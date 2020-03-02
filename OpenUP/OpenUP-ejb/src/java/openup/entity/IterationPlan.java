@@ -5,9 +5,14 @@
  */
 package openup.entity;
 
+import openup.entity.embeddable.Assessment;
+import openup.entity.embeddable.Issue;
+import openup.entity.embeddable.WorkItem;
+import openup.entity.embeddable.Milestone;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -98,6 +103,7 @@ public class IterationPlan implements Serializable {
         this.Date = Date;
     }
 
+    @Embedded
     private List<Milestone> KeyMilestones;
 
     /**
@@ -118,14 +124,14 @@ public class IterationPlan implements Serializable {
         this.KeyMilestones = KeyMilestones;
     }
 
-    private List HighLevelObjectives;
+    private List<String> HighLevelObjectives;
 
     /**
      * Get the value of HighLevelObjectives
      *
      * @return the value of HighLevelObjectives
      */
-    public List getHighLevelObjectives() {
+    public List<String> getHighLevelObjectives() {
         return HighLevelObjectives;
     }
 
@@ -134,10 +140,11 @@ public class IterationPlan implements Serializable {
      *
      * @param HighLevelObjectives new value of HighLevelObjectives
      */
-    public void setHighLevelObjectives(List HighLevelObjectives) {
+    public void setHighLevelObjectives(List<String> HighLevelObjectives) {
         this.HighLevelObjectives = HighLevelObjectives;
     }
 
+    @Embedded
     private List<WorkItem> WorkItemAssignments;
 
     /**
@@ -158,6 +165,7 @@ public class IterationPlan implements Serializable {
         this.WorkItemAssignments = WorkItemAssignments;
     }
 
+    @Embedded
     private List<Issue> Issues;
 
     /**
@@ -198,6 +206,7 @@ public class IterationPlan implements Serializable {
         this.EvaluationCriteria = EvaluationCriteria;
     }
 
+    @Embedded
     private Assessment Assessment;
 
     /**

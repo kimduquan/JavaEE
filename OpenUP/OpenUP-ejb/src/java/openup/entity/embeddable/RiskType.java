@@ -3,12 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.entity;
+package openup.entity.embeddable;
+
+import javax.persistence.Embeddable;
 
 /**
  *
  * @author FOXCONN
  */
+@Embeddable
 public enum RiskType {
     DirectOrIndirect,
     Resource,

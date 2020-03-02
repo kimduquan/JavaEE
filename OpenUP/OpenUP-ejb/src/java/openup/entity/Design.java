@@ -5,8 +5,11 @@
  */
 package openup.entity;
 
+import openup.entity.embeddable.Realization;
+import openup.entity.embeddable.Pattern;
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -77,14 +80,14 @@ public class Design implements Serializable {
         this.DesignStructure = DesignStructure;
     }
 
-    private List<SubSystem> Subsystems;
+    private List<String> Subsystems;
 
     /**
      * Get the value of Subsystems
      *
      * @return the value of Subsystems
      */
-    public List<SubSystem> getSubsystems() {
+    public List<String> getSubsystems() {
         return Subsystems;
     }
 
@@ -93,10 +96,11 @@ public class Design implements Serializable {
      *
      * @param Subsystems new value of Subsystems
      */
-    public void setSubsystems(List<SubSystem> Subsystems) {
+    public void setSubsystems(List<String> Subsystems) {
         this.Subsystems = Subsystems;
     }
 
+    @Embedded
     private List<Pattern> Patterns;
 
     /**
@@ -117,6 +121,7 @@ public class Design implements Serializable {
         this.Patterns = Patterns;
     }
 
+    @Embedded
     private List<Realization> RequirementRealizations;
 
     /**

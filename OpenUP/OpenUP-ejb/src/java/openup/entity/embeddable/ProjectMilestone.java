@@ -3,59 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.entity;
+package openup.entity.embeddable;
 
-import java.io.Serializable;
 import java.util.List;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.Embeddable;
 
 /**
  *
  * @author FOXCONN
  */
-@Entity
-public class ProjectMilestone implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ProjectMilestone)) {
-            return false;
-        }
-        ProjectMilestone other = (ProjectMilestone) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "openup.entity.ProjectMilestone[ id=" + id + " ]";
-    }
+@Embeddable
+public class ProjectMilestone {
     
     private String Iteration;
 
@@ -77,14 +35,14 @@ public class ProjectMilestone implements Serializable {
         this.Iteration = Iteration;
     }
 
-    private List PrimaryObjectives;
+    private List<String> PrimaryObjectives;
 
     /**
      * Get the value of PrimaryObjectives
      *
      * @return the value of PrimaryObjectives
      */
-    public List getPrimaryObjectives() {
+    public List<String> getPrimaryObjectives() {
         return PrimaryObjectives;
     }
 
@@ -93,7 +51,7 @@ public class ProjectMilestone implements Serializable {
      *
      * @param PrimaryObjectives new value of PrimaryObjectives
      */
-    public void setPrimaryObjectives(List PrimaryObjectives) {
+    public void setPrimaryObjectives(List<String> PrimaryObjectives) {
         this.PrimaryObjectives = PrimaryObjectives;
     }
 
@@ -117,14 +75,14 @@ public class ProjectMilestone implements Serializable {
         this.ScheduledStartOrMilestone = ScheduledStartOrMilestone;
     }
 
-    private String TargetVelocity;
+    private int TargetVelocity;
 
     /**
      * Get the value of TargetVelocity
      *
      * @return the value of TargetVelocity
      */
-    public String getTargetVelocity() {
+    public int getTargetVelocity() {
         return TargetVelocity;
     }
 
@@ -133,7 +91,7 @@ public class ProjectMilestone implements Serializable {
      *
      * @param TargetVelocity new value of TargetVelocity
      */
-    public void setTargetVelocity(String TargetVelocity) {
+    public void setTargetVelocity(int TargetVelocity) {
         this.TargetVelocity = TargetVelocity;
     }
 

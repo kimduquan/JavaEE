@@ -3,58 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.entity;
+package openup.entity.embeddable;
 
-import java.io.Serializable;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import java.util.List;
+import javax.persistence.Embeddable;
 
 /**
  *
  * @author FOXCONN
  */
-@Entity
-public class TestCase implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof TestCase)) {
-            return false;
-        }
-        TestCase other = (TestCase) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "openup.entity.TestCase[ id=" + id + " ]";
-    }
+@Embeddable
+public class TestCase {
     
     private String TestCaseID;
 
@@ -116,14 +75,14 @@ public class TestCase implements Serializable {
         this.Description = Description;
     }
 
-    private String PreConditions;
+    private List<String> PreConditions;
 
     /**
      * Get the value of PreConditions
      *
      * @return the value of PreConditions
      */
-    public String getPreConditions() {
+    public List<String> getPreConditions() {
         return PreConditions;
     }
 
@@ -132,18 +91,18 @@ public class TestCase implements Serializable {
      *
      * @param PreConditions new value of PreConditions
      */
-    public void setPreConditions(String PreConditions) {
+    public void setPreConditions(List<String> PreConditions) {
         this.PreConditions = PreConditions;
     }
 
-    private String PostConditions;
+    private List<String> PostConditions;
 
     /**
      * Get the value of PostConditions
      *
      * @return the value of PostConditions
      */
-    public String getPostConditions() {
+    public List<String> getPostConditions() {
         return PostConditions;
     }
 
@@ -152,7 +111,7 @@ public class TestCase implements Serializable {
      *
      * @param PostConditions new value of PostConditions
      */
-    public void setPostConditions(String PostConditions) {
+    public void setPostConditions(List<String> PostConditions) {
         this.PostConditions = PostConditions;
     }
 

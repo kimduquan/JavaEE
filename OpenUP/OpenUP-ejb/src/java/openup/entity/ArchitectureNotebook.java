@@ -139,14 +139,14 @@ public class ArchitectureNotebook implements Serializable {
         this.ArchitecturalGoalsAndPhilosophy = ArchitecturalGoalsAndPhilosophy;
     }
 
-    private String AssumptionsAndDependencies;
+    private List<String> AssumptionsAndDependencies;
 
     /**
      * Get the value of AssumptionsAndDependencies
      *
      * @return the value of AssumptionsAndDependencies
      */
-    public String getAssumptionsAndDependencies() {
+    public List<String> getAssumptionsAndDependencies() {
         return AssumptionsAndDependencies;
     }
 
@@ -155,7 +155,7 @@ public class ArchitectureNotebook implements Serializable {
      *
      * @param AssumptionsAndDependencies new value of AssumptionsAndDependencies
      */
-    public void setAssumptionsAndDependencies(String AssumptionsAndDependencies) {
+    public void setAssumptionsAndDependencies(List<String> AssumptionsAndDependencies) {
         this.AssumptionsAndDependencies = AssumptionsAndDependencies;
     }
 
@@ -180,14 +180,14 @@ public class ArchitectureNotebook implements Serializable {
         this.ArchitecturallySignificantRequirements = ArchitecturallySignificantRequirements;
     }
 
-    private List DecisionsConstraintsAndJustifications;
+    private List<String> DecisionsConstraintsAndJustifications;
 
     /**
      * Get the value of DecisionsConstraintsAndJustifications
      *
      * @return the value of DecisionsConstraintsAndJustifications
      */
-    public List getDecisionsConstraintsAndJustifications() {
+    public List<String> getDecisionsConstraintsAndJustifications() {
         return DecisionsConstraintsAndJustifications;
     }
 
@@ -197,18 +197,18 @@ public class ArchitectureNotebook implements Serializable {
      * @param DecisionsConstraintsAndJustifications new value of
      * DecisionsConstraintsAndJustifications
      */
-    public void setDecisionsConstraintsAndJustifications(List DecisionsConstraintsAndJustifications) {
+    public void setDecisionsConstraintsAndJustifications(List<String> DecisionsConstraintsAndJustifications) {
         this.DecisionsConstraintsAndJustifications = DecisionsConstraintsAndJustifications;
     }
 
-    private List<ArchitecturalMechanism> ArchitecturalMechanisms;
+    private List<String> ArchitecturalMechanisms;
 
     /**
      * Get the value of ArchitecturalMechanisms
      *
      * @return the value of ArchitecturalMechanisms
      */
-    public List<ArchitecturalMechanism> getArchitecturalMechanisms() {
+    public List<String> getArchitecturalMechanisms() {
         return ArchitecturalMechanisms;
     }
 
@@ -217,18 +217,18 @@ public class ArchitectureNotebook implements Serializable {
      *
      * @param ArchitecturalMechanisms new value of ArchitecturalMechanisms
      */
-    public void setArchitecturalMechanisms(List<ArchitecturalMechanism> ArchitecturalMechanisms) {
+    public void setArchitecturalMechanisms(List<String> ArchitecturalMechanisms) {
         this.ArchitecturalMechanisms = ArchitecturalMechanisms;
     }
 
-    private String KeyAbstractions;
+    private List<String> KeyAbstractions;
 
     /**
      * Get the value of KeyAbstractions
      *
      * @return the value of KeyAbstractions
      */
-    public String getKeyAbstractions() {
+    public List<String> getKeyAbstractions() {
         return KeyAbstractions;
     }
 
@@ -237,7 +237,7 @@ public class ArchitectureNotebook implements Serializable {
      *
      * @param KeyAbstractions new value of KeyAbstractions
      */
-    public void setKeyAbstractions(String KeyAbstractions) {
+    public void setKeyAbstractions(List<String> KeyAbstractions) {
         this.KeyAbstractions = KeyAbstractions;
     }
 

@@ -5,9 +5,11 @@
  */
 package openup.entity;
 
+import openup.entity.embeddable.ProjectMilestone;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -159,6 +161,7 @@ public class ProjectPlan implements Serializable {
         this.ProjectPracticesAndMeasurements = ProjectPracticesAndMeasurements;
     }
 
+    @Embedded
     private List<ProjectMilestone> ProjectMilestonesAndObjectives;
 
     /**
@@ -200,14 +203,14 @@ public class ProjectPlan implements Serializable {
         this.Deployment = Deployment;
     }
 
-    private String LessonsLearned;
+    private List<String> LessonsLearned;
 
     /**
      * Get the value of LessonsLearned
      *
      * @return the value of LessonsLearned
      */
-    public String getLessonsLearned() {
+    public List<String> getLessonsLearned() {
         return LessonsLearned;
     }
 
@@ -216,7 +219,7 @@ public class ProjectPlan implements Serializable {
      *
      * @param LessonsLearned new value of LessonsLearned
      */
-    public void setLessonsLearned(String LessonsLearned) {
+    public void setLessonsLearned(List<String> LessonsLearned) {
         this.LessonsLearned = LessonsLearned;
     }
 

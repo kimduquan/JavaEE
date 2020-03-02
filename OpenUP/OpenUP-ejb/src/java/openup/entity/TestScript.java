@@ -5,9 +5,12 @@
  */
 package openup.entity;
 
+import openup.entity.embeddable.TestData;
+import openup.entity.embeddable.TestStep;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -218,26 +221,28 @@ public class TestScript implements Serializable {
         this.Result = Result;
     }
 
-    private List<Test> Test;
+    @Embedded
+    private List<TestStep> Test;
 
     /**
-     * Get the value of Test
+     * Get the value of TestStep
      *
-     * @return the value of Test
+     * @return the value of TestStep
      */
-    public List<Test> getTest() {
+    public List<TestStep> getTest() {
         return Test;
     }
 
     /**
-     * Set the value of Test
+     * Set the value of TestStep
      *
-     * @param Test new value of Test
+     * @param Test new value of TestStep
      */
-    public void setTest(List<Test> Test) {
+    public void setTest(List<TestStep> Test) {
         this.Test = Test;
     }
 
+    @Embedded
     private TestData TestDataTable;
 
     /**

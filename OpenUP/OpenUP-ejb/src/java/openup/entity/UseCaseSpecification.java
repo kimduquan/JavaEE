@@ -138,14 +138,14 @@ public class UseCaseSpecification implements Serializable {
         this.BriefDescription = BriefDescription;
     }
 
-    private List ActorBriefDescriptions;
+    private List<String> ActorBriefDescriptions;
 
     /**
      * Get the value of ActorBriefDescriptions
      *
      * @return the value of ActorBriefDescriptions
      */
-    public List getActorBriefDescriptions() {
+    public List<String> getActorBriefDescriptions() {
         return ActorBriefDescriptions;
     }
 
@@ -154,38 +154,39 @@ public class UseCaseSpecification implements Serializable {
      *
      * @param ActorBriefDescriptions new value of ActorBriefDescriptions
      */
-    public void setActorBriefDescriptions(List ActorBriefDescriptions) {
+    public void setActorBriefDescriptions(List<String> ActorBriefDescriptions) {
         this.ActorBriefDescriptions = ActorBriefDescriptions;
     }
 
-    private List Preconditions;
+    private List<String> PreConditions;
 
     /**
-     * Get the value of Preconditions
+     * Get the value of PreConditions
      *
-     * @return the value of Preconditions
+     * @return the value of PreConditions
      */
-    public List getPreconditions() {
-        return Preconditions;
+    public List<String> getPreConditions() {
+        return PreConditions;
     }
 
     /**
-     * Set the value of Preconditions
+     * Set the value of PreConditions
      *
-     * @param Preconditions new value of Preconditions
+     * @param PreConditions new value of PreConditions
      */
-    public void setPreconditions(List Preconditions) {
-        this.Preconditions = Preconditions;
+    public void setPreConditions(List<String> PreConditions) {
+        this.PreConditions = PreConditions;
     }
 
-    private List BasicFlowOfEvents;
+
+    private List<String> BasicFlowOfEvents;
 
     /**
      * Get the value of BasicFlowOfEvents
      *
      * @return the value of BasicFlowOfEvents
      */
-    public List getBasicFlowOfEvents() {
+    public List<String> getBasicFlowOfEvents() {
         return BasicFlowOfEvents;
     }
 
@@ -194,18 +195,18 @@ public class UseCaseSpecification implements Serializable {
      *
      * @param BasicFlowOfEvents new value of BasicFlowOfEvents
      */
-    public void setBasicFlowOfEvents(List BasicFlowOfEvents) {
+    public void setBasicFlowOfEvents(List<String> BasicFlowOfEvents) {
         this.BasicFlowOfEvents = BasicFlowOfEvents;
     }
 
-    private List AlternativeFlows;
+    private List<String> AlternativeFlows;
 
     /**
      * Get the value of AlternativeFlows
      *
      * @return the value of AlternativeFlows
      */
-    public List getAlternativeFlows() {
+    public List<String> getAlternativeFlows() {
         return AlternativeFlows;
     }
 
@@ -214,18 +215,18 @@ public class UseCaseSpecification implements Serializable {
      *
      * @param AlternativeFlows new value of AlternativeFlows
      */
-    public void setAlternativeFlows(List AlternativeFlows) {
+    public void setAlternativeFlows(List<String> AlternativeFlows) {
         this.AlternativeFlows = AlternativeFlows;
     }
 
-    private List Subflows;
+    private List<String> Subflows;
 
     /**
      * Get the value of Subflows
      *
      * @return the value of Subflows
      */
-    public List getSubflows() {
+    public List<String> getSubflows() {
         return Subflows;
     }
 
@@ -234,18 +235,18 @@ public class UseCaseSpecification implements Serializable {
      *
      * @param Subflows new value of Subflows
      */
-    public void setSubflows(List Subflows) {
+    public void setSubflows(List<String> Subflows) {
         this.Subflows = Subflows;
     }
 
-    private List KeyScenarios;
+    private List<String> KeyScenarios;
 
     /**
      * Get the value of KeyScenarios
      *
      * @return the value of KeyScenarios
      */
-    public List getKeyScenarios() {
+    public List<String> getKeyScenarios() {
         return KeyScenarios;
     }
 
@@ -254,18 +255,18 @@ public class UseCaseSpecification implements Serializable {
      *
      * @param KeyScenarios new value of KeyScenarios
      */
-    public void setKeyScenarios(List KeyScenarios) {
+    public void setKeyScenarios(List<String> KeyScenarios) {
         this.KeyScenarios = KeyScenarios;
     }
 
-    private List PostConditions;
+    private List<String> PostConditions;
 
     /**
      * Get the value of PostConditions
      *
      * @return the value of PostConditions
      */
-    public List getPostConditions() {
+    public List<String> getPostConditions() {
         return PostConditions;
     }
 
@@ -274,18 +275,18 @@ public class UseCaseSpecification implements Serializable {
      *
      * @param PostConditions new value of PostConditions
      */
-    public void setPostConditions(List PostConditions) {
+    public void setPostConditions(List<String> PostConditions) {
         this.PostConditions = PostConditions;
     }
 
-    private List SpecialRequirements;
+    private List<String> SpecialRequirements;
 
     /**
      * Get the value of SpecialRequirements
      *
      * @return the value of SpecialRequirements
      */
-    public List getSpecialRequirements() {
+    public List<String> getSpecialRequirements() {
         return SpecialRequirements;
     }
 
@@ -294,7 +295,7 @@ public class UseCaseSpecification implements Serializable {
      *
      * @param SpecialRequirements new value of SpecialRequirements
      */
-    public void setSpecialRequirements(List SpecialRequirements) {
+    public void setSpecialRequirements(List<String> SpecialRequirements) {
         this.SpecialRequirements = SpecialRequirements;
     }
 

@@ -7,10 +7,14 @@ package openup.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import openup.entity.embeddable.Need;
+import openup.entity.embeddable.Requirement;
 
 /**
  *
@@ -197,14 +201,15 @@ public class Vision implements Serializable {
         this.UserEnvironment = UserEnvironment;
     }
 
-    private String NeedsAndFeatures;
+    @Embedded
+    private List<Need> NeedsAndFeatures;
 
     /**
      * Get the value of NeedsAndFeatures
      *
      * @return the value of NeedsAndFeatures
      */
-    public String getNeedsAndFeatures() {
+    public List<Need> getNeedsAndFeatures() {
         return NeedsAndFeatures;
     }
 
@@ -213,18 +218,19 @@ public class Vision implements Serializable {
      *
      * @param NeedsAndFeatures new value of NeedsAndFeatures
      */
-    public void setNeedsAndFeatures(String NeedsAndFeatures) {
+    public void setNeedsAndFeatures(List<Need> NeedsAndFeatures) {
         this.NeedsAndFeatures = NeedsAndFeatures;
     }
 
-    private String OtherProductRequirements;
+    @Embedded
+    private List<Requirement> OtherProductRequirements;
 
     /**
      * Get the value of OtherProductRequirements
      *
      * @return the value of OtherProductRequirements
      */
-    public String getOtherProductRequirements() {
+    public List<Requirement> getOtherProductRequirements() {
         return OtherProductRequirements;
     }
 
@@ -233,7 +239,7 @@ public class Vision implements Serializable {
      *
      * @param OtherProductRequirements new value of OtherProductRequirements
      */
-    public void setOtherProductRequirements(String OtherProductRequirements) {
+    public void setOtherProductRequirements(List<Requirement> OtherProductRequirements) {
         this.OtherProductRequirements = OtherProductRequirements;
     }
 

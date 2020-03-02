@@ -5,9 +5,11 @@
  */
 package openup.entity;
 
+import openup.entity.embeddable.URPS;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -139,6 +141,7 @@ public class SystemWideRequirementsSpecification implements Serializable {
         this.SystemWideFunctionalRequirements = SystemWideFunctionalRequirements;
     }
 
+    @Embedded
     private URPS SystemQualities;
 
     /**
@@ -301,14 +304,14 @@ public class SystemWideRequirementsSpecification implements Serializable {
         this.CommunicationsInterfaces = CommunicationsInterfaces;
     }
 
-    private List<Rule> BusinessRules;
+    private List<String> BusinessRules;
 
     /**
      * Get the value of BusinessRules
      *
      * @return the value of BusinessRules
      */
-    public List<Rule> getBusinessRules() {
+    public List<String> getBusinessRules() {
         return BusinessRules;
     }
 
@@ -317,7 +320,7 @@ public class SystemWideRequirementsSpecification implements Serializable {
      *
      * @param BusinessRules new value of BusinessRules
      */
-    public void setBusinessRules(List<Rule> BusinessRules) {
+    public void setBusinessRules(List<String> BusinessRules) {
         this.BusinessRules = BusinessRules;
     }
 

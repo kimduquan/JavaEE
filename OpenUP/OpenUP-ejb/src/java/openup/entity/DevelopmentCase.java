@@ -5,8 +5,13 @@
  */
 package openup.entity;
 
+import openup.entity.embeddable.GuidelineProcedure;
+import openup.entity.embeddable.Role;
+import openup.entity.embeddable.Report;
+import openup.entity.embeddable.Reference;
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -158,6 +163,7 @@ public class DevelopmentCase implements Serializable {
         this.DefinitionsAcronymsAndAbbreviations = DefinitionsAcronymsAndAbbreviations;
     }
 
+    @Embedded
     private List<Reference> References;
 
     /**
@@ -402,6 +408,7 @@ public class DevelopmentCase implements Serializable {
         this.WorkProducts = WorkProducts;
     }
 
+    @Embedded
     private List<Report> Reports;
 
     /**
@@ -422,6 +429,7 @@ public class DevelopmentCase implements Serializable {
         this.Reports = Reports;
     }
 
+    @Embedded
     private List<Role> Roles;
 
     /**
@@ -442,6 +450,7 @@ public class DevelopmentCase implements Serializable {
         this.Roles = Roles;
     }
 
+    @Embedded
     private List<GuidelineProcedure> ProjectSpecificGuidelinesAndProcedures;
 
     /**
