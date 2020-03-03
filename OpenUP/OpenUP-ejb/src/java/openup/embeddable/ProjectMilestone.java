@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.entity.embeddable;
+package openup.embeddable;
 
 import java.util.List;
 import javax.persistence.ElementCollection;

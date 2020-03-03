@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.entity.embeddable;
+package openup.embeddable;
 
 import javax.persistence.Embeddable;
 
@@ -12,6 +12,10 @@ import javax.persistence.Embeddable;
  * @author FOXCONN
  */
 @Embeddable
-public class TestData {
-    
+public enum RiskType {
+    DirectOrIndirect,
+    Resource,
+    Bussiness,
+    Technical,
+    Schedule
 }
