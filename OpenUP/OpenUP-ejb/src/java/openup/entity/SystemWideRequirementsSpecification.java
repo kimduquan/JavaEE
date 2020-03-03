@@ -9,6 +9,7 @@ import openup.entity.embeddable.URPS;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -304,6 +305,7 @@ public class SystemWideRequirementsSpecification implements Serializable {
         this.CommunicationsInterfaces = CommunicationsInterfaces;
     }
 
+    @ElementCollection
     private List<String> BusinessRules;
 
     /**

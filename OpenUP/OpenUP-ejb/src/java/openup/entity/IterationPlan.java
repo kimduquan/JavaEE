@@ -12,6 +12,7 @@ import openup.entity.embeddable.Milestone;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -103,7 +104,7 @@ public class IterationPlan implements Serializable {
         this.Date = Date;
     }
 
-    @Embedded
+    @ElementCollection
     private List<Milestone> KeyMilestones;
 
     /**
@@ -124,6 +125,7 @@ public class IterationPlan implements Serializable {
         this.KeyMilestones = KeyMilestones;
     }
 
+    @ElementCollection
     private List<String> HighLevelObjectives;
 
     /**
@@ -144,7 +146,7 @@ public class IterationPlan implements Serializable {
         this.HighLevelObjectives = HighLevelObjectives;
     }
 
-    @Embedded
+    @ElementCollection
     private List<WorkItem> WorkItemAssignments;
 
     /**
@@ -165,7 +167,7 @@ public class IterationPlan implements Serializable {
         this.WorkItemAssignments = WorkItemAssignments;
     }
 
-    @Embedded
+    @ElementCollection
     private List<Issue> Issues;
 
     /**

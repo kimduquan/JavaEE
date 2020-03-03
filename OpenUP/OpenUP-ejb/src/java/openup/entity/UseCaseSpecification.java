@@ -8,6 +8,7 @@ package openup.entity;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -138,6 +139,7 @@ public class UseCaseSpecification implements Serializable {
         this.BriefDescription = BriefDescription;
     }
 
+    @ElementCollection
     private List<String> ActorBriefDescriptions;
 
     /**
@@ -158,6 +160,7 @@ public class UseCaseSpecification implements Serializable {
         this.ActorBriefDescriptions = ActorBriefDescriptions;
     }
 
+    @ElementCollection
     private List<String> PreConditions;
 
     /**
@@ -178,7 +181,7 @@ public class UseCaseSpecification implements Serializable {
         this.PreConditions = PreConditions;
     }
 
-
+    @ElementCollection
     private List<String> BasicFlowOfEvents;
 
     /**
@@ -199,6 +202,7 @@ public class UseCaseSpecification implements Serializable {
         this.BasicFlowOfEvents = BasicFlowOfEvents;
     }
 
+    @ElementCollection
     private List<String> AlternativeFlows;
 
     /**
@@ -219,6 +223,7 @@ public class UseCaseSpecification implements Serializable {
         this.AlternativeFlows = AlternativeFlows;
     }
 
+    @ElementCollection
     private List<String> Subflows;
 
     /**
@@ -239,6 +244,7 @@ public class UseCaseSpecification implements Serializable {
         this.Subflows = Subflows;
     }
 
+    @ElementCollection
     private List<String> KeyScenarios;
 
     /**
@@ -259,6 +265,7 @@ public class UseCaseSpecification implements Serializable {
         this.KeyScenarios = KeyScenarios;
     }
 
+    @ElementCollection
     private List<String> PostConditions;
 
     /**
@@ -279,6 +286,7 @@ public class UseCaseSpecification implements Serializable {
         this.PostConditions = PostConditions;
     }
 
+    @ElementCollection
     private List<String> SpecialRequirements;
 
     /**

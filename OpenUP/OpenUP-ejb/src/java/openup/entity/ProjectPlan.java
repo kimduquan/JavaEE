@@ -9,6 +9,7 @@ import openup.entity.embeddable.ProjectMilestone;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -161,7 +162,7 @@ public class ProjectPlan implements Serializable {
         this.ProjectPracticesAndMeasurements = ProjectPracticesAndMeasurements;
     }
 
-    @Embedded
+    @ElementCollection
     private List<ProjectMilestone> ProjectMilestonesAndObjectives;
 
     /**
@@ -203,6 +204,7 @@ public class ProjectPlan implements Serializable {
         this.Deployment = Deployment;
     }
 
+    @ElementCollection
     private List<String> LessonsLearned;
 
     /**

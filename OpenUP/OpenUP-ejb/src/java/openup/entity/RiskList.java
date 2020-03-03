@@ -8,6 +8,7 @@ package openup.entity;
 import openup.entity.embeddable.Risk;
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -79,7 +80,7 @@ public class RiskList implements Serializable {
         this.Project = Project;
     }
 
-    @Embedded
+    @ElementCollection
     private List<Risk> Risks;
 
     /**

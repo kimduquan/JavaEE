@@ -6,6 +6,7 @@
 package openup.entity.embeddable;
 
 import java.util.List;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embeddable;
 
 /**
@@ -75,6 +76,7 @@ public class TestCase {
         this.Description = Description;
     }
 
+    @ElementCollection
     private List<String> PreConditions;
 
     /**
@@ -95,6 +97,7 @@ public class TestCase {
         this.PreConditions = PreConditions;
     }
 
+    @ElementCollection
     private List<String> PostConditions;
 
     /**

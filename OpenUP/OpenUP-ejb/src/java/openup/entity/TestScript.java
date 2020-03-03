@@ -10,6 +10,7 @@ import openup.entity.embeddable.TestStep;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -221,7 +222,7 @@ public class TestScript implements Serializable {
         this.Result = Result;
     }
 
-    @Embedded
+    @ElementCollection
     private List<TestStep> Test;
 
     /**

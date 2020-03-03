@@ -11,6 +11,7 @@ import openup.entity.embeddable.Report;
 import openup.entity.embeddable.Reference;
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -163,7 +164,7 @@ public class DevelopmentCase implements Serializable {
         this.DefinitionsAcronymsAndAbbreviations = DefinitionsAcronymsAndAbbreviations;
     }
 
-    @Embedded
+    @ElementCollection
     private List<Reference> References;
 
     /**
@@ -224,6 +225,7 @@ public class DevelopmentCase implements Serializable {
         this.LifecycleModel = LifecycleModel;
     }
 
+    @ElementCollection
     private List<IterationPlan> InceptionPhase;
 
     /**
@@ -244,6 +246,7 @@ public class DevelopmentCase implements Serializable {
         this.InceptionPhase = InceptionPhase;
     }
 
+    @ElementCollection
     private List<IterationPlan> ElaborationPhase;
 
     /**
@@ -264,6 +267,7 @@ public class DevelopmentCase implements Serializable {
         this.ElaborationPhase = ElaborationPhase;
     }
 
+    @ElementCollection
     private List<IterationPlan> ConstructionPhase;
 
     /**
@@ -284,6 +288,7 @@ public class DevelopmentCase implements Serializable {
         this.ConstructionPhase = ConstructionPhase;
     }
 
+    @ElementCollection
     private List<IterationPlan> TransitionPhase;
 
     /**
@@ -408,7 +413,7 @@ public class DevelopmentCase implements Serializable {
         this.WorkProducts = WorkProducts;
     }
 
-    @Embedded
+    @ElementCollection
     private List<Report> Reports;
 
     /**
@@ -429,7 +434,7 @@ public class DevelopmentCase implements Serializable {
         this.Reports = Reports;
     }
 
-    @Embedded
+    @ElementCollection
     private List<Role> Roles;
 
     /**
@@ -450,7 +455,7 @@ public class DevelopmentCase implements Serializable {
         this.Roles = Roles;
     }
 
-    @Embedded
+    @ElementCollection
     private List<GuidelineProcedure> ProjectSpecificGuidelinesAndProcedures;
 
     /**

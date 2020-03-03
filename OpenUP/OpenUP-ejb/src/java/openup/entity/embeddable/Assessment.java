@@ -7,6 +7,7 @@ package openup.entity.embeddable;
 
 import java.util.Date;
 import java.util.List;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embeddable;
 
 /**
@@ -158,6 +159,7 @@ public class Assessment {
         this.AssessmentAgainstEvaluationCriteriaTestResults = AssessmentAgainstEvaluationCriteriaTestResults;
     }
 
+    @ElementCollection
     private List<String> OtherConcernsAndDeviations;
 
     /**

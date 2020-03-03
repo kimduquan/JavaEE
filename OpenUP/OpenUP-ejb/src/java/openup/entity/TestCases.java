@@ -8,6 +8,7 @@ package openup.entity;
 import openup.entity.embeddable.TestCase;
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -99,7 +100,7 @@ public class TestCases implements Serializable {
         this.UseCaseName = UseCaseName;
     }
 
-    @Embedded
+    @ElementCollection
     private List<TestCase> TestCases;
 
     /**

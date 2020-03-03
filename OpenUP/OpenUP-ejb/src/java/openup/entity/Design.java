@@ -9,6 +9,7 @@ import openup.entity.embeddable.Realization;
 import openup.entity.embeddable.Pattern;
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -80,6 +81,7 @@ public class Design implements Serializable {
         this.DesignStructure = DesignStructure;
     }
 
+    @ElementCollection
     private List<String> Subsystems;
 
     /**
@@ -100,7 +102,7 @@ public class Design implements Serializable {
         this.Subsystems = Subsystems;
     }
 
-    @Embedded
+    @ElementCollection
     private List<Pattern> Patterns;
 
     /**
@@ -121,7 +123,7 @@ public class Design implements Serializable {
         this.Patterns = Patterns;
     }
 
-    @Embedded
+    @ElementCollection
     private List<Realization> RequirementRealizations;
 
     /**

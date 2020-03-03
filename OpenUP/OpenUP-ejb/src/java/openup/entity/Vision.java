@@ -8,6 +8,7 @@ package openup.entity;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -201,7 +202,7 @@ public class Vision implements Serializable {
         this.UserEnvironment = UserEnvironment;
     }
 
-    @Embedded
+    @ElementCollection
     private List<Need> NeedsAndFeatures;
 
     /**
@@ -222,7 +223,7 @@ public class Vision implements Serializable {
         this.NeedsAndFeatures = NeedsAndFeatures;
     }
 
-    @Embedded
+    @ElementCollection
     private List<Requirement> OtherProductRequirements;
 
     /**

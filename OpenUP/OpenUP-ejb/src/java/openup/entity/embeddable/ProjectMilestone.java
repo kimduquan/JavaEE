@@ -6,6 +6,7 @@
 package openup.entity.embeddable;
 
 import java.util.List;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embeddable;
 
 /**
@@ -35,6 +36,7 @@ public class ProjectMilestone {
         this.Iteration = Iteration;
     }
 
+    @ElementCollection
     private List<String> PrimaryObjectives;
 
     /**

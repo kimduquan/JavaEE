@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.ElementCollection;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -139,6 +140,7 @@ public class ArchitectureNotebook implements Serializable {
         this.ArchitecturalGoalsAndPhilosophy = ArchitecturalGoalsAndPhilosophy;
     }
 
+    @ElementCollection
     private List<String> AssumptionsAndDependencies;
 
     /**
@@ -180,6 +182,7 @@ public class ArchitectureNotebook implements Serializable {
         this.ArchitecturallySignificantRequirements = ArchitecturallySignificantRequirements;
     }
 
+    @ElementCollection
     private List<String> DecisionsConstraintsAndJustifications;
 
     /**
@@ -201,6 +204,7 @@ public class ArchitectureNotebook implements Serializable {
         this.DecisionsConstraintsAndJustifications = DecisionsConstraintsAndJustifications;
     }
 
+    @ElementCollection
     private List<String> ArchitecturalMechanisms;
 
     /**
@@ -221,6 +225,7 @@ public class ArchitectureNotebook implements Serializable {
         this.ArchitecturalMechanisms = ArchitecturalMechanisms;
     }
 
+    @ElementCollection
     private List<String> KeyAbstractions;
 
     /**
