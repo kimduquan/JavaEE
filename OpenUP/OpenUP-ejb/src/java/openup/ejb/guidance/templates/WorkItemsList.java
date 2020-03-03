@@ -67,7 +67,7 @@ public class WorkItemsList implements Serializable {
      *
      * @return the value of WorkItems
      */
-    public List getWorkItems() {
+    public List<WorkItem> getWorkItems() {
         return WorkItems;
     }
 
@@ -76,7 +76,7 @@ public class WorkItemsList implements Serializable {
      *
      * @param WorkItems new value of WorkItems
      */
-    public void setWorkItems(List WorkItems) {
+    public void setWorkItems(List<WorkItem> WorkItems) {
         this.WorkItems = WorkItems;
     }
 
