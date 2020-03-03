@@ -15,6 +15,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -81,6 +83,7 @@ public class SystemWideRequirementsSpecification implements Serializable {
         this.ProjectName = ProjectName;
     }
 
+    @Temporal(TemporalType.DATE)
     private Date Date;
 
     /**

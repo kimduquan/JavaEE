@@ -8,6 +8,8 @@ package openup.embeddable;
 import java.util.Date;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -36,6 +38,7 @@ public class Risk {
         this.RiskID = RiskID;
     }
 
+    @Temporal(TemporalType.DATE)
     private Date DateIdentified;
 
     /**

@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embeddable;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -37,6 +39,7 @@ public class Assessment {
         this.AssessmentTarget = AssessmentTarget;
     }
 
+    @Temporal(TemporalType.DATE)
     private Date AssessmentDate;
 
     /**
