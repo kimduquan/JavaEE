@@ -76,7 +76,7 @@ public class Test_Case {
         this.Description = Description;
     }
 
-    @ElementCollection
+    //@ElementCollection
     private List<String> PreConditions;
 
     /**
@@ -97,7 +97,7 @@ public class Test_Case {
         this.PreConditions = PreConditions;
     }
 
-    @ElementCollection
+    //@ElementCollection
     private List<String> PostConditions;
 
     /**

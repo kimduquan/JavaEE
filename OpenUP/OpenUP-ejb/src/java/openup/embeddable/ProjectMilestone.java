@@ -36,7 +36,7 @@ public class ProjectMilestone {
         this.Iteration = Iteration;
     }
 
-    @ElementCollection
+    //@ElementCollection
     private List<String> PrimaryObjectives;
 
     /**

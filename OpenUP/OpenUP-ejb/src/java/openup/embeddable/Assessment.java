@@ -162,7 +162,7 @@ public class Assessment {
         this.AssessmentAgainstEvaluationCriteriaTestResults = AssessmentAgainstEvaluationCriteriaTestResults;
     }
 
-    @ElementCollection
+    //@ElementCollection
     private List<String> OtherConcernsAndDeviations;
 
     /**
