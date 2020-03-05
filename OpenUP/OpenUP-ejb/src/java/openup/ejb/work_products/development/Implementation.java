@@ -6,6 +6,7 @@
 package openup.ejb.work_products.development;
 
 import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateful;
 import javax.ejb.LocalBean;
 import openup.ejb.work_product_slot.TechnicalImplementation;
@@ -16,6 +17,7 @@ import openup.ejb.work_product_slot.TechnicalImplementation;
  */
 @Stateful
 @LocalBean
+@RolesAllowed("Developer")
 public class Implementation {
 
     // Add business logic below. (Right-click in editor and choose

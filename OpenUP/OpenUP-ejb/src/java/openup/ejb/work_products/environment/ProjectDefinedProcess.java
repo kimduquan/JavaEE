@@ -5,6 +5,7 @@
  */
 package openup.ejb.work_products.environment;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateful;
 import javax.ejb.LocalBean;
 
@@ -14,6 +15,7 @@ import javax.ejb.LocalBean;
  */
 @Stateful
 @LocalBean
+@RolesAllowed("ProcessEngineer")
 public class ProjectDefinedProcess {
 
     // Add business logic below. (Right-click in editor and choose

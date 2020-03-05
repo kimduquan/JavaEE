@@ -5,6 +5,7 @@
  */
 package openup.ejb.work_products.test;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateful;
 import javax.ejb.LocalBean;
 
@@ -14,6 +15,7 @@ import javax.ejb.LocalBean;
  */
 @Stateful
 @LocalBean
+@RolesAllowed("Tester")
 public class TestScript {
 
     // Add business logic below. (Right-click in editor and choose
