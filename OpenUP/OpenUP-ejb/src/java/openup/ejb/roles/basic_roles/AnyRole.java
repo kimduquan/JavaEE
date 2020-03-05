@@ -5,6 +5,7 @@
  */
 package openup.ejb.roles.basic_roles;
 
+import javax.annotation.security.DeclareRoles;
 import javax.ejb.Stateful;
 import javax.ejb.LocalBean;
 
@@ -14,6 +15,7 @@ import javax.ejb.LocalBean;
  */
 @Stateful
 @LocalBean
+@DeclareRoles("AnyRole")
 public class AnyRole {
 
     // Add business logic below. (Right-click in editor and choose
