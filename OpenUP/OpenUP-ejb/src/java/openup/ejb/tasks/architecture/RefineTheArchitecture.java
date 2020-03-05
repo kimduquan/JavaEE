@@ -5,6 +5,7 @@
  */
 package openup.ejb.tasks.architecture;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateful;
 import javax.ejb.LocalBean;
 
@@ -14,6 +15,7 @@ import javax.ejb.LocalBean;
  */
 @Stateful
 @LocalBean
+@RolesAllowed({"Architect", "Developer", "ProjectManager"})
 public class RefineTheArchitecture {
 
     // Add business logic below. (Right-click in editor and choose

@@ -5,6 +5,7 @@
  */
 package openup.ejb.tasks.deployment;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateful;
 import javax.ejb.LocalBean;
 
@@ -14,6 +15,7 @@ import javax.ejb.LocalBean;
  */
 @Stateful
 @LocalBean
+@RolesAllowed({"Developer", "DeploymentEngineer"})
 public class PackageTheRelease {
 
     // Add business logic below. (Right-click in editor and choose
