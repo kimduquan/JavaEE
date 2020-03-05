@@ -5,8 +5,10 @@
  */
 package openup.ejb.work_products.test;
 
+import java.util.List;
 import javax.ejb.Stateful;
 import javax.ejb.LocalBean;
+import openup.ejb.work_product_slot.TechnicalTestResults;
 
 /**
  *
@@ -18,4 +20,25 @@ public class TestLog {
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
+    
+    private List<TechnicalTestResults> FulfilledSlots;
+
+    /**
+     * Get the value of FulfilledSlots
+     *
+     * @return the value of FulfilledSlots
+     */
+    public List<TechnicalTestResults> getFulfilledSlots() {
+        return FulfilledSlots;
+    }
+
+    /**
+     * Set the value of FulfilledSlots
+     *
+     * @param FulfilledSlots new value of FulfilledSlots
+     */
+    public void setFulfilledSlots(List<TechnicalTestResults> FulfilledSlots) {
+        this.FulfilledSlots = FulfilledSlots;
+    }
+
 }

@@ -5,8 +5,10 @@
  */
 package openup.ejb.work_products.development;
 
+import java.util.List;
 import javax.ejb.Stateful;
 import javax.ejb.LocalBean;
+import openup.ejb.work_product_slot.TechnicalDesign;
 
 /**
  *
@@ -18,4 +20,25 @@ public class Design {
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
+    
+        private List<TechnicalDesign> FulfilledSlots;
+
+    /**
+     * Get the value of FulfilledSlots
+     *
+     * @return the value of FulfilledSlots
+     */
+    public List<TechnicalDesign> getFulfilledSlots() {
+        return FulfilledSlots;
+    }
+
+    /**
+     * Set the value of FulfilledSlots
+     *
+     * @param FulfilledSlots new value of FulfilledSlots
+     */
+    public void setFulfilledSlots(List<TechnicalDesign> FulfilledSlots) {
+        this.FulfilledSlots = FulfilledSlots;
+    }
+
 }
