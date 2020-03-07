@@ -15,7 +15,14 @@ import javax.security.enterprise.identitystore.LdapIdentityStoreDefinition;
  */
 @ApplicationScoped
 @BasicAuthenticationMechanismDefinition
-@LdapIdentityStoreDefinition
+@LdapIdentityStoreDefinition(
+        url = "ldap://localhost:10389",
+        bindDn = "uid=admin,ou=system",
+        bindDnPassword = "admin",
+        callerBaseDn = "dc=OpenUP,dc=WSO2,dc=ORG",
+        callerSearchBase = "ou=Roles,dc=OpenUP,dc=WSO2,dc=ORG",
+        groupSearchBase = "ou=Roles,dc=OpenUP,dc=WSO2,dc=ORG"
+)
 public class OpenUP {
 
     // Add business logic below. (Right-click in editor and choose

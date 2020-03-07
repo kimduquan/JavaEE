@@ -2,29 +2,7 @@
 <ejb-jar version="2.1" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd">
     <display-name>OpenUP-ejb</display-name>
     <enterprise-beans>
-        <entity>
-            <display-name>ArchitectureNotebookEB</display-name>
-            <ejb-name>ArchitectureNotebook</ejb-name>
-            <local-home>openup.ejb.work_products.architecture.ArchitectureNotebookLocalHome</local-home>
-            <local>openup.ejb.work_products.architecture.ArchitectureNotebookLocal</local>
-            <ejb-class>openup.ejb.work_products.architecture.ArchitectureNotebook</ejb-class>
-            <persistence-type>Container</persistence-type>
-            <prim-key-class>java.lang.Long</prim-key-class>
-            <reentrant>false</reentrant>
-            <abstract-schema-name>ArchitectureNotebook</abstract-schema-name>
-            <cmp-field>
-                <field-name>pk</field-name>
-            </cmp-field>
-            <primkey-field>pk</primkey-field>
-        </entity>
-        </enterprise-beans>
+    </enterprise-beans>
     <assembly-descriptor>
-        <container-transaction>
-            <method>
-                <ejb-name>ArchitectureNotebook</ejb-name>
-                <method-name>*</method-name>
-            </method>
-            <trans-attribute>Required</trans-attribute>
-        </container-transaction>
         </assembly-descriptor>
     </ejb-jar>
