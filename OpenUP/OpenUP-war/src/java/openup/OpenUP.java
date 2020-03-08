@@ -5,49 +5,14 @@
  */
 package openup;
 
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.Produces;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PUT;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
 
 /**
  * REST Web Service
  *
  * @author FOXCONN
  */
-@Path("openup")
-public class OpenUP {
-
-    @Context
-    private UriInfo context;
-
-    /**
-     * Creates a new instance of OpenUP
-     */
-    public OpenUP() {
-    }
-
-    /**
-     * Retrieves representation of an instance of openup.OpenUP
-     * @return an instance of java.lang.String
-     */
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public String getJson() {
-        //TODO return proper representation object
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * PUT method for updating or creating an instance of OpenUP
-     * @param content representation for the resource
-     */
-    @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void putJson(String content) {
-    }
+@ApplicationPath("openup")
+public class OpenUP extends Application {
 }
