@@ -6,6 +6,7 @@
 package openup.ejb.roles.environment;
 
 import javax.annotation.security.DeclareRoles;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateful;
 import javax.ejb.LocalBean;
 
@@ -16,6 +17,7 @@ import javax.ejb.LocalBean;
 @Stateful
 @LocalBean
 @DeclareRoles("ToolSpecialist")
+@RolesAllowed("ToolSpecialist")
 public class ToolSpecialist {
 
     // Add business logic below. (Right-click in editor and choose

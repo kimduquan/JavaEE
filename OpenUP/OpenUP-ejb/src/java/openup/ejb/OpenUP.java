@@ -14,7 +14,7 @@ import javax.security.enterprise.identitystore.LdapIdentityStoreDefinition;
  * @author FOXCONN
  */
 @ApplicationScoped
-@BasicAuthenticationMechanismDefinition
+@BasicAuthenticationMechanismDefinition( realmName = "file" )
 @LdapIdentityStoreDefinition(
         url = "ldap://localhost:10389",
         bindDn = "uid=admin,ou=system",

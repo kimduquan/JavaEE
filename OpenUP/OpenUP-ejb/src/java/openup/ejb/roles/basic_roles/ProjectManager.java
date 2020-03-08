@@ -6,6 +6,7 @@
 package openup.ejb.roles.basic_roles;
 
 import javax.annotation.security.DeclareRoles;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateful;
 import javax.ejb.LocalBean;
 
@@ -16,6 +17,7 @@ import javax.ejb.LocalBean;
 @Stateful
 @LocalBean
 @DeclareRoles("ProjectManager")
+@RolesAllowed("ProjectManager")
 public class ProjectManager {
 
     // Add business logic below. (Right-click in editor and choose
