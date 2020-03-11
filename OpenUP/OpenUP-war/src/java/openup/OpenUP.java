@@ -5,6 +5,8 @@
  */
 package openup;
 
+import javax.servlet.annotation.HttpConstraint;
+import javax.servlet.annotation.ServletSecurity;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
@@ -14,5 +16,10 @@ import javax.ws.rs.core.Application;
  * @author FOXCONN
  */
 @ApplicationPath("openup")
+@ServletSecurity(
+        @HttpConstraint(
+                rolesAllowed = "AnyRole"
+        )
+)
 public class OpenUP extends Application {
 }

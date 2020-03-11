@@ -11,11 +11,11 @@
                     <file>${reference.OpenUP-ejb.dist}</file>
                 </library>
                 <library dirs="200">
-                    <file>${libs.jsf20.classpath}</file>
+                    <file>${libs.javaee-api-8.0.classpath}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
-                    <file>${libs.primefaces.classpath}</file>
+                    <file>${libs.jsf20.classpath}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
@@ -23,7 +23,7 @@
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
-                    <file>${libs.javaee-api-8.0.classpath}</file>
+                    <file>${libs.primefaces.classpath}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
             </web-module-libraries>

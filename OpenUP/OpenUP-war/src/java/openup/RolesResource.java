@@ -5,6 +5,11 @@
  */
 package openup;
 
+import javax.annotation.security.DeclareRoles;
+import javax.annotation.security.RolesAllowed;
+import javax.ejb.EJB;
+import javax.servlet.annotation.HttpConstraint;
+import javax.servlet.annotation.ServletSecurity;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
@@ -13,6 +18,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.core.MediaType;
+import openup.ejb.roles.basic_roles.AnyRole;
 
 /**
  * REST Web Service
@@ -20,10 +26,20 @@ import javax.ws.rs.core.MediaType;
  * @author FOXCONN
  */
 @Path("roles")
+@ServletSecurity(
+        @HttpConstraint(
+                rolesAllowed = "AnyRole"
+        )
+)
+@RolesAllowed("AnyRole")
+@DeclareRoles("AnyRole")
 public class RolesResource {
 
     @Context
     private UriInfo context;
+    
+    @EJB
+    AnyRole role;
 
     /**
      * Creates a new instance of RolesResource
@@ -39,7 +55,8 @@ public class RolesResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getJson() {
         //TODO return proper representation object
-        throw new UnsupportedOperationException();
+        role.test();
+        return role.toString();
     }
 
     /**
