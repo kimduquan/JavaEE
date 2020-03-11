@@ -7,22 +7,26 @@ package openup.ejb.roles.basic_roles;
 
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
-import javax.ejb.Stateful;
 import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
 
 /**
  *
  * @author FOXCONN
  */
-@Stateful
+@Stateless
 @LocalBean
 @DeclareRoles("AnyRole")
 @RolesAllowed("AnyRole")
+@Path("any-role")
 public class AnyRole {
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
-    public void test(){
-        
+    @GET
+    public String test(){
+        return toString();
     }
 }

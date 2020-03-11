@@ -3,12 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup;
+package openup.ws.rs;
 
-import javax.servlet.annotation.HttpConstraint;
-import javax.servlet.annotation.ServletSecurity;
 import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.Produces;
+
 
 /**
  * REST Web Service
@@ -16,10 +18,7 @@ import javax.ws.rs.core.Application;
  * @author FOXCONN
  */
 @ApplicationPath("openup")
-@ServletSecurity(
-        @HttpConstraint(
-                rolesAllowed = "AnyRole"
-        )
-)
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 public class OpenUP extends Application {
 }
