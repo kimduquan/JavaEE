@@ -7,17 +7,19 @@ package openup.ejb.roles.deployment;
 
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
-import javax.ejb.Stateful;
 import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.ws.rs.Path;
 
 /**
  *
  * @author FOXCONN
  */
-@Stateful
+@Stateless
 @LocalBean
 @DeclareRoles("Trainer")
 @RolesAllowed("Trainer")
+@Path("trainer")
 public class Trainer {
 
     // Add business logic below. (Right-click in editor and choose

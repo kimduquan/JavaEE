@@ -7,14 +7,14 @@ package openup.ejb.roles.basic_roles;
 
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
-import javax.ejb.Stateful;
+import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
 
 /**
  *
  * @author FOXCONN
  */
-@Stateful
+@Stateless
 @LocalBean
 @DeclareRoles("Analyst")
 @RolesAllowed("Analyst")

@@ -7,17 +7,19 @@ package openup.ejb.roles.deployment;
 
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
-import javax.ejb.Stateful;
 import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.ws.rs.Path;
 
 /**
  *
  * @author FOXCONN
  */
-@Stateful
+@Stateless
 @LocalBean
 @DeclareRoles("DeploymentManager")
 @RolesAllowed("DeploymentManager")
+@Path("deployment-manager")
 public class DeploymentManager {
 
     // Add business logic below. (Right-click in editor and choose

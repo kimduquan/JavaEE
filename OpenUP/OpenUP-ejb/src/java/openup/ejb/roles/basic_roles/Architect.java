@@ -7,17 +7,19 @@ package openup.ejb.roles.basic_roles;
 
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
-import javax.ejb.Stateful;
 import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.ws.rs.Path;
 
 /**
  *
  * @author FOXCONN
  */
-@Stateful
+@Stateless
 @LocalBean
 @DeclareRoles("Architect")
 @RolesAllowed("Architect")
+@Path("architect")
 public class Architect {
 
     // Add business logic below. (Right-click in editor and choose

@@ -27,10 +27,32 @@
             <url-pattern>/openup/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
+            
+            <role-name>Analyst</role-name>
             <role-name>AnyRole</role-name>
+            <role-name>Architect</role-name>
+            <role-name>Developer</role-name>
+            <role-name>ProjectManager</role-name>
+            <role-name>Stakeholder</role-name>
+            <role-name>Tester</role-name>
+            
+            <role-name>CourseDeveloper</role-name>
+            <role-name>DeploymentEngineer</role-name>
+            <role-name>DeploymentManager</role-name>
+            <role-name>ProductOwner</role-name>
+            <role-name>TechnicalWriter</role-name>
+            <role-name>Trainer</role-name>
+            
+            <role-name>ProcessEngineer</role-name>
+            <role-name>ToolSpecialist</role-name>
+            
         </auth-constraint>
         <user-data-constraint>
             <transport-guarantee>CONFIDENTIAL</transport-guarantee>
         </user-data-constraint>
     </security-constraint>
+    <error-page>
+        <exception-type>javax.ejb.EJBAccessException</exception-type>
+        <location>/index.xhtml</location>
+    </error-page>
 </web-app>
