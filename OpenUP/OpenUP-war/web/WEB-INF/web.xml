@@ -21,36 +21,188 @@
     <welcome-file-list>
         <welcome-file>faces/index.xhtml</welcome-file>
     </welcome-file-list>
+    
     <security-constraint>
         <web-resource-collection>
-            <web-resource-name>OpenUP</web-resource-name>
-            <url-pattern>/openup/*</url-pattern>
+            <web-resource-name>Analyst</web-resource-name>
+            <url-pattern>/openup/analyst/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
-            
             <role-name>Analyst</role-name>
-            <role-name>AnyRole</role-name>
-            <role-name>Architect</role-name>
-            <role-name>Developer</role-name>
-            <role-name>ProjectManager</role-name>
-            <role-name>Stakeholder</role-name>
-            <role-name>Tester</role-name>
-            
-            <role-name>CourseDeveloper</role-name>
-            <role-name>DeploymentEngineer</role-name>
-            <role-name>DeploymentManager</role-name>
-            <role-name>ProductOwner</role-name>
-            <role-name>TechnicalWriter</role-name>
-            <role-name>Trainer</role-name>
-            
-            <role-name>ProcessEngineer</role-name>
-            <role-name>ToolSpecialist</role-name>
-            
         </auth-constraint>
         <user-data-constraint>
             <transport-guarantee>CONFIDENTIAL</transport-guarantee>
         </user-data-constraint>
     </security-constraint>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>AnyRole</web-resource-name>
+            <url-pattern>/openup/any-role/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>AnyRole</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Architect</web-resource-name>
+            <url-pattern>/openup/architect/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>Architect</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Developer</web-resource-name>
+            <url-pattern>/openup/developer/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>Developer</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>ProjectManager</web-resource-name>
+            <url-pattern>/openup/project-manager/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>ProjectManager</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Stakeholder</web-resource-name>
+            <url-pattern>/openup/stakeholder/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>Stakeholder</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Tester</web-resource-name>
+            <url-pattern>/openup/tester/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>Tester</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>CourseDeveloper</web-resource-name>
+            <url-pattern>/openup/course-developer/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>CourseDeveloper</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>DeploymentEngineer</web-resource-name>
+            <url-pattern>/openup/deployment-engineer/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>DeploymentEngineer</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>DeploymentManager</web-resource-name>
+            <url-pattern>/openup/deployment-manager/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>DeploymentManager</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>ProductOwner</web-resource-name>
+            <url-pattern>/openup/product-owner/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>ProductOwner</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>TechnicalWriter</web-resource-name>
+            <url-pattern>/openup/technical-writer/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>TechnicalWriter</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Trainer</web-resource-name>
+            <url-pattern>/openup/trainer/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>Trainer</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>ProcessEngineer</web-resource-name>
+            <url-pattern>/openup/process-engineer/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>ProcessEngineer</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>ToolSpecialist</web-resource-name>
+            <url-pattern>/openup/tool-specialist/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>ToolSpecialist</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+    
     <error-page>
         <exception-type>javax.ejb.EJBAccessException</exception-type>
         <location>/index.xhtml</location>
