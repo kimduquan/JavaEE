@@ -21,7 +21,6 @@
     <welcome-file-list>
         <welcome-file>faces/index.xhtml</welcome-file>
     </welcome-file-list>
-    
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>Analyst</web-resource-name>
@@ -202,7 +201,6 @@
             <transport-guarantee>CONFIDENTIAL</transport-guarantee>
         </user-data-constraint>
     </security-constraint>
-    
     <error-page>
         <exception-type>javax.ejb.EJBAccessException</exception-type>
         <location>/index.xhtml</location>
