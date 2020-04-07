@@ -19,6 +19,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.push.Push;
 import javax.faces.push.PushContext;
 import javax.inject.Inject;
+import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSConsumer;
 import javax.jms.JMSContext;
@@ -42,7 +43,10 @@ import javax.jms.Topic;
 public class MessageBean implements MessageListener, Serializable {
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
-    @Inject
+    
+    @Resource(lookup="java:comp/DefaultJMSConnectionFactory")
+    ConnectionFactory factory;
+    
     JMSContext jms;
     
     @Inject
@@ -50,7 +54,7 @@ public class MessageBean implements MessageListener, Serializable {
     //@SessionScoped
     PushContext push;
     
-    @Resource(lookup="java:app/OpenUP")
+    @Resource(mappedName="java:app/OpenUP")
     Topic topic;
     
     @Inject
@@ -67,15 +71,16 @@ public class MessageBean implements MessageListener, Serializable {
     @PostConstruct
     public void postConstruct() {
         try {
+            jms = factory.createContext();
             queue = jms.createTemporaryQueue();
             browser = jms.createBrowser(queue);
             consumer = jms.createConsumer(queue);
-            consumer.setMessageListener(this);
+            //consumer.setMessageListener(this);
             producer = jms.createProducer();
             producer.setJMSReplyTo(queue);
             topicConsumer = jms.createConsumer(topic);
-            topicConsumer.setMessageListener(this);
-            
+            //topicConsumer.setMessageListener(this);
+            jms.start();
             Message msg = jms.createObjectMessage();
             msg.setStringProperty("callerPrincipalName", principal.getName());
             producer.send(topic, msg);
@@ -99,6 +104,9 @@ public class MessageBean implements MessageListener, Serializable {
             topicConsumer = null;
             destinations.clear();
             destinations = null;
+            jms.stop();
+            jms.close();
+            jms = null;
         } catch (JMSException ex) {
             Logger.getLogger(MessageBean.class.getName()).log(Level.SEVERE, null, ex);
         }

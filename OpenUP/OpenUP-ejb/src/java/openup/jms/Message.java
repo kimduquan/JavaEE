@@ -29,13 +29,9 @@ public class Message {
     @Inject
     MessageBean msg;
     
-    @Inject
-    Session session;
-    
     @GET
     public List<String> getDestinations(){
-        //return msg.getDestinations();
-        return session.cache.getDestinations();
+        return msg.getDestinations();
     }
     
     @POST
