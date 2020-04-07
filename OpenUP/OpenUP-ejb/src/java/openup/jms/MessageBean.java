@@ -5,113 +5,49 @@
  */
 package openup.jms;
 
-import java.io.Serializable;
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
-import javax.enterprise.context.SessionScoped;
+import javax.ejb.ActivationConfigProperty;
+import javax.ejb.MessageDriven;
 import javax.faces.push.Push;
 import javax.faces.push.PushContext;
 import javax.inject.Inject;
-import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
-import javax.jms.JMSConsumer;
 import javax.jms.JMSContext;
+import javax.jms.JMSDestinationDefinition;
 import javax.jms.JMSException;
-import javax.jms.JMSProducer;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
-import javax.jms.QueueBrowser;
-import javax.jms.TemporaryQueue;
 import javax.jms.TextMessage;
-import javax.jms.Topic;
 
 /**
  *
  * @author FOXCONN
  */
-//@Stateful
-//@LocalBean
-@SessionScoped
-public class MessageBean implements MessageListener, Serializable {
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+@JMSDestinationDefinition(name = "java:app/OpenUP", interfaceName = "javax.jms.Topic", resourceAdapter = "jmsra", destinationName = "OpenUP")
+@MessageDriven(activationConfig = {
+    @ActivationConfigProperty(propertyName = "clientId", propertyValue = "java:app/OpenUP"),
+    @ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "java:app/OpenUP"),
+    @ActivationConfigProperty(propertyName = "subscriptionDurability", propertyValue = "Durable"),
+    @ActivationConfigProperty(propertyName = "subscriptionName", propertyValue = "java:app/OpenUP"),
+    @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Topic")
+})
+public class MessageBean implements MessageListener {
     
-    @Resource(lookup="java:comp/DefaultJMSConnectionFactory")
-    ConnectionFactory factory;
+    @Inject 
+    Application app;
     
+    @Inject
     JMSContext jms;
     
     @Inject
     @Push(channel="message")
-    //@SessionScoped
     PushContext push;
     
-    @Resource(mappedName="java:app/OpenUP")
-    Topic topic;
-    
-    @Inject
-    Principal principal;
-    
-    TemporaryQueue queue;
-    JMSConsumer consumer;
-    JMSProducer producer;
-    QueueBrowser browser;
-    JMSConsumer topicConsumer;
-    
-    ConcurrentHashMap<String, Destination> destinations = new ConcurrentHashMap<>();
-    
-    @PostConstruct
-    public void postConstruct() {
-        try {
-            jms = factory.createContext();
-            queue = jms.createTemporaryQueue();
-            browser = jms.createBrowser(queue);
-            consumer = jms.createConsumer(queue);
-            //consumer.setMessageListener(this);
-            producer = jms.createProducer();
-            producer.setJMSReplyTo(queue);
-            topicConsumer = jms.createConsumer(topic);
-            //topicConsumer.setMessageListener(this);
-            jms.start();
-            Message msg = jms.createObjectMessage();
-            msg.setStringProperty("callerPrincipalName", principal.getName());
-            producer.send(topic, msg);
-        } catch (Exception ex) {
-            Logger.getLogger(MessageBean.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public MessageBean() {
     }
     
-    @PreDestroy
-    public void preDestroy() {
-        try {
-            browser.close();
-            browser = null;
-            consumer.close();
-            consumer = null;
-            producer.clearProperties();
-            producer = null;
-            queue.delete();
-            queue = null;
-            topicConsumer.close();
-            topicConsumer = null;
-            destinations.clear();
-            destinations = null;
-            jms.stop();
-            jms.close();
-            jms = null;
-        } catch (JMSException ex) {
-            Logger.getLogger(MessageBean.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
     @Override
     public void onMessage(Message message) {
         try {
@@ -119,47 +55,41 @@ public class MessageBean implements MessageListener, Serializable {
                 onObjectMessage((ObjectMessage)message);
             }
             else if(message instanceof TextMessage){
-                synchronized(push){
-                    onTextMessage((TextMessage)message);
-                }
+                onTextMessage((TextMessage)message);
             }
-            message.acknowledge();
+            if(message != null){
+                message.acknowledge();
+            }
         } catch (JMSException ex) {
             Logger.getLogger(MessageBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    void onObjectMessage(ObjectMessage message) throws JMSException {
-        if(message.propertyExists("callerPrincipalName")){
-            String callerPrincipalName = message.getStringProperty("callerPrincipalName");
-            Destination destination = message.getJMSReplyTo();
-            if(destination != null){
-                destinations.put(callerPrincipalName, destination);
+    void onObjectMessage(ObjectMessage message) throws JMSException{
+        Destination destination = message.getJMSReplyTo();
+        if(destination != null){
+            app.destinations.forEach((key, value) -> {
+                try {
+                    ObjectMessage msg = jms.createObjectMessage();
+                    msg.setStringProperty("callerPrincipalName", key);
+                    msg.setJMSReplyTo(value);
+                    jms.createProducer().send(destination, msg);
+                } catch (JMSException ex) {
+                    Logger.getLogger(MessageBean.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+            if(message.propertyExists("callerPrincipalName")){
+                String callerPrincipalName = message.getStringProperty("callerPrincipalName");
+                app.destinations.put(callerPrincipalName, destination);
             }
         }
     }
     
     void onTextMessage(TextMessage message) throws JMSException {
-        push.send(message.getText());
-    }
-    
-    public List<String> getDestinations(){
-        List<String> result = new ArrayList<>();
-        destinations.keySet().forEach((key) -> {
-            result.add(key);
-        });
-        return result;
-    }
-    
-    public void send(String destination, String text){
-        if(destinations.containsKey(destination)){
-            Destination dest = destinations.get(destination);
-            if(dest != null){
-                synchronized(push){
-                    TextMessage textMsg = jms.createTextMessage(text);
-                    producer.send(dest, textMsg);
-                    push.send(text);
-                }
+        if(message.propertyExists("callerPrincipalName")){
+            String callerPrincipalName = message.getStringProperty("callerPrincipalName");
+            if(app.destinations.containsKey(callerPrincipalName)){
+                push.send(message.getText(), callerPrincipalName);
             }
         }
     }
