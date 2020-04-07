@@ -12,12 +12,12 @@ import javax.websocket.server.ServerEndpoint;
  *
  * @author FOXCONN
  */
-@ServerEndpoint("/endpoint")
+@ServerEndpoint("/message")
 public class OpenUPEndpoint {
 
     @OnMessage
     public String onMessage(String message) {
-        return null;
+        return message;
     }
     
 }
