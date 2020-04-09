@@ -11,16 +11,16 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
 import javax.inject.Inject;
-import javax.jms.JMSContext;
 import javax.jms.JMSException;
 import javax.jms.ObjectMessage;
 import javax.jms.QueueBrowser;
-import javax.jms.TextMessage;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 
 /**
  *
@@ -37,9 +37,15 @@ public class Message {
     private Session ss;
     
     @Inject
-    private JMSContext jms;
+    private MessageConversation conversation;
+    
+    @POST
+    public void startSession(){
+        ss.getSession().start();
+    }
     
     @GET
+    @Path("/destination")
     public List<String> getDestinations() throws JMSException{
         List<String> result = new ArrayList<>();
         SessionBean ssBean = ss.getSession();
@@ -55,24 +61,42 @@ public class Message {
         return result;
     }
     
-    @POST
-    @Path("/{destination}/")
-    public void send(
-            @PathParam("destination") String destination, 
-            @FormParam("message") String message) throws JMSException{
+    @GET
+    @Path("/conversation/{destination}/")
+    public String getConversation(@PathParam("destination") String destination) throws JMSException{
+        String result = "";
         Enumeration msgs = ss.getSession().getBrowser().getEnumeration();
         while(msgs.hasMoreElements()){
             ObjectMessage msg = (ObjectMessage)msgs.nextElement();
             if(msg.propertyExists("callerPrincipalName")){
                 String callerPrincipalName = msg.getStringProperty("callerPrincipalName");
                 if(callerPrincipalName.equals(destination)){
-                    TextMessage newMsg = jms.createTextMessage(message);
-                    newMsg.setStringProperty("callerPrincipalName", destination);
-                    ss.getSession().getProducer().send(msg.getJMSReplyTo(), newMsg);
-                    ss.getSession().getConsumer().receive();
+                    conversation.begin();
+                    conversation.setPrincipalName(callerPrincipalName);
+                    conversation.setDestination(msg.getJMSReplyTo());
+                    result = conversation.getId();
                     break;
                 }
             }
+        }
+        return result;
+    }
+    
+    @POST
+    @Path("/conversation")
+    public void sendMessage(
+            @FormParam("message") String message, @QueryParam("cid") String cid){
+        if(!cid.isEmpty()){
+            ss.getSession().getProducer().send(conversation.getDestination(), message);
+            ss.getSession().getConsumer().receive();
+        }
+    }
+    
+    @DELETE
+    @Path("/conversation")
+    public void endConversation(@QueryParam("cid") String cid){
+        if(!cid.isEmpty()){
+            conversation.end();
         }
     }
 }

@@ -63,13 +63,19 @@ public class SessionBean {
             producer.setJMSReplyTo(queue);
             topicConsumer = jms.createConsumer(topic);
             
+        } catch (Exception ex) {
+            Logger.getLogger(Session.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void start(){
+        try {
             jms.start();
             ObjectMessage msg = jms.createObjectMessage();
             msg.setStringProperty("callerPrincipalName", principal.getName());
             producer.send(topic, msg);
-            
-        } catch (Exception ex) {
-            Logger.getLogger(Session.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JMSException ex) {
+            Logger.getLogger(SessionBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -83,7 +89,7 @@ public class SessionBean {
             topicConsumer.close();
             jms.stop();
             jms.close();
-        } catch (Exception ex) {
+        } catch (JMSException ex) {
             Logger.getLogger(SessionBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
