@@ -8,6 +8,7 @@ package openup.jms;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.ActivationConfigProperty;
+import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
 import javax.faces.push.Push;
 import javax.faces.push.PushContext;
@@ -35,15 +36,15 @@ import javax.jms.TextMessage;
 })
 public class MessageBean implements MessageListener {
     
-    @Inject 
-    Application app;
+    @EJB 
+    private ApplicationBean app;
     
     @Inject
-    JMSContext jms;
+    private JMSContext jms;
     
     @Inject
     @Push(channel="message")
-    PushContext push;
+    private PushContext push;
     
     public MessageBean() {
     }
@@ -68,7 +69,7 @@ public class MessageBean implements MessageListener {
     void onObjectMessage(ObjectMessage message) throws JMSException{
         Destination destination = message.getJMSReplyTo();
         if(destination != null){
-            app.destinations.forEach((key, value) -> {
+            app.getDestinations().forEach((key, value) -> {
                 try {
                     ObjectMessage msg = jms.createObjectMessage();
                     msg.setStringProperty("callerPrincipalName", key);
@@ -80,7 +81,7 @@ public class MessageBean implements MessageListener {
             });
             if(message.propertyExists("callerPrincipalName")){
                 String callerPrincipalName = message.getStringProperty("callerPrincipalName");
-                app.destinations.put(callerPrincipalName, destination);
+                app.getDestinations().put(callerPrincipalName, destination);
             }
         }
     }
@@ -88,7 +89,7 @@ public class MessageBean implements MessageListener {
     void onTextMessage(TextMessage message) throws JMSException {
         if(message.propertyExists("callerPrincipalName")){
             String callerPrincipalName = message.getStringProperty("callerPrincipalName");
-            if(app.destinations.containsKey(callerPrincipalName)){
+            if(app.getDestinations().containsKey(callerPrincipalName)){
                 push.send(message.getText(), callerPrincipalName);
             }
         }

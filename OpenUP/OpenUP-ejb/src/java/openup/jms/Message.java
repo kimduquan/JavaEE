@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import javax.jms.JMSContext;
 import javax.jms.JMSException;
 import javax.jms.ObjectMessage;
+import javax.jms.QueueBrowser;
 import javax.jms.TextMessage;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -33,15 +34,17 @@ public class Message {
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
     @Inject
-    Session ss;
+    private Session ss;
     
     @Inject
-    JMSContext jms;
+    private JMSContext jms;
     
     @GET
     public List<String> getDestinations() throws JMSException{
         List<String> result = new ArrayList<>();
-        Enumeration msgs = ss.browser.getEnumeration();
+        SessionBean ssBean = ss.getSession();
+        QueueBrowser browser = ssBean.getBrowser();
+        Enumeration msgs = browser.getEnumeration();
         while(msgs.hasMoreElements()){
             ObjectMessage msg = (ObjectMessage)msgs.nextElement();
             if(msg.propertyExists("callerPrincipalName")){
@@ -57,7 +60,7 @@ public class Message {
     public void send(
             @PathParam("destination") String destination, 
             @FormParam("message") String message) throws JMSException{
-        Enumeration msgs = ss.browser.getEnumeration();
+        Enumeration msgs = ss.getSession().getBrowser().getEnumeration();
         while(msgs.hasMoreElements()){
             ObjectMessage msg = (ObjectMessage)msgs.nextElement();
             if(msg.propertyExists("callerPrincipalName")){
@@ -65,8 +68,8 @@ public class Message {
                 if(callerPrincipalName.equals(destination)){
                     TextMessage newMsg = jms.createTextMessage(message);
                     newMsg.setStringProperty("callerPrincipalName", destination);
-                    ss.producer.send(msg.getJMSReplyTo(), newMsg);
-                    ss.consumer.receive();
+                    ss.getSession().getProducer().send(msg.getJMSReplyTo(), newMsg);
+                    ss.getSession().getConsumer().receive();
                     break;
                 }
             }

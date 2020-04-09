@@ -5,29 +5,32 @@
  */
 package openup.jms;
 
-import java.io.Serializable;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.ejb.EJB;
-import javax.enterprise.context.SessionScoped;
+import javax.ejb.Singleton;
+import javax.ejb.LocalBean;
+import javax.jms.Destination;
 
 /**
  *
  * @author FOXCONN
  */
-@SessionScoped
-public class Session implements Serializable {
+@Singleton
+@LocalBean
+public class ApplicationBean {
+
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
-    @EJB
-    private SessionBean session;
+    private ConcurrentHashMap<String, Destination> destinations = new ConcurrentHashMap<>();
     
     @PreDestroy
     void preDestroy(){
-        session.remove();
+        destinations.clear();
+        destinations = null;
     }
     
-    SessionBean getSession(){
-        return session;
+    public ConcurrentHashMap<String, Destination> getDestinations(){
+        return destinations;
     }
 }
