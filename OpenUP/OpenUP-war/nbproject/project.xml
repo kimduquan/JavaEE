@@ -10,6 +10,9 @@
                 <library dirs="100">
                     <file>${reference.OpenUP-ejb.dist}</file>
                 </library>
+                <library dirs="100">
+                    <file>${reference.Message-ejb.dist}</file>
+                </library>
                 <library dirs="200">
                     <file>${libs.javaee-api-8.0.classpath}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
@@ -37,6 +40,14 @@
         </data>
         <libraries xmlns="http://www.netbeans.org/ns/cdnjs-libraries/1"/>
         <references xmlns="http://www.netbeans.org/ns/ant-project-references/1">
+            <reference>
+                <foreign-project>Message-ejb</foreign-project>
+                <artifact-type>jar</artifact-type>
+                <script>build.xml</script>
+                <target>dist</target>
+                <clean-target>clean</clean-target>
+                <id>dist</id>
+            </reference>
             <reference>
                 <foreign-project>OpenUP-ejb</foreign-project>
                 <artifact-type>jar</artifact-type>
