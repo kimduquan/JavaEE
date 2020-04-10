@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.jms;
+package openup.message;
 
+import openup.message.ejb.SessionBean;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -27,7 +28,7 @@ public class Session implements Serializable {
         session.remove();
     }
     
-    SessionBean getSession(){
+    public SessionBean getSession(){
         return session;
     }
 }

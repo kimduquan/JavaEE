@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.jms;
+package openup.message;
 
+import openup.message.ejb.ConversationBean;
 import java.io.Serializable;
+import javax.ejb.EJB;
 import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
 import javax.inject.Inject;
@@ -19,40 +21,47 @@ import javax.jms.Destination;
 public class MessageConversation implements Serializable {
     
     @Inject
-    private Conversation conversation;
+    private Conversation scope;
+    
+    @EJB
+    private ConversationBean conversation;
     
     private Destination destination;
     private String principalName;
     
-    void begin(){
-        if(conversation.isTransient()){
-            conversation.begin();
+    public void begin(){
+        if(scope.isTransient()){
+            scope.begin();
         }
     }
     
-    void end(){
-        if(!conversation.isTransient()){
-            conversation.begin();
+    public void end(){
+        if(!scope.isTransient()){
+            scope.begin();
         }
     }
     
-    String getId(){
-        return conversation.getId();
+    public ConversationBean getConversation() {
+        return conversation;
     }
     
-    void setPrincipalName(String name){
+    public String getId(){
+        return scope.getId();
+    }
+    
+    public void setPrincipalName(String name){
         this.principalName = name;
     }
     
-    void setDestination(Destination dest){
+    public void setDestination(Destination dest){
         this.destination = dest;
     }
     
-    Destination getDestination(){
+    public Destination getDestination(){
         return this.destination;
     }
     
-    String getPrincipalName(){
+    public String getPrincipalName(){
         return this.principalName;
     }
 }

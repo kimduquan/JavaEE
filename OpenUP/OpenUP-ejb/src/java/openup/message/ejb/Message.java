@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.jms;
+package openup.message.ejb;
 
+import openup.message.ejb.SessionBean;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -21,6 +22,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
+import openup.message.MessageConversation;
+import openup.message.Session;
 
 /**
  *

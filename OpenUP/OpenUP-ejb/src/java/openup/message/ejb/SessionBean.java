@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.jms;
+package openup.message.ejb;
 
 import java.security.Principal;
 import java.util.logging.Level;
@@ -24,6 +24,7 @@ import javax.jms.ObjectMessage;
 import javax.jms.QueueBrowser;
 import javax.jms.TemporaryQueue;
 import javax.jms.Topic;
+import openup.message.Session;
 
 /**
  *
@@ -80,7 +81,7 @@ public class SessionBean {
     }
     
     @Remove
-    void remove(){
+    public void remove(){
         try {
             browser.close();
             consumer.close();
