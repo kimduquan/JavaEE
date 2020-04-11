@@ -5,7 +5,6 @@
  */
 package message.ejb;
 
-import message.ejb.ApplicationBean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.ActivationConfigProperty;
@@ -14,34 +13,28 @@ import javax.ejb.MessageDriven;
 import javax.faces.push.Push;
 import javax.faces.push.PushContext;
 import javax.inject.Inject;
-import javax.jms.Destination;
-import javax.jms.JMSContext;
 import javax.jms.JMSDestinationDefinition;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
-import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
 
 /**
  *
  * @author FOXCONN
  */
-@JMSDestinationDefinition(name = "java:app/OpenUP", interfaceName = "javax.jms.Topic", resourceAdapter = "jmsra", destinationName = "OpenUP")
+@JMSDestinationDefinition(name = "java:app/Message", interfaceName = "javax.jms.Topic", resourceAdapter = "jmsra", destinationName = "Message")
 @MessageDriven(activationConfig = {
-    @ActivationConfigProperty(propertyName = "clientId", propertyValue = "java:app/OpenUP"),
-    @ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "java:app/OpenUP"),
+    @ActivationConfigProperty(propertyName = "clientId", propertyValue = "java:app/Message"),
+    @ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "java:app/Message"),
     @ActivationConfigProperty(propertyName = "subscriptionDurability", propertyValue = "Durable"),
-    @ActivationConfigProperty(propertyName = "subscriptionName", propertyValue = "java:app/OpenUP"),
+    @ActivationConfigProperty(propertyName = "subscriptionName", propertyValue = "java:app/Message"),
     @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Topic")
 })
 public class MessageBean implements MessageListener {
     
-    @EJB 
+    @EJB
     private ApplicationBean app;
-    
-    @Inject
-    private JMSContext jms;
     
     @Inject
     @Push(channel="message")
@@ -53,10 +46,7 @@ public class MessageBean implements MessageListener {
     @Override
     public void onMessage(Message message) {
         try {
-            if(message instanceof ObjectMessage){
-                onObjectMessage((ObjectMessage)message);
-            }
-            else if(message instanceof TextMessage){
+            if(message instanceof TextMessage){
                 onTextMessage((TextMessage)message);
             }
             if(message != null){
@@ -67,31 +57,11 @@ public class MessageBean implements MessageListener {
         }
     }
     
-    void onObjectMessage(ObjectMessage message) throws JMSException{
-        Destination destination = message.getJMSReplyTo();
-        if(destination != null){
-            app.getDestinations().forEach((key, value) -> {
-                try {
-                    ObjectMessage msg = jms.createObjectMessage();
-                    msg.setStringProperty("callerPrincipalName", key);
-                    msg.setJMSReplyTo(value);
-                    jms.createProducer().send(destination, msg);
-                } catch (JMSException ex) {
-                    Logger.getLogger(MessageBean.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            });
-            if(message.propertyExists("callerPrincipalName")){
-                String callerPrincipalName = message.getStringProperty("callerPrincipalName");
-                app.getDestinations().put(callerPrincipalName, destination);
-            }
-        }
-    }
-    
     void onTextMessage(TextMessage message) throws JMSException {
-        if(message.propertyExists("callerPrincipalName")){
-            String callerPrincipalName = message.getStringProperty("callerPrincipalName");
-            if(app.getDestinations().containsKey(callerPrincipalName)){
-                push.send(message.getText(), callerPrincipalName);
+        if(message.propertyExists("destination")){
+            String destination = message.getStringProperty("destination");
+            if(app.getDestinations().containsKey(destination)){
+                push.send(message.getText(), destination);
             }
         }
     }

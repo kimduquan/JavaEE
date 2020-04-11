@@ -41,28 +41,31 @@ public class SessionBean {
     
     private JMSContext jms;
     
-    @Resource(mappedName="java:app/OpenUP")
-    private Topic topic;
+    @Resource(mappedName="java:app/Message")
+    private Topic messages;
+    
+    @Resource(mappedName="java:app/Destination")
+    private Topic destinations;
     
     @Inject
     private Principal principal;
     
     private TemporaryQueue queue;
-    private JMSConsumer consumer;
+    private JMSConsumer destinationsConsumer;
     private JMSProducer producer;
-    private QueueBrowser browser;
-    private JMSConsumer topicConsumer;
+    private QueueBrowser destinationBrowser;
+    private JMSConsumer messagesConsumer;
     
     @PostConstruct
     void postConstruct() {
         try {
             jms = factory.createContext();
             queue = jms.createTemporaryQueue();
-            browser = jms.createBrowser(queue);
-            consumer = jms.createConsumer(queue);
+            destinationBrowser = jms.createBrowser(queue);
+            destinationsConsumer = jms.createConsumer(queue);
             producer = jms.createProducer();
             producer.setJMSReplyTo(queue);
-            topicConsumer = jms.createConsumer(topic);
+            messagesConsumer = jms.createConsumer(messages);
             
         } catch (Exception ex) {
             Logger.getLogger(Session.class.getName()).log(Level.SEVERE, null, ex);
@@ -74,7 +77,7 @@ public class SessionBean {
             jms.start();
             ObjectMessage msg = jms.createObjectMessage();
             msg.setStringProperty("callerPrincipalName", principal.getName());
-            producer.send(topic, msg);
+            producer.send(destinations, msg);
         } catch (JMSException ex) {
             Logger.getLogger(SessionBean.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -83,11 +86,11 @@ public class SessionBean {
     @Remove
     public void remove(){
         try {
-            browser.close();
-            consumer.close();
+            destinationBrowser.close();
+            destinationsConsumer.close();
             producer.clearProperties();
             queue.delete();
-            topicConsumer.close();
+            messagesConsumer.close();
             jms.stop();
             jms.close();
         } catch (JMSException ex) {
@@ -97,16 +100,16 @@ public class SessionBean {
     
     @PreDestroy
     void preDestroy() {
-        browser = null;
-        consumer = null;
+        destinationBrowser = null;
+        destinationsConsumer = null;
         producer = null;
         queue = null;
-        topicConsumer = null;
+        messagesConsumer = null;
         jms = null;
     }
     
     public QueueBrowser getBrowser(){
-        return browser;
+        return destinationBrowser;
     }
     
     public JMSProducer getProducer(){
@@ -114,6 +117,6 @@ public class SessionBean {
     }
     
     public JMSConsumer getConsumer(){
-        return consumer;
+        return destinationsConsumer;
     }
 }
