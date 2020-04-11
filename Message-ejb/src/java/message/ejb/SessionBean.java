@@ -64,9 +64,7 @@ public class SessionBean {
             destinationBrowser = jms.createBrowser(queue);
             destinationsConsumer = jms.createConsumer(queue);
             producer = jms.createProducer();
-            producer.setJMSReplyTo(queue);
             messagesConsumer = jms.createConsumer(messages);
-            
         } catch (Exception ex) {
             Logger.getLogger(Session.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -74,9 +72,10 @@ public class SessionBean {
     
     public void start(){
         try {
+            producer.setJMSReplyTo(queue);
             jms.start();
             ObjectMessage msg = jms.createObjectMessage();
-            msg.setStringProperty("callerPrincipalName", principal.getName());
+            msg.setStringProperty("principalName", principal.getName());
             producer.send(destinations, msg);
         } catch (JMSException ex) {
             Logger.getLogger(SessionBean.class.getName()).log(Level.SEVERE, null, ex);

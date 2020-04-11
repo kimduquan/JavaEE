@@ -41,13 +41,8 @@ public class MessageBean {
     @Inject
     private MessageConversation conversation;
     
-    @POST
-    public void startSession(){
-        ss.getSession().start();
-    }
-    
     @GET
-    @Path("/destination")
+    @Path("/destinations")
     public List<String> getDestinations() throws JMSException{
         List<String> result = new ArrayList<>();
         SessionBean ssBean = ss.getSession();
@@ -55,9 +50,9 @@ public class MessageBean {
         Enumeration msgs = browser.getEnumeration();
         while(msgs.hasMoreElements()){
             ObjectMessage msg = (ObjectMessage)msgs.nextElement();
-            if(msg.propertyExists("callerPrincipalName")){
-                String callerPrincipalName = msg.getStringProperty("callerPrincipalName");
-                result.add(callerPrincipalName);
+            if(msg.propertyExists("principalName")){
+                String principalName = msg.getStringProperty("principalName");
+                result.add(principalName);
             }
         }
         return result;

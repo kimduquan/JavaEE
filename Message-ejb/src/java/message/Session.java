@@ -7,6 +7,7 @@ package message;
 
 import message.ejb.SessionBean;
 import java.io.Serializable;
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
@@ -21,6 +22,11 @@ public class Session implements Serializable {
     // "Insert Code > Add Business Method")
     @EJB
     private SessionBean session;
+    
+    @PostConstruct
+    void postConstruct(){
+        session.start();
+    }
     
     @PreDestroy
     void preDestroy(){
