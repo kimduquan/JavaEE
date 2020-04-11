@@ -52,7 +52,7 @@ public class DestinationBean implements MessageListener {
                 message.acknowledge();
             }
         } catch (JMSException ex) {
-            Logger.getLogger(MessageBean.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MessagePushBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -66,7 +66,7 @@ public class DestinationBean implements MessageListener {
                     msg.setJMSReplyTo(value);
                     jms.createProducer().send(destination, msg);
                 } catch (JMSException ex) {
-                    Logger.getLogger(MessageBean.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(MessagePushBean.class.getName()).log(Level.SEVERE, null, ex);
                 }
             });
             if(message.propertyExists("principalName")){

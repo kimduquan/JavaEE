@@ -31,7 +31,7 @@ import javax.jms.TextMessage;
     @ActivationConfigProperty(propertyName = "subscriptionName", propertyValue = "java:app/Message"),
     @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Topic")
 })
-public class MessageBean implements MessageListener {
+public class MessagePushBean implements MessageListener {
     
     @EJB
     private ApplicationBean app;
@@ -40,7 +40,7 @@ public class MessageBean implements MessageListener {
     @Push(channel="message")
     private PushContext push;
     
-    public MessageBean() {
+    public MessagePushBean() {
     }
     
     @Override
@@ -53,7 +53,7 @@ public class MessageBean implements MessageListener {
                 message.acknowledge();
             }
         } catch (JMSException ex) {
-            Logger.getLogger(MessageBean.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MessagePushBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
