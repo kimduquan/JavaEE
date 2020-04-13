@@ -8,16 +8,21 @@ package message.ejb;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.ActivationConfigProperty;
-import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
+import javax.enterprise.event.Event;
 import javax.faces.push.Push;
 import javax.faces.push.PushContext;
 import javax.inject.Inject;
+import javax.jms.Destination;
+import javax.jms.JMSConsumer;
+import javax.jms.JMSContext;
 import javax.jms.JMSDestinationDefinition;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
+import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
+import message.event.MessageEvent;
 
 /**
  *
@@ -33,12 +38,15 @@ import javax.jms.TextMessage;
 })
 public class MessagePushBean implements MessageListener {
     
-    @EJB
-    private ApplicationBean app;
-    
     @Inject
     @Push(channel="message")
     private PushContext push;
+    
+    @Inject
+    private JMSContext jms;
+    
+    @Inject
+    private Event<MessageEvent> event;
     
     public MessagePushBean() {
     }
@@ -46,23 +54,53 @@ public class MessagePushBean implements MessageListener {
     @Override
     public void onMessage(Message message) {
         try {
-            if(message instanceof TextMessage){
-                onTextMessage((TextMessage)message);
-            }
-            if(message != null){
-                message.acknowledge();
+            if(message instanceof ObjectMessage){
+                Destination replyTo = message.getJMSReplyTo();
+                if(replyTo != null){
+                    Message realMsg = null;
+                    JMSConsumer consumer = jms.createConsumer(replyTo);
+                    if(message.propertyExists("timeout")){
+                        long timeout = message.getLongProperty("timeout");
+                        realMsg = consumer.receive(timeout);
+                    }
+                    if(realMsg instanceof TextMessage){
+                        TextMessage textMsg = (TextMessage)realMsg;
+                        MessageEvent msgEvent = buildMessage(textMsg);
+                        sendMessage(msgEvent);
+                        event.fire(msgEvent);
+                        jms.createProducer().send(replyTo, jms.createObjectMessage());
+                    }
+                }
             }
         } catch (JMSException ex) {
             Logger.getLogger(MessagePushBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    void onTextMessage(TextMessage message) throws JMSException {
-        if(message.propertyExists("destination")){
-            String destination = message.getStringProperty("destination");
-            if(app.getDestinations().containsKey(destination)){
-                push.send(message.getText(), destination);
-            }
+    MessageEvent buildMessage(TextMessage msg) throws JMSException{
+        MessageEvent msgEvent = new MessageEvent();
+        if(msg.propertyExists("cid")){
+            msgEvent.setCid(msg.getStringProperty("cid"));
+        }
+        if(msg.propertyExists("destination")){
+            msgEvent.setDestination(msg.getStringProperty("destination"));
+        }
+        if(msg.propertyExists("replyTo")){
+            msgEvent.setReplyTo(msg.getStringProperty("replyTo"));
+        }
+        msgEvent.setText(msg.getText());
+        return msgEvent;
+    }
+    
+    void sendMessage(MessageEvent msgEvent){
+        if(msgEvent.getCid() != null && msgEvent.getCid().isEmpty() == false){
+            push.send(msgEvent.getText(), msgEvent.getCid());
+        }
+        else if(msgEvent.getDestination() != null && msgEvent.getDestination().isEmpty() == false){
+            push.send(msgEvent.getText(), msgEvent.getDestination());
+        }
+        else if(msgEvent.getReplyTo() != null && msgEvent.getReplyTo().isEmpty() == false){
+            push.send(msgEvent.getText(), msgEvent.getReplyTo());
         }
     }
 }
