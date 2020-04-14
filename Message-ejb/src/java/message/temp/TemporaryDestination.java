@@ -24,13 +24,13 @@ import javax.jms.ObjectMessage;
 public abstract class TemporaryDestination implements MessageListener {
     
     @EJB
-    protected TemporaryBean app;
+    private DestinationsBean app;
     
     @Inject
-    protected JMSContext jms;
+    private JMSContext jms;
     
     @Inject
-    protected Event<DestinationDefinition> destinationEvent;
+    private Event<DestinationDefinition> destinationEvent;
     
     @Override
     public void onMessage(Message message) {

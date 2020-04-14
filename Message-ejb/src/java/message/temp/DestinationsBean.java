@@ -27,7 +27,7 @@ import javax.jms.TemporaryTopic;
 @Singleton
 @LocalBean
 @AccessTimeout(value=6, unit=TimeUnit.MINUTES)
-public class TemporaryBean {
+public class DestinationsBean {
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")

@@ -6,6 +6,7 @@
 package message.temp;
 
 import javax.ejb.ActivationConfigProperty;
+import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
 import javax.jms.JMSDestinationDefinition;
 import javax.jms.JMSException;
@@ -25,9 +26,12 @@ import javax.jms.Message;
 })
 public class TemporaryTopicBean extends TemporaryDestination {
 
+    @EJB
+    private TopicListenerBean topic;
+    
     @Override
     protected void onTemporaryMessage(Message message) throws JMSException {
-        
+        topic.onMessage(message);
     }
     
 }

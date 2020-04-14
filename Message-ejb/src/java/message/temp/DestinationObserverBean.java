@@ -7,6 +7,7 @@ package message.temp;
 
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
+import javax.enterprise.event.Observes;
 
 /**
  *
@@ -14,8 +15,11 @@ import javax.ejb.LocalBean;
  */
 @Stateless
 @LocalBean
-public class ClientBean {
+public class DestinationObserverBean {
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
+    public void observe(@Observes DestinationDefinition destDef){
+        
+    }
 }

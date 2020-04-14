@@ -24,11 +24,11 @@ import javax.jms.Message;
 public class TemporaryQueueBean extends TemporaryDestination {
     
     @EJB
-    private QueueListenerBean queueBean;
+    private QueueListenerBean queue;
 
     @Override
     protected void onTemporaryMessage(Message message) throws JMSException {
-        queueBean.onMessage(message);
+        queue.onMessage(message);
     }
     
     

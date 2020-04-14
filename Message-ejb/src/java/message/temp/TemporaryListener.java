@@ -37,8 +37,8 @@ public abstract class TemporaryListener implements MessageListener {
         Destination replyTo = message.getJMSReplyTo();
         JMSConsumer consumer = jms.createConsumer(replyTo);
         Message realMsg = null;
-        if(message.propertyExists("timeout")){
-            long timeout = message.getLongProperty("timeout");
+        if(message.propertyExists("receive_timeout")){
+            long timeout = message.getLongProperty("receive_timeout");
             realMsg = consumer.receive(timeout);
         }
         else{
