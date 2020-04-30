@@ -5,6 +5,7 @@
  */
 package message.temp;
 
+import message.DestinationDefinition;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;

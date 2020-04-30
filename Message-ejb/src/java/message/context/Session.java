@@ -7,13 +7,10 @@ package message.context;
 
 import message.ejb.SessionBean;
 import java.io.Serializable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
-import javax.jms.JMSException;
 
 /**
  *
@@ -28,11 +25,7 @@ public class Session implements Serializable {
     
     @PostConstruct
     void postConstruct(){
-        try {
-            session.start();
-        } catch (JMSException ex) {
-            Logger.getLogger(Session.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        session.start();
     }
     
     @PreDestroy

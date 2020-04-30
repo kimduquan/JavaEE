@@ -25,13 +25,13 @@ public class MessageConversation implements Serializable {
     @EJB
     private ConversationBean conversation;
     
-    public String begin(){
-        String cid = "";
+    public boolean begin(){
+        boolean res = false;
         if(scope.isTransient()){
             scope.begin();
-            cid = scope.getId();
+            res = true;
         }
-        return cid;
+        return res;
     }
     
     public void end(){
@@ -42,5 +42,9 @@ public class MessageConversation implements Serializable {
     
     public ConversationBean getConversation(){
         return conversation;
+    }
+    
+    public String getId(){
+        return scope.getId();
     }
 }

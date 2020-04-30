@@ -5,6 +5,7 @@
  */
 package message.temp;
 
+import message.DestinationDefinition;
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;

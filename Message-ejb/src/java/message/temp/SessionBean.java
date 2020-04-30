@@ -15,6 +15,7 @@ import javax.ejb.Remove;
 import javax.inject.Inject;
 import javax.jms.JMSException;
 import javax.jms.Queue;
+import javax.jms.QueueBrowser;
 
 /**
  *
@@ -33,11 +34,11 @@ public class SessionBean {
     @Inject
     private Principal principal;
     
-    private Queue queue;
+    private Queue destinations;
     
     public void start(long timeout){
         try {
-            queue = context.createQueue(principal.getName(), timeout);
+            destinations = context.createQueue(principal.getName(), timeout);
         } catch (JMSException ex) {
             Logger.getLogger(SessionBean.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -45,6 +46,6 @@ public class SessionBean {
     
     @Remove
     public void remove(){
-        queue = null;
+        destinations = null;
     }
 }

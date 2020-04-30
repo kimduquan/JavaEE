@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package message.temp;
+package message;
 
 import java.io.Serializable;
 
@@ -12,8 +12,8 @@ import java.io.Serializable;
  * @author FOXCONN
  */
 public class DestinationDefinition implements Serializable {
-    String name;
-    String interfaceName;
-    String resourceAdapter;
-    String destinationName;
+    public String name;
+    public String interfaceName;
+    public String resourceAdapter;
+    public String destinationName;
 }

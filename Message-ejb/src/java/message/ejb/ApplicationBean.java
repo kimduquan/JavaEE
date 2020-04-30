@@ -5,18 +5,26 @@
  */
 package message.ejb;
 
-import java.util.HashMap;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
 import javax.ejb.AccessTimeout;
 import javax.ejb.Singleton;
 import javax.ejb.LocalBean;
 import javax.ejb.Lock;
 import javax.ejb.LockType;
-import javax.inject.Inject;
+import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSContext;
+import javax.jms.JMSException;
+import javax.jms.ObjectMessage;
+import javax.jms.Queue;
+import javax.jms.TemporaryQueue;
+import message.DestinationDefinition;
 
 /**
  *
@@ -29,40 +37,55 @@ public class ApplicationBean {
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
-    private ConcurrentHashMap<String, Destination> destinations = new ConcurrentHashMap<>();
+    private TemporaryQueue destinations;
     
-    @Inject
+    @Resource
+    private ConnectionFactory factory;
+    
     private JMSContext jms;
+    
+    @PostConstruct
+    void postConstruct(){
+        jms = factory.createContext();
+        destinations = jms.createTemporaryQueue();
+    }
     
     @PreDestroy
     void preDestroy(){
-        destinations.clear();
-        destinations = null;
+        try {
+            destinations.delete();
+            destinations = null;
+            jms.close();
+            jms = null;
+        } catch (JMSException ex) {
+            Logger.getLogger(ApplicationBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     @Lock(LockType.READ)
-    public Destination getDestination(String principalName){
-        return destinations.getOrDefault(principalName, null);
-    }
-    
-    @Lock(LockType.READ)
-    public HashMap<String, Destination> getDestinations(String principalName){
-        HashMap<String, Destination> dests = new HashMap<>();
-        dests.putAll(destinations);
-        dests.remove(principalName);
-        return dests;
+    public Queue getDestinations(){
+        return destinations;
     }
     
     @Lock(LockType.WRITE)
-    public Destination createDestination(String name){
+    public Destination createDestination(Map<String, String> activationConfig, DestinationDefinition destDef) throws JMSException{
         Destination destination = null;
-        if(!destinations.containsKey(name)){
+        if("javax.jms.Queue".equals(destDef.interfaceName)){
             destination = jms.createTemporaryQueue();
-            destinations.put(name, destination);
         }
-        else{
-            destination = destinations.get(name);
+        else if("javax.jms.Topic".equals(destDef.interfaceName)){
+            destination = jms.createTemporaryTopic();
         }
+        ObjectMessage objMsg = jms.createObjectMessage(destDef);
+        activationConfig.forEach((key, value) -> {
+            try {
+                objMsg.setStringProperty(key, value);
+            } catch (JMSException ex) {
+                Logger.getLogger(ApplicationBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        objMsg.setJMSReplyTo(destination);
+        jms.createProducer().send(destinations, objMsg);
         return destination;
     }
 }

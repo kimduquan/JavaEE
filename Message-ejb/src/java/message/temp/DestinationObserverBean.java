@@ -5,6 +5,7 @@
  */
 package message.temp;
 
+import message.DestinationDefinition;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
 import javax.enterprise.event.Observes;
