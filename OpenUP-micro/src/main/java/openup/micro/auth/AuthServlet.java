@@ -38,11 +38,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.auth.LoginConfig;
 
 /**
  *
  * @author FOXCONN
  */
+ @LoginConfig(authMethod="BASIC", realmName="file")
 @WebServlet(name = "AuthServlet", urlPatterns = {"/auth"})
 @ServletSecurity(
         value = @HttpConstraint(
