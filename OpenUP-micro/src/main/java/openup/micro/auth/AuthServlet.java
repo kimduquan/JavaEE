@@ -25,6 +25,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.security.enterprise.authentication.mechanism.http.BasicAuthenticationMechanismDefinition;
 import javax.security.enterprise.identitystore.LdapIdentityStoreDefinition;
@@ -44,14 +45,14 @@ import org.eclipse.microprofile.auth.LoginConfig;
  *
  * @author FOXCONN
  */
- @LoginConfig(authMethod="BASIC", realmName="file")
-@WebServlet(name = "AuthServlet", urlPatterns = {"/auth"})
+@WebServlet(name = "AuthServlet", urlPatterns = {"/auth/*"}, loadOnStartup = 1)
 @ServletSecurity(
-        value = @HttpConstraint(
+        @HttpConstraint(
                 transportGuarantee = TransportGuarantee.CONFIDENTIAL,
                 rolesAllowed = {"AnyRole"}
         )
 )
+@LoginConfig( authMethod = "BASIC", realmName = "file")
 @BasicAuthenticationMechanismDefinition( realmName = "file" )
 @LdapIdentityStoreDefinition(
         url = "ldap://localhost:10389",
@@ -61,6 +62,7 @@ import org.eclipse.microprofile.auth.LoginConfig;
         callerSearchBase = "ou=Roles,dc=OpenUP,dc=WSO2,dc=ORG",
         groupSearchBase = "ou=Roles,dc=OpenUP,dc=WSO2,dc=ORG"
 )
+@RolesAllowed("AnyRole")
 public class AuthServlet extends HttpServlet {
     
     private PrivateKey privateKey;
@@ -94,32 +96,6 @@ public class AuthServlet extends HttpServlet {
             Logger.getLogger(AuthServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet AuthServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet AuthServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -150,14 +126,16 @@ public class AuthServlet extends HttpServlet {
                                                 .build();
         
         SignedJWT signedJWT = new SignedJWT(header, claimsSet);
-        String token = "";
         try {
             signedJWT.sign(signer);
-            token = signedJWT.serialize();
+            String token = signedJWT.serialize();
+            response.addHeader(AUTHORIZATION, "Bearer ".concat(token));
+            try (PrintWriter out = response.getWriter()){
+                out.write(token);
+            }
         } catch (JOSEException ex) {
             Logger.getLogger(AuthServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-        response.addHeader(AUTHORIZATION, "Bearer ".concat(token));
     }
 
     /**
@@ -171,7 +149,6 @@ public class AuthServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
     }
 
     /**
