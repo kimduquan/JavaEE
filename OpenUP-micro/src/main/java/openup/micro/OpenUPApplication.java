@@ -19,7 +19,7 @@ import org.eclipse.microprofile.auth.LoginConfig;
  * @author FOXCONN
  */
 @ApplicationScoped
-@ApplicationPath("/")
+@ApplicationPath("/openup")
 @LoginConfig(authMethod="MP-JWT", realmName="file")
 @RolesAllowed("AnyRole")
 @Consumes(MediaType.APPLICATION_JSON)
