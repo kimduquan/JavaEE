@@ -1,93 +1,161 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>openup</groupId>
-    <artifactId>OpenUP-micro</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>war</packaging>
-    <name>OpenUP-micro</name>
-    
-    <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <failOnMissingWebXml>false</failOnMissingWebXml>
-        <jakartaee>8.0</jakartaee>
-    </properties>
-    
-    <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.eclipse.microprofile/microprofile -->
-        <dependency>
-            <groupId>org.eclipse.microprofile</groupId>
-            <artifactId>microprofile</artifactId>
-            <version>3.3</version>
-            <type>pom</type>
-            <scope>provided</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/com.nimbusds/nimbus-jose-jwt -->
-        <dependency>
-            <groupId>com.nimbusds</groupId>
-            <artifactId>nimbus-jose-jwt</artifactId>
-            <version>8.17.1</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.graphql/microprofile-graphql-api -->
-        <dependency>
-            <groupId>org.eclipse.microprofile.graphql</groupId>
-            <artifactId>microprofile-graphql-api</artifactId>
-            <version>1.0.2</version>
-            <scope>provided</scope>
-        </dependency>
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-    </dependencies>
-    
-     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>openup</groupId>
+    <artifactId>OpenUP-micro-parent</artifactId>
+    <name>Simple Web Application Parent</name>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
+    <!-- Define dependency version information -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.9</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-httpclient</groupId>
+                <artifactId>commons-httpclient</artifactId>
                 <version>3.1</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <compilerArguments>
-                        <endorseddirs>${endorsed.dir}</endorseddirs>
-                    </compilerArguments>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.3</version>
-                <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.6</version>
-                <executions>
-                    <execution>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${endorsed.dir}</outputDirectory>
-                            <silent>true</silent>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>javax</groupId>
-                                    <artifactId>javaee-api</artifactId>
-                                    <version>${jakartaee}</version>
-                                    <type>jar</type>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>3.1.0</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <!-- Define and configure plugins -->
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>2.3.2</version>
+                    <configuration>
+                        <encoding>UTF-8</encoding>
+                        <source>1.6</source>
+                        <target>1.6</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>2.3</version>
+                    <configuration>
+                        <!-- Ignore error about missing web.xml -->
+                        <failOnMissingWebXml>false</failOnMissingWebXml>
+                        <archive>
+                            <!-- Do not include META-INF/maven to avoid long file problems on windows -->
+                            <addMavenDescriptor>false</addMavenDescriptor>
+                        </archive>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.5</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>2.5</version>
+                    <configuration>
+                        <forkMode>once</forkMode>
+                        <forkedProcessTimeoutInSeconds>300</forkedProcessTimeoutInSeconds>
+                        <!-- Specify which test classes are integration tests -->
+                        <includes>
+                            <include>**/Test*.java</include>
+                            <include>**/*Test.java</include>
+                        </includes>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>integration-test</goal>
+                                <goal>verify</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>io.openliberty.tools</groupId>
+                    <artifactId>liberty-maven-plugin</artifactId>
+                    <version>3.2.2</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
+
+    <profiles>
+        <profile>
+            <id>default-liberty</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <liberty.install.dir>../target/wlp</liberty.install.dir>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.openliberty.tools</groupId>
+                        <artifactId>liberty-maven-plugin</artifactId>
+                        <inherited>false</inherited>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>install-server</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <assemblyInstallDirectory>${project.build.directory}</assemblyInstallDirectory>
+                            <runtimeArtifact>
+                                <artifactId>openliberty-runtime</artifactId>
+                            </runtimeArtifact>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+       </profile>
+
+       <profile>
+            <id>custom-liberty</id>
+            <activation>
+                <property>
+                    <name>libertyInstallDir</name>
+                </property>
+            </activation>
+            <properties>
+                <liberty.install.dir>${libertyInstallDir}</liberty.install.dir>
+            </properties>
+       </profile>
+
+   </profiles>
+
+    <modules>
+        <module>OpenUP-micro-web</module>
+        <module>OpenUP-micro-test</module>
+        <module>OpenUP-micro-assembly</module>
+    </modules>
 </project>
