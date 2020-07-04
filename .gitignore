@@ -5,3 +5,8 @@
 /OpenUP/OpenUP-ejb/dist/
 /OpenUP/OpenUP-war/dist/
 /OpenUP/dist/
+/OpenUP/target/
+/OpenUP/OpenUP-web/target/
+/OpenUP/OpenUP-test/target/
+/OpenUP/OpenUP-assembly/target/
+/OpenUP/OpenUP-service/target/

@@ -65,6 +65,8 @@
                     <systemPropertyVariables>
                         <contextPath>/OpenUP-web-${project.version}</contextPath>
                         <httpPort>${httpPort}</httpPort>
+                        <contextPath>/OpenUP-service-${project.version}</contextPath>
+                        <httpPort>${httpPort}</httpPort>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>

@@ -11,5 +11,6 @@
                   httpsPort="${httpsPort}" />
 
     <application location="OpenUP-web-1.0-SNAPSHOT.war" />
+    <application location="OpenUP-service-1.0-SNAPSHOT.war" />
 
 </server>
