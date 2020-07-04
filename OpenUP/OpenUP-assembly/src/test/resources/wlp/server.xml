@@ -3,6 +3,7 @@
     <!-- Enable features -->
     <featureManager>
         <feature>webProfile-8.0</feature>
+        <feature>microProfile-3.3</feature>
     </featureManager>
 
     <httpEndpoint id="defaultHttpEndpoint"
@@ -11,5 +12,6 @@
                   httpsPort="8443" />
 
     <application location="OpenUP-web-1.0-SNAPSHOT.war" />
+    <application location="OpenUP-service-1.0-SNAPSHOT.war" />
 
 </server>

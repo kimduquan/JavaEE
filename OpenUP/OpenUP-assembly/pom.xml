@@ -10,13 +10,19 @@
     </parent>
 
     <artifactId>OpenUP-assembly</artifactId>
-    <name>Simple Web Application Server Assembly</name>
+    <name>OpenUP-assembly</name>
     <packaging>liberty-assembly</packaging>
 
     <dependencies>
-         <dependency>
+        <dependency>
             <groupId>openup</groupId>
             <artifactId>OpenUP-web</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>OpenUP-service</artifactId>
             <version>1.0-SNAPSHOT</version>
             <type>war</type>
         </dependency>
