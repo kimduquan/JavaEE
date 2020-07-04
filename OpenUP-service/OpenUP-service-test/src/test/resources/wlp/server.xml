@@ -1,0 +1,15 @@
+<server description="test server">
+
+    <!-- Enable features -->
+    <featureManager>
+        <feature>servlet-3.1</feature>
+    </featureManager>
+
+    <httpEndpoint id="defaultHttpEndpoint"
+                  host="localhost"
+                  httpPort="${httpPort}"
+                  httpsPort="${httpsPort}" />
+
+    <application location="OpenUP-service-web-1.0-SNAPSHOT.war" />
+
+</server>

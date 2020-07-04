@@ -1,0 +1,15 @@
+<server description="production server">
+
+    <!-- Enable features -->
+    <featureManager>
+        <feature>microProfile-3.3</feature>
+    </featureManager>
+
+    <httpEndpoint id="defaultHttpEndpoint"
+                  host="localhost"
+                  httpPort="8080"
+                  httpsPort="8443" />
+
+    <application location="OpenUP-service-web-1.0-SNAPSHOT.war" />
+
+</server>
