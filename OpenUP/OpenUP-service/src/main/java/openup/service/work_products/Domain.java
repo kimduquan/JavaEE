@@ -6,28 +6,46 @@
 package openup.service.work_products;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 /**
  *
  * @author FOXCONN
  */
 @Type
+@Schema(
+        name = "Domain",
+        title = "Domain"
+)
 @Entity
-@Table(name = "Domains")
+@Table(name = "_Domain")
 public class Domain implements Serializable {
-
-    @Id
-    @Column
-    private String id;
     
     @Column
+    @Id
     private String name;
+    
+    @ManyToMany
+    @JoinTable(
+            name = "WorkProducts",
+            joinColumns = @JoinColumn(
+                    name = "Domain"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "Artifact"
+            )
+    )
+    private List<Artifact> workProducts;
 
     public String getName() {
         return name;
@@ -38,15 +56,11 @@ public class Domain implements Serializable {
     }
     
     @Name("Work_Products")
-    public Artifact[] getWorkProducts(){
-        return null;
+    public List<Artifact> getWorkProducts(){
+        return workProducts;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    public void setWorkProducts(List<Artifact> workProducts) {
+        this.workProducts = workProducts;
     }
 }

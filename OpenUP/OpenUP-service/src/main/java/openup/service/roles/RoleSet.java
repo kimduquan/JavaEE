@@ -6,40 +6,54 @@
 package openup.service.roles;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 /**
  *
  * @author FOXCONN
  */
 @Type
+@Schema(
+        name = "Role Set",
+        title = "Role Set"
+)
 @Entity
-@Table(name = "RoleSets")
+@Table(name = "RoleSet")
 public class RoleSet implements Serializable {
-
-    @Id
-    @Column
-    private String id;
     
     @Column
+    @Id
     private String name;
     
+    @ManyToMany
+    @JoinTable(
+            name = "Roles",
+            joinColumns = @JoinColumn(
+                    name = "RoleSet"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "Role"
+            )
+    )
+    private List<Role> roles;
+    
     @Name("Roles")
-    public Role[] getRoles(){
-        return null;
+    public List<Role> getRoles(){
+        return roles;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    public void setRoles(List<Role> roles){
+        this.roles = roles;
     }
 
     public String getName() {

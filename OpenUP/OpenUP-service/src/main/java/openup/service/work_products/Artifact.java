@@ -6,30 +6,48 @@
 package openup.service.work_products;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import openup.service.roles.Role;
 import openup.service.tasks.Task;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 /**
  *
  * @author FOXCONN
  */
 @Type
+@Schema(
+        name = "Artifact",
+        title = "Artifact"
+)
 @Entity
-@Table(name = "Artifacts")
+@Table(name = "Artifact")
 public class Artifact implements Serializable {
-
-    @Id
-    @Column
-    private String id;
     
     @Column
+    @Id
     private String name;
+    
+    @ManyToMany
+    @JoinTable(
+            name = "FulfilledSlots",
+            joinColumns = @JoinColumn(
+                    name = "Artifact"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "WorkProductSlot"
+            )
+    )
+    private List<WorkProductSlot> fulfilledSlots;
 
     public String getName() {
         return name;
@@ -37,6 +55,14 @@ public class Artifact implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<WorkProductSlot> getFulfilledSlots() {
+        return fulfilledSlots;
+    }
+
+    public void setFulfilledSlots(List<WorkProductSlot> fulfilledSlots) {
+        this.fulfilledSlots = fulfilledSlots;
     }
     
     @Name("Responsible")
@@ -57,13 +83,5 @@ public class Artifact implements Serializable {
     @Name("Output_From")
     public Task[] getOutputFrom(){
         return null;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 }

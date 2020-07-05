@@ -6,28 +6,46 @@
 package openup.service.tasks;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 /**
  *
  * @author FOXCONN
  */
 @Type
+@Schema(
+        name = "Discipline",
+        title = "Discipline"
+)
 @Entity
-@Table(name = "Disciplines")
+@Table(name = "Discipline")
 public class Discipline implements Serializable {
-
-    @Id
-    @Column
-    private String id;
     
     @Column
+    @Id
     private String name;
+    
+    @ManyToMany
+    @JoinTable(
+            name = "Tasks",
+            joinColumns = @JoinColumn(
+                    name = "Discipline"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "Task"
+            )
+    )
+    private List<Task> tasks;
 
     public String getName() {
         return name;
@@ -36,17 +54,13 @@ public class Discipline implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
     
     @Name("Tasks")
-    public Task[] getTasks(){
-        return null;
+    public List<Task> getTasks(){
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 }

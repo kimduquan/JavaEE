@@ -20,7 +20,7 @@ import org.eclipse.microprofile.graphql.Query;
  */
 @GraphQLApi
 @RequestScoped
-public class OpenUp {
+public class OpenUPQuery {
     
     @Query
     @Name("Roles")

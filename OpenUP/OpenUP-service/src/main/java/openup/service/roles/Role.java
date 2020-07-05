@@ -6,38 +6,64 @@
 package openup.service.roles;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import openup.service.tasks.Task;
 import openup.service.work_products.Artifact;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 /**
  *
  * @author FOXCONN
  */
 @Type
+@Schema(
+        name = "Role",
+        title = "Role"
+)
 @Entity
-@Table(name = "Roles")
+@Table(name = "_Role")
 public class Role implements Serializable {
-
-    @Id
-    @Column
-    private String id;
     
     @Column
+    @Id
     private String name;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
+    
+    @OneToMany
+    private List<Task> performs;
+    
+    @ManyToMany
+    @JoinTable(
+            name = "AdditionallyPerforms",
+            joinColumns = @JoinColumn(
+                    name = "Role"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "Task"
+            )
+    )
+    private List<Task> additionallyPerforms;
+    
+    @ManyToMany
+    @JoinTable(
+            name = "Modifies",
+            joinColumns = @JoinColumn(
+                    name = "Role"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "Artifact"
+            )
+    )
+    private List<Artifact> modifies;
 
     public String getName() {
         return name;
@@ -46,14 +72,30 @@ public class Role implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+
+    public List<Task> getPerforms() {
+        return performs;
+    }
+
+    public void setPerforms(List<Task> performs) {
+        this.performs = performs;
+    }
     
     @Name("Additionally_Performs")
-    public Task[] getAdditionallyPerforms(){
-        return null;
+    public List<Task> getAdditionallyPerforms(){
+        return additionallyPerforms;
+    }
+
+    public void setAdditionallyPerforms(List<Task> additionallyPerforms) {
+        this.additionallyPerforms = additionallyPerforms;
     }
     
     @Name("Modifies")
-    public Artifact[] getModifies(){
-        return null;
+    public List<Artifact> getModifies(){
+        return modifies;
+    }
+
+    public void setModifies(List<Artifact> modifies) {
+        this.modifies = modifies;
     }
 }

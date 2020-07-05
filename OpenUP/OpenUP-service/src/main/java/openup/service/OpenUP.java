@@ -20,9 +20,9 @@ import org.eclipse.microprofile.auth.LoginConfig;
  */
 @ApplicationScoped
 @ApplicationPath("/openup")
-@LoginConfig(authMethod="MP-JWT", realmName="file")
+@LoginConfig(authMethod="MP-JWT", realmName="OpenUP")
 @RolesAllowed("AnyRole")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class OpenUPService extends Application {
+public class OpenUP extends Application {
 }
