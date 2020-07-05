@@ -3,14 +3,32 @@
     <!-- Enable features -->
     <featureManager>
         <feature>webProfile-8.0</feature>
+        <feature>microProfile-3.3</feature>
+        <feature>jpa-2.2</feature>
+        <feature>mpGraphQL-1.0</feature>
     </featureManager>
 
     <httpEndpoint id="defaultHttpEndpoint"
-                  host="localhost"
-                  httpPort="${httpPort}"
-                  httpsPort="${httpsPort}" />
+                  host="*"
+                  httpPort="${default.http.port}"
+                  httpsPort="${default.https.port}" />
 
     <application location="OpenUP-web-1.0-SNAPSHOT.war" />
     <application location="OpenUP-service-1.0-SNAPSHOT.war" />
+    
+    <!-- H2 Library Configuration -->
+    <library id="H2JDBCLib">
+        <fileset dir="${shared.resource.dir}" includes="h2*.jar"/>
+    </library>
+
+    <dataSource id="openup" jndiName="jdbc/openup">
+        <!-- Define the DataSource class names on the <jdbcDriver> element -->
+        <jdbcDriver 
+            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
+            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
+            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
+            libraryRef="H2JDBCLib" />
+        <properties URL="jdbc:h2:~/openup" />
+    </dataSource>
 
 </server>
