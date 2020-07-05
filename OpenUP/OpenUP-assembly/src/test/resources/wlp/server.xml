@@ -9,9 +9,9 @@
     </featureManager>
 
     <httpEndpoint id="defaultHttpEndpoint"
-                  host="*"
-                  httpPort="${default.http.port}"
-                  httpsPort="${default.https.port}" />
+                  host="localhost"
+                  httpPort="8080"
+                  httpsPort="8443" />
 
     <application location="OpenUP-web-1.0-SNAPSHOT.war" />
     <application location="OpenUP-service-1.0-SNAPSHOT.war" />
