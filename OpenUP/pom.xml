@@ -27,13 +27,6 @@
                 <artifactId>commons-httpclient</artifactId>
                 <version>3.1</version>
             </dependency>
-            <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
-            <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>javax.servlet-api</artifactId>
-                <version>4.0.1</version>
-                <scope>provided</scope>
-            </dependency>
             <!-- https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api -->
             <dependency>
                 <groupId>javax.persistence</groupId>
@@ -54,17 +47,11 @@
                 <version>1.0.2</version>
                 <scope>provided</scope>
             </dependency>
-            <!-- https://mvnrepository.com/artifact/io.openliberty/openliberty-webProfile8 -->
             <dependency>
-                <groupId>io.openliberty</groupId>
-                <artifactId>openliberty-webProfile8</artifactId>
-                <version>20.0.0.7</version>
-            </dependency>
-            <!-- https://mvnrepository.com/artifact/io.openliberty/openliberty-microProfile3 -->
-            <dependency>
-                <groupId>io.openliberty</groupId>
-                <artifactId>openliberty-microProfile3</artifactId>
-                <version>20.0.0.7</version>
+                <groupId>org.glassfish</groupId>
+                <artifactId>javax.faces</artifactId>
+                <version>2.3.9</version>
+                <scope>provided</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
