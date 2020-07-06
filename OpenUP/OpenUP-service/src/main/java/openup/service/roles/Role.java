@@ -13,7 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import openup.service.tasks.Task;
 import openup.service.work_products.Artifact;
@@ -37,9 +36,6 @@ public class Role implements Serializable {
     @Column
     @Id
     private String name;
-    
-    @OneToMany
-    private List<Task> performs;
     
     @ManyToMany
     @JoinTable(
@@ -71,14 +67,6 @@ public class Role implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<Task> getPerforms() {
-        return performs;
-    }
-
-    public void setPerforms(List<Task> performs) {
-        this.performs = performs;
     }
     
     @Name("Additionally_Performs")

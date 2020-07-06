@@ -46,6 +46,14 @@ public class RoleSet implements Serializable {
             )
     )
     private List<Role> roles;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
     
     @Name("Roles")
     public List<Role> getRoles(){
@@ -54,13 +62,5 @@ public class RoleSet implements Serializable {
 
     public void setRoles(List<Role> roles){
         this.roles = roles;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 }

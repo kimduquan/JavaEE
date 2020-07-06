@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import openup.service.roles.Role;
 import openup.service.tasks.Task;
@@ -48,6 +49,10 @@ public class Artifact implements Serializable {
             )
     )
     private List<WorkProductSlot> fulfilledSlots;
+    
+    @ManyToOne
+    @JoinColumn(name = "Responsible")
+    private Role responsible;
 
     public String getName() {
         return name;
@@ -66,8 +71,12 @@ public class Artifact implements Serializable {
     }
     
     @Name("Responsible")
-    public Role[] getResponsible(){
-        return null;
+    public Role getResponsible(){
+        return responsible;
+    }
+
+    public void setResponsible(Role responsible) {
+        this.responsible = responsible;
     }
     
     @Name("Modified_By")

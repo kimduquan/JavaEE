@@ -13,7 +13,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import openup.service.roles.Role;
 import openup.service.work_products.Artifact;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -34,6 +36,10 @@ public class Task implements Serializable {
     @Column
     @Id
     private String name;
+    
+    @ManyToOne
+    @JoinColumn(name = "PrimaryPerformer")
+    private Role primaryPerformer;
     
     @ManyToMany
     @JoinTable(
@@ -77,6 +83,14 @@ public class Task implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Role getPrimaryPerformer() {
+        return primaryPerformer;
+    }
+
+    public void setPrimaryPerformer(Role primaryPerformer) {
+        this.primaryPerformer = primaryPerformer;
     }
 
     public List<Artifact> getMandatory() {
