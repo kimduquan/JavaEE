@@ -18,21 +18,13 @@
         <dependency>
             <groupId>org.eclipse.microprofile.graphql</groupId>
             <artifactId>microprofile-graphql-api</artifactId>
-            <version>1.0.2</version>
             <scope>provided</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api -->
+        <!-- https://mvnrepository.com/artifact/org.eclipse.persistence/javax.persistence -->
         <dependency>
-            <groupId>javax.persistence</groupId>
-            <artifactId>javax.persistence-api</artifactId>
-            <version>2.2</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.4.200</version>
-            <scope>test</scope>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>javax.persistence</artifactId>
+            <version>2.2.1</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.eclipse.microprofile/microprofile -->
         <dependency>

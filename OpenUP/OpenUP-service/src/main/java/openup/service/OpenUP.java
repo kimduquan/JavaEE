@@ -5,8 +5,10 @@
  */
 package openup.service;
 
-import javax.annotation.security.RolesAllowed;
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -19,10 +21,17 @@ import org.eclipse.microprofile.auth.LoginConfig;
  * @author FOXCONN
  */
 @ApplicationScoped
-@ApplicationPath("/openup")
+@ApplicationPath("/")
 @LoginConfig(authMethod="MP-JWT", realmName="OpenUP")
-@RolesAllowed("AnyRole")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class OpenUP extends Application {
+    
+    @PersistenceContext
+    private EntityManager entityManager;
+    
+    @PostConstruct
+    void postConstruct(){
+        
+    }
 }
