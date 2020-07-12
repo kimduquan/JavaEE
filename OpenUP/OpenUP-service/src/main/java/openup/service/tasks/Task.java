@@ -43,24 +43,24 @@ public class Task implements Serializable {
     
     @ManyToMany
     @JoinTable(
-            name = "TASK_INPUTS",
+            name = "TASK_INPUTS_MANDATORY",
             joinColumns = @JoinColumn(
                     name = "TASK"
             ),
             inverseJoinColumns = @JoinColumn(
-                    name = "MANDATORY"
+                    name = "ARTIFACT"
             )
     )
     private List<Artifact> mandatory;
     
     @ManyToMany
     @JoinTable(
-            name = "TASK_INPUTS",
+            name = "TASK_INPUTS_OPTIONAL",
             joinColumns = @JoinColumn(
                     name = "TASK"
             ),
             inverseJoinColumns = @JoinColumn(
-                    name = "OPTIONAL"
+                    name = "ARTIFACT"
             )
     )
     private List<Artifact> optional;

@@ -345,6 +345,69 @@ INSERT INTO ARTIFACT_FULFILLED_SLOTS (ARTIFACT, WORK_PRODUCT_SLOT) VALUES ('Work
 INSERT INTO ARTIFACT_FULFILLED_SLOTS (ARTIFACT, WORK_PRODUCT_SLOT) VALUES ('Work Items List', 'Project Work');
 /*ARTIFACT_FULFILLED_SLOTS END*/
 
+/*TASK_INPUTS_MANDATORY BEGIN*/
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Assess Results', 'Iteration Plan');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Assess Results', 'Work Items List');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Deliver Release Communications', 'Release Communications');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Deliver Support Training', 'Support Documentation');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Deliver Support Training', 'Training Materials');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Deliver end user Training', 'Training Materials');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Deliver end user Training', 'User Documentation');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Deploy the Process', 'Project Defined Process');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Detail System-Wide Requirements', 'System-Wide Requirements');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Detail Use-Case Scenarios', 'Use Case');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Develop Release Communications', 'Deployment Plan');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Execute Backout Plan', 'Backout Plan');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Execute Backout Plan', 'Release');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Execute Deployment Plan', 'Deployment Plan');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Execute Deployment Plan', 'Infrastructure');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Execute Deployment Plan', 'Release');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Implement Tests', 'Test Case');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Install and Validate Infrastructure', 'Deployment Plan');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Integrate and Create Build', 'Test Script');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Manage Iteration', 'Iteration Plan');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Manage Iteration', 'Risk List');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Manage Iteration', 'Work Items List');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Package the Release', 'Deployment Plan');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Package the Release', 'Release Controls');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Plan Iteration', 'Work Items List');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Refine the Architecture', 'Architecture Notebook');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Review and Conform to Release Controls', 'Release Controls');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Run Developer Tests', 'Developer Test');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Run Tests', 'Test Script');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Set Up Tools', 'Tools');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Tailor the Process', 'Project Defined Process');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Verify Successful Deployment', 'Release');
+INSERT INTO TASK_INPUTS_MANDATORY (TASK, ARTIFACT) VALUES ('Verify Tool Configuration and Installation', 'Tools');
+/*TASK_INPUTS_MANDATORY END*/
+
+/*TASK_INPUTS_OPTIONAL BEGIN*/
+INSERT INTO TASK_INPUTS_OPTIONAL (TASK, ARTIFACT) VALUES ('Create Test Cases', 'Test Case');
+INSERT INTO TASK_INPUTS_OPTIONAL (TASK, ARTIFACT) VALUES ('Deliver Release Communications', 'Release');
+INSERT INTO TASK_INPUTS_OPTIONAL (TASK, ARTIFACT) VALUES ('Deliver Support Training', 'Product Documentation');
+INSERT INTO TASK_INPUTS_OPTIONAL (TASK, ARTIFACT) VALUES ('Deliver Support Training', 'User Documentation');
+INSERT INTO TASK_INPUTS_OPTIONAL (TASK, ARTIFACT) VALUES ('Deliver end user Training', 'Product Documentation');
+INSERT INTO TASK_INPUTS_OPTIONAL (TASK, ARTIFACT) VALUES ('Design the Solution', 'Design');
+INSERT INTO TASK_INPUTS_OPTIONAL (TASK, ARTIFACT) VALUES ('Detail System-Wide Requirements', 'Use Case');
+INSERT INTO TASK_INPUTS_OPTIONAL (TASK, ARTIFACT) VALUES ('Develop Backout Plan', 'Deployment Plan');
+INSERT INTO TASK_INPUTS_OPTIONAL (TASK, ARTIFACT) VALUES ('Develop Release Communications', 'Release Controls');
+INSERT INTO TASK_INPUTS_OPTIONAL (TASK, ARTIFACT) VALUES ('Develop Support Documentation', 'Product Documentation');
+INSERT INTO TASK_INPUTS_OPTIONAL (TASK, ARTIFACT) VALUES ('Develop Support Documentation', 'User Documentation');
+INSERT INTO TASK_INPUTS_OPTIONAL (TASK, ARTIFACT) VALUES ('Develop Technical Vision', 'Vision');
+INSERT INTO TASK_INPUTS_OPTIONAL (TASK, ARTIFACT) VALUES ('Develop Training Materials', 'Product Documentation');
+INSERT INTO TASK_INPUTS_OPTIONAL (TASK, ARTIFACT) VALUES ('Develop Training Materials', 'Support Documentation');
+INSERT INTO TASK_INPUTS_OPTIONAL (TASK, ARTIFACT) VALUES ('Develop Training Materials', 'User Documentation');
+INSERT INTO TASK_INPUTS_OPTIONAL (TASK, ARTIFACT) VALUES ('Develop User Documentation', 'Product Documentation');
+INSERT INTO TASK_INPUTS_OPTIONAL (TASK, ARTIFACT) VALUES ('Envision the Architecture', 'Architecture Notebook');
+INSERT INTO TASK_INPUTS_OPTIONAL (TASK, ARTIFACT) VALUES ('Execute Deployment Plan', 'Release Controls');
+INSERT INTO TASK_INPUTS_OPTIONAL (TASK, ARTIFACT) VALUES ('Implement Solution', 'Developer Test');
+INSERT INTO TASK_INPUTS_OPTIONAL (TASK, ARTIFACT) VALUES ('Implement Tests', 'Test Script');
+INSERT INTO TASK_INPUTS_OPTIONAL (TASK, ARTIFACT) VALUES ('Install and Validate Infrastructure', 'Release Controls');
+INSERT INTO TASK_INPUTS_OPTIONAL (TASK, ARTIFACT) VALUES ('Plan Iteration', 'Iteration Plan');
+INSERT INTO TASK_INPUTS_OPTIONAL (TASK, ARTIFACT) VALUES ('Plan Iteration', 'Risk List');
+INSERT INTO TASK_INPUTS_OPTIONAL (TASK, ARTIFACT) VALUES ('Verify Successful Deployment', 'Deployment Plan');
+/*TASK_INPUTS_OPTIONAL END*/
+
 /*TASK_OUTPUTS BEGIN*/
 INSERT INTO TASK_OUTPUTS (TASK, ARTIFACT) VALUES ('Assess Results', 'Iteration Plan');
 INSERT INTO TASK_OUTPUTS (TASK, ARTIFACT) VALUES ('Assess Results', 'Work Items List');
