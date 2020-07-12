@@ -30,33 +30,33 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
         title = "Role"
 )
 @Entity
-@Table(name = "_Role")
+@Table(name = "_ROLE")
 public class Role implements Serializable {
     
-    @Column
+    @Column(name = "NAME")
     @Id
     private String name;
     
     @ManyToMany
     @JoinTable(
-            name = "Role_Additionally_Performs",
+            name = "ROLE_ADDITIONALLY_PERFORMS",
             joinColumns = @JoinColumn(
-                    name = "Role"
+                    name = "ROLE"
             ),
             inverseJoinColumns = @JoinColumn(
-                    name = "Task"
+                    name = "TASK"
             )
     )
     private List<Task> additionallyPerforms;
     
     @ManyToMany
     @JoinTable(
-            name = "Role_Modifies",
+            name = "ROLE_MODIFIES",
             joinColumns = @JoinColumn(
-                    name = "Role"
+                    name = "ROLE"
             ),
             inverseJoinColumns = @JoinColumn(
-                    name = "Artifact"
+                    name = "ARTIFACT"
             )
     )
     private List<Artifact> modifies;

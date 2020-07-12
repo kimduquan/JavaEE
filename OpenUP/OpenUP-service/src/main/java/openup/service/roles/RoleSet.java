@@ -28,21 +28,21 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
         title = "Role Set"
 )
 @Entity
-@Table(name = "Role_Set")
+@Table(name = "ROLE_SET")
 public class RoleSet implements Serializable {
     
-    @Column
+    @Column(name = "NAME")
     @Id
     private String name;
     
     @ManyToMany
     @JoinTable(
-            name = "Roles",
+            name = "ROLES",
             joinColumns = @JoinColumn(
-                    name = "Role_Set"
+                    name = "ROLE_SET"
             ),
             inverseJoinColumns = @JoinColumn(
-                    name = "Role"
+                    name = "ROLE"
             )
     )
     private List<Role> roles;

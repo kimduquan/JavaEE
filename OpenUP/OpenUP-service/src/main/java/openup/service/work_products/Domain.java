@@ -28,21 +28,21 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
         title = "Domain"
 )
 @Entity
-@Table(name = "_Domain")
+@Table(name = "_DOMAIN")
 public class Domain implements Serializable {
     
-    @Column
+    @Column(name = "NAME")
     @Id
     private String name;
     
     @ManyToMany
     @JoinTable(
-            name = "Work_Products",
+            name = "WORK_PRODUCTS",
             joinColumns = @JoinColumn(
-                    name = "Domain"
+                    name = "DOMAIN"
             ),
             inverseJoinColumns = @JoinColumn(
-                    name = "Artifact"
+                    name = "ARTIFACT"
             )
     )
     private List<Artifact> workProducts;

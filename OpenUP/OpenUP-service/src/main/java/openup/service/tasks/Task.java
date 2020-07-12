@@ -30,49 +30,49 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
         title = "Task"
 )
 @Entity
-@Table(name = "Task")
+@Table(name = "TASK")
 public class Task implements Serializable {
     
-    @Column
+    @Column(name = "NAME")
     @Id
     private String name;
     
     @ManyToOne
-    @JoinColumn(name = "Task_Primary_Performer")
+    @JoinColumn(name = "TASK_PRIMARY_PERFORMER")
     private Role primaryPerformer;
     
     @ManyToMany
     @JoinTable(
-            name = "Task_Inputs",
+            name = "TASK_INPUTS",
             joinColumns = @JoinColumn(
-                    name = "Task"
+                    name = "TASK"
             ),
             inverseJoinColumns = @JoinColumn(
-                    name = "Mandatory"
+                    name = "MANDATORY"
             )
     )
     private List<Artifact> mandatory;
     
     @ManyToMany
     @JoinTable(
-            name = "Task_Inputs",
+            name = "TASK_INPUTS",
             joinColumns = @JoinColumn(
-                    name = "Task"
+                    name = "TASK"
             ),
             inverseJoinColumns = @JoinColumn(
-                    name = "Optional"
+                    name = "OPTIONAL"
             )
     )
     private List<Artifact> optional;
     
     @ManyToMany
     @JoinTable(
-            name = "Task_Outputs",
+            name = "TASK_OUTPUTS",
             joinColumns = @JoinColumn(
-                    name = "Task"
+                    name = "TASK"
             ),
             inverseJoinColumns = @JoinColumn(
-                    name = "Artifact"
+                    name = "ARTIFACT"
             )
     )
     private List<Artifact> outputs;

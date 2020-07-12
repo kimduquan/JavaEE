@@ -31,27 +31,27 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
         title = "Artifact"
 )
 @Entity
-@Table(name = "Artifact")
+@Table(name = "ARTIFACT")
 public class Artifact implements Serializable {
     
-    @Column
+    @Column(name = "NAME")
     @Id
     private String name;
     
     @ManyToMany
     @JoinTable(
-            name = "Artifact_Fulfilled_Slots",
+            name = "ARTIFACT_FULFILLED_SLOTS",
             joinColumns = @JoinColumn(
-                    name = "Artifact"
+                    name = "ARTIFACT"
             ),
             inverseJoinColumns = @JoinColumn(
-                    name = "Work_Product_Slot"
+                    name = "WORK_PRODUCT_SLOT"
             )
     )
     private List<WorkProductSlot> fulfilledSlots;
     
     @ManyToOne
-    @JoinColumn(name = "Responsible")
+    @JoinColumn(name = "RESPONSIBLE")
     private Role responsible;
 
     public String getName() {
