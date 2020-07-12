@@ -8,8 +8,11 @@ package openup.service.work_products;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -32,6 +35,8 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 )
 @Entity
 @Table(name = "ARTIFACT")
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "NAME")
 public class Artifact implements Serializable {
     
     @Column(name = "NAME")
