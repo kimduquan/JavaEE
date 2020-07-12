@@ -23,7 +23,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
         title = "WorkProductSlot"
 )
 @Entity
-@Table(name = "WorkProductSlot")
+@Table(name = "Work_Product_Slot")
 public class WorkProductSlot implements Serializable {
 
     @Column

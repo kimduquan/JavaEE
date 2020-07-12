@@ -39,7 +39,7 @@ public class Role implements Serializable {
     
     @ManyToMany
     @JoinTable(
-            name = "AdditionallyPerforms",
+            name = "Role_Additionally_Performs",
             joinColumns = @JoinColumn(
                     name = "Role"
             ),
@@ -51,7 +51,7 @@ public class Role implements Serializable {
     
     @ManyToMany
     @JoinTable(
-            name = "Modifies",
+            name = "Role_Modifies",
             joinColumns = @JoinColumn(
                     name = "Role"
             ),

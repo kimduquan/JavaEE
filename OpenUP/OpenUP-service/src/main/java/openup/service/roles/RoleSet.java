@@ -24,11 +24,11 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  */
 @Type
 @Schema(
-        name = "Role Set",
+        name = "RoleSet",
         title = "Role Set"
 )
 @Entity
-@Table(name = "RoleSet")
+@Table(name = "Role_Set")
 public class RoleSet implements Serializable {
     
     @Column
@@ -39,7 +39,7 @@ public class RoleSet implements Serializable {
     @JoinTable(
             name = "Roles",
             joinColumns = @JoinColumn(
-                    name = "RoleSet"
+                    name = "Role_Set"
             ),
             inverseJoinColumns = @JoinColumn(
                     name = "Role"

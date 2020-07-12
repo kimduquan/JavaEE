@@ -37,7 +37,7 @@ public class Domain implements Serializable {
     
     @ManyToMany
     @JoinTable(
-            name = "WorkProducts",
+            name = "Work_Products",
             joinColumns = @JoinColumn(
                     name = "Domain"
             ),

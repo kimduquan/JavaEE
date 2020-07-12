@@ -38,12 +38,12 @@ public class Task implements Serializable {
     private String name;
     
     @ManyToOne
-    @JoinColumn(name = "PrimaryPerformer")
+    @JoinColumn(name = "Task_Primary_Performer")
     private Role primaryPerformer;
     
     @ManyToMany
     @JoinTable(
-            name = "Inputs",
+            name = "Task_Inputs",
             joinColumns = @JoinColumn(
                     name = "Task"
             ),
@@ -55,7 +55,7 @@ public class Task implements Serializable {
     
     @ManyToMany
     @JoinTable(
-            name = "Inputs",
+            name = "Task_Inputs",
             joinColumns = @JoinColumn(
                     name = "Task"
             ),
@@ -67,7 +67,7 @@ public class Task implements Serializable {
     
     @ManyToMany
     @JoinTable(
-            name = "Outputs",
+            name = "Task_Outputs",
             joinColumns = @JoinColumn(
                     name = "Task"
             ),

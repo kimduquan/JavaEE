@@ -40,12 +40,12 @@ public class Artifact implements Serializable {
     
     @ManyToMany
     @JoinTable(
-            name = "FulfilledSlots",
+            name = "Artifact_Fulfilled_Slots",
             joinColumns = @JoinColumn(
                     name = "Artifact"
             ),
             inverseJoinColumns = @JoinColumn(
-                    name = "WorkProductSlot"
+                    name = "Work_Product_Slot"
             )
     )
     private List<WorkProductSlot> fulfilledSlots;
