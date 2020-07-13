@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
@@ -29,6 +30,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 )
 @Entity
 @Table(name = "ROLE_SET")
+@NamedQuery(name = "RoleSet.Roles", query = "SELECT rs FROM RoleSet AS rs")
 public class RoleSet implements Serializable {
     
     @Column(name = "NAME")

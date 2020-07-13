@@ -5,7 +5,10 @@
  */
 package openup.service.roles;
 
+import java.util.List;
 import javax.enterprise.context.RequestScoped;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import org.eclipse.microprofile.graphql.Name;
@@ -24,6 +27,9 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 @RequestScoped
 public class Roles {
     
+    @PersistenceContext
+    private EntityManager entityManager;
+    
     @Name("Contents")
     @GET
     @Operation(
@@ -36,7 +42,7 @@ public class Roles {
                     schema = @Schema(implementation = RoleSet.class)
             )
     )
-    public RoleSet[] getRoleSets(){
-        return new RoleSet[]{};
+    public List<RoleSet> getRoleSets(){
+        return entityManager.createNamedQuery("RoleSet.Roles", RoleSet.class).getResultList();
     }
 }

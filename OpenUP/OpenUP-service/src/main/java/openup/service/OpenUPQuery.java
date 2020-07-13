@@ -6,6 +6,7 @@
 package openup.service;
 
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import openup.service.roles.Roles;
 import openup.service.tasks.Tasks;
 import openup.service.work_products.WorkProducts;
@@ -22,24 +23,33 @@ import org.eclipse.microprofile.graphql.Query;
 @RequestScoped
 public class OpenUPQuery {
     
+    @Inject
+    private Roles roles;
+    
+    @Inject
+    private WorkProducts workProducts;
+    
+    @Inject
+    private Tasks tasks;
+    
     @Query
     @Name("Roles")
     @Description("This category lists roles organized by role set.")
     public Roles getRoles(){
-        return null;
+        return roles;
     }
     
     @Query
     @Name("Work_Products")
     @Description("List of work products organized by domain.")
     public WorkProducts getWorkProducts(){
-        return null;
+        return workProducts;
     }
     
     @Query
     @Name("Tasks")
     @Description("List of tasks organized by discipline.")
     public Tasks getTasks(){
-        return null;
+        return tasks;
     }
 }
