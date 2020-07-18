@@ -5,7 +5,9 @@
  */
 package openup.service.delivery_processes;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -24,6 +26,10 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Entity
 @Table(name = "PHASE")
 public class Phase extends Properties {
+    
+    @Column(name = "NAME")
+    @Id
+    private String name;
     
     @OneToOne
     @JoinColumn(name = "PARENT_ACTIVITIES", referencedColumnName = "NAME")

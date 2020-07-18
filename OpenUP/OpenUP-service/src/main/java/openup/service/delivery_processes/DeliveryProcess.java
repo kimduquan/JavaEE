@@ -5,7 +5,9 @@
  */
 package openup.service.delivery_processes;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -23,4 +25,15 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Table(name = "DELIVERY_PROCESS")
 public class DeliveryProcess extends Properties {
     
+    @Column(name = "NAME")
+    @Id
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

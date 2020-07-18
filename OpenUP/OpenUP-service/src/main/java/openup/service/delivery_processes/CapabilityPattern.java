@@ -5,8 +5,10 @@
  */
 package openup.service.delivery_processes;
 
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
@@ -25,7 +27,18 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Entity
 @Table(name = "CAPABILITY_PATTERN")
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "NAME")
+@DiscriminatorColumn(name = "TEMPLATE", length = 63)
 public class CapabilityPattern extends Properties {
     
+    @Column(name = "TEMPLATE")
+    @Id
+    private String template;
+
+    public String getTemplate() {
+        return template;
+    }
+
+    public void setTemplate(String template) {
+        this.template = template;
+    }
 }

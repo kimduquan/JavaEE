@@ -6,6 +6,7 @@
 package openup.service.delivery_processes;
 
 import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
@@ -30,9 +31,10 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 )
 @Entity
 @Table(name = "ACTIVITY")
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "NAME")
 public class Activity extends CapabilityPattern {
+    
+    @Column(name = "NAME", unique = true, nullable = false)
+    private String name;
     
     @OneToOne
     @JoinColumn(name = "PARENT_ACTIVITIES", referencedColumnName = "NAME")
@@ -44,6 +46,14 @@ public class Activity extends CapabilityPattern {
             inverseJoinColumns = {@JoinColumn(name = "NAME")}
     )
     private List<Task> tasks;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public CapabilityPattern getParentActivities() {
         return parentActivities;

@@ -7,7 +7,6 @@ package openup.service.delivery_processes;
 
 import java.io.Serializable;
 import javax.persistence.Column;
-import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 /**
@@ -16,10 +15,6 @@ import javax.persistence.MappedSuperclass;
  */
 @MappedSuperclass
 public class Properties implements Serializable {
-    
-    @Column(name = "NAME")
-    @Id
-    private String name;
     
     @Column(name = "EVENT_DRIVEN")
     private Boolean eventDriven;
