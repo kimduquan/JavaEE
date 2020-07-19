@@ -5,12 +5,12 @@
  */
 package openup.service.delivery_processes;
 
+import java.util.List;
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
@@ -38,6 +38,13 @@ public class Iteration extends CapabilityPattern {
     @OneToOne
     @JoinColumn(name = "PARENT_ACTIVITIES", referencedColumnName = "NAME")
     private Phase parentActivities;
+    
+    @ManyToMany
+    @JoinTable(name = "ITERATION_ACTIVITIES",
+            joinColumns = {@JoinColumn(name = "ITERATION")},
+            inverseJoinColumns = {@JoinColumn(name = "ACTIVITY")}
+    )
+    private List<Activity> activities;
 
     public String getName() {
         return name;

@@ -7,14 +7,11 @@ package openup.service.delivery_processes;
 
 import java.util.List;
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import openup.service.tasks.Task;
 import org.eclipse.microprofile.graphql.Type;
@@ -36,14 +33,17 @@ public class Activity extends CapabilityPattern {
     @Column(name = "NAME", unique = true, nullable = false)
     private String name;
     
-    @OneToOne
-    @JoinColumn(name = "PARENT_ACTIVITIES", referencedColumnName = "NAME")
+    @ManyToOne
+    @JoinTable(name = "ACTIVITY_PARENT",
+            joinColumns = {@JoinColumn(name = "ACTIVITY")},
+            inverseJoinColumns = {@JoinColumn(name = "PARENT")}
+    )
     private CapabilityPattern parentActivities;
     
-    @OneToMany
+    @ManyToMany
     @JoinTable(name = "ACTIVITY_TASKS",
-            joinColumns = {@JoinColumn(name = "NAME")},
-            inverseJoinColumns = {@JoinColumn(name = "NAME")}
+            joinColumns = {@JoinColumn(name = "ACTIVITY")},
+            inverseJoinColumns = {@JoinColumn(name = "TASK")}
     )
     private List<Task> tasks;
 
