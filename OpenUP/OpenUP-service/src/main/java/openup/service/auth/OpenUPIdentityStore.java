@@ -3,15 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.web.auth;
+package openup.service.auth;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.SessionScoped;
+import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
+import javax.persistence.PersistenceUnit;
 import javax.security.enterprise.credential.UsernamePasswordCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import static javax.security.enterprise.identitystore.CredentialValidationResult.INVALID_RESULT;
@@ -22,29 +28,57 @@ import javax.security.enterprise.identitystore.IdentityStore;
  * @author FOXCONN
  */
 @ApplicationScoped
-public class DatabaseIdentityStore implements IdentityStore {
+public class OpenUPIdentityStore implements IdentityStore {
+    
+    @PersistenceUnit
+    private EntityManagerFactory factory;
+    
+    private ConcurrentHashMap<String, EntityManager> managers;
+    
+    @PreDestroy
+    void preDestroy(){
+        managers.values()
+            .stream()
+            .parallel()
+            .forEach(EntityManager::close);
+        managers.clear();
+        if(factory.isOpen()){
+            factory.close();
+        }
+    }
+    
+    @PostConstruct
+    void postConstruct(){
+        managers = new ConcurrentHashMap<>();
+    }
+    
+    @Produces @SessionScoped
+    public EntityManager getEntityManager(Principal principal){
+        return managers.get(principal.getName());
+    }
     
     public CredentialValidationResult validate(UsernamePasswordCredential credential) {
         Map<String, String> props = new HashMap<>();
         props.put("javax.persistence.jdbc.user", credential.getCaller());
         props.put("javax.persistence.jdbc.password", credential.getPasswordAsString());
-        boolean isSuccess = false;
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("OpenUP", props);
         if(factory.isOpen()){
-            EntityManager manager = factory.createEntityManager();
+            EntityManager manager = factory.createEntityManager(props);
             if(manager.isOpen()){
                 EntityTransaction transaction = manager.getTransaction();
                 transaction.begin();
                 if(transaction.isActive()){
                     transaction.commit();
-                    isSuccess = true;
+                    manager = managers.putIfAbsent(credential.getCaller(), manager);
+                    if(manager != null){
+                        if(manager.isOpen()){
+                            manager.close();
+                        }
+                    }
+                    return new CredentialValidationResult(credential.getCaller());
                 }
                 manager.close();
             }
             factory.close();
-        }
-        if(isSuccess){
-            return new CredentialValidationResult(credential.getCaller());
         }
         return INVALID_RESULT;
     }

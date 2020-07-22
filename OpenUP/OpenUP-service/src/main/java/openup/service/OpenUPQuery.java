@@ -5,6 +5,7 @@
  */
 package openup.service;
 
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import openup.service.roles.Roles;
@@ -21,6 +22,7 @@ import org.eclipse.microprofile.graphql.Query;
  */
 @GraphQLApi
 @RequestScoped
+@RolesAllowed("Any_Role")
 public class OpenUPQuery {
     
     @Inject

@@ -33,6 +33,12 @@
             <type>pom</type>
             <scope>provided</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/javax.security.enterprise/javax.security.enterprise-api -->
+        <dependency>
+            <groupId>javax.security.enterprise</groupId>
+            <artifactId>javax.security.enterprise-api</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
 </project>
