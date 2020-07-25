@@ -8,7 +8,6 @@ package openup.service.auth;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
@@ -33,7 +32,7 @@ public class OpenUPIdentityStore implements IdentityStore {
     @PersistenceUnit
     private EntityManagerFactory factory;
     
-    private ConcurrentHashMap<String, EntityManager> managers;
+    private Map<String, EntityManager> managers;
     
     @PreDestroy
     void preDestroy(){
@@ -49,7 +48,7 @@ public class OpenUPIdentityStore implements IdentityStore {
     
     @PostConstruct
     void postConstruct(){
-        managers = new ConcurrentHashMap<>();
+        managers = new HashMap<>();
     }
     
     @Produces @SessionScoped

@@ -7,6 +7,7 @@ package openup.service.work_products;
 
 import java.util.List;
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.GET;
@@ -27,7 +28,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 @RequestScoped
 public class WorkProducts {
     
-    @PersistenceContext
+    @Inject
     private EntityManager entityManager;
     
     @Name("Contents")
