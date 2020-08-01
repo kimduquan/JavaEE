@@ -22,6 +22,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Base64;
 import java.util.Base64.Encoder;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -54,7 +55,9 @@ public class OpenUPAuth extends Application {
     
     @Override
     public Set<Class<?>> getClasses() {
-        return Set.of(OpenUPAuth.class);
+        Set<Class<?>> classes = new HashSet<>();
+        classes.add(OpenUPAuth.class);
+        return classes;
     }
     
     private PrivateKey privateKey;
