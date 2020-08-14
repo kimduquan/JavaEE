@@ -60,11 +60,11 @@
                 <artifactId>javax.security.enterprise-api</artifactId>
                 <version>1.0</version>
             </dependency>
-            <!-- https://mvnrepository.com/artifact/com.nimbusds/nimbus-jose-jwt -->
+            <!-- https://mvnrepository.com/artifact/io.openliberty.features/jwt-1.0 -->
             <dependency>
-                <groupId>com.nimbusds</groupId>
-                <artifactId>nimbus-jose-jwt</artifactId>
-                <version>8.17.1</version>
+                <groupId>io.openliberty.features</groupId>
+                <artifactId>jwt-1.0</artifactId>
+                <version>20.0.0.8</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

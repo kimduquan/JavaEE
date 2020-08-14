@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.service.auth;
+package openup.persistence;
 
 import java.security.Principal;
 import java.util.HashMap;
@@ -12,22 +12,18 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.SessionScoped;
-import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceUnit;
-import javax.security.enterprise.credential.UsernamePasswordCredential;
-import javax.security.enterprise.identitystore.CredentialValidationResult;
-import static javax.security.enterprise.identitystore.CredentialValidationResult.INVALID_RESULT;
-import javax.security.enterprise.identitystore.IdentityStore;
+import javax.ws.rs.core.Context;
 
 /**
  *
  * @author FOXCONN
  */
 @ApplicationScoped
-public class OpenUPIdentityStore implements IdentityStore {
+public class OpenUPFactory {
     
     @PersistenceUnit
     private EntityManagerFactory factory;
@@ -51,15 +47,15 @@ public class OpenUPIdentityStore implements IdentityStore {
         managers = new HashMap<>();
     }
     
-    @Produces @SessionScoped
-    public EntityManager getEntityManager(Principal principal){
+    @javax.enterprise.inject.Produces @SessionScoped
+    EntityManager getEntityManager(@Context Principal principal){
         return managers.get(principal.getName());
     }
     
-    public CredentialValidationResult validate(UsernamePasswordCredential credential) {
+    public boolean createEntityManager(String userName, String password){
         Map<String, String> props = new HashMap<>();
-        props.put("javax.persistence.jdbc.user", credential.getCaller());
-        props.put("javax.persistence.jdbc.password", credential.getPasswordAsString());
+        props.put("javax.persistence.jdbc.user", userName);
+        props.put("javax.persistence.jdbc.password", password);
         if(factory.isOpen()){
             EntityManager manager = factory.createEntityManager(props);
             if(manager.isOpen()){
@@ -67,18 +63,16 @@ public class OpenUPIdentityStore implements IdentityStore {
                 transaction.begin();
                 if(transaction.isActive()){
                     transaction.commit();
-                    manager = managers.putIfAbsent(credential.getCaller(), manager);
+                    manager = managers.putIfAbsent(userName, manager);
                     if(manager != null){
                         if(manager.isOpen()){
                             manager.close();
                         }
                     }
-                    return new CredentialValidationResult(credential.getCaller());
+                    return true;
                 }
-                manager.close();
             }
-            factory.close();
         }
-        return INVALID_RESULT;
+        return false;
     }
 }
