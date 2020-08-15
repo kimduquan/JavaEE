@@ -42,6 +42,7 @@
         <dependency>
             <groupId>io.openliberty.features</groupId>
             <artifactId>jwt-1.0</artifactId>
+            <type>esa</type>
         </dependency>
     </dependencies>
 

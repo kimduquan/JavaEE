@@ -65,6 +65,7 @@
                 <groupId>io.openliberty.features</groupId>
                 <artifactId>jwt-1.0</artifactId>
                 <version>20.0.0.8</version>
+                <type>esa</type>
             </dependency>
         </dependencies>
     </dependencyManagement>
