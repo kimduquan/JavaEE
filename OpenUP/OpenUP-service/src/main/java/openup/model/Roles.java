@@ -3,10 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.service;
+package openup.model;
 
-import openup.model.delivery_processes.DeliveryProcess;
+import openup.model.roles.RoleSet;
+import java.util.List;
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import org.eclipse.microprofile.graphql.Name;
@@ -21,23 +24,26 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  * @author FOXCONN
  */
 @Type
-@Path("delivery-processes")
+@Path("roles")
 @RequestScoped
-public class DeliveryProcesses {
+public class Roles {
+    
+    @Inject
+    private EntityManager entityManager;
     
     @Name("Contents")
     @GET
     @Operation(
-            summary = "Delivery Processes", 
-            description = "This provides a list of delivery processes that have been published."
+            summary = "Roles", 
+            description = "This category lists roles organized by role set."
     )
     @APIResponse(
-            description = "Delivery Process",
+            description = "Role Set",
             content = @Content(
-                    schema = @Schema(implementation = DeliveryProcess.class)
+                    schema = @Schema(implementation = RoleSet.class)
             )
     )
-    public DeliveryProcess[] getDeliveryProcesses(){
-        return new DeliveryProcess[]{};
+    public List<RoleSet> getRoleSets(){
+        return entityManager.createNamedQuery("RoleSet.Roles", RoleSet.class).getResultList();
     }
 }

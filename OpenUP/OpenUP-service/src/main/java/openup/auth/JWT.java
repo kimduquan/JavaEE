@@ -6,11 +6,16 @@
 package openup.auth;
 
 import java.util.Set;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 /**
  *
  * @author FOXCONN
  */
+@Schema(
+        name = "JsonWebToken",
+        title = "Json Web Token"
+)
 public class JWT {
     
     //Key identifier
@@ -24,6 +29,7 @@ public class JWT {
     private String jti;
     private String upn;
     private Set<String> groups;
+    private String raw_token;
 
     public String getKid() {
         return kid;
@@ -87,5 +93,13 @@ public class JWT {
 
     public void setGroups(Set<String> groups) {
         this.groups = groups;
+    }
+
+    public String getRaw_token() {
+        return raw_token;
+    }
+
+    public void setRaw_token(String raw_token) {
+        this.raw_token = raw_token;
     }
 }

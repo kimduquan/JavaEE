@@ -13,20 +13,30 @@ import java.util.UUID;
 import javax.annotation.security.PermitAll;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.MediaType;
+import openup.auth.JWT;
+import openup.auth.JWTGenerator;
 import openup.config.OpenUPConfigs;
 import openup.persistence.OpenUPPersistence;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.config.Names;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 /**
  *
  * @author FOXCONN
  */
 @RequestScoped
-@Path("/auth")
+@Path("auth")
 @PermitAll
 public class OpenUPAuth {
     
@@ -46,8 +56,36 @@ public class OpenUPAuth {
     private String jwtExpTimeUnit;
     
     @POST
-    Response login(String userName, String password) throws Exception{
-        boolean ok = persistence.createEntityManager(userName, password);
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Operation(
+            summary = "login", 
+            description = "login"
+    )
+    @APIResponse(
+            description = "JWT",
+            content = @Content(
+                    schema = @Schema(implementation = JWT.class)
+            )
+    )
+    public JWT login(
+            @Parameter(
+                name = "username",
+                required = true,
+                allowEmptyValue = false,
+                schema = @Schema(type = SchemaType.STRING)
+            )
+            @FormParam("username")
+            String username, 
+            @Parameter(
+                name = "password",
+                required = true,
+                allowEmptyValue = false,
+                schema = @Schema(type = SchemaType.STRING, format = "password")
+            )
+            @FormParam("password")        
+            String password
+    ) throws Exception{
+        boolean ok = persistence.createEntityManager(username, password);
         if(ok){
             JWT jwt = new JWT();
             jwt.setExp(
@@ -62,12 +100,13 @@ public class OpenUPAuth {
             jwt.setGroups(Set.of("Any_Role"));
             jwt.setIat(new Date().getTime());
             jwt.setIss(issuer);
-            jwt.setJti(userName + UUID.randomUUID());
+            jwt.setJti(username + UUID.randomUUID());
             jwt.setKid("");
-            jwt.setSub(userName);
-            jwt.setUpn(userName);
-            return Response.ok().entity(generator.generate(jwt)).build();
+            jwt.setSub(username);
+            jwt.setUpn(username);
+            jwt.setRaw_token(generator.generate(jwt));
+            return jwt;
         }
-        return Response.status(Response.Status.UNAUTHORIZED).build();
+        return null;
     }
 }
