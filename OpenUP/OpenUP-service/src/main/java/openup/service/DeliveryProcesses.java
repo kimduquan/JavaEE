@@ -3,12 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.service.tasks;
+package openup.service;
 
-import java.util.List;
+import openup.model.delivery_processes.DeliveryProcess;
 import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import org.eclipse.microprofile.graphql.Name;
@@ -23,26 +21,23 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  * @author FOXCONN
  */
 @Type
-@Path("tasks")
+@Path("delivery-processes")
 @RequestScoped
-public class Tasks {
-    
-    @Inject
-    private EntityManager entityManager;
+public class DeliveryProcesses {
     
     @Name("Contents")
     @GET
     @Operation(
-            summary = "Tasks", 
-            description = "List of tasks organized by discipline."
+            summary = "Delivery Processes", 
+            description = "This provides a list of delivery processes that have been published."
     )
     @APIResponse(
-            description = "Discipline",
+            description = "Delivery Process",
             content = @Content(
-                    schema = @Schema(implementation = Discipline.class)
+                    schema = @Schema(implementation = DeliveryProcess.class)
             )
     )
-    public List<Discipline> getDisciplines(){
-        return entityManager.createNamedQuery("Discipline.Disciplines", Discipline.class).getResultList();
+    public DeliveryProcess[] getDeliveryProcesses(){
+        return new DeliveryProcess[]{};
     }
 }

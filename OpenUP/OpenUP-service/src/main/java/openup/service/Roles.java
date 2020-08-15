@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.service.roles;
+package openup.service;
 
+import openup.model.roles.RoleSet;
 import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;

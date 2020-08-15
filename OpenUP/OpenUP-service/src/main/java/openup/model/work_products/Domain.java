@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.service.roles;
+package openup.model.work_products;
 
 import java.io.Serializable;
 import java.util.List;
@@ -13,9 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import openup.service.tasks.Task;
-import openup.service.work_products.Artifact;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -26,12 +25,13 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  */
 @Type
 @Schema(
-        name = "Role",
-        title = "Role"
+        name = "Domain",
+        title = "Domain"
 )
 @Entity
-@Table(name = "_ROLE")
-public class Role implements Serializable {
+@Table(name = "_DOMAIN")
+@NamedQuery(name = "Domain.Domains", query = "SELECT d FROM Domain AS d")
+public class Domain implements Serializable {
     
     @Column(name = "NAME")
     @Id
@@ -39,27 +39,15 @@ public class Role implements Serializable {
     
     @ManyToMany
     @JoinTable(
-            name = "ROLE_ADDITIONALLY_PERFORMS",
+            name = "WORK_PRODUCTS",
             joinColumns = @JoinColumn(
-                    name = "ROLE"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "TASK"
-            )
-    )
-    private List<Task> additionallyPerforms;
-    
-    @ManyToMany
-    @JoinTable(
-            name = "ROLE_MODIFIES",
-            joinColumns = @JoinColumn(
-                    name = "ROLE"
+                    name = "DOMAIN"
             ),
             inverseJoinColumns = @JoinColumn(
                     name = "ARTIFACT"
             )
     )
-    private List<Artifact> modifies;
+    private List<Artifact> workProducts;
 
     public String getName() {
         return name;
@@ -69,21 +57,12 @@ public class Role implements Serializable {
         this.name = name;
     }
     
-    @Name("Additionally_Performs")
-    public List<Task> getAdditionallyPerforms(){
-        return additionallyPerforms;
+    @Name("Work_Products")
+    public List<Artifact> getWorkProducts(){
+        return workProducts;
     }
 
-    public void setAdditionallyPerforms(List<Task> additionallyPerforms) {
-        this.additionallyPerforms = additionallyPerforms;
-    }
-    
-    @Name("Modifies")
-    public List<Artifact> getModifies(){
-        return modifies;
-    }
-
-    public void setModifies(List<Artifact> modifies) {
-        this.modifies = modifies;
+    public void setWorkProducts(List<Artifact> workProducts) {
+        this.workProducts = workProducts;
     }
 }

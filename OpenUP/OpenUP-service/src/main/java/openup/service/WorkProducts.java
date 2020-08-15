@@ -3,9 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.service.delivery_processes;
+package openup.service;
 
+import openup.model.work_products.Domain;
+import java.util.List;
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import org.eclipse.microprofile.graphql.Name;
@@ -20,23 +25,26 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  * @author FOXCONN
  */
 @Type
-@Path("delivery-processes")
+@Path("work-products")
 @RequestScoped
-public class DeliveryProcesses {
+public class WorkProducts {
+    
+    @Inject
+    private EntityManager entityManager;
     
     @Name("Contents")
     @GET
     @Operation(
-            summary = "Delivery Processes", 
-            description = "This provides a list of delivery processes that have been published."
+            summary = "Work Products", 
+            description = "List of work products organized by domain."
     )
     @APIResponse(
-            description = "Delivery Process",
+            description = "Domain",
             content = @Content(
-                    schema = @Schema(implementation = DeliveryProcess.class)
+                    schema = @Schema(implementation = Domain.class)
             )
     )
-    public DeliveryProcess[] getDeliveryProcesses(){
-        return new DeliveryProcess[]{};
+    public List<Domain> getDomains(){
+        return entityManager.createNamedQuery("Domain.Domains", Domain.class).getResultList();
     }
 }

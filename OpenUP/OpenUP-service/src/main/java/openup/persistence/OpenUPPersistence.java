@@ -12,8 +12,8 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.SessionScoped;
+import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceUnit;
 import javax.ws.rs.core.Context;
@@ -23,23 +23,16 @@ import javax.ws.rs.core.Context;
  * @author FOXCONN
  */
 @ApplicationScoped
-public class OpenUPFactory {
+public class OpenUPPersistence {
     
     @PersistenceUnit
-    private EntityManagerFactory factory;
+    private EntityManager entityManager;
     
     private Map<String, EntityManager> managers;
     
     @PreDestroy
     void preDestroy(){
-        managers.values()
-            .stream()
-            .parallel()
-            .forEach(EntityManager::close);
         managers.clear();
-        if(factory.isOpen()){
-            factory.close();
-        }
     }
     
     @PostConstruct
@@ -47,7 +40,7 @@ public class OpenUPFactory {
         managers = new HashMap<>();
     }
     
-    @javax.enterprise.inject.Produces @SessionScoped
+    @Produces @SessionScoped
     EntityManager getEntityManager(@Context Principal principal){
         return managers.get(principal.getName());
     }
@@ -56,21 +49,19 @@ public class OpenUPFactory {
         Map<String, String> props = new HashMap<>();
         props.put("javax.persistence.jdbc.user", userName);
         props.put("javax.persistence.jdbc.password", password);
-        if(factory.isOpen()){
-            EntityManager manager = factory.createEntityManager(props);
-            if(manager.isOpen()){
-                EntityTransaction transaction = manager.getTransaction();
-                transaction.begin();
-                if(transaction.isActive()){
-                    transaction.commit();
-                    manager = managers.putIfAbsent(userName, manager);
-                    if(manager != null){
-                        if(manager.isOpen()){
-                            manager.close();
-                        }
+        EntityManager manager = entityManager.getEntityManagerFactory().createEntityManager(props);
+        if(manager.isOpen()){
+            EntityTransaction transaction = manager.getTransaction();
+            transaction.begin();
+            if(transaction.isActive()){
+                transaction.commit();
+                manager = managers.putIfAbsent(userName, manager);
+                if(manager != null){
+                    if(manager.isOpen()){
+                        manager.close();
                     }
-                    return true;
                 }
+                return true;
             }
         }
         return false;

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.service.tasks;
+package openup.model.tasks;
 
 import java.io.Serializable;
 import java.util.List;
@@ -15,8 +15,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import openup.service.roles.Role;
-import openup.service.work_products.Artifact;
+import openup.model.roles.Role;
+import openup.model.work_products.Artifact;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 

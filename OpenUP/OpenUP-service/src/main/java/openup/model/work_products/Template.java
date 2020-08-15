@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.service.work_products;
+package openup.model.work_products;
 
 import java.io.Serializable;
 import javax.persistence.Embeddable;

@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.graphql;
+package openup.service;
 
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import openup.service.roles.Roles;
-import openup.service.tasks.Tasks;
-import openup.service.work_products.WorkProducts;
+import openup.service.Roles;
+import openup.service.Tasks;
+import openup.service.WorkProducts;
 import org.eclipse.microprofile.graphql.Description;
 import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.Name;

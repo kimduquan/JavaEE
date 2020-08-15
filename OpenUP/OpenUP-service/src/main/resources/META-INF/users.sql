@@ -1,41 +1,41 @@
 /*Basic Roles BEGIN*/
-CREATE USER IF NOT EXISTS analyst PASSWORD 'analyst';
-CREATE USER IF NOT EXISTS any_role PASSWORD 'any_role';
-CREATE USER IF NOT EXISTS architect PASSWORD 'architect';
-CREATE USER IF NOT EXISTS developer PASSWORD 'developer';
-CREATE USER IF NOT EXISTS project_manager PASSWORD 'project_manager';
-CREATE USER IF NOT EXISTS stakeholder PASSWORD 'stakeholder';
-CREATE USER IF NOT EXISTS tester PASSWORD 'tester';
+CREATE USER IF NOT EXISTS analyst1 PASSWORD 'analyst';
+CREATE USER IF NOT EXISTS any_role1 PASSWORD 'any_role';
+CREATE USER IF NOT EXISTS architect1 PASSWORD 'architect';
+CREATE USER IF NOT EXISTS developer1 PASSWORD 'developer';
+CREATE USER IF NOT EXISTS project_manager1 PASSWORD 'project_manager';
+CREATE USER IF NOT EXISTS stakeholder1 PASSWORD 'stakeholder';
+CREATE USER IF NOT EXISTS tester1 PASSWORD 'tester';
 
-GRANT analyst TO Analyst;
-GRANT any_role TO Any_Role;
-GRANT architect TO Architect;
-GRANT developer TO Developer;
-GRANT project_manager TO Project_Manager;
-GRANT stakeholder TO Stakeholder;
-GRANT tester TO Tester;
+GRANT Analyst TO analyst1;
+GRANT Any_Role TO any_role1;
+GRANT Architect TO architect1;
+GRANT Developer TO developer1;
+GRANT Project_Manager TO project_manager1;
+GRANT Stakeholder TO stakeholder1;
+GRANT Tester TO tester1;
 /*Basic Roles END*/
 
 /*Deployment BEGIN*/
-CREATE USER IF NOT EXISTS course_developer PASSWORD 'course_developer';
-CREATE USER IF NOT EXISTS deployment_engineer PASSWORD 'deployment_engineer';
-CREATE USER IF NOT EXISTS deployment_manager PASSWORD 'deployment_manager';
-CREATE USER IF NOT EXISTS product_owner PASSWORD 'product_owner';
-CREATE USER IF NOT EXISTS technical_writer PASSWORD 'technical_writer';
-CREATE USER IF NOT EXISTS trainer PASSWORD 'trainer';
+CREATE USER IF NOT EXISTS course_developer1 PASSWORD 'course_developer';
+CREATE USER IF NOT EXISTS deployment_engineer1 PASSWORD 'deployment_engineer';
+CREATE USER IF NOT EXISTS deployment_manager1 PASSWORD 'deployment_manager';
+CREATE USER IF NOT EXISTS product_owner1 PASSWORD 'product_owner';
+CREATE USER IF NOT EXISTS technical_writer1 PASSWORD 'technical_writer';
+CREATE USER IF NOT EXISTS trainer1 PASSWORD 'trainer';
 
-GRANT course_developer TO Course_Developer;
-GRANT deployment_engineer TO Deployment_Engineer;
-GRANT deployment_manager TO Deployment_Manager;
-GRANT product_owner TO Product_Owner;
-GRANT technical_writer TO Technical_Writer;
-GRANT trainer TO Trainer;
+GRANT Course_Developer TO course_developer1;
+GRANT Deployment_Engineer TO deployment_engineer1;
+GRANT Deployment_Manager TO deployment_manager1;
+GRANT Product_Owner TO product_owner1;
+GRANT Technical_Writer TO technical_writer1;
+GRANT Trainer TO trainer1;
 /*Deployment END*/
 
 /*Environment BEGIN*/
-CREATE USER IF NOT EXISTS process_engineer PASSWORD 'process_engineer';
-CREATE USER IF NOT EXISTS tool_specialist PASSWORD 'tool_specialist';
+CREATE USER IF NOT EXISTS process_engineer1 PASSWORD 'process_engineer';
+CREATE USER IF NOT EXISTS tool_specialist1 PASSWORD 'tool_specialist';
 
-GRANT process_engineer TO Process_Engineer;
-GRANT tool_specialist TO Tool_Specialist;
+GRANT Process_Engineer TO process_engineer1;
+GRANT Tool_Specialist TO tool_specialist1;
 /*Environment END*/

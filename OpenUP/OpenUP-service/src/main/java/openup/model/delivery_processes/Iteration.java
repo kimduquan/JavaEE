@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.service.delivery_processes;
+package openup.model.delivery_processes;
 
 import java.util.List;
 import javax.persistence.Column;

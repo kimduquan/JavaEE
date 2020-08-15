@@ -5,11 +5,8 @@
  */
 package openup.auth;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
@@ -20,7 +17,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 import openup.config.OpenUPConfigs;
-import openup.persistence.OpenUPFactory;
+import openup.persistence.OpenUPPersistence;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.config.Names;
 
@@ -34,7 +31,7 @@ import org.eclipse.microprofile.jwt.config.Names;
 public class OpenUPAuth {
     
     @Inject
-    private OpenUPFactory persistence;
+    private OpenUPPersistence persistence;
     
     @Inject
     private JWTGenerator generator;
