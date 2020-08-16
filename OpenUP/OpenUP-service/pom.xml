@@ -20,10 +20,10 @@
             <artifactId>microprofile-graphql-api</artifactId>
             <scope>provided</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.eclipse.persistence/javax.persistence -->
+        <!-- https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api -->
         <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>javax.persistence</artifactId>
+            <groupId>javax.persistence</groupId>
+            <artifactId>javax.persistence-api</artifactId>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.eclipse.microprofile/microprofile -->
         <dependency>
@@ -32,11 +32,6 @@
             <version>3.3</version>
             <type>pom</type>
             <scope>provided</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/javax.security.enterprise/javax.security.enterprise-api -->
-        <dependency>
-            <groupId>javax.security.enterprise</groupId>
-            <artifactId>javax.security.enterprise-api</artifactId>
         </dependency>
         <!-- https://mvnrepository.com/artifact/io.openliberty.features/jwt-1.0 -->
         <dependency>

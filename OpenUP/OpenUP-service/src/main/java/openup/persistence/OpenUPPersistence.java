@@ -15,7 +15,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceUnit;
+import javax.persistence.PersistenceContext;
 import javax.ws.rs.core.Context;
 
 /**
@@ -25,7 +25,7 @@ import javax.ws.rs.core.Context;
 @ApplicationScoped
 public class OpenUPPersistence {
     
-    @PersistenceUnit
+    @PersistenceContext
     private EntityManager entityManager;
     
     private Map<String, EntityManager> managers;
