@@ -8,15 +8,19 @@ package openup.persistence;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.core.Context;
+import org.eclipse.microprofile.faulttolerance.Asynchronous;
+import org.eclipse.microprofile.faulttolerance.Timeout;
 
 /**
  *
@@ -37,7 +41,7 @@ public class OpenUPPersistence {
     
     @PostConstruct
     void postConstruct(){
-        managers = new HashMap<>();
+        managers = new ConcurrentHashMap<>();
     }
     
     @Produces @SessionScoped
@@ -45,25 +49,17 @@ public class OpenUPPersistence {
         return managers.get(principal.getName());
     }
     
-    public boolean createEntityManager(String userName, String password){
+    @Asynchronous
+    @Timeout(4000)
+    public CompletionStage<EntityManager> createEntityManager(String userName, String password){
         Map<String, String> props = new HashMap<>();
         props.put("javax.persistence.jdbc.user", userName);
         props.put("javax.persistence.jdbc.password", password);
-        EntityManager manager = entityManager.getEntityManagerFactory().createEntityManager(props);
-        if(manager.isOpen()){
-            EntityTransaction transaction = manager.getTransaction();
-            transaction.begin();
-            if(transaction.isActive()){
-                transaction.commit();
-                manager = managers.putIfAbsent(userName, manager);
-                if(manager != null){
-                    if(manager.isOpen()){
-                        manager.close();
-                    }
-                }
-                return true;
-            }
-        }
-        return false;
+        CompletionStage<EntityManager> res = CompletableFuture.supplyAsync(() -> {
+            EntityManager manager = entityManager.getEntityManagerFactory().createEntityManager(props);
+            managers.putIfAbsent(userName, manager);
+            return manager;
+        });
+        return res;
     }
 }
