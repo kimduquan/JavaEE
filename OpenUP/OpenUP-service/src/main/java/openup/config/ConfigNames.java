@@ -9,7 +9,7 @@ package openup.config;
  *
  * @author FOXCONN
  */
-public interface OpenUPConfigs {
+public interface ConfigNames {
     String MP_JWT_PRIVATE_KEY = "mp.jwt.issue.privatekey";
     String JWT_EXP_DURATION = "openup.auth.jwt.exp.duration";
     String JWT_EXP_TIMEUNIT = "openup.auth.jwt.exp.timeunit";

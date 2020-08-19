@@ -5,6 +5,7 @@
  */
 package openup.error;
 
+import java.io.Serializable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import javax.ws.rs.core.Response;
@@ -18,7 +19,7 @@ import org.eclipse.microprofile.faulttolerance.exceptions.TimeoutException;
  *
  * @author FOXCONN
  */
-public class ErrorHandler implements FallbackHandler<CompletionStage<Response>> {
+public class ErrorHandler implements FallbackHandler<CompletionStage<Response>>, Serializable {
 
     @Override
     public CompletionStage<Response> handle(ExecutionContext context) {

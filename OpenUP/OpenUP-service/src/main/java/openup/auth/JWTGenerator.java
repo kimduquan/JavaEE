@@ -7,6 +7,7 @@ package openup.auth;
 
 import com.ibm.websphere.security.jwt.Claims;
 import com.ibm.websphere.security.jwt.JwtBuilder;
+import java.io.Serializable;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
@@ -15,20 +16,22 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
-import openup.config.OpenUPConfigs;
+import javax.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import openup.config.ConfigNames;
 
 /**
  *
  * @author FOXCONN
  */
 @RequestScoped
-public class JWTGenerator {
+public class JWTGenerator implements Serializable {
     
     private PrivateKey privateKey;
     private Base64.Decoder decoder;
     
-    @ConfigProperty(name = OpenUPConfigs.MP_JWT_PRIVATE_KEY)
+    @Inject
+    @ConfigProperty(name = ConfigNames.MP_JWT_PRIVATE_KEY)
     private String privateKeyText;
     
     @PostConstruct

@@ -15,7 +15,7 @@ import java.util.concurrent.CompletionStage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.security.PermitAll;
-import javax.enterprise.context.SessionScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.ws.rs.POST;
@@ -23,7 +23,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import openup.config.OpenUPConfigs;
 import openup.error.ErrorHandler;
 import openup.persistence.OpenUPPersistence;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -38,12 +37,13 @@ import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import openup.config.ConfigNames;
 
 /**
  *
  * @author FOXCONN
  */
-@SessionScoped
+@RequestScoped
 @Path("auth")
 @PermitAll
 public class OpenUPAuth implements Serializable {
@@ -54,13 +54,16 @@ public class OpenUPAuth implements Serializable {
     @Inject
     private JWTGenerator generator;
     
+    @Inject
     @ConfigProperty(name = Names.ISSUER)
     private String issuer;
     
-    @ConfigProperty(name = OpenUPConfigs.JWT_EXP_DURATION)
+    @Inject
+    @ConfigProperty(name = ConfigNames.JWT_EXP_DURATION)
     private Long jwtExpDuration;
     
-    @ConfigProperty(name = OpenUPConfigs.JWT_EXP_TIMEUNIT)
+    @Inject
+    @ConfigProperty(name = ConfigNames.JWT_EXP_TIMEUNIT)
     private String jwtExpTimeUnit;
     
     /**
@@ -85,7 +88,8 @@ public class OpenUPAuth implements Serializable {
             )
     )
     @APIResponse(
-            name = "token", 
+            name = "login", 
+            description = "Json Web Token",
             content = @Content(
                     mediaType = MediaType.TEXT_PLAIN
             )
@@ -95,7 +99,7 @@ public class OpenUPAuth implements Serializable {
     @Timeout(4000)
     @Fallback(value = ErrorHandler.class, applyOn = {Exception.class})
     @CircuitBreaker(requestVolumeThreshold = 40, failureRatio = 0.618, successThreshold = 15)
-    public CompletionStage<Response> login( OpenUPCredential credential ){
+    public CompletionStage<Response> login(final OpenUPCredential credential ){
         CompletionStage<EntityManager> manager = persistence.createEntityManager(credential.getUsername(), credential.getPassword());
         CompletionStage<Response> response = manager.thenApplyAsync(em -> {
             try {

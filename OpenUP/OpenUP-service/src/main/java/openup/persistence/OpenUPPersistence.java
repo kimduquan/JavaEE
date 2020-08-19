@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
@@ -41,7 +40,7 @@ public class OpenUPPersistence {
     
     @PostConstruct
     void postConstruct(){
-        managers = new ConcurrentHashMap<>();
+        managers = new HashMap<>();
     }
     
     @Produces @SessionScoped
