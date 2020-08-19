@@ -32,6 +32,11 @@
             <artifactId>h2</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/io.jaegertracing/jaeger-client -->
+        <dependency>
+            <groupId>io.jaegertracing</groupId>
+            <artifactId>jaeger-client</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -48,6 +53,17 @@
                         </goals>
                         <configuration>
                             <includeArtifactIds>h2</includeArtifactIds>
+                            <outputDirectory>${project.build.directory}/shared/resources/</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-jaeger-dependency</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeArtifactIds>jaeger-client</includeArtifactIds>
                             <outputDirectory>${project.build.directory}/shared/resources/</outputDirectory>
                         </configuration>
                     </execution>
