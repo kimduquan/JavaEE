@@ -15,7 +15,7 @@
 
     <application location="OpenUP-web-1.0-SNAPSHOT.war" />
     <application location="OpenUP-service-1.0-SNAPSHOT.war">
-		<classloader commonLibraryRef="JaegerClientLib"/>
+		<classloader apiTypeVisibility="+third-party"/>
 	</application>
     
     <!-- H2 Library Configuration -->
@@ -25,7 +25,7 @@
 	
 	<!-- Jaeger Client Library Configuration -->
     <library id="JaegerClientLib">
-        <fileset dir="${shared.resource.dir}" includes="jaeger-client*.jar"/>
+        <fileset dir="${shared.resource.dir}" includes="*.jar"/>
     </library>
 
     <dataSource id="openup" jndiName="jdbc/openup">
