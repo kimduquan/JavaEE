@@ -15,7 +15,7 @@ import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import openup.config.ConfigNames;
@@ -24,7 +24,7 @@ import openup.config.ConfigNames;
  *
  * @author FOXCONN
  */
-@RequestScoped
+@Dependent
 public class JWTGenerator implements Serializable {
     
     private PrivateKey privateKey;

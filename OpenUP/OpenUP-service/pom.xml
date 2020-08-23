@@ -39,6 +39,11 @@
             <artifactId>jwt-1.0</artifactId>
             <type>esa</type>
         </dependency>
+		<!-- https://mvnrepository.com/artifact/io.jaegertracing/jaeger-client -->
+        <dependency>
+            <groupId>io.jaegertracing</groupId>
+            <artifactId>jaeger-client</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
