@@ -12,6 +12,12 @@
     <artifactId>OpenUP-assembly</artifactId>
     <name>OpenUP-assembly</name>
     <packaging>liberty-assembly</packaging>
+	
+	<properties>
+		<!-- Jaeger configuration -->
+        <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
+        <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -46,24 +52,13 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>copy-h2-dependency</id>
+                        <id>copy-openup-dependency</id>
                         <phase>package</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <includeArtifactIds>h2</includeArtifactIds>
-                            <outputDirectory>${project.build.directory}/shared/resources/</outputDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-jaeger-dependency</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <includeArtifactIds>jaeger-client</includeArtifactIds>
+                            <excludeGroupIds>openup</excludeGroupIds>
                             <outputDirectory>${project.build.directory}/shared/resources/</outputDirectory>
                         </configuration>
                     </execution>
