@@ -52,11 +52,11 @@ public class JWTGenerator implements Serializable {
     public String generate(JWT jwt) throws Exception{
         return JwtBuilder
                 .create()
-                .claim(Claims.ISSUER, jwt.getIss())
-                .claim(Claims.SUBJECT, jwt.getSub())
-                .claim(Claims.EXPIRATION, jwt.getExp().toString())
-                .claim(Claims.ISSUED_AT, jwt.getIat().toString())
-                .claim(Claims.ID, jwt.getJti())
+                .issuer(jwt.getIss())
+                .subject(jwt.getSub())
+                .expirationTime(jwt.getExp())
+                .claim(Claims.ISSUED_AT, jwt.getIat())
+                .jwtId(true)
                 .claim("upn", jwt.getUpn())
                 .claim("groups", jwt.getGroups().toArray(new String[jwt.getGroups().size()]))
                 .signWith("RS256", privateKey)
