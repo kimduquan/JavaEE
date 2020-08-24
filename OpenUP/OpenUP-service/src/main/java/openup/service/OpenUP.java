@@ -5,17 +5,24 @@
  */
 package openup.service;
 
+import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.eclipse.microprofile.auth.LoginConfig;
 import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition;
+import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeIn;
+import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeType;
 import org.eclipse.microprofile.openapi.annotations.info.Contact;
 import org.eclipse.microprofile.openapi.annotations.info.Info;
+import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
+import org.eclipse.microprofile.openapi.annotations.security.SecurityScheme;
+import org.eclipse.microprofile.openapi.annotations.security.SecuritySchemes;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 /**
@@ -39,6 +46,11 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
             ),
             version = "1.0-SNAPSHOT"
         ),
+        security = {
+            @SecurityRequirement(
+                    name = "MP-JWT"
+            )
+        },
         tags = {
             @Tag(
                     name = "OpenUP",
@@ -46,6 +58,15 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
             )
         }
 )
+@SecuritySchemes({
+    @SecurityScheme(
+            securitySchemeName = "MP-JWT",
+            type = SecuritySchemeType.APIKEY,
+            description = "MP-JWT",
+            apiKeyName = HttpHeaders.AUTHORIZATION,
+            in = SecuritySchemeIn.HEADER
+    )
+})
 public class OpenUP extends Application {
     
 }
