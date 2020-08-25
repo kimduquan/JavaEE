@@ -6,6 +6,7 @@
 package openup.auth;
 
 import java.io.Serializable;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -116,22 +117,18 @@ public class OpenUPAuth implements Serializable {
     Response generateJWT(OpenUPCredential credential) throws Exception{
         JWT jwt = new JWT();
         jwt.setExp(
-                Date.from(
-                    Instant.now()
-                            .plus(
-                                jwtExpDuration, 
-                                ChronoUnit.valueOf(jwtExpTimeUnit)
-                            )
-            ).getTime()
+                new Date().getTime() 
+                        + jwtExpDuration 
+                                * ChronoUnit.valueOf(jwtExpTimeUnit)
+                                        .getDuration()
+                                        .toMillis()
         );
         jwt.setGroups(Set.of("Any_Role"));
-        jwt.setIat(new Date().getTime());
         jwt.setIss(issuer);
         jwt.setJti(credential.getUsername() + UUID.randomUUID());
         jwt.setKid("");
         jwt.setSub(credential.getUsername());
         jwt.setUpn(credential.getUsername());
-        jwt.setRaw_token(generator.generate(jwt));
-        return Response.ok(jwt.getRaw_token()).build();
+        return Response.ok(generator.generate(jwt)).build();
     }
 }

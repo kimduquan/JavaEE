@@ -6,7 +6,6 @@
 package openup.service;
 
 import javax.annotation.security.DenyAll;
-import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.Consumes;
@@ -34,7 +33,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 @LoginConfig(authMethod="MP-JWT", realmName="OpenUP")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@RolesAllowed("Any_Role")
+@DenyAll
 @OpenAPIDefinition(
         info = @Info(
             title = "OpenUP",
@@ -61,10 +60,10 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 @SecuritySchemes({
     @SecurityScheme(
             securitySchemeName = "MP-JWT",
-            type = SecuritySchemeType.APIKEY,
+            type = SecuritySchemeType.HTTP,
             description = "MP-JWT",
-            apiKeyName = HttpHeaders.AUTHORIZATION,
-            in = SecuritySchemeIn.HEADER
+            scheme = "bearer",
+            bearerFormat = "JWT"
     )
 })
 public class OpenUP extends Application {

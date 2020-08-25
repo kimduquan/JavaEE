@@ -55,7 +55,6 @@ public class JWTGenerator implements Serializable {
                 .issuer(jwt.getIss())
                 .subject(jwt.getSub())
                 .expirationTime(jwt.getExp())
-                .claim(Claims.ISSUED_AT, jwt.getIat())
                 .jwtId(true)
                 .claim("upn", jwt.getUpn())
                 .claim("groups", jwt.getGroups().toArray(new String[jwt.getGroups().size()]))

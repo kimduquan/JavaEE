@@ -5,10 +5,12 @@
  */
 package openup.model;
 
+import javax.annotation.security.RolesAllowed;
 import openup.model.delivery_processes.DeliveryProcess;
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.MediaType;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -23,6 +25,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 @Type
 @Path("delivery-processes")
 @RequestScoped
+@RolesAllowed("Any_Role")
 public class DeliveryProcesses {
     
     @Name("Contents")
@@ -34,6 +37,7 @@ public class DeliveryProcesses {
     @APIResponse(
             description = "Delivery Process",
             content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
                     schema = @Schema(implementation = DeliveryProcess.class)
             )
     )

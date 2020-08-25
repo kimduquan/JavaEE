@@ -7,11 +7,13 @@ package openup.model;
 
 import openup.model.roles.RoleSet;
 import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.MediaType;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -26,6 +28,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 @Type
 @Path("roles")
 @RequestScoped
+@RolesAllowed("Any_Role")
 public class Roles {
     
     @Inject
@@ -40,6 +43,7 @@ public class Roles {
     @APIResponse(
             description = "Role Set",
             content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
                     schema = @Schema(implementation = RoleSet.class)
             )
     )
