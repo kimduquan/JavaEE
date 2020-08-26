@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.model.delivery_processes;
+package openup.epf.delivery_processes;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -41,5 +41,13 @@ public class Phase extends Properties {
 
     public void setParentActivities(DeliveryProcess parentActivities) {
         this.parentActivities = parentActivities;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

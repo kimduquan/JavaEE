@@ -3,11 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.model;
+package openup.epf;
 
+import java.util.List;
 import javax.annotation.security.RolesAllowed;
-import openup.model.delivery_processes.DeliveryProcess;
+import openup.epf.delivery_processes.DeliveryProcess;
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
@@ -28,6 +31,9 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 @RolesAllowed("Any_Role")
 public class DeliveryProcesses {
     
+    @Inject
+    private EntityManager entityManager;
+    
     @Name("Contents")
     @GET
     @Operation(
@@ -41,7 +47,7 @@ public class DeliveryProcesses {
                     schema = @Schema(implementation = DeliveryProcess.class)
             )
     )
-    public DeliveryProcess[] getDeliveryProcesses(){
-        return new DeliveryProcess[]{};
+    public List<DeliveryProcess> getDeliveryProcesses(){
+        return entityManager.createNamedQuery("DeliveryProcess.DeliveryProcesses", DeliveryProcess.class).getResultList();
     }
 }

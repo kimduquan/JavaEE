@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.model.work_products;
+package openup.epf.roles;
 
 import java.io.Serializable;
 import java.util.List;
@@ -25,13 +25,13 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  */
 @Type
 @Schema(
-        name = "Domain",
-        title = "Domain"
+        name = "RoleSet",
+        title = "Role Set"
 )
 @Entity
-@Table(name = "_DOMAIN")
-@NamedQuery(name = "Domain.Domains", query = "SELECT d FROM Domain AS d")
-public class Domain implements Serializable {
+@Table(name = "ROLE_SET")
+@NamedQuery(name = "RoleSet.Roles", query = "SELECT rs FROM RoleSet AS rs")
+public class RoleSet implements Serializable {
     
     @Column(name = "NAME")
     @Id
@@ -39,15 +39,15 @@ public class Domain implements Serializable {
     
     @ManyToMany
     @JoinTable(
-            name = "WORK_PRODUCTS",
+            name = "ROLES",
             joinColumns = @JoinColumn(
-                    name = "DOMAIN"
+                    name = "ROLE_SET"
             ),
             inverseJoinColumns = @JoinColumn(
-                    name = "ARTIFACT"
+                    name = "ROLE"
             )
     )
-    private List<Artifact> workProducts;
+    private List<Role> roles;
 
     public String getName() {
         return name;
@@ -57,12 +57,12 @@ public class Domain implements Serializable {
         this.name = name;
     }
     
-    @Name("Work_Products")
-    public List<Artifact> getWorkProducts(){
-        return workProducts;
+    @Name("Roles")
+    public List<Role> getRoles(){
+        return roles;
     }
 
-    public void setWorkProducts(List<Artifact> workProducts) {
-        this.workProducts = workProducts;
+    public void setRoles(List<Role> roles){
+        this.roles = roles;
     }
 }

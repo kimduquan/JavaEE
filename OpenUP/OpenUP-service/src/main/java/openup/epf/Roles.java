@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.model;
+package openup.epf;
 
-import openup.model.work_products.Domain;
+import openup.epf.roles.RoleSet;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
@@ -26,10 +26,10 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  * @author FOXCONN
  */
 @Type
-@Path("work-products")
+@Path("roles")
 @RequestScoped
 @RolesAllowed("Any_Role")
-public class WorkProducts {
+public class Roles {
     
     @Inject
     private EntityManager entityManager;
@@ -37,17 +37,17 @@ public class WorkProducts {
     @Name("Contents")
     @GET
     @Operation(
-            summary = "Work Products", 
-            description = "List of work products organized by domain."
+            summary = "Roles", 
+            description = "This category lists roles organized by role set."
     )
     @APIResponse(
-            description = "Domain",
+            description = "Role Set",
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON,
-                    schema = @Schema(implementation = Domain.class)
+                    schema = @Schema(implementation = RoleSet.class)
             )
     )
-    public List<Domain> getDomains(){
-        return entityManager.createNamedQuery("Domain.Domains", Domain.class).getResultList();
+    public List<RoleSet> getRoleSets(){
+        return entityManager.createNamedQuery("RoleSet.Roles", RoleSet.class).getResultList();
     }
 }

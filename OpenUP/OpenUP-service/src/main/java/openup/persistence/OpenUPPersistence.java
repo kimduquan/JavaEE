@@ -10,13 +10,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.SessionScoped;
+import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import javax.ws.rs.core.Context;
 import org.eclipse.microprofile.faulttolerance.Asynchronous;
@@ -32,22 +34,27 @@ public class OpenUPPersistence {
     @PersistenceUnit
     private EntityManagerFactory factory;
     
+    @PersistenceContext
+    private EntityManager defaultEntityManager;
+    
     private Map<String, EntityManager> managers;
     
     @PreDestroy
     void preDestroy(){
-        managers.values().forEach(EntityManager::close);
+        managers.forEach((name, entityManager) -> {
+            entityManager.close();
+        });
         managers.clear();
     }
     
     @PostConstruct
     void postConstruct(){
-        managers = new HashMap<>();
+        managers = new ConcurrentHashMap<>();
     }
     
-    @Produces @SessionScoped
+    @Produces @Dependent
     EntityManager getEntityManager(@Context Principal principal){
-        return managers.get(principal.getName());
+        return managers.getOrDefault(principal.getName(), defaultEntityManager);
     }
     
     @Asynchronous

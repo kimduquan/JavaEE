@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.model;
+package openup.epf;
 
-import openup.model.roles.RoleSet;
+import openup.epf.tasks.Discipline;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
@@ -26,10 +26,10 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  * @author FOXCONN
  */
 @Type
-@Path("roles")
+@Path("tasks")
 @RequestScoped
 @RolesAllowed("Any_Role")
-public class Roles {
+public class Tasks {
     
     @Inject
     private EntityManager entityManager;
@@ -37,17 +37,17 @@ public class Roles {
     @Name("Contents")
     @GET
     @Operation(
-            summary = "Roles", 
-            description = "This category lists roles organized by role set."
+            summary = "Tasks", 
+            description = "List of tasks organized by discipline."
     )
     @APIResponse(
-            description = "Role Set",
+            description = "Discipline",
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON,
-                    schema = @Schema(implementation = RoleSet.class)
+                    schema = @Schema(implementation = Discipline.class)
             )
     )
-    public List<RoleSet> getRoleSets(){
-        return entityManager.createNamedQuery("RoleSet.Roles", RoleSet.class).getResultList();
+    public List<Discipline> getDisciplines(){
+        return entityManager.createNamedQuery("Discipline.Disciplines", Discipline.class).getResultList();
     }
 }

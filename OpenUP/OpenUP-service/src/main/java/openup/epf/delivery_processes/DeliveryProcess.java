@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.model.work_products;
+package openup.epf.delivery_processes;
 
-import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -19,13 +19,14 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  */
 @Type
 @Schema(
-        name = "WorkProductSlot",
-        title = "WorkProductSlot"
+        name = "DeliveryProcess",
+        title = "Delivery Process"
 )
 @Entity
-@Table(name = "WORK_PRODUCT_SLOT")
-public class WorkProductSlot implements Serializable {
-
+@Table(name = "DELIVERY_PROCESS")
+@NamedQuery(name = "DeliveryProcess.DeliveryProcesses", query = "SELECT dp FROM DeliveryProcess AS dp")
+public class DeliveryProcess extends Properties {
+    
     @Column(name = "NAME")
     @Id
     private String name;
@@ -37,5 +38,4 @@ public class WorkProductSlot implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-    
 }

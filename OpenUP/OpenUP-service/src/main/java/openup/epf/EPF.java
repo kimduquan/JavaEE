@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.query;
+package openup.epf;
 
-import openup.model.WorkProducts;
-import openup.model.Roles;
-import openup.model.Tasks;
+import openup.epf.WorkProducts;
+import openup.epf.Roles;
+import openup.epf.Tasks;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -23,7 +23,7 @@ import org.eclipse.microprofile.graphql.Query;
 @GraphQLApi
 @RequestScoped
 @RolesAllowed("Any_Role")
-public class OpenUPQuery {
+public class EPF {
     
     @Inject
     private Roles roles;

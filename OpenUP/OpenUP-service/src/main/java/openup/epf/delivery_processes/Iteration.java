@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.model.delivery_processes;
+package openup.epf.delivery_processes;
 
 import java.util.List;
 import javax.persistence.Column;
@@ -68,5 +68,13 @@ public class Iteration extends CapabilityPattern {
 
     public void setParentActivities(Phase parentActivities) {
         this.parentActivities = parentActivities;
+    }
+
+    public List<Activity> getActivities() {
+        return activities;
+    }
+
+    public void setActivities(List<Activity> activities) {
+        this.activities = activities;
     }
 }
