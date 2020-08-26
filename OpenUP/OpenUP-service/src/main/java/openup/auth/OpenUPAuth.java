@@ -76,7 +76,8 @@ public class OpenUPAuth implements Serializable {
     @Produces(MediaType.TEXT_PLAIN)
     @Operation(
             summary = "login", 
-            description = "login"
+            description = "login",
+            operationId = "login"
     )
     @RequestBody(
             required = true,

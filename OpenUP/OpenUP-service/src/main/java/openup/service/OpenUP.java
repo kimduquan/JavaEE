@@ -11,14 +11,15 @@ import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.eclipse.microprofile.auth.LoginConfig;
+import org.eclipse.microprofile.openapi.annotations.Components;
 import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition;
-import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeIn;
 import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeType;
 import org.eclipse.microprofile.openapi.annotations.info.Contact;
 import org.eclipse.microprofile.openapi.annotations.info.Info;
+import org.eclipse.microprofile.openapi.annotations.links.Link;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
 import org.eclipse.microprofile.openapi.annotations.security.SecurityScheme;
 import org.eclipse.microprofile.openapi.annotations.security.SecuritySchemes;
@@ -55,7 +56,22 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
                     name = "OpenUP",
                     description = "OpenUP"
             )
-        }
+        },
+        components = @Components(
+                responses = {
+                    @APIResponse(
+                            description = "UNAUTHORIZED",
+                            responseCode = "401",
+                            links = {
+                                @Link(
+                                        name = "login",
+                                        operationId = "login"
+                                )
+                            },
+                            name = "UNAUTHORIZED"
+                    )
+                }
+        )
 )
 @SecuritySchemes({
     @SecurityScheme(
