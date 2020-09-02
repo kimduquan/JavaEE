@@ -7,8 +7,8 @@ package openup.epf.work_products;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
@@ -35,8 +35,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 )
 @Entity
 @Table(name = "ARTIFACT")
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "NAME")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Artifact implements Serializable {
     
     @Column(name = "NAME")
@@ -58,6 +57,12 @@ public class Artifact implements Serializable {
     @ManyToOne
     @JoinColumn(name = "RESPONSIBLE")
     private Role responsible;
+    
+    @ManyToMany(mappedBy = "modifies")
+    private List<Role> modifiedBy;
+    
+    @ManyToMany(mappedBy = "outputs")
+    private List<Task> outputFrom;
 
     public String getName() {
         return name;
@@ -76,6 +81,7 @@ public class Artifact implements Serializable {
     }
     
     @Name("Responsible")
+    @JsonbTransient
     public Role getResponsible(){
         return responsible;
     }
@@ -85,17 +91,28 @@ public class Artifact implements Serializable {
     }
     
     @Name("Modified_By")
+    @JsonbTransient
     public List<Role> getModifiedBy(){
-        return null;
+        return modifiedBy;
+    }
+
+    public void setModifiedBy(List<Role> modifiedBy) {
+        this.modifiedBy = modifiedBy;
     }
     
     @Name("Input_To")
+    @JsonbTransient
     public List<Task> getInputTo(){
         return null;
     }
     
     @Name("Output_From")
+    @JsonbTransient
     public List<Task> getOutputFrom(){
-        return null;
+        return outputFrom;
+    }
+
+    public void setOutputFrom(List<Task> outputFrom) {
+        this.outputFrom = outputFrom;
     }
 }
