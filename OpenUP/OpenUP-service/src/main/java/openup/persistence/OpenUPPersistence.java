@@ -57,20 +57,15 @@ public class OpenUPPersistence {
         return managers.getOrDefault(principal.getName(), defaultEntityManager);
     }
     
-    @Asynchronous
-    @Timeout(4000)
-    public CompletionStage<EntityManager> createEntityManager(String userName, String password){
+    public EntityManager createEntityManager(String userName, String password){
         Map<String, String> props = new HashMap<>();
         props.put("javax.persistence.jdbc.user", userName);
         props.put("javax.persistence.jdbc.password", password);
-        CompletionStage<EntityManager> res = CompletableFuture.supplyAsync(() -> {
-            EntityManager manager = factory.createEntityManager(props);
-            EntityManager oldManager = managers.putIfAbsent(userName, manager);
-            if(oldManager != null){
-                oldManager.close();
-            }
-            return manager;
-        });
-        return res;
+        EntityManager manager = factory.createEntityManager(props);
+        EntityManager oldManager = managers.putIfAbsent(userName, manager);
+        if(oldManager != null){
+            oldManager.close();
+        }
+        return manager;
     }
 }

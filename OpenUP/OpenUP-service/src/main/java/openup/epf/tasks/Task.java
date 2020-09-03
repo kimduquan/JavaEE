@@ -7,6 +7,8 @@ package openup.epf.tasks;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.json.bind.annotation.JsonbPropertyOrder;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -31,6 +33,12 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 )
 @Entity
 @Table(name = "TASK")
+@JsonbPropertyOrder({
+    "name",
+    "mandatory",
+    "optional",
+    "outputs"
+})
 public class Task implements Serializable {
     
     @Column(name = "NAME")
@@ -85,6 +93,7 @@ public class Task implements Serializable {
         this.name = name;
     }
 
+    @JsonbTransient
     public Role getPrimaryPerformer() {
         return primaryPerformer;
     }

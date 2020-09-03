@@ -42,6 +42,7 @@ public class Tasks {
     )
     @APIResponse(
             description = "Discipline",
+            responseCode = "200",
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON,
                     schema = @Schema(implementation = Discipline.class)

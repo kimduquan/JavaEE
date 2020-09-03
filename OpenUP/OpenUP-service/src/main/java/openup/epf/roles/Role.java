@@ -7,6 +7,7 @@ package openup.epf.roles;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -31,6 +32,11 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 )
 @Entity
 @Table(name = "_ROLE")
+@JsonbPropertyOrder({
+    "name",
+    "additionallyPerforms",
+    "modifies"
+})
 public class Role implements Serializable {
     
     @Column(name = "NAME")

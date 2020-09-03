@@ -7,6 +7,7 @@ package openup.epf.work_products;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -36,6 +37,10 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Entity
 @Table(name = "ARTIFACT")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@JsonbPropertyOrder({
+    "name",
+    "fulfilledSlots"
+})
 public class Artifact implements Serializable {
     
     @Column(name = "NAME")

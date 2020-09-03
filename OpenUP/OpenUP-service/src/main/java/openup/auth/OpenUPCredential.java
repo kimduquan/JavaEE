@@ -5,10 +5,16 @@
  */
 package openup.auth;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
 /**
  *
  * @author FOXCONN
  */
+@Schema(
+        name = "Credential",
+        title = "Credential"
+)
 public class OpenUPCredential {
     private String username;
     private String password;

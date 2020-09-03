@@ -42,6 +42,7 @@ public class Roles {
     )
     @APIResponse(
             description = "Role Set",
+            responseCode = "200",
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON,
                     schema = @Schema(implementation = RoleSet.class)

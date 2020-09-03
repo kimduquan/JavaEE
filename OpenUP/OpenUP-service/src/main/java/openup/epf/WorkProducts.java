@@ -42,6 +42,7 @@ public class WorkProducts {
     )
     @APIResponse(
             description = "Domain",
+            responseCode = "200",
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON,
                     schema = @Schema(implementation = Domain.class)

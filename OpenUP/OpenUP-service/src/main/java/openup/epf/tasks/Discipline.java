@@ -7,6 +7,7 @@ package openup.epf.tasks;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -31,6 +32,10 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Entity
 @Table(name = "DISCIPLINE")
 @NamedQuery(name = "Discipline.Disciplines", query = "SELECT d FROM Discipline AS d")
+@JsonbPropertyOrder({
+    "name",
+    "tasks"
+})
 public class Discipline implements Serializable {
     
     @Column(name = "NAME")

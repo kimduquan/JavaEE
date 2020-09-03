@@ -12,6 +12,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -91,7 +92,8 @@ public class OpenUPAuth implements Serializable {
     )
     @APIResponse(
             name = "login", 
-            description = "Json Web Token",
+            description = "Token",
+            responseCode = "200",
             content = @Content(
                     mediaType = MediaType.TEXT_PLAIN
             )
@@ -102,10 +104,10 @@ public class OpenUPAuth implements Serializable {
     @Fallback(value = ErrorHandler.class, applyOn = {Exception.class})
     @CircuitBreaker(requestVolumeThreshold = 40, failureRatio = 0.618, successThreshold = 15)
     public CompletionStage<Response> login(final OpenUPCredential credential ){
-        CompletionStage<EntityManager> manager = persistence.createEntityManager(credential.getUsername(), credential.getPassword());
-        CompletionStage<Response> response = manager.thenApplyAsync(em -> {
+        CompletionStage<Response> response = CompletableFuture.supplyAsync(() -> {
+            persistence.createEntityManager(credential.getUsername(), credential.getPassword());
             try {
-                return generateJWT(credential);
+                return Response.ok(generateJWT(credential)).build();
             } 
             catch (Exception ex) {
                 Logger.getLogger(OpenUPAuth.class.getName()).log(Level.SEVERE, null, ex);
@@ -115,7 +117,7 @@ public class OpenUPAuth implements Serializable {
         return response;
     }
     
-    Response generateJWT(OpenUPCredential credential) throws Exception{
+    String generateJWT(OpenUPCredential credential) throws Exception{
         JWT jwt = new JWT();
         jwt.setExp(
                 new Date().getTime() 
@@ -130,6 +132,6 @@ public class OpenUPAuth implements Serializable {
         jwt.setKid("");
         jwt.setSub(credential.getUsername());
         jwt.setUpn(credential.getUsername());
-        return Response.ok(generator.generate(jwt)).build();
+        return generator.generate(jwt);
     }
 }

@@ -7,6 +7,7 @@ package openup.epf.work_products;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -31,6 +32,10 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Entity
 @Table(name = "_DOMAIN")
 @NamedQuery(name = "Domain.Domains", query = "SELECT d FROM Domain AS d")
+@JsonbPropertyOrder({
+    "name",
+    "workProducts"
+})
 public class Domain implements Serializable {
     
     @Column(name = "NAME")

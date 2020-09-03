@@ -42,6 +42,7 @@ public class DeliveryProcesses {
     )
     @APIResponse(
             description = "Delivery Process",
+            responseCode = "200",
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON,
                     schema = @Schema(implementation = DeliveryProcess.class)
