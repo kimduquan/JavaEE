@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>openup</groupId>
-    <artifactId>service</artifactId>
+    <artifactId>OpenUP-service</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
@@ -48,6 +48,10 @@
         <dependency>
             <groupId>com.kumuluz.ee</groupId>
             <artifactId>kumuluzee-bean-validation-hibernate-validator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.kumuluz.ee</groupId>
+            <artifactId>kumuluzee-jta-narayana</artifactId>
         </dependency>
         <dependency>
             <groupId>com.kumuluz.ee</groupId>
