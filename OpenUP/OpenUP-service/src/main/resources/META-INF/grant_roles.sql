@@ -1,40 +1,22 @@
 /*Basic Roles BEGIN*/
-/*GRANT Analyst TO PUBLIC;
-GRANT Any_Role TO PUBLIC;
-GRANT Architect TO PUBLIC;
-GRANT Developer TO PUBLIC;
-GRANT Project_Manager TO PUBLIC;
-GRANT Stakeholder TO PUBLIC;
-GRANT Tester TO PUBLIC;*/
-
-GRANT Analyst TO Any_Role;
-GRANT Architect TO Any_Role;
-GRANT Developer TO Any_Role;
-GRANT Project_Manager TO Any_Role;
-GRANT Stakeholder TO Any_Role;
-GRANT Tester TO Any_Role;
+GRANT Any_Role TO Analyst;
+GRANT Any_Role TO Architect;
+GRANT Any_Role TO Developer;
+GRANT Any_Role TO Project_Manager;
+GRANT Any_Role TO Stakeholder;
+GRANT Any_Role TO Tester;
 /*Basic Roles END*/
 
 /*Deployment BEGIN*/
-/*GRANT Course_Developer TO PUBLIC;
-GRANT Deployment_Engineer TO PUBLIC;
-GRANT Deployment_Manager TO PUBLIC;
-GRANT Product_Owner TO PUBLIC;
-GRANT Technical_Writer TO PUBLIC;
-GRANT Trainer TO PUBLIC;*/
-
-GRANT Course_Developer TO Any_Role;
-GRANT Deployment_Engineer TO Any_Role;
-GRANT Deployment_Manager TO Any_Role;
-GRANT Product_Owner TO Any_Role;
-GRANT Technical_Writer TO Any_Role;
-GRANT Trainer TO Any_Role;
+GRANT Any_Role TO Course_Developer;
+GRANT Any_Role TO Deployment_Engineer;
+GRANT Any_Role TO Deployment_Manager;
+GRANT Any_Role TO Product_Owner;
+GRANT Any_Role TO Technical_Writer;
+GRANT Any_Role TO Trainer;
 /*Deployment END*/
 
 /*Environment BEGIN*/
-/*GRANT Process_Engineer TO PUBLIC;
-GRANT Tool_Specialist TO PUBLIC;/*
-
-GRANT Process_Engineer TO Any_Role;
-GRANT Tool_Specialist TO Any_Role;
+GRANT Any_Role TO Process_Engineer;
+GRANT Any_Role TO Tool_Specialist;
 /*Environment END*/
