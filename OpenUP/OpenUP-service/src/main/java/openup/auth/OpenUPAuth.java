@@ -6,8 +6,6 @@
 package openup.auth;
 
 import java.io.Serializable;
-import java.time.Duration;
-import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Set;
@@ -19,14 +17,12 @@ import java.util.logging.Logger;
 import javax.annotation.security.PermitAll;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import openup.error.ErrorHandler;
-import openup.persistence.OpenUPPersistence;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.faulttolerance.Asynchronous;
 import org.eclipse.microprofile.faulttolerance.Bulkhead;
@@ -40,6 +36,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import openup.config.ConfigNames;
+import openup.persistence.Application;
 
 /**
  *
@@ -51,7 +48,7 @@ import openup.config.ConfigNames;
 public class OpenUPAuth implements Serializable {
     
     @Inject
-    private OpenUPPersistence persistence;
+    private Application persistence;
     
     @Inject
     private JWTGenerator generator;
@@ -105,12 +102,13 @@ public class OpenUPAuth implements Serializable {
     @CircuitBreaker(requestVolumeThreshold = 40, failureRatio = 0.618, successThreshold = 15)
     public CompletionStage<Response> login(final OpenUPCredential credential ){
         CompletionStage<Response> response = CompletableFuture.supplyAsync(() -> {
-            persistence.createEntityManager(credential.getUsername(), credential.getPassword());
-            try {
-                return Response.ok(generateJWT(credential)).build();
-            } 
-            catch (Exception ex) {
-                Logger.getLogger(OpenUPAuth.class.getName()).log(Level.SEVERE, null, ex);
+            if(persistence.createEntityManagerFactory(credential.getUsername(), credential.getPassword())){
+                try {
+                    return Response.ok(generateJWT(credential)).build();
+                } 
+                catch (Exception ex) {
+                    Logger.getLogger(OpenUPAuth.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         });
