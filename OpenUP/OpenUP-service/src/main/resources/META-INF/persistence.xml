@@ -16,6 +16,6 @@
     </persistence-unit>
     <persistence-unit name="OpenUP-service" transaction-type="JTA">
         <jta-data-source>jdbc/openup</jta-data-source>
-        <jar-file>EPF-1.0-SNAPSHOT.jar</jar-file>
+        <jar-file>../lib/EPF-1.0-SNAPSHOT.jar</jar-file>
     </persistence-unit>
 </persistence>

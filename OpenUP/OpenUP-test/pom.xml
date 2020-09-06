@@ -40,7 +40,6 @@
             <groupId>openup</groupId>
             <artifactId>EPF</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <type>jar</type>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
         <dependency>

@@ -45,9 +45,9 @@
             <artifactId>jaeger-client</artifactId>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>openup</groupId>
             <artifactId>EPF</artifactId>
-            <version>${project.version}</version>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

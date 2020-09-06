@@ -59,7 +59,7 @@ public class Application {
             props.put("javax.persistence.jdbc.password", password);            
             if(factories.containsKey(userName) == false){
                 EntityManagerFactory factory = Persistence.createEntityManagerFactory("OpenUP-service", props);
-                EntityManager manager = factory.createEntityManager(props);
+                EntityManager manager = factory.createEntityManager();
                 managers.put(userName, manager);
                 factories.put(userName, factory);
             }
