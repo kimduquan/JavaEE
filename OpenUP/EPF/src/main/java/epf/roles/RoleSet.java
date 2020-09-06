@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.epf.roles;
+package epf.roles;
 
 import java.io.Serializable;
 import java.util.List;
@@ -14,9 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import openup.epf.tasks.Task;
-import openup.epf.work_products.Artifact;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -27,17 +26,17 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  */
 @Type
 @Schema(
-        name = "Role",
-        title = "Role"
+        name = "RoleSet",
+        title = "Role Set"
 )
 @Entity
-@Table(name = "_ROLE")
+@Table(name = "ROLE_SET")
+@NamedQuery(name = "RoleSet.Roles", query = "SELECT rs FROM RoleSet AS rs")
 @JsonbPropertyOrder({
     "name",
-    "additionallyPerforms",
-    "modifies"
+    "roles"
 })
-public class Role implements Serializable {
+public class RoleSet implements Serializable {
     
     @Column(name = "NAME")
     @Id
@@ -45,27 +44,15 @@ public class Role implements Serializable {
     
     @ManyToMany
     @JoinTable(
-            name = "ROLE_ADDITIONALLY_PERFORMS",
+            name = "ROLES",
             joinColumns = @JoinColumn(
-                    name = "ROLE"
+                    name = "ROLE_SET"
             ),
             inverseJoinColumns = @JoinColumn(
-                    name = "TASK"
-            )
-    )
-    private List<Task> additionallyPerforms;
-    
-    @ManyToMany
-    @JoinTable(
-            name = "ROLE_MODIFIES",
-            joinColumns = @JoinColumn(
                     name = "ROLE"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "ARTIFACT"
             )
     )
-    private List<Artifact> modifies;
+    private List<Role> roles;
 
     public String getName() {
         return name;
@@ -75,21 +62,12 @@ public class Role implements Serializable {
         this.name = name;
     }
     
-    @Name("Additionally_Performs")
-    public List<Task> getAdditionallyPerforms(){
-        return additionallyPerforms;
+    @Name("Roles")
+    public List<Role> getRoles(){
+        return roles;
     }
 
-    public void setAdditionallyPerforms(List<Task> additionallyPerforms) {
-        this.additionallyPerforms = additionallyPerforms;
-    }
-    
-    @Name("Modifies")
-    public List<Artifact> getModifies(){
-        return modifies;
-    }
-
-    public void setModifies(List<Artifact> modifies) {
-        this.modifies = modifies;
+    public void setRoles(List<Role> roles){
+        this.roles = roles;
     }
 }

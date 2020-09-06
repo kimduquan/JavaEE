@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.epf.roles;
+package epf.tasks;
 
 import java.io.Serializable;
 import java.util.List;
@@ -26,17 +26,17 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  */
 @Type
 @Schema(
-        name = "RoleSet",
-        title = "Role Set"
+        name = "Discipline",
+        title = "Discipline"
 )
 @Entity
-@Table(name = "ROLE_SET")
-@NamedQuery(name = "RoleSet.Roles", query = "SELECT rs FROM RoleSet AS rs")
+@Table(name = "DISCIPLINE")
+@NamedQuery(name = "Discipline.Disciplines", query = "SELECT d FROM Discipline AS d")
 @JsonbPropertyOrder({
     "name",
-    "roles"
+    "tasks"
 })
-public class RoleSet implements Serializable {
+public class Discipline implements Serializable {
     
     @Column(name = "NAME")
     @Id
@@ -44,15 +44,15 @@ public class RoleSet implements Serializable {
     
     @ManyToMany
     @JoinTable(
-            name = "ROLES",
+            name = "TASKS",
             joinColumns = @JoinColumn(
-                    name = "ROLE_SET"
+                    name = "DISCIPLINE"
             ),
             inverseJoinColumns = @JoinColumn(
-                    name = "ROLE"
+                    name = "TASK"
             )
     )
-    private List<Role> roles;
+    private List<Task> tasks;
 
     public String getName() {
         return name;
@@ -62,12 +62,12 @@ public class RoleSet implements Serializable {
         this.name = name;
     }
     
-    @Name("Roles")
-    public List<Role> getRoles(){
-        return roles;
+    @Name("Tasks")
+    public List<Task> getTasks(){
+        return tasks;
     }
 
-    public void setRoles(List<Role> roles){
-        this.roles = roles;
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 }

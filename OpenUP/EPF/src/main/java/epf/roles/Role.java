@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.epf.tasks;
+package epf.roles;
 
 import java.io.Serializable;
 import java.util.List;
@@ -14,8 +14,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import epf.tasks.Task;
+import epf.work_products.Artifact;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -26,17 +27,17 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  */
 @Type
 @Schema(
-        name = "Discipline",
-        title = "Discipline"
+        name = "Role",
+        title = "Role"
 )
 @Entity
-@Table(name = "DISCIPLINE")
-@NamedQuery(name = "Discipline.Disciplines", query = "SELECT d FROM Discipline AS d")
+@Table(name = "_ROLE")
 @JsonbPropertyOrder({
     "name",
-    "tasks"
+    "additionallyPerforms",
+    "modifies"
 })
-public class Discipline implements Serializable {
+public class Role implements Serializable {
     
     @Column(name = "NAME")
     @Id
@@ -44,15 +45,27 @@ public class Discipline implements Serializable {
     
     @ManyToMany
     @JoinTable(
-            name = "TASKS",
+            name = "ROLE_ADDITIONALLY_PERFORMS",
             joinColumns = @JoinColumn(
-                    name = "DISCIPLINE"
+                    name = "ROLE"
             ),
             inverseJoinColumns = @JoinColumn(
                     name = "TASK"
             )
     )
-    private List<Task> tasks;
+    private List<Task> additionallyPerforms;
+    
+    @ManyToMany
+    @JoinTable(
+            name = "ROLE_MODIFIES",
+            joinColumns = @JoinColumn(
+                    name = "ROLE"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "ARTIFACT"
+            )
+    )
+    private List<Artifact> modifies;
 
     public String getName() {
         return name;
@@ -62,12 +75,21 @@ public class Discipline implements Serializable {
         this.name = name;
     }
     
-    @Name("Tasks")
-    public List<Task> getTasks(){
-        return tasks;
+    @Name("Additionally_Performs")
+    public List<Task> getAdditionallyPerforms(){
+        return additionallyPerforms;
     }
 
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
+    public void setAdditionallyPerforms(List<Task> additionallyPerforms) {
+        this.additionallyPerforms = additionallyPerforms;
+    }
+    
+    @Name("Modifies")
+    public List<Artifact> getModifies(){
+        return modifies;
+    }
+
+    public void setModifies(List<Artifact> modifies) {
+        this.modifies = modifies;
     }
 }

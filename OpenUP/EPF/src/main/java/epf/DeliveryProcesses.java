@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.epf;
+package epf;
 
-import openup.epf.roles.RoleSet;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
+import epf.delivery_processes.DeliveryProcess;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -26,10 +26,10 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  * @author FOXCONN
  */
 @Type
-@Path("roles")
+@Path("delivery-processes")
 @RequestScoped
 @RolesAllowed("Any_Role")
-public class Roles {
+public class DeliveryProcesses {
     
     @Inject
     private EntityManager entityManager;
@@ -37,18 +37,18 @@ public class Roles {
     @Name("Contents")
     @GET
     @Operation(
-            summary = "Roles", 
-            description = "This category lists roles organized by role set."
+            summary = "Delivery Processes", 
+            description = "This provides a list of delivery processes that have been published."
     )
     @APIResponse(
-            description = "Role Set",
+            description = "Delivery Process",
             responseCode = "200",
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON,
-                    schema = @Schema(implementation = RoleSet.class)
+                    schema = @Schema(implementation = DeliveryProcess.class)
             )
     )
-    public List<RoleSet> getRoleSets(){
-        return entityManager.createNamedQuery("RoleSet.Roles", RoleSet.class).getResultList();
+    public List<DeliveryProcess> getDeliveryProcesses(){
+        return entityManager.createNamedQuery("DeliveryProcess.DeliveryProcesses", DeliveryProcess.class).getResultList();
     }
 }

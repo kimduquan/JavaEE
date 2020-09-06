@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.epf;
+package epf;
 
-import openup.epf.WorkProducts;
-import openup.epf.Roles;
-import openup.epf.Tasks;
+import epf.WorkProducts;
+import epf.Roles;
+import epf.Tasks;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;

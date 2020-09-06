@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.epf.work_products;
+package epf.work_products;
 
 import java.io.Serializable;
 import javax.persistence.Column;
