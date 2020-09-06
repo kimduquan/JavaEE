@@ -102,13 +102,12 @@ public class OpenUPAuth implements Serializable {
     @CircuitBreaker(requestVolumeThreshold = 40, failureRatio = 0.618, successThreshold = 15)
     public CompletionStage<Response> login(final OpenUPCredential credential ){
         CompletionStage<Response> response = CompletableFuture.supplyAsync(() -> {
-            if(persistence.createEntityManagerFactory(credential.getUsername(), credential.getPassword())){
-                try {
-                    return Response.ok(generateJWT(credential)).build();
-                } 
-                catch (Exception ex) {
-                    Logger.getLogger(OpenUPAuth.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            persistence.createFactory(credential.getUsername(), credential.getPassword());
+            try {
+                return Response.ok(generateJWT(credential)).build();
+            } 
+            catch (Exception ex) {
+                Logger.getLogger(OpenUPAuth.class.getName()).log(Level.SEVERE, null, ex);
             }
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         });

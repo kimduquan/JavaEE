@@ -36,7 +36,7 @@ public class Request {
     }
     
     @Produces
-    public EntityManager getEntityManager(){
+    public EntityManager getManager(){
         return manager;
     }
 }

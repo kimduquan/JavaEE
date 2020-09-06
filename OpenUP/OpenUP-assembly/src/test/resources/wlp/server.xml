@@ -35,7 +35,7 @@
             javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
             javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
             libraryRef="H2JDBCLib" />
-        <properties URL="jdbc:h2:~/openup" />
+        <properties URL="jdbc:h2:~/openup;AUTO_SERVER=TRUE" />
     </dataSource>
 
 </server>

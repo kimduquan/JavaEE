@@ -11,6 +11,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
@@ -27,14 +28,20 @@ public class Session implements Serializable {
     private Principal principal;
     
     private EntityManagerFactory factory;
+    private EntityManager manager;
     
     @PostConstruct
     void postConstruct(){
-        factory = application.getEntityManagerFactory(principal.getName());
+        factory = application.getFactory(principal);
+        manager = application.getManager(principal);
     }
     
     @Produces
-    public EntityManagerFactory getEntityManagerFactory(){
+    public EntityManagerFactory getFactory(){
         return factory;
+    }
+    
+    public EntityManager getManager(){
+        return manager;
     }
 }
