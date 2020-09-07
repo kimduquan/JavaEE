@@ -10,6 +10,9 @@ import java.sql.SQLInvalidAuthorizationSpecException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 import org.eclipse.microprofile.faulttolerance.ExecutionContext;
 import org.eclipse.microprofile.faulttolerance.FallbackHandler;
 import org.eclipse.microprofile.faulttolerance.exceptions.BulkheadException;
@@ -20,12 +23,27 @@ import org.eclipse.microprofile.faulttolerance.exceptions.TimeoutException;
  *
  * @author FOXCONN
  */
-public class ErrorHandler implements FallbackHandler<CompletionStage<Response>>, Serializable {
+@Provider
+public class ErrorHandler implements 
+        FallbackHandler<CompletionStage<Response>>, 
+        Serializable,
+        ExceptionMapper<Exception> {
 
     @Override
     public CompletionStage<Response> handle(ExecutionContext context) {
-        Response.Status status = Response.Status.INTERNAL_SERVER_ERROR;
         Throwable failure = context.getFailure();
+        Response response = handle(failure);
+        return CompletableFuture.completedStage(response);
+    }
+
+    @Override
+    public Response toResponse(Exception ex) {
+        return handle(ex);
+    }
+    
+    boolean map(Throwable failure, Response.ResponseBuilder builder){
+        Response.Status status = Response.Status.INTERNAL_SERVER_ERROR;
+        boolean mapped = true;
         if(failure instanceof TimeoutException){
             status = Response.Status.REQUEST_TIMEOUT;
         }
@@ -35,18 +53,32 @@ public class ErrorHandler implements FallbackHandler<CompletionStage<Response>>,
         else if(failure instanceof CircuitBreakerOpenException){
             status = Response.Status.SERVICE_UNAVAILABLE;
         }
-        else {
-            Throwable cause = failure.getCause();
-            Throwable rootCause = failure;
-            while(cause != null){
-                rootCause = cause;
-                cause = cause.getCause();
-            }
-            if(rootCause instanceof SQLInvalidAuthorizationSpecException){
-                status = Response.Status.UNAUTHORIZED;
-            }
+        else if(failure instanceof SQLInvalidAuthorizationSpecException){
+            status = Response.Status.UNAUTHORIZED;
         }
-        return CompletableFuture.completedStage(Response.status(status).build());
+        else if(failure instanceof java.util.concurrent.TimeoutException){
+            status = Response.Status.REQUEST_TIMEOUT;
+        }
+        else{
+            mapped = false;
+        }
+        if(mapped){
+            builder.status(status);
+        }
+        return mapped;
     }
     
+    Response handle(Throwable failure){
+        ResponseBuilder builder = Response.serverError();
+        if(failure != null){
+            if(map(failure, builder) == false){
+                Throwable cause = failure.getCause();
+                while(cause != null && failure != cause){
+                    map(cause, builder);
+                    cause = cause.getCause();
+                }
+            }
+        }
+        return builder.build();
+    }
 }
