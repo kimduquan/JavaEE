@@ -52,7 +52,7 @@ public class Application {
         factories.clear();
     }
     
-    public void createFactory(String userName, String password){
+    public void authenticate(String userName, String password){
         if(managers.containsKey(userName) == false){
             Map<String, Object> props = new HashMap<>();
             props.put("javax.persistence.jdbc.user", userName);
@@ -68,10 +68,6 @@ public class Application {
     
     public EntityManagerFactory getFactory(Principal principal){
         return factories.get(principal.getName());
-    }
-    
-    public EntityManager getManager(Principal principal){
-        return managers.get(principal.getName());
     }
     
     public EntityManagerFactory getDefaultFactory(){

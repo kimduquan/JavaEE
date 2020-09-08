@@ -8,14 +8,15 @@ package openup.auth;
 import java.io.Serializable;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.security.PermitAll;
 import javax.enterprise.context.RequestScoped;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.inject.Inject;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -69,6 +70,7 @@ public class OpenUPAuth implements Serializable {
      *
      * @param credential
      * @return
+     * @throws java.lang.Exception
      */
     @POST
     @Produces(MediaType.TEXT_PLAIN)
@@ -100,21 +102,14 @@ public class OpenUPAuth implements Serializable {
     @Timeout(4000)
     @Fallback(value = ErrorHandler.class, applyOn = {Exception.class})
     @CircuitBreaker(requestVolumeThreshold = 40, failureRatio = 0.618, successThreshold = 15)
-    public CompletionStage<Response> login(final OpenUPCredential credential ){
-        CompletionStage<Response> response = CompletableFuture.supplyAsync(() -> {
-            persistence.createFactory(credential.getUsername(), credential.getPassword());
-            try {
-                return Response.ok(generateJWT(credential)).build();
-            } 
-            catch (Exception ex) {
-                Logger.getLogger(OpenUPAuth.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        });
-        return response;
+    public CompletionStage<Response> login(final OpenUPCredential credential ) throws Exception{
+        persistence.authenticate(credential.getUsername(), credential.getPassword());
+        Set<String> roles = getUserRoles(credential.getUsername(), persistence.getDefaultManager());
+        Response response = Response.ok(generateJWT(credential, roles)).build();
+        return CompletableFuture.completedStage(response);
     }
     
-    String generateJWT(OpenUPCredential credential) throws Exception{
+    String generateJWT(OpenUPCredential credential, Set<String> roles) throws Exception{
         JWT jwt = new JWT();
         jwt.setExp(
                 new Date().getTime() 
@@ -123,12 +118,25 @@ public class OpenUPAuth implements Serializable {
                                         .getDuration()
                                         .toMillis()
         );
-        jwt.setGroups(Set.of("Any_Role"));
+        jwt.setGroups(roles);
         jwt.setIss(issuer);
         jwt.setJti(credential.getUsername() + UUID.randomUUID());
         jwt.setKid("");
         jwt.setSub(credential.getUsername());
         jwt.setUpn(credential.getUsername());
         return generator.generate(jwt);
+    }
+    
+    Set<String> getUserRoles(String userName, EntityManager manager){
+        Set<String> roles = new HashSet<>();
+        Query query = manager.createNamedQuery("Role.GetUserRoles");
+        query.setParameter(1, userName.toUpperCase());
+        query.setParameter(2, userName.toUpperCase());
+        query.setParameter(3, userName.toUpperCase());
+        query.setParameter(4, userName.toUpperCase());
+        query.getResultList().forEach(result ->{
+            roles.add(result.toString());
+        });
+        return roles;
     }
 }

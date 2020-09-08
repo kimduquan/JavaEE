@@ -17,6 +17,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import epf.tasks.Task;
 import epf.work_products.Artifact;
+import javax.persistence.NamedNativeQuery;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -37,6 +38,52 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
     "additionallyPerforms",
     "modifies"
 })
+@NamedNativeQuery(
+        name = "Role.GetUserRoles", 
+        query = "SELECT GRANTEDROLE \n" +
+                "FROM INFORMATION_SCHEMA.RIGHTS \n" +
+                "WHERE \n" +
+                "    GRANTEETYPE = 'ROLE' \n" +
+                "    AND (\n" +
+                "        GRANTEE \n" +
+                "            IN (\n" +
+                "                SELECT GRANTEDROLE \n" +
+                "                FROM INFORMATION_SCHEMA.RIGHTS \n" +
+                "                WHERE GRANTEETYPE = 'USER' \n" +
+                "                    AND GRANTEE = ?\n" +
+                "                )\n" +
+                "        OR\n" +
+                "        GRANTEDROLE \n" +
+                "            IN (\n" +
+                "                SELECT GRANTEDROLE \n" +
+                "                FROM INFORMATION_SCHEMA.RIGHTS \n" +
+                "                WHERE GRANTEETYPE = 'USER' \n" +
+                "                    AND GRANTEE = ?\n" +
+                "                )\n" +
+                "        )\n" +
+                "UNION\n" +
+                "SELECT GRANTEE \n" +
+                "FROM INFORMATION_SCHEMA.RIGHTS \n" +
+                "WHERE \n" +
+                "    GRANTEETYPE = 'ROLE' \n" +
+                "    AND (\n" +
+                "        GRANTEE \n" +
+                "            IN (\n" +
+                "                SELECT GRANTEDROLE \n" +
+                "                FROM INFORMATION_SCHEMA.RIGHTS \n" +
+                "                WHERE GRANTEETYPE = 'USER' \n" +
+                "                    AND GRANTEE = ?\n" +
+                "                )\n" +
+                "        OR\n" +
+                "        GRANTEDROLE \n" +
+                "            IN (\n" +
+                "                SELECT GRANTEDROLE \n" +
+                "                FROM INFORMATION_SCHEMA.RIGHTS \n" +
+                "                WHERE GRANTEETYPE = 'USER' \n" +
+                "                    AND GRANTEE = ?\n" +
+                "                )\n" +
+                "        );"
+)
 public class Role implements Serializable {
     
     @Column(name = "NAME")

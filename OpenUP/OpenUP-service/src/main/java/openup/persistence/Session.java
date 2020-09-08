@@ -28,20 +28,14 @@ public class Session implements Serializable {
     private Principal principal;
     
     private EntityManagerFactory factory;
-    private EntityManager manager;
     
     @PostConstruct
     void postConstruct(){
         factory = application.getFactory(principal);
-        manager = application.getManager(principal);
     }
     
     @Produces
     public EntityManagerFactory getFactory(){
         return factory;
-    }
-    
-    public EntityManager getManager(){
-        return manager;
     }
 }

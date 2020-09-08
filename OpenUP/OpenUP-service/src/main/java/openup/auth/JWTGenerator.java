@@ -5,7 +5,6 @@
  */
 package openup.auth;
 
-import com.ibm.websphere.security.jwt.Claims;
 import com.ibm.websphere.security.jwt.JwtBuilder;
 import java.io.Serializable;
 import java.security.KeyFactory;
