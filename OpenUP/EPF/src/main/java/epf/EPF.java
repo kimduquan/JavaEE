@@ -5,9 +5,6 @@
  */
 package epf;
 
-import epf.WorkProducts;
-import epf.Roles;
-import epf.Tasks;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;

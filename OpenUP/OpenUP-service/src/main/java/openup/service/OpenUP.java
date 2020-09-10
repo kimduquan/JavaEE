@@ -44,7 +44,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
                     url = "www.kdq.io",
                     email = "kimduquan@gmail.com"
             ),
-            version = "1.0-SNAPSHOT"
+            version = "1.0.0"
         ),
         security = {
             @SecurityRequirement(

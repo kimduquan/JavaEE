@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.stream.Stream;
 import javax.annotation.security.PermitAll;
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
@@ -134,8 +135,9 @@ public class OpenUPAuth implements Serializable {
         query.setParameter(2, userName.toUpperCase());
         query.setParameter(3, userName.toUpperCase());
         query.setParameter(4, userName.toUpperCase());
-        query.getResultList().forEach(result ->{
-            roles.add(result.toString());
+        Stream<?> result = query.getResultStream();
+        result.forEach(value -> {
+            roles.add(value.toString());
         });
         return roles;
     }
