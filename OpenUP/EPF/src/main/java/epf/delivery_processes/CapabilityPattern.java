@@ -7,6 +7,7 @@ package epf.delivery_processes;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
@@ -26,24 +27,63 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 )
 @Entity
 @Table(name = "CAPABILITY_PATTERN")
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "TEMPLATE", length = 63)
-public class CapabilityPattern extends Properties {
-    
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@DiscriminatorColumn(name = "NAME", length = 63)
+public class CapabilityPattern {
 	
-	@Column(name = "TEMPLATE")
+	@Column(name = "NAME")
     @Id
-    private String template;
+    private String name;
+	
+	@Embedded
+	private Description description;
+	
+	@Embedded
+	private WorkBreakdownStructure workBreakdownStructure;
+	
+	@Embedded
+	private TeamAllocation teamAllocation;
+	
+	@Embedded
+	private WorkProductUsage workProductUsage;
 
-    public String getTemplate() {
-        return template;
+    public String getName() {
+        return name;
     }
 
-    public void setTemplate(String template) {
-        this.template = template;
+    public void setName(String name) {
+        this.name = name;
     }
+
+	public Description getDescription() {
+		return description;
+	}
+
+	public void setDescription(Description description) {
+		this.description = description;
+	}
+
+	public WorkBreakdownStructure getWorkBreakdownStructure() {
+		return workBreakdownStructure;
+	}
+
+	public void setWorkBreakdownStructure(WorkBreakdownStructure workBreakdownStructure) {
+		this.workBreakdownStructure = workBreakdownStructure;
+	}
+
+	public TeamAllocation getTeamAllocation() {
+		return teamAllocation;
+	}
+
+	public void setTeamAllocation(TeamAllocation teamAllocation) {
+		this.teamAllocation = teamAllocation;
+	}
+
+	public WorkProductUsage getWorkProductUsage() {
+		return workProductUsage;
+	}
+
+	public void setWorkProductUsage(WorkProductUsage workProductUsage) {
+		this.workProductUsage = workProductUsage;
+	}
 }

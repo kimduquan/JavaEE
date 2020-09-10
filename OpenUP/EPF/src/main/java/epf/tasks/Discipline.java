@@ -5,7 +5,6 @@
  */
 package epf.tasks;
 
-import java.io.Serializable;
 import java.util.List;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.persistence.Column;
@@ -36,12 +35,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
     "name",
     "tasks"
 })
-public class Discipline implements Serializable {
-    
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class Discipline {
 
 	@Column(name = "NAME")
     @Id

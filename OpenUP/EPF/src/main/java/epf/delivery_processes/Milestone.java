@@ -6,6 +6,7 @@
 package epf.delivery_processes;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -25,20 +26,14 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 )
 @Entity
 @Table(name = "MILESTONE")
-public class Milestone extends Properties {
-    
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class Milestone {
 
 	@Column(name = "NAME")
     @Id
     private String name;
-    
-    @Column(name = "REQUIRE_RESULTS")
-    private Boolean requiredResults;
-    
+	
+	@Embedded
+	private Properties properties;
     @OneToOne
     @JoinColumn(name = "PREDECESSOR", referencedColumnName = "NAME")
     private Iteration predecessor;
@@ -51,14 +46,13 @@ public class Milestone extends Properties {
         this.name = name;
     }
 
-    public Boolean getRequiredResults() {
-        return requiredResults;
-    }
+	public Properties getProperties() {
+		return properties;
+	}
 
-    public void setRequiredResults(Boolean requiredResults) {
-        this.requiredResults = requiredResults;
-    }
-
+	public void setProperties(Properties properties) {
+		this.properties = properties;
+	}
     public Iteration getPredecessor() {
         return predecessor;
     }

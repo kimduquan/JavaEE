@@ -6,6 +6,7 @@
 package epf.delivery_processes;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -26,27 +27,26 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Entity
 @Table(name = "PHASE")
 public class Phase extends Properties {
-    
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
-	@Column(name = "NAME")
+    @Column(name = "NAME")
     @Id
     private String name;
+	
+	@Embedded
+	private Description description;
+	
+	@Embedded
+	private WorkBreakdownStructure workBreakdownStructure;
+	
+	@Embedded
+	private TeamAllocation teamAllocation;
+	
+	@Embedded
+	private WorkProductUsage workProductUsage;
     
     @OneToOne
     @JoinColumn(name = "PARENT_ACTIVITIES", referencedColumnName = "NAME")
     private DeliveryProcess parentActivities;
-
-    public DeliveryProcess getParentActivities() {
-        return parentActivities;
-    }
-
-    public void setParentActivities(DeliveryProcess parentActivities) {
-        this.parentActivities = parentActivities;
-    }
 
     public String getName() {
         return name;
@@ -54,5 +54,45 @@ public class Phase extends Properties {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+	public Description getDescription() {
+		return description;
+	}
+
+	public void setDescription(Description description) {
+		this.description = description;
+	}
+
+	public WorkBreakdownStructure getWorkBreakdownStructure() {
+		return workBreakdownStructure;
+	}
+
+	public void setWorkBreakdownStructure(WorkBreakdownStructure workBreakdownStructure) {
+		this.workBreakdownStructure = workBreakdownStructure;
+	}
+
+	public TeamAllocation getTeamAllocation() {
+		return teamAllocation;
+	}
+
+	public void setTeamAllocation(TeamAllocation teamAllocation) {
+		this.teamAllocation = teamAllocation;
+	}
+
+	public WorkProductUsage getWorkProductUsage() {
+		return workProductUsage;
+	}
+
+	public void setWorkProductUsage(WorkProductUsage workProductUsage) {
+		this.workProductUsage = workProductUsage;
+	}
+
+    public DeliveryProcess getParentActivities() {
+        return parentActivities;
+    }
+
+    public void setParentActivities(DeliveryProcess parentActivities) {
+        this.parentActivities = parentActivities;
     }
 }

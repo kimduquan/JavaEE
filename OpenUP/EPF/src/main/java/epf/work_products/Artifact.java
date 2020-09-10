@@ -5,7 +5,6 @@
  */
 package epf.work_products;
 
-import java.io.Serializable;
 import java.util.List;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.json.bind.annotation.JsonbTransient;
@@ -41,12 +40,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
     "name",
     "fulfilledSlots"
 })
-public class Artifact implements Serializable {
-    
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class Artifact {
 
 	@Column(name = "NAME")
     @Id

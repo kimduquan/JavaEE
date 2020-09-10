@@ -5,21 +5,15 @@
  */
 package epf.delivery_processes;
 
-import java.io.Serializable;
 import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.Embeddable;
 
 /**
  *
  * @author FOXCONN
  */
-@MappedSuperclass
-public class Properties implements Serializable {
-    
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+@Embeddable
+public class Properties {
 
 	@Column(name = "EVENT_DRIVEN")
     private Boolean eventDriven;

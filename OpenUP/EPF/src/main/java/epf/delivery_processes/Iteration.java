@@ -29,14 +29,6 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Table(name = "ITERATION")
 public class Iteration extends CapabilityPattern {
     
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
-	@Column(name = "NAME", unique = true, nullable = false)
-    private String name;
-    
     @Column(name = "NUMBER")
     private Integer number;
     
@@ -50,14 +42,6 @@ public class Iteration extends CapabilityPattern {
             inverseJoinColumns = {@JoinColumn(name = "ACTIVITY")}
     )
     private List<Activity> activities;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public Integer getNumber() {
         return number;

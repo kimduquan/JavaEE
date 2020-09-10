@@ -5,21 +5,19 @@
  */
 package epf.work_products;
 
-import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.Id;
 
 /**
  *
  * @author FOXCONN
  */
 @Embeddable
-public class Template implements Serializable {
-    
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class Template {
 	
+	@Column(name = "NAME")
+	@Id
 	private String name;
 
     public String getName() {

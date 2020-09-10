@@ -5,7 +5,6 @@
  */
 package epf.work_products;
 
-import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -24,12 +23,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 )
 @Entity
 @Table(name = "WORK_PRODUCT_SLOT")
-public class WorkProductSlot implements Serializable {
-
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class WorkProductSlot {
 	
 	@Column(name = "NAME")
     @Id

@@ -6,7 +6,6 @@
 package epf.delivery_processes;
 
 import java.util.List;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -30,14 +29,6 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Table(name = "ACTIVITY")
 public class Activity extends CapabilityPattern {
     
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
-	@Column(name = "NAME", unique = true, nullable = false)
-    private String name;
-    
     @ManyToOne
     @JoinTable(name = "ACTIVITY_PARENT",
             joinColumns = {@JoinColumn(name = "ACTIVITY")},
@@ -51,14 +42,6 @@ public class Activity extends CapabilityPattern {
             inverseJoinColumns = {@JoinColumn(name = "TASK")}
     )
     private List<Task> tasks;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public CapabilityPattern getParentActivities() {
         return parentActivities;

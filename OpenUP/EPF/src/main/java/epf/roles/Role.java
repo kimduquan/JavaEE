@@ -5,7 +5,6 @@
  */
 package epf.roles;
 
-import java.io.Serializable;
 import java.util.List;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.persistence.Column;
@@ -84,12 +83,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
                 "                )\n" +
                 "        );"
 )
-public class Role implements Serializable {
-    
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class Role {
 
 	@Column(name = "NAME")
     @Id

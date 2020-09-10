@@ -22,10 +22,5 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Entity
 @Table(name = "DELIVERABLE")
 public class Deliverable extends Artifact {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
     
 }
