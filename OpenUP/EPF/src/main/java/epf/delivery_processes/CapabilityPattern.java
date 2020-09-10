@@ -30,7 +30,12 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @DiscriminatorColumn(name = "TEMPLATE", length = 63)
 public class CapabilityPattern extends Properties {
     
-    @Column(name = "TEMPLATE")
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	@Column(name = "TEMPLATE")
     @Id
     private String template;
 

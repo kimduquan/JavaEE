@@ -30,7 +30,12 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Table(name = "ACTIVITY")
 public class Activity extends CapabilityPattern {
     
-    @Column(name = "NAME", unique = true, nullable = false)
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Column(name = "NAME", unique = true, nullable = false)
     private String name;
     
     @ManyToOne

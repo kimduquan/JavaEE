@@ -24,12 +24,17 @@ import org.eclipse.microprofile.faulttolerance.exceptions.TimeoutException;
  * @author FOXCONN
  */
 @Provider
-public class ErrorHandler implements 
+public class ExceptionHandler implements 
         FallbackHandler<CompletionStage<Response>>, 
         Serializable,
         ExceptionMapper<Exception> {
 
-    @Override
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Override
     public CompletionStage<Response> handle(ExecutionContext context) {
         Throwable failure = context.getFailure();
         Response response = handle(failure);

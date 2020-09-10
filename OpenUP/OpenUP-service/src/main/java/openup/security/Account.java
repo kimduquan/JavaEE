@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.auth;
+package openup.security;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
@@ -12,10 +12,10 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  * @author FOXCONN
  */
 @Schema(
-        name = "Credential",
-        title = "Credential"
+        name = "Account",
+        title = "Account"
 )
-public class OpenUPCredential {
+public class Account {
     private String username;
     private String password;
 

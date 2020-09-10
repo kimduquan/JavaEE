@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.auth;
+package openup.security;
 
 import java.util.Set;
 
@@ -11,7 +11,7 @@ import java.util.Set;
  *
  * @author FOXCONN
  */
-public class JWT {
+public class JsonWebToken {
     
     //Key identifier
     private String kid;

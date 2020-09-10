@@ -86,7 +86,12 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 )
 public class Role implements Serializable {
     
-    @Column(name = "NAME")
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Column(name = "NAME")
     @Id
     private String name;
     

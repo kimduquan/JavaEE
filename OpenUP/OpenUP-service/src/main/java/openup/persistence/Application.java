@@ -36,8 +36,8 @@ public class Application {
     
     @PostConstruct
     void postConstruct(){
-        factories = new ConcurrentHashMap();
-        managers = new ConcurrentHashMap();
+        factories = new ConcurrentHashMap<String, EntityManagerFactory>();
+        managers = new ConcurrentHashMap<String, EntityManager>();
     }
     
     @PreDestroy
@@ -52,18 +52,14 @@ public class Application {
         factories.clear();
     }
     
-    public void authenticate(String userName, String password){
-        if(managers.containsKey(userName) == false){
-            Map<String, Object> props = new HashMap<>();
-            props.put("javax.persistence.jdbc.user", userName);
-            props.put("javax.persistence.jdbc.password", password);            
-            if(factories.containsKey(userName) == false){
-                EntityManagerFactory factory = Persistence.createEntityManagerFactory("OpenUP-service", props);
-                EntityManager manager = factory.createEntityManager();
-                managers.put(userName, manager);
-                factories.put(userName, factory);
-            }
-        }
+    public void createFactory(String userName, String password){
+    	Map<String, Object> props = new HashMap<>();
+        props.put("javax.persistence.jdbc.user", userName);
+        props.put("javax.persistence.jdbc.password", password);            
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("OpenUP-service", props);
+        EntityManager manager = factory.createEntityManager();
+        managers.put(userName, manager);
+        factories.put(userName, factory);
     }
     
     public EntityManagerFactory getFactory(Principal principal){

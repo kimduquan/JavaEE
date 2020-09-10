@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.auth;
+package openup.security;
 
 import com.ibm.websphere.security.jwt.JwtBuilder;
 import java.io.Serializable;
@@ -11,30 +11,34 @@ import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Base64;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import openup.config.ConfigNames;
+import openup.config.Config;
 
 /**
  *
  * @author FOXCONN
  */
 @Dependent
-public class JWTGenerator implements Serializable {
+public class TokenGenerator implements Serializable {
     
-    private PrivateKey privateKey;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private PrivateKey privateKey;
     private Base64.Decoder decoder;
     
     @Inject
-    @ConfigProperty(name = ConfigNames.MP_JWT_PRIVATE_KEY)
+    @ConfigProperty(name = Config.MP_JWT_PRIVATE_KEY)
     private String privateKeyText;
     
     @PostConstruct
-    void initilize(){
+    void postConstruct(){
         try {
             decoder = Base64.getUrlDecoder();
             privateKey = KeyFactory.getInstance("RSA")
@@ -43,12 +47,13 @@ public class JWTGenerator implements Serializable {
                                     decoder.decode(privateKeyText)
                                 )
                         );
-        } catch (Exception ex) {
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+        } 
+        catch (Exception ex) {
+            Logger.getLogger(getClass().getName()).throwing(getClass().getName(), "postConstruct", ex);
         }
     }
     
-    public String generate(JWT jwt) throws Exception{
+    public String generate(JsonWebToken jwt) throws Exception{
         return JwtBuilder
                 .create()
                 .issuer(jwt.getIss())

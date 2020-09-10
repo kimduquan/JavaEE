@@ -16,7 +16,12 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public class Properties implements Serializable {
     
-    @Column(name = "EVENT_DRIVEN")
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Column(name = "EVENT_DRIVEN")
     private Boolean eventDriven;
     
     @Column(name = "MULTIPLE_OCCURRENCES")

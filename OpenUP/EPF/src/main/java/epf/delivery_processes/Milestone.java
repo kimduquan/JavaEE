@@ -27,7 +27,12 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Table(name = "MILESTONE")
 public class Milestone extends Properties {
     
-    @Column(name = "NAME")
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Column(name = "NAME")
     @Id
     private String name;
     

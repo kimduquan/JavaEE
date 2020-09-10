@@ -27,7 +27,12 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @NamedQuery(name = "DeliveryProcess.DeliveryProcesses", query = "SELECT dp FROM DeliveryProcess AS dp")
 public class DeliveryProcess extends Properties {
     
-    @Column(name = "NAME")
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	@Column(name = "NAME")
     @Id
     private String name;
 

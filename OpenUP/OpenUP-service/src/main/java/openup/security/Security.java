@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.auth;
+package openup.security;
 
 import java.io.Serializable;
 import java.time.temporal.ChronoUnit;
@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 import javax.annotation.security.PermitAll;
 import javax.enterprise.context.RequestScoped;
@@ -24,7 +25,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import openup.error.ErrorHandler;
+import openup.error.ExceptionHandler;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.faulttolerance.Asynchronous;
 import org.eclipse.microprofile.faulttolerance.Bulkhead;
@@ -37,7 +38,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
-import openup.config.ConfigNames;
+import openup.config.Config;
 import openup.persistence.Application;
 
 /**
@@ -45,26 +46,31 @@ import openup.persistence.Application;
  * @author FOXCONN
  */
 @RequestScoped
-@Path("auth")
+@Path("security")
 @PermitAll
-public class OpenUPAuth implements Serializable {
+public class Security implements Serializable {
     
-    @Inject
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Inject
     private Application persistence;
     
     @Inject
-    private JWTGenerator generator;
+    private TokenGenerator generator;
     
     @Inject
     @ConfigProperty(name = Names.ISSUER)
     private String issuer;
     
     @Inject
-    @ConfigProperty(name = ConfigNames.JWT_EXP_DURATION)
+    @ConfigProperty(name = Config.JWT_EXP_DURATION)
     private Long jwtExpDuration;
     
     @Inject
-    @ConfigProperty(name = ConfigNames.JWT_EXP_TIMEUNIT)
+    @ConfigProperty(name = Config.JWT_EXP_TIMEUNIT)
     private String jwtExpTimeUnit;
     
     /**
@@ -86,12 +92,12 @@ public class OpenUPAuth implements Serializable {
                     mediaType = MediaType.APPLICATION_JSON,
                     schema = @Schema(
                             hidden = true, 
-                            implementation = OpenUPCredential.class
+                            implementation = Account.class
                     )
             )
     )
     @APIResponse(
-            name = "login", 
+            name = "token", 
             description = "Token",
             responseCode = "200",
             content = @Content(
@@ -101,17 +107,28 @@ public class OpenUPAuth implements Serializable {
     @Asynchronous
     @Bulkhead(value = 10, waitingTaskQueue = 16)
     @Timeout(4000)
-    @Fallback(value = ErrorHandler.class, applyOn = {Exception.class})
+    @Fallback(value = ExceptionHandler.class, applyOn = {Exception.class})
     @CircuitBreaker(requestVolumeThreshold = 40, failureRatio = 0.618, successThreshold = 15)
-    public CompletionStage<Response> login(final OpenUPCredential credential ) throws Exception{
-        persistence.authenticate(credential.getUsername(), credential.getPassword());
+    public CompletionStage<Response> login(Account credential ) throws Exception{
+        persistence.createFactory(credential.getUsername(), credential.getPassword());
         Set<String> roles = getUserRoles(credential.getUsername(), persistence.getDefaultManager());
-        Response response = Response.ok(generateJWT(credential, roles)).build();
-        return CompletableFuture.completedStage(response);
+        CompletionStage<Response> response = CompletableFuture.supplyAsync(() -> {
+            String token = "";
+			try {
+	        	JsonWebToken jwt = createJWT(credential);
+	            jwt.setGroups(roles);
+	            token = generator.generate(jwt);
+			} 
+			catch (Exception e) {
+				Logger.getLogger(getClass().getName()).throwing(getClass().getName(), "login", e);
+			}
+            return Response.ok(token).build();
+        });
+        return response;
     }
     
-    String generateJWT(OpenUPCredential credential, Set<String> roles) throws Exception{
-        JWT jwt = new JWT();
+    JsonWebToken createJWT(Account credential) throws Exception{
+        JsonWebToken jwt = new JsonWebToken();
         jwt.setExp(
                 new Date().getTime() 
                         + jwtExpDuration 
@@ -119,13 +136,12 @@ public class OpenUPAuth implements Serializable {
                                         .getDuration()
                                         .toMillis()
         );
-        jwt.setGroups(roles);
         jwt.setIss(issuer);
         jwt.setJti(credential.getUsername() + UUID.randomUUID());
         jwt.setKid("");
         jwt.setSub(credential.getUsername());
         jwt.setUpn(credential.getUsername());
-        return generator.generate(jwt);
+        return jwt;
     }
     
     Set<String> getUserRoles(String userName, EntityManager manager){

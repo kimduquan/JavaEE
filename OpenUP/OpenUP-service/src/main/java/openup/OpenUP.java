@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.service;
+package openup;
 
 import javax.annotation.security.DenyAll;
 import javax.enterprise.context.ApplicationScoped;
