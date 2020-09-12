@@ -6,6 +6,7 @@
 package epf.tasks;
 
 import java.util.List;
+import javax.json.JsonObject;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -41,6 +42,9 @@ public class Discipline {
     @Id
     private String name;
     
+    @Column(name = "SUMMARY")
+    private String summary;
+    
     @ManyToMany
     @JoinTable(
             name = "TASKS",
@@ -52,6 +56,9 @@ public class Discipline {
             )
     )
     private List<Task> tasks;
+    
+    @Column(name = "MAIN_DESCRIPTION")
+    private JsonObject mainDescription;
 
     public String getName() {
         return name;
@@ -59,6 +66,14 @@ public class Discipline {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
     
     @Name("Tasks")
@@ -68,5 +83,13 @@ public class Discipline {
 
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    public JsonObject getMainDescription() {
+        return mainDescription;
+    }
+
+    public void setMainDescription(JsonObject mainDescription) {
+        this.mainDescription = mainDescription;
     }
 }

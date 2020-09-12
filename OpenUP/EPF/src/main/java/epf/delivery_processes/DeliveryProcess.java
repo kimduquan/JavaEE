@@ -31,6 +31,9 @@ public class DeliveryProcess extends Properties {
     @Column(name = "NAME")
     @Id
     private String name;
+    
+    @Column(name = "SUMMARY")
+    private String summary;
 	
     @Embedded
     private Description description;
@@ -50,6 +53,14 @@ public class DeliveryProcess extends Properties {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public Description getDescription() {

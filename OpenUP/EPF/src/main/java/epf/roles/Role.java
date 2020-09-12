@@ -5,19 +5,14 @@
  */
 package epf.roles;
 
-import java.util.List;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import epf.tasks.Task;
-import epf.work_products.Artifact;
+import javax.json.JsonObject;
+import javax.persistence.Embedded;
 import javax.persistence.NamedNativeQuery;
-import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
@@ -85,33 +80,27 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 )
 public class Role {
 
-	@Column(name = "NAME")
+    @Column(name = "NAME")
     @Id
     private String name;
     
-    @ManyToMany
-    @JoinTable(
-            name = "ROLE_ADDITIONALLY_PERFORMS",
-            joinColumns = @JoinColumn(
-                    name = "ROLE"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "TASK"
-            )
-    )
-    private List<Task> additionallyPerforms;
+    @Column(name = "SUMMARY")
+    private String summary;
     
-    @ManyToMany
-    @JoinTable(
-            name = "ROLE_MODIFIES",
-            joinColumns = @JoinColumn(
-                    name = "ROLE"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "ARTIFACT"
-            )
-    )
-    private List<Artifact> modifies;
+    @Embedded
+    private Relationships relationships;
+    
+    @Column(name = "MAIN_DESCRIPTION")
+    private JsonObject mainDescription;
+    
+    @Embedded
+    private Staffing staffing;
+    
+    @Column(name = "KEY_CONSIDERATIONS")
+    private JsonObject keyConsiderations;
+    
+    @Embedded
+    private MoreInformation moreInformation;
 
     public String getName() {
         return name;
@@ -120,22 +109,52 @@ public class Role {
     public void setName(String name) {
         this.name = name;
     }
-    
-    @Name("Additionally_Performs")
-    public List<Task> getAdditionallyPerforms(){
-        return additionallyPerforms;
+
+    public String getSummary() {
+        return summary;
     }
 
-    public void setAdditionallyPerforms(List<Task> additionallyPerforms) {
-        this.additionallyPerforms = additionallyPerforms;
-    }
-    
-    @Name("Modifies")
-    public List<Artifact> getModifies(){
-        return modifies;
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
-    public void setModifies(List<Artifact> modifies) {
-        this.modifies = modifies;
+    public Relationships getRelationships() {
+        return relationships;
+    }
+
+    public void setRelationships(Relationships relationships) {
+        this.relationships = relationships;
+    }
+
+    public JsonObject getMainDescription() {
+        return mainDescription;
+    }
+
+    public void setMainDescription(JsonObject mainDescription) {
+        this.mainDescription = mainDescription;
+    }
+
+    public Staffing getStaffing() {
+        return staffing;
+    }
+
+    public void setStaffing(Staffing staffing) {
+        this.staffing = staffing;
+    }
+
+    public JsonObject getKeyConsiderations() {
+        return keyConsiderations;
+    }
+
+    public void setKeyConsiderations(JsonObject keyConsiderations) {
+        this.keyConsiderations = keyConsiderations;
+    }
+
+    public MoreInformation getMoreInformation() {
+        return moreInformation;
+    }
+
+    public void setMoreInformation(MoreInformation moreInformation) {
+        this.moreInformation = moreInformation;
     }
 }

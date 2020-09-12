@@ -5,22 +5,15 @@
  */
 package epf.work_products;
 
-import java.util.List;
+import javax.json.JsonObject;
 import javax.json.bind.annotation.JsonbPropertyOrder;
-import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import epf.roles.Role;
-import epf.tasks.Task;
-import org.eclipse.microprofile.graphql.Name;
+import javax.persistence.Embedded;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
@@ -46,27 +39,29 @@ public class Artifact {
     @Id
     private String name;
     
-    @ManyToMany
-    @JoinTable(
-            name = "ARTIFACT_FULFILLED_SLOTS",
-            joinColumns = @JoinColumn(
-                    name = "ARTIFACT"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "WORK_PRODUCT_SLOT"
-            )
-    )
-    private List<WorkProductSlot> fulfilledSlots;
+    @Column(name = "SUMMARY")
+    private String summary;
     
-    @ManyToOne
-    @JoinColumn(name = "RESPONSIBLE")
-    private Role responsible;
+    @Column(name = "PURPOSE")
+    private JsonObject purpose;
     
-    @ManyToMany(mappedBy = "modifies")
-    private List<Role> modifiedBy;
+    @Embedded
+    private Relationships relationships;
     
-    @ManyToMany(mappedBy = "outputs")
-    private List<Task> outputFrom;
+    @Embedded
+    private Description description;
+    
+    @Embedded
+    private Illustrations illustrations;
+    
+    @Column(name = "KEY_CONSIDERATIONS")
+    private JsonObject keyConsiderations;
+    
+    @Embedded
+    private Tailoring tailoring;
+    
+    @Embedded
+    private MoreInformation moreInformation;
 
     public String getName() {
         return name;
@@ -76,47 +71,67 @@ public class Artifact {
         this.name = name;
     }
 
-    public List<WorkProductSlot> getFulfilledSlots() {
-        return fulfilledSlots;
+    public String getSummary() {
+        return summary;
     }
 
-    public void setFulfilledSlots(List<WorkProductSlot> fulfilledSlots) {
-        this.fulfilledSlots = fulfilledSlots;
-    }
-    
-    @Name("Responsible")
-    @JsonbTransient
-    public Role getResponsible(){
-        return responsible;
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
-    public void setResponsible(Role responsible) {
-        this.responsible = responsible;
-    }
-    
-    @Name("Modified_By")
-    @JsonbTransient
-    public List<Role> getModifiedBy(){
-        return modifiedBy;
+    public JsonObject getPurpose() {
+        return purpose;
     }
 
-    public void setModifiedBy(List<Role> modifiedBy) {
-        this.modifiedBy = modifiedBy;
-    }
-    
-    @Name("Input_To")
-    @JsonbTransient
-    public List<Task> getInputTo(){
-        return null;
-    }
-    
-    @Name("Output_From")
-    @JsonbTransient
-    public List<Task> getOutputFrom(){
-        return outputFrom;
+    public void setPurpose(JsonObject purpose) {
+        this.purpose = purpose;
     }
 
-    public void setOutputFrom(List<Task> outputFrom) {
-        this.outputFrom = outputFrom;
+    public Relationships getRelationships() {
+        return relationships;
+    }
+
+    public void setRelationships(Relationships relationships) {
+        this.relationships = relationships;
+    }
+
+    public Description getDescription() {
+        return description;
+    }
+
+    public void setDescription(Description description) {
+        this.description = description;
+    }
+
+    public Illustrations getIllustrations() {
+        return illustrations;
+    }
+
+    public void setIllustrations(Illustrations illustrations) {
+        this.illustrations = illustrations;
+    }
+
+    public JsonObject getKeyConsiderations() {
+        return keyConsiderations;
+    }
+
+    public void setKeyConsiderations(JsonObject keyConsiderations) {
+        this.keyConsiderations = keyConsiderations;
+    }
+
+    public Tailoring getTailoring() {
+        return tailoring;
+    }
+
+    public void setTailoring(Tailoring tailoring) {
+        this.tailoring = tailoring;
+    }
+
+    public MoreInformation getMoreInformation() {
+        return moreInformation;
+    }
+
+    public void setMoreInformation(MoreInformation moreInformation) {
+        this.moreInformation = moreInformation;
     }
 }

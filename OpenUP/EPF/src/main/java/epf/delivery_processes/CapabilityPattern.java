@@ -34,6 +34,9 @@ public class CapabilityPattern {
     @Column(name = "NAME")
     @Id
     private String name;
+    
+    @Column(name = "SUMMARY")
+    private String summary;
 	
     @Embedded
     private Description description;
@@ -53,6 +56,14 @@ public class CapabilityPattern {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public Description getDescription() {

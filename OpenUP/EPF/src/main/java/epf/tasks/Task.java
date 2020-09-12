@@ -5,19 +5,13 @@
  */
 package epf.tasks;
 
-import java.util.List;
 import javax.json.bind.annotation.JsonbPropertyOrder;
-import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import epf.roles.Role;
-import epf.work_products.Artifact;
+import javax.json.JsonObject;
+import javax.persistence.Embedded;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
@@ -44,45 +38,29 @@ public class Task {
     @Id
     private String name;
     
-    @ManyToOne
-    @JoinColumn(name = "TASK_PRIMARY_PERFORMER")
-    private Role primaryPerformer;
+    @Column(name = "SUMMARY")
+    private String summary;
     
-    @ManyToMany
-    @JoinTable(
-            name = "TASK_INPUTS_MANDATORY",
-            joinColumns = @JoinColumn(
-                    name = "TASK"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "ARTIFACT"
-            )
-    )
-    private List<Artifact> mandatory;
+    @Column(name = "PURPOSE")
+    private String purpose;
     
-    @ManyToMany
-    @JoinTable(
-            name = "TASK_INPUTS_OPTIONAL",
-            joinColumns = @JoinColumn(
-                    name = "TASK"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "ARTIFACT"
-            )
-    )
-    private List<Artifact> optional;
+    @Embedded
+    private Relationships relationships;
     
-    @ManyToMany
-    @JoinTable(
-            name = "TASK_OUTPUTS",
-            joinColumns = @JoinColumn(
-                    name = "TASK"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "ARTIFACT"
-            )
-    )
-    private List<Artifact> outputs;
+    @Column(name = "MAIN_DESCRIPTION")
+    private String mainDescription;
+    
+    @Column(name = "STEPS")
+    private JsonObject steps;
+    
+    @Column(name = "KEY_CONSIDERATIONS")
+    private JsonObject keyConsiderations;
+    
+    @Column(name = "ALTERNATIVES")
+    private String alternatives;
+    
+    @Embedded
+    private MoreInformation moreInformation;
 
     public String getName() {
         return name;
@@ -92,36 +70,67 @@ public class Task {
         this.name = name;
     }
 
-    @JsonbTransient
-    public Role getPrimaryPerformer() {
-        return primaryPerformer;
+    public String getSummary() {
+        return summary;
     }
 
-    public void setPrimaryPerformer(Role primaryPerformer) {
-        this.primaryPerformer = primaryPerformer;
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
-    public List<Artifact> getMandatory() {
-        return mandatory;
+    public String getPurpose() {
+        return purpose;
     }
 
-    public void setMandatory(List<Artifact> mandatory) {
-        this.mandatory = mandatory;
+    public void setPurpose(String purpose) {
+        this.purpose = purpose;
     }
 
-    public List<Artifact> getOptional() {
-        return optional;
+    public Relationships getRelationships() {
+        return relationships;
     }
 
-    public void setOptional(List<Artifact> optional) {
-        this.optional = optional;
+    public void setRelationships(Relationships relationships) {
+        this.relationships = relationships;
     }
 
-    public List<Artifact> getOutputs() {
-        return outputs;
+    public String getMainDescription() {
+        return mainDescription;
     }
 
-    public void setOutputs(List<Artifact> outputs) {
-        this.outputs = outputs;
+    public void setMainDescription(String mainDescription) {
+        this.mainDescription = mainDescription;
+    }
+
+    public JsonObject getSteps() {
+        return steps;
+    }
+
+    public void setSteps(JsonObject steps) {
+        this.steps = steps;
+    }
+
+    public JsonObject getKeyConsiderations() {
+        return keyConsiderations;
+    }
+
+    public void setKeyConsiderations(JsonObject keyConsiderations) {
+        this.keyConsiderations = keyConsiderations;
+    }
+
+    public String getAlternatives() {
+        return alternatives;
+    }
+
+    public void setAlternatives(String alternatives) {
+        this.alternatives = alternatives;
+    }
+
+    public MoreInformation getMoreInformation() {
+        return moreInformation;
+    }
+
+    public void setMoreInformation(MoreInformation moreInformation) {
+        this.moreInformation = moreInformation;
     }
 }
