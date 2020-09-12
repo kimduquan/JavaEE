@@ -16,9 +16,9 @@ import javax.persistence.Id;
 @Embeddable
 public class Template {
 	
-	@Column(name = "NAME")
-	@Id
-	private String name;
+    @Column(name = "NAME")
+    @Id
+    private String name;
 
     public String getName() {
         return name;

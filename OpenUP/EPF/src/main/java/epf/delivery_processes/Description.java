@@ -8,58 +8,58 @@ import javax.persistence.Embedded;
 @Embeddable
 public class Description {
 
-	@Column(name = "PURPOSE")
-	private JsonObject purpose;
-	
-	@Column(name = "RELATIONSHIPS")
-	private JsonObject relationships;
-	
-	@Column(name = "DESCRIPTION")
-	private JsonObject description;
-	
-	@Embedded
-	private Properties properties;
-	
-	@Embedded
-	private JsonObject alternatives;
+    @Column(name = "PURPOSE")
+    private JsonObject purpose;
+
+    @Column(name = "RELATIONSHIPS")
+    private JsonObject relationships;
+
+    @Column(name = "DESCRIPTION")
+    private JsonObject description;
+
+    @Embedded
+    private Properties properties;
+
+    @Column(name = "ALTERNATIVES")
+    private JsonObject alternatives;
     
     public JsonObject getPurpose() {
-		return purpose;
-	}
+        return purpose;
+    }
 
-	public void setPurpose(JsonObject purpose) {
-		this.purpose = purpose;
-	}
-	
-	public JsonObject getRelationships() {
-		return relationships;
-	}
+    public void setPurpose(JsonObject purpose) {
+        this.purpose = purpose;
+    }
 
-	public void setRelationships(JsonObject relationships) {
-		this.relationships = relationships;
-	}
+    public JsonObject getRelationships() {
+        return relationships;
+    }
 
-	public JsonObject getDescription() {
-		return description;
-	}
+    public void setRelationships(JsonObject relationships) {
+        this.relationships = relationships;
+    }
 
-	public void setDescription(JsonObject description) {
-		this.description = description;
-	}
+    public JsonObject getDescription() {
+        return description;
+    }
 
-	public Properties getProperties() {
-		return properties;
-	}
+    public void setDescription(JsonObject description) {
+        this.description = description;
+    }
 
-	public void setProperties(Properties properties) {
-		this.properties = properties;
-	}
+    public Properties getProperties() {
+        return properties;
+    }
 
-	public JsonObject getAlternatives() {
-		return alternatives;
-	}
+    public void setProperties(Properties properties) {
+        this.properties = properties;
+    }
 
-	public void setAlternatives(JsonObject alternatives) {
-		this.alternatives = alternatives;
-	}
+    public JsonObject getAlternatives() {
+        return alternatives;
+    }
+
+    public void setAlternatives(JsonObject alternatives) {
+        this.alternatives = alternatives;
+    }
 }

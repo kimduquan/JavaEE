@@ -25,7 +25,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Table(name = "WORK_PRODUCT_SLOT")
 public class WorkProductSlot {
 	
-	@Column(name = "NAME")
+    @Column(name = "NAME")
     @Id
     private String name;
 

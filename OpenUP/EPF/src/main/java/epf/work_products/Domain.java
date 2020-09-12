@@ -37,7 +37,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 })
 public class Domain {
 
-	@Column(name = "NAME")
+    @Column(name = "NAME")
     @Id
     private String name;
     

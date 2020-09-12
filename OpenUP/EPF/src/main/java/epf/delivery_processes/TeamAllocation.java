@@ -7,14 +7,14 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class TeamAllocation {
 
-	@Column(name = "TEAM_BREAKDOWN")
-	private JsonObject teamBreakdown;
-	
-	public JsonObject getTeamBreakdown() {
-		return teamBreakdown;
-	}
+    @Column(name = "TEAM_BREAKDOWN")
+    private JsonObject teamBreakdown;
 
-	public void setTeamBreakdown(JsonObject teamBreakdown) {
-		this.teamBreakdown = teamBreakdown;
-	}
+    public JsonObject getTeamBreakdown() {
+        return teamBreakdown;
+    }
+
+    public void setTeamBreakdown(JsonObject teamBreakdown) {
+        this.teamBreakdown = teamBreakdown;
+    }
 }

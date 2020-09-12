@@ -28,24 +28,24 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Entity
 @Table(name = "CAPABILITY_PATTERN")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@DiscriminatorColumn(name = "NAME", length = 63)
+@DiscriminatorColumn(name = "NAME")
 public class CapabilityPattern {
 	
-	@Column(name = "NAME")
+    @Column(name = "NAME")
     @Id
     private String name;
 	
-	@Embedded
-	private Description description;
-	
-	@Embedded
-	private WorkBreakdownStructure workBreakdownStructure;
-	
-	@Embedded
-	private TeamAllocation teamAllocation;
-	
-	@Embedded
-	private WorkProductUsage workProductUsage;
+    @Embedded
+    private Description description;
+
+    @Embedded
+    private WorkBreakdownStructure workBreakdownStructure;
+
+    @Embedded
+    private TeamAllocation teamAllocation;
+
+    @Embedded
+    private WorkProductUsage workProductUsage;
 
     public String getName() {
         return name;
@@ -55,35 +55,35 @@ public class CapabilityPattern {
         this.name = name;
     }
 
-	public Description getDescription() {
-		return description;
-	}
+    public Description getDescription() {
+            return description;
+    }
 
-	public void setDescription(Description description) {
-		this.description = description;
-	}
+    public void setDescription(Description description) {
+            this.description = description;
+    }
 
-	public WorkBreakdownStructure getWorkBreakdownStructure() {
-		return workBreakdownStructure;
-	}
+    public WorkBreakdownStructure getWorkBreakdownStructure() {
+            return workBreakdownStructure;
+    }
 
-	public void setWorkBreakdownStructure(WorkBreakdownStructure workBreakdownStructure) {
-		this.workBreakdownStructure = workBreakdownStructure;
-	}
+    public void setWorkBreakdownStructure(WorkBreakdownStructure workBreakdownStructure) {
+            this.workBreakdownStructure = workBreakdownStructure;
+    }
 
-	public TeamAllocation getTeamAllocation() {
-		return teamAllocation;
-	}
+    public TeamAllocation getTeamAllocation() {
+            return teamAllocation;
+    }
 
-	public void setTeamAllocation(TeamAllocation teamAllocation) {
-		this.teamAllocation = teamAllocation;
-	}
+    public void setTeamAllocation(TeamAllocation teamAllocation) {
+            this.teamAllocation = teamAllocation;
+    }
 
-	public WorkProductUsage getWorkProductUsage() {
-		return workProductUsage;
-	}
+    public WorkProductUsage getWorkProductUsage() {
+            return workProductUsage;
+    }
 
-	public void setWorkProductUsage(WorkProductUsage workProductUsage) {
-		this.workProductUsage = workProductUsage;
-	}
+    public void setWorkProductUsage(WorkProductUsage workProductUsage) {
+            this.workProductUsage = workProductUsage;
+    }
 }

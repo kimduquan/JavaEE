@@ -7,14 +7,14 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class WorkProductUsage {
 
-	@Column(name = "WORK_PRODUCT_BREAKDOWN")
-	private JsonObject workProductBreakdown;
+    @Column(name = "WORK_PRODUCT_BREAKDOWN")
+    private JsonObject workProductBreakdown;
 
-	public JsonObject getWorkProductBreakdown() {
-		return workProductBreakdown;
-	}
+    public JsonObject getWorkProductBreakdown() {
+        return workProductBreakdown;
+    }
 
-	public void setWorkProductBreakdown(JsonObject workProductBreakdown) {
-		this.workProductBreakdown = workProductBreakdown;
-	}
+    public void setWorkProductBreakdown(JsonObject workProductBreakdown) {
+        this.workProductBreakdown = workProductBreakdown;
+    }
 }

@@ -7,25 +7,25 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class WorkBreakdownStructure {
 
-	@Column(name = "WORKFLOW")
-	private JsonObject workflow;
-	
-	@Column(name = "WORK_BREAKDOWN")
-	private JsonObject workBreakdown;
-	
-	public JsonObject getWorkflow() {
-		return workflow;
-	}
+    @Column(name = "WORKFLOW")
+    private JsonObject workflow;
 
-	public void setWorkflow(JsonObject workflow) {
-		this.workflow = workflow;
-	}
+    @Column(name = "WORK_BREAKDOWN")
+    private JsonObject workBreakdown;
 
-	public JsonObject getWorkBreakdown() {
-		return workBreakdown;
-	}
+    public JsonObject getWorkflow() {
+        return workflow;
+    }
 
-	public void setWorkBreakdown(JsonObject workBreakdown) {
-		this.workBreakdown = workBreakdown;
-	}
+    public void setWorkflow(JsonObject workflow) {
+        this.workflow = workflow;
+    }
+
+    public JsonObject getWorkBreakdown() {
+        return workBreakdown;
+    }
+
+    public void setWorkBreakdown(JsonObject workBreakdown) {
+        this.workBreakdown = workBreakdown;
+    }
 }

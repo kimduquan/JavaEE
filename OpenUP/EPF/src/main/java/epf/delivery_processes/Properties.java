@@ -15,7 +15,7 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class Properties {
 
-	@Column(name = "EVENT_DRIVEN")
+    @Column(name = "EVENT_DRIVEN")
     private Boolean eventDriven;
     
     @Column(name = "MULTIPLE_OCCURRENCES")

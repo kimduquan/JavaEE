@@ -42,7 +42,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 })
 public class Artifact {
 
-	@Column(name = "NAME")
+    @Column(name = "NAME")
     @Id
     private String name;
     

@@ -32,17 +32,17 @@ public class Phase extends Properties {
     @Id
     private String name;
 	
-	@Embedded
-	private Description description;
-	
-	@Embedded
-	private WorkBreakdownStructure workBreakdownStructure;
-	
-	@Embedded
-	private TeamAllocation teamAllocation;
-	
-	@Embedded
-	private WorkProductUsage workProductUsage;
+    @Embedded
+    private Description description;
+
+    @Embedded
+    private WorkBreakdownStructure workBreakdownStructure;
+
+    @Embedded
+    private TeamAllocation teamAllocation;
+
+    @Embedded
+    private WorkProductUsage workProductUsage;
     
     @OneToOne
     @JoinColumn(name = "PARENT_ACTIVITIES", referencedColumnName = "NAME")
@@ -56,37 +56,37 @@ public class Phase extends Properties {
         this.name = name;
     }
 
-	public Description getDescription() {
-		return description;
-	}
+    public Description getDescription() {
+        return description;
+    }
 
-	public void setDescription(Description description) {
-		this.description = description;
-	}
+    public void setDescription(Description description) {
+        this.description = description;
+    }
 
-	public WorkBreakdownStructure getWorkBreakdownStructure() {
-		return workBreakdownStructure;
-	}
+    public WorkBreakdownStructure getWorkBreakdownStructure() {
+        return workBreakdownStructure;
+    }
 
-	public void setWorkBreakdownStructure(WorkBreakdownStructure workBreakdownStructure) {
-		this.workBreakdownStructure = workBreakdownStructure;
-	}
+    public void setWorkBreakdownStructure(WorkBreakdownStructure workBreakdownStructure) {
+        this.workBreakdownStructure = workBreakdownStructure;
+    }
 
-	public TeamAllocation getTeamAllocation() {
-		return teamAllocation;
-	}
+    public TeamAllocation getTeamAllocation() {
+        return teamAllocation;
+    }
 
-	public void setTeamAllocation(TeamAllocation teamAllocation) {
-		this.teamAllocation = teamAllocation;
-	}
+    public void setTeamAllocation(TeamAllocation teamAllocation) {
+        this.teamAllocation = teamAllocation;
+    }
 
-	public WorkProductUsage getWorkProductUsage() {
-		return workProductUsage;
-	}
+    public WorkProductUsage getWorkProductUsage() {
+        return workProductUsage;
+    }
 
-	public void setWorkProductUsage(WorkProductUsage workProductUsage) {
-		this.workProductUsage = workProductUsage;
-	}
+    public void setWorkProductUsage(WorkProductUsage workProductUsage) {
+        this.workProductUsage = workProductUsage;
+    }
 
     public DeliveryProcess getParentActivities() {
         return parentActivities;

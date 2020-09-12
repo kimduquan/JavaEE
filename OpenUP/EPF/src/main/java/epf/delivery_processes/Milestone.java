@@ -28,12 +28,13 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Table(name = "MILESTONE")
 public class Milestone {
 
-	@Column(name = "NAME")
+    @Column(name = "NAME")
     @Id
     private String name;
 	
-	@Embedded
-	private Properties properties;
+    @Embedded
+    private Properties properties;
+	
     @OneToOne
     @JoinColumn(name = "PREDECESSOR", referencedColumnName = "NAME")
     private Iteration predecessor;
@@ -46,13 +47,14 @@ public class Milestone {
         this.name = name;
     }
 
-	public Properties getProperties() {
-		return properties;
-	}
+    public Properties getProperties() {
+        return properties;
+    }
 
-	public void setProperties(Properties properties) {
-		this.properties = properties;
-	}
+    public void setProperties(Properties properties) {
+        this.properties = properties;
+    }
+    
     public Iteration getPredecessor() {
         return predecessor;
     }
