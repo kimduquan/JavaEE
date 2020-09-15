@@ -26,7 +26,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Entity
 @Table(name = "DELIVERY_PROCESS")
 @NamedQuery(name = "DeliveryProcess.DeliveryProcesses", query = "SELECT dp FROM DeliveryProcess AS dp")
-public class DeliveryProcess extends Properties {
+public class DeliveryProcess {
 	
     @Column(name = "NAME")
     @Id

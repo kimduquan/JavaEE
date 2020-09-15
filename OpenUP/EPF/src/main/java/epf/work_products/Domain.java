@@ -41,6 +41,9 @@ public class Domain {
     @Id
     private String name;
     
+    @Column(name = "SUMMARY")
+    private String summary;
+    
     @ManyToMany
     @JoinTable(
             name = "WORK_PRODUCTS",
@@ -59,6 +62,14 @@ public class Domain {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
     
     @Name("Work_Products")

@@ -13,7 +13,6 @@ import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 
 /**
  *
@@ -22,8 +21,7 @@ import javax.persistence.ManyToOne;
 @Embeddable
 public class Relationships {
     
-    @ManyToOne
-    @JoinColumn(name = "TASK_PRIMARY_PERFORMER")
+    @JoinColumn(name = "PRIMARY_PERFORMER", referencedColumnName = "NAME")
     private Role primaryPerformer;
     
     @ManyToMany

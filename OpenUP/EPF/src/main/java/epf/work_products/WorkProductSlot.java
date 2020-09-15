@@ -28,6 +28,9 @@ public class WorkProductSlot {
     @Column(name = "NAME")
     @Id
     private String name;
+    
+    @Column(name = "SUMMARY")
+    private String summary;
 
     public String getName() {
         return name;
@@ -36,5 +39,12 @@ public class WorkProductSlot {
     public void setName(String name) {
         this.name = name;
     }
-    
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
 }

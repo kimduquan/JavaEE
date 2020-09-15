@@ -10,7 +10,6 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -26,7 +25,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 )
 @Entity
 @Table(name = "PHASE")
-public class Phase extends Properties {
+public class Phase {
 
     @Column(name = "NAME")
     @Id
@@ -44,7 +43,6 @@ public class Phase extends Properties {
     @Embedded
     private WorkProductUsage workProductUsage;
     
-    @OneToOne
     @JoinColumn(name = "PARENT_ACTIVITIES", referencedColumnName = "NAME")
     private DeliveryProcess parentActivities;
 

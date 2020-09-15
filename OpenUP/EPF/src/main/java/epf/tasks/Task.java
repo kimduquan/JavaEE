@@ -42,13 +42,13 @@ public class Task {
     private String summary;
     
     @Column(name = "PURPOSE")
-    private String purpose;
+    private JsonObject purpose;
     
     @Embedded
     private Relationships relationships;
     
     @Column(name = "MAIN_DESCRIPTION")
-    private String mainDescription;
+    private JsonObject mainDescription;
     
     @Column(name = "STEPS")
     private JsonObject steps;
@@ -57,7 +57,7 @@ public class Task {
     private JsonObject keyConsiderations;
     
     @Column(name = "ALTERNATIVES")
-    private String alternatives;
+    private JsonObject alternatives;
     
     @Embedded
     private MoreInformation moreInformation;
@@ -78,11 +78,11 @@ public class Task {
         this.summary = summary;
     }
 
-    public String getPurpose() {
+    public JsonObject getPurpose() {
         return purpose;
     }
 
-    public void setPurpose(String purpose) {
+    public void setPurpose(JsonObject purpose) {
         this.purpose = purpose;
     }
 
@@ -94,11 +94,11 @@ public class Task {
         this.relationships = relationships;
     }
 
-    public String getMainDescription() {
+    public JsonObject getMainDescription() {
         return mainDescription;
     }
 
-    public void setMainDescription(String mainDescription) {
+    public void setMainDescription(JsonObject mainDescription) {
         this.mainDescription = mainDescription;
     }
 
@@ -118,11 +118,11 @@ public class Task {
         this.keyConsiderations = keyConsiderations;
     }
 
-    public String getAlternatives() {
+    public JsonObject getAlternatives() {
         return alternatives;
     }
 
-    public void setAlternatives(String alternatives) {
+    public void setAlternatives(JsonObject alternatives) {
         this.alternatives = alternatives;
     }
 

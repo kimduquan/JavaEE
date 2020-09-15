@@ -10,9 +10,9 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import epf.tasks.Task;
+import javax.persistence.Column;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
@@ -29,11 +29,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Table(name = "ACTIVITY")
 public class Activity extends CapabilityPattern {
     
-    @ManyToOne
-    @JoinTable(name = "ACTIVITY_PARENT",
-            joinColumns = {@JoinColumn(name = "ACTIVITY")},
-            inverseJoinColumns = {@JoinColumn(name = "PARENT")}
-    )
+    @JoinColumn(name = "PARENT_ACTIVITIES", referencedColumnName = "NAME")
     private CapabilityPattern parentActivities;
     
     @ManyToMany

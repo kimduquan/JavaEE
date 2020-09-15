@@ -11,7 +11,6 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -32,7 +31,6 @@ public class Iteration extends CapabilityPattern {
     @Column(name = "NUMBER")
     private Integer number;
     
-    @OneToOne
     @JoinColumn(name = "PARENT_ACTIVITIES", referencedColumnName = "NAME")
     private Phase parentActivities;
     

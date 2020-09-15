@@ -26,10 +26,10 @@
             <artifactId>jakarta.persistence</artifactId>
         </dependency>
         <!-- https://mvnrepository.com/artifact/javax.security.enterprise/javax.security.enterprise-api -->
-		<dependency>
-		    <groupId>javax.security.enterprise</groupId>
-		    <artifactId>javax.security.enterprise-api</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>javax.security.enterprise</groupId>
+            <artifactId>javax.security.enterprise-api</artifactId>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/org.eclipse.microprofile/microprofile -->
         <dependency>
             <groupId>org.eclipse.microprofile</groupId>
@@ -44,7 +44,7 @@
             <artifactId>jwt-1.0</artifactId>
             <type>esa</type>
         </dependency>
-		<!-- https://mvnrepository.com/artifact/io.jaegertracing/jaeger-client -->
+	<!-- https://mvnrepository.com/artifact/io.jaegertracing/jaeger-client -->
         <dependency>
             <groupId>io.jaegertracing</groupId>
             <artifactId>jaeger-client</artifactId>
