@@ -5,6 +5,8 @@
  */
 package epf.schema.tasks;
 
+import epf.schema.tasks.section.Relationships;
+import epf.schema.tasks.section.MoreInformation;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.persistence.Column;
 import javax.persistence.Entity;

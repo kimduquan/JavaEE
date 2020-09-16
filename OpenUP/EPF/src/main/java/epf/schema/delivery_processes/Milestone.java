@@ -5,6 +5,7 @@
  */
 package epf.schema.delivery_processes;
 
+import epf.schema.delivery_processes.section.Properties;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;

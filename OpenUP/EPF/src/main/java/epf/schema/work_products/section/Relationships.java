@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.schema.work_products;
+package epf.schema.work_products.section;
 
 import epf.schema.roles.Role;
 import epf.schema.tasks.Task;
+import epf.schema.work_products.WorkProductSlot;
 import java.util.List;
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Embeddable;

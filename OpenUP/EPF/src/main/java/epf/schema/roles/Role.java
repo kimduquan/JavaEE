@@ -5,6 +5,9 @@
  */
 package epf.schema.roles;
 
+import epf.schema.roles.section.Staffing;
+import epf.schema.roles.section.MoreInformation;
+import epf.schema.roles.section.Relationships;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.persistence.Column;
 import javax.persistence.Entity;

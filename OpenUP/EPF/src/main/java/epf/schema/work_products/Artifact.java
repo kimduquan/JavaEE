@@ -5,6 +5,11 @@
  */
 package epf.schema.work_products;
 
+import epf.schema.work_products.section.Tailoring;
+import epf.schema.work_products.section.Description;
+import epf.schema.work_products.section.Illustrations;
+import epf.schema.work_products.section.MoreInformation;
+import epf.schema.work_products.section.Relationships;
 import javax.json.JsonObject;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.persistence.Column;

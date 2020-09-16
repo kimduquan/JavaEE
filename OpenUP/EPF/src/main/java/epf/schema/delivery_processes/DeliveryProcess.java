@@ -5,6 +5,10 @@
  */
 package epf.schema.delivery_processes;
 
+import epf.schema.delivery_processes.section.WorkBreakdownStructure;
+import epf.schema.delivery_processes.section.Description;
+import epf.schema.delivery_processes.section.TeamAllocation;
+import epf.schema.delivery_processes.section.WorkProductUsage;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;

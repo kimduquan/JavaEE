@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.schema.tasks;
+package epf.schema.tasks.section;
 
 import epf.schema.roles.Role;
 import epf.schema.work_products.Artifact;

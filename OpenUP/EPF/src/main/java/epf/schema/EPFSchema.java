@@ -19,7 +19,7 @@ import org.eclipse.microprofile.graphql.Query;
  */
 @GraphQLApi
 @RequestScoped
-@RolesAllowed("Any_Role")
+@RolesAllowed("EPF")
 public class EPFSchema {
     
     @Inject

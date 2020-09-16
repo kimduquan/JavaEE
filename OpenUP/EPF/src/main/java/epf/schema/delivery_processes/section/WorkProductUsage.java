@@ -1,4 +1,4 @@
-package epf.schema.delivery_processes;
+package epf.schema.delivery_processes.section;
 
 import javax.json.JsonObject;
 import javax.persistence.Column;

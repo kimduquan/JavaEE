@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.schema.work_products;
+package epf.schema.work_products.section;
 
 import javax.json.JsonObject;
 import javax.persistence.Column;
