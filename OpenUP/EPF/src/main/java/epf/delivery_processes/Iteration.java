@@ -25,7 +25,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
         title = "Iteration"
 )
 @Entity
-@Table(name = "ITERATION")
+@Table(name = "ITERATION", schema = "EPF")
 public class Iteration extends CapabilityPattern {
     
     @Column(name = "NUMBER")
@@ -36,6 +36,7 @@ public class Iteration extends CapabilityPattern {
     
     @ManyToMany
     @JoinTable(name = "ITERATION_ACTIVITIES",
+            schema = "EPF",
             joinColumns = {@JoinColumn(name = "ITERATION")},
             inverseJoinColumns = {@JoinColumn(name = "ACTIVITY")}
     )

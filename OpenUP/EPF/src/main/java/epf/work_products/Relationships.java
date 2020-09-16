@@ -26,6 +26,7 @@ public class Relationships {
     @ManyToMany
     @JoinTable(
             name = "ARTIFACT_FULFILLED_SLOTS",
+            schema = "EPF",
             joinColumns = @JoinColumn(
                     name = "ARTIFACT"
             ),

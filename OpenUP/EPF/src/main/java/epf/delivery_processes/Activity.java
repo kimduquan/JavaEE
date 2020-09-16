@@ -12,7 +12,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import epf.tasks.Task;
-import javax.persistence.Column;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
@@ -26,7 +25,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
         title = "Activity"
 )
 @Entity
-@Table(name = "ACTIVITY")
+@Table(name = "ACTIVITY", schema = "EPF")
 public class Activity extends CapabilityPattern {
     
     @JoinColumn(name = "PARENT_ACTIVITIES", referencedColumnName = "NAME")
@@ -34,6 +33,7 @@ public class Activity extends CapabilityPattern {
     
     @ManyToMany
     @JoinTable(name = "ACTIVITY_TASKS",
+            schema = "EPF",
             joinColumns = {@JoinColumn(name = "ACTIVITY")},
             inverseJoinColumns = {@JoinColumn(name = "TASK")}
     )

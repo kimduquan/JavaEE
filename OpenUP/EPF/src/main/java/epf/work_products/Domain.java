@@ -29,7 +29,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
         title = "Domain"
 )
 @Entity
-@Table(name = "_DOMAIN")
+@Table(name = "_DOMAIN", schema = "EPF")
 @NamedQuery(name = "Domain.Domains", query = "SELECT d FROM Domain AS d")
 @JsonbPropertyOrder({
     "name",
@@ -47,6 +47,7 @@ public class Domain {
     @ManyToMany
     @JoinTable(
             name = "WORK_PRODUCTS",
+            schema = "EPF",
             joinColumns = @JoinColumn(
                     name = "DOMAIN"
             ),

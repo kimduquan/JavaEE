@@ -26,7 +26,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
         title = "Role"
 )
 @Entity
-@Table(name = "_ROLE")
+@Table(name = "_ROLE", schema = "EPF")
 @JsonbPropertyOrder({
     "name",
     "additionallyPerforms",

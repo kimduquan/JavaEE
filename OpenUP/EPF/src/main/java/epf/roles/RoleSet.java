@@ -30,7 +30,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
         title = "Role Set"
 )
 @Entity
-@Table(name = "ROLE_SET")
+@Table(name = "ROLE_SET", schema = "EPF")
 @NamedQuery(name = "RoleSet.Roles", query = "SELECT rs FROM RoleSet AS rs")
 @JsonbPropertyOrder({
     "name",
@@ -48,6 +48,7 @@ public class RoleSet {
     @ManyToMany
     @JoinTable(
             name = "ROLES",
+            schema = "EPF",
             joinColumns = @JoinColumn(
                     name = "ROLE_SET"
             ),

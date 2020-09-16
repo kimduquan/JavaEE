@@ -24,6 +24,7 @@ public class Relationships {
     @ManyToMany
     @JoinTable(
             name = "ROLE_ADDITIONALLY_PERFORMS",
+            schema = "EPF",
             joinColumns = @JoinColumn(
                     name = "ROLE"
             ),
@@ -36,6 +37,7 @@ public class Relationships {
     @ManyToMany
     @JoinTable(
             name = "ROLE_MODIFIES",
+            schema = "EPF",
             joinColumns = @JoinColumn(
                     name = "ROLE"
             ),

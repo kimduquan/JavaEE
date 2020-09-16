@@ -23,7 +23,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
         title = "Template"
 )
 @Entity
-@Table(name = "TEMPLATE")
+@Table(name = "TEMPLATE", schema = "EPF")
 public class Template {
 	
     @Column(name = "NAME")

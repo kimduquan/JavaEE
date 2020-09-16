@@ -25,7 +25,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
         title = "Task"
 )
 @Entity
-@Table(name = "TASK")
+@Table(name = "TASK", schema = "EPF")
 @JsonbPropertyOrder({
     "name",
     "mandatory",

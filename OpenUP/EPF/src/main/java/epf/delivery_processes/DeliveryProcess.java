@@ -24,7 +24,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
         title = "Delivery Process"
 )
 @Entity
-@Table(name = "DELIVERY_PROCESS")
+@Table(name = "DELIVERY_PROCESS", schema = "EPF")
 @NamedQuery(name = "DeliveryProcess.DeliveryProcesses", query = "SELECT dp FROM DeliveryProcess AS dp")
 public class DeliveryProcess {
 	

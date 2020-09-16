@@ -22,7 +22,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
         title = "Work Product Slot"
 )
 @Entity
-@Table(name = "WORK_PRODUCT_SLOT")
+@Table(name = "WORK_PRODUCT_SLOT", schema = "EPF")
 public class WorkProductSlot {
 	
     @Column(name = "NAME")

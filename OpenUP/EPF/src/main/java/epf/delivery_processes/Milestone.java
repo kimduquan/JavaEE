@@ -24,7 +24,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
         title = "Milestone"
 )
 @Entity
-@Table(name = "MILESTONE")
+@Table(name = "MILESTONE", schema = "EPF")
 public class Milestone {
 
     @Column(name = "NAME")

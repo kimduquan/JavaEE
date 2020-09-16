@@ -27,7 +27,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
         title = "Artifact"
 )
 @Entity
-@Table(name = "ARTIFACT")
+@Table(name = "ARTIFACT", schema = "EPF")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @JsonbPropertyOrder({
     "name",

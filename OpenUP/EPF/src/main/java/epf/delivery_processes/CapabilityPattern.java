@@ -26,7 +26,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
         title = "Capability Pattern"
 )
 @Entity
-@Table(name = "CAPABILITY_PATTERN")
+@Table(name = "CAPABILITY_PATTERN", schema = "EPF")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @DiscriminatorColumn(name = "NAME")
 public class CapabilityPattern {

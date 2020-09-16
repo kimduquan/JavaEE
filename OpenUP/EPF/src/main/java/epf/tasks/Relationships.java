@@ -27,6 +27,7 @@ public class Relationships {
     @ManyToMany
     @JoinTable(
             name = "TASK_INPUTS_MANDATORY",
+            schema = "EPF",
             joinColumns = @JoinColumn(
                     name = "TASK"
             ),
@@ -39,6 +40,7 @@ public class Relationships {
     @ManyToMany
     @JoinTable(
             name = "TASK_INPUTS_OPTIONAL",
+            schema = "EPF",
             joinColumns = @JoinColumn(
                     name = "TASK"
             ),
@@ -51,6 +53,7 @@ public class Relationships {
     @ManyToMany
     @JoinTable(
             name = "TASK_OUTPUTS",
+            schema = "EPF",
             joinColumns = @JoinColumn(
                     name = "TASK"
             ),

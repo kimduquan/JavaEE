@@ -20,7 +20,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
         title = "Deliverable"
 )
 @Entity
-@Table(name = "DELIVERABLE")
+@Table(name = "DELIVERABLE", schema = "EPF")
 public class Deliverable extends Artifact {
     
 }
