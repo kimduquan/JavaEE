@@ -20,7 +20,7 @@ import org.eclipse.microprofile.graphql.Query;
 @GraphQLApi
 @RequestScoped
 @RolesAllowed("Any_Role")
-public class EPF {
+public class EPFSchema {
     
     @Inject
     private Roles roles;
