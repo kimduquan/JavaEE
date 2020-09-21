@@ -25,10 +25,10 @@ import javax.persistence.PersistenceUnit;
 @ApplicationScoped
 public class Application {
     
-    @PersistenceUnit(name = "OpenUP", unitName = "OpenUP")
+    @PersistenceUnit(name = "EPF", unitName = "EPF")
     private EntityManagerFactory defaultFactory;
     
-    @PersistenceContext(name = "OpenUP", unitName = "OpenUP")
+    @PersistenceContext(name = "EPF", unitName = "EPF")
     private EntityManager defaultManager;
     
     private Map<String, EntityManagerFactory> factories;
@@ -36,8 +36,8 @@ public class Application {
     
     @PostConstruct
     void postConstruct(){
-        factories = new ConcurrentHashMap<String, EntityManagerFactory>();
-        managers = new ConcurrentHashMap<String, EntityManager>();
+        factories = new ConcurrentHashMap<>();
+        managers = new ConcurrentHashMap<>();
     }
     
     @PreDestroy
@@ -56,7 +56,7 @@ public class Application {
     	Map<String, Object> props = new HashMap<>();
         props.put("javax.persistence.jdbc.user", userName);
         props.put("javax.persistence.jdbc.password", password);            
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("OpenUP-service", props);
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("OpenUP", props);
         EntityManager manager = factory.createEntityManager();
         managers.put(userName, manager);
         factories.put(userName, factory);

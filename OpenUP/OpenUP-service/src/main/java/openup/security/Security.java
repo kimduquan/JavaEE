@@ -51,11 +51,11 @@ import openup.persistence.Application;
 public class Security implements Serializable {
     
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    * 
+    */
+    private static final long serialVersionUID = 1L;
 
-	@Inject
+    @Inject
     private Application persistence;
     
     @Inject
