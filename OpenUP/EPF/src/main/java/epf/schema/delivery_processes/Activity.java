@@ -12,6 +12,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import epf.schema.tasks.Task;
+import javax.persistence.PrimaryKeyJoinColumn;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
@@ -26,6 +27,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 )
 @Entity
 @Table(name = "ACTIVITY", schema = "EPF")
+@PrimaryKeyJoinColumn(name = "EXTENDS")
 public class Activity extends CapabilityPattern {
     
     @JoinColumn(name = "PARENT_ACTIVITIES", referencedColumnName = "NAME")

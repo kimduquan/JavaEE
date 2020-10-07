@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -26,6 +27,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 )
 @Entity
 @Table(name = "ITERATION", schema = "EPF")
+@PrimaryKeyJoinColumn(name = "EXTENDS")
 public class Iteration extends CapabilityPattern {
     
     @Column(name = "NUMBER")

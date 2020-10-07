@@ -13,6 +13,7 @@ import epf.schema.work_products.section.Relationships;
 import javax.json.JsonObject;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
@@ -33,7 +34,8 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 )
 @Entity
 @Table(name = "ARTIFACT", schema = "EPF")
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "NAME", length = 63)
 @JsonbPropertyOrder({
     "name",
     "fulfilledSlots"

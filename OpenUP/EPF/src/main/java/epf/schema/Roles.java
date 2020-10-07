@@ -7,7 +7,7 @@ package epf.schema;
 
 import epf.schema.roles.RoleSet;
 import java.util.List;
-import javax.annotation.security.RolesAllowed;
+import javax.annotation.security.PermitAll;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -28,7 +28,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 @Type
 @Path("roles")
 @RequestScoped
-@RolesAllowed("Any_Role")
+@PermitAll
 public class Roles {
     
     @Inject
