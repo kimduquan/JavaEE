@@ -28,6 +28,15 @@
         <fileset dir="${shared.resource.dir}" includes="*.jar"/>
     </library>
 
+    <dataSource id="epf" jndiName="jdbc/epf">
+        <!-- Define the DataSource class names on the <jdbcDriver> element -->
+        <jdbcDriver 
+            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
+            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
+            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
+            libraryRef="H2JDBCLib" />
+        <properties URL="jdbc:h2:~/EPF_test;SCHEMA=EPF;AUTO_SERVER=TRUE" />
+    </dataSource>
     <dataSource id="openup" jndiName="jdbc/openup">
         <!-- Define the DataSource class names on the <jdbcDriver> element -->
         <jdbcDriver 
@@ -35,7 +44,7 @@
             javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
             javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
             libraryRef="H2JDBCLib" />
-        <properties URL="jdbc:h2:~/openup_test;AUTO_SERVER=TRUE" />
+        <properties URL="jdbc:h2:~/EPF_test;AUTO_SERVER=TRUE" />
     </dataSource>
 
 </server>
