@@ -13,14 +13,30 @@
                   httpPort="8080"
                   httpsPort="8443" />
 
-    <application location="OpenUP-web-1.0-SNAPSHOT.war" />
-    <application location="OpenUP-service-1.0-SNAPSHOT.war" />
+    <application location="OpenUP-web-1.0.0.war" />
+    <application location="OpenUP-service-1.0.0.war">
+		<classloader apiTypeVisibility="+third-party"/>
+	</application>
     
     <!-- H2 Library Configuration -->
     <library id="H2JDBCLib">
         <fileset dir="${shared.resource.dir}" includes="h2*.jar"/>
     </library>
+	
+	<!-- Jaeger Client Library Configuration -->
+    <library id="JaegerClientLib">
+        <fileset dir="${shared.resource.dir}" includes="*.jar"/>
+    </library>
 
+    <dataSource id="epf" jndiName="jdbc/epf">
+        <!-- Define the DataSource class names on the <jdbcDriver> element -->
+        <jdbcDriver 
+            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
+            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
+            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
+            libraryRef="H2JDBCLib" />
+        <properties URL="jdbc:h2:~/EPF;SCHEMA=EPF;AUTO_SERVER=TRUE" />
+    </dataSource>
     <dataSource id="openup" jndiName="jdbc/openup">
         <!-- Define the DataSource class names on the <jdbcDriver> element -->
         <jdbcDriver 
@@ -28,7 +44,7 @@
             javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
             javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
             libraryRef="H2JDBCLib" />
-        <properties URL="jdbc:h2:~/openup" />
+        <properties URL="jdbc:h2:~/EPF;AUTO_SERVER=TRUE" />
     </dataSource>
 
 </server>

@@ -7,7 +7,7 @@
     <artifactId>OpenUP-parent</artifactId>
     <name>OpenUP-parent</name>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -27,12 +27,24 @@
                 <artifactId>commons-httpclient</artifactId>
                 <version>3.1</version>
             </dependency>
-            <!-- https://mvnrepository.com/artifact/org.eclipse.persistence/javax.persistence -->
+            <!-- https://mvnrepository.com/artifact/org.eclipse.persistence/jakarta.persistence -->
             <dependency>
                 <groupId>org.eclipse.persistence</groupId>
-                <artifactId>javax.persistence</artifactId>
-                <version>2.2.1</version>
+                <artifactId>jakarta.persistence</artifactId>
+                <version>2.2.3</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/javax.transaction/javax.transaction-api -->
+            <dependency>
+                <groupId>javax.transaction</groupId>
+                <artifactId>javax.transaction-api</artifactId>
+                <version>1.2</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/javax.security.enterprise/javax.security.enterprise-api -->
+			<dependency>
+			    <groupId>javax.security.enterprise</groupId>
+			    <artifactId>javax.security.enterprise-api</artifactId>
+			    <version>1.0</version>
+			</dependency>
             <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
             <dependency>
                 <groupId>com.h2database</groupId>
@@ -54,17 +66,18 @@
                 <version>8.0.1</version>
                 <scope>provided</scope>
             </dependency>
-            <!-- https://mvnrepository.com/artifact/javax.security.enterprise/javax.security.enterprise-api -->
+            <!-- https://mvnrepository.com/artifact/io.openliberty.features/jwt-1.0 -->
             <dependency>
-                <groupId>javax.security.enterprise</groupId>
-                <artifactId>javax.security.enterprise-api</artifactId>
-                <version>1.0</version>
+                <groupId>io.openliberty.features</groupId>
+                <artifactId>jwt-1.0</artifactId>
+                <version>20.0.0.10</version>
+                <type>esa</type>
             </dependency>
-            <!-- https://mvnrepository.com/artifact/com.nimbusds/nimbus-jose-jwt -->
+            <!-- https://mvnrepository.com/artifact/io.jaegertracing/jaeger-client -->
             <dependency>
-                <groupId>com.nimbusds</groupId>
-                <artifactId>nimbus-jose-jwt</artifactId>
-                <version>8.17.1</version>
+                <groupId>io.jaegertracing</groupId>
+                <artifactId>jaeger-client</artifactId>
+                <version>0.34.3</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -83,7 +96,7 @@
             <plugins>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>2.3.2</version>
+                    <version>3.8.1</version>
                     <configuration>
                         <encoding>UTF-8</encoding>
                         <source>1.8</source>
@@ -93,7 +106,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-war-plugin</artifactId>
-                    <version>2.3</version>
+                    <version>3.3.1</version>
                     <configuration>
                         <!-- Ignore error about missing web.xml -->
                         <failOnMissingWebXml>false</failOnMissingWebXml>
@@ -106,12 +119,12 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.5</version>
+                    <version>3.0.0-M5</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>2.5</version>
+                    <version>3.0.0-M5</version>
                     <configuration>
                         <forkMode>once</forkMode>
                         <forkedProcessTimeoutInSeconds>300</forkedProcessTimeoutInSeconds>
@@ -133,8 +146,19 @@
                 <plugin>
                     <groupId>io.openliberty.tools</groupId>
                     <artifactId>liberty-maven-plugin</artifactId>
-                    <version>3.2.2</version>
+                    <version>3.3-M3</version>
                 </plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>3.2.0</version>
+						<configuration>
+							<archive>
+								<!-- Do not include META-INF/maven to avoid long file problems on windows -->
+								<addMavenDescriptor>false</addMavenDescriptor>
+							</archive>
+						</configuration>
+				</plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -192,5 +216,6 @@
         <module>OpenUP-test</module>
         <module>OpenUP-assembly</module>
         <module>OpenUP-service</module>
+        <module>EPF</module>
     </modules>
 </project>

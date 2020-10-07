@@ -6,7 +6,7 @@
     <parent>
         <groupId>openup</groupId>
         <artifactId>OpenUP-parent</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
 
     <artifactId>OpenUP-web</artifactId>
@@ -18,7 +18,6 @@
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
-            <version>8.0.1</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
