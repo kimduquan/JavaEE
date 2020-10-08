@@ -7,7 +7,6 @@ package epf.schema;
 
 import java.util.List;
 import epf.schema.delivery_processes.DeliveryProcess;
-import javax.annotation.security.PermitAll;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -28,7 +27,6 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 @Type
 @Path("delivery-processes")
 @RequestScoped
-@PermitAll
 public class DeliveryProcesses {
     
     @Inject

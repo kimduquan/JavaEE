@@ -12,18 +12,23 @@ public class JsonConverter implements AttributeConverter<JsonObject, String> {
 
 	@Override
 	public String convertToDatabaseColumn(JsonObject attribute) {
+            if(attribute != null){
 		return attribute.toString();
+            }
+            return null;
 	}
 
 	@Override
 	public JsonObject convertToEntityAttribute(String dbData) {
-		JsonObject result = null;
-		try(StringReader strReader = new StringReader(dbData)){
-			try(JsonReader reader = Json.createReader(strReader)){
-				result = reader.readObject();
-			}
-		}
-		return result;
+            JsonObject result = null;
+            if(dbData != null){
+                try(StringReader strReader = new StringReader(dbData)){
+                        try(JsonReader reader = Json.createReader(strReader)){
+                                result = reader.readObject();
+                        }
+                }
+            }
+            return result;
 	}
 
 }

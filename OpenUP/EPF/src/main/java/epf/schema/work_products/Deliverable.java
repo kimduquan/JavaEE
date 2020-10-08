@@ -6,6 +6,7 @@
 package epf.schema.work_products;
 
 import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -21,6 +22,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 )
 @Entity
 @Table(name = "DELIVERABLE", schema = "EPF")
+@PrimaryKeyJoinColumn(name = "ARTIFACT")
 public class Deliverable extends Artifact {
     
 }

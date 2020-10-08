@@ -5,7 +5,6 @@
  */
 package epf.schema;
 
-import javax.annotation.security.PermitAll;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import org.eclipse.microprofile.graphql.Description;
@@ -19,7 +18,6 @@ import org.eclipse.microprofile.graphql.Query;
  */
 @GraphQLApi
 @RequestScoped
-@PermitAll
 public class EPFSchema {
     
     @Inject

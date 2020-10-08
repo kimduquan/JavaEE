@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.security.Principal;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
+import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManagerFactory;
@@ -28,18 +29,12 @@ public class Session implements Serializable {
     @Inject
     private Application application;
     
-    @Inject
-    private Principal principal;
-    
     private EntityManagerFactory factory;
     
-    @PostConstruct
-    void postConstruct(){
-        factory = application.getFactory(principal);
-    }
-    
-    @Produces
-    public EntityManagerFactory getFactory(){
+    public EntityManagerFactory getFactory(Principal principal){
+        if(factory == null){
+            factory = application.getFactory(principal);
+        }
         return factory;
     }
 }

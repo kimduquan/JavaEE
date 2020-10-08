@@ -7,7 +7,6 @@ package epf.schema;
 
 import epf.schema.work_products.Domain;
 import java.util.List;
-import javax.annotation.security.PermitAll;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -28,7 +27,6 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 @Type
 @Path("work-products")
 @RequestScoped
-@PermitAll
 public class WorkProducts {
     
     @Inject

@@ -16,7 +16,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceUnit;
 
 /**
  *
@@ -24,9 +23,6 @@ import javax.persistence.PersistenceUnit;
  */
 @ApplicationScoped
 public class Application {
-    
-    @PersistenceUnit(name = "EPF", unitName = "EPF")
-    private EntityManagerFactory defaultFactory;
     
     @PersistenceContext(name = "EPF", unitName = "EPF")
     private EntityManager defaultManager;
@@ -64,10 +60,6 @@ public class Application {
     
     public EntityManagerFactory getFactory(Principal principal){
         return factories.get(principal.getName());
-    }
-    
-    public EntityManagerFactory getDefaultFactory(){
-        return defaultFactory;
     }
     
     public EntityManager getDefaultManager(){

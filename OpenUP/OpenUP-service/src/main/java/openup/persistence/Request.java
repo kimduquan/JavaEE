@@ -5,13 +5,16 @@
  */
 package openup.persistence;
 
+import java.security.Principal;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.SecurityContext;
 
 /**
  *
@@ -21,22 +24,36 @@ import javax.persistence.EntityManagerFactory;
 public class Request {
     
     @Inject
-    private EntityManagerFactory factory;
+    private Session session;
+    
+    @PersistenceContext(name = "EPF", unitName = "EPF")
+    private EntityManager defaultManager;
+    
+    @Context
+    private SecurityContext context;
     
     private EntityManager manager;
     
     @PostConstruct
     void postConstruct(){
-        manager = factory.createEntityManager();
+        Principal principal = context.getUserPrincipal();
+        if(principal != null){
+            manager = session.getFactory(principal).createEntityManager();
+        }
     }
     
     @PreDestroy
     void preDestroy(){
-        manager.close();
+        if(manager != null){
+            manager.close();
+        }
     }
     
     @Produces
     public EntityManager getManager(){
-        return manager;
+        if(manager != null){
+            return manager;
+        }
+        return defaultManager;
     }
 }
