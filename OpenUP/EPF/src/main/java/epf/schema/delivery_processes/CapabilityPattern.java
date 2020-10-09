@@ -10,12 +10,9 @@ import epf.schema.delivery_processes.section.TeamAllocation;
 import epf.schema.delivery_processes.section.Description;
 import epf.schema.delivery_processes.section.WorkBreakdownStructure;
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -31,8 +28,6 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 )
 @Entity
 @Table(name = "CAPABILITY_PATTERN", schema = "EPF")
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "NAME", length = 63)
 public class CapabilityPattern {
 	
     @Column(name = "NAME")

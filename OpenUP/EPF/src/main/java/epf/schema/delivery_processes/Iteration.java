@@ -8,10 +8,12 @@ package epf.schema.delivery_processes;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -27,8 +29,16 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 )
 @Entity
 @Table(name = "ITERATION", schema = "EPF")
-@PrimaryKeyJoinColumn(name = "EXTENDS")
-public class Iteration extends CapabilityPattern {
+public class Iteration {
+    
+    @Column(name = "NAME")
+    @Id
+    private String name;
+    
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "NAME")
+    private CapabilityPattern Extends;
     
     @Column(name = "NUMBER")
     private Integer number;
@@ -43,6 +53,22 @@ public class Iteration extends CapabilityPattern {
             inverseJoinColumns = {@JoinColumn(name = "ACTIVITY")}
     )
     private List<Activity> activities;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public CapabilityPattern getExtends() {
+        return Extends;
+    }
+
+    public void setExtends(CapabilityPattern Extends) {
+        this.Extends = Extends;
+    }
 
     public Integer getNumber() {
         return number;
