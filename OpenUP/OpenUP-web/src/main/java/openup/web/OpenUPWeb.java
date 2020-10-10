@@ -5,15 +5,10 @@
  */
 package openup.web;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.security.enterprise.authentication.mechanism.http.BasicAuthenticationMechanismDefinition;
-
 /**
  *
  * @author FOXCONN
  */
-@ApplicationScoped
-@BasicAuthenticationMechanismDefinition(realmName = "OpenUP")
 public class OpenUPWeb {
     
 }

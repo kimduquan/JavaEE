@@ -76,7 +76,7 @@
                         </goals>
                         <configuration>
                             <excludeGroupIds>openup</excludeGroupIds>
-                            <outputDirectory>${project.build.directory}/shared/resources/</outputDirectory>
+                            <outputDirectory>${project.build.directory}/shared/resources/openup/</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>

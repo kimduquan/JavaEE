@@ -40,11 +40,11 @@
                 <version>1.2</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/javax.security.enterprise/javax.security.enterprise-api -->
-			<dependency>
-			    <groupId>javax.security.enterprise</groupId>
-			    <artifactId>javax.security.enterprise-api</artifactId>
-			    <version>1.0</version>
-			</dependency>
+            <dependency>
+                <groupId>javax.security.enterprise</groupId>
+                <artifactId>javax.security.enterprise-api</artifactId>
+                <version>1.0</version>
+            </dependency>
             <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
             <dependency>
                 <groupId>com.h2database</groupId>
@@ -57,13 +57,6 @@
                 <groupId>org.eclipse.microprofile.graphql</groupId>
                 <artifactId>microprofile-graphql-api</artifactId>
                 <version>1.0.2</version>
-                <scope>provided</scope>
-            </dependency>
-            <!-- https://mvnrepository.com/artifact/javax/javaee-web-api -->
-            <dependency>
-                <groupId>javax</groupId>
-                <artifactId>javaee-web-api</artifactId>
-                <version>8.0.1</version>
                 <scope>provided</scope>
             </dependency>
             <!-- https://mvnrepository.com/artifact/io.openliberty.features/jwt-1.0 -->
@@ -148,17 +141,17 @@
                     <artifactId>liberty-maven-plugin</artifactId>
                     <version>3.3-M3</version>
                 </plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-jar-plugin</artifactId>
-					<version>3.2.0</version>
-						<configuration>
-							<archive>
-								<!-- Do not include META-INF/maven to avoid long file problems on windows -->
-								<addMavenDescriptor>false</addMavenDescriptor>
-							</archive>
-						</configuration>
-				</plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.2.0</version>
+                    <configuration>
+                        <archive>
+                            <!-- Do not include META-INF/maven to avoid long file problems on windows -->
+                            <addMavenDescriptor>false</addMavenDescriptor>
+                        </archive>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>

@@ -2,7 +2,6 @@
 
     <!-- Enable features -->
     <featureManager>
-        <feature>webProfile-8.0</feature>
         <feature>microProfile-3.3</feature>
         <feature>jpa-2.2</feature>
         <feature>mpGraphQL-1.0</feature>
@@ -15,17 +14,17 @@
 
     <application location="OpenUP-web-1.0.0.war" />
     <application location="OpenUP-service-1.0.0.war">
-		<classloader apiTypeVisibility="+third-party"/>
-	</application>
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
     
     <!-- H2 Library Configuration -->
     <library id="H2JDBCLib">
-        <fileset dir="${shared.resource.dir}" includes="h2*.jar"/>
+        <fileset dir="${shared.resource.dir}/openup" includes="h2*.jar"/>
     </library>
-	
-	<!-- Jaeger Client Library Configuration -->
-    <library id="JaegerClientLib">
-        <fileset dir="${shared.resource.dir}" includes="*.jar"/>
+    
+    <!-- OpenUP Library Configuration -->
+    <library id="OpenUPLib">
+        <fileset dir="${shared.resource.dir}/openup" includes="*.jar"/>
     </library>
 
     <dataSource id="epf" jndiName="jdbc/epf">
