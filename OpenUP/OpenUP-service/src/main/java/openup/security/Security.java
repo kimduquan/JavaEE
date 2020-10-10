@@ -5,15 +5,14 @@
  */
 package openup.security;
 
+import openup.security.jwt.JsonWebToken;
+import openup.security.jwt.TokenGenerator;
 import java.io.Serializable;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
-import java.util.logging.Logger;
 import java.util.stream.Stream;
 import javax.annotation.security.PermitAll;
 import javax.enterprise.context.RequestScoped;
@@ -25,9 +24,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import openup.error.ExceptionHandler;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.eclipse.microprofile.faulttolerance.Asynchronous;
 import org.eclipse.microprofile.faulttolerance.Bulkhead;
 import org.eclipse.microprofile.faulttolerance.CircuitBreaker;
 import org.eclipse.microprofile.faulttolerance.Fallback;
@@ -47,7 +46,6 @@ import openup.persistence.Application;
  */
 @RequestScoped
 @Path("security")
-@PermitAll
 public class Security implements Serializable {
     
     /**
@@ -66,11 +64,11 @@ public class Security implements Serializable {
     private String issuer;
     
     @Inject
-    @ConfigProperty(name = Config.JWT_EXP_DURATION)
+    @ConfigProperty(name = Config.JWT_EXPIRE_DURATION)
     private Long jwtExpDuration;
     
     @Inject
-    @ConfigProperty(name = Config.JWT_EXP_TIMEUNIT)
+    @ConfigProperty(name = Config.JWT_EXPIRE_TIMEUNIT)
     private String jwtExpTimeUnit;
     
     /**
@@ -104,27 +102,19 @@ public class Security implements Serializable {
                     mediaType = MediaType.TEXT_PLAIN
             )
     )
-    @Asynchronous
+    @PermitAll
     @Bulkhead(value = 10, waitingTaskQueue = 16)
     @Timeout(4000)
     @Fallback(value = ExceptionHandler.class, applyOn = {Exception.class})
     @CircuitBreaker(requestVolumeThreshold = 40, failureRatio = 0.618, successThreshold = 15)
-    public CompletionStage<Response> login(Account credential ) throws Exception{
+    public Response login(Account credential ) throws Exception{
+        ResponseBuilder response = Response.ok();
         persistence.createFactory(credential.getUsername(), credential.getPassword());
         Set<String> roles = getUserRoles(credential.getUsername(), persistence.getDefaultManager());
-        CompletionStage<Response> response = CompletableFuture.supplyAsync(() -> {
-            String token = "";
-			try {
-	        	JsonWebToken jwt = createJWT(credential);
-	            jwt.setGroups(roles);
-	            token = generator.generate(jwt);
-			} 
-			catch (Exception e) {
-				Logger.getLogger(getClass().getName()).throwing(getClass().getName(), "login", e);
-			}
-            return Response.ok(token).build();
-        });
-        return response;
+        JsonWebToken jwt = createJWT(credential);
+        jwt.setGroups(roles);
+        String token = generator.generate(jwt);
+        return response.entity(token).build();
     }
     
     JsonWebToken createJWT(Account credential) throws Exception{

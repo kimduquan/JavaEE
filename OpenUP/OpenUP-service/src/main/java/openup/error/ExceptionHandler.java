@@ -25,7 +25,7 @@ import org.eclipse.microprofile.faulttolerance.exceptions.TimeoutException;
  */
 @Provider
 public class ExceptionHandler implements 
-        FallbackHandler<CompletionStage<Response>>, 
+        FallbackHandler<Response>, 
         Serializable,
         ExceptionMapper<Exception> {
 
@@ -35,10 +35,10 @@ public class ExceptionHandler implements
     private static final long serialVersionUID = 1L;
 
     @Override
-    public CompletionStage<Response> handle(ExecutionContext context) {
+    public Response handle(ExecutionContext context) {
         Throwable failure = context.getFailure();
         Response response = handle(failure);
-        return CompletableFuture.completedStage(response);
+        return response;
     }
 
     @Override

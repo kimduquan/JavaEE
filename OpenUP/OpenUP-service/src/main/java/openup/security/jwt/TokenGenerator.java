@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.security;
+package openup.security.jwt;
 
 import com.ibm.websphere.security.jwt.JwtBuilder;
 import java.io.Serializable;
@@ -26,11 +26,11 @@ import openup.config.Config;
 public class TokenGenerator implements Serializable {
     
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	private PrivateKey privateKey;
+    * 
+    */
+    private static final long serialVersionUID = 1L;
+
+    private PrivateKey privateKey;
     private Base64.Decoder decoder;
     
     @Inject
@@ -61,7 +61,7 @@ public class TokenGenerator implements Serializable {
                 .expirationTime(jwt.getExp())
                 .jwtId(true)
                 .claim("upn", jwt.getUpn())
-                .claim("groups", jwt.getGroups().toArray(new String[jwt.getGroups().size()]))
+                .claim("groups", jwt.getGroups().stream().toArray(String[] ::new))
                 .signWith("RS256", privateKey)
                 .buildJwt()
                 .compact();

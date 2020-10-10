@@ -48,14 +48,18 @@ public class Application {
         factories.clear();
     }
     
-    public void createFactory(String userName, String password){
-    	Map<String, Object> props = new HashMap<>();
-        props.put("javax.persistence.jdbc.user", userName);
-        props.put("javax.persistence.jdbc.password", password);            
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("OpenUP", props);
-        EntityManager manager = factory.createEntityManager();
-        managers.put(userName, manager);
-        factories.put(userName, factory);
+    public boolean createFactory(String userName, String password){
+        boolean hasExist = factories.containsKey(userName) && managers.containsKey(userName);
+    	if(!hasExist){
+            Map<String, Object> props = new HashMap<>();
+            props.put("javax.persistence.jdbc.user", userName);
+            props.put("javax.persistence.jdbc.password", password);            
+            EntityManagerFactory factory = Persistence.createEntityManagerFactory("OpenUP", props);
+            EntityManager manager = factory.createEntityManager();
+            managers.put(userName, manager);
+            factories.put(userName, factory);
+        }
+        return !hasExist;
     }
     
     public EntityManagerFactory getFactory(Principal principal){
