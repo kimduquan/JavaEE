@@ -30,11 +30,11 @@ public class ExceptionHandler implements
         ExceptionMapper<Exception> {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    * 
+    */
+    private static final long serialVersionUID = 1L;
 
-	@Override
+    @Override
     public CompletionStage<Response> handle(ExecutionContext context) {
         Throwable failure = context.getFailure();
         Response response = handle(failure);
