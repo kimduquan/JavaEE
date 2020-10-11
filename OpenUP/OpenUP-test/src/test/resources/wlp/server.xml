@@ -29,7 +29,7 @@
     </library>
     
     <library id="JCacheLib">
-        <file name="${shared.resource.dir}/openup/hazelcast-4.0.3.jar"/>
+        <file name="${shared.resource.dir}/openup/hazelcast-all-4.0.3.jar"/>
     </library>
     
     <!-- uri="file://${server.config.dir}hazelcast.xml" -->
