@@ -5,7 +5,6 @@
  */
 package openup;
 
-import javax.annotation.security.DenyAll;
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.Consumes;
@@ -34,7 +33,6 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 @LoginConfig(authMethod="MP-JWT", realmName="OpenUP")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@DenyAll
 @OpenAPIDefinition(
         info = @Info(
             title = "OpenUP",

@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.schema;
+package openup;
 
+import epf.schema.work_products.Domain;
 import java.util.List;
-import epf.schema.delivery_processes.DeliveryProcess;
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -27,11 +28,12 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  * @author FOXCONN
  */
 @Type
-@Path("delivery-processes")
-@RequestScoped
+@Path("work-products")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class DeliveryProcesses {
+@RequestScoped
+@RolesAllowed("ANY_ROLE")
+public class WorkProducts {
     
     @Inject
     private EntityManager entityManager;
@@ -39,18 +41,18 @@ public class DeliveryProcesses {
     @Name("Contents")
     @GET
     @Operation(
-            summary = "Delivery Processes", 
-            description = "This provides a list of delivery processes that have been published."
+            summary = "Work Products", 
+            description = "List of work products organized by domain."
     )
     @APIResponse(
-            description = "Delivery Process",
+            description = "Domain",
             responseCode = "200",
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON,
-                    schema = @Schema(implementation = DeliveryProcess.class)
+                    schema = @Schema(implementation = Domain.class)
             )
     )
-    public List<DeliveryProcess> getDeliveryProcesses(){
-        return entityManager.createNamedQuery("DeliveryProcess.DeliveryProcesses", DeliveryProcess.class).getResultList();
+    public List<Domain> getDomains(){
+        return entityManager.createNamedQuery("Domain.Domains", Domain.class).getResultList();
     }
 }

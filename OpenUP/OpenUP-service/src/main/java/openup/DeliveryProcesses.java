@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.schema;
+package openup;
 
-import epf.schema.tasks.Discipline;
 import java.util.List;
+import epf.schema.delivery_processes.DeliveryProcess;
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -27,11 +28,12 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  * @author FOXCONN
  */
 @Type
-@Path("tasks")
+@Path("delivery-processes")
+@RequestScoped
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@RequestScoped
-public class Tasks {
+@RolesAllowed("ANY_ROLE")
+public class DeliveryProcesses {
     
     @Inject
     private EntityManager entityManager;
@@ -39,18 +41,18 @@ public class Tasks {
     @Name("Contents")
     @GET
     @Operation(
-            summary = "Tasks", 
-            description = "List of tasks organized by discipline."
+            summary = "Delivery Processes", 
+            description = "This provides a list of delivery processes that have been published."
     )
     @APIResponse(
-            description = "Discipline",
+            description = "Delivery Process",
             responseCode = "200",
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON,
-                    schema = @Schema(implementation = Discipline.class)
+                    schema = @Schema(implementation = DeliveryProcess.class)
             )
     )
-    public List<Discipline> getDisciplines(){
-        return entityManager.createNamedQuery("Discipline.Disciplines", Discipline.class).getResultList();
+    public List<DeliveryProcess> getDeliveryProcesses(){
+        return entityManager.createNamedQuery("DeliveryProcess.DeliveryProcesses", DeliveryProcess.class).getResultList();
     }
 }

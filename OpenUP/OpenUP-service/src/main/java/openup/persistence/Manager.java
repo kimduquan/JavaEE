@@ -7,6 +7,7 @@ package openup.persistence;
 
 import java.io.InputStream;
 import java.util.stream.Collectors;
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -41,6 +42,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 @Path("persistence")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@RolesAllowed("OpenUP")
 public class Manager {
     
     @Inject

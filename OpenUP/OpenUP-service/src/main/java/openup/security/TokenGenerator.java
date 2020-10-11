@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.security.jwt;
+package openup.security;
 
+import openup.security.Token;
 import com.ibm.websphere.security.jwt.JwtBuilder;
 import java.io.Serializable;
 import java.security.KeyFactory;
@@ -53,7 +54,7 @@ public class TokenGenerator implements Serializable {
         }
     }
     
-    public String generate(JsonWebToken jwt) throws Exception{
+    public String generate(Token jwt) throws Exception{
         return JwtBuilder
                 .create()
                 .issuer(jwt.getIss())

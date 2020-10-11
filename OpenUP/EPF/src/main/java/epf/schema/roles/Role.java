@@ -81,6 +81,10 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
                 "                )\n" +
                 "        );"
 )
+@NamedNativeQuery(
+        name = "Role.IsAdmin",
+        query = "SELECT ADMIN FROM INFORMATION_SCHEMA.USERS WHERE NAME = ? AND ADMIN = ?;"
+)
 public class Role {
 
     @Column(name = "NAME")
