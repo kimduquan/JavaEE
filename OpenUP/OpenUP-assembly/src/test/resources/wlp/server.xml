@@ -5,6 +5,7 @@
         <feature>microProfile-3.3</feature>
         <feature>jpa-2.2</feature>
         <feature>mpGraphQL-1.0</feature>
+        <feature>sessionCache-1.0</feature>
     </featureManager>
 
     <httpEndpoint id="defaultHttpEndpoint"
@@ -26,6 +27,13 @@
     <library id="OpenUPLib">
         <fileset dir="${shared.resource.dir}/openup" includes="*.jar"/>
     </library>
+    
+    <library id="JCacheLib">
+        <file name="${shared.resource.dir}/openup/hazelcast-4.0.3.jar"/>
+    </library>
+    
+    <!-- uri="file://${server.config.dir}hazelcast.xml" -->
+    <httpSessionCache libraryRef="JCacheLib" />
 
     <dataSource id="epf" jndiName="jdbc/epf">
         <!-- Define the DataSource class names on the <jdbcDriver> element -->
