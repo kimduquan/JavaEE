@@ -12,6 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Event;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -26,6 +28,9 @@ public class Application {
     
     @PersistenceContext(name = "EPF", unitName = "EPF")
     private EntityManager defaultManager;
+    
+    @Inject
+    private Event<EntityManager> event;
     
     private Map<String, EntityManagerFactory> factories;
     private Map<String, EntityManager> managers;
@@ -58,6 +63,7 @@ public class Application {
             EntityManager manager = factory.createEntityManager();
             managers.put(userName, manager);
             factories.put(userName, factory);
+            event.fire(manager);
         }
         return !hasExist;
     }

@@ -34,6 +34,11 @@
     
     <!-- uri="file://${server.config.dir}hazelcast.xml" -->
     <httpSessionCache libraryRef="JCacheLib" />
+    
+    <mpJwt 
+        id="OpenUP"
+        audiences ="http://localhost:8080/">
+    </mpJwt>
 
     <dataSource id="epf" jndiName="jdbc/epf">
         <!-- Define the DataSource class names on the <jdbcDriver> element -->

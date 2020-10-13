@@ -5,16 +5,19 @@
  */
 package openup.security;
 
-import openup.security.Token;
 import com.ibm.websphere.security.jwt.JwtBuilder;
 import java.io.Serializable;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Base64;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import openup.config.Config;
@@ -55,16 +58,19 @@ public class TokenGenerator implements Serializable {
     }
     
     public String generate(Token jwt) throws Exception{
-        return JwtBuilder
+        String token = JwtBuilder
                 .create()
-                .issuer(jwt.getIss())
-                .subject(jwt.getSub())
-                .expirationTime(jwt.getExp())
+                .audience(jwt.getAudience().stream().collect(Collectors.toList()))
+                .issuer(jwt.getIssuer())
+                .subject(jwt.getSubject())
+                .expirationTime(jwt.getExpirationTime())
                 .jwtId(true)
-                .claim("upn", jwt.getUpn())
-                .claim("groups", jwt.getGroups().stream().toArray(String[] ::new))
+                .claim("iat", jwt.getIssuedAtTime())
+                .claim("upn", jwt.getSubject())
+                .claim("groups", jwt.getGroups().toArray(String[] ::new))
                 .signWith("RS256", privateKey)
                 .buildJwt()
                 .compact();
+        return token;
     }
 }

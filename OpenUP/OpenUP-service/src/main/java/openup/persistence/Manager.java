@@ -42,7 +42,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 @Path("persistence")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@RolesAllowed("OpenUP")
+@RolesAllowed("ADMIN")
 public class Manager {
     
     @Inject

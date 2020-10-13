@@ -13,72 +13,78 @@ import java.util.Set;
  */
 public class Token {
     
-    //Key identifier
-    private String kid;
-    //Issuer
-    private String iss;
-    //Subject
-    private String sub;
-    private Long exp;
-    private Long iat;
-    private String jti;
-    private String upn;
+    private String name;
+    private String rawToken;
+    private String issuer;
+    private Set<String> audience;
+    private String subject;
+    private String tokenID;
+    private long expirationTime;
+    private long issuedAtTime;
     private Set<String> groups;
 
-    public String getKid() {
-        return kid;
+    public String getName() {
+        return name;
     }
 
-    public void setKid(String kid) {
-        this.kid = kid;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getIss() {
-        return iss;
+    public String getRawToken() {
+        return rawToken;
     }
 
-    public void setIss(String iss) {
-        this.iss = iss;
+    public void setRawToken(String rawToken) {
+        this.rawToken = rawToken;
     }
 
-    public String getSub() {
-        return sub;
+    public String getIssuer() {
+        return issuer;
     }
 
-    public void setSub(String sub) {
-        this.sub = sub;
+    public void setIssuer(String issuer) {
+        this.issuer = issuer;
     }
 
-    public Long getExp() {
-        return exp;
+    public Set<String> getAudience() {
+        return audience;
     }
 
-    public void setExp(Long exp) {
-        this.exp = exp;
+    public void setAudience(Set<String> audience) {
+        this.audience = audience;
     }
 
-    public Long getIat() {
-        return iat;
+    public String getSubject() {
+        return subject;
     }
 
-    public void setIat(Long iat) {
-        this.iat = iat;
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
-    public String getJti() {
-        return jti;
+    public String getTokenID() {
+        return tokenID;
     }
 
-    public void setJti(String jti) {
-        this.jti = jti;
+    public void setTokenID(String tokenID) {
+        this.tokenID = tokenID;
     }
 
-    public String getUpn() {
-        return upn;
+    public long getExpirationTime() {
+        return expirationTime;
     }
 
-    public void setUpn(String upn) {
-        this.upn = upn;
+    public void setExpirationTime(long expirationTime) {
+        this.expirationTime = expirationTime;
+    }
+
+    public long getIssuedAtTime() {
+        return issuedAtTime;
+    }
+
+    public void setIssuedAtTime(long issuedAtTime) {
+        this.issuedAtTime = issuedAtTime;
     }
 
     public Set<String> getGroups() {

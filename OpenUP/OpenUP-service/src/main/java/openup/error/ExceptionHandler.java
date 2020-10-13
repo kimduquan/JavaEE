@@ -7,8 +7,6 @@ package openup.error;
 
 import java.io.Serializable;
 import java.sql.SQLInvalidAuthorizationSpecException;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.ext.ExceptionMapper;
