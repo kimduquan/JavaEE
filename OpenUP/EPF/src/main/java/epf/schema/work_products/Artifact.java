@@ -25,10 +25,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  * @author FOXCONN
  */
 @Type
-@Schema(
-        name = "Artifact",
-        title = "Artifact"
-)
+@Schema(title = "Artifact")
 @Entity
 @Table(name = "ARTIFACT", schema = "EPF")
 @JsonbPropertyOrder({

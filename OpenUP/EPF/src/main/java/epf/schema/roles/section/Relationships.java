@@ -13,11 +13,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import org.eclipse.microprofile.graphql.Name;
+import org.eclipse.microprofile.graphql.Type;
 
 /**
  *
  * @author FOXCONN
  */
+@Type
 @Embeddable
 public class Relationships {
     

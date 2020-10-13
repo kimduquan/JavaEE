@@ -7,6 +7,7 @@ package openup;
 
 import java.util.List;
 import epf.schema.delivery_processes.DeliveryProcess;
+import java.util.stream.Collectors;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -32,7 +33,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 @RequestScoped
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@RolesAllowed("ANY_ROLE")
+@RolesAllowed(Roles.ANY_ROLE)
 public class DeliveryProcesses {
     
     @Inject
@@ -53,6 +54,10 @@ public class DeliveryProcesses {
             )
     )
     public List<DeliveryProcess> getDeliveryProcesses(){
-        return entityManager.createNamedQuery("DeliveryProcess.DeliveryProcesses", DeliveryProcess.class).getResultList();
+        return entityManager.createNamedQuery(
+                DeliveryProcess.DELIVERY_PROCESSES, 
+                DeliveryProcess.class)
+                .getResultStream()
+                .collect(Collectors.toList());
     }
 }

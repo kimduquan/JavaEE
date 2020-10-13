@@ -23,10 +23,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  * @author FOXCONN
  */
 @Type
-@Schema(
-        name = "Phase",
-        title = "Phase"
-)
+@Schema(title = "Phase")
 @Entity
 @Table(name = "PHASE", schema = "EPF")
 public class Phase {

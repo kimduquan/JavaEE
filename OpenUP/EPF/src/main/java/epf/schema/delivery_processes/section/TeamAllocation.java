@@ -3,7 +3,9 @@ package epf.schema.delivery_processes.section;
 import javax.json.JsonObject;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import org.eclipse.microprofile.graphql.Type;
 
+@Type
 @Embeddable
 public class TeamAllocation {
 

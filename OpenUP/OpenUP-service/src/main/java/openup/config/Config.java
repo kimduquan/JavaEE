@@ -11,6 +11,6 @@ package openup.config;
  */
 public interface Config {
     String MP_JWT_PRIVATE_KEY = "mp.jwt.issue.privatekey";
-    String JWT_EXPIRE_DURATION = "openup.auth.jwt.exp.duration";
-    String JWT_EXPIRE_TIMEUNIT = "openup.auth.jwt.exp.timeunit";
+    String JWT_EXPIRE_DURATION = "openup.security.jwt.exp.duration";
+    String JWT_EXPIRE_TIMEUNIT = "openup.security.jwt.exp.timeunit";
 }

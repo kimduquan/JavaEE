@@ -24,17 +24,16 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  * @author FOXCONN
  */
 @Type
-@Schema(
-        name = "Domain",
-        title = "Domain"
-)
+@Schema(title = "Domain")
 @Entity
 @Table(name = "_DOMAIN", schema = "EPF")
-@NamedQuery(name = "Domain.Domains", query = "SELECT d FROM Domain AS d")
 @JsonbPropertyOrder({
     "name",
     "workProducts"
 })
+@NamedQuery(
+        name = Domain.DOMAINS, 
+        query = "SELECT d FROM Domain AS d")
 public class Domain {
 
     @Column(name = "NAME")
@@ -56,6 +55,8 @@ public class Domain {
             )
     )
     private List<Artifact> workProducts;
+    
+    public static final String DOMAINS = "Domain.Domains";
 
     public String getName() {
         return name;

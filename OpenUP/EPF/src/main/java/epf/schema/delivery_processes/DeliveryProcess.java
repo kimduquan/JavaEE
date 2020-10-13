@@ -23,13 +23,13 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  * @author FOXCONN
  */
 @Type
-@Schema(
-        name = "DeliveryProcess",
-        title = "Delivery Process"
-)
+@Schema(title = "Delivery Process")
 @Entity
 @Table(name = "DELIVERY_PROCESS", schema = "EPF")
-@NamedQuery(name = "DeliveryProcess.DeliveryProcesses", query = "SELECT dp FROM DeliveryProcess AS dp")
+@NamedQuery(
+        name = DeliveryProcess.DELIVERY_PROCESSES, 
+        query = "SELECT dp FROM DeliveryProcess AS dp"
+)
 public class DeliveryProcess {
 	
     @Column(name = "NAME")
@@ -50,6 +50,8 @@ public class DeliveryProcess {
 
     @Embedded
     private WorkProductUsage workProductUsage;
+    
+    public static final String DELIVERY_PROCESSES = "DeliveryProcess.DeliveryProcesses";
 
     public String getName() {
         return name;

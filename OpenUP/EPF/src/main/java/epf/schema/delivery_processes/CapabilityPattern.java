@@ -22,10 +22,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  * @author FOXCONN
  */
 @Type
-@Schema(
-        name = "CapabilityPattern",
-        title = "Capability Pattern"
-)
+@Schema(title = "Capability Pattern")
 @Entity
 @Table(name = "CAPABILITY_PATTERN", schema = "EPF")
 public class CapabilityPattern {

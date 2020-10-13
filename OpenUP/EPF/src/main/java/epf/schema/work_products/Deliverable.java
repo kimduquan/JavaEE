@@ -20,10 +20,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  * @author FOXCONN
  */
 @Type
-@Schema(
-        name = "Deliverable",
-        title = "Deliverable"
-)
+@Schema(title = "Deliverable")
 @Entity
 @Table(name = "DELIVERABLE", schema = "EPF")
 public class Deliverable {

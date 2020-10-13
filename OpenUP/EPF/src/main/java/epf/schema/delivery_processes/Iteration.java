@@ -23,10 +23,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  * @author FOXCONN
  */
 @Type
-@Schema(
-        name = "Iteration",
-        title = "Iteration"
-)
+@Schema(title = "Iteration")
 @Entity
 @Table(name = "ITERATION", schema = "EPF")
 public class Iteration {

@@ -4,7 +4,9 @@ import javax.json.JsonObject;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
+import org.eclipse.microprofile.graphql.Type;
 
+@Type
 @Embeddable
 public class Description {
 

@@ -5,12 +5,13 @@
  */
 package openup.security;
 
+import epf.schema.roles.Role;
 import java.io.Serializable;
 import java.net.URI;
 import java.net.URL;
 import java.security.Principal;
+import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -23,7 +24,6 @@ import javax.enterprise.event.Event;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
@@ -37,6 +37,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+import openup.Roles;
 import openup.error.ExceptionHandler;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.faulttolerance.Bulkhead;
@@ -57,14 +58,14 @@ import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
  */
 @RequestScoped
 @Path("security")
-@RolesAllowed("ANY_ROLE")
+@RolesAllowed(Roles.ANY_ROLE)
 public class Security implements Serializable {
     
     /**
     * 
     */
     private static final long serialVersionUID = 1L;
-
+    
     @Inject
     private Application persistence;
     
@@ -81,7 +82,7 @@ public class Security implements Serializable {
     
     @Inject
     @ConfigProperty(name = Config.JWT_EXPIRE_TIMEUNIT)
-    private String jwtExpTimeUnit;
+    private ChronoUnit jwtExpTimeUnit;
     
     @Inject
     private Event<Token> event;
@@ -122,16 +123,14 @@ public class Security implements Serializable {
             @FormParam("password")
             String password, 
             @QueryParam("url")
-            URL url,
-            @Context
-            HttpServletRequest request ) throws Exception{
+            URL url) throws Exception{
         ResponseBuilder response = Response.ok();
         
         persistence.createFactory(username, password);
         
         Token jwt = buildToken(username);
         
-        buildTokenID(jwt, request);
+        buildTokenID(jwt);
         
         Set<String> aud = new HashSet<>();
         aud.add(url.toString());
@@ -177,14 +176,12 @@ public class Security implements Serializable {
             @Context
             SecurityContext context, 
             @Context 
-            UriInfo uriInfo,
-            @Context
-            HttpServletRequest request
+            UriInfo uriInfo
             ) throws Exception{
         ResponseBuilder response = Response.ok();
         Principal principal = context.getUserPrincipal();
         Token jwt = buildToken(principal.getName());
-        buildTokenID(jwt, request);
+        buildTokenID(jwt);
         buildAudience(jwt, uriInfo.getBaseUri());
         if(buildRoles(jwt, principal, role, response)){
             String token = generator.generate(jwt);
@@ -201,21 +198,21 @@ public class Security implements Serializable {
         token.setAudience(aud);
     }
     
-    void buildTokenID(Token token, HttpServletRequest request){
-        if(request.isRequestedSessionIdValid()){
-            token.setTokenID(request.getRequestedSessionId());
-        }
-        else{
-            token.setTokenID(token.getName() + UUID.randomUUID());
-        }
+    void buildTokenID(Token token){
+        token.setTokenID(
+                String.format(
+                        "%s-%s-%s",
+                        token.getName(), 
+                        UUID.randomUUID(),
+                        System.currentTimeMillis()));
     }
     
     boolean buildRoles(Token token, Principal principal, String role, ResponseBuilder response){
         boolean ok = true;
-        if("ADMIN".equalsIgnoreCase(role)){
+        if(Roles.ADMIN.equalsIgnoreCase(role)){
             if(isAdmin(principal.getName(), persistence.getDefaultManager())){
                 Set<String> groups = new HashSet<>();
-                groups.add("ADMIN");
+                groups.add(Roles.ADMIN);
                 token.setGroups(groups);
             }
             else{
@@ -232,17 +229,16 @@ public class Security implements Serializable {
     
     Token buildToken(String username) throws Exception{
         Token jwt = new Token();
-        long time = new Date().getTime() / 1000;
+        long time = System.currentTimeMillis() / 1000;
         jwt.setIssuedAtTime(time);
-        jwt.setExpirationTime(time + jwtExpDuration * ChronoUnit.valueOf(jwtExpTimeUnit).getDuration().toSeconds());
+        jwt.setExpirationTime(time + Duration.of(jwtExpDuration, jwtExpTimeUnit).getSeconds());
         jwt.setIssuer(issuer);
         jwt.setSubject(username);
-        jwt.setAudience(new HashSet<>());
         return jwt;
     }
     
     Set<String> getUserRoles(String userName, EntityManager manager){
-        Query query = manager.createNamedQuery("Role.GetUserRoles");
+        Query query = manager.createNamedQuery(Role.GET_USER_ROLES);
         query.setParameter(1, userName.toUpperCase());
         query.setParameter(2, userName.toUpperCase());
         query.setParameter(3, userName.toUpperCase());
@@ -252,9 +248,9 @@ public class Security implements Serializable {
     }
     
     boolean isAdmin(String userName, EntityManager manager){
-        Query query = manager.createNamedQuery("Role.IsAdmin");
+        Query query = manager.createNamedQuery(Role.IS_ADMIN);
         query.setParameter(1, userName.toUpperCase());
-        query.setParameter(2, "true");
+        query.setParameter(2, String.valueOf(true));
         return query.getResultStream().count() > 0;
     }
 }

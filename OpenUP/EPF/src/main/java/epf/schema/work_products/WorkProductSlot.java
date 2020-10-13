@@ -17,10 +17,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  * @author FOXCONN
  */
 @Type
-@Schema(
-        name = "WorkProductSlot",
-        title = "Work Product Slot"
-)
+@Schema(title = "Work Product Slot")
 @Entity
 @Table(name = "WORK_PRODUCT_SLOT", schema = "EPF")
 public class WorkProductSlot {

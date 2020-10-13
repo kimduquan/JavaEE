@@ -18,10 +18,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  * @author FOXCONN
  */
 @Type
-@Schema(
-        name = "Template",
-        title = "Template"
-)
+@Schema(title = "Template")
 @Entity
 @Table(name = "TEMPLATE", schema = "EPF")
 public class Template {

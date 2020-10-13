@@ -25,17 +25,16 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  * @author FOXCONN
  */
 @Type
-@Schema(
-        name = "RoleSet",
-        title = "Role Set"
-)
+@Schema(title = "Role Set")
 @Entity
 @Table(name = "ROLE_SET", schema = "EPF")
-@NamedQuery(name = "RoleSet.Roles", query = "SELECT rs FROM RoleSet AS rs")
 @JsonbPropertyOrder({
     "name",
     "roles"
 })
+@NamedQuery(
+        name = RoleSet.ROLES, 
+        query = "SELECT rs FROM RoleSet AS rs")
 public class RoleSet {
 
     @Column(name = "NAME")
@@ -60,6 +59,8 @@ public class RoleSet {
     
     @Column(name = "MAIN_DESCRIPTION")
     private JsonObject mainDescription;
+    
+    public static final String ROLES = "RoleSet.Roles";
 
     public String getName() {
         return name;

@@ -15,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 
 /**
  *
@@ -31,6 +32,9 @@ public class Request {
     
     @Context
     private SecurityContext context;
+    
+    @Inject
+    private JsonWebToken token;
     
     private EntityManager manager;
     

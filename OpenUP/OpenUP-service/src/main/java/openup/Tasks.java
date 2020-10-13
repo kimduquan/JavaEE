@@ -7,6 +7,7 @@ package openup;
 
 import epf.schema.tasks.Discipline;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -32,7 +33,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @RequestScoped
-@RolesAllowed("ANY_ROLE")
+@RolesAllowed(Roles.ANY_ROLE)
 public class Tasks {
     
     @Inject
@@ -53,6 +54,10 @@ public class Tasks {
             )
     )
     public List<Discipline> getDisciplines(){
-        return entityManager.createNamedQuery("Discipline.Disciplines", Discipline.class).getResultList();
+        return entityManager.createNamedQuery(
+                Discipline.DISCIPLINES, 
+                Discipline.class)
+                .getResultStream()
+                .collect(Collectors.toList());
     }
 }

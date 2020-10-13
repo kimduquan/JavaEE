@@ -25,17 +25,16 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  * @author FOXCONN
  */
 @Type
-@Schema(
-        name = "Discipline",
-        title = "Discipline"
-)
+@Schema(title = "Discipline")
 @Entity
 @Table(name = "DISCIPLINE", schema = "EPF")
-@NamedQuery(name = "Discipline.Disciplines", query = "SELECT d FROM Discipline AS d")
 @JsonbPropertyOrder({
     "name",
     "tasks"
 })
+@NamedQuery(
+        name = Discipline.DISCIPLINES, 
+        query = "SELECT d FROM Discipline AS d")
 public class Discipline {
 
     @Column(name = "NAME")
@@ -60,6 +59,8 @@ public class Discipline {
     
     @Column(name = "MAIN_DESCRIPTION")
     private JsonObject mainDescription;
+    
+    public static final String DISCIPLINES = "Discipline.Disciplines";
 
     public String getName() {
         return name;

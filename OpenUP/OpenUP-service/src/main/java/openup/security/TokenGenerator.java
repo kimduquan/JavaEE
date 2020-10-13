@@ -11,13 +11,10 @@ import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Base64;
-import java.util.List;
-import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import openup.config.Config;
@@ -58,17 +55,27 @@ public class TokenGenerator implements Serializable {
     }
     
     public String generate(Token jwt) throws Exception{
-        String token = JwtBuilder
-                .create()
-                .audience(jwt.getAudience().stream().collect(Collectors.toList()))
-                .issuer(jwt.getIssuer())
+        JwtBuilder builder = JwtBuilder.create();
+        if(jwt.getAudience() == null && !jwt.getAudience().isEmpty()){
+            builder.audience(
+                    jwt.getAudience()
+                            .stream()
+                            .collect(Collectors.toList())
+            );
+        }
+        builder.issuer(jwt.getIssuer())
                 .subject(jwt.getSubject())
                 .expirationTime(jwt.getExpirationTime())
                 .jwtId(true)
                 .claim("iat", jwt.getIssuedAtTime())
-                .claim("upn", jwt.getSubject())
-                .claim("groups", jwt.getGroups().toArray(String[] ::new))
+                .claim("upn", jwt.getSubject());
+        if(jwt.getGroups() != null){
+            builder.claim("groups", jwt.getGroups().toArray(new String[jwt.getGroups().size()]));
+        }
+        builder.claim("tid", jwt.getTokenID())
                 .signWith("RS256", privateKey)
+                ;
+        String token = builder
                 .buildJwt()
                 .compact();
         return token;

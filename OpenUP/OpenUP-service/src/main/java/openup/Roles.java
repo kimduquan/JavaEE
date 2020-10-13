@@ -7,6 +7,7 @@ package openup;
 
 import epf.schema.roles.RoleSet;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -32,8 +33,11 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @RequestScoped
-@RolesAllowed("ANY_ROLE")
+@RolesAllowed(Roles.ANY_ROLE)
 public class Roles {
+    
+    public static final String ANY_ROLE = "ANY_ROLE";
+    public static final String ADMIN = "ADMIN";
     
     @Inject
     private EntityManager entityManager;
@@ -53,6 +57,10 @@ public class Roles {
             )
     )
     public List<RoleSet> getRoleSets(){
-        return entityManager.createNamedQuery("RoleSet.Roles", RoleSet.class).getResultList();
+        return entityManager.createNamedQuery(
+                RoleSet.ROLES, 
+                RoleSet.class)
+                .getResultStream()
+                .collect(Collectors.toList());
     }
 }

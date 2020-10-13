@@ -29,6 +29,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
+import openup.Roles;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
@@ -42,7 +43,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 @Path("persistence")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@RolesAllowed("ADMIN")
+@RolesAllowed(Roles.ADMIN)
 public class Manager {
     
     @Inject
@@ -213,12 +214,9 @@ public class Manager {
                         }
                 )
                 .findFirst()
-                .ifPresentOrElse(
-                        entity::setType, 
-                        () -> {
-                            response.status(Response.Status.NOT_FOUND);
-                        }
-                );
+                .ifPresent(entity::setType);
+        if(entity.getType() == null)
+            response.status(Response.Status.NOT_FOUND);
     }
     
     void findEntityObject(EntityManager manager, String name, String id, Entity entity, ResponseBuilder response){

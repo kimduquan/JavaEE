@@ -24,10 +24,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  * @author FOXCONN
  */
 @Type
-@Schema(
-        name = "Role",
-        title = "Role"
-)
+@Schema(title = "Role")
 @Entity
 @Table(name = "_ROLE", schema = "EPF")
 @JsonbPropertyOrder({
@@ -36,7 +33,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
     "modifies"
 })
 @NamedNativeQuery(
-        name = "Role.GetUserRoles", 
+        name = Role.GET_USER_ROLES, 
         query = "SELECT GRANTEDROLE \n" +
                 "FROM INFORMATION_SCHEMA.RIGHTS \n" +
                 "WHERE \n" +
@@ -82,7 +79,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
                 "        );"
 )
 @NamedNativeQuery(
-        name = "Role.IsAdmin",
+        name = Role.IS_ADMIN,
         query = "SELECT ADMIN FROM INFORMATION_SCHEMA.USERS WHERE NAME = ? AND ADMIN = ?;"
 )
 public class Role {
@@ -164,4 +161,7 @@ public class Role {
     public void setMoreInformation(MoreInformation moreInformation) {
         this.moreInformation = moreInformation;
     }
+    
+    public static final String GET_USER_ROLES = "Role.GetUserRoles";
+    public static final String IS_ADMIN = "Role.IsAdmin";
 }

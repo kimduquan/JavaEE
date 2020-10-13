@@ -8,11 +8,13 @@ package epf.schema.roles.section;
 import javax.json.JsonObject;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import org.eclipse.microprofile.graphql.Type;
 
 /**
  *
  * @author FOXCONN
  */
+@Type
 @Embeddable
 public class Staffing {
     
