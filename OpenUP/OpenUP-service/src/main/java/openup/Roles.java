@@ -8,6 +8,7 @@ package openup;
 import epf.schema.roles.RoleSet;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -16,7 +17,10 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.SecurityContext;
+import openup.persistence.Request;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -36,11 +40,21 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 @RolesAllowed(Roles.ANY_ROLE)
 public class Roles {
     
+    @Inject
+    private Request request;
+    
+    @Context
+    private SecurityContext context;
+    
+    private EntityManager manager;
+    
+    @PostConstruct
+    void postConstruct(){
+        manager = request.getManager(context);
+    }
+    
     public static final String ANY_ROLE = "ANY_ROLE";
     public static final String ADMIN = "ADMIN";
-    
-    @Inject
-    private EntityManager entityManager;
     
     @Name("Contents")
     @GET
@@ -57,7 +71,7 @@ public class Roles {
             )
     )
     public List<RoleSet> getRoleSets(){
-        return entityManager.createNamedQuery(
+        return manager.createNamedQuery(
                 RoleSet.ROLES, 
                 RoleSet.class)
                 .getResultStream()

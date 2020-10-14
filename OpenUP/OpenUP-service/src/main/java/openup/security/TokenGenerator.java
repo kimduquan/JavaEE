@@ -56,7 +56,7 @@ public class TokenGenerator implements Serializable {
     
     public String generate(Token jwt) throws Exception{
         JwtBuilder builder = JwtBuilder.create();
-        if(jwt.getAudience() == null && !jwt.getAudience().isEmpty()){
+        if(jwt.getAudience() != null && !jwt.getAudience().isEmpty()){
             builder.audience(
                     jwt.getAudience()
                             .stream()

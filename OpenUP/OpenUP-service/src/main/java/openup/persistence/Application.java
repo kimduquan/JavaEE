@@ -5,10 +5,11 @@
  */
 package openup.persistence;
 
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
@@ -30,49 +31,47 @@ public class Application {
     private EntityManager defaultManager;
     
     @Inject
-    private Event<EntityManager> event;
+    private Event<Session> event;
     
-    private Map<String, EntityManagerFactory> factories;
-    private Map<String, EntityManager> managers;
+    private Map<String, Session> sessions;
     
     @PostConstruct
     void postConstruct(){
-        factories = new ConcurrentHashMap<>();
-        managers = new ConcurrentHashMap<>();
+        sessions = new ConcurrentHashMap<>();
     }
     
     @PreDestroy
     void preDestroy(){
-        managers.values().forEach(manager -> {
-            manager.close();
+        sessions.values().forEach(s -> {
+            try {
+                s.close();
+            } 
+            catch (Exception ex) {
+                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
+            }
         });
-        managers.clear();
-        factories.values().forEach(factory -> {
-            factory.close();
-        });
-        factories.clear();
     }
     
     public boolean createFactory(String userName, String password){
-        boolean hasExist = factories.containsKey(userName) && managers.containsKey(userName);
+        boolean hasExist = sessions.containsKey(userName);
     	if(!hasExist){
             Map<String, Object> props = new HashMap<>();
             props.put("javax.persistence.jdbc.user", userName);
             props.put("javax.persistence.jdbc.password", password);            
             EntityManagerFactory factory = Persistence.createEntityManagerFactory("OpenUP", props);
             EntityManager manager = factory.createEntityManager();
-            managers.put(userName, manager);
-            factories.put(userName, factory);
-            event.fire(manager);
+            Session session = new Session(factory, manager);
+            sessions.put(userName, session);
+            event.fire(session);
         }
         return !hasExist;
     }
     
-    public EntityManagerFactory getFactory(Principal principal){
-        return factories.get(principal.getName());
-    }
-    
     public EntityManager getDefaultManager(){
         return defaultManager;
+    }
+    
+    public Session getSession(String userName){
+        return sessions.get(userName);
     }
 }

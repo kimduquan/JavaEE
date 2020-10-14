@@ -6,10 +6,8 @@
 package openup.persistence;
 
 import java.security.Principal;
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -25,26 +23,12 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 public class Request {
     
     @Inject
-    private Session session;
+    private Application application;
     
     @PersistenceContext(name = "EPF", unitName = "EPF")
     private EntityManager defaultManager;
     
-    @Context
-    private SecurityContext context;
-    
-    @Inject
-    private JsonWebToken token;
-    
     private EntityManager manager;
-    
-    @PostConstruct
-    void postConstruct(){
-        Principal principal = context.getUserPrincipal();
-        if(principal != null){
-            manager = session.getFactory(principal).createEntityManager();
-        }
-    }
     
     @PreDestroy
     void preDestroy(){
@@ -53,10 +37,18 @@ public class Request {
         }
     }
     
-    @Produces
-    public EntityManager getManager(){
-        if(manager != null){
-            return manager;
+    public EntityManager getManager(SecurityContext context){
+        Principal principal = context.getUserPrincipal();
+        if(principal != null){
+            Session session = application.getSession(principal.getName());
+            if(principal instanceof JsonWebToken){
+                JsonWebToken jwt = (JsonWebToken)principal;
+                return session.getManager(jwt.getTokenID());
+            }
+            else{
+                manager = session.getFactory().createEntityManager();
+                return manager;
+            }
         }
         return defaultManager;
     }

@@ -7,6 +7,7 @@ package openup.persistence;
 
 import java.io.InputStream;
 import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -28,6 +29,7 @@ import javax.ws.rs.MatrixParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import openup.Roles;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -47,7 +49,17 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 public class Manager {
     
     @Inject
+    private Request request;
+    
+    @Context
+    private SecurityContext context;
+    
     private EntityManager manager;
+    
+    @PostConstruct
+    void postConstruct(){
+        manager = request.getManager(context);
+    }
     
     @GET
     @Path("{query}")

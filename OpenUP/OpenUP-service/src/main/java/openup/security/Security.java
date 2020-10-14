@@ -114,7 +114,7 @@ public class Security implements Serializable {
             )
     )
     @Bulkhead(value = 10, waitingTaskQueue = 16)
-    @Timeout(8000)
+    @Timeout(4000)
     @Fallback(value = ExceptionHandler.class, applyOn = {Exception.class})
     @CircuitBreaker(requestVolumeThreshold = 40, failureRatio = 0.618, successThreshold = 15)
     public Response login(

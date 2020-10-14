@@ -5,36 +5,47 @@
  */
 package openup.persistence;
 
-import java.io.Serializable;
-import java.security.Principal;
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.SessionScoped;
-import javax.enterprise.inject.Instance;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
  *
  * @author FOXCONN
  */
-@SessionScoped
-public class Session implements Serializable {
-    
-    /**
-    * 
-    */
-    private static final long serialVersionUID = 1L;
+public class Session implements AutoCloseable {
 
-    @Inject
-    private Application application;
-    
+    public Session(EntityManagerFactory factory, EntityManager defaultManager) {
+        this.factory = factory;
+        this.defaultManager = defaultManager;
+        sessions = new ConcurrentHashMap<>();
+    }
+   
     private EntityManagerFactory factory;
+    private EntityManager defaultManager;
+    private Map<String, EntityManager> sessions;
     
-    public EntityManagerFactory getFactory(Principal principal){
-        if(factory == null){
-            factory = application.getFactory(principal);
+    public EntityManager getManager(String sessionId){
+        EntityManager manager = null;
+        if(!sessions.containsKey(sessionId)){
+            manager = factory.createEntityManager();
+            sessions.put(sessionId, manager);
         }
+        return manager;
+    }
+    
+    public EntityManagerFactory getFactory(){
         return factory;
+    }
+
+    @Override
+    public void close() throws Exception {
+        sessions.values().forEach(manager -> {
+            manager.close();
+        });
+        sessions.clear();
+        defaultManager.close();
+        factory.close();
     }
 }
