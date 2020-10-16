@@ -7,11 +7,9 @@ package openup.persistence;
 
 import java.io.InputStream;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -45,21 +43,14 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 @Path("persistence")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@RolesAllowed(Roles.ADMIN)
+@RolesAllowed(Roles.ANY_ROLE)
 public class Manager {
     
     @Inject
-    private Request request;
+    private Cache cache;
     
     @Context
     private SecurityContext context;
-    
-    private EntityManager manager;
-    
-    @PostConstruct
-    void postConstruct(){
-        manager = request.getManager(context);
-    }
     
     @GET
     @Path("{query}")
@@ -91,7 +82,7 @@ public class Manager {
         ResponseBuilder response = Response.ok();
         Query query = null;
         try{
-            query = manager.createNamedQuery(name);
+            query = cache.createNamedQuery(context, name);
         }
         catch(IllegalArgumentException ex){
             response.status(Response.Status.NOT_FOUND);
@@ -104,7 +95,7 @@ public class Manager {
     }
     
     @POST
-    @Path("{entity}")
+    @Path("{entity}/{id}")
     @Operation(
             summary = "persist", 
             description = "Make an instance managed and persistent."
@@ -130,15 +121,16 @@ public class Manager {
     public Response persist(
             @PathParam("entity")
             String name,
+            @PathParam("id")
+            String id,
             InputStream body
             ) throws Exception{
         ResponseBuilder response = Response.ok();
-        Entity entity = new Entity();
-        findEntity(manager, name, entity, response);
+        Entity entity = findEntity(name, response);
         if(entity.getType() != null){
             try(Jsonb json = JsonbBuilder.create()){
                 Object obj = json.fromJson(body, entity.getType().getJavaType());
-                manager.persist(obj);
+                cache.persist(context, name, id, obj);
             }
             catch(JsonbException ex){
                 response.status(Response.Status.BAD_REQUEST);
@@ -174,8 +166,7 @@ public class Manager {
             @PathParam("id")
             String id){
         ResponseBuilder response = Response.ok();
-        Entity entity = new Entity();
-        findEntityObject(manager, name, id, entity, response);
+        Entity entity = findEntityObject(name, id, response);
         if(entity.getObject() != null){
             response.entity(entity.getObject());
         }
@@ -208,33 +199,24 @@ public class Manager {
             String id
             ){
         ResponseBuilder response = Response.ok();
-        Entity entity = new Entity();
-        findEntityObject(manager, name, id, entity, response);
+        Entity entity = findEntityObject(name, id, response);
         if(entity.getObject() != null){
-            manager.remove(entity.getObject());
+            cache.remove(context, name, id, entity.getObject());
         }
         return response.build();
     }
     
-    void findEntity(EntityManager manager, String name, Entity entity, ResponseBuilder response){
-        manager.getMetamodel()
-                .getEntities()
-                .stream()
-                .filter(
-                        entityType -> {
-                            return entityType.getName().equals(name);
-                        }
-                )
-                .findFirst()
-                .ifPresent(entity::setType);
+    Entity findEntity(String name, ResponseBuilder response){
+        Entity entity = cache.findEntity(context, name);
         if(entity.getType() == null)
             response.status(Response.Status.NOT_FOUND);
+        return entity;
     }
     
-    void findEntityObject(EntityManager manager, String name, String id, Entity entity, ResponseBuilder response){
-        findEntity(manager, name, entity, response);
+    Entity findEntityObject(String name, String id, ResponseBuilder response){
+        Entity entity = findEntity(name, response);
         if(entity.getType() != null){
-            Object object = manager.find(entity.getType().getJavaType(), id);
+            Object object = cache.find(context, name, entity.getType().getJavaType(), id);
             if(object != null){
                 entity.setObject(object);
             }
@@ -242,6 +224,7 @@ public class Manager {
                 response.status(Response.Status.NOT_FOUND);
             }
         }
+        return entity;
     }
     
     void buildQuery(Query query, Integer firstResult, Integer maxResults, UriInfo uriInfo){

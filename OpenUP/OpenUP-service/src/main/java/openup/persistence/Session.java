@@ -28,7 +28,10 @@ public class Session implements AutoCloseable {
     
     public EntityManager getManager(String sessionId){
         EntityManager manager = null;
-        if(!sessions.containsKey(sessionId)){
+        if(sessions.containsKey(sessionId)){
+            manager = sessions.get(sessionId);
+        }
+        else{
             manager = factory.createEntityManager();
             sessions.put(sessionId, manager);
         }
