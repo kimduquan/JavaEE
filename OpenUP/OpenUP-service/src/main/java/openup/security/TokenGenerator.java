@@ -66,14 +66,14 @@ public class TokenGenerator implements Serializable {
         builder.issuer(jwt.getIssuer())
                 .subject(jwt.getSubject())
                 .expirationTime(jwt.getExpirationTime())
+                .notBefore(jwt.getIssuedAtTime())
                 .jwtId(true)
                 .claim("iat", jwt.getIssuedAtTime())
                 .claim("upn", jwt.getSubject());
         if(jwt.getGroups() != null){
             builder.claim("groups", jwt.getGroups().toArray(new String[jwt.getGroups().size()]));
         }
-        builder.claim("tid", jwt.getTokenID())
-                .signWith("RS256", privateKey)
+        builder.signWith("RS256", privateKey)
                 ;
         String token = builder
                 .buildJwt()

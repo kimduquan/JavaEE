@@ -24,6 +24,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -49,6 +50,8 @@ import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import openup.config.Config;
 import openup.persistence.Application;
+import openup.persistence.Credential;
+import openup.persistence.Session;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 
 /**
@@ -122,9 +125,10 @@ public class Security implements Serializable {
             URL url) throws Exception{
         ResponseBuilder response = Response.ok();
         
-        persistence.createFactory(username, password);
+        long time = System.currentTimeMillis() / 1000;
+        persistence.putCredential(username, password, time);
         
-        Token jwt = buildToken(username);
+        Token jwt = buildToken(username, time);
         
         buildTokenID(jwt);
         
@@ -175,13 +179,44 @@ public class Security implements Serializable {
             ) throws Exception{
         ResponseBuilder response = Response.ok();
         Principal principal = context.getUserPrincipal();
-        Token jwt = buildToken(principal.getName());
+        long time = System.currentTimeMillis() / 1000;
+        Token jwt = buildToken(principal.getName(), time);
         buildTokenID(jwt);
         buildAudience(jwt, uriInfo.getBaseUri());
         if(buildRoles(jwt, principal, role, response)){
             String token = generator.generate(jwt);
             response.entity(token);
             jwt.setRawToken(token);
+        }
+        return response.build();
+    }
+    
+    @DELETE
+    @Operation(
+            summary = "logOut", 
+            description = "logOut",
+            operationId = "logOut"
+    )
+    @APIResponse(
+            name = "ok", 
+            description = "ok",
+            responseCode = "200"
+    )
+    public Response logOut(
+            @Context
+            SecurityContext context
+            ) throws Exception{
+        ResponseBuilder response = Response.status(Response.Status.UNAUTHORIZED);
+        Principal principal = context.getUserPrincipal();
+        if(principal != null){
+            Credential credential = persistence.getCredential(principal.getName());
+            if(credential != null){
+                Session session = credential.getSession(principal);
+                if(session != null){
+                    credential.removeSession(principal);
+                    response = Response.ok();
+                }
+            }
         }
         return response.build();
     }
@@ -221,9 +256,8 @@ public class Security implements Serializable {
         return ok;
     }
     
-    Token buildToken(String username) throws Exception{
+    Token buildToken(String username, long time) throws Exception{
         Token jwt = new Token();
-        long time = System.currentTimeMillis() / 1000;
         jwt.setIssuedAtTime(time);
         jwt.setExpirationTime(time + Duration.of(jwtExpDuration, jwtExpTimeUnit).getSeconds());
         jwt.setIssuer(issuer);

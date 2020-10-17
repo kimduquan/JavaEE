@@ -6,6 +6,7 @@
 package openup;
 
 import epf.schema.work_products.Domain;
+import java.security.Principal;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
@@ -14,9 +15,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.SecurityContext;
 import openup.persistence.Cache;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
@@ -40,8 +39,8 @@ public class WorkProducts {
     @Inject
     private Cache cache;
     
-    @Context
-    private SecurityContext context;
+    @Inject
+    private Principal principal;
     
     @Name("Contents")
     @GET
@@ -57,9 +56,9 @@ public class WorkProducts {
                     schema = @Schema(implementation = Domain.class)
             )
     )
-    public List<Domain> getDomains(){
+    public List<Domain> getDomains() throws Exception{
         return cache.getNamedQueryResult(
-                context,
+                principal,
                 Domain.DOMAINS, 
                 Domain.class);
     }

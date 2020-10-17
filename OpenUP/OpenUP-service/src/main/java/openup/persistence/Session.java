@@ -7,10 +7,6 @@ package openup.persistence;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
@@ -34,28 +30,25 @@ public class Session implements AutoCloseable {
         return defaultManager;
     }
     
-    public Conversation getSession(String sessionId){
+    public Conversation getConversation(String sessionId){
         return sessions.get(sessionId);
     }
     
-    public Conversation putSession(String sessionId){
+    public Conversation putConversation(String sessionId){
         Conversation conversation = new Conversation(factory);
         sessions.put(sessionId, conversation);
         return conversation;
     }
+    
+    public Conversation removeConversation(String sessionId){
+        return sessions.remove(sessionId);
+    }
 
     @Override
     public void close() throws Exception {
-        sessions.values().forEach(
-                conversation -> {
-                    try {
-                        conversation.close();
-                    } 
-                    catch (Exception ex) {
-                        Logger.getLogger(Session.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-        );
+        for(Conversation conversation : sessions.values()){
+            conversation.close();
+        }
         sessions.clear();
         defaultManager.close();
         factory.close();

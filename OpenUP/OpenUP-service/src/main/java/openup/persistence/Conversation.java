@@ -33,6 +33,10 @@ public class Conversation implements AutoCloseable {
         conversations.put(cid, manager);
         return manager;
     }
+    
+    public EntityManager removeManager(long cid){
+        return conversations.remove(cid);
+    }
 
     @Override
     public void close() throws Exception {

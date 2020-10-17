@@ -6,6 +6,7 @@
 package openup;
 
 import epf.schema.roles.RoleSet;
+import java.security.Principal;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
@@ -14,9 +15,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.SecurityContext;
 import openup.persistence.Cache;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
@@ -40,8 +39,8 @@ public class Roles {
     @Inject
     private Cache cache;
     
-    @Context
-    private SecurityContext context;
+    @Inject
+    private Principal principal;
     
     public static final String ANY_ROLE = "ANY_ROLE";
     public static final String ADMIN = "ADMIN";
@@ -60,9 +59,9 @@ public class Roles {
                     schema = @Schema(implementation = RoleSet.class)
             )
     )
-    public List<RoleSet> getRoleSets(){
+    public List<RoleSet> getRoleSets() throws Exception{
         return cache.getNamedQueryResult(
-                context,
+                principal,
                 RoleSet.ROLES, 
                 RoleSet.class);
     }

@@ -7,6 +7,7 @@ package openup.error;
 
 import java.io.Serializable;
 import java.sql.SQLInvalidAuthorizationSpecException;
+import javax.security.enterprise.AuthenticationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -47,7 +48,10 @@ public class ExceptionHandler implements
     boolean map(Throwable failure, Response.ResponseBuilder builder){
         Response.Status status = Response.Status.INTERNAL_SERVER_ERROR;
         boolean mapped = true;
-        if(failure instanceof TimeoutException){
+        if(failure instanceof AuthenticationException){
+            status = Response.Status.UNAUTHORIZED;
+        }
+        else if(failure instanceof TimeoutException){
             status = Response.Status.REQUEST_TIMEOUT;
         }
         else if(failure instanceof BulkheadException){

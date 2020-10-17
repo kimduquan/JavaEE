@@ -7,6 +7,7 @@ package openup;
 
 import java.util.List;
 import epf.schema.delivery_processes.DeliveryProcess;
+import java.security.Principal;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -14,9 +15,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.SecurityContext;
 import openup.persistence.Cache;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
@@ -40,8 +39,8 @@ public class DeliveryProcesses {
     @Inject
     private Cache cache;
     
-    @Context
-    private SecurityContext context;
+    @Inject
+    private Principal principal;
     
     @Name("Contents")
     @GET
@@ -57,9 +56,9 @@ public class DeliveryProcesses {
                     schema = @Schema(implementation = DeliveryProcess.class)
             )
     )
-    public List<DeliveryProcess> getDeliveryProcesses(){
+    public List<DeliveryProcess> getDeliveryProcesses() throws Exception{
         return cache.getNamedQueryResult(
-                context,
+                principal,
                 DeliveryProcess.DELIVERY_PROCESSES, 
                 DeliveryProcess.class);
     }

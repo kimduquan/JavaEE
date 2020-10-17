@@ -19,8 +19,8 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.security.enterprise.AuthenticationException;
 import javax.transaction.Transactional;
-import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
 /**
@@ -31,11 +31,11 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 @RequestScoped
 public class Cache {
     
-    @Inject
-    private Application application;
-    
     @PersistenceContext(name = "EPF", unitName = "EPF")
     private EntityManager defaultManager;
+    
+    @Inject
+    private Application application;
     
     EntityManager joinTransaction(EntityManager manager){
         if(manager != null){
@@ -46,67 +46,69 @@ public class Cache {
         return manager;
     }
     
-    EntityManager getManager(SecurityContext context){
-        EntityManager manager;
-        Principal principal = context.getUserPrincipal();
+    EntityManager getManager(Principal principal) throws Exception{
         if(principal != null){
-            Session session = application.getSession(principal.getName());
-            if(session != null){
-                if(principal instanceof JsonWebToken){
-                    JsonWebToken jwt = (JsonWebToken)principal;
-                    Conversation conversation = session.getSession(jwt.getTokenID());
-                    if(conversation == null){
-                        conversation = session.putSession(jwt.getTokenID());
+            EntityManager manager = null;
+            Credential credential = application.getCredential(principal.getName());
+            if(credential != null){
+                Session session = credential.getSession(principal);
+                if(session != null){
+                    if(principal instanceof JsonWebToken){
+                        JsonWebToken jwt = (JsonWebToken)principal;
+                        Conversation conversation = session.getConversation(jwt.getTokenID());
+                        if(conversation != null){
+                            manager = conversation.getManager(jwt.getIssuedAtTime());
+                        }
                     }
-                    manager = conversation.getManager(jwt.getIssuedAtTime());
-                    if(manager == null){
-                        manager = conversation.putManager(jwt.getIssuedAtTime());
+                    else{
+                        manager = session.getDefaultManager();
                     }
-                    return manager;
-                }
-                else{
-                    manager = session.getDefaultManager();
-                    return manager;
                 }
             }
+            if(manager == null){
+                throw new AuthenticationException();
+            }
+            return manager;
         }
         return defaultManager;
     }
     
-    public Query createNamedQuery(SecurityContext context, String name){
-        return getManager(context).createNamedQuery(name);
+    public Query createNamedQuery(Principal principal, String name) throws Exception{
+        return getManager(principal).createNamedQuery(name);
     }
     
     @Transactional
     @CachePut
     public void persist(
-            SecurityContext context,
+            Principal principal,
             @CacheKey
             String name,
             @CacheKey
             String id, 
             @CacheValue
-            Object object){
-        EntityManager manager = joinTransaction(getManager(context));
+            Object object) throws Exception{
+        EntityManager manager = getManager(principal);
+        manager = joinTransaction(manager);
         manager.persist(object);
     }
     
     @CacheResult
-    public Object find(SecurityContext context, @CacheKey String name, Class cls, @CacheKey String id){
-        return getManager(context).find(cls, id);
+    public Object find(Principal principal, @CacheKey String name, Class cls, @CacheKey String id) throws Exception{
+        return getManager(principal).find(cls, id);
     }
     
     @Transactional
     @CacheRemove
-    public void remove(SecurityContext context, @CacheKey String name, @CacheKey String id, Object object){
-        EntityManager manager = joinTransaction(getManager(context));
+    public void remove(Principal principal, @CacheKey String name, @CacheKey String id, Object object) throws Exception{
+        EntityManager manager = getManager(principal);
+        manager = joinTransaction(manager);
         manager.remove(object);
     }
     
     @CacheResult(cacheName = "EntityType")
-    public Entity findEntity(SecurityContext context, @CacheKey String name){
+    public Entity findEntity(Principal principal, @CacheKey String name) throws Exception{
         Entity result = new Entity();
-        getManager(context).getMetamodel()
+        getManager(principal).getMetamodel()
                 .getEntities()
                 .stream()
                 .filter(
@@ -120,8 +122,8 @@ public class Cache {
     }
     
     @CacheResult(cacheName = "NamedQuery")
-    public <T> List<T> getNamedQueryResult(SecurityContext context, @CacheKey String name, Class<T> cls){
-        return getManager(context)
+    public <T> List<T> getNamedQueryResult(Principal principal, @CacheKey String name, Class<T> cls) throws Exception{
+        return getManager(principal)
                 .createNamedQuery(name, cls)
                 .getResultStream()
                 .collect(Collectors.toList());

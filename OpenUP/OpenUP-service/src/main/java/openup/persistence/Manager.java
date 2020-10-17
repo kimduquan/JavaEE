@@ -6,7 +6,6 @@
 package openup.persistence;
 
 import java.io.InputStream;
-import java.util.stream.Collectors;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -19,15 +18,12 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.json.bind.JsonbException;
-import javax.persistence.Query;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.MatrixParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.UriInfo;
 import openup.Roles;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -39,7 +35,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  * @author FOXCONN
  */
 @RequestScoped
-@Path("persistence")
+@Path("persistence/entity")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @RolesAllowed(Roles.ANY_ROLE)
@@ -50,48 +46,6 @@ public class Manager {
     
     @Context
     private SecurityContext context;
-    
-    @GET
-    @Path("{query}")
-    @Operation(
-            summary = "Named Query", 
-            description = "Execute a SELECT query and return the query results."
-    )
-    @APIResponse(
-            description = "Result",
-            responseCode = "200",
-            content = @Content(
-                    mediaType = MediaType.APPLICATION_JSON
-            )
-    )
-    @APIResponse(
-            description = "a query has not been defined with the given name",
-            responseCode = "404"
-    )
-    public Response query(
-            @PathParam("query")
-            String name,
-            @MatrixParam("first")
-            Integer firstResult,
-            @MatrixParam("max")
-            Integer maxResults,
-            @Context 
-            UriInfo uriInfo
-            ){
-        ResponseBuilder response = Response.ok();
-        Query query = null;
-        try{
-            query = cache.createNamedQuery(context, name);
-        }
-        catch(IllegalArgumentException ex){
-            response.status(Response.Status.NOT_FOUND);
-        }
-        if(query != null){
-            buildQuery(query, firstResult, maxResults, uriInfo);
-            response.entity(query.getResultStream().collect(Collectors.toList()));
-        }
-        return response.build();
-    }
     
     @POST
     @Path("{entity}/{id}")
@@ -128,7 +82,7 @@ public class Manager {
         if(entity.getType() != null){
             try(Jsonb json = JsonbBuilder.create()){
                 Object obj = json.fromJson(body, entity.getType().getJavaType());
-                cache.persist(context, name, id, obj);
+                cache.persist(context.getUserPrincipal(), name, id, obj);
             }
             catch(JsonbException ex){
                 response.status(Response.Status.BAD_REQUEST);
@@ -162,7 +116,7 @@ public class Manager {
             @PathParam("entity")
             String name,
             @PathParam("id")
-            String id){
+            String id) throws Exception{
         ResponseBuilder response = Response.ok();
         Entity entity = findEntityObject(name, id, response);
         if(entity.getObject() != null){
@@ -194,26 +148,26 @@ public class Manager {
             String name,
             @PathParam("id")
             String id
-            ){
+            ) throws Exception{
         ResponseBuilder response = Response.ok();
         Entity entity = findEntityObject(name, id, response);
         if(entity.getObject() != null){
-            cache.remove(context, name, id, entity.getObject());
+            cache.remove(context.getUserPrincipal(), name, id, entity.getObject());
         }
         return response.build();
     }
     
-    Entity findEntity(String name, ResponseBuilder response){
-        Entity entity = cache.findEntity(context, name);
+    Entity findEntity(String name, ResponseBuilder response) throws Exception{
+        Entity entity = cache.findEntity(context.getUserPrincipal(), name);
         if(entity.getType() == null)
             response.status(Response.Status.NOT_FOUND);
         return entity;
     }
     
-    Entity findEntityObject(String name, String id, ResponseBuilder response){
+    Entity findEntityObject(String name, String id, ResponseBuilder response) throws Exception{
         Entity entity = findEntity(name, response);
         if(entity.getType() != null){
-            Object object = cache.find(context, name, entity.getType().getJavaType(), id);
+            Object object = cache.find(context.getUserPrincipal(), name, entity.getType().getJavaType(), id);
             if(object != null){
                 entity.setObject(object);
             }
@@ -222,21 +176,5 @@ public class Manager {
             }
         }
         return entity;
-    }
-    
-    void buildQuery(Query query, Integer firstResult, Integer maxResults, UriInfo uriInfo){
-        uriInfo.getQueryParameters().forEach((param, paramValue) -> {
-            String value = "";
-            if(!paramValue.isEmpty()){
-                value = paramValue.get(0);
-            }
-            query.setParameter(param, value);
-        });
-        if(firstResult != null){
-            query.setFirstResult(firstResult);
-        }
-        if(maxResults != null){
-            query.setMaxResults(maxResults);
-        }
     }
 }

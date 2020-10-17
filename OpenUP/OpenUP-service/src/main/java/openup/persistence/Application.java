@@ -28,44 +28,46 @@ public class Application {
     @PersistenceContext(name = "EPF", unitName = "EPF")
     private EntityManager defaultManager;
     
-    private Map<String, Session> sessions;
+    private Map<String, Credential> credentials;
     
     @PostConstruct
     void postConstruct(){
-        sessions = new ConcurrentHashMap<>();
+        credentials = new ConcurrentHashMap<>();
     }
     
     @PreDestroy
     void preDestroy(){
-        sessions.values().forEach(s -> {
+        credentials.values().forEach(credential -> {
             try {
-                s.close();
+                credential.close();
             } 
             catch (Exception ex) {
                 Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
+        credentials.clear();
     }
     
-    public boolean createFactory(String userName, String password){
-        boolean hasExist = sessions.containsKey(userName);
-    	if(!hasExist){
-            Map<String, Object> props = new HashMap<>();
-            props.put("javax.persistence.jdbc.user", userName);
-            props.put("javax.persistence.jdbc.password", password);            
-            EntityManagerFactory factory = Persistence.createEntityManagerFactory("OpenUP", props);
-            EntityManager manager = factory.createEntityManager();
-            Session session = new Session(factory, manager);
-            sessions.put(userName, session);
+    public Credential putCredential(String userName, String password, long timestamp){
+        Credential credential = credentials.get(userName);
+        Map<String, Object> props = new HashMap<>();
+        props.put("javax.persistence.jdbc.user", userName);
+        props.put("javax.persistence.jdbc.password", password);            
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("OpenUP", props);
+        EntityManager manager = factory.createEntityManager();
+        if(credential == null){
+            credential = new Credential();
+            credentials.put(userName, credential);
         }
-        return !hasExist;
+        credential.putSession(timestamp, factory, manager);
+        return credential;
     }
     
     public EntityManager getDefaultManager(){
         return defaultManager;
     }
     
-    public Session getSession(String userName){
-        return sessions.get(userName);
+    public Credential getCredential(String name){
+        return credentials.get(name);
     }
 }
