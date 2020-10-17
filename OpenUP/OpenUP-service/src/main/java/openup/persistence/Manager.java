@@ -20,7 +20,6 @@ import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.json.bind.JsonbException;
 import javax.persistence.Query;
-import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.MatrixParam;
@@ -117,7 +116,6 @@ public class Manager {
             description = "any unexpected error(s) occur(s) during deserialization",
             responseCode = "400"
     )
-    @Transactional
     public Response persist(
             @PathParam("entity")
             String name,
@@ -191,7 +189,6 @@ public class Manager {
             description = "the entity does not exist",
             responseCode = "404"
     )
-    @Transactional
     public Response remove(
             @PathParam("entity")
             String name,

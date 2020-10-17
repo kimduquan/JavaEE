@@ -20,7 +20,6 @@ import java.util.stream.Stream;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.event.Event;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.inject.Inject;
@@ -84,9 +83,6 @@ public class Security implements Serializable {
     @ConfigProperty(name = Config.JWT_EXPIRE_TIMEUNIT)
     private ChronoUnit jwtExpTimeUnit;
     
-    @Inject
-    private Event<Token> event;
-    
     @POST
     @PermitAll
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -142,7 +138,6 @@ public class Security implements Serializable {
         String token = generator.generate(jwt);
         
         jwt.setRawToken(token);
-        event.fire(jwt);
         
         return response.entity(token).build();
     }
@@ -187,7 +182,6 @@ public class Security implements Serializable {
             String token = generator.generate(jwt);
             response.entity(token);
             jwt.setRawToken(token);
-            event.fire(jwt);
         }
         return response.build();
     }

@@ -13,8 +13,6 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -29,9 +27,6 @@ public class Application {
     
     @PersistenceContext(name = "EPF", unitName = "EPF")
     private EntityManager defaultManager;
-    
-    @Inject
-    private Event<Session> event;
     
     private Map<String, Session> sessions;
     
@@ -62,7 +57,6 @@ public class Application {
             EntityManager manager = factory.createEntityManager();
             Session session = new Session(factory, manager);
             sessions.put(userName, session);
-            event.fire(session);
         }
         return !hasExist;
     }
