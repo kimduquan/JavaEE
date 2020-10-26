@@ -22,14 +22,11 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.persistence.Query;
-import javax.persistence.criteria.AbstractQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.Attribute.PersistentAttributeType;
 import javax.persistence.metamodel.EntityType;
@@ -111,11 +108,13 @@ public class QueryManager {
             EntityManager manager = cache.getManager(principal);
             Entity entity = cache.findEntity(principal, rootSegment.getPath());
             if(entity.getType() != null){
-                CriteriaBuilder builder = manager.getCriteriaBuilder();
-                CriteriaQuery<Object> rootQuery = builder.createQuery();
                 EntityType rootType = entity.getType();
                 Class rootClass = rootType.getJavaType();
+                
+                CriteriaBuilder builder = manager.getCriteriaBuilder();
+                CriteriaQuery rootQuery = builder.createQuery(rootClass);
                 Root rootFrom = rootQuery.from(rootClass);
+                List<Predicate> allParams = new ArrayList<>();
                 
                 List<Predicate> rootParams = new ArrayList<>();
                 rootSegment.getMatrixParameters().forEach((name, values) -> {
@@ -126,14 +125,11 @@ public class QueryManager {
                             )
                     );
                 });
-                if(!rootParams.isEmpty()){
-                    rootQuery.where(rootParams.toArray(new Predicate[rootParams.size()]));
-                }
+                allParams.addAll(rootParams);
 
                 ManagedType parentType = rootType;
                 Root parentFrom = rootFrom;
-                AbstractQuery parentQuery = rootQuery;
-                //Join parentJoin = null;
+                Join parentJoin = null;
                 
                 try{
                     for(PathSegment segment : paths.subList(1, paths.size())){
@@ -158,39 +154,43 @@ public class QueryManager {
                                 subClass = parentType.getSingularAttribute(segment.getPath()).getBindableJavaType();
                             }
                             
-                            Subquery subQuery = parentQuery.subquery(subClass);
-                            Root subFrom = subQuery.correlate(parentFrom);
-                            Join join = subFrom.join(segment.getPath());
-                            //Join subJoin = subQuery.correlate(parentJoin);
-                            subQuery.select(join);
+                            Join subJoin;
+                            if(parentJoin == null){
+                                subJoin = parentFrom.join(segment.getPath());
+                            }
+                            else{
+                                subJoin = parentJoin.join(segment.getPath());
+                            }
 
                             List<Predicate> params = new ArrayList<>();
                             segment.getMatrixParameters().forEach((name, values) -> {
                                 params.add(
                                         builder.isMember(
                                                 values,
-                                                subFrom.get(name)
+                                                subJoin.get(name)
                                         )
                                 );
                             });
-                            if(!params.isEmpty()){
-                                subQuery.where(params.toArray(new Predicate[params.size()]));
-                            }
+                            allParams.addAll(params);
                             
                             ManagedType subType = manager.getMetamodel().managedType(subClass);
                             parentType = subType;
-                            parentFrom = subFrom;
-                            parentQuery = subQuery;
+                            parentJoin = subJoin;
                         }
                     }
-                    Query query;
-                    if(rootQuery != parentQuery){
-                        rootQuery.select(parentQuery.getSelection());
+                    
+                    if(parentJoin == null){
+                        rootQuery.select(rootFrom);
                     }
                     else{
-                        rootQuery.select(rootFrom);//
+                        rootQuery.select(parentJoin);//
                     }
-                    query = manager.createQuery(rootQuery);
+                    
+                    if(!allParams.isEmpty()){
+                        rootQuery.where(allParams.toArray(new Predicate[allParams.size()]));
+                    }
+                    
+                    Query query = manager.createQuery(rootQuery);
                 
                     if(firstResult != null){
                         query.setFirstResult(firstResult);
