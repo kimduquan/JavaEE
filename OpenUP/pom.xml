@@ -63,7 +63,7 @@
             <dependency>
                 <groupId>io.openliberty.features</groupId>
                 <artifactId>jwt-1.0</artifactId>
-                <version>20.0.0.10</version>
+                <version>20.0.0.11</version>
                 <type>esa</type>
             </dependency>
             <!-- https://mvnrepository.com/artifact/io.jaegertracing/jaeger-client -->
