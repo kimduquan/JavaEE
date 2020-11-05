@@ -19,11 +19,11 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 public class Credential implements AutoCloseable {
     
     private Map<Long, Session> sessions;
-    private Map<Long, Session> loginSessions;
+    private Map<Long, Session> logonSessions;
 
     public Credential() {
         sessions = new ConcurrentHashMap<>();
-        loginSessions = new ConcurrentHashMap<>();
+        logonSessions = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -33,41 +33,39 @@ public class Credential implements AutoCloseable {
         }
         sessions.clear();
         
-        for(Session session : loginSessions.values()){
+        for(Session session : logonSessions.values()){
             session.close();
         }
-        loginSessions.clear();
+        logonSessions.clear();
     }
     
     public Session putSession(long timestamp, EntityManagerFactory factory, EntityManager manager){
         Session session = new Session(factory, manager);
-        loginSessions.put(timestamp, session);
+        logonSessions.put(timestamp, session);
         return session;
     }
     
     public Session getSession(Principal principal){
         if(principal instanceof JsonWebToken){
             JsonWebToken jwt = (JsonWebToken)principal;
-            loginSessions.computeIfPresent(
-                    jwt.getIssuedAtTime(), 
+            logonSessions.computeIfPresent(jwt.getIssuedAtTime(), 
                     (time, session) -> { 
                         session.putConversation(jwt.getTokenID())
                                 .putManager(jwt.getIssuedAtTime());
-                        loginSessions.remove(jwt.getIssuedAtTime());
+                        logonSessions.remove(jwt.getIssuedAtTime());
                         sessions.put(jwt.getIssuedAtTime(), session);
                         return session; 
                     }
             );
             return sessions.get(jwt.getIssuedAtTime());
         }
-        else{
+        else if(principal != null){
             long timestamp = 0;
-            loginSessions.computeIfPresent(
-                    timestamp, 
+            logonSessions.computeIfPresent(timestamp, 
                     (time, session) -> { 
                         session.putConversation(principal.getName())
                                 .putManager(time);
-                        loginSessions.remove(time);
+                        logonSessions.remove(time);
                         sessions.put(time, session);
                         return session; 
                     }

@@ -57,7 +57,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  * @author FOXCONN
  */
 @RequestScoped
-@Path("persistence/query")
+@Path("persistence")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @RolesAllowed(Roles.ANY_ROLE)
@@ -70,7 +70,7 @@ public class QueryManager {
     private SecurityContext context;
     
     @GET
-    @Path("criteria/{criteria: .+}")
+    @Path("query/{criteria: .+}")
     @Operation(
             summary = "Native Query", 
             description = "Execute a SELECT query and return the query results."
@@ -212,7 +212,7 @@ public class QueryManager {
     }
     
     @GET
-    @Path("{query}")
+    @Path("queries/{query}")
     @Operation(
             summary = "Named Query", 
             description = "Execute a SELECT query and return the query results."
