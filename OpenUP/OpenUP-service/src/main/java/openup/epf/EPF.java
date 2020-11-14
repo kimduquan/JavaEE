@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup;
+package openup.epf;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -18,7 +18,7 @@ import org.eclipse.microprofile.graphql.Query;
  */
 @GraphQLApi
 @RequestScoped
-public class EPFSchema {
+public class EPF {
     
     @Inject
     private Roles roles;

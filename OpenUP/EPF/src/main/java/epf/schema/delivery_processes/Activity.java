@@ -38,7 +38,7 @@ public class Activity {
     @JoinColumn(name = "NAME")
     private CapabilityPattern Extends;
     
-    @JoinColumn(name = "PARENT_ACTIVITIES", referencedColumnName = "NAME")
+    @JoinColumn(name = "PARENT_ACTIVITIES")
     private CapabilityPattern parentActivities;
     
     @ManyToMany

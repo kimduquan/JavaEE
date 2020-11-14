@@ -44,7 +44,7 @@ public class Phase {
     @Embedded
     private WorkProductUsage workProductUsage;
     
-    @JoinColumn(name = "PARENT_ACTIVITIES", referencedColumnName = "NAME")
+    @JoinColumn(name = "PARENT_ACTIVITIES")
     private DeliveryProcess parentActivities;
 
     public String getName() {

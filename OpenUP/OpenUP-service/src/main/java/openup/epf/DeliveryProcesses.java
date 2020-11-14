@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup;
+package openup.epf;
 
-import epf.schema.roles.RoleSet;
-import java.security.Principal;
+import openup.epf.Roles;
 import java.util.List;
+import epf.schema.delivery_processes.DeliveryProcess;
+import java.security.Principal;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -29,12 +30,12 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  * @author FOXCONN
  */
 @Type
-@Path("roles")
+@Path("delivery-processes")
+@RequestScoped
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@RequestScoped
 @RolesAllowed(Roles.ANY_ROLE)
-public class Roles {
+public class DeliveryProcesses {
     
     @Inject
     private Cache cache;
@@ -42,27 +43,24 @@ public class Roles {
     @Inject
     private Principal principal;
     
-    public static final String ANY_ROLE = "ANY_ROLE";
-    public static final String ADMIN = "ADMIN";
-    
     @Name("Contents")
     @GET
     @Operation(
-            summary = "Roles", 
-            description = "This category lists roles organized by role set."
+            summary = "Delivery Processes", 
+            description = "This provides a list of delivery processes that have been published."
     )
     @APIResponse(
-            description = "Role Set",
+            description = "Delivery Process",
             responseCode = "200",
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON,
-                    schema = @Schema(implementation = RoleSet.class)
+                    schema = @Schema(implementation = DeliveryProcess.class)
             )
     )
-    public List<RoleSet> getRoleSets() throws Exception{
+    public List<DeliveryProcess> getDeliveryProcesses() throws Exception{
         return cache.getNamedQueryResult(
                 principal,
-                RoleSet.ROLES, 
-                RoleSet.class);
+                DeliveryProcess.DELIVERY_PROCESSES, 
+                DeliveryProcess.class);
     }
 }

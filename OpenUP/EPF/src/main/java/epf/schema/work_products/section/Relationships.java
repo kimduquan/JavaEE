@@ -40,7 +40,7 @@ public class Relationships {
     private List<WorkProductSlot> fulfilledSlots;
     
     @ManyToOne
-    @JoinColumn(name = "RESPONSIBLE", referencedColumnName = "NAME")
+    @JoinColumn(name = "RESPONSIBLE")
     private Role responsible;
     
     @ManyToMany(mappedBy = "modifies")

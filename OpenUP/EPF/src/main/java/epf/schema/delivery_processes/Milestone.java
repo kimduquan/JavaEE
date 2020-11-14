@@ -29,7 +29,7 @@ public class Milestone {
     @Id
     private String name;
 	
-    @JoinColumn(name = "PREDECESSOR", referencedColumnName = "NAME")
+    @JoinColumn(name = "PREDECESSOR")
     private Iteration predecessor;
 	
     @Embedded

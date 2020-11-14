@@ -6,6 +6,7 @@
         <feature>jpa-2.2</feature>
         <feature>mpGraphQL-1.0</feature>
         <!--<feature>sessionCache-1.0</feature>-->
+        <feature>jsf-2.3</feature>
     </featureManager>
 
     <httpEndpoint id="defaultHttpEndpoint"

@@ -40,7 +40,7 @@ public class Iteration {
     @Column(name = "NUMBER")
     private Integer number;
     
-    @JoinColumn(name = "PARENT_ACTIVITIES", referencedColumnName = "NAME")
+    @JoinColumn(name = "PARENT_ACTIVITIES")
     private Phase parentActivities;
     
     @ManyToMany

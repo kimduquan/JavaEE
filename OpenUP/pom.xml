@@ -72,6 +72,12 @@
                 <artifactId>jaeger-client</artifactId>
                 <version>0.34.3</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-jdk14 -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-jdk14</artifactId>
+                <version>1.7.30</version>
+            </dependency>
             <!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast-all -->
             <dependency>
                 <groupId>com.hazelcast</groupId>

@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup;
+package openup.epf;
 
-import epf.schema.work_products.Domain;
+import epf.schema.tasks.Discipline;
 import java.security.Principal;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
@@ -29,12 +29,12 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  * @author FOXCONN
  */
 @Type
-@Path("work-products")
+@Path("tasks")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @RequestScoped
 @RolesAllowed(Roles.ANY_ROLE)
-public class WorkProducts {
+public class Tasks {
     
     @Inject
     private Cache cache;
@@ -45,21 +45,21 @@ public class WorkProducts {
     @Name("Contents")
     @GET
     @Operation(
-            summary = "Work Products", 
-            description = "List of work products organized by domain."
+            summary = "Tasks", 
+            description = "List of tasks organized by discipline."
     )
     @APIResponse(
-            description = "Domain",
+            description = "Discipline",
             responseCode = "200",
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON,
-                    schema = @Schema(implementation = Domain.class)
+                    schema = @Schema(implementation = Discipline.class)
             )
     )
-    public List<Domain> getDomains() throws Exception{
+    public List<Discipline> getDisciplines() throws Exception{
         return cache.getNamedQueryResult(
                 principal,
-                Domain.DOMAINS, 
-                Domain.class);
+                Discipline.DISCIPLINES, 
+                Discipline.class);
     }
 }
