@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.share.security;
+package openup.api.security;
 
 import java.net.URL;
 import javax.annotation.security.PermitAll;
@@ -26,7 +26,7 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
-import openup.share.epf.schema.Roles;
+import openup.api.epf.schema.Roles;
 
 /**
  *

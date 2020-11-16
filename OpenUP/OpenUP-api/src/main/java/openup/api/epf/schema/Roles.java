@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.share.epf.schema;
+package openup.api.epf.schema;
 
 import epf.schema.roles.RoleSet;
 import java.util.List;

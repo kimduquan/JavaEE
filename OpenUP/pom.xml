@@ -235,6 +235,6 @@
         <module>OpenUP-assembly</module>
         <module>OpenUP-service</module>
         <module>EPF-schema</module>
-        <module>OpenUP-share</module>
+        <module>OpenUP-api</module>
     </modules>
 </project>

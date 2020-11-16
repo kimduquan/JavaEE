@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.share.config;
+package openup.api.epf.schema;
 
-import java.util.Map;
+import epf.schema.work_products.Domain;
+import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -20,23 +22,24 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  *
  * @author FOXCONN
  */
-@Path("config")
+@Path("work-products")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public interface Config {
+@RolesAllowed(Roles.ANY_ROLE)
+public interface WorkProducts {
+    
     @GET
     @Operation(
-            summary = "getConfig", 
-            description = "getConfig"
+            summary = "Work Products", 
+            description = "List of work products organized by domain."
     )
     @APIResponse(
-            name = "OK", 
-            description = "OK",
+            description = "Domain",
             responseCode = "200",
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON,
-                    schema = @Schema(implementation = Map.class)
+                    schema = @Schema(implementation = Domain.class)
             )
     )
-    Map<String, Object> getConfig() throws Exception;
+    List<Domain> getDomains() throws Exception;
 }

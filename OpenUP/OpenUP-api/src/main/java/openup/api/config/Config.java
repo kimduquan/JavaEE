@@ -3,11 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.share.epf.schema;
+package openup.api.config;
 
-import java.util.List;
-import epf.schema.delivery_processes.DeliveryProcess;
-import javax.annotation.security.RolesAllowed;
+import java.util.Map;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -22,24 +20,23 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  *
  * @author FOXCONN
  */
-@Path("delivery-processes")
+@Path("config")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@RolesAllowed(Roles.ANY_ROLE)
-public interface DeliveryProcesses {
-    
+public interface Config {
     @GET
     @Operation(
-            summary = "Delivery Processes", 
-            description = "This provides a list of delivery processes that have been published."
+            summary = "getConfig", 
+            description = "getConfig"
     )
     @APIResponse(
-            description = "Delivery Process",
+            name = "OK", 
+            description = "OK",
             responseCode = "200",
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON,
-                    schema = @Schema(implementation = DeliveryProcess.class)
+                    schema = @Schema(implementation = Map.class)
             )
     )
-    List<DeliveryProcess> getDeliveryProcesses() throws Exception;
+    Map<String, Object> getConfig() throws Exception;
 }
