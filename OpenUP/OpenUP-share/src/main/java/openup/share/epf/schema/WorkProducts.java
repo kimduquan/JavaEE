@@ -3,22 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.epf;
+package openup.share.epf.schema;
 
-import epf.schema.roles.RoleSet;
-import java.security.Principal;
+import epf.schema.work_products.Domain;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import openup.persistence.Cache;
-import org.eclipse.microprofile.graphql.Name;
-import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -28,41 +22,24 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  *
  * @author FOXCONN
  */
-@Type
-@Path("roles")
+@Path("work-products")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@RequestScoped
 @RolesAllowed(Roles.ANY_ROLE)
-public class Roles {
+public interface WorkProducts {
     
-    @Inject
-    private Cache cache;
-    
-    @Inject
-    private Principal principal;
-    
-    public static final String ANY_ROLE = "ANY_ROLE";
-    public static final String ADMIN = "ADMIN";
-    
-    @Name("Contents")
     @GET
     @Operation(
-            summary = "Roles", 
-            description = "This category lists roles organized by role set."
+            summary = "Work Products", 
+            description = "List of work products organized by domain."
     )
     @APIResponse(
-            description = "Role Set",
+            description = "Domain",
             responseCode = "200",
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON,
-                    schema = @Schema(implementation = RoleSet.class)
+                    schema = @Schema(implementation = Domain.class)
             )
     )
-    public List<RoleSet> getRoleSets() throws Exception{
-        return cache.getNamedQueryResult(
-                principal,
-                RoleSet.ROLES, 
-                RoleSet.class);
-    }
+    List<Domain> getDomains() throws Exception;
 }

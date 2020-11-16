@@ -3,22 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.epf;
+package openup.share.epf.schema;
 
 import epf.schema.tasks.Discipline;
-import java.security.Principal;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import openup.persistence.Cache;
-import org.eclipse.microprofile.graphql.Name;
-import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -28,21 +22,12 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  *
  * @author FOXCONN
  */
-@Type
 @Path("tasks")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@RequestScoped
 @RolesAllowed(Roles.ANY_ROLE)
-public class Tasks {
+public interface Tasks {
     
-    @Inject
-    private Cache cache;
-    
-    @Inject
-    private Principal principal;
-    
-    @Name("Contents")
     @GET
     @Operation(
             summary = "Tasks", 
@@ -56,10 +41,5 @@ public class Tasks {
                     schema = @Schema(implementation = Discipline.class)
             )
     )
-    public List<Discipline> getDisciplines() throws Exception{
-        return cache.getNamedQueryResult(
-                principal,
-                Discipline.DISCIPLINES, 
-                Discipline.class);
-    }
+    List<Discipline> getDisciplines() throws Exception;
 }

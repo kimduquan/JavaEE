@@ -3,23 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.epf;
+package openup.share.epf.schema;
 
-import openup.epf.Roles;
+import epf.schema.roles.RoleSet;
 import java.util.List;
-import epf.schema.delivery_processes.DeliveryProcess;
-import java.security.Principal;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import openup.persistence.Cache;
-import org.eclipse.microprofile.graphql.Name;
-import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -29,38 +23,27 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  *
  * @author FOXCONN
  */
-@Type
-@Path("delivery-processes")
-@RequestScoped
+@Path("roles")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @RolesAllowed(Roles.ANY_ROLE)
-public class DeliveryProcesses {
+public interface Roles {
     
-    @Inject
-    private Cache cache;
+    public static final String ANY_ROLE = "ANY_ROLE";
+    public static final String ADMIN = "ADMIN";
     
-    @Inject
-    private Principal principal;
-    
-    @Name("Contents")
     @GET
     @Operation(
-            summary = "Delivery Processes", 
-            description = "This provides a list of delivery processes that have been published."
+            summary = "Roles", 
+            description = "This category lists roles organized by role set."
     )
     @APIResponse(
-            description = "Delivery Process",
+            description = "Role Set",
             responseCode = "200",
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON,
-                    schema = @Schema(implementation = DeliveryProcess.class)
+                    schema = @Schema(implementation = RoleSet.class)
             )
     )
-    public List<DeliveryProcess> getDeliveryProcesses() throws Exception{
-        return cache.getNamedQueryResult(
-                principal,
-                DeliveryProcess.DELIVERY_PROCESSES, 
-                DeliveryProcess.class);
-    }
+    List<RoleSet> getRoleSets() throws Exception;
 }

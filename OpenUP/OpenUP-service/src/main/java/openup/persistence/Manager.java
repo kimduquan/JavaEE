@@ -6,40 +6,22 @@
 package openup.persistence;
 
 import java.io.InputStream;
-import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.json.bind.JsonbException;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
-import openup.epf.Roles;
-import org.eclipse.microprofile.openapi.annotations.Operation;
-import org.eclipse.microprofile.openapi.annotations.media.Content;
-import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
-import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 /**
  *
  * @author FOXCONN
  */
 @RequestScoped
-@Path("persistence/entity")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
-@RolesAllowed(Roles.ANY_ROLE)
-public class Manager {
+public class Manager implements openup.share.persistence.Entities {
     
     @Inject
     private Cache cache;
@@ -47,33 +29,9 @@ public class Manager {
     @Context
     private SecurityContext context;
     
-    @POST
-    @Path("{entity}/{id}")
-    @Operation(
-            summary = "persist", 
-            description = "Make an instance managed and persistent."
-    )
-    @RequestBody(
-            description = "entity instance",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON),
-            required = true
-    )
-    @APIResponse(
-            description = "ok",
-            responseCode = "200"
-    )
-    @APIResponse(
-            description = "entity name is not present",
-            responseCode = "404"
-    )
-    @APIResponse(
-            description = "any unexpected error(s) occur(s) during deserialization",
-            responseCode = "400"
-    )
+    @Override
     public Response persist(
-            @PathParam("entity")
             String name,
-            @PathParam("id")
             String id,
             InputStream body
             ) throws Exception{
@@ -91,31 +49,9 @@ public class Manager {
         return response.build();
     }
     
-    @GET
-    @Path("{entity}/{id}")
-    @Operation(
-            summary = "Find by primary key.", 
-            description = "Search for an entity of the specified class and primary key."
-    )
-    @APIResponse(
-            responseCode = "200",
-            description = "the found entity instance",
-            content = @Content(
-                    mediaType = MediaType.APPLICATION_JSON
-            )
-    )
-    @APIResponse(
-            description = "entity name is not present",
-            responseCode = "404"
-    )
-    @APIResponse(
-            description = "the entity does not exist",
-            responseCode = "404"
-    )
+    @Override
     public Response find(
-            @PathParam("entity")
             String name,
-            @PathParam("id")
             String id) throws Exception{
         ResponseBuilder response = Response.ok();
         Entity entity = findEntityObject(name, id, response);
@@ -125,28 +61,9 @@ public class Manager {
         return response.build();
     }
     
-    @DELETE
-    @Path("{entity}/{id}")
-    @Operation(
-            summary = "remove", 
-            description = "Remove the entity instance."
-    )
-    @APIResponse(
-            description = "ok",
-            responseCode = "200"
-    )
-    @APIResponse(
-            description = "entity name is not present",
-            responseCode = "404"
-    )
-    @APIResponse(
-            description = "the entity does not exist",
-            responseCode = "404"
-    )
+    @Override
     public Response remove(
-            @PathParam("entity")
             String name,
-            @PathParam("id")
             String id
             ) throws Exception{
         ResponseBuilder response = Response.ok();

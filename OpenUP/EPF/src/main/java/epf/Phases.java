@@ -24,7 +24,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Type
 @Schema(title = "Phases")
 @Entity
-@Table(name = "PHASES")
+@Table(name = "_PHASES_", schema = "EPF")
 public class Phases {
 
     @Id

@@ -17,51 +17,29 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import openup.epf.Roles;
-import openup.error.ExceptionHandler;
+import openup.epf.schema.Roles;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.eclipse.microprofile.faulttolerance.Bulkhead;
-import org.eclipse.microprofile.faulttolerance.CircuitBreaker;
-import org.eclipse.microprofile.faulttolerance.Fallback;
-import org.eclipse.microprofile.faulttolerance.Timeout;
 import org.eclipse.microprofile.jwt.config.Names;
-import org.eclipse.microprofile.openapi.annotations.Operation;
-import org.eclipse.microprofile.openapi.annotations.media.Content;
-import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
-import openup.config.Config;
 import openup.persistence.Application;
 import openup.persistence.Credential;
 import openup.persistence.Session;
-import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
+import org.eclipse.microprofile.jwt.JsonWebToken;
+import openup.share.config.ConfigNames;
 
 /**
  *
  * @author FOXCONN
  */
 @RequestScoped
-@Path("security")
-@RolesAllowed(Roles.ANY_ROLE)
-public class Security implements Serializable {
+public class Security implements openup.share.security.Security, Serializable {
     
     /**
     * 
@@ -79,49 +57,17 @@ public class Security implements Serializable {
     private String issuer;
     
     @Inject
-    @ConfigProperty(name = Config.JWT_EXPIRE_DURATION)
+    @ConfigProperty(name = ConfigNames.JWT_EXPIRE_DURATION)
     private Long jwtExpDuration;
     
     @Inject
-    @ConfigProperty(name = Config.JWT_EXPIRE_TIMEUNIT)
+    @ConfigProperty(name = ConfigNames.JWT_EXPIRE_TIMEUNIT)
     private ChronoUnit jwtExpTimeUnit;
     
-    @POST
-    @PermitAll
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Produces(MediaType.TEXT_PLAIN)
-    @Operation(
-            summary = "login", 
-            description = "login",
-            operationId = "login"
-    )
-    @RequestBody(
-            required = true,
-            content = {
-                @Content(
-                        mediaType = MediaType.APPLICATION_FORM_URLENCODED,
-                        example = "{\"username\":\"\",\"password\":\"\"}"
-                )
-            }
-    )
-    @APIResponse(
-            name = "token", 
-            description = "Token",
-            responseCode = "200",
-            content = @Content(
-                    mediaType = MediaType.TEXT_PLAIN
-            )
-    )
-    @Bulkhead(value = 10, waitingTaskQueue = 16)
-    @Timeout(4000)
-    @Fallback(value = ExceptionHandler.class, applyOn = {Exception.class})
-    @CircuitBreaker(requestVolumeThreshold = 40, failureRatio = 0.618, successThreshold = 15)
+    @Override
     public Response login(
-            @FormParam("username")
             String username,
-            @FormParam("password")
-            String password, 
-            @QueryParam("url")
+            String password,
             URL url) throws Exception{
         ResponseBuilder response = Response.ok();
         
@@ -146,35 +92,10 @@ public class Security implements Serializable {
         return response.entity(token).build();
     }
     
-    @PUT
-    @Produces(MediaType.TEXT_PLAIN)
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Operation(
-            summary = "runAs", 
-            description = "runAs",
-            operationId = "runAs"
-    )
-    @RequestBody(
-            required = true,
-            content = @Content(
-                    mediaType = MediaType.APPLICATION_FORM_URLENCODED,
-                    example = "{\"runAs\":\"ADMIN\"}"
-            )
-    )
-    @APIResponse(
-            name = "token", 
-            description = "Token",
-            responseCode = "200",
-            content = @Content(
-                    mediaType = MediaType.TEXT_PLAIN
-            )
-    )
+    @Override
     public Response runAs(
-            @FormParam("runAs") 
             String role,
-            @Context
-            SecurityContext context, 
-            @Context 
+            SecurityContext context,
             UriInfo uriInfo
             ) throws Exception{
         ResponseBuilder response = Response.ok();
@@ -191,19 +112,8 @@ public class Security implements Serializable {
         return response.build();
     }
     
-    @DELETE
-    @Operation(
-            summary = "logOut", 
-            description = "logOut",
-            operationId = "logOut"
-    )
-    @APIResponse(
-            name = "ok", 
-            description = "ok",
-            responseCode = "200"
-    )
+    @Override
     public Response logOut(
-            @Context
             SecurityContext context
             ) throws Exception{
         ResponseBuilder response = Response.status(Response.Status.UNAUTHORIZED);
@@ -214,9 +124,20 @@ public class Security implements Serializable {
                 Session session = credential.getSession(principal);
                 if(session != null){
                     credential.removeSession(principal);
-                    response = Response.ok();
+                    response = Response.ok(principal.getName());
                 }
             }
+        }
+        return response.build();
+    }
+    
+    @Override
+    public Response authenticate(SecurityContext context){
+        ResponseBuilder response = Response.status(Response.Status.UNAUTHORIZED);
+        Principal principal = context.getUserPrincipal();
+        if(principal instanceof JsonWebToken){
+            JsonWebToken jwt = (JsonWebToken) principal;
+            response.entity(jwt).status(Response.Status.OK);
         }
         return response.build();
     }

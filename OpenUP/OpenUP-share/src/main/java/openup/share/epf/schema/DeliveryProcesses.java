@@ -3,22 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.epf;
+package openup.share.epf.schema;
 
-import epf.schema.work_products.Domain;
-import java.security.Principal;
 import java.util.List;
+import epf.schema.delivery_processes.DeliveryProcess;
 import javax.annotation.security.RolesAllowed;
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import openup.persistence.Cache;
-import org.eclipse.microprofile.graphql.Name;
-import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -28,38 +22,24 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  *
  * @author FOXCONN
  */
-@Type
-@Path("work-products")
+@Path("delivery-processes")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@RequestScoped
 @RolesAllowed(Roles.ANY_ROLE)
-public class WorkProducts {
+public interface DeliveryProcesses {
     
-    @Inject
-    private Cache cache;
-    
-    @Inject
-    private Principal principal;
-    
-    @Name("Contents")
     @GET
     @Operation(
-            summary = "Work Products", 
-            description = "List of work products organized by domain."
+            summary = "Delivery Processes", 
+            description = "This provides a list of delivery processes that have been published."
     )
     @APIResponse(
-            description = "Domain",
+            description = "Delivery Process",
             responseCode = "200",
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON,
-                    schema = @Schema(implementation = Domain.class)
+                    schema = @Schema(implementation = DeliveryProcess.class)
             )
     )
-    public List<Domain> getDomains() throws Exception{
-        return cache.getNamedQueryResult(
-                principal,
-                Domain.DOMAINS, 
-                Domain.class);
-    }
+    List<DeliveryProcess> getDeliveryProcesses() throws Exception;
 }

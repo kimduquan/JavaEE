@@ -23,7 +23,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Type
 @Schema(title = "Roles")
 @Entity
-@Table(name = "_ROLES")
+@Table(name = "_ROLES_", schema = "EPF")
 public class Roles {
 
     @Id

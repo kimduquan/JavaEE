@@ -12,13 +12,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.persistence.Query;
@@ -31,37 +27,17 @@ import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.Attribute.PersistentAttributeType;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.ManagedType;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.MatrixParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import openup.epf.Roles;
-import org.eclipse.microprofile.openapi.annotations.Operation;
-import org.eclipse.microprofile.openapi.annotations.enums.Explode;
-import org.eclipse.microprofile.openapi.annotations.enums.ParameterIn;
-import org.eclipse.microprofile.openapi.annotations.enums.ParameterStyle;
-import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
-import org.eclipse.microprofile.openapi.annotations.media.Content;
-import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
-import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 /**
  *
  * @author FOXCONN
  */
 @RequestScoped
-@Path("persistence")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
-@RolesAllowed(Roles.ANY_ROLE)
-public class QueryManager {
+public class QueryManager implements openup.share.persistence.Queries {
     
     @Inject
     private Cache cache;
@@ -69,35 +45,10 @@ public class QueryManager {
     @Context
     private SecurityContext context;
     
-    @GET
-    @Path("query/{criteria: .+}")
-    @Operation(
-            summary = "Native Query", 
-            description = "Execute a SELECT query and return the query results."
-    )
-    @APIResponse(
-            description = "Result",
-            responseCode = "200",
-            content = @Content(
-                    mediaType = MediaType.APPLICATION_JSON
-            )
-    )
-    @PermitAll
+    @Override
     public Response getCriteriaQueryResult(
-            @PathParam("criteria")
-            @Parameter(
-                    name = "criteria",
-                    in = ParameterIn.PATH,
-                    style = ParameterStyle.MATRIX,
-                    explode = Explode.TRUE,
-                    required = true,
-                    allowReserved = true,
-                    schema = @Schema(type = SchemaType.OBJECT)
-            )
             List<PathSegment> paths,
-            @QueryParam("first")
             Integer firstResult,
-            @QueryParam("max")
             Integer maxResults
             ) throws Exception{
         ResponseBuilder response = Response.status(Response.Status.NOT_FOUND);
@@ -211,31 +162,11 @@ public class QueryManager {
         return response.build();
     }
     
-    @GET
-    @Path("queries/{query}")
-    @Operation(
-            summary = "Named Query", 
-            description = "Execute a SELECT query and return the query results."
-    )
-    @APIResponse(
-            description = "Result",
-            responseCode = "200",
-            content = @Content(
-                    mediaType = MediaType.APPLICATION_JSON
-            )
-    )
-    @APIResponse(
-            description = "a query has not been defined with the given name",
-            responseCode = "404"
-    )
+    @Override
     public Response getNamedQueryResult(
-            @PathParam("query")
             String name,
-            @MatrixParam("first")
             Integer firstResult,
-            @MatrixParam("max")
             Integer maxResults,
-            @Context 
             UriInfo uriInfo
             ) throws Exception{
         ResponseBuilder response = Response.ok();
