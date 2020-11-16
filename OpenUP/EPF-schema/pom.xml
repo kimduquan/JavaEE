@@ -6,8 +6,8 @@
         <artifactId>OpenUP-parent</artifactId>
         <version>1.0.0</version>
     </parent>
-    <artifactId>EPF</artifactId>
-    <name>EPF</name>
+    <artifactId>EPF-schema</artifactId>
+    <name>EPF-schema</name>
     <packaging>jar</packaging>
     
     <dependencies>

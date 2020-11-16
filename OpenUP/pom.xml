@@ -234,7 +234,7 @@
         <module>OpenUP-test</module>
         <module>OpenUP-assembly</module>
         <module>OpenUP-service</module>
-        <module>EPF</module>
+        <module>EPF-schema</module>
         <module>OpenUP-share</module>
     </modules>
 </project>
