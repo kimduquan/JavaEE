@@ -65,9 +65,9 @@
             <artifactId>hazelcast-all</artifactId>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>OpenUP-share</artifactId>
-            <version>${project.version}</version>
+            <groupId>openup</groupId>
+            <artifactId>OpenUP-api</artifactId>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 

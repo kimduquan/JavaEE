@@ -20,7 +20,7 @@ import org.eclipse.microprofile.graphql.Type;
  */
 @Type
 @RequestScoped
-public class WorkProducts implements openup.share.epf.schema.WorkProducts {
+public class WorkProducts implements openup.api.epf.schema.WorkProducts {
     
     @Inject
     private Cache cache;

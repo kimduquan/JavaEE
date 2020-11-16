@@ -38,6 +38,12 @@
         </dependency>
         <dependency>
             <groupId>openup</groupId>
+            <artifactId>OpenUP-gateway</artifactId>
+            <version>1.0.0</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
             <artifactId>EPF-schema</artifactId>
             <version>1.0.0</version>
         </dependency>
@@ -113,6 +119,8 @@
                         <contextPath>/OpenUP-web-${project.version}</contextPath>
                         <httpPort>${httpPort}</httpPort>
                         <contextPath>/OpenUP-service-${project.version}</contextPath>
+                        <httpPort>${httpPort}</httpPort>
+                        <contextPath>/OpenUP-gateway-${project.version}</contextPath>
                         <httpPort>${httpPort}</httpPort>
                     </systemPropertyVariables>
                 </configuration>

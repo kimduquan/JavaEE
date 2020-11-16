@@ -23,9 +23,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>openup</groupId>
             <artifactId>OpenUP-api</artifactId>
-            <version>${project.version}</version>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 

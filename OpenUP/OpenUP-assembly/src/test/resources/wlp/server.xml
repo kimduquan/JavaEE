@@ -15,6 +15,7 @@
                   httpsPort="8443" />
 
     <application location="OpenUP-web-1.0.0.war" />
+    <application location="OpenUP-gateway-1.0.0.war" />
     <application location="OpenUP-service-1.0.0.war">
         <classloader apiTypeVisibility="+third-party"/>
     </application>

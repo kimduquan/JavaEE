@@ -37,7 +37,7 @@ import javax.ws.rs.core.UriInfo;
  * @author FOXCONN
  */
 @RequestScoped
-public class QueryManager implements openup.share.persistence.Queries {
+public class QueryManager implements openup.api.persistence.Queries {
     
     @Inject
     private Cache cache;

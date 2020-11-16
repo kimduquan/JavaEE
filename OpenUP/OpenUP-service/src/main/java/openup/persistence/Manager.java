@@ -21,7 +21,7 @@ import javax.ws.rs.core.SecurityContext;
  * @author FOXCONN
  */
 @RequestScoped
-public class Manager implements openup.share.persistence.Entities {
+public class Manager implements openup.api.persistence.Entities {
     
     @Inject
     private Cache cache;

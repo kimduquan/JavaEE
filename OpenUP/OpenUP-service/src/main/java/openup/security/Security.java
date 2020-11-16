@@ -32,14 +32,14 @@ import openup.persistence.Application;
 import openup.persistence.Credential;
 import openup.persistence.Session;
 import org.eclipse.microprofile.jwt.JsonWebToken;
-import openup.share.config.ConfigNames;
+import openup.api.config.ConfigNames;
 
 /**
  *
  * @author FOXCONN
  */
 @RequestScoped
-public class Security implements openup.share.security.Security, Serializable {
+public class Security implements openup.api.security.Security, Serializable {
     
     /**
     * 

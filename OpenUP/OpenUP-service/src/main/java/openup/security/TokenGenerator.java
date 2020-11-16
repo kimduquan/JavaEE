@@ -17,7 +17,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import openup.share.config.ConfigNames;
+import openup.api.config.ConfigNames;
 
 /**
  *

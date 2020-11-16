@@ -20,7 +20,7 @@ import org.eclipse.microprofile.graphql.Type;
  */
 @Type
 @RequestScoped
-public class Roles implements openup.share.epf.schema.Roles {
+public class Roles implements openup.api.epf.schema.Roles {
     
     @Inject
     private Cache cache;

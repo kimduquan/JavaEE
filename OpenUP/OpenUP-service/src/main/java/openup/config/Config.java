@@ -9,14 +9,14 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
-import openup.share.config.ConfigNames;
+import openup.api.config.ConfigNames;
 
 /**
  *
  * @author FOXCONN
  */
 @ApplicationScoped
-public class Config implements openup.share.config.Config {
+public class Config implements openup.api.config.Config {
     
     private Map<String, Object> configs;
     
