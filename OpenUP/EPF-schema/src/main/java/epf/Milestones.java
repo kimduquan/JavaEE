@@ -14,14 +14,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 /**
  *
  * @author FOXCONN
  */
-@Type("_Milestones_")
 @Schema(title = "_Milestones_")
 @Entity
 @Table(name = "_MILESTONES_", schema = "EPF")
