@@ -5,18 +5,12 @@
  */
 package openup;
 
-import java.util.HashSet;
-import java.util.Set;
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
-import openup.config.Config;
-import openup.persistence.Manager;
-import openup.persistence.QueryManager;
-import openup.security.Security;
 import org.eclipse.microprofile.auth.LoginConfig;
 import org.eclipse.microprofile.openapi.annotations.Components;
 import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition;
@@ -88,13 +82,4 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 })
 public class OpenUP extends Application {
     
-    @Override
-    public Set<Class<?>> getClasses() {
-        Set<Class<?>> classes = new HashSet<>();
-        classes.add(Config.class);
-        classes.add(Manager.class);
-        classes.add(QueryManager.class);
-        classes.add(Security.class);
-        return classes;
-    }
 }

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -27,19 +28,24 @@ import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.Attribute.PersistentAttributeType;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.ManagedType;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import org.eclipse.microprofile.openapi.annotations.Operation;
-import org.eclipse.microprofile.openapi.annotations.media.Content;
-import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import openup.api.epf.schema.Roles;
 
 /**
  *
  * @author FOXCONN
  */
+@Path("persistence")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
+@RolesAllowed(Roles.ANY_ROLE)
 @RequestScoped
 public class QueryManager implements openup.api.persistence.Queries {
     
@@ -49,18 +55,6 @@ public class QueryManager implements openup.api.persistence.Queries {
     @Context
     private SecurityContext context;
     
-    
-    @Operation(
-            summary = "Native Query", 
-            description = "Execute a SELECT query and return the query results."
-    )
-    @APIResponse(
-            description = "Result",
-            responseCode = "200",
-            content = @Content(
-                    mediaType = MediaType.APPLICATION_JSON
-            )
-    )
     @Override
     public Response getCriteriaQueryResult(
             List<PathSegment> paths,
@@ -178,22 +172,6 @@ public class QueryManager implements openup.api.persistence.Queries {
         return response.build();
     }
     
-    
-    @Operation(
-            summary = "Named Query", 
-            description = "Execute a SELECT query and return the query results."
-    )
-    @APIResponse(
-            description = "Result",
-            responseCode = "200",
-            content = @Content(
-                    mediaType = MediaType.APPLICATION_JSON
-            )
-    )
-    @APIResponse(
-            description = "a query has not been defined with the given name",
-            responseCode = "404"
-    )
     @Override
     public Response getNamedQueryResult(
             String name,
