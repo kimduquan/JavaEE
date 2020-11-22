@@ -12,6 +12,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
+import openup.api.config.ConfigNames;
 
 /**
  *
@@ -25,7 +26,7 @@ public class Config {
     @PostConstruct
     void postConstruct(){
         configs = new ConcurrentHashMap<>();
-        String configUrl = System.getProperty("openup.config.url");
+        String configUrl = System.getProperty(ConfigNames.OPENUP_CONFIG_URL);
         Client client = ClientBuilder.newClient();
         Map data = client.target(configUrl)
                 .request(MediaType.APPLICATION_JSON)

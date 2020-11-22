@@ -28,9 +28,13 @@ import javax.persistence.metamodel.Attribute.PersistentAttributeType;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.ManagedType;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 /**
  *
@@ -45,6 +49,18 @@ public class QueryManager implements openup.api.persistence.Queries {
     @Context
     private SecurityContext context;
     
+    
+    @Operation(
+            summary = "Native Query", 
+            description = "Execute a SELECT query and return the query results."
+    )
+    @APIResponse(
+            description = "Result",
+            responseCode = "200",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON
+            )
+    )
     @Override
     public Response getCriteriaQueryResult(
             List<PathSegment> paths,
@@ -162,6 +178,22 @@ public class QueryManager implements openup.api.persistence.Queries {
         return response.build();
     }
     
+    
+    @Operation(
+            summary = "Named Query", 
+            description = "Execute a SELECT query and return the query results."
+    )
+    @APIResponse(
+            description = "Result",
+            responseCode = "200",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON
+            )
+    )
+    @APIResponse(
+            description = "a query has not been defined with the given name",
+            responseCode = "404"
+    )
     @Override
     public Response getNamedQueryResult(
             String name,

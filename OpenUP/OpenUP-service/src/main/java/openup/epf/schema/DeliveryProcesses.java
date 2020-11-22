@@ -10,15 +10,19 @@ import epf.schema.delivery_processes.DeliveryProcess;
 import java.security.Principal;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.ws.rs.core.MediaType;
 import openup.persistence.Cache;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 /**
  *
  * @author FOXCONN
  */
-@Type
+@Type("Delivery_Processes")
 @RequestScoped
 public class DeliveryProcesses implements openup.api.epf.schema.DeliveryProcesses {
     
@@ -29,6 +33,18 @@ public class DeliveryProcesses implements openup.api.epf.schema.DeliveryProcesse
     private Principal principal;
     
     @Name("Contents")
+    @Operation(
+            summary = "Delivery Processes", 
+            description = "This provides a list of delivery processes that have been published."
+    )
+    @APIResponse(
+            description = "Delivery Process",
+            responseCode = "200",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @org.eclipse.microprofile.openapi.annotations.media.Schema(implementation = DeliveryProcess.class)
+            )
+    )
     @Override
     public List<DeliveryProcess> getDeliveryProcesses() throws Exception{
         return cache.getNamedQueryResult(

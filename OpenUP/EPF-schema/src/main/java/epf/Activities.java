@@ -21,8 +21,8 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  *
  * @author FOXCONN
  */
-@Type
-@Schema(title = "Activities")
+@Type("_Activities_")
+@Schema(title = "_Activities_")
 @Entity
 @Table(name = "_ACTIVITIES_", schema = "EPF")
 public class Activities {

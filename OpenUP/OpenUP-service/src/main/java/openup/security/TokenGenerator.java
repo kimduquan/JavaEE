@@ -5,6 +5,7 @@
  */
 package openup.security;
 
+import openup.api.security.Token;
 import com.ibm.websphere.security.jwt.JwtBuilder;
 import java.io.Serializable;
 import java.security.KeyFactory;

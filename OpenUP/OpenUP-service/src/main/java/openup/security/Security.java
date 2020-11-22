@@ -5,6 +5,7 @@
  */
 package openup.security;
 
+import openup.api.security.Token;
 import epf.schema.roles.Role;
 import java.io.Serializable;
 import java.net.URI;
@@ -21,6 +22,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.inject.Inject;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.SecurityContext;
@@ -33,6 +35,10 @@ import openup.persistence.Credential;
 import openup.persistence.Session;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import openup.api.config.ConfigNames;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 /**
  *
@@ -64,6 +70,28 @@ public class Security implements openup.api.security.Security, Serializable {
     @ConfigProperty(name = ConfigNames.JWT_EXPIRE_TIMEUNIT)
     private ChronoUnit jwtExpTimeUnit;
     
+    @Operation(
+            summary = "login", 
+            description = "login",
+            operationId = "login"
+    )
+    @RequestBody(
+            required = true,
+            content = {
+                @Content(
+                        mediaType = MediaType.APPLICATION_FORM_URLENCODED,
+                        example = "{\"username\":\"\",\"password\":\"\"}"
+                )
+            }
+    )
+    @APIResponse(
+            name = "token", 
+            description = "Token",
+            responseCode = "200",
+            content = @Content(
+                    mediaType = MediaType.TEXT_PLAIN
+            )
+    )
     @Override
     public Response login(
             String username,
@@ -92,6 +120,27 @@ public class Security implements openup.api.security.Security, Serializable {
         return response.entity(token).build();
     }
     
+    
+    @Operation(
+            summary = "runAs", 
+            description = "runAs",
+            operationId = "runAs"
+    )
+    @RequestBody(
+            required = true,
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_FORM_URLENCODED,
+                    example = "{\"runAs\":\"ADMIN\"}"
+            )
+    )
+    @APIResponse(
+            name = "token", 
+            description = "Token",
+            responseCode = "200",
+            content = @Content(
+                    mediaType = MediaType.TEXT_PLAIN
+            )
+    )
     @Override
     public Response runAs(
             String role,
@@ -112,6 +161,16 @@ public class Security implements openup.api.security.Security, Serializable {
         return response.build();
     }
     
+    @Operation(
+            summary = "logOut", 
+            description = "logOut",
+            operationId = "logOut"
+    )
+    @APIResponse(
+            name = "OK", 
+            description = "OK",
+            responseCode = "200"
+    )
     @Override
     public Response logOut(
             SecurityContext context
@@ -131,13 +190,29 @@ public class Security implements openup.api.security.Security, Serializable {
         return response.build();
     }
     
+    @Operation(
+            summary = "authenticate", 
+            description = "authenticate",
+            operationId = "authenticate"
+    )
+    @APIResponse(
+            name = "OK", 
+            description = "OK",
+            responseCode = "200"
+    )
+    @APIResponse(
+            name = "Unauthorized", 
+            description = "Unauthorized",
+            responseCode = "401"
+    )
     @Override
     public Response authenticate(SecurityContext context){
         ResponseBuilder response = Response.status(Response.Status.UNAUTHORIZED);
         Principal principal = context.getUserPrincipal();
         if(principal instanceof JsonWebToken){
             JsonWebToken jwt = (JsonWebToken) principal;
-            response.entity(jwt).status(Response.Status.OK);
+            Token token = buildToken(jwt);
+            response.entity(token).status(Response.Status.OK);
         }
         return response.build();
     }
@@ -201,5 +276,19 @@ public class Security implements openup.api.security.Security, Serializable {
         query.setParameter(1, userName.toUpperCase());
         query.setParameter(2, String.valueOf(true));
         return query.getResultStream().count() > 0;
+    }
+    
+    Token buildToken(JsonWebToken jwt){
+        Token token = new Token();
+        token.setAudience(jwt.getAudience());
+        token.setExpirationTime(jwt.getExpirationTime());
+        token.setGroups(jwt.getGroups());
+        token.setIssuedAtTime(jwt.getIssuedAtTime());
+        token.setIssuer(jwt.getIssuer());
+        token.setName(jwt.getName());
+        token.setRawToken(jwt.getRawToken());
+        token.setSubject(jwt.getSubject());
+        token.setTokenID(jwt.getTokenID());
+        return token;
     }
 }

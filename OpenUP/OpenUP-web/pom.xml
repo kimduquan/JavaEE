@@ -15,6 +15,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>openup</groupId>
+            <artifactId>OpenUP-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
         </dependency>

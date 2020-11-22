@@ -21,15 +21,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.UriInfo;
 import openup.api.epf.schema.Roles;
-import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.Explode;
 import org.eclipse.microprofile.openapi.annotations.enums.ParameterIn;
 import org.eclipse.microprofile.openapi.annotations.enums.ParameterStyle;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
-import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
-import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 /**
  *
@@ -43,17 +40,6 @@ public interface Queries {
     
     @GET
     @Path("query/{criteria: .+}")
-    @Operation(
-            summary = "Native Query", 
-            description = "Execute a SELECT query and return the query results."
-    )
-    @APIResponse(
-            description = "Result",
-            responseCode = "200",
-            content = @Content(
-                    mediaType = MediaType.APPLICATION_JSON
-            )
-    )
     @PermitAll
     public Response getCriteriaQueryResult(
             @PathParam("criteria")
@@ -75,21 +61,6 @@ public interface Queries {
     
     @GET
     @Path("queries/{query}")
-    @Operation(
-            summary = "Named Query", 
-            description = "Execute a SELECT query and return the query results."
-    )
-    @APIResponse(
-            description = "Result",
-            responseCode = "200",
-            content = @Content(
-                    mediaType = MediaType.APPLICATION_JSON
-            )
-    )
-    @APIResponse(
-            description = "a query has not been defined with the given name",
-            responseCode = "404"
-    )
     Response getNamedQueryResult(
             @PathParam("query")
             String name,

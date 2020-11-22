@@ -118,10 +118,11 @@
                     <systemPropertyVariables>
                         <contextPath>/OpenUP-web-${project.version}</contextPath>
                         <httpPort>${httpPort}</httpPort>
-                        <contextPath>/OpenUP-service-${project.version}</contextPath>
+						<contextPath>/OpenUP-service-${project.version}</contextPath>
                         <httpPort>${httpPort}</httpPort>
                         <contextPath>/OpenUP-gateway-${project.version}</contextPath>
                         <httpPort>${httpPort}</httpPort>
+                        <openup.config.url>http://localhost:${httpPort}/OpenUP-service-${project.version}/config</openup.config.url>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>

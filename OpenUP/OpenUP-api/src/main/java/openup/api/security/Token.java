@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.security;
+package openup.api.security;
 
 import java.util.Set;
 

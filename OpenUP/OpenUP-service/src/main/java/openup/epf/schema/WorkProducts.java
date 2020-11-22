@@ -10,15 +10,19 @@ import java.security.Principal;
 import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.ws.rs.core.MediaType;
 import openup.persistence.Cache;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 /**
  *
  * @author FOXCONN
  */
-@Type
+@Type("Work_Products")
 @RequestScoped
 public class WorkProducts implements openup.api.epf.schema.WorkProducts {
     
@@ -29,6 +33,18 @@ public class WorkProducts implements openup.api.epf.schema.WorkProducts {
     private Principal principal;
     
     @Name("Contents")
+    @Operation(
+            summary = "Work Products", 
+            description = "List of work products organized by domain."
+    )
+    @APIResponse(
+            description = "Domain",
+            responseCode = "200",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @org.eclipse.microprofile.openapi.annotations.media.Schema(implementation = Domain.class)
+            )
+    )
     @Override
     public List<Domain> getDomains() throws Exception{
         return cache.getNamedQueryResult(
