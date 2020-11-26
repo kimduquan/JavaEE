@@ -36,7 +36,7 @@ public class Config {
         });
     }
     
-    public Object getConfig(String name, Object def){
-        return configs.getOrDefault(name, def);
+    public String getConfig(String name, String def){
+        return (String)configs.getOrDefault(name, def);
     }
 }

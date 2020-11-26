@@ -118,10 +118,7 @@
                     <systemPropertyVariables>
                         <contextPath>/OpenUP-web-${project.version}</contextPath>
                         <httpPort>${httpPort}</httpPort>
-                        <contextPath>/OpenUP-gateway-${project.version}</contextPath>
-                        <httpPort>${httpPort}</httpPort>
-			<contextPath>/OpenUP-service-${project.version}</contextPath>
-                        <httpPort>${httpPort}</httpPort>
+                        <httpsPort>${httpsPort}</httpsPort>
                         <openup.config.url>http://localhost:${httpPort}/OpenUP-service-${project.version}/config</openup.config.url>
                     </systemPropertyVariables>
                 </configuration>

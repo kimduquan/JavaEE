@@ -21,4 +21,22 @@
     <welcome-file-list>
         <welcome-file>faces/index.xhtml</welcome-file>
     </welcome-file-list>
+    <security-constraint>
+        <auth-constraint>
+            <description></description>
+            <role-name>ANY_ROLE</role-name>
+        </auth-constraint>
+        <display-name>OpenUP</display-name>
+        <user-data-constraint>
+            <description></description>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+        <web-resource-collection>
+            <description></description>
+            <url-pattern>/faces/*</url-pattern>
+            <web-resource-name>OpenUP</web-resource-name>
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
+        </web-resource-collection>
+    </security-constraint>
 </web-app>
