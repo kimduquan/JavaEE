@@ -25,7 +25,7 @@ public class Config {
     @PostConstruct
     void postConstruct(){
         configs = new ConcurrentHashMap<>();
-        String configUrl = System.getProperty(ConfigNames.OPENUP_CONFIG_URL);
+        String configUrl = System.getenv(ConfigNames.OPENUP_CONFIG_URL);
         Client client = ClientBuilder.newClient();
         Map data = client.target(configUrl)
                 .request(MediaType.APPLICATION_JSON)

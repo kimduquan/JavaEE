@@ -29,7 +29,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
  * @author FOXCONN
  */
 @ApplicationScoped
-@ApplicationPath("/openup")
+@ApplicationPath("/")
 @LoginConfig(authMethod="MP-JWT", realmName="OpenUP")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)

@@ -30,10 +30,7 @@ public class Config implements openup.api.config.Config {
     @PostConstruct
     void postConstruct(){
         configs = new ConcurrentHashMap<>();
-        String url = System.getProperty(ConfigNames.OPENUP_URL);
-        if(url == null){
-            url = "http://localhost:9080/OpenUP-service-1.0.0/openup/";
-        }
+        String url = System.getenv(ConfigNames.OPENUP_URL);
         configs.put(ConfigNames.OPENUP_URL, url);
         configs.put(ConfigNames.OPENUP_CONFIG_URL, url + "config");
         configs.put(ConfigNames.OPENUP_SECURITY_URL, url + "security");
