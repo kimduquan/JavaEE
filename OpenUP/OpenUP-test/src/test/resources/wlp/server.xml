@@ -40,7 +40,7 @@
     
     <mpJwt 
         id="OpenUP"
-        audiences ="http://localhost:${httpsPort}/">
+        audiences ="http://localhost:${httpPort}/,https://localhost:${httpsPort}/">
     </mpJwt>
 
     <dataSource id="epf" jndiName="jdbc/epf">

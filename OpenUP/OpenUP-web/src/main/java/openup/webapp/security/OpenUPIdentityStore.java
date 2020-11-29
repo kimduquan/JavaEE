@@ -5,6 +5,7 @@
  */
 package openup.webapp.security;
 
+import java.net.URL;
 import java.util.Set;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -46,16 +47,22 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
         formData.putSingle("username", credential.getCaller());
         formData.putSingle("password", credential.getPasswordAsString());
         String security = config.getConfig(ConfigNames.OPENUP_SECURITY_URL, "");
-        String url = config.getConfig(ConfigNames.OPENUP_URL, "");
         String header = config.getConfig(ConfigNames.OPENUP_SECURITY_JWT_HEADER, "");
         String format = config.getConfig(ConfigNames.OPENUP_SECURITY_JWT_FORMAT, "");
         Response response = client.target(security)
-                .queryParam("url", url)
+                .queryParam("url", "http://localhost:9080/")
                 .request(MediaType.TEXT_PLAIN)
                 .post(Entity.form(formData));
+        String token = "";
         if(response.getStatus() == Response.Status.OK.getStatusCode()){
-            String token = response.readEntity(String.class);
-            Token jwt = client.target(security)
+            token = response.readEntity(String.class);
+        }
+        client.close();
+        
+        if(!token.isEmpty()){
+            client = ClientBuilder.newClient();
+            response = client
+                    .target(security)
                     .request(MediaType.APPLICATION_JSON)
                     .header(
                             header, 
@@ -64,13 +71,15 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
                                     token
                             )
                     )
-                    .get()
-                    .readEntity(Token.class);
-            JWTPrincipal principal = new JWTPrincipal(jwt.getName());
-            principal.setToken(jwt.getRawToken());
-            result = new CredentialValidationResult(principal, jwt.getGroups());
+                    .get();
+            if(response.getStatus() == Response.Status.OK.getStatusCode()){
+                Token jwt = response.readEntity(Token.class);
+                JWTPrincipal principal = new JWTPrincipal(jwt.getName());
+                principal.setToken(jwt.getRawToken());
+                result = new CredentialValidationResult(principal, jwt.getGroups());
+            }
+            client.close();
         }
-        client.close();
         return result;
     }
     

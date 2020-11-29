@@ -18,6 +18,9 @@ import javax.ws.rs.core.MediaType;
 import openup.persistence.Cache;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 /**
  *
@@ -39,6 +42,18 @@ public class Roles implements openup.api.epf.schema.Roles {
     
     @Name("Contents")
     @Override
+    @Operation(
+            summary = "Roles", 
+            description = "This category lists roles organized by role set."
+    )
+    @APIResponse(
+            description = "Role Set",
+            responseCode = "200",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @org.eclipse.microprofile.openapi.annotations.media.Schema(implementation = RoleSet.class)
+            )
+    )
     public List<RoleSet> getRoleSets() throws Exception{
         return cache.getNamedQueryResult(
                 principal,

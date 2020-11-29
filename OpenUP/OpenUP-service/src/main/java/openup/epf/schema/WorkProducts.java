@@ -18,6 +18,9 @@ import javax.ws.rs.core.MediaType;
 import openup.persistence.Cache;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 /**
  *
@@ -27,7 +30,7 @@ import org.eclipse.microprofile.graphql.Type;
 @Path("work-products")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@RolesAllowed(openup.api.epf.schema.Roles.ANY_ROLE)
+@RolesAllowed(Roles.ANY_ROLE)
 @RequestScoped
 public class WorkProducts implements openup.api.epf.schema.WorkProducts {
     
@@ -39,6 +42,18 @@ public class WorkProducts implements openup.api.epf.schema.WorkProducts {
     
     @Name("Contents")
     @Override
+    @Operation(
+            summary = "Work Products", 
+            description = "List of work products organized by domain."
+    )
+    @APIResponse(
+            description = "Domain",
+            responseCode = "200",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @org.eclipse.microprofile.openapi.annotations.media.Schema(implementation = Domain.class)
+            )
+    )
     public List<Domain> getDomains() throws Exception{
         return cache.getNamedQueryResult(
                 principal,

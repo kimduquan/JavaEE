@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -37,6 +38,9 @@ import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import openup.api.epf.schema.Roles;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 /**
  *
@@ -47,7 +51,7 @@ import openup.api.epf.schema.Roles;
 @Produces(MediaType.APPLICATION_JSON)
 @RolesAllowed(Roles.ANY_ROLE)
 @RequestScoped
-public class QueryManager implements openup.api.persistence.Queries {
+public class Queries implements openup.api.persistence.Queries {
     
     @Inject
     private Cache cache;
@@ -56,6 +60,18 @@ public class QueryManager implements openup.api.persistence.Queries {
     private SecurityContext context;
     
     @Override
+    @PermitAll
+    @Operation(
+            summary = "Native Query", 
+            description = "Execute a SELECT query and return the query results."
+    )
+    @APIResponse(
+            description = "Result",
+            responseCode = "200",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON
+            )
+    )
     public Response getCriteriaQueryResult(
             List<PathSegment> paths,
             Integer firstResult,
@@ -173,6 +189,21 @@ public class QueryManager implements openup.api.persistence.Queries {
     }
     
     @Override
+    @Operation(
+            summary = "Named Query", 
+            description = "Execute a SELECT query and return the query results."
+    )
+    @APIResponse(
+            description = "Result",
+            responseCode = "200",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON
+            )
+    )
+    @APIResponse(
+            description = "a query has not been defined with the given name",
+            responseCode = "404"
+    )
     public Response getNamedQueryResult(
             String name,
             Integer firstResult,

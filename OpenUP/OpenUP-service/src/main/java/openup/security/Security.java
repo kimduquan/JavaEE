@@ -18,12 +18,14 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.inject.Inject;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.SecurityContext;
@@ -36,13 +38,17 @@ import openup.persistence.Credential;
 import openup.persistence.Session;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import openup.api.config.ConfigNames;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 /**
  *
  * @author FOXCONN
  */
 @Path("security")
-@RolesAllowed(openup.api.epf.schema.Roles.ANY_ROLE)
+@RolesAllowed(Roles.ANY_ROLE)
 @RequestScoped
 public class Security implements openup.api.security.Security, Serializable {
     
@@ -69,7 +75,35 @@ public class Security implements openup.api.security.Security, Serializable {
     @ConfigProperty(name = ConfigNames.JWT_EXPIRE_TIMEUNIT)
     private ChronoUnit jwtExpTimeUnit;
     
+    @PermitAll
     @Override
+    @Operation(
+            summary = "login", 
+            description = "login",
+            operationId = "login"
+    )
+    @RequestBody(
+            required = true,
+            content = {
+                @Content(
+                        mediaType = MediaType.APPLICATION_FORM_URLENCODED,
+                        example = "{\"username\":\"\",\"password\":\"\"}"
+                )
+            }
+    )
+    @APIResponse(
+            name = "token", 
+            description = "Token",
+            responseCode = "200",
+            content = @Content(
+                    mediaType = MediaType.TEXT_PLAIN
+            )
+    )
+    @APIResponse(
+            name = "Unauthorized", 
+            description = "Unauthorized",
+            responseCode = "401"
+    )
     public Response login(
             String username,
             String password,
@@ -98,6 +132,26 @@ public class Security implements openup.api.security.Security, Serializable {
     }
     
     @Override
+    @Operation(
+            summary = "runAs", 
+            description = "runAs",
+            operationId = "runAs"
+    )
+    @RequestBody(
+            required = true,
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_FORM_URLENCODED,
+                    example = "{\"runAs\":\"ADMIN\"}"
+            )
+    )
+    @APIResponse(
+            name = "token", 
+            description = "Token",
+            responseCode = "200",
+            content = @Content(
+                    mediaType = MediaType.TEXT_PLAIN
+            )
+    )
     public Response runAs(
             String role,
             SecurityContext context,
@@ -118,6 +172,16 @@ public class Security implements openup.api.security.Security, Serializable {
     }
     
     @Override
+    @Operation(
+            summary = "logOut", 
+            description = "logOut",
+            operationId = "logOut"
+    )
+    @APIResponse(
+            name = "OK", 
+            description = "OK",
+            responseCode = "200"
+    )
     public Response logOut(
             SecurityContext context
             ) throws Exception{
@@ -137,6 +201,21 @@ public class Security implements openup.api.security.Security, Serializable {
     }
     
     @Override
+    @Operation(
+            summary = "authenticate", 
+            description = "authenticate",
+            operationId = "authenticate"
+    )
+    @APIResponse(
+            name = "OK", 
+            description = "OK",
+            responseCode = "200"
+    )
+    @APIResponse(
+            name = "Unauthorized", 
+            description = "Unauthorized",
+            responseCode = "401"
+    )
     public Response authenticate(SecurityContext context){
         ResponseBuilder response = Response.status(Response.Status.UNAUTHORIZED);
         Principal principal = context.getUserPrincipal();

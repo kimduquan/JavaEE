@@ -21,6 +21,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import openup.api.epf.schema.Roles;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 /**
  *
@@ -31,7 +35,7 @@ import openup.api.epf.schema.Roles;
 @Produces(MediaType.APPLICATION_JSON)
 @RolesAllowed(Roles.ANY_ROLE)
 @RequestScoped
-public class Manager implements openup.api.persistence.Entities {
+public class Entities implements openup.api.persistence.Entities {
     
     @Inject
     private Cache cache;
@@ -40,6 +44,27 @@ public class Manager implements openup.api.persistence.Entities {
     private SecurityContext context;
     
     @Override
+    @Operation(
+            summary = "persist", 
+            description = "Make an instance managed and persistent."
+    )
+    @RequestBody(
+            description = "entity instance",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON),
+            required = true
+    )
+    @APIResponse(
+            description = "OK",
+            responseCode = "200"
+    )
+    @APIResponse(
+            description = "entity name is not present",
+            responseCode = "404"
+    )
+    @APIResponse(
+            description = "any unexpected error(s) occur(s) during deserialization",
+            responseCode = "400"
+    )
     public Response persist(
             String name,
             String id,
@@ -60,6 +85,25 @@ public class Manager implements openup.api.persistence.Entities {
     }
     
     @Override
+    @Operation(
+            summary = "Find by primary key.", 
+            description = "Search for an entity of the specified class and primary key."
+    )
+    @APIResponse(
+            responseCode = "200",
+            description = "the found entity instance",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON
+            )
+    )
+    @APIResponse(
+            description = "entity name is not present",
+            responseCode = "404"
+    )
+    @APIResponse(
+            description = "the entity does not exist",
+            responseCode = "404"
+    )
     public Response find(
             String name,
             String id) throws Exception{
@@ -72,6 +116,22 @@ public class Manager implements openup.api.persistence.Entities {
     }
     
     @Override
+    @Operation(
+            summary = "remove", 
+            description = "Remove the entity instance."
+    )
+    @APIResponse(
+            description = "OK",
+            responseCode = "200"
+    )
+    @APIResponse(
+            description = "entity name is not present",
+            responseCode = "404"
+    )
+    @APIResponse(
+            description = "the entity does not exist",
+            responseCode = "404"
+    )
     public Response remove(
             String name,
             String id
