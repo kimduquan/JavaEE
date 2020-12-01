@@ -33,7 +33,7 @@
         </user-data-constraint>
         <web-resource-collection>
             <description></description>
-            <url-pattern>/faces/*</url-pattern>
+            <url-pattern>/*</url-pattern>
             <web-resource-name>OpenUP</web-resource-name>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
