@@ -27,7 +27,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  * @author FOXCONN
  */
 @Type
-@Path("work-products")
+@Path("schema/work-products")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @RolesAllowed(Roles.ANY_ROLE)

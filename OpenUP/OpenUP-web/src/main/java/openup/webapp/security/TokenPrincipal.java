@@ -11,19 +11,19 @@ import javax.security.enterprise.CallerPrincipal;
  *
  * @author FOXCONN
  */
-public class JWTPrincipal extends CallerPrincipal {
+public class TokenPrincipal extends CallerPrincipal {
     
-    private String token;
+    private Token token;
     
-    public JWTPrincipal(String name){
+    public TokenPrincipal(String name){
         super(name);
     }
 
-    public String getToken() {
+    public Token getToken() {
         return token;
     }
 
-    public void setToken(String token) {
+    public void setToken(Token token) {
         this.token = token;
     }
 }

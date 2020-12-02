@@ -7,6 +7,7 @@ package openup.webapp;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.faces.annotation.FacesConfig;
+import javax.inject.Named;
 import javax.security.enterprise.authentication.mechanism.http.AutoApplySession;
 import javax.security.enterprise.authentication.mechanism.http.BasicAuthenticationMechanismDefinition;
 import javax.security.enterprise.authentication.mechanism.http.RememberMe;
@@ -20,6 +21,6 @@ import javax.security.enterprise.authentication.mechanism.http.RememberMe;
 @AutoApplySession
 @BasicAuthenticationMechanismDefinition(realmName = "OpenUP")
 @FacesConfig
-public class WebApp {
-    
+@Named("webapp_application")
+public class Application {
 }

@@ -17,7 +17,7 @@ import javax.ws.rs.core.MediaType;
  *
  * @author FOXCONN
  */
-@Path("tasks")
+@Path("schema/tasks")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public interface Tasks {

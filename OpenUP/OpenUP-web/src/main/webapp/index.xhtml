@@ -1,7 +1,9 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
 
     <body>
 
@@ -11,6 +13,76 @@
             </ui:define>
 
             <ui:define name="left">
+                <p:tree
+                    id="delivery-processes" 
+                    value="#{webapp_view.deliveryProcesses}"
+                    var="data"
+                    dynamic="true"
+                    draggable="true"
+                    droppable="true"
+                    dragdropScope="delivery-processes"
+                    dragMode="parent"
+                    dropRestrict="sibling">
+                    <p:treeNode 
+                        type="delivery-process" 
+                        icon="icon-delivery-process"
+                        collapsedIcon="collapsed-icon"
+                        expandedIcon="expanded-icon">
+                        <h:outputText value="#{data.name}"/>
+                    </p:treeNode
+                    <p:treeNode 
+                        type="phase" 
+                        icon="icon-phase"
+                        collapsedIcon="collapsed-icon"
+                        expandedIcon="expanded-icon">
+                        <h:outputText value="#{data.name}"/>
+                    </p:treeNode>
+                    <p:treeNode 
+                        type="iteration" 
+                        icon="icon-iteration"
+                        collapsedIcon="collapsed-icon"
+                        expandedIcon="expanded-icon">
+                        <h:outputText value="#{data.name}"/>
+                    </p:treeNode>
+                    <p:treeNode 
+                        type="activity" 
+                        icon="icon-activity"
+                        collapsedIcon="collapsed-icon"
+                        expandedIcon="expanded-icon">
+                        <h:outputText value="#{data.name}"/>
+                    </p:treeNode>
+                    <p:treeNode 
+                        type="task" 
+                        icon="icon-task"
+                        collapsedIcon="collapsed-icon"
+                        expandedIcon="expanded-icon">
+                        <h:outputText value="#{data.name}"/>
+                    </p:treeNode>
+                    <p:ajax event="expand"/>
+                    <p:ajax event="collapse"/>
+                    <p:ajax event="select"/>
+                </p:tree>
+                <p:tree
+                    id="roles" 
+                    value = "${webapp_view.roles}"
+                    var = "role-set"
+                    dynamic="true">
+                    
+                </p:tree>
+                <p:tree 
+                    id="work-products" 
+                    value = "#{webapp_view.workProducts}"
+                    var = "domain"
+                    dynamic="true">
+                    
+                </p:tree>
+                <p:tree 
+                    id="tasks" 
+                    value="#{webapp_view.tasks}"
+                    var = "discipline"
+                    dynamic="true">
+                    
+                </p:tree>
             </ui:define>
 
             <ui:define name="content">

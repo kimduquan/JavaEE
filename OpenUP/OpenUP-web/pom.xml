@@ -23,6 +23,11 @@
             <artifactId>OpenUP-api</artifactId>
             <version>1.0.0</version>
         </dependency>-->
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-schema</artifactId>
+            <version>1.0.0</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/org.primefaces/primefaces -->
         <dependency>
             <groupId>org.primefaces</groupId>

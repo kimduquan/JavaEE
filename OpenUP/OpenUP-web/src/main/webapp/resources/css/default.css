@@ -27,3 +27,31 @@ a:link:hover, a:visited:hover  {
   font-weight : bold;
   text-decoration : underline;
 }
+
+.collapsed-icon {
+    background-image: url("#{resource['images/plus.gif']}");
+}
+
+.expanded-icon {
+    background-image: url("#{resource['images/minus.gif']}");
+}
+
+.icon-delivery-process {
+    background-image: url("#{resource['images/delproc_obj.gif']}");
+}
+
+.icon-phase {
+    background-image: url("#{resource['images/Phase.gif']}");
+}
+
+.icon-iteration {
+    background-image: url("#{resource['images/Iteration.gif']}");
+}
+
+.icon-activity {
+    background-image: url("#{resource['images/Activity.gif']}");
+}
+
+.icon-task {
+    background-image: url("#{resource['images/Task.gif']}");
+}

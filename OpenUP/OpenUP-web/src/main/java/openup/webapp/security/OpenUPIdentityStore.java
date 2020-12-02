@@ -5,16 +5,13 @@
  */
 package openup.webapp.security;
 
-import java.net.URL;
 import java.util.Set;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.security.enterprise.CallerPrincipal;
-import javax.security.enterprise.authentication.mechanism.http.AutoApplySession;
 import javax.security.enterprise.authentication.mechanism.http.RememberMe;
 import javax.security.enterprise.credential.BasicAuthenticationCredential;
 import javax.security.enterprise.credential.RememberMeCredential;
-import javax.security.enterprise.credential.UsernamePasswordCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStore;
 import javax.security.enterprise.identitystore.RememberMeIdentityStore;
@@ -74,8 +71,8 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
                     .get();
             if(response.getStatus() == Response.Status.OK.getStatusCode()){
                 Token jwt = response.readEntity(Token.class);
-                JWTPrincipal principal = new JWTPrincipal(jwt.getName());
-                principal.setToken(jwt.getRawToken());
+                TokenPrincipal principal = new TokenPrincipal(jwt.getName());
+                principal.setToken(jwt);
                 result = new CredentialValidationResult(principal, jwt.getGroups());
             }
             client.close();
@@ -107,8 +104,8 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
                     .get();
         if(response.getStatus() == Status.OK.getStatusCode()){
             Token jwt = response.readEntity(Token.class);
-            JWTPrincipal principal = new JWTPrincipal(jwt.getName());
-            principal.setToken(jwt.getRawToken());
+            TokenPrincipal principal = new TokenPrincipal(jwt.getName());
+            principal.setToken(jwt);
             result = new CredentialValidationResult(principal, jwt.getGroups());
         }
         client.close();
@@ -117,9 +114,9 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
 
     @Override
     public String generateLoginToken(CallerPrincipal caller, Set<String> groups) {
-        if(caller instanceof JWTPrincipal){
-            JWTPrincipal principal = (JWTPrincipal) caller;
-            return principal.getToken();
+        if(caller instanceof TokenPrincipal){
+            TokenPrincipal principal = (TokenPrincipal) caller;
+            return principal.getToken().getRawToken();
         }
         return "";
     }

@@ -18,12 +18,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.UriInfo;
-import org.eclipse.microprofile.openapi.annotations.enums.Explode;
-import org.eclipse.microprofile.openapi.annotations.enums.ParameterIn;
-import org.eclipse.microprofile.openapi.annotations.enums.ParameterStyle;
-import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
-import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 
 /**
  *
@@ -38,15 +32,6 @@ public interface Queries {
     @Path("query/{criteria: .+}")
     public Response getCriteriaQueryResult(
             @PathParam("criteria")
-            @Parameter(
-                    name = "criteria",
-                    in = ParameterIn.PATH,
-                    style = ParameterStyle.MATRIX,
-                    explode = Explode.TRUE,
-                    required = true,
-                    allowReserved = true,
-                    schema = @Schema(type = SchemaType.OBJECT)
-            )
             List<PathSegment> paths,
             @QueryParam("first")
             Integer firstResult,
