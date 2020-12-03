@@ -10,6 +10,7 @@ import java.security.Principal;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.security.enterprise.SecurityContext;
 import openup.webapp.security.TokenPrincipal;
 import openup.webapp.security.Token;
 
@@ -24,9 +25,18 @@ public class Session implements Serializable {
     private Token token;
     
     @Inject
-    public Session(Principal principal){
-        if(principal instanceof TokenPrincipal){
-            token = ((TokenPrincipal)principal).getToken();
+    private SecurityContext context;
+    
+    public Session(){
+        
+    }
+    
+    public Token getToken(){
+        if(token == null){
+            if(context.getCallerPrincipal() instanceof TokenPrincipal){
+                token = ((TokenPrincipal)context.getCallerPrincipal()).getToken();
+            }
         }
+        return token;
     }
 }

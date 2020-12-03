@@ -3,13 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.webapp;
+package openup.webapp.view;
 
+import openup.webapp.event.Event;
 import epf.DeliveryProcesses;
 import epf.schema.roles.RoleSet;
 import epf.schema.tasks.Discipline;
 import epf.schema.work_products.Domain;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,6 +20,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import openup.webapp.persistence.Entity;
 import openup.webapp.persistence.Persistence;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -34,6 +37,7 @@ public class View implements Serializable {
     private List<RoleSet> roleSets;
     private List<Domain> domains;
     private List<Discipline> disciplines;
+    private List<Entity> entities;
     
     private TreeNode rootDeliveryProcesses;
     private TreeNode rootRoles;
@@ -43,6 +47,8 @@ public class View implements Serializable {
     @Inject
     private Persistence persistence;
     
+    @Inject Event event;
+    
     @PostConstruct
     void postConstruct(){
         try {
@@ -50,6 +56,7 @@ public class View implements Serializable {
             domains = persistence.getDomains().collect(Collectors.toList());
             roleSets = persistence.getRoleSets().collect(Collectors.toList());
             disciplines = persistence.getDisciplines().collect(Collectors.toList());
+            entities = new ArrayList<>();
         } 
         catch (Exception ex) {
             Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
@@ -88,6 +95,10 @@ public class View implements Serializable {
         return this.rootTasks;
     }
     
+    public List<Entity> getEntities(){
+        return entities;
+    }
+    
     TreeNode addDeliveryProcess(DeliveryProcesses dp){
         return new DefaultTreeNode("delivery-process", dp, this.rootDeliveryProcesses);
     }
@@ -102,5 +113,9 @@ public class View implements Serializable {
     
     TreeNode addDiscipline(Discipline d){
         return new DefaultTreeNode("discipline", d, this.rootTasks);
+    }
+    
+    public Event getEvent(){
+        return event;
     }
 }

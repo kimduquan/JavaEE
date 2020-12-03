@@ -55,3 +55,27 @@ a:link:hover, a:visited:hover  {
 .icon-task {
     background-image: url("#{resource['images/Task.gif']}");
 }
+
+.icon-milestone {
+    background-image: url("#{resource['images/Milestone.gif']}");
+}
+
+.icon-role-set {
+    background-image: url("#{resource['images/RoleSet.gif']}");
+}
+
+.icon-role {
+    background-image: url("#{resource['images/Role.gif']}");
+}
+
+.icon-domain {
+    background-image: url("#{resource['images/Domain.gif']}");
+}
+
+.icon-artifact {
+    background-image: url("#{resource['images/Artifact.gif']}");
+}
+
+.icon-discipline {
+    background-image: url("#{resource['images/Discipline.gif']}");
+}
