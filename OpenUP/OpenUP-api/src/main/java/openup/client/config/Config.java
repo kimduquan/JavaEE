@@ -3,10 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.api.epf.schema;
+package openup.client.config;
 
-import epf.schema.roles.RoleSet;
-import java.util.List;
+import java.util.Map;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -17,14 +16,11 @@ import javax.ws.rs.core.MediaType;
  *
  * @author FOXCONN
  */
-@Path("schema/roles")
+@Path("config")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public interface Roles {
-    
-    public static final String ANY_ROLE = "ANY_ROLE";
-    public static final String ADMIN = "ADMIN";
+public interface Config {
     
     @GET
-    List<RoleSet> getRoleSets() throws Exception;
+    Map<String, Object> getConfig() throws Exception;
 }

@@ -32,7 +32,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 @Produces(MediaType.APPLICATION_JSON)
 @RolesAllowed(Roles.ANY_ROLE)
 @RequestScoped
-public class WorkProducts implements openup.api.epf.schema.WorkProducts {
+public class WorkProducts implements openup.client.epf.schema.WorkProducts {
     
     @Inject
     private Cache cache;

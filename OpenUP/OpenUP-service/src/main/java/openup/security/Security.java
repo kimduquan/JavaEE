@@ -5,7 +5,7 @@
  */
 package openup.security;
 
-import openup.api.security.Token;
+import openup.client.security.Token;
 import epf.schema.roles.Role;
 import java.io.Serializable;
 import java.net.URI;
@@ -37,7 +37,7 @@ import openup.persistence.Application;
 import openup.persistence.Credential;
 import openup.persistence.Session;
 import org.eclipse.microprofile.jwt.JsonWebToken;
-import openup.api.config.ConfigNames;
+import openup.client.config.ConfigNames;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
@@ -50,7 +50,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 @Path("security")
 @RolesAllowed(Roles.ANY_ROLE)
 @RequestScoped
-public class Security implements openup.api.security.Security, Serializable {
+public class Security implements openup.client.security.Security, Serializable {
     
     /**
     * 

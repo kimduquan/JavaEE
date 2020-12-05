@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.api.persistence;
+package openup.client.persistence;
 
 import java.io.InputStream;
 import javax.ws.rs.DELETE;

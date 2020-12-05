@@ -32,7 +32,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 @Produces(MediaType.APPLICATION_JSON)
 @RolesAllowed(Roles.ANY_ROLE)
 @RequestScoped
-public class Tasks implements openup.api.epf.schema.Tasks {
+public class Tasks implements openup.client.epf.schema.Tasks {
     
     @Inject
     private Cache cache;

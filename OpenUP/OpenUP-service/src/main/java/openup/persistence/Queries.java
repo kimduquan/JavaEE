@@ -37,15 +37,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import openup.api.epf.schema.Roles;
+import openup.client.epf.schema.Roles;
 import org.eclipse.microprofile.openapi.annotations.Operation;
-import org.eclipse.microprofile.openapi.annotations.enums.Explode;
-import org.eclipse.microprofile.openapi.annotations.enums.ParameterIn;
-import org.eclipse.microprofile.openapi.annotations.enums.ParameterStyle;
-import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
-import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 /**
@@ -57,7 +51,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 @Produces(MediaType.APPLICATION_JSON)
 @RolesAllowed(Roles.ANY_ROLE)
 @RequestScoped
-public class Queries implements openup.api.persistence.Queries {
+public class Queries implements openup.client.persistence.Queries {
     
     @Inject
     private Cache cache;
@@ -79,15 +73,6 @@ public class Queries implements openup.api.persistence.Queries {
             )
     )
     public Response getCriteriaQueryResult(
-            @Parameter(
-                    name = "criteria",
-                    in = ParameterIn.PATH,
-                    style = ParameterStyle.MATRIX,
-                    explode = Explode.TRUE,
-                    required = true,
-                    allowReserved = true,
-                    schema = @Schema(type = SchemaType.OBJECT)
-            )
             List<PathSegment> paths,
             Integer firstResult,
             Integer maxResults

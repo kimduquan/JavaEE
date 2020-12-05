@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.api.security;
+package openup.client.security;
 
 import java.net.URL;
 import javax.ws.rs.Consumes;
