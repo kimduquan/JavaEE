@@ -231,7 +231,7 @@
 
     <modules>
         <module>EPF-schema</module>
-        <module>OpenUP-api</module>
+        <module>OpenUP-client</module>
         <module>OpenUP-service</module>
         <module>OpenUP-gateway</module>
         <module>OpenUP-web</module>
