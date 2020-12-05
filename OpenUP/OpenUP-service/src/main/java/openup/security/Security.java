@@ -117,15 +117,12 @@ public class Security implements openup.client.security.Security, Serializable {
         
         buildTokenID(jwt);
         
-        Set<String> aud = new HashSet<>();
-        aud.add(url.toString());
-        jwt.setAudience(aud);
+        buildAudience(jwt, url.toURI());
         
         Set<String> roles = getUserRoles(username, persistence.getDefaultManager());
         jwt.setGroups(roles);
         
         String token = generator.generate(jwt);
-        
         jwt.setRawToken(token);
         
         return response.entity(token).build();
@@ -229,14 +226,18 @@ public class Security implements openup.client.security.Security, Serializable {
     
     void buildAudience(Token token, URI uri){
         Set<String> aud = new HashSet<>();
-        aud.add(String.format("%s://%s:%s/", uri.getScheme(), uri.getHost(), uri.getPort()));
+        aud.add(String.format(
+                AUDIENCE_URL_FORMAT, 
+                uri.getScheme(), 
+                uri.getHost(), 
+                uri.getPort()));
         token.setAudience(aud);
     }
     
     void buildTokenID(Token token){
         token.setTokenID(
                 String.format(
-                        "%s-%s-%s",
+                        TOKEN_ID_FORMAT,
                         token.getName(), 
                         UUID.randomUUID(),
                         System.currentTimeMillis()));

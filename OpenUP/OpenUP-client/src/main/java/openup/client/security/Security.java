@@ -28,6 +28,11 @@ import javax.ws.rs.core.UriInfo;
 @Path("security")
 public interface Security {
     
+    String AUDIENCE_URL_FORMAT = "%s://%s:%s/";
+    String TOKEN_ID_FORMAT = "%s-%s-%s";
+    String REQUEST_HEADER_NAME = "Authorization";
+    String REQUEST_HEADER_FORMAT = "Bearer %s";
+    
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)

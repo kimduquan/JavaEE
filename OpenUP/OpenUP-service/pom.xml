@@ -66,7 +66,7 @@
         </dependency>
         <dependency>
             <groupId>openup</groupId>
-            <artifactId>OpenUP-api</artifactId>
+            <artifactId>OpenUP-client</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>

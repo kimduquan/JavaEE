@@ -6,6 +6,7 @@
 package openup.webapp.security;
 
 import javax.security.enterprise.CallerPrincipal;
+import openup.client.security.Token;
 
 /**
  *

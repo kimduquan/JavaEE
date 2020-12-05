@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -61,6 +62,15 @@ public class View implements Serializable {
         catch (Exception ex) {
             Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    @PreDestroy
+    void preDestroy(){
+        deliveryProcesses.clear();
+        domains.clear();
+        roleSets.clear();
+        disciplines.clear();
+        entities.clear();
     }
 
     public TreeNode getDeliveryProcesses() {

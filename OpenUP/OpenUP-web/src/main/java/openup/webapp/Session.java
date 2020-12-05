@@ -12,7 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.security.enterprise.SecurityContext;
 import openup.webapp.security.TokenPrincipal;
-import openup.webapp.security.Token;
+import openup.client.security.Token;
 
 /**
  *

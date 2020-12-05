@@ -14,6 +14,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import openup.client.config.ConfigNames;
+import openup.client.security.Security;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -38,8 +39,8 @@ public class Config implements openup.client.config.Config {
         configs.put(ConfigNames.OPENUP_URL, url);
         configs.put(ConfigNames.OPENUP_CONFIG_URL, url + "config");
         configs.put(ConfigNames.OPENUP_SECURITY_URL, url + "security");
-        configs.put(ConfigNames.OPENUP_SECURITY_JWT_HEADER, "Authorization");
-        configs.put(ConfigNames.OPENUP_SECURITY_JWT_FORMAT, "Bearer %s");
+        configs.put(ConfigNames.OPENUP_SECURITY_JWT_HEADER, Security.REQUEST_HEADER_NAME);
+        configs.put(ConfigNames.OPENUP_SECURITY_JWT_FORMAT, Security.REQUEST_HEADER_FORMAT);
         configs.put(ConfigNames.OPENUP_PERSISTENCE_URL, url + "persistence");
     }
     
