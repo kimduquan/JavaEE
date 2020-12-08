@@ -35,7 +35,7 @@ public class Config implements openup.client.config.Config {
     @PostConstruct
     void postConstruct(){
         configs = new ConcurrentHashMap<>();
-        String url = System.getenv(ConfigNames.OPENUP_URL);
+        String url = System.getenv(ConfigNames.OPENUP_GATEWAY_URL);
         configs.put(ConfigNames.OPENUP_URL, url);
         configs.put(ConfigNames.OPENUP_CONFIG_URL, url + "config");
         configs.put(ConfigNames.OPENUP_SECURITY_URL, url + "security");
@@ -58,7 +58,7 @@ public class Config implements openup.client.config.Config {
                     schema = @Schema(implementation = Map.class)
             )
     )
-    public Map<String, Object> getConfig() throws Exception {
+    public Map<String, Object> getConfigurations() throws Exception {
         return configs;
     }
 }

@@ -7,8 +7,6 @@ package openup.client;
 
 import openup.client.ssl.DefaultHostnameVerifier;
 import openup.client.ssl.DefaultTrustManager;
-import java.net.URI;
-import java.net.URL;
 import java.security.GeneralSecurityException;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;

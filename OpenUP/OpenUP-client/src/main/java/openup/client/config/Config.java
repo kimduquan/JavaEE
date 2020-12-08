@@ -22,5 +22,5 @@ import javax.ws.rs.core.MediaType;
 public interface Config {
     
     @GET
-    Map<String, Object> getConfig() throws Exception;
+    Map<String, Object> getConfigurations() throws Exception;
 }

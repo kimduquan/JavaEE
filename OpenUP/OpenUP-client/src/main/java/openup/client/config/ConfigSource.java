@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.webapp.config;
+package openup.client.config;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,14 +14,13 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import openup.client.Client;
-import openup.client.config.ConfigNames;
 
 /**
  *
  * @author FOXCONN
  */
 @ApplicationScoped
-public class Config {
+public class ConfigSource {
     
     private Map<String, Object> configs;
     
@@ -39,7 +38,7 @@ public class Config {
             }
         } 
         catch (Exception ex) {
-            Logger.getLogger(Config.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ConfigSource.class.getName()).log(Level.SEVERE, null, ex);
         }
         if(data != null){
             data.forEach((Object key, Object value) -> {

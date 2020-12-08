@@ -9,7 +9,6 @@ import epf.DeliveryProcesses;
 import epf.schema.roles.RoleSet;
 import epf.schema.tasks.Discipline;
 import epf.schema.work_products.Domain;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -20,8 +19,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import openup.client.Client;
 import openup.webapp.Session;
-import openup.webapp.config.Config;
 import openup.client.config.ConfigNames;
+import openup.client.config.ConfigSource;
 import openup.client.security.Security;
 
 /**
@@ -32,7 +31,7 @@ import openup.client.security.Security;
 public class Service implements Persistence {
     
     @Inject
-    private Config config;
+    private ConfigSource config;
     
     @Inject
     private Session session;

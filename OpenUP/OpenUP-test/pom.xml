@@ -24,8 +24,9 @@
         
         <!--<liberty.env.openup.config.url>https://localhost:9443/OpenUP-service-1.0.0/config</liberty.env.openup.config.url>
         <liberty.env.openup.url>https://localhost:9443/OpenUP-service-1.0.0/</liberty.env.openup.url>-->
-        <liberty.env.openup.config.url>https://localhost:9443/OpenUP-service-1.0.0/config</liberty.env.openup.config.url>
+        <liberty.env.openup.config.url>https://localhost:9443/OpenUP-gateway-1.0.0/config/</liberty.env.openup.config.url>
         <liberty.env.openup.url>https://localhost:9443/OpenUP-service-1.0.0/</liberty.env.openup.url>
+        <liberty.env.openup.gateway.url>https://localhost:9443/OpenUP-gateway-1.0.0/</liberty.env.openup.gateway.url>
     </properties>
 
     <dependencies>
@@ -66,12 +67,12 @@
             <version>1.0.0</version>
             <type>war</type>
         </dependency>
-        <!--<dependency>
+        <dependency>
             <groupId>openup</groupId>
             <artifactId>OpenUP-gateway</artifactId>
             <version>1.0.0</version>
             <type>war</type>
-        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>OpenUP-web</artifactId>
@@ -121,14 +122,12 @@
                 <configuration>
                     <!-- Pass contextPath and httpPort to the integration tests -->
                     <systemPropertyVariables>
-                        <contextPath>/OpenUP-web-${project.version}</contextPath>
+                        <contextPath>/OpenUP-gateway-${project.version}</contextPath>
                         <httpPort>${httpPort}</httpPort>
                         <httpsPort>${httpsPort}</httpsPort>
                         
-                        <!--<openup.config.url>https://localhost:${httpsPort}/OpenUP-service-${project.version}/config</openup.config.url>
-                        <openup.url>https://localhost:${httpsPort}/OpenUP-service-${project.version}/</openup.url>-->
-                        <openup.config.url>https://localhost:${httpsPort}/OpenUP-service-${project.version}/config</openup.config.url>
-                        <openup.url>https://localhost:${httpsPort}/OpenUP-service-${project.version}/</openup.url>
+                        <openup.config.url>https://localhost:${httpsPort}/OpenUP-gateway-${project.version}/config</openup.config.url>
+                        <openup.url>https://localhost:${httpsPort}/OpenUP-gateway-${project.version}/</openup.url>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>

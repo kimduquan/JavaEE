@@ -25,8 +25,8 @@ import javax.ws.rs.core.Response;
 import openup.client.Client;
 import openup.client.security.Token;
 import openup.client.config.ConfigNames;
+import openup.client.config.ConfigSource;
 import openup.client.security.Security;
-import openup.webapp.config.Config;
 
 /**
  *
@@ -36,7 +36,7 @@ import openup.webapp.config.Config;
 public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentityStore {
     
     @Inject
-    private Config config;
+    private ConfigSource config;
     
     public CredentialValidationResult validate(BasicAuthenticationCredential credential){
         CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;

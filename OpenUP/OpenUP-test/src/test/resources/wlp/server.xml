@@ -5,6 +5,7 @@
         <feature>microProfile-3.3</feature>
         <feature>jpa-2.2</feature>
         <feature>mpGraphQL-1.0</feature>
+        <feature>mpContextPropagation-1.0</feature>
         <!--<feature>sessionCache-1.0</feature>-->
         <feature>transportSecurity-1.0</feature>
         
@@ -30,7 +31,7 @@
     <application location="OpenUP-service-1.0.0.war">
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-    <!--<application location="OpenUP-gateway-1.0.0.war" />-->
+    <application location="OpenUP-gateway-1.0.0.war" />
     <application location="OpenUP-web-1.0.0.war" />
     
     <!-- H2 Library Configuration -->

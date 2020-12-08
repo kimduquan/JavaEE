@@ -15,6 +15,7 @@ public interface ConfigNames {
     String JWT_EXPIRE_TIMEUNIT = "openup.security.jwt.exp.timeunit";
     
     String OPENUP_URL = "openup.url";
+    String OPENUP_GATEWAY_URL = "openup.gateway.url";
     String OPENUP_CONFIG_URL = "openup.config.url";
     String OPENUP_SECURITY_URL = "openup.security.url";
     String OPENUP_SECURITY_JWT_HEADER = "openup.security.jwt.header";
