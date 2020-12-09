@@ -6,14 +6,11 @@
 package openup.gateway;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Disposes;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
-import org.eclipse.microprofile.context.ManagedExecutor;
-import org.eclipse.microprofile.context.ThreadContext;
 
 /**
  *
@@ -25,16 +22,4 @@ import org.eclipse.microprofile.context.ThreadContext;
 @Produces(MediaType.APPLICATION_JSON)
 public class Gateway extends Application {
     
-    public static void shutdownExecutor(@Disposes ManagedExecutor executor){
-        executor.shutdownNow();
-    }
-    
-    @javax.enterprise.inject.Produces
-    @ApplicationScoped
-    public static ManagedExecutor getExecutor(){
-        return ManagedExecutor
-                .builder()
-                .propagated(ThreadContext.APPLICATION)
-                .build();
-    }
 }

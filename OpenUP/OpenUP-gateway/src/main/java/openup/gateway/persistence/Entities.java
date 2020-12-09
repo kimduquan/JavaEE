@@ -14,6 +14,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
@@ -42,6 +43,8 @@ public class Entities {
     public CompletionStage<Response> persist(
             @Context HttpHeaders headers, 
             @Context UriInfo uriInfo,
+            @PathParam("entity") String entity,
+            @PathParam("id") String id,
             InputStream body) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
@@ -53,7 +56,9 @@ public class Entities {
     @Asynchronous
     public CompletionStage<Response> find(
             @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo) throws Exception{
+            @Context UriInfo uriInfo,
+            @PathParam("entity") String entity,
+            @PathParam("id") String id) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         return request.request("GET", null);
@@ -64,7 +69,9 @@ public class Entities {
     @Asynchronous
     public CompletionStage<Response> remove(
             @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo) throws Exception{
+            @Context UriInfo uriInfo,
+            @PathParam("entity") String entity,
+            @PathParam("id") String id) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         return request.request("DELETE", null);
