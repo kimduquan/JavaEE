@@ -6,7 +6,6 @@
 package openup.gateway;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.context.ThreadContext;
@@ -17,10 +16,6 @@ import org.eclipse.microprofile.context.ThreadContext;
  */
 @ApplicationScoped
 public class Executor {
-    
-    public static void shutdown(@Disposes ManagedExecutor executor){
-        executor.shutdownNow();
-    }
     
     @Produces
     @ApplicationScoped

@@ -8,7 +8,6 @@ package openup.gateway.config;
 import java.util.concurrent.CompletionStage;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -25,8 +24,6 @@ import org.eclipse.microprofile.faulttolerance.Asynchronous;
  * @author FOXCONN
  */
 @Path("config")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
 @RequestScoped
 public class Config {
     
@@ -34,6 +31,7 @@ public class Config {
     private Request request;
     
     @GET
+    @Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
     public CompletionStage<Response> getConfigurations(
             @Context HttpHeaders headers, 

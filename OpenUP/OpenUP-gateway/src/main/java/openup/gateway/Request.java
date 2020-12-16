@@ -5,6 +5,7 @@
  */
 package openup.gateway;
 
+import openup.client.ClientQueue;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Date;
@@ -14,14 +15,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.CompletionStage;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
 import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
@@ -36,10 +32,9 @@ import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.StatusType;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import openup.client.config.ConfigNames;
-import openup.client.ssl.DefaultHostnameVerifier;
-import openup.client.ssl.DefaultTrustManager;
 import org.eclipse.microprofile.context.ManagedExecutor;
 
 /**
@@ -51,45 +46,47 @@ public class Request {
     
     private HttpHeaders headers;
     private UriInfo uriInfo;
+    private Client client;
+    private URI uri;
     
     @Inject 
     private ManagedExecutor executor;
     
+    @Inject
+    private ClientQueue clients;
+    
     public CompletionStage<Response> request(
             String method, 
             InputStream in) throws Exception{
-        return executor.supplyAsync(Request::buildContext)
-                .thenApply(Request::buildClient)
-                .thenApply(newClient -> buildTarget(newClient, uriInfo, headers))
+        return executor.supplyAsync(() -> uri = buildUri(uriInfo))
+                .thenApply(newUri -> client = clients.poll(newUri))
+                .thenApply(newClient -> buildTarget(newClient, uriInfo))
                 .thenApply(target -> buildRequest(target, headers))
                 .thenApply(request -> buildMethod(request, method, headers.getMediaType(), in))
                 .thenApply(Request::buildResponse)
-                .thenApply(ResponseBuilder::build);
+                .thenApply(ResponseBuilder::build)
+                .whenComplete((res, ex) -> {
+                    if(ex != null){
+                        client.close();
+                    }
+                    else{
+                        clients.add(uri, client);
+                    }
+                });
     }
     
-    static SSLContext buildContext(){
-        try {
-            TrustManager x509 = new DefaultTrustManager();
-            SSLContext ctx = SSLContext.getInstance("SSL");
-            ctx.init(null, new TrustManager[]{x509}, null);
-            return ctx;
-        } catch (Exception ex) {
-            Logger.getLogger(Request.class.getName()).log(Level.SEVERE, null, ex);
+    static URI buildUri(UriInfo uriInfo){
+        UriBuilder builder = uriInfo.getBaseUriBuilder();
+        List<PathSegment> segments = uriInfo.getPathSegments();
+        if(segments != null && !segments.isEmpty()){
+            builder = builder.path(segments.get(0).getPath());
         }
-        return null;
+        return builder.build();
     }
     
-    static Client buildClient(SSLContext context){
-        return ClientBuilder.newBuilder()
-                .sslContext(context)
-                .hostnameVerifier(new DefaultHostnameVerifier())
-                .build();
-    }
-    
-    static WebTarget buildTarget(Client client, UriInfo uriInfo, HttpHeaders headers){
+    static WebTarget buildTarget(Client client, UriInfo uriInfo){
         String url = System.getenv(ConfigNames.OPENUP_URL);
         WebTarget webTarget = client.target(url);
-        
         if(uriInfo != null){
             List<PathSegment> segments = uriInfo.getPathSegments();
             if(segments != null){
@@ -130,6 +127,10 @@ public class Request {
                     builder = builder.cookie(cookie.getValue());
                 }
             }
+            MultivaluedMap<String, String> requestHeaders = headers.getRequestHeaders();
+            if(requestHeaders.containsKey(HttpHeaders.AUTHORIZATION)){
+                builder = builder.header(HttpHeaders.AUTHORIZATION, headers.getHeaderString(HttpHeaders.AUTHORIZATION));
+            }
         }
         return builder;
     }
@@ -140,8 +141,7 @@ public class Request {
             MediaType type, 
             InputStream in){
         if(in != null && type != null){
-            return builder
-                    .method(
+            return builder.method(
                     method, 
                     Entity.entity(
                             in, 
@@ -150,8 +150,7 @@ public class Request {
             );
         }
         else{
-            return builder
-                    .method(method);
+            return builder.method(method);
         }
     }
     
