@@ -34,49 +34,26 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 })
 @NamedNativeQuery(
         name = Role.GET_USER_ROLES, 
-        query = "SELECT GRANTEDROLE \n" +
-                "FROM INFORMATION_SCHEMA.RIGHTS \n" +
-                "WHERE \n" +
-                "    GRANTEETYPE = 'ROLE' \n" +
-                "    AND (\n" +
-                "        GRANTEE \n" +
-                "            IN (\n" +
-                "                SELECT GRANTEDROLE \n" +
-                "                FROM INFORMATION_SCHEMA.RIGHTS \n" +
-                "                WHERE GRANTEETYPE = 'USER' \n" +
-                "                    AND GRANTEE = ?\n" +
+        query = "SELECT GRANTEDROLE\n" +
+                "FROM INFORMATION_SCHEMA.RIGHTS\n" +
+                "WHERE GRANTEETYPE = 'ROLE'\n" +
+                "    AND GRANTEDROLE <> ''\n" +
+                "    AND GRANTEE\n" +
+                "        IN  (\n" +
+                "            SELECT GRANTEDROLE \n" +
+                "            FROM INFORMATION_SCHEMA.RIGHTS \n" +
+                "            WHERE GRANTEETYPE = 'USER'\n" +
+                "                AND GRANTEE = ?\n" +
+                "                AND GRANTEDROLE <> ''\n" +
                 "                )\n" +
-                "        OR\n" +
-                "        GRANTEDROLE \n" +
-                "            IN (\n" +
-                "                SELECT GRANTEDROLE \n" +
-                "                FROM INFORMATION_SCHEMA.RIGHTS \n" +
-                "                WHERE GRANTEETYPE = 'USER' \n" +
-                "                    AND GRANTEE = ?\n" +
-                "                )\n" +
-                "        )\n" +
                 "UNION\n" +
-                "SELECT GRANTEE \n" +
-                "FROM INFORMATION_SCHEMA.RIGHTS \n" +
-                "WHERE \n" +
-                "    GRANTEETYPE = 'ROLE' \n" +
-                "    AND (\n" +
-                "        GRANTEE \n" +
-                "            IN (\n" +
-                "                SELECT GRANTEDROLE \n" +
-                "                FROM INFORMATION_SCHEMA.RIGHTS \n" +
-                "                WHERE GRANTEETYPE = 'USER' \n" +
-                "                    AND GRANTEE = ?\n" +
-                "                )\n" +
-                "        OR\n" +
-                "        GRANTEDROLE \n" +
-                "            IN (\n" +
-                "                SELECT GRANTEDROLE \n" +
-                "                FROM INFORMATION_SCHEMA.RIGHTS \n" +
-                "                WHERE GRANTEETYPE = 'USER' \n" +
-                "                    AND GRANTEE = ?\n" +
-                "                )\n" +
-                "        );"
+                "    (\n" +
+                "    SELECT GRANTEDROLE \n" +
+                "    FROM INFORMATION_SCHEMA.RIGHTS \n" +
+                "    WHERE GRANTEETYPE = 'USER'\n" +
+                "        AND GRANTEE = ?\n" +
+                "        AND GRANTEDROLE <> ''\n" +
+                ");"
 )
 @NamedNativeQuery(
         name = Role.IS_ADMIN,

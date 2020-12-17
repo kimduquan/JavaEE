@@ -276,8 +276,6 @@ public class Security implements openup.client.security.Security, Serializable {
         Query query = manager.createNamedQuery(Role.GET_USER_ROLES);
         query.setParameter(1, userName.toUpperCase());
         query.setParameter(2, userName.toUpperCase());
-        query.setParameter(3, userName.toUpperCase());
-        query.setParameter(4, userName.toUpperCase());
         Stream<?> result = query.getResultStream();
         return result.map(Object::toString).collect(Collectors.toSet());
     }
