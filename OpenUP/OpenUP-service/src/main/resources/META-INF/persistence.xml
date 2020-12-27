@@ -6,7 +6,7 @@
                         http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
     <persistence-unit name="EPF" transaction-type="JTA">
         <jta-data-source>jdbc/epf</jta-data-source>
-        <jar-file>lib/EPF-1.0.0.jar</jar-file>
+        <jar-file>lib/EPF-schema-1.0.0.jar</jar-file>
         <properties>
             <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
             <property name="javax.persistence.schema-generation.create-source" value="metadata"/>
@@ -16,6 +16,6 @@
     </persistence-unit>
     <persistence-unit name="OpenUP" transaction-type="JTA">
         <jta-data-source>jdbc/openup</jta-data-source>
-        <jar-file>../lib/EPF-1.0.0.jar</jar-file>
+        <jar-file>../lib/EPF-schema-1.0.0.jar</jar-file>
     </persistence-unit>
 </persistence>

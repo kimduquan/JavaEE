@@ -5,6 +5,7 @@
  */
 package openup.security;
 
+import openup.client.security.Token;
 import com.ibm.websphere.security.jwt.JwtBuilder;
 import java.io.Serializable;
 import java.security.KeyFactory;
@@ -17,7 +18,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import openup.config.Config;
+import openup.client.config.ConfigNames;
 
 /**
  *
@@ -35,7 +36,7 @@ public class TokenGenerator implements Serializable {
     private Base64.Decoder decoder;
     
     @Inject
-    @ConfigProperty(name = Config.MP_JWT_PRIVATE_KEY)
+    @ConfigProperty(name = ConfigNames.MP_JWT_PRIVATE_KEY)
     private String privateKeyText;
     
     @PostConstruct

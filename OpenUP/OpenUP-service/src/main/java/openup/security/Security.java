@@ -5,6 +5,7 @@
  */
 package openup.security;
 
+import openup.client.security.Token;
 import epf.schema.roles.Role;
 import java.io.Serializable;
 import java.net.URI;
@@ -23,45 +24,35 @@ import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
+import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import openup.Roles;
-import openup.error.ExceptionHandler;
+import openup.epf.schema.Roles;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.eclipse.microprofile.faulttolerance.Bulkhead;
-import org.eclipse.microprofile.faulttolerance.CircuitBreaker;
-import org.eclipse.microprofile.faulttolerance.Fallback;
-import org.eclipse.microprofile.faulttolerance.Timeout;
 import org.eclipse.microprofile.jwt.config.Names;
-import org.eclipse.microprofile.openapi.annotations.Operation;
-import org.eclipse.microprofile.openapi.annotations.media.Content;
-import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
-import openup.config.Config;
 import openup.persistence.Application;
 import openup.persistence.Credential;
 import openup.persistence.Session;
+import org.eclipse.microprofile.jwt.JsonWebToken;
+import openup.client.config.ConfigNames;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 /**
  *
  * @author FOXCONN
  */
-@RequestScoped
 @Path("security")
 @RolesAllowed(Roles.ANY_ROLE)
-public class Security implements Serializable {
+@RequestScoped
+public class Security implements openup.client.security.Security, Serializable {
     
     /**
     * 
@@ -79,17 +70,20 @@ public class Security implements Serializable {
     private String issuer;
     
     @Inject
-    @ConfigProperty(name = Config.JWT_EXPIRE_DURATION)
+    @ConfigProperty(name = ConfigNames.JWT_EXPIRE_DURATION)
     private Long jwtExpDuration;
     
     @Inject
-    @ConfigProperty(name = Config.JWT_EXPIRE_TIMEUNIT)
+    @ConfigProperty(name = ConfigNames.JWT_EXPIRE_TIMEUNIT)
     private ChronoUnit jwtExpTimeUnit;
     
-    @POST
+    @Context 
+    private SecurityContext context;
+    @Context 
+    private UriInfo uriInfo;
+    
     @PermitAll
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Override
     @Operation(
             summary = "login", 
             description = "login",
@@ -112,43 +106,36 @@ public class Security implements Serializable {
                     mediaType = MediaType.TEXT_PLAIN
             )
     )
-    @Bulkhead(value = 10, waitingTaskQueue = 16)
-    @Timeout(4000)
-    @Fallback(value = ExceptionHandler.class, applyOn = {Exception.class})
-    @CircuitBreaker(requestVolumeThreshold = 40, failureRatio = 0.618, successThreshold = 15)
-    public Response login(
-            @FormParam("username")
+    @APIResponse(
+            name = "Unauthorized", 
+            description = "Unauthorized",
+            responseCode = "401"
+    )
+    public String login(
+            String unit,
             String username,
-            @FormParam("password")
-            String password, 
-            @QueryParam("url")
+            String password,
             URL url) throws Exception{
-        ResponseBuilder response = Response.ok();
         
         long time = System.currentTimeMillis() / 1000;
-        persistence.putCredential(username, password, time);
+        persistence.putContext(unit, username, password, time);
         
         Token jwt = buildToken(username, time);
         
         buildTokenID(jwt);
         
-        Set<String> aud = new HashSet<>();
-        aud.add(url.toString());
-        jwt.setAudience(aud);
+        buildAudience(jwt, url.toURI());
         
         Set<String> roles = getUserRoles(username, persistence.getDefaultManager());
         jwt.setGroups(roles);
         
         String token = generator.generate(jwt);
-        
         jwt.setRawToken(token);
         
-        return response.entity(token).build();
+        return token;
     }
     
-    @PUT
-    @Produces(MediaType.TEXT_PLAIN)
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Override
     @Operation(
             summary = "runAs", 
             description = "runAs",
@@ -169,13 +156,8 @@ public class Security implements Serializable {
                     mediaType = MediaType.TEXT_PLAIN
             )
     )
-    public Response runAs(
-            @FormParam("runAs") 
-            String role,
-            @Context
-            SecurityContext context, 
-            @Context 
-            UriInfo uriInfo
+    public String runAs(
+            String role
             ) throws Exception{
         ResponseBuilder response = Response.ok();
         Principal principal = context.getUserPrincipal();
@@ -188,49 +170,79 @@ public class Security implements Serializable {
             response.entity(token);
             jwt.setRawToken(token);
         }
-        return response.build();
+        return jwt.getRawToken();
     }
     
-    @DELETE
+    @Override
     @Operation(
             summary = "logOut", 
             description = "logOut",
             operationId = "logOut"
     )
     @APIResponse(
-            name = "ok", 
-            description = "ok",
+            name = "OK", 
+            description = "OK",
             responseCode = "200"
     )
-    public Response logOut(
-            @Context
-            SecurityContext context
-            ) throws Exception{
-        ResponseBuilder response = Response.status(Response.Status.UNAUTHORIZED);
+    public String logOut(String unit) throws Exception{
         Principal principal = context.getUserPrincipal();
-        if(principal != null){
-            Credential credential = persistence.getCredential(principal.getName());
-            if(credential != null){
-                Session session = credential.getSession(principal);
-                if(session != null){
-                    credential.removeSession(principal);
-                    response = Response.ok();
+        if(principal instanceof JsonWebToken){
+            openup.persistence.Context ctx = persistence.getContext(unit);
+            if(ctx != null){
+                Credential credential = ctx.getCredential(principal.getName());
+                if(credential != null){
+                    Session session = credential.getSession(principal);
+                    if(session != null){
+                        session = credential.removeSession(principal);
+                        session.close();
+                        return principal.getName();
+                    }
                 }
             }
         }
-        return response.build();
+        throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
+    }
+    
+    @Override
+    @Operation(
+            summary = "authenticate", 
+            description = "authenticate",
+            operationId = "authenticate"
+    )
+    @APIResponse(
+            name = "OK", 
+            description = "OK",
+            responseCode = "200"
+    )
+    @APIResponse(
+            name = "Unauthorized", 
+            description = "Unauthorized",
+            responseCode = "401"
+    )
+    public Token authenticate() throws Exception{
+        Principal principal = context.getUserPrincipal();
+        if(principal instanceof JsonWebToken){
+            JsonWebToken jwt = (JsonWebToken) principal;
+            Token token = buildToken(jwt);
+            return token;
+        }
+        throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
     }
     
     void buildAudience(Token token, URI uri){
         Set<String> aud = new HashSet<>();
-        aud.add(String.format("%s://%s:%s/", uri.getScheme(), uri.getHost(), uri.getPort()));
+        aud.add(String.format(
+                AUDIENCE_URL_FORMAT, 
+                uri.getScheme(), 
+                uri.getHost(), 
+                uri.getPort()));
         token.setAudience(aud);
     }
     
     void buildTokenID(Token token){
         token.setTokenID(
                 String.format(
-                        "%s-%s-%s",
+                        TOKEN_ID_FORMAT,
                         token.getName(), 
                         UUID.randomUUID(),
                         System.currentTimeMillis()));
@@ -269,8 +281,6 @@ public class Security implements Serializable {
         Query query = manager.createNamedQuery(Role.GET_USER_ROLES);
         query.setParameter(1, userName.toUpperCase());
         query.setParameter(2, userName.toUpperCase());
-        query.setParameter(3, userName.toUpperCase());
-        query.setParameter(4, userName.toUpperCase());
         Stream<?> result = query.getResultStream();
         return result.map(Object::toString).collect(Collectors.toSet());
     }
@@ -280,5 +290,19 @@ public class Security implements Serializable {
         query.setParameter(1, userName.toUpperCase());
         query.setParameter(2, String.valueOf(true));
         return query.getResultStream().count() > 0;
+    }
+    
+    Token buildToken(JsonWebToken jwt){
+        Token token = new Token();
+        token.setAudience(jwt.getAudience());
+        token.setExpirationTime(jwt.getExpirationTime());
+        token.setGroups(jwt.getGroups());
+        token.setIssuedAtTime(jwt.getIssuedAtTime());
+        token.setIssuer(jwt.getIssuer());
+        token.setName(jwt.getName());
+        token.setRawToken(jwt.getRawToken());
+        token.setSubject(jwt.getSubject());
+        token.setTokenID(jwt.getTokenID());
+        return token;
     }
 }

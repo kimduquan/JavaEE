@@ -5,7 +5,22 @@
         <feature>microProfile-3.3</feature>
         <feature>jpa-2.2</feature>
         <feature>mpGraphQL-1.0</feature>
+        <feature>mpContextPropagation-1.0</feature>
         <!--<feature>sessionCache-1.0</feature>-->
+        <feature>transportSecurity-1.0</feature>
+        
+        <feature>jsfContainer-2.3</feature>
+        
+        <!--<feature>webProfile-8.0</feature>-->
+        <feature>appSecurity-3.0</feature>
+        <feature>beanValidation-2.0</feature>
+        <feature>ejbLite-3.2</feature>
+        <feature>el-3.0</feature>
+        <feature>jaspic-1.1</feature>
+        <feature>jndi-1.0</feature>
+        <feature>jsp-2.3</feature>
+        <feature>managedBeans-1.0</feature>
+        
     </featureManager>
 
     <httpEndpoint id="defaultHttpEndpoint"
@@ -13,10 +28,11 @@
                   httpPort="${httpPort}"
                   httpsPort="${httpsPort}" />
 
-    <application location="OpenUP-web-1.0.0.war" />
     <application location="OpenUP-service-1.0.0.war">
         <classloader apiTypeVisibility="+third-party"/>
     </application>
+    <application location="OpenUP-gateway-1.0.0.war" />
+    <application location="OpenUP-web-1.0.0.war" />
     
     <!-- H2 Library Configuration -->
     <library id="H2JDBCLib">
@@ -37,7 +53,7 @@
     
     <mpJwt 
         id="OpenUP"
-        audiences ="http://localhost:${httpPort}/">
+        audiences ="http://localhost:${httpPort}/,https://localhost:${httpsPort}/">
     </mpJwt>
 
     <dataSource id="epf" jndiName="jdbc/epf">
@@ -59,4 +75,5 @@
         <properties URL="jdbc:h2:~/EPF_test;AUTO_SERVER=TRUE" />
     </dataSource>
 
+    <keyStore id="defaultKeyStore" password="password"/>
 </server>

@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="4.0" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
-    <!--<context-param>
+    <context-param>
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <param-value>Development</param-value>
+    </context-param>
+    <context-param>
+        <param-name>primefaces.CSP</param-name>
+        <param-value>true</param-value>
     </context-param>
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
@@ -20,5 +24,21 @@
     </session-config>
     <welcome-file-list>
         <welcome-file>faces/index.xhtml</welcome-file>
-    </welcome-file-list>-->
+    </welcome-file-list>
+    <security-constraint>
+        <auth-constraint>
+            <description></description>
+            <role-name>ANY_ROLE</role-name>
+        </auth-constraint>
+        <display-name>OpenUP</display-name>
+        <user-data-constraint>
+            <description></description>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+        <web-resource-collection>
+            <description></description>
+            <url-pattern>/faces/*</url-pattern>
+            <web-resource-name>OpenUP</web-resource-name>
+        </web-resource-collection>
+    </security-constraint>
 </web-app>

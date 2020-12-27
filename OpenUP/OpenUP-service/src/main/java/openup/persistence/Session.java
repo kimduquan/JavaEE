@@ -7,7 +7,6 @@ package openup.persistence;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
@@ -17,40 +16,32 @@ import javax.persistence.EntityManagerFactory;
 public class Session implements AutoCloseable {
    
     private EntityManagerFactory factory;
-    private EntityManager defaultManager;
-    private Map<String, Conversation> sessions;
+    private Map<String, Conversation> conversations;
 
-    public Session(EntityManagerFactory factory, EntityManager defaultManager) {
+    public Session(EntityManagerFactory factory) {
         this.factory = factory;
-        this.defaultManager = defaultManager;
-        sessions = new ConcurrentHashMap<>();
-    }
-
-    public EntityManager getDefaultManager() {
-        return defaultManager;
+        conversations = new ConcurrentHashMap<>();
     }
     
     public Conversation getConversation(String sessionId){
-        return sessions.get(sessionId);
+        return conversations.get(sessionId);
     }
     
     public Conversation putConversation(String sessionId){
         Conversation conversation = new Conversation(factory);
-        sessions.put(sessionId, conversation);
+        conversations.put(sessionId, conversation);
         return conversation;
     }
     
     public Conversation removeConversation(String sessionId){
-        return sessions.remove(sessionId);
+        return conversations.remove(sessionId);
     }
 
     @Override
     public void close() throws Exception {
-        for(Conversation conversation : sessions.values()){
+        for(Conversation conversation : conversations.values()){
             conversation.close();
         }
-        sessions.clear();
-        defaultManager.close();
-        factory.close();
+        conversations.clear();
     }
 }
