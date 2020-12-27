@@ -17,16 +17,12 @@ import javax.security.enterprise.credential.RememberMeCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStore;
 import javax.security.enterprise.identitystore.RememberMeIdentityStore;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
-import openup.client.Client;
 import openup.client.security.Token;
 import openup.client.config.ConfigNames;
 import openup.client.config.ConfigSource;
 import openup.client.security.Security;
+import openup.client.security.Header;
+import org.eclipse.microprofile.rest.client.RestClientBuilder;
 
 /**
  *
@@ -38,58 +34,32 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
     @Inject
     private ConfigSource config;
     
-    public CredentialValidationResult validate(BasicAuthenticationCredential credential){
+    public CredentialValidationResult validate(BasicAuthenticationCredential credential) throws Exception{
         CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
-        String url = config.getConfig(ConfigNames.OPENUP_SECURITY_URL, "");
-        MultivaluedMap<String, String> formData = new MultivaluedHashMap<>();
-        formData.putSingle("username", credential.getCaller());
-        formData.putSingle("password", credential.getPasswordAsString());
-        String header = config.getConfig(ConfigNames.OPENUP_SECURITY_JWT_HEADER, Security.REQUEST_HEADER_NAME);
-        String format = config.getConfig(ConfigNames.OPENUP_SECURITY_JWT_FORMAT, Security.REQUEST_HEADER_FORMAT);
-        String baseUrl = config.getConfig(ConfigNames.OPENUP_URL, url);
-        String token = "";
-        try(Client client = new Client(url)){
-            URL localUrl = new URL(baseUrl);
-            try(Response response = client
-                    .getWebTarget()
-                    .queryParam(
-                            "url", 
-                            String.format(
+        String base = config.getConfig(ConfigNames.OPENUP_URL, "");
+        URL baseUrl = new URL(base);
+        URL audienceUrl = new URL(String.format(
                                     Security.AUDIENCE_URL_FORMAT,
-                                    localUrl.getProtocol(), 
-                                    localUrl.getHost(), 
-                                    localUrl.getPort()
-                            )
-                    )
-                    .request(MediaType.TEXT_PLAIN)
-                    .post(Entity.form(formData))){
-                if(response.getStatus() == Response.Status.OK.getStatusCode()){
-                    token = response.readEntity(String.class);
-                }
-            }
-        } 
-        catch (Exception ex) {
-            Logger.getLogger(OpenUPIdentityStore.class.getName()).log(Level.SEVERE, null, ex);
-        }
+                                    baseUrl.getProtocol(), 
+                                    baseUrl.getHost(), 
+                                    baseUrl.getPort()
+                            ));
+        Header header = new Header();
+        Security service = RestClientBuilder
+                .newBuilder()
+                .baseUrl(baseUrl)
+                .register(header)
+                .build(Security.class);
+        String token = service.login(
+                "OpenUP",
+                credential.getCaller(),
+                credential.getPasswordAsString(),
+                audienceUrl
+        );
         Token jwt = null;
         if(!token.isEmpty()){
-            try(Client client = new Client(url)){
-                try(Response response = client
-                        .getWebTarget()
-                        .request(MediaType.APPLICATION_JSON)
-                        .header(
-                                header, 
-                                String.format(
-                                        format, 
-                                        token
-                                ))
-                        .get()){
-                    jwt = response.readEntity(Token.class);
-                }
-            } 
-            catch (Exception ex) {
-                Logger.getLogger(OpenUPIdentityStore.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            header.setToken(token);
+            jwt = service.authenticate();
         }
         if(jwt != null){
             TokenPrincipal principal = new TokenPrincipal(jwt.getName());
@@ -107,32 +77,25 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
     @Override
     public CredentialValidationResult validate(RememberMeCredential credential) {
         CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
-        String url = config.getConfig(ConfigNames.OPENUP_SECURITY_URL, "");
-        String header = config.getConfig(ConfigNames.OPENUP_SECURITY_JWT_HEADER, Security.REQUEST_HEADER_NAME);
-        String format = config.getConfig(ConfigNames.OPENUP_SECURITY_JWT_FORMAT, Security.REQUEST_HEADER_FORMAT);
-        Token jwt = null;
-        try(Client client = new Client(url)){
-            try(Response response = client
-                    .getWebTarget()
-                    .request(MediaType.APPLICATION_JSON)
-                    .header(
-                            header, 
-                            String.format(
-                                    format, 
-                                    credential.getToken()
-                            )
-                    )
-                    .get()){
-                jwt = response.readEntity(Token.class);
+        try {
+            String base = config.getConfig(ConfigNames.OPENUP_URL, "");
+            URL baseUrl = new URL(base);
+            Header header = new Header();
+            Security service = RestClientBuilder
+                    .newBuilder()
+                    .baseUrl(baseUrl)
+                    .register(header)
+                    .build(Security.class);
+            header.setToken(credential.getToken());
+            Token jwt = service.authenticate();
+            if(jwt != null){
+                TokenPrincipal principal = new TokenPrincipal(jwt.getName());
+                principal.setToken(jwt);
+                result = new CredentialValidationResult(principal, jwt.getGroups());
             }
         } 
         catch (Exception ex) {
             Logger.getLogger(OpenUPIdentityStore.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if(jwt != null){
-            TokenPrincipal principal = new TokenPrincipal(jwt.getName());
-            principal.setToken(jwt);
-            result = new CredentialValidationResult(principal, jwt.getGroups());
         }
         return result;
     }
@@ -148,21 +111,17 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
 
     @Override
     public void removeLoginToken(String token) {
-        String url = config.getConfig(ConfigNames.OPENUP_SECURITY_URL, "");
-        String header = config.getConfig(ConfigNames.OPENUP_SECURITY_JWT_HEADER, Security.REQUEST_HEADER_NAME);
-        String format = config.getConfig(ConfigNames.OPENUP_SECURITY_JWT_FORMAT, Security.REQUEST_HEADER_FORMAT);
-        try(Client client = new Client(url)){
-            try(Response response = client
-                    .getWebTarget()
-                    .request(MediaType.TEXT_PLAIN)
-                    .header(
-                        header, 
-                        String.format(
-                                format, 
-                                token
-                        ))
-                    .delete()){
-            }
+        try {
+            String base = config.getConfig(ConfigNames.OPENUP_URL, "");
+            URL baseUrl = new URL(base);
+            Header header = new Header();
+            Security service = RestClientBuilder
+                    .newBuilder()
+                    .baseUrl(baseUrl)
+                    .register(header)
+                    .build(Security.class);
+            header.setToken(token);
+            service.logOut("OpenUP");
         } 
         catch (Exception ex) {
             Logger.getLogger(OpenUPIdentityStore.class.getName()).log(Level.SEVERE, null, ex);

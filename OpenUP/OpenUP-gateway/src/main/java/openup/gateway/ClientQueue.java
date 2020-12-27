@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.client;
+package openup.gateway;
 
-import java.io.Serializable;
 import java.net.URI;
 import java.util.Map;
 import java.util.Queue;
@@ -15,20 +14,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.enterprise.context.Dependent;
+import javax.enterprise.context.ApplicationScoped;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import openup.client.ssl.DefaultHostnameVerifier;
-import openup.client.ssl.DefaultTrustManager;
+import openup.gateway.ssl.DefaultHostnameVerifier;
+import openup.gateway.ssl.DefaultTrustManager;
 
 /**
  *
  * @author FOXCONN
  */
-@Dependent
-public class ClientQueue implements Serializable {
+@ApplicationScoped
+public class ClientQueue {
     
     private Map<String, Queue<Client>> clients;
     private SSLContext context;
@@ -54,8 +53,7 @@ public class ClientQueue implements Serializable {
             SSLContext ctx = SSLContext.getInstance("SSL");
             ctx.init(null, new TrustManager[]{x509}, null);
             return ctx;
-        } 
-        catch (Exception ex) {
+        } catch (Exception ex) {
             Logger.getLogger(ClientQueue.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;

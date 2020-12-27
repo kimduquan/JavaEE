@@ -46,7 +46,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  *
  * @author FOXCONN
  */
-@Path("persistence")
+@Path("persistence/queries")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @RolesAllowed(Roles.ANY_ROLE)
@@ -54,10 +54,13 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 public class Queries implements openup.client.persistence.Queries {
     
     @Inject
-    private Cache cache;
+    private Request cache;
     
     @Context
     private SecurityContext context;
+    
+    @Context
+    private UriInfo uriInfo;
     
     @Override
     @PermitAll
@@ -73,6 +76,7 @@ public class Queries implements openup.client.persistence.Queries {
             )
     )
     public Response getCriteriaQueryResult(
+            String unit,
             List<PathSegment> paths,
             Integer firstResult,
             Integer maxResults
@@ -82,8 +86,8 @@ public class Queries implements openup.client.persistence.Queries {
         if(!paths.isEmpty()){
             PathSegment rootSegment = paths.get(0);
             Principal principal = context.getUserPrincipal();
-            EntityManager manager = cache.getManager(principal);
-            Entity entity = cache.findEntity(principal, rootSegment.getPath());
+            EntityManager manager = cache.getManager(unit, principal);
+            Entity entity = cache.findEntity(unit, principal, rootSegment.getPath());
             if(entity.getType() != null){
                 EntityType rootType = entity.getType();
                 Class rootClass = rootType.getJavaType();
@@ -188,32 +192,16 @@ public class Queries implements openup.client.persistence.Queries {
         return response.build();
     }
     
-    @Override
-    @Operation(
-            summary = "Named Query", 
-            description = "Execute a SELECT query and return the query results."
-    )
-    @APIResponse(
-            description = "Result",
-            responseCode = "200",
-            content = @Content(
-                    mediaType = MediaType.APPLICATION_JSON
-            )
-    )
-    @APIResponse(
-            description = "a query has not been defined with the given name",
-            responseCode = "404"
-    )
-    public Response getNamedQueryResult(
+    Response getNamedQueryResult(
+            String unit,
             String name,
             Integer firstResult,
-            Integer maxResults,
-            UriInfo uriInfo
+            Integer maxResults
             ) throws Exception{
         ResponseBuilder response = Response.ok();
         Query query = null;
         try{
-            query = cache.createNamedQuery(context.getUserPrincipal(), name);
+            query = cache.createNamedQuery(unit, context.getUserPrincipal(), name);
         }
         catch(IllegalArgumentException ex){
             response.status(Response.Status.NOT_FOUND);

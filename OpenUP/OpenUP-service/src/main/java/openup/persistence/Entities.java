@@ -14,7 +14,9 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.json.bind.JsonbException;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -30,7 +32,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  *
  * @author FOXCONN
  */
-@Path("persistence/entity")
+@Path("persistence")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @RolesAllowed(Roles.ANY_ROLE)
@@ -38,7 +40,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 public class Entities implements openup.client.persistence.Entities {
     
     @Inject
-    private Cache cache;
+    private Request cache;
     
     @Context
     private SecurityContext context;
@@ -65,54 +67,30 @@ public class Entities implements openup.client.persistence.Entities {
             description = "any unexpected error(s) occur(s) during deserialization",
             responseCode = "400"
     )
-    public Response persist(
+    public void persist(
+            String unit,
             String name,
             String id,
             InputStream body
             ) throws Exception{
-        ResponseBuilder response = Response.ok();
-        Entity entity = findEntity(name, response);
+        Entity entity = findEntity(unit, name);
         if(entity.getType() != null){
             try(Jsonb json = JsonbBuilder.create()){
                 Object obj = json.fromJson(body, entity.getType().getJavaType());
-                cache.persist(context.getUserPrincipal(), name, id, obj);
+                cache.persist(unit, context.getUserPrincipal(), name, id, obj);
             }
             catch(JsonbException ex){
-                response.status(Response.Status.BAD_REQUEST);
+                throw new BadRequestException();
             }
         }
-        return response.build();
     }
     
-    @Override
-    @Operation(
-            summary = "Find by primary key.", 
-            description = "Search for an entity of the specified class and primary key."
-    )
-    @APIResponse(
-            responseCode = "200",
-            description = "the found entity instance",
-            content = @Content(
-                    mediaType = MediaType.APPLICATION_JSON
-            )
-    )
-    @APIResponse(
-            description = "entity name is not present",
-            responseCode = "404"
-    )
-    @APIResponse(
-            description = "the entity does not exist",
-            responseCode = "404"
-    )
-    public Response find(
+    Object find(
+            String unit,
             String name,
             String id) throws Exception{
-        ResponseBuilder response = Response.ok();
-        Entity entity = findEntityObject(name, id, response);
-        if(entity.getObject() != null){
-            response.entity(entity.getObject());
-        }
-        return response.build();
+        Entity entity = findEntityObject(unit, name, id);
+        return entity.getObject();
     }
     
     @Override
@@ -132,34 +110,34 @@ public class Entities implements openup.client.persistence.Entities {
             description = "the entity does not exist",
             responseCode = "404"
     )
-    public Response remove(
+    public void remove(
+            String unit,
             String name,
             String id
             ) throws Exception{
-        ResponseBuilder response = Response.ok();
-        Entity entity = findEntityObject(name, id, response);
+        Entity entity = findEntityObject(unit, name, id);
         if(entity.getObject() != null){
-            cache.remove(context.getUserPrincipal(), name, id, entity.getObject());
+            cache.remove(unit, context.getUserPrincipal(), name, id, entity.getObject());
         }
-        return response.build();
     }
     
-    Entity findEntity(String name, ResponseBuilder response) throws Exception{
-        Entity entity = cache.findEntity(context.getUserPrincipal(), name);
-        if(entity.getType() == null)
-            response.status(Response.Status.NOT_FOUND);
+    Entity findEntity(String unit, String name) throws Exception{
+        Entity entity = cache.findEntity(unit, context.getUserPrincipal(), name);
+        if(entity.getType() == null){
+            throw new NotFoundException();
+        }
         return entity;
     }
     
-    Entity findEntityObject(String name, String id, ResponseBuilder response) throws Exception{
-        Entity entity = findEntity(name, response);
+    Entity findEntityObject(String unit, String name, String id) throws Exception{
+        Entity entity = findEntity(unit, name);
         if(entity.getType() != null){
-            Object object = cache.find(context.getUserPrincipal(), name, entity.getType().getJavaType(), id);
+            Object object = cache.find(unit, context.getUserPrincipal(), name, entity.getType().getJavaType(), id);
             if(object != null){
                 entity.setObject(object);
             }
             else{
-                response.status(Response.Status.NOT_FOUND);
+                throw new NotFoundException();
             }
         }
         return entity;

@@ -13,13 +13,10 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.UriInfo;
 
 /**
  *
@@ -34,9 +31,12 @@ public interface Security {
     String REQUEST_HEADER_FORMAT = "Bearer %s";
     
     @POST
+    @Path("{unit}")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
-    Response login(
+    String login(
+            @PathParam("unit")
+            String unit,
             @FormParam("username")
             String username,
             @FormParam("password")
@@ -47,23 +47,20 @@ public interface Security {
     @PUT
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    Response runAs(
+    String runAs(
             @FormParam("runAs") 
-            String role,
-            @Context
-            SecurityContext context, 
-            @Context 
-            UriInfo uriInfo
+            String role
             ) throws Exception;
     
     @DELETE
+    @Path("{unit}")
     @Produces(MediaType.TEXT_PLAIN)
-    Response logOut(
-            @Context
-            SecurityContext context
+    String logOut(
+            @PathParam("unit")
+            String unit
             ) throws Exception;
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    Response authenticate(@Context SecurityContext context);
+    Token authenticate() throws Exception;
 }

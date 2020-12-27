@@ -29,7 +29,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
  */
 @CacheDefaults(cacheName = "Entity")
 @RequestScoped
-public class Cache {
+public class Request {
     
     @PersistenceContext(name = "EPF", unitName = "EPF")
     private EntityManager defaultManager;
@@ -46,22 +46,22 @@ public class Cache {
         return manager;
     }
     
-    EntityManager getManager(Principal principal) throws Exception{
+    EntityManager getManager(String unit, Principal principal) throws Exception{
         if(principal != null){
             EntityManager manager = null;
-            Credential credential = application.getCredential(principal.getName());
-            if(credential != null){
-                Session session = credential.getSession(principal);
-                if(session != null){
-                    if(principal instanceof JsonWebToken){
-                        JsonWebToken jwt = (JsonWebToken)principal;
-                        Conversation conversation = session.getConversation(jwt.getTokenID());
-                        if(conversation != null){
-                            manager = conversation.getManager(jwt.getIssuedAtTime());
+            Context context = application.getContext(unit);
+            if(context != null){
+                Credential credential = context.getCredential(principal.getName());
+                if(credential != null){
+                    Session session = credential.getSession(principal);
+                    if(session != null){
+                        if(principal instanceof JsonWebToken){
+                            JsonWebToken jwt = (JsonWebToken)principal;
+                            Conversation conversation = session.getConversation(jwt.getTokenID());
+                            if(conversation != null){
+                                manager = conversation.getManager(jwt.getIssuedAtTime());
+                            }
                         }
-                    }
-                    else{
-                        manager = session.getDefaultManager();
                     }
                 }
             }
@@ -73,13 +73,15 @@ public class Cache {
         return defaultManager;
     }
     
-    public Query createNamedQuery(Principal principal, String name) throws Exception{
-        return getManager(principal).createNamedQuery(name);
+    public Query createNamedQuery(String unit, Principal principal, String name) throws Exception{
+        return getManager(unit, principal).createNamedQuery(name);
     }
     
     @Transactional
     @CachePut
     public void persist(
+            @CacheKey
+            String unit,
             Principal principal,
             @CacheKey
             String name,
@@ -87,28 +89,28 @@ public class Cache {
             String id, 
             @CacheValue
             Object object) throws Exception{
-        EntityManager manager = getManager(principal);
+        EntityManager manager = getManager(unit, principal);
         manager = joinTransaction(manager);
         manager.persist(object);
     }
     
     @CacheResult
-    public Object find(Principal principal, @CacheKey String name, Class cls, @CacheKey String id) throws Exception{
-        return getManager(principal).find(cls, id);
+    public Object find(@CacheKey String unit, Principal principal, @CacheKey String name, Class cls, @CacheKey String id) throws Exception{
+        return getManager(unit, principal).find(cls, id);
     }
     
     @Transactional
     @CacheRemove
-    public void remove(Principal principal, @CacheKey String name, @CacheKey String id, Object object) throws Exception{
-        EntityManager manager = getManager(principal);
+    public void remove(@CacheKey String unit, Principal principal, @CacheKey String name, @CacheKey String id, Object object) throws Exception{
+        EntityManager manager = getManager(unit, principal);
         manager = joinTransaction(manager);
         manager.remove(object);
     }
     
     @CacheResult(cacheName = "EntityType")
-    public Entity findEntity(Principal principal, @CacheKey String name) throws Exception{
+    public Entity findEntity(@CacheKey String unit, Principal principal, @CacheKey String name) throws Exception{
         Entity result = new Entity();
-        getManager(principal).getMetamodel()
+        getManager(unit, principal).getMetamodel()
                 .getEntities()
                 .stream()
                 .filter(
@@ -122,8 +124,8 @@ public class Cache {
     }
     
     @CacheResult(cacheName = "NamedQuery")
-    public <T> List<T> getNamedQueryResult(Principal principal, @CacheKey String name, Class<T> cls) throws Exception{
-        return getManager(principal)
+    public <T> List<T> getNamedQueryResult(@CacheKey String unit, Principal principal, @CacheKey String name, Class<T> cls) throws Exception{
+        return getManager(unit, principal)
                 .createNamedQuery(name, cls)
                 .getResultStream()
                 .collect(Collectors.toList());

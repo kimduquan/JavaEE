@@ -24,7 +24,9 @@ import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.inject.Inject;
+import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
@@ -75,6 +77,11 @@ public class Security implements openup.client.security.Security, Serializable {
     @ConfigProperty(name = ConfigNames.JWT_EXPIRE_TIMEUNIT)
     private ChronoUnit jwtExpTimeUnit;
     
+    @Context 
+    private SecurityContext context;
+    @Context 
+    private UriInfo uriInfo;
+    
     @PermitAll
     @Override
     @Operation(
@@ -104,14 +111,14 @@ public class Security implements openup.client.security.Security, Serializable {
             description = "Unauthorized",
             responseCode = "401"
     )
-    public Response login(
+    public String login(
+            String unit,
             String username,
             String password,
             URL url) throws Exception{
-        ResponseBuilder response = Response.ok();
         
         long time = System.currentTimeMillis() / 1000;
-        persistence.putCredential(username, password, time);
+        persistence.putContext(unit, username, password, time);
         
         Token jwt = buildToken(username, time);
         
@@ -125,7 +132,7 @@ public class Security implements openup.client.security.Security, Serializable {
         String token = generator.generate(jwt);
         jwt.setRawToken(token);
         
-        return response.entity(token).build();
+        return token;
     }
     
     @Override
@@ -149,10 +156,8 @@ public class Security implements openup.client.security.Security, Serializable {
                     mediaType = MediaType.TEXT_PLAIN
             )
     )
-    public Response runAs(
-            String role,
-            SecurityContext context,
-            UriInfo uriInfo
+    public String runAs(
+            String role
             ) throws Exception{
         ResponseBuilder response = Response.ok();
         Principal principal = context.getUserPrincipal();
@@ -165,7 +170,7 @@ public class Security implements openup.client.security.Security, Serializable {
             response.entity(token);
             jwt.setRawToken(token);
         }
-        return response.build();
+        return jwt.getRawToken();
     }
     
     @Override
@@ -179,22 +184,23 @@ public class Security implements openup.client.security.Security, Serializable {
             description = "OK",
             responseCode = "200"
     )
-    public Response logOut(
-            SecurityContext context
-            ) throws Exception{
-        ResponseBuilder response = Response.status(Response.Status.UNAUTHORIZED);
+    public String logOut(String unit) throws Exception{
         Principal principal = context.getUserPrincipal();
-        if(principal != null){
-            Credential credential = persistence.getCredential(principal.getName());
-            if(credential != null){
-                Session session = credential.getSession(principal);
-                if(session != null){
-                    credential.removeSession(principal);
-                    response = Response.ok(principal.getName());
+        if(principal instanceof JsonWebToken){
+            openup.persistence.Context ctx = persistence.getContext(unit);
+            if(ctx != null){
+                Credential credential = ctx.getCredential(principal.getName());
+                if(credential != null){
+                    Session session = credential.getSession(principal);
+                    if(session != null){
+                        session = credential.removeSession(principal);
+                        session.close();
+                        return principal.getName();
+                    }
                 }
             }
         }
-        return response.build();
+        throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
     }
     
     @Override
@@ -213,15 +219,14 @@ public class Security implements openup.client.security.Security, Serializable {
             description = "Unauthorized",
             responseCode = "401"
     )
-    public Response authenticate(SecurityContext context){
-        ResponseBuilder response = Response.status(Response.Status.UNAUTHORIZED);
+    public Token authenticate() throws Exception{
         Principal principal = context.getUserPrincipal();
         if(principal instanceof JsonWebToken){
             JsonWebToken jwt = (JsonWebToken) principal;
             Token token = buildToken(jwt);
-            response.entity(token).status(Response.Status.OK);
+            return token;
         }
-        return response.build();
+        throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
     }
     
     void buildAudience(Token token, URI uri){

@@ -11,13 +11,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.MatrixParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
-import javax.ws.rs.core.UriInfo;
 
 /**
  *
@@ -29,26 +26,15 @@ import javax.ws.rs.core.UriInfo;
 public interface Queries {
     
     @GET
-    @Path("query/{criteria: .+}")
+    @Path("{unit}/{criteria: .+}")
     public Response getCriteriaQueryResult(
+            @PathParam("unit")
+            String unit,
             @PathParam("criteria")
             List<PathSegment> paths,
             @QueryParam("first")
             Integer firstResult,
             @QueryParam("max")
             Integer maxResults
-            ) throws Exception;
-    
-    @GET
-    @Path("queries/{query}")
-    Response getNamedQueryResult(
-            @PathParam("query")
-            String name,
-            @MatrixParam("first")
-            Integer firstResult,
-            @MatrixParam("max")
-            Integer maxResults,
-            @Context 
-            UriInfo uriInfo
             ) throws Exception;
 }

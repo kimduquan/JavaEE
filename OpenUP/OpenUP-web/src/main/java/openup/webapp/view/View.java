@@ -13,8 +13,6 @@ import epf.schema.work_products.Domain;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -52,16 +50,7 @@ public class View implements Serializable {
     
     @PostConstruct
     void postConstruct(){
-        try {
-            deliveryProcesses = persistence.getDeliveryProcesses().collect(Collectors.toList());
-            domains = persistence.getDomains().collect(Collectors.toList());
-            roleSets = persistence.getRoleSets().collect(Collectors.toList());
-            disciplines = persistence.getDisciplines().collect(Collectors.toList());
-            entities = new ArrayList<>();
-        } 
-        catch (Exception ex) {
-            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        entities = new ArrayList<>();
     }
     
     @PreDestroy
@@ -73,33 +62,37 @@ public class View implements Serializable {
         entities.clear();
     }
 
-    public TreeNode getDeliveryProcesses() {
+    public TreeNode getDeliveryProcesses() throws Exception {
         if(this.rootDeliveryProcesses == null){
             this.rootDeliveryProcesses = new DefaultTreeNode();
+            deliveryProcesses = persistence.getDeliveryProcesses().collect(Collectors.toList());
             this.deliveryProcesses.forEach(this::addDeliveryProcess);
         }
         return rootDeliveryProcesses;
     }
 
-    public TreeNode getRoles() {
+    public TreeNode getRoles() throws Exception {
         if(this.rootRoles == null){
             this.rootRoles = new DefaultTreeNode();
+            roleSets = persistence.getRoleSets().collect(Collectors.toList());
             this.roleSets.forEach(this::addRoleSet);
         }
         return rootRoles;
     }
 
-    public TreeNode getWorkProducts() {
+    public TreeNode getWorkProducts() throws Exception {
         if(this.rootWorkProducts == null){
             this.rootWorkProducts = new DefaultTreeNode();
+            domains = persistence.getDomains().collect(Collectors.toList());
             this.domains.forEach(this::addDomain);
         }
         return rootWorkProducts;
     }
     
-    public TreeNode getTasks(){
+    public TreeNode getTasks() throws Exception{
         if(this.rootTasks == null){
             this.rootTasks = new DefaultTreeNode();
+            disciplines = persistence.getDisciplines().collect(Collectors.toList());
             this.disciplines.forEach(this::addDiscipline);
         }
         return this.rootTasks;

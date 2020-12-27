@@ -18,12 +18,18 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
  */
 public class Credential implements AutoCloseable {
     
+    private EntityManagerFactory factory;
+    private EntityManager defaultManager;
     private Map<Long, Session> sessions;
-    private Map<Long, Session> logonSessions;
 
-    public Credential() {
+    public Credential(EntityManagerFactory factory, EntityManager defaultManager) {
+        this.factory = factory;
+        this.defaultManager = defaultManager;
         sessions = new ConcurrentHashMap<>();
-        logonSessions = new ConcurrentHashMap<>();
+    }
+    
+    public EntityManager getDefaultManager(){
+        return defaultManager;
     }
 
     @Override
@@ -32,41 +38,35 @@ public class Credential implements AutoCloseable {
             session.close();
         }
         sessions.clear();
-        
-        for(Session session : logonSessions.values()){
-            session.close();
-        }
-        logonSessions.clear();
     }
     
-    public Session putSession(long timestamp, EntityManagerFactory factory, EntityManager manager){
-        Session session = new Session(factory, manager);
-        logonSessions.put(timestamp, session);
+    public Session putSession(long timestamp){
+        Session session = new Session(factory);
+        sessions.put(timestamp, session);
         return session;
     }
     
     public Session getSession(Principal principal){
         if(principal instanceof JsonWebToken){
             JsonWebToken jwt = (JsonWebToken)principal;
-            logonSessions.computeIfPresent(jwt.getIssuedAtTime(), 
-                    (time, session) -> { 
+            return sessions.computeIfAbsent(
+                    jwt.getIssuedAtTime(), 
+                    (time) -> { 
+                        Session session = new Session(factory);
                         session.putConversation(jwt.getTokenID())
                                 .putManager(jwt.getIssuedAtTime());
-                        logonSessions.remove(jwt.getIssuedAtTime());
-                        sessions.put(jwt.getIssuedAtTime(), session);
                         return session; 
                     }
             );
-            return sessions.get(jwt.getIssuedAtTime());
         }
         else if(principal != null){
             long timestamp = 0;
-            logonSessions.computeIfPresent(timestamp, 
-                    (time, session) -> { 
+            return sessions.computeIfAbsent(
+                    timestamp, 
+                    (time) -> { 
+                        Session session = new Session(factory);
                         session.putConversation(principal.getName())
                                 .putManager(time);
-                        logonSessions.remove(time);
-                        sessions.put(time, session);
                         return session; 
                     }
             );
@@ -77,16 +77,11 @@ public class Credential implements AutoCloseable {
     public Session removeSession(Principal principal){
         if(principal instanceof JsonWebToken){
             JsonWebToken jwt = (JsonWebToken)principal;
-            sessions.computeIfPresent(
-                    jwt.getIssuedAtTime(), 
-                    (time, session) -> { 
-                        session.removeConversation(jwt.getTokenID())
-                                .removeManager(jwt.getIssuedAtTime())
-                                .close();
-                        return session; 
-                    }
-            );
             return sessions.remove(jwt.getIssuedAtTime());
+        }
+        else if(principal != null){
+            long timestamp = 0;
+            return sessions.remove(timestamp);
         }
         return null;
     }

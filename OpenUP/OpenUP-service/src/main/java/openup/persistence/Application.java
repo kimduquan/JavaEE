@@ -28,46 +28,44 @@ public class Application {
     @PersistenceContext(name = "EPF", unitName = "EPF")
     private EntityManager defaultManager;
     
-    private Map<String, Credential> credentials;
+    private Map<String, Context> contexts;
     
     @PostConstruct
     void postConstruct(){
-        credentials = new ConcurrentHashMap<>();
+        contexts = new ConcurrentHashMap<>();
     }
     
     @PreDestroy
     void preDestroy(){
-        credentials.values().forEach(credential -> {
+        contexts.values().forEach(context -> {
             try {
-                credential.close();
+                context.close();
             } 
             catch (Exception ex) {
                 Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-        credentials.clear();
+        contexts.clear();
     }
     
-    public Credential putCredential(String userName, String password, long timestamp){
-        Credential credential = credentials.get(userName);
+    public Context putContext(String unit, String userName, String password, long timestamp){
         Map<String, Object> props = new HashMap<>();
         props.put("javax.persistence.jdbc.user", userName);
         props.put("javax.persistence.jdbc.password", password);            
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("OpenUP", props);
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory(unit, props);
         EntityManager manager = factory.createEntityManager();
-        if(credential == null){
-            credential = new Credential();
-            credentials.put(userName, credential);
-        }
-        credential.putSession(timestamp, factory, manager);
-        return credential;
+        Context context = contexts.computeIfAbsent(unit, key -> {
+            return new Context();
+        });
+        context.putCredential(userName, factory, manager);
+        return context;
     }
     
     public EntityManager getDefaultManager(){
         return defaultManager;
     }
     
-    public Credential getCredential(String name){
-        return credentials.get(name);
+    public Context getContext(String name){
+        return contexts.get(name);
     }
 }

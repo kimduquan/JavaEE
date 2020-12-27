@@ -5,15 +5,14 @@
  */
 package openup.client.config;
 
+import java.net.URL;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import openup.client.Client;
+import org.eclipse.microprofile.rest.client.RestClientBuilder;
 
 /**
  *
@@ -27,24 +26,21 @@ public class ConfigSource {
     @PostConstruct
     void postConstruct(){
         configs = new ConcurrentHashMap<>();
-        String configUrl = System.getenv(ConfigNames.OPENUP_CONFIG_URL);
-        Map data = null;
-        try(Client client = new Client(configUrl)){
-            try(Response response = client
-                    .getWebTarget()
-                    .request(MediaType.APPLICATION_JSON)
-                    .get()){
-                data = response.readEntity(Map.class);
+        String configUrl = System.getenv(ConfigNames.OPENUP_URL);
+        try {
+            Map<String, Object> data = RestClientBuilder
+                    .newBuilder()
+                    .baseUrl(new URL(configUrl))
+                    .build(Config.class)
+                    .getConfigurations();
+            if(data != null){
+                configs.putAll(data);
             }
         } 
         catch (Exception ex) {
             Logger.getLogger(ConfigSource.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if(data != null){
-            data.forEach((Object key, Object value) -> {
-                configs.put(key.toString(), value);
-            });
-        }
+        
     }
     
     public String getConfig(String name, String def){

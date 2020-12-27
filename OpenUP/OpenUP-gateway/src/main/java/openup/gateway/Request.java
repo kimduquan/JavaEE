@@ -5,7 +5,6 @@
  */
 package openup.gateway;
 
-import openup.client.ClientQueue;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Date;
@@ -34,7 +33,6 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.StatusType;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
-import openup.client.config.ConfigNames;
 import org.eclipse.microprofile.context.ManagedExecutor;
 
 /**
@@ -48,6 +46,7 @@ public class Request {
     private UriInfo uriInfo;
     private Client client;
     private URI uri;
+    private static final String OPENUP_URL = "openup.url";
     
     @Inject 
     private ManagedExecutor executor;
@@ -85,7 +84,7 @@ public class Request {
     }
     
     static WebTarget buildTarget(Client client, UriInfo uriInfo){
-        String url = System.getenv(ConfigNames.OPENUP_URL);
+        String url = System.getenv(OPENUP_URL);
         WebTarget webTarget = client.target(url);
         if(uriInfo != null){
             List<PathSegment> segments = uriInfo.getPathSegments();

@@ -10,9 +10,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -20,14 +18,16 @@ import javax.ws.rs.core.MediaType;
  *
  * @author FOXCONN
  */
-@Path("persistence/entity")
+@Path("persistence")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public interface Entities {
     
     @POST
-    @Path("{entity}/{id}")
-    Response persist(
+    @Path("{unit}/{entity}/{id}")
+    void persist(
+            @PathParam("unit")
+            String unit,
             @PathParam("entity")
             String name,
             @PathParam("id")
@@ -35,17 +35,11 @@ public interface Entities {
             InputStream body
             ) throws Exception;
     
-    @GET
-    @Path("{entity}/{id}")
-    Response find(
-            @PathParam("entity")
-            String name,
-            @PathParam("id")
-            String id) throws Exception;
-    
     @DELETE
-    @Path("{entity}/{id}")
-    Response remove(
+    @Path("{unit}/{entity}/{id}")
+    void remove(
+            @PathParam("unit")
+            String unit,
             @PathParam("entity")
             String name,
             @PathParam("id")

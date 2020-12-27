@@ -9,7 +9,7 @@ import epf.DeliveryProcesses;
 import epf.schema.roles.RoleSet;
 import epf.schema.tasks.Discipline;
 import epf.schema.work_products.Domain;
-import java.util.ArrayList;
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Stream;
 import javax.enterprise.context.RequestScoped;
@@ -17,11 +17,10 @@ import javax.inject.Inject;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import openup.client.Client;
-import openup.webapp.Session;
 import openup.client.config.ConfigNames;
 import openup.client.config.ConfigSource;
-import openup.client.security.Security;
+import openup.client.Client;
+import openup.client.Session;
 
 /**
  *
@@ -39,105 +38,65 @@ public class Service implements Persistence {
     @Override
     public Stream<DeliveryProcesses> getDeliveryProcesses() throws Exception {
         String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
-        String header = config.getConfig(ConfigNames.OPENUP_SECURITY_JWT_HEADER, Security.REQUEST_HEADER_NAME);
-        String format = config.getConfig(ConfigNames.OPENUP_SECURITY_JWT_FORMAT, Security.REQUEST_HEADER_FORMAT);
-        List<DeliveryProcesses> deliveryProcesses = new ArrayList<>();
-        try(Client client = new Client(url)){
-            try(Response response = client
-                    .getWebTarget()
-                    .path("query")
+        try(Client client = new Client(session, new URI(url))){
+            Response response = client
+                    .target()
+                    .path("queries")
+                    .path("OpenUP")
                     .path("DeliveryProcesses")
                     .request(MediaType.APPLICATION_JSON)
-                    .header(
-                            header, 
-                            String.format(
-                                    format,
-                                    session.getToken().getRawToken()
-                            )
-                    )
-                    .get()){
-                deliveryProcesses = response.readEntity(new GenericType<List<DeliveryProcesses>> () {});
-            }
+                    .get();
+            List<DeliveryProcesses> deliveryProcesses = response.readEntity(new GenericType<List<DeliveryProcesses>> () {});
+            return deliveryProcesses.stream();
         }
-        return deliveryProcesses.stream();
     }
 
     @Override
     public Stream<RoleSet> getRoleSets() throws Exception {
         String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
-        String header = config.getConfig(ConfigNames.OPENUP_SECURITY_JWT_HEADER, Security.REQUEST_HEADER_NAME);
-        String format = config.getConfig(ConfigNames.OPENUP_SECURITY_JWT_FORMAT, Security.REQUEST_HEADER_FORMAT);
-        List<RoleSet> roleSets = new ArrayList<>();
-        try(Client client = new Client(url)){
-            try(Response response = client
-                    .getWebTarget()
-                    .path("query")
+        try(Client client = new Client(session, new URI(url))){
+            Response response = client
+                    .target()
+                    .path("queries")
+                    .path("OpenUP")
                     .path("RoleSet")
                     .request(MediaType.APPLICATION_JSON)
-                    .header(
-                            header, 
-                            String.format(
-                                    format,
-                                    session.getToken().getRawToken()
-                            )
-                    )
-                    .get()){
-                roleSets = response.readEntity(new GenericType<List<RoleSet>> () {});
-            }
+                    .get();
+            List<RoleSet> roleSets = response.readEntity(new GenericType<List<RoleSet>> () {});
+            return roleSets.stream();
         }
-        return roleSets.stream();
     }
 
     @Override
     public Stream<Domain> getDomains() throws Exception {
         String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
-        String header = config.getConfig(ConfigNames.OPENUP_SECURITY_JWT_HEADER, Security.REQUEST_HEADER_NAME);
-        String format = config.getConfig(ConfigNames.OPENUP_SECURITY_JWT_FORMAT, Security.REQUEST_HEADER_FORMAT);
-        List<Domain> domains = new ArrayList<>();
-        try(Client client = new Client(url)){
-            try(Response response = client
-                    .getWebTarget()
-                    .path("query")
+        try(Client client = new Client(session, new URI(url))){
+            Response response = client
+                    .target()
+                    .path("queries")
+                    .path("OpenUP")
                     .path("Domain")
                     .request(MediaType.APPLICATION_JSON)
-                    .header(
-                            header, 
-                            String.format(
-                                    format,
-                                    session.getToken().getRawToken()
-                            )
-                    )
-                    .get()){
-                domains = response.readEntity(new GenericType<List<Domain>> () {});
-            }
+                    .get();
+            List<Domain> domains = response.readEntity(new GenericType<List<Domain>> () {});
+            return domains.stream();
         }
-        return domains.stream();
     }
 
     @Override
     public Stream<Discipline> getDisciplines() throws Exception {
         String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
-        String header = config.getConfig(ConfigNames.OPENUP_SECURITY_JWT_HEADER, Security.REQUEST_HEADER_NAME);
-        String format = config.getConfig(ConfigNames.OPENUP_SECURITY_JWT_FORMAT, Security.REQUEST_HEADER_FORMAT);
-        List<Discipline> disciplines = new ArrayList<>();
-        try(Client client = new Client(url)){
-            try(Response response = client
-                    .getWebTarget()
-                    .path("query")
+        try(Client client = new Client(session, new URI(url))){
+            Response response = client
+                    .target()
+                    .path("queries")
+                    .path("OpenUP")
                     .path("Discipline")
                     .request(MediaType.APPLICATION_JSON)
-                    .header(
-                            header, 
-                            String.format(
-                                    format,
-                                    session.getToken().getRawToken()
-                            )
-                    )
-                    .get()){
-                disciplines = response.readEntity(new GenericType<List<Discipline>> () {});
-            }
+                    .get();
+            List<Discipline> disciplines = response.readEntity(new GenericType<List<Discipline>> () {});
+            return disciplines.stream();
         }
-        return disciplines.stream();
     }
     
 }

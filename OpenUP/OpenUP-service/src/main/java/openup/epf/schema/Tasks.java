@@ -15,7 +15,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import openup.persistence.Cache;
+import openup.persistence.Request;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -35,7 +35,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 public class Tasks implements openup.client.epf.schema.Tasks {
     
     @Inject
-    private Cache cache;
+    private Request cache;
     
     @Inject
     private Principal principal;
@@ -56,6 +56,7 @@ public class Tasks implements openup.client.epf.schema.Tasks {
     )
     public List<Discipline> getDisciplines() throws Exception{
         return cache.getNamedQueryResult(
+                "OpenUP",
                 principal,
                 Discipline.DISCIPLINES, 
                 Discipline.class);

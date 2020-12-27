@@ -22,16 +22,10 @@
             <type>pom</type>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>OpenUP-client</artifactId>
-            <version>1.0.0</version>
-        </dependency>
         <!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.context-propagation/microprofile-context-propagation-api -->
         <dependency>
             <groupId>org.eclipse.microprofile.context-propagation</groupId>
             <artifactId>microprofile-context-propagation-api</artifactId>
-            <version>1.0.2</version>
         </dependency>
     </dependencies>
 

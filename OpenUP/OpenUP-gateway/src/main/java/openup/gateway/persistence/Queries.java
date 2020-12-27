@@ -37,27 +37,15 @@ public class Queries {
     private Request request;
     
     @GET
-    @Path("query/{criteria: .+}")
+    @Path("{unit}/{criteria: .+}")
     @Asynchronous
     public CompletionStage<Response> getCriteriaQueryResult(
             @Context HttpHeaders headers, 
             @Context UriInfo uriInfo,
+            @PathParam("unit")
+            String unit,
             @PathParam("criteria")
             List<PathSegment> paths
-            ) throws Exception{
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        return request.request("GET", null);
-    }
-    
-    @GET
-    @Path("queries/{query}")
-    @Asynchronous
-    public CompletionStage<Response> getNamedQueryResult(
-            @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo,
-            @PathParam("query")
-            String name
             ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);

@@ -15,6 +15,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
@@ -36,12 +37,15 @@ public class Security {
     private Request request;
     
     @POST
+    @Path("{unit}")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
     @Asynchronous
     public CompletionStage<Response> login(
             @Context HttpHeaders headers, 
             @Context UriInfo uriInfo,
+            @PathParam("unit")
+            String unit,
             InputStream in) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
@@ -62,11 +66,14 @@ public class Security {
     }
     
     @DELETE
+    @Path("{unit}")
     @Produces(MediaType.TEXT_PLAIN)
     @Asynchronous
     public CompletionStage<Response> logOut(
             @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo) throws Exception{
+            @Context UriInfo uriInfo,
+            @PathParam("unit")
+            String unit) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         return request.request("DELETE", null);

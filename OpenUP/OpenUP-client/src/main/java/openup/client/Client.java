@@ -5,53 +5,29 @@
  */
 package openup.client;
 
-import openup.client.ssl.DefaultHostnameVerifier;
-import openup.client.ssl.DefaultTrustManager;
-import java.security.GeneralSecurityException;
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.ws.rs.client.ClientBuilder;
+import java.net.URI;
 import javax.ws.rs.client.WebTarget;
 
 /**
+ *
  * @author FOXCONN
  */
 public class Client implements AutoCloseable {
-
-    private WebTarget webTarget;
+    
+    private Session session;
+    private URI uri;
     private javax.ws.rs.client.Client client;
     
-    public Client(String url) {
-        client = ClientBuilder.newBuilder()
-                .sslContext(getSSLContext())
-                .hostnameVerifier(getHostnameVerifier())
-                .build();
-        webTarget = client.target(url);
-    }
-
-    private HostnameVerifier getHostnameVerifier() {
-        return new DefaultHostnameVerifier();
-    }
-
-    private SSLContext getSSLContext() {
-        TrustManager x509 = new DefaultTrustManager();
-        SSLContext ctx = null;
-        try {
-            ctx = SSLContext.getInstance("SSL");
-            ctx.init(null, new TrustManager[]{x509}, null);
-        } 
-        catch (GeneralSecurityException ex) {
-        }
-        return ctx;
+    public Client(Session session, URI uri){
+        client = session.clients().poll(uri);
     }
 
     @Override
     public void close() throws Exception {
-        client.close();
+        session.clients().add(uri, client);
     }
     
-    public WebTarget getWebTarget(){
-        return webTarget;
+    public WebTarget target(){
+        return client.target(uri).register(session.header());
     }
 }

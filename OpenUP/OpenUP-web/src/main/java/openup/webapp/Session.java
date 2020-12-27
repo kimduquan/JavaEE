@@ -6,13 +6,12 @@
 package openup.webapp;
 
 import java.io.Serializable;
-import java.security.Principal;
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.security.enterprise.SecurityContext;
 import openup.webapp.security.TokenPrincipal;
-import openup.client.security.Token;
 
 /**
  *
@@ -22,21 +21,17 @@ import openup.client.security.Token;
 @Named("webapp_session")
 public class Session implements Serializable {
     
-    private Token token;
-    
     @Inject
     private SecurityContext context;
     
-    public Session(){
-        
-    }
+    @Inject
+    private openup.client.Session client;
     
-    public Token getToken(){
-        if(token == null){
-            if(context.getCallerPrincipal() instanceof TokenPrincipal){
-                token = ((TokenPrincipal)context.getCallerPrincipal()).getToken();
-            }
+    @PostConstruct
+    void postConstruct(){
+        if(context.getCallerPrincipal() instanceof TokenPrincipal){
+            TokenPrincipal principal = ((TokenPrincipal)context.getCallerPrincipal());
+            client.header().setToken(principal.getToken().getRawToken());
         }
-        return token;
     }
 }

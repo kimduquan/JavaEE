@@ -17,32 +17,32 @@ import javax.persistence.EntityManagerFactory;
 public class Conversation implements AutoCloseable {
     
     private EntityManagerFactory factory;
-    private Map<Long, EntityManager> conversations;
+    private Map<Long, EntityManager> managers;
 
     public Conversation(EntityManagerFactory factory) {
         this.factory = factory;
-        conversations = new ConcurrentHashMap<>();
+        managers = new ConcurrentHashMap<>();
     }
     
     public EntityManager getManager(long cid){
-        return conversations.get(cid);
+        return managers.get(cid);
     }
     
     public EntityManager putManager(long cid){
         EntityManager manager = factory.createEntityManager();
-        conversations.put(cid, manager);
+        managers.put(cid, manager);
         return manager;
     }
     
     public EntityManager removeManager(long cid){
-        return conversations.remove(cid);
+        return managers.remove(cid);
     }
 
     @Override
     public void close() throws Exception {
-        conversations.values().forEach(manager -> {
+        managers.values().forEach(manager -> {
             manager.close();
         });
-        conversations.clear();
+        managers.clear();
     }
 }
