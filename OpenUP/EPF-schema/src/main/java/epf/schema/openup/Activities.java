@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf;
+package epf.schema.openup;
 
-import epf.schema.delivery_processes.Milestone;
+import epf.schema.delivery_processes.Activity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,25 +20,28 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  *
  * @author FOXCONN
  */
-@Schema(title = "_Milestones_")
+@Schema(title = "_Activities_")
 @Entity
-@Table(name = "_MILESTONES_", schema = "EPF")
-public class Milestones {
+@Table(name = "_ACTIVITIES_", schema = "EPF")
+public class Activities {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @ManyToOne
-    @JoinColumn(name = "MILESTONE")
-    private Milestone milestone;
+    @JoinColumn(name = "ACTIVITY")
+    private Activity activity;
     
     @Column(name = "NAME", nullable = false)
     private String name;
     
+    @Column(name = "SUMMARY")
+    private String summary;
+    
     @ManyToOne
-    @JoinColumn(name = "PREDECESSOR")
-    private Iterations predecessor;
+    @JoinColumn(name = "PARENT_ACTIVITIES")
+    private Iterations parentActivities;
 
     public Long getId() {
         return id;
@@ -48,12 +51,12 @@ public class Milestones {
         this.id = id;
     }
 
-    public Milestone getMilestone() {
-        return milestone;
+    public Activity getActivity() {
+        return activity;
     }
 
-    public void setMilestone(Milestone milestone) {
-        this.milestone = milestone;
+    public void setActivity(Activity activity) {
+        this.activity = activity;
     }
 
     public String getName() {
@@ -64,11 +67,19 @@ public class Milestones {
         this.name = name;
     }
 
-    public Iterations getPredecessor() {
-        return predecessor;
+    public String getSummary() {
+        return summary;
     }
 
-    public void setPredecessor(Iterations predecessor) {
-        this.predecessor = predecessor;
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
+    public Iterations getParentActivities() {
+        return parentActivities;
+    }
+
+    public void setParentActivities(Iterations parentActivities) {
+        this.parentActivities = parentActivities;
     }
 }

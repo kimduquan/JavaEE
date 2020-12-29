@@ -8,9 +8,18 @@ package openup.webapp.view;
 import epf.schema.tasks.Discipline;
 import epf.schema.tasks.Task;
 import java.io.Serializable;
+import java.net.URI;
 import java.util.List;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import openup.client.Client;
+import openup.client.config.ConfigNames;
+import openup.client.config.ConfigSource;
+import openup.webapp.Session;
 
 /**
  *
@@ -22,20 +31,42 @@ public class Tasks implements Serializable {
    
     private List<Discipline> disciplines;
     private List<Task> tasks;
+    
+    @Inject
+    private Session session;
+    
+    @Inject
+    private ConfigSource config;
 
-    public List<Discipline> getDisciplines() {
+    public List<Discipline> getDisciplines() throws Exception {
+        if(disciplines == null){
+            String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
+            try(Client client = new Client(session.getClient(), new URI(url))){
+                Response response = client
+                        .target()
+                        .path("OpenUP")
+                        .path("Discipline")
+                        .request(MediaType.APPLICATION_JSON)
+                        .get();
+                disciplines = response.readEntity(new GenericType<List<Discipline>> () {});
+            }
+        }
         return disciplines;
     }
 
-    public void setDisciplines(List<Discipline> disciplines) {
-        this.disciplines = disciplines;
-    }
-
-    public List<Task> getTasks() {
+    public List<Task> getTasks() throws Exception {
+        if(tasks == null){
+            String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
+            try(Client client = new Client(session.getClient(), new URI(url))){
+                Response response = client
+                        .target()
+                        .path("OpenUP")
+                        .path("Task")
+                        .request(MediaType.APPLICATION_JSON)
+                        .get();
+                tasks = response.readEntity(new GenericType<List<Task>> () {});
+            }
+        }
         return tasks;
-    }
-
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
     }
 }

@@ -3,12 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.webapp.persistence;
+package openup.webapp.component;
+
+import java.io.Serializable;
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
 
 /**
  *
  * @author FOXCONN
  */
-public interface Entity {
-    String getName();
+@ViewScoped
+@Named("artifact")
+public class Artifact implements Serializable {
+    
 }

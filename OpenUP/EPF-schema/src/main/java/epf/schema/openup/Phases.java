@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf;
+package epf.schema.openup;
 
-import epf.schema.tasks.Task;
+import epf.schema.delivery_processes.Phase;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,24 +20,25 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  *
  * @author FOXCONN
  */
-@Schema(title = "_Tasks_")
+@Schema(title = "_Phases_")
 @Entity
-@Table(name = "_TASKS_", schema = "EPF")
-public class Tasks {
+@Table(name = "_PHASES_", schema = "EPF")
+public class Phases {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @ManyToOne
-    @JoinColumn(name = "TASK")
-    private Task task;
+    @JoinColumn(name = "PHASE")
+    private Phase phase;
     
     @Column(name = "NAME", nullable = false)
     private String name;
     
-    @Column(name = "SUMMARY")
-    private String summary;
+    @ManyToOne
+    @JoinColumn(name = "PARENT_ACTIVITIES")
+    private DeliveryProcesses parentActivities;
 
     public Long getId() {
         return id;
@@ -47,12 +48,12 @@ public class Tasks {
         this.id = id;
     }
 
-    public Task getTask() {
-        return task;
+    public Phase getPhase() {
+        return phase;
     }
 
-    public void setTask(Task task) {
-        this.task = task;
+    public void setPhase(Phase phase) {
+        this.phase = phase;
     }
 
     public String getName() {
@@ -63,11 +64,11 @@ public class Tasks {
         this.name = name;
     }
 
-    public String getSummary() {
-        return summary;
+    public DeliveryProcesses getParentActivities() {
+        return parentActivities;
     }
 
-    public void setSummary(String summary) {
-        this.summary = summary;
+    public void setParentActivities(DeliveryProcesses parentActivities) {
+        this.parentActivities = parentActivities;
     }
 }

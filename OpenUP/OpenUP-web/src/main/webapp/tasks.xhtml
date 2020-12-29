@@ -15,21 +15,21 @@
             <ui:define name="left">
                 <c:forEach 
                     items="#{tasks.disciplines}" 
-                    var="discipline">
+                    var="varDiscipline">
                     <h:commandLink 
-                        title="#{discipline.summary}" 
-                        value="#{discipline.name}">
+                        title="#{varDiscipline.summary}" 
+                        value="#{varDiscipline.name}">
                     </h:commandLink>
                 </c:forEach>
             </ui:define>
 
             <ui:define name="content">
-                <h:dataTable value="#{tasks.tasks}" var="task">
+                <h:dataTable value="#{tasks.tasks}" var="varTask">
                     <h:column>
-                        <h:outputText value="#{task.name}"></h:outputText>
+                        <h:outputText value="#{varTask.name}"></h:outputText>
                     </h:column>
                     <h:column>
-                        <h:outputText value="#{task.summary}"></h:outputText>
+                        <h:outputText value="#{varTask.summary}"></h:outputText>
                     </h:column>
                 </h:dataTable>
             </ui:define>

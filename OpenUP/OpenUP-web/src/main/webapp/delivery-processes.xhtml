@@ -15,16 +15,16 @@
             <ui:define name="left">
                 <h:dataTable 
                     value="#{delivery_processes.phases}"
-                    var="phase">
+                    var="varPhase">
                     <h:column>
                         <h:outputText 
-                            value="#{phase.parentActivities.name}"
-                            title="#{phase.parentActivities.summary}"/>
+                            value="#{varPhase.parentActivities.name}"
+                            title="#{varPhase.parentActivities.summary}"/>
                     </h:column>
                     <h:column>
                         <h:outputText 
-                            value="#{phase.name}"
-                            title="#{phase.name}"/>
+                            value="#{varPhase.name}"
+                            title="#{varPhase.name}"/>
                     </h:column>
                 </h:dataTable>
             </ui:define>

@@ -3,10 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf;
+package epf.schema.openup;
 
-import epf.schema.work_products.Artifact;
-import epf.schema.work_products.Domain;
+import epf.schema.delivery_processes.DeliveryProcess;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,28 +20,24 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  *
  * @author FOXCONN
  */
-@Schema(title = "_Artifacts_")
+@Schema(title = "_Delivery_Processes_")
 @Entity
-@Table(name = "_ARTIFACTS_", schema = "EPF")
-public class Artifacts {
+@Table(name = "_DELIVERY_PROCESSES_", schema = "EPF")
+public class DeliveryProcesses {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @ManyToOne
-    @JoinColumn(name = "ARTIFACT")
-    private Artifact artifact;
+    @JoinColumn(name = "DELIVERY_PROCESS")
+    private DeliveryProcess deliveryProcess;
     
-    @Column(name = "NAME", nullable = false)
+    @Column(name = "NAME", unique = true, nullable = false)
     private String name;
     
     @Column(name = "SUMMARY")
     private String summary;
-    
-    @ManyToOne
-    @JoinColumn(name = "DOMAINS")
-    private Domain domains;
 
     public Long getId() {
         return id;
@@ -52,12 +47,12 @@ public class Artifacts {
         this.id = id;
     }
 
-    public Artifact getArtifact() {
-        return artifact;
+    public DeliveryProcess getDeliveryProcess() {
+        return deliveryProcess;
     }
 
-    public void setArtifact(Artifact artifact) {
-        this.artifact = artifact;
+    public void setDeliveryProcess(DeliveryProcess deliveryProcess) {
+        this.deliveryProcess = deliveryProcess;
     }
 
     public String getName() {
@@ -74,13 +69,5 @@ public class Artifacts {
 
     public void setSummary(String summary) {
         this.summary = summary;
-    }
-
-    public Domain getDomains() {
-        return domains;
-    }
-
-    public void setDomains(Domain domains) {
-        this.domains = domains;
     }
 }

@@ -46,9 +46,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  *
  * @author FOXCONN
  */
-@Path("persistence/queries")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
+@Path("persistence")
 @RolesAllowed(Roles.ANY_ROLE)
 @RequestScoped
 public class Queries implements openup.client.persistence.Queries {

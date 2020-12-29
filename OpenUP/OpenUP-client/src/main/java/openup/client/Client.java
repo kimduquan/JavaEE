@@ -20,6 +20,8 @@ public class Client implements AutoCloseable {
     
     public Client(Session session, URI uri){
         client = session.clients().poll(uri);
+        this.uri = uri;
+        this.session = session;
     }
 
     @Override

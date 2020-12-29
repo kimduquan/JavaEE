@@ -15,10 +15,10 @@
             <ui:define name="left">
                 <c:forEach 
                     items="#{roles.roleSets}" 
-                    var="role_set">
+                    var="varRoleSet">
                     <h:commandLink 
-                        value="#{role_set.name}"
-                        title="#{role_set.summary}">
+                        value="#{varRoleSet.name}"
+                        title="#{varRoleSet.summary}">
                     </h:commandLink>
                 </c:forEach>
             </ui:define>

@@ -34,4 +34,8 @@ public class Session implements Serializable {
             client.header().setToken(principal.getToken().getRawToken());
         }
     }
+    
+    public openup.client.Session getClient(){
+        return client;
+    }
 }

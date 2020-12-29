@@ -8,9 +8,18 @@ package openup.webapp.view;
 import epf.schema.roles.Role;
 import epf.schema.roles.RoleSet;
 import java.io.Serializable;
+import java.net.URI;
 import java.util.List;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import openup.client.Client;
+import openup.client.config.ConfigNames;
+import openup.client.config.ConfigSource;
+import openup.webapp.Session;
 
 /**
  *
@@ -22,20 +31,42 @@ public class Roles implements Serializable {
     
     private List<RoleSet> roleSets;
     private List<Role> roles;
+    
+    @Inject
+    private Session session;
+    
+    @Inject
+    private ConfigSource config;
 
-    public List<RoleSet> getRoleSets() {
+    public List<RoleSet> getRoleSets() throws Exception {
+        if(roleSets == null){
+            String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
+            try(Client client = new Client(session.getClient(), new URI(url))){
+                Response response = client
+                        .target()
+                        .path("OpenUP")
+                        .path("RoleSet")
+                        .request(MediaType.APPLICATION_JSON)
+                        .get();
+                roleSets = response.readEntity(new GenericType<List<RoleSet>> () {});
+            }
+        }
         return roleSets;
     }
 
-    public void setRoleSets(List<RoleSet> roleSets) {
-        this.roleSets = roleSets;
-    }
-
-    public List<Role> getRoles() {
+    public List<Role> getRoles() throws Exception {
+        if(roles == null){
+            String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
+            try(Client client = new Client(session.getClient(), new URI(url))){
+                Response response = client
+                        .target()
+                        .path("OpenUP")
+                        .path("_Role")
+                        .request(MediaType.APPLICATION_JSON)
+                        .get();
+                roles = response.readEntity(new GenericType<List<Role>> () {});
+            }
+        }
         return roles;
-    }
-
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
     }
 }

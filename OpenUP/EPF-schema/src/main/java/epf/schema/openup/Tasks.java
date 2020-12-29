@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf;
+package epf.schema.openup;
 
-import epf.schema.delivery_processes.Activity;
+import epf.schema.tasks.Task;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,28 +20,24 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  *
  * @author FOXCONN
  */
-@Schema(title = "_Activities_")
+@Schema(title = "_Tasks_")
 @Entity
-@Table(name = "_ACTIVITIES_", schema = "EPF")
-public class Activities {
+@Table(name = "_TASKS_", schema = "EPF")
+public class Tasks {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @ManyToOne
-    @JoinColumn(name = "ACTIVITY")
-    private Activity activity;
+    @JoinColumn(name = "TASK")
+    private Task task;
     
     @Column(name = "NAME", nullable = false)
     private String name;
     
     @Column(name = "SUMMARY")
     private String summary;
-    
-    @ManyToOne
-    @JoinColumn(name = "PARENT_ACTIVITIES")
-    private Iterations parentActivities;
 
     public Long getId() {
         return id;
@@ -51,12 +47,12 @@ public class Activities {
         this.id = id;
     }
 
-    public Activity getActivity() {
-        return activity;
+    public Task getTask() {
+        return task;
     }
 
-    public void setActivity(Activity activity) {
-        this.activity = activity;
+    public void setTask(Task task) {
+        this.task = task;
     }
 
     public String getName() {
@@ -73,13 +69,5 @@ public class Activities {
 
     public void setSummary(String summary) {
         this.summary = summary;
-    }
-
-    public Iterations getParentActivities() {
-        return parentActivities;
-    }
-
-    public void setParentActivities(Iterations parentActivities) {
-        this.parentActivities = parentActivities;
     }
 }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf;
+package epf.schema.openup;
 
 import epf.schema.delivery_processes.Iteration;
 import javax.persistence.Column;

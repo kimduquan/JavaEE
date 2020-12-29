@@ -13,7 +13,6 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
-import javax.inject.Named;
 import openup.client.config.Config;
 import openup.client.config.ConfigNames;
 import openup.client.config.ConfigSource;
@@ -93,7 +92,7 @@ public class Session implements Serializable {
                 .register(securityHeader);
     }
     
-    public ClientQueue clients(){
+    ClientQueue clients(){
         return clients;
     }
     

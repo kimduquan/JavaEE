@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf;
+package epf.schema.openup;
 
-import epf.schema.delivery_processes.Phase;
+import epf.schema.work_products.Artifact;
+import epf.schema.work_products.Domain;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,25 +21,28 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  *
  * @author FOXCONN
  */
-@Schema(title = "_Phases_")
+@Schema(title = "_Artifacts_")
 @Entity
-@Table(name = "_PHASES_", schema = "EPF")
-public class Phases {
+@Table(name = "_ARTIFACTS_", schema = "EPF")
+public class Artifacts {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @ManyToOne
-    @JoinColumn(name = "PHASE")
-    private Phase phase;
+    @JoinColumn(name = "ARTIFACT")
+    private Artifact artifact;
     
     @Column(name = "NAME", nullable = false)
     private String name;
     
+    @Column(name = "SUMMARY")
+    private String summary;
+    
     @ManyToOne
-    @JoinColumn(name = "PARENT_ACTIVITIES")
-    private DeliveryProcesses parentActivities;
+    @JoinColumn(name = "DOMAINS")
+    private Domain domains;
 
     public Long getId() {
         return id;
@@ -48,12 +52,12 @@ public class Phases {
         this.id = id;
     }
 
-    public Phase getPhase() {
-        return phase;
+    public Artifact getArtifact() {
+        return artifact;
     }
 
-    public void setPhase(Phase phase) {
-        this.phase = phase;
+    public void setArtifact(Artifact artifact) {
+        this.artifact = artifact;
     }
 
     public String getName() {
@@ -64,11 +68,19 @@ public class Phases {
         this.name = name;
     }
 
-    public DeliveryProcesses getParentActivities() {
-        return parentActivities;
+    public String getSummary() {
+        return summary;
     }
 
-    public void setParentActivities(DeliveryProcesses parentActivities) {
-        this.parentActivities = parentActivities;
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
+    public Domain getDomains() {
+        return domains;
+    }
+
+    public void setDomains(Domain domains) {
+        this.domains = domains;
     }
 }

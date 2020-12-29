@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.webapp.view;
+package openup.webapp.component;
 
 import java.io.Serializable;
 import javax.faces.view.ViewScoped;
@@ -14,7 +14,7 @@ import javax.inject.Named;
  * @author FOXCONN
  */
 @ViewScoped
-@Named("artifact")
-public class Artifact implements Serializable {
+@Named("role")
+public class Role implements Serializable {
     
 }

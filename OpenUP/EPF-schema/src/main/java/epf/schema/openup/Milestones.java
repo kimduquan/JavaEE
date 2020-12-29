@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf;
+package epf.schema.openup;
 
-import epf.schema.delivery_processes.DeliveryProcess;
+import epf.schema.delivery_processes.Milestone;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,24 +20,25 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  *
  * @author FOXCONN
  */
-@Schema(title = "_Delivery_Processes_")
+@Schema(title = "_Milestones_")
 @Entity
-@Table(name = "_DELIVERY_PROCESSES_", schema = "EPF")
-public class DeliveryProcesses {
+@Table(name = "_MILESTONES_", schema = "EPF")
+public class Milestones {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @ManyToOne
-    @JoinColumn(name = "DELIVERY_PROCESS")
-    private DeliveryProcess deliveryProcess;
+    @JoinColumn(name = "MILESTONE")
+    private Milestone milestone;
     
-    @Column(name = "NAME", unique = true, nullable = false)
+    @Column(name = "NAME", nullable = false)
     private String name;
     
-    @Column(name = "SUMMARY")
-    private String summary;
+    @ManyToOne
+    @JoinColumn(name = "PREDECESSOR")
+    private Iterations predecessor;
 
     public Long getId() {
         return id;
@@ -47,12 +48,12 @@ public class DeliveryProcesses {
         this.id = id;
     }
 
-    public DeliveryProcess getDeliveryProcess() {
-        return deliveryProcess;
+    public Milestone getMilestone() {
+        return milestone;
     }
 
-    public void setDeliveryProcess(DeliveryProcess deliveryProcess) {
-        this.deliveryProcess = deliveryProcess;
+    public void setMilestone(Milestone milestone) {
+        this.milestone = milestone;
     }
 
     public String getName() {
@@ -63,11 +64,11 @@ public class DeliveryProcesses {
         this.name = name;
     }
 
-    public String getSummary() {
-        return summary;
+    public Iterations getPredecessor() {
+        return predecessor;
     }
 
-    public void setSummary(String summary) {
-        this.summary = summary;
+    public void setPredecessor(Iterations predecessor) {
+        this.predecessor = predecessor;
     }
 }
