@@ -48,15 +48,21 @@ public class Application {
         contexts.clear();
     }
     
-    public Context putContext(String unit, String userName, String password, long timestamp){
+    public Context putContext(String unit, String userName, String password, long timestamp) throws Exception{
+        contexts.computeIfPresent(unit, (name, context) -> {
+            if(context != null){
+                return context;
+            }
+            return new Context();
+        });
+        Context context = contexts.computeIfAbsent(unit, key -> {
+            return new Context();
+        });
         Map<String, Object> props = new HashMap<>();
         props.put("javax.persistence.jdbc.user", userName);
         props.put("javax.persistence.jdbc.password", password);            
         EntityManagerFactory factory = Persistence.createEntityManagerFactory(unit, props);
         EntityManager manager = factory.createEntityManager();
-        Context context = contexts.computeIfAbsent(unit, key -> {
-            return new Context();
-        });
         context.putCredential(userName, factory, manager);
         return context;
     }

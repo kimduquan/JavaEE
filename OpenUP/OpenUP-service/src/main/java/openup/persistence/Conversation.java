@@ -29,9 +29,9 @@ public class Conversation implements AutoCloseable {
     }
     
     public EntityManager putManager(long cid){
-        EntityManager manager = factory.createEntityManager();
-        managers.put(cid, manager);
-        return manager;
+        return managers.computeIfAbsent(cid, id -> {
+            return factory.createEntityManager();
+        });
     }
     
     public EntityManager removeManager(long cid){

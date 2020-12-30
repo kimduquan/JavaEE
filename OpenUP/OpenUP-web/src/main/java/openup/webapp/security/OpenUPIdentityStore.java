@@ -6,9 +6,13 @@
 package openup.webapp.security;
 
 import java.net.URL;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.security.enterprise.CallerPrincipal;
@@ -31,11 +35,71 @@ import org.eclipse.microprofile.rest.client.RestClientBuilder;
 @ApplicationScoped
 public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentityStore {
     
+    private Map<String, Session> sessions;
+    
     @Inject
     private ConfigSource config;
     
+    @PostConstruct
+    void postConstruct(){
+        sessions = new ConcurrentHashMap<>();
+    }
+    
+    @PreDestroy
+    void preDestroy(){
+        sessions.clear();
+    }
+    
     public CredentialValidationResult validate(BasicAuthenticationCredential credential) throws Exception{
         CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
+        sessions.computeIfPresent(credential.getCaller(), (name, session) -> {
+            if(session != null 
+                    && !session.getCredential().compareTo(
+                            credential.getCaller(), 
+                            credential.getPasswordAsString())
+                    ){
+                session = null;
+            }
+            if(session == null){
+                try {
+                    Token token = login(credential);
+                    if(token != null){
+                        TokenPrincipal principal = new TokenPrincipal(credential.getCaller(), token);
+                        session = new Session(credential, principal);
+                    }
+                } 
+                catch (Exception ex) {
+                    Logger.getLogger(OpenUPIdentityStore.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            return session;
+        });
+        sessions.computeIfAbsent(credential.getCaller(), (name) -> {
+            try {
+                Token token = login(credential);
+                if(token != null){
+                    TokenPrincipal principal = new TokenPrincipal(credential.getCaller(), token);
+                    return new Session(credential, principal);
+                }
+            } 
+            catch (Exception ex) {
+                Logger.getLogger(OpenUPIdentityStore.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return null;
+        });
+        Session session = sessions.get(credential.getCaller());
+        if(session != null){
+            result = new CredentialValidationResult(
+                    session.getPrincipal(), 
+                    session.getPrincipal()
+                            .getToken()
+                            .getGroups()
+            );
+        }
+        return result;
+    }
+    
+    Token login(BasicAuthenticationCredential credential) throws Exception{
         String base = config.getConfig(ConfigNames.OPENUP_URL, "");
         URL baseUrl = new URL(base);
         URL audienceUrl = new URL(String.format(
@@ -61,12 +125,7 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
             header.setToken(token);
             jwt = service.authenticate();
         }
-        if(jwt != null){
-            TokenPrincipal principal = new TokenPrincipal(jwt.getName());
-            principal.setToken(jwt);
-            result = new CredentialValidationResult(principal, jwt.getGroups());
-        }
-        return result;
+        return jwt;
     }
     
     @Override
@@ -89,8 +148,7 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
             header.setToken(credential.getToken());
             Token jwt = service.authenticate();
             if(jwt != null){
-                TokenPrincipal principal = new TokenPrincipal(jwt.getName());
-                principal.setToken(jwt);
+                TokenPrincipal principal = new TokenPrincipal(jwt.getName(), jwt);
                 result = new CredentialValidationResult(principal, jwt.getGroups());
             }
         } 

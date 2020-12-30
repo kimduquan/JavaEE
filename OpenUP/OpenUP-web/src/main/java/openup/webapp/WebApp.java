@@ -6,6 +6,7 @@
 package openup.webapp;
 
 import java.io.IOException;
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.faces.annotation.FacesConfig;
 import javax.inject.Named;
@@ -44,6 +45,7 @@ import openup.client.epf.schema.Roles;
 @BasicAuthenticationMechanismDefinition(realmName = "OpenUP")
 @FacesConfig
 @Named("webapp")
+@RolesAllowed(Roles.ANY_ROLE)
 public class WebApp extends HttpServlet {
 
     @Override

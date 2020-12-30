@@ -38,12 +38,14 @@ public class Credential implements AutoCloseable {
             session.close();
         }
         sessions.clear();
+        defaultManager.close();
+        factory.close();
     }
     
     public Session putSession(long timestamp){
-        Session session = new Session(factory);
-        sessions.put(timestamp, session);
-        return session;
+        return sessions.computeIfAbsent(timestamp, time -> {
+            return new Session(factory);
+        });
     }
     
     public Session getSession(Principal principal){

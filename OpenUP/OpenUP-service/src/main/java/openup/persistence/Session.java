@@ -28,9 +28,9 @@ public class Session implements AutoCloseable {
     }
     
     public Conversation putConversation(String sessionId){
-        Conversation conversation = new Conversation(factory);
-        conversations.put(sessionId, conversation);
-        return conversation;
+        return conversations.computeIfAbsent(sessionId, id -> {
+            return new Conversation(factory);
+        });
     }
     
     public Conversation removeConversation(String sessionId){
