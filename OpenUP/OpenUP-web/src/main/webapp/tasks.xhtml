@@ -13,14 +13,14 @@
             </ui:define>
 
             <ui:define name="left">
-                <c:forEach 
-                    items="#{tasks.disciplines}" 
+                <ui:repeat 
+                    value="#{tasks.disciplines}"
                     var="varDiscipline">
                     <h:commandLink 
                         title="#{varDiscipline.summary}" 
                         value="#{varDiscipline.name}">
                     </h:commandLink>
-                </c:forEach>
+                </ui:repeat>
             </ui:define>
 
             <ui:define name="content">

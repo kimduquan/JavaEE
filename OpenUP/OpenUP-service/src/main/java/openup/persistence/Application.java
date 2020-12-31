@@ -25,9 +25,6 @@ import javax.persistence.PersistenceContext;
 @ApplicationScoped
 public class Application {
     
-    @PersistenceContext(name = "EPF", unitName = "EPF")
-    private EntityManager defaultManager;
-    
     private Map<String, Context> contexts;
     
     @PostConstruct
@@ -49,26 +46,29 @@ public class Application {
     }
     
     public Context putContext(String unit, String userName, String password, long timestamp) throws Exception{
-        contexts.computeIfPresent(unit, (name, context) -> {
-            if(context != null){
-                return context;
-            }
-            return new Context();
-        });
-        Context context = contexts.computeIfAbsent(unit, key -> {
-            return new Context();
-        });
         Map<String, Object> props = new HashMap<>();
         props.put("javax.persistence.jdbc.user", userName);
         props.put("javax.persistence.jdbc.password", password);            
         EntityManagerFactory factory = Persistence.createEntityManagerFactory(unit, props);
         EntityManager manager = factory.createEntityManager();
-        context.putCredential(userName, factory, manager);
-        return context;
-    }
-    
-    public EntityManager getDefaultManager(){
-        return defaultManager;
+        contexts.computeIfPresent(unit, (name, context) -> {
+            if(context != null){
+                try {
+                    context.close();
+                } 
+                catch (Exception ex) {
+                    Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            context = new Context();
+            context.putCredential(userName, factory, manager);
+            return context;
+        });
+        return contexts.computeIfAbsent(unit, key -> {
+            Context context = new Context();
+            context.putCredential(userName, factory, manager);
+            return context;
+        });
     }
     
     public Context getContext(String name){

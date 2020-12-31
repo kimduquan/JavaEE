@@ -30,14 +30,14 @@
             </ui:define>
 
             <ui:define name="content">
-                <c:forEach 
-                    items="#{delivery_processes.iterations}" 
+                <ui:repeat 
+                    value="#{delivery_processes.iterations}"
                     var="iteration">
                     <h:commandLink 
                         title="#{iteration.extends.summary}"
                         value="#{iteration.name}">
                     </h:commandLink>
-                </c:forEach>
+                </ui:repeat>
                 <h:dataTable 
                     value="#{delivery_processes.tasks}"
                     var="task">

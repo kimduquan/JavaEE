@@ -13,14 +13,14 @@
             </ui:define>
 
             <ui:define name="left">
-                <c:forEach 
-                    items="#{roles.roleSets}" 
+                <ui:repeat 
+                    value="#{roles.roleSets}"
                     var="varRoleSet">
                     <h:commandLink 
                         value="#{varRoleSet.name}"
                         title="#{varRoleSet.summary}">
                     </h:commandLink>
-                </c:forEach>
+                </ui:repeat>
             </ui:define>
 
             <ui:define name="content">

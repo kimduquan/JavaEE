@@ -24,12 +24,13 @@ import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.inject.Inject;
+import javax.persistence.PersistenceContext;
+import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import openup.epf.schema.Roles;
@@ -82,6 +83,9 @@ public class Security implements openup.client.security.Security, Serializable {
     @Context 
     private UriInfo uriInfo;
     
+    @PersistenceContext(name = "EPF", unitName = "EPF")
+    private EntityManager defaultManager;
+    
     @PermitAll
     @Override
     @Operation(
@@ -126,7 +130,7 @@ public class Security implements openup.client.security.Security, Serializable {
         
         buildAudience(jwt, url.toURI());
         
-        Set<String> roles = getUserRoles(username, persistence.getDefaultManager());
+        Set<String> roles = getUserRoles(username, defaultManager);
         jwt.setGroups(roles);
         
         String token = generator.generate(jwt);
@@ -159,18 +163,13 @@ public class Security implements openup.client.security.Security, Serializable {
     public String runAs(
             String role
             ) throws Exception{
-        ResponseBuilder response = Response.ok();
         Principal principal = context.getUserPrincipal();
         long time = System.currentTimeMillis() / 1000;
         Token jwt = buildToken(principal.getName(), time);
         buildTokenID(jwt);
         buildAudience(jwt, uriInfo.getBaseUri());
-        if(buildRoles(jwt, principal, role, response)){
-            String token = generator.generate(jwt);
-            response.entity(token);
-            jwt.setRawToken(token);
-        }
-        return jwt.getRawToken();
+        buildRoles(jwt, principal, role);
+        return generator.generate(jwt);
     }
     
     @Override
@@ -248,24 +247,21 @@ public class Security implements openup.client.security.Security, Serializable {
                         System.currentTimeMillis()));
     }
     
-    boolean buildRoles(Token token, Principal principal, String role, ResponseBuilder response){
-        boolean ok = true;
+    void buildRoles(Token token, Principal principal, String role){
         if(Roles.ADMIN.equalsIgnoreCase(role)){
-            if(isAdmin(principal.getName(), persistence.getDefaultManager())){
+            if(isAdmin(principal.getName(), defaultManager)){
                 Set<String> groups = new HashSet<>();
                 groups.add(Roles.ADMIN);
                 token.setGroups(groups);
             }
             else{
-                response.status(Response.Status.FORBIDDEN);
-                ok = false;
+                throw new ForbiddenException();
             }
         }
         else{
-            Set<String> roles = getUserRoles(principal.getName(), persistence.getDefaultManager());
+            Set<String> roles = getUserRoles(principal.getName(), defaultManager);
             token.setGroups(roles);
         }
-        return ok;
     }
     
     Token buildToken(String username, long time) throws Exception{

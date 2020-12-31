@@ -13,14 +13,14 @@
             </ui:define>
 
             <ui:define name="left">
-                <c:forEach 
-                    items="#{work_products.domains}" 
+                <ui:repeat 
+                    value="#{work_products.domains}"
                     var="varDomain">
                     <h:commandLink 
                         title="#{varDomain.summary}"
                         value="#{varDomain.name}">
                     </h:commandLink>
-                </c:forEach>
+                </ui:repeat>
             </ui:define>
 
             <ui:define name="content">
