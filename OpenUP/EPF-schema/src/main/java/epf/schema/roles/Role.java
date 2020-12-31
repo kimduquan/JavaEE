@@ -18,15 +18,16 @@ import javax.persistence.Embedded;
 import javax.persistence.NamedNativeQuery;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.EPF;
 
 /**
  *
  * @author FOXCONN
  */
-@Type
-@Schema(title = "Role")
-@Entity
-@Table(name = "_ROLE", schema = "EPF")
+@Type(EPF.Role)
+@Schema(name = EPF.Role, title = "Role")
+@Entity(name = EPF.Role)
+@Table(schema = EPF.Schema, name = "_ROLE")
 @JsonbPropertyOrder({
     "name",
     "additionallyPerforms",

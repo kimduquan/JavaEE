@@ -14,15 +14,16 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.EPF;
 
 /**
  *
  * @author FOXCONN
  */
-@Type
-@Schema(title = "Deliverable")
-@Entity
-@Table(name = "DELIVERABLE", schema = "EPF")
+@Type(EPF.Deliverable)
+@Schema(name = EPF.Deliverable, title = "Deliverable")
+@Entity(name = EPF.Deliverable)
+@Table(schema = EPF.Schema, name = "DELIVERABLE")
 public class Deliverable {
     
     @Column(name = "NAME")

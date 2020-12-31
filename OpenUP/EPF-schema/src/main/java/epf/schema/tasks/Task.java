@@ -16,15 +16,16 @@ import javax.json.JsonObject;
 import javax.persistence.Embedded;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.EPF;
 
 /**
  *
  * @author FOXCONN
  */
-@Type
-@Schema(title = "Task")
-@Entity
-@Table(name = "TASK", schema = "EPF")
+@Type(EPF.Task)
+@Schema(name = EPF.Task, title = "Task")
+@Entity(name = EPF.Task)
+@Table(schema = EPF.Schema, name = "TASK")
 @JsonbPropertyOrder({
     "name",
     "mandatory",

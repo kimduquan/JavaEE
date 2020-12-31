@@ -19,15 +19,16 @@ import javax.persistence.Table;
 import javax.persistence.Embedded;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.EPF;
 
 /**
  *
  * @author FOXCONN
  */
-@Type
-@Schema(title = "Artifact")
-@Entity
-@Table(name = "ARTIFACT", schema = "EPF")
+@Type(EPF.Artifact)
+@Schema(name = EPF.Artifact, title = "Artifact")
+@Entity(name = EPF.Artifact)
+@Table(schema = EPF.Schema, name = "ARTIFACT")
 @JsonbPropertyOrder({
     "name",
     "fulfilledSlots"

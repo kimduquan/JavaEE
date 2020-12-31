@@ -19,15 +19,16 @@ import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.EPF;
 
 /**
  *
  * @author FOXCONN
  */
-@Type
-@Schema(title = "Role Set")
-@Entity
-@Table(name = "ROLE_SET", schema = "EPF")
+@Type(EPF.RoleSet)
+@Schema(name = EPF.RoleSet, title = "Role Set")
+@Entity(name = EPF.RoleSet)
+@Table(schema = EPF.Schema, name = "ROLE_SET")
 @JsonbPropertyOrder({
     "name",
     "roles"

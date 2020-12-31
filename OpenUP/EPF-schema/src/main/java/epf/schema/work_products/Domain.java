@@ -18,15 +18,16 @@ import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.EPF;
 
 /**
  *
  * @author FOXCONN
  */
-@Type
-@Schema(title = "Domain")
-@Entity
-@Table(name = "_DOMAIN", schema = "EPF")
+@Type(EPF.Domain)
+@Schema(name = EPF.Domain, title = "Domain")
+@Entity(name = EPF.Domain)
+@Table(schema = EPF.Schema, name = "_DOMAIN")
 @JsonbPropertyOrder({
     "name",
     "workProducts"

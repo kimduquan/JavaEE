@@ -11,15 +11,16 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.EPF;
 
 /**
  *
  * @author FOXCONN
  */
-@Type
-@Schema(title = "Work Product Slot")
-@Entity
-@Table(name = "WORK_PRODUCT_SLOT", schema = "EPF")
+@Type(EPF.WorkProductSlot)
+@Schema(name = EPF.WorkProductSlot, title = "Work Product Slot")
+@Entity(name = EPF.WorkProductSlot)
+@Table(schema = EPF.Schema, name = "WORK_PRODUCT_SLOT")
 public class WorkProductSlot {
 	
     @Column(name = "NAME")

@@ -17,15 +17,16 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.EPF;
 
 /**
  *
  * @author FOXCONN
  */
-@Type
-@Schema(title = "Iteration")
-@Entity
-@Table(name = "ITERATION", schema = "EPF")
+@Type(EPF.Iteration)
+@Schema(name = EPF.Iteration, title = "Iteration")
+@Entity(name = EPF.Iteration)
+@Table(schema = EPF.Schema, name = "ITERATION")
 public class Iteration {
     
     @Column(name = "NAME")

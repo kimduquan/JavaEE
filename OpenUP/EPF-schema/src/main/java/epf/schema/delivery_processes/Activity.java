@@ -5,6 +5,7 @@
  */
 package epf.schema.delivery_processes;
 
+import epf.schema.EPF;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -23,10 +24,10 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  *
  * @author FOXCONN
  */
-@Type
-@Schema(title = "Activity")
-@Entity
-@Table(name = "ACTIVITY", schema = "EPF")
+@Type(EPF.Activity)
+@Schema(name = EPF.Activity, title = "Activity")
+@Entity(name = EPF.Activity)
+@Table(schema = EPF.Schema, name = "ACTIVITY")
 public class Activity {
     
     @Column(name = "NAME")
