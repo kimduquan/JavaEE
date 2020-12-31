@@ -5,7 +5,7 @@
  */
 package epf.schema.openup;
 
-import epf.schema.delivery_processes.DeliveryProcess;
+import epf.schema.OpenUP;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,16 +14,18 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 /**
  *
  * @author FOXCONN
  */
-@Schema(title = "_Delivery_Processes_")
-@Entity
-@Table(name = "_DELIVERY_PROCESSES_", schema = "EPF")
-public class DeliveryProcesses {
+@Type(OpenUP.DeliveryProcess)
+@Schema(name = OpenUP.DeliveryProcess, title = "Delivery Process")
+@Entity(name = OpenUP.DeliveryProcess)
+@Table(schema = OpenUP.Schema, name = "DELIVERY_PROCESS")
+public class DeliveryProcess {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +33,7 @@ public class DeliveryProcesses {
     
     @ManyToOne
     @JoinColumn(name = "DELIVERY_PROCESS")
-    private DeliveryProcess deliveryProcess;
+    private epf.schema.delivery_processes.DeliveryProcess deliveryProcess;
     
     @Column(name = "NAME", unique = true, nullable = false)
     private String name;
@@ -47,11 +49,11 @@ public class DeliveryProcesses {
         this.id = id;
     }
 
-    public DeliveryProcess getDeliveryProcess() {
+    public epf.schema.delivery_processes.DeliveryProcess getDeliveryProcess() {
         return deliveryProcess;
     }
 
-    public void setDeliveryProcess(DeliveryProcess deliveryProcess) {
+    public void setDeliveryProcess(epf.schema.delivery_processes.DeliveryProcess deliveryProcess) {
         this.deliveryProcess = deliveryProcess;
     }
 

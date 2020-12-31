@@ -5,7 +5,7 @@
  */
 package epf.schema.openup;
 
-import epf.schema.delivery_processes.Iteration;
+import epf.schema.OpenUP;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,34 +14,32 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 /**
  *
  * @author FOXCONN
  */
-@Schema(title = "_Iterations_")
-@Entity
-@Table(name = "_ITERATIONS_", schema = "EPF")
-public class Iterations {
+@Type(OpenUP.Task)
+@Schema(name = OpenUP.Task, title = "Task")
+@Entity(name = OpenUP.Task)
+@Table(schema = OpenUP.Schema, name = "TASK")
+public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @ManyToOne
-    @JoinColumn(name = "ITERATION")
-    private Iteration iteration;
+    @JoinColumn(name = "TASK")
+    private epf.schema.tasks.Task task;
     
     @Column(name = "NAME", nullable = false)
     private String name;
     
     @Column(name = "SUMMARY")
     private String summary;
-    
-    @ManyToOne
-    @JoinColumn(name = "PARENT_ACTIVITIES")
-    private Phases parentActivities;
 
     public Long getId() {
         return id;
@@ -51,12 +49,12 @@ public class Iterations {
         this.id = id;
     }
 
-    public Iteration getIteration() {
-        return iteration;
+    public epf.schema.tasks.Task getTask() {
+        return task;
     }
 
-    public void setIteration(Iteration iteration) {
-        this.iteration = iteration;
+    public void setTask(epf.schema.tasks.Task task) {
+        this.task = task;
     }
 
     public String getName() {
@@ -73,13 +71,5 @@ public class Iterations {
 
     public void setSummary(String summary) {
         this.summary = summary;
-    }
-
-    public Phases getParentActivities() {
-        return parentActivities;
-    }
-
-    public void setParentActivities(Phases parentActivities) {
-        this.parentActivities = parentActivities;
     }
 }

@@ -5,7 +5,7 @@
  */
 package epf.schema.openup;
 
-import epf.schema.delivery_processes.Phase;
+import epf.schema.OpenUP;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,31 +14,36 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 /**
  *
  * @author FOXCONN
  */
-@Schema(title = "_Phases_")
-@Entity
-@Table(name = "_PHASES_", schema = "EPF")
-public class Phases {
+@Type(OpenUP.Activity)
+@Schema(name = OpenUP.Activity, title = "Activity")
+@Entity(name = OpenUP.Activity)
+@Table(schema = OpenUP.Schema, name = "ACTIVITY")
+public class Activity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @ManyToOne
-    @JoinColumn(name = "PHASE")
-    private Phase phase;
+    @JoinColumn(name = "ACTIVITY")
+    private epf.schema.delivery_processes.Activity activity;
     
     @Column(name = "NAME", nullable = false)
     private String name;
     
+    @Column(name = "SUMMARY")
+    private String summary;
+    
     @ManyToOne
     @JoinColumn(name = "PARENT_ACTIVITIES")
-    private DeliveryProcesses parentActivities;
+    private Iteration parentActivities;
 
     public Long getId() {
         return id;
@@ -48,12 +53,12 @@ public class Phases {
         this.id = id;
     }
 
-    public Phase getPhase() {
-        return phase;
+    public epf.schema.delivery_processes.Activity getActivity() {
+        return activity;
     }
 
-    public void setPhase(Phase phase) {
-        this.phase = phase;
+    public void setActivity(epf.schema.delivery_processes.Activity activity) {
+        this.activity = activity;
     }
 
     public String getName() {
@@ -64,11 +69,19 @@ public class Phases {
         this.name = name;
     }
 
-    public DeliveryProcesses getParentActivities() {
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
+    public Iteration getParentActivities() {
         return parentActivities;
     }
 
-    public void setParentActivities(DeliveryProcesses parentActivities) {
+    public void setParentActivities(Iteration parentActivities) {
         this.parentActivities = parentActivities;
     }
 }

@@ -5,8 +5,7 @@
  */
 package epf.schema.openup;
 
-import epf.schema.work_products.Artifact;
-import epf.schema.work_products.Domain;
+import epf.schema.OpenUP;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,34 +14,33 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 /**
  *
  * @author FOXCONN
  */
-@Schema(title = "_Artifacts_")
-@Entity
-@Table(name = "_ARTIFACTS_", schema = "EPF")
-public class Artifacts {
+@Type(OpenUP.Milestone)
+@Schema(name = OpenUP.Milestone, title = "Milestone")
+@Entity(name = OpenUP.Milestone)
+@Table(schema = OpenUP.Schema, name = "MILESTONE")
+public class Milestone {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @ManyToOne
-    @JoinColumn(name = "ARTIFACT")
-    private Artifact artifact;
+    @JoinColumn(name = "MILESTONE")
+    private epf.schema.delivery_processes.Milestone milestone;
     
     @Column(name = "NAME", nullable = false)
     private String name;
     
-    @Column(name = "SUMMARY")
-    private String summary;
-    
     @ManyToOne
-    @JoinColumn(name = "DOMAINS")
-    private Domain domains;
+    @JoinColumn(name = "PREDECESSOR")
+    private Iteration predecessor;
 
     public Long getId() {
         return id;
@@ -52,12 +50,12 @@ public class Artifacts {
         this.id = id;
     }
 
-    public Artifact getArtifact() {
-        return artifact;
+    public epf.schema.delivery_processes.Milestone getMilestone() {
+        return milestone;
     }
 
-    public void setArtifact(Artifact artifact) {
-        this.artifact = artifact;
+    public void setMilestone(epf.schema.delivery_processes.Milestone milestone) {
+        this.milestone = milestone;
     }
 
     public String getName() {
@@ -68,19 +66,11 @@ public class Artifacts {
         this.name = name;
     }
 
-    public String getSummary() {
-        return summary;
+    public Iteration getPredecessor() {
+        return predecessor;
     }
 
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
-
-    public Domain getDomains() {
-        return domains;
-    }
-
-    public void setDomains(Domain domains) {
-        this.domains = domains;
+    public void setPredecessor(Iteration predecessor) {
+        this.predecessor = predecessor;
     }
 }

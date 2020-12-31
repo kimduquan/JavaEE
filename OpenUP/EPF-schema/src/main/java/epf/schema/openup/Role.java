@@ -5,7 +5,7 @@
  */
 package epf.schema.openup;
 
-import epf.schema.roles.Role;
+import epf.schema.OpenUP;
 import epf.schema.roles.RoleSet;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,23 +13,25 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 /**
  *
  * @author FOXCONN
  */
-@Schema(title = "_Roles_")
-@Entity
-@Table(name = "_ROLES_", schema = "EPF")
-public class Roles {
+@Type(OpenUP.Role)
+@Schema(name = OpenUP.Role, title = "Role")
+@Entity(name = OpenUP.Role)
+@Table(schema = OpenUP.Schema, name = "_ROLE")
+public class Role {
 
     @Id
     private String name;
     
     @ManyToOne
     @JoinColumn(name = "ROLE")
-    private Role role;
+    private epf.schema.roles.Role role;
     
     @Column(name = "SUMMARY")
     private String summary;
@@ -46,11 +48,11 @@ public class Roles {
         this.name = name;
     }
 
-    public Role getRole() {
+    public epf.schema.roles.Role getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(epf.schema.roles.Role role) {
         this.role = role;
     }
 
