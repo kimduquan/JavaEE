@@ -22,8 +22,6 @@
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
         
-        <!--<liberty.env.openup.config.url>https://localhost:9443/OpenUP-service-1.0.0/config</liberty.env.openup.config.url>
-        <liberty.env.openup.url>https://localhost:9443/OpenUP-service-1.0.0/</liberty.env.openup.url>-->
         <liberty.env.openup.config.url>https://localhost:9443/OpenUP-gateway-1.0.0/config/</liberty.env.openup.config.url>
         <liberty.env.openup.url>https://localhost:9443/OpenUP-service-1.0.0/</liberty.env.openup.url>
         <liberty.env.openup.gateway.url>https://localhost:9443/OpenUP-gateway-1.0.0/</liberty.env.openup.gateway.url>
