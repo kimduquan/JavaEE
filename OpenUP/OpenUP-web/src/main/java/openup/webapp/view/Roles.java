@@ -5,6 +5,8 @@
  */
 package openup.webapp.view;
 
+import epf.schema.EPF;
+import epf.schema.OpenUP;
 import epf.schema.roles.Role;
 import epf.schema.roles.RoleSet;
 import java.io.Serializable;
@@ -44,8 +46,8 @@ public class Roles implements Serializable {
             try(Client client = new Client(session.getClient(), new URI(url))){
                 Response response = client
                         .target()
-                        .path("OpenUP")
-                        .path("RoleSet")
+                        .path(OpenUP.Schema)
+                        .path(EPF.RoleSet)
                         .request(MediaType.APPLICATION_JSON)
                         .get();
                 roleSets = response.readEntity(new GenericType<List<RoleSet>> () {});
@@ -60,8 +62,8 @@ public class Roles implements Serializable {
             try(Client client = new Client(session.getClient(), new URI(url))){
                 Response response = client
                         .target()
-                        .path("OpenUP")
-                        .path("_Role")
+                        .path(OpenUP.Schema)
+                        .path(EPF.Role)
                         .request(MediaType.APPLICATION_JSON)
                         .get();
                 roles = response.readEntity(new GenericType<List<Role>> () {});

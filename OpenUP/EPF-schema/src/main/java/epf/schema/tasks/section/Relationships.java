@@ -5,6 +5,7 @@
  */
 package epf.schema.tasks.section;
 
+import epf.schema.EPF;
 import epf.schema.roles.Role;
 import epf.schema.work_products.Artifact;
 import java.util.List;
@@ -29,7 +30,7 @@ public class Relationships {
     @ManyToMany
     @JoinTable(
             name = "TASK_INPUTS_MANDATORY",
-            schema = "EPF",
+            schema = EPF.Schema,
             joinColumns = @JoinColumn(
                     name = "TASK"
             ),
@@ -42,7 +43,7 @@ public class Relationships {
     @ManyToMany
     @JoinTable(
             name = "TASK_INPUTS_OPTIONAL",
-            schema = "EPF",
+            schema = EPF.Schema,
             joinColumns = @JoinColumn(
                     name = "TASK"
             ),
@@ -55,7 +56,7 @@ public class Relationships {
     @ManyToMany
     @JoinTable(
             name = "TASK_OUTPUTS",
-            schema = "EPF",
+            schema = EPF.Schema,
             joinColumns = @JoinColumn(
                     name = "TASK"
             ),

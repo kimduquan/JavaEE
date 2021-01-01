@@ -5,6 +5,7 @@
  */
 package openup.persistence;
 
+import epf.schema.openup.Role;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,15 +30,12 @@ import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.Attribute.PersistentAttributeType;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.ManagedType;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import openup.client.epf.schema.Roles;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
@@ -47,7 +45,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  * @author FOXCONN
  */
 @Path("persistence")
-@RolesAllowed(Roles.ANY_ROLE)
+@RolesAllowed(Role.ANY_ROLE)
 @RequestScoped
 public class Queries implements openup.client.persistence.Queries {
     

@@ -5,6 +5,7 @@
  */
 package openup.persistence;
 
+import epf.schema.EPF;
 import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,7 +32,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 @RequestScoped
 public class Request {
     
-    @PersistenceContext(name = "EPF", unitName = "EPF")
+    @PersistenceContext(name = EPF.Schema, unitName = EPF.Schema)
     private EntityManager defaultManager;
     
     @Inject

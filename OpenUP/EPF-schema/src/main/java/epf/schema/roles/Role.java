@@ -140,6 +140,7 @@ public class Role {
         this.moreInformation = moreInformation;
     }
     
-    public static final String GET_USER_ROLES = "Role.GetUserRoles";
-    public static final String IS_ADMIN = "Role.IsAdmin";
+    public static final String GET_USER_ROLES = "EPF_Role.GetUserRoles";
+    public static final String IS_ADMIN = "EPF_Role.IsAdmin";
+    public static final String ADMIN = "ADMIN";
 }

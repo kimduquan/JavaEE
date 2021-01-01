@@ -5,6 +5,8 @@
  */
 package openup.webapp.view;
 
+import epf.schema.EPF;
+import epf.schema.OpenUP;
 import epf.schema.delivery_processes.Iteration;
 import epf.schema.delivery_processes.Phase;
 import epf.schema.tasks.Task;
@@ -46,8 +48,8 @@ public class DeliveryProcesses implements Serializable {
             try(Client client = new Client(session.getClient(), new URI(url))){
                 Response response = client
                         .target()
-                        .path("OpenUP")
-                        .path("Phase")
+                        .path(OpenUP.Schema)
+                        .path(EPF.Phase)
                         .request(MediaType.APPLICATION_JSON)
                         .get();
                 phases = response.readEntity(new GenericType<List<Phase>> () {});
@@ -62,8 +64,8 @@ public class DeliveryProcesses implements Serializable {
             try(Client client = new Client(session.getClient(), new URI(url))){
                 Response response = client
                         .target()
-                        .path("OpenUP")
-                        .path("Iteration")
+                        .path(OpenUP.Schema)
+                        .path(EPF.Iteration)
                         .request(MediaType.APPLICATION_JSON)
                         .get();
                 iterations = response.readEntity(new GenericType<List<Iteration>> () {});
@@ -78,8 +80,8 @@ public class DeliveryProcesses implements Serializable {
             try(Client client = new Client(session.getClient(), new URI(url))){
                 Response response = client
                         .target()
-                        .path("OpenUP")
-                        .path("Task")
+                        .path(OpenUP.Schema)
+                        .path(EPF.Task)
                         .request(MediaType.APPLICATION_JSON)
                         .get();
                 tasks = response.readEntity(new GenericType<List<Task>> () {});

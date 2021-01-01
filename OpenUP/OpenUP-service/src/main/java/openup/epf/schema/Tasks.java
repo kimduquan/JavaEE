@@ -5,13 +5,15 @@
  */
 package openup.epf.schema;
 
+import epf.schema.OpenUP;
+import epf.schema.openup.Role;
 import epf.schema.tasks.Discipline;
 import java.security.Principal;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -28,11 +30,9 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  */
 @Type
 @Path("schema/tasks")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
-@RolesAllowed(Roles.ANY_ROLE)
+@RolesAllowed(Role.ANY_ROLE)
 @RequestScoped
-public class Tasks implements openup.client.epf.schema.Tasks {
+public class Tasks {
     
     @Inject
     private Request cache;
@@ -41,7 +41,8 @@ public class Tasks implements openup.client.epf.schema.Tasks {
     private Principal principal;
     
     @Name("Contents")
-    @Override
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Tasks", 
             description = "List of tasks organized by discipline."
@@ -56,7 +57,7 @@ public class Tasks implements openup.client.epf.schema.Tasks {
     )
     public List<Discipline> getDisciplines() throws Exception{
         return cache.getNamedQueryResult(
-                "OpenUP",
+                OpenUP.Schema,
                 principal,
                 Discipline.DISCIPLINES, 
                 Discipline.class);

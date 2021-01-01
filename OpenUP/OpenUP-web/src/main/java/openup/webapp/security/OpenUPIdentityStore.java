@@ -5,6 +5,7 @@
  */
 package openup.webapp.security;
 
+import epf.schema.OpenUP;
 import java.net.URL;
 import java.util.Map;
 import java.util.Set;
@@ -115,7 +116,7 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
                 .register(header)
                 .build(Security.class);
         String token = service.login(
-                "OpenUP",
+                OpenUP.Schema,
                 credential.getCaller(),
                 credential.getPasswordAsString(),
                 audienceUrl
@@ -179,7 +180,7 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
                     .register(header)
                     .build(Security.class);
             header.setToken(token);
-            service.logOut("OpenUP");
+            service.logOut(OpenUP.Schema);
         } 
         catch (Exception ex) {
             Logger.getLogger(OpenUPIdentityStore.class.getName()).log(Level.SEVERE, null, ex);

@@ -46,7 +46,7 @@ public class Iteration {
     
     @ManyToMany
     @JoinTable(name = "ITERATION_ACTIVITIES",
-            schema = "EPF",
+            schema = EPF.Schema,
             joinColumns = {@JoinColumn(name = "ITERATION")},
             inverseJoinColumns = {@JoinColumn(name = "ACTIVITY")}
     )

@@ -5,6 +5,7 @@
  */
 package openup.security;
 
+import epf.schema.EPF;
 import openup.client.security.Token;
 import epf.schema.roles.Role;
 import java.io.Serializable;
@@ -33,7 +34,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import openup.epf.schema.Roles;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.config.Names;
 import openup.persistence.Application;
@@ -51,7 +51,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  * @author FOXCONN
  */
 @Path("security")
-@RolesAllowed(Roles.ANY_ROLE)
+@RolesAllowed(epf.schema.openup.Role.ANY_ROLE)
 @RequestScoped
 public class Security implements openup.client.security.Security, Serializable {
     
@@ -83,7 +83,7 @@ public class Security implements openup.client.security.Security, Serializable {
     @Context 
     private UriInfo uriInfo;
     
-    @PersistenceContext(name = "EPF", unitName = "EPF")
+    @PersistenceContext(name = EPF.Schema, unitName = EPF.Schema)
     private EntityManager defaultManager;
     
     @PermitAll
@@ -248,10 +248,10 @@ public class Security implements openup.client.security.Security, Serializable {
     }
     
     void buildRoles(Token token, Principal principal, String role){
-        if(Roles.ADMIN.equalsIgnoreCase(role)){
+        if(Role.ADMIN.equalsIgnoreCase(role)){
             if(isAdmin(principal.getName(), defaultManager)){
                 Set<String> groups = new HashSet<>();
-                groups.add(Roles.ADMIN);
+                groups.add(Role.ADMIN);
                 token.setGroups(groups);
             }
             else{

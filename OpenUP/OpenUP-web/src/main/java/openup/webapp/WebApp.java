@@ -5,6 +5,8 @@
  */
 package openup.webapp;
 
+import epf.schema.OpenUP;
+import epf.schema.openup.Role;
 import java.io.IOException;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
@@ -20,7 +22,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import openup.client.epf.schema.Roles;
 
 /**
  *
@@ -32,20 +33,20 @@ import openup.client.epf.schema.Roles;
         loadOnStartup = 1, 
         asyncSupported = true, 
         description = "OpenUP",
-        displayName = "OpenUP"
+        displayName = OpenUP.Schema
 )
 @ServletSecurity(
         @HttpConstraint(
                 value = EmptyRoleSemantic.PERMIT,
                 transportGuarantee = TransportGuarantee.CONFIDENTIAL,
-                rolesAllowed = Roles.ANY_ROLE
+                rolesAllowed = Role.ANY_ROLE
         )
 )
 @ApplicationScoped
-@BasicAuthenticationMechanismDefinition(realmName = "OpenUP")
+@BasicAuthenticationMechanismDefinition(realmName = OpenUP.Schema)
 @FacesConfig
 @Named("webapp")
-@RolesAllowed(Roles.ANY_ROLE)
+@RolesAllowed(Role.ANY_ROLE)
 public class WebApp extends HttpServlet {
 
     @Override

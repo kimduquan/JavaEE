@@ -18,7 +18,7 @@ import org.eclipse.microprofile.graphql.Query;
  */
 @GraphQLApi
 @RequestScoped
-public class Schema {
+public class SchemaQL {
     
     @Inject
     private Roles roles;

@@ -5,6 +5,8 @@
  */
 package openup.webapp.view;
 
+import epf.schema.EPF;
+import epf.schema.OpenUP;
 import epf.schema.tasks.Discipline;
 import epf.schema.tasks.Task;
 import java.io.Serializable;
@@ -44,8 +46,8 @@ public class Tasks implements Serializable {
             try(Client client = new Client(session.getClient(), new URI(url))){
                 Response response = client
                         .target()
-                        .path("OpenUP")
-                        .path("Discipline")
+                        .path(OpenUP.Schema)
+                        .path(EPF.Discipline)
                         .request(MediaType.APPLICATION_JSON)
                         .get();
                 disciplines = response.readEntity(new GenericType<List<Discipline>> () {});
@@ -60,8 +62,8 @@ public class Tasks implements Serializable {
             try(Client client = new Client(session.getClient(), new URI(url))){
                 Response response = client
                         .target()
-                        .path("OpenUP")
-                        .path("Task")
+                        .path(OpenUP.Schema)
+                        .path(EPF.Task)
                         .request(MediaType.APPLICATION_JSON)
                         .get();
                 tasks = response.readEntity(new GenericType<List<Task>> () {});

@@ -5,6 +5,8 @@
  */
 package openup.webapp.view;
 
+import epf.schema.EPF;
+import epf.schema.OpenUP;
 import epf.schema.work_products.Artifact;
 import epf.schema.work_products.Domain;
 import java.io.Serializable;
@@ -44,8 +46,8 @@ public class WorkProducts implements Serializable {
             try(Client client = new Client(session.getClient(), new URI(url))){
                 Response response = client
                         .target()
-                        .path("OpenUP")
-                        .path("Domain")
+                        .path(OpenUP.Schema)
+                        .path(EPF.Domain)
                         .request(MediaType.APPLICATION_JSON)
                         .get();
                 domains = response.readEntity(new GenericType<List<Domain>> () {});
@@ -60,8 +62,8 @@ public class WorkProducts implements Serializable {
             try(Client client = new Client(session.getClient(), new URI(url))){
                 Response response = client
                         .target()
-                        .path("OpenUP")
-                        .path("Artifact")
+                        .path(OpenUP.Schema)
+                        .path(EPF.Artifact)
                         .request(MediaType.APPLICATION_JSON)
                         .get();
                 artifacts = response.readEntity(new GenericType<List<Artifact>> () {});

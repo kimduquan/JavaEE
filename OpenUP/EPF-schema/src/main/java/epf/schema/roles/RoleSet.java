@@ -35,7 +35,7 @@ import epf.schema.EPF;
 })
 @NamedQuery(
         name = RoleSet.ROLES, 
-        query = "SELECT rs FROM RoleSet AS rs")
+        query = "SELECT rs FROM EPF_RoleSet AS rs")
 public class RoleSet {
 
     @Column(name = "NAME")
@@ -48,7 +48,7 @@ public class RoleSet {
     @ManyToMany
     @JoinTable(
             name = "ROLES",
-            schema = "EPF",
+            schema = EPF.Schema,
             joinColumns = @JoinColumn(
                     name = "ROLE_SET"
             ),
@@ -61,7 +61,7 @@ public class RoleSet {
     @Column(name = "MAIN_DESCRIPTION")
     private JsonObject mainDescription;
     
-    public static final String ROLES = "RoleSet.Roles";
+    public static final String ROLES = "EPF_RoleSet.Roles";
 
     public String getName() {
         return name;

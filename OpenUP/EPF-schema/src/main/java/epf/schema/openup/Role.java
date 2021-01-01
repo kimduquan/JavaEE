@@ -25,6 +25,8 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Entity(name = OpenUP.Role)
 @Table(schema = OpenUP.Schema, name = "_ROLE")
 public class Role {
+    
+    public static final String ANY_ROLE = "ANY_ROLE";
 
     @Id
     private String name;

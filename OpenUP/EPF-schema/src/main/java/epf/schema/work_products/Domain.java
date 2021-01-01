@@ -34,7 +34,7 @@ import epf.schema.EPF;
 })
 @NamedQuery(
         name = Domain.DOMAINS, 
-        query = "SELECT d FROM Domain AS d")
+        query = "SELECT d FROM EPF_Domain AS d")
 public class Domain {
 
     @Column(name = "NAME")
@@ -47,7 +47,7 @@ public class Domain {
     @ManyToMany
     @JoinTable(
             name = "WORK_PRODUCTS",
-            schema = "EPF",
+            schema = EPF.Schema,
             joinColumns = @JoinColumn(
                     name = "DOMAIN"
             ),
@@ -57,7 +57,7 @@ public class Domain {
     )
     private List<Artifact> workProducts;
     
-    public static final String DOMAINS = "Domain.Domains";
+    public static final String DOMAINS = "EPF_Domain.Domains";
 
     public String getName() {
         return name;

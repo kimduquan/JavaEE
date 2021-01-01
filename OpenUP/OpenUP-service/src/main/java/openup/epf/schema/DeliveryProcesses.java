@@ -5,13 +5,15 @@
  */
 package openup.epf.schema;
 
+import epf.schema.OpenUP;
 import java.util.List;
 import epf.schema.delivery_processes.DeliveryProcess;
+import epf.schema.openup.Role;
 import java.security.Principal;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -28,11 +30,9 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  */
 @Type
 @Path("schema/delivery-processes")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
-@RolesAllowed(Roles.ANY_ROLE)
+@RolesAllowed(Role.ANY_ROLE)
 @RequestScoped
-public class DeliveryProcesses implements openup.client.epf.schema.DeliveryProcesses {
+public class DeliveryProcesses {
     
     @Inject
     private Request cache;
@@ -41,7 +41,8 @@ public class DeliveryProcesses implements openup.client.epf.schema.DeliveryProce
     private Principal principal;
     
     @Name("Contents")
-    @Override        
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Delivery Processes", 
             description = "This provides a list of delivery processes that have been published."
@@ -56,7 +57,7 @@ public class DeliveryProcesses implements openup.client.epf.schema.DeliveryProce
     )
     public List<DeliveryProcess> getDeliveryProcesses() throws Exception{
         return cache.getNamedQueryResult(
-                "OpenUP",
+                OpenUP.Schema,
                 principal,
                 DeliveryProcess.DELIVERY_PROCESSES, 
                 DeliveryProcess.class);

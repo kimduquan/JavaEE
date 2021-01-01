@@ -5,13 +5,15 @@
  */
 package openup.epf.schema;
 
+import epf.schema.OpenUP;
+import epf.schema.openup.Role;
 import epf.schema.work_products.Domain;
 import java.security.Principal;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -28,11 +30,9 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  */
 @Type
 @Path("schema/work-products")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
-@RolesAllowed(Roles.ANY_ROLE)
+@RolesAllowed(Role.ANY_ROLE)
 @RequestScoped
-public class WorkProducts implements openup.client.epf.schema.WorkProducts {
+public class WorkProducts {
     
     @Inject
     private Request cache;
@@ -41,7 +41,8 @@ public class WorkProducts implements openup.client.epf.schema.WorkProducts {
     private Principal principal;
     
     @Name("Contents")
-    @Override
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Work Products", 
             description = "List of work products organized by domain."
@@ -56,7 +57,7 @@ public class WorkProducts implements openup.client.epf.schema.WorkProducts {
     )
     public List<Domain> getDomains() throws Exception{
         return cache.getNamedQueryResult(
-                "OpenUP",
+                OpenUP.Schema,
                 principal,
                 Domain.DOMAINS, 
                 Domain.class);

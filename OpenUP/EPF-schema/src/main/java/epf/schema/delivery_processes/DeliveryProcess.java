@@ -29,7 +29,7 @@ import epf.schema.EPF;
 @Table(schema = EPF.Schema, name = "DELIVERY_PROCESS")
 @NamedQuery(
         name = DeliveryProcess.DELIVERY_PROCESSES, 
-        query = "SELECT dp FROM DeliveryProcess AS dp"
+        query = "SELECT dp FROM EPF_DeliveryProcess AS dp"
 )
 public class DeliveryProcess {
 	
@@ -52,7 +52,7 @@ public class DeliveryProcess {
     @Embedded
     private WorkProductUsage workProductUsage;
     
-    public static final String DELIVERY_PROCESSES = "DeliveryProcess.DeliveryProcesses";
+    public static final String DELIVERY_PROCESSES = "EPF_DeliveryProcess.DeliveryProcesses";
 
     public String getName() {
         return name;

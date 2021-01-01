@@ -35,7 +35,7 @@ import epf.schema.EPF;
 })
 @NamedQuery(
         name = Discipline.DISCIPLINES, 
-        query = "SELECT d FROM Discipline AS d")
+        query = "SELECT d FROM EPF_Discipline AS d")
 public class Discipline {
 
     @Column(name = "NAME")
@@ -48,7 +48,7 @@ public class Discipline {
     @ManyToMany
     @JoinTable(
             name = "TASKS",
-            schema = "EPF",
+            schema = EPF.Schema,
             joinColumns = @JoinColumn(
                     name = "DISCIPLINE"
             ),
@@ -61,7 +61,7 @@ public class Discipline {
     @Column(name = "MAIN_DESCRIPTION")
     private JsonObject mainDescription;
     
-    public static final String DISCIPLINES = "Discipline.Disciplines";
+    public static final String DISCIPLINES = "EPF_Discipline.Disciplines";
 
     public String getName() {
         return name;

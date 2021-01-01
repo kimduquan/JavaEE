@@ -44,7 +44,7 @@ public class Activity {
     
     @ManyToMany
     @JoinTable(name = "ACTIVITY_TASKS",
-            schema = "EPF",
+            schema = EPF.Schema,
             joinColumns = {@JoinColumn(name = "ACTIVITY")},
             inverseJoinColumns = {@JoinColumn(name = "TASK")}
     )
