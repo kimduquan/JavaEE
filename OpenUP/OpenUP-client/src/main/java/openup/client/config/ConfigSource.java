@@ -26,7 +26,7 @@ public class ConfigSource {
     @PostConstruct
     void postConstruct(){
         configs = new ConcurrentHashMap<>();
-        String configUrl = System.getenv(ConfigNames.OPENUP_URL);
+        String configUrl = System.getenv(ConfigNames.OPENUP_GATEWAY_URL);
         try {
             Map<String, Object> data = RestClientBuilder
                     .newBuilder()

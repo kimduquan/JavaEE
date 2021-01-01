@@ -101,7 +101,7 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
     }
     
     Token login(BasicAuthenticationCredential credential) throws Exception{
-        String base = config.getConfig(ConfigNames.OPENUP_URL, "");
+        String base = config.getConfig(ConfigNames.OPENUP_GATEWAY_URL, "");
         URL baseUrl = new URL(base);
         URL audienceUrl = new URL(String.format(
                                     Security.AUDIENCE_URL_FORMAT,
@@ -138,7 +138,7 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
     public CredentialValidationResult validate(RememberMeCredential credential) {
         CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
         try {
-            String base = config.getConfig(ConfigNames.OPENUP_URL, "");
+            String base = config.getConfig(ConfigNames.OPENUP_GATEWAY_URL, "");
             URL baseUrl = new URL(base);
             Header header = new Header();
             Security service = RestClientBuilder
@@ -171,7 +171,7 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
     @Override
     public void removeLoginToken(String token) {
         try {
-            String base = config.getConfig(ConfigNames.OPENUP_URL, "");
+            String base = config.getConfig(ConfigNames.OPENUP_GATEWAY_URL, "");
             URL baseUrl = new URL(base);
             Header header = new Header();
             Security service = RestClientBuilder

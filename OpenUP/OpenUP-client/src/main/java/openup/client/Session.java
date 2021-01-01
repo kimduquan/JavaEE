@@ -45,7 +45,7 @@ public class Session implements Serializable {
     @PostConstruct
     void postConstruct(){
         try {
-            base = configs.getConfig(ConfigNames.OPENUP_URL, "");
+            base = configs.getConfig(ConfigNames.OPENUP_GATEWAY_URL, "");
             securityHeader = new Header();
             config = builder().build(Config.class);
         } 

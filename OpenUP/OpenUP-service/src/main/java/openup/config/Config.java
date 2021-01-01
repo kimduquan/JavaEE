@@ -36,11 +36,7 @@ public class Config implements openup.client.config.Config {
     void postConstruct(){
         configs = new ConcurrentHashMap<>();
         String url = System.getenv(ConfigNames.OPENUP_GATEWAY_URL);
-        configs.put(ConfigNames.OPENUP_URL, url);
-        configs.put(ConfigNames.OPENUP_CONFIG_URL, url + "config");
-        configs.put(ConfigNames.OPENUP_SECURITY_URL, url + "security");
-        configs.put(ConfigNames.OPENUP_SECURITY_JWT_HEADER, Security.REQUEST_HEADER_NAME);
-        configs.put(ConfigNames.OPENUP_SECURITY_JWT_FORMAT, Security.REQUEST_HEADER_FORMAT);
+        configs.put(ConfigNames.OPENUP_GATEWAY_URL, url);
         configs.put(ConfigNames.OPENUP_PERSISTENCE_URL, url + "persistence");
     }
     
