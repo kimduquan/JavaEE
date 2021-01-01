@@ -24,7 +24,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Type(OpenUP.DeliveryProcess)
 @Schema(name = OpenUP.DeliveryProcess, title = "Delivery Process")
 @Entity(name = OpenUP.DeliveryProcess)
-@Table(schema = OpenUP.Schema, name = "DELIVERY_PROCESS")
+@Table(schema = OpenUP.Schema, name = "OPENUP_DELIVERY_PROCESS")
 public class DeliveryProcess {
 
     @Id

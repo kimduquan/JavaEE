@@ -23,7 +23,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Type(OpenUP.Role)
 @Schema(name = OpenUP.Role, title = "Role")
 @Entity(name = OpenUP.Role)
-@Table(schema = OpenUP.Schema, name = "_ROLE")
+@Table(schema = OpenUP.Schema, name = "OPENUP_ROLE")
 public class Role {
     
     public static final String ANY_ROLE = "ANY_ROLE";

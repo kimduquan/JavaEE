@@ -24,7 +24,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Type(OpenUP.Task)
 @Schema(name = OpenUP.Task, title = "Task")
 @Entity(name = OpenUP.Task)
-@Table(schema = OpenUP.Schema, name = "TASK")
+@Table(schema = OpenUP.Schema, name = "OPENUP_TASK")
 public class Task {
 
     @Id

@@ -24,7 +24,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Type(OpenUP.Iteration)
 @Schema(name = OpenUP.Iteration, title = "Iteration")
 @Entity(name = OpenUP.Iteration)
-@Table(schema = OpenUP.Schema, name = "ITERATION")
+@Table(schema = OpenUP.Schema, name = "OPENUP_ITERATION")
 public class Iteration {
 
     @Id
