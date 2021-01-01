@@ -119,7 +119,7 @@
                 <configuration>
                     <!-- Pass contextPath and httpPort to the integration tests -->
                     <systemPropertyVariables>
-                        <contextPath>/OpenUP-gateway-${project.version}</contextPath>
+                        <contextPath>/OpenUP-service-${project.version}</contextPath>
                         <httpPort>${httpPort}</httpPort>
                         <httpsPort>${httpsPort}</httpsPort>
                         
