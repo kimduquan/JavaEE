@@ -5,18 +5,18 @@
  */
 package openup.security;
 
-import epf.schema.OpenUP;
-import epf.schema.openup.Role;
+import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import java.net.URL;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
-import java.util.concurrent.TimeUnit;
+import javax.net.ssl.SSLContext;
 import openup.client.config.ConfigNames;
 import openup.client.security.Header;
 import openup.client.security.Security;
+import static openup.client.security.Security.AUDIENCE_URL_FORMAT;
 import openup.client.security.Token;
+import openup.client.ssl.DefaultHostnameVerifier;
+import openup.client.ssl.DefaultSSLContext;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.junit.Assert;
 import org.junit.Before;
@@ -29,6 +29,7 @@ import org.junit.Test;
  */
 public class SecurityTest {
     
+    private static SSLContext sslContext;
     private static RestClientBuilder builder;
     private static URL url;
     
@@ -37,8 +38,12 @@ public class SecurityTest {
     
     @BeforeClass
     public static void beforeClass() throws Exception{
-        url = new URL(System.getProperty(ConfigNames.OPENUP_URL, ""));
+        url = new URL(System.getProperty(ConfigNames.OPENUP_GATEWAY_URL, ""));
+        sslContext = DefaultSSLContext.build();
         builder = RestClientBuilder.newBuilder()
+                .hostnameVerifier(new DefaultHostnameVerifier())
+                .sslContext(sslContext)
+                .register(JacksonJsonProvider.class)
                 .baseUrl(url);
     }
     
@@ -62,7 +67,18 @@ public class SecurityTest {
         Assert.assertNotNull("JWT", jwt);
         Assert.assertNotNull("Audience", jwt.getAudience());
         Assert.assertEquals("Audience.size", 1, jwt.getAudience().size());
-        Assert.assertArrayEquals("Audience", new String[]{url.toString()}, jwt.getAudience().toArray());
+        Assert.assertArrayEquals(
+                "Audience", 
+                new String[]{
+                    String.format(
+                            AUDIENCE_URL_FORMAT, 
+                            url.getProtocol(), 
+                            url.getHost(), 
+                            url.getPort()
+                    )
+                }, 
+                jwt.getAudience().toArray()
+        );
         
         Assert.assertTrue("ExpirationTime", jwt.getExpirationTime() > 0);
         Assert.assertTrue("ExpirationTime", jwt.getExpirationTime() > jwt.getIssuedAtTime());

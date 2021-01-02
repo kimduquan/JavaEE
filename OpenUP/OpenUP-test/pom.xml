@@ -15,6 +15,9 @@
     <!-- Define variables that will be substituted in server.xml and
          passed to the integration tests -->
     <properties>
+        <httpPort>9080</httpPort>
+        <httpsPort>9443</httpsPort>
+		
         <!-- Jaeger configuration -->
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
@@ -78,24 +81,15 @@
             <version>1.0.0</version>
             <type>war</type>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-rs-client -->
         <dependency>
             <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-rs-client</artifactId>
-            <version>3.4.2</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-rs-extension-providers -->
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-rs-extension-providers</artifactId>
-            <version>3.4.2</version>
+            <artifactId>cxf-rt-rs-mp-client</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.microprofile</groupId>
-            <artifactId>microprofile</artifactId>
-            <version>3.3</version>
-            <type>pom</type>
-            <scope>provided</scope>
+            <groupId>com.fasterxml.jackson.jaxrs</groupId>
+            <artifactId>jackson-jaxrs-json-provider</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -120,7 +114,7 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <excludeGroupIds>openup</excludeGroupIds>
+                            <excludeGroupIds>openup,org.apache.cxf,com.fasterxml.jackson.jaxrs</excludeGroupIds>
                             <outputDirectory>${project.build.directory}/shared/resources/openup/</outputDirectory>
                         </configuration>
                     </execution>

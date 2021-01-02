@@ -32,20 +32,20 @@
             <ui:define name="content">
                 <ui:repeat 
                     value="#{delivery_processes.iterations}"
-                    var="iteration">
+                    var="varIteration">
                     <h:commandLink 
-                        title="#{iteration.extends.summary}"
-                        value="#{iteration.name}">
+                        title="#{varIteration.extends.summary}"
+                        value="#{varIteration.name}">
                     </h:commandLink>
                 </ui:repeat>
                 <h:dataTable 
                     value="#{delivery_processes.tasks}"
-                    var="task">
+                    var="varTask">
                     <h:column>
-                        <h:outputText value="#{task.name}"></h:outputText>
+                        <h:outputText value="#{varTask.name}"></h:outputText>
                     </h:column>
                     <h:column>
-                        <h:outputText value="#{task.summary}"></h:outputText>
+                        <h:outputText value="#{varTask.summary}"></h:outputText>
                     </h:column>
                 </h:dataTable>
             </ui:define>
