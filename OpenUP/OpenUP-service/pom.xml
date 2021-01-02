@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>OpenUP-service</artifactId>
-    <name>OpenUP-service</name>
+    <name>Open Unified Process Application Service</name>
     <packaging>war</packaging>
 
     <dependencies>

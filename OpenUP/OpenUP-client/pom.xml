@@ -7,7 +7,7 @@
         <version>1.0.0</version>
     </parent>
     <artifactId>OpenUP-client</artifactId>
-    <name>OpenUP-client</name>
+    <name>Open Unified Process Application Client</name>
     <packaging>jar</packaging>
     
     <dependencies>

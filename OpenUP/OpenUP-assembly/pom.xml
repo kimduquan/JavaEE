@@ -8,7 +8,7 @@
     </parent>
 
     <artifactId>OpenUP-assembly</artifactId>
-    <name>OpenUP-assembly</name>
+    <name>Open Unified Process Application Server Assembly</name>
     <packaging>liberty-assembly</packaging>
 	
     <properties>

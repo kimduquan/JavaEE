@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>OpenUP-gateway</artifactId>
-    <name>OpenUP-gateway</name>
+    <name>Open Unified Process Application API Gateway</name>
     <packaging>war</packaging>
 
     <dependencies>

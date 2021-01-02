@@ -9,6 +9,7 @@ import java.io.IOException;
 import javax.enterprise.context.Dependent;
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
+import javax.ws.rs.core.HttpHeaders;
 
 /**
  *
@@ -27,7 +28,7 @@ public class Header implements ClientRequestFilter {
     public void filter(ClientRequestContext crc) throws IOException {
         if(token != null){
             crc.getHeaders().putSingle(
-                    Security.REQUEST_HEADER_NAME, 
+                    HttpHeaders.AUTHORIZATION, 
                     String.format(
                             Security.REQUEST_HEADER_FORMAT, 
                             token

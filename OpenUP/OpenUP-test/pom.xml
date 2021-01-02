@@ -10,15 +10,12 @@
     </parent>
 
     <artifactId>OpenUP-test</artifactId>
-    <name>OpenUP-test</name>
+    <name>Open Unified Process Application Iteration Tests</name>
 
     <!-- Define variables that will be substituted in server.xml and
          passed to the integration tests -->
     <properties>
-        <httpPort>9080</httpPort>
-        <httpsPort>9443</httpsPort>
-		
-	<!-- Jaeger configuration -->
+        <!-- Jaeger configuration -->
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
         
@@ -60,6 +57,11 @@
         </dependency>
         <dependency>
             <groupId>openup</groupId>
+            <artifactId>OpenUP-client</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
             <artifactId>OpenUP-service</artifactId>
             <version>1.0.0</version>
             <type>war</type>
@@ -75,6 +77,25 @@
             <artifactId>OpenUP-web</artifactId>
             <version>1.0.0</version>
             <type>war</type>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-rs-client -->
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-rs-client</artifactId>
+            <version>3.4.2</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-rs-extension-providers -->
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-rs-extension-providers</artifactId>
+            <version>3.4.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.microprofile</groupId>
+            <artifactId>microprofile</artifactId>
+            <version>3.3</version>
+            <type>pom</type>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -119,10 +140,6 @@
                 <configuration>
                     <!-- Pass contextPath and httpPort to the integration tests -->
                     <systemPropertyVariables>
-                        <contextPath>/OpenUP-service-${project.version}</contextPath>
-                        <httpPort>${httpPort}</httpPort>
-                        <httpsPort>${httpsPort}</httpsPort>
-                        
                         <openup.url>https://localhost:${httpsPort}/OpenUP-service-${project.version}/</openup.url>
                         <openup.gateway.url>https://localhost:${httpsPort}/OpenUP-gateway-${project.version}/</openup.gateway.url>
                     </systemPropertyVariables>

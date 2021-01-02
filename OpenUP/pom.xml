@@ -5,7 +5,7 @@
 
     <groupId>openup</groupId>
     <artifactId>OpenUP-parent</artifactId>
-    <name>OpenUP-parent</name>
+    <name>Open Unified Process Application Parent</name>
     <packaging>pom</packaging>
     <version>1.0.0</version>
 
@@ -22,10 +22,17 @@
                 <artifactId>junit</artifactId>
                 <version>4.13.1</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-rs-client -->
             <dependency>
-                <groupId>commons-httpclient</groupId>
-                <artifactId>commons-httpclient</artifactId>
-                <version>3.1</version>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-rs-client</artifactId>
+                <version>3.4.2</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-rs-extension-providers -->
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-rs-extension-providers</artifactId>
+                <version>3.4.2</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.eclipse.persistence/jakarta.persistence -->
             <dependency>
