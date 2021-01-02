@@ -10,6 +10,7 @@ import java.util.concurrent.CompletionStage;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -47,6 +48,6 @@ public class Queries {
             ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("GET", null);
+        return request.request(HttpMethod.GET, null);
     }
 }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.gateway.security;
+package openup.gateway.file;
 
 import java.io.InputStream;
 import java.util.concurrent.CompletionStage;
@@ -16,7 +16,6 @@ import javax.ws.rs.HttpMethod;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
@@ -30,51 +29,62 @@ import org.eclipse.microprofile.faulttolerance.Asynchronous;
  *
  * @author FOXCONN
  */
-@Path("security")
+@Path("files")
 @RequestScoped
-public class Security {
+public class Files {
     
     @Inject
     private Request request;
     
-    @POST
-    @Path("{unit}")
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Produces(MediaType.TEXT_PLAIN)
-    @Asynchronous
-    public CompletionStage<Response> login(
-            @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo,
-            @PathParam("unit")
-            String unit,
-            InputStream in) throws Exception{
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        return request.request(HttpMethod.POST, in);
-    }
-    
     @PUT
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.TEXT_PLAIN)
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Asynchronous
-    public CompletionStage<Response> runAs(
+    public CompletionStage<Response> copy(
             @Context HttpHeaders headers, 
             @Context UriInfo uriInfo,
-            InputStream in) throws Exception{
+            InputStream in
+    ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         return request.request(HttpMethod.PUT, in);
     }
     
-    @DELETE
-    @Path("{unit}")
+    @POST
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
     @Asynchronous
-    public CompletionStage<Response> logOut(
+    public CompletionStage<Response> createFile(
             @Context HttpHeaders headers, 
             @Context UriInfo uriInfo,
-            @PathParam("unit")
-            String unit) throws Exception{
+            InputStream in
+    ) throws Exception{
+        request.setHeaders(headers);
+        request.setUriInfo(uriInfo);
+        return request.request(HttpMethod.POST, in);
+    }
+    
+    @POST
+    @Path("temp")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.TEXT_PLAIN)
+    @Asynchronous
+    public CompletionStage<Response> createTempFile(
+            @Context HttpHeaders headers, 
+            @Context UriInfo uriInfo,
+            InputStream in
+    ) throws Exception{
+        request.setHeaders(headers);
+        request.setUriInfo(uriInfo);
+        return request.request(HttpMethod.POST, in);
+    }
+    
+    @DELETE
+    @Asynchronous
+    public CompletionStage<Response> delete(
+            @Context HttpHeaders headers, 
+            @Context UriInfo uriInfo
+    ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         return request.request(HttpMethod.DELETE, null);
@@ -83,11 +93,39 @@ public class Security {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
-    public CompletionStage<Response> authenticate(
+    public CompletionStage<Response> find(
             @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo) throws Exception{
+            @Context UriInfo uriInfo) 
+            throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         return request.request(HttpMethod.GET, null);
+    }
+    
+    @GET
+    @Path("lines")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @Asynchronous
+    public CompletionStage<Response> lines(
+            @Context HttpHeaders headers, 
+            @Context UriInfo uriInfo) 
+            throws Exception{
+        request.setHeaders(headers);
+        request.setUriInfo(uriInfo);
+        return request.request(HttpMethod.GET, null);
+    }
+    
+    @PUT
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.TEXT_PLAIN)
+    @Asynchronous
+    public CompletionStage<Response> move(
+            @Context HttpHeaders headers, 
+            @Context UriInfo uriInfo,
+            InputStream in
+    ) throws Exception{
+        request.setHeaders(headers);
+        request.setUriInfo(uriInfo);
+        return request.request(HttpMethod.PUT, in);
     }
 }
