@@ -8,6 +8,7 @@ package openup.file;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.servlet.http.HttpServletRequest;
@@ -71,8 +72,8 @@ public class Files implements openup.client.file.Files {
                 startDir.toPath(), 
                 maxDepth, null
         )
-        .map(Path::toString)
-        .toList();
+        .map(java.nio.file.Path::toString)
+        .collect(Collectors.toList());
     }
 
     @Override

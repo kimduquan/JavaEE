@@ -62,20 +62,9 @@ import javax.ws.rs.HttpMethod;
 @Named("webapp")
 public class WebApp extends HttpServlet {
     
-    void processRequest(HttpServletRequest req, HttpServletResponse resp)
-        throws ServletException, IOException{
-        req.getRequestDispatcher("faces/tasks.html").forward(req, resp);
-    }
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
         throws ServletException, IOException{
-        processRequest(req, resp);
-    }
-    
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-        throws ServletException, IOException{
-        processRequest(req, resp);
+        req.getRequestDispatcher("tasks.html").forward(req, resp);
     }
 }

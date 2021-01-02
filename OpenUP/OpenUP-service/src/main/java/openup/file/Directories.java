@@ -8,6 +8,7 @@ package openup.file;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.Path;
@@ -43,6 +44,8 @@ public class Directories implements openup.client.file.Directories {
     @Override
     public List<String> list(String dir) throws Exception {
         File directory = buildDirectory(dir);
-        return java.nio.file.Files.list(directory.toPath()).map(Path::toString).toList();
+        return java.nio.file.Files.list(directory.toPath())
+                .map(java.nio.file.Path::toString)
+                .collect(Collectors.toList());
     }
 }
