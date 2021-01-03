@@ -7,6 +7,8 @@ package openup.client.file;
 
 import java.util.List;
 import java.util.Map;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -18,6 +20,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.StreamingOutput;
+import openup.client.file.validation.File;
 
 /**
  *
@@ -31,6 +34,8 @@ public interface Files {
     @Produces(MediaType.TEXT_PLAIN)
     long copy(
             @MatrixParam("target")
+            @NotBlank
+            @File
             String target
     ) throws Exception;
     
@@ -39,6 +44,7 @@ public interface Files {
     @Produces(MediaType.TEXT_PLAIN)
     String createFile(
             @FormParam("path")
+            @NotBlank
             String path,
             @FormParam("attrs")
             Map<String, String> attrs
@@ -52,8 +58,10 @@ public interface Files {
             @FormParam("dir")
             String dir,
             @FormParam("prefix")
+            @NotBlank
             String prefix,
             @FormParam("suffix")
+            @NotBlank
             String suffix,
             @FormParam("attrs")
             Map<String, String> attrs
@@ -62,6 +70,8 @@ public interface Files {
     @DELETE
     void delete(
             @MatrixParam("path")
+            @NotBlank
+            @File
             String path
     ) throws Exception;
     
@@ -69,8 +79,11 @@ public interface Files {
     @Produces(MediaType.APPLICATION_JSON)
     List<String> find(
             @MatrixParam("start")
+            @NotBlank
+            @File
             String start, 
-            @MatrixParam("maxDepth")
+            @MatrixParam("maxDepth") 
+            @Positive
             Integer maxDepth
     ) throws Exception;
     
@@ -79,6 +92,8 @@ public interface Files {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     StreamingOutput lines(
             @MatrixParam("path")
+            @NotBlank
+            @File
             String path
     ) throws Exception;
     
@@ -87,8 +102,11 @@ public interface Files {
     @Produces(MediaType.TEXT_PLAIN)
     String move(
             @FormParam("source")
+            @NotBlank
+            @File
             String source, 
             @MatrixParam("target")
+            @NotBlank
             String target
     ) throws Exception;
 }

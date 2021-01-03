@@ -13,8 +13,6 @@ import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.StreamingOutput;
@@ -37,8 +35,6 @@ public class Files implements openup.client.file.Files {
 
     @Override
     public long copy(
-            @NotBlank
-            @openup.validation.file.File
             String target
     ) throws Exception {
         File targetFile = buildFile(target);
@@ -52,7 +48,6 @@ public class Files implements openup.client.file.Files {
 
     @Override
     public String createFile(
-            @NotBlank
             String path, 
             Map<String, String> attrs
     ) throws Exception {
@@ -63,9 +58,7 @@ public class Files implements openup.client.file.Files {
     @Override
     public String createTempFile(
             String dir, 
-            @NotBlank
             String prefix, 
-            @NotBlank
             String suffix, 
             Map<String, String> attrs
     ) throws Exception {
@@ -78,8 +71,6 @@ public class Files implements openup.client.file.Files {
 
     @Override
     public void delete(
-            @NotBlank
-            @openup.validation.file.File
             String path
     ) throws Exception {
         File file = buildFile(path);
@@ -88,10 +79,7 @@ public class Files implements openup.client.file.Files {
 
     @Override
     public List<String> find(
-            @NotBlank
-            @openup.validation.file.File
-            String start, 
-            @Positive
+            String start,
             Integer maxDepth
     ) throws Exception {
         File startDir = buildFile(start);
@@ -105,8 +93,6 @@ public class Files implements openup.client.file.Files {
 
     @Override
     public StreamingOutput lines(
-            @NotBlank
-            @openup.validation.file.File
             String path
     ) throws Exception {
         File file = buildFile(path);
@@ -115,10 +101,7 @@ public class Files implements openup.client.file.Files {
 
     @Override
     public String move(
-            @NotBlank
-            @openup.validation.file.File
-            String source, 
-            @NotBlank
+            String source,
             String target
     ) throws Exception {
         File sourceFile = buildFile(source);

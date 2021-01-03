@@ -11,9 +11,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
-import javax.validation.constraints.NotBlank;
 import javax.ws.rs.Path;
-import openup.validation.file.Directory;
 
 /**
  *
@@ -30,8 +28,6 @@ public class Directories implements openup.client.file.Directories {
     
     @Override
     public String createDirectories(
-            @NotBlank
-            @Directory
             String dir, 
             Map<String, String> attrs
     ) throws Exception {
@@ -41,8 +37,7 @@ public class Directories implements openup.client.file.Directories {
 
     @Override
     public String createTempDirectory(
-            String dir, 
-            @NotBlank
+            String dir,
             String prefix, 
             Map<String, String> attrs
     ) throws Exception {
@@ -55,8 +50,6 @@ public class Directories implements openup.client.file.Directories {
 
     @Override
     public List<String> list(
-            @NotBlank
-            @Directory
             String dir
     ) throws Exception {
         File directory = buildDirectory(dir);

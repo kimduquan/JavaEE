@@ -13,7 +13,6 @@ import javax.inject.Inject;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.json.bind.JsonbException;
-import javax.validation.constraints.NotBlank;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
@@ -24,7 +23,6 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
-import openup.validation.persistence.Unit;
 
 /**
  *
@@ -64,11 +62,8 @@ public class Entities implements openup.client.persistence.Entities {
             responseCode = "400"
     )
     public void persist(
-            @Unit
             String unit,
-            @NotBlank
             String name,
-            @NotBlank
             String id,
             InputStream body
             ) throws Exception{
@@ -110,11 +105,8 @@ public class Entities implements openup.client.persistence.Entities {
             responseCode = "404"
     )
     public void remove(
-            @Unit
             String unit,
-            @NotBlank
             String name,
-            @NotBlank
             String id
             ) throws Exception{
         Entity entity = findEntityObject(unit, name, id);

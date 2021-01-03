@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.validation.file;
+package openup.client.persistence.validation;
 
 import java.lang.annotation.Documented;
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
@@ -13,6 +13,7 @@ import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
 import javax.validation.Constraint;
+import javax.validation.Payload;
 
 /**
  *
@@ -20,8 +21,12 @@ import javax.validation.Constraint;
  */
 @Target( { PARAMETER, FIELD, ANNOTATION_TYPE })
 @Retention(RUNTIME)
-@Constraint(validatedBy = FileValidator.class)
+@Constraint(validatedBy = UnitValidator.class)
 @Documented
-public @interface File {
-    
+public @interface Unit {
+    public String message() default "Unit";
+
+    public Class<?>[] groups() default {};
+
+    public Class<? extends Payload>[] payload() default {};
 }

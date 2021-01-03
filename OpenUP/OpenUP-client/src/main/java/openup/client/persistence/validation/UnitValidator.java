@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.validation.file;
+package openup.client.persistence.validation;
 
+import epf.schema.EPF;
+import epf.schema.OpenUP;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
@@ -12,12 +14,11 @@ import javax.validation.ConstraintValidatorContext;
  *
  * @author FOXCONN
  */
-public class FileValidator implements ConstraintValidator<File, String> {
+public class UnitValidator implements ConstraintValidator<Unit, String> {
 
     @Override
-    public boolean isValid(String path, ConstraintValidatorContext arg1) {
-        java.io.File file = new java.io.File(path);
-        return file.exists();
+    public boolean isValid(String unit, ConstraintValidatorContext arg1) {
+        return OpenUP.Schema.equals(unit) || EPF.Schema.equals(unit);
     }
     
 }

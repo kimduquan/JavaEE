@@ -14,6 +14,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
+import openup.client.persistence.validation.Unit;
 
 /**
  *
@@ -27,6 +28,7 @@ public interface Queries {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCriteriaQueryResult(
             @PathParam("unit")
+            @Unit
             String unit,
             @PathParam("criteria")
             List<PathSegment> paths,

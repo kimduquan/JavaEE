@@ -7,6 +7,7 @@ package openup.client.file;
 
 import java.util.List;
 import java.util.Map;
+import javax.validation.constraints.NotBlank;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -15,6 +16,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import openup.client.file.validation.Directory;
 
 /**
  *
@@ -28,6 +30,8 @@ public interface Directories {
     @Produces(MediaType.TEXT_PLAIN)
     String createDirectories(
             @FormParam("dir")
+            @NotBlank
+            @Directory
             String dir,
             @FormParam("attrs")
             Map<String, String> attrs
@@ -40,7 +44,8 @@ public interface Directories {
     String createTempDirectory(
             @FormParam("dir")
             String dir,
-            @FormParam("prefix")
+            @FormParam("prefix") 
+            @NotBlank
             String prefix,
             @FormParam("attrs")
             Map<String, String> attrs
@@ -50,6 +55,8 @@ public interface Directories {
     @Produces(MediaType.APPLICATION_JSON)
     List<String> list(
             @MatrixParam("dir")
+            @NotBlank
+            @Directory
             String dir
     ) throws Exception;
 }

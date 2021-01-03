@@ -6,6 +6,7 @@
 package openup.client.security;
 
 import java.net.URL;
+import javax.validation.constraints.NotBlank;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -17,6 +18,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import openup.client.persistence.validation.Unit;
 
 /**
  *
@@ -35,19 +37,24 @@ public interface Security {
     @Produces(MediaType.TEXT_PLAIN)
     String login(
             @PathParam("unit")
+            @Unit
             String unit,
             @FormParam("username")
+            @NotBlank
             String username,
             @FormParam("password")
+            @NotBlank
             String password, 
             @QueryParam("url")
-            URL url) throws Exception;
+            URL url
+    ) throws Exception;
     
     @PUT
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     String runAs(
-            @FormParam("runAs") 
+            @FormParam("runAs")
+            @NotBlank
             String role
             ) throws Exception;
     
@@ -56,6 +63,7 @@ public interface Security {
     @Produces(MediaType.TEXT_PLAIN)
     String logOut(
             @PathParam("unit")
+            @Unit
             String unit
             ) throws Exception;
     

@@ -20,6 +20,10 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-schema</artifactId>
             <version>1.0.0</version>
