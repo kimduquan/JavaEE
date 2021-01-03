@@ -22,8 +22,8 @@
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
         
-        <liberty.env.openup.url>https://localhost:9443/OpenUP-service-1.0.0/</liberty.env.openup.url>
-        <liberty.env.openup.gateway.url>https://localhost:9443/OpenUP-gateway-1.0.0/</liberty.env.openup.gateway.url>
+        <liberty.env.openup.url>https://localhost:9443/service/</liberty.env.openup.url>
+        <liberty.env.openup.gateway.url>https://localhost:9443/gateway/</liberty.env.openup.gateway.url>
     </properties>
 
     <dependencies>
@@ -105,23 +105,6 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-openup-dependency</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <excludeGroupIds>openup,org.apache.cxf,com.fasterxml.jackson.jaxrs</excludeGroupIds>
-                            <outputDirectory>${project.build.directory}/shared/resources/openup/</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <!-- Prevent surefire from executing integration tests as unit tests -->
                 <configuration>
@@ -134,8 +117,8 @@
                 <configuration>
                     <!-- Pass contextPath and httpPort to the integration tests -->
                     <systemPropertyVariables>
-                        <openup.url>https://localhost:${httpsPort}/OpenUP-service-${project.version}/</openup.url>
-                        <openup.gateway.url>https://localhost:${httpsPort}/OpenUP-gateway-${project.version}/</openup.gateway.url>
+                        <openup.url>https://localhost:${httpsPort}/service/</openup.url>
+                        <openup.gateway.url>https://localhost:${httpsPort}/gateway/</openup.gateway.url>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
@@ -167,6 +150,35 @@
                             <appsDirectory>apps</appsDirectory>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>copy-openup-dependency</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>deploy</goal>
+                        </goals>
+                        <configuration>
+                            <copyDependencies>
+                                <location>${project.build.directory}/shared/resources/openup/</location>
+                                <dependency>
+                                    <groupId>com.h2database</groupId>
+                                    <artifactId>h2</artifactId>
+                                </dependency>
+                                <dependency>
+                                    <groupId>io.jaegertracing</groupId>
+                                    <artifactId>jaeger-client</artifactId>
+                                </dependency>
+                                <dependency>
+                                    <groupId>com.hazelcast</groupId>
+                                    <artifactId>hazelcast-all</artifactId>
+                                </dependency>
+                                <dependency>
+                                    <groupId>javax.cache</groupId>
+                                    <artifactId>cache-api</artifactId>
+                                </dependency>
+                            </copyDependencies>
+							<appsDirectory>apps</appsDirectory>
+                        </configuration>
+                    </execution>
                     <!-- Start the server -->
                     <execution>
                         <id>start-liberty-server</id>
@@ -175,7 +187,9 @@
                             <goal>start</goal>
                         </goals>
                         <configuration>
-                            <verifyTimeout>40</verifyTimeout>
+                            <serverStartTimeout>600</serverStartTimeout>
+                            <verifyTimeout>600</verifyTimeout>
+                            <applications>OpenUP-service,OpenUP-gateway,OpenUP-web</applications>
                         </configuration>
                     </execution>
                     <!-- Stop the server -->
