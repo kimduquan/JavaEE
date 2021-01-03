@@ -53,46 +53,53 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
     
     public CredentialValidationResult validate(BasicAuthenticationCredential credential) throws Exception{
         CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
-        sessions.computeIfPresent(credential.getCaller(), (name, session) -> {
-            if(session != null 
-                    && !session.getCredential().compareTo(
-                            credential.getCaller(), 
-                            credential.getPasswordAsString())
-                    ){
-                session = null;
-            }
-            if(session == null){
-                try {
-                    Token token = login(credential);
-                    if(token != null){
-                        TokenPrincipal principal = new TokenPrincipal(credential.getCaller(), token);
-                        session = new Session(credential, principal);
+        Session currSession = sessions.computeIfAbsent(
+                credential.getCaller(), 
+                (name) -> {
+                    try {
+                        Token token = login(credential);
+                        if(token != null){
+                            TokenPrincipal principal = new TokenPrincipal(credential.getCaller(), token);
+                            return new Session(credential, principal);
+                        }
+                    } 
+                    catch (Exception ex) {
+                        Logger.getLogger(OpenUPIdentityStore.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } 
-                catch (Exception ex) {
-                    Logger.getLogger(OpenUPIdentityStore.class.getName()).log(Level.SEVERE, null, ex);
+                    return null;
                 }
-            }
-            return session;
-        });
-        sessions.computeIfAbsent(credential.getCaller(), (name) -> {
-            try {
-                Token token = login(credential);
-                if(token != null){
-                    TokenPrincipal principal = new TokenPrincipal(credential.getCaller(), token);
-                    return new Session(credential, principal);
-                }
-            } 
-            catch (Exception ex) {
-                Logger.getLogger(OpenUPIdentityStore.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            return null;
-        });
-        Session session = sessions.get(credential.getCaller());
-        if(session != null){
+        );
+        if(currSession != null){
+            currSession = sessions.computeIfPresent(
+                    credential.getCaller(), 
+                    (name, session) -> {
+                        if(session != null 
+                                && !session.getCredential().compareTo(
+                                        credential.getCaller(), 
+                                        credential.getPasswordAsString())
+                                ){
+                            session = null;
+                        }
+                        if(session == null){
+                            try {
+                                Token token = login(credential);
+                                if(token != null){
+                                    TokenPrincipal principal = new TokenPrincipal(credential.getCaller(), token);
+                                    session = new Session(credential, principal);
+                                }
+                            } 
+                            catch (Exception ex) {
+                                Logger.getLogger(OpenUPIdentityStore.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                        return session;
+                    }
+            );
+        }
+        if(currSession != null){
             result = new CredentialValidationResult(
-                    session.getPrincipal(), 
-                    session.getPrincipal()
+                    currSession.getPrincipal(), 
+                    currSession.getPrincipal()
                             .getToken()
                             .getGroups()
             );
