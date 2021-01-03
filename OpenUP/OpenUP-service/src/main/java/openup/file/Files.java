@@ -13,6 +13,8 @@ import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.StreamingOutput;
@@ -34,7 +36,11 @@ public class Files implements openup.client.file.Files {
     }
 
     @Override
-    public long copy(String target) throws Exception {
+    public long copy(
+            @NotBlank
+            @openup.validation.file.File
+            String target
+    ) throws Exception {
         File targetFile = buildFile(target);
         long size = 0;
         for(Part part : request.getParts()){
@@ -45,13 +51,24 @@ public class Files implements openup.client.file.Files {
     }
 
     @Override
-    public String createFile(String path, Map<String, String> attrs) throws Exception {
+    public String createFile(
+            @NotBlank
+            String path, 
+            Map<String, String> attrs
+    ) throws Exception {
         File file = new File(path);
         return java.nio.file.Files.createFile(file.toPath()).toString();
     }
 
     @Override
-    public String createTempFile(String dir, String prefix, String suffix, Map<String, String> attrs) throws Exception {
+    public String createTempFile(
+            String dir, 
+            @NotBlank
+            String prefix, 
+            @NotBlank
+            String suffix, 
+            Map<String, String> attrs
+    ) throws Exception {
         if(dir != null && !dir.isEmpty()){
             File directory = new File(dir);
             return java.nio.file.Files.createTempFile(directory.toPath(), prefix, suffix).toString();
@@ -60,13 +77,23 @@ public class Files implements openup.client.file.Files {
     }
 
     @Override
-    public void delete(String path) throws Exception {
+    public void delete(
+            @NotBlank
+            @openup.validation.file.File
+            String path
+    ) throws Exception {
         File file = buildFile(path);
         java.nio.file.Files.delete(file.toPath());
     }
 
     @Override
-    public List<String> find(String start, Integer maxDepth) throws Exception {
+    public List<String> find(
+            @NotBlank
+            @openup.validation.file.File
+            String start, 
+            @Positive
+            Integer maxDepth
+    ) throws Exception {
         File startDir = buildFile(start);
         return java.nio.file.Files.find(
                 startDir.toPath(), 
@@ -77,13 +104,23 @@ public class Files implements openup.client.file.Files {
     }
 
     @Override
-    public StreamingOutput lines(String path) throws Exception {
+    public StreamingOutput lines(
+            @NotBlank
+            @openup.validation.file.File
+            String path
+    ) throws Exception {
         File file = buildFile(path);
         return new LinesOutput(java.nio.file.Files.lines(file.toPath()));
     }
 
     @Override
-    public String move(String source, String target) throws Exception {
+    public String move(
+            @NotBlank
+            @openup.validation.file.File
+            String source, 
+            @NotBlank
+            String target
+    ) throws Exception {
         File sourceFile = buildFile(source);
         File targetFile = new File(target);
         return java.nio.file.Files.move(sourceFile.toPath(), targetFile.toPath()).toString();

@@ -10,6 +10,15 @@ import java.net.URL;
 import java.time.Duration;
 import java.time.Instant;
 import javax.net.ssl.SSLContext;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.NotAuthorizedException;
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
 import openup.client.config.ConfigNames;
 import openup.client.security.Header;
 import openup.client.security.Security;
@@ -33,32 +42,108 @@ public class SecurityTest {
     private static RestClientBuilder builder;
     private static URL url;
     
-    private Security security;
-    private Header header;
+    private static Security security;
+    private static Header header;
+    private static Client client;
     
     @BeforeClass
     public static void beforeClass() throws Exception{
         url = new URL(System.getProperty(ConfigNames.OPENUP_GATEWAY_URL, ""));
         sslContext = DefaultSSLContext.build();
+        header = new Header();
         builder = RestClientBuilder.newBuilder()
                 .hostnameVerifier(new DefaultHostnameVerifier())
                 .sslContext(sslContext)
                 .register(JacksonJsonProvider.class)
-                .baseUrl(url);
+                .baseUrl(url)
+                .register(header);
+        security = builder.build(Security.class);
+        client = ClientBuilder.newBuilder()
+                .hostnameVerifier(new DefaultHostnameVerifier())
+                .sslContext(sslContext)
+                .register(JacksonJsonProvider.class)
+                .register(header).build();
     }
     
     @Before
     public void before(){
-        header = new Header();
-        security = builder.register(header)
-                .build(Security.class);
+        header.setToken(null);
+    }
+    
+    @Test
+    public void testLoginOK() throws Exception{
+        String token = security.login("OpenUP", "any_role1", "any_role", url);
+        Assert.assertNotNull("Token", token);
+        Assert.assertNotEquals("Token", "", token);
+    }
+    
+    @Test(expected = BadRequestException.class)
+    public void testLoginEmptyUnit() throws Exception{
+        MultivaluedMap<String, String> form = new MultivaluedHashMap<>();
+        form.putSingle("username", "any_role1");
+        form.putSingle("password", "any_role");
+        form.putSingle("url", url.toString());
+        client.target(url.toURI())
+                .path("security")
+                .path("")
+                .request(MediaType.TEXT_PLAIN)
+                .post(Entity.form(form), String.class);
+    }
+    
+    @Test(expected = BadRequestException.class)
+    public void testLoginInvalidUnit() throws Exception{
+        security.login("Invalid", "any_role1", "any_role", url);
+    }
+    
+    @Test(expected = BadRequestException.class)
+    public void testLoginEmptyUser() throws Exception{
+        security.login("OpenUP", "", "any_role", url);
+    }
+    
+    @Test(expected = NotAuthorizedException.class)
+    public void testLoginInvalidUser() throws Exception{
+        security.login("OpenUP", "Invalid", "any_role", url);
+    }
+    
+    @Test(expected = BadRequestException.class)
+    public void testLoginEmptyPassword() throws Exception{
+        security.login("OpenUP", "any_role1", "", url);
+    }
+    
+    @Test(expected = NotAuthorizedException.class)
+    public void testLoginInvalidPassword() throws Exception{
+        security.login("OpenUP", "any_role1", "Invalid", url);
+    }
+    
+    @Test(expected = BadRequestException.class)
+    public void testLoginEmptyUrl() throws Exception{
+        MultivaluedMap<String, String> form = new MultivaluedHashMap<>();
+        form.putSingle("username", "any_role1");
+        form.putSingle("password", "any_role");
+        form.putSingle("url", "");
+        client.target(url.toURI())
+                .path("security")
+                .path("OpenUP")
+                .request(MediaType.TEXT_PLAIN)
+                .post(Entity.form(form), String.class);
+    }
+    
+    @Test(expected = BadRequestException.class)
+    public void testLoginInvalidUrl() throws Exception{
+        MultivaluedMap<String, String> form = new MultivaluedHashMap<>();
+        form.putSingle("username", "any_role1");
+        form.putSingle("password", "any_role");
+        form.putSingle("url", "Invalid");
+        client.target(url.toURI())
+                .path("security")
+                .path("OpenUP")
+                .request(MediaType.TEXT_PLAIN)
+                .post(Entity.form(form), String.class);
     }
     
     @Test
     public void testAuthenticateOK() throws Exception{
         String token = security.login("OpenUP", "any_role1", "any_role", url);
-        Assert.assertNotNull("Token", token);
-        Assert.assertNotEquals("Token", "", token);
         
         header.setToken(token);
         
@@ -96,13 +181,11 @@ public class SecurityTest {
                 jwt.getGroups().toArray()
         );
         
-        Assert.assertTrue("IssuedAtTime", jwt.getIssuedAtTime() > 0);
+        Assert.assertTrue("IssuedAtTqime", jwt.getIssuedAtTime() > 0);
         
-        Instant.ofEpochSecond(jwt.getExpirationTime());
-        Instant.ofEpochSecond(jwt.getIssuedAtTime());
-        Duration duration = Duration.between(
-                Instant.ofEpochSecond(jwt.getExpirationTime()), 
-                Instant.ofEpochSecond(jwt.getIssuedAtTime())
+        Duration duration = Duration.between( 
+                Instant.ofEpochSecond(jwt.getIssuedAtTime()),
+                Instant.ofEpochSecond(jwt.getExpirationTime())
         );
         Assert.assertEquals("duration", 30, duration.toMinutes());
         
@@ -120,5 +203,11 @@ public class SecurityTest {
         
         Assert.assertNotNull("TokenID", jwt.getTokenID());
         Assert.assertNotEquals("TokenID", "", jwt.getTokenID());
+    }
+    
+    @Test(expected = NotAuthorizedException.class)
+    public void testAuthenticateInvalidToken() throws Exception{
+        header.setToken("Invalid");
+        security.authenticate();
     }
 }

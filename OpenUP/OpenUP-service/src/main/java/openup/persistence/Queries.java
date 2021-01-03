@@ -39,6 +39,7 @@ import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import openup.validation.persistence.Unit;
 
 /**
  *
@@ -72,6 +73,7 @@ public class Queries implements openup.client.persistence.Queries {
             )
     )
     public Response getCriteriaQueryResult(
+            @Unit
             String unit,
             List<PathSegment> paths,
             Integer firstResult,

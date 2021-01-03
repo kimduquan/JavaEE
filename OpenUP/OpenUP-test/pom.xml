@@ -176,7 +176,7 @@
                                     <artifactId>cache-api</artifactId>
                                 </dependency>
                             </copyDependencies>
-							<appsDirectory>apps</appsDirectory>
+                            <appsDirectory>apps</appsDirectory>
                         </configuration>
                     </execution>
                     <!-- Start the server -->

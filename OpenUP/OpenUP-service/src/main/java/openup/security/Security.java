@@ -26,6 +26,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.inject.Inject;
 import javax.persistence.PersistenceContext;
+import javax.validation.constraints.NotBlank;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
@@ -45,6 +46,7 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import openup.validation.persistence.Unit;
 
 /**
  *
@@ -116,8 +118,11 @@ public class Security implements openup.client.security.Security, Serializable {
             responseCode = "401"
     )
     public String login(
+            @Unit
             String unit,
+            @NotBlank
             String username,
+            @NotBlank
             String password,
             URL url) throws Exception{
         
@@ -161,6 +166,7 @@ public class Security implements openup.client.security.Security, Serializable {
             )
     )
     public String runAs(
+            @NotBlank
             String role
             ) throws Exception{
         Principal principal = context.getUserPrincipal();
@@ -183,7 +189,10 @@ public class Security implements openup.client.security.Security, Serializable {
             description = "OK",
             responseCode = "200"
     )
-    public String logOut(String unit) throws Exception{
+    public String logOut(
+            @Unit
+            String unit
+    ) throws Exception{
         Principal principal = context.getUserPrincipal();
         if(principal instanceof JsonWebToken){
             openup.persistence.Context ctx = persistence.getContext(unit);
