@@ -66,6 +66,12 @@ public class ExceptionHandler implements
         else if(failure instanceof java.util.concurrent.TimeoutException){
             status = Response.Status.REQUEST_TIMEOUT;
         }
+        else if(failure instanceof javax.validation.ConstraintViolationException){
+            status = Response.Status.BAD_REQUEST;
+        }
+        else if(failure instanceof javax.validation.ValidationException){
+            status = Response.Status.BAD_REQUEST;
+        }
         else{
             mapped = false;
         }

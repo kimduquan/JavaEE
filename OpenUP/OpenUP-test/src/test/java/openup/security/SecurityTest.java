@@ -11,6 +11,7 @@ import java.time.Duration;
 import java.time.Instant;
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.BadRequestException;
+import javax.ws.rs.NotAllowedException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.client.Client;
@@ -27,6 +28,7 @@ import openup.client.security.Token;
 import openup.client.ssl.DefaultHostnameVerifier;
 import openup.client.ssl.DefaultSSLContext;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -39,35 +41,43 @@ import org.junit.Test;
 public class SecurityTest {
     
     private static SSLContext sslContext;
-    private static RestClientBuilder builder;
+    private static RestClientBuilder restBuilder;
+    private static ClientBuilder builder;
     private static URL url;
+    private static Header header;
     
     private static Security security;
-    private static Header header;
-    private static Client client;
+    private Client client;
     
     @BeforeClass
     public static void beforeClass() throws Exception{
         url = new URL(System.getProperty(ConfigNames.OPENUP_GATEWAY_URL, ""));
         sslContext = DefaultSSLContext.build();
         header = new Header();
-        builder = RestClientBuilder.newBuilder()
+        restBuilder = RestClientBuilder.newBuilder()
                 .hostnameVerifier(new DefaultHostnameVerifier())
                 .sslContext(sslContext)
                 .register(JacksonJsonProvider.class)
                 .baseUrl(url)
                 .register(header);
-        security = builder.build(Security.class);
-        client = ClientBuilder.newBuilder()
+        security = restBuilder.build(Security.class);
+        
+        builder = ClientBuilder.newBuilder()
                 .hostnameVerifier(new DefaultHostnameVerifier())
                 .sslContext(sslContext)
                 .register(JacksonJsonProvider.class)
-                .register(header).build();
+                .register(header);
     }
     
     @Before
     public void before(){
         header.setToken(null);
+        client = builder.build();
+    }
+    
+    @After
+    public void after(){
+        client.close();
     }
     
     @Test
@@ -77,15 +87,26 @@ public class SecurityTest {
         Assert.assertNotEquals("Token", "", token);
     }
     
-    @Test(expected = BadRequestException.class)
+    @Test(expected = NotAllowedException.class)
     public void testLoginEmptyUnit() throws Exception{
         MultivaluedMap<String, String> form = new MultivaluedHashMap<>();
         form.putSingle("username", "any_role1");
         form.putSingle("password", "any_role");
         form.putSingle("url", url.toString());
-        client.target(url.toURI())
-                .path("security")
+        client.target(url.toString() + "security/")
                 .path("")
+                .request(MediaType.TEXT_PLAIN)
+                .post(Entity.form(form), String.class);
+    }
+    
+    @Test(expected = BadRequestException.class)
+    public void testLoginBlankUnit() throws Exception{
+        MultivaluedMap<String, String> form = new MultivaluedHashMap<>();
+        form.putSingle("username", "any_role1");
+        form.putSingle("password", "any_role");
+        form.putSingle("url", url.toString());
+        client.target(url.toString() + "security/")
+                .path("     ")
                 .request(MediaType.TEXT_PLAIN)
                 .post(Entity.form(form), String.class);
     }
@@ -100,6 +121,11 @@ public class SecurityTest {
         security.login("OpenUP", "", "any_role", url);
     }
     
+    @Test(expected = BadRequestException.class)
+    public void testLoginBlankUser() throws Exception{
+        security.login("OpenUP", "     ", "any_role", url);
+    }
+    
     @Test(expected = NotAuthorizedException.class)
     public void testLoginInvalidUser() throws Exception{
         security.login("OpenUP", "Invalid", "any_role", url);
@@ -108,6 +134,11 @@ public class SecurityTest {
     @Test(expected = BadRequestException.class)
     public void testLoginEmptyPassword() throws Exception{
         security.login("OpenUP", "any_role1", "", url);
+    }
+    
+    @Test(expected = BadRequestException.class)
+    public void testLoginBlankPassword() throws Exception{
+        security.login("OpenUP", "any_role1", "    ", url);
     }
     
     @Test(expected = NotAuthorizedException.class)
@@ -121,6 +152,19 @@ public class SecurityTest {
         form.putSingle("username", "any_role1");
         form.putSingle("password", "any_role");
         form.putSingle("url", "");
+        client.target(url.toURI())
+                .path("security")
+                .path("OpenUP")
+                .request(MediaType.TEXT_PLAIN)
+                .post(Entity.form(form), String.class);
+    }
+    
+    @Test(expected = BadRequestException.class)
+    public void testLoginBlankUrl() throws Exception{
+        MultivaluedMap<String, String> form = new MultivaluedHashMap<>();
+        form.putSingle("username", "any_role1");
+        form.putSingle("password", "any_role");
+        form.putSingle("url", "    ");
         client.target(url.toURI())
                 .path("security")
                 .path("OpenUP")
@@ -203,6 +247,18 @@ public class SecurityTest {
         
         Assert.assertNotNull("TokenID", jwt.getTokenID());
         Assert.assertNotEquals("TokenID", "", jwt.getTokenID());
+    }
+    
+    @Test(expected = NotAuthorizedException.class)
+    public void testAuthenticateEmptyToken() throws Exception{
+        header.setToken("");
+        security.authenticate();
+    }
+    
+    @Test(expected = NotAuthorizedException.class)
+    public void testAuthenticateBlankToken() throws Exception{
+        header.setToken("    ");
+        security.authenticate();
     }
     
     @Test(expected = NotAuthorizedException.class)

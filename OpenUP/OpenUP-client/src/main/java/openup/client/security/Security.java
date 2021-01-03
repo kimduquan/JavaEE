@@ -7,6 +7,7 @@ package openup.client.security;
 
 import java.net.URL;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -46,6 +47,7 @@ public interface Security {
             @NotBlank
             String password, 
             @QueryParam("url")
+            @NotNull
             URL url
     ) throws Exception;
     
