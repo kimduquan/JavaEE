@@ -3,11 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.error;
+package openup;
 
 import java.io.Serializable;
 import java.sql.SQLInvalidAuthorizationSpecException;
 import javax.security.enterprise.AuthenticationException;
+import javax.validation.ValidationException;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -46,7 +48,7 @@ public class ExceptionHandler implements
     }
     
     boolean map(Throwable failure, Response.ResponseBuilder builder){
-        Response.Status status = Response.Status.INTERNAL_SERVER_ERROR;
+        Response.StatusType status = Response.Status.INTERNAL_SERVER_ERROR;
         boolean mapped = true;
         if(failure instanceof AuthenticationException){
             status = Response.Status.UNAUTHORIZED;
@@ -66,11 +68,12 @@ public class ExceptionHandler implements
         else if(failure instanceof java.util.concurrent.TimeoutException){
             status = Response.Status.REQUEST_TIMEOUT;
         }
-        else if(failure instanceof javax.validation.ConstraintViolationException){
+        else if(failure instanceof ValidationException){
             status = Response.Status.BAD_REQUEST;
         }
-        else if(failure instanceof javax.validation.ValidationException){
-            status = Response.Status.BAD_REQUEST;
+        else if(failure instanceof WebApplicationException){
+            WebApplicationException ex = (WebApplicationException)failure;
+            status = ex.getResponse().getStatusInfo();
         }
         else{
             mapped = false;

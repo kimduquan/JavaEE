@@ -12,14 +12,15 @@ import java.time.Instant;
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotAllowedException;
-import javax.ws.rs.NotAuthorizedException;
-import javax.ws.rs.NotFoundException;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import openup.client.config.ConfigNames;
 import openup.client.security.Header;
 import openup.client.security.Security;
@@ -29,6 +30,7 @@ import openup.client.ssl.DefaultHostnameVerifier;
 import openup.client.ssl.DefaultSSLContext;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -47,7 +49,7 @@ public class SecurityTest {
     private static Header header;
     
     private static Security security;
-    private Client client;
+    private static Client client;
     
     @BeforeClass
     public static void beforeClass() throws Exception{
@@ -60,24 +62,30 @@ public class SecurityTest {
                 .register(JacksonJsonProvider.class)
                 .baseUrl(url)
                 .register(header);
-        security = restBuilder.build(Security.class);
         
         builder = ClientBuilder.newBuilder()
                 .hostnameVerifier(new DefaultHostnameVerifier())
                 .sslContext(sslContext)
                 .register(JacksonJsonProvider.class)
                 .register(header);
+        
+        security = restBuilder.build(Security.class);
+        client = builder.build();
+    }
+    
+    @AfterClass
+    public static void afterClass(){
+        client.close();
     }
     
     @Before
     public void before(){
         header.setToken(null);
-        client = builder.build();
     }
     
     @After
     public void after(){
-        client.close();
+        header.setToken(null);
     }
     
     @Test
@@ -85,6 +93,25 @@ public class SecurityTest {
         String token = security.login("OpenUP", "any_role1", "any_role", url);
         Assert.assertNotNull("Token", token);
         Assert.assertNotEquals("Token", "", token);
+        
+        header.setToken(token);
+        security.logOut("OpenUP");
+    }
+    
+    @Test
+    public void testLoginOKAfterLoginInvalidPassword() throws Exception{
+        Assert.assertThrows(
+                WebApplicationException.class, 
+                () -> {
+                    security.login("OpenUP", "any_role1", "Invalid", url);
+                }
+        );
+        String token = security.login("OpenUP", "any_role1", "any_role", url);
+        Assert.assertNotNull("Token", token);
+        Assert.assertNotEquals("Token", "", token);
+        
+        header.setToken(token);
+        security.logOut("OpenUP");
     }
     
     @Test(expected = NotAllowedException.class)
@@ -111,39 +138,128 @@ public class SecurityTest {
                 .post(Entity.form(form), String.class);
     }
     
-    @Test(expected = BadRequestException.class)
+    @Test
     public void testLoginInvalidUnit() throws Exception{
-        security.login("Invalid", "any_role1", "any_role", url);
+        WebApplicationException ex = Assert.assertThrows(
+                WebApplicationException.class, 
+                () -> {
+                    security.login("Invalid", "any_role1", "any_role", url);
+                }
+        );
+        Assert.assertEquals(
+                "Status",
+                Status.BAD_REQUEST.getStatusCode(), 
+                ex.getResponse().getStatus()
+        );
     }
     
-    @Test(expected = BadRequestException.class)
+    @Test
     public void testLoginEmptyUser() throws Exception{
-        security.login("OpenUP", "", "any_role", url);
+        WebApplicationException ex = Assert.assertThrows(
+                WebApplicationException.class, 
+                () -> {
+                    security.login("OpenUP", "", "any_role", url);
+                }
+        );
+        Assert.assertEquals(
+                "Status",
+                Status.BAD_REQUEST.getStatusCode(), 
+                ex.getResponse().getStatus()
+        );
     }
     
-    @Test(expected = BadRequestException.class)
+    @Test
     public void testLoginBlankUser() throws Exception{
-        security.login("OpenUP", "     ", "any_role", url);
+        WebApplicationException ex = Assert.assertThrows(
+                WebApplicationException.class, 
+                () -> {
+                    security.login("OpenUP", "     ", "any_role", url);
+                }
+        );
+        Assert.assertEquals(
+                "Status",
+                Status.BAD_REQUEST.getStatusCode(), 
+                ex.getResponse().getStatus()
+        );
     }
     
-    @Test(expected = NotAuthorizedException.class)
+    @Test
     public void testLoginInvalidUser() throws Exception{
-        security.login("OpenUP", "Invalid", "any_role", url);
+        WebApplicationException ex = Assert.assertThrows(
+                WebApplicationException.class, 
+                () -> {
+                    security.login("OpenUP", "Invalid", "any_role", url);
+                }
+        );
+        Assert.assertEquals(
+                "Status",
+                Status.UNAUTHORIZED.getStatusCode(), 
+                ex.getResponse().getStatus()
+        );
     }
     
-    @Test(expected = BadRequestException.class)
+    @Test
     public void testLoginEmptyPassword() throws Exception{
-        security.login("OpenUP", "any_role1", "", url);
+        WebApplicationException ex = Assert.assertThrows(
+                WebApplicationException.class, 
+                () -> {
+                    security.login("OpenUP", "any_role1", "", url);
+                }
+        );
+        Assert.assertEquals(
+                "Status",
+                Status.BAD_REQUEST.getStatusCode(), 
+                ex.getResponse().getStatus()
+        );
     }
     
-    @Test(expected = BadRequestException.class)
+    @Test
     public void testLoginBlankPassword() throws Exception{
-        security.login("OpenUP", "any_role1", "    ", url);
+        WebApplicationException ex = Assert.assertThrows(
+                WebApplicationException.class, 
+                () -> {
+                    security.login("OpenUP", "any_role1", "    ", url);
+                }
+        );
+        Assert.assertEquals(
+                "Status",
+                Status.BAD_REQUEST.getStatusCode(), 
+                ex.getResponse().getStatus()
+        );
     }
     
-    @Test(expected = NotAuthorizedException.class)
+    @Test
     public void testLoginInvalidPassword() throws Exception{
-        security.login("OpenUP", "any_role1", "Invalid", url);
+        WebApplicationException ex = Assert.assertThrows(
+                WebApplicationException.class, 
+                () -> {
+                    security.login("OpenUP", "any_role1", "Invalid", url);
+                }
+        );
+        Assert.assertEquals(
+                "Status",
+                Status.UNAUTHORIZED.getStatusCode(), 
+                ex.getResponse().getStatus()
+        );
+    }
+    
+    @Test
+    public void testLoginInvalidPasswordAfterLoginOK() throws Exception{
+        String token = security.login("OpenUP", "any_role1", "any_role", url);
+        WebApplicationException ex = Assert.assertThrows(
+                WebApplicationException.class, 
+                () -> {
+                    security.login("OpenUP", "any_role1", "Invalid", url);
+                }
+        );
+        Assert.assertEquals(
+                "Status",
+                Status.UNAUTHORIZED.getStatusCode(), 
+                ex.getResponse().getStatus()
+        );
+        
+        header.setToken(token);
+        security.logOut("OpenUP");
     }
     
     @Test(expected = BadRequestException.class)
@@ -247,23 +363,113 @@ public class SecurityTest {
         
         Assert.assertNotNull("TokenID", jwt.getTokenID());
         Assert.assertNotEquals("TokenID", "", jwt.getTokenID());
+        
+        security.logOut("OpenUP");
     }
     
-    @Test(expected = NotAuthorizedException.class)
+    @Test
     public void testAuthenticateEmptyToken() throws Exception{
         header.setToken("");
-        security.authenticate();
+        WebApplicationException ex = Assert.assertThrows(
+                WebApplicationException.class, 
+                () -> {
+                    security.authenticate();
+                }
+        );
+        Assert.assertEquals(
+                "Status",
+                Status.UNAUTHORIZED.getStatusCode(), 
+                ex.getResponse().getStatus()
+        );
     }
     
-    @Test(expected = NotAuthorizedException.class)
+    @Test
     public void testAuthenticateBlankToken() throws Exception{
         header.setToken("    ");
-        security.authenticate();
+        WebApplicationException ex = Assert.assertThrows(
+                WebApplicationException.class, 
+                () -> {
+                    security.authenticate();
+                }
+        );
+        Assert.assertEquals(
+                "Status",
+                Status.UNAUTHORIZED.getStatusCode(), 
+                ex.getResponse().getStatus()
+        );
     }
     
-    @Test(expected = NotAuthorizedException.class)
+    @Test
     public void testAuthenticateInvalidToken() throws Exception{
         header.setToken("Invalid");
-        security.authenticate();
+        WebApplicationException ex = Assert.assertThrows(
+                WebApplicationException.class, 
+                () -> {
+                    security.authenticate();
+                }
+        );
+        Assert.assertEquals(
+                "Status",
+                Status.UNAUTHORIZED.getStatusCode(), 
+                ex.getResponse().getStatus()
+        );
+    }
+    
+    @Test
+    public void testLogoutOK() throws Exception {
+        String token = security.login("OpenUP", "any_role1", "any_role", url);
+        header.setToken(token);
+        Token jwt = security.authenticate();
+        
+        header.setToken(jwt.getRawToken());
+        
+        security.logOut("OpenUP");
+        
+        WebApplicationException ex = Assert.assertThrows(
+                WebApplicationException.class, 
+                () -> {
+                    security.authenticate();
+                }
+        );
+        Assert.assertEquals(
+                "Status",
+                Status.UNAUTHORIZED.getStatusCode(), 
+                ex.getResponse().getStatus()
+        );
+    }
+    
+    @Test
+    public void testLogoutEmptyUnit() throws Exception{
+        WebApplicationException ex = Assert.assertThrows(
+                WebApplicationException.class, 
+                () -> {
+                    security.logOut("");
+                }
+        );
+        Assert.assertEquals(
+                "Status",
+                Status.BAD_REQUEST.getStatusCode(), 
+                ex.getResponse().getStatus()
+        );
+    }
+    
+    @Test(expected = BadRequestException.class)
+    public void testLogoutBlankUnit() throws Exception{
+        security.logOut("    ");
+    }
+    
+    @Test
+    public void testLogoutInvalidUnit() throws Exception{
+        WebApplicationException ex = Assert.assertThrows(
+                WebApplicationException.class, 
+                () -> {
+                    security.logOut("Invalid");
+                }
+        );
+        Assert.assertEquals(
+                "Status",
+                Status.BAD_REQUEST.getStatusCode(), 
+                ex.getResponse().getStatus()
+        );
     }
 }

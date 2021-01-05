@@ -5,12 +5,16 @@
  */
 package openup.persistence;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
@@ -24,21 +28,63 @@ public class Context implements AutoCloseable {
         credentials = new ConcurrentHashMap<>();
     }
     
-    public Credential putCredential(String userName, EntityManagerFactory factory, EntityManager manager){
-        credentials.computeIfPresent(userName, (key, credential) -> {
+    public Credential putCredential(String userName, String unit, String password) throws Exception{
+        Map<String, Object> props = new HashMap<>();
+        props.put("javax.persistence.jdbc.user", userName);
+        props.put("javax.persistence.jdbc.password", password);
+        List<Exception> errors = new ArrayList<>();
+        Credential cred = credentials.computeIfAbsent(userName, name -> {
+            try{
+                EntityManagerFactory factory = Persistence.createEntityManagerFactory(unit, props);
+                EntityManager manager = factory.createEntityManager();
+                return new Credential(factory, manager);
+            }
+            catch(Exception ex){
+                errors.add(ex);
+            }
+            return null;
+        });
+        if(!errors.isEmpty()){
+            throw errors.get(0);
+        }
+        cred = credentials.computeIfPresent(userName, (name, credential) -> {
             if(credential != null){
-                try {
-                    credential.close();
-                } 
-                catch (Exception ex) {
-                    Logger.getLogger(Context.class.getName()).log(Level.SEVERE, null, ex);
+                synchronized(credential){
+                    if(!props.equals(credential.getFactory().getProperties())){
+                        try {
+                            credential.close();
+                        } 
+                        catch (Exception ex) {
+                            Logger.getLogger(Context.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        credential = null;
+                        try{
+                            EntityManagerFactory factory = Persistence.createEntityManagerFactory(unit, props);
+                            EntityManager manager = factory.createEntityManager();
+                            credential = new Credential(factory, manager);
+                        }
+                        catch (Exception ex) {
+                            errors.add(ex);
+                        }
+                    }
                 }
             }
-            return new Credential(factory, manager);
+            else{
+                try{
+                    EntityManagerFactory factory = Persistence.createEntityManagerFactory(unit, props);
+                    EntityManager manager = factory.createEntityManager();
+                    credential = new Credential(factory, manager);
+                }
+                catch(Exception ex){
+                    errors.add(ex);
+                }
+            }
+            return credential;
         });
-        return credentials.computeIfAbsent(userName, key -> {
-            return new Credential(factory, manager);
-        });
+        if(!errors.isEmpty()){
+            throw errors.get(0);
+        }
+        return cred;
     }
     
     public Credential getCredential(String userName){

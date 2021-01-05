@@ -14,7 +14,6 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -51,19 +50,6 @@ public class Security {
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         return request.request(HttpMethod.POST, in);
-    }
-    
-    @PUT
-    @Produces(MediaType.TEXT_PLAIN)
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Asynchronous
-    public CompletionStage<Response> runAs(
-            @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo,
-            InputStream in) throws Exception{
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        return request.request(HttpMethod.PUT, in);
     }
     
     @DELETE

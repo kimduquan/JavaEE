@@ -54,13 +54,14 @@ public class Request {
             if(context != null){
                 Credential credential = context.getCredential(principal.getName());
                 if(credential != null){
-                    Session session = credential.getSession(principal);
-                    if(session != null){
-                        if(principal instanceof JsonWebToken){
-                            JsonWebToken jwt = (JsonWebToken)principal;
-                            Conversation conversation = session.getConversation(jwt.getTokenID());
-                            if(conversation != null){
-                                manager = conversation.getManager(jwt.getIssuedAtTime());
+                    if(principal instanceof JsonWebToken){
+                        JsonWebToken jwt = (JsonWebToken)principal;
+                        Session session = credential.getSession(jwt.getIssuedAtTime());
+                        if(session != null){
+                            if(System.currentTimeMillis() < jwt.getExpirationTime() * 1000){
+                                manager = session
+                                    .putConversation(jwt.getTokenID())
+                                    .putManager(jwt.getIssuedAtTime());
                             }
                         }
                     }
