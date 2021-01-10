@@ -6,7 +6,7 @@
 package openup.client.lang.capabilities;
 
 import java.util.Optional;
-import openup.client.lang.SymbolKind;
+import openup.client.lang.kind.SymbolKind;
 import openup.client.lang.SymbolTag;
 import openup.client.lang.util.ValueSet;
 

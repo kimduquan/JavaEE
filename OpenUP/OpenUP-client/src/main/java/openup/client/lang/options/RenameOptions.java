@@ -5,10 +5,20 @@
  */
 package openup.client.lang.options;
 
+import java.util.Optional;
+
 /**
  *
  * @author FOXCONN
  */
-public class RenameOptions {
-    
+public class RenameOptions extends WorkDoneProgressOptions {
+    private Optional<Boolean> prepareProvider;
+
+    public Optional<Boolean> getPrepareProvider() {
+        return prepareProvider;
+    }
+
+    public void setPrepareProvider(Optional<Boolean> prepareProvider) {
+        this.prepareProvider = prepareProvider;
+    }
 }

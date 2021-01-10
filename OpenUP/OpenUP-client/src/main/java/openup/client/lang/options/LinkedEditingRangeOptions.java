@@ -9,6 +9,6 @@ package openup.client.lang.options;
  *
  * @author FOXCONN
  */
-public class LinkedEditingRangeOptions {
+public class LinkedEditingRangeOptions extends WorkDoneProgressOptions {
     
 }

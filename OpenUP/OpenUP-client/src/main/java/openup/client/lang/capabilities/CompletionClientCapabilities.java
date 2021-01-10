@@ -6,10 +6,10 @@
 package openup.client.lang.capabilities;
 
 import java.util.Optional;
-import openup.client.lang.CompletionItemKind;
+import openup.client.lang.kind.CompletionItemKind;
 import openup.client.lang.CompletionItemTag;
 import openup.client.lang.InsertTextMode;
-import openup.client.lang.MarkupKind;
+import openup.client.lang.kind.MarkupKind;
 import openup.client.lang.util.Properties;
 import openup.client.lang.util.ValueSet;
 

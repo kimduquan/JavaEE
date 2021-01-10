@@ -5,6 +5,7 @@
  */
 package openup.client.lang;
 
+import openup.client.lang.information.SignatureInformation;
 import java.util.Optional;
 
 /**

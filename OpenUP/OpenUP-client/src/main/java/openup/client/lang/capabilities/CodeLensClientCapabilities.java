@@ -5,10 +5,20 @@
  */
 package openup.client.lang.capabilities;
 
+import java.util.Optional;
+
 /**
  *
  * @author FOXCONN
  */
 public class CodeLensClientCapabilities {
-    
+    private Optional<Boolean> dynamicRegistration;
+
+    public Optional<Boolean> getDynamicRegistration() {
+        return dynamicRegistration;
+    }
+
+    public void setDynamicRegistration(Optional<Boolean> dynamicRegistration) {
+        this.dynamicRegistration = dynamicRegistration;
+    }
 }

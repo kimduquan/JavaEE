@@ -5,7 +5,7 @@
  */
 package openup.client.lang.params;
 
-import openup.client.lang.TextDocumentItem;
+import openup.client.lang.item.TextDocumentItem;
 
 /**
  *

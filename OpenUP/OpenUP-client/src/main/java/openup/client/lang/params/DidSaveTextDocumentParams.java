@@ -6,7 +6,7 @@
 package openup.client.lang.params;
 
 import java.util.Optional;
-import openup.client.lang.TextDocumentIdentifier;
+import openup.client.lang.identifier.TextDocumentIdentifier;
 
 /**
  *

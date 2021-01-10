@@ -5,10 +5,20 @@
  */
 package openup.client.lang.options;
 
+import java.util.Optional;
+
 /**
  *
  * @author FOXCONN
  */
-public class CodeLensOptions {
-    
+public class CodeLensOptions extends WorkDoneProgressOptions {
+    private Optional<Boolean> resolveProvider;
+
+    public Optional<Boolean> getResolveProvider() {
+        return resolveProvider;
+    }
+
+    public void setResolveProvider(Optional<Boolean> resolveProvider) {
+        this.resolveProvider = resolveProvider;
+    }
 }

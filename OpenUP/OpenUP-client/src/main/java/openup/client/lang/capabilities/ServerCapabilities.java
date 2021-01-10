@@ -24,7 +24,7 @@ import openup.client.lang.options.LinkedEditingRangeOptions;
 import openup.client.lang.options.DocumentFormattingOptions;
 import openup.client.lang.options.ReferenceOptions;
 import openup.client.lang.options.RenameOptions;
-import openup.client.lang.options.FileOperationRegistrationOptions;
+import openup.client.lang.options.registration.FileOperationRegistrationOptions;
 import openup.client.lang.options.CodeLensOptions;
 import openup.client.lang.options.CodeActionOptions;
 import openup.client.lang.options.DocumentSymbolOptions;

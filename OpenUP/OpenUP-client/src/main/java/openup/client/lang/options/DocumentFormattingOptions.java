@@ -9,6 +9,6 @@ package openup.client.lang.options;
  *
  * @author FOXCONN
  */
-public class DocumentFormattingOptions {
+public class DocumentFormattingOptions extends WorkDoneProgressOptions {
     
 }

@@ -5,6 +5,7 @@
  */
 package openup.client.lang;
 
+import openup.client.lang.kind.WatchKind;
 import java.util.Optional;
 
 /**

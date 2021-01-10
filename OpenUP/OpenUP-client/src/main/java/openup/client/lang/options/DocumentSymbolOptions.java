@@ -5,10 +5,20 @@
  */
 package openup.client.lang.options;
 
+import java.util.Optional;
+
 /**
  *
  * @author FOXCONN
  */
-public class DocumentSymbolOptions {
-    
+public class DocumentSymbolOptions extends WorkDoneProgressOptions {
+    private Optional<String> label;
+
+    public Optional<String> getLabel() {
+        return label;
+    }
+
+    public void setLabel(Optional<String> label) {
+        this.label = label;
+    }
 }

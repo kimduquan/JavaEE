@@ -5,10 +5,29 @@
  */
 package openup.client.lang.options;
 
+import java.util.Optional;
+
 /**
  *
  * @author FOXCONN
  */
 public class DocumentOnTypeFormattingOptions {
-    
+    private String firstTriggerCharacter;
+    private Optional<String[]> moreTriggerCharacter;
+
+    public String getFirstTriggerCharacter() {
+        return firstTriggerCharacter;
+    }
+
+    public void setFirstTriggerCharacter(String firstTriggerCharacter) {
+        this.firstTriggerCharacter = firstTriggerCharacter;
+    }
+
+    public Optional<String[]> getMoreTriggerCharacter() {
+        return moreTriggerCharacter;
+    }
+
+    public void setMoreTriggerCharacter(Optional<String[]> moreTriggerCharacter) {
+        this.moreTriggerCharacter = moreTriggerCharacter;
+    }
 }

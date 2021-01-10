@@ -6,7 +6,7 @@
 package openup.client.lang.capabilities;
 
 import java.util.Optional;
-import openup.client.lang.MarkupKind;
+import openup.client.lang.kind.MarkupKind;
 
 /**
  *

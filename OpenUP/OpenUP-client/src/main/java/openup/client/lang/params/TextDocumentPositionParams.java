@@ -6,7 +6,7 @@
 package openup.client.lang.params;
 
 import openup.client.lang.Position;
-import openup.client.lang.TextDocumentIdentifier;
+import openup.client.lang.identifier.TextDocumentIdentifier;
 
 /**
  *

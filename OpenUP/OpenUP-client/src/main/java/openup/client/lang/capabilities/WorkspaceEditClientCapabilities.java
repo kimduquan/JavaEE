@@ -6,8 +6,8 @@
 package openup.client.lang.capabilities;
 
 import java.util.Optional;
-import openup.client.lang.FailureHandlingKind;
-import openup.client.lang.ResourceOperationKind;
+import openup.client.lang.kind.FailureHandlingKind;
+import openup.client.lang.kind.ResourceOperationKind;
 
 /**
  *

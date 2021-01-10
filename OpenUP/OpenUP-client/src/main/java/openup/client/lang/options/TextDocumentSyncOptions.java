@@ -6,7 +6,7 @@
 package openup.client.lang.options;
 
 import java.util.Optional;
-import openup.client.lang.TextDocumentSyncKind;
+import openup.client.lang.kind.TextDocumentSyncKind;
 
 /**
  *

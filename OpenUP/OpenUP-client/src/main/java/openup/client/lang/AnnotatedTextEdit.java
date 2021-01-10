@@ -5,6 +5,8 @@
  */
 package openup.client.lang;
 
+import openup.client.lang.identifier.ChangeAnnotationIdentifier;
+
 /**
  *
  * @author FOXCONN

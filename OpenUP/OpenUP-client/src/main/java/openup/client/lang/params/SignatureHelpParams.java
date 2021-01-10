@@ -6,7 +6,7 @@
 package openup.client.lang.params;
 
 import java.util.Optional;
-import openup.client.lang.SignatureHelpContext;
+import openup.client.lang.context.SignatureHelpContext;
 
 /**
  *

@@ -5,6 +5,7 @@
  */
 package openup.client.lang;
 
+import openup.client.lang.kind.FileOperationPatternKind;
 import openup.client.lang.options.FileOperationPatternOptions;
 import java.util.Optional;
 

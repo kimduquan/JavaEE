@@ -5,6 +5,7 @@
  */
 package openup.client.lang;
 
+import openup.client.lang.identifier.ChangeAnnotationIdentifier;
 import openup.client.lang.options.DeleteFileOptions;
 import java.util.Optional;
 

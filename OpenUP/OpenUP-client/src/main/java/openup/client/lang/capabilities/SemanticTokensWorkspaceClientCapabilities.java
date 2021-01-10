@@ -5,10 +5,20 @@
  */
 package openup.client.lang.capabilities;
 
+import java.util.Optional;
+
 /**
  *
  * @author FOXCONN
  */
 public class SemanticTokensWorkspaceClientCapabilities {
-    
+    private Optional<Boolean> refreshSupport;
+
+    public Optional<Boolean> getRefreshSupport() {
+        return refreshSupport;
+    }
+
+    public void setRefreshSupport(Optional<Boolean> refreshSupport) {
+        this.refreshSupport = refreshSupport;
+    }
 }

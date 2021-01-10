@@ -9,6 +9,6 @@ package openup.client.lang;
  *
  * @author FOXCONN
  */
-public class SymbolTag {
-    
+public enum SymbolTag {
+    Deprecated
 }

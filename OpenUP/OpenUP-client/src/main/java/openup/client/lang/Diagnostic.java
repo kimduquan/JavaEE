@@ -5,6 +5,7 @@
  */
 package openup.client.lang;
 
+import openup.client.lang.information.DiagnosticRelatedInformation;
 import java.util.Optional;
 
 /**

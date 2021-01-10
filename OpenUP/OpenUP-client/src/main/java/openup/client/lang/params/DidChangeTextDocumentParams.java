@@ -6,7 +6,7 @@
 package openup.client.lang.params;
 
 import openup.client.lang.TextDocumentContentChangeEvent;
-import openup.client.lang.VersionedTextDocumentIdentifier;
+import openup.client.lang.identifier.VersionedTextDocumentIdentifier;
 
 /**
  *

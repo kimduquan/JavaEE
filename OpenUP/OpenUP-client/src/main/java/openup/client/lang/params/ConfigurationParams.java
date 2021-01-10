@@ -5,7 +5,7 @@
  */
 package openup.client.lang.params;
 
-import openup.client.lang.ConfigurationItem;
+import openup.client.lang.item.ConfigurationItem;
 
 /**
  *
