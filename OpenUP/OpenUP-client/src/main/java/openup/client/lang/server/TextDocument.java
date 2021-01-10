@@ -3,14 +3,33 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.client.lang;
+package openup.client.lang.server;
 
+import openup.client.lang.CallHierarchyIncomingCall;
+import openup.client.lang.CallHierarchyOutgoingCall;
+import openup.client.lang.CodeAction;
+import openup.client.lang.CodeLens;
+import openup.client.lang.ColorPresentation;
+import openup.client.lang.CompletionList;
+import openup.client.lang.DocumentHighlight;
+import openup.client.lang.DocumentLink;
+import openup.client.lang.DocumentSymbol;
+import openup.client.lang.FoldingRange;
+import openup.client.lang.Hover;
+import openup.client.lang.LinkedEditingRanges;
+import openup.client.lang.Location;
+import openup.client.lang.LocationLink;
+import openup.client.lang.Moniker;
+import openup.client.lang.Range;
+import openup.client.lang.SelectionRange;
+import openup.client.lang.SemanticTokens;
+import openup.client.lang.SemanticTokensDelta;
+import openup.client.lang.SignatureHelp;
+import openup.client.lang.TextEdit;
+import openup.client.lang.WorkspaceEdit;
 import openup.client.lang.information.ColorInformation;
-import openup.client.lang.information.SymbolInformation;
 import openup.client.lang.item.CallHierarchyItem;
 import openup.client.lang.item.CompletionItem;
-import openup.client.lang.item.MessageActionItem;
-import openup.client.lang.params.ApplyWorkspaceEditParams;
 import openup.client.lang.params.CallHierarchyIncomingCallsParams;
 import openup.client.lang.params.CallHierarchyOutgoingCallsParams;
 import openup.client.lang.params.CallHierarchyPrepareParams;
@@ -18,15 +37,9 @@ import openup.client.lang.params.CodeActionParams;
 import openup.client.lang.params.CodeLensParams;
 import openup.client.lang.params.ColorPresentationParams;
 import openup.client.lang.params.CompletionParams;
-import openup.client.lang.params.ConfigurationParams;
-import openup.client.lang.params.CreateFilesParams;
 import openup.client.lang.params.DeclarationParams;
 import openup.client.lang.params.DefinitionParams;
-import openup.client.lang.params.DeleteFilesParams;
-import openup.client.lang.params.DidChangeConfigurationParams;
 import openup.client.lang.params.DidChangeTextDocumentParams;
-import openup.client.lang.params.DidChangeWatchedFilesParams;
-import openup.client.lang.params.DidChangeWorkspaceFoldersParams;
 import openup.client.lang.params.DidCloseTextDocumentParams;
 import openup.client.lang.params.DidOpenTextDocumentParams;
 import openup.client.lang.params.DidSaveTextDocumentParams;
@@ -37,73 +50,28 @@ import openup.client.lang.params.DocumentLinkParams;
 import openup.client.lang.params.DocumentOnTypeFormattingParams;
 import openup.client.lang.params.DocumentRangeFormattingParams;
 import openup.client.lang.params.DocumentSymbolParams;
-import openup.client.lang.params.ExecuteCommandParams;
 import openup.client.lang.params.FoldingRangeParams;
 import openup.client.lang.params.HoverParams;
 import openup.client.lang.params.ImplementationParams;
-import openup.client.lang.params.InitializeParams;
-import openup.client.lang.params.InitializedParams;
 import openup.client.lang.params.LinkedEditingRangeParams;
-import openup.client.lang.params.LogMessageParams;
-import openup.client.lang.params.LogTraceParams;
 import openup.client.lang.params.MonikerParams;
 import openup.client.lang.params.PrepareRenameParams;
 import openup.client.lang.params.PublishDiagnosticsParams;
 import openup.client.lang.params.ReferenceParams;
-import openup.client.lang.params.RegistrationParams;
-import openup.client.lang.params.RenameFilesParams;
 import openup.client.lang.params.RenameParams;
 import openup.client.lang.params.SelectionRangeParams;
 import openup.client.lang.params.SemanticTokensDeltaParams;
 import openup.client.lang.params.SemanticTokensParams;
 import openup.client.lang.params.SemanticTokensRangeParams;
-import openup.client.lang.params.SetTraceParams;
-import openup.client.lang.params.ShowDocumentParams;
-import openup.client.lang.params.ShowMessageParams;
-import openup.client.lang.params.ShowMessageRequestParams;
 import openup.client.lang.params.SignatureHelpParams;
 import openup.client.lang.params.TypeDefinitionParams;
-import openup.client.lang.params.UnregistrationParams;
 import openup.client.lang.params.WillSaveTextDocumentParams;
-import openup.client.lang.params.WorkDoneProgressCancelParams;
-import openup.client.lang.params.WorkDoneProgressCreateParams;
-import openup.client.lang.params.WorkspaceSymbolParams;
 
 /**
  *
  * @author FOXCONN
  */
-public interface Server extends openup.client.rpc.Server {
-    
-    InitializeResult initialize(InitializeParams params) throws InitializeError;
-    void initialized(InitializedParams params);
-    Object shutdown() throws Error;
-    void exit();
-    void logTrace(LogTraceParams params);
-    void setTrace(SetTraceParams params);
-    void showMessage(ShowMessageParams params);
-    MessageActionItem showMessageRequest(ShowMessageRequestParams params) throws Error;
-    ShowDocumentResult showDocument(ShowDocumentParams params) throws Error;
-    void logMessage(LogMessageParams params);
-    Object create(WorkDoneProgressCreateParams params) throws Error;
-    void cancel(WorkDoneProgressCancelParams params);
-    void event(Object params);
-    Object registerCapability(RegistrationParams params) throws Error;
-    Object unregisterCapability(UnregistrationParams params) throws Error;
-    WorkspaceFolder[] workspaceFolders() throws Error;
-    void didChangeWorkspaceFolders(DidChangeWorkspaceFoldersParams params);
-    void didChangeConfiguration(DidChangeConfigurationParams params);
-    Object[] configuration(ConfigurationParams params) throws Error;
-    void didChangeWatchedFiles(DidChangeWatchedFilesParams params);
-    SymbolInformation[] symbol(WorkspaceSymbolParams params) throws Error;
-    Object executeCommand(ExecuteCommandParams params) throws Error;
-    ApplyWorkspaceEditResponse applyEdit(ApplyWorkspaceEditParams params) throws Error;
-    WorkspaceEdit willCreateFiles(CreateFilesParams params) throws Error;
-    void didCreateFiles(CreateFilesParams params);
-    WorkspaceEdit willRenameFiles(RenameFilesParams params) throws Error;
-    void didRenameFiles(RenameFilesParams params);
-    WorkspaceEdit willDeleteFiles(DeleteFilesParams params) throws Error;
-    void didDeleteFiles(DeleteFilesParams params);
+public interface TextDocument extends openup.client.rpc.Server {
     void didOpen(DidOpenTextDocumentParams params);
     void didChange(DidChangeTextDocumentParams params);
     void willSave(WillSaveTextDocumentParams params);
