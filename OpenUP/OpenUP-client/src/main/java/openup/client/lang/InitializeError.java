@@ -9,7 +9,7 @@ package openup.client.lang;
  *
  * @author FOXCONN
  */
-public class InitializeError {
+public class InitializeError extends Error {
     public static final int unknownProtocolVersion = 1;
     private Boolean retry;
 

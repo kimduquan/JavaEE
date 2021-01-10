@@ -3,26 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.client.lang;
+package openup.client.rpc;
 
 import java.util.Optional;
+import javax.enterprise.context.RequestScoped;
 
 /**
  *
  * @author FOXCONN
  */
-public class RequestMessage extends Message {
-    private String id;
+@RequestScoped
+public class Notification {
     private String method;
     private Optional<Object> params;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getMethod() {
         return method;

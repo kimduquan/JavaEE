@@ -5,10 +5,22 @@
  */
 package openup.client.lang;
 
+import java.net.URI;
+
 /**
  *
  * @author FOXCONN
  */
 public class DocumentUri {
     
+    private URI uri;
+    
+    public DocumentUri(String uri) throws Exception {
+        this.uri = new URI(uri);
+    }
+    
+    @Override
+    public String toString(){
+        return uri.toString();
+    }
 }

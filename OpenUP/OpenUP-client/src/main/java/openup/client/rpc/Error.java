@@ -3,15 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.client.lang;
+package openup.client.rpc;
 
 import java.util.Optional;
+import javax.enterprise.context.Dependent;
 
 /**
  *
  * @author FOXCONN
  */
-public class ResponseError {
+@Dependent
+public class Error extends Exception {
     private Integer code;
     private String message;
     private Optional<Object> data;

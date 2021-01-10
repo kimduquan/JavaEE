@@ -3,17 +3,28 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.client.lang;
+package openup.client.rpc;
 
 import java.util.Optional;
+import javax.enterprise.context.Dependent;
 
 /**
  *
  * @author FOXCONN
  */
-public class NotificationMessage extends Message {
+@Dependent
+public class Request<T> extends Message {
+    private String id;
     private String method;
-    private Optional<Object> params;
+    private Optional<T> params;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getMethod() {
         return method;
@@ -23,11 +34,11 @@ public class NotificationMessage extends Message {
         this.method = method;
     }
 
-    public Optional<Object> getParams() {
+    public Optional<T> getParams() {
         return params;
     }
 
-    public void setParams(Optional<Object> params) {
+    public void setParams(Optional<T> params) {
         this.params = params;
     }
 }

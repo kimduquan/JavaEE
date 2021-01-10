@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.client.lang;
+package openup.client.rpc;
+
+import javax.ws.rs.core.MediaType;
 
 /**
  *
@@ -19,4 +21,7 @@ public class Message {
     public void setJsonrpc(String jsonrpc) {
         this.jsonrpc = jsonrpc;
     }
+    
+    public static final String APPLICATION_JSON_RPC = "application/vscode-jsonrpc";
+    public static final MediaType APPLICATION_JSON_RPC_TYPE = MediaType.valueOf(APPLICATION_JSON_RPC).withCharset("utf-8");
 }

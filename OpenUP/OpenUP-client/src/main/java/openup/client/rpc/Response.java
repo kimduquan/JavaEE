@@ -3,18 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.client.lang;
+package openup.client.rpc;
 
 import java.util.Optional;
+import javax.enterprise.context.Dependent;
 
 /**
  *
  * @author FOXCONN
  */
-public class ResponseMessage extends Message {
+@Dependent
+public class Response<T> extends Message {
     private String id;
-    private Optional<Object> result;
-    private Optional<ResponseError> error;
+    private Optional<T> result;
+    private Optional<Error> error;
 
     public String getId() {
         return id;
@@ -24,19 +26,19 @@ public class ResponseMessage extends Message {
         this.id = id;
     }
 
-    public Optional<Object> getResult() {
+    public Optional<T> getResult() {
         return result;
     }
 
-    public void setResult(Optional<Object> result) {
+    public void setResult(Optional<T> result) {
         this.result = result;
     }
 
-    public Optional<ResponseError> getError() {
+    public Optional<Error> getError() {
         return error;
     }
 
-    public void setError(Optional<ResponseError> error) {
+    public void setError(Optional<Error> error) {
         this.error = error;
     }
 }
