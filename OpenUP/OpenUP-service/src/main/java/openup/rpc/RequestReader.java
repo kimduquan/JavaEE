@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.json.JsonObject;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
@@ -19,8 +21,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.Provider;
-import openup.client.lang.params.CancelParams;
-import openup.client.lang.params.ProgressParams;
+import openup.client.lang.params.InitializeParams;
+import openup.client.lang.params.InitializedParams;
+import openup.client.lang.params.LogTraceParams;
+import openup.client.lang.params.SetTraceParams;
 import openup.client.rpc.Message;
 import openup.client.rpc.Request;
 
@@ -31,6 +35,19 @@ import openup.client.rpc.Request;
 @Provider
 @Consumes(Message.APPLICATION_JSON_RPC)
 public class RequestReader implements MessageBodyReader<Request> {
+    
+    private Map<String, Type> paramTypes;
+    
+    public RequestReader(){
+        paramTypes = new ConcurrentHashMap<>();
+        
+        paramTypes.put("initialize", (new GenericType<Request<InitializeParams>>() {}).getType());
+        paramTypes.put("initialized", (new GenericType<Request<InitializedParams>>() {}).getType());
+        paramTypes.put("shutdown", null);
+        paramTypes.put("exit", null);
+        paramTypes.put("$/logTrace", (new GenericType<Request<LogTraceParams>>() {}).getType());
+        paramTypes.put("$/setTrace", (new GenericType<Request<SetTraceParams>>() {}).getType());
+    }
 
     @Override
     public boolean isReadable(Class<?> cls, Type type, Annotation[] annotations, MediaType mediaType) {
@@ -43,15 +60,11 @@ public class RequestReader implements MessageBodyReader<Request> {
         final GenericType<Request<JsonObject>> rawType = new GenericType<Request<JsonObject>>() {};
         try(Jsonb json = JsonbBuilder.create()){
             Request<JsonObject> req = json.fromJson(input, rawType.getType());
-            if(req.getMethod().equals("$/cancelRequest")){
-                final GenericType<Request<CancelParams>> reqType = new GenericType<Request<CancelParams>>() {};
-                Request<CancelParams> request = json.fromJson(input, reqType.getType());
-                return request;
-            }
-            else if(req.getMethod().equals("$/progress")){
-                final GenericType<Request<ProgressParams >> reqType = new GenericType<Request<ProgressParams >>() {};
-                Request<ProgressParams > request = json.fromJson(input, reqType.getType());
-                return request;
+            if(paramTypes.containsKey(req.getMethod())){
+                Type reqType = paramTypes.get(req.getMethod());
+                if(reqType != null){
+                    return json.fromJson(input, reqType);
+                }
             }
             return req;
         }

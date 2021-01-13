@@ -21,10 +21,8 @@ import javax.ws.rs.Produces;
 @Path("rpc")
 public interface Server {
     
-    public static final String JSON_RPC = "application/vscode-jsonrpc";
-    
-    @Produces(JSON_RPC)
-    @Consumes(JSON_RPC)
+    @Produces(Message.APPLICATION_JSON_RPC)
+    @Consumes(Message.APPLICATION_JSON_RPC)
     @POST
     default Response request(Request request) throws Exception {
         Response response = new Response();
@@ -78,8 +76,8 @@ public interface Server {
         return response;
     }
     
-    @Produces(JSON_RPC)
-    @Consumes(JSON_RPC)
+    @Produces(Message.APPLICATION_JSON_RPC)
+    @Consumes(Message.APPLICATION_JSON_RPC)
     @PUT
     default void notify(Notification notification) {
         try {
