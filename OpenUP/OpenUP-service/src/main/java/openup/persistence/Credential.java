@@ -36,9 +36,7 @@ public class Credential implements AutoCloseable {
             session.close();
         }
         sessions.clear();
-        defaultManager.clear();
         defaultManager.close();
-        factory.getCache().evictAll();
         factory.close();
     }
     
@@ -54,11 +52,5 @@ public class Credential implements AutoCloseable {
     
     public Session removeSession(long timestamp){
         return sessions.remove(timestamp);
-    }
-    
-    public void reset(EntityManagerFactory factory, EntityManager defaultManager){
-        this.factory = factory;
-        this.defaultManager = defaultManager;
-        sessions.clear();
     }
 }

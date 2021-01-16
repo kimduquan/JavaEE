@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.client.epf.schema;
+package openup.client.schema;
 
 import epf.schema.delivery_processes.DeliveryProcess;
 import epf.schema.roles.RoleSet;

@@ -18,6 +18,8 @@ import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.schema.EPF;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 
 /**
  *
@@ -27,7 +29,13 @@ import epf.schema.EPF;
 @Schema(name = EPF.Iteration, title = "Iteration")
 @Entity(name = EPF.Iteration)
 @Table(schema = EPF.Schema, name = "ITERATION")
+@NamedQuery(
+        name = Iteration.ITERATIONS,
+        query = "SELECT it FROM EPF_Iteration it JOIN it.parentActivities ph WHERE ph.name = :name"
+)
 public class Iteration {
+    
+    public static final String ITERATIONS = "EPF_Iteration.Iterations";
     
     @Column(name = "NAME")
     @Id
@@ -42,6 +50,7 @@ public class Iteration {
     private Integer number;
     
     @JoinColumn(name = "PARENT_ACTIVITIES")
+    @ManyToOne
     private Phase parentActivities;
     
     @ManyToMany

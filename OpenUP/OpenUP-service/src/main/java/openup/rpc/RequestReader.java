@@ -43,8 +43,8 @@ public class RequestReader implements MessageBodyReader<Request> {
         
         paramTypes.put("initialize", (new GenericType<Request<InitializeParams>>() {}).getType());
         paramTypes.put("initialized", (new GenericType<Request<InitializedParams>>() {}).getType());
-        paramTypes.put("shutdown", null);
-        paramTypes.put("exit", null);
+        paramTypes.put("shutdown", (new GenericType<Request<Object>>() {}).getType());
+        paramTypes.put("exit", (new GenericType<Request<Object>>() {}).getType());
         paramTypes.put("$/logTrace", (new GenericType<Request<LogTraceParams>>() {}).getType());
         paramTypes.put("$/setTrace", (new GenericType<Request<SetTraceParams>>() {}).getType());
     }

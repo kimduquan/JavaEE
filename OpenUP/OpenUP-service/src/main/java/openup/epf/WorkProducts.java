@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.epf.schema;
+package openup.epf;
 
 import epf.schema.OpenUP;
-import java.util.List;
-import epf.schema.delivery_processes.DeliveryProcess;
 import epf.schema.openup.Role;
+import epf.schema.work_products.Domain;
 import java.security.Principal;
+import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -29,10 +29,10 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  * @author FOXCONN
  */
 @Type
-@Path("schema/delivery-processes")
+@Path("schema/work-products")
 @RolesAllowed(Role.ANY_ROLE)
 @RequestScoped
-public class DeliveryProcesses {
+public class WorkProducts {
     
     @Inject
     private Request cache;
@@ -44,22 +44,22 @@ public class DeliveryProcesses {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-            summary = "Delivery Processes", 
-            description = "This provides a list of delivery processes that have been published."
+            summary = "Work Products", 
+            description = "List of work products organized by domain."
     )
     @APIResponse(
-            description = "Delivery Process",
+            description = "Domain",
             responseCode = "200",
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON,
-                    schema = @org.eclipse.microprofile.openapi.annotations.media.Schema(implementation = DeliveryProcess.class)
+                    schema = @org.eclipse.microprofile.openapi.annotations.media.Schema(implementation = Domain.class)
             )
     )
-    public List<DeliveryProcess> getDeliveryProcesses() throws Exception{
+    public List<Domain> getDomains() throws Exception{
         return cache.getNamedQueryResult(
                 OpenUP.Schema,
                 principal,
-                DeliveryProcess.DELIVERY_PROCESSES, 
-                DeliveryProcess.class);
+                Domain.DOMAINS, 
+                Domain.class);
     }
 }

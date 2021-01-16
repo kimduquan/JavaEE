@@ -33,21 +33,13 @@ public class Context implements AutoCloseable {
         props.put("javax.persistence.jdbc.user", userName);
         props.put("javax.persistence.jdbc.password", password);
         List<Exception> errors = new ArrayList<>();
-        Credential cred = credentials.computeIfAbsent(userName, name -> {
-            try{
-                EntityManagerFactory factory = Persistence.createEntityManagerFactory(unit, props);
-                EntityManager manager = factory.createEntityManager();
-                return new Credential(factory, manager);
-            }
-            catch(Exception ex){
-                errors.add(ex);
-            }
-            return null;
+        credentials.computeIfAbsent(userName, name -> {
+            return newCredential(unit, props, errors);
         });
         if(!errors.isEmpty()){
             throw errors.get(0);
         }
-        cred = credentials.computeIfPresent(userName, (name, credential) -> {
+        Credential cred = credentials.computeIfPresent(userName, (name, credential) -> {
             if(credential != null){
                 synchronized(credential){
                     if(!props.equals(credential.getFactory().getProperties())){
@@ -57,27 +49,12 @@ public class Context implements AutoCloseable {
                         catch (Exception ex) {
                             Logger.getLogger(Context.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        credential = null;
-                        try{
-                            EntityManagerFactory factory = Persistence.createEntityManagerFactory(unit, props);
-                            EntityManager manager = factory.createEntityManager();
-                            credential = new Credential(factory, manager);
-                        }
-                        catch (Exception ex) {
-                            errors.add(ex);
-                        }
+                        credential = newCredential(unit, props, errors);
                     }
                 }
             }
             else{
-                try{
-                    EntityManagerFactory factory = Persistence.createEntityManagerFactory(unit, props);
-                    EntityManager manager = factory.createEntityManager();
-                    credential = new Credential(factory, manager);
-                }
-                catch(Exception ex){
-                    errors.add(ex);
-                }
+                credential = newCredential(unit, props, errors);
             }
             return credential;
         });
@@ -85,6 +62,26 @@ public class Context implements AutoCloseable {
             throw errors.get(0);
         }
         return cred;
+    }
+    
+    Credential newCredential(String unit, Map<String, Object> props, List<Exception> errors){
+        EntityManagerFactory factory = null;
+        EntityManager manager = null;
+        try{
+            factory = Persistence.createEntityManagerFactory(unit, props);
+            manager = factory.createEntityManager();
+            return new Credential(factory, manager);
+        }
+        catch (Exception ex) {
+            errors.add(ex);
+            if(manager != null){
+                manager.close();
+            }
+            if(factory != null){
+                factory.close();
+            }
+        }
+        return null;
     }
     
     public Credential getCredential(String userName){

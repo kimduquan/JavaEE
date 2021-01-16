@@ -11,6 +11,7 @@ import java.time.Duration;
 import java.time.Instant;
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.BadRequestException;
+import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.NotAllowedException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
@@ -19,7 +20,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import openup.client.config.ConfigNames;
 import openup.client.security.Header;
@@ -245,7 +245,7 @@ public class SecurityTest {
     
     @Test
     public void testLoginInvalidPasswordAfterLoginOK() throws Exception{
-        String token = security.login("OpenUP", "any_role1", "any_role", url);
+        security.login("OpenUP", "any_role1", "any_role", url);
         WebApplicationException ex = Assert.assertThrows(
                 WebApplicationException.class, 
                 () -> {
@@ -257,9 +257,6 @@ public class SecurityTest {
                 Status.UNAUTHORIZED.getStatusCode(), 
                 ex.getResponse().getStatus()
         );
-        
-        header.setToken(token);
-        security.logOut("OpenUP");
     }
     
     @Test(expected = BadRequestException.class)
@@ -419,9 +416,6 @@ public class SecurityTest {
     public void testLogoutOK() throws Exception {
         String token = security.login("OpenUP", "any_role1", "any_role", url);
         header.setToken(token);
-        Token jwt = security.authenticate();
-        
-        header.setToken(jwt.getRawToken());
         
         security.logOut("OpenUP");
         
@@ -440,10 +434,39 @@ public class SecurityTest {
     
     @Test
     public void testLogoutEmptyUnit() throws Exception{
-        WebApplicationException ex = Assert.assertThrows(
-                WebApplicationException.class, 
+        String token = security.login("OpenUP", "any_role1", "any_role", url);
+        header.setToken(token);
+        
+        ClientErrorException ex = Assert.assertThrows(
+                ClientErrorException.class, 
                 () -> {
-                    security.logOut("");
+                    client.target(url.toString() + "security/")
+                            .path("")
+                            .request(MediaType.TEXT_PLAIN)
+                            .delete(String.class);
+                }
+        );
+        Assert.assertEquals(
+                "Status",
+                Status.METHOD_NOT_ALLOWED.getStatusCode(), 
+                ex.getResponse().getStatus()
+        );
+        
+        security.logOut("OpenUP");
+    }
+    
+    @Test
+    public void testLogoutBlankUnit() throws Exception{
+        String token = security.login("OpenUP", "any_role1", "any_role", url);
+        header.setToken(token);
+        
+        ClientErrorException ex = Assert.assertThrows(
+                ClientErrorException.class, 
+                () -> {
+                    client.target(url.toString() + "security/")
+                            .path("    ")
+                            .request(MediaType.TEXT_PLAIN)
+                            .delete(String.class);
                 }
         );
         Assert.assertEquals(
@@ -451,15 +474,15 @@ public class SecurityTest {
                 Status.BAD_REQUEST.getStatusCode(), 
                 ex.getResponse().getStatus()
         );
-    }
-    
-    @Test(expected = BadRequestException.class)
-    public void testLogoutBlankUnit() throws Exception{
-        security.logOut("    ");
+        
+        security.logOut("OpenUP");
     }
     
     @Test
     public void testLogoutInvalidUnit() throws Exception{
+        String token = security.login("OpenUP", "any_role1", "any_role", url);
+        header.setToken(token);
+        
         WebApplicationException ex = Assert.assertThrows(
                 WebApplicationException.class, 
                 () -> {
@@ -471,5 +494,7 @@ public class SecurityTest {
                 Status.BAD_REQUEST.getStatusCode(), 
                 ex.getResponse().getStatus()
         );
+        
+        security.logOut("OpenUP");
     }
 }
