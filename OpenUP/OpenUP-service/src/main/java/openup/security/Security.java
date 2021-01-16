@@ -27,14 +27,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.inject.Inject;
 import javax.persistence.PersistenceContext;
-import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.config.Names;
 import openup.persistence.Application;
@@ -81,8 +79,6 @@ public class Security implements openup.client.security.Security, Serializable {
     
     @Context 
     private SecurityContext context;
-    @Context 
-    private UriInfo uriInfo;
     
     @PersistenceContext(name = EPF.Schema, unitName = EPF.Schema)
     private EntityManager defaultManager;
@@ -212,23 +208,6 @@ public class Security implements openup.client.security.Security, Serializable {
                         System.currentTimeMillis()));
     }
     
-    void buildRoles(Token token, Principal principal, String role){
-        if(Role.ADMIN.equalsIgnoreCase(role)){
-            if(isAdmin(principal.getName(), defaultManager)){
-                Set<String> groups = new HashSet<>();
-                groups.add(Role.ADMIN);
-                token.setGroups(groups);
-            }
-            else{
-                throw new ForbiddenException();
-            }
-        }
-        else{
-            Set<String> roles = getUserRoles(principal.getName(), defaultManager);
-            token.setGroups(roles);
-        }
-    }
-    
     Token buildToken(String username, long time) throws Exception{
         Token jwt = new Token();
         jwt.setIssuedAtTime(time);
@@ -244,13 +223,6 @@ public class Security implements openup.client.security.Security, Serializable {
         query.setParameter(2, userName.toUpperCase());
         Stream<?> result = query.getResultStream();
         return result.map(Object::toString).collect(Collectors.toSet());
-    }
-    
-    boolean isAdmin(String userName, EntityManager manager){
-        Query query = manager.createNamedQuery(Role.IS_ADMIN);
-        query.setParameter(1, userName.toUpperCase());
-        query.setParameter(2, String.valueOf(true));
-        return query.getResultStream().count() > 0;
     }
     
     Token buildToken(JsonWebToken jwt){

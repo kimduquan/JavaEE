@@ -42,8 +42,8 @@ import org.junit.Test;
  */
 public class SecurityTest {
     
-    private static SSLContext sslContext;
     private static RestClientBuilder restBuilder;
+    private static SSLContext sslContext;
     private static ClientBuilder builder;
     private static URL url;
     private static Header header;

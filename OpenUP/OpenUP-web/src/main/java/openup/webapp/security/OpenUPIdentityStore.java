@@ -7,13 +7,9 @@ package openup.webapp.security;
 
 import epf.schema.OpenUP;
 import java.net.URL;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.security.enterprise.CallerPrincipal;
@@ -36,70 +32,17 @@ import org.eclipse.microprofile.rest.client.RestClientBuilder;
 @ApplicationScoped
 public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentityStore {
     
-    private Map<String, Session> sessions;
-    
     @Inject
     private ConfigSource config;
     
-    @PostConstruct
-    void postConstruct(){
-        sessions = new ConcurrentHashMap<>();
-    }
-    
-    @PreDestroy
-    void preDestroy(){
-        sessions.clear();
-    }
-    
     public CredentialValidationResult validate(BasicAuthenticationCredential credential) throws Exception{
         CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
-        Session currSession = sessions.computeIfAbsent(
-                credential.getCaller(), 
-                (name) -> {
-                    try {
-                        Token token = login(credential);
-                        if(token != null){
-                            TokenPrincipal principal = new TokenPrincipal(credential.getCaller(), token);
-                            return new Session(credential, principal);
-                        }
-                    } 
-                    catch (Exception ex) {
-                        Logger.getLogger(OpenUPIdentityStore.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    return null;
-                }
-        );
-        if(currSession != null){
-            currSession = sessions.computeIfPresent(
-                    credential.getCaller(), 
-                    (name, session) -> {
-                        if(session != null 
-                                && !session.getCredential().compareTo(
-                                        credential.getCaller(), 
-                                        credential.getPasswordAsString())
-                                ){
-                            session = null;
-                        }
-                        if(session == null){
-                            try {
-                                Token token = login(credential);
-                                if(token != null){
-                                    TokenPrincipal principal = new TokenPrincipal(credential.getCaller(), token);
-                                    session = new Session(credential, principal);
-                                }
-                            } 
-                            catch (Exception ex) {
-                                Logger.getLogger(OpenUPIdentityStore.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                        }
-                        return session;
-                    }
-            );
-        }
-        if(currSession != null){
+        Token token = login(credential);
+        if(token != null){
+            TokenPrincipal principal = new TokenPrincipal(credential.getCaller(), token);
             result = new CredentialValidationResult(
-                    currSession.getPrincipal(), 
-                    currSession.getPrincipal()
+                    principal, 
+                    principal
                             .getToken()
                             .getGroups()
             );
