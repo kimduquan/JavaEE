@@ -23,6 +23,7 @@ import openup.client.config.ConfigNames;
 import openup.client.config.ConfigSource;
 import openup.client.security.Security;
 import openup.client.security.Header;
+import openup.client.security.PasswordHash;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 
 /**
@@ -68,7 +69,7 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
         String token = service.login(
                 OpenUP.Schema,
                 credential.getCaller(),
-                credential.getPasswordAsString(),
+                PasswordHash.hash(credential.getCaller(), credential.getPassword().getValue()),
                 audienceUrl
         );
         Token jwt = null;

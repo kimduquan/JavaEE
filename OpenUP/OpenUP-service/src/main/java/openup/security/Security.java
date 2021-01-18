@@ -95,7 +95,7 @@ public class Security implements openup.client.security.Security, Serializable {
             content = {
                 @Content(
                         mediaType = MediaType.APPLICATION_FORM_URLENCODED,
-                        example = "{\"username\":\"\",\"password\":\"\"}"
+                        example = "{\"username\":\"\",\"password_hash\":\"\"}"
                 )
             }
     )
@@ -115,7 +115,7 @@ public class Security implements openup.client.security.Security, Serializable {
     public String login(
             String unit,
             String username,
-            String password,
+            String password_hash,
             URL url) throws Exception{
         
         long time = System.currentTimeMillis() / 1000;
@@ -123,7 +123,7 @@ public class Security implements openup.client.security.Security, Serializable {
                 .putCredential(
                         username, 
                         unit, 
-                        password
+                        password_hash
                 )
                 .putSession(time);
         

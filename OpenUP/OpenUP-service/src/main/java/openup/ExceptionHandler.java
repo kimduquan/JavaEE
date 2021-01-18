@@ -6,6 +6,7 @@
 package openup;
 
 import java.io.Serializable;
+import java.io.StreamCorruptedException;
 import java.sql.SQLInvalidAuthorizationSpecException;
 import javax.security.enterprise.AuthenticationException;
 import javax.validation.ValidationException;
@@ -74,6 +75,9 @@ public class ExceptionHandler implements
         else if(failure instanceof WebApplicationException){
             WebApplicationException ex = (WebApplicationException)failure;
             status = ex.getResponse().getStatusInfo();
+        }
+        else if(failure instanceof StreamCorruptedException){
+            
         }
         else{
             mapped = false;

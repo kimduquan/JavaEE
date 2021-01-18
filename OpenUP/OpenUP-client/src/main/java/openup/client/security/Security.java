@@ -42,9 +42,9 @@ public interface Security {
             @FormParam("username")
             @NotBlank
             String username,
-            @FormParam("password")
+            @FormParam("password_hash")
             @NotBlank
-            String password, 
+            String password_hash, 
             @QueryParam("url")
             @NotNull
             URL url

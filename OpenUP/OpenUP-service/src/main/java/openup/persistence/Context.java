@@ -28,10 +28,10 @@ public class Context implements AutoCloseable {
         credentials = new ConcurrentHashMap<>();
     }
     
-    public Credential putCredential(String userName, String unit, String password) throws Exception{
+    public Credential putCredential(String userName, String unit, String password_hash) throws Exception{
         Map<String, Object> props = new HashMap<>();
         props.put("javax.persistence.jdbc.user", userName);
-        props.put("javax.persistence.jdbc.password", password);
+        props.put("javax.persistence.jdbc.password", password_hash);
         List<Exception> errors = new ArrayList<>();
         credentials.computeIfAbsent(userName, name -> {
             return newCredential(unit, props, errors);
