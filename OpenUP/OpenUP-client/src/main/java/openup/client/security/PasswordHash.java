@@ -5,6 +5,7 @@
  */
 package openup.client.security;
 
+import org.eclipse.persistence.internal.security.JCEEncryptor;
 import org.h2.security.SHA256;
 import org.h2.util.StringUtils;
 /**
@@ -13,13 +14,18 @@ import org.h2.util.StringUtils;
  */
 public class PasswordHash {
     
+    private static JCEEncryptor encryptor;
+    
     private PasswordHash(){
         
     }
     
-    public static String hash(String username, char[] password){
+    public static String hash(String username, char[] password) throws Exception{
+        if(encryptor == null){
+            encryptor = new JCEEncryptor();
+        }
         StringBuilder builder = new StringBuilder();
         StringUtils.convertBytesToHex(builder, SHA256.getKeyPasswordHash(username.toUpperCase(), password));
-        return builder.toString();
+        return encryptor.encryptPassword(builder.toString());
     }
 }

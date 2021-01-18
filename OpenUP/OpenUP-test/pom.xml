@@ -33,6 +33,11 @@
             <artifactId>h2</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.eclipse.persistence/org.eclipse.persistence.core -->
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>org.eclipse.persistence.core</artifactId>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/io.jaegertracing/jaeger-client -->
         <dependency>
             <groupId>io.jaegertracing</groupId>

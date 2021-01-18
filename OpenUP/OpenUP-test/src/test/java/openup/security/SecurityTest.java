@@ -14,6 +14,7 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.NotAllowedException;
 import javax.ws.rs.NotAuthorizedException;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -187,7 +188,7 @@ public class SecurityTest {
         login("OpenUP", "any_role1", "Invalid", url, true);
     }
     
-    @Test(expected = BadRequestException.class)
+    @Test(expected = NotFoundException.class)
     public void testLoginEmptyUrl() throws Exception{
         login("OpenUP", "any_role1", "any_role", null, false);
     }
