@@ -19,6 +19,7 @@ import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.schema.EPF;
+import javax.persistence.Index;
 
 /**
  *
@@ -48,12 +49,9 @@ public class Domain {
     @JoinTable(
             name = "WORK_PRODUCTS",
             schema = EPF.Schema,
-            joinColumns = @JoinColumn(
-                    name = "DOMAIN"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "ARTIFACT"
-            )
+            joinColumns = @JoinColumn(name = "DOMAIN"),
+            inverseJoinColumns = @JoinColumn(name = "ARTIFACT"),
+            indexes = {@Index(columnList = "DOMAIN")}
     )
     private List<Artifact> workProducts;
     

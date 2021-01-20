@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import epf.schema.tasks.Task;
 import javax.persistence.Column;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import org.eclipse.microprofile.graphql.Type;
@@ -46,7 +47,8 @@ public class Activity {
     @JoinTable(name = "ACTIVITY_TASKS",
             schema = EPF.Schema,
             joinColumns = {@JoinColumn(name = "ACTIVITY")},
-            inverseJoinColumns = {@JoinColumn(name = "TASK")}
+            inverseJoinColumns = {@JoinColumn(name = "TASK")},
+            indexes = {@Index(columnList = "ACTIVITY")}
     )
     private List<Task> tasks;
 

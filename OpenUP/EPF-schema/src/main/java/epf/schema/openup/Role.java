@@ -10,6 +10,7 @@ import epf.schema.roles.RoleSet;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -23,7 +24,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Type(OpenUP.Role)
 @Schema(name = OpenUP.Role, title = "Role")
 @Entity(name = OpenUP.Role)
-@Table(schema = OpenUP.Schema, name = "OPENUP_ROLE")
+@Table(schema = OpenUP.Schema, name = "OPENUP_ROLE", indexes = {@Index(columnList = "ROLE_SETS")})
 public class Role {
     
     public static final String ANY_ROLE = "ANY_ROLE";

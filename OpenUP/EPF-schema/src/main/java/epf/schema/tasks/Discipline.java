@@ -20,6 +20,7 @@ import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.schema.EPF;
+import javax.persistence.Index;
 
 /**
  *
@@ -49,12 +50,9 @@ public class Discipline {
     @JoinTable(
             name = "TASKS",
             schema = EPF.Schema,
-            joinColumns = @JoinColumn(
-                    name = "DISCIPLINE"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "TASK"
-            )
+            joinColumns = @JoinColumn(name = "DISCIPLINE"),
+            inverseJoinColumns = @JoinColumn(name = "TASK"),
+            indexes = {@Index(columnList = "DISCIPLINE")}
     )
     private List<Task> tasks;
     

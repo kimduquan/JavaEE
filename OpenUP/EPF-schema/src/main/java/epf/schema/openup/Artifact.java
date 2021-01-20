@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -25,7 +26,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Type(OpenUP.Artifact)
 @Schema(name = OpenUP.Artifact, title = "Artifact")
 @Entity(name = OpenUP.Artifact)
-@Table(schema = OpenUP.Schema, name = "OPENUP_ARTIFACT")
+@Table(schema = OpenUP.Schema, name = "OPENUP_ARTIFACT", indexes = {@Index(columnList = "DOMAINS")})
 public class Artifact {
 
     @Id

@@ -18,6 +18,7 @@ import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.schema.EPF;
+import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 
@@ -28,7 +29,7 @@ import javax.persistence.NamedQuery;
 @Type(EPF.Phase)
 @Schema(name = EPF.Phase, title = "Phase")
 @Entity(name = EPF.Phase)
-@Table(schema = EPF.Schema, name = "PHASE")
+@Table(schema = EPF.Schema, name = "PHASE", indexes = {@Index(columnList = "PARENT_ACTIVITIES")})
 @NamedQuery(
         name = Phase.PHASES,
         query = "SELECT ph FROM EPF_Phase ph JOIN ph.parentActivities dp WHERE dp.name = :name"

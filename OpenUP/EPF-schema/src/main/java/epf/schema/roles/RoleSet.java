@@ -20,6 +20,7 @@ import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.schema.EPF;
+import javax.persistence.Index;
 
 /**
  *
@@ -49,12 +50,9 @@ public class RoleSet {
     @JoinTable(
             name = "ROLES",
             schema = EPF.Schema,
-            joinColumns = @JoinColumn(
-                    name = "ROLE_SET"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "ROLE"
-            )
+            joinColumns = @JoinColumn(name = "ROLE_SET"),
+            inverseJoinColumns = @JoinColumn(name = "ROLE"),
+            indexes = {@Index(columnList = "ROLE_SET")}
     )
     private List<Role> roles;
     

@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -24,7 +25,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Type(OpenUP.Activity)
 @Schema(name = OpenUP.Activity, title = "Activity")
 @Entity(name = OpenUP.Activity)
-@Table(schema = OpenUP.Schema, name = "OPENUP_ACTIVITY")
+@Table(schema = OpenUP.Schema, name = "OPENUP_ACTIVITY", indexes = {@Index(columnList = "PARENT_ACTIVITIES")})
 public class Activity {
 
     @Id
