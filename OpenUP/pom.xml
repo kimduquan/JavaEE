@@ -117,6 +117,12 @@
                 <artifactId>cache-api</artifactId>
                 <version>1.1.1</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/javax.batch/javax.batch-api -->
+            <dependency>
+                <groupId>javax.batch</groupId>
+                <artifactId>javax.batch-api</artifactId>
+                <version>1.0.1</version>
+            </dependency>
             <!-- https://mvnrepository.com/artifact/javax/javaee-web-api -->
             <dependency>
                 <groupId>javax</groupId>

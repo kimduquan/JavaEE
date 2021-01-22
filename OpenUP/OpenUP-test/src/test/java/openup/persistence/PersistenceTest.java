@@ -19,8 +19,6 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
 import openup.client.config.ConfigNames;
 import openup.client.security.Header;
 import openup.client.security.PasswordHash;
@@ -48,7 +46,7 @@ public class PersistenceTest {
     private static Security security;
     private static Client client;
     
-    //@BeforeClass
+    @BeforeClass
     public static void beforeClass() throws Exception{
         url = new URL(System.getProperty(ConfigNames.OPENUP_GATEWAY_URL, ""));
         sslContext = DefaultSSLContext.build();
@@ -74,7 +72,7 @@ public class PersistenceTest {
         header.setToken(token);
     }
     
-    //@AfterClass
+    @AfterClass
     public static void afterClass(){
         client.close();
         try {
@@ -91,7 +89,7 @@ public class PersistenceTest {
                 .target(url.toString() + "persistence/")
                 .path(OpenUP.Schema)
                 .path(EPF.DeliveryProcess)
-                .path("OpenUP Lifecycle")
+                .matrixParam("name", "OpenUP Lifecycle")
                 .request(MediaType.APPLICATION_JSON)
                 .get(epf.schema.delivery_processes.DeliveryProcess.class);
         
