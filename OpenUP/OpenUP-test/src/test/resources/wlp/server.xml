@@ -10,7 +10,8 @@
         <feature>transportSecurity-1.0</feature>
         <feature>batch-1.0</feature>
         <feature>batchManagement-1.0</feature>
-        
+        <feature>wasJmsServer-1.0</feature>
+        <feature>wasJmsClient-2.0</feature>
         <feature>webProfile-8.0</feature>
         
     </featureManager>
@@ -68,4 +69,31 @@
     </dataSource>
 
     <keyStore id="defaultKeyStore" password="password"/>
+    
+    <messagingEngine>
+        <!-- queue for batch jms message. -->
+        <queue id="batchOpenUPQueue" 
+                forceReliability="ReliablePersistent" 
+                receiveAllowed="true"/>
+    </messagingEngine>
+    <batchJmsDispatcher />
+    <jmsConnectionFactory id="batchConnectionFactory" 
+                          jndiName="jms/batch/connectionFactory">
+            <properties.wasJms remoteServerAddress="localhost:7276:BootstrapBasicMessaging">
+            </properties.wasJms>
+    </jmsConnectionFactory>
+    <jmsQueue id="batchJobSubmissionQueue" 
+             jndiName="jms/batch/jobSubmissionQueue">
+            <properties.wasJms deliveryMode="Persistent" 
+                               queuename="batchOpenUPQueue">
+            </properties.wasJms>
+    </jmsQueue>
+    <batchJmsExecutor />
+    <jmsActivationSpec id="batchActivationSpec" >
+        <properties.wasJms destinationRef="batchJobSubmissionQueue"
+                           messageSelector="com_ibm_ws_batch_applicationName = 'OpenUP-service'"
+                           destinationType="javax.jms.Queue"
+                           remoteServerAddress="localhost:7276:BootstrapBasicMessaging">
+        </properties.wasJms>
+    </jmsActivationSpec>
 </server>
