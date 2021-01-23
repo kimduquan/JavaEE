@@ -236,7 +236,11 @@ public interface Batch {
     @Produces(MediaType.APPLICATION_JSON)
     List<String> getJobInstanceLogs(
                     @PathParam("job_instance_id")
-                    long job_instance_id
+                    long job_instance_id,
+                    @QueryParam("type")
+                    String type,
+                    @QueryParam("part")
+                    String part
     ) throws Exception;
     
     @GET

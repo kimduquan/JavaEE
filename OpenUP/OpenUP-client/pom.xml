@@ -34,6 +34,10 @@
             <artifactId>validation-api</artifactId>
         </dependency>
         <dependency>
+            <groupId>javax.batch</groupId>
+            <artifactId>javax.batch-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-schema</artifactId>
             <version>1.0.0</version>

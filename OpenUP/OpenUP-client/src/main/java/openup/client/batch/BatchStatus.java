@@ -5,13 +5,16 @@
  */
 package openup.client.batch;
 
-import javax.ws.rs.Path;
-
 /**
  *
  * @author FOXCONN
  */
-@Path("batch")
-public interface Batch {
-    
+public enum BatchStatus {
+    STARTING, 
+    STARTED, 
+    STOPPING, 
+    STOPPED, 
+    FAILED, 
+    COMPLETED, 
+    ABANDONED
 }
