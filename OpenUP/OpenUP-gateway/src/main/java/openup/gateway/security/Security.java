@@ -12,8 +12,8 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -49,20 +49,7 @@ public class Security {
             InputStream in) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("POST", in);
-    }
-    
-    @PUT
-    @Produces(MediaType.TEXT_PLAIN)
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Asynchronous
-    public CompletionStage<Response> runAs(
-            @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo,
-            InputStream in) throws Exception{
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        return request.request("PUT", in);
+        return request.request(HttpMethod.POST, in);
     }
     
     @DELETE
@@ -76,7 +63,7 @@ public class Security {
             String unit) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("DELETE", null);
+        return request.request(HttpMethod.DELETE, null);
     }
     
     @GET
@@ -87,6 +74,6 @@ public class Security {
             @Context UriInfo uriInfo) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("GET", null);
+        return request.request(HttpMethod.GET, null);
     }
 }

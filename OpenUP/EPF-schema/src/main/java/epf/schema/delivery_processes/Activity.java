@@ -5,6 +5,7 @@
  */
 package epf.schema.delivery_processes;
 
+import epf.schema.EPF;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -14,6 +15,7 @@ import javax.persistence.Table;
 import epf.schema.tasks.Task;
 import javax.persistence.Column;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import org.eclipse.microprofile.graphql.Type;
@@ -23,10 +25,10 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  *
  * @author FOXCONN
  */
-@Type
-@Schema(title = "Activity")
-@Entity
-@Table(name = "ACTIVITY", schema = "EPF")
+@Type(EPF.Activity)
+@Schema(name = EPF.Activity, title = "Activity")
+@Entity(name = EPF.Activity)
+@Table(schema = EPF.Schema, name = "ACTIVITY")
 public class Activity {
     
     @Column(name = "NAME")
@@ -43,9 +45,10 @@ public class Activity {
     
     @ManyToMany
     @JoinTable(name = "ACTIVITY_TASKS",
-            schema = "EPF",
+            schema = EPF.Schema,
             joinColumns = {@JoinColumn(name = "ACTIVITY")},
-            inverseJoinColumns = {@JoinColumn(name = "TASK")}
+            inverseJoinColumns = {@JoinColumn(name = "TASK")},
+            indexes = {@Index(columnList = "ACTIVITY")}
     )
     private List<Task> tasks;
 

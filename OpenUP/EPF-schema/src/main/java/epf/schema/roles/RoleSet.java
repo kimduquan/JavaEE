@@ -19,22 +19,24 @@ import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.EPF;
+import javax.persistence.Index;
 
 /**
  *
  * @author FOXCONN
  */
-@Type
-@Schema(title = "Role Set")
-@Entity
-@Table(name = "ROLE_SET", schema = "EPF")
+@Type(EPF.RoleSet)
+@Schema(name = EPF.RoleSet, title = "Role Set")
+@Entity(name = EPF.RoleSet)
+@Table(schema = EPF.Schema, name = "ROLE_SET")
 @JsonbPropertyOrder({
     "name",
     "roles"
 })
 @NamedQuery(
         name = RoleSet.ROLES, 
-        query = "SELECT rs FROM RoleSet AS rs")
+        query = "SELECT rs FROM EPF_RoleSet AS rs")
 public class RoleSet {
 
     @Column(name = "NAME")
@@ -47,20 +49,17 @@ public class RoleSet {
     @ManyToMany
     @JoinTable(
             name = "ROLES",
-            schema = "EPF",
-            joinColumns = @JoinColumn(
-                    name = "ROLE_SET"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "ROLE"
-            )
+            schema = EPF.Schema,
+            joinColumns = @JoinColumn(name = "ROLE_SET"),
+            inverseJoinColumns = @JoinColumn(name = "ROLE"),
+            indexes = {@Index(columnList = "ROLE_SET")}
     )
     private List<Role> roles;
     
     @Column(name = "MAIN_DESCRIPTION")
     private JsonObject mainDescription;
     
-    public static final String ROLES = "RoleSet.Roles";
+    public static final String ROLES = "EPF_RoleSet.Roles";
 
     public String getName() {
         return name;

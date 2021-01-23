@@ -14,15 +14,16 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.EPF;
 
 /**
  *
  * @author FOXCONN
  */
-@Type
-@Schema(title = "Milestone")
-@Entity
-@Table(name = "MILESTONE", schema = "EPF")
+@Type(EPF.Milestone)
+@Schema(name = EPF.Milestone, title = "Milestone")
+@Entity(name = EPF.Milestone)
+@Table(schema = EPF.Schema, name = "MILESTONE")
 public class Milestone {
 
     @Column(name = "NAME")

@@ -5,12 +5,10 @@
  */
 package openup.persistence;
 
-import java.security.Principal;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import org.eclipse.microprofile.jwt.JsonWebToken;
 
 /**
  *
@@ -28,8 +26,8 @@ public class Credential implements AutoCloseable {
         sessions = new ConcurrentHashMap<>();
     }
     
-    public EntityManager getDefaultManager(){
-        return defaultManager;
+    public EntityManagerFactory getFactory(){
+        return factory;
     }
 
     @Override
@@ -38,51 +36,21 @@ public class Credential implements AutoCloseable {
             session.close();
         }
         sessions.clear();
+        defaultManager.close();
+        factory.close();
     }
     
     public Session putSession(long timestamp){
-        Session session = new Session(factory);
-        sessions.put(timestamp, session);
-        return session;
+        return sessions.computeIfAbsent(timestamp, time -> {
+            return new Session(factory);
+        });
     }
     
-    public Session getSession(Principal principal){
-        if(principal instanceof JsonWebToken){
-            JsonWebToken jwt = (JsonWebToken)principal;
-            return sessions.computeIfAbsent(
-                    jwt.getIssuedAtTime(), 
-                    (time) -> { 
-                        Session session = new Session(factory);
-                        session.putConversation(jwt.getTokenID())
-                                .putManager(jwt.getIssuedAtTime());
-                        return session; 
-                    }
-            );
-        }
-        else if(principal != null){
-            long timestamp = 0;
-            return sessions.computeIfAbsent(
-                    timestamp, 
-                    (time) -> { 
-                        Session session = new Session(factory);
-                        session.putConversation(principal.getName())
-                                .putManager(time);
-                        return session; 
-                    }
-            );
-        }
-        return null;
+    public Session getSession(long timestamp){
+        return sessions.get(timestamp);
     }
     
-    public Session removeSession(Principal principal){
-        if(principal instanceof JsonWebToken){
-            JsonWebToken jwt = (JsonWebToken)principal;
-            return sessions.remove(jwt.getIssuedAtTime());
-        }
-        else if(principal != null){
-            long timestamp = 0;
-            return sessions.remove(timestamp);
-        }
-        return null;
+    public Session removeSession(long timestamp){
+        return sessions.remove(timestamp);
     }
 }

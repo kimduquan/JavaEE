@@ -5,6 +5,7 @@
  */
 package openup.webapp.security;
 
+import epf.schema.OpenUP;
 import java.net.URL;
 import java.util.Set;
 import java.util.logging.Level;
@@ -22,6 +23,7 @@ import openup.client.config.ConfigNames;
 import openup.client.config.ConfigSource;
 import openup.client.security.Security;
 import openup.client.security.Header;
+import openup.client.security.PasswordHash;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 
 /**
@@ -36,7 +38,21 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
     
     public CredentialValidationResult validate(BasicAuthenticationCredential credential) throws Exception{
         CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
-        String base = config.getConfig(ConfigNames.OPENUP_URL, "");
+        Token token = login(credential);
+        if(token != null){
+            TokenPrincipal principal = new TokenPrincipal(credential.getCaller(), token);
+            result = new CredentialValidationResult(
+                    principal, 
+                    principal
+                            .getToken()
+                            .getGroups()
+            );
+        }
+        return result;
+    }
+    
+    Token login(BasicAuthenticationCredential credential) throws Exception{
+        String base = config.getConfig(ConfigNames.OPENUP_GATEWAY_URL, "");
         URL baseUrl = new URL(base);
         URL audienceUrl = new URL(String.format(
                                     Security.AUDIENCE_URL_FORMAT,
@@ -51,9 +67,9 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
                 .register(header)
                 .build(Security.class);
         String token = service.login(
-                "OpenUP",
+                OpenUP.Schema,
                 credential.getCaller(),
-                credential.getPasswordAsString(),
+                PasswordHash.hash(credential.getCaller(), credential.getPassword().getValue()),
                 audienceUrl
         );
         Token jwt = null;
@@ -61,12 +77,7 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
             header.setToken(token);
             jwt = service.authenticate();
         }
-        if(jwt != null){
-            TokenPrincipal principal = new TokenPrincipal(jwt.getName());
-            principal.setToken(jwt);
-            result = new CredentialValidationResult(principal, jwt.getGroups());
-        }
-        return result;
+        return jwt;
     }
     
     @Override
@@ -78,7 +89,7 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
     public CredentialValidationResult validate(RememberMeCredential credential) {
         CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
         try {
-            String base = config.getConfig(ConfigNames.OPENUP_URL, "");
+            String base = config.getConfig(ConfigNames.OPENUP_GATEWAY_URL, "");
             URL baseUrl = new URL(base);
             Header header = new Header();
             Security service = RestClientBuilder
@@ -89,8 +100,7 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
             header.setToken(credential.getToken());
             Token jwt = service.authenticate();
             if(jwt != null){
-                TokenPrincipal principal = new TokenPrincipal(jwt.getName());
-                principal.setToken(jwt);
+                TokenPrincipal principal = new TokenPrincipal(jwt.getName(), jwt);
                 result = new CredentialValidationResult(principal, jwt.getGroups());
             }
         } 
@@ -112,7 +122,7 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
     @Override
     public void removeLoginToken(String token) {
         try {
-            String base = config.getConfig(ConfigNames.OPENUP_URL, "");
+            String base = config.getConfig(ConfigNames.OPENUP_GATEWAY_URL, "");
             URL baseUrl = new URL(base);
             Header header = new Header();
             Security service = RestClientBuilder
@@ -121,7 +131,7 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
                     .register(header)
                     .build(Security.class);
             header.setToken(token);
-            service.logOut("OpenUP");
+            service.logOut(OpenUP.Schema);
         } 
         catch (Exception ex) {
             Logger.getLogger(OpenUPIdentityStore.class.getName()).log(Level.SEVERE, null, ex);

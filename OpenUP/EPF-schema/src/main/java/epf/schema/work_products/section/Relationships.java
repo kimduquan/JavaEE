@@ -5,6 +5,7 @@
  */
 package epf.schema.work_products.section;
 
+import epf.schema.EPF;
 import epf.schema.roles.Role;
 import epf.schema.tasks.Task;
 import epf.schema.work_products.WorkProductSlot;
@@ -29,7 +30,7 @@ public class Relationships {
     @ManyToMany
     @JoinTable(
             name = "ARTIFACT_FULFILLED_SLOTS",
-            schema = "EPF",
+            schema = EPF.Schema,
             joinColumns = @JoinColumn(
                     name = "ARTIFACT"
             ),

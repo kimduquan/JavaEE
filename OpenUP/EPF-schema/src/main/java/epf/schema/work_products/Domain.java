@@ -18,22 +18,24 @@ import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.EPF;
+import javax.persistence.Index;
 
 /**
  *
  * @author FOXCONN
  */
-@Type
-@Schema(title = "Domain")
-@Entity
-@Table(name = "_DOMAIN", schema = "EPF")
+@Type(EPF.Domain)
+@Schema(name = EPF.Domain, title = "Domain")
+@Entity(name = EPF.Domain)
+@Table(schema = EPF.Schema, name = "_DOMAIN")
 @JsonbPropertyOrder({
     "name",
     "workProducts"
 })
 @NamedQuery(
         name = Domain.DOMAINS, 
-        query = "SELECT d FROM Domain AS d")
+        query = "SELECT d FROM EPF_Domain AS d")
 public class Domain {
 
     @Column(name = "NAME")
@@ -46,17 +48,14 @@ public class Domain {
     @ManyToMany
     @JoinTable(
             name = "WORK_PRODUCTS",
-            schema = "EPF",
-            joinColumns = @JoinColumn(
-                    name = "DOMAIN"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "ARTIFACT"
-            )
+            schema = EPF.Schema,
+            joinColumns = @JoinColumn(name = "DOMAIN"),
+            inverseJoinColumns = @JoinColumn(name = "ARTIFACT"),
+            indexes = {@Index(columnList = "DOMAIN")}
     )
     private List<Artifact> workProducts;
     
-    public static final String DOMAINS = "Domain.Domains";
+    public static final String DOMAINS = "EPF_Domain.Domains";
 
     public String getName() {
         return name;

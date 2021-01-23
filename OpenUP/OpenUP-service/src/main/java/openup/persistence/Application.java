@@ -5,7 +5,6 @@
  */
 package openup.persistence;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -13,10 +12,6 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.PersistenceContext;
 
 /**
  *
@@ -24,9 +19,6 @@ import javax.persistence.PersistenceContext;
  */
 @ApplicationScoped
 public class Application {
-    
-    @PersistenceContext(name = "EPF", unitName = "EPF")
-    private EntityManager defaultManager;
     
     private Map<String, Context> contexts;
     
@@ -48,21 +40,8 @@ public class Application {
         contexts.clear();
     }
     
-    public Context putContext(String unit, String userName, String password, long timestamp){
-        Map<String, Object> props = new HashMap<>();
-        props.put("javax.persistence.jdbc.user", userName);
-        props.put("javax.persistence.jdbc.password", password);            
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory(unit, props);
-        EntityManager manager = factory.createEntityManager();
-        Context context = contexts.computeIfAbsent(unit, key -> {
-            return new Context();
-        });
-        context.putCredential(userName, factory, manager);
-        return context;
-    }
-    
-    public EntityManager getDefaultManager(){
-        return defaultManager;
+    public Context putContext(String unit) throws Exception{
+        return contexts.computeIfAbsent(unit, name -> { return new Context();});
     }
     
     public Context getContext(String name){

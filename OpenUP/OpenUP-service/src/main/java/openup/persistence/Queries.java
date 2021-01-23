@@ -5,6 +5,7 @@
  */
 package openup.persistence;
 
+import epf.schema.openup.Role;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,15 +30,11 @@ import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.Attribute.PersistentAttributeType;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.ManagedType;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.UriInfo;
-import openup.client.epf.schema.Roles;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
@@ -46,10 +43,8 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  *
  * @author FOXCONN
  */
-@Path("persistence/queries")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
-@RolesAllowed(Roles.ANY_ROLE)
+@Path("persistence")
+@RolesAllowed(Role.ANY_ROLE)
 @RequestScoped
 public class Queries implements openup.client.persistence.Queries {
     
@@ -58,9 +53,6 @@ public class Queries implements openup.client.persistence.Queries {
     
     @Context
     private SecurityContext context;
-    
-    @Context
-    private UriInfo uriInfo;
     
     @Override
     @PermitAll
@@ -190,44 +182,5 @@ public class Queries implements openup.client.persistence.Queries {
             }
         }
         return response.build();
-    }
-    
-    Response getNamedQueryResult(
-            String unit,
-            String name,
-            Integer firstResult,
-            Integer maxResults
-            ) throws Exception{
-        ResponseBuilder response = Response.ok();
-        Query query = null;
-        try{
-            query = cache.createNamedQuery(unit, context.getUserPrincipal(), name);
-        }
-        catch(IllegalArgumentException ex){
-            response.status(Response.Status.NOT_FOUND);
-        }
-        if(query != null){
-            buildQuery(query, firstResult, maxResults, uriInfo);
-            response.entity(
-                    query.getResultStream()
-                            .collect(Collectors.toList()));
-        }
-        return response.build();
-    }
-    
-    void buildQuery(Query query, Integer firstResult, Integer maxResults, UriInfo uriInfo){
-        uriInfo.getQueryParameters().forEach((param, paramValue) -> {
-            String value = "";
-            if(!paramValue.isEmpty()){
-                value = paramValue.get(0);
-            }
-            query.setParameter(param, value);
-        });
-        if(firstResult != null){
-            query.setFirstResult(firstResult);
-        }
-        if(maxResults != null){
-            query.setMaxResults(maxResults);
-        }
     }
 }

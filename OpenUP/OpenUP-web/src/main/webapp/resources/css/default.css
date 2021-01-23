@@ -79,3 +79,19 @@ a:link:hover, a:visited:hover  {
 .icon-discipline {
     background-image: url("#{resource['images/Discipline.gif']}");
 }
+
+.link-delivery-processes {
+    background-image: url("#{resource['images/delproc_obj.gif']}");
+}
+
+.link-roles {
+    background-image: url("#{resource['images/roles_obj.gif']}");
+}
+
+.link-work-products {
+    background-image: url("#{resource['images/workproduct_obj.gif']}");
+}
+
+.link-tasks {
+    background-image: url("#{resource['images/discipline_obj.gif']}");
+}

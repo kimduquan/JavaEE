@@ -11,10 +11,10 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -28,8 +28,6 @@ import org.eclipse.microprofile.faulttolerance.Asynchronous;
  * @author FOXCONN
  */
 @Path("persistence")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
 @RequestScoped
 public class Entities {
     
@@ -38,6 +36,7 @@ public class Entities {
     
     @POST
     @Path("{unit}/{entity}/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Asynchronous
     public CompletionStage<Response> persist(
             @Context HttpHeaders headers, 
@@ -48,7 +47,7 @@ public class Entities {
             InputStream body) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("POST", body);
+        return request.request(HttpMethod.POST, body);
     }
     
     @DELETE
@@ -62,6 +61,6 @@ public class Entities {
             @PathParam("id") String id) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("DELETE", null);
+        return request.request(HttpMethod.DELETE, null);
     }
 }

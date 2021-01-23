@@ -16,15 +16,16 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.EPF;
 
 /**
  *
  * @author FOXCONN
  */
-@Type
-@Schema(title = "Capability Pattern")
-@Entity
-@Table(name = "CAPABILITY_PATTERN", schema = "EPF")
+@Type(EPF.CapabilityPattern)
+@Schema(name = EPF.CapabilityPattern, title = "Capability Pattern")
+@Entity(name = EPF.CapabilityPattern)
+@Table(schema = EPF.Schema, name = "CAPABILITY_PATTERN")
 public class CapabilityPattern {
 	
     @Column(name = "NAME")

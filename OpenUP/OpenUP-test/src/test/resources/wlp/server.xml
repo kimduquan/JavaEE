@@ -8,18 +8,10 @@
         <feature>mpContextPropagation-1.0</feature>
         <!--<feature>sessionCache-1.0</feature>-->
         <feature>transportSecurity-1.0</feature>
+        <feature>batch-1.0</feature>
+        <feature>batchManagement-1.0</feature>
         
-        <feature>jsfContainer-2.3</feature>
-        
-        <!--<feature>webProfile-8.0</feature>-->
-        <feature>appSecurity-3.0</feature>
-        <feature>beanValidation-2.0</feature>
-        <feature>ejbLite-3.2</feature>
-        <feature>el-3.0</feature>
-        <feature>jaspic-1.1</feature>
-        <feature>jndi-1.0</feature>
-        <feature>jsp-2.3</feature>
-        <feature>managedBeans-1.0</feature>
+        <feature>webProfile-8.0</feature>
         
     </featureManager>
 
@@ -28,11 +20,11 @@
                   httpPort="${httpPort}"
                   httpsPort="${httpsPort}" />
 
-    <application location="OpenUP-service-1.0.0.war">
+    <application name="OpenUP-service" context-root="service" location="OpenUP-service-1.0.0.war">
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-    <application location="OpenUP-gateway-1.0.0.war" />
-    <application location="OpenUP-web-1.0.0.war" />
+    <application name="OpenUP-gateway" context-root="gateway" location="OpenUP-gateway-1.0.0.war" />
+    <application name="OpenUP-web" context-root="web" location="OpenUP-web-1.0.0.war" />
     
     <!-- H2 Library Configuration -->
     <library id="H2JDBCLib">
@@ -63,7 +55,7 @@
             javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
             javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
             libraryRef="H2JDBCLib" />
-        <properties URL="jdbc:h2:~/EPF_test;SCHEMA=EPF;AUTO_SERVER=TRUE" />
+        <properties URL="jdbc:h2:~/EPF_test;SCHEMA=EPF;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE" />
     </dataSource>
     <dataSource id="openup" jndiName="jdbc/openup">
         <!-- Define the DataSource class names on the <jdbcDriver> element -->
@@ -72,7 +64,7 @@
             javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
             javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
             libraryRef="H2JDBCLib" />
-        <properties URL="jdbc:h2:~/EPF_test;AUTO_SERVER=TRUE" />
+        <properties URL="jdbc:h2:~/EPF_test;SCHEMA=OPENUP;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE" />
     </dataSource>
 
     <keyStore id="defaultKeyStore" password="password"/>

@@ -5,6 +5,8 @@
  */
 package openup.security;
 
+import epf.schema.EPF;
+import epf.schema.OpenUP;
 import openup.client.security.Token;
 import epf.schema.roles.Role;
 import java.io.Serializable;
@@ -24,15 +26,13 @@ import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.inject.Inject;
+import javax.persistence.PersistenceContext;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.UriInfo;
-import openup.epf.schema.Roles;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.config.Names;
 import openup.persistence.Application;
@@ -50,7 +50,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  * @author FOXCONN
  */
 @Path("security")
-@RolesAllowed(Roles.ANY_ROLE)
+@RolesAllowed(epf.schema.openup.Role.ANY_ROLE)
 @RequestScoped
 public class Security implements openup.client.security.Security, Serializable {
     
@@ -79,8 +79,9 @@ public class Security implements openup.client.security.Security, Serializable {
     
     @Context 
     private SecurityContext context;
-    @Context 
-    private UriInfo uriInfo;
+    
+    @PersistenceContext(name = EPF.Schema, unitName = EPF.Schema)
+    private EntityManager defaultManager;
     
     @PermitAll
     @Override
@@ -94,7 +95,7 @@ public class Security implements openup.client.security.Security, Serializable {
             content = {
                 @Content(
                         mediaType = MediaType.APPLICATION_FORM_URLENCODED,
-                        example = "{\"username\":\"\",\"password\":\"\"}"
+                        example = "{\"username\":\"\",\"password_hash\":\"\"}"
                 )
             }
     )
@@ -114,11 +115,17 @@ public class Security implements openup.client.security.Security, Serializable {
     public String login(
             String unit,
             String username,
-            String password,
+            String password_hash,
             URL url) throws Exception{
         
         long time = System.currentTimeMillis() / 1000;
-        persistence.putContext(unit, username, password, time);
+        persistence.putContext(unit)
+                .putCredential(
+                        username, 
+                        unit, 
+                        password_hash
+                )
+                .putSession(time);
         
         Token jwt = buildToken(username, time);
         
@@ -126,51 +133,13 @@ public class Security implements openup.client.security.Security, Serializable {
         
         buildAudience(jwt, url.toURI());
         
-        Set<String> roles = getUserRoles(username, persistence.getDefaultManager());
+        Set<String> roles = getUserRoles(username, defaultManager);
         jwt.setGroups(roles);
         
         String token = generator.generate(jwt);
         jwt.setRawToken(token);
         
         return token;
-    }
-    
-    @Override
-    @Operation(
-            summary = "runAs", 
-            description = "runAs",
-            operationId = "runAs"
-    )
-    @RequestBody(
-            required = true,
-            content = @Content(
-                    mediaType = MediaType.APPLICATION_FORM_URLENCODED,
-                    example = "{\"runAs\":\"ADMIN\"}"
-            )
-    )
-    @APIResponse(
-            name = "token", 
-            description = "Token",
-            responseCode = "200",
-            content = @Content(
-                    mediaType = MediaType.TEXT_PLAIN
-            )
-    )
-    public String runAs(
-            String role
-            ) throws Exception{
-        ResponseBuilder response = Response.ok();
-        Principal principal = context.getUserPrincipal();
-        long time = System.currentTimeMillis() / 1000;
-        Token jwt = buildToken(principal.getName(), time);
-        buildTokenID(jwt);
-        buildAudience(jwt, uriInfo.getBaseUri());
-        if(buildRoles(jwt, principal, role, response)){
-            String token = generator.generate(jwt);
-            response.entity(token);
-            jwt.setRawToken(token);
-        }
-        return jwt.getRawToken();
     }
     
     @Override
@@ -184,21 +153,13 @@ public class Security implements openup.client.security.Security, Serializable {
             description = "OK",
             responseCode = "200"
     )
-    public String logOut(String unit) throws Exception{
-        Principal principal = context.getUserPrincipal();
-        if(principal instanceof JsonWebToken){
-            openup.persistence.Context ctx = persistence.getContext(unit);
-            if(ctx != null){
-                Credential credential = ctx.getCredential(principal.getName());
-                if(credential != null){
-                    Session session = credential.getSession(principal);
-                    if(session != null){
-                        session = credential.removeSession(principal);
-                        session.close();
-                        return principal.getName();
-                    }
-                }
-            }
+    public String logOut(
+            String unit
+    ) throws Exception{
+        Session session = removeSession(unit);
+        if(session != null){
+            session.close();
+            return context.getUserPrincipal().getName();
         }
         throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
     }
@@ -220,9 +181,8 @@ public class Security implements openup.client.security.Security, Serializable {
             responseCode = "401"
     )
     public Token authenticate() throws Exception{
-        Principal principal = context.getUserPrincipal();
-        if(principal instanceof JsonWebToken){
-            JsonWebToken jwt = (JsonWebToken) principal;
+        if(getSession(OpenUP.Schema) != null){
+            JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
             Token token = buildToken(jwt);
             return token;
         }
@@ -248,26 +208,6 @@ public class Security implements openup.client.security.Security, Serializable {
                         System.currentTimeMillis()));
     }
     
-    boolean buildRoles(Token token, Principal principal, String role, ResponseBuilder response){
-        boolean ok = true;
-        if(Roles.ADMIN.equalsIgnoreCase(role)){
-            if(isAdmin(principal.getName(), persistence.getDefaultManager())){
-                Set<String> groups = new HashSet<>();
-                groups.add(Roles.ADMIN);
-                token.setGroups(groups);
-            }
-            else{
-                response.status(Response.Status.FORBIDDEN);
-                ok = false;
-            }
-        }
-        else{
-            Set<String> roles = getUserRoles(principal.getName(), persistence.getDefaultManager());
-            token.setGroups(roles);
-        }
-        return ok;
-    }
-    
     Token buildToken(String username, long time) throws Exception{
         Token jwt = new Token();
         jwt.setIssuedAtTime(time);
@@ -285,13 +225,6 @@ public class Security implements openup.client.security.Security, Serializable {
         return result.map(Object::toString).collect(Collectors.toSet());
     }
     
-    boolean isAdmin(String userName, EntityManager manager){
-        Query query = manager.createNamedQuery(Role.IS_ADMIN);
-        query.setParameter(1, userName.toUpperCase());
-        query.setParameter(2, String.valueOf(true));
-        return query.getResultStream().count() > 0;
-    }
-    
     Token buildToken(JsonWebToken jwt){
         Token token = new Token();
         token.setAudience(jwt.getAudience());
@@ -304,5 +237,41 @@ public class Security implements openup.client.security.Security, Serializable {
         token.setSubject(jwt.getSubject());
         token.setTokenID(jwt.getTokenID());
         return token;
+    }
+    
+    Session removeSession(String unit) throws Exception{
+        Principal principal = context.getUserPrincipal();
+        if(principal != null){
+            openup.persistence.Context ctx = persistence.getContext(unit);
+            if(ctx != null){
+                Credential credential = ctx.getCredential(principal.getName());
+                if(credential != null){
+                    if(principal instanceof JsonWebToken){
+                        JsonWebToken jwt = (JsonWebToken)principal;
+                        return credential.removeSession(jwt.getIssuedAtTime());
+                    }
+                }
+            }
+        }
+        return null;
+    }
+    
+    Session getSession(String unit) throws Exception{
+        Principal principal = context.getUserPrincipal();
+        if(principal != null){
+            openup.persistence.Context ctx = persistence.getContext(unit);
+            if(ctx != null){
+                Credential credential = ctx.getCredential(principal.getName());
+                if(credential != null){
+                    if(principal instanceof JsonWebToken){
+                        JsonWebToken jwt = (JsonWebToken)principal;
+                        if(System.currentTimeMillis() < jwt.getExpirationTime() * 1000){
+                            return credential.getSession(jwt.getIssuedAtTime());
+                        }
+                    }
+                }
+            }
+        }
+        return null;
     }
 }

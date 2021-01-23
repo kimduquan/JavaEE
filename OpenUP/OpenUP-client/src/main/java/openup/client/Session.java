@@ -13,7 +13,6 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
-import javax.inject.Named;
 import openup.client.config.Config;
 import openup.client.config.ConfigNames;
 import openup.client.config.ConfigSource;
@@ -46,7 +45,7 @@ public class Session implements Serializable {
     @PostConstruct
     void postConstruct(){
         try {
-            base = configs.getConfig(ConfigNames.OPENUP_URL, "");
+            base = configs.getConfig(ConfigNames.OPENUP_GATEWAY_URL, "");
             securityHeader = new Header();
             config = builder().build(Config.class);
         } 
@@ -93,7 +92,7 @@ public class Session implements Serializable {
                 .register(securityHeader);
     }
     
-    public ClientQueue clients(){
+    ClientQueue clients(){
         return clients;
     }
     

@@ -5,6 +5,7 @@
  */
 package openup.persistence;
 
+import epf.schema.EPF;
 import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,7 +19,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.security.enterprise.AuthenticationException;
 import javax.transaction.Transactional;
 import org.eclipse.microprofile.jwt.JsonWebToken;
@@ -31,7 +32,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 @RequestScoped
 public class Request {
     
-    @PersistenceContext(name = "EPF", unitName = "EPF")
+    @PersistenceContext(name = EPF.Schema, unitName = EPF.Schema)
     private EntityManager defaultManager;
     
     @Inject
@@ -53,13 +54,14 @@ public class Request {
             if(context != null){
                 Credential credential = context.getCredential(principal.getName());
                 if(credential != null){
-                    Session session = credential.getSession(principal);
-                    if(session != null){
-                        if(principal instanceof JsonWebToken){
-                            JsonWebToken jwt = (JsonWebToken)principal;
-                            Conversation conversation = session.getConversation(jwt.getTokenID());
-                            if(conversation != null){
-                                manager = conversation.getManager(jwt.getIssuedAtTime());
+                    if(principal instanceof JsonWebToken){
+                        JsonWebToken jwt = (JsonWebToken)principal;
+                        Session session = credential.getSession(jwt.getIssuedAtTime());
+                        if(session != null){
+                            if(System.currentTimeMillis() < jwt.getExpirationTime() * 1000){
+                                manager = session
+                                    .putConversation(jwt.getTokenID())
+                                    .putManager(jwt.getIssuedAtTime());
                             }
                         }
                     }
@@ -73,8 +75,8 @@ public class Request {
         return defaultManager;
     }
     
-    public Query createNamedQuery(String unit, Principal principal, String name) throws Exception{
-        return getManager(unit, principal).createNamedQuery(name);
+    public <T> TypedQuery<T> createNamedQuery(String unit, Principal principal, String name, Class<T> cls) throws Exception{
+        return getManager(unit, principal).createNamedQuery(name, cls);
     }
     
     @Transactional
@@ -95,7 +97,7 @@ public class Request {
     }
     
     @CacheResult
-    public Object find(@CacheKey String unit, Principal principal, @CacheKey String name, Class cls, @CacheKey String id) throws Exception{
+    public <T> T find(@CacheKey String unit, Principal principal, @CacheKey String name, Class<T> cls, @CacheKey String id) throws Exception{
         return getManager(unit, principal).find(cls, id);
     }
     

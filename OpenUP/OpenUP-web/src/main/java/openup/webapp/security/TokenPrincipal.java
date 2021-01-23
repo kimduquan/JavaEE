@@ -16,8 +16,9 @@ public class TokenPrincipal extends CallerPrincipal {
     
     private Token token;
     
-    public TokenPrincipal(String name){
+    public TokenPrincipal(String name, Token token){
         super(name);
+        this.token = token;
     }
 
     public Token getToken() {

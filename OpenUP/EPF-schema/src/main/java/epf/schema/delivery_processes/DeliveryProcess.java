@@ -17,18 +17,19 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.EPF;
 
 /**
  *
  * @author FOXCONN
  */
-@Type
-@Schema(title = "Delivery Process")
-@Entity
-@Table(name = "DELIVERY_PROCESS", schema = "EPF")
+@Type(EPF.DeliveryProcess)
+@Schema(name = EPF.DeliveryProcess, title = "Delivery Process")
+@Entity(name = EPF.DeliveryProcess)
+@Table(schema = EPF.Schema, name = "DELIVERY_PROCESS")
 @NamedQuery(
         name = DeliveryProcess.DELIVERY_PROCESSES, 
-        query = "SELECT dp FROM DeliveryProcess AS dp"
+        query = "SELECT dp FROM EPF_DeliveryProcess AS dp"
 )
 public class DeliveryProcess {
 	
@@ -51,7 +52,7 @@ public class DeliveryProcess {
     @Embedded
     private WorkProductUsage workProductUsage;
     
-    public static final String DELIVERY_PROCESSES = "DeliveryProcess.DeliveryProcesses";
+    public static final String DELIVERY_PROCESSES = "EPF_DeliveryProcess.DeliveryProcesses";
 
     public String getName() {
         return name;

@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>OpenUP-service</artifactId>
-    <name>OpenUP-service</name>
+    <name>Open Unified Process Application Service</name>
     <packaging>war</packaging>
 
     <dependencies>
@@ -34,6 +34,16 @@
         <dependency>
             <groupId>javax.cache</groupId>
             <artifactId>cache-api</artifactId>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/javax.batch/javax.batch-api -->
+        <dependency>
+            <groupId>javax.batch</groupId>
+            <artifactId>javax.batch-api</artifactId>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/javax.validation/validation-api -->
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.eclipse.microprofile/microprofile -->
         <dependency>

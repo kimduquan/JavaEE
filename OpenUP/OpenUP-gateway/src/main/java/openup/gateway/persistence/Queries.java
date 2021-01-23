@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.concurrent.CompletionStage;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -29,8 +29,6 @@ import org.eclipse.microprofile.faulttolerance.Asynchronous;
  */
 @RequestScoped
 @Path("persistence")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
 public class Queries {
     
     @Inject
@@ -38,6 +36,7 @@ public class Queries {
     
     @GET
     @Path("{unit}/{criteria: .+}")
+    @Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
     public CompletionStage<Response> getCriteriaQueryResult(
             @Context HttpHeaders headers, 
@@ -49,6 +48,6 @@ public class Queries {
             ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("GET", null);
+        return request.request(HttpMethod.GET, null);
     }
 }

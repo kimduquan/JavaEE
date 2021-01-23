@@ -19,22 +19,24 @@ import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.EPF;
+import javax.persistence.Index;
 
 /**
  *
  * @author FOXCONN
  */
-@Type
-@Schema(title = "Discipline")
-@Entity
-@Table(name = "DISCIPLINE", schema = "EPF")
+@Type(EPF.Discipline)
+@Schema(name = EPF.Discipline, title = "Discipline")
+@Entity(name = EPF.Discipline)
+@Table(schema = EPF.Schema, name = "DISCIPLINE")
 @JsonbPropertyOrder({
     "name",
     "tasks"
 })
 @NamedQuery(
         name = Discipline.DISCIPLINES, 
-        query = "SELECT d FROM Discipline AS d")
+        query = "SELECT d FROM EPF_Discipline AS d")
 public class Discipline {
 
     @Column(name = "NAME")
@@ -47,20 +49,17 @@ public class Discipline {
     @ManyToMany
     @JoinTable(
             name = "TASKS",
-            schema = "EPF",
-            joinColumns = @JoinColumn(
-                    name = "DISCIPLINE"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "TASK"
-            )
+            schema = EPF.Schema,
+            joinColumns = @JoinColumn(name = "DISCIPLINE"),
+            inverseJoinColumns = @JoinColumn(name = "TASK"),
+            indexes = {@Index(columnList = "DISCIPLINE")}
     )
     private List<Task> tasks;
     
     @Column(name = "MAIN_DESCRIPTION")
     private JsonObject mainDescription;
     
-    public static final String DISCIPLINES = "Discipline.Disciplines";
+    public static final String DISCIPLINES = "EPF_Discipline.Disciplines";
 
     public String getName() {
         return name;

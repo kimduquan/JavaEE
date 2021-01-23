@@ -21,6 +21,7 @@ import javax.net.ssl.TrustManager;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import openup.client.ssl.DefaultHostnameVerifier;
+import openup.client.ssl.DefaultSSLContext;
 import openup.client.ssl.DefaultTrustManager;
 
 /**
@@ -36,7 +37,7 @@ public class ClientQueue implements Serializable {
     @PostConstruct
     void postConstruct(){
         clients = new ConcurrentHashMap<>();
-        context = buildContext();
+        context = DefaultSSLContext.build();
     }
     
     @PreDestroy
@@ -46,19 +47,6 @@ public class ClientQueue implements Serializable {
             queue.clear();
         });
         clients.clear();
-    }
-    
-    static SSLContext buildContext(){
-        try {
-            TrustManager x509 = new DefaultTrustManager();
-            SSLContext ctx = SSLContext.getInstance("SSL");
-            ctx.init(null, new TrustManager[]{x509}, null);
-            return ctx;
-        } 
-        catch (Exception ex) {
-            Logger.getLogger(ClientQueue.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
     }
     
     static Client buildClient(SSLContext context){
