@@ -5,31 +5,24 @@
  */
 package openup.security;
 
-import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import java.net.URL;
 import java.time.Duration;
 import java.time.Instant;
-import javax.net.ssl.SSLContext;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.NotAllowedException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response.Status;
-import openup.client.config.ConfigNames;
-import openup.client.security.Header;
+import openup.TestUtil;
 import openup.client.security.PasswordHash;
 import static openup.client.security.Security.AUDIENCE_URL_FORMAT;
 import openup.client.security.Token;
-import openup.client.ssl.DefaultHostnameVerifier;
-import openup.client.ssl.DefaultSSLContext;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -43,40 +36,24 @@ import org.junit.Test;
  */
 public class SecurityTest {
     
-    private static SSLContext sslContext;
-    private static ClientBuilder builder;
-    private static URL url;
-    private static Header header;
-    private static Client client;
-    
     @BeforeClass
     public static void beforeClass() throws Exception{
-        url = new URL(System.getProperty(ConfigNames.OPENUP_GATEWAY_URL, ""));
-        sslContext = DefaultSSLContext.build();
-        header = new Header();
-        
-        builder = ClientBuilder.newBuilder()
-                .hostnameVerifier(new DefaultHostnameVerifier())
-                .sslContext(sslContext)
-                .register(JacksonJsonProvider.class)
-                .register(header);
-        
-        client = builder.build();
+        TestUtil.beforeClass();
     }
     
     @AfterClass
     public static void afterClass(){
-        client.close();
+        TestUtil.afterClass();
     }
     
     @Before
     public void before(){
-        header.setToken(null);
+        TestUtil.header().setToken(null);
     }
     
     @After
     public void after(){
-        header.setToken(null);
+        TestUtil.header().setToken(null);
     }
     
     String login(String unit, String username, String password, URL targetUrl, boolean needHash) throws Exception{
@@ -90,7 +67,7 @@ public class SecurityTest {
         if(targetUrl != null){
             queryUrl = targetUrl.toString();
         }
-        return client.target(url.toString() + "security/")
+        return TestUtil.client().target(TestUtil.url().toString() + "security/")
                 .path(unit)
                 .queryParam("url", queryUrl)
                 .request(MediaType.TEXT_PLAIN)
@@ -98,25 +75,25 @@ public class SecurityTest {
     }
     
     String logOut(String unit) throws Exception{
-        return client.target(url.toString() + "security/")
+        return TestUtil.client().target(TestUtil.url().toString() + "security/")
                 .path(unit)
                 .request(MediaType.TEXT_PLAIN)
                 .delete(String.class);
     }
     
     Token authenticate() throws Exception{
-        return client.target(url.toString() + "security/")
+        return TestUtil.client().target(TestUtil.url().toString() + "security/")
                 .request(MediaType.APPLICATION_JSON)
                 .get(Token.class);
     }
     
     @Test
     public void testLoginOK() throws Exception{
-        String token = login("OpenUP", "any_role1", "any_role", url, true);
+        String token = login("OpenUP", "any_role1", "any_role", TestUtil.url(), true);
         Assert.assertNotNull("Token", token);
         Assert.assertNotEquals("Token", "", token);
         
-        header.setToken(token);
+        TestUtil.header().setToken(token);
         logOut("OpenUP");
     }
     
@@ -125,67 +102,67 @@ public class SecurityTest {
         WebApplicationException ex = Assert.assertThrows(
                 WebApplicationException.class, 
                 () -> {
-                    login("OpenUP", "any_role1", "Invalid", url, true);
+                    login("OpenUP", "any_role1", "Invalid", TestUtil.url(), true);
                 }
         );
         Assert.assertNotNull("WebApplicationException", ex);
-        String token = login("OpenUP", "any_role1", "any_role", url, true);
+        String token = login("OpenUP", "any_role1", "any_role", TestUtil.url(), true);
         Assert.assertNotNull("Token", token);
         Assert.assertNotEquals("Token", "", token);
         
-        header.setToken(token);
+        TestUtil.header().setToken(token);
         logOut("OpenUP");
     }
     
     @Test(expected = NotAllowedException.class)
     public void testLoginEmptyUnit() throws Exception{
-        login("", "any_role1", "any_role", url, false);
+        login("", "any_role1", "any_role", TestUtil.url(), false);
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginBlankUnit() throws Exception{
-        login("     ", "any_role1", "any_role", url, false);
+        login("     ", "any_role1", "any_role", TestUtil.url(), false);
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginInvalidUnit() throws Exception{
-        login("Invalid", "any_role1", "any_role", url, false);
+        login("Invalid", "any_role1", "any_role", TestUtil.url(), false);
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginEmptyUser() throws Exception{
-        login("OpenUP", "", "any_role", url, false);
+        login("OpenUP", "", "any_role", TestUtil.url(), false);
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginBlankUser() throws Exception{
-        login("OpenUP", "     ", "any_role", url, false);
+        login("OpenUP", "     ", "any_role", TestUtil.url(), false);
     }
     
     @Test(expected = NotAuthorizedException.class)
     public void testLoginInvalidUser() throws Exception{
-        login("OpenUP", "Invalid", "any_role", url, true);
+        login("OpenUP", "Invalid", "any_role", TestUtil.url(), true);
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginEmptyPassword() throws Exception{
-        login("OpenUP", "any_role1", "", url, false);
+        login("OpenUP", "any_role1", "", TestUtil.url(), false);
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginBlankPassword() throws Exception{
-        login("OpenUP", "any_role1", "    ", url, false);
+        login("OpenUP", "any_role1", "    ", TestUtil.url(), false);
     }
     
     @Test(expected = NotAuthorizedException.class)
     public void testLoginInvalidPassword() throws Exception{
-        login("OpenUP", "any_role1", "Invalid", url, true);
+        login("OpenUP", "any_role1", "Invalid", TestUtil.url(), true);
     }
     
     @Test(expected = NotAuthorizedException.class)
     public void testLoginInvalidPasswordAfterLoginOK() throws Exception{
-        login("OpenUP", "any_role1", "any_role", url, true);
-        login("OpenUP", "any_role1", "Invalid", url, true);
+        login("OpenUP", "any_role1", "any_role", TestUtil.url(), true);
+        login("OpenUP", "any_role1", "Invalid", TestUtil.url(), true);
     }
     
     @Test(expected = NotFoundException.class)
@@ -199,7 +176,7 @@ public class SecurityTest {
         form.putSingle("username", "any_role1");
         form.putSingle("password_hash", "any_role");
         form.putSingle("url", "    ");
-        client.target(url.toURI())
+        TestUtil.client().target(TestUtil.url().toURI())
                 .path("security")
                 .path("OpenUP")
                 .request(MediaType.TEXT_PLAIN)
@@ -212,7 +189,7 @@ public class SecurityTest {
         form.putSingle("username", "any_role1");
         form.putSingle("password_hash", "any_role");
         form.putSingle("url", "Invalid");
-        client.target(url.toURI())
+        TestUtil.client().target(TestUtil.url().toURI())
                 .path("security")
                 .path("OpenUP")
                 .request(MediaType.TEXT_PLAIN)
@@ -221,9 +198,9 @@ public class SecurityTest {
     
     @Test
     public void testAuthenticateOK() throws Exception{
-        String token = login("OpenUP", "any_role1", "any_role", url, true);
+        String token = login("OpenUP", "any_role1", "any_role", TestUtil.url(), true);
         
-        header.setToken(token);
+        TestUtil.header().setToken(token);
         
         Token jwt = authenticate();
         
@@ -235,9 +212,9 @@ public class SecurityTest {
                 new String[]{
                     String.format(
                             AUDIENCE_URL_FORMAT, 
-                            url.getProtocol(), 
-                            url.getHost(), 
-                            url.getPort()
+                            TestUtil.url().getProtocol(), 
+                            TestUtil.url().getHost(), 
+                            TestUtil.url().getPort()
                     )
                 }, 
                 jwt.getAudience().toArray()
@@ -287,26 +264,26 @@ public class SecurityTest {
     
     @Test(expected = NotAuthorizedException.class)
     public void testAuthenticateEmptyToken() throws Exception{
-        header.setToken("");
+        TestUtil.header().setToken("");
         authenticate();
     }
     
     @Test(expected = NotAuthorizedException.class)
     public void testAuthenticateBlankToken() throws Exception{
-        header.setToken("    ");
+        TestUtil.header().setToken("    ");
         authenticate();
     }
     
     @Test(expected = NotAuthorizedException.class)
     public void testAuthenticateInvalidToken() throws Exception{
-        header.setToken("Invalid");
+        TestUtil.header().setToken("Invalid");
         authenticate();
     }
     
     @Test(expected = NotAuthorizedException.class)
     public void testLogoutOK() throws Exception {
-        String token = login("OpenUP", "any_role1", "any_role", url, true);
-        header.setToken(token);
+        String token = login("OpenUP", "any_role1", "any_role", TestUtil.url(), true);
+        TestUtil.header().setToken(token);
         
         logOut("OpenUP");
         
@@ -315,8 +292,8 @@ public class SecurityTest {
     
     @Test
     public void testLogoutEmptyUnit() throws Exception{
-        String token = login("OpenUP", "any_role1", "any_role", url, true);
-        header.setToken(token);
+        String token = login("OpenUP", "any_role1", "any_role", TestUtil.url(), true);
+        TestUtil.header().setToken(token);
         
         ClientErrorException ex = Assert.assertThrows(
                 ClientErrorException.class, 
@@ -335,8 +312,8 @@ public class SecurityTest {
     
     @Test
     public void testLogoutBlankUnit() throws Exception{
-        String token = login("OpenUP", "any_role1", "any_role", url, true);
-        header.setToken(token);
+        String token = login("OpenUP", "any_role1", "any_role", TestUtil.url(), true);
+        TestUtil.header().setToken(token);
         
         ClientErrorException ex = Assert.assertThrows(
                 ClientErrorException.class, 
@@ -355,8 +332,8 @@ public class SecurityTest {
     
     @Test
     public void testLogoutInvalidUnit() throws Exception{
-        String token = login("OpenUP", "any_role1", "any_role", url, true);
-        header.setToken(token);
+        String token = login("OpenUP", "any_role1", "any_role", TestUtil.url(), true);
+        TestUtil.header().setToken(token);
         
         WebApplicationException ex = Assert.assertThrows(
                 WebApplicationException.class, 

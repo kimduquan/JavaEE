@@ -53,7 +53,9 @@ public class Events implements openup.client.batch.Events, Serializable {
     public void register(long executionId) {
         broadcasters.computeIfAbsent(
                 executionId, 
-                serverSent::newBroadcaster
+                id -> { 
+                    return serverSent.newBroadcaster(); 
+                }
         ).register(sink);
     }
 }
