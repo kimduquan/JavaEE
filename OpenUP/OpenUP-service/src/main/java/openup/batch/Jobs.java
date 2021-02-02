@@ -23,7 +23,7 @@ import openup.client.batch.JobInstance;
  *
  * @author FOXCONN
  */
-@Path("batch/jobs")
+@Path("batch/job")
 @RolesAllowed(Role.ANY_ROLE)
 @RequestScoped
 public class Jobs implements openup.client.batch.Jobs {

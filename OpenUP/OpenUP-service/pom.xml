@@ -50,6 +50,11 @@
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/javax.jms/javax.jms-api -->
+        <dependency>
+            <groupId>javax.jms</groupId>
+            <artifactId>javax.jms-api</artifactId>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.context-propagation/microprofile-context-propagation-api -->
         <dependency>
             <groupId>org.eclipse.microprofile.context-propagation</groupId>

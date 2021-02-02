@@ -97,4 +97,5 @@
                            remoteServerAddress="localhost:7276:BootstrapBasicMessaging">
         </properties.wasJms>
     </jmsActivationSpec>
+    <batchJmsEvents />
 </server>

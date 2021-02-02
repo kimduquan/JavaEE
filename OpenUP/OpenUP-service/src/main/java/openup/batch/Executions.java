@@ -25,7 +25,7 @@ import openup.client.batch.StepExecution;
  *
  * @author FOXCONN
  */
-@Path("batch/excutions")
+@Path("batch/excution")
 @RolesAllowed(Role.ANY_ROLE)
 @RequestScoped
 public class Executions implements openup.client.batch.Executions {

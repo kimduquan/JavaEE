@@ -22,7 +22,7 @@ import javax.ws.rs.core.MediaType;
  *
  * @author FOXCONN
  */
-@Path("batch/jobs")
+@Path("batch/job")
 public interface Jobs {
     
     @GET

@@ -23,7 +23,7 @@ import javax.ws.rs.sse.SseEventSink;
  *
  * @author FOXCONN
  */
-@Path("batch/events")
+@Path("batch/event")
 @RolesAllowed(Role.ANY_ROLE)
 @SessionScoped
 public class Events implements openup.client.batch.Events, Serializable {

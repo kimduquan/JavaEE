@@ -3,23 +3,30 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.client.batch;
+package openup.client.event;
 
+import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.PathSegment;
 
 /**
  *
  * @author FOXCONN
  */
-@Path("batch/event")
+@Path("event")
 public interface Events {
     
     @GET
+    @Path("{name}/{event: .+}")
     @Produces(MediaType.SERVER_SENT_EVENTS)
-    void register(@QueryParam("executionId") long executionId);
+    void register(
+            @PathParam("name") 
+            String name, 
+            @PathParam("event")
+            List<PathSegment> event
+    );
 }
