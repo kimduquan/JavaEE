@@ -5,7 +5,7 @@
  */
 package openup.persistence;
 
-import epf.schema.openup.Role;
+import openup.schema.Role;
 import java.io.InputStream;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;

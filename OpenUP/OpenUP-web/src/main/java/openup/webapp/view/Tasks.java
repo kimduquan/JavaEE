@@ -6,7 +6,7 @@
 package openup.webapp.view;
 
 import epf.schema.EPF;
-import epf.schema.OpenUP;
+import openup.schema.OpenUP;
 import epf.schema.tasks.Discipline;
 import epf.schema.tasks.Task;
 import java.io.Serializable;

@@ -6,7 +6,7 @@
 package openup.webapp.view;
 
 import epf.schema.EPF;
-import epf.schema.OpenUP;
+import openup.schema.OpenUP;
 import epf.schema.delivery_processes.Iteration;
 import epf.schema.delivery_processes.Phase;
 import epf.schema.tasks.Task;

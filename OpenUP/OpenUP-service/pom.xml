@@ -1,24 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <groupId>openup</groupId>
         <artifactId>OpenUP-parent</artifactId>
         <version>1.0.0</version>
     </parent>
-
     <artifactId>OpenUP-service</artifactId>
-    <name>Open Unified Process Application Service</name>
+    <name>Open Unified Process Service</name>
     <packaging>war</packaging>
-
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.graphql/microprofile-graphql-api -->
         <dependency>
             <groupId>org.eclipse.microprofile.graphql</groupId>
             <artifactId>microprofile-graphql-api</artifactId>
-            <scope>provided</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.eclipse.persistence/jakarta.persistence -->
         <dependency>
@@ -69,9 +64,7 @@
         <dependency>
             <groupId>org.eclipse.microprofile</groupId>
             <artifactId>microprofile</artifactId>
-            <version>3.3</version>
             <type>pom</type>
-            <scope>provided</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.ibm.websphere.appserver.api/com.ibm.websphere.appserver.api.jwt -->
         <dependency>
@@ -90,7 +83,7 @@
         </dependency>
         <dependency>
             <groupId>openup</groupId>
-            <artifactId>EPF-schema</artifactId>
+            <artifactId>OpenUP-schema</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>

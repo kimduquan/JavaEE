@@ -18,7 +18,7 @@ import javax.ws.rs.Path;
  * @author FOXCONN
  */
 @Path("file/directory")
-@RolesAllowed(epf.schema.openup.Role.ANY_ROLE)
+@RolesAllowed(openup.schema.Role.ANY_ROLE)
 @RequestScoped
 public class Directories implements openup.client.file.Directories {
     

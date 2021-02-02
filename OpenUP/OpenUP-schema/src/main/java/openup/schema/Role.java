@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.schema.openup;
+package openup.schema;
 
-import epf.schema.OpenUP;
+import openup.schema.OpenUP;
 import epf.schema.roles.RoleSet;
 import javax.persistence.Column;
 import javax.persistence.Entity;

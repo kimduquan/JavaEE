@@ -5,7 +5,7 @@
  */
 package openup.batch;
 
-import epf.schema.openup.Role;
+import openup.schema.Role;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

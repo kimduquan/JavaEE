@@ -6,7 +6,7 @@
 package openup.client.persistence.validation;
 
 import epf.schema.EPF;
-import epf.schema.OpenUP;
+import openup.schema.OpenUP;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 

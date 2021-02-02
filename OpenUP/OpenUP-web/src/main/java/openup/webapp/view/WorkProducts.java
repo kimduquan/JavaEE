@@ -6,7 +6,7 @@
 package openup.webapp.view;
 
 import epf.schema.EPF;
-import epf.schema.OpenUP;
+import openup.schema.OpenUP;
 import epf.schema.work_products.Artifact;
 import epf.schema.work_products.Domain;
 import java.io.Serializable;

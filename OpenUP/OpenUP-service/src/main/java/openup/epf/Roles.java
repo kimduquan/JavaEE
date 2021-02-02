@@ -5,8 +5,8 @@
  */
 package openup.epf;
 
-import epf.schema.OpenUP;
-import epf.schema.openup.Role;
+import openup.schema.OpenUP;
+import openup.schema.Role;
 import epf.schema.roles.RoleSet;
 import java.security.Principal;
 import java.util.List;

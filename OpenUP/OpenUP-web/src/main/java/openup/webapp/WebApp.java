@@ -5,8 +5,8 @@
  */
 package openup.webapp;
 
-import epf.schema.OpenUP;
-import epf.schema.openup.Role;
+import openup.schema.OpenUP;
+import openup.schema.Role;
 import java.io.IOException;
 import javax.enterprise.context.ApplicationScoped;
 import javax.faces.annotation.FacesConfig;

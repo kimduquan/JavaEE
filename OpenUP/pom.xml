@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>openup</groupId>
     <artifactId>OpenUP-parent</artifactId>
-    <name>Open Unified Process Application Parent</name>
+    <name>Open Unified Process Parent</name>
     <packaging>pom</packaging>
     <version>1.0.0</version>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
-
     <!-- Define dependency version information -->
     <dependencyManagement>
         <dependencies>
@@ -78,6 +74,14 @@
                 <groupId>org.eclipse.microprofile.graphql</groupId>
                 <artifactId>microprofile-graphql-api</artifactId>
                 <version>1.0.3</version>
+                <scope>provided</scope>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.eclipse.microprofile/microprofile -->
+            <dependency>
+                <groupId>org.eclipse.microprofile</groupId>
+                <artifactId>microprofile</artifactId>
+                <version>3.3</version>
+                <type>pom</type>
                 <scope>provided</scope>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.reactive.messaging/microprofile-reactive-messaging-api -->
@@ -156,7 +160,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -164,7 +167,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
     <build>
         <!-- Define and configure plugins -->
         <pluginManagement>
@@ -237,7 +239,6 @@
             </plugins>
         </pluginManagement>
     </build>
-
     <profiles>
         <profile>
             <id>default-liberty</id>
@@ -271,7 +272,6 @@
                 </plugins>
             </build>
        </profile>
-
        <profile>
             <id>custom-liberty</id>
             <activation>
@@ -283,11 +283,10 @@
                 <liberty.install.dir>${libertyInstallDir}</liberty.install.dir>
             </properties>
        </profile>
-
    </profiles>
-
     <modules>
         <module>EPF-schema</module>
+        <module>OpenUP-schema</module>
         <module>OpenUP-client</module>
         <module>OpenUP-service</module>
         <module>OpenUP-gateway</module>

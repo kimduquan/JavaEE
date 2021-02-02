@@ -6,20 +6,16 @@
         <artifactId>OpenUP-parent</artifactId>
         <version>1.0.0</version>
     </parent>
-
     <artifactId>OpenUP-assembly</artifactId>
-    <name>Open Unified Process Application Server Assembly</name>
+    <name>Open Unified Process Server Assembly</name>
     <packaging>liberty-assembly</packaging>
-	
     <properties>
         <!-- Jaeger configuration -->
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
-        
         <liberty.env.openup.url>https://localhost:8443/service/</liberty.env.openup.url>
         <liberty.env.openup.gateway.url>https://localhost:8443/gateway/</liberty.env.openup.gateway.url>
     </properties>
-
     <dependencies>
         <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
         <dependency>
@@ -71,43 +67,42 @@
             <type>war</type>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
                 <groupId>io.openliberty.tools</groupId>
                 <artifactId>liberty-maven-plugin</artifactId>
                 <extensions>true</extensions>
-				<executions>
-					<execution>
-                        <id>copy-openup-dependency</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>deploy</goal>
-                        </goals>
-                        <configuration>
-                            <copyDependencies>
-                                <location>${project.build.directory}/shared/resources/openup/</location>
-                                <dependency>
-                                    <groupId>com.h2database</groupId>
-                                    <artifactId>h2</artifactId>
-                                </dependency>
-                                <dependency>
-                                    <groupId>io.jaegertracing</groupId>
-                                    <artifactId>jaeger-client</artifactId>
-                                </dependency>
-                                <dependency>
-                                    <groupId>com.hazelcast</groupId>
-                                    <artifactId>hazelcast-all</artifactId>
-                                </dependency>
-                                <dependency>
-                                    <groupId>javax.cache</groupId>
-                                    <artifactId>cache-api</artifactId>
-                                </dependency>
-                            </copyDependencies>
-                        </configuration>
+                    <executions>
+                        <execution>
+                            <id>copy-openup-dependency</id>
+                            <phase>pre-integration-test</phase>
+                            <goals>
+                                <goal>deploy</goal>
+                            </goals>
+                            <configuration>
+                                <copyDependencies>
+                                    <location>${project.build.directory}/shared/resources/openup/</location>
+                                    <dependency>
+                                        <groupId>com.h2database</groupId>
+                                        <artifactId>h2</artifactId>
+                                    </dependency>
+                                    <dependency>
+                                        <groupId>io.jaegertracing</groupId>
+                                        <artifactId>jaeger-client</artifactId>
+                                    </dependency>
+                                    <dependency>
+                                        <groupId>com.hazelcast</groupId>
+                                        <artifactId>hazelcast-all</artifactId>
+                                    </dependency>
+                                    <dependency>
+                                        <groupId>javax.cache</groupId>
+                                        <artifactId>cache-api</artifactId>
+                                    </dependency>
+                                </copyDependencies>
+                            </configuration>
                     </execution>
-				</executions>
+		</executions>
                 <configuration>
                     <installDirectory>${liberty.install.dir}</installDirectory>
                     <userDirectory>${project.build.directory}</userDirectory>
@@ -121,5 +116,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

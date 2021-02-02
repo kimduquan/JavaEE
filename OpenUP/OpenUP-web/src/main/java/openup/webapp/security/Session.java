@@ -5,7 +5,7 @@
  */
 package openup.webapp.security;
 
-import epf.schema.OpenUP;
+import openup.schema.OpenUP;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.logging.Level;

@@ -3,15 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.schema.openup;
+package openup.schema;
 
-import epf.schema.OpenUP;
+import openup.schema.OpenUP;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -22,29 +21,25 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  *
  * @author FOXCONN
  */
-@Type(OpenUP.Activity)
-@Schema(name = OpenUP.Activity, title = "Activity")
-@Entity(name = OpenUP.Activity)
-@Table(schema = OpenUP.Schema, name = "OPENUP_ACTIVITY", indexes = {@Index(columnList = "PARENT_ACTIVITIES")})
-public class Activity {
+@Type(OpenUP.Task)
+@Schema(name = OpenUP.Task, title = "Task")
+@Entity(name = OpenUP.Task)
+@Table(schema = OpenUP.Schema, name = "OPENUP_TASK")
+public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @ManyToOne
-    @JoinColumn(name = "ACTIVITY")
-    private epf.schema.delivery_processes.Activity activity;
+    @JoinColumn(name = "TASK")
+    private epf.schema.tasks.Task task;
     
     @Column(name = "NAME", nullable = false)
     private String name;
     
     @Column(name = "SUMMARY")
     private String summary;
-    
-    @ManyToOne
-    @JoinColumn(name = "PARENT_ACTIVITIES")
-    private Iteration parentActivities;
 
     public Long getId() {
         return id;
@@ -54,12 +49,12 @@ public class Activity {
         this.id = id;
     }
 
-    public epf.schema.delivery_processes.Activity getActivity() {
-        return activity;
+    public epf.schema.tasks.Task getTask() {
+        return task;
     }
 
-    public void setActivity(epf.schema.delivery_processes.Activity activity) {
-        this.activity = activity;
+    public void setTask(epf.schema.tasks.Task task) {
+        this.task = task;
     }
 
     public String getName() {
@@ -76,13 +71,5 @@ public class Activity {
 
     public void setSummary(String summary) {
         this.summary = summary;
-    }
-
-    public Iteration getParentActivities() {
-        return parentActivities;
-    }
-
-    public void setParentActivities(Iteration parentActivities) {
-        this.parentActivities = parentActivities;
     }
 }

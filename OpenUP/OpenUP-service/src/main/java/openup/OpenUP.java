@@ -30,12 +30,12 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
  */
 @ApplicationScoped
 @ApplicationPath("/")
-@LoginConfig(authMethod = "MP-JWT", realmName = epf.schema.OpenUP.Schema)
+@LoginConfig(authMethod = "MP-JWT", realmName = openup.schema.OpenUP.Schema)
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @OpenAPIDefinition(
         info = @Info(
-            title = epf.schema.OpenUP.Schema,
+            title = openup.schema.OpenUP.Schema,
             description = "OpenUP",
             contact = @Contact(
                     name = "kimduquan",
@@ -51,7 +51,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
         },
         tags = {
             @Tag(
-                    name = epf.schema.OpenUP.Schema,
+                    name = openup.schema.OpenUP.Schema,
                     description = "OpenUP"
             )
         },

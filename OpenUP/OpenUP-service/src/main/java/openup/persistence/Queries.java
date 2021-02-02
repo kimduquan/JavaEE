@@ -5,7 +5,7 @@
  */
 package openup.persistence;
 
-import epf.schema.openup.Role;
+import openup.schema.Role;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;

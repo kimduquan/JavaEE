@@ -5,7 +5,7 @@
  */
 package openup.client.delivery_processes;
 
-import epf.schema.openup.DeliveryProcess;
+import openup.schema.DeliveryProcess;
 import javax.validation.constraints.NotBlank;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;

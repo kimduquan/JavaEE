@@ -8,7 +8,7 @@ package openup.runtime;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.SessionScoped;
 import javax.ws.rs.Path;
-import epf.schema.openup.Role;
+import openup.schema.Role;
 import java.io.File;
 import java.io.Serializable;
 import java.util.List;

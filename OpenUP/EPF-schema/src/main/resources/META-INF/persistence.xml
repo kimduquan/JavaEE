@@ -13,7 +13,4 @@
             <property name="javax.persistence.sql-load-script-source" value="META-INF/epf.sql"/>
         </properties>
     </persistence-unit>
-    <persistence-unit name="OpenUP" transaction-type="JTA">
-        <jta-data-source>jdbc/openup</jta-data-source>
-    </persistence-unit>
 </persistence>

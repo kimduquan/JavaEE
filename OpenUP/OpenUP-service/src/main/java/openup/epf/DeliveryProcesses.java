@@ -5,10 +5,10 @@
  */
 package openup.epf;
 
-import epf.schema.OpenUP;
+import openup.schema.OpenUP;
 import java.util.List;
 import epf.schema.delivery_processes.DeliveryProcess;
-import epf.schema.openup.Role;
+import openup.schema.Role;
 import java.security.Principal;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;

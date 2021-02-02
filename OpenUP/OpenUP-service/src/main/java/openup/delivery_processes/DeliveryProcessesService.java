@@ -6,11 +6,11 @@
 package openup.delivery_processes;
 
 import epf.schema.EPF;
-import epf.schema.OpenUP;
-import epf.schema.openup.DeliveryProcess;
-import epf.schema.openup.Iteration;
-import epf.schema.openup.Phase;
-import epf.schema.openup.Role;
+import openup.schema.OpenUP;
+import openup.schema.DeliveryProcess;
+import openup.schema.Iteration;
+import openup.schema.Phase;
+import openup.schema.Role;
 import java.security.Principal;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;

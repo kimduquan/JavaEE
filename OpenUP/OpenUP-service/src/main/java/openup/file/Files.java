@@ -22,7 +22,7 @@ import javax.ws.rs.core.StreamingOutput;
  * @author FOXCONN
  */
 @Path("file")
-@RolesAllowed(epf.schema.openup.Role.ANY_ROLE)
+@RolesAllowed(openup.schema.Role.ANY_ROLE)
 @RequestScoped
 public class Files implements openup.client.file.Files {
     

@@ -1,31 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <groupId>openup</groupId>
         <artifactId>OpenUP-parent</artifactId>
         <version>1.0.0</version>
     </parent>
-
     <artifactId>OpenUP-test</artifactId>
-    <name>Open Unified Process Application Iteration Tests</name>
-
+    <name>Open Unified Process Iteration Tests</name>
     <!-- Define variables that will be substituted in server.xml and
          passed to the integration tests -->
     <properties>
         <httpPort>9080</httpPort>
         <httpsPort>9443</httpsPort>
-		
         <!-- Jaeger configuration -->
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
-        
         <liberty.env.openup.url>https://localhost:9443/service/</liberty.env.openup.url>
         <liberty.env.openup.gateway.url>https://localhost:9443/gateway/</liberty.env.openup.gateway.url>
     </properties>
-
     <dependencies>
         <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
         <dependency>
@@ -60,7 +53,7 @@
         </dependency>
         <dependency>
             <groupId>openup</groupId>
-            <artifactId>EPF-schema</artifactId>
+            <artifactId>OpenUP-schema</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>
@@ -97,7 +90,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
     <build>
         <!-- Enable resource filtering so that variables in server.xml get substituted -->
         <testResources>
@@ -106,7 +98,6 @@
                 <filtering>true</filtering>
             </testResource>
         </testResources>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -215,5 +206,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

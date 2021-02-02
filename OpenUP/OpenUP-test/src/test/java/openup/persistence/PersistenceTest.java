@@ -6,8 +6,8 @@
 package openup.persistence;
 
 import epf.schema.EPF;
-import epf.schema.OpenUP;
-import epf.schema.openup.DeliveryProcess;
+import openup.schema.OpenUP;
+import openup.schema.DeliveryProcess;
 import java.util.ArrayList;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;

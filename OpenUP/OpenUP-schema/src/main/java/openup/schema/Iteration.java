@@ -3,14 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.schema.openup;
+package openup.schema;
 
-import epf.schema.OpenUP;
+import openup.schema.OpenUP;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -21,25 +22,29 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  *
  * @author FOXCONN
  */
-@Type(OpenUP.DeliveryProcess)
-@Schema(name = OpenUP.DeliveryProcess, title = "Delivery Process")
-@Entity(name = OpenUP.DeliveryProcess)
-@Table(schema = OpenUP.Schema, name = "OPENUP_DELIVERY_PROCESS")
-public class DeliveryProcess {
+@Type(OpenUP.Iteration)
+@Schema(name = OpenUP.Iteration, title = "Iteration")
+@Entity(name = OpenUP.Iteration)
+@Table(schema = OpenUP.Schema, name = "OPENUP_ITERATION", indexes = {@Index(columnList = "PARENT_ACTIVITIES")})
+public class Iteration {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @ManyToOne
-    @JoinColumn(name = "DELIVERY_PROCESS")
-    private epf.schema.delivery_processes.DeliveryProcess deliveryProcess;
+    @JoinColumn(name = "ITERATION")
+    private epf.schema.delivery_processes.Iteration iteration;
     
-    @Column(name = "NAME", unique = true, nullable = false)
+    @Column(name = "NAME", nullable = false)
     private String name;
     
     @Column(name = "SUMMARY")
     private String summary;
+    
+    @ManyToOne
+    @JoinColumn(name = "PARENT_ACTIVITIES")
+    private Phase parentActivities;
 
     public Long getId() {
         return id;
@@ -49,12 +54,12 @@ public class DeliveryProcess {
         this.id = id;
     }
 
-    public epf.schema.delivery_processes.DeliveryProcess getDeliveryProcess() {
-        return deliveryProcess;
+    public epf.schema.delivery_processes.Iteration getIteration() {
+        return iteration;
     }
 
-    public void setDeliveryProcess(epf.schema.delivery_processes.DeliveryProcess deliveryProcess) {
-        this.deliveryProcess = deliveryProcess;
+    public void setIteration(epf.schema.delivery_processes.Iteration iteration) {
+        this.iteration = iteration;
     }
 
     public String getName() {
@@ -71,5 +76,13 @@ public class DeliveryProcess {
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public Phase getParentActivities() {
+        return parentActivities;
+    }
+
+    public void setParentActivities(Phase parentActivities) {
+        this.parentActivities = parentActivities;
     }
 }

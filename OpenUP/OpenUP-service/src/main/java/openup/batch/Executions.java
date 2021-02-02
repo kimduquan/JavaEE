@@ -5,7 +5,7 @@
  */
 package openup.batch;
 
-import epf.schema.openup.Role;
+import openup.schema.Role;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;

@@ -6,7 +6,7 @@
 package openup.security;
 
 import epf.schema.EPF;
-import epf.schema.OpenUP;
+import openup.schema.OpenUP;
 import openup.client.security.Token;
 import epf.schema.roles.Role;
 import java.io.Serializable;
@@ -50,7 +50,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
  * @author FOXCONN
  */
 @Path("security")
-@RolesAllowed(epf.schema.openup.Role.ANY_ROLE)
+@RolesAllowed(openup.schema.Role.ANY_ROLE)
 @RequestScoped
 public class Security implements openup.client.security.Security, Serializable {
     
