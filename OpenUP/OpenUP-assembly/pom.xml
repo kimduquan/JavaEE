@@ -23,6 +23,11 @@
             <artifactId>h2</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.eclipse.persistence/org.eclipse.persistence.core -->
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>org.eclipse.persistence.core</artifactId>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/io.jaegertracing/jaeger-client -->
         <dependency>
             <groupId>io.jaegertracing</groupId>
@@ -45,7 +50,12 @@
         </dependency>
         <dependency>
             <groupId>openup</groupId>
-            <artifactId>EPF-schema</artifactId>
+            <artifactId>OpenUP-schema</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>OpenUP-client</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>
@@ -73,36 +83,6 @@
                 <groupId>io.openliberty.tools</groupId>
                 <artifactId>liberty-maven-plugin</artifactId>
                 <extensions>true</extensions>
-                    <executions>
-                        <execution>
-                            <id>copy-openup-dependency</id>
-                            <phase>pre-integration-test</phase>
-                            <goals>
-                                <goal>deploy</goal>
-                            </goals>
-                            <configuration>
-                                <copyDependencies>
-                                    <location>${project.build.directory}/shared/resources/openup/</location>
-                                    <dependency>
-                                        <groupId>com.h2database</groupId>
-                                        <artifactId>h2</artifactId>
-                                    </dependency>
-                                    <dependency>
-                                        <groupId>io.jaegertracing</groupId>
-                                        <artifactId>jaeger-client</artifactId>
-                                    </dependency>
-                                    <dependency>
-                                        <groupId>com.hazelcast</groupId>
-                                        <artifactId>hazelcast-all</artifactId>
-                                    </dependency>
-                                    <dependency>
-                                        <groupId>javax.cache</groupId>
-                                        <artifactId>cache-api</artifactId>
-                                    </dependency>
-                                </copyDependencies>
-                            </configuration>
-                    </execution>
-		</executions>
                 <configuration>
                     <installDirectory>${liberty.install.dir}</installDirectory>
                     <userDirectory>${project.build.directory}</userDirectory>
@@ -112,6 +92,25 @@
                     <!-- Drop application into apps/ directory -->
                     <appsDirectory>apps</appsDirectory>
                     <deployPackages>dependencies</deployPackages>
+					<copyDependencies>
+						<location>${project.build.directory}/shared/resources/openup/</location>
+						<dependency>
+							<groupId>com.h2database</groupId>
+							<artifactId>h2</artifactId>
+						</dependency>
+						<dependency>
+							<groupId>io.jaegertracing</groupId>
+							<artifactId>jaeger-client</artifactId>
+						</dependency>
+						<dependency>
+							<groupId>com.hazelcast</groupId>
+							<artifactId>hazelcast-all</artifactId>
+						</dependency>
+						<dependency>
+							<groupId>javax.cache</groupId>
+							<artifactId>cache-api</artifactId>
+						</dependency>
+					</copyDependencies>
                 </configuration>
             </plugin>
         </plugins>
