@@ -146,35 +146,6 @@
                             <appsDirectory>apps</appsDirectory>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>copy-openup-dependency</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>deploy</goal>
-                        </goals>
-                        <configuration>
-                            <copyDependencies>
-                                <location>${project.build.directory}/shared/resources/openup/</location>
-                                <dependency>
-                                    <groupId>com.h2database</groupId>
-                                    <artifactId>h2</artifactId>
-                                </dependency>
-                                <dependency>
-                                    <groupId>io.jaegertracing</groupId>
-                                    <artifactId>jaeger-client</artifactId>
-                                </dependency>
-                                <dependency>
-                                    <groupId>com.hazelcast</groupId>
-                                    <artifactId>hazelcast-all</artifactId>
-                                </dependency>
-                                <dependency>
-                                    <groupId>javax.cache</groupId>
-                                    <artifactId>cache-api</artifactId>
-                                </dependency>
-                            </copyDependencies>
-                            <appsDirectory>apps</appsDirectory>
-                        </configuration>
-                    </execution>
                     <!-- Start the server -->
                     <execution>
                         <id>start-liberty-server</id>
@@ -202,6 +173,25 @@
                     <userDirectory>${project.build.directory}</userDirectory>
                     <serverName>test</serverName>
                     <deployPackages>dependencies</deployPackages>
+					<copyDependencies>
+						<location>${project.build.directory}/shared/resources/openup/</location>
+						<dependency>
+							<groupId>com.h2database</groupId>
+							<artifactId>h2</artifactId>
+						</dependency>
+						<dependency>
+							<groupId>io.jaegertracing</groupId>
+							<artifactId>jaeger-client</artifactId>
+						</dependency>
+						<dependency>
+							<groupId>com.hazelcast</groupId>
+							<artifactId>hazelcast-all</artifactId>
+						</dependency>
+						<dependency>
+							<groupId>javax.cache</groupId>
+							<artifactId>cache-api</artifactId>
+						</dependency>
+					</copyDependencies>
                 </configuration>
             </plugin>
         </plugins>

@@ -223,18 +223,7 @@
                 <plugin>
                     <groupId>io.openliberty.tools</groupId>
                     <artifactId>liberty-maven-plugin</artifactId>
-                    <version>3.3.3</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.2.0</version>
-                    <configuration>
-                        <archive>
-                            <!-- Do not include META-INF/maven to avoid long file problems on windows -->
-                            <addMavenDescriptor>false</addMavenDescriptor>
-                        </archive>
-                    </configuration>
+                    <version>3.3.4</version>
                 </plugin>
             </plugins>
         </pluginManagement>
