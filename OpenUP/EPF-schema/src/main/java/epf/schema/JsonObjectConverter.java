@@ -8,7 +8,7 @@ import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 @Converter(autoApply = true)
-public class JsonObjectAttributeConverter implements AttributeConverter<JsonObject, String> {
+public class JsonObjectConverter implements AttributeConverter<JsonObject, String> {
 
 	@Override
 	public String convertToDatabaseColumn(JsonObject attribute) {

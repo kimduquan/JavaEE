@@ -9,16 +9,13 @@ import java.net.URL;
 import java.time.Duration;
 import java.time.Instant;
 import javax.ws.rs.BadRequestException;
-import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.NotAllowedException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.NotFoundException;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response.Status;
 import openup.TestUtil;
 import openup.client.security.PasswordHash;
 import static openup.client.security.Security.AUDIENCE_URL_FORMAT;
@@ -99,13 +96,12 @@ public class SecurityTest {
     
     @Test
     public void testLoginOKAfterLoginInvalidPassword() throws Exception{
-        WebApplicationException ex = Assert.assertThrows(
-                WebApplicationException.class, 
+        Assert.assertThrows(
+        		NotAuthorizedException.class, 
                 () -> {
                     login("OpenUP", "any_role1", "Invalid", TestUtil.url(), true);
                 }
         );
-        Assert.assertNotNull("WebApplicationException", ex);
         String token = login("OpenUP", "any_role1", "any_role", TestUtil.url(), true);
         Assert.assertNotNull("Token", token);
         Assert.assertNotEquals("Token", "", token);
@@ -114,6 +110,7 @@ public class SecurityTest {
         logOut("OpenUP");
     }
     
+    //@Ignore
     @Test(expected = NotAllowedException.class)
     public void testLoginEmptyUnit() throws Exception{
         login("", "any_role1", "any_role", TestUtil.url(), false);
@@ -290,23 +287,18 @@ public class SecurityTest {
         authenticate();
     }
     
+    //@Ignore
     @Test
     public void testLogoutEmptyUnit() throws Exception{
         String token = login("OpenUP", "any_role1", "any_role", TestUtil.url(), true);
         TestUtil.header().setToken(token);
         
-        ClientErrorException ex = Assert.assertThrows(
-                ClientErrorException.class, 
+       Assert.assertThrows(
+        		NotAllowedException.class, 
                 () -> {
                     logOut("");
                 }
         );
-        Assert.assertEquals(
-                "Status",
-                Status.METHOD_NOT_ALLOWED.getStatusCode(), 
-                ex.getResponse().getStatus()
-        );
-        
         logOut("OpenUP");
     }
     
@@ -315,16 +307,11 @@ public class SecurityTest {
         String token = login("OpenUP", "any_role1", "any_role", TestUtil.url(), true);
         TestUtil.header().setToken(token);
         
-        ClientErrorException ex = Assert.assertThrows(
-                ClientErrorException.class, 
+        Assert.assertThrows(
+        		BadRequestException.class, 
                 () -> {
                     logOut("    ");
                 }
-        );
-        Assert.assertEquals(
-                "Status",
-                Status.BAD_REQUEST.getStatusCode(), 
-                ex.getResponse().getStatus()
         );
         
         logOut("OpenUP");
@@ -335,16 +322,11 @@ public class SecurityTest {
         String token = login("OpenUP", "any_role1", "any_role", TestUtil.url(), true);
         TestUtil.header().setToken(token);
         
-        WebApplicationException ex = Assert.assertThrows(
-                WebApplicationException.class, 
+        Assert.assertThrows(
+        		BadRequestException.class, 
                 () -> {
                     logOut("Invalid");
                 }
-        );
-        Assert.assertEquals(
-                "Status",
-                Status.BAD_REQUEST.getStatusCode(), 
-                ex.getResponse().getStatus()
         );
         
         logOut("OpenUP");
