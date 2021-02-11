@@ -18,10 +18,12 @@ import javax.jms.JMSContext;
 @SessionScoped
 public class Session implements Serializable {
     
-    @Inject
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Inject
     @JMSConnectionFactory("jms/batch/connectionFactory")
     private JMSContext context;
-    
-    @Inject
-    private Application application;
 }

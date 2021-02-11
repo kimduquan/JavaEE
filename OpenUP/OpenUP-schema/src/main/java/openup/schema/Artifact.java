@@ -5,8 +5,8 @@
  */
 package openup.schema;
 
-import openup.schema.OpenUP;
-import epf.schema.work_products.Domain;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
@@ -37,15 +39,25 @@ public class Artifact {
     @JoinColumn(name = "ARTIFACT")
     private epf.schema.work_products.Artifact artifact;
     
+    @ManyToOne
+    @JoinColumn(name = "RESPONSIBLE")
+    private Role responsible;
+    
+    @ManyToMany
+    @JoinTable(
+    		name = "OPENUP_ROLE_MODIFIES",
+    		schema = OpenUP.Schema,
+    		joinColumns = {@JoinColumn(name = "ID")},
+    		inverseJoinColumns = {@JoinColumn(name = "NAME")},
+    		indexes = {@Index(columnList = "NAME")}
+    		)
+    private List<Role> modifiedBy;
+    
     @Column(name = "NAME", nullable = false)
     private String name;
     
     @Column(name = "SUMMARY")
     private String summary;
-    
-    @ManyToOne
-    @JoinColumn(name = "DOMAINS")
-    private Domain domains;
 
     public Long getId() {
         return id;
@@ -77,13 +89,5 @@ public class Artifact {
 
     public void setSummary(String summary) {
         this.summary = summary;
-    }
-
-    public Domain getDomains() {
-        return domains;
-    }
-
-    public void setDomains(Domain domains) {
-        this.domains = domains;
     }
 }

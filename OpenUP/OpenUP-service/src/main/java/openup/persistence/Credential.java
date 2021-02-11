@@ -29,6 +29,10 @@ public class Credential implements AutoCloseable {
     public EntityManagerFactory getFactory(){
         return factory;
     }
+    
+    public EntityManager getDefaultManager() {
+    	return defaultManager;
+    }
 
     @Override
     public void close() throws Exception {

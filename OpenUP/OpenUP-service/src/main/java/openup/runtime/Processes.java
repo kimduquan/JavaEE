@@ -33,7 +33,12 @@ import org.eclipse.microprofile.context.ManagedExecutor;
 @SessionScoped
 public class Processes implements openup.client.runtime.Processes, Serializable {
     
-    private Map<Long, ProcessTask> processes;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Map<Long, ProcessTask> processes;
     
     @Inject
     private ManagedExecutor executor;

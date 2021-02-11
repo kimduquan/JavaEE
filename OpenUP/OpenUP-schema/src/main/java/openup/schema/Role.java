@@ -5,14 +5,14 @@
  */
 package openup.schema;
 
-import openup.schema.OpenUP;
-import epf.schema.roles.RoleSet;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -24,54 +24,48 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Type(OpenUP.Role)
 @Schema(name = OpenUP.Role, title = "Role")
 @Entity(name = OpenUP.Role)
-@Table(schema = OpenUP.Schema, name = "OPENUP_ROLE", indexes = {@Index(columnList = "ROLE_SETS")})
+@Table(schema = OpenUP.Schema, name = "OPENUP_ROLE", indexes = {@Index(columnList = "NAME")})
 public class Role {
-    
-    public static final String ANY_ROLE = "ANY_ROLE";
+
+	public static final String ANY_ROLE = "ANY_ROLE";
 
     @Id
     private String name;
     
-    @ManyToOne
-    @JoinColumn(name = "ROLE")
-    private epf.schema.roles.Role role;
+    @ManyToMany
+    @JoinTable(
+    		name = "OPENUP_ROLES",
+    		schema = OpenUP.Schema,
+    		joinColumns = {@JoinColumn(name = "NAME")},
+    		inverseJoinColumns = {@JoinColumn(name = "ROLE")},
+    		indexes = {@Index(columnList = "NAME")}
+    		)
+    private List<epf.schema.roles.Role> roles;
     
     @Column(name = "SUMMARY")
     private String summary;
     
-    @ManyToOne
-    @JoinColumn(name = "ROLE_SETS")
-    private RoleSet roleSets;
-
     public String getName() {
-        return name;
-    }
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public epf.schema.roles.Role getRole() {
-        return role;
-    }
+	public List<epf.schema.roles.Role> getRoles() {
+		return roles;
+	}
 
-    public void setRole(epf.schema.roles.Role role) {
-        this.role = role;
-    }
+	public void setRoles(List<epf.schema.roles.Role> roles) {
+		this.roles = roles;
+	}
 
-    public String getSummary() {
-        return summary;
-    }
+	public String getSummary() {
+		return summary;
+	}
 
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
-
-    public RoleSet getRoleSets() {
-        return roleSets;
-    }
-
-    public void setRoleSets(RoleSet roleSets) {
-        this.roleSets = roleSets;
-    }
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
 }

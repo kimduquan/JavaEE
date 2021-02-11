@@ -14,14 +14,11 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
@@ -35,14 +32,13 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
-import epf.schema.EPF;
-import epf.schema.roles.Role;
 import openup.client.config.ConfigNames;
 import openup.client.security.Token;
 import openup.persistence.Application;
 import openup.persistence.Credential;
 import openup.persistence.Session;
 import openup.schema.OpenUP;
+import openup.schema.Role;
 
 /**
  *
@@ -78,9 +74,6 @@ public class Security implements openup.client.security.Security, Serializable {
     
     @Context 
     private SecurityContext context;
-    
-    @PersistenceContext(name = EPF.Schema, unitName = EPF.Schema)
-    private EntityManager defaultManager;
     
     @PermitAll
     @Override
@@ -118,20 +111,19 @@ public class Security implements openup.client.security.Security, Serializable {
             URL url) throws Exception{
         
         long time = System.currentTimeMillis() / 1000;
-        persistence.putContext(unit)
+        Credential credential = persistence.putContext(unit)
                 .putCredential(
                         username, 
                         unit, 
                         password_hash
-                )
-                .putSession(time);
+                );
+       credential.putSession(time);
         
         Token jwt = buildToken(username, time);
         
         buildAudience(jwt, url.toURI());
         
-        Set<String> roles = getUserRoles(username, defaultManager);
-        jwt.setGroups(roles);
+        buildGroups(jwt, username, credential.getDefaultManager());
         
         String token = generator.generate(jwt);
         jwt.setRawToken(token);
@@ -205,12 +197,15 @@ public class Security implements openup.client.security.Security, Serializable {
         return jwt;
     }
     
-    Set<String> getUserRoles(String userName, EntityManager manager){
-        Query query = manager.createNamedQuery(Role.GET_USER_ROLES);
-        query.setParameter(1, userName.toUpperCase());
-        query.setParameter(2, userName.toUpperCase());
-        Stream<?> result = query.getResultStream();
-        return result.map(Object::toString).collect(Collectors.toSet());
+    void buildGroups(Token token, String userName, EntityManager manager) {
+    	Role user = manager.find(Role.class, userName);
+    	if(user != null) {
+    		token.setGroups(
+    				user.getRoles()
+    				.stream()
+    				.map(role -> role.getName())
+    				.collect(Collectors.toSet()));
+    	}
     }
     
     Token buildToken(JsonWebToken jwt){

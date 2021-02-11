@@ -67,7 +67,7 @@ public class Entities implements openup.client.persistence.Entities {
             String id,
             InputStream body
             ) throws Exception{
-        Entity entity = findEntity(unit, name);
+        Entity<Object> entity = findEntity(unit, name);
         if(entity.getType() != null){
             try(Jsonb json = JsonbBuilder.create()){
                 Object obj = json.fromJson(body, entity.getType().getJavaType());
@@ -79,11 +79,11 @@ public class Entities implements openup.client.persistence.Entities {
         }
     }
     
-    Object find(
+    <T> T find(
             String unit,
             String name,
             String id) throws Exception{
-        Entity entity = findEntityObject(unit, name, id);
+        Entity<T> entity = findEntityObject(unit, name, id);
         return entity.getObject();
     }
     
@@ -109,24 +109,24 @@ public class Entities implements openup.client.persistence.Entities {
             String name,
             String id
             ) throws Exception{
-        Entity entity = findEntityObject(unit, name, id);
+        Entity<Object> entity = findEntityObject(unit, name, id);
         if(entity.getObject() != null){
             cache.remove(unit, context.getUserPrincipal(), name, id, entity.getObject());
         }
     }
     
-    Entity findEntity(String unit, String name) throws Exception{
-        Entity entity = cache.findEntity(unit, context.getUserPrincipal(), name);
+    <T> Entity<T> findEntity(String unit, String name) throws Exception{
+        Entity<T> entity = cache.findEntity(unit, context.getUserPrincipal(), name);
         if(entity.getType() == null){
             throw new NotFoundException();
         }
         return entity;
     }
     
-    Entity findEntityObject(String unit, String name, String id) throws Exception{
-        Entity entity = findEntity(unit, name);
+    <T> Entity<T> findEntityObject(String unit, String name, String id) throws Exception{
+        Entity<T> entity = findEntity(unit, name);
         if(entity.getType() != null){
-            Object object = cache.find(unit, context.getUserPrincipal(), name, entity.getType().getJavaType(), id);
+            T object = cache.find(unit, context.getUserPrincipal(), name, entity.getType().getJavaType(), id);
             if(object != null){
                 entity.setObject(object);
             }

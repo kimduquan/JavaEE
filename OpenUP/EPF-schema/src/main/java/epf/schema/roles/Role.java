@@ -15,7 +15,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.json.JsonObject;
 import javax.persistence.Embedded;
-import javax.persistence.NamedNativeQuery;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.schema.EPF;
@@ -27,39 +26,12 @@ import epf.schema.EPF;
 @Type(EPF.Role)
 @Schema(name = EPF.Role, title = "Role")
 @Entity(name = EPF.Role)
-@Table(schema = EPF.Schema, name = "_ROLE")
+@Table(schema = EPF.Schema, name = "EPF_ROLE")
 @JsonbPropertyOrder({
     "name",
     "additionallyPerforms",
     "modifies"
 })
-@NamedNativeQuery(
-        name = Role.GET_USER_ROLES, 
-        query = "SELECT GRANTEDROLE\n" +
-                "FROM INFORMATION_SCHEMA.RIGHTS\n" +
-                "WHERE GRANTEETYPE = 'ROLE'\n" +
-                "    AND GRANTEDROLE <> ''\n" +
-                "    AND GRANTEE\n" +
-                "        IN  (\n" +
-                "            SELECT GRANTEDROLE \n" +
-                "            FROM INFORMATION_SCHEMA.RIGHTS \n" +
-                "            WHERE GRANTEETYPE = 'USER'\n" +
-                "                AND GRANTEE = ?\n" +
-                "                AND GRANTEDROLE <> ''\n" +
-                "                )\n" +
-                "UNION\n" +
-                "    (\n" +
-                "    SELECT GRANTEDROLE \n" +
-                "    FROM INFORMATION_SCHEMA.RIGHTS \n" +
-                "    WHERE GRANTEETYPE = 'USER'\n" +
-                "        AND GRANTEE = ?\n" +
-                "        AND GRANTEDROLE <> ''\n" +
-                ");"
-)
-@NamedNativeQuery(
-        name = Role.IS_ADMIN,
-        query = "SELECT ADMIN FROM INFORMATION_SCHEMA.USERS WHERE NAME = ? AND ADMIN = ?;"
-)
 public class Role {
 
     @Column(name = "NAME")
@@ -139,8 +111,4 @@ public class Role {
     public void setMoreInformation(MoreInformation moreInformation) {
         this.moreInformation = moreInformation;
     }
-    
-    public static final String GET_USER_ROLES = "EPF_Role.GetUserRoles";
-    public static final String IS_ADMIN = "EPF_Role.IsAdmin";
-    public static final String ADMIN = "ADMIN";
 }

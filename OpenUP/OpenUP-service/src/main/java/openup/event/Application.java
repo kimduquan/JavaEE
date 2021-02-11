@@ -5,7 +5,6 @@
  */
 package openup.event;
 
-import java.util.Map;
 import javax.enterprise.context.ApplicationScoped;
 
 /**
@@ -14,6 +13,4 @@ import javax.enterprise.context.ApplicationScoped;
  */
 @ApplicationScoped
 public class Application {
-    
-    private Map<String, Broadcaster> broadcasters;
 }

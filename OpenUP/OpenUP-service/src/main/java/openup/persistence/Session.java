@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.persistence.EntityManagerFactory;
 
-import org.eclipse.microprofile.jwt.JsonWebToken;
-
 /**
  *
  * @author FOXCONN

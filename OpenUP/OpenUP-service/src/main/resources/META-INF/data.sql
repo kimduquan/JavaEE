@@ -95,72 +95,72 @@ INSERT INTO EPF.ROLE_SET (NAME) VALUES ('Environment');
 /*ROLE_SET END*/
 
 /*_ROLE BEGIN*/
-INSERT INTO EPF._ROLE (NAME) VALUES ('Analyst');
-INSERT INTO EPF._ROLE (NAME) VALUES ('Any Role');
-INSERT INTO EPF._ROLE (NAME) VALUES ('Architect');
-INSERT INTO EPF._ROLE (NAME) VALUES ('Course Developer');
-INSERT INTO EPF._ROLE (NAME) VALUES ('Deployment Engineer');
-INSERT INTO EPF._ROLE (NAME) VALUES ('Deployment Manager');
-INSERT INTO EPF._ROLE (NAME) VALUES ('Developer');
-INSERT INTO EPF._ROLE (NAME) VALUES ('Process Engineer');
-INSERT INTO EPF._ROLE (NAME) VALUES ('Product Owner');
-INSERT INTO EPF._ROLE (NAME) VALUES ('Project Manager');
-INSERT INTO EPF._ROLE (NAME) VALUES ('Stakeholder');
-INSERT INTO EPF._ROLE (NAME) VALUES ('Technical Writer');
-INSERT INTO EPF._ROLE (NAME) VALUES ('Tester');
-INSERT INTO EPF._ROLE (NAME) VALUES ('Tool Specialist');
-INSERT INTO EPF._ROLE (NAME) VALUES ('Trainer');
+INSERT INTO EPF.EPF_ROLE (NAME) VALUES ('Analyst');
+INSERT INTO EPF.EPF_ROLE (NAME) VALUES ('Any_Role');
+INSERT INTO EPF.EPF_ROLE (NAME) VALUES ('Architect');
+INSERT INTO EPF.EPF_ROLE (NAME) VALUES ('Course_Developer');
+INSERT INTO EPF.EPF_ROLE (NAME) VALUES ('Deployment_Engineer');
+INSERT INTO EPF.EPF_ROLE (NAME) VALUES ('Deployment_Manager');
+INSERT INTO EPF.EPF_ROLE (NAME) VALUES ('Developer');
+INSERT INTO EPF.EPF_ROLE (NAME) VALUES ('Process_Engineer');
+INSERT INTO EPF.EPF_ROLE (NAME) VALUES ('Product_Owner');
+INSERT INTO EPF.EPF_ROLE (NAME) VALUES ('Project_Manager');
+INSERT INTO EPF.EPF_ROLE (NAME) VALUES ('Stakeholder');
+INSERT INTO EPF.EPF_ROLE (NAME) VALUES ('Technical_Writer');
+INSERT INTO EPF.EPF_ROLE (NAME) VALUES ('Tester');
+INSERT INTO EPF.EPF_ROLE (NAME) VALUES ('Tool_Specialist');
+INSERT INTO EPF.EPF_ROLE (NAME) VALUES ('Trainer');
 /*_ROLE END*/
 
 /*ROLES BEGIN*/
 INSERT INTO EPF.ROLES (ROLE_SET, ROLE) VALUES ('Basic Roles', 'Analyst');
-INSERT INTO EPF.ROLES (ROLE_SET, ROLE) VALUES ('Basic Roles', 'Any Role');
+INSERT INTO EPF.ROLES (ROLE_SET, ROLE) VALUES ('Basic Roles', 'Any_Role');
 INSERT INTO EPF.ROLES (ROLE_SET, ROLE) VALUES ('Basic Roles', 'Architect');
 INSERT INTO EPF.ROLES (ROLE_SET, ROLE) VALUES ('Basic Roles', 'Developer');
-INSERT INTO EPF.ROLES (ROLE_SET, ROLE) VALUES ('Basic Roles', 'Project Manager');
+INSERT INTO EPF.ROLES (ROLE_SET, ROLE) VALUES ('Basic Roles', 'Project_Manager');
 INSERT INTO EPF.ROLES (ROLE_SET, ROLE) VALUES ('Basic Roles', 'Stakeholder');
 INSERT INTO EPF.ROLES (ROLE_SET, ROLE) VALUES ('Basic Roles', 'Tester');
-INSERT INTO EPF.ROLES (ROLE_SET, ROLE) VALUES ('Deployment', 'Course Developer');
-INSERT INTO EPF.ROLES (ROLE_SET, ROLE) VALUES ('Deployment', 'Deployment Engineer');
-INSERT INTO EPF.ROLES (ROLE_SET, ROLE) VALUES ('Deployment', 'Deployment Manager');
-INSERT INTO EPF.ROLES (ROLE_SET, ROLE) VALUES ('Deployment', 'Product Owner');
-INSERT INTO EPF.ROLES (ROLE_SET, ROLE) VALUES ('Deployment', 'Technical Writer');
+INSERT INTO EPF.ROLES (ROLE_SET, ROLE) VALUES ('Deployment', 'Course_Developer');
+INSERT INTO EPF.ROLES (ROLE_SET, ROLE) VALUES ('Deployment', 'Deployment_Engineer');
+INSERT INTO EPF.ROLES (ROLE_SET, ROLE) VALUES ('Deployment', 'Deployment_Manager');
+INSERT INTO EPF.ROLES (ROLE_SET, ROLE) VALUES ('Deployment', 'Product_Owner');
+INSERT INTO EPF.ROLES (ROLE_SET, ROLE) VALUES ('Deployment', 'Technical_Writer');
 INSERT INTO EPF.ROLES (ROLE_SET, ROLE) VALUES ('Deployment', 'Trainer');
-INSERT INTO EPF.ROLES (ROLE_SET, ROLE) VALUES ('Environment', 'Process Engineer');
-INSERT INTO EPF.ROLES (ROLE_SET, ROLE) VALUES ('Environment', 'Tool Specialist');
+INSERT INTO EPF.ROLES (ROLE_SET, ROLE) VALUES ('Environment', 'Process_Engineer');
+INSERT INTO EPF.ROLES (ROLE_SET, ROLE) VALUES ('Environment', 'Tool_Specialist');
 /*ROLES END*/
 
 /*_DOMAIN BEGIN*/
-INSERT INTO EPF._DOMAIN (NAME) VALUES ('Architecture');
-INSERT INTO EPF._DOMAIN (NAME) VALUES ('Deployment');
-INSERT INTO EPF._DOMAIN (NAME) VALUES ('Development');
-INSERT INTO EPF._DOMAIN (NAME) VALUES ('Environment');
-INSERT INTO EPF._DOMAIN (NAME) VALUES ('Project Management');
-INSERT INTO EPF._DOMAIN (NAME) VALUES ('Requirements');
-INSERT INTO EPF._DOMAIN (NAME) VALUES ('Test');
+INSERT INTO EPF.EPF_DOMAIN (NAME) VALUES ('Architecture');
+INSERT INTO EPF.EPF_DOMAIN (NAME) VALUES ('Deployment');
+INSERT INTO EPF.EPF_DOMAIN (NAME) VALUES ('Development');
+INSERT INTO EPF.EPF_DOMAIN (NAME) VALUES ('Environment');
+INSERT INTO EPF.EPF_DOMAIN (NAME) VALUES ('Project Management');
+INSERT INTO EPF.EPF_DOMAIN (NAME) VALUES ('Requirements');
+INSERT INTO EPF.EPF_DOMAIN (NAME) VALUES ('Test');
 /*_DOMAIN END*/
 
 /*ARTIFACT BEGIN*/
 INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Architecture Notebook', 'Architect');
-INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Product Documentation', 'Technical Writer');
-INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Support Documentation', 'Technical Writer');
-INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('User Documentation', 'Technical Writer');
-INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Training Materials', 'Course Developer');
-INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Backout Plan', 'Deployment Engineer');
-INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Deployment Plan', 'Deployment Engineer');
+INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Product Documentation', 'Technical_Writer');
+INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Support Documentation', 'Technical_Writer');
+INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('User Documentation', 'Technical_Writer');
+INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Training Materials', 'Course_Developer');
+INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Backout Plan', 'Deployment_Engineer');
+INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Deployment Plan', 'Deployment_Engineer');
 INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Infrastructure', NULL);
-INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Release Communications', 'Deployment Engineer');
-INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Release Controls', 'Deployment Manager');
+INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Release Communications', 'Deployment_Engineer');
+INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Release Controls', 'Deployment_Manager');
 INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Implementation', 'Developer');
 INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Build', 'Developer');
 INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Developer Test', 'Developer');
 INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Design', 'Developer');
-INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Project Defined Process', 'Process Engineer');
-INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Tools', 'Tool Specialist');
-INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Risk List', 'Project Manager');
-INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Work Items List', 'Project Manager');
-INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Iteration Plan', 'Project Manager');
-INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Project Plan', 'Project Manager');
+INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Project Defined Process', 'Process_Engineer');
+INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Tools', 'Tool_Specialist');
+INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Risk List', 'Project_Manager');
+INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Work Items List', 'Project_Manager');
+INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Iteration Plan', 'Project_Manager');
+INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Project Plan', 'Project_Manager');
 INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Glossary', 'Analyst');
 INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Vision', 'Analyst');
 INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('System-Wide Requirements', 'Analyst');
@@ -169,7 +169,7 @@ INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Use Case', 'Analyst');
 INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Test Case', 'Tester');
 INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Test Script', 'Tester');
 INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Test Log', 'Tester');
-INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Release', 'Deployment Engineer');
+INSERT INTO EPF.ARTIFACT (NAME, RESPONSIBLE) VALUES ('Release', 'Deployment_Engineer');
 /*ARTIFACT END*/
 
 /*ARTIFACT BEGIN*/
@@ -233,36 +233,36 @@ INSERT INTO EPF.DISCIPLINE (NAME) VALUES ('Test');
 /*TASK BEGIN*/
 INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Refine the Architecture', 'Architect');
 INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Envision the Architecture', 'Architect');
-INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Develop Product Documentation', 'Technical Writer');
-INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Develop User Documentation', 'Technical Writer');
-INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Develop Support Documentation', 'Technical Writer');
+INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Develop Product Documentation', 'Technical_Writer');
+INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Develop User Documentation', 'Technical_Writer');
+INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Develop Support Documentation', 'Technical_Writer');
 INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Deliver end user Training', 'Trainer');
 INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Deliver Support Training', 'Trainer');
-INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Develop Training Materials', 'Course Developer');
-INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Deliver Release Communications', 'Deployment Engineer');
-INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Execute Backout Plan', 'Deployment Engineer');
-INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Execute Deployment Plan', 'Deployment Engineer');
+INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Develop Training Materials', 'Course_Developer');
+INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Deliver Release Communications', 'Deployment_Engineer');
+INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Execute Backout Plan', 'Deployment_Engineer');
+INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Execute Deployment Plan', 'Deployment_Engineer');
 INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Package the Release', 'Developer');
-INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Verify Successful Deployment', 'Deployment Engineer');
+INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Verify Successful Deployment', 'Deployment_Engineer');
 INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Develop Backout Plan', 'Developer');
-INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Develop Release Communications', 'Deployment Engineer');
-INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Install and Validate Infrastructure', 'Deployment Engineer');
-INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Plan Deployment', 'Deployment Engineer');
+INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Develop Release Communications', 'Deployment_Engineer');
+INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Install and Validate Infrastructure', 'Deployment_Engineer');
+INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Plan Deployment', 'Deployment_Engineer');
 INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Review and Conform to Release Controls', 'Developer');
 INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Implement Developer Tests', 'Developer');
 INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Implement Solution', 'Developer');
 INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Run Developer Tests', 'Developer');
 INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Integrate and Create Build', 'Developer');
 INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Design the Solution', 'Developer');
-INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Deploy the Process', 'Process Engineer');
-INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Tailor the Process', 'Process Engineer');
-INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Set Up Tools', 'Tool Specialist');
-INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Verify Tool Configuration and Installation', 'Tool Specialist');
-INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Assess Results', 'Project Manager');
-INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Manage Iteration', 'Project Manager');
-INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Plan Iteration', 'Project Manager');
-INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Plan Project', 'Project Manager');
-INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Request Change', 'Any Role');
+INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Deploy the Process', 'Process_Engineer');
+INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Tailor the Process', 'Process_Engineer');
+INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Set Up Tools', 'Tool_Specialist');
+INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Verify Tool Configuration and Installation', 'Tool_Specialist');
+INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Assess Results', 'Project_Manager');
+INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Manage Iteration', 'Project_Manager');
+INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Plan Iteration', 'Project_Manager');
+INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Plan Project', 'Project_Manager');
+INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Request Change', 'Any_Role');
 INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Identify and Outline Requirements', 'Analyst');
 INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Detail Use-Case Scenarios', 'Analyst');
 INSERT INTO EPF.TASK (NAME, PRIMARY_PERFORMER) VALUES ('Detail System-Wide Requirements', 'Analyst');
@@ -332,8 +332,8 @@ INSERT INTO EPF.ROLE_ADDITIONALLY_PERFORMS (ROLE, TASK) VALUES ('Architect', 'Id
 INSERT INTO EPF.ROLE_ADDITIONALLY_PERFORMS (ROLE, TASK) VALUES ('Architect', 'Manage Iteration');
 INSERT INTO EPF.ROLE_ADDITIONALLY_PERFORMS (ROLE, TASK) VALUES ('Architect', 'Plan Iteration');
 INSERT INTO EPF.ROLE_ADDITIONALLY_PERFORMS (ROLE, TASK) VALUES ('Architect', 'Plan Project');
-INSERT INTO EPF.ROLE_ADDITIONALLY_PERFORMS (ROLE, TASK) VALUES ('Deployment Engineer', 'Develop Backout Plan');
-INSERT INTO EPF.ROLE_ADDITIONALLY_PERFORMS (ROLE, TASK) VALUES ('Deployment Engineer', 'Package the Release');
+INSERT INTO EPF.ROLE_ADDITIONALLY_PERFORMS (ROLE, TASK) VALUES ('Deployment_Engineer', 'Develop Backout Plan');
+INSERT INTO EPF.ROLE_ADDITIONALLY_PERFORMS (ROLE, TASK) VALUES ('Deployment_Engineer', 'Package the Release');
 INSERT INTO EPF.ROLE_ADDITIONALLY_PERFORMS (ROLE, TASK) VALUES ('Developer', 'Assess Results');
 INSERT INTO EPF.ROLE_ADDITIONALLY_PERFORMS (ROLE, TASK) VALUES ('Developer', 'Create Test Cases');
 INSERT INTO EPF.ROLE_ADDITIONALLY_PERFORMS (ROLE, TASK) VALUES ('Developer', 'Deliver Release Communications');
@@ -351,11 +351,11 @@ INSERT INTO EPF.ROLE_ADDITIONALLY_PERFORMS (ROLE, TASK) VALUES ('Developer', 'Pl
 INSERT INTO EPF.ROLE_ADDITIONALLY_PERFORMS (ROLE, TASK) VALUES ('Developer', 'Plan Project');
 INSERT INTO EPF.ROLE_ADDITIONALLY_PERFORMS (ROLE, TASK) VALUES ('Developer', 'Refine the Architecture');
 INSERT INTO EPF.ROLE_ADDITIONALLY_PERFORMS (ROLE, TASK) VALUES ('Developer', 'Verify Successful Deployment');
-INSERT INTO EPF.ROLE_ADDITIONALLY_PERFORMS (ROLE, TASK) VALUES ('Product Owner', 'Develop Product Documentation');
-INSERT INTO EPF.ROLE_ADDITIONALLY_PERFORMS (ROLE, TASK) VALUES ('Product Owner', 'Verify Successful Deployment');
-INSERT INTO EPF.ROLE_ADDITIONALLY_PERFORMS (ROLE, TASK) VALUES ('Project Manager', 'Develop Technical Vision');
-INSERT INTO EPF.ROLE_ADDITIONALLY_PERFORMS (ROLE, TASK) VALUES ('Project Manager', 'Envision the Architecture');
-INSERT INTO EPF.ROLE_ADDITIONALLY_PERFORMS (ROLE, TASK) VALUES ('Project Manager', 'Refine the Architecture');
+INSERT INTO EPF.ROLE_ADDITIONALLY_PERFORMS (ROLE, TASK) VALUES ('Product_Owner', 'Develop Product Documentation');
+INSERT INTO EPF.ROLE_ADDITIONALLY_PERFORMS (ROLE, TASK) VALUES ('Product_Owner', 'Verify Successful Deployment');
+INSERT INTO EPF.ROLE_ADDITIONALLY_PERFORMS (ROLE, TASK) VALUES ('Project_Manager', 'Develop Technical Vision');
+INSERT INTO EPF.ROLE_ADDITIONALLY_PERFORMS (ROLE, TASK) VALUES ('Project_Manager', 'Envision the Architecture');
+INSERT INTO EPF.ROLE_ADDITIONALLY_PERFORMS (ROLE, TASK) VALUES ('Project_Manager', 'Refine the Architecture');
 INSERT INTO EPF.ROLE_ADDITIONALLY_PERFORMS (ROLE, TASK) VALUES ('Stakeholder', 'Assess Results');
 INSERT INTO EPF.ROLE_ADDITIONALLY_PERFORMS (ROLE, TASK) VALUES ('Stakeholder', 'Create Test Cases');
 INSERT INTO EPF.ROLE_ADDITIONALLY_PERFORMS (ROLE, TASK) VALUES ('Stakeholder', 'Design the Solution');
@@ -388,12 +388,12 @@ INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Analyst', 'Use Case');
 INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Analyst', 'Use-Case Model');
 INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Analyst', 'Vision');
 INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Analyst', 'Work Items List');
-INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Any Role', 'Work Items List');
+INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Any_Role', 'Work Items List');
 INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Architect', 'Architecture Notebook');
-INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Course Developer', 'Training Materials');
-INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Deployment Engineer', 'Deployment Plan');
-INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Deployment Engineer', 'Infrastructure');
-INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Deployment Engineer', 'Release Communications');
+INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Course_Developer', 'Training Materials');
+INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Deployment_Engineer', 'Deployment Plan');
+INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Deployment_Engineer', 'Infrastructure');
+INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Deployment_Engineer', 'Release Communications');
 INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Developer', 'Backout Plan');
 INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Developer', 'Build');
 INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Developer', 'Design');
@@ -402,18 +402,18 @@ INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Developer', 'Implementat
 INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Developer', 'Infrastructure');
 INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Developer', 'Release');
 INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Developer', 'Test Log');
-INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Process Engineer', 'Project Defined Process');
-INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Project Manager', 'Iteration Plan');
-INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Project Manager', 'Project Plan');
-INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Project Manager', 'Risk List');
-INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Project Manager', 'Work Items List');
-INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Technical Writer', 'Product Documentation');
-INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Technical Writer', 'Support Documentation');
-INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Technical Writer', 'User Documentation');
+INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Process_Engineer', 'Project Defined Process');
+INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Project_Manager', 'Iteration Plan');
+INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Project_Manager', 'Project Plan');
+INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Project_Manager', 'Risk List');
+INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Project_Manager', 'Work Items List');
+INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Technical_Writer', 'Product Documentation');
+INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Technical_Writer', 'Support Documentation');
+INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Technical_Writer', 'User Documentation');
 INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Tester', 'Test Case');
 INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Tester', 'Test Log');
 INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Tester', 'Test Script');
-INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Tool Specialist', 'Tools');
+INSERT INTO EPF.ROLE_MODIFIES (ROLE, ARTIFACT) VALUES ('Tool_Specialist', 'Tools');
 /*ROLE_MODIFIES END*/
 
 /*ARTIFACT_FULFILLED_SLOTS BEGIN*/
@@ -545,3 +545,54 @@ INSERT INTO EPF.TASK_OUTPUTS (TASK, ARTIFACT) VALUES ('Set Up Tools', 'Tools');
 INSERT INTO EPF.TASK_OUTPUTS (TASK, ARTIFACT) VALUES ('Tailor the Process', 'Project Defined Process');
 INSERT INTO EPF.TASK_OUTPUTS (TASK, ARTIFACT) VALUES ('Verify Tool Configuration and Installation', 'Tools');
 /*TASK_OUTPUTS END*/
+
+/*OPENUP SCHEMA BEGIN*/
+/*Basic Roles BEGIN*/
+INSERT INTO OPENUP.OPENUP_ROLE (NAME, SUMMARY) VALUES ('analyst1', NULL);
+INSERT INTO OPENUP.OPENUP_ROLE (NAME, SUMMARY) VALUES ('any_role1', NULL);
+INSERT INTO OPENUP.OPENUP_ROLE (NAME, SUMMARY) VALUES ('architect1', NULL);
+INSERT INTO OPENUP.OPENUP_ROLE (NAME, SUMMARY) VALUES ('developer1', NULL);
+INSERT INTO OPENUP.OPENUP_ROLE (NAME, SUMMARY) VALUES ('project_manager1', NULL);
+INSERT INTO OPENUP.OPENUP_ROLE (NAME, SUMMARY) VALUES ('stakeholder1', NULL);
+INSERT INTO OPENUP.OPENUP_ROLE (NAME, SUMMARY) VALUES ('tester1', NULL);
+/*Basic Roles END*/
+
+/*Deployment BEGIN*/
+INSERT INTO OPENUP.OPENUP_ROLE (NAME, SUMMARY) VALUES ('course_developer1', NULL);
+INSERT INTO OPENUP.OPENUP_ROLE (NAME, SUMMARY) VALUES ('deployment_engineer1', NULL);
+INSERT INTO OPENUP.OPENUP_ROLE (NAME, SUMMARY) VALUES ('deployment_manager1', NULL);
+INSERT INTO OPENUP.OPENUP_ROLE (NAME, SUMMARY) VALUES ('product_owner1', NULL);
+INSERT INTO OPENUP.OPENUP_ROLE (NAME, SUMMARY) VALUES ('technical_writer1', NULL);
+INSERT INTO OPENUP.OPENUP_ROLE (NAME, SUMMARY) VALUES ('trainer1', NULL);
+/*Deployment END*/
+
+/*Environment BEGIN*/
+INSERT INTO OPENUP.OPENUP_ROLE (NAME, SUMMARY) VALUES ('process_engineer1', NULL);
+INSERT INTO OPENUP.OPENUP_ROLE (NAME, SUMMARY) VALUES ('tool_specialist1', NULL);
+/*Environment END*/
+
+/*Basic Roles BEGIN*/
+INSERT INTO OPENUP.OPENUP_ROLES (ROLE, NAME) VALUES ('Analyst', 'analyst1');
+INSERT INTO OPENUP.OPENUP_ROLES (ROLE, NAME) VALUES ('Any_Role', 'any_role1');
+INSERT INTO OPENUP.OPENUP_ROLES (ROLE, NAME) VALUES ('Architect', 'architect1');
+INSERT INTO OPENUP.OPENUP_ROLES (ROLE, NAME) VALUES ('Developer', 'developer1');
+INSERT INTO OPENUP.OPENUP_ROLES (ROLE, NAME) VALUES ('Project_Manager', 'project_manager1');
+INSERT INTO OPENUP.OPENUP_ROLES (ROLE, NAME) VALUES ('Stakeholder', 'stakeholder1');
+INSERT INTO OPENUP.OPENUP_ROLES (ROLE, NAME) VALUES ('Tester', 'tester1');
+/*Basic Roles END*/
+
+/*Deployment BEGIN*/
+INSERT INTO OPENUP.OPENUP_ROLES (ROLE, NAME) VALUES ('Course_Developer', 'course_developer1');
+INSERT INTO OPENUP.OPENUP_ROLES (ROLE, NAME) VALUES ('Deployment_Engineer', 'deployment_engineer1');
+INSERT INTO OPENUP.OPENUP_ROLES (ROLE, NAME) VALUES ('Deployment_Manager', 'deployment_manager1');
+INSERT INTO OPENUP.OPENUP_ROLES (ROLE, NAME) VALUES ('Product_Owner', 'product_owner1');
+INSERT INTO OPENUP.OPENUP_ROLES (ROLE, NAME) VALUES ('Technical_Writer', 'technical_writer1');
+INSERT INTO OPENUP.OPENUP_ROLES (ROLE, NAME) VALUES ('Trainer', 'trainer1');
+/*Deployment END*/
+
+/*Environment BEGIN*/
+INSERT INTO OPENUP.OPENUP_ROLES (ROLE, NAME) VALUES ('Process_Engineer', 'process_engineer1');
+INSERT INTO OPENUP.OPENUP_ROLES (ROLE, NAME) VALUES ('Tool_Specialist', 'tool_specialist1');
+/*Environment END*/
+
+/*OPENUP SCHEMA END*/

@@ -5,7 +5,6 @@
  */
 package openup.persistence;
 
-import epf.schema.EPF;
 import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,8 +17,8 @@ import javax.cache.annotation.CacheValue;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.persistence.metamodel.EntityType;
 import javax.transaction.Transactional;
 import javax.ws.rs.ForbiddenException;
 import org.eclipse.microprofile.jwt.JsonWebToken;
@@ -31,9 +30,6 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 @CacheDefaults(cacheName = "Entity")
 @RequestScoped
 public class Request {
-    
-    @PersistenceContext(name = EPF.Schema, unitName = EPF.Schema)
-    private EntityManager defaultManager;
     
     @Inject
     private Application application;
@@ -48,8 +44,8 @@ public class Request {
     }
     
     EntityManager getManager(String unit, Principal principal) throws Exception{
+        EntityManager manager = null;
         if(principal != null){
-            EntityManager manager = null;
             Context context = application.getContext(unit);
             if(context != null){
                 Credential credential = context.getCredential(principal.getName());
@@ -65,14 +61,16 @@ public class Request {
                             }
                         }
                     }
+                    if(manager == null) {
+                    	manager = credential.getDefaultManager();
+                    }
                 }
             }
             if(manager == null){
                 throw new ForbiddenException();
             }
-            return manager;
         }
-        return defaultManager;
+        return manager;
     }
     
     public <T> TypedQuery<T> createNamedQuery(String unit, Principal principal, String name, Class<T> cls) throws Exception{
@@ -110,8 +108,8 @@ public class Request {
     }
     
     @CacheResult(cacheName = "EntityType")
-    public Entity findEntity(@CacheKey String unit, Principal principal, @CacheKey String name) throws Exception{
-        Entity result = new Entity();
+    public <T> Entity<T> findEntity(@CacheKey String unit, Principal principal, @CacheKey String name) throws Exception{
+        Entity<T> result = new Entity<>();
         getManager(unit, principal).getMetamodel()
                 .getEntities()
                 .stream()
@@ -121,7 +119,15 @@ public class Request {
                         }
                 )
                 .findFirst()
-                .ifPresent(result::setType);
+                .ifPresent(entityType -> {
+                	try {
+                		@SuppressWarnings("unchecked")
+						EntityType<T> type = entityType.getClass().cast(entityType);
+	                	result.setType(type);
+	                	}
+                	catch(ClassCastException ex) {
+                		
+                	}});
         return result;
     }
     

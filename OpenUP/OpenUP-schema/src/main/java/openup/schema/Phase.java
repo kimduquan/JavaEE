@@ -5,8 +5,6 @@
  */
 package openup.schema;
 
-import openup.schema.DeliveryProcess;
-import openup.schema.OpenUP;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

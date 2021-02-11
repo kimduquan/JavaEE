@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
@@ -80,14 +81,14 @@ public class Queries implements openup.client.persistence.Queries {
             PathSegment rootSegment = paths.get(0);
             Principal principal = context.getUserPrincipal();
             EntityManager manager = cache.getManager(unit, principal);
-            Entity entity = cache.findEntity(unit, principal, rootSegment.getPath());
+            Entity<Object> entity = cache.findEntity(unit, principal, rootSegment.getPath());
             if(entity.getType() != null){
-                EntityType rootType = entity.getType();
-                Class rootClass = rootType.getJavaType();
+                EntityType<Object> rootType = entity.getType();
+                Class<Object> rootClass = rootType.getJavaType();
                 
                 CriteriaBuilder builder = manager.getCriteriaBuilder();
-                CriteriaQuery rootQuery = builder.createQuery(rootClass);
-                Root rootFrom = rootQuery.from(rootClass);
+                CriteriaQuery<Object> rootQuery = builder.createQuery(rootClass);
+                Root<Object> rootFrom = rootQuery.from(rootClass);
                 List<Predicate> allParams = new ArrayList<>();
                 
                 List<Predicate> rootParams = new ArrayList<>();
@@ -101,15 +102,15 @@ public class Queries implements openup.client.persistence.Queries {
                 });
                 allParams.addAll(rootParams);
 
-                ManagedType parentType = rootType;
-                Root parentFrom = rootFrom;
-                Join parentJoin = null;
+                ManagedType<?> parentType = rootType;
+                Root<?> parentFrom = rootFrom;
+                Join<?,?> parentJoin = null;
                 
                 try{
                     for(PathSegment segment : paths.subList(1, paths.size())){
-                        Attribute attribute = parentType.getAttribute(segment.getPath());
+                        Attribute<?,?> attribute = parentType.getAttribute(segment.getPath());
                         if (attribute.getPersistentAttributeType() != PersistentAttributeType.BASIC) {
-                            Class subClass = null;
+                            Class<?> subClass = null;
                             if(attribute.isCollection()){
                                 if(attribute.getJavaType() == List.class){
                                     subClass = parentType.getList(segment.getPath()).getBindableJavaType();
@@ -128,7 +129,7 @@ public class Queries implements openup.client.persistence.Queries {
                                 subClass = parentType.getSingularAttribute(segment.getPath()).getBindableJavaType();
                             }
                             
-                            Join subJoin;
+                            Join<?,?> subJoin;
                             if(parentJoin == null){
                                 subJoin = parentFrom.join(segment.getPath());
                             }
@@ -147,14 +148,14 @@ public class Queries implements openup.client.persistence.Queries {
                             });
                             allParams.addAll(params);
                             
-                            ManagedType subType = manager.getMetamodel().managedType(subClass);
+                            ManagedType<?> subType = manager.getMetamodel().managedType(subClass);
                             parentType = subType;
                             parentJoin = subJoin;
                         }
                     }
                     
                     if(parentJoin == null){
-                        rootQuery.select(rootFrom);
+                    	rootQuery.select(rootFrom);
                     }
                     else{
                         rootQuery.select(parentJoin);//
@@ -172,8 +173,9 @@ public class Queries implements openup.client.persistence.Queries {
                     if(maxResults != null){
                         query.setMaxResults(maxResults);
                     }
+                    Stream<?> result = query.getResultStream();
                     response.status(Status.OK).entity(
-                                query.getResultStream()
+                                		result
                                         .collect(Collectors.toList())
                     );
                 }

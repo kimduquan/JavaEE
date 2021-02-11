@@ -28,7 +28,12 @@ import javax.ws.rs.sse.SseEventSink;
 @SessionScoped
 public class Events implements openup.client.batch.Events, Serializable {
     
-    private Map<Long, SseBroadcaster> broadcasters;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Map<Long, SseBroadcaster> broadcasters;
     
     @Context
     private Sse serverSent;

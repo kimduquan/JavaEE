@@ -28,7 +28,7 @@ import javax.persistence.Index;
 @Type(EPF.Domain)
 @Schema(name = EPF.Domain, title = "Domain")
 @Entity(name = EPF.Domain)
-@Table(schema = EPF.Schema, name = "_DOMAIN")
+@Table(schema = EPF.Schema, name = "EPF_DOMAIN")
 @JsonbPropertyOrder({
     "name",
     "workProducts"

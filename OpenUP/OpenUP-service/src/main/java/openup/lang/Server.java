@@ -5,16 +5,6 @@
  */
 package openup.lang;
 
-import openup.client.lang.InitializeError;
-import openup.client.lang.InitializeResult;
-import openup.client.lang.item.MessageActionItem;
-import openup.client.lang.params.InitializeParams;
-import openup.client.lang.params.InitializedParams;
-import openup.client.lang.params.LogTraceParams;
-import openup.client.lang.params.SetTraceParams;
-import openup.client.lang.params.ShowMessageParams;
-import openup.client.lang.params.ShowMessageRequestParams;
-
 /**
  *
  * @author FOXCONN
