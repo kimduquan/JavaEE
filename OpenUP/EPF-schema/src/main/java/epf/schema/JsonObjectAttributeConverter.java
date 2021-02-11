@@ -1,4 +1,4 @@
-package epf.util;
+package epf.schema;
 
 import java.io.StringReader;
 import javax.json.Json;
@@ -8,7 +8,7 @@ import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 @Converter(autoApply = true)
-public class JsonConverter implements AttributeConverter<JsonObject, String> {
+public class JsonObjectAttributeConverter implements AttributeConverter<JsonObject, String> {
 
 	@Override
 	public String convertToDatabaseColumn(JsonObject attribute) {
