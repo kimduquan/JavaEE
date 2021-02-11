@@ -8,7 +8,7 @@ package openup.persistence;
 import epf.schema.EPF;
 import openup.schema.OpenUP;
 import openup.schema.DeliveryProcess;
-import java.util.ArrayList;
+import java.util.List;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
@@ -40,15 +40,16 @@ public class PersistenceTest {
     
     @Test
     public void testPersistOK() throws Exception{
-        epf.schema.delivery_processes.DeliveryProcess epfDP = TestUtil
+        List<epf.schema.delivery_processes.DeliveryProcess> epfDPs = TestUtil
                 .client()
                 .target(TestUtil.url().toString() + "persistence/")
                 .path(OpenUP.Schema)
                 .path(EPF.DeliveryProcess)
                 .matrixParam("name", "OpenUP Lifecycle")
                 .request(MediaType.APPLICATION_JSON)
-                .get(epf.schema.delivery_processes.DeliveryProcess.class);
+                .get(new GenericType<List<epf.schema.delivery_processes.DeliveryProcess>>() {});
         
+        epf.schema.delivery_processes.DeliveryProcess epfDP = epfDPs.get(0);
         DeliveryProcess dp = new DeliveryProcess();
         dp.setDeliveryProcess(epfDP);
         dp.setId((long)1);
@@ -61,12 +62,12 @@ public class PersistenceTest {
                 .request()
                 .post(Entity.json(dp));
         
-        ArrayList<DeliveryProcess> deliveryProcesses = TestUtil.client().target(TestUtil.url().toString() + "persistence/")
+        List<DeliveryProcess> deliveryProcesses = TestUtil.client().target(TestUtil.url().toString() + "persistence/")
                 .path(OpenUP.Schema)
                 .path(OpenUP.DeliveryProcess)
                 .matrixParam("name", "OpenUP Lifecycle 1")
                 .request(MediaType.APPLICATION_JSON)
-                .get(new GenericType<ArrayList<DeliveryProcess>>(){});
+                .get(new GenericType<List<DeliveryProcess>>(){});
         
         Assert.assertFalse("DeliveryProcesses.isEmpty", deliveryProcesses.isEmpty());
         Assert.assertEquals("DeliveryProcesses.size", 1, deliveryProcesses.size());

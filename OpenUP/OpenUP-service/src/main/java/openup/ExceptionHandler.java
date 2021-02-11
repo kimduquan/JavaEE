@@ -8,7 +8,7 @@ package openup;
 import java.io.Serializable;
 import java.io.StreamCorruptedException;
 import java.sql.SQLInvalidAuthorizationSpecException;
-import javax.security.enterprise.AuthenticationException;
+import java.sql.SQLNonTransientException;
 import javax.validation.ValidationException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -51,10 +51,7 @@ public class ExceptionHandler implements
     boolean map(Throwable failure, Response.ResponseBuilder builder){
         Response.StatusType status = Response.Status.INTERNAL_SERVER_ERROR;
         boolean mapped = true;
-        if(failure instanceof AuthenticationException){
-            status = Response.Status.UNAUTHORIZED;
-        }
-        else if(failure instanceof TimeoutException){
+        if(failure instanceof TimeoutException){
             status = Response.Status.REQUEST_TIMEOUT;
         }
         else if(failure instanceof BulkheadException){
@@ -79,6 +76,18 @@ public class ExceptionHandler implements
         else if(failure instanceof StreamCorruptedException){
             
         }
+        else if(failure instanceof SQLNonTransientException){
+        	SQLNonTransientException ex = (SQLNonTransientException)failure;
+        	int errorCode = ex.getErrorCode();
+        	switch(errorCode) {
+        	case NOT_ENOUGH_RIGHTS_FOR_1:
+        		status = Response.Status.FORBIDDEN;
+        		break;
+        		default:
+        			mapped = false;
+        			break;
+        	}
+        }
         else{
             mapped = false;
         }
@@ -101,4 +110,6 @@ public class ExceptionHandler implements
         }
         return builder.build();
     }
+    
+    private static final int NOT_ENOUGH_RIGHTS_FOR_1 = 90096;
 }

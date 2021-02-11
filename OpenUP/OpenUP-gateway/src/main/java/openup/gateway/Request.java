@@ -94,7 +94,8 @@ public class Request {
                     MultivaluedMap<String, String> matrixParams = segment.getMatrixParameters();
                     if(matrixParams != null){
                         for(Map.Entry<String, List<String>> matrixParam : matrixParams.entrySet()){
-                            webTarget.matrixParam(matrixParam.getKey(), matrixParam.getValue().toArray());
+                        	Object[] values = new Object[matrixParam.getValue().size()];
+                        	webTarget = webTarget.matrixParam(matrixParam.getKey(), (Object[])matrixParam.getValue().toArray(values));
                         }
                     }
                 }
@@ -102,7 +103,8 @@ public class Request {
             MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();        
             if(queryParams != null){
                 for(Map.Entry<String, List<String>> queryParam : queryParams.entrySet()){
-                    webTarget = webTarget.queryParam(queryParam.getKey(), queryParam.getValue().toArray());
+                	Object[] values = new Object[queryParam.getValue().size()];
+                	webTarget = webTarget.queryParam(queryParam.getKey(), (Object[])queryParam.getValue().toArray(values));
                 }
             }
         }

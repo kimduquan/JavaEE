@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.persistence.EntityManagerFactory;
 
+import org.eclipse.microprofile.jwt.JsonWebToken;
+
 /**
  *
  * @author FOXCONN
@@ -43,5 +45,9 @@ public class Session implements AutoCloseable {
             conversation.close();
         }
         conversations.clear();
+    }
+    
+    public boolean checkExpirationTime(long expirationTime) {
+    	return System.currentTimeMillis() < expirationTime * 1000;
     }
 }

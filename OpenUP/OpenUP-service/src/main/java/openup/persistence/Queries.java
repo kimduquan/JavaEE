@@ -20,6 +20,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.Response.Status;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -171,7 +172,7 @@ public class Queries implements openup.client.persistence.Queries {
                     if(maxResults != null){
                         query.setMaxResults(maxResults);
                     }
-                    response.entity(
+                    response.status(Status.OK).entity(
                                 query.getResultStream()
                                         .collect(Collectors.toList())
                     );

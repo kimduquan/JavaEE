@@ -5,10 +5,6 @@
  */
 package openup.security;
 
-import epf.schema.EPF;
-import openup.schema.OpenUP;
-import openup.client.security.Token;
-import epf.schema.roles.Role;
 import java.io.Serializable;
 import java.net.URI;
 import java.net.URL;
@@ -17,16 +13,15 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
@@ -34,16 +29,20 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.eclipse.microprofile.jwt.config.Names;
-import openup.persistence.Application;
-import openup.persistence.Credential;
-import openup.persistence.Session;
 import org.eclipse.microprofile.jwt.JsonWebToken;
-import openup.client.config.ConfigNames;
+import org.eclipse.microprofile.jwt.config.Names;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import epf.schema.EPF;
+import epf.schema.roles.Role;
+import openup.client.config.ConfigNames;
+import openup.client.security.Token;
+import openup.persistence.Application;
+import openup.persistence.Credential;
+import openup.persistence.Session;
+import openup.schema.OpenUP;
 
 /**
  *
@@ -129,8 +128,6 @@ public class Security implements openup.client.security.Security, Serializable {
         
         Token jwt = buildToken(username, time);
         
-        buildTokenID(jwt);
-        
         buildAudience(jwt, url.toURI());
         
         Set<String> roles = getUserRoles(username, defaultManager);
@@ -199,15 +196,6 @@ public class Security implements openup.client.security.Security, Serializable {
         token.setAudience(aud);
     }
     
-    void buildTokenID(Token token){
-        token.setTokenID(
-                String.format(
-                        TOKEN_ID_FORMAT,
-                        token.getName(), 
-                        UUID.randomUUID(),
-                        System.currentTimeMillis()));
-    }
-    
     Token buildToken(String username, long time) throws Exception{
         Token jwt = new Token();
         jwt.setIssuedAtTime(time);
@@ -265,8 +253,11 @@ public class Security implements openup.client.security.Security, Serializable {
                 if(credential != null){
                     if(principal instanceof JsonWebToken){
                         JsonWebToken jwt = (JsonWebToken)principal;
-                        if(System.currentTimeMillis() < jwt.getExpirationTime() * 1000){
-                            return credential.getSession(jwt.getIssuedAtTime());
+                        Session session = credential.getSession(jwt.getIssuedAtTime());
+                        if(session != null) {
+                            if(session.checkExpirationTime(jwt.getExpirationTime())){
+                                return session;
+                            }
                         }
                     }
                 }

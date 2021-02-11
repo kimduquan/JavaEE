@@ -154,8 +154,8 @@
                             <goal>start</goal>
                         </goals>
                         <configuration>
-                            <serverStartTimeout>600</serverStartTimeout>
                             <verifyTimeout>600</verifyTimeout>
+                            <serverStartTimeout>600</serverStartTimeout>
                             <applications>OpenUP-service,OpenUP-gateway,OpenUP-web</applications>
                         </configuration>
                     </execution>
@@ -192,6 +192,9 @@
 							<artifactId>cache-api</artifactId>
 						</dependency>
 					</copyDependencies>
+					<verifyTimeout>600</verifyTimeout>
+                    <serverStartTimeout>600</serverStartTimeout>
+                    <applications>OpenUP-service,OpenUP-gateway,OpenUP-web</applications>
                 </configuration>
             </plugin>
         </plugins>

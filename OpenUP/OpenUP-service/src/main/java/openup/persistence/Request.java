@@ -20,8 +20,8 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.security.enterprise.AuthenticationException;
 import javax.transaction.Transactional;
+import javax.ws.rs.ForbiddenException;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
 /**
@@ -58,7 +58,7 @@ public class Request {
                         JsonWebToken jwt = (JsonWebToken)principal;
                         Session session = credential.getSession(jwt.getIssuedAtTime());
                         if(session != null){
-                            if(System.currentTimeMillis() < jwt.getExpirationTime() * 1000){
+                            if(session.checkExpirationTime(jwt.getExpirationTime())){
                                 manager = session
                                     .putConversation(jwt.getTokenID())
                                     .putManager(jwt.getIssuedAtTime());
@@ -68,7 +68,7 @@ public class Request {
                 }
             }
             if(manager == null){
-                throw new AuthenticationException();
+                throw new ForbiddenException();
             }
             return manager;
         }

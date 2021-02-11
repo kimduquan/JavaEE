@@ -74,8 +74,7 @@ public class TokenGenerator implements Serializable {
         if(jwt.getGroups() != null){
             builder.claim("groups", jwt.getGroups().toArray(new String[jwt.getGroups().size()]));
         }
-        builder.signWith("RS256", privateKey)
-                ;
+        builder.signWith("RS256", privateKey);
         String token = builder
                 .buildJwt()
                 .compact();

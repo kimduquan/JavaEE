@@ -5,8 +5,11 @@
  */
 package openup;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import java.net.URL;
+import javax.json.JsonObject;
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -39,17 +42,24 @@ public class TestUtil {
         sslContext = DefaultSSLContext.build();
         header = new Header();
         
+        SimpleModule module = new SimpleModule();
+        module.addDeserializer(JsonObject.class, new JsonObjectDeserializer());
+        module.addSerializer(JsonObject.class, new JsonObjectSerializer());
+		ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(module);
+        JacksonJsonProvider provider = new JacksonJsonProvider(mapper);
+        
         restBuilder = RestClientBuilder.newBuilder()
                 .hostnameVerifier(new DefaultHostnameVerifier())
                 .sslContext(sslContext)
-                .register(JacksonJsonProvider.class)
+                .register(provider)
                 .baseUrl(url)
                 .register(header);
         
         builder = ClientBuilder.newBuilder()
                 .hostnameVerifier(new DefaultHostnameVerifier())
                 .sslContext(sslContext)
-                .register(JacksonJsonProvider.class)
+                .register(provider)
                 .register(header);
         
         client = builder.build();
