@@ -22,11 +22,11 @@
                   httpPort="${httpPort}"
                   httpsPort="${httpsPort}" />
 
-    <application name="OpenUP-service" context-root="service" location="OpenUP-service-1.0.0.war">
+    <application id="OpenUP-service" name="OpenUP-service" context-root="service" location="OpenUP-service-1.0.0.war">
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-    <application name="OpenUP-gateway" context-root="gateway" location="OpenUP-gateway-1.0.0.war" />
-    <application name="OpenUP-web" context-root="web" location="OpenUP-web-1.0.0.war" />
+    <application id="OpenUP-gateway" name="OpenUP-gateway" context-root="gateway" location="OpenUP-gateway-1.0.0.war" />
+    <application id="OpenUP-web" name="OpenUP-web" context-root="web" location="OpenUP-web-1.0.0.war" startAfterRef="OpenUP-service,OpenUP-gateway" />
     
     <!-- H2 Library Configuration -->
     <library id="H2JDBCLib">

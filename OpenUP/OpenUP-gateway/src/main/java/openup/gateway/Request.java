@@ -94,8 +94,14 @@ public class Request {
                     MultivaluedMap<String, String> matrixParams = segment.getMatrixParameters();
                     if(matrixParams != null){
                         for(Map.Entry<String, List<String>> matrixParam : matrixParams.entrySet()){
-                        	Object[] values = new Object[matrixParam.getValue().size()];
-                        	webTarget = webTarget.matrixParam(matrixParam.getKey(), (Object[])matrixParam.getValue().toArray(values));
+                        	List<String> paramValues = matrixParam.getValue();
+                        	if(paramValues != null) {
+                            	Object[] values = new Object[paramValues.size()];
+                            	webTarget = webTarget.matrixParam(matrixParam.getKey(), (Object[])paramValues.toArray(values));
+                        	}
+                        	else {
+                        		webTarget = webTarget.matrixParam(matrixParam.getKey());
+                        	}
                         }
                     }
                 }
@@ -103,8 +109,14 @@ public class Request {
             MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();        
             if(queryParams != null){
                 for(Map.Entry<String, List<String>> queryParam : queryParams.entrySet()){
-                	Object[] values = new Object[queryParam.getValue().size()];
-                	webTarget = webTarget.queryParam(queryParam.getKey(), (Object[])queryParam.getValue().toArray(values));
+                	List<String> paramValues = queryParam.getValue();
+                	if(paramValues != null) {
+                    	Object[] values = new Object[paramValues.size()];
+                    	webTarget = webTarget.queryParam(queryParam.getKey(), (Object[])paramValues.toArray(values));
+                	}
+                	else {
+                		webTarget = webTarget.queryParam(queryParam.getKey());
+                	}
                 }
             }
         }
