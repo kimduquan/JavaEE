@@ -1,32 +1,14 @@
 package openup.client.persistence;
 
-import java.net.URI;
-import java.util.List;
-
-import javax.ws.rs.core.MultivaluedMap;
-
 public class Target {
+
+	private String path;
 	
-	private URI uri;
-	private List<Segment> paths;
-	private MultivaluedMap<String, String> queryParams;
-	
-	public URI getUri() {
-		return uri;
+	public String getPath() {
+		return path;
 	}
-	public void setUri(URI uri) {
-		this.uri = uri;
-	}
-	public List<Segment> getPaths() {
-		return paths;
-	}
-	public void setPaths(List<Segment> paths) {
-		this.paths = paths;
-	}
-	public MultivaluedMap<String, String> getQueryParams() {
-		return queryParams;
-	}
-	public void setQueryParams(MultivaluedMap<String, String> queryParams) {
-		this.queryParams = queryParams;
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 }

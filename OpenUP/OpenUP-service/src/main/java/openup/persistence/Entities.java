@@ -61,23 +61,42 @@ public class Entities implements openup.client.persistence.Entities {
             description = "any unexpected error(s) occur(s) during deserialization",
             responseCode = "400"
     )
-    public void persist(
+    public Object persist(
             String unit,
             String name,
-            String id,
             InputStream body
             ) throws Exception{
         Entity<Object> entity = findEntity(unit, name);
         if(entity.getType() != null){
             try(Jsonb json = JsonbBuilder.create()){
                 Object obj = json.fromJson(body, entity.getType().getJavaType());
-                cache.persist(unit, context.getUserPrincipal(), name, id, obj);
+                return cache.persist(unit, context.getUserPrincipal(), name, obj);
             }
             catch(JsonbException ex){
                 throw new BadRequestException();
             }
         }
+        return null;
     }
+    
+    @Override
+	public void merge(
+			String unit, 
+			String name, 
+			String id,
+			InputStream body
+			) throws Exception {
+    	Entity<Object> entity = findEntityObject(unit, name, id);
+        if(entity.getObject() != null){
+            try(Jsonb json = JsonbBuilder.create()){
+                Object obj = json.fromJson(body, entity.getType().getJavaType());
+                cache.merge(unit, context.getUserPrincipal(), name, id, obj);
+            }
+            catch(JsonbException ex){
+                throw new BadRequestException();
+            }
+        }
+	}
     
     <T> T find(
             String unit,

@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -24,6 +25,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Schema(name = OpenUP.DeliveryProcess, title = "Delivery Process")
 @Entity(name = OpenUP.DeliveryProcess)
 @Table(schema = OpenUP.Schema, name = "OPENUP_DELIVERY_PROCESS")
+@NamedNativeQuery(name = QueryNames.FULL_TEXT_SEARCH, query = "SELECT * FROM FT_SEARCH_DATA(?, ?, ?);")
 public class DeliveryProcess {
 
     @Id

@@ -13,8 +13,10 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -35,19 +37,36 @@ public class Entities {
     private Request request;
     
     @POST
-    @Path("{unit}/{entity}/{id}")
+    @Path("{unit}/{entity}")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
     public CompletionStage<Response> persist(
             @Context HttpHeaders headers, 
             @Context UriInfo uriInfo,
             @PathParam("unit") String unit,
             @PathParam("entity") String entity,
-            @PathParam("id") String id,
             InputStream body) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         return request.request(HttpMethod.POST, body);
+    }
+    
+    @PUT
+    @Path("{unit}/{entity}/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Asynchronous
+    public CompletionStage<Response> merge(
+    		@Context HttpHeaders headers, 
+            @Context UriInfo uriInfo,
+    		@PathParam("unit") String unit,
+            @PathParam("entity") String name,
+            @PathParam("id") String id,
+            InputStream body
+            ) throws Exception {
+    	request.setHeaders(headers);
+        request.setUriInfo(uriInfo);
+        return request.request(HttpMethod.PUT, body);
     }
     
     @DELETE

@@ -5,8 +5,11 @@
  */
 package openup.persistence;
 
+import java.lang.reflect.Field;
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import javax.cache.annotation.CacheDefaults;
 import javax.cache.annotation.CacheKey;
@@ -16,8 +19,11 @@ import javax.cache.annotation.CacheResult;
 import javax.cache.annotation.CacheValue;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.Column;
 import javax.persistence.EntityManager;
+import javax.persistence.Table;
 import javax.persistence.TypedQuery;
+import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EntityType;
 import javax.transaction.Transactional;
 import javax.ws.rs.ForbiddenException;
@@ -78,20 +84,37 @@ public class Request {
     }
     
     @Transactional
+    @CacheResult
+    public Object persist(
+            @CacheKey
+            String unit,
+            Principal principal,
+            @CacheKey
+            String name,
+            @CacheValue
+            Object object) throws Exception{
+        EntityManager manager = getManager(unit, principal);
+        manager = joinTransaction(manager);
+        manager.persist(object);
+        manager.flush();
+        return object;
+    }
+    
+    @Transactional
     @CachePut
-    public void persist(
+    public void merge(
             @CacheKey
             String unit,
             Principal principal,
             @CacheKey
             String name,
             @CacheKey
-            String id, 
+            String id,
             @CacheValue
             Object object) throws Exception{
         EntityManager manager = getManager(unit, principal);
         manager = joinTransaction(manager);
-        manager.persist(object);
+        manager.merge(object);
     }
     
     @CacheResult
@@ -137,5 +160,40 @@ public class Request {
                 .createNamedQuery(name, cls)
                 .getResultStream()
                 .collect(Collectors.toList());
+    }
+    
+    @CacheResult(cacheName = "NamedQuery")
+    public <T> List<T> getNamedQueryResult(@CacheKey String unit, Principal principal, @CacheKey String name, Class<T> cls, Integer firstResult, Integer maxResults) throws Exception{
+        return getManager(unit, principal)
+                .createNamedQuery(name, cls)
+                .setFirstResult(firstResult)
+                .setMaxResults(maxResults)
+                .getResultStream()
+                .collect(Collectors.toList());
+    }
+    
+    public void getEntities(String unit, Principal principal, Map<String, EntityType<?>> entityTables, Map<String, Map<String, Attribute<?,?>>> entityAttributes) throws Exception {
+    	EntityManager manager = getManager(unit, principal);
+    	manager.getMetamodel().getEntities().forEach(entityType -> {
+			String tableName = entityType.getName().toLowerCase();
+			Table tableAnnotation = entityType.getJavaType().getAnnotation(Table.class);
+			if(tableAnnotation != null) {
+				tableName = tableAnnotation.name();
+			}
+			entityTables.put(tableName, entityType);
+			Map<String, Attribute<?,?>> attributes = new HashMap<>();
+			entityType.getAttributes().forEach(attr -> {
+				String columnName = attr.getName().toLowerCase();
+				if(attr.getJavaMember() instanceof Field) {
+					Field field = (Field) attr.getJavaMember();
+					Column columnAnnotation = field.getAnnotation(Column.class);
+					if(columnAnnotation != null) {
+						columnName = columnAnnotation.name();
+					}
+				}
+				attributes.put(columnName, attr);
+			});
+			entityAttributes.put(tableName, attributes);
+		});
     }
 }

@@ -18,3 +18,4 @@ UNION
         AND GRANTEE = ?
         AND GRANTEDROLE <> ''
 );
+SELECT * FROM FT_SEARCH_DATA(?, ?, ?);

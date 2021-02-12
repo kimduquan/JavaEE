@@ -48,7 +48,7 @@ public class DeliveryProcessesService implements DeliveryProcesses {
             dp.setName(name);
             dp.setSummary(summary);
             dp.setDeliveryProcess(epfDP);
-            cache.persist(OpenUP.Schema, principal, OpenUP.DeliveryProcess, dp.getName(), dp);
+            cache.persist(OpenUP.Schema, principal, OpenUP.DeliveryProcess, dp);
             cache.createNamedQuery(OpenUP.Schema, principal, epf.schema.delivery_processes.Phase.PHASES, epf.schema.delivery_processes.Phase.class).setParameter("name", epfDP.getName())
                     .getResultStream()
                     .forEach(epfPhase -> {
@@ -57,7 +57,7 @@ public class DeliveryProcessesService implements DeliveryProcesses {
                         phase.setPhase(epfPhase);
                         phase.setParentActivities(dp);
                         try {
-                            cache.persist(OpenUP.Schema, principal, OpenUP.Phase, phase.getName(), phase);
+                            cache.persist(OpenUP.Schema, principal, OpenUP.Phase, phase);
                             cache.createNamedQuery(OpenUP.Schema, principal, epf.schema.delivery_processes.Iteration.ITERATIONS, epf.schema.delivery_processes.Iteration.class)
                                     .setParameter("name", epfPhase.getName())
                                     .getResultStream()
@@ -68,7 +68,7 @@ public class DeliveryProcessesService implements DeliveryProcesses {
                                         it.setParentActivities(phase);
                                         it.setSummary(epfIt.getName());
                                         try {
-                                            cache.persist(OpenUP.Schema, principal, OpenUP.Iteration, "", it);
+                                            cache.persist(OpenUP.Schema, principal, OpenUP.Iteration, it);
                                         } 
                                         catch (Exception ex) {
                                             errors.add(ex);

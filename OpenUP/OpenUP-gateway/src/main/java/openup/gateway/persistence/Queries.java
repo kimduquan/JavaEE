@@ -50,4 +50,16 @@ public class Queries {
         request.setUriInfo(uriInfo);
         return request.request(HttpMethod.GET, null);
     }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Asynchronous
+    public CompletionStage<Response> search(
+    		@Context HttpHeaders headers, 
+            @Context UriInfo uriInfo
+            ) throws Exception{
+    	request.setHeaders(headers);
+        request.setUriInfo(uriInfo);
+        return request.request(HttpMethod.GET, null);
+    }
 }

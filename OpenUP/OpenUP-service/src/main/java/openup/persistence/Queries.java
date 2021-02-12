@@ -5,17 +5,23 @@
  */
 package openup.persistence;
 
+import openup.client.persistence.SearchData;
 import openup.client.persistence.Target;
+import openup.schema.OpenUP;
+import openup.schema.QueryNames;
 import openup.schema.Role;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -24,6 +30,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
@@ -58,7 +65,6 @@ public class Queries implements openup.client.persistence.Queries {
     private SecurityContext context;
     
     @Override
-    @PermitAll
     @Operation(
             summary = "Native Query", 
             description = "Execute a SELECT query and return the query results."
@@ -190,6 +196,46 @@ public class Queries implements openup.client.persistence.Queries {
 
 	@Override
 	public List<Target> search(String text, Integer firstResult, Integer maxResults) throws Exception {
-		return null;
+		Map<String, EntityType<?>> entityTables = new HashMap<>();
+		Map<String, Map<String, Attribute<?,?>>> entityAttributes = new HashMap<>();
+		cache.getEntities(OpenUP.Schema, context.getUserPrincipal(), entityTables, entityAttributes);
+		TypedQuery<SearchData> query = cache.createNamedQuery(
+				OpenUP.Schema, 
+				context.getUserPrincipal(), 
+				QueryNames.FULL_TEXT_SEARCH, 
+				SearchData.class
+				);
+		query.setFirstResult(firstResult);
+		query.setMaxResults(maxResults);
+		query.setParameter(1, text);
+		query.setParameter(2, maxResults);
+		query.setParameter(3, firstResult);
+		return query.getResultStream()
+				.map(item -> {
+					Target target = null;
+					if(entityTables.containsKey(item.getTable())) {
+						target = new Target();
+						StringBuilder builder = new StringBuilder();
+						builder.append(OpenUP.Schema);
+						builder.append('/');
+						EntityType<?> entityType = entityTables.get(item.getTable());
+						builder.append(entityType.getName());
+						builder.append('?');
+						Iterator<String> column = item.getColumns().iterator();
+						Iterator<String> key = item.getKeys().iterator();
+						while(column.hasNext() && key.hasNext()) {
+							builder.append(column.next());
+							builder.append('=');
+							String value = URLEncoder.encode(key.next(), Charset.forName("UTF-8"));
+							builder.append(value);
+							builder.append(';');
+						}
+						target.setPath(builder.toString());
+					}
+					return target;
+					}
+				)
+				.filter(target -> target != null)
+				.collect(Collectors.toList());
 	}
 }
