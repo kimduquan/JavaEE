@@ -6,7 +6,6 @@
 package openup.schema;
 
 import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,7 +27,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Type(OpenUP.Artifact)
 @Schema(name = OpenUP.Artifact, title = "Artifact")
 @Entity(name = OpenUP.Artifact)
-@Table(schema = OpenUP.Schema, name = "OPENUP_ARTIFACT", indexes = {@Index(columnList = "DOMAINS")})
+@Table(schema = OpenUP.Schema, name = "OPENUP_ARTIFACT")
 public class Artifact {
 
     @Id

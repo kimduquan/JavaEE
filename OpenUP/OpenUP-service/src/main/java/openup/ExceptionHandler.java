@@ -79,13 +79,8 @@ public class ExceptionHandler implements
         else if(failure instanceof SQLNonTransientException){
         	SQLNonTransientException ex = (SQLNonTransientException)failure;
         	int errorCode = ex.getErrorCode();
-        	switch(errorCode) {
-        	case NOT_ENOUGH_RIGHTS_FOR_1:
+        	if(NOT_ENOUGH_RIGHTS_FOR_1 == errorCode) {
         		status = Response.Status.FORBIDDEN;
-        		break;
-        		default:
-        			mapped = false;
-        			break;
         	}
         }
         else{

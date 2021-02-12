@@ -37,4 +37,14 @@ public interface Queries {
             @QueryParam("max")
             Integer maxResults
             ) throws Exception;
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    List<Target> search(
+    		@QueryParam("text") 
+    		String text, 
+    		@QueryParam("first")
+            Integer firstResult,
+            @QueryParam("max")
+            Integer maxResults) throws Exception;
 }

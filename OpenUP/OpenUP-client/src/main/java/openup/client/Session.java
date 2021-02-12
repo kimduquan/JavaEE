@@ -29,7 +29,12 @@ import org.eclipse.microprofile.rest.client.RestClientBuilder;
 @SessionScoped
 public class Session implements Serializable {
     
-    private String base;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private String base;
     private Header securityHeader;
     private Security security;
     private Config config;

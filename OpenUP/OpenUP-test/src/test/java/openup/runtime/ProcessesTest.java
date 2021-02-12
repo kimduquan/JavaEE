@@ -7,8 +7,13 @@ package openup.runtime;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import openup.TestUtil;
 import openup.client.runtime.Processes;
+import openup.client.security.Header;
+import openup.client.security.Security;
+import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -20,21 +25,29 @@ import org.junit.Test;
  */
 public class ProcessesTest {
     
-    private static String token;
+	private static Header header;
+    private static ClientBuilder clientBuilder;
+    private static RestClientBuilder restBuilder;
+    private static Client client;
+    private static Security security;
     private static Processes processes;
     
     @BeforeClass
     public static void beforeClass() throws Exception{
-        TestUtil.beforeClass();
-        token = TestUtil.login("any_role1", "any_role");
-        processes = TestUtil.rest().build(Processes.class);
+    	clientBuilder = ClientBuilder.newBuilder();
+        restBuilder = RestClientBuilder.newBuilder();
+        header = TestUtil.buildClient(restBuilder, clientBuilder);
+        client = clientBuilder.build();
+        security = restBuilder.build(Security.class);
+        processes = restBuilder.build(Processes.class);
+        TestUtil.login(security, header, "any_role1", "any_role");
     }
     
     @AfterClass
     public static void afterClass() throws Exception{
         processes.stop();
-        TestUtil.logout(token);
-        TestUtil.afterClass();
+        TestUtil.logout(security, header);
+        client.close();
     }
     
     @Test

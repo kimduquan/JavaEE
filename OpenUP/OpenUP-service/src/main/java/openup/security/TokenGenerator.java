@@ -7,6 +7,7 @@ package openup.security;
 
 import openup.client.security.Token;
 import com.ibm.websphere.security.jwt.JwtBuilder;
+import com.ibm.websphere.security.jwt.JwtToken;
 import java.io.Serializable;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
@@ -18,6 +19,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.jwt.Claims;
 import openup.client.config.ConfigNames;
 
 /**
@@ -55,7 +57,7 @@ public class TokenGenerator implements Serializable {
         }
     }
     
-    public String generate(Token jwt) throws Exception{
+    public Token generate(Token jwt) throws Exception{
         JwtBuilder builder = JwtBuilder.create();
         if(jwt.getAudience() != null && !jwt.getAudience().isEmpty()){
             builder.audience(
@@ -69,15 +71,27 @@ public class TokenGenerator implements Serializable {
                 .expirationTime(jwt.getExpirationTime())
                 .notBefore(jwt.getIssuedAtTime())
                 .jwtId(true)
-                .claim("iat", jwt.getIssuedAtTime())
-                .claim("upn", jwt.getSubject());
+                .claim(Claims.iat.name(), jwt.getIssuedAtTime())
+                .claim(Claims.upn.name(), jwt.getName());
         if(jwt.getGroups() != null){
-            builder.claim("groups", jwt.getGroups().toArray(new String[jwt.getGroups().size()]));
+            builder.claim(Claims.groups.name(), jwt.getGroups().toArray(new String[jwt.getGroups().size()]));
         }
         builder.signWith("RS256", privateKey);
-        String token = builder
-                .buildJwt()
-                .compact();
-        return token;
+        JwtToken generatedJwt = builder.buildJwt();
+        jwt.setAudience(
+        		generatedJwt
+        		.getClaims()
+        		.getAudience()
+        		.stream()
+        		.collect(Collectors.toSet())
+        		);
+        jwt.setExpirationTime(generatedJwt.getClaims().getExpiration());
+        jwt.setIssuedAtTime(generatedJwt.getClaims().getIssuedAt());
+        jwt.setIssuer(generatedJwt.getClaims().getIssuer());
+        jwt.setName(generatedJwt.getClaims().get(Claims.upn.name()).toString());
+        jwt.setSubject(generatedJwt.getClaims().getSubject());
+        jwt.setTokenID(generatedJwt.getClaims().getJwtId());
+        jwt.setRawToken(generatedJwt.compact());
+        return jwt;
     }
 }

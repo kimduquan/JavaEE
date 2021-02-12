@@ -109,7 +109,6 @@ public class Security implements openup.client.security.Security, Serializable {
             String username,
             String password_hash,
             URL url) throws Exception{
-        
         long time = System.currentTimeMillis() / 1000;
         Credential credential = persistence.putContext(unit)
                 .putCredential(
@@ -117,18 +116,12 @@ public class Security implements openup.client.security.Security, Serializable {
                         unit, 
                         password_hash
                 );
-       credential.putSession(time);
-        
         Token jwt = buildToken(username, time);
-        
         buildAudience(jwt, url.toURI());
-        
         buildGroups(jwt, username, credential.getDefaultManager());
-        
-        String token = generator.generate(jwt);
-        jwt.setRawToken(token);
-        
-        return token;
+        jwt = generator.generate(jwt);
+        credential.putSession(jwt.getIssuedAtTime());
+        return jwt.getRawToken();
     }
     
     @Override
@@ -193,6 +186,7 @@ public class Security implements openup.client.security.Security, Serializable {
         jwt.setIssuedAtTime(time);
         jwt.setExpirationTime(time + Duration.of(jwtExpDuration, jwtExpTimeUnit).getSeconds());
         jwt.setIssuer(issuer);
+        jwt.setName(username);
         jwt.setSubject(username);
         return jwt;
     }

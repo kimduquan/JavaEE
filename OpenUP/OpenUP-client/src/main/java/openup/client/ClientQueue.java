@@ -11,18 +11,14 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.Dependent;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import openup.client.ssl.DefaultHostnameVerifier;
 import openup.client.ssl.DefaultSSLContext;
-import openup.client.ssl.DefaultTrustManager;
 
 /**
  *
@@ -31,7 +27,12 @@ import openup.client.ssl.DefaultTrustManager;
 @Dependent
 public class ClientQueue implements Serializable {
     
-    private Map<String, Queue<Client>> clients;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private Map<String, Queue<Client>> clients;
     private SSLContext context;
     
     @PostConstruct

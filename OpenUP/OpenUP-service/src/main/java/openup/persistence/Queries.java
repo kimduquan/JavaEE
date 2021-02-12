@@ -5,6 +5,7 @@
  */
 package openup.persistence;
 
+import openup.client.persistence.Target;
 import openup.schema.Role;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -186,4 +187,9 @@ public class Queries implements openup.client.persistence.Queries {
         }
         return response.build();
     }
+
+	@Override
+	public List<Target> search(String text, Integer firstResult, Integer maxResults) throws Exception {
+		return null;
+	}
 }

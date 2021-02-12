@@ -9,10 +9,15 @@ import epf.schema.EPF;
 import openup.schema.OpenUP;
 import openup.schema.DeliveryProcess;
 import java.util.List;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import openup.TestUtil;
+import openup.client.security.Header;
+import openup.client.security.Security;
+import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -24,24 +29,31 @@ import org.junit.Test;
  */
 public class PersistenceTest {
     
-    private static String token;
+    private static Header header;
+    private static ClientBuilder clientBuilder;
+    private static RestClientBuilder restBuilder;
+    private static Client client;
+    private static Security security;
     
     @BeforeClass
     public static void beforeClass() throws Exception{
-        TestUtil.beforeClass();
-        token = TestUtil.login("any_role1", "any_role");
+        clientBuilder = ClientBuilder.newBuilder();
+        restBuilder = RestClientBuilder.newBuilder();
+        header = TestUtil.buildClient(restBuilder, clientBuilder);
+        client = clientBuilder.build();
+        security = restBuilder.build(Security.class);
+        TestUtil.login(security, header, "any_role1", "any_role");
     }
     
     @AfterClass
     public static void afterClass() throws Exception{
-        TestUtil.logout(token);
-        TestUtil.afterClass();
+        TestUtil.logout(security, header);
+        client.close();
     }
     
     @Test
     public void testPersistOK() throws Exception{
-        List<epf.schema.delivery_processes.DeliveryProcess> epfDPs = TestUtil
-                .client()
+        List<epf.schema.delivery_processes.DeliveryProcess> epfDPs = client
                 .target(TestUtil.url().toString() + "persistence/")
                 .path(OpenUP.Schema)
                 .path(EPF.DeliveryProcess)
@@ -55,14 +67,15 @@ public class PersistenceTest {
         dp.setId((long)1);
         dp.setName("OpenUP Lifecycle 1");
         dp.setSummary("OpenUP Lifecycle 1");
-        TestUtil.client().target(TestUtil.url().toString() + "persistence/")
+        client.target(TestUtil.url().toString() + "persistence/")
                 .path(OpenUP.Schema)
                 .path(OpenUP.DeliveryProcess)
                 .path(String.valueOf(dp.getId()))
                 .request()
                 .post(Entity.json(dp));
         
-        List<DeliveryProcess> deliveryProcesses = TestUtil.client().target(TestUtil.url().toString() + "persistence/")
+        List<DeliveryProcess> deliveryProcesses = client
+        		.target(TestUtil.url().toString() + "persistence/")
                 .path(OpenUP.Schema)
                 .path(OpenUP.DeliveryProcess)
                 .matrixParam("name", "OpenUP Lifecycle 1")
@@ -78,7 +91,7 @@ public class PersistenceTest {
         Assert.assertNotNull("DeliveryProcess.DeliveryProcess", deliveryProcess.getDeliveryProcess());
         Assert.assertEquals("DeliveryProcess.DeliveryProcess.Name", "OpenUP Lifecycle", deliveryProcess.getDeliveryProcess().getName());
         
-        TestUtil.client().target(TestUtil.url().toString() + "persistence/")
+        client.target(TestUtil.url().toString() + "persistence/")
                 .path(OpenUP.Schema)
                 .path(OpenUP.DeliveryProcess)
                 .path(String.valueOf(deliveryProcess.getId()))
