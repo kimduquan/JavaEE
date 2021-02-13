@@ -34,7 +34,7 @@ import openup.client.rpc.Request;
  */
 @Provider
 @Consumes(Message.APPLICATION_JSON_RPC)
-public class RequestReader implements MessageBodyReader<Request> {
+public class RequestReader implements MessageBodyReader<Request<?>> {
     
     private Map<String, Type> paramTypes;
     
@@ -56,7 +56,7 @@ public class RequestReader implements MessageBodyReader<Request> {
     }
 
     @Override
-    public Request readFrom(Class<Request> cls, Type type, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> arg4, InputStream input) throws IOException, WebApplicationException {
+    public Request<?> readFrom(Class<Request<?>> cls, Type type, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> arg4, InputStream input) throws IOException, WebApplicationException {
         final GenericType<Request<JsonObject>> rawType = new GenericType<Request<JsonObject>>() {};
         try(Jsonb json = JsonbBuilder.create()){
             Request<JsonObject> req = json.fromJson(input, rawType.getType());

@@ -28,7 +28,7 @@ import openup.client.rpc.Response;
  */
 @Provider
 @Produces(Message.APPLICATION_JSON_RPC)
-public class ResponseWriter implements MessageBodyWriter<Response> {
+public class ResponseWriter implements MessageBodyWriter<Response<?>> {
 
     @Override
     public boolean isWriteable(Class<?> cls, Type type, Annotation[] annotations, MediaType mediaType) {
@@ -37,7 +37,7 @@ public class ResponseWriter implements MessageBodyWriter<Response> {
     }
 
     @Override
-    public void writeTo(Response msg, Class<?> cls, Type type, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, Object> arg5, OutputStream output) throws IOException, WebApplicationException {
+    public void writeTo(Response<?> msg, Class<?> cls, Type type, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, Object> arg5, OutputStream output) throws IOException, WebApplicationException {
         final GenericType<Response<JsonObject>> resType = new GenericType<Response<JsonObject>>() {};
         try(Jsonb json = JsonbBuilder.create()){
             json.toJson(msg, resType.getType(), output);

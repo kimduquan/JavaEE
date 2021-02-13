@@ -31,7 +31,12 @@ import openup.webapp.Session;
 @Named("roles")
 public class Roles implements Serializable {
     
-    private List<RoleSet> roleSets;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private List<RoleSet> roleSets;
     private List<Role> roles;
     
     @Inject

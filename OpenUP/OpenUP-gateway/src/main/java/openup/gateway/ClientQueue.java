@@ -28,6 +28,8 @@ import openup.gateway.ssl.DefaultTrustManager;
  */
 @ApplicationScoped
 public class ClientQueue {
+	
+	private static final Logger logger = Logger.getLogger(ClientQueue.class.getName());
     
     private Map<String, Queue<Client>> clients;
     private SSLContext context;
@@ -53,8 +55,9 @@ public class ClientQueue {
             SSLContext ctx = SSLContext.getInstance("SSL");
             ctx.init(null, new TrustManager[]{x509}, null);
             return ctx;
-        } catch (Exception ex) {
-            Logger.getLogger(ClientQueue.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        catch (Exception ex) {
+            logger.log(Level.SEVERE, ex.getMessage(), ex);
         }
         return null;
     }

@@ -45,7 +45,7 @@ public class Application {
     
     public Broadcaster<JobInstance> registerJob(long instanceId, Sse sse){
         return jobs.computeIfAbsent(instanceId, id -> {
-            return new Broadcaster(sse.newBroadcaster(), sse.newEventBuilder());
+            return new Broadcaster<>(sse.newBroadcaster(), sse.newEventBuilder());
         });
     }
     
@@ -55,7 +55,7 @@ public class Application {
     
     public Broadcaster<StepExecution> registerStep(long stepExecutionId, Sse sse){
         return steps.computeIfAbsent(stepExecutionId, id -> {
-            return new Broadcaster(sse.newBroadcaster(), sse.newEventBuilder());
+            return new Broadcaster<>(sse.newBroadcaster(), sse.newEventBuilder());
         });
     }
     

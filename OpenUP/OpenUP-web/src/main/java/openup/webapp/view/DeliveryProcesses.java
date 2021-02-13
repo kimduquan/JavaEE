@@ -32,7 +32,12 @@ import openup.webapp.Session;
 @Named("delivery_processes")
 public class DeliveryProcesses implements Serializable {
     
-    private List<Phase> phases;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private List<Phase> phases;
     private List<Iteration> iterations;
     private List<Task> tasks;
     

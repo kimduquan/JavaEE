@@ -14,6 +14,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.CompletionStage;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.client.Client;
@@ -41,6 +43,8 @@ import org.eclipse.microprofile.context.ManagedExecutor;
  */
 @RequestScoped
 public class Request {
+	
+	private static final Logger logger = Logger.getLogger(Request.class.getName());
     
     private HttpHeaders headers;
     private UriInfo uriInfo;
@@ -67,6 +71,7 @@ public class Request {
                 .whenComplete((res, ex) -> {
                     if(ex != null){
                         client.close();
+                        logger.log(Level.WARNING, method + " " + uriInfo.getRequestUri().toString(), ex);
                     }
                     else{
                         clients.add(uri, client);

@@ -98,4 +98,5 @@
         </properties.wasJms>
     </jmsActivationSpec>
     <batchJmsEvents />
+	<logging />
 </server>

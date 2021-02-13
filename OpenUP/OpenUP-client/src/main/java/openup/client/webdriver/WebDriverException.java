@@ -10,7 +10,12 @@ package openup.client.webdriver;
  * @author FOXCONN
  */
 public class WebDriverException extends Exception {
-    private Error value;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private Error value;
 
     public Error getValue() {
         return value;

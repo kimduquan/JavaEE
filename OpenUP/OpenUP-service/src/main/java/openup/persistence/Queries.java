@@ -20,6 +20,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.security.RolesAllowed;
@@ -57,6 +59,8 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 @RolesAllowed(Role.ANY_ROLE)
 @RequestScoped
 public class Queries implements openup.client.persistence.Queries {
+	
+	private static final Logger logger = Logger.getLogger(Queries.class.getName());
     
     @Inject
     private Request cache;
@@ -187,7 +191,7 @@ public class Queries implements openup.client.persistence.Queries {
                     );
                 }
                 catch(IllegalArgumentException ex){
-
+                	logger.log(Level.WARNING, ex.getMessage(), ex);
                 }
             }
         }

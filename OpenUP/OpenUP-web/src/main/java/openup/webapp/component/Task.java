@@ -16,5 +16,10 @@ import javax.inject.Named;
 @ViewScoped
 @Named("task")
 public class Task implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
     
 }

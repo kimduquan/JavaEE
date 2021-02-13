@@ -62,7 +62,12 @@ import javax.ws.rs.HttpMethod;
 @Named("webapp")
 public class WebApp extends HttpServlet {
     
-    @Override
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
         throws ServletException, IOException{
         req.getRequestDispatcher("tasks.html").forward(req, resp);

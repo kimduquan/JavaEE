@@ -19,6 +19,8 @@ import javax.enterprise.context.ApplicationScoped;
  */
 @ApplicationScoped
 public class Application {
+	
+	private static final Logger logger = Logger.getLogger(Application.class.getName());
     
     private Map<String, Context> contexts;
     
@@ -34,7 +36,7 @@ public class Application {
                 context.close();
             } 
             catch (Exception ex) {
-                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
+                logger.log(Level.INFO, ex.getMessage(), ex);
             }
         });
         contexts.clear();

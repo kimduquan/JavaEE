@@ -28,7 +28,12 @@ import org.eclipse.microprofile.rest.client.RestClientBuilder;
 @SessionScoped
 public class Session implements Serializable {
     
-    private TokenPrincipal principal;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private TokenPrincipal principal;
     
     @Inject
     private SecurityContext context;

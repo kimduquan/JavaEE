@@ -21,6 +21,8 @@ import javax.persistence.Persistence;
  * @author FOXCONN
  */
 public class Context implements AutoCloseable {
+	
+	private static final Logger logger = Logger.getLogger(Context.class.getName());
     
     private Map<String, Credential> credentials;
     
@@ -47,7 +49,7 @@ public class Context implements AutoCloseable {
                             credential.close();
                         } 
                         catch (Exception ex) {
-                            Logger.getLogger(Context.class.getName()).log(Level.SEVERE, null, ex);
+                            logger.log(Level.WARNING, ex.getMessage(), ex);
                         }
                         credential = newCredential(unit, props, errors);
                     }
@@ -59,6 +61,7 @@ public class Context implements AutoCloseable {
             return credential;
         });
         if(!errors.isEmpty()){
+        	logger.throwing(getClass().getName(), "putCredential", errors.get(0));
             throw errors.get(0);
         }
         return cred;

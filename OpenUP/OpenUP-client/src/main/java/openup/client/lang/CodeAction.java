@@ -70,11 +70,11 @@ public class CodeAction {
         this.command = command;
     }
 
-    public Optional getData() {
+    public Optional<?> getData() {
         return data;
     }
 
-    public void setData(Optional data) {
+    public void setData(Optional<?> data) {
         this.data = data;
     }
     public class Description {
@@ -95,5 +95,5 @@ public class CodeAction {
     private Optional<Description> disabled;
     private Optional<WorkspaceEdit> edit;
     private Optional<Command> command;
-    private Optional data;
+    private Optional<?> data;
 }

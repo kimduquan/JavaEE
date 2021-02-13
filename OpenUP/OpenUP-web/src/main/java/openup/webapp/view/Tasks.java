@@ -31,7 +31,12 @@ import openup.webapp.Session;
 @Named("tasks")
 public class Tasks implements Serializable {
    
-    private List<Discipline> disciplines;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private List<Discipline> disciplines;
     private List<Task> tasks;
     
     @Inject

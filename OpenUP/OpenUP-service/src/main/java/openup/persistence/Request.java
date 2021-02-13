@@ -10,6 +10,8 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.cache.annotation.CacheDefaults;
 import javax.cache.annotation.CacheKey;
@@ -36,6 +38,8 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 @CacheDefaults(cacheName = "Entity")
 @RequestScoped
 public class Request {
+	
+	private static final Logger logger = Logger.getLogger(Request.class.getName());
     
     @Inject
     private Application application;
@@ -91,7 +95,6 @@ public class Request {
             Principal principal,
             @CacheKey
             String name,
-            @CacheValue
             Object object) throws Exception{
         EntityManager manager = getManager(unit, principal);
         manager = joinTransaction(manager);
@@ -115,6 +118,7 @@ public class Request {
         EntityManager manager = getManager(unit, principal);
         manager = joinTransaction(manager);
         manager.merge(object);
+        manager.flush();
     }
     
     @CacheResult
@@ -128,6 +132,7 @@ public class Request {
         EntityManager manager = getManager(unit, principal);
         manager = joinTransaction(manager);
         manager.remove(object);
+        manager.flush();
     }
     
     @CacheResult(cacheName = "EntityType")
@@ -149,7 +154,7 @@ public class Request {
 	                	result.setType(type);
 	                	}
                 	catch(ClassCastException ex) {
-                		
+                		logger.log(Level.WARNING, ex.getMessage(), ex);
                 	}});
         return result;
     }

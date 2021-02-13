@@ -21,7 +21,12 @@ import openup.webapp.security.TokenPrincipal;
 @Named("webapp_session")
 public class Session implements Serializable {
     
-    @Inject
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Inject
     private SecurityContext context;
     
     @Inject

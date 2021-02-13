@@ -31,7 +31,12 @@ import openup.webapp.Session;
 @Named("work_products")
 public class WorkProducts implements Serializable {
     
-    private List<Domain> domains;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private List<Domain> domains;
     private List<Artifact> artifacts;
     
     @Inject

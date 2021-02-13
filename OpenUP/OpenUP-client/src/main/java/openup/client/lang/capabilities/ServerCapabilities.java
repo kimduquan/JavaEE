@@ -308,7 +308,7 @@ public class ServerCapabilities {
     public class Workspace {
        private Optional<WorkspaceFoldersServerCapabilities> workspaceFolders;
        private Optional<FileOperation> fileOperations;
-       private Optional experimental;
+       private Optional<?> experimental;
 
         public Optional<WorkspaceFoldersServerCapabilities> getWorkspaceFolders() {
             return workspaceFolders;
@@ -326,11 +326,11 @@ public class ServerCapabilities {
             this.fileOperations = fileOperations;
         }
 
-        public Optional getExperimental() {
+        public Optional<?> getExperimental() {
             return experimental;
         }
 
-        public void setExperimental(Optional experimental) {
+        public void setExperimental(Optional<?> experimental) {
             this.experimental = experimental;
         }
     }

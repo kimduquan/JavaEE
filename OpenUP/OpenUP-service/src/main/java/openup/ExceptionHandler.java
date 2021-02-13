@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.io.StreamCorruptedException;
 import java.sql.SQLInvalidAuthorizationSpecException;
 import java.sql.SQLNonTransientException;
+import java.util.logging.Logger;
 import javax.validation.ValidationException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -35,6 +36,7 @@ public class ExceptionHandler implements
     * 
     */
     private static final long serialVersionUID = 1L;
+    private static final Logger logger = Logger.getLogger(ExceptionHandler.class.getName());
 
     @Override
     public Response handle(ExecutionContext context) {
@@ -95,6 +97,7 @@ public class ExceptionHandler implements
     Response handle(Throwable failure){
         ResponseBuilder builder = Response.serverError();
         if(failure != null){
+        	logger.throwing(getClass().getName(), "handle", failure);
             if(map(failure, builder) == false){
                 Throwable cause = failure.getCause();
                 while(cause != null && failure != cause){

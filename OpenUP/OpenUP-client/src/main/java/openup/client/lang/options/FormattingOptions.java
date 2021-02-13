@@ -13,7 +13,12 @@ import java.util.Optional;
  * @author FOXCONN
  */
 public class FormattingOptions extends HashMap<String, Object> {
-    private Integer tabSize;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private Integer tabSize;
     private Boolean insertSpaces;
     private Optional<Boolean> trimTrailingWhitespace;
     private Optional<Boolean> insertFinalNewline;

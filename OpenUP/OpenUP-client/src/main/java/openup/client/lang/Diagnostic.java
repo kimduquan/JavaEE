@@ -21,7 +21,7 @@ public class Diagnostic {
     private String message;
     private Optional<DiagnosticTag[]> tags;
     private Optional<DiagnosticRelatedInformation[]> relatedInformation;
-    private Optional data;
+    private Optional<?> data;
 
     public Range getRange() {
         return range;
@@ -87,11 +87,11 @@ public class Diagnostic {
         this.relatedInformation = relatedInformation;
     }
 
-    public Optional getData() {
+    public Optional<?> getData() {
         return data;
     }
 
-    public void setData(Optional data) {
+    public void setData(Optional<?> data) {
         this.data = data;
     }
 }

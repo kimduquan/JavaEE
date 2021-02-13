@@ -19,7 +19,12 @@ import javax.inject.Named;
 @Named("webapp_conversation")
 public class Conversation implements Serializable {
     
-    @Inject
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	@Inject
     private javax.enterprise.context.Conversation conversation;
     
     @PostConstruct
