@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.client.runtime;
+package epf.client.runtime;
 
 import java.util.List;
 import javax.ws.rs.DELETE;

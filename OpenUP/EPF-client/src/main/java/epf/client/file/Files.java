@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.client.file;
+package epf.client.file;
 
 import java.util.List;
 import java.util.Map;
@@ -20,7 +20,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.StreamingOutput;
-import openup.client.file.validation.File;
+import epf.validation.file.File;
 
 /**
  *

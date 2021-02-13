@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.CompletionStage;
 import java.util.logging.Level;
@@ -36,6 +35,7 @@ import javax.ws.rs.core.Response.StatusType;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.context.ManagedExecutor;
+import epf.util.Var;
 
 /**
  *
@@ -45,12 +45,12 @@ import org.eclipse.microprofile.context.ManagedExecutor;
 public class Request {
 	
 	private static final Logger logger = Logger.getLogger(Request.class.getName());
+    private static final String OPENUP_URL = System.getenv("openup.url");
     
     private HttpHeaders headers;
     private UriInfo uriInfo;
     private Client client;
     private URI uri;
-    private static final String OPENUP_URL = "openup.url";
     
     @Inject 
     private ManagedExecutor executor;
@@ -70,12 +70,9 @@ public class Request {
                 .thenApply(ResponseBuilder::build)
                 .whenComplete((res, ex) -> {
                     if(ex != null){
-                        client.close();
                         logger.log(Level.WARNING, method + " " + uriInfo.getRequestUri().toString(), ex);
                     }
-                    else{
-                        clients.add(uri, client);
-                    }
+                    clients.add(uri, client);
                 });
     }
     
@@ -89,68 +86,67 @@ public class Request {
     }
     
     static WebTarget buildTarget(Client client, UriInfo uriInfo){
-        String url = System.getenv(OPENUP_URL);
-        WebTarget webTarget = client.target(url);
+    	Var<WebTarget> webTarget = new Var<>(client.target(OPENUP_URL));
         if(uriInfo != null){
             List<PathSegment> segments = uriInfo.getPathSegments();
             if(segments != null){
-                for(PathSegment segment : segments){
-                    webTarget = webTarget.path(segment.getPath());
+            	segments.forEach(segment -> {
+            		webTarget.set(target -> target.path(segment.getPath()));
                     MultivaluedMap<String, String> matrixParams = segment.getMatrixParameters();
                     if(matrixParams != null){
-                        for(Map.Entry<String, List<String>> matrixParam : matrixParams.entrySet()){
-                        	List<String> paramValues = matrixParam.getValue();
+                    	matrixParams.forEach((key, value) -> {
+                        	List<String> paramValues = value;
                         	if(paramValues != null) {
                             	Object[] values = new Object[paramValues.size()];
-                            	webTarget = webTarget.matrixParam(matrixParam.getKey(), (Object[])paramValues.toArray(values));
+                            	webTarget.set(target -> target.matrixParam(key, (Object[])paramValues.toArray(values)));
                         	}
                         	else {
-                        		webTarget = webTarget.matrixParam(matrixParam.getKey());
+                        		webTarget.set(target -> target.matrixParam(key));
                         	}
-                        }
+                        });
                     }
-                }
+                });
             }
             MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();        
             if(queryParams != null){
-                for(Map.Entry<String, List<String>> queryParam : queryParams.entrySet()){
-                	List<String> paramValues = queryParam.getValue();
+            	queryParams.forEach((key, value) -> {
+                	List<String> paramValues = value;
                 	if(paramValues != null) {
                     	Object[] values = new Object[paramValues.size()];
-                    	webTarget = webTarget.queryParam(queryParam.getKey(), (Object[])paramValues.toArray(values));
+                    	webTarget.set(target -> target.queryParam(key, (Object[])paramValues.toArray(values)));
                 	}
                 	else {
-                		webTarget = webTarget.queryParam(queryParam.getKey());
+                		webTarget.set(target -> target.queryParam(key));
                 	}
-                }
+            	});
             }
         }
-        return webTarget;
+        return webTarget.get();
     }
     
     static Builder buildRequest(WebTarget target, HttpHeaders headers){
-        Builder builder = target.request();
+        Var<Builder> builder = new Var<>(target.request());
         if(headers != null){
             List<MediaType> mediaTypes = headers.getAcceptableMediaTypes();
             if(mediaTypes != null){
-                builder = builder.accept(mediaTypes.toArray(new MediaType[mediaTypes.size()]));
+                builder.set(b -> b.accept(mediaTypes.toArray(new MediaType[mediaTypes.size()])));
             }
             List<Locale> languages = headers.getAcceptableLanguages();
             if(languages != null){
-                builder = builder.acceptLanguage(languages.toArray(new Locale[languages.size()]));
+                builder.set(b -> b.acceptLanguage(languages.toArray(new Locale[languages.size()])));
             }
             Map<String, Cookie> cookies = headers.getCookies();
             if(cookies != null){
-                for(Entry<String, Cookie> cookie : cookies.entrySet()){
-                    builder = builder.cookie(cookie.getValue());
-                }
+            	cookies.forEach((key, value) -> {
+            		builder.set(b -> b.cookie(value));
+            	});
             }
             MultivaluedMap<String, String> requestHeaders = headers.getRequestHeaders();
             if(requestHeaders.containsKey(HttpHeaders.AUTHORIZATION)){
-                builder = builder.header(HttpHeaders.AUTHORIZATION, headers.getHeaderString(HttpHeaders.AUTHORIZATION));
+            	builder.set(b -> b.header(HttpHeaders.AUTHORIZATION, headers.getHeaderString(HttpHeaders.AUTHORIZATION)));
             }
         }
-        return builder;
+        return builder.get();
     }
     
     static Response buildMethod(

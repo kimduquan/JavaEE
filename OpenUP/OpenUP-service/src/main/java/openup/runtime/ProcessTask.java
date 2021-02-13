@@ -11,8 +11,8 @@ import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.sse.OutboundSseEvent.Builder;
+import epf.client.runtime.ProcessInfo;
 import javax.ws.rs.sse.SseBroadcaster;
-import openup.client.runtime.ProcessInfo;
 
 /**
  *

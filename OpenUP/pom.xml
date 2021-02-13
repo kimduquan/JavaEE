@@ -275,6 +275,9 @@
    </profiles>
     <modules>
         <module>EPF-schema</module>
+		<module>EPF-utility</module>
+        <module>EPF-client</module>
+        <module>EPF-validation</module>
         <module>OpenUP-schema</module>
         <module>OpenUP-client</module>
         <module>OpenUP-service</module>

@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import epf.util.Var;
 
 /**
  *
@@ -36,9 +37,15 @@ public class Credential implements AutoCloseable {
 
     @Override
     public void close() throws Exception {
-        for(Session session : sessions.values()){
-            session.close();
-        }
+    	Var<Exception> ex = new Var<>();
+        sessions.forEach((time, session) -> {
+        	try {
+				session.close();
+			} 
+        	catch (Exception e) {
+				ex.set(e);
+			}
+        });
         sessions.clear();
         defaultManager.close();
         factory.close();

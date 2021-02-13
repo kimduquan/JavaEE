@@ -8,6 +8,7 @@ package openup.persistence;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.persistence.EntityManagerFactory;
+import epf.util.Var;
 
 /**
  *
@@ -39,9 +40,15 @@ public class Session implements AutoCloseable {
 
     @Override
     public void close() throws Exception {
-        for(Conversation conversation : conversations.values()){
-            conversation.close();
-        }
+    	Var<Exception> ex = new Var<>();
+        conversations.forEach((id, conversation) -> {
+        	try {
+				conversation.close();
+			} 
+        	catch (Exception e) {
+        		ex.set(e);
+			}
+        });
         conversations.clear();
     }
     

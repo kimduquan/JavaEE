@@ -27,9 +27,5 @@
             <artifactId>microprofile</artifactId>
             <type>pom</type>
         </dependency>
-        <dependency>
-            <groupId>javax.transaction</groupId>
-            <artifactId>javax.transaction-api</artifactId>
-        </dependency>
     </dependencies>
 </project>

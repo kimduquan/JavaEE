@@ -13,12 +13,14 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
@@ -45,7 +47,7 @@ import openup.schema.Role;
  * @author FOXCONN
  */
 @Path("security")
-@RolesAllowed(openup.schema.Role.ANY_ROLE)
+@RolesAllowed(Role.ANY_ROLE)
 @RequestScoped
 public class Security implements openup.client.security.Security, Serializable {
     
@@ -53,6 +55,7 @@ public class Security implements openup.client.security.Security, Serializable {
     * 
     */
     private static final long serialVersionUID = 1L;
+    private static final Logger logger = Logger.getLogger(Security.class.getName());
     
     @Inject
     private Application persistence;
@@ -109,6 +112,7 @@ public class Security implements openup.client.security.Security, Serializable {
             String username,
             String password_hash,
             URL url) throws Exception{
+    	logger.entering(getClass().getName(), "login", new Object[] {unit, username});
         long time = System.currentTimeMillis() / 1000;
         Credential credential = persistence.putContext(unit)
                 .putCredential(
@@ -121,7 +125,9 @@ public class Security implements openup.client.security.Security, Serializable {
         buildGroups(jwt, username, credential.getDefaultManager());
         jwt = generator.generate(jwt);
         credential.putSession(jwt.getIssuedAtTime());
-        return jwt.getRawToken();
+        String rawToken = jwt.getRawToken();
+        logger.exiting(getClass().getName(), "login");
+        return rawToken;
     }
     
     @Override
@@ -138,12 +144,17 @@ public class Security implements openup.client.security.Security, Serializable {
     public String logOut(
             String unit
     ) throws Exception{
+    	logger.entering(getClass().getName(), "logOut", unit);
         Session session = removeSession(unit);
         if(session != null){
             session.close();
-            return context.getUserPrincipal().getName();
+            String name = context.getUserPrincipal().getName();
+            logger.exiting(getClass().getName(), "logOut", name);
+            return name;
         }
-        throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
+        Exception ex = new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
+        logger.throwing(getClass().getName(), "logOut", ex);
+        throw ex;
     }
     
     @Override
@@ -246,6 +257,9 @@ public class Security implements openup.client.security.Security, Serializable {
                         if(session != null) {
                             if(session.checkExpirationTime(jwt.getExpirationTime())){
                                 return session;
+                            }
+                            else {
+                            	throw new ForbiddenException();
                             }
                         }
                     }

@@ -6,21 +6,23 @@
 package openup.file;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
-import javax.ws.rs.Path;
+import openup.schema.Role;
 
 /**
  *
  * @author FOXCONN
  */
-@Path("file/directory")
-@RolesAllowed(openup.schema.Role.ANY_ROLE)
+@javax.ws.rs.Path("file/directory")
+@RolesAllowed(Role.ANY_ROLE)
 @RequestScoped
-public class Directories implements openup.client.file.Directories {
+public class DirectoryService implements epf.client.file.Directories {
     
     File buildDirectory(String dir) throws Exception{
         return new File(dir);
@@ -32,7 +34,7 @@ public class Directories implements openup.client.file.Directories {
             Map<String, String> attrs
     ) throws Exception {
         File directory = new File(dir);
-        return java.nio.file.Files.createDirectories(directory.toPath()).toString();
+        return Files.createDirectories(directory.toPath()).toString();
     }
 
     @Override
@@ -43,9 +45,9 @@ public class Directories implements openup.client.file.Directories {
     ) throws Exception {
         if(dir != null && !dir.isEmpty()){
             File directory = new File(dir);
-            return java.nio.file.Files.createTempDirectory(directory.toPath(), prefix).toString();
+            return Files.createTempDirectory(directory.toPath(), prefix).toString();
         }
-        return java.nio.file.Files.createTempDirectory(prefix).toString();
+        return Files.createTempDirectory(prefix).toString();
     }
 
     @Override
@@ -53,8 +55,8 @@ public class Directories implements openup.client.file.Directories {
             String dir
     ) throws Exception {
         File directory = buildDirectory(dir);
-        return java.nio.file.Files.list(directory.toPath())
-                .map(java.nio.file.Path::toString)
+        return Files.list(directory.toPath())
+                .map(Path::toString)
                 .collect(Collectors.toList());
     }
 }

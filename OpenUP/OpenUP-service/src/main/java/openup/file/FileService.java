@@ -6,25 +6,28 @@
 package openup.file;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Part;
-import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.StreamingOutput;
+import epf.util.Var;
+import java.nio.file.Path;
+import openup.client.EntityOutput;
+import openup.schema.Role;
 
 /**
  *
  * @author FOXCONN
  */
-@Path("file")
-@RolesAllowed(openup.schema.Role.ANY_ROLE)
+@javax.ws.rs.Path("file")
+@RolesAllowed(Role.ANY_ROLE)
 @RequestScoped
-public class Files implements openup.client.file.Files {
+public class FileService implements epf.client.file.Files {
     
     @Context
     private HttpServletRequest request;
@@ -38,12 +41,21 @@ public class Files implements openup.client.file.Files {
             String target
     ) throws Exception {
         File targetFile = buildFile(target);
-        long size = 0;
-        for(Part part : request.getParts()){
-            java.nio.file.Files.copy(part.getInputStream(), targetFile.toPath());
-            size += part.getSize();
+        Var<Long> size = new Var<>(Long.valueOf(0));
+        Var<Exception> ex = new Var<>();
+        request.getParts().forEach(part -> {
+            try {
+				Files.copy(part.getInputStream(), targetFile.toPath());
+	            size.set(s -> s + part.getSize());
+			} 
+            catch (Exception e) {
+				ex.set(e);
+			}
+        });
+        if(ex.get() != null) {
+        	throw ex.get();
         }
-        return size;
+        return size.get();
     }
 
     @Override
@@ -52,7 +64,7 @@ public class Files implements openup.client.file.Files {
             Map<String, String> attrs
     ) throws Exception {
         File file = new File(path);
-        return java.nio.file.Files.createFile(file.toPath()).toString();
+        return Files.createFile(file.toPath()).toString();
     }
 
     @Override
@@ -64,9 +76,9 @@ public class Files implements openup.client.file.Files {
     ) throws Exception {
         if(dir != null && !dir.isEmpty()){
             File directory = new File(dir);
-            return java.nio.file.Files.createTempFile(directory.toPath(), prefix, suffix).toString();
+            return Files.createTempFile(directory.toPath(), prefix, suffix).toString();
         }
-        return java.nio.file.Files.createTempFile(prefix, suffix).toString();
+        return Files.createTempFile(prefix, suffix).toString();
     }
 
     @Override
@@ -74,7 +86,7 @@ public class Files implements openup.client.file.Files {
             String path
     ) throws Exception {
         File file = buildFile(path);
-        java.nio.file.Files.delete(file.toPath());
+        Files.delete(file.toPath());
     }
 
     @Override
@@ -83,11 +95,11 @@ public class Files implements openup.client.file.Files {
             Integer maxDepth
     ) throws Exception {
         File startDir = buildFile(start);
-        return java.nio.file.Files.find(
+        return Files.find(
                 startDir.toPath(), 
                 maxDepth, null
         )
-        .map(java.nio.file.Path::toString)
+        .map(Path::toString)
         .collect(Collectors.toList());
     }
 
@@ -96,7 +108,7 @@ public class Files implements openup.client.file.Files {
             String path
     ) throws Exception {
         File file = buildFile(path);
-        return new LinesOutput(java.nio.file.Files.lines(file.toPath()));
+        return new EntityOutput(Files.newInputStream(file.toPath()));
     }
 
     @Override
@@ -106,7 +118,7 @@ public class Files implements openup.client.file.Files {
     ) throws Exception {
         File sourceFile = buildFile(source);
         File targetFile = new File(target);
-        return java.nio.file.Files.move(sourceFile.toPath(), targetFile.toPath()).toString();
+        return Files.move(sourceFile.toPath(), targetFile.toPath()).toString();
     }
     
 }

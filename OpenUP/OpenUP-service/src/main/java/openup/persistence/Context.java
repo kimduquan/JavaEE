@@ -5,9 +5,7 @@
  */
 package openup.persistence;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -15,6 +13,7 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import epf.util.Var;
 
 /**
  *
@@ -34,12 +33,13 @@ public class Context implements AutoCloseable {
         Map<String, Object> props = new HashMap<>();
         props.put("javax.persistence.jdbc.user", userName);
         props.put("javax.persistence.jdbc.password", password_hash);
-        List<Exception> errors = new ArrayList<>();
+        Var<Exception> error = new Var<>();
         credentials.computeIfAbsent(userName, name -> {
-            return newCredential(unit, props, errors);
+            return newCredential(unit, props, error);
         });
-        if(!errors.isEmpty()){
-            throw errors.get(0);
+        if(error.get() != null){
+			logger.throwing(getClass().getName(), "putCredential", error.get());
+            throw error.get();
         }
         Credential cred = credentials.computeIfPresent(userName, (name, credential) -> {
             if(credential != null){
@@ -51,23 +51,23 @@ public class Context implements AutoCloseable {
                         catch (Exception ex) {
                             logger.log(Level.WARNING, ex.getMessage(), ex);
                         }
-                        credential = newCredential(unit, props, errors);
+                        credential = newCredential(unit, props, error);
                     }
                 }
             }
             else{
-                credential = newCredential(unit, props, errors);
+                credential = newCredential(unit, props, error);
             }
             return credential;
         });
-        if(!errors.isEmpty()){
-        	logger.throwing(getClass().getName(), "putCredential", errors.get(0));
-            throw errors.get(0);
+        if(error.get() != null){
+        	logger.throwing(getClass().getName(), "putCredential", error.get());
+            throw error.get();
         }
         return cred;
     }
     
-    Credential newCredential(String unit, Map<String, Object> props, List<Exception> errors){
+    Credential newCredential(String unit, Map<String, Object> props, Var<Exception> error){
         EntityManagerFactory factory = null;
         EntityManager manager = null;
         try{
@@ -76,7 +76,7 @@ public class Context implements AutoCloseable {
             return new Credential(factory, manager);
         }
         catch (Exception ex) {
-            errors.add(ex);
+            error.set(ex);
             if(manager != null){
                 manager.close();
             }
@@ -97,9 +97,15 @@ public class Context implements AutoCloseable {
 
     @Override
     public void close() throws Exception {
-        for(Credential credential : credentials.values()){
-            credential.close();
-        }
+    	Var<Exception> ex = new Var<>();
+    	credentials.forEach((name, credential) -> {
+			try {
+				credential.close();
+			} 
+			catch (Exception e) {
+				ex.set(e);
+			}
+		});
         credentials.clear();
     }
 }

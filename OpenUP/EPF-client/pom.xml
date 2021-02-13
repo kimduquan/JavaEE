@@ -6,9 +6,9 @@
         <artifactId>OpenUP-parent</artifactId>
         <version>1.0.0</version>
     </parent>
-    <artifactId>OpenUP-gateway</artifactId>
-    <name>Open Unified Process Gateway</name>
-    <packaging>war</packaging>
+    <artifactId>EPF-client</artifactId>
+    <name>Eclipse Process Framework Client</name>
+    <packaging>jar</packaging>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.eclipse.microprofile/microprofile -->
         <dependency>
@@ -16,14 +16,14 @@
             <artifactId>microprofile</artifactId>
             <type>pom</type>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.context-propagation/microprofile-context-propagation-api -->
         <dependency>
-            <groupId>org.eclipse.microprofile.context-propagation</groupId>
-            <artifactId>microprofile-context-propagation-api</artifactId>
+            <groupId>openup</groupId>
+            <artifactId>EPF-schema</artifactId>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>openup</groupId>
-            <artifactId>EPF-utility</artifactId>
+            <artifactId>EPF-validation</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>

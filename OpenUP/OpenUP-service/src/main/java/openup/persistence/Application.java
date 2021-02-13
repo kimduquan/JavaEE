@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
+import epf.util.Var;
 
 /**
  *
@@ -31,15 +32,21 @@ public class Application {
     
     @PreDestroy
     void preDestroy(){
+    	Var<Exception> ex = new Var<>();
         contexts.values().forEach(context -> {
             try {
                 context.close();
             } 
-            catch (Exception ex) {
-                logger.log(Level.INFO, ex.getMessage(), ex);
+            catch (Exception e) {
+            	ex.set(e);
             }
         });
         contexts.clear();
+        ex.get(e -> {
+        	if(e != null) {
+            	logger.log(Level.INFO, e.getMessage(), e);
+        	}
+        });
     }
     
     public Context putContext(String unit) throws Exception{

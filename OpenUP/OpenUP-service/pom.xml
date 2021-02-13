@@ -10,6 +10,11 @@
     <name>Open Unified Process Service</name>
     <packaging>war</packaging>
     <dependencies>
+    	<!-- https://mvnrepository.com/artifact/javax.transaction/javax.transaction-api -->
+		<dependency>
+		    <groupId>javax.transaction</groupId>
+		    <artifactId>javax.transaction-api</artifactId>
+		</dependency>
         <!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.graphql/microprofile-graphql-api -->
         <dependency>
             <groupId>org.eclipse.microprofile.graphql</groupId>
@@ -81,6 +86,11 @@
             <groupId>com.hazelcast</groupId>
             <artifactId>hazelcast-all</artifactId>
         </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-utility</artifactId>
+            <version>1.0.0</version>
+        </dependency>
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-schema</artifactId>
@@ -94,6 +104,11 @@
         <dependency>
             <groupId>openup</groupId>
             <artifactId>OpenUP-client</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-client</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>

@@ -21,8 +21,9 @@ import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
-import openup.client.runtime.ProcessInfo;
 import org.eclipse.microprofile.context.ManagedExecutor;
+import epf.client.runtime.ProcessInfo;
+import epf.util.Var;
 
 /**
  *
@@ -31,7 +32,7 @@ import org.eclipse.microprofile.context.ManagedExecutor;
 @Path("runtime/process")
 @RolesAllowed(Role.ANY_ROLE)
 @SessionScoped
-public class Processes implements openup.client.runtime.Processes, Serializable {
+public class Processes implements epf.client.runtime.Processes, Serializable {
     
     /**
 	 * 
@@ -50,11 +51,13 @@ public class Processes implements openup.client.runtime.Processes, Serializable 
     
     @PreDestroy
     void preDestroy(){
+    	Var<Exception> ex = new Var<>();
         processes.forEach((pid, process) -> {
             try {
                 process.close();
             } 
-            catch (Exception ex) {
+            catch (Exception e) {
+            	ex.set(e);
             }
         });
         processes.clear();
@@ -73,11 +76,13 @@ public class Processes implements openup.client.runtime.Processes, Serializable 
 
     @Override
     public void stop() throws Exception {
+    	Var<Exception> ex = new Var<>();
         processes.forEach((pid, process) -> {
             try(ProcessTask task = process){
                 task.close();
             } 
-            catch (Exception ex) {
+            catch (Exception e) {
+            	ex.set(e);
             }
         });
         processes.clear();

@@ -71,9 +71,6 @@ public class Request {
                             }
                         }
                     }
-                    if(manager == null) {
-                    	manager = credential.getDefaultManager();
-                    }
                 }
             }
             if(manager == null){

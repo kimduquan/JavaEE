@@ -50,6 +50,7 @@ import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import epf.util.Var;
 
 /**
  *
@@ -113,63 +114,62 @@ public class Queries implements openup.client.persistence.Queries {
                 });
                 allParams.addAll(rootParams);
 
-                ManagedType<?> parentType = rootType;
+                Var<ManagedType<?>> parentType = new Var<>(rootType);
                 Root<?> parentFrom = rootFrom;
-                Join<?,?> parentJoin = null;
+                Var<Join<?,?>> parentJoin = new Var<>();
                 
-                try{
-                    for(PathSegment segment : paths.subList(1, paths.size())){
-                        Attribute<?,?> attribute = parentType.getAttribute(segment.getPath());
-                        if (attribute.getPersistentAttributeType() != PersistentAttributeType.BASIC) {
-                            Class<?> subClass = null;
-                            if(attribute.isCollection()){
-                                if(attribute.getJavaType() == List.class){
-                                    subClass = parentType.getList(segment.getPath()).getBindableJavaType();
-                                }
-                                else if(attribute.getJavaType() == Map.class){
-                                    subClass = parentType.getMap(segment.getPath()).getBindableJavaType();
-                                }
-                                else if(attribute.getJavaType() == Set.class){
-                                    subClass = parentType.getSet(segment.getPath()).getBindableJavaType();
-                                }
-                                else if(attribute.getJavaType() == Collection.class){
-                                    subClass = parentType.getCollection(segment.getPath()).getBindableJavaType();
-                                }
+                paths.subList(1, paths.size()).forEach(segment -> {
+                    Attribute<?,?> attribute = parentType.get().getAttribute(segment.getPath());
+                    if (attribute.getPersistentAttributeType() != PersistentAttributeType.BASIC) {
+                        Class<?> subClass = null;
+                        if(attribute.isCollection()){
+                            if(attribute.getJavaType() == List.class){
+                                subClass = parentType.get().getList(segment.getPath()).getBindableJavaType();
                             }
-                            else if(attribute.isAssociation()){
-                                subClass = parentType.getSingularAttribute(segment.getPath()).getBindableJavaType();
+                            else if(attribute.getJavaType() == Map.class){
+                                subClass = parentType.get().getMap(segment.getPath()).getBindableJavaType();
                             }
-                            
-                            Join<?,?> subJoin;
-                            if(parentJoin == null){
-                                subJoin = parentFrom.join(segment.getPath());
+                            else if(attribute.getJavaType() == Set.class){
+                                subClass = parentType.get().getSet(segment.getPath()).getBindableJavaType();
                             }
-                            else{
-                                subJoin = parentJoin.join(segment.getPath());
+                            else if(attribute.getJavaType() == Collection.class){
+                                subClass = parentType.get().getCollection(segment.getPath()).getBindableJavaType();
                             }
-
-                            List<Predicate> params = new ArrayList<>();
-                            segment.getMatrixParameters().forEach((name, values) -> {
-                                params.add(
-                                        builder.isMember(
-                                                values,
-                                                subJoin.get(name)
-                                        )
-                                );
-                            });
-                            allParams.addAll(params);
-                            
-                            ManagedType<?> subType = manager.getMetamodel().managedType(subClass);
-                            parentType = subType;
-                            parentJoin = subJoin;
                         }
+                        else if(attribute.isAssociation()){
+                            subClass = parentType.get().getSingularAttribute(segment.getPath()).getBindableJavaType();
+                        }
+                        
+                        Join<?,?> subJoin;
+                        if(parentJoin.get() == null){
+                            subJoin = parentFrom.join(segment.getPath());
+                        }
+                        else{
+                            subJoin = parentJoin.get().join(segment.getPath());
+                        }
+
+                        List<Predicate> params = new ArrayList<>();
+                        segment.getMatrixParameters().forEach((name, values) -> {
+                            params.add(
+                                    builder.isMember(
+                                            values,
+                                            subJoin.get(name)
+                                    )
+                            );
+                        });
+                        allParams.addAll(params);
+                        
+                        ManagedType<?> subType = manager.getMetamodel().managedType(subClass);
+                        parentType.set(subType);
+                        parentJoin.set(subJoin);
                     }
-                    
-                    if(parentJoin == null){
+            	});
+                try{
+                	if(parentJoin.get() == null){
                     	rootQuery.select(rootFrom);
                     }
                     else{
-                        rootQuery.select(parentJoin);//
+                        rootQuery.select(parentJoin.get());
                     }
                     
                     if(!allParams.isEmpty()){
