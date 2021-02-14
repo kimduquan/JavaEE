@@ -3,7 +3,9 @@ package epf.util.lang;
 import java.lang.reflect.Constructor;
 import java.util.concurrent.Callable;
 
-public class Throw<T extends Exception> implements Callable<Void>, Runnable {
+import epf.util.Var;
+
+public class Throw<T extends Exception> extends Var<Exception> implements Callable<Void>, Runnable {
 	
 	private Constructor<T> constructor;
 	
@@ -13,7 +15,8 @@ public class Throw<T extends Exception> implements Callable<Void>, Runnable {
 
 	@Override
 	public Void call() throws Exception {
-		throw constructor.newInstance();
+		set(constructor.newInstance());
+		throw get();
 	}
 
 	@Override
