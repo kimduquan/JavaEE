@@ -5,9 +5,12 @@
  */
 package openup.security;
 
-import openup.client.security.Token;
 import com.ibm.websphere.security.jwt.JwtBuilder;
 import com.ibm.websphere.security.jwt.JwtToken;
+
+import epf.client.config.ConfigNames;
+import epf.client.security.Token;
+
 import java.io.Serializable;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
@@ -20,7 +23,6 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.Claims;
-import openup.client.config.ConfigNames;
 
 /**
  *

@@ -3,24 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.gateway;
+package epf.util.client;
 
 import java.net.URI;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import openup.gateway.ssl.DefaultHostnameVerifier;
-import openup.gateway.ssl.DefaultTrustManager;
+import epf.util.ssl.DefaultHostnameVerifier;
+import epf.util.ssl.DefaultSSLContext;
 
 /**
  *
@@ -29,15 +26,13 @@ import openup.gateway.ssl.DefaultTrustManager;
 @ApplicationScoped
 public class ClientQueue {
 	
-	private static final Logger logger = Logger.getLogger(ClientQueue.class.getName());
-    
-    private Map<String, Queue<Client>> clients;
+	private Map<String, Queue<Client>> clients;
     private SSLContext context;
     
     @PostConstruct
     void postConstruct(){
         clients = new ConcurrentHashMap<>();
-        context = buildContext();
+        context = DefaultSSLContext.build();
     }
     
     @PreDestroy
@@ -47,19 +42,6 @@ public class ClientQueue {
             queue.clear();
         });
         clients.clear();
-    }
-    
-    static SSLContext buildContext(){
-        try {
-            TrustManager x509 = new DefaultTrustManager();
-            SSLContext ctx = SSLContext.getInstance("SSL");
-            ctx.init(null, new TrustManager[]{x509}, null);
-            return ctx;
-        } 
-        catch (Exception ex) {
-            logger.log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        return null;
     }
     
     static Client buildClient(SSLContext context){

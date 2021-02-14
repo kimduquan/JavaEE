@@ -5,10 +5,13 @@
  */
 package openup.webapp.view;
 
+import epf.client.config.ConfigNames;
+import epf.client.config.ConfigSource;
 import epf.schema.EPF;
-import openup.schema.OpenUP;
 import epf.schema.tasks.Discipline;
 import epf.schema.tasks.Task;
+import epf.util.client.Client;
+import epf.util.client.ClientQueue;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.List;
@@ -17,11 +20,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import openup.client.Client;
-import openup.client.config.ConfigNames;
-import openup.client.config.ConfigSource;
-import openup.webapp.Session;
 
 /**
  *
@@ -40,7 +38,7 @@ public class Tasks implements Serializable {
     private List<Task> tasks;
     
     @Inject
-    private Session session;
+    private ClientQueue clients;
     
     @Inject
     private ConfigSource config;
@@ -48,14 +46,13 @@ public class Tasks implements Serializable {
     public List<Discipline> getDisciplines() throws Exception {
         if(disciplines == null){
             String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
-            try(Client client = new Client(session.getClient(), new URI(url))){
-                Response response = client
+            try(Client client = new Client(clients, new URI(url))){
+            	disciplines = client
                         .target()
-                        .path(OpenUP.Schema)
+                        .path(EPF.Schema)
                         .path(EPF.Discipline)
                         .request(MediaType.APPLICATION_JSON)
-                        .get();
-                disciplines = response.readEntity(new GenericType<List<Discipline>> () {});
+                        .get(new GenericType<List<Discipline>> () {});
             }
         }
         return disciplines;
@@ -64,14 +61,13 @@ public class Tasks implements Serializable {
     public List<Task> getTasks() throws Exception {
         if(tasks == null){
             String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
-            try(Client client = new Client(session.getClient(), new URI(url))){
-                Response response = client
+            try(Client client = new Client(clients, new URI(url))){
+            	tasks = client
                         .target()
-                        .path(OpenUP.Schema)
+                        .path(EPF.Schema)
                         .path(EPF.Task)
                         .request(MediaType.APPLICATION_JSON)
-                        .get();
-                tasks = response.readEntity(new GenericType<List<Task>> () {});
+                        .get(new GenericType<List<Task>> () {});
             }
         }
         return tasks;

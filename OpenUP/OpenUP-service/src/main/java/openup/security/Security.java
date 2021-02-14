@@ -34,8 +34,9 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
-import openup.client.config.ConfigNames;
-import openup.client.security.Token;
+
+import epf.client.config.ConfigNames;
+import epf.client.security.Token;
 import openup.persistence.Application;
 import openup.persistence.Credential;
 import openup.persistence.Session;
@@ -49,7 +50,7 @@ import openup.schema.Role;
 @Path("security")
 @RolesAllowed(Role.ANY_ROLE)
 @RequestScoped
-public class Security implements openup.client.security.Security, Serializable {
+public class Security implements epf.client.security.Security, Serializable {
     
     /**
     * 

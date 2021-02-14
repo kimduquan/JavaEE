@@ -1,4 +1,4 @@
-package openup.client.persistence;
+package epf.client.persistence;
 
 public class Target {
 

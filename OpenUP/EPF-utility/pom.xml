@@ -10,5 +10,11 @@
     <name>Eclipse Process Framework Utility</name>
     <packaging>jar</packaging>
     <dependencies>
+    	<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile/microprofile -->
+        <dependency>
+            <groupId>org.eclipse.microprofile</groupId>
+            <artifactId>microprofile</artifactId>
+            <type>pom</type>
+        </dependency>
     </dependencies>
 </project>

@@ -10,14 +10,15 @@ import java.util.List;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import openup.TestUtil;
-import openup.client.security.Header;
-import openup.client.security.Security;
+
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import epf.client.runtime.Processes;
+import epf.client.security.Header;
+import epf.client.security.Security;
 
 /**
  *

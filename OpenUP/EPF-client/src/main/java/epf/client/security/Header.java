@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.client.security;
+package epf.client.security;
 
 import java.io.IOException;
 import javax.enterprise.context.Dependent;
@@ -27,12 +27,12 @@ public class Header implements ClientRequestFilter {
     @Override
     public void filter(ClientRequestContext crc) throws IOException {
         if(token != null){
+        	StringBuilder builder = new StringBuilder();
+        	builder.append("Bearer ");
+        	builder.append(token);
             crc.getHeaders().putSingle(
                     HttpHeaders.AUTHORIZATION, 
-                    String.format(
-                            Security.REQUEST_HEADER_FORMAT, 
-                            token
-                    )
+                    builder.toString()
             );
         }
     }

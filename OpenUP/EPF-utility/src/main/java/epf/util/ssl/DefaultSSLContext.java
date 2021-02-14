@@ -3,19 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.client.ssl;
+package epf.util.ssl;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
-import openup.client.ClientQueue;
 
 /**
  *
  * @author FOXCONN
  */
 public class DefaultSSLContext {
+	
+	private static final Logger logger = Logger.getLogger(DefaultSSLContext.class.getName());
     
     public static SSLContext build(){
         try {
@@ -25,7 +26,7 @@ public class DefaultSSLContext {
             return ctx;
         } 
         catch (Exception ex) {
-            Logger.getLogger(ClientQueue.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.log(Level.SEVERE, ex.getMessage(), ex);
         }
         return null;
     }

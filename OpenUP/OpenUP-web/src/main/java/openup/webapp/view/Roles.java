@@ -5,10 +5,13 @@
  */
 package openup.webapp.view;
 
+import epf.client.config.ConfigNames;
+import epf.client.config.ConfigSource;
 import epf.schema.EPF;
-import openup.schema.OpenUP;
 import epf.schema.roles.Role;
 import epf.schema.roles.RoleSet;
+import epf.util.client.Client;
+import epf.util.client.ClientQueue;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.List;
@@ -17,11 +20,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import openup.client.Client;
-import openup.client.config.ConfigNames;
-import openup.client.config.ConfigSource;
-import openup.webapp.Session;
 
 /**
  *
@@ -40,7 +38,7 @@ public class Roles implements Serializable {
     private List<Role> roles;
     
     @Inject
-    private Session session;
+    private ClientQueue clients;
     
     @Inject
     private ConfigSource config;
@@ -48,14 +46,13 @@ public class Roles implements Serializable {
     public List<RoleSet> getRoleSets() throws Exception {
         if(roleSets == null){
             String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
-            try(Client client = new Client(session.getClient(), new URI(url))){
-                Response response = client
+            try(Client client = new Client(clients, new URI(url))){
+            	roleSets = client
                         .target()
-                        .path(OpenUP.Schema)
+                        .path(EPF.Schema)
                         .path(EPF.RoleSet)
                         .request(MediaType.APPLICATION_JSON)
-                        .get();
-                roleSets = response.readEntity(new GenericType<List<RoleSet>> () {});
+                        .get(new GenericType<List<RoleSet>> () {});
             }
         }
         return roleSets;
@@ -64,14 +61,13 @@ public class Roles implements Serializable {
     public List<Role> getRoles() throws Exception {
         if(roles == null){
             String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
-            try(Client client = new Client(session.getClient(), new URI(url))){
-                Response response = client
+            try(Client client = new Client(clients, new URI(url))){
+            	roles = client
                         .target()
-                        .path(OpenUP.Schema)
+                        .path(EPF.Schema)
                         .path(EPF.Role)
                         .request(MediaType.APPLICATION_JSON)
-                        .get();
-                roles = response.readEntity(new GenericType<List<Role>> () {});
+                        .get(new GenericType<List<Role>> () {});
             }
         }
         return roles;

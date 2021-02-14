@@ -32,7 +32,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 @Path("persistence")
 @RolesAllowed(Role.ANY_ROLE)
 @RequestScoped
-public class Entities implements openup.client.persistence.Entities {
+public class Entities implements epf.client.persistence.Entities {
 	
 	private static final Logger logger = Logger.getLogger(Entities.class.getName());
     

@@ -5,6 +5,10 @@
  */
 package openup.persistence;
 
+import epf.client.persistence.Queries;
+import epf.client.persistence.Target;
+import epf.client.security.Header;
+import epf.client.security.Security;
 import epf.schema.EPF;
 import openup.schema.OpenUP;
 import openup.schema.Artifact;
@@ -19,10 +23,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import openup.TestUtil;
-import openup.client.persistence.Queries;
-import openup.client.persistence.Target;
-import openup.client.security.Header;
-import openup.client.security.Security;
+
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.junit.AfterClass;
 import org.junit.Assert;

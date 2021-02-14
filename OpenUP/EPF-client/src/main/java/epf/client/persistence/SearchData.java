@@ -1,4 +1,4 @@
-package openup.client.persistence;
+package epf.client.persistence;
 
 import java.util.List;
 

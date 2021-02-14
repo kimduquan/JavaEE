@@ -5,11 +5,14 @@
  */
 package openup.webapp.view;
 
+import epf.client.config.ConfigNames;
+import epf.client.config.ConfigSource;
 import epf.schema.EPF;
-import openup.schema.OpenUP;
 import epf.schema.delivery_processes.Iteration;
 import epf.schema.delivery_processes.Phase;
 import epf.schema.tasks.Task;
+import epf.util.client.Client;
+import epf.util.client.ClientQueue;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.List;
@@ -18,11 +21,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import openup.client.Client;
-import openup.client.config.ConfigNames;
-import openup.client.config.ConfigSource;
-import openup.webapp.Session;
 
 /**
  *
@@ -42,22 +40,21 @@ public class DeliveryProcesses implements Serializable {
     private List<Task> tasks;
     
     @Inject
-    private Session session;
+    private ConfigSource config;
     
     @Inject
-    private ConfigSource config;
+    private ClientQueue clients;
 
     public List<Phase> getPhases() throws Exception {
         if(phases == null){
             String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
-            try(Client client = new Client(session.getClient(), new URI(url))){
-                Response response = client
-                        .target()
-                        .path(OpenUP.Schema)
+            try(Client client = new Client(clients, new URI(url))){
+            	phases = client
+            			.target()
+                        .path(EPF.Schema)
                         .path(EPF.Phase)
                         .request(MediaType.APPLICATION_JSON)
-                        .get();
-                phases = response.readEntity(new GenericType<List<Phase>> () {});
+                        .get(new GenericType<List<Phase>> () {});
             }
         }
         return phases;
@@ -66,14 +63,13 @@ public class DeliveryProcesses implements Serializable {
     public List<Iteration> getIterations() throws Exception {
         if(iterations == null){
             String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
-            try(Client client = new Client(session.getClient(), new URI(url))){
-                Response response = client
+            try(Client client = new Client(clients, new URI(url))){
+            	iterations = client
                         .target()
-                        .path(OpenUP.Schema)
+                        .path(EPF.Schema)
                         .path(EPF.Iteration)
                         .request(MediaType.APPLICATION_JSON)
-                        .get();
-                iterations = response.readEntity(new GenericType<List<Iteration>> () {});
+                        .get(new GenericType<List<Iteration>> () {});
             }
         }
         return iterations;
@@ -82,14 +78,13 @@ public class DeliveryProcesses implements Serializable {
     public List<Task> getTasks() throws Exception {
         if(tasks == null){
             String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
-            try(Client client = new Client(session.getClient(), new URI(url))){
-                Response response = client
+            try(Client client = new Client(clients, new URI(url))){
+            	tasks = client
                         .target()
-                        .path(OpenUP.Schema)
+                        .path(EPF.Schema)
                         .path(EPF.Task)
                         .request(MediaType.APPLICATION_JSON)
-                        .get();
-                tasks = response.readEntity(new GenericType<List<Task>> () {});
+                        .get(new GenericType<List<Task>> () {});
             }
         }
         return tasks;

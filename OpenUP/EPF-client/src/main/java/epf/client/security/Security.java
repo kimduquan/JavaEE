@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.client.security;
+package epf.client.security;
 
 import java.net.URL;
 import javax.validation.constraints.NotBlank;
@@ -18,7 +18,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import openup.client.persistence.validation.Unit;
+import epf.validation.persistence.Unit;
 
 /**
  *

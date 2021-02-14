@@ -36,6 +36,7 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.util.Var;
+import epf.util.client.ClientQueue;
 
 /**
  *

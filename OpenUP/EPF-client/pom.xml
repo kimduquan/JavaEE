@@ -26,5 +26,10 @@
             <artifactId>EPF-validation</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-utility</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 </project>

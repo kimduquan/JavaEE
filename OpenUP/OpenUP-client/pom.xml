@@ -27,12 +27,18 @@
             <type>pom</type>
         </dependency>
         <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>javax.batch</groupId>
             <artifactId>javax.batch-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-validation</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-utility</artifactId>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>openup</groupId>

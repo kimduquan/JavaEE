@@ -5,6 +5,8 @@
  */
 package openup.security;
 
+import static epf.client.security.Security.AUDIENCE_URL_FORMAT;
+
 import java.net.URL;
 import java.time.Duration;
 import java.time.Instant;
@@ -19,10 +21,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import openup.TestUtil;
-import openup.client.security.Header;
 import openup.client.security.PasswordHash;
-import static openup.client.security.Security.AUDIENCE_URL_FORMAT;
-import openup.client.security.Token;
+
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -30,6 +30,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import epf.client.security.Header;
+import epf.client.security.Token;
 
 /**
  *

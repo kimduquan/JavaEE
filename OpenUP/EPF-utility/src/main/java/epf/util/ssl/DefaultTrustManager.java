@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.client.ssl;
+package epf.util.ssl;
 
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;

@@ -18,13 +18,13 @@ import javax.security.enterprise.credential.RememberMeCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStore;
 import javax.security.enterprise.identitystore.RememberMeIdentityStore;
-import openup.client.security.Token;
-import openup.client.config.ConfigNames;
-import openup.client.config.ConfigSource;
-import openup.client.security.Security;
-import openup.client.security.Header;
 import openup.client.security.PasswordHash;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
+import epf.client.config.ConfigNames;
+import epf.client.config.ConfigSource;
+import epf.client.security.Header;
+import epf.client.security.Security;
+import epf.client.security.Token;
 
 /**
  *

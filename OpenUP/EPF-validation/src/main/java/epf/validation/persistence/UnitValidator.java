@@ -3,10 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.client.persistence.validation;
+package epf.validation.persistence;
 
-import epf.schema.EPF;
-import openup.schema.OpenUP;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
@@ -18,7 +16,7 @@ public class UnitValidator implements ConstraintValidator<Unit, String> {
 
     @Override
     public boolean isValid(String unit, ConstraintValidatorContext arg1) {
-        return OpenUP.Schema.equals(unit) || EPF.Schema.equals(unit);
+        return "OpenUP".equals(unit) || "EPF".equals(unit);
     }
     
 }

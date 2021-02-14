@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.client;
+package epf.util.client;
 
 import java.net.URI;
 import javax.ws.rs.client.WebTarget;
@@ -14,22 +14,24 @@ import javax.ws.rs.client.WebTarget;
  */
 public class Client implements AutoCloseable {
     
-    private Session session;
     private URI uri;
     private javax.ws.rs.client.Client client;
+    private ClientQueue clients;
     
-    public Client(Session session, URI uri){
-        client = session.clients().poll(uri);
+    public Client(ClientQueue clients, URI uri){
+        client = clients.poll(uri);
         this.uri = uri;
-        this.session = session;
+        this.clients = clients;
     }
 
     @Override
     public void close() throws Exception {
-        session.clients().add(uri, client);
+        clients.add(uri, client);
+        uri = null;
+        client = null;
     }
     
     public WebTarget target(){
-        return client.target(uri).register(session.header());
+        return client.target(uri);
     }
 }

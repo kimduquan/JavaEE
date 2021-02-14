@@ -5,8 +5,6 @@
  */
 package openup.persistence;
 
-import openup.client.persistence.SearchData;
-import openup.client.persistence.Target;
 import openup.schema.OpenUP;
 import openup.schema.QueryNames;
 import openup.schema.Role;
@@ -50,6 +48,9 @@ import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+
+import epf.client.persistence.SearchData;
+import epf.client.persistence.Target;
 import epf.util.Var;
 
 /**
@@ -59,7 +60,7 @@ import epf.util.Var;
 @Path("persistence")
 @RolesAllowed(Role.ANY_ROLE)
 @RequestScoped
-public class Queries implements openup.client.persistence.Queries {
+public class Queries implements epf.client.persistence.Queries {
 	
 	private static final Logger logger = Logger.getLogger(Queries.class.getName());
     

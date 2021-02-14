@@ -5,10 +5,13 @@
  */
 package openup.webapp.view;
 
+import epf.client.config.ConfigNames;
+import epf.client.config.ConfigSource;
 import epf.schema.EPF;
-import openup.schema.OpenUP;
 import epf.schema.work_products.Artifact;
 import epf.schema.work_products.Domain;
+import epf.util.client.Client;
+import epf.util.client.ClientQueue;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.List;
@@ -17,11 +20,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import openup.client.Client;
-import openup.client.config.ConfigNames;
-import openup.client.config.ConfigSource;
-import openup.webapp.Session;
 
 /**
  *
@@ -40,7 +38,7 @@ public class WorkProducts implements Serializable {
     private List<Artifact> artifacts;
     
     @Inject
-    private Session session;
+    private ClientQueue clients;
     
     @Inject
     private ConfigSource config;
@@ -48,14 +46,13 @@ public class WorkProducts implements Serializable {
     public List<Domain> getDomains() throws Exception {
         if(domains == null){
             String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
-            try(Client client = new Client(session.getClient(), new URI(url))){
-                Response response = client
+            try(Client client = new Client(clients, new URI(url))){
+            	domains = client
                         .target()
-                        .path(OpenUP.Schema)
+                        .path(EPF.Schema)
                         .path(EPF.Domain)
                         .request(MediaType.APPLICATION_JSON)
-                        .get();
-                domains = response.readEntity(new GenericType<List<Domain>> () {});
+                        .get(new GenericType<List<Domain>> () {});
             }
         }
         return domains;
@@ -64,14 +61,13 @@ public class WorkProducts implements Serializable {
     public List<Artifact> getArtifacts() throws Exception {
         if(artifacts == null){
             String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
-            try(Client client = new Client(session.getClient(), new URI(url))){
-                Response response = client
+            try(Client client = new Client(clients, new URI(url))){
+            	artifacts = client
                         .target()
-                        .path(OpenUP.Schema)
+                        .path(EPF.Schema)
                         .path(EPF.Artifact)
                         .request(MediaType.APPLICATION_JSON)
-                        .get();
-                artifacts = response.readEntity(new GenericType<List<Artifact>> () {});
+                        .get(new GenericType<List<Artifact>> () {});
             }
         }
         return artifacts;
