@@ -47,7 +47,7 @@ public class Function implements Runnable {
 					}
 					return true;
 				})
-				.takeWhile(run -> !(run instanceof Return) && !(run instanceof Throw) && exception() == null)
+				.takeWhile(run -> _return() == null && _throw() == null && exception() == null)
 				.dropWhile(run -> _return() != null || exception() != null || _throw() != null)
 				.flatMap(runnable -> {
 					if(runnable instanceof Function) {
