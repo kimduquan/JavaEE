@@ -19,14 +19,16 @@
 
     <httpEndpoint id="defaultHttpEndpoint"
                   host="localhost"
-                  httpPort="8080"
-                  httpsPort="8443" />
+                  httpPort="80"
+                  httpsPort="443" />
 
-    <application name="OpenUP-service" context-root="service" location="OpenUP-service-1.0.0.war">
+    <application id="OpenUP-service" name="OpenUP-service" context-root="service" location="OpenUP-service-1.0.0.war">
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-    <application name="OpenUP-gateway" context-root="gateway" location="OpenUP-gateway-1.0.0.war" />
-    <application name="OpenUP-web" context-root="web" location="OpenUP-web-1.0.0.war" />
+    <application id="OpenUP-gateway" name="OpenUP-gateway" context-root="gateway" location="OpenUP-gateway-1.0.0.war" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
+    <application id="OpenUP-web" name="OpenUP-web" context-root="web" location="OpenUP-web-1.0.0.war" startAfterRef="OpenUP-service,OpenUP-gateway" />
     
     <!-- H2 Library Configuration -->
     <library id="H2JDBCLib">
@@ -47,7 +49,7 @@
     
     <mpJwt 
         id="OpenUP"
-        audiences ="http://localhost:8080/,https://localhost:8443/">
+        audiences ="http://localhost/,https://localhost/">
     </mpJwt>
 
     <dataSource id="epf" jndiName="jdbc/epf">
@@ -98,4 +100,5 @@
         </properties.wasJms>
     </jmsActivationSpec>
     <batchJmsEvents />
+	<logging />
 </server>
