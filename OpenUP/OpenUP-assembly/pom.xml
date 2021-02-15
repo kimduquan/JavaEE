@@ -87,7 +87,6 @@
                     <!-- Drop application into apps/ directory -->
                     <appsDirectory>apps</appsDirectory>
                     <deployPackages>dependencies</deployPackages>
-                    <applications>OpenUP-service,OpenUP-gateway,OpenUP-web</applications>
 					<copyDependencies>
 						<location>${project.build.directory}/shared/resources/openup/</location>
                         <dependency>
