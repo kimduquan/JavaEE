@@ -9,15 +9,12 @@ import java.io.Serializable;
 import java.io.StreamCorruptedException;
 import java.sql.SQLInvalidAuthorizationSpecException;
 import java.sql.SQLNonTransientException;
-import java.util.logging.Logger;
 import javax.validation.ValidationException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-import org.eclipse.microprofile.faulttolerance.ExecutionContext;
-import org.eclipse.microprofile.faulttolerance.FallbackHandler;
 import org.eclipse.microprofile.faulttolerance.exceptions.BulkheadException;
 import org.eclipse.microprofile.faulttolerance.exceptions.CircuitBreakerOpenException;
 import org.eclipse.microprofile.faulttolerance.exceptions.TimeoutException;
@@ -27,23 +24,12 @@ import org.eclipse.microprofile.faulttolerance.exceptions.TimeoutException;
  * @author FOXCONN
  */
 @Provider
-public class ExceptionHandler implements 
-        FallbackHandler<Response>, 
-        Serializable,
-        ExceptionMapper<Exception> {
+public class ExceptionHandler implements ExceptionMapper<Exception>, Serializable {
 
     /**
     * 
     */
     private static final long serialVersionUID = 1L;
-    private static final Logger logger = Logger.getLogger(ExceptionHandler.class.getName());
-
-    @Override
-    public Response handle(ExecutionContext context) {
-        Throwable failure = context.getFailure();
-        Response response = handle(failure);
-        return response;
-    }
 
     @Override
     public Response toResponse(Exception ex) {
@@ -97,7 +83,6 @@ public class ExceptionHandler implements
     Response handle(Throwable failure){
         ResponseBuilder builder = Response.serverError();
         if(failure != null){
-        	logger.throwing(getClass().getName(), "handle", failure);
             if(map(failure, builder) == false){
                 Throwable cause = failure.getCause();
                 while(cause != null && failure != cause){

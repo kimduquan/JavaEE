@@ -7,15 +7,14 @@ package openup.security;
 
 import com.ibm.websphere.security.jwt.JwtBuilder;
 import com.ibm.websphere.security.jwt.JwtToken;
-
 import epf.client.config.ConfigNames;
 import epf.client.security.Token;
-
 import java.io.Serializable;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Base64;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
@@ -35,6 +34,7 @@ public class TokenGenerator implements Serializable {
     * 
     */
     private static final long serialVersionUID = 1L;
+    private static final Logger logger = Logger.getLogger(TokenGenerator.class.getName());
 
     private PrivateKey privateKey;
     private Base64.Decoder decoder;
@@ -55,7 +55,7 @@ public class TokenGenerator implements Serializable {
                         );
         } 
         catch (Exception ex) {
-            Logger.getLogger(getClass().getName()).throwing(getClass().getName(), "postConstruct", ex);
+            logger.log(Level.SEVERE, ex.getMessage(), ex);
         }
     }
     

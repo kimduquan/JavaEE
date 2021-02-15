@@ -6,21 +6,18 @@
 package openup.delivery_processes;
 
 import epf.schema.EPF;
+import epf.util.Var;
 import openup.schema.OpenUP;
 import openup.schema.DeliveryProcess;
 import openup.schema.Iteration;
 import openup.schema.Phase;
 import openup.schema.Role;
 import java.security.Principal;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
 import openup.client.delivery_processes.DeliveryProcesses;
 import openup.persistence.Request;
 
@@ -43,7 +40,7 @@ public class DeliveryProcessesService implements DeliveryProcesses {
     public DeliveryProcess newDeliveryProcess(String delivery_process, String name, String summary) throws Exception {
         epf.schema.delivery_processes.DeliveryProcess epfDP = cache.find(OpenUP.Schema, principal, EPF.DeliveryProcess, epf.schema.delivery_processes.DeliveryProcess.class, delivery_process);
         if(epfDP != null){
-            List<Exception> errors = new CopyOnWriteArrayList<>();
+            Var<Exception> error = new Var<>();
             DeliveryProcess dp = new DeliveryProcess();
             dp.setName(name);
             dp.setSummary(summary);
@@ -71,16 +68,16 @@ public class DeliveryProcessesService implements DeliveryProcesses {
                                             cache.persist(OpenUP.Schema, principal, OpenUP.Iteration, it);
                                         } 
                                         catch (Exception ex) {
-                                            errors.add(ex);
+                                        	error.set(ex);
                                         }
                                     });
                         } 
                         catch (Exception ex) {
-                            errors.add(ex);
+                        	error.set(ex);
                         }
                     });
-            if(!errors.isEmpty()){
-                throw new InternalServerErrorException(Response.serverError().entity(errors).build());
+            if(error.get() != null){
+                throw error.get();
             }
             return dp;
         }

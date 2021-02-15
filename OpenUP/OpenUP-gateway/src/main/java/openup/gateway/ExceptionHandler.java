@@ -6,9 +6,7 @@
 package openup.gateway;
 
 import java.io.Serializable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -27,14 +25,12 @@ public class ExceptionHandler implements
     * 
     */
     private static final long serialVersionUID = 1L;
-    private static final Logger logger = Logger.getLogger(ExceptionHandler.class.getName());
     
     @Override
     public Response toResponse(Exception ex) {
-    	logger.log(Level.WARNING, ex.getMessage(), ex);
     	ResponseBuilder builder = Response.serverError();
-    	if(ex instanceof ClientErrorException) {
-    		ClientErrorException error = (ClientErrorException) ex;
+    	if(ex instanceof WebApplicationException) {
+    		WebApplicationException error = (WebApplicationException) ex;
     		builder = Response.fromResponse(error.getResponse());
     	}
         return builder.build();

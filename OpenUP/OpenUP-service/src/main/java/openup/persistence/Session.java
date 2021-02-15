@@ -7,6 +7,8 @@ package openup.persistence;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
 import epf.util.Var;
 
@@ -15,6 +17,8 @@ import epf.util.Var;
  * @author FOXCONN
  */
 public class Session implements AutoCloseable {
+	
+	private static final Logger logger = Logger.getLogger(Session.class.getName());
    
     private EntityManagerFactory factory;
     private Map<String, Conversation> conversations;
@@ -40,16 +44,20 @@ public class Session implements AutoCloseable {
 
     @Override
     public void close() throws Exception {
-    	Var<Exception> ex = new Var<>();
-        conversations.forEach((id, conversation) -> {
+    	Var<Exception> error = new Var<>();
+    	conversations.forEach((id, conversation) -> {
         	try {
 				conversation.close();
 			} 
         	catch (Exception e) {
-        		ex.set(e);
+        		logger.log(Level.WARNING, e.getMessage(), e);
+        		error.set(e);
 			}
         });
         conversations.clear();
+        if(error.get() != null) {
+        	throw error.get();
+        }
     }
     
     public boolean checkExpirationTime(long expirationTime) {

@@ -14,6 +14,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -38,6 +40,7 @@ public class Processes implements epf.client.runtime.Processes, Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private static final Logger logger = Logger.getLogger(Processes.class.getName());
 
 	private Map<Long, ProcessTask> processes;
     
@@ -51,13 +54,12 @@ public class Processes implements epf.client.runtime.Processes, Serializable {
     
     @PreDestroy
     void preDestroy(){
-    	Var<Exception> ex = new Var<>();
-        processes.forEach((pid, process) -> {
+    	processes.forEach((pid, process) -> {
             try {
                 process.close();
             } 
             catch (Exception e) {
-            	ex.set(e);
+            	logger.log(Level.WARNING, e.getMessage(), e);
             }
         });
         processes.clear();
@@ -76,16 +78,20 @@ public class Processes implements epf.client.runtime.Processes, Serializable {
 
     @Override
     public void stop() throws Exception {
-    	Var<Exception> ex = new Var<>();
-        processes.forEach((pid, process) -> {
+    	Var<Exception> error = new Var<>();
+    	processes.forEach((pid, process) -> {
             try(ProcessTask task = process){
                 task.close();
             } 
             catch (Exception e) {
-            	ex.set(e);
+            	logger.log(Level.SEVERE, e.getMessage(), e);
+            	error.set(e);
             }
         });
         processes.clear();
+        if(error.get() != null) {
+        	throw error.get();
+        }
     }
 
     @Override

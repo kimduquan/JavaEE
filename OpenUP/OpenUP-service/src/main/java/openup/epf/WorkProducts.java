@@ -23,6 +23,7 @@ import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 /**
  *
@@ -52,7 +53,7 @@ public class WorkProducts {
             responseCode = "200",
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON,
-                    schema = @org.eclipse.microprofile.openapi.annotations.media.Schema(implementation = Domain.class)
+                    schema = @Schema(implementation = Domain.class)
             )
     )
     public List<Domain> getDomains() throws Exception{

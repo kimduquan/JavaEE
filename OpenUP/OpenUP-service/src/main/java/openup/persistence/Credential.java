@@ -7,8 +7,11 @@ package openup.persistence;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+
 import epf.util.Var;
 
 /**
@@ -16,6 +19,8 @@ import epf.util.Var;
  * @author FOXCONN
  */
 public class Credential implements AutoCloseable {
+	
+	private static final Logger logger = Logger.getLogger(Credential.class.getName());
     
     private EntityManagerFactory factory;
     private EntityManager defaultManager;
@@ -37,18 +42,22 @@ public class Credential implements AutoCloseable {
 
     @Override
     public void close() throws Exception {
-    	Var<Exception> ex = new Var<>();
-        sessions.forEach((time, session) -> {
+    	Var<Exception> error = new Var<>();
+    	sessions.forEach((time, session) -> {
         	try {
 				session.close();
 			} 
         	catch (Exception e) {
-				ex.set(e);
+				logger.log(Level.WARNING, e.getMessage(), e);
+				error.set(e);
 			}
         });
         sessions.clear();
         defaultManager.close();
         factory.close();
+        if(error.get() != null) {
+        	throw error.get();
+        }
     }
     
     public Session putSession(long timestamp){

@@ -38,7 +38,6 @@ public class Context implements AutoCloseable {
             return newCredential(unit, props, error);
         });
         if(error.get() != null){
-			logger.throwing(getClass().getName(), "putCredential", error.get());
             throw error.get();
         }
         Credential cred = credentials.computeIfPresent(userName, (name, credential) -> {
@@ -61,7 +60,6 @@ public class Context implements AutoCloseable {
             return credential;
         });
         if(error.get() != null){
-        	logger.throwing(getClass().getName(), "putCredential", error.get());
             throw error.get();
         }
         return cred;
@@ -97,15 +95,19 @@ public class Context implements AutoCloseable {
 
     @Override
     public void close() throws Exception {
-    	Var<Exception> ex = new Var<>();
+    	Var<Exception> error = new Var<>();
     	credentials.forEach((name, credential) -> {
 			try {
 				credential.close();
 			} 
 			catch (Exception e) {
-				ex.set(e);
+				logger.log(Level.WARNING, e.getMessage(), e);
+				error.set(e);
 			}
 		});
         credentials.clear();
+        if(error.get() != null) {
+        	throw error.get();
+        }
     }
 }

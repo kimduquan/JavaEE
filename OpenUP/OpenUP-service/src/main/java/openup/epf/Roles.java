@@ -23,6 +23,7 @@ import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 /**
  *
@@ -52,7 +53,7 @@ public class Roles {
             responseCode = "200",
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON,
-                    schema = @org.eclipse.microprofile.openapi.annotations.media.Schema(implementation = RoleSet.class)
+                    schema = @Schema(implementation = RoleSet.class)
             )
     )
     public List<RoleSet> getRoleSets() throws Exception{

@@ -151,7 +151,7 @@ public class Request {
 	                	result.setType(type);
 	                	}
                 	catch(ClassCastException ex) {
-                		logger.log(Level.WARNING, ex.getMessage(), ex);
+                		logger.log(Level.SEVERE, ex.getMessage(), ex);
                 	}});
         return result;
     }

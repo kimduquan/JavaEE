@@ -7,7 +7,9 @@ package openup.persistence;
 
 import openup.schema.Role;
 import java.io.InputStream;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -76,8 +78,8 @@ public class Entities implements epf.client.persistence.Entities {
                 return cache.persist(unit, context.getUserPrincipal(), name, obj);
             }
             catch(JsonbException ex){
-            	logger.throwing(Entities.class.getName(), "persist", ex);
-                throw new BadRequestException();
+            	logger.log(Level.SEVERE, ex.getMessage(), ex);
+            	throw new BadRequestException();
             }
         }
         return null;
@@ -97,7 +99,7 @@ public class Entities implements epf.client.persistence.Entities {
                 cache.merge(unit, context.getUserPrincipal(), name, id, obj);
             }
             catch(JsonbException ex){
-            	logger.throwing(Entities.class.getName(), "merge", ex);
+            	logger.log(Level.SEVERE, ex.getMessage(), ex);
                 throw new BadRequestException();
             }
         }

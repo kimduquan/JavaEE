@@ -13,7 +13,6 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -34,7 +33,6 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
-
 import epf.client.config.ConfigNames;
 import epf.client.security.Token;
 import openup.persistence.Application;
@@ -56,7 +54,6 @@ public class Security implements epf.client.security.Security, Serializable {
     * 
     */
     private static final long serialVersionUID = 1L;
-    private static final Logger logger = Logger.getLogger(Security.class.getName());
     
     @Inject
     private Application persistence;
@@ -113,8 +110,7 @@ public class Security implements epf.client.security.Security, Serializable {
             String username,
             String password_hash,
             URL url) throws Exception{
-    	logger.entering(getClass().getName(), "login", new Object[] {unit, username});
-        long time = System.currentTimeMillis() / 1000;
+    	long time = System.currentTimeMillis() / 1000;
         Credential credential = persistence.putContext(unit)
                 .putCredential(
                         username, 
@@ -126,9 +122,7 @@ public class Security implements epf.client.security.Security, Serializable {
         buildGroups(jwt, username, credential.getDefaultManager());
         jwt = generator.generate(jwt);
         credential.putSession(jwt.getIssuedAtTime());
-        String rawToken = jwt.getRawToken();
-        logger.exiting(getClass().getName(), "login");
-        return rawToken;
+        return jwt.getRawToken();
     }
     
     @Override
@@ -145,17 +139,13 @@ public class Security implements epf.client.security.Security, Serializable {
     public String logOut(
             String unit
     ) throws Exception{
-    	logger.entering(getClass().getName(), "logOut", unit);
         Session session = removeSession(unit);
         if(session != null){
             session.close();
             String name = context.getUserPrincipal().getName();
-            logger.exiting(getClass().getName(), "logOut", name);
             return name;
         }
-        Exception ex = new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
-        logger.throwing(getClass().getName(), "logOut", ex);
-        throw ex;
+        throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
     }
     
     @Override

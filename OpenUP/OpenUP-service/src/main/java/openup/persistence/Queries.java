@@ -18,8 +18,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.security.RolesAllowed;
@@ -48,7 +46,6 @@ import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
-
 import epf.client.persistence.SearchData;
 import epf.client.persistence.Target;
 import epf.util.Var;
@@ -61,8 +58,6 @@ import epf.util.Var;
 @RolesAllowed(Role.ANY_ROLE)
 @RequestScoped
 public class Queries implements epf.client.persistence.Queries {
-	
-	private static final Logger logger = Logger.getLogger(Queries.class.getName());
     
     @Inject
     private Request cache;
@@ -165,35 +160,30 @@ public class Queries implements epf.client.persistence.Queries {
                         parentJoin.set(subJoin);
                     }
             	});
-                try{
-                	if(parentJoin.get() == null){
-                    	rootQuery.select(rootFrom);
-                    }
-                    else{
-                        rootQuery.select(parentJoin.get());
-                    }
-                    
-                    if(!allParams.isEmpty()){
-                        rootQuery.where(allParams.toArray(new Predicate[allParams.size()]));
-                    }
-                    
-                    Query query = manager.createQuery(rootQuery);
+                if(parentJoin.get() == null){
+                	rootQuery.select(rootFrom);
+                }
+                else{
+                    rootQuery.select(parentJoin.get());
+                }
                 
-                    if(firstResult != null){
-                        query.setFirstResult(firstResult);
-                    }
-                    if(maxResults != null){
-                        query.setMaxResults(maxResults);
-                    }
-                    Stream<?> result = query.getResultStream();
-                    response.status(Status.OK).entity(
-                                		result
-                                        .collect(Collectors.toList())
-                    );
+                if(!allParams.isEmpty()){
+                    rootQuery.where(allParams.toArray(new Predicate[allParams.size()]));
                 }
-                catch(IllegalArgumentException ex){
-                	logger.log(Level.WARNING, ex.getMessage(), ex);
+                
+                Query query = manager.createQuery(rootQuery);
+            
+                if(firstResult != null){
+                    query.setFirstResult(firstResult);
                 }
+                if(maxResults != null){
+                    query.setMaxResults(maxResults);
+                }
+                Stream<?> result = query.getResultStream();
+                response.status(Status.OK).entity(
+                            		result
+                                    .collect(Collectors.toList())
+                );
             }
         }
         return response.build();
