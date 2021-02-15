@@ -23,7 +23,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import openup.TestUtil;
-
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.junit.AfterClass;
 import org.junit.Assert;

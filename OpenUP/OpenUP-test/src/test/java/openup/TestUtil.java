@@ -8,20 +8,16 @@ package openup;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
-
 import epf.client.config.ConfigNames;
 import epf.client.security.Header;
 import epf.client.security.Security;
 import epf.util.ssl.DefaultHostnameVerifier;
 import epf.util.ssl.DefaultSSLContext;
-
 import java.net.URL;
 import javax.json.JsonObject;
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.client.ClientBuilder;
-
 import openup.client.security.PasswordHash;
-
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 
 /**
