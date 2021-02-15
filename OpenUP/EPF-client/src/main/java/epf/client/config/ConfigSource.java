@@ -20,6 +20,8 @@ import org.eclipse.microprofile.rest.client.RestClientBuilder;
  */
 @ApplicationScoped
 public class ConfigSource {
+	
+	private static final Logger logger = Logger.getLogger(ConfigSource.class.getName());
     
     private Map<String, Object> configs;
     
@@ -38,7 +40,7 @@ public class ConfigSource {
             }
         } 
         catch (Exception ex) {
-            Logger.getLogger(ConfigSource.class.getName()).log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, ex.getMessage(), ex);
         }
         
     }

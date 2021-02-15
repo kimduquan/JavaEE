@@ -32,6 +32,8 @@ import epf.client.security.Token;
  */
 @ApplicationScoped
 public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentityStore {
+	
+	private final static Logger logger = Logger.getLogger(OpenUPIdentityStore.class.getName());
     
     @Inject
     private ConfigSource config;
@@ -105,7 +107,7 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
             }
         } 
         catch (Exception ex) {
-            Logger.getLogger(OpenUPIdentityStore.class.getName()).log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, ex.getMessage(), ex);
         }
         return result;
     }
@@ -134,7 +136,7 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
             service.logOut(OpenUP.Schema);
         } 
         catch (Exception ex) {
-            Logger.getLogger(OpenUPIdentityStore.class.getName()).log(Level.SEVERE, null, ex);
+        	logger.log(Level.SEVERE, ex.getMessage(), ex);
         }
     }
 }
