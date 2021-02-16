@@ -72,4 +72,8 @@ public class Session implements Serializable {
             }
         }
     }
+    
+    public TokenPrincipal getPrincipal() {
+    	return principal;
+    }
 }

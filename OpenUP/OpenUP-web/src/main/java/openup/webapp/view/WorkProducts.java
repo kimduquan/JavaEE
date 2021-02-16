@@ -12,6 +12,7 @@ import epf.schema.work_products.Artifact;
 import epf.schema.work_products.Domain;
 import epf.util.client.Client;
 import epf.util.client.ClientQueue;
+import openup.webapp.Session;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.List;
@@ -42,17 +43,26 @@ public class WorkProducts implements Serializable {
     
     @Inject
     private ConfigSource config;
+    
+    @Inject
+    private Session session;
 
     public List<Domain> getDomains() throws Exception {
         if(domains == null){
             String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
-            try(Client client = new Client(clients, new URI(url))){
+            try(Client client = new Client(clients, new URI(url), b -> b)){
             	domains = client
-                        .target()
-                        .path(EPF.Schema)
-                        .path(EPF.Domain)
-                        .request(MediaType.APPLICATION_JSON)
-                        .get(new GenericType<List<Domain>> () {});
+            			.authorization(
+            					session
+            					.getPrincipal()
+            					.getToken()
+            					.getRawToken()
+            					)
+            			.request(
+            					target -> target.path(EPF.Schema).path(EPF.Domain), 
+            					req -> req.accept(MediaType.APPLICATION_JSON)
+            					)
+            			.get(new GenericType<List<Domain>> () {});
             }
         }
         return domains;
@@ -61,13 +71,19 @@ public class WorkProducts implements Serializable {
     public List<Artifact> getArtifacts() throws Exception {
         if(artifacts == null){
             String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
-            try(Client client = new Client(clients, new URI(url))){
+            try(Client client = new Client(clients, new URI(url), b -> b)){
             	artifacts = client
-                        .target()
-                        .path(EPF.Schema)
-                        .path(EPF.Artifact)
-                        .request(MediaType.APPLICATION_JSON)
-                        .get(new GenericType<List<Artifact>> () {});
+            			.authorization(
+            					session
+            					.getPrincipal()
+            					.getToken()
+            					.getRawToken()
+            					)
+            			.request(
+            					target -> target.path(EPF.Schema).path(EPF.Artifact), 
+            					req -> req.accept(MediaType.APPLICATION_JSON)
+            					)
+            			.get(new GenericType<List<Artifact>> () {});
             }
         }
         return artifacts;

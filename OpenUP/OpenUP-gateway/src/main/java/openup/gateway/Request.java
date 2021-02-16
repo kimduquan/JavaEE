@@ -60,7 +60,7 @@ public class Request {
             String method, 
             InputStream in) throws Exception{
         return executor.supplyAsync(() -> uri = buildUri(uriInfo))
-                .thenApply(newUri -> client = clients.poll(newUri))
+                .thenApply(newUri -> client = clients.poll(newUri, b -> b))
                 .thenApply(newClient -> buildTarget(newClient, uriInfo))
                 .thenApply(target -> buildRequest(target, headers))
                 .thenApply(request -> buildMethod(request, method, headers.getMediaType(), in))

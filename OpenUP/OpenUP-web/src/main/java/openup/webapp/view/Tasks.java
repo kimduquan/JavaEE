@@ -12,6 +12,7 @@ import epf.schema.tasks.Discipline;
 import epf.schema.tasks.Task;
 import epf.util.client.Client;
 import epf.util.client.ClientQueue;
+import openup.webapp.Session;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.List;
@@ -42,17 +43,26 @@ public class Tasks implements Serializable {
     
     @Inject
     private ConfigSource config;
+    
+    @Inject
+    private Session session;
 
     public List<Discipline> getDisciplines() throws Exception {
         if(disciplines == null){
             String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
-            try(Client client = new Client(clients, new URI(url))){
+            try(Client client = new Client(clients, new URI(url), b -> b)){
             	disciplines = client
-                        .target()
-                        .path(EPF.Schema)
-                        .path(EPF.Discipline)
-                        .request(MediaType.APPLICATION_JSON)
-                        .get(new GenericType<List<Discipline>> () {});
+            			.authorization(
+            					session
+            					.getPrincipal()
+            					.getToken()
+            					.getRawToken()
+            					)
+            			.request(
+            					target -> target.path(EPF.Schema).path(EPF.Discipline), 
+            					req -> req.accept(MediaType.APPLICATION_JSON)
+            					)
+            			.get(new GenericType<List<Discipline>> () {});
             }
         }
         return disciplines;
@@ -61,13 +71,19 @@ public class Tasks implements Serializable {
     public List<Task> getTasks() throws Exception {
         if(tasks == null){
             String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
-            try(Client client = new Client(clients, new URI(url))){
+            try(Client client = new Client(clients, new URI(url), b -> b)){
             	tasks = client
-                        .target()
-                        .path(EPF.Schema)
-                        .path(EPF.Task)
-                        .request(MediaType.APPLICATION_JSON)
-                        .get(new GenericType<List<Task>> () {});
+            			.authorization(
+            					session
+            					.getPrincipal()
+            					.getToken()
+            					.getRawToken()
+            					)
+            			.request(
+            					target -> target.path(EPF.Schema).path(EPF.Task),
+            					req -> req.accept(MediaType.APPLICATION_JSON)
+            					)
+            			.get(new GenericType<List<Task>> () {});
             }
         }
         return tasks;

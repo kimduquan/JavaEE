@@ -12,6 +12,7 @@ import epf.schema.roles.Role;
 import epf.schema.roles.RoleSet;
 import epf.util.client.Client;
 import epf.util.client.ClientQueue;
+import openup.webapp.Session;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.List;
@@ -42,17 +43,26 @@ public class Roles implements Serializable {
     
     @Inject
     private ConfigSource config;
+    
+    @Inject
+    private Session session;
 
     public List<RoleSet> getRoleSets() throws Exception {
         if(roleSets == null){
             String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
-            try(Client client = new Client(clients, new URI(url))){
+            try(Client client = new Client(clients, new URI(url), b -> b)){
             	roleSets = client
-                        .target()
-                        .path(EPF.Schema)
-                        .path(EPF.RoleSet)
-                        .request(MediaType.APPLICATION_JSON)
-                        .get(new GenericType<List<RoleSet>> () {});
+            			.authorization(
+            					session
+            					.getPrincipal()
+			        			.getToken()
+			        			.getRawToken()
+			        			)
+			        	.request(
+			        			target -> target.path(EPF.Schema).path(EPF.RoleSet), 
+			        			req -> req.accept(MediaType.APPLICATION_JSON)
+			        			)
+			        	.get(new GenericType<List<RoleSet>> () {});
             }
         }
         return roleSets;
@@ -61,13 +71,19 @@ public class Roles implements Serializable {
     public List<Role> getRoles() throws Exception {
         if(roles == null){
             String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
-            try(Client client = new Client(clients, new URI(url))){
+            try(Client client = new Client(clients, new URI(url), b -> b)){
             	roles = client
-                        .target()
-                        .path(EPF.Schema)
-                        .path(EPF.Role)
-                        .request(MediaType.APPLICATION_JSON)
-                        .get(new GenericType<List<Role>> () {});
+            			.authorization(
+            					session
+            					.getPrincipal()
+		            			.getToken()
+		            			.getRawToken()
+		            			)
+		            	.request(
+		            			target -> target.path(EPF.Schema).path(EPF.Role), 
+		            			req -> req.accept(MediaType.APPLICATION_JSON)
+		            			)
+		            	.get(new GenericType<List<Role>> () {});
             }
         }
         return roles;

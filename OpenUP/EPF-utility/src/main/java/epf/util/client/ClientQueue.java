@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Function;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
@@ -30,13 +31,13 @@ public class ClientQueue {
     private SSLContext context;
     
     @PostConstruct
-    void postConstruct(){
+    public void initialize(){
         clients = new ConcurrentHashMap<>();
         context = DefaultSSLContext.build();
     }
     
     @PreDestroy
-    void preDestroy(){
+    public void close(){
         clients.forEach((name, queue) -> {
             queue.forEach(Client::close);
             queue.clear();
@@ -44,25 +45,25 @@ public class ClientQueue {
         clients.clear();
     }
     
-    static Client buildClient(SSLContext context){
-        return ClientBuilder.newBuilder()
-                .sslContext(context)
-                .hostnameVerifier(new DefaultHostnameVerifier())
-                .build();
+    static ClientBuilder newBuilder(SSLContext context){
+    	return ClientBuilder
+    			.newBuilder()
+    			.sslContext(context)
+                .hostnameVerifier(new DefaultHostnameVerifier());
     }
     
-    public Client poll(URI uri){
+    public Client poll(URI uri, Function<ClientBuilder, ClientBuilder> buildClient){
         Queue<Client> pool = clients.computeIfAbsent(
                 uri.toString(), 
                 key -> {
                     Queue<Client> queue = new ConcurrentLinkedQueue<>();
-                    Client client = buildClient(context);
+                    Client client = buildClient.apply(newBuilder(context)).build();
                     queue.add(client);
                     return queue;
                 }
         );
         if(pool.isEmpty()){
-            Client client = buildClient(context);
+        	Client client = buildClient.apply(newBuilder(context)).build();
             pool.add(client);
         }
         return pool.poll();

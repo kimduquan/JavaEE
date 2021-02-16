@@ -6,7 +6,6 @@
 package openup.webapp.security;
 
 import javax.security.enterprise.CallerPrincipal;
-
 import epf.client.security.Token;
 
 /**

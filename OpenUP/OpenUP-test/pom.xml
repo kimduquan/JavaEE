@@ -24,7 +24,6 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <scope>test</scope>
         </dependency>
 		<!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast-all -->
         <dependency>
@@ -67,12 +66,10 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-rs-mp-client</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-json-provider</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>
@@ -173,6 +170,9 @@
                     <userDirectory>${project.build.directory}</userDirectory>
                     <serverName>test</serverName>
                     <deployPackages>dependencies</deployPackages>
+					<verifyTimeout>600</verifyTimeout>
+					<serverStartTimeout>600</serverStartTimeout>
+					<applications>OpenUP-service,OpenUP-gateway,OpenUP-web</applications>
                 </configuration>
             </plugin>
         </plugins>

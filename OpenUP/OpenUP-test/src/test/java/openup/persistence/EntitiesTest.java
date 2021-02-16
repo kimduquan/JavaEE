@@ -5,10 +5,7 @@
  */
 package openup.persistence;
 
-import epf.client.persistence.Entities;
-import epf.client.persistence.Queries;
-import epf.client.persistence.Target;
-import epf.client.security.Header;
+import epf.client.RestClient;
 import epf.client.security.Security;
 import epf.schema.EPF;
 import epf.util.client.Client;
@@ -22,7 +19,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import openup.TestUtil;
-import org.eclipse.microprofile.rest.client.RestClientBuilder;
+import openup.client.security.PasswordHash;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -32,30 +29,31 @@ import org.junit.Test;
  *
  * @author FOXCONN
  */
-public class PersistenceTest {
+public class EntitiesTest {
     
 	private static URI persistenceUrl;
-    private static Header header;
-    private static RestClientBuilder restBuilder;
-    private static Security security;
-    private static Queries queries;
-    private static Entities entities;
+	private static RestClient restClient;
     private static String token;
     
     @BeforeClass
     public static void beforeClass() throws Exception{
     	persistenceUrl = new URI(TestUtil.url().toString() + "persistence");
-        restBuilder = RestClientBuilder.newBuilder();
-        header = TestUtil.buildClient(restBuilder);
-        security = restBuilder.build(Security.class);
-        queries = restBuilder.build(Queries.class);
-        entities = restBuilder.build(Entities.class);
-        token = TestUtil.login(security, header, "any_role1", "any_role");
+    	restClient = TestUtil.newRestClient(TestUtil.url().toURI());
+    	Security security = restClient.build(Security.class);
+        token = security.login(
+        		OpenUP.Schema, 
+        		"any_role1", 
+        		PasswordHash.hash(
+        				"any_role1", 
+        				"any_role".toCharArray()
+        				), 
+        		TestUtil.url()
+        		);
     }
     
     @AfterClass
     public static void afterClass() throws Exception{
-        TestUtil.logout(security, header);
+    	restClient.authorization(token).build(Security.class).logOut(OpenUP.Schema);
     }
     
     @Test
@@ -91,7 +89,16 @@ public class PersistenceTest {
         Assert.assertNotNull("Artifact.artifact", artifact.getArtifact());
         Assert.assertEquals("Artifact.artifact.name", "Work Items List", artifact.getArtifact().getName());
         
-        entities.remove(OpenUP.Schema, OpenUP.Artifact, String.valueOf(artifact.getId()));
+        try(Client client = TestUtil.newClient(persistenceUrl)){
+        	String id = String.valueOf(artifact.getId());
+        	client
+        	.authorization(token)
+        	.request(
+        			target -> target.path(OpenUP.Schema).path(OpenUP.Artifact).path(id),
+        			req -> req.accept(MediaType.APPLICATION_JSON)
+        			)
+        	.delete();
+        }
     }
     
     @Test(expected = ForbiddenException.class)
@@ -107,31 +114,5 @@ public class PersistenceTest {
         					req -> req.accept(MediaType.APPLICATION_JSON))
         			.post(Entity.json(dp), DeliveryProcess.class);
         }
-    }
-    
-    @Test
-    public void testSearchOK() throws Exception {
-    	List<Target> results = queries.search("Any", 0, 100);
-    	Assert.assertNotEquals("results", 0, results.size());
-    	results.forEach(target -> {
-    		Assert.assertNotNull("Target", target);
-    		Assert.assertNotNull("Target.path", target.getPath());
-    		Assert.assertNotEquals("Target.path", "", target.getPath());
-    		Object object;
-    		try(Client client = TestUtil.newClient(persistenceUrl)){
-    			object = client
-    					.authorization(token)
-    					.request(
-    							persistenceUrl.toString() + "/" + target.getPath(),
-    							t -> t, 
-    							req -> req.accept(MediaType.APPLICATION_JSON)
-    							)
-    					.get(Object.class);
-    			Assert.assertNotNull("Target.object", object);
-    		} 
-    		catch (Exception e) {
-				e.printStackTrace();
-			}
-    	});
     }
 }
