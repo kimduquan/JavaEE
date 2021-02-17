@@ -6,7 +6,7 @@
 package openup.webapp;
 
 import java.io.Serializable;
-import java.net.URL;
+import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -15,11 +15,10 @@ import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.security.enterprise.SecurityContext;
-import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import epf.client.config.ConfigNames;
 import epf.client.config.ConfigSource;
-import epf.client.security.Header;
 import epf.client.security.Security;
+import epf.util.client.RestClient;
 import openup.schema.OpenUP;
 import openup.webapp.security.TokenPrincipal;
 
@@ -55,18 +54,16 @@ public class Session implements Serializable {
     @PreDestroy
     void preDestroy(){
         if(principal != null){
-            try {
-                String base = config.getConfig(ConfigNames.OPENUP_GATEWAY_URL, "");
-                URL baseUrl = new URL(base);
-                Header header = new Header();
-                Security service = RestClientBuilder
-                        .newBuilder()
-                        .baseUrl(baseUrl)
-                        .register(header)
-                        .build(Security.class);
-                header.setToken(principal.getToken().getRawToken());
+            try(RestClient restClient = new RestClient(new URI(config.getConfig(ConfigNames.OPENUP_GATEWAY_URL, "")), b -> b)) {
+                Security service = restClient
+                		.authorization(
+                				principal
+                				.getToken()
+                				.getRawToken()
+                				)
+                		.build(Security.class);
                 service.logOut(OpenUP.Schema);
-            } 
+            }
             catch (Exception ex) {
                 logger.log(Level.SEVERE, ex.getMessage(), ex);
             }

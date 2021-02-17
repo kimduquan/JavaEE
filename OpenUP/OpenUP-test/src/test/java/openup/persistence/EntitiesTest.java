@@ -5,10 +5,11 @@
  */
 package openup.persistence;
 
-import epf.client.RestClient;
 import epf.client.security.Security;
 import epf.schema.EPF;
 import epf.util.client.Client;
+import epf.util.client.RestClient;
+import epf.util.security.PasswordHash;
 import openup.schema.OpenUP;
 import openup.schema.Artifact;
 import openup.schema.DeliveryProcess;
@@ -19,7 +20,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import openup.TestUtil;
-import openup.client.security.PasswordHash;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -33,15 +33,25 @@ public class EntitiesTest {
     
 	private static URI persistenceUrl;
 	private static RestClient restClient;
-    private static String token;
+    private static String tokenOpenUP;
+    private static String tokenEPF;
     
     @BeforeClass
     public static void beforeClass() throws Exception{
     	persistenceUrl = new URI(TestUtil.url().toString() + "persistence");
     	restClient = TestUtil.newRestClient(TestUtil.url().toURI());
     	Security security = restClient.build(Security.class);
-        token = security.login(
+    	tokenOpenUP = security.login(
         		OpenUP.Schema, 
+        		"any_role1", 
+        		PasswordHash.hash(
+        				"any_role1", 
+        				"any_role".toCharArray()
+        				), 
+        		TestUtil.url()
+        		);
+    	tokenEPF = security.login(
+        		EPF.Schema, 
         		"any_role1", 
         		PasswordHash.hash(
         				"any_role1", 
@@ -53,7 +63,8 @@ public class EntitiesTest {
     
     @AfterClass
     public static void afterClass() throws Exception{
-    	restClient.authorization(token).build(Security.class).logOut(OpenUP.Schema);
+    	restClient.authorization(tokenOpenUP).build(Security.class).logOut(OpenUP.Schema);
+    	restClient.authorization(tokenEPF).build(Security.class).logOut(EPF.Schema);
     }
     
     @Test
@@ -61,7 +72,7 @@ public class EntitiesTest {
     	List<epf.schema.work_products.Artifact> epfArtifacts;
     	try(Client client = TestUtil.newClient(persistenceUrl)) {
     		epfArtifacts = client
-    				.authorization(token)
+    				.authorization(tokenEPF)
     				.request(
     						target -> target.path(EPF.Schema).path(EPF.Artifact).matrixParam("name", "Work Items List"), 
     						req -> req.accept(MediaType.APPLICATION_JSON))
@@ -75,7 +86,7 @@ public class EntitiesTest {
         artifact.setSummary("Artifact 1 Summary");
         try(Client client = TestUtil.newClient(persistenceUrl)) {
         	artifact = client
-        			.authorization(token)
+        			.authorization(tokenOpenUP)
         			.request(
         					target -> target.path(OpenUP.Schema).path(OpenUP.Artifact), 
         					req -> req.accept(MediaType.APPLICATION_JSON))
@@ -92,7 +103,7 @@ public class EntitiesTest {
         try(Client client = TestUtil.newClient(persistenceUrl)){
         	String id = String.valueOf(artifact.getId());
         	client
-        	.authorization(token)
+        	.authorization(tokenOpenUP)
         	.request(
         			target -> target.path(OpenUP.Schema).path(OpenUP.Artifact).path(id),
         			req -> req.accept(MediaType.APPLICATION_JSON)
@@ -108,7 +119,7 @@ public class EntitiesTest {
         dp.setSummary("OpenUP Lifecycle 1");
         try(Client client = TestUtil.newClient(persistenceUrl)){
         	dp = client
-        			.authorization(token)
+        			.authorization(tokenOpenUP)
         			.request(
         					target -> target.path(OpenUP.Schema).path(OpenUP.DeliveryProcess), 
         					req -> req.accept(MediaType.APPLICATION_JSON))

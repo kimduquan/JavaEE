@@ -19,7 +19,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import openup.TestUtil;
-import openup.client.security.PasswordHash;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -28,6 +28,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import epf.client.security.Token;
 import epf.util.client.Client;
+import epf.util.security.PasswordHash;
 
 /**
  *

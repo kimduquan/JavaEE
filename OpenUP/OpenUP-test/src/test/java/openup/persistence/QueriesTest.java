@@ -5,17 +5,18 @@
  */
 package openup.persistence;
 
-import epf.client.RestClient;
 import epf.client.persistence.Queries;
 import epf.client.persistence.Target;
 import epf.client.security.Security;
 import epf.util.client.Client;
+import epf.util.client.RestClient;
+import epf.util.security.PasswordHash;
 import openup.schema.OpenUP;
 import java.net.URI;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
 import openup.TestUtil;
-import openup.client.security.PasswordHash;
+
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;

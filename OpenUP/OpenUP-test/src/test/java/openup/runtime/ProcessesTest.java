@@ -8,15 +8,16 @@ package openup.runtime;
 import java.util.ArrayList;
 import java.util.List;
 import openup.TestUtil;
-import openup.client.security.PasswordHash;
 import openup.schema.OpenUP;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import epf.client.RestClient;
+
 import epf.client.runtime.Processes;
 import epf.client.security.Security;
+import epf.util.client.RestClient;
+import epf.util.security.PasswordHash;
 
 /**
  *

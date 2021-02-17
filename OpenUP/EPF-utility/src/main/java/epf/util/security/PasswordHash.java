@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.client.security;
+package epf.util.security;
 
 import org.eclipse.persistence.internal.security.JCEEncryptor;
 import org.h2.security.SHA256;

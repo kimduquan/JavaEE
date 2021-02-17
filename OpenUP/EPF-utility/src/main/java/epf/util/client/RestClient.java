@@ -1,4 +1,4 @@
-package epf.client;
+package epf.util.client;
 
 import java.io.IOException;
 import java.net.URI;
@@ -7,7 +7,6 @@ import javax.net.ssl.SSLContext;
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.core.HttpHeaders;
-
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import epf.util.ssl.DefaultHostnameVerifier;
 import epf.util.ssl.DefaultSSLContext;
