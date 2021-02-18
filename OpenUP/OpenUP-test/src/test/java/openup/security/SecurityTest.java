@@ -41,7 +41,7 @@ public class SecurityTest {
     
     @BeforeClass
     public static void beforeClass() throws Exception{
-    	securityUrl = new URI(TestUtil.url().toString() + "security");
+    	securityUrl = new URI(TestUtil.gateway_url().toString() + "security");
     }
     
     @AfterClass
@@ -100,7 +100,7 @@ public class SecurityTest {
     
     @Test
     public void testLoginOK() throws Exception{
-        String token = login(OpenUP.Schema, "any_role1", "any_role", TestUtil.url(), true);
+        String token = login(OpenUP.Schema, "any_role1", "any_role", TestUtil.gateway_url(), true);
         Assert.assertNotNull("Token", token);
         Assert.assertNotEquals("Token", "", token);
         logOut(token, OpenUP.Schema);
@@ -111,10 +111,10 @@ public class SecurityTest {
         Assert.assertThrows(
         		NotAuthorizedException.class, 
                 () -> {
-                    login(OpenUP.Schema, "any_role1", "Invalid", TestUtil.url(), true);
+                    login(OpenUP.Schema, "any_role1", "Invalid", TestUtil.gateway_url(), true);
                 }
         );
-        String token = login(OpenUP.Schema, "any_role1", "any_role", TestUtil.url(), true);
+        String token = login(OpenUP.Schema, "any_role1", "any_role", TestUtil.gateway_url(), true);
         Assert.assertNotNull("Token", token);
         Assert.assertNotEquals("Token", "", token);
         logOut(token, OpenUP.Schema);
@@ -123,53 +123,53 @@ public class SecurityTest {
     //@Ignore
     @Test(expected = NotAllowedException.class)
     public void testLoginEmptyUnit() throws Exception{
-        login("", "any_role1", "any_role", TestUtil.url(), false);
+        login("", "any_role1", "any_role", TestUtil.gateway_url(), false);
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginBlankUnit() throws Exception{
-        login("     ", "any_role1", "any_role", TestUtil.url(), false);
+        login("     ", "any_role1", "any_role", TestUtil.gateway_url(), false);
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginInvalidUnit() throws Exception{
-        login("Invalid", "any_role1", "any_role", TestUtil.url(), false);
+        login("Invalid", "any_role1", "any_role", TestUtil.gateway_url(), false);
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginEmptyUser() throws Exception{
-        login(OpenUP.Schema, "", "any_role", TestUtil.url(), false);
+        login(OpenUP.Schema, "", "any_role", TestUtil.gateway_url(), false);
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginBlankUser() throws Exception{
-        login(OpenUP.Schema, "     ", "any_role", TestUtil.url(), false);
+        login(OpenUP.Schema, "     ", "any_role", TestUtil.gateway_url(), false);
     }
     
     @Test(expected = NotAuthorizedException.class)
     public void testLoginInvalidUser() throws Exception{
-        login(OpenUP.Schema, "Invalid", "any_role", TestUtil.url(), true);
+        login(OpenUP.Schema, "Invalid", "any_role", TestUtil.gateway_url(), true);
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginEmptyPassword() throws Exception{
-        login(OpenUP.Schema, "any_role1", "", TestUtil.url(), false);
+        login(OpenUP.Schema, "any_role1", "", TestUtil.gateway_url(), false);
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginBlankPassword() throws Exception{
-        login(OpenUP.Schema, "any_role1", "    ", TestUtil.url(), false);
+        login(OpenUP.Schema, "any_role1", "    ", TestUtil.gateway_url(), false);
     }
     
     @Test(expected = NotAuthorizedException.class)
     public void testLoginInvalidPassword() throws Exception{
-        login(OpenUP.Schema, "any_role1", "Invalid", TestUtil.url(), true);
+        login(OpenUP.Schema, "any_role1", "Invalid", TestUtil.gateway_url(), true);
     }
     
     @Test(expected = NotAuthorizedException.class)
     public void testLoginInvalidPasswordAfterLoginOK() throws Exception{
-        login(OpenUP.Schema, "any_role1", "any_role", TestUtil.url(), true);
-        login(OpenUP.Schema, "any_role1", "Invalid", TestUtil.url(), true);
+        login(OpenUP.Schema, "any_role1", "any_role", TestUtil.gateway_url(), true);
+        login(OpenUP.Schema, "any_role1", "Invalid", TestUtil.gateway_url(), true);
     }
     
     @Test(expected = NotFoundException.class)
@@ -183,7 +183,7 @@ public class SecurityTest {
         form.putSingle("username", "any_role1");
         form.putSingle("password_hash", "any_role");
         form.putSingle("url", "    ");
-        try(Client client = TestUtil.newClient(TestUtil.url().toURI())){
+        try(Client client = TestUtil.newClient(TestUtil.gateway_url().toURI())){
         	client.request(
         			target -> target.path("security").path(OpenUP.Schema), 
         			req -> req.accept(MediaType.TEXT_PLAIN)
@@ -198,7 +198,7 @@ public class SecurityTest {
         form.putSingle("username", "any_role1");
         form.putSingle("password_hash", "any_role");
         form.putSingle("url", "Invalid");
-        try(Client client = TestUtil.newClient(TestUtil.url().toURI())){
+        try(Client client = TestUtil.newClient(TestUtil.gateway_url().toURI())){
         	client.request(
         			target -> target.path("security").path(OpenUP.Schema), 
         			req -> req.accept(MediaType.TEXT_PLAIN)
@@ -209,7 +209,7 @@ public class SecurityTest {
     
     @Test
     public void testAuthenticateOK() throws Exception{
-        String token = login(OpenUP.Schema, "any_role1", "any_role", TestUtil.url(), true);
+        String token = login(OpenUP.Schema, "any_role1", "any_role", TestUtil.gateway_url(), true);
         Token jwt = authenticate(token);
         Assert.assertNotNull("JWT", jwt);
         Assert.assertNotNull("Audience", jwt.getAudience());
@@ -219,9 +219,9 @@ public class SecurityTest {
                 new String[]{
                     String.format(
                             AUDIENCE_URL_FORMAT, 
-                            TestUtil.url().getProtocol(), 
-                            TestUtil.url().getHost(), 
-                            TestUtil.url().getPort()
+                            TestUtil.gateway_url().getProtocol(), 
+                            TestUtil.gateway_url().getHost(), 
+                            TestUtil.gateway_url().getPort()
                     )
                 }, 
                 jwt.getAudience().toArray()
@@ -276,7 +276,7 @@ public class SecurityTest {
     
     @Test(expected = NotAuthorizedException.class)
     public void testLogoutOK() throws Exception {
-        String token = login(OpenUP.Schema, "any_role1", "any_role", TestUtil.url(), true);
+        String token = login(OpenUP.Schema, "any_role1", "any_role", TestUtil.gateway_url(), true);
         logOut(token, OpenUP.Schema);
         authenticate(token);
     }
@@ -284,7 +284,7 @@ public class SecurityTest {
     //@Ignore
     @Test
     public void testLogoutEmptyUnit() throws Exception{
-        String token = login(OpenUP.Schema, "any_role1", "any_role", TestUtil.url(), true);
+        String token = login(OpenUP.Schema, "any_role1", "any_role", TestUtil.gateway_url(), true);
         Assert.assertThrows(
         		NotAllowedException.class, 
                 () -> {
@@ -296,7 +296,7 @@ public class SecurityTest {
     
     @Test
     public void testLogoutBlankUnit() throws Exception{
-        String token = login(OpenUP.Schema, "any_role1", "any_role", TestUtil.url(), true);
+        String token = login(OpenUP.Schema, "any_role1", "any_role", TestUtil.gateway_url(), true);
         Assert.assertThrows(
         		BadRequestException.class, 
                 () -> {
@@ -308,7 +308,7 @@ public class SecurityTest {
     
     @Test
     public void testLogoutInvalidUnit() throws Exception{
-        String token = login(OpenUP.Schema, "any_role1", "any_role", TestUtil.url(), true);
+        String token = login(OpenUP.Schema, "any_role1", "any_role", TestUtil.gateway_url(), true);
         Assert.assertThrows(
         		BadRequestException.class, 
                 () -> {

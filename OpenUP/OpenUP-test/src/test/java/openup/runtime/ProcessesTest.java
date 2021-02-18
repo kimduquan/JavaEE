@@ -32,7 +32,7 @@ public class ProcessesTest {
     @BeforeClass
     public static void beforeClass() throws Exception{
     	token = TestUtil.login(OpenUP.Schema, "any_role1", "any_role");
-        processesUrl = new URI(TestUtil.url().toString() + "runtime/process");
+        processesUrl = new URI(TestUtil.gateway_url().toString() + "runtime/process");
     }
     
     @AfterClass

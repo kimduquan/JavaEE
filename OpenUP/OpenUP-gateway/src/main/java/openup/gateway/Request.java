@@ -13,6 +13,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletionStage;
+import java.util.logging.Logger;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.client.Client;
@@ -44,6 +45,8 @@ import epf.util.client.ClientQueue;
 public class Request {
 	
 	private static final String OPENUP_URL = System.getenv("openup.url");
+	private static final Logger logger = Logger.getLogger(Request.class.getName());
+	private static final String CLASS_NAME = Request.class.getName();
     
     private HttpHeaders headers;
     private UriInfo uriInfo;
@@ -67,6 +70,9 @@ public class Request {
                 .thenApply(Request::buildResponse)
                 .thenApply(ResponseBuilder::build)
                 .whenComplete((res, ex) -> {
+                	if(ex != null) {
+                		logger.throwing(CLASS_NAME, "request", ex);
+                	}
                     clients.add(uri, client);
                 });
     }

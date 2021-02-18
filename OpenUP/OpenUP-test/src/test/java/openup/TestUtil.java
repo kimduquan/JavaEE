@@ -24,7 +24,7 @@ import javax.json.JsonObject;
  */
 public class TestUtil {
     
-    private static URL url;
+    private static URL gateway_url;
     private static ClientQueue clients;
 	private static URI securityUrl;
 
@@ -38,11 +38,11 @@ public class TestUtil {
 		return provider;
 	}
     
-    public static URL url() throws Exception{
-        if(url == null) {
-        	url = new URL(System.getProperty(ConfigNames.OPENUP_GATEWAY_URL, ""));
+    public static URL gateway_url() throws Exception{
+        if(gateway_url == null) {
+        	gateway_url = new URL(System.getProperty(ConfigNames.OPENUP_GATEWAY_URL, ""));
         }
-        return url;
+        return gateway_url;
     }
     
     public static Client newClient(URI uri) {
@@ -73,18 +73,18 @@ public class TestUtil {
     
     public static String login(String unit, String username, String password) throws Exception {
     	if(securityUrl == null) {
-    		securityUrl = new URI(url().toString() + "security");
+    		securityUrl = new URI(gateway_url().toString() + "security");
     	}
     	String token;
     	try(Client client = TestUtil.newClient(securityUrl)){
-    		token = Security.login(client, unit, username, PasswordHash.hash(username, password.toCharArray()), TestUtil.url());
+    		token = Security.login(client, unit, username, PasswordHash.hash(username, password.toCharArray()), TestUtil.gateway_url());
     	}
     	return token;
     }
     
     public static void logOut(String unit, String token) throws Exception {
     	if(securityUrl == null) {
-    		securityUrl = new URI(url().toString() + "security");
+    		securityUrl = new URI(gateway_url().toString() + "security");
     	}
     	try(Client client = TestUtil.newClient(securityUrl)){
     		client.authorization(token);

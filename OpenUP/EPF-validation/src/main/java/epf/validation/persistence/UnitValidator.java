@@ -16,7 +16,7 @@ public class UnitValidator implements ConstraintValidator<Unit, String> {
 
     @Override
     public boolean isValid(String unit, ConstraintValidatorContext arg1) {
-        return "OpenUP".equals(unit) || "EPF".equals(unit);
+        return "OpenUP".equals(unit);
     }
     
 }

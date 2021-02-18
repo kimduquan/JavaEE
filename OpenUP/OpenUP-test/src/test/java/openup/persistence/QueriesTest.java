@@ -33,7 +33,7 @@ public class QueriesTest {
     @BeforeClass
     public static void beforeClass() throws Exception{
     	token = TestUtil.login(OpenUP.Schema, "any_role1", "any_role");
-    	persistenceUrl = new URI(TestUtil.url().toString() + "persistence");
+    	persistenceUrl = new URI(TestUtil.gateway_url().toString() + "persistence");
     }
     
     @AfterClass

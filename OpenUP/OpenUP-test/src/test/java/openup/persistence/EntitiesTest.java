@@ -36,7 +36,7 @@ public class EntitiesTest {
     
     @BeforeClass
     public static void beforeClass() throws Exception{
-    	persistenceUrl = new URI(TestUtil.url().toString() + "persistence");
+    	persistenceUrl = new URI(TestUtil.gateway_url().toString() + "persistence");
     	token = TestUtil.login(OpenUP.Schema, "any_role1", "any_role");
     }
     
@@ -62,7 +62,7 @@ public class EntitiesTest {
     			.getCriteriaQueryResult(
     					client, 
     					new GenericType<List<epf.schema.work_products.Artifact>>() {},
-						EPF.Schema, 
+						OpenUP.Schema, 
 						target -> target.path(EPF.Artifact).matrixParam("name", "Work Items List"), 
 						null, 
 						null
