@@ -7,18 +7,16 @@ package openup.persistence;
 
 import epf.client.persistence.Queries;
 import epf.client.persistence.Target;
-import epf.client.security.Security;
 import epf.util.client.Client;
-import epf.util.client.RestClient;
-import epf.util.security.PasswordHash;
 import openup.schema.OpenUP;
 import java.net.URI;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
 import openup.TestUtil;
-
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -29,36 +27,34 @@ import org.junit.Test;
 public class QueriesTest {
     
 	private static URI persistenceUrl;
-	private static RestClient restClient;
     private static String token;
+    private Client client;
     
     @BeforeClass
     public static void beforeClass() throws Exception{
+    	token = TestUtil.login(OpenUP.Schema, "any_role1", "any_role");
     	persistenceUrl = new URI(TestUtil.url().toString() + "persistence");
-    	restClient = TestUtil.newRestClient(TestUtil.url().toURI());
-    	Security security = restClient.build(Security.class);
-        token = security.login(
-        		OpenUP.Schema, 
-        		"any_role1", 
-        		PasswordHash.hash(
-        				"any_role1", 
-        				"any_role".toCharArray()
-        				), 
-        		TestUtil.url()
-        		);
     }
     
     @AfterClass
     public static void afterClass() throws Exception{
-    	restClient.authorization(token).build(Security.class).logOut(OpenUP.Schema);
+    	TestUtil.logOut(OpenUP.Schema, token);
+    }
+    
+    @Before
+    public void before() {
+    	client = TestUtil.newClient(persistenceUrl);
+    	client.authorization(token);
+    }
+    
+    @After
+    public void after() throws Exception {
+    	client.close();
     }
     
     @Test
     public void testSearchOK() throws Exception {
-    	List<Target> results = restClient
-    			.authorization(token)
-    			.build(Queries.class)
-    			.search("Any", 0, 100);
+    	List<Target> results = Queries.search(client, "Any", 0, 100);
     	Assert.assertNotEquals("results", 0, results.size());
     	results.forEach(target -> {
     		Assert.assertNotNull("Target", target);

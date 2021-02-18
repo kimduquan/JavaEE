@@ -9,9 +9,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import epf.client.config.ConfigNames;
+import epf.client.security.Security;
 import epf.util.client.Client;
 import epf.util.client.ClientQueue;
 import epf.util.client.RestClient;
+import epf.util.security.PasswordHash;
 import java.net.URI;
 import java.net.URL;
 import javax.json.JsonObject;
@@ -24,6 +26,7 @@ public class TestUtil {
     
     private static URL url;
     private static ClientQueue clients;
+	private static URI securityUrl;
 
 	private static JacksonJsonProvider buildJsonProvider() {
 		SimpleModule module = new SimpleModule();
@@ -65,6 +68,27 @@ public class TestUtil {
     public static void afterClass() {
     	if(clients != null) {
     		clients.close();
+    	}
+    }
+    
+    public static String login(String unit, String username, String password) throws Exception {
+    	if(securityUrl == null) {
+    		securityUrl = new URI(url().toString() + "security");
+    	}
+    	String token;
+    	try(Client client = TestUtil.newClient(securityUrl)){
+    		token = Security.login(client, unit, username, PasswordHash.hash(username, password.toCharArray()), TestUtil.url());
+    	}
+    	return token;
+    }
+    
+    public static void logOut(String unit, String token) throws Exception {
+    	if(securityUrl == null) {
+    		securityUrl = new URI(url().toString() + "security");
+    	}
+    	try(Client client = TestUtil.newClient(securityUrl)){
+    		client.authorization(token);
+    		token = Security.logOut(client, unit);
     	}
     }
 }

@@ -14,8 +14,10 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
+import epf.util.client.Client;
 import epf.validation.persistence.Unit;
 
 /**
@@ -40,6 +42,20 @@ public interface Entities {
             InputStream body
             ) throws Exception;
     
+    static <T> T persist(
+    		Client client,
+            Class<T> cls,
+            String unit,
+            String name,
+            T body
+            ) throws Exception{
+    	return client.request(
+    			target -> target.path(unit).path(name), 
+    			req -> req.accept(MediaType.APPLICATION_JSON)
+    			)
+    			.post(Entity.json(body), cls);
+    }
+    
     @PUT
     @Path("{unit}/{entity}/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -57,6 +73,20 @@ public interface Entities {
             InputStream body
             ) throws Exception;
     
+    static void merge(
+    		Client client,
+    		String unit,
+            String name,
+            String id,
+            Object body
+            ) throws Exception{
+    	client.request(
+    			target -> target.path(unit).path(name).path(id), 
+    			req -> req
+    			)
+    	.put(Entity.json(body));
+    }
+    
     @DELETE
     @Path("{unit}/{entity}/{id}")
     void remove(
@@ -70,4 +100,17 @@ public interface Entities {
             @NotBlank
             String id
             ) throws Exception;
+    
+    static void remove(
+    		Client client,
+            String unit,
+            String name,
+            String id
+            ) throws Exception{
+    	client.request(
+    			target -> target.path(unit).path(name).path(id), 
+    			req -> req
+    			)
+    	.delete();
+    }
 }

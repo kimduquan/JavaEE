@@ -17,7 +17,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
+import epf.util.client.Client;
 import epf.validation.persistence.Unit;
 
 /**
@@ -50,6 +53,21 @@ public interface Security {
             URL url
     ) throws Exception;
     
+    static String login(
+    		Client client, 
+    		String unit, 
+    		String username, 
+    		String password_hash, 
+    		URL url) {
+    	Form form = new Form();
+    	form.param("username", username);
+    	form.param("password_hash", password_hash);
+    	return client.request(
+    			target -> target.path(unit).queryParam("url", url),
+    			req -> req.accept(MediaType.TEXT_PLAIN))
+    			.post(Entity.form(form), String.class);
+    }
+    
     @DELETE
     @Path("{unit}")
     @Produces(MediaType.TEXT_PLAIN)
@@ -59,7 +77,23 @@ public interface Security {
             String unit
             ) throws Exception;
     
+    static String logOut(Client client, String unit) {
+    	return client.request(
+    			target -> target.path(unit), 
+    			req -> req.accept(MediaType.TEXT_PLAIN)
+    			)
+    			.delete(String.class);
+    }
+    
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     Token authenticate() throws Exception;
+    
+    static Token authenticate(Client client) throws Exception{
+    	return client.request(
+    			target -> target, 
+    			req -> req.accept(MediaType.APPLICATION_JSON)
+    			)
+    			.get(Token.class);
+    }
 }

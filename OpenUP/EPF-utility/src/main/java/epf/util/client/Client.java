@@ -42,13 +42,16 @@ public class Client implements AutoCloseable {
         clients.add(uri, client);
         uri = null;
         client = null;
+        authHeader = null;
     }
     
     public Invocation.Builder request(Function<WebTarget, WebTarget> buildTarget, Function<Invocation.Builder, Invocation.Builder> buildRequest) {
     	WebTarget target = client.target(uri);
     	target = buildTarget.apply(target);
     	Invocation.Builder request = target.request();
-    	request = request.header(HttpHeaders.AUTHORIZATION, authHeader);
+    	if(authHeader != null) {
+        	request = request.header(HttpHeaders.AUTHORIZATION, authHeader);
+    	}
     	return buildRequest.apply(request);
     }
     
@@ -56,7 +59,9 @@ public class Client implements AutoCloseable {
     	WebTarget target = client.target(uri);
     	target = buildTarget.apply(target);
     	Invocation.Builder request = target.request();
-    	request = request.header(HttpHeaders.AUTHORIZATION, authHeader);
+    	if(authHeader != null) {
+        	request = request.header(HttpHeaders.AUTHORIZATION, authHeader);
+    	}
     	return buildRequest.apply(request);
     }
 }
