@@ -62,6 +62,7 @@ public class Request {
     public CompletionStage<Response> request(
             String method, 
             InputStream in) throws Exception{
+    	logger.entering(CLASS_NAME, "request", method);
         return executor.supplyAsync(() -> uri = buildUri(uriInfo))
                 .thenApply(newUri -> client = clients.poll(newUri, b -> b))
                 .thenApply(newClient -> buildTarget(newClient, uriInfo))
@@ -74,6 +75,7 @@ public class Request {
                 		logger.throwing(CLASS_NAME, "request", ex);
                 	}
                     clients.add(uri, client);
+                    logger.exiting(CLASS_NAME, "request");
                 });
     }
     
