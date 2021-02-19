@@ -14,7 +14,7 @@
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
         <liberty.env.epf.gateway.url>https://localhost/gateway/</liberty.env.epf.gateway.url>
-        <liberty.env.openup.url>https://localhost/service/</liberty.env.openup.url>
+        <liberty.env.epf.url>https://localhost/service/</liberty.env.epf.url>
     </properties>
     <dependencies>
 		<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->

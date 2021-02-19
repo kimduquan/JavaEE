@@ -44,7 +44,7 @@ import epf.util.client.ClientQueue;
 @RequestScoped
 public class Request {
 	
-	private static final String OPENUP_URL = System.getenv("openup.url");
+	private static final String EPF_URL = System.getenv("epf.url");
 	private static final Logger logger = Logger.getLogger(Request.class.getName());
 	private static final String CLASS_NAME = Request.class.getName();
     
@@ -89,7 +89,7 @@ public class Request {
     }
     
     static WebTarget buildTarget(Client client, UriInfo uriInfo){
-    	Var<WebTarget> webTarget = new Var<>(client.target(OPENUP_URL));
+    	Var<WebTarget> webTarget = new Var<>(client.target(EPF_URL));
         if(uriInfo != null){
             List<PathSegment> segments = uriInfo.getPathSegments();
             if(segments != null){

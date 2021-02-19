@@ -16,7 +16,7 @@
         <!-- Jaeger configuration -->
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
-        <liberty.env.openup.url>https://localhost:9443/service/</liberty.env.openup.url>
+        <liberty.env.epf.url>https://localhost:9443/service/</liberty.env.epf.url>
         <liberty.env.epf.gateway.url>https://localhost:9443/gateway/</liberty.env.epf.gateway.url>
     </properties>
     <dependencies>
@@ -95,7 +95,7 @@
                 <configuration>
                     <!-- Pass contextPath and httpPort to the integration tests -->
                     <systemPropertyVariables>
-                        <openup.url>https://localhost:${httpsPort}/service/</openup.url>
+                        <epf.url>https://localhost:${httpsPort}/service/</epf.url>
                         <epf.gateway.url>https://localhost:${httpsPort}/gateway/</epf.gateway.url>
                     </systemPropertyVariables>
                 </configuration>
