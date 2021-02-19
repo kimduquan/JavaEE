@@ -38,7 +38,6 @@ import epf.client.security.Token;
 import openup.persistence.Application;
 import openup.persistence.Credential;
 import openup.persistence.Session;
-import openup.schema.OpenUP;
 import openup.schema.Role;
 
 /**
@@ -111,7 +110,7 @@ public class Security implements epf.client.security.Security, Serializable {
             String password_hash,
             URL url) throws Exception{
     	long time = System.currentTimeMillis() / 1000;
-        Credential credential = persistence.putContext(unit)
+    	Credential credential = persistence.putContext(unit)
                 .putCredential(
                         username, 
                         unit, 
@@ -139,7 +138,7 @@ public class Security implements epf.client.security.Security, Serializable {
     public String logOut(
             String unit
     ) throws Exception{
-        Session session = removeSession(unit);
+    	Session session = removeSession(unit);
         if(session != null){
             session.close();
             String name = context.getUserPrincipal().getName();
@@ -164,8 +163,8 @@ public class Security implements epf.client.security.Security, Serializable {
             description = "Unauthorized",
             responseCode = "401"
     )
-    public Token authenticate() throws Exception{
-        if(getSession(OpenUP.Schema) != null){
+    public Token authenticate(String unit) throws Exception{
+    	if(getSession(unit) != null){
             JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
             Token token = buildToken(jwt);
             return token;

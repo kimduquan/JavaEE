@@ -91,11 +91,11 @@ public class SecurityTest {
         return name;
     }
     
-    Token authenticate(String token) throws Exception{
+    Token authenticate(String token, String unit) throws Exception{
     	Token t;
     	try(Client client = TestUtil.newClient(securityUrl)){
     		client.authorization(token);
-    		t = Security.authenticate(client);
+    		t = Security.authenticate(client, unit);
     	}
         return t;
     }
@@ -212,7 +212,7 @@ public class SecurityTest {
     @Test
     public void testAuthenticateOK() throws Exception{
         String token = login(OpenUP.Schema, "any_role1", "any_role", TestUtil.gateway_url(), true);
-        Token jwt = authenticate(token);
+        Token jwt = authenticate(token, OpenUP.Schema);
         Assert.assertNotNull("JWT", jwt);
         Assert.assertNotNull("Audience", jwt.getAudience());
         Assert.assertEquals("Audience.size", 1, jwt.getAudience().size());
@@ -263,24 +263,24 @@ public class SecurityTest {
     
     @Test(expected = NotAuthorizedException.class)
     public void testAuthenticateEmptyToken() throws Exception{
-        authenticate("");
+        authenticate("", OpenUP.Schema);
     }
     
     @Test(expected = NotAuthorizedException.class)
     public void testAuthenticateBlankToken() throws Exception{
-        authenticate("    ");
+        authenticate("    ", OpenUP.Schema);
     }
     
     @Test(expected = NotAuthorizedException.class)
     public void testAuthenticateInvalidToken() throws Exception{
-        authenticate("Invalid");
+        authenticate("Invalid", OpenUP.Schema);
     }
     
     @Test(expected = NotAuthorizedException.class)
     public void testLogoutOK() throws Exception {
         String token = login(OpenUP.Schema, "any_role1", "any_role", TestUtil.gateway_url(), true);
         logOut(token, OpenUP.Schema);
-        authenticate(token);
+        authenticate(token, OpenUP.Schema);
     }
     
     //@Ignore

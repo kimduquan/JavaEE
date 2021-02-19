@@ -14,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import epf.util.Var;
+import openup.schema.OpenUP;
 
 /**
  *
@@ -50,12 +51,12 @@ public class Context implements AutoCloseable {
                         catch (Exception ex) {
                             logger.log(Level.WARNING, ex.getMessage(), ex);
                         }
-                        credential = newCredential(unit, props, error);
+                        credential = newCredential(OpenUP.Schema, props, error);
                     }
                 }
             }
             else{
-                credential = newCredential(unit, props, error);
+                credential = newCredential(OpenUP.Schema, props, error);
             }
             return credential;
         });

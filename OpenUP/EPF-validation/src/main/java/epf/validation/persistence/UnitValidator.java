@@ -15,8 +15,14 @@ import javax.validation.ConstraintValidatorContext;
 public class UnitValidator implements ConstraintValidator<Unit, String> {
 
     @Override
-    public boolean isValid(String unit, ConstraintValidatorContext arg1) {
-        return "OpenUP".equals(unit);
+    public boolean isValid(String unit, ConstraintValidatorContext context) {
+    	if(unit == null) {
+    		return true;
+    	}
+    	else if("OpenUP".equals(unit)) {
+    		return true;
+    	}
+        return false;
     }
     
 }
