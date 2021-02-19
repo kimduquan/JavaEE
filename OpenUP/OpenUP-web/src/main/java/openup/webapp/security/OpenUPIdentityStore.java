@@ -79,7 +79,7 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
 					);
             if(!token.isEmpty()){
             	client.authorization(token);
-            	jwt = Security.authenticate(client);
+            	jwt = Security.authenticate(client, OpenUP.Schema);
             }
         }
         return jwt;
@@ -96,7 +96,7 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
         String securityUrl = config.getConfig(ConfigNames.SECURITY_URL, "");
         try(Client client = new Client(clients, new URI(securityUrl), b -> b)) {
         	client.authorization(credential.getToken());
-        	Token jwt = Security.authenticate(client);
+        	Token jwt = Security.authenticate(client, OpenUP.Schema);
             if(jwt != null){
                 TokenPrincipal principal = new TokenPrincipal(jwt.getName(), jwt);
                 result = new CredentialValidationResult(principal, jwt.getGroups());

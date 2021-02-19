@@ -299,6 +299,7 @@
         <module>EPF-service</module>
         <module>OpenUP-web</module>
         <module>EPF-test</module>
+        <module>OpenUP-test</module>
         <module>EPF-assembly</module>
     </modules>
 </project>
