@@ -299,6 +299,6 @@
         <module>EPF-gateway</module>
         <module>OpenUP-web</module>
         <module>OpenUP-test</module>
-        <module>OpenUP-assembly</module>
+        <module>EPF-assembly</module>
     </modules>
 </project>
