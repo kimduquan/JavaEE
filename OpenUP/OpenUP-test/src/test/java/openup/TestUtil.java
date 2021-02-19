@@ -39,7 +39,7 @@ public class TestUtil {
     
     public static URL gateway_url() throws Exception{
         if(gateway_url == null) {
-        	gateway_url = new URL(System.getProperty(ConfigNames.OPENUP_GATEWAY_URL, ""));
+        	gateway_url = new URL(System.getProperty(ConfigNames.GATEWAY_URL, ""));
         }
         return gateway_url;
     }

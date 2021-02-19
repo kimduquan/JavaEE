@@ -46,7 +46,7 @@ public class Tasks implements Serializable {
 
     public List<Discipline> getDisciplines() throws Exception {
         if(disciplines == null){
-            String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
+            String url = config.getConfig(ConfigNames.PERSISTENCE_URL, "");
             try(Client client = session.newClient(new URI(url))){
             	Queries.getCriteriaQueryResult(
             			client, 
@@ -62,7 +62,7 @@ public class Tasks implements Serializable {
 
     public List<Task> getTasks() throws Exception {
         if(tasks == null){
-            String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
+            String url = config.getConfig(ConfigNames.PERSISTENCE_URL, "");
             try(Client client = session.newClient(new URI(url))){
             	tasks = Queries.getCriteriaQueryResult(
             			client, 

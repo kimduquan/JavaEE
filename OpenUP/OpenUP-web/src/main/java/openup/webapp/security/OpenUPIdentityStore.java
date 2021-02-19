@@ -58,7 +58,7 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
     }
     
     Token login(BasicAuthenticationCredential credential) throws Exception{
-        URI securityUrl = new URI(config.getConfig(ConfigNames.OPENUP_SECURITY_URL, ""));
+        URI securityUrl = new URI(config.getConfig(ConfigNames.SECURITY_URL, ""));
         URL audienceUrl = new URL(String.format(
                                     Security.AUDIENCE_URL_FORMAT,
                                     securityUrl.getScheme(), 
@@ -93,7 +93,7 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
     @Override
     public CredentialValidationResult validate(RememberMeCredential credential) {
         CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
-        String securityUrl = config.getConfig(ConfigNames.OPENUP_SECURITY_URL, "");
+        String securityUrl = config.getConfig(ConfigNames.SECURITY_URL, "");
         try(Client client = new Client(clients, new URI(securityUrl), b -> b)) {
         	client.authorization(credential.getToken());
         	Token jwt = Security.authenticate(client);
@@ -119,7 +119,7 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
 
     @Override
     public void removeLoginToken(String token) {
-    	String securityUrl = config.getConfig(ConfigNames.OPENUP_SECURITY_URL, "");
+    	String securityUrl = config.getConfig(ConfigNames.SECURITY_URL, "");
         try(Client client = new Client(clients, new URI(securityUrl), b -> b)) {
             client.authorization(token);
             Security.logOut(client, OpenUP.Schema);

@@ -48,7 +48,7 @@ public class DeliveryProcesses implements Serializable {
 
     public List<Phase> getPhases() throws Exception {
         if(phases == null){
-            String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
+            String url = config.getConfig(ConfigNames.PERSISTENCE_URL, "");
             try(Client client = session.newClient(new URI(url))){
             	phases = Queries.getCriteriaQueryResult(
             			client, 
@@ -64,7 +64,7 @@ public class DeliveryProcesses implements Serializable {
 
     public List<Iteration> getIterations() throws Exception {
         if(iterations == null){
-            String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
+            String url = config.getConfig(ConfigNames.PERSISTENCE_URL, "");
             try(Client client = session.newClient(new URI(url))){
             	iterations = Queries.getCriteriaQueryResult(
             			client, 
@@ -80,7 +80,7 @@ public class DeliveryProcesses implements Serializable {
 
     public List<Task> getTasks() throws Exception {
         if(tasks == null){
-            String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
+            String url = config.getConfig(ConfigNames.PERSISTENCE_URL, "");
             try(Client client = session.newClient(new URI(url))){
             	tasks = Queries.getCriteriaQueryResult(
             			client, 

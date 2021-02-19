@@ -58,7 +58,7 @@ public class Session implements Serializable {
     @PreDestroy
     void preDestroy(){
         if(principal != null){
-        	String gateway = config.getConfig(ConfigNames.OPENUP_GATEWAY_URL, "");
+        	String gateway = config.getConfig(ConfigNames.GATEWAY_URL, "");
         	try(Client client = newClient(new URI(gateway))) {
             	Security.logOut(client, OpenUP.Schema);
             }

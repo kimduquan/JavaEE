@@ -17,7 +17,7 @@
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
         <liberty.env.openup.url>https://localhost:9443/service/</liberty.env.openup.url>
-        <liberty.env.openup.gateway.url>https://localhost:9443/gateway/</liberty.env.openup.gateway.url>
+        <liberty.env.epf.gateway.url>https://localhost:9443/gateway/</liberty.env.epf.gateway.url>
     </properties>
     <dependencies>
 		<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
@@ -53,7 +53,7 @@
         </dependency>
         <dependency>
             <groupId>openup</groupId>
-            <artifactId>OpenUP-gateway</artifactId>
+            <artifactId>EPF-gateway</artifactId>
             <version>1.0.0</version>
             <type>war</type>
         </dependency>
@@ -96,7 +96,7 @@
                     <!-- Pass contextPath and httpPort to the integration tests -->
                     <systemPropertyVariables>
                         <openup.url>https://localhost:${httpsPort}/service/</openup.url>
-                        <openup.gateway.url>https://localhost:${httpsPort}/gateway/</openup.gateway.url>
+                        <epf.gateway.url>https://localhost:${httpsPort}/gateway/</epf.gateway.url>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
@@ -153,7 +153,7 @@
                         <configuration>
                             <verifyTimeout>600</verifyTimeout>
                             <serverStartTimeout>600</serverStartTimeout>
-                            <applications>OpenUP-service,OpenUP-gateway,OpenUP-web</applications>
+                            <applications>OpenUP-service,EPF-gateway,OpenUP-web</applications>
                         </configuration>
                     </execution>
                     <!-- Stop the server -->
@@ -172,7 +172,7 @@
                     <deployPackages>dependencies</deployPackages>
 					<verifyTimeout>600</verifyTimeout>
 					<serverStartTimeout>600</serverStartTimeout>
-					<applications>OpenUP-service,OpenUP-gateway,OpenUP-web</applications>
+					<applications>OpenUP-service,EPF-gateway,OpenUP-web</applications>
                 </configuration>
             </plugin>
         </plugins>

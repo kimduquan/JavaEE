@@ -33,7 +33,7 @@ public class ConfigSource {
     @PostConstruct
     void postConstruct(){
         configs = new ConcurrentHashMap<>();
-        String configUrl = System.getenv(ConfigNames.OPENUP_GATEWAY_URL);
+        String configUrl = System.getenv(ConfigNames.GATEWAY_URL);
         try(Client client = new Client(clients, new URI(configUrl), b -> b)) {
             Map<String, Object> data = Config.getConfigurations(client);
             if(data != null){

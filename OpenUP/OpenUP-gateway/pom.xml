@@ -6,8 +6,8 @@
         <artifactId>OpenUP-parent</artifactId>
         <version>1.0.0</version>
     </parent>
-    <artifactId>OpenUP-gateway</artifactId>
-    <name>Open Unified Process Gateway</name>
+    <artifactId>EPF-gateway</artifactId>
+    <name>Eclipse Process Framework Gateway</name>
     <packaging>war</packaging>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.eclipse.microprofile/microprofile -->

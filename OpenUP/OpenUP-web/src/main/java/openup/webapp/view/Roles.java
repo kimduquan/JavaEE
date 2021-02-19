@@ -46,7 +46,7 @@ public class Roles implements Serializable {
 
     public List<RoleSet> getRoleSets() throws Exception {
         if(roleSets == null){
-            String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
+            String url = config.getConfig(ConfigNames.PERSISTENCE_URL, "");
             try(Client client = session.newClient(new URI(url))){
             	roleSets = Queries.getCriteriaQueryResult(
             			client, 
@@ -62,7 +62,7 @@ public class Roles implements Serializable {
 
     public List<Role> getRoles() throws Exception {
         if(roles == null){
-            String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
+            String url = config.getConfig(ConfigNames.PERSISTENCE_URL, "");
             try(Client client = session.newClient(new URI(url))){
             	roles = Queries.getCriteriaQueryResult(
             			client, 

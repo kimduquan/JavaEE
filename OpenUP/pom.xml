@@ -296,7 +296,7 @@
         <module>OpenUP-schema</module>
         <module>OpenUP-client</module>
         <module>OpenUP-service</module>
-        <module>OpenUP-gateway</module>
+        <module>EPF-gateway</module>
         <module>OpenUP-web</module>
         <module>OpenUP-test</module>
         <module>OpenUP-assembly</module>

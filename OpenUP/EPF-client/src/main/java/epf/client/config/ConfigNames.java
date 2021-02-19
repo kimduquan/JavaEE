@@ -11,11 +11,11 @@ package epf.client.config;
  */
 public interface ConfigNames {
     String MP_JWT_PRIVATE_KEY = "mp.jwt.issue.privatekey";
-    String JWT_EXPIRE_DURATION = "openup.security.jwt.exp.duration";
-    String JWT_EXPIRE_TIMEUNIT = "openup.security.jwt.exp.timeunit";
+    String JWT_EXPIRE_DURATION = "epf.security.jwt.exp.duration";
+    String JWT_EXPIRE_TIMEUNIT = "epf.security.jwt.exp.timeunit";
     
     String OPENUP_URL = "openup.url";
-    String OPENUP_GATEWAY_URL = "openup.gateway.url";
-    String OPENUP_PERSISTENCE_URL = "openup.persistence.url";
-    String OPENUP_SECURITY_URL = "openup.security.url";
+    String GATEWAY_URL = "epf.gateway.url";
+    String PERSISTENCE_URL = "epf.persistence.url";
+    String SECURITY_URL = "epf.security.url";
 }

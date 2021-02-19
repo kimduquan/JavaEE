@@ -46,7 +46,7 @@ public class WorkProducts implements Serializable {
 
     public List<Domain> getDomains() throws Exception {
         if(domains == null){
-            String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
+            String url = config.getConfig(ConfigNames.PERSISTENCE_URL, "");
             try(Client client = session.newClient(new URI(url))){
             	domains = Queries.getCriteriaQueryResult(
             			client, 
@@ -62,7 +62,7 @@ public class WorkProducts implements Serializable {
 
     public List<Artifact> getArtifacts() throws Exception {
         if(artifacts == null){
-            String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
+            String url = config.getConfig(ConfigNames.PERSISTENCE_URL, "");
             try(Client client = session.newClient(new URI(url))){
             	artifacts = Queries.getCriteriaQueryResult(
             			client, 

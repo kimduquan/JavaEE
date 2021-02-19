@@ -35,10 +35,10 @@ public class Config implements epf.client.config.Config {
     @PostConstruct
     void postConstruct(){
         configs = new ConcurrentHashMap<>();
-        String url = System.getenv(ConfigNames.OPENUP_GATEWAY_URL);
-        configs.put(ConfigNames.OPENUP_GATEWAY_URL, url);
-        configs.put(ConfigNames.OPENUP_PERSISTENCE_URL, url + "persistence");
-        configs.put(ConfigNames.OPENUP_SECURITY_URL, url + "security");
+        String url = System.getenv(ConfigNames.GATEWAY_URL);
+        configs.put(ConfigNames.GATEWAY_URL, url);
+        configs.put(ConfigNames.PERSISTENCE_URL, url + "persistence");
+        configs.put(ConfigNames.SECURITY_URL, url + "security");
     }
     
     @Override
