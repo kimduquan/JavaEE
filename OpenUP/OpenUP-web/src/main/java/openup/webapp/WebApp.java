@@ -6,7 +6,6 @@
 package openup.webapp;
 
 import openup.schema.OpenUP;
-import openup.schema.Role;
 import java.io.IOException;
 import javax.enterprise.context.ApplicationScoped;
 import javax.faces.annotation.FacesConfig;
@@ -23,6 +22,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.HttpMethod;
+import epf.schema.roles.Role;
 
 /**
  *
@@ -46,13 +46,13 @@ import javax.ws.rs.HttpMethod;
                     value = HttpMethod.GET,
                     emptyRoleSemantic = EmptyRoleSemantic.PERMIT,
                     transportGuarantee = TransportGuarantee.CONFIDENTIAL,
-                    rolesAllowed = Role.ANY_ROLE
+                    rolesAllowed = Role.DEFAULT_ROLE
             ),
             @HttpMethodConstraint(
                     value = HttpMethod.POST,
                     emptyRoleSemantic = EmptyRoleSemantic.PERMIT,
                     transportGuarantee = TransportGuarantee.CONFIDENTIAL,
-                    rolesAllowed = Role.ANY_ROLE
+                    rolesAllowed = Role.DEFAULT_ROLE
             )
         }
 )
