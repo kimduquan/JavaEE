@@ -6,8 +6,8 @@
         <artifactId>OpenUP-parent</artifactId>
         <version>1.0.0</version>
     </parent>
-    <artifactId>EPF-service</artifactId>
-    <name>Eclipse Process Framework Service</name>
+    <artifactId>OpenUP-service</artifactId>
+    <name>Open Unified Process Service</name>
     <packaging>war</packaging>
     <dependencies>
     	<!-- https://mvnrepository.com/artifact/javax.transaction/javax.transaction-api -->

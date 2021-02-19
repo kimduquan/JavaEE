@@ -1,0 +1,2 @@
+CREATE USER IF NOT EXISTS admin1 PASSWORD 'admin' ADMIN;
+GRANT Any_Role TO admin1;
