@@ -16,10 +16,7 @@ public class UnitValidator implements ConstraintValidator<Unit, String> {
 
     @Override
     public boolean isValid(String unit, ConstraintValidatorContext context) {
-    	if(unit == null) {
-    		return true;
-    	}
-    	else if("OpenUP".equals(unit)) {
+    	if("OpenUP".equals(unit) || "EPF".equals(unit)) {
     		return true;
     	}
         return false;
