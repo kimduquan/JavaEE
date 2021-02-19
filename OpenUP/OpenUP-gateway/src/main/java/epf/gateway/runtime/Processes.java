@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.gateway.runtime;
+package epf.gateway.runtime;
 
 import java.io.InputStream;
 import java.util.concurrent.CompletionStage;
@@ -21,8 +21,10 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import openup.gateway.Request;
+
 import org.eclipse.microprofile.faulttolerance.Asynchronous;
+
+import epf.gateway.Request;
 
 /**
  *
