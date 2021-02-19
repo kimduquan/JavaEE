@@ -16,13 +16,14 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import epf.service.persistence.Request;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.roles.Role;
+import epf.service.persistence.Request;
 
 /**
  *
@@ -30,7 +31,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  */
 @Type
 @Path("schema/delivery-processes")
-@RolesAllowed(EPF.Role)
+@RolesAllowed(Role.DEFAULT_ROLE)
 @RequestScoped
 public class DeliveryProcesses {
     
@@ -57,7 +58,7 @@ public class DeliveryProcesses {
     )
     public List<DeliveryProcess> getDeliveryProcesses() throws Exception{
         return cache.getNamedQueryResult(
-        		EPF.Schema,
+                EPF.Schema,
                 principal,
                 DeliveryProcess.DELIVERY_PROCESSES, 
                 DeliveryProcess.class);

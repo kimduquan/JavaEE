@@ -5,7 +5,6 @@
  */
 package epf.service.persistence;
 
-import openup.schema.QueryNames;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.security.Principal;
@@ -47,6 +46,8 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import epf.client.persistence.SearchData;
 import epf.client.persistence.Target;
 import epf.schema.EPF;
+import epf.schema.QueryNames;
+import epf.schema.roles.Role;
 import epf.util.Var;
 
 /**
@@ -54,7 +55,7 @@ import epf.util.Var;
  * @author FOXCONN
  */
 @Path("persistence")
-@RolesAllowed(EPF.Role)
+@RolesAllowed(Role.DEFAULT_ROLE)
 @RequestScoped
 public class Queries implements epf.client.persistence.Queries {
     

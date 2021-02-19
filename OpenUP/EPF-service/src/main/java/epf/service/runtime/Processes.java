@@ -24,7 +24,7 @@ import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.client.runtime.ProcessInfo;
-import epf.schema.EPF;
+import epf.schema.roles.Role;
 import epf.util.Var;
 
 /**
@@ -32,7 +32,7 @@ import epf.util.Var;
  * @author FOXCONN
  */
 @Path("runtime/process")
-@RolesAllowed(EPF.Role)
+@RolesAllowed(Role.DEFAULT_ROLE)
 @SessionScoped
 public class Processes implements epf.client.runtime.Processes, Serializable {
     

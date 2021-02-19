@@ -23,7 +23,7 @@ import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.security.SecurityScheme;
 import org.eclipse.microprofile.openapi.annotations.security.SecuritySchemes;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
-import epf.schema.EPF;
+import openup.schema.OpenUP;
 
 /**
  *
@@ -31,13 +31,13 @@ import epf.schema.EPF;
  */
 @ApplicationScoped
 @ApplicationPath("/")
-@LoginConfig(authMethod = "MP-JWT", realmName = EPF.Schema)
+@LoginConfig(authMethod = "MP-JWT", realmName = OpenUP.Schema)
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @OpenAPIDefinition(
         info = @Info(
-            title = "Eclipse Process Framework",
-            description = "Eclipse Process Framework",
+            title = OpenUP.Schema,
+            description = "OpenUP",
             contact = @Contact(
                     name = "kimduquan",
                     url = "www.kdq.io",
@@ -52,8 +52,8 @@ import epf.schema.EPF;
         },
         tags = {
             @Tag(
-                    name = EPF.Schema,
-                    description = "Eclipse Process Framework"
+                    name = OpenUP.Schema,
+                    description = "OpenUP"
             )
         },
         components = @Components(

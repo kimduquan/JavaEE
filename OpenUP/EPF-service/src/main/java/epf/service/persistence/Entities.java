@@ -24,14 +24,14 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
-import epf.schema.EPF;
+import epf.schema.roles.Role;
 
 /**
  *
  * @author FOXCONN
  */
 @Path("persistence")
-@RolesAllowed(EPF.Role)
+@RolesAllowed(Role.DEFAULT_ROLE)
 @RequestScoped
 public class Entities implements epf.client.persistence.Entities {
 	

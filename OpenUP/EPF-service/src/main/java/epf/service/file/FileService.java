@@ -15,7 +15,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.StreamingOutput;
-import epf.schema.EPF;
+import epf.schema.roles.Role;
 import epf.util.Var;
 import epf.util.client.EntityOutput;
 import java.nio.file.Path;
@@ -25,7 +25,7 @@ import java.nio.file.Path;
  * @author FOXCONN
  */
 @javax.ws.rs.Path("file")
-@RolesAllowed(EPF.Role)
+@RolesAllowed(Role.DEFAULT_ROLE)
 @RequestScoped
 public class FileService implements epf.client.file.Files {
     

@@ -13,14 +13,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
-import epf.schema.EPF;
+import epf.schema.roles.Role;
 
 /**
  *
  * @author FOXCONN
  */
 @javax.ws.rs.Path("file/directory")
-@RolesAllowed(EPF.Role)
+@RolesAllowed(Role.DEFAULT_ROLE)
 @RequestScoped
 public class DirectoryService implements epf.client.file.Directories {
     
