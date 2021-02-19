@@ -6,7 +6,7 @@
         <artifactId>OpenUP-parent</artifactId>
         <version>1.0.0</version>
     </parent>
-    <artifactId>EPF-test</artifactId>
+    <artifactId>EPF-tests</artifactId>
     <name>Eclipse Process Framework Iteration Tests</name>
     <!-- Define variables that will be substituted in server.xml and
          passed to the integration tests -->
