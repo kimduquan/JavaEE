@@ -4,7 +4,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
                         http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
-    <persistence-unit name="EPF" transaction-type="JTA">
+    <persistence-unit name="EPF_Schema" transaction-type="JTA">
         <jta-data-source>jdbc/epf</jta-data-source>
 		<jar-file>../../lib/EPF-schema-1.0.0.jar</jar-file>
 		<jar-file>../../lib/OpenUP-schema-1.0.0.jar</jar-file>
@@ -17,8 +17,8 @@
             <property name="javax.persistence.sql-load-script-source" value="META-INF/data.sql"/>
         </properties>
     </persistence-unit>
-	<persistence-unit name="OpenUP" transaction-type="JTA">
-        <jta-data-source>jdbc/openup</jta-data-source>
+	<persistence-unit name="EPF" transaction-type="JTA">
+        <jta-data-source>jdbc/epf</jta-data-source>
 		<jar-file>../lib/EPF-schema-1.0.0.jar</jar-file>
 		<jar-file>../lib/OpenUP-schema-1.0.0.jar</jar-file>
     </persistence-unit>

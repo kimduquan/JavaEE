@@ -42,7 +42,7 @@
         </dependency>
         <dependency>
             <groupId>openup</groupId>
-            <artifactId>OpenUP-client</artifactId>
+            <artifactId>OpenUP-schema</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>
@@ -54,12 +54,6 @@
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-gateway</artifactId>
-            <version>1.0.0</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>OpenUP-web</artifactId>
             <version>1.0.0</version>
             <type>war</type>
         </dependency>
@@ -127,7 +121,7 @@
                             <!-- Drop application into apps/ directory -->
                             <appsDirectory>apps</appsDirectory>
 							<copyDependencies>
-                                <location>${project.build.directory}/shared/resources/openup/</location>
+                                <location>${project.build.directory}/shared/resources/epf/</location>
                                 <dependency>
                                     <groupId>com.h2database</groupId>
                                     <artifactId>h2</artifactId>
@@ -153,7 +147,7 @@
                         <configuration>
                             <verifyTimeout>600</verifyTimeout>
                             <serverStartTimeout>600</serverStartTimeout>
-                            <applications>EPF-service,EPF-gateway,OpenUP-web</applications>
+                            <applications>EPF-service,EPF-gateway</applications>
                         </configuration>
                     </execution>
                     <!-- Stop the server -->
@@ -172,7 +166,7 @@
                     <deployPackages>dependencies</deployPackages>
 					<verifyTimeout>600</verifyTimeout>
 					<serverStartTimeout>600</serverStartTimeout>
-					<applications>EPF-service,EPF-gateway,OpenUP-web</applications>
+					<applications>EPF-service,EPF-gateway</applications>
                 </configuration>
             </plugin>
         </plugins>
