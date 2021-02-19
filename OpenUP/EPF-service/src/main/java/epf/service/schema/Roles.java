@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.service.epf;
+package epf.service.schema;
 
 import openup.schema.OpenUP;
 import openup.schema.Role;
-import epf.schema.tasks.Discipline;
+import epf.schema.roles.RoleSet;
 import java.security.Principal;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
@@ -30,10 +30,10 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  * @author FOXCONN
  */
 @Type
-@Path("schema/tasks")
+@Path("schema/roles")
 @RolesAllowed(Role.ANY_ROLE)
 @RequestScoped
-public class Tasks {
+public class Roles {
     
     @Inject
     private Request cache;
@@ -45,22 +45,22 @@ public class Tasks {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-            summary = "Tasks", 
-            description = "List of tasks organized by discipline."
+            summary = "Roles", 
+            description = "This category lists roles organized by role set."
     )
     @APIResponse(
-            description = "Discipline",
+            description = "Role Set",
             responseCode = "200",
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON,
-                    schema = @Schema(implementation = Discipline.class)
+                    schema = @Schema(implementation = RoleSet.class)
             )
     )
-    public List<Discipline> getDisciplines() throws Exception{
+    public List<RoleSet> getRoleSets() throws Exception{
         return cache.getNamedQueryResult(
                 OpenUP.Schema,
                 principal,
-                Discipline.DISCIPLINES, 
-                Discipline.class);
+                RoleSet.ROLES, 
+                RoleSet.class);
     }
 }

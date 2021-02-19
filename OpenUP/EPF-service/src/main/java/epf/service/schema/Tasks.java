@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.service.epf;
+package epf.service.schema;
 
 import openup.schema.OpenUP;
-import java.util.List;
-import epf.schema.delivery_processes.DeliveryProcess;
 import openup.schema.Role;
+import epf.schema.tasks.Discipline;
 import java.security.Principal;
+import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -30,10 +30,10 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  * @author FOXCONN
  */
 @Type
-@Path("schema/delivery-processes")
+@Path("schema/tasks")
 @RolesAllowed(Role.ANY_ROLE)
 @RequestScoped
-public class DeliveryProcesses {
+public class Tasks {
     
     @Inject
     private Request cache;
@@ -45,22 +45,22 @@ public class DeliveryProcesses {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-            summary = "Delivery Processes", 
-            description = "This provides a list of delivery processes that have been published."
+            summary = "Tasks", 
+            description = "List of tasks organized by discipline."
     )
     @APIResponse(
-            description = "Delivery Process",
+            description = "Discipline",
             responseCode = "200",
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON,
-                    schema = @Schema(implementation = DeliveryProcess.class)
+                    schema = @Schema(implementation = Discipline.class)
             )
     )
-    public List<DeliveryProcess> getDeliveryProcesses() throws Exception{
+    public List<Discipline> getDisciplines() throws Exception{
         return cache.getNamedQueryResult(
                 OpenUP.Schema,
                 principal,
-                DeliveryProcess.DELIVERY_PROCESSES, 
-                DeliveryProcess.class);
+                Discipline.DISCIPLINES, 
+                Discipline.class);
     }
 }

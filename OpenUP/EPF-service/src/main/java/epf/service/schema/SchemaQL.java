@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.service.epf;
+package epf.service.schema;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;

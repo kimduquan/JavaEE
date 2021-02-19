@@ -80,6 +80,6 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
             bearerFormat = "JWT"
     )
 })
-public class OpenUP extends Application {
+public class Service extends Application {
     
 }

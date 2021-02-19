@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.service.epf;
+package epf.service.schema;
 
 import openup.schema.OpenUP;
-import openup.schema.Role;
-import epf.schema.work_products.Domain;
-import java.security.Principal;
 import java.util.List;
+import epf.schema.delivery_processes.DeliveryProcess;
+import openup.schema.Role;
+import java.security.Principal;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -30,10 +30,10 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  * @author FOXCONN
  */
 @Type
-@Path("schema/work-products")
+@Path("schema/delivery-processes")
 @RolesAllowed(Role.ANY_ROLE)
 @RequestScoped
-public class WorkProducts {
+public class DeliveryProcesses {
     
     @Inject
     private Request cache;
@@ -45,22 +45,22 @@ public class WorkProducts {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-            summary = "Work Products", 
-            description = "List of work products organized by domain."
+            summary = "Delivery Processes", 
+            description = "This provides a list of delivery processes that have been published."
     )
     @APIResponse(
-            description = "Domain",
+            description = "Delivery Process",
             responseCode = "200",
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON,
-                    schema = @Schema(implementation = Domain.class)
+                    schema = @Schema(implementation = DeliveryProcess.class)
             )
     )
-    public List<Domain> getDomains() throws Exception{
+    public List<DeliveryProcess> getDeliveryProcesses() throws Exception{
         return cache.getNamedQueryResult(
                 OpenUP.Schema,
                 principal,
-                Domain.DOMAINS, 
-                Domain.class);
+                DeliveryProcess.DELIVERY_PROCESSES, 
+                DeliveryProcess.class);
     }
 }
