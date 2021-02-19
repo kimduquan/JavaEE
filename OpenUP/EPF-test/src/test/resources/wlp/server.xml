@@ -22,13 +22,13 @@
                   httpPort="${httpPort}"
                   httpsPort="${httpsPort}" />
 
-    <application id="OpenUP-service" name="OpenUP-service" context-root="service" location="OpenUP-service-1.0.0.war">
+    <application id="EPF-service" name="EPF-service" context-root="service" location="EPF-service-1.0.0.war">
         <classloader apiTypeVisibility="+third-party"/>
     </application>
     <application id="EPF-gateway" name="EPF-gateway" context-root="gateway" location="EPF-gateway-1.0.0.war" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-    <application id="OpenUP-web" name="OpenUP-web" context-root="web" location="OpenUP-web-1.0.0.war" startAfterRef="OpenUP-service,EPF-gateway" />
+    <application id="OpenUP-web" name="OpenUP-web" context-root="web" location="OpenUP-web-1.0.0.war" startAfterRef="EPF-service,EPF-gateway" />
     
     <!-- H2 Library Configuration -->
     <library id="H2JDBCLib">
@@ -94,7 +94,7 @@
     <batchJmsExecutor />
     <jmsActivationSpec id="batchActivationSpec" >
         <properties.wasJms destinationRef="batchJobSubmissionQueue"
-                           messageSelector="com_ibm_ws_batch_applicationName = 'OpenUP-service'"
+                           messageSelector="com_ibm_ws_batch_applicationName = 'EPF-service'"
                            destinationType="javax.jms.Queue"
                            remoteServerAddress="localhost:7276:BootstrapBasicMessaging">
         </properties.wasJms>

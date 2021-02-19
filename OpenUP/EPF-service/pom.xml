@@ -6,7 +6,7 @@
         <artifactId>OpenUP-parent</artifactId>
         <version>1.0.0</version>
     </parent>
-    <artifactId>OpenUP-service</artifactId>
+    <artifactId>EPF-service</artifactId>
     <name>Open Unified Process Service</name>
     <packaging>war</packaging>
     <dependencies>

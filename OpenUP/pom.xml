@@ -292,11 +292,11 @@
 		<module>EPF-utility</module>
         <module>EPF-gateway</module>
         <module>EPF-schema</module>
+        <module>OpenUP-schema</module>
         <module>EPF-validation</module>
         <module>EPF-client</module>
-        <module>OpenUP-schema</module>
         <module>OpenUP-client</module>
-        <module>OpenUP-service</module>
+        <module>EPF-service</module>
         <module>OpenUP-web</module>
         <module>EPF-test</module>
         <module>EPF-assembly</module>

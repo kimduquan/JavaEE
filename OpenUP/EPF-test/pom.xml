@@ -47,7 +47,7 @@
         </dependency>
         <dependency>
             <groupId>openup</groupId>
-            <artifactId>OpenUP-service</artifactId>
+            <artifactId>EPF-service</artifactId>
             <version>1.0.0</version>
             <type>war</type>
         </dependency>
@@ -153,7 +153,7 @@
                         <configuration>
                             <verifyTimeout>600</verifyTimeout>
                             <serverStartTimeout>600</serverStartTimeout>
-                            <applications>OpenUP-service,EPF-gateway,OpenUP-web</applications>
+                            <applications>EPF-service,EPF-gateway,OpenUP-web</applications>
                         </configuration>
                     </execution>
                     <!-- Stop the server -->
@@ -172,7 +172,7 @@
                     <deployPackages>dependencies</deployPackages>
 					<verifyTimeout>600</verifyTimeout>
 					<serverStartTimeout>600</serverStartTimeout>
-					<applications>OpenUP-service,EPF-gateway,OpenUP-web</applications>
+					<applications>EPF-service,EPF-gateway,OpenUP-web</applications>
                 </configuration>
             </plugin>
         </plugins>
