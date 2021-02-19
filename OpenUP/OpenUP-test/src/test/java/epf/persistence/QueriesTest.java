@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.persistence;
+package epf.persistence;
 
+import epf.TestUtil;
 import epf.client.persistence.Queries;
 import epf.client.persistence.Target;
 import epf.util.client.Client;
@@ -12,7 +13,7 @@ import openup.schema.OpenUP;
 import java.net.URI;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
-import openup.TestUtil;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;

@@ -289,16 +289,16 @@
        </profile>
    </profiles>
     <modules>
-        <module>EPF-schema</module>
 		<module>EPF-utility</module>
-        <module>EPF-client</module>
+        <module>EPF-gateway</module>
+        <module>EPF-schema</module>
         <module>EPF-validation</module>
+        <module>EPF-client</module>
         <module>OpenUP-schema</module>
         <module>OpenUP-client</module>
         <module>OpenUP-service</module>
-        <module>EPF-gateway</module>
         <module>OpenUP-web</module>
-        <module>OpenUP-test</module>
+        <module>EPF-test</module>
         <module>EPF-assembly</module>
     </modules>
 </project>

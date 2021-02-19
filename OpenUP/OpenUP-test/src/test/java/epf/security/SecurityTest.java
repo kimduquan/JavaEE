@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.security;
+package epf.security;
 
 import static epf.client.security.Security.AUDIENCE_URL_FORMAT;
 import java.net.URI;
@@ -18,7 +18,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
-import openup.TestUtil;
+
 import openup.schema.OpenUP;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -26,6 +26,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import epf.TestUtil;
 import epf.client.security.Security;
 import epf.client.security.Token;
 import epf.util.client.Client;
