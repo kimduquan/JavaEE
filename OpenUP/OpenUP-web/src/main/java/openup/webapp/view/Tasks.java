@@ -7,11 +7,12 @@ package openup.webapp.view;
 
 import epf.client.config.ConfigNames;
 import epf.client.config.ConfigSource;
+import epf.client.persistence.Queries;
 import epf.schema.EPF;
 import epf.schema.tasks.Discipline;
 import epf.schema.tasks.Task;
 import epf.util.client.Client;
-import epf.util.client.ClientQueue;
+import openup.schema.OpenUP;
 import openup.webapp.Session;
 import java.io.Serializable;
 import java.net.URI;
@@ -20,7 +21,6 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
 
 /**
  *
@@ -39,9 +39,6 @@ public class Tasks implements Serializable {
     private List<Task> tasks;
     
     @Inject
-    private ClientQueue clients;
-    
-    @Inject
     private ConfigSource config;
     
     @Inject
@@ -50,19 +47,14 @@ public class Tasks implements Serializable {
     public List<Discipline> getDisciplines() throws Exception {
         if(disciplines == null){
             String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
-            try(Client client = new Client(clients, new URI(url), b -> b)){
-            	disciplines = client
-            			.authorization(
-            					session
-            					.getPrincipal()
-            					.getToken()
-            					.getRawToken()
-            					)
-            			.request(
-            					target -> target.path(EPF.Schema).path(EPF.Discipline), 
-            					req -> req.accept(MediaType.APPLICATION_JSON)
-            					)
-            			.get(new GenericType<List<Discipline>> () {});
+            try(Client client = session.newClient(new URI(url))){
+            	Queries.getCriteriaQueryResult(
+            			client, 
+            			new GenericType<List<Discipline>> () {}, 
+            			OpenUP.Schema, 
+            			target -> target.path(EPF.Discipline), 
+            			0, 
+            			100);
             }
         }
         return disciplines;
@@ -71,19 +63,14 @@ public class Tasks implements Serializable {
     public List<Task> getTasks() throws Exception {
         if(tasks == null){
             String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
-            try(Client client = new Client(clients, new URI(url), b -> b)){
-            	tasks = client
-            			.authorization(
-            					session
-            					.getPrincipal()
-            					.getToken()
-            					.getRawToken()
-            					)
-            			.request(
-            					target -> target.path(EPF.Schema).path(EPF.Task),
-            					req -> req.accept(MediaType.APPLICATION_JSON)
-            					)
-            			.get(new GenericType<List<Task>> () {});
+            try(Client client = session.newClient(new URI(url))){
+            	tasks = Queries.getCriteriaQueryResult(
+            			client, 
+            			new GenericType<List<Task>> () {}, 
+            			OpenUP.Schema, 
+            			target -> target.path(EPF.Task), 
+            			0, 
+            			100);
             }
         }
         return tasks;

@@ -23,7 +23,8 @@ import epf.client.config.ConfigNames;
 import epf.client.config.ConfigSource;
 import epf.client.security.Security;
 import epf.client.security.Token;
-import epf.util.client.RestClient;
+import epf.util.client.Client;
+import epf.util.client.ClientQueue;
 import epf.util.security.PasswordHash;
 
 /**
@@ -37,6 +38,9 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
     
     @Inject
     private ConfigSource config;
+    
+    @Inject
+    private ClientQueue clients;
     
     public CredentialValidationResult validate(BasicAuthenticationCredential credential) throws Exception{
         CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
@@ -54,33 +58,28 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
     }
     
     Token login(BasicAuthenticationCredential credential) throws Exception{
-        String base = config.getConfig(ConfigNames.OPENUP_GATEWAY_URL, "");
-        URL baseUrl = new URL(base);
+        URI securityUrl = new URI(config.getConfig(ConfigNames.OPENUP_SECURITY_URL, ""));
         URL audienceUrl = new URL(String.format(
                                     Security.AUDIENCE_URL_FORMAT,
-                                    baseUrl.getProtocol(), 
-                                    baseUrl.getHost(), 
-                                    baseUrl.getPort()
+                                    securityUrl.getScheme(), 
+                                    securityUrl.getHost(), 
+                                    securityUrl.getPort()
                             ));
-        String token;
         Token jwt = null;
-        try(RestClient restClient = new RestClient(baseUrl.toURI(), b -> b)){
-        	token = restClient
-        			.build(Security.class)
-        			.login(
-        					OpenUP.Schema,
-        					credential.getCaller(),
-        					PasswordHash.hash(
-        							credential.getCaller(), 
-        							credential.getPassword().getValue()
-        							),
-        					audienceUrl
-        					);
+        try(Client client = new Client(clients, securityUrl, b -> b)){
+        	String token = Security.login(
+        			client, 
+        			OpenUP.Schema,
+					credential.getCaller(),
+					PasswordHash.hash(
+							credential.getCaller(), 
+							credential.getPassword().getValue()
+							),
+					audienceUrl
+					);
             if(!token.isEmpty()){
-                jwt = restClient
-                		.authorization(token)
-                		.build(Security.class)
-                		.authenticate();
+            	client.authorization(token);
+            	jwt = Security.authenticate(client);
             }
         }
         return jwt;
@@ -94,11 +93,10 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
     @Override
     public CredentialValidationResult validate(RememberMeCredential credential) {
         CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
-        try(RestClient restClient = new RestClient(new URI(config.getConfig(ConfigNames.OPENUP_GATEWAY_URL, "")), b -> b)) {
-            Token jwt = restClient
-            		.authorization(credential.getToken())
-            		.build(Security.class)
-            		.authenticate();
+        String securityUrl = config.getConfig(ConfigNames.OPENUP_SECURITY_URL, "");
+        try(Client client = new Client(clients, new URI(securityUrl), b -> b)) {
+        	client.authorization(credential.getToken());
+        	Token jwt = Security.authenticate(client);
             if(jwt != null){
                 TokenPrincipal principal = new TokenPrincipal(jwt.getName(), jwt);
                 result = new CredentialValidationResult(principal, jwt.getGroups());
@@ -121,11 +119,10 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
 
     @Override
     public void removeLoginToken(String token) {
-        try(RestClient restClient = new RestClient(new URI(config.getConfig(ConfigNames.OPENUP_GATEWAY_URL, "")), b -> b)) {
-            restClient
-            .authorization(token)
-            .build(Security.class)
-            .logOut(OpenUP.Schema);
+    	String securityUrl = config.getConfig(ConfigNames.OPENUP_SECURITY_URL, "");
+        try(Client client = new Client(clients, new URI(securityUrl), b -> b)) {
+            client.authorization(token);
+            Security.logOut(client, OpenUP.Schema);
         } 
         catch (Exception ex) {
         	logger.log(Level.SEVERE, ex.getMessage(), ex);

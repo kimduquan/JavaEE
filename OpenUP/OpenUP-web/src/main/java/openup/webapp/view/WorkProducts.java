@@ -7,11 +7,12 @@ package openup.webapp.view;
 
 import epf.client.config.ConfigNames;
 import epf.client.config.ConfigSource;
+import epf.client.persistence.Queries;
 import epf.schema.EPF;
 import epf.schema.work_products.Artifact;
 import epf.schema.work_products.Domain;
 import epf.util.client.Client;
-import epf.util.client.ClientQueue;
+import openup.schema.OpenUP;
 import openup.webapp.Session;
 import java.io.Serializable;
 import java.net.URI;
@@ -20,7 +21,6 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
 
 /**
  *
@@ -34,35 +34,27 @@ public class WorkProducts implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	private List<Domain> domains;
-    private List<Artifact> artifacts;
-    
-    @Inject
-    private ClientQueue clients;
     
     @Inject
     private ConfigSource config;
     
     @Inject
     private Session session;
+	
+	private List<Domain> domains;
+    private List<Artifact> artifacts;
 
     public List<Domain> getDomains() throws Exception {
         if(domains == null){
             String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
-            try(Client client = new Client(clients, new URI(url), b -> b)){
-            	domains = client
-            			.authorization(
-            					session
-            					.getPrincipal()
-            					.getToken()
-            					.getRawToken()
-            					)
-            			.request(
-            					target -> target.path(EPF.Schema).path(EPF.Domain), 
-            					req -> req.accept(MediaType.APPLICATION_JSON)
-            					)
-            			.get(new GenericType<List<Domain>> () {});
+            try(Client client = session.newClient(new URI(url))){
+            	domains = Queries.getCriteriaQueryResult(
+            			client, 
+            			new GenericType<List<Domain>> () {}, 
+            			OpenUP.Schema, 
+            			target -> target.path(EPF.Domain), 
+            			0, 
+            			100);
             }
         }
         return domains;
@@ -71,19 +63,14 @@ public class WorkProducts implements Serializable {
     public List<Artifact> getArtifacts() throws Exception {
         if(artifacts == null){
             String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
-            try(Client client = new Client(clients, new URI(url), b -> b)){
-            	artifacts = client
-            			.authorization(
-            					session
-            					.getPrincipal()
-            					.getToken()
-            					.getRawToken()
-            					)
-            			.request(
-            					target -> target.path(EPF.Schema).path(EPF.Artifact), 
-            					req -> req.accept(MediaType.APPLICATION_JSON)
-            					)
-            			.get(new GenericType<List<Artifact>> () {});
+            try(Client client = session.newClient(new URI(url))){
+            	artifacts = Queries.getCriteriaQueryResult(
+            			client, 
+            			new GenericType<List<Artifact>> () {}, 
+            			OpenUP.Schema, 
+            			target -> target.path(EPF.Artifact), 
+            			0, 
+            			100);
             }
         }
         return artifacts;

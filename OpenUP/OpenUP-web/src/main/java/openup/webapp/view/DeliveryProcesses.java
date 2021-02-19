@@ -7,12 +7,13 @@ package openup.webapp.view;
 
 import epf.client.config.ConfigNames;
 import epf.client.config.ConfigSource;
+import epf.client.persistence.Queries;
 import epf.schema.EPF;
 import epf.schema.delivery_processes.Iteration;
 import epf.schema.delivery_processes.Phase;
 import epf.schema.tasks.Task;
 import epf.util.client.Client;
-import epf.util.client.ClientQueue;
+import openup.schema.OpenUP;
 import openup.webapp.Session;
 import java.io.Serializable;
 import java.net.URI;
@@ -21,7 +22,6 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
 
 /**
  *
@@ -35,35 +35,28 @@ public class DeliveryProcesses implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	private List<Phase> phases;
-    private List<Iteration> iterations;
-    private List<Task> tasks;
     
     @Inject
     private ConfigSource config;
     
     @Inject
-    private ClientQueue clients;
-    
-    @Inject
     private Session session;
+	
+	private List<Phase> phases;
+    private List<Iteration> iterations;
+    private List<Task> tasks;
 
     public List<Phase> getPhases() throws Exception {
         if(phases == null){
             String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
-            try(Client client = new Client(clients, new URI(url), b -> b)){
-            	phases = client.authorization(
-            			session
-            			.getPrincipal()
-            			.getToken()
-            			.getRawToken()
-            			)
-            	.request(
-            			target -> target.path(EPF.Schema).path(EPF.Phase), 
-            			req -> req.accept(MediaType.APPLICATION_JSON)
-            			)
-            	.get(new GenericType<List<Phase>> () {});
+            try(Client client = session.newClient(new URI(url))){
+            	phases = Queries.getCriteriaQueryResult(
+            			client, 
+            			new GenericType<List<Phase>>() {}, 
+            			OpenUP.Schema,
+            			target -> target.path(EPF.Phase), 
+            			0, 
+            			100);
             }
         }
         return phases;
@@ -72,19 +65,14 @@ public class DeliveryProcesses implements Serializable {
     public List<Iteration> getIterations() throws Exception {
         if(iterations == null){
             String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
-            try(Client client = new Client(clients, new URI(url), b -> b)){
-            	iterations = client
-            			.authorization(
-            					session
-                    			.getPrincipal()
-            					.getToken()
-		            			.getRawToken()
-		            			)
-		            	.request(
-		            			target -> target.path(EPF.Schema).path(EPF.Iteration), 
-		            			req -> req.accept(MediaType.APPLICATION_JSON)
-		            			)
-		            	.get(new GenericType<List<Iteration>> () {});
+            try(Client client = session.newClient(new URI(url))){
+            	iterations = Queries.getCriteriaQueryResult(
+            			client, 
+            			new GenericType<List<Iteration>>() {}, 
+            			OpenUP.Schema, 
+            			target -> target.path(EPF.Iteration), 
+            			0, 
+            			100);
             }
         }
         return iterations;
@@ -93,19 +81,14 @@ public class DeliveryProcesses implements Serializable {
     public List<Task> getTasks() throws Exception {
         if(tasks == null){
             String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
-            try(Client client = new Client(clients, new URI(url), b -> b)){
-            	tasks = client
-            			.authorization(
-            					session
-                    			.getPrincipal()
-            					.getToken()
-		            			.getRawToken()
-		            			)
-		            	.request(
-		            			target -> target.path(EPF.Schema).path(EPF.Task), 
-		            			req -> req.accept(MediaType.APPLICATION_JSON)
-		            			)
-		            	.get(new GenericType<List<Task>> () {});
+            try(Client client = session.newClient(new URI(url))){
+            	tasks = Queries.getCriteriaQueryResult(
+            			client, 
+            			new GenericType<List<Task>> () {}, 
+            			OpenUP.Schema, 
+            			target -> target.path(EPF.Task), 
+            			0, 
+            			100);
             }
         }
         return tasks;

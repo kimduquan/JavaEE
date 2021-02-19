@@ -17,4 +17,5 @@ public interface ConfigNames {
     String OPENUP_URL = "openup.url";
     String OPENUP_GATEWAY_URL = "openup.gateway.url";
     String OPENUP_PERSISTENCE_URL = "openup.persistence.url";
+    String OPENUP_SECURITY_URL = "openup.security.url";
 }

@@ -12,7 +12,6 @@ import epf.client.config.ConfigNames;
 import epf.client.security.Security;
 import epf.util.client.Client;
 import epf.util.client.ClientQueue;
-import epf.util.client.RestClient;
 import epf.util.security.PasswordHash;
 import java.net.URI;
 import java.net.URL;
@@ -53,13 +52,6 @@ public class TestUtil {
     	}
     	return new Client(
     			clients, 
-    			uri, 
-    			builder -> builder.register(buildJsonProvider())
-    			);
-    }
-    
-    public static RestClient newRestClient(URI uri) {
-    	return new RestClient(
     			uri, 
     			builder -> builder.register(buildJsonProvider())
     			);

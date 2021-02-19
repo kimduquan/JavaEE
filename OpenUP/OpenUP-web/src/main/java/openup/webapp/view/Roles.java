@@ -7,11 +7,12 @@ package openup.webapp.view;
 
 import epf.client.config.ConfigNames;
 import epf.client.config.ConfigSource;
+import epf.client.persistence.Queries;
 import epf.schema.EPF;
 import epf.schema.roles.Role;
 import epf.schema.roles.RoleSet;
 import epf.util.client.Client;
-import epf.util.client.ClientQueue;
+import openup.schema.OpenUP;
 import openup.webapp.Session;
 import java.io.Serializable;
 import java.net.URI;
@@ -20,7 +21,6 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
 
 /**
  *
@@ -34,35 +34,27 @@ public class Roles implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	private List<RoleSet> roleSets;
-    private List<Role> roles;
-    
-    @Inject
-    private ClientQueue clients;
     
     @Inject
     private ConfigSource config;
     
     @Inject
     private Session session;
+	
+	private List<RoleSet> roleSets;
+    private List<Role> roles;
 
     public List<RoleSet> getRoleSets() throws Exception {
         if(roleSets == null){
             String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
-            try(Client client = new Client(clients, new URI(url), b -> b)){
-            	roleSets = client
-            			.authorization(
-            					session
-            					.getPrincipal()
-			        			.getToken()
-			        			.getRawToken()
-			        			)
-			        	.request(
-			        			target -> target.path(EPF.Schema).path(EPF.RoleSet), 
-			        			req -> req.accept(MediaType.APPLICATION_JSON)
-			        			)
-			        	.get(new GenericType<List<RoleSet>> () {});
+            try(Client client = session.newClient(new URI(url))){
+            	roleSets = Queries.getCriteriaQueryResult(
+            			client, 
+            			new GenericType<List<RoleSet>> () {}, 
+            			OpenUP.Schema,
+            			target -> target.path(EPF.RoleSet), 
+            			0, 
+            			100);
             }
         }
         return roleSets;
@@ -71,19 +63,14 @@ public class Roles implements Serializable {
     public List<Role> getRoles() throws Exception {
         if(roles == null){
             String url = config.getConfig(ConfigNames.OPENUP_PERSISTENCE_URL, "");
-            try(Client client = new Client(clients, new URI(url), b -> b)){
-            	roles = client
-            			.authorization(
-            					session
-            					.getPrincipal()
-		            			.getToken()
-		            			.getRawToken()
-		            			)
-		            	.request(
-		            			target -> target.path(EPF.Schema).path(EPF.Role), 
-		            			req -> req.accept(MediaType.APPLICATION_JSON)
-		            			)
-		            	.get(new GenericType<List<Role>> () {});
+            try(Client client = session.newClient(new URI(url))){
+            	roles = Queries.getCriteriaQueryResult(
+            			client, 
+            			new GenericType<List<Role>> () {}, 
+            			OpenUP.Schema, 
+            			target -> target.path(EPF.Role), 
+            			0, 
+            			100);
             }
         }
         return roles;

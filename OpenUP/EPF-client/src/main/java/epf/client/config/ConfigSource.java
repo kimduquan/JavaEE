@@ -5,14 +5,16 @@
  */
 package epf.client.config;
 
-import java.net.URL;
+import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
-import org.eclipse.microprofile.rest.client.RestClientBuilder;
+import javax.inject.Inject;
+import epf.util.client.Client;
+import epf.util.client.ClientQueue;
 
 /**
  *
@@ -25,16 +27,15 @@ public class ConfigSource {
     
     private Map<String, Object> configs;
     
+    @Inject
+    private ClientQueue clients;
+    
     @PostConstruct
     void postConstruct(){
         configs = new ConcurrentHashMap<>();
         String configUrl = System.getenv(ConfigNames.OPENUP_GATEWAY_URL);
-        try {
-            Map<String, Object> data = RestClientBuilder
-                    .newBuilder()
-                    .baseUrl(new URL(configUrl))
-                    .build(Config.class)
-                    .getConfigurations();
+        try(Client client = new Client(clients, new URI(configUrl), b -> b)) {
+            Map<String, Object> data = Config.getConfigurations(client);
             if(data != null){
                 configs.putAll(data);
             }

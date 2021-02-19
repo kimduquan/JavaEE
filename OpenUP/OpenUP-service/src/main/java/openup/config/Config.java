@@ -8,17 +8,16 @@ package openup.config;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PostConstruct;
+import javax.annotation.security.PermitAll;
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
-
 import epf.client.config.ConfigNames;
 
 /**
@@ -39,9 +38,11 @@ public class Config implements epf.client.config.Config {
         String url = System.getenv(ConfigNames.OPENUP_GATEWAY_URL);
         configs.put(ConfigNames.OPENUP_GATEWAY_URL, url);
         configs.put(ConfigNames.OPENUP_PERSISTENCE_URL, url + "persistence");
+        configs.put(ConfigNames.OPENUP_SECURITY_URL, url + "security");
     }
     
     @Override
+    @PermitAll
     @Operation(
             summary = "getConfig",
             description = "getConfig"
