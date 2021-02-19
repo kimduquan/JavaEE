@@ -35,17 +35,17 @@ import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import epf.client.config.ConfigNames;
 import epf.client.security.Token;
-import openup.persistence.Application;
-import openup.persistence.Credential;
-import openup.persistence.Session;
-import openup.schema.Role;
+import epf.schema.EPF;
+import epf.service.persistence.Application;
+import epf.service.persistence.Credential;
+import epf.service.persistence.Session;
 
 /**
  *
  * @author FOXCONN
  */
 @Path("security")
-@RolesAllowed(Role.ANY_ROLE)
+@RolesAllowed(EPF.Role)
 @RequestScoped
 public class Security implements epf.client.security.Security, Serializable {
     
@@ -220,7 +220,7 @@ public class Security implements epf.client.security.Security, Serializable {
     Session removeSession(String unit) throws Exception{
         Principal principal = context.getUserPrincipal();
         if(principal != null){
-            openup.persistence.Context ctx = persistence.getContext(unit);
+            epf.service.persistence.Context ctx = persistence.getContext(unit);
             if(ctx != null){
                 Credential credential = ctx.getCredential(principal.getName());
                 if(credential != null){
@@ -237,7 +237,7 @@ public class Security implements epf.client.security.Security, Serializable {
     Session getSession(String unit) throws Exception{
         Principal principal = context.getUserPrincipal();
         if(principal != null){
-            openup.persistence.Context ctx = persistence.getContext(unit);
+        	epf.service.persistence.Context ctx = persistence.getContext(unit);
             if(ctx != null){
                 Credential credential = ctx.getCredential(principal.getName());
                 if(credential != null){

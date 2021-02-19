@@ -5,10 +5,9 @@
  */
 package epf.service.schema;
 
-import openup.schema.OpenUP;
 import java.util.List;
+import epf.schema.EPF;
 import epf.schema.delivery_processes.DeliveryProcess;
-import openup.schema.Role;
 import java.security.Principal;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
@@ -17,7 +16,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import openup.persistence.Request;
+import epf.service.persistence.Request;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -31,7 +30,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  */
 @Type
 @Path("schema/delivery-processes")
-@RolesAllowed(Role.ANY_ROLE)
+@RolesAllowed(EPF.Role)
 @RequestScoped
 public class DeliveryProcesses {
     
@@ -58,7 +57,7 @@ public class DeliveryProcesses {
     )
     public List<DeliveryProcess> getDeliveryProcesses() throws Exception{
         return cache.getNamedQueryResult(
-                OpenUP.Schema,
+        		EPF.Schema,
                 principal,
                 DeliveryProcess.DELIVERY_PROCESSES, 
                 DeliveryProcess.class);

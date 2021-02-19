@@ -5,9 +5,7 @@
  */
 package epf.service.persistence;
 
-import openup.schema.OpenUP;
 import openup.schema.QueryNames;
-import openup.schema.Role;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.security.Principal;
@@ -48,6 +46,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import epf.client.persistence.SearchData;
 import epf.client.persistence.Target;
+import epf.schema.EPF;
 import epf.util.Var;
 
 /**
@@ -55,7 +54,7 @@ import epf.util.Var;
  * @author FOXCONN
  */
 @Path("persistence")
-@RolesAllowed(Role.ANY_ROLE)
+@RolesAllowed(EPF.Role)
 @RequestScoped
 public class Queries implements epf.client.persistence.Queries {
     
@@ -193,9 +192,9 @@ public class Queries implements epf.client.persistence.Queries {
 	public List<Target> search(String text, Integer firstResult, Integer maxResults) throws Exception {
 		Map<String, EntityType<?>> entityTables = new HashMap<>();
 		Map<String, Map<String, Attribute<?,?>>> entityAttributes = new HashMap<>();
-		cache.getEntities(OpenUP.Schema, context.getUserPrincipal(), entityTables, entityAttributes);
+		cache.getEntities(EPF.Schema, context.getUserPrincipal(), entityTables, entityAttributes);
 		TypedQuery<SearchData> query = cache.createNamedQuery(
-				OpenUP.Schema, 
+				EPF.Schema, 
 				context.getUserPrincipal(), 
 				QueryNames.FULL_TEXT_SEARCH, 
 				SearchData.class
@@ -211,7 +210,7 @@ public class Queries implements epf.client.persistence.Queries {
 					if(entityTables.containsKey(item.getTable())) {
 						target = new Target();
 						StringBuilder builder = new StringBuilder();
-						builder.append(OpenUP.Schema);
+						builder.append(EPF.Schema);
 						builder.append('/');
 						EntityType<?> entityType = entityTables.get(item.getTable());
 						builder.append(entityType.getName());

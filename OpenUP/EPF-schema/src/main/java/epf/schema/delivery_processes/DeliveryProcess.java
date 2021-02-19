@@ -13,6 +13,7 @@ import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
@@ -31,6 +32,7 @@ import epf.schema.EPF;
         name = DeliveryProcess.DELIVERY_PROCESSES, 
         query = "SELECT dp FROM EPF_DeliveryProcess AS dp"
 )
+@NamedNativeQuery(name = DeliveryProcess.FULL_TEXT_SEARCH, query = "SELECT * FROM FT_SEARCH_DATA(?, ?, ?);")
 public class DeliveryProcess {
 	
     @Column(name = "NAME")
@@ -53,6 +55,7 @@ public class DeliveryProcess {
     private WorkProductUsage workProductUsage;
     
     public static final String DELIVERY_PROCESSES = "EPF_DeliveryProcess.DeliveryProcesses";
+    static final String FULL_TEXT_SEARCH = "EPF.FullTextSearch";
 
     public String getName() {
         return name;
