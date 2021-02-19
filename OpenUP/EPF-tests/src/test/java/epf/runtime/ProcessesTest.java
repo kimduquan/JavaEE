@@ -8,15 +8,12 @@ package epf.runtime;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-
-import openup.schema.OpenUP;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
 import epf.TestUtil;
 import epf.client.runtime.Processes;
 import epf.util.client.Client;
@@ -33,13 +30,13 @@ public class ProcessesTest {
     
     @BeforeClass
     public static void beforeClass() throws Exception{
-    	token = TestUtil.login(OpenUP.Schema, "any_role1", "any_role");
+    	token = TestUtil.login(null, "any_role1", "any_role");
         processesUrl = new URI(TestUtil.gateway_url().toString() + "runtime/process");
     }
     
     @AfterClass
     public static void afterClass() throws Exception{
-    	TestUtil.logOut(OpenUP.Schema, token);
+    	TestUtil.logOut(null, token);
     }
     
     @After

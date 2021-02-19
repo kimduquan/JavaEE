@@ -13,7 +13,6 @@ import openup.schema.OpenUP;
 import java.net.URI;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;

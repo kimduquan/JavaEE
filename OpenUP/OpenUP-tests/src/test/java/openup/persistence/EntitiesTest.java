@@ -17,7 +17,6 @@ import java.net.URI;
 import java.util.List;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.core.GenericType;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;

@@ -9,11 +9,9 @@ import epf.TestUtil;
 import epf.client.persistence.Queries;
 import epf.client.persistence.Target;
 import epf.util.client.Client;
-import openup.schema.OpenUP;
 import java.net.URI;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -33,13 +31,13 @@ public class QueriesTest {
     
     @BeforeClass
     public static void beforeClass() throws Exception{
-    	token = TestUtil.login(OpenUP.Schema, "any_role1", "any_role");
+    	token = TestUtil.login(null, "any_role1", "any_role");
     	persistenceUrl = new URI(TestUtil.gateway_url().toString() + "persistence");
     }
     
     @AfterClass
     public static void afterClass() throws Exception{
-    	TestUtil.logOut(OpenUP.Schema, token);
+    	TestUtil.logOut(null, token);
     }
     
     @Before
