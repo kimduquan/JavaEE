@@ -33,6 +33,8 @@ import epf.schema.EPF;
     "modifies"
 })
 public class Role {
+	
+	public static final String DEFAULT_ROLE = "Any_Role";
 
     @Column(name = "NAME")
     @Id

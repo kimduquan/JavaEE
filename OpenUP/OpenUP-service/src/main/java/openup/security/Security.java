@@ -13,7 +13,6 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
@@ -35,17 +34,17 @@ import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import epf.client.config.ConfigNames;
 import epf.client.security.Token;
+import epf.schema.roles.Role;
 import openup.persistence.Application;
 import openup.persistence.Credential;
 import openup.persistence.Session;
-import openup.schema.Role;
 
 /**
  *
  * @author FOXCONN
  */
 @Path("security")
-@RolesAllowed(Role.ANY_ROLE)
+@RolesAllowed(Role.DEFAULT_ROLE)
 @RequestScoped
 public class Security implements epf.client.security.Security, Serializable {
     
@@ -193,14 +192,9 @@ public class Security implements epf.client.security.Security, Serializable {
     }
     
     void buildGroups(Token token, String userName, EntityManager manager) {
-    	Role user = manager.find(Role.class, userName);
-    	if(user != null) {
-    		token.setGroups(
-    				user.getRoles()
-    				.stream()
-    				.map(role -> role.getName())
-    				.collect(Collectors.toSet()));
-    	}
+    	Set<String> groups = new HashSet<>();
+    	groups.add(Role.DEFAULT_ROLE);
+    	token.setGroups(groups);
     }
     
     Token buildToken(JsonWebToken jwt){

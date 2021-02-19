@@ -296,7 +296,7 @@
         <module>EPF-validation</module>
         <module>EPF-client</module>
         <module>OpenUP-client</module>
-        <module>EPF-service</module>
+        <!--<module>EPF-service</module>-->
 		<module>OpenUP-service</module>
         <module>OpenUP-web</module>
         <module>EPF-tests</module>

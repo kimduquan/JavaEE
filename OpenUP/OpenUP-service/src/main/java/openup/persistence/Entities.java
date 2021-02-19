@@ -5,11 +5,9 @@
  */
 package openup.persistence;
 
-import openup.schema.Role;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -26,13 +24,14 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import epf.schema.roles.Role;
 
 /**
  *
  * @author FOXCONN
  */
 @Path("persistence")
-@RolesAllowed(Role.ANY_ROLE)
+@RolesAllowed(Role.DEFAULT_ROLE)
 @RequestScoped
 public class Entities implements epf.client.persistence.Entities {
 	

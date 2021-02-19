@@ -3,10 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.epf;
+package openup.schema;
 
-import openup.schema.OpenUP;
-import openup.schema.Role;
 import epf.schema.roles.RoleSet;
 import java.security.Principal;
 import java.util.List;
@@ -24,6 +22,7 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.roles.Role;
 
 /**
  *
@@ -31,7 +30,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  */
 @Type
 @Path("schema/roles")
-@RolesAllowed(Role.ANY_ROLE)
+@RolesAllowed(Role.DEFAULT_ROLE)
 @RequestScoped
 public class Roles {
     

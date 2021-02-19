@@ -3,11 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.epf;
+package openup.schema;
 
-import openup.schema.OpenUP;
-import openup.schema.Role;
-import epf.schema.work_products.Domain;
+import epf.schema.tasks.Discipline;
 import java.security.Principal;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
@@ -24,16 +22,17 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.roles.Role;
 
 /**
  *
  * @author FOXCONN
  */
 @Type
-@Path("schema/work-products")
-@RolesAllowed(Role.ANY_ROLE)
+@Path("schema/tasks")
+@RolesAllowed(Role.DEFAULT_ROLE)
 @RequestScoped
-public class WorkProducts {
+public class Tasks {
     
     @Inject
     private Request cache;
@@ -45,22 +44,22 @@ public class WorkProducts {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-            summary = "Work Products", 
-            description = "List of work products organized by domain."
+            summary = "Tasks", 
+            description = "List of tasks organized by discipline."
     )
     @APIResponse(
-            description = "Domain",
+            description = "Discipline",
             responseCode = "200",
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON,
-                    schema = @Schema(implementation = Domain.class)
+                    schema = @Schema(implementation = Discipline.class)
             )
     )
-    public List<Domain> getDomains() throws Exception{
+    public List<Discipline> getDisciplines() throws Exception{
         return cache.getNamedQueryResult(
                 OpenUP.Schema,
                 principal,
-                Domain.DOMAINS, 
-                Domain.class);
+                Discipline.DISCIPLINES, 
+                Discipline.class);
     }
 }

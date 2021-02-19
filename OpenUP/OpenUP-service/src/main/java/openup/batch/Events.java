@@ -5,7 +5,6 @@
  */
 package openup.batch;
 
-import openup.schema.Role;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,13 +17,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseBroadcaster;
 import javax.ws.rs.sse.SseEventSink;
+import epf.schema.roles.Role;
 
 /**
  *
  * @author FOXCONN
  */
 @Path("batch/event")
-@RolesAllowed(Role.ANY_ROLE)
+@RolesAllowed(Role.DEFAULT_ROLE)
 @SessionScoped
 public class Events implements openup.client.batch.Events, Serializable {
     

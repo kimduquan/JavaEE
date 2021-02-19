@@ -5,7 +5,6 @@
  */
 package openup.batch;
 
-import openup.schema.Role;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -16,6 +15,7 @@ import javax.batch.operations.JobOperator;
 import javax.batch.runtime.BatchRuntime;
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.Path;
+import epf.schema.roles.Role;
 import openup.client.batch.JobExecution;
 import openup.client.batch.JobInstance;
 
@@ -24,7 +24,7 @@ import openup.client.batch.JobInstance;
  * @author FOXCONN
  */
 @Path("batch/job")
-@RolesAllowed(Role.ANY_ROLE)
+@RolesAllowed(Role.DEFAULT_ROLE)
 @RequestScoped
 public class Jobs implements openup.client.batch.Jobs {
     

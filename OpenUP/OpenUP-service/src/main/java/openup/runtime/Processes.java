@@ -8,7 +8,6 @@ package openup.runtime;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.SessionScoped;
 import javax.ws.rs.Path;
-import openup.schema.Role;
 import java.io.File;
 import java.io.Serializable;
 import java.util.List;
@@ -25,6 +24,7 @@ import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.client.runtime.ProcessInfo;
+import epf.schema.roles.Role;
 import epf.util.Var;
 
 /**
@@ -32,7 +32,7 @@ import epf.util.Var;
  * @author FOXCONN
  */
 @Path("runtime/process")
-@RolesAllowed(Role.ANY_ROLE)
+@RolesAllowed(Role.DEFAULT_ROLE)
 @SessionScoped
 public class Processes implements epf.client.runtime.Processes, Serializable {
     

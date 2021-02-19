@@ -3,13 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.epf;
+package openup.schema;
 
-import openup.schema.OpenUP;
-import openup.schema.Role;
-import epf.schema.tasks.Discipline;
-import java.security.Principal;
 import java.util.List;
+import epf.schema.EPF;
+import epf.schema.delivery_processes.DeliveryProcess;
+import java.security.Principal;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -24,16 +23,17 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.roles.Role;
 
 /**
  *
  * @author FOXCONN
  */
 @Type
-@Path("schema/tasks")
-@RolesAllowed(Role.ANY_ROLE)
+@Path("schema/delivery-processes")
+@RolesAllowed(Role.DEFAULT_ROLE)
 @RequestScoped
-public class Tasks {
+public class DeliveryProcesses {
     
     @Inject
     private Request cache;
@@ -45,22 +45,22 @@ public class Tasks {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-            summary = "Tasks", 
-            description = "List of tasks organized by discipline."
+            summary = "Delivery Processes", 
+            description = "This provides a list of delivery processes that have been published."
     )
     @APIResponse(
-            description = "Discipline",
+            description = "Delivery Process",
             responseCode = "200",
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON,
-                    schema = @Schema(implementation = Discipline.class)
+                    schema = @Schema(implementation = DeliveryProcess.class)
             )
     )
-    public List<Discipline> getDisciplines() throws Exception{
+    public List<DeliveryProcess> getDeliveryProcesses() throws Exception{
         return cache.getNamedQueryResult(
-                OpenUP.Schema,
+                EPF.Schema,
                 principal,
-                Discipline.DISCIPLINES, 
-                Discipline.class);
+                DeliveryProcess.DELIVERY_PROCESSES, 
+                DeliveryProcess.class);
     }
 }

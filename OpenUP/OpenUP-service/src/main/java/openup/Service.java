@@ -23,6 +23,7 @@ import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.security.SecurityScheme;
 import org.eclipse.microprofile.openapi.annotations.security.SecuritySchemes;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+import openup.schema.OpenUP;
 
 /**
  *
@@ -30,12 +31,12 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
  */
 @ApplicationScoped
 @ApplicationPath("/")
-@LoginConfig(authMethod = "MP-JWT", realmName = openup.schema.OpenUP.Schema)
+@LoginConfig(authMethod = "MP-JWT", realmName = OpenUP.Schema)
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @OpenAPIDefinition(
         info = @Info(
-            title = openup.schema.OpenUP.Schema,
+            title = OpenUP.Schema,
             description = "OpenUP",
             contact = @Contact(
                     name = "kimduquan",
@@ -51,7 +52,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
         },
         tags = {
             @Tag(
-                    name = openup.schema.OpenUP.Schema,
+                    name = OpenUP.Schema,
                     description = "OpenUP"
             )
         },
@@ -80,6 +81,6 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
             bearerFormat = "JWT"
     )
 })
-public class OpenUP extends Application {
+public class Service extends Application {
     
 }
