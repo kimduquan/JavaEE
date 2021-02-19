@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.batch;
+package epf.service.batch;
 
 import openup.schema.Role;
 import java.util.ArrayList;

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.persistence;
+package epf.service.persistence;
 
 import openup.schema.Role;
 import java.io.InputStream;

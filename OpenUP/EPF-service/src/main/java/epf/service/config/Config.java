@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.config;
+package epf.service.config;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

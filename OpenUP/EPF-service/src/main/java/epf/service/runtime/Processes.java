@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.runtime;
+package epf.service.runtime;
 
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.SessionScoped;

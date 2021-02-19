@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.event;
+package epf.service.event;
 
 import javax.enterprise.context.ApplicationScoped;
 

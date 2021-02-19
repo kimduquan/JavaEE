@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.epf;
+package epf.service.epf;
 
 import openup.schema.OpenUP;
 import java.util.List;
