@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import epf.schema.tasks.Task;
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -33,11 +35,13 @@ public class Activity {
     
     @Column(name = "NAME")
     @Id
+    @NotBlank
     private String name;
     
     @OneToOne
     @MapsId
     @JoinColumn(name = "NAME")
+    @NotNull
     private CapabilityPattern Extends;
     
     @JoinColumn(name = "PARENT_ACTIVITIES")

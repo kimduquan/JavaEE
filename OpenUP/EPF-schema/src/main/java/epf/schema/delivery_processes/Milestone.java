@@ -12,6 +12,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.schema.EPF;
@@ -28,12 +31,14 @@ public class Milestone {
 
     @Column(name = "NAME")
     @Id
+    @NotBlank
     private String name;
 	
     @JoinColumn(name = "PREDECESSOR")
     private Iteration predecessor;
 	
     @Embedded
+    @NotNull
     private Properties properties;
     
     @Column(name = "REQUIRED_RESULTS")

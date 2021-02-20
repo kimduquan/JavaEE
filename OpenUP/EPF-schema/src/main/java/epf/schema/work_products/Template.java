@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.schema.EPF;
@@ -26,6 +27,7 @@ public class Template {
 	
     @Column(name = "NAME")
     @Id
+    @NotBlank
     private String name;
     
     @Column(name = "SUMMARY")

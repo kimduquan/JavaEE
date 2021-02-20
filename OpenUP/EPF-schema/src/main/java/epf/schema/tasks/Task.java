@@ -12,6 +12,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.json.JsonObject;
 import javax.persistence.Embedded;
 import org.eclipse.microprofile.graphql.Type;
@@ -36,6 +38,7 @@ public class Task {
 
     @Column(name = "NAME")
     @Id
+    @NotBlank
     private String name;
     
     @Column(name = "SUMMARY")
@@ -45,6 +48,7 @@ public class Task {
     private JsonObject purpose;
     
     @Embedded
+    @NotNull
     private Relationships relationships;
     
     @Column(name = "MAIN_DESCRIPTION")
@@ -60,6 +64,7 @@ public class Task {
     private JsonObject alternatives;
     
     @Embedded
+    @NotNull
     private MoreInformation moreInformation;
 
     public String getName() {

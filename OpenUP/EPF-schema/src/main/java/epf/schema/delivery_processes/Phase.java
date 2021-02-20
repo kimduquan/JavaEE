@@ -15,6 +15,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.schema.EPF;
@@ -40,18 +43,23 @@ public class Phase {
 
     @Column(name = "NAME")
     @Id
+    @NotBlank
     private String name;
 	
     @Embedded
+    @NotNull
     private Description description;
 
     @Embedded
+    @NotNull
     private WorkBreakdownStructure workBreakdownStructure;
 
     @Embedded
+    @NotNull
     private TeamAllocation teamAllocation;
 
     @Embedded
+    @NotNull
     private WorkProductUsage workProductUsage;
     
     @JoinColumn(name = "PARENT_ACTIVITIES")

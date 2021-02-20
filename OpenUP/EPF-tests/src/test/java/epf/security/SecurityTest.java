@@ -11,9 +11,7 @@ import java.net.URL;
 import java.time.Duration;
 import java.time.Instant;
 import javax.ws.rs.BadRequestException;
-import javax.ws.rs.NotAllowedException;
 import javax.ws.rs.NotAuthorizedException;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
@@ -27,6 +25,7 @@ import org.junit.Test;
 import epf.TestUtil;
 import epf.client.security.Security;
 import epf.client.security.Token;
+import epf.schema.EPF;
 import epf.util.client.Client;
 import epf.util.security.PasswordHash;
 
@@ -107,7 +106,7 @@ public class SecurityTest {
     }
     
     //@Ignore
-    @Test(expected = NotAllowedException.class)
+    @Test(expected = BadRequestException.class)
     public void testLoginEmptyUnit() throws Exception{
         login("", "any_role1", "any_role", TestUtil.gateway_url(), false);
     }
@@ -158,7 +157,7 @@ public class SecurityTest {
         login(null, "any_role1", "Invalid", TestUtil.gateway_url(), true);
     }
     
-    @Test(expected = NotFoundException.class)
+    @Test(expected = BadRequestException.class)
     public void testLoginEmptyUrl() throws Exception{
         login(null, "any_role1", "any_role", null, false);
     }
@@ -233,7 +232,7 @@ public class SecurityTest {
         );
         Assert.assertEquals("duration", 30, duration.toMinutes());
         Assert.assertNotNull("Issuer", jwt.getIssuer());
-        Assert.assertEquals("Issuer", "OpenUP", jwt.getIssuer());
+        Assert.assertEquals("Issuer", EPF.Schema, jwt.getIssuer());
         Assert.assertNotNull("Name", jwt.getName());
         Assert.assertEquals("Name", "any_role1", jwt.getName());
         Assert.assertNotNull("RawToken", jwt.getRawToken());
@@ -272,7 +271,7 @@ public class SecurityTest {
     public void testLogoutEmptyUnit() throws Exception{
         String token = login(null, "any_role1", "any_role", TestUtil.gateway_url(), true);
         Assert.assertThrows(
-        		NotAllowedException.class, 
+        		BadRequestException.class, 
                 () -> {
                     logOut(token, "");
                 }

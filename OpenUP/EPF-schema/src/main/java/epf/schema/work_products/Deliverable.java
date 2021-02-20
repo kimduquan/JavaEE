@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.schema.EPF;
@@ -28,11 +30,13 @@ public class Deliverable {
     
     @Column(name = "NAME")
     @Id
+    @NotBlank
     private String name;
     
     @OneToOne
     @MapsId
     @JoinColumn(name = "NAME")
+    @NotNull
     private Artifact artifact;
 
     public String getName() {

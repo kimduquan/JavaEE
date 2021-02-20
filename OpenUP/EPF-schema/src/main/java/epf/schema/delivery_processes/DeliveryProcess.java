@@ -16,6 +16,9 @@ import javax.persistence.Id;
 import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.schema.EPF;
@@ -37,21 +40,26 @@ public class DeliveryProcess {
 	
     @Column(name = "NAME")
     @Id
+    @NotBlank
     private String name;
     
     @Column(name = "SUMMARY")
     private String summary;
 	
     @Embedded
+    @NotNull
     private Description description;
 
     @Embedded
+    @NotNull
     private WorkBreakdownStructure workBreakdownStructure;
 
     @Embedded
+    @NotNull
     private TeamAllocation teamAllocation;
 
     @Embedded
+    @NotNull
     private WorkProductUsage workProductUsage;
     
     public static final String DELIVERY_PROCESSES = "EPF_DeliveryProcess.DeliveryProcesses";

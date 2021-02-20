@@ -34,6 +34,7 @@ public interface Entities {
     Object persist(
             @PathParam("unit")
             @Unit
+            @NotBlank
             String unit,
             @PathParam("entity")
             @NotBlank
@@ -62,6 +63,7 @@ public interface Entities {
     void merge(
     		@PathParam("unit")
             @Unit
+            @NotBlank
             String unit,
             @PathParam("entity")
             @NotBlank
@@ -92,6 +94,7 @@ public interface Entities {
     void remove(
             @PathParam("unit")
             @Unit
+            @NotBlank
             String unit,
             @PathParam("entity")
             @NotBlank

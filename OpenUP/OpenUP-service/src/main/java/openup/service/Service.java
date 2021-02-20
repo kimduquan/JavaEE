@@ -36,8 +36,8 @@ import openup.schema.OpenUP;
 @Produces(MediaType.APPLICATION_JSON)
 @OpenAPIDefinition(
         info = @Info(
-            title = OpenUP.Schema,
-            description = "OpenUP",
+            title = "Open Unified Process",
+            description = "Open Unified Process Service",
             contact = @Contact(
                     name = "kimduquan",
                     url = "www.kdq.io",
@@ -52,8 +52,8 @@ import openup.schema.OpenUP;
         },
         tags = {
             @Tag(
-                    name = OpenUP.Schema,
-                    description = "OpenUP"
+                    name = "Open Unified Process",
+                    description = "Open Unified Process Service"
             )
         },
         components = @Components(

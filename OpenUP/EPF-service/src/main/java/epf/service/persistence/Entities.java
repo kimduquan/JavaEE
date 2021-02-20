@@ -6,7 +6,6 @@
 package epf.service.persistence;
 
 import java.io.InputStream;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
@@ -14,6 +13,7 @@ import javax.inject.Inject;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.json.bind.JsonbException;
+import javax.validation.Validator;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
@@ -39,6 +39,9 @@ public class Entities implements epf.client.persistence.Entities {
     
     @Inject
     private Request cache;
+    
+    @Inject
+    private Validator validator;
     
     @Context
     private SecurityContext context;
@@ -74,10 +77,11 @@ public class Entities implements epf.client.persistence.Entities {
         if(entity.getType() != null){
             try(Jsonb json = JsonbBuilder.create()){
                 Object obj = json.fromJson(body, entity.getType().getJavaType());
+                validator.validate(obj, entity.getType().getJavaType());
                 return cache.persist(unit, context.getUserPrincipal(), name, obj);
             }
             catch(JsonbException ex){
-            	logger.log(Level.SEVERE, ex.getMessage(), ex);
+            	logger.throwing(getClass().getName(), "persist", ex);
             	throw new BadRequestException();
             }
         }
@@ -95,10 +99,11 @@ public class Entities implements epf.client.persistence.Entities {
         if(entity.getObject() != null){
             try(Jsonb json = JsonbBuilder.create()){
                 Object obj = json.fromJson(body, entity.getType().getJavaType());
+                validator.validate(obj, entity.getType().getJavaType());
                 cache.merge(unit, context.getUserPrincipal(), name, id, obj);
             }
             catch(JsonbException ex){
-            	logger.log(Level.SEVERE, ex.getMessage(), ex);
+            	logger.throwing(getClass().getName(), "merge", ex);
                 throw new BadRequestException();
             }
         }

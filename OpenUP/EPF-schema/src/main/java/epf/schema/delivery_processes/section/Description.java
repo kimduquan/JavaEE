@@ -4,6 +4,8 @@ import javax.json.JsonObject;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
+import javax.validation.constraints.NotNull;
+
 import org.eclipse.microprofile.graphql.Type;
 
 @Type
@@ -20,6 +22,7 @@ public class Description {
     private JsonObject description;
 
     @Embedded
+    @NotNull
     private Properties properties;
 
     @Column(name = "ALTERNATIVES")

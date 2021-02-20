@@ -13,6 +13,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.json.JsonObject;
 import javax.persistence.Embedded;
 import org.eclipse.microprofile.graphql.Type;
@@ -38,24 +40,28 @@ public class Role {
 
     @Column(name = "NAME")
     @Id
+    @NotBlank
     private String name;
     
     @Column(name = "SUMMARY")
     private String summary;
     
     @Embedded
+    @NotNull
     private Relationships relationships;
     
     @Column(name = "MAIN_DESCRIPTION")
     private JsonObject mainDescription;
     
     @Embedded
+    @NotNull
     private Staffing staffing;
     
     @Column(name = "KEY_CONSIDERATIONS")
     private JsonObject keyConsiderations;
     
     @Embedded
+    @NotNull
     private MoreInformation moreInformation;
 
     public String getName() {

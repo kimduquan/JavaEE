@@ -61,15 +61,6 @@
             libraryRef="H2JDBCLib" />
         <properties URL="jdbc:h2:~/EPF_test;SCHEMA=EPF;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE" />
     </dataSource>
-    <dataSource id="openup" jndiName="jdbc/openup">
-        <!-- Define the DataSource class names on the <jdbcDriver> element -->
-        <jdbcDriver 
-            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
-            libraryRef="H2JDBCLib" />
-        <properties URL="jdbc:h2:~/EPF_test;SCHEMA=OPENUP;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE" />
-    </dataSource>
 
     <keyStore id="defaultKeyStore" password="password"/>
     

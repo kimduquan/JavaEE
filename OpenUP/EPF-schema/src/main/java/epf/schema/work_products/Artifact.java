@@ -16,6 +16,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.persistence.Embedded;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -37,6 +39,7 @@ public class Artifact {
 
     @Column(name = "NAME")
     @Id
+    @NotBlank
     private String name;
     
     @Column(name = "SUMMARY")
@@ -46,21 +49,26 @@ public class Artifact {
     private JsonObject purpose;
     
     @Embedded
+    @NotNull
     private Relationships relationships;
     
     @Embedded
+    @NotNull
     private Description description;
     
     @Embedded
+    @NotNull
     private Illustrations illustrations;
     
     @Column(name = "KEY_CONSIDERATIONS")
     private JsonObject keyConsiderations;
     
     @Embedded
+    @NotNull
     private Tailoring tailoring;
     
     @Embedded
+    @NotNull
     private MoreInformation moreInformation;
 
     public String getName() {

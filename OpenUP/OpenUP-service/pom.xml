@@ -71,11 +71,6 @@
             <artifactId>microprofile</artifactId>
             <type>pom</type>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.ibm.websphere.appserver.api/com.ibm.websphere.appserver.api.jwt -->
-        <dependency>
-            <groupId>com.ibm.websphere.appserver.api</groupId>
-            <artifactId>com.ibm.websphere.appserver.api.jwt</artifactId>
-        </dependency>
 		<!-- https://mvnrepository.com/artifact/io.jaegertracing/jaeger-client -->
         <dependency>
             <groupId>io.jaegertracing</groupId>
@@ -89,11 +84,6 @@
         <dependency>
             <groupId>openup</groupId>
             <artifactId>OpenUP-client</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-client</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>

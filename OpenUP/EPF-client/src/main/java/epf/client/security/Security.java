@@ -41,6 +41,7 @@ public interface Security {
     String login(
             @QueryParam("unit")
             @Unit
+            @NotBlank
             @DefaultValue(EPF.Schema)
             String unit,
             @FormParam("username")
@@ -74,6 +75,7 @@ public interface Security {
     String logOut(
             @QueryParam("unit")
             @Unit
+            @NotBlank
             @DefaultValue(EPF.Schema)
             String unit
             ) throws Exception;
@@ -92,6 +94,7 @@ public interface Security {
     		@QueryParam("unit")
             @Unit
             @DefaultValue(EPF.Schema)
+    		@NotBlank
             String unit
     		) throws Exception;
     
