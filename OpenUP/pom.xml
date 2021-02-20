@@ -219,7 +219,7 @@
                     <version>3.0.0-M5</version>
                     <configuration>
                         <forkMode>once</forkMode>
-                        <forkedProcessTimeoutInSeconds>600</forkedProcessTimeoutInSeconds>
+                        <forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds>
                         <!-- Specify which test classes are integration tests -->
                         <includes>
                             <include>**/Test*.java</include>

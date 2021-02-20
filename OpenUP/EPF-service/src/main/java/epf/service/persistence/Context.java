@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import epf.schema.EPF;
 import epf.util.Var;
 
 /**
@@ -69,7 +70,7 @@ public class Context implements AutoCloseable {
         EntityManagerFactory factory = null;
         EntityManager manager = null;
         try{
-            factory = Persistence.createEntityManagerFactory(unit, props);
+            factory = Persistence.createEntityManagerFactory(EPF.Schema, props);
             manager = factory.createEntityManager();
             return new Credential(factory, manager);
         }
