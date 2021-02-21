@@ -20,7 +20,6 @@ import epf.client.config.ConfigSource;
 import epf.client.security.Security;
 import epf.util.client.Client;
 import epf.util.client.ClientQueue;
-import openup.schema.OpenUP;
 import openup.webapp.security.TokenPrincipal;
 
 /**

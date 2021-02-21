@@ -5,7 +5,10 @@
  */
 package epf.persistence;
 
-import epf.TestUtil;
+import epf.ClientUtil;
+import epf.ConfigUtil;
+import epf.SecurityUtil;
+import epf.client.config.ConfigNames;
 import epf.client.persistence.Queries;
 import epf.client.persistence.Target;
 import epf.util.client.Client;
@@ -31,18 +34,18 @@ public class QueriesTest {
     
     @BeforeClass
     public static void beforeClass() throws Exception{
-    	token = TestUtil.login(null, "any_role1", "any_role");
-    	persistenceUrl = new URI(TestUtil.gateway_url().toString() + "persistence");
+    	token = SecurityUtil.login(null, "any_role1", "any_role");
+    	persistenceUrl = new URI(ConfigUtil.property(ConfigNames.PERSISTENCE_URL));
     }
     
     @AfterClass
     public static void afterClass() throws Exception{
-    	TestUtil.logOut(null, token);
+    	SecurityUtil.logOut(null, token);
     }
     
     @Before
     public void before() {
-    	client = TestUtil.newClient(persistenceUrl);
+    	client = ClientUtil.newClient(persistenceUrl);
     	client.authorization(token);
     }
     
@@ -60,7 +63,7 @@ public class QueriesTest {
     		Assert.assertNotNull("Target.path", target.getPath());
     		Assert.assertNotEquals("Target.path", "", target.getPath());
     		Object object;
-    		try(Client client = TestUtil.newClient(persistenceUrl)){
+    		try(Client client = ClientUtil.newClient(persistenceUrl)){
     			object = client
     					.authorization(token)
     					.request(

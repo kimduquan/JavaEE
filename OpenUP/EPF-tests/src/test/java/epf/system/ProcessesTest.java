@@ -14,7 +14,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import epf.TestUtil;
+import epf.ClientUtil;
+import epf.ConfigUtil;
+import epf.SecurityUtil;
+import epf.client.config.ConfigNames;
 import epf.client.system.Processes;
 import epf.util.client.Client;
 
@@ -30,13 +33,13 @@ public class ProcessesTest {
     
     @BeforeClass
     public static void beforeClass() throws Exception{
-    	token = TestUtil.login(null, "any_role1", "any_role");
-        processesUrl = new URI(TestUtil.gateway_url().toString() + "system");
+    	token = SecurityUtil.login(null, "any_role1", "any_role");
+        processesUrl = new URI(ConfigUtil.property(ConfigNames.SYSTEM_URL));
     }
     
     @AfterClass
     public static void afterClass() throws Exception{
-    	TestUtil.logOut(null, token);
+    	SecurityUtil.logOut(null, token);
     }
     
     @After
@@ -46,7 +49,7 @@ public class ProcessesTest {
     
     @Before
     public void before() {
-    	client = TestUtil.newClient(processesUrl);
+    	client = ClientUtil.newClient(processesUrl);
     	client.authorization(token);
     }
     

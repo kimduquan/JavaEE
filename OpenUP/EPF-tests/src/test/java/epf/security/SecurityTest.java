@@ -22,7 +22,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import epf.TestUtil;
+import epf.ClientUtil;
+import epf.ConfigUtil;
+import epf.client.config.ConfigNames;
 import epf.client.security.Security;
 import epf.client.security.Token;
 import epf.schema.EPF;
@@ -36,10 +38,12 @@ import epf.util.security.PasswordHash;
 public class SecurityTest {
 	
 	private static URI securityUrl;
+	private static URL gatewayUrl;
     
     @BeforeClass
     public static void beforeClass() throws Exception{
-    	securityUrl = new URI(TestUtil.gateway_url().toString() + "security");
+    	securityUrl = new URI(ConfigUtil.property(ConfigNames.SECURITY_URL));
+    	gatewayUrl = new URL(ConfigUtil.property(ConfigNames.GATEWAY_URL));
     }
     
     @AfterClass
@@ -59,7 +63,7 @@ public class SecurityTest {
             password = PasswordHash.hash(username, password.toCharArray());
         }
         String token;
-        try(Client client = TestUtil.newClient(securityUrl)){
+        try(Client client = ClientUtil.newClient(securityUrl)){
         	token = Security.login(client, unit, username, password, targetUrl);
         }
         return token;
@@ -67,7 +71,7 @@ public class SecurityTest {
     
     String logOut(String token, String unit) throws Exception{
     	String name;
-    	try(Client client = TestUtil.newClient(securityUrl)){
+    	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
     		name = Security.logOut(client, unit);
     	}
@@ -76,7 +80,7 @@ public class SecurityTest {
     
     Token authenticate(String token, String unit) throws Exception{
     	Token t;
-    	try(Client client = TestUtil.newClient(securityUrl)){
+    	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
     		t = Security.authenticate(client, unit);
     	}
@@ -85,7 +89,7 @@ public class SecurityTest {
     
     @Test
     public void testLoginOK() throws Exception{
-        String token = login(null, "any_role1", "any_role", TestUtil.gateway_url(), true);
+        String token = login(null, "any_role1", "any_role", gatewayUrl, true);
         Assert.assertNotNull("Token", token);
         Assert.assertNotEquals("Token", "", token);
         logOut(token, null);
@@ -96,10 +100,10 @@ public class SecurityTest {
         Assert.assertThrows(
         		NotAuthorizedException.class, 
                 () -> {
-                    login(null, "any_role1", "Invalid", TestUtil.gateway_url(), true);
+                    login(null, "any_role1", "Invalid", gatewayUrl, true);
                 }
         );
-        String token = login(null, "any_role1", "any_role", TestUtil.gateway_url(), true);
+        String token = login(null, "any_role1", "any_role", gatewayUrl, true);
         Assert.assertNotNull("Token", token);
         Assert.assertNotEquals("Token", "", token);
         logOut(token, null);
@@ -108,53 +112,53 @@ public class SecurityTest {
     //@Ignore
     @Test(expected = BadRequestException.class)
     public void testLoginEmptyUnit() throws Exception{
-        login("", "any_role1", "any_role", TestUtil.gateway_url(), false);
+        login("", "any_role1", "any_role", gatewayUrl, false);
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginBlankUnit() throws Exception{
-        login("     ", "any_role1", "any_role", TestUtil.gateway_url(), false);
+        login("     ", "any_role1", "any_role", gatewayUrl, false);
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginInvalidUnit() throws Exception{
-        login("Invalid", "any_role1", "any_role", TestUtil.gateway_url(), false);
+        login("Invalid", "any_role1", "any_role", gatewayUrl, false);
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginEmptyUser() throws Exception{
-        login(null, "", "any_role", TestUtil.gateway_url(), false);
+        login(null, "", "any_role", gatewayUrl, false);
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginBlankUser() throws Exception{
-        login(null, "     ", "any_role", TestUtil.gateway_url(), false);
+        login(null, "     ", "any_role", gatewayUrl, false);
     }
     
     @Test(expected = NotAuthorizedException.class)
     public void testLoginInvalidUser() throws Exception{
-        login(null, "Invalid", "any_role", TestUtil.gateway_url(), true);
+        login(null, "Invalid", "any_role", gatewayUrl, true);
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginEmptyPassword() throws Exception{
-        login(null, "any_role1", "", TestUtil.gateway_url(), false);
+        login(null, "any_role1", "", gatewayUrl, false);
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginBlankPassword() throws Exception{
-        login(null, "any_role1", "    ", TestUtil.gateway_url(), false);
+        login(null, "any_role1", "    ", gatewayUrl, false);
     }
     
     @Test(expected = NotAuthorizedException.class)
     public void testLoginInvalidPassword() throws Exception{
-        login(null, "any_role1", "Invalid", TestUtil.gateway_url(), true);
+        login(null, "any_role1", "Invalid", gatewayUrl, true);
     }
     
     @Test(expected = NotAuthorizedException.class)
     public void testLoginInvalidPasswordAfterLoginOK() throws Exception{
-        login(null, "any_role1", "any_role", TestUtil.gateway_url(), true);
-        login(null, "any_role1", "Invalid", TestUtil.gateway_url(), true);
+        login(null, "any_role1", "any_role", gatewayUrl, true);
+        login(null, "any_role1", "Invalid", gatewayUrl, true);
     }
     
     @Test(expected = BadRequestException.class)
@@ -168,9 +172,9 @@ public class SecurityTest {
         form.putSingle("username", "any_role1");
         form.putSingle("password_hash", "any_role");
         form.putSingle("url", "    ");
-        try(Client client = TestUtil.newClient(TestUtil.gateway_url().toURI())){
+        try(Client client = ClientUtil.newClient(securityUrl)){
         	client.request(
-        			target -> target.path("security"), 
+        			target -> target, 
         			req -> req.accept(MediaType.TEXT_PLAIN)
         			)
         	.post(Entity.form(form), String.class);
@@ -183,9 +187,9 @@ public class SecurityTest {
         form.putSingle("username", "any_role1");
         form.putSingle("password_hash", "any_role");
         form.putSingle("url", "Invalid");
-        try(Client client = TestUtil.newClient(TestUtil.gateway_url().toURI())){
+        try(Client client = ClientUtil.newClient(securityUrl)){
         	client.request(
-        			target -> target.path("security"), 
+        			target -> target, 
         			req -> req.accept(MediaType.TEXT_PLAIN)
         			)
         	.post(Entity.form(form), String.class);
@@ -194,7 +198,7 @@ public class SecurityTest {
     
     @Test
     public void testAuthenticateOK() throws Exception{
-        String token = login(null, "any_role1", "any_role", TestUtil.gateway_url(), true);
+        String token = login(null, "any_role1", "any_role", gatewayUrl, true);
         Token jwt = authenticate(token, null);
         Assert.assertNotNull("JWT", jwt);
         Assert.assertNotNull("Audience", jwt.getAudience());
@@ -204,9 +208,9 @@ public class SecurityTest {
                 new String[]{
                     String.format(
                             AUDIENCE_URL_FORMAT, 
-                            TestUtil.gateway_url().getProtocol(), 
-                            TestUtil.gateway_url().getHost(), 
-                            TestUtil.gateway_url().getPort()
+                            gatewayUrl.getProtocol(), 
+                            gatewayUrl.getHost(), 
+                            gatewayUrl.getPort()
                     )
                 }, 
                 jwt.getAudience().toArray()
@@ -261,7 +265,7 @@ public class SecurityTest {
     
     @Test(expected = NotAuthorizedException.class)
     public void testLogoutOK() throws Exception {
-        String token = login(null, "any_role1", "any_role", TestUtil.gateway_url(), true);
+        String token = login(null, "any_role1", "any_role", gatewayUrl, true);
         logOut(token, null);
         authenticate(token, null);
     }
@@ -269,7 +273,7 @@ public class SecurityTest {
     //@Ignore
     @Test
     public void testLogoutEmptyUnit() throws Exception{
-        String token = login(null, "any_role1", "any_role", TestUtil.gateway_url(), true);
+        String token = login(null, "any_role1", "any_role", gatewayUrl, true);
         Assert.assertThrows(
         		BadRequestException.class, 
                 () -> {
@@ -281,7 +285,7 @@ public class SecurityTest {
     
     @Test
     public void testLogoutBlankUnit() throws Exception{
-        String token = login(null, "any_role1", "any_role", TestUtil.gateway_url(), true);
+        String token = login(null, "any_role1", "any_role", gatewayUrl, true);
         Assert.assertThrows(
         		BadRequestException.class, 
                 () -> {
@@ -293,7 +297,7 @@ public class SecurityTest {
     
     @Test
     public void testLogoutInvalidUnit() throws Exception{
-        String token = login(null, "any_role1", "any_role", TestUtil.gateway_url(), true);
+        String token = login(null, "any_role1", "any_role", gatewayUrl, true);
         Assert.assertThrows(
         		BadRequestException.class, 
                 () -> {

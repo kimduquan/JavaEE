@@ -5,7 +5,10 @@
  */
 package epf.persistence;
 
-import epf.TestUtil;
+import epf.ClientUtil;
+import epf.ConfigUtil;
+import epf.SecurityUtil;
+import epf.client.config.ConfigNames;
 import epf.client.persistence.Entities;
 import epf.schema.EPF;
 import epf.schema.delivery_processes.DeliveryProcess;
@@ -40,18 +43,18 @@ public class EntitiesTest {
     
     @BeforeClass
     public static void beforeClass() throws Exception{
-    	persistenceUrl = new URI(TestUtil.gateway_url().toString() + "persistence");
-    	token = TestUtil.login(null, "any_role1", "any_role");
+    	persistenceUrl = new URI(ConfigUtil.property(ConfigNames.PERSISTENCE_URL));
+    	token = SecurityUtil.login(null, "any_role1", "any_role");
     }
     
     @AfterClass
     public static void afterClass() throws Exception{
-    	TestUtil.logOut(null, token);
+    	SecurityUtil.logOut(null, token);
     }
     
     @Before
     public void before() {
-    	client = TestUtil.newClient(persistenceUrl);
+    	client = ClientUtil.newClient(persistenceUrl);
     	client.authorization(token);
     }
     

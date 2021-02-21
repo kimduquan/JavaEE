@@ -23,7 +23,6 @@ import javax.ws.rs.NotFoundException;
 import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
 import org.eclipse.microprofile.context.ManagedExecutor;
-
 import epf.client.system.ProcessInfo;
 import epf.schema.roles.Role;
 import epf.util.Var;
