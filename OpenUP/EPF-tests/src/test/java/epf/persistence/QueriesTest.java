@@ -67,7 +67,7 @@ public class QueriesTest {
     			object = client
     					.authorization(token)
     					.request(
-    							persistenceUrl.toString() + "/" + target.getPath(),
+    							persistenceUrl.toString() + target.getPath(),
     							t -> t, 
     							req -> req.accept(MediaType.APPLICATION_JSON)
     							)

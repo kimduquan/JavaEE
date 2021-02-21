@@ -37,7 +37,7 @@ public interface Processes {
     static long start(Client client, List<String> command, String directory) throws Exception{
     	Object[] cmd = command.toArray();
     	return client.request(
-    			target -> target.matrixParam("command", (Object[])cmd).matrixParam("directory", directory), 
+    			target -> target.path("process").matrixParam("command", (Object[])cmd).matrixParam("directory", directory), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.post(null, Long.class);
@@ -50,7 +50,7 @@ public interface Processes {
     
     static List<ProcessInfo> getProcesses(Client client, boolean isAlive){
     	return client.request(
-    			target -> target.queryParam("isAlive", isAlive), 
+    			target -> target.path("process").queryParam("isAlive", isAlive), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.get(new GenericType<List<ProcessInfo>>() {});
@@ -62,7 +62,7 @@ public interface Processes {
     
     static void stop(Client client) throws Exception{
     	client.request(
-    			target -> target, 
+    			target -> target.path("process"), 
     			req -> req
     			)
     	.delete();
