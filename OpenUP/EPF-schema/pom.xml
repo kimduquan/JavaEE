@@ -16,20 +16,18 @@
             <artifactId>microprofile-graphql-api</artifactId>
             <scope>provided</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.eclipse.persistence/jakarta.persistence -->
-        <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>jakarta.persistence</artifactId>
-        </dependency>
+        <!-- https://mvnrepository.com/artifact/javax/javaee-web-api -->
+		<dependency>
+		    <groupId>javax</groupId>
+		    <artifactId>javaee-web-api</artifactId>
+    		<scope>provided</scope>
+		</dependency>
         <!-- https://mvnrepository.com/artifact/org.eclipse.microprofile/microprofile -->
         <dependency>
             <groupId>org.eclipse.microprofile</groupId>
             <artifactId>microprofile</artifactId>
             <type>pom</type>
-        </dependency>
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
+    		<scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

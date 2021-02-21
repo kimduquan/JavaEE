@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
 /**
  *
@@ -20,9 +21,10 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class Application {
 	
-	private static final Logger logger = Logger.getLogger(Application.class.getName());
+	private Map<String, Context> contexts;
     
-    private Map<String, Context> contexts;
+    @Inject
+    private Logger logger;
     
     @PostConstruct
     void postConstruct(){

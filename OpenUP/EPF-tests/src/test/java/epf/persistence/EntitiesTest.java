@@ -19,8 +19,8 @@ import epf.util.client.Client;
 import java.net.URI;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.ForbiddenException;
+import javax.ws.rs.NotAllowedException;
 import javax.ws.rs.NotFoundException;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -85,7 +85,7 @@ public class EntitiesTest {
         Entities.persist(client, DeliveryProcess.class, "OpenUP", EPF.DeliveryProcess, dp);
     }
     
-    @Test(expected = NotFoundException.class)
+    @Test(expected = NotAllowedException.class)
     public void testPersistEmptyName() throws Exception{
     	Artifact artifact = new Artifact();
         artifact.setName("Artifact 1");
@@ -93,7 +93,7 @@ public class EntitiesTest {
         artifact = Entities.persist(client, Artifact.class, EPF.Schema, "", artifact);
     }
     
-    @Test(expected = BadRequestException.class)
+    @Test(expected = NotAllowedException.class)
     public void testPersistBlankName() throws Exception{
     	Artifact artifact = new Artifact();
         artifact.setName("Artifact 1");

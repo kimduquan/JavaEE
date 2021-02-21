@@ -15,7 +15,14 @@
             <groupId>org.eclipse.microprofile</groupId>
             <artifactId>microprofile</artifactId>
             <type>pom</type>
+    		<scope>provided</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/javax/javaee-web-api -->
+		<dependency>
+		    <groupId>javax</groupId>
+		    <artifactId>javaee-web-api</artifactId>
+    		<scope>provided</scope>
+		</dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-schema</artifactId>

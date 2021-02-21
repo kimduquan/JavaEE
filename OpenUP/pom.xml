@@ -33,30 +33,6 @@
                 <version>2.12.1</version>
                 <scope>test</scope>
             </dependency>
-            <!-- https://mvnrepository.com/artifact/org.eclipse.persistence/jakarta.persistence -->
-            <dependency>
-                <groupId>org.eclipse.persistence</groupId>
-                <artifactId>jakarta.persistence</artifactId>
-                <version>2.2.3</version>
-            </dependency>
-            <!-- https://mvnrepository.com/artifact/javax.transaction/javax.transaction-api -->
-            <dependency>
-                <groupId>javax.transaction</groupId>
-                <artifactId>javax.transaction-api</artifactId>
-                <version>1.2</version>
-            </dependency>
-            <!-- https://mvnrepository.com/artifact/javax.security.enterprise/javax.security.enterprise-api -->
-            <dependency>
-                <groupId>javax.security.enterprise</groupId>
-                <artifactId>javax.security.enterprise-api</artifactId>
-                <version>1.0</version>
-            </dependency>
-            <!-- https://mvnrepository.com/artifact/javax.validation/validation-api -->
-            <dependency>
-                <groupId>javax.validation</groupId>
-                <artifactId>validation-api</artifactId>
-                <version>2.0.1.Final</version>
-            </dependency>
             <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
             <dependency>
                 <groupId>com.h2database</groupId>
@@ -139,24 +115,11 @@
                 <version>8.0.1</version>
                 <scope>provided</scope>
             </dependency>
-            <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
-            <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>javax.servlet-api</artifactId>
-                <version>4.0.1</version>
-                <scope>provided</scope>
-            </dependency>
             <!-- https://mvnrepository.com/artifact/javax.jms/javax.jms-api -->
             <dependency>
                 <groupId>javax.jms</groupId>
                 <artifactId>javax.jms-api</artifactId>
                 <version>2.0.1</version>
-            </dependency>
-            <!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.rest.client/microprofile-rest-client-api -->
-            <dependency>
-                <groupId>org.eclipse.microprofile.rest.client</groupId>
-                <artifactId>microprofile-rest-client-api</artifactId>
-                <version>2.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -302,7 +265,7 @@
         <module>EPF-client</module>
         <module>OpenUP-client</module>
         <module>EPF-service</module>
-	<module>OpenUP-service</module>
+		<module>OpenUP-service</module>
         <module>OpenUP-web</module>
         <module>EPF-tests</module>
         <module>OpenUP-tests</module>

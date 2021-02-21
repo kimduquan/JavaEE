@@ -13,6 +13,7 @@
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
+    		<scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>openup</groupId>
@@ -26,13 +27,13 @@
         </dependency>
         <dependency>
             <groupId>openup</groupId>
-            <artifactId>OpenUP-client</artifactId>
+            <artifactId>EPF-schema</artifactId>
             <version>1.0.0</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.rest.client/microprofile-rest-client-api -->
         <dependency>
-            <groupId>org.eclipse.microprofile.rest.client</groupId>
-            <artifactId>microprofile-rest-client-api</artifactId>
+            <groupId>openup</groupId>
+            <artifactId>OpenUP-client</artifactId>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 </project>

@@ -38,6 +38,7 @@ import epf.schema.roles.Role;
 import epf.service.persistence.Application;
 import epf.service.persistence.Credential;
 import epf.service.persistence.Session;
+import epf.util.logging.Log;
 
 /**
  *
@@ -134,6 +135,7 @@ public class Security implements epf.client.security.Security, Serializable {
             description = "OK",
             responseCode = "200"
     )
+    @Log
     public String logOut(
             String unit
     ) throws Exception{

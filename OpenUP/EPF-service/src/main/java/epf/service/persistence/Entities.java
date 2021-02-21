@@ -35,7 +35,8 @@ import epf.schema.roles.Role;
 @RequestScoped
 public class Entities implements epf.client.persistence.Entities {
 	
-	private static final Logger logger = Logger.getLogger(Entities.class.getName());
+	@Inject
+	private Logger logger;
     
     @Inject
     private Request cache;

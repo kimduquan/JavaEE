@@ -39,7 +39,8 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 @RequestScoped
 public class Request {
 	
-	private static final Logger logger = Logger.getLogger(Request.class.getName());
+	@Inject
+	private Logger logger;
     
     @Inject
     private Application application;

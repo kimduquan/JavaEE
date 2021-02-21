@@ -15,16 +15,7 @@
             <groupId>org.eclipse.microprofile</groupId>
             <artifactId>microprofile</artifactId>
             <type>pom</type>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.context-propagation/microprofile-context-propagation-api -->
-        <dependency>
-            <groupId>org.eclipse.microprofile.context-propagation</groupId>
-            <artifactId>microprofile-context-propagation-api</artifactId>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-jdk14 -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-jdk14</artifactId>
+    		<scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>openup</groupId>

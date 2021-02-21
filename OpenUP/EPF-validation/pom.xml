@@ -10,9 +10,11 @@
     <name>Eclipse Process Framework Validation</name>
     <packaging>jar</packaging>
     <dependencies>
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-        </dependency>
+    	<!-- https://mvnrepository.com/artifact/javax/javaee-web-api -->
+		<dependency>
+		    <groupId>javax</groupId>
+		    <artifactId>javaee-web-api</artifactId>
+    		<scope>provided</scope>
+		</dependency>
     </dependencies>
 </project>

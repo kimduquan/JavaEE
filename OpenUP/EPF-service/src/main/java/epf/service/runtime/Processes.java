@@ -26,6 +26,7 @@ import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.client.runtime.ProcessInfo;
 import epf.schema.roles.Role;
 import epf.util.Var;
+import epf.util.logging.Log;
 
 /**
  *
@@ -40,12 +41,14 @@ public class Processes implements epf.client.runtime.Processes, Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = Logger.getLogger(Processes.class.getName());
-
+	
 	private Map<Long, ProcessTask> processes;
     
     @Inject
     private ManagedExecutor executor;
+    
+    @Inject
+    private Logger logger;
     
     @PostConstruct
     void postConstruct(){
@@ -66,6 +69,7 @@ public class Processes implements epf.client.runtime.Processes, Serializable {
     }
 
     @Override
+    @Log
     public long start(List<String> command, String directory) throws Exception {
         ProcessBuilder builder = new ProcessBuilder();
         builder.command(command);
@@ -77,6 +81,7 @@ public class Processes implements epf.client.runtime.Processes, Serializable {
     }
 
     @Override
+    @Log
     public void stop() throws Exception {
     	Var<Exception> error = new Var<>();
     	processes.forEach((pid, process) -> {
