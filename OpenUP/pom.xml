@@ -236,6 +236,11 @@
                     </executions>
                 </plugin>
                 <plugin>
+                	<groupId>org.apache.maven.plugins</groupId>
+				    <artifactId>maven-clean-plugin</artifactId>
+				    <version>3.1.0</version>
+                </plugin>
+                <plugin>
                     <groupId>io.openliberty.tools</groupId>
                     <artifactId>liberty-maven-plugin</artifactId>
                     <version>3.3.4</version>
@@ -296,8 +301,8 @@
         <module>EPF-validation</module>
         <module>EPF-client</module>
         <module>OpenUP-client</module>
-        <!--<module>EPF-service</module>-->
-		<module>OpenUP-service</module>
+        <module>EPF-service</module>
+	<module>OpenUP-service</module>
         <module>OpenUP-web</module>
         <module>EPF-tests</module>
         <module>OpenUP-tests</module>
