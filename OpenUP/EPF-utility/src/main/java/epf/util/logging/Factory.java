@@ -1,35 +1,21 @@
 package epf.util.logging;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.io.Serializable;
 import java.util.logging.Logger;
-import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 
 @ApplicationScoped
-public class Factory {
+public class Factory implements Serializable {
 
-	private Map<String, Logger> loggers;
-	
-	public Factory() {
-		loggers = new ConcurrentHashMap<>();
-	}
-	
-	@PreDestroy
-	void clear() {
-		loggers.clear();
-	}
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Produces 
 	public Logger getLogger(InjectionPoint injectionPoint) {
-		return getLogger(injectionPoint.getMember().getDeclaringClass().getName());
-	}
-	
-	public Logger getLogger(String clsName) {
-		return loggers.computeIfAbsent(clsName, name -> {
-			return Logger.getLogger(name);
-		});
+		return Logging.getLogger(injectionPoint.getMember().getDeclaringClass().getName());
 	}
 }

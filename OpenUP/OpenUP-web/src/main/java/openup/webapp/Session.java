@@ -20,6 +20,7 @@ import epf.client.config.ConfigSource;
 import epf.client.security.Security;
 import epf.util.client.Client;
 import epf.util.client.ClientQueue;
+import epf.util.logging.Logging;
 import openup.webapp.security.TokenPrincipal;
 
 /**
@@ -36,6 +37,7 @@ public class Session implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private TokenPrincipal principal;
+    private Logger logger;
     
     @Inject
     private SecurityContext context;
@@ -46,14 +48,12 @@ public class Session implements Serializable {
     @Inject
     private ClientQueue clients;
     
-    @Inject
-    private Logger logger;
-    
     @PostConstruct
     void postConstruct(){
         if(context.getCallerPrincipal() instanceof TokenPrincipal){
             principal = ((TokenPrincipal)context.getCallerPrincipal());
         }
+        logger = Logging.getLogger(Session.class.getName());
     }
     
     @PreDestroy

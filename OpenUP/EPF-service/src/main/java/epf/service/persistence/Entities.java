@@ -78,7 +78,7 @@ public class Entities implements epf.client.persistence.Entities {
         if(entity.getType() != null){
             try(Jsonb json = JsonbBuilder.create()){
                 Object obj = json.fromJson(body, entity.getType().getJavaType());
-                validator.validate(obj, entity.getType().getJavaType());
+                validator.validate(obj);
                 return cache.persist(unit, context.getUserPrincipal(), name, obj);
             }
             catch(JsonbException ex){
@@ -100,7 +100,7 @@ public class Entities implements epf.client.persistence.Entities {
         if(entity.getObject() != null){
             try(Jsonb json = JsonbBuilder.create()){
                 Object obj = json.fromJson(body, entity.getType().getJavaType());
-                validator.validate(obj, entity.getType().getJavaType());
+                validator.validate(obj);
                 cache.merge(unit, context.getUserPrincipal(), name, id, obj);
             }
             catch(JsonbException ex){

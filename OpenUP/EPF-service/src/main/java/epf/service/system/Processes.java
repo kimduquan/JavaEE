@@ -27,6 +27,7 @@ import epf.client.system.ProcessInfo;
 import epf.schema.roles.Role;
 import epf.util.Var;
 import epf.util.logging.Log;
+import epf.util.logging.Logging;
 
 /**
  *
@@ -43,16 +44,15 @@ public class Processes implements epf.client.system.Processes, Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private Map<Long, ProcessTask> processes;
+    private Logger logger;
     
     @Inject
     private ManagedExecutor executor;
     
-    @Inject
-    private Logger logger;
-    
     @PostConstruct
     void postConstruct(){
         processes = new ConcurrentHashMap<>();
+        logger = Logging.getLogger(Processes.class.getName());
     }
     
     @PreDestroy
