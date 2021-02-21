@@ -21,21 +21,22 @@ import epf.util.client.ClientQueue;
  * @author FOXCONN
  */
 @ApplicationScoped
-public class ConfigSource {
-	
-	private static final Logger logger = Logger.getLogger(ConfigSource.class.getName());
+public class ConfigSource implements org.eclipse.microprofile.config.spi.ConfigSource {
     
-    private Map<String, Object> configs;
+    private Map<String, String> configs;
     
     @Inject
     private ClientQueue clients;
+    
+    @Inject
+    private Logger logger;
     
     @PostConstruct
     void postConstruct(){
         configs = new ConcurrentHashMap<>();
         String configUrl = System.getenv(ConfigNames.GATEWAY_URL);
         try(Client client = new Client(clients, new URI(configUrl), b -> b)) {
-            Map<String, Object> data = Config.getConfigurations(client);
+            Map<String, String> data = Config.getProperties(client, null);
             if(data != null){
                 configs.putAll(data);
             }
@@ -45,8 +46,19 @@ public class ConfigSource {
         }
         
     }
-    
-    public String getConfig(String name, String def){
-        return (String)configs.getOrDefault(name, def);
-    }
+
+	@Override
+	public Map<String, String> getProperties() {
+		return configs;
+	}
+
+	@Override
+	public String getValue(String propertyName) {
+		return configs.getOrDefault(propertyName, null);
+	}
+
+	@Override
+	public String getName() {
+		return "EPF";
+	}
 }

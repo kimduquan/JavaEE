@@ -3,15 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.client.runtime;
+package epf.client.system;
 
 import java.util.List;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.MatrixParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -25,9 +26,10 @@ import epf.util.client.Client;
  *
  * @author FOXCONN
  */
-@Path("runtime/process")
+@Path("system")
 public interface Processes {
     
+	@Path("process")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     long start(@MatrixParam("command") List<String> command, @MatrixParam("directory") String directory) throws Exception;
@@ -41,6 +43,7 @@ public interface Processes {
     			.post(null, Long.class);
     }
     
+    @Path("process")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     List<ProcessInfo> getProcesses(@QueryParam("isAlive") boolean isAlive);
@@ -53,6 +56,7 @@ public interface Processes {
     			.get(new GenericType<List<ProcessInfo>>() {});
     }
     
+    @Path("process")
     @DELETE
     void stop() throws Exception;
     
@@ -65,9 +69,14 @@ public interface Processes {
     }
     
     @GET
-    @Path("{pid}")
+    @Path("process")
     @Produces(MediaType.APPLICATION_JSON)
-    ProcessInfo info(@PathParam("pid") long pid);
+    ProcessInfo info(
+    		@QueryParam("pid")
+    		@NotBlank
+    		@Positive
+    		long pid
+    		);
     
     static ProcessInfo info(Client client, long pid) {
     	return client.request(
@@ -78,9 +87,14 @@ public interface Processes {
     }
     
     @DELETE
-    @Path("{pid}")
+    @Path("process")
     @Produces(MediaType.APPLICATION_JSON)
-    int destroy(@PathParam("pid") long pid) throws Exception;
+    int destroy(
+    		@QueryParam("pid")
+    		@NotBlank
+    		@Positive
+    		long pid
+    		) throws Exception;
     
     static int destroy(Client client, long pid) throws Exception{
     	return client.request(
@@ -91,7 +105,16 @@ public interface Processes {
     }
     
     @GET
-    @Path("{pid}/out")
+    @Path("process/out")
     @Produces(MediaType.SERVER_SENT_EVENTS)
-    void output(@PathParam("pid") long pid, @Context Sse sse, @Context SseEventSink sink);
+    void output(
+    		@QueryParam("pid")
+    		@NotBlank
+    		@Positive
+    		long pid, 
+    		@Context 
+    		Sse sse, 
+    		@Context 
+    		SseEventSink sink
+    		);
 }

@@ -5,7 +5,6 @@
  */
 package openup.webapp.security;
 
-import openup.schema.OpenUP;
 import java.net.URI;
 import java.net.URL;
 import java.util.Set;
@@ -34,13 +33,14 @@ import epf.util.security.PasswordHash;
 @ApplicationScoped
 public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentityStore {
 	
-	private final static Logger logger = Logger.getLogger(OpenUPIdentityStore.class.getName());
-    
-    @Inject
+	@Inject
     private ConfigSource config;
     
     @Inject
     private ClientQueue clients;
+    
+    @Inject
+    private Logger logger;
     
     public CredentialValidationResult validate(BasicAuthenticationCredential credential) throws Exception{
         CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
@@ -58,7 +58,7 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
     }
     
     Token login(BasicAuthenticationCredential credential) throws Exception{
-        URI securityUrl = new URI(config.getConfig(ConfigNames.SECURITY_URL, ""));
+        URI securityUrl = new URI(config.getValue(ConfigNames.SECURITY_URL));
         URL audienceUrl = new URL(String.format(
                                     Security.AUDIENCE_URL_FORMAT,
                                     securityUrl.getScheme(), 
@@ -69,7 +69,7 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
         try(Client client = new Client(clients, securityUrl, b -> b)){
         	String token = Security.login(
         			client, 
-        			OpenUP.Schema,
+        			null,
 					credential.getCaller(),
 					PasswordHash.hash(
 							credential.getCaller(), 
@@ -79,7 +79,7 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
 					);
             if(!token.isEmpty()){
             	client.authorization(token);
-            	jwt = Security.authenticate(client, OpenUP.Schema);
+            	jwt = Security.authenticate(client, null);
             }
         }
         return jwt;
@@ -93,10 +93,10 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
     @Override
     public CredentialValidationResult validate(RememberMeCredential credential) {
         CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
-        String securityUrl = config.getConfig(ConfigNames.SECURITY_URL, "");
+        String securityUrl = config.getValue(ConfigNames.SECURITY_URL);
         try(Client client = new Client(clients, new URI(securityUrl), b -> b)) {
         	client.authorization(credential.getToken());
-        	Token jwt = Security.authenticate(client, OpenUP.Schema);
+        	Token jwt = Security.authenticate(client, null);
             if(jwt != null){
                 TokenPrincipal principal = new TokenPrincipal(jwt.getName(), jwt);
                 result = new CredentialValidationResult(principal, jwt.getGroups());
@@ -119,10 +119,10 @@ public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentitySto
 
     @Override
     public void removeLoginToken(String token) {
-    	String securityUrl = config.getConfig(ConfigNames.SECURITY_URL, "");
+    	String securityUrl = config.getValue(ConfigNames.SECURITY_URL);
         try(Client client = new Client(clients, new URI(securityUrl), b -> b)) {
             client.authorization(token);
-            Security.logOut(client, OpenUP.Schema);
+            Security.logOut(client, null);
         } 
         catch (Exception ex) {
         	logger.log(Level.SEVERE, ex.getMessage(), ex);

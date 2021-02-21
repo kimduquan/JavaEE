@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.runtime;
+package epf.system;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import epf.TestUtil;
-import epf.client.runtime.Processes;
+import epf.client.system.Processes;
 import epf.util.client.Client;
 
 /**
@@ -31,7 +31,7 @@ public class ProcessesTest {
     @BeforeClass
     public static void beforeClass() throws Exception{
     	token = TestUtil.login(null, "any_role1", "any_role");
-        processesUrl = new URI(TestUtil.gateway_url().toString() + "runtime/process");
+        processesUrl = new URI(TestUtil.gateway_url().toString() + "system");
     }
     
     @AfterClass

@@ -35,7 +35,8 @@ public class Session implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = Logger.getLogger(Session.class.getName());
+
+	private TokenPrincipal principal;
     
     @Inject
     private SecurityContext context;
@@ -45,8 +46,9 @@ public class Session implements Serializable {
     
     @Inject
     private ClientQueue clients;
-
-	private TokenPrincipal principal;
+    
+    @Inject
+    private Logger logger;
     
     @PostConstruct
     void postConstruct(){
@@ -58,9 +60,9 @@ public class Session implements Serializable {
     @PreDestroy
     void preDestroy(){
         if(principal != null){
-        	String gateway = config.getConfig(ConfigNames.GATEWAY_URL, "");
+        	String gateway = config.getValue(ConfigNames.GATEWAY_URL);
         	try(Client client = newClient(new URI(gateway))) {
-            	Security.logOut(client, OpenUP.Schema);
+            	Security.logOut(client, null);
             }
             catch (Exception ex) {
                 logger.log(Level.SEVERE, ex.getMessage(), ex);

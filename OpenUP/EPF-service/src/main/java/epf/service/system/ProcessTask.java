@@ -3,14 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.service.runtime;
+package epf.service.system;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.sse.OutboundSseEvent.Builder;
-import epf.client.runtime.ProcessInfo;
+
+import epf.client.system.ProcessInfo;
+
 import javax.ws.rs.sse.SseBroadcaster;
 
 /**

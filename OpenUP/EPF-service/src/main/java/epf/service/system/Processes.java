@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.service.runtime;
+package epf.service.system;
 
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.SessionScoped;
@@ -23,7 +23,8 @@ import javax.ws.rs.NotFoundException;
 import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
 import org.eclipse.microprofile.context.ManagedExecutor;
-import epf.client.runtime.ProcessInfo;
+
+import epf.client.system.ProcessInfo;
 import epf.schema.roles.Role;
 import epf.util.Var;
 import epf.util.logging.Log;
@@ -32,10 +33,10 @@ import epf.util.logging.Log;
  *
  * @author FOXCONN
  */
-@Path("runtime/process")
+@Path("system")
 @RolesAllowed(Role.DEFAULT_ROLE)
 @SessionScoped
-public class Processes implements epf.client.runtime.Processes, Serializable {
+public class Processes implements epf.client.system.Processes, Serializable {
     
     /**
 	 * 

@@ -10,9 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PostConstruct;
 import javax.annotation.security.PermitAll;
 import javax.enterprise.context.ApplicationScoped;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -26,11 +24,9 @@ import epf.client.config.ConfigNames;
  */
 @ApplicationScoped
 @Path("config")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
 public class Config implements epf.client.config.Config {
     
-    private Map<String, Object> configs;
+    private Map<String, String> configs;
     
     @PostConstruct
     void postConstruct(){
@@ -44,8 +40,8 @@ public class Config implements epf.client.config.Config {
     @Override
     @PermitAll
     @Operation(
-            summary = "getConfig",
-            description = "getConfig"
+            summary = "getProperties",
+            description = "getProperties"
     )
     @APIResponse(
             name = "OK", 
@@ -56,7 +52,7 @@ public class Config implements epf.client.config.Config {
                     schema = @Schema(implementation = Map.class)
             )
     )
-    public Map<String, Object> getConfigurations() throws Exception {
+    public Map<String, String> getProperties(String name) throws Exception {
         return configs;
     }
 }

@@ -12,7 +12,6 @@ import epf.schema.EPF;
 import epf.schema.roles.Role;
 import epf.schema.roles.RoleSet;
 import epf.util.client.Client;
-import openup.schema.OpenUP;
 import openup.webapp.Session;
 import java.io.Serializable;
 import java.net.URI;
@@ -46,12 +45,12 @@ public class Roles implements Serializable {
 
     public List<RoleSet> getRoleSets() throws Exception {
         if(roleSets == null){
-            String url = config.getConfig(ConfigNames.PERSISTENCE_URL, "");
+            String url = config.getValue(ConfigNames.PERSISTENCE_URL);
             try(Client client = session.newClient(new URI(url))){
             	roleSets = Queries.getCriteriaQueryResult(
             			client, 
             			new GenericType<List<RoleSet>> () {}, 
-            			OpenUP.Schema,
+            			null,
             			target -> target.path(EPF.RoleSet), 
             			0, 
             			100);
@@ -62,12 +61,12 @@ public class Roles implements Serializable {
 
     public List<Role> getRoles() throws Exception {
         if(roles == null){
-            String url = config.getConfig(ConfigNames.PERSISTENCE_URL, "");
+            String url = config.getValue(ConfigNames.PERSISTENCE_URL);
             try(Client client = session.newClient(new URI(url))){
             	roles = Queries.getCriteriaQueryResult(
             			client, 
             			new GenericType<List<Role>> () {}, 
-            			OpenUP.Schema, 
+            			null, 
             			target -> target.path(EPF.Role), 
             			0, 
             			100);

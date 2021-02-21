@@ -12,7 +12,6 @@ import epf.schema.EPF;
 import epf.schema.work_products.Artifact;
 import epf.schema.work_products.Domain;
 import epf.util.client.Client;
-import openup.schema.OpenUP;
 import openup.webapp.Session;
 import java.io.Serializable;
 import java.net.URI;
@@ -46,12 +45,12 @@ public class WorkProducts implements Serializable {
 
     public List<Domain> getDomains() throws Exception {
         if(domains == null){
-            String url = config.getConfig(ConfigNames.PERSISTENCE_URL, "");
+            String url = config.getValue(ConfigNames.PERSISTENCE_URL);
             try(Client client = session.newClient(new URI(url))){
             	domains = Queries.getCriteriaQueryResult(
             			client, 
             			new GenericType<List<Domain>> () {}, 
-            			OpenUP.Schema, 
+            			null, 
             			target -> target.path(EPF.Domain), 
             			0, 
             			100);
@@ -62,12 +61,12 @@ public class WorkProducts implements Serializable {
 
     public List<Artifact> getArtifacts() throws Exception {
         if(artifacts == null){
-            String url = config.getConfig(ConfigNames.PERSISTENCE_URL, "");
+            String url = config.getValue(ConfigNames.PERSISTENCE_URL);
             try(Client client = session.newClient(new URI(url))){
             	artifacts = Queries.getCriteriaQueryResult(
             			client, 
             			new GenericType<List<Artifact>> () {}, 
-            			OpenUP.Schema, 
+            			null, 
             			target -> target.path(EPF.Artifact), 
             			0, 
             			100);

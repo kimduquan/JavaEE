@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.gateway.runtime;
+package epf.gateway.system;
 
 import java.io.InputStream;
 import java.util.concurrent.CompletionStage;
@@ -14,29 +14,27 @@ import javax.ws.rs.GET;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-
 import org.eclipse.microprofile.faulttolerance.Asynchronous;
-
 import epf.gateway.Request;
 
 /**
  *
  * @author FOXCONN
  */
-@Path("runtime/process")
+@Path("system")
 @RequestScoped
 public class Processes {
     
     @Inject
     private Request request;
     
+    @Path("process")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
@@ -49,6 +47,7 @@ public class Processes {
         return request.request(HttpMethod.POST, in);
     }
     
+    @Path("process")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
@@ -61,6 +60,7 @@ public class Processes {
         return request.request(HttpMethod.GET, null);
     }
     
+    @Path("process")
     @DELETE
     @Asynchronous
     public CompletionStage<Response> stop(
@@ -73,14 +73,12 @@ public class Processes {
     }
     
     @GET
-    @Path("{pid}")
+    @Path("process")
     @Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
     public CompletionStage<Response> info(
             @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo,
-            @PathParam("pid") 
-            long pid
+            @Context UriInfo uriInfo
     ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
@@ -88,14 +86,12 @@ public class Processes {
     }
     
     @DELETE
-    @Path("{pid}")
+    @Path("process")
     @Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
     public CompletionStage<Response> destroy(
             @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo,
-            @PathParam("pid") 
-            long pid
+            @Context UriInfo uriInfo
     ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
@@ -103,14 +99,12 @@ public class Processes {
     }
     
     @GET
-    @Path("{pid}/out")
+    @Path("process/out")
     @Produces(MediaType.SERVER_SENT_EVENTS)
     @Asynchronous
     public CompletionStage<Response> output(
             @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo,
-            @PathParam("pid") 
-            long pid
+            @Context UriInfo uriInfo
     ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);

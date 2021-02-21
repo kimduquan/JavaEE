@@ -13,7 +13,6 @@ import epf.schema.delivery_processes.Iteration;
 import epf.schema.delivery_processes.Phase;
 import epf.schema.tasks.Task;
 import epf.util.client.Client;
-import openup.schema.OpenUP;
 import openup.webapp.Session;
 import java.io.Serializable;
 import java.net.URI;
@@ -48,12 +47,12 @@ public class DeliveryProcesses implements Serializable {
 
     public List<Phase> getPhases() throws Exception {
         if(phases == null){
-            String url = config.getConfig(ConfigNames.PERSISTENCE_URL, "");
+            String url = config.getValue(ConfigNames.PERSISTENCE_URL);
             try(Client client = session.newClient(new URI(url))){
             	phases = Queries.getCriteriaQueryResult(
             			client, 
             			new GenericType<List<Phase>>() {}, 
-            			OpenUP.Schema,
+            			null,
             			target -> target.path(EPF.Phase), 
             			0, 
             			100);
@@ -64,12 +63,12 @@ public class DeliveryProcesses implements Serializable {
 
     public List<Iteration> getIterations() throws Exception {
         if(iterations == null){
-            String url = config.getConfig(ConfigNames.PERSISTENCE_URL, "");
+            String url = config.getValue(ConfigNames.PERSISTENCE_URL);
             try(Client client = session.newClient(new URI(url))){
             	iterations = Queries.getCriteriaQueryResult(
             			client, 
             			new GenericType<List<Iteration>>() {}, 
-            			OpenUP.Schema, 
+            			null, 
             			target -> target.path(EPF.Iteration), 
             			0, 
             			100);
@@ -80,12 +79,12 @@ public class DeliveryProcesses implements Serializable {
 
     public List<Task> getTasks() throws Exception {
         if(tasks == null){
-            String url = config.getConfig(ConfigNames.PERSISTENCE_URL, "");
+            String url = config.getValue(ConfigNames.PERSISTENCE_URL);
             try(Client client = session.newClient(new URI(url))){
             	tasks = Queries.getCriteriaQueryResult(
             			client, 
             			new GenericType<List<Task>> () {}, 
-            			OpenUP.Schema, 
+            			null, 
             			target -> target.path(EPF.Task), 
             			0, 
             			100);

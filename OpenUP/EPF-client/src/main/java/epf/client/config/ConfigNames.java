@@ -17,4 +17,5 @@ public interface ConfigNames {
     String GATEWAY_URL = "epf.gateway.url";
     String PERSISTENCE_URL = "epf.persistence.url";
     String SECURITY_URL = "epf.security.url";
+    String SYSTEM_URL = "epf.system.url";
 }

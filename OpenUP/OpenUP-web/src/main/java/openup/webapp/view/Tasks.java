@@ -12,7 +12,6 @@ import epf.schema.EPF;
 import epf.schema.tasks.Discipline;
 import epf.schema.tasks.Task;
 import epf.util.client.Client;
-import openup.schema.OpenUP;
 import openup.webapp.Session;
 import java.io.Serializable;
 import java.net.URI;
@@ -46,12 +45,12 @@ public class Tasks implements Serializable {
 
     public List<Discipline> getDisciplines() throws Exception {
         if(disciplines == null){
-            String url = config.getConfig(ConfigNames.PERSISTENCE_URL, "");
+            String url = config.getValue(ConfigNames.PERSISTENCE_URL);
             try(Client client = session.newClient(new URI(url))){
             	Queries.getCriteriaQueryResult(
             			client, 
             			new GenericType<List<Discipline>> () {}, 
-            			OpenUP.Schema, 
+            			null, 
             			target -> target.path(EPF.Discipline), 
             			0, 
             			100);
@@ -62,12 +61,12 @@ public class Tasks implements Serializable {
 
     public List<Task> getTasks() throws Exception {
         if(tasks == null){
-            String url = config.getConfig(ConfigNames.PERSISTENCE_URL, "");
+            String url = config.getValue(ConfigNames.PERSISTENCE_URL);
             try(Client client = session.newClient(new URI(url))){
             	tasks = Queries.getCriteriaQueryResult(
             			client, 
             			new GenericType<List<Task>> () {}, 
-            			OpenUP.Schema, 
+            			null, 
             			target -> target.path(EPF.Task), 
             			0, 
             			100);
