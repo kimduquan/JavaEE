@@ -31,7 +31,7 @@ import epf.util.security.PasswordHash;
  * @author FOXCONN
  */
 @ApplicationScoped
-public class OpenUPIdentityStore implements IdentityStore, RememberMeIdentityStore {
+public class EPFIdentityStore implements IdentityStore, RememberMeIdentityStore {
 	
 	@Inject
     private ConfigSource config;

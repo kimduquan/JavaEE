@@ -1,4 +1,4 @@
-package openup;
+package openup.service;
 
 import java.io.IOException;
 import javax.json.JsonObject;

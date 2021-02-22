@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf;
+package epf.service;
 
 import epf.client.config.ConfigNames;
 import epf.client.security.Security;

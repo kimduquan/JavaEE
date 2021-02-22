@@ -1,4 +1,4 @@
-package epf;
+package epf.service;
 
 import java.net.URI;
 import java.util.Map;

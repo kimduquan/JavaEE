@@ -3,11 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.persistence;
+package epf.service.persistence;
 
-import epf.ClientUtil;
-import epf.ConfigUtil;
-import epf.SecurityUtil;
 import epf.client.config.ConfigNames;
 import epf.client.persistence.Entities;
 import epf.schema.EPF;
@@ -18,6 +15,9 @@ import epf.schema.work_products.section.Illustrations;
 import epf.schema.work_products.section.MoreInformation;
 import epf.schema.work_products.section.Relationships;
 import epf.schema.work_products.section.Tailoring;
+import epf.service.ClientUtil;
+import epf.service.ConfigUtil;
+import epf.service.SecurityUtil;
 import epf.util.client.Client;
 import java.net.URI;
 import javax.ws.rs.BadRequestException;

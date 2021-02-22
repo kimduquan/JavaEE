@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.security;
+package epf.service.security;
 
 import static epf.client.security.Security.AUDIENCE_URL_FORMAT;
 import java.net.URI;
@@ -22,12 +22,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import epf.ClientUtil;
-import epf.ConfigUtil;
+
 import epf.client.config.ConfigNames;
 import epf.client.security.Security;
 import epf.client.security.Token;
 import epf.schema.EPF;
+import epf.service.ClientUtil;
+import epf.service.ConfigUtil;
 import epf.util.client.Client;
 import epf.util.security.PasswordHash;
 

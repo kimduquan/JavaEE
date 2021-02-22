@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.system;
+package epf.service.system;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -14,11 +14,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import epf.ClientUtil;
-import epf.ConfigUtil;
-import epf.SecurityUtil;
+
 import epf.client.config.ConfigNames;
 import epf.client.system.Processes;
+import epf.service.ClientUtil;
+import epf.service.ConfigUtil;
+import epf.service.SecurityUtil;
 import epf.util.client.Client;
 
 /**
