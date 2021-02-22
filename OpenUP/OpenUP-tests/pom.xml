@@ -53,9 +53,15 @@
             <version>1.0.0</version>
             <type>war</type>
         </dependency>
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-webapp</artifactId>
+            <version>1.0.0</version>
+            <type>war</type>
+        </dependency>
         <dependency>
             <groupId>openup</groupId>
-            <artifactId>OpenUP-web</artifactId>
+            <artifactId>OpenUP-webapp</artifactId>
             <version>1.0.0</version>
             <type>war</type>
         </dependency>

@@ -4,6 +4,6 @@
     xsi:schemaLocation="http://www.hazelcast.com/schema/config
        https://hazelcast.com/schema/config/hazelcast-config.xsd">
     <group>
-        <name>OpenUPCluster</name>
+        <name>EPFCluster</name>
     </group>
 </hazelcast>
