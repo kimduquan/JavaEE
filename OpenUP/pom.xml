@@ -267,8 +267,9 @@
         <module>EPF-client</module>
         <module>OpenUP-client</module>
         <module>EPF-service</module>
+		<module>EPF-webapp</module>
 		<module>OpenUP-service</module>
-        <module>OpenUP-web</module>
+        <module>OpenUP-webapp</module>
         <module>EPF-tests</module>
         <module>OpenUP-tests</module>
         <module>EPF-assembly</module>

@@ -6,7 +6,7 @@
         <artifactId>OpenUP-parent</artifactId>
         <version>1.0.0</version>
     </parent>
-    <artifactId>OpenUP-web</artifactId>
+    <artifactId>OpenUP-webapp</artifactId>
     <name>Open Unified Process Web Application</name>
     <packaging>war</packaging>
     <dependencies>

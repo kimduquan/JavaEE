@@ -28,8 +28,8 @@
     <application id="EPF-gateway" name="EPF-gateway" context-root="gateway" location="EPF-gateway-1.0.0.war" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-    <application id="OpenUP-web" name="OpenUP-web" context-root="web" location="OpenUP-web-1.0.0.war" startAfterRef="EPF-service,EPF-gateway" />
-    
+    <application id="EPF-webapp" name="EPF-webapp" context-root="webapp" location="EPF-webapp-1.0.0.war" startAfterRef="EPF-service,EPF-gateway" />
+    <application id="OpenUP-webapp" name="OpenUP-webapp" context-root="OpenUP" location="OpenUP-webapp-1.0.0.war" startAfterRef="EPF-service,EPF-gateway,EPF-webapp" />
     <!-- H2 Library Configuration -->
     <library id="H2JDBCLib">
         <fileset dir="${shared.resource.dir}/openup" includes="h2*.jar"/>
