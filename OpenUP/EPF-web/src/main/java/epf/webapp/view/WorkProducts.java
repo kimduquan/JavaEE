@@ -3,16 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.webapp.view;
+package epf.webapp.view;
 
 import epf.client.config.ConfigNames;
 import epf.client.config.ConfigSource;
 import epf.client.persistence.Queries;
 import epf.schema.EPF;
-import epf.schema.roles.Role;
-import epf.schema.roles.RoleSet;
+import epf.schema.work_products.Artifact;
+import epf.schema.work_products.Domain;
 import epf.util.client.Client;
-import openup.webapp.Session;
+import epf.webapp.Session;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.List;
@@ -26,8 +26,8 @@ import javax.ws.rs.core.GenericType;
  * @author FOXCONN
  */
 @ViewScoped
-@Named("roles")
-public class Roles implements Serializable {
+@Named("work_products")
+public class WorkProducts implements Serializable {
     
     /**
 	 * 
@@ -40,38 +40,38 @@ public class Roles implements Serializable {
     @Inject
     private Session session;
 	
-	private List<RoleSet> roleSets;
-    private List<Role> roles;
+	private List<Domain> domains;
+    private List<Artifact> artifacts;
 
-    public List<RoleSet> getRoleSets() throws Exception {
-        if(roleSets == null){
+    public List<Domain> getDomains() throws Exception {
+        if(domains == null){
             String url = config.getValue(ConfigNames.PERSISTENCE_URL);
             try(Client client = session.newClient(new URI(url))){
-            	roleSets = Queries.getCriteriaQueryResult(
+            	domains = Queries.getCriteriaQueryResult(
             			client, 
-            			new GenericType<List<RoleSet>> () {}, 
-            			null,
-            			target -> target.path(EPF.RoleSet), 
+            			new GenericType<List<Domain>> () {}, 
+            			null, 
+            			target -> target.path(EPF.Domain), 
             			0, 
             			100);
             }
         }
-        return roleSets;
+        return domains;
     }
 
-    public List<Role> getRoles() throws Exception {
-        if(roles == null){
+    public List<Artifact> getArtifacts() throws Exception {
+        if(artifacts == null){
             String url = config.getValue(ConfigNames.PERSISTENCE_URL);
             try(Client client = session.newClient(new URI(url))){
-            	roles = Queries.getCriteriaQueryResult(
+            	artifacts = Queries.getCriteriaQueryResult(
             			client, 
-            			new GenericType<List<Role>> () {}, 
+            			new GenericType<List<Artifact>> () {}, 
             			null, 
-            			target -> target.path(EPF.Role), 
+            			target -> target.path(EPF.Artifact), 
             			0, 
             			100);
             }
         }
-        return roles;
+        return artifacts;
     }
 }

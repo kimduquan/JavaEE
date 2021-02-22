@@ -6,7 +6,7 @@
         <artifactId>OpenUP-parent</artifactId>
         <version>1.0.0</version>
     </parent>
-    <artifactId>EPF-web</artifactId>
+    <artifactId>EPF-webapp</artifactId>
     <name>Eclipse Process Framework Web Application</name>
     <packaging>war</packaging>
     <dependencies>

@@ -16,8 +16,9 @@
         <!-- Jaeger configuration -->
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
-        <liberty.env.epf.url>https://localhost:9443/service/</liberty.env.epf.url>
+        <liberty.env.epf.service.url>https://localhost:9443/service/</liberty.env.epf.service.url>
         <liberty.env.epf.gateway.url>https://localhost:9443/gateway/</liberty.env.epf.gateway.url>
+		<liberty.env.epf.webapp.url>https://localhost:9443/webapp/</liberty.env.epf.webapp.url>
     </properties>
     <dependencies>
 		<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
@@ -53,6 +54,12 @@
             <type>war</type>
         </dependency>
         <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-webapp</artifactId>
+            <version>1.0.0</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-rs-mp-client</artifactId>
         </dependency>
@@ -84,8 +91,9 @@
                 <configuration>
                     <!-- Pass contextPath and httpPort to the integration tests -->
                     <systemPropertyVariables>
-                        <epf.url>https://localhost:${httpsPort}/service/</epf.url>
+                        <epf.service.url>https://localhost:${httpsPort}/service/</epf.service.url>
                         <epf.gateway.url>https://localhost:${httpsPort}/gateway/</epf.gateway.url>
+                        <epf.webapp.url>https://localhost:${httpsPort}/webapp/</epf.webapp.url>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
@@ -142,7 +150,7 @@
                         <configuration>
                             <verifyTimeout>600</verifyTimeout>
                             <serverStartTimeout>600</serverStartTimeout>
-                            <applications>EPF-service,EPF-gateway</applications>
+                            <applications>EPF-service,EPF-gateway,EPF-webapp</applications>
                         </configuration>
                     </execution>
                     <!-- Stop the server -->
@@ -161,7 +169,7 @@
                     <deployPackages>dependencies</deployPackages>
 					<verifyTimeout>600</verifyTimeout>
 					<serverStartTimeout>600</serverStartTimeout>
-					<applications>EPF-service,EPF-gateway</applications>
+					<applications>EPF-service,EPF-gateway,EPF-webapp</applications>
                 </configuration>
             </plugin>
         </plugins>

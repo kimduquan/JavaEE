@@ -3,17 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.webapp.view;
+package epf.webapp.view;
 
 import epf.client.config.ConfigNames;
 import epf.client.config.ConfigSource;
 import epf.client.persistence.Queries;
 import epf.schema.EPF;
-import epf.schema.delivery_processes.Iteration;
-import epf.schema.delivery_processes.Phase;
+import epf.schema.tasks.Discipline;
 import epf.schema.tasks.Task;
 import epf.util.client.Client;
-import openup.webapp.Session;
+import epf.webapp.Session;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.List;
@@ -27,54 +26,37 @@ import javax.ws.rs.core.GenericType;
  * @author FOXCONN
  */
 @ViewScoped
-@Named("delivery_processes")
-public class DeliveryProcesses implements Serializable {
-    
+@Named("tasks")
+public class Tasks implements Serializable {
+   
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	private List<Discipline> disciplines;
+    private List<Task> tasks;
     
     @Inject
     private ConfigSource config;
     
     @Inject
     private Session session;
-	
-	private List<Phase> phases;
-    private List<Iteration> iterations;
-    private List<Task> tasks;
 
-    public List<Phase> getPhases() throws Exception {
-        if(phases == null){
+    public List<Discipline> getDisciplines() throws Exception {
+        if(disciplines == null){
             String url = config.getValue(ConfigNames.PERSISTENCE_URL);
             try(Client client = session.newClient(new URI(url))){
-            	phases = Queries.getCriteriaQueryResult(
+            	Queries.getCriteriaQueryResult(
             			client, 
-            			new GenericType<List<Phase>>() {}, 
-            			null,
-            			target -> target.path(EPF.Phase), 
-            			0, 
-            			100);
-            }
-        }
-        return phases;
-    }
-
-    public List<Iteration> getIterations() throws Exception {
-        if(iterations == null){
-            String url = config.getValue(ConfigNames.PERSISTENCE_URL);
-            try(Client client = session.newClient(new URI(url))){
-            	iterations = Queries.getCriteriaQueryResult(
-            			client, 
-            			new GenericType<List<Iteration>>() {}, 
+            			new GenericType<List<Discipline>> () {}, 
             			null, 
-            			target -> target.path(EPF.Iteration), 
+            			target -> target.path(EPF.Discipline), 
             			0, 
             			100);
             }
         }
-        return iterations;
+        return disciplines;
     }
 
     public List<Task> getTasks() throws Exception {

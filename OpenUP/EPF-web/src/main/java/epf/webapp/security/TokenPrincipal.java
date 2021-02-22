@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.webapp.security;
+package epf.webapp.security;
 
 import javax.security.enterprise.CallerPrincipal;
 import epf.client.security.Token;

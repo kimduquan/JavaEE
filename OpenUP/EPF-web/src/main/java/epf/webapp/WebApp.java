@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.webapp;
+package epf.webapp;
 
-import openup.schema.OpenUP;
+import epf.schema.EPF;
 import java.io.IOException;
 import javax.enterprise.context.ApplicationScoped;
 import javax.faces.annotation.FacesConfig;
@@ -33,8 +33,8 @@ import epf.schema.roles.Role;
         urlPatterns = {"/*"}, 
         loadOnStartup = 1, 
         asyncSupported = true, 
-        description = "OpenUP",
-        displayName = OpenUP.Schema
+        description = "EPF",
+        displayName = EPF.Schema
 )
 @ServletSecurity(
         value = @HttpConstraint(
@@ -57,7 +57,7 @@ import epf.schema.roles.Role;
         }
 )
 @ApplicationScoped
-@BasicAuthenticationMechanismDefinition(realmName = OpenUP.Schema)
+@BasicAuthenticationMechanismDefinition(realmName = EPF.Schema)
 @FacesConfig
 @Named("webapp")
 public class WebApp extends HttpServlet {

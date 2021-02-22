@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.webapp;
+package epf.webapp;
 
 import java.io.Serializable;
 import java.net.URI;
@@ -21,7 +21,7 @@ import epf.client.security.Security;
 import epf.util.client.Client;
 import epf.util.client.ClientQueue;
 import epf.util.logging.Logging;
-import openup.webapp.security.TokenPrincipal;
+import epf.webapp.security.TokenPrincipal;
 
 /**
  *
