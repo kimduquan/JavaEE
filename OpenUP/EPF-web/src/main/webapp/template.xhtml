@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet name="css/default.css"/>
+        <h:outputStylesheet name="css/cssLayout.css"/>
+        <title>Open Unified Process</title>
+    </h:head>
+
+    <h:body>
+        <h:form>
+            <div id="top">
+                <h:commandLink
+                    accesskey="p" 
+                    action="delivery-processes"
+                    styleClass="link-delivery-processes"
+                    tabindex="1"
+                    title="This provides a list of delivery processes that have been published.">
+                    Delivery Processes
+                </h:commandLink>
+                <h:commandLink
+                    accesskey="r" 
+                    action="roles"
+                    styleClass="link-roles"
+                    tabindex="2"
+                    title="This category lists roles organized by role set.">
+                    Roles
+                </h:commandLink>
+                <h:commandLink
+                    accesskey="w" 
+                    action="work-products"
+                    styleClass="link-work-products"
+                    tabindex="3"
+                    title="List of work products organized by domain.">
+                    Work Products
+                </h:commandLink>
+                <h:commandLink
+                    accesskey="t" 
+                    action="tasks"
+                    styleClass="link-tasks"
+                    tabindex="4"
+                    title="List of tasks organized by discipline.">
+                    Tasks
+                </h:commandLink>
+                <ui:insert name="top">
+                </ui:insert>
+            </div>
+            <div>
+                <div id="left">
+                    <ui:insert name="left">
+                    </ui:insert>
+                </div>
+                <div id="content" class="left_content">
+                    <ui:insert name="content">
+
+                    </ui:insert>
+                </div>
+            </div>
+            <div id="bottom">
+                <ui:insert name="bottom">
+
+                </ui:insert>
+            </div>
+            </h:form>
+    </h:body>
+
+</html>
