@@ -52,7 +52,7 @@ public class DeliveryProcesses implements Serializable {
             	phases = Queries.getCriteriaQueryResult(
             			client, 
             			new GenericType<List<Phase>>() {}, 
-            			null,
+            			EPF.Schema,
             			target -> target.path(EPF.Phase), 
             			0, 
             			100);
@@ -68,7 +68,7 @@ public class DeliveryProcesses implements Serializable {
             	iterations = Queries.getCriteriaQueryResult(
             			client, 
             			new GenericType<List<Iteration>>() {}, 
-            			null, 
+            			EPF.Schema, 
             			target -> target.path(EPF.Iteration), 
             			0, 
             			100);
@@ -84,7 +84,7 @@ public class DeliveryProcesses implements Serializable {
             	tasks = Queries.getCriteriaQueryResult(
             			client, 
             			new GenericType<List<Task>> () {}, 
-            			null, 
+            			EPF.Schema, 
             			target -> target.path(EPF.Task), 
             			0, 
             			100);

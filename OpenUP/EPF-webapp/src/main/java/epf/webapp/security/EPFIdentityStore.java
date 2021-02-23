@@ -103,7 +103,7 @@ public class EPFIdentityStore implements IdentityStore, RememberMeIdentityStore 
             }
         } 
         catch (Exception ex) {
-            logger.log(Level.SEVERE, ex.getMessage(), ex);
+            logger.log(Level.SEVERE, "validate", ex);
         }
         return result;
     }
@@ -125,7 +125,7 @@ public class EPFIdentityStore implements IdentityStore, RememberMeIdentityStore 
             Security.logOut(client, null);
         } 
         catch (Exception ex) {
-        	logger.log(Level.SEVERE, ex.getMessage(), ex);
+        	logger.log(Level.SEVERE, "removeLoginToken", ex);
         }
     }
 }

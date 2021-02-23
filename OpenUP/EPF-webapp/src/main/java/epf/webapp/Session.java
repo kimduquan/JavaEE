@@ -59,19 +59,24 @@ public class Session implements Serializable {
     @PreDestroy
     void preDestroy(){
         if(principal != null){
-        	String gateway = config.getValue(ConfigNames.GATEWAY_URL);
-        	try(Client client = newClient(new URI(gateway))) {
+        	String securityUrl = config.getValue(ConfigNames.SECURITY_URL);
+        	try(Client client = newClient(new URI(securityUrl))) {
             	Security.logOut(client, null);
             }
             catch (Exception ex) {
-                logger.log(Level.SEVERE, ex.getMessage(), ex);
+                logger.log(Level.SEVERE, "@PreDestroy", ex);
             }
         }
     }
     
     public Client newClient(URI uri) {
+    	if(context.getCallerPrincipal() instanceof TokenPrincipal){
+            principal = ((TokenPrincipal)context.getCallerPrincipal());
+        }
     	Client client = new Client(clients, uri, b -> b);
-    	client.authorization(principal.getToken().getRawToken());
+    	if(principal != null) {
+        	client.authorization(principal.getToken().getRawToken());
+    	}
     	return client;
     }
 }

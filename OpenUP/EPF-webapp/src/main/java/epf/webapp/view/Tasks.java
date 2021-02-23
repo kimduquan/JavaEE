@@ -50,7 +50,7 @@ public class Tasks implements Serializable {
             	Queries.getCriteriaQueryResult(
             			client, 
             			new GenericType<List<Discipline>> () {}, 
-            			null, 
+            			EPF.Schema, 
             			target -> target.path(EPF.Discipline), 
             			0, 
             			100);
@@ -66,7 +66,7 @@ public class Tasks implements Serializable {
             	tasks = Queries.getCriteriaQueryResult(
             			client, 
             			new GenericType<List<Task>> () {}, 
-            			null, 
+            			EPF.Schema, 
             			target -> target.path(EPF.Task), 
             			0, 
             			100);

@@ -50,7 +50,7 @@ public class Roles implements Serializable {
             	roleSets = Queries.getCriteriaQueryResult(
             			client, 
             			new GenericType<List<RoleSet>> () {}, 
-            			null,
+            			EPF.Schema,
             			target -> target.path(EPF.RoleSet), 
             			0, 
             			100);
@@ -66,7 +66,7 @@ public class Roles implements Serializable {
             	roles = Queries.getCriteriaQueryResult(
             			client, 
             			new GenericType<List<Role>> () {}, 
-            			null, 
+            			EPF.Schema, 
             			target -> target.path(EPF.Role), 
             			0, 
             			100);

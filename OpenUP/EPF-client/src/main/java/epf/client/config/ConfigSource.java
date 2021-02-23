@@ -34,7 +34,7 @@ public class ConfigSource implements org.eclipse.microprofile.config.spi.ConfigS
     @PostConstruct
     void postConstruct(){
         configs = new ConcurrentHashMap<>();
-        String configUrl = System.getenv(ConfigNames.GATEWAY_URL);
+        String configUrl = System.getenv(ConfigNames.GATEWAY_URL) + "config";
         try(Client client = new Client(clients, new URI(configUrl), b -> b)) {
             Map<String, String> data = Config.getProperties(client, null);
             if(data != null){
