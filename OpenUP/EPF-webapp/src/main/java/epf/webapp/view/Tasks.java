@@ -47,7 +47,7 @@ public class Tasks implements Serializable {
         if(disciplines == null){
             String url = config.getValue(ConfigNames.PERSISTENCE_URL);
             try(Client client = session.newClient(new URI(url))){
-            	Queries.getCriteriaQueryResult(
+            	disciplines = Queries.getCriteriaQueryResult(
             			client, 
             			new GenericType<List<Discipline>> () {}, 
             			EPF.Schema, 

@@ -7,7 +7,9 @@ package epf.webapp.security;
 
 import java.net.URI;
 import java.net.URL;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
@@ -32,6 +34,8 @@ import epf.util.security.PasswordHash;
  */
 @ApplicationScoped
 public class EPFIdentityStore implements IdentityStore, RememberMeIdentityStore {
+    
+    private Map<String, TokenPrincipal> principals = new ConcurrentHashMap<>();
 	
 	@Inject
     private ConfigSource config;
@@ -47,12 +51,8 @@ public class EPFIdentityStore implements IdentityStore, RememberMeIdentityStore 
         Token token = login(credential);
         if(token != null){
             TokenPrincipal principal = new TokenPrincipal(credential.getCaller(), token);
-            result = new CredentialValidationResult(
-                    principal, 
-                    principal
-                            .getToken()
-                            .getGroups()
-            );
+            principals.put(credential.getCaller(), principal);
+            result = new CredentialValidationResult(principal, principal.getToken().getGroups());
         }
         return result;
     }
@@ -127,5 +127,9 @@ public class EPFIdentityStore implements IdentityStore, RememberMeIdentityStore 
         catch (Exception ex) {
         	logger.log(Level.SEVERE, "removeLoginToken", ex);
         }
+    }
+    
+    public TokenPrincipal getPrincipal(String name) {
+    	return principals.get(name);
     }
 }

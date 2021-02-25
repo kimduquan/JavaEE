@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -18,9 +19,11 @@ import javax.security.enterprise.SecurityContext;
 import epf.client.config.ConfigNames;
 import epf.client.config.ConfigSource;
 import epf.client.security.Security;
+import epf.schema.roles.Role;
 import epf.util.client.Client;
 import epf.util.client.ClientQueue;
 import epf.util.logging.Logging;
+import epf.webapp.security.EPFIdentityStore;
 import epf.webapp.security.TokenPrincipal;
 
 /**
@@ -29,6 +32,7 @@ import epf.webapp.security.TokenPrincipal;
  */
 @SessionScoped
 @Named("webapp_session")
+@RolesAllowed(Role.DEFAULT_ROLE)
 public class Session implements Serializable {
     
     /**
@@ -48,12 +52,15 @@ public class Session implements Serializable {
     @Inject
     private ClientQueue clients;
     
+    @Inject
+    private EPFIdentityStore identityStore;
+    
     @PostConstruct
     void postConstruct(){
-        if(context.getCallerPrincipal() instanceof TokenPrincipal){
-            principal = ((TokenPrincipal)context.getCallerPrincipal());
-        }
-        logger = Logging.getLogger(Session.class.getName());
+    	if(context.getCallerPrincipal() != null) {
+    		principal = identityStore.getPrincipal(context.getCallerPrincipal().getName());
+    	}
+    	logger = Logging.getLogger(Session.class.getName());
     }
     
     @PreDestroy
@@ -61,18 +68,16 @@ public class Session implements Serializable {
         if(principal != null){
         	String securityUrl = config.getValue(ConfigNames.SECURITY_URL);
         	try(Client client = newClient(new URI(securityUrl))) {
+        		client.authorization(principal.getToken().getRawToken());
             	Security.logOut(client, null);
             }
             catch (Exception ex) {
-                logger.log(Level.SEVERE, "@PreDestroy", ex);
+                logger.log(Level.SEVERE, "PreDestroy", ex);
             }
         }
     }
     
     public Client newClient(URI uri) {
-    	if(context.getCallerPrincipal() instanceof TokenPrincipal){
-            principal = ((TokenPrincipal)context.getCallerPrincipal());
-        }
     	Client client = new Client(clients, uri, b -> b);
     	if(principal != null) {
         	client.authorization(principal.getToken().getRawToken());
