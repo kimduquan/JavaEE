@@ -122,6 +122,31 @@
                 <artifactId>javax.jms-api</artifactId>
                 <version>2.0.1</version>
             </dependency>
+			<!-- https://mvnrepository.com/artifact/com.liferay.faces/com.liferay.faces.bridge.api -->
+			<dependency>
+				<groupId>com.liferay.faces</groupId>
+				<artifactId>com.liferay.faces.bridge.api</artifactId>
+				<version>4.2.0</version>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/com.liferay.faces/com.liferay.faces.bridge.impl -->
+			<dependency>
+			    <groupId>com.liferay.faces</groupId>
+			    <artifactId>com.liferay.faces.bridge.impl</artifactId>
+			    <version>4.2.0</version>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/javax.portlet/portlet-api -->
+			<dependency>
+			    <groupId>javax.portlet</groupId>
+			    <artifactId>portlet-api</artifactId>
+			    <version>3.0.1</version>
+			    <scope>provided</scope>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.apache.portals.pluto/pluto-container -->
+			<dependency>
+			    <groupId>org.apache.portals.pluto</groupId>
+			    <artifactId>pluto-container</artifactId>
+			    <version>3.1.0</version>
+			</dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>
@@ -267,6 +292,7 @@
         <module>EPF-client</module>
         <module>OpenUP-client</module>
         <module>EPF-service</module>
+		<module>EPF-portlet</module>
 		<module>EPF-webapp</module>
 		<module>OpenUP-service</module>
         <module>OpenUP-webapp</module>
