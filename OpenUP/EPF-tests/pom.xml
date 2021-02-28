@@ -53,6 +53,12 @@
             <version>1.0.0</version>
             <type>war</type>
         </dependency>
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-portlet</artifactId>
+            <version>1.0.0</version>
+            <type>war</type>
+        </dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-webapp</artifactId>
@@ -67,6 +73,23 @@
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-json-provider</artifactId>
         </dependency>
+		<dependency>
+			<groupId>com.liferay.faces</groupId>
+			<artifactId>com.liferay.faces.bridge.api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.liferay.faces</groupId>
+			<artifactId>com.liferay.faces.bridge.impl</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.portlet</groupId>
+			<artifactId>portlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.portals.pluto</groupId>
+			<artifactId>pluto-container</artifactId>
+		</dependency>
     </dependencies>
     <build>
         <!-- Enable resource filtering so that variables in server.xml get substituted -->
@@ -137,6 +160,22 @@
                                     <groupId>javax.cache</groupId>
                                     <artifactId>cache-api</artifactId>
                                 </dependency>
+								<dependency>
+									<groupId>com.liferay.faces</groupId>
+									<artifactId>com.liferay.faces.bridge.api</artifactId>
+								</dependency>
+								<dependency>
+									<groupId>com.liferay.faces</groupId>
+									<artifactId>com.liferay.faces.bridge.impl</artifactId>
+								</dependency>
+								<dependency>
+									<groupId>javax.portlet</groupId>
+									<artifactId>portlet-api</artifactId>
+								</dependency>
+								<dependency>
+									<groupId>org.apache.portals.pluto</groupId>
+									<artifactId>pluto-container</artifactId>
+								</dependency>
                             </copyDependencies>
                         </configuration>
                     </execution>
@@ -150,7 +189,7 @@
                         <configuration>
                             <verifyTimeout>600</verifyTimeout>
                             <serverStartTimeout>600</serverStartTimeout>
-                            <applications>EPF-service,EPF-gateway,EPF-webapp</applications>
+                            <applications>EPF-service,EPF-gateway,EPF-portlet,EPF-webapp</applications>
                         </configuration>
                     </execution>
                     <!-- Stop the server -->
@@ -169,7 +208,7 @@
                     <deployPackages>dependencies</deployPackages>
 					<verifyTimeout>600</verifyTimeout>
 					<serverStartTimeout>600</serverStartTimeout>
-					<applications>EPF-service,EPF-gateway,EPF-webapp</applications>
+					<applications>EPF-service,EPF-gateway,EPF-portlet,EPF-webapp</applications>
                 </configuration>
             </plugin>
         </plugins>

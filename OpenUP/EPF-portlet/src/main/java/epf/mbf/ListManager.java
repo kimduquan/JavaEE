@@ -1,39 +1,15 @@
-/**
- * Copyright (c) 2000-2020 Liferay, Inc. All rights reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package com.liferay.faces.demos.applicant.html5.facelets.mbf;
+package epf.mbf;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ApplicationScoped;
-import javax.faces.bean.ManagedBean;
-
-import com.liferay.faces.demos.applicant.html5.facelets.dto.Applicant;
-import com.liferay.faces.demos.applicant.html5.facelets.dto.Attachment;
-import com.liferay.faces.demos.applicant.html5.facelets.dto.City;
-import com.liferay.faces.demos.applicant.html5.facelets.dto.Province;
-
-
-/**
- * @author  Neil Griffin
- */
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Named;
+import epf.dto.City;
+import epf.dto.Province;
 @ApplicationScoped
-@ManagedBean(name = "listManager")
+@Named("listManager")
 public class ListManager {
 
 	// Private Data Members

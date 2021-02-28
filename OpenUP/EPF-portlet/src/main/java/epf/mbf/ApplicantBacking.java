@@ -1,55 +1,31 @@
-/**
- * Copyright (c) 2000-2020 Liferay, Inc. All rights reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package com.liferay.faces.demos.applicant.html5.facelets.mbf;
+package epf.mbf;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.component.UICommand;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
+import javax.inject.Named;
 import javax.servlet.http.Part;
+import epf.dto.Applicant;
+import epf.dto.Attachment;
+import epf.dto.City;
+import epf.util.PartUtil;
+import epf.util.logging.Logging;
+import javax.faces.annotation.ManagedProperty;
 
-import com.liferay.faces.demos.applicant.html5.facelets.dto.Applicant;
-import com.liferay.faces.demos.applicant.html5.facelets.dto.Attachment;
-import com.liferay.faces.demos.applicant.html5.facelets.dto.City;
-import com.liferay.faces.demos.applicant.html5.facelets.util.PartUtil;
-import com.liferay.faces.util.context.FacesContextHelperUtil;
-import com.liferay.faces.util.logging.Logger;
-import com.liferay.faces.util.logging.LoggerFactory;
-import com.liferay.faces.util.model.UploadedFile;
-
-
-/**
- * This is a JSF backing managed-bean for the applicant.xhtml composition.
- *
- * @author  "Neil Griffin"
- */
-@ManagedBean(name = "applicantBacking")
 @RequestScoped
+@Named("applicantBacking")
 public class ApplicantBacking {
 
 	// Logger
-	private static final Logger logger = LoggerFactory.getLogger(ApplicantBacking.class);
+	private static final Logger logger = Logging.getLogger(ApplicantBacking.class.getName());
 
 	// Injections
 	@ManagedProperty(value = "#{attachmentManager}")
@@ -83,11 +59,10 @@ public class ApplicantBacking {
 			if (attachmentToDelete != null) {
 				attachmentToDelete.getFile().delete();
 				attachments.remove(attachmentToDelete);
-				logger.debug("Deleted file=[{0}]", attachmentToDelete.getName());
 			}
 		}
 		catch (Exception e) {
-			logger.error(e);
+			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
 	}
 
@@ -111,8 +86,7 @@ public class ApplicantBacking {
 			}
 		}
 		catch (Exception e) {
-			logger.error(e.getMessage(), e);
-			FacesContextHelperUtil.addGlobalUnexpectedErrorMessage();
+			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
 	}
 
@@ -159,36 +133,16 @@ public class ApplicantBacking {
 		try {
 			uploadedPart.write(copiedFile.getAbsolutePath());
 			uploadedPart.delete();
-			logger.debug("Received fileName=[{0}] absolutePath=[{1}]", copiedFile.getName(),
-				copiedFile.getAbsolutePath());
 
 			List<Attachment> attachments = attachmentManager.getAttachments(attachmentDir);
 			applicant.setAttachments(attachments);
 		}
 		catch (IOException e) {
-			logger.error(e);
+			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
 	}
 
 	public String submit() {
-
-		if (logger.isDebugEnabled()) {
-			logger.debug("firstName=" + applicant.getFirstName());
-			logger.debug("lastName=" + applicant.getLastName());
-			logger.debug("emailAddress=" + applicant.getEmailAddress());
-			logger.debug("phoneNumber=" + applicant.getPhoneNumber());
-			logger.debug("dateOfBirth=" + applicant.getDateOfBirth());
-			logger.debug("city=" + applicant.getCity());
-			logger.debug("provinceId=" + applicant.getProvinceId());
-			logger.debug("postalCode=" + applicant.getPostalCode());
-			logger.debug("comments=" + applicant.getComments());
-
-			List<Attachment> attachments = applicant.getAttachments();
-
-			for (Attachment attachment : attachments) {
-				logger.debug("attachment=[{0}]", attachment.getName());
-			}
-		}
 
 		// Delete the uploaded files.
 		try {
@@ -196,7 +150,6 @@ public class ApplicantBacking {
 
 			for (Attachment attachment : attachments) {
 				attachment.getFile().delete();
-				logger.debug("Deleted file=[{0}]", attachment.getName());
 			}
 
 			// Store the applicant's first name in JSF 2 Flash Scope so that it can be picked up
@@ -210,8 +163,7 @@ public class ApplicantBacking {
 
 		}
 		catch (Exception e) {
-			logger.error(e.getMessage(), e);
-			FacesContextHelperUtil.addGlobalUnexpectedErrorMessage();
+			logger.log(Level.SEVERE, e.getMessage(), e);
 
 			return "failure";
 		}

@@ -1,43 +1,20 @@
-/**
- * Copyright (c) 2000-2020 Liferay, Inc. All rights reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package com.liferay.faces.demos.applicant.html5.facelets.mbf;
+package epf.mbf;
 
 import java.util.Enumeration;
 import java.util.Map;
-
 import javax.el.ELResolver;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.inject.Named;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletMode;
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
 import javax.portlet.WindowState;
 import javax.portlet.faces.preference.Preference;
-
-import com.liferay.faces.util.context.FacesContextHelperUtil;
-
-
-/**
- * @author  Neil Griffin
- */
-@ManagedBean(name = "preferencesBacking")
 @RequestScoped
+@Named("preferencesBacking")
 public class PreferencesBacking {
 
 	/**
@@ -64,11 +41,8 @@ public class PreferencesBacking {
 			ActionResponse actionResponse = (ActionResponse) externalContext.getResponse();
 			actionResponse.setPortletMode(PortletMode.VIEW);
 			actionResponse.setWindowState(WindowState.NORMAL);
-
-			FacesContextHelperUtil.addGlobalSuccessInfoMessage();
 		}
 		catch (Exception e) {
-			FacesContextHelperUtil.addGlobalUnexpectedErrorMessage();
 		}
 	}
 
@@ -119,10 +93,8 @@ public class PreferencesBacking {
 			actionResponse.setWindowState(WindowState.NORMAL);
 
 			// Report a successful message back to the user as feedback.
-			FacesContextHelperUtil.addGlobalSuccessInfoMessage();
 		}
 		catch (Exception e) {
-			FacesContextHelperUtil.addGlobalUnexpectedErrorMessage();
 		}
 	}
 }

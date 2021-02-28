@@ -8,25 +8,25 @@
 	</parent>
 	<artifactId>EPF-portlet</artifactId>
 	<packaging>war</packaging>
-	<name>EPF-portlet</name>
-	<version>1.0.0</version>
+	<name>Eclipse Process Framework Portlet</name>
 	<dependencies>
-		<!-- https://mvnrepository.com/artifact/javax/javaee-web-api -->
 		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-web-api</artifactId>
-		</dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-web-api</artifactId>
+    		<scope>provided</scope>
+        </dependency>
 		<dependency>
 			<groupId>javax.portlet</groupId>
 			<artifactId>portlet-api</artifactId>
 		</dependency>
 		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-utility</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
 			<groupId>com.liferay.faces</groupId>
 			<artifactId>com.liferay.faces.bridge.api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.liferay.faces</groupId>
-			<artifactId>com.liferay.faces.bridge.impl</artifactId>
 		</dependency>
 	</dependencies>
 </project>
