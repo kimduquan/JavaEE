@@ -7,7 +7,6 @@ package epf.service.schema;
 
 import epf.schema.tasks.Discipline;
 import epf.service.persistence.Request;
-
 import java.security.Principal;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;

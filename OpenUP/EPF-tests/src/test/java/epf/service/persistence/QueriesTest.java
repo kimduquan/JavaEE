@@ -7,13 +7,13 @@ package epf.service.persistence;
 
 import epf.client.config.ConfigNames;
 import epf.client.persistence.Queries;
-import epf.client.persistence.Target;
 import epf.service.ClientUtil;
 import epf.service.ConfigUtil;
 import epf.service.SecurityUtil;
 import epf.util.client.Client;
 import java.net.URI;
-import java.util.List;
+import java.util.Set;
+import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -56,23 +56,21 @@ public class QueriesTest {
     
     @Test
     public void testSearchOK() throws Exception {
-    	List<Target> results = Queries.search(client, "Any", 0, 100);
-    	Assert.assertNotEquals("results", 0, results.size());
-    	results.forEach(target -> {
-    		Assert.assertNotNull("Target", target);
-    		Assert.assertNotNull("Target.path", target.getPath());
-    		Assert.assertNotEquals("Target.path", "", target.getPath());
-    		Object object;
-    		try(Client client = ClientUtil.newClient(persistenceUrl)){
-    			object = client
+    	Set<Link> entityLinks = Queries.search(client, "Any", 0, 100);
+    	Assert.assertNotEquals("entityLinks", 0, entityLinks.size());
+    	entityLinks.forEach(entityLink -> {
+    		Assert.assertNotNull("Link", entityLink);
+    		Assert.assertNotNull("Link.title", entityLink.getTitle());
+    		Assert.assertNotEquals("Link.title", "", entityLink.getTitle());
+    		try(Client client = ClientUtil.newClient(entityLink.getUri())){
+    			Object entity = client
     					.authorization(token)
     					.request(
-    							persistenceUrl.toString() + target.getPath(),
     							t -> t, 
     							req -> req.accept(MediaType.APPLICATION_JSON)
     							)
     					.get(Object.class);
-    			Assert.assertNotNull("Target.object", object);
+    			Assert.assertNotNull("Link.entity", entity);
     		} 
     		catch (Exception e) {
 				e.printStackTrace();

@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletionStage;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.client.Client;
@@ -65,10 +66,10 @@ public class Request {
     	logger.entering(CLASS_NAME, "request", method);
         return executor.supplyAsync(() -> uri = buildUri(uriInfo))
                 .thenApply(newUri -> client = clients.poll(newUri, b -> b))
-                .thenApply(newClient -> buildTarget(newClient, uriInfo))
+                .thenApply(newClient -> buildTarget(newClient, uriInfo, SERVICE_URL))
                 .thenApply(target -> buildRequest(target, headers))
                 .thenApply(request -> buildMethod(request, method, headers.getMediaType(), in))
-                .thenApply(Request::buildResponse)
+                .thenApply(response -> buildResponse(response, uriInfo))
                 .thenApply(ResponseBuilder::build)
                 .whenComplete((res, ex) -> {
                 	if(ex != null) {
@@ -88,8 +89,8 @@ public class Request {
         return builder.build();
     }
     
-    static WebTarget buildTarget(Client client, UriInfo uriInfo){
-    	Var<WebTarget> webTarget = new Var<>(client.target(SERVICE_URL));
+    static WebTarget buildTarget(Client client, UriInfo uriInfo, String serviceUrl){
+    	Var<WebTarget> webTarget = new Var<>(client.target(serviceUrl));
         if(uriInfo != null){
             List<PathSegment> segments = uriInfo.getPathSegments();
             if(segments != null){
@@ -171,7 +172,12 @@ public class Request {
         }
     }
     
-    static ResponseBuilder buildResponse(Response res){
+    static Link buildLink(Link link, UriInfo uriInfo) {
+    	link.getUriBuilder().uri(uriInfo.getBaseUri());
+    	return link;
+    }
+    
+    static ResponseBuilder buildResponse(Response res, UriInfo uriInfo){
         ResponseBuilder builder = Response.fromResponse(res);
         Set<String> methods = res.getAllowedMethods();
         if(methods != null){
@@ -201,6 +207,7 @@ public class Request {
         }
         Set<Link> links = res.getLinks();
         if(links != null){
+        	links = links.stream().map(link -> buildLink(link, uriInfo)).collect(Collectors.toSet());
             builder = builder.links(links.toArray(new Link[links.size()]));
         }
         if(location != null){

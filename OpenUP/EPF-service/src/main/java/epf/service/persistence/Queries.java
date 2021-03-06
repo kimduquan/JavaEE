@@ -5,8 +5,6 @@
  */
 package epf.service.persistence;
 
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,14 +35,16 @@ import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.ManagedType;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import epf.client.persistence.SearchData;
-import epf.client.persistence.Target;
 import epf.schema.EPF;
 import epf.schema.QueryNames;
 import epf.schema.roles.Role;
@@ -84,36 +84,29 @@ public class Queries implements epf.client.persistence.Queries {
             Integer maxResults
             ) throws Exception{
         ResponseBuilder response = Response.status(Response.Status.NOT_FOUND);
-        
         if(!paths.isEmpty()){
             PathSegment rootSegment = paths.get(0);
             Principal principal = context.getUserPrincipal();
-            EntityManager manager = cache.getManager(unit, principal);
             Entity<Object> entity = cache.findEntity(unit, principal, rootSegment.getPath());
             if(entity.getType() != null){
+                EntityManager manager = cache.getManager(unit, principal);
+                CriteriaBuilder builder = manager.getCriteriaBuilder();
                 EntityType<Object> rootType = entity.getType();
                 Class<Object> rootClass = rootType.getJavaType();
-                
-                CriteriaBuilder builder = manager.getCriteriaBuilder();
                 CriteriaQuery<Object> rootQuery = builder.createQuery(rootClass);
                 Root<Object> rootFrom = rootQuery.from(rootClass);
                 List<Predicate> allParams = new ArrayList<>();
-                
-                List<Predicate> rootParams = new ArrayList<>();
                 rootSegment.getMatrixParameters().forEach((name, values) -> {
-                    rootParams.add(
+                	allParams.add(
                             builder.isMember(
                                     values,
                                     rootFrom.get(name)
                             )
                     );
                 });
-                allParams.addAll(rootParams);
-
                 Var<ManagedType<?>> parentType = new Var<>(rootType);
                 Root<?> parentFrom = rootFrom;
                 Var<Join<?,?>> parentJoin = new Var<>();
-                
                 paths.subList(1, paths.size()).forEach(segment -> {
                     Attribute<?,?> attribute = parentType.get().getAttribute(segment.getPath());
                     if (attribute.getPersistentAttributeType() != PersistentAttributeType.BASIC) {
@@ -144,16 +137,14 @@ public class Queries implements epf.client.persistence.Queries {
                             subJoin = parentJoin.get().join(segment.getPath());
                         }
 
-                        List<Predicate> params = new ArrayList<>();
                         segment.getMatrixParameters().forEach((name, values) -> {
-                            params.add(
+                        	allParams.add(
                                     builder.isMember(
                                             values,
                                             subJoin.get(name)
                                     )
                             );
                         });
-                        allParams.addAll(params);
                         
                         ManagedType<?> subType = manager.getMetamodel().managedType(subClass);
                         parentType.set(subType);
@@ -190,7 +181,7 @@ public class Queries implements epf.client.persistence.Queries {
     }
 
 	@Override
-	public List<Target> search(String text, Integer firstResult, Integer maxResults) throws Exception {
+	public Response search(UriInfo uriInfo, String text, Integer firstResult, Integer maxResults) throws Exception {
 		Map<String, EntityType<?>> entityTables = new HashMap<>();
 		Map<String, Map<String, Attribute<?,?>>> entityAttributes = new HashMap<>();
 		cache.getEntities(EPF.Schema, context.getUserPrincipal(), entityTables, entityAttributes);
@@ -205,32 +196,38 @@ public class Queries implements epf.client.persistence.Queries {
 		query.setParameter(1, text);
 		query.setParameter(2, maxResults);
 		query.setParameter(3, firstResult);
-		return query.getResultStream()
-				.map(item -> {
-					Target target = null;
-					if(entityTables.containsKey(item.getTable())) {
-						target = new Target();
-						StringBuilder builder = new StringBuilder();
-						builder.append(EPF.Schema);
-						builder.append('/');
-						EntityType<?> entityType = entityTables.get(item.getTable());
-						builder.append(entityType.getName());
-						builder.append('?');
-						Iterator<String> column = item.getColumns().iterator();
-						Iterator<String> key = item.getKeys().iterator();
-						while(column.hasNext() && key.hasNext()) {
-							builder.append(column.next());
-							builder.append('=');
-							String value = URLEncoder.encode(key.next(), Charset.forName("UTF-8"));
-							builder.append(value);
-							builder.append(';');
-						}
-						target.setPath(builder.toString());
-					}
-					return target;
-					}
-				)
-				.filter(target -> target != null)
-				.collect(Collectors.toList());
+		ResponseBuilder response = Response.ok();
+		final UriBuilder baseUri = uriInfo.getBaseUriBuilder();
+		Iterator<Link> it = query
+				.getResultStream()
+				.map(
+						searchData -> {
+							Link entityLink = null;
+							if(entityTables.containsKey(searchData.getTable())) {
+								EntityType<?> entityType = entityTables.get(searchData.getTable());
+								UriBuilder linkBuilder = baseUri
+										.clone()
+										.path(EPF.Schema)
+										.path(entityType.getName());
+								Iterator<String> column = searchData.getColumns().iterator();
+								Iterator<String> key = searchData.getKeys().iterator();
+								while(column.hasNext() && key.hasNext()) {
+									linkBuilder = linkBuilder.matrixParam(column.next(), key.next());
+								}
+								entityLink = Link
+										.fromUriBuilder(linkBuilder)
+										.rel("self")
+										.title(entityType.getName())
+										.build();
+							}
+							return entityLink;
+							}
+						)
+				.filter(link -> link != null)
+				.iterator();
+		while(it.hasNext()) {
+			response = response.links(it.next());
+		}
+		return response.build();
 	}
 }
