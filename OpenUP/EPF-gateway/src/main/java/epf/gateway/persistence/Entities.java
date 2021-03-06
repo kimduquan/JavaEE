@@ -22,9 +22,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-
 import org.eclipse.microprofile.faulttolerance.Asynchronous;
-
 import epf.gateway.Request;
 
 /**
