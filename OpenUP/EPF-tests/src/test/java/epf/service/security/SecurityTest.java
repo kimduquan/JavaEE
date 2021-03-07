@@ -39,7 +39,7 @@ public class SecurityTest {
 	private static URI securityUrl;
     
     @BeforeClass
-    public static void beforeClass() throws Exception{
+    public static void beforeClass(){
     	securityUrl = RegistryUtil.lookup("security");
     }
     

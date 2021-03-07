@@ -37,6 +37,7 @@ public class Registry {
 			.getLinks()
 			.forEach(link -> {
 				remotes.put(link.getRel(), link.getUri());
+				logger.info(link.getRel() + ":" + link.getUri());
 			});
 		} 
 		catch (Exception e) {

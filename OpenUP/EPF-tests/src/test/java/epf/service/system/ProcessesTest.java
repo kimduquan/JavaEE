@@ -31,13 +31,13 @@ public class ProcessesTest {
 	private Client client;
     
     @BeforeClass
-    public static void beforeClass() throws Exception{
+    public static void beforeClass(){
     	token = SecurityUtil.login(null, "any_role1", "any_role");
         processesUrl = RegistryUtil.lookup("system");
     }
     
     @AfterClass
-    public static void afterClass() throws Exception{
+    public static void afterClass(){
     	SecurityUtil.logOut(null, token);
     }
     

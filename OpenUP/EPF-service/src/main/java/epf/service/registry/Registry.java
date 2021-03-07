@@ -1,15 +1,17 @@
 package epf.service.registry;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Link;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import epf.client.config.ConfigNames;
@@ -57,9 +59,16 @@ public class Registry implements epf.client.registry.Registry {
 	@Override
 	public Response list() throws Exception {
 		ResponseBuilder builder = Response.ok();
-		for(Entry<String, URI> link : remotes.entrySet()) {
-			builder = builder.link(link.getValue(), link.getKey());
-		}
+		List<Link> links = remotes
+		.entrySet()
+		.stream()
+		.map(entry -> Link
+				.fromUri(entry.getValue())
+				.rel(entry.getKey())
+				.build()
+				)
+		.collect(Collectors.toList());
+		builder = builder.links(links.toArray(new Link[links.size()]));
 		return builder.build();
 	}
 

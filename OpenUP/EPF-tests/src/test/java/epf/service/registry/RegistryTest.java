@@ -1,8 +1,10 @@
 package epf.service.registry;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.Link;
 import org.junit.After;
@@ -15,16 +17,23 @@ import epf.client.config.ConfigNames;
 import epf.client.registry.Registry;
 import epf.service.ClientUtil;
 import epf.util.client.Client;
+import epf.util.logging.Logging;
 
 public class RegistryTest {
 
+	private static final Logger logger = Logging.getLogger(RegistryTest.class.getName());
 	private static URI registryUrl;
 	
 	private Client client;
     
     @BeforeClass
-    public static void beforeClass() throws Exception{
-    	registryUrl = new URI(System.getProperty(ConfigNames.REGISTRY_URL, ""));
+    public static void beforeClass(){
+    	try {
+			registryUrl = new URI(System.getProperty(ConfigNames.REGISTRY_URL, ""));
+		} 
+    	catch (URISyntaxException e) {
+			logger.severe(e.getMessage());
+		}
     }
     
     @AfterClass
