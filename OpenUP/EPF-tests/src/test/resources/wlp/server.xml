@@ -25,7 +25,7 @@
     <application id="EPF-service" name="EPF-service" context-root="service" location="EPF-service-1.0.0.war">
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-    <application id="EPF-gateway" name="EPF-gateway" context-root="gateway" location="EPF-gateway-1.0.0.war" >
+    <application id="EPF-gateway" name="EPF-gateway" context-root="gateway" location="EPF-gateway-1.0.0.war" startAfterRef="EPF-service" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
 	<application id="EPF-portlet" name="EPF-portlet" context-root="portlet" location="EPF-portlet-1.0.0.war" startAfterRef="EPF-service,EPF-gateway" />

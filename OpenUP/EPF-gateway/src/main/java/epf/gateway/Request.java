@@ -45,7 +45,6 @@ import epf.util.client.ClientQueue;
 @RequestScoped
 public class Request {
 	
-	private static final String SERVICE_URL = System.getenv("epf.service.url");
 	private static final Logger logger = Logger.getLogger(Request.class.getName());
 	private static final String CLASS_NAME = Request.class.getName();
     
@@ -60,13 +59,17 @@ public class Request {
     @Inject
     private ClientQueue clients;
     
+    @Inject
+    private Registry registry;
+    
     public CompletionStage<Response> request(
+    		String service,
             String method, 
             InputStream in) throws Exception{
     	logger.entering(CLASS_NAME, "request", method);
         return executor.supplyAsync(() -> uri = buildUri(uriInfo))
                 .thenApply(newUri -> client = clients.poll(newUri, b -> b))
-                .thenApply(newClient -> buildTarget(newClient, uriInfo, SERVICE_URL))
+                .thenApply(newClient -> buildTarget(newClient, uriInfo, registry.lookup(service)))
                 .thenApply(target -> buildRequest(target, headers))
                 .thenApply(request -> buildMethod(request, method, headers.getMediaType(), in))
                 .thenApply(response -> buildResponse(response, uriInfo))
@@ -89,7 +92,7 @@ public class Request {
         return builder.build();
     }
     
-    static WebTarget buildTarget(Client client, UriInfo uriInfo, String serviceUrl){
+    static WebTarget buildTarget(Client client, UriInfo uriInfo, URI serviceUrl){
     	Var<WebTarget> webTarget = new Var<>(client.target(serviceUrl));
         if(uriInfo != null){
             List<PathSegment> segments = uriInfo.getPathSegments();
@@ -173,8 +176,13 @@ public class Request {
     }
     
     static Link buildLink(Link link, UriInfo uriInfo) {
-    	link.getUriBuilder().uri(uriInfo.getBaseUri());
-    	return link;
+    	return Link
+    			.fromUriBuilder(
+    					link
+    					.getUriBuilder()
+    					.uri(uriInfo.getBaseUri())
+    			)
+    			.build();
     }
     
     static ResponseBuilder buildResponse(Response res, UriInfo uriInfo){
@@ -207,7 +215,10 @@ public class Request {
         }
         Set<Link> links = res.getLinks();
         if(links != null){
-        	links = links.stream().map(link -> buildLink(link, uriInfo)).collect(Collectors.toSet());
+        	links = links
+        			.stream()
+        			.map(link -> buildLink(link, uriInfo))
+        			.collect(Collectors.toSet());
             builder = builder.links(links.toArray(new Link[links.size()]));
         }
         if(location != null){

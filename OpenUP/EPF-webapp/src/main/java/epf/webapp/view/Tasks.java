@@ -5,8 +5,6 @@
  */
 package epf.webapp.view;
 
-import epf.client.config.ConfigNames;
-import epf.client.config.ConfigSource;
 import epf.client.persistence.Queries;
 import epf.schema.EPF;
 import epf.schema.tasks.Discipline;
@@ -14,7 +12,6 @@ import epf.schema.tasks.Task;
 import epf.util.client.Client;
 import epf.webapp.Session;
 import java.io.Serializable;
-import java.net.URI;
 import java.util.List;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -38,15 +35,11 @@ public class Tasks implements Serializable {
     private List<Task> tasks;
     
     @Inject
-    private ConfigSource config;
-    
-    @Inject
     private Session session;
 
     public List<Discipline> getDisciplines() throws Exception {
         if(disciplines == null){
-            String url = config.getValue(ConfigNames.PERSISTENCE_URL);
-            try(Client client = session.newClient(new URI(url))){
+            try(Client client = session.newClient("persistence")){
             	disciplines = Queries.getCriteriaQueryResult(
             			client, 
             			new GenericType<List<Discipline>> () {}, 
@@ -61,8 +54,7 @@ public class Tasks implements Serializable {
 
     public List<Task> getTasks() throws Exception {
         if(tasks == null){
-            String url = config.getValue(ConfigNames.PERSISTENCE_URL);
-            try(Client client = session.newClient(new URI(url))){
+            try(Client client = session.newClient("persistence")){
             	tasks = Queries.getCriteriaQueryResult(
             			client, 
             			new GenericType<List<Task>> () {}, 

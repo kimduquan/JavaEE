@@ -48,7 +48,7 @@ public class Queries {
             ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request(HttpMethod.GET, null);
+        return request.request("persistence", HttpMethod.GET, null);
     }
     
     @GET
@@ -60,6 +60,6 @@ public class Queries {
             ) throws Exception{
     	request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request(HttpMethod.GET, null);
+        return request.request("persistence", HttpMethod.GET, null);
     }
 }

@@ -14,11 +14,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import epf.client.config.ConfigNames;
 import epf.client.system.Processes;
 import epf.service.ClientUtil;
-import epf.service.ConfigUtil;
+import epf.service.RegistryUtil;
 import epf.service.SecurityUtil;
 import epf.util.client.Client;
 
@@ -35,7 +33,7 @@ public class ProcessesTest {
     @BeforeClass
     public static void beforeClass() throws Exception{
     	token = SecurityUtil.login(null, "any_role1", "any_role");
-        processesUrl = new URI(ConfigUtil.property(ConfigNames.SYSTEM_URL));
+        processesUrl = RegistryUtil.lookup("system");
     }
     
     @AfterClass

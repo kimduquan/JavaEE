@@ -14,8 +14,6 @@ public interface ConfigNames {
     String JWT_EXPIRE_DURATION = "epf.security.jwt.exp.duration";
     String JWT_EXPIRE_TIMEUNIT = "epf.security.jwt.exp.timeunit";
     
-    String GATEWAY_URL = "epf.gateway.url";
-    String PERSISTENCE_URL = "epf.persistence.url";
-    String SECURITY_URL = "epf.security.url";
-    String SYSTEM_URL = "epf.system.url";
+    String REGISTRY_URL = "epf.registry.url";
+    String SERVICE_URL = "epf.service.url";
 }

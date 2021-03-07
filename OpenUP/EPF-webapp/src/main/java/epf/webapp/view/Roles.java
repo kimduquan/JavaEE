@@ -5,8 +5,6 @@
  */
 package epf.webapp.view;
 
-import epf.client.config.ConfigNames;
-import epf.client.config.ConfigSource;
 import epf.client.persistence.Queries;
 import epf.schema.EPF;
 import epf.schema.roles.Role;
@@ -14,7 +12,6 @@ import epf.schema.roles.RoleSet;
 import epf.util.client.Client;
 import epf.webapp.Session;
 import java.io.Serializable;
-import java.net.URI;
 import java.util.List;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -35,9 +32,6 @@ public class Roles implements Serializable {
 	private static final long serialVersionUID = 1L;
     
     @Inject
-    private ConfigSource config;
-    
-    @Inject
     private Session session;
 	
 	private List<RoleSet> roleSets;
@@ -45,8 +39,7 @@ public class Roles implements Serializable {
 
     public List<RoleSet> getRoleSets() throws Exception {
         if(roleSets == null){
-            String url = config.getValue(ConfigNames.PERSISTENCE_URL);
-            try(Client client = session.newClient(new URI(url))){
+            try(Client client = session.newClient("persistence")){
             	roleSets = Queries.getCriteriaQueryResult(
             			client, 
             			new GenericType<List<RoleSet>> () {}, 
@@ -61,8 +54,7 @@ public class Roles implements Serializable {
 
     public List<Role> getRoles() throws Exception {
         if(roles == null){
-            String url = config.getValue(ConfigNames.PERSISTENCE_URL);
-            try(Client client = session.newClient(new URI(url))){
+            try(Client client = session.newClient("persistence")){
             	roles = Queries.getCriteriaQueryResult(
             			client, 
             			new GenericType<List<Role>> () {}, 

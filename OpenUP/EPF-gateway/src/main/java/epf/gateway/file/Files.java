@@ -29,7 +29,7 @@ import epf.gateway.Request;
  *
  * @author FOXCONN
  */
-@Path("files")
+@Path("file")
 @RequestScoped
 public class Files {
     
@@ -47,7 +47,7 @@ public class Files {
     ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request(HttpMethod.PUT, in);
+        return request.request("file", HttpMethod.PUT, in);
     }
     
     @POST
@@ -61,7 +61,7 @@ public class Files {
     ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request(HttpMethod.POST, in);
+        return request.request("file", HttpMethod.POST, in);
     }
     
     @POST
@@ -76,7 +76,7 @@ public class Files {
     ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request(HttpMethod.POST, in);
+        return request.request("file", HttpMethod.POST, in);
     }
     
     @DELETE
@@ -87,7 +87,7 @@ public class Files {
     ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request(HttpMethod.DELETE, null);
+        return request.request("file", HttpMethod.DELETE, null);
     }
     
     @GET
@@ -99,7 +99,7 @@ public class Files {
             throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request(HttpMethod.GET, null);
+        return request.request("file", HttpMethod.GET, null);
     }
     
     @GET
@@ -112,7 +112,7 @@ public class Files {
             throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request(HttpMethod.GET, null);
+        return request.request("file", HttpMethod.GET, null);
     }
     
     @PUT
@@ -126,6 +126,6 @@ public class Files {
     ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request(HttpMethod.PUT, in);
+        return request.request("file", HttpMethod.PUT, in);
     }
 }

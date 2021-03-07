@@ -16,7 +16,6 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
-import epf.client.config.ConfigNames;
 
 /**
  *
@@ -31,11 +30,6 @@ public class Config implements epf.client.config.Config {
     @PostConstruct
     void postConstruct(){
         configs = new ConcurrentHashMap<>();
-        String url = System.getenv(ConfigNames.GATEWAY_URL);
-        configs.put(ConfigNames.GATEWAY_URL, url);
-        configs.put(ConfigNames.PERSISTENCE_URL, url + "persistence/");
-        configs.put(ConfigNames.SECURITY_URL, url + "security/");
-        configs.put(ConfigNames.SYSTEM_URL, url + "system/");
     }
     
     @Override

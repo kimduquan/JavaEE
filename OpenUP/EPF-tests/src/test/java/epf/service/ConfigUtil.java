@@ -1,9 +1,7 @@
 package epf.service;
 
-import java.net.URI;
 import java.util.Map;
 import epf.client.config.Config;
-import epf.client.config.ConfigNames;
 import epf.util.client.Client;
 
 public class ConfigUtil {
@@ -12,9 +10,7 @@ public class ConfigUtil {
     
     static Map<String, String> properties() throws Exception{
     	if(configs == null) {
-    		String url = System.getProperty(ConfigNames.GATEWAY_URL, "");
-    		System.out.println("ConfigNames.GATEWAY_URL=" + url);
-    		try(Client client = ClientUtil.newClient(new URI(url + "config"))){
+    		try(Client client = ClientUtil.newClient(RegistryUtil.lookup("config"))){
     			configs = Config.getProperties(client, null);
     		}
     	}

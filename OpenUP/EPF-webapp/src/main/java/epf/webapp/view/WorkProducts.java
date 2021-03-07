@@ -5,8 +5,6 @@
  */
 package epf.webapp.view;
 
-import epf.client.config.ConfigNames;
-import epf.client.config.ConfigSource;
 import epf.client.persistence.Queries;
 import epf.schema.EPF;
 import epf.schema.work_products.Artifact;
@@ -14,7 +12,6 @@ import epf.schema.work_products.Domain;
 import epf.util.client.Client;
 import epf.webapp.Session;
 import java.io.Serializable;
-import java.net.URI;
 import java.util.List;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -35,9 +32,6 @@ public class WorkProducts implements Serializable {
 	private static final long serialVersionUID = 1L;
     
     @Inject
-    private ConfigSource config;
-    
-    @Inject
     private Session session;
 	
 	private List<Domain> domains;
@@ -45,8 +39,7 @@ public class WorkProducts implements Serializable {
 
     public List<Domain> getDomains() throws Exception {
         if(domains == null){
-            String url = config.getValue(ConfigNames.PERSISTENCE_URL);
-            try(Client client = session.newClient(new URI(url))){
+            try(Client client = session.newClient("persistence")){
             	domains = Queries.getCriteriaQueryResult(
             			client, 
             			new GenericType<List<Domain>> () {}, 
@@ -61,8 +54,7 @@ public class WorkProducts implements Serializable {
 
     public List<Artifact> getArtifacts() throws Exception {
         if(artifacts == null){
-            String url = config.getValue(ConfigNames.PERSISTENCE_URL);
-            try(Client client = session.newClient(new URI(url))){
+            try(Client client = session.newClient("persistence")){
             	artifacts = Queries.getCriteriaQueryResult(
             			client, 
             			new GenericType<List<Artifact>> () {}, 

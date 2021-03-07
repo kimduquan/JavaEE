@@ -27,7 +27,7 @@ import epf.gateway.Request;
  *
  * @author FOXCONN
  */
-@Path("files/directories")
+@Path("file/directory")
 @RequestScoped
 public class Directories {
     
@@ -45,7 +45,7 @@ public class Directories {
     ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request(HttpMethod.POST, in);
+        return request.request("file", HttpMethod.POST, in);
     }
     
     @POST
@@ -60,7 +60,7 @@ public class Directories {
     ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request(HttpMethod.POST, in);
+        return request.request("file", HttpMethod.POST, in);
     }
     
     @GET
@@ -72,6 +72,6 @@ public class Directories {
     ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request(HttpMethod.GET, null);
+        return request.request("file", HttpMethod.GET, null);
     }
 }

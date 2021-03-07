@@ -45,7 +45,7 @@ public class Security {
             InputStream in) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request(HttpMethod.POST, in);
+        return request.request("security", HttpMethod.POST, in);
     }
     
     @DELETE
@@ -56,7 +56,7 @@ public class Security {
             @Context UriInfo uriInfo) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request(HttpMethod.DELETE, null);
+        return request.request("security", HttpMethod.DELETE, null);
     }
     
     @GET
@@ -67,6 +67,6 @@ public class Security {
             @Context UriInfo uriInfo) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request(HttpMethod.GET, null);
+        return request.request("security", HttpMethod.GET, null);
     }
 }

@@ -16,8 +16,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.security.enterprise.SecurityContext;
-import epf.client.config.ConfigNames;
-import epf.client.config.ConfigSource;
+import epf.client.registry.LocateRegistry;
 import epf.client.security.Security;
 import epf.schema.roles.Role;
 import epf.util.client.Client;
@@ -47,7 +46,7 @@ public class Session implements Serializable {
     private SecurityContext context;
     
     @Inject
-    private ConfigSource config;
+    private LocateRegistry registry;
     
     @Inject
     private ClientQueue clients;
@@ -66,8 +65,7 @@ public class Session implements Serializable {
     @PreDestroy
     void preDestroy(){
         if(principal != null){
-        	String securityUrl = config.getValue(ConfigNames.SECURITY_URL);
-        	try(Client client = newClient(new URI(securityUrl))) {
+        	try(Client client = newClient(registry.lookup("security"))) {
         		client.authorization(principal.getToken().getRawToken());
             	Security.logOut(client, null);
             }
@@ -79,6 +77,14 @@ public class Session implements Serializable {
     
     public Client newClient(URI uri) {
     	Client client = new Client(clients, uri, b -> b);
+    	if(principal != null) {
+        	client.authorization(principal.getToken().getRawToken());
+    	}
+    	return client;
+    }
+    
+    public Client newClient(String name) {
+    	Client client = new Client(clients, registry.lookup(name), b -> b);
     	if(principal != null) {
         	client.authorization(principal.getToken().getRawToken());
     	}

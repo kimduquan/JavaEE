@@ -38,6 +38,6 @@ public class Config {
             @Context UriInfo uriInfo) throws Exception {
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("GET", null);
+        return request.request("config", "GET", null);
     }
 }

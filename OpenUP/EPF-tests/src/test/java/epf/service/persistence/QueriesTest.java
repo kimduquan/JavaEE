@@ -5,10 +5,9 @@
  */
 package epf.service.persistence;
 
-import epf.client.config.ConfigNames;
 import epf.client.persistence.Queries;
 import epf.service.ClientUtil;
-import epf.service.ConfigUtil;
+import epf.service.RegistryUtil;
 import epf.service.SecurityUtil;
 import epf.util.client.Client;
 import java.net.URI;
@@ -35,7 +34,7 @@ public class QueriesTest {
     @BeforeClass
     public static void beforeClass() throws Exception{
     	token = SecurityUtil.login(null, "any_role1", "any_role");
-    	persistenceUrl = new URI(ConfigUtil.property(ConfigNames.PERSISTENCE_URL));
+    	persistenceUrl = RegistryUtil.lookup("persistence");
     }
     
     @AfterClass

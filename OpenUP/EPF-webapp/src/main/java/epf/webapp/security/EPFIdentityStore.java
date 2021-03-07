@@ -20,8 +20,7 @@ import javax.security.enterprise.credential.RememberMeCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStore;
 import javax.security.enterprise.identitystore.RememberMeIdentityStore;
-import epf.client.config.ConfigNames;
-import epf.client.config.ConfigSource;
+import epf.client.registry.LocateRegistry;
 import epf.client.security.Security;
 import epf.client.security.Token;
 import epf.util.client.Client;
@@ -37,8 +36,8 @@ public class EPFIdentityStore implements IdentityStore, RememberMeIdentityStore 
     
     private Map<String, TokenPrincipal> principals = new ConcurrentHashMap<>();
 	
-	@Inject
-    private ConfigSource config;
+    @Inject
+    private LocateRegistry registry;
     
     @Inject
     private ClientQueue clients;
@@ -58,7 +57,7 @@ public class EPFIdentityStore implements IdentityStore, RememberMeIdentityStore 
     }
     
     Token login(BasicAuthenticationCredential credential) throws Exception{
-        URI securityUrl = new URI(config.getValue(ConfigNames.SECURITY_URL));
+        URI securityUrl = registry.lookup("security");
         URL audienceUrl = new URL(String.format(
                                     Security.AUDIENCE_URL_FORMAT,
                                     securityUrl.getScheme(), 
@@ -93,8 +92,7 @@ public class EPFIdentityStore implements IdentityStore, RememberMeIdentityStore 
     @Override
     public CredentialValidationResult validate(RememberMeCredential credential) {
         CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
-        String securityUrl = config.getValue(ConfigNames.SECURITY_URL);
-        try(Client client = new Client(clients, new URI(securityUrl), b -> b)) {
+        try(Client client = new Client(clients, registry.lookup("security"), b -> b)) {
         	client.authorization(credential.getToken());
         	Token jwt = Security.authenticate(client, null);
             if(jwt != null){
@@ -119,8 +117,7 @@ public class EPFIdentityStore implements IdentityStore, RememberMeIdentityStore 
 
     @Override
     public void removeLoginToken(String token) {
-    	String securityUrl = config.getValue(ConfigNames.SECURITY_URL);
-        try(Client client = new Client(clients, new URI(securityUrl), b -> b)) {
+    	try(Client client = new Client(clients, registry.lookup("security"), b -> b)) {
             client.authorization(token);
             Security.logOut(client, null);
         } 

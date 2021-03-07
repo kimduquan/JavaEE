@@ -5,8 +5,6 @@
  */
 package epf.webapp.view;
 
-import epf.client.config.ConfigNames;
-import epf.client.config.ConfigSource;
 import epf.client.persistence.Queries;
 import epf.schema.EPF;
 import epf.schema.delivery_processes.Iteration;
@@ -15,7 +13,6 @@ import epf.schema.tasks.Task;
 import epf.util.client.Client;
 import epf.webapp.Session;
 import java.io.Serializable;
-import java.net.URI;
 import java.util.List;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -36,9 +33,6 @@ public class DeliveryProcesses implements Serializable {
 	private static final long serialVersionUID = 1L;
     
     @Inject
-    private ConfigSource config;
-    
-    @Inject
     private Session session;
 	
 	private List<Phase> phases;
@@ -47,8 +41,7 @@ public class DeliveryProcesses implements Serializable {
 
     public List<Phase> getPhases() throws Exception {
         if(phases == null){
-            String url = config.getValue(ConfigNames.PERSISTENCE_URL);
-            try(Client client = session.newClient(new URI(url))){
+            try(Client client = session.newClient("persistence")){
             	phases = Queries.getCriteriaQueryResult(
             			client, 
             			new GenericType<List<Phase>>() {}, 
@@ -63,8 +56,7 @@ public class DeliveryProcesses implements Serializable {
 
     public List<Iteration> getIterations() throws Exception {
         if(iterations == null){
-            String url = config.getValue(ConfigNames.PERSISTENCE_URL);
-            try(Client client = session.newClient(new URI(url))){
+            try(Client client = session.newClient("persistence")){
             	iterations = Queries.getCriteriaQueryResult(
             			client, 
             			new GenericType<List<Iteration>>() {}, 
@@ -79,8 +71,7 @@ public class DeliveryProcesses implements Serializable {
 
     public List<Task> getTasks() throws Exception {
         if(tasks == null){
-            String url = config.getValue(ConfigNames.PERSISTENCE_URL);
-            try(Client client = session.newClient(new URI(url))){
+            try(Client client = session.newClient("persistence")){
             	tasks = Queries.getCriteriaQueryResult(
             			client, 
             			new GenericType<List<Task>> () {}, 

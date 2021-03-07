@@ -49,7 +49,7 @@ public class Entities {
             InputStream body) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request(HttpMethod.POST, body);
+        return request.request("persistence", HttpMethod.POST, body);
     }
     
     @PUT
@@ -66,7 +66,7 @@ public class Entities {
             ) throws Exception {
     	request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request(HttpMethod.PUT, body);
+        return request.request("persistence", HttpMethod.PUT, body);
     }
     
     @DELETE
@@ -80,6 +80,6 @@ public class Entities {
             @PathParam("id") String id) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request(HttpMethod.DELETE, null);
+        return request.request("persistence", HttpMethod.DELETE, null);
     }
 }

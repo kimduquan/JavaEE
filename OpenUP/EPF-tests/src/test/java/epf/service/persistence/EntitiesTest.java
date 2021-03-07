@@ -5,7 +5,6 @@
  */
 package epf.service.persistence;
 
-import epf.client.config.ConfigNames;
 import epf.client.persistence.Entities;
 import epf.schema.EPF;
 import epf.schema.delivery_processes.DeliveryProcess;
@@ -16,7 +15,7 @@ import epf.schema.work_products.section.MoreInformation;
 import epf.schema.work_products.section.Relationships;
 import epf.schema.work_products.section.Tailoring;
 import epf.service.ClientUtil;
-import epf.service.ConfigUtil;
+import epf.service.RegistryUtil;
 import epf.service.SecurityUtil;
 import epf.util.client.Client;
 import java.net.URI;
@@ -42,7 +41,7 @@ public class EntitiesTest {
     
     @BeforeClass
     public static void beforeClass() throws Exception{
-    	persistenceUrl = new URI(ConfigUtil.property(ConfigNames.PERSISTENCE_URL));
+    	persistenceUrl = RegistryUtil.lookup("persistence");
     	token = SecurityUtil.login(null, "any_role1", "any_role");
     }
     

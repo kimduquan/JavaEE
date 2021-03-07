@@ -5,12 +5,10 @@
  */
 package epf.service;
 
-import epf.client.config.ConfigNames;
 import epf.client.security.Security;
 import epf.util.client.Client;
 import epf.util.security.PasswordHash;
 import java.net.URI;
-import java.net.URL;
 
 /**
  *
@@ -18,21 +16,21 @@ import java.net.URL;
  */
 public class SecurityUtil {
     
-    private static URL gatewayUrl;
+    private static URI securityUrl;
     
     public static String login(String unit, String username, String password) throws Exception {
-    	if(gatewayUrl == null) {
-    		gatewayUrl = new URL(System.getProperty(ConfigNames.GATEWAY_URL, ""));
+    	if(securityUrl == null) {
+    		securityUrl = RegistryUtil.lookup("security");
     	}
     	String token;
-    	try(Client client = ClientUtil.newClient(new URI(ConfigUtil.property(ConfigNames.SECURITY_URL)))){
-    		token = Security.login(client, unit, username, PasswordHash.hash(username, password.toCharArray()), gatewayUrl);
+    	try(Client client = ClientUtil.newClient(securityUrl)){
+    		token = Security.login(client, unit, username, PasswordHash.hash(username, password.toCharArray()), securityUrl.toURL());
     	}
     	return token;
     }
     
     public static void logOut(String unit, String token) throws Exception {
-    	try(Client client = ClientUtil.newClient(new URI(ConfigUtil.property(ConfigNames.SECURITY_URL)))){
+    	try(Client client = ClientUtil.newClient(RegistryUtil.lookup("security"))){
     		client.authorization(token);
     		token = Security.logOut(client, unit);
     	}

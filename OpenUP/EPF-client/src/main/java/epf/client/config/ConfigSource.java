@@ -5,7 +5,6 @@
  */
 package epf.client.config;
 
-import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -13,6 +12,7 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import epf.client.registry.LocateRegistry;
 import epf.util.client.Client;
 import epf.util.client.ClientQueue;
 
@@ -26,6 +26,9 @@ public class ConfigSource implements org.eclipse.microprofile.config.spi.ConfigS
     private Map<String, String> configs;
     
     @Inject
+    private LocateRegistry registry;
+    
+    @Inject
     private ClientQueue clients;
     
     @Inject
@@ -34,8 +37,7 @@ public class ConfigSource implements org.eclipse.microprofile.config.spi.ConfigS
     @PostConstruct
     void postConstruct(){
         configs = new ConcurrentHashMap<>();
-        String configUrl = System.getenv(ConfigNames.GATEWAY_URL) + "config";
-        try(Client client = new Client(clients, new URI(configUrl), b -> b)) {
+        try(Client client = new Client(clients, registry.lookup("config"), b -> b)) {
             Map<String, String> data = Config.getProperties(client, null);
             if(data != null){
                 configs.putAll(data);
