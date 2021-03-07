@@ -44,7 +44,7 @@ import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
-import epf.client.persistence.SearchData;
+
 import epf.schema.EPF;
 import epf.schema.QueryNames;
 import epf.schema.roles.Role;
