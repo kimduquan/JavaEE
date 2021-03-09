@@ -7,6 +7,7 @@ package epf.gateway;
 
 import java.io.InputStream;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -67,9 +68,9 @@ public class Request {
             String method, 
             InputStream in) throws Exception{
     	logger.entering(CLASS_NAME, "request", method);
-        return executor.supplyAsync(() -> uri = buildUri(uriInfo))
+        return executor.supplyAsync(() -> uri = buildUri(uriInfo, registry))
                 .thenApply(newUri -> client = clients.poll(newUri, b -> b))
-                .thenApply(newClient -> buildTarget(newClient, uriInfo, registry.lookup(service)))
+                .thenApply(newClient -> buildTarget(newClient, uriInfo, uri))
                 .thenApply(target -> buildRequest(target, headers))
                 .thenApply(request -> buildMethod(request, method, headers.getMediaType(), in))
                 .thenApply(response -> buildResponse(response, uriInfo))
@@ -83,17 +84,26 @@ public class Request {
                 });
     }
     
-    static URI buildUri(UriInfo uriInfo){
-        UriBuilder builder = uriInfo.getBaseUriBuilder();
-        List<PathSegment> segments = uriInfo.getPathSegments();
-        if(segments != null && !segments.isEmpty()){
-            builder = builder.path(segments.get(0).getPath());
-        }
-        return builder.build();
+    static URI buildUri(UriInfo uriInfo, Registry registry) {
+    	URI uri = null;
+    	if(uriInfo.getPathSegments() != null && !uriInfo.getPathSegments().isEmpty()) {
+    		String service = uriInfo.getPathSegments().get(0).getPath();
+    		uri = registry.lookup(service);
+    	}
+    	if(uri != null) {
+    		String[] paths = uri.getPath().split("/");
+    		if(paths.length > 1) {
+        		uri = UriBuilder.fromUri(uri).replacePath(paths[1]).build();
+        	}
+    	}
+    	else {
+    		uri = uriInfo.getBaseUri();
+    	}
+    	return uri;
     }
     
-    static WebTarget buildTarget(Client client, UriInfo uriInfo, URI serviceUrl){
-    	Var<WebTarget> webTarget = new Var<>(client.target(serviceUrl));
+    static WebTarget buildTarget(Client client, UriInfo uriInfo, URI serviceUri){
+    	Var<WebTarget> webTarget = new Var<>(client.target(serviceUri));
         if(uriInfo != null){
             List<PathSegment> segments = uriInfo.getPathSegments();
             if(segments != null){
@@ -176,13 +186,13 @@ public class Request {
     }
     
     static Link buildLink(Link link, UriInfo uriInfo) {
-    	return Link
-    			.fromUriBuilder(
-    					link
-    					.getUriBuilder()
-    					.uri(uriInfo.getBaseUri())
-    			)
-    			.build();
+    	String[] paths = link.getUri().getPath().split("/");
+    	String path = "";
+    	if(paths.length > 1) {
+    		path = String.join("/", Arrays.asList(paths).subList(2, paths.length));
+    	}
+    	URI uri = uriInfo.getBaseUriBuilder().path(path).build();
+    	return Link.fromLink(link).uri(uri).build();
     }
     
     static ResponseBuilder buildResponse(Response res, UriInfo uriInfo){
@@ -219,14 +229,10 @@ public class Request {
         			.stream()
         			.map(link -> buildLink(link, uriInfo))
         			.collect(Collectors.toSet());
-            builder = builder.links(links.toArray(new Link[links.size()]));
+        	builder = builder.links().links(links.toArray(new Link[links.size()]));
         }
         if(location != null){
             builder = builder.location(location);
-        }
-        MultivaluedMap<String, Object> resHeaders = res.getHeaders();
-        if(resHeaders != null){
-            builder = builder.replaceAll(resHeaders);
         }
         StatusType status = res.getStatusInfo();
         if(status != null){

@@ -7,6 +7,8 @@ import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.Link;
+import javax.ws.rs.core.UriBuilder;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -55,20 +57,21 @@ public class RegistryTest {
     	Set<Link> links = Registry.list(client).getLinks();
     	Set<URI> URIs = links.stream().map(link -> link.getUri()).collect(Collectors.toSet());
     	Set<URI> expected = new HashSet<>();
-    	URI base = new URI(String.format(
-    			"%s://%s:%s/", 
-    			registryUrl.getScheme(), 
-    			registryUrl.getHost(), 
-    			registryUrl.getPort()
-    			))
-    			.resolve("gateway");
-    	expected.add(base.resolve("config"));
-    	expected.add(base.resolve("file"));
-    	expected.add(base.resolve("persistence"));
-    	expected.add(base.resolve("registry"));
-    	expected.add(base.resolve("schema"));
-    	expected.add(base.resolve("security"));
-    	expected.add(base.resolve("system"));
+    	URI base = UriBuilder
+    			.fromUri(registryUrl)
+    			.replacePath(
+    					registryUrl
+    					.getPath()
+    					.split("/")[2]
+    							)
+    			.build();
+    	expected.add(base.resolve("/config"));
+    	expected.add(base.resolve("/file"));
+    	expected.add(base.resolve("/persistence"));
+    	expected.add(base.resolve("/registry"));
+    	expected.add(base.resolve("/schema"));
+    	expected.add(base.resolve("/security"));
+    	expected.add(base.resolve("/system"));
     	Assert.assertEquals("list", expected, URIs);
     }
 }
