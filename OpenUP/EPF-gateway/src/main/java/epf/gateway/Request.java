@@ -46,9 +46,9 @@ import epf.util.client.ClientQueue;
 @RequestScoped
 public class Request {
 	
-	private static final Logger logger = Logger.getLogger(Request.class.getName());
 	private static final String CLASS_NAME = Request.class.getName();
     
+	private javax.ws.rs.core.Request request;
     private HttpHeaders headers;
     private UriInfo uriInfo;
     private Client client;
@@ -63,16 +63,16 @@ public class Request {
     @Inject
     private Registry registry;
     
-    public CompletionStage<Response> request(
-    		String service,
-            String method, 
-            InputStream in) throws Exception{
-    	logger.entering(CLASS_NAME, "request", method);
+    @Inject
+    private Logger logger;
+    
+    public CompletionStage<Response> request(InputStream in) throws Exception{
+    	logger.entering(CLASS_NAME, "request", request.getMethod());
         return executor.supplyAsync(() -> uri = buildUri(uriInfo, registry))
                 .thenApply(newUri -> client = clients.poll(newUri, b -> b))
                 .thenApply(newClient -> buildTarget(newClient, uriInfo, uri))
                 .thenApply(target -> buildRequest(target, headers))
-                .thenApply(request -> buildMethod(request, method, headers.getMediaType(), in))
+                .thenApply(request -> buildMethod(request, this.request.getMethod(), headers.getMediaType(), in))
                 .thenApply(response -> buildResponse(response, uriInfo))
                 .thenApply(ResponseBuilder::build)
                 .whenComplete((res, ex) -> {
@@ -255,5 +255,9 @@ public class Request {
 
     public void setUriInfo(UriInfo uriInfo) {
         this.uriInfo = uriInfo;
+    }
+    
+    public void setRequest(javax.ws.rs.core.Request request) {
+    	this.request = request;
     }
 }

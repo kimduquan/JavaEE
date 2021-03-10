@@ -10,7 +10,6 @@ import java.util.concurrent.CompletionStage;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
-import javax.ws.rs.HttpMethod;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -41,6 +40,7 @@ public class Queries {
     public CompletionStage<Response> getCriteriaQueryResult(
             @Context HttpHeaders headers, 
             @Context UriInfo uriInfo,
+            @Context javax.ws.rs.core.Request req,
             @PathParam("unit")
             String unit,
             @PathParam("criteria")
@@ -48,7 +48,8 @@ public class Queries {
             ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("persistence", HttpMethod.GET, null);
+        request.setRequest(req);
+        return request.request(null);
     }
     
     @GET
@@ -56,10 +57,12 @@ public class Queries {
     @Asynchronous
     public CompletionStage<Response> search(
     		@Context HttpHeaders headers, 
-            @Context UriInfo uriInfo
+            @Context UriInfo uriInfo,
+            @Context javax.ws.rs.core.Request req
             ) throws Exception{
     	request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("persistence", HttpMethod.GET, null);
+        request.setRequest(req);
+        return request.request(null);
     }
 }

@@ -9,6 +9,9 @@ import java.io.Serializable;
 import java.io.StreamCorruptedException;
 import java.sql.SQLInvalidAuthorizationSpecException;
 import java.sql.SQLNonTransientException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.inject.Inject;
 import javax.validation.ValidationException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -30,6 +33,9 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
     * 
     */
     private static final long serialVersionUID = 1L;
+    
+    @Inject
+    private Logger logger;
 
     @Override
     public Response toResponse(Exception ex) {
@@ -39,6 +45,7 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
     boolean map(Throwable failure, Response.ResponseBuilder builder){
         Response.StatusType status = Response.Status.INTERNAL_SERVER_ERROR;
         boolean mapped = true;
+        logger.log(Level.SEVERE, failure.getMessage(), failure);
         if(failure instanceof TimeoutException){
             status = Response.Status.REQUEST_TIMEOUT;
         }

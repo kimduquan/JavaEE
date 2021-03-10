@@ -7,7 +7,6 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.HttpMethod;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -31,29 +30,29 @@ public class Registry {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Asynchronous
     public CompletionStage<Response> bind(
-    		@Context 
-    		HttpHeaders headers, 
-            @Context 
-            UriInfo uriInfo,
+    		@Context HttpHeaders headers, 
+            @Context UriInfo uriInfo,
+            @Context javax.ws.rs.core.Request req,
             InputStream in
     		) throws Exception{
     	request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("registry", HttpMethod.POST, in);
+        request.setRequest(req);
+        return request.request(in);
     }
 	
 	@GET
 	@Asynchronous
     public CompletionStage<Response> list(
-    		@Context 
-    		HttpHeaders headers, 
-            @Context 
-            UriInfo uriInfo,
+    		@Context HttpHeaders headers, 
+            @Context UriInfo uriInfo,
+            @Context javax.ws.rs.core.Request req,
             InputStream in
     		) throws Exception{
 		request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("registry", HttpMethod.GET, null);
+        request.setRequest(req);
+        return request.request(null);
 	}
 	
 	@GET
@@ -66,11 +65,13 @@ public class Registry {
     		HttpHeaders headers, 
             @Context 
             UriInfo uriInfo,
+            @Context javax.ws.rs.core.Request req,
             InputStream in
     		) throws Exception{
 		request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("registry", HttpMethod.GET, null);
+        request.setRequest(req);
+        return request.request(null);
 	}
 	
 	@PUT
@@ -84,11 +85,13 @@ public class Registry {
     		HttpHeaders headers, 
             @Context 
             UriInfo uriInfo,
+            @Context javax.ws.rs.core.Request req,
             InputStream in
     		) throws Exception{
 		request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("registry", HttpMethod.PUT, in);
+        request.setRequest(req);
+        return request.request(in);
 	}
 	
 	@DELETE
@@ -101,10 +104,12 @@ public class Registry {
     		HttpHeaders headers, 
             @Context 
             UriInfo uriInfo,
+            @Context javax.ws.rs.core.Request req,
             InputStream in
     		) throws Exception{
 		request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("registry", HttpMethod.DELETE, null);
+        request.setRequest(req);
+        return request.request(null);
 	}
 }

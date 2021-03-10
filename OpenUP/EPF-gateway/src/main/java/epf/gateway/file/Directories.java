@@ -11,7 +11,6 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.HttpMethod;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -41,11 +40,13 @@ public class Directories {
     public CompletionStage<Response> createDirectories(
             @Context HttpHeaders headers, 
             @Context UriInfo uriInfo,
+            @Context javax.ws.rs.core.Request req,
             InputStream in
     ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("file", HttpMethod.POST, in);
+        request.setRequest(req);
+        return request.request(in);
     }
     
     @POST
@@ -56,11 +57,13 @@ public class Directories {
     public CompletionStage<Response> createTempDirectory(
             @Context HttpHeaders headers, 
             @Context UriInfo uriInfo,
+            @Context javax.ws.rs.core.Request req,
             InputStream in
     ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("file", HttpMethod.POST, in);
+        request.setRequest(req);
+        return request.request(in);
     }
     
     @GET
@@ -68,10 +71,12 @@ public class Directories {
     @Asynchronous
     public CompletionStage<Response> list(
             @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo
+            @Context UriInfo uriInfo,
+            @Context javax.ws.rs.core.Request req
     ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("file", HttpMethod.GET, null);
+        request.setRequest(req);
+        return request.request(null);
     }
 }

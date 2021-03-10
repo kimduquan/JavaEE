@@ -11,7 +11,6 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.HttpMethod;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -41,10 +40,12 @@ public class Processes {
     public CompletionStage<Response> start(
             @Context HttpHeaders headers, 
             @Context UriInfo uriInfo,
+            @Context javax.ws.rs.core.Request req,
             InputStream in) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("system", HttpMethod.POST, in);
+        request.setRequest(req);
+        return request.request(in);
     }
     
     @Path("process")
@@ -53,11 +54,13 @@ public class Processes {
     @Asynchronous
     public CompletionStage<Response> getProcesses(
             @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo
+            @Context UriInfo uriInfo,
+            @Context javax.ws.rs.core.Request req
     ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("system", HttpMethod.GET, null);
+        request.setRequest(req);
+        return request.request(null);
     }
     
     @Path("process")
@@ -65,11 +68,13 @@ public class Processes {
     @Asynchronous
     public CompletionStage<Response> stop(
             @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo
+            @Context UriInfo uriInfo,
+            @Context javax.ws.rs.core.Request req
     ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("system", HttpMethod.DELETE, null);
+        request.setRequest(req);
+        return request.request(null);
     }
     
     @GET
@@ -78,11 +83,13 @@ public class Processes {
     @Asynchronous
     public CompletionStage<Response> info(
             @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo
+            @Context UriInfo uriInfo,
+            @Context javax.ws.rs.core.Request req
     ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("system", HttpMethod.GET, null);
+        request.setRequest(req);
+        return request.request(null);
     }
     
     @DELETE
@@ -91,11 +98,13 @@ public class Processes {
     @Asynchronous
     public CompletionStage<Response> destroy(
             @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo
+            @Context UriInfo uriInfo,
+            @Context javax.ws.rs.core.Request req
     ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("system", HttpMethod.DELETE, null);
+        request.setRequest(req);
+        return request.request(null);
     }
     
     @GET
@@ -104,10 +113,12 @@ public class Processes {
     @Asynchronous
     public CompletionStage<Response> output(
             @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo
+            @Context UriInfo uriInfo,
+            @Context javax.ws.rs.core.Request req
     ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("system", HttpMethod.GET, null);
+        request.setRequest(req);
+        return request.request(null);
     }
 }

@@ -11,7 +11,6 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.HttpMethod;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -44,12 +43,14 @@ public class Entities {
     public CompletionStage<Response> persist(
             @Context HttpHeaders headers, 
             @Context UriInfo uriInfo,
+            @Context javax.ws.rs.core.Request req,
             @PathParam("unit") String unit,
             @PathParam("entity") String entity,
             InputStream body) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("persistence", HttpMethod.POST, body);
+        request.setRequest(req);
+        return request.request(body);
     }
     
     @PUT
@@ -59,6 +60,7 @@ public class Entities {
     public CompletionStage<Response> merge(
     		@Context HttpHeaders headers, 
             @Context UriInfo uriInfo,
+            @Context javax.ws.rs.core.Request req,
     		@PathParam("unit") String unit,
             @PathParam("entity") String name,
             @PathParam("id") String id,
@@ -66,7 +68,8 @@ public class Entities {
             ) throws Exception {
     	request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("persistence", HttpMethod.PUT, body);
+        request.setRequest(req);
+        return request.request(body);
     }
     
     @DELETE
@@ -75,11 +78,13 @@ public class Entities {
     public CompletionStage<Response> remove(
             @Context HttpHeaders headers, 
             @Context UriInfo uriInfo,
+            @Context javax.ws.rs.core.Request req,
             @PathParam("unit") String unit,
             @PathParam("entity") String entity,
             @PathParam("id") String id) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("persistence", HttpMethod.DELETE, null);
+        request.setRequest(req);
+        return request.request(null);
     }
 }

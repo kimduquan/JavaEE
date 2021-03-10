@@ -62,16 +62,16 @@ public class RegistryTest {
     			.replacePath(
     					registryUrl
     					.getPath()
-    					.split("/")[2]
+    					.split("/")[1]
     							)
     			.build();
-    	expected.add(base.resolve("/config"));
-    	expected.add(base.resolve("/file"));
-    	expected.add(base.resolve("/persistence"));
-    	expected.add(base.resolve("/registry"));
-    	expected.add(base.resolve("/schema"));
-    	expected.add(base.resolve("/security"));
-    	expected.add(base.resolve("/system"));
+    	expected.add(base.resolve("config"));
+    	expected.add(base.resolve("file"));
+    	expected.add(base.resolve("persistence"));
+    	expected.add(base.resolve("registry"));
+    	expected.add(base.resolve("schema"));
+    	expected.add(base.resolve("security"));
+    	expected.add(base.resolve("system"));
     	Assert.assertEquals("list", expected, URIs);
     }
 }

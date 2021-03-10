@@ -12,7 +12,6 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.HttpMethod;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -42,10 +41,12 @@ public class Security {
     public CompletionStage<Response> login(
             @Context HttpHeaders headers, 
             @Context UriInfo uriInfo,
+            @Context javax.ws.rs.core.Request req,
             InputStream in) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("security", HttpMethod.POST, in);
+        request.setRequest(req);
+        return request.request(in);
     }
     
     @DELETE
@@ -53,10 +54,13 @@ public class Security {
     @Asynchronous
     public CompletionStage<Response> logOut(
             @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo) throws Exception{
+            @Context UriInfo uriInfo,
+            @Context javax.ws.rs.core.Request req
+            ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("security", HttpMethod.DELETE, null);
+        request.setRequest(req);
+        return request.request(null);
     }
     
     @GET
@@ -64,9 +68,11 @@ public class Security {
     @Asynchronous
     public CompletionStage<Response> authenticate(
             @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo) throws Exception{
+            @Context UriInfo uriInfo,
+            @Context javax.ws.rs.core.Request req) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("security", HttpMethod.GET, null);
+        request.setRequest(req);
+        return request.request(null);
     }
 }

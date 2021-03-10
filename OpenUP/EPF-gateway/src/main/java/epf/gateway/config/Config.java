@@ -35,9 +35,11 @@ public class Config {
     @Asynchronous
     public CompletionStage<Response> getConfigurations(
             @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo) throws Exception {
+            @Context UriInfo uriInfo,
+            @Context javax.ws.rs.core.Request req) throws Exception {
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("config", "GET", null);
+        request.setRequest(req);
+        return request.request(null);
     }
 }

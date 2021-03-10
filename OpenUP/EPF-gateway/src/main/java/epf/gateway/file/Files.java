@@ -12,7 +12,6 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.HttpMethod;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -43,11 +42,13 @@ public class Files {
     public CompletionStage<Response> copy(
             @Context HttpHeaders headers, 
             @Context UriInfo uriInfo,
+            @Context javax.ws.rs.core.Request req,
             InputStream in
     ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("file", HttpMethod.PUT, in);
+        request.setRequest(req);
+        return request.request(in);
     }
     
     @POST
@@ -57,11 +58,13 @@ public class Files {
     public CompletionStage<Response> createFile(
             @Context HttpHeaders headers, 
             @Context UriInfo uriInfo,
+            @Context javax.ws.rs.core.Request req,
             InputStream in
     ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("file", HttpMethod.POST, in);
+        request.setRequest(req);
+        return request.request(in);
     }
     
     @POST
@@ -72,22 +75,26 @@ public class Files {
     public CompletionStage<Response> createTempFile(
             @Context HttpHeaders headers, 
             @Context UriInfo uriInfo,
+            @Context javax.ws.rs.core.Request req,
             InputStream in
     ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("file", HttpMethod.POST, in);
+        request.setRequest(req);
+        return request.request(in);
     }
     
     @DELETE
     @Asynchronous
     public CompletionStage<Response> delete(
             @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo
+            @Context UriInfo uriInfo,
+            @Context javax.ws.rs.core.Request req
     ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("file", HttpMethod.DELETE, null);
+        request.setRequest(req);
+        return request.request(null);
     }
     
     @GET
@@ -95,11 +102,14 @@ public class Files {
     @Asynchronous
     public CompletionStage<Response> find(
             @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo) 
+            @Context UriInfo uriInfo,
+            @Context javax.ws.rs.core.Request req
+            ) 
             throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("file", HttpMethod.GET, null);
+        request.setRequest(req);
+        return request.request(null);
     }
     
     @GET
@@ -108,11 +118,14 @@ public class Files {
     @Asynchronous
     public CompletionStage<Response> lines(
             @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo) 
+            @Context UriInfo uriInfo,
+            @Context javax.ws.rs.core.Request req
+            ) 
             throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("file", HttpMethod.GET, null);
+        request.setRequest(req);
+        return request.request(null);
     }
     
     @PUT
@@ -122,10 +135,12 @@ public class Files {
     public CompletionStage<Response> move(
             @Context HttpHeaders headers, 
             @Context UriInfo uriInfo,
+            @Context javax.ws.rs.core.Request req,
             InputStream in
     ) throws Exception{
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
-        return request.request("file", HttpMethod.PUT, in);
+        request.setRequest(req);
+        return request.request(in);
     }
 }

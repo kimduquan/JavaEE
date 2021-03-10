@@ -7,6 +7,7 @@ package epf.gateway;
 
 import java.io.Serializable;
 import java.util.logging.Logger;
+import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
@@ -26,8 +27,10 @@ public class ExceptionHandler implements
     * 
     */
     private static final long serialVersionUID = 1L;
-    private static final Logger logger = Logger.getLogger(ExceptionHandler.class.getName());
     private static final String CLASS_NAME = ExceptionHandler.class.getName();
+    
+    @Inject
+    private Logger logger;
     
     @Override
     public Response toResponse(Exception ex) {
