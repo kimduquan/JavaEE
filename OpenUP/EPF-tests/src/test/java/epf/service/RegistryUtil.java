@@ -22,7 +22,6 @@ public class RegistryUtil {
     		try(Client client = ClientUtil.newClient(new URI(registryUrl))){
     			remotes = new ConcurrentHashMap<>();
     			Registry.list(client)
-    					.getLinks()
     					.forEach(link -> {
     						remotes.put(link.getRel(), link.getUri());
     						logger.info(link.getRel() + ":" + link.getUri()); 

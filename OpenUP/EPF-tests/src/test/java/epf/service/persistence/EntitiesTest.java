@@ -28,6 +28,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.Ignore;
 
 /**
  *
@@ -62,6 +63,7 @@ public class EntitiesTest {
     }
     
     @Test
+    @Ignore
     public void testPersistOK() throws Exception{
     	Artifact artifact = new Artifact();
         artifact.setName("Artifact 1");

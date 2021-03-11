@@ -30,7 +30,6 @@ public class LocateRegistry {
 		try(Client client = new Client(clients, new URI(REGISTRY_URL), b -> b)){
 			Registry
 			.list(client)
-			.getLinks()
 			.forEach(link -> {
 				remotes.put(link.getRel(), link.getUri());
 			});

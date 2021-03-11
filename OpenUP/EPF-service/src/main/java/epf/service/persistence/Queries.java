@@ -216,7 +216,6 @@ public class Queries implements epf.client.persistence.Queries {
 								}
 								entityLink = Link
 										.fromUriBuilder(linkBuilder)
-										.rel("self")
 										.title(entityType.getName())
 										.build();
 							}
