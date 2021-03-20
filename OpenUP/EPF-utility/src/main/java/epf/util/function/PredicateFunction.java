@@ -1,5 +1,6 @@
 package epf.util.function;
 
+import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -20,6 +21,7 @@ public class PredicateFunction extends Function {
 	 */
 	public PredicateFunction(final Supplier<Boolean> predicate, final Stream<Runnable> stream) {
 		super(stream);
+		Objects.requireNonNull(predicate);
 		this.predicate = new Predicate(predicate);
 	}
 	

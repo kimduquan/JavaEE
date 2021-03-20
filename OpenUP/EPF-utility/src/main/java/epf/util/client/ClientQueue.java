@@ -7,6 +7,7 @@ package epf.util.client;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -80,6 +81,8 @@ public class ClientQueue {
      * @return
      */
     public Client poll(final URI uri, final Function<ClientBuilder, ClientBuilder> buildClient){
+    	Objects.requireNonNull(uri);
+    	Objects.requireNonNull(buildClient);
     	final Queue<Client> pool = clients.computeIfAbsent(
                 uri.toString(), 
                 key -> {
@@ -101,6 +104,8 @@ public class ClientQueue {
      * @param client
      */
     public void add(final URI uri, final Client client){
+    	Objects.requireNonNull(uri);
+    	Objects.requireNonNull(client);
         clients.computeIfPresent(
                 uri.toString(), 
                 (key, value) -> {

@@ -6,6 +6,7 @@
 package epf.util.security;
 
 import java.util.Locale;
+import java.util.Objects;
 
 import org.eclipse.persistence.internal.security.JCEEncryptor;
 import org.h2.security.SHA256;
@@ -32,6 +33,8 @@ public final class PasswordHelper {
      * @throws Exception
      */
     public static String hash(final String username, final char... password) throws Exception {
+    	Objects.requireNonNull(username);
+    	Objects.requireNonNull(password);
         if(encryptor == null){
             encryptor = new JCEEncryptor();
         }

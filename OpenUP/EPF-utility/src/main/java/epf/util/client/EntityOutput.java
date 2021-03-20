@@ -10,6 +10,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.Objects;
+
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.StreamingOutput;
 
@@ -28,6 +30,7 @@ public class EntityOutput implements StreamingOutput {
      * @param input
      */
     public EntityOutput(final InputStream input) {
+    	Objects.requireNonNull(input);
         this.input = input;
     }
 

@@ -1,5 +1,6 @@
 package epf.util.function;
 
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.stream.Stream;
 import epf.util.Var;
@@ -33,6 +34,7 @@ public class Function implements Runnable {
 	 * @param stream
 	 */
 	public Function(final Stream<Runnable> stream) {
+		Objects.requireNonNull(stream);
 		this.stream = stream;
 	}
 

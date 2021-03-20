@@ -6,6 +6,7 @@
 package epf.util.client;
 
 import java.net.URI;
+import java.util.Objects;
 import java.util.function.Function;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
@@ -41,16 +42,48 @@ public class Client implements AutoCloseable {
      * @param buildClient
      */
     public Client(final ClientQueue clients, final URI uri, final Function<ClientBuilder, ClientBuilder> buildClient) {
+    	Objects.requireNonNull(clients);
+    	Objects.requireNonNull(uri);
+    	Objects.requireNonNull(buildClient);
     	client = clients.poll(uri, buildClient);
         this.uri = uri;
         this.clients = clients;
     }
 
 	/**
+	 * @return the uri
+	 */
+	protected URI getUri() {
+		return uri;
+	}
+
+	/**
+	 * @return the authHeader
+	 */
+	protected String getAuthHeader() {
+		return authHeader;
+	}
+
+	/**
+	 * @return the client
+	 */
+	protected javax.ws.rs.client.Client getClient() {
+		return client;
+	}
+
+	/**
+	 * @return the clients
+	 */
+	protected ClientQueue getClients() {
+		return clients;
+	}
+
+	/**
 	 * @param token
 	 * @return
 	 */
 	public Client authorization(final String token) {
+		Objects.requireNonNull(token);
 		final StringBuilder tokenHeader = new StringBuilder();
     	authHeader = tokenHeader.append("Bearer ").append(token).toString();
 		return this;
@@ -67,22 +100,8 @@ public class Client implements AutoCloseable {
      * @return
      */
     public Invocation.Builder request(final Function<WebTarget, WebTarget> buildTarget, final Function<Invocation.Builder, Invocation.Builder> buildRequest) {
-    	WebTarget target = client.target(uri);
-    	target = buildTarget.apply(target);
-    	Invocation.Builder request = target.request();
-    	if(authHeader != null) {
-        	request = request.header(HttpHeaders.AUTHORIZATION, authHeader);
-    	}
-    	return buildRequest.apply(request);
-    }
-    
-    /**
-     * @param uri
-     * @param buildTarget
-     * @param buildRequest
-     * @return
-     */
-    public Invocation.Builder request(final String uri, final Function<WebTarget, WebTarget> buildTarget, final Function<Invocation.Builder, Invocation.Builder> buildRequest) {
+    	Objects.requireNonNull(buildTarget);
+    	Objects.requireNonNull(buildRequest);
     	WebTarget target = client.target(uri);
     	target = buildTarget.apply(target);
     	Invocation.Builder request = target.request();

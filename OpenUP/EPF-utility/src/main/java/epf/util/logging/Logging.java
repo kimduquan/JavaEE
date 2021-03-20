@@ -2,6 +2,7 @@ package epf.util.logging;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import javax.interceptor.AroundInvoke;
@@ -52,6 +53,7 @@ public class Logging implements Serializable {
 	 * @return
 	 */
 	public static Logger getLogger(final String clsName) {
+		Objects.requireNonNull(clsName);
 		return LOGGERS.computeIfAbsent(clsName, name -> {
 			return Logger.getLogger(name);
 		});
