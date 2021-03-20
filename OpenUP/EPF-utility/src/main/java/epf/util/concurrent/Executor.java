@@ -22,7 +22,7 @@ public class Executor {
      */
     @Produces
     @ApplicationScoped
-    public static ManagedExecutor getExecutor(){
+    public ManagedExecutor getExecutor(){
         return ManagedExecutor
                 .builder()
                 .propagated(ThreadContext.APPLICATION)

@@ -31,7 +31,7 @@ import epf.service.ClientUtil;
 import epf.service.RegistryUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
-import epf.util.security.PasswordHash;
+import epf.util.security.PasswordHelper;
 
 /**
  *
@@ -61,7 +61,7 @@ public class SecurityTest {
     
     String login(String unit, String username, String password, URL targetUrl, boolean needHash) throws Exception{
         if(needHash){
-        	password = PasswordHash.hash(username, password.toCharArray());
+        	password = PasswordHelper.hash(username, password.toCharArray());
         }
         String token;
         try(Client client = ClientUtil.newClient(securityUrl)){
@@ -246,7 +246,7 @@ public class SecurityTest {
         );
         Assert.assertEquals("duration", 30, duration.toMinutes());
         Assert.assertNotNull("Issuer", jwt.getIssuer());
-        Assert.assertEquals("Issuer", EPF.Schema, jwt.getIssuer());
+        Assert.assertEquals("Issuer", EPF.SCHEMA, jwt.getIssuer());
         Assert.assertNotNull("Name", jwt.getName());
         Assert.assertEquals("Name", "any_role1", jwt.getName());
         Assert.assertNotNull("RawToken", jwt.getRawToken());

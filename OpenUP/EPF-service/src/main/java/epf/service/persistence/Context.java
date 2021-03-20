@@ -83,7 +83,7 @@ public class Context {
         EntityManager manager = null;
         Credential result = null;
         try{
-            factory = Persistence.createEntityManagerFactory(EPF.Schema, props);
+            factory = Persistence.createEntityManagerFactory(EPF.SCHEMA, props);
             manager = factory.createEntityManager();
             result = new Credential(factory, manager);
         }

@@ -8,15 +8,11 @@ package epf.service.security;
 import java.io.Serializable;
 import java.net.URL;
 import java.security.Principal;
-import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.util.HashSet;
-import java.util.Set;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
@@ -31,7 +27,6 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
-import epf.client.EPFException;
 import epf.client.config.ConfigNames;
 import epf.client.security.Token;
 import epf.schema.roles.Role;
@@ -134,15 +129,15 @@ public class Security implements epf.client.security.Security, Serializable {
                         unit, 
                         passwordHash
                 );
-        Token jwt = buildToken(username, time);
-        buildAudience(jwt, url);
-        buildGroups(jwt, username, credential.getDefaultManager());
-        try {
-			jwt = generator.generate(jwt);
-		} 
-        catch (Exception e) {
-        	throw new EPFException(e);
-		}
+    	final TokenBuilder builder = new TokenBuilder(issuer);
+        final Token jwt = builder
+        		.expire(jwtExpTimeUnit, jwtExpDuration)
+        		.fromCredential(credential)
+        		.generator(generator)
+        		.time(time)
+        		.url(url)
+        		.userName(username)
+        		.build();
         credential.putSession(jwt.getIssuedAtTime());
         return jwt.getRawToken();
     }
@@ -181,75 +176,12 @@ public class Security implements epf.client.security.Security, Serializable {
             description = "OK",
             responseCode = "200"
     )
-    @APIResponse(
-            name = "Unauthorized", 
-            description = "Unauthorized",
-            responseCode = "401"
-    )
     public Token authenticate(final String unit) {
     	if(getSession(unit) != null){
     		final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
-    		return buildToken(jwt);
+    		return new TokenBuilder(issuer).build(jwt);
         }
         throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
-    }
-    
-    /**
-     * @param token
-     * @param url
-     */
-    protected void buildAudience(final Token token, final URL url){
-    	final Set<String> aud = new HashSet<>();
-        aud.add(String.format(
-                AUDIENCE_URL_FORMAT, 
-                url.getProtocol(), 
-                url.getHost(), 
-                url.getPort()));
-        token.setAudience(aud);
-    }
-    
-    /**
-     * @param username
-     * @param time
-     * @return
-     */
-    protected Token buildToken(final String username, final long time) {
-    	final Token jwt = new Token();
-        jwt.setIssuedAtTime(time);
-        jwt.setExpirationTime(time + Duration.of(jwtExpDuration, jwtExpTimeUnit).getSeconds());
-        jwt.setIssuer(issuer);
-        jwt.setName(username);
-        jwt.setSubject(username);
-        return jwt;
-    }
-    
-    /**
-     * @param token
-     * @param userName
-     * @param manager
-     */
-    protected void buildGroups(final Token token, final String userName, final EntityManager manager) {
-    	final Set<String> groups = new HashSet<>();
-    	groups.add(Role.DEFAULT_ROLE);
-    	token.setGroups(groups);
-    }
-    
-    /**
-     * @param jwt
-     * @return
-     */
-    protected Token buildToken(final JsonWebToken jwt){
-    	final Token token = new Token();
-        token.setAudience(jwt.getAudience());
-        token.setExpirationTime(jwt.getExpirationTime());
-        token.setGroups(jwt.getGroups());
-        token.setIssuedAtTime(jwt.getIssuedAtTime());
-        token.setIssuer(jwt.getIssuer());
-        token.setName(jwt.getName());
-        token.setRawToken(jwt.getRawToken());
-        token.setSubject(jwt.getSubject());
-        token.setTokenID(jwt.getTokenID());
-        return token;
     }
     
     /**

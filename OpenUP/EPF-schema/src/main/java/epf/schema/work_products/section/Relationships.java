@@ -33,7 +33,7 @@ public class Relationships {
     @ManyToMany
     @JoinTable(
             name = "ARTIFACT_FULFILLED_SLOTS",
-            schema = EPF.Schema,
+            schema = EPF.SCHEMA,
             joinColumns = @JoinColumn(
                     name = "ARTIFACT"
             ),

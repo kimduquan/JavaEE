@@ -18,10 +18,10 @@ import epf.schema.EPF;
  *
  * @author FOXCONN
  */
-@Type(EPF.WorkProductSlot)
-@Schema(name = EPF.WorkProductSlot, title = "Work Product Slot")
-@Entity(name = EPF.WorkProductSlot)
-@Table(schema = EPF.Schema, name = "WORK_PRODUCT_SLOT")
+@Type(EPF.WORK_PRODUCT_SLOT)
+@Schema(name = EPF.WORK_PRODUCT_SLOT, title = "Work Product Slot")
+@Entity(name = EPF.WORK_PRODUCT_SLOT)
+@Table(schema = EPF.SCHEMA, name = "WORK_PRODUCT_SLOT")
 public class WorkProductSlot {
 	
     /**

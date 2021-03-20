@@ -22,11 +22,11 @@ public class Do extends Function {
 				.apply(stream)
 				.takeWhile(func -> {
 					if(func instanceof While) {
-						final While _while = (While) func;
-						if(_while.getPredicate().get() == null) {
+						final While whileFunc = (While) func;
+						if(whileFunc.getPredicate().get() == null) {
 							return true;
 						}
-						return _while.getPredicate().get();
+						return whileFunc.getPredicate().get();
 					}
 					else if(func instanceof Break) {
 						return false;

@@ -8,7 +8,7 @@ package epf.service;
 import epf.client.security.Security;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
-import epf.util.security.PasswordHash;
+import epf.util.security.PasswordHelper;
 import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,7 +28,7 @@ public class SecurityUtil {
     	}
     	String token = null;
     	try(Client client = ClientUtil.newClient(securityUrl)){
-    		token = Security.login(client, unit, username, PasswordHash.hash(username, password.toCharArray()), securityUrl.toURL());
+    		token = Security.login(client, unit, username, PasswordHelper.hash(username, password.toCharArray()), securityUrl.toURL());
     	}
     	catch(Exception ex) {
     		logger.log(Level.SEVERE, "login", ex);

@@ -27,10 +27,10 @@ import epf.schema.EPF;
  *
  * @author FOXCONN
  */
-@Type(EPF.DeliveryProcess)
-@Schema(name = EPF.DeliveryProcess, title = "Delivery Process")
-@Entity(name = EPF.DeliveryProcess)
-@Table(schema = EPF.Schema, name = "DELIVERY_PROCESS")
+@Type(EPF.DELIVERY_PROCESS)
+@Schema(name = EPF.DELIVERY_PROCESS, title = "Delivery Process")
+@Entity(name = EPF.DELIVERY_PROCESS)
+@Table(schema = EPF.SCHEMA, name = "DELIVERY_PROCESS")
 @NamedQuery(
         name = DeliveryProcess.DELIVERY_PROCESSES, 
         query = "SELECT dp FROM EPF_DeliveryProcess AS dp"

@@ -23,10 +23,10 @@ import epf.schema.EPF;
  *
  * @author FOXCONN
  */
-@Type(EPF.Milestone)
-@Schema(name = EPF.Milestone, title = "Milestone")
-@Entity(name = EPF.Milestone)
-@Table(schema = EPF.Schema, name = "MILESTONE")
+@Type(EPF.MILESTONE)
+@Schema(name = EPF.MILESTONE, title = "Milestone")
+@Entity(name = EPF.MILESTONE)
+@Table(schema = EPF.SCHEMA, name = "MILESTONE")
 public class Milestone {
 
     /**

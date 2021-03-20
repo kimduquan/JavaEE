@@ -24,10 +24,10 @@ import epf.schema.EPF;
  *
  * @author FOXCONN
  */
-@Type(EPF.CapabilityPattern)
-@Schema(name = EPF.CapabilityPattern, title = "Capability Pattern")
-@Entity(name = EPF.CapabilityPattern)
-@Table(schema = EPF.Schema, name = "CAPABILITY_PATTERN")
+@Type(EPF.CAPABILITY_PATTERN)
+@Schema(name = EPF.CAPABILITY_PATTERN, title = "Capability Pattern")
+@Entity(name = EPF.CAPABILITY_PATTERN)
+@Table(schema = EPF.SCHEMA, name = "CAPABILITY_PATTERN")
 public class CapabilityPattern {
 	
     /**

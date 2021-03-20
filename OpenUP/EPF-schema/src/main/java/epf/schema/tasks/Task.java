@@ -24,10 +24,10 @@ import epf.schema.EPF;
  *
  * @author FOXCONN
  */
-@Type(EPF.Task)
-@Schema(name = EPF.Task, title = "Task")
-@Entity(name = EPF.Task)
-@Table(schema = EPF.Schema, name = "TASK")
+@Type(EPF.TASK)
+@Schema(name = EPF.TASK, title = "Task")
+@Entity(name = EPF.TASK)
+@Table(schema = EPF.SCHEMA, name = "TASK")
 @JsonbPropertyOrder({
     "name",
     "mandatory",

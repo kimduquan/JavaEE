@@ -25,10 +25,10 @@ import epf.schema.EPF;
  *
  * @author FOXCONN
  */
-@Type(EPF.Role)
-@Schema(name = EPF.Role, title = "Role")
-@Entity(name = EPF.Role)
-@Table(schema = EPF.Schema, name = "EPF_ROLE")
+@Type(EPF.ROLE)
+@Schema(name = EPF.ROLE, title = "Role")
+@Entity(name = EPF.ROLE)
+@Table(schema = EPF.SCHEMA, name = "EPF_ROLE")
 @JsonbPropertyOrder({
     "name",
     "additionallyPerforms",

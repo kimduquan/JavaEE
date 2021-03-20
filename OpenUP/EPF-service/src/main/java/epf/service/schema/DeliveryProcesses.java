@@ -67,7 +67,7 @@ public class DeliveryProcesses {
     )
     public List<DeliveryProcess> getDeliveryProcesses() {
         return cache.getNamedQueryResult(
-                EPF.Schema,
+                EPF.SCHEMA,
                 principal,
                 DeliveryProcess.DELIVERY_PROCESSES, 
                 DeliveryProcess.class);

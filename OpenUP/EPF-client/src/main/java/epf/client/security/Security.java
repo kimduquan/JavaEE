@@ -63,7 +63,7 @@ public interface Security {
             @QueryParam(UNIT)
             @Unit
             @NotBlank
-            @DefaultValue(EPF.Schema)
+            @DefaultValue(EPF.SCHEMA)
             final String unit,
             @FormParam("username")
             @NotBlank
@@ -109,7 +109,7 @@ public interface Security {
             @QueryParam(UNIT)
             @Unit
             @NotBlank
-            @DefaultValue(EPF.Schema)
+            @DefaultValue(EPF.SCHEMA)
             final String unit
             );
     
@@ -135,7 +135,7 @@ public interface Security {
     Token authenticate(
     		@QueryParam(UNIT)
             @Unit
-            @DefaultValue(EPF.Schema)
+            @DefaultValue(EPF.SCHEMA)
     		@NotBlank
     		final String unit
     		);

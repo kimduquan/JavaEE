@@ -19,10 +19,10 @@ import epf.schema.EPF;
  *
  * @author FOXCONN
  */
-@Type(EPF.Template)
-@Schema(name = EPF.Template, title = "Template")
-@Entity(name = EPF.Template)
-@Table(schema = EPF.Schema, name = "TEMPLATE")
+@Type(EPF.TEMPLATE)
+@Schema(name = EPF.TEMPLATE, title = "Template")
+@Entity(name = EPF.TEMPLATE)
+@Table(schema = EPF.SCHEMA, name = "TEMPLATE")
 public class Template {
 	
     /**

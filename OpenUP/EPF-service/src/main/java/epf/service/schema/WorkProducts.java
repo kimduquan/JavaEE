@@ -67,7 +67,7 @@ public class WorkProducts {
     )
     public List<Domain> getDomains() {
         return cache.getNamedQueryResult(
-                EPF.Schema,
+                EPF.SCHEMA,
                 principal,
                 Domain.DOMAINS, 
                 Domain.class);

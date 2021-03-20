@@ -32,7 +32,7 @@ public interface Config {
     @Produces(MediaType.APPLICATION_JSON)
     Map<String, String> getProperties(
     		@QueryParam("name") 
-    		@DefaultValue(EPF.Schema)
+    		@DefaultValue(EPF.SCHEMA)
     		final String name
     		);
     

@@ -22,10 +22,10 @@ import epf.schema.EPF;
  *
  * @author FOXCONN
  */
-@Type(EPF.Deliverable)
-@Schema(name = EPF.Deliverable, title = "Deliverable")
-@Entity(name = EPF.Deliverable)
-@Table(schema = EPF.Schema, name = "DELIVERABLE")
+@Type(EPF.DELIVERABLE)
+@Schema(name = EPF.DELIVERABLE, title = "Deliverable")
+@Entity(name = EPF.DELIVERABLE)
+@Table(schema = EPF.SCHEMA, name = "DELIVERABLE")
 public class Deliverable {
     
     /**

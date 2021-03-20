@@ -8,5 +8,6 @@ public class Break implements Runnable {
 
 	@Override
 	public void run() {
+		toString();
 	}
 }

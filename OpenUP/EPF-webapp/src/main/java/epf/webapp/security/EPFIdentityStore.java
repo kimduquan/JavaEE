@@ -27,7 +27,7 @@ import epf.client.security.Security;
 import epf.client.security.Token;
 import epf.util.client.Client;
 import epf.util.client.ClientQueue;
-import epf.util.security.PasswordHash;
+import epf.util.security.PasswordHelper;
 
 /**
  *
@@ -93,7 +93,7 @@ public class EPFIdentityStore implements IdentityStore, RememberMeIdentityStore 
 			                            securityUrl.getHost(), 
 			                            securityUrl.getPort()
 			                    ));
-			passwordHash = PasswordHash.hash(
+			passwordHash = PasswordHelper.hash(
 					credential.getCaller(), 
 					credential.getPassword().getValue()
 					);

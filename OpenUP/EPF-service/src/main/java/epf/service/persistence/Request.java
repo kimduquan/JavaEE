@@ -69,19 +69,28 @@ public class Request {
      * @return
      */
     protected EntityManager getManager(final String unit, final Principal principal){
-        final Context context = application.getContext(unit);
-        Credential credential = null;
-        if(principal != null && context != null){
-        	credential = context.getCredential(principal.getName());
-        }
         JsonWebToken jwt = null;
         Session session = null;
-        if(credential != null && principal instanceof JsonWebToken){
-        	jwt = (JsonWebToken)principal;
-        	session = credential.getSession(jwt.getIssuedAtTime());
+        final Context context = application.getContext(unit);
+        if(principal != null && context != null){
+        	final Credential credential = context.getCredential(principal.getName());
+            if(credential != null && principal instanceof JsonWebToken){
+            	jwt = (JsonWebToken)principal;
+            	session = credential.getSession(jwt.getIssuedAtTime());
+            }
         }
-        EntityManager manager = null;
-        if(session != null && session.checkExpirationTime(jwt.getExpirationTime())){
+        return getEntityManager(principal, jwt, session);
+    }
+    
+    /**
+     * @param principal
+     * @param jwt
+     * @param session
+     * @return
+     */
+    protected static EntityManager getEntityManager(final Principal principal, final JsonWebToken jwt, final Session session) {
+    	EntityManager manager = null;
+    	if(session != null && jwt != null && session.checkExpirationTime(jwt.getExpirationTime())){
         	manager = session
                     .putConversation(jwt.getTokenID())
                     .putManager(jwt.getIssuedAtTime());
@@ -89,7 +98,7 @@ public class Request {
         if(principal != null && manager == null){
             throw new ForbiddenException();
         }
-        return manager;
+    	return manager;
     }
     
     /**

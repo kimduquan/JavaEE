@@ -18,7 +18,7 @@ import javax.net.ssl.SSLContext;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import epf.util.ssl.DefaultHostnameVerifier;
-import epf.util.ssl.DefaultSSLContext;
+import epf.util.ssl.SSLContextHelper;
 
 /**
  *
@@ -48,7 +48,7 @@ public class ClientQueue {
      */
     @PostConstruct
     public void initialize(){
-        context = DefaultSSLContext.build();
+        context = SSLContextHelper.build();
     }
     
     /**

@@ -34,7 +34,7 @@ import epf.schema.roles.Role;
         loadOnStartup = 1, 
         asyncSupported = true, 
         description = "EPF",
-        displayName = EPF.Schema
+        displayName = EPF.SCHEMA
 )
 @ServletSecurity(
         value = @HttpConstraint(
@@ -57,7 +57,7 @@ import epf.schema.roles.Role;
         }
 )
 @ApplicationScoped
-@BasicAuthenticationMechanismDefinition(realmName = EPF.Schema)
+@BasicAuthenticationMechanismDefinition(realmName = EPF.SCHEMA)
 @FacesConfig
 @Named("webapp")
 public class WebApp extends HttpServlet {

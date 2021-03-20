@@ -67,7 +67,7 @@ public class Roles {
     )
     public List<RoleSet> getRoleSets() {
         return cache.getNamedQueryResult(
-                EPF.Schema,
+                EPF.SCHEMA,
                 principal,
                 RoleSet.ROLES, 
                 RoleSet.class);

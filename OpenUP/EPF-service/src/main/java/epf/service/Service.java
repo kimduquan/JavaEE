@@ -31,7 +31,7 @@ import epf.schema.EPF;
  */
 @ApplicationScoped
 @ApplicationPath("/")
-@LoginConfig(authMethod = "MP-JWT", realmName = EPF.Schema)
+@LoginConfig(authMethod = "MP-JWT", realmName = EPF.SCHEMA)
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @OpenAPIDefinition(

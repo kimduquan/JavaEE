@@ -18,7 +18,7 @@ public class Handler extends ExceptionHandlerWrapper {
 	/**
 	 * 
 	 */
-	private static final Logger logger = Logging.getLogger(Handler.class.getName());
+	private static final Logger LOGGER = Logging.getLogger(Handler.class.getName());
 
 	/**
 	 * @param wrapped
@@ -29,20 +29,22 @@ public class Handler extends ExceptionHandlerWrapper {
 	
 	@Override
     public void handle() throws FacesException {
+		ExceptionQueuedEvent event = null;
+		WebApplicationException exception = null;
 		if(getUnhandledExceptionQueuedEvents().iterator().hasNext()) {
-			final ExceptionQueuedEvent event = getUnhandledExceptionQueuedEvents().iterator().next();
+			event = getUnhandledExceptionQueuedEvents().iterator().next();
 			if(event.getContext().getException() instanceof WebApplicationException) {
-				final WebApplicationException exception = (WebApplicationException) event.getContext().getException();
-				if(event.getContext().getContext().getExternalContext().getResponse() instanceof HttpServletResponse) {
-					final HttpServletResponse response = (HttpServletResponse)event.getContext().getContext().getExternalContext().getResponse();
-					try {
-						getUnhandledExceptionQueuedEvents().iterator().remove();
-						response.sendError(exception.getResponse().getStatus());
-					} 
-					catch (Exception e) {
-						logger.throwing(logger.getName(), "handle", e);
-					}
-				}
+				exception = (WebApplicationException) event.getContext().getException();
+			}
+		}
+		if(exception != null && event != null && event.getContext().getContext().getExternalContext().getResponse() instanceof HttpServletResponse) {
+			final HttpServletResponse response = (HttpServletResponse)event.getContext().getContext().getExternalContext().getResponse();
+			try {
+				getUnhandledExceptionQueuedEvents().iterator().remove();
+				response.sendError(exception.getResponse().getStatus());
+			} 
+			catch (Exception e) {
+				LOGGER.throwing(LOGGER.getName(), "handle", e);
 			}
 		}
 		super.handle();

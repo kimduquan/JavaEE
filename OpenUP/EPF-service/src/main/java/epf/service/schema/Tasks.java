@@ -67,7 +67,7 @@ public class Tasks {
     )
     public List<Discipline> getDisciplines() {
         return cache.getNamedQueryResult(
-                EPF.Schema,
+                EPF.SCHEMA,
                 principal,
                 Discipline.DISCIPLINES, 
                 Discipline.class);

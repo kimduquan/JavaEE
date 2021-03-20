@@ -116,9 +116,9 @@ public class Queries implements epf.client.persistence.Queries {
 	public Response search(final UriInfo uriInfo, final String text, final Integer firstResult, final Integer maxResults) {
 		final Map<String, EntityType<?>> entityTables = new ConcurrentHashMap<>();
 		final Map<String, Map<String, Attribute<?,?>>> entityAttributes = new ConcurrentHashMap<>();
-		cache.mapEntities(EPF.Schema, context.getUserPrincipal(), entityTables, entityAttributes);
+		cache.mapEntities(EPF.SCHEMA, context.getUserPrincipal(), entityTables, entityAttributes);
 		final TypedQuery<SearchData> query = cache.createNamedQuery(
-				EPF.Schema, 
+				EPF.SCHEMA, 
 				context.getUserPrincipal(), 
 				QueryNames.FULL_TEXT_SEARCH, 
 				SearchData.class
@@ -139,7 +139,7 @@ public class Queries implements epf.client.persistence.Queries {
 								EntityType<?> entityType = entityTables.get(searchData.getTable());
 								UriBuilder linkBuilder = baseUri
 										.clone()
-										.path(EPF.Schema)
+										.path(EPF.SCHEMA)
 										.path(entityType.getName());
 								Iterator<String> column = searchData.getColumns().iterator();
 								Iterator<String> key = searchData.getKeys().iterator();

@@ -23,7 +23,7 @@ public class Logging implements Serializable {
 	/**
 	 * 
 	 */
-	private static final Map<String, Logger> loggers = new ConcurrentHashMap<>();
+	private static final Map<String, Logger> LOGGERS = new ConcurrentHashMap<>();
 	
 	/**
 	 * @param invocationContext
@@ -31,11 +31,18 @@ public class Logging implements Serializable {
 	 * @throws Exception
 	 */
 	@AroundInvoke
-	public Object logMethodEntry(final InvocationContext invocationContext) throws Exception {
+	public Object logMethodEntry(final InvocationContext invocationContext) {
 		final String cls = invocationContext.getMethod().getDeclaringClass().getName();
+		final String method = invocationContext.getMethod().getName();
 		final Logger logger = getLogger(cls);
-		logger.entering(cls, invocationContext.getMethod().getName(), invocationContext.getParameters());
-		final Object result = invocationContext.proceed();
+		logger.entering(cls, method, invocationContext.getParameters());
+		Object result = null;
+		try {
+			result = invocationContext.proceed();
+		} 
+		catch (Exception e) {
+			logger.throwing(cls, method, e);
+		}
 		logger.exiting(cls, invocationContext.getMethod().getName(), result);
 		return result;
 	}
@@ -45,7 +52,7 @@ public class Logging implements Serializable {
 	 * @return
 	 */
 	public static Logger getLogger(final String clsName) {
-		return loggers.computeIfAbsent(clsName, name -> {
+		return LOGGERS.computeIfAbsent(clsName, name -> {
 			return Logger.getLogger(name);
 		});
 	}

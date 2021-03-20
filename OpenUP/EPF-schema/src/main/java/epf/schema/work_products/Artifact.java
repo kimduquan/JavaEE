@@ -27,10 +27,10 @@ import epf.schema.EPF;
  *
  * @author FOXCONN
  */
-@Type(EPF.Artifact)
-@Schema(name = EPF.Artifact, title = "Artifact")
-@Entity(name = EPF.Artifact)
-@Table(schema = EPF.Schema, name = "ARTIFACT")
+@Type(EPF.ARTIFACT)
+@Schema(name = EPF.ARTIFACT, title = "Artifact")
+@Entity(name = EPF.ARTIFACT)
+@Table(schema = EPF.SCHEMA, name = "ARTIFACT")
 @JsonbPropertyOrder({
     "name",
     "fulfilledSlots"

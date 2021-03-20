@@ -29,10 +29,10 @@ import javax.persistence.NamedQuery;
  *
  * @author FOXCONN
  */
-@Type(EPF.Iteration)
-@Schema(name = EPF.Iteration, title = "Iteration")
-@Entity(name = EPF.Iteration)
-@Table(schema = EPF.Schema, name = "ITERATION", indexes = {@Index(columnList = "PARENT_ACTIVITIES")})
+@Type(EPF.ITERATION)
+@Schema(name = EPF.ITERATION, title = "Iteration")
+@Entity(name = EPF.ITERATION)
+@Table(schema = EPF.SCHEMA, name = "ITERATION", indexes = {@Index(columnList = "PARENT_ACTIVITIES")})
 @NamedQuery(
         name = Iteration.ITERATIONS,
         query = "SELECT it FROM EPF_Iteration it JOIN it.parentActivities ph WHERE ph.name = :name"
@@ -59,7 +59,7 @@ public class Iteration {
     @MapsId
     @JoinColumn(name = "NAME")
     @NotNull
-    private CapabilityPattern Extends;
+    private CapabilityPattern extend;
     
     /**
      * 
@@ -79,7 +79,7 @@ public class Iteration {
      */
     @ManyToMany
     @JoinTable(name = "ITERATION_ACTIVITIES",
-            schema = EPF.Schema,
+            schema = EPF.SCHEMA,
             joinColumns = {@JoinColumn(name = "ITERATION")},
             inverseJoinColumns = {@JoinColumn(name = "ACTIVITY")},
             indexes = {@Index(columnList = "ITERATION")}
@@ -94,12 +94,12 @@ public class Iteration {
         this.name = name;
     }
 
-    public CapabilityPattern getExtends() {
-        return Extends;
+    public CapabilityPattern getExtend() {
+        return extend;
     }
 
-    public void setExtends(final CapabilityPattern Extends) {
-        this.Extends = Extends;
+    public void setExtend(final CapabilityPattern extend) {
+        this.extend = extend;
     }
 
     public Integer getNumber() {

@@ -63,8 +63,8 @@ public class WorkProducts implements Serializable {
             	domains = Queries.getCriteriaQueryResult(
             			client, 
             			new GenericType<List<Domain>> () {}, 
-            			EPF.Schema, 
-            			target -> target.path(EPF.Domain), 
+            			EPF.SCHEMA, 
+            			target -> target.path(EPF.DOMAIN), 
             			0, 
             			100);
             } 
@@ -84,8 +84,8 @@ public class WorkProducts implements Serializable {
             	artifacts = Queries.getCriteriaQueryResult(
             			client, 
             			new GenericType<List<Artifact>> () {}, 
-            			EPF.Schema, 
-            			target -> target.path(EPF.Artifact), 
+            			EPF.SCHEMA, 
+            			target -> target.path(EPF.ARTIFACT), 
             			0, 
             			100);
             } 

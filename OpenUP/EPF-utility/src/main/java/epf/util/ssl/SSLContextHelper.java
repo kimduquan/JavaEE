@@ -14,14 +14,14 @@ import javax.net.ssl.TrustManager;
  *
  * @author FOXCONN
  */
-public final class DefaultSSLContext {
+public final class SSLContextHelper {
 	
 	/**
 	 * 
 	 */
-	private static final Logger logger = Logger.getLogger(DefaultSSLContext.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(SSLContextHelper.class.getName());
 	
-	private DefaultSSLContext() {
+	private SSLContextHelper() {
 		
 	}
     
@@ -36,7 +36,7 @@ public final class DefaultSSLContext {
             ctx.init(null, new TrustManager[]{x509}, null);
         } 
         catch (Exception ex) {
-        	logger.log(Level.SEVERE, ex.getMessage(), ex);
+        	LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
         }
         return ctx;
     }

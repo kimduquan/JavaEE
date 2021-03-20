@@ -13,65 +13,65 @@ public interface EPF {
     /**
      * 
      */
-    String Schema = "EPF";
+    String SCHEMA = "EPF";
     /**
      * 
      */
-    String Activity = "EPF_Activity";
+    String ACTIVITY = "EPF_Activity";
     /**
      * 
      */
-    String CapabilityPattern = "EPF_CapabilityPattern";
+    String CAPABILITY_PATTERN = "EPF_CapabilityPattern";
     /**
      * 
      */
-    String DeliveryProcess = "EPF_DeliveryProcess";
+    String DELIVERY_PROCESS = "EPF_DeliveryProcess";
     /**
      * 
      */
-    String Iteration = "EPF_Iteration";
+    String ITERATION = "EPF_Iteration";
     /**
      * 
      */
-    String Milestone = "EPF_Milestone";
+    String MILESTONE = "EPF_Milestone";
     /**
      * 
      */
-    String Phase = "EPF_Phase";
+    String PHASE = "EPF_Phase";
     /**
      * 
      */
-    String Role = "EPF_Role";
+    String ROLE = "EPF_Role";
     /**
      * 
      */
-    String RoleSet = "EPF_RoleSet";
+    String ROLE_SET = "EPF_RoleSet";
     /**
      * 
      */
-    String Discipline = "EPF_Discipline";
+    String DISCIPLINE = "EPF_Discipline";
     /**
      * 
      */
-    String Task = "EPF_Task";
+    String TASK = "EPF_Task";
     /**
      * 
      */
-    String Artifact = "EPF_Artifact";
+    String ARTIFACT = "EPF_Artifact";
     /**
      * 
      */
-    String Deliverable = "EPF_Deliverable";
+    String DELIVERABLE = "EPF_Deliverable";
     /**
      * 
      */
-    String Domain = "EPF_Domain";
+    String DOMAIN = "EPF_Domain";
     /**
      * 
      */
-    String Template = "EPF_Template";
+    String TEMPLATE = "EPF_Template";
     /**
      * 
      */
-    String WorkProductSlot = "EPF_WorkProductSlot";
+    String WORK_PRODUCT_SLOT = "EPF_WorkProductSlot";
 }

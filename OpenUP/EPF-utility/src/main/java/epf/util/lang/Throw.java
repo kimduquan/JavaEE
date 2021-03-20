@@ -38,6 +38,7 @@ public class Throw<T extends Exception> extends Var<Exception> implements Callab
 
 	@Override
 	public void run() {
+		set(get());
 	}
 
 }

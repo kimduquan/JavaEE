@@ -23,11 +23,11 @@ public class Function implements Runnable {
 	/**
 	 * 
 	 */
-	private transient Var<?> _return;
+	private transient Var<?> returnVar;
 	/**
 	 * 
 	 */
-	private transient Var<Exception> _throw;
+	private transient Var<Exception> throwVar;
 	
 	/**
 	 * @param stream
@@ -63,10 +63,10 @@ public class Function implements Runnable {
 		return stream
 				.filter(run -> {
 					if(run instanceof Return) {
-						_return = (Var<?>) run;
+						returnVar = (Var<?>) run;
 					}
 					else if(run instanceof Throw) {
-						_throw = (Throw<?>) run;
+						throwVar = (Throw<?>) run;
 					}
 					return true;
 				})
@@ -93,13 +93,13 @@ public class Function implements Runnable {
 	 * @return
 	 */
 	protected Var<?> getReturn(){
-		return _return;
+		return returnVar;
 	}
 	
 	/**
 	 * @return
 	 */
 	protected Var<Exception> getThrow(){
-		return _throw;
+		return throwVar;
 	}
 }

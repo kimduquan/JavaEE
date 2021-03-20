@@ -26,10 +26,10 @@ import javax.persistence.Index;
  *
  * @author FOXCONN
  */
-@Type(EPF.Domain)
-@Schema(name = EPF.Domain, title = "Domain")
-@Entity(name = EPF.Domain)
-@Table(schema = EPF.Schema, name = "EPF_DOMAIN")
+@Type(EPF.DOMAIN)
+@Schema(name = EPF.DOMAIN, title = "Domain")
+@Entity(name = EPF.DOMAIN)
+@Table(schema = EPF.SCHEMA, name = "EPF_DOMAIN")
 @JsonbPropertyOrder({
     "name",
     "workProducts"
@@ -59,7 +59,7 @@ public class Domain {
     @ManyToMany
     @JoinTable(
             name = "WORK_PRODUCTS",
-            schema = EPF.Schema,
+            schema = EPF.SCHEMA,
             joinColumns = @JoinColumn(name = "DOMAIN"),
             inverseJoinColumns = @JoinColumn(name = "ARTIFACT"),
             indexes = {@Index(columnList = "DOMAIN")}

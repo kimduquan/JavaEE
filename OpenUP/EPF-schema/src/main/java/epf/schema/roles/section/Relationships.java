@@ -30,7 +30,7 @@ public class Relationships {
     @ManyToMany
     @JoinTable(
             name = "ROLE_ADDITIONALLY_PERFORMS",
-            schema = EPF.Schema,
+            schema = EPF.SCHEMA,
             joinColumns = @JoinColumn(
                     name = "ROLE"
             ),
@@ -46,7 +46,7 @@ public class Relationships {
     @ManyToMany
     @JoinTable(
             name = "ROLE_MODIFIES",
-            schema = EPF.Schema,
+            schema = EPF.SCHEMA,
             joinColumns = @JoinColumn(
                     name = "ROLE"
             ),
