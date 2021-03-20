@@ -6,8 +6,6 @@
 package epf.service.system;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -53,11 +51,8 @@ public class ProcessesTest {
     }
     
     @Test
-    public void testStartOK() throws Exception {
-        List<String> command = new ArrayList<>();
-        command.add("java");
-        command.add("-version");
-        long pid = Processes.start(client, command, "D:\\");
+    public void testStartOK() {
+        long pid = Processes.start(client, "D:\\", "java", "-version");
         Assert.assertNotEquals("Process", 0, pid);
     }
 }

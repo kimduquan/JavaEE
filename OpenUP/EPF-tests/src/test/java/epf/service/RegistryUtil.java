@@ -18,13 +18,11 @@ public class RegistryUtil {
     static Map<String, URI> list(){
     	if(remotes == null) {
     		String registryUrl = System.getProperty(ConfigNames.REGISTRY_URL, "");
-    		System.out.println("ConfigNames.REGISTRY_URL=" + registryUrl);
     		try(Client client = ClientUtil.newClient(new URI(registryUrl))){
     			remotes = new ConcurrentHashMap<>();
     			Registry.list(client)
     					.forEach(link -> {
     						remotes.put(link.getRel(), link.getUri());
-    						logger.info(link.getRel() + ":" + link.getUri()); 
     					});
     		}
     		catch(Exception ex) {

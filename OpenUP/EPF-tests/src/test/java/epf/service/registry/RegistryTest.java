@@ -4,6 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.Link;
@@ -33,7 +34,7 @@ public class RegistryTest {
 			registryUrl = new URI(System.getProperty(ConfigNames.REGISTRY_URL, ""));
 		} 
     	catch (URISyntaxException e) {
-			logger.severe(e.getMessage());
+			logger.log(Level.SEVERE, "beforeClass", e);
 		}
     }
     
@@ -47,25 +48,34 @@ public class RegistryTest {
     }
     
     @After
-    public void after() throws Exception{
-    	client.close();
+    public void after(){
+    	try {
+			client.close();
+		} 
+    	catch (Exception e) {
+			logger.log(Level.WARNING, "after", e);
+		}
     }
     
     @Test
-    public void testList_OK() throws Exception {
+    public void testList_OK() {
     	Set<Link> links = Registry.list(client);
     	Set<URI> URIs = links.stream().map(link -> link.getUri()).collect(Collectors.toSet());
     	Set<URI> expected = new HashSet<>();
     	String path = registryUrl.getPath().split("/")[1];
     	URI base = UriBuilder.fromUri(registryUrl).replacePath(path).build();
-    	logger.info(String.format("path=%s, base=%s", path, base));
-    	expected.add(new URI(base.toString() + "/config"));
-    	expected.add(new URI(base.toString() + "/file"));
-    	expected.add(new URI(base.toString() + "/persistence"));
-    	expected.add(new URI(base.toString() + "/registry"));
-    	expected.add(new URI(base.toString() + "/schema"));
-    	expected.add(new URI(base.toString() + "/security"));
-    	expected.add(new URI(base.toString() + "/system"));
+    	try {
+			expected.add(new URI(base.toString() + "/config"));
+	    	expected.add(new URI(base.toString() + "/file"));
+	    	expected.add(new URI(base.toString() + "/persistence"));
+	    	expected.add(new URI(base.toString() + "/registry"));
+	    	expected.add(new URI(base.toString() + "/schema"));
+	    	expected.add(new URI(base.toString() + "/security"));
+	    	expected.add(new URI(base.toString() + "/system"));
+		} 
+    	catch (URISyntaxException e) {
+			logger.log(Level.SEVERE, "testList_OK", e);
+		}
     	Assert.assertEquals("list", expected, URIs);
     }
 }

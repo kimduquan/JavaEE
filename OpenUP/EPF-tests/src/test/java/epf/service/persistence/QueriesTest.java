@@ -9,8 +9,11 @@ import epf.service.ClientUtil;
 import epf.service.RegistryUtil;
 import epf.service.SecurityUtil;
 import epf.util.client.Client;
+import epf.util.logging.Logging;
 import java.net.URI;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -28,6 +31,8 @@ import org.junit.Ignore;
  */
 public class QueriesTest {
     
+	private static final Logger logger = Logging.getLogger(QueriesTest.class.getName());
+	
 	private static URI persistenceUrl;
     private static String token;
     private Client client;
@@ -50,13 +55,18 @@ public class QueriesTest {
     }
     
     @After
-    public void after() throws Exception {
-    	client.close();
+    public void after() {
+    	try {
+			client.close();
+		} 
+    	catch (Exception e) {
+    		logger.log(Level.WARNING, "after", e);
+		}
     }
     
     @Test
     @Ignore
-    public void testSearchOK() throws Exception {
+    public void testSearchOK() {
     	Response response = client.request(
     			target -> target
     			.queryParam("text", "Any")
@@ -83,7 +93,7 @@ public class QueriesTest {
     			Assert.assertNotNull("Link.entity", entity);
     		} 
     		catch (Exception e) {
-				e.printStackTrace();
+				logger.log(Level.SEVERE, entityLink.toString(), e);
 			}
     	});
     }

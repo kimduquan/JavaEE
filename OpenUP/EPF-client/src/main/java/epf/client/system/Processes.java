@@ -50,9 +50,9 @@ public interface Processes {
      * @param directory
      * @return
      */
-    static long start(final Client client, final List<String> command, final String directory){
+    static long start(final Client client, final String directory, final String... command){
     	return client.request(
-    			target -> target.path(PROCESS).matrixParam("command", (Object[])command.toArray()).matrixParam("directory", directory), 
+    			target -> target.path(PROCESS).matrixParam("command", (Object[])command).matrixParam("directory", directory), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.post(null, Long.class);

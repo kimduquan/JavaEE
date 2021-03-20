@@ -10,7 +10,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-
 import epf.client.EPFException;
 import epf.schema.EPF;
 import epf.util.Var;
@@ -51,7 +50,8 @@ public class Context {
         if(error.get() != null){
         	throw new EPFException(error.get());
         }
-        final Credential cred = credentials.computeIfPresent(userName, (name, credential) -> {
+        final Var<Credential> cred = new Var<>();
+        credentials.computeIfPresent(userName, (name, credential) -> {
             if(credential == null){
                 credential = newCredential(unit, props, error);
             }
@@ -63,12 +63,13 @@ public class Context {
                     }
                 }
             }
+            cred.set(credential);
             return credential;
         });
         if(error.get() != null){
         	throw new EPFException(error.get());
         }
-        return cred;
+        return cred.get();
     }
     
     /**

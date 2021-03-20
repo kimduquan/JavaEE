@@ -24,7 +24,7 @@ public class ConfigUtil {
     	return configs;
     }
     
-    public static String property(String name) throws Exception {
+    public static String property(String name) {
     	return properties().get(name);
     }
 }

@@ -6,12 +6,9 @@
 package epf.service.persistence;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -24,30 +21,18 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.Attribute;
-import javax.persistence.metamodel.Attribute.PersistentAttributeType;
 import javax.persistence.metamodel.EntityType;
-import javax.persistence.metamodel.ManagedType;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Link;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
-import org.eclipse.microprofile.openapi.annotations.Operation;
-import org.eclipse.microprofile.openapi.annotations.media.Content;
-import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import epf.schema.EPF;
 import epf.schema.QueryNames;
 import epf.schema.roles.Role;
-import epf.util.Var;
 
 /**
  *
@@ -74,17 +59,6 @@ public class Queries implements epf.client.persistence.Queries {
      *
      */
     @Override
-    @Operation(
-            summary = "Native Query", 
-            description = "Execute a SELECT query and return the query results."
-    )
-    @APIResponse(
-            description = "Result",
-            responseCode = "200",
-            content = @Content(
-                    mediaType = MediaType.APPLICATION_JSON
-            )
-    )
     public Response executeQuery(
             final String unit,
             final List<PathSegment> paths,
@@ -92,127 +66,50 @@ public class Queries implements epf.client.persistence.Queries {
             final Integer maxResults
             ) {
     	final ResponseBuilder response = Response.status(Response.Status.NOT_FOUND);
+    	Entity<Object> entity = null;
+    	final Principal principal = context.getUserPrincipal();
         if(!paths.isEmpty()){
         	final PathSegment rootSegment = paths.get(0);
-        	final Principal principal = context.getUserPrincipal();
-        	final Entity<Object> entity = cache.findEntity(unit, principal, rootSegment.getPath());
-            if(entity.getType() != null){
-            	final EntityManager manager = cache.getManager(unit, principal);
-            	final CriteriaBuilder builder = manager.getCriteriaBuilder();
-            	final EntityType<Object> rootType = entity.getType();
-            	final Class<Object> rootClass = rootType.getJavaType();
-            	final CriteriaQuery<Object> rootQuery = builder.createQuery(rootClass);
-            	final Root<Object> rootFrom = rootQuery.from(rootClass);
-            	final List<Predicate> allParams = new ArrayList<>();
-                rootSegment.getMatrixParameters().forEach((name, values) -> {
-                	allParams.add(
-                            builder.isMember(
-                                    values,
-                                    rootFrom.get(name)
-                            )
-                    );
-                });
-                final Var<ManagedType<?>> parentType = new Var<>(rootType);
-                final Root<?> parentFrom = rootFrom;
-                final Var<Join<?,?>> parentJoin = new Var<>();
-                paths.subList(1, paths.size()).forEach(
-                		segment -> buildQuery(
-                				segment, 
-		                		parentType, 
-		                		parentJoin, 
-		                		parentFrom, 
-		                		allParams, 
-		                		manager, 
-		                		builder
-		                		)
-                		);
-                if(parentJoin.get() == null){
-                	rootQuery.select(rootFrom);
-                }
-                else{
-                    rootQuery.select(parentJoin.get());
-                }
-                
-                if(!allParams.isEmpty()){
-                    rootQuery.where(allParams.toArray(new Predicate[0]));
-                }
-                
-                final Query query = manager.createQuery(rootQuery);
-            
-                if(firstResult != null){
-                    query.setFirstResult(firstResult);
-                }
-                if(maxResults != null){
-                    query.setMaxResults(maxResults);
-                }
-                final Stream<?> result = query.getResultStream();
-                response.status(Status.OK).entity(
-                            		result
-                                    .collect(Collectors.toList())
-                );
-            }
+        	entity = cache.findEntity(unit, principal, rootSegment.getPath());
+        }
+        if(entity != null && entity.getType() != null){
+        	final EntityManager manager = cache.getManager(unit, principal);
+        	final QueryBuilder queryBuilder = new QueryBuilder();
+        	final Query query = queryBuilder
+        			.manager(manager)
+        			.entity(entity)
+        			.paths(paths)
+        			.build();
+            getQueryResult(query, firstResult, maxResults, response);
         }
         return response.build();
     }
     
     /**
-     * @param segment
-     * @param parentType
-     * @param parentJoin
-     * @param parentFrom
-     * @param allParams
-     * @param manager
+     * @param query
+     * @param firstResult
+     * @param maxResults
+     * @param response
+     * @return
      */
-    protected static void buildQuery(
-    		final PathSegment segment, 
-    		final Var<ManagedType<?>> parentType, 
-    		final Var<Join<?,?>> parentJoin,
-    		final Root<?> parentFrom,
-    		final List<Predicate> allParams,
-    		final EntityManager manager,
-    		final CriteriaBuilder builder) {
-    	final Attribute<?,?> attribute = parentType.get().getAttribute(segment.getPath());
-        if (attribute.getPersistentAttributeType() != PersistentAttributeType.BASIC) {
-            Class<?> subClass = null;
-            if(attribute.isCollection()){
-                if(attribute.getJavaType() == List.class){
-                    subClass = parentType.get().getList(segment.getPath()).getBindableJavaType();
-                }
-                else if(attribute.getJavaType() == Map.class){
-                    subClass = parentType.get().getMap(segment.getPath()).getBindableJavaType();
-                }
-                else if(attribute.getJavaType() == Set.class){
-                    subClass = parentType.get().getSet(segment.getPath()).getBindableJavaType();
-                }
-                else if(attribute.getJavaType() == Collection.class){
-                    subClass = parentType.get().getCollection(segment.getPath()).getBindableJavaType();
-                }
-            }
-            else if(attribute.isAssociation()){
-                subClass = parentType.get().getSingularAttribute(segment.getPath()).getBindableJavaType();
-            }
-            
-            Join<?,?> subJoin;
-            if(parentJoin.get() == null){
-                subJoin = parentFrom.join(segment.getPath());
-            }
-            else{
-                subJoin = parentJoin.get().join(segment.getPath());
-            }
-
-            segment.getMatrixParameters().forEach((name, values) -> {
-            	allParams.add(
-                        builder.isMember(
-                                values,
-                                subJoin.get(name)
-                        )
-                );
-            });
-            
-            final ManagedType<?> subType = manager.getMetamodel().managedType(subClass);
-            parentType.set(subType);
-            parentJoin.set(subJoin);
+    protected static ResponseBuilder getQueryResult(
+    		final Query query,
+    		final Integer firstResult,
+            final Integer maxResults,
+    		final ResponseBuilder response
+    		) {
+    	if(firstResult != null){
+            query.setFirstResult(firstResult);
         }
+        if(maxResults != null){
+            query.setMaxResults(maxResults);
+        }
+        final Stream<?> result = query.getResultStream();
+        response.status(Status.OK).entity(
+                    		result
+                            .collect(Collectors.toList())
+        );
+        return response;
     }
 
 	@Override

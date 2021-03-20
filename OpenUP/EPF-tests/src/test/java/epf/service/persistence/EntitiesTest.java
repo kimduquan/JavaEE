@@ -18,7 +18,10 @@ import epf.service.ClientUtil;
 import epf.service.RegistryUtil;
 import epf.service.SecurityUtil;
 import epf.util.client.Client;
+import epf.util.logging.Logging;
 import java.net.URI;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotFoundException;
@@ -35,6 +38,8 @@ import org.junit.Ignore;
  * @author FOXCONN
  */
 public class EntitiesTest {
+	
+	private static final Logger logger = Logging.getLogger(EntitiesTest.class.getName());
     
 	private static URI persistenceUrl;
     private static String token;
@@ -58,13 +63,18 @@ public class EntitiesTest {
     }
     
     @After
-    public void after() throws Exception {
-    	client.close();
+    public void after() {
+    	try {
+			client.close();
+		} 
+    	catch (Exception e) {
+    		logger.log(Level.WARNING, "after", e);
+		}
     }
     
     @Test
     @Ignore
-    public void testPersistOK() throws Exception{
+    public void testPersistOK(){
     	Artifact artifact = new Artifact();
         artifact.setName("Artifact 1");
         artifact.setSummary("Artifact 1 Summary");
@@ -81,7 +91,7 @@ public class EntitiesTest {
     }
     
     @Test(expected = ForbiddenException.class)
-    public void testPersist_InvalidUnit() throws Exception {
+    public void testPersist_InvalidUnit() {
     	DeliveryProcess dp = new DeliveryProcess();
         dp.setName("Delivery Process 1");
         dp.setSummary("Delivery Process 1");
@@ -89,7 +99,7 @@ public class EntitiesTest {
     }
     
     @Test(expected = NotFoundException.class)
-    public void testPersistEmptyName() throws Exception{
+    public void testPersistEmptyName() {
     	Artifact artifact = new Artifact();
         artifact.setName("Artifact 1");
         artifact.setSummary("Artifact 1 Summary");
@@ -97,7 +107,7 @@ public class EntitiesTest {
     }
     
     @Test(expected = BadRequestException.class)
-    public void testPersistBlankName() throws Exception{
+    public void testPersistBlankName() {
     	Artifact artifact = new Artifact();
         artifact.setName("Artifact 1");
         artifact.setSummary("Artifact 1 Summary");
@@ -105,33 +115,33 @@ public class EntitiesTest {
     }
     
     @Test(expected = NotFoundException.class)
-    public void testPersistInvalidName() throws Exception{
+    public void testPersistInvalidName() {
     	Artifact artifact = new Artifact();
         artifact = Entities.persist(client, Artifact.class, EPF.Schema, "Invalid", artifact);
     }
     
     @Test(expected = BadRequestException.class)
-    public void testPersistEmptyEntity() throws Exception{
+    public void testPersistEmptyEntity() {
     	Artifact artifact = new Artifact();
         artifact = Entities.persist(client, Artifact.class, EPF.Schema, EPF.Artifact, artifact);
     }
     
     @Test(expected = BadRequestException.class)
-    public void testPersistEmptyEntityId() throws Exception{
+    public void testPersistEmptyEntityId() {
     	Artifact artifact = new Artifact();
         artifact.setName("");
         artifact = Entities.persist(client, Artifact.class, EPF.Schema, EPF.Artifact, artifact);
     }
     
     @Test(expected = BadRequestException.class)
-    public void testPersistBlankEntityId() throws Exception{
+    public void testPersistBlankEntityId() {
     	Artifact artifact = new Artifact();
         artifact.setName("    ");
         artifact = Entities.persist(client, Artifact.class, EPF.Schema, EPF.Artifact, artifact);
     }
     
     @Test(expected = BadRequestException.class)
-    public void testPersistNullEntityRequiredField() throws Exception{
+    public void testPersistNullEntityRequiredField() {
     	Artifact artifact = new Artifact();
         artifact.setName("Artifact 1");
         artifact.setSummary("Artifact 1 Summary");
@@ -139,7 +149,7 @@ public class EntitiesTest {
     }
     
     @Test(expected = BadRequestException.class)
-    public void testPersistInvalidEntityType() throws Exception{
+    public void testPersistInvalidEntityType() {
     	Artifact artifact = new Artifact();
         artifact.setName("Artifact 1");
         artifact.setSummary("Artifact 1 Summary");

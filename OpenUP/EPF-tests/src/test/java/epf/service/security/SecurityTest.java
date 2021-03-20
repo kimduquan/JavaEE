@@ -10,6 +10,8 @@ import java.net.URI;
 import java.net.URL;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.client.Entity;
@@ -28,6 +30,7 @@ import epf.schema.EPF;
 import epf.service.ClientUtil;
 import epf.service.RegistryUtil;
 import epf.util.client.Client;
+import epf.util.logging.Logging;
 import epf.util.security.PasswordHash;
 
 /**
@@ -36,6 +39,7 @@ import epf.util.security.PasswordHash;
  */
 public class SecurityTest {
 	
+	private static final Logger logger = Logging.getLogger(SecurityTest.class.getName());
 	private static URI securityUrl;
     
     @BeforeClass
@@ -57,7 +61,7 @@ public class SecurityTest {
     
     String login(String unit, String username, String password, URL targetUrl, boolean needHash) throws Exception{
         if(needHash){
-            password = PasswordHash.hash(username, password.toCharArray());
+        	password = PasswordHash.hash(username, password.toCharArray());
         }
         String token;
         try(Client client = ClientUtil.newClient(securityUrl)){
@@ -85,28 +89,37 @@ public class SecurityTest {
     }
     
     @Test
-    public void testLoginOK() throws Exception{
-        String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
-        Assert.assertNotNull("Token", token);
-        Assert.assertNotEquals("Token", "", token);
-        logOut(token, null);
+    public void testLoginOK() {
+		try {
+			String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
+	        Assert.assertNotNull("Token", token);
+	        Assert.assertNotEquals("Token", "", token);
+	        logOut(token, null);
+		} 
+		catch (Exception e) {
+			logger.log(Level.SEVERE, "testLoginOK", e);
+		}
     }
     
     @Test
-    public void testLoginOKAfterLoginInvalidPassword() throws Exception{
+    public void testLoginOKAfterLoginInvalidPassword() {
         Assert.assertThrows(
         		NotAuthorizedException.class, 
                 () -> {
                     login(null, "any_role1", "Invalid", securityUrl.toURL(), true);
                 }
         );
-        String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
-        Assert.assertNotNull("Token", token);
-        Assert.assertNotEquals("Token", "", token);
-        logOut(token, null);
+        try {
+			String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
+			Assert.assertNotNull("Token", token);
+			Assert.assertNotEquals("Token", "", token);
+			logOut(token, null);
+		} 
+        catch (Exception e) {
+			logger.log(Level.SEVERE, "testLoginOKAfterLoginInvalidPassword", e);
+		}
     }
     
-    //@Ignore
     @Test(expected = BadRequestException.class)
     public void testLoginEmptyUnit() throws Exception{
         login("", "any_role1", "any_role", securityUrl.toURL(), false);
