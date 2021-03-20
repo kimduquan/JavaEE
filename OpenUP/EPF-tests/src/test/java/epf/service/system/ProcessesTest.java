@@ -55,9 +55,9 @@ public class ProcessesTest {
     @Test
     public void testStartOK() throws Exception {
         List<String> command = new ArrayList<>();
-        command.add("git");
-        command.add("pull");
-        long pid = Processes.start(client, command, "D:\\projects\\JavaEE2\\OpenUP");
+        command.add("java");
+        command.add("-version");
+        long pid = Processes.start(client, command, "D:\\");
         Assert.assertNotEquals("Process", 0, pid);
     }
 }

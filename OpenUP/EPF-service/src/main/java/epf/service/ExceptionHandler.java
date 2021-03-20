@@ -9,9 +9,6 @@ import java.io.Serializable;
 import java.io.StreamCorruptedException;
 import java.sql.SQLInvalidAuthorizationSpecException;
 import java.sql.SQLNonTransientException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.inject.Inject;
 import javax.validation.ValidationException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -42,12 +39,6 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
      * 
      */
     private static final int ADMIN_RIGHTS_REQUIRED = 90_040;
-    
-    /**
-     * 
-     */
-    @Inject
-    private transient Logger logger;
 
     /**
      *
@@ -65,8 +56,10 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
     protected boolean map(final Throwable failure, final Response.ResponseBuilder builder){
         Response.StatusType status = Response.Status.INTERNAL_SERVER_ERROR;
         boolean mapped = true;
-        logger.log(Level.SEVERE, failure.getMessage(), failure);
-        if(failure instanceof TimeoutException){
+        if(failure instanceof ServiceException) {
+        	mapped = false;
+        }
+        else if(failure instanceof TimeoutException){
             status = Response.Status.REQUEST_TIMEOUT;
         }
         else if(failure instanceof BulkheadException){
@@ -98,10 +91,6 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
         			|| ADMIN_RIGHTS_REQUIRED == errorCode) {
         		status = Response.Status.FORBIDDEN;
         	}
-        }
-        else if(failure instanceof ServiceException) {
-        	final ServiceException exception = (ServiceException) failure;
-        	mapped = map(exception.getCause(), builder);
         }
         else{
             mapped = false;
