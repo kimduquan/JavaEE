@@ -18,12 +18,21 @@ import org.eclipse.microprofile.graphql.Type;
 @Embeddable
 public class MoreInformation {
     
+    /**
+     * 
+     */
     @Column(name = "CHECKLISTS")
     private JsonObject checklists;
     
+    /**
+     * 
+     */
     @Column(name = "CONCEPTS")
     private JsonObject concepts;
     
+    /**
+     * 
+     */
     @Column(name = "GUIDELINES")
     private JsonObject guidelines;
 
@@ -31,7 +40,7 @@ public class MoreInformation {
         return checklists;
     }
 
-    public void setChecklists(JsonObject checklists) {
+    public void setChecklists(final JsonObject checklists) {
         this.checklists = checklists;
     }
 
@@ -39,7 +48,7 @@ public class MoreInformation {
         return concepts;
     }
 
-    public void setConcepts(JsonObject concepts) {
+    public void setConcepts(final JsonObject concepts) {
         this.concepts = concepts;
     }
 
@@ -47,7 +56,7 @@ public class MoreInformation {
         return guidelines;
     }
 
-    public void setGuidelines(JsonObject guidelines) {
+    public void setGuidelines(final JsonObject guidelines) {
         this.guidelines = guidelines;
     }
 }

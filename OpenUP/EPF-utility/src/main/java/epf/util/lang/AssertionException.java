@@ -1,5 +1,9 @@
 package epf.util.lang;
 
+/**
+ * @author PC
+ *
+ */
 public class AssertionException extends Exception {
 
 	/**

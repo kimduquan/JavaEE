@@ -46,33 +46,67 @@ import epf.util.client.ClientQueue;
 @RequestScoped
 public class Request {
 	
+	/**
+	 * 
+	 */
 	private static final String CLASS_NAME = Request.class.getName();
     
-	private javax.ws.rs.core.Request request;
-    private HttpHeaders headers;
-    private UriInfo uriInfo;
-    private Client client;
-    private URI uri;
+	/**
+	 * 
+	 */
+	private transient javax.ws.rs.core.Request rawRequest;
+    /**
+     * 
+     */
+    private transient HttpHeaders headers;
+    /**
+     * 
+     */
+    private transient UriInfo uriInfo;
+    /**
+     * 
+     */
+    private transient Client client;
+    /**
+     * 
+     */
+    private transient URI uri;
     
+    /**
+     * 
+     */
     @Inject 
-    private ManagedExecutor executor;
+    private transient ManagedExecutor executor;
     
+    /**
+     * 
+     */
     @Inject
-    private ClientQueue clients;
+    private transient ClientQueue clients;
     
+    /**
+     * 
+     */
     @Inject
-    private Registry registry;
+    private transient Registry registry;
     
+    /**
+     * 
+     */
     @Inject
-    private Logger logger;
+    private transient Logger logger;
     
-    public CompletionStage<Response> request(InputStream in) throws Exception{
-    	logger.entering(CLASS_NAME, "request", request.getMethod());
+    /**
+     * @param in
+     * @return
+     */
+    public CompletionStage<Response> request(final InputStream body){
+    	logger.entering(CLASS_NAME, "request", rawRequest.getMethod());
         return executor.supplyAsync(() -> uri = buildUri(uriInfo, registry))
                 .thenApply(newUri -> client = clients.poll(newUri, b -> b))
                 .thenApply(newClient -> buildTarget(newClient, uriInfo, uri))
                 .thenApply(target -> buildRequest(target, headers))
-                .thenApply(request -> buildMethod(request, this.request.getMethod(), headers.getMediaType(), in))
+                .thenApply(request -> buildMethod(request, this.rawRequest.getMethod(), headers.getMediaType(), body))
                 .thenApply(response -> buildResponse(response, uriInfo))
                 .thenApply(ResponseBuilder::build)
                 .whenComplete((res, ex) -> {
@@ -84,56 +118,63 @@ public class Request {
                 });
     }
     
-    static URI buildUri(UriInfo uriInfo, Registry registry) {
+    /**
+     * @param uriInfo
+     * @param registry
+     * @return
+     */
+    protected static URI buildUri(final UriInfo uriInfo, final Registry registry) {
     	URI uri = null;
     	if(uriInfo.getPathSegments() != null && !uriInfo.getPathSegments().isEmpty()) {
-    		String service = uriInfo.getPathSegments().get(0).getPath();
+    		final String service = uriInfo.getPathSegments().get(0).getPath();
     		uri = registry.lookup(service);
     	}
     	if(uri != null) {
-    		String[] paths = uri.getPath().split("/");
+    		final String[] paths = uri.getPath().split("/");
     		if(paths.length > 1) {
         		uri = UriBuilder.fromUri(uri).replacePath(paths[1]).build();
         	}
     	}
-    	else {
+    	if(uri == null) {
     		uri = uriInfo.getBaseUri();
     	}
     	return uri;
     }
     
-    static WebTarget buildTarget(Client client, UriInfo uriInfo, URI serviceUri){
-    	Var<WebTarget> webTarget = new Var<>(client.target(serviceUri));
+    /**
+     * @param client
+     * @param uriInfo
+     * @param serviceUri
+     * @return
+     */
+    protected static WebTarget buildTarget(final Client client,final  UriInfo uriInfo, final URI serviceUri){
+    	final Var<WebTarget> webTarget = new Var<>(client.target(serviceUri));
         if(uriInfo != null){
-            List<PathSegment> segments = uriInfo.getPathSegments();
+        	final List<PathSegment> segments = uriInfo.getPathSegments();
             if(segments != null){
             	segments.forEach(segment -> {
             		webTarget.set(target -> target.path(segment.getPath()));
-                    MultivaluedMap<String, String> matrixParams = segment.getMatrixParameters();
+            		final MultivaluedMap<String, String> matrixParams = segment.getMatrixParameters();
                     if(matrixParams != null){
                     	matrixParams.forEach((key, value) -> {
-                        	List<String> paramValues = value;
-                        	if(paramValues != null) {
-                            	Object[] values = new Object[paramValues.size()];
-                            	webTarget.set(target -> target.matrixParam(key, (Object[])paramValues.toArray(values)));
+                    		if(value == null) {
+                        		webTarget.set(target -> target.matrixParam(key));
                         	}
                         	else {
-                        		webTarget.set(target -> target.matrixParam(key));
+                            	webTarget.set(target -> target.matrixParam(key, value.toArray(new Object[0])));
                         	}
                         });
                     }
                 });
             }
-            MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();        
+            final MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();        
             if(queryParams != null){
             	queryParams.forEach((key, value) -> {
-                	List<String> paramValues = value;
-                	if(paramValues != null) {
-                    	Object[] values = new Object[paramValues.size()];
-                    	webTarget.set(target -> target.queryParam(key, (Object[])paramValues.toArray(values)));
+            		if(value == null) {
+                		webTarget.set(target -> target.queryParam(key));
                 	}
                 	else {
-                		webTarget.set(target -> target.queryParam(key));
+                		webTarget.set(target -> target.queryParam(key, value.toArray(new Object[0])));
                 	}
             	});
             }
@@ -141,24 +182,29 @@ public class Request {
         return webTarget.get();
     }
     
-    static Builder buildRequest(WebTarget target, HttpHeaders headers){
-        Var<Builder> builder = new Var<>(target.request());
+    /**
+     * @param target
+     * @param headers
+     * @return
+     */
+    protected static Builder buildRequest(final WebTarget target, final HttpHeaders headers){
+    	final Var<Builder> builder = new Var<>(target.request());
         if(headers != null){
-            List<MediaType> mediaTypes = headers.getAcceptableMediaTypes();
+        	final List<MediaType> mediaTypes = headers.getAcceptableMediaTypes();
             if(mediaTypes != null){
-                builder.set(b -> b.accept(mediaTypes.toArray(new MediaType[mediaTypes.size()])));
+                builder.set(b -> b.accept(mediaTypes.toArray(new MediaType[0])));
             }
-            List<Locale> languages = headers.getAcceptableLanguages();
+            final List<Locale> languages = headers.getAcceptableLanguages();
             if(languages != null){
-                builder.set(b -> b.acceptLanguage(languages.toArray(new Locale[languages.size()])));
+                builder.set(b -> b.acceptLanguage(languages.toArray(new Locale[0])));
             }
-            Map<String, Cookie> cookies = headers.getCookies();
+            final Map<String, Cookie> cookies = headers.getCookies();
             if(cookies != null){
             	cookies.forEach((key, value) -> {
             		builder.set(b -> b.cookie(value));
             	});
             }
-            MultivaluedMap<String, String> requestHeaders = headers.getRequestHeaders();
+            final MultivaluedMap<String, String> requestHeaders = headers.getRequestHeaders();
             if(requestHeaders.containsKey(HttpHeaders.AUTHORIZATION)){
             	builder.set(b -> b.header(HttpHeaders.AUTHORIZATION, headers.getHeaderString(HttpHeaders.AUTHORIZATION)));
             }
@@ -166,60 +212,79 @@ public class Request {
         return builder.get();
     }
     
-    static Response buildMethod(
-            Builder builder, 
-            String method, 
-            MediaType type, 
-            InputStream in){
-        if(in != null && type != null){
-            return builder.method(
+    /**
+     * @param builder
+     * @param method
+     * @param type
+     * @param in
+     * @return
+     */
+    protected static Response buildMethod(
+    		final Builder builder, 
+    		final String method, 
+    		final MediaType type, 
+    		final InputStream body){
+    	Response response;
+    	if(body == null || type == null) {
+    		response = builder.method(method);
+    	}
+    	else {
+    		response = builder.method(
                     method, 
                     Entity.entity(
-                            in, 
+                            body, 
                             type
                     )
             );
         }
-        else{
-            return builder.method(method);
-        }
+    	return response;
     }
     
-    static Link buildLink(Link link, UriInfo uriInfo) {
-    	String[] paths = link.getUri().getPath().split("/");
+    /**
+     * @param link
+     * @param uriInfo
+     * @return
+     */
+    protected static Link buildLink(final Link link, final UriInfo uriInfo) {
+    	final String[] paths = link.getUri().getPath().split("/");
     	String path = "";
     	if(paths.length > 1) {
     		path = String.join("/", Arrays.asList(paths).subList(2, paths.length));
     	}
-    	URI uri = uriInfo.getBaseUriBuilder().path(path).build();
+    	final URI uri = uriInfo.getBaseUriBuilder().path(path).build();
     	return Link.fromLink(link).uri(uri).build();
     }
     
-    static ResponseBuilder buildResponse(Response res, UriInfo uriInfo){
+    /**
+     * @param res
+     * @param uriInfo
+     * @return
+     */
+    protected static ResponseBuilder buildResponse(final Response res, final UriInfo uriInfo){
         ResponseBuilder builder = Response.fromResponse(res);
-        Set<String> methods = res.getAllowedMethods();
+        final Set<String> methods = res.getAllowedMethods();
         if(methods != null){
             builder = builder.allow(methods);
         }
-        Map<String, NewCookie> cookies = res.getCookies();
+        final Map<String, NewCookie> cookies = res.getCookies();
         if(cookies != null){
             builder = builder.cookie(cookies.values().toArray(new NewCookie[cookies.values().size()]));
         }
-        URI location = res.getLocation();
+        final URI location = res.getLocation();
         if(location != null){
             builder = builder.contentLocation(location);
         }
         if(res.hasEntity()){
-            Object entity = res.getEntity();
+        	final Object entity = res.getEntity();
             if(entity != null){
                 builder = builder.entity(entity);
             }
         }
-        Locale lang = res.getLanguage();
+        final Locale lang = res.getLanguage();
         if(lang != null){
             builder = builder.language(lang);
         }
-        Date modified = res.getLastModified();
+        final Date modified = res.getLastModified();
         if(modified != null){
             builder = builder.lastModified(modified);
         }
@@ -234,30 +299,30 @@ public class Request {
         if(location != null){
             builder = builder.location(location);
         }
-        StatusType status = res.getStatusInfo();
+        final StatusType status = res.getStatusInfo();
         if(status != null){
             builder = builder.status(status);
         }
-        EntityTag tag = res.getEntityTag();
+        final EntityTag tag = res.getEntityTag();
         if(tag != null){
             builder = builder.tag(tag);
         }
-        MediaType type = res.getMediaType();
+        final MediaType type = res.getMediaType();
         if(type != null){
             builder = builder.type(type);
         }
         return builder;
     }
 
-    public void setHeaders(HttpHeaders headers) {
+    public void setHeaders(final HttpHeaders headers) {
         this.headers = headers;
     }
 
-    public void setUriInfo(UriInfo uriInfo) {
+    public void setUriInfo(final UriInfo uriInfo) {
         this.uriInfo = uriInfo;
     }
     
-    public void setRequest(javax.ws.rs.core.Request request) {
-    	this.request = request;
+    public void setRequest(final javax.ws.rs.core.Request request) {
+    	this.rawRequest = request;
     }
 }

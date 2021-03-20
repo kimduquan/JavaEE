@@ -5,10 +5,16 @@
  */
 package epf.service.security;
 
+import com.ibm.websphere.security.jwt.InvalidBuilderException;
+import com.ibm.websphere.security.jwt.InvalidClaimException;
 import com.ibm.websphere.security.jwt.JwtBuilder;
+import com.ibm.websphere.security.jwt.JwtException;
 import com.ibm.websphere.security.jwt.JwtToken;
+import com.ibm.websphere.security.jwt.KeyException;
 import epf.client.config.ConfigNames;
 import epf.client.security.Token;
+import epf.service.ServiceException;
+
 import java.io.Serializable;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
@@ -34,19 +40,30 @@ public class TokenGenerator implements Serializable {
     * 
     */
     private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
     private static final Logger logger = Logger.getLogger(TokenGenerator.class.getName());
 
-    private PrivateKey privateKey;
-    private Base64.Decoder decoder;
+    /**
+     * 
+     */
+    private transient PrivateKey privateKey;
     
+    /**
+     * 
+     */
     @Inject
-    @ConfigProperty(name = ConfigNames.MP_JWT_PRIVATE_KEY)
-    private String privateKeyText;
+    @ConfigProperty(name = ConfigNames.JWT_PRIVATE_KEY)
+    private transient String privateKeyText;
     
+    /**
+     * 
+     */
     @PostConstruct
-    void postConstruct(){
+    protected void postConstruct(){
         try {
-            decoder = Base64.getUrlDecoder();
+        	final Base64.Decoder decoder = Base64.getUrlDecoder();
             privateKey = KeyFactory.getInstance("RSA")
                         .generatePrivate(
                                 new PKCS8EncodedKeySpec(
@@ -59,41 +76,54 @@ public class TokenGenerator implements Serializable {
         }
     }
     
-    public Token generate(Token jwt) throws Exception{
-        JwtBuilder builder = JwtBuilder.create();
-        if(jwt.getAudience() != null && !jwt.getAudience().isEmpty()){
-            builder.audience(
-                    jwt.getAudience()
-                            .stream()
-                            .collect(Collectors.toList())
-            );
-        }
-        builder.issuer(jwt.getIssuer())
-                .subject(jwt.getSubject())
-                .expirationTime(jwt.getExpirationTime())
-                .notBefore(jwt.getIssuedAtTime())
-                .jwtId(true)
-                .claim(Claims.iat.name(), jwt.getIssuedAtTime())
-                .claim(Claims.upn.name(), jwt.getName());
-        if(jwt.getGroups() != null){
-            builder.claim(Claims.groups.name(), jwt.getGroups().toArray(new String[jwt.getGroups().size()]));
-        }
-        builder.signWith("RS256", privateKey);
-        JwtToken generatedJwt = builder.buildJwt();
-        jwt.setAudience(
-        		generatedJwt
-        		.getClaims()
-        		.getAudience()
-        		.stream()
-        		.collect(Collectors.toSet())
-        		);
-        jwt.setExpirationTime(generatedJwt.getClaims().getExpiration());
-        jwt.setIssuedAtTime(generatedJwt.getClaims().getIssuedAt());
-        jwt.setIssuer(generatedJwt.getClaims().getIssuer());
-        jwt.setName(generatedJwt.getClaims().get(Claims.upn.name()).toString());
-        jwt.setSubject(generatedJwt.getClaims().getSubject());
-        jwt.setTokenID(generatedJwt.getClaims().getJwtId());
-        jwt.setRawToken(generatedJwt.compact());
+    /**
+     * @param jwt
+     * @return
+     * @throws InvalidBuilderException
+     * @throws InvalidClaimException
+     * @throws KeyException
+     * @throws JwtException
+     */
+    public Token generate(final Token jwt) throws ServiceException {
+    	try {
+    		final JwtBuilder builder = JwtBuilder.create();
+            if(jwt.getAudience() != null && !jwt.getAudience().isEmpty()){
+                builder.audience(
+                        jwt.getAudience()
+                                .stream()
+                                .collect(Collectors.toList())
+                );
+            }
+            builder.issuer(jwt.getIssuer())
+                    .subject(jwt.getSubject())
+                    .expirationTime(jwt.getExpirationTime())
+                    .notBefore(jwt.getIssuedAtTime())
+                    .jwtId(true)
+                    .claim(Claims.iat.name(), jwt.getIssuedAtTime())
+                    .claim(Claims.upn.name(), jwt.getName());
+            if(jwt.getGroups() != null){
+                builder.claim(Claims.groups.name(), jwt.getGroups().toArray(new String[jwt.getGroups().size()]));
+            }
+            builder.signWith("RS256", privateKey);
+            final JwtToken generatedJwt = builder.buildJwt();
+            jwt.setAudience(
+            		generatedJwt
+            		.getClaims()
+            		.getAudience()
+            		.stream()
+            		.collect(Collectors.toSet())
+            		);
+            jwt.setExpirationTime(generatedJwt.getClaims().getExpiration());
+            jwt.setIssuedAtTime(generatedJwt.getClaims().getIssuedAt());
+            jwt.setIssuer(generatedJwt.getClaims().getIssuer());
+            jwt.setName(generatedJwt.getClaims().get(Claims.upn.name()).toString());
+            jwt.setSubject(generatedJwt.getClaims().getSubject());
+            jwt.setTokenID(generatedJwt.getClaims().getJwtId());
+            jwt.setRawToken(generatedJwt.compact());
+    	}
+    	catch(Exception ex) {
+    		throw new ServiceException(ex);
+    	}
         return jwt;
     }
 }

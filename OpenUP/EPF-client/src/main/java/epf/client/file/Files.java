@@ -29,6 +29,10 @@ import epf.validation.file.File;
 @Path("file")
 public interface Files {
     
+    /**
+     * @param target
+     * @return
+     */
     @PUT
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.TEXT_PLAIN)
@@ -36,45 +40,65 @@ public interface Files {
             @MatrixParam("target")
             @NotBlank
             @File
-            String target
-    ) throws Exception;
+            final String target
+    );
     
+    /**
+     * @param path
+     * @param attrs
+     * @return
+     */
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
     String createFile(
             @FormParam("path")
             @NotBlank
-            String path,
+            final String path,
             @FormParam("attrs")
-            Map<String, String> attrs
-    ) throws Exception;
+            final Map<String, String> attrs
+    );
     
+    /**
+     * @param dir
+     * @param prefix
+     * @param suffix
+     * @param attrs
+     * @return
+     */
     @POST
     @Path("temp")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
     String createTempFile(
             @FormParam("dir")
-            String dir,
+            final String dir,
             @FormParam("prefix")
             @NotBlank
-            String prefix,
+            final String prefix,
             @FormParam("suffix")
             @NotBlank
-            String suffix,
+            final String suffix,
             @FormParam("attrs")
-            Map<String, String> attrs
-    ) throws Exception;
+            final Map<String, String> attrs
+    );
     
+    /**
+     * @param path
+     */
     @DELETE
     void delete(
             @MatrixParam("path")
             @NotBlank
             @File
-            String path
-    ) throws Exception;
+            final String path
+    );
     
+    /**
+     * @param start
+     * @param maxDepth
+     * @return
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     List<String> find(
@@ -85,8 +109,12 @@ public interface Files {
             @MatrixParam("maxDepth") 
             @Positive
             Integer maxDepth
-    ) throws Exception;
+    );
     
+    /**
+     * @param path
+     * @return
+     */
     @GET
     @Path("lines")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
@@ -94,9 +122,14 @@ public interface Files {
             @MatrixParam("path")
             @NotBlank
             @File
-            String path
-    ) throws Exception;
+            final String path
+    );
     
+    /**
+     * @param source
+     * @param target
+     * @return
+     */
     @PUT
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
@@ -104,9 +137,9 @@ public interface Files {
             @FormParam("source")
             @NotBlank
             @File
-            String source, 
+            final String source, 
             @MatrixParam("target")
             @NotBlank
-            String target
-    ) throws Exception;
+            final String target
+    );
 }

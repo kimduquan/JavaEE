@@ -24,9 +24,9 @@ import javax.validation.Payload;
 @Constraint(validatedBy = UnitValidator.class)
 @Documented
 public @interface Unit {
-    public String message() default "Unit";
+    String message() default "Unit";
 
-    public Class<?>[] groups() default {};
+    Class<?>[] groups() default {};
 
-    public Class<? extends Payload>[] payload() default {};
+    Class<? extends Payload>[] payload() default {};
 }

@@ -3,23 +3,30 @@ package epf.util.lang;
 import java.util.stream.Stream;
 import epf.util.function.Function;
 
+/**
+ * @author PC
+ *
+ */
 public class Do extends Function {
 	
-	public Do(Stream<Runnable> stream) {
+	/**
+	 * @param stream
+	 */
+	public Do(final Stream<Runnable> stream) {
 		super(stream);
 	}
 	
 	@Override
-	public Stream<Runnable> apply(Stream<Runnable> stream){
+	public Stream<Runnable> apply(final Stream<Runnable> stream){
 		return super
 				.apply(stream)
 				.takeWhile(func -> {
 					if(func instanceof While) {
-						While _while = ((While) func);
-						if(_while.predicate().get() == null) {
+						final While _while = (While) func;
+						if(_while.getPredicate().get() == null) {
 							return true;
 						}
-						return _while.predicate().get();
+						return _while.getPredicate().get();
 					}
 					else if(func instanceof Break) {
 						return false;

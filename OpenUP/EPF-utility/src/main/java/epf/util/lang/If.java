@@ -4,9 +4,17 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 import epf.util.function.PredicateFunction;
 
+/**
+ * @author PC
+ *
+ */
 public class If extends PredicateFunction {
 
-	public If(Supplier<Boolean> predicate, Stream<Runnable> stream) {
+	/**
+	 * @param predicate
+	 * @param stream
+	 */
+	public If(final Supplier<Boolean> predicate, final Stream<Runnable> stream) {
 		super(predicate, stream);
 	}
 }

@@ -8,23 +8,42 @@ import javax.validation.constraints.NotNull;
 
 import org.eclipse.microprofile.graphql.Type;
 
+/**
+ * @author PC
+ *
+ */
 @Type
 @Embeddable
 public class Description {
 
+    /**
+     * 
+     */
     @Column(name = "PURPOSE")
     private JsonObject purpose;
 
+    /**
+     * 
+     */
     @Column(name = "RELATIONSHIPS")
     private JsonObject relationships;
 
+    /**
+     * 
+     */
     @Column(name = "DESCRIPTION")
     private JsonObject description;
 
+    /**
+     * 
+     */
     @Embedded
     @NotNull
     private Properties properties;
 
+    /**
+     * 
+     */
     @Column(name = "ALTERNATIVES")
     private JsonObject alternatives;
     
@@ -32,7 +51,7 @@ public class Description {
         return purpose;
     }
 
-    public void setPurpose(JsonObject purpose) {
+    public void setPurpose(final JsonObject purpose) {
         this.purpose = purpose;
     }
 
@@ -40,7 +59,7 @@ public class Description {
         return relationships;
     }
 
-    public void setRelationships(JsonObject relationships) {
+    public void setRelationships(final JsonObject relationships) {
         this.relationships = relationships;
     }
 
@@ -48,7 +67,7 @@ public class Description {
         return description;
     }
 
-    public void setDescription(JsonObject description) {
+    public void setDescription(final JsonObject description) {
         this.description = description;
     }
 
@@ -56,7 +75,7 @@ public class Description {
         return properties;
     }
 
-    public void setProperties(Properties properties) {
+    public void setProperties(final Properties properties) {
         this.properties = properties;
     }
 
@@ -64,7 +83,7 @@ public class Description {
         return alternatives;
     }
 
-    public void setAlternatives(JsonObject alternatives) {
+    public void setAlternatives(final JsonObject alternatives) {
         this.alternatives = alternatives;
     }
 }

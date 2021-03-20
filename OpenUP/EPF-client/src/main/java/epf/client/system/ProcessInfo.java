@@ -7,32 +7,51 @@ package epf.client.system;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
 
 /**
  *
  * @author FOXCONN
  */
 public class ProcessInfo {
+    /**
+     * 
+     */
     private String[] arguments;
+    /**
+     * 
+     */
     private String command;
+    /**
+     * 
+     */
     private String commandLine;
+    /**
+     * 
+     */
     private Instant start;
+    /**
+     * 
+     */
     private Duration totalCpu;
+    /**
+     * 
+     */
     private String user;
 
     public String[] getArguments() {
-        return arguments;
+    	return arguments;
     }
 
-    public void setArguments(String[] arguments) {
-        this.arguments = arguments;
+    public void setArguments(final String... arguments) {
+        this.arguments = Arrays.copyOf(arguments, arguments.length);
     }
 
     public String getCommand() {
         return command;
     }
 
-    public void setCommand(String command) {
+    public void setCommand(final String command) {
         this.command = command;
     }
 
@@ -40,7 +59,7 @@ public class ProcessInfo {
         return commandLine;
     }
 
-    public void setCommandLine(String commandLine) {
+    public void setCommandLine(final String commandLine) {
         this.commandLine = commandLine;
     }
 
@@ -48,7 +67,7 @@ public class ProcessInfo {
         return start;
     }
 
-    public void setStart(Instant start) {
+    public void setStart(final Instant start) {
         this.start = start;
     }
 
@@ -56,7 +75,7 @@ public class ProcessInfo {
         return totalCpu;
     }
 
-    public void setTotalCpu(Duration totalCpu) {
+    public void setTotalCpu(final Duration totalCpu) {
         this.totalCpu = totalCpu;
     }
 
@@ -64,7 +83,7 @@ public class ProcessInfo {
         return user;
     }
 
-    public void setUser(String user) {
+    public void setUser(final String user) {
         this.user = user;
     }
 }

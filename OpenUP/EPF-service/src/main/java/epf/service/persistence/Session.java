@@ -7,60 +7,72 @@ package epf.service.persistence;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
-import epf.util.Var;
 
 /**
  *
  * @author FOXCONN
  */
-public class Session implements AutoCloseable {
-	
-	private static final Logger logger = Logger.getLogger(Session.class.getName());
+public class Session {
    
-    private EntityManagerFactory factory;
-    private Map<String, Conversation> conversations;
+    /**
+     * 
+     */
+    private transient final EntityManagerFactory factory;
+    /**
+     * 
+     */
+    private transient final Map<String, Conversation> conversations;
 
-    public Session(EntityManagerFactory factory) {
+    /**
+     * @param factory
+     */
+    public Session(final EntityManagerFactory factory) {
         this.factory = factory;
         conversations = new ConcurrentHashMap<>();
     }
     
-    public Conversation getConversation(String sessionId){
+    /**
+     * @param sessionId
+     * @return
+     */
+    public Conversation getConversation(final String sessionId){
         return conversations.get(sessionId);
     }
     
-    public Conversation putConversation(String sessionId){
+    /**
+     * @param sessionId
+     * @return
+     */
+    public Conversation putConversation(final String sessionId){
         return conversations.computeIfAbsent(sessionId, id -> {
             return new Conversation(factory);
         });
     }
     
-    public Conversation removeConversation(String sessionId){
+    /**
+     * @param sessionId
+     * @return
+     */
+    public Conversation removeConversation(final String sessionId){
         return conversations.remove(sessionId);
     }
 
-    @Override
-    public void close() throws Exception {
-    	Var<Exception> error = new Var<>();
+    /**
+     * 
+     */
+    public void close() {
     	conversations.forEach((id, conversation) -> {
-        	try {
-				conversation.close();
-			} 
-        	catch (Exception e) {
-        		logger.log(Level.WARNING, e.getMessage(), e);
-        		error.set(e);
-			}
+    		conversation.close();
         });
         conversations.clear();
-        if(error.get() != null) {
-        	throw error.get();
-        }
     }
     
-    public boolean checkExpirationTime(long expirationTime) {
+    /**
+     * @param expirationTime
+     * @return
+     */
+    public boolean checkExpirationTime(final long expirationTime) {
     	return System.currentTimeMillis() < expirationTime * 1000;
     }
 }

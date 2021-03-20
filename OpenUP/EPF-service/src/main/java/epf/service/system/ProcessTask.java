@@ -17,15 +17,30 @@ import javax.ws.rs.sse.SseBroadcaster;
  *
  * @author FOXCONN
  */
-public class ProcessTask implements Runnable, AutoCloseable {
+public class ProcessTask implements Runnable {
 	
+	/**
+	 * 
+	 */
 	private static final Logger logger = Logger.getLogger(Processes.class.getName());
     
+    /**
+     * 
+     */
     private SseBroadcaster broadcaster;
-    private Process process;
+    /**
+     * 
+     */
+    private transient final Process process;
+    /**
+     * 
+     */
     private Builder builder;
 
-    public ProcessTask(Process process) {
+    /**
+     * @param process
+     */
+    public ProcessTask(final Process process) {
         this.process = process;
     }
 
@@ -43,8 +58,10 @@ public class ProcessTask implements Runnable, AutoCloseable {
         }
     }
 
-    @Override
-    public void close() throws Exception {
+    /**
+     * 
+     */
+    public void close() {
         broadcaster.close();
         process.destroyForcibly();
     }
@@ -53,19 +70,22 @@ public class ProcessTask implements Runnable, AutoCloseable {
         return process;
     }
 
-    public void setBroadcaster(SseBroadcaster broadcaster) {
+    public void setBroadcaster(final SseBroadcaster broadcaster) {
         this.broadcaster = broadcaster;
     }
     
+    /**
+     * @return
+     */
     public ProcessInfo getInfo(){
-        ProcessInfo info = new ProcessInfo();
-        ProcessHandle.Info i = process.info();
-        i.arguments().ifPresent(info::setArguments);
-        i.command().ifPresent(info::setCommand);
-        i.commandLine().ifPresent(info::setCommandLine);
-        i.startInstant().ifPresent(info::setStart);
-        i.totalCpuDuration().ifPresent(info::setTotalCpu);
-        i.user().ifPresent(info::setUser);
+    	final ProcessInfo info = new ProcessInfo();
+    	final ProcessHandle.Info procInfo = process.info();
+    	procInfo.arguments().ifPresent(info::setArguments);
+    	procInfo.command().ifPresent(info::setCommand);
+    	procInfo.commandLine().ifPresent(info::setCommandLine);
+    	procInfo.startInstant().ifPresent(info::setStart);
+    	procInfo.totalCpuDuration().ifPresent(info::setTotalCpu);
+    	procInfo.user().ifPresent(info::setUser);
         return info;
     }
 
@@ -77,7 +97,7 @@ public class ProcessTask implements Runnable, AutoCloseable {
         return builder;
     }
 
-    public void setBuilder(Builder builder) {
+    public void setBuilder(final Builder builder) {
         this.builder = builder;
     }
 }

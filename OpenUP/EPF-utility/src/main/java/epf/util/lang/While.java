@@ -4,13 +4,24 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 import epf.util.function.PredicateFunction;
 
+/**
+ * @author PC
+ *
+ */
 public class While extends PredicateFunction {
 	
-	public While(Supplier<Boolean> predicate) {
+	/**
+	 * @param predicate
+	 */
+	public While(final Supplier<Boolean> predicate) {
 		super(predicate, Stream.of());
 	}
 	
-	public While(Supplier<Boolean> predicate, Stream<Runnable> stream) {
+	/**
+	 * @param predicate
+	 * @param stream
+	 */
+	public While(final Supplier<Boolean> predicate, final Stream<Runnable> stream) {
 		super(predicate, stream);
 	}
 }

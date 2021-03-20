@@ -13,21 +13,48 @@ import java.util.Set;
  */
 public class Token {
     
+    /**
+     * 
+     */
     private String name;
+    /**
+     * 
+     */
     private String rawToken;
+    /**
+     * 
+     */
     private String issuer;
+    /**
+     * 
+     */
     private Set<String> audience;
+    /**
+     * 
+     */
     private String subject;
+    /**
+     * 
+     */
     private String tokenID;
+    /**
+     * 
+     */
     private long expirationTime;
+    /**
+     * 
+     */
     private long issuedAtTime;
+    /**
+     * 
+     */
     private Set<String> groups;
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -35,7 +62,7 @@ public class Token {
         return rawToken;
     }
 
-    public void setRawToken(String rawToken) {
+    public void setRawToken(final String rawToken) {
         this.rawToken = rawToken;
     }
 
@@ -43,7 +70,7 @@ public class Token {
         return issuer;
     }
 
-    public void setIssuer(String issuer) {
+    public void setIssuer(final String issuer) {
         this.issuer = issuer;
     }
 
@@ -51,7 +78,7 @@ public class Token {
         return audience;
     }
 
-    public void setAudience(Set<String> audience) {
+    public void setAudience(final Set<String> audience) {
         this.audience = audience;
     }
 
@@ -59,7 +86,7 @@ public class Token {
         return subject;
     }
 
-    public void setSubject(String subject) {
+    public void setSubject(final String subject) {
         this.subject = subject;
     }
 
@@ -67,7 +94,7 @@ public class Token {
         return tokenID;
     }
 
-    public void setTokenID(String tokenID) {
+    public void setTokenID(final String tokenID) {
         this.tokenID = tokenID;
     }
 
@@ -75,7 +102,7 @@ public class Token {
         return expirationTime;
     }
 
-    public void setExpirationTime(long expirationTime) {
+    public void setExpirationTime(final long expirationTime) {
         this.expirationTime = expirationTime;
     }
 
@@ -83,7 +110,7 @@ public class Token {
         return issuedAtTime;
     }
 
-    public void setIssuedAtTime(long issuedAtTime) {
+    public void setIssuedAtTime(final long issuedAtTime) {
         this.issuedAtTime = issuedAtTime;
     }
 
@@ -91,7 +118,7 @@ public class Token {
         return groups;
     }
 
-    public void setGroups(Set<String> groups) {
+    public void setGroups(final Set<String> groups) {
         this.groups = groups;
     }
 }

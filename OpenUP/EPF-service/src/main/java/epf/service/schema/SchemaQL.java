@@ -20,14 +20,23 @@ import org.eclipse.microprofile.graphql.Query;
 @RequestScoped
 public class SchemaQL {
     
+    /**
+     * 
+     */
     @Inject
-    private Roles roles;
+    private transient Roles roles;
     
+    /**
+     * 
+     */
     @Inject
-    private WorkProducts workProducts;
+    private transient WorkProducts workProducts;
     
+    /**
+     * 
+     */
     @Inject
-    private Tasks tasks;
+    private transient Tasks tasks;
     
     @Query
     @Name("Roles")

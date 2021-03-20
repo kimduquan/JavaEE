@@ -30,58 +30,96 @@ import javax.ws.rs.core.PathSegment;
  */
 @Path("persistence")
 public interface Queries {
+	
+	/**
+	 * 
+	 */
+	String FIRST = "first";
+	/**
+	 * 
+	 */
+	String MAX = "max";
     
+    /**
+     * @param unit
+     * @param paths
+     * @param firstResult
+     * @param maxResults
+     * @return
+     */
     @GET
     @Path("{unit}/{criteria: .+}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCriteriaQueryResult(
+    Response getCriteriaQueryResult(
             @PathParam("unit")
             @Unit
-            String unit,
+            final String unit,
             @PathParam("criteria")
-            List<PathSegment> paths,
-            @QueryParam("first")
-            Integer firstResult,
-            @QueryParam("max")
-            Integer maxResults
-            ) throws Exception;
+            final List<PathSegment> paths,
+            @QueryParam(FIRST)
+            final Integer firstResult,
+            @QueryParam(MAX)
+            final Integer maxResults
+            );
     
+    /**
+     * @param client
+     * @param type
+     * @param unit
+     * @param paths
+     * @param firstResult
+     * @param maxResults
+     */
     static <T> List<T> getCriteriaQueryResult(
-            Client client,
-            GenericType<List<T>> type,
-            String unit,
-            Function<WebTarget, WebTarget> paths,
-            Integer firstResult,
-            Integer maxResults
-            ) throws Exception{
+    		final Client client,
+    		final GenericType<List<T>> type,
+    		final String unit,
+    		final Function<WebTarget, WebTarget> paths,
+    		final Integer firstResult,
+    		final Integer maxResults
+            ) {
     	return client.request(
     			target -> paths.apply(
-    					target.path(unit).queryParam("first", firstResult).queryParam("max", maxResults)
+    					target.path(unit).queryParam(FIRST, firstResult).queryParam(MAX, maxResults)
     					), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.get(type);
     }
     
+    /**
+     * @param uriInfo
+     * @param text
+     * @param firstResult
+     * @param maxResults
+     * @return
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     Response search(
     		@Context
-    		UriInfo uriInfo,
+    		final UriInfo uriInfo,
     		@QueryParam("text") 
-    		String text, 
-    		@QueryParam("first")
-            Integer firstResult,
-            @QueryParam("max")
-            Integer maxResults) throws Exception;
+    		final String text, 
+    		@QueryParam(FIRST)
+    		final Integer firstResult,
+            @QueryParam(MAX)
+    		final Integer maxResults);
     
+    /**
+     * @param client
+     * @param text
+     * @param firstResult
+     * @param maxResults
+     * @return
+     */
     static Set<Link> search(
-    		Client client,
-    		String text, 
-    		Integer firstResult,
-            Integer maxResults) throws Exception{
+    		final Client client,
+    		final String text, 
+    		final Integer firstResult,
+    		final Integer maxResults) {
     	return client.request(
-    			target -> target.queryParam("text", text).queryParam("first", firstResult).queryParam("max", maxResults), 
+    			target -> target.queryParam("text", text).queryParam(FIRST, firstResult).queryParam(MAX, maxResults), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.get()

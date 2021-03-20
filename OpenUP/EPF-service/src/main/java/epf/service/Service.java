@@ -76,7 +76,7 @@ import epf.schema.EPF;
     @SecurityScheme(
             securitySchemeName = "MP-JWT",
             type = SecuritySchemeType.HTTP,
-            description = "MP-JWT",
+            description = "",
             scheme = "bearer",
             bearerFormat = "JWT"
     )

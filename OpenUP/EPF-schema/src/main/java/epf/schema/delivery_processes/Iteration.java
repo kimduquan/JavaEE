@@ -39,26 +39,44 @@ import javax.persistence.NamedQuery;
 )
 public class Iteration {
     
+    /**
+     * 
+     */
     public static final String ITERATIONS = "EPF_Iteration.Iterations";
     
+    /**
+     * 
+     */
     @Column(name = "NAME")
     @Id
     @NotBlank
     private String name;
     
+    /**
+     * 
+     */
     @OneToOne
     @MapsId
     @JoinColumn(name = "NAME")
     @NotNull
     private CapabilityPattern Extends;
     
+    /**
+     * 
+     */
     @Column(name = "NUMBER")
     private Integer number;
     
+    /**
+     * 
+     */
     @JoinColumn(name = "PARENT_ACTIVITIES")
     @ManyToOne
     private Phase parentActivities;
     
+    /**
+     * 
+     */
     @ManyToMany
     @JoinTable(name = "ITERATION_ACTIVITIES",
             schema = EPF.Schema,
@@ -72,7 +90,7 @@ public class Iteration {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -80,7 +98,7 @@ public class Iteration {
         return Extends;
     }
 
-    public void setExtends(CapabilityPattern Extends) {
+    public void setExtends(final CapabilityPattern Extends) {
         this.Extends = Extends;
     }
 
@@ -88,7 +106,7 @@ public class Iteration {
         return number;
     }
 
-    public void setNumber(Integer number) {
+    public void setNumber(final Integer number) {
         this.number = number;
     }
 
@@ -96,7 +114,7 @@ public class Iteration {
         return parentActivities;
     }
 
-    public void setParentActivities(Phase parentActivities) {
+    public void setParentActivities(final Phase parentActivities) {
         this.parentActivities = parentActivities;
     }
 
@@ -104,7 +122,7 @@ public class Iteration {
         return activities;
     }
 
-    public void setActivities(List<Activity> activities) {
+    public void setActivities(final List<Activity> activities) {
         this.activities = activities;
     }
 }

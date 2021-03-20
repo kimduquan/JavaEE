@@ -7,25 +7,33 @@ package epf.service.persistence;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import epf.util.Var;
 
 /**
  *
  * @author FOXCONN
  */
-public class Credential implements AutoCloseable {
-	
-	private static final Logger logger = Logger.getLogger(Credential.class.getName());
+public class Credential {
     
-    private EntityManagerFactory factory;
-    private EntityManager defaultManager;
-    private Map<Long, Session> sessions;
+    /**
+     * 
+     */
+    private transient final EntityManagerFactory factory;
+    /**
+     * 
+     */
+    private transient final EntityManager defaultManager;
+    /**
+     * 
+     */
+    private transient final Map<Long, Session> sessions;
 
-    public Credential(EntityManagerFactory factory, EntityManager defaultManager) {
+    /**
+     * @param factory
+     * @param defaultManager
+     */
+    public Credential(final EntityManagerFactory factory, final EntityManager defaultManager) {
         this.factory = factory;
         this.defaultManager = defaultManager;
         sessions = new ConcurrentHashMap<>();
@@ -39,37 +47,41 @@ public class Credential implements AutoCloseable {
     	return defaultManager;
     }
 
-    @Override
-    public void close() throws Exception {
-    	Var<Exception> error = new Var<>();
+    /**
+     * 
+     */
+    public void close() {
     	sessions.forEach((time, session) -> {
-        	try {
-				session.close();
-			} 
-        	catch (Exception e) {
-				logger.log(Level.WARNING, e.getMessage(), e);
-				error.set(e);
-			}
+    		session.close();
         });
         sessions.clear();
         defaultManager.close();
         factory.close();
-        if(error.get() != null) {
-        	throw error.get();
-        }
     }
     
-    public Session putSession(long timestamp){
+    /**
+     * @param timestamp
+     * @return
+     */
+    public Session putSession(final long timestamp){
         return sessions.computeIfAbsent(timestamp, time -> {
             return new Session(factory);
         });
     }
     
-    public Session getSession(long timestamp){
+    /**
+     * @param timestamp
+     * @return
+     */
+    public Session getSession(final long timestamp){
         return sessions.get(timestamp);
     }
     
-    public Session removeSession(long timestamp){
+    /**
+     * @param timestamp
+     * @return
+     */
+    public Session removeSession(final long timestamp){
         return sessions.remove(timestamp);
     }
 }

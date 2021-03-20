@@ -5,6 +5,7 @@
  */
 package epf.webapp.security;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.Map;
@@ -34,46 +35,76 @@ import epf.util.security.PasswordHash;
 @ApplicationScoped
 public class EPFIdentityStore implements IdentityStore, RememberMeIdentityStore {
     
-    private Map<String, TokenPrincipal> principals = new ConcurrentHashMap<>();
+    /**
+     * 
+     */
+    /**
+     * 
+     */
+    private transient final Map<String, TokenPrincipal> principals = new ConcurrentHashMap<>();
 	
+    /**
+     * 
+     */
     @Inject
-    private LocateRegistry registry;
+    private transient LocateRegistry registry;
     
+    /**
+     * 
+     */
     @Inject
-    private ClientQueue clients;
+    private transient ClientQueue clients;
     
+    /**
+     * 
+     */
     @Inject
-    private Logger logger;
+    private transient Logger logger;
     
-    public CredentialValidationResult validate(BasicAuthenticationCredential credential) throws Exception{
+    /**
+     * @param credential
+     * @return
+     * @throws Exception
+     */
+    public CredentialValidationResult validate(final BasicAuthenticationCredential credential) {
         CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
-        Token token = login(credential);
+        final Token token = login(credential);
         if(token != null){
-            TokenPrincipal principal = new TokenPrincipal(credential.getCaller(), token);
+        	final TokenPrincipal principal = new TokenPrincipal(credential.getCaller(), token);
             principals.put(credential.getCaller(), principal);
             result = new CredentialValidationResult(principal, principal.getToken().getGroups());
         }
         return result;
     }
     
-    Token login(BasicAuthenticationCredential credential) throws Exception{
-        URI securityUrl = registry.lookup("security");
-        URL audienceUrl = new URL(String.format(
-                                    Security.AUDIENCE_URL_FORMAT,
-                                    securityUrl.getScheme(), 
-                                    securityUrl.getHost(), 
-                                    securityUrl.getPort()
-                            ));
+    /**
+     * @param credential
+     * @return
+     */
+    protected Token login(final BasicAuthenticationCredential credential){
         Token jwt = null;
+        final URI securityUrl = registry.lookup("security");
+        URL audienceUrl = null;
+		try {
+			audienceUrl = new URL(String.format(
+			                            Security.AUDIENCE_URL_FORMAT,
+			                            securityUrl.getScheme(), 
+			                            securityUrl.getHost(), 
+			                            securityUrl.getPort()
+			                    ));
+		} 
+		catch (MalformedURLException e) {
+		}
         try(Client client = new Client(clients, securityUrl, b -> b)){
-        	String token = Security.login(
+        	final String passwordHash = PasswordHash.hash(
+					credential.getCaller(), 
+					credential.getPassword().getValue()
+					);
+        	final String token = Security.login(
         			client, 
         			null,
 					credential.getCaller(),
-					PasswordHash.hash(
-							credential.getCaller(), 
-							credential.getPassword().getValue()
-							),
+					passwordHash,
 					audienceUrl
 					);
             if(!token.isEmpty()){
@@ -81,22 +112,25 @@ public class EPFIdentityStore implements IdentityStore, RememberMeIdentityStore 
             	jwt = Security.authenticate(client, null);
             }
         }
+        catch (Exception e) {
+			
+		}
         return jwt;
     }
     
     @Override
-    public Set<String> getCallerGroups(CredentialValidationResult validationResult){
+    public Set<String> getCallerGroups(final CredentialValidationResult validationResult){
         return validationResult.getCallerGroups();
     }
 
     @Override
-    public CredentialValidationResult validate(RememberMeCredential credential) {
+    public CredentialValidationResult validate(final RememberMeCredential credential) {
         CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
         try(Client client = new Client(clients, registry.lookup("security"), b -> b)) {
         	client.authorization(credential.getToken());
-        	Token jwt = Security.authenticate(client, null);
+        	final Token jwt = Security.authenticate(client, null);
             if(jwt != null){
-                TokenPrincipal principal = new TokenPrincipal(jwt.getName(), jwt);
+            	final TokenPrincipal principal = new TokenPrincipal(jwt.getName(), jwt);
                 result = new CredentialValidationResult(principal, jwt.getGroups());
             }
         } 
@@ -107,16 +141,17 @@ public class EPFIdentityStore implements IdentityStore, RememberMeIdentityStore 
     }
 
     @Override
-    public String generateLoginToken(CallerPrincipal caller, Set<String> groups) {
+    public String generateLoginToken(final CallerPrincipal caller, final Set<String> groups) {
+    	String token = "";
         if(caller instanceof TokenPrincipal){
-            TokenPrincipal principal = (TokenPrincipal) caller;
-            return principal.getToken().getRawToken();
+        	final TokenPrincipal principal = (TokenPrincipal) caller;
+            token = principal.getToken().getRawToken();
         }
-        return "";
+        return token;
     }
 
     @Override
-    public void removeLoginToken(String token) {
+    public void removeLoginToken(final String token) {
     	try(Client client = new Client(clients, registry.lookup("security"), b -> b)) {
             client.authorization(token);
             Security.logOut(client, null);
@@ -126,7 +161,11 @@ public class EPFIdentityStore implements IdentityStore, RememberMeIdentityStore 
         }
     }
     
-    public TokenPrincipal getPrincipal(String name) {
+    /**
+     * @param name
+     * @return
+     */
+    public TokenPrincipal getPrincipal(final String name) {
     	return principals.get(name);
     }
 }

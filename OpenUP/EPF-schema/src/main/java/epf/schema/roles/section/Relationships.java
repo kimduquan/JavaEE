@@ -24,6 +24,9 @@ import org.eclipse.microprofile.graphql.Type;
 @Embeddable
 public class Relationships {
     
+    /**
+     * 
+     */
     @ManyToMany
     @JoinTable(
             name = "ROLE_ADDITIONALLY_PERFORMS",
@@ -37,6 +40,9 @@ public class Relationships {
     )
     private List<Task> additionallyPerforms;
     
+    /**
+     * 
+     */
     @ManyToMany
     @JoinTable(
             name = "ROLE_MODIFIES",
@@ -55,7 +61,7 @@ public class Relationships {
         return additionallyPerforms;
     }
 
-    public void setAdditionallyPerforms(List<Task> additionallyPerforms) {
+    public void setAdditionallyPerforms(final List<Task> additionallyPerforms) {
         this.additionallyPerforms = additionallyPerforms;
     }
     
@@ -64,7 +70,7 @@ public class Relationships {
         return modifies;
     }
 
-    public void setModifies(List<Artifact> modifies) {
+    public void setModifies(final List<Artifact> modifies) {
         this.modifies = modifies;
     }
 }

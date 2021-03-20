@@ -5,74 +5,85 @@
  */
 package epf.service.persistence;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import epf.schema.EPF;
+import epf.service.ServiceException;
 import epf.util.Var;
 
 /**
  *
  * @author FOXCONN
  */
-public class Context implements AutoCloseable {
-	
-	private static final Logger logger = Logger.getLogger(Context.class.getName());
+public class Context {
     
-    private Map<String, Credential> credentials;
+    /**
+     * 
+     */
+    private transient final Map<String, Credential> credentials;
     
+    /**
+     * 
+     */
     public Context(){
         credentials = new ConcurrentHashMap<>();
     }
     
-    public Credential putCredential(String userName, String unit, String password_hash) throws Exception{
-        Map<String, Object> props = new HashMap<>();
+    /**
+     * @param userName
+     * @param unit
+     * @param passwordHash
+     * @return
+     * @throws Exception 
+     */
+    public Credential putCredential(final String userName, final String unit, final String passwordHash) throws ServiceException {
+    	final Map<String, Object> props = new ConcurrentHashMap<>();
         props.put("javax.persistence.jdbc.user", userName);
-        props.put("javax.persistence.jdbc.password", password_hash);
-        Var<Exception> error = new Var<>();
+        props.put("javax.persistence.jdbc.password", passwordHash);
+        final Var<Exception> error = new Var<>();
         credentials.computeIfAbsent(userName, name -> {
             return newCredential(unit, props, error);
         });
         if(error.get() != null){
-            throw error.get();
+        	throw new ServiceException(error.get());
         }
-        Credential cred = credentials.computeIfPresent(userName, (name, credential) -> {
-            if(credential != null){
+        final Credential cred = credentials.computeIfPresent(userName, (name, credential) -> {
+            if(credential == null){
+                credential = newCredential(unit, props, error);
+            }
+            else{
                 synchronized(credential){
                     if(!props.equals(credential.getFactory().getProperties())){
-                        try {
-                            credential.close();
-                        } 
-                        catch (Exception ex) {
-                            logger.log(Level.WARNING, ex.getMessage(), ex);
-                        }
+                    	credential.close();
                         credential = newCredential(unit, props, error);
                     }
                 }
             }
-            else{
-                credential = newCredential(unit, props, error);
-            }
             return credential;
         });
         if(error.get() != null){
-            throw error.get();
+        	throw new ServiceException(error.get());
         }
         return cred;
     }
     
-    Credential newCredential(String unit, Map<String, Object> props, Var<Exception> error){
+    /**
+     * @param unit
+     * @param props
+     * @param error
+     * @return
+     */
+    protected Credential newCredential(final String unit, final Map<String, Object> props, final Var<Exception> error){
         EntityManagerFactory factory = null;
         EntityManager manager = null;
+        Credential result = null;
         try{
             factory = Persistence.createEntityManagerFactory(EPF.Schema, props);
             manager = factory.createEntityManager();
-            return new Credential(factory, manager);
+            result = new Credential(factory, manager);
         }
         catch (Exception ex) {
             error.set(ex);
@@ -83,32 +94,32 @@ public class Context implements AutoCloseable {
                 factory.close();
             }
         }
-        return null;
+        return result;
     }
     
-    public Credential getCredential(String userName){
+    /**
+     * @param userName
+     * @return
+     */
+    public Credential getCredential(final String userName){
         return credentials.get(userName);
     }
     
-    public Credential removeCredential(String userName){
+    /**
+     * @param userName
+     * @return
+     */
+    public Credential removeCredential(final String userName){
         return credentials.remove(userName);
     }
 
-    @Override
-    public void close() throws Exception {
-    	Var<Exception> error = new Var<>();
+    /**
+     *
+     */
+    public void close() {
     	credentials.forEach((name, credential) -> {
-			try {
-				credential.close();
-			} 
-			catch (Exception e) {
-				logger.log(Level.WARNING, e.getMessage(), e);
-				error.set(e);
-			}
+    		credential.close();
 		});
         credentials.clear();
-        if(error.get() != null) {
-        	throw error.get();
-        }
     }
 }

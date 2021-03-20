@@ -7,9 +7,10 @@ package epf.service.persistence;
 
 import java.lang.reflect.Field;
 import java.security.Principal;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -39,31 +40,44 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 @RequestScoped
 public class Request {
 	
+	/**
+	 * 
+	 */
 	@Inject
-	private Logger logger;
+	private transient Logger logger;
     
+    /**
+     * 
+     */
     @Inject
-    private Application application;
+    private transient Application application;
     
-    EntityManager joinTransaction(EntityManager manager){
-        if(manager != null){
-            if(!manager.isJoinedToTransaction()){
-                manager.joinTransaction();
-            }
+    /**
+     * @param manager
+     * @return
+     */
+    protected EntityManager joinTransaction(final EntityManager manager){
+        if(manager != null && !manager.isJoinedToTransaction()){
+        	manager.joinTransaction();
         }
         return manager;
     }
     
-    EntityManager getManager(String unit, Principal principal) throws Exception{
+    /**
+     * @param unit
+     * @param principal
+     * @return
+     */
+    protected EntityManager getManager(final String unit, final Principal principal){
         EntityManager manager = null;
         if(principal != null){
-            Context context = application.getContext(unit);
+        	final Context context = application.getContext(unit);
             if(context != null){
-                Credential credential = context.getCredential(principal.getName());
+            	final Credential credential = context.getCredential(principal.getName());
                 if(credential != null){
                     if(principal instanceof JsonWebToken){
-                        JsonWebToken jwt = (JsonWebToken)principal;
-                        Session session = credential.getSession(jwt.getIssuedAtTime());
+                    	final JsonWebToken jwt = (JsonWebToken)principal;
+                    	final Session session = credential.getSession(jwt.getIssuedAtTime());
                         if(session != null){
                             if(session.checkExpirationTime(jwt.getExpirationTime())){
                                 manager = session
@@ -81,19 +95,34 @@ public class Request {
         return manager;
     }
     
-    public <T> TypedQuery<T> createNamedQuery(String unit, Principal principal, String name, Class<T> cls) throws Exception{
+    /**
+     * @param <T>
+     * @param unit
+     * @param principal
+     * @param name
+     * @param cls
+     * @return
+     */
+    public <T> TypedQuery<T> createNamedQuery(final String unit, final Principal principal, final String name, final Class<T> cls) {
         return getManager(unit, principal).createNamedQuery(name, cls);
     }
     
+    /**
+     * @param unit
+     * @param principal
+     * @param name
+     * @param object
+     * @return
+     */
     @Transactional
     @CacheResult
     public Object persist(
             @CacheKey
-            String unit,
-            Principal principal,
+            final String unit,
+            final  Principal principal,
             @CacheKey
-            String name,
-            Object object) throws Exception{
+            final String name,
+            final Object object) {
         EntityManager manager = getManager(unit, principal);
         manager = joinTransaction(manager);
         manager.persist(object);
@@ -101,41 +130,80 @@ public class Request {
         return object;
     }
     
+    /**
+     * @param unit
+     * @param principal
+     * @param name
+     * @param entityId
+     * @param object
+     */
     @Transactional
     @CachePut
     public void merge(
             @CacheKey
-            String unit,
-            Principal principal,
+            final String unit,
+            final Principal principal,
             @CacheKey
-            String name,
+            final String name,
             @CacheKey
-            String id,
+            final String entityId,
             @CacheValue
-            Object object) throws Exception{
+            final Object object) {
         EntityManager manager = getManager(unit, principal);
         manager = joinTransaction(manager);
         manager.merge(object);
         manager.flush();
     }
     
+    /**
+     * @param unit
+     * @param principal
+     * @param name
+     * @param cls
+     * @param entityId
+     * @return
+     */
     @CacheResult
-    public <T> T find(@CacheKey String unit, Principal principal, @CacheKey String name, Class<T> cls, @CacheKey String id) throws Exception{
-        return getManager(unit, principal).find(cls, id);
+    public <T> T find(
+    		@CacheKey final String unit, 
+    		final Principal principal, 
+    		@CacheKey final String name, 
+    		final Class<T> cls, 
+    		@CacheKey final String entityId) {
+        return getManager(unit, principal).find(cls, entityId);
     }
     
+    /**
+     * @param unit
+     * @param principal
+     * @param name
+     * @param entityId
+     * @param object
+     */
     @Transactional
     @CacheRemove
-    public void remove(@CacheKey String unit, Principal principal, @CacheKey String name, @CacheKey String id, Object object) throws Exception{
+    public void remove(
+    		@CacheKey final String unit, 
+    		final Principal principal, 
+    		@CacheKey final String name, 
+    		@CacheKey final String entityId, 
+    		final Object object) {
         EntityManager manager = getManager(unit, principal);
         manager = joinTransaction(manager);
         manager.remove(object);
         manager.flush();
     }
     
+    /**
+     * @param <T>
+     * @param unit
+     * @param principal
+     * @param name
+     * @return
+     */
     @CacheResult(cacheName = "EntityType")
-    public <T> Entity<T> findEntity(@CacheKey String unit, Principal principal, @CacheKey String name) throws Exception{
-        Entity<T> result = new Entity<>();
+    public <T> Entity<T> findEntity(@CacheKey final String unit, final Principal principal, @CacheKey final String name) {
+    	final Entity<T> result = new Entity<>();
         getManager(unit, principal).getMetamodel()
                 .getEntities()
                 .stream()
@@ -148,7 +216,7 @@ public class Request {
                 .ifPresent(entityType -> {
                 	try {
                 		@SuppressWarnings("unchecked")
-						EntityType<T> type = entityType.getClass().cast(entityType);
+                		final EntityType<T> type = entityType.getClass().cast(entityType);
 	                	result.setType(type);
 	                	}
                 	catch(ClassCastException ex) {
@@ -157,16 +225,42 @@ public class Request {
         return result;
     }
     
+    /**
+     * @param <T>
+     * @param unit
+     * @param principal
+     * @param name
+     * @param cls
+     * @return
+     */
     @CacheResult(cacheName = "NamedQuery")
-    public <T> List<T> getNamedQueryResult(@CacheKey String unit, Principal principal, @CacheKey String name, Class<T> cls) throws Exception{
+    public <T> List<T> getNamedQueryResult(
+    		@CacheKey final String unit, 
+    		final Principal principal, 
+    		@CacheKey final String name, 
+    		final Class<T> cls) {
         return getManager(unit, principal)
                 .createNamedQuery(name, cls)
                 .getResultStream()
                 .collect(Collectors.toList());
     }
     
+    /**
+     * @param unit
+     * @param principal
+     * @param name
+     * @param cls
+     * @param firstResult
+     * @param maxResults
+     */
     @CacheResult(cacheName = "NamedQuery")
-    public <T> List<T> getNamedQueryResult(@CacheKey String unit, Principal principal, @CacheKey String name, Class<T> cls, Integer firstResult, Integer maxResults) throws Exception{
+    public <T> List<T> getNamedQueryResult(
+    		@CacheKey final String unit, 
+    		final Principal principal, 
+    		@CacheKey final String name, 
+    		final Class<T> cls, 
+    		final Integer firstResult, 
+    		final Integer maxResults) {
         return getManager(unit, principal)
                 .createNamedQuery(name, cls)
                 .setFirstResult(firstResult)
@@ -175,21 +269,31 @@ public class Request {
                 .collect(Collectors.toList());
     }
     
-    public void getEntities(String unit, Principal principal, Map<String, EntityType<?>> entityTables, Map<String, Map<String, Attribute<?,?>>> entityAttributes) throws Exception {
-    	EntityManager manager = getManager(unit, principal);
+    /**
+     * @param unit
+     * @param principal
+     * @param entityTables
+     * @param entityAttributes
+     */
+    public void mapEntities(
+    		final String unit, 
+    		final Principal principal, 
+    		final Map<String, EntityType<?>> entityTables, 
+    		final Map<String, Map<String, Attribute<?,?>>> entityAttributes) {
+    	final EntityManager manager = getManager(unit, principal);
     	manager.getMetamodel().getEntities().forEach(entityType -> {
-			String tableName = entityType.getName().toLowerCase();
-			Table tableAnnotation = entityType.getJavaType().getAnnotation(Table.class);
+			String tableName = entityType.getName().toLowerCase(Locale.getDefault());
+			final Table tableAnnotation = entityType.getJavaType().getAnnotation(Table.class);
 			if(tableAnnotation != null) {
 				tableName = tableAnnotation.name();
 			}
 			entityTables.put(tableName, entityType);
-			Map<String, Attribute<?,?>> attributes = new HashMap<>();
+			final Map<String, Attribute<?,?>> attributes = new ConcurrentHashMap<>();
 			entityType.getAttributes().forEach(attr -> {
-				String columnName = attr.getName().toLowerCase();
+				String columnName = attr.getName().toLowerCase(Locale.getDefault());
 				if(attr.getJavaMember() instanceof Field) {
-					Field field = (Field) attr.getJavaMember();
-					Column columnAnnotation = field.getAnnotation(Column.class);
+					final Field field = (Field) attr.getJavaMember();
+					final Column columnAnnotation = field.getAnnotation(Column.class);
 					if(columnAnnotation != null) {
 						columnName = columnAnnotation.name();
 					}

@@ -25,14 +25,23 @@ import epf.schema.EPF;
 @Table(schema = EPF.Schema, name = "TEMPLATE")
 public class Template {
 	
+    /**
+     * 
+     */
     @Column(name = "NAME")
     @Id
     @NotBlank
     private String name;
     
+    /**
+     * 
+     */
     @Column(name = "SUMMARY")
     private String summary;
     
+    /**
+     * 
+     */
     @Column(name = "MAIN_DESCRIPTION")
     private JsonObject mainDescription;
 
@@ -40,7 +49,7 @@ public class Template {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -48,7 +57,7 @@ public class Template {
         return summary;
     }
 
-    public void setSummary(String summary) {
+    public void setSummary(final String summary) {
         this.summary = summary;
     }
 
@@ -56,7 +65,7 @@ public class Template {
         return mainDescription;
     }
 
-    public void setMainDescription(JsonObject mainDescription) {
+    public void setMainDescription(final JsonObject mainDescription) {
         this.mainDescription = mainDescription;
     }
 }

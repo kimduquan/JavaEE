@@ -15,8 +15,8 @@ import javax.validation.ConstraintValidatorContext;
 public class DirectoryValidator implements ConstraintValidator<Directory, String> {
 
     @Override
-    public boolean isValid(String path, ConstraintValidatorContext arg1) {
-        java.io.File dir = new java.io.File(path);
+    public boolean isValid(final String path, final ConstraintValidatorContext arg1) {
+    	final java.io.File dir = new java.io.File(path);
         return dir.isDirectory() && dir.exists();
     }
     

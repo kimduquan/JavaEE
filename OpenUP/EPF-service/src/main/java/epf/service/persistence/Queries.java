@@ -8,11 +8,11 @@ package epf.service.persistence;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.security.RolesAllowed;
@@ -44,7 +44,6 @@ import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
-
 import epf.schema.EPF;
 import epf.schema.QueryNames;
 import epf.schema.roles.Role;
@@ -59,12 +58,21 @@ import epf.util.Var;
 @RequestScoped
 public class Queries implements epf.client.persistence.Queries {
     
+    /**
+     * 
+     */
     @Inject
-    private Request cache;
+    private transient Request cache;
     
+    /**
+     * 
+     */
     @Context
-    private SecurityContext context;
+    private transient SecurityContext context;
     
+    /**
+     *
+     */
     @Override
     @Operation(
             summary = "Native Query", 
@@ -78,24 +86,24 @@ public class Queries implements epf.client.persistence.Queries {
             )
     )
     public Response getCriteriaQueryResult(
-            String unit,
-            List<PathSegment> paths,
-            Integer firstResult,
-            Integer maxResults
-            ) throws Exception{
-        ResponseBuilder response = Response.status(Response.Status.NOT_FOUND);
+            final String unit,
+            final List<PathSegment> paths,
+            final Integer firstResult,
+            final Integer maxResults
+            ) {
+    	final ResponseBuilder response = Response.status(Response.Status.NOT_FOUND);
         if(!paths.isEmpty()){
-            PathSegment rootSegment = paths.get(0);
-            Principal principal = context.getUserPrincipal();
-            Entity<Object> entity = cache.findEntity(unit, principal, rootSegment.getPath());
+        	final PathSegment rootSegment = paths.get(0);
+        	final Principal principal = context.getUserPrincipal();
+        	final Entity<Object> entity = cache.findEntity(unit, principal, rootSegment.getPath());
             if(entity.getType() != null){
-                EntityManager manager = cache.getManager(unit, principal);
-                CriteriaBuilder builder = manager.getCriteriaBuilder();
-                EntityType<Object> rootType = entity.getType();
-                Class<Object> rootClass = rootType.getJavaType();
-                CriteriaQuery<Object> rootQuery = builder.createQuery(rootClass);
-                Root<Object> rootFrom = rootQuery.from(rootClass);
-                List<Predicate> allParams = new ArrayList<>();
+            	final EntityManager manager = cache.getManager(unit, principal);
+            	final CriteriaBuilder builder = manager.getCriteriaBuilder();
+            	final EntityType<Object> rootType = entity.getType();
+            	final Class<Object> rootClass = rootType.getJavaType();
+            	final CriteriaQuery<Object> rootQuery = builder.createQuery(rootClass);
+            	final Root<Object> rootFrom = rootQuery.from(rootClass);
+            	final List<Predicate> allParams = new ArrayList<>();
                 rootSegment.getMatrixParameters().forEach((name, values) -> {
                 	allParams.add(
                             builder.isMember(
@@ -104,11 +112,11 @@ public class Queries implements epf.client.persistence.Queries {
                             )
                     );
                 });
-                Var<ManagedType<?>> parentType = new Var<>(rootType);
-                Root<?> parentFrom = rootFrom;
-                Var<Join<?,?>> parentJoin = new Var<>();
+                final Var<ManagedType<?>> parentType = new Var<>(rootType);
+                final Root<?> parentFrom = rootFrom;
+                final Var<Join<?,?>> parentJoin = new Var<>();
                 paths.subList(1, paths.size()).forEach(segment -> {
-                    Attribute<?,?> attribute = parentType.get().getAttribute(segment.getPath());
+                    final Attribute<?,?> attribute = parentType.get().getAttribute(segment.getPath());
                     if (attribute.getPersistentAttributeType() != PersistentAttributeType.BASIC) {
                         Class<?> subClass = null;
                         if(attribute.isCollection()){
@@ -146,7 +154,7 @@ public class Queries implements epf.client.persistence.Queries {
                             );
                         });
                         
-                        ManagedType<?> subType = manager.getMetamodel().managedType(subClass);
+                        final ManagedType<?> subType = manager.getMetamodel().managedType(subClass);
                         parentType.set(subType);
                         parentJoin.set(subJoin);
                     }
@@ -159,10 +167,10 @@ public class Queries implements epf.client.persistence.Queries {
                 }
                 
                 if(!allParams.isEmpty()){
-                    rootQuery.where(allParams.toArray(new Predicate[allParams.size()]));
+                    rootQuery.where(allParams.toArray(new Predicate[0]));
                 }
                 
-                Query query = manager.createQuery(rootQuery);
+                final Query query = manager.createQuery(rootQuery);
             
                 if(firstResult != null){
                     query.setFirstResult(firstResult);
@@ -170,7 +178,7 @@ public class Queries implements epf.client.persistence.Queries {
                 if(maxResults != null){
                     query.setMaxResults(maxResults);
                 }
-                Stream<?> result = query.getResultStream();
+                final Stream<?> result = query.getResultStream();
                 response.status(Status.OK).entity(
                             		result
                                     .collect(Collectors.toList())
@@ -181,11 +189,11 @@ public class Queries implements epf.client.persistence.Queries {
     }
 
 	@Override
-	public Response search(UriInfo uriInfo, String text, Integer firstResult, Integer maxResults) throws Exception {
-		Map<String, EntityType<?>> entityTables = new HashMap<>();
-		Map<String, Map<String, Attribute<?,?>>> entityAttributes = new HashMap<>();
-		cache.getEntities(EPF.Schema, context.getUserPrincipal(), entityTables, entityAttributes);
-		TypedQuery<SearchData> query = cache.createNamedQuery(
+	public Response search(final UriInfo uriInfo, final String text, final Integer firstResult, final Integer maxResults) {
+		final Map<String, EntityType<?>> entityTables = new ConcurrentHashMap<>();
+		final Map<String, Map<String, Attribute<?,?>>> entityAttributes = new ConcurrentHashMap<>();
+		cache.mapEntities(EPF.Schema, context.getUserPrincipal(), entityTables, entityAttributes);
+		final TypedQuery<SearchData> query = cache.createNamedQuery(
 				EPF.Schema, 
 				context.getUserPrincipal(), 
 				QueryNames.FULL_TEXT_SEARCH, 
@@ -198,7 +206,7 @@ public class Queries implements epf.client.persistence.Queries {
 		query.setParameter(3, firstResult);
 		ResponseBuilder response = Response.ok();
 		final UriBuilder baseUri = uriInfo.getBaseUriBuilder();
-		Iterator<Link> it = query
+		final Iterator<Link> linksIt = query
 				.getResultStream()
 				.map(
 						searchData -> {
@@ -224,8 +232,8 @@ public class Queries implements epf.client.persistence.Queries {
 						)
 				.filter(link -> link != null)
 				.iterator();
-		while(it.hasNext()) {
-			response = response.links(it.next());
+		while(linksIt.hasNext()) {
+			response = response.links(linksIt.next());
 		}
 		return response.build();
 	}

@@ -24,9 +24,15 @@ import org.eclipse.microprofile.graphql.Type;
 @Embeddable
 public class Relationships {
     
+    /**
+     * 
+     */
     @JoinColumn(name = "PRIMARY_PERFORMER", referencedColumnName = "NAME")
     private Role primaryPerformer;
     
+    /**
+     * 
+     */
     @ManyToMany
     @JoinTable(
             name = "TASK_INPUTS_MANDATORY",
@@ -40,6 +46,9 @@ public class Relationships {
     )
     private List<Artifact> mandatory;
     
+    /**
+     * 
+     */
     @ManyToMany
     @JoinTable(
             name = "TASK_INPUTS_OPTIONAL",
@@ -53,6 +62,9 @@ public class Relationships {
     )
     private List<Artifact> optional;
     
+    /**
+     * 
+     */
     @ManyToMany
     @JoinTable(
             name = "TASK_OUTPUTS",
@@ -71,7 +83,7 @@ public class Relationships {
         return primaryPerformer;
     }
 
-    public void setPrimaryPerformer(Role primaryPerformer) {
+    public void setPrimaryPerformer(final Role primaryPerformer) {
         this.primaryPerformer = primaryPerformer;
     }
 
@@ -79,7 +91,7 @@ public class Relationships {
         return mandatory;
     }
 
-    public void setMandatory(List<Artifact> mandatory) {
+    public void setMandatory(final List<Artifact> mandatory) {
         this.mandatory = mandatory;
     }
 
@@ -87,7 +99,7 @@ public class Relationships {
         return optional;
     }
 
-    public void setOptional(List<Artifact> optional) {
+    public void setOptional(final List<Artifact> optional) {
         this.optional = optional;
     }
 
@@ -95,7 +107,7 @@ public class Relationships {
         return outputs;
     }
 
-    public void setOutputs(List<Artifact> outputs) {
+    public void setOutputs(final List<Artifact> outputs) {
         this.outputs = outputs;
     }
 }

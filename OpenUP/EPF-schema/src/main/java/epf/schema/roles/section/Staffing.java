@@ -18,9 +18,15 @@ import org.eclipse.microprofile.graphql.Type;
 @Embeddable
 public class Staffing {
     
+    /**
+     * 
+     */
     @Column(name = "SKILLS")
     private JsonObject skills;
     
+    /**
+     * 
+     */
     @Column(name = "ASSIGNMENT_APPROACHES")
     private JsonObject assignmentApproaches;
 
@@ -28,7 +34,7 @@ public class Staffing {
         return skills;
     }
 
-    public void setSkills(JsonObject skills) {
+    public void setSkills(final JsonObject skills) {
         this.skills = skills;
     }
 
@@ -36,7 +42,7 @@ public class Staffing {
         return assignmentApproaches;
     }
 
-    public void setAssignmentApproaches(JsonObject assignmentApproaches) {
+    public void setAssignmentApproaches(final JsonObject assignmentApproaches) {
         this.assignmentApproaches = assignmentApproaches;
     }
 }

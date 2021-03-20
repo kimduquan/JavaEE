@@ -27,18 +27,27 @@ public class ExceptionHandler implements
     * 
     */
     private static final long serialVersionUID = 1L;
+    /**
+     * 
+     */
     private static final String CLASS_NAME = ExceptionHandler.class.getName();
     
+    /**
+     * 
+     */
     @Inject
-    private Logger logger;
+    private transient Logger logger;
     
     @Override
-    public Response toResponse(Exception ex) {
-    	logger.throwing(CLASS_NAME, "toResponse", ex);
-    	ResponseBuilder builder = Response.serverError();
-    	if(ex instanceof WebApplicationException) {
-    		WebApplicationException error = (WebApplicationException) ex;
+    public Response toResponse(final Exception exception) {
+    	logger.throwing(CLASS_NAME, "toResponse", exception);
+    	ResponseBuilder builder;
+    	if(exception instanceof WebApplicationException) {
+    		final WebApplicationException error = (WebApplicationException) exception;
     		builder = Response.fromResponse(error.getResponse());
+    	}
+    	else {
+    		builder = Response.serverError();
     	}
         return builder.build();
     }

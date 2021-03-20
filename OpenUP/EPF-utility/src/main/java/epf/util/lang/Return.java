@@ -2,6 +2,11 @@ package epf.util.lang;
 
 import epf.util.Var;
 
+/**
+ * @author PC
+ *
+ * @param <R>
+ */
 public class Return<R> extends Var<R> implements Runnable {
 
 	@Override

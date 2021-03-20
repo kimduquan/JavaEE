@@ -28,57 +28,96 @@ import epf.util.client.Client;
  */
 @Path("system")
 public interface Processes {
+	
+	/**
+	 * 
+	 */
+	String PROCESS = "process";
     
-	@Path("process")
+	/**
+	 * @param command
+	 * @param directory
+	 * @return
+	 */
+	@Path(PROCESS)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    long start(@MatrixParam("command") List<String> command, @MatrixParam("directory") String directory) throws Exception;
+    long start(@MatrixParam("command") final List<String> command, @MatrixParam("directory") final String directory);
     
-    static long start(Client client, List<String> command, String directory) throws Exception{
-    	Object[] cmd = command.toArray();
+    /**
+     * @param client
+     * @param command
+     * @param directory
+     * @return
+     */
+    static long start(final Client client, final List<String> command, final String directory){
     	return client.request(
-    			target -> target.path("process").matrixParam("command", (Object[])cmd).matrixParam("directory", directory), 
+    			target -> target.path(PROCESS).matrixParam("command", (Object[])command.toArray()).matrixParam("directory", directory), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.post(null, Long.class);
     }
     
+    /**
+     * @param isAlive
+     * @return
+     */
     @Path("process")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    List<ProcessInfo> getProcesses(@QueryParam("isAlive") boolean isAlive);
+    List<ProcessInfo> getProcesses(@QueryParam("isAlive") final boolean isAlive);
     
-    static List<ProcessInfo> getProcesses(Client client, boolean isAlive){
+    /**
+     * @param client
+     * @param isAlive
+     * @return
+     */
+    static List<ProcessInfo> getProcesses(final Client client, final boolean isAlive){
     	return client.request(
-    			target -> target.path("process").queryParam("isAlive", isAlive), 
+    			target -> target.path(PROCESS).queryParam("isAlive", isAlive), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.get(new GenericType<List<ProcessInfo>>() {});
     }
     
-    @Path("process")
+    /**
+     * 
+     */
+    @Path(PROCESS)
     @DELETE
-    void stop() throws Exception;
+    void stop();
     
-    static void stop(Client client) throws Exception{
+    /**
+     * @param client
+     */
+    static void stop(final Client client) {
     	client.request(
-    			target -> target.path("process"), 
+    			target -> target.path(PROCESS), 
     			req -> req
     			)
     	.delete();
     }
     
+    /**
+     * @param pid
+     * @return
+     */
     @GET
-    @Path("process")
+    @Path(PROCESS)
     @Produces(MediaType.APPLICATION_JSON)
     ProcessInfo info(
     		@QueryParam("pid")
     		@NotBlank
     		@Positive
-    		long pid
+    		final long pid
     		);
     
-    static ProcessInfo info(Client client, long pid) {
+    /**
+     * @param client
+     * @param pid
+     * @return
+     */
+    static ProcessInfo info(final Client client, long pid) {
     	return client.request(
     			target -> target.path(String.valueOf(pid)), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
@@ -86,17 +125,26 @@ public interface Processes {
     			.get(ProcessInfo.class);
     }
     
+    /**
+     * @param pid
+     * @return
+     */
     @DELETE
-    @Path("process")
+    @Path(PROCESS)
     @Produces(MediaType.APPLICATION_JSON)
     int destroy(
     		@QueryParam("pid")
     		@NotBlank
     		@Positive
-    		long pid
-    		) throws Exception;
+    		final long pid
+    		);
     
-    static int destroy(Client client, long pid) throws Exception{
+    /**
+     * @param client
+     * @param pid
+     * @return
+     */
+    static int destroy(final Client client, final long pid) {
     	return client.request(
     			target -> target.path(String.valueOf(pid)), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
@@ -104,6 +152,11 @@ public interface Processes {
     			.delete(Integer.class);
     }
     
+    /**
+     * @param pid
+     * @param sse
+     * @param sink
+     */
     @GET
     @Path("process/out")
     @Produces(MediaType.SERVER_SENT_EVENTS)
@@ -111,10 +164,10 @@ public interface Processes {
     		@QueryParam("pid")
     		@NotBlank
     		@Positive
-    		long pid, 
+    		final long pid, 
     		@Context 
-    		Sse sse, 
+    		final Sse sse, 
     		@Context 
-    		SseEventSink sink
+    		final SseEventSink sink
     		);
 }

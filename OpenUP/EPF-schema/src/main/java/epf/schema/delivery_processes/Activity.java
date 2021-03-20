@@ -33,20 +33,32 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Table(schema = EPF.Schema, name = "ACTIVITY")
 public class Activity {
     
+    /**
+     * 
+     */
     @Column(name = "NAME")
     @Id
     @NotBlank
     private String name;
     
+    /**
+     * 
+     */
     @OneToOne
     @MapsId
     @JoinColumn(name = "NAME")
     @NotNull
     private CapabilityPattern Extends;
     
+    /**
+     * 
+     */
     @JoinColumn(name = "PARENT_ACTIVITIES")
     private CapabilityPattern parentActivities;
     
+    /**
+     * 
+     */
     @ManyToMany
     @JoinTable(name = "ACTIVITY_TASKS",
             schema = EPF.Schema,
@@ -60,7 +72,7 @@ public class Activity {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -68,7 +80,7 @@ public class Activity {
         return Extends;
     }
 
-    public void setExtends(CapabilityPattern Extends) {
+    public void setExtends(final CapabilityPattern Extends) {
         this.Extends = Extends;
     }
 
@@ -76,7 +88,7 @@ public class Activity {
         return parentActivities;
     }
 
-    public void setParentActivities(CapabilityPattern parentActivities) {
+    public void setParentActivities(final CapabilityPattern parentActivities) {
         this.parentActivities = parentActivities;
     }
 
@@ -84,7 +96,7 @@ public class Activity {
         return tasks;
     }
 
-    public void setTasks(List<Task> tasks) {
+    public void setTasks(final List<Task> tasks) {
         this.tasks = tasks;
     }
 }

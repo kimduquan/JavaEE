@@ -6,23 +6,42 @@ import epf.util.Var;
 import epf.util.lang.Return;
 import epf.util.lang.Throw;
 
+/**
+ * @author PC
+ *
+ */
 public class Function implements Runnable {
 	
-	private Stream<Runnable> stream;
-	private Var<Exception> exception;
-	private Var<?> _return;
-	private Var<Exception> _throw;
+	/**
+	 * 
+	 */
+	private transient final Stream<Runnable> stream;
+	/**
+	 * 
+	 */
+	private transient Var<Exception> exception;
+	/**
+	 * 
+	 */
+	private transient Var<?> _return;
+	/**
+	 * 
+	 */
+	private transient Var<Exception> _throw;
 	
-	public Function(Stream<Runnable> stream) {
+	/**
+	 * @param stream
+	 */
+	public Function(final Stream<Runnable> stream) {
 		this.stream = stream;
 	}
 
 	@Override
 	public void run() {
-		apply(stream())
+		apply(getStream())
 		.forEach(runnable -> {
 			if(runnable instanceof Callable) {
-				Callable<?> callable = (Callable<?>) runnable;
+				final Callable<?> callable = (Callable<?>) runnable;
 				try {
 					callable.call();
 				} 
@@ -36,7 +55,11 @@ public class Function implements Runnable {
 		});
 	}
 	
-	protected Stream<Runnable> apply(Stream<Runnable> stream){
+	/**
+	 * @param stream
+	 * @return
+	 */
+	protected Stream<Runnable> apply(final Stream<Runnable> stream){
 		return stream
 				.filter(run -> {
 					if(run instanceof Return) {
@@ -47,30 +70,36 @@ public class Function implements Runnable {
 					}
 					return true;
 				})
-				.takeWhile(run -> _return() == null && _throw() == null && exception() == null)
-				.dropWhile(run -> _return() != null || exception() != null || _throw() != null)
+				.takeWhile(run -> getReturn() == null && getThrow() == null && getException() == null)
+				.dropWhile(run -> getReturn() != null || getException() != null || getThrow() != null)
 				.flatMap(runnable -> {
 					if(runnable instanceof Function) {
-						Function func = (Function) runnable;
-						return func.apply(func.stream());
+						final Function func = (Function) runnable;
+						return func.apply(func.getStream());
 					}
 					return Stream.of(runnable);
 				});
 	}
 	
-	protected Stream<Runnable> stream(){
+	protected Stream<Runnable> getStream(){
 		return stream;
 	}
 	
-	protected Var<Exception> exception(){
+	protected Var<Exception> getException(){
 		return exception;
 	}
 	
-	protected Var<?> _return(){
+	/**
+	 * @return
+	 */
+	protected Var<?> getReturn(){
 		return _return;
 	}
 	
-	protected Var<Exception> _throw(){
+	/**
+	 * @return
+	 */
+	protected Var<Exception> getThrow(){
 		return _throw;
 	}
 }

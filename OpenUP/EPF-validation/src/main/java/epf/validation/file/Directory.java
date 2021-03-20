@@ -24,9 +24,9 @@ import javax.validation.Payload;
 @Constraint(validatedBy = DirectoryValidator.class)
 @Documented
 public @interface Directory {
-    public String message() default "Directory";
+    String message() default "Directory";
 
-    public Class<?>[] groups() default {};
+    Class<?>[] groups() default {};
 
-    public Class<? extends Payload>[] payload() default {};
+    Class<? extends Payload>[] payload() default {};
 }

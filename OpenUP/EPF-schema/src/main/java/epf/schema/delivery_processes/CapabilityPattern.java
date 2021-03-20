@@ -30,26 +30,44 @@ import epf.schema.EPF;
 @Table(schema = EPF.Schema, name = "CAPABILITY_PATTERN")
 public class CapabilityPattern {
 	
+    /**
+     * 
+     */
     @Column(name = "NAME")
     @Id
     @NotBlank
     private String name;
     
+    /**
+     * 
+     */
     @Column(name = "SUMMARY")
     private String summary;
 	
+    /**
+     * 
+     */
     @Embedded
     @NotNull
     private Description description;
 
+    /**
+     * 
+     */
     @Embedded
     @NotNull
     private WorkBreakdownStructure workBreakdownStructure;
 
+    /**
+     * 
+     */
     @Embedded
     @NotNull
     private TeamAllocation teamAllocation;
 
+    /**
+     * 
+     */
     @Embedded
     @NotNull
     private WorkProductUsage workProductUsage;
@@ -58,7 +76,7 @@ public class CapabilityPattern {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -66,7 +84,7 @@ public class CapabilityPattern {
         return summary;
     }
 
-    public void setSummary(String summary) {
+    public void setSummary(final String summary) {
         this.summary = summary;
     }
 
@@ -74,7 +92,7 @@ public class CapabilityPattern {
             return description;
     }
 
-    public void setDescription(Description description) {
+    public void setDescription(final Description description) {
             this.description = description;
     }
 
@@ -82,7 +100,7 @@ public class CapabilityPattern {
             return workBreakdownStructure;
     }
 
-    public void setWorkBreakdownStructure(WorkBreakdownStructure workBreakdownStructure) {
+    public void setWorkBreakdownStructure(final WorkBreakdownStructure workBreakdownStructure) {
             this.workBreakdownStructure = workBreakdownStructure;
     }
 
@@ -90,7 +108,7 @@ public class CapabilityPattern {
             return teamAllocation;
     }
 
-    public void setTeamAllocation(TeamAllocation teamAllocation) {
+    public void setTeamAllocation(final TeamAllocation teamAllocation) {
             this.teamAllocation = teamAllocation;
     }
 
@@ -98,7 +116,7 @@ public class CapabilityPattern {
             return workProductUsage;
     }
 
-    public void setWorkProductUsage(WorkProductUsage workProductUsage) {
+    public void setWorkProductUsage(final WorkProductUsage workProductUsage) {
             this.workProductUsage = workProductUsage;
     }
 }

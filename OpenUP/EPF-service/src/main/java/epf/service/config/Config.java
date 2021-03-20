@@ -7,7 +7,6 @@ package epf.service.config;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.annotation.PostConstruct;
 import javax.annotation.security.PermitAll;
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.Path;
@@ -25,11 +24,16 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 @Path("config")
 public class Config implements epf.client.config.Config {
     
-    private Map<String, String> configs;
+    /**
+     * 
+     */
+    private final transient Map<String, String> configs;
     
-    @PostConstruct
-    void postConstruct(){
-        configs = new ConcurrentHashMap<>();
+    /**
+     * 
+     */
+    public Config() {
+    	configs = new ConcurrentHashMap<>();
     }
     
     @Override
@@ -47,7 +51,7 @@ public class Config implements epf.client.config.Config {
                     schema = @Schema(implementation = Map.class)
             )
     )
-    public Map<String, String> getProperties(String name) throws Exception {
+    public Map<String, String> getProperties(final String name) {
         return configs;
     }
 }

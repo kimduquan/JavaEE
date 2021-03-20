@@ -7,19 +7,30 @@ import javax.json.JsonReader;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
+/**
+ * @author PC
+ *
+ */
 @Converter(autoApply = true)
 public class JsonObjectConverter implements AttributeConverter<JsonObject, String> {
 
+	/**
+	 *
+	 */
 	@Override
-	public String convertToDatabaseColumn(JsonObject attribute) {
-            if(attribute != null){
-		return attribute.toString();
-            }
-            return null;
+	public String convertToDatabaseColumn(final JsonObject attribute) {
+		String value = null;
+        if(attribute != null){
+        	value = attribute.toString();
+        }
+        return value;
 	}
 
+	/**
+	 *
+	 */
 	@Override
-	public JsonObject convertToEntityAttribute(String dbData) {
+	public JsonObject convertToEntityAttribute(final String dbData) {
             JsonObject result = null;
             if(dbData != null){
                 try(StringReader strReader = new StringReader(dbData)){

@@ -22,23 +22,35 @@ import javax.ws.rs.core.MediaType;
 @Path("schema")
 public interface Schema {
     
+    /**
+     * @return
+     */
     @Path("delivery-processes")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    List<DeliveryProcess> getDeliveryProcesses() throws Exception;
+    List<DeliveryProcess> getDeliveryProcesses();
     
+    /**
+     * @return
+     */
     @Path("roles")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    List<RoleSet> getRoleSets() throws Exception;
+    List<RoleSet> getRoleSets();
     
+    /**
+     * @return
+     */
     @Path("tasks")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    List<Discipline> getDisciplines() throws Exception;
+    List<Discipline> getDisciplines();
     
+    /**
+     * @return
+     */
     @Path("work-products")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    List<Domain> getDomains() throws Exception;
+    List<Domain> getDomains();
 }

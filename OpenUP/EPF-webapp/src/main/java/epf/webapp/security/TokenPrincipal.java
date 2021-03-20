@@ -14,9 +14,16 @@ import epf.client.security.Token;
  */
 public class TokenPrincipal extends CallerPrincipal {
     
+    /**
+     * 
+     */
     private Token token;
     
-    public TokenPrincipal(String name, Token token){
+    /**
+     * @param name
+     * @param token
+     */
+    public TokenPrincipal(final String name, final Token token){
         super(name);
         this.token = token;
     }
@@ -25,7 +32,7 @@ public class TokenPrincipal extends CallerPrincipal {
         return token;
     }
 
-    public void setToken(Token token) {
+    public void setToken(final Token token) {
         this.token = token;
     }
 }

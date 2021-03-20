@@ -19,94 +19,133 @@ import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.faulttolerance.Asynchronous;
 import epf.gateway.Request;
 
+/**
+ * @author PC
+ *
+ */
 @Path("registry")
 @RequestScoped
 public class Registry {
 
+	/**
+	 * 
+	 */
 	@Inject
-    private Request request;
+    private transient Request request;
     
+    /**
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @param body
+     * @return
+     */
     @POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Asynchronous
     public CompletionStage<Response> bind(
-    		@Context HttpHeaders headers, 
-            @Context UriInfo uriInfo,
-            @Context javax.ws.rs.core.Request req,
-            InputStream in
-    		) throws Exception{
+    		@Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req,
+            final InputStream body
+    		) {
     	request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         request.setRequest(req);
-        return request.request(in);
+        return request.request(body);
     }
 	
+	/**
+	 * @param headers
+	 * @param uriInfo
+	 * @param req
+	 * @return
+	 */
 	@GET
 	@Asynchronous
     public CompletionStage<Response> list(
-    		@Context HttpHeaders headers, 
-            @Context UriInfo uriInfo,
-            @Context javax.ws.rs.core.Request req,
-            InputStream in
-    		) throws Exception{
+    		@Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req
+    		) {
 		request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         request.setRequest(req);
         return request.request(null);
 	}
 	
+	/**
+	 * @param name
+	 * @param headers
+	 * @param uriInfo
+	 * @param req
+	 * @return
+	 */
 	@GET
 	@Path("{name}")
 	@Asynchronous
     public CompletionStage<Response> lookup(
     		@PathParam("name") 
-    		String name,
+    		final String name,
     		@Context 
-    		HttpHeaders headers, 
+    		final HttpHeaders headers, 
             @Context 
-            UriInfo uriInfo,
-            @Context javax.ws.rs.core.Request req,
-            InputStream in
-    		) throws Exception{
+            final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req
+    		) {
 		request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         request.setRequest(req);
         return request.request(null);
 	}
 	
+	/**
+	 * @param name
+	 * @param headers
+	 * @param uriInfo
+	 * @param req
+	 * @param body
+	 * @return
+	 */
 	@PUT
 	@Path("{name}")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Asynchronous
     public CompletionStage<Response> rebind(
     		@PathParam("name") 
-    		String name, 
+    		final String name, 
     		@Context 
-    		HttpHeaders headers, 
+    		final HttpHeaders headers, 
             @Context 
-            UriInfo uriInfo,
-            @Context javax.ws.rs.core.Request req,
-            InputStream in
-    		) throws Exception{
+            final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req,
+            final InputStream body
+    		) {
 		request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         request.setRequest(req);
-        return request.request(in);
+        return request.request(body);
 	}
 	
+	/**
+	 * @param name
+	 * @param headers
+	 * @param uriInfo
+	 * @param req
+	 * @return
+	 */
 	@DELETE
 	@Path("{name}")
 	@Asynchronous
     public CompletionStage<Response> unbind(
     		@PathParam("name") 
-    		String name,
+    		final String name,
     		@Context 
-    		HttpHeaders headers, 
+    		final HttpHeaders headers, 
             @Context 
-            UriInfo uriInfo,
-            @Context javax.ws.rs.core.Request req,
-            InputStream in
-    		) throws Exception{
+            final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req
+    		) {
 		request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         request.setRequest(req);

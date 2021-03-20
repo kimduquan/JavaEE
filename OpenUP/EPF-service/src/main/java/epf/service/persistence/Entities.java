@@ -25,6 +25,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import epf.schema.roles.Role;
+import epf.service.ServiceException;
 
 /**
  *
@@ -35,17 +36,29 @@ import epf.schema.roles.Role;
 @RequestScoped
 public class Entities implements epf.client.persistence.Entities {
 	
+	/**
+	 * 
+	 */
 	@Inject
-	private Logger logger;
+	private transient Logger logger;
     
+    /**
+     * 
+     */
     @Inject
-    private Request cache;
+    private transient Request cache;
     
+    /**
+     * 
+     */
     @Inject
-    private Validator validator;
+    private transient Validator validator;
     
+    /**
+     * 
+     */
     @Context
-    private SecurityContext context;
+    private transient SecurityContext context;
     
     @Override
     @Operation(
@@ -70,51 +83,64 @@ public class Entities implements epf.client.persistence.Entities {
             responseCode = "400"
     )
     public Object persist(
-            String unit,
-            String name,
-            InputStream body
-            ) throws Exception{
-        Entity<Object> entity = findEntity(unit, name);
+            final String unit,
+            final String name,
+            final InputStream body
+            ){
+    	final Entity<Object> entity = findEntity(unit, name);
+    	Object object = null;
         if(entity.getType() != null){
             try(Jsonb json = JsonbBuilder.create()){
-                Object obj = json.fromJson(body, entity.getType().getJavaType());
+            	final Object obj = json.fromJson(body, entity.getType().getJavaType());
                 validator.validate(obj);
-                return cache.persist(unit, context.getUserPrincipal(), name, obj);
+                object = cache.persist(unit, context.getUserPrincipal(), name, obj);
             }
             catch(JsonbException ex){
-            	logger.throwing(getClass().getName(), "persist", ex);
-            	throw new BadRequestException();
+            	throw new BadRequestException(ex);
+            }
+            catch(Exception ex) {
+            	throw new ServiceException(ex);
             }
         }
-        return null;
+        return object;
     }
     
     @Override
 	public void merge(
-			String unit, 
-			String name, 
-			String id,
-			InputStream body
-			) throws Exception {
-    	Entity<Object> entity = findEntityObject(unit, name, id);
+			final String unit, 
+			final String name, 
+			final String entityId,
+			final InputStream body
+			) {
+    	final Entity<Object> entity = findEntityObject(unit, name, entityId);
         if(entity.getObject() != null){
             try(Jsonb json = JsonbBuilder.create()){
-                Object obj = json.fromJson(body, entity.getType().getJavaType());
+            	final Object obj = json.fromJson(body, entity.getType().getJavaType());
                 validator.validate(obj);
-                cache.merge(unit, context.getUserPrincipal(), name, id, obj);
+                cache.merge(unit, context.getUserPrincipal(), name, entityId, obj);
             }
             catch(JsonbException ex){
             	logger.throwing(getClass().getName(), "merge", ex);
-                throw new BadRequestException();
+                throw new BadRequestException(ex);
+            }
+            catch(Exception ex) {
+            	throw new ServiceException(ex);
             }
         }
 	}
     
-    <T> T find(
-            String unit,
-            String name,
-            String id) throws Exception{
-        Entity<T> entity = findEntityObject(unit, name, id);
+    /**
+     * @param <T>
+     * @param unit
+     * @param name
+     * @param entityId
+     * @return
+     */
+    protected <T> T find(
+    		final String unit,
+    		final String name,
+    		final String entityId){
+        final Entity<T> entity = findEntityObject(unit, name, entityId);
         return entity.getObject();
     }
     
@@ -136,34 +162,45 @@ public class Entities implements epf.client.persistence.Entities {
             responseCode = "404"
     )
     public void remove(
-            String unit,
-            String name,
-            String id
-            ) throws Exception{
-        Entity<Object> entity = findEntityObject(unit, name, id);
+    		final String unit,
+    		final String name,
+    		final String entityId
+            ) {
+    	final Entity<Object> entity = findEntityObject(unit, name, entityId);
         if(entity.getObject() != null){
-            cache.remove(unit, context.getUserPrincipal(), name, id, entity.getObject());
+            cache.remove(unit, context.getUserPrincipal(), name, entityId, entity.getObject());
         }
     }
     
-    <T> Entity<T> findEntity(String unit, String name) throws Exception{
-        Entity<T> entity = cache.findEntity(unit, context.getUserPrincipal(), name);
+    /**
+     * @param <T>
+     * @param unit
+     * @param name
+     * @return
+     */
+    protected <T> Entity<T> findEntity(final String unit, final String name) {
+    	final Entity<T> entity = cache.findEntity(unit, context.getUserPrincipal(), name);
         if(entity.getType() == null){
             throw new NotFoundException();
         }
         return entity;
     }
     
-    <T> Entity<T> findEntityObject(String unit, String name, String id) throws Exception{
-        Entity<T> entity = findEntity(unit, name);
+    /**
+     * @param <T>
+     * @param unit
+     * @param name
+     * @param entityId
+     * @return
+     */
+    protected <T> Entity<T> findEntityObject(final String unit, final String name, final String entityId) {
+    	final Entity<T> entity = findEntity(unit, name);
         if(entity.getType() != null){
-            T object = cache.find(unit, context.getUserPrincipal(), name, entity.getType().getJavaType(), id);
-            if(object != null){
-                entity.setObject(object);
+        	final T object = cache.find(unit, context.getUserPrincipal(), name, entity.getType().getJavaType(), entityId);
+            if(object == null){
+            	throw new NotFoundException();
             }
-            else{
-                throw new NotFoundException();
-            }
+            entity.setObject(object);
         }
         return entity;
     }

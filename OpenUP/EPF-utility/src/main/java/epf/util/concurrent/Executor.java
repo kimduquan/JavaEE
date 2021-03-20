@@ -17,6 +17,9 @@ import org.eclipse.microprofile.context.ThreadContext;
 @ApplicationScoped
 public class Executor {
     
+    /**
+     * @return
+     */
     @Produces
     @ApplicationScoped
     public static ManagedExecutor getExecutor(){

@@ -19,20 +19,26 @@ import javax.ws.rs.core.StreamingOutput;
  */
 public class EntityOutput implements StreamingOutput {
     
-    private InputStream in;
+    /**
+     * 
+     */
+    private transient final InputStream input;
 
-    public EntityOutput(InputStream in) {
-        this.in = in;
+    /**
+     * @param input
+     */
+    public EntityOutput(final InputStream input) {
+        this.input = input;
     }
 
     @Override
-    public void write(OutputStream out) throws IOException, WebApplicationException {
-        try(InputStreamReader reader = new InputStreamReader(in)){
-            try(OutputStreamWriter writer = new OutputStreamWriter(out)){
+    public void write(final OutputStream output) throws IOException, WebApplicationException {
+        try(InputStreamReader reader = new InputStreamReader(input)){
+            try(OutputStreamWriter writer = new OutputStreamWriter(output)){
                 reader.transferTo(writer);
             }
         }
-        in.close();
+        input.close();
     }
     
 }

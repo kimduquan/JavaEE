@@ -6,7 +6,6 @@
 package epf.service.security;
 
 import java.io.Serializable;
-import java.net.URI;
 import java.net.URL;
 import java.security.Principal;
 import java.time.Duration;
@@ -21,6 +20,7 @@ import javax.persistence.EntityManager;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
+import javax.ws.rs.ServerErrorException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -54,26 +54,44 @@ public class Security implements epf.client.security.Security, Serializable {
     */
     private static final long serialVersionUID = 1L;
     
+    /**
+     * 
+     */
     @Inject
-    private Application persistence;
+    private transient Application persistence;
     
+    /**
+     * 
+     */
     @Inject
-    private TokenGenerator generator;
+    private transient TokenGenerator generator;
     
+    /**
+     * 
+     */
     @Inject
     @ConfigProperty(name = Names.ISSUER)
-    private String issuer;
+    private transient String issuer;
     
+    /**
+     * 
+     */
     @Inject
     @ConfigProperty(name = ConfigNames.JWT_EXPIRE_DURATION)
-    private Long jwtExpDuration;
+    private transient Long jwtExpDuration;
     
+    /**
+     * 
+     */
     @Inject
     @ConfigProperty(name = ConfigNames.JWT_EXPIRE_TIMEUNIT)
-    private ChronoUnit jwtExpTimeUnit;
+    private transient ChronoUnit jwtExpTimeUnit;
     
+    /**
+     * 
+     */
     @Context 
-    private SecurityContext context;
+    private transient SecurityContext context;
     
     @PermitAll
     @Override
@@ -105,21 +123,26 @@ public class Security implements epf.client.security.Security, Serializable {
             responseCode = "401"
     )
     public String login(
-            String unit,
-            String username,
-            String password_hash,
-            URL url) throws Exception{
-    	long time = System.currentTimeMillis() / 1000;
-    	Credential credential = persistence.putContext(unit)
+            final String unit,
+            final String username,
+            final String password_hash,
+            final URL url) {
+    	final long time = System.currentTimeMillis() / 1000;
+    	final Credential credential = persistence.putContext(unit)
                 .putCredential(
                         username, 
                         unit, 
                         password_hash
                 );
         Token jwt = buildToken(username, time);
-        buildAudience(jwt, url.toURI());
+        buildAudience(jwt, url);
         buildGroups(jwt, username, credential.getDefaultManager());
-        jwt = generator.generate(jwt);
+        try {
+			jwt = generator.generate(jwt);
+		} 
+        catch (Exception e) {
+        	throw new ServerErrorException(501, e);
+		}
         credential.putSession(jwt.getIssuedAtTime());
         return jwt.getRawToken();
     }
@@ -137,13 +160,12 @@ public class Security implements epf.client.security.Security, Serializable {
     )
     @Log
     public String logOut(
-            String unit
-    ) throws Exception{
-    	Session session = removeSession(unit);
+    		final String unit
+    ) {
+    	final Session session = removeSession(unit);
         if(session != null){
             session.close();
-            String name = context.getUserPrincipal().getName();
-            return name;
+            return context.getUserPrincipal().getName();
         }
         throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
     }
@@ -164,27 +186,35 @@ public class Security implements epf.client.security.Security, Serializable {
             description = "Unauthorized",
             responseCode = "401"
     )
-    public Token authenticate(String unit) throws Exception{
+    public Token authenticate(final String unit) {
     	if(getSession(unit) != null){
-            JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
-            Token token = buildToken(jwt);
-            return token;
+    		final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
+    		return buildToken(jwt);
         }
         throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
     }
     
-    void buildAudience(Token token, URI uri){
-        Set<String> aud = new HashSet<>();
+    /**
+     * @param token
+     * @param url
+     */
+    protected void buildAudience(final Token token, final URL url){
+    	final Set<String> aud = new HashSet<>();
         aud.add(String.format(
                 AUDIENCE_URL_FORMAT, 
-                uri.getScheme(), 
-                uri.getHost(), 
-                uri.getPort()));
+                url.getProtocol(), 
+                url.getHost(), 
+                url.getPort()));
         token.setAudience(aud);
     }
     
-    Token buildToken(String username, long time) throws Exception{
-        Token jwt = new Token();
+    /**
+     * @param username
+     * @param time
+     * @return
+     */
+    protected Token buildToken(final String username, final long time) {
+    	final Token jwt = new Token();
         jwt.setIssuedAtTime(time);
         jwt.setExpirationTime(time + Duration.of(jwtExpDuration, jwtExpTimeUnit).getSeconds());
         jwt.setIssuer(issuer);
@@ -193,14 +223,23 @@ public class Security implements epf.client.security.Security, Serializable {
         return jwt;
     }
     
-    void buildGroups(Token token, String userName, EntityManager manager) {
-    	Set<String> groups = new HashSet<>();
+    /**
+     * @param token
+     * @param userName
+     * @param manager
+     */
+    protected void buildGroups(final Token token, final String userName, final EntityManager manager) {
+    	final Set<String> groups = new HashSet<>();
     	groups.add(Role.DEFAULT_ROLE);
     	token.setGroups(groups);
     }
     
-    Token buildToken(JsonWebToken jwt){
-        Token token = new Token();
+    /**
+     * @param jwt
+     * @return
+     */
+    protected Token buildToken(final JsonWebToken jwt){
+    	final Token token = new Token();
         token.setAudience(jwt.getAudience());
         token.setExpirationTime(jwt.getExpirationTime());
         token.setGroups(jwt.getGroups());
@@ -213,45 +252,48 @@ public class Security implements epf.client.security.Security, Serializable {
         return token;
     }
     
-    Session removeSession(String unit) throws Exception{
-        Principal principal = context.getUserPrincipal();
+    /**
+     * @param unit
+     * @return
+     */
+    protected Session removeSession(final String unit) {
+    	Session session = null;
+    	final Principal principal = context.getUserPrincipal();
         if(principal != null){
-            epf.service.persistence.Context ctx = persistence.getContext(unit);
+        	final epf.service.persistence.Context ctx = persistence.getContext(unit);
             if(ctx != null){
-                Credential credential = ctx.getCredential(principal.getName());
-                if(credential != null){
-                    if(principal instanceof JsonWebToken){
-                        JsonWebToken jwt = (JsonWebToken)principal;
-                        return credential.removeSession(jwt.getIssuedAtTime());
-                    }
+            	final Credential credential = ctx.getCredential(principal.getName());
+                if(credential != null && principal instanceof JsonWebToken){
+                	final JsonWebToken jwt = (JsonWebToken)principal;
+                    session = credential.removeSession(jwt.getIssuedAtTime());
                 }
             }
         }
-        return null;
+        return session;
     }
     
-    Session getSession(String unit) throws Exception{
-        Principal principal = context.getUserPrincipal();
+    /**
+     * @param unit
+     * @return
+     */
+    protected Session getSession(final String unit) {
+    	Session session = null;
+    	final Principal principal = context.getUserPrincipal();
         if(principal != null){
-            epf.service.persistence.Context ctx = persistence.getContext(unit);
+        	final epf.service.persistence.Context ctx = persistence.getContext(unit);
             if(ctx != null){
-                Credential credential = ctx.getCredential(principal.getName());
-                if(credential != null){
-                    if(principal instanceof JsonWebToken){
-                        JsonWebToken jwt = (JsonWebToken)principal;
-                        Session session = credential.getSession(jwt.getIssuedAtTime());
-                        if(session != null) {
-                            if(session.checkExpirationTime(jwt.getExpirationTime())){
-                                return session;
-                            }
-                            else {
-                            	throw new ForbiddenException();
-                            }
+            	final Credential credential = ctx.getCredential(principal.getName());
+                if(credential != null && principal instanceof JsonWebToken){
+                	final JsonWebToken jwt = (JsonWebToken)principal;
+                	session = credential.getSession(jwt.getIssuedAtTime());
+                    if(session != null) {
+                        if(!session.checkExpirationTime(jwt.getExpirationTime())) {
+                        	throw new ForbiddenException();
                         }
                     }
                 }
             }
         }
-        return null;
+        return session;
     }
 }

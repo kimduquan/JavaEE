@@ -37,36 +37,63 @@ import epf.schema.EPF;
 })
 public class Artifact {
 
+    /**
+     * 
+     */
     @Column(name = "NAME")
     @Id
     @NotBlank
     private String name;
     
+    /**
+     * 
+     */
     @Column(name = "SUMMARY")
     private String summary;
     
+    /**
+     * 
+     */
     @Column(name = "PURPOSE")
     private JsonObject purpose;
     
+    /**
+     * 
+     */
     @Embedded
     @NotNull
     private Relationships relationships;
     
+    /**
+     * 
+     */
     @Embedded
     @NotNull
     private Description description;
     
+    /**
+     * 
+     */
     @Embedded
     @NotNull
     private Illustrations illustrations;
     
+    /**
+     * 
+     */
     @Column(name = "KEY_CONSIDERATIONS")
     private JsonObject keyConsiderations;
     
+    /**
+     * 
+     */
     @Embedded
     @NotNull
     private Tailoring tailoring;
     
+    /**
+     * 
+     */
     @Embedded
     @NotNull
     private MoreInformation moreInformation;
@@ -75,7 +102,7 @@ public class Artifact {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -83,7 +110,7 @@ public class Artifact {
         return summary;
     }
 
-    public void setSummary(String summary) {
+    public void setSummary(final String summary) {
         this.summary = summary;
     }
 
@@ -91,7 +118,7 @@ public class Artifact {
         return purpose;
     }
 
-    public void setPurpose(JsonObject purpose) {
+    public void setPurpose(final JsonObject purpose) {
         this.purpose = purpose;
     }
 
@@ -99,7 +126,7 @@ public class Artifact {
         return relationships;
     }
 
-    public void setRelationships(Relationships relationships) {
+    public void setRelationships(final Relationships relationships) {
         this.relationships = relationships;
     }
 
@@ -107,7 +134,7 @@ public class Artifact {
         return description;
     }
 
-    public void setDescription(Description description) {
+    public void setDescription(final Description description) {
         this.description = description;
     }
 
@@ -115,7 +142,7 @@ public class Artifact {
         return illustrations;
     }
 
-    public void setIllustrations(Illustrations illustrations) {
+    public void setIllustrations(final Illustrations illustrations) {
         this.illustrations = illustrations;
     }
 
@@ -123,7 +150,7 @@ public class Artifact {
         return keyConsiderations;
     }
 
-    public void setKeyConsiderations(JsonObject keyConsiderations) {
+    public void setKeyConsiderations(final JsonObject keyConsiderations) {
         this.keyConsiderations = keyConsiderations;
     }
 
@@ -131,7 +158,7 @@ public class Artifact {
         return tailoring;
     }
 
-    public void setTailoring(Tailoring tailoring) {
+    public void setTailoring(final Tailoring tailoring) {
         this.tailoring = tailoring;
     }
 
@@ -139,7 +166,7 @@ public class Artifact {
         return moreInformation;
     }
 
-    public void setMoreInformation(MoreInformation moreInformation) {
+    public void setMoreInformation(final MoreInformation moreInformation) {
         this.moreInformation = moreInformation;
     }
 }

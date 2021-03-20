@@ -14,32 +14,55 @@ import javax.persistence.EntityManagerFactory;
  *
  * @author FOXCONN
  */
-public class Conversation implements AutoCloseable {
+public class Conversation {
     
-    private EntityManagerFactory factory;
-    private Map<Long, EntityManager> managers;
+    /**
+     * 
+     */
+    private transient final EntityManagerFactory factory;
+    /**
+     * 
+     */
+    private transient final Map<Long, EntityManager> managers;
 
-    public Conversation(EntityManagerFactory factory) {
+    /**
+     * @param factory
+     */
+    public Conversation(final EntityManagerFactory factory) {
         this.factory = factory;
         managers = new ConcurrentHashMap<>();
     }
     
-    public EntityManager getManager(long cid){
+    /**
+     * @param cid
+     * @return
+     */
+    public EntityManager getManager(final long cid){
         return managers.get(cid);
     }
     
-    public EntityManager putManager(long cid){
+    /**
+     * @param cid
+     * @return
+     */
+    public EntityManager putManager(final long cid){
         return managers.computeIfAbsent(cid, id -> {
             return factory.createEntityManager();
         });
     }
     
-    public EntityManager removeManager(long cid){
+    /**
+     * @param cid
+     * @return
+     */
+    public EntityManager removeManager(final long cid){
         return managers.remove(cid);
     }
 
-    @Override
-    public void close() throws Exception {
+    /**
+     *
+     */
+    public void close() {
         managers.values().forEach(manager -> {
             manager.close();
         });

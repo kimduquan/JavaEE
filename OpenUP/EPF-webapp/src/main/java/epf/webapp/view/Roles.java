@@ -13,6 +13,8 @@ import epf.util.client.Client;
 import epf.webapp.Session;
 import java.io.Serializable;
 import java.util.List;
+import java.util.logging.Logger;
+
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -31,13 +33,31 @@ public class Roles implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
     
+    /**
+     * 
+     */
     @Inject
-    private Session session;
+    private transient Session session;
+    
+    /**
+     * 
+     */
+    @Inject
+    private transient Logger logger;
 	
-	private List<RoleSet> roleSets;
-    private List<Role> roles;
+	/**
+	 * 
+	 */
+	private transient List<RoleSet> roleSets;
+    /**
+     * 
+     */
+    private transient List<Role> roles;
 
-    public List<RoleSet> getRoleSets() throws Exception {
+    /**
+     * @return
+     */
+    public List<RoleSet> getRoleSets() {
         if(roleSets == null){
             try(Client client = session.newClient("persistence")){
             	roleSets = Queries.getCriteriaQueryResult(
@@ -47,12 +67,18 @@ public class Roles implements Serializable {
             			target -> target.path(EPF.RoleSet), 
             			0, 
             			100);
-            }
+            } 
+            catch (Exception e) {
+				logger.severe(e.getMessage());
+			}
         }
         return roleSets;
     }
 
-    public List<Role> getRoles() throws Exception {
+    /**
+     * @return
+     */
+    public List<Role> getRoles() {
         if(roles == null){
             try(Client client = session.newClient("persistence")){
             	roles = Queries.getCriteriaQueryResult(
@@ -62,7 +88,10 @@ public class Roles implements Serializable {
             			target -> target.path(EPF.Role), 
             			0, 
             			100);
-            }
+            } 
+            catch (Exception e) {
+				logger.severe(e.getMessage());
+			}
         }
         return roles;
     }

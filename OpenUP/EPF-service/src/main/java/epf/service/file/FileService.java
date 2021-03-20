@@ -6,16 +6,19 @@
 package epf.service.file;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.StreamingOutput;
 import epf.schema.roles.Role;
+import epf.service.ServiceException;
 import epf.util.Var;
 import epf.util.client.EntityOutput;
 import java.nio.file.Path;
@@ -29,96 +32,168 @@ import java.nio.file.Path;
 @RequestScoped
 public class FileService implements epf.client.file.Files {
     
+    /**
+     * 
+     */
     @Context
-    private HttpServletRequest request;
+    private transient HttpServletRequest request;
     
-    File buildFile(String path) throws Exception{
+    /**
+     * @param path
+     * @return
+     */
+    protected File buildFile(final String path){
         return new File(path);
     }
 
+    /**
+     *
+     */
     @Override
     public long copy(
-            String target
-    ) throws Exception {
-        File targetFile = buildFile(target);
-        Var<Long> size = new Var<>(Long.valueOf(0));
-        Var<Exception> ex = new Var<>();
-        request.getParts().forEach(part -> {
-            try {
-				Files.copy(part.getInputStream(), targetFile.toPath());
-	            size.set(s -> s + part.getSize());
-			} 
-            catch (Exception e) {
-				ex.set(e);
-			}
-        });
-        if(ex.get() != null) {
-        	throw ex.get();
+            final String target
+    ) {
+    	final File targetFile = buildFile(target);
+    	final Var<Long> size = new Var<>(Long.valueOf(0));
+    	final Var<IOException> error = new Var<>();
+        try {
+			request.getParts().forEach(part -> {
+			    try {
+					Files.copy(part.getInputStream(), targetFile.toPath());
+			        size.set(s -> s + part.getSize());
+				} 
+			    catch (IOException e) {
+			    	error.set(e);
+				}
+			});
+		} 
+        catch (IOException | ServletException e) {
+        	throw new ServiceException(e);
+		}
+        if(error.get() != null) {
+        	throw new ServiceException(error.get());
         }
         return size.get();
     }
 
+    /**
+     *
+     */
     @Override
     public String createFile(
-            String path, 
-            Map<String, String> attrs
-    ) throws Exception {
-        File file = new File(path);
-        return Files.createFile(file.toPath()).toString();
+    		final String path, 
+    		final Map<String, String> attrs
+    ) {
+    	final File file = new File(path);
+        try {
+			return Files.createFile(file.toPath()).toString();
+		} 
+        catch (IOException e) {
+        	throw new ServiceException(e);
+		}
     }
 
+    /**
+     *
+     */
     @Override
     public String createTempFile(
-            String dir, 
-            String prefix, 
-            String suffix, 
-            Map<String, String> attrs
-    ) throws Exception {
-        if(dir != null && !dir.isEmpty()){
-            File directory = new File(dir);
-            return Files.createTempFile(directory.toPath(), prefix, suffix).toString();
+    		final String dir, 
+    		final String prefix, 
+    		final String suffix, 
+    		final Map<String, String> attrs
+    ) {
+    	String result;
+        if(dir == null || dir.isEmpty()){
+            try {
+    			result = Files.createTempFile(prefix, suffix).toString();
+    		} 
+            catch (IOException e) {
+            	throw new ServiceException(e);
+    		}
         }
-        return Files.createTempFile(prefix, suffix).toString();
+        else {
+        	final File directory = new File(dir);
+            try {
+				result = Files.createTempFile(directory.toPath(), prefix, suffix).toString();
+			} 
+            catch (IOException e) {
+            	throw new ServiceException(e);
+			}
+        }
+        return result;
     }
 
+    /**
+     *
+     */
     @Override
     public void delete(
-            String path
-    ) throws Exception {
-        File file = buildFile(path);
-        Files.delete(file.toPath());
+    		final String path
+    ) {
+    	final File file = buildFile(path);
+        try {
+			Files.delete(file.toPath());
+		} 
+        catch (IOException e) {
+        	throw new ServiceException(e);
+		}
     }
 
+    /**
+     *
+     */
     @Override
     public List<String> find(
-            String start,
-            Integer maxDepth
-    ) throws Exception {
-        File startDir = buildFile(start);
-        return Files.find(
-                startDir.toPath(), 
-                maxDepth, null
-        )
-        .map(Path::toString)
-        .collect(Collectors.toList());
+    		final String start,
+    		final Integer maxDepth
+    ) {
+    	final File startDir = buildFile(start);
+        try {
+			return Files.find(
+			        startDir.toPath(), 
+			        maxDepth, null
+			)
+			.map(Path::toString)
+			.collect(Collectors.toList());
+		} 
+        catch (IOException e) {
+        	throw new ServiceException(e);
+		}
     }
 
+    /**
+     *
+     */
     @Override
     public StreamingOutput lines(
-            String path
-    ) throws Exception {
-        File file = buildFile(path);
-        return new EntityOutput(Files.newInputStream(file.toPath()));
+    		final String path
+    ) {
+    	final File file = buildFile(path);
+        try {
+			return new EntityOutput(Files.newInputStream(file.toPath()));
+		} 
+        catch (IOException e) {
+        	throw new ServiceException(e);
+		}
     }
 
+    /**
+     *
+     */
     @Override
     public String move(
-            String source,
-            String target
-    ) throws Exception {
-        File sourceFile = buildFile(source);
-        File targetFile = new File(target);
-        return Files.move(sourceFile.toPath(), targetFile.toPath()).toString();
+    		final String source,
+    		final String target
+    ) {
+        final File sourceFile = buildFile(source);
+        final File targetFile = new File(target);
+        try {
+			return Files.move(sourceFile.toPath(), targetFile.toPath()).toString();
+		} 
+        catch (IOException e) {
+        	throw new ServiceException(e);
+		}
     }
     
 }

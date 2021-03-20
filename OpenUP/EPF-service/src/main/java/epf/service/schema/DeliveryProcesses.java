@@ -35,12 +35,21 @@ import epf.service.persistence.Request;
 @RequestScoped
 public class DeliveryProcesses {
     
+    /**
+     * 
+     */
     @Inject
-    private Request cache;
+    private transient Request cache;
     
+    /**
+     * 
+     */
     @Inject
-    private Principal principal;
+    private transient Principal principal;
     
+    /**
+     * @return
+     */
     @Name("Contents")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -56,7 +65,7 @@ public class DeliveryProcesses {
                     schema = @Schema(implementation = DeliveryProcess.class)
             )
     )
-    public List<DeliveryProcess> getDeliveryProcesses() throws Exception{
+    public List<DeliveryProcess> getDeliveryProcesses() {
         return cache.getNamedQueryResult(
                 EPF.Schema,
                 principal,

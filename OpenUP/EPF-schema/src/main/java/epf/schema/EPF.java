@@ -10,20 +10,68 @@ package epf.schema;
  * @author FOXCONN
  */
 public interface EPF {
-    public static final String Schema = "EPF";
-    public static final String Activity = "EPF_Activity";
-    public static final String CapabilityPattern = "EPF_CapabilityPattern";
-    public static final String DeliveryProcess = "EPF_DeliveryProcess";
-    public static final String Iteration = "EPF_Iteration";
-    public static final String Milestone = "EPF_Milestone";
-    public static final String Phase = "EPF_Phase";
-    public static final String Role = "EPF_Role";
-    public static final String RoleSet = "EPF_RoleSet";
-    public static final String Discipline = "EPF_Discipline";
-    public static final String Task = "EPF_Task";
-    public static final String Artifact = "EPF_Artifact";
-    public static final String Deliverable = "EPF_Deliverable";
-    public static final String Domain = "EPF_Domain";
-    public static final String Template = "EPF_Template";
-    public static final String WorkProductSlot = "EPF_WorkProductSlot";
+    /**
+     * 
+     */
+    String Schema = "EPF";
+    /**
+     * 
+     */
+    String Activity = "EPF_Activity";
+    /**
+     * 
+     */
+    String CapabilityPattern = "EPF_CapabilityPattern";
+    /**
+     * 
+     */
+    String DeliveryProcess = "EPF_DeliveryProcess";
+    /**
+     * 
+     */
+    String Iteration = "EPF_Iteration";
+    /**
+     * 
+     */
+    String Milestone = "EPF_Milestone";
+    /**
+     * 
+     */
+    String Phase = "EPF_Phase";
+    /**
+     * 
+     */
+    String Role = "EPF_Role";
+    /**
+     * 
+     */
+    String RoleSet = "EPF_RoleSet";
+    /**
+     * 
+     */
+    String Discipline = "EPF_Discipline";
+    /**
+     * 
+     */
+    String Task = "EPF_Task";
+    /**
+     * 
+     */
+    String Artifact = "EPF_Artifact";
+    /**
+     * 
+     */
+    String Deliverable = "EPF_Deliverable";
+    /**
+     * 
+     */
+    String Domain = "EPF_Domain";
+    /**
+     * 
+     */
+    String Template = "EPF_Template";
+    /**
+     * 
+     */
+    String WorkProductSlot = "EPF_WorkProductSlot";
 }

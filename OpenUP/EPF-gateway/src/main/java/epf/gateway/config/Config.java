@@ -27,16 +27,25 @@ import epf.gateway.Request;
 @RequestScoped
 public class Config {
     
+    /**
+     * 
+     */
     @Inject
-    private Request request;
+    private transient Request request;
     
+    /**
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @return
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
     public CompletionStage<Response> getConfigurations(
-            @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo,
-            @Context javax.ws.rs.core.Request req) throws Exception {
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req) {
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         request.setRequest(req);

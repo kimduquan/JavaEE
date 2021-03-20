@@ -36,33 +36,60 @@ import epf.schema.EPF;
 })
 public class Task {
 
+    /**
+     * 
+     */
     @Column(name = "NAME")
     @Id
     @NotBlank
     private String name;
     
+    /**
+     * 
+     */
     @Column(name = "SUMMARY")
     private String summary;
     
+    /**
+     * 
+     */
     @Column(name = "PURPOSE")
     private JsonObject purpose;
     
+    /**
+     * 
+     */
     @Embedded
     @NotNull
     private Relationships relationships;
     
+    /**
+     * 
+     */
     @Column(name = "MAIN_DESCRIPTION")
     private JsonObject mainDescription;
     
+    /**
+     * 
+     */
     @Column(name = "STEPS")
     private JsonObject steps;
     
+    /**
+     * 
+     */
     @Column(name = "KEY_CONSIDERATIONS")
     private JsonObject keyConsiderations;
     
+    /**
+     * 
+     */
     @Column(name = "ALTERNATIVES")
     private JsonObject alternatives;
     
+    /**
+     * 
+     */
     @Embedded
     @NotNull
     private MoreInformation moreInformation;
@@ -71,7 +98,7 @@ public class Task {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -79,7 +106,7 @@ public class Task {
         return summary;
     }
 
-    public void setSummary(String summary) {
+    public void setSummary(final String summary) {
         this.summary = summary;
     }
 
@@ -87,7 +114,7 @@ public class Task {
         return purpose;
     }
 
-    public void setPurpose(JsonObject purpose) {
+    public void setPurpose(final JsonObject purpose) {
         this.purpose = purpose;
     }
 
@@ -95,7 +122,7 @@ public class Task {
         return relationships;
     }
 
-    public void setRelationships(Relationships relationships) {
+    public void setRelationships(final Relationships relationships) {
         this.relationships = relationships;
     }
 
@@ -103,7 +130,7 @@ public class Task {
         return mainDescription;
     }
 
-    public void setMainDescription(JsonObject mainDescription) {
+    public void setMainDescription(final JsonObject mainDescription) {
         this.mainDescription = mainDescription;
     }
 
@@ -111,7 +138,7 @@ public class Task {
         return steps;
     }
 
-    public void setSteps(JsonObject steps) {
+    public void setSteps(final JsonObject steps) {
         this.steps = steps;
     }
 
@@ -119,7 +146,7 @@ public class Task {
         return keyConsiderations;
     }
 
-    public void setKeyConsiderations(JsonObject keyConsiderations) {
+    public void setKeyConsiderations(final JsonObject keyConsiderations) {
         this.keyConsiderations = keyConsiderations;
     }
 
@@ -127,7 +154,7 @@ public class Task {
         return alternatives;
     }
 
-    public void setAlternatives(JsonObject alternatives) {
+    public void setAlternatives(final JsonObject alternatives) {
         this.alternatives = alternatives;
     }
 
@@ -135,7 +162,7 @@ public class Task {
         return moreInformation;
     }
 
-    public void setMoreInformation(MoreInformation moreInformation) {
+    public void setMoreInformation(final MoreInformation moreInformation) {
         this.moreInformation = moreInformation;
     }
 }

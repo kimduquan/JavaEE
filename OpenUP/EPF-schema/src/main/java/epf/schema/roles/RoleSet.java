@@ -40,14 +40,23 @@ import javax.persistence.Index;
         query = "SELECT rs FROM EPF_RoleSet AS rs")
 public class RoleSet {
 
+    /**
+     * 
+     */
     @Column(name = "NAME")
     @Id
     @NotBlank
     private String name;
     
+    /**
+     * 
+     */
     @Column(name = "SUMMARY")
     private String summary;
     
+    /**
+     * 
+     */
     @ManyToMany
     @JoinTable(
             name = "ROLES",
@@ -58,16 +67,22 @@ public class RoleSet {
     )
     private List<Role> roles;
     
+    /**
+     * 
+     */
     @Column(name = "MAIN_DESCRIPTION")
     private JsonObject mainDescription;
     
+    /**
+     * 
+     */
     public static final String ROLES = "EPF_RoleSet.Roles";
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -75,7 +90,7 @@ public class RoleSet {
         return summary;
     }
 
-    public void setSummary(String summary) {
+    public void setSummary(final String summary) {
         this.summary = summary;
     }
     
@@ -84,7 +99,7 @@ public class RoleSet {
         return roles;
     }
 
-    public void setRoles(List<Role> roles){
+    public void setRoles(final List<Role> roles){
         this.roles = roles;
     }
 
@@ -92,7 +107,7 @@ public class RoleSet {
         return mainDescription;
     }
 
-    public void setMainDescription(JsonObject mainDescription) {
+    public void setMainDescription(final JsonObject mainDescription) {
         this.mainDescription = mainDescription;
     }
 }

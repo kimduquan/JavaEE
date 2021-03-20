@@ -14,20 +14,30 @@ import javax.net.ssl.TrustManager;
  *
  * @author FOXCONN
  */
-public class DefaultSSLContext {
+public final class DefaultSSLContext {
 	
+	/**
+	 * 
+	 */
 	private static final Logger logger = Logger.getLogger(DefaultSSLContext.class.getName());
+	
+	private DefaultSSLContext() {
+		
+	}
     
+    /**
+     * @return
+     */
     public static SSLContext build(){
+    	SSLContext ctx = null;
         try {
-            TrustManager x509 = new DefaultTrustManager();
-            SSLContext ctx = SSLContext.getInstance("SSL");
+        	final TrustManager x509 = new DefaultTrustManager();
+        	ctx = SSLContext.getInstance("SSL");
             ctx.init(null, new TrustManager[]{x509}, null);
-            return ctx;
         } 
         catch (Exception ex) {
         	logger.log(Level.SEVERE, ex.getMessage(), ex);
         }
-        return null;
+        return ctx;
     }
 }

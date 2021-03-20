@@ -27,6 +27,9 @@ import org.eclipse.microprofile.graphql.Type;
 @Embeddable
 public class Relationships {
     
+    /**
+     * 
+     */
     @ManyToMany
     @JoinTable(
             name = "ARTIFACT_FULFILLED_SLOTS",
@@ -40,13 +43,22 @@ public class Relationships {
     )
     private List<WorkProductSlot> fulfilledSlots;
     
+    /**
+     * 
+     */
     @ManyToOne
     @JoinColumn(name = "RESPONSIBLE")
     private Role responsible;
     
+    /**
+     * 
+     */
     @ManyToMany(mappedBy = "modifies")
     private List<Role> modifiedBy;
     
+    /**
+     * 
+     */
     @ManyToMany(mappedBy = "outputs")
     private List<Task> outputFrom;
 
@@ -54,7 +66,7 @@ public class Relationships {
         return fulfilledSlots;
     }
 
-    public void setFulfilledSlots(List<WorkProductSlot> fulfilledSlots) {
+    public void setFulfilledSlots(final List<WorkProductSlot> fulfilledSlots) {
         this.fulfilledSlots = fulfilledSlots;
     }
     
@@ -64,7 +76,7 @@ public class Relationships {
         return responsible;
     }
 
-    public void setResponsible(Role responsible) {
+    public void setResponsible(final Role responsible) {
         this.responsible = responsible;
     }
     
@@ -74,10 +86,13 @@ public class Relationships {
         return modifiedBy;
     }
 
-    public void setModifiedBy(List<Role> modifiedBy) {
+    public void setModifiedBy(final List<Role> modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
     
+    /**
+     * @return
+     */
     @Name("Input_To")
     @JsonbTransient
     public List<Task> getInputTo(){
@@ -90,7 +105,7 @@ public class Relationships {
         return outputFrom;
     }
 
-    public void setOutputFrom(List<Task> outputFrom) {
+    public void setOutputFrom(final List<Task> outputFrom) {
         this.outputFrom = outputFrom;
     }
 }

@@ -15,7 +15,7 @@ import javax.net.ssl.SSLSession;
 public class DefaultHostnameVerifier implements HostnameVerifier {
 
     @Override
-    public boolean verify(String hostname, SSLSession sslSession) {
+    public boolean verify(final String hostname, final SSLSession sslSession) {
         return true;
     }
 }

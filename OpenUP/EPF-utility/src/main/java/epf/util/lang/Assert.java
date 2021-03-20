@@ -4,11 +4,21 @@ import java.util.concurrent.Callable;
 import java.util.function.Supplier;
 import epf.util.function.Predicate;
 
+/**
+ * @author PC
+ *
+ */
 public class Assert implements Runnable, Callable<Void> {
 
-	private Predicate predicate;
+	/**
+	 * 
+	 */
+	private transient final Predicate predicate;
 	
-	public Assert(Supplier<Boolean> func) {
+	/**
+	 * @param func
+	 */
+	public Assert(final Supplier<Boolean> func) {
 		predicate = new Predicate(func);
 	}
 

@@ -27,6 +27,12 @@ import epf.validation.persistence.Unit;
 @Path("persistence")
 public interface Entities {
     
+    /**
+     * @param unit
+     * @param name
+     * @param body
+     * @return
+     */
     @POST
     @Path("{unit}/{entity}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -35,21 +41,28 @@ public interface Entities {
             @PathParam("unit")
             @Unit
             @NotBlank
-            String unit,
+            final String unit,
             @PathParam("entity")
             @NotBlank
-            String name,
+            final String name,
             @NotNull
-            InputStream body
-            ) throws Exception;
+            final InputStream body
+            );
     
+    /**
+     * @param client
+     * @param cls
+     * @param unit
+     * @param name
+     * @param body
+     */
     static <T> T persist(
-    		Client client,
-            Class<T> cls,
-            String unit,
-            String name,
-            T body
-            ) throws Exception{
+    		final Client client,
+    		final Class<T> cls,
+    		final String unit,
+    		final String name,
+    		final T body
+            ){
     	return client.request(
     			target -> target.path(unit).path(name), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
@@ -57,6 +70,12 @@ public interface Entities {
     			.post(Entity.json(body), cls);
     }
     
+    /**
+     * @param unit
+     * @param name
+     * @param entityId
+     * @param body
+     */
     @PUT
     @Path("{unit}/{entity}/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -64,54 +83,72 @@ public interface Entities {
     		@PathParam("unit")
             @Unit
             @NotBlank
-            String unit,
+            final String unit,
             @PathParam("entity")
             @NotBlank
-            String name,
+            final String name,
             @PathParam("id")
             @NotBlank
-            String id,
+            final String entityId,
             @NotNull
-            InputStream body
-            ) throws Exception;
+            final InputStream body
+            );
     
+    /**
+     * @param client
+     * @param unit
+     * @param name
+     * @param entityId
+     * @param body
+     */
     static void merge(
-    		Client client,
-    		String unit,
-            String name,
-            String id,
-            Object body
-            ) throws Exception{
+    		final Client client,
+    		final String unit,
+    		final String name,
+    		final String entityId,
+    		final Object body
+            ) {
     	client.request(
-    			target -> target.path(unit).path(name).path(id), 
+    			target -> target.path(unit).path(name).path(entityId), 
     			req -> req
     			)
     	.put(Entity.json(body));
     }
     
+    /**
+     * @param unit
+     * @param name
+     * @param entityId
+     */
     @DELETE
     @Path("{unit}/{entity}/{id}")
     void remove(
             @PathParam("unit")
             @Unit
             @NotBlank
-            String unit,
+            final String unit,
             @PathParam("entity")
             @NotBlank
-            String name,
+            final String name,
             @PathParam("id")
             @NotBlank
-            String id
-            ) throws Exception;
+            final String entityId
+            );
     
+    /**
+     * @param client
+     * @param unit
+     * @param name
+     * @param entityId
+     */
     static void remove(
-    		Client client,
-            String unit,
-            String name,
-            String id
-            ) throws Exception{
+    		final Client client,
+    		final String unit,
+    		final String name,
+    		final String entityId
+            ) {
     	client.request(
-    			target -> target.path(unit).path(name).path(id), 
+    			target -> target.path(unit).path(name).path(entityId), 
     			req -> req
     			)
     	.delete();

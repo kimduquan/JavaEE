@@ -5,6 +5,8 @@
  */
 package epf.util.security;
 
+import java.util.Locale;
+
 import org.eclipse.persistence.internal.security.JCEEncryptor;
 import org.h2.security.SHA256;
 import org.h2.util.StringUtils;
@@ -12,20 +14,29 @@ import org.h2.util.StringUtils;
  *
  * @author FOXCONN
  */
-public class PasswordHash {
+public final class PasswordHash {
     
+    /**
+     * 
+     */
     private static JCEEncryptor encryptor;
     
     private PasswordHash(){
         
     }
     
-    public static String hash(String username, char[] password) throws Exception{
+    /**
+     * @param username
+     * @param password
+     * @return
+     * @throws Exception
+     */
+    public static String hash(final String username, final char... password) throws Exception{
         if(encryptor == null){
             encryptor = new JCEEncryptor();
         }
-        StringBuilder builder = new StringBuilder();
-        StringUtils.convertBytesToHex(builder, SHA256.getKeyPasswordHash(username.toUpperCase(), password));
+        final StringBuilder builder = new StringBuilder();
+        StringUtils.convertBytesToHex(builder, SHA256.getKeyPasswordHash(username.toUpperCase(Locale.getDefault()), password));
         return encryptor.encryptPassword(builder.toString());
     }
 }

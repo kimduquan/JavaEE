@@ -39,14 +39,23 @@ import javax.persistence.Index;
         query = "SELECT d FROM EPF_Domain AS d")
 public class Domain {
 
+    /**
+     * 
+     */
     @Column(name = "NAME")
     @Id
     @NotBlank
     private String name;
     
+    /**
+     * 
+     */
     @Column(name = "SUMMARY")
     private String summary;
     
+    /**
+     * 
+     */
     @ManyToMany
     @JoinTable(
             name = "WORK_PRODUCTS",
@@ -57,13 +66,16 @@ public class Domain {
     )
     private List<Artifact> workProducts;
     
+    /**
+     * 
+     */
     public static final String DOMAINS = "EPF_Domain.Domains";
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -71,7 +83,7 @@ public class Domain {
         return summary;
     }
 
-    public void setSummary(String summary) {
+    public void setSummary(final String summary) {
         this.summary = summary;
     }
     
@@ -80,7 +92,7 @@ public class Domain {
         return workProducts;
     }
 
-    public void setWorkProducts(List<Artifact> workProducts) {
+    public void setWorkProducts(final List<Artifact> workProducts) {
         this.workProducts = workProducts;
     }
 }

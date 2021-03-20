@@ -24,11 +24,17 @@ import epf.schema.EPF;
 @Table(schema = EPF.Schema, name = "WORK_PRODUCT_SLOT")
 public class WorkProductSlot {
 	
+    /**
+     * 
+     */
     @Column(name = "NAME")
     @Id
     @NotBlank
     private String name;
     
+    /**
+     * 
+     */
     @Column(name = "SUMMARY")
     private String summary;
 
@@ -36,7 +42,7 @@ public class WorkProductSlot {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -44,7 +50,7 @@ public class WorkProductSlot {
         return summary;
     }
 
-    public void setSummary(String summary) {
+    public void setSummary(final String summary) {
         this.summary = summary;
     }
 }

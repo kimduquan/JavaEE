@@ -34,15 +34,35 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
     */
     private static final long serialVersionUID = 1L;
     
+    /**
+     * 
+     */
+    private static final int NOT_ENOUGH_RIGHTS_FOR_1 = 90_096;
+    /**
+     * 
+     */
+    private static final int ADMIN_RIGHTS_REQUIRED = 90_040;
+    
+    /**
+     * 
+     */
     @Inject
-    private Logger logger;
+    private transient Logger logger;
 
+    /**
+     *
+     */
     @Override
-    public Response toResponse(Exception ex) {
-        return handle(ex);
+    public Response toResponse(final Exception exception) {
+        return handle(exception);
     }
     
-    boolean map(Throwable failure, Response.ResponseBuilder builder){
+    /**
+     * @param failure
+     * @param builder
+     * @return
+     */
+    protected boolean map(final Throwable failure, final Response.ResponseBuilder builder){
         Response.StatusType status = Response.Status.INTERNAL_SERVER_ERROR;
         boolean mapped = true;
         logger.log(Level.SEVERE, failure.getMessage(), failure);
@@ -65,19 +85,23 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
             status = Response.Status.BAD_REQUEST;
         }
         else if(failure instanceof WebApplicationException){
-            WebApplicationException ex = (WebApplicationException)failure;
-            status = ex.getResponse().getStatusInfo();
+        	final WebApplicationException exception = (WebApplicationException)failure;
+            status = exception.getResponse().getStatusInfo();
         }
         else if(failure instanceof StreamCorruptedException){
-            
+            mapped = true;
         }
         else if(failure instanceof SQLNonTransientException){
-        	SQLNonTransientException ex = (SQLNonTransientException)failure;
-        	int errorCode = ex.getErrorCode();
+        	final SQLNonTransientException exception = (SQLNonTransientException)failure;
+        	final int errorCode = exception.getErrorCode();
         	if(NOT_ENOUGH_RIGHTS_FOR_1 == errorCode
         			|| ADMIN_RIGHTS_REQUIRED == errorCode) {
         		status = Response.Status.FORBIDDEN;
         	}
+        }
+        else if(failure instanceof ServiceException) {
+        	final ServiceException exception = (ServiceException) failure;
+        	mapped = map(exception.getCause(), builder);
         }
         else{
             mapped = false;
@@ -88,20 +112,19 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
         return mapped;
     }
     
-    Response handle(Throwable failure){
-        ResponseBuilder builder = Response.serverError();
-        if(failure != null){
-            if(map(failure, builder) == false){
-                Throwable cause = failure.getCause();
-                while(cause != null && failure != cause){
-                    map(cause, builder);
-                    cause = cause.getCause();
-                }
+    /**
+     * @param failure
+     * @return
+     */
+    protected Response handle(final Throwable failure){
+    	final ResponseBuilder builder = Response.serverError();
+        if(failure != null && !map(failure, builder)){
+        	Throwable cause = failure.getCause();
+            while(cause != null && !cause.equals(failure)){
+                map(cause, builder);
+                cause = cause.getCause();
             }
         }
         return builder.build();
     }
-    
-    private static final int NOT_ENOUGH_RIGHTS_FOR_1 = 90096;
-    private static final int ADMIN_RIGHTS_REQUIRED = 90040;
 }

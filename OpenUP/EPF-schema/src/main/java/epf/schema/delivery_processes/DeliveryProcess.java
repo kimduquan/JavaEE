@@ -38,38 +38,62 @@ import epf.schema.EPF;
 @NamedNativeQuery(name = DeliveryProcess.FULL_TEXT_SEARCH, query = "SELECT * FROM FT_SEARCH_DATA(?, ?, ?);")
 public class DeliveryProcess {
 	
+    /**
+     * 
+     */
     @Column(name = "NAME")
     @Id
     @NotBlank
     private String name;
     
+    /**
+     * 
+     */
     @Column(name = "SUMMARY")
     private String summary;
 	
+    /**
+     * 
+     */
     @Embedded
     @NotNull
     private Description description;
 
+    /**
+     * 
+     */
     @Embedded
     @NotNull
     private WorkBreakdownStructure workBreakdownStructure;
 
+    /**
+     * 
+     */
     @Embedded
     @NotNull
     private TeamAllocation teamAllocation;
 
+    /**
+     * 
+     */
     @Embedded
     @NotNull
     private WorkProductUsage workProductUsage;
     
+    /**
+     * 
+     */
     public static final String DELIVERY_PROCESSES = "EPF_DeliveryProcess.DeliveryProcesses";
-    static final String FULL_TEXT_SEARCH = "EPF.FullTextSearch";
+    /**
+     * 
+     */
+    public static final String FULL_TEXT_SEARCH = "EPF.FullTextSearch";
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -77,7 +101,7 @@ public class DeliveryProcess {
         return summary;
     }
 
-    public void setSummary(String summary) {
+    public void setSummary(final String summary) {
         this.summary = summary;
     }
 
@@ -85,7 +109,7 @@ public class DeliveryProcess {
             return description;
     }
 
-    public void setDescription(Description description) {
+    public void setDescription(final Description description) {
             this.description = description;
     }
 
@@ -93,7 +117,7 @@ public class DeliveryProcess {
             return workBreakdownStructure;
     }
 
-    public void setWorkBreakdownStructure(WorkBreakdownStructure workBreakdownStructure) {
+    public void setWorkBreakdownStructure(final WorkBreakdownStructure workBreakdownStructure) {
             this.workBreakdownStructure = workBreakdownStructure;
     }
 
@@ -101,7 +125,7 @@ public class DeliveryProcess {
             return teamAllocation;
     }
 
-    public void setTeamAllocation(TeamAllocation teamAllocation) {
+    public void setTeamAllocation(final TeamAllocation teamAllocation) {
             this.teamAllocation = teamAllocation;
     }
 
@@ -109,7 +133,7 @@ public class DeliveryProcess {
             return workProductUsage;
     }
 
-    public void setWorkProductUsage(WorkProductUsage workProductUsage) {
+    public void setWorkProductUsage(final WorkProductUsage workProductUsage) {
             this.workProductUsage = workProductUsage;
     }
 }

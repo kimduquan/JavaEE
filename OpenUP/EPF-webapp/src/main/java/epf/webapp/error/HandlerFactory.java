@@ -3,9 +3,16 @@ package epf.webapp.error;
 import javax.faces.context.ExceptionHandler;
 import javax.faces.context.ExceptionHandlerFactory;
 
+/**
+ * @author PC
+ *
+ */
 public class HandlerFactory extends ExceptionHandlerFactory {
 	
-	public HandlerFactory(ExceptionHandlerFactory wrapped) {
+	/**
+	 * @param wrapped
+	 */
+	public HandlerFactory(final ExceptionHandlerFactory wrapped) {
         super(wrapped);
     }
 

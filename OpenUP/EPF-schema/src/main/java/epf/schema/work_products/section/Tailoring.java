@@ -18,12 +18,21 @@ import org.eclipse.microprofile.graphql.Type;
 @Embeddable
 public class Tailoring {
     
+    /**
+     * 
+     */
     @Column(name = "IMPACT_OF_NOT_HAVING")
     private JsonObject impactOfNotHaving;
     
+    /**
+     * 
+     */
     @Column(name = "REASONS_FOR_NOT_NEEDING")
     private JsonObject reasonsForNotNeeding;
     
+    /**
+     * 
+     */
     @Column(name = "REPRESENTATION_OPTIONS")
     private JsonObject representationOptions;
 
@@ -31,7 +40,7 @@ public class Tailoring {
         return impactOfNotHaving;
     }
 
-    public void setImpactOfNotHaving(JsonObject impactOfNotHaving) {
+    public void setImpactOfNotHaving(final JsonObject impactOfNotHaving) {
         this.impactOfNotHaving = impactOfNotHaving;
     }
 
@@ -39,7 +48,7 @@ public class Tailoring {
         return reasonsForNotNeeding;
     }
 
-    public void setReasonsForNotNeeding(JsonObject reasonsForNotNeeding) {
+    public void setReasonsForNotNeeding(final JsonObject reasonsForNotNeeding) {
         this.reasonsForNotNeeding = reasonsForNotNeeding;
     }
 
@@ -47,7 +56,7 @@ public class Tailoring {
         return representationOptions;
     }
 
-    public void setRepresentationOptions(JsonObject representationOptions) {
+    public void setRepresentationOptions(final JsonObject representationOptions) {
         this.representationOptions = representationOptions;
     }
 }

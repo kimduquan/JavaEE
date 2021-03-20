@@ -35,12 +35,21 @@ import epf.schema.roles.Role;
 @RequestScoped
 public class WorkProducts {
     
+    /**
+     * 
+     */
     @Inject
-    private Request cache;
+    private transient Request cache;
     
+    /**
+     * 
+     */
     @Inject
-    private Principal principal;
+    private transient Principal principal;
     
+    /**
+     * @return
+     */
     @Name("Contents")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -56,7 +65,7 @@ public class WorkProducts {
                     schema = @Schema(implementation = Domain.class)
             )
     )
-    public List<Domain> getDomains() throws Exception{
+    public List<Domain> getDomains() {
         return cache.getNamedQueryResult(
                 EPF.Schema,
                 principal,

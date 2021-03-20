@@ -68,7 +68,7 @@ public class WebApp extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+    protected void doGet(final HttpServletRequest req, final HttpServletResponse resp)
         throws ServletException, IOException{
         req.getRequestDispatcher("tasks.html").forward(req, resp);
     }

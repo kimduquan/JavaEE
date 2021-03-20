@@ -13,14 +13,20 @@ import javax.persistence.metamodel.EntityType;
  */
 public class Entity<T> {
     
-    private EntityType<T> type;
-    private T object;
+    /**
+     * 
+     */
+    private transient EntityType<T> type;
+    /**
+     * 
+     */
+    private transient T object;
 
     public EntityType<T> getType() {
         return type;
     }
 
-    public void setType(EntityType<T> type) {
+    public void setType(final EntityType<T> type) {
         this.type = type;
     }
 
@@ -28,7 +34,7 @@ public class Entity<T> {
         return object;
     }
 
-    public void setObject(T object) {
+    public void setObject(final T object) {
         this.object = object;
     }
 }

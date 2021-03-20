@@ -25,6 +25,11 @@ import epf.validation.file.Directory;
 @Path("file/directory")
 public interface Directories {
     
+    /**
+     * @param dir
+     * @param attrs
+     * @return
+     */
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
@@ -32,31 +37,41 @@ public interface Directories {
             @FormParam("dir")
             @NotBlank
             @Directory
-            String dir,
+            final String dir,
             @FormParam("attrs")
-            Map<String, String> attrs
-    ) throws Exception;
+            final Map<String, String> attrs
+    );
     
+    /**
+     * @param dir
+     * @param prefix
+     * @param attrs
+     * @return
+     */
     @POST
     @Path("temp")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
     String createTempDirectory(
             @FormParam("dir")
-            String dir,
+            final String dir,
             @FormParam("prefix") 
             @NotBlank
-            String prefix,
+            final String prefix,
             @FormParam("attrs")
-            Map<String, String> attrs
-    ) throws Exception;
+            final Map<String, String> attrs
+    );
     
+    /**
+     * @param dir
+     * @return
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     List<String> list(
             @MatrixParam("dir")
             @NotBlank
             @Directory
-            String dir
-    ) throws Exception;
+            final String dir
+    );
 }

@@ -23,28 +23,50 @@ import epf.util.client.ClientQueue;
 @ApplicationScoped
 public class ConfigSource implements org.eclipse.microprofile.config.spi.ConfigSource {
     
-    private Map<String, String> configs;
+    /**
+     * 
+     */
+    private final transient Map<String, String> configs;
     
+    /**
+     * 
+     */
     @Inject
-    private LocateRegistry registry;
+    private transient LocateRegistry registry;
     
+    /**
+     * 
+     */
     @Inject
-    private ClientQueue clients;
+    private transient ClientQueue clients;
     
+    /**
+     * 
+     */
     @Inject
-    private Logger logger;
+    private transient Logger logger;
     
-    @PostConstruct
-    void postConstruct(){
+    /**
+     * 
+     */
+    public ConfigSource() {
+    	super();
         configs = new ConcurrentHashMap<>();
+    }
+    
+    /**
+     * 
+     */
+    @PostConstruct
+    protected void postConstruct(){
         try(Client client = new Client(clients, registry.lookup("config"), b -> b)) {
-            Map<String, String> data = Config.getProperties(client, null);
+            final Map<String, String> data = Config.getProperties(client, null);
             if(data != null){
                 configs.putAll(data);
             }
         } 
-        catch (Exception ex) {
-            logger.log(Level.SEVERE, ex.getMessage(), ex);
+        catch(Exception ex) {
+        	logger.log(Level.SEVERE, ex.getMessage(), ex);
         }
         
     }
@@ -55,7 +77,7 @@ public class ConfigSource implements org.eclipse.microprofile.config.spi.ConfigS
 	}
 
 	@Override
-	public String getValue(String propertyName) {
+	public String getValue(final String propertyName) {
 		return configs.getOrDefault(propertyName, null);
 	}
 

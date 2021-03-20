@@ -291,7 +291,7 @@
         <module>EPF-validation</module>
         <module>EPF-client</module>
         <module>OpenUP-client</module>
-		<!-- <module>EPF-service</module> -->
+		<module>EPF-service</module>
 		<module>EPF-portlet</module>
 		<module>EPF-webapp</module>
 		<module>OpenUP-service</module>

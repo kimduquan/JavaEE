@@ -5,10 +5,17 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import org.eclipse.microprofile.graphql.Type;
 
+/**
+ * @author PC
+ *
+ */
 @Type
 @Embeddable
 public class WorkProductUsage {
 
+    /**
+     * 
+     */
     @Column(name = "WORK_PRODUCT_BREAKDOWN")
     private JsonObject workProductBreakdown;
 
@@ -16,7 +23,7 @@ public class WorkProductUsage {
         return workProductBreakdown;
     }
 
-    public void setWorkProductBreakdown(JsonObject workProductBreakdown) {
+    public void setWorkProductBreakdown(final JsonObject workProductBreakdown) {
         this.workProductBreakdown = workProductBreakdown;
     }
 }

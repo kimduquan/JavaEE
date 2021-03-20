@@ -27,15 +27,33 @@ import epf.util.ssl.DefaultSSLContext;
 @ApplicationScoped
 public class ClientQueue {
 	
-	private Map<String, Queue<Client>> clients;
-    private SSLContext context;
+	/**
+	 * 
+	 */
+	private transient final Map<String, Queue<Client>> clients;
+    /**
+     * 
+     */
+    private transient SSLContext context;
     
+    /**
+     * 
+     */
+    public ClientQueue() {
+        clients = new ConcurrentHashMap<>();
+    }
+    
+    /**
+     * 
+     */
     @PostConstruct
     public void initialize(){
-        clients = new ConcurrentHashMap<>();
         context = DefaultSSLContext.build();
     }
     
+    /**
+     * 
+     */
     @PreDestroy
     public void close(){
         clients.forEach((name, queue) -> {
@@ -45,15 +63,24 @@ public class ClientQueue {
         clients.clear();
     }
     
-    static ClientBuilder newBuilder(SSLContext context){
+    /**
+     * @param context
+     * @return
+     */
+    protected static ClientBuilder newBuilder(final SSLContext context){
     	return ClientBuilder
     			.newBuilder()
     			.sslContext(context)
                 .hostnameVerifier(new DefaultHostnameVerifier());
     }
     
-    public Client poll(URI uri, Function<ClientBuilder, ClientBuilder> buildClient){
-        Queue<Client> pool = clients.computeIfAbsent(
+    /**
+     * @param uri
+     * @param buildClient
+     * @return
+     */
+    public Client poll(final URI uri, final Function<ClientBuilder, ClientBuilder> buildClient){
+    	final Queue<Client> pool = clients.computeIfAbsent(
                 uri.toString(), 
                 key -> {
                     Queue<Client> queue = new ConcurrentLinkedQueue<>();
@@ -63,13 +90,17 @@ public class ClientQueue {
                 }
         );
         if(pool.isEmpty()){
-        	Client client = buildClient.apply(newBuilder(context)).build();
+        	final Client client = buildClient.apply(newBuilder(context)).build();
             pool.add(client);
         }
         return pool.poll();
     }
     
-    public void add(URI uri, Client client){
+    /**
+     * @param uri
+     * @param client
+     */
+    public void add(final URI uri, final Client client){
         clients.computeIfPresent(
                 uri.toString(), 
                 (key, value) -> {

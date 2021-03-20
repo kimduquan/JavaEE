@@ -11,22 +11,47 @@ import javax.inject.Inject;
 import epf.util.client.Client;
 import epf.util.client.ClientQueue;
 
+/**
+ * @author PC
+ *
+ */
 @ApplicationScoped
 public class Registry {
 
+	/**
+	 * 
+	 */
 	private static final String SERVICE_URL = System.getenv("epf.service.url");
 	
-	private Map<String, URI> remotes;
+	/**
+	 * 
+	 */
+	private transient final Map<String, URI> remotes;
 	
+	/**
+	 * 
+	 */
 	@Inject
-	private ClientQueue clients;
+	private transient ClientQueue clients;
 	
+	/**
+	 * 
+	 */
 	@Inject
-	private Logger logger;
-    
-	@PostConstruct
-	void postConstruct() {
+	private transient Logger logger;
+	
+	/**
+	 * 
+	 */
+	public Registry() {
 		remotes = new ConcurrentHashMap<>();
+	}
+    
+	/**
+	 * 
+	 */
+	@PostConstruct
+	protected void postConstruct() {
 		try(Client client = new Client(clients, new URI(SERVICE_URL).resolve("registry"), b -> b)){
 			client
 			.request(
@@ -37,7 +62,6 @@ public class Registry {
 			.getLinks()
 			.forEach(link -> {
 				remotes.put(link.getRel(), link.getUri());
-				logger.info(link.getRel() + ":" + link.getUri());
 			});
 		} 
 		catch (Exception e) {
@@ -45,7 +69,11 @@ public class Registry {
 		}
 	}
 	
-	public URI lookup(String name) {
+	/**
+	 * @param name
+	 * @return
+	 */
+	public URI lookup(final String name) {
 		return remotes.get(name);
 	}
 }

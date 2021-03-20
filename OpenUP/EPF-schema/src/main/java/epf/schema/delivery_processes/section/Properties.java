@@ -17,21 +17,39 @@ import org.eclipse.microprofile.graphql.Type;
 @Embeddable
 public class Properties {
 
+    /**
+     * 
+     */
     @Column(name = "EVENT_DRIVEN")
     private Boolean eventDriven;
     
+    /**
+     * 
+     */
     @Column(name = "MULTIPLE_OCCURRENCES")
     private Boolean multipleOccurrences;
     
+    /**
+     * 
+     */
     @Column(name = "ONGOING")
     private Boolean ongoing;
     
+    /**
+     * 
+     */
     @Column(name = "OPTIONAL")
     private Boolean optional;
     
+    /**
+     * 
+     */
     @Column(name = "PLANNED")
     private Boolean planned;
     
+    /**
+     * 
+     */
     @Column(name = "REPEATABLE")
     private Boolean repeatable;
     
@@ -39,7 +57,7 @@ public class Properties {
         return eventDriven;
     }
 
-    public void setEventDriven(Boolean eventDriven) {
+    public void setEventDriven(final Boolean eventDriven) {
         this.eventDriven = eventDriven;
     }
 
@@ -47,7 +65,7 @@ public class Properties {
         return multipleOccurrences;
     }
 
-    public void setMultipleOccurrences(Boolean multipleOccurrences) {
+    public void setMultipleOccurrences(final Boolean multipleOccurrences) {
         this.multipleOccurrences = multipleOccurrences;
     }
 
@@ -55,7 +73,7 @@ public class Properties {
         return ongoing;
     }
 
-    public void setOngoing(Boolean ongoing) {
+    public void setOngoing(final Boolean ongoing) {
         this.ongoing = ongoing;
     }
 
@@ -63,7 +81,7 @@ public class Properties {
         return optional;
     }
 
-    public void setOptional(Boolean optional) {
+    public void setOptional(final Boolean optional) {
         this.optional = optional;
     }
 
@@ -71,7 +89,7 @@ public class Properties {
         return planned;
     }
 
-    public void setPlanned(Boolean planned) {
+    public void setPlanned(final Boolean planned) {
         this.planned = planned;
     }
 
@@ -79,7 +97,7 @@ public class Properties {
         return repeatable;
     }
 
-    public void setRepeatable(Boolean repeatable) {
+    public void setRepeatable(final Boolean repeatable) {
         this.repeatable = repeatable;
     }
 }

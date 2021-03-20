@@ -39,31 +39,55 @@ public class Session implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private TokenPrincipal principal;
-    private Logger logger;
+	/**
+	 * 
+	 */
+	private transient TokenPrincipal principal;
+    /**
+     * 
+     */
+    private transient Logger logger;
     
+    /**
+     * 
+     */
     @Inject
-    private SecurityContext context;
+    private transient SecurityContext context;
     
+    /**
+     * 
+     */
     @Inject
-    private LocateRegistry registry;
+    private transient LocateRegistry registry;
     
+    /**
+     * 
+     */
     @Inject
-    private ClientQueue clients;
+    private transient ClientQueue clients;
     
+    /**
+     * 
+     */
     @Inject
-    private EPFIdentityStore identityStore;
+    private transient EPFIdentityStore identityStore;
     
+    /**
+     * 
+     */
     @PostConstruct
-    void postConstruct(){
+    protected void postConstruct(){
     	if(context.getCallerPrincipal() != null) {
     		principal = identityStore.getPrincipal(context.getCallerPrincipal().getName());
     	}
     	logger = Logging.getLogger(Session.class.getName());
     }
     
+    /**
+     * 
+     */
     @PreDestroy
-    void preDestroy(){
+    protected void preDestroy(){
         if(principal != null){
         	try(Client client = newClient(registry.lookup("security"))) {
         		client.authorization(principal.getToken().getRawToken());
@@ -75,16 +99,24 @@ public class Session implements Serializable {
         }
     }
     
-    public Client newClient(URI uri) {
-    	Client client = new Client(clients, uri, b -> b);
+    /**
+     * @param uri
+     * @return
+     */
+    public Client newClient(final URI uri) {
+    	final Client client = new Client(clients, uri, b -> b);
     	if(principal != null) {
         	client.authorization(principal.getToken().getRawToken());
     	}
     	return client;
     }
     
-    public Client newClient(String name) {
-    	Client client = new Client(clients, registry.lookup(name), b -> b);
+    /**
+     * @param name
+     * @return
+     */
+    public Client newClient(final String name) {
+    	final Client client = new Client(clients, registry.lookup(name), b -> b);
     	if(principal != null) {
         	client.authorization(principal.getToken().getRawToken());
     	}

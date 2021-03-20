@@ -35,12 +35,21 @@ import epf.schema.roles.Role;
 @RequestScoped
 public class Tasks {
     
+    /**
+     * 
+     */
     @Inject
-    private Request cache;
+    private transient Request cache;
     
+    /**
+     * 
+     */
     @Inject
-    private Principal principal;
+    private transient Principal principal;
     
+    /**
+     * @return
+     */
     @Name("Contents")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -56,7 +65,7 @@ public class Tasks {
                     schema = @Schema(implementation = Discipline.class)
             )
     )
-    public List<Discipline> getDisciplines() throws Exception{
+    public List<Discipline> getDisciplines() {
         return cache.getNamedQueryResult(
                 EPF.Schema,
                 principal,

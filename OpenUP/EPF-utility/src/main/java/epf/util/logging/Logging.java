@@ -8,6 +8,10 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 
+/**
+ * @author PC
+ *
+ */
 @Log
 @Interceptor
 public class Logging implements Serializable {
@@ -16,19 +20,31 @@ public class Logging implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
 	private static final Map<String, Logger> loggers = new ConcurrentHashMap<>();
 	
+	/**
+	 * @param invocationContext
+	 * @return
+	 * @throws Exception
+	 */
 	@AroundInvoke
-	public Object logMethodEntry(InvocationContext invocationContext) throws Exception {
-		String cls = invocationContext.getMethod().getDeclaringClass().getName();
-		Logger logger = getLogger(cls);
+	public Object logMethodEntry(final InvocationContext invocationContext) throws Exception {
+		final String cls = invocationContext.getMethod().getDeclaringClass().getName();
+		final Logger logger = getLogger(cls);
 		logger.entering(cls, invocationContext.getMethod().getName(), invocationContext.getParameters());
-		Object result = invocationContext.proceed();
+		final Object result = invocationContext.proceed();
 		logger.exiting(cls, invocationContext.getMethod().getName(), result);
 		return result;
 	}
 	
-	public static Logger getLogger(String clsName) {
+	/**
+	 * @param clsName
+	 * @return
+	 */
+	public static Logger getLogger(final String clsName) {
 		return loggers.computeIfAbsent(clsName, name -> {
 			return Logger.getLogger(name);
 		});

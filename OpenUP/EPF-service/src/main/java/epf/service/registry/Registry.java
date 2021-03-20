@@ -16,20 +16,39 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import epf.client.config.ConfigNames;
 
+/**
+ * @author PC
+ *
+ */
 @Path("registry")
 @ApplicationScoped
 public class Registry implements epf.client.registry.Registry {
 	
-	private Map<String, URI> remotes;
+	/**
+	 * 
+	 */
+	private transient final Map<String, URI> remotes;
 	
+	/**
+	 * 
+	 */
 	@Inject
-	private Logger logger;
+	private transient Logger logger;
 	
-	@PostConstruct
-	void postConstruct() {
+	/**
+	 * 
+	 */
+	public Registry() {
 		remotes = new ConcurrentHashMap<>();
+	}
+	
+	/**
+	 * 
+	 */
+	@PostConstruct
+	protected void postConstruct() {
 		try {
-			URI serviceUrl = new URI(System.getenv(ConfigNames.SERVICE_URL));
+			final URI serviceUrl = new URI(System.getenv(ConfigNames.SERVICE_URL));
 			String remote = "config";
 			remotes.put(remote, serviceUrl.resolve(remote));
 			remote = "file";
@@ -52,14 +71,14 @@ public class Registry implements epf.client.registry.Registry {
 	}
 
 	@Override
-	public void bind(String name, URI remote) throws Exception {
+	public void bind(final String name, final URI remote) {
 		remotes.put(name, remote);
 	}
 
 	@Override
-	public Response list() throws Exception {
+	public Response list() {
 		ResponseBuilder builder = Response.ok();
-		List<Link> links = remotes
+		final List<Link> links = remotes
 		.entrySet()
 		.stream()
 		.map(entry -> Link
@@ -68,13 +87,13 @@ public class Registry implements epf.client.registry.Registry {
 				.build()
 				)
 		.collect(Collectors.toList());
-		builder = builder.links(links.toArray(new Link[links.size()]));
+		builder = builder.links(links.toArray(new Link[0]));
 		return builder.build();
 	}
 
 	@Override
-	public Response lookup(String name) throws Exception {
-		ResponseBuilder builder = Response.ok();
+	public Response lookup(final String name) {
+		final ResponseBuilder builder = Response.ok();
 		remotes.computeIfPresent(name, (key, remote) -> {
 			builder.link(remote, name);
 			return remote;
@@ -83,14 +102,14 @@ public class Registry implements epf.client.registry.Registry {
 	}
 
 	@Override
-	public void rebind(String name, URI remote) throws Exception {
+	public void rebind(final String name, final URI remote) {
 		remotes.computeIfPresent(name, (key, value) -> {
 			return remote;
 		});
 	}
 
 	@Override
-	public void unbind(String name) throws Exception {
+	public void unbind(final String name) {
 		remotes.remove(name);
 	}
 

@@ -30,50 +30,73 @@ import epf.gateway.Request;
 @RequestScoped
 public class Directories {
     
+    /**
+     * 
+     */
     @Inject
-    private Request request;
+    private transient Request request;
     
+    /**
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @param body
+     * @return
+     */
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
     @Asynchronous
     public CompletionStage<Response> createDirectories(
-            @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo,
-            @Context javax.ws.rs.core.Request req,
-            InputStream in
-    ) throws Exception{
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req,
+            final InputStream body
+    ) {
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         request.setRequest(req);
-        return request.request(in);
+        return request.request(body);
     }
     
+    /**
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @param body
+     * @return
+     */
     @POST
     @Path("temp")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
     @Asynchronous
     public CompletionStage<Response> createTempDirectory(
-            @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo,
-            @Context javax.ws.rs.core.Request req,
-            InputStream in
-    ) throws Exception{
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req,
+            final InputStream body
+    ) {
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         request.setRequest(req);
-        return request.request(in);
+        return request.request(body);
     }
     
+    /**
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @return
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
     public CompletionStage<Response> list(
-            @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo,
-            @Context javax.ws.rs.core.Request req
-    ) throws Exception{
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req
+    ) {
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         request.setRequest(req);

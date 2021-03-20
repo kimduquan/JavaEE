@@ -35,12 +35,21 @@ import epf.schema.roles.Role;
 @RequestScoped
 public class Roles {
     
+    /**
+     * 
+     */
     @Inject
-    private Request cache;
+    private transient Request cache;
     
+    /**
+     * 
+     */
     @Inject
-    private Principal principal;
+    private transient Principal principal;
     
+    /**
+     * @return
+     */
     @Name("Contents")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -56,7 +65,7 @@ public class Roles {
                     schema = @Schema(implementation = RoleSet.class)
             )
     )
-    public List<RoleSet> getRoleSets() throws Exception{
+    public List<RoleSet> getRoleSets() {
         return cache.getNamedQueryResult(
                 EPF.Schema,
                 principal,

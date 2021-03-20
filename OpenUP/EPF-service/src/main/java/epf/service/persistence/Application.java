@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -21,18 +20,29 @@ import javax.inject.Inject;
 @ApplicationScoped
 public class Application {
 	
-	private Map<String, Context> contexts;
+	/**
+	 * 
+	 */
+	private transient final Map<String, Context> contexts;
     
+    /**
+     * 
+     */
     @Inject
-    private Logger logger;
+    private transient Logger logger;
     
-    @PostConstruct
-    void postConstruct(){
-        contexts = new ConcurrentHashMap<>();
+    /**
+     * 
+     */
+    public Application() {
+    	contexts = new ConcurrentHashMap<>();
     }
     
+    /**
+     * 
+     */
     @PreDestroy
-    void preDestroy(){
+    protected void preDestroy(){
     	contexts.values().forEach(context -> {
             try {
                 context.close();
@@ -44,11 +54,19 @@ public class Application {
         contexts.clear();
     }
     
-    public Context putContext(String unit) throws Exception{
+    /**
+     * @param unit
+     * @return
+     */
+    public Context putContext(final String unit){
         return contexts.computeIfAbsent(unit, name -> { return new Context();});
     }
     
-    public Context getContext(String name){
+    /**
+     * @param name
+     * @return
+     */
+    public Context getContext(final String name){
         return contexts.get(name);
     }
 }

@@ -28,11 +28,17 @@ import epf.schema.EPF;
 @Table(schema = EPF.Schema, name = "DELIVERABLE")
 public class Deliverable {
     
+    /**
+     * 
+     */
     @Column(name = "NAME")
     @Id
     @NotBlank
     private String name;
     
+    /**
+     * 
+     */
     @OneToOne
     @MapsId
     @JoinColumn(name = "NAME")
@@ -43,7 +49,7 @@ public class Deliverable {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -51,7 +57,7 @@ public class Deliverable {
         return artifact;
     }
 
-    public void setArtifact(Artifact artifact) {
+    public void setArtifact(final Artifact artifact) {
         this.artifact = artifact;
     }
 }

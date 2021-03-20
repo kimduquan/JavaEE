@@ -13,13 +13,23 @@ import javax.validation.ConstraintValidatorContext;
  * @author FOXCONN
  */
 public class UnitValidator implements ConstraintValidator<Unit, String> {
+	
+	/**
+	 * 
+	 */
+	private static final String OPENUP = "OpenUP";
+	/**
+	 * 
+	 */
+	private static final String EPF = "EPF";
 
     @Override
-    public boolean isValid(String unit, ConstraintValidatorContext context) {
-    	if("OpenUP".equals(unit) || "EPF".equals(unit)) {
-    		return true;
+    public boolean isValid(final String unit, final ConstraintValidatorContext context) {
+    	boolean isValid = false;
+    	if(OPENUP.equals(unit) || EPF.equals(unit)) {
+    		isValid = true;
     	}
-        return false;
+        return isValid;
     }
     
 }

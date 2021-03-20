@@ -29,18 +29,30 @@ import epf.schema.EPF;
 @Table(schema = EPF.Schema, name = "MILESTONE")
 public class Milestone {
 
+    /**
+     * 
+     */
     @Column(name = "NAME")
     @Id
     @NotBlank
     private String name;
 	
+    /**
+     * 
+     */
     @JoinColumn(name = "PREDECESSOR")
     private Iteration predecessor;
 	
+    /**
+     * 
+     */
     @Embedded
     @NotNull
     private Properties properties;
     
+    /**
+     * 
+     */
     @Column(name = "REQUIRED_RESULTS")
     private Boolean requiredResults;
 
@@ -48,7 +60,7 @@ public class Milestone {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
     
@@ -56,7 +68,7 @@ public class Milestone {
         return predecessor;
     }
 
-    public void setPredecessor(Iteration predecessor) {
+    public void setPredecessor(final Iteration predecessor) {
         this.predecessor = predecessor;
     }
 
@@ -64,7 +76,7 @@ public class Milestone {
         return properties;
     }
 
-    public void setProperties(Properties properties) {
+    public void setProperties(final Properties properties) {
         this.properties = properties;
     }
 
@@ -72,7 +84,7 @@ public class Milestone {
         return requiredResults;
     }
 
-    public void setRequiredResults(Boolean requiredResults) {
+    public void setRequiredResults(final Boolean requiredResults) {
         this.requiredResults = requiredResults;
     }
 }

@@ -18,34 +18,55 @@ import javax.ws.rs.core.HttpHeaders;
  */
 public class Client implements AutoCloseable {
 
-	private URI uri;
-    private String authHeader;
-    private javax.ws.rs.client.Client client;
-    private ClientQueue clients;
+	/**
+	 * 
+	 */
+	private transient final URI uri;
+    /**
+     * 
+     */
+    private transient String authHeader;
+    /**
+     * 
+     */
+    private transient final javax.ws.rs.client.Client client;
+    /**
+     * 
+     */
+    private transient final ClientQueue clients;
     
-    public Client(ClientQueue clients, URI uri, Function<ClientBuilder, ClientBuilder> buildClient) {
+    /**
+     * @param clients
+     * @param uri
+     * @param buildClient
+     */
+    public Client(final ClientQueue clients, final URI uri, final Function<ClientBuilder, ClientBuilder> buildClient) {
     	client = clients.poll(uri, buildClient);
         this.uri = uri;
         this.clients = clients;
     }
 
-	public Client authorization(String token) {
-		StringBuilder tokenHeader = new StringBuilder();
-    	tokenHeader.append("Bearer ");
-    	tokenHeader.append(token);
-    	authHeader = tokenHeader.toString();
+	/**
+	 * @param token
+	 * @return
+	 */
+	public Client authorization(final String token) {
+		final StringBuilder tokenHeader = new StringBuilder();
+    	authHeader = tokenHeader.append("Bearer ").append(token).toString();
 		return this;
 	}
 
     @Override
     public void close() throws Exception {
         clients.add(uri, client);
-        uri = null;
-        client = null;
-        authHeader = null;
     }
     
-    public Invocation.Builder request(Function<WebTarget, WebTarget> buildTarget, Function<Invocation.Builder, Invocation.Builder> buildRequest) {
+    /**
+     * @param buildTarget
+     * @param buildRequest
+     * @return
+     */
+    public Invocation.Builder request(final Function<WebTarget, WebTarget> buildTarget, final Function<Invocation.Builder, Invocation.Builder> buildRequest) {
     	WebTarget target = client.target(uri);
     	target = buildTarget.apply(target);
     	Invocation.Builder request = target.request();
@@ -55,7 +76,13 @@ public class Client implements AutoCloseable {
     	return buildRequest.apply(request);
     }
     
-    public Invocation.Builder request(String uri, Function<WebTarget, WebTarget> buildTarget, Function<Invocation.Builder, Invocation.Builder> buildRequest) {
+    /**
+     * @param uri
+     * @param buildTarget
+     * @param buildRequest
+     * @return
+     */
+    public Invocation.Builder request(final String uri, final Function<WebTarget, WebTarget> buildTarget, final Function<Invocation.Builder, Invocation.Builder> buildRequest) {
     	WebTarget target = client.target(uri);
     	target = buildTarget.apply(target);
     	Invocation.Builder request = target.request();

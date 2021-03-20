@@ -30,36 +30,53 @@ import epf.gateway.Request;
 @Path("persistence")
 public class Queries {
     
+    /**
+     * 
+     */
     @Inject
-    private Request request;
+    private transient Request request;
     
+    /**
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @param unit
+     * @param paths
+     * @return
+     */
     @GET
     @Path("{unit}/{criteria: .+}")
     @Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
     public CompletionStage<Response> getCriteriaQueryResult(
-            @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo,
-            @Context javax.ws.rs.core.Request req,
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req,
             @PathParam("unit")
-            String unit,
+            final String unit,
             @PathParam("criteria")
-            List<PathSegment> paths
-            ) throws Exception{
+            final List<PathSegment> paths
+            ) {
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         request.setRequest(req);
         return request.request(null);
     }
     
+    /**
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @return
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
     public CompletionStage<Response> search(
-    		@Context HttpHeaders headers, 
-            @Context UriInfo uriInfo,
-            @Context javax.ws.rs.core.Request req
-            ) throws Exception{
+    		@Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req
+            ) {
     	request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         request.setRequest(req);

@@ -24,22 +24,34 @@ public class Conversation implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	/**
+	 * 
+	 */
 	@Inject
-    private javax.enterprise.context.Conversation conversation;
+    private transient javax.enterprise.context.Conversation conversation;
     
+    /**
+     * 
+     */
     @PostConstruct
-    void postConstruct(){
+    protected void postConstruct(){
         if(conversation.isTransient()){
             conversation.begin();
         }
     }
     
+    /**
+     * 
+     */
     public void end(){
         if(!conversation.isTransient()){
             conversation.end();
         }
     }
     
+    /**
+     * @return
+     */
     public String getId(){
         return conversation.getId();
     }

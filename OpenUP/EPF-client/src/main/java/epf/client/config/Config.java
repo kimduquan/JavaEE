@@ -17,21 +17,31 @@ import epf.schema.EPF;
 import epf.util.client.Client;
 
 /**
+ * Config
  *
  * @author FOXCONN
  */
 @Path("config")
 public interface Config {
     
+    /**
+     * @param name
+     * @return
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     Map<String, String> getProperties(
     		@QueryParam("name") 
     		@DefaultValue(EPF.Schema)
-    		String name
-    		) throws Exception;
+    		final String name
+    		);
     
-    static Map<String, String> getProperties(Client client, String name) throws Exception{
+    /**
+     * @param client
+     * @param name
+     * @return
+     */
+    static Map<String, String> getProperties(final Client client, final String name) {
     	return client.request(
     			target -> target, 
     			req -> req.accept(MediaType.APPLICATION_JSON)

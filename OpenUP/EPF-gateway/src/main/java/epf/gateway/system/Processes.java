@@ -26,96 +26,131 @@ import epf.gateway.Request;
  *
  * @author FOXCONN
  */
-@Path("system")
+@Path("system/process")
 @RequestScoped
 public class Processes {
     
+    /**
+     * 
+     */
     @Inject
-    private Request request;
+    private transient Request request;
     
-    @Path("process")
+    /**
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @param body
+     * @return
+     */
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
     public CompletionStage<Response> start(
-            @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo,
-            @Context javax.ws.rs.core.Request req,
-            InputStream in) throws Exception{
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req,
+            final InputStream body) {
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         request.setRequest(req);
-        return request.request(in);
+        return request.request(body);
     }
     
-    @Path("process")
+    /**
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @return
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
     public CompletionStage<Response> getProcesses(
-            @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo,
-            @Context javax.ws.rs.core.Request req
-    ) throws Exception{
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req
+    ) {
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         request.setRequest(req);
         return request.request(null);
     }
     
-    @Path("process")
+    /**
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @return
+     */
     @DELETE
     @Asynchronous
     public CompletionStage<Response> stop(
-            @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo,
-            @Context javax.ws.rs.core.Request req
-    ) throws Exception{
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req
+    ) {
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         request.setRequest(req);
         return request.request(null);
     }
     
+    /**
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @return
+     */
     @GET
-    @Path("process")
     @Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
     public CompletionStage<Response> info(
-            @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo,
-            @Context javax.ws.rs.core.Request req
-    ) throws Exception{
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req
+    ) {
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         request.setRequest(req);
         return request.request(null);
     }
     
+    /**
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @return
+     */
     @DELETE
-    @Path("process")
     @Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
     public CompletionStage<Response> destroy(
-            @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo,
-            @Context javax.ws.rs.core.Request req
-    ) throws Exception{
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req
+    ) {
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         request.setRequest(req);
         return request.request(null);
     }
     
+    /**
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @return
+     */
     @GET
     @Path("process/out")
     @Produces(MediaType.SERVER_SENT_EVENTS)
     @Asynchronous
     public CompletionStage<Response> output(
-            @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo,
-            @Context javax.ws.rs.core.Request req
-    ) throws Exception{
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req
+    ) {
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         request.setRequest(req);

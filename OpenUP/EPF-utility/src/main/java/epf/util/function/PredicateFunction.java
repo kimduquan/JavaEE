@@ -3,11 +3,22 @@ package epf.util.function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+/**
+ * @author PC
+ *
+ */
 public class PredicateFunction extends Function {
 	
-	private Predicate predicate;
+	/**
+	 * 
+	 */
+	private transient final Predicate predicate;
 
-	public PredicateFunction(Supplier<Boolean> predicate, Stream<Runnable> stream) {
+	/**
+	 * @param predicate
+	 * @param stream
+	 */
+	public PredicateFunction(final Supplier<Boolean> predicate, final Stream<Runnable> stream) {
 		super(stream);
 		this.predicate = new Predicate(predicate);
 	}
@@ -20,7 +31,7 @@ public class PredicateFunction extends Function {
 		}
 	}
 	
-	public Predicate predicate() {
+	public Predicate getPredicate() {
 		return this.predicate;
 	}
 }

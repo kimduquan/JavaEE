@@ -15,8 +15,8 @@ import javax.validation.ConstraintValidatorContext;
 public class FileValidator implements ConstraintValidator<File, String> {
 
     @Override
-    public boolean isValid(String path, ConstraintValidatorContext arg1) {
-        java.io.File file = new java.io.File(path);
+    public boolean isValid(final String path, final ConstraintValidatorContext arg1) {
+    	final java.io.File file = new java.io.File(path);
         return file.exists();
     }
     

@@ -189,6 +189,6 @@ public class FunctionTest {
 		func.run();
 		Assert.assertNotNull("varCount", varCount.get());
 		Assert.assertEquals("varCount", 6, varCount.get().intValue());
-		Assert.assertNotNull("Function.exception", func.exception());
+		Assert.assertNotNull("Function.exception", func.getException());
 	}
 }

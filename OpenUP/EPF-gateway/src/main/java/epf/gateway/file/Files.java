@@ -32,115 +32,162 @@ import epf.gateway.Request;
 @RequestScoped
 public class Files {
     
+    /**
+     * 
+     */
     @Inject
-    private Request request;
+    private transient Request request;
     
+    /**
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @param body
+     * @return
+     */
     @PUT
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.TEXT_PLAIN)
     @Asynchronous
     public CompletionStage<Response> copy(
-            @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo,
-            @Context javax.ws.rs.core.Request req,
-            InputStream in
-    ) throws Exception{
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req,
+            final InputStream body
+    ) {
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         request.setRequest(req);
-        return request.request(in);
+        return request.request(body);
     }
     
+    /**
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @param body
+     * @return
+     */
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
     @Asynchronous
     public CompletionStage<Response> createFile(
-            @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo,
-            @Context javax.ws.rs.core.Request req,
-            InputStream in
-    ) throws Exception{
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req,
+            final InputStream body
+    ) {
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         request.setRequest(req);
-        return request.request(in);
+        return request.request(body);
     }
     
+    /**
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @param body
+     * @return
+     */
     @POST
     @Path("temp")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
     @Asynchronous
     public CompletionStage<Response> createTempFile(
-            @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo,
-            @Context javax.ws.rs.core.Request req,
-            InputStream in
-    ) throws Exception{
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req,
+            final InputStream body
+    ) {
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         request.setRequest(req);
-        return request.request(in);
+        return request.request(body);
     }
     
+    /**
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @return
+     */
     @DELETE
     @Asynchronous
     public CompletionStage<Response> delete(
-            @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo,
-            @Context javax.ws.rs.core.Request req
-    ) throws Exception{
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req
+    ) {
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         request.setRequest(req);
         return request.request(null);
     }
     
+    /**
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @return
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
     public CompletionStage<Response> find(
-            @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo,
-            @Context javax.ws.rs.core.Request req
-            ) 
-            throws Exception{
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req
+            ) {
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         request.setRequest(req);
         return request.request(null);
     }
     
+    /**
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @return
+     */
     @GET
     @Path("lines")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     @Asynchronous
     public CompletionStage<Response> lines(
-            @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo,
-            @Context javax.ws.rs.core.Request req
-            ) 
-            throws Exception{
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req
+            ) {
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         request.setRequest(req);
         return request.request(null);
     }
     
+    /**
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @param body
+     * @return
+     */
     @PUT
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
     @Asynchronous
     public CompletionStage<Response> move(
-            @Context HttpHeaders headers, 
-            @Context UriInfo uriInfo,
-            @Context javax.ws.rs.core.Request req,
-            InputStream in
-    ) throws Exception{
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req,
+            final InputStream body
+    ) {
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         request.setRequest(req);
-        return request.request(in);
+        return request.request(body);
     }
 }

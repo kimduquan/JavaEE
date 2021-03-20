@@ -13,6 +13,8 @@ import epf.util.client.Client;
 import epf.webapp.Session;
 import java.io.Serializable;
 import java.util.List;
+import java.util.logging.Logger;
+
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -31,13 +33,31 @@ public class Tasks implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private List<Discipline> disciplines;
-    private List<Task> tasks;
+	/**
+	 * 
+	 */
+	private transient List<Discipline> disciplines;
+    /**
+     * 
+     */
+    private transient List<Task> tasks;
     
+    /**
+     * 
+     */
     @Inject
-    private Session session;
+    private transient Session session;
+    
+    /**
+     * 
+     */
+    @Inject
+    private transient Logger logger;
 
-    public List<Discipline> getDisciplines() throws Exception {
+    /**
+     * @return
+     */
+    public List<Discipline> getDisciplines() {
         if(disciplines == null){
             try(Client client = session.newClient("persistence")){
             	disciplines = Queries.getCriteriaQueryResult(
@@ -47,12 +67,18 @@ public class Tasks implements Serializable {
             			target -> target.path(EPF.Discipline), 
             			0, 
             			100);
-            }
+            } 
+            catch (Exception e) {
+				logger.severe(e.getMessage());
+			}
         }
         return disciplines;
     }
 
-    public List<Task> getTasks() throws Exception {
+    /**
+     * @return
+     */
+    public List<Task> getTasks() {
         if(tasks == null){
             try(Client client = session.newClient("persistence")){
             	tasks = Queries.getCriteriaQueryResult(
@@ -62,7 +88,10 @@ public class Tasks implements Serializable {
             			target -> target.path(EPF.Task), 
             			0, 
             			100);
-            }
+            } 
+            catch (Exception e) {
+				logger.severe(e.getMessage());
+			}
         }
         return tasks;
     }

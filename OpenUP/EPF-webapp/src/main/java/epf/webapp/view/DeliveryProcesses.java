@@ -14,6 +14,7 @@ import epf.util.client.Client;
 import epf.webapp.Session;
 import java.io.Serializable;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -32,14 +33,36 @@ public class DeliveryProcesses implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
     
+    /**
+     * 
+     */
     @Inject
-    private Session session;
+    private transient Session session;
+    
+    /**
+     * 
+     */
+    @Inject
+    private transient Logger logger;
 	
-	private List<Phase> phases;
-    private List<Iteration> iterations;
-    private List<Task> tasks;
+	/**
+	 * 
+	 */
+	private transient List<Phase> phases;
+    /**
+     * 
+     */
+    private transient List<Iteration> iterations;
+    /**
+     * 
+     */
+    private transient List<Task> tasks;
 
-    public List<Phase> getPhases() throws Exception {
+    /**
+     * @return
+     * @throws Exception
+     */
+    public List<Phase> getPhases() {
         if(phases == null){
             try(Client client = session.newClient("persistence")){
             	phases = Queries.getCriteriaQueryResult(
@@ -49,12 +72,15 @@ public class DeliveryProcesses implements Serializable {
             			target -> target.path(EPF.Phase), 
             			0, 
             			100);
-            }
+            } 
+            catch (Exception e) {
+				logger.severe(e.getMessage());
+			}
         }
         return phases;
     }
 
-    public List<Iteration> getIterations() throws Exception {
+    public List<Iteration> getIterations() {
         if(iterations == null){
             try(Client client = session.newClient("persistence")){
             	iterations = Queries.getCriteriaQueryResult(
@@ -64,12 +90,15 @@ public class DeliveryProcesses implements Serializable {
             			target -> target.path(EPF.Iteration), 
             			0, 
             			100);
-            }
+            } 
+            catch (Exception e) {
+            	logger.severe(e.getMessage());
+			}
         }
         return iterations;
     }
 
-    public List<Task> getTasks() throws Exception {
+    public List<Task> getTasks() {
         if(tasks == null){
             try(Client client = session.newClient("persistence")){
             	tasks = Queries.getCriteriaQueryResult(
@@ -79,7 +108,10 @@ public class DeliveryProcesses implements Serializable {
             			target -> target.path(EPF.Task), 
             			0, 
             			100);
-            }
+            } 
+            catch (Exception e) {
+            	logger.severe(e.getMessage());
+			}
         }
         return tasks;
     }
