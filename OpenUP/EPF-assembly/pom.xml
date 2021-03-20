@@ -13,24 +13,15 @@
         <!-- Jaeger configuration -->
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
-        <liberty.env.epf.gateway.url>https://localhost/gateway/</liberty.env.epf.gateway.url>
-        <liberty.env.epf.url>https://localhost/service/</liberty.env.epf.url>
+        <liberty.env.epf.service.url>https://localhost/service/</liberty.env.epf.service.url>
+        <liberty.env.epf.registry.url>https://localhost/gateway/registry/</liberty.env.epf.registry.url>
+		<liberty.env.epf.webapp.url>https://localhost/webapp/</liberty.env.epf.webapp.url>
     </properties>
     <dependencies>
 		<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-        </dependency>
-		<!-- https://mvnrepository.com/artifact/io.jaegertracing/jaeger-client -->
-        <dependency>
-            <groupId>io.jaegertracing</groupId>
-            <artifactId>jaeger-client</artifactId>
-        </dependency>
-		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-jdk14 -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-jdk14</artifactId>
         </dependency>
 		<!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast-all -->
         <dependency>
@@ -49,11 +40,6 @@
         </dependency>
         <dependency>
             <groupId>openup</groupId>
-            <artifactId>OpenUP-client</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
             <artifactId>EPF-service</artifactId>
             <version>1.0.0</version>
             <type>war</type>
@@ -66,10 +52,33 @@
         </dependency>
         <dependency>
             <groupId>openup</groupId>
-            <artifactId>OpenUP-web</artifactId>
+            <artifactId>EPF-portlet</artifactId>
             <version>1.0.0</version>
             <type>war</type>
         </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-webapp</artifactId>
+            <version>1.0.0</version>
+            <type>war</type>
+        </dependency>
+		<dependency>
+			<groupId>com.liferay.faces</groupId>
+			<artifactId>com.liferay.faces.bridge.api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.liferay.faces</groupId>
+			<artifactId>com.liferay.faces.bridge.impl</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.portlet</groupId>
+			<artifactId>portlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.portals.pluto</groupId>
+			<artifactId>pluto-container</artifactId>
+		</dependency>
     </dependencies>
     <build>
         <plugins>
@@ -87,29 +96,37 @@
                     <appsDirectory>apps</appsDirectory>
                     <deployPackages>dependencies</deployPackages>
 					<copyDependencies>
-						<location>${project.build.directory}/shared/resources/openup/</location>
-                        <dependency>
-                            <groupId>com.h2database</groupId>
-                            <artifactId>h2</artifactId>
-                        </dependency>
-                        <dependency>
-                            <groupId>io.jaegertracing</groupId>
-                            <artifactId>jaeger-client</artifactId>
-                        </dependency>
+						<location>${project.build.directory}/shared/resources/epf/</location>
 						<dependency>
-							<groupId>org.slf4j</groupId>
-							<artifactId>slf4j-jdk14</artifactId>
+						    <groupId>com.h2database</groupId>
+						    <artifactId>h2</artifactId>
 						</dependency>
-                        <dependency>
-                            <groupId>com.hazelcast</groupId>
-                            <artifactId>hazelcast-all</artifactId>
-                        </dependency>
-                        <dependency>
-                            <groupId>javax.cache</groupId>
-                            <artifactId>cache-api</artifactId>
-                        </dependency>
-                    </copyDependencies>
-                </configuration>
+						<dependency>
+						    <groupId>com.hazelcast</groupId>
+						    <artifactId>hazelcast-all</artifactId>
+						</dependency>
+						<dependency>
+						    <groupId>javax.cache</groupId>
+						    <artifactId>cache-api</artifactId>
+						</dependency>
+						<dependency>
+							<groupId>com.liferay.faces</groupId>
+							<artifactId>com.liferay.faces.bridge.api</artifactId>
+						</dependency>
+						<dependency>
+							<groupId>com.liferay.faces</groupId>
+							<artifactId>com.liferay.faces.bridge.impl</artifactId>
+						</dependency>
+						<dependency>
+							<groupId>javax.portlet</groupId>
+							<artifactId>portlet-api</artifactId>
+						</dependency>
+						<dependency>
+							<groupId>org.apache.portals.pluto</groupId>
+							<artifactId>pluto-container</artifactId>
+						</dependency>
+					</copyDependencies>
+				</configuration>
             </plugin>
         </plugins>
     </build>
