@@ -55,7 +55,7 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
      * @param builder
      * @return
      */
-    protected boolean map(final Throwable failure, final Response.ResponseBuilder builder){
+    protected static boolean map(final Throwable failure, final Response.ResponseBuilder builder){
         Response.StatusType status = Response.Status.INTERNAL_SERVER_ERROR;
         boolean mapped = true;
         if(failure instanceof EPFException) {
@@ -107,7 +107,7 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
      * @param failure
      * @return
      */
-    protected Response handle(final Throwable failure){
+    protected static Response handle(final Throwable failure){
     	final ResponseBuilder builder = Response.serverError();
         if(failure != null && !map(failure, builder)){
         	Throwable cause = failure.getCause();

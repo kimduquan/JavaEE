@@ -21,35 +21,35 @@ public class TokenBuilder {
 	/**
 	 * 
 	 */
-	private Credential credential;
+	private transient Credential credential;
 	/**
 	 * 
 	 */
-	private String name;
+	private transient String name;
 	/**
 	 * 
 	 */
-	private long issuedAtTime;
+	private transient long issuedAtTime;
 	/**
 	 * 
 	 */
-	private TokenGenerator tokenGenerator;
+	private transient TokenGenerator tokenGenerator;
 	/**
 	 * 
 	 */
-	private URL audience;
+	private transient URL audience;
 	/**
 	 * 
 	 */
-	private long expireDuration;
+	private transient long expireDuration;
 	/**
 	 * 
 	 */
-	private ChronoUnit expireTimeUnit;
+	private transient ChronoUnit expireTimeUnit;
 	/**
 	 * 
 	 */
-	private final String issuer;
+	private transient final String issuer;
 	
 	/**
 	 * @param issuer
@@ -80,17 +80,25 @@ public class TokenBuilder {
 	 * @param issuedAtTime
 	 * @return
 	 */
-	public TokenBuilder time(long issuedAtTime) {
+	public TokenBuilder time(final long issuedAtTime) {
 		this.issuedAtTime = issuedAtTime;
 		return this;
 	}
 
-	public TokenBuilder generator(TokenGenerator generator) {
+	/**
+	 * @param generator
+	 * @return
+	 */
+	public TokenBuilder generator(final TokenGenerator generator) {
 		this.tokenGenerator = generator;
 		return this;
 	}
 
-	public TokenBuilder url(URL url) {
+	/**
+	 * @param url
+	 * @return
+	 */
+	public TokenBuilder url(final URL url) {
 		this.audience = url;
 		return this;
 	}
@@ -100,40 +108,11 @@ public class TokenBuilder {
 	 * @param duration
 	 * @return
 	 */
-	public TokenBuilder expire(ChronoUnit timeUnit, long duration) {
+	public TokenBuilder expire(final ChronoUnit timeUnit, final long duration) {
 		this.expireDuration = duration;
 		this.expireTimeUnit = timeUnit;
 		return this;
 	}
-	
-	/**
-     * @param token
-     * @param url
-     */
-    protected static void buildAudience(final Token token, final URL url){
-    	final Set<String> aud = new HashSet<>();
-        aud.add(String.format(
-                Security.AUDIENCE_URL_FORMAT, 
-                url.getProtocol(), 
-                url.getHost(), 
-                url.getPort()));
-        token.setAudience(aud);
-    }
-    
-    /**
-     * @param username
-     * @param time
-     * @return
-     */
-    protected Token buildToken(final String username, final long time) {
-    	final Token jwt = new Token();
-        jwt.setIssuedAtTime(time);
-        jwt.setExpirationTime(time + Duration.of(expireDuration, expireTimeUnit).getSeconds());
-        jwt.setIssuer(issuer);
-        jwt.setName(username);
-        jwt.setSubject(username);
-        return jwt;
-    }
     
     /**
      * @param token
@@ -145,6 +124,33 @@ public class TokenBuilder {
     	groups.add(Role.DEFAULT_ROLE);
     	token.setGroups(groups);
     }
+
+	/**
+	 * @return
+	 */
+	public Token build() {
+		Token jwt = new Token();
+        jwt.setIssuedAtTime(issuedAtTime);
+        jwt.setExpirationTime(issuedAtTime + Duration.of(expireDuration, expireTimeUnit).getSeconds());
+        jwt.setIssuer(issuer);
+        jwt.setName(name);
+        jwt.setSubject(name);
+		final Set<String> aud = new HashSet<>();
+        aud.add(String.format(
+                Security.AUDIENCE_URL_FORMAT, 
+                audience.getProtocol(), 
+                audience.getHost(), 
+                audience.getPort()));
+        jwt.setAudience(aud);
+	    buildGroups(jwt, name, credential.getDefaultManager());
+	    try {
+			jwt = tokenGenerator.generate(jwt);
+		} 
+	    catch (Exception e) {
+	    	throw new EPFException(e);
+		}
+	    return jwt;
+	}
     
     /**
      * @param jwt
@@ -163,20 +169,4 @@ public class TokenBuilder {
         token.setTokenID(jwt.getTokenID());
         return token;
     }
-
-	/**
-	 * @return
-	 */
-	public Token build() {
-		Token jwt = buildToken(name, issuedAtTime);
-	    buildAudience(jwt, audience);
-	    buildGroups(jwt, name, credential.getDefaultManager());
-	    try {
-			jwt = tokenGenerator.generate(jwt);
-		} 
-	    catch (Exception e) {
-	    	throw new EPFException(e);
-		}
-	    return jwt;
-	}
 }
