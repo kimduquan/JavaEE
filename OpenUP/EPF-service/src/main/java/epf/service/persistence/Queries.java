@@ -85,7 +85,7 @@ public class Queries implements epf.client.persistence.Queries {
                     mediaType = MediaType.APPLICATION_JSON
             )
     )
-    public Response getCriteriaQueryResult(
+    public Response executeQuery(
             final String unit,
             final List<PathSegment> paths,
             final Integer firstResult,
@@ -115,50 +115,17 @@ public class Queries implements epf.client.persistence.Queries {
                 final Var<ManagedType<?>> parentType = new Var<>(rootType);
                 final Root<?> parentFrom = rootFrom;
                 final Var<Join<?,?>> parentJoin = new Var<>();
-                paths.subList(1, paths.size()).forEach(segment -> {
-                    final Attribute<?,?> attribute = parentType.get().getAttribute(segment.getPath());
-                    if (attribute.getPersistentAttributeType() != PersistentAttributeType.BASIC) {
-                        Class<?> subClass = null;
-                        if(attribute.isCollection()){
-                            if(attribute.getJavaType() == List.class){
-                                subClass = parentType.get().getList(segment.getPath()).getBindableJavaType();
-                            }
-                            else if(attribute.getJavaType() == Map.class){
-                                subClass = parentType.get().getMap(segment.getPath()).getBindableJavaType();
-                            }
-                            else if(attribute.getJavaType() == Set.class){
-                                subClass = parentType.get().getSet(segment.getPath()).getBindableJavaType();
-                            }
-                            else if(attribute.getJavaType() == Collection.class){
-                                subClass = parentType.get().getCollection(segment.getPath()).getBindableJavaType();
-                            }
-                        }
-                        else if(attribute.isAssociation()){
-                            subClass = parentType.get().getSingularAttribute(segment.getPath()).getBindableJavaType();
-                        }
-                        
-                        Join<?,?> subJoin;
-                        if(parentJoin.get() == null){
-                            subJoin = parentFrom.join(segment.getPath());
-                        }
-                        else{
-                            subJoin = parentJoin.get().join(segment.getPath());
-                        }
-
-                        segment.getMatrixParameters().forEach((name, values) -> {
-                        	allParams.add(
-                                    builder.isMember(
-                                            values,
-                                            subJoin.get(name)
-                                    )
-                            );
-                        });
-                        
-                        final ManagedType<?> subType = manager.getMetamodel().managedType(subClass);
-                        parentType.set(subType);
-                        parentJoin.set(subJoin);
-                    }
-            	});
+                paths.subList(1, paths.size()).forEach(
+                		segment -> buildQuery(
+                				segment, 
+		                		parentType, 
+		                		parentJoin, 
+		                		parentFrom, 
+		                		allParams, 
+		                		manager, 
+		                		builder
+		                		)
+                		);
                 if(parentJoin.get() == null){
                 	rootQuery.select(rootFrom);
                 }
@@ -186,6 +153,66 @@ public class Queries implements epf.client.persistence.Queries {
             }
         }
         return response.build();
+    }
+    
+    /**
+     * @param segment
+     * @param parentType
+     * @param parentJoin
+     * @param parentFrom
+     * @param allParams
+     * @param manager
+     */
+    protected static void buildQuery(
+    		final PathSegment segment, 
+    		final Var<ManagedType<?>> parentType, 
+    		final Var<Join<?,?>> parentJoin,
+    		final Root<?> parentFrom,
+    		final List<Predicate> allParams,
+    		final EntityManager manager,
+    		final CriteriaBuilder builder) {
+    	final Attribute<?,?> attribute = parentType.get().getAttribute(segment.getPath());
+        if (attribute.getPersistentAttributeType() != PersistentAttributeType.BASIC) {
+            Class<?> subClass = null;
+            if(attribute.isCollection()){
+                if(attribute.getJavaType() == List.class){
+                    subClass = parentType.get().getList(segment.getPath()).getBindableJavaType();
+                }
+                else if(attribute.getJavaType() == Map.class){
+                    subClass = parentType.get().getMap(segment.getPath()).getBindableJavaType();
+                }
+                else if(attribute.getJavaType() == Set.class){
+                    subClass = parentType.get().getSet(segment.getPath()).getBindableJavaType();
+                }
+                else if(attribute.getJavaType() == Collection.class){
+                    subClass = parentType.get().getCollection(segment.getPath()).getBindableJavaType();
+                }
+            }
+            else if(attribute.isAssociation()){
+                subClass = parentType.get().getSingularAttribute(segment.getPath()).getBindableJavaType();
+            }
+            
+            Join<?,?> subJoin;
+            if(parentJoin.get() == null){
+                subJoin = parentFrom.join(segment.getPath());
+            }
+            else{
+                subJoin = parentJoin.get().join(segment.getPath());
+            }
+
+            segment.getMatrixParameters().forEach((name, values) -> {
+            	allParams.add(
+                        builder.isMember(
+                                values,
+                                subJoin.get(name)
+                        )
+                );
+            });
+            
+            final ManagedType<?> subType = manager.getMetamodel().managedType(subClass);
+            parentType.set(subType);
+            parentJoin.set(subJoin);
+        }
     }
 
 	@Override

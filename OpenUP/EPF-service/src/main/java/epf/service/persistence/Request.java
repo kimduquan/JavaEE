@@ -69,28 +69,25 @@ public class Request {
      * @return
      */
     protected EntityManager getManager(final String unit, final Principal principal){
+        final Context context = application.getContext(unit);
+        Credential credential = null;
+        if(principal != null && context != null){
+        	credential = context.getCredential(principal.getName());
+        }
+        JsonWebToken jwt = null;
+        Session session = null;
+        if(credential != null && principal instanceof JsonWebToken){
+        	jwt = (JsonWebToken)principal;
+        	session = credential.getSession(jwt.getIssuedAtTime());
+        }
         EntityManager manager = null;
-        if(principal != null){
-        	final Context context = application.getContext(unit);
-            if(context != null){
-            	final Credential credential = context.getCredential(principal.getName());
-                if(credential != null){
-                    if(principal instanceof JsonWebToken){
-                    	final JsonWebToken jwt = (JsonWebToken)principal;
-                    	final Session session = credential.getSession(jwt.getIssuedAtTime());
-                        if(session != null){
-                            if(session.checkExpirationTime(jwt.getExpirationTime())){
-                                manager = session
-                                    .putConversation(jwt.getTokenID())
-                                    .putManager(jwt.getIssuedAtTime());
-                            }
-                        }
-                    }
-                }
-            }
-            if(manager == null){
-                throw new ForbiddenException();
-            }
+        if(session != null && session.checkExpirationTime(jwt.getExpirationTime())){
+        	manager = session
+                    .putConversation(jwt.getTokenID())
+                    .putManager(jwt.getIssuedAtTime());
+        }
+        if(principal != null && manager == null){
+            throw new ForbiddenException();
         }
         return manager;
     }

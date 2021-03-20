@@ -50,7 +50,7 @@ public interface Queries {
     @GET
     @Path("{unit}/{criteria: .+}")
     @Produces(MediaType.APPLICATION_JSON)
-    Response getCriteriaQueryResult(
+    Response executeQuery(
             @PathParam("unit")
             @Unit
             final String unit,

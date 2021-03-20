@@ -22,7 +22,7 @@ public class ProcessTask implements Runnable {
 	/**
 	 * 
 	 */
-	private static final Logger logger = Logger.getLogger(Processes.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(Processes.class.getName());
     
     /**
      * 
@@ -54,7 +54,7 @@ public class ProcessTask implements Runnable {
             }
         } 
         catch (Exception ex) {
-            logger.log(Level.SEVERE, ex.getMessage(), ex);
+            LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
         }
     }
 

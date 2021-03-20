@@ -20,7 +20,6 @@ import javax.persistence.EntityManager;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
-import javax.ws.rs.ServerErrorException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -32,6 +31,7 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import epf.client.EPFException;
 import epf.client.config.ConfigNames;
 import epf.client.security.Token;
 import epf.schema.roles.Role;
@@ -125,14 +125,14 @@ public class Security implements epf.client.security.Security, Serializable {
     public String login(
             final String unit,
             final String username,
-            final String password_hash,
+            final String passwordHash,
             final URL url) {
     	final long time = System.currentTimeMillis() / 1000;
     	final Credential credential = persistence.putContext(unit)
                 .putCredential(
                         username, 
                         unit, 
-                        password_hash
+                        passwordHash
                 );
         Token jwt = buildToken(username, time);
         buildAudience(jwt, url);
@@ -141,7 +141,7 @@ public class Security implements epf.client.security.Security, Serializable {
 			jwt = generator.generate(jwt);
 		} 
         catch (Exception e) {
-        	throw new ServerErrorException(501, e);
+        	throw new EPFException(e);
 		}
         credential.putSession(jwt.getIssuedAtTime());
         return jwt.getRawToken();
@@ -259,14 +259,12 @@ public class Security implements epf.client.security.Security, Serializable {
     protected Session removeSession(final String unit) {
     	Session session = null;
     	final Principal principal = context.getUserPrincipal();
-        if(principal != null){
-        	final epf.service.persistence.Context ctx = persistence.getContext(unit);
-            if(ctx != null){
-            	final Credential credential = ctx.getCredential(principal.getName());
-                if(credential != null && principal instanceof JsonWebToken){
-                	final JsonWebToken jwt = (JsonWebToken)principal;
-                    session = credential.removeSession(jwt.getIssuedAtTime());
-                }
+    	final epf.service.persistence.Context ctx = persistence.getContext(unit);
+        if(principal != null && ctx != null){
+        	final Credential credential = ctx.getCredential(principal.getName());
+            if(credential != null && principal instanceof JsonWebToken){
+            	final JsonWebToken jwt = (JsonWebToken)principal;
+                session = credential.removeSession(jwt.getIssuedAtTime());
             }
         }
         return session;
@@ -279,20 +277,18 @@ public class Security implements epf.client.security.Security, Serializable {
     protected Session getSession(final String unit) {
     	Session session = null;
     	final Principal principal = context.getUserPrincipal();
-        if(principal != null){
-        	final epf.service.persistence.Context ctx = persistence.getContext(unit);
-            if(ctx != null){
-            	final Credential credential = ctx.getCredential(principal.getName());
-                if(credential != null && principal instanceof JsonWebToken){
-                	final JsonWebToken jwt = (JsonWebToken)principal;
-                	session = credential.getSession(jwt.getIssuedAtTime());
-                    if(session != null) {
-                        if(!session.checkExpirationTime(jwt.getExpirationTime())) {
-                        	throw new ForbiddenException();
-                        }
-                    }
-                }
-            }
+    	final epf.service.persistence.Context ctx = persistence.getContext(unit);
+    	Credential credential = null;
+    	JsonWebToken jwt = null;
+        if(principal != null && ctx != null){
+        	credential = ctx.getCredential(principal.getName());
+        }
+        if(credential != null && principal instanceof JsonWebToken){
+        	jwt = (JsonWebToken)principal;
+        	session = credential.getSession(jwt.getIssuedAtTime());
+        }
+        if(session != null && !session.checkExpirationTime(jwt.getExpirationTime())) {
+        	throw new ForbiddenException();
         }
         return session;
     }

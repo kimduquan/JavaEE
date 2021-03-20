@@ -44,7 +44,7 @@ public class TokenGenerator implements Serializable {
     /**
      * 
      */
-    private static final Logger logger = Logger.getLogger(TokenGenerator.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(TokenGenerator.class.getName());
 
     /**
      * 
@@ -73,7 +73,7 @@ public class TokenGenerator implements Serializable {
                         );
         } 
         catch (Exception ex) {
-            logger.log(Level.SEVERE, ex.getMessage(), ex);
+            LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
         }
     }
     
