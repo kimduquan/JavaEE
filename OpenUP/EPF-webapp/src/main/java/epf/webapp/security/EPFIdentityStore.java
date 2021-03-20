@@ -5,7 +5,6 @@
  */
 package epf.webapp.security;
 
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.Map;
@@ -21,6 +20,8 @@ import javax.security.enterprise.credential.RememberMeCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStore;
 import javax.security.enterprise.identitystore.RememberMeIdentityStore;
+
+import epf.client.EPFException;
 import epf.client.registry.LocateRegistry;
 import epf.client.security.Security;
 import epf.client.security.Token;
@@ -82,9 +83,9 @@ public class EPFIdentityStore implements IdentityStore, RememberMeIdentityStore 
      * @return
      */
     protected Token login(final BasicAuthenticationCredential credential){
-        Token jwt = null;
         final URI securityUrl = registry.lookup("security");
-        URL audienceUrl = null;
+        URL audienceUrl;
+        String passwordHash;
 		try {
 			audienceUrl = new URL(String.format(
 			                            Security.AUDIENCE_URL_FORMAT,
@@ -92,14 +93,16 @@ public class EPFIdentityStore implements IdentityStore, RememberMeIdentityStore 
 			                            securityUrl.getHost(), 
 			                            securityUrl.getPort()
 			                    ));
-		} 
-		catch (MalformedURLException e) {
-		}
-        try(Client client = new Client(clients, securityUrl, b -> b)){
-        	final String passwordHash = PasswordHash.hash(
+			passwordHash = PasswordHash.hash(
 					credential.getCaller(), 
 					credential.getPassword().getValue()
 					);
+		} 
+		catch (Exception e) {
+			throw new EPFException(e);
+		}
+		Token jwt = null;
+        try(Client client = new Client(clients, securityUrl, b -> b)){
         	final String token = Security.login(
         			client, 
         			null,
@@ -113,7 +116,7 @@ public class EPFIdentityStore implements IdentityStore, RememberMeIdentityStore 
             }
         }
         catch (Exception e) {
-			
+			logger.warning(e.getMessage());
 		}
         return jwt;
     }

@@ -34,7 +34,7 @@ import epf.schema.roles.Role;
         loadOnStartup = 1, 
         asyncSupported = true, 
         description = "OpenUP",
-        displayName = OpenUP.Schema
+        displayName = OpenUP.SCHEMA
 )
 @ServletSecurity(
         value = @HttpConstraint(
@@ -57,7 +57,7 @@ import epf.schema.roles.Role;
         }
 )
 @ApplicationScoped
-@BasicAuthenticationMechanismDefinition(realmName = OpenUP.Schema)
+@BasicAuthenticationMechanismDefinition(realmName = OpenUP.SCHEMA)
 @FacesConfig
 @Named("webapp")
 public class WebApp extends HttpServlet {

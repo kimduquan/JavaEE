@@ -10,8 +10,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+
+import epf.client.EPFException;
 import epf.schema.EPF;
-import epf.service.ServiceException;
 import epf.util.Var;
 
 /**
@@ -39,7 +40,7 @@ public class Context {
      * @return
      * @throws Exception 
      */
-    public Credential putCredential(final String userName, final String unit, final String passwordHash) throws ServiceException {
+    public Credential putCredential(final String userName, final String unit, final String passwordHash) throws EPFException {
     	final Map<String, Object> props = new ConcurrentHashMap<>();
         props.put("javax.persistence.jdbc.user", userName);
         props.put("javax.persistence.jdbc.password", passwordHash);
@@ -48,7 +49,7 @@ public class Context {
             return newCredential(unit, props, error);
         });
         if(error.get() != null){
-        	throw new ServiceException(error.get());
+        	throw new EPFException(error.get());
         }
         final Credential cred = credentials.computeIfPresent(userName, (name, credential) -> {
             if(credential == null){
@@ -65,7 +66,7 @@ public class Context {
             return credential;
         });
         if(error.get() != null){
-        	throw new ServiceException(error.get());
+        	throw new EPFException(error.get());
         }
         return cred;
     }

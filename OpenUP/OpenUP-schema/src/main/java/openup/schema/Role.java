@@ -21,25 +21,34 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  *
  * @author FOXCONN
  */
-@Type(OpenUP.Role)
-@Schema(name = OpenUP.Role, title = "Role")
-@Entity(name = OpenUP.Role)
-@Table(schema = OpenUP.Schema, name = "OPENUP_ROLE", indexes = {@Index(columnList = "NAME")})
+@Type(OpenUP.ROLE)
+@Schema(name = OpenUP.ROLE, title = "Role")
+@Entity(name = OpenUP.ROLE)
+@Table(schema = OpenUP.SCHEMA, name = "OPENUP_ROLE", indexes = {@Index(columnList = "NAME")})
 public class Role {
 
+    /**
+     * 
+     */
     @Id
     private String name;
     
+    /**
+     * 
+     */
     @ManyToMany
     @JoinTable(
     		name = "OPENUP_ROLES",
-    		schema = OpenUP.Schema,
+    		schema = OpenUP.SCHEMA,
     		joinColumns = {@JoinColumn(name = "NAME")},
     		inverseJoinColumns = {@JoinColumn(name = "ROLE")},
     		indexes = {@Index(columnList = "NAME")}
     		)
     private List<epf.schema.roles.Role> roles;
     
+    /**
+     * 
+     */
     @Column(name = "SUMMARY")
     private String summary;
     
@@ -47,7 +56,7 @@ public class Role {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 
@@ -55,7 +64,7 @@ public class Role {
 		return roles;
 	}
 
-	public void setRoles(List<epf.schema.roles.Role> roles) {
+	public void setRoles(final List<epf.schema.roles.Role> roles) {
 		this.roles = roles;
 	}
 
@@ -63,7 +72,7 @@ public class Role {
 		return summary;
 	}
 
-	public void setSummary(String summary) {
+	public void setSummary(final String summary) {
 		this.summary = summary;
 	}
 }

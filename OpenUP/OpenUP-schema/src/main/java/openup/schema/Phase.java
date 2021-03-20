@@ -21,40 +21,52 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  *
  * @author FOXCONN
  */
-@Type(OpenUP.Phase)
-@Schema(name = OpenUP.Phase, title = "Phase")
-@Entity(name = OpenUP.Phase)
-@Table(schema = OpenUP.Schema, name = "OPENUP_PHASE", indexes = {@Index(columnList = "PARENT_ACTIVITIES")})
+@Type(OpenUP.PHASE)
+@Schema(name = OpenUP.PHASE, title = "Phase")
+@Entity(name = OpenUP.PHASE)
+@Table(schema = OpenUP.SCHEMA, name = "OPENUP_PHASE", indexes = {@Index(columnList = "PARENT_ACTIVITIES")})
 public class Phase {
 
+    /**
+     * 
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long phaseId;
     
+    /**
+     * 
+     */
     @ManyToOne
     @JoinColumn(name = "PHASE")
     private epf.schema.delivery_processes.Phase phase;
     
+    /**
+     * 
+     */
     @Column(name = "NAME", nullable = false)
     private String name;
     
+    /**
+     * 
+     */
     @ManyToOne
     @JoinColumn(name = "PARENT_ACTIVITIES")
     private DeliveryProcess parentActivities;
 
-    public Long getId() {
-        return id;
+    public Long getPhaseId() {
+        return phaseId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setPhaseId(final Long phaseId) {
+        this.phaseId = phaseId;
     }
 
     public epf.schema.delivery_processes.Phase getPhase() {
         return phase;
     }
 
-    public void setPhase(epf.schema.delivery_processes.Phase phase) {
+    public void setPhase(final epf.schema.delivery_processes.Phase phase) {
         this.phase = phase;
     }
 
@@ -62,7 +74,7 @@ public class Phase {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -70,7 +82,7 @@ public class Phase {
         return parentActivities;
     }
 
-    public void setParentActivities(DeliveryProcess parentActivities) {
+    public void setParentActivities(final DeliveryProcess parentActivities) {
         this.parentActivities = parentActivities;
     }
 }

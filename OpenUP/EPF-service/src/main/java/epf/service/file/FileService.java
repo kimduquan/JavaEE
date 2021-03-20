@@ -17,8 +17,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.StreamingOutput;
+
+import epf.client.EPFException;
 import epf.schema.roles.Role;
-import epf.service.ServiceException;
 import epf.util.Var;
 import epf.util.client.EntityOutput;
 import java.nio.file.Path;
@@ -68,10 +69,10 @@ public class FileService implements epf.client.file.Files {
 			});
 		} 
         catch (IOException | ServletException e) {
-        	throw new ServiceException(e);
+        	throw new EPFException(e);
 		}
         if(error.get() != null) {
-        	throw new ServiceException(error.get());
+        	throw new EPFException(error.get());
         }
         return size.get();
     }
@@ -89,7 +90,7 @@ public class FileService implements epf.client.file.Files {
 			return Files.createFile(file.toPath()).toString();
 		} 
         catch (IOException e) {
-        	throw new ServiceException(e);
+        	throw new EPFException(e);
 		}
     }
 
@@ -109,7 +110,7 @@ public class FileService implements epf.client.file.Files {
     			result = Files.createTempFile(prefix, suffix).toString();
     		} 
             catch (IOException e) {
-            	throw new ServiceException(e);
+            	throw new EPFException(e);
     		}
         }
         else {
@@ -118,7 +119,7 @@ public class FileService implements epf.client.file.Files {
 				result = Files.createTempFile(directory.toPath(), prefix, suffix).toString();
 			} 
             catch (IOException e) {
-            	throw new ServiceException(e);
+            	throw new EPFException(e);
 			}
         }
         return result;
@@ -136,7 +137,7 @@ public class FileService implements epf.client.file.Files {
 			Files.delete(file.toPath());
 		} 
         catch (IOException e) {
-        	throw new ServiceException(e);
+        	throw new EPFException(e);
 		}
     }
 
@@ -158,7 +159,7 @@ public class FileService implements epf.client.file.Files {
 			.collect(Collectors.toList());
 		} 
         catch (IOException e) {
-        	throw new ServiceException(e);
+        	throw new EPFException(e);
 		}
     }
 
@@ -174,7 +175,7 @@ public class FileService implements epf.client.file.Files {
 			return new EntityOutput(Files.newInputStream(file.toPath()));
 		} 
         catch (IOException e) {
-        	throw new ServiceException(e);
+        	throw new EPFException(e);
 		}
     }
 
@@ -192,7 +193,7 @@ public class FileService implements epf.client.file.Files {
 			return Files.move(sourceFile.toPath(), targetFile.toPath()).toString();
 		} 
         catch (IOException e) {
-        	throw new ServiceException(e);
+        	throw new EPFException(e);
 		}
     }
     

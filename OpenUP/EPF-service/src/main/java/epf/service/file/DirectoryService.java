@@ -14,8 +14,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
+
+import epf.client.EPFException;
 import epf.schema.roles.Role;
-import epf.service.ServiceException;
 
 /**
  *
@@ -36,7 +37,7 @@ public class DirectoryService implements epf.client.file.Directories {
 			return Files.createDirectories(directory.toPath()).toString();
 		} 
         catch (IOException e) {
-			throw new ServiceException(e);
+			throw new EPFException(e);
 		}
     }
 
@@ -52,7 +53,7 @@ public class DirectoryService implements epf.client.file.Directories {
     			result = Files.createTempDirectory(prefix).toString();
     		} 
             catch (IOException e) {
-            	throw new ServiceException(e);
+            	throw new EPFException(e);
     		}
         }
     	else {
@@ -61,7 +62,7 @@ public class DirectoryService implements epf.client.file.Directories {
 				result = Files.createTempDirectory(directory.toPath(), prefix).toString();
 			} 
             catch (IOException e) {
-            	throw new ServiceException(e);
+            	throw new EPFException(e);
 			}
     	}
         return result;
@@ -78,7 +79,7 @@ public class DirectoryService implements epf.client.file.Directories {
 			        .collect(Collectors.toList());
 		} 
         catch (IOException e) {
-        	throw new ServiceException(e);
+        	throw new EPFException(e);
 		}
     }
 }

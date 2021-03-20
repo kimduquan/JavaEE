@@ -21,43 +21,58 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  *
  * @author FOXCONN
  */
-@Type(OpenUP.Iteration)
-@Schema(name = OpenUP.Iteration, title = "Iteration")
-@Entity(name = OpenUP.Iteration)
-@Table(schema = OpenUP.Schema, name = "OPENUP_ITERATION", indexes = {@Index(columnList = "PARENT_ACTIVITIES")})
+@Type(OpenUP.ITERATION)
+@Schema(name = OpenUP.ITERATION, title = "Iteration")
+@Entity(name = OpenUP.ITERATION)
+@Table(schema = OpenUP.SCHEMA, name = "OPENUP_ITERATION", indexes = {@Index(columnList = "PARENT_ACTIVITIES")})
 public class Iteration {
 
+    /**
+     * 
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long iterationId;
     
+    /**
+     * 
+     */
     @ManyToOne
     @JoinColumn(name = "ITERATION")
     private epf.schema.delivery_processes.Iteration iteration;
     
+    /**
+     * 
+     */
     @Column(name = "NAME", nullable = false)
     private String name;
     
+    /**
+     * 
+     */
     @Column(name = "SUMMARY")
     private String summary;
     
+    /**
+     * 
+     */
     @ManyToOne
     @JoinColumn(name = "PARENT_ACTIVITIES")
     private Phase parentActivities;
 
-    public Long getId() {
-        return id;
+    public Long getIterationId() {
+        return iterationId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIterationId(final Long iterationId) {
+        this.iterationId = iterationId;
     }
 
     public epf.schema.delivery_processes.Iteration getIteration() {
         return iteration;
     }
 
-    public void setIteration(epf.schema.delivery_processes.Iteration iteration) {
+    public void setIteration(final epf.schema.delivery_processes.Iteration iteration) {
         this.iteration = iteration;
     }
 
@@ -65,7 +80,7 @@ public class Iteration {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -73,7 +88,7 @@ public class Iteration {
         return summary;
     }
 
-    public void setSummary(String summary) {
+    public void setSummary(final String summary) {
         this.summary = summary;
     }
 
@@ -81,7 +96,7 @@ public class Iteration {
         return parentActivities;
     }
 
-    public void setParentActivities(Phase parentActivities) {
+    public void setParentActivities(final Phase parentActivities) {
         this.parentActivities = parentActivities;
     }
 }

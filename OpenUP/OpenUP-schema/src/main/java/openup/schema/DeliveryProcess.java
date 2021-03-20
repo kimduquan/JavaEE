@@ -22,40 +22,52 @@ import epf.schema.QueryNames;
  *
  * @author FOXCONN
  */
-@Type(OpenUP.DeliveryProcess)
-@Schema(name = OpenUP.DeliveryProcess, title = "Delivery Process")
-@Entity(name = OpenUP.DeliveryProcess)
-@Table(schema = OpenUP.Schema, name = "OPENUP_DELIVERY_PROCESS")
+@Type(OpenUP.DELIVERY_PROCESS)
+@Schema(name = OpenUP.DELIVERY_PROCESS, title = "Delivery Process")
+@Entity(name = OpenUP.DELIVERY_PROCESS)
+@Table(schema = OpenUP.SCHEMA, name = "OPENUP_DELIVERY_PROCESS")
 @NamedNativeQuery(name = QueryNames.FULL_TEXT_SEARCH, query = "SELECT * FROM FT_SEARCH_DATA(?, ?, ?);")
 public class DeliveryProcess {
 
+    /**
+     * 
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long processId;
     
+    /**
+     * 
+     */
     @ManyToOne
     @JoinColumn(name = "DELIVERY_PROCESS")
     private epf.schema.delivery_processes.DeliveryProcess deliveryProcess;
     
+    /**
+     * 
+     */
     @Column(name = "NAME", unique = true, nullable = false)
     private String name;
     
+    /**
+     * 
+     */
     @Column(name = "SUMMARY")
     private String summary;
 
-    public Long getId() {
-        return id;
+    public Long getProcessId() {
+        return processId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setProcessId(final Long processId) {
+        this.processId = processId;
     }
 
     public epf.schema.delivery_processes.DeliveryProcess getDeliveryProcess() {
         return deliveryProcess;
     }
 
-    public void setDeliveryProcess(epf.schema.delivery_processes.DeliveryProcess deliveryProcess) {
+    public void setDeliveryProcess(final epf.schema.delivery_processes.DeliveryProcess deliveryProcess) {
         this.deliveryProcess = deliveryProcess;
     }
 
@@ -63,7 +75,7 @@ public class DeliveryProcess {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -71,7 +83,7 @@ public class DeliveryProcess {
         return summary;
     }
 
-    public void setSummary(String summary) {
+    public void setSummary(final String summary) {
         this.summary = summary;
     }
 }

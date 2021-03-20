@@ -20,40 +20,52 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  *
  * @author FOXCONN
  */
-@Type(OpenUP.Milestone)
-@Schema(name = OpenUP.Milestone, title = "Milestone")
-@Entity(name = OpenUP.Milestone)
-@Table(schema = OpenUP.Schema, name = "OPENUP_MILESTONE")
+@Type(OpenUP.MILESTONE)
+@Schema(name = OpenUP.MILESTONE, title = "Milestone")
+@Entity(name = OpenUP.MILESTONE)
+@Table(schema = OpenUP.SCHEMA, name = "OPENUP_MILESTONE")
 public class Milestone {
 
+    /**
+     * 
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long milestoneId;
     
+    /**
+     * 
+     */
     @ManyToOne
     @JoinColumn(name = "MILESTONE")
     private epf.schema.delivery_processes.Milestone milestone;
     
+    /**
+     * 
+     */
     @Column(name = "NAME", nullable = false)
     private String name;
     
+    /**
+     * 
+     */
     @ManyToOne
     @JoinColumn(name = "PREDECESSOR")
     private Iteration predecessor;
 
-    public Long getId() {
-        return id;
+    public Long getMilestoneId() {
+        return milestoneId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setMilestoneId(final Long milestoneId) {
+        this.milestoneId = milestoneId;
     }
 
     public epf.schema.delivery_processes.Milestone getMilestone() {
         return milestone;
     }
 
-    public void setMilestone(epf.schema.delivery_processes.Milestone milestone) {
+    public void setMilestone(final epf.schema.delivery_processes.Milestone milestone) {
         this.milestone = milestone;
     }
 
@@ -61,7 +73,7 @@ public class Milestone {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -69,7 +81,7 @@ public class Milestone {
         return predecessor;
     }
 
-    public void setPredecessor(Iteration predecessor) {
+    public void setPredecessor(final Iteration predecessor) {
         this.predecessor = predecessor;
     }
 }

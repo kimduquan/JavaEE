@@ -24,53 +24,71 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  *
  * @author FOXCONN
  */
-@Type(OpenUP.Artifact)
-@Schema(name = OpenUP.Artifact, title = "Artifact")
-@Entity(name = OpenUP.Artifact)
-@Table(schema = OpenUP.Schema, name = "OPENUP_ARTIFACT")
+@Type(OpenUP.ARTIFACT)
+@Schema(name = OpenUP.ARTIFACT, title = "Artifact")
+@Entity(name = OpenUP.ARTIFACT)
+@Table(schema = OpenUP.SCHEMA, name = "OPENUP_ARTIFACT")
 public class Artifact {
 
+	/**
+     * 
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long artifactId;
     
+    /**
+     * 
+     */
     @ManyToOne
     @JoinColumn(name = "ARTIFACT")
     private epf.schema.work_products.Artifact artifact;
     
+    /**
+     * 
+     */
     @ManyToOne
     @JoinColumn(name = "RESPONSIBLE")
     private Role responsible;
     
+    /**
+     * 
+     */
     @ManyToMany
     @JoinTable(
     		name = "OPENUP_ROLE_MODIFIES",
-    		schema = OpenUP.Schema,
+    		schema = OpenUP.SCHEMA,
     		joinColumns = {@JoinColumn(name = "ID")},
     		inverseJoinColumns = {@JoinColumn(name = "NAME")},
     		indexes = {@Index(columnList = "NAME")}
     		)
     private List<Role> modifiedBy;
     
+    /**
+     * 
+     */
     @Column(name = "NAME", nullable = false)
     private String name;
     
+    /**
+     * 
+     */
     @Column(name = "SUMMARY")
     private String summary;
 
-    public Long getId() {
-        return id;
+    public Long getArtifactId() {
+        return artifactId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setArtifactId(final Long artifactId) {
+        this.artifactId = artifactId;
     }
 
     public epf.schema.work_products.Artifact getArtifact() {
         return artifact;
     }
 
-    public void setArtifact(epf.schema.work_products.Artifact artifact) {
+    public void setArtifact(final epf.schema.work_products.Artifact artifact) {
         this.artifact = artifact;
     }
 
@@ -78,7 +96,7 @@ public class Artifact {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -86,7 +104,23 @@ public class Artifact {
         return summary;
     }
 
-    public void setSummary(String summary) {
+    public void setSummary(final String summary) {
         this.summary = summary;
     }
+
+    public Role getResponsible() {
+		return responsible;
+	}
+
+	public void setResponsible(final Role responsible) {
+		this.responsible = responsible;
+	}
+
+	public List<Role> getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(final List<Role> modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
 }

@@ -23,9 +23,10 @@ import javax.ws.rs.NotFoundException;
 import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
 import org.eclipse.microprofile.context.ManagedExecutor;
+
+import epf.client.EPFException;
 import epf.client.system.ProcessInfo;
 import epf.schema.roles.Role;
-import epf.service.ServiceException;
 import epf.util.Var;
 import epf.util.logging.Log;
 
@@ -93,7 +94,7 @@ public class Processes implements epf.client.system.Processes, Serializable {
 			process = builder.start();
 		} 
 		catch (IOException e) {
-			throw new ServiceException(e);
+			throw new EPFException(e);
 		}
         final Long pid = process.pid();
         processes.put(pid, new ProcessTask(process));
@@ -115,7 +116,7 @@ public class Processes implements epf.client.system.Processes, Serializable {
         });
         processes.clear();
         if(error.get() != null) {
-        	throw new ServiceException(error.get());
+        	throw new EPFException(error.get());
         }
     }
 

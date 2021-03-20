@@ -1,13 +1,13 @@
 /**
  * 
  */
-package epf.service;
+package epf.client;
 
 /**
  * @author PC
  *
  */
-public class ServiceException extends RuntimeException {
+public class EPFException extends RuntimeException {
 
 	/**
 	 * 
@@ -17,7 +17,7 @@ public class ServiceException extends RuntimeException {
 	/**
 	 * @param cause
 	 */
-	public ServiceException(final Throwable cause) {
+	public EPFException(final Throwable cause) {
 		super(cause);
 	}
 }

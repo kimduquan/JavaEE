@@ -19,6 +19,8 @@ import org.eclipse.microprofile.faulttolerance.exceptions.BulkheadException;
 import org.eclipse.microprofile.faulttolerance.exceptions.CircuitBreakerOpenException;
 import org.eclipse.microprofile.faulttolerance.exceptions.TimeoutException;
 
+import epf.client.EPFException;
+
 /**
  *
  * @author FOXCONN
@@ -56,7 +58,7 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
     protected boolean map(final Throwable failure, final Response.ResponseBuilder builder){
         Response.StatusType status = Response.Status.INTERNAL_SERVER_ERROR;
         boolean mapped = true;
-        if(failure instanceof ServiceException) {
+        if(failure instanceof EPFException) {
         	mapped = false;
         }
         else if(failure instanceof TimeoutException){

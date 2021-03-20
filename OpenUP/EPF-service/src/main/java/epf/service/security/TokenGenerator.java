@@ -11,9 +11,10 @@ import com.ibm.websphere.security.jwt.JwtBuilder;
 import com.ibm.websphere.security.jwt.JwtException;
 import com.ibm.websphere.security.jwt.JwtToken;
 import com.ibm.websphere.security.jwt.KeyException;
+
+import epf.client.EPFException;
 import epf.client.config.ConfigNames;
 import epf.client.security.Token;
-import epf.service.ServiceException;
 
 import java.io.Serializable;
 import java.security.KeyFactory;
@@ -84,7 +85,7 @@ public class TokenGenerator implements Serializable {
      * @throws KeyException
      * @throws JwtException
      */
-    public Token generate(final Token jwt) throws ServiceException {
+    public Token generate(final Token jwt) throws EPFException {
     	try {
     		final JwtBuilder builder = JwtBuilder.create();
             if(jwt.getAudience() != null && !jwt.getAudience().isEmpty()){
@@ -122,7 +123,7 @@ public class TokenGenerator implements Serializable {
             jwt.setRawToken(generatedJwt.compact());
     	}
     	catch(Exception ex) {
-    		throw new ServiceException(ex);
+    		throw new EPFException(ex);
     	}
         return jwt;
     }

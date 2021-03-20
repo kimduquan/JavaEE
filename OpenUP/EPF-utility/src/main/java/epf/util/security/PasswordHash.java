@@ -31,7 +31,7 @@ public final class PasswordHash {
      * @return
      * @throws Exception
      */
-    public static String hash(final String username, final char... password) throws Exception{
+    public static String hash(final String username, final char... password) throws Exception {
         if(encryptor == null){
             encryptor = new JCEEncryptor();
         }

@@ -31,7 +31,7 @@ import openup.schema.OpenUP;
  */
 @ApplicationScoped
 @ApplicationPath("/")
-@LoginConfig(authMethod = "MP-JWT", realmName = OpenUP.Schema)
+@LoginConfig(authMethod = "MP-JWT", realmName = OpenUP.SCHEMA)
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @OpenAPIDefinition(

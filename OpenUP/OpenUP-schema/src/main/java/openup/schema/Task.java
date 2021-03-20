@@ -20,39 +20,51 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  *
  * @author FOXCONN
  */
-@Type(OpenUP.Task)
-@Schema(name = OpenUP.Task, title = "Task")
-@Entity(name = OpenUP.Task)
-@Table(schema = OpenUP.Schema, name = "OPENUP_TASK")
+@Type(OpenUP.TASK)
+@Schema(name = OpenUP.TASK, title = "Task")
+@Entity(name = OpenUP.TASK)
+@Table(schema = OpenUP.SCHEMA, name = "OPENUP_TASK")
 public class Task {
 
+    /**
+     * 
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long taskId;
     
+    /**
+     * 
+     */
     @ManyToOne
     @JoinColumn(name = "TASK")
     private epf.schema.tasks.Task task;
     
+    /**
+     * 
+     */
     @Column(name = "NAME", nullable = false)
     private String name;
     
+    /**
+     * 
+     */
     @Column(name = "SUMMARY")
     private String summary;
 
-    public Long getId() {
-        return id;
+    public Long getTaskId() {
+        return taskId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setTaskId(final Long taskId) {
+        this.taskId = taskId;
     }
 
     public epf.schema.tasks.Task getTask() {
         return task;
     }
 
-    public void setTask(epf.schema.tasks.Task task) {
+    public void setTask(final epf.schema.tasks.Task task) {
         this.task = task;
     }
 
@@ -60,7 +72,7 @@ public class Task {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -68,7 +80,7 @@ public class Task {
         return summary;
     }
 
-    public void setSummary(String summary) {
+    public void setSummary(final String summary) {
         this.summary = summary;
     }
 }

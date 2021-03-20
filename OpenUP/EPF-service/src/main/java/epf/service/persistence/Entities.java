@@ -24,8 +24,9 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+
+import epf.client.EPFException;
 import epf.schema.roles.Role;
-import epf.service.ServiceException;
 
 /**
  *
@@ -99,7 +100,7 @@ public class Entities implements epf.client.persistence.Entities {
             	throw new BadRequestException(ex);
             }
             catch(Exception ex) {
-            	throw new ServiceException(ex);
+            	throw new EPFException(ex);
             }
         }
         return object;
@@ -124,7 +125,7 @@ public class Entities implements epf.client.persistence.Entities {
                 throw new BadRequestException(ex);
             }
             catch(Exception ex) {
-            	throw new ServiceException(ex);
+            	throw new EPFException(ex);
             }
         }
 	}
