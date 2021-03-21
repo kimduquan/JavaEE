@@ -27,7 +27,7 @@ import epf.util.ssl.SSLContextHelper;
  */
 @ApplicationScoped
 public class ClientQueue {
-	
+
 	/**
 	 * 
 	 */
@@ -43,6 +43,20 @@ public class ClientQueue {
     public ClientQueue() {
         clients = new ConcurrentHashMap<>();
     }
+	
+	/**
+	 * @return the clients
+	 */
+	protected Map<String, Queue<Client>> getClients() {
+		return clients;
+	}
+
+	/**
+	 * @return the context
+	 */
+	protected SSLContext getContext() {
+		return context;
+	}
     
     /**
      * 
