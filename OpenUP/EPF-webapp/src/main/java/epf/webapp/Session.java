@@ -21,7 +21,6 @@ import epf.client.security.Security;
 import epf.schema.roles.Role;
 import epf.util.client.Client;
 import epf.util.client.ClientQueue;
-import epf.util.logging.Logging;
 import epf.webapp.security.EPFIdentityStore;
 import epf.webapp.security.TokenPrincipal;
 
@@ -46,6 +45,7 @@ public class Session implements Serializable {
     /**
      * 
      */
+	@Inject
     private transient Logger logger;
     
     /**
@@ -80,7 +80,6 @@ public class Session implements Serializable {
     	if(context.getCallerPrincipal() != null) {
     		principal = identityStore.getPrincipal(context.getCallerPrincipal().getName());
     	}
-    	logger = Logging.getLogger(Session.class.getName());
     }
     
     /**
