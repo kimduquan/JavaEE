@@ -330,7 +330,7 @@
 												<limit>
 													<counter>LINE</counter>
 													<value>COVEREDRATIO</value>
-													<minimum>0.63</minimum>
+													<minimum>0.62</minimum>
 												</limit>
 												<limit>
 													<counter>BRANCH</counter>
@@ -340,7 +340,7 @@
 												<limit>
 													<counter>COMPLEXITY</counter>
 													<value>COVEREDRATIO</value>
-													<minimum>0.64</minimum>
+													<minimum>0.63</minimum>
 												</limit>
 											</limits>
 										</rule>
