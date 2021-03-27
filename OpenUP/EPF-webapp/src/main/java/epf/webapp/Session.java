@@ -7,6 +7,8 @@ package epf.webapp;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.security.Principal;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -77,8 +79,12 @@ public class Session implements Serializable {
      */
     @PostConstruct
     protected void postConstruct(){
-    	if(context.getCallerPrincipal() != null) {
-    		principal = identityStore.getPrincipal(context.getCallerPrincipal().getName());
+    	Principal current = context.getCallerPrincipal();
+    	if(current != null) {
+    		Set<TokenPrincipal> token = context.getPrincipalsByType(TokenPrincipal.class);
+    		if(token.isEmpty()) {
+    			principal = identityStore.getPrincipal(current.getName());
+    		}
     	}
     }
     

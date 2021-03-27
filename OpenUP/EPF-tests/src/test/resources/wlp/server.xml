@@ -28,8 +28,7 @@
     <application id="EPF-gateway" name="EPF-gateway" context-root="gateway" location="EPF-gateway-1.0.0.war" startAfterRef="EPF-service" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-	<application id="EPF-portlet" name="EPF-portlet" context-root="portlet" location="EPF-portlet-1.0.0.war" startAfterRef="EPF-service,EPF-gateway" />
-    <application id="EPF-webapp" name="EPF-webapp" context-root="webapp" location="EPF-webapp-1.0.0.war" startAfterRef="EPF-service,EPF-gateway" />
+	<application id="EPF-webapp" name="EPF-webapp" context-root="webapp" location="EPF-webapp-1.0.0.war" startAfterRef="EPF-service,EPF-gateway" />
     
     <!-- H2 Library Configuration -->
     <library id="H2JDBCLib">

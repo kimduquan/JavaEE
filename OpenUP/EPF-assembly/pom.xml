@@ -109,7 +109,7 @@
 						    <groupId>javax.cache</groupId>
 						    <artifactId>cache-api</artifactId>
 						</dependency>
-						<dependency>
+						<!--<dependency>
 							<groupId>com.liferay.faces</groupId>
 							<artifactId>com.liferay.faces.bridge.api</artifactId>
 						</dependency>
@@ -124,7 +124,7 @@
 						<dependency>
 							<groupId>org.apache.portals.pluto</groupId>
 							<artifactId>pluto-container</artifactId>
-						</dependency>
+						</dependency>-->
 					</copyDependencies>
 				</configuration>
             </plugin>

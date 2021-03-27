@@ -5,24 +5,29 @@
  */
 package epf.service.file;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.security.RolesAllowed;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Link;
+import javax.ws.rs.core.PathSegment;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.StreamingOutput;
-
+import javax.ws.rs.core.UriInfo;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import epf.client.EPFException;
 import epf.schema.roles.Role;
-import epf.util.Var;
 import epf.util.client.EntityOutput;
-import java.nio.file.Path;
 
 /**
  *
@@ -30,171 +35,113 @@ import java.nio.file.Path;
  */
 @javax.ws.rs.Path("file")
 @RolesAllowed(Role.DEFAULT_ROLE)
-@RequestScoped
+@ApplicationScoped
 public class FileService implements epf.client.file.Files {
-    
-    /**
-     * 
-     */
-    @Context
-    private transient HttpServletRequest request;
-    
-    /**
-     * @param path
-     * @return
-     */
-    protected File buildFile(final String path){
-        return new File(path);
-    }
+	
+	/**
+	 * 
+	 */
+	public static final String ROOT_FOLDER_CONFIG = "epf.file.root";
+	
+	/**
+	 * 
+	 */
+	@ConfigProperty(name = ROOT_FOLDER_CONFIG)
+	@Inject
+	private transient String rootFolder;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	private transient Logger logger;
 
-    /**
-     *
-     */
-    @Override
-    public long copy(
-            final String target
-    ) {
-    	final File targetFile = buildFile(target);
-    	final Var<Long> size = new Var<>(Long.valueOf(0));
-    	final Var<IOException> error = new Var<>();
-        try {
+	@Override
+	public Response createFile(
+			final List<PathSegment> paths,
+			final UriInfo uriInfo,
+			final HttpServletRequest request, 
+			final SecurityContext security) {
+		final PathBuilder builder = new PathBuilder(rootFolder);
+		final Path targetFolder = builder
+				.principal(security.getUserPrincipal())
+				.paths(paths)
+				.build();
+		final List<Path> files = new ArrayList<>();
+		try {
+			targetFolder.toFile().mkdirs();
 			request.getParts().forEach(part -> {
-			    try {
-					Files.copy(part.getInputStream(), targetFile.toPath());
-			        size.set(s -> s + part.getSize());
+				try {
+					final Path targetFile = Files.createTempFile(targetFolder, "", "");
+					Files.copy(part.getInputStream(), targetFile);
+					files.add(targetFile);
 				} 
-			    catch (IOException e) {
-			    	error.set(e);
+				catch (IOException e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
 				}
 			});
 		} 
-        catch (IOException | ServletException e) {
-        	throw new EPFException(e);
+		catch (IOException | ServletException e) {
+			throw new EPFException(e);
 		}
-        if(error.get() != null) {
-        	throw new EPFException(error.get());
-        }
-        return size.get();
-    }
+		final Path root = Path.of(rootFolder);
+		final Link[] links = files
+				.stream()
+				.map(path -> uriInfo
+						.getBaseUri()
+						.resolve(
+								root
+								.relativize(path)
+								.toUri()
+								)
+						)
+				.map(uri -> Link
+						.fromUri(uri)
+						.rel("file")
+						.build()
+						)
+				.collect(Collectors.toList())
+				.toArray(new Link[0]);
+		return Response.ok().links(links).build();
+	}
 
-    /**
-     *
-     */
-    @Override
-    public String createFile(
-    		final String path, 
-    		final Map<String, String> attrs
-    ) {
-    	final File file = new File(path);
-        try {
-			return Files.createFile(file.toPath()).toString();
+	@Override
+	public StreamingOutput lines(
+			final UriInfo uriInfo, 
+			final List<PathSegment> paths,
+			final SecurityContext security) {
+		final PathBuilder builder = new PathBuilder(rootFolder);
+		final Path targetFile = builder
+				.principal(security.getUserPrincipal())
+				.paths(paths)
+				.build();
+		StreamingOutput response;
+		try {
+			response = new EntityOutput(Files.newInputStream(targetFile));
 		} 
-        catch (IOException e) {
-        	throw new EPFException(e);
+		catch (IOException e) {
+			throw new EPFException(e);
 		}
-    }
+		return response;
+	}
 
-    /**
-     *
-     */
-    @Override
-    public String createTempFile(
-    		final String dir, 
-    		final String prefix, 
-    		final String suffix, 
-    		final Map<String, String> attrs
-    ) {
-    	String result;
-        if(dir == null || dir.isEmpty()){
-            try {
-    			result = Files.createTempFile(prefix, suffix).toString();
-    		} 
-            catch (IOException e) {
-            	throw new EPFException(e);
-    		}
-        }
-        else {
-        	final File directory = new File(dir);
-            try {
-				result = Files.createTempFile(directory.toPath(), prefix, suffix).toString();
-			} 
-            catch (IOException e) {
-            	throw new EPFException(e);
-			}
-        }
-        return result;
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void delete(
-    		final String path
-    ) {
-    	final File file = buildFile(path);
-        try {
-			Files.delete(file.toPath());
+	@Override
+	public Response delete(
+			final UriInfo uriInfo, 
+			final List<PathSegment> paths, 
+			final SecurityContext security) {
+		final PathBuilder builder = new PathBuilder(rootFolder);
+		final Path targetFile = builder
+				.principal(security.getUserPrincipal())
+				.paths(paths)
+				.build();
+		try {
+			Files.delete(targetFile);
 		} 
-        catch (IOException e) {
-        	throw new EPFException(e);
+		catch (IOException e) {
+			throw new EPFException(e);
 		}
-    }
-
-    /**
-     *
-     */
-    @Override
-    public List<String> find(
-    		final String start,
-    		final Integer maxDepth
-    ) {
-    	final File startDir = buildFile(start);
-        try {
-			return Files.find(
-			        startDir.toPath(), 
-			        maxDepth, null
-			)
-			.map(Path::toString)
-			.collect(Collectors.toList());
-		} 
-        catch (IOException e) {
-        	throw new EPFException(e);
-		}
-    }
-
-    /**
-     *
-     */
-    @Override
-    public StreamingOutput lines(
-    		final String path
-    ) {
-    	final File file = buildFile(path);
-        try {
-			return new EntityOutput(Files.newInputStream(file.toPath()));
-		} 
-        catch (IOException e) {
-        	throw new EPFException(e);
-		}
-    }
-
-    /**
-     *
-     */
-    @Override
-    public String move(
-    		final String source,
-    		final String target
-    ) {
-        final File sourceFile = buildFile(source);
-        final File targetFile = new File(target);
-        try {
-			return Files.move(sourceFile.toPath(), targetFile.toPath()).toString();
-		} 
-        catch (IOException e) {
-        	throw new EPFException(e);
-		}
-    }
+		return Response.ok().build();
+	}
     
 }
