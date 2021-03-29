@@ -6,23 +6,25 @@
 package epf.service.file;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.ForbiddenException;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.StreamingOutput;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import epf.client.EPFException;
@@ -49,18 +51,12 @@ public class FileService implements epf.client.file.Files {
 	@ConfigProperty(name = ROOT_FOLDER_CONFIG)
 	@Inject
 	private transient String rootFolder;
-	
-	/**
-	 * 
-	 */
-	@Inject
-	private transient Logger logger;
 
 	@Override
 	public Response createFile(
 			final List<PathSegment> paths,
 			final UriInfo uriInfo,
-			final HttpServletRequest request, 
+			final InputStream input, 
 			final SecurityContext security) {
 		final PathBuilder builder = new PathBuilder(rootFolder);
 		final Path targetFolder = builder
@@ -70,36 +66,24 @@ public class FileService implements epf.client.file.Files {
 		final List<Path> files = new ArrayList<>();
 		try {
 			targetFolder.toFile().mkdirs();
-			request.getParts().forEach(part -> {
-				try {
-					final Path targetFile = Files.createTempFile(targetFolder, "", "");
-					Files.copy(part.getInputStream(), targetFile);
-					files.add(targetFile);
-				} 
-				catch (IOException e) {
-					logger.log(Level.SEVERE, e.getMessage(), e);
-				}
-			});
+			final Path targetFile = Files.createTempFile(targetFolder, "", "");
+			Files.copy(input, targetFile, StandardCopyOption.REPLACE_EXISTING);
+			files.add(targetFile);
 		} 
-		catch (IOException | ServletException e) {
+		catch (IOException e) {
 			throw new EPFException(e);
 		}
 		final Path root = Path.of(rootFolder);
 		final Link[] links = files
 				.stream()
-				.map(path -> uriInfo
-						.getBaseUri()
-						.resolve(
-								root
-								.relativize(path)
-								.toUri()
-								)
-						)
-				.map(uri -> Link
-						.fromUri(uri)
-						.rel("file")
-						.build()
-						)
+				.map(path -> {
+					UriBuilder uriBuilder = uriInfo.getBaseUriBuilder().path(getClass());
+					final Iterator<Path> pathIt = root.relativize(path).iterator();
+					while(pathIt.hasNext()) {
+						uriBuilder = uriBuilder.path(pathIt.next().toString());
+					}
+					return Link.fromUri(uriBuilder.build()).rel("self").build();
+				})
 				.collect(Collectors.toList())
 				.toArray(new Link[0]);
 		return Response.ok().links(links).build();
@@ -110,9 +94,9 @@ public class FileService implements epf.client.file.Files {
 			final UriInfo uriInfo, 
 			final List<PathSegment> paths,
 			final SecurityContext security) {
+		validatePaths(paths, security);
 		final PathBuilder builder = new PathBuilder(rootFolder);
 		final Path targetFile = builder
-				.principal(security.getUserPrincipal())
 				.paths(paths)
 				.build();
 		StreamingOutput response;
@@ -130,9 +114,9 @@ public class FileService implements epf.client.file.Files {
 			final UriInfo uriInfo, 
 			final List<PathSegment> paths, 
 			final SecurityContext security) {
+		validatePaths(paths, security);
 		final PathBuilder builder = new PathBuilder(rootFolder);
 		final Path targetFile = builder
-				.principal(security.getUserPrincipal())
 				.paths(paths)
 				.build();
 		try {
@@ -144,4 +128,16 @@ public class FileService implements epf.client.file.Files {
 		return Response.ok().build();
 	}
     
+	/**
+	 * @param paths
+	 * @param security
+	 */
+	protected static void validatePaths(final List<PathSegment> paths, final SecurityContext security) {
+		if(paths.isEmpty()) {
+			throw new NotFoundException();
+		}
+		if(!security.getUserPrincipal().getName().equals(paths.get(0).getPath())) {
+			throw new ForbiddenException();
+		}
+	}
 }

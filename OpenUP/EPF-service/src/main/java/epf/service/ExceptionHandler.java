@@ -7,6 +7,9 @@ package epf.service;
 
 import java.io.Serializable;
 import java.io.StreamCorruptedException;
+import java.nio.file.AccessDeniedException;
+import java.nio.file.InvalidPathException;
+import java.nio.file.NoSuchFileException;
 import java.sql.SQLInvalidAuthorizationSpecException;
 import java.sql.SQLNonTransientException;
 import javax.validation.ValidationException;
@@ -18,7 +21,6 @@ import javax.ws.rs.ext.Provider;
 import org.eclipse.microprofile.faulttolerance.exceptions.BulkheadException;
 import org.eclipse.microprofile.faulttolerance.exceptions.CircuitBreakerOpenException;
 import org.eclipse.microprofile.faulttolerance.exceptions.TimeoutException;
-
 import epf.client.EPFException;
 
 /**
@@ -93,6 +95,15 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
         			|| ADMIN_RIGHTS_REQUIRED == errorCode) {
         		status = Response.Status.FORBIDDEN;
         	}
+        }
+        else if(failure instanceof NoSuchFileException) {
+        	status = Response.Status.NOT_FOUND;
+        }
+        else if(failure instanceof AccessDeniedException) {
+        	status = Response.Status.FORBIDDEN;
+        }
+        else if(failure instanceof InvalidPathException) {
+        	status = Response.Status.BAD_REQUEST;
         }
         else{
             mapped = false;

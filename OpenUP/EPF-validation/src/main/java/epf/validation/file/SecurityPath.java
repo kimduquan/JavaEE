@@ -21,9 +21,9 @@ import javax.validation.Payload;
  */
 @Target( { PARAMETER, FIELD, ANNOTATION_TYPE })
 @Retention(RUNTIME)
-@Constraint(validatedBy = FileValidator.class)
+@Constraint(validatedBy = SecurityPathValidator.class)
 @Documented
-public @interface File {
+public @interface SecurityPath {
     String message() default "File";
 
     Class<?>[] groups() default {};

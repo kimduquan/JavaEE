@@ -5,8 +5,8 @@
  */
 package epf.client.file;
 
+import java.io.InputStream;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -14,6 +14,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
@@ -21,6 +22,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
+import epf.util.client.Client;
 
 /**
  *
@@ -29,20 +31,51 @@ import javax.ws.rs.core.UriInfo;
 @Path("file")
 public interface Files {
 	
+	/**
+	 * @param paths
+	 * @param uriInfo
+	 * @param input
+	 * @param security
+	 * @return
+	 */
 	@POST
 	@Path("{paths: .+}")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
 	Response createFile(
 			@PathParam("paths")
 			final List<PathSegment> paths,
 			@Context 
     		final UriInfo uriInfo,
-			@Context 
-			final HttpServletRequest request,
+			final InputStream input,
 			@Context
 			final SecurityContext security
 			);
 	
+	/**
+	 * @param client
+	 * @param input
+	 * @param paths
+	 * @return
+	 */
+	static Response createFile(final Client client, final InputStream input, final String... paths) {
+		return client
+				.request(
+						target -> { 
+							for(String path : paths) {
+								target = target.path(path);
+							}
+							return target; 
+							}, 
+						req -> req)
+				.post(Entity.entity(input, MediaType.APPLICATION_OCTET_STREAM_TYPE));
+	}
+	
+    /**
+     * @param uriInfo
+     * @param paths
+     * @param security
+     * @return
+     */
     @GET
     @Path("{paths: .+}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
@@ -55,6 +88,31 @@ public interface Files {
 			final SecurityContext security
     		);
     
+    /**
+     * @param client
+     * @param paths
+     * @return
+     */
+    static Response lines(final Client client, final String... paths) {
+    	return client
+    			.request(
+    					target -> {
+    						for(final String path : paths) {
+    							target = target.path(path);
+    						}
+    						return target;
+    					}, 
+    					req -> req.accept(MediaType.APPLICATION_OCTET_STREAM)
+    					)
+    			.get();
+    }
+    
+    /**
+     * @param uriInfo
+     * @param paths
+     * @param security
+     * @return
+     */
     @DELETE
     @Path("{paths: .+}")
     Response delete(
@@ -64,4 +122,23 @@ public interface Files {
     		final List<PathSegment> paths,
     		@Context
 			final SecurityContext security);
+    
+    /**
+     * @param client
+     * @param paths
+     * @return
+     */
+    static Response delete(final Client client, final String... paths) {
+    	return client
+    			.request(
+    					target -> {
+    						for(final String path : paths) {
+    							target = target.path(path);
+    						}
+    						return target;
+    					}, 
+    					req -> req
+    					)
+    			.delete();
+    }
 }

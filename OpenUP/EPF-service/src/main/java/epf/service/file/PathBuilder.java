@@ -66,7 +66,9 @@ public class PathBuilder {
 	 */
 	public Path build() {
 		final List<String> buildPaths = new ArrayList<>();
-		buildPaths.add(userFolder);
+		if(userFolder != null) {
+			buildPaths.add(userFolder);
+		}
 		buildPaths.addAll(subPaths);
 		return Path.of(rootFolder, buildPaths.toArray(new String[0]));
 	}
