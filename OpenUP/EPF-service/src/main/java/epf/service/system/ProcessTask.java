@@ -7,11 +7,10 @@ package epf.service.system;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.logging.Level;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Logger;
-import javax.ws.rs.sse.OutboundSseEvent.Builder;
 import epf.client.system.ProcessInfo;
-import javax.ws.rs.sse.SseBroadcaster;
 
 /**
  *
@@ -27,21 +26,19 @@ public class ProcessTask implements Runnable {
     /**
      * 
      */
-    private SseBroadcaster broadcaster;
-    /**
-     * 
-     */
     private transient final Process process;
+    
     /**
      * 
      */
-    private Builder builder;
+    private transient final Queue<String> output;
 
     /**
      * @param process
      */
     public ProcessTask(final Process process) {
         this.process = process;
+        output = new ConcurrentLinkedQueue<>();
     }
 
     @Override
@@ -49,12 +46,12 @@ public class ProcessTask implements Runnable {
         try(InputStreamReader input = new InputStreamReader(process.getInputStream())){
             try(BufferedReader reader = new BufferedReader(input)){
                 reader.lines().forEach(line -> {
-                    broadcaster.broadcast(builder.data(line).build());
+                    output.add(line);
                 });
             }
         } 
         catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
+            LOGGER.severe(ex.getMessage());
         }
     }
 
@@ -62,16 +59,11 @@ public class ProcessTask implements Runnable {
      * 
      */
     public void close() {
-        broadcaster.close();
         process.destroyForcibly();
     }
 
     public Process getProcess() {
         return process;
-    }
-
-    public void setBroadcaster(final SseBroadcaster broadcaster) {
-        this.broadcaster = broadcaster;
     }
     
     /**
@@ -88,16 +80,8 @@ public class ProcessTask implements Runnable {
     	procInfo.user().ifPresent(info::setUser);
         return info;
     }
-
-    public SseBroadcaster getBroadcaster() {
-        return broadcaster;
-    }
-
-    public Builder getBuilder() {
-        return builder;
-    }
-
-    public void setBuilder(final Builder builder) {
-        this.builder = builder;
+    
+    public Queue<String> getOutput(){
+    	return output;
     }
 }

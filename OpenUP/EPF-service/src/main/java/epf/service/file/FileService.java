@@ -50,6 +50,11 @@ public class FileService implements epf.client.file.Files {
 	/**
 	 * 
 	 */
+	private static final int USER_PATH_SEGMENT_INDEX = 1;
+	
+	/**
+	 * 
+	 */
 	@ConfigProperty(name = ROOT_FOLDER_CONFIG)
 	@Inject
 	private transient String rootFolder;
@@ -142,7 +147,7 @@ public class FileService implements epf.client.file.Files {
 			if(principal instanceof JsonWebToken) {
 				final JsonWebToken jwt = (JsonWebToken) principal;
 				if(jwt.getGroups().contains(firstPath)) {
-					if(paths.size() > 1) {
+					if(paths.size() > USER_PATH_SEGMENT_INDEX) {
 						final String secondPath = paths.get(1).toString();
 						if(!secondPath.equals(principalName) && !httpMethod.equals(HttpMethod.GET)) {
 							throw new ForbiddenException();

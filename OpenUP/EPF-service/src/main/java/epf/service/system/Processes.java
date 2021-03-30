@@ -14,8 +14,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
@@ -23,11 +21,9 @@ import javax.ws.rs.NotFoundException;
 import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
 import org.eclipse.microprofile.context.ManagedExecutor;
-
 import epf.client.EPFException;
 import epf.client.system.ProcessInfo;
 import epf.schema.roles.Role;
-import epf.util.Var;
 import epf.util.logging.Log;
 
 /**
@@ -48,11 +44,11 @@ public class Processes implements epf.client.system.Processes, Serializable {
 	 * 
 	 */
 	private transient final Map<Long, ProcessTask> processes;
-    /**
-     * 
-     */
-	@Inject
-    private transient Logger logger;
+	
+	/**
+	 * 
+	 */
+	private transient final Map<Long, OutputTask> outputs;
     
     /**
      * 
@@ -65,6 +61,7 @@ public class Processes implements epf.client.system.Processes, Serializable {
      */
     public Processes() {
     	processes = new ConcurrentHashMap<>();
+    	outputs = new ConcurrentHashMap<>();
     }
     
     /**
@@ -72,15 +69,10 @@ public class Processes implements epf.client.system.Processes, Serializable {
      */
     @PreDestroy
     protected void preDestroy(){
-    	processes.forEach((pid, process) -> {
-            try {
-                process.close();
-            } 
-            catch (Exception e) {
-            	logger.log(Level.WARNING, e.getMessage(), e);
-            }
-        });
-        processes.clear();
+    	outputs.forEach((pid, output) -> output.close());
+    	outputs.clear();
+    	processes.forEach((pid, output) -> output.close());
+    	processes.clear();
     }
 
     @Override
@@ -89,35 +81,27 @@ public class Processes implements epf.client.system.Processes, Serializable {
     	final ProcessBuilder builder = new ProcessBuilder();
         builder.command(command);
         builder.directory(new File(directory));
-        Process process;
-		try {
-			process = builder.start();
+        Long pid;
+        try {
+			final Process process = builder.start();
+	        final ProcessTask task = new ProcessTask(process);
+	        executor.submit(task);
+	        pid = process.pid();
+	        processes.put(pid, task);
 		} 
 		catch (IOException e) {
 			throw new EPFException(e);
 		}
-        final Long pid = process.pid();
-        processes.put(pid, new ProcessTask(process));
         return pid;
     }
 
     @Override
     @Log
     public void stop() {
-    	final Var<Exception> error = new Var<>();
-    	processes.forEach((pid, process) -> {
-            try{
-            	process.close();
-            } 
-            catch (Exception e) {
-            	logger.log(Level.SEVERE, e.getMessage(), e);
-            	error.set(e);
-            }
-        });
-        processes.clear();
-        if(error.get() != null) {
-        	throw new EPFException(error.get());
-        }
+    	outputs.forEach((pid, output) -> output.close());
+    	outputs.clear();
+    	processes.forEach((pid, output) -> output.close());
+    	processes.clear();
     }
 
     @Override
@@ -131,6 +115,10 @@ public class Processes implements epf.client.system.Processes, Serializable {
 
     @Override
     public int destroy(final long pid) {
+    	final OutputTask output = outputs.remove(pid);
+    	if(output != null) {
+    		output.close();
+    	}
     	final ProcessTask process = processes.remove(pid);
         if(process == null){
             throw new NotFoundException();
@@ -152,18 +140,16 @@ public class Processes implements epf.client.system.Processes, Serializable {
 
     @Override
     public void output(final long pid, final Sse sse, final SseEventSink sink) {
-    	final ProcessTask procTask = processes.computeIfPresent(pid, (id, process) -> {
-            if(process.getBroadcaster() == null){
-                process.setBroadcaster(sse.newBroadcaster());
-                process.setBuilder(sse.newEventBuilder());
-                executor.submit(process);
-            }
-            process.getBroadcaster().register(sink);
-            return process;
-        });
+    	final ProcessTask procTask = processes.getOrDefault(Long.valueOf(pid), null);
         if(procTask == null){
             throw new NotFoundException();
         }
+        final OutputTask output = outputs.computeIfAbsent(Long.valueOf(pid), id -> {
+        	final OutputTask out = new OutputTask(procTask, sse.newBroadcaster(), sse.newEventBuilder());
+        	executor.submit(out);
+        	return out;
+        });
+        output.getBroadcaster().register(sink);
     }
     
 }
