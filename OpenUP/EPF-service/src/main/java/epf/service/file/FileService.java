@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -18,7 +19,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.ForbiddenException;
-import javax.ws.rs.NotFoundException;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
@@ -27,6 +28,7 @@ import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.client.EPFException;
 import epf.schema.roles.Role;
 import epf.util.client.EntityOutput;
@@ -58,9 +60,9 @@ public class FileService implements epf.client.file.Files {
 			final UriInfo uriInfo,
 			final InputStream input, 
 			final SecurityContext security) {
+		validatePaths(paths, security, HttpMethod.POST);
 		final PathBuilder builder = new PathBuilder(rootFolder);
 		final Path targetFolder = builder
-				.principal(security.getUserPrincipal())
 				.paths(paths)
 				.build();
 		final List<Path> files = new ArrayList<>();
@@ -94,7 +96,7 @@ public class FileService implements epf.client.file.Files {
 			final UriInfo uriInfo, 
 			final List<PathSegment> paths,
 			final SecurityContext security) {
-		validatePaths(paths, security);
+		validatePaths(paths, security, HttpMethod.GET);
 		final PathBuilder builder = new PathBuilder(rootFolder);
 		final Path targetFile = builder
 				.paths(paths)
@@ -114,7 +116,7 @@ public class FileService implements epf.client.file.Files {
 			final UriInfo uriInfo, 
 			final List<PathSegment> paths, 
 			final SecurityContext security) {
-		validatePaths(paths, security);
+		validatePaths(paths, security, HttpMethod.DELETE);
 		final PathBuilder builder = new PathBuilder(rootFolder);
 		final Path targetFile = builder
 				.paths(paths)
@@ -132,12 +134,31 @@ public class FileService implements epf.client.file.Files {
 	 * @param paths
 	 * @param security
 	 */
-	protected static void validatePaths(final List<PathSegment> paths, final SecurityContext security) {
-		if(paths.isEmpty()) {
-			throw new NotFoundException();
-		}
-		if(!security.getUserPrincipal().getName().equals(paths.get(0).getPath())) {
-			throw new ForbiddenException();
+	protected static void validatePaths(final List<PathSegment> paths, final SecurityContext security, final String httpMethod) {
+		final Principal principal = security.getUserPrincipal();
+		final String principalName = principal.getName();
+		final String firstPath = paths.get(0).toString();
+		if(!principalName.equals(firstPath)) {
+			if(principal instanceof JsonWebToken) {
+				final JsonWebToken jwt = (JsonWebToken) principal;
+				if(jwt.getGroups().contains(firstPath)) {
+					if(paths.size() > 1) {
+						final String secondPath = paths.get(1).toString();
+						if(!secondPath.equals(principalName) && !httpMethod.equals(HttpMethod.GET)) {
+							throw new ForbiddenException();
+						}
+					}
+					else if(!httpMethod.equals(HttpMethod.GET)) {
+						throw new ForbiddenException();
+					}
+				}
+				else {
+					throw new ForbiddenException();
+				}
+			}
+			else {
+				throw new ForbiddenException();
+			}
 		}
 	}
 }

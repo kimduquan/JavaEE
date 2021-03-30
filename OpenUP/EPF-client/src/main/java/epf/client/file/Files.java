@@ -16,6 +16,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
@@ -23,6 +24,7 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 import epf.util.client.Client;
+import javax.validation.constraints.*;
 
 /**
  *
@@ -43,6 +45,7 @@ public interface Files {
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
 	Response createFile(
 			@PathParam("paths")
+			@NotEmpty
 			final List<PathSegment> paths,
 			@Context 
     		final UriInfo uriInfo,
@@ -57,7 +60,7 @@ public interface Files {
 	 * @param paths
 	 * @return
 	 */
-	static Response createFile(final Client client, final InputStream input, final String... paths) {
+	static Link createFile(final Client client, final InputStream input, final String... paths) {
 		return client
 				.request(
 						target -> { 
@@ -67,7 +70,8 @@ public interface Files {
 							return target; 
 							}, 
 						req -> req)
-				.post(Entity.entity(input, MediaType.APPLICATION_OCTET_STREAM_TYPE));
+				.post(Entity.entity(input, MediaType.APPLICATION_OCTET_STREAM_TYPE))
+				.getLink("self");
 	}
 	
     /**
@@ -83,6 +87,7 @@ public interface Files {
     		@Context 
     		final UriInfo uriInfo, 
     		@PathParam("paths")
+    		@NotEmpty
     		final List<PathSegment> paths,
     		@Context
 			final SecurityContext security
@@ -93,7 +98,7 @@ public interface Files {
      * @param paths
      * @return
      */
-    static Response lines(final Client client, final String... paths) {
+    static InputStream lines(final Client client, final String... paths) {
     	return client
     			.request(
     					target -> {
@@ -104,7 +109,7 @@ public interface Files {
     					}, 
     					req -> req.accept(MediaType.APPLICATION_OCTET_STREAM)
     					)
-    			.get();
+    			.get(InputStream.class);
     }
     
     /**
@@ -119,6 +124,7 @@ public interface Files {
     		@Context 
     		final UriInfo uriInfo, 
     		@PathParam("paths")
+    		@NotEmpty
     		final List<PathSegment> paths,
     		@Context
 			final SecurityContext security);
@@ -128,8 +134,8 @@ public interface Files {
      * @param paths
      * @return
      */
-    static Response delete(final Client client, final String... paths) {
-    	return client
+    static Link delete(final Client client, final String... paths) {
+    	final Response response = client
     			.request(
     					target -> {
     						for(final String path : paths) {
@@ -140,5 +146,6 @@ public interface Files {
     					req -> req
     					)
     			.delete();
+    	return response.getLink("self");
     }
 }

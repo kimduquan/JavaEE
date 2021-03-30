@@ -4,16 +4,16 @@
 package epf.service.file;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -24,7 +24,6 @@ import epf.service.ClientUtil;
 import epf.service.RegistryUtil;
 import epf.service.SecurityUtil;
 import epf.util.client.Client;
-import epf.util.logging.Logging;
 
 /**
  * @author PC
@@ -35,8 +34,8 @@ public class FilesTest {
 	private static String token;
 	private static URI filesUrl;
 	private static Path tempDir;
-	private static final Logger logger = Logging.getLogger(FilesTest.class.getName());
 	private Client client;
+	private Path tempFile;
 
 	/**
 	 * @throws java.lang.Exception
@@ -64,6 +63,8 @@ public class FilesTest {
 	public void setUp() throws Exception {
 		client = ClientUtil.newClient(filesUrl);
     	client.authorization(token);
+    	tempFile = Files.createTempFile("", "");
+    	Files.writeString(tempFile, "this is a test");
 	}
 
 	/**
@@ -72,15 +73,13 @@ public class FilesTest {
 	@After
 	public void tearDown() throws Exception {
 		client.close();
+		tempFile.toFile().delete();
 	}
 
 	@Test
-	public void test() throws Exception {
-		Path file = Files.createTempFile("", "");
-		Files.writeString(file, "this is a test");
-		try (InputStream input = Files.newInputStream(file)){
-			Response response = epf.client.file.Files.createFile(client, input, "test");
-			Link link = response.getLink("self");
+	public void testCreateFileOK_User() throws Exception {
+		try (InputStream input = Files.newInputStream(tempFile)){
+			Link link = epf.client.file.Files.createFile(client, input, "any_role1");
 			Assert.assertNotNull(link);
 			try(Client newclient = ClientUtil.newClient(link.getUri())){
 				newclient.authorization(token);
@@ -99,9 +98,123 @@ public class FilesTest {
 				newclient.request(target -> target, req -> req).delete();
 			}
 		}
-		finally {
-			file.toFile().delete();
-		}
 	}
 
+	@Test
+	public void testCreateFileOK_Group() throws Exception {
+		try (InputStream input = Files.newInputStream(tempFile)){
+			Link link = epf.client.file.Files.createFile(client, input, "Any_Role", "any_role1");
+			Assert.assertNotNull(link);
+			try(Client newclient = ClientUtil.newClient(link.getUri())){
+				newclient.authorization(token);
+				InputStream input2 = newclient
+						.request(
+						target -> target, 
+						req -> req.accept(MediaType.APPLICATION_OCTET_STREAM)
+						)
+						.get(InputStream.class);
+				try(InputStreamReader reader = new InputStreamReader(input2)){
+					try(BufferedReader buffer = new BufferedReader(reader)){
+						String text = buffer.lines().collect(Collectors.joining());
+						Assert.assertEquals("this is a test", text);
+					}
+				}
+				newclient.request(target -> target, req -> req).delete();
+			}
+		}
+	}
+	
+	@Test//(expected = ForbiddenException.class)
+	public void testCreateFile_InvalidUser() throws IOException {
+		try (InputStream input = Files.newInputStream(tempFile)){
+			epf.client.file.Files.createFile(client, input, "any_role2");
+		}
+	}
+	
+	@Test//(expected = ForbiddenException.class)
+	public void testCreateFile_InvalidGroup_ValidUser() throws IOException {
+		try (InputStream input = Files.newInputStream(tempFile)){
+			epf.client.file.Files.createFile(client, input, "Developer", "any_role1");
+		}
+	}
+	
+	@Test//(expected = ForbiddenException.class)
+	public void testCreateFile_ValidGroup_InvalidUser() throws IOException {
+		try (InputStream input = Files.newInputStream(tempFile)){
+			epf.client.file.Files.createFile(client, input, "Any_Role", "any_role2");
+		}
+	}
+	
+	@Test//(expected = ForbiddenException.class)
+	public void testCreateFile_InvalidGroup_InvalidUser() throws IOException {
+		try (InputStream input = Files.newInputStream(tempFile)){
+			epf.client.file.Files.createFile(client, input, "Developer", "any_role2");
+		}
+	}
+	
+	@Test//(expected = ForbiddenException.class)
+	public void testDelete_InvalidUser() {
+		epf.client.file.Files.delete(client, "any_role2");
+	}
+	
+	@Test//(expected = ForbiddenException.class)
+	public void testDelete_InvalidGroup_ValidUser() {
+		epf.client.file.Files.delete(client, "Developer", "any_role1");
+	}
+	
+	@Test//(expected = ForbiddenException.class)
+	public void testDelete_ValidGroup_InvalidUser() {
+		epf.client.file.Files.delete(client, "Any_Role", "any_role2");
+	}
+	
+	@Test//(expected = ForbiddenException.class)
+	public void testDelete_InvalidGroup_InvalidUser() {
+		epf.client.file.Files.delete(client, "Developer", "any_role2");
+	}
+	
+	@Test(expected = ForbiddenException.class)
+	public void testLines_InvalidUser() {
+		epf.client.file.Files.lines(client, "any_role2");
+	}
+	
+	@Test(expected = ForbiddenException.class)
+	public void testLines_InvalidGroup_ValidUser() {
+		epf.client.file.Files.lines(client, "Developer", "any_role1");
+	}
+	
+	@Test
+	public void testLines_ValidGroup_InvalidUser() throws Exception {
+		String otherToken = SecurityUtil.login(null, "developer1", "developer");
+		Link link;
+		try(InputStream input = Files.newInputStream(tempFile)){
+			try(Client otherClient = ClientUtil.newClient(filesUrl)){
+				otherClient.authorization(otherToken);
+				link = epf.client.file.Files.createFile(otherClient, input, "Any_Role", "developer1");
+			}
+		}
+		try(Client newclient = ClientUtil.newClient(link.getUri())){
+			newclient.authorization(token);
+			InputStream input = newclient
+					.request(
+					target -> target, 
+					req -> req.accept(MediaType.APPLICATION_OCTET_STREAM)
+					)
+					.get(InputStream.class);
+			try(InputStreamReader reader = new InputStreamReader(input)){
+				try(BufferedReader buffer = new BufferedReader(reader)){
+					String text = buffer.lines().collect(Collectors.joining());
+					Assert.assertEquals("this is a test", text);
+				}
+			}
+		}
+		try(Client otherClient = ClientUtil.newClient(filesUrl)){
+			otherClient.authorization(otherToken);
+			otherClient.request(target -> target, req -> req).delete();
+		}
+	}
+	
+	@Test(expected = ForbiddenException.class)
+	public void testLines_InvalidGroup_InvalidUser() {
+		epf.client.file.Files.lines(client, "Developer", "any_role2");
+	}
 }
