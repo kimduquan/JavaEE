@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -54,6 +56,7 @@ public class FilesTest {
 	public static void tearDownAfterClass() throws Exception {
 		SecurityUtil.logOut(null, token);
 		Files.walk(tempDir).parallel().forEach(path -> path.toFile().delete());
+		tempDir.toFile().delete();
 	}
 
 	/**
@@ -63,7 +66,7 @@ public class FilesTest {
 	public void setUp() throws Exception {
 		client = ClientUtil.newClient(filesUrl);
     	client.authorization(token);
-    	tempFile = Files.createTempFile("", "");
+    	tempFile = Files.createTempFile(tempDir, "", "");
     	Files.writeString(tempFile, "this is a test");
 	}
 
@@ -79,8 +82,10 @@ public class FilesTest {
 	@Test
 	public void testCreateFileOK_User() throws Exception {
 		try (InputStream input = Files.newInputStream(tempFile)){
-			Link link = epf.client.file.Files.createFile(client, input, "any_role1");
-			Assert.assertNotNull(link);
+			Response response = epf.client.file.Files.createFile(client, input, "any_role1");
+			Assert.assertEquals("Response.status", Response.Status.OK.getStatusCode(), response.getStatusInfo().getStatusCode());
+			Link link = response.getLink("self");
+			Assert.assertNotNull("Response.link", link);
 			try(Client newclient = ClientUtil.newClient(link.getUri())){
 				newclient.authorization(token);
 				InputStream input2 = newclient
@@ -103,8 +108,10 @@ public class FilesTest {
 	@Test
 	public void testCreateFileOK_Group() throws Exception {
 		try (InputStream input = Files.newInputStream(tempFile)){
-			Link link = epf.client.file.Files.createFile(client, input, "Any_Role", "any_role1");
-			Assert.assertNotNull(link);
+			Response response = epf.client.file.Files.createFile(client, input, "Any_Role", "any_role1");
+			Assert.assertEquals("Response.status", Response.Status.OK.getStatusCode(), response.getStatusInfo().getStatusCode());
+			Link link = response.getLink("self");
+			Assert.assertNotNull("Response.link", link);
 			try(Client newclient = ClientUtil.newClient(link.getUri())){
 				newclient.authorization(token);
 				InputStream input2 = newclient
@@ -127,49 +134,57 @@ public class FilesTest {
 	@Test//(expected = ForbiddenException.class)
 	public void testCreateFile_InvalidUser() throws IOException {
 		try (InputStream input = Files.newInputStream(tempFile)){
-			epf.client.file.Files.createFile(client, input, "any_role2");
+			Response response = epf.client.file.Files.createFile(client, input, "any_role2");
+			Assert.assertEquals("Response.status", Response.Status.FORBIDDEN.getStatusCode(), response.getStatusInfo().getStatusCode());
 		}
 	}
 	
 	@Test//(expected = ForbiddenException.class)
 	public void testCreateFile_InvalidGroup_ValidUser() throws IOException {
 		try (InputStream input = Files.newInputStream(tempFile)){
-			epf.client.file.Files.createFile(client, input, "Developer", "any_role1");
+			Response response = epf.client.file.Files.createFile(client, input, "Developer", "any_role1");
+			Assert.assertEquals("Response.status", Response.Status.FORBIDDEN.getStatusCode(), response.getStatusInfo().getStatusCode());
 		}
 	}
 	
 	@Test//(expected = ForbiddenException.class)
 	public void testCreateFile_ValidGroup_InvalidUser() throws IOException {
 		try (InputStream input = Files.newInputStream(tempFile)){
-			epf.client.file.Files.createFile(client, input, "Any_Role", "any_role2");
+			Response response = epf.client.file.Files.createFile(client, input, "Any_Role", "any_role2");
+			Assert.assertEquals("Response.status", Response.Status.FORBIDDEN.getStatusCode(), response.getStatusInfo().getStatusCode());
 		}
 	}
 	
 	@Test//(expected = ForbiddenException.class)
 	public void testCreateFile_InvalidGroup_InvalidUser() throws IOException {
 		try (InputStream input = Files.newInputStream(tempFile)){
-			epf.client.file.Files.createFile(client, input, "Developer", "any_role2");
+			Response response = epf.client.file.Files.createFile(client, input, "Developer", "any_role2");
+			Assert.assertEquals("Response.status", Response.Status.FORBIDDEN.getStatusCode(), response.getStatusInfo().getStatusCode());
 		}
 	}
 	
 	@Test//(expected = ForbiddenException.class)
 	public void testDelete_InvalidUser() {
-		epf.client.file.Files.delete(client, "any_role2");
+		Response response = epf.client.file.Files.delete(client, "any_role2");
+		Assert.assertEquals("Response.status", Response.Status.FORBIDDEN.getStatusCode(), response.getStatusInfo().getStatusCode());
 	}
 	
 	@Test//(expected = ForbiddenException.class)
 	public void testDelete_InvalidGroup_ValidUser() {
-		epf.client.file.Files.delete(client, "Developer", "any_role1");
+		Response response = epf.client.file.Files.delete(client, "Developer", "any_role1");
+		Assert.assertEquals("Response.status", Response.Status.FORBIDDEN.getStatusCode(), response.getStatusInfo().getStatusCode());
 	}
 	
 	@Test//(expected = ForbiddenException.class)
 	public void testDelete_ValidGroup_InvalidUser() {
-		epf.client.file.Files.delete(client, "Any_Role", "any_role2");
+		Response response = epf.client.file.Files.delete(client, "Any_Role", "any_role2");
+		Assert.assertEquals("Response.status", Response.Status.FORBIDDEN.getStatusCode(), response.getStatusInfo().getStatusCode());
 	}
 	
 	@Test//(expected = ForbiddenException.class)
 	public void testDelete_InvalidGroup_InvalidUser() {
-		epf.client.file.Files.delete(client, "Developer", "any_role2");
+		Response response = epf.client.file.Files.delete(client, "Developer", "any_role2");
+		Assert.assertEquals("Response.status", Response.Status.FORBIDDEN.getStatusCode(), response.getStatusInfo().getStatusCode());
 	}
 	
 	@Test(expected = ForbiddenException.class)
@@ -189,7 +204,10 @@ public class FilesTest {
 		try(InputStream input = Files.newInputStream(tempFile)){
 			try(Client otherClient = ClientUtil.newClient(filesUrl)){
 				otherClient.authorization(otherToken);
-				link = epf.client.file.Files.createFile(otherClient, input, "Any_Role", "developer1");
+				Response response = epf.client.file.Files.createFile(otherClient, input, "Any_Role", "developer1");
+				Assert.assertEquals("Response.status", Response.Status.OK.getStatusCode(), response.getStatusInfo().getStatusCode());
+				link = response.getLink("self");
+				Assert.assertNotNull("Response.link", link);
 			}
 		}
 		try(Client newclient = ClientUtil.newClient(link.getUri())){

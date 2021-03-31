@@ -16,7 +16,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
@@ -60,8 +59,8 @@ public interface Files {
 	 * @param paths
 	 * @return
 	 */
-	static Link createFile(final Client client, final InputStream input, final String... paths) {
-		return client
+	static Response createFile(final Client client, final InputStream input, final String... paths) {
+		final Response response = client
 				.request(
 						target -> { 
 							for(String path : paths) {
@@ -70,8 +69,8 @@ public interface Files {
 							return target; 
 							}, 
 						req -> req)
-				.post(Entity.entity(input, MediaType.APPLICATION_OCTET_STREAM_TYPE))
-				.getLink("self");
+				.post(Entity.entity(input, MediaType.APPLICATION_OCTET_STREAM_TYPE));
+		return response;
 	}
 	
     /**
@@ -134,7 +133,7 @@ public interface Files {
      * @param paths
      * @return
      */
-    static Link delete(final Client client, final String... paths) {
+    static Response delete(final Client client, final String... paths) {
     	final Response response = client
     			.request(
     					target -> {
@@ -146,6 +145,6 @@ public interface Files {
     					req -> req
     					)
     			.delete();
-    	return response.getLink("self");
+    	return response;
     }
 }
