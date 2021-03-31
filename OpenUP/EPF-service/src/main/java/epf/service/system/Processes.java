@@ -132,9 +132,7 @@ public class Processes implements epf.client.system.Processes, Serializable {
         return processes.values()
                 .stream()
                 .filter(process -> process.getProcess().isAlive() == isAlive)
-                .map(process -> {
-                    return process.getInfo();
-                })
+                .map(process -> process.getInfo())
                 .collect(Collectors.toList());
     }
 

@@ -13,6 +13,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
@@ -26,7 +27,7 @@ import epf.gateway.Request;
  *
  * @author FOXCONN
  */
-@Path("system/process")
+@Path("system")
 @RequestScoped
 public class Processes {
     
@@ -103,9 +104,12 @@ public class Processes {
      * @return
      */
     @GET
+    @Path("{pid}")
     @Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
     public CompletionStage<Response> info(
+    		@PathParam("pid")
+    		final String pid,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req
@@ -123,9 +127,12 @@ public class Processes {
      * @return
      */
     @DELETE
+    @Path("{pid}")
     @Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
     public CompletionStage<Response> destroy(
+    		@PathParam("pid")
+    		final String pid,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req
@@ -143,10 +150,12 @@ public class Processes {
      * @return
      */
     @GET
-    @Path("process/out")
+    @Path("{pid}/out")
     @Produces(MediaType.SERVER_SENT_EVENTS)
     @Asynchronous
     public CompletionStage<Response> output(
+    		@PathParam("pid")
+    		final String pid,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req

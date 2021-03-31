@@ -9,10 +9,12 @@ import java.util.List;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.MatrixParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -28,19 +30,13 @@ import epf.util.client.Client;
  */
 @Path("system")
 public interface Processes {
-	
-	/**
-	 * 
-	 */
-	String PROCESS = "process";
     
 	/**
 	 * @param command
 	 * @param directory
 	 * @return
 	 */
-	@Path(PROCESS)
-    @POST
+	@POST
     @Produces(MediaType.APPLICATION_JSON)
     long start(@MatrixParam("command") final List<String> command, @MatrixParam("directory") final String directory);
     
@@ -52,7 +48,7 @@ public interface Processes {
      */
     static long start(final Client client, final String directory, final String... command){
     	return client.request(
-    			target -> target.path(PROCESS).matrixParam("command", (Object[])command).matrixParam("directory", directory), 
+    			target -> target.matrixParam("command", (Object[])command).matrixParam("directory", directory), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.post(null, Long.class);
@@ -62,10 +58,12 @@ public interface Processes {
      * @param isAlive
      * @return
      */
-    @Path("process")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    List<ProcessInfo> getProcesses(@QueryParam("isAlive") final boolean isAlive);
+    List<ProcessInfo> getProcesses(
+    		@QueryParam("isAlive") 
+    		@DefaultValue("true")
+    		final boolean isAlive);
     
     /**
      * @param client
@@ -74,7 +72,7 @@ public interface Processes {
      */
     static List<ProcessInfo> getProcesses(final Client client, final boolean isAlive){
     	return client.request(
-    			target -> target.path(PROCESS).queryParam("isAlive", isAlive), 
+    			target -> target.queryParam("isAlive", isAlive), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.get(new GenericType<List<ProcessInfo>>() {});
@@ -83,7 +81,6 @@ public interface Processes {
     /**
      * 
      */
-    @Path(PROCESS)
     @DELETE
     void stop();
     
@@ -92,7 +89,7 @@ public interface Processes {
      */
     static void stop(final Client client) {
     	client.request(
-    			target -> target.path(PROCESS), 
+    			target -> target, 
     			req -> req
     			)
     	.delete();
@@ -103,11 +100,10 @@ public interface Processes {
      * @return
      */
     @GET
-    @Path(PROCESS)
+    @Path("{pid}")
     @Produces(MediaType.APPLICATION_JSON)
     ProcessInfo info(
-    		@QueryParam("pid")
-    		@NotBlank
+    		@PathParam("pid")
     		@Positive
     		final long pid
     		);
@@ -117,7 +113,7 @@ public interface Processes {
      * @param pid
      * @return
      */
-    static ProcessInfo info(final Client client, long pid) {
+    static ProcessInfo info(final Client client, final long pid) {
     	return client.request(
     			target -> target.path(String.valueOf(pid)), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
@@ -130,10 +126,10 @@ public interface Processes {
      * @return
      */
     @DELETE
-    @Path(PROCESS)
+    @Path("{pid}")
     @Produces(MediaType.APPLICATION_JSON)
     int destroy(
-    		@QueryParam("pid")
+    		@PathParam("pid")
     		@NotBlank
     		@Positive
     		final long pid
@@ -158,10 +154,10 @@ public interface Processes {
      * @param sink
      */
     @GET
-    @Path("process/out")
+    @Path("{pid}/out")
     @Produces(MediaType.SERVER_SENT_EVENTS)
     void output(
-    		@QueryParam("pid")
+    		@PathParam("pid")
     		@NotBlank
     		@Positive
     		final long pid, 

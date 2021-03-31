@@ -6,12 +6,16 @@
 package epf.service.system;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
+import epf.client.system.ProcessInfo;
 import epf.client.system.Processes;
 import epf.service.ClientUtil;
 import epf.service.RegistryUtil;
@@ -51,8 +55,24 @@ public class ProcessesTest {
     }
     
     @Test
+    @Ignore
     public void testStartOK() {
         long pid = Processes.start(client, "D:\\", "java", "-version");
-        Assert.assertNotEquals("Process", 0, pid);
+        Assert.assertNotEquals("Process.pid", 0, pid);
+        ProcessInfo info = Processes.info(client, pid);
+        Assert.assertNotNull("ProcessInfo", info);
+        Assert.assertArrayEquals("ProcessInfo.arguments", new String[] { "-version" }, info.getArguments());
+        Assert.assertEquals("ProcessInfo.command", "java", info.getCommand());
+        Assert.assertEquals("ProcessInfo.commandLine", "java -version", info.getCommandLine());
+        Assert.assertEquals("ProcessInfo.start", "java", info.getStart().toString());
+        Assert.assertEquals("ProcessInfo.totalCpu.seconds", 1, info.getTotalCpu().getSeconds());
+        Assert.assertEquals("ProcessInfo.user", "PC", info.getUser());
+        List<ProcessInfo> processes = new ArrayList<>();
+        processes.addAll(Processes.getProcesses(client, true));
+        processes.addAll(Processes.getProcesses(client, false));
+        Assert.assertFalse("List<ProcessInfo>.emtpty", processes.isEmpty());
+        int exitValue = Processes.destroy(client, pid);
+        Assert.assertEquals("exitValue", 0, exitValue);
+    	Processes.stop(client);
     }
 }
