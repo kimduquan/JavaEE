@@ -41,11 +41,11 @@
     </library>
     
     <library id="JCacheLib">
-        <file name="${shared.resource.dir}/epf/hazelcast-all-4.0.3.jar"/>
+        <file name="${shared.resource.dir}/epf/hazelcast-3.12.12.jar"/>
     </library>
     
     <!-- uri="file://${server.config.dir}hazelcast.xml" -->
-    <httpSessionCache libraryRef="JCacheLib" />
+    <httpSessionCache libraryRef="JCacheLib" uri="file://${server.config.dir}hazelcast-config.xml" />
     
     <mpJwt 
         id="EPF"
