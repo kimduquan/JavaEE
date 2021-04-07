@@ -23,7 +23,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import epf.client.config.ConfigNames;
 import epf.service.ClientUtil;
 import epf.service.RegistryUtil;
 import epf.service.SecurityUtil;
@@ -50,7 +49,7 @@ public class FilesTest {
 		token = SecurityUtil.login(null, "any_role1", "any_role");
 		filesUrl = RegistryUtil.lookup("file", null);
 		tempDir = Files.createTempDirectory("file");
-		rootDir = Paths.get(System.getProperty(ConfigNames.FILE_ROOT, "")).toAbsolutePath();
+		rootDir = Paths.get(System.getProperty("epf.tests.file.root", "")).toAbsolutePath();
 	}
 
 	/**

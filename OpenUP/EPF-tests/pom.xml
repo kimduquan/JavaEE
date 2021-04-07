@@ -19,7 +19,8 @@
         <liberty.env.epf.service.url>https://localhost:9443/service/</liberty.env.epf.service.url>
         <liberty.env.epf.registry.url>https://localhost:9443/gateway/registry/</liberty.env.epf.registry.url>
 		<liberty.env.epf.webapp.url>https://localhost:9443/webapp/</liberty.env.epf.webapp.url>
-		<liberty.env.epf.file.root>target/servers/test/epf.file.root</liberty.env.epf.file.root>
+		<liberty.env.epf.tests.file.root>target/servers/test/epf.file.root</liberty.env.epf.tests.file.root>
+		<liberty.env.webdriver.chrome.driver>chromedriver.exe</liberty.env.webdriver.chrome.driver>
     </properties>
     <dependencies>
 		<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
@@ -68,6 +69,14 @@
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-json-provider</artifactId>
         </dependency>
+        <dependency>
+		    <groupId>org.jboss.weld</groupId>
+		    <artifactId>weld-junit4</artifactId>
+		</dependency>
+        <dependency>
+		    <groupId>org.seleniumhq.selenium</groupId>
+		    <artifactId>selenium-java</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>com.liferay.faces</groupId>
 			<artifactId>com.liferay.faces.bridge.api</artifactId>
@@ -112,7 +121,8 @@
                         <epf.service.url>https://localhost:${httpsPort}/service/</epf.service.url>
                         <epf.registry.url>https://localhost:${httpsPort}/gateway/registry/</epf.registry.url>
                         <epf.webapp.url>https://localhost:${httpsPort}/webapp/</epf.webapp.url>
-                        <epf.file.root>target/servers/test/epf.file.root</epf.file.root>
+                        <epf.tests.file.root>target/servers/test/epf.file.root</epf.tests.file.root>
+                        <webdriver.chrome.driver>chromedriver.exe</webdriver.chrome.driver>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>

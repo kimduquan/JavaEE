@@ -36,4 +36,8 @@ public interface ConfigNames {
      * 
      */
     String FILE_ROOT = "epf.file.root";
+    /**
+     * 
+     */
+    String WEB_APP_URL = "epf.webapp.url";
 }
