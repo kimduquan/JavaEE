@@ -14,7 +14,7 @@ public class ConfigUtil {
     
     static Map<String, String> properties(){
     	if(configs == null) {
-    		try(Client client = ClientUtil.newClient(RegistryUtil.lookup("config"))){
+    		try(Client client = ClientUtil.newClient(RegistryUtil.lookup("config", null))){
     			configs = Config.getProperties(client, null);
     		}
     		catch(Exception ex) {

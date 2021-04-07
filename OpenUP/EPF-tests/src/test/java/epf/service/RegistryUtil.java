@@ -15,12 +15,12 @@ public class RegistryUtil {
 	private static final Logger logger = Logging.getLogger(RegistryUtil.class.getName());
     private static Map<String, URI> remotes;
     
-    static Map<String, URI> list(){
+    static Map<String, URI> list(String version){
     	if(remotes == null) {
     		String registryUrl = System.getProperty(ConfigNames.REGISTRY_URL, "");
     		try(Client client = ClientUtil.newClient(new URI(registryUrl))){
     			remotes = new ConcurrentHashMap<>();
-    			Registry.list(client)
+    			Registry.list(client, version)
     					.forEach(link -> {
     						remotes.put(link.getRel(), link.getUri());
     					});
@@ -32,7 +32,7 @@ public class RegistryUtil {
     	return remotes;
     }
     
-    public static URI lookup(String name) {
-    	return list().get(name);
+    public static URI lookup(String name, String version) {
+    	return list(version).get(name);
     }
 }

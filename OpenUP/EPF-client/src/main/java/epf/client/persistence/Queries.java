@@ -70,7 +70,7 @@ public interface Queries {
      * @param firstResult
      * @param maxResults
      */
-    static <T> List<T> getCriteriaQueryResult(
+    static <T> List<T> executeQuery(
     		final Client client,
     		final GenericType<List<T>> type,
     		final String unit,

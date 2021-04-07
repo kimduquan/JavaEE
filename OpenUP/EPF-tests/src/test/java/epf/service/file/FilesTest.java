@@ -45,7 +45,7 @@ public class FilesTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		token = SecurityUtil.login(null, "any_role1", "any_role");
-		filesUrl = RegistryUtil.lookup("file");
+		filesUrl = RegistryUtil.lookup("file", null);
 		tempDir = Files.createTempDirectory("file");
 	}
 

@@ -65,7 +65,7 @@ public class DeliveryProcesses implements Serializable {
     public List<Phase> getPhases() {
         if(phases == null){
             try(Client client = session.newClient("persistence")){
-            	phases = Queries.getCriteriaQueryResult(
+            	phases = Queries.executeQuery(
             			client, 
             			new GenericType<List<Phase>>() {}, 
             			EPF.SCHEMA,
@@ -83,7 +83,7 @@ public class DeliveryProcesses implements Serializable {
     public List<Iteration> getIterations() {
         if(iterations == null){
             try(Client client = session.newClient("persistence")){
-            	iterations = Queries.getCriteriaQueryResult(
+            	iterations = Queries.executeQuery(
             			client, 
             			new GenericType<List<Iteration>>() {}, 
             			EPF.SCHEMA, 
@@ -101,7 +101,7 @@ public class DeliveryProcesses implements Serializable {
     public List<Task> getTasks() {
         if(tasks == null){
             try(Client client = session.newClient("persistence")){
-            	tasks = Queries.getCriteriaQueryResult(
+            	tasks = Queries.executeQuery(
             			client, 
             			new GenericType<List<Task>> () {}, 
             			EPF.SCHEMA, 

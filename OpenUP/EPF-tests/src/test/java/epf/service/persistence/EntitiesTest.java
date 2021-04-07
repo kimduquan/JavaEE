@@ -47,7 +47,7 @@ public class EntitiesTest {
     
     @BeforeClass
     public static void beforeClass(){
-    	persistenceUrl = RegistryUtil.lookup("persistence");
+    	persistenceUrl = RegistryUtil.lookup("persistence", null);
     	token = SecurityUtil.login(null, "any_role1", "any_role");
     }
     

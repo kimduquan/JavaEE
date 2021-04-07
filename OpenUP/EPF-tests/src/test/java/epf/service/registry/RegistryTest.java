@@ -59,7 +59,7 @@ public class RegistryTest {
     
     @Test
     public void testList_OK() {
-    	Set<Link> links = Registry.list(client);
+    	Set<Link> links = Registry.list(client, null);
     	Set<URI> URIs = links.stream().map(link -> link.getUri()).collect(Collectors.toSet());
     	Set<URI> expected = new HashSet<>();
     	String path = registryUrl.getPath().split("/")[1];

@@ -24,7 +24,7 @@ public class SecurityUtil {
     
     public static String login(String unit, String username, String password) {
     	if(securityUrl == null) {
-    		securityUrl = RegistryUtil.lookup("security");
+    		securityUrl = RegistryUtil.lookup("security", null);
     	}
     	String token = null;
     	try(Client client = ClientUtil.newClient(securityUrl)){
@@ -37,7 +37,7 @@ public class SecurityUtil {
     }
     
     public static void logOut(String unit, String token) {
-    	try(Client client = ClientUtil.newClient(RegistryUtil.lookup("security"))){
+    	try(Client client = ClientUtil.newClient(RegistryUtil.lookup("security", null))){
     		client.authorization(token);
     		token = Security.logOut(client, unit);
     	}

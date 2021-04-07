@@ -35,7 +35,7 @@ public class ProcessesTest {
     @BeforeClass
     public static void beforeClass(){
     	token = SecurityUtil.login(null, "any_role1", "any_role");
-        processesUrl = RegistryUtil.lookup("system");
+        processesUrl = RegistryUtil.lookup("system", null);
     }
     
     @AfterClass

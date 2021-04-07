@@ -44,7 +44,7 @@ public class SecurityTest {
     
     @BeforeClass
     public static void beforeClass(){
-    	securityUrl = RegistryUtil.lookup("security");
+    	securityUrl = RegistryUtil.lookup("security", null);
     }
     
     @AfterClass

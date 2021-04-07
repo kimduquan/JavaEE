@@ -40,7 +40,7 @@ public class QueriesTest {
     @BeforeClass
     public static void beforeClass(){
     	token = SecurityUtil.login(null, "any_role1", "any_role");
-    	persistenceUrl = RegistryUtil.lookup("persistence");
+    	persistenceUrl = RegistryUtil.lookup("persistence", null);
     }
     
     @AfterClass

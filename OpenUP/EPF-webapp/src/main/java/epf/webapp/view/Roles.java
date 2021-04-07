@@ -59,7 +59,7 @@ public class Roles implements Serializable {
     public List<RoleSet> getRoleSets() {
         if(roleSets == null){
             try(Client client = session.newClient("persistence")){
-            	roleSets = Queries.getCriteriaQueryResult(
+            	roleSets = Queries.executeQuery(
             			client, 
             			new GenericType<List<RoleSet>> () {}, 
             			EPF.SCHEMA,
@@ -80,7 +80,7 @@ public class Roles implements Serializable {
     public List<Role> getRoles() {
         if(roles == null){
             try(Client client = session.newClient("persistence")){
-            	roles = Queries.getCriteriaQueryResult(
+            	roles = Queries.executeQuery(
             			client, 
             			new GenericType<List<Role>> () {}, 
             			EPF.SCHEMA, 

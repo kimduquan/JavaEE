@@ -60,7 +60,7 @@ public class WorkProducts implements Serializable {
     public List<Domain> getDomains() {
         if(domains == null){
             try(Client client = session.newClient("persistence")){
-            	domains = Queries.getCriteriaQueryResult(
+            	domains = Queries.executeQuery(
             			client, 
             			new GenericType<List<Domain>> () {}, 
             			EPF.SCHEMA, 
@@ -81,7 +81,7 @@ public class WorkProducts implements Serializable {
     public List<Artifact> getArtifacts() {
         if(artifacts == null){
             try(Client client = session.newClient("persistence")){
-            	artifacts = Queries.getCriteriaQueryResult(
+            	artifacts = Queries.executeQuery(
             			client, 
             			new GenericType<List<Artifact>> () {}, 
             			EPF.SCHEMA, 

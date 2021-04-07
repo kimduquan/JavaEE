@@ -60,7 +60,7 @@ public class Tasks implements Serializable {
     public List<Discipline> getDisciplines() {
         if(disciplines == null){
             try(Client client = session.newClient("persistence")){
-            	disciplines = Queries.getCriteriaQueryResult(
+            	disciplines = Queries.executeQuery(
             			client, 
             			new GenericType<List<Discipline>> () {}, 
             			EPF.SCHEMA, 
@@ -81,7 +81,7 @@ public class Tasks implements Serializable {
     public List<Task> getTasks() {
         if(tasks == null){
             try(Client client = session.newClient("persistence")){
-            	tasks = Queries.getCriteriaQueryResult(
+            	tasks = Queries.executeQuery(
             			client, 
             			new GenericType<List<Task>> () {}, 
             			EPF.SCHEMA, 
