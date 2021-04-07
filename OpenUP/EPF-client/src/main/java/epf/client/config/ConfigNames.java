@@ -32,4 +32,8 @@ public interface ConfigNames {
      * 
      */
     String SERVICE_URL = "epf.service.url";
+    /**
+     * 
+     */
+    String FILE_ROOT = "epf.file.root";
 }

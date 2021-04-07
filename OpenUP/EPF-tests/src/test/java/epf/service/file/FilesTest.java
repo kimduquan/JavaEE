@@ -10,18 +10,20 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import epf.client.config.ConfigNames;
 import epf.service.ClientUtil;
 import epf.service.RegistryUtil;
 import epf.service.SecurityUtil;
@@ -36,6 +38,7 @@ public class FilesTest {
 	private static String token;
 	private static URI filesUrl;
 	private static Path tempDir;
+	private static Path rootDir;
 	private Client client;
 	private Path tempFile;
 
@@ -47,6 +50,7 @@ public class FilesTest {
 		token = SecurityUtil.login(null, "any_role1", "any_role");
 		filesUrl = RegistryUtil.lookup("file", null);
 		tempDir = Files.createTempDirectory("file");
+		rootDir = Paths.get(System.getProperty(ConfigNames.FILE_ROOT, "")).toAbsolutePath();
 	}
 
 	/**
@@ -55,8 +59,14 @@ public class FilesTest {
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		SecurityUtil.logOut(null, token);
-		Files.walk(tempDir).parallel().forEach(path -> path.toFile().delete());
+		try(Stream<Path> paths = Files.walk(tempDir)){
+			paths.forEach(path -> path.toFile().delete());
+		}
 		tempDir.toFile().delete();
+		try(Stream<Path> paths = Files.walk(rootDir)){
+			paths.forEach(path -> path.toFile().delete());
+		}
+		rootDir.toFile().delete();
 	}
 
 	/**
