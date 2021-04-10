@@ -14,6 +14,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import epf.util.client.Client;
 import epf.validation.persistence.Unit;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -99,7 +101,9 @@ public interface Queries {
     Response search(
     		@Context
     		final UriInfo uriInfo,
-    		@QueryParam("text") 
+    		@QueryParam("text")
+    		@NotBlank
+    		@Pattern(regexp = "\\w+")
     		final String text, 
     		@QueryParam(FIRST)
     		final Integer firstResult,

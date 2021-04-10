@@ -22,8 +22,8 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
 import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  *
@@ -69,7 +69,7 @@ public class QueriesTest {
     public void testSearchOK() {
     	Response response = client.request(
     			target -> target
-    			.queryParam("text", "Any")
+    			.queryParam("text", "OpenUP")
     			.queryParam("first", 0)
     			.queryParam("max", 100), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
@@ -96,5 +96,59 @@ public class QueriesTest {
 				logger.log(Level.SEVERE, entityLink.toString(), e);
 			}
     	});
+    }
+    
+    @Test
+    public void testSearchOK_EmptyResult() {
+    	Response response = client.request(
+    			target -> target
+    			.queryParam("text", "EPF")
+    			.queryParam("first", 0)
+    			.queryParam("max", 100), 
+    			req -> req.accept(MediaType.APPLICATION_JSON)
+    			)
+    			.get();
+    	Assert.assertEquals("Response.status", 200, response.getStatus());
+    	Set<Link> entityLinks = response.getLinks();
+    	Assert.assertTrue("Response.links.empty", entityLinks.isEmpty());
+    }
+    
+    @Test
+    public void testSearch_EmptyText() {
+    	Response response = client.request(
+    			target -> target
+    			.queryParam("text", "")
+    			.queryParam("first", 0)
+    			.queryParam("max", 100), 
+    			req -> req.accept(MediaType.APPLICATION_JSON)
+    			)
+    			.get();
+    	Assert.assertEquals("Response.status", 400, response.getStatus());
+    }
+    
+    @Test
+    public void testSearch_BlankText() {
+    	Response response = client.request(
+    			target -> target
+    			.queryParam("text", "    ")
+    			.queryParam("first", 0)
+    			.queryParam("max", 100), 
+    			req -> req.accept(MediaType.APPLICATION_JSON)
+    			)
+    			.get();
+    	Assert.assertEquals("Response.status", 400, response.getStatus());
+    }
+    
+    @Test
+    public void testSearch_InvalidText() {
+    	Response response = client.request(
+    			target -> target
+    			.queryParam("text", "'abc'")
+    			.queryParam("first", 0)
+    			.queryParam("max", 100), 
+    			req -> req.accept(MediaType.APPLICATION_JSON)
+    			)
+    			.get();
+    	Assert.assertEquals("Response.status", 400, response.getStatus());
     }
 }

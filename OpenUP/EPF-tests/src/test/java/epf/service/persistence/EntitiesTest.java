@@ -31,7 +31,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.Ignore;
 
 /**
  *
@@ -43,17 +42,20 @@ public class EntitiesTest {
     
 	private static URI persistenceUrl;
     private static String token;
+    private static String adminToken;
     private Client client;
     
     @BeforeClass
     public static void beforeClass(){
     	persistenceUrl = RegistryUtil.lookup("persistence", null);
     	token = SecurityUtil.login(null, "any_role1", "any_role");
+    	adminToken = SecurityUtil.login(null, "admin1", "admin");
     }
     
     @AfterClass
     public static void afterClass(){
     	SecurityUtil.logOut(null, token);
+    	SecurityUtil.logOut(null, adminToken);
     }
     
     @Before
@@ -73,8 +75,7 @@ public class EntitiesTest {
     }
     
     @Test
-    @Ignore
-    public void testPersistOK(){
+    public void testPersistOK() throws Exception{
     	Artifact artifact = new Artifact();
         artifact.setName("Artifact 1");
         artifact.setSummary("Artifact 1 Summary");
@@ -83,11 +84,15 @@ public class EntitiesTest {
         artifact.setMoreInformation(new MoreInformation());
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
-        artifact = Entities.persist(client, Artifact.class, EPF.SCHEMA, EPF.ARTIFACT, artifact);
-        Assert.assertNotNull("Artifact", artifact);
-        Assert.assertEquals("Artifact.name", "Artifact 1", artifact.getName());
-        Assert.assertEquals("Artifact.summary", "Artifact 1 Summary", artifact.getSummary());
-        Entities.remove(client, EPF.SCHEMA, EPF.ARTIFACT, artifact.getName());
+        Artifact updatedArtifact = null;
+        try(Client adminClient = ClientUtil.newClient(persistenceUrl)){
+        	adminClient.authorization(adminToken);
+        	updatedArtifact = Entities.persist(adminClient, Artifact.class, EPF.SCHEMA, EPF.ARTIFACT, artifact);
+            Entities.remove(adminClient, EPF.SCHEMA, EPF.ARTIFACT, artifact.getName());
+        }
+        Assert.assertNotNull("Artifact", updatedArtifact);
+        Assert.assertEquals("Artifact.name", "Artifact 1", updatedArtifact.getName());
+        Assert.assertEquals("Artifact.summary", "Artifact 1 Summary", updatedArtifact.getSummary());
     }
     
     @Test(expected = ForbiddenException.class)

@@ -19,9 +19,9 @@ import javax.inject.Named;
  * @author PC
  *
  */
-public class WebAppUtil {
+public class WebDriverUtil {
 	
-	private static Logger LOGGER = Logging.getLogger(WebAppUtil.class.getName());
+	private static Logger LOGGER = Logging.getLogger(WebDriverUtil.class.getName());
 
 	@Produces
 	public static WebDriver newWebDriver() {
@@ -33,7 +33,7 @@ public class WebAppUtil {
 	}
 	
 	@Produces @Named("WEB_APP_URL")
-	public static URL getWebAppURL() {
+	public static URL getDefaultURL() {
 		URL url = null;
 		try {
 			url = new URL(System.getProperty(ConfigNames.WEB_APP_URL, ""));

@@ -22,6 +22,8 @@ import javax.persistence.Embedded;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.schema.EPF;
+import epf.schema.EntityListener;
+import javax.persistence.EntityListeners;
 
 /**
  *
@@ -35,6 +37,7 @@ import epf.schema.EPF;
     "name",
     "fulfilledSlots"
 })
+@EntityListeners({EntityListener.class})
 public class Artifact {
 
     /**

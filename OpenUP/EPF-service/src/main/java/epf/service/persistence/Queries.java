@@ -120,7 +120,7 @@ public class Queries implements epf.client.persistence.Queries {
 		final TypedQuery<SearchData> query = cache.createNamedQuery(
 				EPF.SCHEMA, 
 				context.getUserPrincipal(), 
-				QueryNames.FULL_TEXT_SEARCH, 
+				QueryNames.FT_SEARCH_DATA, 
 				SearchData.class
 				);
 		query.setFirstResult(firstResult);

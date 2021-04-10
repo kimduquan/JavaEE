@@ -6,12 +6,11 @@
 package epf.service.security;
 
 import static epf.client.security.Security.AUDIENCE_URL_FORMAT;
+
 import java.net.URI;
 import java.net.URL;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.client.Entity;
@@ -30,7 +29,6 @@ import epf.schema.EPF;
 import epf.service.ClientUtil;
 import epf.service.RegistryUtil;
 import epf.util.client.Client;
-import epf.util.logging.Logging;
 import epf.util.security.PasswordHelper;
 
 /**
@@ -39,7 +37,6 @@ import epf.util.security.PasswordHelper;
  */
 public class SecurityTest {
 	
-	private static final Logger logger = Logging.getLogger(SecurityTest.class.getName());
 	private static URI securityUrl;
     
     @BeforeClass
@@ -89,35 +86,33 @@ public class SecurityTest {
     }
     
     @Test
-    public void testLoginOK() {
-		try {
-			String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
-	        Assert.assertNotNull("Token", token);
-	        Assert.assertNotEquals("Token", "", token);
-	        logOut(token, null);
-		} 
-		catch (Exception e) {
-			logger.log(Level.SEVERE, "testLoginOK", e);
-		}
+    public void testLoginOK() throws Exception {
+    	String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
+        Assert.assertNotNull("Token", token);
+        Assert.assertNotEquals("Token", "", token);
+        logOut(token, null);
     }
     
     @Test
-    public void testLoginOKAfterLoginInvalidPassword() {
+    public void testLoginOK_Admin() throws Exception {
+    	String token = login(null, "admin1", "admin", securityUrl.toURL(), true);
+        Assert.assertNotNull("Token", token);
+        Assert.assertNotEquals("Token", "", token);
+        logOut(token, null);
+    }
+    
+    @Test
+    public void testLoginOKAfterLoginInvalidPassword() throws Exception {
         Assert.assertThrows(
         		NotAuthorizedException.class, 
                 () -> {
                     login(null, "any_role1", "Invalid", securityUrl.toURL(), true);
                 }
         );
-        try {
-			String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
-			Assert.assertNotNull("Token", token);
-			Assert.assertNotEquals("Token", "", token);
-			logOut(token, null);
-		} 
-        catch (Exception e) {
-			logger.log(Level.SEVERE, "testLoginOKAfterLoginInvalidPassword", e);
-		}
+        String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
+		Assert.assertNotNull("Token", token);
+		Assert.assertFalse("Token", token.isEmpty());
+		logOut(token, null);
     }
     
     @Test(expected = BadRequestException.class)
@@ -210,11 +205,11 @@ public class SecurityTest {
     public void testAuthenticateOK() throws Exception{
         String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
         Token jwt = authenticate(token, null);
-        Assert.assertNotNull("JWT", jwt);
-        Assert.assertNotNull("Audience", jwt.getAudience());
-        Assert.assertEquals("Audience.size", 1, jwt.getAudience().size());
+        Assert.assertNotNull("Token", jwt);
+        Assert.assertNotNull("Token.audience", jwt.getAudience());
+        Assert.assertEquals("Token.audience.size", 1, jwt.getAudience().size());
         Assert.assertArrayEquals(
-                "Audience", 
+                "Token.audience", 
                 new String[]{
                     String.format(
                             AUDIENCE_URL_FORMAT, 
@@ -225,36 +220,36 @@ public class SecurityTest {
                 }, 
                 jwt.getAudience().toArray()
         );
-        Assert.assertTrue("ExpirationTime", jwt.getExpirationTime() > 0);
-        Assert.assertTrue("ExpirationTime", jwt.getExpirationTime() > jwt.getIssuedAtTime());
-        Assert.assertNotNull("Groups", jwt.getGroups());
-        Assert.assertEquals("Groups.size", 
+        Assert.assertTrue("Token.expirationTime", jwt.getExpirationTime() > 0);
+        Assert.assertTrue("Token.expirationTime", jwt.getExpirationTime() > jwt.getIssuedAtTime());
+        Assert.assertNotNull("Token.groups", jwt.getGroups());
+        Assert.assertEquals("Token.groups.size", 
                 1, 
                 jwt.getGroups().size()
         );
         Assert.assertArrayEquals(
-                "Groups", 
+                "Token.groups", 
                 new String[]{
                     "Any_Role"
                 }, 
                 jwt.getGroups().toArray()
         );
-        Assert.assertTrue("IssuedAtTqime", jwt.getIssuedAtTime() > 0);
+        Assert.assertTrue("Token.issuedAtTime", jwt.getIssuedAtTime() > 0);
         Duration duration = Duration.between( 
                 Instant.ofEpochSecond(jwt.getIssuedAtTime()),
                 Instant.ofEpochSecond(jwt.getExpirationTime())
         );
         Assert.assertEquals("duration", 30, duration.toMinutes());
-        Assert.assertNotNull("Issuer", jwt.getIssuer());
-        Assert.assertEquals("Issuer", EPF.SCHEMA, jwt.getIssuer());
-        Assert.assertNotNull("Name", jwt.getName());
-        Assert.assertEquals("Name", "any_role1", jwt.getName());
-        Assert.assertNotNull("RawToken", jwt.getRawToken());
-        Assert.assertEquals("RawToken", token, jwt.getRawToken());
-        Assert.assertNotNull("Subject", jwt.getSubject());
-        Assert.assertEquals("Subject", "any_role1", jwt.getSubject());
-        Assert.assertNotNull("TokenID", jwt.getTokenID());
-        Assert.assertNotEquals("TokenID", "", jwt.getTokenID());
+        Assert.assertNotNull("Token.issuer", jwt.getIssuer());
+        Assert.assertEquals("Token.issuer", EPF.SCHEMA, jwt.getIssuer());
+        Assert.assertNotNull("Token.name", jwt.getName());
+        Assert.assertEquals("Token.name", "any_role1", jwt.getName());
+        Assert.assertNotNull("Token.rawToken", jwt.getRawToken());
+        Assert.assertEquals("Token.rawToken", token, jwt.getRawToken());
+        Assert.assertNotNull("Token.subject", jwt.getSubject());
+        Assert.assertEquals("Token.subject", "any_role1", jwt.getSubject());
+        Assert.assertNotNull("Token.tokenID", jwt.getTokenID());
+        Assert.assertNotEquals("Token.tokenID", "", jwt.getTokenID());
         logOut(token, null);
     }
     
@@ -280,7 +275,6 @@ public class SecurityTest {
         authenticate(token, null);
     }
     
-    //@Ignore
     @Test
     public void testLogoutEmptyUnit() throws Exception{
         String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);

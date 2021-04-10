@@ -18,10 +18,10 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.schema.EPF;
+import epf.schema.QueryNames;
 
 /**
  *
@@ -35,7 +35,7 @@ import epf.schema.EPF;
         name = DeliveryProcess.DELIVERY_PROCESSES, 
         query = "SELECT dp FROM EPF_DeliveryProcess AS dp"
 )
-@NamedNativeQuery(name = DeliveryProcess.FULL_TEXT_SEARCH, query = "SELECT * FROM FT_SEARCH_DATA(?, ?, ?);")
+@NamedNativeQuery(name = QueryNames.FT_SEARCH_DATA, query = "SELECT * FROM FT_SEARCH_DATA(?, ?, ?);")
 public class DeliveryProcess {
 	
     /**
@@ -84,10 +84,6 @@ public class DeliveryProcess {
      * 
      */
     public static final String DELIVERY_PROCESSES = "EPF_DeliveryProcess.DeliveryProcesses";
-    /**
-     * 
-     */
-    public static final String FULL_TEXT_SEARCH = "EPF.FullTextSearch";
 
     public String getName() {
         return name;

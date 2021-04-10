@@ -8,5 +8,5 @@ public interface QueryNames {
 	/**
 	 * 
 	 */
-	String FULL_TEXT_SEARCH = "EPF.FulltextSearch";
+	String FT_SEARCH_DATA = "EPF.FulltextSearch";
 }

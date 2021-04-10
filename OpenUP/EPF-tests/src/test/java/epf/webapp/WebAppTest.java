@@ -3,9 +3,7 @@
  */
 package epf.webapp;
 
-import java.net.URL;
 import javax.inject.Inject;
-import javax.inject.Named;
 import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.After;
 import org.junit.Before;
@@ -13,7 +11,8 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.MethodRule;
-import org.openqa.selenium.WebDriver;
+import epf.webapp.page.DefaultPage;
+import epf.webapp.page.impl.DefaultPageImpl;
 
 /**
  * @author PC
@@ -22,7 +21,12 @@ import org.openqa.selenium.WebDriver;
 public class WebAppTest {
 	
 	@ClassRule
-    public static WeldInitiator weld = WeldInitiator.from(WebAppUtil.class, WebAppTest.class).build();
+    public static WeldInitiator weld = WeldInitiator.from(
+    		WebDriverUtil.class, 
+    		WebAppTest.class,
+    		DefaultPageImpl.class
+    		)
+    .build();
 	
 	@Rule
     public MethodRule testClassInjectorRule = weld.getTestClassInjectorRule();
@@ -42,14 +46,11 @@ public class WebAppTest {
 	}
 	
 	@Inject
-	WebDriver webDriver;
-	
-	@Inject @Named("WEB_APP_URL")
-	URL webAppUrl;
+	DefaultPage defaultPage;
 
 	@Test
 	public void test() {
-		webDriver.navigate().to(webAppUrl);
+		defaultPage.linkWorkProducts().click();
 	}
 
 }
