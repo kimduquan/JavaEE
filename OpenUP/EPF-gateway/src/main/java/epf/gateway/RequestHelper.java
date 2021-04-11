@@ -35,7 +35,7 @@ import epf.util.Var;
  * @author PC
  *
  */
-public final class RequestBuilder {
+public final class RequestHelper {
 	
 	/**
 	 * 
@@ -45,7 +45,7 @@ public final class RequestBuilder {
 	/**
 	 * 
 	 */
-	private RequestBuilder(){
+	private RequestHelper(){
 		
 	}
 
@@ -177,12 +177,14 @@ public final class RequestBuilder {
      * @return
      */
     public static Link buildLink(final Link link, final UriInfo uriInfo) {
-    	final String[] paths = link.getUri().getPath().split("/");
+    	final URI linkUri = link.getUri();
+    	final String[] linkPaths = linkUri.getPath().split("/");
     	String path = "";
-    	if(paths.length > MIN_PATHS_COUNT) {
-    		path = String.join("/", Arrays.asList(paths).subList(2, paths.length));
+    	if(linkPaths.length > MIN_PATHS_COUNT) {
+    		path = String.join("/", Arrays.asList(linkPaths).subList(2, linkPaths.length));
     	}
-    	final URI uri = uriInfo.getBaseUriBuilder().path(path).build();
+    	final String linkScheme = linkUri.getScheme();
+    	final URI uri = uriInfo.getBaseUriBuilder().path(path).scheme(linkScheme).build();
     	return Link.fromLink(link).uri(uri).build();
     }
     

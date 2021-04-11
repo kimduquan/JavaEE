@@ -40,4 +40,8 @@ public interface ConfigNames {
      * 
      */
     String WEB_APP_URL = "epf.webapp.url";
+    /**
+     * 
+     */
+    String MESSAGING_URL = "epf.messaging.url";
 }

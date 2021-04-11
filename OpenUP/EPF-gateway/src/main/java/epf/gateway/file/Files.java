@@ -40,6 +40,14 @@ public class Files {
     @Inject
     private transient Request request;
     
+    /**
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @param paths
+     * @param body
+     * @return
+     */
     @POST
 	@Path("{paths: .+}")
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
@@ -58,6 +66,13 @@ public class Files {
         return request.request(body);
     }
     
+    /**
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @param paths
+     * @return
+     */
     @GET
     @Path("{paths: .+}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
@@ -74,6 +89,13 @@ public class Files {
         return request.request(null);
     }
     
+    /**
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @param paths
+     * @return
+     */
     @DELETE
     @Path("{paths: .+}")
     public CompletionStage<Response> delete(

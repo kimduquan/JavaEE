@@ -18,6 +18,7 @@ import org.junit.Test;
 import epf.client.config.ConfigNames;
 import epf.client.registry.Registry;
 import epf.service.ClientUtil;
+import epf.service.MessagingUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
 
@@ -72,6 +73,9 @@ public class RegistryTest {
 	    	expected.add(new URI(base.toString() + "/schema"));
 	    	expected.add(new URI(base.toString() + "/security"));
 	    	expected.add(new URI(base.toString() + "/system"));
+	    	
+	    	base = UriBuilder.fromUri(registryUrl).replacePath(path).scheme("wss").build();
+	    	expected.add(new URI(base.toString() + "/cache"));
 		} 
     	catch (URISyntaxException e) {
 			logger.log(Level.SEVERE, "testList_OK", e);

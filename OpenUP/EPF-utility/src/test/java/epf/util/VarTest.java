@@ -17,8 +17,8 @@ public class VarTest {
 	 */
 	@Test
 	public void testVar() {
-		Var<String> var = new Var<>();
-		Assert.assertNull("var", var.get());
+		final Var<String> var = new Var<>();
+		Assert.assertNull(var.get());
 	}
 
 	/**
@@ -26,9 +26,9 @@ public class VarTest {
 	 */
 	@Test
 	public void testVarT() {
-		Var<String> var = new Var<>("var");
-		Assert.assertNotNull("var", var.get());
-		Assert.assertEquals("var", "var", var.get());
+		final Var<String> var = new Var<>("var");
+		Assert.assertNotNull(var.get());
+		Assert.assertEquals("var", var.get());
 	}
 
 	/**
@@ -36,11 +36,11 @@ public class VarTest {
 	 */
 	@Test
 	public void testSetT() {
-		Var<String> var = new Var<>("");
+		final Var<String> var = new Var<>("");
 		var.set("var");
-		Assert.assertEquals("var", "var", var.get());
+		Assert.assertEquals("var", var.get());
 		var.set("var1");
-		Assert.assertEquals("var", "var1", var.get());
+		Assert.assertEquals("var1", var.get());
 	}
 
 	/**
@@ -48,11 +48,11 @@ public class VarTest {
 	 */
 	@Test
 	public void testGet() {
-		Var<String> var = new Var<>();
+		final Var<String> var = new Var<>();
 		var.set("");
-		Assert.assertEquals("var", "", var.get());
+		Assert.assertEquals("", var.get());
 		var.set("var");
-		Assert.assertEquals("var", "var", var.get());
+		Assert.assertEquals("var", var.get());
 	}
 
 	/**
@@ -60,17 +60,17 @@ public class VarTest {
 	 */
 	@Test
 	public void testSetFunctionOfTT() {
-		Var<String> var = new Var<>();
+		final Var<String> var = new Var<>();
 		var.set(v -> {
-			Assert.assertNull("var", v);
+			Assert.assertNull(v);
 			return "var";
 		});
-		Assert.assertEquals("var", "var", var.get());
+		Assert.assertEquals("var", var.get());
 		var.set(v -> {
-			Assert.assertEquals("var", "var", v);
+			Assert.assertEquals("var", v);
 			return "";
 		});
-		Assert.assertEquals("var", "", var.get());
+		Assert.assertEquals("", var.get());
 	}
 
 	/**
@@ -78,17 +78,17 @@ public class VarTest {
 	 */
 	@Test
 	public void testGetConsumerOfT() {
-		Var<String> var = new Var<>();
+		final Var<String> var = new Var<>();
 		var.get(v -> {
-			Assert.assertNull("var", v);
+			Assert.assertNull(v);
 		});
 		var.set("var");
 		var.get(v -> {
-			Assert.assertEquals("var", "var", v);
+			Assert.assertEquals("var", v);
 		});
 		var.set("");
 		var.get(v -> {
-			Assert.assertEquals("var", "", v);
+			Assert.assertEquals("", v);
 		});
 	}
 

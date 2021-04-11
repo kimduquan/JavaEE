@@ -17,6 +17,7 @@
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
         <liberty.env.epf.service.url>https://localhost:9443/service/</liberty.env.epf.service.url>
+        <liberty.env.epf.messaging.url>wss://localhost:9443/service/messaging/</liberty.env.epf.messaging.url>
         <liberty.env.epf.registry.url>https://localhost:9443/gateway/registry/</liberty.env.epf.registry.url>
 		<liberty.env.epf.webapp.url>https://localhost:9443/webapp/</liberty.env.epf.webapp.url>
 		<liberty.env.epf.tests.file.root>target/servers/test/epf.file.root</liberty.env.epf.tests.file.root>
@@ -38,6 +39,22 @@
             <groupId>javax.cache</groupId>
             <artifactId>cache-api</artifactId>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api -->
+		<dependency>
+		    <groupId>javax.websocket</groupId>
+		    <artifactId>javax.websocket-api</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.jetty.websocket/javax-websocket-client-impl -->
+		<dependency>
+		    <groupId>org.eclipse.jetty.websocket</groupId>
+		    <artifactId>javax-websocket-client-impl</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.glassfish/javax.json -->
+        <dependency>
+		    <groupId>org.glassfish</groupId>
+		    <artifactId>javax.json</artifactId>
+		    <scope>test</scope>
+		</dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-client</artifactId>
@@ -120,6 +137,7 @@
                     <systemPropertyVariables>
                         <epf.service.url>https://localhost:${httpsPort}/service/</epf.service.url>
                         <epf.registry.url>https://localhost:${httpsPort}/gateway/registry/</epf.registry.url>
+                        <epf.messaging.url>wss://localhost:${httpsPort}/service/messaging/</epf.messaging.url>
                         <epf.webapp.url>https://localhost:${httpsPort}/webapp/</epf.webapp.url>
                         <epf.tests.file.root>target/servers/test/epf.file.root</epf.tests.file.root>
                         <webdriver.chrome.driver>chromedriver.exe</webdriver.chrome.driver>
