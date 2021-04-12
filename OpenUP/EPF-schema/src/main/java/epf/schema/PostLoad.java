@@ -3,6 +3,9 @@
  */
 package epf.schema;
 
+import javax.json.bind.annotation.JsonbCreator;
+import javax.json.bind.annotation.JsonbProperty;
+
 /**
  * @author PC
  *
@@ -13,12 +16,16 @@ public class PostLoad {
 	 * 
 	 */
 	private Object entity;
+	
+	/**
+	 * @param entity
+	 */
+	@JsonbCreator
+	public PostLoad(@JsonbProperty("entity") final Object entity) {
+		this.entity = entity;
+	}
 
 	public Object getEntity() {
 		return entity;
-	}
-
-	public void setEntity(final Object entity) {
-		this.entity = entity;
 	}
 }
