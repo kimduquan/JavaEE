@@ -54,6 +54,19 @@
 			    <version>1.1.4</version>
                 <scope>test</scope>
 			</dependency>
+			<!-- https://mvnrepository.com/artifact/javax.json.bind/javax.json.bind-api -->
+			<dependency>
+			    <groupId>javax.json.bind</groupId>
+			    <artifactId>javax.json.bind-api</artifactId>
+			    <version>1.0</version>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.eclipse/yasson -->
+			<dependency>
+			    <groupId>org.eclipse</groupId>
+			    <artifactId>yasson</artifactId>
+			    <version>1.0.2</version>
+			    <scope>test</scope>
+			</dependency>
             <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
             <dependency>
                 <groupId>com.h2database</groupId>

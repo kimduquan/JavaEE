@@ -6,6 +6,7 @@ package epf.util.websocket;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import javax.websocket.ClientEndpointConfig;
 import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
 import org.junit.After;
@@ -25,6 +26,7 @@ public class ClientTest {
 	WebSocketContainer container;
 	URI uri;
 	Session session;
+	ClientEndpointConfig config;
 	Client client;
 
 	/**
@@ -49,8 +51,9 @@ public class ClientTest {
 		container = Mockito.mock(WebSocketContainer.class);
 		uri = new URI("wss://localhost:9443/cache");
 		session = Mockito.mock(Session.class);
-		Mockito.when(container.connectToServer(Mockito.any(Client.class), Mockito.same(uri))).thenReturn(session);
-		client = Client.connectToServer(container, uri);
+		config = Mockito.mock(ClientEndpointConfig.class);
+		Mockito.when(container.connectToServer(Mockito.any(Client.class), Mockito.same(config), Mockito.same(uri))).thenReturn(session);
+		client = Client.connectToServer(container, config, uri);
 	}
 
 	/**
@@ -119,7 +122,11 @@ public class ClientTest {
 	public void testConnectToServer() throws Exception {
 		Assert.assertNotNull("Client", client);
 		Assert.assertSame("Client.session", session, client.getSession());
-		Mockito.verify(container, Mockito.times(1)).connectToServer(Mockito.same(client), Mockito.same(uri));
+		Mockito.verify(container, Mockito.times(1)).connectToServer(Mockito.same(client), Mockito.same(config), Mockito.same(uri));
 	}
 
+	@Test
+	public void testOnOpen() {
+		client.onOpen(session, null);
+	}
 }

@@ -18,13 +18,15 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+import epf.client.messaging.MessageDecoder;
+import epf.client.messaging.MessageEncoder;
 import epf.util.websocket.Server;
 
 /**
  * @author PC
  *
  */
-@ServerEndpoint("/messaging/{path}")
+@ServerEndpoint(value = "/messaging/{path}", encoders = {MessageEncoder.class}, decoders = {MessageDecoder.class})
 @ApplicationScoped
 public class Messaging {
 	
@@ -87,7 +89,7 @@ public class Messaging {
 	 * @param session
 	 */
 	@OnMessage
-    public void onMessage(@PathParam(PATH) final String path, final String message, final Session session) {
+    public void onMessage(@PathParam(PATH) final String path, final Object message, final Session session) {
 		servers.computeIfPresent(path, (p, server) -> {
 			server.onMessage(message, session);
 			return server;

@@ -12,16 +12,13 @@ public class PostPersist {
 	/**
 	 * 
 	 */
-	private final Object entity;
-	
-	/**
-	 * @param entity
-	 */
-	public PostPersist(final Object entity) {
-		this.entity = entity;
-	}
+	private Object entity;
 
 	public Object getEntity() {
 		return entity;
+	}
+
+	public void setEntity(final Object entity) {
+		this.entity = entity;
 	}
 }

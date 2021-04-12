@@ -47,7 +47,9 @@ public class EntityListener {
 	 */
 	@PostLoad
 	protected void postLoad(final Object entity) {
-		loadEvent.fire(new epf.schema.PostLoad(entity));
+		final epf.schema.PostLoad event = new epf.schema.PostLoad();
+		event.setEntity(entity);
+		loadEvent.fire(event);
 	}
 	
 	/**
@@ -55,7 +57,9 @@ public class EntityListener {
 	 */
 	@PostPersist
 	protected void postPersist(final Object entity) {
-		persistEvent.fire(new epf.schema.PostPersist(entity));
+		final epf.schema.PostPersist event = new epf.schema.PostPersist();
+		event.setEntity(entity);
+		persistEvent.fire(event);
 	}
 	
 	/**
@@ -63,7 +67,9 @@ public class EntityListener {
 	 */
 	@PostRemove
 	protected void postRemove(final Object entity) {
-		removeEvent.fire(new epf.schema.PostRemove(entity));
+		final epf.schema.PostRemove event = new epf.schema.PostRemove();
+		event.setEntity(entity);
+		removeEvent.fire(event);
 	}
 	
 	/**
@@ -71,6 +77,8 @@ public class EntityListener {
 	 */
 	@PostUpdate
 	protected void postUpdate(final Object entity) {
-		updateEvent.fire(new epf.schema.PostUpdate(entity));
+		final epf.schema.PostUpdate event = new epf.schema.PostUpdate();
+		event.setEntity(entity);
+		updateEvent.fire(event);
 	}
 }

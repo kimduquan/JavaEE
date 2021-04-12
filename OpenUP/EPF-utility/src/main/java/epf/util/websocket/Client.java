@@ -7,7 +7,10 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.function.Consumer;
 import javax.websocket.ClientEndpoint;
+import javax.websocket.ClientEndpointConfig;
 import javax.websocket.DeploymentException;
+import javax.websocket.Endpoint;
+import javax.websocket.EndpointConfig;
 import javax.websocket.OnMessage;
 import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
@@ -17,7 +20,7 @@ import javax.websocket.WebSocketContainer;
  *
  */
 @ClientEndpoint
-public class Client implements AutoCloseable {
+public class Client extends Endpoint implements AutoCloseable {
 	
 	/**
 	 * 
@@ -50,7 +53,7 @@ public class Client implements AutoCloseable {
 	 * @param session
 	 */
 	@OnMessage
-    public void onMessage(final String message, final Session session) {
+    public void onMessage(final Object message, final Session session) {
 		if(messageConsumer != null) {
 			messageConsumer.accept(message);
 		}
@@ -73,10 +76,15 @@ public class Client implements AutoCloseable {
 	 */
 	public static Client connectToServer(
 			final WebSocketContainer container, 
+			final ClientEndpointConfig config,
 			final URI uri) throws DeploymentException, IOException {
 		final Client client = new Client();
-		final Session session = container.connectToServer(client, uri);
+		final Session session = container.connectToServer(client, config, uri);
 		client.session = session;
 		return client;
+	}
+
+	@Override
+	public void onOpen(final Session session, final EndpointConfig config) {
 	}
 }

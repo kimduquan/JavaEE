@@ -12,16 +12,13 @@ public class PostRemove {
 	/**
 	 * 
 	 */
-	private final Object entity;
-	
-	/**
-	 * @param entity
-	 */
-	public PostRemove(final Object entity) {
-		this.entity = entity;
-	}
+	private Object entity;
 
 	public Object getEntity() {
 		return entity;
+	}
+
+	public void setEntity(final Object entity) {
+		this.entity = entity;
 	}
 }

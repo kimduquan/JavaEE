@@ -69,7 +69,7 @@ public class Server implements AutoCloseable {
      * @param session
      */
     @OnMessage
-    public void onMessage(final String message, final Session session) {
+    public void onMessage(final Object message, final Session session) {
     	messageCount.incrementAndGet();
 	}
     

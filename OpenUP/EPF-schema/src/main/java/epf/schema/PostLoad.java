@@ -12,16 +12,13 @@ public class PostLoad {
 	/**
 	 * 
 	 */
-	private final Object entity;
-	
-	/**
-	 * @param entity
-	 */
-	public PostLoad(final Object entity) {
-		this.entity = entity;
-	}
+	private Object entity;
 
 	public Object getEntity() {
 		return entity;
+	}
+
+	public void setEntity(final Object entity) {
+		this.entity = entity;
 	}
 }
