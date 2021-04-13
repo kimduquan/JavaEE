@@ -28,7 +28,7 @@ import epf.util.websocket.Server;
  */
 @ServerEndpoint(value = "/messaging/{path}", encoders = {MessageEncoder.class}, decoders = {MessageDecoder.class})
 @ApplicationScoped
-public class Messaging {
+public class Messaging implements epf.client.messaging.Messaging {
 	
 	/**
 	 * 
@@ -114,10 +114,15 @@ public class Messaging {
 	 * @param path
 	 * @param consumer
 	 */
-	public void forEach(final String path, final Consumer<? super Session> consumer) {
+	protected void forEach(final String path, final Consumer<? super Session> consumer) {
 		servers.computeIfPresent(path, (p, server) -> {
 			server.forEach(consumer);
 			return server;
 		});
+	}
+
+	@Override
+	public void sendObject(final String path, final Object object) {
+		forEach(path, session -> session.getAsyncRemote().sendObject(object));
 	}
 }

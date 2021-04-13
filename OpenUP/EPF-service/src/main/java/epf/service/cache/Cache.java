@@ -6,10 +6,10 @@ package epf.service.cache;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+import epf.client.messaging.Messaging;
 import epf.schema.PostPersist;
 import epf.schema.PostRemove;
 import epf.schema.PostUpdate;
-import epf.service.messaging.Messaging;
 
 /**
  * @author PC
@@ -28,20 +28,20 @@ public class Cache {
 	 * @param event
 	 */
 	public void postPersist(@Observes final PostPersist event) {
-		messaging.forEach("cache", session -> session.getAsyncRemote().sendObject(event));
+		messaging.sendObject("cache", event);
 	}
 	
 	/**
 	 * @param event
 	 */
 	public void postRemove(@Observes final PostRemove event) {
-		messaging.forEach("cache", session -> session.getAsyncRemote().sendObject(event));
+		messaging.sendObject("cache", event);
 	}
 	
 	/**
 	 * @param event
 	 */
 	public void postUpdate(@Observes final PostUpdate event) {
-		messaging.forEach("cache", session -> session.getAsyncRemote().sendObject(event));
+		messaging.sendObject("cache", event);
 	}
 }

@@ -27,4 +27,6 @@ public interface Messaging {
 		client.setSession(session);
 		return client;
 	}
+	
+	void sendObject(String path, Object object);
 }
