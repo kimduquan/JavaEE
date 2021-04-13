@@ -16,6 +16,6 @@ import epf.client.messaging.Messaging;
 public class CacheUtil {
 	
 	public static Client connectToServer() throws DeploymentException, IOException, URISyntaxException {
-		return Messaging.connectToServer(MessagingUtil.getMessagingUrl().resolve("cache"));
+		return Messaging.connectToServer(MessagingUtil.getMessagingUrl(), "cache");
 	}
 }

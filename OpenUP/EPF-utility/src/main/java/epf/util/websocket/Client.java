@@ -83,6 +83,22 @@ public class Client extends Endpoint implements AutoCloseable {
 		client.session = session;
 		return client;
 	}
+	
+	/**
+	 * @param container
+	 * @param uri
+	 * @return
+	 * @throws DeploymentException
+	 * @throws IOException
+	 */
+	public static Client connectToServer(
+			final WebSocketContainer container,
+			final URI uri) throws DeploymentException, IOException {
+		final Client client = new Client();
+		final Session session = container.connectToServer(client, uri);
+		client.session = session;
+		return client;
+	}
 
 	@Override
 	public void onOpen(final Session session, final EndpointConfig config) {

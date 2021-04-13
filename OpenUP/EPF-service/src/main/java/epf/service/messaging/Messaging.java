@@ -92,6 +92,7 @@ public class Messaging {
     public void onMessage(@PathParam(PATH) final String path, final Object message, final Session session) {
 		servers.computeIfPresent(path, (p, server) -> {
 			server.onMessage(message, session);
+			server.forEach(ss -> ss.getAsyncRemote().sendObject(message));
 			return server;
 		});
 	}

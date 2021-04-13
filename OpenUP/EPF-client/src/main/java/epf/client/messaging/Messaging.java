@@ -21,9 +21,9 @@ public interface Messaging {
 	 * @throws DeploymentException
 	 * @throws IOException
 	 */
-	static Client connectToServer(final URI uri) throws DeploymentException, IOException {
+	static Client connectToServer(final URI uri, final String path) throws DeploymentException, IOException {
 		final Client client = new Client();
-		final Session session = ContainerProvider.getWebSocketContainer().connectToServer(client, uri);
+		final Session session = ContainerProvider.getWebSocketContainer().connectToServer(client, uri.resolve(path));
 		client.setSession(session);
 		return client;
 	}

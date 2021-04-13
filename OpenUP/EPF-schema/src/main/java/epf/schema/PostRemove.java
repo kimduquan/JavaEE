@@ -15,7 +15,7 @@ public class PostRemove {
 	/**
 	 * 
 	 */
-	private Object entity;
+	private transient final Object entity;
 	
 	/**
 	 * @param entity

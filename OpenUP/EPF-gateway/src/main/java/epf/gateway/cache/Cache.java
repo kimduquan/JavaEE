@@ -53,7 +53,6 @@ public class Cache {
 		try {
 			final URI cacheUri = new URI(System.getenv("epf.messaging.url")).resolve("cache");
 			client = Client.connectToServer(ContainerProvider.getWebSocketContainer(), cacheUri);
-			client.onMessage(this::sendObject);
 		} 
 		catch (Exception e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
@@ -82,8 +81,8 @@ public class Cache {
 	/**
 	 * @param message
 	 */
-	protected void sendObject(final Object message) {
-		server.forEach(session -> session.getAsyncRemote().sendObject(message));
+	protected void logMessage(final Object message) {
+		logger.info(String.valueOf(message));
 	}
 	
 	/**
