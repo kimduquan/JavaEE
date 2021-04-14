@@ -3,13 +3,13 @@ package epf.service.messaging;
 import java.net.URI;
 import java.time.Duration;
 import java.util.HashMap;
-import javax.websocket.ContainerProvider;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import epf.client.messaging.MessageDecoder;
+import epf.client.messaging.Client;
+import epf.client.messaging.Messaging;
 import epf.client.persistence.Entities;
 import epf.schema.EPF;
 import epf.schema.PostPersist;
@@ -21,10 +21,10 @@ import epf.schema.work_products.section.MoreInformation;
 import epf.schema.work_products.section.Relationships;
 import epf.schema.work_products.section.Tailoring;
 import epf.service.ClientUtil;
+import epf.service.MessagingUtil;
 import epf.service.RegistryUtil;
 import epf.service.SecurityUtil;
 import epf.service.TestUtil;
-import epf.util.websocket.Client;
 import org.junit.Test;
 
 public class MessagingTest {
@@ -37,7 +37,7 @@ public class MessagingTest {
     @BeforeClass
     public static void beforeClass() throws Exception{
     	persistenceUrl = RegistryUtil.lookup("persistence", null);
-    	cacheUrl = RegistryUtil.lookup("cache", null);
+    	cacheUrl = MessagingUtil.getMessagingUrl().resolve("cache");
     	token = SecurityUtil.login(null, "admin1", "admin");
     }
     
@@ -53,7 +53,7 @@ public class MessagingTest {
     
     @Before
     public void before() throws Exception {
-    	client = Client.connectToServer(ContainerProvider.getWebSocketContainer(), cacheUrl);
+    	client = Messaging.connectToServer(cacheUrl);
     	TestUtil.waitUntil(t -> client.getSession().isOpen(), Duration.ofSeconds(10));
     }
 
@@ -73,15 +73,11 @@ public class MessagingTest {
             Entities.remove(persistenceClient, EPF.SCHEMA, EPF.ARTIFACT, artifact.getName());
     	}
     	
-    	TestUtil.waitUntil((t) -> client.getMessages().stream().anyMatch(msg -> msg.contains(PostPersist.class.getName())), Duration.ofSeconds(10));
-    	TestUtil.waitUntil((t) -> client.getMessages().stream().anyMatch(msg -> msg.contains(PostRemove.class.getName())), Duration.ofSeconds(10));
+    	TestUtil.waitUntil((t) -> client.getMessages().stream().anyMatch(msg -> msg instanceof PostPersist), Duration.ofSeconds(10));
+    	TestUtil.waitUntil((t) -> client.getMessages().stream().anyMatch(msg -> msg instanceof PostRemove), Duration.ofSeconds(10));
     	client.getMessages().forEach(msg -> System.out.println(String.valueOf(msg)));
-    	MessageDecoder decoder = new MessageDecoder();
-    	String message = client.getMessages().stream().filter(msg -> msg.contains(PostPersist.class.getName())).findFirst().get();
-    	PostPersist persist = (PostPersist) decoder.decode(message);
-    	message = client.getMessages().stream().filter(msg -> msg.contains(PostRemove.class.getName())).findFirst().get();
-    	PostRemove remove = (PostRemove) decoder.decode(message);
-    	
+    	PostPersist persist = (PostPersist)client.getMessages().stream().filter(msg -> msg instanceof PostPersist).findFirst().get();
+    	PostRemove remove = (PostRemove)client.getMessages().stream().filter(msg -> msg instanceof PostRemove).findFirst().get();
     	Assert.assertNotNull("PostPersist", persist);
     	Assert.assertTrue("PostPersist.entity", persist.getEntity() instanceof HashMap);
     	@SuppressWarnings("unchecked")
