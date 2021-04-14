@@ -17,16 +17,17 @@
             <type>pom</type>
     		<scope>provided</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/javax/javaee-web-api -->
+		<dependency>
+		    <groupId>javax</groupId>
+		    <artifactId>javaee-web-api</artifactId>
+    		<scope>provided</scope>
+		</dependency>
         <!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.context-propagation/microprofile-context-propagation-api -->
         <dependency>
             <groupId>org.eclipse.microprofile.context-propagation</groupId>
             <artifactId>microprofile-context-propagation-api</artifactId>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api -->
-		<dependency>
-		    <groupId>javax.websocket</groupId>
-		    <artifactId>javax.websocket-api</artifactId>
-		</dependency>
         <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
         <dependency>
             <groupId>com.h2database</groupId>

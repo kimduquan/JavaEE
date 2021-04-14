@@ -120,9 +120,4 @@ public class Messaging implements epf.client.messaging.Messaging {
 			return server;
 		});
 	}
-
-	@Override
-	public void sendObject(final String path, final Object object) {
-		forEach(path, session -> session.getAsyncRemote().sendObject(object));
-	}
 }

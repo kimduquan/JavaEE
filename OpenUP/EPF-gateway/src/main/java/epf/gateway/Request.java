@@ -5,12 +5,14 @@
  */
 package epf.gateway;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.concurrent.CompletionStage;
 import java.util.logging.Logger;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
@@ -93,7 +95,12 @@ public class Request {
                 	if(ex != null) {
                 		logger.throwing(CLASS_NAME, "request", ex);
                 	}
-                    clients.add(uri, client);
+                	if(ex instanceof ProcessingException && ex.getCause() instanceof IOException) {
+                		client.close();
+                	}
+                	else {
+                        clients.add(uri, client);
+                	}
                     logger.exiting(CLASS_NAME, "request");
                 });
     }

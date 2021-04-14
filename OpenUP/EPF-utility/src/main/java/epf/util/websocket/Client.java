@@ -5,6 +5,8 @@ package epf.util.websocket;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 import javax.websocket.ClientEndpoint;
 import javax.websocket.ClientEndpointConfig;
@@ -21,7 +23,7 @@ import javax.websocket.WebSocketContainer;
  */
 @ClientEndpoint
 public class Client extends Endpoint implements AutoCloseable {
-	
+
 	/**
 	 * 
 	 */
@@ -30,13 +32,19 @@ public class Client extends Endpoint implements AutoCloseable {
 	/**
 	 * 
 	 */
-	private transient Consumer<Object> messageConsumer;
+	private transient Consumer<? super String> messageConsumer;
+	
+	/**
+	 * 
+	 */
+	private Queue<String> messages;
 	
 	/**
 	 * 
 	 */
 	protected Client() {
 		super();
+		messages = new ConcurrentLinkedQueue<>();
 	}
 	
 	public Session getSession() {
@@ -46,6 +54,7 @@ public class Client extends Endpoint implements AutoCloseable {
 	@Override
 	public void close() throws Exception {
 		session.close();
+		messages.clear();
 	}
 	
 	/**
@@ -53,16 +62,19 @@ public class Client extends Endpoint implements AutoCloseable {
 	 * @param session
 	 */
 	@OnMessage
-    public void onMessage(final Object message, final Session session) {
+    public void onMessage(final String message, final Session session) {
 		if(messageConsumer != null) {
 			messageConsumer.accept(message);
+		}
+		else {
+			messages.add(message);
 		}
 	}
 	
 	/**
 	 * @param messageConsumer
 	 */
-	public void onMessage(final Consumer<? super Object> messageConsumer) {
+	public void onMessage(final Consumer<? super String> messageConsumer) {
 		this.messageConsumer = messageConsumer;
 	}
 	
@@ -102,5 +114,9 @@ public class Client extends Endpoint implements AutoCloseable {
 
 	@Override
 	public void onOpen(final Session session, final EndpointConfig config) {
+	}
+	
+	public Queue<String> getMessages() {
+		return messages;
 	}
 }

@@ -3,9 +3,18 @@
  */
 package epf.service.cache;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+import javax.websocket.DeploymentException;
+import epf.client.config.ConfigNames;
+import epf.client.messaging.Client;
 import epf.client.messaging.Messaging;
 import epf.schema.PostPersist;
 import epf.schema.PostRemove;
@@ -21,27 +30,52 @@ public class Cache {
 	/**
 	 * 
 	 */
+	private transient Client client;
+	
+	/**
+	 * 
+	 */
 	@Inject
-	private transient Messaging messaging;
+	private transient Logger logger;
+	
+	/**
+	 * 
+	 */
+	@PostConstruct
+	protected void postConstruct() {
+		try {
+			client = Messaging.connectToServer(new URI(System.getenv(ConfigNames.MESSAGING_URL)).resolve("cache"));
+		} 
+		catch (DeploymentException|IOException|URISyntaxException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+		}
+	}
 	
 	/**
 	 * @param event
 	 */
 	public void postPersist(@Observes final PostPersist event) {
-		messaging.sendObject("cache", event);
+		sendObject(event);
 	}
 	
 	/**
 	 * @param event
 	 */
 	public void postRemove(@Observes final PostRemove event) {
-		messaging.sendObject("cache", event);
+		sendObject(event);
 	}
 	
 	/**
 	 * @param event
 	 */
 	public void postUpdate(@Observes final PostUpdate event) {
-		messaging.sendObject("cache", event);
+		sendObject(event);
+	}
+	
+	/**
+	 * @param object
+	 */
+	protected void sendObject(final Object object) {
+		client.getSession().getAsyncRemote().sendObject(object);
 	}
 }

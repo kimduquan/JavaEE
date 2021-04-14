@@ -3,29 +3,10 @@
  */
 package epf.schema;
 
-import javax.json.bind.annotation.JsonbCreator;
-import javax.json.bind.annotation.JsonbProperty;
-
 /**
  * @author PC
  *
  */
-public class PostLoad {
-
-	/**
-	 * 
-	 */
-	private transient final Object entity;
+public class PostLoad extends EntityEvent {
 	
-	/**
-	 * @param entity
-	 */
-	@JsonbCreator
-	public PostLoad(@JsonbProperty("entity") final Object entity) {
-		this.entity = entity;
-	}
-
-	public Object getEntity() {
-		return entity;
-	}
 }

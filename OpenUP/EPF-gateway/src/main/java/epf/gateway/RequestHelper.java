@@ -178,14 +178,28 @@ public final class RequestHelper {
      */
     public static Link buildLink(final Link link, final UriInfo uriInfo) {
     	final URI linkUri = link.getUri();
+    	URI uri = linkUri;
+    	if(!linkUri.getScheme().startsWith("ws")) {
+    		uri = buildUri(link, uriInfo);
+    	}
+    	return Link.fromLink(link).uri(uri).build();
+    }
+    
+    /**
+     * @param link
+     * @param uriInfo
+     * @return
+     */
+    private static URI buildUri(final Link link, final UriInfo uriInfo) {
+    	final URI linkUri = link.getUri();
     	final String[] linkPaths = linkUri.getPath().split("/");
     	String path = "";
     	if(linkPaths.length > MIN_PATHS_COUNT) {
     		path = String.join("/", Arrays.asList(linkPaths).subList(2, linkPaths.length));
     	}
     	final String linkScheme = linkUri.getScheme();
-    	final URI uri = uriInfo.getBaseUriBuilder().path(path).scheme(linkScheme).build();
-    	return Link.fromLink(link).uri(uri).build();
+    	final int linkPort = linkUri.getPort();
+    	return uriInfo.getBaseUriBuilder().path(path).scheme(linkScheme).port(linkPort).build();
     }
     
     /**

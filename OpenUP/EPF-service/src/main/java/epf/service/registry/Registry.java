@@ -14,7 +14,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.core.UriBuilder;
 import epf.client.config.ConfigNames;
 
 /**
@@ -70,8 +69,9 @@ public class Registry implements epf.client.registry.Registry {
 			remotes.put(remote, serviceUrl.resolve(remote));
 			remote = "system";
 			remotes.put(remote, serviceUrl.resolve(remote));
+			final URI messagingUrl = new URI(System.getenv(ConfigNames.MESSAGING_URL));
 			remote = "cache";
-			remotes.put(remote, UriBuilder.fromUri(serviceUrl.resolve(remote)).scheme("wss").build());
+			remotes.put(remote, messagingUrl.resolve(remote));
 		} 
 		catch (Exception e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);

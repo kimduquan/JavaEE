@@ -21,12 +21,10 @@ public interface Messaging {
 	 * @throws DeploymentException
 	 * @throws IOException
 	 */
-	static Client connectToServer(final URI uri, final String path) throws DeploymentException, IOException {
+	static Client connectToServer(URI uri) throws DeploymentException, IOException {
 		final Client client = new Client();
-		final Session session = ContainerProvider.getWebSocketContainer().connectToServer(client, uri.resolve(path));
+		final Session session = ContainerProvider.getWebSocketContainer().connectToServer(client, uri);
 		client.setSession(session);
 		return client;
 	}
-	
-	void sendObject(String path, Object object);
 }

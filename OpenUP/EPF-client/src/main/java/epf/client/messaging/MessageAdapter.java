@@ -11,7 +11,6 @@ import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
-import javax.json.bind.JsonbConfig;
 import javax.json.bind.adapter.JsonbAdapter;
 import epf.util.logging.Logging;
 
@@ -19,27 +18,16 @@ import epf.util.logging.Logging;
  * @author PC
  *
  */
-public class ObjectAdapter implements JsonbAdapter<Object, JsonObject> {
+public class MessageAdapter implements JsonbAdapter<Object, JsonObject> {
 	
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(ObjectAdapter.class.getName());
+	private static final Logger LOGGER = Logging.getLogger(MessageAdapter.class.getName());
 	
-	/**
-	 * 
-	 */
-	public static final ObjectAdapter INSTANCE = new ObjectAdapter();
-	
-	/**
-	 * 
-	 */
-	public static final JsonbConfig CONFIG = new JsonbConfig()
-			.withAdapters(INSTANCE);
-
 	@Override
 	public JsonObject adaptToJson(final Object obj) throws Exception {
-		try(Jsonb jsonb = JsonbBuilder.create(CONFIG)){
+		try(Jsonb jsonb = JsonbBuilder.create()){
 			final String json = jsonb.toJson(obj);
 			try(StringReader reader = new StringReader(json)){
 				try(JsonReader jsonReader = Json.createReader(reader)){
@@ -63,12 +51,12 @@ public class ObjectAdapter implements JsonbAdapter<Object, JsonObject> {
 			final String className = obj.getString("class");
 			final Class<?> cls = Class.forName(className);
 			final JsonObject adaptObject = Json.createObjectBuilder(obj).remove("class").build();
-			try(Jsonb jsonb = JsonbBuilder.create(CONFIG)){
+			try(Jsonb jsonb = JsonbBuilder.create()){
 				return jsonb.fromJson(adaptObject.toString(), cls);
 			}
 		}
 		catch(Exception ex) {
-			LOGGER.log(Level.SEVERE, "adaptToJson", ex);
+			LOGGER.log(Level.SEVERE, "adaptFromJson", ex);
 			throw ex;
 		}
 	}

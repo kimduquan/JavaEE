@@ -3,6 +3,8 @@
  */
 package epf.client.messaging;
 
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 import javax.websocket.ClientEndpoint;
 import javax.websocket.OnMessage;
@@ -14,7 +16,7 @@ import javax.websocket.Session;
  */
 @ClientEndpoint(decoders = {MessageDecoder.class}, encoders = {MessageEncoder.class})
 public class Client implements AutoCloseable {
-	
+
 	/**
 	 * 
 	 */
@@ -23,13 +25,19 @@ public class Client implements AutoCloseable {
 	/**
 	 * 
 	 */
-	private transient Consumer<Object> messageConsumer;
+	private transient Consumer<? super Object> messageConsumer;
+	
+	/**
+	 * 
+	 */
+	private transient final Queue<Object> messages;
 	
 	/**
 	 * 
 	 */
 	protected Client() {
 		super();
+		messages = new ConcurrentLinkedQueue<>();
 	}
 	
 	public Session getSession() {
@@ -39,10 +47,15 @@ public class Client implements AutoCloseable {
 	protected void setSession(final Session session) {
 		this.session = session;
 	}
+	
+	public Queue<Object> getMessages() {
+		return messages;
+	}
 
 	@Override
 	public void close() throws Exception {
 		session.close();
+		messages.clear();
 	}
 	
 	/**
@@ -51,7 +64,10 @@ public class Client implements AutoCloseable {
 	 */
 	@OnMessage
     public void onMessage(final Object message, final Session session) {
-		if(messageConsumer != null) {
+		if(messageConsumer == null) {
+			messages.add(message);
+		}
+		else {
 			messageConsumer.accept(message);
 		}
 	}

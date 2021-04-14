@@ -79,13 +79,6 @@ public class Cache {
 	}
 	
 	/**
-	 * @param message
-	 */
-	protected void logMessage(final Object message) {
-		logger.info(String.valueOf(message));
-	}
-	
-	/**
 	 * @param session
 	 */
 	@OnOpen

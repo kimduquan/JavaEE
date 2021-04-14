@@ -9,6 +9,9 @@ import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
+import javax.json.bind.JsonbConfig;
 import javax.websocket.DecodeException;
 import javax.websocket.Decoder;
 import javax.websocket.EndpointConfig;
@@ -25,6 +28,11 @@ public class MessageDecoder implements Decoder.Text<Object> {
 	 */
 	private static final Logger LOGGER = Logging.getLogger(MessageDecoder.class.getName());
 	
+	/**
+	 * 
+	 */
+	private transient final JsonbConfig config = new JsonbConfig().withAdapters(new MessageAdapter());
+	
 	@Override
 	public void init(final EndpointConfig config) {
 		LOGGER.entering(getClass().getName(), "init");
@@ -32,7 +40,7 @@ public class MessageDecoder implements Decoder.Text<Object> {
 
 	@Override
 	public void destroy() {
-		LOGGER.entering(getClass().getName(), "destroy");
+		LOGGER.exiting(getClass().getName(), "destroy");
 	}
 
 	@Override
@@ -40,7 +48,11 @@ public class MessageDecoder implements Decoder.Text<Object> {
 		try(StringReader reader = new StringReader(string)){
 			try(JsonReader jsonReader = Json.createReader(reader)){
 				final JsonObject jsonObject = jsonReader.readObject();
-				return ObjectAdapter.INSTANCE.adaptFromJson(jsonObject);
+				final String className = jsonObject.getString("class");
+				final Class<?> cls = Class.forName(className);
+				try(Jsonb jsonb = JsonbBuilder.create(config)){
+					return jsonb.fromJson(string, cls);
+				}
 			}
 		}
 		catch (Exception e) {

@@ -97,9 +97,9 @@ public class Server implements AutoCloseable {
 		sessions.values()
     	.parallelStream()
     	.filter(Session::isOpen)
-    	.forEach(t -> {
-			try {
-				t.close();
+    	.forEach(session -> {
+    		try {
+				session.close();
 			} 
 			catch (IOException e) {
 				LOGGER.throwing(Session.class.getName(), "close", e);

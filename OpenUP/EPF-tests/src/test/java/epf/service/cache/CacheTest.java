@@ -2,16 +2,14 @@ package epf.service.cache;
 
 import java.net.URI;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import epf.client.messaging.Client;
+import epf.client.messaging.Messaging;
 import epf.client.persistence.Entities;
 import epf.schema.EPF;
 import epf.schema.PostPersist;
@@ -22,7 +20,6 @@ import epf.schema.work_products.section.Illustrations;
 import epf.schema.work_products.section.MoreInformation;
 import epf.schema.work_products.section.Relationships;
 import epf.schema.work_products.section.Tailoring;
-import epf.service.CacheUtil;
 import epf.service.ClientUtil;
 import epf.service.RegistryUtil;
 import epf.service.SecurityUtil;
@@ -32,13 +29,14 @@ import org.junit.Test;
 public class CacheTest {
 	
 	private static URI persistenceUrl;
+	private static URI cacheUrl;
 	private static String token;
 	private Client client;
-	private List<Object> messages = Collections.synchronizedList(new ArrayList<>());
     
     @BeforeClass
     public static void beforeClass() throws Exception{
     	persistenceUrl = RegistryUtil.lookup("persistence", null);
+    	cacheUrl = RegistryUtil.lookup("cache", null);
     	token = SecurityUtil.login(null, "admin1", "admin");
     }
     
@@ -50,13 +48,12 @@ public class CacheTest {
     @After
     public void after() throws Exception {
     	client.close();
-    	messages.clear();
     }
     
     @Before
     public void before() throws Exception {
-    	client = CacheUtil.connectToServer();
-    	client.onMessage(messages::add);
+    	client = Messaging.connectToServer(cacheUrl);
+    	TestUtil.waitUntil(t -> client.getSession().isOpen(), Duration.ofSeconds(10));
     }
 
     @Test
@@ -75,10 +72,21 @@ public class CacheTest {
             Entities.remove(persistenceClient, EPF.SCHEMA, EPF.ARTIFACT, artifact.getName());
     	}
     	
-    	TestUtil.waitUntil((t) -> messages.stream().anyMatch(msg -> msg instanceof PostPersist), Duration.ofSeconds(20));
-    	TestUtil.waitUntil((t) -> messages.stream().anyMatch(msg -> msg instanceof PostRemove), Duration.ofSeconds(20));
-    	
-    	PostPersist persist = (PostPersist) messages.stream().filter(object -> object instanceof PostPersist).findFirst().get();
+    	//TestUtil.waitUntil((t) -> client.getMessages().stream().anyMatch(msg -> msg.contains(PostPersist.class.getName())), Duration.ofSeconds(10));
+    	//TestUtil.waitUntil((t) -> client.getMessages().stream().anyMatch(msg -> msg.contains(PostRemove.class.getName())), Duration.ofSeconds(10));
+    	TestUtil.waitUntil((t) -> client.getMessages().stream().anyMatch(msg -> msg instanceof PostPersist), Duration.ofSeconds(10));
+    	TestUtil.waitUntil((t) -> client.getMessages().stream().anyMatch(msg -> msg instanceof PostRemove), Duration.ofSeconds(10));
+    	client.getMessages().forEach(msg -> System.out.println(String.valueOf(msg)));
+    	PostPersist persist = null;
+    	PostRemove remove = null;
+    	/*try(Jsonb jsonb = JsonbBuilder.create(new JsonbConfig().withAdapters(new MessageAdapter()))){
+    		String message = client.getMessages().stream().filter(msg -> msg.contains(PostPersist.class.getName())).findFirst().get();
+    		persist = jsonb.fromJson(message, PostPersist.class);
+    		message = client.getMessages().stream().filter(msg -> msg.contains(PostRemove.class.getName())).findFirst().get();
+    		remove = jsonb.fromJson(message, PostRemove.class);
+    	}*/
+    	persist = (PostPersist)client.getMessages().stream().filter(msg -> msg instanceof PostPersist).findFirst().get();
+    	remove = (PostRemove)client.getMessages().stream().filter(msg -> msg instanceof PostRemove).findFirst().get();
     	Assert.assertNotNull("PostPersist", persist);
     	Assert.assertTrue("PostPersist.entity", persist.getEntity() instanceof HashMap);
     	@SuppressWarnings("unchecked")
@@ -86,7 +94,6 @@ public class CacheTest {
     	Assert.assertEquals("PostPersist.entity.class", Artifact.class.getName(), persistEntity.get("class"));
     	Assert.assertEquals("PostPersist.entity.name", artifact.getName(), persistEntity.get("name"));
     	
-    	PostRemove remove = (PostRemove) messages.stream().filter(object -> object instanceof PostRemove).findFirst().get();
     	Assert.assertNotNull("PostRemove", remove);
     	Assert.assertTrue("PostRemove.entity", remove.getEntity() instanceof HashMap);
     	@SuppressWarnings("unchecked")
