@@ -60,10 +60,12 @@ public class Client implements AutoCloseable {
 	 */
 	@OnMessage
     public void onMessage(final String message, final Session session) {
-		if(messageConsumer != null) {
+		if(messageConsumer == null) {
+			messages.add(message);
+		}
+		else {
 			messageConsumer.accept(message);
 		}
-		messages.add(message);
 	}
 	
 	/**

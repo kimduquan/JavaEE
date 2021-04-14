@@ -73,7 +73,10 @@ public class RegistryTest {
 	    	expected.add(new URI(base.toString() + "/schema"));
 	    	expected.add(new URI(base.toString() + "/security"));
 	    	expected.add(new URI(base.toString() + "/system"));
-	    	expected.add(MessagingUtil.getMessagingUrl().resolve("cache"));
+	    	String messagingPath = MessagingUtil.getMessagingUrl().getPath();
+	    	messagingPath = (path + "/" + messagingPath.split("/")[2]);
+	    	URI messagingUrl = UriBuilder.fromUri(MessagingUtil.getMessagingUrl()).replacePath(messagingPath).build();
+	    	expected.add(new URI(messagingUrl.toString() + "/cache"));
 		} 
     	catch (URISyntaxException e) {
 			logger.log(Level.SEVERE, "testList_OK", e);

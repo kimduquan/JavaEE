@@ -177,11 +177,7 @@ public final class RequestHelper {
      * @return
      */
     public static Link buildLink(final Link link, final UriInfo uriInfo) {
-    	final URI linkUri = link.getUri();
-    	URI uri = linkUri;
-    	if(!linkUri.getScheme().startsWith("ws")) {
-    		uri = buildUri(link, uriInfo);
-    	}
+    	final URI uri = buildUri(link, uriInfo);
     	return Link.fromLink(link).uri(uri).build();
     }
     

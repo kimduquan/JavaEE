@@ -5,24 +5,21 @@ package epf.gateway.messaging;
 
 import java.io.IOException;
 import java.net.URI;
-import javax.websocket.ClientEndpoint;
 import javax.websocket.DeploymentException;
-import javax.websocket.OnMessage;
-import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
+import epf.util.websocket.Client;
 import epf.util.websocket.Server;
 
 /**
  * @author PC
  *
  */
-@ClientEndpoint(decoders = {MessageDecoder.class})
 public class Remote implements AutoCloseable {
 	
 	/**
 	 * 
 	 */
-	private transient final Session session;
+	private transient final Client client;
 	
 	/**
 	 * 
@@ -32,9 +29,8 @@ public class Remote implements AutoCloseable {
 	/**
 	 * @param message
 	 */
-	@OnMessage
-	public void onMessage(final Message message) {
-		server.forEach(session -> session.getAsyncRemote().sendText(message.getText()));
+	protected void onMessage(final String message) {
+		server.forEach(session -> session.getAsyncRemote().sendText(message));
 	}
 	
 	/**
@@ -44,13 +40,14 @@ public class Remote implements AutoCloseable {
 	 * @throws IOException
 	 */
 	public Remote(final WebSocketContainer container, final URI uri) throws DeploymentException, IOException {
-		session = container.connectToServer(this, uri);
+		client = Client.connectToServer(container, uri);
 		this.server = new Server();
+		client.onMessage(this::onMessage);
 	}
 
 	@Override
 	public void close() throws Exception {
-		session.close();
+		client.close();
 		server.close();
 	}
 	
