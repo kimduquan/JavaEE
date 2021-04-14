@@ -26,7 +26,6 @@ public class ClientTest {
 	WebSocketContainer container;
 	URI uri;
 	Session session;
-	ClientEndpointConfig config;
 	Client client;
 
 	/**
@@ -51,9 +50,8 @@ public class ClientTest {
 		container = Mockito.mock(WebSocketContainer.class);
 		uri = new URI("wss://localhost:9443/cache");
 		session = Mockito.mock(Session.class);
-		config = Mockito.mock(ClientEndpointConfig.class);
-		Mockito.when(container.connectToServer(Mockito.any(Client.class), Mockito.same(config), Mockito.same(uri))).thenReturn(session);
-		client = Client.connectToServer(container, config, uri);
+		Mockito.when(container.connectToServer(Mockito.any(Client.class), Mockito.same(uri))).thenReturn(session);
+		client = Client.connectToServer(container, uri);
 	}
 
 	/**
@@ -122,11 +120,6 @@ public class ClientTest {
 	public void testConnectToServer() throws Exception {
 		Assert.assertNotNull("Client", client);
 		Assert.assertSame("Client.session", session, client.getSession());
-		Mockito.verify(container, Mockito.times(1)).connectToServer(Mockito.same(client), Mockito.same(config), Mockito.same(uri));
-	}
-
-	@Test
-	public void testOnOpen() {
-		client.onOpen(session, null);
+		Mockito.verify(container, Mockito.times(1)).connectToServer(Mockito.same(client), Mockito.same(uri));
 	}
 }

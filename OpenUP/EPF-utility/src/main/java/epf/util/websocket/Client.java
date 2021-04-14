@@ -9,10 +9,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 import javax.websocket.ClientEndpoint;
-import javax.websocket.ClientEndpointConfig;
 import javax.websocket.DeploymentException;
-import javax.websocket.Endpoint;
-import javax.websocket.EndpointConfig;
 import javax.websocket.OnMessage;
 import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
@@ -22,7 +19,7 @@ import javax.websocket.WebSocketContainer;
  *
  */
 @ClientEndpoint
-public class Client extends Endpoint implements AutoCloseable {
+public class Client implements AutoCloseable {
 
 	/**
 	 * 
@@ -37,7 +34,7 @@ public class Client extends Endpoint implements AutoCloseable {
 	/**
 	 * 
 	 */
-	private Queue<String> messages;
+	private transient final Queue<String> messages;
 	
 	/**
 	 * 
@@ -66,9 +63,7 @@ public class Client extends Endpoint implements AutoCloseable {
 		if(messageConsumer != null) {
 			messageConsumer.accept(message);
 		}
-		else {
-			messages.add(message);
-		}
+		messages.add(message);
 	}
 	
 	/**
@@ -76,24 +71,6 @@ public class Client extends Endpoint implements AutoCloseable {
 	 */
 	public void onMessage(final Consumer<? super String> messageConsumer) {
 		this.messageConsumer = messageConsumer;
-	}
-	
-	/**
-	 * @param container
-	 * @param uri
-	 * @param messageConsumer
-	 * @return
-	 * @throws DeploymentException
-	 * @throws IOException
-	 */
-	public static Client connectToServer(
-			final WebSocketContainer container, 
-			final ClientEndpointConfig config,
-			final URI uri) throws DeploymentException, IOException {
-		final Client client = new Client();
-		final Session session = container.connectToServer(client, config, uri);
-		client.session = session;
-		return client;
 	}
 	
 	/**
@@ -110,10 +87,6 @@ public class Client extends Endpoint implements AutoCloseable {
 		final Session session = container.connectToServer(client, uri);
 		client.session = session;
 		return client;
-	}
-
-	@Override
-	public void onOpen(final Session session, final EndpointConfig config) {
 	}
 	
 	public Queue<String> getMessages() {

@@ -1,32 +1,36 @@
 /**
  * 
  */
-package epf.service.messaging;
+package epf.gateway.messaging;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.websocket.CloseReason;
+import javax.websocket.ContainerProvider;
+import javax.websocket.DeploymentException;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
+import javax.websocket.WebSocketContainer;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
-import epf.client.messaging.MessageDecoder;
-import epf.client.messaging.MessageEncoder;
-import epf.util.websocket.Server;
 
 /**
  * @author PC
  *
  */
-@ServerEndpoint(value = "/messaging/{path}", encoders = {MessageEncoder.class}, decoders = {MessageDecoder.class})
+@ServerEndpoint("/messaging/{path}")
 @ApplicationScoped
 public class Messaging {
 	
@@ -38,7 +42,7 @@ public class Messaging {
 	/**
 	 * 
 	 */
-	private final transient Map<String, Server> servers = new ConcurrentHashMap<>();
+	private final transient Map<String, Remote> remotes = new ConcurrentHashMap<>();
 	
 	/**
 	 * 
@@ -51,7 +55,14 @@ public class Messaging {
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		servers.put("cache", new Server());
+		try {
+			final URI messagingUrl = new URI(System.getenv("epf.messaging.url"));
+			final WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+			remotes.put("cache", new Remote(container, messagingUrl.resolve("cache")));
+		} 
+		catch (URISyntaxException | DeploymentException | IOException e) {
+			logger.log(Level.SEVERE, "postConstruct", e);
+		}
 	}
 	
 	/**
@@ -59,12 +70,12 @@ public class Messaging {
 	 */
 	@PreDestroy
 	protected void preDestroy() {
-		servers.values().parallelStream().forEach(server -> {
+		remotes.values().parallelStream().forEach(server -> {
 			try {
 				server.close();
 			} 
 			catch (Exception e) {
-				logger.throwing(Server.class.getName(), "close", e);
+				logger.throwing(Remote.class.getName(), "close", e);
 			}
 		});
 	}
@@ -75,9 +86,9 @@ public class Messaging {
 	 */
 	@OnOpen
     public void onOpen(@PathParam(PATH) final String path, final Session session) {
-		servers.computeIfPresent(path, (p, server) -> {
-			server.onOpen(session);
-			return server;
+		remotes.computeIfPresent(path, (p, remote) -> {
+			remote.getServer().onOpen(session);
+			return remote;
 			}
 		);
 	}
@@ -89,10 +100,11 @@ public class Messaging {
 	 */
 	@OnClose
     public void onClose(@PathParam(PATH) final String path, final Session session, final CloseReason closeReason) {
-		servers.computeIfPresent(path, (p, server) -> {
-			server.onClose(session, closeReason);
-			return server;
-		});
+		remotes.computeIfPresent(path, (p, remote) -> {
+			remote.getServer().onClose(session, closeReason);
+			return remote;
+			}
+		);
 	}
 	
 	/**
@@ -101,12 +113,12 @@ public class Messaging {
 	 * @param session
 	 */
 	@OnMessage
-    public void onMessage(@PathParam(PATH) final String path, final Object message, final Session session) {
-		servers.computeIfPresent(path, (p, server) -> {
-			server.onMessage(message, session);
-			server.forEach(ss -> ss.getAsyncRemote().sendObject(message));
-			return server;
-		});
+    public void onMessage(@PathParam(PATH) final String path, final String message, final Session session) {
+		remotes.computeIfPresent(path, (p, remote) -> {
+			remote.getServer().onMessage(message, session);
+			return remote;
+			}
+		);
 	}
 	
 	/**
@@ -116,9 +128,10 @@ public class Messaging {
 	 */
 	@OnError
     public void onError(@PathParam(PATH) final String path, final Session session, final Throwable throwable) {
-		servers.computeIfPresent(path, (p, server) -> {
-			server.onError(session, throwable);
-			return server;
-		});
+		remotes.computeIfPresent(path, (p, remote) -> {
+			remote.getServer().onError(session, throwable);
+			return remote;
+			}
+		);
 	}
 }
