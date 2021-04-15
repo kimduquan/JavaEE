@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.service.cache;
+package epf.service.persistence;
 
 import java.io.IOException;
 import java.net.URI;
@@ -25,7 +25,7 @@ import epf.schema.PostUpdate;
  *
  */
 @ApplicationScoped
-public class Cache {
+public class Listener {
 	
 	/**
 	 * 
@@ -44,7 +44,7 @@ public class Cache {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			client = Messaging.connectToServer(new URI(System.getenv(ConfigNames.MESSAGING_URL)).resolve("cache"));
+			client = Messaging.connectToServer(new URI(System.getenv(ConfigNames.MESSAGING_URL)).resolve("persistence"));
 		} 
 		catch (DeploymentException|IOException|URISyntaxException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);

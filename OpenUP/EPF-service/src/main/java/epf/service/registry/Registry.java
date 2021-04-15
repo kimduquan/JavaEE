@@ -70,8 +70,8 @@ public class Registry implements epf.client.registry.Registry {
 			remote = "system";
 			remotes.put(remote, serviceUrl.resolve(remote));
 			final URI messagingUrl = new URI(System.getenv(ConfigNames.MESSAGING_URL));
-			remote = "cache";
-			remotes.put(remote, messagingUrl.resolve(remote));
+			remote = "messaging";
+			remotes.put(remote, messagingUrl);
 		} 
 		catch (Exception e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);

@@ -1,4 +1,4 @@
-package epf.service.cache;
+package epf.service.persistence;
 
 import java.net.URI;
 import java.time.Duration;
@@ -27,17 +27,20 @@ import epf.service.TestUtil;
 import epf.util.websocket.Client;
 import org.junit.Test;
 
-public class CacheTest {
+public class ListenerTest {
 	
 	private static URI persistenceUrl;
-	private static URI cacheUrl;
+	private static URI messagingUrl;
+	private static URI listenerUrl;
 	private static String token;
 	private Client client;
     
     @BeforeClass
     public static void beforeClass() throws Exception{
     	persistenceUrl = RegistryUtil.lookup("persistence", null);
-    	cacheUrl = RegistryUtil.lookup("cache", null);
+    	messagingUrl = RegistryUtil.lookup("messaging", null);
+    	listenerUrl = new URI(messagingUrl.toString() + "/persistence");
+    	System.out.println(listenerUrl);
     	token = SecurityUtil.login(null, "admin1", "admin");
     }
     
@@ -53,7 +56,7 @@ public class CacheTest {
     
     @Before
     public void before() throws Exception {
-    	client = Client.connectToServer(ContainerProvider.getWebSocketContainer(), cacheUrl);
+    	client = Client.connectToServer(ContainerProvider.getWebSocketContainer(), listenerUrl);
     	TestUtil.waitUntil(t -> client.getSession().isOpen(), Duration.ofSeconds(10));
     }
 

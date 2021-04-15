@@ -30,14 +30,14 @@ import org.junit.Test;
 public class MessagingTest {
 	
 	private static URI persistenceUrl;
-	private static URI cacheUrl;
+	private static URI listenerUrl;
 	private static String token;
 	private Client client;
     
     @BeforeClass
     public static void beforeClass() throws Exception{
     	persistenceUrl = RegistryUtil.lookup("persistence", null);
-    	cacheUrl = MessagingUtil.getMessagingUrl().resolve("cache");
+    	listenerUrl = new URI(MessagingUtil.getMessagingUrl().toString() + "persistence");
     	token = SecurityUtil.login(null, "admin1", "admin");
     }
     
@@ -53,7 +53,7 @@ public class MessagingTest {
     
     @Before
     public void before() throws Exception {
-    	client = Messaging.connectToServer(cacheUrl);
+    	client = Messaging.connectToServer(listenerUrl);
     	TestUtil.waitUntil(t -> client.getSession().isOpen(), Duration.ofSeconds(10));
     }
 

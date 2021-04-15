@@ -58,7 +58,7 @@ public class Messaging {
 		try {
 			final URI messagingUrl = new URI(System.getenv("epf.messaging.url"));
 			final WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-			remotes.put("cache", new Remote(container, messagingUrl.resolve("cache")));
+			remotes.put("persistence", new Remote(container, messagingUrl.resolve("persistence")));
 		} 
 		catch (URISyntaxException | DeploymentException | IOException e) {
 			logger.log(Level.SEVERE, "postConstruct", e);

@@ -76,7 +76,7 @@ public class RegistryTest {
 	    	String messagingPath = MessagingUtil.getMessagingUrl().getPath();
 	    	messagingPath = (path + "/" + messagingPath.split("/")[2]);
 	    	URI messagingUrl = UriBuilder.fromUri(MessagingUtil.getMessagingUrl()).replacePath(messagingPath).build();
-	    	expected.add(new URI(messagingUrl.toString() + "/cache"));
+	    	expected.add(messagingUrl);
 		} 
     	catch (URISyntaxException e) {
 			logger.log(Level.SEVERE, "testList_OK", e);
