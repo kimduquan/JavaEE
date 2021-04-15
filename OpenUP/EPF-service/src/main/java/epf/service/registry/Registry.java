@@ -69,6 +69,8 @@ public class Registry implements epf.client.registry.Registry {
 			remotes.put(remote, serviceUrl.resolve(remote));
 			remote = "system";
 			remotes.put(remote, serviceUrl.resolve(remote));
+			remote = "stream";
+			remotes.put(remote, serviceUrl.resolve(remote));
 			final URI messagingUrl = new URI(System.getenv(ConfigNames.MESSAGING_URL));
 			remote = "messaging";
 			remotes.put(remote, messagingUrl);

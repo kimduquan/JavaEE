@@ -12,6 +12,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.sse.SseEventSource;
 
 /**
  *
@@ -109,5 +110,19 @@ public class Client implements AutoCloseable {
         	request = request.header(HttpHeaders.AUTHORIZATION, authHeader);
     	}
     	return buildRequest.apply(request);
+    }
+    
+    /**
+     * @param buildTarget
+     * @return
+     */
+    public SseEventSource stream(final Function<WebTarget, WebTarget> buildTarget, final Function<SseEventSource.Builder, SseEventSource.Builder> buildEvent) {
+    	Objects.requireNonNull(buildTarget);
+    	Objects.requireNonNull(buildEvent);
+    	WebTarget target = client.target(uri);
+    	target = buildTarget.apply(target);
+    	SseEventSource.Builder builder = SseEventSource.target(target);
+    	builder = buildEvent.apply(builder);
+    	return builder.build();
     }
 }

@@ -40,6 +40,13 @@
                 <version>3.4.2</version>
                 <scope>test</scope>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-rs-sse -->
+			<dependency>
+			    <groupId>org.apache.cxf</groupId>
+			    <artifactId>cxf-rt-rs-sse</artifactId>
+			    <version>3.4.3</version>
+                <scope>test</scope>
+			</dependency>
             <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.jaxrs/jackson-jaxrs-json-provider -->
             <dependency>
                 <groupId>com.fasterxml.jackson.jaxrs</groupId>

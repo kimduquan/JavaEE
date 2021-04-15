@@ -73,6 +73,7 @@ public class RegistryTest {
 	    	expected.add(new URI(base.toString() + "/schema"));
 	    	expected.add(new URI(base.toString() + "/security"));
 	    	expected.add(new URI(base.toString() + "/system"));
+	    	expected.add(new URI(base.toString() + "/stream"));
 	    	String messagingPath = MessagingUtil.getMessagingUrl().getPath();
 	    	messagingPath = (path + "/" + messagingPath.split("/")[2]);
 	    	URI messagingUrl = UriBuilder.fromUri(MessagingUtil.getMessagingUrl()).replacePath(messagingPath).build();
