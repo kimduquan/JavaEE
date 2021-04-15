@@ -1,0 +1,132 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package epf.client.persistence;
+
+import java.util.List;
+import java.util.Set;
+import java.util.function.Function;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import epf.util.client.Client;
+import epf.validation.persistence.Unit;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.ws.rs.GET;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.Link;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.PathSegment;
+
+/**
+ *
+ * @author FOXCONN
+ */
+@Path("persistence")
+public interface Queries {
+	
+	/**
+	 * 
+	 */
+	String FIRST = "first";
+	/**
+	 * 
+	 */
+	String MAX = "max";
+    
+    /**
+     * @param unit
+     * @param paths
+     * @param firstResult
+     * @param maxResults
+     * @return
+     */
+    @GET
+    @Path("{unit}/{criteria: .+}")
+    @Produces(MediaType.APPLICATION_JSON)
+    Response executeQuery(
+            @PathParam("unit")
+            @Unit
+            final String unit,
+            @PathParam("criteria")
+            final List<PathSegment> paths,
+            @QueryParam(FIRST)
+            final Integer firstResult,
+            @QueryParam(MAX)
+            final Integer maxResults
+            );
+    
+    /**
+     * @param client
+     * @param type
+     * @param unit
+     * @param paths
+     * @param firstResult
+     * @param maxResults
+     */
+    static <T> List<T> executeQuery(
+    		final Client client,
+    		final GenericType<List<T>> type,
+    		final String unit,
+    		final Function<WebTarget, WebTarget> paths,
+    		final Integer firstResult,
+    		final Integer maxResults
+            ) {
+    	return client.request(
+    			target -> paths.apply(
+    					target.path(unit).queryParam(FIRST, firstResult).queryParam(MAX, maxResults)
+    					), 
+    			req -> req.accept(MediaType.APPLICATION_JSON)
+    			)
+    			.get(type);
+    }
+    
+    /**
+     * @param uriInfo
+     * @param text
+     * @param firstResult
+     * @param maxResults
+     * @return
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    Response search(
+    		@Context
+    		final UriInfo uriInfo,
+    		@QueryParam("text")
+    		@NotBlank
+    		@Pattern(regexp = "\\w+")
+    		final String text, 
+    		@QueryParam(FIRST)
+    		final Integer firstResult,
+            @QueryParam(MAX)
+    		final Integer maxResults);
+    
+    /**
+     * @param client
+     * @param text
+     * @param firstResult
+     * @param maxResults
+     * @return
+     */
+    static Set<Link> search(
+    		final Client client,
+    		final String text, 
+    		final Integer firstResult,
+    		final Integer maxResults) {
+    	return client.request(
+    			target -> target.queryParam("text", text).queryParam(FIRST, firstResult).queryParam(MAX, maxResults), 
+    			req -> req.accept(MediaType.APPLICATION_JSON)
+    			)
+    			.get()
+    			.getLinks();
+    }
+}

@@ -15,7 +15,7 @@ public class DocumentLink {
     private Range range;
     private Optional<DocumentUri> target;
     private Optional<String> tooltip;
-    private Optional data;
+    private Optional<?> data;
 
     public Range getRange() {
         return range;
@@ -41,11 +41,11 @@ public class DocumentLink {
         this.tooltip = tooltip;
     }
 
-    public Optional getData() {
+    public Optional<?> getData() {
         return data;
     }
 
-    public void setData(Optional data) {
+    public void setData(Optional<?> data) {
         this.data = data;
     }
 }

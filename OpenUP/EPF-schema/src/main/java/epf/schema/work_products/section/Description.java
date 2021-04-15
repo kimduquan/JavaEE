@@ -18,9 +18,15 @@ import org.eclipse.microprofile.graphql.Type;
 @Embeddable
 public class Description {
     
+    /**
+     * 
+     */
     @Column(name = "MAIN_DESCRIPTION")
     private JsonObject mainDescription;
     
+    /**
+     * 
+     */
     @Column(name = "BRIEF_OUTLINE")
     private JsonObject briefOutline;
 
@@ -28,7 +34,7 @@ public class Description {
         return mainDescription;
     }
 
-    public void setMainDescription(JsonObject mainDescription) {
+    public void setMainDescription(final JsonObject mainDescription) {
         this.mainDescription = mainDescription;
     }
 
@@ -36,7 +42,7 @@ public class Description {
         return briefOutline;
     }
 
-    public void setBriefOutline(JsonObject briefOutline) {
+    public void setBriefOutline(final JsonObject briefOutline) {
         this.briefOutline = briefOutline;
     }
 }

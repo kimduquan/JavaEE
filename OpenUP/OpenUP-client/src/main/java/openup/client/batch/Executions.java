@@ -22,7 +22,7 @@ import javax.ws.rs.core.MediaType;
  *
  * @author FOXCONN
  */
-@Path("batch/excutions")
+@Path("batch/excution")
 public interface Executions {
     
     @DELETE

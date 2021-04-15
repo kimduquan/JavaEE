@@ -7,31 +7,15 @@
         <version>1.0.0</version>
     </parent>
     <artifactId>OpenUP-client</artifactId>
-    <name>Open Unified Process Application Client</name>
+    <name>Open Unified Process Client</name>
     <packaging>jar</packaging>
-    
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.eclipse.persistence/org.eclipse.persistence.core -->
-        <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>org.eclipse.persistence.core</artifactId>
-        </dependency>
         <!-- https://mvnrepository.com/artifact/org.eclipse.microprofile/microprofile -->
         <dependency>
             <groupId>org.eclipse.microprofile</groupId>
             <artifactId>microprofile</artifactId>
-            <version>3.3</version>
             <type>pom</type>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
+    		<scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax.batch</groupId>
@@ -39,7 +23,7 @@
         </dependency>
         <dependency>
             <groupId>openup</groupId>
-            <artifactId>EPF-schema</artifactId>
+            <artifactId>EPF-utility</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>

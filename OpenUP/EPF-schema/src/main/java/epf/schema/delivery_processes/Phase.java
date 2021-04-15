@@ -15,6 +15,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.schema.EPF;
@@ -26,34 +29,60 @@ import javax.persistence.NamedQuery;
  *
  * @author FOXCONN
  */
-@Type(EPF.Phase)
-@Schema(name = EPF.Phase, title = "Phase")
-@Entity(name = EPF.Phase)
-@Table(schema = EPF.Schema, name = "PHASE", indexes = {@Index(columnList = "PARENT_ACTIVITIES")})
+@Type(EPF.PHASE)
+@Schema(name = EPF.PHASE, title = "Phase")
+@Entity(name = EPF.PHASE)
+@Table(schema = EPF.SCHEMA, name = "PHASE", indexes = {@Index(columnList = "PARENT_ACTIVITIES")})
 @NamedQuery(
         name = Phase.PHASES,
         query = "SELECT ph FROM EPF_Phase ph JOIN ph.parentActivities dp WHERE dp.name = :name"
 )
 public class Phase {
     
+    /**
+     * 
+     */
     public static final String PHASES = "EPF_Phase.Phases";
 
+    /**
+     * 
+     */
     @Column(name = "NAME")
     @Id
+    @NotBlank
     private String name;
 	
+    /**
+     * 
+     */
     @Embedded
+    @NotNull
     private Description description;
 
+    /**
+     * 
+     */
     @Embedded
+    @NotNull
     private WorkBreakdownStructure workBreakdownStructure;
 
+    /**
+     * 
+     */
     @Embedded
+    @NotNull
     private TeamAllocation teamAllocation;
 
+    /**
+     * 
+     */
     @Embedded
+    @NotNull
     private WorkProductUsage workProductUsage;
     
+    /**
+     * 
+     */
     @JoinColumn(name = "PARENT_ACTIVITIES")
     @ManyToOne
     private DeliveryProcess parentActivities;
@@ -62,7 +91,7 @@ public class Phase {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -70,7 +99,7 @@ public class Phase {
         return description;
     }
 
-    public void setDescription(Description description) {
+    public void setDescription(final Description description) {
         this.description = description;
     }
 
@@ -78,7 +107,7 @@ public class Phase {
         return workBreakdownStructure;
     }
 
-    public void setWorkBreakdownStructure(WorkBreakdownStructure workBreakdownStructure) {
+    public void setWorkBreakdownStructure(final WorkBreakdownStructure workBreakdownStructure) {
         this.workBreakdownStructure = workBreakdownStructure;
     }
 
@@ -86,7 +115,7 @@ public class Phase {
         return teamAllocation;
     }
 
-    public void setTeamAllocation(TeamAllocation teamAllocation) {
+    public void setTeamAllocation(final TeamAllocation teamAllocation) {
         this.teamAllocation = teamAllocation;
     }
 
@@ -94,7 +123,7 @@ public class Phase {
         return workProductUsage;
     }
 
-    public void setWorkProductUsage(WorkProductUsage workProductUsage) {
+    public void setWorkProductUsage(final WorkProductUsage workProductUsage) {
         this.workProductUsage = workProductUsage;
     }
 
@@ -102,7 +131,7 @@ public class Phase {
         return parentActivities;
     }
 
-    public void setParentActivities(DeliveryProcess parentActivities) {
+    public void setParentActivities(final DeliveryProcess parentActivities) {
         this.parentActivities = parentActivities;
     }
 }

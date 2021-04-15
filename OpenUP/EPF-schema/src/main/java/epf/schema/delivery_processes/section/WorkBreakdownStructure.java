@@ -5,13 +5,23 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import org.eclipse.microprofile.graphql.Type;
 
+/**
+ * @author PC
+ *
+ */
 @Type
 @Embeddable
 public class WorkBreakdownStructure {
 
+    /**
+     * 
+     */
     @Column(name = "WORKFLOW")
     private JsonObject workflow;
 
+    /**
+     * 
+     */
     @Column(name = "WORK_BREAKDOWN")
     private JsonObject workBreakdown;
 
@@ -19,7 +29,7 @@ public class WorkBreakdownStructure {
         return workflow;
     }
 
-    public void setWorkflow(JsonObject workflow) {
+    public void setWorkflow(final JsonObject workflow) {
         this.workflow = workflow;
     }
 
@@ -27,7 +37,7 @@ public class WorkBreakdownStructure {
         return workBreakdown;
     }
 
-    public void setWorkBreakdown(JsonObject workBreakdown) {
+    public void setWorkBreakdown(final JsonObject workBreakdown) {
         this.workBreakdown = workBreakdown;
     }
 }

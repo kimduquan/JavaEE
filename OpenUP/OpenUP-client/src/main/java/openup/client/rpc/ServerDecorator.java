@@ -21,7 +21,7 @@ public class ServerDecorator implements Server {
     private Server server;
     
     @Override
-    public Response request(Request request) throws Exception {
+    public Response<?> request(Request<?> request) throws Exception {
         return server.request(request);
     }
     

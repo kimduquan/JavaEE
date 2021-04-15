@@ -18,12 +18,21 @@ import org.eclipse.microprofile.graphql.Type;
 @Embeddable
 public class Illustrations {
     
+    /**
+     * 
+     */
     @Column(name = "TEMPLATES")
     private JsonObject templates;
     
+    /**
+     * 
+     */
     @Column(name = "REPORTS")
     private JsonObject reports;
     
+    /**
+     * 
+     */
     @Column(name = "EXAMPLES")
     private JsonObject examples;
 
@@ -31,7 +40,7 @@ public class Illustrations {
         return templates;
     }
 
-    public void setTemplates(JsonObject templates) {
+    public void setTemplates(final JsonObject templates) {
         this.templates = templates;
     }
 
@@ -39,7 +48,7 @@ public class Illustrations {
         return reports;
     }
 
-    public void setReports(JsonObject reports) {
+    public void setReports(final JsonObject reports) {
         this.reports = reports;
     }
 
@@ -47,7 +56,7 @@ public class Illustrations {
         return examples;
     }
 
-    public void setExamples(JsonObject examples) {
+    public void setExamples(final JsonObject examples) {
         this.examples = examples;
     }
 }

@@ -14,7 +14,12 @@ import javax.enterprise.context.Dependent;
  */
 @Dependent
 public class Error extends Exception {
-    private Integer code;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private Integer code;
     private String message;
     private Optional<Object> data;
 

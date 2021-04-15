@@ -23,7 +23,7 @@ public class CallHierarchyItem {
     private DocumentUri uri;
     private Range range;
     private Range selectionRange;
-    private Optional data;
+    private Optional<?> data;
 
     public String getName() {
         return name;
@@ -81,11 +81,11 @@ public class CallHierarchyItem {
         this.selectionRange = selectionRange;
     }
 
-    public Optional getData() {
+    public Optional<?> getData() {
         return data;
     }
 
-    public void setData(Optional data) {
+    public void setData(Optional<?> data) {
         this.data = data;
     }
 }

@@ -24,8 +24,8 @@ public interface Server {
     @Produces(Message.APPLICATION_JSON_RPC)
     @Consumes(Message.APPLICATION_JSON_RPC)
     @POST
-    default Response request(Request request) throws Exception {
-        Response response = new Response();
+    default Response<?> request(Request<?> request) throws Exception {
+        Response<Object> response = new Response<>();
         response.setId(request.getId());
         response.setJsonrpc("2.0");
         try {

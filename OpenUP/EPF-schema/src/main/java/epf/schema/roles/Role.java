@@ -13,9 +13,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.json.JsonObject;
 import javax.persistence.Embedded;
-import javax.persistence.NamedNativeQuery;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.schema.EPF;
@@ -24,71 +25,74 @@ import epf.schema.EPF;
  *
  * @author FOXCONN
  */
-@Type(EPF.Role)
-@Schema(name = EPF.Role, title = "Role")
-@Entity(name = EPF.Role)
-@Table(schema = EPF.Schema, name = "_ROLE")
+@Type(EPF.ROLE)
+@Schema(name = EPF.ROLE, title = "Role")
+@Entity(name = EPF.ROLE)
+@Table(schema = EPF.SCHEMA, name = "EPF_ROLE")
 @JsonbPropertyOrder({
     "name",
     "additionallyPerforms",
     "modifies"
 })
-@NamedNativeQuery(
-        name = Role.GET_USER_ROLES, 
-        query = "SELECT GRANTEDROLE\n" +
-                "FROM INFORMATION_SCHEMA.RIGHTS\n" +
-                "WHERE GRANTEETYPE = 'ROLE'\n" +
-                "    AND GRANTEDROLE <> ''\n" +
-                "    AND GRANTEE\n" +
-                "        IN  (\n" +
-                "            SELECT GRANTEDROLE \n" +
-                "            FROM INFORMATION_SCHEMA.RIGHTS \n" +
-                "            WHERE GRANTEETYPE = 'USER'\n" +
-                "                AND GRANTEE = ?\n" +
-                "                AND GRANTEDROLE <> ''\n" +
-                "                )\n" +
-                "UNION\n" +
-                "    (\n" +
-                "    SELECT GRANTEDROLE \n" +
-                "    FROM INFORMATION_SCHEMA.RIGHTS \n" +
-                "    WHERE GRANTEETYPE = 'USER'\n" +
-                "        AND GRANTEE = ?\n" +
-                "        AND GRANTEDROLE <> ''\n" +
-                ");"
-)
-@NamedNativeQuery(
-        name = Role.IS_ADMIN,
-        query = "SELECT ADMIN FROM INFORMATION_SCHEMA.USERS WHERE NAME = ? AND ADMIN = ?;"
-)
 public class Role {
+	
+	/**
+	 * 
+	 */
+	public static final String DEFAULT_ROLE = "Any_Role";
 
+    /**
+     * 
+     */
     @Column(name = "NAME")
     @Id
+    @NotBlank
     private String name;
     
+    /**
+     * 
+     */
     @Column(name = "SUMMARY")
     private String summary;
     
+    /**
+     * 
+     */
     @Embedded
+    @NotNull
     private Relationships relationships;
     
+    /**
+     * 
+     */
     @Column(name = "MAIN_DESCRIPTION")
     private JsonObject mainDescription;
     
+    /**
+     * 
+     */
     @Embedded
+    @NotNull
     private Staffing staffing;
     
+    /**
+     * 
+     */
     @Column(name = "KEY_CONSIDERATIONS")
     private JsonObject keyConsiderations;
     
+    /**
+     * 
+     */
     @Embedded
+    @NotNull
     private MoreInformation moreInformation;
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -96,7 +100,7 @@ public class Role {
         return summary;
     }
 
-    public void setSummary(String summary) {
+    public void setSummary(final String summary) {
         this.summary = summary;
     }
 
@@ -104,7 +108,7 @@ public class Role {
         return relationships;
     }
 
-    public void setRelationships(Relationships relationships) {
+    public void setRelationships(final Relationships relationships) {
         this.relationships = relationships;
     }
 
@@ -112,7 +116,7 @@ public class Role {
         return mainDescription;
     }
 
-    public void setMainDescription(JsonObject mainDescription) {
+    public void setMainDescription(final JsonObject mainDescription) {
         this.mainDescription = mainDescription;
     }
 
@@ -120,7 +124,7 @@ public class Role {
         return staffing;
     }
 
-    public void setStaffing(Staffing staffing) {
+    public void setStaffing(final Staffing staffing) {
         this.staffing = staffing;
     }
 
@@ -128,7 +132,7 @@ public class Role {
         return keyConsiderations;
     }
 
-    public void setKeyConsiderations(JsonObject keyConsiderations) {
+    public void setKeyConsiderations(final JsonObject keyConsiderations) {
         this.keyConsiderations = keyConsiderations;
     }
 
@@ -136,11 +140,7 @@ public class Role {
         return moreInformation;
     }
 
-    public void setMoreInformation(MoreInformation moreInformation) {
+    public void setMoreInformation(final MoreInformation moreInformation) {
         this.moreInformation = moreInformation;
     }
-    
-    public static final String GET_USER_ROLES = "EPF_Role.GetUserRoles";
-    public static final String IS_ADMIN = "EPF_Role.IsAdmin";
-    public static final String ADMIN = "ADMIN";
 }

@@ -15,6 +15,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.schema.EPF;
@@ -26,37 +29,57 @@ import javax.persistence.NamedQuery;
  *
  * @author FOXCONN
  */
-@Type(EPF.Iteration)
-@Schema(name = EPF.Iteration, title = "Iteration")
-@Entity(name = EPF.Iteration)
-@Table(schema = EPF.Schema, name = "ITERATION", indexes = {@Index(columnList = "PARENT_ACTIVITIES")})
+@Type(EPF.ITERATION)
+@Schema(name = EPF.ITERATION, title = "Iteration")
+@Entity(name = EPF.ITERATION)
+@Table(schema = EPF.SCHEMA, name = "ITERATION", indexes = {@Index(columnList = "PARENT_ACTIVITIES")})
 @NamedQuery(
         name = Iteration.ITERATIONS,
         query = "SELECT it FROM EPF_Iteration it JOIN it.parentActivities ph WHERE ph.name = :name"
 )
 public class Iteration {
     
+    /**
+     * 
+     */
     public static final String ITERATIONS = "EPF_Iteration.Iterations";
     
+    /**
+     * 
+     */
     @Column(name = "NAME")
     @Id
+    @NotBlank
     private String name;
     
+    /**
+     * 
+     */
     @OneToOne
     @MapsId
     @JoinColumn(name = "NAME")
-    private CapabilityPattern Extends;
+    @NotNull
+    private CapabilityPattern extend;
     
+    /**
+     * 
+     */
     @Column(name = "NUMBER")
     private Integer number;
     
+    /**
+     * 
+     */
     @JoinColumn(name = "PARENT_ACTIVITIES")
     @ManyToOne
     private Phase parentActivities;
     
+    /**
+     * 
+     */
     @ManyToMany
     @JoinTable(name = "ITERATION_ACTIVITIES",
-            schema = EPF.Schema,
+            schema = EPF.SCHEMA,
             joinColumns = {@JoinColumn(name = "ITERATION")},
             inverseJoinColumns = {@JoinColumn(name = "ACTIVITY")},
             indexes = {@Index(columnList = "ITERATION")}
@@ -67,23 +90,23 @@ public class Iteration {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
-    public CapabilityPattern getExtends() {
-        return Extends;
+    public CapabilityPattern getExtend() {
+        return extend;
     }
 
-    public void setExtends(CapabilityPattern Extends) {
-        this.Extends = Extends;
+    public void setExtend(final CapabilityPattern extend) {
+        this.extend = extend;
     }
 
     public Integer getNumber() {
         return number;
     }
 
-    public void setNumber(Integer number) {
+    public void setNumber(final Integer number) {
         this.number = number;
     }
 
@@ -91,7 +114,7 @@ public class Iteration {
         return parentActivities;
     }
 
-    public void setParentActivities(Phase parentActivities) {
+    public void setParentActivities(final Phase parentActivities) {
         this.parentActivities = parentActivities;
     }
 
@@ -99,7 +122,7 @@ public class Iteration {
         return activities;
     }
 
-    public void setActivities(List<Activity> activities) {
+    public void setActivities(final List<Activity> activities) {
         this.activities = activities;
     }
 }

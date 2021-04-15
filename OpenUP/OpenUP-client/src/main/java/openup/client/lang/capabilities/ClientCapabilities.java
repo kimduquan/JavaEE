@@ -163,11 +163,11 @@ public class ClientCapabilities {
             this.general = general;
         }
 
-        public Optional getExperimental() {
+        public Optional<?> getExperimental() {
             return experimental;
         }
 
-        public void setExperimental(Optional experimental) {
+        public void setExperimental(Optional<?> experimental) {
             this.experimental = experimental;
         }
         private Optional<Boolean> applyEdit;
@@ -184,7 +184,7 @@ public class ClientCapabilities {
         Optional<TextDocumentClientCapabilities> textDocument;
         Optional<Window> window;
         Optional<General> general;
-        Optional experimental;
+        Optional<?> experimental;
 
         public Optional<Boolean> getApplyEdit() {
             return applyEdit;

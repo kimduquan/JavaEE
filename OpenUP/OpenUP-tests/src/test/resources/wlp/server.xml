@@ -1,0 +1,95 @@
+<server description="test server">
+
+    <!-- Enable features -->
+    <featureManager>
+        <feature>microProfile-3.3</feature>
+        <feature>jpa-2.2</feature>
+        <feature>mpGraphQL-1.0</feature>
+        <feature>mpContextPropagation-1.0</feature>
+        <feature>mpReactiveMessaging-1.0</feature>
+        <!--<feature>sessionCache-1.0</feature>-->
+        <feature>transportSecurity-1.0</feature>
+        <feature>batch-1.0</feature>
+        <feature>batchManagement-1.0</feature>
+        <feature>wasJmsServer-1.0</feature>
+        <feature>wasJmsClient-2.0</feature>
+        <feature>webProfile-8.0</feature>
+        
+    </featureManager>
+
+    <httpEndpoint id="defaultHttpEndpoint"
+                  host="localhost"
+                  httpPort="${httpPort}"
+                  httpsPort="${httpsPort}" />
+
+    <application id="EPF-service" name="EPF-service" context-root="service" location="EPF-service-1.0.0.war">
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
+    <application id="EPF-gateway" name="EPF-gateway" context-root="gateway" location="EPF-gateway-1.0.0.war" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
+    <application id="EPF-webapp" name="EPF-webapp" context-root="webapp" location="EPF-webapp-1.0.0.war" startAfterRef="EPF-service,EPF-gateway" />
+    <application id="OpenUP-webapp" name="OpenUP-webapp" context-root="OpenUP" location="OpenUP-webapp-1.0.0.war" startAfterRef="EPF-service,EPF-gateway,EPF-webapp" />
+    <!-- H2 Library Configuration -->
+    <library id="H2JDBCLib">
+        <fileset dir="${shared.resource.dir}/openup" includes="h2*.jar"/>
+    </library>
+    
+    <!-- OpenUP Library Configuration -->
+    <library id="OpenUPLib">
+        <fileset dir="${shared.resource.dir}/openup" includes="*.jar"/>
+    </library>
+    
+    <library id="JCacheLib">
+        <file name="${shared.resource.dir}/openup/hazelcast-all-4.0.3.jar"/>
+    </library>
+    
+    <!-- uri="file://${server.config.dir}hazelcast.xml" -->
+    <httpSessionCache libraryRef="JCacheLib" />
+    
+    <mpJwt 
+        id="OpenUP"
+        audiences ="http://localhost:${httpPort}/,https://localhost:${httpsPort}/">
+    </mpJwt>
+
+    <dataSource id="epf" jndiName="jdbc/epf">
+        <!-- Define the DataSource class names on the <jdbcDriver> element -->
+        <jdbcDriver 
+            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
+            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
+            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
+            libraryRef="H2JDBCLib" />
+        <properties URL="jdbc:h2:~/EPF_test;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE" />
+    </dataSource>
+
+    <keyStore id="defaultKeyStore" password="password"/>
+    
+    <messagingEngine>
+        <!-- queue for batch jms message. -->
+        <queue id="batchOpenUPQueue" 
+                forceReliability="ReliablePersistent" 
+                receiveAllowed="true"/>
+    </messagingEngine>
+    <batchJmsDispatcher />
+    <jmsConnectionFactory id="batchConnectionFactory" 
+                          jndiName="jms/batch/connectionFactory">
+            <properties.wasJms remoteServerAddress="localhost:7276:BootstrapBasicMessaging">
+            </properties.wasJms>
+    </jmsConnectionFactory>
+    <jmsQueue id="batchJobSubmissionQueue" 
+             jndiName="jms/batch/jobSubmissionQueue">
+            <properties.wasJms deliveryMode="Persistent" 
+                               queuename="batchOpenUPQueue">
+            </properties.wasJms>
+    </jmsQueue>
+    <batchJmsExecutor />
+    <jmsActivationSpec id="batchActivationSpec" >
+        <properties.wasJms destinationRef="batchJobSubmissionQueue"
+                           messageSelector="com_ibm_ws_batch_applicationName = 'EPF-service'"
+                           destinationType="javax.jms.Queue"
+                           remoteServerAddress="localhost:7276:BootstrapBasicMessaging">
+        </properties.wasJms>
+    </jmsActivationSpec>
+    <batchJmsEvents />
+	<logging />
+</server>

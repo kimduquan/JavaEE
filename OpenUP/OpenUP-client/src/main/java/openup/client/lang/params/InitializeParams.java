@@ -42,7 +42,7 @@ public class InitializeParams extends WorkDoneProgressParams {
     Optional<String> locale;
     Optional<String> rootPath;
     DocumentUri rootUri;
-    Optional initializationOptions;
+    Optional<?> initializationOptions;
     ClientCapabilities capabilities;
     Optional<TraceValue> trace;
     Optional<WorkspaceFolder[]> workspaceFolders;

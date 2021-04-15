@@ -14,7 +14,7 @@ import java.util.Optional;
 public class CodeLens {
     private Range range;
     private Optional<Command> command;
-    private Optional data;
+    private Optional<?> data;
 
     public Range getRange() {
         return range;
@@ -32,11 +32,11 @@ public class CodeLens {
         this.command = command;
     }
 
-    public Optional getData() {
+    public Optional<?> getData() {
         return data;
     }
 
-    public void setData(Optional data) {
+    public void setData(Optional<?> data) {
         this.data = data;
     }
 }

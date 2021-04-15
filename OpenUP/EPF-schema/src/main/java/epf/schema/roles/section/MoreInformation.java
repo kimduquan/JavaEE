@@ -18,6 +18,9 @@ import org.eclipse.microprofile.graphql.Type;
 @Embeddable
 public class MoreInformation {
     
+    /**
+     * 
+     */
     @Column(name = "GUIDELINES")
     private JsonObject guidelines;
 
@@ -25,7 +28,7 @@ public class MoreInformation {
         return guidelines;
     }
 
-    public void setGuidelines(JsonObject guidelines) {
+    public void setGuidelines(final JsonObject guidelines) {
         this.guidelines = guidelines;
     }
 }

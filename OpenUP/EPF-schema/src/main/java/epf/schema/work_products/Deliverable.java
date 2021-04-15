@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.schema.EPF;
@@ -20,26 +22,34 @@ import epf.schema.EPF;
  *
  * @author FOXCONN
  */
-@Type(EPF.Deliverable)
-@Schema(name = EPF.Deliverable, title = "Deliverable")
-@Entity(name = EPF.Deliverable)
-@Table(schema = EPF.Schema, name = "DELIVERABLE")
+@Type(EPF.DELIVERABLE)
+@Schema(name = EPF.DELIVERABLE, title = "Deliverable")
+@Entity(name = EPF.DELIVERABLE)
+@Table(schema = EPF.SCHEMA, name = "DELIVERABLE")
 public class Deliverable {
     
+    /**
+     * 
+     */
     @Column(name = "NAME")
     @Id
+    @NotBlank
     private String name;
     
+    /**
+     * 
+     */
     @OneToOne
     @MapsId
     @JoinColumn(name = "NAME")
+    @NotNull
     private Artifact artifact;
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -47,7 +57,7 @@ public class Deliverable {
         return artifact;
     }
 
-    public void setArtifact(Artifact artifact) {
+    public void setArtifact(final Artifact artifact) {
         this.artifact = artifact;
     }
 }

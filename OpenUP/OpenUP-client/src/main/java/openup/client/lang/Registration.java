@@ -14,7 +14,7 @@ import java.util.Optional;
 public class Registration {
     private String id;
     private String method;
-    private Optional registerOptions;
+    private Optional<?> registerOptions;
 
     public String getId() {
         return id;
@@ -32,11 +32,11 @@ public class Registration {
         this.method = method;
     }
 
-    public Optional getRegisterOptions() {
+    public Optional<?> getRegisterOptions() {
         return registerOptions;
     }
 
-    public void setRegisterOptions(Optional registerOptions) {
+    public void setRegisterOptions(Optional<?> registerOptions) {
         this.registerOptions = registerOptions;
     }
 }

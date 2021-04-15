@@ -36,7 +36,7 @@ public class CompletionItem {
     private Optional<TextEdit[]> additionalTextEdits;
     private Optional<String[]> commitCharacters;
     private Optional<Command> command;
-    private Optional data;
+    private Optional<?> data;
 
     public String getLabel() {
         return label;
@@ -166,11 +166,11 @@ public class CompletionItem {
         this.command = command;
     }
 
-    public Optional getData() {
+    public Optional<?> getData() {
         return data;
     }
 
-    public void setData(Optional data) {
+    public void setData(Optional<?> data) {
         this.data = data;
     }
 }

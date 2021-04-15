@@ -15,6 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -25,10 +26,10 @@ import javax.persistence.Index;
  *
  * @author FOXCONN
  */
-@Type(EPF.Domain)
-@Schema(name = EPF.Domain, title = "Domain")
-@Entity(name = EPF.Domain)
-@Table(schema = EPF.Schema, name = "_DOMAIN")
+@Type(EPF.DOMAIN)
+@Schema(name = EPF.DOMAIN, title = "Domain")
+@Entity(name = EPF.DOMAIN)
+@Table(schema = EPF.SCHEMA, name = "EPF_DOMAIN")
 @JsonbPropertyOrder({
     "name",
     "workProducts"
@@ -38,30 +39,43 @@ import javax.persistence.Index;
         query = "SELECT d FROM EPF_Domain AS d")
 public class Domain {
 
+    /**
+     * 
+     */
     @Column(name = "NAME")
     @Id
+    @NotBlank
     private String name;
     
+    /**
+     * 
+     */
     @Column(name = "SUMMARY")
     private String summary;
     
+    /**
+     * 
+     */
     @ManyToMany
     @JoinTable(
             name = "WORK_PRODUCTS",
-            schema = EPF.Schema,
+            schema = EPF.SCHEMA,
             joinColumns = @JoinColumn(name = "DOMAIN"),
             inverseJoinColumns = @JoinColumn(name = "ARTIFACT"),
             indexes = {@Index(columnList = "DOMAIN")}
     )
     private List<Artifact> workProducts;
     
+    /**
+     * 
+     */
     public static final String DOMAINS = "EPF_Domain.Domains";
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -69,7 +83,7 @@ public class Domain {
         return summary;
     }
 
-    public void setSummary(String summary) {
+    public void setSummary(final String summary) {
         this.summary = summary;
     }
     
@@ -78,7 +92,7 @@ public class Domain {
         return workProducts;
     }
 
-    public void setWorkProducts(List<Artifact> workProducts) {
+    public void setWorkProducts(final List<Artifact> workProducts) {
         this.workProducts = workProducts;
     }
 }

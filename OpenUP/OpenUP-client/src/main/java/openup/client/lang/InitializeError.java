@@ -10,7 +10,12 @@ package openup.client.lang;
  * @author FOXCONN
  */
 public class InitializeError extends Error {
-    public static final int unknownProtocolVersion = 1;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	public static final int unknownProtocolVersion = 1;
     private Boolean retry;
 
     public Boolean getRetry() {

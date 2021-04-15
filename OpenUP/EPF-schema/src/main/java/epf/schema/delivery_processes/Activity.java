@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import epf.schema.tasks.Task;
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -25,27 +27,41 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  *
  * @author FOXCONN
  */
-@Type(EPF.Activity)
-@Schema(name = EPF.Activity, title = "Activity")
-@Entity(name = EPF.Activity)
-@Table(schema = EPF.Schema, name = "ACTIVITY")
+@Type(EPF.ACTIVITY)
+@Schema(name = EPF.ACTIVITY, title = "Activity")
+@Entity(name = EPF.ACTIVITY)
+@Table(schema = EPF.SCHEMA, name = "ACTIVITY")
 public class Activity {
     
+    /**
+     * 
+     */
     @Column(name = "NAME")
     @Id
+    @NotBlank
     private String name;
     
+    /**
+     * 
+     */
     @OneToOne
     @MapsId
     @JoinColumn(name = "NAME")
-    private CapabilityPattern Extends;
+    @NotNull
+    private CapabilityPattern extend;
     
+    /**
+     * 
+     */
     @JoinColumn(name = "PARENT_ACTIVITIES")
     private CapabilityPattern parentActivities;
     
+    /**
+     * 
+     */
     @ManyToMany
     @JoinTable(name = "ACTIVITY_TASKS",
-            schema = EPF.Schema,
+            schema = EPF.SCHEMA,
             joinColumns = {@JoinColumn(name = "ACTIVITY")},
             inverseJoinColumns = {@JoinColumn(name = "TASK")},
             indexes = {@Index(columnList = "ACTIVITY")}
@@ -56,23 +72,23 @@ public class Activity {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
-    public CapabilityPattern getExtends() {
-        return Extends;
+    public CapabilityPattern getExtend() {
+        return extend;
     }
 
-    public void setExtends(CapabilityPattern Extends) {
-        this.Extends = Extends;
+    public void setExtend(final CapabilityPattern extend) {
+        this.extend = extend;
     }
 
     public CapabilityPattern getParentActivities() {
         return parentActivities;
     }
 
-    public void setParentActivities(CapabilityPattern parentActivities) {
+    public void setParentActivities(final CapabilityPattern parentActivities) {
         this.parentActivities = parentActivities;
     }
 
@@ -80,7 +96,7 @@ public class Activity {
         return tasks;
     }
 
-    public void setTasks(List<Task> tasks) {
+    public void setTasks(final List<Task> tasks) {
         this.tasks = tasks;
     }
 }

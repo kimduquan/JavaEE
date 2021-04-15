@@ -14,6 +14,8 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.schema.EPF;
@@ -22,36 +24,59 @@ import epf.schema.EPF;
  *
  * @author FOXCONN
  */
-@Type(EPF.CapabilityPattern)
-@Schema(name = EPF.CapabilityPattern, title = "Capability Pattern")
-@Entity(name = EPF.CapabilityPattern)
-@Table(schema = EPF.Schema, name = "CAPABILITY_PATTERN")
+@Type(EPF.CAPABILITY_PATTERN)
+@Schema(name = EPF.CAPABILITY_PATTERN, title = "Capability Pattern")
+@Entity(name = EPF.CAPABILITY_PATTERN)
+@Table(schema = EPF.SCHEMA, name = "CAPABILITY_PATTERN")
 public class CapabilityPattern {
 	
+    /**
+     * 
+     */
     @Column(name = "NAME")
     @Id
+    @NotBlank
     private String name;
     
+    /**
+     * 
+     */
     @Column(name = "SUMMARY")
     private String summary;
 	
+    /**
+     * 
+     */
     @Embedded
+    @NotNull
     private Description description;
 
+    /**
+     * 
+     */
     @Embedded
+    @NotNull
     private WorkBreakdownStructure workBreakdownStructure;
 
+    /**
+     * 
+     */
     @Embedded
+    @NotNull
     private TeamAllocation teamAllocation;
 
+    /**
+     * 
+     */
     @Embedded
+    @NotNull
     private WorkProductUsage workProductUsage;
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -59,7 +84,7 @@ public class CapabilityPattern {
         return summary;
     }
 
-    public void setSummary(String summary) {
+    public void setSummary(final String summary) {
         this.summary = summary;
     }
 
@@ -67,7 +92,7 @@ public class CapabilityPattern {
             return description;
     }
 
-    public void setDescription(Description description) {
+    public void setDescription(final Description description) {
             this.description = description;
     }
 
@@ -75,7 +100,7 @@ public class CapabilityPattern {
             return workBreakdownStructure;
     }
 
-    public void setWorkBreakdownStructure(WorkBreakdownStructure workBreakdownStructure) {
+    public void setWorkBreakdownStructure(final WorkBreakdownStructure workBreakdownStructure) {
             this.workBreakdownStructure = workBreakdownStructure;
     }
 
@@ -83,7 +108,7 @@ public class CapabilityPattern {
             return teamAllocation;
     }
 
-    public void setTeamAllocation(TeamAllocation teamAllocation) {
+    public void setTeamAllocation(final TeamAllocation teamAllocation) {
             this.teamAllocation = teamAllocation;
     }
 
@@ -91,7 +116,7 @@ public class CapabilityPattern {
             return workProductUsage;
     }
 
-    public void setWorkProductUsage(WorkProductUsage workProductUsage) {
+    public void setWorkProductUsage(final WorkProductUsage workProductUsage) {
             this.workProductUsage = workProductUsage;
     }
 }
