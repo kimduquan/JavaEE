@@ -21,8 +21,10 @@
                   host="localhost"
                   httpPort="${httpPort}"
                   httpsPort="${httpsPort}" />
-
-    <application id="EPF-service" name="EPF-service" context-root="service" location="EPF-service-1.0.0.war">
+	<application id="EPF-messaging" name="EPF-messaging" context-root="messaging" location="EPF-messaging-1.0.0.war" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
+    <application id="EPF-service" name="EPF-service" context-root="service" location="EPF-service-1.0.0.war" startAfterRef="EPF-messaging" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
     <application id="EPF-gateway" name="EPF-gateway" context-root="gateway" location="EPF-gateway-1.0.0.war" startAfterRef="EPF-service" >
