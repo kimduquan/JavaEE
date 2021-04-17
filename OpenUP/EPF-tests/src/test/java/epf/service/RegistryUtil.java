@@ -18,9 +18,7 @@ public class RegistryUtil {
     	if(remotes == null) {
     		try {
     			URI gatewayUrl = GatewayUtil.getGatewayUrl();
-    			logger.info("epf.gateway.url=" + String.valueOf(gatewayUrl));
 				URI registryUrl = gatewayUrl.resolve("registry");
-				logger.info("epf.registry.url=" + String.valueOf(registryUrl));
 	    		try(Client client = ClientUtil.newClient(registryUrl)){
 	    			remotes = new ConcurrentHashMap<>();
 	    			Registry.list(client, version)
