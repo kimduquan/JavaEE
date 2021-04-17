@@ -2,6 +2,7 @@ package epf.service.messaging;
 
 import java.net.URI;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.HashMap;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -61,7 +62,7 @@ public class MessagingTest {
     @Test
     public void test() throws Exception {
     	Artifact artifact = new Artifact();
-        artifact.setName("Artifact Messaging");
+        artifact.setName("Artifact Messaging" + String.valueOf(Instant.now().toEpochMilli()));
         artifact.setSummary("Artifact Messaging Summary");
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());

@@ -2,6 +2,7 @@ package epf.service.persistence;
 
 import java.net.URI;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -85,7 +86,7 @@ public class ListenerTest {
     @Test
     public void test() throws Exception {
     	Artifact artifact = new Artifact();
-        artifact.setName("Artifact Listener");
+        artifact.setName("Artifact Listener" + String.valueOf(Instant.now().toEpochMilli()));
         artifact.setSummary("Artifact Listener Summary");
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
@@ -124,7 +125,7 @@ public class ListenerTest {
     @Test
     public void testStream() throws Exception {
     	Artifact artifact = new Artifact();
-        artifact.setName("Artifact Listener Event");
+        artifact.setName("Artifact Listener Event" + String.valueOf(Instant.now().toEpochMilli()));
         artifact.setSummary("Artifact Listener Event Summary");
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());

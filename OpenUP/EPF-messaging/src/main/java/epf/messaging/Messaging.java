@@ -26,7 +26,7 @@ import epf.util.websocket.Server;
  * @author PC
  *
  */
-@ServerEndpoint(value = "/{path}", encoders = {MessageEncoder.class}, decoders = {MessageDecoder.class})
+@ServerEndpoint(value = "/messaging/{path}", encoders = {MessageEncoder.class}, decoders = {MessageDecoder.class})
 @ApplicationScoped
 public class Messaging {
 	

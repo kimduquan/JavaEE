@@ -18,8 +18,8 @@
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
         <liberty.env.epf.service.url>https://localhost:9443/service/</liberty.env.epf.service.url>
         <liberty.env.epf.gateway.url>https://localhost:9443/gateway/</liberty.env.epf.gateway.url>
-        <liberty.env.epf.messaging.url>ws://localhost:9080/service/messaging/</liberty.env.epf.messaging.url>
-        <liberty.env.epf.registry.url>https://localhost:9443/service/registry/</liberty.env.epf.registry.url>
+        <liberty.env.epf.messaging.url>ws://localhost:9080/messaging/messaging/</liberty.env.epf.messaging.url>
+        <liberty.env.epf.registry.url>https://localhost:9443/registry/registry/</liberty.env.epf.registry.url>
 		<liberty.env.epf.webapp.url>https://localhost:9443/webapp/</liberty.env.epf.webapp.url>
 		<liberty.env.epf.tests.file.root>target/servers/test/epf.file.root</liberty.env.epf.tests.file.root>
 		<liberty.env.webdriver.chrome.driver>chromedriver.exe</liberty.env.webdriver.chrome.driver>
@@ -161,8 +161,8 @@
                     <systemPropertyVariables>
                         <epf.service.url>https://localhost:${httpsPort}/service/</epf.service.url>
                         <epf.gateway.url>https://localhost:${httpsPort}/gateway/</epf.gateway.url>
-                        <epf.registry.url>https://localhost:${httpsPort}/service/registry/</epf.registry.url>
-                        <epf.messaging.url>ws://localhost:${httpPort}/service/messaging/</epf.messaging.url>
+                        <epf.registry.url>https://localhost:${httpsPort}/registry/registry/</epf.registry.url>
+                        <epf.messaging.url>ws://localhost:${httpPort}/messaging/messaging/</epf.messaging.url>
                         <epf.webapp.url>https://localhost:${httpsPort}/webapp/</epf.webapp.url>
                         <epf.tests.file.root>target/servers/test/epf.file.root</epf.tests.file.root>
                         <webdriver.chrome.driver>chromedriver.exe</webdriver.chrome.driver>
