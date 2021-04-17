@@ -407,6 +407,7 @@
 		<module>EPF-utility</module>
         <module>EPF-gateway</module>
 		<module>EPF-messaging</module>
+		<module>EPF-registry</module>
         <module>EPF-schema</module>
         <module>OpenUP-schema</module>
         <module>EPF-validation</module>

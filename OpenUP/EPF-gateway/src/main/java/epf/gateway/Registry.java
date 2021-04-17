@@ -21,7 +21,7 @@ public class Registry {
 	/**
 	 * 
 	 */
-	private static final String SERVICE_URL = System.getenv("epf.service.url");
+	private static final String REGISTRY_URL = System.getenv("epf.registry.url");
 	
 	/**
 	 * 
@@ -52,7 +52,7 @@ public class Registry {
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		try(Client client = new Client(clients, new URI(SERVICE_URL).resolve("registry"), b -> b)){
+		try(Client client = new Client(clients, new URI(REGISTRY_URL), b -> b)){
 			client
 			.request(
 					target -> target, 
@@ -65,7 +65,7 @@ public class Registry {
 			});
 		} 
 		catch (Exception e) {
-			logger.log(Level.SEVERE, SERVICE_URL, e);
+			logger.log(Level.SEVERE, REGISTRY_URL, e);
 		}
 	}
 	

@@ -40,7 +40,7 @@ public class MessageEncoder implements Encoder.Text<Object> {
 
 	@Override
 	public void destroy() {
-		LOGGER.entering(getClass().getName(), "destroy");
+		LOGGER.exiting(getClass().getName(), "destroy");
 	}
 
 	@Override

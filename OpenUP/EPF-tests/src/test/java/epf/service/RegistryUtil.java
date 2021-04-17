@@ -3,7 +3,6 @@ package epf.service;
 import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import epf.client.config.ConfigNames;
 import epf.client.registry.Registry;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
@@ -17,14 +16,16 @@ public class RegistryUtil {
     
     static Map<String, URI> list(String version){
     	if(remotes == null) {
-    		String registryUrl = System.getProperty(ConfigNames.REGISTRY_URL, "");
-    		try(Client client = ClientUtil.newClient(new URI(registryUrl))){
-    			remotes = new ConcurrentHashMap<>();
-    			Registry.list(client, version)
-    					.forEach(link -> {
-    						remotes.put(link.getRel(), link.getUri());
-    					});
-    		}
+    		try {
+				URI registryUrl = GatewayUtil.getGatewayUrl().resolve("registry");
+	    		try(Client client = ClientUtil.newClient(registryUrl)){
+	    			remotes = new ConcurrentHashMap<>();
+	    			Registry.list(client, version)
+	    					.forEach(link -> {
+	    						remotes.put(link.getRel(), link.getUri());
+	    					});
+	    		}
+			}
     		catch(Exception ex) {
     			logger.log(Level.SEVERE, "list", ex);
     		}

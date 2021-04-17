@@ -32,6 +32,11 @@ import javax.validation.constraints.*;
 @Path("file")
 public interface Files {
 	
+    /**
+     * 
+     */
+    String ROOT = "epf.file.root";
+	
 	/**
 	 * @param paths
 	 * @param uriInfo

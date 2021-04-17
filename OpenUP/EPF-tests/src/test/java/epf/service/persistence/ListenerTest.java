@@ -35,7 +35,6 @@ import org.junit.Test;
 public class ListenerTest {
 	
 	private static URI persistenceUrl;
-	private static URI messagingUrl;
 	private static URI listenerUrl;
 	private static URI streamUrl;
 	private static String token;
@@ -48,7 +47,7 @@ public class ListenerTest {
     @BeforeClass
     public static void beforeClass() throws Exception{
     	persistenceUrl = RegistryUtil.lookup("persistence", null);
-    	messagingUrl = RegistryUtil.lookup("messaging", null);
+    	URI messagingUrl = RegistryUtil.lookup("messaging", null);
     	listenerUrl = new URI(messagingUrl.toString() + "/persistence");
     	token = SecurityUtil.login(null, "admin1", "admin");
     	streamUrl = RegistryUtil.lookup("stream", null);

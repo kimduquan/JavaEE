@@ -37,7 +37,8 @@ public class MessagingTest {
     @BeforeClass
     public static void beforeClass() throws Exception{
     	persistenceUrl = RegistryUtil.lookup("persistence", null);
-    	listenerUrl = new URI(MessagingUtil.getMessagingUrl().toString() + "persistence");
+    	URI messagingUrl = MessagingUtil.getMessagingUrl();
+    	listenerUrl = messagingUrl.resolve("persistence");
     	token = SecurityUtil.login(null, "admin1", "admin");
     }
     

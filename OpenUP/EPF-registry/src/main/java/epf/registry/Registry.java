@@ -1,4 +1,4 @@
-package epf.service.registry;
+package epf.registry;
 
 import java.net.URI;
 import java.util.List;
@@ -20,7 +20,7 @@ import epf.client.messaging.Messaging;
  * @author PC
  *
  */
-@Path("registry")
+@Path("/")
 @ApplicationScoped
 public class Registry implements epf.client.registry.Registry {
 	
@@ -61,6 +61,8 @@ public class Registry implements epf.client.registry.Registry {
 			remotes.put(remote, serviceUrl.resolve(remote));
 			remote = "persistence";
 			remotes.put(remote, serviceUrl.resolve(remote));
+			remote = "registry";
+			remotes.put(remote, serviceUrl.resolve(remote));
 			remote = "schema";
 			remotes.put(remote, serviceUrl.resolve(remote));
 			remote = "security";
@@ -69,9 +71,6 @@ public class Registry implements epf.client.registry.Registry {
 			remotes.put(remote, serviceUrl.resolve(remote));
 			remote = "stream";
 			remotes.put(remote, serviceUrl.resolve(remote));
-			final URI registryUrl = new URI(System.getenv(Registry.REGISTRY_URL));
-			remote = "registry";
-			remotes.put(remote, registryUrl);
 			final URI messagingUrl = new URI(System.getenv(Messaging.MESSAGING_URL));
 			remote = "messaging";
 			remotes.put(remote, messagingUrl);

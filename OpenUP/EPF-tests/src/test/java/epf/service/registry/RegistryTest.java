@@ -15,10 +15,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import epf.client.config.ConfigNames;
 import epf.client.registry.Registry;
 import epf.service.ClientUtil;
-import epf.service.MessagingUtil;
+import epf.service.GatewayUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
 
@@ -32,7 +31,7 @@ public class RegistryTest {
     @BeforeClass
     public static void beforeClass(){
     	try {
-			registryUrl = new URI(System.getProperty(ConfigNames.REGISTRY_URL, ""));
+			registryUrl = GatewayUtil.getGatewayUrl().resolve("registry");
 		} 
     	catch (URISyntaxException e) {
 			logger.log(Level.SEVERE, "beforeClass", e);
@@ -63,20 +62,16 @@ public class RegistryTest {
     	Set<Link> links = Registry.list(client, null);
     	Set<URI> URIs = links.stream().map(link -> link.getUri()).collect(Collectors.toSet());
     	Set<URI> expected = new HashSet<>();
-    	String path = registryUrl.getPath().split("/")[1];
-    	URI base = UriBuilder.fromUri(registryUrl).replacePath(path).build();
     	try {
-			expected.add(new URI(base.toString() + "/config"));
-	    	expected.add(new URI(base.toString() + "/file"));
-	    	expected.add(new URI(base.toString() + "/persistence"));
-	    	expected.add(new URI(base.toString() + "/registry"));
-	    	expected.add(new URI(base.toString() + "/schema"));
-	    	expected.add(new URI(base.toString() + "/security"));
-	    	expected.add(new URI(base.toString() + "/system"));
-	    	expected.add(new URI(base.toString() + "/stream"));
-	    	String messagingPath = MessagingUtil.getMessagingUrl().getPath();
-	    	messagingPath = (path + "/" + messagingPath.split("/")[2]);
-	    	URI messagingUrl = UriBuilder.fromUri(MessagingUtil.getMessagingUrl()).replacePath(messagingPath).build();
+			expected.add(GatewayUtil.getGatewayUrl().resolve("config"));
+	    	expected.add(GatewayUtil.getGatewayUrl().resolve("file"));
+	    	expected.add(GatewayUtil.getGatewayUrl().resolve("persistence"));
+	    	expected.add(GatewayUtil.getGatewayUrl().resolve("registry"));
+	    	expected.add(GatewayUtil.getGatewayUrl().resolve("schema"));
+	    	expected.add(GatewayUtil.getGatewayUrl().resolve("security"));
+	    	expected.add(GatewayUtil.getGatewayUrl().resolve("system"));
+	    	expected.add(GatewayUtil.getGatewayUrl().resolve("stream"));
+	    	URI messagingUrl = UriBuilder.fromUri(GatewayUtil.getGatewayUrl().resolve("messaging")).scheme("ws").port(9080).build();
 	    	expected.add(messagingUrl);
 		} 
     	catch (URISyntaxException e) {

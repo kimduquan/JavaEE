@@ -45,17 +45,12 @@ public class FileService implements epf.client.file.Files {
 	/**
 	 * 
 	 */
-	public static final String ROOT_FOLDER_CONFIG = "epf.file.root";
-	
-	/**
-	 * 
-	 */
 	private static final int USER_PATH_SEGMENT_INDEX = 1;
 	
 	/**
 	 * 
 	 */
-	@ConfigProperty(name = ROOT_FOLDER_CONFIG)
+	@ConfigProperty(name = ROOT)
 	@Inject
 	private transient String rootFolder;
 
