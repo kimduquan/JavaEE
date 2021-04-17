@@ -51,6 +51,9 @@ public class Stream {
 	@Inject
 	private transient Logger logger;
 	
+	/**
+	 * 
+	 */
 	@PostConstruct
 	protected void postConstruct() {
 		try {
