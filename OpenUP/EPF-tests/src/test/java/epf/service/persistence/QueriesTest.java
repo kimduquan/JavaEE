@@ -99,7 +99,6 @@ public class QueriesTest {
     }
     
     @Test
-    @Ignore
     public void testSearchOK_EmptyResult() {
     	Response response = client.request(
     			target -> target
