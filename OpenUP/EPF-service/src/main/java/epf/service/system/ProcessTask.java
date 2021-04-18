@@ -51,7 +51,7 @@ public class ProcessTask implements Runnable {
             }
         } 
         catch (Exception ex) {
-            LOGGER.severe(ex.getMessage());
+            LOGGER.throwing(getClass().getName(), "run", ex);
         }
     }
 

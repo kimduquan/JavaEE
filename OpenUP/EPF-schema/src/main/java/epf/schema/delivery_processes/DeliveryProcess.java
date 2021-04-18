@@ -9,6 +9,8 @@ import epf.schema.delivery_processes.section.WorkBreakdownStructure;
 import epf.schema.delivery_processes.section.Description;
 import epf.schema.delivery_processes.section.TeamAllocation;
 import epf.schema.delivery_processes.section.WorkProductUsage;
+import epf.schema.h2.Queries;
+import epf.schema.h2.QueryNames;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -21,7 +23,6 @@ import javax.validation.constraints.NotNull;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.schema.EPF;
-import epf.schema.QueryNames;
 
 /**
  *
@@ -35,7 +36,7 @@ import epf.schema.QueryNames;
         name = DeliveryProcess.DELIVERY_PROCESSES, 
         query = "SELECT dp FROM EPF_DeliveryProcess AS dp"
 )
-@NamedNativeQuery(name = QueryNames.FT_SEARCH_DATA, query = "SELECT * FROM FT_SEARCH_DATA(?, ?, ?);")
+@NamedNativeQuery(name = QueryNames.FT_SEARCH_DATA, query = Queries.FT_SEARCH_DATA)
 public class DeliveryProcess {
 	
     /**

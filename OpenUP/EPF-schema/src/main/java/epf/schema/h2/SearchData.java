@@ -1,4 +1,4 @@
-package epf.service.persistence;
+package epf.schema.h2;
 
 import java.util.List;
 

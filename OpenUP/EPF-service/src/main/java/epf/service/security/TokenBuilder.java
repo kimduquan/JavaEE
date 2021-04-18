@@ -4,12 +4,16 @@ import java.net.URL;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import javax.persistence.EntityManager;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.client.EPFException;
 import epf.client.security.Token;
-import epf.schema.roles.Role;
+import epf.schema.h2.QueryNames;
 import epf.service.persistence.Credential;
 
 /**
@@ -120,9 +124,22 @@ public class TokenBuilder {
      * @param manager
      */
     protected static void buildGroups(final Token token, final String userName, final EntityManager manager) {
-    	final Set<String> groups = new HashSet<>();
-    	groups.add(Role.DEFAULT_ROLE);
+    	final Set<String> groups = manager
+    			.createNamedQuery(QueryNames.ROLES, String.class)
+    			.setParameter(1, userName.toUpperCase(Locale.getDefault()))
+    			.setParameter(2, userName.toUpperCase(Locale.getDefault()))
+    			.getResultStream()
+    			.map(TokenBuilder::mapRole)
+    			.collect(Collectors.toSet());
     	token.setGroups(groups);
+    }
+    
+    /**
+     * @param role
+     * @return
+     */
+    protected static String mapRole(final String role) {
+    	return Stream.of(role.split("_")).map(text -> text.substring(0, 1) + text.substring(1).toLowerCase(Locale.getDefault())).collect(Collectors.joining("_"));
     }
 
 	/**
