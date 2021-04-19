@@ -82,14 +82,19 @@ public class Stream {
 			@Context 
 			final Sse sse) {
 		clients.computeIfPresent(path, (p, client) -> {
-			broadcasters.computeIfAbsent(
+			final Broadcaster broadcaster = broadcasters.computeIfAbsent(
 					path, p2 -> new Broadcaster(
-							client, sse.newEventBuilder(), 
+							sse.newEventBuilder(), 
 							sse.newBroadcaster()
 							)
-					)
-			.getBroadcaster()
-			.register(sink);
+					);
+			client.onMessage(broadcaster::broadcast);
+			broadcaster.getBroadcaster().onClose(snk -> { 
+				broadcasters.remove(path); 
+				client.onMessage(message -> {}); 
+				}
+			);
+			broadcaster.getBroadcaster().register(sink);
 			return client;
 		});
 	}
