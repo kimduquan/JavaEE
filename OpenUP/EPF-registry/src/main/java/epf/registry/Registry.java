@@ -14,6 +14,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
+import epf.client.cache.Cache;
+import epf.client.config.Config;
 import epf.client.messaging.Messaging;
 
 /**
@@ -55,9 +57,7 @@ public class Registry implements epf.client.registry.Registry {
 	protected void postConstruct() {
 		try {
 			final URI serviceUrl = new URI(System.getenv(SERVICE_URL));
-			String remote = "config";
-			remotes.put(remote, serviceUrl.resolve(remote));
-			remote = "file";
+			String remote = "file";
 			remotes.put(remote, serviceUrl.resolve(remote));
 			remote = "persistence";
 			remotes.put(remote, serviceUrl.resolve(remote));
@@ -75,6 +75,12 @@ public class Registry implements epf.client.registry.Registry {
 			final URI messagingUrl = new URI(System.getenv(Messaging.MESSAGING_URL));
 			remote = "messaging";
 			remotes.put(remote, messagingUrl);
+			final URI cacheUrl = new URI(System.getenv(Cache.CACHE_URL));
+			remote = "cache";
+			remotes.put(remote, cacheUrl);
+			final URI configUrl = new URI(System.getenv(Config.CONFIG_URL));
+			remote = "config";
+			remotes.put(remote, configUrl);
 		} 
 		catch (Exception e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);

@@ -16,11 +16,11 @@
         <!-- Jaeger configuration -->
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
-		<liberty.env.epf.config.url>https://localhost:9443/config/</liberty.env.epf.config.url>
+		<liberty.env.epf.config.url>https://localhost:9443/config/config/</liberty.env.epf.config.url>
         <liberty.env.epf.service.url>https://localhost:9443/service/</liberty.env.epf.service.url>
         <liberty.env.epf.gateway.url>https://localhost:9443/gateway/</liberty.env.epf.gateway.url>
         <liberty.env.epf.messaging.url>ws://localhost:9080/messaging/messaging/</liberty.env.epf.messaging.url>
-        <liberty.env.epf.cache.url>https://localhost:9443/cache/</liberty.env.epf.cache.url>
+        <liberty.env.epf.cache.url>https://localhost:9443/cache/cache/</liberty.env.epf.cache.url>
         <liberty.env.epf.registry.url>https://localhost:9443/registry/registry/</liberty.env.epf.registry.url>
 		<liberty.env.epf.webapp.url>https://localhost:9443/webapp/</liberty.env.epf.webapp.url>
 		<liberty.env.epf.tests.file.root>target/servers/test/epf.file.root</liberty.env.epf.tests.file.root>
@@ -174,12 +174,12 @@
                 <configuration>
                     <!-- Pass contextPath and httpPort to the integration tests -->
                     <systemPropertyVariables>
-						<epf.config.url>https://localhost:${httpsPort}/config/</epf.config.url>
+						<epf.config.url>https://localhost:${httpsPort}/config/config/</epf.config.url>
                         <epf.service.url>https://localhost:${httpsPort}/service/</epf.service.url>
                         <epf.gateway.url>https://localhost:${httpsPort}/gateway/</epf.gateway.url>
                         <epf.registry.url>https://localhost:${httpsPort}/registry/registry/</epf.registry.url>
                         <epf.messaging.url>ws://localhost:${httpPort}/messaging/messaging/</epf.messaging.url>
-                        <epf.cache.url>https://localhost:${httpsPort}/cache/</epf.cache.url>
+                        <epf.cache.url>https://localhost:${httpsPort}/cache/cache/</epf.cache.url>
                         <epf.webapp.url>https://localhost:${httpsPort}/webapp/</epf.webapp.url>
                         <epf.tests.file.root>target/servers/test/epf.file.root</epf.tests.file.root>
                         <webdriver.chrome.driver>chromedriver.exe</webdriver.chrome.driver>
