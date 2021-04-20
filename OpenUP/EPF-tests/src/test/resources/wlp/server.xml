@@ -24,6 +24,9 @@
 	<application id="EPF-messaging" name="EPF-messaging" context-root="messaging" location="EPF-messaging-1.0.0.war" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
+    <application id="EPF-cache" name="cache" context-root="cache" location="EPF-cache-1.0.0.war" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
 	<application id="EPF-registry" name="EPF-registry" context-root="registry" location="EPF-registry-1.0.0.war" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
