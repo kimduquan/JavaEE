@@ -16,6 +16,7 @@
         <!-- Jaeger configuration -->
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
+		<liberty.env.epf.config.url>https://localhost:9443/config/</liberty.env.epf.config.url>
         <liberty.env.epf.service.url>https://localhost:9443/service/</liberty.env.epf.service.url>
         <liberty.env.epf.gateway.url>https://localhost:9443/gateway/</liberty.env.epf.gateway.url>
         <liberty.env.epf.messaging.url>ws://localhost:9080/messaging/messaging/</liberty.env.epf.messaging.url>
@@ -69,6 +70,12 @@
             <groupId>openup</groupId>
             <artifactId>EPF-client</artifactId>
             <version>1.0.0</version>
+        </dependency>
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-config</artifactId>
+            <version>1.0.0</version>
+            <type>war</type>
         </dependency>
         <dependency>
             <groupId>openup</groupId>
@@ -167,11 +174,12 @@
                 <configuration>
                     <!-- Pass contextPath and httpPort to the integration tests -->
                     <systemPropertyVariables>
+						<epf.config.url>https://localhost:${httpsPort}/config/</epf.config.url>
                         <epf.service.url>https://localhost:${httpsPort}/service/</epf.service.url>
                         <epf.gateway.url>https://localhost:${httpsPort}/gateway/</epf.gateway.url>
                         <epf.registry.url>https://localhost:${httpsPort}/registry/registry/</epf.registry.url>
                         <epf.messaging.url>ws://localhost:${httpPort}/messaging/messaging/</epf.messaging.url>
-                        <epf.cache.url>https://localhost:9443/cache/</epf.cache.url>
+                        <epf.cache.url>https://localhost:${httpsPort}/cache/</epf.cache.url>
                         <epf.webapp.url>https://localhost:${httpsPort}/webapp/</epf.webapp.url>
                         <epf.tests.file.root>target/servers/test/epf.file.root</epf.tests.file.root>
                         <webdriver.chrome.driver>chromedriver.exe</webdriver.chrome.driver>
@@ -247,7 +255,7 @@
                         <configuration>
                             <verifyTimeout>600</verifyTimeout>
                             <serverStartTimeout>600</serverStartTimeout>
-                            <applications>EPF-messaging,EPF-cache,EPF-service,EPF-registry,EPF-gateway,EPF-webapp</applications>
+                            <applications>EPF-config,EPF-messaging,EPF-cache,EPF-service,EPF-registry,EPF-gateway,EPF-webapp</applications>
                         </configuration>
                     </execution>
                     <!-- Stop the server -->
@@ -266,7 +274,7 @@
                     <deployPackages>dependencies</deployPackages>
 					<verifyTimeout>600</verifyTimeout>
 					<serverStartTimeout>600</serverStartTimeout>
-					<applications>EPF-messaging,EPF-cache,EPF-service,EPF-registry,EPF-gateway,EPF-webapp</applications>
+					<applications>EPF-config,EPF-messaging,EPF-cache,EPF-service,EPF-registry,EPF-gateway,EPF-webapp</applications>
                 </configuration>
             </plugin>
         </plugins>
