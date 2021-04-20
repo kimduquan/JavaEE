@@ -3,7 +3,6 @@ package epf.client.registry;
 import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -56,7 +55,7 @@ public class LocateRegistry {
 			});
 		} 
 		catch (Exception e) {
-			logger.log(Level.SEVERE, e.getMessage(), e);
+			logger.throwing(getClass().getName(), "postConstruct", e);
 		}
 	}
 	
