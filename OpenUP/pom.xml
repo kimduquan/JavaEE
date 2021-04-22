@@ -406,6 +406,7 @@
    </profiles>
     <modules>
 		<module>EPF-utility</module>
+		<module>EPF-batch</module>
 		<module>EPF-config</module>
         <module>EPF-gateway</module>
 		<module>EPF-messaging</module>
