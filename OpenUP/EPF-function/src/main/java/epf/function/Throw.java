@@ -1,4 +1,4 @@
-package epf.util.lang;
+package epf.function;
 
 import java.lang.reflect.Constructor;
 import java.util.concurrent.Callable;

@@ -1,11 +1,9 @@
-package epf.util.function;
+package epf.function;
 
 import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.stream.Stream;
 import epf.util.Var;
-import epf.util.lang.Return;
-import epf.util.lang.Throw;
 
 /**
  * @author PC

@@ -1,8 +1,7 @@
-package epf.util.lang;
+package epf.function;
 
 import java.util.concurrent.Callable;
 import java.util.function.Supplier;
-import epf.util.function.Predicate;
 
 /**
  * @author PC

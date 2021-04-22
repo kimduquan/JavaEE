@@ -1,7 +1,6 @@
-package epf.util.lang;
+package epf.function;
 
 import java.util.stream.Stream;
-import epf.util.function.Function;
 
 /**
  * @author PC

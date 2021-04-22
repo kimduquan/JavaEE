@@ -1,4 +1,4 @@
-package epf.util.function;
+package epf.function;
 
 import java.util.stream.Stream;
 import org.junit.After;
@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import epf.util.Var;
-import epf.util.lang.Return;
 
 public class FunctionTest {
 
@@ -182,7 +181,7 @@ public class FunctionTest {
 						() -> { varCount.set(Integer.valueOf(0));},
 						() -> { varCount.set(count -> count + 1);},
 						() -> { varCount.set(count -> count + 5);},
-						new epf.util.lang.Assert(() -> 1 == 2),
+						new epf.function.Assert(() -> 1 == 2),
 						() -> { varCount.set(count -> count + 10);}
 						)
 				);

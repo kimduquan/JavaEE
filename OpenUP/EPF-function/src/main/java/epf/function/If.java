@@ -1,8 +1,7 @@
-package epf.util.lang;
+package epf.function;
 
 import java.util.function.Supplier;
 import java.util.stream.Stream;
-import epf.util.function.PredicateFunction;
 
 /**
  * @author PC

@@ -1,14 +1,13 @@
-package epf.util.lang;
+package epf.function;
 
 /**
  * @author PC
  *
  */
-public class Continue implements Runnable {
+public class Break implements Runnable {
 
 	@Override
 	public void run() {
 		toString();
 	}
-
 }
