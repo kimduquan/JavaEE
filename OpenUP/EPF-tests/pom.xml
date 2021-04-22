@@ -261,7 +261,7 @@
                         <configuration>
                             <verifyTimeout>600</verifyTimeout>
                             <serverStartTimeout>600</serverStartTimeout>
-                            <applications>EPF-config,EPF-messaging,EPF-cache,EPF-service,EPF-registry,EPF-gateway,EPF-webapp</applications>
+                            <applications>EPF-config,EPF-messaging,EPF-batch,EPF-cache,EPF-service,EPF-registry,EPF-gateway,EPF-webapp</applications>
                         </configuration>
                     </execution>
                     <!-- Stop the server -->
@@ -280,7 +280,7 @@
                     <deployPackages>dependencies</deployPackages>
 					<verifyTimeout>600</verifyTimeout>
 					<serverStartTimeout>600</serverStartTimeout>
-					<applications>EPF-config,EPF-messaging,EPF-cache,EPF-service,EPF-registry,EPF-gateway,EPF-webapp</applications>
+					<applications>EPF-config,EPF-messaging,EPF-batch,EPF-cache,EPF-service,EPF-registry,EPF-gateway,EPF-webapp</applications>
                 </configuration>
             </plugin>
         </plugins>
