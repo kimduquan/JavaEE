@@ -52,7 +52,7 @@
     </library>
     
     <library id="JCacheLib">
-        <file name="${shared.resource.dir}/epf/hazelcast-3.12.12.jar"/>
+        <file name="${shared.resource.dir}/epf/hazelcast-4.2.jar"/>
     </library>
     
     <!-- uri="file://${server.config.dir}hazelcast.xml" -->
