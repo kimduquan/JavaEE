@@ -1,12 +1,17 @@
 package epf.schema.h2;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author PC
  *
  */
-public class SearchData {
+public class SearchData implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/**
 	 * 
 	 */

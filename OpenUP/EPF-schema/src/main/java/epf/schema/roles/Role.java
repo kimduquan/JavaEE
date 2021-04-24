@@ -16,6 +16,7 @@ import javax.persistence.NamedNativeQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import javax.json.JsonObject;
 import javax.persistence.Embedded;
 import org.eclipse.microprofile.graphql.Type;
@@ -38,8 +39,13 @@ import epf.schema.h2.QueryNames;
     "modifies"
 })
 @NamedNativeQuery(name = QueryNames.ROLES, query = Queries.ROLES)
-public class Role {
+public class Role implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * 
 	 */

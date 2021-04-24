@@ -5,6 +5,8 @@
  */
 package openup.schema;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,9 +26,14 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Schema(name = OpenUP.DELIVERY_PROCESS, title = "Delivery Process")
 @Entity(name = OpenUP.DELIVERY_PROCESS)
 @Table(schema = OpenUP.SCHEMA, name = "OPENUP_DELIVERY_PROCESS")
-public class DeliveryProcess {
+public class DeliveryProcess implements Serializable {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * 
      */
     @Id

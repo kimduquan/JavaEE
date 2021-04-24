@@ -5,6 +5,7 @@
  */
 package epf.schema.tasks;
 
+import java.io.Serializable;
 import java.util.List;
 import javax.json.JsonObject;
 import javax.json.bind.annotation.JsonbPropertyOrder;
@@ -38,9 +39,14 @@ import javax.persistence.Index;
 @NamedQuery(
         name = Discipline.DISCIPLINES, 
         query = "SELECT d FROM EPF_Discipline AS d")
-public class Discipline {
+public class Discipline implements Serializable {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * 
      */
     @Column(name = "NAME")

@@ -11,6 +11,7 @@ import epf.schema.delivery_processes.section.TeamAllocation;
 import epf.schema.delivery_processes.section.WorkProductUsage;
 import epf.schema.h2.Queries;
 import epf.schema.h2.QueryNames;
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -37,9 +38,14 @@ import epf.schema.EPF;
         query = "SELECT dp FROM EPF_DeliveryProcess AS dp"
 )
 @NamedNativeQuery(name = QueryNames.FT_SEARCH_DATA, query = Queries.FT_SEARCH_DATA)
-public class DeliveryProcess {
+public class DeliveryProcess implements Serializable {
 	
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * 
      */
     @Column(name = "NAME")

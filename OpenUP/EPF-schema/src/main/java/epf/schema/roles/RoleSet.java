@@ -5,6 +5,7 @@
  */
 package epf.schema.roles;
 
+import java.io.Serializable;
 import java.util.List;
 import javax.json.JsonObject;
 import javax.json.bind.annotation.JsonbPropertyOrder;
@@ -38,9 +39,14 @@ import javax.persistence.Index;
 @NamedQuery(
         name = RoleSet.ROLES, 
         query = "SELECT rs FROM EPF_RoleSet AS rs")
-public class RoleSet {
+public class RoleSet implements Serializable {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * 
      */
     @Column(name = "NAME")

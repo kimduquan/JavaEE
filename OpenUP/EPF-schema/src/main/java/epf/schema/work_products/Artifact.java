@@ -10,6 +10,7 @@ import epf.schema.work_products.section.Description;
 import epf.schema.work_products.section.Illustrations;
 import epf.schema.work_products.section.MoreInformation;
 import epf.schema.work_products.section.Relationships;
+import java.io.Serializable;
 import javax.json.JsonObject;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.persistence.Column;
@@ -38,9 +39,14 @@ import javax.persistence.EntityListeners;
     "fulfilledSlots"
 })
 @EntityListeners({EntityListener.class})
-public class Artifact {
+public class Artifact implements Serializable {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * 
      */
     @Column(name = "NAME")

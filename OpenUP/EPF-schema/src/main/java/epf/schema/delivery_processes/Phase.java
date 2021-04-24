@@ -9,6 +9,7 @@ import epf.schema.delivery_processes.section.WorkProductUsage;
 import epf.schema.delivery_processes.section.TeamAllocation;
 import epf.schema.delivery_processes.section.WorkBreakdownStructure;
 import epf.schema.delivery_processes.section.Description;
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -17,7 +18,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.schema.EPF;
@@ -37,9 +37,14 @@ import javax.persistence.NamedQuery;
         name = Phase.PHASES,
         query = "SELECT ph FROM EPF_Phase ph JOIN ph.parentActivities dp WHERE dp.name = :name"
 )
-public class Phase {
+public class Phase implements Serializable {
     
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * 
      */
     public static final String PHASES = "EPF_Phase.Phases";

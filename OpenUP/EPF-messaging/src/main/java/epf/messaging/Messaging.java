@@ -52,6 +52,7 @@ public class Messaging {
 	@PostConstruct
 	protected void postConstruct() {
 		servers.put("persistence", new Server());
+		servers.put("cache", new Server());
 	}
 	
 	/**

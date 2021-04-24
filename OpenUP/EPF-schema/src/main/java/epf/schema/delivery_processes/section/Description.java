@@ -1,11 +1,11 @@
 package epf.schema.delivery_processes.section;
 
+import java.io.Serializable;
 import javax.json.JsonObject;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 import javax.validation.constraints.NotNull;
-
 import org.eclipse.microprofile.graphql.Type;
 
 /**
@@ -14,9 +14,14 @@ import org.eclipse.microprofile.graphql.Type;
  */
 @Type
 @Embeddable
-public class Description {
+public class Description implements Serializable {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * 
      */
     @Column(name = "PURPOSE")

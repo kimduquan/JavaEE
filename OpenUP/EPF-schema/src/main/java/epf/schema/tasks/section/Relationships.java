@@ -8,6 +8,7 @@ package epf.schema.tasks.section;
 import epf.schema.EPF;
 import epf.schema.roles.Role;
 import epf.schema.work_products.Artifact;
+import java.io.Serializable;
 import java.util.List;
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Embeddable;
@@ -22,9 +23,14 @@ import org.eclipse.microprofile.graphql.Type;
  */
 @Type
 @Embeddable
-public class Relationships {
+public class Relationships implements Serializable {
     
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * 
      */
     @JoinColumn(name = "PRIMARY_PERFORMER", referencedColumnName = "NAME")

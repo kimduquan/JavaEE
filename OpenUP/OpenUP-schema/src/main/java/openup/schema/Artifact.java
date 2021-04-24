@@ -5,6 +5,7 @@
  */
 package openup.schema;
 
+import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,7 +29,12 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Schema(name = OpenUP.ARTIFACT, title = "Artifact")
 @Entity(name = OpenUP.ARTIFACT)
 @Table(schema = OpenUP.SCHEMA, name = "OPENUP_ARTIFACT")
-public class Artifact {
+public class Artifact implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**
      * 

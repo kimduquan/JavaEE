@@ -5,6 +5,7 @@
  */
 package epf.schema.work_products;
 
+import java.io.Serializable;
 import java.util.List;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.persistence.Column;
@@ -37,9 +38,14 @@ import javax.persistence.Index;
 @NamedQuery(
         name = Domain.DOMAINS, 
         query = "SELECT d FROM EPF_Domain AS d")
-public class Domain {
+public class Domain implements Serializable {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * 
      */
     @Column(name = "NAME")

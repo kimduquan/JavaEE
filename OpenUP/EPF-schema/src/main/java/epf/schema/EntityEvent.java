@@ -3,12 +3,18 @@
  */
 package epf.schema;
 
+import java.io.Serializable;
+
 /**
  * @author PC
  *
  */
-public class EntityEvent {
+public class EntityEvent implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/**
 	 * 
 	 */

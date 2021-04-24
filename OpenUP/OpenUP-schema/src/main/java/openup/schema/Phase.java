@@ -5,6 +5,7 @@
  */
 package openup.schema;
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,9 +26,14 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Schema(name = OpenUP.PHASE, title = "Phase")
 @Entity(name = OpenUP.PHASE)
 @Table(schema = OpenUP.SCHEMA, name = "OPENUP_PHASE", indexes = {@Index(columnList = "PARENT_ACTIVITIES")})
-public class Phase {
+public class Phase implements Serializable {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * 
      */
     @Id

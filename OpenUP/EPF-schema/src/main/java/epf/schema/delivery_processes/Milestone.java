@@ -6,6 +6,7 @@
 package epf.schema.delivery_processes;
 
 import epf.schema.delivery_processes.section.Properties;
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -14,7 +15,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.schema.EPF;
@@ -27,9 +27,14 @@ import epf.schema.EPF;
 @Schema(name = EPF.MILESTONE, title = "Milestone")
 @Entity(name = EPF.MILESTONE)
 @Table(schema = EPF.SCHEMA, name = "MILESTONE")
-public class Milestone {
+public class Milestone implements Serializable {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * 
      */
     @Column(name = "NAME")

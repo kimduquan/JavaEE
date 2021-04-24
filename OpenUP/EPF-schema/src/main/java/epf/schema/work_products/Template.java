@@ -5,6 +5,7 @@
  */
 package epf.schema.work_products;
 
+import java.io.Serializable;
 import javax.json.JsonObject;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,9 +24,14 @@ import epf.schema.EPF;
 @Schema(name = EPF.TEMPLATE, title = "Template")
 @Entity(name = EPF.TEMPLATE)
 @Table(schema = EPF.SCHEMA, name = "TEMPLATE")
-public class Template {
+public class Template implements Serializable {
 	
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * 
      */
     @Column(name = "NAME")
