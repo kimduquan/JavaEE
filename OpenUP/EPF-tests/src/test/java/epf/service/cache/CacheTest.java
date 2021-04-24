@@ -5,6 +5,7 @@ package epf.service.cache;
 
 import java.net.URI;
 import java.time.Instant;
+import javax.ws.rs.NotFoundException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -90,6 +91,12 @@ public class CacheTest {
         Assert.assertNotNull("Artifact", cachedArtifact);
         Assert.assertEquals("Artifact.name", artifact.getName(), cachedArtifact.getName());
         Assert.assertEquals("Artifact.summary", artifact.getSummary(), cachedArtifact.getSummary());
+	}
+	
+	@Test(expected = NotFoundException.class)
+	public void testGetEntity_NotFound() throws Exception {
+		Thread.sleep(20);
+        Cache.getEntity(client, Artifact.class, EPF.SCHEMA, EPF.ARTIFACT, "Artifact Cache" + String.valueOf(Instant.now().toEpochMilli()));
 	}
 
 }

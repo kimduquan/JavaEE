@@ -104,7 +104,6 @@ public class Persistence {
 		catch (Exception e) {
 			logger.throwing(client.getClass().getName(), "close", e);
 		}
-		cache.close();
 	}
 	
 	/**
@@ -147,41 +146,10 @@ public class Persistence {
 	 */
 	protected Object getKey(final Object entity) {
 		final Class<?> cls = entity.getClass();
-		final String schema = entitySchemas.computeIfAbsent(cls.getName(), key -> {
-			String name = null;
-			if(cls.isAnnotationPresent(javax.persistence.Table.class)) {
-				name = ((javax.persistence.Table)cls.getAnnotation(javax.persistence.Table.class)).schema();
-			}
-			return name;
-		});
-		final String entityName = entityNames.computeIfAbsent(cls.getName(), key -> {
-			String name = null;
-			if(cls.isAnnotationPresent(javax.persistence.Entity.class)) {
-				name = ((javax.persistence.Entity)cls.getAnnotation(javax.persistence.Entity.class)).name();
-			}
-			return name;
-		});
-		final Field idField = entityIdFields.computeIfAbsent(cls.getName(), name -> {
-			final Optional<Field> entityIdField = Stream.of(cls.getDeclaredFields()).parallel().filter(field -> field.isAnnotationPresent(Id.class)).findAny();
-			Field field = null;
-			if(entityIdField.isPresent()) {
-				field = entityIdField.get();
-			}
-			return field;
-		});
-		final Method idGetter = entityIdGetters.computeIfAbsent(cls.getName(), key -> {
-			Method getter = null;
-			if(idField != null) {
-				final String name = "get" + idField.getName().substring(0, 1).toUpperCase(Locale.getDefault()) + idField.getName().substring(1);
-				try {
-					getter = cls.getMethod(name);
-				} 
-				catch (NoSuchMethodException | SecurityException e) {
-					logger.throwing("java.lang.Class", "getMethod", e);
-				}
-			}
-			return getter;
-		});
+		final String schema = getEntitySchema(cls);
+		final String entityName = getEntityName(cls);
+		final Field idField = getEntityIdField(cls);
+		final Method idGetter = getEntityIdGetter(cls, idField);
 		Object entityId = null;
 		if(idGetter != null) {
 			try {
@@ -196,6 +164,70 @@ public class Persistence {
 			key = String.format(CACHE_KEY_FORMAT, schema, entityName, entityId);
 		}
 		return key;
+	}
+	
+	/**
+	 * @param cls
+	 * @return
+	 */
+	protected String getEntitySchema(final Class<?> cls) {
+		return entitySchemas.computeIfAbsent(cls.getName(), key -> {
+			String name = null;
+			if(cls.isAnnotationPresent(javax.persistence.Table.class)) {
+				name = ((javax.persistence.Table)cls.getAnnotation(javax.persistence.Table.class)).schema();
+			}
+			return name;
+		});
+	}
+	
+	/**
+	 * @param cls
+	 * @return
+	 */
+	protected String getEntityName(final Class<?> cls) {
+		return entityNames.computeIfAbsent(cls.getName(), key -> {
+			String name = null;
+			if(cls.isAnnotationPresent(javax.persistence.Entity.class)) {
+				name = ((javax.persistence.Entity)cls.getAnnotation(javax.persistence.Entity.class)).name();
+			}
+			return name;
+		});
+	}
+	
+	/**
+	 * @param cls
+	 * @return
+	 */
+	protected Field getEntityIdField(final Class<?> cls) {
+		return entityIdFields.computeIfAbsent(cls.getName(), name -> {
+			final Optional<Field> entityIdField = Stream.of(cls.getDeclaredFields()).parallel().filter(field -> field.isAnnotationPresent(Id.class)).findAny();
+			Field field = null;
+			if(entityIdField.isPresent()) {
+				field = entityIdField.get();
+			}
+			return field;
+		});
+	}
+	
+	/**
+	 * @param cls
+	 * @param idField
+	 * @return
+	 */
+	protected Method getEntityIdGetter(final Class<?> cls, final Field idField) {
+		return entityIdGetters.computeIfAbsent(cls.getName(), key -> {
+			Method getter = null;
+			if(idField != null) {
+				final String name = "get" + idField.getName().substring(0, 1).toUpperCase(Locale.getDefault()) + idField.getName().substring(1);
+				try {
+					getter = cls.getMethod(name);
+				} 
+				catch (NoSuchMethodException | SecurityException e) {
+					logger.throwing("java.lang.Class", "getMethod", e);
+				}
+			}
+			return getter;
+		});
 	}
 	
 	/**

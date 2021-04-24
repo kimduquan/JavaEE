@@ -27,7 +27,7 @@ import epf.cache.persistence.Persistence;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class Service extends Application {
-
+	
 	/**
 	 * 
 	 */
@@ -36,8 +36,13 @@ public class Service extends Application {
 	/**
 	 * 
 	 */
+	private transient javax.cache.Cache<Object, Object> persistenceCache;
+	
+	/**
+	 * 
+	 */
 	@Inject
-	private Persistence persistence;
+	private transient Persistence persistence;
 	
 	/**
 	 * 
@@ -47,12 +52,17 @@ public class Service extends Application {
 		Hazelcast.newHazelcastInstance();
 		manager = Caching.getCachingProvider().getCacheManager();
 		final MutableConfiguration<Object, Object> config = new MutableConfiguration<>();
-		final javax.cache.Cache<Object, Object> cache = manager.createCache("persistence", config);
-		persistence.setCache(cache);
+		persistenceCache = manager.createCache("persistence", config);
+		persistence.setCache(persistenceCache);
 	}
 	
+	/**
+	 * 
+	 */
 	@PreDestroy
 	public void preDestroy() {
+		persistenceCache.close();
+		manager.close();
 		Hazelcast.shutdownAll();
 	}
 }
