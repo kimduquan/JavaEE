@@ -22,4 +22,9 @@ public interface Queries {
 			+ " ) "
 			+ "UNION"
 			+ "    SELECT GRANTEDROLE FROM INFORMATION_SCHEMA.RIGHTS WHERE GRANTEDROLE <> '' AND GRANTEETYPE = 'USER' AND GRANTEE = ?;";
+	
+	/**
+	 * 
+	 */
+	String SET_PASSWORD = "ALTER USER %s SET PASSWORD ?;";
 }

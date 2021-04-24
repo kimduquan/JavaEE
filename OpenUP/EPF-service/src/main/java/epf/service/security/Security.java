@@ -28,11 +28,13 @@ import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import epf.client.config.ConfigNames;
+import epf.client.security.Info;
 import epf.client.security.Token;
 import epf.schema.roles.Role;
 import epf.service.persistence.Application;
 import epf.service.persistence.Credential;
 import epf.service.persistence.Session;
+import epf.service.persistence.security.SecurityService;
 import epf.util.logging.Log;
 
 /**
@@ -85,6 +87,12 @@ public class Security implements epf.client.security.Security, Serializable {
     /**
      * 
      */
+    @Inject
+    private transient SecurityService service;
+    
+    /**
+     * 
+     */
     @Context 
     private transient SecurityContext context;
     
@@ -129,7 +137,7 @@ public class Security implements epf.client.security.Security, Serializable {
                         unit, 
                         passwordHash
                 );
-    	final TokenBuilder builder = new TokenBuilder(issuer);
+    	final TokenBuilder builder = new TokenBuilder(issuer, service);
         final Token jwt = builder
         		.expire(jwtExpTimeUnit, jwtExpDuration)
         		.fromCredential(credential)
@@ -154,9 +162,7 @@ public class Security implements epf.client.security.Security, Serializable {
             responseCode = "200"
     )
     @Log
-    public String logOut(
-    		final String unit
-    ) {
+    public String logOut(final String unit) {
     	final Session session = removeSession(unit);
         if(session != null){
             session.close();
@@ -179,7 +185,7 @@ public class Security implements epf.client.security.Security, Serializable {
     public Token authenticate(final String unit) {
     	if(getSession(unit) != null){
     		final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
-    		return new TokenBuilder(issuer).build(jwt);
+    		return new TokenBuilder(issuer, service).build(jwt);
         }
         throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
     }
@@ -224,4 +230,26 @@ public class Security implements epf.client.security.Security, Serializable {
         }
         return session;
     }
+    
+    /**
+     * @param unit
+     * @return
+     */
+    protected Credential getCredential(final String unit) {
+    	final Principal principal = context.getUserPrincipal();
+    	final epf.service.persistence.Context ctx = persistence.getContext(unit);
+    	if(principal != null && ctx != null) {
+    		final Credential credential = ctx.getCredential(principal.getName());
+    		if(credential != null) {
+    			return credential;
+    		}
+    	}
+    	throw new ForbiddenException();
+    }
+
+	@Override
+	public void update(final String unit, final Info info) {
+		final Credential credential = getCredential(unit);
+		service.setUserPassword(credential.getDefaultManager(), context.getUserPrincipal().getName(), info.getPassword().toCharArray());
+	}
 }

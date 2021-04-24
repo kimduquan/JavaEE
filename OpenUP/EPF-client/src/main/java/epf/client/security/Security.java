@@ -6,13 +6,19 @@
 package epf.client.security;
 
 import java.net.URL;
+import java.util.Map;
+
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.HttpMethod;
+import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -20,6 +26,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import epf.schema.EPF;
 import epf.util.client.Client;
 import epf.validation.persistence.Unit;
@@ -151,5 +158,37 @@ public interface Security {
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.get(Token.class);
+    }
+    
+    /**
+     * @param unit
+     */
+    @PATCH
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    void update(
+    		@QueryParam(UNIT)
+            @Unit
+            @DefaultValue(EPF.SCHEMA)
+    		@NotBlank
+    		final String unit,
+    		@BeanParam
+    		@Valid
+    		final Info info
+    		);
+    
+    /**
+     * @param client
+     * @param unit
+     * @param fields
+     */
+    static Response update(final Client client, final String unit, final Map<String, String> fields) {
+    	final Form form = new Form();
+    	fields.forEach((name, value) -> form.param(name, value));
+    	return client.request(
+    			target -> target.queryParam(UNIT, unit), 
+    			req -> req
+    			)
+    	.build(HttpMethod.PATCH, Entity.form(form))
+    	.invoke();
     }
 }

@@ -4,17 +4,12 @@ import java.net.URL;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import javax.persistence.EntityManager;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.client.EPFException;
 import epf.client.security.Token;
-import epf.schema.h2.QueryNames;
 import epf.service.persistence.Credential;
+import epf.service.persistence.security.SecurityService;
 
 /**
  * @author PC
@@ -56,10 +51,16 @@ public class TokenBuilder {
 	private transient final String issuer;
 	
 	/**
+	 * 
+	 */
+	private transient final SecurityService service;
+	
+	/**
 	 * @param issuer
 	 */
-	public TokenBuilder(final String issuer) {
+	public TokenBuilder(final String issuer, final SecurityService service) {
 		this.issuer = issuer;
+		this.service = service;
 	}
 	
 	/**
@@ -117,30 +118,6 @@ public class TokenBuilder {
 		this.expireTimeUnit = timeUnit;
 		return this;
 	}
-    
-    /**
-     * @param token
-     * @param userName
-     * @param manager
-     */
-    protected static void buildGroups(final Token token, final String userName, final EntityManager manager) {
-    	final Set<String> groups = manager
-    			.createNamedQuery(QueryNames.ROLES, String.class)
-    			.setParameter(1, userName.toUpperCase(Locale.getDefault()))
-    			.setParameter(2, userName.toUpperCase(Locale.getDefault()))
-    			.getResultStream()
-    			.map(TokenBuilder::mapRole)
-    			.collect(Collectors.toSet());
-    	token.setGroups(groups);
-    }
-    
-    /**
-     * @param role
-     * @return
-     */
-    protected static String mapRole(final String role) {
-    	return Stream.of(role.split("_")).map(text -> text.substring(0, 1) + text.substring(1).toLowerCase(Locale.getDefault())).collect(Collectors.joining("_"));
-    }
 
 	/**
 	 * @return
@@ -159,7 +136,7 @@ public class TokenBuilder {
                 audience.getHost(), 
                 audience.getPort()));
         jwt.setAudience(aud);
-	    buildGroups(jwt, name, credential.getDefaultManager());
+        jwt.setGroups(service.getUserRoles(credential.getDefaultManager(), name));
 	    try {
 			jwt = tokenGenerator.generate(jwt);
 		} 

@@ -6,17 +6,19 @@
 package epf.service.security;
 
 import static epf.client.security.Security.AUDIENCE_URL_FORMAT;
-
 import java.net.URI;
 import java.net.URL;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -309,5 +311,52 @@ public class SecurityTest {
                 }
         );
         logOut(token, null);
+    }
+    
+    @Test
+    public void testUpdateOk_Password() throws Exception {
+    	String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
+    	try(Client client = ClientUtil.newClient(securityUrl)){
+    		client.authorization(token);
+    		Map<String, String> fields = new HashMap<>();
+    		fields.put("password", "any_role1");
+    		Response response = Security.update(client, null, fields);
+    		Assert.assertEquals("Response.status", Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
+    	}
+    	logOut(token, null);
+    	token = login(null, "any_role1", "any_role1", securityUrl.toURL(), true);
+    	try(Client client = ClientUtil.newClient(securityUrl)){
+    		client.authorization(token);
+    		Map<String, String> fields = new HashMap<>();
+    		fields.put("password", "any_role");
+    		Response response = Security.update(client, null, fields);
+    		Assert.assertEquals("Response.status", Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
+    	}
+    	logOut(token, null);
+    }
+    
+    @Test
+    public void testUpdateInvalid_PasswordNull() throws Exception {
+    	String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
+    	try(Client client = ClientUtil.newClient(securityUrl)){
+    		client.authorization(token);
+    		Map<String, String> fields = new HashMap<>();
+    		Response response = Security.update(client, null, fields);
+    		Assert.assertEquals("Response.status", Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+    	}
+    	logOut(token, null);
+    }
+    
+    @Test
+    public void testUpdateInvalid_PasswordEmpty() throws Exception {
+    	String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
+    	try(Client client = ClientUtil.newClient(securityUrl)){
+    		client.authorization(token);
+    		Map<String, String> fields = new HashMap<>();
+    		fields.put("password", "");
+    		Response response = Security.update(client, null, fields);
+    		Assert.assertEquals("Response.status", Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+    	}
+    	logOut(token, null);
     }
 }
