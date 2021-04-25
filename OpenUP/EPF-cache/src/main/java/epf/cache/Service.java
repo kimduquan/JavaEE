@@ -36,7 +36,7 @@ public class Service extends Application {
 	/**
 	 * 
 	 */
-	private transient javax.cache.Cache<Object, Object> persistenceCache;
+	private transient javax.cache.Cache<String, Object> persistenceCache;
 	
 	/**
 	 * 
@@ -51,7 +51,7 @@ public class Service extends Application {
 	public void postConstruct() {
 		Hazelcast.newHazelcastInstance();
 		manager = Caching.getCachingProvider().getCacheManager();
-		final MutableConfiguration<Object, Object> config = new MutableConfiguration<>();
+		final MutableConfiguration<String, Object> config = new MutableConfiguration<>();
 		persistenceCache = manager.createCache("persistence", config);
 		persistence.setCache(persistenceCache);
 	}

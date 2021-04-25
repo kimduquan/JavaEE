@@ -44,7 +44,7 @@ public class Persistence {
 	/**
 	 * 
 	 */
-	private transient Cache<Object, Object> cache;
+	private transient Cache<String, Object> cache;
 	
 	/**
 	 * 
@@ -112,28 +112,28 @@ public class Persistence {
 	protected void onEntityEvent(final Object message) {
 		if(message instanceof PostLoad) {
 			final PostLoad postLoad = (PostLoad) message;
-			final Object key = getKey(postLoad.getEntity());
+			final String key = getKey(postLoad.getEntity());
 			if(key != null) {
 				cache.putIfAbsent(key, postLoad.getEntity());
 			}
 		}
 		else if(message instanceof PostUpdate) {
 			final PostUpdate postUpdate = (PostUpdate) message;
-			final Object key = getKey(postUpdate.getEntity());
+			final String key = getKey(postUpdate.getEntity());
 			if(key != null) {
 				cache.replace(key, postUpdate.getEntity());
 			}
 		}
 		else if(message instanceof PostPersist) {
 			final PostPersist postPersist = (PostPersist) message;
-			final Object key = getKey(postPersist.getEntity());
+			final String key = getKey(postPersist.getEntity());
 			if(key != null) {
 				cache.put(key, postPersist.getEntity());
 			}
 		}
 		else if(message instanceof PostRemove) {
 			final PostRemove postRemove = (PostRemove) message;
-			final Object key = getKey(postRemove.getEntity());
+			final String key = getKey(postRemove.getEntity());
 			if(key != null) {
 				cache.remove(key);
 			}
@@ -144,7 +144,7 @@ public class Persistence {
 	 * @param entity
 	 * @return
 	 */
-	protected Object getKey(final Object entity) {
+	protected String getKey(final Object entity) {
 		final Class<?> cls = entity.getClass();
 		final String schema = getEntitySchema(cls);
 		final String entityName = getEntityName(cls);
@@ -159,7 +159,7 @@ public class Persistence {
 				logger.throwing(Method.class.getName(), "invoke", e);
 			}
 		}
-		Object key = null;
+		String key = null;
 		if(schema != null && entityName != null && entityId != null) {
 			key = String.format(CACHE_KEY_FORMAT, schema, entityName, entityId);
 		}
@@ -249,7 +249,7 @@ public class Persistence {
 		return entity;
 	}
 	
-	public void setCache(final Cache<Object, Object> cache) {
+	public void setCache(final Cache<String, Object> cache) {
 		this.cache = cache;
 	}
 }
