@@ -28,5 +28,13 @@
             <artifactId>EPF-client</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+			<groupId>org.jppf</groupId>
+			<artifactId>jppf-j2ee-client</artifactId>
+			<version>6.2</version>
+			<scope>system</scope>
+			<type>jar</type>
+			<systemPath>${pom.basedir}/src/main/webapp/WEB-INF/lib/jppf-j2ee-client.jar</systemPath>
+		</dependency>
     </dependencies>
 </project>
