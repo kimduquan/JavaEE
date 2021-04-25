@@ -72,6 +72,7 @@ public class RegistryTest {
 	    	expected.add(GatewayUtil.getGatewayUrl().resolve("system"));
 	    	expected.add(GatewayUtil.getGatewayUrl().resolve("stream"));
 	    	expected.add(GatewayUtil.getGatewayUrl().resolve("cache"));
+	    	expected.add(GatewayUtil.getGatewayUrl().resolve("script"));
 	    	URI messagingUrl = UriBuilder.fromUri(GatewayUtil.getGatewayUrl().resolve("messaging")).scheme("ws").port(9080).build();
 	    	expected.add(messagingUrl);
 		} 

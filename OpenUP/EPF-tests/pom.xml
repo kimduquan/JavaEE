@@ -17,6 +17,7 @@
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
 		<liberty.env.epf.config.url>https://localhost:9443/config/config/</liberty.env.epf.config.url>
+		<liberty.env.epf.script.url>https://localhost:9443/script/script/</liberty.env.epf.script.url>
         <liberty.env.epf.service.url>https://localhost:9443/service/</liberty.env.epf.service.url>
         <liberty.env.epf.gateway.url>https://localhost:9443/gateway/</liberty.env.epf.gateway.url>
         <liberty.env.epf.messaging.url>ws://localhost:9080/messaging/messaging/</liberty.env.epf.messaging.url>
@@ -187,6 +188,7 @@
                     <!-- Pass contextPath and httpPort to the integration tests -->
                     <systemPropertyVariables>
 						<epf.config.url>https://localhost:${httpsPort}/config/config/</epf.config.url>
+						<epf.script.url>https://localhost:${httpsPort}/script/script/</epf.script.url>
                         <epf.service.url>https://localhost:${httpsPort}/service/</epf.service.url>
                         <epf.gateway.url>https://localhost:${httpsPort}/gateway/</epf.gateway.url>
                         <epf.registry.url>https://localhost:${httpsPort}/registry/registry/</epf.registry.url>
@@ -267,7 +269,7 @@
                         <configuration>
                             <verifyTimeout>600</verifyTimeout>
                             <serverStartTimeout>600</serverStartTimeout>
-                            <applications>EPF-config,EPF-messaging,EPF-batch,EPF-cache,EPF-service,EPF-registry,EPF-gateway,EPF-webapp</applications>
+                            <applications>EPF-script,EPF-config,EPF-messaging,EPF-batch,EPF-cache,EPF-service,EPF-registry,EPF-gateway,EPF-webapp</applications>
                         </configuration>
                     </execution>
                     <!-- Stop the server -->
@@ -286,7 +288,7 @@
                     <deployPackages>dependencies</deployPackages>
 					<verifyTimeout>600</verifyTimeout>
 					<serverStartTimeout>600</serverStartTimeout>
-					<applications>EPF-config,EPF-messaging,EPF-batch,EPF-cache,EPF-service,EPF-registry,EPF-gateway,EPF-webapp</applications>
+					<applications>EPF-script,EPF-config,EPF-messaging,EPF-batch,EPF-cache,EPF-service,EPF-registry,EPF-gateway,EPF-webapp</applications>
                 </configuration>
             </plugin>
         </plugins>

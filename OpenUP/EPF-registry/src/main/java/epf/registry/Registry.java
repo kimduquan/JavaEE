@@ -17,6 +17,7 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import epf.client.cache.Cache;
 import epf.client.config.Config;
 import epf.client.messaging.Messaging;
+import epf.client.script.Script;
 
 /**
  * @author PC
@@ -81,6 +82,9 @@ public class Registry implements epf.client.registry.Registry {
 			final URI configUrl = new URI(System.getenv(Config.CONFIG_URL));
 			remote = "config";
 			remotes.put(remote, configUrl);
+			final URI scriptUrl = new URI(System.getenv(Script.SCRIPT_URL));
+			remote = "script";
+			remotes.put(remote, scriptUrl);
 		} 
 		catch (Exception e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
