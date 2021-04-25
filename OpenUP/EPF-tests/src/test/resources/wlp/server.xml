@@ -14,7 +14,7 @@
         <feature>wasJmsServer-1.0</feature>
         <feature>wasJmsClient-2.0</feature>
         <feature>webProfile-8.0</feature>
-        
+        <feature>jca-1.7</feature>
     </featureManager>
 
     <httpEndpoint id="defaultHttpEndpoint"
@@ -22,6 +22,9 @@
                   httpPort="${httpPort}"
                   httpsPort="${httpsPort}" />
 	<application id="EPF-batch" name="EPF-batch" context-root="batch" location="EPF-batch-1.0.0.war" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
+	<application id="EPF-script" name="EPF-script" context-root="script" location="EPF-script-1.0.0.war" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
 	<application id="EPF-config" name="EPF-config" context-root="config" location="EPF-config-1.0.0.war" >

@@ -408,6 +408,7 @@
 		<module>EPF-utility</module>
 		<module>EPF-function</module>
 		<module>EPF-batch</module>
+		<module>EPF-script</module>
 		<module>EPF-config</module>
         <module>EPF-gateway</module>
 		<module>EPF-messaging</module>
