@@ -28,13 +28,36 @@
             <artifactId>EPF-client</artifactId>
             <version>1.0.0</version>
         </dependency>
-        <dependency>
+        <!-- https://mvnrepository.com/artifact/javax.resource/javax.resource-api -->
+		<dependency>
+		    <groupId>javax.resource</groupId>
+		    <artifactId>javax.resource-api</artifactId>
+		</dependency>
+        <!-- <dependency>
 			<groupId>org.jppf</groupId>
 			<artifactId>jppf-j2ee-client</artifactId>
 			<version>6.2</version>
 			<scope>system</scope>
 			<type>jar</type>
 			<systemPath>${pom.basedir}/src/main/webapp/WEB-INF/lib/jppf-j2ee-client.jar</systemPath>
+		</dependency> -->
+		<dependency>
+			<groupId>org.jppf</groupId>
+			<artifactId>jppf-jca</artifactId>
+			<version>6.2</version>
+			<scope>system</scope>
+			<type>jar</type>
+			<systemPath>${pom.basedir}/src/main/webapp/WEB-INF/lib/jppf-jca.jar</systemPath>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.jppf/jppf-client -->
+		<dependency>
+		    <groupId>org.jppf</groupId>
+		    <artifactId>jppf-client</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.codehaus.groovy/groovy-jsr223 -->
+		<dependency>
+		    <groupId>org.codehaus.groovy</groupId>
+		    <artifactId>groovy-jsr223</artifactId>
 		</dependency>
     </dependencies>
 </project>
