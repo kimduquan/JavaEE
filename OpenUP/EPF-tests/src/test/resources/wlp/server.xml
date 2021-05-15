@@ -110,7 +110,7 @@
     <batchJmsEvents />
 	<logging />
 	<resourceAdapter id="jppf" location="${server.config.dir}/jppf_ra_OpenLiberty.rar">
-		<classloader apiTypeVisibility="spec,ibm-api,api,stable,third-party"/>
+		<classloader apiTypeVisibility="+third-party"/>
 	</resourceAdapter>
 	<connectionFactory jndiName="eis/JPPFConnectionFactory">
 		<properties.jppf ConfigurationSource="classpath|jppf.properties"/>

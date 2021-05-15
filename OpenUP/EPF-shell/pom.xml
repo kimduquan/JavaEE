@@ -6,7 +6,7 @@
     <version>1.0.0</version>
   </parent>
   <artifactId>EPF-shell</artifactId>
-  <name>EPF-shell</name>
+  <name>Eclipse Process Framework Shell</name>
   <dependencies>
   	<!-- https://mvnrepository.com/artifact/org.jppf/jppf-client -->
 	<dependency>

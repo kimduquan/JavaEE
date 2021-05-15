@@ -133,6 +133,7 @@ public class Queries implements epf.client.persistence.Queries {
 		final UriBuilder baseUri = uriInfo.getBaseUriBuilder();
 		final Iterator<Link> linksIt = query
 				.getResultStream()
+				.filter(link -> link != null)
 				.map(
 						searchData -> {
 							Link entityLink = null;
@@ -155,7 +156,6 @@ public class Queries implements epf.client.persistence.Queries {
 							return entityLink;
 							}
 						)
-				.filter(link -> link != null)
 				.iterator();
 		while(linksIt.hasNext()) {
 			response = response.links(linksIt.next());
