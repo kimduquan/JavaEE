@@ -25,21 +25,21 @@
 			<groupId>org.springframework.shell</groupId>
 			<artifactId>spring-shell-starter</artifactId>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.jppf/jppf-client -->
+		<!-- https://mvnrepository.com/artifact/org.jppf/jppf-client 
 		<dependency>
 			<groupId>org.jppf</groupId>
 			<artifactId>jppf-client</artifactId>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.codehaus.groovy/groovy-jsr223 -->
+		</dependency>-->
+		<!-- https://mvnrepository.com/artifact/org.codehaus.groovy/groovy-jsr223 
 		<dependency>
 			<groupId>org.codehaus.groovy</groupId>
 			<artifactId>groovy-jsr223</artifactId>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.python/jython-standalone -->
+		</dependency>-->
+		<!-- https://mvnrepository.com/artifact/org.python/jython-standalone 
 		<dependency>
 			<groupId>org.python</groupId>
 			<artifactId>jython-standalone</artifactId>
-		</dependency>
+		</dependency>-->
 	</dependencies>
 
 	<build>
