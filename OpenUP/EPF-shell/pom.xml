@@ -1,27 +1,64 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>openup</groupId>
-    <artifactId>OpenUP-parent</artifactId>
-    <version>1.0.0</version>
-  </parent>
-  <artifactId>EPF-shell</artifactId>
-  <name>Eclipse Process Framework Shell</name>
-  <dependencies>
-  	<!-- https://mvnrepository.com/artifact/org.jppf/jppf-client -->
-	<dependency>
-	    <groupId>org.jppf</groupId>
-	    <artifactId>jppf-client</artifactId>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/org.codehaus.groovy/groovy-jsr223 -->
-	<dependency>
-	    <groupId>org.codehaus.groovy</groupId>
-	    <artifactId>groovy-jsr223</artifactId>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/org.python/jython-standalone -->
-	<dependency>
-	    <groupId>org.python</groupId>
-	    <artifactId>jython-standalone</artifactId>
-	</dependency>
-  </dependencies>
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>openup</groupId>
+		<artifactId>OpenUP-parent</artifactId>
+		<version>1.0.0</version>
+	</parent>
+	<artifactId>EPF-shell</artifactId>
+	<packaging>jar</packaging>
+	<name>Eclipse Process Framework Shell</name>
+	<dependencyManagement>
+		<dependencies>
+			<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>2.4.5</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.shell</groupId>
+			<artifactId>spring-shell-starter</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.jppf/jppf-client -->
+		<dependency>
+			<groupId>org.jppf</groupId>
+			<artifactId>jppf-client</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.codehaus.groovy/groovy-jsr223 -->
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-jsr223</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.python/jython-standalone -->
+		<dependency>
+			<groupId>org.python</groupId>
+			<artifactId>jython-standalone</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<fork>true</fork>
+					<mainClass>epf.shell.Application</mainClass>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
