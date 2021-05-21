@@ -3,21 +3,30 @@
  */
 package epf.shell;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import jakarta.enterprise.inject.se.SeContainer;
+import jakarta.enterprise.inject.se.SeContainerInitializer;
 
 /**
  * @author PC
  *
  */
-@SpringBootApplication
-public class Application {
+public final class Application {
+	
+	/**
+	 * 
+	 */
+	private Application() {
+		super();
+	}
 
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
+	public static void main(final String[] args) {
+		try(SeContainer container = SeContainerInitializer.newInstance().initialize()){
+			final Shell shell = container.select(Shell.class).get();
+			shell.execute(args);
+		}
 	}
 
 }

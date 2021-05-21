@@ -8,23 +8,27 @@
 	<artifactId>EPF-shell</artifactId>
 	<packaging>jar</packaging>
 	<name>Eclipse Process Framework Shell</name>
-	<dependencyManagement>
-		<dependencies>
-			<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies -->
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-dependencies</artifactId>
-				<version>2.4.5</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 	<dependencies>
+		<!-- https://mvnrepository.com/artifact/info.picocli/picocli -->
 		<dependency>
-			<groupId>org.springframework.shell</groupId>
-			<artifactId>spring-shell-starter</artifactId>
+		    <groupId>info.picocli</groupId>
+		    <artifactId>picocli</artifactId>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.jboss.weld.se/weld-se-shaded -->
+		<dependency>
+		    <groupId>org.jboss.weld.se</groupId>
+		    <artifactId>weld-se-shaded</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.jboss/jandex -->
+		<dependency>
+		    <groupId>org.jboss</groupId>
+		    <artifactId>jandex</artifactId>
+		</dependency>
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-client</artifactId>
+            <version>1.0.0</version>
+        </dependency>
 		<!-- https://mvnrepository.com/artifact/org.jppf/jppf-client 
 		<dependency>
 			<groupId>org.jppf</groupId>
@@ -41,24 +45,20 @@
 			<artifactId>jython-standalone</artifactId>
 		</dependency>-->
 	</dependencies>
-
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<fork>true</fork>
-					<mainClass>epf.shell.Application</mainClass>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>repackage</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+	    <plugins>
+	      <plugin>
+	        <groupId>org.codehaus.mojo</groupId>
+	        <artifactId>appassembler-maven-plugin</artifactId>
+	        <configuration>
+	          <programs>
+	            <program>
+	              <mainClass>epf.shell.Application</mainClass>
+	              <id>epf</id>
+	            </program>
+	          </programs>
+	        </configuration>
+	      </plugin>
+	    </plugins>
+	  </build>
 </project>
