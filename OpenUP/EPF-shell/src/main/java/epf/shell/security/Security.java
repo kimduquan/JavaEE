@@ -5,8 +5,9 @@ package epf.shell.security;
 
 import java.net.URI;
 import java.net.URL;
-import epf.shell.ClientUtil;
-import epf.shell.Registry;
+import epf.client.security.Token;
+import epf.shell.client.ClientUtil;
+import epf.shell.registry.Registry;
 import epf.util.Var;
 import epf.util.client.Client;
 import epf.util.security.PasswordHelper;
@@ -24,9 +25,15 @@ import picocli.CommandLine.Option;
 @RequestScoped
 public class Security {
 	
+	/**
+	 * 
+	 */
 	@Inject @Named(Registry.EPF_SECURITY_URL)
 	private transient Var<URI> securityUrl;
 	
+	/**
+	 * 
+	 */
 	@Inject
 	private transient ClientUtil clientUtil;
 
@@ -51,6 +58,37 @@ public class Security {
 					PasswordHelper.hash(user, password), 
 					new URL(securityUrl.get().toString())
 					);
+		}
+	}
+	
+	/**
+	 * @param token
+	 * @return
+	 * @throws Exception
+	 */
+	@Command(name = "logout")
+	public String logout(
+			@Option(names = {"-t", "--token"}, description = "Token") 
+			final String token
+			) throws Exception {
+		try(Client client = clientUtil.newClient(securityUrl.get())){
+			client.authorization(token);
+			return epf.client.security.Security.logOut(client, null);
+		}
+	}
+	
+	/**
+	 * @param token
+	 * @return
+	 * @throws Exception
+	 */
+	@Command(name = "auth")
+	public Token authenticate(
+			@Option(names = {"-t", "--token"}, description = "Token") 
+			final String token) throws Exception {
+		try(Client client = clientUtil.newClient(securityUrl.get())){
+			client.authorization(token);
+			return epf.client.security.Security.authenticate(client, null);
 		}
 	}
 }

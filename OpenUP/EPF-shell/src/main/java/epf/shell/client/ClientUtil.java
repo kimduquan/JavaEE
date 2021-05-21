@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.shell;
+package epf.shell.client;
 
 import java.net.URI;
 import epf.util.client.Client;

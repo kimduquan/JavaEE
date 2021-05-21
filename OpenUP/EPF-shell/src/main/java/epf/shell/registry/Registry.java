@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.shell;
+package epf.shell.registry;
 
 /**
  * @author PC

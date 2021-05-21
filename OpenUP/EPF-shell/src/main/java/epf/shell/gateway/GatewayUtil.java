@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.shell;
+package epf.shell.gateway;
 
 import java.net.URI;
 import java.net.URISyntaxException;

@@ -125,4 +125,13 @@ public class Client implements AutoCloseable {
     	builder = buildEvent.apply(builder);
     	return builder.build();
     }
+    
+    /**
+     * @param clients
+     * @param uri
+     * @return
+     */
+    public static Client newClient(final ClientQueue clients, final URI uri) {
+    	return new Client(clients, uri, builder -> builder);
+    }
 }

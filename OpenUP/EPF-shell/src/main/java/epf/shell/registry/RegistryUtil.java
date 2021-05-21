@@ -1,16 +1,16 @@
 /**
  * 
  */
-package epf.shell;
+package epf.shell.registry;
 
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import epf.client.gateway.Gateway;
 import epf.client.registry.Registry;
+import epf.shell.client.ClientUtil;
 import epf.util.Var;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
@@ -62,7 +62,7 @@ public class RegistryUtil {
 			});
 		} 
 		catch (Exception e) {
-			LOGGER.log(Level.SEVERE, e.getMessage(), e);
+			LOGGER.throwing(getClass().getName(), "postConstruct", e);
 		}
 	}
 	
@@ -70,9 +70,8 @@ public class RegistryUtil {
 	 * @return
 	 * @throws MalformedURLException 
 	 */
-	@Produces @Named(epf.shell.Registry.EPF_SECURITY_URL)
+	@Produces @Named(epf.shell.registry.Registry.EPF_SECURITY_URL)
 	public Var<URI> getSecurityUrl() throws MalformedURLException {
 		return new Var<>(remotes.get("security"));
 	}
-	
 }
