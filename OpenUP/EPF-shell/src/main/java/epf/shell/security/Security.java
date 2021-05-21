@@ -3,6 +3,7 @@
  */
 package epf.shell.security;
 
+import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URL;
 import epf.client.security.Token;
@@ -36,6 +37,9 @@ public class Security {
 	 */
 	@Inject
 	private transient ClientUtil clientUtil;
+	
+	@Inject @Named(epf.shell.System.OUTPUT)
+	private transient PrintWriter out;
 
 	/**
 	 * @param user
@@ -51,13 +55,15 @@ public class Security {
 		    final char... password
 			) throws Exception {
 		try(Client client = clientUtil.newClient(securityUrl.get())){
-			return epf.client.security.Security.login(
+			final String token = epf.client.security.Security.login(
 					client, 
 					null, 
 					user, 
 					PasswordHelper.hash(user, password), 
 					new URL(securityUrl.get().toString())
 					);
+			out.println(token);
+			return token;
 		}
 	}
 	
@@ -73,7 +79,9 @@ public class Security {
 			) throws Exception {
 		try(Client client = clientUtil.newClient(securityUrl.get())){
 			client.authorization(token);
-			return epf.client.security.Security.logOut(client, null);
+			final String result = epf.client.security.Security.logOut(client, null);
+			out.println(result);
+			return result;
 		}
 	}
 	
