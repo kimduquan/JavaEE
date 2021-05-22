@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.service;
+package epf;
 
 import java.time.Duration;
 import java.util.function.Predicate;

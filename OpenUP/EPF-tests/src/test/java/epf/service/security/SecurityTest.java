@@ -25,10 +25,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import epf.client.ClientUtil;
 import epf.client.security.Security;
 import epf.client.security.Token;
 import epf.schema.EPF;
-import epf.service.ClientUtil;
 import epf.service.RegistryUtil;
 import epf.util.client.Client;
 import epf.util.security.PasswordHelper;

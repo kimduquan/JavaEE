@@ -5,6 +5,7 @@
  */
 package epf.service;
 
+import epf.client.ClientUtil;
 import epf.client.security.Security;
 import epf.util.client.Client;
 import epf.util.logging.Logging;

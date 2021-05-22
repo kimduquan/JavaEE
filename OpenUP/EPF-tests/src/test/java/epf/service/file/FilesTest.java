@@ -23,7 +23,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import epf.service.ClientUtil;
+
+import epf.client.ClientUtil;
 import epf.service.RegistryUtil;
 import epf.service.SecurityUtil;
 import epf.util.client.Client;

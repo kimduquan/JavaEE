@@ -15,8 +15,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import epf.client.ClientUtil;
 import epf.client.registry.Registry;
-import epf.service.ClientUtil;
 import epf.service.GatewayUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;

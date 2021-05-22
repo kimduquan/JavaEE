@@ -1,10 +1,12 @@
-package epf.service;
+package epf.client;
 
 import java.net.URI;
 import javax.json.JsonObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
+import epf.JsonObjectDeserializer;
+import epf.JsonObjectSerializer;
 import epf.util.client.Client;
 import epf.util.client.ClientQueue;
 
