@@ -6,6 +6,7 @@
 package epf.schema.delivery_processes;
 
 import epf.schema.EPF;
+import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -31,9 +32,14 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Schema(name = EPF.ACTIVITY, title = "Activity")
 @Entity(name = EPF.ACTIVITY)
 @Table(schema = EPF.SCHEMA, name = "ACTIVITY")
-public class Activity {
+public class Activity implements Serializable {
     
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * 
      */
     @Column(name = "NAME")

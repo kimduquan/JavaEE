@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import javax.json.JsonObject;
 import javax.persistence.Embedded;
 import org.eclipse.microprofile.graphql.Type;
@@ -34,9 +35,14 @@ import epf.schema.EPF;
     "optional",
     "outputs"
 })
-public class Task {
+public class Task implements Serializable {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * 
      */
     @Column(name = "NAME")

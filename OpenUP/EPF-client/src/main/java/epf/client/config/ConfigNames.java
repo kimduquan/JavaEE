@@ -23,25 +23,8 @@ public interface ConfigNames {
      * 
      */
     String JWT_EXPIRE_TIMEUNIT = "epf.security.jwt.exp.timeunit";
-    
-    /**
-     * 
-     */
-    String REGISTRY_URL = "epf.registry.url";
-    /**
-     * 
-     */
-    String SERVICE_URL = "epf.service.url";
-    /**
-     * 
-     */
-    String FILE_ROOT = "epf.file.root";
     /**
      * 
      */
     String WEB_APP_URL = "epf.webapp.url";
-    /**
-     * 
-     */
-    String MESSAGING_URL = "epf.messaging.url";
 }

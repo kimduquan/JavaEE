@@ -6,6 +6,7 @@
 package epf.service.persistence;
 
 import java.io.InputStream;
+import java.net.URI;
 import java.util.logging.Logger;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
@@ -13,18 +14,21 @@ import javax.inject.Inject;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.json.bind.JsonbException;
+import javax.persistence.metamodel.PluralAttribute;
 import javax.validation.Validator;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
-
 import epf.client.EPFException;
 import epf.schema.roles.Role;
 
@@ -205,4 +209,34 @@ public class Entities implements epf.client.persistence.Entities {
         }
         return entity;
     }
+
+	@Override
+	public Response getEntityType(final String unit, final String name) {
+		final Entity<Object> entity = findEntity(unit, name);
+		if(entity.getType() != null) {
+			final ResponseBuilder response = Response.ok();
+			entity.getType().getPluralAttributes().forEach(attribute -> {
+				
+			});
+			return response.build();
+		}
+		throw new NotFoundException();
+	}
+	
+	/**
+	 * @param uri
+	 * @param attr
+	 * @param unit
+	 * @param entity
+	 * @return
+	 */
+	protected Link buildLink(final URI uri, final PluralAttribute<?, ?, ?> attr, final String unit, final String entity) {
+		Link.Builder builder = Link.fromUri(uri);
+		builder = builder.rel(attr.getName());
+		builder = builder.type(attr.getBindableJavaType().getName());
+		builder = builder.title(attr.getName());
+		builder = builder.param("unit", unit);
+		builder = builder.param("entity", entity);
+		return builder.build();
+	}
 }

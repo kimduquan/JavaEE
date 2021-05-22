@@ -3,11 +3,11 @@ package epf.client.registry;
 import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import epf.client.gateway.Gateway;
 import epf.util.client.Client;
 import epf.util.client.ClientQueue;
 
@@ -17,11 +17,6 @@ import epf.util.client.ClientQueue;
  */
 @ApplicationScoped
 public class LocateRegistry {
-
-	/**
-	 * 
-	 */
-	private static final String REGISTRY_URL = System.getenv("epf.registry.url");
 	
 	/**
 	 * 
@@ -52,7 +47,7 @@ public class LocateRegistry {
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		try(Client client = new Client(clients, new URI(REGISTRY_URL), b -> b)){
+		try(Client client = new Client(clients, new URI(System.getenv(Gateway.GATEWAY_URL)).resolve("registry"), b -> b)){
 			Registry
 			.list(client, null)
 			.forEach(link -> {
@@ -60,7 +55,7 @@ public class LocateRegistry {
 			});
 		} 
 		catch (Exception e) {
-			logger.log(Level.SEVERE, REGISTRY_URL, e);
+			logger.throwing(getClass().getName(), "postConstruct", e);
 		}
 	}
 	

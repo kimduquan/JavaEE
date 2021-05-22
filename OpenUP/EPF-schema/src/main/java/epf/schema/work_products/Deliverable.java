@@ -5,6 +5,7 @@
  */
 package epf.schema.work_products;
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -26,9 +27,14 @@ import epf.schema.EPF;
 @Schema(name = EPF.DELIVERABLE, title = "Deliverable")
 @Entity(name = EPF.DELIVERABLE)
 @Table(schema = EPF.SCHEMA, name = "DELIVERABLE")
-public class Deliverable {
+public class Deliverable implements Serializable {
     
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * 
      */
     @Column(name = "NAME")

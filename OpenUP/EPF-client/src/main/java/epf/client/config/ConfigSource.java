@@ -7,7 +7,6 @@ package epf.client.config;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -66,7 +65,7 @@ public class ConfigSource implements org.eclipse.microprofile.config.spi.ConfigS
             }
         } 
         catch(Exception ex) {
-        	logger.log(Level.SEVERE, ex.getMessage(), ex);
+        	logger.throwing(getClass().getName(), "postConstruct", ex);
         }
         
     }

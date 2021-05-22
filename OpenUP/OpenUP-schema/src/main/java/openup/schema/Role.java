@@ -5,6 +5,7 @@
  */
 package openup.schema;
 
+import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,9 +26,14 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Schema(name = OpenUP.ROLE, title = "Role")
 @Entity(name = OpenUP.ROLE)
 @Table(schema = OpenUP.SCHEMA, name = "OPENUP_ROLE", indexes = {@Index(columnList = "NAME")})
-public class Role {
+public class Role implements Serializable {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * 
      */
     @Id

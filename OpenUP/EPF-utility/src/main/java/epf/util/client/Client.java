@@ -45,7 +45,6 @@ public class Client implements AutoCloseable {
     public Client(final ClientQueue clients, final URI uri, final Function<ClientBuilder, ClientBuilder> buildClient) {
     	Objects.requireNonNull(clients);
     	Objects.requireNonNull(uri);
-    	Objects.requireNonNull(buildClient);
     	client = clients.poll(uri, buildClient);
         this.uri = uri;
         this.clients = clients;

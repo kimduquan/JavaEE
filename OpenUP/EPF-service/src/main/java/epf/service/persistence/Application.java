@@ -7,7 +7,6 @@ package epf.service.persistence;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
@@ -48,7 +47,7 @@ public class Application {
                 context.close();
             } 
             catch (Exception e) {
-            	logger.log(Level.WARNING, e.getMessage(), e);
+            	logger.throwing(Context.class.getName(), "close", e);
             }
         });
         contexts.clear();

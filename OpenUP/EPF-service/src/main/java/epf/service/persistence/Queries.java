@@ -31,7 +31,8 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import epf.schema.EPF;
-import epf.schema.QueryNames;
+import epf.schema.h2.QueryNames;
+import epf.schema.h2.SearchData;
 import epf.schema.roles.Role;
 
 /**
@@ -132,6 +133,7 @@ public class Queries implements epf.client.persistence.Queries {
 		final UriBuilder baseUri = uriInfo.getBaseUriBuilder();
 		final Iterator<Link> linksIt = query
 				.getResultStream()
+				.filter(link -> link != null)
 				.map(
 						searchData -> {
 							Link entityLink = null;
@@ -154,7 +156,6 @@ public class Queries implements epf.client.persistence.Queries {
 							return entityLink;
 							}
 						)
-				.filter(link -> link != null)
 				.iterator();
 		while(linksIt.hasNext()) {
 			response = response.links(linksIt.next());

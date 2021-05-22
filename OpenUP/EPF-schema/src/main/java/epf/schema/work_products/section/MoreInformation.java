@@ -5,6 +5,7 @@
  */
 package epf.schema.work_products.section;
 
+import java.io.Serializable;
 import javax.json.JsonObject;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -16,9 +17,14 @@ import org.eclipse.microprofile.graphql.Type;
  */
 @Type
 @Embeddable
-public class MoreInformation {
+public class MoreInformation implements Serializable {
     
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * 
      */
     @Column(name = "CHECKLISTS")

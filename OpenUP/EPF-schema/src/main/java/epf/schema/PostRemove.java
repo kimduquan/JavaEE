@@ -8,5 +8,10 @@ package epf.schema;
  *
  */
 public class PostRemove extends EntityEvent {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	
 }

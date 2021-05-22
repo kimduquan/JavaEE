@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.cache.annotation.CacheDefaults;
@@ -226,7 +225,7 @@ public class Request {
 	                	result.setType(type);
 	                	}
                 	catch(ClassCastException ex) {
-                		logger.log(Level.SEVERE, ex.getMessage(), ex);
+                		logger.throwing(EntityType.class.getName(), "getClass", ex);
                 	}});
         return result;
     }

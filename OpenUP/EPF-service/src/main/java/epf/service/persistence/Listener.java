@@ -6,14 +6,12 @@ package epf.service.persistence;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.websocket.DeploymentException;
-import epf.client.config.ConfigNames;
 import epf.client.messaging.Client;
 import epf.client.messaging.Messaging;
 import epf.schema.PostPersist;
@@ -44,10 +42,10 @@ public class Listener {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			client = Messaging.connectToServer(new URI(System.getenv(ConfigNames.MESSAGING_URL)).resolve("persistence"));
+			client = Messaging.connectToServer(new URI(System.getenv(Messaging.MESSAGING_URL)).resolve("persistence"));
 		} 
 		catch (DeploymentException|IOException|URISyntaxException e) {
-			logger.log(Level.SEVERE, e.getMessage(), e);
+			logger.throwing(Messaging.class.getName(), "connectToServer", e);
 		}
 	}
 	

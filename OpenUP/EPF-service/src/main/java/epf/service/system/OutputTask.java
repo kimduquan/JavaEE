@@ -58,7 +58,7 @@ public class OutputTask implements Runnable {
 				Thread.sleep(40);
 			} 
 			catch (InterruptedException e) {
-				LOGGER.warning(e.getMessage());
+				LOGGER.throwing(Thread.class.getName(), "sleep", e);
 			}
 		}
 	}

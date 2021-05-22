@@ -9,6 +9,7 @@ import epf.schema.delivery_processes.section.WorkProductUsage;
 import epf.schema.delivery_processes.section.TeamAllocation;
 import epf.schema.delivery_processes.section.Description;
 import epf.schema.delivery_processes.section.WorkBreakdownStructure;
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -28,9 +29,14 @@ import epf.schema.EPF;
 @Schema(name = EPF.CAPABILITY_PATTERN, title = "Capability Pattern")
 @Entity(name = EPF.CAPABILITY_PATTERN)
 @Table(schema = EPF.SCHEMA, name = "CAPABILITY_PATTERN")
-public class CapabilityPattern {
+public class CapabilityPattern implements Serializable {
 	
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * 
      */
     @Column(name = "NAME")

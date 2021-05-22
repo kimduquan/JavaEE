@@ -12,14 +12,18 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import javax.json.JsonObject;
 import javax.persistence.Embedded;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.schema.EPF;
+import epf.schema.h2.Queries;
+import epf.schema.h2.QueryNames;
 
 /**
  *
@@ -34,8 +38,14 @@ import epf.schema.EPF;
     "additionallyPerforms",
     "modifies"
 })
-public class Role {
+@NamedNativeQuery(name = QueryNames.ROLES, query = Queries.ROLES)
+public class Role implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * 
 	 */

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>openup</groupId>
+        <artifactId>OpenUP-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    <artifactId>EPF-script</artifactId>
+    <name>Eclipse Process Framework Scripting</name>
+    <packaging>war</packaging>
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.eclipse.microprofile/microprofile -->
+        <dependency>
+            <groupId>org.eclipse.microprofile</groupId>
+            <artifactId>microprofile</artifactId>
+            <type>pom</type>
+    		<scope>provided</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/javax/javaee-web-api -->
+		<dependency>
+		    <groupId>javax</groupId>
+		    <artifactId>javaee-web-api</artifactId>
+    		<scope>provided</scope>
+		</dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-client</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/javax.resource/javax.resource-api -->
+		<dependency>
+		    <groupId>javax.resource</groupId>
+		    <artifactId>javax.resource-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jppf</groupId>
+			<artifactId>jppf-jca</artifactId>
+			<version>6.2</version>
+			<scope>system</scope>
+			<type>jar</type>
+			<systemPath>${pom.basedir}/src/main/webapp/WEB-INF/lib/jppf-jca.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.jppf</groupId>
+			<artifactId>jppf-j2ee-client</artifactId>
+			<version>6.2</version>
+			<scope>system</scope>
+			<type>jar</type>
+			<systemPath>${pom.basedir}/src/main/webapp/WEB-INF/lib/jppf-j2ee-client.jar</systemPath>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.jppf/jppf-client -->
+		<dependency>
+		    <groupId>org.jppf</groupId>
+		    <artifactId>jppf-client</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.codehaus.groovy/groovy-jsr223 -->
+		<dependency>
+		    <groupId>org.codehaus.groovy</groupId>
+		    <artifactId>groovy-jsr223</artifactId>
+		</dependency>
+    </dependencies>
+</project>

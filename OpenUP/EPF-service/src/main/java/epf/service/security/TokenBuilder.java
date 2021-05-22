@@ -5,12 +5,11 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.EntityManager;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.client.EPFException;
 import epf.client.security.Token;
-import epf.schema.roles.Role;
 import epf.service.persistence.Credential;
+import epf.service.persistence.security.SecurityService;
 
 /**
  * @author PC
@@ -52,10 +51,16 @@ public class TokenBuilder {
 	private transient final String issuer;
 	
 	/**
+	 * 
+	 */
+	private transient final SecurityService service;
+	
+	/**
 	 * @param issuer
 	 */
-	public TokenBuilder(final String issuer) {
+	public TokenBuilder(final String issuer, final SecurityService service) {
 		this.issuer = issuer;
+		this.service = service;
 	}
 	
 	/**
@@ -113,17 +118,6 @@ public class TokenBuilder {
 		this.expireTimeUnit = timeUnit;
 		return this;
 	}
-    
-    /**
-     * @param token
-     * @param userName
-     * @param manager
-     */
-    protected static void buildGroups(final Token token, final String userName, final EntityManager manager) {
-    	final Set<String> groups = new HashSet<>();
-    	groups.add(Role.DEFAULT_ROLE);
-    	token.setGroups(groups);
-    }
 
 	/**
 	 * @return
@@ -142,7 +136,7 @@ public class TokenBuilder {
                 audience.getHost(), 
                 audience.getPort()));
         jwt.setAudience(aud);
-	    buildGroups(jwt, name, credential.getDefaultManager());
+        jwt.setGroups(service.getUserRoles(credential.getDefaultManager(), name));
 	    try {
 			jwt = tokenGenerator.generate(jwt);
 		} 

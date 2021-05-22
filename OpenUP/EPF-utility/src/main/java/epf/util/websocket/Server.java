@@ -87,7 +87,7 @@ public class Server implements AutoCloseable {
      */
     public void forEach(final Consumer<? super Session> consumer) {
     	sessions.values()
-    	.parallelStream()
+    	.stream()
     	.filter(Session::isOpen)
     	.forEach(consumer);
     }

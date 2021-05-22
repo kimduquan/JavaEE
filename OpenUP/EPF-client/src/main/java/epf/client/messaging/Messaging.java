@@ -14,6 +14,11 @@ import javax.websocket.Session;
  *
  */
 public interface Messaging {
+	
+    /**
+     * 
+     */
+    String MESSAGING_URL = "epf.messaging.url";
 
 	/**
 	 * @param uri

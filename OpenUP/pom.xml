@@ -111,7 +111,7 @@
             <dependency>
                 <groupId>com.ibm.websphere.appserver.api</groupId>
                 <artifactId>com.ibm.websphere.appserver.api.jwt</artifactId>
-                <version>1.1.50</version>
+                <version>1.1.51</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/io.jaegertracing/jaeger-client -->
             <dependency>
@@ -129,7 +129,7 @@
 			<dependency>
 			    <groupId>com.hazelcast</groupId>
 			    <artifactId>hazelcast</artifactId>
-			    <version>3.12.12</version>
+			    <version>4.2</version>
 			</dependency>
             <!-- https://mvnrepository.com/artifact/javax.cache/cache-api -->
             <dependency>
@@ -156,11 +156,18 @@
                 <artifactId>javax.jms-api</artifactId>
                 <version>2.0.1</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/javax.resource/javax.resource-api -->
+			<dependency>
+			    <groupId>javax.resource</groupId>
+			    <artifactId>javax.resource-api</artifactId>
+			    <version>1.7.1</version>
+			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.jetty.websocket/javax-websocket-client-impl -->
 			<dependency>
 			    <groupId>org.eclipse.jetty.websocket</groupId>
 			    <artifactId>javax-websocket-client-impl</artifactId>
 			    <version>9.4.39.v20210325</version>
+		    	<scope>test</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/com.liferay.faces/com.liferay.faces.bridge.api -->
 			<dependency>
@@ -186,6 +193,42 @@
 			    <groupId>org.apache.portals.pluto</groupId>
 			    <artifactId>pluto-container</artifactId>
 			    <version>3.1.0</version>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.jppf/jppf-client -->
+			<dependency>
+			    <groupId>org.jppf</groupId>
+			    <artifactId>jppf-client</artifactId>
+			    <version>6.2</version>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.codehaus.groovy/groovy-jsr223 -->
+			<dependency>
+			    <groupId>org.codehaus.groovy</groupId>
+			    <artifactId>groovy-jsr223</artifactId>
+			    <version>3.0.8</version>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.python/jython-standalone -->
+			<dependency>
+			    <groupId>org.python</groupId>
+			    <artifactId>jython-standalone</artifactId>
+			    <version>2.7.2</version>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/info.picocli/picocli -->
+			<dependency>
+			    <groupId>info.picocli</groupId>
+			    <artifactId>picocli</artifactId>
+			    <version>4.6.1</version>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.jboss.weld.se/weld-se-shaded -->
+			<dependency>
+			    <groupId>org.jboss.weld.se</groupId>
+			    <artifactId>weld-se-shaded</artifactId>
+			    <version>4.0.1.SP1</version>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.jboss/jandex -->
+			<dependency>
+			    <groupId>org.jboss</groupId>
+			    <artifactId>jandex</artifactId>
+			    <version>2.2.3.Final</version>
 			</dependency>
         </dependencies>
     </dependencyManagement>
@@ -277,7 +320,7 @@
                 <plugin>
                     <groupId>io.openliberty.tools</groupId>
                     <artifactId>liberty-maven-plugin</artifactId>
-                    <version>3.3.4</version>
+                    <version>3.3.5-M1</version>
                 </plugin>
                 <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-pmd-plugin -->
 				<plugin>
@@ -291,6 +334,18 @@
 					<artifactId>jacoco-maven-plugin</artifactId>
 					<version>0.8.6</version>
 				</plugin>
+				<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-maven-plugin -->
+				<plugin>
+				    <groupId>org.springframework.boot</groupId>
+				    <artifactId>spring-boot-maven-plugin</artifactId>
+				    <version>2.4.5</version>
+				</plugin>
+				<!-- https://mvnrepository.com/artifact/org.codehaus.mojo/appassembler-maven-plugin -->
+				<plugin>
+				    <groupId>org.codehaus.mojo</groupId>
+				    <artifactId>appassembler-maven-plugin</artifactId>
+				    <version>2.1.0</version>
+				</plugin>	
             </plugins>
         </pluginManagement>
     </build>
@@ -363,17 +418,17 @@
 												<limit>
 													<counter>LINE</counter>
 													<value>COVEREDRATIO</value>
-													<minimum>0.61</minimum>
+													<minimum>0.45</minimum>
 												</limit>
 												<limit>
 													<counter>BRANCH</counter>
 													<value>COVEREDRATIO</value>
-													<minimum>0.52</minimum>
+													<minimum>0.50</minimum>
 												</limit>
 												<limit>
 													<counter>COMPLEXITY</counter>
 													<value>COVEREDRATIO</value>
-													<minimum>0.63</minimum>
+													<minimum>0.43</minimum>
 												</limit>
 											</limits>
 										</rule>
@@ -405,7 +460,14 @@
    </profiles>
     <modules>
 		<module>EPF-utility</module>
+		<module>EPF-function</module>
+		<module>EPF-batch</module>
+		<module>EPF-script</module>
+		<module>EPF-config</module>
         <module>EPF-gateway</module>
+		<module>EPF-messaging</module>
+		<module>EPF-cache</module>
+		<module>EPF-registry</module>
         <module>EPF-schema</module>
         <module>OpenUP-schema</module>
         <module>EPF-validation</module>
@@ -419,5 +481,6 @@
         <module>EPF-tests</module>
         <!--<module>OpenUP-tests</module>-->
         <module>EPF-assembly</module>
+        <module>EPF-shell</module>
     </modules>
 </project>

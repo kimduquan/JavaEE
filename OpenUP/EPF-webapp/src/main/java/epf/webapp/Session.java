@@ -79,9 +79,9 @@ public class Session implements Serializable {
      */
     @PostConstruct
     protected void postConstruct(){
-    	Principal current = context.getCallerPrincipal();
+    	final Principal current = context.getCallerPrincipal();
     	if(current != null) {
-    		Set<TokenPrincipal> token = context.getPrincipalsByType(TokenPrincipal.class);
+    		final Set<TokenPrincipal> token = context.getPrincipalsByType(TokenPrincipal.class);
     		if(token.isEmpty()) {
     			principal = identityStore.getPrincipal(current.getName());
     		}

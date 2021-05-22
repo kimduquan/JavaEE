@@ -11,17 +11,14 @@ import com.ibm.websphere.security.jwt.JwtBuilder;
 import com.ibm.websphere.security.jwt.JwtException;
 import com.ibm.websphere.security.jwt.JwtToken;
 import com.ibm.websphere.security.jwt.KeyException;
-
 import epf.client.EPFException;
 import epf.client.config.ConfigNames;
 import epf.client.security.Token;
-
 import java.io.Serializable;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Base64;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
@@ -41,10 +38,6 @@ public class TokenGenerator implements Serializable {
     * 
     */
     private static final long serialVersionUID = 1L;
-    /**
-     * 
-     */
-    private static final Logger LOGGER = Logger.getLogger(TokenGenerator.class.getName());
 
     /**
      * 
@@ -61,6 +54,12 @@ public class TokenGenerator implements Serializable {
     /**
      * 
      */
+    @Inject
+    private transient Logger logger;
+    
+    /**
+     * 
+     */
     @PostConstruct
     protected void postConstruct(){
         try {
@@ -73,7 +72,7 @@ public class TokenGenerator implements Serializable {
                         );
         } 
         catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
+            logger.throwing(getClass().getName(), "postConstruct", ex);
         }
     }
     

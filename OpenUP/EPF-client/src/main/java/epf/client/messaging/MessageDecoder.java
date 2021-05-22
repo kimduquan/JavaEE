@@ -31,7 +31,7 @@ public class MessageDecoder implements Decoder.Text<Object> {
 	/**
 	 * 
 	 */
-	private transient final JsonbConfig config = new JsonbConfig().withAdapters(new MessageAdapter());
+	private transient final Jsonb jsonb = JsonbBuilder.create(new JsonbConfig().withAdapters(new MessageAdapter()));
 	
 	@Override
 	public void init(final EndpointConfig config) {
@@ -50,9 +50,7 @@ public class MessageDecoder implements Decoder.Text<Object> {
 				final JsonObject jsonObject = jsonReader.readObject();
 				final String className = jsonObject.getString("class");
 				final Class<?> cls = Class.forName(className);
-				try(Jsonb jsonb = JsonbBuilder.create(config)){
-					return jsonb.fromJson(string, cls);
-				}
+				return jsonb.fromJson(string, cls);
 			}
 		}
 		catch (Exception e) {

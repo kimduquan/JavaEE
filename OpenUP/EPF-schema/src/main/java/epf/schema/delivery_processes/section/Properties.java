@@ -5,6 +5,7 @@
  */
 package epf.schema.delivery_processes.section;
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import org.eclipse.microprofile.graphql.Type;
@@ -15,9 +16,14 @@ import org.eclipse.microprofile.graphql.Type;
  */
 @Type
 @Embeddable
-public class Properties {
+public class Properties implements Serializable {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * 
      */
     @Column(name = "EVENT_DRIVEN")

@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -96,5 +97,19 @@ public class Security {
         request.setUriInfo(uriInfo);
         request.setRequest(req);
         return request.request(null);
+    }
+    
+    @PATCH
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Asynchronous
+    public CompletionStage<Response> update(
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req,
+            final InputStream body) {
+        request.setHeaders(headers);
+        request.setUriInfo(uriInfo);
+        request.setRequest(req);
+        return request.request(body);
     }
 }
