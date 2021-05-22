@@ -5,15 +5,17 @@ package epf.tests.shell;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.ProcessBuilder.Redirect;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
+
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -79,28 +81,16 @@ public class ShellTest {
 	}
 
 	@Test
-	public void test() throws IOException, InterruptedException {
+	public void testSecurity_Login() throws IOException, InterruptedException {
 		builder.command("powershell", "./epf", "security", "login", "-u", "any_role1", "-p");
 		process = builder.start();
 		TestUtil.waitUntil(o -> process.isAlive(), Duration.ofSeconds(10));
-		try(Scanner scanner = new Scanner(process.getInputStream())){
-			while(scanner.hasNextLine()) {
-				String line = scanner.nextLine();
-				if(line.startsWith("Enter value for --password (Password):")) {
-					Files.write(in, "any_role".getBytes(Charset.forName("UTF-8")));
-					break;
-				}
-			}
-		}
-		Files.lines(in).forEach(line -> {
-			System.out.println("[IN]" + line);
-		});
-		Files.lines(out).forEach(line -> {
-			System.out.println("[OUT]" + line);
-		});
-		Files.lines(err).forEach(line -> {
-			System.err.println("[ERR]" + line);
-		});
+		Files.write(in, List.of("any_role"), Charset.forName("UTF-8"));
+		TestUtil.waitUntil(o -> !process.isAlive(), Duration.ofSeconds(10));
+		List<String> lines = Files.readAllLines(out);
+		Assert.assertEquals(2, lines.size());
+		Assert.assertEquals("Enter value for --password (Password): ", lines.get(0));
+		Assert.assertTrue(lines.get(1).length() > 256);
 	}
 
 }

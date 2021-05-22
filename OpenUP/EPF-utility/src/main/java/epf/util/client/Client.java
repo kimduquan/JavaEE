@@ -45,7 +45,6 @@ public class Client implements AutoCloseable {
     public Client(final ClientQueue clients, final URI uri, final Function<ClientBuilder, ClientBuilder> buildClient) {
     	Objects.requireNonNull(clients);
     	Objects.requireNonNull(uri);
-    	Objects.requireNonNull(buildClient);
     	client = clients.poll(uri, buildClient);
         this.uri = uri;
         this.clients = clients;
@@ -124,14 +123,5 @@ public class Client implements AutoCloseable {
     	SseEventSource.Builder builder = SseEventSource.target(target);
     	builder = buildEvent.apply(builder);
     	return builder.build();
-    }
-    
-    /**
-     * @param clients
-     * @param uri
-     * @return
-     */
-    public static Client newClient(final ClientQueue clients, final URI uri) {
-    	return new Client(clients, uri, builder -> builder);
     }
 }

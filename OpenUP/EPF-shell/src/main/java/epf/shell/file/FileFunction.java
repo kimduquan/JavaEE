@@ -9,6 +9,7 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import javax.ws.rs.core.Response;
+import epf.shell.Function;
 import epf.shell.client.ClientUtil;
 import epf.shell.registry.Registry;
 import epf.util.Var;
@@ -25,7 +26,8 @@ import picocli.CommandLine.Option;
  */
 @Command(name = "file")
 @RequestScoped
-public class FileCommand {
+@Function
+public class FileFunction {
 
 	/**
 	 * 

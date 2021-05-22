@@ -96,13 +96,16 @@ public class ClientQueue {
      */
     public Client poll(final URI uri, final Function<ClientBuilder, ClientBuilder> buildClient){
     	Objects.requireNonNull(uri);
-    	Objects.requireNonNull(buildClient);
     	final Queue<Client> pool = clients.computeIfAbsent(
                 uri.toString(), 
                 key -> {
                     Queue<Client> queue = new ConcurrentLinkedQueue<>();
-                    Client client = buildClient.apply(newBuilder(context)).build();
-                    queue.add(client);
+                    if(buildClient != null) {
+                    	queue.add(buildClient.apply(newBuilder(context)).build());
+                    }
+                    else {
+                        queue.add(newBuilder(context).build());
+                    }
                     return queue;
                 }
         );

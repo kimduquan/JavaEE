@@ -45,6 +45,7 @@ public class FunctionInterceptor {
 			logger.entering(cls, method, context.getParameters());
 			result = context.proceed();
 			logger.exiting(cls, method, result);
+			out.println();
 			out.println(String.valueOf(result));
 		}
 		catch(Exception ex) {
