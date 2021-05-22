@@ -3,12 +3,12 @@
  */
 package epf.shell.security;
 
-import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import epf.client.security.Token;
+import epf.shell.Function;
 import epf.shell.client.ClientUtil;
 import epf.shell.registry.Registry;
 import epf.util.Var;
@@ -26,6 +26,7 @@ import picocli.CommandLine.Option;
  */
 @Command(name = "security")
 @RequestScoped
+@Function
 public class Security {
 	
 	/**
@@ -39,17 +40,12 @@ public class Security {
 	 */
 	@Inject
 	private transient ClientUtil clientUtil;
-	
-	/**
-	 * 
-	 */
-	@Inject @Named(epf.shell.System.OUT)
-	private transient PrintWriter out;
 
 	/**
 	 * @param user
 	 * @param password
 	 * @return
+	 * @throws Exception 
 	 * @throws ShellException
 	 */
 	@Command(name = "login")
@@ -60,15 +56,13 @@ public class Security {
 		    final char... password
 			) throws Exception {
 		try(Client client = clientUtil.newClient(securityUrl.get())){
-			final String token = epf.client.security.Security.login(
+			return epf.client.security.Security.login(
 					client, 
 					null, 
 					user, 
 					PasswordHelper.hash(user, password), 
 					new URL(securityUrl.get().toString())
 					);
-			out.println(token);
-			return token;
 		}
 	}
 	
@@ -84,9 +78,7 @@ public class Security {
 			) throws Exception {
 		try(Client client = clientUtil.newClient(securityUrl.get())){
 			client.authorization(token);
-			final String result = epf.client.security.Security.logOut(client, null);
-			out.println(result);
-			return result;
+			return epf.client.security.Security.logOut(client, null);
 		}
 	}
 	

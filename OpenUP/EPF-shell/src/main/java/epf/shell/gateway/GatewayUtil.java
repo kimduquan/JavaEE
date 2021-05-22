@@ -18,9 +18,16 @@ import jakarta.inject.Named;
 @ApplicationScoped
 public class GatewayUtil {
 
+	/**
+	 * @return
+	 * @throws URISyntaxException
+	 */
 	@Produces @ApplicationScoped @Named(Gateway.GATEWAY_URL)
 	public static Var<URI> getGateWayUrl() throws URISyntaxException {
-		final String url = System.getenv(Gateway.GATEWAY_URL);
+		String url = System.getenv(Gateway.GATEWAY_URL);
+		if(url == null || url.isEmpty()) {
+			url = System.getProperty(Gateway.GATEWAY_URL);
+		}
 		return new Var<>(new URI(url));
 	}
 }

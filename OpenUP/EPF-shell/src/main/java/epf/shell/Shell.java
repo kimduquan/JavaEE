@@ -51,7 +51,7 @@ public class Shell {
 	/**
 	 * @return
 	 */
-	@Produces @Named(System.OUT)
+	@Produces @Named(SYSTEM.OUT)
 	public PrintWriter getOutput() {
 		return commandLine.getOut();
 	}
@@ -59,7 +59,7 @@ public class Shell {
 	/**
 	 * @return
 	 */
-	@Produces @Named(System.ERR)
+	@Produces @Named(SYSTEM.ERR)
 	public PrintWriter getError() {
 		return  commandLine.getErr();
 	}

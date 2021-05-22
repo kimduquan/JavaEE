@@ -29,20 +29,21 @@
             <artifactId>EPF-client</artifactId>
             <version>1.0.0</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.eclipse.microprofile/microprofile -->
-        <dependency>
-            <groupId>org.eclipse.microprofile</groupId>
-            <artifactId>microprofile</artifactId>
-            <type>pom</type>
-    		<scope>provided</scope>
-        </dependency>
+        <!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
+		<dependency>
+		    <groupId>javax.ws.rs</groupId>
+		    <artifactId>javax.ws.rs-api</artifactId>
+		    <version>2.1</version>
+		</dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-rs-mp-client</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-json-provider</artifactId>
+            <scope>runtime</scope>
         </dependency>
 		<!-- https://mvnrepository.com/artifact/org.jppf/jppf-client 
 		<dependency>
@@ -73,6 +74,21 @@
 	            </program>
 	          </programs>
 	        </configuration>
+	        <executions>
+	        	<execution>
+	        		<id>epf-shell-assemble</id>
+	        		<goals>
+	        			<goal>assemble</goal>
+	        		</goals>
+	        		<phase>package</phase>
+	        		<configuration>
+	        			<showConsoleWindow>true</showConsoleWindow>
+	        			<repositoryLayout>flat</repositoryLayout>
+	        			<useWildcardClassPath>true</useWildcardClassPath>
+	        			<extraJvmArguments>-Depf.gateway.url="https://localhost:9443/gateway/"</extraJvmArguments>
+	        		</configuration>
+	        	</execution>
+	        </executions>
 	      </plugin>
 	    </plugins>
 	  </build>

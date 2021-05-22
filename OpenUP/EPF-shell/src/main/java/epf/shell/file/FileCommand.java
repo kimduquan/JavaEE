@@ -5,7 +5,6 @@ package epf.shell.file;
 
 import java.io.File;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -40,12 +39,6 @@ public class FileCommand {
 	@Inject
 	private transient ClientUtil clientUtil;
 	
-	/**
-	 * 
-	 */
-	@Inject @Named(epf.shell.System.OUT)
-	private transient PrintWriter out;
-	
 	@Command(name = "create")
 	public URI createFile(
 			@Option(names = {"-t", "--token"}, description = "Token") 
@@ -57,9 +50,7 @@ public class FileCommand {
 		try(Client client = clientUtil.newClient(fileUrl.get())){
 			try(InputStream input = Files.newInputStream(file.toPath())){
 				final Response res = epf.client.file.Files.createFile(client, input, path);
-				final URI uri = res.getLink("self").getUri();
-				out.println(uri);
-				return uri;
+				return res.getLink("self").getUri();
 			}
 		}
 	}
