@@ -6,6 +6,8 @@ package epf.shell.security;
 import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import epf.client.security.Token;
 import epf.shell.client.ClientUtil;
 import epf.shell.registry.Registry;
@@ -38,7 +40,10 @@ public class Security {
 	@Inject
 	private transient ClientUtil clientUtil;
 	
-	@Inject @Named(epf.shell.System.OUTPUT)
+	/**
+	 * 
+	 */
+	@Inject @Named(epf.shell.System.OUT)
 	private transient PrintWriter out;
 
 	/**
@@ -51,7 +56,7 @@ public class Security {
 	public String login(
 			@Option(names = {"-u", "--user"}, description = "User name")
 			final String user,
-			@Option(names = {"-p", "--password"}, description = "Passphrase", interactive = true)
+			@Option(names = {"-p", "--password"}, description = "Password", interactive = true)
 		    final char... password
 			) throws Exception {
 		try(Client client = clientUtil.newClient(securityUrl.get())){
@@ -97,6 +102,21 @@ public class Security {
 		try(Client client = clientUtil.newClient(securityUrl.get())){
 			client.authorization(token);
 			return epf.client.security.Security.authenticate(client, null);
+		}
+	}
+	
+	@Command(name = "set")
+	public void update(
+			@Option(names = {"-t", "--token"}, description = "Token") 
+			final String token,
+			@Option(names = {"-p", "--password"}, description = "Password", interactive = true)
+		    final char... password
+		    ) throws Exception {
+		try(Client client = clientUtil.newClient(securityUrl.get())){
+			client.authorization(token);
+			final Map<String, String> infos = new HashMap<>();
+			infos.put("password", new String(password));
+			epf.client.security.Security.update(client, null, infos);
 		}
 	}
 }

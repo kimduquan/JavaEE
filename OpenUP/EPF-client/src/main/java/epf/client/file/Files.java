@@ -6,6 +6,7 @@
 package epf.client.file;
 
 import java.io.InputStream;
+import java.util.Iterator;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -64,12 +65,13 @@ public interface Files {
 	 * @param paths
 	 * @return
 	 */
-	static Response createFile(final Client client, final InputStream input, final String... paths) {
+	static Response createFile(final Client client, final InputStream input, final java.nio.file.Path paths) {
 		final Response response = client
 				.request(
 						target -> { 
-							for(String path : paths) {
-								target = target.path(path);
+							final Iterator<java.nio.file.Path> itPath = paths.iterator();
+							while(itPath.hasNext()) {
+								target = target.path(itPath.next().toString());
 							}
 							return target; 
 							}, 
@@ -102,13 +104,14 @@ public interface Files {
      * @param paths
      * @return
      */
-    static InputStream lines(final Client client, final String... paths) {
+    static InputStream lines(final Client client, final java.nio.file.Path paths) {
     	return client
     			.request(
     					target -> {
-    						for(final String path : paths) {
-    							target = target.path(path);
-    						}
+    						final Iterator<java.nio.file.Path> itPath = paths.iterator();
+							while(itPath.hasNext()) {
+								target = target.path(itPath.next().toString());
+							}
     						return target;
     					}, 
     					req -> req.accept(MediaType.APPLICATION_OCTET_STREAM)
@@ -138,13 +141,14 @@ public interface Files {
      * @param paths
      * @return
      */
-    static Response delete(final Client client, final String... paths) {
+    static Response delete(final Client client, final java.nio.file.Path paths) {
     	final Response response = client
     			.request(
     					target -> {
-    						for(final String path : paths) {
-    							target = target.path(path);
-    						}
+    						final Iterator<java.nio.file.Path> itPath = paths.iterator();
+							while(itPath.hasNext()) {
+								target = target.path(itPath.next().toString());
+							}
     						return target;
     					}, 
     					req -> req

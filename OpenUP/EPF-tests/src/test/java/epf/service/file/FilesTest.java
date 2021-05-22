@@ -91,7 +91,7 @@ public class FilesTest {
 	@Test
 	public void testCreateFileOK_User() throws Exception {
 		try (InputStream input = Files.newInputStream(tempFile)){
-			Response response = epf.client.file.Files.createFile(client, input, "any_role1");
+			Response response = epf.client.file.Files.createFile(client, input, Path.of("any_role1"));
 			Assert.assertEquals("Response.status", Response.Status.OK.getStatusCode(), response.getStatusInfo().getStatusCode());
 			Link link = response.getLink("self");
 			Assert.assertNotNull("Response.link", link);
@@ -117,7 +117,7 @@ public class FilesTest {
 	@Test
 	public void testCreateFileOK_Group() throws Exception {
 		try (InputStream input = Files.newInputStream(tempFile)){
-			Response response = epf.client.file.Files.createFile(client, input, "Any_Role", "any_role1");
+			Response response = epf.client.file.Files.createFile(client, input, Path.of("Any_Role", "any_role1"));
 			Assert.assertEquals("Response.status", Response.Status.OK.getStatusCode(), response.getStatusInfo().getStatusCode());
 			Link link = response.getLink("self");
 			Assert.assertNotNull("Response.link", link);
@@ -143,7 +143,7 @@ public class FilesTest {
 	@Test//(expected = ForbiddenException.class)
 	public void testCreateFile_InvalidUser() throws IOException {
 		try (InputStream input = Files.newInputStream(tempFile)){
-			Response response = epf.client.file.Files.createFile(client, input, "any_role2");
+			Response response = epf.client.file.Files.createFile(client, input, Path.of("any_role2"));
 			Assert.assertEquals("Response.status", Response.Status.FORBIDDEN.getStatusCode(), response.getStatusInfo().getStatusCode());
 		}
 	}
@@ -151,7 +151,7 @@ public class FilesTest {
 	@Test//(expected = ForbiddenException.class)
 	public void testCreateFile_InvalidGroup_ValidUser() throws IOException {
 		try (InputStream input = Files.newInputStream(tempFile)){
-			Response response = epf.client.file.Files.createFile(client, input, "Developer", "any_role1");
+			Response response = epf.client.file.Files.createFile(client, input, Path.of("Developer", "any_role1"));
 			Assert.assertEquals("Response.status", Response.Status.FORBIDDEN.getStatusCode(), response.getStatusInfo().getStatusCode());
 		}
 	}
@@ -159,7 +159,7 @@ public class FilesTest {
 	@Test//(expected = ForbiddenException.class)
 	public void testCreateFile_ValidGroup_InvalidUser() throws IOException {
 		try (InputStream input = Files.newInputStream(tempFile)){
-			Response response = epf.client.file.Files.createFile(client, input, "Any_Role", "any_role2");
+			Response response = epf.client.file.Files.createFile(client, input, Path.of("Any_Role", "any_role2"));
 			Assert.assertEquals("Response.status", Response.Status.FORBIDDEN.getStatusCode(), response.getStatusInfo().getStatusCode());
 		}
 	}
@@ -167,43 +167,43 @@ public class FilesTest {
 	@Test//(expected = ForbiddenException.class)
 	public void testCreateFile_InvalidGroup_InvalidUser() throws IOException {
 		try (InputStream input = Files.newInputStream(tempFile)){
-			Response response = epf.client.file.Files.createFile(client, input, "Developer", "any_role2");
+			Response response = epf.client.file.Files.createFile(client, input, Path.of("Developer", "any_role2"));
 			Assert.assertEquals("Response.status", Response.Status.FORBIDDEN.getStatusCode(), response.getStatusInfo().getStatusCode());
 		}
 	}
 	
 	@Test//(expected = ForbiddenException.class)
 	public void testDelete_InvalidUser() {
-		Response response = epf.client.file.Files.delete(client, "any_role2");
+		Response response = epf.client.file.Files.delete(client, Path.of("any_role2"));
 		Assert.assertEquals("Response.status", Response.Status.FORBIDDEN.getStatusCode(), response.getStatusInfo().getStatusCode());
 	}
 	
 	@Test//(expected = ForbiddenException.class)
 	public void testDelete_InvalidGroup_ValidUser() {
-		Response response = epf.client.file.Files.delete(client, "Developer", "any_role1");
+		Response response = epf.client.file.Files.delete(client, Path.of("Developer", "any_role1"));
 		Assert.assertEquals("Response.status", Response.Status.FORBIDDEN.getStatusCode(), response.getStatusInfo().getStatusCode());
 	}
 	
 	@Test//(expected = ForbiddenException.class)
 	public void testDelete_ValidGroup_InvalidUser() {
-		Response response = epf.client.file.Files.delete(client, "Any_Role", "any_role2");
+		Response response = epf.client.file.Files.delete(client, Path.of("Any_Role", "any_role2"));
 		Assert.assertEquals("Response.status", Response.Status.FORBIDDEN.getStatusCode(), response.getStatusInfo().getStatusCode());
 	}
 	
 	@Test//(expected = ForbiddenException.class)
 	public void testDelete_InvalidGroup_InvalidUser() {
-		Response response = epf.client.file.Files.delete(client, "Developer", "any_role2");
+		Response response = epf.client.file.Files.delete(client, Path.of("Developer", "any_role2"));
 		Assert.assertEquals("Response.status", Response.Status.FORBIDDEN.getStatusCode(), response.getStatusInfo().getStatusCode());
 	}
 	
 	@Test(expected = ForbiddenException.class)
 	public void testLines_InvalidUser() {
-		epf.client.file.Files.lines(client, "any_role2");
+		epf.client.file.Files.lines(client, Path.of("any_role2"));
 	}
 	
 	@Test(expected = ForbiddenException.class)
 	public void testLines_InvalidGroup_ValidUser() {
-		epf.client.file.Files.lines(client, "Developer", "any_role1");
+		epf.client.file.Files.lines(client, Path.of("Developer", "any_role1"));
 	}
 	
 	@Test
@@ -213,7 +213,7 @@ public class FilesTest {
 		try(InputStream input = Files.newInputStream(tempFile)){
 			try(Client otherClient = ClientUtil.newClient(filesUrl)){
 				otherClient.authorization(otherToken);
-				Response response = epf.client.file.Files.createFile(otherClient, input, "Any_Role", "developer1");
+				Response response = epf.client.file.Files.createFile(otherClient, input, Path.of("Any_Role", "developer1"));
 				Assert.assertEquals("Response.status", Response.Status.OK.getStatusCode(), response.getStatusInfo().getStatusCode());
 				link = response.getLink("self");
 				Assert.assertNotNull("Response.link", link);
@@ -242,6 +242,6 @@ public class FilesTest {
 	
 	@Test(expected = ForbiddenException.class)
 	public void testLines_InvalidGroup_InvalidUser() {
-		epf.client.file.Files.lines(client, "Developer", "any_role2");
+		epf.client.file.Files.lines(client, Path.of("Developer", "any_role2"));
 	}
 }

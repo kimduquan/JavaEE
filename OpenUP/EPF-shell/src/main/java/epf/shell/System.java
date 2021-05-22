@@ -12,9 +12,9 @@ public interface System {
 	/**
 	 * 
 	 */
-	String OUTPUT ="System.out";
+	String OUT ="System.out";
 	/**
 	 * 
 	 */
-	String ERROR = "System.err";
+	String ERR = "System.err";
 }
