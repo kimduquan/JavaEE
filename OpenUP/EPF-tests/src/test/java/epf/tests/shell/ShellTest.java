@@ -3,17 +3,16 @@
  */
 package epf.tests.shell;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.time.Duration;
+import java.util.Scanner;
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import epf.tests.TestUtil;
 
 /**
  * @author PC
@@ -47,6 +46,7 @@ public class ShellTest {
 	public void setUp() throws Exception {
 		builder = new ProcessBuilder();
 		builder.directory(workingDir);
+		builder.inheritIO();
 	}
 
 	/**
@@ -58,16 +58,16 @@ public class ShellTest {
 	}
 
 	@Test
-	public void test() throws IOException {
-		builder.command("powershell", "./epf.bat", "security", "login", "-u", "any_role1", "-p");
+	public void test() throws IOException, InterruptedException {
+		builder.command("powershell", "./epf", "security", "login", "-u", "any_role1", "-p");
 		process = builder.start();
-		try(PrintWriter writer = new PrintWriter(process.getOutputStream())){
-			writer.println("any_role");
-		}
-		try(InputStreamReader input = new InputStreamReader(process.getInputStream())){
-			try(BufferedReader reader = new BufferedReader(input)){
-				String token = reader.readLine();
-				Assert.assertNotEquals("", token);
+		TestUtil.waitUntil(o -> process.isAlive(), Duration.ofSeconds(10));
+		try(Scanner scanner = new Scanner(process.getInputStream())){
+			while(scanner.hasNextLine()) {
+				String line = scanner.nextLine();
+				if(line.startsWith("Enter")) {
+					break;
+				}
 			}
 		}
 	}
