@@ -110,8 +110,12 @@ public class ClientQueue {
                 }
         );
         if(pool.isEmpty()){
-        	final Client client = buildClient.apply(newBuilder(context)).build();
-            pool.add(client);
+        	if(buildClient != null) {
+                pool.add(buildClient.apply(newBuilder(context)).build());
+        	}
+        	else {
+        		pool.add(newBuilder(context).build());
+        	}
         }
         return pool.poll();
     }

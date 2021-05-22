@@ -44,6 +44,6 @@ public class ClientUtil {
 	 * @return
 	 */
 	public Client newClient(final URI uri) {
-		return new Client(clients, uri, null);
+		return new Client(clients, uri, builder -> builder);
 	}
 }
