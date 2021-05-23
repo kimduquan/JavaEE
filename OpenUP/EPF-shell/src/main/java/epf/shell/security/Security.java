@@ -5,8 +5,8 @@ package epf.shell.security;
 
 import java.net.URI;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import epf.client.security.Token;
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
@@ -106,7 +106,7 @@ public class Security {
 		    ) throws Exception {
 		try(Client client = clientUtil.newClient(securityUrl.get())){
 			client.authorization(token);
-			final Map<String, String> infos = new HashMap<>();
+			final Map<String, String> infos = new ConcurrentHashMap<>();
 			infos.put("password", new String(password));
 			epf.client.security.Security.update(client, null, infos);
 		}

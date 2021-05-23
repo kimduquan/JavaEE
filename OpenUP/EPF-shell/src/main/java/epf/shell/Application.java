@@ -4,7 +4,6 @@
 package epf.shell;
 
 import java.io.PrintStream;
-
 import jakarta.enterprise.inject.se.SeContainer;
 import jakarta.enterprise.inject.se.SeContainerInitializer;
 
