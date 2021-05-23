@@ -18,6 +18,8 @@ import epf.client.cache.Cache;
 import epf.client.config.Config;
 import epf.client.messaging.Messaging;
 import epf.client.script.Script;
+import epf.client.persistence.Persistence;
+import epf.client.security.Security;
 
 /**
  * @author PC
@@ -60,12 +62,14 @@ public class Registry implements epf.client.registry.Registry {
 			final URI serviceUrl = new URI(System.getenv(SERVICE_URL));
 			String remote = "file";
 			remotes.put(remote, serviceUrl.resolve(remote));
+			final URI persistenceUrl = new URI(System.getenv(Persistence.PERSISTENCE_URL));
 			remote = "persistence";
-			remotes.put(remote, serviceUrl.resolve(remote));
+			remotes.put(remote, persistenceUrl);
 			remote = "schema";
 			remotes.put(remote, serviceUrl.resolve(remote));
+			final URI securityUrl = new URI(System.getenv(Security.SECURITY_URL));
 			remote = "security";
-			remotes.put(remote, serviceUrl.resolve(remote));
+			remotes.put(remote, securityUrl);
 			remote = "system";
 			remotes.put(remote, serviceUrl.resolve(remote));
 			remote = "stream";

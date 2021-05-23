@@ -7,7 +7,6 @@ package epf.client.security;
 
 import java.net.URL;
 import java.util.Map;
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -37,6 +36,11 @@ import epf.validation.persistence.Unit;
  */
 @Path("security")
 public interface Security {
+	
+	/**
+     * 
+     */
+    String SECURITY_URL = "epf.security.url";
     
     /**
      * 
