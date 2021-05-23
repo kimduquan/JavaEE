@@ -7,9 +7,6 @@ package epf.persistence;
 
 import java.io.Serializable;
 import java.io.StreamCorruptedException;
-import java.nio.file.AccessDeniedException;
-import java.nio.file.InvalidPathException;
-import java.nio.file.NoSuchFileException;
 import java.sql.SQLInvalidAuthorizationSpecException;
 import java.sql.SQLNonTransientException;
 import javax.validation.ValidationException;

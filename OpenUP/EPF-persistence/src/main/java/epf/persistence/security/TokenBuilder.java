@@ -8,8 +8,7 @@ import java.util.Set;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.client.EPFException;
 import epf.client.security.Token;
-import epf.service.persistence.Credential;
-import epf.service.persistence.security.SecurityService;
+import epf.persistence.impl.Credential;
 
 /**
  * @author PC

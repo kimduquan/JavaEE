@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.persistence.impl;
+package epf.persistence;
 
 import java.lang.reflect.Field;
 import java.security.Principal;
@@ -30,6 +30,11 @@ import javax.persistence.metamodel.EntityType;
 import javax.transaction.Transactional;
 import javax.ws.rs.ForbiddenException;
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import epf.persistence.impl.Application;
+import epf.persistence.impl.Context;
+import epf.persistence.impl.Credential;
+import epf.persistence.impl.Session;
+import epf.persistence.impl.Entity;
 
 /**
  *

@@ -31,10 +31,9 @@ import epf.client.config.ConfigNames;
 import epf.client.security.Info;
 import epf.client.security.Token;
 import epf.schema.roles.Role;
-import epf.service.persistence.Application;
-import epf.service.persistence.Credential;
-import epf.service.persistence.Session;
-import epf.service.persistence.security.SecurityService;
+import epf.persistence.impl.Application;
+import epf.persistence.impl.Credential;
+import epf.persistence.impl.Session;
 import epf.util.logging.Log;
 
 /**
@@ -197,7 +196,7 @@ public class Security implements epf.client.security.Security, Serializable {
     protected Session removeSession(final String unit) {
     	Session session = null;
     	final Principal principal = context.getUserPrincipal();
-    	final epf.service.persistence.Context ctx = persistence.getContext(unit);
+    	final epf.persistence.impl.Context ctx = persistence.getContext(unit);
         if(principal != null && ctx != null){
         	final Credential credential = ctx.getCredential(principal.getName());
             if(credential != null && principal instanceof JsonWebToken){
@@ -215,7 +214,7 @@ public class Security implements epf.client.security.Security, Serializable {
     protected Session getSession(final String unit) {
     	Session session = null;
     	final Principal principal = context.getUserPrincipal();
-    	final epf.service.persistence.Context ctx = persistence.getContext(unit);
+    	final epf.persistence.impl.Context ctx = persistence.getContext(unit);
     	Credential credential = null;
     	JsonWebToken jwt = null;
         if(principal != null && ctx != null){
@@ -237,7 +236,7 @@ public class Security implements epf.client.security.Security, Serializable {
      */
     protected Credential getCredential(final String unit) {
     	final Principal principal = context.getUserPrincipal();
-    	final epf.service.persistence.Context ctx = persistence.getContext(unit);
+    	final epf.persistence.impl.Context ctx = persistence.getContext(unit);
     	if(principal != null && ctx != null) {
     		final Credential credential = ctx.getCredential(principal.getName());
     		if(credential != null) {

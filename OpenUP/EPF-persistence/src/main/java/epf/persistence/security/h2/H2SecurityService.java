@@ -10,10 +10,9 @@ import java.util.stream.Stream;
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
-
 import epf.schema.h2.Queries;
 import epf.schema.h2.QueryNames;
-import epf.service.persistence.security.SecurityService;
+import epf.persistence.security.SecurityService;
 
 /**
  * @author PC

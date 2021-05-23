@@ -30,6 +30,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import epf.client.EPFException;
+import epf.persistence.impl.Entity;
 import epf.schema.roles.Role;
 
 /**

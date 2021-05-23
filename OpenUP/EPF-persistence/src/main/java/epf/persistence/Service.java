@@ -11,8 +11,8 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
-
-import src.main.java.epf.service.LoginConfig;
+import org.eclipse.microprofile.auth.LoginConfig;
+import epf.schema.EPF;
 
 /**
  *
