@@ -24,6 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.ForbiddenException;
+import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.NotFoundException;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -103,7 +104,9 @@ public class EntitiesTest {
         Entities.persist(client, DeliveryProcess.class, "OpenUP", EPF.DELIVERY_PROCESS, dp);
     }
     
-    @Test(expected = NotFoundException.class)
+    //@Test(expected = NotFoundException.class)
+    //https://github.com/OpenLiberty/open-liberty/issues/14217
+    @Test(expected = InternalServerErrorException.class)
     public void testPersistEmptyName() {
     	Artifact artifact = new Artifact();
         artifact.setName("Artifact 1");
