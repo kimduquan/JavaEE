@@ -573,7 +573,7 @@
         <module>OpenUP-schema</module>
         <module>EPF-validation</module>
         <module>EPF-client</module>
-		<module>EPF-persistence</module>
+		<!--<module>EPF-persistence</module>-->
         <!--<module>OpenUP-client</module>-->
 		<module>EPF-service</module>
 		<module>EPF-portlet</module>

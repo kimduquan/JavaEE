@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 import epf.client.EPFException;
+import epf.persistence.impl.h2.ErrorCode;
 
 /**
  *
@@ -28,15 +29,6 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
     * 
     */
     private static final long serialVersionUID = 1L;
-    
-    /**
-     * 
-     */
-    private static final int NOT_ENOUGH_RIGHTS_FOR_1 = 90_096;
-    /**
-     * 
-     */
-    private static final int ADMIN_RIGHTS_REQUIRED = 90_040;
 
     /**
      *
@@ -76,8 +68,8 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
         else if(failure instanceof SQLNonTransientException){
         	final SQLNonTransientException exception = (SQLNonTransientException)failure;
         	final int errorCode = exception.getErrorCode();
-        	if(NOT_ENOUGH_RIGHTS_FOR_1 == errorCode
-        			|| ADMIN_RIGHTS_REQUIRED == errorCode) {
+        	if(ErrorCode.NOT_ENOUGH_RIGHTS_FOR_1 == errorCode
+        			|| ErrorCode.ADMIN_RIGHTS_REQUIRED == errorCode) {
         		status = Response.Status.FORBIDDEN;
         	}
         }

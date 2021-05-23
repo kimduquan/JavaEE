@@ -10,8 +10,6 @@ import java.io.StreamCorruptedException;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.InvalidPathException;
 import java.nio.file.NoSuchFileException;
-import java.sql.SQLInvalidAuthorizationSpecException;
-import java.sql.SQLNonTransientException;
 import javax.validation.ValidationException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -31,15 +29,6 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
     * 
     */
     private static final long serialVersionUID = 1L;
-    
-    /**
-     * 
-     */
-    private static final int NOT_ENOUGH_RIGHTS_FOR_1 = 90_096;
-    /**
-     * 
-     */
-    private static final int ADMIN_RIGHTS_REQUIRED = 90_040;
 
     /**
      *
@@ -60,9 +49,6 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
         if(failure instanceof EPFException) {
         	mapped = false;
         }
-        else if(failure instanceof SQLInvalidAuthorizationSpecException){
-            status = Response.Status.UNAUTHORIZED;
-        }
         else if(failure instanceof java.util.concurrent.TimeoutException){
             status = Response.Status.REQUEST_TIMEOUT;
         }
@@ -75,14 +61,6 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
         }
         else if(failure instanceof StreamCorruptedException){
             mapped = true;
-        }
-        else if(failure instanceof SQLNonTransientException){
-        	final SQLNonTransientException exception = (SQLNonTransientException)failure;
-        	final int errorCode = exception.getErrorCode();
-        	if(NOT_ENOUGH_RIGHTS_FOR_1 == errorCode
-        			|| ADMIN_RIGHTS_REQUIRED == errorCode) {
-        		status = Response.Status.FORBIDDEN;
-        	}
         }
         else if(failure instanceof NoSuchFileException) {
         	status = Response.Status.NOT_FOUND;
