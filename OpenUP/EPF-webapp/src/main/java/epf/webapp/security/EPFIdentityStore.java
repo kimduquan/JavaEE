@@ -20,7 +20,6 @@ import javax.security.enterprise.credential.RememberMeCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStore;
 import javax.security.enterprise.identitystore.RememberMeIdentityStore;
-
 import epf.client.EPFException;
 import epf.client.registry.LocateRegistry;
 import epf.client.security.Security;

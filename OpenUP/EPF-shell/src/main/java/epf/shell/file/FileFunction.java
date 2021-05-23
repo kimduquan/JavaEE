@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import javax.ws.rs.core.Response;
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
-import epf.shell.registry.Registry;
+import epf.shell.registry.REGISTRY;
 import epf.util.Var;
 import epf.util.client.Client;
 import jakarta.enterprise.context.RequestScoped;
@@ -32,7 +32,7 @@ public class FileFunction {
 	/**
 	 * 
 	 */
-	@Inject @Named(Registry.EPF_FILE_URL)
+	@Inject @Named(REGISTRY.EPF_FILE_URL)
 	private transient Var<URI> fileUrl;
 	
 	/**

@@ -11,11 +11,6 @@
 	<name>Eclipse Process Framework Portlet</name>
 	<dependencies>
 		<dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-web-api</artifactId>
-    		<scope>provided</scope>
-        </dependency>
-		<dependency>
 			<groupId>javax.portlet</groupId>
 			<artifactId>portlet-api</artifactId>
 		</dependency>

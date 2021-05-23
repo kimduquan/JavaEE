@@ -7,7 +7,7 @@ package epf.shell.registry;
  * @author PC
  *
  */
-public interface Registry {
+public interface REGISTRY {
 
 	/**
 	 * 

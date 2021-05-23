@@ -6,6 +6,7 @@
 package epf.client.config;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -83,5 +84,11 @@ public class ConfigSource implements org.eclipse.microprofile.config.spi.ConfigS
 	@Override
 	public String getName() {
 		return "EPF";
+	}
+
+	@Override
+	public Set<String> getPropertyNames() {
+		// TODO Auto-generated method stub
+		return configs.keySet();
 	}
 }

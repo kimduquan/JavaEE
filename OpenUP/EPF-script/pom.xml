@@ -10,29 +10,32 @@
     <name>Eclipse Process Framework Scripting</name>
     <packaging>war</packaging>
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.eclipse.microprofile/microprofile -->
-        <dependency>
-            <groupId>org.eclipse.microprofile</groupId>
-            <artifactId>microprofile</artifactId>
-            <type>pom</type>
-    		<scope>provided</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/javax/javaee-web-api -->
+    	<!-- https://mvnrepository.com/artifact/javax.enterprise/cdi-api -->
 		<dependency>
-		    <groupId>javax</groupId>
-		    <artifactId>javaee-web-api</artifactId>
-    		<scope>provided</scope>
+		    <groupId>javax.enterprise</groupId>
+		    <artifactId>cdi-api</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
+		<dependency>
+		    <groupId>javax.annotation</groupId>
+		    <artifactId>javax.annotation-api</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.config/microprofile-config-api -->
+		<dependency>
+		    <groupId>org.eclipse.microprofile.config</groupId>
+		    <artifactId>microprofile-config-api</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.resource/javax.resource-api -->
+		<dependency>
+		    <groupId>javax.resource</groupId>
+		    <artifactId>javax.resource-api</artifactId>
 		</dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-client</artifactId>
             <version>1.0.0</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/javax.resource/javax.resource-api -->
-		<dependency>
-		    <groupId>javax.resource</groupId>
-		    <artifactId>javax.resource-api</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>org.jppf</groupId>
 			<artifactId>jppf-jca</artifactId>
@@ -53,11 +56,6 @@
 		<dependency>
 		    <groupId>org.jppf</groupId>
 		    <artifactId>jppf-client</artifactId>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.codehaus.groovy/groovy-jsr223 -->
-		<dependency>
-		    <groupId>org.codehaus.groovy</groupId>
-		    <artifactId>groovy-jsr223</artifactId>
 		</dependency>
     </dependencies>
 </project>

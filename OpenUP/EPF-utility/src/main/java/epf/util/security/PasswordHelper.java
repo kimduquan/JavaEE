@@ -7,7 +7,6 @@ package epf.util.security;
 
 import java.util.Locale;
 import java.util.Objects;
-
 import org.eclipse.persistence.internal.security.JCEEncryptor;
 import org.h2.security.SHA256;
 import org.h2.util.StringUtils;

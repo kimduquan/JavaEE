@@ -39,33 +39,22 @@
             <groupId>com.hazelcast</groupId>
             <artifactId>hazelcast</artifactId>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/javax/javaee-web-api -->
-		<dependency>
-		    <groupId>javax</groupId>
-		    <artifactId>javaee-web-api</artifactId>
-    		<scope>provided</scope>
-		</dependency>
-        <!-- https://mvnrepository.com/artifact/javax.cache/cache-api -->
-        <dependency>
-            <groupId>javax.cache</groupId>
-            <artifactId>cache-api</artifactId>
-        </dependency>
 		<!-- https://mvnrepository.com/artifact/org.eclipse.jetty.websocket/javax-websocket-client-impl -->
 		<dependency>
 		    <groupId>org.eclipse.jetty.websocket</groupId>
 		    <artifactId>javax-websocket-client-impl</artifactId>
 		    <scope>test</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.glassfish/javax.json -->
+		<dependency>
+		    <groupId>org.glassfish</groupId>
+		    <artifactId>javax.json</artifactId>
+		    <scope>test</scope>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.eclipse/yasson -->
 		<dependency>
 		    <groupId>org.eclipse</groupId>
 		    <artifactId>yasson</artifactId>
-		    <scope>test</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.glassfish/javax.json -->
-        <dependency>
-		    <groupId>org.glassfish</groupId>
-		    <artifactId>javax.json</artifactId>
 		    <scope>test</scope>
 		</dependency>
         <dependency>

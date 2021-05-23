@@ -10,24 +10,10 @@
     <name>Open Unified Process Schema</name>
     <packaging>jar</packaging>
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.graphql/microprofile-graphql-api -->
-        <dependency>
-            <groupId>org.eclipse.microprofile.graphql</groupId>
-            <artifactId>microprofile-graphql-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.eclipse.microprofile/microprofile -->
-        <dependency>
-            <groupId>org.eclipse.microprofile</groupId>
-            <artifactId>microprofile</artifactId>
-            <type>pom</type>
-    		<scope>provided</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/javax/javaee-web-api -->
+    	<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.graphql/microprofile-graphql-api -->
 		<dependency>
-		    <groupId>javax</groupId>
-		    <artifactId>javaee-web-api</artifactId>
-    		<scope>provided</scope>
+		    <groupId>org.eclipse.microprofile.graphql</groupId>
+		    <artifactId>microprofile-graphql-api</artifactId>
 		</dependency>
         <dependency>
             <groupId>openup</groupId>

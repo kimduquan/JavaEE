@@ -70,7 +70,7 @@ public class RegistryUtil {
 	 * @return
 	 * @throws MalformedURLException 
 	 */
-	@Produces @Named(epf.shell.registry.Registry.EPF_SECURITY_URL)
+	@Produces @Named(REGISTRY.EPF_SECURITY_URL)
 	public Var<URI> getSecurityUrl() throws MalformedURLException {
 		return new Var<>(remotes.get("security"));
 	}
@@ -79,7 +79,7 @@ public class RegistryUtil {
 	 * @return
 	 * @throws MalformedURLException
 	 */
-	@Produces @Named(epf.shell.registry.Registry.EPF_FILE_URL)
+	@Produces @Named(REGISTRY.EPF_FILE_URL)
 	public Var<URI> getFileUrl() throws MalformedURLException {
 		return new Var<>(remotes.get("file"));
 	}
