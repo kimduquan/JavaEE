@@ -36,11 +36,6 @@
 		    <groupId>com.ibm.websphere.appserver.api</groupId>
 		    <artifactId>com.ibm.websphere.appserver.api.jwt</artifactId>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.fault-tolerance/microprofile-fault-tolerance-api -->
-		<dependency>
-		    <groupId>org.eclipse.microprofile.fault-tolerance</groupId>
-		    <artifactId>microprofile-fault-tolerance-api</artifactId>
-		</dependency>
 		<!-- https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api -->
 		<dependency>
 		    <groupId>javax.websocket</groupId>

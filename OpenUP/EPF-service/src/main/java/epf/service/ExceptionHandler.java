@@ -18,9 +18,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-import org.eclipse.microprofile.faulttolerance.exceptions.BulkheadException;
-import org.eclipse.microprofile.faulttolerance.exceptions.CircuitBreakerOpenException;
-import org.eclipse.microprofile.faulttolerance.exceptions.TimeoutException;
 import epf.client.EPFException;
 
 /**
@@ -62,15 +59,6 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
         boolean mapped = true;
         if(failure instanceof EPFException) {
         	mapped = false;
-        }
-        else if(failure instanceof TimeoutException){
-            status = Response.Status.REQUEST_TIMEOUT;
-        }
-        else if(failure instanceof BulkheadException){
-            status = Response.Status.TOO_MANY_REQUESTS;
-        }
-        else if(failure instanceof CircuitBreakerOpenException){
-            status = Response.Status.SERVICE_UNAVAILABLE;
         }
         else if(failure instanceof SQLInvalidAuthorizationSpecException){
             status = Response.Status.UNAUTHORIZED;
