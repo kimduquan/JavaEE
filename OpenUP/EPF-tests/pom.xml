@@ -51,6 +51,11 @@
 		    <artifactId>javax.json</artifactId>
 		    <scope>test</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/jakarta.annotation/jakarta.annotation-api -->
+		<dependency>
+		    <groupId>jakarta.annotation</groupId>
+		    <artifactId>jakarta.annotation-api</artifactId>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.eclipse/yasson -->
 		<dependency>
 		    <groupId>org.eclipse</groupId>

@@ -1,7 +1,6 @@
 package epf.tests.service;
 
 import java.util.Map;
-
 import epf.client.config.Config;
 import epf.tests.client.ClientUtil;
 import epf.util.client.Client;

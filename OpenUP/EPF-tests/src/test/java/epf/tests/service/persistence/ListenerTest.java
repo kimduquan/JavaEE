@@ -15,7 +15,6 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-
 import epf.client.messaging.MessageDecoder;
 import epf.client.persistence.Entities;
 import epf.schema.EPF;

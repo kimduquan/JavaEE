@@ -25,7 +25,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
 import epf.client.security.Security;
 import epf.client.security.Token;
 import epf.schema.EPF;

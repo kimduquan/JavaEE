@@ -3,7 +3,6 @@ package epf.tests.service;
 import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
 import epf.client.registry.Registry;
 import epf.tests.client.ClientUtil;
 import epf.util.client.Client;

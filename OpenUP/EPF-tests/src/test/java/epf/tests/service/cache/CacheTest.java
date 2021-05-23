@@ -12,7 +12,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
 import epf.client.cache.Cache;
 import epf.client.persistence.Entities;
 import epf.schema.EPF;

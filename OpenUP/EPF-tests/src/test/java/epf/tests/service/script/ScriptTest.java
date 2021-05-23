@@ -13,7 +13,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-
 import epf.client.script.Script;
 import epf.tests.client.ClientUtil;
 import epf.tests.service.RegistryUtil;

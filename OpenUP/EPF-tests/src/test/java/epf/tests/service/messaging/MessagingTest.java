@@ -9,7 +9,6 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-
 import epf.client.messaging.Client;
 import epf.client.messaging.Messaging;
 import epf.client.persistence.Entities;
@@ -27,7 +26,6 @@ import epf.tests.client.ClientUtil;
 import epf.tests.service.MessagingUtil;
 import epf.tests.service.RegistryUtil;
 import epf.tests.service.SecurityUtil;
-
 import org.junit.Test;
 
 public class MessagingTest {

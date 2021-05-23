@@ -15,7 +15,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-
 import epf.client.system.ProcessInfo;
 import epf.client.system.Processes;
 import epf.tests.client.ClientUtil;
