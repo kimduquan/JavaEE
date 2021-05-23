@@ -27,6 +27,10 @@ public class ShellUtil {
 		return shellPath;
 	}
 	
+	/**
+	 * @param process
+	 * @throws InterruptedException
+	 */
 	public static void print(Process process) throws InterruptedException {
 		new Thread(() -> {
 			try(Scanner scanner = new Scanner(process.getInputStream())){

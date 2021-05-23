@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -83,7 +84,7 @@ public class ShellTest {
 		process = builder.start();
 		TestUtil.waitUntil(o -> process.isAlive(), Duration.ofSeconds(10));
 		Files.write(in, List.of("any_role"), Charset.forName("UTF-8"));
-		TestUtil.waitUntil(o -> !process.isAlive(), Duration.ofSeconds(10));
+		process.waitFor(20, TimeUnit.SECONDS);
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(2, lines.size());
 		Assert.assertEquals("Enter value for --password (Password): ", lines.get(0));
