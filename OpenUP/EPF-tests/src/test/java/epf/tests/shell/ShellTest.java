@@ -39,7 +39,7 @@ public class ShellTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		workingDir = ShellUtil.getShellPath().toAbsolutePath().toRealPath().toFile();
+		workingDir = ShellUtil.getShellPath().toRealPath().toFile();
 	}
 
 	/**
@@ -86,6 +86,8 @@ public class ShellTest {
 		Files.write(in, List.of("any_role"), Charset.forName("UTF-8"));
 		process.waitFor(20, TimeUnit.SECONDS);
 		List<String> lines = Files.readAllLines(out);
+		Files.lines(err).forEach(System.err::println);
+		Files.lines(out).forEach(System.out::println);
 		Assert.assertEquals(2, lines.size());
 		Assert.assertEquals("Enter value for --password (Password): ", lines.get(0));
 		Assert.assertTrue(lines.get(1).length() > 256);
