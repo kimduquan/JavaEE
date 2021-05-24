@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.tests.service;
+package epf.tests.messaging;
 
 import java.net.URI;
 import java.net.URISyntaxException;

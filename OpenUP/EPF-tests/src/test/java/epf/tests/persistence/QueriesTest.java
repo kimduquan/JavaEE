@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.tests.service.persistence;
+package epf.tests.persistence;
 
 import epf.tests.client.ClientUtil;
-import epf.tests.service.RegistryUtil;
-import epf.tests.service.SecurityUtil;
+import epf.tests.registry.RegistryUtil;
+import epf.tests.security.SecurityUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
 import java.net.URI;

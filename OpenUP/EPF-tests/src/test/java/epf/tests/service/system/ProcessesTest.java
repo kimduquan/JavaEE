@@ -18,8 +18,8 @@ import org.junit.Test;
 import epf.client.system.ProcessInfo;
 import epf.client.system.Processes;
 import epf.tests.client.ClientUtil;
-import epf.tests.service.RegistryUtil;
-import epf.tests.service.SecurityUtil;
+import epf.tests.registry.RegistryUtil;
+import epf.tests.security.SecurityUtil;
 import epf.util.client.Client;
 
 /**

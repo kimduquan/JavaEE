@@ -1,4 +1,4 @@
-package epf.tests.service.registry;
+package epf.tests.registry;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -18,7 +18,7 @@ import org.junit.Test;
 
 import epf.client.registry.Registry;
 import epf.tests.client.ClientUtil;
-import epf.tests.service.GatewayUtil;
+import epf.tests.gateway.GatewayUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
 

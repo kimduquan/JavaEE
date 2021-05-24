@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.tests.service.cache;
+package epf.tests.cache;
 
 import java.net.URI;
 import java.time.Instant;
@@ -22,8 +22,8 @@ import epf.schema.work_products.section.MoreInformation;
 import epf.schema.work_products.section.Relationships;
 import epf.schema.work_products.section.Tailoring;
 import epf.tests.client.ClientUtil;
-import epf.tests.service.RegistryUtil;
-import epf.tests.service.SecurityUtil;
+import epf.tests.registry.RegistryUtil;
+import epf.tests.security.SecurityUtil;
 import epf.util.client.Client;
 
 /**

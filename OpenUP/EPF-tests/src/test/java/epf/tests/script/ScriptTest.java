@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.tests.service.script;
+package epf.tests.script;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -15,8 +15,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import epf.client.script.Script;
 import epf.tests.client.ClientUtil;
-import epf.tests.service.RegistryUtil;
-import epf.tests.service.SecurityUtil;
+import epf.tests.registry.RegistryUtil;
+import epf.tests.security.SecurityUtil;
 import epf.util.client.Client;
 
 /**

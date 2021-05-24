@@ -1,10 +1,11 @@
-package epf.tests.service;
+package epf.tests.registry;
 
 import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import epf.client.registry.Registry;
 import epf.tests.client.ClientUtil;
+import epf.tests.gateway.GatewayUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
 import java.util.logging.Level;

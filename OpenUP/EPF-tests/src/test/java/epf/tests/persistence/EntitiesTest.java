@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.tests.service.persistence;
+package epf.tests.persistence;
 
 import epf.client.persistence.Entities;
 import epf.schema.EPF;
@@ -15,8 +15,8 @@ import epf.schema.work_products.section.MoreInformation;
 import epf.schema.work_products.section.Relationships;
 import epf.schema.work_products.section.Tailoring;
 import epf.tests.client.ClientUtil;
-import epf.tests.service.RegistryUtil;
-import epf.tests.service.SecurityUtil;
+import epf.tests.registry.RegistryUtil;
+import epf.tests.security.SecurityUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
 import java.net.URI;

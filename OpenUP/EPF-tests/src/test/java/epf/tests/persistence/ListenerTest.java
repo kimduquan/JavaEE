@@ -1,4 +1,4 @@
-package epf.tests.service.persistence;
+package epf.tests.persistence;
 
 import java.net.URI;
 import java.time.Duration;
@@ -28,8 +28,8 @@ import epf.schema.work_products.section.Relationships;
 import epf.schema.work_products.section.Tailoring;
 import epf.tests.TestUtil;
 import epf.tests.client.ClientUtil;
-import epf.tests.service.RegistryUtil;
-import epf.tests.service.SecurityUtil;
+import epf.tests.registry.RegistryUtil;
+import epf.tests.security.SecurityUtil;
 import epf.util.websocket.Client;
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package epf.tests.service.messaging;
+package epf.tests.messaging;
 
 import java.net.URI;
 import java.time.Duration;
@@ -23,9 +23,9 @@ import epf.schema.work_products.section.Relationships;
 import epf.schema.work_products.section.Tailoring;
 import epf.tests.TestUtil;
 import epf.tests.client.ClientUtil;
-import epf.tests.service.MessagingUtil;
-import epf.tests.service.RegistryUtil;
-import epf.tests.service.SecurityUtil;
+import epf.tests.registry.RegistryUtil;
+import epf.tests.security.SecurityUtil;
+
 import org.junit.Test;
 
 public class MessagingTest {

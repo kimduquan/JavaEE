@@ -1,8 +1,9 @@
-package epf.tests.service;
+package epf.tests.config;
 
 import java.util.Map;
 import epf.client.config.Config;
 import epf.tests.client.ClientUtil;
+import epf.tests.registry.RegistryUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
 import java.util.logging.Level;

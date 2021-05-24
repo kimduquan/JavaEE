@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.tests.service;
+package epf.tests.security;
 
 import epf.client.security.Security;
 import epf.tests.client.ClientUtil;
+import epf.tests.registry.RegistryUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
 import epf.util.security.PasswordHelper;
