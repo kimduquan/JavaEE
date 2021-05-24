@@ -184,7 +184,9 @@ public class Security implements epf.client.security.Security, Serializable {
     public Token authenticate(final String unit) {
     	if(getSession(unit) != null){
     		final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
-    		return new TokenBuilder(issuer, service).build(jwt);
+    		final Token token = new TokenBuilder(issuer, service).build(jwt);
+    		token.setRawToken(null);
+    		return token;
         }
         throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
     }

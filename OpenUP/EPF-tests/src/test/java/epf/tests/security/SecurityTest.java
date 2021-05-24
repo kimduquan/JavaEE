@@ -246,8 +246,7 @@ public class SecurityTest {
         Assert.assertEquals("Token.issuer", EPF.SCHEMA, jwt.getIssuer());
         Assert.assertNotNull("Token.name", jwt.getName());
         Assert.assertEquals("Token.name", "any_role1", jwt.getName());
-        Assert.assertNotNull("Token.rawToken", jwt.getRawToken());
-        Assert.assertEquals("Token.rawToken", token, jwt.getRawToken());
+        Assert.assertNull("Token.rawToken", jwt.getRawToken());
         Assert.assertNotNull("Token.subject", jwt.getSubject());
         Assert.assertEquals("Token.subject", "any_role1", jwt.getSubject());
         Assert.assertNotNull("Token.tokenID", jwt.getTokenID());
