@@ -42,8 +42,14 @@
         <dependency>
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-json-provider</artifactId>
-            <scope>runtime</scope>
+            <scope>provided</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.glassfish/javax.json -->
+		<dependency>
+		    <groupId>org.glassfish</groupId>
+		    <artifactId>javax.json</artifactId>
+            <scope>runtime</scope>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.jppf/jppf-client 
 		<dependency>
 			<groupId>org.jppf</groupId>

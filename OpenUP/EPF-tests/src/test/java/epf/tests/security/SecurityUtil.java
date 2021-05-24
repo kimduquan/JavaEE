@@ -6,6 +6,7 @@
 package epf.tests.security;
 
 import epf.client.security.Security;
+import epf.client.security.Token;
 import epf.tests.client.ClientUtil;
 import epf.tests.registry.RegistryUtil;
 import epf.util.client.Client;
@@ -45,6 +46,13 @@ public class SecurityUtil {
     	}
     	catch(Exception ex) {
     		logger.log(Level.SEVERE, "logOut", ex);
+    	}
+    }
+    
+    public static Token auth(String unit, String token) throws Exception {
+    	try(Client client = ClientUtil.newClient(RegistryUtil.lookup("security", null))){
+    		client.authorization(token);
+    		return Security.authenticate(client, unit);
     	}
     }
 }

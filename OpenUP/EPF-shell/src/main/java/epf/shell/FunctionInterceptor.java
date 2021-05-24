@@ -2,6 +2,8 @@ package epf.shell;
 
 import java.io.PrintWriter;
 import java.util.logging.Logger;
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 import jakarta.annotation.Priority;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -70,12 +72,28 @@ public class FunctionInterceptor {
 			result = context.proceed();
 			logger.exiting(cls, method, result);
 			out.println();
-			out.println(String.valueOf(result));
+			out.println(valueOf(result));
 		}
 		catch(Exception ex) {
 			err.println(ex.getMessage());
 			logger.throwing(cls, method, ex);
 		}
 		return result;
+	}
+	
+	/**
+	 * @param result
+	 * @return
+	 * @throws Exception 
+	 */
+	protected String valueOf(final Object result) throws Exception {
+		if(result != null && !result.getClass().getPackageName().startsWith("java.")) {
+			try(Jsonb jsonb = JsonbBuilder.create()){
+				return jsonb.toJson(result);
+			}
+		}
+		else {
+			return String.valueOf(result);
+		}
 	}
 }

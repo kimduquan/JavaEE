@@ -10,6 +10,9 @@ import java.nio.file.Path;
 import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
+import javax.ws.rs.NotAuthorizedException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -17,7 +20,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import epf.client.gateway.Gateway;
+import epf.client.security.Token;
 import epf.tests.TestUtil;
+import epf.tests.security.SecurityUtil;
 
 /**
  * @author PC
@@ -27,6 +32,7 @@ public class ShellTest {
 	
 	private static Path workingDir;
 	private static Path tempDir;
+	private static String token;
 	private ProcessBuilder builder;
 	private Process process;
 	Path out;
@@ -40,6 +46,7 @@ public class ShellTest {
 	public static void setUpBeforeClass() throws Exception {
 		workingDir = ShellUtil.getShellPath().toRealPath();
 		tempDir = Files.createTempDirectory("temp");
+		token = SecurityUtil.login(null, "any_role1", "any_role");
 	}
 
 	/**
@@ -48,6 +55,7 @@ public class ShellTest {
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		tempDir.toFile().delete();
+		SecurityUtil.logOut(null, token);
 	}
 
 	/**
@@ -89,7 +97,36 @@ public class ShellTest {
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(2, lines.size());
 		Assert.assertEquals("Enter value for --password (Password): ", lines.get(0));
-		Assert.assertTrue(lines.get(1).length() > 256);
+		String newToken = lines.get(1);
+		Assert.assertTrue(newToken.length() > 256);
+		SecurityUtil.logOut(null, newToken);
 	}
 
+	@Test(expected = NotAuthorizedException.class)
+	public void testSecurity_Logout() throws Exception {
+		String newToken = SecurityUtil.login(null, "any_role1", "any_role");
+		builder.command("powershell", "./epf", "security", "logout", "-t", newToken);
+		process = builder.start();
+		TestUtil.waitUntil(o -> process.isAlive(), Duration.ofSeconds(10));
+		process.waitFor(20, TimeUnit.SECONDS);
+		List<String> lines = Files.readAllLines(out);
+		Assert.assertEquals(2, lines.size());
+		Assert.assertEquals("any_role1", lines.get(1));
+		SecurityUtil.auth(null, newToken);
+	}
+	
+	@Test
+	public void testSecurity_Auth() throws Exception {
+		builder.command("powershell", "./epf", "security", "auth", "-t", token);
+		process = builder.start();
+		TestUtil.waitUntil(o -> process.isAlive(), Duration.ofSeconds(10));
+		process.waitFor(20, TimeUnit.SECONDS);
+		List<String> lines = Files.readAllLines(out);
+		Assert.assertEquals(2, lines.size());
+		try(Jsonb jsonb = JsonbBuilder.create()){
+			Token securityToken = jsonb.fromJson(lines.get(1), Token.class);
+			Assert.assertNotNull("Token", securityToken);
+			Assert.assertEquals("Token.name", "any_role1", securityToken.getName());
+		}
+	}
 }

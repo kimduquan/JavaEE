@@ -1,4 +1,4 @@
-package epf.tests;
+package epf.shell.client;
 
 import java.io.IOException;
 import javax.json.JsonObject;
