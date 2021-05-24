@@ -37,6 +37,11 @@ public interface Files {
      * 
      */
     String ROOT = "epf.file.root";
+    
+    /**
+     * 
+     */
+    String FILE_URL = "epf.file.url";
 	
 	/**
 	 * @param paths

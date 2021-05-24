@@ -73,6 +73,27 @@ public interface Entities {
     }
     
     /**
+     * @param client
+     * @param unit
+     * @param name
+     * @param body
+     * @return
+     */
+    static String persist(
+    		final Client client,
+    		final String unit,
+    		final String name,
+    		final String body
+            ){
+    	return client.request(
+    			target -> target.path(unit).path(name), 
+    			req -> req.accept(MediaType.APPLICATION_JSON)
+    			)
+    			.post(Entity.entity(body, MediaType.APPLICATION_JSON_TYPE))
+    			.readEntity(String.class);
+    }
+    
+    /**
      * @param unit
      * @param name
      * @param entityId
@@ -115,6 +136,27 @@ public interface Entities {
     			req -> req
     			)
     	.put(Entity.json(body));
+    }
+    
+    /**
+     * @param client
+     * @param unit
+     * @param name
+     * @param entityId
+     * @param body
+     */
+    static void merge(
+    		final Client client,
+    		final String unit,
+    		final String name,
+    		final String entityId,
+    		final String body
+            ) {
+    	client.request(
+    			target -> target.path(unit).path(name).path(entityId), 
+    			req -> req
+    			)
+    	.put(Entity.entity(body, MediaType.APPLICATION_JSON_TYPE));
     }
     
     /**

@@ -10,7 +10,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import epf.client.security.Token;
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
-import epf.shell.registry.REGISTRY;
 import epf.util.Var;
 import epf.util.client.Client;
 import epf.util.security.PasswordHelper;
@@ -32,7 +31,7 @@ public class Security {
 	/**
 	 * 
 	 */
-	@Inject @Named(REGISTRY.EPF_SECURITY_URL)
+	@Inject @Named(epf.client.security.Security.SECURITY_URL)
 	private transient Var<URI> securityUrl;
 	
 	/**

@@ -87,7 +87,7 @@ public class FunctionInterceptor {
 	 * @throws Exception 
 	 */
 	protected String valueOf(final Object result) throws Exception {
-		if(result != null && !result.getClass().getPackageName().startsWith("java.")) {
+		if(result instanceof String == false) {
 			try(Jsonb jsonb = JsonbBuilder.create()){
 				return jsonb.toJson(result);
 			}
