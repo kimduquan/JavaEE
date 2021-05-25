@@ -140,7 +140,7 @@ public class ShellTest {
 		Files.write(in, List.of("any_role"), Charset.forName("UTF-8"));
 		process.waitFor(20, TimeUnit.SECONDS);
 		List<String> lines = Files.readAllLines(out);
-		Assert.assertEquals(0, lines.size());
+		Assert.assertEquals(1, lines.size());
 	}
 	
 	@Test
