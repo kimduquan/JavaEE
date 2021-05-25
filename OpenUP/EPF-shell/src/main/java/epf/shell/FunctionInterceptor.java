@@ -47,14 +47,15 @@ public class FunctionInterceptor {
 	 */
 	@AroundInvoke
 	public Object aroundInvoke(final InvocationContext context) throws Exception {
+		Object result = null;
 		try {
 			validator.validateParameters(context.getTarget(), context.getMethod(), context.getParameters());
-			return invoke(context);
+			result = invoke(context);
 		}
 		catch(ValidationException ex) {
 			err.println(ex.getMessage());
 		}
-		return null;
+		return result;
 	}
 
 	/**
@@ -71,8 +72,10 @@ public class FunctionInterceptor {
 			logger.entering(cls, method, context.getParameters());
 			result = context.proceed();
 			logger.exiting(cls, method, result);
-			out.println();
-			out.println(valueOf(result));
+			if(!context.getMethod().getReturnType().equals(Void.class)) {
+				out.println();
+				out.println(valueOf(result));
+			}
 		}
 		catch(Exception ex) {
 			err.println(ex.getMessage());
@@ -87,13 +90,15 @@ public class FunctionInterceptor {
 	 * @throws Exception 
 	 */
 	protected String valueOf(final Object result) throws Exception {
-		if(result instanceof String == false) {
+		String value;
+		if(!(result instanceof String)) {
 			try(Jsonb jsonb = JsonbBuilder.create()){
-				return jsonb.toJson(result);
+				value = jsonb.toJson(result);
 			}
 		}
 		else {
-			return String.valueOf(result);
+			value = String.valueOf(result);
 		}
+		return value;
 	}
 }

@@ -101,7 +101,7 @@ public class Security {
 	 * @param password
 	 * @throws Exception
 	 */
-	@Command(name = "set")
+	@Command(name = "update")
 	public void update(
 			@Option(names = {"-t", "--token"}, description = "Token") 
 			final String token,
@@ -113,6 +113,21 @@ public class Security {
 			final Map<String, String> infos = new ConcurrentHashMap<>();
 			infos.put("password", new String(password));
 			epf.client.security.Security.update(client, null, infos);
+		}
+	}
+	
+	/**
+	 * @param token
+	 * @return
+	 * @throws Exception
+	 */
+	@Command(name = "revoke")
+	public String revoke(
+			@Option(names = {"-t", "--token"}, description = "Token") 
+			final String token) throws Exception {
+		try(Client client = clientUtil.newClient(securityUrl.get())){
+			client.authorization(token);
+			return epf.client.security.Security.revoke(client, null, securityUrl.get().toURL());
 		}
 	}
 }

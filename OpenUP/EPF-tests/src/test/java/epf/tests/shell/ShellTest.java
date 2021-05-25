@@ -100,27 +100,27 @@ public class ShellTest {
 		String newToken = lines.get(1);
 		Assert.assertTrue(newToken.length() > 256);
 		SecurityUtil.logOut(null, newToken);
+		lines = Files.readAllLines(err);
+		Assert.assertTrue(lines.isEmpty());
 	}
 
 	@Test(expected = NotAuthorizedException.class)
 	public void testSecurity_Logout() throws Exception {
 		String newToken = SecurityUtil.login(null, "any_role1", "any_role");
 		builder.command("powershell", "./epf", "security", "logout", "-t", newToken);
-		process = builder.start();
-		TestUtil.waitUntil(o -> process.isAlive(), Duration.ofSeconds(10));
-		process.waitFor(20, TimeUnit.SECONDS);
+		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(2, lines.size());
 		Assert.assertEquals("any_role1", lines.get(1));
 		SecurityUtil.auth(null, newToken);
+		lines = Files.readAllLines(err);
+		Assert.assertTrue(lines.isEmpty());
 	}
 	
 	@Test
 	public void testSecurity_Auth() throws Exception {
 		builder.command("powershell", "./epf", "security", "auth", "-t", token);
-		process = builder.start();
-		TestUtil.waitUntil(o -> process.isAlive(), Duration.ofSeconds(10));
-		process.waitFor(20, TimeUnit.SECONDS);
+		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(2, lines.size());
 		try(Jsonb jsonb = JsonbBuilder.create()){
@@ -128,5 +128,33 @@ public class ShellTest {
 			Assert.assertNotNull("Token", securityToken);
 			Assert.assertEquals("Token.name", "any_role1", securityToken.getName());
 		}
+		lines = Files.readAllLines(err);
+		Assert.assertTrue(lines.isEmpty());
+	}
+	
+	@Test
+	public void testSecurity_UpdatePassword() throws InterruptedException, IOException {
+		builder.command("powershell", "./epf", "security", "update", "-t", token, "-p");
+		process = builder.start();
+		TestUtil.waitUntil(o -> process.isAlive(), Duration.ofSeconds(10));
+		Files.write(in, List.of("any_role"), Charset.forName("UTF-8"));
+		process.waitFor(20, TimeUnit.SECONDS);
+		List<String> lines = Files.readAllLines(out);
+		Assert.assertTrue(lines.isEmpty());
+		lines = Files.readAllLines(err);
+		Assert.assertTrue(lines.isEmpty());
+	}
+	
+	@Test
+	public void testSecurity_Revoke() throws InterruptedException, IOException {
+		String token = SecurityUtil.login(null, "any_role1", "any_role");
+		builder.command("powershell", "./epf", "security", "revoke", "-t", token);
+		process = ShellUtil.waitFor(builder);
+		List<String> lines = Files.readAllLines(out);
+		Assert.assertEquals(2, lines.size());
+		String newToken = lines.get(1);
+		Assert.assertNotEquals("", newToken);
+		Assert.assertTrue(newToken.length() > 256);
+		SecurityUtil.logOut(null, newToken);
 	}
 }
