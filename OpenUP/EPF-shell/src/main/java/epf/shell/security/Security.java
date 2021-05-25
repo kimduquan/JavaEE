@@ -96,6 +96,11 @@ public class Security {
 		}
 	}
 	
+	/**
+	 * @param token
+	 * @param password
+	 * @throws Exception
+	 */
 	@Command(name = "set")
 	public void update(
 			@Option(names = {"-t", "--token"}, description = "Token") 

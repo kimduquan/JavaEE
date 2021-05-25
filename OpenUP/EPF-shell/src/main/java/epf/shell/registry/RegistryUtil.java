@@ -15,7 +15,7 @@ import epf.util.Var;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
 import jakarta.annotation.PostConstruct;
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -24,7 +24,7 @@ import jakarta.inject.Named;
  * @author PC
  *
  */
-@ApplicationScoped
+@RequestScoped
 public class RegistryUtil {
 	
 	/**
