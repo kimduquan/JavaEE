@@ -13,6 +13,7 @@ import epf.util.client.Client;
 import epf.util.logging.Logging;
 import epf.util.security.PasswordHelper;
 import java.net.URI;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,6 +54,13 @@ public class SecurityUtil {
     	try(Client client = ClientUtil.newClient(RegistryUtil.lookup("security", null))){
     		client.authorization(token);
     		return Security.authenticate(client, unit);
+    	}
+    }
+    
+    public static String revoke(String unit, String token, URL url) throws Exception {
+    	try(Client client = ClientUtil.newClient(RegistryUtil.lookup("security", null))){
+    		client.authorization(token);
+    		return Security.revoke(client, unit, url);
     	}
     }
 }

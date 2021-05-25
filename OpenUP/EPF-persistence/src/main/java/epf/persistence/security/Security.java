@@ -162,7 +162,7 @@ public class Security implements epf.client.security.Security, Serializable {
     )
     @Log
     public String logOut(final String unit) {
-    	final Session session = removeSession(unit);
+    	final Session session = removeSession(unit, context, persistence);
         if(session != null){
             session.close();
             return context.getUserPrincipal().getName();
@@ -182,7 +182,7 @@ public class Security implements epf.client.security.Security, Serializable {
             responseCode = "200"
     )
     public Token authenticate(final String unit) {
-    	if(getSession(unit) != null){
+    	if(getSession(unit, context, persistence) != null){
     		final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
     		final Token token = new TokenBuilder(issuer, service).build(jwt);
     		token.setRawToken(null);
@@ -195,25 +195,26 @@ public class Security implements epf.client.security.Security, Serializable {
      * @param unit
      * @return
      */
-    protected Session removeSession(final String unit) {
-    	Session session = null;
+    protected Session removeSession(final String unit, final SecurityContext context, final Application persistence) {
     	final Principal principal = context.getUserPrincipal();
     	final epf.persistence.impl.Context ctx = persistence.getContext(unit);
         if(principal != null && ctx != null){
         	final Credential credential = ctx.getCredential(principal.getName());
             if(credential != null && principal instanceof JsonWebToken){
             	final JsonWebToken jwt = (JsonWebToken)principal;
-                session = credential.removeSession(jwt.getIssuedAtTime());
+                return credential.removeSession(jwt.getIssuedAtTime());
             }
         }
-        return session;
+        throw new ForbiddenException();
     }
     
     /**
      * @param unit
+     * @param context
+     * @param persistence
      * @return
      */
-    protected Session getSession(final String unit) {
+    protected static Session getSession(final String unit, final SecurityContext context, final Application persistence) {
     	Session session = null;
     	final Principal principal = context.getUserPrincipal();
     	final epf.persistence.impl.Context ctx = persistence.getContext(unit);
@@ -234,9 +235,11 @@ public class Security implements epf.client.security.Security, Serializable {
     
     /**
      * @param unit
+     * @param context
+     * @param persistence
      * @return
      */
-    protected Credential getCredential(final String unit) {
+    protected static Credential getCredential(final String unit, final SecurityContext context, final Application persistence) {
     	final Principal principal = context.getUserPrincipal();
     	final epf.persistence.impl.Context ctx = persistence.getContext(unit);
     	if(principal != null && ctx != null) {
@@ -250,7 +253,26 @@ public class Security implements epf.client.security.Security, Serializable {
 
 	@Override
 	public void update(final String unit, final Info info) {
-		final Credential credential = getCredential(unit);
+		final Credential credential = getCredential(unit, context, persistence);
 		service.setUserPassword(credential.getDefaultManager(), context.getUserPrincipal().getName(), info.getPassword().toCharArray());
+	}
+
+	@Override
+	public String revoke(final String unit, final URL url) {
+		final Session session = removeSession(unit, context, persistence);
+		session.close();
+		final Credential credential = getCredential(unit, context, persistence);
+		final long time = System.currentTimeMillis() / 1000;
+		final TokenBuilder builder = new TokenBuilder(issuer, service);
+        final Token jwt = builder
+        		.expire(jwtExpTimeUnit, jwtExpDuration)
+        		.fromCredential(credential)
+        		.generator(generator)
+        		.time(time)
+        		.url(url)
+        		.userName(context.getUserPrincipal().getName())
+        		.build();
+        credential.putSession(jwt.getIssuedAtTime());
+        return jwt.getRawToken();
 	}
 }

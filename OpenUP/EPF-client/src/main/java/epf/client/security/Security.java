@@ -19,6 +19,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -61,6 +62,11 @@ public interface Security {
     String UNIT = "unit";
     
     /**
+     * 
+     */
+    String URL = "url";
+    
+    /**
      * @param unit
      * @param username
      * @param password_hash
@@ -82,7 +88,7 @@ public interface Security {
             @FormParam("password_hash")
             @NotBlank
             final String passwordHash, 
-            @QueryParam("url")
+            @QueryParam(URL)
             @NotNull
             final URL url
     );
@@ -105,7 +111,7 @@ public interface Security {
     	form.param("username", username);
     	form.param("password_hash", passwordHash);
     	return client.request(
-    			target -> target.queryParam(UNIT, unit).queryParam("url", url),
+    			target -> target.queryParam(UNIT, unit).queryParam(URL, url),
     			req -> req.accept(MediaType.TEXT_PLAIN))
     			.post(Entity.form(form), String.class);
     }
@@ -194,5 +200,39 @@ public interface Security {
     			)
     	.build(HttpMethod.PATCH, Entity.form(form))
     	.invoke();
+    }
+    
+    /**
+     * @param unit
+     * @param url
+     * @return
+     */
+    @PUT
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.TEXT_PLAIN)
+    String revoke(
+    		@QueryParam(UNIT)
+            @Unit
+            @NotBlank
+            @DefaultValue(EPF.SCHEMA)
+            final String unit,
+            @QueryParam(URL)
+            @NotNull
+            final URL url);
+    
+    /**
+     * @param client
+     * @param unit
+     * @param url
+     * @return
+     */
+    static String revoke(
+    		final Client client,
+            final String unit,
+            final URL url) {
+    	return client.request(
+    			target -> target.queryParam(UNIT, unit).queryParam(URL, url),
+    			req -> req.accept(MediaType.TEXT_PLAIN))
+    			.put(Entity.form(new Form()), String.class);
     }
 }
