@@ -65,14 +65,15 @@ public class FunctionInterceptor {
 	 */
 	protected Object invoke(final InvocationContext context) throws Exception {
 		final String cls = context.getTarget().getClass().getName();
-		final String method = context.getMethod().getName();
 		final Logger logger = Logger.getLogger(cls);
+		final String method = context.getMethod().getName();
 		Object result = null;
 		try {
 			logger.entering(cls, method, context.getParameters());
 			result = context.proceed();
 			logger.exiting(cls, method, result);
-			if(!context.getMethod().getReturnType().equals(Void.class)) {
+			final Class<?> returnType = context.getMethod().getReturnType();
+			if(returnType != null && !returnType.equals(void.class)) {
 				out.println();
 				out.println(valueOf(result));
 			}
@@ -91,13 +92,13 @@ public class FunctionInterceptor {
 	 */
 	protected String valueOf(final Object result) throws Exception {
 		String value;
-		if(!(result instanceof String)) {
+		if(result instanceof String || result == null) {
+			value = String.valueOf(result);
+		}
+		else {
 			try(Jsonb jsonb = JsonbBuilder.create()){
 				value = jsonb.toJson(result);
 			}
-		}
-		else {
-			value = String.valueOf(result);
 		}
 		return value;
 	}

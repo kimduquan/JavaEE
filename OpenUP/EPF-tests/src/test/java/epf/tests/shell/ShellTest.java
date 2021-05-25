@@ -140,9 +140,7 @@ public class ShellTest {
 		Files.write(in, List.of("any_role"), Charset.forName("UTF-8"));
 		process.waitFor(20, TimeUnit.SECONDS);
 		List<String> lines = Files.readAllLines(out);
-		Assert.assertTrue(lines.isEmpty());
-		lines = Files.readAllLines(err);
-		Assert.assertTrue(lines.isEmpty());
+		Assert.assertEquals(0, lines.size());
 	}
 	
 	@Test
@@ -155,6 +153,7 @@ public class ShellTest {
 		String newToken = lines.get(1);
 		Assert.assertNotEquals("", newToken);
 		Assert.assertTrue(newToken.length() > 256);
+		Assert.assertNotEquals(token, newToken);
 		SecurityUtil.logOut(null, newToken);
 	}
 }
