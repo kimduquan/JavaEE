@@ -27,7 +27,7 @@ public class Credential {
     /**
      * 
      */
-    private transient final Map<Long, Session> sessions;
+    private transient final Map<String, Session> sessions;
 
     /**
      * @param factory
@@ -63,8 +63,8 @@ public class Credential {
      * @param timestamp
      * @return
      */
-    public Session putSession(final long timestamp){
-        return sessions.computeIfAbsent(timestamp, time -> {
+    public Session putSession(final String sessionId){
+        return sessions.computeIfAbsent(sessionId, time -> {
             return new Session(factory);
         });
     }
@@ -73,15 +73,15 @@ public class Credential {
      * @param timestamp
      * @return
      */
-    public Session getSession(final long timestamp){
-        return sessions.get(timestamp);
+    public Session getSession(final String sessionId){
+        return sessions.get(sessionId);
     }
     
     /**
      * @param timestamp
      * @return
      */
-    public Session removeSession(final long timestamp){
-        return sessions.remove(timestamp);
+    public Session removeSession(final String sessionId){
+        return sessions.remove(sessionId);
     }
 }

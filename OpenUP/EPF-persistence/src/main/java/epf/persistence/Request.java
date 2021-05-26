@@ -80,7 +80,7 @@ public class Request {
         	final Credential credential = context.getCredential(principal.getName());
             if(credential != null && principal instanceof JsonWebToken){
             	jwt = (JsonWebToken)principal;
-            	session = credential.getSession(jwt.getIssuedAtTime());
+            	session = credential.getSession(jwt.getTokenID());
             }
         }
         return getEntityManager(principal, jwt, session);

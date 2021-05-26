@@ -131,7 +131,6 @@ public class Security implements epf.client.security.Security, Serializable {
             final String username,
             final String passwordHash,
             final URL url) {
-    	final long time = System.currentTimeMillis() / 1000;
     	final Credential credential = persistence.putContext(unit)
                 .putCredential(
                         username, 
@@ -139,6 +138,7 @@ public class Security implements epf.client.security.Security, Serializable {
                         passwordHash
                 );
     	final TokenBuilder builder = new TokenBuilder(issuer, service);
+    	final long time = System.currentTimeMillis() / 1000;
         final Token jwt = builder
         		.expire(jwtExpTimeUnit, jwtExpDuration)
         		.fromCredential(credential)
@@ -147,7 +147,7 @@ public class Security implements epf.client.security.Security, Serializable {
         		.url(url)
         		.userName(username)
         		.build();
-        credential.putSession(jwt.getIssuedAtTime());
+        credential.putSession(jwt.getTokenID());
         return jwt.getRawToken();
     }
     
@@ -204,7 +204,7 @@ public class Security implements epf.client.security.Security, Serializable {
         	final Credential credential = ctx.getCredential(principal.getName());
             if(credential != null && principal instanceof JsonWebToken){
             	final JsonWebToken jwt = (JsonWebToken)principal;
-                return credential.removeSession(jwt.getIssuedAtTime());
+                return credential.removeSession(jwt.getTokenID());
             }
         }
         throw new ForbiddenException();
@@ -227,7 +227,7 @@ public class Security implements epf.client.security.Security, Serializable {
         }
         if(credential != null && principal instanceof JsonWebToken){
         	jwt = (JsonWebToken)principal;
-        	session = credential.getSession(jwt.getIssuedAtTime());
+        	session = credential.getSession(jwt.getTokenID());
         }
         if(session != null && !session.checkExpirationTime(jwt.getExpirationTime())) {
         	throw new ForbiddenException();
@@ -279,7 +279,7 @@ public class Security implements epf.client.security.Security, Serializable {
 			        		.url(url)
 			        		.userName(jsonWebToken.getName())
 			        		.build();
-			        credential.putSession(jwt.getIssuedAtTime());
+			        credential.putSession(jwt.getTokenID());
 			        return jwt.getRawToken();
 				} 
 				catch (MalformedURLException e) {
