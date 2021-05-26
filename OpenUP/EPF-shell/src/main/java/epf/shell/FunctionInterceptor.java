@@ -74,7 +74,7 @@ public class FunctionInterceptor {
 			logger.exiting(cls, method, result);
 			final Class<?> returnType = context.getMethod().getReturnType();
 			if(returnType != null && !returnType.equals(void.class)) {
-				out.println();
+				out.println("Proceed.");
 				out.println(valueOf(result));
 			}
 		}
