@@ -96,7 +96,7 @@ public class ShellTest {
 		process.waitFor(20, TimeUnit.SECONDS);
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(2, lines.size());
-		Assert.assertEquals("Enter value for --password (Password): ", lines.get(0));
+		Assert.assertEquals("Enter value for --password (Password): Proceed.", lines.get(0));
 		String newToken = lines.get(1);
 		Assert.assertTrue(newToken.length() > 256);
 		SecurityUtil.logOut(null, newToken);
