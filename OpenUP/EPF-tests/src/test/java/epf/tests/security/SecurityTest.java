@@ -15,15 +15,11 @@ import java.util.Map;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import epf.client.security.Security;
@@ -45,18 +41,6 @@ public class SecurityTest {
     @BeforeClass
     public static void beforeClass(){
     	securityUrl = RegistryUtil.lookup("security", null);
-    }
-    
-    @AfterClass
-    public static void afterClass(){
-    }
-    
-    @Before
-    public void before(){
-    }
-    
-    @After
-    public void after(){
     }
     
     String login(String unit, String username, String password, URL targetUrl, boolean needHash) throws Exception{
@@ -82,13 +66,10 @@ public class SecurityTest {
     	}
     }
     
-    String revoke(String token, String unit, String url) throws Exception{
+    String revoke(String token, String unit) throws Exception{
     	try(Client client = ClientUtil.newClient(securityUrl)){
-    		client.authorization(token);
-    		return client.request(
-        			target -> target.queryParam("unit", unit).queryParam("url", url),
-        			req -> req.accept(MediaType.TEXT_PLAIN))
-        			.put(Entity.form(new Form()), String.class);
+			client.authorization(token);
+    		return Security.revoke(client, unit);
     	}
     }
     
@@ -368,10 +349,10 @@ public class SecurityTest {
     public void testRevokeOk() throws Exception {
     	String unit = null;
     	final String token = login(unit, "any_role1", "any_role", securityUrl.toURL(), true);
+    	Token jwt = authenticate(token, unit);
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
-    		Token jwt = authenticate(token, unit);
-    		String newToken = Security.revoke(client, unit, securityUrl.toURL());
+    		String newToken = Security.revoke(client, unit);
     		Assert.assertNotEquals(token, newToken);
     		Assert.assertThrows(NotAuthorizedException.class, () -> {
     			authenticate(token, unit);
@@ -388,10 +369,10 @@ public class SecurityTest {
     	String unit = null;
     	final String token = login(unit, "any_role1", "any_role", securityUrl.toURL(), true);
     	try(Client client = ClientUtil.newClient(securityUrl)){
-    		String newToken = revoke(token, unit, securityUrl.toString());
+    		String newToken = revoke(token, unit);
     		Token newJwt = authenticate(newToken, unit);
     		client.authorization(newToken);
-    		String newToken2 = Security.revoke(client, unit, securityUrl.toURL());
+    		String newToken2 = Security.revoke(client, unit);
     		Token newJwt2 = authenticate(newToken2, unit);
     		Assert.assertNotNull("Token", newJwt2);
     		Assert.assertNotEquals("Token.tokenID", newJwt.getTokenID(), newJwt2.getTokenID());
@@ -400,10 +381,19 @@ public class SecurityTest {
     }
     
     @Test
+    public void testRevokeEmptyUnit() throws Exception{
+        String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
+        Assert.assertThrows(BadRequestException.class, () -> {
+            revoke(token, "");
+        });
+        logOut(token, null);
+    }
+    
+    @Test
     public void testRevokeBlankUnit() throws Exception{
         String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
         Assert.assertThrows(BadRequestException.class, () -> {
-            revoke(token, "     ", securityUrl.toString());
+            revoke(token, "     ");
         });
         logOut(token, null);
     }
@@ -412,35 +402,8 @@ public class SecurityTest {
     public void testRevokeInvalidUnit() throws Exception{
         String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
         Assert.assertThrows(BadRequestException.class, () -> {
-            revoke(token, "Invalid", securityUrl.toString());
+            revoke(token, "Invalid");
         });
-        logOut(token, null);
-    }
-    
-    @Test
-    public void testRevokeEmptyUrl() throws Exception{
-        String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
-        Assert.assertThrows(BadRequestException.class, () -> {
-            revoke(token, null, null);
-        });
-        logOut(token, null);
-    }
-    
-    @Test
-    public void testRevokeBlankUrl() throws Exception{
-    	String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
-    	Assert.assertThrows(BadRequestException.class, () -> {
-    		revoke(token, null, "     ");
-    	});
-        logOut(token, null);
-    }
-    
-    @Test
-    public void testRevokeInvalidUrl() throws Exception{
-    	String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
-    	Assert.assertThrows(BadRequestException.class, () -> {
-    		revoke(token, null, "Invalid");
-    	});
         logOut(token, null);
     }
 }

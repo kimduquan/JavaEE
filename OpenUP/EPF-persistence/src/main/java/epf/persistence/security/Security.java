@@ -6,6 +6,7 @@
 package epf.persistence.security;
 
 import java.io.Serializable;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.Principal;
 import java.time.temporal.ChronoUnit;
@@ -27,6 +28,7 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import epf.client.EPFException;
 import epf.client.config.ConfigNames;
 import epf.client.security.Info;
 import epf.client.security.Token;
@@ -258,21 +260,33 @@ public class Security implements epf.client.security.Security, Serializable {
 	}
 
 	@Override
-	public String revoke(final String unit, final URL url) {
+	public String revoke(final String unit) {
 		final Session session = removeSession(unit, context, persistence);
-		session.close();
-		final Credential credential = getCredential(unit, context, persistence);
-		final long time = System.currentTimeMillis() / 1000;
-		final TokenBuilder builder = new TokenBuilder(issuer, service);
-        final Token jwt = builder
-        		.expire(jwtExpTimeUnit, jwtExpDuration)
-        		.fromCredential(credential)
-        		.generator(generator)
-        		.time(time)
-        		.url(url)
-        		.userName(context.getUserPrincipal().getName())
-        		.build();
-        credential.putSession(jwt.getIssuedAtTime());
-        return jwt.getRawToken();
+		if(session != null) {
+			session.close();
+			if(context.getUserPrincipal() instanceof JsonWebToken) {
+				final JsonWebToken jsonWebToken = (JsonWebToken) context.getUserPrincipal();
+				try {
+					final URL url = new URL(jsonWebToken.getAudience().iterator().next());
+					final TokenBuilder builder = new TokenBuilder(issuer, service);
+					final Credential credential = getCredential(unit, context, persistence);
+					final long time = System.currentTimeMillis() / 1000;
+			        Token jwt = builder
+			        		.expire(jwtExpTimeUnit, jwtExpDuration)
+			        		.fromCredential(credential)
+			        		.generator(generator)
+			        		.time(time)
+			        		.url(url)
+			        		.userName(jsonWebToken.getName())
+			        		.build();
+			        credential.putSession(jwt.getIssuedAtTime());
+			        return jwt.getRawToken();
+				} 
+				catch (MalformedURLException e) {
+					throw new EPFException(e);
+				}
+			}
+		}
+        throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
 	}
 }

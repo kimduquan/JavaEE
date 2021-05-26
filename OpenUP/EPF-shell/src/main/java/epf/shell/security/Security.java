@@ -124,10 +124,11 @@ public class Security {
 	@Command(name = "revoke")
 	public String revoke(
 			@Option(names = {"-t", "--token"}, description = "Token") 
-			final String token) throws Exception {
+			final String token
+			) throws Exception {
 		try(Client client = clientUtil.newClient(securityUrl.get())){
 			client.authorization(token);
-			return epf.client.security.Security.revoke(client, null, securityUrl.get().toURL());
+			return epf.client.security.Security.revoke(client, null);
 		}
 	}
 }

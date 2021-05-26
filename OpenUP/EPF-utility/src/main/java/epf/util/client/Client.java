@@ -91,6 +91,7 @@ public class Client implements AutoCloseable {
 
     @Override
     public void close() throws Exception {
+    	authHeader = null;
         clients.add(uri, client);
     }
     

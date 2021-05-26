@@ -215,10 +215,7 @@ public interface Security {
             @Unit
             @NotBlank
             @DefaultValue(EPF.SCHEMA)
-            final String unit,
-            @QueryParam(URL)
-            @NotNull
-            final URL url);
+            final String unit);
     
     /**
      * @param client
@@ -228,10 +225,9 @@ public interface Security {
      */
     static String revoke(
     		final Client client,
-            final String unit,
-            final URL url) {
+            final String unit) {
     	return client.request(
-    			target -> target.queryParam(UNIT, unit).queryParam(URL, url),
+    			target -> target.queryParam(UNIT, unit),
     			req -> req.accept(MediaType.TEXT_PLAIN))
     			.put(Entity.form(new Form()), String.class);
     }
