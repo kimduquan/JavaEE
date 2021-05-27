@@ -1,6 +1,6 @@
 cd EPF-persistence
-call mvn install -U
+call mvn clean install
 echo on
 cd ../
-call mvn install
+call mvn clean install
 echo on

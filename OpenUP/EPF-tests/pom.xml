@@ -138,14 +138,17 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-rs-mp-client</artifactId>
+		    <scope>test</scope>
         </dependency>
         <dependency>
 		    <groupId>org.apache.cxf</groupId>
 		    <artifactId>cxf-rt-rs-sse</artifactId>
+		    <scope>test</scope>
 		</dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-json-provider</artifactId>
+		    <scope>test</scope>
         </dependency>
         <dependency>
 		    <groupId>org.jboss.weld</groupId>
