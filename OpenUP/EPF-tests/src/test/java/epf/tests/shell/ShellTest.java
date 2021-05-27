@@ -4,11 +4,11 @@
 package epf.tests.shell;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
@@ -21,7 +21,15 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import epf.client.gateway.Gateway;
 import epf.client.security.Token;
+import epf.schema.EPF;
+import epf.schema.work_products.Artifact;
+import epf.schema.work_products.section.Description;
+import epf.schema.work_products.section.Illustrations;
+import epf.schema.work_products.section.MoreInformation;
+import epf.schema.work_products.section.Relationships;
+import epf.schema.work_products.section.Tailoring;
 import epf.tests.TestUtil;
+import epf.tests.persistence.PersistenceUtil;
 import epf.tests.security.SecurityUtil;
 
 /**
@@ -33,6 +41,7 @@ public class ShellTest {
 	private static Path workingDir;
 	private static Path tempDir;
 	private static String token;
+	private static String adminToken;
 	private ProcessBuilder builder;
 	private Process process;
 	Path out;
@@ -47,6 +56,7 @@ public class ShellTest {
 		workingDir = ShellUtil.getShellPath().toRealPath();
 		tempDir = Files.createTempDirectory("temp");
 		token = SecurityUtil.login(null, "any_role1", "any_role");
+		adminToken = SecurityUtil.login(null, "admin1", "admin");
 	}
 
 	/**
@@ -91,9 +101,7 @@ public class ShellTest {
 	public void testSecurity_Login() throws IOException, InterruptedException {
 		builder.command("powershell", "./epf", "security", "login", "-u", "any_role1", "-p");
 		process = builder.start();
-		TestUtil.waitUntil(o -> process.isAlive(), Duration.ofSeconds(10));
-		Files.write(in, List.of("any_role"), Charset.forName("UTF-8"));
-		process.waitFor(20, TimeUnit.SECONDS);
+		ShellUtil.waitFor(builder, in, "any_role");
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(2, lines.size());
 		Assert.assertEquals("Enter value for --password (Password): Proceed.", lines.get(0));
@@ -135,10 +143,7 @@ public class ShellTest {
 	@Test
 	public void testSecurity_UpdatePassword() throws InterruptedException, IOException {
 		builder.command("powershell", "./epf", "security", "update", "-t", token, "-p");
-		process = builder.start();
-		TestUtil.waitUntil(o -> process.isAlive(), Duration.ofSeconds(10));
-		Files.write(in, List.of("any_role"), Charset.forName("UTF-8"));
-		process.waitFor(20, TimeUnit.SECONDS);
+		process = ShellUtil.waitFor(builder, in, "any_role");
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(1, lines.size());
 	}
@@ -155,5 +160,86 @@ public class ShellTest {
 		Assert.assertTrue(newToken.length() > 256);
 		Assert.assertNotEquals(token, newToken);
 		SecurityUtil.logOut(null, newToken);
+	}
+	
+	@Test
+	public void testPersistence_Persist() throws Exception {
+		Artifact artifact = new Artifact();
+		artifact.setName("Artifact Shell" + System.currentTimeMillis());
+        artifact.setSummary("Artifact Shell Summary" + UUID.randomUUID());
+        artifact.setDescription(new Description());
+        artifact.setIllustrations(new Illustrations());
+        artifact.setMoreInformation(new MoreInformation());
+        artifact.setRelationships(new Relationships());
+        artifact.setTailoring(new Tailoring());
+        
+		builder.command("powershell", "./epf", "persistence", "persist", "-t", adminToken, "-u", EPF.SCHEMA, "-n", EPF.ARTIFACT, "-e");
+		process = builder.start();
+		TestUtil.waitUntil(o -> process.isAlive(), Duration.ofSeconds(10));
+		ShellUtil.writeJson(in, artifact);
+		process.waitFor(20, TimeUnit.SECONDS);
+		
+		List<String> lines = Files.readAllLines(out);
+		Assert.assertEquals(2, lines.size());
+        Artifact updatedArtifact = null;
+        try(Jsonb jsonb = JsonbBuilder.create()){
+        	updatedArtifact = jsonb.fromJson(lines.get(1), Artifact.class);
+        }
+        Assert.assertNotNull("Artifact", updatedArtifact);
+        Assert.assertEquals("Artifact.name", artifact.getName(), updatedArtifact.getName());
+        Assert.assertEquals("Artifact.summary", artifact.getSummary(), updatedArtifact.getSummary());
+        
+        PersistenceUtil.remove(adminToken, EPF.SCHEMA, EPF.ARTIFACT, artifact.getName());;
+	}
+	
+	@Test
+	public void testPersistence_Merge() throws Exception {
+		Artifact artifact = new Artifact();
+        artifact.setName("Artifact_Shell" + System.currentTimeMillis());
+        artifact.setSummary("Artifact Shell Summary" + UUID.randomUUID());
+        artifact.setDescription(new Description());
+        artifact.setIllustrations(new Illustrations());
+        artifact.setMoreInformation(new MoreInformation());
+        artifact.setRelationships(new Relationships());
+        artifact.setTailoring(new Tailoring());
+        PersistenceUtil.persist(adminToken, Artifact.class, EPF.SCHEMA, EPF.ARTIFACT, artifact);
+    	
+        builder.command("powershell", "./epf", "persistence", "merge", "-t", adminToken, "-u", EPF.SCHEMA, "-n", EPF.ARTIFACT, "-i", artifact.getName(), "-e");
+		process = builder.start();
+		TestUtil.waitUntil(o -> process.isAlive(), Duration.ofSeconds(10));
+        Artifact updatedArtifact = new Artifact();
+        updatedArtifact.setName("Artifact_Shell" + System.currentTimeMillis());
+        updatedArtifact.setSummary("Artifact Shell Summary" + UUID.randomUUID());
+        updatedArtifact.setDescription(new Description());
+        updatedArtifact.setIllustrations(new Illustrations());
+        updatedArtifact.setMoreInformation(new MoreInformation());
+        updatedArtifact.setRelationships(new Relationships());
+        updatedArtifact.setTailoring(new Tailoring());
+		ShellUtil.writeJson(in, artifact);
+		process.waitFor(20, TimeUnit.SECONDS);
+		List<String> lines = Files.readAllLines(out);
+		Assert.assertEquals(1, lines.size());
+        
+        PersistenceUtil.remove(adminToken, EPF.SCHEMA, EPF.ARTIFACT, updatedArtifact.getName());
+	}
+	
+	@Test
+	public void testPersistence_Remove() throws Exception {
+		Artifact artifact = new Artifact();
+        artifact.setName("Artifact_Shell" + System.currentTimeMillis());
+        artifact.setSummary("Artifact Shell Summary" + UUID.randomUUID());
+        artifact.setDescription(new Description());
+        artifact.setIllustrations(new Illustrations());
+        artifact.setMoreInformation(new MoreInformation());
+        artifact.setRelationships(new Relationships());
+        artifact.setTailoring(new Tailoring());
+        PersistenceUtil.persist(adminToken, Artifact.class, EPF.SCHEMA, EPF.ARTIFACT, artifact);
+    	
+        builder.command("powershell", "./epf", "persistence", "remove", "-t", adminToken, "-u", EPF.SCHEMA, "-n", EPF.ARTIFACT, "-i", artifact.getName());
+		process = ShellUtil.waitFor(builder);
+		List<String> lines = Files.readAllLines(out);
+		Assert.assertEquals(0, lines.size());
+		lines = Files.readAllLines(err);
+		Assert.assertTrue(lines.isEmpty());
 	}
 }

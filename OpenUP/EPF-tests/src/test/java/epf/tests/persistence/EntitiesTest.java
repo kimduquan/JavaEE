@@ -20,6 +20,7 @@ import epf.tests.security.SecurityUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
 import java.net.URI;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.BadRequestException;
@@ -78,8 +79,8 @@ public class EntitiesTest {
     @Test
     public void testPersistOK() throws Exception{
     	Artifact artifact = new Artifact();
-        artifact.setName("Artifact 1");
-        artifact.setSummary("Artifact 1 Summary");
+        artifact.setName("Artifact Entities" + System.currentTimeMillis());
+        artifact.setSummary("Artifact Entities Summary" + UUID.randomUUID());
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
         artifact.setMoreInformation(new MoreInformation());
@@ -89,11 +90,56 @@ public class EntitiesTest {
         try(Client adminClient = ClientUtil.newClient(persistenceUrl)){
         	adminClient.authorization(adminToken);
         	updatedArtifact = Entities.persist(adminClient, Artifact.class, EPF.SCHEMA, EPF.ARTIFACT, artifact);
-            Entities.remove(adminClient, EPF.SCHEMA, EPF.ARTIFACT, artifact.getName());
         }
         Assert.assertNotNull("Artifact", updatedArtifact);
-        Assert.assertEquals("Artifact.name", "Artifact 1", updatedArtifact.getName());
-        Assert.assertEquals("Artifact.summary", "Artifact 1 Summary", updatedArtifact.getSummary());
+        Assert.assertEquals("Artifact.name", artifact.getName(), updatedArtifact.getName());
+        Assert.assertEquals("Artifact.summary", artifact.getSummary(), updatedArtifact.getSummary());
+        
+        PersistenceUtil.remove(adminToken, EPF.SCHEMA, EPF.ARTIFACT, artifact.getName());
+    }
+    
+    @Test
+    public void testMergeOK() throws Exception{
+    	Artifact artifact = new Artifact();
+        artifact.setName("Artifact Entities" + System.currentTimeMillis());
+        artifact.setSummary("Artifact Entities Summary" + UUID.randomUUID());
+        artifact.setDescription(new Description());
+        artifact.setIllustrations(new Illustrations());
+        artifact.setMoreInformation(new MoreInformation());
+        artifact.setRelationships(new Relationships());
+        artifact.setTailoring(new Tailoring());
+        PersistenceUtil.persist(adminToken, Artifact.class, EPF.SCHEMA, EPF.ARTIFACT, artifact);
+        Artifact updatedArtifact = null;
+        try(Client adminClient = ClientUtil.newClient(persistenceUrl)){
+        	adminClient.authorization(adminToken);
+            updatedArtifact = new Artifact();
+            updatedArtifact.setName("Artifact Entities" + System.currentTimeMillis());
+            updatedArtifact.setSummary("Artifact Entities Summary" + UUID.randomUUID());
+            updatedArtifact.setDescription(new Description());
+            updatedArtifact.setIllustrations(new Illustrations());
+            updatedArtifact.setMoreInformation(new MoreInformation());
+            updatedArtifact.setRelationships(new Relationships());
+            updatedArtifact.setTailoring(new Tailoring());
+        	Entities.merge(adminClient, EPF.SCHEMA, EPF.ARTIFACT, artifact.getName(), updatedArtifact);
+        }
+        PersistenceUtil.remove(adminToken, EPF.SCHEMA, EPF.ARTIFACT, updatedArtifact.getName());
+    }
+    
+    @Test
+    public void testRemoveOK() throws Exception{
+    	Artifact artifact = new Artifact();
+        artifact.setName("Artifact Entities" + System.currentTimeMillis());
+        artifact.setSummary("Artifact Entities Summary" + UUID.randomUUID());
+        artifact.setDescription(new Description());
+        artifact.setIllustrations(new Illustrations());
+        artifact.setMoreInformation(new MoreInformation());
+        artifact.setRelationships(new Relationships());
+        artifact.setTailoring(new Tailoring());
+        PersistenceUtil.persist(adminToken, Artifact.class, EPF.SCHEMA, EPF.ARTIFACT, artifact);
+        try(Client adminClient = ClientUtil.newClient(persistenceUrl)){
+        	adminClient.authorization(adminToken);
+            Entities.remove(adminClient, EPF.SCHEMA, EPF.ARTIFACT, artifact.getName());
+        }
     }
     
     @Test(expected = ForbiddenException.class)

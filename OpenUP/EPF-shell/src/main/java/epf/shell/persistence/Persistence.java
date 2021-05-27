@@ -43,12 +43,17 @@ public class Persistence {
 	 */
 	@Command(name = "persist")
 	public String persist(
+			@Option(names = {"-t", "--token"}, description = "Token") 
+			final String token,
+			@Option(names = {"-u", "--unit"}, description = "Unit")
+			final String unit,
 			@Option(names = {"-n", "--name"}, description = "Name")
 			final String name, 
 			@Option(names = {"-e", "--entity"}, description = "Entity", interactive = true, echo = true)
 			final String entity) throws Exception {
 		try(Client client = clientUtil.newClient(persistenceUrl.get())){
-			return epf.client.persistence.Entities.persist(client, null, name, entity);
+			client.authorization(token);
+			return epf.client.persistence.Entities.persist(client, unit, name, entity);
 		}
 	}
 	
@@ -60,6 +65,10 @@ public class Persistence {
 	 */
 	@Command(name = "merge")
 	public void merge(
+			@Option(names = {"-t", "--token"}, description = "Token") 
+			final String token,
+			@Option(names = {"-u", "--unit"}, description = "Unit")
+			final String unit,
 			@Option(names = {"-n", "--name"}, description = "Name")
 			final String name, 
 			@Option(names = {"-i", "--id"}, description = "ID")
@@ -67,18 +76,24 @@ public class Persistence {
 			@Option(names = {"-e", "--entity"}, description = "Entity", interactive = true, echo = true)
 			final String entity) throws Exception {
 		try(Client client = clientUtil.newClient(persistenceUrl.get())){
-			epf.client.persistence.Entities.merge(client, null, name, id, entity);
+			client.authorization(token);
+			epf.client.persistence.Entities.merge(client, unit, name, id, entity);
 		}
 	}
 	
 	@Command(name = "remove")
 	public void remove(
+			@Option(names = {"-t", "--token"}, description = "Token") 
+			final String token,
+			@Option(names = {"-u", "--unit"}, description = "Unit")
+			final String unit,
 			@Option(names = {"-n", "--name"}, description = "Name")
 			final String name, 
 			@Option(names = {"-i", "--id"}, description = "ID")
 			final String id) throws Exception {
 		try(Client client = clientUtil.newClient(persistenceUrl.get())){
-			epf.client.persistence.Entities.remove(client, null, name, id);
+			client.authorization(token);
+			epf.client.persistence.Entities.remove(client, unit, name, id);
 		}
 	}
 }
