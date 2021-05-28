@@ -7,9 +7,6 @@ package epf.service;
 
 import java.io.Serializable;
 import java.io.StreamCorruptedException;
-import java.nio.file.AccessDeniedException;
-import java.nio.file.InvalidPathException;
-import java.nio.file.NoSuchFileException;
 import javax.validation.ValidationException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -61,15 +58,6 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
         }
         else if(failure instanceof StreamCorruptedException){
             mapped = true;
-        }
-        else if(failure instanceof NoSuchFileException) {
-        	status = Response.Status.NOT_FOUND;
-        }
-        else if(failure instanceof AccessDeniedException) {
-        	status = Response.Status.FORBIDDEN;
-        }
-        else if(failure instanceof InvalidPathException) {
-        	status = Response.Status.BAD_REQUEST;
         }
         else{
             mapped = false;
