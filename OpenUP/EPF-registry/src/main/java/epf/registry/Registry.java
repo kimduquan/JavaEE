@@ -17,6 +17,7 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import epf.client.cache.Cache;
 import epf.client.config.Config;
 import epf.client.file.Files;
+import epf.client.gateway.Gateway;
 import epf.client.messaging.Messaging;
 import epf.client.script.Script;
 import epf.client.persistence.Persistence;
@@ -60,22 +61,18 @@ public class Registry implements epf.client.registry.Registry {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI serviceUrl = new URI(System.getenv(SERVICE_URL));
+			final URI gatewayUrl = new URI(System.getenv(Gateway.GATEWAY_URL));
 			String remote = "file";
 			final URI fileUrl = new URI(System.getenv(Files.FILE_URL));
 			remotes.put(remote, fileUrl);
 			final URI persistenceUrl = new URI(System.getenv(Persistence.PERSISTENCE_URL));
 			remote = "persistence";
 			remotes.put(remote, persistenceUrl);
-			remote = "schema";
-			remotes.put(remote, serviceUrl.resolve(remote));
 			final URI securityUrl = new URI(System.getenv(Security.SECURITY_URL));
 			remote = "security";
 			remotes.put(remote, securityUrl);
-			remote = "system";
-			remotes.put(remote, serviceUrl.resolve(remote));
 			remote = "stream";
-			remotes.put(remote, serviceUrl.resolve(remote));
+			remotes.put(remote, gatewayUrl.resolve(remote));
 			final URI registryUrl = new URI(System.getenv(Registry.REGISTRY_URL));
 			remote = "registry";
 			remotes.put(remote, registryUrl);

@@ -68,9 +68,7 @@ public class RegistryTest {
 	    	expected.add(GatewayUtil.getGatewayUrl().resolve("file"));
 	    	expected.add(GatewayUtil.getGatewayUrl().resolve("persistence"));
 	    	expected.add(GatewayUtil.getGatewayUrl().resolve("registry"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("schema"));
 	    	expected.add(GatewayUtil.getGatewayUrl().resolve("security"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("system"));
 	    	expected.add(GatewayUtil.getGatewayUrl().resolve("stream"));
 	    	expected.add(GatewayUtil.getGatewayUrl().resolve("cache"));
 	    	expected.add(GatewayUtil.getGatewayUrl().resolve("script"));

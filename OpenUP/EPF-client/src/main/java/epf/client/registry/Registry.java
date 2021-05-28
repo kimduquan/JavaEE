@@ -30,11 +30,6 @@ public interface Registry {
      */
     String REGISTRY_URL = "epf.registry.url";
     
-    /**
-     * 
-     */
-    String SERVICE_URL = "epf.service.url";
-    
 	/**
 	 * 
 	 */

@@ -18,7 +18,6 @@
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
 		<liberty.env.epf.config.url>https://localhost:9443/config/config/</liberty.env.epf.config.url>
 		<liberty.env.epf.script.url>https://localhost:9443/script/script/</liberty.env.epf.script.url>
-        <liberty.env.epf.service.url>https://localhost:9443/service/</liberty.env.epf.service.url>
 		<liberty.env.epf.file.url>https://localhost:9443/file/file/</liberty.env.epf.file.url>
 		<liberty.env.epf.persistence.url>https://localhost:9443/persistence/persistence/</liberty.env.epf.persistence.url>
 		<liberty.env.epf.security.url>https://localhost:9443/persistence/security/</liberty.env.epf.security.url>
@@ -97,12 +96,6 @@
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-cache</artifactId>
-            <version>1.0.0</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-service</artifactId>
             <version>1.0.0</version>
             <type>war</type>
         </dependency>
@@ -208,7 +201,6 @@
                     <systemPropertyVariables>
 						<epf.config.url>https://localhost:${httpsPort}/config/config/</epf.config.url>
 						<epf.script.url>https://localhost:${httpsPort}/script/script/</epf.script.url>
-                        <epf.service.url>https://localhost:${httpsPort}/service/</epf.service.url>
 						<epf.file.url>https://localhost:${httpsPort}/file/file/</epf.file.url>
 						<epf.persistence.url>https://localhost:${httpsPort}/persistence/persistence/</epf.persistence.url>
 						<epf.security.url>https://localhost:${httpsPort}/persistence/security/</epf.security.url>
@@ -292,7 +284,7 @@
                         <configuration>
                             <verifyTimeout>600</verifyTimeout>
                             <serverStartTimeout>600</serverStartTimeout>
-                            <applications>EPF-script,EPF-config,EPF-messaging,EPF-batch,EPF-cache,EPF-service,EPF-file,EPF-persistence,EPF-registry,EPF-gateway,EPF-webapp</applications>
+                            <applications>EPF-script,EPF-config,EPF-messaging,EPF-batch,EPF-cache,EPF-file,EPF-persistence,EPF-registry,EPF-gateway,EPF-webapp</applications>
                         </configuration>
                     </execution>
                     <!-- Stop the server -->
@@ -311,7 +303,7 @@
                     <deployPackages>dependencies</deployPackages>
 					<verifyTimeout>600</verifyTimeout>
 					<serverStartTimeout>600</serverStartTimeout>
-					<applications>EPF-script,EPF-config,EPF-messaging,EPF-batch,EPF-cache,EPF-service,EPF-file,EPF-persistence,EPF-registry,EPF-gateway,EPF-webapp</applications>
+					<applications>EPF-script,EPF-config,EPF-messaging,EPF-batch,EPF-cache,EPF-file,EPF-persistence,EPF-registry,EPF-gateway,EPF-webapp</applications>
                 </configuration>
             </plugin>
         </plugins>
