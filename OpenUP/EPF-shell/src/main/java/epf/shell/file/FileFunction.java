@@ -40,6 +40,13 @@ public class FileFunction {
 	@Inject
 	private transient ClientUtil clientUtil;
 	
+	/**
+	 * @param token
+	 * @param file
+	 * @param path
+	 * @return
+	 * @throws Exception
+	 */
 	@Command(name = "create")
 	public URI createFile(
 			@Option(names = {"-t", "--token"}, description = "Token") 

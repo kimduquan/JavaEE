@@ -38,10 +38,10 @@ public class ClientUtil {
 	protected void postConstruct() {
 		clients = new ClientQueue();
 		clients.initialize();
-		SimpleModule module = new SimpleModule();
+		final SimpleModule module = new SimpleModule();
         module.addDeserializer(JsonObject.class, new JsonObjectDeserializer());
         module.addSerializer(JsonObject.class, new JsonObjectSerializer());
-		ObjectMapper mapper = new ObjectMapper();
+		final ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(module);
         provider = new JacksonJsonProvider(mapper);
 	}

@@ -72,15 +72,22 @@ public class Persistence {
 			@Option(names = {"-n", "--name"}, description = "Name")
 			final String name, 
 			@Option(names = {"-i", "--id"}, description = "ID")
-			final String id,
+			final String entityId,
 			@Option(names = {"-e", "--entity"}, description = "Entity", interactive = true, echo = true)
 			final String entity) throws Exception {
 		try(Client client = clientUtil.newClient(persistenceUrl.get())){
 			client.authorization(token);
-			epf.client.persistence.Entities.merge(client, unit, name, id, entity);
+			epf.client.persistence.Entities.merge(client, unit, name, entityId, entity);
 		}
 	}
 	
+	/**
+	 * @param token
+	 * @param unit
+	 * @param name
+	 * @param entityId
+	 * @throws Exception
+	 */
 	@Command(name = "remove")
 	public void remove(
 			@Option(names = {"-t", "--token"}, description = "Token") 
@@ -90,10 +97,10 @@ public class Persistence {
 			@Option(names = {"-n", "--name"}, description = "Name")
 			final String name, 
 			@Option(names = {"-i", "--id"}, description = "ID")
-			final String id) throws Exception {
+			final String entityId) throws Exception {
 		try(Client client = clientUtil.newClient(persistenceUrl.get())){
 			client.authorization(token);
-			epf.client.persistence.Entities.remove(client, unit, name, id);
+			epf.client.persistence.Entities.remove(client, unit, name, entityId);
 		}
 	}
 }

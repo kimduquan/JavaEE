@@ -11,23 +11,26 @@ import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 
+/**
+ * @author PC
+ *
+ */
 public class JsonObjectDeserializer extends JsonDeserializer<JsonObject> {
 
 	@Override
-	public JsonObject deserialize(JsonParser p, DeserializationContext ctxt)
+	public JsonObject deserialize(final JsonParser parser, final DeserializationContext ctxt)
 			throws IOException, JsonProcessingException {
-		TreeNode node = p.readValueAsTree();
+		JsonObject object = null;
+		final TreeNode node = parser.readValueAsTree();
 		if(node != null) {
-			String value = node.toString();
-			JsonObject object;
+			final String value = node.toString();
 			try(StringReader reader = new StringReader(value)){
 				try(JsonReader jsonReader = Json.createReader(reader)){
 					object = jsonReader.readObject();
 				}
 			}
-			return object;
 		}
-		return null;
+		return object;
 	}
 
 }

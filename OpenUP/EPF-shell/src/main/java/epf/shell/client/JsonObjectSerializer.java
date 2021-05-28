@@ -6,15 +6,19 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
+/**
+ * @author PC
+ *
+ */
 public class JsonObjectSerializer extends JsonSerializer<JsonObject> {
 
 	@Override
-	public void serialize(JsonObject value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-		if(value != null) {
-			gen.writeRaw(value.toString());
+	public void serialize(final JsonObject value, final JsonGenerator gen, final SerializerProvider serializers) throws IOException {
+		if(value == null) {
+			gen.writeNull();
 		}
 		else {
-			gen.writeNull();
+			gen.writeRaw(value.toString());
 		}
 	}
 
