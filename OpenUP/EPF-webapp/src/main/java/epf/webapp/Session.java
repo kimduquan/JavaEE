@@ -6,7 +6,6 @@
 package epf.webapp;
 
 import java.io.Serializable;
-import java.net.URI;
 import java.security.Principal;
 import java.util.Set;
 import java.util.logging.Level;
@@ -94,7 +93,7 @@ public class Session implements Serializable {
     @PreDestroy
     protected void preDestroy(){
         if(principal != null){
-        	try(Client client = newClient(registry.lookup("security"))) {
+        	try(Client client = newClient("security")) {
         		client.authorization(principal.getToken().getRawToken());
             	Security.logOut(client, null);
             }
@@ -102,18 +101,6 @@ public class Session implements Serializable {
                 logger.log(Level.SEVERE, "PreDestroy", ex);
             }
         }
-    }
-    
-    /**
-     * @param uri
-     * @return
-     */
-    public Client newClient(final URI uri) {
-    	final Client client = new Client(clients, uri, b -> b);
-    	if(principal != null) {
-        	client.authorization(principal.getToken().getRawToken());
-    	}
-    	return client;
     }
     
     /**
