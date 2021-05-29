@@ -10,16 +10,12 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.security.enterprise.CallerPrincipal;
 import javax.security.enterprise.credential.BasicAuthenticationCredential;
-import javax.security.enterprise.credential.RememberMeCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStore;
-import javax.security.enterprise.identitystore.RememberMeIdentityStore;
 import epf.client.EPFException;
 import epf.client.registry.LocateRegistry;
 import epf.client.security.Security;
@@ -33,7 +29,7 @@ import epf.util.security.PasswordHelper;
  * @author FOXCONN
  */
 @ApplicationScoped
-public class EPFIdentityStore implements IdentityStore, RememberMeIdentityStore {
+public class EPFIdentityStore implements IdentityStore {
     
     /**
      * 
@@ -70,8 +66,8 @@ public class EPFIdentityStore implements IdentityStore, RememberMeIdentityStore 
         CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
         final Token token = login(credential);
         if(token != null){
-        	final TokenPrincipal principal = new TokenPrincipal(credential.getCaller(), token);
-            principals.put(credential.getCaller(), principal);
+        	final TokenPrincipal principal = new TokenPrincipal(token);
+            principals.put(token.getTokenID(), principal);
             result = new CredentialValidationResult(principal, principal.getToken().getGroups());
         }
         return result;
@@ -112,6 +108,9 @@ public class EPFIdentityStore implements IdentityStore, RememberMeIdentityStore 
             if(!token.isEmpty()){
             	client.authorization(token);
             	jwt = Security.authenticate(client, null);
+            	if(jwt != null) {
+            		jwt.setRawToken(token);
+            	}
             }
         }
         catch (Exception e) {
@@ -123,44 +122,6 @@ public class EPFIdentityStore implements IdentityStore, RememberMeIdentityStore 
     @Override
     public Set<String> getCallerGroups(final CredentialValidationResult validationResult){
         return validationResult.getCallerGroups();
-    }
-
-    @Override
-    public CredentialValidationResult validate(final RememberMeCredential credential) {
-        CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
-        try(Client client = new Client(clients, registry.lookup("security"), b -> b)) {
-        	client.authorization(credential.getToken());
-        	final Token jwt = Security.authenticate(client, null);
-            if(jwt != null){
-            	final TokenPrincipal principal = new TokenPrincipal(jwt.getName(), jwt);
-                result = new CredentialValidationResult(principal, jwt.getGroups());
-            }
-        } 
-        catch (Exception ex) {
-            logger.log(Level.SEVERE, "validate", ex);
-        }
-        return result;
-    }
-
-    @Override
-    public String generateLoginToken(final CallerPrincipal caller, final Set<String> groups) {
-    	String token = "";
-        if(caller instanceof TokenPrincipal){
-        	final TokenPrincipal principal = (TokenPrincipal) caller;
-            token = principal.getToken().getRawToken();
-        }
-        return token;
-    }
-
-    @Override
-    public void removeLoginToken(final String token) {
-    	try(Client client = new Client(clients, registry.lookup("security"), b -> b)) {
-            client.authorization(token);
-            Security.logOut(client, null);
-        } 
-        catch (Exception ex) {
-        	logger.log(Level.SEVERE, "removeLoginToken", ex);
-        }
     }
     
     /**

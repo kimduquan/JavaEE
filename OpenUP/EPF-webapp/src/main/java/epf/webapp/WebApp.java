@@ -39,18 +39,19 @@ import epf.schema.roles.Role;
 @ServletSecurity(
         value = @HttpConstraint(
                 value = EmptyRoleSemantic.DENY,
-                transportGuarantee = TransportGuarantee.CONFIDENTIAL
+                transportGuarantee = TransportGuarantee.CONFIDENTIAL,
+                rolesAllowed = Role.DEFAULT_ROLE
         ),
         httpMethodConstraints = {
             @HttpMethodConstraint(
                     value = HttpMethod.GET,
-                    emptyRoleSemantic = EmptyRoleSemantic.PERMIT,
+                    emptyRoleSemantic = EmptyRoleSemantic.DENY,
                     transportGuarantee = TransportGuarantee.CONFIDENTIAL,
                     rolesAllowed = Role.DEFAULT_ROLE
             ),
             @HttpMethodConstraint(
                     value = HttpMethod.POST,
-                    emptyRoleSemantic = EmptyRoleSemantic.PERMIT,
+                    emptyRoleSemantic = EmptyRoleSemantic.DENY,
                     transportGuarantee = TransportGuarantee.CONFIDENTIAL,
                     rolesAllowed = Role.DEFAULT_ROLE
             )

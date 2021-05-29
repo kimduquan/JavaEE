@@ -23,8 +23,8 @@ public class TokenPrincipal extends CallerPrincipal {
      * @param name
      * @param token
      */
-    public TokenPrincipal(final String name, final Token token){
-        super(name);
+    public TokenPrincipal(final Token token){
+        super(token.getTokenID());
         this.token = token;
     }
 

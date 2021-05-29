@@ -7,7 +7,6 @@ package epf.webapp;
 
 import java.io.Serializable;
 import java.security.Principal;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -42,7 +41,7 @@ public class Session implements Serializable {
 	/**
 	 * 
 	 */
-	private transient TokenPrincipal principal;
+	private TokenPrincipal principal;
     /**
      * 
      */
@@ -80,10 +79,7 @@ public class Session implements Serializable {
     protected void postConstruct(){
     	final Principal current = context.getCallerPrincipal();
     	if(current != null) {
-    		final Set<TokenPrincipal> token = context.getPrincipalsByType(TokenPrincipal.class);
-    		if(token.isEmpty()) {
-    			principal = identityStore.getPrincipal(current.getName());
-    		}
+    		principal = identityStore.getPrincipal(current.getName());
     	}
     }
     
