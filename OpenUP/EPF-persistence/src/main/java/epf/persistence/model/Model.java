@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.persistence.metamodel;
+package epf.persistence.model;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,10 +24,10 @@ import epf.schema.roles.Role;
  *
  * @author FOXCONN
  */
-@Path("metamodel")
+@Path("model")
 @RolesAllowed(Role.DEFAULT_ROLE)
 @RequestScoped
-public class Entities implements epf.client.persistence.metamodel.Entities {
+public class Model implements epf.client.model.Model {
     
     /**
      * 
@@ -76,7 +76,7 @@ public class Entities implements epf.client.persistence.metamodel.Entities {
 
 	@Override
 	public Response getEntityTypes(final String unit) {
-		final List<epf.client.persistence.metamodel.EntityType> entityTypes = findEntities(unit)
+		final List<epf.client.model.EntityType> entityTypes = findEntities(unit)
 				.stream()
 				.map(EntityTypeBuilder::build)
 				.collect(Collectors.toList());

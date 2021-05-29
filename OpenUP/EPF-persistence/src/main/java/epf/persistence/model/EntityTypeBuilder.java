@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.persistence.metamodel;
+package epf.persistence.model;
 
 import java.util.stream.Collectors;
 
@@ -19,9 +19,9 @@ public class EntityTypeBuilder {
 	 * @param entity
 	 * @return
 	 */
-	public static epf.client.persistence.metamodel.EntityType build(final Entity<?> entity){
+	public static epf.client.model.EntityType build(final Entity<?> entity){
 		final EntityType<?> type = entity.getType();
-		final epf.client.persistence.metamodel.EntityType entityType = new epf.client.persistence.metamodel.EntityType();
+		final epf.client.model.EntityType entityType = new epf.client.model.EntityType();
 		entityType.setAttributes(
 				type
 				.getDeclaredAttributes()

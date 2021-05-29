@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.client.persistence.metamodel;
+package epf.client.model;
 
 import java.util.List;
 import javax.validation.constraints.NotBlank;
@@ -19,8 +19,14 @@ import epf.validation.persistence.Unit;
  * @author PC
  *
  */
-@Path("metamodel")
-public interface Entities {
+@Path("model")
+public interface Model {
+	
+	/**
+	 * 
+	 */
+	String EPF_MODEL_URL = "epf.model.url";
+	
 	/**
      * @return
      */

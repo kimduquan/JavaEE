@@ -1,12 +1,12 @@
 /**
  * 
  */
-package epf.persistence.metamodel;
+package epf.persistence.model;
 
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.Attribute.PersistentAttributeType;
 
-import epf.client.persistence.metamodel.AttributeType;
+import epf.client.model.AttributeType;
 
 /**
  * @author PC
@@ -18,8 +18,8 @@ public class AttributeBuilder {
 	 * @param attribute
 	 * @return
 	 */
-	public static epf.client.persistence.metamodel.Attribute build(final Attribute<?, ?> attr){
-		final epf.client.persistence.metamodel.Attribute attribute = new epf.client.persistence.metamodel.Attribute();
+	public static epf.client.model.Attribute build(final Attribute<?, ?> attr){
+		final epf.client.model.Attribute attribute = new epf.client.model.Attribute();
 		attribute.setType(attr.getJavaType().getName());
 		attribute.setName(attr.getName());
 		attribute.setAttributeType(buildAttrbuteType(attr.getPersistentAttributeType()));

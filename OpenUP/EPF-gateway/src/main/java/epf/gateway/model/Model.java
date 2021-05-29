@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.gateway.persistence;
+package epf.gateway.model;
 
 import java.util.concurrent.CompletionStage;
 import javax.enterprise.context.RequestScoped;
@@ -24,9 +24,9 @@ import epf.gateway.Request;
  *
  * @author FOXCONN
  */
-@Path("persistence")
+@Path("model")
 @RequestScoped
-public class EntityTypes {
+public class Model {
     
     /**
      * 

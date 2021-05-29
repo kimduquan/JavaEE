@@ -20,6 +20,7 @@
 		<liberty.env.epf.script.url>https://localhost:9443/script/script/</liberty.env.epf.script.url>
 		<liberty.env.epf.file.url>https://localhost:9443/file/file/</liberty.env.epf.file.url>
 		<liberty.env.epf.persistence.url>https://localhost:9443/persistence/persistence/</liberty.env.epf.persistence.url>
+		<liberty.env.epf.model.url>https://localhost:9443/persistence/model/</liberty.env.epf.model.url>
 		<liberty.env.epf.security.url>https://localhost:9443/persistence/security/</liberty.env.epf.security.url>
         <liberty.env.epf.gateway.url>https://localhost:9443/gateway/</liberty.env.epf.gateway.url>
         <liberty.env.epf.messaging.url>ws://localhost:9080/messaging/messaging/</liberty.env.epf.messaging.url>
@@ -210,6 +211,7 @@
 						<epf.script.url>https://localhost:${httpsPort}/script/script/</epf.script.url>
 						<epf.file.url>https://localhost:${httpsPort}/file/file/</epf.file.url>
 						<epf.persistence.url>https://localhost:${httpsPort}/persistence/persistence/</epf.persistence.url>
+						<epf.model.url>https://localhost:${httpsPort}/persistence/model/</epf.model.url>
 						<epf.security.url>https://localhost:${httpsPort}/persistence/security/</epf.security.url>
                         <epf.gateway.url>https://localhost:${httpsPort}/gateway/</epf.gateway.url>
                         <epf.registry.url>https://localhost:${httpsPort}/registry/registry/</epf.registry.url>

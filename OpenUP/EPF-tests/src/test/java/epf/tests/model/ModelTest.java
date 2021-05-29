@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.tests.persistence;
+package epf.tests.model;
 
 import java.net.URI;
 import java.util.List;
@@ -14,8 +14,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import epf.client.persistence.metamodel.EntityType;
-import epf.client.persistence.metamodel.Entities;
+import epf.client.model.Model;
+import epf.client.model.EntityType;
 import epf.schema.EPF;
 import epf.tests.client.ClientUtil;
 import epf.tests.registry.RegistryUtil;
@@ -27,17 +27,17 @@ import epf.util.logging.Logging;
  * @author PC
  *
  */
-public class EntityTypesTest {
+public class ModelTest {
 
-	private static final Logger logger = Logging.getLogger(EntityTypesTest.class.getName());
-	private static URI persistenceUrl;
+	private static final Logger logger = Logging.getLogger(ModelTest.class.getName());
+	private static URI modelUrl;
     private static String token;
     private static String adminToken;
     private Client client;
     
     @BeforeClass
     public static void beforeClass(){
-    	persistenceUrl = RegistryUtil.lookup("persistence", null);
+    	modelUrl = RegistryUtil.lookup("model", null);
     	token = SecurityUtil.login(null, "any_role1", "any_role");
     	adminToken = SecurityUtil.login(null, "admin1", "admin");
     }
@@ -50,7 +50,7 @@ public class EntityTypesTest {
     
     @Before
     public void before() {
-    	client = ClientUtil.newClient(persistenceUrl);
+    	client = ClientUtil.newClient(modelUrl);
     	client.authorization(token);
     }
     
@@ -66,7 +66,7 @@ public class EntityTypesTest {
 
 	@Test
 	public void testGetEntityTypesOk() {
-		List<EntityType> types = Entities.getEntityTypes(client, EPF.SCHEMA);
+		List<EntityType> types = Model.getEntityTypes(client, EPF.SCHEMA);
 		types.forEach(type -> {
 			System.out.println(type.getName());
 		});
@@ -74,7 +74,7 @@ public class EntityTypesTest {
 	
 	@Test
 	public void testGetEntityTypeOk() {
-		EntityType type = Entities.getEntityType(client, EPF.SCHEMA, EPF.ARTIFACT);
+		EntityType type = Model.getEntityType(client, EPF.SCHEMA, EPF.ARTIFACT);
 		Assert.assertNotNull("EntityType", type);
 		Assert.assertEquals("EntityType.name", EPF.ARTIFACT, type.getName());
 	}
