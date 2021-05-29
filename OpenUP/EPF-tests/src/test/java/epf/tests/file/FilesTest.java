@@ -198,12 +198,12 @@ public class FilesTest {
 	
 	@Test(expected = ForbiddenException.class)
 	public void testLines_InvalidUser() {
-		epf.client.file.Files.lines(client, Path.of("any_role2"));
+		epf.client.file.Files.read(client, Path.of("any_role2"));
 	}
 	
 	@Test(expected = ForbiddenException.class)
 	public void testLines_InvalidGroup_ValidUser() {
-		epf.client.file.Files.lines(client, Path.of("Developer", "any_role1"));
+		epf.client.file.Files.read(client, Path.of("Developer", "any_role1"));
 	}
 	
 	@Test
@@ -242,6 +242,6 @@ public class FilesTest {
 	
 	@Test(expected = ForbiddenException.class)
 	public void testLines_InvalidGroup_InvalidUser() {
-		epf.client.file.Files.lines(client, Path.of("Developer", "any_role2"));
+		epf.client.file.Files.read(client, Path.of("Developer", "any_role2"));
 	}
 }

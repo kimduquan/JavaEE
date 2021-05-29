@@ -40,7 +40,7 @@ import epf.util.client.EntityOutput;
 @javax.ws.rs.Path("file")
 @RolesAllowed(Role.DEFAULT_ROLE)
 @ApplicationScoped
-public class FileService implements epf.client.file.Files {
+public class FileStore implements epf.client.file.Files {
 	
 	/**
 	 * 
@@ -92,7 +92,7 @@ public class FileService implements epf.client.file.Files {
 	}
 
 	@Override
-	public StreamingOutput lines(
+	public StreamingOutput read(
 			final UriInfo uriInfo, 
 			final List<PathSegment> paths,
 			final SecurityContext security) {

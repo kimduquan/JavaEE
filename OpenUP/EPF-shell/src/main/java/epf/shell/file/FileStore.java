@@ -26,7 +26,7 @@ import picocli.CommandLine.Option;
 @Command(name = "file")
 @RequestScoped
 @Function
-public class FileFunction {
+public class FileStore {
 
 	/**
 	 * 
