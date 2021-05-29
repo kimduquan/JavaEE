@@ -349,11 +349,6 @@
         <!-- Define and configure plugins -->
         <pluginManagement>
             <plugins>
-            	<plugin>
-            		<groupId>org.apache.maven.plugins</groupId>
-				    <artifactId>maven-resources-plugin</artifactId>
-				    <version>3.2.0</version>
-            	</plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.8.1</version>
@@ -382,16 +377,6 @@
                     <version>3.0.0-M5</version>
                 </plugin>
                 <plugin>
-                	<groupId>org.apache.maven.plugins</groupId>
-				    <artifactId>maven-jar-plugin</artifactId>
-				    <version>3.2.0</version>
-                </plugin>
-                <plugin>
-                	<groupId>org.apache.maven.plugins</groupId>
-				    <artifactId>maven-install-plugin</artifactId>
-				    <version>3.0.0-M1</version>
-                </plugin>
-                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <version>3.0.0-M5</version>
@@ -414,15 +399,30 @@
                     </executions>
                 </plugin>
                 <plugin>
-                	<groupId>org.apache.maven.plugins</groupId>
-				    <artifactId>maven-clean-plugin</artifactId>
-				    <version>3.1.0</version>
-                </plugin>
-                <plugin>
                     <groupId>io.openliberty.tools</groupId>
                     <artifactId>liberty-maven-plugin</artifactId>
                     <version>3.3.5-M1</version>
                 </plugin>
+                <plugin>
+                	<groupId>org.apache.maven.plugins</groupId>
+				    <artifactId>maven-jar-plugin</artifactId>
+				    <version>3.2.0</version>
+                </plugin>
+                <plugin>
+                	<groupId>org.apache.maven.plugins</groupId>
+				    <artifactId>maven-install-plugin</artifactId>
+				    <version>3.0.0-M1</version>
+                </plugin>
+                <plugin>
+                	<groupId>org.apache.maven.plugins</groupId>
+				    <artifactId>maven-clean-plugin</artifactId>
+				    <version>3.1.0</version>
+                </plugin>
+            	<plugin>
+            		<groupId>org.apache.maven.plugins</groupId>
+				    <artifactId>maven-resources-plugin</artifactId>
+				    <version>3.2.0</version>
+            	</plugin>
                 <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-pmd-plugin -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
