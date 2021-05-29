@@ -5,7 +5,7 @@ package epf.tests.webapp;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import epf.client.config.ConfigNames;
+import epf.client.webapp.WebApp;
 import epf.util.logging.Logging;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -36,7 +36,7 @@ public class WebDriverUtil {
 	public static URL getDefaultURL() {
 		URL url = null;
 		try {
-			url = new URL(System.getProperty(ConfigNames.WEB_APP_URL, ""));
+			url = new URL(System.getProperty(WebApp.WEBAPP_URL, ""));
 		} 
 		catch (MalformedURLException e) {
 			LOGGER.log(Level.SEVERE, e.getMessage(), e);

@@ -70,15 +70,17 @@ public class Model implements epf.client.model.Model {
 
 	@Override
 	public Response getEntityType(final String unit, final String name) {
-		final ResponseBuilder response = Response.ok(EntityTypeBuilder.build(findEntity(unit, name)));
+		final EntityBuilder builder = new EntityBuilder();
+		final ResponseBuilder response = Response.ok(builder.build(findEntity(unit, name)));
 		return response.build();
 	}
 
 	@Override
 	public Response getEntityTypes(final String unit) {
+		final EntityBuilder builder = new EntityBuilder();
 		final List<epf.client.model.Entity> entityTypes = findEntities(unit)
 				.stream()
-				.map(EntityTypeBuilder::build)
+				.map(builder::build)
 				.collect(Collectors.toList());
 		return Response.ok(entityTypes).build();
 	}

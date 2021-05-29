@@ -6,7 +6,6 @@
 package epf.persistence;
 
 import java.io.InputStream;
-import java.net.URI;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -16,23 +15,16 @@ import javax.inject.Inject;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.json.bind.JsonbException;
-import javax.persistence.metamodel.PluralAttribute;
 import javax.validation.Validator;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Link;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-import org.eclipse.microprofile.openapi.annotations.Operation;
-import org.eclipse.microprofile.openapi.annotations.media.Content;
-import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
-import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import epf.client.EPFException;
 import epf.persistence.impl.Entity;
-import epf.persistence.model.EntityTypeBuilder;
+import epf.persistence.model.EntityBuilder;
 import epf.schema.roles.Role;
 
 /**
@@ -69,27 +61,6 @@ public class Entities implements epf.client.persistence.Entities {
     private transient SecurityContext context;
     
     @Override
-    @Operation(
-            summary = "persist", 
-            description = "Make an instance managed and persistent."
-    )
-    @RequestBody(
-            description = "entity instance",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON),
-            required = true
-    )
-    @APIResponse(
-            description = "OK",
-            responseCode = "200"
-    )
-    @APIResponse(
-            description = "entity name is not present",
-            responseCode = "404"
-    )
-    @APIResponse(
-            description = "any unexpected error(s) occur(s) during deserialization",
-            responseCode = "400"
-    )
     public Object persist(
             final String unit,
             final String name,
@@ -153,22 +124,6 @@ public class Entities implements epf.client.persistence.Entities {
     }
     
     @Override
-    @Operation(
-            summary = "remove", 
-            description = "Remove the entity instance."
-    )
-    @APIResponse(
-            description = "OK",
-            responseCode = "200"
-    )
-    @APIResponse(
-            description = "entity name is not present",
-            responseCode = "404"
-    )
-    @APIResponse(
-            description = "the entity does not exist",
-            responseCode = "404"
-    )
     public void remove(
     		final String unit,
     		final String name,
@@ -225,29 +180,13 @@ public class Entities implements epf.client.persistence.Entities {
         }
         return entity;
     }
-	
-	/**
-	 * @param uri
-	 * @param attr
-	 * @param unit
-	 * @param entity
-	 * @return
-	 */
-	protected Link buildLink(final URI uri, final PluralAttribute<?, ?, ?> attr, final String unit, final String entity) {
-		Link.Builder builder = Link.fromUri(uri);
-		builder = builder.rel(attr.getName());
-		builder = builder.type(attr.getBindableJavaType().getName());
-		builder = builder.title(attr.getName());
-		builder = builder.param("unit", unit);
-		builder = builder.param("entity", entity);
-		return builder.build();
-	}
 
 	@Override
-	public Response getEntities(String unit) {
+	public Response getEntities(final String unit) {
+		final EntityBuilder builder = new EntityBuilder();
 		final List<epf.client.model.Entity> entityTypes = findEntities(unit)
 				.stream()
-				.map(EntityTypeBuilder::build)
+				.map(builder::build)
 				.collect(Collectors.toList());
 		return Response.ok(entityTypes).build();
 	}

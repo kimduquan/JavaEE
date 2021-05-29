@@ -24,6 +24,12 @@ public interface Cache {
 	 */
 	String CACHE_URL = "epf.cache.url";
 	
+	/**
+	 * @param schema
+	 * @param name
+	 * @param entityId
+	 * @return
+	 */
 	@GET
     @Path("persistence/{schema}/{entity}/{id}")
 	@Produces(MediaType.APPLICATION_JSON)

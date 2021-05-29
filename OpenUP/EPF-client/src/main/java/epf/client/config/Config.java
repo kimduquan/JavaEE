@@ -24,6 +24,9 @@ import epf.util.client.Client;
 @Path("config")
 public interface Config {
 	
+	/**
+	 * 
+	 */
 	String CONFIG_URL = "epf.config.url";
     
     /**

@@ -29,9 +29,9 @@ import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import epf.client.EPFException;
-import epf.client.config.ConfigNames;
 import epf.client.security.Info;
 import epf.client.security.Token;
+import epf.client.security.jwt.JWT;
 import epf.schema.roles.Role;
 import epf.persistence.impl.Application;
 import epf.persistence.impl.Credential;
@@ -75,14 +75,14 @@ public class Security implements epf.client.security.Security, Serializable {
      * 
      */
     @Inject
-    @ConfigProperty(name = ConfigNames.JWT_EXPIRE_DURATION)
+    @ConfigProperty(name = JWT.EXPIRE_DURATION)
     private transient Long jwtExpDuration;
     
     /**
      * 
      */
     @Inject
-    @ConfigProperty(name = ConfigNames.JWT_EXPIRE_TIMEUNIT)
+    @ConfigProperty(name = JWT.EXPIRE_TIMEUNIT)
     private transient ChronoUnit jwtExpTimeUnit;
     
     /**
@@ -271,7 +271,7 @@ public class Security implements epf.client.security.Security, Serializable {
 					final TokenBuilder builder = new TokenBuilder(issuer, service);
 					final Credential credential = getCredential(unit, context, persistence);
 					final long time = System.currentTimeMillis() / 1000;
-			        Token jwt = builder
+			        final Token jwt = builder
 			        		.expire(jwtExpTimeUnit, jwtExpDuration)
 			        		.fromCredential(credential)
 			        		.generator(generator)

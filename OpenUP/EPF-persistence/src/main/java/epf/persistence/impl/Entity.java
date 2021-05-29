@@ -16,11 +16,11 @@ public class Entity<T> {
     /**
      * 
      */
-    private transient EntityType<T> type;
+    private EntityType<T> type;
     /**
      * 
      */
-    private transient T object;
+    private T object;
 
     public EntityType<T> getType() {
         return type;

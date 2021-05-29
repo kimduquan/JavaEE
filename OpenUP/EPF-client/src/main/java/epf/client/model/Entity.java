@@ -32,6 +32,11 @@ public class Entity {
 	private String name;
 	
 	/**
+	 * 
+	 */
+	private EntityType entityType;
+	
+	/**
 	 * @return the attributes
 	 */
 	public Set<Attribute> getAttributes() {
@@ -85,5 +90,19 @@ public class Entity {
 	 */
 	public void setName(final String name) {
 		this.name = name;
+	}
+
+	/**
+	 * @return the entityType
+	 */
+	public EntityType getEntityType() {
+		return entityType;
+	}
+
+	/**
+	 * @param entityType the entityType to set
+	 */
+	public void setEntityType(final EntityType entityType) {
+		this.entityType = entityType;
 	}
 }
