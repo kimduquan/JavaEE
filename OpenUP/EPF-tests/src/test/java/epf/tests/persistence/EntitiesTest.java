@@ -5,7 +5,7 @@
  */
 package epf.tests.persistence;
 
-import epf.client.model.EntityType;
+import epf.client.model.Entity;
 import epf.client.persistence.Entities;
 import epf.schema.EPF;
 import epf.schema.delivery_processes.DeliveryProcess;
@@ -45,7 +45,6 @@ import org.junit.Test;
 public class EntitiesTest {
 	
 	private static final Logger logger = Logging.getLogger(EntitiesTest.class.getName());
-    
 	private static URI persistenceUrl;
     private static String token;
     private static String adminToken;
@@ -149,9 +148,8 @@ public class EntitiesTest {
     @Test
     public void testGetEntitiesOK() throws Exception{
     	Response res = Entities.getEntities(client, null);
-    	List<EntityType> entities = res.readEntity(new GenericType<List<EntityType>>() {});
-    	Assert.assertFalse("List<EntityType>", entities.isEmpty());
-    	entities.forEach(entity -> System.out.println(entity.getName()));
+    	List<Entity> entities = res.readEntity(new GenericType<List<Entity>>() {});
+    	Assert.assertFalse("List<EntityType>.empty", entities.isEmpty());
     }
     
     @Test(expected = ForbiddenException.class)

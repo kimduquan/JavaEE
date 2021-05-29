@@ -245,7 +245,7 @@ public class Entities implements epf.client.persistence.Entities {
 
 	@Override
 	public Response getEntities(String unit) {
-		final List<epf.client.model.EntityType> entityTypes = findEntities(unit)
+		final List<epf.client.model.Entity> entityTypes = findEntities(unit)
 				.stream()
 				.map(EntityTypeBuilder::build)
 				.collect(Collectors.toList());

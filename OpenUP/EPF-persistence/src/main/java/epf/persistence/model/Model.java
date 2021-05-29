@@ -76,7 +76,7 @@ public class Model implements epf.client.model.Model {
 
 	@Override
 	public Response getEntityTypes(final String unit) {
-		final List<epf.client.model.EntityType> entityTypes = findEntities(unit)
+		final List<epf.client.model.Entity> entityTypes = findEntities(unit)
 				.stream()
 				.map(EntityTypeBuilder::build)
 				.collect(Collectors.toList());

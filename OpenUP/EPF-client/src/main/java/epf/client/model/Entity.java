@@ -9,7 +9,7 @@ import java.util.Set;
  * @author PC
  *
  */
-public class EntityType {
+public class Entity {
 
 	/**
 	 * 

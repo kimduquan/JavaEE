@@ -43,13 +43,13 @@ public interface Model {
      * @param client
      * @return
      */
-    static List<EntityType> getEntityTypes(final Client client, final String unit) {
+    static List<Entity> getEntityTypes(final Client client, final String unit) {
     	return client
     			.request(
     					target -> target.path(unit), 
     					req -> req.accept(MediaType.APPLICATION_JSON)
     					)
-    			.get(new GenericType<List<EntityType>>() {});
+    			.get(new GenericType<List<Entity>>() {});
     }
     
     /**
@@ -75,12 +75,12 @@ public interface Model {
      * @param entity
      * @return
      */
-    static EntityType getEntityType(final Client client, final String unit, final String entity) {
+    static Entity getEntityType(final Client client, final String unit, final String entity) {
     	return client
     			.request(
     					target -> target.path(unit).path(entity), 
     					req -> req.accept(MediaType.APPLICATION_JSON)
     					)
-    			.get(EntityType.class);
+    			.get(Entity.class);
     }
 }

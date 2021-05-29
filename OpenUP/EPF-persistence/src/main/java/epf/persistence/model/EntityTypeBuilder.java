@@ -19,9 +19,9 @@ public class EntityTypeBuilder {
 	 * @param entity
 	 * @return
 	 */
-	public static epf.client.model.EntityType build(final Entity<?> entity){
+	public static epf.client.model.Entity build(final Entity<?> entity){
 		final EntityType<?> type = entity.getType();
-		final epf.client.model.EntityType entityType = new epf.client.model.EntityType();
+		final epf.client.model.Entity entityType = new epf.client.model.Entity();
 		entityType.setAttributes(
 				type
 				.getDeclaredAttributes()

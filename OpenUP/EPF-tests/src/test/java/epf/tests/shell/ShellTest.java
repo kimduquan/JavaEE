@@ -13,6 +13,8 @@ import java.util.concurrent.TimeUnit;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.ws.rs.NotAuthorizedException;
+import javax.ws.rs.core.GenericType;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -20,6 +22,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import epf.client.gateway.Gateway;
+import epf.client.model.Entity;
 import epf.client.security.Token;
 import epf.schema.EPF;
 import epf.schema.work_products.Artifact;
@@ -241,5 +244,18 @@ public class ShellTest {
 		Assert.assertEquals(0, lines.size());
 		lines = Files.readAllLines(err);
 		Assert.assertTrue(lines.isEmpty());
+	}
+	
+	@Test
+	public void testPersistence_GetEntities() throws Exception {
+		builder.command("powershell", "./epf", "persistence", "get-entities", "-t", token, "-u", EPF.SCHEMA);
+		process = ShellUtil.waitFor(builder);
+		List<String> lines = Files.readAllLines(out);
+		Assert.assertEquals(2, lines.size());
+		List<Entity> entities;
+		try(Jsonb jsonb = JsonbBuilder.create()){
+			entities = jsonb.fromJson(lines.get(1), (new GenericType<List<Entity>>() {}).getType());
+		}
+		Assert.assertFalse(entities.isEmpty());
 	}
 }
