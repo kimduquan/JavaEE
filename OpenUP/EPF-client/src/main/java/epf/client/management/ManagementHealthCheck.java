@@ -17,12 +17,14 @@ import javax.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Liveness;
+import org.eclipse.microprofile.health.Readiness;
 
 /**
  * @author PC
  *
  */
 @Liveness
+@Readiness
 @ApplicationScoped
 public class ManagementHealthCheck implements HealthCheck {
 
@@ -42,7 +44,7 @@ public class ManagementHealthCheck implements HealthCheck {
 				.withData("ClassLoading.unloadedClassCount", classLoading.getUnloadedClassCount())
 				.withData("ClassLoading.verbose", classLoading.isVerbose())
 				.withData("Compilation.name", compilation.getName())
-				.withData("Compilation.totalCompilationTime", compilation.getTotalCompilationTime())
+				.withData("Compilation.totalCompilationTime", compilation.isCompilationTimeMonitoringSupported()?compilation.getTotalCompilationTime():-1)
 				.withData("Compilation.compilationTimeMonitoringSupported", compilation.isCompilationTimeMonitoringSupported())
 				.withData("Memory.verbose", memory.isVerbose())
 				.withData("Memory.objectPendingFinalizationCount", memory.getObjectPendingFinalizationCount())
@@ -59,7 +61,7 @@ public class ManagementHealthCheck implements HealthCheck {
 				.withData("OperatingSystem.version", os.getVersion())
 				.withData("OperatingSystem.availableProcessors", os.getAvailableProcessors())
 				.withData("OperatingSystem.systemLoadAverage", String.valueOf(os.getSystemLoadAverage()))
-				.withData("Runtime.bootClassPath", runtime.getBootClassPath())
+				.withData("Runtime.bootClassPath", runtime.isBootClassPathSupported()?runtime.getBootClassPath():"")
 				.withData("Runtime.classPath", runtime.getClassPath())
 				.withData("Runtime.libraryPath", runtime.getLibraryPath())
 				.withData("Runtime.managementSpecVersion", runtime.getManagementSpecVersion())
@@ -76,7 +78,7 @@ public class ManagementHealthCheck implements HealthCheck {
 				.withData("Runtime.bootClassPathSupported", runtime.isBootClassPathSupported())
 				.withData("Runtime.inputArguments", String.join(" ", runtime.getInputArguments()))
 				.withData("Runtime.systemProperties", runtime.getSystemProperties().toString())
-				.withData("Thread.currentThreadCpuTime", thread.getCurrentThreadCpuTime())
+				.withData("Thread.currentThreadCpuTime", thread.isCurrentThreadCpuTimeSupported()?thread.getCurrentThreadCpuTime():-1)
 				.withData("Thread.currentThreadUserTime", thread.getCurrentThreadUserTime())
 				.withData("Thread.totalStartedThreadCount", thread.getTotalStartedThreadCount())
 				.withData("Thread.currentThreadCpuTimeSupported", thread.isCurrentThreadCpuTimeSupported())
