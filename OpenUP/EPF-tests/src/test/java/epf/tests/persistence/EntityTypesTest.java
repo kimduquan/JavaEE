@@ -13,8 +13,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import epf.client.persistence.EntityType;
-import epf.client.persistence.EntityTypes;
+
+import epf.client.persistence.metamodel.EntityType;
+import epf.client.persistence.metamodel.Entities;
 import epf.schema.EPF;
 import epf.tests.client.ClientUtil;
 import epf.tests.registry.RegistryUtil;
@@ -65,7 +66,7 @@ public class EntityTypesTest {
 
 	@Test
 	public void testGetEntityTypesOk() {
-		List<EntityType> types = EntityTypes.getEntityTypes(client, EPF.SCHEMA);
+		List<EntityType> types = Entities.getEntityTypes(client, EPF.SCHEMA);
 		types.forEach(type -> {
 			System.out.println(type.getName());
 		});
@@ -73,7 +74,7 @@ public class EntityTypesTest {
 	
 	@Test
 	public void testGetEntityTypeOk() {
-		EntityType type = EntityTypes.getEntityType(client, EPF.SCHEMA, EPF.ARTIFACT);
+		EntityType type = Entities.getEntityType(client, EPF.SCHEMA, EPF.ARTIFACT);
 		Assert.assertNotNull("EntityType", type);
 		Assert.assertEquals("EntityType.name", EPF.ARTIFACT, type.getName());
 	}

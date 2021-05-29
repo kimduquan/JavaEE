@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.client.persistence;
+package epf.client.persistence.metamodel;
 
 import java.util.HashSet;
 import java.util.Set;

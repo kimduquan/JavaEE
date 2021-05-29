@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.client.persistence;
+package epf.client.persistence.metamodel;
 
 import java.util.List;
 import javax.validation.constraints.NotBlank;
@@ -19,8 +19,8 @@ import epf.validation.persistence.Unit;
  * @author PC
  *
  */
-@Path("persistence")
-public interface EntityTypes {
+@Path("metamodel")
+public interface Entities {
 	/**
      * @return
      */
