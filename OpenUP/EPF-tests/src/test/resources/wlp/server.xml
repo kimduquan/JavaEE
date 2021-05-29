@@ -32,13 +32,16 @@
 	<application id="EPF-registry" name="EPF-registry" context-root="registry" location="EPF-registry-1.0.0.war" startAfterRef="EPF-config" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
+	<application id="EPF-management" name="EPF-management" context-root="management" location="EPF-management-1.0.0.war" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
 	<application id="EPF-messaging" name="EPF-messaging" context-root="messaging" location="EPF-messaging-1.0.0.war" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
     <application id="EPF-cache" name="EPF-cache" context-root="cache" location="EPF-cache-1.0.0.war" startAfterRef="EPF-messaging" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-	<application id="EPF-file" name="EPF-file" context-root="file" location="EPF-file-1.0.0.war" startAfterRef="EPF-messaging" >
+	<application id="EPF-file" name="EPF-file" context-root="file" location="EPF-file-1.0.0.war" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
 	<application id="EPF-persistence" name="EPF-persistence" context-root="persistence" location="EPF-persistence-1.0.0.war" startAfterRef="EPF-messaging" >

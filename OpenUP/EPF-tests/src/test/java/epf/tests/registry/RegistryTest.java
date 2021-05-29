@@ -15,7 +15,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
 import epf.client.registry.Registry;
 import epf.tests.client.ClientUtil;
 import epf.tests.gateway.GatewayUtil;
@@ -72,6 +71,7 @@ public class RegistryTest {
 	    	expected.add(GatewayUtil.getGatewayUrl().resolve("stream"));
 	    	expected.add(GatewayUtil.getGatewayUrl().resolve("cache"));
 	    	expected.add(GatewayUtil.getGatewayUrl().resolve("script"));
+	    	expected.add(GatewayUtil.getGatewayUrl().resolve("management"));
 	    	URI messagingUrl = UriBuilder.fromUri(GatewayUtil.getGatewayUrl().resolve("messaging")).scheme("ws").port(9080).build();
 	    	expected.add(messagingUrl);
 		} 

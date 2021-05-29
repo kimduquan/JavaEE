@@ -18,6 +18,7 @@ import epf.client.cache.Cache;
 import epf.client.config.Config;
 import epf.client.file.Files;
 import epf.client.gateway.Gateway;
+import epf.client.management.Management;
 import epf.client.messaging.Messaging;
 import epf.client.script.Script;
 import epf.client.persistence.Persistence;
@@ -88,6 +89,9 @@ public class Registry implements epf.client.registry.Registry {
 			final URI scriptUrl = new URI(System.getenv(Script.SCRIPT_URL));
 			remote = "script";
 			remotes.put(remote, scriptUrl);
+			final URI managementUrl = new URI(System.getenv(Management.MANAGEMENT_URL));
+			remote = "management";
+			remotes.put(remote, managementUrl);
 		} 
 		catch (Exception e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);

@@ -564,6 +564,7 @@
 		<module>EPF-messaging</module>
 		<module>EPF-cache</module>
 		<module>EPF-registry</module>
+		<module>EPF-management</module>
         <module>EPF-schema</module>
         <module>OpenUP-schema</module>
         <module>EPF-validation</module>
