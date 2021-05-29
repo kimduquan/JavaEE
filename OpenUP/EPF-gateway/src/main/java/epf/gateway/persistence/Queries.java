@@ -70,12 +70,15 @@ public class Queries {
      * @return
      */
     @GET
+    @Path("{unit}")
     @Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
     public CompletionStage<Response> search(
     		@Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
-            @Context final javax.ws.rs.core.Request req
+            @Context final javax.ws.rs.core.Request req,
+            @PathParam("unit")
+            final String unit
             ) {
     	request.setHeaders(headers);
         request.setUriInfo(uriInfo);

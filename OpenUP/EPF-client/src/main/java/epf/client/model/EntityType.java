@@ -3,7 +3,6 @@
  */
 package epf.client.model;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -15,22 +14,22 @@ public class EntityType {
 	/**
 	 * 
 	 */
-	private transient Set<Attribute> attributes = new HashSet<>();
+	private Set<Attribute> attributes;
 	
 	/**
 	 * 
 	 */
-	private transient String idType;
+	private String idType;
 	
 	/**
 	 * 
 	 */
-	private transient String type;
+	private String type;
 	
 	/**
 	 * 
 	 */
-	private transient String name;
+	private String name;
 	
 	/**
 	 * @return the attributes
@@ -42,7 +41,7 @@ public class EntityType {
 	/**
 	 * @param attributes the attributes to set
 	 */
-	public void setAttributes(Set<Attribute> attributes) {
+	public void setAttributes(final Set<Attribute> attributes) {
 		this.attributes = attributes;
 	}
 
@@ -56,7 +55,7 @@ public class EntityType {
 	/**
 	 * @param idType the idType to set
 	 */
-	public void setIdType(String idType) {
+	public void setIdType(final String idType) {
 		this.idType = idType;
 	}
 
@@ -70,7 +69,7 @@ public class EntityType {
 	/**
 	 * @param type the type to set
 	 */
-	public void setType(String type) {
+	public void setType(final String type) {
 		this.type = type;
 	}
 
@@ -84,7 +83,7 @@ public class EntityType {
 	/**
 	 * @param name the name to set
 	 */
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 }

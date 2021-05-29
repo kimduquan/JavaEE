@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -23,6 +24,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -30,6 +32,7 @@ import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import epf.client.EPFException;
 import epf.persistence.impl.Entity;
+import epf.persistence.model.EntityTypeBuilder;
 import epf.schema.roles.Role;
 
 /**
@@ -238,5 +241,14 @@ public class Entities implements epf.client.persistence.Entities {
 		builder = builder.param("unit", unit);
 		builder = builder.param("entity", entity);
 		return builder.build();
+	}
+
+	@Override
+	public Response getEntities(String unit) {
+		final List<epf.client.model.EntityType> entityTypes = findEntities(unit)
+				.stream()
+				.map(EntityTypeBuilder::build)
+				.collect(Collectors.toList());
+		return Response.ok(entityTypes).build();
 	}
 }

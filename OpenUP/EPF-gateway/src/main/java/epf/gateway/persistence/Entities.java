@@ -11,6 +11,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -109,6 +110,25 @@ public class Entities {
             @PathParam("unit") final String unit,
             @PathParam("entity") final String entity,
             @PathParam("id") final String entityId) {
+        request.setHeaders(headers);
+        request.setUriInfo(uriInfo);
+        request.setRequest(req);
+        return request.request(null);
+    }
+    
+    /**
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @return
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Asynchronous
+    public CompletionStage<Response> getEntities(
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req) {
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         request.setRequest(req);

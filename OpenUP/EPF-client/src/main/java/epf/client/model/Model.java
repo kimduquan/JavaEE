@@ -5,7 +5,7 @@ package epf.client.model;
 
 import java.util.List;
 import javax.validation.constraints.NotBlank;
-import javax.ws.rs.HEAD;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -30,7 +30,7 @@ public interface Model {
 	/**
      * @return
      */
-    @HEAD
+    @GET
     @Path("{unit}")
     @Produces(MediaType.APPLICATION_JSON)
     Response getEntityTypes(
@@ -49,7 +49,7 @@ public interface Model {
     					target -> target.path(unit), 
     					req -> req.accept(MediaType.APPLICATION_JSON)
     					)
-    			.head().readEntity(new GenericType<List<EntityType>>() {});
+    			.get(new GenericType<List<EntityType>>() {});
     }
     
     /**
@@ -57,7 +57,7 @@ public interface Model {
      * @param name
      * @return
      */
-    @HEAD
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{unit}/{entity}")
     Response getEntityType(
@@ -79,8 +79,8 @@ public interface Model {
     	return client
     			.request(
     					target -> target.path(unit).path(entity), 
-    					req -> req.accept(MediaType.APPLICATION_JSON_TYPE)
+    					req -> req.accept(MediaType.APPLICATION_JSON)
     					)
-    			.head().readEntity(EntityType.class);
+    			.get(EntityType.class);
     }
 }

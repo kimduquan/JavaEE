@@ -5,6 +5,7 @@
  */
 package epf.tests.persistence;
 
+import epf.client.model.EntityType;
 import epf.client.persistence.Entities;
 import epf.schema.EPF;
 import epf.schema.delivery_processes.DeliveryProcess;
@@ -20,12 +21,15 @@ import epf.tests.security.SecurityUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotFoundException;
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.Response;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -140,6 +144,14 @@ public class EntitiesTest {
         	adminClient.authorization(adminToken);
             Entities.remove(adminClient, EPF.SCHEMA, EPF.ARTIFACT, artifact.getName());
         }
+    }
+    
+    @Test
+    public void testGetEntitiesOK() throws Exception{
+    	Response res = Entities.getEntities(client, null);
+    	List<EntityType> entities = res.readEntity(new GenericType<List<EntityType>>() {});
+    	Assert.assertFalse("List<EntityType>", entities.isEmpty());
+    	entities.forEach(entity -> System.out.println(entity.getName()));
     }
     
     @Test(expected = ForbiddenException.class)

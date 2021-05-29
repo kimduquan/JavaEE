@@ -32,7 +32,6 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import epf.persistence.impl.Entity;
 import epf.persistence.impl.QueryBuilder;
-import epf.schema.EPF;
 import epf.schema.h2.QueryNames;
 import epf.schema.h2.SearchData;
 import epf.schema.roles.Role;
@@ -116,12 +115,12 @@ public class Queries implements epf.client.persistence.Queries {
     }
 
 	@Override
-	public Response search(final UriInfo uriInfo, final String text, final Integer firstResult, final Integer maxResults) {
+	public Response search(final String unit, final UriInfo uriInfo, final String text, final Integer firstResult, final Integer maxResults) {
 		final Map<String, EntityType<?>> entityTables = new ConcurrentHashMap<>();
 		final Map<String, Map<String, Attribute<?,?>>> entityAttributes = new ConcurrentHashMap<>();
-		cache.mapEntities(EPF.SCHEMA, context.getUserPrincipal(), entityTables, entityAttributes);
+		cache.mapEntities(unit, context.getUserPrincipal(), entityTables, entityAttributes);
 		final TypedQuery<SearchData> query = cache.createNamedQuery(
-				EPF.SCHEMA, 
+				unit, 
 				context.getUserPrincipal(), 
 				QueryNames.FT_SEARCH_DATA, 
 				SearchData.class
@@ -143,7 +142,7 @@ public class Queries implements epf.client.persistence.Queries {
 								EntityType<?> entityType = entityTables.get(searchData.getTable());
 								UriBuilder linkBuilder = baseUri
 										.clone()
-										.path(EPF.SCHEMA)
+										.path(unit)
 										.path(entityType.getName());
 								Iterator<String> column = searchData.getColumns().iterator();
 								Iterator<String> key = searchData.getKeys().iterator();

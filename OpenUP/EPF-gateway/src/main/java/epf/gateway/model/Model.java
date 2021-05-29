@@ -8,7 +8,7 @@ package epf.gateway.model;
 import java.util.concurrent.CompletionStage;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.ws.rs.HEAD;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -42,7 +42,7 @@ public class Model {
      * @param entity
      * @param body
      */
-    @HEAD
+    @GET
     @Path("{unit}")
     @Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
@@ -65,7 +65,7 @@ public class Model {
      * @param entityId
      * @param body
      */
-    @HEAD
+    @GET
     @Path("{unit}/{entity}")
     @Produces(MediaType.APPLICATION_JSON)
     @Asynchronous

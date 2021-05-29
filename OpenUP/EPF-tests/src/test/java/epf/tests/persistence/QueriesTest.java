@@ -5,6 +5,8 @@
  */
 package epf.tests.persistence;
 
+import epf.client.persistence.Queries;
+import epf.schema.EPF;
 import epf.tests.client.ClientUtil;
 import epf.tests.registry.RegistryUtil;
 import epf.tests.security.SecurityUtil;
@@ -14,16 +16,16 @@ import java.net.URI;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.Ignore;
 
 /**
  *
@@ -32,7 +34,6 @@ import org.junit.Test;
 public class QueriesTest {
     
 	private static final Logger logger = Logging.getLogger(QueriesTest.class.getName());
-	
 	private static URI persistenceUrl;
     private static String token;
     private Client client;
@@ -67,16 +68,7 @@ public class QueriesTest {
     @Test
     @Ignore
     public void testSearchOK() {
-    	Response response = client.request(
-    			target -> target
-    			.queryParam("text", "OpenUP")
-    			.queryParam("first", 0)
-    			.queryParam("max", 100), 
-    			req -> req.accept(MediaType.APPLICATION_JSON)
-    			)
-    			.get();
-    	Assert.assertEquals("Response.status", 200, response.getStatus());
-    	Set<Link> entityLinks = response.getLinks();
+    	Set<Link> entityLinks = Queries.search(client, EPF.SCHEMA, "Any", 0, 100);
     	Assert.assertFalse("Response.links.empty", entityLinks.isEmpty());
     	entityLinks.forEach(entityLink -> {
     		Assert.assertNotNull("Link", entityLink);
@@ -100,55 +92,25 @@ public class QueriesTest {
     
     @Test
     public void testSearchOK_EmptyResult() {
-    	Response response = client.request(
-    			target -> target
-    			.queryParam("text", "EPF")
-    			.queryParam("first", 0)
-    			.queryParam("max", 100), 
-    			req -> req.accept(MediaType.APPLICATION_JSON)
-    			)
-    			.get();
-    	Assert.assertEquals("Response.status", 200, response.getStatus());
-    	Set<Link> entityLinks = response.getLinks();
+    	Set<Link> entityLinks = Queries.search(client, EPF.SCHEMA, "EPF", 0, 100);
     	Assert.assertTrue("Response.links.empty", entityLinks.isEmpty());
     }
     
-    @Test
+    @Test(expected = BadRequestException.class)
+    @Ignore
     public void testSearch_EmptyText() {
-    	Response response = client.request(
-    			target -> target
-    			.queryParam("text", "")
-    			.queryParam("first", 0)
-    			.queryParam("max", 100), 
-    			req -> req.accept(MediaType.APPLICATION_JSON)
-    			)
-    			.get();
-    	Assert.assertEquals("Response.status", 400, response.getStatus());
+    	Queries.search(client, EPF.SCHEMA, "", 0, 100);
     }
     
-    @Test
+    @Test(expected = BadRequestException.class)
+    @Ignore
     public void testSearch_BlankText() {
-    	Response response = client.request(
-    			target -> target
-    			.queryParam("text", "    ")
-    			.queryParam("first", 0)
-    			.queryParam("max", 100), 
-    			req -> req.accept(MediaType.APPLICATION_JSON)
-    			)
-    			.get();
-    	Assert.assertEquals("Response.status", 400, response.getStatus());
+    	Queries.search(client, EPF.SCHEMA, "    ", 0, 100);
     }
     
-    @Test
+    @Test(expected = BadRequestException.class)
+    @Ignore
     public void testSearch_InvalidText() {
-    	Response response = client.request(
-    			target -> target
-    			.queryParam("text", "'abc'")
-    			.queryParam("first", 0)
-    			.queryParam("max", 100), 
-    			req -> req.accept(MediaType.APPLICATION_JSON)
-    			)
-    			.get();
-    	Assert.assertEquals("Response.status", 400, response.getStatus());
+    	Queries.search(client, EPF.SCHEMA, "'abc'", 0, 100);
     }
 }

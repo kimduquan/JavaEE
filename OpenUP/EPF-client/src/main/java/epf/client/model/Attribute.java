@@ -12,23 +12,23 @@ public class Attribute {
 	/**
 	 * 
 	 */
-	private transient String type;
+	private String type;
 	/**
 	 * 
 	 */
-	private transient String name;
+	private String name;
 	/**
 	 * 
 	 */
-	private transient AttributeType attributeType;
+	private AttributeType attributeType;
 	/**
 	 * 
 	 */
-	private transient boolean association;
+	private boolean association;
 	/**
 	 * 
 	 */
-	private transient boolean collection;
+	private boolean collection;
 	/**
 	 * @return the type
 	 */
@@ -38,7 +38,7 @@ public class Attribute {
 	/**
 	 * @param type the type to set
 	 */
-	public void setType(String type) {
+	public void setType(final String type) {
 		this.type = type;
 	}
 	/**
@@ -50,7 +50,7 @@ public class Attribute {
 	/**
 	 * @param name the name to set
 	 */
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 	/**
@@ -62,7 +62,7 @@ public class Attribute {
 	/**
 	 * @param attributeType the attributeType to set
 	 */
-	public void setAttributeType(AttributeType attributeType) {
+	public void setAttributeType(final AttributeType attributeType) {
 		this.attributeType = attributeType;
 	}
 	/**
@@ -74,7 +74,7 @@ public class Attribute {
 	/**
 	 * @param association the association to set
 	 */
-	public void setAssociation(boolean association) {
+	public void setAssociation(final boolean association) {
 		this.association = association;
 	}
 	/**
@@ -86,7 +86,7 @@ public class Attribute {
 	/**
 	 * @param collection the collection to set
 	 */
-	public void setCollection(boolean collection) {
+	public void setCollection(final boolean collection) {
 		this.collection = collection;
 	}
 }

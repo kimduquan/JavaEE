@@ -15,6 +15,7 @@ import javax.ws.rs.core.UriInfo;
 import epf.util.client.Client;
 import epf.validation.persistence.Unit;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
@@ -55,6 +56,7 @@ public interface Queries {
     Response executeQuery(
             @PathParam("unit")
             @Unit
+            @NotBlank
             final String unit,
             @PathParam("criteria")
             final List<PathSegment> paths,
@@ -97,12 +99,18 @@ public interface Queries {
      * @return
      */
     @GET
+    @Path("{unit}")
     @Produces(MediaType.APPLICATION_JSON)
     Response search(
+    		@PathParam("unit")
+            @Unit
+            @NotBlank
+            final String unit,
     		@Context
     		final UriInfo uriInfo,
     		@QueryParam("text")
     		@NotBlank
+    		@NotEmpty
     		@Pattern(regexp = "\\w+")
     		final String text, 
     		@QueryParam(FIRST)
@@ -119,11 +127,12 @@ public interface Queries {
      */
     static Set<Link> search(
     		final Client client,
+    		final String unit,
     		final String text, 
     		final Integer firstResult,
     		final Integer maxResults) {
     	return client.request(
-    			target -> target.queryParam("text", text).queryParam(FIRST, firstResult).queryParam(MAX, maxResults), 
+    			target -> target.path(unit).queryParam("text", text).queryParam(FIRST, firstResult).queryParam(MAX, maxResults), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.get()
