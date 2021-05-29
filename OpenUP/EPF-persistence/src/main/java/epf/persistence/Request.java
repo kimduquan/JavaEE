@@ -239,6 +239,36 @@ public class Request {
      * @param <T>
      * @param unit
      * @param principal
+     * @return
+     */
+    @CacheResult(cacheName = "EntityType")
+    public <T> List<Entity<T>> findEntities(@CacheKey final String unit, final Principal principal) {
+    	return getManager(unit, principal)
+    			.getMetamodel()
+    			.getEntities()
+    			.stream()
+    			.map(entityType -> { 
+    					Entity<T> entity = null;
+    					try {
+                    		@SuppressWarnings("unchecked")
+                    		final EntityType<T> type = entityType.getClass().cast(entityType);
+                    		entity = new Entity<>();
+                    		entity.setType(type);
+    	                	}
+                    	catch(ClassCastException ex) {
+                    		logger.throwing(EntityType.class.getName(), "getClass", ex);
+                    	}
+    					return entity;
+    				}
+    			)
+    			.filter(entity -> entity != null)
+    			.collect(Collectors.toList());
+    }
+    
+    /**
+     * @param <T>
+     * @param unit
+     * @param principal
      * @param name
      * @param cls
      * @return

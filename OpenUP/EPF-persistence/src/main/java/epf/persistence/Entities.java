@@ -7,7 +7,9 @@ package epf.persistence;
 
 import java.io.InputStream;
 import java.net.URI;
+import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -30,6 +32,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import epf.client.EPFException;
+import epf.persistence.client.EntityTypeBuilder;
 import epf.persistence.impl.Entity;
 import epf.schema.roles.Role;
 
@@ -40,7 +43,7 @@ import epf.schema.roles.Role;
 @Path("persistence")
 @RolesAllowed(Role.DEFAULT_ROLE)
 @RequestScoped
-public class Entities implements epf.client.persistence.Entities {
+public class Entities implements epf.client.persistence.Entities, epf.client.persistence.EntityTypes {
 	
 	/**
 	 * 
@@ -195,6 +198,19 @@ public class Entities implements epf.client.persistence.Entities {
     /**
      * @param <T>
      * @param unit
+     * @return
+     */
+    protected <T> List<Entity<T>> findEntities(final String unit){
+    	final List<Entity<T>> entities = cache.findEntities(unit, context.getUserPrincipal());
+    	if(entities.isEmpty()){
+            throw new NotFoundException();
+        }
+        return entities;
+    }
+    
+    /**
+     * @param <T>
+     * @param unit
      * @param name
      * @param entityId
      * @return
@@ -213,15 +229,8 @@ public class Entities implements epf.client.persistence.Entities {
 
 	@Override
 	public Response getEntityType(final String unit, final String name) {
-		final Entity<Object> entity = findEntity(unit, name);
-		if(entity.getType() != null) {
-			final ResponseBuilder response = Response.ok();
-			entity.getType().getPluralAttributes().forEach(attribute -> {
-				
-			});
-			return response.build();
-		}
-		throw new NotFoundException();
+		final ResponseBuilder response = Response.ok(EntityTypeBuilder.build(findEntity(unit, name)));
+		return response.build();
 	}
 	
 	/**
@@ -239,5 +248,14 @@ public class Entities implements epf.client.persistence.Entities {
 		builder = builder.param("unit", unit);
 		builder = builder.param("entity", entity);
 		return builder.build();
+	}
+
+	@Override
+	public Response getEntityTypes(final String unit) {
+		final List<epf.client.persistence.EntityType> entityTypes = findEntities(unit)
+				.stream()
+				.map(EntityTypeBuilder::build)
+				.collect(Collectors.toList());
+		return Response.ok(entityTypes).build();
 	}
 }
