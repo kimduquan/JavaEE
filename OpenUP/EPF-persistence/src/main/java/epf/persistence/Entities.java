@@ -24,7 +24,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import epf.client.EPFException;
 import epf.persistence.impl.Entity;
-import epf.persistence.model.EntityBuilder;
+import epf.persistence.metamodel.EntityBuilder;
 import epf.schema.roles.Role;
 
 /**
@@ -184,7 +184,7 @@ public class Entities implements epf.client.persistence.Entities {
 	@Override
 	public Response getEntities(final String unit) {
 		final EntityBuilder builder = new EntityBuilder();
-		final List<epf.client.model.Entity> entityTypes = findEntities(unit)
+		final List<epf.client.persistence.Entity> entityTypes = findEntities(unit)
 				.stream()
 				.map(builder::build)
 				.collect(Collectors.toList());

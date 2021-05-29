@@ -5,8 +5,8 @@
  */
 package epf.tests.persistence;
 
-import epf.client.model.Entity;
 import epf.client.persistence.Entities;
+import epf.client.persistence.Entity;
 import epf.schema.EPF;
 import epf.schema.delivery_processes.DeliveryProcess;
 import epf.schema.work_products.Artifact;

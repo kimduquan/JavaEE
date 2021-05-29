@@ -20,7 +20,6 @@ import epf.client.file.Files;
 import epf.client.gateway.Gateway;
 import epf.client.management.Management;
 import epf.client.messaging.Messaging;
-import epf.client.model.Model;
 import epf.client.script.Script;
 import epf.client.persistence.Persistence;
 import epf.client.security.Security;
@@ -93,9 +92,6 @@ public class Registry implements epf.client.registry.Registry {
 			final URI managementUrl = new URI(System.getenv(Management.MANAGEMENT_URL));
 			remote = "management";
 			remotes.put(remote, managementUrl);
-			final URI modelUrl = new URI(System.getenv(Model.EPF_MODEL_URL));
-			remote = "model";
-			remotes.put(remote, modelUrl);
 		} 
 		catch (Exception e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);

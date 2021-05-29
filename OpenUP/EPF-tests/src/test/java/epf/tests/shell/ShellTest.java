@@ -22,7 +22,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import epf.client.gateway.Gateway;
-import epf.client.model.Entity;
+import epf.client.persistence.Entity;
 import epf.client.security.Token;
 import epf.schema.EPF;
 import epf.schema.work_products.Artifact;

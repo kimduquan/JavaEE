@@ -8,7 +8,7 @@ import java.util.List;
 
 import javax.ws.rs.core.GenericType;
 
-import epf.client.model.Entity;
+import epf.client.persistence.Entity;
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
 import epf.util.Var;

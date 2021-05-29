@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.client.model;
+package epf.client.persistence;
 
 /**
  * @author PC
