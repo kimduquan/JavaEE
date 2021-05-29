@@ -37,6 +37,11 @@
 		    <groupId>org.eclipse.microprofile.config</groupId>
 		    <artifactId>microprofile-config-api</artifactId>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.health/microprofile-health-api -->
+		<dependency>
+		    <groupId>org.eclipse.microprofile.health</groupId>
+		    <artifactId>microprofile-health-api</artifactId>
+		</dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-schema</artifactId>

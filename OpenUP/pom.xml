@@ -75,6 +75,12 @@
 			    <artifactId>microprofile-context-propagation-api</artifactId>
 			    <version>1.2</version>
 			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.health/microprofile-health-api -->
+			<dependency>
+			    <groupId>org.eclipse.microprofile.health</groupId>
+			    <artifactId>microprofile-health-api</artifactId>
+			    <version>3.0</version>
+			</dependency>
 			<!-- https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api -->
 			<dependency>
 			    <groupId>javax.persistence</groupId>
