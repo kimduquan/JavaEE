@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>EPF-web-web</artifactId>
-    <name>Simple Web Application</name>
+    <name>Eclipse Process Framework Web Application</name>
     <packaging>war</packaging>
 
     <dependencies>

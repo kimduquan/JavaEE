@@ -5,7 +5,7 @@
 
     <groupId>openup</groupId>
     <artifactId>EPF-web-parent</artifactId>
-    <name>Simple Web Application Parent</name>
+    <name>Eclipse Process Framework Web Application Parent</name>
     <packaging>pom</packaging>
     <version>1.0.0</version>
 

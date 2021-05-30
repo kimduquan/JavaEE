@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>EPF-web-test</artifactId>
-    <name>Simple Web Application Iteration Tests</name>
+    <name>Eclipse Process Framework Web Application Iteration Tests</name>
 
     <!-- Define variables that will be substituted in server.xml and
          passed to the integration tests -->

@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>EPF-web-assembly</artifactId>
-    <name>Simple Web Application Server Assembly</name>
+    <name>Eclipse Process Framework Web Application Server Assembly</name>
     <packaging>liberty-assembly</packaging>
 
     <dependencies>
