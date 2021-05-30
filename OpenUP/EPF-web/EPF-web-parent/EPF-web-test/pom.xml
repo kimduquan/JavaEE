@@ -113,7 +113,7 @@
                 <configuration>
                     <installDirectory>${liberty.install.dir}</installDirectory>
                     <userDirectory>${project.build.directory}</userDirectory>
-                    <serverName>test</serverName>
+                    <serverName>web_test</serverName>
                     <deployPackages>dependencies</deployPackages>
                 </configuration>
             </plugin>

@@ -31,7 +31,7 @@
                 <configuration>
                     <installDirectory>${liberty.install.dir}</installDirectory>
                     <userDirectory>${project.build.directory}</userDirectory>
-                    <serverName>production</serverName>
+                    <serverName>web_production</serverName>
                     <!-- Use custom server.xml -->
                     <serverXmlFile>${project.basedir}/src/test/resources/wlp/server.xml</serverXmlFile>
                     <!-- Drop application into apps/ directory -->
