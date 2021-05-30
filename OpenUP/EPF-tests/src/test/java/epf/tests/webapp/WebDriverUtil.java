@@ -32,7 +32,7 @@ public class WebDriverUtil {
 		webDriver.quit();
 	}
 	
-	@Produces @Named("WEB_APP_URL")
+	@Produces @Named(WebApp.WEBAPP_URL)
 	public static URL getDefaultURL() {
 		URL url = null;
 		try {

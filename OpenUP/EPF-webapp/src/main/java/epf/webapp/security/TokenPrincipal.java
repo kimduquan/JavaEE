@@ -20,12 +20,18 @@ public class TokenPrincipal extends CallerPrincipal {
     private Token token;
     
     /**
+     * 
+     */
+    private String caller;
+    
+    /**
      * @param name
      * @param token
      */
-    public TokenPrincipal(final Token token){
+    public TokenPrincipal(final String caller, final Token token){
         super(token.getTokenID());
         this.token = token;
+        this.caller = caller;
     }
 
     public Token getToken() {
@@ -35,4 +41,8 @@ public class TokenPrincipal extends CallerPrincipal {
     public void setToken(final Token token) {
         this.token = token;
     }
+
+	public String getCaller() {
+		return caller;
+	}
 }
