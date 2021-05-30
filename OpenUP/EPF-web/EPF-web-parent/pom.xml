@@ -154,7 +154,7 @@
    </profiles>
 
     <modules>
-        <module>EPF-web-web</module>
+        <module>EPF-web</module>
         <module>EPF-web-test</module>
         <module>EPF-web-assembly</module>
     </modules>
