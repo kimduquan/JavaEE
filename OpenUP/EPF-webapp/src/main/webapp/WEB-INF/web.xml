@@ -19,7 +19,7 @@
     <security-constraint>
     	<web-resource-collection>
     		<web-resource-name>EPF</web-resource-name>
-    		<url-pattern>/*</url-pattern>
+    		<url-pattern>/pages/*</url-pattern>
     	</web-resource-collection>
     	<auth-constraint>
     		<role-name>Any_Role</role-name>
@@ -29,7 +29,7 @@
     	</user-data-constraint>
     </security-constraint>
     <welcome-file-list>
-        <welcome-file>tasks.html</welcome-file>
+        <welcome-file>pages/tasks.html</welcome-file>
     </welcome-file-list>
     <session-config>
         <session-timeout>
