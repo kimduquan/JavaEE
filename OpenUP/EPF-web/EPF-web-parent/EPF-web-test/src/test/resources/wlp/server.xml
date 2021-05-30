@@ -10,6 +10,6 @@
                   httpPort="${httpPort}"
                   httpsPort="${httpsPort}" />
 
-    <application location="EPF-web-web-1.0.0.war" />
+    <application location="EPF-web-1.0.0.war" />
 
 </server>

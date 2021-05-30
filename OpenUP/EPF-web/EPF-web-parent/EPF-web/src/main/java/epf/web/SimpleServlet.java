@@ -1,4 +1,4 @@
-package epf.web.web;
+package epf.web;
 
 import java.io.IOException;
 import javax.servlet.ServletException;

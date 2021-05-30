@@ -57,7 +57,7 @@
                 <configuration>
                     <!-- Pass contextPath and httpPort to the integration tests -->
                     <systemPropertyVariables>
-                        <contextPath>/EPF-web-web-${project.version}</contextPath>
+                        <contextPath>/EPF-web-${project.version}</contextPath>
                         <httpPort>${httpPort}</httpPort>
                     </systemPropertyVariables>
                 </configuration>
