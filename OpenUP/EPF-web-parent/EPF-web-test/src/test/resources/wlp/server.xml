@@ -2,7 +2,7 @@
 
     <!-- Enable features -->
     <featureManager>
-        <feature>servlet-4.0</feature>
+        <feature>webProfile-8.0</feature>
     </featureManager>
 
     <httpEndpoint id="defaultHttpEndpoint"
@@ -10,6 +10,6 @@
                   httpPort="${httpPort}"
                   httpsPort="${httpsPort}" />
 
-    <application location="EPF-web-1.0.0.war" />
+    <application id="EPF-web" name="EPF-web" context-root="web" location="EPF-web-1.0.0.war" />
 
 </server>

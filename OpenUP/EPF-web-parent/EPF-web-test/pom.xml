@@ -15,8 +15,10 @@
     <!-- Define variables that will be substituted in server.xml and
          passed to the integration tests -->
     <properties>
-        <httpPort>9080</httpPort>
-        <httpsPort>9443</httpsPort>
+        <httpPort>8080</httpPort>
+        <httpsPort>8443</httpsPort>
+        <liberty.env.epf.gateway.url>https://localhost:9443/gateway/</liberty.env.epf.gateway.url>
+        <liberty.env.epf.webapp.url>https://localhost:9443/web/</liberty.env.epf.webapp.url>
     </properties>
 
     <dependencies>
@@ -59,6 +61,8 @@
                     <systemPropertyVariables>
                         <contextPath>/EPF-web-${project.version}</contextPath>
                         <httpPort>${httpPort}</httpPort>
+                        <epf.gateway.url>https://localhost:9443/gateway/</epf.gateway.url>
+                        <epf.webapp.url>https://localhost:9443/web/</epf.webapp.url>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>

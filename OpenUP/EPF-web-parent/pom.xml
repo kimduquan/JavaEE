@@ -25,11 +25,13 @@
                 <artifactId>commons-httpclient</artifactId>
                 <version>3.1</version>
             </dependency>
-            <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>javax.servlet-api</artifactId>
-                <version>3.1.0</version>
-            </dependency>
+            <!-- https://mvnrepository.com/artifact/javax/javaee-web-api -->
+			<dependency>
+			    <groupId>javax</groupId>
+			    <artifactId>javaee-web-api</artifactId>
+			    <version>8.0.1</version>
+			    <scope>provided</scope>
+			</dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -73,18 +75,6 @@
                     </plugin>
                 </plugins>
             </build>
-       </profile>
-
-       <profile>
-            <id>custom-liberty</id>
-            <activation>
-                <property>
-                    <name>libertyInstallDir</name>
-                </property>
-            </activation>
-            <properties>
-                <liberty.install.dir>${libertyInstallDir}</liberty.install.dir>
-            </properties>
        </profile>
 
    </profiles>

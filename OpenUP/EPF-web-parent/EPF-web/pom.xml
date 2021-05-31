@@ -14,10 +14,21 @@
     <packaging>war</packaging>
 
     <dependencies>
+    	<!-- https://mvnrepository.com/artifact/javax/javaee-web-api -->
+		<dependency>
+		    <groupId>javax</groupId>
+		    <artifactId>javaee-web-api</artifactId>
+		    <scope>provided</scope>
+		</dependency>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <scope>provided</scope>
+            <groupId>openup</groupId>
+            <artifactId>EPF-client</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-schema</artifactId>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 
