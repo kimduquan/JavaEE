@@ -30,4 +30,7 @@
     		<transport-guarantee>CONFIDENTIAL</transport-guarantee>
     	</user-data-constraint>
     </security-constraint>
+    <welcome-file-list>
+		<welcome-file>pages/tasks.html</welcome-file>
+    </welcome-file-list>
 </web-app>
