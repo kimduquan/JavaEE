@@ -13,7 +13,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.security.enterprise.authentication.mechanism.http.BasicAuthenticationMechanismDefinition;
+import javax.security.enterprise.authentication.mechanism.http.CustomFormAuthenticationMechanismDefinition;
+import javax.security.enterprise.authentication.mechanism.http.LoginToContinue;
 import javax.security.enterprise.credential.BasicAuthenticationCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStore;
@@ -21,7 +22,6 @@ import epf.client.registry.LocateRegistry;
 import epf.client.security.Security;
 import epf.client.security.Token;
 import epf.client.webapp.WebApp;
-import epf.schema.EPF;
 import epf.util.client.Client;
 import epf.util.client.ClientQueue;
 import epf.util.logging.Logging;
@@ -32,7 +32,12 @@ import epf.util.security.PasswordHelper;
  * @author FOXCONN
  */
 @ApplicationScoped
-@BasicAuthenticationMechanismDefinition(realmName = EPF.SCHEMA)
+@CustomFormAuthenticationMechanismDefinition(
+        loginToContinue = @LoginToContinue(
+                loginPage = "security/login.html",
+                useForwardToLogin = true
+            )
+)
 public class EPFIdentityStore implements IdentityStore {
 	
 	/**
