@@ -12,8 +12,10 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
@@ -65,12 +67,15 @@ public class FileStore implements epf.client.file.Files {
 		final Path targetFolder = builder
 				.paths(paths)
 				.build();
+		final String targetFolderRelative = builder.buildRelative();
 		final List<Path> files = new ArrayList<>();
+		final Map<String, String> targetFileRelativePaths = new HashMap<>();
 		try {
 			targetFolder.toFile().mkdirs();
 			final Path targetFile = Files.createTempFile(targetFolder, "", "");
 			Files.copy(input, targetFile, StandardCopyOption.REPLACE_EXISTING);
 			files.add(targetFile);
+			targetFileRelativePaths.put(targetFile.getFileName().toString(), targetFolderRelative + "/" + targetFile.getFileName().toString());
 		} 
 		catch (IOException e) {
 			throw new EPFException(e);
@@ -80,11 +85,12 @@ public class FileStore implements epf.client.file.Files {
 				.stream()
 				.map(path -> {
 					UriBuilder uriBuilder = uriInfo.getBaseUriBuilder().path(getClass());
+					final String title = targetFileRelativePaths.get(path.getFileName().toString());
 					final Iterator<Path> pathIt = root.relativize(path).iterator();
 					while(pathIt.hasNext()) {
 						uriBuilder = uriBuilder.path(pathIt.next().toString());
 					}
-					return Link.fromUri(uriBuilder.build()).rel("self").build();
+					return Link.fromUri(uriBuilder.build()).rel("self").title(title).build();
 				})
 				.collect(Collectors.toList())
 				.toArray(new Link[0]);
@@ -126,7 +132,7 @@ public class FileStore implements epf.client.file.Files {
 		catch (IOException e) {
 			throw new EPFException(e);
 		}
-		return Response.ok().build();
+		return Response.ok(targetFile.toString()).build();
 	}
     
 	/**

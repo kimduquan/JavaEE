@@ -60,9 +60,10 @@ public class FileStore {
 		try(Client client = clientUtil.newClient(fileUrl.get())){
 			client.authorization(token);
 			try(InputStream input = Files.newInputStream(file.toPath())){
-				final Response res = epf.client.file.Files.createFile(client, input, path);
-				res.getStatus();
-				return res.getLink("self").getUri().toString();
+				try(Response res = epf.client.file.Files.createFile(client, input, path)){
+					res.getStatus();
+					return res.getLink("self").getTitle();
+				}
 			}
 		}
 	}
@@ -86,7 +87,7 @@ public class FileStore {
 			client.authorization(token);
 			try(InputStream stream = epf.client.file.Files.read(client, path)){
 				try(InputStreamReader reader = new InputStreamReader(stream)){
-					try(BufferedWriter writer = Files.newBufferedWriter(path)){
+					try(BufferedWriter writer = Files.newBufferedWriter(output)){
 						reader.transferTo(writer);
 						writer.flush();
 					}
@@ -109,7 +110,9 @@ public class FileStore {
 			) throws Exception {
 		try(Client client = clientUtil.newClient(fileUrl.get())){
 			client.authorization(token);
-			epf.client.file.Files.delete(client, path).getStatus();
+			try(Response response = epf.client.file.Files.delete(client, path)){
+				response.getStatus();
+			}
 		}
 	}
 }

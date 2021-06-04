@@ -22,7 +22,6 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import epf.tests.client.ClientUtil;
 import epf.tests.registry.RegistryUtil;
@@ -33,7 +32,6 @@ import epf.util.client.Client;
  * @author PC
  *
  */
-@Ignore
 public class FilesTest {
 	
 	private static String token;
@@ -199,17 +197,17 @@ public class FilesTest {
 	}
 	
 	@Test(expected = ForbiddenException.class)
-	public void testLines_InvalidUser() {
+	public void testRead_InvalidUser() {
 		epf.client.file.Files.read(client, Path.of("any_role2"));
 	}
 	
 	@Test(expected = ForbiddenException.class)
-	public void testLines_InvalidGroup_ValidUser() {
+	public void testRead_InvalidGroup_ValidUser() {
 		epf.client.file.Files.read(client, Path.of("Developer", "any_role1"));
 	}
 	
 	@Test
-	public void testLines_ValidGroup_InvalidUser() throws Exception {
+	public void testRead_ValidGroup_InvalidUser() throws Exception {
 		String otherToken = SecurityUtil.login(null, "developer1", "developer");
 		Link link;
 		try(InputStream input = Files.newInputStream(tempFile)){
@@ -243,7 +241,7 @@ public class FilesTest {
 	}
 	
 	@Test(expected = ForbiddenException.class)
-	public void testLines_InvalidGroup_InvalidUser() {
+	public void testRead_InvalidGroup_InvalidUser() {
 		epf.client.file.Files.read(client, Path.of("Developer", "any_role2"));
 	}
 }

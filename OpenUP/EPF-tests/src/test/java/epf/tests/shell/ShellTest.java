@@ -4,7 +4,6 @@
 package epf.tests.shell;
 
 import java.io.IOException;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
@@ -12,11 +11,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.core.GenericType;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -34,9 +33,8 @@ import epf.schema.work_products.section.MoreInformation;
 import epf.schema.work_products.section.Relationships;
 import epf.schema.work_products.section.Tailoring;
 import epf.tests.TestUtil;
-import epf.tests.gateway.GatewayUtil;
+import epf.tests.file.FileUtil;
 import epf.tests.persistence.PersistenceUtil;
-import epf.tests.registry.RegistryUtil;
 import epf.tests.security.SecurityUtil;
 
 /**
@@ -265,7 +263,7 @@ public class ShellTest {
 	
 	@Test
 	public void testFile_Create() throws Exception {
-		Path file = Files.createTempFile("file", ".txt");
+		Path file = Files.createTempFile("file", ".in");
 		Files.write(file, Arrays.asList("this is a test"));
 		Path path = Path.of("any_role1", "this", "is", "a", "test");
 		builder.command(
@@ -278,12 +276,58 @@ public class ShellTest {
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(2, lines.size());
-		URI fileUrl = RegistryUtil.lookup("file", null);
-		String expected = fileUrl.toString() + "/any_role1/this/is/a/test/";
-		System.out.println(expected);
-		Assert.assertTrue(
-				lines.get(1)
-				.startsWith(expected)
+		Assert.assertTrue(lines.get(1).startsWith("any_role1/this/is/a/test/"));
+		FileUtil.delete(token, Path.of("any_role1/this/is/a/test"));
+		file.toFile().delete();
+	}
+	
+	@Test
+	public void testFile_Delete() throws Exception {
+		Path file = Files.createTempFile("file", ".in");
+		Files.write(file, Arrays.asList("this is a test"));
+		Path path = Path.of("any_role1", "this", "is", "a", "test");
+		String createdFile = FileUtil.createFile(token, file, path);
+		builder.command(
+				"powershell", "./epf", 
+				"file", "delete", 
+				"-t", token, 
+				"-p", "\"" + createdFile + "\"" 
 				);
+		process = ShellUtil.waitFor(builder);
+		List<String> lines = Files.readAllLines(out);
+		Assert.assertEquals(1, lines.size());
+		lines = Files.readAllLines(err);
+		Assert.assertTrue(lines.isEmpty());
+		file.toFile().delete();
+	}
+	
+	@Test
+	public void testFile_Read() throws Exception {
+		Path file = Files.createTempFile("file", ".in");
+		Files.write(file, Arrays.asList("this is a test"));
+		Path path = Path.of("any_role1", "this", "is", "a", "test");
+		String createdFile = FileUtil.createFile(token, file, path);
+		Path output = Files.createTempFile("file", ".out");
+		builder.command(
+				"powershell", "./epf", 
+				"file", "read", 
+				"-t", token, 
+				"-p", "\"" + createdFile + "\"",
+				"-o", "\"" + output.toString() + "\""
+				);
+		process = ShellUtil.waitFor(builder);
+		List<String> lines = Files.readAllLines(out);
+		Assert.assertEquals(1, lines.size());
+		lines = Files.readAllLines(err);
+		Assert.assertTrue(lines.isEmpty());
+		Assert.assertArrayEquals(
+				new String[] {"this is a test"},
+				Files
+				.lines(output)
+				.collect(Collectors.toList())
+				.toArray(new String[0])
+				);
+		file.toFile().delete();
+		output.toFile().delete();
 	}
 }

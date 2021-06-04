@@ -50,4 +50,11 @@ public class PathBuilder {
 	public Path build() {
 		return Path.of(rootFolder, subPaths.toArray(new String[0]));
 	}
+	
+	/**
+	 * @return
+	 */
+	public String buildRelative() {
+		return String.join("/", subPaths);
+	}
 }
