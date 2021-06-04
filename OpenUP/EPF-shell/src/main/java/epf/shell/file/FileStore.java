@@ -50,7 +50,7 @@ public class FileStore {
 	 * @throws Exception
 	 */
 	@Command(name = "create")
-	public URI createFile(
+	public String createFile(
 			@Option(names = {"-t", "--token"}, description = "Token") 
 			final String token,
 			@Option(names = {"-f", "--file"}, description = "File")
@@ -61,7 +61,8 @@ public class FileStore {
 			client.authorization(token);
 			try(InputStream input = Files.newInputStream(file.toPath())){
 				final Response res = epf.client.file.Files.createFile(client, input, path);
-				return res.getLink("self").getUri();
+				res.getStatus();
+				return res.getLink("self").getUri().toString();
 			}
 		}
 	}
@@ -108,7 +109,7 @@ public class FileStore {
 			) throws Exception {
 		try(Client client = clientUtil.newClient(fileUrl.get())){
 			client.authorization(token);
-			epf.client.file.Files.delete(client, path);
+			epf.client.file.Files.delete(client, path).getStatus();
 		}
 	}
 }

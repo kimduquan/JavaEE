@@ -22,6 +22,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import epf.tests.client.ClientUtil;
 import epf.tests.registry.RegistryUtil;
@@ -32,6 +33,7 @@ import epf.util.client.Client;
  * @author PC
  *
  */
+@Ignore
 public class FilesTest {
 	
 	private static String token;

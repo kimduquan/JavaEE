@@ -4,9 +4,11 @@
 package epf.tests.shell;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -32,7 +34,9 @@ import epf.schema.work_products.section.MoreInformation;
 import epf.schema.work_products.section.Relationships;
 import epf.schema.work_products.section.Tailoring;
 import epf.tests.TestUtil;
+import epf.tests.gateway.GatewayUtil;
 import epf.tests.persistence.PersistenceUtil;
+import epf.tests.registry.RegistryUtil;
 import epf.tests.security.SecurityUtil;
 
 /**
@@ -257,5 +261,29 @@ public class ShellTest {
 			entities = jsonb.fromJson(lines.get(1), (new GenericType<List<Entity>>() {}).getType());
 		}
 		Assert.assertFalse(entities.isEmpty());
+	}
+	
+	@Test
+	public void testFile_Create() throws Exception {
+		Path file = Files.createTempFile("file", ".txt");
+		Files.write(file, Arrays.asList("this is a test"));
+		Path path = Path.of("any_role1", "this", "is", "a", "test");
+		builder.command(
+				"powershell", "./epf", 
+				"file", "create", 
+				"-t", token, 
+				"-f", "\"" + file.toString() + "\"", 
+				"-p", "\"" + path.toString() + "\"" 
+				);
+		process = ShellUtil.waitFor(builder);
+		List<String> lines = Files.readAllLines(out);
+		Assert.assertEquals(2, lines.size());
+		URI fileUrl = RegistryUtil.lookup("file", null);
+		String expected = fileUrl.toString() + "/any_role1/this/is/a/test/";
+		System.out.println(expected);
+		Assert.assertTrue(
+				lines.get(1)
+				.startsWith(expected)
+				);
 	}
 }
