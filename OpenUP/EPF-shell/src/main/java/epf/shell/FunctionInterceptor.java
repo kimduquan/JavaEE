@@ -70,11 +70,13 @@ public class FunctionInterceptor {
 		Object result = null;
 		try {
 			logger.entering(cls, method, context.getParameters());
+			final long time = System.currentTimeMillis();
 			result = context.proceed();
+			final long duration = System.currentTimeMillis() - time;
 			logger.exiting(cls, method, result);
+			out.println(String.format("Proceed.(%dms)", duration));
 			final Class<?> returnType = context.getMethod().getReturnType();
 			if(returnType != null && !returnType.equals(void.class)) {
-				out.println("Proceed.");
 				out.println(valueOf(result));
 			}
 		}

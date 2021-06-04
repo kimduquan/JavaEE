@@ -107,7 +107,7 @@ public class ShellTest {
 		ShellUtil.waitFor(builder, in, "any_role");
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(2, lines.size());
-		Assert.assertEquals("Enter value for --password (Password): Proceed.", lines.get(0));
+		Assert.assertTrue(lines.get(0).startsWith("Enter value for --password (Password): "));
 		String newToken = lines.get(1);
 		Assert.assertTrue(newToken.length() > 256);
 		SecurityUtil.logOut(null, newToken);
@@ -241,7 +241,7 @@ public class ShellTest {
         builder.command("powershell", "./epf", "persistence", "remove", "-t", adminToken, "-u", EPF.SCHEMA, "-n", EPF.ARTIFACT, "-i", artifact.getName());
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
-		Assert.assertEquals(0, lines.size());
+		Assert.assertEquals(1, lines.size());
 		lines = Files.readAllLines(err);
 		Assert.assertTrue(lines.isEmpty());
 	}
