@@ -10,6 +10,7 @@ import jakarta.inject.Named;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import epf.client.webapp.WebApp;
 import epf.tests.webapp.page.DefaultPage;
 
 /**
@@ -21,7 +22,7 @@ public class DefaultPageImpl implements DefaultPage {
 	@Inject
 	private WebDriver webDriver;
 	
-	@Inject @Named("WEB_APP_URL")
+	@Inject @Named(WebApp.WEBAPP_URL)
 	private URL webAppUrl;
 	
 	@PostConstruct

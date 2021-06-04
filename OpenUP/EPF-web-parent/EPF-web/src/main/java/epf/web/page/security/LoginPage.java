@@ -6,14 +6,15 @@ package epf.web.page.security;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 import epf.client.security.Credential;
+import epf.web.page.Page;
 
 /**
  * @author PC
  *
  */
-@Named("security_login")
+@Named(Page.SECURITY_LOGIN_PAGE)
 @RequestScoped
-public class Login {
+public class LoginPage {
 
 	/**
 	 * 
@@ -38,6 +39,7 @@ public class Login {
 	 * @return
 	 */
 	public String login() {
-		return "";
+                
+		return Page.TASKS_PAGE;
 	}
 }
