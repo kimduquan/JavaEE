@@ -101,14 +101,13 @@ public class FileStore implements epf.client.file.Files {
 		final Path targetFile = builder
 				.paths(paths)
 				.build();
-		StreamingOutput response;
 		try {
-			response = new EntityOutput(Files.newInputStream(targetFile));
+			StreamingOutput response = new EntityOutput(Files.newInputStream(targetFile));
+			return response;
 		} 
-		catch (IOException e) {
+		catch (Exception e) {
 			throw new EPFException(e);
 		}
-		return response;
 	}
 
 	@Override
