@@ -3,51 +3,32 @@
  */
 package epf.rules.admin;
 
-import java.util.logging.Logger;
-
-import javax.annotation.PostConstruct;
+import java.io.InputStream;
+import java.util.HashMap;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.rules.ConfigurationException;
-import javax.rules.RuleServiceProvider;
-import javax.rules.admin.RuleAdministrator;
+import javax.rules.admin.RuleExecutionSet;
 import javax.ws.rs.Path;
-import epf.rules.Provider;
-import epf.util.logging.Logging;
+import javax.ws.rs.core.Response;
 
 /**
  * @author PC
  *
  */
 @Path("rules/admin")
+@ApplicationScoped
 public class Admin implements epf.client.rules.admin.Admin {
 	
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(Admin.class.getName());
-	
-	/**
-	 * 
-	 */
-	private transient RuleAdministrator ruleAdmin;
-
-	/**
-	 * 
-	 */
 	@Inject
-	private transient Provider provider;
-	
-	@PostConstruct
-	protected void postConstruct() {
-		try {
-			ruleAdmin = provider.getRuleProvider().getRuleAdministrator();
-		} 
-		catch (ConfigurationException e) {
-			LOGGER.throwing(RuleServiceProvider.class.getName(), "getRuleAdministrator", e);
-		}
-	}
-	
-	public RuleAdministrator getRuleAdmin() {
-		return ruleAdmin;
+	private transient Administrator administrator;
+
+	@Override
+	public Response registerRuleExecutionSet(String ruleSet, InputStream input) throws Exception {
+		RuleExecutionSet ruleExeSet = administrator.getLocalRuleProvider().createRuleExecutionSet(input, new HashMap<Object, Object>());
+		administrator.getRuleAdmin().registerRuleExecutionSet(ruleExeSet.getName(), ruleExeSet, new HashMap<Object, Object>());
+		return Response.ok().build();
 	}
 }

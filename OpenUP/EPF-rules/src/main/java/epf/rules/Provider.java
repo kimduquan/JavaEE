@@ -8,6 +8,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.rules.ConfigurationException;
+import javax.rules.RuleRuntime;
 import javax.rules.RuleServiceProvider;
 import javax.rules.RuleServiceProviderManager;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -30,6 +31,11 @@ public class Provider {
 	 * 
 	 */
 	private transient RuleServiceProvider ruleProvider;
+	
+	/**
+	 * 
+	 */
+	private transient RuleRuntime ruleRuntime;
 
 	/**
 	 * 
@@ -50,17 +56,34 @@ public class Provider {
 	 */
 	@PostConstruct
 	protected void postConstruct() {
+		Class<?> cls = null;
 		try {
-			Class.forName(providerClass);
-			ruleProvider = RuleServiceProviderManager.getRuleServiceProvider(providerUri);
-			ruleProvider.getRuleAdministrator();
+			cls = Class.forName(providerClass);
 		} 
-		catch (ClassNotFoundException | ConfigurationException e) {
+		catch (ClassNotFoundException e) {
 			LOGGER.throwing("Class", "forName", e);
+		}
+		if(cls != null) {
+			try {
+				ruleProvider = RuleServiceProviderManager.getRuleServiceProvider(providerUri);
+			} 
+			catch (ConfigurationException e) {
+				LOGGER.throwing("RuleServiceProviderManager", "getRuleServiceProvider", e);
+			}
+		}
+		try {
+			ruleRuntime = ruleProvider.getRuleRuntime();
+		} 
+		catch (ConfigurationException e) {
+			LOGGER.throwing("RuleServiceProvider", "getRuleRuntime", e);
 		}
 	}
 	
 	public RuleServiceProvider getRuleProvider() {
 		return this.ruleProvider;
+	}
+	
+	public RuleRuntime getRuleRuntime() {
+		return this.ruleRuntime;
 	}
 }
