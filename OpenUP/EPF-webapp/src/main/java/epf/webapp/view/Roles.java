@@ -68,7 +68,7 @@ public class Roles implements Serializable {
             			100);
             } 
             catch (Exception e) {
-				logger.severe(e.getMessage());
+            	logger.throwing(Queries.class.getName(), "executeQuery", e);
 			}
         }
         return roleSets;
@@ -89,7 +89,7 @@ public class Roles implements Serializable {
             			100);
             } 
             catch (Exception e) {
-				logger.severe(e.getMessage());
+            	logger.throwing(Queries.class.getName(), "executeQuery", e);
 			}
         }
         return roles;

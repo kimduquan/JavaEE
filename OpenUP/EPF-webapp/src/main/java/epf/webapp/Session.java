@@ -41,7 +41,7 @@ public class Session implements Serializable {
 	/**
 	 * 
 	 */
-	private TokenPrincipal principal;
+	private transient TokenPrincipal principal;
     /**
      * 
      */

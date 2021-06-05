@@ -13,7 +13,7 @@ import com.ibm.websphere.security.jwt.JwtToken;
 import com.ibm.websphere.security.jwt.KeyException;
 import epf.client.EPFException;
 import epf.client.security.Token;
-import epf.client.security.jwt.JWT;
+import epf.client.security.jwt.JWTConfig;
 import java.io.Serializable;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
@@ -48,7 +48,7 @@ public class TokenGenerator implements Serializable {
      * 
      */
     @Inject
-    @ConfigProperty(name = JWT.PRIVATE_KEY)
+    @ConfigProperty(name = JWTConfig.PRIVATE_KEY)
     private transient String privateKeyText;
     
     /**

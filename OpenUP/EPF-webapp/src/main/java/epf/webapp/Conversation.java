@@ -28,15 +28,15 @@ public class Conversation implements Serializable {
 	 * 
 	 */
 	@Inject
-    private transient javax.enterprise.context.Conversation conversation;
+    private transient javax.enterprise.context.Conversation context;
     
     /**
      * 
      */
     @PostConstruct
     protected void postConstruct(){
-        if(conversation.isTransient()){
-            conversation.begin();
+        if(context.isTransient()){
+            context.begin();
         }
     }
     
@@ -44,8 +44,8 @@ public class Conversation implements Serializable {
      * 
      */
     public void end(){
-        if(!conversation.isTransient()){
-            conversation.end();
+        if(!context.isTransient()){
+            context.end();
         }
     }
     
@@ -53,6 +53,6 @@ public class Conversation implements Serializable {
      * @return
      */
     public String getId(){
-        return conversation.getId();
+        return context.getId();
     }
 }

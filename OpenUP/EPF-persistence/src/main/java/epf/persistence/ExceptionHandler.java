@@ -68,8 +68,8 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
         else if(failure instanceof SQLNonTransientException){
         	final SQLNonTransientException exception = (SQLNonTransientException)failure;
         	final int errorCode = exception.getErrorCode();
-        	if(ErrorCode.NOT_ENOUGH_RIGHTS_FOR_1 == errorCode
-        			|| ErrorCode.ADMIN_RIGHTS_REQUIRED == errorCode) {
+        	if(ErrorCode.NOT_ENOUGH_RIGHTS == errorCode
+        			|| ErrorCode.ADMIN_REQUIRED == errorCode) {
         		status = Response.Status.FORBIDDEN;
         	}
         }

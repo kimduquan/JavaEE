@@ -27,6 +27,15 @@ import picocli.CommandLine.Option;
 @RequestScoped
 @Function
 public class Security {
+
+	/**
+	 * 
+	 */
+	public static final String TOKEN_ARG = "--token";
+	/**
+	 * 
+	 */
+	public static final String TOKEN_DESC = "Token";
 	
 	/**
 	 * 
@@ -72,7 +81,7 @@ public class Security {
 	 */
 	@Command(name = "logout")
 	public String logout(
-			@Option(names = {"-t", "--token"}, description = "Token") 
+			@Option(names = {"-t", TOKEN_ARG}, description = TOKEN_DESC) 
 			final String token
 			) throws Exception {
 		try(Client client = clientUtil.newClient(securityUrl.get())){
@@ -88,7 +97,7 @@ public class Security {
 	 */
 	@Command(name = "auth")
 	public Token authenticate(
-			@Option(names = {"-t", "--token"}, description = "Token") 
+			@Option(names = {"-t", TOKEN_ARG}, description = TOKEN_DESC) 
 			final String token) throws Exception {
 		try(Client client = clientUtil.newClient(securityUrl.get())){
 			client.authorization(token);
@@ -103,7 +112,7 @@ public class Security {
 	 */
 	@Command(name = "update")
 	public void update(
-			@Option(names = {"-t", "--token"}, description = "Token") 
+			@Option(names = {"-t", TOKEN_ARG}, description = TOKEN_DESC) 
 			final String token,
 			@Option(names = {"-p", "--password"}, description = "Password", interactive = true)
 		    final char... password
@@ -123,7 +132,7 @@ public class Security {
 	 */
 	@Command(name = "revoke")
 	public String revoke(
-			@Option(names = {"-t", "--token"}, description = "Token") 
+			@Option(names = {"-t", TOKEN_ARG}, description = TOKEN_DESC) 
 			final String token
 			) throws Exception {
 		try(Client client = clientUtil.newClient(securityUrl.get())){

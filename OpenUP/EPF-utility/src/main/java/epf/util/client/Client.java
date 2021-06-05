@@ -31,7 +31,7 @@ public class Client implements AutoCloseable {
     /**
      * 
      */
-    private transient final javax.ws.rs.client.Client client;
+    private transient final javax.ws.rs.client.Client rsClient;
     /**
      * 
      */
@@ -45,7 +45,7 @@ public class Client implements AutoCloseable {
     public Client(final ClientQueue clients, final URI uri, final Function<ClientBuilder, ClientBuilder> buildClient) {
     	Objects.requireNonNull(clients);
     	Objects.requireNonNull(uri);
-    	client = clients.poll(uri, buildClient);
+    	rsClient = clients.poll(uri, buildClient);
         this.uri = uri;
         this.clients = clients;
     }
@@ -68,7 +68,7 @@ public class Client implements AutoCloseable {
 	 * @return the client
 	 */
 	protected javax.ws.rs.client.Client getClient() {
-		return client;
+		return rsClient;
 	}
 
 	/**
@@ -91,8 +91,7 @@ public class Client implements AutoCloseable {
 
     @Override
     public void close() throws Exception {
-    	authHeader = null;
-        clients.add(uri, client);
+        clients.add(uri, rsClient);
     }
     
     /**
@@ -103,7 +102,7 @@ public class Client implements AutoCloseable {
     public Invocation.Builder request(final Function<WebTarget, WebTarget> buildTarget, final Function<Invocation.Builder, Invocation.Builder> buildRequest) {
     	Objects.requireNonNull(buildTarget);
     	Objects.requireNonNull(buildRequest);
-    	WebTarget target = client.target(uri);
+    	WebTarget target = rsClient.target(uri);
     	target = buildTarget.apply(target);
     	Invocation.Builder request = target.request();
     	if(authHeader != null) {
@@ -119,7 +118,7 @@ public class Client implements AutoCloseable {
     public SseEventSource stream(final Function<WebTarget, WebTarget> buildTarget, final Function<SseEventSource.Builder, SseEventSource.Builder> buildEvent) {
     	Objects.requireNonNull(buildTarget);
     	Objects.requireNonNull(buildEvent);
-    	WebTarget target = client.target(uri);
+    	WebTarget target = rsClient.target(uri);
     	target = buildTarget.apply(target);
     	SseEventSource.Builder builder = SseEventSource.target(target);
     	builder = buildEvent.apply(builder);

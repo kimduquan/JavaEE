@@ -69,7 +69,7 @@ public class WorkProducts implements Serializable {
             			100);
             } 
             catch (Exception e) {
-            	logger.severe(e.getMessage());
+            	logger.throwing(Queries.class.getName(), "executeQuery", e);
 			}
         }
         return domains;
@@ -90,7 +90,7 @@ public class WorkProducts implements Serializable {
             			100);
             } 
             catch (Exception e) {
-				logger.severe(e.getMessage());
+            	logger.throwing(Queries.class.getName(), "executeQuery", e);
 			}
         }
         return artifacts;

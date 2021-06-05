@@ -5,7 +5,6 @@
  */
 package epf.util.ssl;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -36,7 +35,7 @@ public final class SSLContextHelper {
             ctx.init(null, new TrustManager[]{x509}, null);
         } 
         catch (Exception ex) {
-        	LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
+        	LOGGER.throwing(SSLContextHelper.class.getName(), "build", ex);
         }
         return ctx;
     }

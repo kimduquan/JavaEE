@@ -71,7 +71,7 @@ public interface Files {
 	 * @return
 	 */
 	static Response createFile(final Client client, final InputStream input, final java.nio.file.Path paths) {
-		final Response response = client
+		return client
 				.request(
 						target -> { 
 							final Iterator<java.nio.file.Path> itPath = paths.iterator();
@@ -82,7 +82,6 @@ public interface Files {
 							}, 
 						req -> req)
 				.post(Entity.entity(input, MediaType.APPLICATION_OCTET_STREAM_TYPE));
-		return response;
 	}
 	
     /**
@@ -147,7 +146,7 @@ public interface Files {
      * @return
      */
     static Response delete(final Client client, final java.nio.file.Path paths) {
-    	final Response response = client
+    	return client
     			.request(
     					target -> {
     						final Iterator<java.nio.file.Path> itPath = paths.iterator();
@@ -159,6 +158,5 @@ public interface Files {
     					req -> req
     					)
     			.delete();
-    	return response;
     }
 }

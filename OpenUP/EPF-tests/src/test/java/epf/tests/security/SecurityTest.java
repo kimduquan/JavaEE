@@ -5,7 +5,7 @@
  */
 package epf.tests.security;
 
-import static epf.client.security.Security.AUDIENCE_URL_FORMAT;
+import static epf.client.security.Security.AUDIENCE_FORMAT;
 import java.net.URI;
 import java.net.URL;
 import java.time.Duration;
@@ -200,7 +200,7 @@ public class SecurityTest {
                 "Token.audience", 
                 new String[]{
                     String.format(
-                            AUDIENCE_URL_FORMAT, 
+                            AUDIENCE_FORMAT, 
                             securityUrl.getScheme(), 
                             securityUrl.getHost(), 
                             securityUrl.getPort()

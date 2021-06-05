@@ -83,19 +83,11 @@ public class Utility {
 		Stream.of(env).forEach(v -> {
 			final String[] data = v.split("=");
 			if(data.length > 0) {
-				String value = "";
-				if(data.length > 1) {
-					value = data[1];
-				}
-				enVars.put(data[0], value);
+				enVars.put(data[0], data[1]);
 			}
 		});
 		builder.environment().putAll(enVars);
 		builder.inheritIO();
-		final File out = Files.createTempFile(tempDir, "exec", ".out").toFile();
-		final File err = Files.createTempFile(tempDir, "exec", ".err").toFile();
-		builder.redirectError(err);
-		builder.redirectOutput(out);
 		final Process process = builder.start();
 		return process.waitFor();
 	}

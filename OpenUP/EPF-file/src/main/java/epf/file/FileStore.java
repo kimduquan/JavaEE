@@ -12,10 +12,10 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
@@ -47,7 +47,7 @@ public class FileStore implements epf.client.file.Files {
 	/**
 	 * 
 	 */
-	private static final int USER_PATH_SEGMENT_INDEX = 1;
+	private static final int USER_INDEX = 1;
 	
 	/**
 	 * 
@@ -67,15 +67,15 @@ public class FileStore implements epf.client.file.Files {
 		final Path targetFolder = builder
 				.paths(paths)
 				.build();
-		final String targetFolderRelative = builder.buildRelative();
+		final String relativePath = builder.buildRelative();
 		final List<Path> files = new ArrayList<>();
-		final Map<String, String> targetFileRelativePaths = new HashMap<>();
+		final Map<String, String> targetFilePaths = new ConcurrentHashMap<>();
 		try {
 			targetFolder.toFile().mkdirs();
 			final Path targetFile = Files.createTempFile(targetFolder, "", "");
 			Files.copy(input, targetFile, StandardCopyOption.REPLACE_EXISTING);
 			files.add(targetFile);
-			targetFileRelativePaths.put(targetFile.getFileName().toString(), targetFolderRelative + "/" + targetFile.getFileName().toString());
+			targetFilePaths.put(targetFile.getFileName().toString(), relativePath + "/" + targetFile.getFileName().toString());
 		} 
 		catch (IOException e) {
 			throw new EPFException(e);
@@ -85,7 +85,7 @@ public class FileStore implements epf.client.file.Files {
 				.stream()
 				.map(path -> {
 					UriBuilder uriBuilder = uriInfo.getBaseUriBuilder().path(getClass());
-					final String title = targetFileRelativePaths.get(path.getFileName().toString());
+					final String title = targetFilePaths.get(path.getFileName().toString());
 					final Iterator<Path> pathIt = root.relativize(path).iterator();
 					while(pathIt.hasNext()) {
 						uriBuilder = uriBuilder.path(pathIt.next().toString());
@@ -108,8 +108,7 @@ public class FileStore implements epf.client.file.Files {
 				.paths(paths)
 				.build();
 		try {
-			StreamingOutput response = new EntityOutput(Files.newInputStream(targetFile));
-			return response;
+			return new EntityOutput(Files.newInputStream(targetFile));
 		} 
 		catch (Exception e) {
 			throw new EPFException(e);
@@ -147,7 +146,7 @@ public class FileStore implements epf.client.file.Files {
 			if(principal instanceof JsonWebToken) {
 				final JsonWebToken jwt = (JsonWebToken) principal;
 				if(jwt.getGroups().contains(firstPath)) {
-					if(paths.size() > USER_PATH_SEGMENT_INDEX) {
+					if(paths.size() > USER_INDEX) {
 						final String secondPath = paths.get(1).toString();
 						if(!secondPath.equals(principalName) && !httpMethod.equals(HttpMethod.GET)) {
 							throw new ForbiddenException();

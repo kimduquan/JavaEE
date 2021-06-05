@@ -9,14 +9,14 @@ package epf.client.persistence;
  */
 public enum EntityType {
 	/** Entity */
-	Entity, 
+	ENTITY, 
 	
 	/** Embeddable class */
-	Embeddable,
+	EMBEDDABLE,
 	
 	/** Mapped superclass */
-	MappedSuperClass, 
+	MAPPED_SUPER_CLASS,
 	
 	/** Basic type */
-	Basic
+	BASIC
 }

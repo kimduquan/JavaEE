@@ -27,6 +27,23 @@ import picocli.CommandLine.Option;
 @RequestScoped
 @Function
 public class Persistence {
+	
+	/**
+	 * 
+	 */
+	public static final String UNIT_ARG = "--unit";
+	/**
+	 * 
+	 */
+	public static final String UNIT_DESC = "Unit";
+	/**
+	 * 
+	 */
+	public static final String TOKEN_ARG = "--token";
+	/**
+	 * 
+	 */
+	public static final String TOKEN_DESC = "Token";
 
 	/**
 	 * 
@@ -48,9 +65,9 @@ public class Persistence {
 	 */
 	@Command(name = "persist")
 	public String persist(
-			@Option(names = {"-t", "--token"}, description = "Token") 
+			@Option(names = {"-t", TOKEN_ARG}, description = TOKEN_DESC) 
 			final String token,
-			@Option(names = {"-u", "--unit"}, description = "Unit")
+			@Option(names = {"-u", UNIT_ARG}, description = UNIT_DESC)
 			final String unit,
 			@Option(names = {"-n", "--name"}, description = "Name")
 			final String name, 
@@ -70,9 +87,9 @@ public class Persistence {
 	 */
 	@Command(name = "merge")
 	public void merge(
-			@Option(names = {"-t", "--token"}, description = "Token") 
+			@Option(names = {"-t", TOKEN_ARG}, description = TOKEN_DESC) 
 			final String token,
-			@Option(names = {"-u", "--unit"}, description = "Unit")
+			@Option(names = {"-u", UNIT_ARG}, description = UNIT_DESC)
 			final String unit,
 			@Option(names = {"-n", "--name"}, description = "Name")
 			final String name, 
@@ -95,9 +112,9 @@ public class Persistence {
 	 */
 	@Command(name = "remove")
 	public void remove(
-			@Option(names = {"-t", "--token"}, description = "Token") 
+			@Option(names = {"-t", TOKEN_ARG}, description = TOKEN_DESC) 
 			final String token,
-			@Option(names = {"-u", "--unit"}, description = "Unit")
+			@Option(names = {"-u", UNIT_ARG}, description = UNIT_DESC)
 			final String unit,
 			@Option(names = {"-n", "--name"}, description = "Name")
 			final String name, 
@@ -117,9 +134,9 @@ public class Persistence {
 	 */
 	@Command(name = "get-entities")
 	public List<Entity> getEntities(
-			@Option(names = {"-t", "--token"}, description = "Token") 
+			@Option(names = {"-t", TOKEN_ARG}, description = TOKEN_DESC) 
 			final String token,
-			@Option(names = {"-u", "--unit"}, description = "Unit")
+			@Option(names = {"-u", UNIT_ARG}, description = UNIT_DESC)
 			final String unit) throws Exception{
 		try(Client client = clientUtil.newClient(persistenceUrl.get())){
 			client.authorization(token);

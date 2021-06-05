@@ -8,13 +8,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.websocket.CloseReason;
-import javax.websocket.OnClose;
-import javax.websocket.OnError;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import epf.util.logging.Logging;
 
@@ -50,8 +45,7 @@ public class Server implements AutoCloseable {
 	/**
 	 * @param session
 	 */
-	@OnOpen
-    public void onOpen(final Session session) {
+	public void onOpen(final Session session) {
         sessions.put(session.getId(), session);
     }
  
@@ -59,7 +53,6 @@ public class Server implements AutoCloseable {
      * @param session
      * @param closeReason
      */
-    @OnClose
     public void onClose(final Session session, final CloseReason closeReason) {
         sessions.remove(session.getId());
     }
@@ -68,7 +61,6 @@ public class Server implements AutoCloseable {
      * @param message
      * @param session
      */
-    @OnMessage
     public void onMessage(final Object message, final Session session) {
     	messageCount.incrementAndGet();
 	}
@@ -77,9 +69,8 @@ public class Server implements AutoCloseable {
      * @param session
      * @param throwable
      */
-    @OnError
     public void onError(final Session session, final Throwable throwable) {
-    	LOGGER.log(Level.SEVERE, SessionUtil.toString(session));
+    	LOGGER.throwing(getClass().getName(), SessionUtil.toString(session), throwable);
     }
     
     /**

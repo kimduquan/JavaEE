@@ -7,7 +7,7 @@ package epf.client.security.jwt;
  * @author PC
  *
  */
-public interface JWT {
+public interface JWTConfig {
 	
     /**
      * 

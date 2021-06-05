@@ -46,7 +46,7 @@ public interface Security {
     /**
      * 
      */
-    String AUDIENCE_URL_FORMAT = "%s://%s:%s/";
+    String AUDIENCE_FORMAT = "%s://%s:%s/";
     /**
      * 
      */
@@ -54,7 +54,7 @@ public interface Security {
     /**
      * 
      */
-    String REQUEST_HEADER_FORMAT = "Bearer %s";
+    String HEADER_FORMAT = "Bearer %s";
     
     /**
      * 
@@ -183,7 +183,7 @@ public interface Security {
     		final String unit,
     		@BeanParam
     		@Valid
-    		final Info info
+    		final CredentialInfo info
     		);
     
     /**

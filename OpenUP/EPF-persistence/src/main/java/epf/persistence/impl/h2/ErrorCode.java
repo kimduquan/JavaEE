@@ -12,10 +12,10 @@ public interface ErrorCode {
 	/**
 	 * 
 	 */
-	int NOT_ENOUGH_RIGHTS_FOR_1 = 90_096;
+	int NOT_ENOUGH_RIGHTS = 90_096;
 	
 	/**
 	 * 
 	 */
-	int ADMIN_RIGHTS_REQUIRED = 90_040;
+	int ADMIN_REQUIRED = 90_040;
 }

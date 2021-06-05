@@ -74,7 +74,7 @@ public class DeliveryProcesses implements Serializable {
             			100);
             } 
             catch (Exception e) {
-				logger.severe(e.getMessage());
+            	logger.throwing(Queries.class.getName(), "executeQuery", e);
 			}
         }
         return phases;
@@ -92,7 +92,7 @@ public class DeliveryProcesses implements Serializable {
             			100);
             } 
             catch (Exception e) {
-            	logger.severe(e.getMessage());
+            	logger.throwing(Queries.class.getName(), "executeQuery", e);
 			}
         }
         return iterations;
@@ -110,7 +110,7 @@ public class DeliveryProcesses implements Serializable {
             			100);
             } 
             catch (Exception e) {
-            	logger.severe(e.getMessage());
+            	logger.throwing(Queries.class.getName(), "executeQuery", e);
 			}
         }
         return tasks;

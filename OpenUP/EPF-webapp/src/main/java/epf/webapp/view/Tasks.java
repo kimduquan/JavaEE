@@ -39,7 +39,7 @@ public class Tasks implements Serializable {
     /**
      * 
      */
-    private transient List<Task> tasks;
+    private transient List<Task> taskList;
     
     /**
      * 
@@ -68,7 +68,7 @@ public class Tasks implements Serializable {
             			100);
             } 
             catch (Exception e) {
-				logger.severe(e.getMessage());
+            	logger.throwing(Queries.class.getName(), "executeQuery", e);
 			}
         }
         return disciplines;
@@ -78,9 +78,9 @@ public class Tasks implements Serializable {
      * @return
      */
     public List<Task> getTasks() {
-        if(tasks == null){
+        if(taskList == null){
             try(Client client = session.newClient("persistence")){
-            	tasks = Queries.executeQuery(
+            	taskList = Queries.executeQuery(
             			client, 
             			new GenericType<List<Task>> () {}, 
             			EPF.SCHEMA, 
@@ -89,9 +89,9 @@ public class Tasks implements Serializable {
             			100);
             } 
             catch (Exception e) {
-				logger.severe(e.getMessage());
+            	logger.throwing(Queries.class.getName(), "executeQuery", e);
 			}
         }
-        return tasks;
+        return taskList;
     }
 }

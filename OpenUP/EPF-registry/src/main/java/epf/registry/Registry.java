@@ -4,7 +4,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
@@ -94,7 +93,7 @@ public class Registry implements epf.client.registry.Registry {
 			remotes.put(remote, managementUrl);
 		} 
 		catch (Exception e) {
-			logger.log(Level.SEVERE, e.getMessage(), e);
+			logger.throwing(getClass().getName(), "postConstruct", e);
 		}
 		
 	}

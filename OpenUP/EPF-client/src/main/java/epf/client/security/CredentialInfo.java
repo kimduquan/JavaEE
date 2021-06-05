@@ -11,7 +11,7 @@ import javax.ws.rs.FormParam;
  * @author PC
  *
  */
-public class Info {
+public class CredentialInfo {
 
 	/**
 	 * 

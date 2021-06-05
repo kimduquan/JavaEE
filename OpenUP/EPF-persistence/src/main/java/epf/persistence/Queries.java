@@ -139,13 +139,13 @@ public class Queries implements epf.client.persistence.Queries {
 						searchData -> {
 							Link entityLink = null;
 							if(entityTables.containsKey(searchData.getTable())) {
-								EntityType<?> entityType = entityTables.get(searchData.getTable());
+								final EntityType<?> entityType = entityTables.get(searchData.getTable());
 								UriBuilder linkBuilder = baseUri
 										.clone()
 										.path(unit)
 										.path(entityType.getName());
-								Iterator<String> column = searchData.getColumns().iterator();
-								Iterator<String> key = searchData.getKeys().iterator();
+								final Iterator<String> column = searchData.getColumns().iterator();
+								final Iterator<String> key = searchData.getKeys().iterator();
 								while(column.hasNext() && key.hasNext()) {
 									linkBuilder = linkBuilder.matrixParam(column.next(), key.next());
 								}

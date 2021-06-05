@@ -44,16 +44,16 @@ public class EntityBuilder {
 		epf.client.persistence.EntityType entityType = null;
 		switch(type) {
 		case BASIC:
-			entityType = epf.client.persistence.EntityType.Basic;
+			entityType = epf.client.persistence.EntityType.BASIC;
 			break;
 		case EMBEDDABLE:
-			entityType = epf.client.persistence.EntityType.Embeddable;
+			entityType = epf.client.persistence.EntityType.EMBEDDABLE;
 			break;
 		case ENTITY:
-			entityType = epf.client.persistence.EntityType.Entity;
+			entityType = epf.client.persistence.EntityType.ENTITY;
 			break;
 		case MAPPED_SUPERCLASS:
-			entityType = epf.client.persistence.EntityType.MappedSuperClass;
+			entityType = epf.client.persistence.EntityType.MAPPED_SUPER_CLASS;
 			break;
 		default:
 			break;

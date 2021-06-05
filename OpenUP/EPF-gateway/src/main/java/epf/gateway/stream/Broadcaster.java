@@ -20,29 +20,32 @@ public class Broadcaster implements AutoCloseable {
 	/**
 	 * 
 	 */
-	private transient final SseBroadcaster broadcaster;
+	private transient final SseBroadcaster sse;
 
 	/**
 	 * 
 	 */
 	public Broadcaster(final OutboundSseEvent.Builder builder, final SseBroadcaster broadcaster) {
 		this.builder = builder;
-		this.broadcaster = broadcaster;
+		this.sse = broadcaster;
 	}
 	
 	/**
 	 * @param message
 	 */
 	public void broadcast(final String message) {
-		broadcaster.broadcast(builder.data(message).build());
+		sse.broadcast(builder.data(message).build());
 	}
 
 	@Override
 	public void close() throws Exception {
-		broadcaster.close();
+		sse.close();
 	}
 	
+	/**
+	 * @return
+	 */
 	public SseBroadcaster getBroadcaster() {
-		return broadcaster;
+		return sse;
 	}
 }

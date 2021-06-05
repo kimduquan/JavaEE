@@ -130,7 +130,7 @@ public class TokenBuilder {
         jwt.setSubject(name);
 		final Set<String> aud = new HashSet<>();
         aud.add(String.format(
-                Security.AUDIENCE_URL_FORMAT, 
+                Security.AUDIENCE_FORMAT, 
                 audience.getProtocol(), 
                 audience.getHost(), 
                 audience.getPort()));

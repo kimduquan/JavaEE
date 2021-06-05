@@ -86,8 +86,7 @@ public class Client implements AutoCloseable {
 			final WebSocketContainer container,
 			final URI uri) throws DeploymentException, IOException {
 		final Client client = new Client();
-		final Session session = container.connectToServer(client, uri);
-		client.session = session;
+		client.session = container.connectToServer(client, uri);
 		return client;
 	}
 	

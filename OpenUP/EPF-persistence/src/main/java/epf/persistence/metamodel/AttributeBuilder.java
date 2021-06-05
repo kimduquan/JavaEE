@@ -32,28 +32,28 @@ public class AttributeBuilder {
 	 * @return
 	 */
 	protected static AttributeType buildAttrbuteType(final PersistentAttributeType type) {
-		AttributeType attrType = AttributeType.Basic;
+		AttributeType attrType = AttributeType.BASIC;
 		switch(type) {
 			case BASIC:
-				attrType = AttributeType.Basic;
+				attrType = AttributeType.BASIC;
 				break;
 			case ELEMENT_COLLECTION:
-				attrType = AttributeType.ElementCollection;
+				attrType = AttributeType.ELEMENT_COLLECTION;
 				break;
 			case EMBEDDED:
-				attrType = AttributeType.Embedded;
+				attrType = AttributeType.EMBEDDED;
 				break;
 			case MANY_TO_MANY:
-				attrType = AttributeType.ManyToMany;
+				attrType = AttributeType.MANY_TO_MANY;
 				break;
 			case MANY_TO_ONE:
-				attrType = AttributeType.ManyToOne;
+				attrType = AttributeType.MANY_TO_ONE;
 				break;
 			case ONE_TO_MANY:
-				attrType = AttributeType.OneToMany;
+				attrType = AttributeType.ONE_TO_MANY;
 				break;
 			case ONE_TO_ONE:
-				attrType = AttributeType.OneToOne;
+				attrType = AttributeType.ONE_TO_ONE;
 				break;
 			default:
 				break;

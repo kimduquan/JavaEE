@@ -22,7 +22,7 @@ public class TokenPrincipal extends CallerPrincipal {
     /**
      * 
      */
-    private String caller;
+    private transient final String caller;
     
     /**
      * @param name

@@ -35,7 +35,7 @@ public class ManagementHealthCheck implements HealthCheck {
 		final MemoryMXBean memory = ManagementFactory.getMemoryMXBean();
 		final MemoryUsage heap = memory.getHeapMemoryUsage();
 		final MemoryUsage nonHeap = memory.getNonHeapMemoryUsage();
-		final OperatingSystemMXBean os = ManagementFactory.getOperatingSystemMXBean();
+		final OperatingSystemMXBean operatingSystem = ManagementFactory.getOperatingSystemMXBean();
 		final RuntimeMXBean runtime = ManagementFactory.getRuntimeMXBean();
 		final ThreadMXBean thread = ManagementFactory.getThreadMXBean();
 		return HealthCheckResponse
@@ -56,11 +56,11 @@ public class ManagementHealthCheck implements HealthCheck {
 				.withData("Memory.nonHeapMemoryUsage.init", nonHeap.getInit())
 				.withData("Memory.nonHeapMemoryUsage.max", nonHeap.getMax())
 				.withData("Memory.nonHeapMemoryUsage.used", nonHeap.getUsed())
-				.withData("OperatingSystem.arch", os.getArch())
-				.withData("OperatingSystem.name", os.getName())
-				.withData("OperatingSystem.version", os.getVersion())
-				.withData("OperatingSystem.availableProcessors", os.getAvailableProcessors())
-				.withData("OperatingSystem.systemLoadAverage", String.valueOf(os.getSystemLoadAverage()))
+				.withData("OperatingSystem.arch", operatingSystem.getArch())
+				.withData("OperatingSystem.name", operatingSystem.getName())
+				.withData("OperatingSystem.version", operatingSystem.getVersion())
+				.withData("OperatingSystem.availableProcessors", operatingSystem.getAvailableProcessors())
+				.withData("OperatingSystem.systemLoadAverage", String.valueOf(operatingSystem.getSystemLoadAverage()))
 				.withData("Runtime.bootClassPath", runtime.isBootClassPathSupported()?runtime.getBootClassPath():"")
 				.withData("Runtime.classPath", runtime.getClassPath())
 				.withData("Runtime.libraryPath", runtime.getLibraryPath())

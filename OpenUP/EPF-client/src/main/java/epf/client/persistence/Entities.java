@@ -31,6 +31,11 @@ import epf.validation.persistence.Unit;
  */
 @Path("persistence")
 public interface Entities {
+	
+	/**
+	 * 
+	 */
+	String UNIT = "unit";
     
     /**
      * @param unit
@@ -43,7 +48,7 @@ public interface Entities {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Object persist(
-            @PathParam("unit")
+            @PathParam(UNIT)
             @Unit
             @NotBlank
             final String unit,
@@ -106,7 +111,7 @@ public interface Entities {
     @Path("{unit}/{entity}/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     void merge(
-    		@PathParam("unit")
+    		@PathParam(UNIT)
             @Unit
             @NotBlank
             final String unit,
@@ -170,7 +175,7 @@ public interface Entities {
     @DELETE
     @Path("{unit}/{entity}/{id}")
     void remove(
-            @PathParam("unit")
+            @PathParam(UNIT)
             @Unit
             @NotBlank
             final String unit,
@@ -207,7 +212,7 @@ public interface Entities {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     Response getEntities(
-    		@QueryParam("unit")
+    		@QueryParam(UNIT)
     		@Unit
             @NotBlank
             @DefaultValue(EPF.SCHEMA)
@@ -222,7 +227,7 @@ public interface Entities {
     		final Client client,
     		final String unit) {
     	return client.request(
-    			target -> target.queryParam("unit", unit), 
+    			target -> target.queryParam(UNIT, unit), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     	.get();

@@ -32,6 +32,14 @@ public class Cache {
 	@Inject
     private transient Request request;
 	
+	/**
+	 * @param headers
+	 * @param uriInfo
+	 * @param req
+	 * @param unit
+	 * @param entity
+	 * @param entityId
+	 */
 	@GET
 	@Path("persistence/{schema}/{entity}/{id}")
 	@Produces(MediaType.APPLICATION_JSON)

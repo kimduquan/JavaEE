@@ -78,7 +78,7 @@ public class EPFIdentityStore implements IdentityStore {
     public CredentialValidationResult validate(final BasicAuthenticationCredential credential) {
         CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
         try {
-            String oldHashPassword = credentials.get(credential.getCaller());
+            final String oldHashPassword = credentials.get(credential.getCaller());
             final String passwordHash = PasswordHelper.hash(credential.getCaller(), credential.getPassword().getValue());
             
             Token token = null;

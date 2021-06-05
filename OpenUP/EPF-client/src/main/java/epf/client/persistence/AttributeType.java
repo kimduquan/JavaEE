@@ -10,23 +10,23 @@ package epf.client.persistence;
 public enum AttributeType {
 
 	/** Many-to-one association */
-    ManyToOne, 
+    MANY_TO_ONE, 
 
 	 /** One-to-one association */
-    OneToOne, 
+    ONE_TO_ONE, 
     
     /** Basic attribute */
-    Basic, 
+    BASIC, 
 
     /** Embeddable class attribute */
-    Embedded,
+    EMBEDDED,
 
     /** Many-to-many association */
-    ManyToMany, 
+    MANY_TO_MANY, 
 
     /** One-to-many association */
-    OneToMany, 
+    ONE_TO_MANY, 
 
     /** Element collection */
-    ElementCollection
+    ELEMENT_COLLECTION
 }

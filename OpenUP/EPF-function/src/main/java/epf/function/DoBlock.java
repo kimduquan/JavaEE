@@ -6,12 +6,12 @@ import java.util.stream.Stream;
  * @author PC
  *
  */
-public class Do extends Function {
+public class DoBlock extends Function {
 	
 	/**
 	 * @param stream
 	 */
-	public Do(final Stream<Runnable> stream) {
+	public DoBlock(final Stream<Runnable> stream) {
 		super(stream);
 	}
 	
