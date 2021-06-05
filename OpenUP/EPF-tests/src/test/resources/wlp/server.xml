@@ -44,6 +44,9 @@
 	<application id="EPF-file" name="EPF-file" context-root="file" location="EPF-file-1.0.0.war" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
+    <application id="EPF-rules" name="EPF-rules" context-root="rules" location="EPF-rules-1.0.0.war" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
 	<application id="EPF-persistence" name="EPF-persistence" context-root="persistence" location="EPF-persistence-1.0.0.war" startAfterRef="EPF-messaging" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>

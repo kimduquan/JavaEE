@@ -36,5 +36,10 @@
             <artifactId>EPF-client</artifactId>
             <version>1.0.0</version>
         </dependency>
+		<!-- https://mvnrepository.com/artifact/org.drools/drools-jsr94 -->
+		<dependency>
+		    <groupId>org.drools</groupId>
+		    <artifactId>drools-jsr94</artifactId>
+		</dependency>
     </dependencies>
 </project>
