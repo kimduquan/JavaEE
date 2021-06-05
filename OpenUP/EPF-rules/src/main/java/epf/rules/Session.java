@@ -6,9 +6,10 @@ package epf.rules;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
+import javax.rules.InvalidRuleSessionException;
 import javax.rules.RuleExecutionSetNotFoundException;
 import javax.rules.RuleRuntime;
 import javax.rules.RuleSessionCreateException;
@@ -44,8 +45,27 @@ public class Session implements Serializable {
 	@Inject
 	private transient Provider provider;
 	
-	@PostConstruct
-	protected void postConstruct() {
+	/**
+	 * 
+	 */
+	@PreDestroy
+	protected void preDestroy() {
+		if(ruleSession != null) {
+			try {
+				ruleSession.release();
+			} 
+			catch (InvalidRuleSessionException | RemoteException e) {
+				LOGGER.throwing(StatefulRuleSession.class.getName(), "release", e);
+			}
+		}
+	}
+	
+	/**
+	 * @param ruleSet
+	 * @return
+	 */
+	protected StatefulRuleSession createRuleSession(final String ruleSet) {
+		StatefulRuleSession ruleSession = null;
 		try {
 			ruleSession = (StatefulRuleSession) provider
 					.getRuleRuntime()
@@ -62,9 +82,17 @@ public class Session implements Serializable {
 				| RemoteException e) {
 			LOGGER.throwing(RuleRuntime.class.getName(), "createRuleSession", e);
 		}
+		return ruleSession;
 	}
 
-	public StatefulRuleSession getRuleSession() {
+	/**
+	 * @param ruleSet
+	 * @return
+	 */
+	public StatefulRuleSession getRuleSession(final String ruleSet) {
+		if(ruleSession == null) {
+			ruleSession = this.createRuleSession(ruleSet);
+		}
 		return ruleSession;
 	}
 }

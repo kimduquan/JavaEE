@@ -6,7 +6,6 @@ package epf.rules;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -40,14 +39,6 @@ public class Request {
 	 */
 	@Inject
 	private transient Provider provider;
-	
-	/**
-	 * 
-	 */
-	@PostConstruct
-	protected void postConstruct() {
-		
-	}
 	
 	/**
 	 * 

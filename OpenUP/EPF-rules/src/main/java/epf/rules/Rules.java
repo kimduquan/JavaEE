@@ -39,13 +39,13 @@ public class Rules implements epf.client.rules.Rules {
 
 	@Override
 	public Response executeRules(final String ruleSet) throws Exception {
-		session.getRuleSession().executeRules();
+		session.getRuleSession(ruleSet).executeRules();
 		return Response.ok().build();
 	}
 
 	@Override
 	public Response addObject(final String ruleSet, final InputStream input) throws Exception {
-		final Handle handle = session.getRuleSession().addObject(new Object());
+		final Handle handle = session.getRuleSession(ruleSet).addObject(new Object());
 		return Response.ok(handle).build();
 	}
 
