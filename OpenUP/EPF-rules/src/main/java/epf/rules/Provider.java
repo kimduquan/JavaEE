@@ -53,6 +53,7 @@ public class Provider {
 		try {
 			Class.forName(providerClass);
 			ruleProvider = RuleServiceProviderManager.getRuleServiceProvider(providerUri);
+			ruleProvider.getRuleAdministrator();
 		} 
 		catch (ClassNotFoundException | ConfigurationException e) {
 			LOGGER.throwing("Class", "forName", e);
