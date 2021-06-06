@@ -63,4 +63,24 @@ public class Admin {
 			}
 		}
 	}
+	
+	/**
+	 * @param token
+	 * @param name
+	 * @throws Exception
+	 */
+	@Command(name = "de-register")
+	public void deregisterRuleExecutionSet(
+			@Option(names = {"-t", "--token"}, description = "Token") 
+			final String token,
+			@Option(names = {"-n", "--name"}, description = "Name")
+			final String name
+			) throws Exception {
+		try(Client client = clientUtil.newClient(rulesUrl.get())){
+			client.authorization(token);
+			try(Response response = epf.client.rules.admin.Admin.deregisterRuleExecutionSet(client, name)){
+				response.getStatus();
+			}
+		}
+	}
 }

@@ -35,4 +35,10 @@ public class Admin implements epf.client.rules.admin.Admin {
 		administrator.getRuleAdmin().registerRuleExecutionSet(ruleSet, ruleExeSet, new HashMap<Object, Object>());
 		return Response.ok().build();
 	}
+
+	@Override
+	public Response deregisterRuleExecutionSet(final String name, final UriInfo uriInfo) throws Exception {
+		administrator.getRuleAdmin().deregisterRuleExecutionSet(name, new HashMap<Object, Object>());
+		return Response.ok().build();
+	}
 }

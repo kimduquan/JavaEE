@@ -27,4 +27,13 @@ public class RulesUtil {
 			}
 		}
 	}
+	
+	public static void registerRuleExecutionSet(String token, String ruleSet) throws Exception {
+		try(Client client = ClientUtil.newClient(RegistryUtil.lookup("rules", null))){
+			client.authorization(token);
+			try(Response response = epf.client.rules.admin.Admin.deregisterRuleExecutionSet(client, ruleSet)){
+				response.getStatus();
+			}
+		}
+	}
 }
