@@ -4,11 +4,6 @@
 package epf.shell.persistence;
 
 import java.net.URI;
-import java.util.List;
-
-import javax.ws.rs.core.GenericType;
-
-import epf.client.schema.Entity;
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
 import epf.util.Var;
@@ -123,24 +118,6 @@ public class Persistence {
 		try(Client client = clientUtil.newClient(persistenceUrl.get())){
 			client.authorization(token);
 			epf.client.persistence.Entities.remove(client, unit, name, entityId);
-		}
-	}
-	
-	/**
-	 * @param token
-	 * @param unit
-	 * @return
-	 * @throws Exception
-	 */
-	@Command(name = "get-entities")
-	public List<Entity> getEntities(
-			@Option(names = {"-t", TOKEN_ARG}, description = TOKEN_DESC) 
-			final String token,
-			@Option(names = {"-u", UNIT_ARG}, description = UNIT_DESC)
-			final String unit) throws Exception{
-		try(Client client = clientUtil.newClient(persistenceUrl.get())){
-			client.authorization(token);
-			return epf.client.persistence.Entities.getEntities(client, unit).readEntity(new GenericType<List<Entity>>() {});
 		}
 	}
 }

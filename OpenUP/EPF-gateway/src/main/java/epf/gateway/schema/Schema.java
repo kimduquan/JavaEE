@@ -4,6 +4,7 @@
 package epf.gateway.schema;
 
 import java.util.concurrent.CompletionStage;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -21,6 +22,8 @@ import epf.gateway.Request;
  * @author PC
  *
  */
+@Path("schema")
+@RequestScoped
 public class Schema {
     
     /**
@@ -29,6 +32,13 @@ public class Schema {
     @Inject
     private transient Request request;
     
+    /**
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @param unit
+     * @return
+     */
     @GET
     @Path("{unit}")
     @Produces(MediaType.APPLICATION_JSON)

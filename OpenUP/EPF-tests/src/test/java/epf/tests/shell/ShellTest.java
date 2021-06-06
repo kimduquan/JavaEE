@@ -249,8 +249,8 @@ public class ShellTest {
 	}
 	
 	@Test
-	public void testPersistence_GetEntities() throws Exception {
-		builder.command("powershell", "./epf", "persistence", "get-entities", "-t", token, "-u", EPF.SCHEMA);
+	public void testSchema_GetEntities() throws Exception {
+		builder.command("powershell", "./epf", "schema", "entities", "-t", token, "-u", EPF.SCHEMA);
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(2, lines.size());

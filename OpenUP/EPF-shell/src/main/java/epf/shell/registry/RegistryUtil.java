@@ -99,4 +99,12 @@ public class RegistryUtil {
 	public Var<URI> getRulesUrl(){
 		return new Var<>(remotes.get("rules"));
 	}
+	
+	/**
+	 * @return
+	 */
+	@Produces @Named(epf.client.schema.Schema.SCHEMA_URL)
+	public Var<URI> getSchemaUrl(){
+		return new Var<>(remotes.get("schema"));
+	}
 }

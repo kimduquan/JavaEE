@@ -3,8 +3,8 @@
  */
 package epf.shell.rules;
 
-import epf.client.rules.admin.Admin;
 import epf.shell.Function;
+import epf.shell.rules.admin.Admin;
 import jakarta.enterprise.context.RequestScoped;
 import picocli.CommandLine.Command;
 
