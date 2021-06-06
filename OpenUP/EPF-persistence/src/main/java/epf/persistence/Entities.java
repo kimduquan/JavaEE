@@ -6,9 +6,7 @@
 package epf.persistence;
 
 import java.io.InputStream;
-import java.util.List;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -20,11 +18,9 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import epf.client.EPFException;
 import epf.persistence.impl.Entity;
-import epf.persistence.metamodel.EntityBuilder;
 import epf.schema.roles.Role;
 
 /**
@@ -152,19 +148,6 @@ public class Entities implements epf.client.persistence.Entities {
     /**
      * @param <T>
      * @param unit
-     * @return
-     */
-    protected <T> List<Entity<T>> findEntities(final String unit){
-    	final List<Entity<T>> entities = cache.findEntities(unit, context.getUserPrincipal());
-    	if(entities.isEmpty()){
-            throw new NotFoundException();
-        }
-        return entities;
-    }
-    
-    /**
-     * @param <T>
-     * @param unit
      * @param name
      * @param entityId
      * @return
@@ -180,14 +163,4 @@ public class Entities implements epf.client.persistence.Entities {
         }
         return entity;
     }
-
-	@Override
-	public Response getEntities(final String unit) {
-		final EntityBuilder builder = new EntityBuilder();
-		final List<epf.client.persistence.Entity> entityTypes = findEntities(unit)
-				.stream()
-				.map(builder::build)
-				.collect(Collectors.toList());
-		return Response.ok(entityTypes).build();
-	}
 }

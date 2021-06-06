@@ -32,10 +32,10 @@ import epf.client.EPFException;
 import epf.client.security.CredentialInfo;
 import epf.client.security.Token;
 import epf.client.security.jwt.JWTConfig;
+import epf.persistence.context.Application;
+import epf.persistence.context.Credential;
+import epf.persistence.context.Session;
 import epf.schema.roles.Role;
-import epf.persistence.impl.Application;
-import epf.persistence.impl.Credential;
-import epf.persistence.impl.Session;
 import epf.util.logging.Log;
 
 /**
@@ -199,7 +199,7 @@ public class Security implements epf.client.security.Security, Serializable {
      */
     protected Session removeSession(final String unit, final SecurityContext context, final Application persistence) {
     	final Principal principal = context.getUserPrincipal();
-    	final epf.persistence.impl.Context ctx = persistence.getContext(unit);
+    	final epf.persistence.context.Context ctx = persistence.getContext(unit);
         if(principal != null && ctx != null){
         	final Credential credential = ctx.getCredential(principal.getName());
             if(credential != null && principal instanceof JsonWebToken){
@@ -219,7 +219,7 @@ public class Security implements epf.client.security.Security, Serializable {
     protected static Session getSession(final String unit, final SecurityContext context, final Application persistence) {
     	Session session = null;
     	final Principal principal = context.getUserPrincipal();
-    	final epf.persistence.impl.Context ctx = persistence.getContext(unit);
+    	final epf.persistence.context.Context ctx = persistence.getContext(unit);
     	Credential credential = null;
     	JsonWebToken jwt = null;
         if(principal != null && ctx != null){
@@ -243,7 +243,7 @@ public class Security implements epf.client.security.Security, Serializable {
      */
     protected static Credential getCredential(final String unit, final SecurityContext context, final Application persistence) {
     	final Principal principal = context.getUserPrincipal();
-    	final epf.persistence.impl.Context ctx = persistence.getContext(unit);
+    	final epf.persistence.context.Context ctx = persistence.getContext(unit);
     	if(principal != null && ctx != null) {
     		final Credential credential = ctx.getCredential(principal.getName());
     		if(credential != null) {

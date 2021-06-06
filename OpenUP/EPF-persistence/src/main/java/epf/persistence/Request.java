@@ -30,10 +30,11 @@ import javax.persistence.metamodel.EntityType;
 import javax.transaction.Transactional;
 import javax.ws.rs.ForbiddenException;
 import org.eclipse.microprofile.jwt.JsonWebToken;
-import epf.persistence.impl.Application;
-import epf.persistence.impl.Context;
-import epf.persistence.impl.Credential;
-import epf.persistence.impl.Session;
+
+import epf.persistence.context.Application;
+import epf.persistence.context.Context;
+import epf.persistence.context.Credential;
+import epf.persistence.context.Session;
 import epf.persistence.impl.Entity;
 
 /**

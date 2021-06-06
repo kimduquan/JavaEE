@@ -91,4 +91,12 @@ public class RegistryUtil {
 	public Var<URI> getPersistenceUrl(){
 		return new Var<>(remotes.get("persistence"));
 	}
+	
+	/**
+	 * @return
+	 */
+	@Produces @Named(epf.client.rules.Rules.RULES_URL)
+	public Var<URI> getRulesUrl(){
+		return new Var<>(remotes.get("rules"));
+	}
 }
