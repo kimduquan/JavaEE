@@ -34,6 +34,12 @@ public class Rules implements epf.client.rules.Rules {
 	 * 
 	 */
 	@Inject
+	private transient Provider provider;
+	
+	/**
+	 * 
+	 */
+	@Inject
 	private transient Session session;
 	
 	/**
@@ -69,6 +75,17 @@ public class Rules implements epf.client.rules.Rules {
 			final Object object = decoder.decode(jsonb, input);
 			final Handle handle = session.getRuleSession(ruleSet).addObject(object);
 			return Response.ok(handle).build();
+		}
+	}
+
+	@Override
+	public Response getRegistrations() throws Exception {
+		try(Jsonb jsonb = JsonbBuilder.create(new JsonbConfig().withAdapters(new Adapter()))){
+			final Encoder encoder = new Encoder();
+			@SuppressWarnings("unchecked")
+			List<Object> registrations = provider.getRuleRuntime().getRegistrations();
+			final String json = encoder.encodeArray(jsonb, registrations);
+			return Response.ok(json, MediaType.APPLICATION_JSON).build();
 		}
 	}
 

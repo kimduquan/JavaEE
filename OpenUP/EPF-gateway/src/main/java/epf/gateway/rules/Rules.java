@@ -8,6 +8,7 @@ import java.util.concurrent.CompletionStage;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -19,6 +20,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import org.eclipse.microprofile.faulttolerance.Asynchronous;
 import epf.gateway.Request;
 
 /**
@@ -47,6 +49,7 @@ public class Rules {
 	@Path("{ruleSet}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
+    @Asynchronous
 	public CompletionStage<Response> executeRules(
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -70,6 +73,7 @@ public class Rules {
 	@PUT
 	@Path("{ruleSet}")
 	@Produces(MediaType.APPLICATION_JSON)
+    @Asynchronous
 	public CompletionStage<Response> executeRules(
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -92,12 +96,32 @@ public class Rules {
 	@PATCH
 	@Path("{ruleSet}")
 	@Consumes(MediaType.APPLICATION_JSON)
+    @Asynchronous
 	public CompletionStage<Response> addObject(
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             @PathParam("ruleSet")
             final String ruleSet) {
+        request.setHeaders(headers);
+        request.setUriInfo(uriInfo);
+        request.setRequest(req);
+        return request.request(null);
+    }
+	
+	/**
+	 * @param headers
+	 * @param uriInfo
+	 * @param req
+	 * @return
+	 */
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+    @Asynchronous
+	public CompletionStage<Response> getRegistrations(
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req) {
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         request.setRequest(req);

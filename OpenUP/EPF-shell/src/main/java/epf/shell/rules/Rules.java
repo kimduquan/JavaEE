@@ -104,4 +104,21 @@ public class Rules {
 			}
 		}
 	}
+	
+	/**
+	 * @param token
+	 * @return
+	 * @throws Exception
+	 */
+	@Command(name = "registrations")
+	public String getRegistrations(
+			@Option(names = {"-t", "--token"}, description = "Token") 
+			final String token) throws Exception {
+		try(Client client = clientUtil.newClient(rulesUrl.get())){
+			client.authorization(token);
+			try(Response response = epf.client.rules.Rules.getRegistrations(client)){
+				return response.readEntity(String.class);
+			}
+		}
+	}
 }

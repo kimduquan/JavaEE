@@ -5,6 +5,7 @@ package epf.client.rules;
 
 import java.io.InputStream;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
@@ -126,5 +127,25 @@ public interface Rules {
 						req -> req
 						)
 				.method(HttpMethod.PATCH, Entity.entity(input, MediaType.APPLICATION_JSON));
+	}
+	
+	/**
+	 * @return
+	 */
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	Response getRegistrations() throws Exception;
+	
+	/**
+	 * @param client
+	 * @return
+	 */
+	static Response getRegistrations(final Client client) {
+		return client
+				.request(
+						target -> target, 
+						req -> req.accept(MediaType.APPLICATION_JSON)
+						)
+				.get();
 	}
 }

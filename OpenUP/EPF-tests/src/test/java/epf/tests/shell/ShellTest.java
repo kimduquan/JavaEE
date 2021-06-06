@@ -15,7 +15,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
-import javax.json.bind.JsonbConfig;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.core.GenericType;
 import org.junit.After;
@@ -23,6 +22,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import epf.client.gateway.Gateway;
 import epf.client.schema.Entity;
@@ -39,9 +39,6 @@ import epf.tests.file.FileUtil;
 import epf.tests.persistence.PersistenceUtil;
 import epf.tests.rules.RulesUtil;
 import epf.tests.security.SecurityUtil;
-import epf.util.json.Adapter;
-import epf.util.json.Decoder;
-import epf.util.json.Encoder;
 
 /**
  * @author PC
@@ -340,7 +337,7 @@ public class ShellTest {
 	}
 	
 	@Test
-	public void testRules_Admin_Register() throws InterruptedException, IOException {
+	public void testRules_Admin_Register() throws Exception {
 		Path ruleFile = Path.of("", "Artifact.drl");
 		builder.command(
 				"powershell", "./epf", 
@@ -354,6 +351,7 @@ public class ShellTest {
 		Assert.assertEquals(1, lines.size());
 		lines = Files.readAllLines(err);
 		Assert.assertTrue(lines.isEmpty());
+		RulesUtil.deregisterRuleExecutionSet(token, "Artifact1");
 	}
 	
 	@Test
@@ -370,24 +368,36 @@ public class ShellTest {
 		Artifact artifact = new Artifact();
 		artifact.setName("Artifact" + UUID.randomUUID() + System.currentTimeMillis());
 		input.add(artifact);
-		String json = "";
-		try(Jsonb jsonb = JsonbBuilder.create(new JsonbConfig().withAdapters(new Adapter()))){
-			Encoder encoder = new Encoder();
-			json = encoder.encodeArray(jsonb, input);
-		}
+		String json = RulesUtil.encode(input);
 		process = ShellUtil.waitFor(builder, in, json);
 		List<String> lines = Files.readAllLines(out);
 		List<String> errors = Files.readAllLines(err);
 		Assert.assertEquals(2, lines.size());
-		List<Object> resultList = null;
-		try(Jsonb jsonb = JsonbBuilder.create(new JsonbConfig().withAdapters(new Adapter()))){
-			Decoder decoder = new Decoder();
-			resultList = decoder.decodeArray(jsonb, lines.get(1));
-		}
+		List<Object> resultList = RulesUtil.decode(lines.get(1));
 		Assert.assertTrue(errors.isEmpty());
 		Assert.assertFalse(resultList.isEmpty());
 		Artifact resultArtifact = (Artifact) resultList.get(0);
 		Assert.assertNotNull("Artifact", resultArtifact);
 		Assert.assertEquals("Artifact.summary", artifact.getName() + " Summary", resultArtifact.getSummary());
+		RulesUtil.deregisterRuleExecutionSet(token, "Artifact1");
+	}
+	
+	@Test
+	@Ignore
+	public void testRules_Registrations() throws Exception {
+		RulesUtil.registerRuleExecutionSet(token, Path.of("", "Artifact.drl"), "Artifact1");
+		builder.command(
+				"powershell", "./epf", 
+				"rules", "registrations",
+				"-t", token
+				);
+		process = ShellUtil.waitFor(builder);
+		List<String> lines = Files.readAllLines(out);
+		List<String> errors = Files.readAllLines(err);
+		Assert.assertEquals(2, lines.size());
+		List<Object> resultList = RulesUtil.decode(lines.get(1));
+		Assert.assertTrue(errors.isEmpty());
+		Assert.assertFalse(resultList.isEmpty());
+		RulesUtil.deregisterRuleExecutionSet(token, "Artifact1");
 	}
 }
