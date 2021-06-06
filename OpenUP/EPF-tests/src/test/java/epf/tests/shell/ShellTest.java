@@ -100,7 +100,9 @@ public class ShellTest {
 	 */
 	@After
 	public void tearDown() throws Exception {
-		process.destroyForcibly();
+		if(process != null) {
+			process.destroyForcibly();
+		}
 		Files.lines(err).forEach(System.err::println);
 		Files.lines(out).forEach(System.out::println);
 		in.toFile().delete();
