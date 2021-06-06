@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.client.messaging;
+package epf.util.json;
 
 import java.io.StringReader;
 import java.util.logging.Level;
@@ -18,12 +18,12 @@ import epf.util.logging.Logging;
  * @author PC
  *
  */
-public class MessageAdapter implements JsonbAdapter<Object, JsonObject> {
+public class Adapter implements JsonbAdapter<Object, JsonObject> {
 	
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(MessageAdapter.class.getName());
+	private static final Logger LOGGER = Logging.getLogger(Adapter.class.getName());
 	
 	@Override
 	public JsonObject adaptToJson(final Object obj) throws Exception {
