@@ -2,7 +2,7 @@ package epf.rules.work_products
 import epf.schema.work_products.Artifact
 
 rule "Rule 1"
-	when artifact : Artifact()
+	when artifact : Artifact(summary == null)
 	then artifact.setSummary(artifact.getName() + " Summary");
-	update (artifact);
+		update (artifact);
 end

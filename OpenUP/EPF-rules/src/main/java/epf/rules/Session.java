@@ -5,6 +5,8 @@ package epf.rules;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.SessionScoped;
@@ -37,7 +39,7 @@ public class Session implements Serializable {
 	/**
 	 * 
 	 */
-	private transient StatefulRuleSession ruleSession;
+	private transient final Map<String, StatefulRuleSession> statefulSessions = new ConcurrentHashMap<>();
 	
 	/**
 	 * 
@@ -50,14 +52,14 @@ public class Session implements Serializable {
 	 */
 	@PreDestroy
 	protected void preDestroy() {
-		if(ruleSession != null) {
+		statefulSessions.forEach((name, session) -> {
 			try {
-				ruleSession.release();
+				session.release();
 			} 
 			catch (InvalidRuleSessionException | RemoteException e) {
 				LOGGER.throwing(StatefulRuleSession.class.getName(), "release", e);
 			}
-		}
+		});
 	}
 	
 	/**
@@ -90,9 +92,6 @@ public class Session implements Serializable {
 	 * @return
 	 */
 	public StatefulRuleSession getRuleSession(final String ruleSet) {
-		if(ruleSession == null) {
-			ruleSession = this.createRuleSession(ruleSet);
-		}
-		return ruleSession;
+		return statefulSessions.computeIfAbsent(ruleSet, this::createRuleSession);
 	}
 }

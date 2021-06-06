@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -14,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
+import javax.json.bind.JsonbConfig;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.core.GenericType;
 import org.junit.After;
@@ -35,7 +37,11 @@ import epf.schema.work_products.section.Tailoring;
 import epf.tests.TestUtil;
 import epf.tests.file.FileUtil;
 import epf.tests.persistence.PersistenceUtil;
+import epf.tests.rules.RulesUtil;
 import epf.tests.security.SecurityUtil;
+import epf.util.json.Adapter;
+import epf.util.json.Decoder;
+import epf.util.json.Encoder;
 
 /**
  * @author PC
@@ -334,12 +340,11 @@ public class ShellTest {
 	@Test
 	public void testRules_Admin_Register() throws InterruptedException, IOException {
 		Path ruleFile = Path.of("", "Artifact.drl");
-		System.out.println(ruleFile.toAbsolutePath().toString());
 		builder.command(
 				"powershell", "./epf", 
 				"rules", "admin", "register",
 				"-t", token,
-				"-n", ruleFile.getFileName().toString(),
+				"-n", "Artifact",
 				"-f", ruleFile.toAbsolutePath().toString()
 				);
 		process = ShellUtil.waitFor(builder);
@@ -347,5 +352,40 @@ public class ShellTest {
 		Assert.assertEquals(1, lines.size());
 		lines = Files.readAllLines(err);
 		Assert.assertTrue(lines.isEmpty());
+	}
+	
+	@Test
+	public void testRules_Execute() throws Exception {
+		RulesUtil.registerRuleExecutionSet(token, Path.of("", "Artifact.drl"), "Artifact1");
+		builder.command(
+				"powershell", "./epf", 
+				"rules", "execute",
+				"-t", token,
+				"-r", "Artifact1",
+				"-i"
+				);
+		List<Object> input = new ArrayList<>();
+		Artifact artifact = new Artifact();
+		artifact.setName("Artifact" + UUID.randomUUID() + System.currentTimeMillis());
+		input.add(artifact);
+		String json = "";
+		try(Jsonb jsonb = JsonbBuilder.create(new JsonbConfig().withAdapters(new Adapter()))){
+			Encoder encoder = new Encoder();
+			json = encoder.encodeArray(jsonb, input);
+		}
+		process = ShellUtil.waitFor(builder, in, json);
+		List<String> lines = Files.readAllLines(out);
+		List<String> errors = Files.readAllLines(err);
+		Assert.assertEquals(2, lines.size());
+		List<Object> resultList = null;
+		try(Jsonb jsonb = JsonbBuilder.create(new JsonbConfig().withAdapters(new Adapter()))){
+			Decoder decoder = new Decoder();
+			resultList = decoder.decodeArray(jsonb, lines.get(1));
+		}
+		Assert.assertTrue(errors.isEmpty());
+		Assert.assertFalse(resultList.isEmpty());
+		Artifact resultArtifact = (Artifact) resultList.get(0);
+		Assert.assertNotNull("Artifact", resultArtifact);
+		Assert.assertEquals("Artifact.summary", artifact.getName() + " Summary", resultArtifact.getSummary());
 	}
 }
