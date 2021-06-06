@@ -29,7 +29,7 @@ public class Admin implements epf.client.rules.admin.Admin {
 	@Override
 	public Response registerRuleExecutionSet(final String ruleSet, final UriInfo uriInfo, final InputStream input) throws Exception {
 		final RuleExecutionSet ruleExeSet = administrator.getLocalRuleProvider().createRuleExecutionSet(input, new HashMap<Object, Object>());
-		administrator.getRuleAdmin().registerRuleExecutionSet(uriInfo.toString() + ruleSet, ruleExeSet, new HashMap<Object, Object>());
+		administrator.getRuleAdmin().registerRuleExecutionSet(uriInfo.getBaseUri() + "/rules/" + ruleSet, ruleExeSet, new HashMap<Object, Object>());
 		return Response.ok().build();
 	}
 }

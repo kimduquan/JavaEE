@@ -1,0 +1,8 @@
+package epf.rules.work_products
+import epf.schema.work_products.Artifact
+
+rule "Rule 1"
+	when artifact : Artifact()
+	then artifact.setSummary(artifact.getName() + " Summary");
+	update (artifact);
+end

@@ -330,4 +330,21 @@ public class ShellTest {
 		file.toFile().delete();
 		output.toFile().delete();
 	}
+	
+	@Test
+	public void testRules_Admin_Register() throws InterruptedException, IOException {
+		Path ruleFile = Path.of("", "Artifact.drl");
+		builder.command(
+				"powershell", "./epf", 
+				"rules", "admin", "register",
+				"-t", token,
+				"-n", ruleFile.getFileName().toString(),
+				"-f", ruleFile.toString()
+				);
+		process = ShellUtil.waitFor(builder);
+		List<String> lines = Files.readAllLines(out);
+		Assert.assertEquals(1, lines.size());
+		lines = Files.readAllLines(err);
+		Assert.assertTrue(lines.isEmpty());
+	}
 }
