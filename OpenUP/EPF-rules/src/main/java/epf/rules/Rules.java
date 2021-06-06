@@ -5,11 +5,13 @@ package epf.rules;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.rules.Handle;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
+import epf.schema.roles.Role;
 
 /**
  * @author PC
@@ -17,6 +19,7 @@ import javax.ws.rs.core.Response;
  */
 @Path("rules")
 @RequestScoped
+@RolesAllowed(Role.DEFAULT_ROLE)
 public class Rules implements epf.client.rules.Rules {
 	
 	/**

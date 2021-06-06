@@ -26,8 +26,7 @@ import epf.gateway.Request;
 @Path("rules/admin")
 @RequestScoped
 public class Admin {
-
-    
+	
     /**
      * 
      */

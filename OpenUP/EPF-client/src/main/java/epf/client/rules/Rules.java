@@ -5,14 +5,17 @@ package epf.client.rules;
 
 import java.io.InputStream;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import epf.util.client.Client;
 
 /**
  * @author PC
@@ -53,6 +56,23 @@ public interface Rules {
 			) throws Exception;
 	
 	/**
+	 * @param client
+	 * @param ruleSet
+	 * @param input
+	 * @return
+	 * @throws Exception
+	 */
+	static Response executeRules(final Client client, final String ruleSet,final String input
+			) throws Exception{
+		return client
+				.request(
+						target -> target.path(ruleSet), 
+						req -> req.accept(MediaType.APPLICATION_JSON)
+						)
+				.post(Entity.entity(input, MediaType.APPLICATION_JSON));
+	}
+	
+	/**
 	 * @param ruleSet
 	 * @return
 	 * @throws Exception
@@ -66,6 +86,21 @@ public interface Rules {
 			) throws Exception;
 	
 	/**
+	 * @param client
+	 * @param ruleSet
+	 * @return
+	 * @throws Exception
+	 */
+	static Response executeRules(final Client client, final String ruleSet) throws Exception{
+		return client
+				.request(
+						target -> target.path(ruleSet), 
+						req -> req.accept(MediaType.APPLICATION_JSON)
+						)
+				.put(Entity.json(null));
+	}
+	
+	/**
 	 * @param ruleSet
 	 * @param input
 	 * @throws Exception
@@ -77,4 +112,19 @@ public interface Rules {
 			@PathParam("ruleSet")
 			final String ruleSet,
 			final InputStream input) throws Exception;
+	
+	/**
+	 * @param client
+	 * @param ruleSet
+	 * @param input
+	 * @return
+	 */
+	static Response addObject(final Client client, final String ruleSet, final String input) {
+		return client
+				.request(
+						target -> target.path(ruleSet), 
+						req -> req
+						)
+				.method(HttpMethod.PATCH, Entity.entity(input, MediaType.APPLICATION_JSON));
+	}
 }

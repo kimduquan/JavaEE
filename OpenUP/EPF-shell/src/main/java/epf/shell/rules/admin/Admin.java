@@ -55,6 +55,7 @@ public class Admin {
 			final File file 
 			) throws Exception {
 		try(Client client = clientUtil.newClient(rulesUrl.get())){
+			client.authorization(token);
 			try(InputStream input = Files.newInputStream(file.toPath())){
 				try(Response response = epf.client.rules.admin.Admin.registerRuleExecutionSet(client, name, input)){
 					response.getStatus();

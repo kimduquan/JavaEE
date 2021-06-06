@@ -334,12 +334,13 @@ public class ShellTest {
 	@Test
 	public void testRules_Admin_Register() throws InterruptedException, IOException {
 		Path ruleFile = Path.of("", "Artifact.drl");
+		System.out.println(ruleFile.toAbsolutePath().toString());
 		builder.command(
 				"powershell", "./epf", 
 				"rules", "admin", "register",
 				"-t", token,
 				"-n", ruleFile.getFileName().toString(),
-				"-f", ruleFile.toString()
+				"-f", ruleFile.toAbsolutePath().toString()
 				);
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
