@@ -3,8 +3,10 @@
  */
 package epf.client.rules.admin;
 
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import epf.util.client.Client;
 import java.io.InputStream;
 import javax.ws.rs.Consumes;
@@ -32,6 +34,8 @@ public interface Admin {
 	Response registerRuleExecutionSet(
 			@PathParam("ruleSet")
 			final String name,
+			@Context
+			final UriInfo uriInfo,
 			final InputStream input
 			) throws Exception;
 	
