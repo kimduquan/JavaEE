@@ -355,6 +355,22 @@ public class ShellTest {
 	}
 	
 	@Test
+	public void testRules_Admin_Deregister() throws Exception {
+		RulesUtil.registerRuleExecutionSet(token, Path.of("", "Artifact.drl"), "Artifact1");
+		builder.command(
+				"powershell", "./epf", 
+				"rules", "admin", "de-register",
+				"-t", token,
+				"-n", "Artifact1"
+				);
+		process = ShellUtil.waitFor(builder);
+		List<String> lines = Files.readAllLines(out);
+		List<String> errors = Files.readAllLines(err);
+		Assert.assertEquals(1, lines.size());
+		Assert.assertTrue(errors.isEmpty());
+	}
+	
+	@Test
 	public void testRules_Execute() throws Exception {
 		RulesUtil.registerRuleExecutionSet(token, Path.of("", "Artifact.drl"), "Artifact1");
 		builder.command(
