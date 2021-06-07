@@ -4,13 +4,17 @@
 package epf.shell.persistence;
 
 import java.net.URI;
+
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
+import epf.shell.security.Credential;
+import epf.shell.security.CallerPrincipal;
 import epf.util.Var;
 import epf.util.client.Client;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -60,8 +64,9 @@ public class Persistence {
 	 */
 	@Command(name = "persist")
 	public String persist(
-			@Option(names = {"-t", TOKEN_ARG}, description = TOKEN_DESC) 
-			final String token,
+			@ArgGroup(exclusive = true, multiplicity = "1")
+			@CallerPrincipal
+			final Credential credential,
 			@Option(names = {"-u", UNIT_ARG}, description = UNIT_DESC)
 			final String unit,
 			@Option(names = {"-n", "--name"}, description = "Name")
@@ -69,7 +74,7 @@ public class Persistence {
 			@Option(names = {"-e", "--entity"}, description = "Entity", interactive = true, echo = true)
 			final String entity) throws Exception {
 		try(Client client = clientUtil.newClient(persistenceUrl.get())){
-			client.authorization(token);
+			client.authorization(credential.getToken());
 			return epf.client.persistence.Entities.persist(client, unit, name, entity);
 		}
 	}
@@ -82,8 +87,9 @@ public class Persistence {
 	 */
 	@Command(name = "merge")
 	public void merge(
-			@Option(names = {"-t", TOKEN_ARG}, description = TOKEN_DESC) 
-			final String token,
+			@ArgGroup(exclusive = true, multiplicity = "1")
+			@CallerPrincipal
+			final Credential credential,
 			@Option(names = {"-u", UNIT_ARG}, description = UNIT_DESC)
 			final String unit,
 			@Option(names = {"-n", "--name"}, description = "Name")
@@ -93,7 +99,7 @@ public class Persistence {
 			@Option(names = {"-e", "--entity"}, description = "Entity", interactive = true, echo = true)
 			final String entity) throws Exception {
 		try(Client client = clientUtil.newClient(persistenceUrl.get())){
-			client.authorization(token);
+			client.authorization(credential.getToken());
 			epf.client.persistence.Entities.merge(client, unit, name, entityId, entity);
 		}
 	}
@@ -107,8 +113,9 @@ public class Persistence {
 	 */
 	@Command(name = "remove")
 	public void remove(
-			@Option(names = {"-t", TOKEN_ARG}, description = TOKEN_DESC) 
-			final String token,
+			@ArgGroup(exclusive = true, multiplicity = "1")
+			@CallerPrincipal
+			final Credential credential,
 			@Option(names = {"-u", UNIT_ARG}, description = UNIT_DESC)
 			final String unit,
 			@Option(names = {"-n", "--name"}, description = "Name")
@@ -116,7 +123,7 @@ public class Persistence {
 			@Option(names = {"-i", "--id"}, description = "ID")
 			final String entityId) throws Exception {
 		try(Client client = clientUtil.newClient(persistenceUrl.get())){
-			client.authorization(token);
+			client.authorization(credential.getToken());
 			epf.client.persistence.Entities.remove(client, unit, name, entityId);
 		}
 	}

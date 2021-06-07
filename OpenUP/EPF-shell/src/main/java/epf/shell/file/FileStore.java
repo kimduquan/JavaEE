@@ -11,13 +11,17 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import javax.ws.rs.core.Response;
+
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
+import epf.shell.security.Credential;
+import epf.shell.security.CallerPrincipal;
 import epf.util.Var;
 import epf.util.client.Client;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -51,14 +55,15 @@ public class FileStore {
 	 */
 	@Command(name = "create")
 	public String createFile(
-			@Option(names = {"-t", "--token"}, description = "Token") 
-			final String token,
+			@ArgGroup(exclusive = true, multiplicity = "1")
+			@CallerPrincipal
+			final Credential credential,
 			@Option(names = {"-f", "--file"}, description = "File")
 			final File file,
 			@Option(names = {"-p", "--path"}, description = "Path")
 			final Path path) throws Exception {
 		try(Client client = clientUtil.newClient(fileUrl.get())){
-			client.authorization(token);
+			client.authorization(credential.getToken());
 			try(InputStream input = Files.newInputStream(file.toPath())){
 				try(Response res = epf.client.file.Files.createFile(client, input, path)){
 					res.getStatus();
@@ -76,15 +81,16 @@ public class FileStore {
 	 */
 	@Command(name = "read")
 	public void read(
-			@Option(names = {"-t", "--token"}, description = "Token") 
-			final String token,
+			@ArgGroup(exclusive = true, multiplicity = "1")
+			@CallerPrincipal
+			final Credential credential,
 			@Option(names = {"-p", "--path"}, description = "Path")
 			final Path path,
 			@Option(names = {"-o", "--output"}, description = "Output")
 			final Path output
 			) throws Exception {
 		try(Client client = clientUtil.newClient(fileUrl.get())){
-			client.authorization(token);
+			client.authorization(credential.getToken());
 			try(InputStream stream = epf.client.file.Files.read(client, path)){
 				try(InputStreamReader reader = new InputStreamReader(stream)){
 					try(BufferedWriter writer = Files.newBufferedWriter(output)){
@@ -103,13 +109,14 @@ public class FileStore {
 	 */
 	@Command(name = "delete")
 	public void delete(
-			@Option(names = {"-t", "--token"}, description = "Token") 
-			final String token,
+			@ArgGroup(exclusive = true, multiplicity = "1")
+			@CallerPrincipal
+			final Credential credential,
 			@Option(names = {"-p", "--path"}, description = "Path")
 			final Path path
 			) throws Exception {
 		try(Client client = clientUtil.newClient(fileUrl.get())){
-			client.authorization(token);
+			client.authorization(credential.getToken());
 			try(Response response = epf.client.file.Files.delete(client, path)){
 				response.getStatus();
 			}

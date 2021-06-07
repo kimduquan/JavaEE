@@ -8,13 +8,17 @@ import java.io.InputStream;
 import java.net.URI;
 import java.nio.file.Files;
 import javax.ws.rs.core.Response;
+
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
+import epf.shell.security.Credential;
+import epf.shell.security.CallerPrincipal;
 import epf.util.Var;
 import epf.util.client.Client;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -47,15 +51,16 @@ public class Admin {
 	 */
 	@Command(name = "register")
 	public void registerRuleExecutionSet(
-			@Option(names = {"-t", "--token"}, description = "Token") 
-			final String token,
+			@ArgGroup(exclusive = true, multiplicity = "1")
+			@CallerPrincipal
+			final Credential credential,
 			@Option(names = {"-n", "--name"}, description = "Name")
 			final String name,
 			@Option(names = {"-f", "--file"}, description = "Rules file")
 			final File file 
 			) throws Exception {
 		try(Client client = clientUtil.newClient(rulesUrl.get())){
-			client.authorization(token);
+			client.authorization(credential.getToken());
 			try(InputStream input = Files.newInputStream(file.toPath())){
 				try(Response response = epf.client.rules.admin.Admin.registerRuleExecutionSet(client, name, input)){
 					response.getStatus();
@@ -71,13 +76,14 @@ public class Admin {
 	 */
 	@Command(name = "de-register")
 	public void deregisterRuleExecutionSet(
-			@Option(names = {"-t", "--token"}, description = "Token") 
-			final String token,
+			@ArgGroup(exclusive = true, multiplicity = "1")
+			@CallerPrincipal
+			final Credential credential,
 			@Option(names = {"-n", "--name"}, description = "Name")
 			final String name
 			) throws Exception {
 		try(Client client = clientUtil.newClient(rulesUrl.get())){
-			client.authorization(token);
+			client.authorization(credential.getToken());
 			try(Response response = epf.client.rules.admin.Admin.deregisterRuleExecutionSet(client, name)){
 				response.getStatus();
 			}

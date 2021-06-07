@@ -16,6 +16,7 @@ import epf.util.security.PasswordHelper;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -48,6 +49,12 @@ public class Security {
 	 */
 	@Inject
 	private transient ClientUtil clientUtil;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	private transient IdentityStore identityStore;
 
 	/**
 	 * @param user
@@ -81,11 +88,13 @@ public class Security {
 	 */
 	@Command(name = "logout")
 	public String logout(
-			@Option(names = {"-t", TOKEN_ARG}, description = TOKEN_DESC) 
-			final String token
+			@ArgGroup(exclusive = true, multiplicity = "1")
+			@CallerPrincipal
+			final Credential credential
 			) throws Exception {
+		identityStore.remove(credential);
 		try(Client client = clientUtil.newClient(securityUrl.get())){
-			client.authorization(token);
+			client.authorization(credential.getToken());
 			return epf.client.security.Security.logOut(client, null);
 		}
 	}
@@ -99,10 +108,16 @@ public class Security {
 	public Token authenticate(
 			@Option(names = {"-t", TOKEN_ARG}, description = TOKEN_DESC) 
 			final String token) throws Exception {
+		Token authToken = null;
 		try(Client client = clientUtil.newClient(securityUrl.get())){
 			client.authorization(token);
-			return epf.client.security.Security.authenticate(client, null);
+			authToken = epf.client.security.Security.authenticate(client, null);
 		}
+		final Credential credential = new Credential();
+		credential.token = token;
+		credential.tokenID = authToken.getTokenID();
+		identityStore.put(credential);
+		return authToken;
 	}
 	
 	/**
@@ -112,13 +127,14 @@ public class Security {
 	 */
 	@Command(name = "update")
 	public void update(
-			@Option(names = {"-t", TOKEN_ARG}, description = TOKEN_DESC) 
-			final String token,
+			@ArgGroup(exclusive = true, multiplicity = "1")
+			@CallerPrincipal
+			final Credential credential,
 			@Option(names = {"-p", "--password"}, description = "Password", interactive = true)
 		    final char... password
 		    ) throws Exception {
 		try(Client client = clientUtil.newClient(securityUrl.get())){
-			client.authorization(token);
+			client.authorization(credential.getToken());
 			final Map<String, String> infos = new ConcurrentHashMap<>();
 			infos.put("password", new String(password));
 			epf.client.security.Security.update(client, null, infos);
@@ -132,11 +148,12 @@ public class Security {
 	 */
 	@Command(name = "revoke")
 	public String revoke(
-			@Option(names = {"-t", TOKEN_ARG}, description = TOKEN_DESC) 
-			final String token
+			@ArgGroup(exclusive = true, multiplicity = "1")
+			@CallerPrincipal
+			final Credential credential
 			) throws Exception {
 		try(Client client = clientUtil.newClient(securityUrl.get())){
-			client.authorization(token);
+			client.authorization(credential.getToken());
 			return epf.client.security.Security.revoke(client, null);
 		}
 	}
