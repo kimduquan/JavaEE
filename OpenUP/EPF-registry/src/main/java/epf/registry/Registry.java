@@ -21,6 +21,7 @@ import epf.client.management.Management;
 import epf.client.messaging.Messaging;
 import epf.client.script.Script;
 import epf.client.persistence.Persistence;
+import epf.client.planning.Planning;
 import epf.client.rules.Rules;
 import epf.client.schema.Schema;
 import epf.client.security.Security;
@@ -99,6 +100,9 @@ public class Registry implements epf.client.registry.Registry {
 			final URI schemaUrl = new URI(System.getenv(Schema.SCHEMA_URL));
 			remote = "schema";
 			remotes.put(remote, schemaUrl);
+			final URI planningUrl = new URI(System.getenv(Planning.PLANNING_URL));
+			remote = "planning";
+			remotes.put(remote, planningUrl);
 		} 
 		catch (Exception e) {
 			logger.throwing(getClass().getName(), "postConstruct", e);
