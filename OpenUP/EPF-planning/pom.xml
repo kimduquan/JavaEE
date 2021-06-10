@@ -36,10 +36,10 @@
             <artifactId>EPF-client</artifactId>
             <version>1.0.0</version>
         </dependency>
-		<!-- https://mvnrepository.com/artifact/org.drools/drools-jsr94 -->
+		<!-- https://mvnrepository.com/artifact/org.optaplanner/optaplanner-core -->
 		<dependency>
-		    <groupId>org.drools</groupId>
-		    <artifactId>drools-jsr94</artifactId>
+		    <groupId>org.optaplanner</groupId>
+		    <artifactId>optaplanner-core</artifactId>
 		</dependency>
         <dependency>
             <groupId>openup</groupId>

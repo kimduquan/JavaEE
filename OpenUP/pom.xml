@@ -349,6 +349,12 @@
 			    <artifactId>drools-jsr94</artifactId>
 			    <version>7.2.0.Final</version>
 			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.optaplanner/optaplanner-core -->
+			<dependency>
+			    <groupId>org.optaplanner</groupId>
+			    <artifactId>optaplanner-core</artifactId>
+			    <version>8.7.0.Final</version>
+			</dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>
