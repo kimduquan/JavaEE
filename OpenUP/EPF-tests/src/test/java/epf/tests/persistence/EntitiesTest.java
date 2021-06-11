@@ -17,10 +17,10 @@ import epf.schema.work_products.section.Tailoring;
 import epf.tests.client.ClientUtil;
 import epf.tests.registry.RegistryUtil;
 import epf.tests.security.SecurityUtil;
+import epf.util.StringUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
 import java.net.URI;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.BadRequestException;
@@ -78,8 +78,8 @@ public class EntitiesTest {
     @Test
     public void testPersistOK() throws Exception{
     	Artifact artifact = new Artifact();
-        artifact.setName("Artifact Entities" + System.currentTimeMillis());
-        artifact.setSummary("Artifact Entities Summary" + UUID.randomUUID());
+        artifact.setName(StringUtil.randomString("Artifact Entities"));
+        artifact.setSummary(StringUtil.randomString("Artifact Entities Summary"));
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
         artifact.setMoreInformation(new MoreInformation());
@@ -100,8 +100,8 @@ public class EntitiesTest {
     @Test
     public void testMergeOK() throws Exception{
     	Artifact artifact = new Artifact();
-        artifact.setName("Artifact Entities" + System.currentTimeMillis());
-        artifact.setSummary("Artifact Entities Summary" + UUID.randomUUID());
+        artifact.setName(StringUtil.randomString("Artifact Entities"));
+        artifact.setSummary(StringUtil.randomString("Artifact Entities Summary"));
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
         artifact.setMoreInformation(new MoreInformation());
@@ -112,8 +112,8 @@ public class EntitiesTest {
         try(Client adminClient = ClientUtil.newClient(persistenceUrl)){
         	adminClient.authorization(adminToken);
             updatedArtifact = new Artifact();
-            updatedArtifact.setName("Artifact Entities" + System.currentTimeMillis());
-            updatedArtifact.setSummary("Artifact Entities Summary" + UUID.randomUUID());
+            updatedArtifact.setName(StringUtil.randomString("Artifact Entities"));
+            updatedArtifact.setSummary(StringUtil.randomString("Artifact Entities Summary"));
             updatedArtifact.setDescription(new Description());
             updatedArtifact.setIllustrations(new Illustrations());
             updatedArtifact.setMoreInformation(new MoreInformation());
@@ -127,8 +127,8 @@ public class EntitiesTest {
     @Test
     public void testRemoveOK() throws Exception{
     	Artifact artifact = new Artifact();
-        artifact.setName("Artifact Entities" + System.currentTimeMillis());
-        artifact.setSummary("Artifact Entities Summary" + UUID.randomUUID());
+        artifact.setName(StringUtil.randomString("Artifact Entities"));
+        artifact.setSummary(StringUtil.randomString("Artifact Entities Summary"));
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
         artifact.setMoreInformation(new MoreInformation());

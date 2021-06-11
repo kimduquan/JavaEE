@@ -4,7 +4,6 @@
 package epf.tests.cache;
 
 import java.net.URI;
-import java.time.Instant;
 import javax.ws.rs.NotFoundException;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -24,6 +23,7 @@ import epf.schema.work_products.section.Tailoring;
 import epf.tests.client.ClientUtil;
 import epf.tests.registry.RegistryUtil;
 import epf.tests.security.SecurityUtil;
+import epf.util.StringUtil;
 import epf.util.client.Client;
 
 /**
@@ -79,7 +79,7 @@ public class CacheTest {
 	@Test
 	public void testGetEntityOk() throws Exception {
 		Artifact artifact = new Artifact();
-        artifact.setName("Artifact Cache" + String.valueOf(Instant.now().toEpochMilli()));
+        artifact.setName(StringUtil.randomString("Artifact Cache"));
         artifact.setSummary("Artifact Cache Summary");
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
@@ -96,7 +96,7 @@ public class CacheTest {
 	@Test(expected = NotFoundException.class)
 	public void testGetEntity_NotFound() throws Exception {
 		Thread.sleep(20);
-        Cache.getEntity(client, Artifact.class, EPF.SCHEMA, EPF.ARTIFACT, "Artifact Cache" + String.valueOf(Instant.now().toEpochMilli()));
+        Cache.getEntity(client, Artifact.class, EPF.SCHEMA, EPF.ARTIFACT, StringUtil.randomString("Artifact Cache"));
 	}
 
 }

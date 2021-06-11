@@ -39,6 +39,7 @@ import epf.tests.file.FileUtil;
 import epf.tests.persistence.PersistenceUtil;
 import epf.tests.rules.RulesUtil;
 import epf.tests.security.SecurityUtil;
+import epf.util.StringUtil;
 
 /**
  * @author PC
@@ -194,8 +195,8 @@ public class ShellTest {
 	@Test
 	public void testPersistence_Persist() throws Exception {
 		Artifact artifact = new Artifact();
-		artifact.setName("Artifact Shell" + System.currentTimeMillis());
-        artifact.setSummary("Artifact Shell Summary" + UUID.randomUUID());
+		artifact.setName(StringUtil.randomString("Artifact Shell"));
+        artifact.setSummary(StringUtil.randomString("Artifact Shell Summary"));
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
         artifact.setMoreInformation(new MoreInformation());
@@ -224,8 +225,8 @@ public class ShellTest {
 	@Test
 	public void testPersistence_Merge() throws Exception {
 		Artifact artifact = new Artifact();
-        artifact.setName("Artifact_Shell" + System.currentTimeMillis());
-        artifact.setSummary("Artifact Shell Summary" + UUID.randomUUID());
+        artifact.setName(StringUtil.randomString("Artifact_Shell"));
+        artifact.setSummary(StringUtil.randomString("Artifact Shell Summary"));
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
         artifact.setMoreInformation(new MoreInformation());
@@ -237,8 +238,8 @@ public class ShellTest {
 		process = builder.start();
 		TestUtil.waitUntil(o -> process.isAlive(), Duration.ofSeconds(10));
         Artifact updatedArtifact = new Artifact();
-        updatedArtifact.setName("Artifact_Shell" + System.currentTimeMillis());
-        updatedArtifact.setSummary("Artifact Shell Summary" + UUID.randomUUID());
+        updatedArtifact.setName(StringUtil.randomString("Artifact_Shell"));
+        updatedArtifact.setSummary(StringUtil.randomString("Artifact Shell Summary"));
         updatedArtifact.setDescription(new Description());
         updatedArtifact.setIllustrations(new Illustrations());
         updatedArtifact.setMoreInformation(new MoreInformation());
@@ -255,8 +256,8 @@ public class ShellTest {
 	@Test
 	public void testPersistence_Remove() throws Exception {
 		Artifact artifact = new Artifact();
-        artifact.setName("Artifact_Shell" + System.currentTimeMillis());
-        artifact.setSummary("Artifact Shell Summary" + UUID.randomUUID());
+        artifact.setName(StringUtil.randomString("Artifact_Shell"));
+        artifact.setSummary(StringUtil.randomString("Artifact Shell Summary"));
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
         artifact.setMoreInformation(new MoreInformation());

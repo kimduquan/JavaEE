@@ -3,7 +3,6 @@ package epf.tests.messaging;
 import java.net.URI;
 import java.time.Duration;
 import java.util.HashMap;
-import java.util.UUID;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -25,6 +24,7 @@ import epf.tests.TestUtil;
 import epf.tests.client.ClientUtil;
 import epf.tests.registry.RegistryUtil;
 import epf.tests.security.SecurityUtil;
+import epf.util.StringUtil;
 import org.junit.Test;
 
 public class MessagingTest {
@@ -61,8 +61,8 @@ public class MessagingTest {
     @Test
     public void test() throws Exception {
     	Artifact artifact = new Artifact();
-        artifact.setName("Artifact Messaging" + System.currentTimeMillis());
-        artifact.setSummary("Artifact Messaging Summary" + UUID.randomUUID());
+        artifact.setName(StringUtil.randomString("Artifact Messaging"));
+        artifact.setSummary(StringUtil.randomString("Artifact Messaging Summary"));
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
         artifact.setMoreInformation(new MoreInformation());
