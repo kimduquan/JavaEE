@@ -5,13 +5,9 @@ package epf.cache.persistence;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -55,11 +51,6 @@ public class Persistence {
 	 * 
 	 */
 	private transient final Map<String, Field> entityIdFields = new ConcurrentHashMap<>();
-	
-	/**
-	 * 
-	 */
-	private transient final Map<String, Method> entityIdGetters = new ConcurrentHashMap<>();
 	
 	/**
 	 * 
@@ -149,14 +140,14 @@ public class Persistence {
 		final String schema = getEntitySchema(cls);
 		final String entityName = getEntityName(cls);
 		final Field idField = getEntityIdField(cls);
-		final Method idGetter = getEntityIdGetter(cls, idField);
 		Object entityId = null;
-		if(idGetter != null) {
+		if(idField != null) {
 			try {
-				entityId = idGetter.invoke(entity);
+				idField.setAccessible(true);
+				entityId = idField.get(entity);
 			} 
-			catch (InvocationTargetException | IllegalAccessException | IllegalArgumentException e) {
-				logger.throwing(Method.class.getName(), "invoke", e);
+			catch (IllegalAccessException | IllegalArgumentException e) {
+				logger.throwing(cls.getName(), idField.getName(), e);
 			}
 		}
 		String key = null;
@@ -200,33 +191,10 @@ public class Persistence {
 	 */
 	protected Field getEntityIdField(final Class<?> cls) {
 		return entityIdFields.computeIfAbsent(cls.getName(), name -> {
-			final Optional<Field> entityIdField = Stream.of(cls.getDeclaredFields()).parallel().filter(field -> field.isAnnotationPresent(Id.class)).findAny();
-			Field field = null;
-			if(entityIdField.isPresent()) {
-				field = entityIdField.get();
-			}
-			return field;
-		});
-	}
-	
-	/**
-	 * @param cls
-	 * @param idField
-	 * @return
-	 */
-	protected Method getEntityIdGetter(final Class<?> cls, final Field idField) {
-		return entityIdGetters.computeIfAbsent(cls.getName(), key -> {
-			Method getter = null;
-			if(idField != null) {
-				final String name = "get" + idField.getName().substring(0, 1).toUpperCase(Locale.getDefault()) + idField.getName().substring(1);
-				try {
-					getter = cls.getMethod(name);
-				} 
-				catch (NoSuchMethodException | SecurityException e) {
-					logger.throwing("java.lang.Class", "getMethod", e);
-				}
-			}
-			return getter;
+			return Stream.of(cls.getDeclaredFields())
+					.filter(field -> field.isAnnotationPresent(Id.class))
+					.findAny()
+					.orElse(null);
 		});
 	}
 	

@@ -80,7 +80,7 @@ public class ListenerTest {
     @Before
     public void before() throws Exception {
     	client = Client.connectToServer(ContainerProvider.getWebSocketContainer(), listenerUrl);
-    	TestUtil.waitUntil(t -> client.getSession().isOpen(), Duration.ofSeconds(10));
+    	TestUtil.waitUntil(t -> client.getSession().isOpen(), Duration.ofSeconds(20));
     }
 
     @Test
@@ -99,12 +99,12 @@ public class ListenerTest {
             Entities.remove(persistenceClient, EPF.SCHEMA, EPF.ARTIFACT, artifact.getName());
     	}
     	
-    	TestUtil.waitUntil((t) -> client.getMessages().stream().anyMatch(msg -> msg.contains(PostPersist.class.getName())), Duration.ofSeconds(10));
-    	TestUtil.waitUntil((t) -> client.getMessages().stream().anyMatch(msg -> msg.contains(PostRemove.class.getName())), Duration.ofSeconds(10));
+    	TestUtil.waitUntil((t) -> client.getMessages().stream().anyMatch(msg -> msg.contains(PostPersist.class.getName()) && msg.contains(artifact.getName())), Duration.ofSeconds(20));
+    	TestUtil.waitUntil((t) -> client.getMessages().stream().anyMatch(msg -> msg.contains(PostRemove.class.getName()) && msg.contains(artifact.getName())), Duration.ofSeconds(20));
     	MessageDecoder decoder = new MessageDecoder();
-    	String message = client.getMessages().stream().filter(msg -> msg.contains(PostPersist.class.getName())).findFirst().get();
+    	String message = client.getMessages().stream().filter(msg -> msg.contains(PostPersist.class.getName()) && msg.contains(artifact.getName())).findFirst().get();
     	PostPersist persist = (PostPersist) decoder.decode(message);
-    	message = client.getMessages().stream().filter(msg -> msg.contains(PostRemove.class.getName())).findFirst().get();
+    	message = client.getMessages().stream().filter(msg -> msg.contains(PostRemove.class.getName()) && msg.contains(artifact.getName())).findFirst().get();
     	PostRemove remove = (PostRemove) decoder.decode(message);
     	
     	Assert.assertNotNull("PostPersist", persist);
@@ -125,7 +125,7 @@ public class ListenerTest {
     @Test
     public void testStream() throws Exception {
     	Artifact artifact = new Artifact();
-        artifact.setName("Artifact Listener Event" + String.valueOf(Instant.now().toEpochMilli()));
+        artifact.setName("Artifact Listener Event" + Instant.now().toEpochMilli());
         artifact.setSummary("Artifact Listener Event Summary");
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
