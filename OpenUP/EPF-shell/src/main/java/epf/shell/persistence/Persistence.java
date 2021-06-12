@@ -38,15 +38,6 @@ public class Persistence {
 	/**
 	 * 
 	 */
-	public static final String TOKEN_ARG = "--token";
-	/**
-	 * 
-	 */
-	public static final String TOKEN_DESC = "Token";
-
-	/**
-	 * 
-	 */
 	@Inject @Named(epf.client.persistence.Persistence.PERSISTENCE_URL)
 	private transient Var<URI> persistenceUrl;
 	

@@ -23,6 +23,11 @@ public class IdentityStore implements ConstraintValidator<CallerPrincipal, Crede
 	/**
 	 * 
 	 */
+	private static final String TOKEN_FOLDER = "security";
+	
+	/**
+	 * 
+	 */
 	private static final Logger LOGGER = Logging.getLogger(IdentityStore.class.getName());
 	
 	/**
@@ -30,9 +35,9 @@ public class IdentityStore implements ConstraintValidator<CallerPrincipal, Crede
 	 * @throws Exception
 	 */
 	protected void put(final Credential credential) throws Exception {
-		final Path tokenFolder = Path.of("", "security");
+		final Path tokenFolder = Path.of("", TOKEN_FOLDER);
     	tokenFolder.toFile().mkdirs();
-    	final Path tokenFile = Path.of("", "security", credential.tokenID);
+    	final Path tokenFile = Path.of("", TOKEN_FOLDER, credential.tokenID);
 		Files.write(tokenFile, Arrays.asList(credential.token));
 	}
 	
@@ -42,7 +47,7 @@ public class IdentityStore implements ConstraintValidator<CallerPrincipal, Crede
 	 */
 	protected void remove(final Credential credential) throws Exception {
 		if(credential.tokenID != null && !credential.tokenID.isEmpty()) {
-			final Path tokenFile = Path.of("", "security", credential.tokenID);
+			final Path tokenFile = Path.of("", TOKEN_FOLDER, credential.tokenID);
 			Files.delete(tokenFile);
 		}
 	}
@@ -55,7 +60,7 @@ public class IdentityStore implements ConstraintValidator<CallerPrincipal, Crede
 	protected boolean validate(final Credential credential) throws Exception {
 		boolean result = true;
 		if(credential.tokenID != null && !credential.tokenID.isEmpty()) {
-    		final Path tokenFile = Path.of("", "security", credential.tokenID);
+    		final Path tokenFile = Path.of("", TOKEN_FOLDER, credential.tokenID);
     		result = Files.exists(tokenFile);
     		if(result) {
         		final List<String> lines = Files.readAllLines(tokenFile);

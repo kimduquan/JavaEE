@@ -5,7 +5,6 @@ package epf.shell.rules;
 
 import java.net.URI;
 import javax.ws.rs.core.Response;
-
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
 import epf.shell.rules.admin.Admin;
