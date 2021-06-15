@@ -31,5 +31,12 @@
             <artifactId>EPF-client</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+		    <groupId>openup</groupId>
+		    <artifactId>opencv</artifactId>
+		    <version>4.5.2</version>
+		    <scope>system</scope>
+		    <systemPath>C://Program Files/opencv/build/java/opencv-452.jar</systemPath>
+		</dependency>
     </dependencies>
 </project>
