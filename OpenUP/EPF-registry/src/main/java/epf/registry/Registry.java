@@ -17,6 +17,7 @@ import epf.client.cache.Cache;
 import epf.client.config.Config;
 import epf.client.file.Files;
 import epf.client.gateway.Gateway;
+import epf.client.image.Image;
 import epf.client.management.Management;
 import epf.client.messaging.Messaging;
 import epf.client.script.Script;
@@ -103,6 +104,9 @@ public class Registry implements epf.client.registry.Registry {
 			final URI planningUrl = new URI(System.getenv(Planning.PLANNING_URL));
 			remote = "planning";
 			remotes.put(remote, planningUrl);
+			final URI imageUrl = new URI(System.getenv(Image.IMAGE_URL));
+			remote = "image";
+			remotes.put(remote, imageUrl);
 		} 
 		catch (Exception e) {
 			logger.throwing(getClass().getName(), "postConstruct", e);

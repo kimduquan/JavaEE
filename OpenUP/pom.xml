@@ -601,6 +601,7 @@
         <module>EPF-client</module>
 		<!--<module>EPF-persistence</module>-->
 		<module>EPF-file</module>
+		<module>EPF-image</module>
 		<module>EPF-rules</module>
 		<module>EPF-planning</module>
 		<module>EPF-portlet</module>
