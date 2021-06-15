@@ -45,7 +45,7 @@
         <classloader apiTypeVisibility="+third-party"/>
     </application>
     <application id="EPF-image" name="EPF-image" context-root="image" location="EPF-image-1.0.0.war" >
-        <classloader apiTypeVisibility="+third-party"/>
+        <classloader commonLibraryRef="OpenCVLib"/>
     </application>
     <application id="EPF-rules" name="EPF-rules" context-root="rules" location="EPF-rules-1.0.0.war" >
         <classloader apiTypeVisibility="+third-party"/>
@@ -73,6 +73,11 @@
     
     <library id="JCacheLib">
         <file name="${shared.resource.dir}/epf/hazelcast-4.2.jar"/>
+    </library>
+    
+    <library id="OpenCVLib">
+        <file name="${opencv}/opencv-452.jar"/>
+        <file name="${opencv}/x64/opencv_java452.dll"/>
     </library>
     
     <!-- uri="file://${server.config.dir}hazelcast.xml" -->

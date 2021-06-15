@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
@@ -16,12 +17,14 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
+import epf.schema.roles.Role;
 
 /**
  * @author PC
  *
  */
 @Path("image")
+@RolesAllowed(Role.DEFAULT_ROLE)
 @ApplicationScoped
 public class Image implements epf.client.image.Image {
 	

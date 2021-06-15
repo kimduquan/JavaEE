@@ -436,4 +436,20 @@ public class ShellTest {
 		Assert.assertFalse(resultList.isEmpty());
 		RulesUtil.deregisterRuleExecutionSet(token, "Artifact1");
 	}
+	
+	@Test
+	public void testImage_FindContours() throws Exception {
+		Path ruleFile = Path.of("", "board.jpg");
+		builder.command(
+				"powershell", "./epf", 
+				"image", "find-contours",
+				"-tid", tokenID,
+				"-f", ruleFile.toAbsolutePath().toString()
+				);
+		process = ShellUtil.waitFor(builder);
+		List<String> lines = Files.readAllLines(out);
+		Assert.assertEquals(1, lines.size());
+		lines = Files.readAllLines(err);
+		Assert.assertTrue(lines.isEmpty());
+	}
 }

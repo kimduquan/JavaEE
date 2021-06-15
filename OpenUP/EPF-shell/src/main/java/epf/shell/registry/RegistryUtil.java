@@ -107,4 +107,12 @@ public class RegistryUtil {
 	public Var<URI> getSchemaUrl(){
 		return new Var<>(remotes.get("schema"));
 	}
+	
+	/**
+	 * @return
+	 */
+	@Produces @Named(epf.client.image.Image.IMAGE_URL)
+	public Var<URI> getImageUrl(){
+		return new Var<>(remotes.get("image"));
+	}
 }
