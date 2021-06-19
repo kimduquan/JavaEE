@@ -13,16 +13,15 @@ import javax.faces.convert.FacesConverter;
  *
  */
 @FacesConverter(value = "PasswordConverter")
-public class PasswordConverter implements Converter {
+public class PasswordConverter implements Converter<char[]> {
 
 	@Override
-	public Object getAsObject(final FacesContext context, final UIComponent component, final String value) {
-		return value.toCharArray();
+	public char[] getAsObject(final FacesContext context, final UIComponent component, final String value) {
+		return value != null ? value.toCharArray() : null;
 	}
 
 	@Override
-	public String getAsString(final FacesContext context, final UIComponent component, final Object value) {
-		return ((char[])value).toString();
+	public String getAsString(final FacesContext context, final UIComponent component, final char[] value) {
+		return value != null ? new String(value) : null;
 	}
-
 }

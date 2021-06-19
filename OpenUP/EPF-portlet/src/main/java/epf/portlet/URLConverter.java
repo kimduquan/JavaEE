@@ -17,7 +17,7 @@ import epf.util.logging.Logging;
  *
  */
 @FacesConverter(forClass=URL.class)
-public class URLConverter implements Converter {
+public class URLConverter implements Converter<URL> {
 	
 	/**
 	 * 
@@ -25,19 +25,21 @@ public class URLConverter implements Converter {
 	private static final Logger LOGGER = Logging.getLogger(URLConverter.class.getName());
 
 	@Override
-	public Object getAsObject(final FacesContext context, final UIComponent component, final String value) {
+	public URL getAsObject(final FacesContext context, final UIComponent component, final String value) {
 		URL url = null;
-		try {
-			url = new URL(value);
-		} 
-		catch (MalformedURLException e) {
-			LOGGER.throwing(getClass().getName(), "getAsObject", e);
+		if(value != null) {
+			try {
+				url = new URL(value);
+			} 
+			catch (MalformedURLException e) {
+				LOGGER.throwing(getClass().getName(), "getAsObject", e);
+			}
 		}
 		return url;
 	}
 
 	@Override
-	public String getAsString(final FacesContext context, final UIComponent component, final Object value) {
+	public String getAsString(final FacesContext context, final UIComponent component, final URL value) {
 		return value != null ? value.toString() : null;
 	}
 
