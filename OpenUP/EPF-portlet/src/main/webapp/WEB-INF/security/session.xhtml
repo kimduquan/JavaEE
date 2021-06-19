@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<f:view
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+>
+	<h:head>
+		<h:outputStylesheet library="css" name="main.css" />
+	</h:head>
+	<h:body>
+		<h:form>
+			<h:outputLabel value="#{i18n['epf.security.session.principal.name']}" />
+			<h:outputText value="#{epf_security_session.principal.name}" />
+			<h:commandButton action="#{epf_security_session.logout}" value="#{i18n['epf.security.session.logout']}" />
+		</h:form>
+	</h:body>
+</f:view>
