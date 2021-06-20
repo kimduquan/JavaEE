@@ -14,8 +14,6 @@
 			<h:inputText value="#{epf_security.credential.caller}" />
 			<h:outputLabel value="#{i18n['epf.security.credential.password']}" />
 			<h:inputSecret value="#{epf_security.credential.password}" converter="PasswordConverter" />
-			<h:outputLabel value="#{i18n['epf.security.credential.url']}" />
-			<h:inputText value="#{epf_security.credential.url}" />
 			<h:commandButton action="#{epf_security.login}" value="#{i18n['epf.security.login']}" />
 		</h:form>
 	</h:body>

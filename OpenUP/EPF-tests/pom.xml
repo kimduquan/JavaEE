@@ -13,6 +13,8 @@
     <properties>
         <httpPort>9080</httpPort>
         <httpsPort>9443</httpsPort>
+        <httpWebPort>8080</httpWebPort>
+        <httpsWebPort>8443</httpsWebPort>
         <opencv>C://Program Files/opencv/build/java</opencv>
         <!-- Jaeger configuration -->
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>

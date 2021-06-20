@@ -17,6 +17,9 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.net.URI;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -78,13 +81,14 @@ public class Security implements Serializable {
 		try {
 			final URI securityUrl = registry.get("security", request.getPreferences());
 			final String passwordHash = PasswordHelper.hash(credential.getCaller(), credential.getPassword());
+			final URL url = new URL(request.getRequest().getScheme(), request.getRequest().getServerName(), request.getRequest().getServerPort(), "");
 			try(Client client = new Client(application.getClients(), securityUrl, b -> b)){
 				final String token = epf.client.security.Security.login(
 						client, 
 						null, 
 						credential.getCaller(), 
 						passwordHash, 
-						securityUrl.toURL()
+						url
 						);
 				session.setToken(token);
 			}
@@ -99,5 +103,39 @@ public class Security implements Serializable {
 			LOGGER.throwing(getClass().getName(), "login", e);
 		}
 		return "";
+	}
+	
+	/**
+	 * @return
+	 */
+	public String logout() {
+		final URI securityUrl = registry.get("security", request.getPreferences());
+		try(Client client = new Client(application.getClients(), securityUrl, b -> b)){
+			client.authorization(session.getToken());
+			epf.client.security.Security.logOut(client, null);
+			session.setToken(null);
+			session.setPrincipal(null);
+		} 
+		catch (Exception e) {
+			LOGGER.throwing(getClass().getName(), "logout", e);
+		}
+		return "security";
+	}
+	
+	/**
+	 * @return
+	 */
+	public String setPassword() {
+		final URI securityUrl = registry.get("security", request.getPreferences());
+		final Map<String, String> info = new HashMap<>();
+		info.put("password", new String(credential.getPassword()));
+		try(Client client = new Client(application.getClients(), securityUrl, b -> b)){
+			client.authorization(session.getToken());
+			epf.client.security.Security.update(client, null, info);
+		} 
+		catch (Exception e) {
+			LOGGER.throwing(getClass().getName(), "update", e);
+		}
+		return "security";
 	}
 }

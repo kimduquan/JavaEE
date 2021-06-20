@@ -3,7 +3,6 @@
  */
 package epf.client.security;
 
-import java.net.URL;
 import java.util.Arrays;
 
 /**
@@ -20,11 +19,6 @@ public class Credential {
      * 
      */
     private char[] password = new char[0];
-    
-    /**
-     * 
-     */
-    private URL url;
     
 	/**
 	 * @return the caller
@@ -49,17 +43,5 @@ public class Credential {
 	 */
 	public void setPassword(final char... password) {
 		this.password = Arrays.copyOf(password, password.length);
-	}
-	/**
-	 * @return the url
-	 */
-	public URL getUrl() {
-		return url;
-	}
-	/**
-	 * @param url the url to set
-	 */
-	public void setUrl(final URL url) {
-		this.url = url;
 	}
 }

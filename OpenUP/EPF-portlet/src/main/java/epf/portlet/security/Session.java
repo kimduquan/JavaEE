@@ -59,13 +59,4 @@ public class Session implements Serializable{
 	protected void setPrincipal(final Token principal) {
 		this.principal = principal;
 	}
-	
-	/**
-	 * @return
-	 */
-	public String logout() {
-		this.token = null;
-		this.principal = null;
-		return "security";
-	}
 }
