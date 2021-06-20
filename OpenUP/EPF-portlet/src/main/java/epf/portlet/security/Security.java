@@ -5,10 +5,11 @@ package epf.portlet.security;
 
 import epf.client.security.Credential;
 import epf.client.security.Token;
+import epf.portlet.Application;
 import epf.portlet.Portlet;
+import epf.portlet.Request;
 import epf.portlet.registry.Registry;
 import epf.util.client.Client;
-import epf.util.client.ClientQueue;
 import epf.util.logging.Logging;
 import epf.util.security.PasswordHelper;
 import javax.enterprise.context.RequestScoped;
@@ -44,6 +45,12 @@ public class Security implements Serializable {
 	/**
 	 * 
 	 */
+	@Inject
+	private transient Request request;
+	
+	/**
+	 * 
+	 */
 	@Inject 
 	private transient Session session;
 	
@@ -57,7 +64,7 @@ public class Security implements Serializable {
 	 * 
 	 */
 	@Inject
-	private transient ClientQueue clients;
+	private transient Application application;
 	 
 
 	public Credential getCredential() {
@@ -69,13 +76,19 @@ public class Security implements Serializable {
 	 */
 	public String login() {
 		try {
-			final URI securityUrl = registry.get("security");
+			final URI securityUrl = registry.get("security", request.getPreferences());
 			final String passwordHash = PasswordHelper.hash(credential.getCaller(), credential.getPassword());
-			try(Client client = new Client(clients, securityUrl, b -> b)){
-				final String token = epf.client.security.Security.login(client, null, credential.getCaller(), passwordHash, securityUrl.toURL());
+			try(Client client = new Client(application.getClients(), securityUrl, b -> b)){
+				final String token = epf.client.security.Security.login(
+						client, 
+						null, 
+						credential.getCaller(), 
+						passwordHash, 
+						securityUrl.toURL()
+						);
 				session.setToken(token);
 			}
-			try(Client client = new Client(clients, securityUrl, b -> b)){
+			try(Client client = new Client(application.getClients(), securityUrl, b -> b)){
 				client.authorization(session.getToken());
 				final Token token = epf.client.security.Security.authenticate(client, null);
 				session.setPrincipal(token);

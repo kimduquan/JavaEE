@@ -7,21 +7,19 @@ import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import epf.client.gateway.Gateway;
-import epf.portlet.Request;
+import javax.portlet.PortletPreferences;
+import epf.portlet.Application;
+import epf.portlet.gateway.Gateway;
 import epf.util.client.Client;
-import epf.util.client.ClientQueue;
 import epf.util.logging.Logging;
 
 /**
  * @author PC
  *
  */
-@RequestScoped
+@ApplicationScoped
 public class Registry {
 	
 	/**
@@ -38,46 +36,41 @@ public class Registry {
 	 * 
 	 */
 	@Inject
-	private transient Request request;
+	private transient Application application;
 	
 	/**
 	 * 
 	 */
 	@Inject
-	private transient ClientQueue clients;
+	private transient Gateway gateway;
 	
 	/**
+	 * @throws Exception 
 	 * 
 	 */
-	@PostConstruct
-	protected void postConstruct() {
-		try {
-			final URI gateway = new URI(request.getPreferences().getValue(Gateway.GATEWAY_URL, ""));
-			final URI registry = new URI(gateway.toString() + "/registry");
-			try(Client client = new Client(clients, registry, b -> b)){
-				epf.client.registry.Registry.list(client, null).forEach(link -> {
-					remotes.put(link.getRel(), link.getUri());
-				});
-			}
-		}  
-		catch (Exception e) {
-			LOGGER.throwing(getClass().getName(), "postConstruct", e);
+	protected void getRemotes(final PortletPreferences preferences) throws Exception {
+		final URI gatewayUrl = gateway.getGatewayUrl(preferences);
+		final URI registry = new URI(gatewayUrl.toString() + "registry");
+		try(Client client = new Client(application.getClients(), registry, b -> b)){
+			epf.client.registry.Registry.list(client, null).forEach(link -> {
+				remotes.put(link.getRel(), link.getUri());
+			});
 		}
-	}
-	
-	/**
-	 * 
-	 */
-	@PreDestroy
-	protected void preDestroy() {
-		remotes.clear();
 	}
 	
 	/**
 	 * @param name
 	 * @return
 	 */
-	public URI get(final String name) {
+	public URI get(final String name, final PortletPreferences preferences) {
+		if(remotes.isEmpty()) {
+			try {
+				getRemotes(preferences);
+			} 
+			catch (Exception e) {
+				LOGGER.throwing(getClass().getName(), "getRemotes", e);
+			}
+		}
 		return remotes.get(name);
 	}
 }

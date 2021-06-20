@@ -25,15 +25,54 @@
 		<dependency>
 		    <groupId>javax.faces</groupId>
 		    <artifactId>javax.faces-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/javax.portlet/portlet-api -->
 		<dependency>
 		    <groupId>javax.portlet</groupId>
 		    <artifactId>portlet-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.liferay.faces</groupId>
 			<artifactId>com.liferay.faces.bridge.impl</artifactId>
 		</dependency>
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>pre-integration-test</phase>
+							<configuration>
+								<target>
+									<copy file="${project.build.directory}/${project.build.finalName}.war" todir="C://Program Files/pluto-3.1.0/webapps"/>
+								</target >
+							</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>portlet-package</id>
+						<configuration>
+							<packagingExcludes>WEB-INF/lib/javax.ws.rs-api-*.jar</packagingExcludes>
+						</configuration>
+						<goals>
+							<goal>war</goal>
+						</goals>
+						<phase>package</phase>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
