@@ -120,7 +120,7 @@ public class Registry implements epf.client.registry.Registry {
 	 */
 	protected Map<String, URI> getRemotes(final String version){
 		Map<String, URI> remoteURIs = remotes;
-		if(version != null) {
+		if(version != null && !version.isEmpty()) {
 			remoteURIs = remoteVersions.computeIfAbsent(version, ver -> new ConcurrentHashMap<>());
 		}
 		return remoteURIs;
