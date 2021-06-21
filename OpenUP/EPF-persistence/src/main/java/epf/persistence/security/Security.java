@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.Principal;
+import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -138,7 +139,7 @@ public class Security implements epf.client.security.Security, Serializable {
                         passwordHash
                 );
     	final TokenBuilder builder = new TokenBuilder(issuer, service);
-    	final long time = System.currentTimeMillis() / 1000;
+    	final long time = Instant.now().getEpochSecond();
         final Token jwt = builder
         		.expire(jwtExpTimeUnit, jwtExpDuration)
         		.fromCredential(credential)
@@ -270,7 +271,7 @@ public class Security implements epf.client.security.Security, Serializable {
 					final URL url = new URL(jsonWebToken.getAudience().iterator().next());
 					final TokenBuilder builder = new TokenBuilder(issuer, service);
 					final Credential credential = getCredential(unit, context, persistence);
-					final long time = System.currentTimeMillis() / 1000;
+					final long time = Instant.now().getEpochSecond();
 			        final Token jwt = builder
 			        		.expire(jwtExpTimeUnit, jwtExpDuration)
 			        		.fromCredential(credential)

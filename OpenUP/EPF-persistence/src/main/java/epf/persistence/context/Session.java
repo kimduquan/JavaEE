@@ -5,6 +5,7 @@
  */
 package epf.persistence.context;
 
+import java.time.Instant;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.persistence.EntityManagerFactory;
@@ -73,6 +74,6 @@ public class Session {
      * @return
      */
     public boolean checkExpirationTime(final long expirationTime) {
-    	return System.currentTimeMillis() < expirationTime * 1000;
+    	return Instant.now().getEpochSecond() < expirationTime;
     }
 }

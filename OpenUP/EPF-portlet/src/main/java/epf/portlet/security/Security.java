@@ -125,7 +125,7 @@ public class Security implements Serializable {
 	/**
 	 * @return
 	 */
-	public String setPassword() {
+	public String update() {
 		final URI securityUrl = registry.get("security", request.getPreferences());
 		final Map<String, String> info = new HashMap<>();
 		info.put("password", new String(credential.getPassword()));
@@ -135,6 +135,21 @@ public class Security implements Serializable {
 		} 
 		catch (Exception e) {
 			LOGGER.throwing(getClass().getName(), "update", e);
+		}
+		return "security";
+	}
+	
+	/**
+	 * @return
+	 */
+	public String revoke() {
+		final URI securityUrl = registry.get("security", request.getPreferences());
+		try(Client client = new Client(application.getClients(), securityUrl, b -> b)){
+			client.authorization(session.getToken());
+			epf.client.security.Security.revoke(client, null);
+		} 
+		catch (Exception e) {
+			LOGGER.throwing(getClass().getName(), "revoke", e);
 		}
 		return "security";
 	}

@@ -8,6 +8,7 @@ import javax.inject.Named;
 import epf.client.security.Token;
 import epf.portlet.Portlet;
 import java.io.Serializable;
+import java.time.Instant;
 
 /**
  * @author PC
@@ -58,5 +59,12 @@ public class Session implements Serializable{
 	 */
 	protected void setPrincipal(final Token principal) {
 		this.principal = principal;
+	}
+	
+	/**
+	 * @return
+	 */
+	public boolean isExpired() {
+		return principal != null && Instant.now().getEpochSecond() > principal.getExpirationTime();
 	}
 }

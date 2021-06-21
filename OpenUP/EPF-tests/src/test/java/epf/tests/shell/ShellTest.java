@@ -10,7 +10,6 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.json.bind.Jsonb;
@@ -402,7 +401,7 @@ public class ShellTest {
 				);
 		List<Object> input = new ArrayList<>();
 		Artifact artifact = new Artifact();
-		artifact.setName("Artifact" + UUID.randomUUID() + System.currentTimeMillis());
+		artifact.setName(StringUtil.randomString("Artifact"));
 		input.add(artifact);
 		String json = RulesUtil.encode(input);
 		process = ShellUtil.waitFor(builder, in, json);

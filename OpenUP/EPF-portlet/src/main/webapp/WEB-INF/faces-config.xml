@@ -8,4 +8,18 @@
 	<lifecycle>
 		<phase-listener>com.liferay.faces.util.lifecycle.DebugPhaseListener</phase-listener>
 	</lifecycle>
+	<navigation-rule>
+		<from-view-id>security/*</from-view-id>
+		<navigation-case>
+			<if>#{epf_security_session.token == null}</if>
+			<to-view-id>security/security.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>security/security.xhtml</from-view-id>
+		<navigation-case>
+			<if>#{epf_security_session.token != null}</if>
+			<to-view-id>security/session.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
 </faces-config>
