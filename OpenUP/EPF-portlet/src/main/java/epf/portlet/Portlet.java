@@ -17,4 +17,8 @@ public interface Portlet {
 	 * 
 	 */
 	String SECURITY_SESSION = "epf_security_session";
+	/**
+	 * 
+	 */
+	String PERSISTENCE = "epf_persistence";
 }
