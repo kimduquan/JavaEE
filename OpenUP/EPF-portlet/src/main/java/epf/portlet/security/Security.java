@@ -5,12 +5,13 @@ package epf.portlet.security;
 
 import epf.client.security.Credential;
 import epf.client.security.Token;
-import epf.portlet.Application;
 import epf.portlet.Event;
-import epf.portlet.Portlet;
-import epf.portlet.Request;
-import epf.portlet.Response;
-import epf.portlet.registry.Registry;
+import epf.portlet.EventUtil;
+import epf.portlet.Name;
+import epf.portlet.RequestUtil;
+import epf.portlet.SessionUtil;
+import epf.portlet.client.ClientUtil;
+import epf.portlet.registry.RegistryUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
 import epf.util.security.PasswordHelper;
@@ -28,7 +29,7 @@ import java.util.logging.Logger;
  * @author PC
  *
  */
-@Named(Portlet.SECURITY)
+@Named(Name.SECURITY)
 @RequestScoped
 public class Security implements Serializable {
 	
@@ -51,13 +52,7 @@ public class Security implements Serializable {
 	 * 
 	 */
 	@Inject
-	private transient Request request;
-	
-	/**
-	 * 
-	 */
-	@Inject
-	private transient Response response;
+	private transient RequestUtil request;
 	
 	/**
 	 * 
@@ -69,13 +64,25 @@ public class Security implements Serializable {
 	 * 
 	 */
 	@Inject
-	private transient Registry registry;
+	private transient RegistryUtil registryUtil;
 	
 	/**
 	 * 
 	 */
 	@Inject
-	private transient Application application;
+	private transient ClientUtil clientUtil;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	private transient EventUtil eventUtil;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	private transient SessionUtil sessionUtil;
 	 
 
 	public Credential getCredential() {
@@ -87,11 +94,16 @@ public class Security implements Serializable {
 	 */
 	public String login() {
 		try {
-			final URI securityUrl = registry.get("security", request.getPreferences());
+			final URI securityUrl = registryUtil.get("security");
 			final String passwordHash = PasswordHelper.hash(credential.getCaller(), credential.getPassword());
-			final URL url = new URL(request.getRequest().getScheme(), request.getRequest().getServerName(), request.getRequest().getServerPort(), "");
+			final URL url = new URL(
+					request.getRequest().getScheme(), 
+					request.getRequest().getServerName(), 
+					request.getRequest().getServerPort(), 
+					""
+					);
 			String rawToken;
-			try(Client client = new Client(application.getClients(), securityUrl, b -> b)){
+			try(Client client = clientUtil.newClient(securityUrl)){
 				rawToken = epf.client.security.Security.login(
 						client, 
 						null, 
@@ -101,13 +113,14 @@ public class Security implements Serializable {
 						);
 			}
 			Token token;
-			try(Client client = new Client(application.getClients(), securityUrl, b -> b)){
+			try(Client client = clientUtil.newClient(securityUrl)){
 				client.authorization(rawToken);
 				token = epf.client.security.Security.authenticate(client, null);
 			}
 			final Principal principal = newPrincipal(rawToken, token);
 			session.setPrincipal(principal);
-			response.getState().setEvent(Event.EPF_SECURITY_PRINCIPAL, principal);
+			sessionUtil.setAttribute(Name.SECURITY_PRINCIPAL, principal);
+			eventUtil.setEvent(Event.SECURITY_PRINCIPAL, principal);
 			return "session";
 		} 
 		catch (Exception e) {
@@ -120,12 +133,12 @@ public class Security implements Serializable {
 	 * @return
 	 */
 	public String logout() {
-		final URI securityUrl = registry.get("security", request.getPreferences());
-		try(Client client = new Client(application.getClients(), securityUrl, b -> b)){
+		try(Client client = clientUtil.newClient(registryUtil.get("security"))){
 			client.authorization(session.getToken());
 			epf.client.security.Security.logOut(client, null);
 			session.setPrincipal(null);
-			response.getState().setEvent(Event.EPF_SECURITY_PRINCIPAL, null);
+			sessionUtil.setAttribute(Name.SECURITY_PRINCIPAL, null);
+			eventUtil.setEvent(Event.SECURITY_PRINCIPAL, null);
 		} 
 		catch (Exception e) {
 			LOGGER.throwing(getClass().getName(), "logout", e);
@@ -137,10 +150,9 @@ public class Security implements Serializable {
 	 * @return
 	 */
 	public String update() {
-		final URI securityUrl = registry.get("security", request.getPreferences());
 		final Map<String, String> info = new HashMap<>();
 		info.put("password", new String(credential.getPassword()));
-		try(Client client = new Client(application.getClients(), securityUrl, b -> b)){
+		try(Client client = clientUtil.newClient(registryUtil.get("security"))){
 			client.authorization(session.getToken());
 			epf.client.security.Security.update(client, null, info);
 		} 
@@ -154,26 +166,34 @@ public class Security implements Serializable {
 	 * @return
 	 */
 	public String revoke() {
-		final URI securityUrl = registry.get("security", request.getPreferences());
 		try {
+			final URI securityUrl = registryUtil.get("security");
 			String rawToken;
-			try(Client client = new Client(application.getClients(), securityUrl, b -> b)){
+			try(Client client = clientUtil.newClient(securityUrl)){
 				client.authorization(session.getToken());
 				rawToken = epf.client.security.Security.revoke(client, null);
 			}
 			Token token;
-			try(Client client = new Client(application.getClients(), securityUrl, b -> b)){
+			try(Client client = clientUtil.newClient(securityUrl)){
 				client.authorization(rawToken);
 				token = epf.client.security.Security.authenticate(client, null);
 			}
 			final Principal principal = newPrincipal(rawToken, token);
 			session.setPrincipal(principal);
-			response.getState().setEvent(Event.EPF_SECURITY_PRINCIPAL, principal);
+			sessionUtil.setAttribute(Name.SECURITY_PRINCIPAL, principal);
+			eventUtil.setEvent(Event.SECURITY_PRINCIPAL, principal);
 		}
 		catch (Exception e) {
 			LOGGER.throwing(getClass().getName(), "revoke", e);
 		}
 		return "security";
+	}
+	
+	/**
+	 * @return
+	 */
+	public Principal getPrincipal() {
+		return sessionUtil.getAttribute(Name.SECURITY_PRINCIPAL);
 	}
 	
 	/**

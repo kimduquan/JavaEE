@@ -82,9 +82,19 @@
 		<supported-processing-event>
 			<qname xmlns:epf-security="http://openup.org/epf/security">epf-security:principal</qname>
 		</supported-processing-event>
+		<supported-public-render-parameter>entity</supported-public-render-parameter>
+		<supported-public-render-parameter>id</supported-public-render-parameter>
 	</portlet>
 	<event-definition>
 		<qname xmlns:epf-security="http://openup.org/epf/security">epf-security:principal</qname>
 		<value-type>epf.portlet.security.Principal</value-type>
 	</event-definition>
+	<public-render-parameter>
+		<identifier>entity</identifier>
+		<qname xmlns:epf-persistence="http://openup.org/epf/persistence">epf-persistence:entity</qname>
+	</public-render-parameter>
+	<public-render-parameter>
+		<identifier>id</identifier>
+		<qname xmlns:epf-persistence="http://openup.org/epf/persistence">epf-persistence:id</qname>
+	</public-render-parameter>
 </portlet-app>

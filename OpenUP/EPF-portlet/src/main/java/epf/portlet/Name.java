@@ -7,7 +7,7 @@ package epf.portlet;
  * @author PC
  *
  */
-public interface Portlet {
+public interface Name {
 
 	/**
 	 * 
@@ -17,6 +17,10 @@ public interface Portlet {
 	 * 
 	 */
 	String SECURITY_SESSION = "epf_security_session";
+	/**
+	 * 
+	 */
+	String SECURITY_PRINCIPAL = "epf_security_principal";
 	/**
 	 * 
 	 */

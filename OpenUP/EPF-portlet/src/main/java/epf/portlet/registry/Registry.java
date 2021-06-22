@@ -9,9 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.portlet.PortletPreferences;
-import epf.portlet.Application;
-import epf.portlet.gateway.Gateway;
+import epf.portlet.client.ClientUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
 
@@ -36,22 +34,15 @@ public class Registry {
 	 * 
 	 */
 	@Inject
-	private transient Application application;
-	
-	/**
-	 * 
-	 */
-	@Inject
-	private transient Gateway gateway;
+	private transient ClientUtil clientUtil;
 	
 	/**
 	 * @throws Exception 
 	 * 
 	 */
-	protected void getRemotes(final PortletPreferences preferences) throws Exception {
-		final URI gatewayUrl = gateway.getGatewayUrl(preferences);
+	protected void getRemotes(final URI gatewayUrl) throws Exception {
 		final URI registry = new URI(gatewayUrl.toString() + "registry");
-		try(Client client = new Client(application.getClients(), registry, b -> b)){
+		try(Client client = clientUtil.newClient(registry)){
 			epf.client.registry.Registry.list(client, null).forEach(link -> {
 				remotes.put(link.getRel(), link.getUri());
 			});
@@ -62,10 +53,10 @@ public class Registry {
 	 * @param name
 	 * @return
 	 */
-	public URI get(final String name, final PortletPreferences preferences) {
+	protected URI get(final String name, final URI gatewayUrl) {
 		if(remotes.isEmpty()) {
 			try {
-				getRemotes(preferences);
+				getRemotes(gatewayUrl);
 			} 
 			catch (Exception e) {
 				LOGGER.throwing(getClass().getName(), "getRemotes", e);

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.portlet;
+package epf.portlet.client;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -40,7 +40,7 @@ public class Application {
 	/**
 	 * @return
 	 */
-	public ClientQueue getClients() {
+	protected ClientQueue getClients() {
 		return clients;
 	}
 }

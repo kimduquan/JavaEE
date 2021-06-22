@@ -9,6 +9,13 @@
 		<h:outputStylesheet library="css" name="main.css" />
 	</h:head>
 	<h:body>
-		<h:outputLabel value="#{epf_persistence.principalName}"></h:outputLabel>
+		<h:form>
+			<h:selectOneListbox value="#{epf_persistence.entity}">
+				<f:selectItems value="#{epf_persistence.entities}" var="entityVar" itemLabel="#{entityVar.name}" itemValue="#{entityVar.name}" ></f:selectItems>
+				<f:ajax listener="#{epf_persistence.handleEntityChanged}"></f:ajax>
+			</h:selectOneListbox>
+			<h:dataTable>
+			</h:dataTable>
+		</h:form>
 	</h:body>
 </f:view>

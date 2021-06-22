@@ -5,7 +5,6 @@ package epf.portlet;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
 import javax.portlet.annotations.PortletRequestScoped;
 
@@ -14,26 +13,13 @@ import javax.portlet.annotations.PortletRequestScoped;
  *
  */
 @PortletRequestScoped
-public class Request {
-
-	/**
-	 * 
-	 */
-	@Inject @Named("portletPreferences")
-	private transient PortletPreferences preferences;
+public class RequestUtil {
 	
 	/**
 	 * 
 	 */
-	@Inject @Named("portletRequest")
+	@Inject @Named(Bridge.PORTLET_REQUEST)
 	private transient PortletRequest request;
-	
-	/**
-	 * @return
-	 */
-	public PortletPreferences getPreferences() {
-		return preferences;
-	}
 	
 	/**
 	 * @return
