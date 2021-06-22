@@ -36,6 +36,9 @@
 		<security-role-ref>
 			<role-name>user</role-name>
 		</security-role-ref>
+		<supported-publishing-event>
+			<qname xmlns:epf-security="http://openup.org/epf/security">epf-security:principal</qname>
+		</supported-publishing-event>
 	</portlet>
 	<portlet>
 		<portlet-name>EPF-persistence</portlet-name>
@@ -44,6 +47,10 @@
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/WEB-INF/persistence/persistence.xhtml</value>
+		</init-param>
+		<init-param>
+			<name>javax.portlet.faces.bridgeEventHandler</name>
+			<value>epf.portlet.EventHandler</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -72,5 +79,12 @@
 		<security-role-ref>
 			<role-name>user</role-name>
 		</security-role-ref>
+		<supported-processing-event>
+			<qname xmlns:epf-security="http://openup.org/epf/security">epf-security:principal</qname>
+		</supported-processing-event>
 	</portlet>
+	<event-definition>
+		<qname xmlns:epf-security="http://openup.org/epf/security">epf-security:principal</qname>
+		<value-type>epf.portlet.security.Principal</value-type>
+	</event-definition>
 </portlet-app>
