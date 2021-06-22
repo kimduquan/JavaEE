@@ -10,9 +10,8 @@
 	</h:head>
 	<h:body>
 		<h:form>
-			<h:selectOneListbox value="#{epf_persistence.entity}">
+			<h:selectOneListbox value="#{epf_persistence.entity}" onchange="submit()" valueChangeListener="#{epf_persistence.handleEntityChanged}">
 				<f:selectItems value="#{epf_persistence.entities}" var="entityVar" itemLabel="#{entityVar.name}" itemValue="#{entityVar.name}" ></f:selectItems>
-				<f:ajax listener="#{epf_persistence.handleEntityChanged}"></f:ajax>
 			</h:selectOneListbox>
 			<h:dataTable>
 			</h:dataTable>

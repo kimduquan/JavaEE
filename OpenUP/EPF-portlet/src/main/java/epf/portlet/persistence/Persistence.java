@@ -8,12 +8,13 @@ import java.util.List;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
-import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.event.ValueChangeEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.json.JsonObject;
 import epf.client.schema.Entity;
 import epf.portlet.Name;
+import epf.portlet.Parameter;
 import epf.portlet.ParameterUtil;
 import epf.portlet.schema.SchemaUtil;
 import epf.schema.EPF;
@@ -71,6 +72,7 @@ public class Persistence implements Serializable {
 	protected void postConstruct() {
 		try {
 			entities = schemaUtil.getEntities(EPF.SCHEMA);
+			entity = paramUtil.getValue(Parameter.PERSISTENCE_ENTITY);
 		} 
 		catch (Exception e) {
 			LOGGER.throwing(getClass().getName(), "postConstruct", e);
@@ -100,10 +102,10 @@ public class Persistence implements Serializable {
 	}
 	
 	/**
-	 * @param event
+	 * 
 	 */
-	public void handleEntityChanged(final AjaxBehaviorEvent event) {
-		paramUtil.setValue("entity", entity);
+	public void handleEntityChanged(final ValueChangeEvent event) {
+		paramUtil.setValue("entity", event.getNewValue().toString());
 	}
 
 	/**
