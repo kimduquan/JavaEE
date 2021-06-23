@@ -15,4 +15,9 @@ public interface Event {
 	 * 
 	 */
 	QName SECURITY_PRINCIPAL = QName.valueOf("{http://openup.org/epf/security}principal");
+	
+	/**
+	 * 
+	 */
+	QName SCHEMA_ENTITY = QName.valueOf("{http://openup.org/epf/schema}entity");
 }

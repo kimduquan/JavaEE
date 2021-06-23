@@ -9,12 +9,5 @@
 		<h:outputStylesheet library="css" name="main.css" />
 	</h:head>
 	<h:body>
-		<h:form>
-			<h:selectOneListbox value="#{epf_persistence.entity}" onchange="submit()" valueChangeListener="#{epf_persistence.handleEntityChanged}">
-				<f:selectItems value="#{epf_persistence.entities}" var="entityVar" itemLabel="#{entityVar.name}" itemValue="#{entityVar.name}" ></f:selectItems>
-			</h:selectOneListbox>
-			<h:dataTable>
-			</h:dataTable>
-		</h:form>
 	</h:body>
 </f:view>

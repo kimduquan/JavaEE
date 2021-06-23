@@ -25,4 +25,8 @@ public interface Name {
 	 * 
 	 */
 	String PERSISTENCE = "epf_persistence";
+	/**
+	 * 
+	 */
+	String SCHEMA = "epf_schema";
 }
