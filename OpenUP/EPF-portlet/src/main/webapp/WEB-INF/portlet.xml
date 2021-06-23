@@ -131,7 +131,7 @@
 	</event-definition>
 	<event-definition>
 		<qname xmlns:epf-schema="http://openup.org/epf/schema">epf-schema:entity</qname>
-		<value-type>epf.portlet.schema.Entity</value-type>
+		<value-type>epf.portlet.schema.EntityEvent</value-type>
 	</event-definition>
 	<public-render-parameter>
 		<identifier>entity</identifier>

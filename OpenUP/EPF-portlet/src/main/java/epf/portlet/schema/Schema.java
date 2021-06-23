@@ -6,6 +6,7 @@ package epf.portlet.schema;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
@@ -152,8 +153,13 @@ public class Schema implements Serializable {
 	 */
 	public void handleEntityChanged(final ValueChangeEvent event) {
 		entity = event.getNewValue().toString();
-		paramUtil.setValue("entity", event.getNewValue().toString());
-		eventUtil.setEvent(Event.SCHEMA_ENTITY, new epf.portlet.schema.Entity());
+		final Optional<Entity> selectedEntity = entities.stream().filter(e -> entity.equals(e.getName())).findAny();
+		if(selectedEntity.isPresent()) {
+			final EntityEvent entityEvent = new EntityEvent();
+			entityEvent.setEntity(selectedEntity.get());
+			eventUtil.setEvent(Event.SCHEMA_ENTITY, entityEvent);
+		}
+		paramUtil.setValue("entity", entity);
 	}
 
 	/**
