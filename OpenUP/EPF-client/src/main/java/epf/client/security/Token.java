@@ -5,15 +5,22 @@
  */
 package epf.client.security;
 
+import java.io.Serializable;
 import java.util.Set;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author FOXCONN
  */
-public class Token {
+@XmlRootElement
+public class Token implements Serializable {
     
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
      * 
      */
     private String name;
