@@ -14,7 +14,7 @@ public interface Event {
 	/**
 	 * 
 	 */
-	QName SECURITY_PRINCIPAL = QName.valueOf("{http://openup.org/epf/security}principal");
+	QName SECURITY_TOKEN = QName.valueOf("{http://openup.org/epf/security}token");
 	
 	/**
 	 * 

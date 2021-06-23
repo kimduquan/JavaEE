@@ -17,6 +17,7 @@ import javax.json.JsonObject;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import epf.client.schema.Entity;
+import epf.client.security.Token;
 import epf.portlet.Event;
 import epf.portlet.EventUtil;
 import epf.portlet.Name;
@@ -25,7 +26,6 @@ import epf.portlet.ParameterUtil;
 import epf.portlet.SessionUtil;
 import epf.portlet.client.ClientUtil;
 import epf.portlet.registry.RegistryUtil;
-import epf.portlet.security.Principal;
 import epf.schema.EPF;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
@@ -113,11 +113,11 @@ public class Schema implements Serializable {
 	 * @throws Exception
 	 */
 	protected List<Entity> getEntities(final String unit) throws Exception{
-		final Principal principal = sessionUtil.getAttribute(Name.SECURITY_PRINCIPAL);
-		if(principal != null) {
+		final Token token = sessionUtil.getAttribute(Name.SECURITY_TOKEN);
+		if(token != null) {
 			final URI schemaUrl = registryUtil.get("schema");
 			try(Client client = clientUtil.newClient(schemaUrl)){
-				client.authorization(principal.getToken().getRawToken());
+				client.authorization(token.getRawToken());
 				try(Response response = epf.client.schema.Schema.getEntities(client, unit)){
 					return response.readEntity(new GenericType<List<Entity>>() {});
 				}
@@ -155,9 +155,7 @@ public class Schema implements Serializable {
 		entity = event.getNewValue().toString();
 		final Optional<Entity> selectedEntity = entities.stream().filter(e -> entity.equals(e.getName())).findAny();
 		if(selectedEntity.isPresent()) {
-			final EntityEvent entityEvent = new EntityEvent();
-			entityEvent.setEntity(selectedEntity.get());
-			eventUtil.setEvent(Event.SCHEMA_ENTITY, entityEvent);
+			eventUtil.setEvent(Event.SCHEMA_ENTITY, selectedEntity.get());
 		}
 		paramUtil.setValue("entity", entity);
 	}

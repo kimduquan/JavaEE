@@ -20,7 +20,7 @@ public interface Name {
 	/**
 	 * 
 	 */
-	String SECURITY_PRINCIPAL = "epf_security_principal";
+	String SECURITY_TOKEN = "epf_security_token";
 	/**
 	 * 
 	 */

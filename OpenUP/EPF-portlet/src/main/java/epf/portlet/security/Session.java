@@ -5,6 +5,7 @@ package epf.portlet.security;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
+import epf.client.security.Token;
 import epf.portlet.Name;
 import java.io.Serializable;
 import java.time.Instant;
@@ -25,33 +26,20 @@ public class Session implements Serializable{
 	/**
 	 * 
 	 */
-	private Principal principal;
+	private Token token;
 	
 	/**
 	 * @return
 	 */
 	public boolean isExpired() {
-		return principal != null && principal.getToken() != null && Instant.now().getEpochSecond() > principal.getToken().getExpirationTime();
-	}
-	
-	/**
-	 * @return
-	 */
-	public String getToken() {
-		return principal.getToken().getRawToken();
+		return token != null && Instant.now().getEpochSecond() > token.getExpirationTime();
 	}
 
-	/**
-	 * @return the principal
-	 */
-	public Principal getPrincipal() {
-		return principal;
+	public Token getToken() {
+		return token;
 	}
 
-	/**
-	 * @param principal the principal to set
-	 */
-	public void setPrincipal(final Principal principal) {
-		this.principal = principal;
+	public void setToken(final Token token) {
+		this.token = token;
 	}
 }

@@ -117,10 +117,10 @@ public class Security implements Serializable {
 				client.authorization(rawToken);
 				token = epf.client.security.Security.authenticate(client, null);
 			}
-			final Principal principal = newPrincipal(rawToken, token);
-			session.setPrincipal(principal);
-			sessionUtil.setAttribute(Name.SECURITY_PRINCIPAL, principal);
-			eventUtil.setEvent(Event.SECURITY_PRINCIPAL, principal);
+			token.setRawToken(rawToken);
+			session.setToken(token);
+			sessionUtil.setAttribute(Name.SECURITY_TOKEN, token);
+			eventUtil.setEvent(Event.SECURITY_TOKEN, token);
 			return "session";
 		} 
 		catch (Exception e) {
@@ -134,11 +134,11 @@ public class Security implements Serializable {
 	 */
 	public String logout() {
 		try(Client client = clientUtil.newClient(registryUtil.get("security"))){
-			client.authorization(session.getToken());
+			client.authorization(session.getToken().getRawToken());
 			epf.client.security.Security.logOut(client, null);
-			session.setPrincipal(null);
-			sessionUtil.setAttribute(Name.SECURITY_PRINCIPAL, null);
-			eventUtil.setEvent(Event.SECURITY_PRINCIPAL, null);
+			session.setToken(null);
+			sessionUtil.setAttribute(Name.SECURITY_TOKEN, null);
+			eventUtil.setEvent(Event.SECURITY_TOKEN, null);
 		} 
 		catch (Exception e) {
 			LOGGER.throwing(getClass().getName(), "logout", e);
@@ -153,7 +153,7 @@ public class Security implements Serializable {
 		final Map<String, String> info = new HashMap<>();
 		info.put("password", new String(credential.getPassword()));
 		try(Client client = clientUtil.newClient(registryUtil.get("security"))){
-			client.authorization(session.getToken());
+			client.authorization(session.getToken().getRawToken());
 			epf.client.security.Security.update(client, null, info);
 		} 
 		catch (Exception e) {
@@ -170,7 +170,7 @@ public class Security implements Serializable {
 			final URI securityUrl = registryUtil.get("security");
 			String rawToken;
 			try(Client client = clientUtil.newClient(securityUrl)){
-				client.authorization(session.getToken());
+				client.authorization(session.getToken().getRawToken());
 				rawToken = epf.client.security.Security.revoke(client, null);
 			}
 			Token token;
@@ -178,33 +178,14 @@ public class Security implements Serializable {
 				client.authorization(rawToken);
 				token = epf.client.security.Security.authenticate(client, null);
 			}
-			final Principal principal = newPrincipal(rawToken, token);
-			session.setPrincipal(principal);
-			sessionUtil.setAttribute(Name.SECURITY_PRINCIPAL, principal);
-			eventUtil.setEvent(Event.SECURITY_PRINCIPAL, principal);
+			token.setRawToken(rawToken);
+			session.setToken(token);
+			sessionUtil.setAttribute(Name.SECURITY_TOKEN, token);
+			eventUtil.setEvent(Event.SECURITY_TOKEN, token);
 		}
 		catch (Exception e) {
 			LOGGER.throwing(getClass().getName(), "revoke", e);
 		}
 		return "security";
-	}
-	
-	/**
-	 * @return
-	 */
-	public Principal getPrincipal() {
-		return sessionUtil.getAttribute(Name.SECURITY_PRINCIPAL);
-	}
-	
-	/**
-	 * @param rawToken
-	 * @param token
-	 * @return
-	 */
-	protected static Principal newPrincipal(final String rawToken, final Token token) {
-		token.setRawToken(rawToken);
-		final Principal principal = new Principal();
-		principal.setToken(token);
-		return principal;
 	}
 }
