@@ -3,12 +3,10 @@
  */
 package epf.portlet;
 
-import java.io.Serializable;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.portlet.StateAwareResponse;
+import javax.portlet.PortletResponse;
 import javax.portlet.annotations.PortletRequestScoped;
-import javax.xml.namespace.QName;
 
 /**
  * @author PC
@@ -20,14 +18,14 @@ public class ResponseUtil {
 	/**
 	 * 
 	 */
-	@Inject @Named(Bridge.STATE_AWARE_RESPONSE)
-	private transient StateAwareResponse state;
-	
+	@Inject @Named(Bridge.PORTLET_RESPONSE)
+	private transient PortletResponse response;
+
 	/**
-	 * @param qname
-	 * @param value
+	 * @return the response
 	 */
-	public void setEvent(final QName qname, final Serializable value) {
-		state.setEvent(qname, value);
+	public PortletResponse getResponse() {
+		return response;
 	}
+	
 }

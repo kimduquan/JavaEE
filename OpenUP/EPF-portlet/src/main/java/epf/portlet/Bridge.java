@@ -33,4 +33,9 @@ public interface Bridge {
 	 * 
 	 */
 	String PORTLET_SESSION = "portletSession";
+	
+	/**
+	 * 
+	 */
+	String PORTLET_RESPONSE = "portletResponse";
 }

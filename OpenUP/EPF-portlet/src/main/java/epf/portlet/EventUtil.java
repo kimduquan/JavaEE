@@ -7,6 +7,7 @@ import java.io.Serializable;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.portlet.PortletSession;
+import javax.portlet.StateAwareResponse;
 import javax.portlet.annotations.PortletRequestScoped;
 import javax.xml.namespace.QName;
 
@@ -20,8 +21,8 @@ public class EventUtil {
 	/**
 	 * 
 	 */
-	@Inject
-	private transient ResponseUtil responseUtil;
+	@Inject @Named(Bridge.STATE_AWARE_RESPONSE)
+	private transient StateAwareResponse state;
 	
 	/**
 	 * 
@@ -34,7 +35,7 @@ public class EventUtil {
 	 * @param value
 	 */
 	public void setEvent(final QName qname, final Serializable value) {
-		responseUtil.setEvent(qname, value);
+		state.setEvent(qname, value);
 	}
 	
 	@SuppressWarnings("unchecked")
