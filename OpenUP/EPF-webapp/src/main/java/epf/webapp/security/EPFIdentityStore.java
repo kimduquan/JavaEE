@@ -24,7 +24,7 @@ import epf.client.webapp.WebApp;
 import epf.util.client.Client;
 import epf.util.client.ClientQueue;
 import epf.util.logging.Logging;
-import epf.util.security.PasswordHelper;
+import epf.util.security.PasswordUtil;
 import epf.schema.EPF;
 
 /**
@@ -79,7 +79,7 @@ public class EPFIdentityStore implements IdentityStore {
         CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
         try {
             final String oldHashPassword = credentials.get(credential.getCaller());
-            final String passwordHash = PasswordHelper.hash(credential.getCaller(), credential.getPassword().getValue());
+            final String passwordHash = PasswordUtil.hash(credential.getCaller(), credential.getPassword().getValue());
             
             Token token = null;
             if(passwordHash.equals(oldHashPassword)) {

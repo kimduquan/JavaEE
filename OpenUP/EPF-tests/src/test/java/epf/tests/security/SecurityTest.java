@@ -28,7 +28,7 @@ import epf.schema.EPF;
 import epf.tests.client.ClientUtil;
 import epf.tests.registry.RegistryUtil;
 import epf.util.client.Client;
-import epf.util.security.PasswordHelper;
+import epf.util.security.PasswordUtil;
 
 /**
  *
@@ -45,7 +45,7 @@ public class SecurityTest {
     
     String login(String unit, String username, String password, URL targetUrl, boolean needHash) throws Exception{
         if(needHash){
-        	password = PasswordHelper.hash(username, password.toCharArray());
+        	password = PasswordUtil.hash(username, password.toCharArray());
         }
         try(Client client = ClientUtil.newClient(securityUrl)){
         	return Security.login(client, unit, username, password, targetUrl);

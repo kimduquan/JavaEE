@@ -12,7 +12,7 @@ import epf.shell.Function;
 import epf.shell.client.ClientUtil;
 import epf.util.Var;
 import epf.util.client.Client;
-import epf.util.security.PasswordHelper;
+import epf.util.security.PasswordUtil;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -75,7 +75,7 @@ public class Security {
 					client, 
 					null, 
 					user, 
-					PasswordHelper.hash(user, password), 
+					PasswordUtil.hash(user, password), 
 					new URL(securityUrl.get().toString())
 					);
 		}

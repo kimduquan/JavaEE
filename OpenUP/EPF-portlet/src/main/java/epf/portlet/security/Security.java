@@ -14,7 +14,7 @@ import epf.portlet.client.ClientUtil;
 import epf.portlet.registry.RegistryUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
-import epf.util.security.PasswordHelper;
+import epf.util.security.PasswordUtil;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -95,7 +95,7 @@ public class Security implements Serializable {
 	public String login() {
 		try {
 			final URI securityUrl = registryUtil.get("security");
-			final String passwordHash = PasswordHelper.hash(credential.getCaller(), credential.getPassword());
+			final String passwordHash = PasswordUtil.hash(credential.getCaller(), credential.getPassword());
 			final URL url = new URL(
 					request.getRequest().getScheme(), 
 					request.getRequest().getServerName(), 

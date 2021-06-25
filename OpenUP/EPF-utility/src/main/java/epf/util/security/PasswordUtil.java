@@ -14,14 +14,14 @@ import org.h2.util.StringUtils;
  *
  * @author FOXCONN
  */
-public final class PasswordHelper {
+public final class PasswordUtil {
     
     /**
      * 
      */
     private static JCEEncryptor encryptor;
     
-    private PasswordHelper(){
+    private PasswordUtil(){
         
     }
     
