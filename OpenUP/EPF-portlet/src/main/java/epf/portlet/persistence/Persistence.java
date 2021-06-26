@@ -3,8 +3,6 @@
  */
 package epf.portlet.persistence;
 
-import java.io.Serializable;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +20,7 @@ import epf.client.schema.Entity;
 import epf.client.security.Token;
 import epf.portlet.Event;
 import epf.portlet.EventUtil;
-import epf.portlet.Name;
+import epf.portlet.Naming;
 import epf.portlet.SessionUtil;
 import epf.portlet.client.ClientUtil;
 import epf.portlet.registry.RegistryUtil;
@@ -35,13 +33,8 @@ import epf.util.logging.Logging;
  *
  */
 @RequestScoped
-@Named(Name.PERSISTENCE)
-public class Persistence implements Serializable {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+@Named(Naming.PERSISTENCE)
+public class Persistence {
 	
 	/**
 	 * 
@@ -56,17 +49,12 @@ public class Persistence implements Serializable {
 	/**
 	 * 
 	 */
+	private List<Attribute> attributes;
+	
+	/**
+	 * 
+	 */
 	private List<Map<String, Object>> objects;
-	
-	/**
-	 * 
-	 */
-	private List<String> fieldNames;
-	
-	/**
-	 * 
-	 */
-	private List<String> fieldIds;
 	
 	/**
 	 * 
@@ -95,38 +83,31 @@ public class Persistence implements Serializable {
 	/**
 	 * 
 	 */
-	@Inject
-	private transient ObjectCollector collector;
-	
-	/**
-	 * 
-	 */
 	@PostConstruct
 	protected void postConstruct() {
 		entity = eventUtil.getEvent(Event.SCHEMA_ENTITY);
 		if(entity != null) {
-			fieldNames = entity
+			attributes = entity
 					.getAttributes()
 					.stream()
 					.filter(
 							attr -> !attr.isAssociation() 
 							&& !attr.isCollection() 
-							&& attr.getAttributeType() == AttributeType.BASIC
+							&& attr.getAttributeType().equals(AttributeType.BASIC)
 							)
-					.map(Attribute::getName)
-					.collect(Collectors.toList());
-			Collections.sort(fieldNames, new Comparator<String>() {
-				@Override
-				public int compare(String o1, String o2) {
-					return Integer.compare(o1.length(), o2.length());
-				}}
-			);
-			fieldIds = fieldNames
-					.stream()
-					.map(field -> entity.getType() + "." + field)
+					.sorted(new Comparator<Attribute>() {
+						@Override
+						public int compare(Attribute o1, Attribute o2) {
+							int result = Integer.compare(o1.getName().length(), o2.getName().length());
+							if(result == 0) {
+								result = o1.getName().compareTo(o2.getName());
+							}
+							return result;
+						}}
+					)
 					.collect(Collectors.toList());
 		}
-		final Token token = sessionUtil.getAttribute(Name.SECURITY_TOKEN);
+		final Token token = sessionUtil.getAttribute(Naming.SECURITY_TOKEN);
 		if(entity != null && token != null) {
 			try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
 				client.authorization(token.getRawToken());
@@ -143,9 +124,6 @@ public class Persistence implements Serializable {
 				LOGGER.throwing(getClass().getName(), "postConstruct", e);
 			}
 		}
-		if(objects != null) {
-			objects = collector.collect(objects.stream());
-		}
 	}
 
 	public Entity getEntity() {
@@ -156,11 +134,15 @@ public class Persistence implements Serializable {
 		return objects;
 	}
 
-	public List<String> getFieldNames() {
-		return fieldNames;
+	public List<Attribute> getAttributes() {
+		return attributes;
 	}
-
-	public List<String> getFieldIds() {
-		return fieldIds;
+	
+	/**
+	 * @param attribute
+	 * @return
+	 */
+	public String getId(final Attribute attribute) {
+		return entity.getType() + "." + attribute.getName();
 	}
 }

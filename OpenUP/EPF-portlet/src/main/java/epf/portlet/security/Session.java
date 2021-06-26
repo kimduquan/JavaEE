@@ -6,7 +6,7 @@ package epf.portlet.security;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 import epf.client.security.Token;
-import epf.portlet.Name;
+import epf.portlet.Naming;
 import java.io.Serializable;
 import java.time.Instant;
 
@@ -15,7 +15,7 @@ import java.time.Instant;
  *
  */
 @SessionScoped
-@Named(Name.SECURITY_SESSION)
+@Named(Naming.SECURITY_SESSION)
 public class Session implements Serializable{
 
 	/**

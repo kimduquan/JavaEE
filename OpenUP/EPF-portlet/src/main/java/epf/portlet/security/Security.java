@@ -7,7 +7,7 @@ import epf.client.security.Credential;
 import epf.client.security.Token;
 import epf.portlet.Event;
 import epf.portlet.EventUtil;
-import epf.portlet.Name;
+import epf.portlet.Naming;
 import epf.portlet.RequestUtil;
 import epf.portlet.SessionUtil;
 import epf.portlet.client.ClientUtil;
@@ -18,7 +18,6 @@ import epf.util.security.PasswordUtil;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.io.Serializable;
 import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
@@ -29,14 +28,9 @@ import java.util.logging.Logger;
  * @author PC
  *
  */
-@Named(Name.SECURITY)
+@Named(Naming.SECURITY)
 @RequestScoped
-public class Security implements Serializable {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class Security {
 	
 	/**
 	 * 
@@ -119,7 +113,7 @@ public class Security implements Serializable {
 			}
 			token.setRawToken(rawToken);
 			session.setToken(token);
-			sessionUtil.setAttribute(Name.SECURITY_TOKEN, token);
+			sessionUtil.setAttribute(Naming.SECURITY_TOKEN, token);
 			eventUtil.setEvent(Event.SECURITY_TOKEN, token);
 			return "session";
 		} 
@@ -137,7 +131,7 @@ public class Security implements Serializable {
 			client.authorization(session.getToken().getRawToken());
 			epf.client.security.Security.logOut(client, null);
 			session.setToken(null);
-			sessionUtil.setAttribute(Name.SECURITY_TOKEN, null);
+			sessionUtil.setAttribute(Naming.SECURITY_TOKEN, null);
 			eventUtil.setEvent(Event.SECURITY_TOKEN, null);
 		} 
 		catch (Exception e) {
@@ -180,7 +174,7 @@ public class Security implements Serializable {
 			}
 			token.setRawToken(rawToken);
 			session.setToken(token);
-			sessionUtil.setAttribute(Name.SECURITY_TOKEN, token);
+			sessionUtil.setAttribute(Naming.SECURITY_TOKEN, token);
 			eventUtil.setEvent(Event.SECURITY_TOKEN, token);
 		}
 		catch (Exception e) {

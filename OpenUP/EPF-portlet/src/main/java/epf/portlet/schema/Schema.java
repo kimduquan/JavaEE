@@ -3,7 +3,6 @@
  */
 package epf.portlet.schema;
 
-import java.io.Serializable;
 import java.net.URI;
 import java.util.Comparator;
 import java.util.List;
@@ -24,7 +23,7 @@ import epf.client.schema.Entity;
 import epf.client.security.Token;
 import epf.portlet.Event;
 import epf.portlet.EventUtil;
-import epf.portlet.Name;
+import epf.portlet.Naming;
 import epf.portlet.Parameter;
 import epf.portlet.ParameterUtil;
 import epf.portlet.SessionUtil;
@@ -39,13 +38,8 @@ import epf.util.logging.Logging;
  *
  */
 @RequestScoped
-@Named(Name.SCHEMA)
-public class Schema implements Serializable {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+@Named(Naming.SCHEMA)
+public class Schema {
 	
 	/**
 	 * 
@@ -126,7 +120,7 @@ public class Schema implements Serializable {
 	 * @throws Exception
 	 */
 	protected List<Entity> getEntities(final String unit) throws Exception{
-		final Token token = sessionUtil.getAttribute(Name.SECURITY_TOKEN);
+		final Token token = sessionUtil.getAttribute(Naming.SECURITY_TOKEN);
 		if(token != null) {
 			final URI schemaUrl = registryUtil.get("schema");
 			try(Client client = clientUtil.newClient(schemaUrl)){

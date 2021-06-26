@@ -13,14 +13,13 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import epf.client.schema.Attribute;
 import epf.portlet.SessionUtil;
-import epf.portlet.persistence.ObjectCollector;
 
 /**
  * @author PC
  *
  */
 @RequestScoped
-public class AttributeCollector implements ObjectCollector {
+public class AttributeCollector {
 	
 	/**
 	 * 
@@ -61,7 +60,6 @@ public class AttributeCollector implements ObjectCollector {
 	 * @param stream
 	 * @return
 	 */
-	@Override
 	public List<Map<String, Object>> collect(final Stream<Map<String, Object>> stream){
 		if(list == null) {
 			Stream<Map<String, Object>> newStream = stream;
@@ -80,7 +78,6 @@ public class AttributeCollector implements ObjectCollector {
 		return list;
 	}
 
-	@Override
 	public AttributeComparator sort(final Attribute attribute, final boolean ascending) {
 		if(comparators == null) {
 			comparators = new ArrayList<>();
@@ -92,7 +89,6 @@ public class AttributeCollector implements ObjectCollector {
 		return newComparator;
 	}
 
-	@Override
 	public AttributeFilter filter(final Attribute attribute, final boolean include) {
 		if(filters == null) {
 			filters = new ArrayList<>();

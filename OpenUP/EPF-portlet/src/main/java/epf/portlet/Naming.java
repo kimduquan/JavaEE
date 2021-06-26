@@ -7,7 +7,7 @@ package epf.portlet;
  * @author PC
  *
  */
-public interface Name {
+public interface Naming {
 
 	/**
 	 * 
@@ -25,6 +25,14 @@ public interface Name {
 	 * 
 	 */
 	String PERSISTENCE = "epf_persistence";
+	/**
+	 * 
+	 */
+	String PERSISTENCE_ENTITY = "epf_persistence_entity";
+	/**
+	 * 
+	 */
+	String PERSISTENCE_QUERY = "epf_persistence_query";
 	/**
 	 * 
 	 */
