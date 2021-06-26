@@ -95,6 +95,12 @@ public class Persistence implements Serializable {
 	/**
 	 * 
 	 */
+	@Inject
+	private transient ObjectCollector collector;
+	
+	/**
+	 * 
+	 */
 	@PostConstruct
 	protected void postConstruct() {
 		entity = eventUtil.getEvent(Event.SCHEMA_ENTITY);
@@ -136,6 +142,9 @@ public class Persistence implements Serializable {
 			catch (Exception e) {
 				LOGGER.throwing(getClass().getName(), "postConstruct", e);
 			}
+		}
+		if(objects != null) {
+			objects = collector.collect(objects.stream());
 		}
 	}
 

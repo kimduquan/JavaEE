@@ -37,4 +37,22 @@ public class SessionUtil {
 	public void setAttribute(final String name, final Object value) {
 		portletSession.setAttribute(name, value, PortletSession.APPLICATION_SCOPE);
 	}
+	
+	/**
+	 * @param <T>
+	 * @param name
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public <T extends Object> T getPortletAttribute(final Class<?> cls, final String name) {
+		return (T) portletSession.getAttribute(cls.getName() + "." + name, PortletSession.PORTLET_SCOPE);
+	}
+	
+	/**
+	 * @param name
+	 * @param value
+	 */
+	public void setPortletAttribute(final Class<?> cls, final String name, final Object value) {
+		portletSession.setAttribute(cls.getName() + "." + name, value, PortletSession.PORTLET_SCOPE);
+	}
 }
