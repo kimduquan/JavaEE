@@ -5,6 +5,7 @@ package epf.portlet.persistence;
 
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -60,7 +61,7 @@ public class Persistence implements Serializable {
 	/**
 	 * 
 	 */
-	private List<String> fields;
+	private List<String> fieldNames;
 	
 	/**
 	 * 
@@ -98,7 +99,7 @@ public class Persistence implements Serializable {
 	protected void postConstruct() {
 		entity = eventUtil.getEvent(Event.SCHEMA_ENTITY);
 		if(entity != null) {
-			fields = entity
+			fieldNames = entity
 					.getAttributes()
 					.stream()
 					.filter(
@@ -108,8 +109,13 @@ public class Persistence implements Serializable {
 							)
 					.map(Attribute::getName)
 					.collect(Collectors.toList());
-			Collections.sort(fields);
-			fieldIds = fields
+			Collections.sort(fieldNames, new Comparator<String>() {
+				@Override
+				public int compare(String o1, String o2) {
+					return Integer.compare(o1.length(), o2.length());
+				}}
+			);
+			fieldIds = fieldNames
 					.stream()
 					.map(field -> entity.getType() + "." + field)
 					.collect(Collectors.toList());
@@ -141,8 +147,8 @@ public class Persistence implements Serializable {
 		return objects;
 	}
 
-	public List<String> getFields() {
-		return fields;
+	public List<String> getFieldNames() {
+		return fieldNames;
 	}
 
 	public List<String> getFieldIds() {

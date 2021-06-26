@@ -5,8 +5,11 @@ package epf.portlet.schema;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -57,6 +60,11 @@ public class Schema implements Serializable {
 	/**
 	 * 
 	 */
+	private List<Map.Entry<String, Entity>> sortedEntities;
+	
+	/**
+	 * 
+	 */
 	private String entity;
 	
 	/**
@@ -103,6 +111,7 @@ public class Schema implements Serializable {
 								Entity::getName, 
 								Function.identity())
 								);
+				sortedEntities = sort(entities.entrySet());
 			}
 			entity = paramUtil.getValue(Parameter.SCHEMA_ENTITY);
 		} 
@@ -162,5 +171,26 @@ public class Schema implements Serializable {
 			eventUtil.setEvent(Event.SCHEMA_ENTITY, selectedEntity);
 		}
 		paramUtil.setValue("entity", entity);
+	}
+	
+	/**
+	 * @param entities
+	 * @return
+	 */
+	protected static List<Map.Entry<String, Entity>> sort(final Set<Map.Entry<String, Entity>> entities){
+		return entities
+		.stream()
+		.sorted(new Comparator<Map.Entry<String, Entity>>() {
+			@Override
+			public int compare(Entry<String, Entity> o1, Entry<String, Entity> o2) {
+				// TODO Auto-generated method stub
+				return o1.getValue().getType().compareTo(o2.getValue().getType());
+			}}
+		)
+		.collect(Collectors.toList());
+	}
+
+	public List<Map.Entry<String, Entity>> getSortedEntities() {
+		return sortedEntities;
 	}
 }
