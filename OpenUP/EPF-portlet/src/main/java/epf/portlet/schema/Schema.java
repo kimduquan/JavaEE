@@ -6,14 +6,15 @@ package epf.portlet.schema;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.event.ValueChangeEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.json.JsonObject;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import epf.client.schema.Entity;
@@ -51,12 +52,7 @@ public class Schema implements Serializable {
 	/**
 	 * 
 	 */
-	private List<Entity> entities;
-	
-	/**
-	 * 
-	 */
-	private List<JsonObject> objects;
+	private Map<String, Entity> entities;
 	
 	/**
 	 * 
@@ -99,7 +95,15 @@ public class Schema implements Serializable {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			entities = getEntities(EPF.SCHEMA);
+			final List<Entity> entityList = getEntities(EPF.SCHEMA);
+			if(entityList != null) {
+				entities = entityList
+						.stream()
+						.collect(Collectors.toMap(
+								Entity::getName, 
+								Function.identity())
+								);
+			}
 			entity = paramUtil.getValue(Parameter.SCHEMA_ENTITY);
 		} 
 		catch (Exception e) {
@@ -130,7 +134,7 @@ public class Schema implements Serializable {
 	 * @return
 	 * @throws Exception 
 	 */
-	public List<Entity> getEntities(){
+	public Map<String, Entity> getEntities(){
 		return entities;
 	}
 
@@ -153,17 +157,10 @@ public class Schema implements Serializable {
 	 */
 	public void handleEntityChanged(final ValueChangeEvent event) {
 		entity = event.getNewValue().toString();
-		final Optional<Entity> selectedEntity = entities.stream().filter(e -> entity.equals(e.getName())).findAny();
-		if(selectedEntity.isPresent()) {
-			eventUtil.setEvent(Event.SCHEMA_ENTITY, selectedEntity.get());
+		final Entity selectedEntity = entities.get(entity);
+		if(selectedEntity != null) {
+			eventUtil.setEvent(Event.SCHEMA_ENTITY, selectedEntity);
 		}
 		paramUtil.setValue("entity", entity);
-	}
-
-	/**
-	 * @return the objects
-	 */
-	public List<JsonObject> getObjects() {
-		return objects;
 	}
 }

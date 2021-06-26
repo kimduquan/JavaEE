@@ -74,7 +74,7 @@ public interface Queries {
      * @param firstResult
      * @param maxResults
      */
-    static <T> List<T> executeQuery(
+    static <T extends Object> List<T> executeQuery(
     		final Client client,
     		final GenericType<List<T>> type,
     		final String unit,
@@ -89,6 +89,28 @@ public interface Queries {
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.get(type);
+    }
+    
+    /**
+     * @param client
+     * @param unit
+     * @param paths
+     * @param firstResult
+     * @param maxResults
+     */
+    static Response executeQuery(
+    		final Client client,
+    		final String unit,
+    		final Function<WebTarget, WebTarget> paths,
+    		final Integer firstResult,
+    		final Integer maxResults){
+    	return client.request(
+    			target -> paths.apply(
+    					target.path(unit).queryParam(FIRST, firstResult).queryParam(MAX, maxResults)
+    					), 
+    			req -> req.accept(MediaType.APPLICATION_JSON)
+    			)
+    			.get();
     }
     
     /**

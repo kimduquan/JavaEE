@@ -3,12 +3,20 @@
  */
 package epf.client.schema;
 
+import java.io.Serializable;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * @author PC
  *
  */
-public class Attribute {
+@XmlRootElement
+public class Attribute implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/**
 	 * 
 	 */

@@ -16,6 +16,11 @@
             <artifactId>EPF-client</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>OpenUP-schema</artifactId>
+            <version>1.0.0</version>
+        </dependency>
 		<dependency>
 			<groupId>javax.enterprise</groupId>
 			<artifactId>cdi-api</artifactId>

@@ -11,10 +11,8 @@
 	<h:body>
 		<h:form>
 			<h:selectOneListbox rendered="#{epf_schema.entities != null}" value="#{epf_schema.entity}" onchange="submit()" valueChangeListener="#{epf_schema.handleEntityChanged}">
-				<f:selectItems value="#{epf_schema.entities}" var="entityVar" itemLabel="#{entityVar.name}" itemValue="#{entityVar.name}" ></f:selectItems>
+				<f:selectItems value="#{epf_schema.entities.entrySet()}" var="entry" itemLabel="#{entry.value.name}" itemValue="#{entry.key}" ></f:selectItems>
 			</h:selectOneListbox>
-			<h:dataTable>
-			</h:dataTable>
 		</h:form>
 	</h:body>
 </f:view>
