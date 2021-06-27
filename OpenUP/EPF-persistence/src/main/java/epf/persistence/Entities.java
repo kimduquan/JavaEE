@@ -18,6 +18,7 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import epf.client.EPFException;
 import epf.persistence.impl.Entity;
@@ -102,19 +103,6 @@ public class Entities implements epf.client.persistence.Entities {
         }
 	}
     
-    /**
-     * @param <T>
-     * @param name
-     * @param entityId
-     * @return
-     */
-    protected <T> T find(
-    		final String name,
-    		final String entityId){
-        final Entity<T> entity = findEntityObject(name, entityId);
-        return entity.getObject();
-    }
-    
     @Override
     public void remove(
     		final String name,
@@ -156,4 +144,10 @@ public class Entities implements epf.client.persistence.Entities {
         }
         return entity;
     }
+
+	@Override
+	public Response find(final String name, final String entityId) {
+		final Entity<Object> entity = findEntityObject(name, entityId);
+		return Response.ok(entity.getObject()).build();
+	}
 }

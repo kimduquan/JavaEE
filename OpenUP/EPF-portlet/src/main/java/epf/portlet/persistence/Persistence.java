@@ -19,6 +19,8 @@ import epf.client.security.Token;
 import epf.portlet.Event;
 import epf.portlet.EventUtil;
 import epf.portlet.Naming;
+import epf.portlet.Parameter;
+import epf.portlet.ParameterUtil;
 import epf.portlet.SessionUtil;
 import epf.portlet.client.ClientUtil;
 import epf.portlet.registry.RegistryUtil;
@@ -85,6 +87,12 @@ public class Persistence {
 	/**
 	 * 
 	 */
+	@Inject
+	private transient ParameterUtil paramUtil;
+	
+	/**
+	 * 
+	 */
 	@PostConstruct
 	protected void postConstruct() {
 		entity = eventUtil.getEvent(Event.SCHEMA_ENTITY);
@@ -97,18 +105,28 @@ public class Persistence {
 		}
 		token = sessionUtil.getAttribute(Naming.SECURITY_TOKEN);
 		if(entity != null && token != null) {
-			try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
-				client.authorization(token.getRawToken());
-				try(Response response = epf.client.persistence.Queries.executeQuery(
-						client, 
-						path -> path.path(entity.getName()), 
-						0, 
-						100)){
-					objects = response.readEntity(new GenericType<List<Map<String, Object>>>() {});
-				}
+			try{
+				objects = fetchObjects();
 			} 
 			catch (Exception e) {
 				LOGGER.throwing(getClass().getName(), "postConstruct", e);
+			}
+		}
+	}
+	
+	/**
+	 * @return
+	 * @throws Exception
+	 */
+	protected List<Map<String, Object>> fetchObjects() throws Exception{
+		try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
+			client.authorization(token.getRawToken());
+			try(Response response = epf.client.persistence.Queries.executeQuery(
+					client, 
+					path -> path.path(entity.getName()), 
+					0, 
+					100)){
+				return response.readEntity(new GenericType<List<Map<String, Object>>>() {});
 			}
 		}
 	}
@@ -142,5 +160,22 @@ public class Persistence {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * @param object
+	 * @return
+	 */
+	public String merge(final Map<String, Object> object) {
+		if(entity.isSingleId()) {
+			final Attribute id = entity.getId();
+			if(id != null) {
+				final Object idValue = object.get(id.getName());
+				if(idValue != null) {
+					paramUtil.setValue(Parameter.PERSISTENCE_ENTITY_ID, idValue.toString());
+				}
+			}
+		}
+		return "entity";
 	}
 }

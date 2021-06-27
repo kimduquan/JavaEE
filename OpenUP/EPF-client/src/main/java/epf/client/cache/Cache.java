@@ -43,11 +43,12 @@ public interface Cache {
             );
 	
 	/**
+	 * @param <T>
 	 * @param client
 	 * @param cls
-	 * @param schema
 	 * @param entity
 	 * @param entityId
+	 * @return
 	 */
 	static <T> T getEntity(final Client client, final Class<T> cls, final String entity, final String entityId) {
 		return client.request(
@@ -55,5 +56,19 @@ public interface Cache {
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.get(cls);
+	}
+	
+	/**
+	 * @param client
+	 * @param entity
+	 * @param entityId
+	 * @return
+	 */
+	static Response getEntity(final Client client, final String entity, final String entityId) {
+		return client.request(
+    			target -> target.path("persistence").path(entity).path(entityId), 
+    			req -> req.accept(MediaType.APPLICATION_JSON)
+    			)
+				.get();
 	}
 }

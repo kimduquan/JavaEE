@@ -112,4 +112,31 @@ public class Entities {
         request.setRequest(req);
         return request.request(null);
     }
+    
+    /**
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @param name
+     * @param entityId
+     * @param body
+     * @return
+     */
+    @POST
+    @Path("{entity}/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Asynchronous
+    public CompletionStage<Response> find(
+    		@Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req,
+            @PathParam("entity") final String name,
+            @PathParam("id") final String entityId,
+            final InputStream body
+            ) {
+    	request.setHeaders(headers);
+        request.setUriInfo(uriInfo);
+        request.setRequest(req);
+        return request.request(body);
+    }
 }

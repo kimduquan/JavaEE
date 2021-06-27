@@ -4,14 +4,9 @@
 package epf.portlet.schema;
 
 import java.net.URI;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.function.Function;
+import java.util.Optional;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.event.ValueChangeEvent;
@@ -48,12 +43,7 @@ public class Schema {
 	/**
 	 * 
 	 */
-	private Map<String, Entity> entities;
-	
-	/**
-	 * 
-	 */
-	private List<Map.Entry<String, Entity>> sortedEntities;
+	private List<Entity> entities;
 	
 	/**
 	 * 
@@ -96,16 +86,7 @@ public class Schema {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final List<Entity> entityList = fetchEntities();
-			if(entityList != null) {
-				entities = entityList
-						.stream()
-						.collect(Collectors.toMap(
-								Entity::getName, 
-								Function.identity())
-								);
-				sortedEntities = sort(entities.entrySet());
-			}
+			entities = fetchEntities();
 			entity = paramUtil.getValue(Parameter.SCHEMA_ENTITY);
 		} 
 		catch (Exception e) {
@@ -133,9 +114,8 @@ public class Schema {
 	
 	/**
 	 * @return
-	 * @throws Exception 
 	 */
-	public Map<String, Entity> getEntities(){
+	public List<Entity> getEntities(){
 		return entities;
 	}
 
@@ -158,31 +138,10 @@ public class Schema {
 	 */
 	public void handleEntityChanged(final ValueChangeEvent event) {
 		entity = event.getNewValue().toString();
-		final Entity selectedEntity = entities.get(entity);
-		if(selectedEntity != null) {
-			eventUtil.setEvent(Event.SCHEMA_ENTITY, selectedEntity);
+		final Optional<Entity> selectedEntity = entities.stream().filter(e -> e.getName().equals(entity)).findFirst();
+		if(selectedEntity.isPresent()) {
+			eventUtil.setEvent(Event.SCHEMA_ENTITY, selectedEntity.get());
 		}
 		paramUtil.setValue(Parameter.SCHEMA_ENTITY, entity);
-	}
-	
-	/**
-	 * @param entities
-	 * @return
-	 */
-	protected static List<Map.Entry<String, Entity>> sort(final Set<Map.Entry<String, Entity>> entities){
-		return entities
-		.stream()
-		.sorted(new Comparator<Map.Entry<String, Entity>>() {
-			@Override
-			public int compare(Entry<String, Entity> o1, Entry<String, Entity> o2) {
-				// TODO Auto-generated method stub
-				return o1.getValue().getType().compareTo(o2.getValue().getType());
-			}}
-		)
-		.collect(Collectors.toList());
-	}
-
-	public List<Map.Entry<String, Entity>> getSortedEntities() {
-		return sortedEntities;
 	}
 }

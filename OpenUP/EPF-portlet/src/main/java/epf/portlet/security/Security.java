@@ -13,7 +13,6 @@ import epf.portlet.SessionUtil;
 import epf.portlet.client.ClientUtil;
 import epf.portlet.registry.RegistryUtil;
 import epf.util.client.Client;
-import epf.util.logging.Logging;
 import epf.util.security.PasswordUtil;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -22,7 +21,6 @@ import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * @author PC
@@ -31,11 +29,6 @@ import java.util.logging.Logger;
 @Named(Naming.SECURITY)
 @RequestScoped
 public class Security {
-	
-	/**
-	 * 
-	 */
-	private static final Logger LOGGER = Logging.getLogger(Security.class.getName());
 	
 	/**
 	 * 
@@ -85,102 +78,89 @@ public class Security {
 	
 	/**
 	 * @return
+	 * @throws Exception 
 	 */
-	public String login() {
-		try {
-			final URI securityUrl = registryUtil.get("security");
-			final String passwordHash = PasswordUtil.hash(credential.getCaller(), credential.getPassword());
-			final URL url = new URL(
-					request.getRequest().getScheme(), 
-					request.getRequest().getServerName(), 
-					request.getRequest().getServerPort(), 
-					""
+	public String login() throws Exception {
+		final URI securityUrl = registryUtil.get("security");
+		final String passwordHash = PasswordUtil.hash(credential.getCaller(), credential.getPassword());
+		final URL url = new URL(
+				request.getRequest().getScheme(), 
+				request.getRequest().getServerName(), 
+				request.getRequest().getServerPort(), 
+				""
+				);
+		String rawToken;
+		try(Client client = clientUtil.newClient(securityUrl)){
+			rawToken = epf.client.security.Security.login(
+					client,
+					credential.getCaller(), 
+					passwordHash, 
+					url
 					);
-			String rawToken;
-			try(Client client = clientUtil.newClient(securityUrl)){
-				rawToken = epf.client.security.Security.login(
-						client,
-						credential.getCaller(), 
-						passwordHash, 
-						url
-						);
-			}
-			Token token;
-			try(Client client = clientUtil.newClient(securityUrl)){
-				client.authorization(rawToken);
-				token = epf.client.security.Security.authenticate(client);
-			}
-			token.setRawToken(rawToken);
-			session.setToken(token);
-			session.setSecurityUrl(securityUrl);
-			sessionUtil.setAttribute(Naming.SECURITY_TOKEN, token);
-			eventUtil.setEvent(Event.SECURITY_TOKEN, token);
-			return "session";
-		} 
-		catch (Exception e) {
-			LOGGER.throwing(getClass().getName(), "login", e);
 		}
-		return "";
+		Token token;
+		try(Client client = clientUtil.newClient(securityUrl)){
+			client.authorization(rawToken);
+			token = epf.client.security.Security.authenticate(client);
+		}
+		token.setRawToken(rawToken);
+		session.setToken(token);
+		session.setSecurityUrl(securityUrl);
+		sessionUtil.setAttribute(Naming.SECURITY_TOKEN, token);
+		eventUtil.setEvent(Event.SECURITY_TOKEN, token);
+		return "session";
 	}
 	
 	/**
 	 * @return
+	 * @throws Exception 
 	 */
-	public String logout() {
+	public String logout() throws Exception {
 		try(Client client = clientUtil.newClient(registryUtil.get("security"))){
 			client.authorization(session.getToken().getRawToken());
 			epf.client.security.Security.logOut(client);
 			session.setToken(null);
 			sessionUtil.setAttribute(Naming.SECURITY_TOKEN, null);
 			eventUtil.setEvent(Event.SECURITY_TOKEN, null);
-		} 
-		catch (Exception e) {
-			LOGGER.throwing(getClass().getName(), "logout", e);
 		}
 		return "security";
 	}
 	
 	/**
 	 * @return
+	 * @throws Exception 
 	 */
-	public String update() {
+	public String update() throws Exception {
 		final Map<String, String> info = new HashMap<>();
 		info.put("password", new String(credential.getPassword()));
 		try(Client client = clientUtil.newClient(registryUtil.get("security"))){
 			client.authorization(session.getToken().getRawToken());
 			epf.client.security.Security.update(client, info);
-		} 
-		catch (Exception e) {
-			LOGGER.throwing(getClass().getName(), "update", e);
 		}
 		return "security";
 	}
 	
 	/**
 	 * @return
+	 * @throws Exception 
 	 */
-	public String revoke() {
-		try {
-			final URI securityUrl = registryUtil.get("security");
-			String rawToken;
-			try(Client client = clientUtil.newClient(securityUrl)){
-				client.authorization(session.getToken().getRawToken());
-				rawToken = epf.client.security.Security.revoke(client);
-			}
-			Token token;
-			try(Client client = clientUtil.newClient(securityUrl)){
-				client.authorization(rawToken);
-				token = epf.client.security.Security.authenticate(client);
-			}
-			token.setRawToken(rawToken);
-			session.setToken(token);
-			session.setSecurityUrl(securityUrl);
-			sessionUtil.setAttribute(Naming.SECURITY_TOKEN, token);
-			eventUtil.setEvent(Event.SECURITY_TOKEN, token);
+	public String revoke() throws Exception {
+		final URI securityUrl = registryUtil.get("security");
+		String rawToken;
+		try(Client client = clientUtil.newClient(securityUrl)){
+			client.authorization(session.getToken().getRawToken());
+			rawToken = epf.client.security.Security.revoke(client);
 		}
-		catch (Exception e) {
-			LOGGER.throwing(getClass().getName(), "revoke", e);
+		Token token;
+		try(Client client = clientUtil.newClient(securityUrl)){
+			client.authorization(rawToken);
+			token = epf.client.security.Security.authenticate(client);
 		}
+		token.setRawToken(rawToken);
+		session.setToken(token);
+		session.setSecurityUrl(securityUrl);
+		sessionUtil.setAttribute(Naming.SECURITY_TOKEN, token);
+		eventUtil.setEvent(Event.SECURITY_TOKEN, token);
 		return "security";
 	}
 }

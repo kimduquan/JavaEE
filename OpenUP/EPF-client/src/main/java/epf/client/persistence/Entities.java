@@ -17,6 +17,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import epf.util.client.Client;
 
 /**
@@ -70,7 +72,7 @@ public interface Entities {
      * @param body
      * @return
      */
-    static String persist(
+    static Response persist(
     		final Client client,
     		final String name,
     		final String body
@@ -79,8 +81,7 @@ public interface Entities {
     			target -> target.path(name), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
-    			.post(Entity.entity(body, MediaType.APPLICATION_JSON_TYPE))
-    			.readEntity(String.class);
+    			.post(Entity.entity(body, MediaType.APPLICATION_JSON));
     }
     
     /**
@@ -170,5 +171,40 @@ public interface Entities {
     			req -> req
     			)
     	.delete();
+    }
+    
+    /**
+     * @param name
+     * @param entityId
+     * @return
+     */
+    @POST
+    @Path("{entity}/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    Response find(
+            @PathParam("entity")
+            @NotBlank
+            final String name,
+            @PathParam("id")
+            @NotBlank
+            final String entityId
+            );
+    
+    /**
+     * @param client
+     * @param name
+     * @param entityId
+     * @return
+     */
+    static Response find(
+    		final Client client,
+            final String name,
+            final String entityId
+            ) {
+    	return client.request(
+    			target -> target.path(name).path(entityId), 
+    			req -> req.accept(MediaType.APPLICATION_JSON)
+    			)
+    			.post(Entity.text(null));
     }
 }

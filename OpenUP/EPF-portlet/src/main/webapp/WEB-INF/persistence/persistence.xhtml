@@ -14,6 +14,7 @@
 			<h:link outcome="entity" value="#{i18n['epf.persistence.persist']}" />
 			<h:dataTable rendered="#{not empty epf_persistence.attributes and epf_persistence.objects != null}" value="#{epf_persistence.objects}" var="objectVar">
 				<h:column>
+					<h:commandButton value="#{i18n['epf.persistence.merge']}" action="#{epf_persistence.merge(objectVar)}"></h:commandButton>
 					<h:commandButton value="#{i18n['epf.persistence.remove']}" action="#{epf_persistence.remove(objectVar)}"></h:commandButton>
 				</h:column>
 				<h:column rendered="#{epf_persistence.attributes.size() gt 0}">

@@ -101,6 +101,76 @@ public interface Security {
     }
     
     /**
+     * @param username
+     * @param passwordHash
+     * @param url
+     * @return
+     */
+    @POST
+    @Path("otp")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.TEXT_PLAIN)
+    String newOneTimePassword(
+            @FormParam("username")
+            @NotBlank
+            final String username,
+            @FormParam("password_hash")
+            @NotBlank
+            final String passwordHash, 
+            @QueryParam(URL)
+            @NotNull
+            final URL url
+    );
+    
+    /**
+     * @param client
+     * @param username
+     * @param passwordHash
+     * @param url
+     * @return
+     */
+    static String newOneTimePassword(
+    		final Client client,
+    		final String username, 
+    		final String passwordHash, 
+    		final URL url) {
+    	final Form form = new Form();
+    	form.param("username", username);
+    	form.param("password_hash", passwordHash);
+    	return client.request(
+    			target -> target.path("otp").queryParam(URL, url),
+    			req -> req.accept(MediaType.TEXT_PLAIN))
+    			.post(Entity.form(form), String.class);
+    }
+    
+    @PUT
+    @Path("otp")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.TEXT_PLAIN)
+    String loginOneTimePassword(
+            @FormParam("otp")
+            @NotBlank
+            final String oneTimePassword
+    );
+    
+    /**
+     * @param client
+     * @param oneTimePassword
+     * @return
+     */
+    static String loginOneTimePassword(
+    		final Client client,
+    		final String oneTimePassword
+    		) {
+    	final Form form = new Form();
+    	form.param("otp", oneTimePassword);
+    	return client.request(
+    			target -> target.path("otp"),
+    			req -> req.accept(MediaType.TEXT_PLAIN))
+    			.put(Entity.form(form), String.class);
+    }
+    
+    /**
      * @return
      */
     @DELETE

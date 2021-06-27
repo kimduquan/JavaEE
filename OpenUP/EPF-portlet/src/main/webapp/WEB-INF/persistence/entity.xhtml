@@ -11,15 +11,17 @@
 	</h:head>
 	<h:body>
 		<h:form rendered="#{epf_persistence_entity.attributes != null}">
-			<ui:repeat var="attributeVar" value="#{epf_persistence_entity.attributes}">
-				<h:outputLabel value="#{attributeVar.name}"></h:outputLabel>
-				<h:selectManyListbox rendered="#{attributeVar.collection}" value="#{epf_persistence_entity.object[attributeVar.name]}"></h:selectManyListbox>
-				<h:selectManyListbox rendered="#{attributeVar.association}" value="#{epf_persistence_entity.object[attributeVar.name]}"></h:selectManyListbox>
-				<h:inputText rendered="#{not attributeVar.collection and not attributeVar.association}" value="#{epf_persistence_entity.object[attributeVar.name]}"></h:inputText>
-			</ui:repeat>
-			<h:commandButton rendered="#{epf_persistence_entity.id == null}" action="#{epf_persistence_entity.persist}" value="#{i18n['epf.persistence.persist']}"></h:commandButton>
-			<h:commandButton rendered="#{epf_persistence_entity.id != null}" action="#{epf_persistence_entity.merge}" value="#{i18n['epf.persistence.merge']}"></h:commandButton>
-			<h:commandButton rendered="#{epf_persistence_entity.id != null}" action="#{epf_persistence_entity.remove}" value="#{i18n['epf.persistence.remove']}"></h:commandButton>
+			<fieldset>
+				<ui:repeat var="attributeVar" value="#{epf_persistence_entity.attributes}">
+					<h:outputLabel value="#{attributeVar.name}" ></h:outputLabel>
+					<h:selectManyListbox rendered="#{attributeVar.collection}" value="#{epf_persistence_entity.object[attributeVar.name]}"></h:selectManyListbox>
+					<h:selectManyListbox rendered="#{attributeVar.association}" value="#{epf_persistence_entity.object[attributeVar.name]}"></h:selectManyListbox>
+					<h:inputText rendered="#{not attributeVar.collection and not attributeVar.association}" value="#{epf_persistence_entity.object[attributeVar.name]}"></h:inputText>
+				</ui:repeat>
+				<h:commandButton rendered="#{epf_persistence_entity.id == null}" action="#{epf_persistence_entity.persist}" value="#{i18n['epf.persistence.persist']}"></h:commandButton>
+				<h:commandButton rendered="#{epf_persistence_entity.id != null}" action="#{epf_persistence_entity.merge}" value="#{i18n['epf.persistence.merge']}"></h:commandButton>
+				<h:commandButton rendered="#{epf_persistence_entity.id != null}" action="#{epf_persistence_entity.remove}" value="#{i18n['epf.persistence.remove']}"></h:commandButton>
+			</fieldset>
 		</h:form>
 	</h:body>
 </f:view>

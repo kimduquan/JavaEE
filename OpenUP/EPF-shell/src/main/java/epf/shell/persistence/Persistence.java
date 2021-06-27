@@ -4,7 +4,7 @@
 package epf.shell.persistence;
 
 import java.net.URI;
-
+import javax.ws.rs.core.Response;
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
 import epf.shell.security.Credential;
@@ -55,7 +55,9 @@ public class Persistence {
 			final String entity) throws Exception {
 		try(Client client = clientUtil.newClient(persistenceUrl.get())){
 			client.authorization(credential.getToken());
-			return epf.client.persistence.Entities.persist(client, name, entity);
+			try(Response response = epf.client.persistence.Entities.persist(client, name, entity)){
+				return response.readEntity(String.class);
+			}
 		}
 	}
 	

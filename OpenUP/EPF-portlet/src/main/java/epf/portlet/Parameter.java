@@ -9,5 +9,12 @@ package epf.portlet;
  */
 public interface Parameter {
 
+	/**
+	 * 
+	 */
 	String SCHEMA_ENTITY = "entity";
+	/**
+	 * 
+	 */
+	String PERSISTENCE_ENTITY_ID = "id";
 }

@@ -19,16 +19,11 @@ import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.jwt.config.Names;
-import org.eclipse.microprofile.openapi.annotations.Operation;
-import org.eclipse.microprofile.openapi.annotations.media.Content;
-import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
-import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import epf.client.EPFException;
 import epf.client.security.CredentialInfo;
 import epf.client.security.Token;
@@ -37,7 +32,6 @@ import epf.persistence.context.Application;
 import epf.persistence.context.Credential;
 import epf.persistence.context.Session;
 import epf.schema.roles.Role;
-import epf.util.logging.Log;
 
 /**
  *
@@ -58,6 +52,12 @@ public class Security implements epf.client.security.Security, Serializable {
      */
     @Inject
     private transient Application persistence;
+    
+    /**
+     * 
+     */
+    @Inject
+    private transient IdentityStore identityStore;
     
     /**
      * 
@@ -100,33 +100,6 @@ public class Security implements epf.client.security.Security, Serializable {
     
     @PermitAll
     @Override
-    @Operation(
-            summary = "login", 
-            description = "login",
-            operationId = "login"
-    )
-    @RequestBody(
-            required = true,
-            content = {
-                @Content(
-                        mediaType = MediaType.APPLICATION_FORM_URLENCODED,
-                        example = "{\"username\":\"\",\"password_hash\":\"\"}"
-                )
-            }
-    )
-    @APIResponse(
-            name = "token", 
-            description = "Token",
-            responseCode = "200",
-            content = @Content(
-                    mediaType = MediaType.TEXT_PLAIN
-            )
-    )
-    @APIResponse(
-            name = "Unauthorized", 
-            description = "Unauthorized",
-            responseCode = "401"
-    )
     public String login(
             final String username,
             final String passwordHash,
@@ -151,17 +124,6 @@ public class Security implements epf.client.security.Security, Serializable {
     }
     
     @Override
-    @Operation(
-            summary = "logOut", 
-            description = "logOut",
-            operationId = "logOut"
-    )
-    @APIResponse(
-            name = "OK", 
-            description = "OK",
-            responseCode = "200"
-    )
-    @Log
     public String logOut() {
     	final Session session = removeSession(context, persistence);
         if(session != null){
@@ -172,16 +134,6 @@ public class Security implements epf.client.security.Security, Serializable {
     }
     
     @Override
-    @Operation(
-            summary = "authenticate", 
-            description = "authenticate",
-            operationId = "authenticate"
-    )
-    @APIResponse(
-            name = "OK", 
-            description = "OK",
-            responseCode = "200"
-    )
     public Token authenticate() {
     	if(getSession(context, persistence) != null){
     		final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
@@ -286,5 +238,38 @@ public class Security implements epf.client.security.Security, Serializable {
 			}
 		}
         throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
+	}
+
+	@PermitAll
+	@Override
+	public String newOneTimePassword(final String username, final String passwordHash, final  URL url) {
+		final Credential credential = persistence.putContext()
+                .putCredential(
+                        username,
+                        passwordHash
+                );
+    	final TokenBuilder builder = new TokenBuilder(issuer, service);
+    	final long time = Instant.now().getEpochSecond();
+        final Token jwt = builder
+        		.expire(jwtExpTimeUnit, jwtExpDuration)
+        		.fromCredential(credential)
+        		.generator(generator)
+        		.time(time)
+        		.url(url)
+        		.userName(username)
+        		.build();
+        credential.putSession(jwt.getTokenID());
+        identityStore.putToken(jwt);
+        return jwt.getTokenID();
+	}
+
+	@PermitAll
+	@Override
+	public String loginOneTimePassword(final String oneTimePassword) {
+		final Token token = identityStore.removeToken(oneTimePassword);
+		if(token != null) {
+			return token.getRawToken();
+		}
+		throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build()); 
 	}
 }
