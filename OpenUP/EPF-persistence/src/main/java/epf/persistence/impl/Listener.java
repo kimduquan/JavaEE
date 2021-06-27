@@ -18,6 +18,7 @@ import epf.schema.PostLoad;
 import epf.schema.PostPersist;
 import epf.schema.PostRemove;
 import epf.schema.PostUpdate;
+import epf.util.logging.Logging;
 
 /**
  * @author PC
@@ -25,6 +26,11 @@ import epf.schema.PostUpdate;
  */
 @ApplicationScoped
 public class Listener {
+	
+	/**
+	 * 
+	 */
+	private static final Logger LOGGER = Logging.getLogger(Listener.class.getName());
 	
 	/**
 	 * 
@@ -82,6 +88,11 @@ public class Listener {
 	 * @param object
 	 */
 	protected void sendObject(final Object object) {
-		client.getSession().getAsyncRemote().sendObject(object);
+		try {
+			client.getSession().getBasicRemote().sendObject(object);
+		} 
+		catch (Exception e) {
+			LOGGER.throwing(getClass().getName(), "sendObject", e);
+		}
 	}
 }

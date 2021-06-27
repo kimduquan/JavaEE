@@ -171,7 +171,10 @@ public class Request {
     		@CacheKey final String name, 
     		final Class<T> cls, 
     		@CacheKey final String entityId) {
-        return getManager(principal).find(cls, entityId);
+    	final EntityManager manager = getManager(principal);
+    	final T object = manager.find(cls, entityId);
+    	manager.refresh(object);
+        return object;
     }
     
     /**
