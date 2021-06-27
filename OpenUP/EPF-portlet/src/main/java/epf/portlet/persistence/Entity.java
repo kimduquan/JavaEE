@@ -6,6 +6,7 @@ package epf.portlet.persistence;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -22,6 +23,7 @@ import epf.portlet.client.ClientUtil;
 import epf.portlet.registry.RegistryUtil;
 import epf.schema.EPF;
 import epf.util.client.Client;
+import epf.util.logging.Logging;
 
 /**
  * @author PC
@@ -30,6 +32,11 @@ import epf.util.client.Client;
 @RequestScoped
 @Named(Naming.PERSISTENCE_ENTITY)
 public class Entity {
+	
+	/**
+	 * 
+	 */
+	private static final Logger LOGGER = Logging.getLogger(Entity.class.getName());
 	
 	/**
 	 * 
@@ -93,6 +100,14 @@ public class Entity {
 			id = entity.getId();
 		}
 		token = sessionUtil.getAttribute(Naming.SECURITY_TOKEN);
+		if(entity != null && id != null && token != null) {
+			try(Client client = clientUtil.newClient(registryUtil.get("cache"))){
+				
+			} 
+			catch (Exception e) {
+				LOGGER.throwing(getClass().getName(), "postConstruct", e);
+			}
+		}
 	}
 
 	public List<Attribute> getAttributes() {

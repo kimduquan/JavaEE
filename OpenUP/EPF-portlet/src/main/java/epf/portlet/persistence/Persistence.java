@@ -127,14 +127,20 @@ public class Persistence {
 		return attributes;
 	}
 	
+	/**
+	 * @param object
+	 * @throws Exception
+	 */
 	public void remove(final Map<String, Object> object) throws Exception {
 		if(entity.isSingleId()) {
 			final Attribute id = entity.getId();
 			if(id != null) {
 				final Object idValue = object.get(id.getName());
-				try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
-					client.authorization(token.getRawToken());
-					epf.client.persistence.Entities.remove(client, EPF.SCHEMA, entity.getName(), idValue.toString());
+				if(idValue != null) {
+					try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
+						client.authorization(token.getRawToken());
+						epf.client.persistence.Entities.remove(client, EPF.SCHEMA, entity.getName(), idValue.toString());
+					}
 				}
 			}
 		}
