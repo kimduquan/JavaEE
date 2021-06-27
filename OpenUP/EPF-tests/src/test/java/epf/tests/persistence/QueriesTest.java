@@ -6,7 +6,6 @@
 package epf.tests.persistence;
 
 import epf.client.persistence.Queries;
-import epf.schema.EPF;
 import epf.tests.client.ClientUtil;
 import epf.tests.registry.RegistryUtil;
 import epf.tests.security.SecurityUtil;
@@ -40,13 +39,13 @@ public class QueriesTest {
     
     @BeforeClass
     public static void beforeClass(){
-    	token = SecurityUtil.login(null, "any_role1", "any_role");
+    	token = SecurityUtil.login("any_role1", "any_role");
     	persistenceUrl = RegistryUtil.lookup("persistence", null);
     }
     
     @AfterClass
     public static void afterClass(){
-    	SecurityUtil.logOut(null, token);
+    	SecurityUtil.logOut(token);
     }
     
     @Before
@@ -68,7 +67,7 @@ public class QueriesTest {
     @Test
     @Ignore
     public void testSearchOK() {
-    	Set<Link> entityLinks = Queries.search(client, EPF.SCHEMA, "Any", 0, 100);
+    	Set<Link> entityLinks = Queries.search(client, "Any", 0, 100);
     	Assert.assertFalse("Response.links.empty", entityLinks.isEmpty());
     	entityLinks.forEach(entityLink -> {
     		Assert.assertNotNull("Link", entityLink);
@@ -92,25 +91,25 @@ public class QueriesTest {
     
     @Test
     public void testSearchOK_EmptyResult() {
-    	Set<Link> entityLinks = Queries.search(client, EPF.SCHEMA, "EPF", 0, 100);
+    	Set<Link> entityLinks = Queries.search(client, "EPF", 0, 100);
     	Assert.assertTrue("Response.links.empty", entityLinks.isEmpty());
     }
     
     @Test(expected = BadRequestException.class)
     @Ignore
     public void testSearch_EmptyText() {
-    	Queries.search(client, EPF.SCHEMA, "", 0, 100);
+    	Queries.search(client, "", 0, 100);
     }
     
     @Test(expected = BadRequestException.class)
     @Ignore
     public void testSearch_BlankText() {
-    	Queries.search(client, EPF.SCHEMA, "    ", 0, 100);
+    	Queries.search(client, "    ", 0, 100);
     }
     
     @Test(expected = BadRequestException.class)
     @Ignore
     public void testSearch_InvalidText() {
-    	Queries.search(client, EPF.SCHEMA, "'abc'", 0, 100);
+    	Queries.search(client, "'abc'", 0, 100);
     }
 }

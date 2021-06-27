@@ -36,19 +36,18 @@ public class Cache {
 	 * @param headers
 	 * @param uriInfo
 	 * @param req
-	 * @param unit
 	 * @param entity
 	 * @param entityId
+	 * @return
 	 */
 	@GET
-	@Path("persistence/{schema}/{entity}/{id}")
+	@Path("persistence/{entity}/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
     public CompletionStage<Response> getEntity(
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
-            @PathParam("schema") final String unit,
             @PathParam("entity") final String entity,
             @PathParam("id") final String entityId) {
         request.setHeaders(headers);

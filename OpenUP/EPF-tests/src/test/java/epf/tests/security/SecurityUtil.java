@@ -25,13 +25,13 @@ public class SecurityUtil {
 	private static final Logger logger = Logging.getLogger(SecurityUtil.class.getName());
     private static URI securityUrl;
     
-    public static String login(String unit, String username, String password) {
+    public static String login(String username, String password) {
     	if(securityUrl == null) {
     		securityUrl = RegistryUtil.lookup("security", null);
     	}
     	String token = null;
     	try(Client client = ClientUtil.newClient(securityUrl)){
-    		token = Security.login(client, unit, username, PasswordUtil.hash(username, password.toCharArray()), securityUrl.toURL());
+    		token = Security.login(client, username, PasswordUtil.hash(username, password.toCharArray()), securityUrl.toURL());
     	}
     	catch(Exception ex) {
     		logger.log(Level.SEVERE, "login", ex);
@@ -39,27 +39,27 @@ public class SecurityUtil {
     	return token;
     }
     
-    public static void logOut(String unit, String token) {
+    public static void logOut(String token) {
     	try(Client client = ClientUtil.newClient(RegistryUtil.lookup("security", null))){
     		client.authorization(token);
-    		token = Security.logOut(client, unit);
+    		token = Security.logOut(client);
     	}
     	catch(Exception ex) {
     		logger.log(Level.SEVERE, "logOut", ex);
     	}
     }
     
-    public static Token auth(String unit, String token) throws Exception {
+    public static Token auth(String token) throws Exception {
     	try(Client client = ClientUtil.newClient(RegistryUtil.lookup("security", null))){
     		client.authorization(token);
-    		return Security.authenticate(client, unit);
+    		return Security.authenticate(client);
     	}
     }
     
-    public static String revoke(String unit, String token) throws Exception {
+    public static String revoke(String token) throws Exception {
     	try(Client client = ClientUtil.newClient(RegistryUtil.lookup("security", null))){
     		client.authorization(token);
-    		return Security.revoke(client, unit);
+    		return Security.revoke(client);
     	}
     }
 }

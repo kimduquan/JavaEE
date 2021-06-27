@@ -57,12 +57,8 @@ public class Queries implements epf.client.persistence.Queries {
     @Context
     private transient SecurityContext context;
     
-    /**
-     *
-     */
     @Override
     public Response executeQuery(
-            final String unit,
             final List<PathSegment> paths,
             final Integer firstResult,
             final Integer maxResults
@@ -72,10 +68,10 @@ public class Queries implements epf.client.persistence.Queries {
     	final Principal principal = context.getUserPrincipal();
         if(!paths.isEmpty()){
         	final PathSegment rootSegment = paths.get(0);
-        	entity = cache.findEntity(unit, principal, rootSegment.getPath());
+        	entity = cache.findEntity(principal, rootSegment.getPath());
         }
         if(entity != null && entity.getType() != null){
-        	final EntityManager manager = cache.getManager(unit, principal);
+        	final EntityManager manager = cache.getManager(principal);
         	final QueryBuilder queryBuilder = new QueryBuilder();
         	final Query query = queryBuilder
         			.manager(manager)
@@ -115,12 +111,11 @@ public class Queries implements epf.client.persistence.Queries {
     }
 
 	@Override
-	public Response search(final String unit, final UriInfo uriInfo, final String text, final Integer firstResult, final Integer maxResults) {
+	public Response search(final UriInfo uriInfo, final String text, final Integer firstResult, final Integer maxResults) {
 		final Map<String, EntityType<?>> entityTables = new ConcurrentHashMap<>();
 		final Map<String, Map<String, Attribute<?,?>>> entityAttributes = new ConcurrentHashMap<>();
-		cache.mapEntities(unit, context.getUserPrincipal(), entityTables, entityAttributes);
+		cache.mapEntities(context.getUserPrincipal(), entityTables, entityAttributes);
 		final TypedQuery<SearchData> query = cache.createNamedQuery(
-				unit, 
 				context.getUserPrincipal(), 
 				QueryNames.FT_SEARCH_DATA, 
 				SearchData.class
@@ -142,7 +137,6 @@ public class Queries implements epf.client.persistence.Queries {
 								final EntityType<?> entityType = entityTables.get(searchData.getTable());
 								UriBuilder linkBuilder = baseUri
 										.clone()
-										.path(unit)
 										.path(entityType.getName());
 								final Iterator<String> column = searchData.getColumns().iterator();
 								final Iterator<String> key = searchData.getKeys().iterator();

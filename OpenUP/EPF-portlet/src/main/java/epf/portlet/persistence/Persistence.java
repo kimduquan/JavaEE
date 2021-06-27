@@ -22,7 +22,6 @@ import epf.portlet.Naming;
 import epf.portlet.SessionUtil;
 import epf.portlet.client.ClientUtil;
 import epf.portlet.registry.RegistryUtil;
-import epf.schema.EPF;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
 
@@ -101,8 +100,7 @@ public class Persistence {
 			try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
 				client.authorization(token.getRawToken());
 				try(Response response = epf.client.persistence.Queries.executeQuery(
-						client,
-						EPF.SCHEMA, 
+						client, 
 						path -> path.path(entity.getName()), 
 						0, 
 						100)){
@@ -139,7 +137,7 @@ public class Persistence {
 				if(idValue != null) {
 					try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
 						client.authorization(token.getRawToken());
-						epf.client.persistence.Entities.remove(client, EPF.SCHEMA, entity.getName(), idValue.toString());
+						epf.client.persistence.Entities.remove(client, entity.getName(), idValue.toString());
 					}
 				}
 			}

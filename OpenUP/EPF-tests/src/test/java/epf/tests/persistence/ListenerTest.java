@@ -50,7 +50,7 @@ public class ListenerTest {
     	persistenceUrl = RegistryUtil.lookup("persistence", null);
     	URI messagingUrl = RegistryUtil.lookup("messaging", null);
     	listenerUrl = new URI(messagingUrl.toString() + "/persistence");
-    	token = SecurityUtil.login(null, "admin1", "admin");
+    	token = SecurityUtil.login("admin1", "admin");
     	streamUrl = RegistryUtil.lookup("stream", null);
     	executor = Executors.newFixedThreadPool(1);
     	streamClient = ClientUtil.newClient(streamUrl);
@@ -65,7 +65,7 @@ public class ListenerTest {
     
     @AfterClass
     public static void afterClass() throws Exception{
-    	SecurityUtil.logOut(null, token);
+    	SecurityUtil.logOut(token);
     	event.close();
     	executor.shutdown();
     	streamClient.close();
@@ -95,8 +95,8 @@ public class ListenerTest {
         artifact.setTailoring(new Tailoring());
     	try(epf.util.client.Client persistenceClient = ClientUtil.newClient(persistenceUrl)){
     		persistenceClient.authorization(token);
-    		Entities.persist(persistenceClient, Artifact.class, EPF.SCHEMA, EPF.ARTIFACT, artifact);
-            Entities.remove(persistenceClient, EPF.SCHEMA, EPF.ARTIFACT, artifact.getName());
+    		Entities.persist(persistenceClient, Artifact.class, EPF.ARTIFACT, artifact);
+            Entities.remove(persistenceClient, EPF.ARTIFACT, artifact.getName());
     	}
     	
     	TestUtil.waitUntil((t) -> client.getMessages().stream().anyMatch(msg -> msg.contains(PostPersist.class.getName()) && msg.contains(artifact.getName())), Duration.ofSeconds(20));
@@ -134,8 +134,8 @@ public class ListenerTest {
         artifact.setTailoring(new Tailoring());
     	try(epf.util.client.Client persistenceClient = ClientUtil.newClient(persistenceUrl)){
     		persistenceClient.authorization(token);
-    		Entities.persist(persistenceClient, Artifact.class, EPF.SCHEMA, EPF.ARTIFACT, artifact);
-            Entities.remove(persistenceClient, EPF.SCHEMA, EPF.ARTIFACT, artifact.getName());
+    		Entities.persist(persistenceClient, Artifact.class, EPF.ARTIFACT, artifact);
+            Entities.remove(persistenceClient, EPF.ARTIFACT, artifact.getName());
     	}
     	
     	TestUtil.waitUntil((t) -> events.stream().anyMatch(msg -> msg.contains(PostPersist.class.getName()) && msg.contains(artifact.getName())), Duration.ofSeconds(10));

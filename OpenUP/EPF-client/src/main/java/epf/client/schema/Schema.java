@@ -3,15 +3,12 @@
  */
 package epf.client.schema;
 
-import javax.validation.constraints.NotBlank;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import epf.util.client.Client;
-import epf.validation.persistence.Unit;
 
 /**
  * @author PC
@@ -29,24 +26,16 @@ public interface Schema {
      * @return
      */
     @GET
-    @Path("{unit}")
     @Produces(MediaType.APPLICATION_JSON)
-    Response getEntities(
-    		@PathParam("unit")
-    		@Unit
-            @NotBlank
-    		final String unit);
+    Response getEntities();
     
     /**
      * @param client
-     * @param unit
      * @return
      */
-    static Response getEntities(
-    		final Client client,
-    		final String unit) {
+    static Response getEntities(final Client client) {
     	return client.request(
-    			target -> target.path(unit), 
+    			target -> target, 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     	.get();

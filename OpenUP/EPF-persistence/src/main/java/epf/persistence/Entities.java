@@ -58,17 +58,16 @@ public class Entities implements epf.client.persistence.Entities {
     
     @Override
     public Object persist(
-            final String unit,
             final String name,
             final InputStream body
             ){
-    	final Entity<Object> entity = findEntity(unit, name);
+    	final Entity<Object> entity = findEntity(name);
     	Object object = null;
         if(entity.getType() != null){
             try(Jsonb json = JsonbBuilder.create()){
             	final Object obj = json.fromJson(body, entity.getType().getJavaType());
                 validator.validate(obj);
-                object = cache.persist(unit, context.getUserPrincipal(), name, obj);
+                object = cache.persist(context.getUserPrincipal(), name, obj);
             }
             catch(JsonbException ex){
             	throw new BadRequestException(ex);
@@ -82,17 +81,16 @@ public class Entities implements epf.client.persistence.Entities {
     
     @Override
 	public void merge(
-			final String unit, 
 			final String name, 
 			final String entityId,
 			final InputStream body
 			) {
-    	final Entity<Object> entity = findEntityObject(unit, name, entityId);
+    	final Entity<Object> entity = findEntityObject(name, entityId);
         if(entity.getObject() != null){
             try(Jsonb json = JsonbBuilder.create()){
             	final Object obj = json.fromJson(body, entity.getType().getJavaType());
                 validator.validate(obj);
-                cache.merge(unit, context.getUserPrincipal(), name, entityId, obj);
+                cache.merge(context.getUserPrincipal(), name, entityId, obj);
             }
             catch(JsonbException ex){
             	logger.throwing(getClass().getName(), "merge", ex);
@@ -106,39 +104,35 @@ public class Entities implements epf.client.persistence.Entities {
     
     /**
      * @param <T>
-     * @param unit
      * @param name
      * @param entityId
      * @return
      */
     protected <T> T find(
-    		final String unit,
     		final String name,
     		final String entityId){
-        final Entity<T> entity = findEntityObject(unit, name, entityId);
+        final Entity<T> entity = findEntityObject(name, entityId);
         return entity.getObject();
     }
     
     @Override
     public void remove(
-    		final String unit,
     		final String name,
     		final String entityId
             ) {
-    	final Entity<Object> entity = findEntityObject(unit, name, entityId);
+    	final Entity<Object> entity = findEntityObject(name, entityId);
         if(entity.getObject() != null){
-            cache.remove(unit, context.getUserPrincipal(), name, entityId, entity.getObject());
+            cache.remove(context.getUserPrincipal(), name, entityId, entity.getObject());
         }
     }
     
     /**
      * @param <T>
-     * @param unit
      * @param name
      * @return
      */
-    protected <T> Entity<T> findEntity(final String unit, final String name) {
-    	final Entity<T> entity = cache.findEntity(unit, context.getUserPrincipal(), name);
+    protected <T> Entity<T> findEntity(final String name) {
+    	final Entity<T> entity = cache.findEntity(context.getUserPrincipal(), name);
         if(entity.getType() == null){
             throw new NotFoundException();
         }
@@ -147,15 +141,14 @@ public class Entities implements epf.client.persistence.Entities {
     
     /**
      * @param <T>
-     * @param unit
      * @param name
      * @param entityId
      * @return
      */
-    protected <T> Entity<T> findEntityObject(final String unit, final String name, final String entityId) {
-    	final Entity<T> entity = findEntity(unit, name);
+    protected <T> Entity<T> findEntityObject(final String name, final String entityId) {
+    	final Entity<T> entity = findEntity(name);
         if(entity.getType() != null){
-        	final T object = cache.find(unit, context.getUserPrincipal(), name, entity.getType().getJavaType(), entityId);
+        	final T object = cache.find(context.getUserPrincipal(), name, entity.getType().getJavaType(), entityId);
             if(object == null){
             	throw new NotFoundException();
             }

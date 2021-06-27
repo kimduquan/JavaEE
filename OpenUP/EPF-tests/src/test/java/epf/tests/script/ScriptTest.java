@@ -35,7 +35,7 @@ public class ScriptTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		scriptUrl = RegistryUtil.lookup("script", null);
-		token = SecurityUtil.login(null, "any_role1", "any_role");
+		token = SecurityUtil.login("any_role1", "any_role");
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class ScriptTest {
 	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-		SecurityUtil.logOut(null, token);
+		SecurityUtil.logOut(token);
 	}
 
 	/**

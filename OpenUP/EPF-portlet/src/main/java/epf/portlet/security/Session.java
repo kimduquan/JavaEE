@@ -59,7 +59,7 @@ public class Session implements Serializable{
 		if(token != null && securityUrl != null)
 		try(Client client = clientUtil.newClient(securityUrl)){
 			client.authorization(token.getRawToken());
-			epf.client.security.Security.logOut(client, null);
+			epf.client.security.Security.logOut(client);
 		} 
 		catch (Exception e) {
 			LOGGER.throwing(getClass().getName(), "preDestroy", e);

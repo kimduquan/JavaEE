@@ -7,7 +7,6 @@ package epf.tests.persistence;
 
 import epf.client.persistence.Entities;
 import epf.schema.EPF;
-import epf.schema.delivery_processes.DeliveryProcess;
 import epf.schema.work_products.Artifact;
 import epf.schema.work_products.section.Description;
 import epf.schema.work_products.section.Illustrations;
@@ -24,7 +23,6 @@ import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.BadRequestException;
-import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotFoundException;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -49,14 +47,14 @@ public class EntitiesTest {
     @BeforeClass
     public static void beforeClass(){
     	persistenceUrl = RegistryUtil.lookup("persistence", null);
-    	token = SecurityUtil.login(null, "any_role1", "any_role");
-    	adminToken = SecurityUtil.login(null, "admin1", "admin");
+    	token = SecurityUtil.login("any_role1", "any_role");
+    	adminToken = SecurityUtil.login("admin1", "admin");
     }
     
     @AfterClass
     public static void afterClass(){
-    	SecurityUtil.logOut(null, token);
-    	SecurityUtil.logOut(null, adminToken);
+    	SecurityUtil.logOut(token);
+    	SecurityUtil.logOut(adminToken);
     }
     
     @Before
@@ -88,13 +86,13 @@ public class EntitiesTest {
         Artifact updatedArtifact = null;
         try(Client adminClient = ClientUtil.newClient(persistenceUrl)){
         	adminClient.authorization(adminToken);
-        	updatedArtifact = Entities.persist(adminClient, Artifact.class, EPF.SCHEMA, EPF.ARTIFACT, artifact);
+        	updatedArtifact = Entities.persist(adminClient, Artifact.class, EPF.ARTIFACT, artifact);
         }
         Assert.assertNotNull("Artifact", updatedArtifact);
         Assert.assertEquals("Artifact.name", artifact.getName(), updatedArtifact.getName());
         Assert.assertEquals("Artifact.summary", artifact.getSummary(), updatedArtifact.getSummary());
         
-        PersistenceUtil.remove(adminToken, EPF.SCHEMA, EPF.ARTIFACT, artifact.getName());
+        PersistenceUtil.remove(adminToken, EPF.ARTIFACT, artifact.getName());
     }
     
     @Test
@@ -107,7 +105,7 @@ public class EntitiesTest {
         artifact.setMoreInformation(new MoreInformation());
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
-        PersistenceUtil.persist(adminToken, Artifact.class, EPF.SCHEMA, EPF.ARTIFACT, artifact);
+        PersistenceUtil.persist(adminToken, Artifact.class, EPF.ARTIFACT, artifact);
         Artifact updatedArtifact = null;
         try(Client adminClient = ClientUtil.newClient(persistenceUrl)){
         	adminClient.authorization(adminToken);
@@ -119,9 +117,9 @@ public class EntitiesTest {
             updatedArtifact.setMoreInformation(new MoreInformation());
             updatedArtifact.setRelationships(new Relationships());
             updatedArtifact.setTailoring(new Tailoring());
-        	Entities.merge(adminClient, EPF.SCHEMA, EPF.ARTIFACT, artifact.getName(), updatedArtifact);
+        	Entities.merge(adminClient, EPF.ARTIFACT, artifact.getName(), updatedArtifact);
         }
-        PersistenceUtil.remove(adminToken, EPF.SCHEMA, EPF.ARTIFACT, updatedArtifact.getName());
+        PersistenceUtil.remove(adminToken, EPF.ARTIFACT, updatedArtifact.getName());
     }
     
     @Test
@@ -134,19 +132,11 @@ public class EntitiesTest {
         artifact.setMoreInformation(new MoreInformation());
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
-        PersistenceUtil.persist(adminToken, Artifact.class, EPF.SCHEMA, EPF.ARTIFACT, artifact);
+        PersistenceUtil.persist(adminToken, Artifact.class, EPF.ARTIFACT, artifact);
         try(Client adminClient = ClientUtil.newClient(persistenceUrl)){
         	adminClient.authorization(adminToken);
-            Entities.remove(adminClient, EPF.SCHEMA, EPF.ARTIFACT, artifact.getName());
+            Entities.remove(adminClient, EPF.ARTIFACT, artifact.getName());
         }
-    }
-    
-    @Test(expected = ForbiddenException.class)
-    public void testPersist_InvalidUnit() {
-    	DeliveryProcess dp = new DeliveryProcess();
-        dp.setName("Delivery Process 1");
-        dp.setSummary("Delivery Process 1");
-        Entities.persist(client, DeliveryProcess.class, "OpenUP", EPF.DELIVERY_PROCESS, dp);
     }
     
     
@@ -157,7 +147,7 @@ public class EntitiesTest {
     	Artifact artifact = new Artifact();
         artifact.setName("Artifact 1");
         artifact.setSummary("Artifact 1 Summary");
-        artifact = Entities.persist(client, Artifact.class, EPF.SCHEMA, "", artifact);
+        artifact = Entities.persist(client, Artifact.class, "", artifact);
     }
     
     @Test(expected = BadRequestException.class)
@@ -165,33 +155,33 @@ public class EntitiesTest {
     	Artifact artifact = new Artifact();
         artifact.setName("Artifact 1");
         artifact.setSummary("Artifact 1 Summary");
-        artifact = Entities.persist(client, Artifact.class, EPF.SCHEMA, "    ", artifact);
+        artifact = Entities.persist(client, Artifact.class, "    ", artifact);
     }
     
     @Test(expected = NotFoundException.class)
     public void testPersistInvalidName() {
     	Artifact artifact = new Artifact();
-        artifact = Entities.persist(client, Artifact.class, EPF.SCHEMA, "Invalid", artifact);
+        artifact = Entities.persist(client, Artifact.class, "Invalid", artifact);
     }
     
     @Test(expected = BadRequestException.class)
     public void testPersistEmptyEntity() {
     	Artifact artifact = new Artifact();
-        artifact = Entities.persist(client, Artifact.class, EPF.SCHEMA, EPF.ARTIFACT, artifact);
+        artifact = Entities.persist(client, Artifact.class, EPF.ARTIFACT, artifact);
     }
     
     @Test(expected = BadRequestException.class)
     public void testPersistEmptyEntityId() {
     	Artifact artifact = new Artifact();
         artifact.setName("");
-        artifact = Entities.persist(client, Artifact.class, EPF.SCHEMA, EPF.ARTIFACT, artifact);
+        artifact = Entities.persist(client, Artifact.class, EPF.ARTIFACT, artifact);
     }
     
     @Test(expected = BadRequestException.class)
     public void testPersistBlankEntityId() {
     	Artifact artifact = new Artifact();
         artifact.setName("    ");
-        artifact = Entities.persist(client, Artifact.class, EPF.SCHEMA, EPF.ARTIFACT, artifact);
+        artifact = Entities.persist(client, Artifact.class, EPF.ARTIFACT, artifact);
     }
     
     @Test(expected = BadRequestException.class)
@@ -199,7 +189,7 @@ public class EntitiesTest {
     	Artifact artifact = new Artifact();
         artifact.setName("Artifact 1");
         artifact.setSummary("Artifact 1 Summary");
-        artifact = Entities.persist(client, Artifact.class, EPF.SCHEMA, EPF.ARTIFACT, artifact);
+        artifact = Entities.persist(client, Artifact.class, EPF.ARTIFACT, artifact);
     }
     
     @Test(expected = BadRequestException.class)
@@ -207,6 +197,6 @@ public class EntitiesTest {
     	Artifact artifact = new Artifact();
         artifact.setName("Artifact 1");
         artifact.setSummary("Artifact 1 Summary");
-        artifact = Entities.persist(client, Artifact.class, EPF.SCHEMA, EPF.ACTIVITY, artifact);
+        artifact = Entities.persist(client, Artifact.class, EPF.ACTIVITY, artifact);
     }
 }

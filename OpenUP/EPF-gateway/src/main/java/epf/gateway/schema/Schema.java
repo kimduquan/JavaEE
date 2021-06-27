@@ -8,7 +8,6 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
@@ -36,19 +35,15 @@ public class Schema {
      * @param headers
      * @param uriInfo
      * @param req
-     * @param unit
      * @return
      */
     @GET
-    @Path("{unit}")
     @Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
     public CompletionStage<Response> getEntities(
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
-            @Context final javax.ws.rs.core.Request req,
-            @PathParam("unit")
-            final String unit) {
+            @Context final javax.ws.rs.core.Request req) {
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         request.setRequest(req);

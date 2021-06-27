@@ -42,12 +42,12 @@ public class Entities {
      * @param headers
      * @param uriInfo
      * @param req
-     * @param unit
      * @param entity
      * @param body
+     * @return
      */
     @POST
-    @Path("{unit}/{entity}")
+    @Path("{entity}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
@@ -55,7 +55,6 @@ public class Entities {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
-            @PathParam("unit") final String unit,
             @PathParam("entity") final String entity,
             final InputStream body) {
         request.setHeaders(headers);
@@ -67,20 +66,20 @@ public class Entities {
     /**
      * @param headers
      * @param uriInfo
-     * @param unit
+     * @param req
      * @param name
      * @param entityId
      * @param body
+     * @return
      */
     @PUT
-    @Path("{unit}/{entity}/{id}")
+    @Path("{entity}/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Asynchronous
     public CompletionStage<Response> merge(
     		@Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
-    		@PathParam("unit") final String unit,
             @PathParam("entity") final String name,
             @PathParam("id") final String entityId,
             final InputStream body
@@ -95,18 +94,17 @@ public class Entities {
      * @param headers
      * @param uriInfo
      * @param req
-     * @param unit
      * @param entity
-     * @param id
+     * @param entityId
+     * @return
      */
     @DELETE
-    @Path("{unit}/{entity}/{id}")
+    @Path("{entity}/{id}")
     @Asynchronous
     public CompletionStage<Response> remove(
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
-            @PathParam("unit") final String unit,
             @PathParam("entity") final String entity,
             @PathParam("id") final String entityId) {
         request.setHeaders(headers);

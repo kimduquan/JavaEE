@@ -46,7 +46,7 @@ public class FilesTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		token = SecurityUtil.login(null, "any_role1", "any_role");
+		token = SecurityUtil.login("any_role1", "any_role");
 		filesUrl = RegistryUtil.lookup("file", null);
 		tempDir = Files.createTempDirectory("file");
 		rootDir = Paths.get(System.getProperty("epf.tests.file.root", "")).toAbsolutePath();
@@ -57,7 +57,7 @@ public class FilesTest {
 	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-		SecurityUtil.logOut(null, token);
+		SecurityUtil.logOut(token);
 		try(Stream<Path> paths = Files.walk(tempDir)){
 			paths.forEach(path -> path.toFile().delete());
 		}
@@ -208,7 +208,7 @@ public class FilesTest {
 	
 	@Test
 	public void testRead_ValidGroup_InvalidUser() throws Exception {
-		String otherToken = SecurityUtil.login(null, "developer1", "developer");
+		String otherToken = SecurityUtil.login("developer1", "developer");
 		Link link;
 		try(InputStream input = Files.newInputStream(tempFile)){
 			try(Client otherClient = ClientUtil.newClient(filesUrl)){

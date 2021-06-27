@@ -26,15 +26,6 @@ import picocli.CommandLine.Option;
 @RequestScoped
 @Function
 public class Persistence {
-	
-	/**
-	 * 
-	 */
-	public static final String UNIT_ARG = "--unit";
-	/**
-	 * 
-	 */
-	public static final String UNIT_DESC = "Unit";
 	/**
 	 * 
 	 */
@@ -58,15 +49,13 @@ public class Persistence {
 			@ArgGroup(exclusive = true, multiplicity = "1")
 			@CallerPrincipal
 			final Credential credential,
-			@Option(names = {"-u", UNIT_ARG}, description = UNIT_DESC)
-			final String unit,
 			@Option(names = {"-n", "--name"}, description = "Name")
 			final String name, 
 			@Option(names = {"-e", "--entity"}, description = "Entity", interactive = true, echo = true)
 			final String entity) throws Exception {
 		try(Client client = clientUtil.newClient(persistenceUrl.get())){
 			client.authorization(credential.getToken());
-			return epf.client.persistence.Entities.persist(client, unit, name, entity);
+			return epf.client.persistence.Entities.persist(client, name, entity);
 		}
 	}
 	
@@ -81,8 +70,6 @@ public class Persistence {
 			@ArgGroup(exclusive = true, multiplicity = "1")
 			@CallerPrincipal
 			final Credential credential,
-			@Option(names = {"-u", UNIT_ARG}, description = UNIT_DESC)
-			final String unit,
 			@Option(names = {"-n", "--name"}, description = "Name")
 			final String name, 
 			@Option(names = {"-i", "--id"}, description = "ID")
@@ -91,13 +78,12 @@ public class Persistence {
 			final String entity) throws Exception {
 		try(Client client = clientUtil.newClient(persistenceUrl.get())){
 			client.authorization(credential.getToken());
-			epf.client.persistence.Entities.merge(client, unit, name, entityId, entity);
+			epf.client.persistence.Entities.merge(client, name, entityId, entity);
 		}
 	}
 	
 	/**
-	 * @param token
-	 * @param unit
+	 * @param credential
 	 * @param name
 	 * @param entityId
 	 * @throws Exception
@@ -107,15 +93,13 @@ public class Persistence {
 			@ArgGroup(exclusive = true, multiplicity = "1")
 			@CallerPrincipal
 			final Credential credential,
-			@Option(names = {"-u", UNIT_ARG}, description = UNIT_DESC)
-			final String unit,
 			@Option(names = {"-n", "--name"}, description = "Name")
 			final String name, 
 			@Option(names = {"-i", "--id"}, description = "ID")
 			final String entityId) throws Exception {
 		try(Client client = clientUtil.newClient(persistenceUrl.get())){
 			client.authorization(credential.getToken());
-			epf.client.persistence.Entities.remove(client, unit, name, entityId);
+			epf.client.persistence.Entities.remove(client, name, entityId);
 		}
 	}
 }

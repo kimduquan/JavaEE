@@ -43,50 +43,50 @@ public class SecurityTest {
     	securityUrl = RegistryUtil.lookup("security", null);
     }
     
-    String login(String unit, String username, String password, URL targetUrl, boolean needHash) throws Exception{
+    String login(String username, String password, URL targetUrl, boolean needHash) throws Exception{
         if(needHash){
         	password = PasswordUtil.hash(username, password.toCharArray());
         }
         try(Client client = ClientUtil.newClient(securityUrl)){
-        	return Security.login(client, unit, username, password, targetUrl);
+        	return Security.login(client, username, password, targetUrl);
         }
     }
     
-    String logOut(String token, String unit) throws Exception{
+    String logOut(String token) throws Exception{
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
-    		return Security.logOut(client, unit);
+    		return Security.logOut(client);
     	}
     }
     
-    Token authenticate(String token, String unit) throws Exception{
+    Token authenticate(String token) throws Exception{
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
-    		return Security.authenticate(client, unit);
+    		return Security.authenticate(client);
     	}
     }
     
-    String revoke(String token, String unit) throws Exception{
+    String revoke(String token) throws Exception{
     	try(Client client = ClientUtil.newClient(securityUrl)){
 			client.authorization(token);
-    		return Security.revoke(client, unit);
+    		return Security.revoke(client);
     	}
     }
     
     @Test
     public void testLoginOK() throws Exception {
-    	String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
+    	String token = login("any_role1", "any_role", securityUrl.toURL(), true);
         Assert.assertNotNull("Token", token);
         Assert.assertNotEquals("Token", "", token);
-        logOut(token, null);
+        logOut(token);
     }
     
     @Test
     public void testLoginOK_Admin() throws Exception {
-    	String token = login(null, "admin1", "admin", securityUrl.toURL(), true);
+    	String token = login("admin1", "admin", securityUrl.toURL(), true);
         Assert.assertNotNull("Token", token);
         Assert.assertNotEquals("Token", "", token);
-        logOut(token, null);
+        logOut(token);
     }
     
     @Test
@@ -94,69 +94,54 @@ public class SecurityTest {
         Assert.assertThrows(
         		NotAuthorizedException.class, 
                 () -> {
-                    login(null, "any_role1", "Invalid", securityUrl.toURL(), true);
+                    login("any_role1", "Invalid", securityUrl.toURL(), true);
                 }
         );
-        String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
+        String token = login("any_role1", "any_role", securityUrl.toURL(), true);
 		Assert.assertNotNull("Token", token);
 		Assert.assertFalse("Token", token.isEmpty());
-		logOut(token, null);
-    }
-    
-    @Test(expected = BadRequestException.class)
-    public void testLoginEmptyUnit() throws Exception{
-        login("", "any_role1", "any_role", securityUrl.toURL(), false);
-    }
-    
-    @Test(expected = BadRequestException.class)
-    public void testLoginBlankUnit() throws Exception{
-        login("     ", "any_role1", "any_role", securityUrl.toURL(), false);
-    }
-    
-    @Test(expected = BadRequestException.class)
-    public void testLoginInvalidUnit() throws Exception{
-        login("Invalid", "any_role1", "any_role", securityUrl.toURL(), false);
+		logOut(token);
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginEmptyUser() throws Exception{
-        login(null, "", "any_role", securityUrl.toURL(), false);
+        login("", "any_role", securityUrl.toURL(), false);
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginBlankUser() throws Exception{
-        login(null, "     ", "any_role", securityUrl.toURL(), false);
+        login("     ", "any_role", securityUrl.toURL(), false);
     }
     
     @Test(expected = NotAuthorizedException.class)
     public void testLoginInvalidUser() throws Exception{
-        login(null, "Invalid", "any_role", securityUrl.toURL(), true);
+        login("Invalid", "any_role", securityUrl.toURL(), true);
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginEmptyPassword() throws Exception{
-        login(null, "any_role1", "", securityUrl.toURL(), false);
+        login("any_role1", "", securityUrl.toURL(), false);
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginBlankPassword() throws Exception{
-        login(null, "any_role1", "    ", securityUrl.toURL(), false);
+        login("any_role1", "    ", securityUrl.toURL(), false);
     }
     
     @Test(expected = NotAuthorizedException.class)
     public void testLoginInvalidPassword() throws Exception{
-        login(null, "any_role1", "Invalid", securityUrl.toURL(), true);
+        login("any_role1", "Invalid", securityUrl.toURL(), true);
     }
     
     @Test(expected = NotAuthorizedException.class)
     public void testLoginInvalidPasswordAfterLoginOK() throws Exception{
-        login(null, "any_role1", "any_role", securityUrl.toURL(), true);
-        login(null, "any_role1", "Invalid", securityUrl.toURL(), true);
+        login("any_role1", "any_role", securityUrl.toURL(), true);
+        login("any_role1", "Invalid", securityUrl.toURL(), true);
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginEmptyUrl() throws Exception{
-        login(null, "any_role1", "any_role", null, false);
+        login("any_role1", "any_role", null, false);
     }
     
     @Test(expected = BadRequestException.class)
@@ -191,8 +176,8 @@ public class SecurityTest {
     
     @Test
     public void testAuthenticateOK() throws Exception{
-        String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
-        Token jwt = authenticate(token, null);
+        String token = login("any_role1", "any_role", securityUrl.toURL(), true);
+        Token jwt = authenticate(token);
         Assert.assertNotNull("Token", jwt);
         Assert.assertNotNull("Token.audience", jwt.getAudience());
         Assert.assertEquals("Token.audience.size", 1, jwt.getAudience().size());
@@ -237,173 +222,108 @@ public class SecurityTest {
         Assert.assertEquals("Token.subject", "any_role1", jwt.getSubject());
         Assert.assertNotNull("Token.tokenID", jwt.getTokenID());
         Assert.assertNotEquals("Token.tokenID", "", jwt.getTokenID());
-        logOut(token, null);
+        logOut(token);
     }
     
     @Test(expected = NotAuthorizedException.class)
     public void testAuthenticateEmptyToken() throws Exception{
-        authenticate("", null);
+        authenticate("");
     }
     
     @Test(expected = NotAuthorizedException.class)
     public void testAuthenticateBlankToken() throws Exception{
-        authenticate("    ", null);
+        authenticate("    ");
     }
     
     @Test(expected = NotAuthorizedException.class)
     public void testAuthenticateInvalidToken() throws Exception{
-        authenticate("Invalid", null);
+        authenticate("Invalid");
     }
     
     @Test(expected = NotAuthorizedException.class)
     public void testLogoutOK() throws Exception {
-        String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
-        logOut(token, null);
-        authenticate(token, null);
-    }
-    
-    @Test
-    public void testLogoutEmptyUnit() throws Exception{
-        String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
-        Assert.assertThrows(
-        		BadRequestException.class, 
-                () -> {
-                    logOut(token, "");
-                }
-        );
-        logOut(token, null);
-    }
-    
-    @Test
-    public void testLogoutBlankUnit() throws Exception{
-        String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
-        Assert.assertThrows(
-        		BadRequestException.class, 
-                () -> {
-                    logOut(token, "    ");
-                }
-        );
-        logOut(token, null);
-    }
-    
-    @Test
-    public void testLogoutInvalidUnit() throws Exception{
-        String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
-        Assert.assertThrows(
-        		BadRequestException.class, 
-                () -> {
-                    logOut(token, "Invalid");
-                }
-        );
-        logOut(token, null);
+        String token = login("any_role1", "any_role", securityUrl.toURL(), true);
+        logOut(token);
+        authenticate(token);
     }
     
     @Test
     public void testUpdateOk_Password() throws Exception {
-    	String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
+    	String token = login("any_role1", "any_role", securityUrl.toURL(), true);
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
     		Map<String, String> fields = new HashMap<>();
     		fields.put("password", "any_role1");
-    		Response response = Security.update(client, null, fields);
+    		Response response = Security.update(client, fields);
     		Assert.assertEquals("Response.status", Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
     	}
-    	logOut(token, null);
-    	token = login(null, "any_role1", "any_role1", securityUrl.toURL(), true);
+    	logOut(token);
+    	token = login("any_role1", "any_role1", securityUrl.toURL(), true);
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
     		Map<String, String> fields = new HashMap<>();
     		fields.put("password", "any_role");
-    		Response response = Security.update(client, null, fields);
+    		Response response = Security.update(client, fields);
     		Assert.assertEquals("Response.status", Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
     	}
-    	logOut(token, null);
+    	logOut(token);
     }
     
     @Test
     public void testUpdateInvalid_PasswordNull() throws Exception {
-    	String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
+    	String token = login("any_role1", "any_role", securityUrl.toURL(), true);
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
     		Map<String, String> fields = new HashMap<>();
-    		Response response = Security.update(client, null, fields);
+    		Response response = Security.update(client, fields);
     		Assert.assertEquals("Response.status", Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     	}
-    	logOut(token, null);
+    	logOut(token);
     }
     
     @Test
     public void testUpdateInvalid_PasswordEmpty() throws Exception {
-    	String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
+    	String token = login("any_role1", "any_role", securityUrl.toURL(), true);
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
     		Map<String, String> fields = new HashMap<>();
     		fields.put("password", "");
-    		Response response = Security.update(client, null, fields);
+    		Response response = Security.update(client, fields);
     		Assert.assertEquals("Response.status", Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     	}
-    	logOut(token, null);
+    	logOut(token);
     }
     
     @Test
     public void testRevokeOk() throws Exception {
-    	String unit = null;
-    	final String token = login(unit, "any_role1", "any_role", securityUrl.toURL(), true);
-    	Token jwt = authenticate(token, unit);
+    	final String token = login("any_role1", "any_role", securityUrl.toURL(), true);
+    	Token jwt = authenticate(token);
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
-    		String newToken = Security.revoke(client, unit);
+    		String newToken = Security.revoke(client);
     		Assert.assertNotEquals(token, newToken);
     		Assert.assertThrows(NotAuthorizedException.class, () -> {
-    			authenticate(token, unit);
+    			authenticate(token);
     		});
-    		Token newJwt = authenticate(newToken, unit);
+    		Token newJwt = authenticate(newToken);
     		Assert.assertNotNull("Token", newJwt);
     		Assert.assertNotEquals("Token.tokenID", jwt.getTokenID(), newJwt.getTokenID());
-    		logOut(newToken, unit);
+    		logOut(newToken);
     	}
     }
     
     @Test
     public void testRevokeOk_AfterRevoke() throws Exception {
-    	String unit = null;
-    	final String token = login(unit, "any_role1", "any_role", securityUrl.toURL(), true);
+    	final String token = login("any_role1", "any_role", securityUrl.toURL(), true);
     	try(Client client = ClientUtil.newClient(securityUrl)){
-    		String newToken = revoke(token, unit);
-    		Token newJwt = authenticate(newToken, unit);
+    		String newToken = revoke(token);
+    		Token newJwt = authenticate(newToken);
     		client.authorization(newToken);
-    		String newToken2 = Security.revoke(client, unit);
-    		Token newJwt2 = authenticate(newToken2, unit);
+    		String newToken2 = Security.revoke(client);
+    		Token newJwt2 = authenticate(newToken2);
     		Assert.assertNotNull("Token", newJwt2);
     		Assert.assertNotEquals("Token.tokenID", newJwt.getTokenID(), newJwt2.getTokenID());
-    		logOut(newToken2, unit);
+    		logOut(newToken2);
     	}
-    }
-    
-    @Test
-    public void testRevokeEmptyUnit() throws Exception{
-        String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
-        Assert.assertThrows(BadRequestException.class, () -> {
-            revoke(token, "");
-        });
-        logOut(token, null);
-    }
-    
-    @Test
-    public void testRevokeBlankUnit() throws Exception{
-        String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
-        Assert.assertThrows(BadRequestException.class, () -> {
-            revoke(token, "     ");
-        });
-        logOut(token, null);
-    }
-    
-    @Test
-    public void testRevokeInvalidUnit() throws Exception{
-        String token = login(null, "any_role1", "any_role", securityUrl.toURL(), true);
-        Assert.assertThrows(BadRequestException.class, () -> {
-            revoke(token, "Invalid");
-        });
-        logOut(token, null);
     }
 }

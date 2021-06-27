@@ -18,7 +18,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
 
 /**
  * @author PC
@@ -42,8 +41,7 @@ public class Schema {
 	private transient ClientUtil clientUtil;
 	
 	/**
-	 * @param token
-	 * @param unit
+	 * @param credential
 	 * @return
 	 * @throws Exception
 	 */
@@ -51,12 +49,10 @@ public class Schema {
 	public List<Entity> getEntities(
 			@ArgGroup(exclusive = true, multiplicity = "1")
 			@CallerPrincipal
-			final Credential credential,
-			@Option(names = {"-u", "--unit"}, description = "Unit")
-			final String unit) throws Exception{
+			final Credential credential) throws Exception{
 		try(Client client = clientUtil.newClient(schemaUrl.get())){
 			client.authorization(credential.getToken());
-			return epf.client.schema.Schema.getEntities(client, unit).readEntity(new GenericType<List<Entity>>() {});
+			return epf.client.schema.Schema.getEntities(client).readEntity(new GenericType<List<Entity>>() {});
 		}
 	}
 }

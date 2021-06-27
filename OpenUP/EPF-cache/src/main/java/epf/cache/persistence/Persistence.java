@@ -35,7 +35,7 @@ public class Persistence {
 	/**
 	 * 
 	 */
-	private static final String CACHE_KEY_FORMAT = "%s/%s/%s";
+	private static final String CACHE_KEY_FORMAT = "%s\0%s";
 	
 	/**
 	 * 
@@ -56,11 +56,6 @@ public class Persistence {
 	 * 
 	 */
 	private transient final Map<String, String> entityNames = new ConcurrentHashMap<>();
-	
-	/**
-	 * 
-	 */
-	private transient final Map<String, String> entitySchemas = new ConcurrentHashMap<>();
 	
 	/**
 	 * 
@@ -137,7 +132,6 @@ public class Persistence {
 	 */
 	protected String getKey(final Object entity) {
 		final Class<?> cls = entity.getClass();
-		final String schema = getEntitySchema(cls);
 		final String entityName = getEntityName(cls);
 		final Field idField = getEntityIdField(cls);
 		Object entityId = null;
@@ -151,24 +145,10 @@ public class Persistence {
 			}
 		}
 		String key = null;
-		if(schema != null && entityName != null && entityId != null) {
-			key = String.format(CACHE_KEY_FORMAT, schema, entityName, entityId);
+		if(entityName != null && entityId != null) {
+			key = String.format(CACHE_KEY_FORMAT, entityName, entityId);
 		}
 		return key;
-	}
-	
-	/**
-	 * @param cls
-	 * @return
-	 */
-	protected String getEntitySchema(final Class<?> cls) {
-		return entitySchemas.computeIfAbsent(cls.getName(), key -> {
-			String name = null;
-			if(cls.isAnnotationPresent(javax.persistence.Table.class)) {
-				name = ((javax.persistence.Table)cls.getAnnotation(javax.persistence.Table.class)).schema();
-			}
-			return name;
-		});
 	}
 	
 	/**
@@ -199,17 +179,15 @@ public class Persistence {
 	}
 	
 	/**
-	 * @param schema
 	 * @param name
 	 * @param entityId
 	 * @return
 	 */
 	public Object getEntity(
-            final String schema,
             final String name,
             final String entityId
             ) {
-		final String key = String.format(CACHE_KEY_FORMAT, schema, name, entityId);
+		final String key = String.format(CACHE_KEY_FORMAT, name, entityId);
 		Object entity = null;
 		if(cache.containsKey(key)) {
 			entity = cache.get(key);

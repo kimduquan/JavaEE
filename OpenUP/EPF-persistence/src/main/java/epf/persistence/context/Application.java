@@ -12,6 +12,8 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import epf.schema.EPF;
+
 /**
  *
  * @author FOXCONN
@@ -54,18 +56,16 @@ public class Application {
     }
     
     /**
-     * @param unit
      * @return
      */
-    public Context putContext(final String unit){
-        return contexts.computeIfAbsent(unit, name -> { return new Context();});
+    public Context putContext(){
+        return contexts.computeIfAbsent(EPF.SCHEMA, name -> { return new Context();});
     }
     
     /**
-     * @param name
      * @return
      */
-    public Context getContext(final String name){
-        return contexts.get(name);
+    public Context getContext(){
+        return contexts.get(EPF.SCHEMA);
     }
 }

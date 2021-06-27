@@ -128,14 +128,12 @@ public class Security implements epf.client.security.Security, Serializable {
             responseCode = "401"
     )
     public String login(
-            final String unit,
             final String username,
             final String passwordHash,
             final URL url) {
-    	final Credential credential = persistence.putContext(unit)
+    	final Credential credential = persistence.putContext()
                 .putCredential(
-                        username, 
-                        unit, 
+                        username,
                         passwordHash
                 );
     	final TokenBuilder builder = new TokenBuilder(issuer, service);
@@ -164,8 +162,8 @@ public class Security implements epf.client.security.Security, Serializable {
             responseCode = "200"
     )
     @Log
-    public String logOut(final String unit) {
-    	final Session session = removeSession(unit, context, persistence);
+    public String logOut() {
+    	final Session session = removeSession(context, persistence);
         if(session != null){
             session.close();
             return context.getUserPrincipal().getName();
@@ -184,8 +182,8 @@ public class Security implements epf.client.security.Security, Serializable {
             description = "OK",
             responseCode = "200"
     )
-    public Token authenticate(final String unit) {
-    	if(getSession(unit, context, persistence) != null){
+    public Token authenticate() {
+    	if(getSession(context, persistence) != null){
     		final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
     		final Token token = new TokenBuilder(issuer, service).build(jwt);
     		token.setRawToken(null);
@@ -195,12 +193,13 @@ public class Security implements epf.client.security.Security, Serializable {
     }
     
     /**
-     * @param unit
+     * @param context
+     * @param persistence
      * @return
      */
-    protected Session removeSession(final String unit, final SecurityContext context, final Application persistence) {
+    protected Session removeSession(final SecurityContext context, final Application persistence) {
     	final Principal principal = context.getUserPrincipal();
-    	final epf.persistence.context.Context ctx = persistence.getContext(unit);
+    	final epf.persistence.context.Context ctx = persistence.getContext();
         if(principal != null && ctx != null){
         	final Credential credential = ctx.getCredential(principal.getName());
             if(credential != null && principal instanceof JsonWebToken){
@@ -212,15 +211,14 @@ public class Security implements epf.client.security.Security, Serializable {
     }
     
     /**
-     * @param unit
      * @param context
      * @param persistence
      * @return
      */
-    protected static Session getSession(final String unit, final SecurityContext context, final Application persistence) {
+    protected static Session getSession(final SecurityContext context, final Application persistence) {
     	Session session = null;
     	final Principal principal = context.getUserPrincipal();
-    	final epf.persistence.context.Context ctx = persistence.getContext(unit);
+    	final epf.persistence.context.Context ctx = persistence.getContext();
     	Credential credential = null;
     	JsonWebToken jwt = null;
         if(principal != null && ctx != null){
@@ -237,14 +235,13 @@ public class Security implements epf.client.security.Security, Serializable {
     }
     
     /**
-     * @param unit
      * @param context
      * @param persistence
      * @return
      */
-    protected static Credential getCredential(final String unit, final SecurityContext context, final Application persistence) {
+    protected static Credential getCredential(final SecurityContext context, final Application persistence) {
     	final Principal principal = context.getUserPrincipal();
-    	final epf.persistence.context.Context ctx = persistence.getContext(unit);
+    	final epf.persistence.context.Context ctx = persistence.getContext();
     	if(principal != null && ctx != null) {
     		final Credential credential = ctx.getCredential(principal.getName());
     		if(credential != null) {
@@ -255,14 +252,14 @@ public class Security implements epf.client.security.Security, Serializable {
     }
 
 	@Override
-	public void update(final String unit, final CredentialInfo info) {
-		final Credential credential = getCredential(unit, context, persistence);
+	public void update(final CredentialInfo info) {
+		final Credential credential = getCredential(context, persistence);
 		service.setUserPassword(credential.getDefaultManager(), context.getUserPrincipal().getName(), info.getPassword().toCharArray());
 	}
 
 	@Override
-	public String revoke(final String unit) {
-		final Session session = removeSession(unit, context, persistence);
+	public String revoke() {
+		final Session session = removeSession(context, persistence);
 		if(session != null) {
 			session.close();
 			if(context.getUserPrincipal() instanceof JsonWebToken) {
@@ -270,7 +267,7 @@ public class Security implements epf.client.security.Security, Serializable {
 				try {
 					final URL url = new URL(jsonWebToken.getAudience().iterator().next());
 					final TokenBuilder builder = new TokenBuilder(issuer, service);
-					final Credential credential = getCredential(unit, context, persistence);
+					final Credential credential = getCredential(context, persistence);
 					final long time = Instant.now().getEpochSecond();
 			        final Token jwt = builder
 			        		.expire(jwtExpTimeUnit, jwtExpDuration)

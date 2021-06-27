@@ -40,11 +40,10 @@ public class Schema implements epf.client.schema.Schema {
 	
 	/**
 	 * @param <T>
-	 * @param unit
 	 * @return
 	 */
-	protected <T> List<Entity<T>> findEntities(final String unit){
-    	final List<Entity<T>> entities = cache.findEntities(unit, context.getUserPrincipal());
+	protected <T> List<Entity<T>> findEntities(){
+    	final List<Entity<T>> entities = cache.findEntities(context.getUserPrincipal());
     	if(entities.isEmpty()){
             throw new NotFoundException();
         }
@@ -52,9 +51,9 @@ public class Schema implements epf.client.schema.Schema {
     }
 
 	@Override
-	public Response getEntities(final String unit) {
+	public Response getEntities() {
 		final EntityBuilder builder = new EntityBuilder();
-		final List<epf.client.schema.Entity> entityTypes = findEntities(unit)
+		final List<epf.client.schema.Entity> entityTypes = findEntities()
 				.stream()
 				.map(builder::build)
 				.collect(Collectors.toList());

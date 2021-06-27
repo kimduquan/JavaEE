@@ -30,7 +30,6 @@ import javax.persistence.metamodel.EntityType;
 import javax.transaction.Transactional;
 import javax.ws.rs.ForbiddenException;
 import org.eclipse.microprofile.jwt.JsonWebToken;
-
 import epf.persistence.context.Application;
 import epf.persistence.context.Context;
 import epf.persistence.context.Credential;
@@ -69,14 +68,13 @@ public class Request {
     }
     
     /**
-     * @param unit
      * @param principal
      * @return
      */
-    protected EntityManager getManager(final String unit, final Principal principal){
+    protected EntityManager getManager(final Principal principal){
         JsonWebToken jwt = null;
         Session session = null;
-        final Context context = application.getContext(unit);
+        final Context context = application.getContext();
         if(principal != null && context != null){
         	final Credential credential = context.getCredential(principal.getName());
             if(credential != null && principal instanceof JsonWebToken){
@@ -108,18 +106,16 @@ public class Request {
     
     /**
      * @param <T>
-     * @param unit
      * @param principal
      * @param name
      * @param cls
      * @return
      */
-    public <T> TypedQuery<T> createNamedQuery(final String unit, final Principal principal, final String name, final Class<T> cls) {
-        return getManager(unit, principal).createNamedQuery(name, cls);
+    public <T> TypedQuery<T> createNamedQuery(final Principal principal, final String name, final Class<T> cls) {
+        return getManager(principal).createNamedQuery(name, cls);
     }
     
     /**
-     * @param unit
      * @param principal
      * @param name
      * @param object
@@ -128,13 +124,11 @@ public class Request {
     @Transactional
     @CacheResult
     public Object persist(
-            @CacheKey
-            final String unit,
             final  Principal principal,
             @CacheKey
             final String name,
             final Object object) {
-        EntityManager manager = getManager(unit, principal);
+        EntityManager manager = getManager(principal);
         manager = joinTransaction(manager);
         manager.persist(object);
         manager.flush();
@@ -142,7 +136,6 @@ public class Request {
     }
     
     /**
-     * @param unit
      * @param principal
      * @param name
      * @param entityId
@@ -151,8 +144,6 @@ public class Request {
     @Transactional
     @CachePut
     public void merge(
-            @CacheKey
-            final String unit,
             final Principal principal,
             @CacheKey
             final String name,
@@ -160,14 +151,14 @@ public class Request {
             final String entityId,
             @CacheValue
             final Object object) {
-        EntityManager manager = getManager(unit, principal);
+        EntityManager manager = getManager(principal);
         manager = joinTransaction(manager);
         manager.merge(object);
         manager.flush();
     }
     
     /**
-     * @param unit
+     * @param <T>
      * @param principal
      * @param name
      * @param cls
@@ -176,16 +167,14 @@ public class Request {
      */
     @CacheResult
     public <T> T find(
-    		@CacheKey final String unit, 
     		final Principal principal, 
     		@CacheKey final String name, 
     		final Class<T> cls, 
     		@CacheKey final String entityId) {
-        return getManager(unit, principal).find(cls, entityId);
+        return getManager(principal).find(cls, entityId);
     }
     
     /**
-     * @param unit
      * @param principal
      * @param name
      * @param entityId
@@ -194,12 +183,11 @@ public class Request {
     @Transactional
     @CacheRemove
     public void remove(
-    		@CacheKey final String unit, 
     		final Principal principal, 
     		@CacheKey final String name, 
     		@CacheKey final String entityId, 
     		final Object object) {
-        EntityManager manager = getManager(unit, principal);
+        EntityManager manager = getManager(principal);
         manager = joinTransaction(manager);
         manager.remove(object);
         manager.flush();
@@ -207,15 +195,14 @@ public class Request {
     
     /**
      * @param <T>
-     * @param unit
      * @param principal
      * @param name
      * @return
      */
     @CacheResult(cacheName = "EntityType")
-    public <T> Entity<T> findEntity(@CacheKey final String unit, final Principal principal, @CacheKey final String name) {
+    public <T> Entity<T> findEntity(final Principal principal, @CacheKey final String name) {
     	final Entity<T> result = new Entity<>();
-        getManager(unit, principal).getMetamodel()
+        getManager(principal).getMetamodel()
                 .getEntities()
                 .stream()
                 .filter(
@@ -238,13 +225,12 @@ public class Request {
     
     /**
      * @param <T>
-     * @param unit
      * @param principal
      * @return
      */
     @CacheResult(cacheName = "EntityType")
-    public <T> List<Entity<T>> findEntities(@CacheKey final String unit, final Principal principal) {
-    	return getManager(unit, principal)
+    public <T> List<Entity<T>> findEntities(final Principal principal) {
+    	return getManager(principal)
     			.getMetamodel()
     			.getEntities()
     			.stream()
@@ -268,7 +254,6 @@ public class Request {
     
     /**
      * @param <T>
-     * @param unit
      * @param principal
      * @param name
      * @param cls
@@ -276,33 +261,32 @@ public class Request {
      */
     @CacheResult(cacheName = "NamedQuery")
     public <T> List<T> getNamedQueryResult(
-    		@CacheKey final String unit, 
     		final Principal principal, 
     		@CacheKey final String name, 
     		final Class<T> cls) {
-        return getManager(unit, principal)
+        return getManager(principal)
                 .createNamedQuery(name, cls)
                 .getResultStream()
                 .collect(Collectors.toList());
     }
     
     /**
-     * @param unit
+     * @param <T>
      * @param principal
      * @param name
      * @param cls
      * @param firstResult
      * @param maxResults
+     * @return
      */
     @CacheResult(cacheName = "NamedQuery")
     public <T> List<T> getNamedQueryResult(
-    		@CacheKey final String unit, 
     		final Principal principal, 
     		@CacheKey final String name, 
     		final Class<T> cls, 
     		final Integer firstResult, 
     		final Integer maxResults) {
-        return getManager(unit, principal)
+        return getManager(principal)
                 .createNamedQuery(name, cls)
                 .setFirstResult(firstResult)
                 .setMaxResults(maxResults)
@@ -311,17 +295,15 @@ public class Request {
     }
     
     /**
-     * @param unit
      * @param principal
      * @param entityTables
      * @param entityAttributes
      */
     public void mapEntities(
-    		final String unit, 
     		final Principal principal, 
     		final Map<String, EntityType<?>> entityTables, 
     		final Map<String, Map<String, Attribute<?,?>>> entityAttributes) {
-    	final EntityManager manager = getManager(unit, principal);
+    	final EntityManager manager = getManager(principal);
     	manager.getMetamodel().getEntities().forEach(entityType -> {
 			String tableName = entityType.getName().toLowerCase(Locale.getDefault());
 			final Table tableAnnotation = entityType.getJavaType().getAnnotation(Table.class);

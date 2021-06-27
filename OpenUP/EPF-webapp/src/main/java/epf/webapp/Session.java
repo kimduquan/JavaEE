@@ -91,7 +91,7 @@ public class Session implements Serializable {
         if(principal != null){
         	try(Client client = newClient("security")) {
         		client.authorization(principal.getToken().getRawToken());
-            	Security.logOut(client, null);
+            	Security.logOut(client);
             }
             catch (Exception ex) {
                 logger.log(Level.SEVERE, "PreDestroy", ex);

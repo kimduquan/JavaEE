@@ -62,7 +62,6 @@ public class Tasks implements Serializable {
             	disciplines = Queries.executeQuery(
             			client, 
             			new GenericType<List<Discipline>> () {}, 
-            			EPF.SCHEMA, 
             			target -> target.path(EPF.DISCIPLINE), 
             			0, 
             			100);
@@ -83,7 +82,6 @@ public class Tasks implements Serializable {
             	taskList = Queries.executeQuery(
             			client, 
             			new GenericType<List<Task>> () {}, 
-            			EPF.SCHEMA, 
             			target -> target.path(EPF.TASK), 
             			0, 
             			100);

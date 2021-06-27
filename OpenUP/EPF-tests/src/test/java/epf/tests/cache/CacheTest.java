@@ -46,7 +46,7 @@ public class CacheTest {
 		cacheUrl = RegistryUtil.lookup("cache", null);
 		persistenceUrl = RegistryUtil.lookup("persistence", null);
 		persistenceClient = ClientUtil.newClient(persistenceUrl);
-		token = SecurityUtil.login(null, "any_role1", "any_role");
+		token = SecurityUtil.login("any_role1", "any_role");
 		persistenceClient.authorization(token);
 	}
 
@@ -56,7 +56,7 @@ public class CacheTest {
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		persistenceClient.close();
-		SecurityUtil.logOut(null, token);
+		SecurityUtil.logOut(token);
 	}
 
 	/**
@@ -86,8 +86,8 @@ public class CacheTest {
         artifact.setMoreInformation(new MoreInformation());
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
-        Entities.persist(persistenceClient, Artifact.class, EPF.SCHEMA, EPF.ARTIFACT, artifact);
-        Artifact cachedArtifact = Cache.getEntity(client, Artifact.class, EPF.SCHEMA, EPF.ARTIFACT, artifact.getName());
+        Entities.persist(persistenceClient, Artifact.class, EPF.ARTIFACT, artifact);
+        Artifact cachedArtifact = Cache.getEntity(client, Artifact.class, EPF.ARTIFACT, artifact.getName());
         Assert.assertNotNull("Artifact", cachedArtifact);
         Assert.assertEquals("Artifact.name", artifact.getName(), cachedArtifact.getName());
         Assert.assertEquals("Artifact.summary", artifact.getSummary(), cachedArtifact.getSummary());
@@ -96,7 +96,7 @@ public class CacheTest {
 	@Test(expected = NotFoundException.class)
 	public void testGetEntity_NotFound() throws Exception {
 		Thread.sleep(20);
-        Cache.getEntity(client, Artifact.class, EPF.SCHEMA, EPF.ARTIFACT, StringUtil.randomString("Artifact Cache"));
+        Cache.getEntity(client, Artifact.class, EPF.ARTIFACT, StringUtil.randomString("Artifact Cache"));
 	}
 
 }

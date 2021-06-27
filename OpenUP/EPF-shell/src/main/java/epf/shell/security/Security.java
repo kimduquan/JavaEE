@@ -72,8 +72,7 @@ public class Security {
 			) throws Exception {
 		try(Client client = clientUtil.newClient(securityUrl.get())){
 			return epf.client.security.Security.login(
-					client, 
-					null, 
+					client,
 					user, 
 					PasswordUtil.hash(user, password), 
 					new URL(securityUrl.get().toString())
@@ -95,7 +94,7 @@ public class Security {
 		identityStore.remove(credential);
 		try(Client client = clientUtil.newClient(securityUrl.get())){
 			client.authorization(credential.getToken());
-			return epf.client.security.Security.logOut(client, null);
+			return epf.client.security.Security.logOut(client);
 		}
 	}
 	
@@ -111,7 +110,7 @@ public class Security {
 		Token authToken = null;
 		try(Client client = clientUtil.newClient(securityUrl.get())){
 			client.authorization(token);
-			authToken = epf.client.security.Security.authenticate(client, null);
+			authToken = epf.client.security.Security.authenticate(client);
 		}
 		final Credential credential = new Credential();
 		credential.token = token;
@@ -137,7 +136,7 @@ public class Security {
 			client.authorization(credential.getToken());
 			final Map<String, String> infos = new ConcurrentHashMap<>();
 			infos.put("password", new String(password));
-			epf.client.security.Security.update(client, null, infos);
+			epf.client.security.Security.update(client, infos);
 		}
 	}
 	
@@ -154,7 +153,7 @@ public class Security {
 			) throws Exception {
 		try(Client client = clientUtil.newClient(securityUrl.get())){
 			client.authorization(credential.getToken());
-			return epf.client.security.Security.revoke(client, null);
+			return epf.client.security.Security.revoke(client);
 		}
 	}
 }

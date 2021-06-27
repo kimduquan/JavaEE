@@ -39,12 +39,12 @@ public class MessagingTest {
     	persistenceUrl = RegistryUtil.lookup("persistence", null);
     	URI messagingUrl = MessagingUtil.getMessagingUrl();
     	listenerUrl = messagingUrl.resolve("persistence");
-    	token = SecurityUtil.login(null, "admin1", "admin");
+    	token = SecurityUtil.login("admin1", "admin");
     }
     
     @AfterClass
     public static void afterClass(){
-    	SecurityUtil.logOut(null, token);
+    	SecurityUtil.logOut(token);
     }
     
     @After
@@ -70,8 +70,8 @@ public class MessagingTest {
         artifact.setTailoring(new Tailoring());
     	try(epf.util.client.Client persistenceClient = ClientUtil.newClient(persistenceUrl)){
     		persistenceClient.authorization(token);
-    		Entities.persist(persistenceClient, Artifact.class, EPF.SCHEMA, EPF.ARTIFACT, artifact);
-            Entities.remove(persistenceClient, EPF.SCHEMA, EPF.ARTIFACT, artifact.getName());
+    		Entities.persist(persistenceClient, Artifact.class, EPF.ARTIFACT, artifact);
+            Entities.remove(persistenceClient, EPF.ARTIFACT, artifact.getName());
     	}
     	
     	TestUtil.waitUntil((t) -> client.getMessages().stream().anyMatch(msg -> msg instanceof PostPersist), Duration.ofSeconds(10));

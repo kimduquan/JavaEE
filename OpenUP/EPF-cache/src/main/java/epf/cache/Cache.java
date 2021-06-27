@@ -29,11 +29,10 @@ public class Cache implements epf.client.cache.Cache {
 	 */
 	@Override
     public Response getEntity(
-            final String schema,
             final String name,
             final String entityId
             ) {
-		final Object entity = persistence.getEntity(schema, name, entityId);
+		final Object entity = persistence.getEntity(name, entityId);
 		if(entity != null) {
 			return Response.ok(entity).build();
 		}

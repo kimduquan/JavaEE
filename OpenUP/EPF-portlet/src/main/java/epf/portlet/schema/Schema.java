@@ -29,7 +29,6 @@ import epf.portlet.ParameterUtil;
 import epf.portlet.SessionUtil;
 import epf.portlet.client.ClientUtil;
 import epf.portlet.registry.RegistryUtil;
-import epf.schema.EPF;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
 
@@ -97,7 +96,7 @@ public class Schema {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final List<Entity> entityList = getEntities(EPF.SCHEMA);
+			final List<Entity> entityList = fetchEntities();
 			if(entityList != null) {
 				entities = entityList
 						.stream()
@@ -115,17 +114,16 @@ public class Schema {
 	}
 	
 	/**
-	 * @param unit
 	 * @return
 	 * @throws Exception
 	 */
-	protected List<Entity> getEntities(final String unit) throws Exception{
+	protected List<Entity> fetchEntities() throws Exception{
 		final Token token = sessionUtil.getAttribute(Naming.SECURITY_TOKEN);
 		if(token != null) {
 			final URI schemaUrl = registryUtil.get("schema");
 			try(Client client = clientUtil.newClient(schemaUrl)){
 				client.authorization(token.getRawToken());
-				try(Response response = epf.client.schema.Schema.getEntities(client, unit)){
+				try(Response response = epf.client.schema.Schema.getEntities(client)){
 					return response.readEntity(new GenericType<List<Entity>>() {});
 				}
 			}
@@ -164,7 +162,7 @@ public class Schema {
 		if(selectedEntity != null) {
 			eventUtil.setEvent(Event.SCHEMA_ENTITY, selectedEntity);
 		}
-		paramUtil.setValue("entity", entity);
+		paramUtil.setValue(Parameter.SCHEMA_ENTITY, entity);
 	}
 	
 	/**

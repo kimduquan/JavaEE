@@ -18,7 +18,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 import epf.util.client.Client;
-import epf.validation.persistence.Unit;
 
 /**
  *
@@ -26,27 +25,17 @@ import epf.validation.persistence.Unit;
  */
 @Path("persistence")
 public interface Entities {
-	
-	/**
-	 * 
-	 */
-	String UNIT = "unit";
     
     /**
-     * @param unit
      * @param name
      * @param body
      * @return
      */
     @POST
-    @Path("{unit}/{entity}")
+    @Path("{entity}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Object persist(
-            @PathParam(UNIT)
-            @Unit
-            @NotBlank
-            final String unit,
             @PathParam("entity")
             @NotBlank
             final String name,
@@ -55,21 +44,21 @@ public interface Entities {
             );
     
     /**
+     * @param <T>
      * @param client
      * @param cls
-     * @param unit
      * @param name
      * @param body
+     * @return
      */
     static <T> T persist(
     		final Client client,
     		final Class<T> cls,
-    		final String unit,
     		final String name,
     		final T body
             ){
     	return client.request(
-    			target -> target.path(unit).path(name), 
+    			target -> target.path(name), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.post(Entity.json(body), cls);
@@ -77,19 +66,17 @@ public interface Entities {
     
     /**
      * @param client
-     * @param unit
      * @param name
      * @param body
      * @return
      */
     static String persist(
     		final Client client,
-    		final String unit,
     		final String name,
     		final String body
             ){
     	return client.request(
-    			target -> target.path(unit).path(name), 
+    			target -> target.path(name), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.post(Entity.entity(body, MediaType.APPLICATION_JSON_TYPE))
@@ -97,19 +84,14 @@ public interface Entities {
     }
     
     /**
-     * @param unit
      * @param name
      * @param entityId
      * @param body
      */
     @PUT
-    @Path("{unit}/{entity}/{id}")
+    @Path("{entity}/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     void merge(
-    		@PathParam(UNIT)
-            @Unit
-            @NotBlank
-            final String unit,
             @PathParam("entity")
             @NotBlank
             final String name,
@@ -122,20 +104,18 @@ public interface Entities {
     
     /**
      * @param client
-     * @param unit
      * @param name
      * @param entityId
      * @param body
      */
     static void merge(
     		final Client client,
-    		final String unit,
     		final String name,
     		final String entityId,
     		final Object body
             ) {
     	client.request(
-    			target -> target.path(unit).path(name).path(entityId), 
+    			target -> target.path(name).path(entityId), 
     			req -> req
     			)
     	.put(Entity.json(body));
@@ -143,37 +123,30 @@ public interface Entities {
     
     /**
      * @param client
-     * @param unit
      * @param name
      * @param entityId
      * @param body
      */
     static void merge(
     		final Client client,
-    		final String unit,
     		final String name,
     		final String entityId,
     		final String body
             ) {
     	client.request(
-    			target -> target.path(unit).path(name).path(entityId), 
+    			target -> target.path(name).path(entityId), 
     			req -> req
     			)
     	.put(Entity.entity(body, MediaType.APPLICATION_JSON_TYPE));
     }
     
     /**
-     * @param unit
      * @param name
      * @param entityId
      */
     @DELETE
-    @Path("{unit}/{entity}/{id}")
+    @Path("{entity}/{id}")
     void remove(
-            @PathParam(UNIT)
-            @Unit
-            @NotBlank
-            final String unit,
             @PathParam("entity")
             @NotBlank
             final String name,
@@ -184,18 +157,16 @@ public interface Entities {
     
     /**
      * @param client
-     * @param unit
      * @param name
      * @param entityId
      */
     static void remove(
     		final Client client,
-    		final String unit,
     		final String name,
     		final String entityId
             ) {
     	client.request(
-    			target -> target.path(unit).path(name).path(entityId), 
+    			target -> target.path(name).path(entityId), 
     			req -> req
     			)
     	.delete();

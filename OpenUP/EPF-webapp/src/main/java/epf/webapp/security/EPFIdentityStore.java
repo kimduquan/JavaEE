@@ -90,15 +90,14 @@ public class EPFIdentityStore implements IdentityStore {
             	final URI securityUrl = registry.lookup("security");
             	try(Client client = new Client(clients, securityUrl, b -> b)){
             		final String rawToken = Security.login(
-                			client, 
-                			null,
+                			client,
         					credential.getCaller(),
         					passwordHash,
         					webAppUrl
         					);
                     if(!rawToken.isEmpty()){
                     	client.authorization(rawToken);
-                    	token = Security.authenticate(client, null);
+                    	token = Security.authenticate(client);
                     	if(token != null) {
                     		token.setRawToken(rawToken);
                     		tokens.put(credential.getCaller(), token);

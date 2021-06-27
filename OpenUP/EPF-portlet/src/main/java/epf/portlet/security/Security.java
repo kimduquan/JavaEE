@@ -99,8 +99,7 @@ public class Security {
 			String rawToken;
 			try(Client client = clientUtil.newClient(securityUrl)){
 				rawToken = epf.client.security.Security.login(
-						client, 
-						null, 
+						client,
 						credential.getCaller(), 
 						passwordHash, 
 						url
@@ -109,7 +108,7 @@ public class Security {
 			Token token;
 			try(Client client = clientUtil.newClient(securityUrl)){
 				client.authorization(rawToken);
-				token = epf.client.security.Security.authenticate(client, null);
+				token = epf.client.security.Security.authenticate(client);
 			}
 			token.setRawToken(rawToken);
 			session.setToken(token);
@@ -130,7 +129,7 @@ public class Security {
 	public String logout() {
 		try(Client client = clientUtil.newClient(registryUtil.get("security"))){
 			client.authorization(session.getToken().getRawToken());
-			epf.client.security.Security.logOut(client, null);
+			epf.client.security.Security.logOut(client);
 			session.setToken(null);
 			sessionUtil.setAttribute(Naming.SECURITY_TOKEN, null);
 			eventUtil.setEvent(Event.SECURITY_TOKEN, null);
@@ -149,7 +148,7 @@ public class Security {
 		info.put("password", new String(credential.getPassword()));
 		try(Client client = clientUtil.newClient(registryUtil.get("security"))){
 			client.authorization(session.getToken().getRawToken());
-			epf.client.security.Security.update(client, null, info);
+			epf.client.security.Security.update(client, info);
 		} 
 		catch (Exception e) {
 			LOGGER.throwing(getClass().getName(), "update", e);
@@ -166,12 +165,12 @@ public class Security {
 			String rawToken;
 			try(Client client = clientUtil.newClient(securityUrl)){
 				client.authorization(session.getToken().getRawToken());
-				rawToken = epf.client.security.Security.revoke(client, null);
+				rawToken = epf.client.security.Security.revoke(client);
 			}
 			Token token;
 			try(Client client = clientUtil.newClient(securityUrl)){
 				client.authorization(rawToken);
-				token = epf.client.security.Security.authenticate(client, null);
+				token = epf.client.security.Security.authenticate(client);
 			}
 			token.setRawToken(rawToken);
 			session.setToken(token);

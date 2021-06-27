@@ -34,18 +34,17 @@ public class Context {
     
     /**
      * @param userName
-     * @param unit
      * @param passwordHash
      * @return
-     * @throws Exception 
+     * @throws EPFException
      */
-    public Credential putCredential(final String userName, final String unit, final String passwordHash) throws EPFException {
+    public Credential putCredential(final String userName, final String passwordHash) throws EPFException {
     	final Map<String, Object> props = new ConcurrentHashMap<>();
         props.put("javax.persistence.jdbc.user", userName);
         props.put("javax.persistence.jdbc.password", passwordHash);
         final Var<Exception> error = new Var<>();
         credentials.computeIfAbsent(userName, name -> {
-            return newCredential(unit, props, error);
+            return newCredential(props, error);
         });
         if(error.get() != null){
         	throw new EPFException(error.get());
@@ -53,13 +52,13 @@ public class Context {
         final Var<Credential> cred = new Var<>();
         credentials.computeIfPresent(userName, (name, credential) -> {
             if(credential == null){
-                credential = newCredential(unit, props, error);
+                credential = newCredential(props, error);
             }
             else{
                 synchronized(credential){
                     if(!props.equals(credential.getFactory().getProperties())){
                     	credential.close();
-                        credential = newCredential(unit, props, error);
+                        credential = newCredential(props, error);
                     }
                 }
             }
@@ -73,12 +72,11 @@ public class Context {
     }
     
     /**
-     * @param unit
      * @param props
      * @param error
      * @return
      */
-    protected Credential newCredential(final String unit, final Map<String, Object> props, final Var<Exception> error){
+    protected Credential newCredential(final Map<String, Object> props, final Var<Exception> error){
         EntityManagerFactory factory = null;
         EntityManager manager = null;
         Credential result = null;

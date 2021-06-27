@@ -13,7 +13,6 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HttpMethod;
@@ -27,9 +26,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import epf.schema.EPF;
 import epf.util.client.Client;
-import epf.validation.persistence.Unit;
 
 /**
  *
@@ -59,17 +56,11 @@ public interface Security {
     /**
      * 
      */
-    String UNIT = "unit";
-    
-    /**
-     * 
-     */
     String URL = "url";
     
     /**
-     * @param unit
      * @param username
-     * @param password_hash
+     * @param passwordHash
      * @param url
      * @return
      */
@@ -77,11 +68,6 @@ public interface Security {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
     String login(
-            @QueryParam(UNIT)
-            @Unit
-            @NotBlank
-            @DefaultValue(EPF.SCHEMA)
-            final String unit,
             @FormParam("username")
             @NotBlank
             final String username,
@@ -95,15 +81,13 @@ public interface Security {
     
     /**
      * @param client
-     * @param unit
      * @param username
-     * @param password_hash
+     * @param passwordHash
      * @param url
      * @return
      */
     static String login(
-    		final Client client, 
-    		final String unit, 
+    		final Client client,
     		final String username, 
     		final String passwordHash, 
     		final URL url) {
@@ -111,76 +95,55 @@ public interface Security {
     	form.param("username", username);
     	form.param("password_hash", passwordHash);
     	return client.request(
-    			target -> target.queryParam(UNIT, unit).queryParam(URL, url),
+    			target -> target.queryParam(URL, url),
     			req -> req.accept(MediaType.TEXT_PLAIN))
     			.post(Entity.form(form), String.class);
     }
     
     /**
-     * @param unit
      * @return
      */
     @DELETE
     @Produces(MediaType.TEXT_PLAIN)
-    String logOut(
-            @QueryParam(UNIT)
-            @Unit
-            @NotBlank
-            @DefaultValue(EPF.SCHEMA)
-            final String unit
-            );
+    String logOut();
     
     /**
      * @param client
-     * @param unit
      * @return
      */
-    static String logOut(final Client client, final String unit) {
+    static String logOut(final Client client) {
     	return client.request(
-    			target -> target.queryParam(UNIT, unit), 
+    			target -> target, 
     			req -> req.accept(MediaType.TEXT_PLAIN)
     			)
     			.delete(String.class);
     }
     
     /**
-     * @param unit
      * @return
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    Token authenticate(
-    		@QueryParam(UNIT)
-            @Unit
-            @DefaultValue(EPF.SCHEMA)
-    		@NotBlank
-    		final String unit
-    		);
+    Token authenticate();
     
     /**
      * @param client
-     * @param unit
      * @return
      */
-    static Token authenticate(final Client client, final String unit) {
+    static Token authenticate(final Client client) {
     	return client.request(
-    			target -> target.queryParam(UNIT, unit), 
+    			target -> target, 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.get(Token.class);
     }
     
     /**
-     * @param unit
+     * @param info
      */
     @PATCH
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     void update(
-    		@QueryParam(UNIT)
-            @Unit
-            @DefaultValue(EPF.SCHEMA)
-    		@NotBlank
-    		final String unit,
     		@BeanParam
     		@Valid
     		final CredentialInfo info
@@ -188,14 +151,14 @@ public interface Security {
     
     /**
      * @param client
-     * @param unit
      * @param fields
+     * @return
      */
-    static Response update(final Client client, final String unit, final Map<String, String> fields) {
+    static Response update(final Client client, final Map<String, String> fields) {
     	final Form form = new Form();
     	fields.forEach((name, value) -> form.param(name, value));
     	return client.request(
-    			target -> target.queryParam(UNIT, unit), 
+    			target -> target, 
     			req -> req
     			)
     	.build(HttpMethod.PATCH, Entity.form(form))
@@ -203,31 +166,21 @@ public interface Security {
     }
     
     /**
-     * @param unit
-     * @param url
      * @return
      */
     @PUT
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
-    String revoke(
-    		@QueryParam(UNIT)
-            @Unit
-            @NotBlank
-            @DefaultValue(EPF.SCHEMA)
-            final String unit);
+    String revoke();
     
     /**
      * @param client
-     * @param unit
-     * @param url
      * @return
      */
     static String revoke(
-    		final Client client,
-            final String unit) {
+    		final Client client) {
     	return client.request(
-    			target -> target.queryParam(UNIT, unit),
+    			target -> target,
     			req -> req.accept(MediaType.TEXT_PLAIN))
     			.put(Entity.form(new Form()), String.class);
     }

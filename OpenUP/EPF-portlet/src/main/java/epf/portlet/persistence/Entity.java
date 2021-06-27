@@ -21,7 +21,6 @@ import epf.portlet.Naming;
 import epf.portlet.SessionUtil;
 import epf.portlet.client.ClientUtil;
 import epf.portlet.registry.RegistryUtil;
-import epf.schema.EPF;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
 
@@ -132,7 +131,6 @@ public class Entity {
 			client.authorization(token.getRawToken());
 			epf.client.persistence.Entities.persist(
 					client, 
-					EPF.SCHEMA, 
 					entity.getName(), 
 					builder.build().toString()
 					);
@@ -151,8 +149,7 @@ public class Entity {
 				try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
 					client.authorization(token.getRawToken());
 					epf.client.persistence.Entities.merge(
-							client, 
-							EPF.SCHEMA, 
+							client,
 							entity.getName(), 
 							idValue.toString(), 
 							builder.build().toString()
@@ -174,7 +171,6 @@ public class Entity {
 					client.authorization(token.getRawToken());
 					epf.client.persistence.Entities.remove(
 							client, 
-							EPF.SCHEMA, 
 							entity.getName(), 
 							idValue.toString()
 							);

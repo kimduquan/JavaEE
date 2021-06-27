@@ -17,7 +17,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import epf.client.schema.Entity;
 import epf.client.schema.Schema;
-import epf.schema.EPF;
 import epf.tests.client.ClientUtil;
 import epf.tests.persistence.EntitiesTest;
 import epf.tests.registry.RegistryUtil;
@@ -43,8 +42,8 @@ public class SchemaTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		schemaUrl = RegistryUtil.lookup("schema", null);
-    	token = SecurityUtil.login(null, "any_role1", "any_role");
-    	adminToken = SecurityUtil.login(null, "admin1", "admin");
+    	token = SecurityUtil.login("any_role1", "any_role");
+    	adminToken = SecurityUtil.login("admin1", "admin");
 	}
 
 	/**
@@ -52,8 +51,8 @@ public class SchemaTest {
 	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-		SecurityUtil.logOut(null, token);
-    	SecurityUtil.logOut(null, adminToken);
+		SecurityUtil.logOut(token);
+    	SecurityUtil.logOut(adminToken);
 	}
 
 	/**
@@ -80,7 +79,7 @@ public class SchemaTest {
 	
     @Test
     public void testGetEntitiesOK() throws Exception{
-    	Response res = Schema.getEntities(client, EPF.SCHEMA);
+    	Response res = Schema.getEntities(client);
     	List<Entity> entities = res.readEntity(new GenericType<List<Entity>>() {});
     	Assert.assertFalse("List<EntityType>.empty", entities.isEmpty());
     }
