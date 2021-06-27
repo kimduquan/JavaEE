@@ -12,7 +12,7 @@ import epf.client.schema.Attribute;
  * @author PC
  *
  */
-public class AttributeComparator implements Comparator<Map<String, Object>>, Serializable {
+public class ObjectComparator implements Comparator<Map<String, Object>>, Serializable {
 	
 	/**
 	 * 
@@ -32,7 +32,7 @@ public class AttributeComparator implements Comparator<Map<String, Object>>, Ser
 	 * @param attribute
 	 * @param ascending
 	 */
-	protected AttributeComparator(final Attribute attribute, final boolean ascending) {
+	protected ObjectComparator(final Attribute attribute, final boolean ascending) {
 		this.attribute = attribute;
 		this.ascending = ascending;
 	}

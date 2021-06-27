@@ -3,16 +3,26 @@
  */
 package epf.persistence.schema;
 
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.Type;
 import javax.persistence.metamodel.Type.PersistenceType;
+import epf.client.schema.Attribute;
+import epf.client.schema.util.AttributeComparator;
 import epf.persistence.impl.Entity;
+import epf.util.logging.Logging;
 
 /**
  * @author PC
  *
  */
 public class EntityBuilder {
+	
+	/**
+	 * 
+	 */
+	private static final Logger LOGGER = Logging.getLogger(EntityBuilder.class.getName());
 
 	/**
 	 * @param entity
@@ -22,17 +32,30 @@ public class EntityBuilder {
 		final EntityType<?> type = entity.getType();
 		final epf.client.schema.Entity entityType = new epf.client.schema.Entity();
 		final AttributeBuilder builder = new AttributeBuilder();
+		final AttributeComparator comparator = new AttributeComparator();
 		entityType.setAttributes(
 				type
-				.getDeclaredAttributes()
+				.getAttributes()
 				.stream()
 				.map(builder::build)
-				.collect(Collectors.toSet())
+				.sorted(comparator)
+				.collect(Collectors.toList())
 				);
 		entityType.setIdType(type.getIdType().getJavaType().getName());
 		entityType.setType(type.getJavaType().getName());
 		entityType.setName(type.getName());
 		entityType.setEntityType(buildEntityType(type.getPersistenceType()));
+		entityType.setSingleId(type.hasSingleIdAttribute());
+		if(type.hasSingleIdAttribute()) {
+			final Type<?> idType = type.getIdType();
+			try {
+				final Attribute id = builder.build(type.getId(idType.getJavaType()));
+				entityType.setId(id);
+			}
+			catch(Exception ex) {
+				LOGGER.throwing(getClass().getName(), "build", ex);
+			}
+		}
 		return entityType;
 	}
 	

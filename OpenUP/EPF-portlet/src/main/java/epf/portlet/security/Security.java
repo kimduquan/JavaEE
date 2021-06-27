@@ -113,6 +113,7 @@ public class Security {
 			}
 			token.setRawToken(rawToken);
 			session.setToken(token);
+			session.setSecurityUrl(securityUrl);
 			sessionUtil.setAttribute(Naming.SECURITY_TOKEN, token);
 			eventUtil.setEvent(Event.SECURITY_TOKEN, token);
 			return "session";
@@ -174,6 +175,7 @@ public class Security {
 			}
 			token.setRawToken(rawToken);
 			session.setToken(token);
+			session.setSecurityUrl(securityUrl);
 			sessionUtil.setAttribute(Naming.SECURITY_TOKEN, token);
 			eventUtil.setEvent(Event.SECURITY_TOKEN, token);
 		}

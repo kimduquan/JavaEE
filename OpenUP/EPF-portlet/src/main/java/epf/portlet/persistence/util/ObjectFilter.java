@@ -10,7 +10,7 @@ import java.util.Map;
  * @author PC
  *
  */
-public class AttributeFilter implements Serializable {
+public class ObjectFilter implements Serializable {
 	
 	/**
 	 * 
@@ -19,7 +19,7 @@ public class AttributeFilter implements Serializable {
 	/**
 	 * 
 	 */
-	private final AttributeComparator comparator;
+	private final ObjectComparator comparator;
 	/**
 	 * 
 	 */
@@ -29,7 +29,7 @@ public class AttributeFilter implements Serializable {
 	 * @param comparator
 	 * @param include
 	 */
-	protected AttributeFilter(final AttributeComparator comparator, final boolean include) {
+	protected ObjectFilter(final ObjectComparator comparator, final boolean include) {
 		this.comparator = comparator;
 		this.include = include;
 	}
@@ -51,7 +51,7 @@ public class AttributeFilter implements Serializable {
 		this.include = include;
 	}
 
-	public AttributeComparator getComparator() {
+	public ObjectComparator getComparator() {
 		return comparator;
 	}
 }

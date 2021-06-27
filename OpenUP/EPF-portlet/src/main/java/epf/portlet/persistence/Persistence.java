@@ -3,7 +3,6 @@
  */
 package epf.portlet.persistence;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -15,7 +14,6 @@ import javax.inject.Named;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import epf.client.schema.Attribute;
-import epf.client.schema.AttributeType;
 import epf.client.schema.Entity;
 import epf.client.security.Token;
 import epf.portlet.Event;
@@ -59,6 +57,11 @@ public class Persistence {
 	/**
 	 * 
 	 */
+	private Token token;
+	
+	/**
+	 * 
+	 */
 	@Inject
 	private transient RegistryUtil registryUtil;
 	
@@ -90,24 +93,10 @@ public class Persistence {
 			attributes = entity
 					.getAttributes()
 					.stream()
-					.filter(
-							attr -> !attr.isAssociation() 
-							&& !attr.isCollection() 
-							&& attr.getAttributeType().equals(AttributeType.BASIC)
-							)
-					.sorted(new Comparator<Attribute>() {
-						@Override
-						public int compare(Attribute o1, Attribute o2) {
-							int result = Integer.compare(o1.getName().length(), o2.getName().length());
-							if(result == 0) {
-								result = o1.getName().compareTo(o2.getName());
-							}
-							return result;
-						}}
-					)
+					.filter(AttributeUtil::isBasic)
 					.collect(Collectors.toList());
 		}
-		final Token token = sessionUtil.getAttribute(Naming.SECURITY_TOKEN);
+		token = sessionUtil.getAttribute(Naming.SECURITY_TOKEN);
 		if(entity != null && token != null) {
 			try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
 				client.authorization(token.getRawToken());
@@ -138,11 +127,16 @@ public class Persistence {
 		return attributes;
 	}
 	
-	/**
-	 * @param attribute
-	 * @return
-	 */
-	public String getId(final Attribute attribute) {
-		return entity.getType() + "." + attribute.getName();
+	public void remove(final Map<String, Object> object) throws Exception {
+		if(entity.isSingleId()) {
+			final Attribute id = entity.getId();
+			if(id != null) {
+				final Object idValue = object.get(id.getName());
+				try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
+					client.authorization(token.getRawToken());
+					epf.client.persistence.Entities.remove(client, EPF.SCHEMA, entity.getName(), idValue.toString());
+				}
+			}
+		}
 	}
 }

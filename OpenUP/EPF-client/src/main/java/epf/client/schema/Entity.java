@@ -4,7 +4,7 @@
 package epf.client.schema;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -22,7 +22,7 @@ public class Entity implements Serializable {
 	/**
 	 * 
 	 */
-	private Set<Attribute> attributes;
+	private List<Attribute> attributes;
 	
 	/**
 	 * 
@@ -45,16 +45,26 @@ public class Entity implements Serializable {
 	private EntityType entityType;
 	
 	/**
+	 * 
+	 */
+	private boolean singleId;
+	
+	/**
+	 * 
+	 */
+	private Attribute id;
+	
+	/**
 	 * @return the attributes
 	 */
-	public Set<Attribute> getAttributes() {
+	public List<Attribute> getAttributes() {
 		return attributes;
 	}
 
 	/**
 	 * @param attributes the attributes to set
 	 */
-	public void setAttributes(final Set<Attribute> attributes) {
+	public void setAttributes(final List<Attribute> attributes) {
 		this.attributes = attributes;
 	}
 
@@ -112,5 +122,21 @@ public class Entity implements Serializable {
 	 */
 	public void setEntityType(final EntityType entityType) {
 		this.entityType = entityType;
+	}
+
+	public Attribute getId() {
+		return id;
+	}
+
+	public void setId(final Attribute id) {
+		this.id = id;
+	}
+
+	public boolean isSingleId() {
+		return singleId;
+	}
+
+	public void setSingleId(final boolean singleId) {
+		this.singleId = singleId;
 	}
 }

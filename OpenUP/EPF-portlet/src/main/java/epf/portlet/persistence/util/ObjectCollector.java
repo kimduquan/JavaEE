@@ -19,17 +19,17 @@ import epf.portlet.SessionUtil;
  *
  */
 @RequestScoped
-public class AttributeCollector {
+public class ObjectCollector {
 	
 	/**
 	 * 
 	 */
-	private List<AttributeComparator> comparators;
+	private List<ObjectComparator> comparators;
 	
 	/**
 	 * 
 	 */
-	private List<AttributeFilter> filters;
+	private List<ObjectFilter> filters;
 	/**
 	 * 
 	 */
@@ -64,12 +64,12 @@ public class AttributeCollector {
 		if(list == null) {
 			Stream<Map<String, Object>> newStream = stream;
 			if(filters != null) {
-				for(AttributeFilter f : filters) {
+				for(ObjectFilter f : filters) {
 					newStream = newStream.filter(data -> f.filter(filter, data));
 				}
 			}
 			if(comparators != null) {
-				for(AttributeComparator comparator : comparators) {
+				for(ObjectComparator comparator : comparators) {
 					newStream = newStream.sorted(comparator);
 				}
 			}
@@ -78,23 +78,23 @@ public class AttributeCollector {
 		return list;
 	}
 
-	public AttributeComparator sort(final Attribute attribute, final boolean ascending) {
+	public ObjectComparator sort(final Attribute attribute, final boolean ascending) {
 		if(comparators == null) {
 			comparators = new ArrayList<>();
 		}
 		comparators.removeIf(c -> c.getAttribute().getName().equals(attribute.getName()));
-		final AttributeComparator newComparator = new AttributeComparator(attribute, ascending);
+		final ObjectComparator newComparator = new ObjectComparator(attribute, ascending);
 		comparators.add(0, newComparator);
 		sessionUtil.setPortletAttribute(getClass(), "comparators", comparators);
 		return newComparator;
 	}
 
-	public AttributeFilter filter(final Attribute attribute, final boolean include) {
+	public ObjectFilter filter(final Attribute attribute, final boolean include) {
 		if(filters == null) {
 			filters = new ArrayList<>();
 		}
 		filters.removeIf(f -> f.getComparator().getAttribute().getName().equals(attribute.getName()));
-		final AttributeFilter newFilter = new AttributeFilter(new AttributeComparator(attribute, true), include);
+		final ObjectFilter newFilter = new ObjectFilter(new ObjectComparator(attribute, true), include);
 		filters.add(0, newFilter);
 		sessionUtil.setPortletAttribute(getClass(), "filters", filters);
 		return newFilter;
