@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import javax.websocket.DeploymentException;
 import epf.client.messaging.Client;
 import epf.client.messaging.Messaging;
+import epf.schema.PostLoad;
 import epf.schema.PostPersist;
 import epf.schema.PostRemove;
 import epf.schema.PostUpdate;
@@ -67,6 +68,13 @@ public class Listener {
 	 * @param event
 	 */
 	public void postUpdate(@Observes final PostUpdate event) {
+		sendObject(event);
+	}
+	
+	/**
+	 * @param event
+	 */
+	public void postLoad(@Observes final PostLoad event) {
 		sendObject(event);
 	}
 	

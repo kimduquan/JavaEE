@@ -164,14 +164,12 @@ public class Entity {
 	 * @throws Exception
 	 */
 	protected Map<String, Object> fetchPersistedEntity() throws Exception{
-		Map<String, Object> object = null;
 		try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
 			client.authorization(token.getRawToken());
 			try(Response response = epf.client.persistence.Entities.find(client, entity.getName(), id)){
-				object = response.readEntity(new GenericType<Map<String, Object>>() {});
+				return response.readEntity(new GenericType<Map<String, Object>>() {});
 			}
 		}
-		return object;
 	}
 
 	public List<Attribute> getAttributes() {
