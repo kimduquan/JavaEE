@@ -5,6 +5,7 @@ package epf.portlet.security;
 
 import epf.client.security.Credential;
 import epf.client.security.Token;
+import epf.portlet.CookieUtil;
 import epf.portlet.Event;
 import epf.portlet.EventUtil;
 import epf.portlet.Naming;
@@ -17,6 +18,7 @@ import epf.util.security.PasswordUtil;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.Cookie;
 import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
@@ -70,6 +72,12 @@ public class Security {
 	 */
 	@Inject
 	private transient SessionUtil sessionUtil;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	private transient CookieUtil cookieUtil;
 	 
 
 	public Credential getCredential() {
@@ -108,6 +116,12 @@ public class Security {
 		session.setSecurityUrl(securityUrl);
 		sessionUtil.setAttribute(Naming.SECURITY_TOKEN, token);
 		eventUtil.setEvent(Event.SECURITY_TOKEN, token);
+		final Cookie cookie = new Cookie(Naming.SECURITY_TOKEN, rawToken);
+		cookie.setMaxAge(-1);
+		cookie.setDomain(request.getRequest().getServerName());
+		cookie.setHttpOnly(true);
+		cookie.setPath("/");
+		cookieUtil.addCookie(cookie);
 		return "session";
 	}
 	
@@ -119,10 +133,11 @@ public class Security {
 		try(Client client = clientUtil.newClient(registryUtil.get("security"))){
 			client.authorization(session.getToken().getRawToken());
 			epf.client.security.Security.logOut(client);
-			session.setToken(null);
-			sessionUtil.setAttribute(Naming.SECURITY_TOKEN, null);
-			eventUtil.setEvent(Event.SECURITY_TOKEN, null);
 		}
+		session.setToken(null);
+		sessionUtil.setAttribute(Naming.SECURITY_TOKEN, null);
+		eventUtil.setEvent(Event.SECURITY_TOKEN, null);
+		cookieUtil.deleteCookie(Naming.SECURITY_TOKEN);
 		return "security";
 	}
 	
@@ -151,6 +166,7 @@ public class Security {
 			client.authorization(session.getToken().getRawToken());
 			rawToken = epf.client.security.Security.revoke(client);
 		}
+		cookieUtil.deleteCookie(Naming.SECURITY_TOKEN);
 		Token token;
 		try(Client client = clientUtil.newClient(securityUrl)){
 			client.authorization(rawToken);
@@ -161,6 +177,12 @@ public class Security {
 		session.setSecurityUrl(securityUrl);
 		sessionUtil.setAttribute(Naming.SECURITY_TOKEN, token);
 		eventUtil.setEvent(Event.SECURITY_TOKEN, token);
+		final Cookie cookie = new Cookie(Naming.SECURITY_TOKEN, rawToken);
+		cookie.setMaxAge(-1);
+		cookie.setDomain(request.getRequest().getServerName());
+		cookie.setHttpOnly(true);
+		cookie.setPath("/");
+		cookieUtil.addCookie(cookie);
 		return "security";
 	}
 }

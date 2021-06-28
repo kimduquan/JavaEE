@@ -15,13 +15,11 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import epf.client.schema.Attribute;
 import epf.client.schema.Entity;
-import epf.client.security.Token;
 import epf.portlet.Event;
 import epf.portlet.EventUtil;
 import epf.portlet.Naming;
 import epf.portlet.Parameter;
 import epf.portlet.ParameterUtil;
-import epf.portlet.SessionUtil;
 import epf.portlet.client.ClientUtil;
 import epf.portlet.registry.RegistryUtil;
 import epf.util.client.Client;
@@ -58,11 +56,6 @@ public class Persistence {
 	/**
 	 * 
 	 */
-	private Token token;
-	
-	/**
-	 * 
-	 */
 	@Inject
 	private transient RegistryUtil registryUtil;
 	
@@ -77,12 +70,6 @@ public class Persistence {
 	 */
 	@Inject
 	private transient EventUtil eventUtil;
-	
-	/**
-	 * 
-	 */
-	@Inject
-	private transient SessionUtil sessionUtil;
 	
 	/**
 	 * 
@@ -103,8 +90,7 @@ public class Persistence {
 					.filter(AttributeUtil::isBasic)
 					.collect(Collectors.toList());
 		}
-		token = sessionUtil.getAttribute(Naming.SECURITY_TOKEN);
-		if(entity != null && token != null) {
+		if(entity != null) {
 			try{
 				objects = fetchObjects();
 			} 
@@ -120,7 +106,6 @@ public class Persistence {
 	 */
 	protected List<Map<String, Object>> fetchObjects() throws Exception{
 		try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
-			client.authorization(token.getRawToken());
 			try(Response response = epf.client.persistence.Queries.executeQuery(
 					client, 
 					path -> path.path(entity.getName()), 
@@ -154,7 +139,6 @@ public class Persistence {
 				final Object idValue = object.get(id.getName());
 				if(idValue != null) {
 					try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
-						client.authorization(token.getRawToken());
 						epf.client.persistence.Entities.remove(client, entity.getName(), idValue.toString());
 					}
 				}

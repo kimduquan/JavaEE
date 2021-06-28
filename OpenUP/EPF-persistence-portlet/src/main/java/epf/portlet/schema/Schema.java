@@ -15,13 +15,11 @@ import javax.inject.Named;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import epf.client.schema.Entity;
-import epf.client.security.Token;
 import epf.portlet.Event;
 import epf.portlet.EventUtil;
 import epf.portlet.Naming;
 import epf.portlet.Parameter;
 import epf.portlet.ParameterUtil;
-import epf.portlet.SessionUtil;
 import epf.portlet.client.ClientUtil;
 import epf.portlet.registry.RegistryUtil;
 import epf.util.client.Client;
@@ -49,12 +47,6 @@ public class Schema {
 	 * 
 	 */
 	private String entity;
-	
-	/**
-	 * 
-	 */
-	@Inject
-	private transient SessionUtil sessionUtil;
 	
 	/**
 	 * 
@@ -99,17 +91,12 @@ public class Schema {
 	 * @throws Exception
 	 */
 	protected List<Entity> fetchEntities() throws Exception{
-		final Token token = sessionUtil.getAttribute(Naming.SECURITY_TOKEN);
-		if(token != null) {
-			final URI schemaUrl = registryUtil.get("schema");
-			try(Client client = clientUtil.newClient(schemaUrl)){
-				client.authorization(token.getRawToken());
-				try(Response response = epf.client.schema.Schema.getEntities(client)){
-					return response.readEntity(new GenericType<List<Entity>>() {});
-				}
+		final URI schemaUrl = registryUtil.get("schema");
+		try(Client client = clientUtil.newClient(schemaUrl)){
+			try(Response response = epf.client.schema.Schema.getEntities(client)){
+				return response.readEntity(new GenericType<List<Entity>>() {});
 			}
 		}
-		return null;
 	}
 	
 	/**

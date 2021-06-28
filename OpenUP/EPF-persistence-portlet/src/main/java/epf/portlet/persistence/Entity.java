@@ -16,14 +16,12 @@ import javax.json.JsonObjectBuilder;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import epf.client.schema.Attribute;
-import epf.client.security.Token;
 import epf.portlet.Event;
 import epf.portlet.EventUtil;
 import epf.portlet.Naming;
 import epf.portlet.Parameter;
 import epf.portlet.ParameterUtil;
 import epf.portlet.RequestUtil;
-import epf.portlet.SessionUtil;
 import epf.portlet.client.ClientUtil;
 import epf.portlet.registry.RegistryUtil;
 import epf.util.client.Client;
@@ -65,11 +63,6 @@ public class Entity {
 	/**
 	 * 
 	 */
-	private Token token;
-	
-	/**
-	 * 
-	 */
 	@Inject
 	private transient RegistryUtil registryUtil;
 	
@@ -84,12 +77,6 @@ public class Entity {
 	 */
 	@Inject
 	private transient EventUtil eventUtil;
-	
-	/**
-	 * 
-	 */
-	@Inject
-	private transient SessionUtil sessionUtil;
 	
 	/**
 	 * 
@@ -122,8 +109,7 @@ public class Entity {
 			object = new HashMap<>();
 			attributes.forEach(attribute -> object.put(attribute.getName(), null));
 		}
-		token = sessionUtil.getAttribute(Naming.SECURITY_TOKEN);
-		if(entity != null && id != null && token != null) {
+		if(entity != null && id != null) {
 			try {
 				object = fetchEntity();
 			} 
@@ -152,7 +138,6 @@ public class Entity {
 	 */
 	protected Map<String, Object> fetchCachedEntity() throws Exception{
 		try(Client client = clientUtil.newClient(registryUtil.get("cache"))){
-			client.authorization(token.getRawToken());
 			try(Response response = epf.client.cache.Cache.getEntity(client, entity.getName(), id)){
 				return response.readEntity(new GenericType<Map<String, Object>>() {});
 			}
@@ -165,7 +150,6 @@ public class Entity {
 	 */
 	protected Map<String, Object> fetchPersistedEntity() throws Exception{
 		try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
-			client.authorization(token.getRawToken());
 			try(Response response = epf.client.persistence.Entities.find(client, entity.getName(), id)){
 				return response.readEntity(new GenericType<Map<String, Object>>() {});
 			}
@@ -196,7 +180,6 @@ public class Entity {
 	 */
 	public void persist() throws Exception {
 		try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
-			client.authorization(token.getRawToken());
 			final JsonObjectBuilder builder = Json.createObjectBuilder(object);
 			try(Response response = epf.client.persistence.Entities.persist(
 					client, 
@@ -222,7 +205,6 @@ public class Entity {
 	public void merge() throws Exception {
 		final JsonObjectBuilder builder = Json.createObjectBuilder(object);
 		try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
-			client.authorization(token.getRawToken());
 			epf.client.persistence.Entities.merge(
 					client,
 					entity.getName(), 
@@ -238,7 +220,6 @@ public class Entity {
 	 */
 	public String remove() throws Exception {
 		try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
-			client.authorization(token.getRawToken());
 			epf.client.persistence.Entities.remove(
 					client, 
 					entity.getName(), 
