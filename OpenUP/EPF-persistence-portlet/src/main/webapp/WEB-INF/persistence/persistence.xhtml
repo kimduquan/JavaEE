@@ -11,12 +11,14 @@
 	</h:head>
 	<h:body>
 		<h:form>
-			<h:link outcome="entity" value="#{i18n['epf.persistence.persist']}" />
 			<h:dataTable rendered="#{not empty epf_persistence.attributes and epf_persistence.objects != null}" value="#{epf_persistence.objects}" var="objectVar">
 				<h:column>
 					<h:outputText value="#{epf_persistence.indexOf(objectVar)}" />
 				</h:column>
 				<h:column>
+					<f:facet name="header">
+						<h:link outcome="entity" value="#{i18n['epf.persistence.persist']}" />
+					</f:facet>
 					<h:commandButton value="#{i18n['epf.persistence.merge']}" action="#{epf_persistence.merge(objectVar)}"></h:commandButton>
 				</h:column>
 				<h:column>
