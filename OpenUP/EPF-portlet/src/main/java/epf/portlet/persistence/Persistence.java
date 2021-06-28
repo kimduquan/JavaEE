@@ -178,4 +178,12 @@ public class Persistence {
 		}
 		return "entity";
 	}
+	
+	/**
+	 * @param object
+	 * @return
+	 */
+	public int indexOf(final Map<String, Object> object) {
+		return objects.indexOf(object) + 1;
+	}
 }
