@@ -10,11 +10,6 @@ import javax.xml.namespace.QName;
  *
  */
 public interface Event {
-
-	/**
-	 * 
-	 */
-	QName SECURITY_TOKEN = QName.valueOf("{http://openup.org/epf/security}token");
 	
 	/**
 	 * 

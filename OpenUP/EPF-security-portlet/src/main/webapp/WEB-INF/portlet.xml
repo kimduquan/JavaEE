@@ -36,12 +36,5 @@
 		<security-role-ref>
 			<role-name>user</role-name>
 		</security-role-ref>
-		<supported-publishing-event>
-			<qname xmlns:epf-security="http://openup.org/epf/security">epf-security:token</qname>
-		</supported-publishing-event>
 	</portlet>
-	<event-definition>
-		<qname xmlns:epf-security="http://openup.org/epf/security">epf-security:token</qname>
-		<value-type>epf.client.security.Token</value-type>
-	</event-definition>
 </portlet-app>

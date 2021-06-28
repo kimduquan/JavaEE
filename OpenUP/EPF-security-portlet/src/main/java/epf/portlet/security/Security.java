@@ -6,11 +6,8 @@ package epf.portlet.security;
 import epf.client.security.Credential;
 import epf.client.security.Token;
 import epf.portlet.CookieUtil;
-import epf.portlet.Event;
-import epf.portlet.EventUtil;
 import epf.portlet.Naming;
 import epf.portlet.RequestUtil;
-import epf.portlet.SessionUtil;
 import epf.portlet.client.ClientUtil;
 import epf.portlet.registry.RegistryUtil;
 import epf.util.client.Client;
@@ -65,18 +62,6 @@ public class Security {
 	 * 
 	 */
 	@Inject
-	private transient EventUtil eventUtil;
-	
-	/**
-	 * 
-	 */
-	@Inject
-	private transient SessionUtil sessionUtil;
-	
-	/**
-	 * 
-	 */
-	@Inject
 	private transient CookieUtil cookieUtil;
 	 
 
@@ -113,9 +98,6 @@ public class Security {
 		}
 		token.setRawToken(rawToken);
 		session.setToken(token);
-		session.setSecurityUrl(securityUrl);
-		sessionUtil.setAttribute(Naming.SECURITY_TOKEN, token);
-		eventUtil.setEvent(Event.SECURITY_TOKEN, token);
 		final Cookie cookie = new Cookie(Naming.SECURITY_TOKEN, rawToken);
 		cookie.setMaxAge(-1);
 		cookie.setDomain(request.getRequest().getServerName());
@@ -135,8 +117,6 @@ public class Security {
 			epf.client.security.Security.logOut(client);
 		}
 		session.setToken(null);
-		sessionUtil.setAttribute(Naming.SECURITY_TOKEN, null);
-		eventUtil.setEvent(Event.SECURITY_TOKEN, null);
 		cookieUtil.deleteCookie(Naming.SECURITY_TOKEN);
 		return "security";
 	}
@@ -166,7 +146,6 @@ public class Security {
 			client.authorization(session.getToken().getRawToken());
 			rawToken = epf.client.security.Security.revoke(client);
 		}
-		cookieUtil.deleteCookie(Naming.SECURITY_TOKEN);
 		Token token;
 		try(Client client = clientUtil.newClient(securityUrl)){
 			client.authorization(rawToken);
@@ -174,9 +153,6 @@ public class Security {
 		}
 		token.setRawToken(rawToken);
 		session.setToken(token);
-		session.setSecurityUrl(securityUrl);
-		sessionUtil.setAttribute(Naming.SECURITY_TOKEN, token);
-		eventUtil.setEvent(Event.SECURITY_TOKEN, token);
 		final Cookie cookie = new Cookie(Naming.SECURITY_TOKEN, rawToken);
 		cookie.setMaxAge(-1);
 		cookie.setDomain(request.getRequest().getServerName());

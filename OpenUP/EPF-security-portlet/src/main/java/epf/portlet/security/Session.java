@@ -9,11 +9,11 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import epf.client.security.Token;
 import epf.portlet.Naming;
-import epf.portlet.client.ClientUtil;
+import epf.portlet.client.Application;
+import epf.portlet.registry.Registry;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
 import java.io.Serializable;
-import java.net.URI;
 import java.time.Instant;
 import java.util.logging.Logger;
 
@@ -43,34 +43,28 @@ public class Session implements Serializable{
 	/**
 	 * 
 	 */
-	private URI securityUrl;
+	@Inject
+	private transient Application application;
 	
 	/**
 	 * 
 	 */
 	@Inject
-	private transient ClientUtil clientUtil;
+	private transient Registry registry;
 	
 	/**
 	 * 
 	 */
 	@PreDestroy
 	protected void preDestroy() {
-		if(token != null && securityUrl != null)
-		try(Client client = clientUtil.newClient(securityUrl)){
+		if(token != null && !registry.isEmpty())
+		try(Client client = application.newClient(registry.get("security"))){
 			client.authorization(token.getRawToken());
 			epf.client.security.Security.logOut(client);
 		} 
 		catch (Exception e) {
 			LOGGER.throwing(getClass().getName(), "preDestroy", e);
 		}
-	}
-	
-	/**
-	 * @param url
-	 */
-	protected void setSecurityUrl(final URI url) {
-		this.securityUrl = url;
 	}
 	
 	/**

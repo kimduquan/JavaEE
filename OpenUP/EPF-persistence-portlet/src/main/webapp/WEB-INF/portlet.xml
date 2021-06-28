@@ -87,10 +87,6 @@
 		<supported-public-render-parameter>entity</supported-public-render-parameter>
 	</portlet>
 	<event-definition>
-		<qname xmlns:epf-security="http://openup.org/epf/security">epf-security:token</qname>
-		<value-type>epf.client.security.Token</value-type>
-	</event-definition>
-	<event-definition>
 		<qname xmlns:epf-schema="http://openup.org/epf/schema">epf-schema:entity</qname>
 		<value-type>epf.client.schema.Entity</value-type>
 	</event-definition>
