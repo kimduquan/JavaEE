@@ -622,6 +622,8 @@
 		<module>EPF-rules</module>
 		<module>EPF-planning</module>
 		<module>EPF-portlet</module>
+		<module>EPF-security-portlet</module>
+		<module>EPF-persistence-portlet</module>
 		<module>EPF-webapp</module>
         <module>EPF-tests</module>
         <module>EPF-assembly</module>
