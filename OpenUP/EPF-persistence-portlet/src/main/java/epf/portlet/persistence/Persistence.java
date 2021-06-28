@@ -56,6 +56,16 @@ public class Persistence {
 	/**
 	 * 
 	 */
+	private int firstResult = 0;
+	
+	/**
+	 * 
+	 */
+	private int maxResults = 100;
+	
+	/**
+	 * 
+	 */
 	@Inject
 	private transient RegistryUtil registryUtil;
 	
@@ -90,14 +100,6 @@ public class Persistence {
 					.filter(AttributeUtil::isBasic)
 					.collect(Collectors.toList());
 		}
-		if(entity != null) {
-			try{
-				objects = fetchObjects();
-			} 
-			catch (Exception e) {
-				LOGGER.throwing(getClass().getName(), "postConstruct", e);
-			}
-		}
 	}
 	
 	/**
@@ -109,8 +111,8 @@ public class Persistence {
 			try(Response response = epf.client.persistence.Queries.executeQuery(
 					client, 
 					path -> path.path(entity.getName()), 
-					0, 
-					100)){
+					firstResult, 
+					maxResults)){
 				return response.readEntity(new GenericType<List<Map<String, Object>>>() {});
 			}
 		}
@@ -121,6 +123,14 @@ public class Persistence {
 	}
 
 	public List<Map<String, Object>> getObjects() {
+		if(entity != null && objects == null) {
+			try{
+				objects = fetchObjects();
+			} 
+			catch (Exception e) {
+				LOGGER.throwing(getClass().getName(), "postConstruct", e);
+			}
+		}
 		return objects;
 	}
 
@@ -169,5 +179,28 @@ public class Persistence {
 	 */
 	public int indexOf(final Map<String, Object> object) {
 		return objects.indexOf(object) + 1;
+	}
+	
+	/**
+	 * 
+	 */
+	public void getResult() {
+		this.getObjects();
+	}
+
+	public int getFirstResult() {
+		return firstResult;
+	}
+
+	public void setFirstResult(final int firstResult) {
+		this.firstResult = firstResult;
+	}
+
+	public int getMaxResults() {
+		return maxResults;
+	}
+
+	public void setMaxResults(final int maxResults) {
+		this.maxResults = maxResults;
 	}
 }
