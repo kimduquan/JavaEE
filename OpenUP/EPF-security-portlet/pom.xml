@@ -16,26 +16,14 @@
             <artifactId>EPF-client</artifactId>
             <version>1.0.0</version>
         </dependency>
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-portlet</artifactId>
+            <version>1.0.0</version>
+        </dependency>
         <dependency>
 		    <groupId>org.glassfish</groupId>
 		    <artifactId>javax.json</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>javax.enterprise</groupId>
-			<artifactId>cdi-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.faces/javax.faces-api -->
-		<dependency>
-		    <groupId>javax.faces</groupId>
-		    <artifactId>javax.faces-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.portlet/portlet-api -->
-		<dependency>
-		    <groupId>javax.portlet</groupId>
-		    <artifactId>portlet-api</artifactId>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.liferay.faces</groupId>
