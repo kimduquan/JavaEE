@@ -16,11 +16,12 @@
             <artifactId>EPF-client</artifactId>
             <version>1.0.0</version>
         </dependency>
-        <dependency>
-		    <groupId>org.glassfish</groupId>
-		    <artifactId>javax.json</artifactId>
-		</dependency>
 		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-portlet</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
 			<groupId>javax.enterprise</groupId>
 			<artifactId>cdi-api</artifactId>
 			<scope>provided</scope>
@@ -36,6 +37,10 @@
 		    <groupId>javax.portlet</groupId>
 		    <artifactId>portlet-api</artifactId>
 			<scope>provided</scope>
+		</dependency>
+        <dependency>
+		    <groupId>org.glassfish</groupId>
+		    <artifactId>javax.json</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.liferay.faces</groupId>
