@@ -36,5 +36,9 @@ public interface Naming {
 	/**
 	 * 
 	 */
+	String PERSISTENCE_SEARCH = "epf_persistence_search";
+	/**
+	 * 
+	 */
 	String SCHEMA = "epf_schema";
 }

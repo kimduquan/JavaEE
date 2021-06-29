@@ -24,7 +24,7 @@
 					<f:facet name="header">
 						<h:link outcome="entity" value="#{i18n['epf.persistence.persist']}" />
 					</f:facet>
-					<h:commandButton value="#{i18n['epf.persistence.merge']}" action="#{epf_persistence.merge(objectVar)}"></h:commandButton>
+					<h:commandLink value="#{i18n['epf.persistence.merge']}" action="#{epf_persistence.merge(objectVar)}"></h:commandLink>
 				</h:column>
 				<h:column>
 					<h:commandButton value="#{i18n['epf.persistence.remove']}" action="#{epf_persistence.remove(objectVar)}"></h:commandButton>
