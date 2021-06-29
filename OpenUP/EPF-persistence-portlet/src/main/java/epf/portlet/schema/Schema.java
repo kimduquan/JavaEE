@@ -3,13 +3,14 @@
  */
 package epf.portlet.schema;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.event.ValueChangeEvent;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.GenericType;
@@ -29,10 +30,15 @@ import epf.util.logging.Logging;
  * @author PC
  *
  */
-@RequestScoped
+@ViewScoped
 @Named(Naming.SCHEMA)
-public class Schema {
+public class Schema implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * 
 	 */

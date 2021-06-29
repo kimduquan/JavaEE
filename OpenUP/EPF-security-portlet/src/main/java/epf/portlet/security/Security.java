@@ -12,10 +12,11 @@ import epf.portlet.client.ClientUtil;
 import epf.portlet.registry.RegistryUtil;
 import epf.util.client.Client;
 import epf.util.security.PasswordUtil;
-import javax.enterprise.context.RequestScoped;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.Cookie;
+import java.io.Serializable;
 import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
@@ -26,9 +27,14 @@ import java.util.Map;
  *
  */
 @Named(Naming.SECURITY)
-@RequestScoped
-public class Security {
+@ViewScoped
+public class Security implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * 
 	 */

@@ -3,12 +3,13 @@
  */
 package epf.portlet.persistence;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.GenericType;
@@ -30,10 +31,15 @@ import epf.util.logging.Logging;
  * @author PC
  *
  */
-@RequestScoped
+@ViewScoped
 @Named(Naming.PERSISTENCE)
-public class Persistence {
+public class Persistence implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * 
 	 */
@@ -57,12 +63,12 @@ public class Persistence {
 	/**
 	 * 
 	 */
-	private Integer firstResult;
+	private int firstResult;
 	
 	/**
 	 * 
 	 */
-	private Integer maxResults;
+	private int maxResults;
 	
 	/**
 	 * 
@@ -111,12 +117,7 @@ public class Persistence {
 			firstResult = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT));
 			maxResults = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT));
 			if(entity != null) {
-				try{
-					objects = fetchObjects();
-				} 
-				catch (Exception e) {
-					LOGGER.throwing(getClass().getName(), "getResult", e);
-				}
+				objects = fetchObjects();
 			}
 		}
 		catch (Exception e) {
@@ -196,16 +197,12 @@ public class Persistence {
 	}
 	
 	/**
+	 * @throws Exception 
 	 * 
 	 */
-	public void getResult() {
+	public void getResult() throws Exception {
 		if(entity != null) {
-			try{
-				objects = fetchObjects();
-			} 
-			catch (Exception e) {
-				LOGGER.throwing(getClass().getName(), "getResult", e);
-			}
+			objects = fetchObjects();
 		}
 	}
 

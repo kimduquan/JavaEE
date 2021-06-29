@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.json.Json;
@@ -31,7 +31,7 @@ import epf.util.logging.Logging;
  * @author PC
  *
  */
-@RequestScoped
+@ViewScoped
 @Named(Naming.PERSISTENCE_ENTITY)
 public class Entity {
 	

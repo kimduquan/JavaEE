@@ -27,4 +27,18 @@ public class RequestUtil {
 	public PortletRequest getRequest() {
 		return request;
 	}
+	
+	/**
+	 * @return
+	 */
+	public boolean isRenderPhase() {
+		return PortletRequest.RENDER_PHASE.equals(request.getAttribute(PortletRequest.LIFECYCLE_PHASE));
+	}
+	
+	/**
+	 * @return
+	 */
+	public boolean isActionPhase() {
+		return PortletRequest.ACTION_PHASE.equals(request.getAttribute(PortletRequest.LIFECYCLE_PHASE));
+	}
 }
