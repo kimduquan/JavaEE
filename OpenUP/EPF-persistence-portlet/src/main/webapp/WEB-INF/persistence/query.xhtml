@@ -10,5 +10,80 @@
 		<h:outputStylesheet library="css" name="main.css" />
 	</h:head>
 	<h:body>
+		<h:form>
+			<h:outputText value="#{i18n['epf.persistence.query.firstResult']}"></h:outputText>
+			<h:inputText value="#{epf_persistence_query.firstResult}"></h:inputText>
+			<h:outputText value="#{i18n['epf.persistence.query.maxResults']}"></h:outputText>
+			<h:inputText value="#{epf_persistence_query.maxResults}"></h:inputText>
+			<h:commandButton value="#{i18n['epf.persistence.query.result']}" action="#{epf_persistence_query.executeQuery}"></h:commandButton>
+			<h:dataTable rendered="#{not empty epf_persistence_query.attributes and epf_persistence_query.result != null}" value="#{epf_persistence_query.result}" var="resultVar">
+				<h:column>
+					<h:outputText value="#{epf_persistence_query.indexOf(resultVar)}" />
+				</h:column>
+				<h:column>
+					<h:commandLink value="#{i18n['epf.persistence.merge']}" action="#{epf_persistence_query.merge(resultVar)}"></h:commandLink>
+				</h:column>
+				<h:column rendered="#{epf_persistence_query.attributes.size() gt 0}">
+					<f:facet name="header">
+						<h:outputText value="#{epf_persistence_query.attributes[0].name}"></h:outputText>
+					</f:facet>
+					<h:outputText value="#{resultVar[epf_persistence_query.attributes[0].name]}" ></h:outputText>
+				</h:column>
+				<h:column rendered="#{epf_persistence_query.attributes.size() gt 1}">
+					<f:facet name="header">
+						<h:outputText value="#{epf_persistence_query.attributes[1].name}"></h:outputText>
+					</f:facet>
+					<h:outputText value="#{resultVar[epf_persistence_query.attributes[1].name]}" ></h:outputText>
+				</h:column>
+				<h:column rendered="#{epf_persistence_query.attributes.size() gt 2}">
+					<f:facet name="header">
+						<h:outputText value="#{epf_persistence_query.attributes[2].name}"></h:outputText>
+					</f:facet>
+					<h:outputText value="#{resultVar[epf_persistence_query.attributes[2].name]}" ></h:outputText>
+				</h:column>
+				<h:column rendered="#{epf_persistence_query.attributes.size() gt 3}">
+					<f:facet name="header">
+						<h:outputText value="#{epf_persistence_query.attributes[3].name}"></h:outputText>
+					</f:facet>
+					<h:outputText value="#{resultVar[epf_persistence_query.attributes[3].name]}" ></h:outputText>
+				</h:column>
+				<h:column rendered="#{epf_persistence_query.attributes.size() gt 4}">
+					<f:facet name="header">
+						<h:outputText value="#{epf_persistence_query.attributes[4].name}"></h:outputText>
+					</f:facet>
+					<h:outputText value="#{resultVar[epf_persistence_query.attributes[4].name]}" ></h:outputText>
+				</h:column>
+				<h:column rendered="#{epf_persistence_query.attributes.size() gt 5}">
+					<f:facet name="header">
+						<h:outputText value="#{epf_persistence_query.attributes[5].name}"></h:outputText>
+					</f:facet>
+					<h:outputText value="#{resultVar[epf_persistence_query.attributes[5].name]}" ></h:outputText>
+				</h:column>
+				<h:column rendered="#{epf_persistence_query.attributes.size() gt 6}">
+					<f:facet name="header">
+						<h:outputText value="#{epf_persistence_query.attributes[6].name}"></h:outputText>
+					</f:facet>
+					<h:outputText value="#{resultVar[epf_persistence_query.attributes[6].name]}" ></h:outputText>
+				</h:column>
+				<h:column rendered="#{epf_persistence_query.attributes.size() gt 7}">
+					<f:facet name="header">
+						<h:outputText value="#{epf_persistence_query.attributes[7].name}"></h:outputText>
+					</f:facet>
+					<h:outputText value="#{resultVar[epf_persistence_query.attributes[7].name]}" ></h:outputText>
+				</h:column>
+				<h:column rendered="#{epf_persistence_query.attributes.size() gt 8}">
+					<f:facet name="header">
+						<h:outputText value="#{epf_persistence_query.attributes[8].name}"></h:outputText>
+					</f:facet>
+					<h:outputText value="#{resultVar[epf_persistence_query.attributes[8].name]}" ></h:outputText>
+				</h:column>
+				<h:column rendered="#{epf_persistence_query.attributes.size() gt 9}">
+					<f:facet name="header">
+						<h:outputText value="#{epf_persistence_query.attributes[9].name}"></h:outputText>
+					</f:facet>
+					<h:outputText value="#{resultVar[epf_persistence_query.attributes[9].name]}" ></h:outputText>
+				</h:column>
+			</h:dataTable>
+		</h:form>
 	</h:body>
 </f:view>

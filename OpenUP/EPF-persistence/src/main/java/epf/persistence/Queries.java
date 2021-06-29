@@ -30,10 +30,10 @@ import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
+import epf.client.persistence.SearchData;
 import epf.persistence.impl.Entity;
 import epf.persistence.impl.QueryBuilder;
 import epf.schema.h2.QueryNames;
-import epf.schema.h2.SearchData;
 import epf.schema.roles.Role;
 
 /**

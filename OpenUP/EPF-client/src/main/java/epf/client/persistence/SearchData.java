@@ -1,4 +1,4 @@
-package epf.schema.h2;
+package epf.client.persistence;
 
 import java.io.Serializable;
 import java.util.List;
