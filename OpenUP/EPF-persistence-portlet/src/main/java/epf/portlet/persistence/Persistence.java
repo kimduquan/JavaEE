@@ -21,6 +21,7 @@ import epf.portlet.Naming;
 import epf.portlet.Parameter;
 import epf.portlet.ParameterUtil;
 import epf.portlet.client.ClientUtil;
+import epf.portlet.config.ConfigUtil;
 import epf.portlet.registry.RegistryUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
@@ -56,18 +57,24 @@ public class Persistence {
 	/**
 	 * 
 	 */
-	private int firstResult = 0;
+	private Integer firstResult;
 	
 	/**
 	 * 
 	 */
-	private int maxResults = 100;
+	private Integer maxResults;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	private transient RegistryUtil registryUtil;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	private transient ConfigUtil configUtil;
 	
 	/**
 	 * 
@@ -100,6 +107,21 @@ public class Persistence {
 					.filter(AttributeUtil::isBasic)
 					.collect(Collectors.toList());
 		}
+		try {
+			firstResult = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT));
+			maxResults = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT));
+			if(entity != null) {
+				try{
+					objects = fetchObjects();
+				} 
+				catch (Exception e) {
+					LOGGER.throwing(getClass().getName(), "getResult", e);
+				}
+			}
+		}
+		catch (Exception e) {
+			LOGGER.throwing(getClass().getName(), "postConstruct", e);
+		}
 	}
 	
 	/**
@@ -123,14 +145,6 @@ public class Persistence {
 	}
 
 	public List<Map<String, Object>> getObjects() {
-		if(entity != null && objects == null) {
-			try{
-				objects = fetchObjects();
-			} 
-			catch (Exception e) {
-				LOGGER.throwing(getClass().getName(), "postConstruct", e);
-			}
-		}
 		return objects;
 	}
 
@@ -185,7 +199,14 @@ public class Persistence {
 	 * 
 	 */
 	public void getResult() {
-		this.getObjects();
+		if(entity != null) {
+			try{
+				objects = fetchObjects();
+			} 
+			catch (Exception e) {
+				LOGGER.throwing(getClass().getName(), "getResult", e);
+			}
+		}
 	}
 
 	public int getFirstResult() {

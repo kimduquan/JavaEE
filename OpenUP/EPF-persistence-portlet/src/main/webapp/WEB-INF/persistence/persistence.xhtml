@@ -11,6 +11,11 @@
 	</h:head>
 	<h:body>
 		<h:form>
+			<h:outputText value="#{i18n['epf.persistence.query.firstResult']}"></h:outputText>
+			<h:inputText value="#{epf_persistence.firstResult}"></h:inputText>
+			<h:outputText value="#{i18n['epf.persistence.query.maxResults']}"></h:outputText>
+			<h:inputText value="#{epf_persistence.maxResults}"></h:inputText>
+			<h:commandButton value="#{i18n['epf.persistence.query.result']}" action="#{epf_persistence.getResult}"></h:commandButton>
 			<h:dataTable rendered="#{not empty epf_persistence.attributes and epf_persistence.objects != null}" value="#{epf_persistence.objects}" var="objectVar">
 				<h:column>
 					<h:outputText value="#{epf_persistence.indexOf(objectVar)}" />
@@ -19,18 +24,9 @@
 					<f:facet name="header">
 						<h:link outcome="entity" value="#{i18n['epf.persistence.persist']}" />
 					</f:facet>
-					<f:facet name="footer">
-						<h:commandButton value="#{i18n['epf.persistence.query.result']}" action="#{epf_persistence.getResult}"></h:commandButton>
-					</f:facet>
 					<h:commandButton value="#{i18n['epf.persistence.merge']}" action="#{epf_persistence.merge(objectVar)}"></h:commandButton>
 				</h:column>
 				<h:column>
-					<f:facet name="footer">
-						<h:outputText value="#{i18n['epf.persistence.query.firstResult']}"></h:outputText>
-						<h:inputText value="#{epf_persistence.firstResult}"></h:inputText>
-						<h:outputText value="#{i18n['epf.persistence.query.maxResults']}"></h:outputText>
-						<h:inputText value="#{epf_persistence.maxResults}"></h:inputText>
-					</f:facet>
 					<h:commandButton value="#{i18n['epf.persistence.remove']}" action="#{epf_persistence.remove(objectVar)}"></h:commandButton>
 				</h:column>
 				<h:column rendered="#{epf_persistence.attributes.size() gt 0}">

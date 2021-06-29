@@ -7,14 +7,12 @@ package epf.config;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import javax.annotation.PostConstruct;
 import javax.annotation.security.PermitAll;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.ws.rs.Path;
-import javax.ws.rs.core.MediaType;
-import org.eclipse.microprofile.openapi.annotations.Operation;
-import org.eclipse.microprofile.openapi.annotations.media.Content;
-import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 /**
  *
@@ -27,30 +25,33 @@ public class Config implements epf.client.config.Config {
     /**
      * 
      */
-    private final transient Map<String, String> configs;
+    private final transient Map<String, String> configs = new ConcurrentHashMap<>();
     
     /**
      * 
      */
-    public Config() {
-    	configs = new ConcurrentHashMap<>();
+    @ConfigProperty(name = epf.client.persistence.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT)
+	@Inject
+	private transient int firstResultDefault;
+    
+    /**
+     * 
+     */
+    @ConfigProperty(name = epf.client.persistence.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT)
+	@Inject
+	private transient int maxResultsDefault;
+    
+    /**
+     * 
+     */
+    @PostConstruct
+    protected void postConstruct() {
+    	configs.put(epf.client.persistence.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT, String.valueOf(firstResultDefault));
+    	configs.put(epf.client.persistence.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT, String.valueOf(maxResultsDefault));
     }
     
     @Override
     @PermitAll
-    @Operation(
-            summary = "getProperties",
-            description = "getProperties"
-    )
-    @APIResponse(
-            name = "OK", 
-            description = "OK",
-            responseCode = "200",
-            content = @Content(
-                    mediaType = MediaType.APPLICATION_JSON,
-                    schema = @Schema(implementation = Map.class)
-            )
-    )
     public Map<String, String> getProperties(final String name) {
         return configs;
     }
