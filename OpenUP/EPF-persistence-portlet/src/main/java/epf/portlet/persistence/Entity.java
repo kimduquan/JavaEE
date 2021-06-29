@@ -3,6 +3,7 @@
  */
 package epf.portlet.persistence;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +34,13 @@ import epf.util.logging.Logging;
  */
 @ViewScoped
 @Named(Naming.PERSISTENCE_ENTITY)
-public class Entity {
+public class Entity implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * 
 	 */

@@ -193,7 +193,7 @@ public class Persistence implements Serializable {
 	 * @return
 	 */
 	public int indexOf(final Map<String, Object> object) {
-		return objects.indexOf(object) + 1;
+		return firstResult + objects.indexOf(object);
 	}
 	
 	/**
