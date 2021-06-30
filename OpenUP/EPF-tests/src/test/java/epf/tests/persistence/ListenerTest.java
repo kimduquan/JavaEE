@@ -35,6 +35,7 @@ import org.junit.Test;
 
 public class ListenerTest {
 	
+	private static int timeout = 60;
 	private static URI persistenceUrl;
 	private static URI listenerUrl;
 	private static URI streamUrl;
@@ -80,7 +81,7 @@ public class ListenerTest {
     @Before
     public void before() throws Exception {
     	client = Client.connectToServer(ContainerProvider.getWebSocketContainer(), listenerUrl);
-    	TestUtil.waitUntil(t -> client.getSession().isOpen(), Duration.ofSeconds(20));
+    	TestUtil.waitUntil(t -> client.getSession().isOpen(), Duration.ofSeconds(timeout));
     }
 
     @Test
@@ -99,8 +100,8 @@ public class ListenerTest {
             Entities.remove(persistenceClient, EPF.ARTIFACT, artifact.getName());
     	}
     	
-    	TestUtil.waitUntil((t) -> client.getMessages().stream().anyMatch(msg -> msg.contains(PostPersist.class.getName()) && msg.contains(artifact.getName())), Duration.ofSeconds(20));
-    	TestUtil.waitUntil((t) -> client.getMessages().stream().anyMatch(msg -> msg.contains(PostRemove.class.getName()) && msg.contains(artifact.getName())), Duration.ofSeconds(20));
+    	TestUtil.waitUntil((t) -> client.getMessages().stream().anyMatch(msg -> msg.contains(PostPersist.class.getName()) && msg.contains(artifact.getName())), Duration.ofSeconds(timeout));
+    	TestUtil.waitUntil((t) -> client.getMessages().stream().anyMatch(msg -> msg.contains(PostRemove.class.getName()) && msg.contains(artifact.getName())), Duration.ofSeconds(timeout));
     	MessageDecoder decoder = new MessageDecoder();
     	String message = client.getMessages().stream().filter(msg -> msg.contains(PostPersist.class.getName()) && msg.contains(artifact.getName())).findFirst().get();
     	PostPersist persist = (PostPersist) decoder.decode(message);
@@ -138,8 +139,8 @@ public class ListenerTest {
             Entities.remove(persistenceClient, EPF.ARTIFACT, artifact.getName());
     	}
     	
-    	TestUtil.waitUntil((t) -> events.stream().anyMatch(msg -> msg.contains(PostPersist.class.getName()) && msg.contains(artifact.getName())), Duration.ofSeconds(10));
-    	TestUtil.waitUntil((t) -> events.stream().anyMatch(msg -> msg.contains(PostRemove.class.getName()) && msg.contains(artifact.getName())), Duration.ofSeconds(10));
+    	TestUtil.waitUntil((t) -> events.stream().anyMatch(msg -> msg.contains(PostPersist.class.getName()) && msg.contains(artifact.getName())), Duration.ofSeconds(timeout));
+    	TestUtil.waitUntil((t) -> events.stream().anyMatch(msg -> msg.contains(PostRemove.class.getName()) && msg.contains(artifact.getName())), Duration.ofSeconds(timeout));
     	MessageDecoder decoder = new MessageDecoder();
     	String message = events.stream().filter(msg -> msg.contains(PostPersist.class.getName()) && msg.contains(artifact.getName())).findFirst().get();
     	PostPersist persist = (PostPersist) decoder.decode(message);

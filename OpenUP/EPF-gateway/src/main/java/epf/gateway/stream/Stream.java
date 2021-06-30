@@ -65,6 +65,12 @@ public class Stream {
 			logger.log(Level.SEVERE, "postConstruct", e);
 		}
 	}
+	
+	protected Broadcaster newBroadcaster(final Sse sse, final Client client) {
+		final Broadcaster broadcaster = new Broadcaster(sse.newEventBuilder(), sse.newBroadcaster());
+		client.onMessage(broadcaster::broadcast);
+		return broadcaster;
+	}
 
 	/**
 	 * @param sink
@@ -83,17 +89,8 @@ public class Stream {
 			final Sse sse) {
 		clients.computeIfPresent(path, (p, client) -> {
 			final Broadcaster broadcaster = broadcasters.computeIfAbsent(
-					path, p2 -> new Broadcaster(
-							sse.newEventBuilder(), 
-							sse.newBroadcaster()
-							)
+					path, p2 -> newBroadcaster(sse, client)
 					);
-			client.onMessage(broadcaster::broadcast);
-			broadcaster.getBroadcaster().onClose(snk -> { 
-				broadcasters.remove(path); 
-				client.onMessage(message -> {}); 
-				}
-			);
 			broadcaster.getBroadcaster().register(sink);
 			return client;
 		});
