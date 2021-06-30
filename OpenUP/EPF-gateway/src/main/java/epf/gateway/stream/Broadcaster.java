@@ -3,14 +3,21 @@
  */
 package epf.gateway.stream;
 
+import java.util.logging.Logger;
 import javax.ws.rs.sse.OutboundSseEvent;
 import javax.ws.rs.sse.SseBroadcaster;
+import epf.util.logging.Logging;
 
 /**
  * @author PC
  *
  */
 public class Broadcaster implements AutoCloseable {
+	
+	/**
+	 * 
+	 */
+	private static final Logger LOGGER = Logging.getLogger(Broadcaster.class.getName());
 	
 	/**
 	 * 
@@ -34,7 +41,12 @@ public class Broadcaster implements AutoCloseable {
 	 * @param message
 	 */
 	public void broadcast(final String message) {
-		sse.broadcast(builder.data(message).build());
+		try {
+			sse.broadcast(builder.data(message).build());
+		}
+		catch(Exception ex) {
+			LOGGER.throwing(getClass().getName(), "broadcast", ex);
+		}
 	}
 
 	@Override
