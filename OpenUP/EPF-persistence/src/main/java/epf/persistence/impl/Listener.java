@@ -8,7 +8,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.Future;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -16,6 +15,7 @@ import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.websocket.DeploymentException;
 import epf.client.messaging.Client;
+import epf.client.messaging.Handler;
 import epf.client.messaging.Messaging;
 import epf.schema.PostLoad;
 import epf.schema.PostPersist;
@@ -32,12 +32,12 @@ public class Listener {
 	/**
 	 * 
 	 */
-	private transient Client client;
+	private transient URI messagingUrl;
 	
 	/**
 	 * 
 	 */
-	private transient Queue<Future<Void>> futures;
+	private transient final Queue<Client> clients = new ConcurrentLinkedQueue<>();
 	
 	/**
 	 * 
@@ -51,8 +51,9 @@ public class Listener {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			futures = new ConcurrentLinkedQueue<>();
-			client = Messaging.connectToServer(new URI(System.getenv(Messaging.MESSAGING_URL)).resolve("persistence"));
+			messagingUrl = new URI(System.getenv(Messaging.MESSAGING_URL));
+			final Client client = Messaging.connectToServer(messagingUrl.resolve("persistence"));
+			clients.add(client);
 		} 
 		catch (DeploymentException|IOException|URISyntaxException e) {
 			logger.throwing(Messaging.class.getName(), "connectToServer", e);
@@ -89,28 +90,14 @@ public class Listener {
 	
 	/**
 	 * @param object
+	 * @param async
 	 */
 	protected void sendObject(final Object object, final boolean async) {
-		if(async) {
-			futures.add(client.getSession().getAsyncRemote().sendObject(object));
-		}
-		else {
-			try {
-				Future<Void> future;
-				do {
-					future = futures.poll();
-					if(future != null) {
-						future.get();
-					}
-				}
-				while(future != null);
-				synchronized(client.getSession()) {
-					client.getSession().getBasicRemote().sendObject(object);
-				}
-			}
-			catch(Exception ex) {
-				logger.throwing(getClass().getName(), "sendObject", ex);
-			}
+		try(Handler handler = new Handler(clients, async, messagingUrl.resolve("persistence"))) {
+			handler.sendObject(object);
+		} 
+		catch (Exception e) {
+			logger.throwing(Messaging.class.getName(), "sendObject", e);
 		}
 	}
 }
