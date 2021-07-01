@@ -66,9 +66,17 @@ public class Stream {
 		}
 	}
 	
-	protected Broadcaster newBroadcaster(final Sse sse, final Client client) {
+	protected Broadcaster newBroadcaster(final String path, final Sse sse, final Client client) {
 		final Broadcaster broadcaster = new Broadcaster(sse.newEventBuilder(), sse.newBroadcaster());
 		client.onMessage(broadcaster::broadcast);
+		broadcaster.getBroadcaster().onClose(sink -> {
+			client.onMessage(msg -> {});
+			broadcasters.remove(path);
+		});
+		broadcaster.getBroadcaster().onError((sink, err) -> {
+			client.onMessage(msg -> {});
+			broadcasters.remove(path);
+		});
 		return broadcaster;
 	}
 
@@ -89,7 +97,7 @@ public class Stream {
 			final Sse sse) {
 		clients.computeIfPresent(path, (p, client) -> {
 			final Broadcaster broadcaster = broadcasters.computeIfAbsent(
-					path, p2 -> newBroadcaster(sse, client)
+					path, p2 -> newBroadcaster(p2, sse, client)
 					);
 			broadcaster.getBroadcaster().register(sink);
 			return client;
