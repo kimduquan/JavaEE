@@ -10,6 +10,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
@@ -58,6 +59,22 @@ public class Listener {
 		catch (DeploymentException|IOException|URISyntaxException e) {
 			logger.throwing(Messaging.class.getName(), "connectToServer", e);
 		}
+	}
+	
+	/**
+	 * 
+	 */
+	@PreDestroy
+	protected void preDestroy() {
+		clients.forEach(client -> {
+			try {
+				client.close();
+			} 
+			catch (Exception e) {
+				logger.throwing(client.getClass().getName(), "close", e);
+			}
+		});
+		clients.clear();
 	}
 	
 	/**
