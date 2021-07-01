@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.validation.constraints.NotBlank;
@@ -66,6 +67,38 @@ public class Stream {
 		}
 	}
 	
+	/**
+	 * 
+	 */
+	@PreDestroy
+	protected void preDestroy() {
+		this.clients.forEach((path, client) -> {
+			try {
+				client.onMessage(msg -> {});
+				client.close();
+			} 
+			catch (Exception e) {
+				logger.throwing(client.getClass().getName(), "close", e);
+			}
+		});
+		this.clients.clear();
+		this.broadcasters.forEach((path, broadcaster) -> {
+			try {
+				broadcaster.close();
+			} 
+			catch (Exception e) {
+				logger.throwing(broadcaster.getClass().getName(), "close", e);
+			}
+		});
+		this.broadcasters.clear();
+	}
+	
+	/**
+	 * @param path
+	 * @param sse
+	 * @param client
+	 * @return
+	 */
 	protected Broadcaster newBroadcaster(final String path, final Sse sse, final Client client) {
 		final Broadcaster broadcaster = new Broadcaster(sse.newEventBuilder(), sse.newBroadcaster());
 		client.onMessage(broadcaster::broadcast);
