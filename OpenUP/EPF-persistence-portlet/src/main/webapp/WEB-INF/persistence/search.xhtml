@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+
+<f:view
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+>
+	<h:head>
+		<h:outputStylesheet library="css" name="main.css" />
+	</h:head>
+	<h:body>
+		<h:form>
+			<h:inputText value="#{epf_persistence_search.text}"></h:inputText>
+			<h:commandButton value="#{i18n['epf.persistence.query.search']}" action="#{epf_persistence_search.search}"></h:commandButton>
+			<h:dataTable rendered="#{not empty epf_persistence_search.result}" value="#{epf_persistence_search.result}" var="resultVar">
+				<f:facet name="header">
+					<h:outputText value="#{i18n['epf.persistence.query.firstResult']}"></h:outputText>
+					<h:inputText value="#{epf_persistence_search.firstResult}"></h:inputText>
+					<h:outputText value="#{i18n['epf.persistence.query.maxResults']}"></h:outputText>
+					<h:inputText value="#{epf_persistence_search.maxResults}"></h:inputText>
+				</f:facet>
+				<h:column>
+					<h:outputText value="#{resutlVar.toString()}"></h:outputText>
+				</h:column>
+			</h:dataTable>
+			<h:outputText rendered="#{empty epf_persistence_search.result}" value="#{i18n['epf.persistence.query.result.empty']}"></h:outputText>
+		</h:form>
+	</h:body>
+</f:view>

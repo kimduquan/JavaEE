@@ -125,10 +125,11 @@ public class Queries implements epf.client.persistence.Queries {
 		query.setParameter(1, text);
 		query.setParameter(2, maxResults);
 		query.setParameter(3, firstResult);
-		ResponseBuilder response = Response.ok();
+		final List<SearchData> result = query.getResultList();
+		ResponseBuilder response = Response.ok(result);
 		final UriBuilder baseUri = uriInfo.getBaseUriBuilder();
-		final Iterator<Link> linksIt = query
-				.getResultStream()
+		final Iterator<Link> linksIt = result
+				.stream()
 				.filter(link -> link != null)
 				.map(
 						searchData -> {

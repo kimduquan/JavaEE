@@ -67,7 +67,7 @@ public class QueriesTest {
     @Test
     @Ignore
     public void testSearchOK() {
-    	Set<Link> entityLinks = Queries.search(client, "Any", 0, 100);
+    	Set<Link> entityLinks = Queries.search(client, "Any", 0, 100).getLinks();
     	Assert.assertFalse("Response.links.empty", entityLinks.isEmpty());
     	entityLinks.forEach(entityLink -> {
     		Assert.assertNotNull("Link", entityLink);
@@ -91,7 +91,7 @@ public class QueriesTest {
     
     @Test
     public void testSearchOK_EmptyResult() {
-    	Set<Link> entityLinks = Queries.search(client, "EPF", 0, 100);
+    	Set<Link> entityLinks = Queries.search(client, "EPF", 0, 100).getLinks();
     	Assert.assertTrue("Response.links.empty", entityLinks.isEmpty());
     }
     

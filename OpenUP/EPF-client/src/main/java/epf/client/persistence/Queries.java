@@ -6,7 +6,6 @@
 package epf.client.persistence;
 
 import java.util.List;
-import java.util.Set;
 import java.util.function.Function;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -22,7 +21,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
 
@@ -135,7 +133,7 @@ public interface Queries {
      * @param maxResults
      * @return
      */
-    static Set<Link> search(
+    static Response search(
     		final Client client,
     		final String text, 
     		final Integer firstResult,
@@ -144,7 +142,6 @@ public interface Queries {
     			target -> target.queryParam("text", text).queryParam(FIRST, firstResult).queryParam(MAX, maxResults), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
-    			.get()
-    			.getLinks();
+    			.get();
     }
 }
