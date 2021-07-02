@@ -11,6 +11,7 @@ import epf.portlet.RequestUtil;
 import epf.portlet.client.ClientUtil;
 import epf.portlet.registry.RegistryUtil;
 import epf.util.client.Client;
+import epf.util.logging.Logging;
 import epf.util.security.PasswordUtil;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -21,6 +22,8 @@ import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.logging.Logger;
 
 /**
  * @author PC
@@ -34,6 +37,11 @@ public class Security implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * 
+	 */
+	private static final Logger LOGGER = Logging.getLogger(Security.class.getName());
 
 	/**
 	 * 
@@ -166,5 +174,27 @@ public class Security implements Serializable {
 		cookie.setPath("/");
 		cookieUtil.addCookie(cookie);
 		return "security";
+	}
+	
+	/**
+	 * @return
+	 */
+	public String authenticate() {
+		final Optional<Cookie> cookie = cookieUtil.getCookie(Naming.SECURITY_TOKEN);
+		if(cookie.isPresent() && session.getToken() == null) {
+			try(Client client = clientUtil.newClient(registryUtil.get("security"))){
+				final Token token = epf.client.security.Security.authenticate(client);
+				final String rawToken = cookie.get().getValue();
+				token.setRawToken(rawToken);
+				session.setToken(token);
+			} 
+			catch (Exception e) {
+				LOGGER.throwing(getClass().getName(), "authenticate", e);
+			}
+		}
+		if(session.getToken() != null) {
+			return "session";
+		}
+		return "";
 	}
 }
