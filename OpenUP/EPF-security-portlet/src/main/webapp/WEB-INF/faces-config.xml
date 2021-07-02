@@ -11,8 +11,8 @@
 	<navigation-rule>
 		<from-view-id>/security/security.xhtml</from-view-id>
 		<navigation-case>
-			<from-outcome>session</from-outcome>
-			<to-view-id>/security/session.xhtml</to-view-id>
+			<from-outcome>principal</from-outcome>
+			<to-view-id>/security/principal.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
 </faces-config>

@@ -117,7 +117,7 @@ public class Security implements Serializable {
 		cookie.setHttpOnly(true);
 		cookie.setPath("/");
 		cookieUtil.addCookie(cookie);
-		return "session";
+		return "principal";
 	}
 	
 	/**
@@ -126,7 +126,6 @@ public class Security implements Serializable {
 	 */
 	public String logout() throws Exception {
 		try(Client client = clientUtil.newClient(registryUtil.get("security"))){
-			client.authorization(session.getToken().getRawToken());
 			epf.client.security.Security.logOut(client);
 		}
 		session.setToken(null);
@@ -142,10 +141,9 @@ public class Security implements Serializable {
 		final Map<String, String> info = new HashMap<>();
 		info.put("password", new String(credential.getPassword()));
 		try(Client client = clientUtil.newClient(registryUtil.get("security"))){
-			client.authorization(session.getToken().getRawToken());
 			epf.client.security.Security.update(client, info);
 		}
-		return "session";
+		return "principal";
 	}
 	
 	/**
@@ -156,7 +154,6 @@ public class Security implements Serializable {
 		final URI securityUrl = registryUtil.get("security");
 		String rawToken;
 		try(Client client = clientUtil.newClient(securityUrl)){
-			client.authorization(session.getToken().getRawToken());
 			rawToken = epf.client.security.Security.revoke(client);
 		}
 		Token token;
@@ -172,7 +169,7 @@ public class Security implements Serializable {
 		cookie.setHttpOnly(true);
 		cookie.setPath("/");
 		cookieUtil.addCookie(cookie);
-		return "session";
+		return "principal";
 	}
 	
 	/**
@@ -191,9 +188,9 @@ public class Security implements Serializable {
 				LOGGER.throwing(getClass().getName(), "authenticate", e);
 			}
 		}
-		if(session.getToken() != null) {
-			return "session";
+		if(session.getToken() == null) {
+			return "security";
 		}
-		return "";
+		return "principal";
 	}
 }

@@ -21,4 +21,9 @@ public interface Naming {
 	 * 
 	 */
 	String SECURITY_TOKEN = "epf_security_token";
+	
+	/**
+	 * 
+	 */
+	String SECURITY_PRINCIPAL = "epf_security_principal";
 }
