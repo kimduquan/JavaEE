@@ -8,7 +8,6 @@ import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import epf.client.security.Token;
-import epf.portlet.Naming;
 import epf.portlet.client.Application;
 import epf.portlet.registry.Registry;
 import epf.util.client.Client;

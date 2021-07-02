@@ -18,7 +18,6 @@ import epf.client.schema.Attribute;
 import epf.client.schema.Entity;
 import epf.portlet.Event;
 import epf.portlet.EventUtil;
-import epf.portlet.Naming;
 import epf.portlet.Parameter;
 import epf.portlet.ParameterUtil;
 import epf.portlet.client.ClientUtil;

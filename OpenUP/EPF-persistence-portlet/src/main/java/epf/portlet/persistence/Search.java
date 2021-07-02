@@ -5,7 +5,6 @@ package epf.portlet.persistence;
 
 import java.io.Serializable;
 import javax.inject.Named;
-import epf.portlet.Naming;
 
 /**
  * @author PC

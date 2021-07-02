@@ -19,7 +19,6 @@ import javax.ws.rs.core.Response;
 import epf.client.schema.Attribute;
 import epf.portlet.Event;
 import epf.portlet.EventUtil;
-import epf.portlet.Naming;
 import epf.portlet.Parameter;
 import epf.portlet.ParameterUtil;
 import epf.portlet.RequestUtil;

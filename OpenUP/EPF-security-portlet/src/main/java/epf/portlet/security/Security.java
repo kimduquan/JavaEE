@@ -6,7 +6,6 @@ package epf.portlet.security;
 import epf.client.security.Credential;
 import epf.client.security.Token;
 import epf.portlet.CookieUtil;
-import epf.portlet.Naming;
 import epf.portlet.RequestUtil;
 import epf.portlet.client.ClientUtil;
 import epf.portlet.registry.RegistryUtil;

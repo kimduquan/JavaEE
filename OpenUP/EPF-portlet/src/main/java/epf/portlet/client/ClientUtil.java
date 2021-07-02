@@ -7,7 +7,7 @@ import java.net.URI;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import epf.portlet.CookieUtil;
-import epf.portlet.Naming;
+import epf.portlet.security.Naming;
 import epf.util.client.Client;
 
 /**

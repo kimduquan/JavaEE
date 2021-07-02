@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.portlet;
+package epf.portlet.persistence;
 
 /**
  * @author PC
@@ -9,18 +9,6 @@ package epf.portlet;
  */
 public interface Naming {
 
-	/**
-	 * 
-	 */
-	String SECURITY = "epf_security";
-	/**
-	 * 
-	 */
-	String SECURITY_SESSION = "epf_security_session";
-	/**
-	 * 
-	 */
-	String SECURITY_TOKEN = "epf_security_token";
 	/**
 	 * 
 	 */
@@ -37,8 +25,4 @@ public interface Naming {
 	 * 
 	 */
 	String PERSISTENCE_SEARCH = "epf_persistence_search";
-	/**
-	 * 
-	 */
-	String SCHEMA = "epf_schema";
 }
