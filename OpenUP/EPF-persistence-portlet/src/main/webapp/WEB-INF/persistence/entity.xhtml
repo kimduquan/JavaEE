@@ -18,9 +18,9 @@
 					<h:selectManyListbox rendered="#{attributeVar.association}" value="#{epf_persistence_entity.object[attributeVar.name]}"></h:selectManyListbox>
 					<h:inputText rendered="#{not attributeVar.collection and not attributeVar.association}" value="#{epf_persistence_entity.object[attributeVar.name]}"></h:inputText>
 				</ui:repeat>
-				<h:commandButton rendered="#{epf_persistence_entity.id == null}" action="#{epf_persistence_entity.persist}" value="#{i18n['epf.persistence.persist']}"></h:commandButton>
-				<h:commandButton rendered="#{epf_persistence_entity.id != null}" action="#{epf_persistence_entity.merge}" value="#{i18n['epf.persistence.merge']}"></h:commandButton>
-				<h:commandButton rendered="#{epf_persistence_entity.id != null}" action="#{epf_persistence_entity.remove}" value="#{i18n['epf.persistence.remove']}"></h:commandButton>
+				<h:commandButton rendered="#{epf_persistence_entity.id == null}" action="#{epf_persistence_entity.persist}" value="#{i18n['epf.persistence.entity.persist']}"></h:commandButton>
+				<h:commandButton rendered="#{epf_persistence_entity.id != null}" action="#{epf_persistence_entity.merge}" value="#{i18n['epf.persistence.entity.merge']}"></h:commandButton>
+				<h:commandButton rendered="#{epf_persistence_entity.id != null}" action="#{epf_persistence_entity.remove}" value="#{i18n['epf.persistence.entity.remove']}"></h:commandButton>
 			</fieldset>
 		</h:form>
 	</h:body>

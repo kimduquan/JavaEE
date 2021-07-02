@@ -112,16 +112,14 @@ public class Query implements Serializable {
 					.stream()
 					.filter(AttributeUtil::isBasic)
 					.collect(Collectors.toList());
-		}
-		try {
-			firstResult = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT));
-			maxResults = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT));
-			if(entity != null) {
+			try {
+				firstResult = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT));
+				maxResults = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT));
 				result = getResultList();
 			}
-		}
-		catch (Exception e) {
-			LOGGER.throwing(getClass().getName(), "postConstruct", e);
+			catch (Exception e) {
+				LOGGER.throwing(getClass().getName(), "postConstruct", e);
+			}
 		}
 	}
 	

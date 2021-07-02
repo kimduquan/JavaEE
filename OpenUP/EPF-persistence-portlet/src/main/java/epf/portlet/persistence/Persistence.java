@@ -68,11 +68,6 @@ public class Persistence implements Serializable {
 	/**
 	 * 
 	 */
-	private int maxResults;
-	
-	/**
-	 * 
-	 */
 	@Inject
 	private transient RegistryUtil registryUtil;
 	
@@ -112,16 +107,14 @@ public class Persistence implements Serializable {
 					.stream()
 					.filter(AttributeUtil::isBasic)
 					.collect(Collectors.toList());
-		}
-		try {
-			firstResult = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT));
-			maxResults = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT));
-			if(entity != null) {
-				objects = fetchObjects();
+			try {
+				firstResult = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT));
+				final int maxResults = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT));
+				objects = fetchObjects(firstResult, maxResults);
 			}
-		}
-		catch (Exception e) {
-			LOGGER.throwing(getClass().getName(), "postConstruct", e);
+			catch (Exception e) {
+				LOGGER.throwing(getClass().getName(), "postConstruct", e);
+			}
 		}
 	}
 	
@@ -129,7 +122,7 @@ public class Persistence implements Serializable {
 	 * @return
 	 * @throws Exception
 	 */
-	protected List<Map<String, Object>> fetchObjects() throws Exception{
+	protected List<Map<String, Object>> fetchObjects(final int firstResult, final int maxResults) throws Exception{
 		try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
 			try(Response response = epf.client.persistence.Queries.executeQuery(
 					client, 
@@ -194,31 +187,5 @@ public class Persistence implements Serializable {
 	 */
 	public int indexOf(final Map<String, Object> object) {
 		return firstResult + objects.indexOf(object);
-	}
-	
-	/**
-	 * @throws Exception 
-	 * 
-	 */
-	public void getResult() throws Exception {
-		if(entity != null) {
-			objects = fetchObjects();
-		}
-	}
-
-	public int getFirstResult() {
-		return firstResult;
-	}
-
-	public void setFirstResult(final int firstResult) {
-		this.firstResult = firstResult;
-	}
-
-	public int getMaxResults() {
-		return maxResults;
-	}
-
-	public void setMaxResults(final int maxResults) {
-		this.maxResults = maxResults;
 	}
 }
