@@ -145,7 +145,7 @@ public class Security implements Serializable {
 			client.authorization(session.getToken().getRawToken());
 			epf.client.security.Security.update(client, info);
 		}
-		return "security";
+		return "session";
 	}
 	
 	/**
@@ -172,7 +172,7 @@ public class Security implements Serializable {
 		cookie.setHttpOnly(true);
 		cookie.setPath("/");
 		cookieUtil.addCookie(cookie);
-		return "security";
+		return "session";
 	}
 	
 	/**
