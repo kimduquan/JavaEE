@@ -12,8 +12,8 @@
 		<h:form>
 			<h:outputLabel value="#{i18n['epf.security.session.token.name']}" />
 			<h:outputText value="#{epf_security_session.token.name}" />
-			<h:commandButton action="#{epf_security.logout}" value="#{i18n['epf.security.logout']}" />
-			<h:commandButton rendered="#{epf_security_session.expired}" action="#{epf_security.revoke}" value="#{i18n['epf.security.revoke']}" />
+			<h:commandButton action="#{epf_security_principal.logout}" value="#{i18n['epf.security.logout']}" />
+			<h:commandButton rendered="#{epf_security_principal.expired}" action="#{epf_security_principal.revoke}" value="#{i18n['epf.security.revoke']}" />
 			<h:link outcome="credential" value="#{i18n['epf.security.update']}" />
 		</h:form>
 	</h:body>

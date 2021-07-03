@@ -19,8 +19,7 @@ import javax.servlet.http.Cookie;
 import java.io.Serializable;
 import java.net.URI;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.Instant;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -112,59 +111,7 @@ public class Security implements Serializable {
 		token.setRawToken(rawToken);
 		session.setToken(token);
 		final Cookie cookie = new Cookie(Naming.SECURITY_TOKEN, rawToken);
-		cookie.setMaxAge(-1);
-		cookie.setDomain(request.getRequest().getServerName());
-		cookie.setHttpOnly(true);
-		cookie.setPath("/");
-		cookieUtil.addCookie(cookie);
-		return "principal";
-	}
-	
-	/**
-	 * @return
-	 * @throws Exception 
-	 */
-	public String logout() throws Exception {
-		try(Client client = clientUtil.newClient(registryUtil.get("security"))){
-			epf.client.security.Security.logOut(client);
-		}
-		session.setToken(null);
-		cookieUtil.deleteCookie(Naming.SECURITY_TOKEN);
-		return "security";
-	}
-	
-	/**
-	 * @return
-	 * @throws Exception 
-	 */
-	public String update() throws Exception {
-		final Map<String, String> info = new HashMap<>();
-		info.put("password", new String(credential.getPassword()));
-		try(Client client = clientUtil.newClient(registryUtil.get("security"))){
-			epf.client.security.Security.update(client, info);
-		}
-		return "principal";
-	}
-	
-	/**
-	 * @return
-	 * @throws Exception 
-	 */
-	public String revoke() throws Exception {
-		final URI securityUrl = registryUtil.get("security");
-		String rawToken;
-		try(Client client = clientUtil.newClient(securityUrl)){
-			rawToken = epf.client.security.Security.revoke(client);
-		}
-		Token token;
-		try(Client client = clientUtil.newClient(securityUrl)){
-			client.authorization(rawToken);
-			token = epf.client.security.Security.authenticate(client);
-		}
-		token.setRawToken(rawToken);
-		session.setToken(token);
-		final Cookie cookie = new Cookie(Naming.SECURITY_TOKEN, rawToken);
-		cookie.setMaxAge(-1);
+		cookie.setMaxAge((int)(token.getExpirationTime() - Instant.EPOCH.getEpochSecond()));
 		cookie.setDomain(request.getRequest().getServerName());
 		cookie.setHttpOnly(true);
 		cookie.setPath("/");
@@ -188,7 +135,7 @@ public class Security implements Serializable {
 				LOGGER.throwing(getClass().getName(), "authenticate", e);
 			}
 		}
-		if(session.getToken() == null) {
+		if(!cookie.isPresent() || session.getToken() == null) {
 			return "security";
 		}
 		return "principal";
