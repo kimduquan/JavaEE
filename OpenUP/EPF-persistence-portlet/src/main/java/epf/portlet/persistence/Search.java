@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.GenericType;
@@ -23,6 +24,7 @@ import epf.util.logging.Logging;
  *
  */
 @Named(Naming.PERSISTENCE_SEARCH)
+@ViewScoped
 public class Search implements Serializable {
 
 	/**
@@ -93,7 +95,9 @@ public class Search implements Serializable {
 	public void search() throws Exception{
 		try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
 			try(Response response = epf.client.persistence.Queries.search(client, text, firstResult, maxResults)){
-				result = response.readEntity(new GenericType<List<SearchData>>() {});
+				if(Response.Status.OK.getStatusCode() == response.getStatus()) {
+					result = response.readEntity(new GenericType<List<SearchData>>() {});
+				}
 			}
 		}
 	}
@@ -133,5 +137,4 @@ public class Search implements Serializable {
 	public void setText(final String text) {
 		this.text = text;
 	}
-
 }
