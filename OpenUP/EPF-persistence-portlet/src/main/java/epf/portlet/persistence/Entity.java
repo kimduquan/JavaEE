@@ -3,18 +3,19 @@
  */
 package epf.portlet.persistence;
 
+import java.io.InputStream;
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.json.Json;
+import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-import javax.ws.rs.core.GenericType;
+import javax.json.JsonReader;
+import javax.json.JsonValue;
 import javax.ws.rs.core.Response;
 import epf.client.schema.Attribute;
 import epf.portlet.Event;
@@ -58,7 +59,7 @@ public class Entity implements Serializable {
 	/**
 	 * 
 	 */
-	private Map<String, Object> object;
+	private JsonObject object;
 	
 	/**
 	 * 
@@ -111,8 +112,9 @@ public class Entity implements Serializable {
 			attributes = entity.getAttributes();
 		}
 		if(entity != null && id == null) {
-			object = new HashMap<>();
-			attributes.forEach(attribute -> object.put(attribute.getName(), null));
+			final JsonObjectBuilder builder = Json.createObjectBuilder();
+			attributes.forEach(attribute -> AttributeUtil.addDefault(builder, attribute));
+			object = builder.build();
 		}
 		if(entity != null && id != null) {
 			try {
@@ -128,7 +130,7 @@ public class Entity implements Serializable {
 	 * @return
 	 * @throws Exception
 	 */
-	protected Map<String, Object> fetchEntity() throws Exception {
+	protected JsonObject fetchEntity() throws Exception {
 		try{
 			return fetchCachedEntity();
 		} 
@@ -141,10 +143,14 @@ public class Entity implements Serializable {
 	 * @return
 	 * @throws Exception
 	 */
-	protected Map<String, Object> fetchCachedEntity() throws Exception{
+	protected JsonObject fetchCachedEntity() throws Exception{
 		try(Client client = clientUtil.newClient(registryUtil.get("cache"))){
 			try(Response response = epf.client.cache.Cache.getEntity(client, entity.getName(), id)){
-				return response.readEntity(new GenericType<Map<String, Object>>() {});
+				try(InputStream stream = response.readEntity(InputStream.class)){
+					try(JsonReader reader = Json.createReader(stream)){
+						return reader.readObject();
+					}
+				}
 			}
 		}
 	}
@@ -153,10 +159,14 @@ public class Entity implements Serializable {
 	 * @return
 	 * @throws Exception
 	 */
-	protected Map<String, Object> fetchPersistedEntity() throws Exception{
+	protected JsonObject fetchPersistedEntity() throws Exception{
 		try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
 			try(Response response = epf.client.persistence.Entities.find(client, entity.getName(), id)){
-				return response.readEntity(new GenericType<Map<String, Object>>() {});
+				try(InputStream stream = response.readEntity(InputStream.class)){
+					try(JsonReader reader = Json.createReader(stream)){
+						return reader.readObject();
+					}
+				}
 			}
 		}
 	}
@@ -165,7 +175,7 @@ public class Entity implements Serializable {
 		return attributes;
 	}
 
-	public Map<String, Object> getObject() {
+	public JsonObject getObject() {
 		return object;
 	}
 
@@ -191,13 +201,17 @@ public class Entity implements Serializable {
 					entity.getName(), 
 					builder.build().toString()
 					)){
-				object = response.readEntity(new GenericType<Map<String, Object>>() {});
+				try(InputStream stream = response.readEntity(InputStream.class)){
+					try(JsonReader reader = Json.createReader(stream)){
+						object = reader.readObject();
+					}
+				}
 			}
 		}
 		if(entity.getId() != null) {
-			Object idValue = object.get(entity.getId().getName());
+			final JsonValue idValue = object.get(entity.getId().getName());
 			if(idValue != null) {
-				id = idValue.toString();
+				id = AttributeUtil.getAsString(idValue);
 				paramUtil.setValue(Parameter.PERSISTENCE_ENTITY_ID, id);
 			}
 		}

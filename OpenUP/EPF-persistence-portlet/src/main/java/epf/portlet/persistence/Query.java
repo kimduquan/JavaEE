@@ -3,16 +3,19 @@
  */
 package epf.portlet.persistence;
 
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.ws.rs.core.GenericType;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
+import javax.json.JsonValue;
 import javax.ws.rs.core.Response;
 import epf.client.schema.Attribute;
 import epf.client.schema.Entity;
@@ -67,7 +70,7 @@ public class Query implements Serializable {
 	/**
 	 * 
 	 */
-	private List<Map<String, Object>> result;
+	private List<JsonObject> result;
 	
 	/**
 	 * 
@@ -126,14 +129,22 @@ public class Query implements Serializable {
 	 * @return
 	 * @throws Exception
 	 */
-	protected List<Map<String, Object>> getResultList() throws Exception{
+	protected List<JsonObject> getResultList() throws Exception{
 		try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
 			try(Response response = epf.client.persistence.Queries.executeQuery(
 					client, 
 					path -> path.path(entity.getName()), 
 					firstResult, 
 					maxResults)){
-				return response.readEntity(new GenericType<List<Map<String, Object>>>() {});
+				try(InputStream stream = response.readEntity(InputStream.class)){
+					try(JsonReader reader = Json.createReader(stream)){
+						return reader
+						.readArray()
+						.stream()
+						.map(value -> value.asJsonObject())
+						.collect(Collectors.toList());
+					}
+				}
 			}
 		}
 	}
@@ -142,7 +153,7 @@ public class Query implements Serializable {
 	 * @param object
 	 * @return
 	 */
-	public int indexOf(final Map<String, Object> object) {
+	public int indexOf(final JsonObject object) {
 		return firstResult + result.indexOf(object);
 	}
 	
@@ -160,20 +171,21 @@ public class Query implements Serializable {
 	 * @param object
 	 * @return
 	 */
-	public String merge(final Map<String, Object> object) {
+	public String merge(final JsonObject object) {
 		if(entity.isSingleId()) {
 			final Attribute id = entity.getId();
 			if(id != null) {
-				final Object idValue = object.get(id.getName());
+				final JsonValue idValue = object.get(id.getName());
 				if(idValue != null) {
-					paramUtil.setValue(Parameter.PERSISTENCE_ENTITY_ID, idValue.toString());
+					final String value = AttributeUtil.getAsString(idValue);
+					paramUtil.setValue(Parameter.PERSISTENCE_ENTITY_ID, value);
 				}
 			}
 		}
 		return "entity";
 	}
 
-	public List<Map<String, Object>> getResult() {
+	public List<JsonObject> getResult() {
 		return result;
 	}
 

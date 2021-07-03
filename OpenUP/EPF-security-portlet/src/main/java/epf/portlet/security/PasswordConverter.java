@@ -12,7 +12,7 @@ import javax.faces.convert.FacesConverter;
  * @author PC
  *
  */
-@FacesConverter(value = "PasswordConverter")
+@FacesConverter(value = "PasswordConverter", managed = true)
 public class PasswordConverter implements Converter<char[]> {
 
 	@Override

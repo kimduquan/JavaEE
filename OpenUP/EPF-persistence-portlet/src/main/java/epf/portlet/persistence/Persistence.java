@@ -3,16 +3,19 @@
  */
 package epf.portlet.persistence;
 
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.ws.rs.core.GenericType;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
+import javax.json.JsonValue;
 import javax.ws.rs.core.Response;
 import epf.client.schema.Attribute;
 import epf.client.schema.Entity;
@@ -57,7 +60,7 @@ public class Persistence implements Serializable {
 	/**
 	 * 
 	 */
-	private List<Map<String, Object>> objects;
+	private List<JsonObject> objects;
 	
 	/**
 	 * 
@@ -121,14 +124,22 @@ public class Persistence implements Serializable {
 	 * @return
 	 * @throws Exception
 	 */
-	protected List<Map<String, Object>> fetchObjects(final int firstResult, final int maxResults) throws Exception{
+	protected List<JsonObject> fetchObjects(final int firstResult, final int maxResults) throws Exception{
 		try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
 			try(Response response = epf.client.persistence.Queries.executeQuery(
 					client, 
 					path -> path.path(entity.getName()), 
 					firstResult, 
 					maxResults)){
-				return response.readEntity(new GenericType<List<Map<String, Object>>>() {});
+				try(InputStream stream = response.readEntity(InputStream.class)){
+					try(JsonReader reader = Json.createReader(stream)){
+						return reader
+						.readArray()
+						.stream()
+						.map(value -> value.asJsonObject())
+						.collect(Collectors.toList());
+					}
+				}
 			}
 		}
 	}
@@ -137,7 +148,7 @@ public class Persistence implements Serializable {
 		return entity;
 	}
 
-	public List<Map<String, Object>> getObjects() {
+	public List<JsonObject> getObjects() {
 		return objects;
 	}
 
@@ -149,14 +160,15 @@ public class Persistence implements Serializable {
 	 * @param object
 	 * @throws Exception
 	 */
-	public void remove(final Map<String, Object> object) throws Exception {
+	public void remove(final JsonObject object) throws Exception {
 		if(entity.isSingleId()) {
 			final Attribute id = entity.getId();
 			if(id != null) {
-				final Object idValue = object.get(id.getName());
+				final JsonValue idValue = object.get(id.getName());
 				if(idValue != null) {
+					final String value = AttributeUtil.getAsString(idValue);
 					try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
-						epf.client.persistence.Entities.remove(client, entity.getName(), idValue.toString());
+						epf.client.persistence.Entities.remove(client, entity.getName(), value);
 					}
 				}
 			}
@@ -167,13 +179,14 @@ public class Persistence implements Serializable {
 	 * @param object
 	 * @return
 	 */
-	public String merge(final Map<String, Object> object) {
+	public String merge(final JsonObject object) {
 		if(entity.isSingleId()) {
 			final Attribute id = entity.getId();
 			if(id != null) {
-				final Object idValue = object.get(id.getName());
+				final JsonValue idValue = object.get(id.getName());
 				if(idValue != null) {
-					paramUtil.setValue(Parameter.PERSISTENCE_ENTITY_ID, idValue.toString());
+					final String value = AttributeUtil.getAsString(idValue);
+					paramUtil.setValue(Parameter.PERSISTENCE_ENTITY_ID, value);
 				}
 			}
 		}
@@ -184,7 +197,7 @@ public class Persistence implements Serializable {
 	 * @param object
 	 * @return
 	 */
-	public int indexOf(final Map<String, Object> object) {
+	public int indexOf(final JsonObject object) {
 		return firstResult + objects.indexOf(object);
 	}
 }
