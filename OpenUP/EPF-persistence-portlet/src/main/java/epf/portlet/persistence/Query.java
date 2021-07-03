@@ -176,8 +176,8 @@ public class Query implements Serializable {
 			final Attribute id = entity.getId();
 			if(id != null) {
 				final JsonValue idValue = object.get(id.getName());
-				if(idValue != null) {
-					final String value = AttributeUtil.getAsString(idValue);
+				final String value = AttributeUtil.getAsString(idValue);
+				if(value != null) {
 					paramUtil.setValue(Parameter.PERSISTENCE_ENTITY_ID, value);
 				}
 			}
