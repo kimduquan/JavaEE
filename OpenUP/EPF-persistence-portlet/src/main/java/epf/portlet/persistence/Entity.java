@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -17,7 +18,6 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
 import javax.json.JsonValue;
 import javax.ws.rs.core.Response;
-import epf.client.schema.Attribute;
 import epf.portlet.Event;
 import epf.portlet.EventUtil;
 import epf.portlet.Parameter;
@@ -54,12 +54,12 @@ public class Entity implements Serializable {
 	/**
 	 * 
 	 */
-	private List<Attribute> attributes;
+	private List<EntityAttribute> attributes;
 	
 	/**
 	 * 
 	 */
-	private JsonObject object;
+	private EntityObject object;
 	
 	/**
 	 * 
@@ -109,19 +109,24 @@ public class Entity implements Serializable {
 			LOGGER.throwing(getClass().getName(), "postConstruct", e);
 		}
 		if(entity != null) {
-			attributes = entity.getAttributes();
-		}
-		if(entity != null && id == null) {
-			final JsonObjectBuilder builder = Json.createObjectBuilder();
-			attributes.forEach(attribute -> AttributeUtil.addDefault(builder, attribute));
-			object = builder.build();
-		}
-		if(entity != null && id != null) {
-			try {
-				object = fetchEntity();
-			} 
-			catch (Exception e) {
-				LOGGER.throwing(getClass().getName(), "postConstruct", e);
+			if(id == null) {
+				final JsonObjectBuilder builder = Json.createObjectBuilder();
+				entity.getAttributes().forEach(attribute -> AttributeUtil.addDefault(builder, attribute));
+				object = new EntityObject(builder.build());
+			}
+			else {
+				try {
+					object = new EntityObject(fetchEntity());
+				} 
+				catch (Exception e) {
+					LOGGER.throwing(getClass().getName(), "postConstruct", e);
+				}
+			}
+			if(object != null) {
+				attributes = entity.getAttributes()
+						.stream()
+						.map(attribute -> new EntityAttribute(object, attribute))
+						.collect(Collectors.toList());
 			}
 		}
 	}
@@ -171,12 +176,8 @@ public class Entity implements Serializable {
 		}
 	}
 
-	public List<Attribute> getAttributes() {
+	public List<EntityAttribute> getAttributes() {
 		return attributes;
-	}
-
-	public JsonObject getObject() {
-		return object;
 	}
 
 	public String getId() {
@@ -195,15 +196,14 @@ public class Entity implements Serializable {
 	 */
 	public void persist() throws Exception {
 		try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
-			final JsonObjectBuilder builder = Json.createObjectBuilder(object);
 			try(Response response = epf.client.persistence.Entities.persist(
 					client, 
 					entity.getName(), 
-					builder.build().toString()
+					object.merge().toString()
 					)){
 				try(InputStream stream = response.readEntity(InputStream.class)){
 					try(JsonReader reader = Json.createReader(stream)){
-						object = reader.readObject();
+						object = new EntityObject(reader.readObject());
 					}
 				}
 			}
@@ -222,13 +222,12 @@ public class Entity implements Serializable {
 	 * 
 	 */
 	public void merge() throws Exception {
-		final JsonObjectBuilder builder = Json.createObjectBuilder(object);
 		try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
 			epf.client.persistence.Entities.merge(
 					client,
 					entity.getName(), 
 					id, 
-					builder.build().toString()
+					object.merge().toString()
 					);
 		}
 	}

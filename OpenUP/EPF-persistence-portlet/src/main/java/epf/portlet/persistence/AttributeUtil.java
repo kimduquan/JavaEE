@@ -3,9 +3,12 @@
  */
 package epf.portlet.persistence;
 
+import java.io.StringReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import javax.json.Json;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonReader;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 import epf.client.schema.Attribute;
@@ -48,9 +51,6 @@ public class AttributeUtil {
 		else if(BigInteger.class.getName().equals(attribute.getType())) {
 			builder.add(attribute.getName(), BigInteger.ZERO);
 		}
-		else if(BigInteger.class.getName().equals(attribute.getType())) {
-			builder.add(attribute.getName(), BigInteger.ZERO);
-		}
 		else if(Boolean.class.getName().equals(attribute.getType())) {
 			builder.add(attribute.getName(), false);
 		}
@@ -66,6 +66,18 @@ public class AttributeUtil {
 		else if(String.class.getName().equals(attribute.getType())) {
 			builder.add(attribute.getName(), "");
 		}
+		else if(attribute.isCollection()) {
+			builder.add(attribute.getName(), JsonValue.EMPTY_JSON_ARRAY);
+		}
+		else if(attribute.isAssociation()) {
+			builder.add(attribute.getName(), JsonValue.EMPTY_JSON_OBJECT);
+		}
+		else if(AttributeType.BASIC.equals(attribute.getAttributeType())) {
+			builder.addNull(attribute.getName());
+		}
+		else {
+			builder.add(attribute.getName(), JsonValue.EMPTY_JSON_OBJECT);
+		}
 	}
 	
 	/**
@@ -73,13 +85,51 @@ public class AttributeUtil {
 	 * @return
 	 */
 	public static String getAsString(final JsonValue value) {
-		String string;
+		String string = null;
 		if(value instanceof JsonString) {
 			string = ((JsonString)value).getString();
 		}
-		else {
+		else if(value != null){
 			string = value.toString();
 		}
 		return string;
+	}
+	
+	/**
+	 * @param object
+	 * @param attribute
+	 * @param value
+	 */
+	public static void setValue(final EntityObject object, final Attribute attribute, final String value) {
+		if(BigDecimal.class.getName().equals(attribute.getType())) {
+			object.put(attribute.getName(), Json.createValue(new BigDecimal(value)));
+		}
+		else if(BigInteger.class.getName().equals(attribute.getType())) {
+			object.put(attribute.getName(), Json.createValue(new BigInteger(value)));
+		}
+		else if(Boolean.class.getName().equals(attribute.getType())) {
+			final boolean b = Boolean.valueOf(value);
+			object.put(attribute.getName(), b ? JsonValue.TRUE : JsonValue.FALSE);
+		}
+		else if(Double.class.getName().equals(attribute.getType())) {
+			object.put(attribute.getName(), Json.createValue(Double.valueOf(value)));
+		}
+		else if(Integer.class.getName().equals(attribute.getType())) {
+			object.put(attribute.getName(), Json.createValue(Integer.valueOf(value)));
+		}
+		else if(Long.class.getName().equals(attribute.getType())) {
+			object.put(attribute.getName(), Json.createValue(Long.valueOf(value)));
+		}
+		else if(String.class.getName().equals(attribute.getType())) {
+			object.put(attribute.getName(), Json.createValue(value));
+		}
+		else if (value != null && !value.isEmpty()){
+			try(StringReader reader = new StringReader(value)){
+				try(JsonReader jsonReader = Json.createReader(reader)){
+					final JsonValue jsonValue = jsonReader.readValue();
+					object.put(attribute.getName(), jsonValue);
+				}
+			}
+		}
 	}
 }
