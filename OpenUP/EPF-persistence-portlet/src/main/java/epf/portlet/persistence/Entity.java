@@ -102,33 +102,7 @@ public class Entity implements Serializable {
 	@PostConstruct
 	protected void postConstruct() {
 		entity = eventUtil.getEvent(Event.SCHEMA_ENTITY);
-		try {
-			id = requestUtil.getRequest().getRenderParameters().getValue(Parameter.PERSISTENCE_ENTITY_ID);
-		}
-		catch (Exception e) {
-			LOGGER.throwing(getClass().getName(), "postConstruct", e);
-		}
-		if(entity != null) {
-			if(id == null) {
-				final JsonObjectBuilder builder = Json.createObjectBuilder();
-				entity.getAttributes().forEach(attribute -> AttributeUtil.addDefault(builder, attribute));
-				object = new EntityObject(builder.build());
-			}
-			else {
-				try {
-					object = new EntityObject(fetchEntity());
-				} 
-				catch (Exception e) {
-					LOGGER.throwing(getClass().getName(), "postConstruct", e);
-				}
-			}
-			if(object != null) {
-				attributes = entity.getAttributes()
-						.stream()
-						.map(attribute -> new EntityAttribute(object, attribute))
-						.collect(Collectors.toList());
-			}
-		}
+		
 	}
 	
 	/**
@@ -175,19 +149,41 @@ public class Entity implements Serializable {
 			}
 		}
 	}
+	
+	public void prePersist() {
+		if(entity != null && object == null) {
+			final JsonObjectBuilder builder = Json.createObjectBuilder();
+			entity.getAttributes().forEach(attribute -> AttributeUtil.addDefault(builder, attribute));
+			object = new EntityObject(builder.build());
+			attributes = entity.getAttributes()
+					.stream()
+					.map(attribute -> new EntityAttribute(object, attribute))
+					.collect(Collectors.toList());
+		}
+	}
+	
+	public void preUpdate() {
+		if(entity != null && object == null) {
+			try {
+				id = requestUtil.getRequest().getRenderParameters().getValue(Parameter.PERSISTENCE_ENTITY_ID);
+				object = new EntityObject(fetchEntity());
+				attributes = entity.getAttributes()
+						.stream()
+						.map(attribute -> new EntityAttribute(object, attribute))
+						.collect(Collectors.toList());
+			} 
+			catch (Exception e) {
+				LOGGER.throwing(getClass().getName(), "postConstruct", e);
+			}
+		}
+	}
+	
+	public EntityObject getObject() {
+		return object;
+	}
 
 	public List<EntityAttribute> getAttributes() {
 		return attributes;
-	}
-
-	public String getId() {
-		try {
-			id = requestUtil.getRequest().getRenderParameters().getValue(Parameter.PERSISTENCE_ENTITY_ID);
-		}
-		catch (Exception e) {
-			LOGGER.throwing(getClass().getName(), "postConstruct", e);
-		}
-		return id;
 	}
 	
 	/**

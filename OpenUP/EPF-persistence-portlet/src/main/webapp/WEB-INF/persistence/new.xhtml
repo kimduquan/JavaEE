@@ -7,22 +7,21 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 >
 	<f:metadata>
-		<f:viewAction action="#{epf_persistence_entity.preUpdate}"/>
+		<f:viewAction action="#{epf_persistence_entity.prePersist}"/>
 	</f:metadata>
 	<h:head>
 		<h:outputStylesheet library="css" name="main.css" />
 	</h:head>
 	<h:body>
-		<h:form rendered="#{epf_persistence_entity.object != null}">
+		<h:form rendered="#{epf_persistence_entity.attributes != null}">
 			<fieldset>
-				<ui:repeat rendered="#{not empty epf_persistence_entity.attributes}" var="attributeVar" value="#{epf_persistence_entity.attributes}">
+				<ui:repeat var="attributeVar" value="#{epf_persistence_entity.attributes}">
 					<h:outputLabel value="#{attributeVar.attribute.name}" ></h:outputLabel>
 					<h:selectManyListbox rendered="#{attributeVar.attribute.collection}" value="#{attributeVar.value}"></h:selectManyListbox>
 					<h:selectManyListbox rendered="#{attributeVar.attribute.association}" value="#{attributeVar.value}"></h:selectManyListbox>
 					<h:inputText rendered="#{not attributeVar.attribute.collection and not attributeVar.attribute.association}" value="#{attributeVar.value}"></h:inputText>
 				</ui:repeat>
-				<h:commandButton action="#{epf_persistence_entity.merge}" value="#{i18n['epf.persistence.entity.merge']}"></h:commandButton>
-				<h:commandButton action="#{epf_persistence_entity.remove}" value="#{i18n['epf.persistence.entity.remove']}"></h:commandButton>
+				<h:commandButton action="#{epf_persistence_entity.persist}" value="#{i18n['epf.persistence.entity.persist']}"></h:commandButton>
 			</fieldset>
 		</h:form>
 	</h:body>
