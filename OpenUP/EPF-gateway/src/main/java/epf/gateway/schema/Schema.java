@@ -49,4 +49,24 @@ public class Schema {
         request.setRequest(req);
         return request.request(null);
     }
+    
+    /**
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @return
+     */
+    @GET
+    @Path("embeddable")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Asynchronous
+    public CompletionStage<Response> getEmbeddables(
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req) {
+        request.setHeaders(headers);
+        request.setUriInfo(uriInfo);
+        request.setRequest(req);
+        return request.request(null);
+    }
 }

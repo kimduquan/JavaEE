@@ -5,7 +5,9 @@ package epf.portlet.persistence;
 
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
@@ -17,7 +19,9 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
 import javax.json.JsonValue;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
+import epf.client.schema.Embeddable;
 import epf.portlet.Event;
 import epf.portlet.EventUtil;
 import epf.portlet.Parameter;
@@ -69,6 +73,11 @@ public class Entity implements Serializable {
 	/**
 	 * 
 	 */
+	private Map<String, Embeddable> embeddables;
+	
+	/**
+	 * 
+	 */
 	@Inject
 	private transient RegistryUtil registryUtil;
 	
@@ -102,6 +111,16 @@ public class Entity implements Serializable {
 	@PostConstruct
 	protected void postConstruct() {
 		entity = eventUtil.getEvent(Event.SCHEMA_ENTITY);
+		if(entity != null) {
+			try {
+				embeddables = fetchEmbeddables()
+						.stream()
+						.collect(Collectors.toMap(Embeddable::getType, e -> e));
+			} 
+			catch (Exception e) {
+				LOGGER.throwing(getClass().getName(), "postConstruct", e);
+			}
+		}
 	}
 	
 	/**
@@ -150,6 +169,18 @@ public class Entity implements Serializable {
 	}
 	
 	/**
+	 * @return
+	 * @throws Exception
+	 */
+	protected List<Embeddable> fetchEmbeddables() throws Exception{
+		try(Client client = clientUtil.newClient(registryUtil.get("schema"))){
+			try(Response response = epf.client.schema.Schema.getEmbeddables(client)){
+				return response.readEntity(new GenericType<List<Embeddable>>() {});
+			}
+		}
+	}
+	
+	/**
 	 * 
 	 */
 	public void prePersist() {
@@ -157,9 +188,12 @@ public class Entity implements Serializable {
 			final JsonObjectBuilder builder = Json.createObjectBuilder();
 			entity.getAttributes().forEach(attribute -> AttributeUtil.addDefault(builder, attribute));
 			object = new EntityObject(builder.build());
+			final AttributeBuilder attrBuilder = new AttributeBuilder()
+					.setObject(object)
+					.setEmbeddables(embeddables);
 			attributes = entity.getAttributes()
 					.stream()
-					.map(attribute -> new EntityAttribute(object, attribute))
+					.map(attribute -> attrBuilder.setAttribute(attribute).build())
 					.collect(Collectors.toList());
 		}
 	}
@@ -173,14 +207,17 @@ public class Entity implements Serializable {
 				id = requestUtil.getRequest().getRenderParameters().getValue(Parameter.PERSISTENCE_ENTITY_ID);
 				if(id != null && !id.isEmpty()) {
 					object = new EntityObject(fetchEntity());
+					final AttributeBuilder attrBuilder = new AttributeBuilder()
+							.setObject(object)
+							.setEmbeddables(embeddables);
 					attributes = entity.getAttributes()
 							.stream()
-							.map(attribute -> new EntityAttribute(object, attribute))
+							.map(attribute -> attrBuilder.setAttribute(attribute).build())
 							.collect(Collectors.toList());
 				}
 			} 
 			catch (Exception e) {
-				LOGGER.throwing(getClass().getName(), "postConstruct", e);
+				LOGGER.throwing(getClass().getName(), "preLoad", e);
 			}
 		}
 		return entity != null && object != null;
@@ -192,6 +229,17 @@ public class Entity implements Serializable {
 
 	public List<EntityAttribute> getAttributes() {
 		return attributes;
+	}
+	
+	/**
+	 * @param attribute
+	 * @return
+	 */
+	public List<EntityAttribute> getEmbeddedAttributes(final EntityAttribute attribute){
+		if(attribute instanceof EmbeddedAttribute) {
+			return ((EmbeddedAttribute) attribute).getAttributes();
+		}
+		return Arrays.asList();
 	}
 	
 	/**
@@ -214,8 +262,8 @@ public class Entity implements Serializable {
 		}
 		if(entity.getId() != null) {
 			final JsonValue idValue = object.get(entity.getId().getName());
-			if(idValue != null) {
-				id = AttributeUtil.getAsString(idValue);
+			id = AttributeUtil.getAsString(idValue);
+			if(id != null) {
 				paramUtil.setValue(Parameter.PERSISTENCE_ENTITY_ID, id);
 			}
 		}
@@ -249,5 +297,9 @@ public class Entity implements Serializable {
 					);
 		}
 		return "persistence";
+	}
+
+	public epf.client.schema.Entity getEntity() {
+		return entity;
 	}
 }

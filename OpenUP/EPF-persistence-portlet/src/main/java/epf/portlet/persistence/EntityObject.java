@@ -16,7 +16,13 @@ import javax.json.JsonValue;
  */
 public class EntityObject {
 
+	/**
+	 * 
+	 */
 	private final JsonObject object;
+	/**
+	 * 
+	 */
 	private final Map<String, JsonValue> attributes;
 	
 	/**

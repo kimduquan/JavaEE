@@ -6,6 +6,8 @@ package epf.portlet.persistence;
 import java.io.StringReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.List;
+
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
@@ -28,7 +30,7 @@ public class AttributeUtil {
 	public static boolean isBasic(final Attribute attribute) {
 		return !attribute.isAssociation() 
 				&& !attribute.isCollection() 
-				&& attribute.getAttributeType().equals(AttributeType.BASIC);
+				&& AttributeType.BASIC.equals(attribute.getAttributeType());
 	}
 	
 	/**
@@ -96,6 +98,14 @@ public class AttributeUtil {
 	}
 	
 	/**
+	 * @param value
+	 * @return
+	 */
+	public static List<String> getAsStrings(final JsonValue value) {
+		return null;
+	}
+	
+	/**
 	 * @param object
 	 * @param attribute
 	 * @param value
@@ -131,5 +141,14 @@ public class AttributeUtil {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * @param object
+	 * @param attribute
+	 * @param values
+	 */
+	public static void setValues(final EntityObject object, final Attribute attribute, final List<String> values) {
+		
 	}
 }

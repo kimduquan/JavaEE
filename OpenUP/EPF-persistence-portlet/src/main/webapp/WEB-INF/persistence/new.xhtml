@@ -15,14 +15,23 @@
 	<h:body>
 		<h:form rendered="#{epf_persistence_entity.attributes != null}">
 			<fieldset>
-				<ui:repeat var="attributeVar" value="#{epf_persistence_entity.attributes}">
-					<h:outputLabel value="#{attributeVar.attribute.name}" ></h:outputLabel>
-					<h:selectManyListbox rendered="#{attributeVar.attribute.collection}" value="#{attributeVar.value}"></h:selectManyListbox>
-					<h:selectManyListbox rendered="#{attributeVar.attribute.association}" value="#{attributeVar.value}"></h:selectManyListbox>
-					<h:inputText rendered="#{not attributeVar.attribute.collection and not attributeVar.attribute.association}" value="#{attributeVar.value}"></h:inputText>
+				<legend>
+					<h:outputText value="#{i18n[epf_persistence_entity.entity.type]}"></h:outputText>
+				</legend>
+				<ui:repeat rendered="#{not empty epf_persistence_entity.attributes}" var="attributeVar" value="#{epf_persistence_entity.attributes}">
+					<fieldset>
+						<legend>
+							<h:outputLabel value="#{attributeVar.attribute.name}" ></h:outputLabel>
+						</legend>
+						<h:inputText rendered="#{attributeVar.basic}" value="#{attributeVar.value}"></h:inputText>
+						<ui:repeat rendered="#{attributeVar.embedded}" var="embeddedAttributeVar" value="#{epf_persistence_entity.getEmbeddedAttributes(attributeVar)}">
+							<h:outputLabel value="#{embeddedAttributeVar.attribute.name}" ></h:outputLabel>
+							<h:inputText rendered="#{embeddedAttributeVar.basic}" value="#{embeddedAttributeVar.value}"></h:inputText>
+						</ui:repeat>
+					</fieldset>
 				</ui:repeat>
-				<h:commandButton action="#{epf_persistence_entity.persist}" value="#{i18n['epf.persistence.entity.persist']}"></h:commandButton>
 			</fieldset>
+			<h:commandButton action="#{epf_persistence_entity.persist}" value="#{i18n['epf.persistence.entity.persist']}"></h:commandButton>
 		</h:form>
 	</h:body>
 </f:view>

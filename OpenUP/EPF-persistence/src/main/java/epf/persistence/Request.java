@@ -26,6 +26,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Table;
 import javax.persistence.TypedQuery;
 import javax.persistence.metamodel.Attribute;
+import javax.persistence.metamodel.EmbeddableType;
 import javax.persistence.metamodel.EntityType;
 import javax.transaction.Transactional;
 import javax.ws.rs.ForbiddenException;
@@ -34,6 +35,7 @@ import epf.persistence.context.Application;
 import epf.persistence.context.Context;
 import epf.persistence.context.Credential;
 import epf.persistence.context.Session;
+import epf.persistence.impl.Embeddable;
 import epf.persistence.impl.Entity;
 
 /**
@@ -252,6 +254,35 @@ public class Request {
     				}
     			)
     			.filter(entity -> entity != null)
+    			.collect(Collectors.toList());
+    }
+    
+    /**
+     * @param <T>
+     * @param principal
+     * @return
+     */
+    @CacheResult(cacheName = "EmbeddableType")
+    public <T> List<Embeddable<T>> findEmbeddables(final Principal principal) {
+    	return getManager(principal)
+    			.getMetamodel()
+    			.getEmbeddables()
+    			.stream()
+    			.map(embeddableType -> { 
+    					Embeddable<T> embeddable = null;
+    					try {
+                    		@SuppressWarnings("unchecked")
+                    		final EmbeddableType<T> type = embeddableType.getClass().cast(embeddableType);
+                    		embeddable = new Embeddable<>();
+                    		embeddable.setType(type);
+    	                	}
+                    	catch(ClassCastException ex) {
+                    		logger.throwing(EmbeddableType.class.getName(), "getClass", ex);
+                    	}
+    					return embeddable;
+    				}
+    			)
+    			.filter(embeddable -> embeddable != null)
     			.collect(Collectors.toList());
     }
     

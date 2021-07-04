@@ -40,4 +40,24 @@ public interface Schema {
     			)
     	.get();
     }
+    
+    /**
+     * @return
+     */
+    @GET
+    @Path("embeddable")
+    @Produces(MediaType.APPLICATION_JSON)
+    Response getEmbeddables();
+    
+    /**
+     * @param client
+     * @return
+     */
+    static Response getEmbeddables(final Client client) {
+    	return client.request(
+    			target -> target.path("embeddable"), 
+    			req -> req.accept(MediaType.APPLICATION_JSON)
+    			)
+    	.get();
+    }
 }

@@ -112,7 +112,6 @@ public class Query implements Serializable {
 			attributes = entity
 					.getAttributes()
 					.stream()
-					.filter(AttributeUtil::isBasic)
 					.collect(Collectors.toList());
 			try {
 				firstResult = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT));

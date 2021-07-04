@@ -13,8 +13,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import epf.client.schema.util.EmbeddableComparator;
 import epf.client.schema.util.EntityComparator;
 import epf.persistence.Request;
+import epf.persistence.impl.Embeddable;
 import epf.persistence.impl.Entity;
 import epf.schema.roles.Role;
 
@@ -50,12 +52,36 @@ public class Schema implements epf.client.schema.Schema {
         }
         return entities;
     }
+	
+	/**
+	 * @param <T>
+	 * @return
+	 */
+	protected <T> List<Embeddable<T>> findEmbeddables(){
+    	final List<Embeddable<T>> embeddables = cache.findEmbeddables(context.getUserPrincipal());
+    	if(embeddables.isEmpty()){
+            throw new NotFoundException();
+        }
+        return embeddables;
+    }
 
 	@Override
 	public Response getEntities() {
 		final EntityBuilder builder = new EntityBuilder();
 		final EntityComparator comparator = new EntityComparator();
 		final List<epf.client.schema.Entity> entityTypes = findEntities()
+				.stream()
+				.map(builder::build)
+				.sorted(comparator)
+				.collect(Collectors.toList());
+		return Response.ok(entityTypes).build();
+	}
+
+	@Override
+	public Response getEmbeddables() {
+		final EmbeddableBuilder builder = new EmbeddableBuilder();
+		final EmbeddableComparator comparator = new EmbeddableComparator();
+		final List<epf.client.schema.Embeddable> entityTypes = findEmbeddables()
 				.stream()
 				.map(builder::build)
 				.sorted(comparator)

@@ -4,6 +4,7 @@
 package epf.portlet.persistence;
 
 import epf.client.schema.Attribute;
+import epf.client.schema.AttributeType;
 
 /**
  * @author PC
@@ -11,14 +12,20 @@ import epf.client.schema.Attribute;
  */
 public class EntityAttribute {
 
+	/**
+	 * 
+	 */
 	private final Attribute attribute;
+	/**
+	 * 
+	 */
 	private final EntityObject object;
 	
 	/**
 	 * @param object
 	 * @param attribute
 	 */
-	public EntityAttribute(final EntityObject object, final Attribute attribute) {
+	protected EntityAttribute(final EntityObject object, final Attribute attribute) {
 		this.attribute = attribute;
 		this.object = object;
 	}
@@ -39,5 +46,13 @@ public class EntityAttribute {
 
 	public Attribute getAttribute() {
 		return attribute;
+	}
+	
+	public boolean isBasic() {
+		return AttributeUtil.isBasic(attribute);
+	}
+	
+	public boolean isEmbedded() {
+		return AttributeType.EMBEDDED.equals(attribute.getAttributeType());
 	}
 }
