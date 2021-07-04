@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
@@ -78,6 +79,16 @@ public class Entity implements Serializable {
 	/**
 	 * 
 	 */
+	private Map<String, epf.client.schema.Entity> entities;
+	
+	/**
+	 * 
+	 */
+	private final Map<String, List<JsonObject>> values = new ConcurrentHashMap<>();
+	
+	/**
+	 * 
+	 */
 	@Inject
 	private transient RegistryUtil registryUtil;
 	
@@ -113,6 +124,9 @@ public class Entity implements Serializable {
 		entity = eventUtil.getEvent(Event.SCHEMA_ENTITY);
 		if(entity != null) {
 			try {
+				entities = fetchEntities()
+						.stream()
+						.collect(Collectors.toMap(epf.client.schema.Entity::getType, e -> e));
 				embeddables = fetchEmbeddables()
 						.stream()
 						.collect(Collectors.toMap(Embeddable::getType, e -> e));
@@ -181,6 +195,43 @@ public class Entity implements Serializable {
 	}
 	
 	/**
+	 * @return
+	 * @throws Exception
+	 */
+	protected List<epf.client.schema.Entity> fetchEntities() throws Exception{
+		try(Client client = clientUtil.newClient(registryUtil.get("schema"))){
+			try(Response response = epf.client.schema.Schema.getEmbeddables(client)){
+				return response.readEntity(new GenericType<List<epf.client.schema.Entity>>() {});
+			}
+		}
+	}
+	
+	/**
+	 * @param type
+	 * @return
+	 * @throws Exception
+	 */
+	protected List<JsonObject> fetchValues(final String type) throws Exception{
+		try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
+			try(Response response = epf.client.persistence.Queries.executeQuery(
+					client, 
+					path -> path.path(entity.getName()), 
+					null, 
+					null)){
+				try(InputStream stream = response.readEntity(InputStream.class)){
+					try(JsonReader reader = Json.createReader(stream)){
+						return reader
+						.readArray()
+						.stream()
+						.map(value -> value.asJsonObject())
+						.collect(Collectors.toList());
+					}
+				}
+			}
+		}
+	}
+	
+	/**
 	 * 
 	 */
 	public void prePersist() {
@@ -190,6 +241,7 @@ public class Entity implements Serializable {
 			object = new EntityObject(builder.build());
 			final AttributeBuilder attrBuilder = new AttributeBuilder()
 					.setObject(object)
+					.setEntities(entities)
 					.setEmbeddables(embeddables);
 			attributes = entity.getAttributes()
 					.stream()
@@ -209,6 +261,7 @@ public class Entity implements Serializable {
 					object = new EntityObject(fetchEntity());
 					final AttributeBuilder attrBuilder = new AttributeBuilder()
 							.setObject(object)
+							.setEntities(entities)
 							.setEmbeddables(embeddables);
 					attributes = entity.getAttributes()
 							.stream()
@@ -235,9 +288,28 @@ public class Entity implements Serializable {
 	 * @param attribute
 	 * @return
 	 */
-	public List<BasicAttribute> getEmbeddedAttributes(final BasicAttribute attribute){
+	public EmbeddedAttribute getEmbeddedAttribute(final BasicAttribute attribute){
 		if(attribute instanceof EmbeddedAttribute) {
-			return ((EmbeddedAttribute) attribute).getAttributes();
+			return (EmbeddedAttribute) attribute;
+		}
+		return null;
+	}
+	
+	/**
+	 * @param attribute
+	 * @return
+	 */
+	public List<JsonObject> getValues(final BasicAttribute attribute){
+		if(attribute.getAttribute().isAssociation()) {
+			return values.computeIfAbsent(attribute.getAttribute().getType(), type -> {
+				try {
+					return fetchValues(type);
+				} 
+				catch (Exception e) {
+					LOGGER.throwing(getClass().getName(), "getValues", e);
+				}
+				return null;
+			});
 		}
 		return Arrays.asList();
 	}

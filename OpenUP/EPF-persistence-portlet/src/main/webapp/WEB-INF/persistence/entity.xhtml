@@ -21,10 +21,16 @@
 							<h:outputLabel value="#{attributeVar.attribute.name}" ></h:outputLabel>
 						</legend>
 						<h:inputText rendered="#{attributeVar.basic}" value="#{attributeVar.value}"></h:inputText>
-						<ui:repeat rendered="#{attributeVar.embedded}" var="embeddedAttributeVar" value="#{epf_persistence_entity.getEmbeddedAttributes(attributeVar)}">
+						<ui:repeat rendered="#{attributeVar.embedded}" var="embeddedAttributeVar" value="#{epf_persistence_entity.getEmbeddedAttribute(attributeVar).attributes}">
 							<h:outputLabel value="#{embeddedAttributeVar.attribute.name}" ></h:outputLabel>
 							<h:inputText rendered="#{embeddedAttributeVar.basic}" value="#{embeddedAttributeVar.value}"></h:inputText>
+							<h:selectOneMenu rendered="#{embeddedAttributeVar.singular}" value="#{embeddedAttributeVar.value}" >
+								<f:selectItems value="#{epf_persistence_entity.getValues(embeddedAttributeVar)}"></f:selectItems>
+							</h:selectOneMenu>
 						</ui:repeat>
+						<h:selectOneMenu rendered="#{attributeVar.singular}" value="#{attributeVar.value}" >
+							<f:selectItems value="#{epf_persistence_entity.getValues(attributeVar)}"></f:selectItems>
+						</h:selectOneMenu>
 					</fieldset>
 				</ui:repeat>
 			</fieldset>

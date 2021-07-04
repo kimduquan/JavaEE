@@ -55,4 +55,9 @@ public class BasicAttribute {
 	public boolean isEmbedded() {
 		return AttributeType.EMBEDDED.equals(attribute.getAttributeType());
 	}
+	
+	public boolean isSingular() {
+		return AttributeType.MANY_TO_ONE.equals(attribute.getAttributeType())
+				|| AttributeType.ONE_TO_ONE.equals(attribute.getAttributeType());
+	}
 }
