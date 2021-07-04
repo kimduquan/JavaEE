@@ -69,23 +69,23 @@ public class Schema implements epf.client.schema.Schema {
 	public Response getEntities() {
 		final EntityBuilder builder = new EntityBuilder();
 		final EntityComparator comparator = new EntityComparator();
-		final List<epf.client.schema.Entity> entityTypes = findEntities()
+		final List<epf.client.schema.Entity> entities = findEntities()
 				.stream()
 				.map(builder::build)
 				.sorted(comparator)
 				.collect(Collectors.toList());
-		return Response.ok(entityTypes).build();
+		return Response.ok(entities).build();
 	}
 
 	@Override
 	public Response getEmbeddables() {
 		final EmbeddableBuilder builder = new EmbeddableBuilder();
 		final EmbeddableComparator comparator = new EmbeddableComparator();
-		final List<epf.client.schema.Embeddable> entityTypes = findEmbeddables()
+		final List<epf.client.schema.Embeddable> embeddables = findEmbeddables()
 				.stream()
 				.map(builder::build)
 				.sorted(comparator)
 				.collect(Collectors.toList());
-		return Response.ok(entityTypes).build();
+		return Response.ok(embeddables).build();
 	}
 }

@@ -10,7 +10,7 @@ import epf.client.schema.AttributeType;
  * @author PC
  *
  */
-public class EntityAttribute {
+public class BasicAttribute {
 
 	/**
 	 * 
@@ -25,7 +25,7 @@ public class EntityAttribute {
 	 * @param object
 	 * @param attribute
 	 */
-	protected EntityAttribute(final EntityObject object, final Attribute attribute) {
+	protected BasicAttribute(final EntityObject object, final Attribute attribute) {
 		this.attribute = attribute;
 		this.object = object;
 	}

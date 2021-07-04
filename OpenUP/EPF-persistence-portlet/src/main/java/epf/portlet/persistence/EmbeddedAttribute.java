@@ -14,7 +14,7 @@ import epf.client.schema.Embeddable;
  * @author PC
  *
  */
-public class EmbeddedAttribute extends EntityAttribute {
+public class EmbeddedAttribute extends BasicAttribute {
 	
 	/**
 	 * 
@@ -29,14 +29,14 @@ public class EmbeddedAttribute extends EntityAttribute {
 	/**
 	 * 
 	 */
-	private List<EntityAttribute> attributes;
+	private List<BasicAttribute> attributes;
 
 	/**
 	 * @param object
 	 * @param attribute
 	 * @param embeddable
 	 */
-	protected EmbeddedAttribute(final EntityObject object, final Attribute attribute, final Embeddable embeddable, final EntityObject embeddedObject, final List<EntityAttribute> attributes) {
+	protected EmbeddedAttribute(final EntityObject object, final Attribute attribute, final Embeddable embeddable, final EntityObject embeddedObject, final List<BasicAttribute> attributes) {
 		super(object, attribute);
 		this.embeddable = embeddable;
 		this.embeddedObject = embeddedObject;
@@ -47,7 +47,7 @@ public class EmbeddedAttribute extends EntityAttribute {
 		return embeddable;
 	}
 
-	public List<EntityAttribute> getAttributes() {
+	public List<BasicAttribute> getAttributes() {
 		return attributes;
 	}
 

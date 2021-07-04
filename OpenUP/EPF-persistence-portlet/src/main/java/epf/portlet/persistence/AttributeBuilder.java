@@ -33,12 +33,12 @@ public class AttributeBuilder {
 	/**
 	 * @return
 	 */
-	public EntityAttribute build() {
+	public BasicAttribute build() {
 		if(AttributeType.EMBEDDED.equals(attribute.getAttributeType())) {
 			final Embeddable embeddable = embeddables.get(attribute.getType());
 			final JsonValue value = object.get(attribute.getName());
 			final EntityObject embeddedObject = new EntityObject(value != null ? value.asJsonObject() : JsonValue.EMPTY_JSON_OBJECT);
-			final List<EntityAttribute> embeddedAttributes = embeddable
+			final List<BasicAttribute> embeddedAttributes = embeddable
 					.getAttributes()
 					.stream()
 					.map(attr -> new AttributeBuilder()
@@ -50,7 +50,7 @@ public class AttributeBuilder {
 					.collect(Collectors.toList());
 			return new EmbeddedAttribute(object, attribute, embeddable, embeddedObject, embeddedAttributes);
 		}
-		return new EntityAttribute(object, attribute);
+		return new BasicAttribute(object, attribute);
 	}
 
 	public AttributeBuilder setAttribute(final Attribute attribute) {

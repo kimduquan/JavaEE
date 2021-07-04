@@ -58,7 +58,7 @@ public class Entity implements Serializable {
 	/**
 	 * 
 	 */
-	private List<EntityAttribute> attributes;
+	private List<BasicAttribute> attributes;
 	
 	/**
 	 * 
@@ -227,7 +227,7 @@ public class Entity implements Serializable {
 		return object;
 	}
 
-	public List<EntityAttribute> getAttributes() {
+	public List<BasicAttribute> getAttributes() {
 		return attributes;
 	}
 	
@@ -235,7 +235,7 @@ public class Entity implements Serializable {
 	 * @param attribute
 	 * @return
 	 */
-	public List<EntityAttribute> getEmbeddedAttributes(final EntityAttribute attribute){
+	public List<BasicAttribute> getEmbeddedAttributes(final BasicAttribute attribute){
 		if(attribute instanceof EmbeddedAttribute) {
 			return ((EmbeddedAttribute) attribute).getAttributes();
 		}
