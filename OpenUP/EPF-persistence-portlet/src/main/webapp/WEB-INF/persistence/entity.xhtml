@@ -12,7 +12,7 @@
 	<h:body>
 		<h:form rendered="#{epf_persistence_entity.preLoad()}">
 			<fieldset>
-				<ui:repeat var="attributeVar" value="#{epf_persistence_entity.attributes}">
+				<ui:repeat rendered="#{not empty epf_persistence_entity.attributes}" var="attributeVar" value="#{epf_persistence_entity.attributes}">
 					<h:outputLabel value="#{attributeVar.attribute.name}" ></h:outputLabel>
 					<h:selectManyListbox rendered="#{attributeVar.attribute.collection}" value="#{attributeVar.value}"></h:selectManyListbox>
 					<h:selectManyListbox rendered="#{attributeVar.attribute.association}" value="#{attributeVar.value}"></h:selectManyListbox>
