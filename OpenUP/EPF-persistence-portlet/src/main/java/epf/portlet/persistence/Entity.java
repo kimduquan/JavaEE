@@ -102,7 +102,6 @@ public class Entity implements Serializable {
 	@PostConstruct
 	protected void postConstruct() {
 		entity = eventUtil.getEvent(Event.SCHEMA_ENTITY);
-		
 	}
 	
 	/**
@@ -150,6 +149,9 @@ public class Entity implements Serializable {
 		}
 	}
 	
+	/**
+	 * 
+	 */
 	public void prePersist() {
 		if(entity != null && object == null) {
 			final JsonObjectBuilder builder = Json.createObjectBuilder();
@@ -162,20 +164,26 @@ public class Entity implements Serializable {
 		}
 	}
 	
-	public void preUpdate() {
+	/**
+	 * @return
+	 */
+	public boolean preLoad() {
 		if(entity != null && object == null) {
 			try {
 				id = requestUtil.getRequest().getRenderParameters().getValue(Parameter.PERSISTENCE_ENTITY_ID);
-				object = new EntityObject(fetchEntity());
-				attributes = entity.getAttributes()
-						.stream()
-						.map(attribute -> new EntityAttribute(object, attribute))
-						.collect(Collectors.toList());
+				if(id != null && !id.isEmpty()) {
+					object = new EntityObject(fetchEntity());
+					attributes = entity.getAttributes()
+							.stream()
+							.map(attribute -> new EntityAttribute(object, attribute))
+							.collect(Collectors.toList());
+				}
 			} 
 			catch (Exception e) {
 				LOGGER.throwing(getClass().getName(), "postConstruct", e);
 			}
 		}
+		return entity != null && object != null;
 	}
 	
 	public EntityObject getObject() {
