@@ -4,7 +4,6 @@
 package epf.portlet.persistence;
 
 import epf.client.schema.Attribute;
-import epf.client.schema.AttributeType;
 
 /**
  * @author PC
@@ -53,11 +52,14 @@ public class BasicAttribute {
 	}
 	
 	public boolean isEmbedded() {
-		return AttributeType.EMBEDDED.equals(attribute.getAttributeType());
+		return AttributeUtil.isEmbedded(attribute);
 	}
 	
 	public boolean isSingular() {
-		return AttributeType.MANY_TO_ONE.equals(attribute.getAttributeType())
-				|| AttributeType.ONE_TO_ONE.equals(attribute.getAttributeType());
+		return AttributeUtil.isSingular(attribute);
+	}
+	
+	public boolean isPlural() {
+		return AttributeUtil.isPlural(attribute);
 	}
 }

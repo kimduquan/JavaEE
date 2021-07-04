@@ -29,6 +29,15 @@ public class Attribute implements Serializable {
 	 * 
 	 */
 	private AttributeType attributeType;
+	
+	/**
+	 * 
+	 */
+	private BindableType bindable;
+	/**
+	 * 
+	 */
+	private String bindableType;
 	/**
 	 * 
 	 */
@@ -96,5 +105,29 @@ public class Attribute implements Serializable {
 	 */
 	public void setCollection(final boolean collection) {
 		this.collection = collection;
+	}
+	/**
+	 * @return the bindableType
+	 */
+	public String getBindableType() {
+		return bindableType;
+	}
+	/**
+	 * @param bindableType the bindableType to set
+	 */
+	public void setBindableType(String bindableType) {
+		this.bindableType = bindableType;
+	}
+	/**
+	 * @return the bindable
+	 */
+	public BindableType getBindable() {
+		return bindable;
+	}
+	/**
+	 * @param bindable the bindable to set
+	 */
+	public void setBindable(BindableType bindable) {
+		this.bindable = bindable;
 	}
 }

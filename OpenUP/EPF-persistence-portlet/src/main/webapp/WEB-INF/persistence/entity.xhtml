@@ -25,12 +25,18 @@
 							<h:outputLabel value="#{embeddedAttributeVar.attribute.name}" ></h:outputLabel>
 							<h:inputText rendered="#{embeddedAttributeVar.basic}" value="#{embeddedAttributeVar.value}"></h:inputText>
 							<h:selectOneMenu rendered="#{embeddedAttributeVar.singular}" value="#{embeddedAttributeVar.value}" >
-								<f:selectItems value="#{epf_persistence_entity.getValues(embeddedAttributeVar)}"></f:selectItems>
+								<f:selectItems value="#{epf_persistence_entity.getValues(embeddedAttributeVar)}" var="embeddedValueVar" itemLabel="#{epf_persistence_entity.getSingularAttribute(embeddedAttributeVar).toString(embeddedValueVar)}" itemValue="#{embeddedValueVar}"></f:selectItems>
 							</h:selectOneMenu>
+							<h:selectManyMenu rendered="#{embeddedAttributeVar.plural}" value="#{embeddedAttributeVar.value}" >
+								<f:selectItems value="#{epf_persistence_entity.getValues(embeddedAttributeVar)}" var="embeddedValueVar" itemLabel="#{epf_persistence_entity.getPluralAttribute(embeddedAttributeVar).toString(embeddedValueVar)}" itemValue="#{embeddedValueVar}"></f:selectItems>
+							</h:selectManyMenu>
 						</ui:repeat>
 						<h:selectOneMenu rendered="#{attributeVar.singular}" value="#{attributeVar.value}" >
-							<f:selectItems value="#{epf_persistence_entity.getValues(attributeVar)}"></f:selectItems>
+							<f:selectItems value="#{epf_persistence_entity.getValues(attributeVar)}" var="valueVar" itemLabel="#{epf_persistence_entity.getSingularAttribute(attributeVar).toString(valueVar)}" itemValue="#{valueVar}"></f:selectItems>
 						</h:selectOneMenu>
+						<h:selectManyMenu rendered="#{attributeVar.plural}" value="#{attributeVar.value}" >
+							<f:selectItems value="#{epf_persistence_entity.getValues(attributeVar)}" var="valueVar" itemLabel="#{epf_persistence_entity.getPluralAttribute(attributeVar).toString(valueVar)}" itemValue="#{valueVar}"></f:selectItems>
+						</h:selectManyMenu>
 					</fieldset>
 				</ui:repeat>
 			</fieldset>

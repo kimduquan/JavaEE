@@ -200,18 +200,18 @@ public class Entity implements Serializable {
 	 */
 	protected List<epf.client.schema.Entity> fetchEntities() throws Exception{
 		try(Client client = clientUtil.newClient(registryUtil.get("schema"))){
-			try(Response response = epf.client.schema.Schema.getEmbeddables(client)){
+			try(Response response = epf.client.schema.Schema.getEntities(client)){
 				return response.readEntity(new GenericType<List<epf.client.schema.Entity>>() {});
 			}
 		}
 	}
 	
 	/**
-	 * @param type
+	 * @param entity
 	 * @return
 	 * @throws Exception
 	 */
-	protected List<JsonObject> fetchValues(final String type) throws Exception{
+	protected List<JsonObject> fetchValues(final epf.client.schema.Entity entity) throws Exception{
 		try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
 			try(Response response = epf.client.persistence.Queries.executeQuery(
 					client, 
@@ -299,16 +299,38 @@ public class Entity implements Serializable {
 	 * @param attribute
 	 * @return
 	 */
+	public SingularAttribute getSingularAttribute(final BasicAttribute attribute) {
+		if(attribute instanceof SingularAttribute) {
+			return (SingularAttribute) attribute;
+		}
+		return null;
+	}
+	
+	/**
+	 * @param attribute
+	 * @return
+	 */
+	public PluralAttribute getPluralAttribute(final BasicAttribute attribute) {
+		if(attribute instanceof PluralAttribute) {
+			return (PluralAttribute) attribute;
+		}
+		return null;
+	}
+	
+	/**
+	 * @param attribute
+	 * @return
+	 */
 	public List<JsonObject> getValues(final BasicAttribute attribute){
 		if(attribute.getAttribute().isAssociation()) {
-			return values.computeIfAbsent(attribute.getAttribute().getType(), type -> {
+			return values.computeIfAbsent(attribute.getAttribute().getBindableType(), type -> {
 				try {
-					return fetchValues(type);
+					return fetchValues(entities.get(type));
 				} 
 				catch (Exception e) {
 					LOGGER.throwing(getClass().getName(), "getValues", e);
 				}
-				return null;
+				return Arrays.asList();
 			});
 		}
 		return Arrays.asList();

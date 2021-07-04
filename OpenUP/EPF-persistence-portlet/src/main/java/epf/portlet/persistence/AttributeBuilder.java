@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import javax.json.JsonValue;
 import epf.client.schema.Attribute;
-import epf.client.schema.AttributeType;
 import epf.client.schema.Embeddable;
 
 /**
@@ -58,6 +57,22 @@ public class AttributeBuilder {
 	/**
 	 * @return
 	 */
+	protected SingularAttribute buildSingularAttribute() {
+		final epf.client.schema.Entity entity = entities.get(attribute.getBindableType());
+		return new SingularAttribute(object, attribute, entity);
+	}
+	
+	/**
+	 * @return
+	 */
+	protected PluralAttribute buildPluralAttribute() {
+		final epf.client.schema.Entity entity = entities.get(attribute.getBindableType());
+		return new PluralAttribute(object, attribute, entity);
+	}
+	
+	/**
+	 * @return
+	 */
 	protected BasicAttribute buildBasicAttribute() {
 		return new BasicAttribute(object, attribute);
 	}
@@ -66,8 +81,14 @@ public class AttributeBuilder {
 	 * @return
 	 */
 	public BasicAttribute build() {
-		if(AttributeType.EMBEDDED.equals(attribute.getAttributeType())) {
+		if(AttributeUtil.isEmbedded(attribute)) {
 			return buidEmbeddedAttribute();
+		}
+		else if(AttributeUtil.isSingular(attribute)) {
+			return buildSingularAttribute();
+		}
+		else if(AttributeUtil.isPlural(attribute)) {
+			return buildPluralAttribute();
 		}
 		return buildBasicAttribute();
 	}

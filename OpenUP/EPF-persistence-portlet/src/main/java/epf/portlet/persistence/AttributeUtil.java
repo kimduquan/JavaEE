@@ -6,8 +6,6 @@ package epf.portlet.persistence;
 import java.io.StringReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.List;
-
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
@@ -31,6 +29,31 @@ public class AttributeUtil {
 		return !attribute.isAssociation() 
 				&& !attribute.isCollection() 
 				&& AttributeType.BASIC.equals(attribute.getAttributeType());
+	}
+	
+	/**
+	 * @return
+	 */
+	public static boolean isSingular(final Attribute attribute) {
+		return AttributeType.MANY_TO_ONE.equals(attribute.getAttributeType())
+				|| AttributeType.ONE_TO_ONE.equals(attribute.getAttributeType());
+	}
+	
+	/**
+	 * @param attribute
+	 * @return
+	 */
+	public static boolean isPlural(final Attribute attribute) {
+		return AttributeType.ONE_TO_MANY.equals(attribute.getAttributeType())
+				|| AttributeType.MANY_TO_MANY.equals(attribute.getAttributeType());
+	}
+	
+	/**
+	 * @param attribute
+	 * @return
+	 */
+	public static boolean isEmbedded(final Attribute attribute) {
+		return AttributeType.EMBEDDED.equals(attribute.getAttributeType());
 	}
 	
 	/**
@@ -98,14 +121,6 @@ public class AttributeUtil {
 	}
 	
 	/**
-	 * @param value
-	 * @return
-	 */
-	public static List<String> getAsStrings(final JsonValue value) {
-		return null;
-	}
-	
-	/**
 	 * @param object
 	 * @param attribute
 	 * @param value
@@ -141,14 +156,5 @@ public class AttributeUtil {
 				}
 			}
 		}
-	}
-	
-	/**
-	 * @param object
-	 * @param attribute
-	 * @param values
-	 */
-	public static void setValues(final EntityObject object, final Attribute attribute, final List<String> values) {
-		
 	}
 }
