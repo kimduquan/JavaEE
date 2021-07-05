@@ -299,28 +299,22 @@ public class Entity implements Serializable {
 	 * @param attribute
 	 * @return
 	 */
-	public BindableAttribute getBindableAttribute(final BasicAttribute attribute) {
-		if(attribute instanceof BindableAttribute) {
-			return (BindableAttribute) attribute;
-		}
-		return null;
-	}
-	
-	/**
-	 * @param attribute
-	 * @return
-	 */
-	public List<JsonObject> getValues(final BasicAttribute attribute){
+	public List<Identifiable> getValues(final BasicAttribute attribute){
 		if(attribute.getAttribute().isAssociation()) {
-			return values.computeIfAbsent(attribute.getAttribute().getBindableType(), type -> {
-				try {
-					return fetchValues(entities.get(type));
-				} 
-				catch (Exception e) {
-					LOGGER.throwing(getClass().getName(), "getValues", e);
-				}
-				return Arrays.asList();
-			});
+			final String attrType = attribute.getAttribute().getBindableType();
+			final epf.client.schema.Entity entity = entities.get(attrType);
+			return values.computeIfAbsent(attrType, type -> {
+						try {
+							return fetchValues(entity);
+						} 
+						catch (Exception e) {
+							LOGGER.throwing(getClass().getName(), "getValues", e);
+						}
+						return Arrays.asList();
+					})
+					.stream()
+					.map(obj -> new Identifiable(obj, entity))
+					.collect(Collectors.toList());
 		}
 		return Arrays.asList();
 	}

@@ -25,17 +25,17 @@
 							<h:outputLabel value="#{embeddedAttributeVar.attribute.name}" ></h:outputLabel>
 							<h:inputText rendered="#{embeddedAttributeVar.basic}" value="#{embeddedAttributeVar.value}"></h:inputText>
 							<h:selectOneMenu rendered="#{embeddedAttributeVar.singular}" value="#{embeddedAttributeVar.value}" >
-								<f:selectItems value="#{epf_persistence_entity.getValues(embeddedAttributeVar)}" var="embeddedValueVar" itemLabel="#{epf_persistence_entity.getBindableAttribute(embeddedAttributeVar).toString(embeddedValueVar)}" itemValue="#{embeddedValueVar}"></f:selectItems>
+								<f:selectItems value="#{epf_persistence_entity.getValues(embeddedAttributeVar)}" var="embeddedValueVar" itemLabel="#{embeddedValueVar.toString()}" itemValue="#{embeddedValueVar.id}"></f:selectItems>
 							</h:selectOneMenu>
-							<h:selectManyMenu rendered="#{embeddedAttributeVar.plural}" value="#{embeddedAttributeVar.value}" >
-								<f:selectItems value="#{epf_persistence_entity.getValues(embeddedAttributeVar)}" var="embeddedValueVar" itemLabel="#{epf_persistence_entity.getBindableAttribute(embeddedAttributeVar).toString(embeddedValueVar)}" itemValue="#{embeddedValueVar}"></f:selectItems>
+							<h:selectManyMenu rendered="#{embeddedAttributeVar.plural}" value="#{embeddedAttributeVar.values}" >
+								<f:selectItems value="#{epf_persistence_entity.getValues(embeddedAttributeVar)}" var="embeddedValueVar" itemLabel="#{embeddedValueVar.toString()}" itemValue="#{embeddedValueVar.id}"></f:selectItems>
 							</h:selectManyMenu>
 						</ui:repeat>
 						<h:selectOneMenu rendered="#{attributeVar.singular}" value="#{attributeVar.value}" >
-							<f:selectItems value="#{epf_persistence_entity.getValues(attributeVar)}" var="valueVar" itemLabel="#{epf_persistence_entity.getBindableAttribute(attributeVar).toString(valueVar)}" itemValue="#{valueVar}"></f:selectItems>
+							<f:selectItems value="#{epf_persistence_entity.getValues(attributeVar)}" var="valueVar" itemLabel="#{valueVar.toString()}" itemValue="#{valueVar.id}"></f:selectItems>
 						</h:selectOneMenu>
-						<h:selectManyMenu rendered="#{attributeVar.plural}" value="#{attributeVar.value}" >
-							<f:selectItems value="#{epf_persistence_entity.getValues(attributeVar)}" var="valueVar" itemLabel="#{epf_persistence_entity.getBindableAttribute(attributeVar).toString(valueVar)}" itemValue="#{valueVar}"></f:selectItems>
+						<h:selectManyMenu rendered="#{attributeVar.plural}" value="#{attributeVar.values}" >
+							<f:selectItems value="#{epf_persistence_entity.getValues(attributeVar)}" var="valueVar" itemLabel="#{valueVar.toString()}" itemValue="#{valueVar.id}"></f:selectItems>
 						</h:selectManyMenu>
 					</fieldset>
 				</ui:repeat>

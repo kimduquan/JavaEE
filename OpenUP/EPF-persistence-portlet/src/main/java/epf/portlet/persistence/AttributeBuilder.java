@@ -51,15 +51,8 @@ public class AttributeBuilder {
 						.build()
 						)
 				.collect(Collectors.toList());
+		object.putEmbedded(attribute.getName(), embeddedObject);
 		return new EmbeddedAttribute(object, attribute, embeddable, embeddedObject, embeddedAttributes);
-	}
-	
-	/**
-	 * @return
-	 */
-	protected BindableAttribute buildBindableAttribute() {
-		final epf.client.schema.Entity entity = entities.get(attribute.getBindableType());
-		return new BindableAttribute(object, attribute, entity);
 	}
 	
 	/**
@@ -75,10 +68,6 @@ public class AttributeBuilder {
 	public BasicAttribute build() {
 		if(AttributeUtil.isEmbedded(attribute)) {
 			return buidEmbeddedAttribute();
-		}
-		else if(AttributeUtil.isSingular(attribute)
-				|| AttributeUtil.isPlural(attribute)) {
-			return buildBindableAttribute();
 		}
 		return buildBasicAttribute();
 	}

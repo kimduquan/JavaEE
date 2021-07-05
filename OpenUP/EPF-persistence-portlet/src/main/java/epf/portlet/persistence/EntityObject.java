@@ -24,6 +24,10 @@ public class EntityObject {
 	 * 
 	 */
 	private final Map<String, JsonValue> attributes;
+	/**
+	 * 
+	 */
+	private final Map<String, EntityObject> embeddedObjects;
 	
 	/**
 	 * @param entity
@@ -32,6 +36,7 @@ public class EntityObject {
 	public EntityObject(final JsonObject object) {
 		this.object = object;
 		attributes = new ConcurrentHashMap<>();
+		embeddedObjects = new ConcurrentHashMap<>();
 	}
 	
 	/**
@@ -51,11 +56,22 @@ public class EntityObject {
 	}
 	
 	/**
+	 * @param name
+	 * @param embeddedObject
+	 */
+	public void putEmbedded(final String name, final EntityObject embeddedObject) {
+		embeddedObjects.put(name, embeddedObject);
+	}
+	
+	/**
 	 * @return
 	 */
 	public JsonObject merge() {
 		final JsonObjectBuilder builder = Json.createObjectBuilder(object);
 		attributes.forEach(builder::add);
+		embeddedObjects.forEach((name, embeddedObject) -> {
+			builder.add(name, embeddedObject.merge());
+		});
 		return builder.build();
 	}
 }
