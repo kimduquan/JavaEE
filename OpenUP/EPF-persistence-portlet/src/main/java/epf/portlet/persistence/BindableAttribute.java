@@ -11,7 +11,7 @@ import epf.client.schema.Attribute;
  * @author PC
  *
  */
-public class SingularAttribute extends BasicAttribute {
+public class BindableAttribute extends BasicAttribute {
 	
 	/**
 	 * 
@@ -28,7 +28,7 @@ public class SingularAttribute extends BasicAttribute {
 	 * @param attribute
 	 * @param entity
 	 */
-	protected SingularAttribute(final EntityObject object, final Attribute attribute, final epf.client.schema.Entity entity) {
+	protected BindableAttribute(final EntityObject object, final Attribute attribute, final epf.client.schema.Entity entity) {
 		super(object, attribute);
 		this.entity = entity;
 		if(entity.isSingleId() && entity.getId() != null) {

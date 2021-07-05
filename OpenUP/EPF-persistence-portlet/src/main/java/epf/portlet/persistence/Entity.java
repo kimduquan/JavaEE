@@ -299,20 +299,9 @@ public class Entity implements Serializable {
 	 * @param attribute
 	 * @return
 	 */
-	public SingularAttribute getSingularAttribute(final BasicAttribute attribute) {
-		if(attribute instanceof SingularAttribute) {
-			return (SingularAttribute) attribute;
-		}
-		return null;
-	}
-	
-	/**
-	 * @param attribute
-	 * @return
-	 */
-	public PluralAttribute getPluralAttribute(final BasicAttribute attribute) {
-		if(attribute instanceof PluralAttribute) {
-			return (PluralAttribute) attribute;
+	public BindableAttribute getBindableAttribute(final BasicAttribute attribute) {
+		if(attribute instanceof BindableAttribute) {
+			return (BindableAttribute) attribute;
 		}
 		return null;
 	}
