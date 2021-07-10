@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.portlet.persistence;
+package epf.portlet;
 
 import java.io.StringReader;
 import javax.faces.component.UIComponent;
@@ -30,7 +30,7 @@ public class JsonValueConverter implements Converter<JsonValue> {
 
 	@Override
 	public String getAsString(final FacesContext context, final UIComponent component, final JsonValue value) {
-		return AttributeUtil.getAsString(value);
+		return JsonUtil.toString(value);
 	}
 
 }

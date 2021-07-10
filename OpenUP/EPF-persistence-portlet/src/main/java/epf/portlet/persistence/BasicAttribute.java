@@ -12,6 +12,7 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonReader;
 import javax.json.JsonValue;
 import epf.client.schema.Attribute;
+import epf.portlet.JsonUtil;
 
 /**
  * @author PC
@@ -41,7 +42,7 @@ public class BasicAttribute {
 	 * @return
 	 */
 	public String getValue() {
-		return AttributeUtil.getAsString(object.get(attribute.getName()));
+		return JsonUtil.toString(object.get(attribute.getName()));
 	}
 	
 	/**

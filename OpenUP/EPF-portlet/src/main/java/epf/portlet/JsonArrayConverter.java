@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.portlet.persistence;
+package epf.portlet;
 
 import java.io.StringReader;
 import javax.faces.component.UIComponent;

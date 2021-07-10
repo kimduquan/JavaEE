@@ -32,6 +32,7 @@ import epf.portlet.client.ClientUtil;
 import epf.portlet.registry.RegistryUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
+import epf.portlet.JsonUtil;
 
 /**
  * @author PC
@@ -339,7 +340,7 @@ public class Entity implements Serializable {
 		}
 		if(entity.getId() != null) {
 			final JsonValue idValue = object.get(entity.getId().getName());
-			id = AttributeUtil.getAsString(idValue);
+			id = JsonUtil.toString(idValue);
 			if(id != null) {
 				paramUtil.setValue(Parameter.PERSISTENCE_ENTITY_ID, id);
 			}

@@ -58,21 +58,19 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>pre-integration-test</phase>
-							<configuration>
-								<target>
-									<copy file="${project.build.directory}/${project.build.finalName}.war" todir="C://Program Files/pluto-3.1.0/webapps"/>
-								</target >
-							</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
+			    <groupId>org.apache.tomcat.maven</groupId>
+			    <artifactId>tomcat8-maven-plugin</artifactId>
+			    <configuration>
+			    	<server>Pluto</server>
+			    </configuration>
+			    <executions>
+			    	<execution>
+			    		<phase>pre-integration-test</phase>
+			    		<goals>
+			    			<goal>redeploy-only</goal>
+			    		</goals>
+			    	</execution>
+			    </executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

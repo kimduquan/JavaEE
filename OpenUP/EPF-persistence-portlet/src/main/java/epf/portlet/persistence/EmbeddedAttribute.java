@@ -9,6 +9,7 @@ import javax.json.Json;
 import javax.json.JsonReader;
 import epf.client.schema.Attribute;
 import epf.client.schema.Embeddable;
+import epf.portlet.JsonUtil;
 
 /**
  * @author PC
@@ -60,7 +61,7 @@ public class EmbeddedAttribute extends BasicAttribute {
 	 */
 	@Override
 	public String getValue() {
-		return AttributeUtil.getAsString(getEmbeddedObject().get(getAttribute().getName()));
+		return JsonUtil.toString(getEmbeddedObject().get(getAttribute().getName()));
 	}
 	
 	/**

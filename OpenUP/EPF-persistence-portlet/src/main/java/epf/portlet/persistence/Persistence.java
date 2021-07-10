@@ -21,6 +21,7 @@ import epf.client.schema.Attribute;
 import epf.client.schema.Entity;
 import epf.portlet.Event;
 import epf.portlet.EventUtil;
+import epf.portlet.JsonUtil;
 import epf.portlet.Parameter;
 import epf.portlet.ParameterUtil;
 import epf.portlet.client.ClientUtil;
@@ -166,7 +167,7 @@ public class Persistence implements Serializable {
 			if(id != null) {
 				final JsonValue idValue = object.get(id.getName());
 				if(idValue != null) {
-					final String value = AttributeUtil.getAsString(idValue);
+					final String value = JsonUtil.toString(idValue);
 					try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
 						epf.client.persistence.Entities.remove(client, entity.getName(), value);
 					}
@@ -185,7 +186,7 @@ public class Persistence implements Serializable {
 			if(id != null) {
 				final JsonValue idValue = object.get(id.getName());
 				if(idValue != null) {
-					final String value = AttributeUtil.getAsString(idValue);
+					final String value = JsonUtil.toString(idValue);
 					paramUtil.setValue(Parameter.PERSISTENCE_ENTITY_ID, value);
 				}
 			}

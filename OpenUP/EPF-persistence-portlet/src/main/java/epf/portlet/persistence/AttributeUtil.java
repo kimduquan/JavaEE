@@ -9,7 +9,6 @@ import java.math.BigInteger;
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
-import javax.json.JsonString;
 import javax.json.JsonValue;
 import epf.client.schema.Attribute;
 import epf.client.schema.AttributeType;
@@ -103,21 +102,6 @@ public class AttributeUtil {
 		else {
 			builder.add(attribute.getName(), JsonValue.EMPTY_JSON_OBJECT);
 		}
-	}
-	
-	/**
-	 * @param value
-	 * @return
-	 */
-	public static String getAsString(final JsonValue value) {
-		String string = null;
-		if(value instanceof JsonString) {
-			string = ((JsonString)value).getString();
-		}
-		else if(value != null){
-			string = value.toString();
-		}
-		return string;
 	}
 	
 	/**

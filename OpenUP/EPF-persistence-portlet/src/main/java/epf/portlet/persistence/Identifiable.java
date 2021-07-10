@@ -10,6 +10,7 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 import epf.client.schema.Attribute;
+import epf.portlet.JsonUtil;
 
 /**
  * @author PC
@@ -45,7 +46,7 @@ public class Identifiable implements Serializable {
 					idValue
 					)
 					.build();
-			string = AttributeUtil.getAsString(idValue);
+			string = JsonUtil.toString(idValue);
 		}
 		else {
 			id = object;
@@ -56,7 +57,7 @@ public class Identifiable implements Serializable {
 					.findFirst();
 			if(stringAttr.isPresent()) {
 				final JsonValue stringValue = object.get(stringAttr.get().getName());
-				string = AttributeUtil.getAsString(stringValue);
+				string = JsonUtil.toString(stringValue);
 			}
 			else {
 				string = null;
