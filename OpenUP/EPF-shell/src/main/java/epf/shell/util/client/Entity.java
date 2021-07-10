@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.shell.util;
+package epf.shell.util.client;
 
 /**
  * @author PC

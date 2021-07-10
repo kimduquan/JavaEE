@@ -7,6 +7,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 import javax.websocket.ClientEndpoint;
+import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.Session;
 
@@ -26,6 +27,11 @@ public class Client implements AutoCloseable {
 	 * 
 	 */
 	private transient Consumer<? super Object> messageConsumer;
+	
+	/**
+	 * 
+	 */
+	private transient Consumer<? super Throwable> errorConsumer;
 	
 	/**
 	 * 
@@ -70,6 +76,24 @@ public class Client implements AutoCloseable {
 		else {
 			messageConsumer.accept(message);
 		}
+	}
+	
+	/**
+	 * @param session
+	 * @param throwable
+	 */
+	@OnError
+	public void onError(final Session session, final Throwable throwable) {
+		if(errorConsumer != null) {
+			errorConsumer.accept(throwable);
+		}
+	}
+	
+	/**
+	 * @param errorConsumer
+	 */
+	public void onError(final Consumer<? super Throwable> errorConsumer) {
+		this.errorConsumer = errorConsumer;
 	}
 	
 	/**

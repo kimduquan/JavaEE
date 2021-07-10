@@ -6,7 +6,6 @@ package epf.util.websocket;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import javax.websocket.ClientEndpointConfig;
 import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
 import org.junit.After;
@@ -86,6 +85,19 @@ public class ClientTest {
 		Assert.assertFalse(messages.isEmpty());
 		Assert.assertEquals(1, messages.size());
 		Assert.assertEquals("messages", messages.get(0));
+	}
+	
+	/**
+	 * Test method for {@link epf.util.websocket.Client#onError(java.util.function.Consumer)}.
+	 */
+	@Test
+	public void testOnErrorConsumerOfQsuperThrowable() {
+		List<Throwable> errors = new ArrayList<>();
+		client.onError(errors::add);
+		Throwable error = Mockito.mock(Throwable.class);
+		client.onError(session, error);
+		Assert.assertFalse(errors.isEmpty());
+		Assert.assertSame(error, errors.get(0));
 	}
 
 	/**

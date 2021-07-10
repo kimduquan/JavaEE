@@ -25,6 +25,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
+import epf.shell.util.client.Entity;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
 import jakarta.annotation.PostConstruct;
@@ -257,6 +258,7 @@ public class Utility {
 			final URI uri) throws Exception {
 		final WebSocketContainer container = ContainerProvider.getWebSocketContainer();
 		try(epf.util.websocket.Client client = epf.util.websocket.Client.connectToServer(container, uri)){
+			client.onError(error -> error.printStackTrace());
 			client.onMessage(msg -> System.out.print(msg));
 			try(Scanner scanner = new Scanner(System.in)){
 				while(scanner.hasNext()) {
