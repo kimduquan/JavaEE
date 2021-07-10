@@ -10,12 +10,15 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
+import javax.websocket.ContainerProvider;
+import javax.websocket.WebSocketContainer;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
@@ -242,5 +245,30 @@ public class Utility {
 			}
 		}
 		return reqEntity != null ? builder.method(method, reqEntity) : builder.method(method);
+	}
+	
+	/**
+	 * @param uri
+	 * @throws Exception
+	 */
+	@Command(name = "connect")
+	public void connectToServer(
+			@Option(names = {"-u", "--uri"}, required = true, description = "URI") 
+			final URI uri) throws Exception {
+		final WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+		try(epf.util.websocket.Client client = epf.util.websocket.Client.connectToServer(container, uri)){
+			client.onMessage(msg -> System.out.print(msg));
+			try(Scanner scanner = new Scanner(System.in)){
+				while(scanner.hasNext()) {
+					final String line = scanner.next();
+					if("close".equals(line)) {
+						break;
+					}
+					else {
+						client.getSession().getBasicRemote().sendText(line);
+					}
+				}
+			}
+		}
 	}
 }
