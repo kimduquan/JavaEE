@@ -1,5 +1,7 @@
 call .\copy_dependency.bat
 echo on
+call .\start_portal.bat
+echo on
 call git pull
 echo on
 cd EPF-persistence
