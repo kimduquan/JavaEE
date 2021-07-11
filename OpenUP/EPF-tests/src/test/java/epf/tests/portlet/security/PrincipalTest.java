@@ -77,7 +77,12 @@ public class PrincipalTest {
 
 	@Test
 	public void test() {
-		Assert.assertFalse("Principal.name.empty", principal.get().getName().isEmpty());
+		Assert.assertEquals("Principal.name", "any_role1", principal.get().getName());
+		security.logout();
 	}
 
+	@Test
+	public void testLogout() {
+		principal.get().logout();
+	}
 }

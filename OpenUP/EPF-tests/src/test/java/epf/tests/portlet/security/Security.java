@@ -7,7 +7,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import epf.tests.portlet.View;
 import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
 import jakarta.inject.Inject;
 
 /**
@@ -39,8 +38,7 @@ public class Security {
 		webDriver.findElement(By.cssSelector(".security.login")).click();
 	}
 	
-	@PreDestroy
-	void logout() {
+	public void logout() {
 		webDriver.findElement(By.cssSelector(".security.principal.logout")).click();
 	}
 }

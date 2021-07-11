@@ -77,6 +77,7 @@ public class SecurityTest {
 		security.setPassword("any_role");
 		security.login();
 		Assert.assertEquals("Security.principalName", "any_role1", principal.get().getName());
+		security.logout();
 	}
 
 }
