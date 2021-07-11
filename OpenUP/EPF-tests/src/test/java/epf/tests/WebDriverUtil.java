@@ -1,16 +1,18 @@
 /**
  * 
  */
-package epf.tests.webapp;
+package epf.tests;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import epf.client.portlet.Portlet;
 import epf.client.webapp.WebApp;
 import epf.util.logging.Logging;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Disposes;
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Named;
@@ -23,7 +25,7 @@ public class WebDriverUtil {
 	
 	private static Logger LOGGER = Logging.getLogger(WebDriverUtil.class.getName());
 
-	@Produces
+	@Produces @ApplicationScoped
 	public static WebDriver newWebDriver() {
 		return new ChromeDriver();
 	}
@@ -40,6 +42,22 @@ public class WebDriverUtil {
 		} 
 		catch (MalformedURLException e) {
 			LOGGER.log(Level.SEVERE, e.getMessage(), e);
+		}
+		return url;
+	}
+	
+	@Produces @Named(Portlet.PORTLET_URL)
+	public static URL getPortletURL() {
+		URL url = null;
+		try {
+			String temp = System.getProperty(Portlet.PORTLET_URL, "");
+			if(temp.isEmpty()) {
+				temp = "http://localhost:8080/pluto/portal/";
+			}
+			url = new URL(temp);
+		} 
+		catch (MalformedURLException e) {
+			
 		}
 		return url;
 	}
