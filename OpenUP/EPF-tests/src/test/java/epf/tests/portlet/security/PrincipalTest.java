@@ -22,7 +22,7 @@ import jakarta.inject.Inject;
  * @author PC
  *
  */
-public class SecurityTest {
+public class PrincipalTest {
 	
 	@ClassRule
     public static WeldInitiator weld = WeldInitiator.from(
@@ -30,18 +30,12 @@ public class SecurityTest {
     		View.class,
     		Security.class,
     		Principal.class,
-    		SecurityTest.class
+    		PrincipalTest.class
     		)
     .build();
 	
 	@Rule
     public MethodRule testClassInjectorRule = weld.getTestClassInjectorRule();
-	
-	@Inject
-	Security security;
-	
-	@Inject
-	Instance<Principal> principal;
 
 	/**
 	 * @throws java.lang.Exception
@@ -62,6 +56,9 @@ public class SecurityTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
+		security.setUsername("any_role1");
+		security.setPassword("any_role");
+		security.login();
 	}
 
 	/**
@@ -69,14 +66,18 @@ public class SecurityTest {
 	 */
 	@After
 	public void tearDown() throws Exception {
+		
 	}
+	
+	@Inject
+	Security security;
+	
+	@Inject
+	Instance<Principal> principal;
 
 	@Test
 	public void test() {
-		security.setUsername("any_role1");
-		security.setPassword("any_role");
-		security.login();
-		Assert.assertEquals("Security.principalName", "any_role1", principal.get().getName());
+		Assert.assertFalse("Principal.name.empty", principal.get().getName().isEmpty());
 	}
 
 }

@@ -39,10 +39,6 @@ public class Security {
 		webDriver.findElement(By.cssSelector(".security.login")).click();
 	}
 	
-	public String getPrincipalName() {
-		return webDriver.findElement(By.cssSelector(".security.session.token.name")).getText();
-	}
-	
 	@PreDestroy
 	void logout() {
 		webDriver.findElement(By.cssSelector(".security.principal.logout")).click();
