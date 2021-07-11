@@ -163,12 +163,18 @@
             <version>1.0.0</version>
             <type>war</type>
         </dependency>
-        <!--<dependency>
+        <dependency>
             <groupId>openup</groupId>
-            <artifactId>EPF-shell</artifactId>
+            <artifactId>EPF-persistence-portlet</artifactId>
             <version>1.0.0</version>
-            <type>jar</type>
-        </dependency>-->
+            <type>war</type>
+        </dependency>
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-security-portlet</artifactId>
+            <version>1.0.0</version>
+            <type>war</type>
+        </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-rs-mp-client</artifactId>
