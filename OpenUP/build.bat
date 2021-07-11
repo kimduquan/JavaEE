@@ -1,6 +1,6 @@
 call .\copy_dependency.bat
 echo on
-call .\start_portal.bat
+call .\startup.bat
 echo on
 call git pull
 echo on
@@ -9,4 +9,6 @@ call mvn clean install
 echo on
 cd ../
 call mvn clean install
+echo on
+call .\shutdown.bat
 echo on
