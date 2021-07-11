@@ -6,6 +6,7 @@ package epf.tests.portlet.security;
 import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -70,6 +71,7 @@ public class SecurityTest {
 		security.setUsername("any_role1");
 		security.setPassword("any_role");
 		security.login();
+		Assert.assertEquals("Security.principalName", "any_role1", security.getPrincipalName());;
 	}
 
 }
