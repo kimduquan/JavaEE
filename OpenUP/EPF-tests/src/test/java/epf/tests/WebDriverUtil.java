@@ -4,7 +4,7 @@
 package epf.tests;
 
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import com.microsoft.edge.seleniumtools.EdgeDriver;
 import epf.client.portlet.Portlet;
 import epf.client.webapp.WebApp;
 import epf.util.logging.Logging;
@@ -27,7 +27,7 @@ public class WebDriverUtil {
 
 	@Produces @ApplicationScoped
 	public static WebDriver newWebDriver() {
-		return new ChromeDriver();
+		return new EdgeDriver();
 	}
 	
 	public static void close(@Disposes WebDriver webDriver) {

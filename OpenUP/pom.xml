@@ -211,6 +211,12 @@
 			    <artifactId>selenium-java</artifactId>
 			    <version>3.141.59</version>
 			</dependency>
+			<!-- https://mvnrepository.com/artifact/com.microsoft.edge/msedge-selenium-tools-java -->
+			<dependency>
+			    <groupId>com.microsoft.edge</groupId>
+			    <artifactId>msedge-selenium-tools-java</artifactId>
+			    <version>3.141.0</version>
+			</dependency>
             <!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-rs-mp-client -->
             <dependency>
                 <groupId>org.apache.cxf</groupId>

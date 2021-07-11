@@ -42,7 +42,8 @@ public class CookieUtil {
 	 * @param name
 	 */
 	public void deleteCookie(final String name) {
-		Stream.of(request.getCookies())
+		final Cookie[] cookies = request.getCookies() != null ? request.getCookies() : new Cookie[0];
+		Stream.of(cookies)
 		.filter(cookie -> name.equals(cookie.getName()))
 		.findFirst()
 		.ifPresent(cookie -> {
@@ -56,7 +57,8 @@ public class CookieUtil {
 	 * @return
 	 */
 	public Optional<Cookie> getCookie(final String name) {
-		return Stream.of(request.getCookies())
+		final Cookie[] cookies = request.getCookies() != null ? request.getCookies() : new Cookie[0];
+		return Stream.of(cookies)
 				.filter(cookie -> name.equals(cookie.getName()))
 				.findFirst();
 	}

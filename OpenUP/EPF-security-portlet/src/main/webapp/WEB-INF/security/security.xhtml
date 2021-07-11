@@ -4,6 +4,7 @@
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:pth="http://xmlns.jcp.org/jsf/passthrough"
 >
 	<f:metadata>
 		<f:viewAction action="#{epf_security.authenticate}"/>
@@ -13,11 +14,11 @@
 	</h:head>
 	<h:body>
 		<h:form>
-			<h:outputLabel value="#{i18n['epf.security.credential.caller']}" />
-			<h:inputText value="#{epf_security.credential.caller}" />
-			<h:outputLabel value="#{i18n['epf.security.credential.password']}" />
-			<h:inputSecret value="#{epf_security.credential.password}" converter="PasswordConverter" />
-			<h:commandButton action="#{epf_security.login}" value="#{i18n['epf.security.login']}" />
+			<h:outputLabel for="caller" value="#{i18n['epf.security.credential.caller']}" />
+			<h:inputText id="caller" styleClass="security credential caller" value="#{epf_security.credential.caller}" />
+			<h:outputLabel for="password" value="#{i18n['epf.security.credential.password']}" />
+			<h:inputSecret id="password" styleClass="security credential password" value="#{epf_security.credential.password}" converter="PasswordConverter" />
+			<h:commandButton id="login" styleClass="security login" action="#{epf_security.login}" value="#{i18n['epf.security.login']}" />
 		</h:form>
 	</h:body>
 </f:view>

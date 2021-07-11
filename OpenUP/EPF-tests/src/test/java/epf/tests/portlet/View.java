@@ -8,6 +8,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import epf.client.portlet.Portlet;
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
@@ -26,17 +27,29 @@ public class View {
 	@PostConstruct
 	void navigate() {
 		webDriver.navigate().to(url);
+		setUsername("pluto");
+		setPassword("pluto");
+		login();
 	}
 	
-	public void setUsername(String username) {
+	@PreDestroy
+	void logout() {
+		webDriver.findElement(By.linkText("Logout")).click();;
+	}
+	
+	void setUsername(String username) {
 		webDriver.findElement(By.name("j_username")).sendKeys(username);
 	}
 	
-	public void setPassword(String password) {
+	void setPassword(String password) {
 		webDriver.findElement(By.name("j_password")).sendKeys(password);;
 	}
 	
-	public void login() {
+	void login() {
 		webDriver.findElement(By.name("login")).submit();
+	}
+	
+	public void navigateToSecurity() {
+		webDriver.findElement(By.linkText("Security")).click();
 	}
 }
