@@ -4,10 +4,7 @@
 package epf.tests.portlet.security;
 
 import org.jboss.weld.junit4.WeldInitiator;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.Assert;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -22,14 +19,13 @@ import jakarta.inject.Inject;
  *
  */
 public class CredentialTest {
-
+	
 	@ClassRule
     public static WeldInitiator weld = WeldInitiator.from(
     		WebDriverUtil.class, 
     		View.class,
-    		Security.class,
-    		Principal.class,
     		Credential.class,
+    		Principal.class,
     		CredentialTest.class
     		)
     .build();
@@ -37,52 +33,18 @@ public class CredentialTest {
 	@Rule
     public MethodRule testClassInjectorRule = weld.getTestClassInjectorRule();
 	
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-		security.setUsername("any_role1");
-		security.setPassword("any_role");
-		security.login();
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-		security.logout();
-	}
-	
 	@Inject
-	Security security;
+	Credential credential;
 	
 	@Inject
 	Instance<Principal> principal;
 	
-	@Inject
-	Instance<Credential> credential;
-
 	@Test
-	public void testUpdate() {
-		principal.get().navigateToSetPassword();
-		credential.get().setPassword("any_role");
-		credential.get().update();
+	public void testLogin_ValidCredential_Succeed() throws Exception {
+		credential.setCaller("any_role1");
+		credential.setPassword("any_role".toCharArray());
+		credential.login();
+		Assert.assertEquals("Security.principalName", "any_role1", principal.get().getName());
+		principal.get().logout();
 	}
-
 }

@@ -11,7 +11,7 @@
 	<h:body>
 		<h:form>
 			<h:outputLabel value="#{i18n['epf.security.session.token.name']}" />
-			<h:outputLabel styleClass="#{style.css('security.session.token.name')}" value="#{epf_security_session.token.name}" />
+			<h:outputLabel styleClass="#{style.css('security.session.token.name')}" value="#{epf_security_principal.name}" />
 			<h:commandButton styleClass="#{style.css('security.principal.logout')}" action="#{epf_security_principal.logout}" value="#{i18n['epf.security.logout']}" />
 			<h:commandButton styleClass="#{style.css('security.principal.revoke')}" rendered="#{epf_security_principal.expired}" action="#{epf_security_principal.revoke}" value="#{i18n['epf.security.revoke']}" />
 			<h:link outcome="credential" styleClass="#{style.css('security.update')}" value="#{i18n['epf.security.update']}" />

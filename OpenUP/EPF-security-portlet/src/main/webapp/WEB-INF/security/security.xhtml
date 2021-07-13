@@ -15,9 +15,9 @@
 	<h:body>
 		<h:form>
 			<h:outputLabel for="caller" value="#{i18n['epf.security.credential.caller']}" />
-			<h:inputText id="caller" styleClass="#{style.css('security.credential.caller')}" value="#{epf_security.credential.caller}" />
+			<h:inputText id="caller" styleClass="#{style.css('security.credential.caller')}" value="#{epf_security.caller}" />
 			<h:outputLabel for="password" value="#{i18n['epf.security.credential.password']}" />
-			<h:inputSecret id="password" styleClass="#{style.css('security.credential.password')}" value="#{epf_security.credential.password}" converter="PasswordConverter" />
+			<h:inputSecret id="password" styleClass="#{style.css('security.credential.password')}" value="#{epf_security.password}" converter="PasswordConverter" />
 			<h:commandButton id="login" styleClass="#{style.css('security.login')}" action="#{epf_security.login}" value="#{i18n['epf.security.login']}" />
 		</h:form>
 	</h:body>

@@ -5,10 +5,7 @@ package epf.tests.portlet.security;
 
 import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -28,7 +25,7 @@ public class PrincipalTest {
     public static WeldInitiator weld = WeldInitiator.from(
     		WebDriverUtil.class, 
     		View.class,
-    		Security.class,
+    		Credential.class,
     		Principal.class,
     		PrincipalTest.class
     		)
@@ -36,29 +33,21 @@ public class PrincipalTest {
 	
 	@Rule
     public MethodRule testClassInjectorRule = weld.getTestClassInjectorRule();
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
+	
+	@Inject
+	Credential credential;
+	
+	@Inject
+	Instance<Principal> principal;
 
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
-		security.setUsername("any_role1");
-		security.setPassword("any_role");
-		security.login();
+		credential.setCaller("any_role1");
+		credential.setPassword("any_role".toCharArray());
+		credential.login();
 	}
 
 	/**
@@ -68,21 +57,21 @@ public class PrincipalTest {
 	public void tearDown() throws Exception {
 		
 	}
-	
-	@Inject
-	Security security;
-	
-	@Inject
-	Instance<Principal> principal;
 
 	@Test
-	public void test() {
-		Assert.assertEquals("Principal.name", "any_role1", principal.get().getName());
-		security.logout();
-	}
-
-	@Test
-	public void testLogout() {
+	public void testLogout_UserLoggedIn_Succeed() {
 		principal.get().logout();
+	}
+	
+	@Test
+	public void testUpdate_ValidPassword_Succeed() throws Exception {
+		principal.get().navigateToUpdate();
+		principal.get().setPassword("any_role".toCharArray());
+		principal.get().update();
+		principal.get().logout();
+		/*credential.setCaller("any_role1");
+		credential.setPassword("any_role".toCharArray());
+		credential.login();
+		principal.get().logout();*/
 	}
 }

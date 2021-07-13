@@ -8,12 +8,11 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.Cookie;
-
+import epf.client.portlet.security.PrincipalView;
 import epf.client.security.Credential;
 import epf.client.security.Token;
 import epf.portlet.CookieUtil;
@@ -28,7 +27,7 @@ import epf.util.client.Client;
  */
 @ViewScoped
 @Named(Naming.SECURITY_PRINCIPAL)
-public class Principal implements Serializable {
+public class Principal implements PrincipalView, Serializable {
 
 	/**
 	 * 
@@ -70,10 +69,6 @@ public class Principal implements Serializable {
 	@Inject
 	private transient RequestUtil requestUtil;
 	
-	public Credential getCredential() {
-		return credential;
-	}
-	
 	/**
 	 * @return
 	 */
@@ -85,6 +80,7 @@ public class Principal implements Serializable {
 	 * @return
 	 * @throws Exception 
 	 */
+	@Override
 	public String logout() throws Exception {
 		try(Client client = clientUtil.newClient(registryUtil.get("security"))){
 			epf.client.security.Security.logOut(client);
@@ -98,6 +94,7 @@ public class Principal implements Serializable {
 	 * @return
 	 * @throws Exception 
 	 */
+	@Override
 	public String update() throws Exception {
 		final Map<String, String> info = new HashMap<>();
 		info.put("password", new String(credential.getPassword()));
@@ -111,6 +108,7 @@ public class Principal implements Serializable {
 	 * @return
 	 * @throws Exception 
 	 */
+	@Override
 	public void revoke() throws Exception {
 		final URI securityUrl = registryUtil.get("security");
 		String rawToken;
@@ -130,5 +128,20 @@ public class Principal implements Serializable {
 		cookie.setHttpOnly(true);
 		cookie.setPath("/");
 		cookieUtil.addCookie(cookie);
+	}
+
+	@Override
+	public char[] getPassword() {
+		return credential.getPassword();
+	}
+
+	@Override
+	public void setPassword(final char... password) {
+		credential.setPassword(password);
+	}
+
+	@Override
+	public String getName() {
+		return session.getToken().getName();
 	}
 }

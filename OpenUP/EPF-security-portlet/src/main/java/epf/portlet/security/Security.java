@@ -3,6 +3,7 @@
  */
 package epf.portlet.security;
 
+import epf.client.portlet.security.CredentialView;
 import epf.client.security.Credential;
 import epf.client.security.Token;
 import epf.portlet.CookieUtil;
@@ -29,7 +30,7 @@ import java.util.logging.Logger;
  */
 @Named(Naming.SECURITY)
 @ViewScoped
-public class Security implements Serializable {
+public class Security implements CredentialView, Serializable {
 	
 	/**
 	 * 
@@ -75,16 +76,12 @@ public class Security implements Serializable {
 	 */
 	@Inject
 	private transient CookieUtil cookieUtil;
-	 
-
-	public Credential getCredential() {
-		return credential;
-	}
 	
 	/**
 	 * @return
 	 * @throws Exception 
 	 */
+	@Override
 	public String login() throws Exception {
 		final URI securityUrl = registryUtil.get("security");
 		final String passwordHash = PasswordUtil.hash(credential.getCaller(), credential.getPassword());
@@ -139,5 +136,25 @@ public class Security implements Serializable {
 			return "security";
 		}
 		return "principal";
+	}
+
+	@Override
+	public String getCaller() {
+		return credential.getCaller();
+	}
+
+	@Override
+	public void setCaller(final String caller) {
+		credential.setCaller(caller);
+	}
+
+	@Override
+	public char[] getPassword() {
+		return credential.getPassword();
+	}
+
+	@Override
+	public void setPassword(final char... password) {
+		credential.setPassword(password);
 	}
 }
