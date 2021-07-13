@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
+import epf.client.portlet.persistence.SchemaView;
 import epf.client.schema.Entity;
 import epf.portlet.Event;
 import epf.portlet.EventUtil;
@@ -31,7 +32,7 @@ import epf.util.logging.Logging;
  */
 @ViewScoped
 @Named(Naming.SCHEMA)
-public class Schema implements Serializable {
+public class Schema implements SchemaView, Serializable {
 	
 	/**
 	 * 
@@ -114,6 +115,7 @@ public class Schema implements Serializable {
 	/**
 	 * @return the entity
 	 */
+	@Override
 	public String getEntity() {
 		return entity;
 	}
@@ -121,6 +123,7 @@ public class Schema implements Serializable {
 	/**
 	 * @param entity the entity to set
 	 */
+	@Override
 	public void setEntity(final String entity) {
 		this.entity = entity;
 	}

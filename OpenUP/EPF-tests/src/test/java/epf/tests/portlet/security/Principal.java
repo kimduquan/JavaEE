@@ -14,8 +14,12 @@ import jakarta.inject.Inject;
  */
 public class Principal implements PrincipalView {
 	
-	@Inject
 	WebDriver driver;
+	
+	@Inject
+	public Principal(WebDriver driver) {
+		this.driver = driver;
+	}
 	
 	@Override
 	public String logout() {

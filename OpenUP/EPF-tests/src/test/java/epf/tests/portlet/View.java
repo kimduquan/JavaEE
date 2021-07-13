@@ -52,4 +52,8 @@ public class View {
 	public void navigateToSecurity() {
 		webDriver.findElement(By.linkText("Security")).click();
 	}
+	
+	public void navigateToPersistence() {
+		webDriver.findElement(By.linkText("Persistence")).click();
+	}
 }

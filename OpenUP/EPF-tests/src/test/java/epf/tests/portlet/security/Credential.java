@@ -16,11 +16,15 @@ import jakarta.inject.Inject;
  */
 public class Credential implements CredentialView {
 
-	@Inject
 	WebDriver driver;
 	
-	@Inject
 	View view;
+	
+	@Inject
+	public Credential(WebDriver driver, View view){
+		this.driver = driver;
+		this.view = view;
+	}
 	
 	@PostConstruct
 	void navigate() {
