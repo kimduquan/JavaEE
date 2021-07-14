@@ -12,11 +12,11 @@
 	<h:body>
 		<h:form>
 			<h:outputText value="#{i18n['epf.persistence.query.firstResult']}"></h:outputText>
-			<h:inputText value="#{epf_persistence_query.firstResult}"></h:inputText>
+			<h:inputText styleClass="#{style.css('persistence.query.firstResult')}" value="#{epf_persistence_query.firstResult}"></h:inputText>
 			<h:outputText value="#{i18n['epf.persistence.query.maxResults']}"></h:outputText>
-			<h:inputText value="#{epf_persistence_query.maxResults}"></h:inputText>
+			<h:inputText styleClass="#{style.css('persistence.query.maxResults')}" value="#{epf_persistence_query.maxResults}"></h:inputText>
 			<h:commandButton value="#{i18n['epf.persistence.query.result']}" action="#{epf_persistence_query.executeQuery}"></h:commandButton>
-			<h:dataTable rendered="#{not empty epf_persistence_query.attributes and epf_persistence_query.result != null}" value="#{epf_persistence_query.result}" var="resultVar">
+			<h:dataTable styleClass="#{style.css('persistence.query.result')}" rendered="#{not empty epf_persistence_query.attributes and epf_persistence_query.result != null}" value="#{epf_persistence_query.result}" var="resultVar">
 				<h:column>
 					<h:outputText value="#{epf_persistence_query.indexOf(resultVar)}" />
 				</h:column>

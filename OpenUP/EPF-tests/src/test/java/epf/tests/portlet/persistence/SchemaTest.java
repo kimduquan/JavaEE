@@ -5,6 +5,7 @@ package epf.tests.portlet.persistence;
 
 import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -53,8 +54,9 @@ public class SchemaTest {
 	}
 
 	@Test
-	public void test() {
-		schema.getEntity();
+	public void testSetEntity_ValidEntity_Succeed() {
+		schema.setEntity("Artifact");
+		Assert.assertEquals("schema.entity", "Artifact", schema.getEntity());
 	}
 
 }

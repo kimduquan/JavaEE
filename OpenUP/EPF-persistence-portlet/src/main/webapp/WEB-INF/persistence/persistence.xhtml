@@ -11,24 +11,24 @@
 	</h:head>
 	<h:body>
 		<h:form>
-			<h:dataTable rendered="#{not empty epf_persistence.attributes and epf_persistence.objects != null}" value="#{epf_persistence.objects}" var="objectVar">
+			<h:dataTable styleClass="#{style.css('persistence.entities')}" rendered="#{not empty epf_persistence.attributes and epf_persistence.objects != null}" value="#{epf_persistence.objects}" var="objectVar">
 				<f:facet name="header">
-					<h:link outcome="search" value="#{i18n['epf.persistence.query.search']}" />
+					<h:link styleClass="#{style.css('persistence.query.search')}" outcome="search" value="#{i18n['epf.persistence.query.search']}" />
 				</f:facet>
 				<h:column>
 					<h:outputText value="#{epf_persistence.indexOf(objectVar)}" />
 				</h:column>
 				<h:column>
 					<f:facet name="header">
-						<h:link outcome="query" value="#{i18n['epf.persistence.query']}" />
+						<h:link styleClass="#{style.css('persistence.query')}" outcome="query" value="#{i18n['epf.persistence.query']}" />
 					</f:facet>
-					<h:commandButton value="#{i18n['epf.persistence.entity.merge']}" action="#{epf_persistence.merge(objectVar)}"></h:commandButton>
+					<h:commandButton styleClass="#{style.css('persistence.entity.merge')}" value="#{i18n['epf.persistence.entity.merge']}" action="#{epf_persistence.merge(objectVar)}"></h:commandButton>
 				</h:column>
 				<h:column>
 					<f:facet name="header">
-						<h:link outcome="new" value="#{i18n['epf.persistence.entity.persist']}" />
+						<h:link styleClass="#{style.css('persistence.entity.persist')}" outcome="new" value="#{i18n['epf.persistence.entity.persist']}" />
 					</f:facet>
-					<h:commandButton value="#{i18n['epf.persistence.entity.remove']}" action="#{epf_persistence.remove(objectVar)}"></h:commandButton>
+					<h:commandButton styleClass="#{style.css('persistence.entity.remove')}" value="#{i18n['epf.persistence.entity.remove']}" action="#{epf_persistence.remove(objectVar)}"></h:commandButton>
 				</h:column>
 				<h:column rendered="#{epf_persistence.attributes.size() gt 0}">
 					<f:facet name="header">

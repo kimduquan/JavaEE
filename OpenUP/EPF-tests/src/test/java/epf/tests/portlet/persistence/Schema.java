@@ -5,6 +5,7 @@ package epf.tests.portlet.persistence;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.Select;
 import epf.client.portlet.persistence.SchemaView;
 import epf.tests.portlet.security.SecurityUtil;
 import jakarta.annotation.PostConstruct;
@@ -32,14 +33,14 @@ public class Schema implements SchemaView {
 
 	@Override
 	public String getEntity() {
-		// TODO Auto-generated method stub
-		return null;
+		Select select = new Select(driver.findElement(By.cssSelector(".schema.entities")));
+		return select.getFirstSelectedOption().getText();
 	}
 
 	@Override
 	public void setEntity(String entity) {
-		// TODO Auto-generated method stub
-		
+		Select select = new Select(driver.findElement(By.cssSelector(".schema.entities")));
+		select.selectByVisibleText(entity);
 	}
 
 	public void navigateToPersistence() {

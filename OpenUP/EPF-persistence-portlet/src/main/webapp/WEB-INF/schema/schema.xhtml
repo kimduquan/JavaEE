@@ -10,7 +10,7 @@
 	</h:head>
 	<h:body>
 		<h:form>
-			<h:selectOneListbox rendered="#{epf_schema.entities != null}" value="#{epf_schema.entity}" onchange="submit()" valueChangeListener="#{epf_schema.handleEntityChanged}">
+			<h:selectOneListbox styleClass="#{style.css('schema.entities')}" rendered="#{epf_schema.entities != null}" value="#{epf_schema.entity}" onchange="submit()" valueChangeListener="#{epf_schema.handleEntityChanged}">
 				<f:selectItems value="#{epf_schema.entities}" var="entityVar" itemLabel="#{i18n[entityVar.type]}" itemValue="#{entityVar.name}" ></f:selectItems>
 			</h:selectOneListbox>
 		</h:form>
