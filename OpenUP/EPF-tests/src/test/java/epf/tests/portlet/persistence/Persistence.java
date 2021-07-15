@@ -5,7 +5,7 @@ package epf.tests.portlet.persistence;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import epf.tests.portlet.security.SecurityUtil;
+import epf.tests.portlet.security.Security;
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
 
@@ -15,18 +15,18 @@ import jakarta.inject.Inject;
  */
 public class Persistence {
 	
-	WebDriver driver;
-	SecurityUtil securityUtil;
+	private final WebDriver driver;
+	private final Security security;
 	
 	@Inject
-	public Persistence(WebDriver driver, SecurityUtil securityUtil) {
+	public Persistence(WebDriver driver, Security security) {
 		this.driver = driver;
-		this.securityUtil = securityUtil;
+		this.security = security;
 	}
 	
 	@PostConstruct
 	void navigate() {
-		securityUtil.login();
+		security.login();
 	}
 
 	public void navigateToPersistence() {

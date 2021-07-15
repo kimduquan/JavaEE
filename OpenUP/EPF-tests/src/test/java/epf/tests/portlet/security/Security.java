@@ -15,20 +15,23 @@ import jakarta.inject.Inject;
  *
  */
 @ApplicationScoped
-public class SecurityUtil {
+public class Security {
 	
-	Credential credential;
+	private final Credential credential;
+	private final Principal principal;
+	
+	private final View view;
 	
 	@Inject
-	WebDriver driver;
-	
-	@Inject
-	View view;
+	public Security(WebDriver driver, View view) {
+		this.view = view;
+		credential = new Credential(driver);
+		principal = new Principal(driver);
+	}
 	
 	@PostConstruct
 	void postConstruct() {
 		view.navigateToSecurity();
-		credential = new Credential(driver, view);
 		credential.setCaller("any_role1");
 		credential.setPassword("any_role".toCharArray());
 		try {
@@ -43,7 +46,6 @@ public class SecurityUtil {
 	@PreDestroy
 	void preDestroy() {
 		view.navigateToSecurity();
-		Principal principal = new Principal(driver);
 		principal.logout();
 	}
 

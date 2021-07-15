@@ -18,11 +18,15 @@ import jakarta.inject.Named;
  */
 public class View {
 
-	@Inject
-	private transient WebDriver webDriver;
+	private final WebDriver webDriver;
 	
-	@Inject @Named(Portlet.PORTLET_URL)
-	private transient URL url;
+	private final URL url;
+	
+	@Inject
+	public View(WebDriver driver, @Named(Portlet.PORTLET_URL) URL url) {
+		this.webDriver = driver;
+		this.url = url;
+	}
 	
 	@PostConstruct
 	void navigate() {
@@ -51,9 +55,5 @@ public class View {
 	
 	public void navigateToSecurity() {
 		webDriver.findElement(By.linkText("Security")).click();
-	}
-	
-	public void navigateToPersistence() {
-		webDriver.findElement(By.linkText("Persistence")).click();
 	}
 }

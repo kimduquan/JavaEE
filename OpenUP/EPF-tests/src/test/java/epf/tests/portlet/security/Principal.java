@@ -14,7 +14,7 @@ import jakarta.inject.Inject;
  */
 public class Principal implements PrincipalView {
 	
-	WebDriver driver;
+	private final WebDriver driver;
 	
 	@Inject
 	public Principal(WebDriver driver) {

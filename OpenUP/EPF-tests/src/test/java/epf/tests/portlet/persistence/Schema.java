@@ -7,8 +7,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
 import epf.client.portlet.persistence.SchemaView;
-import epf.tests.portlet.security.SecurityUtil;
-import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
 
 /**
@@ -17,18 +15,11 @@ import jakarta.inject.Inject;
  */
 public class Schema implements SchemaView {
 	
-	WebDriver driver;
-	SecurityUtil securityUtil;
+	private final WebDriver driver;
 	
 	@Inject
-	public Schema(WebDriver driver, SecurityUtil securityUtil) {
+	public Schema(WebDriver driver) {
 		this.driver = driver;
-		this.securityUtil = securityUtil;
-	}
-	
-	@PostConstruct
-	void navigate() {
-		securityUtil.login();
 	}
 
 	@Override
@@ -41,9 +32,5 @@ public class Schema implements SchemaView {
 	public void setEntity(String entity) {
 		Select select = new Select(driver.findElement(By.cssSelector(".schema.entities")));
 		select.selectByVisibleText(entity);
-	}
-
-	public void navigateToPersistence() {
-		driver.findElement(By.linkText("Persistence")).click();
 	}
 }

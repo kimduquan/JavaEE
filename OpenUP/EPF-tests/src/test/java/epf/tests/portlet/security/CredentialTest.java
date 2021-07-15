@@ -4,7 +4,9 @@
 package epf.tests.portlet.security;
 
 import org.jboss.weld.junit4.WeldInitiator;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -34,10 +36,28 @@ public class CredentialTest {
     public MethodRule testClassInjectorRule = weld.getTestClassInjectorRule();
 	
 	@Inject
+	View view;
+	
+	@Inject
 	Credential credential;
 	
 	@Inject
 	Instance<Principal> principal;
+	
+	/**
+	 * @throws java.lang.Exception
+	 */
+	@Before
+	public void setUp() throws Exception {
+		view.navigateToSecurity();
+	}
+
+	/**
+	 * @throws java.lang.Exception
+	 */
+	@After
+	public void tearDown() throws Exception {
+	}
 	
 	@Test
 	public void testLogin_ValidCredential_Succeed() throws Exception {

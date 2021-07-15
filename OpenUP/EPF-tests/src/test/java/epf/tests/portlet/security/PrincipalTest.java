@@ -12,7 +12,6 @@ import org.junit.Test;
 import org.junit.rules.MethodRule;
 import epf.tests.WebDriverUtil;
 import epf.tests.portlet.View;
-import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
 
 /**
@@ -35,16 +34,20 @@ public class PrincipalTest {
     public MethodRule testClassInjectorRule = weld.getTestClassInjectorRule();
 	
 	@Inject
+	View view;
+	
+	@Inject
 	Credential credential;
 	
 	@Inject
-	Instance<Principal> principal;
+	Principal principal;
 
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
+		view.navigateToSecurity();
 		credential.setCaller("any_role1");
 		credential.setPassword("any_role".toCharArray());
 		credential.login();
@@ -60,15 +63,15 @@ public class PrincipalTest {
 
 	@Test
 	public void testLogout_UserLoggedIn_Succeed() {
-		principal.get().logout();
+		principal.logout();
 	}
 	
 	@Test
 	public void testUpdate_ValidPassword_Succeed() throws Exception {
-		principal.get().navigateToUpdate();
-		principal.get().setPassword("any_role".toCharArray());
-		principal.get().update();
-		principal.get().logout();
+		principal.navigateToUpdate();
+		principal.setPassword("any_role".toCharArray());
+		principal.update();
+		principal.logout();
 		/*credential.setCaller("any_role1");
 		credential.setPassword("any_role".toCharArray());
 		credential.login();

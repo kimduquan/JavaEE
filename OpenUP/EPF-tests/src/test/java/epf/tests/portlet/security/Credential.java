@@ -6,8 +6,6 @@ package epf.tests.portlet.security;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import epf.client.portlet.security.CredentialView;
-import epf.tests.portlet.View;
-import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
 
 /**
@@ -16,19 +14,11 @@ import jakarta.inject.Inject;
  */
 public class Credential implements CredentialView {
 
-	WebDriver driver;
-	
-	View view;
+	private final WebDriver driver;
 	
 	@Inject
-	public Credential(WebDriver driver, View view){
+	public Credential(WebDriver driver){
 		this.driver = driver;
-		this.view = view;
-	}
-	
-	@PostConstruct
-	void navigate() {
-		view.navigateToSecurity();
 	}
 
 	@Override

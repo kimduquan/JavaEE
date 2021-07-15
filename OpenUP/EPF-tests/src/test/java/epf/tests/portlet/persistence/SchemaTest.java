@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.junit.rules.MethodRule;
 import epf.tests.WebDriverUtil;
 import epf.tests.portlet.View;
-import epf.tests.portlet.security.SecurityUtil;
+import epf.tests.portlet.security.Security;
 import jakarta.inject.Inject;
 
 /**
@@ -26,7 +26,8 @@ public class SchemaTest {
     public static WeldInitiator weld = WeldInitiator.from(
     		WebDriverUtil.class, 
     		View.class,
-    		SecurityUtil.class,
+    		Security.class,
+    		Persistence.class,
     		Schema.class,
     		SchemaTest.class
     		)
@@ -36,6 +37,9 @@ public class SchemaTest {
     public MethodRule testClassInjectorRule = weld.getTestClassInjectorRule();
 	
 	@Inject
+	Persistence persistence;
+	
+	@Inject
 	Schema schema;
 
 	/**
@@ -43,7 +47,7 @@ public class SchemaTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		schema.navigateToPersistence();
+		persistence.navigateToPersistence();
 	}
 
 	/**
