@@ -13,7 +13,6 @@ import org.junit.Test;
 import org.junit.rules.MethodRule;
 import epf.tests.WebDriverUtil;
 import epf.tests.portlet.View;
-import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
 
 /**
@@ -42,7 +41,7 @@ public class CredentialTest {
 	Credential credential;
 	
 	@Inject
-	Instance<Principal> principal;
+	Principal principal;
 	
 	/**
 	 * @throws java.lang.Exception
@@ -64,7 +63,7 @@ public class CredentialTest {
 		credential.setCaller("any_role1");
 		credential.setPassword("any_role".toCharArray());
 		credential.login();
-		Assert.assertEquals("Security.principalName", "any_role1", principal.get().getName());
-		principal.get().logout();
+		Assert.assertEquals("Security.principalName", "any_role1", principal.getName());
+		principal.logout();
 	}
 }

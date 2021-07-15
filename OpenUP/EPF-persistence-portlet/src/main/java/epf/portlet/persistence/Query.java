@@ -17,6 +17,7 @@ import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.JsonValue;
 import javax.ws.rs.core.Response;
+import epf.client.portlet.persistence.QueryView;
 import epf.client.schema.Attribute;
 import epf.client.schema.Entity;
 import epf.portlet.Event;
@@ -36,7 +37,7 @@ import epf.util.logging.Logging;
  */
 @ViewScoped
 @Named(Naming.PERSISTENCE_QUERY)
-public class Query implements Serializable {
+public class Query implements QueryView, Serializable {
 
 	/**
 	 * 
@@ -110,10 +111,20 @@ public class Query implements Serializable {
 	protected void postConstruct() {
 		entity = eventUtil.getEvent(Event.SCHEMA_ENTITY);
 		if(entity != null) {
-			attributes = entity
-					.getAttributes()
-					.stream()
-					.collect(Collectors.toList());
+			if(entity.getId() != null) {
+				final String id = entity.getId().getName();
+				attributes = entity
+						.getAttributes()
+						.stream()
+						.filter(attr -> !id.equals(attr.getName()))
+						.collect(Collectors.toList());
+			}
+			else {
+				attributes = entity
+						.getAttributes()
+						.stream()
+						.collect(Collectors.toList());
+			}
 			try {
 				firstResult = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT));
 				maxResults = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT));
@@ -149,11 +160,8 @@ public class Query implements Serializable {
 		}
 	}
 	
-	/**
-	 * @param object
-	 * @return
-	 */
-	public int indexOf(final JsonObject object) {
+	@Override
+	public int getIndexOf(final Object object) {
 		return firstResult + result.indexOf(object);
 	}
 	
@@ -161,6 +169,7 @@ public class Query implements Serializable {
 	 * @throws Exception 
 	 * 
 	 */
+	@Override
 	public void executeQuery() throws Exception {
 		if(entity != null) {
 			result = getResultList();
@@ -193,19 +202,35 @@ public class Query implements Serializable {
 		return attributes;
 	}
 
+	@Override
 	public int getFirstResult() {
 		return firstResult;
 	}
 
+	@Override
 	public void setFirstResult(final int firstResult) {
 		this.firstResult = firstResult;
 	}
 
+	@Override
 	public int getMaxResults() {
 		return maxResults;
 	}
 
+	@Override
 	public void setMaxResults(final int maxResults) {
 		this.maxResults = maxResults;
+	}
+
+	/**
+	 * @return the entity
+	 */
+	public Entity getEntity() {
+		return entity;
+	}
+
+	@Override
+	public int getResultSize() {
+		return result.size();
 	}
 }

@@ -15,13 +15,23 @@
 			<h:inputText styleClass="#{style.css('persistence.query.firstResult')}" value="#{epf_persistence_query.firstResult}"></h:inputText>
 			<h:outputText value="#{i18n['epf.persistence.query.maxResults']}"></h:outputText>
 			<h:inputText styleClass="#{style.css('persistence.query.maxResults')}" value="#{epf_persistence_query.maxResults}"></h:inputText>
-			<h:commandButton value="#{i18n['epf.persistence.query.result']}" action="#{epf_persistence_query.executeQuery}"></h:commandButton>
+			<h:commandButton styleClass="#{style.css('persistence.query.executeQuery')}" value="#{i18n['epf.persistence.query.result']}" action="#{epf_persistence_query.executeQuery}"></h:commandButton>
 			<h:dataTable styleClass="#{style.css('persistence.query.result')}" rendered="#{not empty epf_persistence_query.attributes and epf_persistence_query.result != null}" value="#{epf_persistence_query.result}" var="resultVar">
 				<h:column>
-					<h:outputText value="#{epf_persistence_query.indexOf(resultVar)}" />
+					<h:outputText value="#{epf_persistence_query.getIndexOf(resultVar)}" />
 				</h:column>
 				<h:column>
+					<f:facet name="header">
+						<h:outputText value="#{i18n['epf.persistence.query.result.size']}"></h:outputText>
+						<h:outputLabel styleClass="#{style.css('persistence.query.result.size')}" value="#{epf_persistence_query.result.size()}"></h:outputLabel>
+					</f:facet>
 					<h:commandButton value="#{i18n['epf.persistence.entity.merge']}" action="#{epf_persistence_query.merge(resultVar)}"></h:commandButton>
+				</h:column>
+				<h:column rendered="#{epf_persistence_query.entity.id != null}">
+					<f:facet name="header">
+						<h:outputText value="#{epf_persistence_query.entity.id.name}"></h:outputText>
+					</f:facet>
+					<h:outputLabel styleClass="#{style.css('persistence.query.entity.id.name')}" value="#{resultVar[epf_persistence_query.entity.id.name]}"></h:outputLabel>
 				</h:column>
 				<h:column rendered="#{epf_persistence_query.attributes.size() gt 0}">
 					<f:facet name="header">

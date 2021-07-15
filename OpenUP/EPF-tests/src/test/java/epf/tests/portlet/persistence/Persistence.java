@@ -32,4 +32,8 @@ public class Persistence {
 	public void navigateToPersistence() {
 		driver.findElement(By.linkText("Persistence")).click();
 	}
+	
+	public void navigateToQuery() {
+		driver.findElement(By.linkText("Query")).click();
+	}
 }
