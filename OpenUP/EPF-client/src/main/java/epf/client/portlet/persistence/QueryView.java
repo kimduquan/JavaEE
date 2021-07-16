@@ -40,4 +40,10 @@ public interface QueryView {
 	 * @return
 	 */
 	int getResultSize();
+	
+	/**
+	 * @param entity
+	 * @return
+	 */
+	String merge(final Object entity);
 }

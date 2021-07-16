@@ -68,4 +68,11 @@ public class Query implements QueryView {
 	public List<?> getResult(){
 		return driver.findElements(By.cssSelector("label.persistence.query.entity.id.name"));
 	}
+
+	@Override
+	public String merge(Object entity) {
+		int index = getIndexOf(entity);
+		driver.findElements(By.cssSelector(".persistence.entity.merge")).get(index).click();
+		return "";
+	}
 }

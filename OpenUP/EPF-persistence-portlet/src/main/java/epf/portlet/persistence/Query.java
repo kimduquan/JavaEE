@@ -176,11 +176,9 @@ public class Query implements QueryView, Serializable {
 		}
 	}
 	
-	/**
-	 * @param object
-	 * @return
-	 */
-	public String merge(final JsonObject object) {
+	@Override
+	public String merge(final Object ent) {
+		final JsonObject object = (JsonObject) ent;
 		if(entity.isSingleId()) {
 			final Attribute id = entity.getId();
 			if(id != null) {

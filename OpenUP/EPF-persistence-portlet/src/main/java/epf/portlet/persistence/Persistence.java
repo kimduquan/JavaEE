@@ -17,6 +17,7 @@ import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.JsonValue;
 import javax.ws.rs.core.Response;
+import epf.client.portlet.persistence.PersistenceView;
 import epf.client.schema.Attribute;
 import epf.client.schema.Entity;
 import epf.portlet.Event;
@@ -36,7 +37,7 @@ import epf.util.logging.Logging;
  */
 @ViewScoped
 @Named(Naming.PERSISTENCE)
-public class Persistence implements Serializable {
+public class Persistence implements PersistenceView, Serializable {
 	
 	/**
 	 * 
@@ -157,11 +158,9 @@ public class Persistence implements Serializable {
 		return attributes;
 	}
 	
-	/**
-	 * @param object
-	 * @throws Exception
-	 */
-	public void remove(final JsonObject object) throws Exception {
+	@Override
+	public void remove(final Object ent) throws Exception {
+		final JsonObject object = (JsonObject) ent;
 		if(entity.isSingleId()) {
 			final Attribute id = entity.getId();
 			if(id != null) {
@@ -176,11 +175,9 @@ public class Persistence implements Serializable {
 		}
 	}
 	
-	/**
-	 * @param object
-	 * @return
-	 */
-	public String merge(final JsonObject object) {
+	@Override
+	public String merge(final Object ent) {
+		final JsonObject object = (JsonObject) ent;
 		if(entity.isSingleId()) {
 			final Attribute id = entity.getId();
 			if(id != null) {
@@ -194,11 +191,9 @@ public class Persistence implements Serializable {
 		return "entity";
 	}
 	
-	/**
-	 * @param object
-	 * @return
-	 */
-	public int indexOf(final JsonObject object) {
+	@Override
+	public int indexOf(final Object ent) {
+		final JsonObject object = (JsonObject) ent;
 		return firstResult + objects.indexOf(object);
 	}
 }

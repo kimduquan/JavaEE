@@ -13,7 +13,7 @@
 		<h:form>
 			<h:dataTable styleClass="#{style.css('persistence.entities')}" rendered="#{not empty epf_persistence.attributes and epf_persistence.objects != null}" value="#{epf_persistence.objects}" var="objectVar">
 				<f:facet name="header">
-					<h:link styleClass="#{style.css('persistence.query.search')}" outcome="search" value="#{i18n['epf.persistence.query.search']}" />
+					<h:link styleClass="#{style.css('persistence.search')}" outcome="search" value="#{i18n['epf.persistence.search']}" />
 				</f:facet>
 				<h:column>
 					<h:outputText value="#{epf_persistence.indexOf(objectVar)}" />
