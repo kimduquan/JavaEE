@@ -34,7 +34,7 @@ public interface QueryView {
 	 * @param object
 	 * @return
 	 */
-	int getIndexOf(final Object object);
+	int getIndexOf(final String attribute, final Object object);
 	
 	/**
 	 * @return
@@ -42,8 +42,9 @@ public interface QueryView {
 	int getResultSize();
 	
 	/**
-	 * @param entity
+	 * @param attribute
+	 * @param value
 	 * @return
 	 */
-	String merge(final Object entity);
+	String merge(final String attribute, final Object value);
 }

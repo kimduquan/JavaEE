@@ -111,20 +111,10 @@ public class Query implements QueryView, Serializable {
 	protected void postConstruct() {
 		entity = eventUtil.getEvent(Event.SCHEMA_ENTITY);
 		if(entity != null) {
-			if(entity.getId() != null) {
-				final String id = entity.getId().getName();
-				attributes = entity
-						.getAttributes()
-						.stream()
-						.filter(attr -> !id.equals(attr.getName()))
-						.collect(Collectors.toList());
-			}
-			else {
-				attributes = entity
-						.getAttributes()
-						.stream()
-						.collect(Collectors.toList());
-			}
+			attributes = entity
+					.getAttributes()
+					.stream()
+					.collect(Collectors.toList());
 			try {
 				firstResult = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT));
 				maxResults = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT));
@@ -161,7 +151,7 @@ public class Query implements QueryView, Serializable {
 	}
 	
 	@Override
-	public int getIndexOf(final Object object) {
+	public int getIndexOf(final String attribute, final Object object) {
 		return firstResult + result.indexOf(object);
 	}
 	
@@ -177,7 +167,7 @@ public class Query implements QueryView, Serializable {
 	}
 	
 	@Override
-	public String merge(final Object ent) {
+	public String merge(final String attribute, final Object ent) {
 		final JsonObject object = (JsonObject) ent;
 		if(entity.isSingleId()) {
 			final Attribute id = entity.getId();
@@ -218,13 +208,6 @@ public class Query implements QueryView, Serializable {
 	@Override
 	public void setMaxResults(final int maxResults) {
 		this.maxResults = maxResults;
-	}
-
-	/**
-	 * @return the entity
-	 */
-	public Entity getEntity() {
-		return entity;
 	}
 
 	@Override

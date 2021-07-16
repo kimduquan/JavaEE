@@ -54,8 +54,8 @@ public class Query implements QueryView {
 	}
 
 	@Override
-	public int getIndexOf(Object object) {
-		List<WebElement> elements = driver.findElements(By.cssSelector("label.persistence.query.entity.id.name"));
+	public int getIndexOf(final String attribute, Object object) {
+		List<WebElement> elements = driver.findElements(By.cssSelector(".persistence.query.attributes.".concat(attribute)));
 		Optional<WebElement> found = elements.stream().filter(ele -> ele.getText().equals(object)).findFirst();
 		return found.isPresent() ? elements.indexOf(found.get()) : -1;
 	}
@@ -66,12 +66,12 @@ public class Query implements QueryView {
 	}
 	
 	public List<?> getResult(){
-		return driver.findElements(By.cssSelector("label.persistence.query.entity.id.name"));
+		return driver.findElements(By.cssSelector(".persistence.query.result.indexOf"));
 	}
 
 	@Override
-	public String merge(Object entity) {
-		int index = getIndexOf(entity);
+	public String merge(final String attribute, Object entity) {
+		int index = getIndexOf(attribute, entity);
 		driver.findElements(By.cssSelector(".persistence.entity.merge")).get(index).click();
 		return "";
 	}

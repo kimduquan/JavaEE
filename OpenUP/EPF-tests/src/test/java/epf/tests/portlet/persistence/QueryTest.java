@@ -73,10 +73,10 @@ public class QueryTest {
 
 	@Test
 	public void test_SetFirstResult_TheFirstObjectIndexIsCorrect() throws Exception {
-		int index = query.getIndexOf("Release");
+		int index = query.getIndexOf("name", "Release");
 		query.setFirstResult(query.getFirstResult() + 5);
 		query.executeQuery();
-		Assert.assertEquals(index - 5, query.getIndexOf("Release"));
+		Assert.assertEquals(index - 5, query.getIndexOf("name", "Release"));
 	}
 	
 	@Test
@@ -85,5 +85,10 @@ public class QueryTest {
 		query.executeQuery();
 		Assert.assertEquals("Query.resultSize", 20, query.getResultSize());
 		Assert.assertEquals("Query.result.size", 20, query.getResult().size());
+	}
+	
+	@Test
+	public void test_Merge_navigateToEntity() {
+		query.merge("name", "Release");
 	}
 }
