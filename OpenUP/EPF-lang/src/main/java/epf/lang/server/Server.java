@@ -7,6 +7,8 @@ import java.util.concurrent.CompletableFuture;
 import javax.inject.Inject;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
+import org.eclipse.lsp4j.ServerCapabilities;
+import org.eclipse.lsp4j.ServerInfo;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
 import org.eclipse.lsp4j.services.LanguageServer;
@@ -51,10 +53,16 @@ public class Server implements LanguageServer, LanguageClientAware {
 		this.document = document;
 		this.executor = executor;
 	}
+	
+	protected InitializeResult init(final InitializeParams params) {
+		final ServerCapabilities capabilities = new ServerCapabilities();
+		final ServerInfo info = new ServerInfo();
+		return new InitializeResult(capabilities, info);
+	}
 
 	@Override
-	public CompletableFuture<InitializeResult> initialize(InitializeParams params) {
-		return executor.supplyAsync(InitializeResult::new);
+	public CompletableFuture<InitializeResult> initialize(final InitializeParams params) {
+		return executor.supplyAsync(() -> init(params));
 	}
 
 	@Override

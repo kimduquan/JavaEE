@@ -8,7 +8,6 @@ import javax.websocket.CloseReason;
 import javax.websocket.EndpointConfig;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
-import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
@@ -45,15 +44,6 @@ public class Lang {
 	 */
 	@OnError
     public void onError(final Session session, final Throwable throwable) {
-		
-	}
-	
-	/**
-	 * @param message
-	 * @param session
-	 */
-	@OnMessage
-    public void onMessage(final Object message, final Session session) {
 		
 	}
 }
