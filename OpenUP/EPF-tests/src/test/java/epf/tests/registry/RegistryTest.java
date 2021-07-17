@@ -78,6 +78,8 @@ public class RegistryTest {
 	    	expected.add(GatewayUtil.getGatewayUrl().resolve("image"));
 	    	URI messagingUrl = UriBuilder.fromUri(GatewayUtil.getGatewayUrl().resolve("messaging")).scheme("ws").port(9080).build();
 	    	expected.add(messagingUrl);
+	    	URI langUrl = UriBuilder.fromUri(GatewayUtil.getGatewayUrl().resolve("lang")).scheme("ws").port(9080).build();
+	    	expected.add(langUrl);
 		} 
     	catch (URISyntaxException e) {
 			logger.log(Level.SEVERE, "testList_OK", e);

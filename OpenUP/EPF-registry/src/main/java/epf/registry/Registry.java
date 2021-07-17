@@ -18,6 +18,7 @@ import epf.client.config.Config;
 import epf.client.file.Files;
 import epf.client.gateway.Gateway;
 import epf.client.image.Image;
+import epf.client.lang.Lang;
 import epf.client.management.Management;
 import epf.client.messaging.Messaging;
 import epf.client.script.Script;
@@ -107,6 +108,9 @@ public class Registry implements epf.client.registry.Registry {
 			final URI imageUrl = new URI(System.getenv(Image.IMAGE_URL));
 			remote = "image";
 			remotes.put(remote, imageUrl);
+			final URI langUrl = new URI(System.getenv(Lang.LANG_URL));
+			remote = "lang";
+			remotes.put(remote, langUrl);
 		} 
 		catch (Exception e) {
 			logger.throwing(getClass().getName(), "postConstruct", e);

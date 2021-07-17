@@ -641,6 +641,7 @@
 		<module>EPF-config</module>
         <module>EPF-gateway</module>
 		<module>EPF-messaging</module>
+		<module>EPF-lang</module>
 		<module>EPF-cache</module>
 		<module>EPF-registry</module>
 		<module>EPF-management</module>
