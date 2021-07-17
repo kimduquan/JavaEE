@@ -239,7 +239,18 @@ public class Query implements QueryView, Serializable {
 
 	@Override
 	public List<?> getResultList(final String attribute) {
-		return resultList;
+		Stream<JsonObject> streamObj = resultList.stream();
+		for(JsonObjectFilter filter : filters) {
+			if(filter != null) {
+				streamObj = streamObj.filter(filter::filter);
+			}
+		}
+		for(JsonObjectComparator comparator : comparators) {
+			if(comparator != null) {
+				streamObj = streamObj.sorted(comparator);
+			}
+		}
+		return streamObj.collect(Collectors.toList());
 	}
 
 	@Override
@@ -248,9 +259,6 @@ public class Query implements QueryView, Serializable {
 		final int index = attributes.indexOf(attr);
 		if(filters.get(index) == null) {
 			filters.set(index, new JsonObjectFilter(attr.getName()));
-		}
-		if(entity != null) {
-			resultList = getResultList();
 		}
 	}
 
@@ -265,9 +273,6 @@ public class Query implements QueryView, Serializable {
 		}
 		else {
 			comparator.setAscending(!comparator.isAscending());
-		}
-		if(entity != null) {
-			resultList = getResultList();
 		}
 	}
 }
