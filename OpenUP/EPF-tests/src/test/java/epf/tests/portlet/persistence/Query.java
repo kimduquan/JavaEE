@@ -78,7 +78,12 @@ public class Query implements QueryView {
 	}
 
 	@Override
-	public void sort(String attribute) {
+	public void sort(Object attribute) {
+		driver.findElement(By.cssSelector(".persistence.query.resultList.sort.".concat(attribute.toString()))).click();
+	}
+
+	@Override
+	public void filter(Object attribute, Object value) throws Exception {
 		
 	}
 }

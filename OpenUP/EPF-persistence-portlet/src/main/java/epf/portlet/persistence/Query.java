@@ -5,9 +5,11 @@ package epf.portlet.persistence;
 
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -22,6 +24,8 @@ import epf.client.schema.Attribute;
 import epf.client.schema.Entity;
 import epf.portlet.Event;
 import epf.portlet.EventUtil;
+import epf.portlet.JsonObjectComparator;
+import epf.portlet.JsonObjectFilter;
 import epf.portlet.JsonUtil;
 import epf.portlet.Parameter;
 import epf.portlet.ParameterUtil;
@@ -77,6 +81,16 @@ public class Query implements QueryView, Serializable {
 	/**
 	 * 
 	 */
+	private List<JsonObjectComparator> comparators;
+	
+	/**
+	 * 
+	 */
+	private List<JsonObjectFilter> filters;
+	
+	/**
+	 * 
+	 */
 	@Inject
 	private transient RegistryUtil registryUtil;
 	
@@ -115,6 +129,8 @@ public class Query implements QueryView, Serializable {
 					.getAttributes()
 					.stream()
 					.collect(Collectors.toList());
+			comparators = Arrays.asList(new JsonObjectComparator[attributes.size()]);
+			filters = Arrays.asList(new JsonObjectFilter[attributes.size()]);
 			try {
 				firstResult = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT));
 				maxResults = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT));
@@ -139,11 +155,21 @@ public class Query implements QueryView, Serializable {
 					maxResults)){
 				try(InputStream stream = response.readEntity(InputStream.class)){
 					try(JsonReader reader = Json.createReader(stream)){
-						return reader
-						.readArray()
-						.stream()
-						.map(value -> value.asJsonObject())
-						.collect(Collectors.toList());
+						Stream<JsonObject> streamObj = reader
+								.readArray()
+								.stream()
+								.map(value -> value.asJsonObject());
+						for(JsonObjectFilter filter : filters) {
+							if(filter != null) {
+								streamObj = streamObj.filter(filter::filter);
+							}
+						}
+						for(JsonObjectComparator comparator : comparators) {
+							if(comparator != null) {
+								streamObj = streamObj.sorted(comparator);
+							}
+						}
+						return streamObj.collect(Collectors.toList());
 					}
 				}
 			}
@@ -212,12 +238,36 @@ public class Query implements QueryView, Serializable {
 	}
 
 	@Override
-	public void sort(final String attribute) {
-		
+	public List<?> getResultList(final String attribute) {
+		return resultList;
 	}
 
 	@Override
-	public List<?> getResultList(final String attribute) {
-		return resultList;
+	public void filter(final Object attribute, final Object value) throws Exception {
+		final Attribute attr = (Attribute) attribute;
+		final int index = attributes.indexOf(attr);
+		if(filters.get(index) == null) {
+			filters.set(index, new JsonObjectFilter(attr.getName()));
+		}
+		if(entity != null) {
+			resultList = getResultList();
+		}
+	}
+
+	@Override
+	public void sort(final Object attribute) throws Exception {
+		final Attribute attr = (Attribute) attribute;
+		final int index = attributes.indexOf(attr);
+		JsonObjectComparator comparator = comparators.get(index);
+		if(comparator == null) {
+			comparator = new JsonObjectComparator(attr.getName());
+			comparators.set(index, comparator);
+		}
+		else {
+			comparator.setAscending(!comparator.isAscending());
+		}
+		if(entity != null) {
+			resultList = getResultList();
+		}
 	}
 }

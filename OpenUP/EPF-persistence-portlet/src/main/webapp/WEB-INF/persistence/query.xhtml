@@ -52,6 +52,10 @@
 				<h:column rendered="#{epf_persistence_query.attributes.size() gt 0}">
 					<f:facet name="header">
 						<h:outputText value="#{epf_persistence_query.attributes[0].name}"></h:outputText>
+						<h:commandButton 
+							action="#{epf_persistence_query.sort(epf_persistence_query.attributes[0])}" 
+							value="#{i18n['epf.persistence.query.resultList.sort']}" 
+							styleClass="#{style.css('persistence.query.resultList.sort.'.concat(epf_persistence_query.attributes[0].name))}"/>
 					</f:facet>
 					<h:outputLabel 
 						value="#{resultVar[epf_persistence_query.attributes[0].name]}"
@@ -60,6 +64,10 @@
 				<h:column rendered="#{epf_persistence_query.attributes.size() gt 1}">
 					<f:facet name="header">
 						<h:outputText value="#{epf_persistence_query.attributes[1].name}"></h:outputText>
+						<h:commandButton 
+							action="#{epf_persistence_query.sort(epf_persistence_query.attributes[1])}" 
+							value="#{i18n['epf.persistence.query.resultList.sort']}" 
+							styleClass="#{style.css('persistence.query.resultList.sort.'.concat(epf_persistence_query.attributes[1].name))}"/>
 					</f:facet>
 					<h:outputLabel 
 						value="#{resultVar[epf_persistence_query.attributes[1].name]}"
@@ -68,6 +76,10 @@
 				<h:column rendered="#{epf_persistence_query.attributes.size() gt 2}">
 					<f:facet name="header">
 						<h:outputText value="#{epf_persistence_query.attributes[2].name}"></h:outputText>
+						<h:commandButton 
+							action="#{epf_persistence_query.sort(epf_persistence_query.attributes[2])}" 
+							value="#{i18n['epf.persistence.query.resultList.sort']}" 
+							styleClass="#{style.css('persistence.query.resultList.sort.'.concat(epf_persistence_query.attributes[2].name))}"/>
 					</f:facet>
 					<h:outputLabel 
 						value="#{resultVar[epf_persistence_query.attributes[2].name]}"
@@ -76,6 +88,10 @@
 				<h:column rendered="#{epf_persistence_query.attributes.size() gt 3}">
 					<f:facet name="header">
 						<h:outputText value="#{epf_persistence_query.attributes[3].name}"></h:outputText>
+						<h:commandButton 
+							action="#{epf_persistence_query.sort(epf_persistence_query.attributes[3])}" 
+							value="#{i18n['epf.persistence.query.resultList.sort']}" 
+							styleClass="#{style.css('persistence.query.resultList.sort.'.concat(epf_persistence_query.attributes[3].name))}"/>
 					</f:facet>
 					<h:outputLabel 
 						value="#{resultVar[epf_persistence_query.attributes[3].name]}"
@@ -84,6 +100,10 @@
 				<h:column rendered="#{epf_persistence_query.attributes.size() gt 4}">
 					<f:facet name="header">
 						<h:outputText value="#{epf_persistence_query.attributes[4].name}"></h:outputText>
+						<h:commandButton 
+							action="#{epf_persistence_query.sort(epf_persistence_query.attributes[4])}" 
+							value="#{i18n['epf.persistence.query.resultList.sort']}" 
+							styleClass="#{style.css('persistence.query.resultList.sort.'.concat(epf_persistence_query.attributes[4].name))}"/>
 					</f:facet>
 					<h:outputLabel 
 						value="#{resultVar[epf_persistence_query.attributes[4].name]}"
@@ -92,6 +112,10 @@
 				<h:column rendered="#{epf_persistence_query.attributes.size() gt 5}">
 					<f:facet name="header">
 						<h:outputText value="#{epf_persistence_query.attributes[5].name}"></h:outputText>
+						<h:commandButton 
+							action="#{epf_persistence_query.sort(epf_persistence_query.attributes[5])}" 
+							value="#{i18n['epf.persistence.query.resultList.sort']}" 
+							styleClass="#{style.css('persistence.query.resultList.sort.'.concat(epf_persistence_query.attributes[5].name))}"/>
 					</f:facet>
 					<h:outputLabel 
 						value="#{resultVar[epf_persistence_query.attributes[5].name]}"
@@ -100,6 +124,10 @@
 				<h:column rendered="#{epf_persistence_query.attributes.size() gt 6}">
 					<f:facet name="header">
 						<h:outputText value="#{epf_persistence_query.attributes[6].name}"></h:outputText>
+						<h:commandButton 
+							action="#{epf_persistence_query.sort(epf_persistence_query.attributes[6])}" 
+							value="#{i18n['epf.persistence.query.resultList.sort']}" 
+							styleClass="#{style.css('persistence.query.resultList.sort.'.concat(epf_persistence_query.attributes[6].name))}"/>
 					</f:facet>
 					<h:outputLabel 
 						value="#{resultVar[epf_persistence_query.attributes[6].name]}"
@@ -108,6 +136,10 @@
 				<h:column rendered="#{epf_persistence_query.attributes.size() gt 7}">
 					<f:facet name="header">
 						<h:outputText value="#{epf_persistence_query.attributes[7].name}"></h:outputText>
+						<h:commandButton 
+							action="#{epf_persistence_query.sort(epf_persistence_query.attributes[7])}" 
+							value="#{i18n['epf.persistence.query.resultList.sort']}" 
+							styleClass="#{style.css('persistence.query.resultList.sort.'.concat(epf_persistence_query.attributes[7].name))}"/>
 					</f:facet>
 					<h:outputLabel 
 						value="#{resultVar[epf_persistence_query.attributes[7].name]}"
@@ -116,6 +148,10 @@
 				<h:column rendered="#{epf_persistence_query.attributes.size() gt 8}">
 					<f:facet name="header">
 						<h:outputText value="#{epf_persistence_query.attributes[8].name}"></h:outputText>
+						<h:commandButton 
+							action="#{epf_persistence_query.sort(epf_persistence_query.attributes[8])}" 
+							value="#{i18n['epf.persistence.query.resultList.sort']}" 
+							styleClass="#{style.css('persistence.query.resultList.sort.'.concat(epf_persistence_query.attributes[8].name))}"/>
 					</f:facet>
 					<h:outputLabel 
 						value="#{resultVar[epf_persistence_query.attributes[8].name]}"
@@ -124,6 +160,10 @@
 				<h:column rendered="#{epf_persistence_query.attributes.size() gt 9}">
 					<f:facet name="header">
 						<h:outputText value="#{epf_persistence_query.attributes[9].name}"></h:outputText>
+						<h:commandButton 
+							action="#{epf_persistence_query.sort(epf_persistence_query.attributes[9])}" 
+							value="#{i18n['epf.persistence.query.resultList.sort']}" 
+							styleClass="#{style.css('persistence.query.resultList.sort.'.concat(epf_persistence_query.attributes[9].name))}"/>
 					</f:facet>
 					<h:outputLabel 
 						value="#{resultVar[epf_persistence_query.attributes[9].name]}"

@@ -91,4 +91,15 @@ public class QueryTest {
 	public void test_Merge_navigateToEntity() {
 		query.merge("name", "Release");
 	}
+	
+	@Test
+	public void test_Sort_Ascending_TheResultOrderIsAscending() {
+		query.sort("name");
+	}
+	
+	@Test
+	public void test_Sort_Descending_TheResultOrderIsDescending() {
+		query.sort("name");
+		query.sort("name");
+	}
 }
