@@ -68,7 +68,7 @@ public class QueryTest {
 		Assert.assertEquals("Query.firstResult", 0, query.getFirstResult());
 		Assert.assertEquals("Query.maxResults", 100, query.getMaxResults());
 		Assert.assertEquals("Query.resultSize", 100, query.getResultSize());
-		Assert.assertEquals("Query.result.size", 100, query.getResult().size());
+		Assert.assertEquals("Query.result.size", 100, query.getResultList("name").size());
 	}
 
 	@Test
@@ -84,7 +84,7 @@ public class QueryTest {
 		query.setMaxResults(20);
 		query.executeQuery();
 		Assert.assertEquals("Query.resultSize", 20, query.getResultSize());
-		Assert.assertEquals("Query.result.size", 20, query.getResult().size());
+		Assert.assertEquals("Query.result.size", 20, query.getResultList("name").size());
 	}
 	
 	@Test

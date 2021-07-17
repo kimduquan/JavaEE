@@ -3,6 +3,8 @@
  */
 package epf.client.portlet.persistence;
 
+import java.util.List;
+
 /**
  * @author PC
  *
@@ -40,6 +42,17 @@ public interface QueryView {
 	 * @return
 	 */
 	int getResultSize();
+	
+	/**
+	 * @param attribute
+	 * @return
+	 */
+	List<?> getResultList(final String attribute);
+	
+	/**
+	 * @param attribute
+	 */
+	void sort(final String attribute);
 	
 	/**
 	 * @param attribute

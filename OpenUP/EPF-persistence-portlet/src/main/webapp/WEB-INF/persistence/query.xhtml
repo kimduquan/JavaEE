@@ -25,24 +25,24 @@
 				styleClass="#{style.css('persistence.query.maxResults')}" value="#{epf_persistence_query.maxResults}"></h:inputText>
 			<h:commandButton 
 				styleClass="#{style.css('persistence.query.executeQuery')}" 
-				value="#{i18n['epf.persistence.query.result']}" 
+				value="#{i18n['epf.persistence.query.executeQuery']}" 
 				action="#{epf_persistence_query.executeQuery}"></h:commandButton>
 			<h:dataTable 
-				rendered="#{not empty epf_persistence_query.attributes and epf_persistence_query.result != null}" 
-				value="#{epf_persistence_query.result}" 
+				rendered="#{not empty epf_persistence_query.attributes and epf_persistence_query.getResultList('') != null}" 
+				value="#{epf_persistence_query.getResultList('')}" 
 				var="resultVar" 
-				styleClass="#{style.css('persistence.query.result')}">
+				styleClass="#{style.css('persistence.query.resultList')}">
 				<h:column>
 					<h:outputLabel 
 						value="#{epf_persistence_query.getIndexOf('', resultVar)}"
-						styleClass="#{style.css('persistence.query.result.indexOf')}" ></h:outputLabel>
+						styleClass="#{style.css('persistence.query.resultList.indexOf')}" ></h:outputLabel>
 				</h:column>
 				<h:column>
 					<f:facet name="header">
-						<h:outputText value="#{i18n['epf.persistence.query.result.size']}"></h:outputText>
+						<h:outputText value="#{i18n['epf.persistence.query.resultList.size']}"></h:outputText>
 						<h:outputLabel 
-							value="#{epf_persistence_query.result.size()}" 
-							styleClass="#{style.css('persistence.query.result.size')}"></h:outputLabel>
+							value="#{epf_persistence_query.resultSize}" 
+							styleClass="#{style.css('persistence.query.resultList.size')}"></h:outputLabel>
 					</f:facet>
 					<h:commandButton 
 						value="#{i18n['epf.persistence.entity.merge']}" 

@@ -62,11 +62,7 @@ public class Query implements QueryView {
 
 	@Override
 	public int getResultSize() {
-		 return Integer.parseInt(driver.findElement(By.cssSelector(".persistence.query.result.size")).getText());
-	}
-	
-	public List<?> getResult(){
-		return driver.findElements(By.cssSelector(".persistence.query.result.indexOf"));
+		 return Integer.parseInt(driver.findElement(By.cssSelector(".persistence.query.resultList.size")).getText());
 	}
 
 	@Override
@@ -74,5 +70,15 @@ public class Query implements QueryView {
 		int index = getIndexOf(attribute, entity);
 		driver.findElements(By.cssSelector(".persistence.entity.merge")).get(index).click();
 		return "";
+	}
+
+	@Override
+	public List<?> getResultList(String attribute) {
+		return driver.findElements(By.cssSelector(".persistence.query.resultList.indexOf"));
+	}
+
+	@Override
+	public void sort(String attribute) {
+		
 	}
 }

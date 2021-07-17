@@ -72,7 +72,7 @@ public class Query implements QueryView, Serializable {
 	/**
 	 * 
 	 */
-	private List<JsonObject> result;
+	private List<JsonObject> resultList;
 	
 	/**
 	 * 
@@ -118,7 +118,7 @@ public class Query implements QueryView, Serializable {
 			try {
 				firstResult = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT));
 				maxResults = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT));
-				result = getResultList();
+				resultList = getResultList();
 			}
 			catch (Exception e) {
 				LOGGER.throwing(getClass().getName(), "postConstruct", e);
@@ -152,7 +152,7 @@ public class Query implements QueryView, Serializable {
 	
 	@Override
 	public int getIndexOf(final String attribute, final Object object) {
-		return firstResult + result.indexOf(object);
+		return firstResult + resultList.indexOf(object);
 	}
 	
 	/**
@@ -162,7 +162,7 @@ public class Query implements QueryView, Serializable {
 	@Override
 	public void executeQuery() throws Exception {
 		if(entity != null) {
-			result = getResultList();
+			resultList = getResultList();
 		}
 	}
 	
@@ -180,10 +180,6 @@ public class Query implements QueryView, Serializable {
 			}
 		}
 		return "entity";
-	}
-
-	public List<JsonObject> getResult() {
-		return result;
 	}
 
 	public List<Attribute> getAttributes() {
@@ -212,6 +208,16 @@ public class Query implements QueryView, Serializable {
 
 	@Override
 	public int getResultSize() {
-		return result.size();
+		return resultList.size();
+	}
+
+	@Override
+	public void sort(final String attribute) {
+		
+	}
+
+	@Override
+	public List<?> getResultList(final String attribute) {
+		return resultList;
 	}
 }
