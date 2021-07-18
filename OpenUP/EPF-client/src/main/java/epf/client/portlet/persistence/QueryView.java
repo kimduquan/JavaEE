@@ -53,12 +53,12 @@ public interface QueryView {
 	 * @param attribute
 	 * @param value
 	 */
-	void filter(final Object attribute, final Object value) throws Exception;
+	void filter(final String attribute, final String value) throws Exception;
 	
 	/**
 	 * @param attribute
 	 */
-	void sort(final Object attribute) throws Exception;
+	void sort(final String attribute) throws Exception;
 	
 	/**
 	 * @param attribute

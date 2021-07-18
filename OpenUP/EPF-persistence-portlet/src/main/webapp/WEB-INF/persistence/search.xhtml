@@ -18,8 +18,8 @@
 					action="#{epf_persistence_search.search}"></h:commandButton>
 				<h:dataTable 
 					styleClass="#{style.css('persistence.search.result')}" 
-					rendered="#{not empty epf_persistence_search.result}" 
-					value="#{epf_persistence_search.result}" 
+					rendered="#{not empty epf_persistence_search.resultList}" 
+					value="#{epf_persistence_search.resultList}" 
 					var="resultVar">
 					<f:facet name="header">
 						<h:outputText value="#{i18n['epf.persistence.query.firstResult']}"></h:outputText>
@@ -33,7 +33,7 @@
 				</h:dataTable>
 				<h:outputText 
 					styleClass="#{style.css('persistence.query.resultList.empty')}" 
-					rendered="#{empty epf_persistence_search.result}" 
+					rendered="#{empty epf_persistence_search.resultList}" 
 					value="#{i18n['epf.persistence.query.resultList.empty']}"></h:outputText>
 			</ui:define>
 		</ui:composition>

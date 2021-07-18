@@ -254,8 +254,8 @@ public class Query implements QueryView, Serializable {
 	}
 
 	@Override
-	public void filter(final Object attribute, final Object value) throws Exception {
-		final Attribute attr = (Attribute) attribute;
+	public void filter(final String attribute, final String value) throws Exception {
+		final Attribute attr = attributes.stream().filter(a -> a.getName().equals(attribute)).findFirst().get();
 		final int index = attributes.indexOf(attr);
 		if(filters.get(index) == null) {
 			filters.set(index, new JsonObjectFilter(attr.getName()));
@@ -263,8 +263,8 @@ public class Query implements QueryView, Serializable {
 	}
 
 	@Override
-	public void sort(final Object attribute) throws Exception {
-		final Attribute attr = (Attribute) attribute;
+	public void sort(final String attribute) throws Exception {
+		final Attribute attr = attributes.stream().filter(a -> a.getName().equals(attribute)).findFirst().get();
 		final int index = attributes.indexOf(attr);
 		JsonObjectComparator comparator = comparators.get(index);
 		if(comparator == null) {

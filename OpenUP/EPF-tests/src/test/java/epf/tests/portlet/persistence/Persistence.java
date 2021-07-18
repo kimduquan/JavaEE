@@ -46,6 +46,10 @@ public class Persistence implements PersistenceView {
 	public void navigateToPersist() {
 		driver.findElement(By.cssSelector(".persistence.entity.persist")).click();
 	}
+	
+	public void navigateToSearch() {
+		driver.findElement(By.cssSelector(".persistence.search")).click();
+	}
 
 	@Override
 	public String merge(Object entity) {
