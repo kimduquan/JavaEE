@@ -6,25 +6,36 @@
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 >
-	<h:head>
-		<h:outputStylesheet library="css" name="main.css" />
-	</h:head>
 	<h:body>
-		<h:form>
-			<h:inputText styleClass="#{style.css('persistence.search.text')}" value="#{epf_persistence_search.text}"></h:inputText>
-			<h:commandButton styleClass="#{style.css('persistence.search')}" value="#{i18n['epf.persistence.search']}" action="#{epf_persistence_search.search}"></h:commandButton>
-			<h:dataTable styleClass="#{style.css('persistence.search.result')}" rendered="#{not empty epf_persistence_search.result}" value="#{epf_persistence_search.result}" var="resultVar">
-				<f:facet name="header">
-					<h:outputText value="#{i18n['epf.persistence.query.firstResult']}"></h:outputText>
-					<h:inputText value="#{epf_persistence_search.firstResult}"></h:inputText>
-					<h:outputText value="#{i18n['epf.persistence.query.maxResults']}"></h:outputText>
-					<h:inputText value="#{epf_persistence_search.maxResults}"></h:inputText>
-				</f:facet>
-				<h:column>
-					<h:outputText value="#{resutlVar.toString()}"></h:outputText>
-				</h:column>
-			</h:dataTable>
-			<h:outputText styleClass="#{style.css('persistence.query.result.empty')}" rendered="#{empty epf_persistence_search.result}" value="#{i18n['epf.persistence.query.result.empty']}"></h:outputText>
-		</h:form>
+		<ui:composition template="../template.xhtml">
+			<ui:define name="main">
+				<h:inputText 
+					styleClass="#{style.css('persistence.search.text')}" 
+					value="#{epf_persistence_search.text}"></h:inputText>
+				<h:commandButton 
+					styleClass="#{style.css('persistence.search')}" 
+					value="#{i18n['epf.persistence.search']}" 
+					action="#{epf_persistence_search.search}"></h:commandButton>
+				<h:dataTable 
+					styleClass="#{style.css('persistence.search.result')}" 
+					rendered="#{not empty epf_persistence_search.result}" 
+					value="#{epf_persistence_search.result}" 
+					var="resultVar">
+					<f:facet name="header">
+						<h:outputText value="#{i18n['epf.persistence.query.firstResult']}"></h:outputText>
+						<h:inputText value="#{epf_persistence_search.firstResult}"></h:inputText>
+						<h:outputText value="#{i18n['epf.persistence.query.maxResults']}"></h:outputText>
+						<h:inputText value="#{epf_persistence_search.maxResults}"></h:inputText>
+					</f:facet>
+					<h:column>
+						<h:outputText value="#{resutlVar.toString()}"></h:outputText>
+					</h:column>
+				</h:dataTable>
+				<h:outputText 
+					styleClass="#{style.css('persistence.query.resultList.empty')}" 
+					rendered="#{empty epf_persistence_search.result}" 
+					value="#{i18n['epf.persistence.query.resultList.empty']}"></h:outputText>
+			</ui:define>
+		</ui:composition>
 	</h:body>
 </f:view>
