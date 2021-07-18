@@ -169,6 +169,7 @@ public class Query implements QueryView, Serializable {
 	@Override
 	public void executeQuery() throws Exception {
 		if(entity != null) {
+			collector = new JsonObjectCollector(attributes.stream().map(Attribute::getName).collect(Collectors.toList()));
 			resultList = getResultList();
 		}
 	}
