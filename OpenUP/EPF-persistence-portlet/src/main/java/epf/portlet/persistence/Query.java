@@ -5,11 +5,9 @@ package epf.portlet.persistence;
 
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -24,8 +22,7 @@ import epf.client.schema.Attribute;
 import epf.client.schema.Entity;
 import epf.portlet.Event;
 import epf.portlet.EventUtil;
-import epf.portlet.JsonObjectComparator;
-import epf.portlet.JsonObjectFilter;
+import epf.portlet.JsonObjectCollector;
 import epf.portlet.JsonUtil;
 import epf.portlet.Parameter;
 import epf.portlet.ParameterUtil;
@@ -81,12 +78,7 @@ public class Query implements QueryView, Serializable {
 	/**
 	 * 
 	 */
-	private List<JsonObjectComparator> comparators;
-	
-	/**
-	 * 
-	 */
-	private List<JsonObjectFilter> filters;
+	private JsonObjectCollector collector;
 	
 	/**
 	 * 
@@ -129,8 +121,7 @@ public class Query implements QueryView, Serializable {
 					.getAttributes()
 					.stream()
 					.collect(Collectors.toList());
-			comparators = Arrays.asList(new JsonObjectComparator[attributes.size()]);
-			filters = Arrays.asList(new JsonObjectFilter[attributes.size()]);
+			collector = new JsonObjectCollector(attributes.stream().map(Attribute::getName).collect(Collectors.toList()));
 			try {
 				firstResult = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT));
 				maxResults = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT));
@@ -155,21 +146,11 @@ public class Query implements QueryView, Serializable {
 					maxResults)){
 				try(InputStream stream = response.readEntity(InputStream.class)){
 					try(JsonReader reader = Json.createReader(stream)){
-						Stream<JsonObject> streamObj = reader
+						return reader
 								.readArray()
 								.stream()
-								.map(value -> value.asJsonObject());
-						for(JsonObjectFilter filter : filters) {
-							if(filter != null) {
-								streamObj = streamObj.filter(filter::filter);
-							}
-						}
-						for(JsonObjectComparator comparator : comparators) {
-							if(comparator != null) {
-								streamObj = streamObj.sorted(comparator);
-							}
-						}
-						return streamObj.collect(Collectors.toList());
+								.map(value -> value.asJsonObject())
+								.collect(Collectors.toList());
 					}
 				}
 			}
@@ -239,40 +220,16 @@ public class Query implements QueryView, Serializable {
 
 	@Override
 	public List<?> getResultList(final String attribute) {
-		Stream<JsonObject> streamObj = resultList.stream();
-		for(JsonObjectFilter filter : filters) {
-			if(filter != null) {
-				streamObj = streamObj.filter(filter::filter);
-			}
-		}
-		for(JsonObjectComparator comparator : comparators) {
-			if(comparator != null) {
-				streamObj = streamObj.sorted(comparator);
-			}
-		}
-		return streamObj.collect(Collectors.toList());
+		return collector.collect(resultList.stream());
 	}
 
 	@Override
 	public void filter(final String attribute, final String value) throws Exception {
-		final Attribute attr = attributes.stream().filter(a -> a.getName().equals(attribute)).findFirst().get();
-		final int index = attributes.indexOf(attr);
-		if(filters.get(index) == null) {
-			filters.set(index, new JsonObjectFilter(attr.getName()));
-		}
+		collector.filter(attribute, value);
 	}
 
 	@Override
 	public void sort(final String attribute) throws Exception {
-		final Attribute attr = attributes.stream().filter(a -> a.getName().equals(attribute)).findFirst().get();
-		final int index = attributes.indexOf(attr);
-		JsonObjectComparator comparator = comparators.get(index);
-		if(comparator == null) {
-			comparator = new JsonObjectComparator(attr.getName());
-			comparators.set(index, comparator);
-		}
-		else {
-			comparator.setAscending(!comparator.isAscending());
-		}
+		collector.sort(attribute);
 	}
 }
