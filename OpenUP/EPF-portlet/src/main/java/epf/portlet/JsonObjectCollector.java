@@ -118,4 +118,24 @@ public class JsonObjectCollector {
 	public void limit(final long limit) {
 		this.limit = limit;
 	}
+	
+	/**
+	 * @param name
+	 */
+	public void move(final String name) {
+		final int index = names.indexOf(name);
+		final String prevName = names.get(index - 1);
+		names.set(index, prevName);
+		names.set(index - 1, name);
+		
+		final JsonObjectFilter filter = filters.get(index);
+		final JsonObjectFilter prevFilter = filters.get(index - 1);
+		filters.set(index, prevFilter);
+		filters.set(index - 1, filter);
+		
+		final JsonObjectComparator comparator = comparators.get(index);
+		final JsonObjectComparator prevComparator = comparators.get(index - 1);
+		comparators.set(index, prevComparator);
+		comparators.set(index - 1, comparator);
+	}
 }

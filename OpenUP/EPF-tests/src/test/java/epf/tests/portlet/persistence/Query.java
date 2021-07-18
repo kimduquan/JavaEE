@@ -62,7 +62,7 @@ public class Query implements QueryView {
 
 	@Override
 	public int getResultSize() {
-		 return Integer.parseInt(driver.findElement(By.cssSelector(".persistence.query.resultList.size")).getText());
+		 return Integer.parseInt(driver.findElement(By.cssSelector(".persistence.query.resultList.size")).getAttribute("title"));
 	}
 
 	@Override
@@ -85,5 +85,10 @@ public class Query implements QueryView {
 	@Override
 	public void filter(String attribute, String value) throws Exception {
 		
+	}
+
+	@Override
+	public void move(String attribute) {
+		driver.findElement(By.cssSelector(".persistence.query.resultList.move.".concat(attribute))).click();
 	}
 }

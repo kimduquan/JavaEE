@@ -62,6 +62,11 @@ public interface QueryView {
 	
 	/**
 	 * @param attribute
+	 */
+	void move(final String attribute);
+	
+	/**
+	 * @param attribute
 	 * @param value
 	 * @return
 	 */

@@ -169,6 +169,10 @@ public class Query implements QueryView, Serializable {
 	@Override
 	public void executeQuery() throws Exception {
 		if(entity != null) {
+			attributes = entity
+					.getAttributes()
+					.stream()
+					.collect(Collectors.toList());
 			collector = new JsonObjectCollector(attributes.stream().map(Attribute::getName).collect(Collectors.toList()));
 			resultList = getResultList();
 		}
@@ -232,5 +236,16 @@ public class Query implements QueryView, Serializable {
 	@Override
 	public void sort(final String attribute) throws Exception {
 		collector.sort(attribute);
+	}
+
+	@Override
+	public void move(final String attribute) {
+		final Attribute attr = attributes.stream().filter(a -> a.getName().equals(attribute)).findFirst().get();
+		final int index = attributes.indexOf(attr);
+		final Attribute prevAttr = attributes.get(index - 1);
+		attributes.set(index, prevAttr);
+		attributes.set(index - 1, attr);
+		
+		collector.move(attribute);
 	}
 }
