@@ -34,9 +34,9 @@
         <dependency>
 		    <groupId>openup</groupId>
 		    <artifactId>opencv</artifactId>
-		    <version>4.5.2</version>
+		    <version>4.2.0</version>
 		    <scope>system</scope>
-		    <systemPath>C://Program Files/opencv/build/java/opencv-452.jar</systemPath>
+			<systemPath>/usr/share/java/opencv-420.jar</systemPath><!--<systemPath>C://Program Files/opencv/build/java/opencv-452.jar</systemPath>-->
 		</dependency>
     </dependencies>
 </project>
