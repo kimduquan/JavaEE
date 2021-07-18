@@ -4,9 +4,8 @@
 package epf.portlet;
 
 import java.util.Iterator;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.faces.FacesException;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.ExceptionHandler;
 import javax.faces.context.ExceptionHandlerWrapper;
 import javax.faces.context.FacesContext;
@@ -27,13 +26,14 @@ public class ExceptionHelper extends ExceptionHandlerWrapper {
 	
 	@Override
     public void handle() throws FacesException {
-		final Queue<Throwable> throwables = new ConcurrentLinkedQueue<>();
 		final Iterator<ExceptionQueuedEvent> it = getUnhandledExceptionQueuedEvents().iterator();
 		while(it.hasNext()) {
 			final ExceptionQueuedEvent event = it.next();
-			throwables.add(getRootCause(event.getContext().getException()));
+			final Throwable exception = event.getContext().getException();
+			final Throwable rootCause = getRootCause(exception);
+			final FacesMessage msg = new FacesMessage(exception.getLocalizedMessage(), rootCause.getLocalizedMessage());
+			FacesContext.getCurrentInstance().addMessage(null, msg);
 			it.remove();
 		}
-		FacesContext.getCurrentInstance().
 	}
 }

@@ -8,6 +8,9 @@
 	<lifecycle>
 		<phase-listener>com.liferay.faces.util.lifecycle.DebugPhaseListener</phase-listener>
 	</lifecycle>
+	<factory>
+		<exception-handler-factory>epf.portlet.ExceptionUtil</exception-handler-factory>
+	</factory>
 	<navigation-rule>
 		<from-view-id>/security/*</from-view-id>
 		<navigation-case>
