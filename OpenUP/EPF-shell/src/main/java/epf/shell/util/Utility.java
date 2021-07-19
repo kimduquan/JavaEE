@@ -28,6 +28,7 @@ import epf.shell.client.ClientUtil;
 import epf.shell.util.client.Entity;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
+import epf.util.file.PathUtil;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -66,7 +67,7 @@ public class Utility {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			tempDir = Files.createTempDirectory(Path.of(""), "utility");
+			tempDir = Files.createTempDirectory(PathUtil.of(""), "utility");
 		} 
 		catch (IOException e) {
 			LOG.throwing(Files.class.getName(), "createTempDirectory", e);

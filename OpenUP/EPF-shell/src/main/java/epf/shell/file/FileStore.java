@@ -11,13 +11,13 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import javax.ws.rs.core.Response;
-
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
 import epf.shell.security.Credential;
 import epf.shell.security.CallerPrincipal;
 import epf.util.Var;
 import epf.util.client.Client;
+import epf.util.io.IOUtil;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -94,7 +94,7 @@ public class FileStore {
 			try(InputStream stream = epf.client.file.Files.read(client, path)){
 				try(InputStreamReader reader = new InputStreamReader(stream)){
 					try(BufferedWriter writer = Files.newBufferedWriter(output)){
-						reader.transferTo(writer);
+						IOUtil.transferTo(reader, writer);
 						writer.flush();
 					}
 				}
