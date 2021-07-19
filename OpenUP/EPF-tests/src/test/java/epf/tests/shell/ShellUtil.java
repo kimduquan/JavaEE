@@ -16,6 +16,7 @@ import javax.json.bind.JsonbBuilder;
 import epf.client.security.Token;
 import epf.tests.TestUtil;
 import epf.util.ProcessUtil;
+import epf.util.file.PathUtil;
 
 /**
  * @author PC
@@ -33,7 +34,7 @@ public class ShellUtil {
 	 */
 	public static Path getShellPath() {
 		if(shellPath == null) {
-			shellPath = Path.of(System.getProperty("epf.shell.path"));
+			shellPath = PathUtil.of(System.getProperty("epf.shell.path"));
 		}
 		return shellPath;
 	}

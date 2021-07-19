@@ -291,7 +291,7 @@ public class ShellTest {
 	public void testFile_Create() throws Exception {
 		Path file = Files.createTempFile("file", ".in");
 		Files.write(file, Arrays.asList("this is a test"));
-		Path path = Path.of("any_role1", "this", "is", "a", "test");
+		Path path = PathUtil.of("any_role1", "this", "is", "a", "test");
 		builder = ProcessUtil.command(builder, 
 				"./epf", 
 				"file", "create", 
@@ -303,7 +303,7 @@ public class ShellTest {
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(2, lines.size());
 		Assert.assertTrue(lines.get(1).startsWith("any_role1/this/is/a/test/"));
-		FileUtil.delete(token, Path.of("any_role1/this/is/a/test"));
+		FileUtil.delete(token, PathUtil.of("any_role1/this/is/a/test"));
 		file.toFile().delete();
 	}
 	
@@ -311,7 +311,7 @@ public class ShellTest {
 	public void testFile_Delete() throws Exception {
 		Path file = Files.createTempFile("file", ".in");
 		Files.write(file, Arrays.asList("this is a test"));
-		Path path = Path.of("any_role1", "this", "is", "a", "test");
+		Path path = PathUtil.of("any_role1", "this", "is", "a", "test");
 		String createdFile = FileUtil.createFile(token, file, path);
 		builder = ProcessUtil.command(builder, 
 				"./epf", 
@@ -331,7 +331,7 @@ public class ShellTest {
 	public void testFile_Read() throws Exception {
 		Path file = Files.createTempFile("file", ".in");
 		Files.write(file, Arrays.asList("this is a test"));
-		Path path = Path.of("any_role1", "this", "is", "a", "test");
+		Path path = PathUtil.of("any_role1", "this", "is", "a", "test");
 		String createdFile = FileUtil.createFile(token, file, path);
 		Path output = Files.createTempFile("file", ".out");
 		builder = ProcessUtil.command(builder, 

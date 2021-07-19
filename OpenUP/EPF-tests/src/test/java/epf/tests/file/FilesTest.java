@@ -92,7 +92,7 @@ public class FilesTest {
 	@Test
 	public void testCreateFileOK_User() throws Exception {
 		try (InputStream input = Files.newInputStream(tempFile)){
-			Response response = epf.client.file.Files.createFile(client, input, Path.of("any_role1"));
+			Response response = epf.client.file.Files.createFile(client, input, PathUtil.of("any_role1"));
 			Assert.assertEquals("Response.status", Response.Status.OK.getStatusCode(), response.getStatusInfo().getStatusCode());
 			Link link = response.getLink("self");
 			Assert.assertNotNull("Response.link", link);
@@ -144,7 +144,7 @@ public class FilesTest {
 	@Test//(expected = ForbiddenException.class)
 	public void testCreateFile_InvalidUser() throws IOException {
 		try (InputStream input = Files.newInputStream(tempFile)){
-			Response response = epf.client.file.Files.createFile(client, input, Path.of("any_role2"));
+			Response response = epf.client.file.Files.createFile(client, input, PathUtil.of("any_role2"));
 			Assert.assertEquals("Response.status", Response.Status.FORBIDDEN.getStatusCode(), response.getStatusInfo().getStatusCode());
 		}
 	}
@@ -175,7 +175,7 @@ public class FilesTest {
 	
 	@Test//(expected = ForbiddenException.class)
 	public void testDelete_InvalidUser() {
-		Response response = epf.client.file.Files.delete(client, Path.of("any_role2"));
+		Response response = epf.client.file.Files.delete(client, PathUtil.of("any_role2"));
 		Assert.assertEquals("Response.status", Response.Status.FORBIDDEN.getStatusCode(), response.getStatusInfo().getStatusCode());
 	}
 	
@@ -199,7 +199,7 @@ public class FilesTest {
 	
 	@Test(expected = ForbiddenException.class)
 	public void testRead_InvalidUser() {
-		epf.client.file.Files.read(client, Path.of("any_role2"));
+		epf.client.file.Files.read(client, PathUtil.of("any_role2"));
 	}
 	
 	@Test(expected = ForbiddenException.class)
