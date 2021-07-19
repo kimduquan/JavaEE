@@ -34,6 +34,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.client.EPFException;
 import epf.schema.roles.Role;
 import epf.util.client.EntityOutput;
+import epf.util.file.PathUtil;
 
 /**
  *
@@ -80,7 +81,7 @@ public class FileStore implements epf.client.file.Files {
 		catch (IOException e) {
 			throw new EPFException(e);
 		}
-		final Path root = Path.of(rootFolder);
+		final Path root = PathUtil.of(rootFolder);
 		final Link[] links = files
 				.stream()
 				.map(path -> {
