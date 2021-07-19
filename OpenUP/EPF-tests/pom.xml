@@ -39,6 +39,7 @@
 		<liberty.env.epf.tests.file.root>target/servers/test/epf.file.root</liberty.env.epf.tests.file.root>
 		<liberty.env.webdriver.chrome.driver>chromedriver.exe</liberty.env.webdriver.chrome.driver>
 		<liberty.env.webdriver.edge.driver>msedgedriver.exe</liberty.env.webdriver.edge.driver>
+		<liberty.env.webdriver.gecko.driver>/mnt/c/WSL/geckodriver</liberty.env.webdriver.gecko.driver>
 		<liberty.env.epf.shell.path>../EPF-shell/target/appassembler/bin</liberty.env.epf.shell.path>
     </properties>
     <dependencies>
@@ -258,6 +259,7 @@
                         <epf.tests.file.root>target/servers/test/epf.file.root</epf.tests.file.root>
                         <webdriver.chrome.driver>chromedriver.exe</webdriver.chrome.driver>
                         <webdriver.edge.driver>msedgedriver.exe</webdriver.edge.driver>
+						<webdriver.gecko.driver>/mnt/c/WSL/geckodriver</webdriver.gecko.driver>
                         <epf.shell.path>../EPF-shell/target/appassembler/bin</epf.shell.path>
                     </systemPropertyVariables>
                 </configuration>
