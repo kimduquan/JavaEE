@@ -15,32 +15,31 @@
         <httpsPort>9443</httpsPort>
         <httpWebPort>8080</httpWebPort>
         <httpsWebPort>8443</httpsWebPort>
-		<opencv>/usr/share/java</opencv><!--<opencv>C://Program Files/opencv/build/java</opencv>-->
         <!-- Jaeger configuration -->
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
-		<liberty.env.epf.config.url>https://localhost:9443/config/config/</liberty.env.epf.config.url>
-		<liberty.env.epf.script.url>https://localhost:9443/script/script/</liberty.env.epf.script.url>
-		<liberty.env.epf.file.url>https://localhost:9443/file/file/</liberty.env.epf.file.url>
-		<liberty.env.epf.image.url>https://localhost:9443/image/image/</liberty.env.epf.image.url>
-		<liberty.env.epf.rules.url>https://localhost:9443/rules/rules/</liberty.env.epf.rules.url>
-		<liberty.env.epf.planning.url>https://localhost:9443/planning/planning/</liberty.env.epf.planning.url>
-		<liberty.env.epf.persistence.url>https://localhost:9443/persistence/persistence/</liberty.env.epf.persistence.url>
-		<liberty.env.epf.schema.url>https://localhost:9443/persistence/schema/</liberty.env.epf.schema.url>
-		<liberty.env.epf.security.url>https://localhost:9443/persistence/security/</liberty.env.epf.security.url>
-        <liberty.env.epf.gateway.url>https://localhost:9443/gateway/</liberty.env.epf.gateway.url>
-        <liberty.env.epf.messaging.url>ws://localhost:9080/messaging/messaging/</liberty.env.epf.messaging.url>
-        <liberty.env.epf.lang.url>ws://localhost:9080/lang/lang/</liberty.env.epf.lang.url>
-        <liberty.env.epf.cache.url>https://localhost:9443/cache/cache/</liberty.env.epf.cache.url>
-        <liberty.env.epf.registry.url>https://localhost:9443/registry/registry/</liberty.env.epf.registry.url>
-		<liberty.env.epf.management.url>https://localhost:9443/management/management/</liberty.env.epf.management.url>
-		<liberty.env.epf.portlet.url>http://localhost:8080/pluto/portal/</liberty.env.epf.portlet.url>
-		<liberty.env.epf.webapp.url>https://localhost:9443/webapp/</liberty.env.epf.webapp.url>
-		<liberty.env.epf.tests.file.root>target/servers/test/epf.file.root</liberty.env.epf.tests.file.root>
-		<liberty.env.webdriver.chrome.driver>chromedriver.exe</liberty.env.webdriver.chrome.driver>
-		<liberty.env.webdriver.edge.driver>msedgedriver.exe</liberty.env.webdriver.edge.driver>
-		<liberty.env.webdriver.gecko.driver>/mnt/c/WSL/geckodriver</liberty.env.webdriver.gecko.driver>
-		<liberty.env.epf.shell.path>../EPF-shell/target/appassembler/bin</liberty.env.epf.shell.path>
+		<liberty.env.epf_config_url>https://localhost:9443/config/config/</liberty.env.epf_config_url>
+		<liberty.env.epf_script_url>https://localhost:9443/script/script/</liberty.env.epf_script_url>
+		<liberty.env.epf_file_url>https://localhost:9443/file/file/</liberty.env.epf_file_url>
+		<liberty.env.epf_image_url>https://localhost:9443/image/image/</liberty.env.epf_image_url>
+		<liberty.env.epf_rules_url>https://localhost:9443/rules/rules/</liberty.env.epf_rules_url>
+		<liberty.env.epf_planning_url>https://localhost:9443/planning/planning/</liberty.env.epf_planning_url>
+		<liberty.env.epf_persistence_url>https://localhost:9443/persistence/persistence/</liberty.env.epf_persistence_url>
+		<liberty.env.epf_schema_url>https://localhost:9443/persistence/schema/</liberty.env.epf_schema_url>
+		<liberty.env.epf_security_url>https://localhost:9443/persistence/security/</liberty.env.epf_security_url>
+        <liberty.env.epf_gateway_url>https://localhost:9443/gateway/</liberty.env.epf_gateway_url>
+        <liberty.env.epf_messaging_url>ws://localhost:9080/messaging/messaging/</liberty.env.epf_messaging_url>
+        <liberty.env.epf_lang_url>ws://localhost:9080/lang/lang/</liberty.env.epf_lang_url>
+        <liberty.env.epf_cache_url>https://localhost:9443/cache/cache/</liberty.env.epf_cache_url>
+        <liberty.env.epf_registry_url>https://localhost:9443/registry/registry/</liberty.env.epf_registry_url>
+		<liberty.env.epf_management_url>https://localhost:9443/management/management/</liberty.env.epf_management_url>
+		<liberty.env.epf_portlet_url>http://localhost:8080/pluto/portal/</liberty.env.epf_portlet_url>
+		<liberty.env.epf_webapp_url>https://localhost:9443/webapp/</liberty.env.epf_webapp_url>
+		<liberty.env.epf_tests_file_root>target/servers/test/epf.file.root</liberty.env.epf_tests_file_root>
+		<liberty.env.webdriver_chrome_driver>chromedriver.exe</liberty.env.webdriver_chrome_driver>
+		<liberty.env.webdriver_edge_driver>msedgedriver.exe</liberty.env.webdriver_edge_driver>
+		<liberty.env.webdriver_gecko_driver>/mnt/c/WSL/geckodriver</liberty.env.webdriver_gecko_driver>
+		<liberty.env.epf_shell_path>../EPF-shell/target/appassembler/bin</liberty.env.epf_shell_path>
     </properties>
     <dependencies>
 		<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
