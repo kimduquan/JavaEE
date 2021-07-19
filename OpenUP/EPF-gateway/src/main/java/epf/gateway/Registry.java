@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import epf.util.SystemUtil;
 import epf.util.client.Client;
 import epf.util.client.ClientQueue;
 
@@ -21,7 +22,7 @@ public class Registry {
 	/**
 	 * 
 	 */
-	private static final String REGISTRY_URL = System.getenv("epf.registry.url");
+	private static final String REGISTRY_URL = SystemUtil.getenv("epf.registry.url");
 	
 	/**
 	 * 

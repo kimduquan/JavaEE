@@ -26,6 +26,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
+
+import epf.util.SystemUtil;
 import epf.util.websocket.Client;
 
 /**
@@ -58,7 +60,7 @@ public class Stream {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI messagingUrl = new URI(System.getenv("epf.messaging.url"));
+			final URI messagingUrl = new URI(SystemUtil.getenv("epf.messaging.url"));
 			final WebSocketContainer container = ContainerProvider.getWebSocketContainer();
 			clients.put("persistence", Client.connectToServer(container, messagingUrl.resolve("persistence")));
 		} 
