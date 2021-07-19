@@ -39,6 +39,7 @@ import epf.tests.persistence.PersistenceUtil;
 import epf.tests.rules.RulesUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
+import epf.util.file.PathUtil;
 import epf.util.ProcessUtil;
 
 /**
@@ -358,7 +359,7 @@ public class ShellTest {
 	
 	@Test
 	public void testRules_Admin_Register() throws Exception {
-		Path ruleFile = Path.of("", "Artifact.drl");
+		Path ruleFile = PathUtil.of("", "Artifact.drl");
 		builder = ProcessUtil.command(builder, 
 				"./epf", 
 				"rules", "admin", "register",
@@ -376,7 +377,7 @@ public class ShellTest {
 	
 	@Test
 	public void testRules_Admin_Deregister() throws Exception {
-		RulesUtil.registerRuleExecutionSet(token, Path.of("", "Artifact.drl"), "Artifact1");
+		RulesUtil.registerRuleExecutionSet(token, PathUtil.of("", "Artifact.drl"), "Artifact1");
 		builder = ProcessUtil.command(builder, 
 				"./epf", 
 				"rules", "admin", "de-register",
@@ -392,7 +393,7 @@ public class ShellTest {
 	
 	@Test
 	public void testRules_Execute() throws Exception {
-		RulesUtil.registerRuleExecutionSet(token, Path.of("", "Artifact.drl"), "Artifact1");
+		RulesUtil.registerRuleExecutionSet(token, PathUtil.of("", "Artifact.drl"), "Artifact1");
 		builder = ProcessUtil.command(builder, 
 				"./epf", 
 				"rules", "execute",
@@ -421,7 +422,7 @@ public class ShellTest {
 	@Test
 	@Ignore
 	public void testRules_Registrations() throws Exception {
-		RulesUtil.registerRuleExecutionSet(token, Path.of("", "Artifact.drl"), "Artifact1");
+		RulesUtil.registerRuleExecutionSet(token, PathUtil.of("", "Artifact.drl"), "Artifact1");
 		builder = ProcessUtil.command(builder, 
 				"./epf", 
 				"rules", "registrations",
@@ -439,7 +440,7 @@ public class ShellTest {
 	
 	@Test
 	public void testImage_FindContours() throws Exception {
-		Path ruleFile = Path.of("", "board.jpg");
+		Path ruleFile = PathUtil.of("", "board.jpg");
 		builder = ProcessUtil.command(builder, 
 				"./epf", 
 				"image", "find-contours",
