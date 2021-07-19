@@ -13,7 +13,8 @@ import java.io.OutputStreamWriter;
 import java.util.Objects;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.StreamingOutput;
-import epf.util.IOUtil;
+
+import epf.util.io.IOUtil;
 
 /**
  *
