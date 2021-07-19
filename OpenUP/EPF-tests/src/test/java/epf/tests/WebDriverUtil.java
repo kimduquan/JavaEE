@@ -4,7 +4,9 @@
 package epf.tests;
 
 import org.openqa.selenium.WebDriver;
-import com.microsoft.edge.seleniumtools.EdgeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+
 import epf.client.portlet.Portlet;
 import epf.client.webapp.WebApp;
 import epf.util.logging.Logging;
@@ -27,7 +29,9 @@ public class WebDriverUtil {
 
 	@Produces @ApplicationScoped
 	public static WebDriver newWebDriver() {
-		return new EdgeDriver();
+		final FirefoxOptions options = new FirefoxOptions();
+		options.setHeadless(true);
+		return new FirefoxDriver(options);
 	}
 	
 	public static void close(@Disposes WebDriver webDriver) {
