@@ -11,6 +11,7 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.ws.rs.ForbiddenException;
@@ -77,7 +78,7 @@ public class FilesTest {
 		client = ClientUtil.newClient(filesUrl);
     	client.authorization(token);
     	tempFile = Files.createTempFile(tempDir, "", "");
-    	Files.writeString(tempFile, "this is a test");
+    	Files.write(tempFile, Arrays.asList("this is a test"));
 	}
 
 	/**

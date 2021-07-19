@@ -9,6 +9,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.json.bind.Jsonb;
@@ -65,7 +66,7 @@ public class ShellUtil {
 		System.out.println(String.join(" ", builder.command()));
 		final Process process = builder.start();
 		TestUtil.waitUntil(o -> process.isAlive(), Duration.ofSeconds(10));
-		Files.write(in, List.of(inputs), Charset.forName("UTF-8"));
+		Files.write(in, Arrays.asList(inputs), Charset.forName("UTF-8"));
 		process.waitFor(20, TimeUnit.SECONDS);
 		return process;
 	}
