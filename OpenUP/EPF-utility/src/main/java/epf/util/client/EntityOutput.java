@@ -11,9 +11,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Objects;
-
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.StreamingOutput;
+import epf.util.IOUtil;
 
 /**
  *
@@ -38,7 +38,7 @@ public class EntityOutput implements StreamingOutput {
     public void write(final OutputStream output) throws IOException, WebApplicationException {
         try(InputStreamReader reader = new InputStreamReader(input)){
             try(OutputStreamWriter writer = new OutputStreamWriter(output)){
-                reader.transferTo(writer);
+                IOUtil.transferTo(reader, writer);
             }
         }
         input.close();
