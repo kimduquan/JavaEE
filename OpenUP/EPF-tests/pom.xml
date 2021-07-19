@@ -249,7 +249,7 @@
                         <epf.webapp.url>https://localhost:${httpsPort}/webapp/</epf.webapp.url>
                         <epf.portlet.url>http://localhost:8080/pluto/portal/</epf.portlet.url>
                         <epf.tests.file.root>target/servers/test/epf.file.root</epf.tests.file.root>
-                        <webdriver.gecko.driver>~/geckodriver</webdriver.gecko.driver>
+                        <webdriver.gecko.driver>geckodriver</webdriver.gecko.driver>
                         <epf.shell.path>../EPF-shell/target/appassembler/bin</epf.shell.path>
                     </systemPropertyVariables>
                 </configuration>
