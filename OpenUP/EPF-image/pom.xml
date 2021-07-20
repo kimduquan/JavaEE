@@ -31,12 +31,12 @@
             <artifactId>EPF-client</artifactId>
             <version>1.0.0</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
 		    <groupId>openup</groupId>
 		    <artifactId>opencv</artifactId>
 		    <version>4.2.0</version>
 		    <scope>system</scope>
 			<systemPath>/usr/share/java/opencv-420.jar</systemPath>
-		</dependency>
+		</dependency>-->
     </dependencies>
 </project>

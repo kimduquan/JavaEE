@@ -12,6 +12,11 @@ import java.util.List;
  *
  */
 public interface ProcessUtil {
+	
+	/**
+	 * 
+	 */
+	String COMMAND = SystemUtil.OS_NAME.contains("Windows") ? "powershell" : "bash";
 
 	/**
 	 * @param builder
@@ -20,7 +25,7 @@ public interface ProcessUtil {
 	 */
 	static ProcessBuilder command(final ProcessBuilder builder, final String...command) {
 		final List<String> cmd = new ArrayList<>();
-		cmd.add("bash");
+		cmd.add(COMMAND);
 		cmd.addAll(Arrays.asList(command));
 		return builder.command(cmd);
 	}

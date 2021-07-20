@@ -8,6 +8,11 @@ package epf.util;
  *
  */
 public interface SystemUtil {
+	
+	/**
+	 * 
+	 */
+	String OS_NAME = System.getProperty("os.name");
 
 	/**
 	 * @param name
