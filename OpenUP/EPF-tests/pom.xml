@@ -353,7 +353,7 @@
 			<id>Linux</id>
 			<activation>
 				<os>
-					<family>Linux</family>
+					<name>Linux</name>
 				</os>
 			</activation>
 			<properties>

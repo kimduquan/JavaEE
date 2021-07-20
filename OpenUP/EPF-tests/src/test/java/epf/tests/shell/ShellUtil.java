@@ -28,7 +28,7 @@ public class ShellUtil {
 	/**
 	 * 
 	 */
-	private static final String COMMAND = System.getProperty("command");
+	private static final String COMMAND = System.getProperty("epf.tests.shell.command");
 	
 	/**
 	 * 
