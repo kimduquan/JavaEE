@@ -79,8 +79,8 @@
     </library>
     
     <library id="OpenCVLib">
-        <file name="/usr/share/java/opencv-420.jar"/>
-        <file name="/usr/lib/x86_64-linux-gnu/libopencv_core.so"/>
+        <file name="${opencv_java}"/>
+        <file name="${opencv_core}"/>
     </library>
     
     <!-- uri="file://${server.config.dir}hazelcast.xml" -->

@@ -40,7 +40,6 @@ import epf.tests.rules.RulesUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
 import epf.util.file.PathUtil;
-import epf.util.ProcessUtil;
 
 /**
  * @author PC
@@ -130,7 +129,7 @@ public class ShellTest {
 
 	@Test
 	public void testSecurity_Login() throws IOException, InterruptedException {
-		builder = ProcessUtil.command(builder, "./epf", "security", "login", "-u", "any_role1", "-p");
+		builder = ShellUtil.command(builder, "./epf", "security", "login", "-u", "any_role1", "-p");
 		process = builder.start();
 		ShellUtil.waitFor(builder, in, "any_role");
 		List<String> lines = Files.readAllLines(out);
@@ -146,7 +145,7 @@ public class ShellTest {
 	@Test(expected = NotAuthorizedException.class)
 	public void testSecurity_Logout() throws Exception {
 		String newToken = SecurityUtil.login("any_role1", "any_role");
-		builder = ProcessUtil.command(builder, "./epf", "security", "logout", "-t", newToken);
+		builder = ShellUtil.command(builder, "./epf", "security", "logout", "-t", newToken);
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(2, lines.size());
@@ -158,7 +157,7 @@ public class ShellTest {
 	
 	@Test
 	public void testSecurity_Auth() throws Exception {
-		builder = ProcessUtil.command(builder, "./epf", "security", "auth", "-t", token);
+		builder = ShellUtil.command(builder, "./epf", "security", "auth", "-t", token);
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(2, lines.size());
@@ -173,7 +172,7 @@ public class ShellTest {
 	
 	@Test
 	public void testSecurity_UpdatePassword() throws InterruptedException, IOException {
-		builder = ProcessUtil.command(builder, "./epf", "security", "update", "-tid", tokenID, "-p");
+		builder = ShellUtil.command(builder, "./epf", "security", "update", "-tid", tokenID, "-p");
 		process = ShellUtil.waitFor(builder, in, "any_role");
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(1, lines.size());
@@ -182,7 +181,7 @@ public class ShellTest {
 	@Test
 	public void testSecurity_Revoke() throws InterruptedException, IOException {
 		String token = SecurityUtil.login("any_role1", "any_role");
-		builder = ProcessUtil.command(builder, "./epf", "security", "revoke", "-t", token);
+		builder = ShellUtil.command(builder, "./epf", "security", "revoke", "-t", token);
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(2, lines.size());
@@ -204,7 +203,7 @@ public class ShellTest {
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
         
-        builder = ProcessUtil.command(builder, "./epf", "persistence", "persist", "-tid", adminTokenID, "-n", EPF.ARTIFACT, "-e");
+        builder = ShellUtil.command(builder, "./epf", "persistence", "persist", "-tid", adminTokenID, "-n", EPF.ARTIFACT, "-e");
 		process = builder.start();
 		TestUtil.waitUntil(o -> process.isAlive(), Duration.ofSeconds(10));
 		ShellUtil.writeJson(in, artifact);
@@ -235,7 +234,7 @@ public class ShellTest {
         artifact.setTailoring(new Tailoring());
         PersistenceUtil.persist(adminToken, Artifact.class, EPF.ARTIFACT, artifact);
     	
-        builder = ProcessUtil.command(builder, "./epf", "persistence", "merge", "-tid", adminTokenID, "-n", EPF.ARTIFACT, "-i", artifact.getName(), "-e");
+        builder = ShellUtil.command(builder, "./epf", "persistence", "merge", "-tid", adminTokenID, "-n", EPF.ARTIFACT, "-i", artifact.getName(), "-e");
 		process = builder.start();
 		TestUtil.waitUntil(o -> process.isAlive(), Duration.ofSeconds(10));
         Artifact updatedArtifact = new Artifact();
@@ -266,7 +265,7 @@ public class ShellTest {
         artifact.setTailoring(new Tailoring());
         PersistenceUtil.persist(adminToken, Artifact.class, EPF.ARTIFACT, artifact);
     	
-        builder = ProcessUtil.command(builder, "./epf", "persistence", "remove", "-tid", adminTokenID, "-n", EPF.ARTIFACT, "-i", artifact.getName());
+        builder = ShellUtil.command(builder, "./epf", "persistence", "remove", "-tid", adminTokenID, "-n", EPF.ARTIFACT, "-i", artifact.getName());
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(1, lines.size());
@@ -276,7 +275,7 @@ public class ShellTest {
 	
 	@Test
 	public void testSchema_GetEntities() throws Exception {
-		builder = ProcessUtil.command(builder, "./epf", "schema", "entities", "-tid", tokenID);
+		builder = ShellUtil.command(builder, "./epf", "schema", "entities", "-tid", tokenID);
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(2, lines.size());
@@ -292,7 +291,7 @@ public class ShellTest {
 		Path file = Files.createTempFile("file", ".in");
 		Files.write(file, Arrays.asList("this is a test"));
 		Path path = PathUtil.of("any_role1", "this", "is", "a", "test");
-		builder = ProcessUtil.command(builder, 
+		builder = ShellUtil.command(builder, 
 				"./epf", 
 				"file", "create", 
 				"-tid", tokenID, 
@@ -313,7 +312,7 @@ public class ShellTest {
 		Files.write(file, Arrays.asList("this is a test"));
 		Path path = PathUtil.of("any_role1", "this", "is", "a", "test");
 		String createdFile = FileUtil.createFile(token, file, path);
-		builder = ProcessUtil.command(builder, 
+		builder = ShellUtil.command(builder, 
 				"./epf", 
 				"file", "delete", 
 				"-tid", tokenID, 
@@ -334,7 +333,7 @@ public class ShellTest {
 		Path path = PathUtil.of("any_role1", "this", "is", "a", "test");
 		String createdFile = FileUtil.createFile(token, file, path);
 		Path output = Files.createTempFile("file", ".out");
-		builder = ProcessUtil.command(builder, 
+		builder = ShellUtil.command(builder, 
 				"./epf", 
 				"file", "read", 
 				"-tid", tokenID, 
@@ -360,7 +359,7 @@ public class ShellTest {
 	@Test
 	public void testRules_Admin_Register() throws Exception {
 		Path ruleFile = PathUtil.of("", "Artifact.drl");
-		builder = ProcessUtil.command(builder, 
+		builder = ShellUtil.command(builder, 
 				"./epf", 
 				"rules", "admin", "register",
 				"-tid", tokenID,
@@ -378,7 +377,7 @@ public class ShellTest {
 	@Test
 	public void testRules_Admin_Deregister() throws Exception {
 		RulesUtil.registerRuleExecutionSet(token, PathUtil.of("", "Artifact.drl"), "Artifact1");
-		builder = ProcessUtil.command(builder, 
+		builder = ShellUtil.command(builder, 
 				"./epf", 
 				"rules", "admin", "de-register",
 				"-tid", tokenID,
@@ -394,7 +393,7 @@ public class ShellTest {
 	@Test
 	public void testRules_Execute() throws Exception {
 		RulesUtil.registerRuleExecutionSet(token, PathUtil.of("", "Artifact.drl"), "Artifact1");
-		builder = ProcessUtil.command(builder, 
+		builder = ShellUtil.command(builder, 
 				"./epf", 
 				"rules", "execute",
 				"-tid", tokenID,
@@ -423,7 +422,7 @@ public class ShellTest {
 	@Ignore
 	public void testRules_Registrations() throws Exception {
 		RulesUtil.registerRuleExecutionSet(token, PathUtil.of("", "Artifact.drl"), "Artifact1");
-		builder = ProcessUtil.command(builder, 
+		builder = ShellUtil.command(builder, 
 				"./epf", 
 				"rules", "registrations",
 				"-tid", tokenID
@@ -441,7 +440,7 @@ public class ShellTest {
 	@Test
 	public void testImage_FindContours() throws Exception {
 		Path ruleFile = PathUtil.of("", "board.jpg");
-		builder = ProcessUtil.command(builder, 
+		builder = ShellUtil.command(builder, 
 				"./epf", 
 				"image", "find-contours",
 				"-tid", tokenID,

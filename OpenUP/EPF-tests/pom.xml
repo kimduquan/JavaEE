@@ -247,10 +247,11 @@
                         <epf.lang.url>ws://localhost:9080/lang/lang/</epf.lang.url>
                         <epf.cache.url>https://localhost:${httpsPort}/cache/cache/</epf.cache.url>
                         <epf.webapp.url>https://localhost:${httpsPort}/webapp/</epf.webapp.url>
-                        <epf.portlet.url>http://localhost:8080/pluto/portal/</epf.portlet.url>
-                        <epf.tests.file.root>target/servers/test/epf.file.root</epf.tests.file.root>
-                        <webdriver.gecko.driver>geckodriver</webdriver.gecko.driver>
+                        <epf.portlet.url>http://localhost:${httpWebPort}/pluto/portal/</epf.portlet.url>
                         <epf.shell.path>../EPF-shell/target/appassembler/bin</epf.shell.path>
+                        <webdriver.gecko.driver>${geckodriver}</webdriver.gecko.driver>
+                        <epf.tests.file.root>target/servers/test/epf.file.root</epf.tests.file.root>
+                        <epf.tests.shell.command>${command}</epf.tests.shell.command>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
@@ -347,4 +348,34 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+		<profile>
+			<id>Linux</id>
+			<activation>
+				<os>
+					<family>Linux</family>
+				</os>
+			</activation>
+			<properties>
+        		<geckodriver>geckodriver</geckodriver>
+        		<command>bash</command>
+        		<opencv_java>/usr/share/java/opencv-420.jar</opencv_java>
+        		<opencv_core>/usr/lib/x86_64-linux-gnu/libopencv_core.so</opencv_core>
+			</properties>
+		</profile>
+		<profile>
+			<id>Windows</id>
+			<activation>
+				<os>
+					<name>Windows</name>
+				</os>
+			</activation>
+			<properties>
+        		<geckodriver>geckodriver.exe</geckodriver>
+        		<command>powershell</command>
+        		<opencv_java>C://Program Files/opencv/build/java/opencv-452.jar</opencv_java>
+        		<opencv_core>C://Program Files/opencv/build/java/x64/opencv_java452.dll</opencv_core>
+			</properties>
+		</profile>
+	</profiles>
 </project>
