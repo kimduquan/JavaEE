@@ -37,7 +37,7 @@
 			<id>Linux</id>
 			<activation>
 				<os>
-					<family>Linux</family>
+					<name>linux</name>
 				</os>
 			</activation>
 			<dependencies>
