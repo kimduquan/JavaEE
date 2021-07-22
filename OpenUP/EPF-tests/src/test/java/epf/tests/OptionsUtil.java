@@ -4,7 +4,6 @@
 package epf.tests;
 
 import java.io.File;
-import java.util.Properties;
 import java.util.logging.Level;
 import org.openqa.selenium.firefox.FirefoxDriverLogLevel;
 import org.openqa.selenium.firefox.FirefoxOptions;
@@ -42,10 +41,10 @@ public class OptionsUtil {
 			options.setProfile(new FirefoxProfile(new File(profile)));
 		}
 		
-		final Properties props = System.getProperties();
-		props.entrySet().parallelStream()
-		.filter(prop -> prop.getKey().toString().startsWith("webdriver.options.prefs."))
-		.forEach(prop -> options.addPreference(prop.getKey().toString(), prop.getValue().toString()));
+//		final Properties props = System.getProperties();
+//		props.entrySet().parallelStream()
+//		.filter(prop -> prop.getKey().toString().startsWith("webdriver.options.prefs."))
+//		.forEach(prop -> options.addPreference(prop.getKey().toString(), prop.getValue().toString()));
 		return options;
 	}
 }

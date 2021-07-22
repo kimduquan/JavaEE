@@ -252,8 +252,7 @@
                         <webdriver.gecko.driver>${geckodriver}</webdriver.gecko.driver>
                         <epf.tests.file.root>target/servers/test/epf.file.root</epf.tests.file.root>
                         <epf.tests.shell.command>${command}</epf.tests.shell.command>
-                        <webdriver.timeouts.implicitlyWait.time>60</webdriver.timeouts.implicitlyWait.time>
-                        <webdriver.timeouts.implicitlyWait.unit>seconds</webdriver.timeouts.implicitlyWait.unit>
+                        <webdriver.timeouts.implicit>60</webdriver.timeouts.implicit>
                         <webdriver.firefox.headless>true</webdriver.firefox.headless>
                     </systemPropertyVariables>
                 </configuration>

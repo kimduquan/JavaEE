@@ -43,25 +43,22 @@ public class WebDriverUtil {
 		//System.setProperty("webdriver.gecko.driver", "C:\\GIT\\JavaEE\\OpenUP\\EPF-tests\\geckodriver.exe");
 		final WebDriver driver = new FirefoxDriver(options);
 		
-		final String implicitlyWaitTime = System.getProperty("webdriver.timeouts.implicitlyWait.time");
-		final String implicitlyWaitUnit = System.getProperty("webdriver.timeouts.implicitlyWait.unit");
-		if(implicitlyWaitTime != null && implicitlyWaitUnit != null) {
+		final String implicit = System.getProperty("webdriver.timeouts.implicit");
+		if(implicit != null) {
 			driver.manage().timeouts()
-			.implicitlyWait(Long.valueOf(implicitlyWaitTime), TimeUnit.valueOf(implicitlyWaitUnit.toUpperCase()));
+			.implicitlyWait(Long.valueOf(implicit), TimeUnit.SECONDS);
 		}
 		
-		final String pageLoadTimeoutTime = System.getProperty("webdriver.timeouts.pageLoadTimeout.time");
-		final String pageLoadTimeoutUnit = System.getProperty("webdriver.timeouts.pageLoadTimeout.unit");
-		if(pageLoadTimeoutTime != null && pageLoadTimeoutUnit != null) {
+		final String pageLoad = System.getProperty("webdriver.timeouts.pageLoad");
+		if(pageLoad != null) {
 			driver.manage().timeouts()
-			.pageLoadTimeout(Long.valueOf(pageLoadTimeoutTime), TimeUnit.valueOf(pageLoadTimeoutUnit.toUpperCase()));
+			.pageLoadTimeout(Long.valueOf(pageLoad), TimeUnit.SECONDS);
 		}
 		
-		final String scriptTimeoutTime = System.getProperty("webdriver.timeouts.scriptTimeout.time");
-		final String scriptTimeoutUnit = System.getProperty("webdriver.timeouts.scriptTimeout.unit");
-		if(scriptTimeoutTime != null && scriptTimeoutUnit != null) {
+		final String script = System.getProperty("webdriver.timeouts.script");
+		if(script != null) {
 			driver.manage().timeouts()
-			.setScriptTimeout(Long.valueOf(scriptTimeoutTime), TimeUnit.valueOf(scriptTimeoutUnit.toUpperCase()));
+			.setScriptTimeout(Long.valueOf(script), TimeUnit.SECONDS);
 		}
 		return driver;
 	}
