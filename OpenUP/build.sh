@@ -1,4 +1,5 @@
 git pull
+git clean -f -d
 ./copy_dependency.sh
 ./startup.sh
 export JAVA_HOME=~/graalvm-ce-java11-21.1.0
