@@ -45,6 +45,7 @@ public class Shell {
 	protected void postConstruct() {
 		commandLine = new CommandLine(EPFCommand.class, factory);
 		commandLine.registerConverter(Path.class, pathConverter);
+		commandLine.setTrimQuotes(true);
 	}
 	
 	/**
