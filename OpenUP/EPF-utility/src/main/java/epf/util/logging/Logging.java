@@ -1,6 +1,7 @@
 package epf.util.logging;
 
 import java.io.Serializable;
+import java.net.URL;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -57,5 +58,18 @@ public class Logging implements Serializable {
 		return LOGGERS.computeIfAbsent(clsName, name -> {
 			return Logger.getLogger(name);
 		});
+	}
+	
+	/**
+	 * @param cls
+	 */
+	public static void config(final Class<?> cls) {
+		final String configFile = System.getProperty("java.util.logging.config.file");
+		if(configFile == null) {
+			final URL config = cls.getClassLoader().getResource("logging.properties");
+			if(config != null) {
+				System.setProperty("java.util.logging.config.file", config.getFile());
+			}
+		}
 	}
 }
