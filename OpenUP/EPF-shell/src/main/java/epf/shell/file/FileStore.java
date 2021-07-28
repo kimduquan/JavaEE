@@ -87,13 +87,13 @@ public class FileStore {
 			@Option(names = {"-p", "--path"}, description = "Path")
 			final Path path,
 			@Option(names = {"-o", "--output"}, description = "Output")
-			final Path output
+			final File output
 			) throws Exception {
 		try(Client client = clientUtil.newClient(fileUrl.get())){
 			client.authorization(credential.getToken());
 			try(InputStream stream = epf.client.file.Files.read(client, path)){
 				try(InputStreamReader reader = new InputStreamReader(stream)){
-					try(BufferedWriter writer = Files.newBufferedWriter(output)){
+					try(BufferedWriter writer = Files.newBufferedWriter(output.toPath())){
 						IOUtil.transferTo(reader, writer);
 						writer.flush();
 					}
