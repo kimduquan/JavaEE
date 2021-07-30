@@ -27,6 +27,7 @@ import epf.client.planning.Planning;
 import epf.client.rules.Rules;
 import epf.client.schema.Schema;
 import epf.client.security.Security;
+import epf.util.SystemUtil;
 
 /**
  * @author PC
@@ -66,49 +67,49 @@ public class Registry implements epf.client.registry.Registry {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI gatewayUrl = new URI(System.getenv(Gateway.GATEWAY_URL));
+			final URI gatewayUrl = new URI(SystemUtil.getenv(Gateway.GATEWAY_URL));
 			String remote = "file";
-			final URI fileUrl = new URI(System.getenv(Files.FILE_URL));
+			final URI fileUrl = new URI(SystemUtil.getenv(Files.FILE_URL));
 			remotes.put(remote, fileUrl);
-			final URI persistenceUrl = new URI(System.getenv(Persistence.PERSISTENCE_URL));
+			final URI persistenceUrl = new URI(SystemUtil.getenv(Persistence.PERSISTENCE_URL));
 			remote = "persistence";
 			remotes.put(remote, persistenceUrl);
-			final URI securityUrl = new URI(System.getenv(Security.SECURITY_URL));
+			final URI securityUrl = new URI(SystemUtil.getenv(Security.SECURITY_URL));
 			remote = "security";
 			remotes.put(remote, securityUrl);
 			remote = "stream";
 			remotes.put(remote, gatewayUrl.resolve(remote));
-			final URI registryUrl = new URI(System.getenv(Registry.REGISTRY_URL));
+			final URI registryUrl = new URI(SystemUtil.getenv(Registry.REGISTRY_URL));
 			remote = "registry";
 			remotes.put(remote, registryUrl);
-			final URI messagingUrl = new URI(System.getenv(Messaging.MESSAGING_URL));
+			final URI messagingUrl = new URI(SystemUtil.getenv(Messaging.MESSAGING_URL));
 			remote = "messaging";
 			remotes.put(remote, messagingUrl);
-			final URI cacheUrl = new URI(System.getenv(Cache.CACHE_URL));
+			final URI cacheUrl = new URI(SystemUtil.getenv(Cache.CACHE_URL));
 			remote = "cache";
 			remotes.put(remote, cacheUrl);
-			final URI configUrl = new URI(System.getenv(Config.CONFIG_URL));
+			final URI configUrl = new URI(SystemUtil.getenv(Config.CONFIG_URL));
 			remote = "config";
 			remotes.put(remote, configUrl);
-			final URI scriptUrl = new URI(System.getenv(Script.SCRIPT_URL));
+			final URI scriptUrl = new URI(SystemUtil.getenv(Script.SCRIPT_URL));
 			remote = "script";
 			remotes.put(remote, scriptUrl);
-			final URI managementUrl = new URI(System.getenv(Management.MANAGEMENT_URL));
+			final URI managementUrl = new URI(SystemUtil.getenv(Management.MANAGEMENT_URL));
 			remote = "management";
 			remotes.put(remote, managementUrl);
-			final URI rulesUrl = new URI(System.getenv(Rules.RULES_URL));
+			final URI rulesUrl = new URI(SystemUtil.getenv(Rules.RULES_URL));
 			remote = "rules";
 			remotes.put(remote, rulesUrl);
-			final URI schemaUrl = new URI(System.getenv(Schema.SCHEMA_URL));
+			final URI schemaUrl = new URI(SystemUtil.getenv(Schema.SCHEMA_URL));
 			remote = "schema";
 			remotes.put(remote, schemaUrl);
-			final URI planningUrl = new URI(System.getenv(Planning.PLANNING_URL));
+			final URI planningUrl = new URI(SystemUtil.getenv(Planning.PLANNING_URL));
 			remote = "planning";
 			remotes.put(remote, planningUrl);
-			final URI imageUrl = new URI(System.getenv(Image.IMAGE_URL));
+			final URI imageUrl = new URI(SystemUtil.getenv(Image.IMAGE_URL));
 			remote = "image";
 			remotes.put(remote, imageUrl);
-			final URI langUrl = new URI(System.getenv(Lang.LANG_URL));
+			final URI langUrl = new URI(SystemUtil.getenv(Lang.LANG_URL));
 			remote = "lang";
 			remotes.put(remote, langUrl);
 		} 

@@ -13,17 +13,22 @@
         <!-- Jaeger configuration -->
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
-		<liberty.env.epf.config.url>https://localhost/config/config/</liberty.env.epf.config.url>
-		<liberty.env.epf.script.url>https://localhost/script/script/</liberty.env.epf.script.url>
-		<liberty.env.epf.file.url>https://localhost/file/file/</liberty.env.epf.file.url>
-		<liberty.env.epf.persistence.url>https://localhost/persistence/persistence/</liberty.env.epf.persistence.url>
-		<liberty.env.epf.security.url>https://localhost/persistence/security/</liberty.env.epf.security.url>
-		<liberty.env.epf.gateway.url>https://localhost/gateway/</liberty.env.epf.gateway.url>
-		<liberty.env.epf.messaging.url>ws://localhost/messaging/messaging/</liberty.env.epf.messaging.url>
-		<liberty.env.epf.cache.url>https://localhost/cache/cache/</liberty.env.epf.cache.url>
-        <liberty.env.epf.registry.url>https://localhost/registry/registry/</liberty.env.epf.registry.url>
-		<liberty.env.epf.management.url>https://localhost/management/management/</liberty.env.epf.management.url>
-		<liberty.env.epf.webapp.url>https://localhost/webapp/</liberty.env.epf.webapp.url>
+		<liberty.env.epf_config_url>https://localhost/config/config/</liberty.env.epf_config_url>
+		<liberty.env.epf_script_url>https://localhost/script/script/</liberty.env.epf_script_url>
+		<liberty.env.epf_file_url>https://localhost/file/file/</liberty.env.epf_file_url>
+		<liberty.env.epf_image_url>https://localhost/image/image/</liberty.env.epf_image_url>
+		<liberty.env.epf_rules_url>https://localhost/rules/rules/</liberty.env.epf_rules_url>
+		<liberty.env.epf_planning_url>https://localhost/planning/planning/</liberty.env.epf_planning_url>
+		<liberty.env.epf_persistence_url>https://localhost/persistence/persistence/</liberty.env.epf_persistence_url>
+		<liberty.env.epf_schema_url>https://localhost/persistence/schema/</liberty.env.epf_schema_url>
+		<liberty.env.epf_security_url>https://localhost/persistence/security/</liberty.env.epf_security_url>
+		<liberty.env.epf_gateway_url>https://localhost/gateway/</liberty.env.epf_gateway_url>
+		<liberty.env.epf_messaging_url>ws://localhost/messaging/messaging/</liberty.env.epf_messaging_url>
+		<liberty.env.epf_lang_url>ws://localhost/lang/lang/</liberty.env.epf_lang_url>
+		<liberty.env.epf_cache_url>https://localhost/cache/cache/</liberty.env.epf_cache_url>
+		<liberty.env.epf_registry_url>https://localhost/registry/registry/</liberty.env.epf_registry_url>
+		<liberty.env.epf_management_url>https://localhost/management/management/</liberty.env.epf_management_url>
+		<liberty.env.epf_webapp_url>https://localhost/webapp/</liberty.env.epf_webapp_url>
     </properties>
     <dependencies>
 		<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
@@ -35,11 +40,6 @@
         <dependency>
             <groupId>com.hazelcast</groupId>
             <artifactId>hazelcast</artifactId>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/javax.cache/cache-api -->
-        <dependency>
-            <groupId>javax.cache</groupId>
-            <artifactId>cache-api</artifactId>
         </dependency>
         <dependency>
             <groupId>openup</groupId>
@@ -70,6 +70,12 @@
             <version>1.0.0</version>
             <type>war</type>
         </dependency>
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-lang</artifactId>
+            <version>1.0.0</version>
+            <type>war</type>
+        </dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-cache</artifactId>
@@ -79,6 +85,24 @@
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-file</artifactId>
+            <version>1.0.0</version>
+            <type>war</type>
+        </dependency>
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-image</artifactId>
+            <version>1.0.0</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-rules</artifactId>
+            <version>1.0.0</version>
+            <type>war</type>
+        </dependency>
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-planning</artifactId>
             <version>1.0.0</version>
             <type>war</type>
         </dependency>
@@ -112,12 +136,6 @@
             <version>1.0.0</version>
             <type>war</type>
         </dependency>
-        <!--<dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-shell</artifactId>
-            <version>1.0.0</version>
-            <type>jar</type>
-        </dependency>-->
 		<dependency>
 			<groupId>com.liferay.faces</groupId>
 			<artifactId>com.liferay.faces.bridge.api</artifactId>
@@ -154,16 +172,16 @@
 					<copyDependencies>
 						<location>${project.build.directory}/shared/resources/epf/</location>
 						<dependency>
-						    <groupId>com.h2database</groupId>
-						    <artifactId>h2</artifactId>
+							<groupId>com.h2database</groupId>
+							<artifactId>h2</artifactId>
 						</dependency>
 						<dependency>
-						    <groupId>com.hazelcast</groupId>
-						    <artifactId>hazelcast</artifactId>
+							<groupId>com.hazelcast</groupId>
+							<artifactId>hazelcast</artifactId>
 						</dependency>
 						<!--<dependency>
-						    <groupId>javax.cache</groupId>
-						    <artifactId>cache-api</artifactId>
+							<groupId>javax.cache</groupId>
+							<artifactId>cache-api</artifactId>
 						</dependency>
 						<dependency>
 							<groupId>com.liferay.faces</groupId>
