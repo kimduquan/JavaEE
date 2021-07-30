@@ -1,3 +1,3 @@
-export JAVA_HOME=~/graalvm-ee-java8-21.2.0
+export JAVA_HOME=~/jdk8u292-b10
 cd EPF-tests
 mvn liberty:dev
