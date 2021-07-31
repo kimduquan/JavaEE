@@ -6,9 +6,12 @@ package openup.roles;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.ws.rs.Path;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import epf.schema.roles.RoleSet;
 import openup.client.OpenUPException;
+import openup.client.PersistenceUtil;
 import openup.schema.roles.Role;
 
 /**
@@ -19,11 +22,17 @@ import openup.schema.roles.Role;
 @RolesAllowed(openup.client.roles.Roles.ANY_ROLE)
 @RequestScoped
 public class Roles implements openup.client.roles.Roles {
+	
+	/**
+	 * 
+	 */
+	@Inject
+	@RestClient
+	private transient PersistenceUtil persistence;
 
 	@Override
 	public List<RoleSet> getRoles() {
-		// TODO Auto-generated method stub
-		return null;
+		return persistence.getRoleSets();
 	}
 
 	@Override
