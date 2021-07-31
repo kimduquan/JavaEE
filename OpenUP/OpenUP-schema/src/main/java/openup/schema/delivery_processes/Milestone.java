@@ -16,7 +16,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-
 import openup.schema.OpenUP;
 
 /**
@@ -39,7 +38,7 @@ public class Milestone implements Serializable {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long milestoneId;
+    private Long id;
     
     /**
      * 
@@ -60,14 +59,6 @@ public class Milestone implements Serializable {
     @ManyToOne
     @JoinColumn(name = "PREDECESSOR")
     private Iteration predecessor;
-
-    public Long getMilestoneId() {
-        return milestoneId;
-    }
-
-    public void setMilestoneId(final Long milestoneId) {
-        this.milestoneId = milestoneId;
-    }
 
     public epf.schema.delivery_processes.Milestone getMilestone() {
         return milestone;
@@ -92,4 +83,12 @@ public class Milestone implements Serializable {
     public void setPredecessor(final Iteration predecessor) {
         this.predecessor = predecessor;
     }
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(final Long id) {
+		this.id = id;
+	}
 }

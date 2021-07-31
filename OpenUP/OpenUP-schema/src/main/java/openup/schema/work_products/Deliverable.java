@@ -4,18 +4,25 @@
 package openup.schema.work_products;
 
 import java.io.Serializable;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
-import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import org.eclipse.microprofile.graphql.Type;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import openup.schema.OpenUP;
 
 /**
  * @author PC
  *
  */
+@Type(OpenUP.DELIVERABLE)
+@Schema(name = OpenUP.DELIVERABLE, title = "Deliverable")
+@Entity(name = OpenUP.DELIVERABLE)
+@Table(schema = OpenUP.SCHEMA, name = "OPENUP_DELIVERABLE")
 public class Deliverable implements Serializable {
 
 	/**
@@ -28,7 +35,7 @@ public class Deliverable implements Serializable {
 	 */
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long deliverableId;
+    private Long id;
 	
 	/**
 	 * 
@@ -36,22 +43,6 @@ public class Deliverable implements Serializable {
 	@ManyToOne
     @JoinColumn(name = "DELIVERABLE")
     private epf.schema.work_products.Deliverable deliverable;
-	
-	/**
-	 * 
-	 */
-	@OneToOne
-    @MapsId
-    @JoinColumn(name = "ARTIFACT")
-	private Artifact artifact;
-
-	public Long getDeliverableId() {
-		return deliverableId;
-	}
-
-	public void setDeliverableId(final Long deliverableId) {
-		this.deliverableId = deliverableId;
-	}
 
 	public epf.schema.work_products.Deliverable getDeliverable() {
 		return deliverable;
@@ -60,12 +51,12 @@ public class Deliverable implements Serializable {
 	public void setDeliverable(final epf.schema.work_products.Deliverable deliverable) {
 		this.deliverable = deliverable;
 	}
-	
-	public Artifact getArtifact() {
-		return artifact;
+
+	public Long getId() {
+		return id;
 	}
 
-	public void setArtifact(final Artifact artifact) {
-		this.artifact = artifact;
+	public void setId(final Long id) {
+		this.id = id;
 	}
 }

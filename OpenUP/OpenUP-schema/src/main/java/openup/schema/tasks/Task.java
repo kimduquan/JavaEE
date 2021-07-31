@@ -16,7 +16,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-
 import openup.schema.OpenUP;
 
 /**
@@ -39,7 +38,7 @@ public class Task implements Serializable {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long taskId;
+    private Long id;
     
     /**
      * 
@@ -59,14 +58,6 @@ public class Task implements Serializable {
      */
     @Column(name = "SUMMARY")
     private String summary;
-
-    public Long getTaskId() {
-        return taskId;
-    }
-
-    public void setTaskId(final Long taskId) {
-        this.taskId = taskId;
-    }
 
     public epf.schema.tasks.Task getTask() {
         return task;
@@ -91,4 +82,12 @@ public class Task implements Serializable {
     public void setSummary(final String summary) {
         this.summary = summary;
     }
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(final Long id) {
+		this.id = id;
+	}
 }

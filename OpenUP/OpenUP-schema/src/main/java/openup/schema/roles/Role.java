@@ -7,7 +7,10 @@ package openup.schema.roles;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Index;
@@ -17,7 +20,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-
 import openup.schema.OpenUP;
 
 /**
@@ -46,13 +48,19 @@ public class Role implements Serializable {
      */
     @ManyToMany
     @JoinTable(
-    		name = "OPENUP_ROLES",
-    		schema = OpenUP.SCHEMA,
-    		joinColumns = {@JoinColumn(name = "NAME")},
-    		inverseJoinColumns = {@JoinColumn(name = "ROLE")},
-    		indexes = {@Index(columnList = "NAME")}
-    		)
+            name = "OPENUP_ROLE_SET",
+            schema = OpenUP.SCHEMA,
+            joinColumns = @JoinColumn(name = "NAME"),
+            inverseJoinColumns = @JoinColumn(name = "ROLE"),
+            indexes = {@Index(columnList = "NAME")}
+    )
     private List<epf.schema.roles.Role> roles;
+    
+    /**
+     * 
+     */
+    @ElementCollection
+    private Map<String, String> claims = new ConcurrentHashMap<>();
     
     /**
      * 
@@ -68,19 +76,27 @@ public class Role implements Serializable {
 		this.name = name;
 	}
 
-	public List<epf.schema.roles.Role> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(final List<epf.schema.roles.Role> roles) {
-		this.roles = roles;
-	}
-
 	public String getSummary() {
 		return summary;
 	}
 
 	public void setSummary(final String summary) {
 		this.summary = summary;
+	}
+
+	public Map<String, String> getClaims() {
+		return claims;
+	}
+
+	public void setClaims(final Map<String, String> claims) {
+		this.claims = claims;
+	}
+
+	public List<epf.schema.roles.Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(final List<epf.schema.roles.Role> roles) {
+		this.roles = roles;
 	}
 }

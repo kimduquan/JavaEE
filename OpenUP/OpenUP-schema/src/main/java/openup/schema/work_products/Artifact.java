@@ -20,7 +20,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-
 import openup.schema.OpenUP;
 import openup.schema.roles.Role;
 
@@ -44,7 +43,7 @@ public class Artifact implements Serializable {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long artifactId;
+    private Long id;
     
     /**
      * 
@@ -85,14 +84,6 @@ public class Artifact implements Serializable {
     @Column(name = "SUMMARY")
     private String summary;
 
-    public Long getArtifactId() {
-        return artifactId;
-    }
-
-    public void setArtifactId(final Long artifactId) {
-        this.artifactId = artifactId;
-    }
-
     public epf.schema.work_products.Artifact getArtifact() {
         return artifact;
     }
@@ -131,5 +122,13 @@ public class Artifact implements Serializable {
 
 	public void setModifiedBy(final List<Role> modifiedBy) {
 		this.modifiedBy = modifiedBy;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(final Long id) {
+		this.id = id;
 	}
 }

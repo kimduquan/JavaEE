@@ -17,7 +17,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-
 import openup.schema.OpenUP;
 
 /**
@@ -40,7 +39,7 @@ public class Phase implements Serializable {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long phaseId;
+    private Long id;
     
     /**
      * 
@@ -61,14 +60,6 @@ public class Phase implements Serializable {
     @ManyToOne
     @JoinColumn(name = "PARENT_ACTIVITIES")
     private DeliveryProcess parentActivities;
-
-    public Long getPhaseId() {
-        return phaseId;
-    }
-
-    public void setPhaseId(final Long phaseId) {
-        this.phaseId = phaseId;
-    }
 
     public epf.schema.delivery_processes.Phase getPhase() {
         return phase;
@@ -93,4 +84,12 @@ public class Phase implements Serializable {
     public void setParentActivities(final DeliveryProcess parentActivities) {
         this.parentActivities = parentActivities;
     }
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(final Long id) {
+		this.id = id;
+	}
 }

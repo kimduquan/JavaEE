@@ -573,27 +573,27 @@ INSERT INTO OPENUP.OPENUP_ROLE (NAME, SUMMARY) VALUES ('tool_specialist1', NULL)
 /*Environment END*/
 
 /*Basic Roles BEGIN*/
-INSERT INTO OPENUP.OPENUP_ROLES (ROLE, NAME) VALUES ('Analyst', 'analyst1');
-INSERT INTO OPENUP.OPENUP_ROLES (ROLE, NAME) VALUES ('Any_Role', 'any_role1');
-INSERT INTO OPENUP.OPENUP_ROLES (ROLE, NAME) VALUES ('Architect', 'architect1');
-INSERT INTO OPENUP.OPENUP_ROLES (ROLE, NAME) VALUES ('Developer', 'developer1');
-INSERT INTO OPENUP.OPENUP_ROLES (ROLE, NAME) VALUES ('Project_Manager', 'project_manager1');
-INSERT INTO OPENUP.OPENUP_ROLES (ROLE, NAME) VALUES ('Stakeholder', 'stakeholder1');
-INSERT INTO OPENUP.OPENUP_ROLES (ROLE, NAME) VALUES ('Tester', 'tester1');
+INSERT INTO OPENUP.OPENUP_ROLE_SET (ROLE, NAME) VALUES ('Analyst', 'analyst1');
+INSERT INTO OPENUP.OPENUP_ROLE_SET (ROLE, NAME) VALUES ('Any_Role', 'any_role1');
+INSERT INTO OPENUP.OPENUP_ROLE_SET (ROLE, NAME) VALUES ('Architect', 'architect1');
+INSERT INTO OPENUP.OPENUP_ROLE_SET (ROLE, NAME) VALUES ('Developer', 'developer1');
+INSERT INTO OPENUP.OPENUP_ROLE_SET (ROLE, NAME) VALUES ('Project_Manager', 'project_manager1');
+INSERT INTO OPENUP.OPENUP_ROLE_SET (ROLE, NAME) VALUES ('Stakeholder', 'stakeholder1');
+INSERT INTO OPENUP.OPENUP_ROLE_SET (ROLE, NAME) VALUES ('Tester', 'tester1');
 /*Basic Roles END*/
 
 /*Deployment BEGIN*/
-INSERT INTO OPENUP.OPENUP_ROLES (ROLE, NAME) VALUES ('Course_Developer', 'course_developer1');
-INSERT INTO OPENUP.OPENUP_ROLES (ROLE, NAME) VALUES ('Deployment_Engineer', 'deployment_engineer1');
-INSERT INTO OPENUP.OPENUP_ROLES (ROLE, NAME) VALUES ('Deployment_Manager', 'deployment_manager1');
-INSERT INTO OPENUP.OPENUP_ROLES (ROLE, NAME) VALUES ('Product_Owner', 'product_owner1');
-INSERT INTO OPENUP.OPENUP_ROLES (ROLE, NAME) VALUES ('Technical_Writer', 'technical_writer1');
-INSERT INTO OPENUP.OPENUP_ROLES (ROLE, NAME) VALUES ('Trainer', 'trainer1');
+INSERT INTO OPENUP.OPENUP_ROLE_SET (ROLE, NAME) VALUES ('Course_Developer', 'course_developer1');
+INSERT INTO OPENUP.OPENUP_ROLE_SET (ROLE, NAME) VALUES ('Deployment_Engineer', 'deployment_engineer1');
+INSERT INTO OPENUP.OPENUP_ROLE_SET (ROLE, NAME) VALUES ('Deployment_Manager', 'deployment_manager1');
+INSERT INTO OPENUP.OPENUP_ROLE_SET (ROLE, NAME) VALUES ('Product_Owner', 'product_owner1');
+INSERT INTO OPENUP.OPENUP_ROLE_SET (ROLE, NAME) VALUES ('Technical_Writer', 'technical_writer1');
+INSERT INTO OPENUP.OPENUP_ROLE_SET (ROLE, NAME) VALUES ('Trainer', 'trainer1');
 /*Deployment END*/
 
 /*Environment BEGIN*/
-INSERT INTO OPENUP.OPENUP_ROLES (ROLE, NAME) VALUES ('Process_Engineer', 'process_engineer1');
-INSERT INTO OPENUP.OPENUP_ROLES (ROLE, NAME) VALUES ('Tool_Specialist', 'tool_specialist1');
+INSERT INTO OPENUP.OPENUP_ROLE_SET (ROLE, NAME) VALUES ('Process_Engineer', 'process_engineer1');
+INSERT INTO OPENUP.OPENUP_ROLE_SET (ROLE, NAME) VALUES ('Tool_Specialist', 'tool_specialist1');
 /*Environment END*/
 
 /*OPENUP SCHEMA END*/

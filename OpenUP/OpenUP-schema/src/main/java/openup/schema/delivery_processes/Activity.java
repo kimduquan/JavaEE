@@ -17,7 +17,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-
 import openup.schema.OpenUP;
 
 /**
@@ -40,7 +39,7 @@ public class Activity implements Serializable {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long activityId;
+    private Long id;
     
     /**
      * 
@@ -67,14 +66,6 @@ public class Activity implements Serializable {
     @ManyToOne
     @JoinColumn(name = "PARENT_ACTIVITIES")
     private Iteration parentActivities;
-
-    public Long getActivityId() {
-        return activityId;
-    }
-
-    public void setActivityId(final Long activityId) {
-        this.activityId = activityId;
-    }
 
     public epf.schema.delivery_processes.Activity getActivity() {
         return activity;
@@ -107,4 +98,12 @@ public class Activity implements Serializable {
     public void setParentActivities(final Iteration parentActivities) {
         this.parentActivities = parentActivities;
     }
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(final Long id) {
+		this.id = id;
+	}
 }

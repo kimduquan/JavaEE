@@ -6,7 +6,6 @@
 package openup.schema.delivery_processes;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,7 +16,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-
 import openup.schema.OpenUP;
 
 /**
@@ -40,7 +38,7 @@ public class DeliveryProcess implements Serializable {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long processId;
+    private Long id;
     
     /**
      * 
@@ -60,14 +58,6 @@ public class DeliveryProcess implements Serializable {
      */
     @Column(name = "SUMMARY")
     private String summary;
-
-    public Long getProcessId() {
-        return processId;
-    }
-
-    public void setProcessId(final Long processId) {
-        this.processId = processId;
-    }
 
     public epf.schema.delivery_processes.DeliveryProcess getDeliveryProcess() {
         return deliveryProcess;
@@ -92,4 +82,12 @@ public class DeliveryProcess implements Serializable {
     public void setSummary(final String summary) {
         this.summary = summary;
     }
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(final Long id) {
+		this.id = id;
+	}
 }
