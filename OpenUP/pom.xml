@@ -672,5 +672,10 @@
 		<module>EPF-security-portlet</module>
         <module>EPF-tests</module>
         <module>EPF-assembly</module>
+		
+		<module>OpenUP-delivery-processes</module>
+		<module>OpenUP-roles</module>
+		<module>OpenUP-tasks</module>
+		<module>OpenUP-work-products</module>
     </modules>
 </project>
