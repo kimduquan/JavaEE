@@ -3,10 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.schema;
+package openup.schema.tasks;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,15 +17,17 @@ import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
+import openup.schema.OpenUP;
+
 /**
  *
  * @author FOXCONN
  */
-@Type(OpenUP.DELIVERY_PROCESS)
-@Schema(name = OpenUP.DELIVERY_PROCESS, title = "Delivery Process")
-@Entity(name = OpenUP.DELIVERY_PROCESS)
-@Table(schema = OpenUP.SCHEMA, name = "OPENUP_DELIVERY_PROCESS")
-public class DeliveryProcess implements Serializable {
+@Type(OpenUP.TASK)
+@Schema(name = OpenUP.TASK, title = "Task")
+@Entity(name = OpenUP.TASK)
+@Table(schema = OpenUP.SCHEMA, name = "OPENUP_TASK")
+public class Task implements Serializable {
 
     /**
 	 * 
@@ -38,19 +39,19 @@ public class DeliveryProcess implements Serializable {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long processId;
+    private Long taskId;
     
     /**
      * 
      */
     @ManyToOne
-    @JoinColumn(name = "DELIVERY_PROCESS")
-    private epf.schema.delivery_processes.DeliveryProcess deliveryProcess;
+    @JoinColumn(name = "TASK")
+    private epf.schema.tasks.Task task;
     
     /**
      * 
      */
-    @Column(name = "NAME", unique = true, nullable = false)
+    @Column(name = "NAME", nullable = false)
     private String name;
     
     /**
@@ -59,20 +60,20 @@ public class DeliveryProcess implements Serializable {
     @Column(name = "SUMMARY")
     private String summary;
 
-    public Long getProcessId() {
-        return processId;
+    public Long getTaskId() {
+        return taskId;
     }
 
-    public void setProcessId(final Long processId) {
-        this.processId = processId;
+    public void setTaskId(final Long taskId) {
+        this.taskId = taskId;
     }
 
-    public epf.schema.delivery_processes.DeliveryProcess getDeliveryProcess() {
-        return deliveryProcess;
+    public epf.schema.tasks.Task getTask() {
+        return task;
     }
 
-    public void setDeliveryProcess(final epf.schema.delivery_processes.DeliveryProcess deliveryProcess) {
-        this.deliveryProcess = deliveryProcess;
+    public void setTask(final epf.schema.tasks.Task task) {
+        this.task = task;
     }
 
     public String getName() {

@@ -3,30 +3,32 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.schema;
+package openup.schema.delivery_processes;
 
 import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
+import openup.schema.OpenUP;
+
 /**
  *
  * @author FOXCONN
  */
-@Type(OpenUP.ITERATION)
-@Schema(name = OpenUP.ITERATION, title = "Iteration")
-@Entity(name = OpenUP.ITERATION)
-@Table(schema = OpenUP.SCHEMA, name = "OPENUP_ITERATION", indexes = {@Index(columnList = "PARENT_ACTIVITIES")})
-public class Iteration implements Serializable {
+@Type(OpenUP.DELIVERY_PROCESS)
+@Schema(name = OpenUP.DELIVERY_PROCESS, title = "Delivery Process")
+@Entity(name = OpenUP.DELIVERY_PROCESS)
+@Table(schema = OpenUP.SCHEMA, name = "OPENUP_DELIVERY_PROCESS")
+public class DeliveryProcess implements Serializable {
 
     /**
 	 * 
@@ -38,19 +40,19 @@ public class Iteration implements Serializable {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long iterationId;
+    private Long processId;
     
     /**
      * 
      */
     @ManyToOne
-    @JoinColumn(name = "ITERATION")
-    private epf.schema.delivery_processes.Iteration iteration;
+    @JoinColumn(name = "DELIVERY_PROCESS")
+    private epf.schema.delivery_processes.DeliveryProcess deliveryProcess;
     
     /**
      * 
      */
-    @Column(name = "NAME", nullable = false)
+    @Column(name = "NAME", unique = true, nullable = false)
     private String name;
     
     /**
@@ -58,28 +60,21 @@ public class Iteration implements Serializable {
      */
     @Column(name = "SUMMARY")
     private String summary;
-    
-    /**
-     * 
-     */
-    @ManyToOne
-    @JoinColumn(name = "PARENT_ACTIVITIES")
-    private Phase parentActivities;
 
-    public Long getIterationId() {
-        return iterationId;
+    public Long getProcessId() {
+        return processId;
     }
 
-    public void setIterationId(final Long iterationId) {
-        this.iterationId = iterationId;
+    public void setProcessId(final Long processId) {
+        this.processId = processId;
     }
 
-    public epf.schema.delivery_processes.Iteration getIteration() {
-        return iteration;
+    public epf.schema.delivery_processes.DeliveryProcess getDeliveryProcess() {
+        return deliveryProcess;
     }
 
-    public void setIteration(final epf.schema.delivery_processes.Iteration iteration) {
-        this.iteration = iteration;
+    public void setDeliveryProcess(final epf.schema.delivery_processes.DeliveryProcess deliveryProcess) {
+        this.deliveryProcess = deliveryProcess;
     }
 
     public String getName() {
@@ -96,13 +91,5 @@ public class Iteration implements Serializable {
 
     public void setSummary(final String summary) {
         this.summary = summary;
-    }
-
-    public Phase getParentActivities() {
-        return parentActivities;
-    }
-
-    public void setParentActivities(final Phase parentActivities) {
-        this.parentActivities = parentActivities;
     }
 }

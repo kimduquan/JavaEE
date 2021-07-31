@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package openup.schema;
+package openup.schema.delivery_processes;
 
 import java.io.Serializable;
 import javax.persistence.Column;
@@ -16,6 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
+import openup.schema.OpenUP;
 
 /**
  *

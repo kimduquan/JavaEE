@@ -12,7 +12,7 @@ import org.optaplanner.core.api.domain.entity.PlanningEntity;
  * @author FOXCONN
  */
 @PlanningEntity
-public class Iteration extends openup.schema.Iteration {
+public class Iteration extends openup.schema.delivery_processes.Iteration {
 
     /**
 	 * 
