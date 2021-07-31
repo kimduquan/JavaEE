@@ -21,6 +21,11 @@
             <artifactId>EPF-portlet</artifactId>
             <version>1.0.0</version>
         </dependency>
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-portlet-client</artifactId>
+            <version>1.0.0</version>
+        </dependency>
         <dependency>
 			<groupId>javax.enterprise</groupId>
 			<artifactId>cdi-api</artifactId>
