@@ -658,7 +658,6 @@
 		<module>EPF-registry</module>
 		<module>EPF-management</module>
         <module>EPF-schema</module>
-        <module>OpenUP-schema</module>
         <module>EPF-validation</module>
         <module>EPF-client</module>
 		<!--<module>EPF-persistence</module>-->
@@ -673,6 +672,8 @@
         <module>EPF-tests</module>
         <module>EPF-assembly</module>
 		
+		<module>OpenUP-client</module>
+        <module>OpenUP-schema</module>
 		<module>OpenUP-delivery-processes</module>
 		<module>OpenUP-roles</module>
 		<module>OpenUP-tasks</module>
