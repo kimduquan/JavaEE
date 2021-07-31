@@ -112,6 +112,12 @@ public class Registry implements epf.client.registry.Registry {
 			final URI langUrl = new URI(SystemUtil.getenv(Lang.LANG_URL));
 			remote = "lang";
 			remotes.put(remote, langUrl);
+			final String openupUrl = SystemUtil.getenv("openup.url");
+			final String[] openupUrls = openupUrl.split(",");
+			for(String name : openupUrls) {
+				final String url = SystemUtil.getenv(name);
+				remotes.put(name, new URI(url));
+			}
 		} 
 		catch (Exception e) {
 			logger.throwing(getClass().getName(), "postConstruct", e);

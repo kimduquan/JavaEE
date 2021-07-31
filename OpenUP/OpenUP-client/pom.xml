@@ -28,9 +28,9 @@
 		    <artifactId>validation-api</artifactId>
 		    <scope>provided</scope>
 		</dependency>
-        <dependency>
+		<dependency>
             <groupId>openup</groupId>
-            <artifactId>EPF-client</artifactId>
+            <artifactId>OpenUP-schema</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>
