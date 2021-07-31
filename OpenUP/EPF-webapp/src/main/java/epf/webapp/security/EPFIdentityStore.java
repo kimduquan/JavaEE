@@ -26,6 +26,7 @@ import epf.util.client.ClientQueue;
 import epf.util.logging.Logging;
 import epf.util.security.PasswordUtil;
 import epf.schema.EPF;
+import epf.util.SystemUtil;
 
 /**
  *
@@ -86,7 +87,7 @@ public class EPFIdentityStore implements IdentityStore {
             	token = tokens.get(credential.getCaller());
             }
             else {
-                final URL webAppUrl = new URL(System.getenv(WebApp.WEBAPP_URL));
+                final URL webAppUrl = new URL(SystemUtil.getenv(WebApp.WEBAPP_URL));
             	final URI securityUrl = registry.lookup("security");
             	try(Client client = new Client(clients, securityUrl, b -> b)){
             		final String rawToken = Security.login(

@@ -12,7 +12,7 @@ import org.optaplanner.core.api.domain.entity.PlanningEntity;
  * @author FOXCONN
  */
 @PlanningEntity
-public class Milestone extends openup.schema.Milestone {
+public class Milestone extends openup.schema.delivery_processes.Milestone {
 
     /**
 	 * 

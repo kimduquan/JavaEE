@@ -31,12 +31,41 @@
             <artifactId>EPF-client</artifactId>
             <version>1.0.0</version>
         </dependency>
-        <dependency>
-		    <groupId>openup</groupId>
-		    <artifactId>opencv</artifactId>
-		    <version>4.5.2</version>
-		    <scope>system</scope>
-		    <systemPath>C://Program Files/opencv/build/java/opencv-452.jar</systemPath>
-		</dependency>
     </dependencies>
+	<profiles>
+		<profile>
+			<id>Linux</id>
+			<activation>
+				<os>
+					<name>linux</name>
+				</os>
+			</activation>
+			<dependencies>
+				<dependency>
+				    <groupId>openup</groupId>
+				    <artifactId>opencv</artifactId>
+				    <version>4.2.0</version>
+				    <scope>system</scope>
+					<systemPath>/usr/share/java/opencv-420.jar</systemPath>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>Windows</id>
+			<activation>
+				<os>
+					<family>windows</family>
+				</os>
+			</activation>
+			<dependencies>
+				<dependency>
+				    <groupId>openup</groupId>
+				    <artifactId>opencv</artifactId>
+				    <version>4.5.2</version>
+				    <scope>system</scope>
+				    <systemPath>C://Program Files/opencv/build/java/opencv-452.jar</systemPath>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
 </project>

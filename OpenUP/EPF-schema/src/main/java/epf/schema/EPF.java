@@ -74,4 +74,8 @@ public interface EPF {
      * 
      */
     String WORK_PRODUCT_SLOT = "EPF_WorkProductSlot";
+    /**
+     * 
+     */
+    String REPORT = "EPF_Report";
 }

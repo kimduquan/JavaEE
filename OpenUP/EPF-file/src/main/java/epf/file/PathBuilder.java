@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.PathSegment;
+import epf.util.file.PathUtil;
 
 /**
  * @author PC
@@ -48,7 +49,7 @@ public class PathBuilder {
 	 * @return
 	 */
 	public Path build() {
-		return Path.of(rootFolder, subPaths.toArray(new String[0]));
+		return PathUtil.of(rootFolder, subPaths.toArray(new String[0]));
 	}
 	
 	/**

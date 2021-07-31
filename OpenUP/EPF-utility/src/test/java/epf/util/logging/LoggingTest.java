@@ -4,6 +4,9 @@
 package epf.util.logging;
 
 import java.lang.reflect.Method;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.interceptor.InvocationContext;
 import org.junit.Assert;
@@ -74,5 +77,15 @@ public class LoggingTest {
 	@Test(expected = NullPointerException.class)
 	public void testGetLogger_NullName() {
 		Logging.getLogger(null);
+	}
+	
+	/**
+	 * Test method for {@link epf.util.logging.Logging#config(java.lang.Class)}.
+	 */
+	@Test
+	public void testConfig() {
+		Logging.config(getClass());
+		String configFile = System.getProperty("java.util.logging.config.file");
+		Assert.assertNotNull("System.property.java.util.logging.config.file", configFile);
 	}
 }

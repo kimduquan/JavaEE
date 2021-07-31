@@ -30,7 +30,7 @@ public class View {
 	
 	@PostConstruct
 	void navigate() {
-		webDriver.navigate().to(url);
+		webDriver.get(url.toString());
 		setUsername("pluto");
 		setPassword("pluto");
 		login();

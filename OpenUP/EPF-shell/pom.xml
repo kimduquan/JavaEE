@@ -122,7 +122,7 @@
 	        			<showConsoleWindow>true</showConsoleWindow>
 	        			<repositoryLayout>flat</repositoryLayout>
 	        			<useWildcardClassPath>true</useWildcardClassPath>
-	        			<extraJvmArguments>-Depf.gateway.url="https://localhost:9443/gateway/" -Djava.util.logging.config.file="logging.properties"</extraJvmArguments>
+	        			<extraJvmArguments>-Depf.gateway.url="https://localhost:9443/gateway/"</extraJvmArguments>
 	        		</configuration>
 	        	</execution>
 	        </executions>

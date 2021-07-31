@@ -12,7 +12,7 @@ import org.optaplanner.core.api.domain.entity.PlanningEntity;
  * @author FOXCONN
  */
 @PlanningEntity
-public class Artifact extends openup.schema.Artifact {
+public class Artifact extends openup.schema.work_products.Artifact {
 
 	/**
 	 * 

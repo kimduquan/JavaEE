@@ -66,7 +66,6 @@ public class ManagementHealthCheck implements HealthCheck {
 				.withData("Runtime.libraryPath", runtime.getLibraryPath())
 				.withData("Runtime.managementSpecVersion", runtime.getManagementSpecVersion())
 				.withData("Runtime.name", runtime.getName())
-				.withData("Runtime.pid", runtime.getPid())
 				.withData("Runtime.specName", runtime.getSpecName())
 				.withData("Runtime.specVendor", runtime.getSpecVendor())
 				.withData("Runtime.specVersion", runtime.getSpecVersion())

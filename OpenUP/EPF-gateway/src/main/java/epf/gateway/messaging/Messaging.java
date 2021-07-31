@@ -26,6 +26,8 @@ import javax.websocket.WebSocketContainer;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
+import epf.util.SystemUtil;
+
 /**
  * @author PC
  *
@@ -56,7 +58,7 @@ public class Messaging {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI messagingUrl = new URI(System.getenv("epf.messaging.url"));
+			final URI messagingUrl = new URI(SystemUtil.getenv("epf.messaging.url"));
 			final WebSocketContainer container = ContainerProvider.getWebSocketContainer();
 			remotes.put("persistence", new Remote(container, messagingUrl.resolve("persistence")));
 		} 

@@ -6,6 +6,7 @@ package epf.shell.gateway;
 import java.net.URI;
 import java.net.URISyntaxException;
 import epf.client.gateway.Gateway;
+import epf.util.SystemUtil;
 import epf.util.Var;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
@@ -24,7 +25,7 @@ public class GatewayUtil {
 	 */
 	@Produces @ApplicationScoped @Named(Gateway.GATEWAY_URL)
 	public Var<URI> getGateWayUrl() throws URISyntaxException {
-		String url = System.getenv(Gateway.GATEWAY_URL);
+		String url = SystemUtil.getenv(Gateway.GATEWAY_URL);
 		if(url == null || url.isEmpty()) {
 			url = System.getProperty(Gateway.GATEWAY_URL);
 		}

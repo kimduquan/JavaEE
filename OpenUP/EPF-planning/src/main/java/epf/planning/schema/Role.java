@@ -12,7 +12,7 @@ import org.optaplanner.core.api.domain.entity.PlanningEntity;
  * @author FOXCONN
  */
 @PlanningEntity
-public class Role extends openup.schema.Role {
+public class Role extends openup.schema.roles.Role {
 
     /**
 	 * 

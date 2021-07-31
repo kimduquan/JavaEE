@@ -39,6 +39,7 @@ import epf.tests.persistence.PersistenceUtil;
 import epf.tests.rules.RulesUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
+import epf.util.file.PathUtil;
 
 /**
  * @author PC
@@ -128,7 +129,7 @@ public class ShellTest {
 
 	@Test
 	public void testSecurity_Login() throws IOException, InterruptedException {
-		builder.command("powershell", "./epf", "security", "login", "-u", "any_role1", "-p");
+		builder = ShellUtil.command(builder, "./epf", "security", "login", "-u", "any_role1", "-p");
 		process = builder.start();
 		ShellUtil.waitFor(builder, in, "any_role");
 		List<String> lines = Files.readAllLines(out);
@@ -144,7 +145,7 @@ public class ShellTest {
 	@Test(expected = NotAuthorizedException.class)
 	public void testSecurity_Logout() throws Exception {
 		String newToken = SecurityUtil.login("any_role1", "any_role");
-		builder.command("powershell", "./epf", "security", "logout", "-t", newToken);
+		builder = ShellUtil.command(builder, "./epf", "security", "logout", "-t", newToken);
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(2, lines.size());
@@ -156,7 +157,7 @@ public class ShellTest {
 	
 	@Test
 	public void testSecurity_Auth() throws Exception {
-		builder.command("powershell", "./epf", "security", "auth", "-t", token);
+		builder = ShellUtil.command(builder, "./epf", "security", "auth", "-t", token);
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(2, lines.size());
@@ -171,7 +172,7 @@ public class ShellTest {
 	
 	@Test
 	public void testSecurity_UpdatePassword() throws InterruptedException, IOException {
-		builder.command("powershell", "./epf", "security", "update", "-tid", tokenID, "-p");
+		builder = ShellUtil.command(builder, "./epf", "security", "update", "-tid", tokenID, "-p");
 		process = ShellUtil.waitFor(builder, in, "any_role");
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(1, lines.size());
@@ -180,7 +181,7 @@ public class ShellTest {
 	@Test
 	public void testSecurity_Revoke() throws InterruptedException, IOException {
 		String token = SecurityUtil.login("any_role1", "any_role");
-		builder.command("powershell", "./epf", "security", "revoke", "-t", token);
+		builder = ShellUtil.command(builder, "./epf", "security", "revoke", "-t", token);
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(2, lines.size());
@@ -202,7 +203,7 @@ public class ShellTest {
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
         
-		builder.command("powershell", "./epf", "persistence", "persist", "-tid", adminTokenID, "-n", EPF.ARTIFACT, "-e");
+        builder = ShellUtil.command(builder, "./epf", "persistence", "persist", "-tid", adminTokenID, "-n", EPF.ARTIFACT, "-e");
 		process = builder.start();
 		TestUtil.waitUntil(o -> process.isAlive(), Duration.ofSeconds(10));
 		ShellUtil.writeJson(in, artifact);
@@ -233,7 +234,7 @@ public class ShellTest {
         artifact.setTailoring(new Tailoring());
         PersistenceUtil.persist(adminToken, Artifact.class, EPF.ARTIFACT, artifact);
     	
-        builder.command("powershell", "./epf", "persistence", "merge", "-tid", adminTokenID, "-n", EPF.ARTIFACT, "-i", artifact.getName(), "-e");
+        builder = ShellUtil.command(builder, "./epf", "persistence", "merge", "-tid", adminTokenID, "-n", EPF.ARTIFACT, "-i", artifact.getName(), "-e");
 		process = builder.start();
 		TestUtil.waitUntil(o -> process.isAlive(), Duration.ofSeconds(10));
         Artifact updatedArtifact = new Artifact();
@@ -264,7 +265,7 @@ public class ShellTest {
         artifact.setTailoring(new Tailoring());
         PersistenceUtil.persist(adminToken, Artifact.class, EPF.ARTIFACT, artifact);
     	
-        builder.command("powershell", "./epf", "persistence", "remove", "-tid", adminTokenID, "-n", EPF.ARTIFACT, "-i", artifact.getName());
+        builder = ShellUtil.command(builder, "./epf", "persistence", "remove", "-tid", adminTokenID, "-n", EPF.ARTIFACT, "-i", artifact.getName());
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(1, lines.size());
@@ -274,7 +275,7 @@ public class ShellTest {
 	
 	@Test
 	public void testSchema_GetEntities() throws Exception {
-		builder.command("powershell", "./epf", "schema", "entities", "-tid", tokenID);
+		builder = ShellUtil.command(builder, "./epf", "schema", "entities", "-tid", tokenID);
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(2, lines.size());
@@ -289,9 +290,9 @@ public class ShellTest {
 	public void testFile_Create() throws Exception {
 		Path file = Files.createTempFile("file", ".in");
 		Files.write(file, Arrays.asList("this is a test"));
-		Path path = Path.of("any_role1", "this", "is", "a", "test");
-		builder.command(
-				"powershell", "./epf", 
+		Path path = PathUtil.of("any_role1", "this", "is", "a", "test");
+		builder = ShellUtil.command(builder, 
+				"./epf", 
 				"file", "create", 
 				"-tid", tokenID, 
 				"-f", "\"" + file.toString() + "\"", 
@@ -301,7 +302,7 @@ public class ShellTest {
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(2, lines.size());
 		Assert.assertTrue(lines.get(1).startsWith("any_role1/this/is/a/test/"));
-		FileUtil.delete(token, Path.of("any_role1/this/is/a/test"));
+		FileUtil.delete(token, PathUtil.of("any_role1/this/is/a/test"));
 		file.toFile().delete();
 	}
 	
@@ -309,10 +310,10 @@ public class ShellTest {
 	public void testFile_Delete() throws Exception {
 		Path file = Files.createTempFile("file", ".in");
 		Files.write(file, Arrays.asList("this is a test"));
-		Path path = Path.of("any_role1", "this", "is", "a", "test");
+		Path path = PathUtil.of("any_role1", "this", "is", "a", "test");
 		String createdFile = FileUtil.createFile(token, file, path);
-		builder.command(
-				"powershell", "./epf", 
+		builder = ShellUtil.command(builder, 
+				"./epf", 
 				"file", "delete", 
 				"-tid", tokenID, 
 				"-p", "\"" + createdFile + "\"" 
@@ -329,11 +330,11 @@ public class ShellTest {
 	public void testFile_Read() throws Exception {
 		Path file = Files.createTempFile("file", ".in");
 		Files.write(file, Arrays.asList("this is a test"));
-		Path path = Path.of("any_role1", "this", "is", "a", "test");
+		Path path = PathUtil.of("any_role1", "this", "is", "a", "test");
 		String createdFile = FileUtil.createFile(token, file, path);
 		Path output = Files.createTempFile("file", ".out");
-		builder.command(
-				"powershell", "./epf", 
+		builder = ShellUtil.command(builder, 
+				"./epf", 
 				"file", "read", 
 				"-tid", tokenID, 
 				"-p", "\"" + createdFile + "\"",
@@ -357,9 +358,9 @@ public class ShellTest {
 	
 	@Test
 	public void testRules_Admin_Register() throws Exception {
-		Path ruleFile = Path.of("", "Artifact.drl");
-		builder.command(
-				"powershell", "./epf", 
+		Path ruleFile = PathUtil.of("", "Artifact.drl");
+		builder = ShellUtil.command(builder, 
+				"./epf", 
 				"rules", "admin", "register",
 				"-tid", tokenID,
 				"-n", "Artifact",
@@ -375,9 +376,9 @@ public class ShellTest {
 	
 	@Test
 	public void testRules_Admin_Deregister() throws Exception {
-		RulesUtil.registerRuleExecutionSet(token, Path.of("", "Artifact.drl"), "Artifact1");
-		builder.command(
-				"powershell", "./epf", 
+		RulesUtil.registerRuleExecutionSet(token, PathUtil.of("", "Artifact.drl"), "Artifact1");
+		builder = ShellUtil.command(builder, 
+				"./epf", 
 				"rules", "admin", "de-register",
 				"-tid", tokenID,
 				"-n", "Artifact1"
@@ -391,9 +392,9 @@ public class ShellTest {
 	
 	@Test
 	public void testRules_Execute() throws Exception {
-		RulesUtil.registerRuleExecutionSet(token, Path.of("", "Artifact.drl"), "Artifact1");
-		builder.command(
-				"powershell", "./epf", 
+		RulesUtil.registerRuleExecutionSet(token, PathUtil.of("", "Artifact.drl"), "Artifact1");
+		builder = ShellUtil.command(builder, 
+				"./epf", 
 				"rules", "execute",
 				"-tid", tokenID,
 				"-r", "Artifact1",
@@ -420,9 +421,9 @@ public class ShellTest {
 	@Test
 	@Ignore
 	public void testRules_Registrations() throws Exception {
-		RulesUtil.registerRuleExecutionSet(token, Path.of("", "Artifact.drl"), "Artifact1");
-		builder.command(
-				"powershell", "./epf", 
+		RulesUtil.registerRuleExecutionSet(token, PathUtil.of("", "Artifact.drl"), "Artifact1");
+		builder = ShellUtil.command(builder, 
+				"./epf", 
 				"rules", "registrations",
 				"-tid", tokenID
 				);
@@ -438,9 +439,9 @@ public class ShellTest {
 	
 	@Test
 	public void testImage_FindContours() throws Exception {
-		Path ruleFile = Path.of("", "board.jpg");
-		builder.command(
-				"powershell", "./epf", 
+		Path ruleFile = PathUtil.of("", "board.jpg");
+		builder = ShellUtil.command(builder, 
+				"./epf", 
 				"image", "find-contours",
 				"-tid", tokenID,
 				"-f", ruleFile.toAbsolutePath().toString()

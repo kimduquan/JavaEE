@@ -24,6 +24,7 @@ import epf.schema.PostLoad;
 import epf.schema.PostPersist;
 import epf.schema.PostRemove;
 import epf.schema.PostUpdate;
+import epf.util.SystemUtil;
 
 /**
  * @author PC
@@ -69,7 +70,7 @@ public class Persistence {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI messagingUrl = new URI(System.getenv(Messaging.MESSAGING_URL));
+			final URI messagingUrl = new URI(SystemUtil.getenv(Messaging.MESSAGING_URL));
 			client = Messaging.connectToServer(messagingUrl.resolve("persistence"));
 			client.onMessage(this::onEntityEvent);
 		} 

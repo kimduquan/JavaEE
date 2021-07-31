@@ -9,6 +9,7 @@ import java.net.URISyntaxException;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Logger;
+import epf.util.SystemUtil;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
@@ -52,7 +53,7 @@ public class Listener {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			messagingUrl = new URI(System.getenv(Messaging.MESSAGING_URL));
+			messagingUrl = new URI(SystemUtil.getenv(Messaging.MESSAGING_URL));
 			final Client client = Messaging.connectToServer(messagingUrl.resolve("persistence"));
 			clients.add(client);
 		} 
