@@ -294,7 +294,7 @@
                         <epf.tests.shell.command>${command}</epf.tests.shell.command>
                         <webdriver.timeouts.implicit>60</webdriver.timeouts.implicit>
                         <webdriver.firefox.headless>true</webdriver.firefox.headless>
-						<openup.url>delivery_processes.url,roles.url,tasks.url,work_products.url</openup.url>
+						<openup.url>openup.delivery_processes.url,openup.roles.url,openup.tasks.url,openup.work_products.url,openup.security.url</openup.url>
 						<openup.delivery_processes.url>https://localhost:${httpsPort}/delivery-processes/delivery-processes/</openup.delivery_processes.url>
 						<openup.roles.url>https://localhost:${httpsPort}/roles/roles/</openup.roles.url>
 						<openup.security.url>https://localhost:${httpsPort}/roles/security/</openup.security.url>
