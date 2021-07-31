@@ -16,11 +16,16 @@
 		    <artifactId>cdi-api</artifactId>
 		    <scope>provided</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
+    	<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.jwt/microprofile-jwt-auth-api -->
 		<dependency>
-		    <groupId>javax.annotation</groupId>
-		    <artifactId>javax.annotation-api</artifactId>
+		    <groupId>org.eclipse.microprofile.jwt</groupId>
+		    <artifactId>microprofile-jwt-auth-api</artifactId>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.jaegertracing/jaeger-client -->
+        <dependency>
+            <groupId>io.jaegertracing</groupId>
+            <artifactId>jaeger-client</artifactId>
+        </dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-client</artifactId>
