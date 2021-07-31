@@ -684,5 +684,10 @@
 		<module>OpenUP-roles</module>
 		<module>OpenUP-tasks</module>
 		<module>OpenUP-work-products</module>
+		
+		<module>OpenUP-delivery-processes-portlet</module>
+		<module>OpenUP-roles-portlet</module>
+		<module>OpenUP-tasks-portlet</module>
+		<module>OpenUP-work-products-portlet</module>
     </modules>
 </project>
