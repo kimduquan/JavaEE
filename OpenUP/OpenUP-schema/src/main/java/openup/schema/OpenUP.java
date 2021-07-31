@@ -25,6 +25,10 @@ public interface OpenUP {
     /**
      * 
      */
+    String REPORT = "Report";
+    /**
+     * 
+     */
     String DELIVERABLE = "Deliverable";
     /**
      * 

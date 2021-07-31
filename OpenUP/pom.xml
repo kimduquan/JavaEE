@@ -673,6 +673,7 @@
 		<module>EPF-planning</module>
 		<module>EPF-portlet</module>
 		<module>EPF-webapp</module>
+		<module>EPF-portlet-client</module>
 		<module>EPF-file-portlet</module>
 		<module>EPF-messaging-portlet</module>
 		<module>EPF-persistence-portlet</module>
@@ -687,6 +688,7 @@
 		<module>OpenUP-tasks</module>
 		<module>OpenUP-work-products</module>
 		
+		<module>OpenUP-portlet-client</module>
 		<module>OpenUP-delivery-processes-portlet</module>
 		<module>OpenUP-roles-portlet</module>
 		<module>OpenUP-tasks-portlet</module>
