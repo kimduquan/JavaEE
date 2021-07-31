@@ -6,15 +6,14 @@
 package epf.client.persistence;
 
 import java.util.List;
-import java.util.Set;
 import java.util.function.Function;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import epf.util.client.Client;
-import epf.validation.persistence.Unit;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
@@ -22,7 +21,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
 
@@ -43,19 +41,15 @@ public interface Queries {
 	String MAX = "max";
     
     /**
-     * @param unit
      * @param paths
      * @param firstResult
      * @param maxResults
      * @return
      */
     @GET
-    @Path("{unit}/{criteria: .+}")
+    @Path("{criteria: .+}")
     @Produces(MediaType.APPLICATION_JSON)
     Response executeQuery(
-            @PathParam("unit")
-            @Unit
-            final String unit,
             @PathParam("criteria")
             final List<PathSegment> paths,
             @QueryParam(FIRST)
@@ -65,28 +59,49 @@ public interface Queries {
             );
     
     /**
+     * @param <T>
      * @param client
      * @param type
-     * @param unit
      * @param paths
      * @param firstResult
      * @param maxResults
+     * @return
      */
-    static <T> List<T> executeQuery(
+    static <T extends Object> List<T> executeQuery(
     		final Client client,
     		final GenericType<List<T>> type,
-    		final String unit,
     		final Function<WebTarget, WebTarget> paths,
     		final Integer firstResult,
     		final Integer maxResults
             ) {
     	return client.request(
     			target -> paths.apply(
-    					target.path(unit).queryParam(FIRST, firstResult).queryParam(MAX, maxResults)
+    					target.queryParam(FIRST, firstResult).queryParam(MAX, maxResults)
     					), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.get(type);
+    }
+    
+    /**
+     * @param client
+     * @param paths
+     * @param firstResult
+     * @param maxResults
+     * @return
+     */
+    static Response executeQuery(
+    		final Client client,
+    		final Function<WebTarget, WebTarget> paths,
+    		final Integer firstResult,
+    		final Integer maxResults){
+    	return client.request(
+    			target -> paths.apply(
+    					target.queryParam(FIRST, firstResult).queryParam(MAX, maxResults)
+    					), 
+    			req -> req.accept(MediaType.APPLICATION_JSON)
+    			)
+    			.get();
     }
     
     /**
@@ -103,6 +118,7 @@ public interface Queries {
     		final UriInfo uriInfo,
     		@QueryParam("text")
     		@NotBlank
+    		@NotEmpty
     		@Pattern(regexp = "\\w+")
     		final String text, 
     		@QueryParam(FIRST)
@@ -117,7 +133,7 @@ public interface Queries {
      * @param maxResults
      * @return
      */
-    static Set<Link> search(
+    static Response search(
     		final Client client,
     		final String text, 
     		final Integer firstResult,
@@ -126,7 +142,6 @@ public interface Queries {
     			target -> target.queryParam("text", text).queryParam(FIRST, firstResult).queryParam(MAX, maxResults), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
-    			.get()
-    			.getLinks();
+    			.get();
     }
 }

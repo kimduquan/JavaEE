@@ -33,18 +33,30 @@
 		<dependency>
 		    <groupId>javax.ws.rs</groupId>
 		    <artifactId>javax.ws.rs-api</artifactId>
-		    <version>2.1</version>
 		</dependency>
-        <dependency>
+		<!-- https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api -->
+		<dependency>
+		    <groupId>javax.websocket</groupId>
+		    <artifactId>javax.websocket-api</artifactId>
+		</dependency>
+		<dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-rs-mp-client</artifactId>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-json-provider</artifactId>
-            <scope>runtime</scope>
         </dependency>
+		<!-- https://mvnrepository.com/artifact/org.glassfish/javax.json -->
+		<dependency>
+		    <groupId>org.glassfish</groupId>
+		    <artifactId>javax.json</artifactId>
+		</dependency>
+        <!-- https://mvnrepository.com/artifact/org.eclipse/yasson -->
+		<dependency>
+		    <groupId>org.eclipse</groupId>
+		    <artifactId>yasson</artifactId>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.jppf/jppf-client 
 		<dependency>
 			<groupId>org.jppf</groupId>
@@ -60,6 +72,31 @@
 			<groupId>org.python</groupId>
 			<artifactId>jython-standalone</artifactId>
 		</dependency>-->
+		<!-- https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator-cdi -->
+		<dependency>
+		    <groupId>org.hibernate.validator</groupId>
+		    <artifactId>hibernate-validator-cdi</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.glassfish/jakarta.el -->
+		<dependency>
+		    <groupId>org.glassfish</groupId>
+		    <artifactId>jakarta.el</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api -->
+		<dependency>
+		    <groupId>jakarta.validation</groupId>
+		    <artifactId>jakarta.validation-api</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-jdk14 -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.eclipse.jetty.websocket/javax-websocket-client-impl -->
+		<dependency>
+		    <groupId>org.eclipse.jetty.websocket</groupId>
+		    <artifactId>javax-websocket-client-impl</artifactId>
+		</dependency>
 	</dependencies>
 	<build>
 	    <plugins>
@@ -85,7 +122,7 @@
 	        			<showConsoleWindow>true</showConsoleWindow>
 	        			<repositoryLayout>flat</repositoryLayout>
 	        			<useWildcardClassPath>true</useWildcardClassPath>
-	        			<extraJvmArguments>-Depf.gateway.url="https://localhost:9443/gateway/"</extraJvmArguments>
+	        			<extraJvmArguments>-Depf.gateway.url="https://localhost:9443/gateway/" -Djava.util.logging.config.file="logging.properties"</extraJvmArguments>
 	        		</configuration>
 	        	</execution>
 	        </executions>

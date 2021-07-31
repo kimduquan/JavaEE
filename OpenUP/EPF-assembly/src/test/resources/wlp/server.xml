@@ -2,11 +2,10 @@
 
     <!-- Enable features -->
     <featureManager>
-        <feature>microProfile-3.3</feature>
+        <feature>microProfile-4.0</feature>
         <feature>jpa-2.2</feature>
         <feature>mpGraphQL-1.0</feature>
-        <feature>mpContextPropagation-1.0</feature>
-        <feature>mpReactiveMessaging-1.0</feature>
+        <feature>mpContextPropagation-1.2</feature>
         <!--<feature>sessionCache-1.0</feature>-->
         <feature>transportSecurity-1.0</feature>
         <feature>batch-1.0</feature>
@@ -14,22 +13,44 @@
         <feature>wasJmsServer-1.0</feature>
         <feature>wasJmsClient-2.0</feature>
         <feature>webProfile-8.0</feature>
-        
+        <feature>jca-1.7</feature>
     </featureManager>
 
     <httpEndpoint id="defaultHttpEndpoint"
                   host="localhost"
                   httpPort="80"
                   httpsPort="443" />
-
-    <application id="EPF-service" name="EPF-service" context-root="service" location="EPF-service-1.0.0.war">
+	<application id="EPF-batch" name="EPF-batch" context-root="batch" location="EPF-batch-1.0.0.war" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-    <application id="EPF-gateway" name="EPF-gateway" context-root="gateway" location="EPF-gateway-1.0.0.war" startAfterRef="EPF-service" >
+	<application id="EPF-script" name="EPF-script" context-root="script" location="EPF-script-1.0.0.war" >
+        <classloader classProviderRef="jppf" apiTypeVisibility="spec,ibm-api,api,stable,third-party"/>
+    </application>
+	<application id="EPF-config" name="EPF-config" context-root="config" location="EPF-config-1.0.0.war" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-	<application id="EPF-portlet" name="EPF-portlet" context-root="portlet" location="EPF-portlet-1.0.0.war" startAfterRef="EPF-service,EPF-gateway" />
-    <application id="EPF-webapp" name="EPF-webapp" context-root="webapp" location="EPF-webapp-1.0.0.war" startAfterRef="EPF-service,EPF-gateway" />
+	<application id="EPF-registry" name="EPF-registry" context-root="registry" location="EPF-registry-1.0.0.war" startAfterRef="EPF-config" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
+	<application id="EPF-management" name="EPF-management" context-root="management" location="EPF-management-1.0.0.war" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
+	<application id="EPF-messaging" name="EPF-messaging" context-root="messaging" location="EPF-messaging-1.0.0.war" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
+    <application id="EPF-cache" name="EPF-cache" context-root="cache" location="EPF-cache-1.0.0.war" startAfterRef="EPF-messaging" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
+	<application id="EPF-file" name="EPF-file" context-root="file" location="EPF-file-1.0.0.war" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
+	<application id="EPF-persistence" name="EPF-persistence" context-root="persistence" location="EPF-persistence-1.0.0.war" startAfterRef="EPF-messaging" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
+    <application id="EPF-gateway" name="EPF-gateway" context-root="gateway" location="EPF-gateway-1.0.0.war" startAfterRef="EPF-registry" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
+	<application id="EPF-webapp" name="EPF-webapp" context-root="webapp" location="EPF-webapp-1.0.0.war" startAfterRef="EPF-persistence,EPF-gateway" />
     
     <!-- H2 Library Configuration -->
     <library id="H2JDBCLib">
@@ -42,11 +63,11 @@
     </library>
     
     <library id="JCacheLib">
-        <file name="${shared.resource.dir}/epf/hazelcast-all-4.0.3.jar"/>
+        <file name="${shared.resource.dir}/epf/hazelcast-4.2.jar"/>
     </library>
     
     <!-- uri="file://${server.config.dir}hazelcast.xml" -->
-    <httpSessionCache libraryRef="JCacheLib" />
+    <httpSessionCache libraryRef="JCacheLib" uri="file://${server.config.dir}hazelcast-config.xml" />
     
     <mpJwt 
         id="EPF"
@@ -86,11 +107,17 @@
     <batchJmsExecutor />
     <jmsActivationSpec id="batchActivationSpec" >
         <properties.wasJms destinationRef="batchJobSubmissionQueue"
-                           messageSelector="com_ibm_ws_batch_applicationName = 'EPF-service'"
+                           messageSelector="com_ibm_ws_batch_applicationName = 'EPF-batch'"
                            destinationType="javax.jms.Queue"
                            remoteServerAddress="localhost:7276:BootstrapBasicMessaging">
         </properties.wasJms>
     </jmsActivationSpec>
     <batchJmsEvents />
 	<logging />
+	<resourceAdapter id="jppf" location="${server.config.dir}/jppf_ra_OpenLiberty.rar">
+		<classloader apiTypeVisibility="+third-party"/>
+	</resourceAdapter>
+	<connectionFactory jndiName="eis/JPPFConnectionFactory">
+		<properties.jppf ConfigurationSource="classpath|jppf.properties"/>
+	</connectionFactory>
 </server>

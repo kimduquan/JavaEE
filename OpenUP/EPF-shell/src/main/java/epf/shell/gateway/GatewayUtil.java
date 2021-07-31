@@ -23,7 +23,7 @@ public class GatewayUtil {
 	 * @throws URISyntaxException
 	 */
 	@Produces @ApplicationScoped @Named(Gateway.GATEWAY_URL)
-	public static Var<URI> getGateWayUrl() throws URISyntaxException {
+	public Var<URI> getGateWayUrl() throws URISyntaxException {
 		String url = System.getenv(Gateway.GATEWAY_URL);
 		if(url == null || url.isEmpty()) {
 			url = System.getProperty(Gateway.GATEWAY_URL);

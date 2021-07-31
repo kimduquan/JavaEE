@@ -40,20 +40,17 @@ public class Queries {
      * @param headers
      * @param uriInfo
      * @param req
-     * @param unit
      * @param paths
      * @return
      */
     @GET
-    @Path("{unit}/{criteria: .+}")
+    @Path("{criteria: .+}")
     @Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
     public CompletionStage<Response> getCriteriaQueryResult(
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
-            @PathParam("unit")
-            final String unit,
             @PathParam("criteria")
             final List<PathSegment> paths
             ) {

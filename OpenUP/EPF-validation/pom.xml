@@ -10,11 +10,26 @@
     <name>Eclipse Process Framework Validation</name>
     <packaging>jar</packaging>
     <dependencies>
-    	<!-- https://mvnrepository.com/artifact/javax/javaee-web-api -->
+    	<!-- https://mvnrepository.com/artifact/javax.validation/validation-api -->
 		<dependency>
-		    <groupId>javax</groupId>
-		    <artifactId>javaee-web-api</artifactId>
-    		<scope>provided</scope>
+		    <groupId>javax.validation</groupId>
+		    <artifactId>validation-api</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
+		<dependency>
+		    <groupId>javax.ws.rs</groupId>
+		    <artifactId>javax.ws.rs-api</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.enterprise/cdi-api -->
+		<dependency>
+		    <groupId>javax.enterprise</groupId>
+		    <artifactId>cdi-api</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.security.enterprise/javax.security.enterprise-api -->
+		<dependency>
+		    <groupId>javax.security.enterprise</groupId>
+		    <artifactId>javax.security.enterprise-api</artifactId>
 		</dependency>
     </dependencies>
 </project>

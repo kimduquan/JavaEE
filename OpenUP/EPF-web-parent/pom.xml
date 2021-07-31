@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+	<parent>
+        <groupId>openup</groupId>
+        <artifactId>OpenUP-parent</artifactId>
+        <version>1.0.0</version>
+        <relativePath>../</relativePath>
+    </parent>
+    <artifactId>EPF-web-parent</artifactId>
+    <name>Eclipse Process Framework Web Application Parent</name>
+    <packaging>pom</packaging>
+
+    <!-- Define dependency version information -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.9</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-httpclient</groupId>
+                <artifactId>commons-httpclient</artifactId>
+                <version>3.1</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/javax/javaee-web-api -->
+			<dependency>
+			    <groupId>javax</groupId>
+			    <artifactId>javaee-web-api</artifactId>
+			    <version>8.0.1</version>
+			    <scope>provided</scope>
+			</dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>default-liberty</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <liberty.install.dir>../target/wlp</liberty.install.dir>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.openliberty.tools</groupId>
+                        <artifactId>liberty-maven-plugin</artifactId>
+                        <inherited>false</inherited>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>install-server</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <assemblyInstallDirectory>${project.build.directory}</assemblyInstallDirectory>
+                            <runtimeArtifact>
+                                <artifactId>openliberty-runtime</artifactId>
+                            </runtimeArtifact>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+       </profile>
+
+   </profiles>
+
+    <modules>
+        <module>EPF-web</module>
+        <module>EPF-web-test</module>
+        <module>EPF-web-assembly</module>
+    </modules>
+</project>

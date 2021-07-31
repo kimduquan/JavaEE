@@ -13,7 +13,7 @@ public class Predicate extends Var<Boolean> implements Runnable {
 	/**
 	 * 
 	 */
-	private transient final Supplier<Boolean> predicate;
+	private transient final Supplier<Boolean> predic;
 	
 	/**
 	 * @param predicate
@@ -21,12 +21,12 @@ public class Predicate extends Var<Boolean> implements Runnable {
 	public Predicate(final Supplier<Boolean> predicate) {
 		super();
 		Objects.requireNonNull(predicate);
-		this.predicate = predicate;
+		this.predic = predicate;
 	}
 
 	@Override
 	public void run() {
-		set(predicate.get());
+		set(predic.get());
 	}
 
 }

@@ -3,22 +3,24 @@
  */
 package epf.tests.webapp;
 
-import javax.inject.Inject;
 import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.MethodRule;
-
+import epf.tests.WebDriverUtil;
 import epf.tests.webapp.page.DefaultPage;
 import epf.tests.webapp.page.impl.DefaultPageImpl;
+import jakarta.inject.Inject;
 
 /**
  * @author PC
  *
  */
+@Ignore
 public class WebAppTest {
 	
 	@ClassRule

@@ -13,6 +13,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
+import org.eclipse.microprofile.faulttolerance.exceptions.BulkheadException;
+import org.eclipse.microprofile.faulttolerance.exceptions.CircuitBreakerOpenException;
+import org.eclipse.microprofile.faulttolerance.exceptions.TimeoutException;
 
 /**
  *
@@ -46,6 +49,15 @@ public class ExceptionHandler implements
     		final WebApplicationException error = (WebApplicationException) exception;
     		builder = Response.fromResponse(error.getResponse());
     	}
+    	else if(exception instanceof TimeoutException){
+            builder = Response.status(Response.Status.REQUEST_TIMEOUT);
+        }
+        else if(exception instanceof BulkheadException){
+            builder = Response.status(Response.Status.TOO_MANY_REQUESTS);
+        }
+        else if(exception instanceof CircuitBreakerOpenException){
+            builder = Response.status(Response.Status.SERVICE_UNAVAILABLE);
+        }
     	else {
     		builder = Response.serverError();
     	}

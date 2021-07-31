@@ -10,31 +10,45 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.security.enterprise.CallerPrincipal;
+import javax.security.enterprise.authentication.mechanism.http.BasicAuthenticationMechanismDefinition;
 import javax.security.enterprise.credential.BasicAuthenticationCredential;
-import javax.security.enterprise.credential.RememberMeCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStore;
-import javax.security.enterprise.identitystore.RememberMeIdentityStore;
-
-import epf.client.EPFException;
 import epf.client.registry.LocateRegistry;
 import epf.client.security.Security;
 import epf.client.security.Token;
+import epf.client.webapp.WebApp;
 import epf.util.client.Client;
 import epf.util.client.ClientQueue;
-import epf.util.security.PasswordHelper;
+import epf.util.logging.Logging;
+import epf.util.security.PasswordUtil;
+import epf.schema.EPF;
 
 /**
  *
  * @author FOXCONN
  */
 @ApplicationScoped
-public class EPFIdentityStore implements IdentityStore, RememberMeIdentityStore {
+@BasicAuthenticationMechanismDefinition(realmName = EPF.SCHEMA)
+public class EPFIdentityStore implements IdentityStore {
+	
+	/**
+	 * 
+	 */
+	private static final Logger LOGGER = Logging.getLogger(EPFIdentityStore.class.getName());
+	
+	/**
+	 * 
+	 */
+	private transient final Map<String, String> credentials = new ConcurrentHashMap<>();
+	
+	/**
+	 * 
+	 */
+	private transient final Map<String, Token> tokens = new ConcurrentHashMap<>();
     
     /**
      * 
@@ -57,118 +71,69 @@ public class EPFIdentityStore implements IdentityStore, RememberMeIdentityStore 
     private transient ClientQueue clients;
     
     /**
-     * 
-     */
-    @Inject
-    private transient Logger logger;
-    
-    /**
      * @param credential
      * @return
      * @throws Exception
      */
     public CredentialValidationResult validate(final BasicAuthenticationCredential credential) {
         CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
-        final Token token = login(credential);
-        if(token != null){
-        	final TokenPrincipal principal = new TokenPrincipal(credential.getCaller(), token);
-            principals.put(credential.getCaller(), principal);
-            result = new CredentialValidationResult(principal, principal.getToken().getGroups());
-        }
-        return result;
-    }
-    
-    /**
-     * @param credential
-     * @return
-     */
-    protected Token login(final BasicAuthenticationCredential credential){
-        final URI securityUrl = registry.lookup("security");
-        URL audienceUrl;
-        String passwordHash;
-		try {
-			audienceUrl = new URL(String.format(
-			                            Security.AUDIENCE_URL_FORMAT,
-			                            securityUrl.getScheme(), 
-			                            securityUrl.getHost(), 
-			                            securityUrl.getPort()
-			                    ));
-			passwordHash = PasswordHelper.hash(
-					credential.getCaller(), 
-					credential.getPassword().getValue()
-					);
-		} 
-		catch (Exception e) {
-			throw new EPFException(e);
-		}
-		Token jwt = null;
-        try(Client client = new Client(clients, securityUrl, b -> b)){
-        	final String token = Security.login(
-        			client, 
-        			null,
-					credential.getCaller(),
-					passwordHash,
-					audienceUrl
-					);
-            if(!token.isEmpty()){
-            	client.authorization(token);
-            	jwt = Security.authenticate(client, null);
+        try {
+            final String oldHashPassword = credentials.get(credential.getCaller());
+            final String passwordHash = PasswordUtil.hash(credential.getCaller(), credential.getPassword().getValue());
+            
+            Token token = null;
+            if(passwordHash.equals(oldHashPassword)) {
+            	token = tokens.get(credential.getCaller());
+            }
+            else {
+                final URL webAppUrl = new URL(System.getenv(WebApp.WEBAPP_URL));
+            	final URI securityUrl = registry.lookup("security");
+            	try(Client client = new Client(clients, securityUrl, b -> b)){
+            		final String rawToken = Security.login(
+                			client,
+        					credential.getCaller(),
+        					passwordHash,
+        					webAppUrl
+        					);
+                    if(!rawToken.isEmpty()){
+                    	client.authorization(rawToken);
+                    	token = Security.authenticate(client);
+                    	if(token != null) {
+                    		token.setRawToken(rawToken);
+                    		tokens.put(credential.getCaller(), token);
+                            credentials.put(credential.getCaller(), passwordHash);
+                    	}
+                    }
+                }
+            }
+            
+            if(token != null){
+            	final Token tempToken = token;
+            	final TokenPrincipal principal = principals.computeIfAbsent(token.getTokenID(), id -> new TokenPrincipal(credential.getCaller(), tempToken));
+                result = new CredentialValidationResult(principal, principal.getToken().getGroups());
             }
         }
-        catch (Exception e) {
-			logger.warning(e.getMessage());
-		}
-        return jwt;
+        catch(Exception ex) {
+        	LOGGER.throwing(getClass().getName(), "validate", ex);
+        }
+        return result;
     }
     
     @Override
     public Set<String> getCallerGroups(final CredentialValidationResult validationResult){
         return validationResult.getCallerGroups();
     }
-
-    @Override
-    public CredentialValidationResult validate(final RememberMeCredential credential) {
-        CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
-        try(Client client = new Client(clients, registry.lookup("security"), b -> b)) {
-        	client.authorization(credential.getToken());
-        	final Token jwt = Security.authenticate(client, null);
-            if(jwt != null){
-            	final TokenPrincipal principal = new TokenPrincipal(jwt.getName(), jwt);
-                result = new CredentialValidationResult(principal, jwt.getGroups());
-            }
-        } 
-        catch (Exception ex) {
-            logger.log(Level.SEVERE, "validate", ex);
-        }
-        return result;
-    }
-
-    @Override
-    public String generateLoginToken(final CallerPrincipal caller, final Set<String> groups) {
-    	String token = "";
-        if(caller instanceof TokenPrincipal){
-        	final TokenPrincipal principal = (TokenPrincipal) caller;
-            token = principal.getToken().getRawToken();
-        }
-        return token;
-    }
-
-    @Override
-    public void removeLoginToken(final String token) {
-    	try(Client client = new Client(clients, registry.lookup("security"), b -> b)) {
-            client.authorization(token);
-            Security.logOut(client, null);
-        } 
-        catch (Exception ex) {
-        	logger.log(Level.SEVERE, "removeLoginToken", ex);
-        }
-    }
     
     /**
      * @param name
      * @return
      */
-    public TokenPrincipal getPrincipal(final String name) {
-    	return principals.get(name);
+    public TokenPrincipal peekPrincipal(final String name) {
+    	final TokenPrincipal principal = principals.remove(name);
+    	if(principal != null) {
+    		credentials.remove(principal.getCaller());
+    		tokens.remove(principal.getCaller());
+    	}
+    	return principal;
     }
 }

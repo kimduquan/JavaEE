@@ -30,11 +30,6 @@ public interface Registry {
      */
     String REGISTRY_URL = "epf.registry.url";
     
-    /**
-     * 
-     */
-    String SERVICE_URL = "epf.service.url";
-    
 	/**
 	 * 
 	 */
@@ -89,7 +84,7 @@ public interface Registry {
 	static Set<Link> list(final Client client, final String version) {
 		return client
 				.request(
-						target -> target.queryParam(VERSION, version), 
+						target -> version != null ? target.queryParam(VERSION, version) : target, 
 						req -> req
 						)
 				.get()

@@ -68,13 +68,12 @@ public class DeliveryProcesses implements Serializable {
             	phases = Queries.executeQuery(
             			client, 
             			new GenericType<List<Phase>>() {}, 
-            			EPF.SCHEMA,
             			target -> target.path(EPF.PHASE), 
             			0, 
             			100);
             } 
             catch (Exception e) {
-				logger.severe(e.getMessage());
+            	logger.throwing(Queries.class.getName(), "executeQuery", e);
 			}
         }
         return phases;
@@ -86,13 +85,12 @@ public class DeliveryProcesses implements Serializable {
             	iterations = Queries.executeQuery(
             			client, 
             			new GenericType<List<Iteration>>() {}, 
-            			EPF.SCHEMA, 
             			target -> target.path(EPF.ITERATION), 
             			0, 
             			100);
             } 
             catch (Exception e) {
-            	logger.severe(e.getMessage());
+            	logger.throwing(Queries.class.getName(), "executeQuery", e);
 			}
         }
         return iterations;
@@ -104,13 +102,12 @@ public class DeliveryProcesses implements Serializable {
             	tasks = Queries.executeQuery(
             			client, 
             			new GenericType<List<Task>> () {}, 
-            			EPF.SCHEMA, 
             			target -> target.path(EPF.TASK), 
             			0, 
             			100);
             } 
             catch (Exception e) {
-            	logger.severe(e.getMessage());
+            	logger.throwing(Queries.class.getName(), "executeQuery", e);
 			}
         }
         return tasks;

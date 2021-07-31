@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 import javax.websocket.ClientEndpoint;
 import javax.websocket.DeploymentException;
+import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
@@ -34,6 +35,11 @@ public class Client implements AutoCloseable {
 	/**
 	 * 
 	 */
+	private transient Consumer<? super Throwable> errorConsumer;
+	
+	/**
+	 * 
+	 */
 	private transient final Queue<String> messages;
 	
 	/**
@@ -52,6 +58,7 @@ public class Client implements AutoCloseable {
 	public void close() throws Exception {
 		session.close();
 		messages.clear();
+		messageConsumer = null;
 	}
 	
 	/**
@@ -69,10 +76,28 @@ public class Client implements AutoCloseable {
 	}
 	
 	/**
+	 * @param session
+	 * @param throwable
+	 */
+	@OnError
+	public void onError(final Session session, final Throwable throwable) {
+		if(errorConsumer != null) {
+			errorConsumer.accept(throwable);
+		}
+	}
+	
+	/**
 	 * @param messageConsumer
 	 */
 	public void onMessage(final Consumer<? super String> messageConsumer) {
 		this.messageConsumer = messageConsumer;
+	}
+	
+	/**
+	 * @param errorConsumer
+	 */
+	public void onError(final Consumer<? super Throwable> errorConsumer) {
+		this.errorConsumer = errorConsumer;
 	}
 	
 	/**
@@ -86,8 +111,7 @@ public class Client implements AutoCloseable {
 			final WebSocketContainer container,
 			final URI uri) throws DeploymentException, IOException {
 		final Client client = new Client();
-		final Session session = container.connectToServer(client, uri);
-		client.session = session;
+		client.session = container.connectToServer(client, uri);
 		return client;
 	}
 	

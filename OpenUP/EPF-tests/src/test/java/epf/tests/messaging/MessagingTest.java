@@ -1,0 +1,117 @@
+<<<<<<< HEAD:OpenUP/EPF-tests/src/test/java/epf/tests/service/messaging/MessagingTest.java
+package epf.tests.service.messaging;
+=======
+package epf.tests.messaging;
+>>>>>>> remotes/origin/micro:OpenUP/EPF-tests/src/test/java/epf/tests/messaging/MessagingTest.java
+
+import java.net.URI;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.HashMap;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+
+import epf.client.messaging.Client;
+import epf.client.messaging.Messaging;
+import epf.client.persistence.Entities;
+import epf.schema.EPF;
+import epf.schema.PostPersist;
+import epf.schema.PostRemove;
+import epf.schema.work_products.Artifact;
+import epf.schema.work_products.section.Description;
+import epf.schema.work_products.section.Illustrations;
+import epf.schema.work_products.section.MoreInformation;
+import epf.schema.work_products.section.Relationships;
+import epf.schema.work_products.section.Tailoring;
+import epf.tests.TestUtil;
+import epf.tests.client.ClientUtil;
+<<<<<<< HEAD:OpenUP/EPF-tests/src/test/java/epf/tests/service/messaging/MessagingTest.java
+import epf.tests.service.MessagingUtil;
+import epf.tests.service.RegistryUtil;
+import epf.tests.service.SecurityUtil;
+
+=======
+import epf.tests.registry.RegistryUtil;
+import epf.tests.security.SecurityUtil;
+import epf.util.StringUtil;
+>>>>>>> remotes/origin/micro:OpenUP/EPF-tests/src/test/java/epf/tests/messaging/MessagingTest.java
+import org.junit.Test;
+
+public class MessagingTest {
+	
+	private static URI persistenceUrl;
+	private static URI listenerUrl;
+	private static String token;
+	private Client client;
+    
+    @BeforeClass
+    public static void beforeClass() throws Exception{
+    	persistenceUrl = RegistryUtil.lookup("persistence", null);
+    	URI messagingUrl = MessagingUtil.getMessagingUrl();
+    	listenerUrl = messagingUrl.resolve("persistence");
+<<<<<<< HEAD:OpenUP/EPF-tests/src/test/java/epf/tests/service/messaging/MessagingTest.java
+    	token = SecurityUtil.login(null, "admin1", "admin");
+=======
+    	token = SecurityUtil.login("admin1", "admin");
+>>>>>>> remotes/origin/micro:OpenUP/EPF-tests/src/test/java/epf/tests/messaging/MessagingTest.java
+    }
+    
+    @AfterClass
+    public static void afterClass(){
+    	SecurityUtil.logOut(token);
+    }
+    
+    @After
+    public void after() throws Exception {
+    	client.close();
+    }
+    
+    @Before
+    public void before() throws Exception {
+    	client = Messaging.connectToServer(listenerUrl);
+    	TestUtil.waitUntil(t -> client.getSession().isOpen(), Duration.ofSeconds(10));
+    }
+
+    @Test
+    public void test() throws Exception {
+    	Artifact artifact = new Artifact();
+<<<<<<< HEAD:OpenUP/EPF-tests/src/test/java/epf/tests/service/messaging/MessagingTest.java
+        artifact.setName("Artifact Messaging" + String.valueOf(Instant.now().toEpochMilli()));
+        artifact.setSummary("Artifact Messaging Summary");
+=======
+        artifact.setName(StringUtil.randomString("Artifact Messaging"));
+        artifact.setSummary(StringUtil.randomString("Artifact Messaging Summary"));
+>>>>>>> remotes/origin/micro:OpenUP/EPF-tests/src/test/java/epf/tests/messaging/MessagingTest.java
+        artifact.setDescription(new Description());
+        artifact.setIllustrations(new Illustrations());
+        artifact.setMoreInformation(new MoreInformation());
+        artifact.setRelationships(new Relationships());
+        artifact.setTailoring(new Tailoring());
+    	try(epf.util.client.Client persistenceClient = ClientUtil.newClient(persistenceUrl)){
+    		persistenceClient.authorization(token);
+    		Entities.persist(persistenceClient, Artifact.class, EPF.ARTIFACT, artifact);
+            Entities.remove(persistenceClient, EPF.ARTIFACT, artifact.getName());
+    	}
+    	
+    	TestUtil.waitUntil((t) -> client.getMessages().stream().anyMatch(msg -> msg instanceof PostPersist), Duration.ofSeconds(10));
+    	TestUtil.waitUntil((t) -> client.getMessages().stream().anyMatch(msg -> msg instanceof PostRemove), Duration.ofSeconds(10));
+    	PostPersist persist = (PostPersist)client.getMessages().stream().filter(msg -> msg instanceof PostPersist).findFirst().get();
+    	PostRemove remove = (PostRemove)client.getMessages().stream().filter(msg -> msg instanceof PostRemove).findFirst().get();
+    	Assert.assertNotNull("PostPersist", persist);
+    	Assert.assertTrue("PostPersist.entity", persist.getEntity() instanceof HashMap);
+    	@SuppressWarnings("unchecked")
+		HashMap<String, Object> persistEntity = (HashMap<String, Object>)persist.getEntity();
+    	Assert.assertEquals("PostPersist.entity.class", Artifact.class.getName(), persistEntity.get("class"));
+    	Assert.assertEquals("PostPersist.entity.name", artifact.getName(), persistEntity.get("name"));
+    	
+    	Assert.assertNotNull("PostRemove", remove);
+    	Assert.assertTrue("PostRemove.entity", remove.getEntity() instanceof HashMap);
+    	@SuppressWarnings("unchecked")
+		HashMap<String, Object> removeEntity = (HashMap<String, Object>)remove.getEntity();
+    	Assert.assertEquals("PostRemove.entity.class", Artifact.class.getName(), removeEntity.get("class"));
+    	Assert.assertEquals("PostRemove.entity.name", artifact.getName(), removeEntity.get("name"));
+    }
+}

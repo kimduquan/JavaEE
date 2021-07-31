@@ -2,11 +2,10 @@
 
     <!-- Enable features -->
     <featureManager>
-        <feature>microProfile-3.3</feature>
+        <feature>microProfile-4.0</feature>
         <feature>jpa-2.2</feature>
         <feature>mpGraphQL-1.0</feature>
-        <feature>mpContextPropagation-1.0</feature>
-        <feature>mpReactiveMessaging-1.0</feature>
+        <feature>mpContextPropagation-1.2</feature>
         <!--<feature>sessionCache-1.0</feature>-->
         <feature>transportSecurity-1.0</feature>
         <feature>batch-1.0</feature>
@@ -33,19 +32,37 @@
 	<application id="EPF-registry" name="EPF-registry" context-root="registry" location="EPF-registry-1.0.0.war" startAfterRef="EPF-config" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
+	<application id="EPF-management" name="EPF-management" context-root="management" location="EPF-management-1.0.0.war" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
 	<application id="EPF-messaging" name="EPF-messaging" context-root="messaging" location="EPF-messaging-1.0.0.war" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
+    <application id="EPF-lang" name="EPF-lang" context-root="lang" location="EPF-lang-1.0.0.war" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
     <application id="EPF-cache" name="EPF-cache" context-root="cache" location="EPF-cache-1.0.0.war" startAfterRef="EPF-messaging" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-    <application id="EPF-service" name="EPF-service" context-root="service" location="EPF-service-1.0.0.war" startAfterRef="EPF-messaging" >
+	<application id="EPF-file" name="EPF-file" context-root="file" location="EPF-file-1.0.0.war" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
+    <application id="EPF-image" name="EPF-image" context-root="image" location="EPF-image-1.0.0.war" >
+        <classloader commonLibraryRef="OpenCVLib"/>
+    </application>
+    <application id="EPF-rules" name="EPF-rules" context-root="rules" location="EPF-rules-1.0.0.war" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
+	<application id="EPF-planning" name="EPF-planning" context-root="planning" location="EPF-planning-1.0.0.war" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
+	<application id="EPF-persistence" name="EPF-persistence" context-root="persistence" location="EPF-persistence-1.0.0.war" startAfterRef="EPF-messaging" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
     <application id="EPF-gateway" name="EPF-gateway" context-root="gateway" location="EPF-gateway-1.0.0.war" startAfterRef="EPF-registry" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-	<application id="EPF-webapp" name="EPF-webapp" context-root="webapp" location="EPF-webapp-1.0.0.war" startAfterRef="EPF-service,EPF-gateway" />
+	<application id="EPF-webapp" name="EPF-webapp" context-root="webapp" location="EPF-webapp-1.0.0.war" startAfterRef="EPF-persistence,EPF-gateway" />
     
     <!-- H2 Library Configuration -->
     <library id="H2JDBCLib">
@@ -61,12 +78,17 @@
         <file name="${shared.resource.dir}/epf/hazelcast-4.2.jar"/>
     </library>
     
+    <library id="OpenCVLib">
+        <file name="${opencv}/opencv-452.jar"/>
+        <file name="${opencv}/x64/opencv_java452.dll"/>
+    </library>
+    
     <!-- uri="file://${server.config.dir}hazelcast.xml" -->
     <httpSessionCache libraryRef="JCacheLib" uri="file://${server.config.dir}hazelcast-config.xml" />
     
     <mpJwt 
         id="EPF"
-        audiences ="http://localhost:${httpPort}/,https://localhost:${httpsPort}/">
+        audiences ="http://localhost:${httpPort}/,https://localhost:${httpsPort}/,http://localhost/,https://localhost/,http://localhost:${httpWebPort}/,https://localhost:${httpsWebPort}/">
     </mpJwt>
 
     <dataSource id="epf" jndiName="jdbc/epf">
@@ -102,7 +124,7 @@
     <batchJmsExecutor />
     <jmsActivationSpec id="batchActivationSpec" >
         <properties.wasJms destinationRef="batchJobSubmissionQueue"
-                           messageSelector="com_ibm_ws_batch_applicationName = 'EPF-service'"
+                           messageSelector="com_ibm_ws_batch_applicationName = 'EPF-batch'"
                            destinationType="javax.jms.Queue"
                            remoteServerAddress="localhost:7276:BootstrapBasicMessaging">
         </properties.wasJms>

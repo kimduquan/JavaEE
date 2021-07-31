@@ -10,11 +10,11 @@ import epf.schema.roles.Role;
 import epf.schema.work_products.Artifact;
 import java.io.Serializable;
 import java.util.List;
-import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 
 /**
@@ -35,6 +35,22 @@ public class Relationships implements Serializable {
      */
     @JoinColumn(name = "PRIMARY_PERFORMER", referencedColumnName = "NAME")
     private Role primaryPerformer;
+    
+    /**
+     * 
+     */
+    @ManyToMany
+    @JoinTable(
+            name = "ROLE_ADDITIONALLY_PERFORMS",
+            schema = EPF.SCHEMA,
+            joinColumns = @JoinColumn(
+                    name = "TASK"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "ROLE"
+            )
+    )
+    private List<Role> additionallyPerforms;
     
     /**
      * 
@@ -84,13 +100,21 @@ public class Relationships implements Serializable {
     )
     private List<Artifact> outputs;
 
-    @JsonbTransient
     public Role getPrimaryPerformer() {
         return primaryPerformer;
     }
 
     public void setPrimaryPerformer(final Role primaryPerformer) {
         this.primaryPerformer = primaryPerformer;
+    }
+    
+    @Name("Additionally_Performs")
+    public List<Role> getAdditionallyPerforms(){
+        return additionallyPerforms;
+    }
+
+    public void setAdditionallyPerforms(final List<Role> additionallyPerforms) {
+        this.additionallyPerforms = additionallyPerforms;
     }
 
     public List<Artifact> getMandatory() {

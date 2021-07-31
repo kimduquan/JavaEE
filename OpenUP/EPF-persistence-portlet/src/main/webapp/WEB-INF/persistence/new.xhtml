@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+
+<f:view
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+>
+	<f:metadata>
+		<f:viewAction action="#{epf_persistence_entity.prePersist}"/>
+	</f:metadata>
+	<h:body>
+		<ui:composition template="../template.xhtml">
+			<ui:define name="main">
+				<div h:rendered="#{epf_persistence_entity.attributes != null}">
+					<fieldset>
+						<legend>
+							<h:outputText value="#{i18n[epf_persistence_entity.entity.type]}"></h:outputText>
+						</legend>
+						<ui:repeat 
+							rendered="#{not empty epf_persistence_entity.attributes}" 
+							var="attributeVar" 
+							value="#{epf_persistence_entity.attributes}">
+							<fieldset>
+								<legend>
+									<h:outputLabel value="#{attributeVar.attribute.name}" ></h:outputLabel>
+								</legend>
+								<h:inputText 
+									rendered="#{attributeVar.basic}" 
+									value="#{attributeVar.value}" 
+									styleClass="#{style.css(epf_persistence_entity.entity.type.concat('.').concat(attributeVar.attribute.name))}"></h:inputText>
+								<ui:repeat 
+									rendered="#{attributeVar.embedded}" 
+									var="embeddedAttributeVar" 
+									value="#{epf_persistence_entity.getEmbeddedAttribute(attributeVar).attributes}">
+									<h:outputLabel value="#{embeddedAttributeVar.attribute.name}" ></h:outputLabel>
+									<h:inputText 
+										rendered="#{embeddedAttributeVar.basic}" 
+										value="#{embeddedAttributeVar.value}"
+										styleClass="#{style.css(epf_persistence_entity.entity.type.concat('.').concat(attributeVar.attribute.name).concat('.').concat(embeddedAttributeVar.attribute.name))}"></h:inputText>
+									<h:selectOneMenu 
+										rendered="#{embeddedAttributeVar.singular}" 
+										value="#{embeddedAttributeVar.value}"
+										styleClass="#{style.css(epf_persistence_entity.entity.type.concat('.').concat(attributeVar.attribute.name).concat('.').concat(embeddedAttributeVar.attribute.name))}">
+										<f:selectItems 
+											value="#{epf_persistence_entity.getValues(embeddedAttributeVar)}" 
+											var="embeddedValueVar" 
+											itemLabel="#{embeddedValueVar.toString()}" 
+											itemValue="#{embeddedValueVar.id}"></f:selectItems>
+									</h:selectOneMenu>
+									<h:selectManyMenu 
+										rendered="#{embeddedAttributeVar.plural}" 
+										value="#{embeddedAttributeVar.values}" 
+										styleClass="#{style.css(epf_persistence_entity.entity.type.concat('.').concat(attributeVar.attribute.name).concat('.').concat(embeddedAttributeVar.attribute.name))}">
+										<f:selectItems 
+											value="#{epf_persistence_entity.getValues(embeddedAttributeVar)}" 
+											var="embeddedValueVar" 
+											itemLabel="#{embeddedValueVar.toString()}" 
+											itemValue="#{embeddedValueVar.id}"></f:selectItems>
+									</h:selectManyMenu>
+								</ui:repeat>
+								<h:selectOneMenu 
+									rendered="#{attributeVar.singular}" 
+									value="#{attributeVar.value}" 
+									styleClass="#{style.css(epf_persistence_entity.entity.type.concat('.').concat(attributeVar.attribute.name))}">
+									<f:selectItems 
+										value="#{epf_persistence_entity.getValues(attributeVar)}" 
+										var="valueVar" 
+										itemLabel="#{valueVar.toString()}" 
+										itemValue="#{valueVar.id}"></f:selectItems>
+								</h:selectOneMenu>
+								<h:selectManyMenu 
+									rendered="#{attributeVar.plural}" 
+									value="#{attributeVar.values}" 
+									styleClass="#{style.css(epf_persistence_entity.entity.type.concat('.').concat(attributeVar.attribute.name))}">
+									<f:selectItems 
+										value="#{epf_persistence_entity.getValues(attributeVar)}" 
+										var="valueVar" 
+										itemLabel="#{valueVar.toString()}" 
+										itemValue="#{valueVar.id}"></f:selectItems>
+								</h:selectManyMenu>
+							</fieldset>
+						</ui:repeat>
+					</fieldset>
+					<h:commandButton 
+						action="#{epf_persistence_entity.persist}" 
+						value="#{i18n['epf.persistence.entity.persist']}"></h:commandButton>
+				</div>
+			</ui:define>
+		</ui:composition>
+	</h:body>
+</f:view>

@@ -5,18 +5,18 @@ package epf.shell.security;
 
 import java.net.URI;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import epf.client.security.Token;
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
-import epf.shell.registry.Registry;
 import epf.util.Var;
 import epf.util.client.Client;
-import epf.util.security.PasswordHelper;
+import epf.util.security.PasswordUtil;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -28,11 +28,20 @@ import picocli.CommandLine.Option;
 @RequestScoped
 @Function
 public class Security {
+
+	/**
+	 * 
+	 */
+	public static final String TOKEN_ARG = "--token";
+	/**
+	 * 
+	 */
+	public static final String TOKEN_DESC = "Token";
 	
 	/**
 	 * 
 	 */
-	@Inject @Named(Registry.EPF_SECURITY_URL)
+	@Inject @Named(epf.client.security.Security.SECURITY_URL)
 	private transient Var<URI> securityUrl;
 	
 	/**
@@ -40,6 +49,12 @@ public class Security {
 	 */
 	@Inject
 	private transient ClientUtil clientUtil;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	private transient IdentityStore identityStore;
 
 	/**
 	 * @param user
@@ -57,10 +72,9 @@ public class Security {
 			) throws Exception {
 		try(Client client = clientUtil.newClient(securityUrl.get())){
 			return epf.client.security.Security.login(
-					client, 
-					null, 
+					client,
 					user, 
-					PasswordHelper.hash(user, password), 
+					PasswordUtil.hash(user, password), 
 					new URL(securityUrl.get().toString())
 					);
 		}
@@ -73,12 +87,14 @@ public class Security {
 	 */
 	@Command(name = "logout")
 	public String logout(
-			@Option(names = {"-t", "--token"}, description = "Token") 
-			final String token
+			@ArgGroup(exclusive = true, multiplicity = "1")
+			@CallerPrincipal
+			final Credential credential
 			) throws Exception {
+		identityStore.remove(credential);
 		try(Client client = clientUtil.newClient(securityUrl.get())){
-			client.authorization(token);
-			return epf.client.security.Security.logOut(client, null);
+			client.authorization(credential.getToken());
+			return epf.client.security.Security.logOut(client);
 		}
 	}
 	
@@ -89,26 +105,55 @@ public class Security {
 	 */
 	@Command(name = "auth")
 	public Token authenticate(
-			@Option(names = {"-t", "--token"}, description = "Token") 
+			@Option(names = {"-t", TOKEN_ARG}, description = TOKEN_DESC) 
 			final String token) throws Exception {
+		Token authToken = null;
 		try(Client client = clientUtil.newClient(securityUrl.get())){
 			client.authorization(token);
-			return epf.client.security.Security.authenticate(client, null);
+			authToken = epf.client.security.Security.authenticate(client);
 		}
+		final Credential credential = new Credential();
+		credential.token = token;
+		credential.tokenID = authToken.getTokenID();
+		identityStore.put(credential);
+		return authToken;
 	}
 	
-	@Command(name = "set")
+	/**
+	 * @param token
+	 * @param password
+	 * @throws Exception
+	 */
+	@Command(name = "update")
 	public void update(
-			@Option(names = {"-t", "--token"}, description = "Token") 
-			final String token,
+			@ArgGroup(exclusive = true, multiplicity = "1")
+			@CallerPrincipal
+			final Credential credential,
 			@Option(names = {"-p", "--password"}, description = "Password", interactive = true)
 		    final char... password
 		    ) throws Exception {
 		try(Client client = clientUtil.newClient(securityUrl.get())){
-			client.authorization(token);
-			final Map<String, String> infos = new HashMap<>();
+			client.authorization(credential.getToken());
+			final Map<String, String> infos = new ConcurrentHashMap<>();
 			infos.put("password", new String(password));
-			epf.client.security.Security.update(client, null, infos);
+			epf.client.security.Security.update(client, infos);
+		}
+	}
+	
+	/**
+	 * @param token
+	 * @return
+	 * @throws Exception
+	 */
+	@Command(name = "revoke")
+	public String revoke(
+			@ArgGroup(exclusive = true, multiplicity = "1")
+			@CallerPrincipal
+			final Credential credential
+			) throws Exception {
+		try(Client client = clientUtil.newClient(securityUrl.get())){
+			client.authorization(credential.getToken());
+			return epf.client.security.Security.revoke(client);
 		}
 	}
 }

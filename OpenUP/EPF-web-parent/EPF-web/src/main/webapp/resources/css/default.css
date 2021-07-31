@@ -1,0 +1,97 @@
+body {
+    background-color: #ffffff;
+    font-size: 12px;
+    font-family: Verdana, "Verdana CE",  Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    color: #000000;  
+    margin: 10px;
+}
+
+h1 {
+    font-family: Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    border-bottom: 1px solid #AFAFAF; 
+    font-size:  16px;
+    font-weight: bold;
+    margin: 0px;
+    padding: 0px;
+    color: #D20005;
+}
+
+a:link, a:visited {
+  color: #045491;
+  font-weight : bold;
+  text-decoration: none;
+}
+
+a:link:hover, a:visited:hover  {
+  color: #045491;
+  font-weight : bold;
+  text-decoration : underline;
+}
+
+.collapsed-icon {
+    background-image: url("#{resource['images/plus.gif']}");
+}
+
+.expanded-icon {
+    background-image: url("#{resource['images/minus.gif']}");
+}
+
+.icon-delivery-process {
+    background-image: url("#{resource['images/delproc_obj.gif']}");
+}
+
+.icon-phase {
+    background-image: url("#{resource['images/Phase.gif']}");
+}
+
+.icon-iteration {
+    background-image: url("#{resource['images/Iteration.gif']}");
+}
+
+.icon-activity {
+    background-image: url("#{resource['images/Activity.gif']}");
+}
+
+.icon-task {
+    background-image: url("#{resource['images/Task.gif']}");
+}
+
+.icon-milestone {
+    background-image: url("#{resource['images/Milestone.gif']}");
+}
+
+.icon-role-set {
+    background-image: url("#{resource['images/RoleSet.gif']}");
+}
+
+.icon-role {
+    background-image: url("#{resource['images/Role.gif']}");
+}
+
+.icon-domain {
+    background-image: url("#{resource['images/Domain.gif']}");
+}
+
+.icon-artifact {
+    background-image: url("#{resource['images/Artifact.gif']}");
+}
+
+.icon-discipline {
+    background-image: url("#{resource['images/Discipline.gif']}");
+}
+
+.link-delivery-processes {
+    background-image: url("#{resource['images/delproc_obj.gif']}");
+}
+
+.link-roles {
+    background-image: url("#{resource['images/roles_obj.gif']}");
+}
+
+.link-work-products {
+    background-image: url("#{resource['images/workproduct_obj.gif']}");
+}
+
+.link-tasks {
+    background-image: url("#{resource['images/discipline_obj.gif']}");
+}

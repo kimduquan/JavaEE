@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<f:view
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+>
+	<h:head>
+		<h:outputStylesheet library="css" name="main.css" />
+	</h:head>
+	<h:body>
+		<h:form>
+			<h:selectOneListbox styleClass="#{style.css('schema.entities')}" rendered="#{epf_schema.entities != null}" value="#{epf_schema.entity}" onchange="submit()" valueChangeListener="#{epf_schema.handleEntityChanged}">
+				<f:selectItems value="#{epf_schema.entities}" var="entityVar" itemLabel="#{i18n[entityVar.type]}" itemValue="#{entityVar.name}" ></f:selectItems>
+			</h:selectOneListbox>
+		</h:form>
+	</h:body>
+</f:view>

@@ -5,13 +5,9 @@ package epf.cache.persistence;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -39,7 +35,7 @@ public class Persistence {
 	/**
 	 * 
 	 */
-	private static final String CACHE_KEY_FORMAT = "%s/%s/%s";
+	private static final String CACHE_KEY_FORMAT = "%s\0%s";
 	
 	/**
 	 * 
@@ -59,17 +55,7 @@ public class Persistence {
 	/**
 	 * 
 	 */
-	private transient final Map<String, Method> entityIdGetters = new ConcurrentHashMap<>();
-	
-	/**
-	 * 
-	 */
 	private transient final Map<String, String> entityNames = new ConcurrentHashMap<>();
-	
-	/**
-	 * 
-	 */
-	private transient final Map<String, String> entitySchemas = new ConcurrentHashMap<>();
 	
 	/**
 	 * 
@@ -83,7 +69,7 @@ public class Persistence {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI messagingUrl = new URI(System.getenv("epf.messaging.url"));
+			final URI messagingUrl = new URI(System.getenv(Messaging.MESSAGING_URL));
 			client = Messaging.connectToServer(messagingUrl.resolve("persistence"));
 			client.onMessage(this::onEntityEvent);
 		} 
@@ -146,38 +132,23 @@ public class Persistence {
 	 */
 	protected String getKey(final Object entity) {
 		final Class<?> cls = entity.getClass();
-		final String schema = getEntitySchema(cls);
 		final String entityName = getEntityName(cls);
 		final Field idField = getEntityIdField(cls);
-		final Method idGetter = getEntityIdGetter(cls, idField);
 		Object entityId = null;
-		if(idGetter != null) {
+		if(idField != null) {
 			try {
-				entityId = idGetter.invoke(entity);
+				idField.setAccessible(true);
+				entityId = idField.get(entity);
 			} 
-			catch (InvocationTargetException | IllegalAccessException | IllegalArgumentException e) {
-				logger.throwing(Method.class.getName(), "invoke", e);
+			catch (IllegalAccessException | IllegalArgumentException e) {
+				logger.throwing(cls.getName(), idField.getName(), e);
 			}
 		}
 		String key = null;
-		if(schema != null && entityName != null && entityId != null) {
-			key = String.format(CACHE_KEY_FORMAT, schema, entityName, entityId);
+		if(entityName != null && entityId != null) {
+			key = String.format(CACHE_KEY_FORMAT, entityName, entityId);
 		}
 		return key;
-	}
-	
-	/**
-	 * @param cls
-	 * @return
-	 */
-	protected String getEntitySchema(final Class<?> cls) {
-		return entitySchemas.computeIfAbsent(cls.getName(), key -> {
-			String name = null;
-			if(cls.isAnnotationPresent(javax.persistence.Table.class)) {
-				name = ((javax.persistence.Table)cls.getAnnotation(javax.persistence.Table.class)).schema();
-			}
-			return name;
-		});
 	}
 	
 	/**
@@ -200,48 +171,23 @@ public class Persistence {
 	 */
 	protected Field getEntityIdField(final Class<?> cls) {
 		return entityIdFields.computeIfAbsent(cls.getName(), name -> {
-			final Optional<Field> entityIdField = Stream.of(cls.getDeclaredFields()).parallel().filter(field -> field.isAnnotationPresent(Id.class)).findAny();
-			Field field = null;
-			if(entityIdField.isPresent()) {
-				field = entityIdField.get();
-			}
-			return field;
+			return Stream.of(cls.getDeclaredFields())
+					.filter(field -> field.isAnnotationPresent(Id.class))
+					.findAny()
+					.orElse(null);
 		});
 	}
 	
 	/**
-	 * @param cls
-	 * @param idField
-	 * @return
-	 */
-	protected Method getEntityIdGetter(final Class<?> cls, final Field idField) {
-		return entityIdGetters.computeIfAbsent(cls.getName(), key -> {
-			Method getter = null;
-			if(idField != null) {
-				final String name = "get" + idField.getName().substring(0, 1).toUpperCase(Locale.getDefault()) + idField.getName().substring(1);
-				try {
-					getter = cls.getMethod(name);
-				} 
-				catch (NoSuchMethodException | SecurityException e) {
-					logger.throwing("java.lang.Class", "getMethod", e);
-				}
-			}
-			return getter;
-		});
-	}
-	
-	/**
-	 * @param schema
 	 * @param name
 	 * @param entityId
 	 * @return
 	 */
 	public Object getEntity(
-            final String schema,
             final String name,
             final String entityId
             ) {
-		final String key = String.format(CACHE_KEY_FORMAT, schema, name, entityId);
+		final String key = String.format(CACHE_KEY_FORMAT, name, entityId);
 		Object entity = null;
 		if(cache.containsKey(key)) {
 			entity = cache.get(key);

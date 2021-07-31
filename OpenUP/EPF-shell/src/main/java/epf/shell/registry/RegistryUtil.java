@@ -15,7 +15,7 @@ import epf.util.Var;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
 import jakarta.annotation.PostConstruct;
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -24,7 +24,7 @@ import jakarta.inject.Named;
  * @author PC
  *
  */
-@ApplicationScoped
+@RequestScoped
 public class RegistryUtil {
 	
 	/**
@@ -70,7 +70,7 @@ public class RegistryUtil {
 	 * @return
 	 * @throws MalformedURLException 
 	 */
-	@Produces @Named(epf.shell.registry.Registry.EPF_SECURITY_URL)
+	@Produces @Named(epf.client.security.Security.SECURITY_URL)
 	public Var<URI> getSecurityUrl() throws MalformedURLException {
 		return new Var<>(remotes.get("security"));
 	}
@@ -79,8 +79,40 @@ public class RegistryUtil {
 	 * @return
 	 * @throws MalformedURLException
 	 */
-	@Produces @Named(epf.shell.registry.Registry.EPF_FILE_URL)
+	@Produces @Named(epf.client.file.Files.FILE_URL)
 	public Var<URI> getFileUrl() throws MalformedURLException {
 		return new Var<>(remotes.get("file"));
+	}
+	
+	/**
+	 * @return
+	 */
+	@Produces @Named(epf.client.persistence.Persistence.PERSISTENCE_URL)
+	public Var<URI> getPersistenceUrl(){
+		return new Var<>(remotes.get("persistence"));
+	}
+	
+	/**
+	 * @return
+	 */
+	@Produces @Named(epf.client.rules.Rules.RULES_URL)
+	public Var<URI> getRulesUrl(){
+		return new Var<>(remotes.get("rules"));
+	}
+	
+	/**
+	 * @return
+	 */
+	@Produces @Named(epf.client.schema.Schema.SCHEMA_URL)
+	public Var<URI> getSchemaUrl(){
+		return new Var<>(remotes.get("schema"));
+	}
+	
+	/**
+	 * @return
+	 */
+	@Produces @Named(epf.client.image.Image.IMAGE_URL)
+	public Var<URI> getImageUrl(){
+		return new Var<>(remotes.get("image"));
 	}
 }

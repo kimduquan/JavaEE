@@ -37,6 +37,11 @@ public interface Files {
      * 
      */
     String ROOT = "epf.file.root";
+    
+    /**
+     * 
+     */
+    String FILE_URL = "epf.file.url";
 	
 	/**
 	 * @param paths
@@ -66,7 +71,7 @@ public interface Files {
 	 * @return
 	 */
 	static Response createFile(final Client client, final InputStream input, final java.nio.file.Path paths) {
-		final Response response = client
+		return client
 				.request(
 						target -> { 
 							final Iterator<java.nio.file.Path> itPath = paths.iterator();
@@ -77,7 +82,6 @@ public interface Files {
 							}, 
 						req -> req)
 				.post(Entity.entity(input, MediaType.APPLICATION_OCTET_STREAM_TYPE));
-		return response;
 	}
 	
     /**
@@ -89,7 +93,7 @@ public interface Files {
     @GET
     @Path("{paths: .+}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    StreamingOutput lines(
+    StreamingOutput read(
     		@Context 
     		final UriInfo uriInfo, 
     		@PathParam("paths")
@@ -104,7 +108,7 @@ public interface Files {
      * @param paths
      * @return
      */
-    static InputStream lines(final Client client, final java.nio.file.Path paths) {
+    static InputStream read(final Client client, final java.nio.file.Path paths) {
     	return client
     			.request(
     					target -> {
@@ -142,7 +146,7 @@ public interface Files {
      * @return
      */
     static Response delete(final Client client, final java.nio.file.Path paths) {
-    	final Response response = client
+    	return client
     			.request(
     					target -> {
     						final Iterator<java.nio.file.Path> itPath = paths.iterator();
@@ -154,6 +158,5 @@ public interface Files {
     					req -> req
     					)
     			.delete();
-    	return response;
     }
 }

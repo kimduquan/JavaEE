@@ -99,19 +99,23 @@ public class ClientQueue {
     	final Queue<Client> pool = clients.computeIfAbsent(
                 uri.toString(), 
                 key -> {
-                    Queue<Client> queue = new ConcurrentLinkedQueue<>();
-                    if(buildClient != null) {
-                    	queue.add(buildClient.apply(newBuilder(context)).build());
+                    final Queue<Client> queue = new ConcurrentLinkedQueue<>();
+                    if(buildClient == null) {
+                        queue.add(newBuilder(context).build());
                     }
                     else {
-                        queue.add(newBuilder(context).build());
+                    	queue.add(buildClient.apply(newBuilder(context)).build());
                     }
                     return queue;
                 }
         );
         if(pool.isEmpty()){
-        	final Client client = buildClient.apply(newBuilder(context)).build();
-            pool.add(client);
+        	if(buildClient == null) {
+        		pool.add(newBuilder(context).build());
+        	}
+        	else {
+                pool.add(buildClient.apply(newBuilder(context)).build());
+        	}
         }
         return pool.poll();
     }

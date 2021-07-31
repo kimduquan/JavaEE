@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+
+<f:view
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+>
+	<h:body>
+		<ui:composition template="../template.xhtml">
+			<ui:define name="main">
+				<h:dataTable styleClass="#{style.css('persistence.entities')}" rendered="#{not empty epf_persistence.attributes and epf_persistence.objects != null}" value="#{epf_persistence.objects}" var="objectVar">
+					<h:column>
+						<h:outputText value="#{epf_persistence.indexOf(objectVar)}" />
+					</h:column>
+					<h:column>
+						<h:commandButton styleClass="#{style.css('persistence.entity.merge')}" value="#{i18n['epf.persistence.entity.merge']}" action="#{epf_persistence.merge(objectVar)}"></h:commandButton>
+					</h:column>
+					<h:column>
+						<h:commandButton styleClass="#{style.css('persistence.entity.remove')}" value="#{i18n['epf.persistence.entity.remove']}" action="#{epf_persistence.remove(objectVar)}"></h:commandButton>
+					</h:column>
+					<h:column rendered="#{epf_persistence.attributes.size() gt 0}">
+						<f:facet name="header">
+							<h:outputText value="#{epf_persistence.attributes[0].name}"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{objectVar[epf_persistence.attributes[0].name]}" ></h:outputText>
+					</h:column>
+					<h:column rendered="#{epf_persistence.attributes.size() gt 1}">
+						<f:facet name="header">
+							<h:outputText value="#{epf_persistence.attributes[1].name}"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{objectVar[epf_persistence.attributes[1].name]}" ></h:outputText>
+					</h:column>
+					<h:column rendered="#{epf_persistence.attributes.size() gt 2}">
+						<f:facet name="header">
+							<h:outputText value="#{epf_persistence.attributes[2].name}"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{objectVar[epf_persistence.attributes[2].name]}" ></h:outputText>
+					</h:column>
+					<h:column rendered="#{epf_persistence.attributes.size() gt 3}">
+						<f:facet name="header">
+							<h:outputText value="#{epf_persistence.attributes[3].name}"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{objectVar[epf_persistence.attributes[3].name]}" ></h:outputText>
+					</h:column>
+					<h:column rendered="#{epf_persistence.attributes.size() gt 4}">
+						<f:facet name="header">
+							<h:outputText value="#{epf_persistence.attributes[4].name}"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{objectVar[epf_persistence.attributes[4].name]}" ></h:outputText>
+					</h:column>
+					<h:column rendered="#{epf_persistence.attributes.size() gt 5}">
+						<f:facet name="header">
+							<h:outputText value="#{epf_persistence.attributes[5].name}"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{objectVar[epf_persistence.attributes[5].name]}" ></h:outputText>
+					</h:column>
+					<h:column rendered="#{epf_persistence.attributes.size() gt 6}">
+						<f:facet name="header">
+							<h:outputText value="#{epf_persistence.attributes[6].name}"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{objectVar[epf_persistence.attributes[6].name]}" ></h:outputText>
+					</h:column>
+					<h:column rendered="#{epf_persistence.attributes.size() gt 7}">
+						<f:facet name="header">
+							<h:outputText value="#{epf_persistence.attributes[7].name}"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{objectVar[epf_persistence.attributes[7].name]}" ></h:outputText>
+					</h:column>
+					<h:column rendered="#{epf_persistence.attributes.size() gt 8}">
+						<f:facet name="header">
+							<h:outputText value="#{epf_persistence.attributes[8].name}"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{objectVar[epf_persistence.attributes[8].name]}" ></h:outputText>
+					</h:column>
+					<h:column rendered="#{epf_persistence.attributes.size() gt 9}">
+						<f:facet name="header">
+							<h:outputText value="#{epf_persistence.attributes[9].name}"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{objectVar[epf_persistence.attributes[9].name]}" ></h:outputText>
+					</h:column>
+				</h:dataTable>
+			</ui:define>
+    	</ui:composition>
+	</h:body>
+</f:view>

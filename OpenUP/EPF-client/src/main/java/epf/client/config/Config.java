@@ -13,7 +13,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
-import epf.schema.EPF;
 import epf.util.client.Client;
 
 /**
@@ -24,6 +23,9 @@ import epf.util.client.Client;
 @Path("config")
 public interface Config {
 	
+	/**
+	 * 
+	 */
 	String CONFIG_URL = "epf.config.url";
     
     /**
@@ -34,7 +36,7 @@ public interface Config {
     @Produces(MediaType.APPLICATION_JSON)
     Map<String, String> getProperties(
     		@QueryParam("name") 
-    		@DefaultValue(EPF.SCHEMA)
+    		@DefaultValue("")
     		final String name
     		);
     

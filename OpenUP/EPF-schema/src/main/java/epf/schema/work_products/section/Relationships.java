@@ -7,11 +7,9 @@ package epf.schema.work_products.section;
 
 import epf.schema.EPF;
 import epf.schema.roles.Role;
-import epf.schema.tasks.Task;
 import epf.schema.work_products.WorkProductSlot;
 import java.io.Serializable;
 import java.util.List;
-import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -59,14 +57,18 @@ public class Relationships implements Serializable {
     /**
      * 
      */
-    @ManyToMany(mappedBy = "modifies")
+    @ManyToMany
+    @JoinTable(
+            name = "ROLE_MODIFIES",
+            schema = EPF.SCHEMA,
+            joinColumns = @JoinColumn(
+                    name = "ARTIFACT"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "ROLE"
+            )
+    )
     private List<Role> modifiedBy;
-    
-    /**
-     * 
-     */
-    @ManyToMany(mappedBy = "outputs")
-    private List<Task> outputFrom;
 
     public List<WorkProductSlot> getFulfilledSlots() {
         return fulfilledSlots;
@@ -77,7 +79,6 @@ public class Relationships implements Serializable {
     }
     
     @Name("Responsible")
-    @JsonbTransient
     public Role getResponsible(){
         return responsible;
     }
@@ -87,31 +88,11 @@ public class Relationships implements Serializable {
     }
     
     @Name("Modified_By")
-    @JsonbTransient
     public List<Role> getModifiedBy(){
         return modifiedBy;
     }
 
     public void setModifiedBy(final List<Role> modifiedBy) {
         this.modifiedBy = modifiedBy;
-    }
-    
-    /**
-     * @return
-     */
-    @Name("Input_To")
-    @JsonbTransient
-    public List<Task> getInputTo(){
-        return null;
-    }
-    
-    @Name("Output_From")
-    @JsonbTransient
-    public List<Task> getOutputFrom(){
-        return outputFrom;
-    }
-
-    public void setOutputFrom(final List<Task> outputFrom) {
-        this.outputFrom = outputFrom;
     }
 }

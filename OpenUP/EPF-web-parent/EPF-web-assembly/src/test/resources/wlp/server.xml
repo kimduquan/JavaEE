@@ -1,0 +1,15 @@
+<server description="production server">
+
+    <!-- Enable features -->
+    <featureManager>
+        <feature>servlet-4.0</feature>
+    </featureManager>
+
+    <httpEndpoint id="defaultHttpEndpoint"
+                  host="localhost"
+                  httpPort="8080"
+                  httpsPort="8443" />
+
+    <application location="EPF-web-web-1.0.0.war" />
+
+</server>

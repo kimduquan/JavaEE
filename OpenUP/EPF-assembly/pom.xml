@@ -13,8 +13,16 @@
         <!-- Jaeger configuration -->
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
-        <liberty.env.epf.service.url>https://localhost/service/</liberty.env.epf.service.url>
-        <liberty.env.epf.registry.url>https://localhost/gateway/registry/</liberty.env.epf.registry.url>
+		<liberty.env.epf.config.url>https://localhost/config/config/</liberty.env.epf.config.url>
+		<liberty.env.epf.script.url>https://localhost/script/script/</liberty.env.epf.script.url>
+		<liberty.env.epf.file.url>https://localhost/file/file/</liberty.env.epf.file.url>
+		<liberty.env.epf.persistence.url>https://localhost/persistence/persistence/</liberty.env.epf.persistence.url>
+		<liberty.env.epf.security.url>https://localhost/persistence/security/</liberty.env.epf.security.url>
+		<liberty.env.epf.gateway.url>https://localhost/gateway/</liberty.env.epf.gateway.url>
+		<liberty.env.epf.messaging.url>ws://localhost/messaging/messaging/</liberty.env.epf.messaging.url>
+		<liberty.env.epf.cache.url>https://localhost/cache/cache/</liberty.env.epf.cache.url>
+        <liberty.env.epf.registry.url>https://localhost/registry/registry/</liberty.env.epf.registry.url>
+		<liberty.env.epf.management.url>https://localhost/management/management/</liberty.env.epf.management.url>
 		<liberty.env.epf.webapp.url>https://localhost/webapp/</liberty.env.epf.webapp.url>
     </properties>
     <dependencies>
@@ -38,9 +46,57 @@
             <artifactId>EPF-client</artifactId>
             <version>1.0.0</version>
         </dependency>
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-batch</artifactId>
+            <version>1.0.0</version>
+            <type>war</type>
+        </dependency>
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-script</artifactId>
+            <version>1.0.0</version>
+            <type>war</type>
+        </dependency>
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-config</artifactId>
+            <version>1.0.0</version>
+            <type>war</type>
+        </dependency>
         <dependency>
             <groupId>openup</groupId>
-            <artifactId>EPF-service</artifactId>
+            <artifactId>EPF-messaging</artifactId>
+            <version>1.0.0</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-cache</artifactId>
+            <version>1.0.0</version>
+            <type>war</type>
+        </dependency>
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-file</artifactId>
+            <version>1.0.0</version>
+            <type>war</type>
+        </dependency>
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-persistence</artifactId>
+            <version>1.0.0</version>
+            <type>war</type>
+        </dependency>
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-registry</artifactId>
+            <version>1.0.0</version>
+            <type>war</type>
+        </dependency>
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-management</artifactId>
             <version>1.0.0</version>
             <type>war</type>
         </dependency>
@@ -52,16 +108,16 @@
         </dependency>
         <dependency>
             <groupId>openup</groupId>
-            <artifactId>EPF-portlet</artifactId>
-            <version>1.0.0</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
             <artifactId>EPF-webapp</artifactId>
             <version>1.0.0</version>
             <type>war</type>
         </dependency>
+        <!--<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-shell</artifactId>
+            <version>1.0.0</version>
+            <type>jar</type>
+        </dependency>-->
 		<dependency>
 			<groupId>com.liferay.faces</groupId>
 			<artifactId>com.liferay.faces.bridge.api</artifactId>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>openup</groupId>
+        <artifactId>EPF-web-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>EPF-web-assembly</artifactId>
+    <name>Eclipse Process Framework Web Application Server Assembly</name>
+    <packaging>liberty-assembly</packaging>
+
+    <dependencies>
+         <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-web</artifactId>
+            <version>1.0.0</version>
+            <type>war</type>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>io.openliberty.tools</groupId>
+                <artifactId>liberty-maven-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <installDirectory>${liberty.install.dir}</installDirectory>
+                    <userDirectory>${project.build.directory}</userDirectory>
+                    <serverName>web_production</serverName>
+                    <!-- Use custom server.xml -->
+                    <serverXmlFile>${project.basedir}/src/test/resources/wlp/server.xml</serverXmlFile>
+                    <!-- Drop application into apps/ directory -->
+                    <appsDirectory>apps</appsDirectory>
+                    <deployPackages>dependencies</deployPackages>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

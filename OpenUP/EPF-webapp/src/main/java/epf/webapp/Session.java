@@ -6,9 +6,7 @@
 package epf.webapp;
 
 import java.io.Serializable;
-import java.net.URI;
 import java.security.Principal;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -81,10 +79,7 @@ public class Session implements Serializable {
     protected void postConstruct(){
     	final Principal current = context.getCallerPrincipal();
     	if(current != null) {
-    		final Set<TokenPrincipal> token = context.getPrincipalsByType(TokenPrincipal.class);
-    		if(token.isEmpty()) {
-    			principal = identityStore.getPrincipal(current.getName());
-    		}
+    		principal = identityStore.peekPrincipal(current.getName());
     	}
     }
     
@@ -94,26 +89,14 @@ public class Session implements Serializable {
     @PreDestroy
     protected void preDestroy(){
         if(principal != null){
-        	try(Client client = newClient(registry.lookup("security"))) {
+        	try(Client client = newClient("security")) {
         		client.authorization(principal.getToken().getRawToken());
-            	Security.logOut(client, null);
+            	Security.logOut(client);
             }
             catch (Exception ex) {
                 logger.log(Level.SEVERE, "PreDestroy", ex);
             }
         }
-    }
-    
-    /**
-     * @param uri
-     * @return
-     */
-    public Client newClient(final URI uri) {
-    	final Client client = new Client(clients, uri, b -> b);
-    	if(principal != null) {
-        	client.authorization(principal.getToken().getRawToken());
-    	}
-    	return client;
     }
     
     /**

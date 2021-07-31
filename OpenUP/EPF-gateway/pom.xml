@@ -10,24 +10,43 @@
     <name>Eclipse Process Framework Gateway</name>
     <packaging>war</packaging>
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.eclipse.microprofile/microprofile -->
-        <dependency>
-            <groupId>org.eclipse.microprofile</groupId>
-            <artifactId>microprofile</artifactId>
-            <type>pom</type>
-    		<scope>provided</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/javax/javaee-web-api -->
+    	<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
 		<dependency>
-		    <groupId>javax</groupId>
-		    <artifactId>javaee-web-api</artifactId>
-    		<scope>provided</scope>
+		    <groupId>javax.ws.rs</groupId>
+		    <artifactId>javax.ws.rs-api</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.enterprise/cdi-api -->
+		<dependency>
+		    <groupId>javax.enterprise</groupId>
+		    <artifactId>cdi-api</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
+		<dependency>
+		    <groupId>javax.annotation</groupId>
+		    <artifactId>javax.annotation-api</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api -->
+		<dependency>
+		    <groupId>javax.websocket</groupId>
+		    <artifactId>javax.websocket-api</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.validation/validation-api -->
+		<dependency>
+		    <groupId>javax.validation</groupId>
+		    <artifactId>validation-api</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.fault-tolerance/microprofile-fault-tolerance-api -->
+		<dependency>
+		    <groupId>org.eclipse.microprofile.fault-tolerance</groupId>
+		    <artifactId>microprofile-fault-tolerance-api</artifactId>
 		</dependency>
         <!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.context-propagation/microprofile-context-propagation-api -->
-        <dependency>
-            <groupId>org.eclipse.microprofile.context-propagation</groupId>
-            <artifactId>microprofile-context-propagation-api</artifactId>
-        </dependency>
+		<dependency>
+		    <groupId>org.eclipse.microprofile.context-propagation</groupId>
+		    <artifactId>microprofile-context-propagation-api</artifactId>
+		</dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-utility</artifactId>

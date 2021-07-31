@@ -3,17 +3,14 @@
  */
 package epf.client.messaging;
 
-import java.io.StringReader;
 import java.util.logging.Logger;
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.json.bind.JsonbConfig;
 import javax.websocket.EncodeException;
 import javax.websocket.Encoder;
 import javax.websocket.EndpointConfig;
+import epf.util.json.Adapter;
 import epf.util.logging.Logging;
 
 /**
@@ -30,7 +27,12 @@ public class MessageEncoder implements Encoder.Text<Object> {
 	/**
 	 * 
 	 */
-	private transient final Jsonb jsonb = JsonbBuilder.create(new JsonbConfig().withAdapters(new MessageAdapter()));
+	private transient final Jsonb jsonb = JsonbBuilder.create(new JsonbConfig().withAdapters(new Adapter()));
+	
+	/**
+	 * 
+	 */
+	private transient final epf.util.json.Encoder encoder = new epf.util.json.Encoder();
 
 	@Override
 	public void init(final EndpointConfig config) {
@@ -45,20 +47,10 @@ public class MessageEncoder implements Encoder.Text<Object> {
 	@Override
 	public String encode(final Object object) throws EncodeException {
 		try {
-			final String json = jsonb.toJson(object);
-			try(StringReader reader = new StringReader(json)){
-				try(JsonReader jsonReader = Json.createReader(reader)){
-					final JsonObject jsonObject = jsonReader.readObject();
-					final JsonObject encodedJsonObject = Json
-							.createObjectBuilder(jsonObject)
-							.add("class", object.getClass().getName())
-							.build();
-					return encodedJsonObject.toString();
-				}
-			}
+			return encoder.encode(jsonb, object);
 		}
 		catch (Exception e) {
-			LOGGER.throwing(getClass().getName(), "encode", e);
+			LOGGER.throwing(encoder.getClass().getName(), "encode", e);
 			throw new EncodeException(object, e.getMessage(), e);
 		}
 	}

@@ -10,19 +10,6 @@
     <name>Eclipse Process Framework Batch</name>
     <packaging>war</packaging>
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.eclipse.microprofile/microprofile -->
-        <dependency>
-            <groupId>org.eclipse.microprofile</groupId>
-            <artifactId>microprofile</artifactId>
-            <type>pom</type>
-    		<scope>provided</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/javax/javaee-web-api -->
-		<dependency>
-		    <groupId>javax</groupId>
-		    <artifactId>javaee-web-api</artifactId>
-    		<scope>provided</scope>
-		</dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-client</artifactId>

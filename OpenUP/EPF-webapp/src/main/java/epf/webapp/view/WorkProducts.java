@@ -63,13 +63,12 @@ public class WorkProducts implements Serializable {
             	domains = Queries.executeQuery(
             			client, 
             			new GenericType<List<Domain>> () {}, 
-            			EPF.SCHEMA, 
             			target -> target.path(EPF.DOMAIN), 
             			0, 
             			100);
             } 
             catch (Exception e) {
-            	logger.severe(e.getMessage());
+            	logger.throwing(Queries.class.getName(), "executeQuery", e);
 			}
         }
         return domains;
@@ -84,13 +83,12 @@ public class WorkProducts implements Serializable {
             	artifacts = Queries.executeQuery(
             			client, 
             			new GenericType<List<Artifact>> () {}, 
-            			EPF.SCHEMA, 
             			target -> target.path(EPF.ARTIFACT), 
             			0, 
             			100);
             } 
             catch (Exception e) {
-				logger.severe(e.getMessage());
+            	logger.throwing(Queries.class.getName(), "executeQuery", e);
 			}
         }
         return artifacts;
