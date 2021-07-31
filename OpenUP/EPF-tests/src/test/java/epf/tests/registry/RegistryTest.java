@@ -80,6 +80,10 @@ public class RegistryTest {
 	    	expected.add(messagingUrl);
 	    	URI langUrl = UriBuilder.fromUri(GatewayUtil.getGatewayUrl().resolve("lang")).scheme("ws").port(9080).build();
 	    	expected.add(langUrl);
+	    	expected.add(GatewayUtil.getGatewayUrl().resolve("delivery-processes"));
+	    	expected.add(GatewayUtil.getGatewayUrl().resolve("roles"));
+	    	expected.add(GatewayUtil.getGatewayUrl().resolve("tasks"));
+	    	expected.add(GatewayUtil.getGatewayUrl().resolve("work-products"));
 		} 
     	catch (URISyntaxException e) {
 			logger.log(Level.SEVERE, "testList_OK", e);
