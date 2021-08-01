@@ -28,7 +28,10 @@ import epf.client.rules.Rules;
 import epf.client.schema.Schema;
 import epf.client.security.Security;
 import epf.util.SystemUtil;
+import openup.client.delivery_processes.DeliveryProcesses;
 import openup.client.roles.Roles;
+import openup.client.tasks.Tasks;
+import openup.client.work_products.WorkProducts;
 
 /**
  * @author PC
@@ -116,6 +119,15 @@ public class Registry implements epf.client.registry.Registry {
 			final URI rolesUrl = new URI(SystemUtil.getenv(Roles.ROLES_URL));
 			remote = "roles";
 			remotes.put(remote, rolesUrl);
+			final URI deliveryProcessesUrl = new URI(SystemUtil.getenv(DeliveryProcesses.DELIVERY_PROCESSES_URL));
+			remote = "delivery-processes";
+			remotes.put(remote, deliveryProcessesUrl);
+			final URI tasksUrl = new URI(SystemUtil.getenv(Tasks.TASKS_URL));
+			remote = "tasks";
+			remotes.put(remote, tasksUrl);
+			final URI workProductsUrl = new URI(SystemUtil.getenv(WorkProducts.WORK_PRODUCTS_URL));
+			remote = "work-products";
+			remotes.put(remote, workProductsUrl);
 		} 
 		catch (Exception e) {
 			logger.throwing(getClass().getName(), "postConstruct", e);

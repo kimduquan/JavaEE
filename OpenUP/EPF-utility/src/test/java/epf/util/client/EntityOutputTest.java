@@ -38,7 +38,7 @@ public class EntityOutputTest {
 	@Test
 	public void testEntityOutput() {
 		InputStream mockInputStream = Mockito.mock(InputStream.class);
-		EntityOutput output = new EntityOutput(mockInputStream);
+		new EntityOutput(mockInputStream);
 	}
 	
 	/**
@@ -46,7 +46,7 @@ public class EntityOutputTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testEntityOutput_NullInput() {
-		EntityOutput output = new EntityOutput(null);
+		new EntityOutput(null);
 	}
 
 	/**
