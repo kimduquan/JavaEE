@@ -5,12 +5,8 @@
  */
 package epf.persistence.security;
 
-import com.ibm.websphere.security.jwt.InvalidBuilderException;
-import com.ibm.websphere.security.jwt.InvalidClaimException;
 import com.ibm.websphere.security.jwt.JwtBuilder;
-import com.ibm.websphere.security.jwt.JwtException;
 import com.ibm.websphere.security.jwt.JwtToken;
-import com.ibm.websphere.security.jwt.KeyException;
 import epf.client.EPFException;
 import epf.client.security.Token;
 import epf.client.security.jwt.JWTConfig;
@@ -79,10 +75,7 @@ public class TokenGenerator implements Serializable {
     /**
      * @param jwt
      * @return
-     * @throws InvalidBuilderException
-     * @throws InvalidClaimException
-     * @throws KeyException
-     * @throws JwtException
+     * @throws EPFException
      */
     public Token generate(final Token jwt) throws EPFException {
     	try {

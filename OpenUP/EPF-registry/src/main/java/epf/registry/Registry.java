@@ -28,6 +28,7 @@ import epf.client.rules.Rules;
 import epf.client.schema.Schema;
 import epf.client.security.Security;
 import epf.util.SystemUtil;
+import openup.client.roles.Roles;
 
 /**
  * @author PC
@@ -112,12 +113,9 @@ public class Registry implements epf.client.registry.Registry {
 			final URI langUrl = new URI(SystemUtil.getenv(Lang.LANG_URL));
 			remote = "lang";
 			remotes.put(remote, langUrl);
-			final String openupUrl = SystemUtil.getenv("openup.url");
-			final String[] openupUrls = openupUrl.split(",");
-			for(String name : openupUrls) {
-				final String url = SystemUtil.getenv(name);
-				remotes.put(name, new URI(url));
-			}
+			final URI rolesUrl = new URI(SystemUtil.getenv(Roles.ROLES_URL));
+			remote = "roles";
+			remotes.put(remote, rolesUrl);
 		} 
 		catch (Exception e) {
 			logger.throwing(getClass().getName(), "postConstruct", e);

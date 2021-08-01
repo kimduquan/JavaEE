@@ -19,7 +19,7 @@ import openup.schema.roles.Role;
  *
  */
 @Path("roles")
-@RolesAllowed(openup.client.roles.Roles.ANY_ROLE)
+@RolesAllowed(epf.schema.roles.Role.DEFAULT_ROLE)
 @RequestScoped
 public class Roles implements openup.client.roles.Roles {
 	

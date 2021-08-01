@@ -7,6 +7,7 @@ import java.util.concurrent.CompletionStage;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -22,7 +23,7 @@ import epf.gateway.Request;
  * @author PC
  *
  */
-@Path("openup/roles")
+@Path("roles")
 @RequestScoped
 public class Roles {
 	
@@ -68,6 +69,25 @@ public class Roles {
             @Context final javax.ws.rs.core.Request req,
             @PathParam("roleSet") final String roleSet, 
             @PathParam("role") final String role) {
+        request.setHeaders(headers);
+        request.setUriInfo(uriInfo);
+        request.setRequest(req);
+        return request.request(null);
+    }
+    
+    /**
+	 * @param headers
+	 * @param uriInfo
+	 * @param req
+	 * @return
+	 */
+	@POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Asynchronous
+    public CompletionStage<Response> authorize(
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req) {
         request.setHeaders(headers);
         request.setUriInfo(uriInfo);
         request.setRequest(req);

@@ -8,18 +8,13 @@ import java.util.Set;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.client.EPFException;
 import epf.client.security.Token;
-import epf.persistence.context.Credential;
+import epf.schema.roles.Role;
 
 /**
  * @author PC
  *
  */
 public class TokenBuilder {
-
-	/**
-	 * 
-	 */
-	private transient Credential credential;
 	/**
 	 * 
 	 */
@@ -50,25 +45,10 @@ public class TokenBuilder {
 	private transient final String issuer;
 	
 	/**
-	 * 
-	 */
-	private transient final SecurityService service;
-	
-	/**
 	 * @param issuer
 	 */
-	public TokenBuilder(final String issuer, final SecurityService service) {
+	public TokenBuilder(final String issuer) {
 		this.issuer = issuer;
-		this.service = service;
-	}
-	
-	/**
-	 * @param credential
-	 * @return
-	 */
-	public TokenBuilder fromCredential(final Credential credential) {
-		this.credential = credential;
-		return this;
 	}
 
 	/**
@@ -135,7 +115,9 @@ public class TokenBuilder {
                 audience.getHost(), 
                 audience.getPort()));
         jwt.setAudience(aud);
-        jwt.setGroups(service.getUserRoles(credential.getDefaultManager(), name));
+        final Set<String> groups = new HashSet<>();
+        groups.add(Role.DEFAULT_ROLE);
+        jwt.setGroups(groups);
 	    try {
 			jwt = tokenGenerator.generate(jwt);
 		} 

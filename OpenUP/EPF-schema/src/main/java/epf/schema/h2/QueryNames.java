@@ -9,9 +9,4 @@ public interface QueryNames {
 	 * 
 	 */
 	String FT_SEARCH_DATA = "EPF.FulltextSearch";
-	
-	/**
-	 * 
-	 */
-	String ROLES = "EPF.Roles";
 }

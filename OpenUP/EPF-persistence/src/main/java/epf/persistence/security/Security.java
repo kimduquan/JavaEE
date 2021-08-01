@@ -109,11 +109,10 @@ public class Security implements epf.client.security.Security, Serializable {
                         username,
                         passwordHash
                 );
-    	final TokenBuilder builder = new TokenBuilder(issuer, service);
+    	final TokenBuilder builder = new TokenBuilder(issuer);
     	final long time = Instant.now().getEpochSecond();
         final Token jwt = builder
         		.expire(jwtExpTimeUnit, jwtExpDuration)
-        		.fromCredential(credential)
         		.generator(generator)
         		.time(time)
         		.url(url)
@@ -137,7 +136,7 @@ public class Security implements epf.client.security.Security, Serializable {
     public Token authenticate() {
     	if(getSession(context, persistence) != null){
     		final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
-    		final Token token = new TokenBuilder(issuer, service).build(jwt);
+    		final Token token = new TokenBuilder(issuer).build(jwt);
     		token.setRawToken(null);
     		return token;
         }
@@ -218,12 +217,11 @@ public class Security implements epf.client.security.Security, Serializable {
 				final JsonWebToken jsonWebToken = (JsonWebToken) context.getUserPrincipal();
 				try {
 					final URL url = new URL(jsonWebToken.getAudience().iterator().next());
-					final TokenBuilder builder = new TokenBuilder(issuer, service);
+					final TokenBuilder builder = new TokenBuilder(issuer);
 					final Credential credential = getCredential(context, persistence);
 					final long time = Instant.now().getEpochSecond();
 			        final Token jwt = builder
 			        		.expire(jwtExpTimeUnit, jwtExpDuration)
-			        		.fromCredential(credential)
 			        		.generator(generator)
 			        		.time(time)
 			        		.url(url)
@@ -248,11 +246,10 @@ public class Security implements epf.client.security.Security, Serializable {
                         username,
                         passwordHash
                 );
-    	final TokenBuilder builder = new TokenBuilder(issuer, service);
+    	final TokenBuilder builder = new TokenBuilder(issuer);
     	final long time = Instant.now().getEpochSecond();
         final Token jwt = builder
         		.expire(jwtExpTimeUnit, jwtExpDuration)
-        		.fromCredential(credential)
         		.generator(generator)
         		.time(time)
         		.url(url)

@@ -40,13 +40,18 @@ public class WebDriverUtil {
 			options.setHeadless(Boolean.valueOf(headless));
 		}
 		
-		//System.setProperty("webdriver.gecko.driver", "C:\\GIT\\JavaEE\\OpenUP\\EPF-tests\\geckodriver.exe");
+		final String webdriverDriver = System.getProperty("webdriver.gecko.driver");
+		if(webdriverDriver == null) {
+			System.setProperty("webdriver.gecko.driver", "./geckodriver.exe");
+		}
 		final WebDriver driver = new FirefoxDriver(options);
 		
 		final String implicit = System.getProperty("webdriver.timeouts.implicit");
 		if(implicit != null) {
-			driver.manage().timeouts()
-			.implicitlyWait(Long.valueOf(implicit), TimeUnit.SECONDS);
+			driver.manage().timeouts().implicitlyWait(Long.valueOf(implicit), TimeUnit.SECONDS);
+		}
+		else {
+			driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
 		}
 		
 		final String pageLoad = System.getProperty("webdriver.timeouts.pageLoad");

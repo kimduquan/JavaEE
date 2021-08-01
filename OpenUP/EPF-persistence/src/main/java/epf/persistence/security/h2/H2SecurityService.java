@@ -4,14 +4,12 @@
 package epf.persistence.security.h2;
 
 import java.util.Locale;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import epf.schema.h2.Queries;
-import epf.schema.h2.QueryNames;
 import epf.persistence.security.SecurityService;
 
 /**
@@ -20,17 +18,6 @@ import epf.persistence.security.SecurityService;
  */
 @RequestScoped
 public class H2SecurityService implements SecurityService {
-
-	@Override
-	public Set<String> getUserRoles(final EntityManager manager, final String userName) {
-		return manager
-		.createNamedQuery(QueryNames.ROLES, String.class)
-		.setParameter(1, userName.toUpperCase(Locale.getDefault()))
-		.setParameter(2, userName.toUpperCase(Locale.getDefault()))
-		.getResultStream()
-		.map(H2SecurityService::mapRole)
-		.collect(Collectors.toSet());
-	}
 
 	@Override
 	@Transactional

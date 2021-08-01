@@ -23,7 +23,7 @@ public interface Roles {
 	/**
 	 * 
 	 */
-	String ANY_ROLE = "Any_Role";
+	String ROLES_URL = "openup.roles.url";
 
 	/**
 	 * @return

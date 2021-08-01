@@ -3,7 +3,6 @@
  */
 package epf.persistence.security;
 
-import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
@@ -12,13 +11,6 @@ import javax.transaction.Transactional;
  *
  */
 public interface SecurityService {
-
-	/**
-	 * @param manager
-	 * @param userName
-	 * @return
-	 */
-	Set<String> getUserRoles(final EntityManager manager, final String userName);
 	
 	/**
 	 * @param manager
