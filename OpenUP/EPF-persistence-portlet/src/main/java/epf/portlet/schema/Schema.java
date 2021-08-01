@@ -21,8 +21,8 @@ import epf.portlet.Event;
 import epf.portlet.EventUtil;
 import epf.portlet.Parameter;
 import epf.portlet.ParameterUtil;
-import epf.portlet.client.ClientUtil;
 import epf.portlet.registry.RegistryUtil;
+import epf.portlet.security.SecurityUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
 
@@ -64,7 +64,7 @@ public class Schema implements SchemaView, Serializable {
 	 * 
 	 */
 	@Inject
-	private transient ClientUtil clientUtil;
+	private transient SecurityUtil clientUtil;
 	
 	/**
 	 * 

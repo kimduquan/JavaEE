@@ -8,7 +8,6 @@ import java.util.Set;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.client.EPFException;
 import epf.client.security.Token;
-import epf.schema.roles.Role;
 
 /**
  * @author PC
@@ -45,10 +44,16 @@ public class TokenBuilder {
 	private transient final String issuer;
 	
 	/**
+	 * 
+	 */
+	private transient final Set<String> groups;
+	
+	/**
 	 * @param issuer
 	 */
-	public TokenBuilder(final String issuer) {
+	public TokenBuilder(final String issuer, final Set<String> groups) {
 		this.issuer = issuer;
+		this.groups = groups;
 	}
 
 	/**
@@ -115,8 +120,6 @@ public class TokenBuilder {
                 audience.getHost(), 
                 audience.getPort()));
         jwt.setAudience(aud);
-        final Set<String> groups = new HashSet<>();
-        groups.add(Role.DEFAULT_ROLE);
         jwt.setGroups(groups);
 	    try {
 			jwt = tokenGenerator.generate(jwt);

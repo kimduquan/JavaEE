@@ -9,6 +9,18 @@
 	<h:body>
 		<ui:composition template="../template.xhtml">
 			<ui:define name="main">
+				<h:dataTable 
+					rendered="#{not empty openup_roles.roles}" 
+					value="#{openup_roles.roles}"
+					styleClass="#{style.css('openup.roles')}"
+					var="roleVar">
+					<h:column>
+						<h:commandLink 
+							action="#{openup_roles.setRole(roleVar)}" 
+							value="#{openup_roles.toString(roleVar)}" 
+							styleClass="#{style.css('openup.schema.roles.role.name')}" />
+					</h:column>
+				</h:dataTable>
 			</ui:define>
     	</ui:composition>
 	</h:body>

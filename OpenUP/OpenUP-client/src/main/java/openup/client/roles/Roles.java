@@ -6,11 +6,10 @@ package openup.client.roles;
 import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
-import epf.schema.roles.RoleSet;
-import openup.client.OpenUPException;
+import epf.util.client.Client;
 import openup.schema.roles.Role;
 
 /**
@@ -30,17 +29,16 @@ public interface Roles {
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	List<RoleSet> getRoles();
+	List<Role> getRoles();
 	
 	/**
-	 * @param roleSet
-	 * @param role
+	 * @param client
 	 * @return
-	 * @throws OpenUPException
 	 */
-	@GET
-	@Path("{roleSet}/{role}")
-	@Produces(MediaType.APPLICATION_JSON)
-	List<Role> getRoles(@PathParam("roleSet") final String roleSet, @PathParam("role") final String role) throws OpenUPException;
-	
+	static List<Role> getRoles(final Client client) {
+		return client.request(
+				target -> target, 
+				req -> req)
+				.get(new GenericType<List<Role>>() {});
+	}
 }

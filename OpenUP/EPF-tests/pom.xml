@@ -37,10 +37,8 @@
 		<liberty.env.epf_webapp_url>https://localhost:9443/webapp/</liberty.env.epf_webapp_url>
 		<liberty.env.epf_tests_file_root>target/servers/test/epf.file.root</liberty.env.epf_tests_file_root>
 		<liberty.env.epf_shell_path>../EPF-shell/target/appassembler/bin</liberty.env.epf_shell_path>
-		<liberty.env.openup_url>openup_security_url,openup_delivery_processes_url,openup_roles_url,openup_tasks_url,openup_work_products_url</liberty.env.openup_url>
 		<liberty.env.openup_delivery_processes_url>https://localhost:9443/delivery-processes/delivery-processes/</liberty.env.openup_delivery_processes_url>
 		<liberty.env.openup_roles_url>https://localhost:9443/roles/roles/</liberty.env.openup_roles_url>
-		<liberty.env.openup_security_url>https://localhost:9443/roles/security/</liberty.env.openup_security_url>
 		<liberty.env.openup_tasks_url>https://localhost:9443/tasks/tasks/</liberty.env.openup_tasks_url>
 		<liberty.env.openup_work_products_url>https://localhost:9443/work-products/work-products/</liberty.env.openup_work_products_url>
     </properties>
@@ -294,10 +292,8 @@
                         <epf.tests.shell.command>${command}</epf.tests.shell.command>
                         <webdriver.timeouts.implicit>60</webdriver.timeouts.implicit>
                         <webdriver.firefox.headless>true</webdriver.firefox.headless>
-						<openup.url>openup.delivery_processes.url,openup.roles.url,openup.tasks.url,openup.work_products.url,openup.security.url</openup.url>
 						<openup.delivery_processes.url>https://localhost:${httpsPort}/delivery-processes/delivery-processes/</openup.delivery_processes.url>
 						<openup.roles.url>https://localhost:${httpsPort}/roles/roles/</openup.roles.url>
-						<openup.security.url>https://localhost:${httpsPort}/roles/security/</openup.security.url>
 						<openup.tasks.url>https://localhost:${httpsPort}/tasks/tasks/</openup.tasks.url>
 						<openup.work_products.url>https://localhost:${httpsPort}/work-products/work-products/</openup.work_products.url>
                     </systemPropertyVariables>

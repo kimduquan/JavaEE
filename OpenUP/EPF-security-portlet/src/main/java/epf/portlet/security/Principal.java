@@ -17,7 +17,6 @@ import epf.client.security.Credential;
 import epf.client.security.Token;
 import epf.portlet.CookieUtil;
 import epf.portlet.RequestUtil;
-import epf.portlet.client.ClientUtil;
 import epf.portlet.registry.RegistryUtil;
 import epf.util.client.Client;
 
@@ -55,7 +54,7 @@ public class Principal implements PrincipalView, Serializable {
 	 * 
 	 */
 	@Inject
-	private transient ClientUtil clientUtil;
+	private transient SecurityUtil clientUtil;
 	
 	/**
 	 * 

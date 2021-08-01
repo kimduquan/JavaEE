@@ -5,8 +5,9 @@ package epf.portlet.config;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import epf.portlet.client.ClientUtil;
+
 import epf.portlet.registry.RegistryUtil;
+import epf.portlet.security.SecurityUtil;
 import epf.util.client.Client;
 
 /**
@@ -32,7 +33,7 @@ public class ConfigUtil {
 	 * 
 	 */
 	@Inject
-	private transient ClientUtil clientUtil;
+	private transient SecurityUtil clientUtil;
 	
 	/**
 	 * @param name

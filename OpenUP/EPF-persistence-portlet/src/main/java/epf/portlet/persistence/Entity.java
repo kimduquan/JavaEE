@@ -28,8 +28,8 @@ import epf.portlet.EventUtil;
 import epf.portlet.Parameter;
 import epf.portlet.ParameterUtil;
 import epf.portlet.RequestUtil;
-import epf.portlet.client.ClientUtil;
 import epf.portlet.registry.RegistryUtil;
+import epf.portlet.security.SecurityUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
 import epf.portlet.JsonUtil;
@@ -97,7 +97,7 @@ public class Entity implements Serializable {
 	 * 
 	 */
 	@Inject
-	private transient ClientUtil clientUtil;
+	private transient SecurityUtil clientUtil;
 
 	/**
 	 * 

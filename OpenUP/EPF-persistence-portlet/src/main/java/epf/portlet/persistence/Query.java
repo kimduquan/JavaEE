@@ -26,9 +26,9 @@ import epf.portlet.JsonObjectCollector;
 import epf.portlet.JsonUtil;
 import epf.portlet.Parameter;
 import epf.portlet.ParameterUtil;
-import epf.portlet.client.ClientUtil;
 import epf.portlet.config.ConfigUtil;
 import epf.portlet.registry.RegistryUtil;
+import epf.portlet.security.SecurityUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
 
@@ -96,7 +96,7 @@ public class Query implements QueryView, Serializable {
 	 * 
 	 */
 	@Inject
-	private transient ClientUtil clientUtil;
+	private transient SecurityUtil clientUtil;
 	
 	/**
 	 * 

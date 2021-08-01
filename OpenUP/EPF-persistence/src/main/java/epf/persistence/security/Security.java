@@ -11,10 +11,13 @@ import java.net.URL;
 import java.security.Principal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
@@ -32,6 +35,7 @@ import epf.persistence.context.Application;
 import epf.persistence.context.Credential;
 import epf.persistence.context.Session;
 import epf.schema.roles.Role;
+import openup.schema.Naming;
 
 /**
  *
@@ -109,7 +113,8 @@ public class Security implements epf.client.security.Security, Serializable {
                         username,
                         passwordHash
                 );
-    	final TokenBuilder builder = new TokenBuilder(issuer);
+    	final Set<String> roles = getRoles(credential.getDefaultManager(), username);
+    	final TokenBuilder builder = new TokenBuilder(issuer, roles);
     	final long time = Instant.now().getEpochSecond();
         final Token jwt = builder
         		.expire(jwtExpTimeUnit, jwtExpDuration)
@@ -136,7 +141,7 @@ public class Security implements epf.client.security.Security, Serializable {
     public Token authenticate() {
     	if(getSession(context, persistence) != null){
     		final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
-    		final Token token = new TokenBuilder(issuer).build(jwt);
+    		final Token token = new TokenBuilder(issuer, jwt.getGroups()).build(jwt);
     		token.setRawToken(null);
     		return token;
         }
@@ -201,6 +206,20 @@ public class Security implements epf.client.security.Security, Serializable {
     	}
     	throw new ForbiddenException();
     }
+    
+    /**
+     * @param manager
+     * @return
+     */
+    protected static Set<String> getRoles(final EntityManager manager, final String name){
+    	return manager.createNamedQuery(Naming.FIND_ROLES_BY_NAME, openup.schema.roles.Role.class)
+    			.setParameter("name", name)
+    			.getSingleResult()
+    			.getRoles()
+    			.stream()
+    			.map(r -> r.getName())
+    			.collect(Collectors.toSet());
+    }
 
 	@Override
 	public void update(final CredentialInfo info) {
@@ -217,7 +236,7 @@ public class Security implements epf.client.security.Security, Serializable {
 				final JsonWebToken jsonWebToken = (JsonWebToken) context.getUserPrincipal();
 				try {
 					final URL url = new URL(jsonWebToken.getAudience().iterator().next());
-					final TokenBuilder builder = new TokenBuilder(issuer);
+					final TokenBuilder builder = new TokenBuilder(issuer, jsonWebToken.getGroups());
 					final Credential credential = getCredential(context, persistence);
 					final long time = Instant.now().getEpochSecond();
 			        final Token jwt = builder
@@ -246,7 +265,8 @@ public class Security implements epf.client.security.Security, Serializable {
                         username,
                         passwordHash
                 );
-    	final TokenBuilder builder = new TokenBuilder(issuer);
+		final Set<String> roles = getRoles(credential.getDefaultManager(), username);
+    	final TokenBuilder builder = new TokenBuilder(issuer, roles);
     	final long time = Instant.now().getEpochSecond();
         final Token jwt = builder
         		.expire(jwtExpTimeUnit, jwtExpDuration)

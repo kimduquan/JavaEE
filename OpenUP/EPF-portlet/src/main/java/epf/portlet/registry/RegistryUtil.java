@@ -6,8 +6,9 @@ package epf.portlet.registry;
 import java.net.URI;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import epf.portlet.client.ClientUtil;
+
 import epf.portlet.gateway.GatewayUtil;
+import epf.portlet.security.SecurityUtil;
 import epf.util.client.Client;
 
 /**
@@ -33,7 +34,7 @@ public class RegistryUtil {
 	 * 
 	 */
 	@Inject
-	private transient ClientUtil clientUtil;
+	private transient SecurityUtil clientUtil;
 	
 	/**
 	 * @param name

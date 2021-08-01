@@ -17,9 +17,11 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import openup.schema.Naming;
 import openup.schema.OpenUP;
 
 /**
@@ -30,6 +32,7 @@ import openup.schema.OpenUP;
 @Schema(name = OpenUP.ROLE, title = "Role")
 @Entity(name = OpenUP.ROLE)
 @Table(schema = OpenUP.SCHEMA, name = "OPENUP_ROLE", indexes = {@Index(columnList = "NAME")})
+@NamedQuery(name = Naming.FIND_ROLES_BY_NAME, query = "SELECT r FROM Role r WHERE r.name = :name")
 public class Role implements Serializable {
 
     /**
@@ -98,5 +101,10 @@ public class Role implements Serializable {
 
 	public void setRoles(final List<epf.schema.roles.Role> roles) {
 		this.roles = roles;
+	}
+	
+	@Override
+	public String toString() {
+		return name != null ? name : super.toString();
 	}
 }
