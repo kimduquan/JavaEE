@@ -214,10 +214,9 @@ public class Security implements epf.client.security.Security, Serializable {
     protected static Set<String> getRoles(final EntityManager manager, final String name){
     	return manager.createNamedQuery(Naming.FIND_ROLES_BY_NAME, openup.schema.roles.Role.class)
     			.setParameter("name", name)
-    			.getSingleResult()
-    			.getRoles()
-    			.stream()
-    			.map(r -> r.getName())
+    			.getResultStream()
+    			.flatMap(role -> role.getRoles().stream())
+    			.map(role -> role.getName())
     			.collect(Collectors.toSet());
     }
 
