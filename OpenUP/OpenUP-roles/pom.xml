@@ -52,5 +52,10 @@
             <artifactId>OpenUP-client</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>OpenUP-schema</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 </project>
