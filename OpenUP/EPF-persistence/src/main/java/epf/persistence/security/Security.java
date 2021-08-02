@@ -184,9 +184,6 @@ public class Security implements epf.client.security.Security, Serializable {
         	jwt = (JsonWebToken)principal;
         	session = credential.getSession(jwt.getTokenID());
         }
-        if(session != null && !session.checkExpirationTime(jwt.getExpirationTime())) {
-        	throw new ForbiddenException();
-        }
         return session;
     }
     

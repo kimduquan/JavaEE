@@ -95,7 +95,7 @@ public class Request {
      */
     protected static EntityManager getEntityManager(final Principal principal, final JsonWebToken jwt, final Session session) {
     	EntityManager manager = null;
-    	if(session != null && jwt != null && session.checkExpirationTime(jwt.getExpirationTime())){
+    	if(session != null && jwt != null){
         	manager = session
                     .putConversation(jwt.getTokenID())
                     .putManager(jwt.getIssuedAtTime());

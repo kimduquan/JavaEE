@@ -5,7 +5,6 @@
  */
 package epf.persistence.context;
 
-import java.time.Instant;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.persistence.EntityManagerFactory;
@@ -67,13 +66,5 @@ public class Session {
     		conversation.close();
         });
         conversations.clear();
-    }
-    
-    /**
-     * @param expirationTime
-     * @return
-     */
-    public boolean checkExpirationTime(final long expirationTime) {
-    	return Instant.now().getEpochSecond() < expirationTime;
     }
 }
