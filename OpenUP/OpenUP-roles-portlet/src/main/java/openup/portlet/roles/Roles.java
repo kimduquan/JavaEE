@@ -66,7 +66,7 @@ public class Roles implements Serializable, RolesView {
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		try(Client client = securityUtil.newClient(registry.get("roles"))){
+		try(Client client = securityUtil.newClient(registry.get("persistence"))){
 			roles = Queries.executeQuery(
 					client, 
 					new GenericType<List<Role>>() {}, 
