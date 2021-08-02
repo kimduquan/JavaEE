@@ -5,20 +5,21 @@ package openup.portlet.roles;
 
 import java.util.List;
 import java.util.logging.Logger;
-
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-
-import epf.portlet.client.ClientUtil;
+import javax.ws.rs.core.GenericType;
 import epf.portlet.registry.RegistryUtil;
+import epf.portlet.security.SecurityUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
 import openup.client.portlet.Naming;
 import openup.client.portlet.roles.RolesView;
 import java.io.Serializable;
+import openup.schema.OpenUP;
 import openup.schema.roles.Role;
+import epf.client.persistence.Queries;
 
 /**
  * @author PC
@@ -52,7 +53,7 @@ public class Roles implements Serializable, RolesView {
 	 * 
 	 */
 	@Inject
-	private transient ClientUtil clientUtil;
+	private transient SecurityUtil securityUtil;
 	
 	/**
 	 * 
@@ -65,8 +66,13 @@ public class Roles implements Serializable, RolesView {
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		try(Client client = clientUtil.newClient(registry.get("roles"))){
-			roles = openup.client.roles.Roles.getRoles(client);
+		try(Client client = securityUtil.newClient(registry.get("roles"))){
+			roles = Queries.executeQuery(
+					client, 
+					new GenericType<List<Role>>() {}, 
+					target -> target.path(OpenUP.ROLE), 
+					null, 
+					null);
 		} 
 		catch (Exception e) {
 			LOGGER.throwing(getClass().getName(), "postConstruct", e);
