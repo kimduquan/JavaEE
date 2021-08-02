@@ -7,10 +7,9 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import epf.client.gateway.Gateway;
 import epf.util.client.Client;
 import epf.util.client.ClientQueue;
-import epf.util.SystemUtil;
+import epf.client.gateway.GatewayUtil;
 
 /**
  * @author PC
@@ -48,7 +47,7 @@ public class LocateRegistry {
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		try(Client client = new Client(clients, new URI(SystemUtil.getenv(Gateway.GATEWAY_URL)).resolve("registry"), b -> b)){
+		try(Client client = new Client(clients, GatewayUtil.get("registry"), b -> b)){
 			Registry
 			.list(client, null)
 			.forEach(link -> {

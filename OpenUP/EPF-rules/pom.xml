@@ -41,9 +41,9 @@
 		    <groupId>org.drools</groupId>
 		    <artifactId>drools-jsr94</artifactId>
 		</dependency>
-        <dependency>
+		<dependency>
             <groupId>openup</groupId>
-            <artifactId>EPF-schema</artifactId>
+            <artifactId>OpenUP-schema</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>

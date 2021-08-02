@@ -59,6 +59,11 @@ public interface Security {
     String URL = "url";
     
     /**
+     * 
+     */
+    String DEFAULT_ROLE = "Any_Role";
+    
+    /**
      * @param username
      * @param passwordHash
      * @param url

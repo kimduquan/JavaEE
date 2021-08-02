@@ -32,7 +32,7 @@ import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.client.EPFException;
-import epf.schema.roles.Role;
+import epf.client.security.Security;
 import epf.util.client.EntityOutput;
 import epf.util.file.PathUtil;
 
@@ -41,7 +41,7 @@ import epf.util.file.PathUtil;
  * @author FOXCONN
  */
 @javax.ws.rs.Path("file")
-@RolesAllowed(Role.DEFAULT_ROLE)
+@RolesAllowed(Security.DEFAULT_ROLE)
 @ApplicationScoped
 public class FileStore implements epf.client.file.Files {
 	
