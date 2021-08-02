@@ -16,7 +16,7 @@ import javax.rules.StatelessRuleSession;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import epf.schema.roles.Role;
+import epf.client.security.Security;
 import epf.util.json.Adapter;
 import epf.util.json.Decoder;
 import epf.util.json.Encoder;
@@ -27,7 +27,7 @@ import epf.util.json.Encoder;
  */
 @Path("rules")
 @RequestScoped
-@RolesAllowed(Role.DEFAULT_ROLE)
+@RolesAllowed(Security.DEFAULT_ROLE)
 public class Rules implements epf.client.rules.Rules {
 	
 	/**

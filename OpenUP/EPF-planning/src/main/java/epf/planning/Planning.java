@@ -6,7 +6,7 @@ package epf.planning;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.Path;
-import epf.schema.roles.Role;
+import epf.client.security.Security;
 
 /**
  * @author PC
@@ -14,7 +14,7 @@ import epf.schema.roles.Role;
  */
 @Path("planning")
 @RequestScoped
-@RolesAllowed(Role.DEFAULT_ROLE)
+@RolesAllowed(Security.DEFAULT_ROLE)
 public class Planning implements epf.client.planning.Planning {
 
 }

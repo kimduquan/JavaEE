@@ -15,17 +15,17 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import epf.client.schema.util.EmbeddableComparator;
 import epf.client.schema.util.EntityComparator;
+import epf.client.security.Security;
 import epf.persistence.Request;
 import epf.persistence.impl.Embeddable;
 import epf.persistence.impl.Entity;
-import epf.schema.roles.Role;
 
 /**
  * @author PC
  *
  */
 @Path("schema")
-@RolesAllowed(Role.DEFAULT_ROLE)
+@RolesAllowed(Security.DEFAULT_ROLE)
 @RequestScoped
 public class Schema implements epf.client.schema.Schema {
 	

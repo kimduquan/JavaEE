@@ -34,7 +34,6 @@ import epf.client.security.jwt.JWTConfig;
 import epf.persistence.context.Application;
 import epf.persistence.context.Credential;
 import epf.persistence.context.Session;
-import epf.schema.roles.Role;
 import openup.schema.Naming;
 
 /**
@@ -42,7 +41,7 @@ import openup.schema.Naming;
  * @author FOXCONN
  */
 @Path("security")
-@RolesAllowed(Role.DEFAULT_ROLE)
+@RolesAllowed(epf.client.security.Security.DEFAULT_ROLE)
 @RequestScoped
 public class Security implements epf.client.security.Security, Serializable {
     

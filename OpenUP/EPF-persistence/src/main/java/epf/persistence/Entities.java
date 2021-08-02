@@ -21,15 +21,15 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import epf.client.EPFException;
+import epf.client.security.Security;
 import epf.persistence.impl.Entity;
-import epf.schema.roles.Role;
 
 /**
  *
  * @author FOXCONN
  */
 @Path("persistence")
-@RolesAllowed(Role.DEFAULT_ROLE)
+@RolesAllowed(Security.DEFAULT_ROLE)
 @RequestScoped
 public class Entities implements epf.client.persistence.Entities {
 	

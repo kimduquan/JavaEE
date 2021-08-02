@@ -31,17 +31,17 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import epf.client.persistence.SearchData;
+import epf.client.security.Security;
 import epf.persistence.impl.Entity;
 import epf.persistence.impl.QueryBuilder;
 import epf.schema.h2.QueryNames;
-import epf.schema.roles.Role;
 
 /**
  *
  * @author FOXCONN
  */
 @Path("persistence")
-@RolesAllowed(Role.DEFAULT_ROLE)
+@RolesAllowed(Security.DEFAULT_ROLE)
 @RequestScoped
 public class Queries implements epf.client.persistence.Queries {
     

@@ -42,11 +42,6 @@ public class Role implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 */
-	public static final String DEFAULT_ROLE = "Any_Role";
-
     /**
      * 
      */

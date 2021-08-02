@@ -10,7 +10,7 @@ import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 import epf.cache.persistence.Persistence;
-import epf.schema.roles.Role;
+import epf.client.security.Security;
 
 /**
  * @author PC
@@ -18,7 +18,7 @@ import epf.schema.roles.Role;
  */
 @ApplicationScoped
 @Path("cache")
-@RolesAllowed(Role.DEFAULT_ROLE)
+@RolesAllowed(Security.DEFAULT_ROLE)
 public class Cache implements epf.client.cache.Cache {
 
 	/**

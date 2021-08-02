@@ -12,7 +12,7 @@ import javax.rules.admin.RuleExecutionSet;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import epf.schema.roles.Role;
+import epf.client.security.Security;
 
 /**
  * @author PC
@@ -20,7 +20,7 @@ import epf.schema.roles.Role;
  */
 @Path("rules/admin")
 @ApplicationScoped
-@RolesAllowed(Role.DEFAULT_ROLE)
+@RolesAllowed(Security.DEFAULT_ROLE)
 public class Admin implements epf.client.rules.admin.Admin {
 	
 	/**

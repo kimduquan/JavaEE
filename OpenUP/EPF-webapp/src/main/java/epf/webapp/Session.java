@@ -18,7 +18,6 @@ import javax.inject.Named;
 import javax.security.enterprise.SecurityContext;
 import epf.client.registry.LocateRegistry;
 import epf.client.security.Security;
-import epf.schema.roles.Role;
 import epf.util.client.Client;
 import epf.util.client.ClientQueue;
 import epf.webapp.security.EPFIdentityStore;
@@ -30,7 +29,7 @@ import epf.webapp.security.TokenPrincipal;
  */
 @SessionScoped
 @Named("webapp_session")
-@RolesAllowed(Role.DEFAULT_ROLE)
+@RolesAllowed(Security.DEFAULT_ROLE)
 public class Session implements Serializable {
     
     /**
