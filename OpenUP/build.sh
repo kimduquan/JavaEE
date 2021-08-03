@@ -1,5 +1,6 @@
 git pull
 git clean -f -d
+./clean.sh
 ./copy_dependency.sh
 ./startup.sh
 export JAVA_HOME=~/jdk-11.0.11+9
