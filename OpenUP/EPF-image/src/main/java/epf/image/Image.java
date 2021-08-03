@@ -17,14 +17,14 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
-import epf.schema.roles.Role;
+import epf.client.security.Security;
 
 /**
  * @author PC
  *
  */
 @Path("image")
-@RolesAllowed(Role.DEFAULT_ROLE)
+@RolesAllowed(Security.DEFAULT_ROLE)
 @ApplicationScoped
 public class Image implements epf.client.image.Image {
 	

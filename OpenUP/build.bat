@@ -1,4 +1,7 @@
+call .\clean.bat
+echo on
 call git pull
+call git clean -f -d
 call .\copy_dependency.bat
 echo on
 call .\startup.bat

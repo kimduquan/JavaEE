@@ -671,15 +671,7 @@
 		<!--<module>EPF-image</module>-->
 		<module>EPF-rules</module>
 		<module>EPF-planning</module>
-		<module>EPF-portlet</module>
 		<module>EPF-webapp</module>
-		<module>EPF-portlet-client</module>
-		<module>EPF-file-portlet</module>
-		<module>EPF-messaging-portlet</module>
-		<module>EPF-persistence-portlet</module>
-		<module>EPF-security-portlet</module>
-        <module>EPF-tests</module>
-        <module>EPF-assembly</module>
 		
 		<module>OpenUP-client</module>
         <module>OpenUP-schema</module>
@@ -688,11 +680,21 @@
 		<module>OpenUP-tasks</module>
 		<module>OpenUP-work-products</module>
 		
+		<module>EPF-portlet-client</module>
+		<module>EPF-portlet</module>
+		<module>EPF-file-portlet</module>
+		<module>EPF-messaging-portlet</module>
+		<module>EPF-persistence-portlet</module>
+		<module>EPF-security-portlet</module>
+		
 		<module>OpenUP-portlet-client</module>
 		<module>OpenUP-portlet</module>
 		<module>OpenUP-delivery-processes-portlet</module>
 		<module>OpenUP-roles-portlet</module>
 		<module>OpenUP-tasks-portlet</module>
 		<module>OpenUP-work-products-portlet</module>
+		
+        <module>EPF-tests</module>
+        <module>EPF-assembly</module>
     </modules>
 </project>
