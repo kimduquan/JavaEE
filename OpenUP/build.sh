@@ -5,12 +5,6 @@ git clean -f -d
 ./clean.sh
 ./copy_dependency.sh
 ./startup.sh
-cd EPF-function
-mvn clean install
-cd ../
-cd EPF-image
-mvn clean install
-cd ../
 cd EPF-persistence
 mvn clean install
 cd ../
