@@ -6,6 +6,7 @@
 package epf.client.security;
 
 import java.io.Serializable;
+import java.util.Map;
 import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -15,8 +16,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class Token implements Serializable {
-    
-    /**
+
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
@@ -56,6 +57,10 @@ public class Token implements Serializable {
      * 
      */
     private Set<String> groups;
+    /**
+     * 
+     */
+    private Map<? extends String, ? extends Object> claims;
 
     public String getName() {
         return name;
@@ -128,4 +133,12 @@ public class Token implements Serializable {
     public void setGroups(final Set<String> groups) {
         this.groups = groups;
     }
+    
+    public Map<? extends String, ? extends Object> getClaims() {
+		return claims;
+	}
+
+	public void setClaims(final Map<? extends String, ? extends Object> claims) {
+		this.claims = claims;
+	}
 }

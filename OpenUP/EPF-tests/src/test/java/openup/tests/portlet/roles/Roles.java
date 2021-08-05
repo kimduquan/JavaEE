@@ -20,14 +20,7 @@ public class Roles implements RolesView {
 
 	@Override
 	public void setRole(Object role) {
-		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	public Object getRole() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

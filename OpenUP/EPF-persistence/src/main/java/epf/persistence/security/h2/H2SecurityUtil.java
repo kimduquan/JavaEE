@@ -7,14 +7,14 @@ import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import epf.schema.h2.Queries;
-import epf.persistence.security.SecurityService;
+import epf.persistence.security.SecurityUtil;
 
 /**
  * @author PC
  *
  */
 @RequestScoped
-public class H2SecurityService implements SecurityService {
+public class H2SecurityUtil implements SecurityUtil {
 
 	@Override
 	@Transactional

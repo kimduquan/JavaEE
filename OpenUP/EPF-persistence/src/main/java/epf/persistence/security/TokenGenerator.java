@@ -5,6 +5,7 @@
  */
 package epf.persistence.security;
 
+import com.ibm.websphere.security.jwt.InvalidClaimException;
 import com.ibm.websphere.security.jwt.JwtBuilder;
 import com.ibm.websphere.security.jwt.JwtToken;
 import epf.client.EPFException;
@@ -80,23 +81,27 @@ public class TokenGenerator implements Serializable {
     public Token generate(final Token jwt) throws EPFException {
     	try {
     		final JwtBuilder builder = JwtBuilder.create();
-            if(jwt.getAudience() != null && !jwt.getAudience().isEmpty()){
-                builder.audience(
-                        jwt.getAudience()
-                                .stream()
-                                .collect(Collectors.toList())
-                );
-            }
-            builder.issuer(jwt.getIssuer())
+    		builder.audience(
+                    jwt.getAudience()
+                            .stream()
+                            .collect(Collectors.toList())
+                            )
+    				.issuer(jwt.getIssuer())
                     .subject(jwt.getSubject())
                     .expirationTime(jwt.getExpirationTime())
                     .notBefore(jwt.getIssuedAtTime())
                     .jwtId(true)
                     .claim(Claims.iat.name(), jwt.getIssuedAtTime())
-                    .claim(Claims.upn.name(), jwt.getName());
-            if(jwt.getGroups() != null){
-                builder.claim(Claims.groups.name(), jwt.getGroups().toArray(new String[jwt.getGroups().size()]));
-            }
+                    .claim(Claims.upn.name(), jwt.getName())
+                    .claim(Claims.groups.name(), jwt.getGroups().toArray(new String[jwt.getGroups().size()]));
+            jwt.getClaims().forEach((claim, value) -> {
+            	try {
+					builder.claim(claim, value);
+				} 
+            	catch (InvalidClaimException e) {
+            		logger.throwing(getClass().getName(), "generate", e);
+				}
+            });
             builder.signWith("RS256", privateKey);
             final JwtToken generatedJwt = builder.buildJwt();
             jwt.setAudience(

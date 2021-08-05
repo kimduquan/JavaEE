@@ -4,8 +4,8 @@ import java.net.URL;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
-import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.client.EPFException;
 import epf.client.security.Token;
 
@@ -49,11 +49,17 @@ public class TokenBuilder {
 	private transient final Set<String> groups;
 	
 	/**
+	 * 
+	 */
+	private transient final Map<? extends String, ? extends Object> claims;
+	
+	/**
 	 * @param issuer
 	 */
-	public TokenBuilder(final String issuer, final Set<String> groups) {
+	public TokenBuilder(final String issuer, final Set<String> groups, final Map<? extends String, ? extends Object> claims) {
 		this.issuer = issuer;
 		this.groups = groups;
+		this.claims = claims;
 	}
 
 	/**
@@ -121,6 +127,7 @@ public class TokenBuilder {
                 audience.getPort()));
         jwt.setAudience(aud);
         jwt.setGroups(groups);
+        jwt.setClaims(claims);
 	    try {
 			jwt = tokenGenerator.generate(jwt);
 		} 
@@ -129,22 +136,4 @@ public class TokenBuilder {
 		}
 	    return jwt;
 	}
-    
-    /**
-     * @param jwt
-     * @return
-     */
-    public Token build(final JsonWebToken jwt){
-    	final Token token = new Token();
-        token.setAudience(jwt.getAudience());
-        token.setExpirationTime(jwt.getExpirationTime());
-        token.setGroups(jwt.getGroups());
-        token.setIssuedAtTime(jwt.getIssuedAtTime());
-        token.setIssuer(jwt.getIssuer());
-        token.setName(jwt.getName());
-        token.setRawToken(jwt.getRawToken());
-        token.setSubject(jwt.getSubject());
-        token.setTokenID(jwt.getTokenID());
-        return token;
-    }
 }

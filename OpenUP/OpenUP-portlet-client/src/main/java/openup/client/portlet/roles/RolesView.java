@@ -22,11 +22,6 @@ public interface RolesView {
 	void setRole(final Object role);
 	
 	/**
-	 * @return
-	 */
-	Object getRole();
-	
-	/**
 	 * @param role
 	 * @return
 	 */

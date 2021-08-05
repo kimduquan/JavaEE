@@ -10,7 +10,7 @@ import javax.transaction.Transactional;
  * @author PC
  *
  */
-public interface SecurityService {
+public interface SecurityUtil {
 	
 	/**
 	 * @param manager

@@ -94,7 +94,6 @@ public class Roles implements Serializable, RolesView {
 		return role.toString();
 	}
 
-	@Override
 	public Object getRole() {
 		return role;
 	}

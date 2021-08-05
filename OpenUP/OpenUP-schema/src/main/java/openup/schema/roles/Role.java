@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -17,6 +18,7 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
@@ -63,6 +65,10 @@ public class Role implements Serializable {
      * 
      */
     @ElementCollection
+    @CollectionTable(
+    		name="OPENUP_ROLE_CLAIMS", 
+    		schema = OpenUP.SCHEMA)
+    @MapKeyJoinColumn(name="ROLE")
     private Map<String, String> claims = new ConcurrentHashMap<>();
     
     /**
