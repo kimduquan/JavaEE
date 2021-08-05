@@ -67,7 +67,9 @@ public class Role implements Serializable {
     @ElementCollection
     @CollectionTable(
     		name="OPENUP_ROLE_CLAIMS", 
-    		schema = OpenUP.SCHEMA)
+    		schema = OpenUP.SCHEMA,
+    		indexes = {@Index(columnList = "ROLE")}
+    		)
     @MapKeyJoinColumn(name="ROLE")
     private Map<String, String> claims = new ConcurrentHashMap<>();
     
