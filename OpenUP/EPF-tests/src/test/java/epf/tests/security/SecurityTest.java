@@ -22,6 +22,7 @@ import javax.ws.rs.core.Response;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.Ignore;
 import epf.client.security.Security;
 import epf.client.security.Token;
 import epf.schema.EPF;
@@ -229,16 +230,19 @@ public class SecurityTest {
         logOut(token);
     }
     
+    @Ignore
     @Test(expected = NotAuthorizedException.class)
     public void testAuthenticateEmptyToken() throws Exception{
         authenticate("");
     }
     
+    @Ignore
     @Test(expected = NotAuthorizedException.class)
     public void testAuthenticateBlankToken() throws Exception{
         authenticate("    ");
     }
     
+    @Ignore
     @Test(expected = NotAuthorizedException.class)
     public void testAuthenticateInvalidToken() throws Exception{
         authenticate("Invalid");
