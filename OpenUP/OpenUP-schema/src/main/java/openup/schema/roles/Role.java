@@ -18,9 +18,10 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.MapKeyJoinColumn;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import openup.schema.Naming;
@@ -68,9 +69,10 @@ public class Role implements Serializable {
     @CollectionTable(
     		name="OPENUP_ROLE_CLAIMS", 
     		schema = OpenUP.SCHEMA,
-    		indexes = {@Index(columnList = "ROLE")}
+    		uniqueConstraints = {@UniqueConstraint(columnNames = {"ROLE_NAME", "NAME"})}
     		)
-    @MapKeyJoinColumn(name="ROLE")
+    @MapKeyColumn(name = "NAME")
+    @Column(name = "VALUE")
     private Map<String, String> claims = new ConcurrentHashMap<>();
     
     /**
