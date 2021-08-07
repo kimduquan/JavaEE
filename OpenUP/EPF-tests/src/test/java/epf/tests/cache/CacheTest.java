@@ -89,7 +89,19 @@ public class CacheTest {
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
         Entities.persist(persistenceClient, Artifact.class, EPF.ARTIFACT, artifact);
-        TestUtil.waitUntil((t) -> Cache.getEntity(client, Artifact.class, EPF.ARTIFACT, artifact.getName()) != null, Duration.ofSeconds(20));
+        TestUtil.waitUntil(
+        		(t) -> {
+				        	Artifact art = null;
+				        	try {
+				        		art = Cache.getEntity(client, Artifact.class, EPF.ARTIFACT, artifact.getName());
+				        	}
+				        	catch(Exception ex) {
+				        		ex.printStackTrace();
+				        	}
+				        	return art != null;
+				        }, 
+        		Duration.ofSeconds(10)
+        		);
         Artifact cachedArtifact = Cache.getEntity(client, Artifact.class, EPF.ARTIFACT, artifact.getName());
         Assert.assertNotNull("Artifact", cachedArtifact);
         Assert.assertEquals("Artifact.name", artifact.getName(), cachedArtifact.getName());

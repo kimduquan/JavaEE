@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.io.StreamCorruptedException;
 import java.sql.SQLInvalidAuthorizationSpecException;
 import java.sql.SQLNonTransientException;
+import java.util.logging.Logger;
 import javax.validation.ValidationException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -17,6 +18,7 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 import epf.client.EPFException;
 import epf.persistence.impl.h2.ErrorCode;
+import epf.util.logging.Logging;
 
 /**
  *
@@ -29,6 +31,11 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
     * 
     */
     private static final long serialVersionUID = 1L;
+    
+    /**
+     * 
+     */
+    private static final Logger LOGGER = Logging.getLogger(ExceptionHandler.class.getName());
 
     /**
      *
@@ -77,7 +84,8 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
             mapped = false;
         }
         if(mapped){
-            builder.status(status);
+            final String message = failure.getMessage();
+            builder.status(status.getStatusCode(), message);
         }
         return mapped;
     }
@@ -88,12 +96,21 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
      */
     protected static Response handle(final Throwable failure){
     	final ResponseBuilder builder = Response.serverError();
-        if(failure != null && !map(failure, builder)){
-        	Throwable cause = failure.getCause();
-            while(cause != null && !cause.equals(failure)){
-                map(cause, builder);
-                cause = cause.getCause();
-            }
+    	if(failure != null){
+        	Throwable rootCause = failure;
+        	boolean mapStatus = map(failure, builder);
+        	if(!mapStatus) {
+            	Throwable cause = failure.getCause();
+                while(cause != null && !cause.equals(failure)){
+                	rootCause = cause;
+                	mapStatus = mapStatus || map(cause, builder);
+                    cause = cause.getCause();
+                }
+        	}
+        	if(!mapStatus && rootCause != null) {
+        		builder.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), rootCause.getMessage());
+        		LOGGER.throwing(ExceptionHandler.class.getName(), "handle", failure);
+        	}
         }
         return builder.build();
     }
