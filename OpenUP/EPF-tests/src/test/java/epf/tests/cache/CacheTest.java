@@ -4,6 +4,7 @@
 package epf.tests.cache;
 
 import java.net.URI;
+import java.time.Duration;
 import javax.ws.rs.NotFoundException;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -20,6 +21,7 @@ import epf.schema.work_products.section.Illustrations;
 import epf.schema.work_products.section.MoreInformation;
 import epf.schema.work_products.section.Relationships;
 import epf.schema.work_products.section.Tailoring;
+import epf.tests.TestUtil;
 import epf.tests.client.ClientUtil;
 import epf.tests.registry.RegistryUtil;
 import epf.tests.security.SecurityUtil;
@@ -78,7 +80,7 @@ public class CacheTest {
 
 	@Test
 	public void testGetEntityOk() throws Exception {
-		Artifact artifact = new Artifact();
+		final Artifact artifact = new Artifact();
         artifact.setName(StringUtil.randomString("Artifact Cache"));
         artifact.setSummary("Artifact Cache Summary");
         artifact.setDescription(new Description());
@@ -87,6 +89,7 @@ public class CacheTest {
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
         Entities.persist(persistenceClient, Artifact.class, EPF.ARTIFACT, artifact);
+        TestUtil.waitUntil((t) -> Cache.getEntity(client, Artifact.class, EPF.ARTIFACT, artifact.getName()) != null, Duration.ofSeconds(20));
         Artifact cachedArtifact = Cache.getEntity(client, Artifact.class, EPF.ARTIFACT, artifact.getName());
         Assert.assertNotNull("Artifact", cachedArtifact);
         Assert.assertEquals("Artifact.name", artifact.getName(), cachedArtifact.getName());

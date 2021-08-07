@@ -20,7 +20,7 @@ public class TokenUtil {
 	/**
 	 * 
 	 */
-	public static final String[] DEFAULT_CLAIMS = new String[] {"aud", "exp", "groups", "iat", "iss", "raw_token", "sub", "jti"};
+	public static final String[] DEFAULT_CLAIMS = new String[] {"aud", "exp", "groups", "iat", "iss", "raw_token", "sub", "jti", "upn", "token_type"};
 
 	/**
 	 * @param jwt

@@ -222,6 +222,10 @@ public class SecurityTest {
         Assert.assertEquals("Token.subject", "any_role1", jwt.getSubject());
         Assert.assertNotNull("Token.tokenID", jwt.getTokenID());
         Assert.assertNotEquals("Token.tokenID", "", jwt.getTokenID());
+        Assert.assertNotNull("Token.claims", jwt.getClaims());
+        Assert.assertEquals("Token.claims.size", 2, jwt.getClaims().size());
+        Assert.assertEquals("Token.claims.full_name", "Any Role 1", jwt.getClaims().get("full_name"));
+        Assert.assertEquals("Token.claims.email", "any_role1@openup.org", jwt.getClaims().get("email"));
         logOut(token);
     }
     

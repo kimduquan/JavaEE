@@ -63,7 +63,7 @@ public class CredentialTest {
 		credential.setCaller("any_role1");
 		credential.setPassword("any_role".toCharArray());
 		credential.login();
-		Assert.assertEquals("Security.principalName", "any_role1", principal.getName());
+		Assert.assertEquals("Security.principalFullName", "Any Role 1", principal.getFullName());
 		principal.logout();
 	}
 }

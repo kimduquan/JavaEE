@@ -140,7 +140,7 @@ public class Principal implements PrincipalView, Serializable {
 	}
 
 	@Override
-	public String getName() {
-		return session.getToken().getName();
+	public String getFullName() {
+		return (String)session.getToken().getClaims().get("full_name");
 	}
 }

@@ -34,5 +34,8 @@ public interface PrincipalView {
 	 */
 	void revoke() throws Exception;
 	
-	String getName();
+	/**
+	 * @return
+	 */
+	String getFullName();
 }
