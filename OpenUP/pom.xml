@@ -321,6 +321,7 @@
 				<groupId>com.liferay.faces</groupId>
 				<artifactId>com.liferay.faces.bridge.api</artifactId>
 				<version>4.2.0</version>
+				<scope>provided</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.jboss.resteasy/resteasy-client -->
 			<dependency>

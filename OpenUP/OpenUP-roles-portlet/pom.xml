@@ -52,9 +52,11 @@
 		    <groupId>org.glassfish</groupId>
 		    <artifactId>javax.json</artifactId>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.liferay.faces/com.liferay.faces.bridge.api -->
 		<dependency>
 			<groupId>com.liferay.faces</groupId>
-			<artifactId>com.liferay.faces.bridge.impl</artifactId>
+			<artifactId>com.liferay.faces.bridge.api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 		    <groupId>org.jboss.resteasy</groupId>
