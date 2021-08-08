@@ -35,6 +35,11 @@
 			<groupId>javax.json</groupId>
 			<artifactId>javax.json-api</artifactId>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.glassfish/javax.json -->
+		<dependency>
+			<groupId>org.glassfish</groupId>
+			<artifactId>javax.json</artifactId>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.liferay.faces/com.liferay.faces.bridge.impl -->
 		<dependency>
 			<groupId>com.liferay.faces</groupId>

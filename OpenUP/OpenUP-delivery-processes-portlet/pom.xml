@@ -38,9 +38,11 @@
 		    <artifactId>portlet-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-        <dependency>
-		    <groupId>org.glassfish</groupId>
-		    <artifactId>javax.json</artifactId>
+        <!-- https://mvnrepository.com/artifact/javax.json/javax.json-api -->
+		<dependency>
+			<groupId>javax.json</groupId>
+			<artifactId>javax.json-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.liferay.faces/com.liferay.faces.bridge.api -->
 		<dependency>
