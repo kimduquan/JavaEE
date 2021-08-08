@@ -30,5 +30,10 @@
 		    <groupId>javax.faces</groupId>
 		    <artifactId>javax.faces-api</artifactId>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.json/javax.json-api -->
+		<dependency>
+			<groupId>javax.json</groupId>
+			<artifactId>javax.json-api</artifactId>
+		</dependency>
 	</dependencies>
 </project>
