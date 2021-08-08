@@ -9,6 +9,56 @@
 	<packaging>jar</packaging>
 	<name>Eclipse Process Framework Shell</name>
 	<dependencies>
+        <!-- https://mvnrepository.com/artifact/javax.enterprise/cdi-api -->
+		<dependency>
+		    <groupId>javax.enterprise</groupId>
+		    <artifactId>cdi-api</artifactId>
+		</dependency>
+    	<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
+		<dependency>
+		    <groupId>javax.ws.rs</groupId>
+		    <artifactId>javax.ws.rs-api</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.validation/validation-api -->
+		<dependency>
+		    <groupId>javax.validation</groupId>
+		    <artifactId>validation-api</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api -->
+		<dependency>
+		    <groupId>javax.websocket</groupId>
+		    <artifactId>javax.websocket-api</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.config/microprofile-config-api -->
+		<dependency>
+		    <groupId>org.eclipse.microprofile.config</groupId>
+		    <artifactId>microprofile-config-api</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.health/microprofile-health-api -->
+		<dependency>
+		    <groupId>org.eclipse.microprofile.health</groupId>
+		    <artifactId>microprofile-health-api</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
+		<dependency>
+		    <groupId>javax.xml.bind</groupId>
+		    <artifactId>jaxb-api</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
+		<dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>javax.annotation-api</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.json.bind/javax.json.bind-api -->
+		<dependency>
+			<groupId>javax.json.bind</groupId>
+			<artifactId>javax.json.bind-api</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api -->
+		<dependency>
+		    <groupId>jakarta.validation</groupId>
+		    <artifactId>jakarta.validation-api</artifactId>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/info.picocli/picocli -->
 		<dependency>
 		    <groupId>info.picocli</groupId>
@@ -34,18 +84,6 @@
             <artifactId>EPF-security-utility</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
-		<dependency>
-		    <groupId>javax.ws.rs</groupId>
-		    <artifactId>javax.ws.rs-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api -->
-		<dependency>
-		    <groupId>javax.websocket</groupId>
-		    <artifactId>javax.websocket-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
 		<dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-rs-mp-client</artifactId>
@@ -89,12 +127,6 @@
 		    <groupId>org.glassfish</groupId>
 		    <artifactId>jakarta.el</artifactId>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api -->
-		<dependency>
-		    <groupId>jakarta.validation</groupId>
-		    <artifactId>jakarta.validation-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-jdk14 -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -131,6 +163,7 @@
 	        			<repositoryLayout>flat</repositoryLayout>
 	        			<useWildcardClassPath>true</useWildcardClassPath>
 	        			<extraJvmArguments>-Depf.gateway.url="https://localhost:9443/gateway/"</extraJvmArguments>
+						<!--<useAllProjectDependencies>true</useAllProjectDependencies>-->
 	        		</configuration>
 	        	</execution>
 	        </executions>
