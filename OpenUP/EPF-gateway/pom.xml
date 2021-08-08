@@ -14,6 +14,7 @@
 		<dependency>
 		    <groupId>javax.ws.rs</groupId>
 		    <artifactId>javax.ws.rs-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/javax.enterprise/cdi-api -->
 		<dependency>
@@ -25,6 +26,7 @@
 		<dependency>
 		    <groupId>javax.annotation</groupId>
 		    <artifactId>javax.annotation-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api -->
 		<dependency>
@@ -36,21 +38,24 @@
 		<dependency>
 		    <groupId>javax.validation</groupId>
 		    <artifactId>validation-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.fault-tolerance/microprofile-fault-tolerance-api -->
 		<dependency>
 		    <groupId>org.eclipse.microprofile.fault-tolerance</groupId>
 		    <artifactId>microprofile-fault-tolerance-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
         <!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.context-propagation/microprofile-context-propagation-api -->
 		<dependency>
 		    <groupId>org.eclipse.microprofile.context-propagation</groupId>
 		    <artifactId>microprofile-context-propagation-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-utility</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

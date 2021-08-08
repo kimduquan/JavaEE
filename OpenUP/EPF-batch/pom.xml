@@ -13,7 +13,7 @@
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-client</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

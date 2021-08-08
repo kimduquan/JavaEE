@@ -44,96 +44,96 @@
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-client</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
         </dependency>
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-batch</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
             <type>war</type>
         </dependency>
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-script</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
             <type>war</type>
         </dependency>
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-config</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-messaging</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
             <type>war</type>
         </dependency>
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-lang</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-cache</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
             <type>war</type>
         </dependency>
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-file</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
             <type>war</type>
         </dependency>
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-image</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-rules</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
             <type>war</type>
         </dependency>
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-planning</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
             <type>war</type>
         </dependency>
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-persistence</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
             <type>war</type>
         </dependency>
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-registry</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
             <type>war</type>
         </dependency>
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-management</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-gateway</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-webapp</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
             <type>war</type>
         </dependency>
 		<dependency>

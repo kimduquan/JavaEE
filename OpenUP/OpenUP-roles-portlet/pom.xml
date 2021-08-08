@@ -14,22 +14,22 @@
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>OpenUP-portlet-client</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>OpenUP-portlet</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>OpenUP-schema</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
         </dependency>
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-portlet</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
 			<groupId>javax.enterprise</groupId>

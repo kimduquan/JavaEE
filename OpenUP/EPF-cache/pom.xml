@@ -14,6 +14,7 @@
 		<dependency>
 		    <groupId>javax.ws.rs</groupId>
 		    <artifactId>javax.ws.rs-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/javax.enterprise/cdi-api -->
 		<dependency>
@@ -36,16 +37,19 @@
 		<dependency>
 		    <groupId>javax.cache</groupId>
 		    <artifactId>cache-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
 		<dependency>
 		    <groupId>javax.annotation</groupId>
 		    <artifactId>javax.annotation-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.jwt/microprofile-jwt-auth-api -->
 		<dependency>
 		    <groupId>org.eclipse.microprofile.jwt</groupId>
 		    <artifactId>microprofile-jwt-auth-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast -->
 		<dependency>
@@ -55,12 +59,12 @@
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-client</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
         </dependency>
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>OpenUP-schema</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

@@ -16,15 +16,29 @@
 		    <artifactId>cdi-api</artifactId>
 		    <scope>provided</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>javax.ws.rs-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.validation/validation-api -->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
     	<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.jwt/microprofile-jwt-auth-api -->
 		<dependency>
 		    <groupId>org.eclipse.microprofile.jwt</groupId>
 		    <artifactId>microprofile-jwt-auth-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.config/microprofile-config-api -->
 		<dependency>
 		    <groupId>org.eclipse.microprofile.config</groupId>
 		    <artifactId>microprofile-config-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.jaegertracing/jaeger-client -->
         <dependency>
@@ -34,7 +48,7 @@
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-client</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
         </dependency>
 		<!-- https://mvnrepository.com/artifact/org.optaplanner/optaplanner-core -->
 		<dependency>
@@ -44,7 +58,7 @@
         <dependency>
             <groupId>openup</groupId>
             <artifactId>OpenUP-schema</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>
