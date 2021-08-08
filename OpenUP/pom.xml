@@ -18,6 +18,7 @@
 			    <groupId>javax.ws.rs</groupId>
 			    <artifactId>javax.ws.rs-api</artifactId>
 			    <version>2.1.1</version>
+				<scope>provided</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/javax.enterprise/cdi-api -->
 			<dependency>
@@ -50,23 +51,27 @@
 			    <groupId>javax.annotation</groupId>
 			    <artifactId>javax.annotation-api</artifactId>
 			    <version>1.3.2</version>
+				<scope>provided</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/javax.validation/validation-api -->
 			<dependency>
 			    <groupId>javax.validation</groupId>
 			    <artifactId>validation-api</artifactId>
 			    <version>2.0.1.Final</version>
+				<scope>provided</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.openapi/microprofile-openapi-api -->
 			<dependency>
 			    <groupId>org.eclipse.microprofile.openapi</groupId>
 			    <artifactId>microprofile-openapi-api</artifactId>
+				<scope>provided</scope>
 			    <version>2.0</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.fault-tolerance/microprofile-fault-tolerance-api -->
 			<dependency>
 			    <groupId>org.eclipse.microprofile.fault-tolerance</groupId>
 			    <artifactId>microprofile-fault-tolerance-api</artifactId>
+				<scope>provided</scope>
 			    <version>3.0</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.context-propagation/microprofile-context-propagation-api -->
@@ -74,72 +79,84 @@
 			    <groupId>org.eclipse.microprofile.context-propagation</groupId>
 			    <artifactId>microprofile-context-propagation-api</artifactId>
 			    <version>1.2</version>
+				<scope>provided</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.health/microprofile-health-api -->
 			<dependency>
 			    <groupId>org.eclipse.microprofile.health</groupId>
 			    <artifactId>microprofile-health-api</artifactId>
 			    <version>3.0</version>
+				<scope>provided</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.rest.client/microprofile-rest-client-api -->
 			<dependency>
 			    <groupId>org.eclipse.microprofile.rest.client</groupId>
 			    <artifactId>microprofile-rest-client-api</artifactId>
 			    <version>2.0</version>
+				<scope>provided</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api -->
 			<dependency>
 			    <groupId>javax.persistence</groupId>
 			    <artifactId>javax.persistence-api</artifactId>
 			    <version>2.2</version>
+				<scope>provided</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/javax.json/javax.json-api -->
 			<dependency>
 			    <groupId>javax.json</groupId>
 			    <artifactId>javax.json-api</artifactId>
 			    <version>1.1.3</version>
+				<scope>provided</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.graphql/microprofile-graphql-api -->
 			<dependency>
 			    <groupId>org.eclipse.microprofile.graphql</groupId>
 			    <artifactId>microprofile-graphql-api</artifactId>
 			    <version>1.0</version>
+				<scope>provided</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/javax.json.bind/javax.json.bind-api -->
 			<dependency>
 			    <groupId>javax.json.bind</groupId>
 			    <artifactId>javax.json.bind-api</artifactId>
 			    <version>1.0</version>
+				<scope>provided</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.config/microprofile-config-api -->
 			<dependency>
 			    <groupId>org.eclipse.microprofile.config</groupId>
 			    <artifactId>microprofile-config-api</artifactId>
 			    <version>2.0</version>
+				<scope>provided</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/javax.resource/javax.resource-api -->
 			<dependency>
 			    <groupId>javax.resource</groupId>
 			    <artifactId>javax.resource-api</artifactId>
 			    <version>1.7</version>
+				<scope>provided</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.jwt/microprofile-jwt-auth-api -->
 			<dependency>
 			    <groupId>org.eclipse.microprofile.jwt</groupId>
 			    <artifactId>microprofile-jwt-auth-api</artifactId>
 			    <version>1.2</version>
+				<scope>provided</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/javax.transaction/javax.transaction-api -->
 			<dependency>
 			    <groupId>javax.transaction</groupId>
 			    <artifactId>javax.transaction-api</artifactId>
 			    <version>1.2</version>
+				<scope>provided</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/javax.security.enterprise/javax.security.enterprise-api -->
 			<dependency>
 			    <groupId>javax.security.enterprise</groupId>
 			    <artifactId>javax.security.enterprise-api</artifactId>
 			    <version>1.0</version>
+				<scope>provided</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/javax.faces/javax.faces-api -->
 			<dependency>
@@ -160,6 +177,7 @@
 			    <groupId>javax.xml.bind</groupId>
 			    <artifactId>jaxb-api</artifactId>
 			    <version>2.3.1</version>
+				<scope>provided</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/jsr94/jsr94 -->
 			<dependency>
@@ -188,12 +206,14 @@
 			    <groupId>jakarta.validation</groupId>
 			    <artifactId>jakarta.validation-api</artifactId>
 			    <version>3.0.0</version>
+				<scope>provided</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/jakarta.annotation/jakarta.annotation-api -->
 			<dependency>
 			    <groupId>jakarta.annotation</groupId>
 			    <artifactId>jakarta.annotation-api</artifactId>
 			    <version>2.0.0</version>
+				<scope>provided</scope>
 			</dependency>
 			
 			
@@ -263,13 +283,13 @@
             <dependency>
                 <groupId>org.eclipse.persistence</groupId>
                 <artifactId>org.eclipse.persistence.core</artifactId>
-                <version>3.0.1</version>
+                <version>3.0.2</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/com.ibm.websphere.appserver.api/com.ibm.websphere.appserver.api.jwt -->
 			<dependency>
 			    <groupId>com.ibm.websphere.appserver.api</groupId>
 			    <artifactId>com.ibm.websphere.appserver.api.jwt</artifactId>
-			    <version>1.1.54</version>
+			    <version>1.1.55</version>
 			</dependency>
             <!-- https://mvnrepository.com/artifact/io.jaegertracing/jaeger-client -->
             <dependency>
@@ -306,13 +326,13 @@
 			<dependency>
 			    <groupId>org.jboss.resteasy</groupId>
 			    <artifactId>resteasy-client</artifactId>
-			    <version>4.6.1.Final</version>
+			    <version>4.7.1.Final</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.jboss.resteasy/resteasy-jackson2-provider -->
 			<dependency>
 			    <groupId>org.jboss.resteasy</groupId>
 			    <artifactId>resteasy-jackson2-provider</artifactId>
-			    <version>4.6.1.Final</version>
+			    <version>4.7.1.Final</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/com.liferay.faces/com.liferay.faces.bridge.impl -->
 			<dependency>
@@ -354,13 +374,13 @@
 			<dependency>
 			    <groupId>org.jboss.weld.se</groupId>
 			    <artifactId>weld-se-shaded</artifactId>
-			    <version>4.0.1.SP1</version>
+			    <version>4.0.2.Final</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.jboss/jandex -->
 			<dependency>
 			    <groupId>org.jboss</groupId>
 			    <artifactId>jandex</artifactId>
-			    <version>2.2.3.Final</version>
+			    <version>2.3.0.Final</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator-cdi -->
 			<dependency>
@@ -384,7 +404,7 @@
 			<dependency>
 			    <groupId>org.optaplanner</groupId>
 			    <artifactId>optaplanner-core</artifactId>
-			    <version>8.7.0.Final</version>
+			    <version>8.9.1.Final</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.lsp4j/org.eclipse.lsp4j.websocket -->
 			<dependency>
@@ -653,6 +673,7 @@
     <modules>
         <module>EPF-shell</module>
 		<module>EPF-utility</module>
+		<module>EPF-security-utility</module>
 		<module>EPF-function</module>
 		<module>EPF-batch</module>
 		<module>EPF-script</module>

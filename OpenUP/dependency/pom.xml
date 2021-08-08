@@ -15,5 +15,20 @@
 			<groupId>org.glassfish</groupId>
 			<artifactId>javax.faces</artifactId>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.liferay.faces/com.liferay.faces.bridge.api -->
+		<dependency>
+			<groupId>com.liferay.faces</groupId>
+			<artifactId>com.liferay.faces.bridge.api</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.portlet/portlet-api -->
+		<dependency>
+		    <groupId>javax.portlet</groupId>
+		    <artifactId>portlet-api</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.faces/javax.faces-api -->
+		<dependency>
+		    <groupId>javax.faces</groupId>
+		    <artifactId>javax.faces-api</artifactId>
+		</dependency>
 	</dependencies>
 </project>

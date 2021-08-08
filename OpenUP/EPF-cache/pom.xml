@@ -37,7 +37,6 @@
 		<dependency>
 		    <groupId>javax.cache</groupId>
 		    <artifactId>cache-api</artifactId>
-			<scope>provided</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
 		<dependency>
