@@ -20,11 +20,6 @@
 			<groupId>com.liferay.faces</groupId>
 			<artifactId>com.liferay.faces.bridge.api</artifactId>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.portlet/portlet-api -->
-		<dependency>
-		    <groupId>javax.portlet</groupId>
-		    <artifactId>portlet-api</artifactId>
-		</dependency>
 		<!-- https://mvnrepository.com/artifact/javax.faces/javax.faces-api -->
 		<dependency>
 		    <groupId>javax.faces</groupId>
