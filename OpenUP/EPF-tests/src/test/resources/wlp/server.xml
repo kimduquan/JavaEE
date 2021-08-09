@@ -62,7 +62,6 @@
     <application id="EPF-gateway" name="EPF-gateway" context-root="gateway" location="EPF-gateway-1.0.0.war" startAfterRef="EPF-registry" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-	<application id="EPF-webapp" name="EPF-webapp" context-root="webapp" location="EPF-webapp-1.0.0.war" startAfterRef="EPF-persistence,EPF-gateway" />
 	<application id="OpenUP-delivery-processes" name="OpenUP-delivery-processes" context-root="delivery-processes" location="OpenUP-delivery-processes-1.0.0.war" startAfterRef="EPF-persistence,EPF-gateway" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>

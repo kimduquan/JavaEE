@@ -34,7 +34,6 @@
         <liberty.env.epf_registry_url>https://localhost:9443/registry/registry/</liberty.env.epf_registry_url>
 		<liberty.env.epf_management_url>https://localhost:9443/management/management/</liberty.env.epf_management_url>
 		<liberty.env.epf_portlet_url>http://localhost:8080/pluto/portal/</liberty.env.epf_portlet_url>
-		<liberty.env.epf_webapp_url>https://localhost:9443/webapp/</liberty.env.epf_webapp_url>
 		<liberty.env.epf_tests_file_root>target/servers/test/epf.file.root</liberty.env.epf_tests_file_root>
 		<liberty.env.epf_shell_path>../EPF-shell/target/appassembler/bin</liberty.env.epf_shell_path>
 		<liberty.env.openup_delivery_processes_url>https://localhost:9443/delivery-processes/delivery-processes/</liberty.env.openup_delivery_processes_url>
@@ -192,12 +191,6 @@
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-webapp</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>OpenUP-delivery-processes</artifactId>
@@ -301,7 +294,6 @@
                         <epf.messaging.url>ws://localhost:${httpPort}/messaging/messaging/</epf.messaging.url>
                         <epf.lang.url>ws://localhost:9080/lang/lang/</epf.lang.url>
                         <epf.cache.url>https://localhost:${httpsPort}/cache/cache/</epf.cache.url>
-                        <epf.webapp.url>https://localhost:${httpsPort}/webapp/</epf.webapp.url>
                         <epf.portlet.url>http://localhost:${httpWebPort}/pluto/portal/</epf.portlet.url>
                         <epf.shell.path>../EPF-shell/target/appassembler/bin</epf.shell.path>
                         <webdriver.gecko.driver>${geckodriver}</webdriver.gecko.driver>
@@ -385,7 +377,7 @@
                         <configuration>
                             <verifyTimeout>600</verifyTimeout>
                             <serverStartTimeout>600</serverStartTimeout>
-                            <applications>EPF-script,EPF-config,EPF-messaging,EPF-batch,EPF-cache,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-persistence,EPF-registry,EPF-management,EPF-gateway,EPF-webapp,OpenUP-delivery-processes,OpenUP-roles,OpenUP-tasks,OpenUP-work-products</applications>
+                            <applications>EPF-script,EPF-config,EPF-messaging,EPF-batch,EPF-cache,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-persistence,EPF-registry,EPF-management,EPF-gateway,OpenUP-delivery-processes,OpenUP-roles,OpenUP-tasks,OpenUP-work-products</applications>
                         </configuration>
                     </execution>
                     <!-- Stop the server -->
@@ -404,7 +396,7 @@
                     <deployPackages>dependencies</deployPackages>
 					<verifyTimeout>600</verifyTimeout>
 					<serverStartTimeout>600</serverStartTimeout>
-					<applications>EPF-script,EPF-config,EPF-messaging,EPF-batch,EPF-cache,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-persistence,EPF-registry,EPF-management,EPF-gateway,EPF-webapp,OpenUP-delivery-processes,OpenUP-roles,OpenUP-tasks,OpenUP-work-products</applications>
+					<applications>EPF-script,EPF-config,EPF-messaging,EPF-batch,EPF-cache,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-persistence,EPF-registry,EPF-management,EPF-gateway,OpenUP-delivery-processes,OpenUP-roles,OpenUP-tasks,OpenUP-work-products</applications>
                 </configuration>
             </plugin>
         </plugins>

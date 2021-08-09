@@ -7,7 +7,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import epf.client.portlet.Portlet;
-import epf.client.webapp.WebApp;
 import epf.util.logging.Logging;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -70,18 +69,6 @@ public class WebDriverUtil {
 	
 	public static void close(@Disposes WebDriver webDriver) {
 		webDriver.quit();
-	}
-	
-	@Produces @Named(WebApp.WEBAPP_URL)
-	public static URL getDefaultURL() {
-		URL url = null;
-		try {
-			url = new URL(System.getProperty(WebApp.WEBAPP_URL, ""));
-		} 
-		catch (MalformedURLException e) {
-			LOGGER.log(Level.SEVERE, e.getMessage(), e);
-		}
-		return url;
 	}
 	
 	@Produces @Named(Portlet.PORTLET_URL)

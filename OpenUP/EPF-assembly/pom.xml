@@ -130,12 +130,6 @@
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-webapp</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
 		<dependency>
 			<groupId>com.liferay.faces</groupId>
 			<artifactId>com.liferay.faces.bridge.api</artifactId>
