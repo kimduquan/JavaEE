@@ -58,6 +58,12 @@
 			<artifactId>javax.annotation-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.json/javax.json-api -->
+		<dependency>
+		    <groupId>javax.json</groupId>
+		    <artifactId>javax.json-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/javax.json.bind/javax.json.bind-api -->
 		<dependency>
 			<groupId>javax.json.bind</groupId>

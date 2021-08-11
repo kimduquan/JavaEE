@@ -3,7 +3,6 @@
     <!-- Enable features -->
     <featureManager>
         <feature>microProfile-4.0</feature>
-        <feature>jpa-2.2</feature>
         <feature>mpGraphQL-1.0</feature>
         <feature>mpContextPropagation-1.2</feature>
         <!--<feature>sessionCache-1.0</feature>-->
@@ -12,7 +11,9 @@
         <feature>batchManagement-1.0</feature>
         <feature>wasJmsServer-1.0</feature>
         <feature>wasJmsClient-2.0</feature>
-        <feature>webProfile-8.0</feature>
+        <feature>beanValidation-2.0</feature>
+        <feature>jpa-2.2</feature>
+        <feature>websocket-1.1</feature>
         <feature>jca-1.7</feature>
     </featureManager>
 
