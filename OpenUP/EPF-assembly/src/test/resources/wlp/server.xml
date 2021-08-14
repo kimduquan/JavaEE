@@ -63,6 +63,18 @@
     <application id="EPF-gateway" name="EPF-gateway" context-root="gateway" location="EPF-gateway-1.0.0.war" startAfterRef="EPF-registry" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
+	<application id="OpenUP-delivery-processes" name="OpenUP-delivery-processes" context-root="delivery-processes" location="OpenUP-delivery-processes-1.0.0.war" startAfterRef="EPF-persistence,EPF-gateway" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
+	<application id="OpenUP-roles" name="OpenUP-roles" context-root="roles" location="OpenUP-roles-1.0.0.war" startAfterRef="EPF-persistence,EPF-gateway" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
+	<application id="OpenUP-tasks" name="OpenUP-tasks" context-root="tasks" location="OpenUP-tasks-1.0.0.war" startAfterRef="EPF-persistence,EPF-gateway" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
+	<application id="OpenUP-work-products" name="OpenUP-work-products" context-root="work-products" location="OpenUP-work-products-1.0.0.war" startAfterRef="EPF-persistence,EPF-gateway" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
     
     <!-- H2 Library Configuration -->
     <library id="H2JDBCLib">
