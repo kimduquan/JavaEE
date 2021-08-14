@@ -5,7 +5,7 @@
         <feature>microProfile-4.0</feature>
         <feature>mpGraphQL-1.0</feature>
         <feature>mpContextPropagation-1.2</feature>
-        <!--<feature>sessionCache-1.0</feature>-->
+        <feature>sessionCache-1.0</feature>
         <feature>transportSecurity-1.0</feature>
         <feature>batch-1.0</feature>
         <feature>batchManagement-1.0</feature>
@@ -95,8 +95,7 @@
         <file name="${opencv_core}"/>
     </library>
     
-    <!-- uri="file://${server.config.dir}hazelcast.xml" -->
-    <httpSessionCache libraryRef="JCacheLib" uri="file://${server.config.dir}hazelcast-config.xml" />
+    <httpSessionCache libraryRef="JCacheLib" uri="file:${server.config.dir}/hazelcast-config.xml" />
     
     <mpJwt 
         id="EPF"
