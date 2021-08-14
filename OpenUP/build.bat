@@ -1,5 +1,6 @@
 call git pull
 call git clean -f -d
+copy .\settings.xml ~/.m2
 call .\clean.bat
 echo on
 call .\copy_dependency.bat
