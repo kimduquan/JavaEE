@@ -158,8 +158,10 @@
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
-			<groupId>com.liferay.faces</groupId>
+		<dependency>
+            <groupId>com.liferay.faces</groupId>
 			<artifactId>com.liferay.faces.bridge.api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.liferay.faces</groupId>
@@ -225,34 +227,4 @@
             </plugin>
         </plugins>
     </build>
-    <profiles>
-		<profile>
-			<id>Linux</id>
-			<activation>
-				<os>
-					<name>Linux</name>
-				</os>
-			</activation>
-			<properties>
-        		<geckodriver>./geckodriver</geckodriver>
-        		<command>bash</command>
-        		<opencv_java>/usr/share/java/opencv-420.jar</opencv_java>
-        		<opencv_core>/usr/lib/x86_64-linux-gnu/libopencv_core.so</opencv_core>
-			</properties>
-		</profile>
-		<profile>
-			<id>Windows</id>
-			<activation>
-				<os>
-					<family>windows</family>
-				</os>
-			</activation>
-			<properties>
-        		<geckodriver>./geckodriver.exe</geckodriver>
-        		<command>powershell</command>
-        		<opencv_java>C://Program Files/opencv/build/java/opencv-452.jar</opencv_java>
-        		<opencv_core>C://Program Files/opencv/build/java/x64/opencv_java452.dll</opencv_core>
-			</properties>
-		</profile>
-	</profiles>
 </project>
