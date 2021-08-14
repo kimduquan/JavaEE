@@ -2,8 +2,8 @@
 
 <portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd" version="2.0">
 	<portlet>
-		<portlet-name>OpenUP-delivery-processes-portlet</portlet-name>
-		<display-name>OpenUP-delivery-processes-portlet</display-name>
+		<portlet-name>OpenUP-delivery-processes</portlet-name>
+		<display-name>OpenUP-delivery-processes</display-name>
 		<portlet-class>javax.portlet.faces.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -18,8 +18,8 @@
 			<mime-type>text/html</mime-type>
 		</supports>
 		<portlet-info>
-			<title>OpenUP-delivery-processes-portlet</title>
-			<short-title>OpenUP-delivery-processes-portlet</short-title>
+			<title>OpenUP-delivery-processes</title>
+			<short-title>OpenUP-delivery-processes</short-title>
 			<keywords>OpenUP-delivery-processes</keywords>
 		</portlet-info>
 		<portlet-preferences>
