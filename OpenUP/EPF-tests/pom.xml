@@ -34,12 +34,13 @@
         <liberty.env.epf_registry_url>https://localhost:9443/registry/registry/</liberty.env.epf_registry_url>
 		<liberty.env.epf_management_url>https://localhost:9443/management/management/</liberty.env.epf_management_url>
 		<liberty.env.epf_portlet_url>http://localhost:8080/pluto/portal/</liberty.env.epf_portlet_url>
-		<liberty.env.epf_tests_file_root>target/servers/test/epf.file.root</liberty.env.epf_tests_file_root>
-		<liberty.env.epf_shell_path>../EPF-shell/target/appassembler/bin</liberty.env.epf_shell_path>
+		<liberty.env.epf_webapp_url>https://localhost:9443/webapp/</liberty.env.epf_webapp_url>
 		<liberty.env.openup_delivery_processes_url>https://localhost:9443/delivery-processes/delivery-processes/</liberty.env.openup_delivery_processes_url>
 		<liberty.env.openup_roles_url>https://localhost:9443/roles/roles/</liberty.env.openup_roles_url>
 		<liberty.env.openup_tasks_url>https://localhost:9443/tasks/tasks/</liberty.env.openup_tasks_url>
 		<liberty.env.openup_work_products_url>https://localhost:9443/work-products/work-products/</liberty.env.openup_work_products_url>
+		<liberty.env.epf_tests_file_root>target/servers/test/epf.file.root</liberty.env.epf_tests_file_root>
+		<liberty.env.epf_shell_path>../EPF-shell/target/appassembler/bin</liberty.env.epf_shell_path>
     </properties>
     <dependencies>
 		<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
@@ -197,6 +198,12 @@
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-webapp</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>OpenUP-delivery-processes</artifactId>
@@ -286,16 +293,17 @@
                         <epf.lang.url>ws://localhost:9080/lang/lang/</epf.lang.url>
                         <epf.cache.url>https://localhost:${httpsPort}/cache/cache/</epf.cache.url>
                         <epf.portlet.url>http://localhost:${httpWebPort}/pluto/portal/</epf.portlet.url>
+                        <epf.webapp.url>https://localhost:${httpsPort}/webapp/</epf.webapp.url>
+						<openup.delivery_processes.url>https://localhost:${httpsPort}/delivery-processes/delivery-processes/</openup.delivery_processes.url>
+						<openup.roles.url>https://localhost:${httpsPort}/roles/roles/</openup.roles.url>
+						<openup.tasks.url>https://localhost:${httpsPort}/tasks/tasks/</openup.tasks.url>
+						<openup.work_products.url>https://localhost:${httpsPort}/work-products/work-products/</openup.work_products.url>
                         <epf.shell.path>../EPF-shell/target/appassembler/bin</epf.shell.path>
                         <webdriver.gecko.driver>${geckodriver}</webdriver.gecko.driver>
                         <epf.tests.file.root>target/servers/test/epf.file.root</epf.tests.file.root>
                         <epf.tests.shell.command>${command}</epf.tests.shell.command>
                         <webdriver.timeouts.implicit>60</webdriver.timeouts.implicit>
                         <webdriver.firefox.headless>true</webdriver.firefox.headless>
-						<openup.delivery_processes.url>https://localhost:${httpsPort}/delivery-processes/delivery-processes/</openup.delivery_processes.url>
-						<openup.roles.url>https://localhost:${httpsPort}/roles/roles/</openup.roles.url>
-						<openup.tasks.url>https://localhost:${httpsPort}/tasks/tasks/</openup.tasks.url>
-						<openup.work_products.url>https://localhost:${httpsPort}/work-products/work-products/</openup.work_products.url>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>

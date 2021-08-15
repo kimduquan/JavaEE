@@ -695,6 +695,7 @@
 		<module>EPF-image</module>
 		<module>EPF-rules</module>
 		<module>EPF-planning</module>
+		<module>EPF-webapp</module>
 		
 		<module>OpenUP-client</module>
         <module>OpenUP-schema</module>
