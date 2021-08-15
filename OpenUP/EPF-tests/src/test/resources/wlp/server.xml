@@ -87,7 +87,7 @@
     </library>
     
     <library id="JCacheLib">
-        <file name="${shared.resource.dir}/epf/hazelcast-4.2.jar"/>
+        <file name="${shared.resource.dir}/epf/hazelcast-3.12.12.jar"/>
     </library>
     
     <library id="OpenCVLib">
@@ -95,7 +95,9 @@
         <file name="${opencv_core}"/>
     </library>
     
-    <httpSessionCache libraryRef="JCacheLib" uri="file:${server.config.dir}/hazelcast-config.xml" />
+    <httpSessionCache libraryRef="JCacheLib" uri="file:${server.config.dir}hazelcast-config.xml">
+    	<!--<properties hazelcast.config.location="file:${server.config.dir}hazelcast-config.xml" hazelcast.jcache.provider.type="member"/>-->
+    </httpSessionCache>
     
     <mpJwt 
         id="EPF"

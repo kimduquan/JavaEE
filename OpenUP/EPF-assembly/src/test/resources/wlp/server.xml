@@ -5,7 +5,7 @@
         <feature>microProfile-4.0</feature>
         <feature>mpGraphQL-1.0</feature>
         <feature>mpContextPropagation-1.2</feature>
-        <!--<feature>sessionCache-1.0</feature>-->
+        <feature>sessionCache-1.0</feature>
         <feature>transportSecurity-1.0</feature>
         <feature>batch-1.0</feature>
         <feature>batchManagement-1.0</feature>
@@ -87,7 +87,7 @@
     </library>
     
     <library id="JCacheLib">
-        <file name="${shared.resource.dir}/epf/hazelcast-4.2.jar"/>
+        <file name="${shared.resource.dir}/epf/hazelcast-3.12.12.jar"/>
     </library>
     
     <library id="OpenCVLib">
@@ -95,8 +95,9 @@
         <file name="/usr/lib/x86_64-linux-gnu/libopencv_core.so"/>
     </library>
     
-    <!-- uri="file://${server.config.dir}hazelcast.xml" -->
-    <httpSessionCache libraryRef="JCacheLib" uri="file://${server.config.dir}hazelcast-config.xml" />
+    <httpSessionCache libraryRef="JCacheLib" uri="file:${server.config.dir}hazelcast-config.xml">
+    	<!--<properties hazelcast.config.location="file:${server.config.dir}hazelcast-config.xml" hazelcast.jcache.provider.type="member"/>-->
+    </httpSessionCache>
     
     <mpJwt 
         id="EPF"

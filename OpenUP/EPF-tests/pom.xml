@@ -47,7 +47,7 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
         </dependency>
-		<!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast-all -->
+		<!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast -->
         <dependency>
             <groupId>com.hazelcast</groupId>
             <artifactId>hazelcast</artifactId>
@@ -239,27 +239,12 @@
         <dependency>
 		    <groupId>org.jboss.weld</groupId>
 		    <artifactId>weld-junit4</artifactId>
+			<scope>test</scope>
 		</dependency>
         <dependency>
 		    <groupId>org.seleniumhq.selenium</groupId>
 		    <artifactId>selenium-java</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.liferay.faces</groupId>
-			<artifactId>com.liferay.faces.bridge.api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.liferay.faces</groupId>
-			<artifactId>com.liferay.faces.bridge.impl</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>javax.portlet</groupId>
-			<artifactId>portlet-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.portals.pluto</groupId>
-			<artifactId>pluto-container</artifactId>
+			<scope>test</scope>
 		</dependency>
     </dependencies>
     <build>
@@ -350,26 +335,6 @@
                                     <groupId>com.hazelcast</groupId>
                                     <artifactId>hazelcast</artifactId>
                                 </dependency>
-                                <!--<dependency>
-                                    <groupId>javax.cache</groupId>
-                                    <artifactId>cache-api</artifactId>
-                                </dependency>
-								<dependency>
-									<groupId>com.liferay.faces</groupId>
-									<artifactId>com.liferay.faces.bridge.api</artifactId>
-								</dependency>
-								<dependency>
-									<groupId>com.liferay.faces</groupId>
-									<artifactId>com.liferay.faces.bridge.impl</artifactId>
-								</dependency>
-								<dependency>
-									<groupId>javax.portlet</groupId>
-									<artifactId>portlet-api</artifactId>
-								</dependency>
-								<dependency>
-									<groupId>org.apache.portals.pluto</groupId>
-									<artifactId>pluto-container</artifactId>
-								</dependency>-->
                             </copyDependencies>
                         </configuration>
                     </execution>

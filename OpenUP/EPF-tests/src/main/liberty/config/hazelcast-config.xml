@@ -3,6 +3,6 @@
     xsi:schemaLocation="http://www.hazelcast.com/schema/config
        https://hazelcast.com/schema/config/hazelcast-config-3.12.xsd">
     <group>
-        <name>EPFCluster</name>
+        <name>TestCluster</name>
     </group>
 </hazelcast>

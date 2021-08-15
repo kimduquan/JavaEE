@@ -16,7 +16,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import org.eclipse.microprofile.auth.LoginConfig;
-import com.hazelcast.core.Hazelcast;
 import epf.cache.persistence.Persistence;
 import epf.schema.EPF;
 
@@ -52,7 +51,6 @@ public class Service extends Application {
 	 */
 	@PostConstruct
 	public void postConstruct() {
-		Hazelcast.newHazelcastInstance();
 		manager = Caching.getCachingProvider().getCacheManager();
 		final MutableConfiguration<String, Object> config = new MutableConfiguration<>();
 		persistenceCache = manager.createCache("persistence", config);
@@ -66,6 +64,5 @@ public class Service extends Application {
 	public void preDestroy() {
 		persistenceCache.close();
 		manager.close();
-		Hazelcast.shutdownAll();
 	}
 }
