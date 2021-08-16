@@ -1,13 +1,30 @@
 package epf.webapp;
 
 import java.io.IOException;
+import javax.annotation.security.RolesAllowed;
+import javax.enterprise.context.ApplicationScoped;
+import javax.security.enterprise.authentication.mechanism.http.BasicAuthenticationMechanismDefinition;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.HttpConstraint;
+import javax.servlet.annotation.ServletSecurity;
+import javax.servlet.annotation.ServletSecurity.EmptyRoleSemantic;
+import javax.servlet.annotation.ServletSecurity.TransportGuarantee;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/")
+@WebServlet(urlPatterns = {"/"}, loadOnStartup = 1)
+@ApplicationScoped
+@BasicAuthenticationMechanismDefinition(realmName = "EPF")
+@ServletSecurity(
+		@HttpConstraint(
+				value = EmptyRoleSemantic.PERMIT,
+				transportGuarantee = TransportGuarantee.CONFIDENTIAL,
+				rolesAllowed = {epf.client.security.Security.DEFAULT_ROLE}
+				)
+		)
+@RolesAllowed(epf.client.security.Security.DEFAULT_ROLE)
 public class WebAppServlet extends HttpServlet {
 	/**
 	 * 
@@ -19,7 +36,6 @@ public class WebAppServlet extends HttpServlet {
      */
     public WebAppServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
     /**

@@ -11,7 +11,6 @@ import java.util.Set;
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.security.enterprise.authentication.mechanism.http.BasicAuthenticationMechanismDefinition;
 import javax.security.enterprise.credential.BasicAuthenticationCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStore;
@@ -30,7 +29,6 @@ import epf.client.security.Token;
  * @author FOXCONN
  */
 @ApplicationScoped
-@BasicAuthenticationMechanismDefinition(realmName = "EPF")
 public class EPFIdentityStore implements IdentityStore {
 	
 	/**
