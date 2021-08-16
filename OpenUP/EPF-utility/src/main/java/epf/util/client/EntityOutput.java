@@ -7,13 +7,10 @@ package epf.util.client;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.util.Objects;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.StreamingOutput;
-
 import epf.util.io.IOUtil;
 
 /**
@@ -37,11 +34,7 @@ public class EntityOutput implements StreamingOutput {
 
     @Override
     public void write(final OutputStream output) throws IOException, WebApplicationException {
-        try(InputStreamReader reader = new InputStreamReader(input)){
-            try(OutputStreamWriter writer = new OutputStreamWriter(output)){
-                IOUtil.transferTo(reader, writer);
-            }
-        }
+        IOUtil.transferTo(input, output);
         input.close();
     }
     

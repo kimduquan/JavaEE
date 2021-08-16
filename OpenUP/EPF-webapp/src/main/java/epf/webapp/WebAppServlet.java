@@ -1,6 +1,7 @@
 package epf.webapp;
 
 import java.io.IOException;
+import java.io.InputStream;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.security.enterprise.authentication.mechanism.http.BasicAuthenticationMechanismDefinition;
@@ -13,8 +14,19 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import epf.util.SystemUtil;
+import epf.util.logging.Logging;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublishers;
+import java.net.http.HttpRequest.Builder;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
+import java.util.logging.Logger;
 
-@WebServlet(urlPatterns = {"/"}, loadOnStartup = 1)
+@WebServlet(urlPatterns = {"/*"}, loadOnStartup = 1)
 @ApplicationScoped
 @BasicAuthenticationMechanismDefinition(realmName = "EPF")
 @ServletSecurity(
@@ -26,31 +38,112 @@ import javax.servlet.http.HttpServletResponse;
 		)
 @RolesAllowed(epf.client.security.Security.DEFAULT_ROLE)
 public class WebAppServlet extends HttpServlet {
+	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * 
+	 */
+	private static final Logger LOGGER = Logging.getLogger(WebAppServlet.class.getName());
        
     /**
-     * @see HttpServlet#HttpServlet()
+     * 
      */
     public WebAppServlet() {
         super();
     }
-
+    
     /**
-     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+     * @param request
+     * @return
+     * @throws URISyntaxException
      */
+    protected URI buildRequestUri(final HttpServletRequest request) throws URISyntaxException {
+    	final String portletUrl = SystemUtil.getenv(WebApp.PORTLET_URL);
+    	final String requestUri = request.getRequestURI();
+    	final String queryString = request.getQueryString();
+    	final String uri = portletUrl + requestUri + (queryString != null ? queryString : "");
+    	return new URI(uri);
+    }
+    
+    /**
+     * @param request
+     * @param uri
+     * @return
+     */
+    protected Builder buildRequest(final HttpServletRequest request, final URI uri) {
+    	return HttpRequest.newBuilder(uri);
+    }
+    
+    /**
+     * @return
+     */
+    protected HttpClient buildClient() {
+    	return HttpClient.newBuilder().build();
+    }
+    
+    protected void buildResponse(final HttpServletResponse response, final HttpResponse<InputStream> httpResponse) throws IOException {
+    	httpResponse.body().transferTo(response.getOutputStream());
+    }
+
+    @Override
     protected void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
-        response.getWriter().print("<h1><font color=green>Simple Servlet ran successfully</font></h1>"
-                        + "Powered by WebSphere Application Server Liberty Profile");
+    	try {
+    		final URI uri = buildRequestUri(request);
+        	final HttpRequest httpRequest = buildRequest(request, uri).GET().build();
+        	final HttpClient client = buildClient();
+			final HttpResponse<InputStream> httpResponse = client.send(httpRequest, BodyHandlers.ofInputStream());
+			buildResponse(response, httpResponse);
+		}
+    	catch (InterruptedException | URISyntaxException e) {
+			LOGGER.throwing(getClass().getName(), "doGet", e);
+		}
     }
 
-    /**
-     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-     */
+    @Override
     protected void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
-        //    TODO Auto-generated method stub
+    	try {
+    		final URI uri = buildRequestUri(request);
+    		final InputStream input = request.getInputStream();
+        	final HttpRequest httpRequest = buildRequest(request, uri).POST(BodyPublishers.ofInputStream(() -> input)).build();
+        	final HttpClient client = buildClient();
+    		final HttpResponse<InputStream> httpResponse = client.send(httpRequest, BodyHandlers.ofInputStream());
+			buildResponse(response, httpResponse);
+		}
+    	catch (InterruptedException | URISyntaxException e) {
+			LOGGER.throwing(getClass().getName(), "doPost", e);
+		}
     }
 
+    @Override
+    protected void doPut(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
+    	try {
+    		final URI uri = buildRequestUri(request);
+    		final InputStream input = request.getInputStream();
+        	final HttpRequest httpRequest = buildRequest(request, uri).PUT(BodyPublishers.ofInputStream(() -> input)).build();
+        	final HttpClient client = buildClient();
+        	final HttpResponse<InputStream> httpResponse = client.send(httpRequest, BodyHandlers.ofInputStream());
+			buildResponse(response, httpResponse);
+		}
+    	catch (InterruptedException | URISyntaxException e) {
+			LOGGER.throwing(getClass().getName(), "doPut", e);
+		}
+    }
+    
+    @Override
+    protected void doDelete(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
+    	try {
+    		final URI uri = buildRequestUri(request);
+    		final HttpRequest httpRequest = buildRequest(request, uri).DELETE().build();
+        	final HttpClient client = buildClient();
+        	final HttpResponse<InputStream> httpResponse = client.send(httpRequest, BodyHandlers.ofInputStream());
+			buildResponse(response, httpResponse);
+		}
+    	catch (InterruptedException | URISyntaxException e) {
+			LOGGER.throwing(getClass().getName(), "doDelete", e);
+		}
+    }
 }

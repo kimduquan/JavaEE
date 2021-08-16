@@ -33,7 +33,7 @@
         <liberty.env.epf_cache_url>https://localhost:9443/cache/cache/</liberty.env.epf_cache_url>
         <liberty.env.epf_registry_url>https://localhost:9443/registry/registry/</liberty.env.epf_registry_url>
 		<liberty.env.epf_management_url>https://localhost:9443/management/management/</liberty.env.epf_management_url>
-		<liberty.env.epf_portlet_url>http://localhost:8080/pluto/portal/</liberty.env.epf_portlet_url>
+		<liberty.env.epf_portlet_url>http://localhost:8080/pluto/portal</liberty.env.epf_portlet_url>
 		<liberty.env.epf_webapp_url>https://localhost:9443/webapp/</liberty.env.epf_webapp_url>
 		<liberty.env.openup_delivery_processes_url>https://localhost:9443/delivery-processes/delivery-processes/</liberty.env.openup_delivery_processes_url>
 		<liberty.env.openup_roles_url>https://localhost:9443/roles/roles/</liberty.env.openup_roles_url>
@@ -292,7 +292,7 @@
                         <epf.messaging.url>ws://localhost:${httpPort}/messaging/messaging/</epf.messaging.url>
                         <epf.lang.url>ws://localhost:9080/lang/lang/</epf.lang.url>
                         <epf.cache.url>https://localhost:${httpsPort}/cache/cache/</epf.cache.url>
-                        <epf.portlet.url>http://localhost:${httpWebPort}/pluto/portal/</epf.portlet.url>
+                        <epf.portlet.url>http://localhost:${httpWebPort}/pluto/portal</epf.portlet.url>
                         <epf.webapp.url>https://localhost:${httpsPort}/webapp/</epf.webapp.url>
 						<openup.delivery_processes.url>https://localhost:${httpsPort}/delivery-processes/delivery-processes/</openup.delivery_processes.url>
 						<openup.roles.url>https://localhost:${httpsPort}/roles/roles/</openup.roles.url>

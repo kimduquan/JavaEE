@@ -3,10 +3,9 @@
  */
 package epf.shell.file;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -91,12 +90,9 @@ public class FileStore {
 			) throws Exception {
 		try(Client client = clientUtil.newClient(fileUrl.get())){
 			client.authorization(credential.getToken());
-			try(InputStream stream = epf.client.file.Files.read(client, path)){
-				try(InputStreamReader reader = new InputStreamReader(stream)){
-					try(BufferedWriter writer = Files.newBufferedWriter(output.toPath())){
-						IOUtil.transferTo(reader, writer);
-						writer.flush();
-					}
+			try(InputStream in = epf.client.file.Files.read(client, path)){
+				try(OutputStream out = Files.newOutputStream(output.toPath())){
+					IOUtil.transferTo(in, out);
 				}
 			}
 		}
