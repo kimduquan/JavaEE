@@ -24,6 +24,7 @@ import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpRequest.Builder;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
+import java.util.Enumeration;
 import java.util.logging.Logger;
 
 @WebServlet(urlPatterns = {"/*"}, loadOnStartup = 1)
@@ -61,7 +62,7 @@ public class WebAppServlet extends HttpServlet {
      * @return
      * @throws URISyntaxException
      */
-    protected URI buildRequestUri(final HttpServletRequest request) throws URISyntaxException {
+    protected static URI buildRequestUri(final HttpServletRequest request) throws URISyntaxException {
     	final String portletUrl = SystemUtil.getenv(WebApp.PORTLET_URL);
     	final String requestUri = request.getRequestURI();
     	final String queryString = request.getQueryString();
@@ -70,22 +71,42 @@ public class WebAppServlet extends HttpServlet {
     }
     
     /**
+     * @param builder
+     * @param request
+     * @return
+     */
+    protected static Builder buildHeaders(final Builder builder, final HttpServletRequest request) {
+    	final Enumeration<String> headerNames = request.getHeaderNames();
+		Builder newBuilder = builder;
+    	if(headerNames != null) {
+    		while(headerNames.hasMoreElements()) {
+    			final String headerName = headerNames.nextElement();
+    			final String header = request.getHeader(headerName);
+    			newBuilder = newBuilder.header(headerName, header);
+    		}
+    	}
+    	return newBuilder;
+    }
+    
+    /**
      * @param request
      * @param uri
      * @return
      */
-    protected Builder buildRequest(final HttpServletRequest request, final URI uri) {
-    	return HttpRequest.newBuilder(uri);
+    protected static Builder buildRequest(final HttpServletRequest request, final URI uri) {
+    	Builder builder = HttpRequest.newBuilder(uri);
+    	builder = buildHeaders(builder, request);
+    	return builder;
     }
     
     /**
      * @return
      */
-    protected HttpClient buildClient() {
+    protected static HttpClient buildClient() {
     	return HttpClient.newBuilder().build();
     }
     
-    protected void buildResponse(final HttpServletResponse response, final HttpResponse<InputStream> httpResponse) throws IOException {
+    protected static void buildResponse(final HttpServletResponse response, final HttpResponse<InputStream> httpResponse) throws IOException {
     	httpResponse.body().transferTo(response.getOutputStream());
     }
 
