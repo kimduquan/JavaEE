@@ -7,12 +7,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import epf.client.portlet.Portlet;
-import epf.util.logging.Logging;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Disposes;
 import jakarta.enterprise.inject.Produces;
@@ -24,8 +21,6 @@ import jakarta.inject.Named;
  */
 public class WebDriverUtil {
 	
-	private static Logger LOGGER = Logging.getLogger(WebDriverUtil.class.getName());
-
 	/**
 	 * @param options
 	 * @return

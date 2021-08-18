@@ -82,7 +82,7 @@ public class CacheTest {
 	public void testGetEntityOk() throws Exception {
 		final Artifact artifact = new Artifact();
         artifact.setName(StringUtil.randomString("Artifact Cache"));
-        artifact.setSummary("Artifact Cache Summary");
+        artifact.setSummary("Artifact Cache testGetEntityOk");
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
         artifact.setMoreInformation(new MoreInformation());
@@ -106,6 +106,7 @@ public class CacheTest {
         Assert.assertNotNull("Artifact", cachedArtifact);
         Assert.assertEquals("Artifact.name", artifact.getName(), cachedArtifact.getName());
         Assert.assertEquals("Artifact.summary", artifact.getSummary(), cachedArtifact.getSummary());
+        Entities.remove(persistenceClient, EPF.ARTIFACT, artifact.getName());
 	}
 	
 	@Test(expected = NotFoundException.class)

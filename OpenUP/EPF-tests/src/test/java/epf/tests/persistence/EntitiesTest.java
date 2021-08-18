@@ -77,7 +77,7 @@ public class EntitiesTest {
     public void testPersistOK() throws Exception{
     	Artifact artifact = new Artifact();
         artifact.setName(StringUtil.randomString("Artifact Entities"));
-        artifact.setSummary(StringUtil.randomString("Artifact Entities Summary"));
+        artifact.setSummary("Artifact Entities testPersistOK");
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
         artifact.setMoreInformation(new MoreInformation());
@@ -99,7 +99,7 @@ public class EntitiesTest {
     public void testMergeOK() throws Exception{
     	Artifact artifact = new Artifact();
         artifact.setName(StringUtil.randomString("Artifact Entities"));
-        artifact.setSummary(StringUtil.randomString("Artifact Entities Summary"));
+        artifact.setSummary(StringUtil.randomString("Artifact Entities testMergeOK"));
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
         artifact.setMoreInformation(new MoreInformation());
@@ -110,8 +110,8 @@ public class EntitiesTest {
         try(Client adminClient = ClientUtil.newClient(persistenceUrl)){
         	adminClient.authorization(adminToken);
             updatedArtifact = new Artifact();
-            updatedArtifact.setName(StringUtil.randomString("Artifact Entities"));
-            updatedArtifact.setSummary(StringUtil.randomString("Artifact Entities Summary"));
+            updatedArtifact.setName(artifact.getName());
+            updatedArtifact.setSummary(StringUtil.randomString("Artifact Entities testMergeOK"));
             updatedArtifact.setDescription(new Description());
             updatedArtifact.setIllustrations(new Illustrations());
             updatedArtifact.setMoreInformation(new MoreInformation());
@@ -126,7 +126,7 @@ public class EntitiesTest {
     public void testRemoveOK() throws Exception{
     	Artifact artifact = new Artifact();
         artifact.setName(StringUtil.randomString("Artifact Entities"));
-        artifact.setSummary(StringUtil.randomString("Artifact Entities Summary"));
+        artifact.setSummary("Artifact Entities testRemoveOK");
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
         artifact.setMoreInformation(new MoreInformation());
@@ -145,16 +145,16 @@ public class EntitiesTest {
     @Test(expected = NotFoundException.class)
     public void testPersistEmptyName() {
     	Artifact artifact = new Artifact();
-        artifact.setName("Artifact 1");
-        artifact.setSummary("Artifact 1 Summary");
+        artifact.setName(StringUtil.randomString("Artifact Entities"));
+        artifact.setSummary("Artifact Entities testPersistEmptyName");
         artifact = Entities.persist(client, Artifact.class, "", artifact);
     }
     
     @Test(expected = BadRequestException.class)
     public void testPersistBlankName() {
     	Artifact artifact = new Artifact();
-        artifact.setName("Artifact 1");
-        artifact.setSummary("Artifact 1 Summary");
+        artifact.setName(StringUtil.randomString("Artifact Entities"));
+        artifact.setSummary("Artifact Entities testPersistBlankName");
         artifact = Entities.persist(client, Artifact.class, "    ", artifact);
     }
     
@@ -187,16 +187,16 @@ public class EntitiesTest {
     @Test(expected = BadRequestException.class)
     public void testPersistNullEntityRequiredField() {
     	Artifact artifact = new Artifact();
-        artifact.setName("Artifact 1");
-        artifact.setSummary("Artifact 1 Summary");
+        artifact.setName(StringUtil.randomString("Artifact Entities"));
+        artifact.setSummary("Artifact Entities testPersistNullEntityRequiredField");
         artifact = Entities.persist(client, Artifact.class, EPF.ARTIFACT, artifact);
     }
     
     @Test(expected = BadRequestException.class)
     public void testPersistInvalidEntityType() {
     	Artifact artifact = new Artifact();
-        artifact.setName("Artifact 1");
-        artifact.setSummary("Artifact 1 Summary");
+        artifact.setName(StringUtil.randomString("Artifact Entities"));
+        artifact.setSummary("Artifact Entities testPersistInvalidEntityType");
         artifact = Entities.persist(client, Artifact.class, EPF.ACTIVITY, artifact);
     }
 }

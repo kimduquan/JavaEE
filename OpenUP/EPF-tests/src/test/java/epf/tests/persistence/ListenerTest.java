@@ -90,7 +90,7 @@ public class ListenerTest {
     public void test() throws Exception {
     	Artifact artifact = new Artifact();
         artifact.setName(StringUtil.randomString("Artifact Listener"));
-        artifact.setSummary("Artifact Listener Summary");
+        artifact.setSummary("Artifact Listener test");
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
         artifact.setMoreInformation(new MoreInformation());
@@ -128,8 +128,8 @@ public class ListenerTest {
     @Test
     public void testStream() throws Exception {
     	Artifact artifact = new Artifact();
-        artifact.setName(StringUtil.randomString("Artifact Listener Event"));
-        artifact.setSummary("Artifact Listener Event Summary");
+        artifact.setName(StringUtil.randomString("Artifact Listener"));
+        artifact.setSummary("Artifact Listener testStream");
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
         artifact.setMoreInformation(new MoreInformation());

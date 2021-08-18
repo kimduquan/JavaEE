@@ -196,7 +196,7 @@ public class ShellTest {
 	public void testPersistence_Persist() throws Exception {
 		Artifact artifact = new Artifact();
 		artifact.setName(StringUtil.randomString("Artifact Shell"));
-        artifact.setSummary(StringUtil.randomString("Artifact Shell Summary"));
+        artifact.setSummary("Artifact Shell testPersistence_Persist");
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
         artifact.setMoreInformation(new MoreInformation());
@@ -226,7 +226,7 @@ public class ShellTest {
 	public void testPersistence_Merge() throws Exception {
 		Artifact artifact = new Artifact();
         artifact.setName(StringUtil.randomString("Artifact_Shell"));
-        artifact.setSummary(StringUtil.randomString("Artifact Shell Summary"));
+        artifact.setSummary(StringUtil.randomString("Artifact_Shell testPersistence_Merge"));
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
         artifact.setMoreInformation(new MoreInformation());
@@ -238,8 +238,8 @@ public class ShellTest {
 		process = builder.start();
 		TestUtil.waitUntil(o -> process.isAlive(), Duration.ofSeconds(10));
         Artifact updatedArtifact = new Artifact();
-        updatedArtifact.setName(StringUtil.randomString("Artifact_Shell"));
-        updatedArtifact.setSummary(StringUtil.randomString("Artifact Shell Summary"));
+        updatedArtifact.setName(artifact.getName());
+        updatedArtifact.setSummary(StringUtil.randomString("Artifact Shell testPersistence_Merge"));
         updatedArtifact.setDescription(new Description());
         updatedArtifact.setIllustrations(new Illustrations());
         updatedArtifact.setMoreInformation(new MoreInformation());
@@ -257,7 +257,7 @@ public class ShellTest {
 	public void testPersistence_Remove() throws Exception {
 		Artifact artifact = new Artifact();
         artifact.setName(StringUtil.randomString("Artifact_Shell"));
-        artifact.setSummary(StringUtil.randomString("Artifact Shell Summary"));
+        artifact.setSummary("Artifact Shell testPersistence_Remove");
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
         artifact.setMoreInformation(new MoreInformation());

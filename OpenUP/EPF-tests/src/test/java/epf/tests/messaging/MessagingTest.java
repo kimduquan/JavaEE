@@ -8,7 +8,6 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-
 import epf.client.gateway.GatewayUtil;
 import epf.client.messaging.Client;
 import epf.client.messaging.Messaging;
@@ -63,7 +62,7 @@ public class MessagingTest {
     public void test() throws Exception {
     	Artifact artifact = new Artifact();
         artifact.setName(StringUtil.randomString("Artifact Messaging"));
-        artifact.setSummary(StringUtil.randomString("Artifact Messaging Summary"));
+        artifact.setSummary("Artifact Messaging test");
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
         artifact.setMoreInformation(new MoreInformation());
