@@ -8,10 +8,8 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import epf.client.gateway.GatewayUtil;
 import epf.client.messaging.Client;
 import epf.client.messaging.Messaging;
-import epf.client.persistence.Entities;
 import epf.schema.EPF;
 import epf.schema.PostPersist;
 import epf.schema.PostRemove;
@@ -22,21 +20,19 @@ import epf.schema.work_products.section.MoreInformation;
 import epf.schema.work_products.section.Relationships;
 import epf.schema.work_products.section.Tailoring;
 import epf.tests.TestUtil;
-import epf.tests.client.ClientUtil;
+import epf.tests.persistence.PersistenceUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
 import org.junit.Test;
 
 public class MessagingTest {
 	
-	private static URI persistenceUrl;
 	private static URI listenerUrl;
 	private static String token;
 	private Client client;
     
     @BeforeClass
     public static void beforeClass() throws Exception{
-    	persistenceUrl = GatewayUtil.get("persistence");
     	URI messagingUrl = MessagingUtil.getMessagingUrl();
     	listenerUrl = messagingUrl.resolve("persistence");
     	token = SecurityUtil.login("admin1", "admin");
@@ -68,11 +64,8 @@ public class MessagingTest {
         artifact.setMoreInformation(new MoreInformation());
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
-    	try(epf.util.client.Client persistenceClient = ClientUtil.newClient(persistenceUrl)){
-    		persistenceClient.authorization(token);
-    		Entities.persist(persistenceClient, Artifact.class, EPF.ARTIFACT, artifact);
-            Entities.remove(persistenceClient, EPF.ARTIFACT, artifact.getName());
-    	}
+        PersistenceUtil.persist(token, Artifact.class, EPF.ARTIFACT, artifact);
+        PersistenceUtil.remove(token, EPF.ARTIFACT, artifact.getName());
     	
     	TestUtil.waitUntil((t) -> client.getMessages().stream().anyMatch(msg -> msg instanceof PostPersist), Duration.ofSeconds(10));
     	TestUtil.waitUntil((t) -> client.getMessages().stream().anyMatch(msg -> msg instanceof PostRemove), Duration.ofSeconds(10));

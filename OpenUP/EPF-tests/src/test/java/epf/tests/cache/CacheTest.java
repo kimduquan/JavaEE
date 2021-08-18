@@ -13,7 +13,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import epf.client.cache.Cache;
-import epf.client.persistence.Entities;
 import epf.schema.EPF;
 import epf.schema.work_products.Artifact;
 import epf.schema.work_products.section.Description;
@@ -23,6 +22,7 @@ import epf.schema.work_products.section.Relationships;
 import epf.schema.work_products.section.Tailoring;
 import epf.tests.TestUtil;
 import epf.tests.client.ClientUtil;
+import epf.tests.persistence.PersistenceUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
 import epf.util.client.Client;
@@ -35,8 +35,6 @@ import epf.client.gateway.GatewayUtil;
 public class CacheTest {
 	
 	static URI cacheUrl;
-	static URI persistenceUrl;
-	static Client persistenceClient;
 	static String token;
 	Client client;
 
@@ -46,10 +44,7 @@ public class CacheTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		cacheUrl = GatewayUtil.get("cache");
-		persistenceUrl = GatewayUtil.get("persistence");
-		persistenceClient = ClientUtil.newClient(persistenceUrl);
 		token = SecurityUtil.login("any_role1", "any_role");
-		persistenceClient.authorization(token);
 	}
 
 	/**
@@ -57,7 +52,6 @@ public class CacheTest {
 	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-		persistenceClient.close();
 		SecurityUtil.logOut(token);
 	}
 
@@ -88,7 +82,7 @@ public class CacheTest {
         artifact.setMoreInformation(new MoreInformation());
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
-        Entities.persist(persistenceClient, Artifact.class, EPF.ARTIFACT, artifact);
+        PersistenceUtil.persist(token, Artifact.class, EPF.ARTIFACT, artifact);
         TestUtil.waitUntil(
         		(t) -> {
 				        	Artifact art = null;
@@ -106,7 +100,7 @@ public class CacheTest {
         Assert.assertNotNull("Artifact", cachedArtifact);
         Assert.assertEquals("Artifact.name", artifact.getName(), cachedArtifact.getName());
         Assert.assertEquals("Artifact.summary", artifact.getSummary(), cachedArtifact.getSummary());
-        Entities.remove(persistenceClient, EPF.ARTIFACT, artifact.getName());
+        PersistenceUtil.remove(token, EPF.ARTIFACT, artifact.getName());
 	}
 	
 	@Test(expected = NotFoundException.class)

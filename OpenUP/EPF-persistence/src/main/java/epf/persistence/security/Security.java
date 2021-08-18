@@ -29,6 +29,7 @@ import epf.client.EPFException;
 import epf.client.security.CredentialInfo;
 import epf.client.security.Token;
 import epf.client.security.jwt.JWTConfig;
+import epf.client.security.jwt.TokenUtil;
 import epf.persistence.context.Application;
 import epf.persistence.context.Credential;
 import epf.persistence.context.Session;

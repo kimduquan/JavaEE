@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.persistence.security;
+package epf.client.security.jwt;
 
 import java.util.Arrays;
 import java.util.HashMap;

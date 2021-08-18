@@ -34,12 +34,6 @@
 		    <artifactId>javax.annotation-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.openapi/microprofile-openapi-api -->
-		<dependency>
-		    <groupId>org.eclipse.microprofile.openapi</groupId>
-		    <artifactId>microprofile-openapi-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-client</artifactId>
