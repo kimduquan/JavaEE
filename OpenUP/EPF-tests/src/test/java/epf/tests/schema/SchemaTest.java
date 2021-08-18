@@ -19,10 +19,10 @@ import epf.client.schema.Entity;
 import epf.client.schema.Schema;
 import epf.tests.client.ClientUtil;
 import epf.tests.persistence.EntitiesTest;
-import epf.tests.registry.RegistryUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
+import epf.client.gateway.GatewayUtil;
 
 /**
  * @author PC
@@ -41,7 +41,7 @@ public class SchemaTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		schemaUrl = RegistryUtil.lookup("schema", null);
+		schemaUrl = GatewayUtil.get("schema");
     	token = SecurityUtil.login("any_role1", "any_role");
     	adminToken = SecurityUtil.login("admin1", "admin");
 	}

@@ -24,8 +24,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import epf.client.gateway.GatewayUtil;
 import epf.tests.client.ClientUtil;
-import epf.tests.registry.RegistryUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.client.Client;
 import epf.util.file.PathUtil;
@@ -49,7 +49,7 @@ public class FilesTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		token = SecurityUtil.login("any_role1", "any_role");
-		filesUrl = RegistryUtil.lookup("file", null);
+		filesUrl = GatewayUtil.get("file");
 		tempDir = Files.createTempDirectory("file");
 		rootDir = Paths.get(System.getProperty("epf.tests.file.root", "")).toAbsolutePath();
 	}

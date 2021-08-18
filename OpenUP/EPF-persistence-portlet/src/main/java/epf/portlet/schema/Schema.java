@@ -21,7 +21,7 @@ import epf.portlet.Event;
 import epf.portlet.EventUtil;
 import epf.portlet.Parameter;
 import epf.portlet.ParameterUtil;
-import epf.portlet.registry.RegistryUtil;
+import epf.portlet.gateway.GatewayUtil;
 import epf.portlet.security.SecurityUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
@@ -58,7 +58,7 @@ public class Schema implements SchemaView, Serializable {
 	 * 
 	 */
 	@Inject
-	private transient RegistryUtil registryUtil;
+	private transient GatewayUtil gatewayUtil;
 	
 	/**
 	 * 
@@ -97,7 +97,7 @@ public class Schema implements SchemaView, Serializable {
 	 * @throws Exception
 	 */
 	protected List<Entity> fetchEntities() throws Exception{
-		final URI schemaUrl = registryUtil.get("schema");
+		final URI schemaUrl = gatewayUtil.get("schema");
 		try(Client client = clientUtil.newClient(schemaUrl)){
 			try(Response response = epf.client.schema.Schema.getEntities(client)){
 				return response.readEntity(new GenericType<List<Entity>>() {});

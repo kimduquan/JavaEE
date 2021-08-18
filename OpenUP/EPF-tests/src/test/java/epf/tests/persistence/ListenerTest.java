@@ -8,12 +8,15 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.websocket.ContainerProvider;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.sse.SseEventSource;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+
+import epf.client.gateway.GatewayUtil;
 import epf.client.messaging.MessageDecoder;
 import epf.client.persistence.Entities;
 import epf.schema.EPF;
@@ -27,7 +30,6 @@ import epf.schema.work_products.section.Relationships;
 import epf.schema.work_products.section.Tailoring;
 import epf.tests.TestUtil;
 import epf.tests.client.ClientUtil;
-import epf.tests.registry.RegistryUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
 import epf.util.websocket.Client;
@@ -48,11 +50,11 @@ public class ListenerTest {
     
     @BeforeClass
     public static void beforeClass() throws Exception{
-    	persistenceUrl = RegistryUtil.lookup("persistence", null);
-    	URI messagingUrl = RegistryUtil.lookup("messaging", null);
+    	persistenceUrl = GatewayUtil.get("persistence");
+    	URI messagingUrl = UriBuilder.fromUri(GatewayUtil.getUrl().resolve("messaging")).scheme("ws").port(9080).build();
     	listenerUrl = new URI(messagingUrl.toString() + "/persistence");
     	token = SecurityUtil.login("admin1", "admin");
-    	streamUrl = RegistryUtil.lookup("stream", null);
+    	streamUrl = GatewayUtil.get("stream");
     	executor = Executors.newFixedThreadPool(1);
     	streamClient = ClientUtil.newClient(streamUrl);
     	events = new ConcurrentLinkedQueue<>();

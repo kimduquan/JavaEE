@@ -10,7 +10,8 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.GenericType;
-import epf.portlet.registry.RegistryUtil;
+
+import epf.portlet.gateway.GatewayUtil;
 import epf.portlet.security.SecurityUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
@@ -59,14 +60,14 @@ public class Roles implements Serializable, RolesView {
 	 * 
 	 */
 	@Inject
-	private transient RegistryUtil registry;
+	private transient GatewayUtil gatewayUtil;
 	
 	/**
 	 * 
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		try(Client client = securityUtil.newClient(registry.get("persistence"))){
+		try(Client client = securityUtil.newClient(gatewayUtil.get("persistence"))){
 			roles = Queries.executeQuery(
 					client, 
 					new GenericType<List<Role>>() {}, 

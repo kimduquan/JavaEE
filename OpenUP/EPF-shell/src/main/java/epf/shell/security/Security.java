@@ -3,19 +3,18 @@
  */
 package epf.shell.security;
 
-import java.net.URI;
 import java.net.URL;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import epf.client.gateway.GatewayUtil;
 import epf.client.security.Token;
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
-import epf.util.Var;
 import epf.util.client.Client;
 import epf.util.security.PasswordUtil;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -37,12 +36,6 @@ public class Security {
 	 * 
 	 */
 	public static final String TOKEN_DESC = "Token";
-	
-	/**
-	 * 
-	 */
-	@Inject @Named(epf.client.security.Security.SECURITY_URL)
-	private transient Var<URI> securityUrl;
 	
 	/**
 	 * 
@@ -70,12 +63,12 @@ public class Security {
 			@Option(names = {"-p", "--password"}, description = "Password", interactive = true)
 		    final char... password
 			) throws Exception {
-		try(Client client = clientUtil.newClient(securityUrl.get())){
+		try(Client client = clientUtil.newClient(GatewayUtil.get("security"))){
 			return epf.client.security.Security.login(
 					client,
 					user, 
 					PasswordUtil.hash(user, password), 
-					new URL(securityUrl.get().toString())
+					new URL(GatewayUtil.get("shell").toString())
 					);
 		}
 	}
@@ -92,7 +85,7 @@ public class Security {
 			final Credential credential
 			) throws Exception {
 		identityStore.remove(credential);
-		try(Client client = clientUtil.newClient(securityUrl.get())){
+		try(Client client = clientUtil.newClient(GatewayUtil.get("security"))){
 			client.authorization(credential.getToken());
 			return epf.client.security.Security.logOut(client);
 		}
@@ -108,7 +101,7 @@ public class Security {
 			@Option(names = {"-t", TOKEN_ARG}, description = TOKEN_DESC) 
 			final String token) throws Exception {
 		Token authToken = null;
-		try(Client client = clientUtil.newClient(securityUrl.get())){
+		try(Client client = clientUtil.newClient(GatewayUtil.get("security"))){
 			client.authorization(token);
 			authToken = epf.client.security.Security.authenticate(client);
 		}
@@ -132,7 +125,7 @@ public class Security {
 			@Option(names = {"-p", "--password"}, description = "Password", interactive = true)
 		    final char... password
 		    ) throws Exception {
-		try(Client client = clientUtil.newClient(securityUrl.get())){
+		try(Client client = clientUtil.newClient(GatewayUtil.get("security"))){
 			client.authorization(credential.getToken());
 			final Map<String, String> infos = new ConcurrentHashMap<>();
 			infos.put("password", new String(password));
@@ -151,7 +144,7 @@ public class Security {
 			@CallerPrincipal
 			final Credential credential
 			) throws Exception {
-		try(Client client = clientUtil.newClient(securityUrl.get())){
+		try(Client client = clientUtil.newClient(GatewayUtil.get("security"))){
 			client.authorization(credential.getToken());
 			return epf.client.security.Security.revoke(client);
 		}

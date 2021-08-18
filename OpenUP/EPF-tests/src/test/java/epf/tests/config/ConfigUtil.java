@@ -2,8 +2,8 @@ package epf.tests.config;
 
 import java.util.Map;
 import epf.client.config.Config;
+import epf.client.gateway.GatewayUtil;
 import epf.tests.client.ClientUtil;
-import epf.tests.registry.RegistryUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
 import java.util.logging.Level;
@@ -16,7 +16,7 @@ public class ConfigUtil {
     
     static Map<String, String> properties(){
     	if(configs == null) {
-    		try(Client client = ClientUtil.newClient(RegistryUtil.lookup("config", null))){
+    		try(Client client = ClientUtil.newClient(GatewayUtil.get("config"))){
     			configs = Config.getProperties(client, null);
     		}
     		catch(Exception ex) {

@@ -8,6 +8,8 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+
+import epf.client.gateway.GatewayUtil;
 import epf.client.messaging.Client;
 import epf.client.messaging.Messaging;
 import epf.client.persistence.Entities;
@@ -22,7 +24,6 @@ import epf.schema.work_products.section.Relationships;
 import epf.schema.work_products.section.Tailoring;
 import epf.tests.TestUtil;
 import epf.tests.client.ClientUtil;
-import epf.tests.registry.RegistryUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
 import org.junit.Test;
@@ -36,7 +37,7 @@ public class MessagingTest {
     
     @BeforeClass
     public static void beforeClass() throws Exception{
-    	persistenceUrl = RegistryUtil.lookup("persistence", null);
+    	persistenceUrl = GatewayUtil.get("persistence");
     	URI messagingUrl = MessagingUtil.getMessagingUrl();
     	listenerUrl = messagingUrl.resolve("persistence");
     	token = SecurityUtil.login("admin1", "admin");

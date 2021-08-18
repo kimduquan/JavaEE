@@ -5,19 +5,16 @@ package epf.shell.rules.admin;
 
 import java.io.File;
 import java.io.InputStream;
-import java.net.URI;
 import java.nio.file.Files;
 import javax.ws.rs.core.Response;
-
+import epf.client.gateway.GatewayUtil;
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
 import epf.shell.security.Credential;
 import epf.shell.security.CallerPrincipal;
-import epf.util.Var;
 import epf.util.client.Client;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -30,12 +27,6 @@ import picocli.CommandLine.Option;
 @RequestScoped
 @Function
 public class Admin {
-	
-	/**
-	 * 
-	 */
-	@Inject @Named(epf.client.rules.Rules.RULES_URL)
-	private transient Var<URI> rulesUrl;
 	
 	/**
 	 * 
@@ -59,7 +50,7 @@ public class Admin {
 			@Option(names = {"-f", "--file"}, description = "Rules file")
 			final File file 
 			) throws Exception {
-		try(Client client = clientUtil.newClient(rulesUrl.get())){
+		try(Client client = clientUtil.newClient(GatewayUtil.get("rules"))){
 			client.authorization(credential.getToken());
 			try(InputStream input = Files.newInputStream(file.toPath())){
 				try(Response response = epf.client.rules.admin.Admin.registerRuleExecutionSet(client, name, input)){
@@ -82,7 +73,7 @@ public class Admin {
 			@Option(names = {"-n", "--name"}, description = "Name")
 			final String name
 			) throws Exception {
-		try(Client client = clientUtil.newClient(rulesUrl.get())){
+		try(Client client = clientUtil.newClient(GatewayUtil.get("rules"))){
 			client.authorization(credential.getToken());
 			try(Response response = epf.client.rules.admin.Admin.deregisterRuleExecutionSet(client, name)){
 				response.getStatus();

@@ -3,17 +3,15 @@
  */
 package epf.shell.persistence;
 
-import java.net.URI;
 import javax.ws.rs.core.Response;
+import epf.client.gateway.GatewayUtil;
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
 import epf.shell.security.Credential;
 import epf.shell.security.CallerPrincipal;
-import epf.util.Var;
 import epf.util.client.Client;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -26,11 +24,6 @@ import picocli.CommandLine.Option;
 @RequestScoped
 @Function
 public class Persistence {
-	/**
-	 * 
-	 */
-	@Inject @Named(epf.client.persistence.Persistence.PERSISTENCE_URL)
-	private transient Var<URI> persistenceUrl;
 	
 	/**
 	 * 
@@ -53,7 +46,7 @@ public class Persistence {
 			final String name, 
 			@Option(names = {"-e", "--entity"}, description = "Entity", interactive = true, echo = true)
 			final String entity) throws Exception {
-		try(Client client = clientUtil.newClient(persistenceUrl.get())){
+		try(Client client = clientUtil.newClient(GatewayUtil.get("persistence"))){
 			client.authorization(credential.getToken());
 			try(Response response = epf.client.persistence.Entities.persist(client, name, entity)){
 				return response.readEntity(String.class);
@@ -78,7 +71,7 @@ public class Persistence {
 			final String entityId,
 			@Option(names = {"-e", "--entity"}, description = "Entity", interactive = true, echo = true)
 			final String entity) throws Exception {
-		try(Client client = clientUtil.newClient(persistenceUrl.get())){
+		try(Client client = clientUtil.newClient(GatewayUtil.get("persistence"))){
 			client.authorization(credential.getToken());
 			epf.client.persistence.Entities.merge(client, name, entityId, entity);
 		}
@@ -99,7 +92,7 @@ public class Persistence {
 			final String name, 
 			@Option(names = {"-i", "--id"}, description = "ID")
 			final String entityId) throws Exception {
-		try(Client client = clientUtil.newClient(persistenceUrl.get())){
+		try(Client client = clientUtil.newClient(GatewayUtil.get("persistence"))){
 			client.authorization(credential.getToken());
 			epf.client.persistence.Entities.remove(client, name, entityId);
 		}

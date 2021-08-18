@@ -6,20 +6,18 @@ package epf.shell.file;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import javax.ws.rs.core.Response;
+import epf.client.gateway.GatewayUtil;
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
 import epf.shell.security.Credential;
 import epf.shell.security.CallerPrincipal;
-import epf.util.Var;
 import epf.util.client.Client;
 import epf.util.io.IOUtil;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -32,12 +30,6 @@ import picocli.CommandLine.Option;
 @RequestScoped
 @Function
 public class FileStore {
-
-	/**
-	 * 
-	 */
-	@Inject @Named(epf.client.file.Files.FILE_URL)
-	private transient Var<URI> fileUrl;
 	
 	/**
 	 * 
@@ -61,7 +53,7 @@ public class FileStore {
 			final File file,
 			@Option(names = {"-p", "--path"}, description = "Path")
 			final Path path) throws Exception {
-		try(Client client = clientUtil.newClient(fileUrl.get())){
+		try(Client client = clientUtil.newClient(GatewayUtil.get("file"))){
 			client.authorization(credential.getToken());
 			try(InputStream input = Files.newInputStream(file.toPath())){
 				try(Response res = epf.client.file.Files.createFile(client, input, path)){
@@ -88,7 +80,7 @@ public class FileStore {
 			@Option(names = {"-o", "--output"}, description = "Output")
 			final File output
 			) throws Exception {
-		try(Client client = clientUtil.newClient(fileUrl.get())){
+		try(Client client = clientUtil.newClient(GatewayUtil.get("file"))){
 			client.authorization(credential.getToken());
 			try(InputStream in = epf.client.file.Files.read(client, path)){
 				try(OutputStream out = Files.newOutputStream(output.toPath())){
@@ -111,7 +103,7 @@ public class FileStore {
 			@Option(names = {"-p", "--path"}, description = "Path")
 			final Path path
 			) throws Exception {
-		try(Client client = clientUtil.newClient(fileUrl.get())){
+		try(Client client = clientUtil.newClient(GatewayUtil.get("file"))){
 			client.authorization(credential.getToken());
 			try(Response response = epf.client.file.Files.delete(client, path)){
 				response.getStatus();

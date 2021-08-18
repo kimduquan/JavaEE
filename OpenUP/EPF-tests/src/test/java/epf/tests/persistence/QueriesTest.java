@@ -5,9 +5,9 @@
  */
 package epf.tests.persistence;
 
+import epf.client.gateway.GatewayUtil;
 import epf.client.persistence.Queries;
 import epf.tests.client.ClientUtil;
-import epf.tests.registry.RegistryUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
@@ -38,9 +38,9 @@ public class QueriesTest {
     private Client client;
     
     @BeforeClass
-    public static void beforeClass(){
+    public static void beforeClass() throws Exception{
     	token = SecurityUtil.login("any_role1", "any_role");
-    	persistenceUrl = RegistryUtil.lookup("persistence", null);
+    	persistenceUrl = GatewayUtil.get("persistence");
     }
     
     @AfterClass

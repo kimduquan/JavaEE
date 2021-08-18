@@ -7,13 +7,12 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.json.bind.JsonbConfig;
 import javax.ws.rs.core.Response;
+import epf.client.gateway.GatewayUtil;
 import epf.tests.client.ClientUtil;
-import epf.tests.registry.RegistryUtil;
 import epf.util.client.Client;
 import epf.util.json.Adapter;
 import epf.util.json.Decoder;
@@ -26,7 +25,7 @@ import epf.util.json.Encoder;
 public class RulesUtil {
 
 	public static void registerRuleExecutionSet(String token, Path ruleFile, String ruleSet) throws Exception {
-		try(Client client = ClientUtil.newClient(RegistryUtil.lookup("rules", null))){
+		try(Client client = ClientUtil.newClient(GatewayUtil.get("rules"))){
 			client.authorization(token);
 			try(InputStream input = Files.newInputStream(ruleFile)){
 				try(Response response = epf.client.rules.admin.Admin.registerRuleExecutionSet(client, ruleSet, input)){
@@ -37,7 +36,7 @@ public class RulesUtil {
 	}
 	
 	public static void deregisterRuleExecutionSet(String token, String ruleSet) throws Exception {
-		try(Client client = ClientUtil.newClient(RegistryUtil.lookup("rules", null))){
+		try(Client client = ClientUtil.newClient(GatewayUtil.get("rules"))){
 			client.authorization(token);
 			try(Response response = epf.client.rules.admin.Admin.deregisterRuleExecutionSet(client, ruleSet)){
 				response.getStatus();

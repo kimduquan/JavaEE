@@ -27,9 +27,9 @@ import epf.client.security.Security;
 import epf.client.security.Token;
 import epf.schema.EPF;
 import epf.tests.client.ClientUtil;
-import epf.tests.registry.RegistryUtil;
 import epf.util.client.Client;
 import epf.util.security.PasswordUtil;
+import epf.client.gateway.GatewayUtil;
 
 /**
  *
@@ -40,8 +40,8 @@ public class SecurityTest {
 	private static URI securityUrl;
     
     @BeforeClass
-    public static void beforeClass(){
-    	securityUrl = RegistryUtil.lookup("security", null);
+    public static void beforeClass() throws Exception{
+    	securityUrl = GatewayUtil.get("security");
     }
     
     String login(String username, String password, URL targetUrl, boolean needHash) throws Exception{

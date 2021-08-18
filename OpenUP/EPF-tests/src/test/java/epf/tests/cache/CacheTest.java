@@ -23,10 +23,10 @@ import epf.schema.work_products.section.Relationships;
 import epf.schema.work_products.section.Tailoring;
 import epf.tests.TestUtil;
 import epf.tests.client.ClientUtil;
-import epf.tests.registry.RegistryUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
 import epf.util.client.Client;
+import epf.client.gateway.GatewayUtil;
 
 /**
  * @author PC
@@ -45,8 +45,8 @@ public class CacheTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		cacheUrl = RegistryUtil.lookup("cache", null);
-		persistenceUrl = RegistryUtil.lookup("persistence", null);
+		cacheUrl = GatewayUtil.get("cache");
+		persistenceUrl = GatewayUtil.get("persistence");
 		persistenceClient = ClientUtil.newClient(persistenceUrl);
 		token = SecurityUtil.login("any_role1", "any_role");
 		persistenceClient.authorization(token);

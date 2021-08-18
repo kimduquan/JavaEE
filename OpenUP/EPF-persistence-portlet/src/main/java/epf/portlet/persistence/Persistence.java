@@ -26,7 +26,7 @@ import epf.portlet.JsonUtil;
 import epf.portlet.Parameter;
 import epf.portlet.ParameterUtil;
 import epf.portlet.config.ConfigUtil;
-import epf.portlet.registry.RegistryUtil;
+import epf.portlet.gateway.GatewayUtil;
 import epf.portlet.security.SecurityUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
@@ -73,7 +73,7 @@ public class Persistence implements PersistenceView, Serializable {
 	 * 
 	 */
 	@Inject
-	private transient RegistryUtil registryUtil;
+	private transient GatewayUtil gatewayUtil;
 	
 	/**
 	 * 
@@ -127,7 +127,7 @@ public class Persistence implements PersistenceView, Serializable {
 	 * @throws Exception
 	 */
 	protected List<JsonObject> fetchObjects(final int firstResult, final int maxResults) throws Exception{
-		try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
+		try(Client client = clientUtil.newClient(gatewayUtil.get("persistence"))){
 			try(Response response = epf.client.persistence.Queries.executeQuery(
 					client, 
 					path -> path.path(entity.getName()), 
@@ -167,7 +167,7 @@ public class Persistence implements PersistenceView, Serializable {
 				final JsonValue idValue = object.get(id.getName());
 				if(idValue != null) {
 					final String value = JsonUtil.toString(idValue);
-					try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
+					try(Client client = clientUtil.newClient(gatewayUtil.get("persistence"))){
 						epf.client.persistence.Entities.remove(client, entity.getName(), value);
 					}
 				}

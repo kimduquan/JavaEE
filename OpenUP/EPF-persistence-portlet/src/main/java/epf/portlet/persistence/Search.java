@@ -15,7 +15,7 @@ import javax.ws.rs.core.Response;
 import epf.client.persistence.SearchData;
 import epf.client.portlet.persistence.SearchView;
 import epf.portlet.config.ConfigUtil;
-import epf.portlet.registry.RegistryUtil;
+import epf.portlet.gateway.GatewayUtil;
 import epf.portlet.security.SecurityUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
@@ -62,7 +62,7 @@ public class Search implements SearchView, Serializable {
 	 * 
 	 */
 	@Inject
-	private transient RegistryUtil registryUtil;
+	private transient GatewayUtil gatewayUtil;
 	
 	/**
 	 * 
@@ -92,7 +92,7 @@ public class Search implements SearchView, Serializable {
 	
 	@Override
 	public void search() throws Exception{
-		try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
+		try(Client client = clientUtil.newClient(gatewayUtil.get("persistence"))){
 			try(Response response = epf.client.persistence.Queries.search(client, text, firstResult, maxResults)){
 				resultList = response.readEntity(new GenericType<List<SearchData>>() {});
 			}

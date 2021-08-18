@@ -15,9 +15,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import epf.client.gateway.GatewayUtil;
 import epf.client.registry.Registry;
 import epf.tests.client.ClientUtil;
-import epf.tests.gateway.GatewayUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
 
@@ -29,9 +29,9 @@ public class RegistryTest {
 	private Client client;
     
     @BeforeClass
-    public static void beforeClass(){
+    public static void beforeClass() throws Exception{
     	try {
-			registryUrl = GatewayUtil.getGatewayUrl().resolve("registry");
+			registryUrl = GatewayUtil.get("registry");
 		} 
     	catch (URISyntaxException e) {
 			logger.log(Level.SEVERE, "beforeClass", e);
@@ -63,29 +63,29 @@ public class RegistryTest {
     	Set<URI> URIs = links.stream().map(link -> link.getUri()).collect(Collectors.toSet());
     	Set<URI> expected = new HashSet<>();
     	try {
-			expected.add(GatewayUtil.getGatewayUrl().resolve("config"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("file"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("persistence"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("registry"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("security"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("stream"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("cache"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("script"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("management"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("rules"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("schema"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("planning"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("image"));
-	    	URI messagingUrl = UriBuilder.fromUri(GatewayUtil.getGatewayUrl().resolve("messaging")).scheme("ws").port(9080).build();
+			expected.add(GatewayUtil.getUrl().resolve("config"));
+	    	expected.add(GatewayUtil.getUrl().resolve("file"));
+	    	expected.add(GatewayUtil.getUrl().resolve("persistence"));
+	    	expected.add(GatewayUtil.getUrl().resolve("registry"));
+	    	expected.add(GatewayUtil.getUrl().resolve("security"));
+	    	expected.add(GatewayUtil.getUrl().resolve("stream"));
+	    	expected.add(GatewayUtil.getUrl().resolve("cache"));
+	    	expected.add(GatewayUtil.getUrl().resolve("script"));
+	    	expected.add(GatewayUtil.getUrl().resolve("management"));
+	    	expected.add(GatewayUtil.getUrl().resolve("rules"));
+	    	expected.add(GatewayUtil.getUrl().resolve("schema"));
+	    	expected.add(GatewayUtil.getUrl().resolve("planning"));
+	    	expected.add(GatewayUtil.getUrl().resolve("image"));
+	    	URI messagingUrl = UriBuilder.fromUri(GatewayUtil.getUrl().resolve("messaging")).scheme("ws").port(9080).build();
 	    	expected.add(messagingUrl);
-	    	URI langUrl = UriBuilder.fromUri(GatewayUtil.getGatewayUrl().resolve("lang")).scheme("ws").port(9080).build();
+	    	URI langUrl = UriBuilder.fromUri(GatewayUtil.getUrl().resolve("lang")).scheme("ws").port(9080).build();
 	    	expected.add(langUrl);
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("delivery-processes"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("roles"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("tasks"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("work-products"));
+	    	expected.add(GatewayUtil.getUrl().resolve("delivery-processes"));
+	    	expected.add(GatewayUtil.getUrl().resolve("roles"));
+	    	expected.add(GatewayUtil.getUrl().resolve("tasks"));
+	    	expected.add(GatewayUtil.getUrl().resolve("work-products"));
 		} 
-    	catch (URISyntaxException e) {
+    	catch (Exception e) {
 			logger.log(Level.SEVERE, "testList_OK", e);
 		}
     	Assert.assertEquals("list", expected, URIs);

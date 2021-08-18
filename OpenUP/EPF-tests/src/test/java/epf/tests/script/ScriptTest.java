@@ -15,9 +15,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 import epf.client.script.Script;
 import epf.tests.client.ClientUtil;
-import epf.tests.registry.RegistryUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.client.Client;
+import epf.client.gateway.GatewayUtil;
 
 /**
  * @author PC
@@ -34,7 +34,7 @@ public class ScriptTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		scriptUrl = RegistryUtil.lookup("script", null);
+		scriptUrl = GatewayUtil.get("script");
 		token = SecurityUtil.login("any_role1", "any_role");
 	}
 

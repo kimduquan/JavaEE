@@ -22,11 +22,12 @@ public class GatewayUtil {
 	private transient PreferenceUtil preferenceUtil;
 
 	/**
-	 * @param preferences
+	 * @param name
 	 * @return
 	 * @throws Exception
 	 */
-	public URI getGatewayUrl() throws Exception {
-		return new URI(preferenceUtil.getValue(epf.client.gateway.Gateway.GATEWAY_URL, ""));
+	public URI get(final String name) throws Exception {
+		final URI gatewayUrl = new URI(preferenceUtil.getValue(epf.client.gateway.Gateway.GATEWAY_URL, ""));
+		return gatewayUrl.resolve(name);
 	}
 }

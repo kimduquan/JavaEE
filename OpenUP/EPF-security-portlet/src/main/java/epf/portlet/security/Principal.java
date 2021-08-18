@@ -17,7 +17,7 @@ import epf.client.security.Credential;
 import epf.client.security.Token;
 import epf.portlet.CookieUtil;
 import epf.portlet.RequestUtil;
-import epf.portlet.registry.RegistryUtil;
+import epf.portlet.gateway.GatewayUtil;
 import epf.util.client.Client;
 
 /**
@@ -48,7 +48,7 @@ public class Principal implements PrincipalView, Serializable {
 	 * 
 	 */
 	@Inject
-	private transient RegistryUtil registryUtil;
+	private transient GatewayUtil gatewayUtil;
 	
 	/**
 	 * 
@@ -81,7 +81,7 @@ public class Principal implements PrincipalView, Serializable {
 	 */
 	@Override
 	public String logout() throws Exception {
-		try(Client client = clientUtil.newClient(registryUtil.get("security"))){
+		try(Client client = clientUtil.newClient(gatewayUtil.get("security"))){
 			epf.client.security.Security.logOut(client);
 		}
 		session.setToken(null);
@@ -97,7 +97,7 @@ public class Principal implements PrincipalView, Serializable {
 	public String update() throws Exception {
 		final Map<String, String> info = new HashMap<>();
 		info.put("password", new String(credential.getPassword()));
-		try(Client client = clientUtil.newClient(registryUtil.get("security"))){
+		try(Client client = clientUtil.newClient(gatewayUtil.get("security"))){
 			epf.client.security.Security.update(client, info);
 		}
 		return "principal";
@@ -109,7 +109,7 @@ public class Principal implements PrincipalView, Serializable {
 	 */
 	@Override
 	public void revoke() throws Exception {
-		final URI securityUrl = registryUtil.get("security");
+		final URI securityUrl = gatewayUtil.get("security");
 		String rawToken;
 		try(Client client = clientUtil.newClient(securityUrl)){
 			rawToken = epf.client.security.Security.revoke(client);

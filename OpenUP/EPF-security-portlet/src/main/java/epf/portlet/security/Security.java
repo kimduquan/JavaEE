@@ -9,7 +9,7 @@ import epf.client.security.Token;
 import epf.portlet.CookieUtil;
 import epf.portlet.RequestUtil;
 import epf.portlet.client.ClientUtil;
-import epf.portlet.registry.RegistryUtil;
+import epf.portlet.gateway.GatewayUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
 import epf.util.security.PasswordUtil;
@@ -63,7 +63,7 @@ public class Security implements CredentialView, Serializable {
 	 * 
 	 */
 	@Inject
-	private transient RegistryUtil registryUtil;
+	private transient GatewayUtil gatewayUtil;
 	
 	/**
 	 * 
@@ -89,7 +89,7 @@ public class Security implements CredentialView, Serializable {
 	 */
 	@Override
 	public String login() throws Exception {
-		final URI securityUrl = registryUtil.get("security");
+		final URI securityUrl = gatewayUtil.get("security");
 		final String passwordHash = PasswordUtil.hash(credential.getCaller(), credential.getPassword());
 		final URL url = new URL(
 				request.getRequest().getScheme(), 
@@ -128,7 +128,7 @@ public class Security implements CredentialView, Serializable {
 	public String authenticate() {
 		final Optional<Cookie> cookie = cookieUtil.getCookie(Naming.SECURITY_TOKEN);
 		if(cookie.isPresent() && session.getToken() == null) {
-			try(Client client = securityUtil.newClient(registryUtil.get("security"))){
+			try(Client client = securityUtil.newClient(gatewayUtil.get("security"))){
 				final Token token = epf.client.security.Security.authenticate(client);
 				final String rawToken = cookie.get().getValue();
 				token.setRawToken(rawToken);

@@ -28,7 +28,7 @@ import epf.portlet.EventUtil;
 import epf.portlet.Parameter;
 import epf.portlet.ParameterUtil;
 import epf.portlet.RequestUtil;
-import epf.portlet.registry.RegistryUtil;
+import epf.portlet.gateway.GatewayUtil;
 import epf.portlet.security.SecurityUtil;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
@@ -91,7 +91,7 @@ public class Entity implements Serializable {
 	 * 
 	 */
 	@Inject
-	private transient RegistryUtil registryUtil;
+	private transient GatewayUtil gatewayUtil;
 	
 	/**
 	 * 
@@ -156,7 +156,7 @@ public class Entity implements Serializable {
 	 * @throws Exception
 	 */
 	protected JsonObject fetchCachedEntity() throws Exception{
-		try(Client client = clientUtil.newClient(registryUtil.get("cache"))){
+		try(Client client = clientUtil.newClient(gatewayUtil.get("cache"))){
 			try(Response response = epf.client.cache.Cache.getEntity(client, entity.getName(), id)){
 				try(InputStream stream = response.readEntity(InputStream.class)){
 					try(JsonReader reader = Json.createReader(stream)){
@@ -172,7 +172,7 @@ public class Entity implements Serializable {
 	 * @throws Exception
 	 */
 	protected JsonObject fetchPersistedEntity() throws Exception{
-		try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
+		try(Client client = clientUtil.newClient(gatewayUtil.get("persistence"))){
 			try(Response response = epf.client.persistence.Entities.find(client, entity.getName(), id)){
 				try(InputStream stream = response.readEntity(InputStream.class)){
 					try(JsonReader reader = Json.createReader(stream)){
@@ -188,7 +188,7 @@ public class Entity implements Serializable {
 	 * @throws Exception
 	 */
 	protected List<Embeddable> fetchEmbeddables() throws Exception{
-		try(Client client = clientUtil.newClient(registryUtil.get("schema"))){
+		try(Client client = clientUtil.newClient(gatewayUtil.get("schema"))){
 			try(Response response = epf.client.schema.Schema.getEmbeddables(client)){
 				return response.readEntity(new GenericType<List<Embeddable>>() {});
 			}
@@ -200,7 +200,7 @@ public class Entity implements Serializable {
 	 * @throws Exception
 	 */
 	protected List<epf.client.schema.Entity> fetchEntities() throws Exception{
-		try(Client client = clientUtil.newClient(registryUtil.get("schema"))){
+		try(Client client = clientUtil.newClient(gatewayUtil.get("schema"))){
 			try(Response response = epf.client.schema.Schema.getEntities(client)){
 				return response.readEntity(new GenericType<List<epf.client.schema.Entity>>() {});
 			}
@@ -213,7 +213,7 @@ public class Entity implements Serializable {
 	 * @throws Exception
 	 */
 	protected List<JsonObject> fetchValues(final epf.client.schema.Entity entity) throws Exception{
-		try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
+		try(Client client = clientUtil.newClient(gatewayUtil.get("persistence"))){
 			try(Response response = epf.client.persistence.Queries.executeQuery(
 					client, 
 					path -> path.path(entity.getName()), 
@@ -325,7 +325,7 @@ public class Entity implements Serializable {
 	 * 
 	 */
 	public void persist() throws Exception {
-		try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
+		try(Client client = clientUtil.newClient(gatewayUtil.get("persistence"))){
 			try(Response response = epf.client.persistence.Entities.persist(
 					client, 
 					entity.getName(), 
@@ -352,7 +352,7 @@ public class Entity implements Serializable {
 	 * 
 	 */
 	public void merge() throws Exception {
-		try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
+		try(Client client = clientUtil.newClient(gatewayUtil.get("persistence"))){
 			epf.client.persistence.Entities.merge(
 					client,
 					entity.getName(), 
@@ -367,7 +367,7 @@ public class Entity implements Serializable {
 	 * 
 	 */
 	public String remove() throws Exception {
-		try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
+		try(Client client = clientUtil.newClient(gatewayUtil.get("persistence"))){
 			epf.client.persistence.Entities.remove(
 					client, 
 					entity.getName(), 
