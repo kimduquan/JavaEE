@@ -18,11 +18,7 @@ public interface GatewayUtil {
 	 * @throws Exception 
 	 */
 	static URI get(final String name) throws Exception {
-		String uri = SystemUtil.getenv(Gateway.GATEWAY_URL);
-		if(uri == null || uri.isEmpty()) {
-			uri = System.getProperty(Gateway.GATEWAY_URL);
-		}
-		return new URI(uri).resolve(name);
+		return getUrl().resolve(name);
 	}
 	
 	/**

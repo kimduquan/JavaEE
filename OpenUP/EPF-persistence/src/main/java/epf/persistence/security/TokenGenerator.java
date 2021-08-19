@@ -78,7 +78,7 @@ public class TokenGenerator implements Serializable {
      * @return
      * @throws EPFException
      */
-    public Token generate(final Token jwt) throws EPFException {
+    public Token generate(final Token jwt, final boolean createTokenId) throws EPFException {
     	try {
     		final JwtBuilder builder = JwtBuilder.create();
     		builder.audience(
@@ -90,7 +90,7 @@ public class TokenGenerator implements Serializable {
                     .subject(jwt.getSubject())
                     .expirationTime(jwt.getExpirationTime())
                     .notBefore(jwt.getIssuedAtTime())
-                    .jwtId(true)
+                    .jwtId(createTokenId)
                     .claim(Claims.iat.name(), jwt.getIssuedAtTime())
                     .claim(Claims.upn.name(), jwt.getName())
                     .claim(Claims.groups.name(), jwt.getGroups().toArray(new String[jwt.getGroups().size()]));

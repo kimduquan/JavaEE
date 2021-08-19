@@ -54,6 +54,11 @@ public class TokenBuilder {
 	private transient final Map<? extends String, ? extends Object> claims;
 	
 	/**
+	 * 
+	 */
+	private transient boolean createTID = true;
+
+	/**
 	 * @param issuer
 	 */
 	public TokenBuilder(final String issuer, final Set<String> groups, final Map<? extends String, ? extends Object> claims) {
@@ -110,6 +115,15 @@ public class TokenBuilder {
 	}
 
 	/**
+	 * @param create
+	 * @return
+	 */
+	public TokenBuilder createTID(final boolean create) {
+		this.createTID = create;
+		return this;
+	}
+
+	/**
 	 * @return
 	 */
 	public Token build() {
@@ -129,7 +143,7 @@ public class TokenBuilder {
         jwt.setGroups(groups);
         jwt.setClaims(claims);
 	    try {
-			jwt = tokenGenerator.generate(jwt);
+			jwt = tokenGenerator.generate(jwt, createTID);
 		} 
 	    catch (Exception e) {
 	    	throw new EPFException(e);
