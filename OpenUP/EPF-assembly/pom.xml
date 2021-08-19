@@ -33,6 +33,7 @@
 		<liberty.env.openup_roles_url>https://localhost/roles/roles/</liberty.env.openup_roles_url>
 		<liberty.env.openup_tasks_url>https://localhost/tasks/tasks/</liberty.env.openup_tasks_url>
 		<liberty.env.openup_work_products_url>https://localhost/work-products/work-products/</liberty.env.openup_work_products_url>
+		<liberty.env.openup_gateway_url>https://localhost/openup/gateway/</liberty.env.openup_gateway_url>
     </properties>
     <dependencies>
 		<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
@@ -156,6 +157,12 @@
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>OpenUP-work-products</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>OpenUP-gateway</artifactId>
             <version>${project.version}</version>
             <type>war</type>
         </dependency>

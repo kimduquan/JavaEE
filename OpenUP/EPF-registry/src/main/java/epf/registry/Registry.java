@@ -71,7 +71,6 @@ public class Registry implements epf.client.registry.Registry {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI gatewayUrl = new URI(SystemUtil.getenv(Gateway.GATEWAY_URL));
 			String remote = "file";
 			final URI fileUrl = new URI(SystemUtil.getenv(Files.FILE_URL));
 			remotes.put(remote, fileUrl);
@@ -81,6 +80,7 @@ public class Registry implements epf.client.registry.Registry {
 			final URI securityUrl = new URI(SystemUtil.getenv(Security.SECURITY_URL));
 			remote = "security";
 			remotes.put(remote, securityUrl);
+			final URI gatewayUrl = new URI(SystemUtil.getenv(Gateway.GATEWAY_URL));
 			remote = "stream";
 			remotes.put(remote, gatewayUrl.resolve(remote));
 			final URI registryUrl = new URI(SystemUtil.getenv(Registry.REGISTRY_URL));

@@ -709,6 +709,7 @@
 		<module>OpenUP-roles</module>
 		<module>OpenUP-tasks</module>
 		<module>OpenUP-work-products</module>
+		<module>OpenUP-gateway</module>
 		
 		<module>EPF-portlet-client</module>
 		<module>EPF-portlet</module>
