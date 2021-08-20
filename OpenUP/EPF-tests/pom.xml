@@ -183,6 +183,12 @@
         </dependency>
 		<dependency>
             <groupId>openup</groupId>
+            <artifactId>EPF-security</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
+		<dependency>
+            <groupId>openup</groupId>
             <artifactId>EPF-registry</artifactId>
             <version>${project.version}</version>
             <type>war</type>

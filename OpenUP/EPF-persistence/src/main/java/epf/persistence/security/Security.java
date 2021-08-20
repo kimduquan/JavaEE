@@ -50,7 +50,7 @@ import epf.util.logging.Logging;
 @Path("security")
 @RolesAllowed(epf.client.security.Security.DEFAULT_ROLE)
 @RequestScoped
-public class Security implements epf.client.security.Security, Serializable {
+public class Security implements epf.client.security.Security, epf.client.security.otp.OTPSecurity, Serializable {
     
     /**
     * 
@@ -302,7 +302,7 @@ public class Security implements epf.client.security.Security, Serializable {
 
 	@PermitAll
 	@Override
-	public String newOneTimePassword(final String username, final String passwordHash, final  URL url) {
+	public String loginOneTime(final String username, final String passwordHash, final  URL url) {
 		final Credential credential = persistence.putContext()
                 .putCredential(
                         username,
@@ -323,7 +323,7 @@ public class Security implements epf.client.security.Security, Serializable {
 
 	@PermitAll
 	@Override
-	public String loginOneTimePassword(final String oneTimePassword) {
+	public String authenticateOneTime(final String oneTimePassword) {
 		final Token token = identityStore.removeToken(oneTimePassword);
 		if(token != null) {
 			return token.getRawToken();
