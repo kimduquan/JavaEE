@@ -1,4 +1,4 @@
-package epf.persistence.security;
+package epf.security;
 
 import java.security.PrivateKey;
 import java.util.HashMap;
@@ -58,7 +58,8 @@ public class TokenBuilder {
                 .subject(token.getSubject())
                 .expirationTime(token.getExpirationTime())
                 .notBefore(token.getIssuedAtTime())
-                .jwtId(true)
+                .jwtId(false)
+                .claim(Claims.jti.name(), token.getTokenID())
                 .claim(Claims.iat.name(), token.getIssuedAtTime())
                 .claim(Claims.upn.name(), token.getName())
                 .claim(Claims.groups.name(), token.getGroups().toArray(new String[token.getGroups().size()]));

@@ -205,6 +205,28 @@ public interface Entities {
     			target -> target.path(name).path(entityId), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
-    			.post(Entity.text(null));
+    			.post(Entity.text(""));
+    }
+    
+    /**
+     * @param <T>
+     * @param client
+     * @param cls
+     * @param name
+     * @param entityId
+     * @return
+     */
+    static <T extends Object> T find(
+    		final Client client,
+    		final Class<T> cls,
+            final String name,
+            final String entityId
+            ) {
+    	return client.request(
+    			target -> target.path(name).path(entityId), 
+    			req -> req.accept(MediaType.APPLICATION_JSON)
+    			)
+    			.post(Entity.text(""))
+    			.readEntity(cls);
     }
 }

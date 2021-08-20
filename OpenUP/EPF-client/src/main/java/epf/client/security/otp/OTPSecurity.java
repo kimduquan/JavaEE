@@ -68,6 +68,10 @@ public interface OTPSecurity {
     			.post(Entity.form(form), String.class);
     }
     
+    /**
+     * @param oneTimePassword
+     * @return
+     */
     @PUT
     @Path("otp")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)

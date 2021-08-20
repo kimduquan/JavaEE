@@ -21,4 +21,9 @@ public interface JWTConfig {
      * 
      */
     String EXPIRE_TIMEUNIT = "epf.security.jwt.exp.timeunit";
+    
+    /**
+     * 
+     */
+    String TOKEN_CLAIM = "token";
 }

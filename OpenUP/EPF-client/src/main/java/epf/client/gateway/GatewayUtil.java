@@ -4,7 +4,7 @@
 package epf.client.gateway;
 
 import java.net.URI;
-import epf.util.SystemUtil;
+import epf.util.config.ConfigUtil;
 
 /**
  * @author PC
@@ -26,10 +26,7 @@ public interface GatewayUtil {
 	 * @throws Exception 
 	 */
 	static URI getUrl() throws Exception {
-		String uri = SystemUtil.getenv(Gateway.GATEWAY_URL);
-		if(uri == null || uri.isEmpty()) {
-			uri = System.getProperty(Gateway.GATEWAY_URL);
-		}
+		final String uri = ConfigUtil.getString(Gateway.GATEWAY_URL);
 		return new URI(uri);
 	}
 }

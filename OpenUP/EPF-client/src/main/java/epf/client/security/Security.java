@@ -182,8 +182,7 @@ public interface Security {
      * @param client
      * @return
      */
-    static String revoke(
-    		final Client client) {
+    static String revoke(final Client client) {
     	return client.request(
     			target -> target,
     			req -> req.accept(MediaType.TEXT_PLAIN))

@@ -7,15 +7,12 @@ package epf.persistence.security;
 
 import java.io.Serializable;
 import java.net.URL;
-import java.security.KeyFactory;
 import java.security.Principal;
 import java.security.PrivateKey;
-import java.security.spec.PKCS8EncodedKeySpec;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.logging.Logger;
@@ -42,6 +39,7 @@ import epf.persistence.context.Application;
 import epf.persistence.context.Credential;
 import epf.persistence.context.Session;
 import epf.util.logging.Logging;
+import epf.util.security.KeyUtil;
 
 /**
  *
@@ -125,13 +123,7 @@ public class Security implements epf.client.security.Security, epf.client.securi
     @PostConstruct
     protected void postConstruct(){
         try {
-        	final Base64.Decoder decoder = Base64.getUrlDecoder();
-            privateKey = KeyFactory.getInstance("RSA")
-                        .generatePrivate(
-                                new PKCS8EncodedKeySpec(
-                                    decoder.decode(privateKeyText)
-                                )
-                        );
+            privateKey = KeyUtil.generatePrivate("RSA", privateKeyText);
         } 
         catch (Exception ex) {
             LOGGER.throwing(getClass().getName(), "postConstruct", ex);

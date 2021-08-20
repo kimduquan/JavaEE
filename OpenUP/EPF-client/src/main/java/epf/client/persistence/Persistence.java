@@ -17,6 +17,11 @@ public interface Persistence {
 	/**
 	 * 
 	 */
+	String PERSISTENCE_SECURITY_URL = "epf.persistence.security.url";
+	
+	/**
+	 * 
+	 */
 	String PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT = "epf.persistence.query.firstResult.default";
 	
 	/**
