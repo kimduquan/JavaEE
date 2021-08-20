@@ -6,12 +6,20 @@
 package epf.persistence.security;
 
 import java.io.Serializable;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.KeyFactory;
 import java.security.Principal;
+import java.security.PrivateKey;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Set;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
@@ -33,8 +41,7 @@ import epf.client.security.jwt.TokenUtil;
 import epf.persistence.context.Application;
 import epf.persistence.context.Credential;
 import epf.persistence.context.Session;
-import epf.persistence.roles.RolesUtil;
-import openup.schema.roles.Role;
+import epf.util.logging.Logging;
 
 /**
  *
@@ -53,6 +60,16 @@ public class Security implements epf.client.security.Security, Serializable {
     /**
      * 
      */
+    private static final Logger LOGGER = Logging.getLogger(Security.class.getName());
+    
+    /**
+     * 
+     */
+    private transient PrivateKey privateKey;
+    
+    /**
+     * 
+     */
     @Inject
     private transient Application persistence;
     
@@ -66,7 +83,8 @@ public class Security implements epf.client.security.Security, Serializable {
      * 
      */
     @Inject
-    private transient TokenGenerator generator;
+    @ConfigProperty(name = JWTConfig.PRIVATE_KEY)
+    private transient String privateKeyText;
     
     /**
      * 
@@ -80,14 +98,14 @@ public class Security implements epf.client.security.Security, Serializable {
      */
     @Inject
     @ConfigProperty(name = JWTConfig.EXPIRE_DURATION)
-    private transient Long jwtExpDuration;
+    private transient Long expireAmount;
     
     /**
      * 
      */
     @Inject
     @ConfigProperty(name = JWTConfig.EXPIRE_TIMEUNIT)
-    private transient ChronoUnit jwtExpTimeUnit;
+    private transient ChronoUnit expireTimeUnit;
     
     /**
      * 
@@ -101,6 +119,57 @@ public class Security implements epf.client.security.Security, Serializable {
     @Context 
     private transient SecurityContext context;
     
+    /**
+     * 
+     */
+    @PostConstruct
+    protected void postConstruct(){
+        try {
+        	final Base64.Decoder decoder = Base64.getUrlDecoder();
+            privateKey = KeyFactory.getInstance("RSA")
+                        .generatePrivate(
+                                new PKCS8EncodedKeySpec(
+                                    decoder.decode(privateKeyText)
+                                )
+                        );
+        } 
+        catch (Exception ex) {
+            LOGGER.throwing(getClass().getName(), "postConstruct", ex);
+        }
+    }
+    
+    /**
+     * @param username
+     * @param url
+     * @return
+     */
+    protected Token buildToken(final String username, final URL url) {
+    	final long now = Instant.now().getEpochSecond();
+    	final Token token = new Token();
+    	token.setAudience(new HashSet<>(Arrays.asList(String.format(AUDIENCE_FORMAT, url.getProtocol(), url.getHost(), url.getPort()))));
+    	token.setClaims(new HashMap<>());
+    	token.setExpirationTime(now + Duration.of(expireAmount, expireTimeUnit).getSeconds());
+    	token.setGroups(new HashSet<>(Arrays.asList(DEFAULT_ROLE)));
+    	token.setIssuedAtTime(now);
+    	token.setIssuer(issuer);
+    	token.setName(username);
+    	token.setSubject(username);
+    	return token;
+    }
+    
+    /**
+     * @param jsonWebToken
+     * @return
+     */
+    protected Token buildToken(final JsonWebToken jsonWebToken) {
+    	final long now = Instant.now().getEpochSecond();
+		final Token token = TokenUtil.from(jsonWebToken);
+		token.setClaims(TokenUtil.getClaims(jsonWebToken));
+		token.setExpirationTime(now + Duration.of(expireAmount, expireTimeUnit).getSeconds());
+		token.setIssuedAtTime(now);
+		return token;
+    }
+    
     @PermitAll
     @Override
     public String login(
@@ -112,19 +181,16 @@ public class Security implements epf.client.security.Security, Serializable {
                         username,
                         passwordHash
                 );
-    	final Role role = RolesUtil.getRole(credential.getDefaultManager(), username);
-    	final Set<String> roles = RolesUtil.getRoleNames(role);
-    	final TokenBuilder builder = new TokenBuilder(issuer, roles, role.getClaims());
-    	final long time = Instant.now().getEpochSecond();
-        final Token jwt = builder
-        		.expire(jwtExpTimeUnit, jwtExpDuration)
-        		.generator(generator)
-        		.time(time)
-        		.url(url)
-        		.userName(username)
-        		.build();
-        credential.putSession(jwt.getTokenID());
-        return jwt.getRawToken();
+    	final Token token = buildToken(username, url);
+    	final TokenBuilder builder = new TokenBuilder(token, privateKey);
+    	try {
+			final Token newToken = builder.build();
+	        credential.putSession(newToken.getTokenID());
+	        return newToken.getRawToken();
+		} 
+		catch (Exception e) {
+			throw new EPFException(e);
+		}
     }
     
     @Override
@@ -219,23 +285,14 @@ public class Security implements epf.client.security.Security, Serializable {
 			if(context.getUserPrincipal() instanceof JsonWebToken) {
 				final JsonWebToken jsonWebToken = (JsonWebToken) context.getUserPrincipal();
 				try {
-					final URL url = new URL(jsonWebToken.getAudience().iterator().next());
+					final Token token = buildToken(jsonWebToken);
+					final TokenBuilder builder = new TokenBuilder(token, privateKey);
+					final Token newToken = builder.build();
 					final Credential credential = getCredential(context, persistence);
-					final Role role = RolesUtil.getRole(credential.getDefaultManager(), jsonWebToken.getName());
-			    	final Set<String> roles = RolesUtil.getRoleNames(role);
-					final TokenBuilder builder = new TokenBuilder(issuer, roles, role.getClaims());
-					final long time = Instant.now().getEpochSecond();
-			        final Token jwt = builder
-			        		.expire(jwtExpTimeUnit, jwtExpDuration)
-			        		.generator(generator)
-			        		.time(time)
-			        		.url(url)
-			        		.userName(jsonWebToken.getName())
-			        		.build();
-			        credential.putSession(jwt.getTokenID());
-			        return jwt.getRawToken();
+					credential.putSession(newToken.getTokenID());
+			        return newToken.getRawToken();
 				} 
-				catch (MalformedURLException e) {
+				catch (Exception e) {
 					throw new EPFException(e);
 				}
 			}
@@ -251,20 +308,17 @@ public class Security implements epf.client.security.Security, Serializable {
                         username,
                         passwordHash
                 );
-		final Role role = RolesUtil.getRole(credential.getDefaultManager(), username);
-    	final Set<String> roles = RolesUtil.getRoleNames(role);
-    	final TokenBuilder builder = new TokenBuilder(issuer, roles, role.getClaims());
-    	final long time = Instant.now().getEpochSecond();
-        final Token jwt = builder
-        		.expire(jwtExpTimeUnit, jwtExpDuration)
-        		.generator(generator)
-        		.time(time)
-        		.url(url)
-        		.userName(username)
-        		.build();
-        credential.putSession(jwt.getTokenID());
-        identityStore.putToken(jwt);
-        return jwt.getTokenID();
+		final Token token = buildToken(username, url);
+		final TokenBuilder builder = new TokenBuilder(token, privateKey);
+		try {
+			final Token newToken = builder.build();
+	        credential.putSession(newToken.getTokenID());
+	        identityStore.putToken(newToken);
+	        return newToken.getTokenID();
+		}
+		catch(Exception ex) {
+			throw new EPFException(ex);
+		}
 	}
 
 	@PermitAll
