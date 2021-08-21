@@ -52,13 +52,16 @@ public class Message implements Serializable, Closeable {
 		return object;
 	}
 	
-	public void waitObject() {
+	/**
+	 * 
+	 */
+	public void waitToClose() {
 		do {
 			try {
 				Thread.sleep(40);
 			} 
-			catch (Exception e) {
-				LOGGER.throwing(getClass().getName(), "waitToSend", e);
+			catch (InterruptedException e) {
+				LOGGER.throwing(getClass().getName(), "waitToClose", e);
 			}
 		}
 		while(!isClose);

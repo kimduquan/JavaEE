@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.logging.Logger;
+import javax.websocket.EncodeException;
 import epf.client.messaging.Client;
 import epf.util.logging.Logging;
 
@@ -58,14 +59,14 @@ public class MessageTask implements Runnable, Closeable {
 					client.getSession().getBasicRemote().sendObject(message.getObject());
 					messages.poll().close();
 				} 
-				catch (Exception e) {
+				catch (IOException|EncodeException e) {
 					LOGGER.throwing(getClass().getName(), "run", e);
 				}
 			}
 			try {
 				Thread.sleep(40);
 			} 
-			catch (Exception e) {
+			catch (InterruptedException e) {
 				LOGGER.throwing(getClass().getName(), "run", e);
 			}
 		}

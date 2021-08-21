@@ -97,37 +97,39 @@ public class Listener {
 	/**
 	 * @param object
 	 */
-	protected void send(final Object object) {
+	protected void send(final Object object, final boolean sync) {
 		final Message message = new Message(object);
 		objects.add(message);
-		message.waitObject();
+		if(sync) {
+			message.waitToClose();
+		}
 	}
 	
 	/**
 	 * @param event
 	 */
 	public void postPersist(@Observes final PostPersist event) {
-		send(event);
+		send(event, true);
 	}
 	
 	/**
 	 * @param event
 	 */
 	public void postRemove(@Observes final PostRemove event) {
-		send(event);
+		send(event, true);
 	}
 	
 	/**
 	 * @param event
 	 */
 	public void postUpdate(@Observes final PostUpdate event) {
-		send(event);
+		send(event, true);
 	}
 	
 	/**
 	 * @param event
 	 */
 	public void postLoad(@Observes final PostLoad event) {
-		send(event);
+		send(event, false);
 	}
 }
