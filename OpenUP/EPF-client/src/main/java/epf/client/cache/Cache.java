@@ -8,8 +8,13 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.sse.Sse;
+import javax.ws.rs.sse.SseEventSink;
+import javax.ws.rs.sse.SseEventSource;
 import epf.util.client.Client;
 
 /**
@@ -70,5 +75,30 @@ public interface Cache {
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
 				.get();
+	}
+	
+	/**
+	 * @param entity
+	 * @param sseEventSink
+	 * @param sse
+	 */
+	@GET
+	@Path("persistence")
+	@Produces(MediaType.SERVER_SENT_EVENTS)
+	void forEachEntity(
+			@QueryParam("entity")
+			@NotBlank
+			final String entity, 
+			@Context 
+			final SseEventSink sseEventSink, 
+			@Context 
+			final Sse sse);
+	
+	/**
+	 * @param client
+	 * @param entity
+	 */
+	static SseEventSource forEachEntity(final Client client, final String entity) {
+		return client.stream(target -> target.path("persistence").queryParam("entity", entity), req -> req);
 	}
 }

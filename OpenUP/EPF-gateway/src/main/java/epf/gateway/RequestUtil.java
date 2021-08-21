@@ -7,9 +7,11 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.ws.rs.client.Entity;
@@ -28,7 +30,7 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.StatusType;
-import epf.util.Var;
+import javax.ws.rs.sse.SseEventSource;
 
 /**
  * @author PC
@@ -71,38 +73,44 @@ public interface RequestUtil {
      * @return
      */
     static WebTarget buildTarget(final WebTarget input,final  UriInfo uriInfo, final URI serviceUri){
-    	final Var<WebTarget> webTarget = new Var<>(input);
+    	WebTarget webTarget = input;
         if(uriInfo != null){
         	final List<PathSegment> segments = uriInfo.getPathSegments();
             if(segments != null){
-            	segments.forEach(segment -> {
-            		webTarget.set(target -> target.path(segment.getPath()));
+            	final Iterator<PathSegment> segmentIt = segments.iterator();
+            	while(segmentIt.hasNext()) {
+            		final PathSegment segment = segmentIt.next();
+            		webTarget = webTarget.path(segment.getPath());
             		final MultivaluedMap<String, String> matrixParams = segment.getMatrixParameters();
                     if(matrixParams != null){
-                    	matrixParams.forEach((key, value) -> {
+                    	for(Entry<String, List<String>> entry : matrixParams.entrySet()) {
+                    		final String key = entry.getKey();
+                    		final List<String> value = entry.getValue();
                     		if(value == null) {
-                        		webTarget.set(target -> target.matrixParam(key));
+                        		webTarget = webTarget.matrixParam(key);
                         	}
                         	else {
-                            	webTarget.set(target -> target.matrixParam(key, value.toArray(new Object[0])));
+                            	webTarget = webTarget.matrixParam(key, value.toArray(new Object[0]));
                         	}
-                        });
+                    	}
                     }
-                });
+            	}
             }
             final MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();        
             if(queryParams != null){
-            	queryParams.forEach((key, value) -> {
+            	for(Entry<String, List<String>> entry : queryParams.entrySet()) {
+            		final String key = entry.getKey();
+            		final List<String> value = entry.getValue();
             		if(value == null) {
-                		webTarget.set(target -> target.queryParam(key));
+                		webTarget = webTarget.queryParam(key);
                 	}
                 	else {
-                		webTarget.set(target -> target.queryParam(key, value.toArray(new Object[0])));
+                		webTarget = webTarget.queryParam(key, value.toArray(new Object[0]));
                 	}
-            	});
+            	}
             }
         }
-        return webTarget.get();
+        return webTarget;
     }
     
     /**
@@ -111,28 +119,29 @@ public interface RequestUtil {
      * @return
      */
     static Builder buildRequest(final Builder input, final HttpHeaders headers){
-    	final Var<Builder> builder = new Var<>(input);
+    	Builder builder = input;
         if(headers != null){
         	final List<MediaType> mediaTypes = headers.getAcceptableMediaTypes();
             if(mediaTypes != null){
-                builder.set(b -> b.accept(mediaTypes.toArray(new MediaType[0])));
+                builder = builder.accept(mediaTypes.toArray(new MediaType[0]));
             }
             final List<Locale> languages = headers.getAcceptableLanguages();
             if(languages != null){
-                builder.set(b -> b.acceptLanguage(languages.toArray(new Locale[0])));
+                builder = builder.acceptLanguage(languages.toArray(new Locale[0]));
             }
             final Map<String, Cookie> cookies = headers.getCookies();
             if(cookies != null){
-            	cookies.forEach((key, value) -> {
-            		builder.set(b -> b.cookie(value));
-            	});
+            	for(Entry<String, Cookie> entry : cookies.entrySet()) {
+            		final Cookie value = entry.getValue();
+            		builder = builder.cookie(value);
+            	}
             }
             final MultivaluedMap<String, String> requestHeaders = headers.getRequestHeaders();
             if(requestHeaders.containsKey(HttpHeaders.AUTHORIZATION)){
-            	builder.set(b -> b.header(HttpHeaders.AUTHORIZATION, headers.getHeaderString(HttpHeaders.AUTHORIZATION)));
+            	builder = builder.header(HttpHeaders.AUTHORIZATION, headers.getHeaderString(HttpHeaders.AUTHORIZATION));
             }
         }
-        return builder.get();
+        return builder;
     }
     
     /**
@@ -247,5 +256,13 @@ public interface RequestUtil {
             builder = builder.type(type);
         }
         return builder;
+    }
+    
+    /**
+     * @param builder
+     * @return
+     */
+    static SseEventSource.Builder buildSource(final SseEventSource.Builder builder){
+    	return builder;
     }
 }

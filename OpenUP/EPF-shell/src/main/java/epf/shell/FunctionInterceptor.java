@@ -2,6 +2,8 @@ package epf.shell;
 
 import java.io.PrintWriter;
 import java.util.logging.Logger;
+
+import javax.json.JsonValue;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import jakarta.annotation.Priority;
@@ -94,7 +96,7 @@ public class FunctionInterceptor {
 	 */
 	protected String valueOf(final Object result) throws Exception {
 		String value;
-		if(result instanceof String || result == null) {
+		if(result instanceof String || result instanceof JsonValue || result == null) {
 			value = String.valueOf(result);
 		}
 		else {

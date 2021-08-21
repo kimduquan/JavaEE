@@ -97,4 +97,28 @@ public class Persistence {
 			epf.client.persistence.Entities.remove(client, name, entityId);
 		}
 	}
+	
+	/**
+	 * @param credential
+	 * @param name
+	 * @param entityId
+	 * @return
+	 * @throws Exception
+	 */
+	@Command(name = "find")
+	public String find(
+			@ArgGroup(exclusive = true, multiplicity = "1")
+			@CallerPrincipal
+			final Credential credential,
+			@Option(names = {"-n", "--name"}, description = "Name")
+			final String name, 
+			@Option(names = {"-i", "--id"}, description = "ID")
+			final String entityId) throws Exception {
+		try(Client client = clientUtil.newClient(GatewayUtil.get("persistence"))){
+			client.authorization(credential.getToken());
+			try(Response response = epf.client.persistence.Entities.find(client, name, entityId)){
+				return response.readEntity(String.class);
+			}
+		}
+	}
 }

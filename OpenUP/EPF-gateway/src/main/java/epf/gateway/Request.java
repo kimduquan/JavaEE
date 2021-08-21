@@ -12,8 +12,14 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.sse.OutboundSseEvent;
+import javax.ws.rs.sse.Sse;
+import javax.ws.rs.sse.SseEventSink;
+import javax.ws.rs.sse.SseEventSource;
+
 import epf.util.client.Client;
 import epf.util.client.ClientUtil;
 import epf.util.logging.Logging;
@@ -66,5 +72,41 @@ public class Request {
     		LOGGER.exiting(getClass().getName(), "request");
     		return response;
     	}
+    }
+    
+    /**
+     * @param headers
+     * @param uriInfo
+     * @param sseEventSink
+     * @param sse
+     * @throws Exception 
+     */
+    public void stream(
+    		final HttpHeaders headers, 
+            final UriInfo uriInfo,
+            final SseEventSink sseEventSink,
+            final Sse sse) throws Exception {
+    	final OutboundSseEvent.Builder eventBuilder = sse.newEventBuilder();
+    	final URI uri = RequestUtil.buildUri(uriInfo, registry);
+    	try(Client client = clientUtil.newClient(uri)){
+    		try(SseEventSource stream = client.stream(
+    				target -> RequestUtil.buildTarget(target, uriInfo, uri), 
+    				b -> b
+    				)){
+    			stream.register(e -> {
+    				final OutboundSseEvent newEvent = eventBuilder
+    						.comment(e.getComment())
+    						.data(e.readData())
+		    				.id(e.getId())
+		    				.mediaType(MediaType.APPLICATION_JSON_TYPE)
+		    				.name(e.getName())
+		    				.reconnectDelay(e.getReconnectDelay())
+		    				.build();
+    				sseEventSink.send(newEvent);
+    			});
+    			stream.open();
+    		}
+    	}
+		sseEventSink.close();
     }
 }

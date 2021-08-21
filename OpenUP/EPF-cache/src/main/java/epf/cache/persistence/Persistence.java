@@ -7,8 +7,11 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.AbstractMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
@@ -194,6 +197,19 @@ public class Persistence {
 			entity = cache.get(key);
 		}
 		return entity;
+	}
+	
+	/**
+	 * @param name
+	 * @return
+	 */
+	public void forEachEntity(final String name, final Consumer<? super Entry<String, Object>> action){
+		final String key = String.format(CACHE_KEY_FORMAT, name, "");
+		cache.forEach(entry -> {
+			if(entry.getKey().startsWith(key)) {
+				action.accept(new AbstractMap.SimpleImmutableEntry<>(entry.getKey(), entry.getValue()));
+			}
+		});
 	}
 	
 	public void setCache(final Cache<String, Object> cache) {

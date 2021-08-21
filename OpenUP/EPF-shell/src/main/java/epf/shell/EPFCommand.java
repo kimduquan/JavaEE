@@ -3,6 +3,7 @@
  */
 package epf.shell;
 
+import epf.shell.cache.Cache;
 import epf.shell.file.FileStore;
 import epf.shell.image.Image;
 import epf.shell.persistence.Persistence;
@@ -17,7 +18,7 @@ import picocli.CommandLine.Command;
  * @author PC
  *
  */
-@Command(name = "epf", subcommands = {Security.class, Persistence.class, Schema.class, FileStore.class, Rules.class, Utility.class, Image.class})
+@Command(name = "epf", subcommands = {Security.class, Persistence.class, Schema.class, FileStore.class, Rules.class, Utility.class, Image.class, Cache.class})
 @ApplicationScoped
 public class EPFCommand {
 	

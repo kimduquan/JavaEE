@@ -16,6 +16,8 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.sse.Sse;
+import javax.ws.rs.sse.SseEventSink;
 import org.eclipse.microprofile.faulttolerance.Asynchronous;
 import epf.gateway.Request;
 
@@ -54,4 +56,26 @@ public class Cache {
             @PathParam("id") final String entityId) throws Exception {
         return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
     }
+	
+	/**
+	 * @param headers
+	 * @param uriInfo
+	 * @param sseEventSink
+	 * @param sse
+	 * @throws Exception 
+	 */
+	@GET
+	@Path("persistence")
+	@Produces(MediaType.SERVER_SENT_EVENTS)
+	public void forEachEntity(
+			@Context 
+			final HttpHeaders headers, 
+            @Context 
+            final UriInfo uriInfo,
+			@Context 
+			final SseEventSink sseEventSink, 
+			@Context 
+			final Sse sse) throws Exception {
+		request.stream(headers, uriInfo, sseEventSink, sse);
+	}
 }

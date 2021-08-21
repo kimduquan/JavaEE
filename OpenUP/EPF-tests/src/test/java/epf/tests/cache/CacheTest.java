@@ -5,7 +5,10 @@ package epf.tests.cache;
 
 import java.net.URI;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ws.rs.NotFoundException;
+import javax.ws.rs.sse.SseEventSource;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -109,4 +112,26 @@ public class CacheTest {
         Cache.getEntity(client, Artifact.class, EPF.ARTIFACT, StringUtil.randomString("Artifact Cache"));
 	}
 
+	@Test
+	public void testForEachEntityOk() throws Exception {
+		final Artifact artifact = new Artifact();
+        artifact.setName(StringUtil.randomString("Artifact Cache"));
+        artifact.setSummary("Artifact Cache testForEachEntityOk");
+        artifact.setDescription(new Description());
+        artifact.setIllustrations(new Illustrations());
+        artifact.setMoreInformation(new MoreInformation());
+        artifact.setRelationships(new Relationships());
+        artifact.setTailoring(new Tailoring());
+        PersistenceUtil.persist(token, Artifact.class, EPF.ARTIFACT, artifact);
+        final List<String> data = new ArrayList<>();
+        try(SseEventSource stream = Cache.forEachEntity(client, EPF.ARTIFACT)){
+        	stream.register(e -> {
+        		data.add(e.getId());
+        	});
+        	stream.open();
+        }
+        Assert.assertEquals(1, data.size());
+        Assert.assertTrue(data.contains(artifact.getName()));
+        PersistenceUtil.remove(token, EPF.ARTIFACT, artifact.getName());
+	}
 }
