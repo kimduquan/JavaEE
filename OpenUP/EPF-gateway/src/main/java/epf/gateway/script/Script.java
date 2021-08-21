@@ -1,8 +1,9 @@
 package epf.gateway.script;
 
 import java.io.InputStream;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -21,7 +22,7 @@ import epf.gateway.Request;
  *
  */
 @Path("script")
-@RequestScoped
+@ApplicationScoped
 public class Script {
 
 	/**
@@ -35,6 +36,7 @@ public class Script {
 	 * @param uriInfo
 	 * @param req
 	 * @param body
+	 * @throws Exception 
 	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
@@ -45,10 +47,7 @@ public class Script {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body
-    ) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(body);
+    ) throws Exception {
+        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, body));
     }
 }

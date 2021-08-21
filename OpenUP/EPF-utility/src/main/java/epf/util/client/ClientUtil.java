@@ -4,14 +4,14 @@
 package epf.util.client;
 
 import java.net.URI;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 /**
  * @author PC
  *
  */
-@RequestScoped
+@Dependent
 public class ClientUtil {
 
 	/**

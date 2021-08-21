@@ -3,7 +3,7 @@
  */
 package epf.gateway.planning;
 
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.Path;
 
 /**
@@ -11,7 +11,7 @@ import javax.ws.rs.Path;
  *
  */
 @Path("planning")
-@RequestScoped
+@ApplicationScoped
 public class Planning {
 	
 }

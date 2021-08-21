@@ -6,8 +6,9 @@
 package epf.gateway.persistence;
 
 import java.io.InputStream;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -29,7 +30,7 @@ import epf.gateway.Request;
  * @author FOXCONN
  */
 @Path("persistence")
-@RequestScoped
+@ApplicationScoped
 public class Entities {
     
     /**
@@ -45,6 +46,7 @@ public class Entities {
      * @param entity
      * @param body
      * @return
+     * @throws Exception 
      */
     @POST
     @Path("{entity}")
@@ -56,11 +58,8 @@ public class Entities {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             @PathParam("entity") final String entity,
-            final InputStream body) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(body);
+            final InputStream body) throws Exception {
+        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, body));
     }
     
     /**
@@ -71,6 +70,7 @@ public class Entities {
      * @param entityId
      * @param body
      * @return
+     * @throws Exception 
      */
     @PUT
     @Path("{entity}/{id}")
@@ -83,11 +83,8 @@ public class Entities {
             @PathParam("entity") final String name,
             @PathParam("id") final String entityId,
             final InputStream body
-            ) {
-    	request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(body);
+            ) throws Exception {
+    	return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, body));
     }
     
     /**
@@ -97,6 +94,7 @@ public class Entities {
      * @param entity
      * @param entityId
      * @return
+     * @throws Exception 
      */
     @DELETE
     @Path("{entity}/{id}")
@@ -106,11 +104,8 @@ public class Entities {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             @PathParam("entity") final String entity,
-            @PathParam("id") final String entityId) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(null);
+            @PathParam("id") final String entityId) throws Exception {
+        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
     }
     
     /**
@@ -121,6 +116,7 @@ public class Entities {
      * @param entityId
      * @param body
      * @return
+     * @throws Exception 
      */
     @POST
     @Path("{entity}/{id}")
@@ -133,10 +129,7 @@ public class Entities {
             @PathParam("entity") final String name,
             @PathParam("id") final String entityId,
             final InputStream body
-            ) {
-    	request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(body);
+            ) throws Exception {
+    	return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, body));
     }
 }

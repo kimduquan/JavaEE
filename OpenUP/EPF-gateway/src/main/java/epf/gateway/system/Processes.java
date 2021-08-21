@@ -6,8 +6,9 @@
 package epf.gateway.system;
 
 import java.io.InputStream;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -28,7 +29,7 @@ import epf.gateway.Request;
  * @author FOXCONN
  */
 @Path("system")
-@RequestScoped
+@ApplicationScoped
 public class Processes {
     
     /**
@@ -43,6 +44,7 @@ public class Processes {
      * @param req
      * @param body
      * @return
+     * @throws Exception 
      */
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -51,11 +53,8 @@ public class Processes {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
-            final InputStream body) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(body);
+            final InputStream body) throws Exception {
+        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, body));
     }
     
     /**
@@ -63,6 +62,7 @@ public class Processes {
      * @param uriInfo
      * @param req
      * @return
+     * @throws Exception 
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -71,11 +71,8 @@ public class Processes {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req
-    ) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(null);
+    ) throws Exception {
+        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
     }
     
     /**
@@ -83,6 +80,7 @@ public class Processes {
      * @param uriInfo
      * @param req
      * @return
+     * @throws Exception 
      */
     @DELETE
     @Asynchronous
@@ -90,11 +88,8 @@ public class Processes {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req
-    ) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(null);
+    ) throws Exception {
+        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
     }
     
     /**
@@ -102,6 +97,7 @@ public class Processes {
      * @param uriInfo
      * @param req
      * @return
+     * @throws Exception 
      */
     @GET
     @Path("{pid}")
@@ -113,11 +109,8 @@ public class Processes {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req
-    ) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(null);
+    ) throws Exception {
+        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
     }
     
     /**
@@ -125,6 +118,7 @@ public class Processes {
      * @param uriInfo
      * @param req
      * @return
+     * @throws Exception 
      */
     @DELETE
     @Path("{pid}")
@@ -136,11 +130,8 @@ public class Processes {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req
-    ) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(null);
+    ) throws Exception {
+        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
     }
     
     /**
@@ -148,6 +139,7 @@ public class Processes {
      * @param uriInfo
      * @param req
      * @return
+     * @throws Exception 
      */
     @GET
     @Path("{pid}/out")
@@ -159,10 +151,7 @@ public class Processes {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req
-    ) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(null);
+    ) throws Exception {
+        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
     }
 }

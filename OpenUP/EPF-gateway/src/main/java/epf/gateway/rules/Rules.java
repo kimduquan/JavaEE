@@ -4,8 +4,9 @@
 package epf.gateway.rules;
 
 import java.io.InputStream;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -28,7 +29,7 @@ import epf.gateway.Request;
  *
  */
 @Path("rules")
-@RequestScoped
+@ApplicationScoped
 public class Rules {
 	
     /**
@@ -44,6 +45,7 @@ public class Rules {
 	 * @param ruleSet
 	 * @param body
 	 * @return
+	 * @throws Exception 
 	 */
 	@POST
 	@Path("{ruleSet}")
@@ -56,11 +58,8 @@ public class Rules {
             @Context final javax.ws.rs.core.Request req,
             @PathParam("ruleSet")
             final String ruleSet,
-            final InputStream body) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(body);
+            final InputStream body) throws Exception {
+        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, body));
     }
 	
 	/**
@@ -69,6 +68,7 @@ public class Rules {
 	 * @param req
 	 * @param ruleSet
 	 * @return
+	 * @throws Exception 
 	 */
 	@PUT
 	@Path("{ruleSet}")
@@ -79,11 +79,8 @@ public class Rules {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             @PathParam("ruleSet")
-            final String ruleSet) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(null);
+            final String ruleSet) throws Exception {
+        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
     }
 	
 	/**
@@ -92,6 +89,7 @@ public class Rules {
 	 * @param req
 	 * @param ruleSet
 	 * @return
+	 * @throws Exception 
 	 */
 	@PATCH
 	@Path("{ruleSet}")
@@ -102,11 +100,8 @@ public class Rules {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             @PathParam("ruleSet")
-            final String ruleSet) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(null);
+            final String ruleSet) throws Exception {
+        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
     }
 	
 	/**
@@ -114,6 +109,7 @@ public class Rules {
 	 * @param uriInfo
 	 * @param req
 	 * @return
+	 * @throws Exception 
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -121,10 +117,7 @@ public class Rules {
 	public CompletionStage<Response> getRegistrations(
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
-            @Context final javax.ws.rs.core.Request req) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(null);
+            @Context final javax.ws.rs.core.Request req) throws Exception {
+        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
     }
 }

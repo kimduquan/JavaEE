@@ -12,7 +12,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.client.Invocation.Builder;
@@ -71,8 +70,8 @@ public interface RequestUtil {
      * @param serviceUri
      * @return
      */
-    static WebTarget buildTarget(final Client client,final  UriInfo uriInfo, final URI serviceUri){
-    	final Var<WebTarget> webTarget = new Var<>(client.target(serviceUri));
+    static WebTarget buildTarget(final WebTarget input,final  UriInfo uriInfo, final URI serviceUri){
+    	final Var<WebTarget> webTarget = new Var<>(input);
         if(uriInfo != null){
         	final List<PathSegment> segments = uriInfo.getPathSegments();
             if(segments != null){
@@ -111,8 +110,8 @@ public interface RequestUtil {
      * @param headers
      * @return
      */
-    static Builder buildRequest(final WebTarget target, final HttpHeaders headers){
-    	final Var<Builder> builder = new Var<>(target.request());
+    static Builder buildRequest(final Builder input, final HttpHeaders headers){
+    	final Var<Builder> builder = new Var<>(input);
         if(headers != null){
         	final List<MediaType> mediaTypes = headers.getAcceptableMediaTypes();
             if(mediaTypes != null){

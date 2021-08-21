@@ -6,6 +6,7 @@
 package epf.gateway.image;
 
 import java.io.InputStream;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -41,6 +42,7 @@ public class Image {
      * @param req
      * @param body
      * @return
+     * @throws Exception 
      */
     @Path("contours")
 	@POST
@@ -52,10 +54,7 @@ public class Image {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body
-    ) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(body);
+    ) throws Exception {
+        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, body));
     }
 }

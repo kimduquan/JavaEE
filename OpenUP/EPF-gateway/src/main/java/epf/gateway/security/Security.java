@@ -6,8 +6,9 @@
 package epf.gateway.security;
 
 import java.io.InputStream;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -30,7 +31,7 @@ import epf.gateway.Request;
  * @author FOXCONN
  */
 @Path("security")
-@RequestScoped
+@ApplicationScoped
 public class Security {
     
     /**
@@ -45,6 +46,7 @@ public class Security {
      * @param req
      * @param body
      * @return
+     * @throws Exception 
      */
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -54,11 +56,8 @@ public class Security {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
-            final InputStream body) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(body);
+            final InputStream body) throws Exception {
+        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, body));
     }
     
     /**
@@ -66,6 +65,7 @@ public class Security {
      * @param uriInfo
      * @param req
      * @return
+     * @throws Exception 
      */
     @DELETE
     @Produces(MediaType.TEXT_PLAIN)
@@ -74,11 +74,8 @@ public class Security {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req
-            ) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(null);
+            ) throws Exception {
+        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
     }
     
     /**
@@ -86,6 +83,7 @@ public class Security {
      * @param uriInfo
      * @param req
      * @return
+     * @throws Exception 
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -93,11 +91,8 @@ public class Security {
     public CompletionStage<Response> authenticate(
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
-            @Context final javax.ws.rs.core.Request req) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(null);
+            @Context final javax.ws.rs.core.Request req) throws Exception {
+        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
     }
     
     /**
@@ -106,6 +101,7 @@ public class Security {
      * @param req
      * @param body
      * @return
+     * @throws Exception 
      */
     @PATCH
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -114,11 +110,8 @@ public class Security {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
-            final InputStream body) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(body);
+            final InputStream body) throws Exception {
+    	return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, body));
     }
     
     /**
@@ -127,6 +120,7 @@ public class Security {
      * @param req
      * @param body
      * @return
+     * @throws Exception 
      */
     @PUT
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -136,10 +130,7 @@ public class Security {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
-            final InputStream body) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(body);
+            final InputStream body) throws Exception {
+    	return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, body));
     }
 }

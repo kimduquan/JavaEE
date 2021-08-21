@@ -4,8 +4,9 @@
 package epf.gateway.rules.admin;
 
 import java.io.InputStream;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -25,7 +26,7 @@ import epf.gateway.Request;
  *
  */
 @Path("rules/admin")
-@RequestScoped
+@ApplicationScoped
 public class Admin {
 	
     /**
@@ -40,6 +41,7 @@ public class Admin {
      * @param req
      * @param body
      * @return
+     * @throws Exception 
      */
     @Path("{ruleSet}")
     @PUT
@@ -51,11 +53,8 @@ public class Admin {
             @Context final javax.ws.rs.core.Request req,
             @PathParam("ruleSet")
             final String ruleSet,
-            final InputStream body) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(body);
+            final InputStream body) throws Exception {
+        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, body));
     }
     
     /**
@@ -64,6 +63,7 @@ public class Admin {
      * @param req
      * @param ruleSet
      * @return
+     * @throws Exception 
      */
     @Path("{ruleSet}")
     @DELETE
@@ -73,10 +73,7 @@ public class Admin {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             @PathParam("ruleSet")
-            final String ruleSet) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(null);
+            final String ruleSet) throws Exception {
+        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
     }
 }

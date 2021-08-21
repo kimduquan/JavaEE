@@ -7,8 +7,9 @@ package epf.gateway.file;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -31,7 +32,7 @@ import epf.gateway.Request;
  * @author FOXCONN
  */
 @Path("file")
-@RequestScoped
+@ApplicationScoped
 public class Files {
     
     /**
@@ -47,6 +48,7 @@ public class Files {
      * @param paths
      * @param body
      * @return
+     * @throws Exception 
      */
     @POST
 	@Path("{paths: .+}")
@@ -59,11 +61,8 @@ public class Files {
             @PathParam("paths")
     		final List<PathSegment> paths,
             final InputStream body
-    ) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(body);
+    ) throws Exception {
+        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, body));
     }
     
     /**
@@ -72,6 +71,7 @@ public class Files {
      * @param req
      * @param paths
      * @return
+     * @throws Exception 
      */
     @GET
     @Path("{paths: .+}")
@@ -82,11 +82,8 @@ public class Files {
             @Context final javax.ws.rs.core.Request req,
             @PathParam("paths")
     		final List<PathSegment> paths
-    ) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(null);
+    ) throws Exception {
+        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
     }
     
     /**
@@ -95,6 +92,7 @@ public class Files {
      * @param req
      * @param paths
      * @return
+     * @throws Exception 
      */
     @DELETE
     @Path("{paths: .+}")
@@ -104,10 +102,7 @@ public class Files {
             @Context final javax.ws.rs.core.Request req,
             @PathParam("paths")
     		final List<PathSegment> paths
-    ) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(null);
+    ) throws Exception {
+        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
     }
 }

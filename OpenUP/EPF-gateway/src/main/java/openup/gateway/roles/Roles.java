@@ -3,8 +3,9 @@
  */
 package openup.gateway.roles;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -23,7 +24,7 @@ import epf.gateway.Request;
  *
  */
 @Path("roles")
-@RequestScoped
+@ApplicationScoped
 public class Roles {
 	
 	/**
@@ -37,6 +38,7 @@ public class Roles {
      * @param uriInfo
      * @param req
      * @return
+     * @throws Exception 
      */
     @GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -44,11 +46,8 @@ public class Roles {
 	public CompletionStage<Response> getRoles(
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
-            @Context final javax.ws.rs.core.Request req) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(null);
+            @Context final javax.ws.rs.core.Request req) throws Exception {
+        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
     }
     
     /**
@@ -57,6 +56,7 @@ public class Roles {
      * @param req
      * @param roleSet
      * @param role
+     * @throws Exception 
      */
     @GET
 	@Path("{roleSet}/{role}")
@@ -67,10 +67,7 @@ public class Roles {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             @PathParam("roleSet") final String roleSet, 
-            @PathParam("role") final String role) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(null);
+            @PathParam("role") final String role) throws Exception {
+        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
     }
 }

@@ -3,8 +3,9 @@
  */
 package epf.gateway.cache;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -23,7 +24,7 @@ import epf.gateway.Request;
  *
  */
 @Path("cache")
-@RequestScoped
+@ApplicationScoped
 public class Cache {
 
 	/**
@@ -39,6 +40,7 @@ public class Cache {
 	 * @param entity
 	 * @param entityId
 	 * @return
+	 * @throws Exception 
 	 */
 	@GET
 	@Path("persistence/{entity}/{id}")
@@ -49,10 +51,7 @@ public class Cache {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             @PathParam("entity") final String entity,
-            @PathParam("id") final String entityId) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(null);
+            @PathParam("id") final String entityId) throws Exception {
+        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
     }
 }

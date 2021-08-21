@@ -5,8 +5,9 @@
  */
 package epf.gateway.config;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -24,7 +25,7 @@ import epf.gateway.Request;
  * @author FOXCONN
  */
 @Path("config")
-@RequestScoped
+@ApplicationScoped
 public class Config {
     
     /**
@@ -38,6 +39,7 @@ public class Config {
      * @param uriInfo
      * @param req
      * @return
+     * @throws Exception 
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -45,10 +47,7 @@ public class Config {
     public CompletionStage<Response> getConfigurations(
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
-            @Context final javax.ws.rs.core.Request req) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(null);
+            @Context final javax.ws.rs.core.Request req) throws Exception {
+        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
     }
 }

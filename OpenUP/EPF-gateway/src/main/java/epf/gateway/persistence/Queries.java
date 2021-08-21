@@ -6,8 +6,9 @@
 package epf.gateway.persistence;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -26,7 +27,7 @@ import epf.gateway.Request;
  *
  * @author FOXCONN
  */
-@RequestScoped
+@ApplicationScoped
 @Path("persistence")
 public class Queries {
     
@@ -42,6 +43,7 @@ public class Queries {
      * @param req
      * @param paths
      * @return
+     * @throws Exception 
      */
     @GET
     @Path("{criteria: .+}")
@@ -53,11 +55,8 @@ public class Queries {
             @Context final javax.ws.rs.core.Request req,
             @PathParam("criteria")
             final List<PathSegment> paths
-            ) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(null);
+            ) throws Exception {
+        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
     }
     
     /**
@@ -65,6 +64,7 @@ public class Queries {
      * @param uriInfo
      * @param req
      * @return
+     * @throws Exception 
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -73,10 +73,7 @@ public class Queries {
     		@Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req
-            ) {
-    	request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(null);
+            ) throws Exception {
+    	return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
     }
 }

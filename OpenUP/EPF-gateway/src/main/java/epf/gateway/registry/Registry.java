@@ -1,8 +1,9 @@
 package epf.gateway.registry;
 
 import java.io.InputStream;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -24,7 +25,7 @@ import epf.gateway.Request;
  *
  */
 @Path("registry")
-@RequestScoped
+@ApplicationScoped
 public class Registry {
 
 	/**
@@ -39,6 +40,7 @@ public class Registry {
      * @param req
      * @param body
      * @return
+     * @throws Exception 
      */
     @POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -48,11 +50,8 @@ public class Registry {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body
-    		) {
-    	request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(body);
+    		) throws Exception {
+    	return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, body));
     }
 	
 	/**
@@ -60,6 +59,7 @@ public class Registry {
 	 * @param uriInfo
 	 * @param req
 	 * @return
+	 * @throws Exception 
 	 */
 	@GET
 	@Asynchronous
@@ -67,11 +67,8 @@ public class Registry {
     		@Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req
-    		) {
-		request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(null);
+    		) throws Exception {
+		return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
 	}
 	
 	/**
@@ -80,6 +77,7 @@ public class Registry {
 	 * @param uriInfo
 	 * @param req
 	 * @return
+	 * @throws Exception 
 	 */
 	@GET
 	@Path("{name}")
@@ -92,11 +90,8 @@ public class Registry {
             @Context 
             final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req
-    		) {
-		request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(null);
+    		) throws Exception {
+		return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
 	}
 	
 	/**
@@ -106,6 +101,7 @@ public class Registry {
 	 * @param req
 	 * @param body
 	 * @return
+	 * @throws Exception 
 	 */
 	@PUT
 	@Path("{name}")
@@ -120,11 +116,8 @@ public class Registry {
             final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body
-    		) {
-		request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(body);
+    		) throws Exception {
+		return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, body));
 	}
 	
 	/**
@@ -133,6 +126,7 @@ public class Registry {
 	 * @param uriInfo
 	 * @param req
 	 * @return
+	 * @throws Exception 
 	 */
 	@DELETE
 	@Path("{name}")
@@ -145,10 +139,7 @@ public class Registry {
             @Context 
             final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req
-    		) {
-		request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(null);
+    		) throws Exception {
+		return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
 	}
 }
