@@ -52,6 +52,18 @@
 		    <artifactId>microprofile-config-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.reactive.messaging/microprofile-reactive-messaging-api -->
+		<dependency>
+		    <groupId>org.eclipse.microprofile.reactive.messaging</groupId>
+		    <artifactId>microprofile-reactive-messaging-api</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.context-propagation/microprofile-context-propagation-api -->
+		<dependency>
+		    <groupId>org.eclipse.microprofile.context-propagation</groupId>
+		    <artifactId>microprofile-context-propagation-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/javax.cache/cache-api -->
 		<dependency>
 		    <groupId>javax.cache</groupId>

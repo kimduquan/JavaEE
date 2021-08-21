@@ -10,14 +10,15 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Logger;
 import epf.util.SystemUtil;
+import epf.util.logging.Logging;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
-import javax.inject.Inject;
 import javax.websocket.DeploymentException;
+import org.eclipse.microprofile.context.ManagedExecutor;
+import org.eclipse.microprofile.context.ThreadContext;
 import epf.client.messaging.Client;
-import epf.client.messaging.Handler;
 import epf.client.messaging.Messaging;
 import epf.schema.PostLoad;
 import epf.schema.PostPersist;
@@ -34,18 +35,32 @@ public class Listener {
 	/**
 	 * 
 	 */
+	private static final Logger LOGGER = Logging.getLogger(Listener.class.getName());
+	
+	/**
+	 * 
+	 */
 	private transient URI messagingUrl;
 	
 	/**
 	 * 
 	 */
-	private transient final Queue<Client> clients = new ConcurrentLinkedQueue<>();
+	private transient Client client;
 	
 	/**
 	 * 
 	 */
-	@Inject
-	private transient Logger logger;
+	private transient final Queue<Message> objects = new ConcurrentLinkedQueue<>();
+	
+	/**
+	 * 
+	 */
+	private transient ManagedExecutor executor;
+	
+	/**
+	 * 
+	 */
+	private transient MessageTask task;
 	
 	/**
 	 * 
@@ -54,11 +69,13 @@ public class Listener {
 	protected void postConstruct() {
 		try {
 			messagingUrl = new URI(SystemUtil.getenv(Messaging.MESSAGING_URL));
-			final Client client = Messaging.connectToServer(messagingUrl.resolve("persistence"));
-			clients.add(client);
+			client = Messaging.connectToServer(messagingUrl.resolve("persistence"));
+			executor = ManagedExecutor.builder().propagated(ThreadContext.APPLICATION).build();
+			task = new MessageTask(client, objects);
+			executor.submit(task);
 		} 
 		catch (DeploymentException|IOException|URISyntaxException e) {
-			logger.throwing(Messaging.class.getName(), "connectToServer", e);
+			LOGGER.throwing(Messaging.class.getName(), "connectToServer", e);
 		}
 	}
 	
@@ -67,55 +84,50 @@ public class Listener {
 	 */
 	@PreDestroy
 	protected void preDestroy() {
-		clients.forEach(client -> {
-			try {
-				client.close();
-			} 
-			catch (Exception e) {
-				logger.throwing(client.getClass().getName(), "close", e);
-			}
-		});
-		clients.clear();
+		try {
+			task.close();
+			executor.shutdownNow();
+			client.close();
+		} 
+		catch (Exception e) {
+			LOGGER.throwing(client.getClass().getName(), "close", e);
+		}
+	}
+	
+	/**
+	 * @param object
+	 */
+	protected void send(final Object object) {
+		final Message message = new Message(object);
+		objects.add(message);
+		message.waitObject();
 	}
 	
 	/**
 	 * @param event
 	 */
 	public void postPersist(@Observes final PostPersist event) {
-		sendObject(event, false);
+		send(event);
 	}
 	
 	/**
 	 * @param event
 	 */
 	public void postRemove(@Observes final PostRemove event) {
-		sendObject(event, false);
+		send(event);
 	}
 	
 	/**
 	 * @param event
 	 */
 	public void postUpdate(@Observes final PostUpdate event) {
-		sendObject(event, false);
+		send(event);
 	}
 	
 	/**
 	 * @param event
 	 */
 	public void postLoad(@Observes final PostLoad event) {
-		sendObject(event, true);
-	}
-	
-	/**
-	 * @param object
-	 * @param async
-	 */
-	protected void sendObject(final Object object, final boolean async) {
-		try(Handler handler = new Handler(clients, async, messagingUrl.resolve("persistence"))) {
-			handler.sendObject(object);
-		} 
-		catch (Exception e) {
-			logger.throwing(Messaging.class.getName(), "sendObject", e);
-		}
+		send(event);
 	}
 }
