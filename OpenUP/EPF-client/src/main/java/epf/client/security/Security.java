@@ -6,11 +6,8 @@
 package epf.client.security;
 
 import java.net.URL;
-import java.util.Map;
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -149,9 +146,10 @@ public interface Security {
     @PATCH
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     void update(
-    		@BeanParam
-    		@Valid
-    		final CredentialInfo info
+    		@FormParam("password")
+    		@NotNull
+    		@NotBlank
+    		final String password
     		);
     
     /**
@@ -159,9 +157,8 @@ public interface Security {
      * @param fields
      * @return
      */
-    static Response update(final Client client, final Map<String, String> fields) {
-    	final Form form = new Form();
-    	fields.forEach((name, value) -> form.param(name, value));
+    static Response update(final Client client, final String password) {
+    	final Form form = new Form().param("password", password);
     	return client.request(
     			target -> target, 
     			req -> req

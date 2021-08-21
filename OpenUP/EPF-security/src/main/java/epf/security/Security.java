@@ -10,7 +10,6 @@ import java.net.URL;
 import java.security.PrivateKey;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.security.PermitAll;
@@ -19,13 +18,11 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.client.EPFException;
 import epf.client.persistence.Persistence;
-import epf.client.security.CredentialInfo;
 import epf.client.security.Token;
 import epf.client.security.jwt.JWTConfig;
 import epf.util.client.Client;
@@ -168,16 +165,12 @@ public class Security implements epf.client.security.Security, Serializable {
     }
 
 	@Override
-	public void update(final CredentialInfo info) {
+	public void update(final String password) {
 		final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
     	final String rawToken = jwt.getClaim(JWTConfig.TOKEN_CLAIM);
     	try(Client securityClient = clientUtil.newClient(ConfigUtil.getURI(Persistence.PERSISTENCE_SECURITY_URL))){
     		securityClient.authorization(rawToken);
-    		final Map<String, String> infos = new ConcurrentHashMap<>();
-			infos.put("password", info.getPassword());
-    		try(Response response = epf.client.security.Security.update(securityClient, infos)){
-    			response.getStatus();
-    		}
+    		epf.client.security.Security.update(securityClient, password);
     	}
     	catch (Exception e) {
 			throw new EPFException(e);

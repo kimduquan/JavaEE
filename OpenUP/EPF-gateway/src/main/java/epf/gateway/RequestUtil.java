@@ -35,26 +35,19 @@ import epf.util.Var;
  * @author PC
  *
  */
-public final class RequestHelper {
+public interface RequestUtil {
 	
 	/**
 	 * 
 	 */
-	private static final int MIN_PATHS_COUNT = 1;
-	
-	/**
-	 * 
-	 */
-	private RequestHelper(){
-		
-	}
+	int MIN_PATHS_COUNT = 1;
 
 	/**
      * @param uriInfo
      * @param registry
      * @return
      */
-    public static URI buildUri(final UriInfo uriInfo, final Registry registry) {
+    static URI buildUri(final UriInfo uriInfo, final Registry registry) {
     	URI uri = null;
     	if(uriInfo.getPathSegments() != null && !uriInfo.getPathSegments().isEmpty()) {
     		final String service = uriInfo.getPathSegments().get(0).getPath();
@@ -78,7 +71,7 @@ public final class RequestHelper {
      * @param serviceUri
      * @return
      */
-    public static WebTarget buildTarget(final Client client,final  UriInfo uriInfo, final URI serviceUri){
+    static WebTarget buildTarget(final Client client,final  UriInfo uriInfo, final URI serviceUri){
     	final Var<WebTarget> webTarget = new Var<>(client.target(serviceUri));
         if(uriInfo != null){
         	final List<PathSegment> segments = uriInfo.getPathSegments();
@@ -118,7 +111,7 @@ public final class RequestHelper {
      * @param headers
      * @return
      */
-    public static Builder buildRequest(final WebTarget target, final HttpHeaders headers){
+    static Builder buildRequest(final WebTarget target, final HttpHeaders headers){
     	final Var<Builder> builder = new Var<>(target.request());
         if(headers != null){
         	final List<MediaType> mediaTypes = headers.getAcceptableMediaTypes();
@@ -150,7 +143,7 @@ public final class RequestHelper {
      * @param in
      * @return
      */
-    public static Response buildMethod(
+    static Response buildMethod(
     		final Builder builder, 
     		final String method, 
     		final MediaType type, 
@@ -176,7 +169,7 @@ public final class RequestHelper {
      * @param uriInfo
      * @return
      */
-    public static Link buildLink(final Link link, final UriInfo uriInfo) {
+    static Link buildLink(final Link link, final UriInfo uriInfo) {
     	final URI uri = buildUri(link, uriInfo);
     	return Link.fromLink(link).uri(uri).build();
     }
@@ -186,7 +179,7 @@ public final class RequestHelper {
      * @param uriInfo
      * @return
      */
-    private static URI buildUri(final Link link, final UriInfo uriInfo) {
+    static URI buildUri(final Link link, final UriInfo uriInfo) {
     	final URI linkUri = link.getUri();
     	final String[] linkPaths = linkUri.getPath().split("/");
     	String path = "";
@@ -203,7 +196,7 @@ public final class RequestHelper {
      * @param uriInfo
      * @return
      */
-    public static ResponseBuilder buildResponse(final Response res, final UriInfo uriInfo){
+    static ResponseBuilder buildResponse(final Response res, final UriInfo uriInfo){
         ResponseBuilder builder = Response.fromResponse(res);
         final Set<String> methods = res.getAllowedMethods();
         if(methods != null){

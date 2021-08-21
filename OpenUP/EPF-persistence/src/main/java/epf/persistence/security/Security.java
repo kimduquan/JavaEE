@@ -31,7 +31,6 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.jwt.config.Names;
 import epf.client.EPFException;
-import epf.client.security.CredentialInfo;
 import epf.client.security.Token;
 import epf.client.security.jwt.JWTConfig;
 import epf.client.security.jwt.TokenUtil;
@@ -264,9 +263,9 @@ public class Security implements epf.client.security.Security, epf.client.securi
     }
 
 	@Override
-	public void update(final CredentialInfo info) {
+	public void update(final String password) {
 		final Credential credential = getCredential(context, persistence);
-		service.setUserPassword(credential.getDefaultManager(), context.getUserPrincipal().getName(), info.getPassword().toCharArray());
+		service.setUserPassword(credential.getDefaultManager(), context.getUserPrincipal().getName(), password.toCharArray());
 	}
 
 	@Override

@@ -84,12 +84,12 @@ public class Request {
      */
     public CompletionStage<Response> request(final InputStream body){
     	logger.entering(CLASS_NAME, "request", rawRequest.getMethod());
-        return executor.supplyAsync(() -> uri = RequestHelper.buildUri(uriInfo, registry))
+        return executor.supplyAsync(() -> uri = RequestUtil.buildUri(uriInfo, registry))
                 .thenApply(newUri -> client = clients.poll(newUri, b -> b))
-                .thenApply(newClient -> RequestHelper.buildTarget(newClient, uriInfo, uri))
-                .thenApply(target -> RequestHelper.buildRequest(target, headers))
-                .thenApply(request -> RequestHelper.buildMethod(request, this.rawRequest.getMethod(), headers.getMediaType(), body))
-                .thenApply(response -> RequestHelper.buildResponse(response, uriInfo))
+                .thenApply(newClient -> RequestUtil.buildTarget(newClient, uriInfo, uri))
+                .thenApply(target -> RequestUtil.buildRequest(target, headers))
+                .thenApply(request -> RequestUtil.buildMethod(request, this.rawRequest.getMethod(), headers.getMediaType(), body))
+                .thenApply(response -> RequestUtil.buildResponse(response, uriInfo))
                 .thenApply(ResponseBuilder::build)
                 .whenComplete((res, ex) -> {
                 	if(ex != null) {

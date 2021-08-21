@@ -5,13 +5,10 @@
  */
 package epf.tests.security;
 
-import static epf.client.security.Security.AUDIENCE_FORMAT;
 import java.net.URI;
 import java.net.URL;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.client.Entity;
@@ -186,7 +183,7 @@ public class SecurityTest {
                 "Token.audience", 
                 new String[]{
                     String.format(
-                            AUDIENCE_FORMAT, 
+                    		epf.client.security.Security.AUDIENCE_FORMAT, 
                             securityUrl.getScheme(), 
                             securityUrl.getHost(), 
                             securityUrl.getPort()
@@ -260,18 +257,14 @@ public class SecurityTest {
     	String token = login("any_role1", "any_role", securityUrl.toURL(), true);
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
-    		Map<String, String> fields = new HashMap<>();
-    		fields.put("password", "any_role1");
-    		Response response = Security.update(client, fields);
+    		Response response = Security.update(client, "any_role1");
     		Assert.assertEquals("Response.status", Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
     	}
     	logOut(token);
     	token = login("any_role1", "any_role1", securityUrl.toURL(), true);
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
-    		Map<String, String> fields = new HashMap<>();
-    		fields.put("password", "any_role");
-    		Response response = Security.update(client, fields);
+    		Response response = Security.update(client, "any_role");
     		Assert.assertEquals("Response.status", Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
     	}
     	logOut(token);
@@ -282,8 +275,7 @@ public class SecurityTest {
     	String token = login("any_role1", "any_role", securityUrl.toURL(), true);
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
-    		Map<String, String> fields = new HashMap<>();
-    		Response response = Security.update(client, fields);
+    		Response response = Security.update(client, null);
     		Assert.assertEquals("Response.status", Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     	}
     	logOut(token);
@@ -294,9 +286,7 @@ public class SecurityTest {
     	String token = login("any_role1", "any_role", securityUrl.toURL(), true);
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
-    		Map<String, String> fields = new HashMap<>();
-    		fields.put("password", "");
-    		Response response = Security.update(client, fields);
+    		Response response = Security.update(client, "");
     		Assert.assertEquals("Response.status", Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     	}
     	logOut(token);

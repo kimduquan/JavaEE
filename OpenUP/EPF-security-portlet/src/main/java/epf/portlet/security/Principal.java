@@ -6,8 +6,6 @@ package epf.portlet.security;
 import java.io.Serializable;
 import java.net.URI;
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -95,10 +93,8 @@ public class Principal implements PrincipalView, Serializable {
 	 */
 	@Override
 	public String update() throws Exception {
-		final Map<String, String> info = new HashMap<>();
-		info.put("password", new String(credential.getPassword()));
 		try(Client client = clientUtil.newClient(gatewayUtil.get("security"))){
-			epf.client.security.Security.update(client, info);
+			epf.client.security.Security.update(client, new String(credential.getPassword()));
 		}
 		return "principal";
 	}
