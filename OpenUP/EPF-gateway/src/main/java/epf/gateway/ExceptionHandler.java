@@ -7,7 +7,6 @@ package epf.gateway;
 
 import java.io.Serializable;
 import java.util.logging.Logger;
-import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
@@ -16,6 +15,7 @@ import javax.ws.rs.ext.Provider;
 import org.eclipse.microprofile.faulttolerance.exceptions.BulkheadException;
 import org.eclipse.microprofile.faulttolerance.exceptions.CircuitBreakerOpenException;
 import org.eclipse.microprofile.faulttolerance.exceptions.TimeoutException;
+import epf.util.logging.Logging;
 
 /**
  *
@@ -30,20 +30,15 @@ public class ExceptionHandler implements
     * 
     */
     private static final long serialVersionUID = 1L;
-    /**
-     * 
-     */
-    private static final String CLASS_NAME = ExceptionHandler.class.getName();
     
     /**
      * 
      */
-    @Inject
-    private transient Logger logger;
+    private static final Logger LOGGER = Logging.getLogger(ExceptionHandler.class.getName());
     
     @Override
     public Response toResponse(final Exception exception) {
-    	logger.throwing(CLASS_NAME, "toResponse", exception);
+    	LOGGER.throwing(getClass().getName(), "toResponse", exception);
     	ResponseBuilder builder;
     	if(exception instanceof WebApplicationException) {
     		final WebApplicationException error = (WebApplicationException) exception;
