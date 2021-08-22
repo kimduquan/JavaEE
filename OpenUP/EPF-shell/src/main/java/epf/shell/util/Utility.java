@@ -23,6 +23,7 @@ import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.sse.SseEventSource;
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
 import epf.shell.util.client.Entity;
@@ -260,7 +261,7 @@ public class Utility {
 		final WebSocketContainer container = ContainerProvider.getWebSocketContainer();
 		try(epf.util.websocket.Client client = epf.util.websocket.Client.connectToServer(container, uri)){
 			client.onError(error -> error.printStackTrace());
-			client.onMessage(msg -> System.out.print(msg));
+			client.onMessage(msg -> System.out.println(msg));
 			try(Scanner scanner = new Scanner(System.in)){
 				while(scanner.hasNext()) {
 					final String line = scanner.next();
@@ -271,6 +272,28 @@ public class Utility {
 						client.getSession().getBasicRemote().sendText(line);
 					}
 				}
+			}
+		}
+	}
+	
+	/**
+	 * @param uri
+	 * @throws Exception 
+	 */
+	@Command(name = "stream")
+	public void stream(
+			@Option(names = {"-u", "--uri"}, required = true, description = "URI") 
+			final URI uri) throws Exception {
+		try(Client client = clientUtil.newClient(uri)){
+			try(SseEventSource stream = client.stream(target -> target, req -> req)){
+				stream.register(
+						event -> {
+							System.out.println(event.readData());
+						},
+						error -> {
+							error.printStackTrace();
+						});
+				stream.open();
 			}
 		}
 	}
