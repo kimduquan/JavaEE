@@ -3,23 +3,13 @@
  */
 package epf.cache;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.cache.CacheManager;
-import javax.cache.Caching;
-import javax.cache.configuration.MutableConfiguration;
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import org.eclipse.microprofile.auth.LoginConfig;
-import org.eclipse.microprofile.health.HealthCheck;
-import org.eclipse.microprofile.health.HealthCheckResponse;
-import org.eclipse.microprofile.health.Readiness;
-import epf.cache.persistence.Persistence;
 import epf.schema.EPF;
 
 /**
@@ -31,47 +21,6 @@ import epf.schema.EPF;
 @LoginConfig(authMethod = "MP-JWT", realmName = EPF.SCHEMA)
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@Readiness
-public class Service extends Application implements HealthCheck {
+public class Service extends Application {
 	
-	/**
-	 * 
-	 */
-	private transient CacheManager manager;
-	
-	/**
-	 * 
-	 */
-	private transient javax.cache.Cache<String, Object> persistenceCache;
-	
-	/**
-	 * 
-	 */
-	@Inject
-	private transient Persistence persistence;
-	
-	/**
-	 * 
-	 */
-	@PostConstruct
-	public void postConstruct() {
-		manager = Caching.getCachingProvider().getCacheManager();
-		final MutableConfiguration<String, Object> config = new MutableConfiguration<>();
-		persistenceCache = manager.createCache("persistence", config);
-		persistence.setCache(persistenceCache);
-	}
-	
-	/**
-	 * 
-	 */
-	@PreDestroy
-	public void preDestroy() {
-		persistenceCache.close();
-		manager.close();
-	}
-
-	@Override
-	public HealthCheckResponse call() {
-		return HealthCheckResponse.up("EPF-cache");
-	}
 }

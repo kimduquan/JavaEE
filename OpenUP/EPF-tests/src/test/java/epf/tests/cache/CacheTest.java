@@ -14,7 +14,6 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import epf.client.cache.Cache;
 import epf.schema.EPF;
@@ -30,7 +29,8 @@ import epf.tests.persistence.PersistenceUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
 import epf.util.client.Client;
-import epf.client.gateway.GatewayUtil;
+import epf.util.config.ConfigUtil;
+import org.junit.Ignore;
 
 /**
  * @author PC
@@ -47,7 +47,7 @@ public class CacheTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		cacheUrl = GatewayUtil.get("cache");
+		cacheUrl = ConfigUtil.getURI(Cache.CACHE_URL);
 		token = SecurityUtil.login("any_role1", "any_role");
 	}
 
@@ -127,9 +127,14 @@ public class CacheTest {
         PersistenceUtil.persist(token, Artifact.class, EPF.ARTIFACT, artifact);
         final List<String> data = new ArrayList<>();
         try(SseEventSource stream = Cache.forEachEntity(client, EPF.ARTIFACT)){
-        	stream.register(e -> {
-        		data.add(e.getId());
-        	});
+        	stream.register(
+        			e -> {
+        				data.add(e.getId());
+        				}
+        			,
+        			error -> {
+        				error.printStackTrace();
+        			});
         	stream.open();
         }
         Assert.assertEquals(1, data.size());

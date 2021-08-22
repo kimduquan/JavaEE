@@ -4,6 +4,8 @@
 package epf.cache;
 
 import java.util.Map.Entry;
+
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -56,6 +58,7 @@ public class Cache implements epf.client.cache.Cache {
 		throw new NotFoundException();
 	}
 
+	@PermitAll
 	@Override
 	public void forEachEntity(final String entity, final SseEventSink sseEventSink, final Sse sse) {
 		final Builder builder = sse.newEventBuilder();

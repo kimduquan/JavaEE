@@ -92,17 +92,22 @@ public class Request {
     				target -> RequestUtil.buildTarget(target, uriInfo, uri), 
     				b -> RequestUtil.buildSource(b)
     				)){
-    			stream.register(e -> {
-    				final OutboundSseEvent newEvent = eventBuilder
-    						.comment(e.getComment())
-    						.data(e.readData())
-		    				.id(e.getId())
-		    				.mediaType(MediaType.APPLICATION_JSON_TYPE)
-		    				.name(e.getName())
-		    				.reconnectDelay(e.getReconnectDelay())
-		    				.build();
-    				sseEventSink.send(newEvent);
-    			});
+    			stream.register(
+    					e -> {
+    						final OutboundSseEvent newEvent = eventBuilder
+    								.comment(e.getComment())
+		    						.data(e.readData())
+				    				.id(e.getId())
+				    				.mediaType(MediaType.APPLICATION_JSON_TYPE)
+				    				.name(e.getName())
+				    				.reconnectDelay(e.getReconnectDelay())
+				    				.build();
+		    				sseEventSink.send(newEvent);
+		    				}
+    					,
+    					error -> {
+    						LOGGER.throwing(getClass().getName(), "stream", error);
+    					});
     			stream.open();
     		}
     	}

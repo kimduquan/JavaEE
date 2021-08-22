@@ -4,6 +4,7 @@
 package epf.client.cache;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -40,9 +41,11 @@ public interface Cache {
 	@Produces(MediaType.APPLICATION_JSON)
     Response getEntity(
             @PathParam("entity")
+            @NotNull
             @NotBlank
             final String name,
             @PathParam("id")
+            @NotNull
             @NotBlank
             final String entityId
             );
@@ -87,6 +90,7 @@ public interface Cache {
 	@Produces(MediaType.SERVER_SENT_EVENTS)
 	void forEachEntity(
 			@QueryParam("entity")
+			@NotNull
 			@NotBlank
 			final String entity, 
 			@Context 

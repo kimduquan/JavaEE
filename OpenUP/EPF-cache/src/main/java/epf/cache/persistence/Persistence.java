@@ -17,8 +17,11 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.cache.Cache;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.persistence.Id;
 import javax.websocket.DeploymentException;
+import org.eclipse.microprofile.health.Readiness;
+import epf.cache.Manager;
 import epf.client.messaging.Client;
 import epf.client.messaging.Messaging;
 import epf.schema.PostLoad;
@@ -69,9 +72,16 @@ public class Persistence {
 	/**
 	 * 
 	 */
+	@Inject @Readiness
+	private transient Manager manager;
+	
+	/**
+	 * 
+	 */
 	@PostConstruct
 	protected void postConstruct() {
 		try {
+			cache = manager.getCache("persistence");
 			final URI messagingUrl = new URI(SystemUtil.getenv(Messaging.MESSAGING_URL));
 			client = Messaging.connectToServer(messagingUrl.resolve("persistence"));
 			client.onMessage(this::onEntityEvent);
@@ -209,15 +219,6 @@ public class Persistence {
 				queue.add(new AbstractMap.SimpleImmutableEntry<>(entry.getKey(), entry.getValue()));
 			}
 		});
-		try {
-			queue.close();
-		} 
-		catch (IOException e) {
-			LOGGER.throwing(getClass().getName(), "forEachEntity", e);
-		}
-	}
-	
-	public void setCache(final Cache<String, Object> cache) {
-		this.cache = cache;
+		queue.close();
 	}
 }

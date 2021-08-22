@@ -5,14 +5,18 @@ package epf.gateway.stream;
 
 import java.util.logging.Logger;
 import javax.ws.rs.sse.OutboundSseEvent;
+import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseBroadcaster;
+import javax.ws.rs.sse.SseEventSink;
+import epf.util.concurrent.ObjectQueue;
 import epf.util.logging.Logging;
+import epf.util.websocket.Client;
 
 /**
  * @author PC
  *
  */
-public class Broadcaster implements AutoCloseable {
+public class Broadcaster extends ObjectQueue<String> {
 	
 	/**
 	 * 
@@ -27,37 +31,35 @@ public class Broadcaster implements AutoCloseable {
 	/**
 	 * 
 	 */
-	private transient final SseBroadcaster sse;
+	private transient final SseBroadcaster broadcaster;
 
 	/**
-	 * 
+	 * @param builder
+	 * @param broadcaster
 	 */
-	public Broadcaster(final OutboundSseEvent.Builder builder, final SseBroadcaster broadcaster) {
-		this.builder = builder;
-		this.sse = broadcaster;
-	}
-	
-	/**
-	 * @param message
-	 */
-	public void broadcast(final String message) {
-		try {
-			sse.broadcast(builder.data(message).build());
-		}
-		catch(Exception ex) {
-			LOGGER.throwing(getClass().getName(), "broadcast", ex);
-		}
+	public Broadcaster(final Client client, final Sse sse) {
+		this.builder = sse.newEventBuilder();
+		this.broadcaster = sse.newBroadcaster();
+		client.onMessage(this::add);
 	}
 
 	@Override
-	public void close() throws Exception {
-		sse.close();
+	public void close() {
+		super.close();
+		broadcaster.close();
+	}
+
+	@Override
+	public void accept(final String message) {
+		try {
+			broadcaster.broadcast(builder.data(message).build());
+		}
+		catch(Exception ex) {
+			LOGGER.throwing(getClass().getName(), "accept", ex);
+		}
 	}
 	
-	/**
-	 * @return
-	 */
-	public SseBroadcaster getBroadcaster() {
-		return sse;
+	public void register(final SseEventSink sink) {
+		broadcaster.register(sink);
 	}
 }

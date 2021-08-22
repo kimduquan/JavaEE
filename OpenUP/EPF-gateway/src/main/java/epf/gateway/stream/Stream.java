@@ -26,7 +26,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
-
+import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.util.SystemUtil;
 import epf.util.websocket.Client;
 
@@ -57,6 +57,12 @@ public class Stream {
 	/**
 	 * 
 	 */
+	@Inject
+	private transient ManagedExecutor executor;
+	
+	/**
+	 * 
+	 */
 	@PostConstruct
 	protected void postConstruct() {
 		try {
@@ -74,9 +80,8 @@ public class Stream {
 	 */
 	@PreDestroy
 	protected void preDestroy() {
-		this.clients.forEach((path, client) -> {
+		this.clients.values().parallelStream().forEach(client -> {
 			try {
-				client.onMessage(msg -> {});
 				client.close();
 			} 
 			catch (Exception e) {
@@ -84,7 +89,7 @@ public class Stream {
 			}
 		});
 		this.clients.clear();
-		this.broadcasters.forEach((path, broadcaster) -> {
+		this.broadcasters.values().parallelStream().forEach(broadcaster -> {
 			try {
 				broadcaster.close();
 			} 
@@ -93,26 +98,6 @@ public class Stream {
 			}
 		});
 		this.broadcasters.clear();
-	}
-	
-	/**
-	 * @param path
-	 * @param sse
-	 * @param client
-	 * @return
-	 */
-	protected Broadcaster newBroadcaster(final String path, final Sse sse, final Client client) {
-		final Broadcaster broadcaster = new Broadcaster(sse.newEventBuilder(), sse.newBroadcaster());
-		client.onMessage(broadcaster::broadcast);
-		broadcaster.getBroadcaster().onClose(sink -> {
-			client.onMessage(msg -> {});
-			broadcasters.remove(path);
-		});
-		broadcaster.getBroadcaster().onError((sink, err) -> {
-			client.onMessage(msg -> {});
-			broadcasters.remove(path);
-		});
-		return broadcaster;
 	}
 
 	/**
@@ -132,9 +117,12 @@ public class Stream {
 			final Sse sse) {
 		clients.computeIfPresent(path, (p, client) -> {
 			final Broadcaster broadcaster = broadcasters.computeIfAbsent(
-					path, p2 -> newBroadcaster(p2, sse, client)
-					);
-			broadcaster.getBroadcaster().register(sink);
+					path, p2 -> {
+						final Broadcaster newBroadcaster = new Broadcaster(client, sse);
+						executor.submit(newBroadcaster);
+						return newBroadcaster;
+					});
+			broadcaster.register(sink);
 			return client;
 		});
 	}

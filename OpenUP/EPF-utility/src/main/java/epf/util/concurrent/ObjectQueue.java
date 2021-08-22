@@ -4,7 +4,6 @@
 package epf.util.concurrent;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -34,7 +33,7 @@ public abstract class ObjectQueue<T extends Object> implements Runnable, Closeab
 	private transient final AtomicBoolean close = new AtomicBoolean(false);
 
 	@Override
-	public void close() throws IOException {
+	public void close() {
 		close.set(true);
 	}
 
@@ -45,18 +44,18 @@ public abstract class ObjectQueue<T extends Object> implements Runnable, Closeab
 				while(!objects.isEmpty()) {
 					accept(objects.poll());
 				}
+				break;
+			}
+			else {
+				while(!objects.isEmpty()) {
+					accept(objects.poll());
+				}
 				try {
 					Thread.sleep(40);
 				} 
 				catch (InterruptedException e) {
 					LOGGER.throwing(getClass().getName(), "run", e);
 				}
-			}
-			else {
-				while(!objects.isEmpty()) {
-					accept(objects.poll());
-				}
-				break;
 			}
 		}
 	}
