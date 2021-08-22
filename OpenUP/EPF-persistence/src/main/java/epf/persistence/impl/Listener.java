@@ -6,8 +6,6 @@ package epf.persistence.impl;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Logger;
 import epf.util.SystemUtil;
 import epf.util.logging.Logging;
@@ -40,17 +38,7 @@ public class Listener {
 	/**
 	 * 
 	 */
-	private transient URI messagingUrl;
-	
-	/**
-	 * 
-	 */
 	private transient Client client;
-	
-	/**
-	 * 
-	 */
-	private transient final Queue<Message> objects = new ConcurrentLinkedQueue<>();
 	
 	/**
 	 * 
@@ -60,7 +48,7 @@ public class Listener {
 	/**
 	 * 
 	 */
-	private transient MessageTask task;
+	private transient MessageQueue messages;
 	
 	/**
 	 * 
@@ -68,11 +56,11 @@ public class Listener {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			messagingUrl = new URI(SystemUtil.getenv(Messaging.MESSAGING_URL));
+			final URI messagingUrl = new URI(SystemUtil.getenv(Messaging.MESSAGING_URL));
 			client = Messaging.connectToServer(messagingUrl.resolve("persistence"));
 			executor = ManagedExecutor.builder().propagated(ThreadContext.APPLICATION).build();
-			task = new MessageTask(client, objects);
-			executor.submit(task);
+			messages = new MessageQueue(client);
+			executor.submit(messages);
 		} 
 		catch (DeploymentException|IOException|URISyntaxException e) {
 			LOGGER.throwing(Messaging.class.getName(), "connectToServer", e);
@@ -85,7 +73,7 @@ public class Listener {
 	@PreDestroy
 	protected void preDestroy() {
 		try {
-			task.close();
+			messages.close();
 			executor.shutdownNow();
 			client.close();
 		} 
@@ -99,7 +87,7 @@ public class Listener {
 	 */
 	protected void send(final Object object, final boolean sync) {
 		final Message message = new Message(object);
-		objects.add(message);
+		messages.add(message);
 		if(sync) {
 			message.waitToClose();
 		}

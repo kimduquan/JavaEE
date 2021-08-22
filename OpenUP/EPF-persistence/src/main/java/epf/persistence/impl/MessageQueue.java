@@ -7,6 +7,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Logger;
 import javax.websocket.EncodeException;
 import epf.client.messaging.Client;
@@ -16,12 +17,12 @@ import epf.util.logging.Logging;
  * @author PC
  *
  */
-public class MessageTask implements Runnable, Closeable {
+public class MessageQueue implements Runnable, Closeable {
 	
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(MessageTask.class.getName());
+	private static final Logger LOGGER = Logging.getLogger(MessageQueue.class.getName());
 	
 	/**
 	 * 
@@ -39,20 +40,29 @@ public class MessageTask implements Runnable, Closeable {
 	private transient boolean isClose;
 	
 	/**
-	 * @param messages
+	 * 
+	 */
+	//private transient final Object wait = new Object();
+	
+	/**
 	 * @param client
 	 */
-	public MessageTask(final Client client, final Queue<Message> messages) {
+	public MessageQueue(final Client client) {
 		Objects.requireNonNull(client, "Client");
-		Objects.requireNonNull(messages, "Queue");
 		this.client = client;
-		this.messages = messages;
+		this.messages = new ConcurrentLinkedQueue<>();
 		isClose = false;
 	}
 
 	@Override
 	public void run() {
 		while(!isClose) {
+			/*try {
+				wait.wait();
+			} 
+			catch (InterruptedException e) {
+				LOGGER.throwing(getClass().getName(), "run", e);
+			}*/
 			while(!messages.isEmpty()) {
 				final Message message = messages.peek();
 				try {
@@ -75,5 +85,14 @@ public class MessageTask implements Runnable, Closeable {
 	@Override
 	public void close() throws IOException {
 		isClose = true;
+		//wait.notify();
+	}
+	
+	/**
+	 * @param message
+	 */
+	public void add(final Message message) {
+		messages.add(message);
+		//wait.notify();
 	}
 }

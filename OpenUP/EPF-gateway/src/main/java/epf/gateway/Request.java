@@ -19,7 +19,6 @@ import javax.ws.rs.sse.OutboundSseEvent;
 import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
 import javax.ws.rs.sse.SseEventSource;
-
 import epf.util.client.Client;
 import epf.util.client.ClientUtil;
 import epf.util.logging.Logging;
@@ -91,7 +90,7 @@ public class Request {
     	try(Client client = clientUtil.newClient(uri)){
     		try(SseEventSource stream = client.stream(
     				target -> RequestUtil.buildTarget(target, uriInfo, uri), 
-    				b -> b
+    				b -> RequestUtil.buildSource(b)
     				)){
     			stream.register(e -> {
     				final OutboundSseEvent newEvent = eventBuilder
