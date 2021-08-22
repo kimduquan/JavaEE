@@ -9,6 +9,8 @@ import java.net.URISyntaxException;
 import java.util.logging.Logger;
 import epf.util.SystemUtil;
 import epf.util.logging.Logging;
+import epf.util.websocket.Message;
+import epf.util.websocket.MessageQueue;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
@@ -59,7 +61,7 @@ public class Listener {
 			final URI messagingUrl = new URI(SystemUtil.getenv(Messaging.MESSAGING_URL));
 			client = Messaging.connectToServer(messagingUrl.resolve("persistence"));
 			executor = ManagedExecutor.builder().propagated(ThreadContext.APPLICATION).build();
-			messages = new MessageQueue(client);
+			messages = new MessageQueue(client.getSession());
 			executor.submit(messages);
 		} 
 		catch (DeploymentException|IOException|URISyntaxException e) {

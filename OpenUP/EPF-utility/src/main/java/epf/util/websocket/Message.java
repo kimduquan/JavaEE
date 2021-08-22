@@ -1,12 +1,14 @@
 /**
  * 
  */
-package epf.persistence.impl;
+package epf.util.websocket;
 
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.logging.Logger;
+import javax.websocket.EncodeException;
+import javax.websocket.Session;
 import epf.util.logging.Logging;
 
 /**
@@ -48,8 +50,18 @@ public class Message implements Serializable, Closeable {
 		isClose = true;
 	}
 
-	public Object getObject() {
-		return object;
+	/**
+	 * @param session
+	 * @throws EncodeException 
+	 * @throws IOException 
+	 */
+	protected void send(final Session session) throws IOException, EncodeException {
+		if(object instanceof String) {
+			session.getBasicRemote().sendText((String) object);
+		}
+		else {
+			session.getBasicRemote().sendObject(object);
+		}
 	}
 	
 	/**

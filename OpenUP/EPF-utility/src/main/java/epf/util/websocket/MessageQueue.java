@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.persistence.impl;
+package epf.util.websocket;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Logger;
 import javax.websocket.EncodeException;
-import epf.client.messaging.Client;
+import javax.websocket.Session;
 import epf.util.logging.Logging;
 
 /**
@@ -32,7 +32,7 @@ public class MessageQueue implements Runnable, Closeable {
 	/**
 	 * 
 	 */
-	private transient final Client client;
+	private transient final Session session;
 	
 	/**
 	 * 
@@ -45,11 +45,11 @@ public class MessageQueue implements Runnable, Closeable {
 	//private transient final Object wait = new Object();
 	
 	/**
-	 * @param client
+	 * @param session
 	 */
-	public MessageQueue(final Client client) {
-		Objects.requireNonNull(client, "Client");
-		this.client = client;
+	public MessageQueue(final Session session) {
+		Objects.requireNonNull(session, "Session");
+		this.session = session;
 		this.messages = new ConcurrentLinkedQueue<>();
 		isClose = false;
 	}
@@ -66,7 +66,7 @@ public class MessageQueue implements Runnable, Closeable {
 			while(!messages.isEmpty()) {
 				final Message message = messages.peek();
 				try {
-					client.getSession().getBasicRemote().sendObject(message.getObject());
+					message.send(session);
 					messages.poll().close();
 				} 
 				catch (IOException|EncodeException e) {

@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
@@ -20,6 +19,7 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import epf.client.messaging.MessageDecoder;
 import epf.client.messaging.MessageEncoder;
+import epf.util.logging.Logging;
 import epf.util.websocket.Server;
 
 /**
@@ -33,18 +33,17 @@ public class Messaging {
 	/**
 	 * 
 	 */
+	private static final Logger LOGGER = Logging.getLogger(Messaging.class.getName());
+	
+	/**
+	 * 
+	 */
 	private final static String PATH = "path";
 	
 	/**
 	 * 
 	 */
 	private final transient Map<String, Server> servers = new ConcurrentHashMap<>();
-	
-	/**
-	 * 
-	 */
-	@Inject
-	private transient Logger logger;
 	
 	/**
 	 * 
@@ -65,7 +64,7 @@ public class Messaging {
 				server.close();
 			} 
 			catch (Exception e) {
-				logger.throwing(Server.class.getName(), "close", e);
+				LOGGER.throwing(Server.class.getName(), "close", e);
 			}
 		});
 	}
@@ -104,7 +103,6 @@ public class Messaging {
 	@OnMessage
     public void onMessage(@PathParam(PATH) final String path, final Object message, final Session session) {
 		servers.computeIfPresent(path, (p, server) -> {
-			server.onMessage(message, session);
 			server.forEach(ss -> ss.getAsyncRemote().sendObject(message));
 			return server;
 		});

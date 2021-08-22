@@ -6,7 +6,6 @@ package epf.util.websocket;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 import javax.websocket.CloseReason;
@@ -30,11 +29,6 @@ public class Server implements AutoCloseable {
 	private final transient Map<String, Session> sessions = new ConcurrentHashMap<>();
 	
 	/**
-	 * 
-	 */
-	private final transient AtomicLong messageCount = new AtomicLong(0);
-	
-	/**
 	 * @param id
 	 * @return
 	 */
@@ -56,14 +50,6 @@ public class Server implements AutoCloseable {
     public void onClose(final Session session, final CloseReason closeReason) {
         sessions.remove(session.getId());
     }
-    
-    /**
-     * @param message
-     * @param session
-     */
-    public void onMessage(final Object message, final Session session) {
-    	messageCount.incrementAndGet();
-	}
     
     /**
      * @param session
