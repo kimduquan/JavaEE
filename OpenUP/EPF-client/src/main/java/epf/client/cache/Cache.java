@@ -3,6 +3,8 @@
  */
 package epf.client.cache;
 
+import java.util.List;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
@@ -11,6 +13,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.sse.Sse;
@@ -75,6 +78,63 @@ public interface Cache {
 	static Response getEntity(final Client client, final String entity, final String entityId) {
 		return client.request(
     			target -> target.path("persistence").path(entity).path(entityId), 
+    			req -> req.accept(MediaType.APPLICATION_JSON)
+    			)
+				.get();
+	}
+	
+	/**
+	 * @param name
+	 * @param firstResult
+	 * @param maxResults
+	 * @return
+	 */
+	@GET
+    @Path("persistence/{entity}")
+	@Produces(MediaType.APPLICATION_JSON)
+    Response getEntities(
+            @PathParam("entity")
+            @NotNull
+            @NotBlank
+            final String name,
+            @QueryParam("firstResult")
+            final Integer firstResult,
+            @QueryParam("maxResults")
+    		final Integer maxResults
+            );
+	
+	/**
+	 * @param client
+	 * @param cls
+	 * @param entity
+	 * @param firstResult
+	 * @param maxResults
+	 */
+	static <T> List<T> getEntities(
+			final Client client, 
+			final Class<T> cls, 
+			final String entity, 
+			final Integer firstResult, 
+			final Integer maxResults) {
+		return client.request(
+    			target -> target.path("persistence").path(entity).queryParam("firstResult", firstResult).queryParam("maxResults", maxResults), 
+    			req -> req.accept(MediaType.APPLICATION_JSON)
+    			)
+    			.get(new GenericType<List<T>>() {});
+	}
+	
+	/**
+	 * @param client
+	 * @param entity
+	 * @return
+	 */
+	static Response getEntities(
+			final Client client, 
+			final String entity, 
+			final Integer firstResult, 
+			final Integer maxResults) {
+		return client.request(
+    			target -> target.path("persistence").path(entity).queryParam("firstResult", firstResult).queryParam("maxResults", maxResults), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
 				.get();

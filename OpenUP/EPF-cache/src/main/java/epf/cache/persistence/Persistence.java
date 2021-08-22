@@ -8,6 +8,8 @@ import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -206,6 +208,21 @@ public class Persistence {
 			entity = cache.get(key);
 		}
 		return entity;
+	}
+	
+	/**
+	 * @param name
+	 * @return
+	 */
+	public List<Entry<String, Object>> getEntities(final String name){
+		final List<Entry<String, Object>> entries = new ArrayList<>();
+		final String key = String.format(CACHE_KEY_FORMAT, name, "");
+		cache.forEach(entry -> {
+			if(entry.getKey().startsWith(key)) {
+				entries.add(new AbstractMap.SimpleImmutableEntry<>(entry.getKey(), entry.getValue()));
+			}
+		});
+		return entries;
 	}
 	
 	/**

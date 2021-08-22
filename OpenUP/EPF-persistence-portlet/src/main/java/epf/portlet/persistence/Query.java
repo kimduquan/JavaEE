@@ -137,7 +137,31 @@ public class Query implements QueryView, Serializable {
 	 * @return
 	 * @throws Exception
 	 */
-	protected List<JsonObject> getResultList() throws Exception{
+	protected List<JsonObject> getCachedResultList() throws Exception{
+		try(Client client = clientUtil.newClient(gatewayUtil.get("cache"))){
+			try(Response response = epf.client.cache.Cache.getEntities(
+					client, 
+					entity.getName(), 
+					firstResult, 
+					maxResults)){
+				try(InputStream stream = response.readEntity(InputStream.class)){
+					try(JsonReader reader = Json.createReader(stream)){
+						return reader
+								.readArray()
+								.stream()
+								.map(value -> value.asJsonObject())
+								.collect(Collectors.toList());
+					}
+				}
+			}
+		}
+	}
+	
+	/**
+	 * @return
+	 * @throws Exception
+	 */
+	protected List<JsonObject> getPersistedResultList() throws Exception{
 		try(Client client = clientUtil.newClient(gatewayUtil.get("persistence"))){
 			try(Response response = epf.client.persistence.Queries.executeQuery(
 					client, 
@@ -155,6 +179,18 @@ public class Query implements QueryView, Serializable {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * @return
+	 * @throws Exception
+	 */
+	protected List<JsonObject> getResultList() throws Exception{
+		final List<JsonObject> cachedResultList = getCachedResultList();
+		if(!cachedResultList.isEmpty()) {
+			return cachedResultList;
+		}
+		return getPersistedResultList();
 	}
 	
 	@Override

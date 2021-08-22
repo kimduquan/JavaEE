@@ -123,10 +123,38 @@ public class Persistence implements PersistenceView, Serializable {
 	}
 	
 	/**
+	 * @param firstResult
+	 * @param maxResults
 	 * @return
 	 * @throws Exception
 	 */
-	protected List<JsonObject> fetchObjects(final int firstResult, final int maxResults) throws Exception{
+	protected List<JsonObject> fetchCachedObjects(final int firstResult, final int maxResults) throws Exception{
+		try(Client client = clientUtil.newClient(gatewayUtil.get("cache"))){
+			try(Response response = epf.client.cache.Cache.getEntities(
+					client, 
+					entity.getName(), 
+					firstResult, 
+					maxResults)){
+				try(InputStream stream = response.readEntity(InputStream.class)){
+					try(JsonReader reader = Json.createReader(stream)){
+						return reader
+						.readArray()
+						.stream()
+						.map(value -> value.asJsonObject())
+						.collect(Collectors.toList());
+					}
+				}
+			}
+		}
+	}
+	
+	/**
+	 * @param firstResult
+	 * @param maxResults
+	 * @return
+	 * @throws Exception
+	 */
+	protected List<JsonObject> fetchPersistedObjects(final int firstResult, final int maxResults) throws Exception{
 		try(Client client = clientUtil.newClient(gatewayUtil.get("persistence"))){
 			try(Response response = epf.client.persistence.Queries.executeQuery(
 					client, 
@@ -144,6 +172,18 @@ public class Persistence implements PersistenceView, Serializable {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * @return
+	 * @throws Exception
+	 */
+	protected List<JsonObject> fetchObjects(final int firstResult, final int maxResults) throws Exception{
+		final List<JsonObject> cachedObjects = fetchCachedObjects(firstResult, maxResults);
+		if(!cachedObjects.isEmpty()) {
+			return cachedObjects;
+		}
+		return fetchPersistedObjects(firstResult, maxResults);
 	}
 
 	public Entity getEntity() {

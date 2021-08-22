@@ -60,6 +60,26 @@ public class Cache {
 	/**
 	 * @param headers
 	 * @param uriInfo
+	 * @param req
+	 * @param entity
+	 * @return
+	 * @throws Exception
+	 */
+	@GET
+	@Path("persistence/{entity}")
+	@Produces(MediaType.APPLICATION_JSON)
+    @Asynchronous
+    public CompletionStage<Response> getEntities(
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req,
+            @PathParam("entity") final String entity) throws Exception {
+        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
+    }
+	
+	/**
+	 * @param headers
+	 * @param uriInfo
 	 * @param sseEventSink
 	 * @param sse
 	 * @throws Exception 

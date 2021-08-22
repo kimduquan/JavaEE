@@ -212,7 +212,23 @@ public class Entity implements Serializable {
 	 * @return
 	 * @throws Exception
 	 */
-	protected List<JsonObject> fetchValues(final epf.client.schema.Entity entity) throws Exception{
+	protected List<JsonObject> fetchCachedValues(final epf.client.schema.Entity entity) throws Exception{
+		try(Client client = clientUtil.newClient(gatewayUtil.get("cache"))){
+			try(Response response = epf.client.cache.Cache.getEntities(client, entity.getName(), null, null)){
+				try(InputStream stream = response.readEntity(InputStream.class)){
+					try(JsonReader reader = Json.createReader(stream)){
+						return reader
+								.readArray()
+								.stream()
+								.map(value -> value.asJsonObject())
+								.collect(Collectors.toList());
+					}
+				}
+			}
+		}
+	}
+	
+	protected List<JsonObject> fetchPersistedValues(final epf.client.schema.Entity entity) throws Exception{
 		try(Client client = clientUtil.newClient(gatewayUtil.get("persistence"))){
 			try(Response response = epf.client.persistence.Queries.executeQuery(
 					client, 
@@ -230,6 +246,19 @@ public class Entity implements Serializable {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * @param entity
+	 * @return
+	 * @throws Exception
+	 */
+	protected List<JsonObject> fetchValues(final epf.client.schema.Entity entity) throws Exception{
+		final List<JsonObject> cachedValues = fetchCachedValues(entity);
+		if(!cachedValues.isEmpty()) {
+			return cachedValues;
+		}
+		return fetchPersistedValues(entity);
 	}
 	
 	/**

@@ -3,8 +3,10 @@
  */
 package epf.cache;
 
+import java.util.List;
 import java.util.Map.Entry;
-
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
@@ -76,5 +78,18 @@ public class Cache implements epf.client.cache.Cache {
 		executor.submit(() -> persistence.forEachEntity(entity, queue));
 		queue.run();
 		sseEventSink.close();
+	}
+
+	@Override
+	public Response getEntities(final String name, final Integer firstResult, final Integer maxResults) {
+		Stream<Entry<String,Object>> stream = persistence.getEntities(name).stream();
+		if(firstResult != null) {
+			stream = stream.skip(firstResult);
+		}
+		if(maxResults != null) {
+			stream = stream.limit(maxResults);
+		}
+		final List<Object> objects = stream.map(entry -> entry.getValue()).collect(Collectors.toList());
+		return Response.ok(objects).build();
 	}
 }
