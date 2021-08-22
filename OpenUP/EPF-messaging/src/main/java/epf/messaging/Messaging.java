@@ -3,6 +3,7 @@
  */
 package epf.messaging;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
@@ -103,7 +104,10 @@ public class Messaging {
 	@OnMessage
     public void onMessage(@PathParam(PATH) final String path, final Object message, final Session session) {
 		servers.computeIfPresent(path, (p, server) -> {
-			server.forEach(ss -> ss.getAsyncRemote().sendObject(message));
+			final Iterator<Session> sessionIt = server.getSessions().iterator();
+			while(sessionIt.hasNext()) {
+				sessionIt.next().getAsyncRemote().sendObject(message);
+			}
 			return server;
 		});
 	}

@@ -92,13 +92,13 @@ public class ServerTest {
 		Mockito.when(session.isOpen()).thenReturn(true);
 		server.onOpen(session);
 		List<Session> sessions = new ArrayList<>();
-		server.forEach(sessions::add);
+		server.getSessions().forEach(sessions::add);
 		Assert.assertEquals(1, sessions.size());
 		Assert.assertSame(session, sessions.get(0));
 		
 		Mockito.when(session.isOpen()).thenReturn(false);
 		sessions = new ArrayList<>();
-		server.forEach(sessions::add);
+		server.getSessions().forEach(sessions::add);
 		Assert.assertTrue(sessions.isEmpty());
 	}
 

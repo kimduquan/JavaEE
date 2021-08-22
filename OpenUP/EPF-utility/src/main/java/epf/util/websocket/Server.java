@@ -6,8 +6,8 @@ package epf.util.websocket;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 import javax.websocket.CloseReason;
 import javax.websocket.Session;
 import epf.util.logging.Logging;
@@ -62,11 +62,10 @@ public class Server implements AutoCloseable {
     /**
      * @param consumer
      */
-    public void forEach(final Consumer<? super Session> consumer) {
-    	sessions.values()
+    public Stream<Session> getSessions() {
+    	return sessions.values()
     	.stream()
-    	.filter(Session::isOpen)
-    	.forEach(consumer);
+    	.filter(Session::isOpen);
     }
 
 	@Override

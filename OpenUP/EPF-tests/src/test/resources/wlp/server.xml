@@ -138,7 +138,7 @@
     <jmsQueue id="batchJobSubmissionQueue" 
              jndiName="jms/batch/jobSubmissionQueue">
             <properties.wasJms deliveryMode="Persistent" 
-                               queuename="batchEPFQueue">
+                               queueName="batchEPFQueue">
             </properties.wasJms>
     </jmsQueue>
     <batchJmsExecutor />

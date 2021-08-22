@@ -15,9 +15,9 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
+import javax.inject.Inject;
 import javax.websocket.DeploymentException;
 import org.eclipse.microprofile.context.ManagedExecutor;
-import org.eclipse.microprofile.context.ThreadContext;
 import epf.client.messaging.Client;
 import epf.client.messaging.Messaging;
 import epf.schema.PostLoad;
@@ -45,12 +45,13 @@ public class Listener {
 	/**
 	 * 
 	 */
-	private transient ManagedExecutor executor;
+	private transient MessageQueue messages;
 	
 	/**
 	 * 
 	 */
-	private transient MessageQueue messages;
+	@Inject
+	private transient ManagedExecutor executor;
 	
 	/**
 	 * 
@@ -60,7 +61,6 @@ public class Listener {
 		try {
 			final URI messagingUrl = new URI(SystemUtil.getenv(Messaging.MESSAGING_URL));
 			client = Messaging.connectToServer(messagingUrl.resolve("persistence"));
-			executor = ManagedExecutor.builder().propagated(ThreadContext.APPLICATION).build();
 			messages = new MessageQueue(client.getSession());
 			executor.submit(messages);
 		} 
@@ -76,7 +76,6 @@ public class Listener {
 	protected void preDestroy() {
 		try {
 			messages.close();
-			executor.shutdownNow();
 			client.close();
 		} 
 		catch (Exception e) {
