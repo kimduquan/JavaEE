@@ -14,6 +14,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import epf.client.cache.Cache;
 import epf.schema.EPF;
@@ -29,8 +30,7 @@ import epf.tests.persistence.PersistenceUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
 import epf.util.client.Client;
-import epf.util.config.ConfigUtil;
-import org.junit.Ignore;
+import epf.client.gateway.GatewayUtil;
 
 /**
  * @author PC
@@ -47,7 +47,7 @@ public class CacheTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		cacheUrl = ConfigUtil.getURI(Cache.CACHE_URL);
+		cacheUrl = GatewayUtil.get("cache");
 		token = SecurityUtil.login("any_role1", "any_role");
 	}
 
