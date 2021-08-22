@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 import javax.websocket.EncodeException;
 import javax.websocket.Session;
@@ -38,7 +39,7 @@ public class MessageTopic implements Runnable, Closeable {
 	/**
 	 * 
 	 */
-	private transient boolean isClose;
+	private transient final AtomicBoolean isClose;
 	
 	/**
 	 * 
@@ -46,15 +47,15 @@ public class MessageTopic implements Runnable, Closeable {
 	public MessageTopic() {
 		messages = new ConcurrentLinkedQueue<>();
 		sessions = new ConcurrentHashMap<>();
-		isClose = false;
+		isClose = new AtomicBoolean(false);
 	}
 	
 	@Override
 	public void run() {
-		while(!isClose) {
+		while(!isClose.get()) {
 			while(!messages.isEmpty()) {
 				final Message message = messages.peek();
-				sessions.forEach((id, session) -> {
+				sessions.values().parallelStream().forEach(session -> {
 					try {
 						message.send(session);
 					} 
@@ -80,7 +81,7 @@ public class MessageTopic implements Runnable, Closeable {
 
 	@Override
 	public void close() throws IOException {
-		isClose = true;
+		isClose.set(true);
 	}
 	
 	/**

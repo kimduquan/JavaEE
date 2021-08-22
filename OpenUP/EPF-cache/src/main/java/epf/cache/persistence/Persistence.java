@@ -11,14 +11,12 @@ import java.util.AbstractMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.cache.Cache;
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import javax.persistence.Id;
 import javax.websocket.DeploymentException;
 import epf.client.messaging.Client;
@@ -28,6 +26,8 @@ import epf.schema.PostPersist;
 import epf.schema.PostRemove;
 import epf.schema.PostUpdate;
 import epf.util.SystemUtil;
+import epf.util.concurrent.ObjectQueue;
+import epf.util.logging.Logging;
 
 /**
  * @author PC
@@ -35,6 +35,11 @@ import epf.util.SystemUtil;
  */
 @ApplicationScoped
 public class Persistence {
+	
+	/**
+	 * 
+	 */
+	private static final Logger LOGGER = Logging.getLogger(Persistence.class.getName());
 	
 	/**
 	 * 
@@ -60,12 +65,6 @@ public class Persistence {
 	 * 
 	 */
 	private transient final Map<String, String> entityNames = new ConcurrentHashMap<>();
-	
-	/**
-	 * 
-	 */
-	@Inject
-	private transient Logger logger;
 
 	/**
 	 * 
@@ -78,7 +77,7 @@ public class Persistence {
 			client.onMessage(this::onEntityEvent);
 		} 
 		catch (URISyntaxException | DeploymentException | IOException e) {
-			logger.throwing(getClass().getName(), "postConstruct", e);
+			LOGGER.throwing(getClass().getName(), "postConstruct", e);
 		}
 	}
 	
@@ -92,7 +91,7 @@ public class Persistence {
 			client.onMessage(mag -> {});
 		} 
 		catch (Exception e) {
-			logger.throwing(client.getClass().getName(), "close", e);
+			LOGGER.throwing(client.getClass().getName(), "close", e);
 		}
 	}
 	
@@ -145,7 +144,7 @@ public class Persistence {
 				entityId = idField.get(entity);
 			} 
 			catch (IllegalAccessException | IllegalArgumentException e) {
-				logger.throwing(cls.getName(), idField.getName(), e);
+				LOGGER.throwing(cls.getName(), idField.getName(), e);
 			}
 		}
 		String key = null;
@@ -203,13 +202,19 @@ public class Persistence {
 	 * @param name
 	 * @return
 	 */
-	public void forEachEntity(final String name, final Consumer<? super Entry<String, Object>> action){
+	public void forEachEntity(final String name, final ObjectQueue<Entry<String, Object>> queue) {
 		final String key = String.format(CACHE_KEY_FORMAT, name, "");
 		cache.forEach(entry -> {
 			if(entry.getKey().startsWith(key)) {
-				action.accept(new AbstractMap.SimpleImmutableEntry<>(entry.getKey(), entry.getValue()));
+				queue.add(new AbstractMap.SimpleImmutableEntry<>(entry.getKey(), entry.getValue()));
 			}
 		});
+		try {
+			queue.close();
+		} 
+		catch (IOException e) {
+			LOGGER.throwing(getClass().getName(), "forEachEntity", e);
+		}
 	}
 	
 	public void setCache(final Cache<String, Object> cache) {

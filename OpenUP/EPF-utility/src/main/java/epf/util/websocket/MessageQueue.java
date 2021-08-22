@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 import javax.websocket.EncodeException;
 import javax.websocket.Session;
@@ -37,7 +38,7 @@ public class MessageQueue implements Runnable, Closeable {
 	/**
 	 * 
 	 */
-	private transient boolean isClose;
+	private transient final AtomicBoolean isClose;
 	
 	/**
 	 * @param session
@@ -46,12 +47,12 @@ public class MessageQueue implements Runnable, Closeable {
 		Objects.requireNonNull(session, "Session");
 		this.session = session;
 		this.messages = new ConcurrentLinkedQueue<>();
-		isClose = false;
+		isClose = new AtomicBoolean(false);
 	}
 
 	@Override
 	public void run() {
-		while(!isClose) {
+		while(!isClose.get()) {
 			while(!messages.isEmpty()) {
 				final Message message = messages.peek();
 				try {
@@ -73,7 +74,7 @@ public class MessageQueue implements Runnable, Closeable {
 
 	@Override
 	public void close() throws IOException {
-		isClose = true;
+		isClose.set(true);
 	}
 	
 	/**

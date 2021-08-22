@@ -6,6 +6,7 @@ package epf.util.websocket;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 import javax.websocket.EncodeException;
 import javax.websocket.Session;
@@ -35,19 +36,19 @@ public class Message implements Serializable, Closeable {
 	/**
 	 * 
 	 */
-	private transient boolean isClose;
+	private transient final AtomicBoolean isClose;
 	
 	/**
 	 * @param object
 	 */
 	public Message(final Object object) {
 		this.object = object;
-		isClose = false;
+		isClose = new AtomicBoolean(false);
 	}
 
 	@Override
 	public void close() throws IOException {
-		isClose = true;
+		isClose.set(true);
 	}
 
 	/**
@@ -76,6 +77,6 @@ public class Message implements Serializable, Closeable {
 				LOGGER.throwing(getClass().getName(), "waitToClose", e);
 			}
 		}
-		while(!isClose);
+		while(!isClose.get());
 	}
 }
