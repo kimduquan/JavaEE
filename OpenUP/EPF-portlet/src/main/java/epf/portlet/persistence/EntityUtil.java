@@ -16,9 +16,15 @@ import epf.portlet.cache.PersistenceCacheUtil;
 @RequestScoped
 public class EntityUtil {
 
+	/**
+	 * 
+	 */
 	@Inject
 	private transient PersistenceCacheUtil persistenceCache;
 	
+	/**
+	 * 
+	 */
 	@Inject
 	private transient PersistenceUtil persistence;
 	
