@@ -15,18 +15,18 @@ import epf.client.security.Token;
  * @author PC
  *
  */
-public class TokenUtil {
+public interface TokenUtil {
 	
 	/**
 	 * 
 	 */
-	public static final String[] DEFAULT_CLAIMS = new String[] {"aud", "exp", "groups", "iat", "iss", "raw_token", "sub", "jti", "upn", "token_type"};
+	String[] DEFAULT_CLAIMS = new String[] {"aud", "exp", "groups", "iat", "iss", "raw_token", "sub", "jti", "upn", "token_type"};
 
 	/**
 	 * @param jwt
 	 * @return
 	 */
-	public static Map<String, String> getClaims(final JsonWebToken jwt){
+	static Map<String, String> getClaims(final JsonWebToken jwt){
 		final Map<String, String> claims = new HashMap<>();
 		final Set<String> names = new HashSet<>();
 		names.addAll(jwt.getClaimNames());
@@ -44,7 +44,7 @@ public class TokenUtil {
 	 * @param jwt
 	 * @return
 	 */
-	public static Token from(final JsonWebToken jwt) {
+	static Token from(final JsonWebToken jwt) {
 		final Token token = new Token();
         token.setAudience(jwt.getAudience());
         token.setExpirationTime(jwt.getExpirationTime());

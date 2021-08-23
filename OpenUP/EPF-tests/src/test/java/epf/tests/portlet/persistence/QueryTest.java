@@ -67,8 +67,8 @@ public class QueryTest {
 	public void test_DefaultValues_TheSameConfiguredValues() {
 		Assert.assertEquals("Query.firstResult", 0, query.getFirstResult());
 		Assert.assertEquals("Query.maxResults", 100, query.getMaxResults());
-		Assert.assertTrue("Query.resultSize", 29 <= query.getResultSize());
-		Assert.assertTrue("Query.result.size", 29 <= query.getResultList("name").size());
+		Assert.assertEquals("Query.resultSize", 29, query.getResultSize());
+		Assert.assertEquals("Query.result.size", 29, query.getResultList("name").size());
 	}
 
 	@Test

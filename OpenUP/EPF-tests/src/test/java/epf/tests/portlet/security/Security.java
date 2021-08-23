@@ -50,6 +50,6 @@ public class Security {
 	}
 
 	public void login(){
-		
+		principal.getFullName();
 	}
 }

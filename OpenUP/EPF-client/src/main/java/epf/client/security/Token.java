@@ -61,6 +61,11 @@ public class Token implements Serializable {
      * 
      */
     private Map<? extends String, ? extends Object> claims;
+    
+    @Override
+    public String toString() {
+    	return String.valueOf(tokenID);
+    }
 
     public String getName() {
         return name;

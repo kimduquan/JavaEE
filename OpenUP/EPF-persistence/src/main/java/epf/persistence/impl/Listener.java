@@ -6,6 +6,8 @@ package epf.persistence.impl;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import epf.util.SystemUtil;
 import epf.util.logging.Logging;
@@ -40,12 +42,22 @@ public class Listener {
 	/**
 	 * 
 	 */
+	private static final Object object = new Object();
+	
+	/**
+	 * 
+	 */
 	private transient Client client;
 	
 	/**
 	 * 
 	 */
 	private transient MessageQueue messages;
+	
+	/**
+	 * 
+	 */
+	private transient final Map<String, Object> loaded = new ConcurrentHashMap<>();
 	
 	/**
 	 * 
@@ -87,6 +99,7 @@ public class Listener {
 	 * @param object
 	 */
 	protected void send(final Object object, final boolean sync) {
+		//System.out.println(String.format("%s/%s", getClass().getName(), object));
 		final Message message = new Message(object);
 		messages.add(message);
 		if(sync) {
@@ -98,6 +111,7 @@ public class Listener {
 	 * @param event
 	 */
 	public void postPersist(@Observes final PostPersist event) {
+		loaded.put(event.getEntity().toString(), object);
 		send(event, true);
 	}
 	
@@ -105,13 +119,16 @@ public class Listener {
 	 * @param event
 	 */
 	public void postRemove(@Observes final PostRemove event) {
+		loaded.put(event.getEntity().toString(), object);
 		send(event, true);
+		loaded.remove(event.getEntity().toString());
 	}
 	
 	/**
 	 * @param event
 	 */
 	public void postUpdate(@Observes final PostUpdate event) {
+		loaded.put(event.getEntity().toString(), object);
 		send(event, true);
 	}
 	
@@ -119,6 +136,9 @@ public class Listener {
 	 * @param event
 	 */
 	public void postLoad(@Observes final PostLoad event) {
-		send(event, false);
+		loaded.computeIfAbsent(event.getEntity().toString(), key -> {
+			send(event, false);
+			return object;
+		});
 	}
 }

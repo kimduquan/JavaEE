@@ -32,7 +32,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.jwt.config.Names;
 import epf.client.EPFException;
 import epf.client.security.Token;
-import epf.client.security.jwt.JWTConfig;
+import epf.client.security.jwt.JWT;
 import epf.client.security.jwt.TokenUtil;
 import epf.persistence.context.Application;
 import epf.persistence.context.Credential;
@@ -80,7 +80,7 @@ public class Security implements epf.client.security.Security, epf.client.securi
      * 
      */
     @Inject
-    @ConfigProperty(name = JWTConfig.PRIVATE_KEY)
+    @ConfigProperty(name = JWT.PRIVATE_KEY)
     private transient String privateKeyText;
     
     /**
@@ -94,14 +94,14 @@ public class Security implements epf.client.security.Security, epf.client.securi
      * 
      */
     @Inject
-    @ConfigProperty(name = JWTConfig.EXPIRE_DURATION)
+    @ConfigProperty(name = JWT.EXPIRE_DURATION)
     private transient Long expireAmount;
     
     /**
      * 
      */
     @Inject
-    @ConfigProperty(name = JWTConfig.EXPIRE_TIMEUNIT)
+    @ConfigProperty(name = JWT.EXPIRE_TIMEUNIT)
     private transient ChronoUnit expireTimeUnit;
     
     /**

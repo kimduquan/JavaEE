@@ -111,6 +111,7 @@ public class Persistence {
 	 * @param message
 	 */
 	protected void onEntityEvent(final Object message) {
+		//System.out.println(String.format("%s/%s", getClass().getName(), message));
 		if(message instanceof PostLoad) {
 			final PostLoad postLoad = (PostLoad) message;
 			final String key = getKey(postLoad.getEntity());

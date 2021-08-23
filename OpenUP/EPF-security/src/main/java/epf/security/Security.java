@@ -24,7 +24,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.client.EPFException;
 import epf.client.persistence.Persistence;
 import epf.client.security.Token;
-import epf.client.security.jwt.JWTConfig;
+import epf.client.security.jwt.JWT;
 import epf.util.client.Client;
 import epf.util.client.ClientUtil;
 import epf.util.config.ConfigUtil;
@@ -62,7 +62,7 @@ public class Security implements epf.client.security.Security, Serializable {
      * 
      */
     @Inject
-    @ConfigProperty(name = JWTConfig.PRIVATE_KEY)
+    @ConfigProperty(name = JWT.PRIVATE_KEY)
     private transient String privateKeyText;
     
     /**
@@ -104,7 +104,7 @@ public class Security implements epf.client.security.Security, Serializable {
 				.map(r -> r.getName())
 				.collect(Collectors.toSet()));
 		final Map<String, String> claims = new HashMap<>(role.getClaims());
-		claims.put(JWTConfig.TOKEN_CLAIM, rawToken);
+		claims.put(JWT.TOKEN_CLAIM, rawToken);
 		token.setClaims(claims);
 		final TokenBuilder builder = new TokenBuilder(token, privateKey);
 		return builder.build();
@@ -134,7 +134,7 @@ public class Security implements epf.client.security.Security, Serializable {
     @Override
     public String logOut() {
     	final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
-    	final String rawToken = jwt.getClaim(JWTConfig.TOKEN_CLAIM);
+    	final String rawToken = jwt.getClaim(JWT.TOKEN_CLAIM);
     	try(Client client = clientUtil.newClient(ConfigUtil.getURI(Persistence.PERSISTENCE_SECURITY_URL))){
     		client.authorization(rawToken);
     		return epf.client.security.Security.logOut(client);
@@ -147,7 +147,7 @@ public class Security implements epf.client.security.Security, Serializable {
     @Override
     public Token authenticate() {
     	final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
-    	final String rawToken = jwt.getClaim(JWTConfig.TOKEN_CLAIM);
+    	final String rawToken = jwt.getClaim(JWT.TOKEN_CLAIM);
     	try(Client securityClient = clientUtil.newClient(ConfigUtil.getURI(Persistence.PERSISTENCE_SECURITY_URL))){
     		securityClient.authorization(rawToken);
     		final Token token = epf.client.security.Security.authenticate(securityClient);
@@ -155,7 +155,7 @@ public class Security implements epf.client.security.Security, Serializable {
     			persistenceClient.authorization(rawToken);
     			final Token newToken = buildToken(persistenceClient, token, rawToken);
     			newToken.setRawToken(null);
-    			newToken.getClaims().remove(JWTConfig.TOKEN_CLAIM);
+    			newToken.getClaims().remove(JWT.TOKEN_CLAIM);
     			return newToken;
     		}
     	} 
@@ -167,7 +167,7 @@ public class Security implements epf.client.security.Security, Serializable {
 	@Override
 	public void update(final String password) {
 		final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
-    	final String rawToken = jwt.getClaim(JWTConfig.TOKEN_CLAIM);
+    	final String rawToken = jwt.getClaim(JWT.TOKEN_CLAIM);
     	try(Client securityClient = clientUtil.newClient(ConfigUtil.getURI(Persistence.PERSISTENCE_SECURITY_URL))){
     		securityClient.authorization(rawToken);
     		epf.client.security.Security.update(securityClient, password);
