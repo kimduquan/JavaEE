@@ -85,7 +85,7 @@ public class Entity implements Serializable {
 	/**
 	 * 
 	 */
-	private final Map<String, List<JsonObject>> values = new ConcurrentHashMap<>();
+	private final Map<String, List<JsonObject>> associationValues = new ConcurrentHashMap<>();
 	
 	/**
 	 * 
@@ -97,7 +97,7 @@ public class Entity implements Serializable {
 	 * 
 	 */
 	@Inject
-	private transient SecurityUtil clientUtil;
+	private transient SecurityUtil securityUtil;
 
 	/**
 	 * 
@@ -156,7 +156,7 @@ public class Entity implements Serializable {
 	 * @throws Exception
 	 */
 	protected JsonObject fetchCachedEntity() throws Exception{
-		try(Client client = clientUtil.newClient(gatewayUtil.get("cache"))){
+		try(Client client = securityUtil.newClient(gatewayUtil.get("cache"))){
 			try(Response response = epf.client.cache.Cache.getEntity(client, entity.getName(), id)){
 				try(InputStream stream = response.readEntity(InputStream.class)){
 					try(JsonReader reader = Json.createReader(stream)){
@@ -172,7 +172,7 @@ public class Entity implements Serializable {
 	 * @throws Exception
 	 */
 	protected JsonObject fetchPersistedEntity() throws Exception{
-		try(Client client = clientUtil.newClient(gatewayUtil.get("persistence"))){
+		try(Client client = securityUtil.newClient(gatewayUtil.get("persistence"))){
 			try(Response response = epf.client.persistence.Entities.find(client, entity.getName(), id)){
 				try(InputStream stream = response.readEntity(InputStream.class)){
 					try(JsonReader reader = Json.createReader(stream)){
@@ -188,7 +188,7 @@ public class Entity implements Serializable {
 	 * @throws Exception
 	 */
 	protected List<Embeddable> fetchEmbeddables() throws Exception{
-		try(Client client = clientUtil.newClient(gatewayUtil.get("schema"))){
+		try(Client client = securityUtil.newClient(gatewayUtil.get("schema"))){
 			try(Response response = epf.client.schema.Schema.getEmbeddables(client)){
 				return response.readEntity(new GenericType<List<Embeddable>>() {});
 			}
@@ -200,7 +200,7 @@ public class Entity implements Serializable {
 	 * @throws Exception
 	 */
 	protected List<epf.client.schema.Entity> fetchEntities() throws Exception{
-		try(Client client = clientUtil.newClient(gatewayUtil.get("schema"))){
+		try(Client client = securityUtil.newClient(gatewayUtil.get("schema"))){
 			try(Response response = epf.client.schema.Schema.getEntities(client)){
 				return response.readEntity(new GenericType<List<epf.client.schema.Entity>>() {});
 			}
@@ -213,7 +213,7 @@ public class Entity implements Serializable {
 	 * @throws Exception
 	 */
 	protected List<JsonObject> fetchCachedValues(final epf.client.schema.Entity entity) throws Exception{
-		try(Client client = clientUtil.newClient(gatewayUtil.get("cache"))){
+		try(Client client = securityUtil.newClient(gatewayUtil.get("cache"))){
 			try(Response response = epf.client.cache.Cache.getEntities(client, entity.getName(), null, null)){
 				try(InputStream stream = response.readEntity(InputStream.class)){
 					try(JsonReader reader = Json.createReader(stream)){
@@ -229,7 +229,7 @@ public class Entity implements Serializable {
 	}
 	
 	protected List<JsonObject> fetchPersistedValues(final epf.client.schema.Entity entity) throws Exception{
-		try(Client client = clientUtil.newClient(gatewayUtil.get("persistence"))){
+		try(Client client = securityUtil.newClient(gatewayUtil.get("persistence"))){
 			try(Response response = epf.client.persistence.Queries.executeQuery(
 					client, 
 					path -> path.path(entity.getName()), 
@@ -253,7 +253,7 @@ public class Entity implements Serializable {
 	 * @return
 	 * @throws Exception
 	 */
-	protected List<JsonObject> fetchValues(final epf.client.schema.Entity entity) throws Exception{
+	protected List<JsonObject> fetchAssociationValues(final epf.client.schema.Entity entity) throws Exception{
 		final List<JsonObject> cachedValues = fetchCachedValues(entity);
 		if(!cachedValues.isEmpty()) {
 			return cachedValues;
@@ -270,12 +270,12 @@ public class Entity implements Serializable {
 			entity.getAttributes().forEach(attribute -> AttributeUtil.addDefault(builder, attribute));
 			object = new EntityObject(builder.build());
 			final AttributeBuilder attrBuilder = new AttributeBuilder()
-					.setObject(object)
-					.setEntities(entities)
-					.setEmbeddables(embeddables);
+					.object(object)
+					.entities(entities)
+					.embeddables(embeddables);
 			attributes = entity.getAttributes()
 					.stream()
-					.map(attribute -> attrBuilder.setAttribute(attribute).build())
+					.map(attribute -> attrBuilder.attribute(attribute).build())
 					.collect(Collectors.toList());
 		}
 	}
@@ -290,13 +290,29 @@ public class Entity implements Serializable {
 				if(id != null && !id.isEmpty()) {
 					object = new EntityObject(fetchEntity());
 					final AttributeBuilder attrBuilder = new AttributeBuilder()
-							.setObject(object)
-							.setEntities(entities)
-							.setEmbeddables(embeddables);
+							.object(object)
+							.entities(entities)
+							.embeddables(embeddables);
 					attributes = entity.getAttributes()
 							.stream()
-							.map(attribute -> attrBuilder.setAttribute(attribute).build())
+							.map(attribute -> attrBuilder.attribute(attribute).build())
 							.collect(Collectors.toList());
+					attributes
+					.parallelStream()
+					.filter(attr -> attr.getAttribute().isAssociation())
+					.forEach(attr -> {
+						final String attrType = attr.getAttribute().getBindableType();
+						final epf.client.schema.Entity entity = entities.get(attrType);
+						associationValues.computeIfAbsent(attrType, type -> {
+							try {
+								return fetchAssociationValues(entity);
+							} 
+							catch (Exception e) {
+								LOGGER.throwing(getClass().getName(), "fetchAssociationValues", e);
+							}
+							return Arrays.asList();
+						});
+					});
 				}
 			} 
 			catch (Exception e) {
@@ -329,16 +345,16 @@ public class Entity implements Serializable {
 	 * @param attribute
 	 * @return
 	 */
-	public List<Identifiable> getValues(final BasicAttribute attribute){
+	public List<Identifiable> getAssociationValues(final BasicAttribute attribute){
 		if(attribute.getAttribute().isAssociation()) {
 			final String attrType = attribute.getAttribute().getBindableType();
 			final epf.client.schema.Entity entity = entities.get(attrType);
-			return values.computeIfAbsent(attrType, type -> {
+			return associationValues.computeIfAbsent(attrType, type -> {
 						try {
-							return fetchValues(entity);
+							return fetchAssociationValues(entity);
 						} 
 						catch (Exception e) {
-							LOGGER.throwing(getClass().getName(), "getValues", e);
+							LOGGER.throwing(getClass().getName(), "fetchAssociationValues", e);
 						}
 						return Arrays.asList();
 					})
@@ -354,7 +370,7 @@ public class Entity implements Serializable {
 	 * 
 	 */
 	public void persist() throws Exception {
-		try(Client client = clientUtil.newClient(gatewayUtil.get("persistence"))){
+		try(Client client = securityUtil.newClient(gatewayUtil.get("persistence"))){
 			try(Response response = epf.client.persistence.Entities.persist(
 					client, 
 					entity.getName(), 
@@ -381,7 +397,7 @@ public class Entity implements Serializable {
 	 * 
 	 */
 	public void merge() throws Exception {
-		try(Client client = clientUtil.newClient(gatewayUtil.get("persistence"))){
+		try(Client client = securityUtil.newClient(gatewayUtil.get("persistence"))){
 			epf.client.persistence.Entities.merge(
 					client,
 					entity.getName(), 
@@ -396,7 +412,7 @@ public class Entity implements Serializable {
 	 * 
 	 */
 	public String remove() throws Exception {
-		try(Client client = clientUtil.newClient(gatewayUtil.get("persistence"))){
+		try(Client client = securityUtil.newClient(gatewayUtil.get("persistence"))){
 			epf.client.persistence.Entities.remove(
 					client, 
 					entity.getName(), 

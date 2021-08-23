@@ -44,10 +44,10 @@ public class AttributeBuilder {
 				.getAttributes()
 				.stream()
 				.map(attr -> new AttributeBuilder()
-						.setAttribute(attr)
-						.setEmbeddables(embeddables)
-						.setEntities(entities)
-						.setObject(embeddedObject)
+						.attribute(attr)
+						.embeddables(embeddables)
+						.entities(entities)
+						.object(embeddedObject)
 						.build()
 						)
 				.collect(Collectors.toList());
@@ -72,22 +72,22 @@ public class AttributeBuilder {
 		return buildBasicAttribute();
 	}
 
-	public AttributeBuilder setAttribute(final Attribute attribute) {
+	public AttributeBuilder attribute(final Attribute attribute) {
 		this.attribute = attribute;
 		return this;
 	}
 
-	public AttributeBuilder setObject(final EntityObject object) {
+	public AttributeBuilder object(final EntityObject object) {
 		this.object = object;
 		return this;
 	}
 
-	public AttributeBuilder setEmbeddables(final Map<String, Embeddable> embeddables) {
+	public AttributeBuilder embeddables(final Map<String, Embeddable> embeddables) {
 		this.embeddables = embeddables;
 		return this;
 	}
 
-	public AttributeBuilder setEntities(final Map<String, epf.client.schema.Entity> entities) {
+	public AttributeBuilder entities(final Map<String, epf.client.schema.Entity> entities) {
 		this.entities = entities;
 		return this;
 	}
