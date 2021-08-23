@@ -180,7 +180,7 @@ public class Security implements epf.client.security.Security, Serializable {
 	@Override
 	public String revoke() {
 		final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
-    	final String rawToken = jwt.getClaim(JWTConfig.TOKEN_CLAIM);
+    	final String rawToken = jwt.getClaim(JWT.TOKEN_CLAIM);
     	try(Client securityClient = clientUtil.newClient(ConfigUtil.getURI(Persistence.PERSISTENCE_SECURITY_URL))){
     		securityClient.authorization(rawToken);
     		final String newRawToken = epf.client.security.Security.revoke(securityClient);
