@@ -44,6 +44,11 @@ public class DeliveryProcess implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+    
+    /**
+     * 
+     */
+    public static final String DELIVERY_PROCESSES = "EPF_DeliveryProcess.DeliveryProcesses";
 
 	/**
      * 
@@ -87,10 +92,10 @@ public class DeliveryProcess implements Serializable {
     @NotNull
     private WorkProductUsage workProductUsage;
     
-    /**
-     * 
-     */
-    public static final String DELIVERY_PROCESSES = "EPF_DeliveryProcess.DeliveryProcesses";
+    @Override
+    public String toString() {
+    	return String.format("%s@%s", getClass().getName(), name);
+    }
 
     public String getName() {
         return name;

@@ -50,6 +50,11 @@ public class Deliverable implements Serializable {
     @JoinColumn(name = "NAME")
     @NotNull
     private Artifact artifact;
+    
+    @Override
+    public String toString() {
+    	return String.format("%s@%s", getClass().getName(), name);
+    }
 
     public String getName() {
         return name;

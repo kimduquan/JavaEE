@@ -59,6 +59,11 @@ public class Milestone implements Serializable {
     @ManyToOne
     @JoinColumn(name = "PREDECESSOR")
     private Iteration predecessor;
+    
+    @Override
+    public String toString() {
+    	return String.format("%s@%s:%d", getClass().getName(), name, id);
+    }
 
     public epf.schema.delivery_processes.Milestone getMilestone() {
         return milestone;

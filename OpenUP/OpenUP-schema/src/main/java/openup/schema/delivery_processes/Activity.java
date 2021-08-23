@@ -66,6 +66,11 @@ public class Activity implements Serializable {
     @ManyToOne
     @JoinColumn(name = "PARENT_ACTIVITIES")
     private Iteration parentActivities;
+    
+    @Override
+    public String toString() {
+    	return String.format("%s@%s:%d", getClass().getName(), name, id);
+    }
 
     public epf.schema.delivery_processes.Activity getActivity() {
         return activity;

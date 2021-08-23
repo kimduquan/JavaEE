@@ -91,6 +91,11 @@ public class Phase implements Serializable {
     @JoinColumn(name = "PARENT_ACTIVITIES")
     @ManyToOne
     private DeliveryProcess parentActivities;
+    
+    @Override
+    public String toString() {
+    	return String.format("%s@%s", getClass().getName(), name);
+    }
 
     public String getName() {
         return name;

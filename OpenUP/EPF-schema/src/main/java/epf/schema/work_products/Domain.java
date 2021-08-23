@@ -44,6 +44,11 @@ public class Domain implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+    
+    /**
+     * 
+     */
+    public static final String DOMAINS = "EPF_Domain.Domains";
 
 	/**
      * 
@@ -72,10 +77,10 @@ public class Domain implements Serializable {
     )
     private List<Artifact> workProducts;
     
-    /**
-     * 
-     */
-    public static final String DOMAINS = "EPF_Domain.Domains";
+    @Override
+    public String toString() {
+    	return String.format("%s@%s", getClass().getName(), name);
+    }
 
     public String getName() {
         return name;

@@ -50,6 +50,11 @@ public class Template implements Serializable {
      */
     @Column(name = "MAIN_DESCRIPTION")
     private JsonObject mainDescription;
+    
+    @Override
+    public String toString() {
+    	return String.format("%s@%s", getClass().getName(), name);
+    }
 
     public String getName() {
         return name;

@@ -73,6 +73,11 @@ public class Activity implements Serializable {
             indexes = {@Index(columnList = "ACTIVITY")}
     )
     private List<Task> tasks;
+    
+    @Override
+    public String toString() {
+    	return String.format("%s@%s", getClass().getName(), name);
+    }
 
     public String getName() {
         return name;

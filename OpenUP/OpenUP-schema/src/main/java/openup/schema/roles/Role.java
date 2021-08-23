@@ -47,6 +47,7 @@ public class Role implements Serializable {
      * 
      */
     @Id
+    @Column(name = "NAME")
     private String name;
     
     /**
@@ -81,6 +82,11 @@ public class Role implements Serializable {
     @Column(name = "SUMMARY")
     private String summary;
     
+    @Override
+    public String toString() {
+    	return String.format("%s@%s", getClass().getName(), name);
+    }
+    
     public String getName() {
 		return name;
 	}
@@ -111,10 +117,5 @@ public class Role implements Serializable {
 
 	public void setRoles(final List<epf.schema.roles.Role> roles) {
 		this.roles = roles;
-	}
-	
-	@Override
-	public String toString() {
-		return name != null ? name : super.toString();
 	}
 }

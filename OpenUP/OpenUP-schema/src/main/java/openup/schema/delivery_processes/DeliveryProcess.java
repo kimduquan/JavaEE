@@ -58,6 +58,11 @@ public class DeliveryProcess implements Serializable {
      */
     @Column(name = "SUMMARY")
     private String summary;
+    
+    @Override
+    public String toString() {
+    	return String.format("%s@%s:%d", getClass().getName(), name, id);
+    }
 
     public epf.schema.delivery_processes.DeliveryProcess getDeliveryProcess() {
         return deliveryProcess;

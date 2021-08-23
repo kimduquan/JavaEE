@@ -90,6 +90,11 @@ public class Iteration implements Serializable {
             indexes = {@Index(columnList = "ITERATION")}
     )
     private List<Activity> activities;
+    
+    @Override
+    public String toString() {
+    	return String.format("%s@%s", getClass().getName(), name);
+    }
 
     public String getName() {
         return name;

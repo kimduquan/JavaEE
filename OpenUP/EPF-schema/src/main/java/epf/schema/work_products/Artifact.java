@@ -106,6 +106,11 @@ public class Artifact implements Serializable {
     @Embedded
     @NotNull
     private MoreInformation moreInformation;
+    
+    @Override
+    public String toString() {
+    	return String.format("%s@%s", getClass().getName(), name);
+    }
 
     public String getName() {
         return name;

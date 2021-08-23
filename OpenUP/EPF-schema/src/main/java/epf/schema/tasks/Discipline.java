@@ -45,6 +45,11 @@ public class Discipline implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+    
+    /**
+     * 
+     */
+    public static final String DISCIPLINES = "EPF_Discipline.Disciplines";
 
 	/**
      * 
@@ -79,10 +84,10 @@ public class Discipline implements Serializable {
     @Column(name = "MAIN_DESCRIPTION")
     private JsonObject mainDescription;
     
-    /**
-     * 
-     */
-    public static final String DISCIPLINES = "EPF_Discipline.Disciplines";
+    @Override
+    public String toString() {
+    	return String.format("%s@%s", getClass().getName(), name);
+    }
 
     public String getName() {
         return name;

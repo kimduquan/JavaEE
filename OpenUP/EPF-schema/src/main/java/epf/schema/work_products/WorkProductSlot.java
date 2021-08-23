@@ -43,6 +43,11 @@ public class WorkProductSlot implements Serializable {
      */
     @Column(name = "SUMMARY")
     private String summary;
+    
+    @Override
+    public String toString() {
+    	return String.format("%s@%s", getClass().getName(), name);
+    }
 
     public String getName() {
         return name;

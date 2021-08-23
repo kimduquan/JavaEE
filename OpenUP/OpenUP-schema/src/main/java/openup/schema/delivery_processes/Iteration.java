@@ -66,6 +66,11 @@ public class Iteration implements Serializable {
     @ManyToOne
     @JoinColumn(name = "PARENT_ACTIVITIES")
     private Phase parentActivities;
+    
+    @Override
+    public String toString() {
+    	return String.format("%s@%s:%d", getClass().getName(), name, id);
+    }
 
     public epf.schema.delivery_processes.Iteration getIteration() {
         return iteration;

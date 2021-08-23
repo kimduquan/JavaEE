@@ -77,6 +77,11 @@ public class CapabilityPattern implements Serializable {
     @Embedded
     @NotNull
     private WorkProductUsage workProductUsage;
+    
+    @Override
+    public String toString() {
+    	return String.format("%s@%s", getClass().getName(), name);
+    }
 
     public String getName() {
         return name;
