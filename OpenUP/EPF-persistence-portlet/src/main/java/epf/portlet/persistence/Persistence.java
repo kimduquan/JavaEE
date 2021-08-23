@@ -3,7 +3,6 @@
  */
 package epf.portlet.persistence;
 
-import java.io.InputStream;
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Logger;
@@ -12,11 +11,8 @@ import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.json.Json;
 import javax.json.JsonObject;
-import javax.json.JsonReader;
 import javax.json.JsonValue;
-import javax.ws.rs.core.Response;
 import epf.client.portlet.persistence.PersistenceView;
 import epf.client.schema.Attribute;
 import epf.client.schema.Entity;
@@ -102,6 +98,12 @@ public class Persistence implements PersistenceView, Serializable {
 	/**
 	 * 
 	 */
+	@Inject
+	private transient EntityUtil entityUtil;
+	
+	/**
+	 * 
+	 */
 	@PostConstruct
 	protected void postConstruct() {
 		entity = eventUtil.getEvent(Event.SCHEMA_ENTITY);
@@ -114,76 +116,12 @@ public class Persistence implements PersistenceView, Serializable {
 			try {
 				firstResult = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT));
 				final int maxResults = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT));
-				objects = fetchObjects(firstResult, maxResults);
+				objects = entityUtil.getEntities(entity.getName(), firstResult, maxResults);
 			}
 			catch (Exception e) {
 				LOGGER.throwing(getClass().getName(), "postConstruct", e);
 			}
 		}
-	}
-	
-	/**
-	 * @param firstResult
-	 * @param maxResults
-	 * @return
-	 * @throws Exception
-	 */
-	protected List<JsonObject> fetchCachedObjects(final int firstResult, final int maxResults) throws Exception{
-		try(Client client = clientUtil.newClient(gatewayUtil.get("cache"))){
-			try(Response response = epf.client.cache.Cache.getEntities(
-					client, 
-					entity.getName(), 
-					firstResult, 
-					maxResults)){
-				try(InputStream stream = response.readEntity(InputStream.class)){
-					try(JsonReader reader = Json.createReader(stream)){
-						return reader
-						.readArray()
-						.stream()
-						.map(value -> value.asJsonObject())
-						.collect(Collectors.toList());
-					}
-				}
-			}
-		}
-	}
-	
-	/**
-	 * @param firstResult
-	 * @param maxResults
-	 * @return
-	 * @throws Exception
-	 */
-	protected List<JsonObject> fetchPersistedObjects(final int firstResult, final int maxResults) throws Exception{
-		try(Client client = clientUtil.newClient(gatewayUtil.get("persistence"))){
-			try(Response response = epf.client.persistence.Queries.executeQuery(
-					client, 
-					path -> path.path(entity.getName()), 
-					firstResult, 
-					maxResults)){
-				try(InputStream stream = response.readEntity(InputStream.class)){
-					try(JsonReader reader = Json.createReader(stream)){
-						return reader
-						.readArray()
-						.stream()
-						.map(value -> value.asJsonObject())
-						.collect(Collectors.toList());
-					}
-				}
-			}
-		}
-	}
-	
-	/**
-	 * @return
-	 * @throws Exception
-	 */
-	protected List<JsonObject> fetchObjects(final int firstResult, final int maxResults) throws Exception{
-		final List<JsonObject> cachedObjects = fetchCachedObjects(firstResult, maxResults);
-		if(!cachedObjects.isEmpty()) {
-			return cachedObjects;
-		}
-		return fetchPersistedObjects(firstResult, maxResults);
 	}
 
 	public Entity getEntity() {

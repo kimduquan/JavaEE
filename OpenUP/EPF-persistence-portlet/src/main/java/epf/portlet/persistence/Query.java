@@ -3,7 +3,6 @@
  */
 package epf.portlet.persistence;
 
-import java.io.InputStream;
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Logger;
@@ -12,11 +11,8 @@ import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.json.Json;
 import javax.json.JsonObject;
-import javax.json.JsonReader;
 import javax.json.JsonValue;
-import javax.ws.rs.core.Response;
 import epf.client.portlet.persistence.QueryView;
 import epf.client.schema.Attribute;
 import epf.client.schema.Entity;
@@ -27,9 +23,6 @@ import epf.portlet.JsonUtil;
 import epf.portlet.Parameter;
 import epf.portlet.ParameterUtil;
 import epf.portlet.config.ConfigUtil;
-import epf.portlet.gateway.GatewayUtil;
-import epf.portlet.security.SecurityUtil;
-import epf.util.client.Client;
 import epf.util.logging.Logging;
 
 /**
@@ -48,7 +41,7 @@ public class Query implements QueryView, Serializable {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(Persistence.class.getName());
+	private static final Logger LOGGER = Logging.getLogger(Query.class.getName());
 	
 	/**
 	 * 
@@ -84,19 +77,7 @@ public class Query implements QueryView, Serializable {
 	 * 
 	 */
 	@Inject
-	private transient GatewayUtil gatewayUtil;
-	
-	/**
-	 * 
-	 */
-	@Inject
 	private transient ConfigUtil configUtil;
-	
-	/**
-	 * 
-	 */
-	@Inject
-	private transient SecurityUtil clientUtil;
 	
 	/**
 	 * 
@@ -113,6 +94,12 @@ public class Query implements QueryView, Serializable {
 	/**
 	 * 
 	 */
+	@Inject
+	private transient EntityUtil entityUtil;
+	
+	/**
+	 * 
+	 */
 	@PostConstruct
 	protected void postConstruct() {
 		entity = eventUtil.getEvent(Event.SCHEMA_ENTITY);
@@ -125,72 +112,12 @@ public class Query implements QueryView, Serializable {
 			try {
 				firstResult = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT));
 				maxResults = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT));
-				resultList = getResultList();
+				resultList = entityUtil.getEntities(entity.getName(), firstResult, maxResults);
 			}
 			catch (Exception e) {
 				LOGGER.throwing(getClass().getName(), "postConstruct", e);
 			}
 		}
-	}
-	
-	/**
-	 * @return
-	 * @throws Exception
-	 */
-	protected List<JsonObject> getCachedResultList() throws Exception{
-		try(Client client = clientUtil.newClient(gatewayUtil.get("cache"))){
-			try(Response response = epf.client.cache.Cache.getEntities(
-					client, 
-					entity.getName(), 
-					firstResult, 
-					maxResults)){
-				try(InputStream stream = response.readEntity(InputStream.class)){
-					try(JsonReader reader = Json.createReader(stream)){
-						return reader
-								.readArray()
-								.stream()
-								.map(value -> value.asJsonObject())
-								.collect(Collectors.toList());
-					}
-				}
-			}
-		}
-	}
-	
-	/**
-	 * @return
-	 * @throws Exception
-	 */
-	protected List<JsonObject> getPersistedResultList() throws Exception{
-		try(Client client = clientUtil.newClient(gatewayUtil.get("persistence"))){
-			try(Response response = epf.client.persistence.Queries.executeQuery(
-					client, 
-					path -> path.path(entity.getName()), 
-					firstResult, 
-					maxResults)){
-				try(InputStream stream = response.readEntity(InputStream.class)){
-					try(JsonReader reader = Json.createReader(stream)){
-						return reader
-								.readArray()
-								.stream()
-								.map(value -> value.asJsonObject())
-								.collect(Collectors.toList());
-					}
-				}
-			}
-		}
-	}
-	
-	/**
-	 * @return
-	 * @throws Exception
-	 */
-	protected List<JsonObject> getResultList() throws Exception{
-		final List<JsonObject> cachedResultList = getCachedResultList();
-		if(!cachedResultList.isEmpty()) {
-			return cachedResultList;
-		}
-		return getPersistedResultList();
 	}
 	
 	@Override
@@ -210,7 +137,7 @@ public class Query implements QueryView, Serializable {
 					.stream()
 					.collect(Collectors.toList());
 			collector = new JsonObjectCollector(attributes.stream().map(Attribute::getName).collect(Collectors.toList()));
-			resultList = getResultList();
+			resultList = entityUtil.getEntities(entity.getName(), firstResult, maxResults);
 		}
 	}
 	
