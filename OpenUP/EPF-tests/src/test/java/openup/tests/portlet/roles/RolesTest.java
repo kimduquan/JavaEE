@@ -12,8 +12,8 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.MethodRule;
-import epf.tests.WebDriverUtil;
-import epf.tests.portlet.View;
+import epf.tests.portlet.PortletView;
+import epf.tests.portlet.WebDriverUtil;
 import epf.tests.portlet.security.Security;
 import jakarta.inject.Inject;
 
@@ -27,7 +27,7 @@ public class RolesTest {
 	@ClassRule
     public static WeldInitiator weld = WeldInitiator.from(
     		WebDriverUtil.class, 
-    		View.class,
+    		PortletView.class,
     		Security.class,
     		Roles.class,
     		RolesTest.class

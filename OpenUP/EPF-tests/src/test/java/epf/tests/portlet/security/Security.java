@@ -3,10 +3,11 @@
  */
 package epf.tests.portlet.security;
 
+import java.util.Map.Entry;
 import org.openqa.selenium.WebDriver;
-import epf.tests.portlet.View;
+import epf.tests.portlet.PortletView;
+import epf.tests.security.SecurityUtil;
 import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -17,39 +18,33 @@ import jakarta.inject.Inject;
 @ApplicationScoped
 public class Security {
 	
-	private final Credential credential;
-	private final Principal principal;
-	
-	private final View view;
+	private PortletView view;
+	private WebDriver driver;
 	
 	@Inject
-	public Security(WebDriver driver, View view) {
+	public Security(PortletView view, WebDriver driver) {
 		this.view = view;
-		credential = new Credential(driver);
-		principal = new Principal(driver);
+		this.driver = driver;
 	}
 	
 	@PostConstruct
-	void postConstruct() {
+	public void navigateTo() {
 		view.navigateToSecurity();
-		credential.setCaller("any_role1");
-		credential.setPassword("any_role".toCharArray());
-		try {
-			credential.login();
-		} 
-		catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
-	@PreDestroy
-	void preDestroy() {
-		view.navigateToSecurity();
-		principal.logout();
-	}
-
-	public void login(){
+	public void login() throws Exception {
+		Entry<String, String> cred = SecurityUtil.peekCredential();
+		Credential credential = new Credential(driver);
+		credential.setCaller(cred.getKey());
+		credential.setPassword(cred.getValue().toCharArray());
+		credential.login();
+		Principal principal = new Principal(driver);
 		principal.getFullName();
+	}
+	
+	public void logout() {
+		view.navigateToSecurity();
+		Principal principal = new Principal(driver);
+		principal.logout();
 	}
 }

@@ -26,6 +26,7 @@ import epf.schema.PostLoad;
 import epf.schema.PostPersist;
 import epf.schema.PostRemove;
 import epf.schema.PostUpdate;
+import epf.util.ObjectUtil;
 
 /**
  * @author PC
@@ -98,34 +99,31 @@ public class Listener {
 	/**
 	 * @param object
 	 */
-	protected void send(final Object object, final boolean sync) {
-		//System.out.println(String.format("%s/%s", getClass().getName(), object));
-		final Message message = new Message(object);
+	protected void send(final Object event) {
+		final Message message = new Message(event);
 		messages.add(message);
-		if(sync) {
-			message.waitToClose();
-		}
 	}
 	
 	/**
 	 * @param event
 	 */
 	public void postPersist(@Observes final PostPersist event) {
-		send(event, true);
+		send(event);
 	}
 	
 	/**
 	 * @param event
 	 */
 	public void postRemove(@Observes final PostRemove event) {
-		send(event, true);
+		send(event);
+		loaded.remove(event.getEntity().toString());
 	}
 	
 	/**
 	 * @param event
 	 */
 	public void postUpdate(@Observes final PostUpdate event) {
-		send(event, true);
+		send(event);
 	}
 	
 	/**
@@ -133,7 +131,8 @@ public class Listener {
 	 */
 	public void postLoad(@Observes final PostLoad event) {
 		loaded.computeIfAbsent(event.getEntity().toString(), key -> {
-			send(event, false);
+			send(event);
+			ObjectUtil.print(this, event.getEntity());
 			return object;
 		});
 	}

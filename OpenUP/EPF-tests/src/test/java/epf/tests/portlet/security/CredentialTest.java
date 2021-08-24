@@ -11,8 +11,9 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.MethodRule;
-import epf.tests.WebDriverUtil;
-import epf.tests.portlet.View;
+
+import epf.tests.portlet.PortletView;
+import epf.tests.portlet.WebDriverUtil;
 import jakarta.inject.Inject;
 
 /**
@@ -23,8 +24,9 @@ public class CredentialTest {
 	
 	@ClassRule
     public static WeldInitiator weld = WeldInitiator.from(
-    		WebDriverUtil.class, 
-    		View.class,
+    		WebDriverUtil.class,
+    		PortletView.class,
+    		Security.class,
     		Credential.class,
     		Principal.class,
     		CredentialTest.class
@@ -33,9 +35,6 @@ public class CredentialTest {
 	
 	@Rule
     public MethodRule testClassInjectorRule = weld.getTestClassInjectorRule();
-	
-	@Inject
-	View view;
 	
 	@Inject
 	Credential credential;
@@ -48,7 +47,6 @@ public class CredentialTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		view.navigateToSecurity();
 	}
 
 	/**

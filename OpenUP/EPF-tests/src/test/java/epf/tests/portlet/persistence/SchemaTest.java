@@ -11,8 +11,8 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.MethodRule;
-import epf.tests.WebDriverUtil;
-import epf.tests.portlet.View;
+import epf.tests.portlet.PortletView;
+import epf.tests.portlet.WebDriverUtil;
 import epf.tests.portlet.security.Security;
 import jakarta.inject.Inject;
 
@@ -25,9 +25,9 @@ public class SchemaTest {
 	@ClassRule
     public static WeldInitiator weld = WeldInitiator.from(
     		WebDriverUtil.class, 
-    		View.class,
-    		Security.class,
+    		PortletView.class,
     		Persistence.class,
+    		Security.class,
     		Schema.class,
     		SchemaTest.class
     		)
@@ -37,7 +37,7 @@ public class SchemaTest {
     public MethodRule testClassInjectorRule = weld.getTestClassInjectorRule();
 	
 	@Inject
-	Persistence persistence;
+	Persistence pesistence;
 	
 	@Inject
 	Schema schema;
@@ -47,7 +47,7 @@ public class SchemaTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		persistence.navigateToPersistence();
+		pesistence.navigateToSchema();
 	}
 
 	/**

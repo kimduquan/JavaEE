@@ -4,6 +4,7 @@
 package epf.shell.cache;
 
 import java.io.PrintWriter;
+import java.util.Optional;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.sse.SseEventSource;
 import epf.client.gateway.GatewayUtil;
@@ -86,6 +87,37 @@ public class Persistence {
 					out.get().println(e.readData());
 				});
 				stream.open();
+			}
+		}
+	}
+	
+	/**
+	 * @param credential
+	 * @param name
+	 * @param firstResult
+	 * @param maxResults
+	 * @return
+	 * @throws Exception
+	 */
+	@Command(name = "get-all")
+	public String getAll(
+			@ArgGroup(exclusive = true, multiplicity = "1")
+			@CallerPrincipal
+			final Credential credential,
+			@Option(names = {"-n", "--name"}, description = "Name")
+			final String name,
+			@Option(names = {"-f", "--first"}, description = "First Result")
+			final Optional<Integer> firstResult,
+			@Option(names = {"-m", "--max"}, description = "Max Result(s)")
+			final Optional<Integer> maxResults) throws Exception {
+		try(Client client = clientUtil.newClient(GatewayUtil.get("cache"))){
+			client.authorization(credential.getToken());
+			try(Response response = epf.client.cache.Cache.getEntities(
+					client, 
+					name, 
+					firstResult.isEmpty() ? null : firstResult.get(), 
+					maxResults.isEmpty() ? null : maxResults.get())){
+				return response.readEntity(String.class);
 			}
 		}
 	}
