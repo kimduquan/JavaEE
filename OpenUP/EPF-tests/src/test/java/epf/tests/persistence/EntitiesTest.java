@@ -41,20 +41,17 @@ public class EntitiesTest {
 	private static final Logger logger = Logging.getLogger(EntitiesTest.class.getName());
 	private static URI persistenceUrl;
     private static String token;
-    private static String adminToken;
     private Client client;
     
     @BeforeClass
     public static void beforeClass() throws Exception{
     	persistenceUrl = GatewayUtil.get("persistence");
-    	token = SecurityUtil.login("any_role1", "any_role");
-    	adminToken = SecurityUtil.login("admin1", "admin");
+    	token = SecurityUtil.login();
     }
     
     @AfterClass
     public static void afterClass(){
     	SecurityUtil.logOut(token);
-    	SecurityUtil.logOut(adminToken);
     }
     
     @Before
@@ -85,14 +82,14 @@ public class EntitiesTest {
         artifact.setTailoring(new Tailoring());
         Artifact updatedArtifact = null;
         try(Client adminClient = ClientUtil.newClient(persistenceUrl)){
-        	adminClient.authorization(adminToken);
+        	adminClient.authorization(token);
         	updatedArtifact = Entities.persist(adminClient, Artifact.class, EPF.ARTIFACT, artifact);
         }
         Assert.assertNotNull("Artifact", updatedArtifact);
         Assert.assertEquals("Artifact.name", artifact.getName(), updatedArtifact.getName());
         Assert.assertEquals("Artifact.summary", artifact.getSummary(), updatedArtifact.getSummary());
         
-        PersistenceUtil.remove(adminToken, EPF.ARTIFACT, artifact.getName());
+        PersistenceUtil.remove(token, EPF.ARTIFACT, artifact.getName());
     }
     
     @Test
@@ -105,10 +102,10 @@ public class EntitiesTest {
         artifact.setMoreInformation(new MoreInformation());
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
-        PersistenceUtil.persist(adminToken, Artifact.class, EPF.ARTIFACT, artifact);
+        PersistenceUtil.persist(token, Artifact.class, EPF.ARTIFACT, artifact);
         Artifact updatedArtifact = null;
         try(Client adminClient = ClientUtil.newClient(persistenceUrl)){
-        	adminClient.authorization(adminToken);
+        	adminClient.authorization(token);
             updatedArtifact = new Artifact();
             updatedArtifact.setName(artifact.getName());
             updatedArtifact.setSummary(StringUtil.randomString("Artifact Entities testMergeOK"));
@@ -119,7 +116,7 @@ public class EntitiesTest {
             updatedArtifact.setTailoring(new Tailoring());
         	Entities.merge(adminClient, EPF.ARTIFACT, artifact.getName(), updatedArtifact);
         }
-        PersistenceUtil.remove(adminToken, EPF.ARTIFACT, updatedArtifact.getName());
+        PersistenceUtil.remove(token, EPF.ARTIFACT, updatedArtifact.getName());
     }
     
     @Test
@@ -132,9 +129,9 @@ public class EntitiesTest {
         artifact.setMoreInformation(new MoreInformation());
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
-        PersistenceUtil.persist(adminToken, Artifact.class, EPF.ARTIFACT, artifact);
+        PersistenceUtil.persist(token, Artifact.class, EPF.ARTIFACT, artifact);
         try(Client adminClient = ClientUtil.newClient(persistenceUrl)){
-        	adminClient.authorization(adminToken);
+        	adminClient.authorization(token);
             Entities.remove(adminClient, EPF.ARTIFACT, artifact.getName());
         }
     }

@@ -10,6 +10,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.json.bind.Jsonb;
@@ -52,8 +53,8 @@ public class ShellTest {
 	private static Path tempDir;
 	private static String token;
 	private static String tokenID;
-	private static String adminToken;
-	private static String adminTokenID;
+	private static String otherToken;
+	private static String otherTokenID;
 	private ProcessBuilder builder;
 	private Process process;
 	Path out;
@@ -68,7 +69,7 @@ public class ShellTest {
 		workingDir = ShellUtil.getShellPath().toRealPath();
 		tempDir = Files.createTempDirectory("temp");
 		token = SecurityUtil.login("any_role1", "any_role");
-		adminToken = SecurityUtil.login("admin1", "admin");
+		otherToken = SecurityUtil.login();
 		
 		Path out = Files.createTempFile(tempDir, "out", "out");
 		ProcessBuilder builder = new ProcessBuilder();
@@ -80,7 +81,7 @@ public class ShellTest {
 		
 		out = Files.createTempFile(tempDir, "out", "out");
 		builder.redirectOutput(out.toFile());
-		adminTokenID = ShellUtil.securityAuth(builder, adminToken, out).getTokenID();
+		otherTokenID = ShellUtil.securityAuth(builder, otherToken, out).getTokenID();
 		Files.delete(out);
 	}
 
@@ -93,7 +94,7 @@ public class ShellTest {
 		builder.directory(workingDir.toFile());
 		builder.environment().put(Gateway.GATEWAY_URL, GatewayUtil.getUrl().toString());
 		ShellUtil.securityLogout(builder, tokenID);
-		ShellUtil.securityLogout(builder, adminTokenID);
+		ShellUtil.securityLogout(builder, otherTokenID);
 		tempDir.toFile().delete();
 	}
 
@@ -130,9 +131,10 @@ public class ShellTest {
 
 	@Test
 	public void testSecurity_Login() throws IOException, InterruptedException {
-		builder = ShellUtil.command(builder, "./epf", "security", "login", "-u", "any_role1", "-p");
+		Entry<String, String> credential = SecurityUtil.peekCredential();
+		builder = ShellUtil.command(builder, "./epf", "security", "login", "-u", credential.getKey(), "-p");
 		process = builder.start();
-		ShellUtil.waitFor(builder, in, "any_role");
+		ShellUtil.waitFor(builder, in, credential.getValue());
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(2, lines.size());
 		Assert.assertTrue(lines.get(0).startsWith("Enter value for --password (Password): "));
@@ -145,12 +147,13 @@ public class ShellTest {
 
 	@Test(expected = NotAuthorizedException.class)
 	public void testSecurity_Logout() throws Exception {
-		String newToken = SecurityUtil.login("any_role1", "any_role");
+		Entry<String, String> credential = SecurityUtil.peekCredential();
+		String newToken = SecurityUtil.login(credential.getKey(), credential.getValue());
 		builder = ShellUtil.command(builder, "./epf", "security", "logout", "-t", newToken);
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(2, lines.size());
-		Assert.assertEquals("any_role1", lines.get(1));
+		Assert.assertEquals(credential.getKey(), lines.get(1));
 		SecurityUtil.auth(newToken);
 		lines = Files.readAllLines(err);
 		Assert.assertTrue(lines.isEmpty());
@@ -181,7 +184,7 @@ public class ShellTest {
 	
 	@Test
 	public void testSecurity_Revoke() throws InterruptedException, IOException {
-		String token = SecurityUtil.login("any_role1", "any_role");
+		String token = SecurityUtil.login();
 		builder = ShellUtil.command(builder, "./epf", "security", "revoke", "-t", token);
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
@@ -204,7 +207,7 @@ public class ShellTest {
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
         
-        builder = ShellUtil.command(builder, "./epf", "persistence", "persist", "-tid", adminTokenID, "-n", EPF.ARTIFACT, "-e");
+        builder = ShellUtil.command(builder, "./epf", "persistence", "persist", "-tid", otherTokenID, "-n", EPF.ARTIFACT, "-e");
 		process = builder.start();
 		TestUtil.waitUntil(o -> process.isAlive(), Duration.ofSeconds(10));
 		ShellUtil.writeJson(in, artifact);
@@ -220,7 +223,7 @@ public class ShellTest {
         Assert.assertEquals("Artifact.name", artifact.getName(), updatedArtifact.getName());
         Assert.assertEquals("Artifact.summary", artifact.getSummary(), updatedArtifact.getSummary());
         
-        PersistenceUtil.remove(adminToken, EPF.ARTIFACT, artifact.getName());;
+        PersistenceUtil.remove(otherToken, EPF.ARTIFACT, artifact.getName());
 	}
 	
 	@Test
@@ -233,9 +236,9 @@ public class ShellTest {
         artifact.setMoreInformation(new MoreInformation());
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
-        PersistenceUtil.persist(adminToken, Artifact.class, EPF.ARTIFACT, artifact);
+        PersistenceUtil.persist(otherToken, Artifact.class, EPF.ARTIFACT, artifact);
     	
-        builder = ShellUtil.command(builder, "./epf", "persistence", "merge", "-tid", adminTokenID, "-n", EPF.ARTIFACT, "-i", artifact.getName(), "-e");
+        builder = ShellUtil.command(builder, "./epf", "persistence", "merge", "-tid", otherTokenID, "-n", EPF.ARTIFACT, "-i", artifact.getName(), "-e");
 		process = builder.start();
 		TestUtil.waitUntil(o -> process.isAlive(), Duration.ofSeconds(10));
         Artifact updatedArtifact = new Artifact();
@@ -251,7 +254,7 @@ public class ShellTest {
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(1, lines.size());
         
-        PersistenceUtil.remove(adminToken, EPF.ARTIFACT, updatedArtifact.getName());
+        PersistenceUtil.remove(otherToken, EPF.ARTIFACT, updatedArtifact.getName());
 	}
 	
 	@Test
@@ -264,9 +267,9 @@ public class ShellTest {
         artifact.setMoreInformation(new MoreInformation());
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
-        PersistenceUtil.persist(adminToken, Artifact.class, EPF.ARTIFACT, artifact);
+        PersistenceUtil.persist(otherToken, Artifact.class, EPF.ARTIFACT, artifact);
     	
-        builder = ShellUtil.command(builder, "./epf", "persistence", "remove", "-tid", adminTokenID, "-n", EPF.ARTIFACT, "-i", artifact.getName());
+        builder = ShellUtil.command(builder, "./epf", "persistence", "remove", "-tid", otherTokenID, "-n", EPF.ARTIFACT, "-i", artifact.getName());
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(1, lines.size());

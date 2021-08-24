@@ -35,7 +35,7 @@ public class MessagingTest {
     public static void beforeClass() throws Exception{
     	URI messagingUrl = MessagingUtil.getMessagingUrl();
     	listenerUrl = messagingUrl.resolve("persistence");
-    	token = SecurityUtil.login("admin1", "admin");
+    	token = SecurityUtil.login();
     }
     
     @AfterClass

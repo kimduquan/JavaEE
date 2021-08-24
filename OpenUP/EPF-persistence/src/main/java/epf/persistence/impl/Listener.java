@@ -111,7 +111,6 @@ public class Listener {
 	 * @param event
 	 */
 	public void postPersist(@Observes final PostPersist event) {
-		loaded.put(event.getEntity().toString(), object);
 		send(event, true);
 	}
 	
@@ -119,16 +118,13 @@ public class Listener {
 	 * @param event
 	 */
 	public void postRemove(@Observes final PostRemove event) {
-		loaded.put(event.getEntity().toString(), object);
 		send(event, true);
-		loaded.remove(event.getEntity().toString());
 	}
 	
 	/**
 	 * @param event
 	 */
 	public void postUpdate(@Observes final PostUpdate event) {
-		loaded.put(event.getEntity().toString(), object);
 		send(event, true);
 	}
 	

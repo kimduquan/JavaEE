@@ -33,7 +33,6 @@ public class SchemaTest {
 	private static final Logger logger = Logging.getLogger(EntitiesTest.class.getName());
 	private static URI schemaUrl;
     private static String token;
-    private static String adminToken;
     private Client client;
 
 	/**
@@ -42,8 +41,7 @@ public class SchemaTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		schemaUrl = GatewayUtil.get("schema");
-    	token = SecurityUtil.login("any_role1", "any_role");
-    	adminToken = SecurityUtil.login("admin1", "admin");
+    	token = SecurityUtil.login();
 	}
 
 	/**
@@ -52,7 +50,6 @@ public class SchemaTest {
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		SecurityUtil.logOut(token);
-    	SecurityUtil.logOut(adminToken);
 	}
 
 	/**

@@ -72,9 +72,5 @@ public class PrincipalTest {
 		principal.setPassword("any_role".toCharArray());
 		principal.update();
 		principal.logout();
-		/*credential.setCaller("any_role1");
-		credential.setPassword("any_role".toCharArray());
-		credential.login();
-		principal.get().logout();*/
 	}
 }

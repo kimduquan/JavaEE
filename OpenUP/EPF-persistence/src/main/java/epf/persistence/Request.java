@@ -175,7 +175,6 @@ public class Request {
     		@CacheKey final String entityId) {
     	final EntityManager manager = getManager(principal);
     	final T object = manager.find(cls, entityId);
-    	manager.refresh(object);
         return object;
     }
     

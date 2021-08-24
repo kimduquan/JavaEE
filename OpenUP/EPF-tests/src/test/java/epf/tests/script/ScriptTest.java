@@ -35,7 +35,7 @@ public class ScriptTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		scriptUrl = GatewayUtil.get("script");
-		token = SecurityUtil.login("any_role1", "any_role");
+		token = SecurityUtil.login();
 	}
 
 	/**

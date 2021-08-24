@@ -15,7 +15,6 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-
 import epf.client.gateway.GatewayUtil;
 import epf.client.messaging.MessageDecoder;
 import epf.client.persistence.Entities;
@@ -53,7 +52,7 @@ public class ListenerTest {
     	persistenceUrl = GatewayUtil.get("persistence");
     	URI messagingUrl = UriBuilder.fromUri(GatewayUtil.getUrl().resolve("messaging")).scheme("ws").port(9080).build();
     	listenerUrl = new URI(messagingUrl.toString() + "/persistence");
-    	token = SecurityUtil.login("admin1", "admin");
+    	token = SecurityUtil.login();
     	streamUrl = GatewayUtil.get("stream");
     	executor = Executors.newFixedThreadPool(1);
     	streamClient = ClientUtil.newClient(streamUrl);

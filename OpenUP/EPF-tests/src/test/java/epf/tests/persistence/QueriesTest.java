@@ -39,7 +39,7 @@ public class QueriesTest {
     
     @BeforeClass
     public static void beforeClass() throws Exception{
-    	token = SecurityUtil.login("any_role1", "any_role");
+    	token = SecurityUtil.login();
     	persistenceUrl = GatewayUtil.get("persistence");
     }
     

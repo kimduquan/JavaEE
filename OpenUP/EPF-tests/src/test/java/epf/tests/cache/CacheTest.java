@@ -48,7 +48,7 @@ public class CacheTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		cacheUrl = GatewayUtil.get("cache");
-		token = SecurityUtil.login("any_role1", "any_role");
+		token = SecurityUtil.login();
 	}
 
 	/**
