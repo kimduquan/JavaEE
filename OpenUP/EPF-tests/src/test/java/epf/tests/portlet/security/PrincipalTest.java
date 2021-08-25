@@ -39,6 +39,9 @@ public class PrincipalTest {
     public MethodRule testClassInjectorRule = weld.getTestClassInjectorRule();
 	
 	@Inject
+	PortletView view;
+	
+	@Inject
 	Credential credential;
 	
 	@Inject
@@ -49,6 +52,7 @@ public class PrincipalTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
+		view.navigateToSecurity();
 		cred = SecurityUtil.peekCredential();
 		credential.setCaller(cred.getKey());
 		credential.setPassword(cred.getValue().toCharArray());

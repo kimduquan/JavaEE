@@ -33,7 +33,6 @@ import epf.schema.PostLoad;
 import epf.schema.PostPersist;
 import epf.schema.PostRemove;
 import epf.schema.PostUpdate;
-import epf.util.ObjectUtil;
 import epf.util.SystemUtil;
 import epf.util.concurrent.ObjectQueue;
 import epf.util.logging.Logging;
@@ -124,7 +123,6 @@ public class Persistence {
 			final PostLoad postLoad = (PostLoad) message;
 			final String key = getKey(postLoad.getEntity());
 			if(key != null) {
-				ObjectUtil.print(this, message);
 				if(!cache.containsKey(key)) {
 					increaseCacheSize(postLoad.getEntity().getClass());
 					cache.put(key, postLoad.getEntity());

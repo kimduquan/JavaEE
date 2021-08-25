@@ -63,12 +63,6 @@ public class MessageTopic implements Runnable, Closeable {
 						LOGGER.throwing(getClass().getName(), "run", e);
 					}
 				});
-				try {
-					messages.poll().close();
-				} 
-				catch (IOException e) {
-					LOGGER.throwing(getClass().getName(), "run", e);
-				}
 			}
 			try {
 				Thread.sleep(40);
