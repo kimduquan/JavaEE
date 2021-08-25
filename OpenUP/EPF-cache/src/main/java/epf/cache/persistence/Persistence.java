@@ -8,12 +8,15 @@ import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.AbstractMap;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -51,6 +54,11 @@ public class Persistence {
 	 * 
 	 */
 	private static final String CACHE_KEY_FORMAT = "%s\0%s";
+	
+	/**
+	 * 
+	 */
+	private static final String CACHE_SIZE_FORMAT = "%s\0size";
 	
 	/**
 	 * 
@@ -116,8 +124,11 @@ public class Persistence {
 			final PostLoad postLoad = (PostLoad) message;
 			final String key = getKey(postLoad.getEntity());
 			if(key != null) {
-				ObjectUtil.print(this, postLoad.getEntity());
-				cache.putIfAbsent(key, postLoad.getEntity());
+				ObjectUtil.print(this, message);
+				if(!cache.containsKey(key)) {
+					increaseCacheSize(postLoad.getEntity().getClass());
+					cache.put(key, postLoad.getEntity());
+				}
 			}
 		}
 		else if(message instanceof PostUpdate) {
@@ -131,6 +142,7 @@ public class Persistence {
 			final PostPersist postPersist = (PostPersist) message;
 			final String key = getKey(postPersist.getEntity());
 			if(key != null) {
+				increaseCacheSize(postPersist.getEntity().getClass());
 				cache.put(key, postPersist.getEntity());
 			}
 		}
@@ -138,9 +150,44 @@ public class Persistence {
 			final PostRemove postRemove = (PostRemove) message;
 			final String key = getKey(postRemove.getEntity());
 			if(key != null) {
+				decreaseCacheSize(postRemove.getEntity().getClass());
 				cache.remove(key);
 			}
 		}
+	}
+	
+	/**
+	 * @param cls
+	 */
+	protected void increaseCacheSize(final Class<?> cls) {
+		final String entityName = getEntityName(cls);
+		final String cacheSize = String.format(CACHE_SIZE_FORMAT, entityName);
+		cache.putIfAbsent(cacheSize, Long.valueOf(0));
+		final Long size = (Long) cache.get(cacheSize);
+		cache.put(cacheSize, size + 1);
+	}
+	
+	/**
+	 * @param cls
+	 */
+	protected void decreaseCacheSize(final Class<?> cls) {
+		final String entityName = getEntityName(cls);
+		final String cacheSize = String.format(CACHE_SIZE_FORMAT, entityName);
+		cache.putIfAbsent(cacheSize, Long.valueOf(0));
+		final Long size = (Long) cache.get(cacheSize);
+		cache.put(cacheSize, size - 1);
+	}
+	
+	/**
+	 * @param entityName
+	 * @return
+	 */
+	protected long getCacheSize(final String entityName) {
+		final String cacheSize = String.format(CACHE_SIZE_FORMAT, entityName);
+		if(cache.containsKey(cacheSize)) {
+			return (Long)cache.get(cacheSize);
+		}
+		return 0;
 	}
 	
 	/**
@@ -152,9 +199,8 @@ public class Persistence {
 		final String entityName = getEntityName(cls);
 		final Field idField = getEntityIdField(cls);
 		Object entityId = null;
-		if(idField != null) {
+		if(entityName != null && idField != null) {
 			try {
-				idField.setAccessible(true);
 				entityId = idField.get(entity);
 			} 
 			catch (IllegalAccessException | IllegalArgumentException e) {
@@ -163,7 +209,7 @@ public class Persistence {
 		}
 		String key = null;
 		if(entityName != null && entityId != null) {
-			key = String.format(CACHE_KEY_FORMAT, entityName, entityId);
+			key = String.format(CACHE_KEY_FORMAT, entityName, String.valueOf(entityId));
 		}
 		return key;
 	}
@@ -188,10 +234,11 @@ public class Persistence {
 	 */
 	protected Field getEntityIdField(final Class<?> cls) {
 		return entityIdFields.computeIfAbsent(cls.getName(), name -> {
-			return Stream.of(cls.getDeclaredFields())
+			final Optional<Field> idField = Stream.of(cls.getDeclaredFields())
 					.filter(field -> field.isAnnotationPresent(Id.class))
-					.findAny()
-					.orElse(null);
+					.findAny();
+			idField.ifPresent(f -> f.setAccessible(true));
+			return idField.orElse(null);
 		});
 	}
 	
@@ -217,14 +264,19 @@ public class Persistence {
 	 * @return
 	 */
 	public List<Entry<String, Object>> getEntities(final String name){
-		final List<Entry<String, Object>> entries = new ArrayList<>();
+		final Queue<Entry<String, Object>> entries = new ConcurrentLinkedQueue<>();
 		final String key = String.format(CACHE_KEY_FORMAT, name, "");
-		cache.forEach(entry -> {
-			if(entry.getKey().startsWith(key)) {
-				entries.add(new AbstractMap.SimpleImmutableEntry<>(entry.getKey(), entry.getValue()));
+		if(getCacheSize(name) > 0) {
+			do {
+				cache.forEach(entry -> {
+					if(entry.getKey().startsWith(key)) {
+						entries.add(new AbstractMap.SimpleImmutableEntry<>(entry.getKey(), entry.getValue()));
+					}
+				});
 			}
-		});
-		return entries;
+			while(entries.size() < getCacheSize(name));
+		}
+		return entries.stream().collect(Collectors.toList());
 	}
 	
 	/**

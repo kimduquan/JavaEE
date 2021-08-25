@@ -26,7 +26,6 @@ import epf.schema.PostLoad;
 import epf.schema.PostPersist;
 import epf.schema.PostRemove;
 import epf.schema.PostUpdate;
-import epf.util.ObjectUtil;
 
 /**
  * @author PC
@@ -132,7 +131,6 @@ public class Listener {
 	public void postLoad(@Observes final PostLoad event) {
 		loaded.computeIfAbsent(event.getEntity().toString(), key -> {
 			send(event);
-			ObjectUtil.print(this, event.getEntity());
 			return object;
 		});
 	}

@@ -11,7 +11,6 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.MethodRule;
-
 import epf.tests.portlet.PortletView;
 import epf.tests.portlet.WebDriverUtil;
 import jakarta.inject.Inject;
@@ -37,6 +36,9 @@ public class CredentialTest {
     public MethodRule testClassInjectorRule = weld.getTestClassInjectorRule();
 	
 	@Inject
+	PortletView view;
+	
+	@Inject
 	Credential credential;
 	
 	@Inject
@@ -47,6 +49,7 @@ public class CredentialTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
+		view.navigateToSecurity();
 	}
 
 	/**

@@ -45,6 +45,11 @@ public class Message implements Serializable, Closeable {
 		this.object = object;
 		isClose = new AtomicBoolean(false);
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("%s/%s", getClass().getName(), String.valueOf(object));
+	}
 
 	@Override
 	public void close() throws IOException {

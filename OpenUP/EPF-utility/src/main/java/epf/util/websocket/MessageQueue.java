@@ -63,12 +63,6 @@ public class MessageQueue implements Runnable, Closeable {
 					LOGGER.throwing(getClass().getName(), "run", e);
 				}
 			}
-			try {
-				Thread.sleep(40);
-			} 
-			catch (InterruptedException e) {
-				LOGGER.throwing(getClass().getName(), "run", e);
-			}
 		}
 	}
 

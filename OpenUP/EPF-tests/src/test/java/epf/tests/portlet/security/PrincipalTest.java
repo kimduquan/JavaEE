@@ -4,7 +4,6 @@
 package epf.tests.portlet.security;
 
 import java.util.Map.Entry;
-
 import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.After;
 import org.junit.Before;
@@ -12,7 +11,6 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.MethodRule;
-
 import epf.tests.portlet.PortletView;
 import epf.tests.portlet.WebDriverUtil;
 import epf.tests.security.SecurityUtil;
