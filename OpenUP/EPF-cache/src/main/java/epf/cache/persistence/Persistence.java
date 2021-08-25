@@ -8,11 +8,14 @@ import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.AbstractMap;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Logger;
@@ -52,12 +55,12 @@ public class Persistence {
 	/**
 	 * 
 	 */
-	private static final String CACHE_KEY_FORMAT = "%s\0%s";
+	private static final String CACHE_KEY_FORMAT = "epf.cache.entry.key\0%s\0%s";
 	
 	/**
 	 * 
 	 */
-	private static final String CACHE_SIZE_FORMAT = "%s\0size";
+	private static final String CACHE_KEYS_FORMAT = "epf.cache.entry.keys\0%s";
 	
 	/**
 	 * 
@@ -122,9 +125,9 @@ public class Persistence {
 		if(message instanceof PostLoad) {
 			final PostLoad postLoad = (PostLoad) message;
 			final String key = getKey(postLoad.getEntity());
-			if(key != null && !cache.containsKey(key)) {
-				increaseCacheSize(postLoad.getEntity().getClass());
-				cache.put(key, postLoad.getEntity());
+			if(key != null) {
+				putKey(postLoad.getEntity().getClass(), key);
+				cache.putIfAbsent(key, postLoad.getEntity());
 			}
 		}
 		else if(message instanceof PostUpdate) {
@@ -138,7 +141,7 @@ public class Persistence {
 			final PostPersist postPersist = (PostPersist) message;
 			final String key = getKey(postPersist.getEntity());
 			if(key != null) {
-				increaseCacheSize(postPersist.getEntity().getClass());
+				putKey(postPersist.getEntity().getClass(), key);
 				cache.put(key, postPersist.getEntity());
 			}
 		}
@@ -146,44 +149,38 @@ public class Persistence {
 			final PostRemove postRemove = (PostRemove) message;
 			final String key = getKey(postRemove.getEntity());
 			if(key != null) {
-				decreaseCacheSize(postRemove.getEntity().getClass());
+				removeKey(postRemove.getEntity().getClass(), key);
 				cache.remove(key);
 			}
 		}
 	}
-	
+
 	/**
 	 * @param cls
+	 * @param key
 	 */
-	protected void increaseCacheSize(final Class<?> cls) {
+	protected void putKey(final Class<?> cls, final String key) {
 		final String entityName = getEntityName(cls);
-		final String cacheSize = String.format(CACHE_SIZE_FORMAT, entityName);
-		cache.putIfAbsent(cacheSize, Long.valueOf(0));
-		final Long size = (Long) cache.get(cacheSize);
-		cache.put(cacheSize, size + 1);
+		final String keys = String.format(CACHE_KEYS_FORMAT, entityName);
+		cache.putIfAbsent(keys, new HashSet<>());
+		@SuppressWarnings("unchecked")
+		final Set<String> cacheKeys = (Set<String>) cache.get(keys);
+		cacheKeys.add(key);
+		cache.replace(keys, cacheKeys);
 	}
 	
 	/**
 	 * @param cls
+	 * @param key
 	 */
-	protected void decreaseCacheSize(final Class<?> cls) {
+	protected void removeKey(final Class<?> cls, final String key) {
 		final String entityName = getEntityName(cls);
-		final String cacheSize = String.format(CACHE_SIZE_FORMAT, entityName);
-		cache.putIfAbsent(cacheSize, Long.valueOf(0));
-		final Long size = (Long) cache.get(cacheSize);
-		cache.put(cacheSize, size - 1);
-	}
-	
-	/**
-	 * @param entityName
-	 * @return
-	 */
-	protected long getCacheSize(final String entityName) {
-		final String cacheSize = String.format(CACHE_SIZE_FORMAT, entityName);
-		if(cache.containsKey(cacheSize)) {
-			return (Long)cache.get(cacheSize);
-		}
-		return 0;
+		final String keys = String.format(CACHE_KEYS_FORMAT, entityName);
+		cache.putIfAbsent(keys, new HashSet<>());
+		@SuppressWarnings("unchecked")
+		final Set<String> cacheKeys = (Set<String>) cache.get(keys);
+		cacheKeys.remove(key);
+		cache.replace(keys, cacheKeys);
 	}
 	
 	/**
@@ -259,20 +256,30 @@ public class Persistence {
 	 * @param name
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public List<Entry<String, Object>> getEntities(final String name){
-		final Queue<Entry<String, Object>> entries = new ConcurrentLinkedQueue<>();
-		final String key = String.format(CACHE_KEY_FORMAT, name, "");
-		if(getCacheSize(name) > 0) {
+		final String keys = String.format(CACHE_KEYS_FORMAT, name);
+		if(cache.containsKey(keys)) {
+			Set<String> cacheKeys;
+			Map<String, Object> entries;
 			do {
-				cache.forEach(entry -> {
-					if(entry.getKey().startsWith(key)) {
-						entries.add(new AbstractMap.SimpleImmutableEntry<>(entry.getKey(), entry.getValue()));
-					}
-				});
+				cacheKeys = (Set<String>) cache.get(keys);
+				entries = cache.getAll(cacheKeys);
 			}
-			while(entries.size() < getCacheSize(name));
+			while(entries.size() < cacheKeys.size());
+			return entries.entrySet().stream().collect(Collectors.toList());
 		}
-		return entries.stream().collect(Collectors.toList());
+		else {
+			final Queue<Entry<String, Object>> entries = new ConcurrentLinkedQueue<>();
+			final String key = String.format(CACHE_KEY_FORMAT, name, "");
+			cache.forEach(entry -> {
+				if(entry.getKey().startsWith(key)) {
+					entries.add(new AbstractMap.SimpleImmutableEntry<>(entry.getKey(), entry.getValue()));
+				}
+			});
+			entries.stream().collect(Collectors.toList());
+			return Arrays.asList();
+		}
 	}
 	
 	/**
