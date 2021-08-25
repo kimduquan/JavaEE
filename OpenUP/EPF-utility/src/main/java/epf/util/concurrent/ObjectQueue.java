@@ -4,10 +4,13 @@
 package epf.util.concurrent;
 
 import java.io.Closeable;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.Objects;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
+import epf.util.logging.Logging;
 
 /**
  * @author PC
@@ -18,7 +21,17 @@ public abstract class ObjectQueue<T extends Object> implements Runnable, Closeab
 	/**
 	 * 
 	 */
-	private transient final Queue<T> objects = new ConcurrentLinkedQueue<>();
+	private static transient final Logger LOGGER = Logging.getLogger(ObjectQueue.class.getName());
+	
+	/**
+	 * 
+	 */
+	private static transient final Object BREAK = new Object();
+	
+	/**
+	 * 
+	 */
+	private transient final BlockingQueue<Object> objects = new LinkedBlockingQueue<>();
 	
 	/**
 	 * 
@@ -28,21 +41,23 @@ public abstract class ObjectQueue<T extends Object> implements Runnable, Closeab
 	@Override
 	public void close() {
 		close.set(true);
+		objects.add(BREAK);
 	}
 
 	@Override
 	public void run() {
-		while(true) {
-			if(close.get()) {
-				while(!objects.isEmpty()) {
-					accept(objects.poll());
+		while(!close.get()) {
+			try {
+				final Object object = objects.take();
+				if(BREAK == object) {
+					break;
 				}
-				break;
-			}
-			else {
-				while(!objects.isEmpty()) {
-					accept(objects.poll());
-				}
+				@SuppressWarnings("unchecked")
+				final T obj = (T) object;
+				accept(obj);
+			} 
+			catch (InterruptedException e) {
+				LOGGER.throwing(getClass().getName(), "run", null);
 			}
 		}
 	}
@@ -51,6 +66,7 @@ public abstract class ObjectQueue<T extends Object> implements Runnable, Closeab
 	 * @param entry
 	 */
 	public void add(final T entry) {
+		Objects.requireNonNull(entry, "T");
 		objects.add(entry);
 	}
 }

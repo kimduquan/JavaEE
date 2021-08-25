@@ -6,9 +6,10 @@ package epf.util.websocket;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Map;
-import java.util.Queue;
+import java.util.Objects;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 import javax.websocket.EncodeException;
@@ -29,7 +30,7 @@ public class MessageTopic implements Runnable, Closeable {
 	/**
 	 * 
 	 */
-	private transient final Queue<Message> messages;
+	private transient final BlockingQueue<Message> messages;
 	
 	/**
 	 * 
@@ -45,7 +46,7 @@ public class MessageTopic implements Runnable, Closeable {
 	 * 
 	 */
 	public MessageTopic() {
-		messages = new ConcurrentLinkedQueue<>();
+		messages = new LinkedBlockingQueue<>();
 		sessions = new ConcurrentHashMap<>();
 		isClose = new AtomicBoolean(false);
 	}
@@ -53,8 +54,11 @@ public class MessageTopic implements Runnable, Closeable {
 	@Override
 	public void run() {
 		while(!isClose.get()) {
-			while(!messages.isEmpty()) {
-				final Message message = messages.peek();
+			try {
+				final Message message = messages.take();
+				if(Message.BREAK == message) {
+					break;
+				}
 				sessions.values().parallelStream().forEach(session -> {
 					try {
 						message.send(session);
@@ -63,12 +67,9 @@ public class MessageTopic implements Runnable, Closeable {
 						LOGGER.throwing(getClass().getName(), "run", e);
 					}
 				});
-				try {
-					messages.poll().close();
-				} 
-				catch (IOException e) {
-					LOGGER.throwing(getClass().getName(), "run", e);
-				}
+			} 
+			catch (InterruptedException e) {
+				LOGGER.throwing(getClass().getName(), "run", e);
 			}
 		}
 	}
@@ -76,12 +77,14 @@ public class MessageTopic implements Runnable, Closeable {
 	@Override
 	public void close() throws IOException {
 		isClose.set(true);
+		messages.add(Message.BREAK);
 	}
 	
 	/**
 	 * @param message
 	 */
 	public void add(final Message message) {
+		Objects.requireNonNull(message, "Message");
 		messages.add(message);
 	}
 	
@@ -89,6 +92,7 @@ public class MessageTopic implements Runnable, Closeable {
 	 * @param session
 	 */
 	public void addSession(final Session session) {
+		Objects.requireNonNull(session, "Session");
 		sessions.put(session.getId(), session);
 	}
 	
@@ -96,6 +100,7 @@ public class MessageTopic implements Runnable, Closeable {
 	 * @param session
 	 */
 	public void removeSession(final Session session) {
+		Objects.requireNonNull(session, "Session");
 		sessions.remove(session.getId());
 	}
 }

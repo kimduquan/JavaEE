@@ -33,7 +33,7 @@ public class MessageQueueTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		executor = Executors.newFixedThreadPool(5);
+		executor = Executors.newFixedThreadPool(2);
 	}
 
 	/**

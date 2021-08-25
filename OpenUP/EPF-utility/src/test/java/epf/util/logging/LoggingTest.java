@@ -4,9 +4,6 @@
 package epf.util.logging;
 
 import java.lang.reflect.Method;
-import java.util.logging.FileHandler;
-import java.util.logging.Handler;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.interceptor.InvocationContext;
 import org.junit.Assert;

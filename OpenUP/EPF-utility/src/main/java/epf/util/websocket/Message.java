@@ -7,10 +7,8 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Logger;
 import javax.websocket.EncodeException;
 import javax.websocket.Session;
-import epf.util.logging.Logging;
 
 /**
  * @author PC
@@ -26,7 +24,7 @@ public class Message implements Serializable, Closeable {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(Message.class.getName());
+	public static final Message BREAK = new Message(new Object());
 	
 	/**
 	 * 
@@ -68,20 +66,5 @@ public class Message implements Serializable, Closeable {
 		else {
 			session.getBasicRemote().sendObject(object);
 		}
-	}
-	
-	/**
-	 * 
-	 */
-	public void waitToClose() {
-		do {
-			try {
-				Thread.sleep(40);
-			} 
-			catch (InterruptedException e) {
-				LOGGER.throwing(getClass().getName(), "waitToClose", e);
-			}
-		}
-		while(!isClose.get());
 	}
 }

@@ -6,8 +6,8 @@ package epf.util.websocket;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Objects;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 import javax.websocket.EncodeException;
@@ -28,7 +28,7 @@ public class MessageQueue implements Runnable, Closeable {
 	/**
 	 * 
 	 */
-	private transient final Queue<Message> messages;
+	private transient final BlockingQueue<Message> messages;
 	
 	/**
 	 * 
@@ -46,22 +46,23 @@ public class MessageQueue implements Runnable, Closeable {
 	public MessageQueue(final Session session) {
 		Objects.requireNonNull(session, "Session");
 		this.session = session;
-		this.messages = new ConcurrentLinkedQueue<>();
+		this.messages = new LinkedBlockingQueue<>();
 		isClose = new AtomicBoolean(false);
 	}
 
 	@Override
 	public void run() {
 		while(!isClose.get()) {
-			while(!messages.isEmpty()) {
-				final Message message = messages.peek();
-				try {
-					message.send(session);
-					messages.poll().close();
-				} 
-				catch (IOException|EncodeException e) {
-					LOGGER.throwing(getClass().getName(), "run", e);
+			try {
+				final Message message = messages.take();
+				if(Message.BREAK == message) {
+					break;
 				}
+				message.send(session);
+				message.close();
+			} 
+			catch (IOException|EncodeException | InterruptedException e) {
+				LOGGER.throwing(getClass().getName(), "run", e);
 			}
 		}
 	}
@@ -69,12 +70,14 @@ public class MessageQueue implements Runnable, Closeable {
 	@Override
 	public void close() throws IOException {
 		isClose.set(true);
+		messages.add(Message.BREAK);
 	}
 	
 	/**
 	 * @param message
 	 */
 	public void add(final Message message) {
+		Objects.requireNonNull(message, "Message");
 		messages.add(message);
 	}
 }

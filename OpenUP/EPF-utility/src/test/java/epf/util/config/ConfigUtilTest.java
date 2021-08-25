@@ -4,7 +4,6 @@
 package epf.util.config;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import org.junit.Assert;
 import org.junit.Test;
 

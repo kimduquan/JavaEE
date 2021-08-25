@@ -65,20 +65,11 @@ public class MessageTest {
 
 	/**
 	 * Test method for {@link epf.util.websocket.Message#close()}.
+	 * @throws IOException 
 	 */
 	@Test
-	public void testClose() {
-		executor.submit(() -> {
-			try {
-				Thread.sleep(40);
-				message.close();
-			} 
-			catch (IOException | InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		});
-		message.waitToClose();
+	public void testClose() throws IOException {
+		message.close();
 	}
 
 	/**
@@ -109,23 +100,4 @@ public class MessageTest {
 		message.send(session);
 		Mockito.verify(basic, Mockito.times(1)).sendText(Mockito.eq("this is a test"));
 	}
-
-	/**
-	 * Test method for {@link epf.util.websocket.Message#waitToClose()}.
-	 */
-	@Test
-	public void testWaitToClose() {
-		executor.submit(() -> {
-			try {
-				Thread.sleep(40);
-				message.close();
-			} 
-			catch (IOException | InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		});
-		message.waitToClose();
-	}
-
 }
