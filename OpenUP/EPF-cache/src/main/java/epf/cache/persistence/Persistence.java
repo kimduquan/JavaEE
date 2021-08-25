@@ -122,11 +122,9 @@ public class Persistence {
 		if(message instanceof PostLoad) {
 			final PostLoad postLoad = (PostLoad) message;
 			final String key = getKey(postLoad.getEntity());
-			if(key != null) {
-				if(!cache.containsKey(key)) {
-					increaseCacheSize(postLoad.getEntity().getClass());
-					cache.put(key, postLoad.getEntity());
-				}
+			if(key != null && !cache.containsKey(key)) {
+				increaseCacheSize(postLoad.getEntity().getClass());
+				cache.put(key, postLoad.getEntity());
 			}
 		}
 		else if(message instanceof PostUpdate) {
