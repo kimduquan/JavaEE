@@ -8,16 +8,13 @@ import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.AbstractMap;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -28,6 +25,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.Id;
 import javax.websocket.DeploymentException;
+import javax.ws.rs.NotFoundException;
 import org.eclipse.microprofile.health.Readiness;
 import epf.cache.Manager;
 import epf.client.messaging.Client;
@@ -126,7 +124,8 @@ public class Persistence {
 			final PostLoad postLoad = (PostLoad) message;
 			final String key = getKey(postLoad.getEntity());
 			if(key != null) {
-				putKey(postLoad.getEntity().getClass(), key);
+				final String entityName = getEntityName(postLoad.getEntity().getClass());
+				putKey(entityName, key);
 				cache.putIfAbsent(key, postLoad.getEntity());
 			}
 		}
@@ -141,7 +140,8 @@ public class Persistence {
 			final PostPersist postPersist = (PostPersist) message;
 			final String key = getKey(postPersist.getEntity());
 			if(key != null) {
-				putKey(postPersist.getEntity().getClass(), key);
+				final String entityName = getEntityName(postPersist.getEntity().getClass());
+				putKey(entityName, key);
 				cache.put(key, postPersist.getEntity());
 			}
 		}
@@ -149,38 +149,54 @@ public class Persistence {
 			final PostRemove postRemove = (PostRemove) message;
 			final String key = getKey(postRemove.getEntity());
 			if(key != null) {
-				removeKey(postRemove.getEntity().getClass(), key);
+				final String entityName = getEntityName(postRemove.getEntity().getClass());
+				removeKey(entityName, key);
 				cache.remove(key);
 			}
 		}
+	}
+	
+	/**
+	 * @param entityName
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	protected Set<String> getKeys(final String entityName){
+		final String keys = String.format(CACHE_KEYS_FORMAT, entityName);
+		return (Set<String>) cache.get(keys);
 	}
 
 	/**
 	 * @param cls
 	 * @param key
 	 */
-	protected void putKey(final Class<?> cls, final String key) {
-		final String entityName = getEntityName(cls);
+	protected void putKey(final String entityName, final String key) {
 		final String keys = String.format(CACHE_KEYS_FORMAT, entityName);
-		cache.putIfAbsent(keys, new HashSet<>());
 		@SuppressWarnings("unchecked")
 		final Set<String> cacheKeys = (Set<String>) cache.get(keys);
-		cacheKeys.add(key);
-		cache.replace(keys, cacheKeys);
+		if(cacheKeys == null) {
+			final ConcurrentSkipListSet<String> newKeys = new ConcurrentSkipListSet<>();
+			newKeys.add(key);
+			cache.putIfAbsent(keys, newKeys);
+		}
+		else if(!cacheKeys.contains(key)) {
+			cacheKeys.add(key);
+			cache.replace(keys, cacheKeys);
+		}
 	}
 	
 	/**
 	 * @param cls
 	 * @param key
 	 */
-	protected void removeKey(final Class<?> cls, final String key) {
-		final String entityName = getEntityName(cls);
+	protected void removeKey(final String entityName, final String key) {
 		final String keys = String.format(CACHE_KEYS_FORMAT, entityName);
-		cache.putIfAbsent(keys, new HashSet<>());
 		@SuppressWarnings("unchecked")
 		final Set<String> cacheKeys = (Set<String>) cache.get(keys);
-		cacheKeys.remove(key);
-		cache.replace(keys, cacheKeys);
+		if(cacheKeys != null && cacheKeys.contains(keys)) {
+			cacheKeys.remove(key);
+			cache.replace(keys, cacheKeys);
+		}
 	}
 	
 	/**
@@ -256,30 +272,18 @@ public class Persistence {
 	 * @param name
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public List<Entry<String, Object>> getEntities(final String name){
 		final String keys = String.format(CACHE_KEYS_FORMAT, name);
-		if(cache.containsKey(keys)) {
-			Set<String> cacheKeys;
-			Map<String, Object> entries;
-			do {
-				cacheKeys = (Set<String>) cache.get(keys);
-				entries = cache.getAll(cacheKeys);
+		@SuppressWarnings("unchecked")
+		final Set<String> cacheKeys = (Set<String>) cache.get(keys);
+		if(cacheKeys != null) {
+			final Map<String, Object> entries = cache.getAll(cacheKeys);
+			if(cacheKeys.size() == entries.size()) {
+				entries.forEach((k, v) -> System.out.println(k));
+				return entries.entrySet().stream().collect(Collectors.toList());
 			}
-			while(entries.size() < cacheKeys.size());
-			return entries.entrySet().stream().collect(Collectors.toList());
 		}
-		else {
-			final Queue<Entry<String, Object>> entries = new ConcurrentLinkedQueue<>();
-			final String key = String.format(CACHE_KEY_FORMAT, name, "");
-			cache.forEach(entry -> {
-				if(entry.getKey().startsWith(key)) {
-					entries.add(new AbstractMap.SimpleImmutableEntry<>(entry.getKey(), entry.getValue()));
-				}
-			});
-			entries.stream().collect(Collectors.toList());
-			return Arrays.asList();
-		}
+		throw new NotFoundException();
 	}
 	
 	/**

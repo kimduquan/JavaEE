@@ -6,8 +6,6 @@ package epf.persistence.impl;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import epf.util.SystemUtil;
 import epf.util.logging.Logging;
@@ -42,22 +40,12 @@ public class Listener {
 	/**
 	 * 
 	 */
-	private static final Object object = new Object();
-	
-	/**
-	 * 
-	 */
 	private transient Client client;
 	
 	/**
 	 * 
 	 */
 	private transient MessageQueue messages;
-	
-	/**
-	 * 
-	 */
-	private transient final Map<String, Object> loaded = new ConcurrentHashMap<>();
 	
 	/**
 	 * 
@@ -115,7 +103,6 @@ public class Listener {
 	 */
 	public void postRemove(@Observes final PostRemove event) {
 		send(event);
-		loaded.remove(event.getEntity().toString());
 	}
 	
 	/**
@@ -129,9 +116,6 @@ public class Listener {
 	 * @param event
 	 */
 	public void postLoad(@Observes final PostLoad event) {
-		loaded.computeIfAbsent(event.getEntity().toString(), key -> {
-			send(event);
-			return object;
-		});
+		send(event);
 	}
 }
