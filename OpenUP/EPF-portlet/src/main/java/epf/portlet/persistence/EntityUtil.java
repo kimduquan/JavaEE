@@ -7,7 +7,7 @@ import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.json.JsonObject;
-import epf.portlet.cache.PersistenceCacheUtil;
+import epf.portlet.cache.EntityCacheUtil;
 
 /**
  * @author PC
@@ -20,7 +20,7 @@ public class EntityUtil {
 	 * 
 	 */
 	@Inject
-	private transient PersistenceCacheUtil persistenceCache;
+	private transient EntityCacheUtil persistenceCache;
 	
 	/**
 	 * 

@@ -30,6 +30,11 @@ public class MessageTopic implements Runnable, Closeable {
 	/**
 	 * 
 	 */
+	public transient final Message BREAK = new Message(new Object());
+	
+	/**
+	 * 
+	 */
 	private transient final BlockingQueue<Message> messages;
 	
 	/**
@@ -56,7 +61,7 @@ public class MessageTopic implements Runnable, Closeable {
 		while(!isClose.get()) {
 			try {
 				final Message message = messages.take();
-				if(Message.BREAK == message) {
+				if(BREAK == message) {
 					break;
 				}
 				sessions.values().parallelStream().forEach(session -> {
@@ -77,7 +82,7 @@ public class MessageTopic implements Runnable, Closeable {
 	@Override
 	public void close() throws IOException {
 		isClose.set(true);
-		messages.add(Message.BREAK);
+		messages.add(BREAK);
 	}
 	
 	/**

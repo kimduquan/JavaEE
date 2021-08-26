@@ -23,12 +23,12 @@ import epf.util.logging.Logging;
  *
  */
 @RequestScoped
-public class PersistenceCacheUtil {
+public class EntityCacheUtil {
 	
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(PersistenceCacheUtil.class.getName());
+	private static final Logger LOGGER = Logging.getLogger(EntityCacheUtil.class.getName());
 
 	/**
 	 * 

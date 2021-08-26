@@ -24,11 +24,6 @@ public class Message implements Serializable, Closeable {
 	/**
 	 * 
 	 */
-	public static final Message BREAK = new Message(new Object());
-	
-	/**
-	 * 
-	 */
 	private transient final Object object;
 	
 	/**

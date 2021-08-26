@@ -26,7 +26,7 @@ public abstract class ObjectQueue<T extends Object> implements Runnable, Closeab
 	/**
 	 * 
 	 */
-	private static transient final Object BREAK = new Object();
+	private transient final Object BREAK = new Object();
 	
 	/**
 	 * 

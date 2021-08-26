@@ -28,7 +28,7 @@ public abstract class ObjectTopic<T extends Object, U extends Consumer<T>> imple
 	/**
 	 * 
 	 */
-	private static transient final Object BREAK = new Object();
+	private transient final Object BREAK = new Object();
 	
 	/**
 	 * 
