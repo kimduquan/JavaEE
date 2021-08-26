@@ -38,6 +38,9 @@ public class QueryTest {
     public MethodRule testClassInjectorRule = weld.getTestClassInjectorRule();
 	
 	@Inject
+	PortletView view;
+	
+	@Inject
 	Schema schema;
 	
 	@Inject
@@ -62,6 +65,13 @@ public class QueryTest {
 
 	@Test
 	public void test_DefaultValues_TheSameConfiguredValues() {
+		int resultSize = query.getResultSize();
+		if(resultSize != 29) {
+			view.refresh();
+			schema.setEntity("Artifact");
+			schema.getEntity();
+			query.getResultSize();
+		}
 		Assert.assertEquals("Query.firstResult", 0, query.getFirstResult());
 		Assert.assertEquals("Query.maxResults", 100, query.getMaxResults());
 		Assert.assertEquals("Query.resultSize", 29, query.getResultSize());

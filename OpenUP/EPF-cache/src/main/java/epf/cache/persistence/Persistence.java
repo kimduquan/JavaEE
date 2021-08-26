@@ -155,16 +155,6 @@ public class Persistence {
 			}
 		}
 	}
-	
-	/**
-	 * @param entityName
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	protected Set<String> getKeys(final String entityName){
-		final String keys = String.format(CACHE_KEYS_FORMAT, entityName);
-		return (Set<String>) cache.get(keys);
-	}
 
 	/**
 	 * @param cls
@@ -279,7 +269,6 @@ public class Persistence {
 		if(cacheKeys != null) {
 			final Map<String, Object> entries = cache.getAll(cacheKeys);
 			if(cacheKeys.size() == entries.size()) {
-				entries.forEach((k, v) -> System.out.println(k));
 				return entries.entrySet().stream().collect(Collectors.toList());
 			}
 		}

@@ -54,6 +54,10 @@ public class PortletView {
 	void login() {
 		driver.findElement(By.name("login")).submit();
 	}
+	
+	public void refresh() {
+		driver.navigate().refresh();
+	}
 
 	public void navigateToPersistence() {
 		driver.findElement(By.linkText("Persistence")).click();
