@@ -3,21 +3,17 @@
  */
 package epf.util.websocket;
 
-import java.io.Closeable;
-import java.io.IOException;
 import java.util.Objects;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 import javax.websocket.Session;
+import epf.util.concurrent.ObjectQueue;
 import epf.util.logging.Logging;
 
 /**
  * @author PC
  *
  */
-public class MessageQueue implements Runnable, Closeable {
+public class MessageQueue extends ObjectQueue<Message> {
 	
 	/**
 	 * 
@@ -27,61 +23,25 @@ public class MessageQueue implements Runnable, Closeable {
 	/**
 	 * 
 	 */
-	public transient final Message BREAK = new Message(new Object());
-	
-	/**
-	 * 
-	 */
-	private transient final BlockingQueue<Message> messages;
-	
-	/**
-	 * 
-	 */
 	private transient final Session session;
-	
-	/**
-	 * 
-	 */
-	private transient final AtomicBoolean isClose;
 	
 	/**
 	 * @param session
 	 */
 	public MessageQueue(final Session session) {
+		super();
 		Objects.requireNonNull(session, "Session");
 		this.session = session;
-		this.messages = new LinkedBlockingQueue<>();
-		isClose = new AtomicBoolean(false);
 	}
 
 	@Override
-	public void run() {
-		while(!isClose.get()) {
-			try {
-				final Message message = messages.take();
-				if(BREAK == message) {
-					break;
-				}
-				message.send(session);
-				message.close();
-			} 
-			catch (Exception e) {
-				LOGGER.throwing(getClass().getName(), "run", e);
-			}
+	public void accept(final Message message) {
+		try {
+			message.send(session);
+			message.close();
+		} 
+		catch (Exception e) {
+			LOGGER.throwing(getClass().getName(), "accept", e);
 		}
-	}
-
-	@Override
-	public void close() throws IOException {
-		isClose.set(true);
-		messages.add(BREAK);
-	}
-	
-	/**
-	 * @param message
-	 */
-	public void add(final Message message) {
-		Objects.requireNonNull(message, "Message");
-		messages.add(message);
 	}
 }
