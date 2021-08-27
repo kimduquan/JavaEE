@@ -12,7 +12,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
-import javax.websocket.EncodeException;
 import javax.websocket.Session;
 import epf.util.logging.Logging;
 
@@ -68,12 +67,12 @@ public class MessageTopic implements Runnable, Closeable {
 					try {
 						message.send(session);
 					} 
-					catch (IOException|EncodeException e) {
+					catch (Exception e) {
 						LOGGER.throwing(getClass().getName(), "run", e);
 					}
 				});
 			} 
-			catch (InterruptedException e) {
+			catch (Exception e) {
 				LOGGER.throwing(getClass().getName(), "run", e);
 			}
 		}

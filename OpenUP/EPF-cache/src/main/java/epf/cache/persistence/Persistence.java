@@ -15,6 +15,7 @@ import javax.cache.Cache;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.websocket.DeploymentException;
+import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.Readiness;
 import epf.cache.Manager;
 import epf.client.messaging.Client;
@@ -60,16 +61,23 @@ public class Persistence {
 	/**
 	 * 
 	 */
+	@Inject
+	private transient ManagedExecutor executor;
+	
+	/**
+	 * 
+	 */
 	@PostConstruct
 	protected void postConstruct() {
 		try {
 			cache = manager.getCache("persistence");
 			entityCache = new EntityCache(cache);
+			executor.submit(entityCache);
 			final URI messagingUrl = new URI(SystemUtil.getenv(Messaging.MESSAGING_URL));
 			client = Messaging.connectToServer(messagingUrl.resolve("persistence"));
 			client.onMessage(message -> {
 				if(message instanceof EntityEvent) {
-					entityCache.accept((EntityEvent) message);
+					entityCache.add((EntityEvent) message);
 				}
 			});
 		} 

@@ -65,7 +65,7 @@ public abstract class ObjectTopic<T extends Object, U extends Consumer<T>> imple
 					consumer.accept(obj);
 				});
 			} 
-			catch (InterruptedException e) {
+			catch (Exception e) {
 				LOGGER.throwing(getClass().getName(), "run", null);
 			}
 		}

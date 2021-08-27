@@ -56,7 +56,7 @@ public abstract class ObjectQueue<T extends Object> implements Runnable, Closeab
 				final T obj = (T) object;
 				accept(obj);
 			} 
-			catch (InterruptedException e) {
+			catch (Exception e) {
 				LOGGER.throwing(getClass().getName(), "run", null);
 			}
 		}

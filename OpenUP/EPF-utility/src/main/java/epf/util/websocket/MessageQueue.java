@@ -10,7 +10,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
-import javax.websocket.EncodeException;
 import javax.websocket.Session;
 import epf.util.logging.Logging;
 
@@ -66,7 +65,7 @@ public class MessageQueue implements Runnable, Closeable {
 				message.send(session);
 				message.close();
 			} 
-			catch (IOException|EncodeException | InterruptedException e) {
+			catch (Exception e) {
 				LOGGER.throwing(getClass().getName(), "run", e);
 			}
 		}
