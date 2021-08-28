@@ -36,7 +36,7 @@ public class AttributeBuilder {
 	/**
 	 * @return
 	 */
-	protected EmbeddedAttribute buidEmbeddedAttribute() {
+	protected EmbeddedAttribute buildEmbeddedAttribute() {
 		final Embeddable embeddable = embeddables.get(attribute.getType());
 		final JsonValue value = object.get(attribute.getName());
 		final EntityObject embeddedObject = new EntityObject(value != null ? value.asJsonObject() : JsonValue.EMPTY_JSON_OBJECT);
@@ -67,7 +67,7 @@ public class AttributeBuilder {
 	 */
 	public BasicAttribute build() {
 		if(AttributeUtil.isEmbedded(attribute)) {
-			return buidEmbeddedAttribute();
+			return buildEmbeddedAttribute();
 		}
 		return buildBasicAttribute();
 	}
