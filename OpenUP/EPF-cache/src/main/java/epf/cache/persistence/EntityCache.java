@@ -7,21 +7,18 @@ import java.lang.reflect.Field;
 import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.cache.Cache;
-import javax.persistence.Id;
 import epf.schema.EntityEvent;
 import epf.schema.PostLoad;
 import epf.schema.PostPersist;
 import epf.schema.PostRemove;
 import epf.schema.PostUpdate;
+import epf.schema.SchemaUtil;
 import epf.util.concurrent.ObjectQueue;
 import epf.util.logging.Logging;
 
@@ -49,12 +46,7 @@ public class EntityCache extends ObjectQueue<EntityEvent> {
 	/**
 	 * 
 	 */
-	private transient final Map<String, Field> entityIdFields = new ConcurrentHashMap<>();
-	
-	/**
-	 * 
-	 */
-	private transient final Map<String, String> entityNames = new ConcurrentHashMap<>();
+	private transient final SchemaUtil schemaUtil = new SchemaUtil();
 	
 	/**
 	 * 
@@ -107,8 +99,8 @@ public class EntityCache extends ObjectQueue<EntityEvent> {
 	 */
 	protected String getKey(final Object entity) {
 		final Class<?> cls = entity.getClass();
-		final String entityName = getEntityName(cls);
-		final Field idField = getEntityIdField(cls);
+		final String entityName = schemaUtil.getEntityName(cls);
+		final Field idField = schemaUtil.getEntityIdField(cls);
 		Object entityId = null;
 		if(entityName != null && idField != null) {
 			try {
@@ -124,34 +116,6 @@ public class EntityCache extends ObjectQueue<EntityEvent> {
 		}
 		return key;
 	}
-	
-	/**
-	 * @param cls
-	 * @return
-	 */
-	protected String getEntityName(final Class<?> cls) {
-		return entityNames.computeIfAbsent(cls.getName(), key -> {
-			String name = null;
-			if(cls.isAnnotationPresent(javax.persistence.Entity.class)) {
-				name = ((javax.persistence.Entity)cls.getAnnotation(javax.persistence.Entity.class)).name();
-			}
-			return name;
-		});
-	}
-	
-	/**
-	 * @param cls
-	 * @return
-	 */
-	protected Field getEntityIdField(final Class<?> cls) {
-		return entityIdFields.computeIfAbsent(cls.getName(), name -> {
-			final Optional<Field> idField = Stream.of(cls.getDeclaredFields())
-					.filter(field -> field.isAnnotationPresent(Id.class))
-					.findAny();
-			idField.ifPresent(f -> f.setAccessible(true));
-			return idField.orElse(null);
-		});
-	}
 
 	@Override
 	public void accept(final EntityEvent event) {
@@ -159,7 +123,7 @@ public class EntityCache extends ObjectQueue<EntityEvent> {
 			final PostLoad postLoad = (PostLoad) event;
 			final String key = getKey(postLoad.getEntity());
 			if(key != null) {
-				final String entityName = getEntityName(postLoad.getEntity().getClass());
+				final String entityName = schemaUtil.getEntityName(postLoad.getEntity().getClass());
 				putKey(entityName, key);
 				cache.putIfAbsent(key, postLoad.getEntity());
 			}
@@ -175,7 +139,7 @@ public class EntityCache extends ObjectQueue<EntityEvent> {
 			final PostPersist postPersist = (PostPersist) event;
 			final String key = getKey(postPersist.getEntity());
 			if(key != null) {
-				final String entityName = getEntityName(postPersist.getEntity().getClass());
+				final String entityName = schemaUtil.getEntityName(postPersist.getEntity().getClass());
 				putKey(entityName, key);
 				cache.put(key, postPersist.getEntity());
 			}
@@ -184,7 +148,7 @@ public class EntityCache extends ObjectQueue<EntityEvent> {
 			final PostRemove postRemove = (PostRemove) event;
 			final String key = getKey(postRemove.getEntity());
 			if(key != null) {
-				final String entityName = getEntityName(postRemove.getEntity().getClass());
+				final String entityName = schemaUtil.getEntityName(postRemove.getEntity().getClass());
 				removeKey(entityName, key);
 				cache.remove(key);
 			}

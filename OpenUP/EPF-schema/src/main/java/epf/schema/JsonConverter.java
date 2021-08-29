@@ -12,7 +12,7 @@ import javax.persistence.Converter;
  *
  */
 @Converter(autoApply = true)
-public class JsonObjectConverter implements AttributeConverter<JsonObject, String> {
+public class JsonConverter implements AttributeConverter<JsonObject, String> {
 
 	/**
 	 *
