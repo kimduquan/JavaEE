@@ -64,6 +64,9 @@ public class Messaging {
 		final Server cache = new Server();
 		servers.put("cache", cache);
 		executor.submit(cache);
+		final Server security = new Server();
+		servers.put("security", security);
+		executor.submit(security);
 	}
 	
 	/**

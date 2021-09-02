@@ -15,6 +15,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
@@ -80,6 +81,12 @@ public class Security implements epf.client.security.Security, Serializable {
     /**
      * 
      */
+    @Inject
+    private transient Event<Token> login;
+    
+    /**
+     * 
+     */
     @PostConstruct
     protected void postConstruct(){
         try {
@@ -123,7 +130,8 @@ public class Security implements epf.client.security.Security, Serializable {
     		try(Client persistenceClient = clientUtil.newClient(ConfigUtil.getURI(Persistence.PERSISTENCE_URL))){
     			persistenceClient.authorization(rawToken);
     			final Token newToken = buildToken(persistenceClient, token, rawToken);
-        		return newToken.getRawToken();
+        		login.fire(newToken);
+    			return newToken.getRawToken();
     		}
     	} 
     	catch (Exception e) {
