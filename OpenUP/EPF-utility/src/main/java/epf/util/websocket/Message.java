@@ -45,7 +45,7 @@ public class Message implements Serializable, Closeable {
 	}
 
 	@Override
-	public void close() throws IOException {
+	public void close() {
 		isClose.set(true);
 	}
 

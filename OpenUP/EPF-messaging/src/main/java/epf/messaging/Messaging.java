@@ -3,13 +3,13 @@
  */
 package epf.messaging;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
@@ -18,6 +18,7 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.client.messaging.MessageDecoder;
 import epf.client.messaging.MessageEncoder;
 import epf.util.logging.Logging;
@@ -49,10 +50,20 @@ public class Messaging {
 	/**
 	 * 
 	 */
+	@Inject
+	private transient ManagedExecutor executor;
+	
+	/**
+	 * 
+	 */
 	@PostConstruct
 	protected void postConstruct() {
-		servers.put("persistence", new Server());
-		servers.put("cache", new Server());
+		final Server persistence = new Server();
+		servers.put("persistence", persistence);
+		executor.submit(persistence);
+		final Server cache = new Server();
+		servers.put("cache", cache);
+		executor.submit(cache);
 	}
 	
 	/**
@@ -104,10 +115,7 @@ public class Messaging {
 	@OnMessage
     public void onMessage(@PathParam(PATH) final String path, final Object message, final Session session) {
 		servers.computeIfPresent(path, (p, server) -> {
-			final Iterator<Session> sessionIt = server.getSessions().iterator();
-			while(sessionIt.hasNext()) {
-				sessionIt.next().getAsyncRemote().sendObject(message);
-			}
+			server.onMessage(message, session);
 			return server;
 		});
 	}

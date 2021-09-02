@@ -26,6 +26,8 @@ public class MessageTopicTest {
 	MessageTopic topic;
 	Session session1;
 	Session session2;
+	MessageHandler handler1;
+	MessageHandler handler2;
 	
 	/**
 	 * @throws java.lang.Exception
@@ -52,6 +54,8 @@ public class MessageTopicTest {
 		Mockito.when(session1.getId()).thenReturn("1");
 		session2 = Mockito.mock(Session.class);
 		Mockito.when(session2.getId()).thenReturn("2");
+		handler1 = new MessageHandler(session1);
+		handler2 = new MessageHandler(session2);
 		topic = new MessageTopic();
 	}
 
@@ -78,8 +82,8 @@ public class MessageTopicTest {
 	 */
 	@Test
 	public void testRun() throws IOException, EncodeException, InterruptedException {
-		topic.addSession(session1);
-		topic.addSession(session2);
+		topic.addConsumer("1", handler1);
+		topic.addConsumer("2", handler2);
 		executor.submit(topic);
 		Message message1 = Mockito.mock(Message.class);
 		Message message2 = Mockito.mock(Message.class);
@@ -131,7 +135,7 @@ public class MessageTopicTest {
 	 */
 	@Test
 	public void testRemoveSession() {
-		topic.removeSession(session2);
+		topic.removeConsumer("2");
 	}
 
 }

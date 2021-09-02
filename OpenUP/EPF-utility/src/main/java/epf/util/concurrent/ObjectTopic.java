@@ -18,7 +18,7 @@ import epf.util.logging.Logging;
  * @author PC
  *
  */
-public abstract class ObjectTopic<T extends Object, U extends Consumer<T>> implements Runnable, Closeable, Consumer<T> {
+public class ObjectTopic<T extends Object, U extends Consumer<T>> implements Runnable, Closeable, Consumer<T> {
 
 	/**
 	 * 
@@ -61,9 +61,7 @@ public abstract class ObjectTopic<T extends Object, U extends Consumer<T>> imple
 				}
 				@SuppressWarnings("unchecked")
 				final T obj = (T)object;
-				consumers.values().parallelStream().forEach(consumer -> {
-					consumer.accept(obj);
-				});
+				accept(obj);
 			} 
 			catch (Exception e) {
 				LOGGER.throwing(getClass().getName(), "run", null);
@@ -95,5 +93,12 @@ public abstract class ObjectTopic<T extends Object, U extends Consumer<T>> imple
 	public void removeConsumer(final String id) {
 		Objects.requireNonNull(id, "String");
 		consumers.remove(id);
+	}
+
+	@Override
+	public void accept(final T object) {
+		consumers.values().parallelStream().forEach(consumer -> {
+			consumer.accept(object);
+		});
 	}
 }

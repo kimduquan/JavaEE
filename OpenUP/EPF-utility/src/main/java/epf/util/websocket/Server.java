@@ -3,11 +3,8 @@
  */
 package epf.util.websocket;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.io.Closeable;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
 import javax.websocket.CloseReason;
 import javax.websocket.Session;
 import epf.util.logging.Logging;
@@ -16,7 +13,7 @@ import epf.util.logging.Logging;
  * @author PC
  *
  */
-public class Server implements AutoCloseable {
+public class Server implements Runnable, Closeable {
 	
 	/**
 	 * 
@@ -26,21 +23,13 @@ public class Server implements AutoCloseable {
 	/**
 	 * 
 	 */
-	private final transient Map<String, Session> sessions = new ConcurrentHashMap<>();
-	
-	/**
-	 * @param id
-	 * @return
-	 */
-	protected Session getSession(final String sessionId) {
-		return sessions.get(sessionId);
-	}
+	private final transient MessageTopic messages = new MessageTopic();
 	
 	/**
 	 * @param session
 	 */
 	public void onOpen(final Session session) {
-        sessions.put(session.getId(), session);
+        messages.addConsumer(session.getId(), new MessageHandler(session));
     }
  
     /**
@@ -48,7 +37,7 @@ public class Server implements AutoCloseable {
      * @param closeReason
      */
     public void onClose(final Session session, final CloseReason closeReason) {
-        sessions.remove(session.getId());
+        messages.removeConsumer(session.getId());
     }
     
     /**
@@ -60,27 +49,20 @@ public class Server implements AutoCloseable {
     }
     
     /**
-     * @param consumer
+     * @param message
+     * @param session
      */
-    public Stream<Session> getSessions() {
-    	return sessions.values()
-    	.stream()
-    	.filter(Session::isOpen);
+    public void onMessage(final Object message, final Session session) {
+    	messages.add(new Message(message));
     }
 
 	@Override
-	public void close() throws Exception {
-		sessions.values()
-    	.parallelStream()
-    	.filter(Session::isOpen)
-    	.forEach(session -> {
-    		try {
-				session.close();
-			} 
-			catch (IOException e) {
-				LOGGER.throwing(Session.class.getName(), "close", e);
-			}
-		});
-		sessions.clear();
+	public void close() {
+		messages.close();
+	}
+
+	@Override
+	public void run() {
+		messages.run();
 	}
 }

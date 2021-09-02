@@ -14,6 +14,7 @@ import javax.websocket.WebSocketContainer;
 import epf.util.logging.Logging;
 import epf.util.websocket.Client;
 import epf.util.websocket.Message;
+import epf.util.websocket.MessageHandler;
 import epf.util.websocket.MessageTopic;
 
 /**
@@ -68,7 +69,7 @@ public class Remote implements Runnable, AutoCloseable {
 	 * @param session
 	 */
 	public void onOpen(final Session session) {
-		messages.addSession(session);
+		messages.addConsumer(session.getId(), new MessageHandler(session));
     }
  
     /**
@@ -76,7 +77,7 @@ public class Remote implements Runnable, AutoCloseable {
      * @param closeReason
      */
     public void onClose(final Session session, final CloseReason closeReason) {
-    	messages.removeSession(session);
+    	messages.removeConsumer(session.getId());
     }
     
     /**
