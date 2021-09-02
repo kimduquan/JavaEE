@@ -4,7 +4,6 @@
 package epf.client.cache;
 
 import java.util.List;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
@@ -19,6 +18,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
 import javax.ws.rs.sse.SseEventSource;
+import epf.client.security.Token;
 import epf.util.client.Client;
 
 /**
@@ -164,5 +164,27 @@ public interface Cache {
 	 */
 	static SseEventSource forEachEntity(final Client client, final String entity) {
 		return client.stream(target -> target.path("persistence").queryParam("entity", entity), req -> req);
+	}
+	
+	/**
+	 * @param tokenId
+	 * @return
+	 */
+	@GET
+    @Path("security")
+	@Produces(MediaType.APPLICATION_JSON)
+	Token getToken(@QueryParam("tid") final String tokenId);
+	
+	/**
+	 * @param client
+	 * @param tokenId
+	 * @return
+	 */
+	static Token getToken(final Client client, final String tokenId) {
+		return client
+				.request(target -> target.queryParam("tid", tokenId), 
+						req -> req.accept(MediaType.APPLICATION_JSON)
+						)
+				.get(Token.class);
 	}
 }

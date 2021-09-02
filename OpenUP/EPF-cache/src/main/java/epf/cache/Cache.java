@@ -21,7 +21,8 @@ import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.cache.persistence.Persistence;
-import epf.client.security.Security;
+import epf.cache.security.Security;
+import epf.client.security.Token;
 import epf.util.concurrent.ObjectQueue;
 
 /**
@@ -30,8 +31,14 @@ import epf.util.concurrent.ObjectQueue;
  */
 @ApplicationScoped
 @Path("cache")
-@RolesAllowed(Security.DEFAULT_ROLE)
+@RolesAllowed(epf.client.security.Security.DEFAULT_ROLE)
 public class Cache implements epf.client.cache.Cache {
+	
+	/**
+	 * 
+	 */
+	@Inject
+	private transient Security security;
 
 	/**
 	 * 
@@ -95,5 +102,10 @@ public class Cache implements epf.client.cache.Cache {
 			return Response.ok(objects).build();
 		}
 		throw new NotFoundException();
+	}
+
+	@Override
+	public Token getToken(final String tokenId) {
+		return security.getToken(tokenId);
 	}
 }

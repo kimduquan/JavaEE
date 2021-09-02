@@ -34,6 +34,7 @@ public class Manager implements HealthCheck {
 		manager = Caching.getCachingProvider().getCacheManager();
 		final MutableConfiguration<String, Object> config = new MutableConfiguration<>();
 		manager.createCache("persistence", config);
+		manager.createCache("security", config);
 	}
 	
 	/**
