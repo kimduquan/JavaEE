@@ -40,5 +40,10 @@
 			<groupId>com.liferay.faces</groupId>
 			<artifactId>com.liferay.faces.bridge.impl</artifactId>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.primefaces/primefaces -->
+		<dependency>
+		    <groupId>org.primefaces</groupId>
+		    <artifactId>primefaces</artifactId>
+		</dependency>
 	</dependencies>
 </project>
