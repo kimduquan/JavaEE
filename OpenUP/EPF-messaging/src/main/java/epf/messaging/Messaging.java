@@ -113,7 +113,7 @@ public class Messaging {
 	 * @param session
 	 */
 	@OnMessage
-    public void onMessage(@PathParam(PATH) final String path, final Object message, final Session session) {
+    public void onMessage(@PathParam(PATH) final String path, final String message, final Session session) {
 		servers.computeIfPresent(path, (p, server) -> {
 			server.onMessage(message, session);
 			return server;
