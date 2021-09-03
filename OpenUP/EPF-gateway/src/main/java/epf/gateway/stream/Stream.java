@@ -22,11 +22,13 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
 import org.eclipse.microprofile.context.ManagedExecutor;
+import epf.gateway.security.SecurityUtil;
 import epf.util.config.ConfigUtil;
 import epf.util.websocket.Client;
 
@@ -103,6 +105,7 @@ public class Stream {
 	/**
 	 * @param sink
 	 * @param sse
+	 * @throws Exception 
 	 */
 	@GET
 	@Path("{path}")
@@ -114,16 +117,24 @@ public class Stream {
 			@Context 
 			final SseEventSink sink, 
 			@Context 
-			final Sse sse) {
-		clients.computeIfPresent(path, (p, client) -> {
-			final Broadcaster broadcaster = broadcasters.computeIfAbsent(
-					path, p2 -> {
-						final Broadcaster newBroadcaster = new Broadcaster(client, sse);
-						executor.submit(newBroadcaster);
-						return newBroadcaster;
-					});
-			broadcaster.register(sink);
-			return client;
-		});
+			final Sse sse,
+			@QueryParam("tid")
+			@NotBlank
+			final String tokenId) throws Exception {
+		if(SecurityUtil.authenticateTokenId(tokenId)) {
+			clients.computeIfPresent(path, (p, client) -> {
+				final Broadcaster broadcaster = broadcasters.computeIfAbsent(
+						path, p2 -> {
+							final Broadcaster newBroadcaster = new Broadcaster(client, sse);
+							executor.submit(newBroadcaster);
+							return newBroadcaster;
+						});
+				broadcaster.register(sink);
+				return client;
+			});
+		}
+		else {
+			sink.close();
+		}
 	}
 }

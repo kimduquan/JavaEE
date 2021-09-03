@@ -44,18 +44,29 @@ public interface SecurityUtil {
 		if(params != null && params.containsKey("tid")) {
 			final List<String> tid = session.getRequestParameterMap().get("tid");
 			if(tid != null && tid.size() > 0) {
-				final URI cacheUrl = ConfigUtil.getURI("epf.cache.url").resolve("..");
-				final Map<String, Object> data = RestClientBuilder.newBuilder().baseUri(cacheUrl).build(CacheUtil.class).getToken(tid.get(0));
-				if(data != null && data.containsKey("rawToken")) {
-					final String rawToken = (String) data.get("rawToken");
-					final URI securityUrl = ConfigUtil.getURI("epf.security.url").resolve("..");
-					final StringBuilder builder = new StringBuilder();
-					builder.append("Bearer ").append(rawToken);
-					try(Response response = RestClientBuilder.newBuilder().baseUri(securityUrl).build(SecurityUtil.class).authenticate(builder.toString())){
-						if(response.getStatus() == 200) {
-							succeed = true;
-						}
-					}
+				succeed = authenticateTokenId(tid.get(0));
+			}
+		}
+		return succeed;
+	}
+	
+	/**
+	 * @param tokenId
+	 * @return
+	 * @throws Exception
+	 */
+	static boolean authenticateTokenId(final String tokenId) throws Exception {
+		boolean succeed = false;
+		final URI cacheUrl = ConfigUtil.getURI("epf.cache.url").resolve("..");
+		final Map<String, Object> data = RestClientBuilder.newBuilder().baseUri(cacheUrl).build(CacheUtil.class).getToken(tokenId);
+		if(data != null && data.containsKey("rawToken")) {
+			final String rawToken = (String) data.get("rawToken");
+			final URI securityUrl = ConfigUtil.getURI("epf.security.url").resolve("..");
+			final StringBuilder builder = new StringBuilder();
+			builder.append("Bearer ").append(rawToken);
+			try(Response response = RestClientBuilder.newBuilder().baseUri(securityUrl).build(SecurityUtil.class).authenticate(builder.toString())){
+				if(response.getStatus() == 200) {
+					succeed = true;
 				}
 			}
 		}
