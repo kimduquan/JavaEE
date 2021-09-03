@@ -3,12 +3,13 @@ package epf.tests.messaging;
 import java.net.URI;
 import java.time.Duration;
 import java.util.HashMap;
+import javax.ws.rs.core.UriBuilder;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
+import epf.client.gateway.GatewayUtil;
 import epf.client.messaging.Client;
 import epf.client.messaging.Messaging;
 import epf.schema.EPF;
@@ -35,10 +36,10 @@ public class MessagingTest {
     
     @BeforeClass
     public static void beforeClass() throws Exception{
-    	URI messagingUrl = MessagingUtil.getMessagingUrl();
+    	URI messagingUrl = UriBuilder.fromUri(GatewayUtil.getUrl().resolve("messaging")).scheme("ws").port(9080).build();
     	token = SecurityUtil.login();
     	tokenId = SecurityUtil.auth(token).getTokenID();
-    	listenerUrl = messagingUrl.resolve("persistence?tid=" + tokenId);
+    	listenerUrl = new URI(messagingUrl.toString() + "/persistence?tid=" + tokenId);
     }
     
     @AfterClass
@@ -90,10 +91,10 @@ public class MessagingTest {
     }
     
     @Test
-    @Ignore
     public void testInvalidTokenId() throws Exception {
-    	URI messagingUrl = MessagingUtil.getMessagingUrl();
-    	Client invalidClient = Messaging.connectToServer(messagingUrl.resolve("persistence"));
+    	URI messagingUrl = UriBuilder.fromUri(GatewayUtil.getUrl().resolve("messaging")).scheme("ws").port(9080).build();
+    	URI url = new URI(messagingUrl.toString() + "/persistence");
+    	Client invalidClient = Messaging.connectToServer(url);
     	TestUtil.waitUntil(t -> !invalidClient.getSession().isOpen(), Duration.ofSeconds(10));
     	Assert.assertFalse("Client.session.open", invalidClient.getSession().isOpen());
     }
