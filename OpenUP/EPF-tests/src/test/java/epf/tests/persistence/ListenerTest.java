@@ -41,6 +41,7 @@ public class ListenerTest {
 	private static URI listenerUrl;
 	private static URI streamUrl;
 	private static String token;
+	private static String tokenId;
 	private static ExecutorService executor;
 	private Client client;
 	private static epf.util.client.Client streamClient;
@@ -51,8 +52,9 @@ public class ListenerTest {
     public static void beforeClass() throws Exception{
     	persistenceUrl = GatewayUtil.get("persistence");
     	URI messagingUrl = UriBuilder.fromUri(GatewayUtil.getUrl().resolve("messaging")).scheme("ws").port(9080).build();
-    	listenerUrl = new URI(messagingUrl.toString() + "/persistence");
     	token = SecurityUtil.login();
+    	tokenId = SecurityUtil.auth(token).getTokenID();
+    	listenerUrl = new URI(messagingUrl.toString() + "/persistence?tid=" + tokenId);
     	streamUrl = GatewayUtil.get("stream");
     	executor = Executors.newFixedThreadPool(1);
     	streamClient = ClientUtil.newClient(streamUrl);

@@ -8,6 +8,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import epf.client.messaging.Client;
 import epf.client.messaging.Messaging;
 import epf.schema.EPF;
@@ -29,13 +30,15 @@ public class MessagingTest {
 	
 	private static URI listenerUrl;
 	private static String token;
+	private static String tokenId;
 	private Client client;
     
     @BeforeClass
     public static void beforeClass() throws Exception{
     	URI messagingUrl = MessagingUtil.getMessagingUrl();
-    	listenerUrl = messagingUrl.resolve("persistence");
     	token = SecurityUtil.login();
+    	tokenId = SecurityUtil.auth(token).getTokenID();
+    	listenerUrl = messagingUrl.resolve("persistence?tid=" + tokenId);
     }
     
     @AfterClass
@@ -84,5 +87,14 @@ public class MessagingTest {
 		HashMap<String, Object> removeEntity = (HashMap<String, Object>)remove.getEntity();
     	Assert.assertEquals("PostRemove.entity.class", Artifact.class.getName(), removeEntity.get("class"));
     	Assert.assertEquals("PostRemove.entity.name", artifact.getName(), removeEntity.get("name"));
+    }
+    
+    @Test
+    @Ignore
+    public void testInvalidTokenId() throws Exception {
+    	URI messagingUrl = MessagingUtil.getMessagingUrl();
+    	Client invalidClient = Messaging.connectToServer(messagingUrl.resolve("persistence"));
+    	TestUtil.waitUntil(t -> !invalidClient.getSession().isOpen(), Duration.ofSeconds(10));
+    	Assert.assertFalse("Client.session.open", invalidClient.getSession().isOpen());
     }
 }

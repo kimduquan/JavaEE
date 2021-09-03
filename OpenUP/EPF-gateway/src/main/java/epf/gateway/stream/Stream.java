@@ -66,7 +66,6 @@ public class Stream {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			
 			final URI messagingUrl = ConfigUtil.getURI("epf.messaging.url");
 			final WebSocketContainer container = ContainerProvider.getWebSocketContainer();
 			clients.put("persistence", Client.connectToServer(container, messagingUrl.resolve("persistence")));

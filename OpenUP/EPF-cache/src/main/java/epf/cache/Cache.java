@@ -104,6 +104,7 @@ public class Cache implements epf.client.cache.Cache {
 		throw new NotFoundException();
 	}
 
+	@PermitAll
 	@Override
 	public Token getToken(final String tokenId) {
 		return security.getToken(tokenId);
