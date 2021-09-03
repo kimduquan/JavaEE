@@ -7,9 +7,9 @@ import java.net.URI;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.cache.Cache;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.Readiness;
 import epf.cache.Manager;
 import epf.client.messaging.Client;
@@ -33,7 +33,7 @@ public class Security {
 	/**
 	 * 
 	 */
-	private transient Cache<String, Object> cache;
+	private transient TokenCache tokenCache;
 	
 	/**
 	 * 
@@ -49,16 +49,22 @@ public class Security {
 	/**
 	 * 
 	 */
+	@Inject
+	private transient ManagedExecutor executor;
+	
+	/**
+	 * 
+	 */
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			cache = manager.getCache("security");
+			tokenCache = new TokenCache(manager.getCache("security"));
+			executor.submit(tokenCache);
 			final URI messagingUrl = ConfigUtil.getURI(Messaging.MESSAGING_URL);
 			client = Messaging.connectToServer(messagingUrl.resolve("security"));
 			client.onMessage(message -> {
 				if(message instanceof Token) {
-					final Token token = (Token) message;
-					cache.put(token.getTokenID(), token);
+					tokenCache.add((Token) message);
 				}
 			});
 		}
@@ -85,6 +91,6 @@ public class Security {
 	 * @return
 	 */
 	public Token getToken(final String tokenId) {
-		return (Token) cache.get(tokenId);
+		return tokenCache.get(tokenId);
 	}
 }

@@ -94,8 +94,9 @@ public class MessagingTest {
     public void testInvalidTokenId() throws Exception {
     	URI messagingUrl = UriBuilder.fromUri(GatewayUtil.getUrl().resolve("messaging")).scheme("ws").port(9080).build();
     	URI url = new URI(messagingUrl.toString() + "/persistence");
-    	Client invalidClient = Messaging.connectToServer(url);
-    	TestUtil.waitUntil(t -> !invalidClient.getSession().isOpen(), Duration.ofSeconds(10));
-    	Assert.assertFalse("Client.session.open", invalidClient.getSession().isOpen());
+    	try(Client invalidClient = Messaging.connectToServer(url)){
+        	TestUtil.waitUntil(t -> !invalidClient.getSession().isOpen(), Duration.ofSeconds(10));
+        	Assert.assertFalse("Client.session.open", invalidClient.getSession().isOpen());
+    	}
     }
 }
