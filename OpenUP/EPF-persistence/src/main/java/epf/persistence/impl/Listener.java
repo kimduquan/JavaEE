@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.logging.Logger;
-import epf.util.SystemUtil;
+import epf.util.config.ConfigUtil;
 import epf.util.logging.Logging;
 import epf.util.websocket.Message;
 import epf.util.websocket.MessageQueue;
@@ -59,7 +59,7 @@ public class Listener {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI messagingUrl = new URI(SystemUtil.getenv(Messaging.MESSAGING_URL));
+			final URI messagingUrl = ConfigUtil.getURI(Messaging.MESSAGING_URL);
 			client = Messaging.connectToServer(messagingUrl.resolve("persistence"));
 			messages = new MessageQueue(client.getSession());
 			executor.submit(messages);

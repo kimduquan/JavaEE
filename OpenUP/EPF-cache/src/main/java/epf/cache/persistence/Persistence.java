@@ -21,8 +21,8 @@ import epf.cache.Manager;
 import epf.client.messaging.Client;
 import epf.client.messaging.Messaging;
 import epf.schema.EntityEvent;
-import epf.util.SystemUtil;
 import epf.util.concurrent.ObjectQueue;
+import epf.util.config.ConfigUtil;
 import epf.util.logging.Logging;
 
 /**
@@ -73,7 +73,7 @@ public class Persistence {
 			cache = manager.getCache("persistence");
 			entityCache = new EntityCache(cache);
 			executor.submit(entityCache);
-			final URI messagingUrl = new URI(SystemUtil.getenv(Messaging.MESSAGING_URL));
+			final URI messagingUrl = ConfigUtil.getURI(Messaging.MESSAGING_URL);
 			client = Messaging.connectToServer(messagingUrl.resolve("persistence"));
 			client.onMessage(message -> {
 				if(message instanceof EntityEvent) {

@@ -15,7 +15,7 @@ import epf.cache.Manager;
 import epf.client.messaging.Client;
 import epf.client.messaging.Messaging;
 import epf.client.security.Token;
-import epf.util.SystemUtil;
+import epf.util.config.ConfigUtil;
 import epf.util.logging.Logging;
 
 /**
@@ -53,7 +53,7 @@ public class Security {
 	protected void postConstruct() {
 		try {
 			cache = manager.getCache("security");
-			final URI messagingUrl = new URI(SystemUtil.getenv(Messaging.MESSAGING_URL));
+			final URI messagingUrl = ConfigUtil.getURI(Messaging.MESSAGING_URL);
 			client = Messaging.connectToServer(messagingUrl.resolve("security"));
 			client.onMessage(message -> {
 				if(message instanceof Token) {

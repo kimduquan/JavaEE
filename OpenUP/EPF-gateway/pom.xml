@@ -52,6 +52,12 @@
 		    <artifactId>microprofile-context-propagation-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.rest.client/microprofile-rest-client-api -->
+		<dependency>
+		    <groupId>org.eclipse.microprofile.rest.client</groupId>
+		    <artifactId>microprofile-rest-client-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-utility</artifactId>

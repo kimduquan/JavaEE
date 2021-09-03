@@ -14,7 +14,7 @@ import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.client.messaging.Client;
 import epf.client.messaging.Messaging;
 import epf.client.security.Token;
-import epf.util.SystemUtil;
+import epf.util.config.ConfigUtil;
 import epf.util.logging.Logging;
 import epf.util.websocket.Message;
 import epf.util.websocket.MessageQueue;
@@ -53,7 +53,7 @@ public class Application {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI messagingUrl = new URI(SystemUtil.getenv(Messaging.MESSAGING_URL));
+			final URI messagingUrl = ConfigUtil.getURI(Messaging.MESSAGING_URL);
 			client = Messaging.connectToServer(messagingUrl.resolve("security"));
 			messages = new MessageQueue(client.getSession());
 			executor.submit(messages);

@@ -14,7 +14,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import epf.util.SystemUtil;
+import epf.util.config.ConfigUtil;
 import epf.util.logging.Logging;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -63,7 +63,7 @@ public class WebAppServlet extends HttpServlet {
      * @throws URISyntaxException
      */
     protected static URI buildRequestUri(final HttpServletRequest request) throws URISyntaxException {
-    	final String portletUrl = SystemUtil.getenv(WebApp.PORTLET_URL);
+    	final String portletUrl = ConfigUtil.getString(WebApp.PORTLET_URL);
     	final String requestUri = request.getRequestURI();
     	final String queryString = request.getQueryString();
     	final String uri = portletUrl + requestUri + (queryString != null ? queryString : "");

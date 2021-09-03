@@ -16,10 +16,10 @@ import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStore;
 import epf.util.client.Client;
 import epf.util.client.ClientQueue;
+import epf.util.config.ConfigUtil;
 import epf.util.logging.Logging;
 import epf.util.security.PasswordUtil;
 import epf.webapp.WebApp;
-import epf.util.SystemUtil;
 import epf.client.gateway.GatewayUtil;
 import epf.client.security.Security;
 import epf.client.security.Token;
@@ -51,7 +51,7 @@ public class EPFIdentityStore implements IdentityStore {
         CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
         try {
         	final String passwordHash = PasswordUtil.hash(credential.getCaller(), credential.getPassword().getValue());
-        	final URL webAppUrl = new URL(SystemUtil.getenv(WebApp.WEBAPP_URL));
+        	final URL webAppUrl = new URL(ConfigUtil.getString(WebApp.WEBAPP_URL));
         	final URI securityUrl = GatewayUtil.get("security");
         	Token token = null;
         	try(Client client = new Client(clients, securityUrl, b -> b)){

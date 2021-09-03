@@ -26,7 +26,7 @@ import javax.websocket.WebSocketContainer;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import org.eclipse.microprofile.context.ManagedExecutor;
-import epf.util.SystemUtil;
+import epf.util.config.ConfigUtil;
 import epf.util.logging.Logging;
 
 /**
@@ -64,7 +64,7 @@ public class Messaging {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI messagingUrl = new URI(SystemUtil.getenv("epf.messaging.url"));
+			final URI messagingUrl = ConfigUtil.getURI("epf.messaging.url");
 			final WebSocketContainer container = ContainerProvider.getWebSocketContainer();
 			final Remote persistence = new Remote(container, messagingUrl.resolve("persistence"));
 			remotes.put("persistence", persistence);
@@ -96,6 +96,7 @@ public class Messaging {
 	 */
 	@OnOpen
     public void onOpen(@PathParam(PATH) final String path, final Session session) {
+		
 		remotes.computeIfPresent(path, (p, remote) -> {
 			remote.onOpen(session);
 			return remote;

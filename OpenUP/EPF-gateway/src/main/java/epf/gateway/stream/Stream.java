@@ -27,7 +27,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
 import org.eclipse.microprofile.context.ManagedExecutor;
-import epf.util.SystemUtil;
+import epf.util.config.ConfigUtil;
 import epf.util.websocket.Client;
 
 /**
@@ -66,7 +66,8 @@ public class Stream {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI messagingUrl = new URI(SystemUtil.getenv("epf.messaging.url"));
+			
+			final URI messagingUrl = ConfigUtil.getURI("epf.messaging.url");
 			final WebSocketContainer container = ContainerProvider.getWebSocketContainer();
 			clients.put("persistence", Client.connectToServer(container, messagingUrl.resolve("persistence")));
 		} 
