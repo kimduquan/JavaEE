@@ -19,6 +19,11 @@ public class EntityEvent implements Serializable {
 	/**
 	 * 
 	 */
+	private long time; 
+	
+	/**
+	 * 
+	 */
 	private Object entity;
 	
 	@Override
@@ -32,5 +37,13 @@ public class EntityEvent implements Serializable {
 
 	public void setEntity(final Object entity) {
 		this.entity = entity;
+	}
+
+	public long getTime() {
+		return time;
+	}
+
+	public void setTime(final long time) {
+		this.time = time;
 	}
 }

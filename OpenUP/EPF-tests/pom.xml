@@ -143,6 +143,12 @@
         </dependency>
 		<dependency>
             <groupId>openup</groupId>
+            <artifactId>EPF-logging</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
+		<dependency>
+            <groupId>openup</groupId>
             <artifactId>EPF-lang</artifactId>
             <version>${project.version}</version>
             <type>war</type>
@@ -374,7 +380,7 @@
                         <configuration>
                             <verifyTimeout>600</verifyTimeout>
                             <serverStartTimeout>600</serverStartTimeout>
-                            <applications>EPF-script,EPF-config,EPF-messaging,EPF-batch,EPF-cache,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-persistence,EPF-registry,EPF-management,EPF-gateway,OpenUP-delivery-processes,OpenUP-roles,OpenUP-tasks,OpenUP-work-products</applications>
+                            <applications>EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-persistence,EPF-registry,EPF-management,EPF-gateway,OpenUP-delivery-processes,OpenUP-roles,OpenUP-tasks,OpenUP-work-products</applications>
                         </configuration>
                     </execution>
                     <!-- Stop the server -->
@@ -393,7 +399,7 @@
                     <deployPackages>dependencies</deployPackages>
 					<verifyTimeout>600</verifyTimeout>
 					<serverStartTimeout>600</serverStartTimeout>
-					<applications>EPF-script,EPF-config,EPF-messaging,EPF-batch,EPF-cache,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-persistence,EPF-registry,EPF-management,EPF-gateway,OpenUP-delivery-processes,OpenUP-roles,OpenUP-tasks,OpenUP-work-products</applications>
+					<applications>EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-persistence,EPF-registry,EPF-management,EPF-gateway,OpenUP-delivery-processes,OpenUP-roles,OpenUP-tasks,OpenUP-work-products</applications>
                 </configuration>
             </plugin>
 			<plugin>
