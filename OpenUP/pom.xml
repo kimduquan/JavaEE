@@ -13,6 +13,13 @@
     <!-- Define dependency version information -->
     <dependencyManagement>
         <dependencies>
+        	<!-- https://mvnrepository.com/artifact/javax.enterprise.concurrent/javax.enterprise.concurrent-api -->
+			<dependency>
+			    <groupId>javax.enterprise.concurrent</groupId>
+			    <artifactId>javax.enterprise.concurrent-api</artifactId>
+			    <version>1.1</version>
+			    <scope>provided</scope>
+			</dependency>
         	<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
 			<dependency>
 			    <groupId>javax.ws.rs</groupId>
@@ -709,6 +716,7 @@
 		<module>EPF-utility</module>
 		<module>EPF-security-utility</module>
 		<module>EPF-function</module>
+		<module>EPF-schedule</module>
 		<module>EPF-batch</module>
 		<module>EPF-script</module>
 		<module>EPF-config</module>

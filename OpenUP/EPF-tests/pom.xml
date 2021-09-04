@@ -18,6 +18,7 @@
         <!-- Jaeger configuration -->
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
+		<liberty.env.epf_schedule_url>https://localhost:9443/schedule/schedule/</liberty.env.epf_schedule_url>
 		<liberty.env.epf_config_url>https://localhost:9443/config/config/</liberty.env.epf_config_url>
 		<liberty.env.epf_script_url>https://localhost:9443/script/script/</liberty.env.epf_script_url>
 		<liberty.env.epf_file_url>https://localhost:9443/file/file/</liberty.env.epf_file_url>
@@ -116,6 +117,12 @@
             <groupId>openup</groupId>
             <artifactId>OpenUP-portlet-client</artifactId>
             <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-schedule</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
         </dependency>
 		<dependency>
             <groupId>openup</groupId>
@@ -298,6 +305,7 @@
                 <configuration>
                     <!-- Pass contextPath and httpPort to the integration tests -->
                     <systemPropertyVariables>
+						<epf.schedule.url>https://localhost:${httpsPort}/schedule/schedule/</epf.schedule.url>
 						<epf.config.url>https://localhost:${httpsPort}/config/config/</epf.config.url>
 						<epf.script.url>https://localhost:${httpsPort}/script/script/</epf.script.url>
 						<epf.file.url>https://localhost:${httpsPort}/file/file/</epf.file.url>
@@ -380,7 +388,7 @@
                         <configuration>
                             <verifyTimeout>600</verifyTimeout>
                             <serverStartTimeout>600</serverStartTimeout>
-                            <applications>EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-persistence,EPF-registry,EPF-management,EPF-gateway,OpenUP-delivery-processes,OpenUP-roles,OpenUP-tasks,OpenUP-work-products</applications>
+                            <applications>EPF-schedule,EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-persistence,EPF-registry,EPF-management,EPF-gateway,OpenUP-delivery-processes,OpenUP-roles,OpenUP-tasks,OpenUP-work-products</applications>
                         </configuration>
                     </execution>
                     <!-- Stop the server -->
@@ -399,7 +407,7 @@
                     <deployPackages>dependencies</deployPackages>
 					<verifyTimeout>600</verifyTimeout>
 					<serverStartTimeout>600</serverStartTimeout>
-					<applications>EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-persistence,EPF-registry,EPF-management,EPF-gateway,OpenUP-delivery-processes,OpenUP-roles,OpenUP-tasks,OpenUP-work-products</applications>
+					<applications>EPF-schedule,EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-persistence,EPF-registry,EPF-management,EPF-gateway,OpenUP-delivery-processes,OpenUP-roles,OpenUP-tasks,OpenUP-work-products</applications>
                 </configuration>
             </plugin>
 			<plugin>
