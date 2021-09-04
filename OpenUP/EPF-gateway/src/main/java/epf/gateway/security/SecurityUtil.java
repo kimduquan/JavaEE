@@ -32,22 +32,21 @@ public interface SecurityUtil {
 	@GET
     @Produces(MediaType.APPLICATION_JSON)
 	Response authenticate(@HeaderParam(HttpHeaders.AUTHORIZATION) final String token);
-
+	
 	/**
 	 * @param session
 	 * @return
-	 * @throws Exception 
 	 */
-	static boolean authenticate(final Session session) throws Exception {
-		boolean succeed = false;
+	static String getTokenId(final Session session) {
+		String tokenId = null;
 		final Map<String, List<String>> params = session.getRequestParameterMap();
 		if(params != null && params.containsKey("tid")) {
 			final List<String> tid = session.getRequestParameterMap().get("tid");
 			if(tid != null && tid.size() > 0) {
-				succeed = authenticateTokenId(tid.get(0));
+				tokenId = tid.get(0);
 			}
 		}
-		return succeed;
+		return tokenId;
 	}
 	
 	/**

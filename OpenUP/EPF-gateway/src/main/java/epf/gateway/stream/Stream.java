@@ -19,11 +19,11 @@ import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
 import javax.websocket.WebSocketContainer;
 import javax.ws.rs.GET;
+import javax.ws.rs.MatrixParam;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -120,7 +120,7 @@ public class Stream {
 			final SseEventSink sink, 
 			@Context 
 			final Sse sse,
-			@QueryParam("tid")
+			@MatrixParam("tid")
 			@NotBlank
 			final String tokenId) throws Exception {
 		if(SecurityUtil.authenticateTokenId(tokenId)) {

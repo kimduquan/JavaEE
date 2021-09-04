@@ -59,7 +59,7 @@ public class ListenerTest {
     	executor = Executors.newFixedThreadPool(1);
     	streamClient = ClientUtil.newClient(streamUrl);
     	events = new ConcurrentLinkedQueue<>();
-    	event = streamClient.stream(target -> target.path("persistence").queryParam("tid", tokenId), b -> b);
+    	event = streamClient.stream(target -> target.path("persistence").matrixParam("tid", tokenId), b -> b);
     	event.register(e -> {
     		String data = e.readData();
     		events.add(data);
