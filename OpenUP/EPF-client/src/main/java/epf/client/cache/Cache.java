@@ -182,7 +182,7 @@ public interface Cache {
 	 */
 	static Token getToken(final Client client, final String tokenId) {
 		return client
-				.request(target -> target.queryParam("tid", tokenId), 
+				.request(target -> target.path("security").queryParam("tid", tokenId), 
 						req -> req.accept(MediaType.APPLICATION_JSON)
 						)
 				.get(Token.class);

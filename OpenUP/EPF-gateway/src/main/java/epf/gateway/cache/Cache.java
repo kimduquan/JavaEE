@@ -98,4 +98,22 @@ public class Cache {
 			final Sse sse) throws Exception {
 		request.stream(headers, uriInfo, sseEventSink, sse);
 	}
+	
+	/**
+	 * @param headers
+	 * @param uriInfo
+	 * @param req
+	 * @return
+	 * @throws Exception
+	 */
+	@GET
+	@Path("security")
+	@Produces(MediaType.APPLICATION_JSON)
+    @Asynchronous
+    public CompletionStage<Response> getToken(
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req) throws Exception {
+        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
+    }
 }

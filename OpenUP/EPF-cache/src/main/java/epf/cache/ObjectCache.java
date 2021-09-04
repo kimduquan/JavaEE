@@ -3,6 +3,7 @@
  */
 package epf.cache;
 
+import java.util.Objects;
 import epf.util.concurrent.ObjectQueue;
 
 /**
@@ -20,6 +21,7 @@ public abstract class ObjectCache<T extends Object> extends ObjectQueue<T> {
 	 * @param cache
 	 */
 	public ObjectCache(final javax.cache.Cache<String, Object> cache) {
+		Objects.requireNonNull(cache, "Cache");
 		this.cache = cache;
 	}
 	

@@ -98,16 +98,20 @@ public class Messaging {
 	 */
 	@OnOpen
     public void onOpen(@PathParam(PATH) final String path, final Session session) throws Exception {
-		if(SecurityUtil.authenticate(session)) {
+		remotes.computeIfPresent(path, (p, remote) -> {
+			remote.onOpen(session);
+			return remote;
+			}
+		);
+		if(!SecurityUtil.authenticate(session)) {
+			final CloseReason reason = new CloseReason(CloseReason.CloseCodes.VIOLATED_POLICY, "");
 			remotes.computeIfPresent(path, (p, remote) -> {
-				remote.onOpen(session);
+				remote.onClose(session, reason);
 				return remote;
 				}
 			);
-		}
-		else {
 			try {
-				session.close(new CloseReason(CloseReason.CloseCodes.VIOLATED_POLICY, ""));
+				session.close(reason);
 			} 
 			catch (IOException e) {
 				LOGGER.throwing(LOGGER.getName(), "onOpen", e);
