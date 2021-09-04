@@ -12,6 +12,7 @@ import javax.rules.admin.RuleExecutionSet;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import org.eclipse.microprofile.health.Readiness;
 import epf.client.security.Security;
 
 /**
@@ -26,7 +27,7 @@ public class Admin implements epf.client.rules.admin.Admin {
 	/**
 	 * 
 	 */
-	@Inject
+	@Inject @Readiness
 	private transient Administrator administrator;
 
 	@Override

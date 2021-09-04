@@ -20,6 +20,7 @@ import javax.ws.rs.sse.OutboundSseEvent.Builder;
 import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
 import org.eclipse.microprofile.context.ManagedExecutor;
+import org.eclipse.microprofile.health.Readiness;
 import epf.cache.persistence.Persistence;
 import epf.cache.security.Security;
 import epf.client.security.Token;
@@ -37,13 +38,13 @@ public class Cache implements epf.client.cache.Cache {
 	/**
 	 * 
 	 */
-	@Inject
+	@Inject @Readiness
 	private transient Security security;
 
 	/**
 	 * 
 	 */
-	@Inject
+	@Inject @Readiness
 	private transient Persistence persistence;
 	
 	/**

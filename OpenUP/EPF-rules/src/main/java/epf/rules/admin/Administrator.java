@@ -12,6 +12,9 @@ import javax.rules.ConfigurationException;
 import javax.rules.RuleServiceProvider;
 import javax.rules.admin.LocalRuleExecutionSetProvider;
 import javax.rules.admin.RuleAdministrator;
+import org.eclipse.microprofile.health.HealthCheck;
+import org.eclipse.microprofile.health.HealthCheckResponse;
+import org.eclipse.microprofile.health.Readiness;
 import epf.rules.Provider;
 import epf.util.logging.Logging;
 
@@ -20,12 +23,13 @@ import epf.util.logging.Logging;
  *
  */
 @ApplicationScoped
-public class Administrator {
+@Readiness
+public class Administrator implements HealthCheck {
 	
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(Admin.class.getName());
+	private static final Logger LOGGER = Logging.getLogger(Administrator.class.getName());
 	
 	/**
 	 * 
@@ -40,7 +44,7 @@ public class Administrator {
 	/**
 	 * 
 	 */
-	@Inject
+	@Inject @Readiness
 	private transient Provider provider;
 	
 	@PostConstruct
@@ -67,5 +71,10 @@ public class Administrator {
 	
 	public LocalRuleExecutionSetProvider getLocalRuleProvider() {
 		return this.localRuleProvider;
+	}
+
+	@Override
+	public HealthCheckResponse call() {
+		return HealthCheckResponse.up("EPF-rules-admin");
 	}
 }

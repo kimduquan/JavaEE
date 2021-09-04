@@ -10,6 +10,8 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.eclipse.microprofile.context.ManagedExecutor;
+import org.eclipse.microprofile.health.HealthCheck;
+import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
 import epf.cache.Manager;
 import epf.client.messaging.Client;
@@ -23,7 +25,8 @@ import epf.util.logging.Logging;
  *
  */
 @ApplicationScoped
-public class Security {
+@Readiness
+public class Security implements HealthCheck {
 	
 	/**
 	 * 
@@ -92,5 +95,10 @@ public class Security {
 	 */
 	public Token getToken(final String tokenId) {
 		return tokenCache.get(tokenId);
+	}
+
+	@Override
+	public HealthCheckResponse call() {
+		return HealthCheckResponse.up("EPF-security-cache");
 	}
 }

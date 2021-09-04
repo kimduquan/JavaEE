@@ -12,6 +12,9 @@ import javax.rules.RuleRuntime;
 import javax.rules.RuleServiceProvider;
 import javax.rules.RuleServiceProviderManager;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.health.HealthCheck;
+import org.eclipse.microprofile.health.HealthCheckResponse;
+import org.eclipse.microprofile.health.Readiness;
 import epf.client.rules.Rules;
 import epf.util.logging.Logging;
 
@@ -20,7 +23,8 @@ import epf.util.logging.Logging;
  *
  */
 @ApplicationScoped
-public class Provider {
+@Readiness
+public class Provider implements HealthCheck {
 	
 	/**
 	 * 
@@ -85,5 +89,10 @@ public class Provider {
 	
 	public RuleRuntime getRuleRuntime() {
 		return this.ruleRuntime;
+	}
+
+	@Override
+	public HealthCheckResponse call() {
+		return HealthCheckResponse.up("EPF-rules");
 	}
 }

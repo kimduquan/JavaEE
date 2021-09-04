@@ -16,6 +16,7 @@ import javax.rules.StatelessRuleSession;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.eclipse.microprofile.health.Readiness;
 import epf.client.security.Security;
 import epf.util.json.Adapter;
 import epf.util.json.Decoder;
@@ -33,7 +34,7 @@ public class Rules implements epf.client.rules.Rules {
 	/**
 	 * 
 	 */
-	@Inject
+	@Inject @Readiness
 	private transient Provider provider;
 	
 	/**

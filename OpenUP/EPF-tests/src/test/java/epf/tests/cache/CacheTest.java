@@ -26,6 +26,7 @@ import epf.schema.work_products.section.Relationships;
 import epf.schema.work_products.section.Tailoring;
 import epf.tests.TestUtil;
 import epf.tests.client.ClientUtil;
+import epf.tests.health.HealthUtil;
 import epf.tests.persistence.PersistenceUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
@@ -47,6 +48,7 @@ public class CacheTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		HealthUtil.readỵ̣();
 		cacheUrl = GatewayUtil.get("cache");
 		token = SecurityUtil.login();
 	}

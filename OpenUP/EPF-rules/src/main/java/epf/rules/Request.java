@@ -15,6 +15,7 @@ import javax.rules.RuleRuntime;
 import javax.rules.RuleSessionCreateException;
 import javax.rules.RuleSessionTypeUnsupportedException;
 import javax.rules.StatelessRuleSession;
+import org.eclipse.microprofile.health.Readiness;
 import epf.util.logging.Logging;
 
 /**
@@ -37,7 +38,7 @@ public class Request {
 	/**
 	 * 
 	 */
-	@Inject
+	@Inject @Readiness
 	private transient Provider provider;
 	
 	/**

@@ -16,6 +16,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.websocket.DeploymentException;
 import org.eclipse.microprofile.context.ManagedExecutor;
+import org.eclipse.microprofile.health.HealthCheck;
+import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
 import epf.cache.Manager;
 import epf.client.messaging.Client;
@@ -30,7 +32,8 @@ import epf.util.logging.Logging;
  *
  */
 @ApplicationScoped
-public class Persistence {
+@Readiness
+public class Persistence implements HealthCheck {
 	
 	/**
 	 * 
@@ -127,5 +130,10 @@ public class Persistence {
 	public void forEachEntity(final String name, final ObjectQueue<Entry<String, Object>> queue) {
 		entityCache.forEachEntity(name, queue);
 		queue.close();
+	}
+
+	@Override
+	public HealthCheckResponse call() {
+		return HealthCheckResponse.up("EPF-persistence-cache");
 	}
 }

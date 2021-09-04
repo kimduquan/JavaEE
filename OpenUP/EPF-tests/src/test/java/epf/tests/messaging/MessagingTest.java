@@ -22,7 +22,7 @@ import epf.schema.work_products.section.MoreInformation;
 import epf.schema.work_products.section.Relationships;
 import epf.schema.work_products.section.Tailoring;
 import epf.tests.TestUtil;
-import epf.tests.cache.CacheUtil;
+import epf.tests.health.HealthUtil;
 import epf.tests.persistence.PersistenceUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
@@ -38,7 +38,7 @@ public class MessagingTest {
     @BeforeClass
     public static void beforeClass() throws Exception{
     	URI messagingUrl = UriBuilder.fromUri(GatewayUtil.getUrl().resolve("messaging")).scheme("ws").port(9080).build();
-    	CacheUtil.getToken("");
+    	HealthUtil.readỵ̣();
     	token = SecurityUtil.login();
     	tokenId = SecurityUtil.auth(token).getTokenID();
     	listenerUrl = new URI(messagingUrl.toString() + "/persistence?tid=" + tokenId);

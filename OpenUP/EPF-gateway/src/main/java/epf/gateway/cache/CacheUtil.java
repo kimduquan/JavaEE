@@ -14,7 +14,7 @@ import javax.ws.rs.core.MediaType;
  * @author PC
  *
  */
-@Path("cache")
+@Path("/")
 public interface CacheUtil {
 
 	/**
