@@ -73,17 +73,17 @@ public class ScheduleTest {
 	}
 
 	@Test
-	public void testScheduleShell() throws Exception {
-		long id = Schedule.scheduleShell(client, 1, TimeUnit.SECONDS).readEntity(Long.class);
+	public void testSchedule() throws Exception {
+		long id = Schedule.schedule(client, Schedule.SHELL, 1, TimeUnit.SECONDS).readEntity(Long.class);
 		TestUtil.waitUntil(t -> messages.stream().anyMatch(message -> message.contains(String.valueOf(id))), Duration.ofSeconds(2));
 		Assert.assertTrue(messages.stream().anyMatch(message -> message.contains(String.valueOf(id))));
 	}
 	
 	@Test
-	public void testCancelShell() throws Exception {
-		long id = Schedule.scheduleShell(client, 1, TimeUnit.SECONDS).readEntity(Long.class);
+	public void testCancel() throws Exception {
+		long id = Schedule.schedule(client, Schedule.SHELL, 1, TimeUnit.SECONDS).readEntity(Long.class);
 		Thread.sleep(80);
-		Schedule.cancelShell(client, id).getStatus();
+		Schedule.cancel(client, Schedule.SHELL, id).getStatus();
 		TestUtil.waitUntil(t -> messages.stream().anyMatch(message -> message.contains(String.valueOf(id))), Duration.ofSeconds(1));
 		Assert.assertEquals(0, messages.stream().filter(message -> message.contains(String.valueOf(id))).count());
 	}

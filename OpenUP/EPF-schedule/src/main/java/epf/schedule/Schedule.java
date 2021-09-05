@@ -102,7 +102,7 @@ public class Schedule implements epf.client.schedule.Schedule {
 	}
 
 	@Override
-	public long scheduleShell(final long delay, final TimeUnit unit) {
+	public long schedule(final String path, final long delay, final TimeUnit unit) {
 		final Scheduled invoke = new Scheduled(id.incrementAndGet(), shellMessages);
 		final ScheduledFuture<?> future = scheduledExecutor.schedule(invoke, delay, unit);
 		invoke.setScheduled(future);
@@ -111,9 +111,27 @@ public class Schedule implements epf.client.schedule.Schedule {
 	}
 
 	@Override
-	public void cancelShell(final long id) {
+	public void cancel(final String path, final long id) {
 		if(invokers.containsKey(id)) {
 			invokers.remove(id).close();
 		}
+	}
+
+	@Override
+	public long scheduleAtFixedRate(final String path, final long initialDelay, final long period, final TimeUnit unit) {
+		final Scheduled invoke = new Scheduled(id.incrementAndGet(), shellMessages);
+		final ScheduledFuture<?> future = scheduledExecutor.scheduleAtFixedRate(invoke, initialDelay, period, unit);
+		invoke.setScheduled(future);
+		invokers.put(invoke.getId(), invoke);
+		return invoke.getId();
+	}
+
+	@Override
+	public long scheduleWithFixedDelay(final String path, final long initialDelay, final long delay, final TimeUnit unit) {
+		final Scheduled invoke = new Scheduled(id.incrementAndGet(), shellMessages);
+		final ScheduledFuture<?> future = scheduledExecutor.scheduleWithFixedDelay(invoke, initialDelay, delay, unit);
+		invoke.setScheduled(future);
+		invokers.put(invoke.getId(), invoke);
+		return invoke.getId();
 	}
 }
