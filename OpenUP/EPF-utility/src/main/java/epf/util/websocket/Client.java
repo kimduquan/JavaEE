@@ -5,8 +5,6 @@ package epf.util.websocket;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 import javax.websocket.ClientEndpoint;
 import javax.websocket.DeploymentException;
@@ -40,14 +38,8 @@ public class Client implements AutoCloseable {
 	/**
 	 * 
 	 */
-	private transient final Queue<String> messages;
-	
-	/**
-	 * 
-	 */
 	protected Client() {
 		super();
-		messages = new ConcurrentLinkedQueue<>();
 	}
 	
 	public Session getSession() {
@@ -57,7 +49,6 @@ public class Client implements AutoCloseable {
 	@Override
 	public void close() throws Exception {
 		session.close();
-		messages.clear();
 		messageConsumer = null;
 	}
 	
@@ -67,10 +58,7 @@ public class Client implements AutoCloseable {
 	 */
 	@OnMessage
     public void onMessage(final String message, final Session session) {
-		if(messageConsumer == null) {
-			messages.add(message);
-		}
-		else {
+		if(messageConsumer != null) {
 			messageConsumer.accept(message);
 		}
 	}
@@ -113,9 +101,5 @@ public class Client implements AutoCloseable {
 		final Client client = new Client();
 		client.session = container.connectToServer(client, uri);
 		return client;
-	}
-	
-	public Queue<String> getMessages() {
-		return messages;
 	}
 }

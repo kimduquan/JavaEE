@@ -52,7 +52,7 @@ public class Logging implements HealthCheck {
 	 */
 	protected void newLogger(final String name, final URI messagingUrl) throws DeploymentException, IOException {
 		final Client client = Client.connectToServer(ContainerProvider.getWebSocketContainer(), messagingUrl.resolve(name));
-		final Logger logger = new Logger(name, client, false);
+		final Logger logger = new Logger(name, client);
 		executor.submit(logger);
 		loggers.put(name, logger);
 		client.onMessage(message -> {
@@ -69,6 +69,7 @@ public class Logging implements HealthCheck {
 			final URI messagingUrl = ConfigUtil.getURI("epf.messaging.url");
 			newLogger("persistence", messagingUrl);
 			newLogger("security", messagingUrl);
+			newLogger("cache", messagingUrl);
 		}
 		catch(Exception ex) {
 			LOGGER.throwing(LOGGER.getName(), "postConstruct", ex);

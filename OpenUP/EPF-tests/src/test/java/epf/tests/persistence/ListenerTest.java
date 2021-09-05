@@ -44,6 +44,7 @@ public class ListenerTest {
 	private static String tokenId;
 	private static ExecutorService executor;
 	private Client client;
+	private Queue<String> messages;
 	private static epf.util.client.Client streamClient;
 	private static SseEventSource event;
 	private static Queue<String> events;
@@ -79,11 +80,14 @@ public class ListenerTest {
     public void after() throws Exception {
     	client.close();
     	events.clear();
+    	messages.clear();
     }
     
     @Before
     public void before() throws Exception {
+    	messages = new ConcurrentLinkedQueue<>();
     	client = Client.connectToServer(ContainerProvider.getWebSocketContainer(), listenerUrl);
+    	client.onMessage(messages::add);
     	TestUtil.waitUntil(t -> client.getSession().isOpen(), Duration.ofSeconds(timeout));
     }
 
@@ -103,12 +107,12 @@ public class ListenerTest {
             Entities.remove(persistenceClient, EPF.ARTIFACT, artifact.getName());
     	}
     	
-    	TestUtil.waitUntil((t) -> client.getMessages().stream().anyMatch(msg -> msg.contains(PostPersist.class.getName()) && msg.contains(artifact.getName())), Duration.ofSeconds(timeout));
-    	TestUtil.waitUntil((t) -> client.getMessages().stream().anyMatch(msg -> msg.contains(PostRemove.class.getName()) && msg.contains(artifact.getName())), Duration.ofSeconds(timeout));
+    	TestUtil.waitUntil((t) -> messages.stream().anyMatch(msg -> msg.contains(PostPersist.class.getName()) && msg.contains(artifact.getName())), Duration.ofSeconds(timeout));
+    	TestUtil.waitUntil((t) -> messages.stream().anyMatch(msg -> msg.contains(PostRemove.class.getName()) && msg.contains(artifact.getName())), Duration.ofSeconds(timeout));
     	MessageDecoder decoder = new MessageDecoder();
-    	String message = client.getMessages().stream().filter(msg -> msg.contains(PostPersist.class.getName()) && msg.contains(artifact.getName())).findFirst().get();
+    	String message = messages.stream().filter(msg -> msg.contains(PostPersist.class.getName()) && msg.contains(artifact.getName())).findFirst().get();
     	PostPersist persist = (PostPersist) decoder.decode(message);
-    	message = client.getMessages().stream().filter(msg -> msg.contains(PostRemove.class.getName()) && msg.contains(artifact.getName())).findFirst().get();
+    	message = messages.stream().filter(msg -> msg.contains(PostRemove.class.getName()) && msg.contains(artifact.getName())).findFirst().get();
     	PostRemove remove = (PostRemove) decoder.decode(message);
     	
     	Assert.assertNotNull("PostPersist", persist);

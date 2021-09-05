@@ -61,6 +61,7 @@ public class Listener {
 		try {
 			final URI messagingUrl = ConfigUtil.getURI(Messaging.MESSAGING_URL);
 			client = Messaging.connectToServer(messagingUrl.resolve("persistence"));
+			client.onMessage(msg -> {});
 			messages = new MessageQueue(client.getSession());
 			executor.submit(messages);
 		} 

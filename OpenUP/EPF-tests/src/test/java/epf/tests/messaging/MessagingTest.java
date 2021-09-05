@@ -3,6 +3,8 @@ package epf.tests.messaging;
 import java.net.URI;
 import java.time.Duration;
 import java.util.HashMap;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.ws.rs.core.UriBuilder;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -34,6 +36,7 @@ public class MessagingTest {
 	private static String token;
 	private static String tokenId;
 	private Client client;
+	private Queue<Object> messages;
     
     @BeforeClass
     public static void beforeClass() throws Exception{
@@ -52,11 +55,14 @@ public class MessagingTest {
     @After
     public void after() throws Exception {
     	client.close();
+    	messages.clear();
     }
     
     @Before
     public void before() throws Exception {
     	client = Messaging.connectToServer(listenerUrl);
+    	messages = new ConcurrentLinkedQueue<>();
+    	client.onMessage(messages::add);
     	TestUtil.waitUntil(t -> client.getSession().isOpen(), Duration.ofSeconds(10));
     }
 
@@ -73,10 +79,10 @@ public class MessagingTest {
         PersistenceUtil.persist(token, Artifact.class, EPF.ARTIFACT, artifact);
         PersistenceUtil.remove(token, EPF.ARTIFACT, artifact.getName());
     	
-    	TestUtil.waitUntil((t) -> client.getMessages().stream().anyMatch(msg -> msg instanceof PostPersist), Duration.ofSeconds(10));
-    	TestUtil.waitUntil((t) -> client.getMessages().stream().anyMatch(msg -> msg instanceof PostRemove), Duration.ofSeconds(10));
-    	PostPersist persist = (PostPersist)client.getMessages().stream().filter(msg -> msg instanceof PostPersist).findFirst().get();
-    	PostRemove remove = (PostRemove)client.getMessages().stream().filter(msg -> msg instanceof PostRemove).findFirst().get();
+    	TestUtil.waitUntil((t) -> messages.stream().anyMatch(msg -> msg instanceof PostPersist), Duration.ofSeconds(10));
+    	TestUtil.waitUntil((t) -> messages.stream().anyMatch(msg -> msg instanceof PostRemove), Duration.ofSeconds(10));
+    	PostPersist persist = (PostPersist)messages.stream().filter(msg -> msg instanceof PostPersist).findFirst().get();
+    	PostRemove remove = (PostRemove)messages.stream().filter(msg -> msg instanceof PostRemove).findFirst().get();
     	Assert.assertNotNull("PostPersist", persist);
     	Assert.assertTrue("PostPersist.entity", persist.getEntity() instanceof HashMap);
     	@SuppressWarnings("unchecked")

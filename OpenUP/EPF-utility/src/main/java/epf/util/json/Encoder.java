@@ -5,7 +5,6 @@ package epf.util.json;
 
 import java.io.StringReader;
 import java.util.List;
-
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;

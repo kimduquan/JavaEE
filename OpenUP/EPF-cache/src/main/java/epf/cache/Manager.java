@@ -9,6 +9,7 @@ import javax.cache.CacheManager;
 import javax.cache.Caching;
 import javax.cache.configuration.MutableConfiguration;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
@@ -29,12 +30,19 @@ public class Manager implements HealthCheck {
 	/**
 	 * 
 	 */
+	@Inject
+	private transient Listener listener;
+	
+	/**
+	 * 
+	 */
 	@PostConstruct
 	protected void postConstruct() {
 		manager = Caching.getCachingProvider().getCacheManager();
 		final MutableConfiguration<String, Object> config = new MutableConfiguration<>();
 		manager.createCache("persistence", config);
 		manager.createCache("security", config);
+		listener.register(manager);
 	}
 	
 	/**
@@ -42,6 +50,7 @@ public class Manager implements HealthCheck {
 	 */
 	@PreDestroy
 	protected void preDestroy() {
+		listener.deregister(manager);
 		manager.close();
 	}
 
