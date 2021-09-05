@@ -13,12 +13,14 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.concurrent.ManagedScheduledExecutorService;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Path;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.client.messaging.Messaging;
+import epf.client.security.Security;
 import epf.util.config.ConfigUtil;
 import epf.util.logging.Logging;
 import epf.util.websocket.Client;
@@ -30,6 +32,7 @@ import epf.util.websocket.MessageQueue;
  */
 @ApplicationScoped
 @Path("schedule")
+@RolesAllowed(Security.DEFAULT_ROLE)
 public class Schedule implements epf.client.schedule.Schedule {
 	
 	/**

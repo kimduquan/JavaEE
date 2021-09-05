@@ -18,6 +18,7 @@ import epf.client.schedule.Schedule;
 import epf.tests.TestUtil;
 import epf.tests.client.ClientUtil;
 import epf.tests.health.HealthUtil;
+import epf.tests.security.SecurityUtil;
 import epf.util.client.Client;
 import epf.util.config.ConfigUtil;
 
@@ -29,6 +30,7 @@ public class ScheduleTest {
 	
 	static URI scheduleUrl;
 	static Client client;
+	static String token;
 	static epf.util.websocket.Client shell;
 	static Queue<String> messages;
 
@@ -40,6 +42,8 @@ public class ScheduleTest {
 		HealthUtil.readỵ̣();
 		scheduleUrl = ConfigUtil.getURI(epf.client.schedule.Schedule.SCHEDULE_URL);
 		client = ClientUtil.newClient(scheduleUrl);
+		token = SecurityUtil.login();
+		client.authorization(token);
 		URI messagingUrl = ConfigUtil.getURI(epf.client.messaging.Messaging.MESSAGING_URL);
 		shell = epf.util.websocket.Client.connectToServer(messagingUrl.resolve("schedule/shell"));
 		messages = new ConcurrentLinkedQueue<>();
@@ -54,6 +58,7 @@ public class ScheduleTest {
 		client.close();
 		shell.close();
 		messages.clear();
+		SecurityUtil.logOut(token);
 	}
 
 	/**

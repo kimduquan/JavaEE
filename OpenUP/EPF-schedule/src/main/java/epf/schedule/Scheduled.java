@@ -46,6 +46,11 @@ public class Scheduled implements Runnable, Serializable, Closeable {
 	private ScheduledFuture<?> scheduled;
 	
 	/**
+	 * 
+	 */
+	private long time;
+	
+	/**
 	 * @param id
 	 * @param messages
 	 */
@@ -56,6 +61,7 @@ public class Scheduled implements Runnable, Serializable, Closeable {
 
 	@Override
 	public void run() {
+		time = Instant.now().toEpochMilli();
 		try(Jsonb jsonb = JsonbBuilder.create()){
 			messages.add(new Message(jsonb.toJson(this)));
 		} 
@@ -81,7 +87,7 @@ public class Scheduled implements Runnable, Serializable, Closeable {
 	}
 	
 	public long getTime() {
-		return Instant.now().toEpochMilli();
+		return time;
 	}
 
 	@Override
