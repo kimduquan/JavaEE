@@ -15,9 +15,7 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.validation.constraints.NotBlank;
-import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
-import javax.websocket.WebSocketContainer;
 import javax.ws.rs.GET;
 import javax.ws.rs.MatrixParam;
 import javax.ws.rs.NotAuthorizedException;
@@ -71,8 +69,7 @@ public class Stream {
 	protected void postConstruct() {
 		try {
 			final URI messagingUrl = ConfigUtil.getURI("epf.messaging.url");
-			final WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-			clients.put("persistence", Client.connectToServer(container, messagingUrl.resolve("persistence")));
+			clients.put("persistence", Client.connectToServer(messagingUrl.resolve("persistence")));
 		} 
 		catch (URISyntaxException | DeploymentException | IOException e) {
 			logger.log(Level.SEVERE, "postConstruct", e);

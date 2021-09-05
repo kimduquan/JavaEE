@@ -15,14 +15,12 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.websocket.CloseReason;
-import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
-import javax.websocket.WebSocketContainer;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import org.eclipse.microprofile.context.ManagedExecutor;
@@ -66,8 +64,7 @@ public class Messaging {
 	protected void postConstruct() {
 		try {
 			final URI messagingUrl = ConfigUtil.getURI("epf.messaging.url");
-			final WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-			final Remote persistence = new Remote(container, messagingUrl.resolve("persistence"));
+			final Remote persistence = new Remote(messagingUrl.resolve("persistence"));
 			remotes.put("persistence", persistence);
 			executor.submit(persistence);
 		} 

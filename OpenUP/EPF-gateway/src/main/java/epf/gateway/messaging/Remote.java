@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 import javax.websocket.CloseReason;
 import javax.websocket.DeploymentException;
 import javax.websocket.Session;
-import javax.websocket.WebSocketContainer;
 import epf.util.logging.Logging;
 import epf.util.websocket.Client;
 import epf.util.websocket.Message;
@@ -39,15 +38,13 @@ public class Remote implements Runnable, AutoCloseable {
 	private transient final MessageTopic messages;
 	
 	/**
-	 * @param container
 	 * @param uri
 	 * @throws DeploymentException
 	 * @throws IOException
 	 */
-	public Remote(final WebSocketContainer container, final URI uri) throws DeploymentException, IOException {
-		Objects.requireNonNull(container, "WebSocketContainer");
+	public Remote(final URI uri) throws DeploymentException, IOException {
 		Objects.requireNonNull(uri, "URI");
-		client = Client.connectToServer(container, uri);
+		client = Client.connectToServer(uri);
 		client.onMessage(this::addMessage);
 		messages = new MessageTopic();
 	}

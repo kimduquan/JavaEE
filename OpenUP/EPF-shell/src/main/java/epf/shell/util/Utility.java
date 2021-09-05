@@ -17,8 +17,6 @@ import java.util.stream.Stream;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
-import javax.websocket.ContainerProvider;
-import javax.websocket.WebSocketContainer;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
@@ -258,8 +256,7 @@ public class Utility {
 	public void connectToServer(
 			@Option(names = {"-u", "--uri"}, required = true, description = "URI") 
 			final URI uri) throws Exception {
-		final WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-		try(epf.util.websocket.Client client = epf.util.websocket.Client.connectToServer(container, uri)){
+		try(epf.util.websocket.Client client = epf.util.websocket.Client.connectToServer(uri)){
 			client.onError(error -> error.printStackTrace());
 			client.onMessage(msg -> System.out.println(msg));
 			try(Scanner scanner = new Scanner(System.in)){

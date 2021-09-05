@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.function.Consumer;
 import javax.websocket.ClientEndpoint;
+import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -95,11 +96,21 @@ public class Client implements AutoCloseable {
 	 * @throws DeploymentException
 	 * @throws IOException
 	 */
-	public static Client connectToServer(
+	protected static Client connectToServer(
 			final WebSocketContainer container,
 			final URI uri) throws DeploymentException, IOException {
 		final Client client = new Client();
 		client.session = container.connectToServer(client, uri);
 		return client;
+	}
+	
+	/**
+	 * @param uri
+	 * @return
+	 * @throws DeploymentException
+	 * @throws IOException
+	 */
+	public static Client connectToServer(final URI uri) throws DeploymentException, IOException {
+		return connectToServer(ContainerProvider.getWebSocketContainer(), uri);
 	}
 }

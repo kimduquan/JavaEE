@@ -67,6 +67,9 @@ public class Messaging {
 		final Server security = new Server();
 		servers.put("security", security);
 		executor.submit(security);
+		final Server schedule = new Server();
+		servers.put("schedule", schedule);
+		executor.submit(schedule);
 	}
 	
 	/**

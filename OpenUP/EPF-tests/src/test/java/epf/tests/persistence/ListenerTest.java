@@ -7,7 +7,6 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import javax.websocket.ContainerProvider;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.sse.SseEventSource;
 import org.junit.After;
@@ -86,7 +85,7 @@ public class ListenerTest {
     @Before
     public void before() throws Exception {
     	messages = new ConcurrentLinkedQueue<>();
-    	client = Client.connectToServer(ContainerProvider.getWebSocketContainer(), listenerUrl);
+    	client = Client.connectToServer(listenerUrl);
     	client.onMessage(messages::add);
     	TestUtil.waitUntil(t -> client.getSession().isOpen(), Duration.ofSeconds(timeout));
     }

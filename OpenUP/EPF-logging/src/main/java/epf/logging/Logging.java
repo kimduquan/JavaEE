@@ -11,7 +11,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.HealthCheck;
@@ -46,12 +45,12 @@ public class Logging implements HealthCheck {
 	
 	/**
 	 * @param name
-	 * @param messagingUrl
+	 * @param url
 	 * @throws DeploymentException
 	 * @throws IOException
 	 */
-	protected void newLogger(final String name, final URI messagingUrl) throws DeploymentException, IOException {
-		final Client client = Client.connectToServer(ContainerProvider.getWebSocketContainer(), messagingUrl.resolve(name));
+	protected void newLogger(final String name, final URI url) throws DeploymentException, IOException {
+		final Client client = Client.connectToServer(url);
 		final Logger logger = new Logger(name, client);
 		executor.submit(logger);
 		loggers.put(name, logger);
@@ -67,9 +66,10 @@ public class Logging implements HealthCheck {
 	protected void postConstruct() {
 		try {
 			final URI messagingUrl = ConfigUtil.getURI("epf.messaging.url");
-			newLogger("persistence", messagingUrl);
-			newLogger("security", messagingUrl);
-			newLogger("cache", messagingUrl);
+			newLogger("EPF-persistence", messagingUrl.resolve("persistence"));
+			newLogger("EPF-security", messagingUrl.resolve("security"));
+			newLogger("EPF-cache", messagingUrl.resolve("cache"));
+			newLogger("EPF-shell-schedule", messagingUrl.resolve("schedule/shell"));
 		}
 		catch(Exception ex) {
 			LOGGER.throwing(LOGGER.getName(), "postConstruct", ex);
