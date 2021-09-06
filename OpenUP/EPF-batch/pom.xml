@@ -10,6 +10,30 @@
     <name>Eclipse Process Framework Batch</name>
     <packaging>war</packaging>
     <dependencies>
+    	<!-- https://mvnrepository.com/artifact/javax.enterprise/cdi-api -->
+		<dependency>
+		    <groupId>javax.enterprise</groupId>
+		    <artifactId>cdi-api</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
+		<dependency>
+		    <groupId>javax.ws.rs</groupId>
+		    <artifactId>javax.ws.rs-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+    	<!-- https://mvnrepository.com/artifact/javax.batch/javax.batch-api -->
+		<dependency>
+		    <groupId>javax.batch</groupId>
+		    <artifactId>javax.batch-api</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.rest.client/microprofile-rest-client-api -->
+		<dependency>
+		    <groupId>org.eclipse.microprofile.rest.client</groupId>
+		    <artifactId>microprofile-rest-client-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-client</artifactId>

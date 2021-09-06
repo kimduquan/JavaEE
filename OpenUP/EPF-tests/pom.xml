@@ -38,6 +38,7 @@
 		<liberty.env.epf_portlet_url>http://localhost:8080/pluto/portal</liberty.env.epf_portlet_url>
 		<liberty.env.epf_webapp_url>https://localhost:9443/webapp/</liberty.env.epf_webapp_url>
 		<liberty.env.epf_health_url>https://localhost:9443/health/</liberty.env.epf_health_url>
+		<liberty.env.epf_batch_api_url>https://localhost:9443/ibm/</liberty.env.epf_batch_api_url>
 		<liberty.env.openup_delivery_processes_url>https://localhost:9443/delivery-processes/delivery-processes/</liberty.env.openup_delivery_processes_url>
 		<liberty.env.openup_roles_url>https://localhost:9443/roles/roles/</liberty.env.openup_roles_url>
 		<liberty.env.openup_tasks_url>https://localhost:9443/tasks/tasks/</liberty.env.openup_tasks_url>
@@ -325,6 +326,7 @@
                         <epf.portlet.url>http://localhost:${httpWebPort}/pluto/portal</epf.portlet.url>
                         <epf.webapp.url>https://localhost:${httpsPort}/webapp/</epf.webapp.url>
                         <epf.health.url>https://localhost:${httpsPort}/health/</epf.health.url>
+						<epf.batch.api.url>https://localhost:${httpsPort}/ibm/</epf.batch.api.url>
 						<openup.delivery_processes.url>https://localhost:${httpsPort}/delivery-processes/delivery-processes/</openup.delivery_processes.url>
 						<openup.roles.url>https://localhost:${httpsPort}/roles/roles/</openup.roles.url>
 						<openup.tasks.url>https://localhost:${httpsPort}/tasks/tasks/</openup.tasks.url>
