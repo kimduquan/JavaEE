@@ -3,6 +3,7 @@
  */
 package epf.util.file;
 
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
 
 /**
@@ -17,6 +18,6 @@ public interface PathUtil {
 	 * @return
 	 */
 	static Path of(final String first, final String... more) {
-		return Provider.getFileSystem().getPath(first, more);
+		return FileSystems.getDefault().getPath(first, more);
 	}
 }
