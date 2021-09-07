@@ -7,6 +7,7 @@ package epf.file;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -34,7 +35,6 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.client.EPFException;
 import epf.client.security.Security;
 import epf.util.client.EntityOutput;
-import epf.util.file.PathUtil;
 
 /**
  *
@@ -53,6 +53,12 @@ public class FileStore implements epf.client.file.Files {
 	/**
 	 * 
 	 */
+	@Inject
+	private transient FileSystem system;
+	
+	/**
+	 * 
+	 */
 	@ConfigProperty(name = ROOT)
 	@Inject
 	private transient String rootFolder;
@@ -64,7 +70,7 @@ public class FileStore implements epf.client.file.Files {
 			final InputStream input, 
 			final SecurityContext security) {
 		validatePaths(paths, security, HttpMethod.POST);
-		final PathBuilder builder = new PathBuilder(rootFolder);
+		final PathBuilder builder = new PathBuilder(rootFolder, system);
 		final Path targetFolder = builder
 				.paths(paths)
 				.build();
@@ -81,7 +87,7 @@ public class FileStore implements epf.client.file.Files {
 		catch (IOException e) {
 			throw new EPFException(e);
 		}
-		final Path root = PathUtil.of(rootFolder);
+		final Path root = system.getPath(rootFolder);
 		final Link[] links = files
 				.stream()
 				.map(path -> {
@@ -104,7 +110,7 @@ public class FileStore implements epf.client.file.Files {
 			final List<PathSegment> paths,
 			final SecurityContext security) {
 		validatePaths(paths, security, HttpMethod.GET);
-		final PathBuilder builder = new PathBuilder(rootFolder);
+		final PathBuilder builder = new PathBuilder(rootFolder, system);
 		final Path targetFile = builder
 				.paths(paths)
 				.build();
@@ -122,7 +128,7 @@ public class FileStore implements epf.client.file.Files {
 			final List<PathSegment> paths, 
 			final SecurityContext security) {
 		validatePaths(paths, security, HttpMethod.DELETE);
-		final PathBuilder builder = new PathBuilder(rootFolder);
+		final PathBuilder builder = new PathBuilder(rootFolder, system);
 		final Path targetFile = builder
 				.paths(paths)
 				.build();
