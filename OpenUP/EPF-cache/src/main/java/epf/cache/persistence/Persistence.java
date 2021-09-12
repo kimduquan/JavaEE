@@ -23,6 +23,7 @@ import epf.cache.Manager;
 import epf.client.messaging.Client;
 import epf.client.messaging.Messaging;
 import epf.schema.EntityEvent;
+import epf.schema.PostLoad;
 import epf.util.concurrent.ObjectQueue;
 import epf.util.config.ConfigUtil;
 import epf.util.logging.Logging;
@@ -54,6 +55,11 @@ public class Persistence implements HealthCheck {
 	 * 
 	 */
 	private transient Client client;
+	
+	/**
+	 * 
+	 */
+	private transient Client postLoadClient;
 
 	/**
 	 * 
@@ -83,6 +89,12 @@ public class Persistence implements HealthCheck {
 					entityCache.add((EntityEvent) message);
 				}
 			});
+			postLoadClient = Messaging.connectToServer(messagingUrl.resolve("persistence/post-load"));
+			postLoadClient.onMessage(message -> {
+				if(message instanceof PostLoad) {
+					entityCache.add((PostLoad) message);
+				}
+			});
 		} 
 		catch (URISyntaxException | DeploymentException | IOException e) {
 			LOGGER.throwing(getClass().getName(), "postConstruct", e);
@@ -95,6 +107,7 @@ public class Persistence implements HealthCheck {
 	@PreDestroy
 	protected void preDestroy() {
 		try {
+			postLoadClient.close();
 			client.close();
 			entityCache.close();
 		} 

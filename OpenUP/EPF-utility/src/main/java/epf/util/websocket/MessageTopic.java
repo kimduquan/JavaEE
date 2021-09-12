@@ -11,10 +11,5 @@ import epf.util.concurrent.ObjectTopic;
  *
  */
 public class MessageTopic extends ObjectTopic<Message, Consumer<Message>> {
-
-	@Override
-	public void accept(final Message message) {
-		super.accept(message);
-		message.close();
-	}
+	
 }

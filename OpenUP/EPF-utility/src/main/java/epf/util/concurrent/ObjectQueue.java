@@ -57,7 +57,7 @@ public abstract class ObjectQueue<T extends Object> implements Runnable, Closeab
 				accept(obj);
 			} 
 			catch (Exception e) {
-				LOGGER.throwing(getClass().getName(), "run", null);
+				LOGGER.throwing(getClass().getName(), "run", e);
 			}
 		}
 	}

@@ -64,15 +64,6 @@ public class MessageTest {
 	}
 
 	/**
-	 * Test method for {@link epf.util.websocket.Message#close()}.
-	 * @throws IOException 
-	 */
-	@Test
-	public void testClose() throws IOException {
-		message.close();
-	}
-
-	/**
 	 * Test method for {@link epf.util.websocket.Message#send(javax.websocket.Session)}.
 	 * @throws EncodeException 
 	 * @throws IOException 

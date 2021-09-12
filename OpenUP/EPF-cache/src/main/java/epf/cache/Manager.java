@@ -42,7 +42,7 @@ public class Manager implements HealthCheck {
 		final MutableConfiguration<String, Object> config = new MutableConfiguration<>();
 		manager.createCache("persistence", config);
 		manager.createCache("security", config);
-		listener.register(manager);
+		listener.registerEvents(manager);
 	}
 	
 	/**
@@ -50,7 +50,7 @@ public class Manager implements HealthCheck {
 	 */
 	@PreDestroy
 	protected void preDestroy() {
-		listener.deregister(manager);
+		listener.deregisterEvents(manager);
 		manager.close();
 	}
 

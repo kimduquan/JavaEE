@@ -50,6 +50,16 @@ public class Listener {
 	/**
 	 * 
 	 */
+	private transient Client postLoadClient;
+	
+	/**
+	 * 
+	 */
+	private transient MessageQueue postLoadMessages;
+	
+	/**
+	 * 
+	 */
 	@Inject
 	private transient ManagedExecutor executor;
 	
@@ -64,6 +74,10 @@ public class Listener {
 			client.onMessage(msg -> {});
 			messages = new MessageQueue(client.getSession());
 			executor.submit(messages);
+			postLoadClient = Messaging.connectToServer(messagingUrl.resolve("persistence/post-load"));
+			postLoadClient.onMessage(msg -> {});
+			postLoadMessages = new MessageQueue(postLoadClient.getSession());
+			executor.submit(postLoadMessages);
 		} 
 		catch (DeploymentException|IOException|URISyntaxException e) {
 			LOGGER.throwing(Messaging.class.getName(), "connectToServer", e);
@@ -78,6 +92,8 @@ public class Listener {
 		try {
 			messages.close();
 			client.close();
+			postLoadMessages.close();
+			postLoadClient.close();
 		} 
 		catch (Exception e) {
 			LOGGER.throwing(client.getClass().getName(), "close", e);
@@ -117,6 +133,7 @@ public class Listener {
 	 * @param event
 	 */
 	public void postLoad(@Observes final PostLoad event) {
-		send(event);
+		final Message message = new Message(event);
+		postLoadMessages.add(message);
 	}
 }

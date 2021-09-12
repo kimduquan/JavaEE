@@ -110,6 +110,67 @@ public class CacheTest {
 	}
 	
 	@Test(expected = NotFoundException.class)
+	public void testGetEntity_AfterRemoveEntity_NotFound() throws Exception {
+		final Artifact artifact = new Artifact();
+        artifact.setName(StringUtil.randomString("Artifact Cache"));
+        artifact.setSummary("Artifact Cache testGetEntity_AfterRemoveEntity_NotFound");
+        artifact.setDescription(new Description());
+        artifact.setIllustrations(new Illustrations());
+        artifact.setMoreInformation(new MoreInformation());
+        artifact.setRelationships(new Relationships());
+        artifact.setTailoring(new Tailoring());
+        PersistenceUtil.persist(token, Artifact.class, EPF.ARTIFACT, artifact);
+        TestUtil.waitUntil(
+        		(t) -> {
+				        	Artifact art = null;
+				        	try {
+				        		art = Cache.getEntity(client, Artifact.class, EPF.ARTIFACT, artifact.getName());
+				        	}
+				        	catch(Exception ex) {
+				        		ex.printStackTrace();
+				        	}
+				        	return art != null;
+				        }, 
+        		Duration.ofSeconds(10)
+        		);
+        PersistenceUtil.remove(token, EPF.ARTIFACT, artifact.getName());
+        Thread.sleep(80);
+        Cache.getEntity(client, Artifact.class, EPF.ARTIFACT, artifact.getName());
+	}
+	
+	@Test
+	public void testGetEntity_AfterUpdateEntity_TheEntityFieldUpdated() throws Exception {
+		final Artifact artifact = new Artifact();
+        artifact.setName(StringUtil.randomString("Artifact Cache"));
+        artifact.setSummary("Artifact Cache testGetEntity_AfterUpdateEntity_TheEntityFieldUpdated");
+        artifact.setDescription(new Description());
+        artifact.setIllustrations(new Illustrations());
+        artifact.setMoreInformation(new MoreInformation());
+        artifact.setRelationships(new Relationships());
+        artifact.setTailoring(new Tailoring());
+        PersistenceUtil.persist(token, Artifact.class, EPF.ARTIFACT, artifact);
+        TestUtil.waitUntil(
+        		(t) -> {
+				        	Artifact art = null;
+				        	try {
+				        		art = Cache.getEntity(client, Artifact.class, EPF.ARTIFACT, artifact.getName());
+				        	}
+				        	catch(Exception ex) {
+				        		ex.printStackTrace();
+				        	}
+				        	return art != null;
+				        }, 
+        		Duration.ofSeconds(10)
+        		);
+        artifact.setSummary(StringUtil.randomString("Artifact Cache Summary"));
+        PersistenceUtil.merge(token, EPF.ARTIFACT, artifact.getName(), artifact);
+        Thread.sleep(80);
+        Artifact actualArtifact = Cache.getEntity(client, Artifact.class, EPF.ARTIFACT, artifact.getName());
+        Assert.assertEquals("Artifact.summary", artifact.getSummary(), actualArtifact.getSummary());
+        PersistenceUtil.remove(token, EPF.ARTIFACT, artifact.getName());
+	}
+	
+	@Test(expected = NotFoundException.class)
 	public void testGetEntity_NotFound() throws Exception {
 		Thread.sleep(20);
         Cache.getEntity(client, Artifact.class, EPF.ARTIFACT, StringUtil.randomString("Artifact Cache"));

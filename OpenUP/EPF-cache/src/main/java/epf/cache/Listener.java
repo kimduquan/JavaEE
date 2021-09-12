@@ -106,26 +106,28 @@ public class Listener {
 	/**
 	 * @param manager
 	 */
-	public void register(final CacheManager manager) {
+	public void registerEvents(final CacheManager manager) {
 		final Iterable<String> names = manager.getCacheNames();
 		names.forEach(name -> {
-			created.register(manager.getCache(name));
-			expired.register(manager.getCache(name));
-			removed.register(manager.getCache(name));
-			updated.register(manager.getCache(name));
+			final javax.cache.Cache<String, Object> cache = manager.getCache(name);
+			created.register(cache);
+			expired.register(cache);
+			removed.register(cache);
+			updated.register(cache);
 		});
 	}
 	
 	/**
 	 * @param manager
 	 */
-	public void deregister(final CacheManager manager) {
+	public void deregisterEvents(final CacheManager manager) {
 		final Iterable<String> names = manager.getCacheNames();
 		names.forEach(name -> {
-			created.deregister(manager.getCache(name));
-			expired.deregister(manager.getCache(name));
-			removed.deregister(manager.getCache(name));
-			updated.deregister(manager.getCache(name));
+			final javax.cache.Cache<String, Object> cache = manager.getCache(name);
+			created.deregister(cache);
+			expired.deregister(cache);
+			removed.deregister(cache);
+			updated.deregister(cache);
 		});
 	}
 }

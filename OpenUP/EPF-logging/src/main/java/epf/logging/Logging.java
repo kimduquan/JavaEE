@@ -70,6 +70,7 @@ public class Logging implements HealthCheck {
 			newLogger("EPF-security", messagingUrl.resolve("security"));
 			newLogger("EPF-cache", messagingUrl.resolve("cache"));
 			newLogger("EPF-shell-schedule", messagingUrl.resolve("schedule/shell"));
+			newLogger("EPF-persistence-load", messagingUrl.resolve("persistence/post-load"));
 		}
 		catch(Exception ex) {
 			LOGGER.throwing(LOGGER.getName(), "postConstruct", ex);

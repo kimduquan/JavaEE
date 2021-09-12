@@ -38,7 +38,6 @@ public class MessageQueue extends ObjectQueue<Message> {
 	public void accept(final Message message) {
 		try {
 			message.send(session);
-			message.close();
 		} 
 		catch (Exception e) {
 			LOGGER.throwing(getClass().getName(), "accept", e);

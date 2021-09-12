@@ -63,11 +63,17 @@ public class Event {
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		Map<String, Server> server = new ConcurrentHashMap<>();
-		Server event = new Server();
-		server.put("shell", event);
-		servers.put("schedule", server);
-		executor.submit(event);
+		final Map<String, Server> scheduleServer = new ConcurrentHashMap<>();
+		servers.put("schedule", scheduleServer);
+		final Server shellEvent = new Server();
+		scheduleServer.put("shell", shellEvent);
+		executor.submit(shellEvent);
+		
+		final Map<String, Server> persistenceServer = new ConcurrentHashMap<>();
+		servers.put("persistence", persistenceServer);
+		final Server postLoadEvent = new Server();
+		persistenceServer.put("post-load", postLoadEvent);
+		executor.submit(postLoadEvent);
 	}
 	
 	/**
