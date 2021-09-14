@@ -44,8 +44,9 @@
 		<liberty.env.openup_tasks_url>https://localhost:9443/tasks/tasks/</liberty.env.openup_tasks_url>
 		<liberty.env.openup_work_products_url>https://localhost:9443/work-products/work-products/</liberty.env.openup_work_products_url>
 		<liberty.env.openup_gateway_url>https://localhost:9443/openup/gateway/</liberty.env.openup_gateway_url>
-		<liberty.env.epf_tests_file_root>target/servers/test/epf.file.root</liberty.env.epf_tests_file_root>
 		<liberty.env.epf_shell_path>../EPF-shell/target/appassembler/bin</liberty.env.epf_shell_path>
+		<liberty.env.epf_shell_command>${command}</liberty.env.epf_shell_command>
+		<liberty.env.epf_tests_file_root>target/servers/test/epf.file.root</liberty.env.epf_tests_file_root>
     </properties>
     <dependencies>
 		<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
@@ -122,6 +123,12 @@
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-schedule</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-shell-schedule</artifactId>
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
@@ -333,9 +340,9 @@
 						<openup.work_products.url>https://localhost:${httpsPort}/work-products/work-products/</openup.work_products.url>
 						<openup.gateway.url>https://localhost:${httpsPort}/openup/gateway/</openup.gateway.url>
                         <epf.shell.path>../EPF-shell/target/appassembler/bin</epf.shell.path>
+                        <epf.shell.command>${command}</epf.shell.command>
                         <webdriver.gecko.driver>${geckodriver}</webdriver.gecko.driver>
                         <epf.tests.file.root>target/servers/test/epf.file.root</epf.tests.file.root>
-                        <epf.tests.shell.command>${command}</epf.tests.shell.command>
                         <webdriver.timeouts.implicit>60</webdriver.timeouts.implicit>
                         <webdriver.firefox.headless>true</webdriver.firefox.headless>
                     </systemPropertyVariables>

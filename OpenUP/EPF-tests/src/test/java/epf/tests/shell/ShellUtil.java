@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import epf.client.security.Token;
+import epf.client.shell.Shell;
 import epf.tests.TestUtil;
 import epf.util.file.PathUtil;
 
@@ -28,7 +29,7 @@ public class ShellUtil {
 	/**
 	 * 
 	 */
-	private static final String COMMAND = System.getProperty("epf.tests.shell.command");
+	private static final String COMMAND = System.getProperty(Shell.SHELL_COMMAND);
 	
 	/**
 	 * 
@@ -40,7 +41,7 @@ public class ShellUtil {
 	 */
 	public static Path getShellPath() {
 		if(shellPath == null) {
-			shellPath = PathUtil.of(System.getProperty("epf.shell.path"));
+			shellPath = PathUtil.of(System.getProperty(Shell.SHELL_PATH));
 		}
 		return shellPath;
 	}

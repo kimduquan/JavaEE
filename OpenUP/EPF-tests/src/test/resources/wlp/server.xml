@@ -21,7 +21,10 @@
                   host="localhost"
                   httpPort="${httpPort}"
                   httpsPort="${httpsPort}" />
-	<application id="EPF-schedule" name="EPF-schedule" context-root="schedule" location="EPF-schedule-1.0.0.war" >
+	<application id="EPF-schedule" name="EPF-schedule" context-root="schedule" location="EPF-schedule-1.0.0.war" startAfterRef="EPF-messaging" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
+    <application id="EPF-shell-schedule" name="EPF-shell-schedule" context-root="shell-schedule" location="EPF-shell-schedule-1.0.0.war" startAfterRef="EPF-messaging" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
 	<application id="EPF-batch" name="EPF-batch" context-root="batch" location="EPF-batch-1.0.0.war" >
