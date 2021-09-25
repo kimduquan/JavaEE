@@ -12,8 +12,6 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import epf.schema.EPF;
-
 /**
  *
  * @author FOXCONN
