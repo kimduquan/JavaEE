@@ -28,11 +28,11 @@ public class ObjectPool<T extends Object, U extends Consumer<T>> extends ObjectQ
 	}
 	
 	@Override
-	public void accept(final T t) {
+	public void accept(final T object) {
 		final Consumer<T> consumer = consumers.poll();
 		if(consumer != null) {
-			consumer.accept(t);
 			consumers.add(consumer);
+			consumer.accept(object);
 		}
 	}
 }
