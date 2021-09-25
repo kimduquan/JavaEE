@@ -5,8 +5,8 @@
  */
 package epf.work_products.schema.section;
 
-import epf.schema.EPF;
 import epf.work_products.schema.WorkProductSlot;
+import epf.work_products.schema.WorkProducts;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.CollectionTable;
@@ -39,7 +39,7 @@ public class Relationships implements Serializable {
     @ManyToMany
     @JoinTable(
             name = "ARTIFACT_FULFILLED_SLOTS",
-            schema = EPF.WORK_PRODUCTS_SCHEMA,
+            schema = WorkProducts.SCHEMA,
             joinColumns = @JoinColumn(
                     name = "ARTIFACT"
             ),
@@ -61,7 +61,7 @@ public class Relationships implements Serializable {
     @ElementCollection
     @CollectionTable(
     		name = "ROLE_MODIFIES",
-    		schema = EPF.WORK_PRODUCTS_SCHEMA,
+    		schema = WorkProducts.SCHEMA,
     		joinColumns = @JoinColumn(name = "ARTIFACT"),
     		indexes = {@Index(columnList = "ARTIFACT")})
     @Column(name = "ROLE")

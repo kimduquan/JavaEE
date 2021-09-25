@@ -59,13 +59,13 @@ public class Application {
      * @return
      */
     public Context putContext(){
-        return contexts.computeIfAbsent(EPF.SCHEMA, name -> { return new Context();});
+        return contexts.computeIfAbsent(Context.SCHEMA, name -> { return new Context();});
     }
     
     /**
      * @return
      */
     public Context getContext(){
-        return contexts.get(EPF.SCHEMA);
+        return contexts.get(Context.SCHEMA);
     }
 }

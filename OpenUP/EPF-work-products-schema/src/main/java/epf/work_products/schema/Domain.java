@@ -20,17 +20,16 @@ import javax.validation.constraints.NotBlank;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import epf.schema.EPF;
 import javax.persistence.Index;
 
 /**
  *
  * @author FOXCONN
  */
-@Type(EPF.DOMAIN)
-@Schema(name = EPF.DOMAIN, title = "Domain")
-@Entity(name = EPF.DOMAIN)
-@Table(schema = EPF.WORK_PRODUCTS_SCHEMA, name = "EPF_DOMAIN")
+@Type(WorkProducts.DOMAIN)
+@Schema(name = WorkProducts.DOMAIN, title = "Domain")
+@Entity(name = WorkProducts.DOMAIN)
+@Table(schema = WorkProducts.SCHEMA, name = "EPF_DOMAIN")
 @JsonbPropertyOrder({
     "name",
     "workProducts"
@@ -70,7 +69,7 @@ public class Domain implements Serializable {
     @ManyToMany
     @JoinTable(
             name = "WORK_PRODUCTS",
-            schema = EPF.WORK_PRODUCTS_SCHEMA,
+            schema = WorkProducts.SCHEMA,
             joinColumns = @JoinColumn(name = "DOMAIN"),
             inverseJoinColumns = @JoinColumn(name = "ARTIFACT"),
             indexes = {@Index(columnList = "DOMAIN")}

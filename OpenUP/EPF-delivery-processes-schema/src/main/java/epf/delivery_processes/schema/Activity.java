@@ -1,6 +1,5 @@
 package epf.delivery_processes.schema;
 
-import epf.schema.EPF;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
@@ -22,10 +21,10 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
  *
  * @author FOXCONN
  */
-@Type(EPF.ACTIVITY)
-@Schema(name = EPF.ACTIVITY, title = "Activity")
-@Entity(name = EPF.ACTIVITY)
-@Table(schema = EPF.DELIVERY_PROCESSES_SCHEMA, name = "ACTIVITY")
+@Type(DeliveryProcesses.ACTIVITY)
+@Schema(name = DeliveryProcesses.ACTIVITY, title = "Activity")
+@Entity(name = DeliveryProcesses.ACTIVITY)
+@Table(schema = DeliveryProcesses.SCHEMA, name = "ACTIVITY")
 public class Activity implements Serializable {
     
     /**
@@ -62,7 +61,7 @@ public class Activity implements Serializable {
     @ElementCollection
     @CollectionTable(
     		name = "ACTIVITY_TASKS",
-    		schema = EPF.DELIVERY_PROCESSES_SCHEMA,
+    		schema = DeliveryProcesses.SCHEMA,
     		joinColumns = @JoinColumn(name = "ACTIVITY"),
     		indexes = {@Index(columnList = "ACTIVITY")})
     @Column(name = "TASK")

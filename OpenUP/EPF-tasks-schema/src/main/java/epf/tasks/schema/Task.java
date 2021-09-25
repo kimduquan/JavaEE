@@ -12,7 +12,6 @@ import javax.json.JsonObject;
 import javax.persistence.Embedded;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import epf.schema.EPF;
 import epf.tasks.schema.section.MoreInformation;
 import epf.tasks.schema.section.Relationships;
 
@@ -20,10 +19,10 @@ import epf.tasks.schema.section.Relationships;
  *
  * @author FOXCONN
  */
-@Type(EPF.TASK)
-@Schema(name = EPF.TASK, title = "Task")
-@Entity(name = EPF.TASK)
-@Table(schema = EPF.TASKS_SCHEMA, name = "TASK")
+@Type(Tasks.TASK)
+@Schema(name = Tasks.TASK, title = "Task")
+@Entity(name = Tasks.TASK)
+@Table(schema = Tasks.SCHEMA, name = "TASK")
 @JsonbPropertyOrder({
     "name",
     "mandatory",

@@ -15,7 +15,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import epf.schema.EPF;
 import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
@@ -24,10 +23,10 @@ import javax.persistence.NamedQuery;
  *
  * @author FOXCONN
  */
-@Type(EPF.ITERATION)
-@Schema(name = EPF.ITERATION, title = "Iteration")
-@Entity(name = EPF.ITERATION)
-@Table(schema = EPF.DELIVERY_PROCESSES_SCHEMA, name = "ITERATION", indexes = {@Index(columnList = "PARENT_ACTIVITIES")})
+@Type(DeliveryProcesses.ITERATION)
+@Schema(name = DeliveryProcesses.ITERATION, title = "Iteration")
+@Entity(name = DeliveryProcesses.ITERATION)
+@Table(schema = DeliveryProcesses.SCHEMA, name = "ITERATION", indexes = {@Index(columnList = "PARENT_ACTIVITIES")})
 @NamedQuery(
         name = Iteration.ITERATIONS,
         query = "SELECT it FROM EPF_Iteration it JOIN it.parentActivities ph WHERE ph.name = :name"
@@ -79,7 +78,7 @@ public class Iteration implements Serializable {
      */
     @ManyToMany
     @JoinTable(name = "ITERATION_ACTIVITIES",
-            schema = EPF.DELIVERY_PROCESSES_SCHEMA,
+            schema = DeliveryProcesses.SCHEMA,
             joinColumns = {@JoinColumn(name = "ITERATION")},
             inverseJoinColumns = {@JoinColumn(name = "ACTIVITY")},
             indexes = {@Index(columnList = "ITERATION")}

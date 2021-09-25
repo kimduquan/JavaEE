@@ -14,7 +14,6 @@ import org.junit.BeforeClass;
 import epf.client.gateway.GatewayUtil;
 import epf.client.messaging.Client;
 import epf.client.messaging.Messaging;
-import epf.schema.EPF;
 import epf.schema.PostPersist;
 import epf.schema.PostRemove;
 import epf.tests.TestUtil;
@@ -23,6 +22,7 @@ import epf.tests.persistence.PersistenceUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
 import epf.work_products.schema.Artifact;
+import epf.work_products.schema.WorkProducts;
 import epf.work_products.schema.section.Description;
 import epf.work_products.schema.section.Illustrations;
 import epf.work_products.schema.section.MoreInformation;
@@ -77,8 +77,8 @@ public class MessagingTest {
         artifact.setMoreInformation(new MoreInformation());
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
-        PersistenceUtil.persist(token, Artifact.class, EPF.ARTIFACT, artifact);
-        PersistenceUtil.remove(token, EPF.ARTIFACT, artifact.getName());
+        PersistenceUtil.persist(token, Artifact.class, WorkProducts.ARTIFACT, artifact);
+        PersistenceUtil.remove(token, WorkProducts.ARTIFACT, artifact.getName());
     	
     	TestUtil.waitUntil((t) -> messages.stream().anyMatch(msg -> msg instanceof PostPersist), Duration.ofSeconds(10));
     	TestUtil.waitUntil((t) -> messages.stream().anyMatch(msg -> msg instanceof PostRemove), Duration.ofSeconds(10));

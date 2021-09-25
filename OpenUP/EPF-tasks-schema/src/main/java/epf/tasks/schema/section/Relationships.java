@@ -1,6 +1,6 @@
 package epf.tasks.schema.section;
 
-import epf.schema.EPF;
+import epf.tasks.schema.Tasks;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.CollectionTable;
@@ -37,7 +37,7 @@ public class Relationships implements Serializable {
     @ElementCollection
     @CollectionTable(
     		name = "ROLE_ADDITIONALLY_PERFORMS",
-    		schema = EPF.TASKS_SCHEMA,
+    		schema = Tasks.SCHEMA,
     		joinColumns = @JoinColumn(name = "TASK"),
     		indexes = {@Index(columnList = "TASK")})
     @Column(name = "ROLE")
@@ -49,7 +49,7 @@ public class Relationships implements Serializable {
     @ElementCollection
     @CollectionTable(
     		name = "TASK_INPUTS_MANDATORY",
-    		schema = EPF.TASKS_SCHEMA,
+    		schema = Tasks.SCHEMA,
     		joinColumns = @JoinColumn(name = "TASK"),
     		indexes = {@Index(columnList = "TASK")})
     @Column(name = "ARTIFACT")
@@ -61,7 +61,7 @@ public class Relationships implements Serializable {
     @ElementCollection
     @CollectionTable(
     		name = "TASK_INPUTS_OPTIONAL",
-    		schema = EPF.TASKS_SCHEMA,
+    		schema = Tasks.SCHEMA,
     		joinColumns = @JoinColumn(name = "TASK"),
     		indexes = {@Index(columnList = "TASK")})
     @Column(name = "ARTIFACT")
@@ -74,7 +74,7 @@ public class Relationships implements Serializable {
     @ElementCollection
     @CollectionTable(
     		name = "TASK_OUTPUTS",
-    		schema = EPF.TASKS_SCHEMA,
+    		schema = Tasks.SCHEMA,
     		joinColumns = @JoinColumn(name = "TASK"),
     		indexes = {@Index(columnList = "TASK")})
     @Column(name = "ARTIFACT")

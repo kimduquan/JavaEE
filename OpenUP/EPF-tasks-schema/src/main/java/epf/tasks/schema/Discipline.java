@@ -16,17 +16,16 @@ import javax.validation.constraints.NotBlank;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import epf.schema.EPF;
 import javax.persistence.Index;
 
 /**
  *
  * @author FOXCONN
  */
-@Type(EPF.DISCIPLINE)
-@Schema(name = EPF.DISCIPLINE, title = "Discipline")
-@Entity(name = EPF.DISCIPLINE)
-@Table(schema = EPF.TASKS_SCHEMA, name = "DISCIPLINE")
+@Type(Tasks.DISCIPLINE)
+@Schema(name = Tasks.DISCIPLINE, title = "Discipline")
+@Entity(name = Tasks.DISCIPLINE)
+@Table(schema = Tasks.SCHEMA, name = "DISCIPLINE")
 @JsonbPropertyOrder({
     "name",
     "tasks"
@@ -66,7 +65,7 @@ public class Discipline implements Serializable {
     @ManyToMany
     @JoinTable(
             name = "TASKS",
-            schema = EPF.TASKS_SCHEMA,
+            schema = Tasks.SCHEMA,
             joinColumns = @JoinColumn(name = "DISCIPLINE"),
             inverseJoinColumns = @JoinColumn(name = "TASK"),
             indexes = {@Index(columnList = "DISCIPLINE")}

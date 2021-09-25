@@ -10,16 +10,15 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import epf.schema.EPF;
 
 /**
  * @author PC
  *
  */
-@Type(EPF.REPORT)
-@Schema(name = EPF.REPORT, title = "Report")
-@Entity(name = EPF.REPORT)
-@Table(schema = EPF.WORK_PRODUCTS_SCHEMA, name = "REPORT")
+@Type(WorkProducts.REPORT)
+@Schema(name = WorkProducts.REPORT, title = "Report")
+@Entity(name = WorkProducts.REPORT)
+@Table(schema = WorkProducts.SCHEMA, name = "REPORT")
 public class Report implements Serializable {
 
 	/**

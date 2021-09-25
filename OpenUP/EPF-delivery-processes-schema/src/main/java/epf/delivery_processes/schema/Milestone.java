@@ -11,18 +11,16 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-
 import epf.delivery_processes.schema.section.Properties;
-import epf.schema.EPF;
 
 /**
  *
  * @author FOXCONN
  */
-@Type(EPF.MILESTONE)
-@Schema(name = EPF.MILESTONE, title = "Milestone")
-@Entity(name = EPF.MILESTONE)
-@Table(schema = EPF.DELIVERY_PROCESSES_SCHEMA, name = "MILESTONE")
+@Type(DeliveryProcesses.MILESTONE)
+@Schema(name = DeliveryProcesses.MILESTONE, title = "Milestone")
+@Entity(name = DeliveryProcesses.MILESTONE)
+@Table(schema = DeliveryProcesses.SCHEMA, name = "MILESTONE")
 public class Milestone implements Serializable {
 
     /**

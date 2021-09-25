@@ -14,21 +14,19 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-
 import epf.delivery_processes.schema.section.Description;
 import epf.delivery_processes.schema.section.TeamAllocation;
 import epf.delivery_processes.schema.section.WorkBreakdownStructure;
 import epf.delivery_processes.schema.section.WorkProductUsage;
-import epf.schema.EPF;
 
 /**
  *
  * @author FOXCONN
  */
-@Type(EPF.DELIVERY_PROCESS)
-@Schema(name = EPF.DELIVERY_PROCESS, title = "Delivery Process")
-@Entity(name = EPF.DELIVERY_PROCESS)
-@Table(schema = EPF.DELIVERY_PROCESSES_SCHEMA, name = "DELIVERY_PROCESS")
+@Type(DeliveryProcesses.DELIVERY_PROCESS)
+@Schema(name = DeliveryProcesses.DELIVERY_PROCESS, title = "Delivery Process")
+@Entity(name = DeliveryProcesses.DELIVERY_PROCESS)
+@Table(schema = DeliveryProcesses.SCHEMA, name = "DELIVERY_PROCESS")
 @NamedQuery(
         name = DeliveryProcess.DELIVERY_PROCESSES, 
         query = "SELECT dp FROM EPF_DeliveryProcess AS dp"

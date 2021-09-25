@@ -13,16 +13,15 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import epf.schema.EPF;
 
 /**
  *
  * @author FOXCONN
  */
-@Type(EPF.WORK_PRODUCT_SLOT)
-@Schema(name = EPF.WORK_PRODUCT_SLOT, title = "Work Product Slot")
-@Entity(name = EPF.WORK_PRODUCT_SLOT)
-@Table(schema = EPF.WORK_PRODUCTS_SCHEMA, name = "WORK_PRODUCT_SLOT")
+@Type(WorkProducts.WORK_PRODUCT_SLOT)
+@Schema(name = WorkProducts.WORK_PRODUCT_SLOT, title = "Work Product Slot")
+@Entity(name = WorkProducts.WORK_PRODUCT_SLOT)
+@Table(schema = WorkProducts.SCHEMA, name = "WORK_PRODUCT_SLOT")
 public class WorkProductSlot implements Serializable {
 	
     /**

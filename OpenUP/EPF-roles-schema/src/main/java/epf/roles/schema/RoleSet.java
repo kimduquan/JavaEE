@@ -21,17 +21,16 @@ import javax.validation.constraints.NotBlank;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import epf.schema.EPF;
 import javax.persistence.Index;
 
 /**
  *
  * @author FOXCONN
  */
-@Type(EPF.ROLE_SET)
-@Schema(name = EPF.ROLE_SET, title = "Role Set")
-@Entity(name = EPF.ROLE_SET)
-@Table(schema = EPF.ROLES_SCHEMA, name = "ROLE_SET")
+@Type(Roles.ROLE_SET)
+@Schema(name = Roles.ROLE_SET, title = "Role Set")
+@Entity(name = Roles.ROLE_SET)
+@Table(schema = Roles.SCHEMA, name = "ROLE_SET")
 @JsonbPropertyOrder({
     "name",
     "roles"
@@ -71,7 +70,7 @@ public class RoleSet implements Serializable {
     @ManyToMany
     @JoinTable(
             name = "ROLES",
-            schema = EPF.ROLES_SCHEMA,
+            schema = Roles.SCHEMA,
             joinColumns = @JoinColumn(name = "ROLE_SET"),
             inverseJoinColumns = @JoinColumn(name = "ROLE"),
             indexes = {@Index(columnList = "ROLE_SET")}

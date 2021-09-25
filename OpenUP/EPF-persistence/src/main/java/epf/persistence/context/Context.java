@@ -11,7 +11,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import epf.client.EPFException;
-import epf.schema.EPF;
 import epf.util.Var;
 
 /**
@@ -19,6 +18,11 @@ import epf.util.Var;
  * @author FOXCONN
  */
 public class Context {
+	
+	/**
+     * 
+     */
+    public static final String SCHEMA = "EPF";
     
     /**
      * 
@@ -81,7 +85,7 @@ public class Context {
         EntityManager manager = null;
         Credential result = null;
         try{
-            factory = Persistence.createEntityManagerFactory(EPF.SCHEMA, props);
+            factory = Persistence.createEntityManagerFactory(SCHEMA, props);
             manager = factory.createEntityManager();
             result = new Credential(factory, manager);
         }

@@ -28,7 +28,6 @@ import epf.client.gateway.Gateway;
 import epf.client.gateway.GatewayUtil;
 import epf.client.schema.Entity;
 import epf.client.security.Token;
-import epf.schema.EPF;
 import epf.tests.TestUtil;
 import epf.tests.file.FileUtil;
 import epf.tests.persistence.PersistenceUtil;
@@ -37,6 +36,7 @@ import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
 import epf.util.file.PathUtil;
 import epf.work_products.schema.Artifact;
+import epf.work_products.schema.WorkProducts;
 import epf.work_products.schema.section.Description;
 import epf.work_products.schema.section.Illustrations;
 import epf.work_products.schema.section.MoreInformation;
@@ -207,7 +207,7 @@ public class ShellTest {
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
         
-        builder = ShellUtil.command(builder, "./epf", "persistence", "persist", "-tid", otherTokenID, "-n", EPF.ARTIFACT, "-e");
+        builder = ShellUtil.command(builder, "./epf", "persistence", "persist", "-tid", otherTokenID, "-n", WorkProducts.ARTIFACT, "-e");
 		process = builder.start();
 		TestUtil.waitUntil(o -> process.isAlive(), Duration.ofSeconds(10));
 		ShellUtil.writeJson(in, artifact);
@@ -223,7 +223,7 @@ public class ShellTest {
         Assert.assertEquals("Artifact.name", artifact.getName(), updatedArtifact.getName());
         Assert.assertEquals("Artifact.summary", artifact.getSummary(), updatedArtifact.getSummary());
         
-        PersistenceUtil.remove(otherToken, EPF.ARTIFACT, artifact.getName());
+        PersistenceUtil.remove(otherToken, WorkProducts.ARTIFACT, artifact.getName());
 	}
 	
 	@Test
@@ -236,9 +236,9 @@ public class ShellTest {
         artifact.setMoreInformation(new MoreInformation());
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
-        PersistenceUtil.persist(otherToken, Artifact.class, EPF.ARTIFACT, artifact);
+        PersistenceUtil.persist(otherToken, Artifact.class, WorkProducts.ARTIFACT, artifact);
     	
-        builder = ShellUtil.command(builder, "./epf", "persistence", "merge", "-tid", otherTokenID, "-n", EPF.ARTIFACT, "-i", artifact.getName(), "-e");
+        builder = ShellUtil.command(builder, "./epf", "persistence", "merge", "-tid", otherTokenID, "-n", WorkProducts.ARTIFACT, "-i", artifact.getName(), "-e");
 		process = builder.start();
 		TestUtil.waitUntil(o -> process.isAlive(), Duration.ofSeconds(10));
         Artifact updatedArtifact = new Artifact();
@@ -254,7 +254,7 @@ public class ShellTest {
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(1, lines.size());
         
-        PersistenceUtil.remove(otherToken, EPF.ARTIFACT, updatedArtifact.getName());
+        PersistenceUtil.remove(otherToken, WorkProducts.ARTIFACT, updatedArtifact.getName());
 	}
 	
 	@Test
@@ -267,9 +267,9 @@ public class ShellTest {
         artifact.setMoreInformation(new MoreInformation());
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
-        PersistenceUtil.persist(otherToken, Artifact.class, EPF.ARTIFACT, artifact);
+        PersistenceUtil.persist(otherToken, Artifact.class, WorkProducts.ARTIFACT, artifact);
     	
-        builder = ShellUtil.command(builder, "./epf", "persistence", "remove", "-tid", otherTokenID, "-n", EPF.ARTIFACT, "-i", artifact.getName());
+        builder = ShellUtil.command(builder, "./epf", "persistence", "remove", "-tid", otherTokenID, "-n", WorkProducts.ARTIFACT, "-i", artifact.getName());
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(1, lines.size());

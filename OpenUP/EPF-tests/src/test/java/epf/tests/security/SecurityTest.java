@@ -23,7 +23,6 @@ import org.junit.Test;
 import org.junit.Ignore;
 import epf.client.security.Security;
 import epf.client.security.Token;
-import epf.schema.EPF;
 import epf.tests.client.ClientUtil;
 import epf.util.client.Client;
 import epf.util.security.PasswordUtil;

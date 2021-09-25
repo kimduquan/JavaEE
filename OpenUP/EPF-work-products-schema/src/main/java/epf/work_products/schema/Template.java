@@ -14,16 +14,15 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import epf.schema.EPF;
 
 /**
  *
  * @author FOXCONN
  */
-@Type(EPF.TEMPLATE)
-@Schema(name = EPF.TEMPLATE, title = "Template")
-@Entity(name = EPF.TEMPLATE)
-@Table(schema = EPF.WORK_PRODUCTS_SCHEMA, name = "TEMPLATE")
+@Type(WorkProducts.TEMPLATE)
+@Schema(name = WorkProducts.TEMPLATE, title = "Template")
+@Entity(name = WorkProducts.TEMPLATE)
+@Table(schema = WorkProducts.SCHEMA, name = "TEMPLATE")
 public class Template implements Serializable {
 	
     /**

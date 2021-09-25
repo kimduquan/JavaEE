@@ -17,7 +17,6 @@ import org.junit.BeforeClass;
 import epf.client.gateway.GatewayUtil;
 import epf.client.messaging.MessageDecoder;
 import epf.client.persistence.Entities;
-import epf.schema.EPF;
 import epf.schema.PostPersist;
 import epf.schema.PostRemove;
 import epf.tests.TestUtil;
@@ -26,6 +25,7 @@ import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
 import epf.util.websocket.Client;
 import epf.work_products.schema.Artifact;
+import epf.work_products.schema.WorkProducts;
 import epf.work_products.schema.section.Description;
 import epf.work_products.schema.section.Illustrations;
 import epf.work_products.schema.section.MoreInformation;
@@ -103,8 +103,8 @@ public class ListenerTest {
         artifact.setTailoring(new Tailoring());
     	try(epf.util.client.Client persistenceClient = ClientUtil.newClient(persistenceUrl)){
     		persistenceClient.authorization(token);
-    		Entities.persist(persistenceClient, Artifact.class, EPF.ARTIFACT, artifact);
-            Entities.remove(persistenceClient, EPF.ARTIFACT, artifact.getName());
+    		Entities.persist(persistenceClient, Artifact.class, WorkProducts.ARTIFACT, artifact);
+            Entities.remove(persistenceClient, WorkProducts.ARTIFACT, artifact.getName());
     	}
     	
     	TestUtil.waitUntil((t) -> messages.stream().anyMatch(msg -> msg.contains(PostPersist.class.getName()) && msg.contains(artifact.getName())), Duration.ofSeconds(timeout));
@@ -142,8 +142,8 @@ public class ListenerTest {
         artifact.setTailoring(new Tailoring());
     	try(epf.util.client.Client persistenceClient = ClientUtil.newClient(persistenceUrl)){
     		persistenceClient.authorization(token);
-    		Entities.persist(persistenceClient, Artifact.class, EPF.ARTIFACT, artifact);
-            Entities.remove(persistenceClient, EPF.ARTIFACT, artifact.getName());
+    		Entities.persist(persistenceClient, Artifact.class, WorkProducts.ARTIFACT, artifact);
+            Entities.remove(persistenceClient, WorkProducts.ARTIFACT, artifact.getName());
     	}
     	
     	TestUtil.waitUntil((t) -> events.stream().anyMatch(msg -> msg.contains(PostPersist.class.getName()) && msg.contains(artifact.getName())), Duration.ofSeconds(timeout));

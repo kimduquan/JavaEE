@@ -14,16 +14,15 @@ import epf.delivery_processes.schema.section.Description;
 import epf.delivery_processes.schema.section.TeamAllocation;
 import epf.delivery_processes.schema.section.WorkBreakdownStructure;
 import epf.delivery_processes.schema.section.WorkProductUsage;
-import epf.schema.EPF;
 
 /**
  *
  * @author FOXCONN
  */
-@Type(EPF.CAPABILITY_PATTERN)
-@Schema(name = EPF.CAPABILITY_PATTERN, title = "Capability Pattern")
-@Entity(name = EPF.CAPABILITY_PATTERN)
-@Table(schema = EPF.DELIVERY_PROCESSES_SCHEMA, name = "CAPABILITY_PATTERN")
+@Type(DeliveryProcesses.CAPABILITY_PATTERN)
+@Schema(name = DeliveryProcesses.CAPABILITY_PATTERN, title = "Capability Pattern")
+@Entity(name = DeliveryProcesses.CAPABILITY_PATTERN)
+@Table(schema = DeliveryProcesses.SCHEMA, name = "CAPABILITY_PATTERN")
 public class CapabilityPattern implements Serializable {
 	
     /**

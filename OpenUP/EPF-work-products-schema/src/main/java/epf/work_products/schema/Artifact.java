@@ -17,24 +17,22 @@ import javax.validation.constraints.NotNull;
 import javax.persistence.Embedded;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import epf.schema.EPF;
 import epf.schema.EntityListener;
 import epf.work_products.schema.section.Description;
 import epf.work_products.schema.section.Illustrations;
 import epf.work_products.schema.section.MoreInformation;
 import epf.work_products.schema.section.Relationships;
 import epf.work_products.schema.section.Tailoring;
-
 import javax.persistence.EntityListeners;
 
 /**
  *
  * @author FOXCONN
  */
-@Type(EPF.ARTIFACT)
-@Schema(name = EPF.ARTIFACT, title = "Artifact")
-@Entity(name = EPF.ARTIFACT)
-@Table(schema = EPF.WORK_PRODUCTS_SCHEMA, name = "ARTIFACT")
+@Type(WorkProducts.ARTIFACT)
+@Schema(name = WorkProducts.ARTIFACT, title = "Artifact")
+@Entity(name = WorkProducts.ARTIFACT)
+@Table(schema = WorkProducts.SCHEMA, name = "ARTIFACT")
 @JsonbPropertyOrder({
     "name",
     "fulfilledSlots"

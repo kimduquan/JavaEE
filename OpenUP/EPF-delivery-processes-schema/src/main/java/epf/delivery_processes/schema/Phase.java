@@ -11,12 +11,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-
 import epf.delivery_processes.schema.section.Description;
 import epf.delivery_processes.schema.section.TeamAllocation;
 import epf.delivery_processes.schema.section.WorkBreakdownStructure;
 import epf.delivery_processes.schema.section.WorkProductUsage;
-import epf.schema.EPF;
 import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
@@ -25,10 +23,10 @@ import javax.persistence.NamedQuery;
  *
  * @author FOXCONN
  */
-@Type(EPF.PHASE)
-@Schema(name = EPF.PHASE, title = "Phase")
-@Entity(name = EPF.PHASE)
-@Table(schema = EPF.DELIVERY_PROCESSES_SCHEMA, name = "PHASE", indexes = {@Index(columnList = "PARENT_ACTIVITIES")})
+@Type(DeliveryProcesses.PHASE)
+@Schema(name = DeliveryProcesses.PHASE, title = "Phase")
+@Entity(name = DeliveryProcesses.PHASE)
+@Table(schema = DeliveryProcesses.SCHEMA, name = "PHASE", indexes = {@Index(columnList = "PARENT_ACTIVITIES")})
 @NamedQuery(
         name = Phase.PHASES,
         query = "SELECT ph FROM EPF_Phase ph JOIN ph.parentActivities dp WHERE dp.name = :name"

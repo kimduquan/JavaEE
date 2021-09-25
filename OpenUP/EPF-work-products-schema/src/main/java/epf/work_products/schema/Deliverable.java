@@ -17,16 +17,15 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import epf.schema.EPF;
 
 /**
  *
  * @author FOXCONN
  */
-@Type(EPF.DELIVERABLE)
-@Schema(name = EPF.DELIVERABLE, title = "Deliverable")
-@Entity(name = EPF.DELIVERABLE)
-@Table(schema = EPF.WORK_PRODUCTS_SCHEMA, name = "DELIVERABLE")
+@Type(WorkProducts.DELIVERABLE)
+@Schema(name = WorkProducts.DELIVERABLE, title = "Deliverable")
+@Entity(name = WorkProducts.DELIVERABLE)
+@Table(schema = WorkProducts.SCHEMA, name = "DELIVERABLE")
 public class Deliverable implements Serializable {
     
     /**
