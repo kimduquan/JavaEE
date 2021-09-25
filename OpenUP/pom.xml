@@ -736,7 +736,13 @@
 		<module>EPF-cache</module>
 		<module>EPF-registry</module>
 		<module>EPF-management</module>
+		
         <module>EPF-schema</module>
+		<module>EPF-delivery-processes-schema</module>
+		<module>EPF-roles-schema</module>
+		<module>EPF-tasks-schema</module>
+		<module>EPF-work-products-schema</module>
+		
         <module>EPF-validation</module>
         <module>EPF-client</module>
 		<module>EPF-security</module>
