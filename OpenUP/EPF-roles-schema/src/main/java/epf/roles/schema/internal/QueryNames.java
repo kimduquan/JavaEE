@@ -1,4 +1,4 @@
-package epf.schema.h2;
+package epf.roles.schema.internal;
 
 /**
  * @author PC

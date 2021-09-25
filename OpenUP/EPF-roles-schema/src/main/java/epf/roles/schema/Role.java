@@ -9,6 +9,7 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -20,7 +21,8 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.roles.schema.section.MoreInformation;
 import epf.roles.schema.section.Relationships;
 import epf.roles.schema.section.Staffing;
-
+import epf.roles.schema.internal.Queries;
+import epf.roles.schema.internal.QueryNames;
 /**
  *
  * @author FOXCONN
@@ -34,6 +36,7 @@ import epf.roles.schema.section.Staffing;
     "additionallyPerforms",
     "modifies"
 })
+@NamedNativeQuery(name = QueryNames.FT_SEARCH_DATA, query = Queries.FT_SEARCH_DATA)
 public class Role implements Serializable {
 	
 	/**

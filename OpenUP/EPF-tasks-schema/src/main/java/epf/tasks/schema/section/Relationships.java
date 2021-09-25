@@ -40,7 +40,7 @@ public class Relationships implements Serializable {
     		schema = Tasks.SCHEMA,
     		joinColumns = @JoinColumn(name = "TASK"),
     		indexes = {@Index(columnList = "TASK")})
-    @Column(name = "ROLE")
+    @Column(name = "ROLE", nullable = false)
     private List<String> additionallyPerforms;
     
     /**
@@ -52,7 +52,7 @@ public class Relationships implements Serializable {
     		schema = Tasks.SCHEMA,
     		joinColumns = @JoinColumn(name = "TASK"),
     		indexes = {@Index(columnList = "TASK")})
-    @Column(name = "ARTIFACT")
+    @Column(name = "ARTIFACT", nullable = false)
     private List<String> mandatory;
     
     /**
@@ -64,7 +64,7 @@ public class Relationships implements Serializable {
     		schema = Tasks.SCHEMA,
     		joinColumns = @JoinColumn(name = "TASK"),
     		indexes = {@Index(columnList = "TASK")})
-    @Column(name = "ARTIFACT")
+    @Column(name = "ARTIFACT", nullable = false)
     private List<String> optional;
     
     /**
@@ -77,7 +77,7 @@ public class Relationships implements Serializable {
     		schema = Tasks.SCHEMA,
     		joinColumns = @JoinColumn(name = "TASK"),
     		indexes = {@Index(columnList = "TASK")})
-    @Column(name = "ARTIFACT")
+    @Column(name = "ARTIFACT", nullable = false)
     private List<String> outputs;
 
     public String getPrimaryPerformer() {

@@ -34,7 +34,7 @@ import epf.client.persistence.SearchData;
 import epf.client.security.Security;
 import epf.persistence.impl.Entity;
 import epf.persistence.impl.QueryBuilder;
-import epf.schema.h2.QueryNames;
+import epf.roles.schema.internal.QueryNames;
 
 /**
  *

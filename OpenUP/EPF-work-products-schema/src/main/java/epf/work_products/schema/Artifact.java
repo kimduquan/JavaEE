@@ -17,13 +17,11 @@ import javax.validation.constraints.NotNull;
 import javax.persistence.Embedded;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import epf.schema.EntityListener;
 import epf.work_products.schema.section.Description;
 import epf.work_products.schema.section.Illustrations;
 import epf.work_products.schema.section.MoreInformation;
 import epf.work_products.schema.section.Relationships;
 import epf.work_products.schema.section.Tailoring;
-import javax.persistence.EntityListeners;
 
 /**
  *
@@ -37,7 +35,6 @@ import javax.persistence.EntityListeners;
     "name",
     "fulfilledSlots"
 })
-@EntityListeners({EntityListener.class})
 public class Artifact implements Serializable {
 
     /**

@@ -64,7 +64,7 @@ public class Relationships implements Serializable {
     		schema = WorkProducts.SCHEMA,
     		joinColumns = @JoinColumn(name = "ARTIFACT"),
     		indexes = {@Index(columnList = "ARTIFACT")})
-    @Column(name = "ROLE")
+    @Column(name = "ROLE", nullable = false)
     private List<String> modifiedBy;
 
     public List<WorkProductSlot> getFulfilledSlots() {

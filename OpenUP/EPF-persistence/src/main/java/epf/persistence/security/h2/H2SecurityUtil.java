@@ -6,8 +6,8 @@ package epf.persistence.security.h2;
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
-import epf.schema.h2.Queries;
 import epf.persistence.security.SecurityUtil;
+import epf.roles.schema.internal.Queries;
 
 /**
  * @author PC
