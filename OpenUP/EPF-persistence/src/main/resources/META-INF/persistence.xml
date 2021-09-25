@@ -3,6 +3,10 @@
     <!--<persistence-unit name="EPF_Schema" transaction-type="JTA">
     	<jta-data-source>jdbc/epf</jta-data-source>
 		<jar-file>lib/EPF-schema-1.0.0.jar</jar-file>
+		<jar-file>lib/EPF-delivery-processes-schema-1.0.0.jar</jar-file>
+		<jar-file>lib/EPF-roles-schema-1.0.0.jar</jar-file>
+		<jar-file>lib/EPF-tasks-schema-1.0.0.jar</jar-file>
+		<jar-file>lib/EPF-work-products-schema-1.0.0.jar</jar-file>
 		<jar-file>lib/OpenUP-schema-1.0.0.jar</jar-file>
         <properties>
             <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
@@ -14,6 +18,10 @@
 	<persistence-unit name="EPF" transaction-type="JTA">
         <jta-data-source>jdbc/epf</jta-data-source>
 		<jar-file>../lib/EPF-schema-1.0.0.jar</jar-file>
+		<jar-file>../lib/EPF-delivery-processes-schema-1.0.0.jar</jar-file>
+		<jar-file>../lib/EPF-roles-schema-1.0.0.jar</jar-file>
+		<jar-file>../lib/EPF-tasks-schema-1.0.0.jar</jar-file>
+		<jar-file>../lib/EPF-work-products-schema-1.0.0.jar</jar-file>
 		<jar-file>../lib/OpenUP-schema-1.0.0.jar</jar-file>
     </persistence-unit>
 </persistence>
