@@ -8,6 +8,8 @@ import org.optaplanner.core.api.domain.solution.PlanningEntityCollectionProperty
 import org.optaplanner.core.api.domain.solution.PlanningSolution;
 import org.optaplanner.core.api.domain.solution.ProblemFactCollectionProperty;
 import org.optaplanner.core.api.domain.valuerange.ValueRangeProvider;
+
+import epf.delivery_processes.schema.DeliveryProcess;
 import epf.planning.schema.Activity;
 import epf.planning.schema.Artifact;
 import epf.planning.schema.Iteration;
@@ -15,10 +17,9 @@ import epf.planning.schema.Milestone;
 import epf.planning.schema.Phase;
 import epf.planning.schema.Role;
 import epf.planning.schema.Task;
-import epf.schema.delivery_processes.DeliveryProcess;
-import epf.schema.roles.RoleSet;
-import epf.schema.tasks.Discipline;
-import epf.schema.work_products.Domain;
+import epf.roles.schema.RoleSet;
+import epf.tasks.schema.Discipline;
+import epf.work_products.schema.Domain;
 
 /**
  * @author PC

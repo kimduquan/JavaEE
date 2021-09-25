@@ -46,7 +46,7 @@ public class Phase implements Serializable {
      */
     @ManyToOne
     @JoinColumn(name = "PHASE")
-    private epf.schema.delivery_processes.Phase phase;
+    private epf.delivery_processes.schema.Phase phase;
     
     /**
      * 
@@ -66,11 +66,11 @@ public class Phase implements Serializable {
     	return String.format("%s@%s:%d", getClass().getName(), name, id);
     }
 
-    public epf.schema.delivery_processes.Phase getPhase() {
+    public epf.delivery_processes.schema.Phase getPhase() {
         return phase;
     }
 
-    public void setPhase(final epf.schema.delivery_processes.Phase phase) {
+    public void setPhase(final epf.delivery_processes.schema.Phase phase) {
         this.phase = phase;
     }
 

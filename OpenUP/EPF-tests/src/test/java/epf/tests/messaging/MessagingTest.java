@@ -17,17 +17,18 @@ import epf.client.messaging.Messaging;
 import epf.schema.EPF;
 import epf.schema.PostPersist;
 import epf.schema.PostRemove;
-import epf.schema.work_products.Artifact;
-import epf.schema.work_products.section.Description;
-import epf.schema.work_products.section.Illustrations;
-import epf.schema.work_products.section.MoreInformation;
-import epf.schema.work_products.section.Relationships;
-import epf.schema.work_products.section.Tailoring;
 import epf.tests.TestUtil;
 import epf.tests.health.HealthUtil;
 import epf.tests.persistence.PersistenceUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
+import epf.work_products.schema.Artifact;
+import epf.work_products.schema.section.Description;
+import epf.work_products.schema.section.Illustrations;
+import epf.work_products.schema.section.MoreInformation;
+import epf.work_products.schema.section.Relationships;
+import epf.work_products.schema.section.Tailoring;
+
 import org.junit.Test;
 
 public class MessagingTest {

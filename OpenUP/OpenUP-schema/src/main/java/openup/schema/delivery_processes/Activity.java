@@ -46,7 +46,7 @@ public class Activity implements Serializable {
      */
     @ManyToOne
     @JoinColumn(name = "ACTIVITY")
-    private epf.schema.delivery_processes.Activity activity;
+    private epf.delivery_processes.schema.Activity activity;
     
     /**
      * 
@@ -72,11 +72,11 @@ public class Activity implements Serializable {
     	return String.format("%s@%s:%d", getClass().getName(), name, id);
     }
 
-    public epf.schema.delivery_processes.Activity getActivity() {
+    public epf.delivery_processes.schema.Activity getActivity() {
         return activity;
     }
 
-    public void setActivity(final epf.schema.delivery_processes.Activity activity) {
+    public void setActivity(final epf.delivery_processes.schema.Activity activity) {
         this.activity = activity;
     }
 

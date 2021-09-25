@@ -42,13 +42,13 @@ public class Deliverable implements Serializable {
 	 */
 	@ManyToOne
     @JoinColumn(name = "DELIVERABLE")
-    private epf.schema.work_products.Deliverable deliverable;
+    private epf.work_products.schema.Deliverable deliverable;
 
-	public epf.schema.work_products.Deliverable getDeliverable() {
+	public epf.work_products.schema.Deliverable getDeliverable() {
 		return deliverable;
 	}
 
-	public void setDeliverable(final epf.schema.work_products.Deliverable deliverable) {
+	public void setDeliverable(final epf.work_products.schema.Deliverable deliverable) {
 		this.deliverable = deliverable;
 	}
 

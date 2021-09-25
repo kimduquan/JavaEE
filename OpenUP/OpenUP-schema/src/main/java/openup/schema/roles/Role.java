@@ -61,7 +61,7 @@ public class Role implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "ROLE"),
             indexes = {@Index(columnList = "NAME")}
     )
-    private List<epf.schema.roles.Role> roles;
+    private List<epf.roles.schema.Role> roles;
     
     /**
      * 
@@ -111,11 +111,11 @@ public class Role implements Serializable {
 		this.claims = claims;
 	}
 
-	public List<epf.schema.roles.Role> getRoles() {
+	public List<epf.roles.schema.Role> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(final List<epf.schema.roles.Role> roles) {
+	public void setRoles(final List<epf.roles.schema.Role> roles) {
 		this.roles = roles;
 	}
 }

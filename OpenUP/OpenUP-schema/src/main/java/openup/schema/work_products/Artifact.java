@@ -50,7 +50,7 @@ public class Artifact implements Serializable {
      */
     @ManyToOne
     @JoinColumn(name = "ARTIFACT")
-    private epf.schema.work_products.Artifact artifact;
+    private epf.work_products.schema.Artifact artifact;
     
     /**
      * 
@@ -84,11 +84,11 @@ public class Artifact implements Serializable {
     @Column(name = "SUMMARY")
     private String summary;
 
-    public epf.schema.work_products.Artifact getArtifact() {
+    public epf.work_products.schema.Artifact getArtifact() {
         return artifact;
     }
 
-    public void setArtifact(final epf.schema.work_products.Artifact artifact) {
+    public void setArtifact(final epf.work_products.schema.Artifact artifact) {
         this.artifact = artifact;
     }
 

@@ -46,7 +46,7 @@ public class Iteration implements Serializable {
      */
     @ManyToOne
     @JoinColumn(name = "ITERATION")
-    private epf.schema.delivery_processes.Iteration iteration;
+    private epf.delivery_processes.schema.Iteration iteration;
     
     /**
      * 
@@ -72,11 +72,11 @@ public class Iteration implements Serializable {
     	return String.format("%s@%s:%d", getClass().getName(), name, id);
     }
 
-    public epf.schema.delivery_processes.Iteration getIteration() {
+    public epf.delivery_processes.schema.Iteration getIteration() {
         return iteration;
     }
 
-    public void setIteration(final epf.schema.delivery_processes.Iteration iteration) {
+    public void setIteration(final epf.delivery_processes.schema.Iteration iteration) {
         this.iteration = iteration;
     }
 
