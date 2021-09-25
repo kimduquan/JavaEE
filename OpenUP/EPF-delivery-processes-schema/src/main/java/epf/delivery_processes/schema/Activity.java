@@ -1,22 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.delivery_processes.schema;
 
 import epf.schema.EPF;
-import epf.tasks.schema.Task;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.MapsId;
@@ -65,14 +59,14 @@ public class Activity implements Serializable {
     /**
      * 
      */
-    @ManyToMany
-    @JoinTable(name = "ACTIVITY_TASKS",
-            schema = EPF.SCHEMA,
-            joinColumns = {@JoinColumn(name = "ACTIVITY")},
-            inverseJoinColumns = {@JoinColumn(name = "TASK")},
-            indexes = {@Index(columnList = "ACTIVITY")}
-    )
-    private List<Task> tasks;
+    @ElementCollection
+    @CollectionTable(
+    		name = "ACTIVITY_TASKS",
+    		schema = EPF.SCHEMA,
+    		joinColumns = @JoinColumn(name = "ACTIVITY"),
+    		indexes = {@Index(columnList = "ACTIVITY")})
+    @Column(name = "TASK")
+    private List<String> tasks;
     
     @Override
     public String toString() {
@@ -103,11 +97,11 @@ public class Activity implements Serializable {
         this.parentActivities = parentActivities;
     }
 
-    public List<Task> getTasks() {
+    public List<String> getTasks() {
         return tasks;
     }
 
-    public void setTasks(final List<Task> tasks) {
+    public void setTasks(final List<String> tasks) {
         this.tasks = tasks;
     }
 }

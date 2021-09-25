@@ -5,17 +5,19 @@
  */
 package epf.work_products.schema.section;
 
-import epf.roles.schema.Role;
 import epf.schema.EPF;
 import epf.work_products.schema.WorkProductSlot;
-
 import java.io.Serializable;
 import java.util.List;
+
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embeddable;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 
@@ -51,25 +53,20 @@ public class Relationships implements Serializable {
     /**
      * 
      */
-    @ManyToOne
-    @JoinColumn(name = "RESPONSIBLE")
-    private Role responsible;
+    @Column(name = "RESPONSIBLE", nullable = false)
+    private String responsible;
     
     /**
      * 
      */
-    @ManyToMany
-    @JoinTable(
-            name = "ROLE_MODIFIES",
-            schema = EPF.SCHEMA,
-            joinColumns = @JoinColumn(
-                    name = "ARTIFACT"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "ROLE"
-            )
-    )
-    private List<Role> modifiedBy;
+    @ElementCollection
+    @CollectionTable(
+    		name = "ROLE_MODIFIES",
+    		schema = EPF.SCHEMA,
+    		joinColumns = @JoinColumn(name = "ARTIFACT"),
+    		indexes = {@Index(columnList = "ARTIFACT")})
+    @Column(name = "ROLE")
+    private List<String> modifiedBy;
 
     public List<WorkProductSlot> getFulfilledSlots() {
         return fulfilledSlots;
@@ -80,20 +77,20 @@ public class Relationships implements Serializable {
     }
     
     @Name("Responsible")
-    public Role getResponsible(){
+    public String getResponsible(){
         return responsible;
     }
 
-    public void setResponsible(final Role responsible) {
+    public void setResponsible(final String responsible) {
         this.responsible = responsible;
     }
     
     @Name("Modified_By")
-    public List<Role> getModifiedBy(){
+    public List<String> getModifiedBy(){
         return modifiedBy;
     }
 
-    public void setModifiedBy(final List<Role> modifiedBy) {
+    public void setModifiedBy(final List<String> modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
 }

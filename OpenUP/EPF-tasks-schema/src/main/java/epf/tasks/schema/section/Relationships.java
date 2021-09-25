@@ -1,19 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.tasks.schema.section;
 
-import epf.roles.schema.Role;
 import epf.schema.EPF;
-import epf.work_products.schema.Artifact;
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.Index;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 
@@ -33,111 +28,96 @@ public class Relationships implements Serializable {
 	/**
      * 
      */
-    @JoinColumn(name = "PRIMARY_PERFORMER", referencedColumnName = "NAME")
-    private Role primaryPerformer;
+    @Column(name = "PRIMARY_PERFORMER", nullable = false)
+    private String primaryPerformer;
     
     /**
      * 
      */
-    @ManyToMany
-    @JoinTable(
-            name = "ROLE_ADDITIONALLY_PERFORMS",
-            schema = EPF.SCHEMA,
-            joinColumns = @JoinColumn(
-                    name = "TASK"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "ROLE"
-            )
-    )
-    private List<Role> additionallyPerforms;
+    @ElementCollection
+    @CollectionTable(
+    		name = "ROLE_ADDITIONALLY_PERFORMS",
+    		schema = EPF.SCHEMA,
+    		joinColumns = @JoinColumn(name = "TASK"),
+    		indexes = {@Index(columnList = "TASK")})
+    @Column(name = "ROLE")
+    private List<String> additionallyPerforms;
     
     /**
      * 
      */
-    @ManyToMany
-    @JoinTable(
-            name = "TASK_INPUTS_MANDATORY",
-            schema = EPF.SCHEMA,
-            joinColumns = @JoinColumn(
-                    name = "TASK"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "ARTIFACT"
-            )
-    )
-    private List<Artifact> mandatory;
+    @ElementCollection
+    @CollectionTable(
+    		name = "TASK_INPUTS_MANDATORY",
+    		schema = EPF.SCHEMA,
+    		joinColumns = @JoinColumn(name = "TASK"),
+    		indexes = {@Index(columnList = "TASK")})
+    @Column(name = "ARTIFACT")
+    private List<String> mandatory;
     
     /**
      * 
      */
-    @ManyToMany
-    @JoinTable(
-            name = "TASK_INPUTS_OPTIONAL",
-            schema = EPF.SCHEMA,
-            joinColumns = @JoinColumn(
-                    name = "TASK"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "ARTIFACT"
-            )
-    )
-    private List<Artifact> optional;
+    @ElementCollection
+    @CollectionTable(
+    		name = "TASK_INPUTS_OPTIONAL",
+    		schema = EPF.SCHEMA,
+    		joinColumns = @JoinColumn(name = "TASK"),
+    		indexes = {@Index(columnList = "TASK")})
+    @Column(name = "ARTIFACT")
+    private List<String> optional;
     
     /**
      * 
      */
-    @ManyToMany
-    @JoinTable(
-            name = "TASK_OUTPUTS",
-            schema = EPF.SCHEMA,
-            joinColumns = @JoinColumn(
-                    name = "TASK"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "ARTIFACT"
-            )
-    )
-    private List<Artifact> outputs;
+    
+    @ElementCollection
+    @CollectionTable(
+    		name = "TASK_OUTPUTS",
+    		schema = EPF.SCHEMA,
+    		joinColumns = @JoinColumn(name = "TASK"),
+    		indexes = {@Index(columnList = "TASK")})
+    @Column(name = "ARTIFACT")
+    private List<String> outputs;
 
-    public Role getPrimaryPerformer() {
+    public String getPrimaryPerformer() {
         return primaryPerformer;
     }
 
-    public void setPrimaryPerformer(final Role primaryPerformer) {
+    public void setPrimaryPerformer(final String primaryPerformer) {
         this.primaryPerformer = primaryPerformer;
     }
     
     @Name("Additionally_Performs")
-    public List<Role> getAdditionallyPerforms(){
+    public List<String> getAdditionallyPerforms(){
         return additionallyPerforms;
     }
 
-    public void setAdditionallyPerforms(final List<Role> additionallyPerforms) {
+    public void setAdditionallyPerforms(final List<String> additionallyPerforms) {
         this.additionallyPerforms = additionallyPerforms;
     }
 
-    public List<Artifact> getMandatory() {
+    public List<String> getMandatory() {
         return mandatory;
     }
 
-    public void setMandatory(final List<Artifact> mandatory) {
+    public void setMandatory(final List<String> mandatory) {
         this.mandatory = mandatory;
     }
 
-    public List<Artifact> getOptional() {
+    public List<String> getOptional() {
         return optional;
     }
 
-    public void setOptional(final List<Artifact> optional) {
+    public void setOptional(final List<String> optional) {
         this.optional = optional;
     }
 
-    public List<Artifact> getOutputs() {
+    public List<String> getOutputs() {
         return outputs;
     }
 
-    public void setOutputs(final List<Artifact> outputs) {
+    public void setOutputs(final List<String> outputs) {
         this.outputs = outputs;
     }
 }
