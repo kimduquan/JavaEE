@@ -30,7 +30,7 @@ import epf.schema.EPF;
 @Type(EPF.ROLE)
 @Schema(name = EPF.ROLE, title = "Role")
 @Entity(name = EPF.ROLE)
-@Table(schema = EPF.SCHEMA, name = "EPF_ROLE")
+@Table(schema = EPF.ROLES_SCHEMA, name = "EPF_ROLE")
 @JsonbPropertyOrder({
     "name",
     "additionallyPerforms",

@@ -22,7 +22,7 @@ import epf.schema.EPF;
 @Type(EPF.MILESTONE)
 @Schema(name = EPF.MILESTONE, title = "Milestone")
 @Entity(name = EPF.MILESTONE)
-@Table(schema = EPF.SCHEMA, name = "MILESTONE")
+@Table(schema = EPF.DELIVERY_PROCESSES_SCHEMA, name = "MILESTONE")
 public class Milestone implements Serializable {
 
     /**

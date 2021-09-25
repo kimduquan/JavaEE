@@ -219,7 +219,7 @@ public class SecurityTest {
         );
         Assert.assertEquals("duration", 30, duration.toMinutes());
         Assert.assertNotNull("Token.issuer", jwt.getIssuer());
-        Assert.assertEquals("Token.issuer", EPF.SCHEMA, jwt.getIssuer());
+        Assert.assertEquals("Token.issuer", "EPF", jwt.getIssuer());
         Assert.assertNotNull("Token.name", jwt.getName());
         Assert.assertEquals("Token.name", "any_role1", jwt.getName());
         Assert.assertNull("Token.rawToken", jwt.getRawToken());

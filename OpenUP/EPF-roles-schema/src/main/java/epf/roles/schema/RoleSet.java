@@ -31,7 +31,7 @@ import javax.persistence.Index;
 @Type(EPF.ROLE_SET)
 @Schema(name = EPF.ROLE_SET, title = "Role Set")
 @Entity(name = EPF.ROLE_SET)
-@Table(schema = EPF.SCHEMA, name = "ROLE_SET")
+@Table(schema = EPF.ROLES_SCHEMA, name = "ROLE_SET")
 @JsonbPropertyOrder({
     "name",
     "roles"
@@ -71,7 +71,7 @@ public class RoleSet implements Serializable {
     @ManyToMany
     @JoinTable(
             name = "ROLES",
-            schema = EPF.SCHEMA,
+            schema = EPF.ROLES_SCHEMA,
             joinColumns = @JoinColumn(name = "ROLE_SET"),
             inverseJoinColumns = @JoinColumn(name = "ROLE"),
             indexes = {@Index(columnList = "ROLE_SET")}

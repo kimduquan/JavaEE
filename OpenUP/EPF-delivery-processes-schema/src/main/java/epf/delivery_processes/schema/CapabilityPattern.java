@@ -23,7 +23,7 @@ import epf.schema.EPF;
 @Type(EPF.CAPABILITY_PATTERN)
 @Schema(name = EPF.CAPABILITY_PATTERN, title = "Capability Pattern")
 @Entity(name = EPF.CAPABILITY_PATTERN)
-@Table(schema = EPF.SCHEMA, name = "CAPABILITY_PATTERN")
+@Table(schema = EPF.DELIVERY_PROCESSES_SCHEMA, name = "CAPABILITY_PATTERN")
 public class CapabilityPattern implements Serializable {
 	
     /**

@@ -28,7 +28,7 @@ import javax.persistence.NamedQuery;
 @Type(EPF.PHASE)
 @Schema(name = EPF.PHASE, title = "Phase")
 @Entity(name = EPF.PHASE)
-@Table(schema = EPF.SCHEMA, name = "PHASE", indexes = {@Index(columnList = "PARENT_ACTIVITIES")})
+@Table(schema = EPF.DELIVERY_PROCESSES_SCHEMA, name = "PHASE", indexes = {@Index(columnList = "PARENT_ACTIVITIES")})
 @NamedQuery(
         name = Phase.PHASES,
         query = "SELECT ph FROM EPF_Phase ph JOIN ph.parentActivities dp WHERE dp.name = :name"

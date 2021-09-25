@@ -23,7 +23,7 @@ import epf.tasks.schema.section.Relationships;
 @Type(EPF.TASK)
 @Schema(name = EPF.TASK, title = "Task")
 @Entity(name = EPF.TASK)
-@Table(schema = EPF.SCHEMA, name = "TASK")
+@Table(schema = EPF.TASKS_SCHEMA, name = "TASK")
 @JsonbPropertyOrder({
     "name",
     "mandatory",

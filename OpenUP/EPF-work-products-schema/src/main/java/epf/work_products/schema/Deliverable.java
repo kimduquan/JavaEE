@@ -26,7 +26,7 @@ import epf.schema.EPF;
 @Type(EPF.DELIVERABLE)
 @Schema(name = EPF.DELIVERABLE, title = "Deliverable")
 @Entity(name = EPF.DELIVERABLE)
-@Table(schema = EPF.SCHEMA, name = "DELIVERABLE")
+@Table(schema = EPF.WORK_PRODUCTS_SCHEMA, name = "DELIVERABLE")
 public class Deliverable implements Serializable {
     
     /**

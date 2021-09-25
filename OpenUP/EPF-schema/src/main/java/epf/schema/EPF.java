@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.schema;
 
 /**
@@ -14,6 +9,22 @@ public interface EPF {
      * 
      */
     String SCHEMA = "EPF";
+    /**
+     * 
+     */
+    String DELIVERY_PROCESSES_SCHEMA = "EPF_DELIVERY_PROCESSES";
+    /**
+     * 
+     */
+    String ROLES_SCHEMA = "EPF_ROLES";
+    /**
+     * 
+     */
+    String TASKS_SCHEMA = "EPF_TASKS";
+    /**
+     * 
+     */
+    String WORK_PRODUCTS_SCHEMA = "EPF_WORK_PRODUCTS";
     /**
      * 
      */

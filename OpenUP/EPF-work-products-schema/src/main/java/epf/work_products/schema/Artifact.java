@@ -34,7 +34,7 @@ import javax.persistence.EntityListeners;
 @Type(EPF.ARTIFACT)
 @Schema(name = EPF.ARTIFACT, title = "Artifact")
 @Entity(name = EPF.ARTIFACT)
-@Table(schema = EPF.SCHEMA, name = "ARTIFACT")
+@Table(schema = EPF.WORK_PRODUCTS_SCHEMA, name = "ARTIFACT")
 @JsonbPropertyOrder({
     "name",
     "fulfilledSlots"

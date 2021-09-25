@@ -27,7 +27,7 @@ import javax.persistence.NamedQuery;
 @Type(EPF.ITERATION)
 @Schema(name = EPF.ITERATION, title = "Iteration")
 @Entity(name = EPF.ITERATION)
-@Table(schema = EPF.SCHEMA, name = "ITERATION", indexes = {@Index(columnList = "PARENT_ACTIVITIES")})
+@Table(schema = EPF.DELIVERY_PROCESSES_SCHEMA, name = "ITERATION", indexes = {@Index(columnList = "PARENT_ACTIVITIES")})
 @NamedQuery(
         name = Iteration.ITERATIONS,
         query = "SELECT it FROM EPF_Iteration it JOIN it.parentActivities ph WHERE ph.name = :name"
@@ -79,7 +79,7 @@ public class Iteration implements Serializable {
      */
     @ManyToMany
     @JoinTable(name = "ITERATION_ACTIVITIES",
-            schema = EPF.SCHEMA,
+            schema = EPF.DELIVERY_PROCESSES_SCHEMA,
             joinColumns = {@JoinColumn(name = "ITERATION")},
             inverseJoinColumns = {@JoinColumn(name = "ACTIVITY")},
             indexes = {@Index(columnList = "ITERATION")}

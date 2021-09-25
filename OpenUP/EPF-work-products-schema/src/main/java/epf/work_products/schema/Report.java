@@ -19,7 +19,7 @@ import epf.schema.EPF;
 @Type(EPF.REPORT)
 @Schema(name = EPF.REPORT, title = "Report")
 @Entity(name = EPF.REPORT)
-@Table(schema = EPF.SCHEMA, name = "REPORT")
+@Table(schema = EPF.WORK_PRODUCTS_SCHEMA, name = "REPORT")
 public class Report implements Serializable {
 
 	/**

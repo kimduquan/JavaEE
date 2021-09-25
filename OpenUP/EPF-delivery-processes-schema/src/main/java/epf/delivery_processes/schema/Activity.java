@@ -25,7 +25,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Type(EPF.ACTIVITY)
 @Schema(name = EPF.ACTIVITY, title = "Activity")
 @Entity(name = EPF.ACTIVITY)
-@Table(schema = EPF.SCHEMA, name = "ACTIVITY")
+@Table(schema = EPF.DELIVERY_PROCESSES_SCHEMA, name = "ACTIVITY")
 public class Activity implements Serializable {
     
     /**
@@ -62,7 +62,7 @@ public class Activity implements Serializable {
     @ElementCollection
     @CollectionTable(
     		name = "ACTIVITY_TASKS",
-    		schema = EPF.SCHEMA,
+    		schema = EPF.DELIVERY_PROCESSES_SCHEMA,
     		joinColumns = @JoinColumn(name = "ACTIVITY"),
     		indexes = {@Index(columnList = "ACTIVITY")})
     @Column(name = "TASK")

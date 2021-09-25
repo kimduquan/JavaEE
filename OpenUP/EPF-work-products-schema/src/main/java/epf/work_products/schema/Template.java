@@ -23,7 +23,7 @@ import epf.schema.EPF;
 @Type(EPF.TEMPLATE)
 @Schema(name = EPF.TEMPLATE, title = "Template")
 @Entity(name = EPF.TEMPLATE)
-@Table(schema = EPF.SCHEMA, name = "TEMPLATE")
+@Table(schema = EPF.WORK_PRODUCTS_SCHEMA, name = "TEMPLATE")
 public class Template implements Serializable {
 	
     /**

@@ -28,7 +28,7 @@ import epf.schema.EPF;
 @Type(EPF.DELIVERY_PROCESS)
 @Schema(name = EPF.DELIVERY_PROCESS, title = "Delivery Process")
 @Entity(name = EPF.DELIVERY_PROCESS)
-@Table(schema = EPF.SCHEMA, name = "DELIVERY_PROCESS")
+@Table(schema = EPF.DELIVERY_PROCESSES_SCHEMA, name = "DELIVERY_PROCESS")
 @NamedQuery(
         name = DeliveryProcess.DELIVERY_PROCESSES, 
         query = "SELECT dp FROM EPF_DeliveryProcess AS dp"

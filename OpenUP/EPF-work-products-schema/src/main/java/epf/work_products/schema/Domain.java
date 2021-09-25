@@ -30,7 +30,7 @@ import javax.persistence.Index;
 @Type(EPF.DOMAIN)
 @Schema(name = EPF.DOMAIN, title = "Domain")
 @Entity(name = EPF.DOMAIN)
-@Table(schema = EPF.SCHEMA, name = "EPF_DOMAIN")
+@Table(schema = EPF.WORK_PRODUCTS_SCHEMA, name = "EPF_DOMAIN")
 @JsonbPropertyOrder({
     "name",
     "workProducts"
@@ -70,7 +70,7 @@ public class Domain implements Serializable {
     @ManyToMany
     @JoinTable(
             name = "WORK_PRODUCTS",
-            schema = EPF.SCHEMA,
+            schema = EPF.WORK_PRODUCTS_SCHEMA,
             joinColumns = @JoinColumn(name = "DOMAIN"),
             inverseJoinColumns = @JoinColumn(name = "ARTIFACT"),
             indexes = {@Index(columnList = "DOMAIN")}

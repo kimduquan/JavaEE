@@ -1,11 +1,35 @@
 /*Basic Roles BEGIN*/
-GRANT SELECT ON SCHEMA EPF TO Analyst;
-GRANT SELECT ON SCHEMA EPF TO Any_Role;
-GRANT SELECT ON SCHEMA EPF TO Architect;
-GRANT SELECT ON SCHEMA EPF TO Developer;
-GRANT SELECT ON SCHEMA EPF TO Project_Manager;
-GRANT SELECT ON SCHEMA EPF TO Stakeholder;
-GRANT SELECT ON SCHEMA EPF TO Tester;
+GRANT SELECT ON SCHEMA EPF_Delivery_Processes TO Analyst;
+GRANT SELECT ON SCHEMA EPF_Delivery_Processes TO Any_Role;
+GRANT SELECT ON SCHEMA EPF_Delivery_Processes TO Architect;
+GRANT SELECT ON SCHEMA EPF_Delivery_Processes TO Developer;
+GRANT SELECT ON SCHEMA EPF_Delivery_Processes TO Project_Manager;
+GRANT SELECT ON SCHEMA EPF_Delivery_Processes TO Stakeholder;
+GRANT SELECT ON SCHEMA EPF_Delivery_Processes TO Tester;
+
+GRANT SELECT ON SCHEMA EPF_Roles TO Analyst;
+GRANT SELECT ON SCHEMA EPF_Roles TO Any_Role;
+GRANT SELECT ON SCHEMA EPF_Roles TO Architect;
+GRANT SELECT ON SCHEMA EPF_Roles TO Developer;
+GRANT SELECT ON SCHEMA EPF_Roles TO Project_Manager;
+GRANT SELECT ON SCHEMA EPF_Roles TO Stakeholder;
+GRANT SELECT ON SCHEMA EPF_Roles TO Tester;
+
+GRANT SELECT ON SCHEMA EPF_Tasks TO Analyst;
+GRANT SELECT ON SCHEMA EPF_Tasks TO Any_Role;
+GRANT SELECT ON SCHEMA EPF_Tasks TO Architect;
+GRANT SELECT ON SCHEMA EPF_Tasks TO Developer;
+GRANT SELECT ON SCHEMA EPF_Tasks TO Project_Manager;
+GRANT SELECT ON SCHEMA EPF_Tasks TO Stakeholder;
+GRANT SELECT ON SCHEMA EPF_Tasks TO Tester;
+
+GRANT SELECT ON SCHEMA EPF_Work_Products TO Analyst;
+GRANT SELECT ON SCHEMA EPF_Work_Products TO Any_Role;
+GRANT SELECT ON SCHEMA EPF_Work_Products TO Architect;
+GRANT SELECT ON SCHEMA EPF_Work_Products TO Developer;
+GRANT SELECT ON SCHEMA EPF_Work_Products TO Project_Manager;
+GRANT SELECT ON SCHEMA EPF_Work_Products TO Stakeholder;
+GRANT SELECT ON SCHEMA EPF_Work_Products TO Tester;
 
 GRANT SELECT ON SCHEMA OPENUP TO Analyst;
 GRANT SELECT ON SCHEMA OPENUP TO Any_Role;
@@ -41,12 +65,33 @@ REVOKE ALL ON SCHEMA INFORMATION_SCHEMA FROM tester1;
 /*Basic Roles END*/
 
 /*Deployment BEGIN*/
-GRANT SELECT ON SCHEMA EPF TO Course_Developer;
-GRANT SELECT ON SCHEMA EPF TO Deployment_Engineer;
-GRANT SELECT ON SCHEMA EPF TO Deployment_Manager;
-GRANT SELECT ON SCHEMA EPF TO Product_Owner;
-GRANT SELECT ON SCHEMA EPF TO Technical_Writer;
-GRANT SELECT ON SCHEMA EPF TO Trainer;
+GRANT SELECT ON SCHEMA EPF_Delivery_Processes TO Course_Developer;
+GRANT SELECT ON SCHEMA EPF_Delivery_Processes TO Deployment_Engineer;
+GRANT SELECT ON SCHEMA EPF_Delivery_Processes TO Deployment_Manager;
+GRANT SELECT ON SCHEMA EPF_Delivery_Processes TO Product_Owner;
+GRANT SELECT ON SCHEMA EPF_Delivery_Processes TO Technical_Writer;
+GRANT SELECT ON SCHEMA EPF_Delivery_Processes TO Trainer;
+
+GRANT SELECT ON SCHEMA EPF_Roles TO Course_Developer;
+GRANT SELECT ON SCHEMA EPF_Roles TO Deployment_Engineer;
+GRANT SELECT ON SCHEMA EPF_Roles TO Deployment_Manager;
+GRANT SELECT ON SCHEMA EPF_Roles TO Product_Owner;
+GRANT SELECT ON SCHEMA EPF_Roles TO Technical_Writer;
+GRANT SELECT ON SCHEMA EPF_Roles TO Trainer;
+
+GRANT SELECT ON SCHEMA EPF_Tasks TO Course_Developer;
+GRANT SELECT ON SCHEMA EPF_Tasks TO Deployment_Engineer;
+GRANT SELECT ON SCHEMA EPF_Tasks TO Deployment_Manager;
+GRANT SELECT ON SCHEMA EPF_Tasks TO Product_Owner;
+GRANT SELECT ON SCHEMA EPF_Tasks TO Technical_Writer;
+GRANT SELECT ON SCHEMA EPF_Tasks TO Trainer;
+
+GRANT SELECT ON SCHEMA EPF_Work_Products TO Course_Developer;
+GRANT SELECT ON SCHEMA EPF_Work_Products TO Deployment_Engineer;
+GRANT SELECT ON SCHEMA EPF_Work_Products TO Deployment_Manager;
+GRANT SELECT ON SCHEMA EPF_Work_Products TO Product_Owner;
+GRANT SELECT ON SCHEMA EPF_Work_Products TO Technical_Writer;
+GRANT SELECT ON SCHEMA EPF_Work_Products TO Trainer;
 
 GRANT SELECT ON SCHEMA OPENUP TO Course_Developer;
 GRANT SELECT ON SCHEMA OPENUP TO Deployment_Engineer;
@@ -78,8 +123,17 @@ REVOKE ALL ON SCHEMA INFORMATION_SCHEMA FROM trainer1;
 /*Deployment END*/
 
 /*Environment BEGIN*/
-GRANT SELECT ON SCHEMA EPF TO Process_Engineer;
-GRANT SELECT ON SCHEMA EPF TO Tool_Specialist;
+GRANT SELECT ON SCHEMA EPF_Delivery_Processes TO Process_Engineer;
+GRANT SELECT ON SCHEMA EPF_Delivery_Processes TO Tool_Specialist;
+
+GRANT SELECT ON SCHEMA EPF_Roles TO Process_Engineer;
+GRANT SELECT ON SCHEMA EPF_Roles TO Tool_Specialist;
+
+GRANT SELECT ON SCHEMA EPF_Tasks TO Process_Engineer;
+GRANT SELECT ON SCHEMA EPF_Tasks TO Tool_Specialist;
+
+GRANT SELECT ON SCHEMA EPF_Work_Products TO Process_Engineer;
+GRANT SELECT ON SCHEMA EPF_Work_Products TO Tool_Specialist;
 
 GRANT SELECT ON SCHEMA OPENUP TO Process_Engineer;
 GRANT SELECT ON SCHEMA OPENUP TO Tool_Specialist;

@@ -37,7 +37,7 @@ public class Relationships implements Serializable {
     @ElementCollection
     @CollectionTable(
     		name = "ROLE_ADDITIONALLY_PERFORMS",
-    		schema = EPF.SCHEMA,
+    		schema = EPF.TASKS_SCHEMA,
     		joinColumns = @JoinColumn(name = "TASK"),
     		indexes = {@Index(columnList = "TASK")})
     @Column(name = "ROLE")
@@ -49,7 +49,7 @@ public class Relationships implements Serializable {
     @ElementCollection
     @CollectionTable(
     		name = "TASK_INPUTS_MANDATORY",
-    		schema = EPF.SCHEMA,
+    		schema = EPF.TASKS_SCHEMA,
     		joinColumns = @JoinColumn(name = "TASK"),
     		indexes = {@Index(columnList = "TASK")})
     @Column(name = "ARTIFACT")
@@ -61,7 +61,7 @@ public class Relationships implements Serializable {
     @ElementCollection
     @CollectionTable(
     		name = "TASK_INPUTS_OPTIONAL",
-    		schema = EPF.SCHEMA,
+    		schema = EPF.TASKS_SCHEMA,
     		joinColumns = @JoinColumn(name = "TASK"),
     		indexes = {@Index(columnList = "TASK")})
     @Column(name = "ARTIFACT")
@@ -74,7 +74,7 @@ public class Relationships implements Serializable {
     @ElementCollection
     @CollectionTable(
     		name = "TASK_OUTPUTS",
-    		schema = EPF.SCHEMA,
+    		schema = EPF.TASKS_SCHEMA,
     		joinColumns = @JoinColumn(name = "TASK"),
     		indexes = {@Index(columnList = "TASK")})
     @Column(name = "ARTIFACT")
