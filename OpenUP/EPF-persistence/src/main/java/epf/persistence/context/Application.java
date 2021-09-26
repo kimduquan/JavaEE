@@ -15,6 +15,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import epf.delivery_processes.schema.DeliveryProcesses;
 import epf.roles.schema.Roles;
+import epf.schema.EPF;
 import epf.tasks.schema.Tasks;
 import epf.work_products.schema.WorkProducts;
 import openup.schema.OpenUP;
@@ -47,7 +48,7 @@ public class Application {
      */
     @PostConstruct
     protected void postConstruct() {
-    	defaultContext = new Context("EPF");
+    	defaultContext = new Context(EPF.SCHEMA);
     	contexts.put(DeliveryProcesses.SCHEMA, new Context(DeliveryProcesses.SCHEMA));
     	contexts.put(Roles.SCHEMA, new Context(Roles.SCHEMA));
     	contexts.put(Tasks.SCHEMA, new Context(Tasks.SCHEMA));

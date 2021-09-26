@@ -53,4 +53,7 @@
 		<jar-file>../lib/EPF-work-products-schema-1.0.0.jar</jar-file>
 		<jar-file>../lib/OpenUP-schema-1.0.0.jar</jar-file>
     </persistence-unit>
+    <persistence-unit name="FT" transaction-type="JTA">
+        <jta-data-source>jdbc/ft</jta-data-source>
+    </persistence-unit>
 </persistence>
