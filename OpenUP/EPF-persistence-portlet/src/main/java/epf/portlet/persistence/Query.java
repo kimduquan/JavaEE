@@ -112,7 +112,7 @@ public class Query implements QueryView, Serializable {
 			try {
 				firstResult = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT));
 				maxResults = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT));
-				resultList = entityUtil.getEntities(entity.getName(), firstResult, maxResults);
+				resultList = entityUtil.getEntities(entity.getTable().getSchema(), entity.getName(), firstResult, maxResults);
 			}
 			catch (Exception e) {
 				LOGGER.throwing(getClass().getName(), "postConstruct", e);
@@ -137,7 +137,7 @@ public class Query implements QueryView, Serializable {
 					.stream()
 					.collect(Collectors.toList());
 			collector = new JsonObjectCollector(attributes.stream().map(Attribute::getName).collect(Collectors.toList()));
-			resultList = entityUtil.getEntities(entity.getName(), firstResult, maxResults);
+			resultList = entityUtil.getEntities(entity.getTable().getSchema(), entity.getName(), firstResult, maxResults);
 		}
 	}
 	

@@ -59,6 +59,7 @@ public class Queries implements epf.client.persistence.Queries {
     
     @Override
     public Response executeQuery(
+    		final String schema,
             final List<PathSegment> paths,
             final Integer firstResult,
             final Integer maxResults

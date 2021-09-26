@@ -88,12 +88,12 @@ public class CacheTest {
         artifact.setMoreInformation(new MoreInformation());
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
-        PersistenceUtil.persist(token, Artifact.class, WorkProducts.ARTIFACT, artifact);
+        PersistenceUtil.persist(token, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
         TestUtil.waitUntil(
         		(t) -> {
 				        	Artifact art = null;
 				        	try {
-				        		art = Cache.getEntity(client, Artifact.class, WorkProducts.ARTIFACT, artifact.getName());
+				        		art = Cache.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
 				        	}
 				        	catch(Exception ex) {
 				        		ex.printStackTrace();
@@ -102,11 +102,11 @@ public class CacheTest {
 				        }, 
         		Duration.ofSeconds(10)
         		);
-        Artifact cachedArtifact = Cache.getEntity(client, Artifact.class, WorkProducts.ARTIFACT, artifact.getName());
+        Artifact cachedArtifact = Cache.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
         Assert.assertNotNull("Artifact", cachedArtifact);
         Assert.assertEquals("Artifact.name", artifact.getName(), cachedArtifact.getName());
         Assert.assertEquals("Artifact.summary", artifact.getSummary(), cachedArtifact.getSummary());
-        PersistenceUtil.remove(token, WorkProducts.ARTIFACT, artifact.getName());
+        PersistenceUtil.remove(token, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
 	}
 	
 	@Test(expected = NotFoundException.class)
@@ -119,12 +119,12 @@ public class CacheTest {
         artifact.setMoreInformation(new MoreInformation());
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
-        PersistenceUtil.persist(token, Artifact.class, WorkProducts.ARTIFACT, artifact);
+        PersistenceUtil.persist(token, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
         TestUtil.waitUntil(
         		(t) -> {
 				        	Artifact art = null;
 				        	try {
-				        		art = Cache.getEntity(client, Artifact.class, WorkProducts.ARTIFACT, artifact.getName());
+				        		art = Cache.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
 				        	}
 				        	catch(Exception ex) {
 				        		ex.printStackTrace();
@@ -133,9 +133,9 @@ public class CacheTest {
 				        }, 
         		Duration.ofSeconds(10)
         		);
-        PersistenceUtil.remove(token, WorkProducts.ARTIFACT, artifact.getName());
+        PersistenceUtil.remove(token, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
         Thread.sleep(80);
-        Cache.getEntity(client, Artifact.class, WorkProducts.ARTIFACT, artifact.getName());
+        Cache.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
 	}
 	
 	@Test
@@ -148,12 +148,12 @@ public class CacheTest {
         artifact.setMoreInformation(new MoreInformation());
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
-        PersistenceUtil.persist(token, Artifact.class, WorkProducts.ARTIFACT, artifact);
+        PersistenceUtil.persist(token, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
         TestUtil.waitUntil(
         		(t) -> {
 				        	Artifact art = null;
 				        	try {
-				        		art = Cache.getEntity(client, Artifact.class, WorkProducts.ARTIFACT, artifact.getName());
+				        		art = Cache.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
 				        	}
 				        	catch(Exception ex) {
 				        		ex.printStackTrace();
@@ -163,17 +163,17 @@ public class CacheTest {
         		Duration.ofSeconds(10)
         		);
         artifact.setSummary(StringUtil.randomString("Artifact Cache Summary"));
-        PersistenceUtil.merge(token, WorkProducts.ARTIFACT, artifact.getName(), artifact);
+        PersistenceUtil.merge(token, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName(), artifact);
         Thread.sleep(80);
-        Artifact actualArtifact = Cache.getEntity(client, Artifact.class, WorkProducts.ARTIFACT, artifact.getName());
+        Artifact actualArtifact = Cache.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
         Assert.assertEquals("Artifact.summary", artifact.getSummary(), actualArtifact.getSummary());
-        PersistenceUtil.remove(token, WorkProducts.ARTIFACT, artifact.getName());
+        PersistenceUtil.remove(token, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
 	}
 	
 	@Test(expected = NotFoundException.class)
 	public void testGetEntity_NotFound() throws Exception {
 		Thread.sleep(20);
-        Cache.getEntity(client, Artifact.class, WorkProducts.ARTIFACT, StringUtil.randomString("Artifact Cache"));
+        Cache.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, StringUtil.randomString("Artifact Cache"));
 	}
 
 	@Test
@@ -187,9 +187,9 @@ public class CacheTest {
         artifact.setMoreInformation(new MoreInformation());
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
-        PersistenceUtil.persist(token, Artifact.class, WorkProducts.ARTIFACT, artifact);
+        PersistenceUtil.persist(token, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
         final List<String> data = new ArrayList<>();
-        try(SseEventSource stream = Cache.forEachEntity(client, WorkProducts.ARTIFACT)){
+        try(SseEventSource stream = Cache.forEachEntity(client, WorkProducts.SCHEMA, WorkProducts.ARTIFACT)){
         	stream.register(
         			e -> {
         				data.add(e.getId());
@@ -202,6 +202,6 @@ public class CacheTest {
         }
         Assert.assertEquals(1, data.size());
         Assert.assertTrue(data.contains(artifact.getName()));
-        PersistenceUtil.remove(token, WorkProducts.ARTIFACT, artifact.getName());
+        PersistenceUtil.remove(token, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
 	}
 }

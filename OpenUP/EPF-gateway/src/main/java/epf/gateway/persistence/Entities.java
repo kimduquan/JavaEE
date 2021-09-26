@@ -43,13 +43,12 @@ public class Entities {
      * @param headers
      * @param uriInfo
      * @param req
+     * @param schema
      * @param entity
      * @param body
-     * @return
-     * @throws Exception 
      */
     @POST
-    @Path("{entity}")
+    @Path("{schema}/{entity}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
@@ -57,6 +56,7 @@ public class Entities {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
+            @PathParam("schema") final String schema,
             @PathParam("entity") final String entity,
             final InputStream body) throws Exception {
         return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, body));
@@ -66,21 +66,21 @@ public class Entities {
      * @param headers
      * @param uriInfo
      * @param req
-     * @param name
+     * @param schema
+     * @param entity
      * @param entityId
      * @param body
-     * @return
-     * @throws Exception 
      */
     @PUT
-    @Path("{entity}/{id}")
+    @Path("{schema}/{entity}/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Asynchronous
     public CompletionStage<Response> merge(
     		@Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
-            @PathParam("entity") final String name,
+            @PathParam("schema") final String schema,
+            @PathParam("entity") final String entity,
             @PathParam("id") final String entityId,
             final InputStream body
             ) throws Exception {
@@ -91,18 +91,18 @@ public class Entities {
      * @param headers
      * @param uriInfo
      * @param req
+     * @param schema
      * @param entity
      * @param entityId
-     * @return
-     * @throws Exception 
      */
     @DELETE
-    @Path("{entity}/{id}")
+    @Path("{schema}/{entity}/{id}")
     @Asynchronous
     public CompletionStage<Response> remove(
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
+            @PathParam("schema") final String schema,
             @PathParam("entity") final String entity,
             @PathParam("id") final String entityId) throws Exception {
         return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
@@ -112,21 +112,21 @@ public class Entities {
      * @param headers
      * @param uriInfo
      * @param req
-     * @param name
+     * @param schema
+     * @param entity
      * @param entityId
      * @param body
-     * @return
-     * @throws Exception 
      */
     @POST
-    @Path("{entity}/{id}")
+    @Path("{schema}/{entity}/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
     public CompletionStage<Response> find(
     		@Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
-            @PathParam("entity") final String name,
+            @PathParam("schema") final String schema,
+            @PathParam("entity") final String entity,
             @PathParam("id") final String entityId,
             final InputStream body
             ) throws Exception {

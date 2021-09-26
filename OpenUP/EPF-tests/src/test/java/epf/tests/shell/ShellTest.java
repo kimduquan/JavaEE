@@ -207,7 +207,7 @@ public class ShellTest {
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
         
-        builder = ShellUtil.command(builder, "./epf", "persistence", "persist", "-tid", otherTokenID, "-n", WorkProducts.ARTIFACT, "-e");
+        builder = ShellUtil.command(builder, "./epf", "persistence", "persist", "-tid", otherTokenID, "-s", WorkProducts.SCHEMA, "-e", WorkProducts.ARTIFACT, "-d");
 		process = builder.start();
 		TestUtil.waitUntil(o -> process.isAlive(), Duration.ofSeconds(10));
 		ShellUtil.writeJson(in, artifact);
@@ -223,7 +223,7 @@ public class ShellTest {
         Assert.assertEquals("Artifact.name", artifact.getName(), updatedArtifact.getName());
         Assert.assertEquals("Artifact.summary", artifact.getSummary(), updatedArtifact.getSummary());
         
-        PersistenceUtil.remove(otherToken, WorkProducts.ARTIFACT, artifact.getName());
+        PersistenceUtil.remove(otherToken, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
 	}
 	
 	@Test
@@ -236,9 +236,9 @@ public class ShellTest {
         artifact.setMoreInformation(new MoreInformation());
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
-        PersistenceUtil.persist(otherToken, Artifact.class, WorkProducts.ARTIFACT, artifact);
+        PersistenceUtil.persist(otherToken, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
     	
-        builder = ShellUtil.command(builder, "./epf", "persistence", "merge", "-tid", otherTokenID, "-n", WorkProducts.ARTIFACT, "-i", artifact.getName(), "-e");
+        builder = ShellUtil.command(builder, "./epf", "persistence", "merge", "-tid", otherTokenID, "-s", WorkProducts.SCHEMA, "-e", WorkProducts.ARTIFACT, "-i", artifact.getName(), "-d");
 		process = builder.start();
 		TestUtil.waitUntil(o -> process.isAlive(), Duration.ofSeconds(10));
         Artifact updatedArtifact = new Artifact();
@@ -254,7 +254,7 @@ public class ShellTest {
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(1, lines.size());
         
-        PersistenceUtil.remove(otherToken, WorkProducts.ARTIFACT, updatedArtifact.getName());
+        PersistenceUtil.remove(otherToken, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, updatedArtifact.getName());
 	}
 	
 	@Test
@@ -267,9 +267,9 @@ public class ShellTest {
         artifact.setMoreInformation(new MoreInformation());
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
-        PersistenceUtil.persist(otherToken, Artifact.class, WorkProducts.ARTIFACT, artifact);
+        PersistenceUtil.persist(otherToken, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
     	
-        builder = ShellUtil.command(builder, "./epf", "persistence", "remove", "-tid", otherTokenID, "-n", WorkProducts.ARTIFACT, "-i", artifact.getName());
+        builder = ShellUtil.command(builder, "./epf", "persistence", "remove", "-tid", otherTokenID, "-s", WorkProducts.SCHEMA, "-e", WorkProducts.ARTIFACT, "-i", artifact.getName());
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(1, lines.size());

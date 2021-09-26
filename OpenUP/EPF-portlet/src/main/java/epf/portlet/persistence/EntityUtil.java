@@ -29,30 +29,30 @@ public class EntityUtil {
 	private transient PersistenceUtil persistence;
 	
 	/**
-	 * @param name
+	 * @param schema
+	 * @param entity
 	 * @param firstResult
 	 * @param maxResults
-	 * @return
-	 * @throws Exception
 	 */
-	public List<JsonObject> getEntities(final String name, final Integer firstResult, final Integer maxResults) throws Exception{
-		List<JsonObject> objects = persistenceCache.getEntities(name, firstResult, maxResults);
+	public List<JsonObject> getEntities(final String schema, final String entity, final Integer firstResult, final Integer maxResults) throws Exception{
+		List<JsonObject> objects = persistenceCache.getEntities(schema, entity, firstResult, maxResults);
 		if(objects == null || objects.isEmpty()) {
-			objects = persistence.getEntities(name, firstResult, maxResults);
+			objects = persistence.getEntities(schema, entity, firstResult, maxResults);
 		}
 		return objects;
 	}
 	
 	/**
-	 * @param name
+	 * @param schema
+	 * @param entity
 	 * @param id
 	 * @return
 	 * @throws Exception
 	 */
-	public JsonObject getEntity(final String name, final String id) throws Exception {
-		JsonObject object = persistenceCache.getEntity(name, id);
+	public JsonObject getEntity(final String schema, final String entity, final String id) throws Exception {
+		JsonObject object = persistenceCache.getEntity(schema, entity, id);
 		if(object == null || object.isEmpty()) {
-			object = persistence.getEntity(name, id);
+			object = persistence.getEntity(schema, entity, id);
 		}
 		return object;
 	}

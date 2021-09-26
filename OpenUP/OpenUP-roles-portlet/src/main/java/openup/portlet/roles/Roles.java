@@ -70,6 +70,7 @@ public class Roles implements Serializable, RolesView {
 		try(Client client = securityUtil.newClient(gatewayUtil.get("persistence"))){
 			roles = Queries.executeQuery(
 					client, 
+					OpenUP.SCHEMA,
 					new GenericType<List<Role>>() {}, 
 					target -> target.path(OpenUP.ROLE), 
 					null, 

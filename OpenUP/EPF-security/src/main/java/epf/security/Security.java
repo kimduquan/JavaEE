@@ -105,7 +105,7 @@ public class Security implements epf.client.security.Security, Serializable {
      * @throws Exception
      */
     protected Token buildToken(final Client client, final Token token, final String rawToken) throws Exception {
-    	final Role role = epf.client.persistence.Entities.find(client, Role.class, OpenUP.ROLE, token.getName());
+    	final Role role = epf.client.persistence.Entities.find(client, Role.class, OpenUP.SCHEMA, OpenUP.ROLE, token.getName());
 		token.setGroups(role.getRoles()
 				.stream()
 				.map(r -> r.getName())

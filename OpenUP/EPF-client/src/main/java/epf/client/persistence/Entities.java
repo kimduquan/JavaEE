@@ -18,7 +18,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import epf.util.client.Client;
 
 /**
@@ -29,38 +28,42 @@ import epf.util.client.Client;
 public interface Entities {
     
     /**
-     * @param name
+     * @param schema
+     * @param entity
      * @param body
      * @return
      */
     @POST
-    @Path("{entity}")
+    @Path("{schema}/{entity}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Object persist(
+    		@PathParam("schema")
+            @NotBlank
+            final String schema,
             @PathParam("entity")
             @NotBlank
-            final String name,
+            final String entity,
             @NotNull
             final InputStream body
             );
     
     /**
-     * @param <T>
      * @param client
      * @param cls
-     * @param name
+     * @param schema
+     * @param entity
      * @param body
-     * @return
      */
     static <T> T persist(
     		final Client client,
     		final Class<T> cls,
-    		final String name,
+    		final String schema,
+    		final String entity,
     		final T body
             ){
     	return client.request(
-    			target -> target.path(name), 
+    			target -> target.path(schema).path(entity), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.post(Entity.json(body), cls);
@@ -68,34 +71,39 @@ public interface Entities {
     
     /**
      * @param client
-     * @param name
+     * @param schema
+     * @param entity
      * @param body
-     * @return
      */
     static Response persist(
     		final Client client,
-    		final String name,
+    		final String schema,
+    		final String entity,
     		final String body
             ){
     	return client.request(
-    			target -> target.path(name), 
+    			target -> target.path(schema).path(entity), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.post(Entity.entity(body, MediaType.APPLICATION_JSON));
     }
     
     /**
-     * @param name
+     * @param schema
+     * @param entity
      * @param entityId
      * @param body
      */
     @PUT
-    @Path("{entity}/{id}")
+    @Path("{schema}/{entity}/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     void merge(
+    		@PathParam("schema")
+            @NotBlank
+            final String schema,
             @PathParam("entity")
             @NotBlank
-            final String name,
+            final String entity,
             @PathParam("id")
             @NotBlank
             final String entityId,
@@ -105,18 +113,20 @@ public interface Entities {
     
     /**
      * @param client
-     * @param name
+     * @param schema
+     * @param entity
      * @param entityId
      * @param body
      */
     static void merge(
     		final Client client,
-    		final String name,
+    		final String schema,
+    		final String entity,
     		final String entityId,
     		final Object body
             ) {
     	client.request(
-    			target -> target.path(name).path(entityId), 
+    			target -> target.path(schema).path(entity).path(entityId), 
     			req -> req
     			)
     	.put(Entity.json(body));
@@ -124,33 +134,39 @@ public interface Entities {
     
     /**
      * @param client
-     * @param name
+     * @param schema
+     * @param entity
      * @param entityId
      * @param body
      */
     static void merge(
     		final Client client,
-    		final String name,
+    		final String schema,
+    		final String entity,
     		final String entityId,
     		final String body
             ) {
     	client.request(
-    			target -> target.path(name).path(entityId), 
+    			target -> target.path(schema).path(entity).path(entityId), 
     			req -> req
     			)
     	.put(Entity.entity(body, MediaType.APPLICATION_JSON_TYPE));
     }
     
     /**
-     * @param name
+     * @param schema
+     * @param entity
      * @param entityId
      */
     @DELETE
-    @Path("{entity}/{id}")
+    @Path("{schema}/{entity}/{id}")
     void remove(
+    		@PathParam("schema")
+            @NotBlank
+            final String schema,
             @PathParam("entity")
             @NotBlank
-            final String name,
+            final String entity,
             @PathParam("id")
             @NotBlank
             final String entityId
@@ -158,33 +174,39 @@ public interface Entities {
     
     /**
      * @param client
-     * @param name
+     * @param schema
+     * @param entity
      * @param entityId
      */
     static void remove(
     		final Client client,
-    		final String name,
+    		final String schema,
+    		final String entity,
     		final String entityId
             ) {
     	client.request(
-    			target -> target.path(name).path(entityId), 
+    			target -> target.path(schema).path(entity).path(entityId), 
     			req -> req
     			)
     	.delete();
     }
     
     /**
-     * @param name
+     * @param schema
+     * @param entity
      * @param entityId
      * @return
      */
     @POST
-    @Path("{entity}/{id}")
+    @Path("{schema}/{entity}/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     Response find(
+    		@PathParam("schema")
+            @NotBlank
+            final String schema,
             @PathParam("entity")
             @NotBlank
-            final String name,
+            final String entity,
             @PathParam("id")
             @NotBlank
             final String entityId
@@ -192,38 +214,40 @@ public interface Entities {
     
     /**
      * @param client
-     * @param name
+     * @param schema
+     * @param entity
      * @param entityId
      * @return
      */
     static Response find(
     		final Client client,
-            final String name,
+    		final String schema,
+            final String entity,
             final String entityId
             ) {
     	return client.request(
-    			target -> target.path(name).path(entityId), 
+    			target -> target.path(schema).path(entity).path(entityId), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.post(Entity.text(""));
     }
     
     /**
-     * @param <T>
      * @param client
      * @param cls
-     * @param name
+     * @param schema
+     * @param entity
      * @param entityId
-     * @return
      */
     static <T extends Object> T find(
     		final Client client,
     		final Class<T> cls,
-            final String name,
+    		final String schema,
+            final String entity,
             final String entityId
             ) {
     	return client.request(
-    			target -> target.path(name).path(entityId), 
+    			target -> target.path(schema).path(entity).path(entityId), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.post(Entity.text(""))

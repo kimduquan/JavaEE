@@ -41,18 +41,18 @@ public class Queries {
      * @param headers
      * @param uriInfo
      * @param req
+     * @param schema
      * @param paths
-     * @return
-     * @throws Exception 
      */
     @GET
-    @Path("{criteria: .+}")
+    @Path("{schema}/{criteria: .+}")
     @Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
-    public CompletionStage<Response> getCriteriaQueryResult(
+    public CompletionStage<Response> executeQuery(
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
+            @PathParam("schema") final String schema,
             @PathParam("criteria")
             final List<PathSegment> paths
             ) throws Exception {

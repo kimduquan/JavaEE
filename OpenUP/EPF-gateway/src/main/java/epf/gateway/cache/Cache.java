@@ -39,19 +39,19 @@ public class Cache {
 	 * @param headers
 	 * @param uriInfo
 	 * @param req
+	 * @param schema
 	 * @param entity
 	 * @param entityId
-	 * @return
-	 * @throws Exception 
 	 */
 	@GET
-	@Path("persistence/{entity}/{id}")
+	@Path("persistence/{schema}/{entity}/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
     public CompletionStage<Response> getEntity(
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
+            @PathParam("schema") final String schema,
             @PathParam("entity") final String entity,
             @PathParam("id") final String entityId) throws Exception {
         return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
@@ -61,18 +61,18 @@ public class Cache {
 	 * @param headers
 	 * @param uriInfo
 	 * @param req
+	 * @param schema
 	 * @param entity
-	 * @return
-	 * @throws Exception
 	 */
 	@GET
-	@Path("persistence/{entity}")
+	@Path("persistence/{schema}/{entity}")
 	@Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
     public CompletionStage<Response> getEntities(
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
+            @PathParam("schema") final String schema,
             @PathParam("entity") final String entity) throws Exception {
         return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
     }
@@ -82,10 +82,10 @@ public class Cache {
 	 * @param uriInfo
 	 * @param sseEventSink
 	 * @param sse
-	 * @throws Exception 
+	 * @param schema
 	 */
 	@GET
-	@Path("persistence")
+	@Path("persistence/{schema}")
 	@Produces(MediaType.SERVER_SENT_EVENTS)
 	public void forEachEntity(
 			@Context 
@@ -95,7 +95,9 @@ public class Cache {
 			@Context 
 			final SseEventSink sseEventSink, 
 			@Context 
-			final Sse sse) throws Exception {
+			final Sse sse,
+			@PathParam("schema") 
+			final String schema) throws Exception {
 		request.stream(headers, uriInfo, sseEventSink, sse);
 	}
 	

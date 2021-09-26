@@ -45,24 +45,25 @@ public class Persistence {
 	
 	/**
 	 * @param credential
-	 * @param name
+	 * @param schema
+	 * @param entity
 	 * @param entityId
-	 * @return
-	 * @throws Exception
 	 */
 	@Command(name = "get")
 	public String get(
 			@ArgGroup(exclusive = true, multiplicity = "1")
 			@CallerPrincipal
 			final Credential credential,
-			@Option(names = {"-n", "--name"}, description = "Name")
-			final String name, 
+			@Option(names = {"-s", "--schema"}, description = "Schema")
+			final String schema,
+			@Option(names = {"-e", "--entity"}, description = "Entity")
+			final String entity, 
 			@Option(names = {"-i", "--id"}, description = "ID")
 			final String entityId
 			) throws Exception {
 		try(Client client = clientUtil.newClient(GatewayUtil.get("cache"))){
 			client.authorization(credential.getToken());
-			try(Response response = epf.client.cache.Cache.getEntity(client, name, entityId)){
+			try(Response response = epf.client.cache.Cache.getEntity(client, schema, entity, entityId)){
 				return response.readEntity(String.class);
 			}
 		}
@@ -70,19 +71,22 @@ public class Persistence {
 	
 	/**
 	 * @param credential
-	 * @param name
-	 * @throws Exception 
+	 * @param schema
+	 * @param entity
+	 * @throws Exception
 	 */
 	@Command(name = "for-each")
 	public void forEach(
 			@ArgGroup(exclusive = true, multiplicity = "1")
 			@CallerPrincipal
 			final Credential credential,
-			@Option(names = {"-n", "--name"}, description = "Name")
-			final String name) throws Exception {
+			@Option(names = {"-s", "--schema"}, description = "Schema")
+			final String schema,
+			@Option(names = {"-e", "--entity"}, description = "Entity")
+			final String entity) throws Exception {
 		try(Client client = clientUtil.newClient(GatewayUtil.get("cache"))){
 			client.authorization(credential.getToken());
-			try(SseEventSource stream = epf.client.cache.Cache.forEachEntity(client, name)){
+			try(SseEventSource stream = epf.client.cache.Cache.forEachEntity(client, schema, entity)){
 				stream.register(e -> {
 					out.get().println(e.readData());
 				});
@@ -93,19 +97,20 @@ public class Persistence {
 	
 	/**
 	 * @param credential
-	 * @param name
+	 * @param schema
+	 * @param entity
 	 * @param firstResult
 	 * @param maxResults
-	 * @return
-	 * @throws Exception
 	 */
 	@Command(name = "get-all")
 	public String getAll(
 			@ArgGroup(exclusive = true, multiplicity = "1")
 			@CallerPrincipal
 			final Credential credential,
-			@Option(names = {"-n", "--name"}, description = "Name")
-			final String name,
+			@Option(names = {"-s", "--schema"}, description = "Schema")
+			final String schema,
+			@Option(names = {"-e", "--entity"}, description = "Entity")
+			final String entity,
 			@Option(names = {"-f", "--first"}, description = "First Result")
 			final Optional<Integer> firstResult,
 			@Option(names = {"-m", "--max"}, description = "Max Result(s)")
@@ -114,7 +119,8 @@ public class Persistence {
 			client.authorization(credential.getToken());
 			try(Response response = epf.client.cache.Cache.getEntities(
 					client, 
-					name, 
+					schema,
+					entity,
 					firstResult.isEmpty() ? null : firstResult.get(), 
 					maxResults.isEmpty() ? null : maxResults.get())){
 				return response.readEntity(String.class);

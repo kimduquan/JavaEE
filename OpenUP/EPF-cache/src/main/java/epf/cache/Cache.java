@@ -53,11 +53,9 @@ public class Cache implements epf.client.cache.Cache {
 	@Inject
 	private transient ManagedExecutor executor;
 	
-	/**
-	 *
-	 */
 	@Override
     public Response getEntity(
+    		final String schema,
             final String name,
             final String entityId
             ) {
@@ -70,7 +68,7 @@ public class Cache implements epf.client.cache.Cache {
 
 	@PermitAll
 	@Override
-	public void forEachEntity(final String entity, final SseEventSink sseEventSink, final Sse sse) {
+	public void forEachEntity(final String schema, final String entity, final SseEventSink sseEventSink, final Sse sse) {
 		final Builder builder = sse.newEventBuilder();
 		final ObjectQueue<Entry<String, Object>> queue = new ObjectQueue<Entry<String, Object>>() {
 			@Override
@@ -89,7 +87,7 @@ public class Cache implements epf.client.cache.Cache {
 	}
 
 	@Override
-	public Response getEntities(final String name, final Integer firstResult, final Integer maxResults) {
+	public Response getEntities(final String schema, final String name, final Integer firstResult, final Integer maxResults) {
 		List<Entry<String,Object>> entities = persistence.getEntities(name);
 		if(entities != null) {
 			Stream<Entry<String,Object>> stream = entities.stream();

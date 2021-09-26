@@ -36,17 +36,17 @@ public class PersistenceUtil {
 	private transient SecurityUtil securityUtil;
 	
 	/**
+	 * @param schema
 	 * @param entity
 	 * @param firstResult
 	 * @param maxResults
-	 * @return
-	 * @throws Exception
 	 */
-	public List<JsonObject> getEntities(final String name, final Integer firstResult, final Integer maxResults) throws Exception{
+	public List<JsonObject> getEntities(final String schema, final String entity, final Integer firstResult, final Integer maxResults) throws Exception{
 		try(Client client = securityUtil.newClient(gatewayUtil.get("persistence"))){
 			try(Response response = epf.client.persistence.Queries.executeQuery(
 					client, 
-					path -> path.path(name), 
+					schema,
+					path -> path.path(entity), 
 					firstResult, 
 					maxResults)){
 				try(InputStream stream = response.readEntity(InputStream.class)){
@@ -63,14 +63,15 @@ public class PersistenceUtil {
 	}
 	
 	/**
-	 * @param name
+	 * @param schema
+	 * @param entity
 	 * @param id
 	 * @return
 	 * @throws Exception
 	 */
-	public JsonObject getEntity(final String name, final String id) throws Exception {
+	public JsonObject getEntity(final String schema, final String entity, final String id) throws Exception {
 		try(Client client = securityUtil.newClient(gatewayUtil.get("persistence"))){
-			try(Response response = epf.client.persistence.Entities.find(client, name, id)){
+			try(Response response = epf.client.persistence.Entities.find(client, schema, entity, id)){
 				try(InputStream stream = response.readEntity(InputStream.class)){
 					try(JsonReader reader = Json.createReader(stream)){
 						return reader.readObject();

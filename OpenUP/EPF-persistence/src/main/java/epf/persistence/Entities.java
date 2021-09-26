@@ -59,6 +59,7 @@ public class Entities implements epf.client.persistence.Entities {
     
     @Override
     public Object persist(
+    		final String schema,
             final String name,
             final InputStream body
             ){
@@ -82,6 +83,7 @@ public class Entities implements epf.client.persistence.Entities {
     
     @Override
 	public void merge(
+			final String schema,
 			final String name, 
 			final String entityId,
 			final InputStream body
@@ -105,6 +107,7 @@ public class Entities implements epf.client.persistence.Entities {
     
     @Override
     public void remove(
+    		final String schema,
     		final String name,
     		final String entityId
             ) {
@@ -146,7 +149,7 @@ public class Entities implements epf.client.persistence.Entities {
     }
 
 	@Override
-	public Response find(final String name, final String entityId) {
+	public Response find(final String schema, final String name, final String entityId) {
 		final Entity<Object> entity = findEntityObject(name, entityId);
 		return Response.ok(entity.getObject()).build();
 	}

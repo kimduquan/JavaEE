@@ -25,10 +25,10 @@ public interface CacheUtil {
 		}
 	}
 	
-	static Response getEntity(String token, String entity, String id) throws Exception {
+	static Response getEntity(String token, String schema, String entity, String id) throws Exception {
 		try(Client client = ClientUtil.newClient(GatewayUtil.get("cache"))){
 			client.authorization(token);
-			return Cache.getEntity(client, entity, id);
+			return Cache.getEntity(client, schema, entity, id);
 		}
 		catch (Exception e) {
 			return null;

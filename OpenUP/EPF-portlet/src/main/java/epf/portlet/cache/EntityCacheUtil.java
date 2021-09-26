@@ -43,16 +43,16 @@ public class EntityCacheUtil {
 	private transient SecurityUtil securityUtil;
 	
 	/**
+	 * @param schema
 	 * @param entity
 	 * @param firstResult
 	 * @param maxResults
 	 * @return
-	 * @throws Exception 
 	 */
-	public List<JsonObject> getEntities(final String name, final Integer firstResult, final Integer maxResults) {
+	public List<JsonObject> getEntities(final String schema, final String entity, final Integer firstResult, final Integer maxResults) {
 		List<JsonObject> objects = null;
 		try(Client client = securityUtil.newClient(gatewayUtil.get("cache"))){
-			try(Response response = epf.client.cache.Cache.getEntities(client, name, firstResult, maxResults)){
+			try(Response response = epf.client.cache.Cache.getEntities(client, schema, entity, firstResult, maxResults)){
 				try(InputStream stream = response.readEntity(InputStream.class)){
 					try(JsonReader reader = Json.createReader(stream)){
 						objects = reader
@@ -71,15 +71,15 @@ public class EntityCacheUtil {
 	}
 	
 	/**
-	 * @param name
+	 * @param schema
+	 * @param entity
 	 * @param id
 	 * @return
-	 * @throws Exception
 	 */
-	public JsonObject getEntity(final String name, final String id) {
+	public JsonObject getEntity(final String schema, final String entity, final String id) {
 		JsonObject object = null;
 		try(Client client = securityUtil.newClient(gatewayUtil.get("cache"))){
-			try(Response response = epf.client.cache.Cache.getEntity(client, name, id)){
+			try(Response response = epf.client.cache.Cache.getEntity(client, schema, entity, id)){
 				try(InputStream stream = response.readEntity(InputStream.class)){
 					try(JsonReader reader = Json.createReader(stream)){
 						object = reader.readObject();

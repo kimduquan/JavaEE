@@ -84,13 +84,13 @@ public class EntitiesTest {
         Artifact updatedArtifact = null;
         try(Client adminClient = ClientUtil.newClient(persistenceUrl)){
         	adminClient.authorization(token);
-        	updatedArtifact = Entities.persist(adminClient, Artifact.class, WorkProducts.ARTIFACT, artifact);
+        	updatedArtifact = Entities.persist(adminClient, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
         }
         Assert.assertNotNull("Artifact", updatedArtifact);
         Assert.assertEquals("Artifact.name", artifact.getName(), updatedArtifact.getName());
         Assert.assertEquals("Artifact.summary", artifact.getSummary(), updatedArtifact.getSummary());
         
-        PersistenceUtil.remove(token, WorkProducts.ARTIFACT, artifact.getName());
+        PersistenceUtil.remove(token, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
     }
     
     @Test
@@ -103,7 +103,7 @@ public class EntitiesTest {
         artifact.setMoreInformation(new MoreInformation());
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
-        PersistenceUtil.persist(token, Artifact.class, WorkProducts.ARTIFACT, artifact);
+        PersistenceUtil.persist(token, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
         Artifact updatedArtifact = null;
         try(Client adminClient = ClientUtil.newClient(persistenceUrl)){
         	adminClient.authorization(token);
@@ -115,9 +115,9 @@ public class EntitiesTest {
             updatedArtifact.setMoreInformation(new MoreInformation());
             updatedArtifact.setRelationships(new Relationships());
             updatedArtifact.setTailoring(new Tailoring());
-        	Entities.merge(adminClient, WorkProducts.ARTIFACT, artifact.getName(), updatedArtifact);
+        	Entities.merge(adminClient, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName(), updatedArtifact);
         }
-        PersistenceUtil.remove(token, WorkProducts.ARTIFACT, updatedArtifact.getName());
+        PersistenceUtil.remove(token, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, updatedArtifact.getName());
     }
     
     @Test
@@ -130,10 +130,10 @@ public class EntitiesTest {
         artifact.setMoreInformation(new MoreInformation());
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
-        PersistenceUtil.persist(token, Artifact.class, WorkProducts.ARTIFACT, artifact);
+        PersistenceUtil.persist(token, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
         try(Client adminClient = ClientUtil.newClient(persistenceUrl)){
         	adminClient.authorization(token);
-            Entities.remove(adminClient, WorkProducts.ARTIFACT, artifact.getName());
+            Entities.remove(adminClient, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
         }
     }
     
@@ -145,7 +145,7 @@ public class EntitiesTest {
     	Artifact artifact = new Artifact();
         artifact.setName(StringUtil.randomString("Artifact Entities"));
         artifact.setSummary("Artifact Entities testPersistEmptyName");
-        artifact = Entities.persist(client, Artifact.class, "", artifact);
+        artifact = Entities.persist(client, Artifact.class, WorkProducts.SCHEMA, "", artifact);
     }
     
     @Test(expected = BadRequestException.class)
@@ -153,33 +153,33 @@ public class EntitiesTest {
     	Artifact artifact = new Artifact();
         artifact.setName(StringUtil.randomString("Artifact Entities"));
         artifact.setSummary("Artifact Entities testPersistBlankName");
-        artifact = Entities.persist(client, Artifact.class, "    ", artifact);
+        artifact = Entities.persist(client, Artifact.class, WorkProducts.SCHEMA, "    ", artifact);
     }
     
     @Test(expected = NotFoundException.class)
     public void testPersistInvalidName() {
     	Artifact artifact = new Artifact();
-        artifact = Entities.persist(client, Artifact.class, "Invalid", artifact);
+        artifact = Entities.persist(client, Artifact.class, WorkProducts.SCHEMA, "Invalid", artifact);
     }
     
     @Test(expected = BadRequestException.class)
     public void testPersistEmptyEntity() {
     	Artifact artifact = new Artifact();
-        artifact = Entities.persist(client, Artifact.class, WorkProducts.ARTIFACT, artifact);
+        artifact = Entities.persist(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
     }
     
     @Test(expected = BadRequestException.class)
     public void testPersistEmptyEntityId() {
     	Artifact artifact = new Artifact();
         artifact.setName("");
-        artifact = Entities.persist(client, Artifact.class, WorkProducts.ARTIFACT, artifact);
+        artifact = Entities.persist(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
     }
     
     @Test(expected = BadRequestException.class)
     public void testPersistBlankEntityId() {
     	Artifact artifact = new Artifact();
         artifact.setName("    ");
-        artifact = Entities.persist(client, Artifact.class, WorkProducts.ARTIFACT, artifact);
+        artifact = Entities.persist(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
     }
     
     @Test(expected = BadRequestException.class)
@@ -187,7 +187,7 @@ public class EntitiesTest {
     	Artifact artifact = new Artifact();
         artifact.setName(StringUtil.randomString("Artifact Entities"));
         artifact.setSummary("Artifact Entities testPersistNullEntityRequiredField");
-        artifact = Entities.persist(client, Artifact.class, WorkProducts.ARTIFACT, artifact);
+        artifact = Entities.persist(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
     }
     
     @Test(expected = BadRequestException.class)
@@ -195,6 +195,6 @@ public class EntitiesTest {
     	Artifact artifact = new Artifact();
         artifact.setName(StringUtil.randomString("Artifact Entities"));
         artifact.setSummary("Artifact Entities testPersistInvalidEntityType");
-        artifact = Entities.persist(client, Artifact.class, DeliveryProcesses.ACTIVITY, artifact);
+        artifact = Entities.persist(client, Artifact.class, WorkProducts.SCHEMA, DeliveryProcesses.ACTIVITY, artifact);
     }
 }

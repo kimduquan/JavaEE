@@ -195,7 +195,7 @@ public class Entity implements Serializable {
 			try {
 				id = requestUtil.getRequest().getRenderParameters().getValue(Parameter.PERSISTENCE_ENTITY_ID);
 				if(id != null && !id.isEmpty()) {
-					object = new EntityObject(entityUtil.getEntity(entity.getName(), id));
+					object = new EntityObject(entityUtil.getEntity(entity.getTable().getSchema(), entity.getName(), id));
 					final AttributeBuilder attrBuilder = new AttributeBuilder()
 							.object(object)
 							.entities(entities)
@@ -212,7 +212,7 @@ public class Entity implements Serializable {
 						final epf.client.schema.Entity entity = entities.get(attrType);
 						associationValues.computeIfAbsent(attrType, type -> {
 							try {
-								return entityUtil.getEntities(entity.getName(), null, null);
+								return entityUtil.getEntities(entity.getTable().getSchema(), entity.getName(), null, null);
 							} 
 							catch (Exception e) {
 								LOGGER.throwing(getClass().getName(), "preLoad", e);
@@ -258,7 +258,7 @@ public class Entity implements Serializable {
 			final epf.client.schema.Entity entity = entities.get(attrType);
 			return associationValues.computeIfAbsent(attrType, type -> {
 						try {
-							return entityUtil.getEntities(entity.getName(), null, null);
+							return entityUtil.getEntities(entity.getTable().getSchema(), entity.getName(), null, null);
 						} 
 						catch (Exception e) {
 							LOGGER.throwing(getClass().getName(), "getAssociationValues", e);
@@ -280,6 +280,7 @@ public class Entity implements Serializable {
 		try(Client client = securityUtil.newClient(gatewayUtil.get("persistence"))){
 			try(Response response = epf.client.persistence.Entities.persist(
 					client, 
+					entity.getTable().getSchema(),
 					entity.getName(), 
 					object.merge().toString()
 					)){
@@ -307,6 +308,7 @@ public class Entity implements Serializable {
 		try(Client client = securityUtil.newClient(gatewayUtil.get("persistence"))){
 			epf.client.persistence.Entities.merge(
 					client,
+					entity.getTable().getSchema(),
 					entity.getName(), 
 					id, 
 					object.merge().toString()
@@ -322,6 +324,7 @@ public class Entity implements Serializable {
 		try(Client client = securityUtil.newClient(gatewayUtil.get("persistence"))){
 			epf.client.persistence.Entities.remove(
 					client, 
+					entity.getTable().getSchema(),
 					entity.getName(), 
 					id
 					);

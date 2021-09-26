@@ -103,8 +103,8 @@ public class ListenerTest {
         artifact.setTailoring(new Tailoring());
     	try(epf.util.client.Client persistenceClient = ClientUtil.newClient(persistenceUrl)){
     		persistenceClient.authorization(token);
-    		Entities.persist(persistenceClient, Artifact.class, WorkProducts.ARTIFACT, artifact);
-            Entities.remove(persistenceClient, WorkProducts.ARTIFACT, artifact.getName());
+    		Entities.persist(persistenceClient, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
+            Entities.remove(persistenceClient, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
     	}
     	
     	TestUtil.waitUntil((t) -> messages.stream().anyMatch(msg -> msg.contains(PostPersist.class.getName()) && msg.contains(artifact.getName())), Duration.ofSeconds(timeout));
@@ -142,8 +142,8 @@ public class ListenerTest {
         artifact.setTailoring(new Tailoring());
     	try(epf.util.client.Client persistenceClient = ClientUtil.newClient(persistenceUrl)){
     		persistenceClient.authorization(token);
-    		Entities.persist(persistenceClient, Artifact.class, WorkProducts.ARTIFACT, artifact);
-            Entities.remove(persistenceClient, WorkProducts.ARTIFACT, artifact.getName());
+    		Entities.persist(persistenceClient, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
+            Entities.remove(persistenceClient, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
     	}
     	
     	TestUtil.waitUntil((t) -> events.stream().anyMatch(msg -> msg.contains(PostPersist.class.getName()) && msg.contains(artifact.getName())), Duration.ofSeconds(timeout));
