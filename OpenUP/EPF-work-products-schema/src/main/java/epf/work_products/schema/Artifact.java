@@ -7,7 +7,6 @@ package epf.work_products.schema;
 
 import java.io.Serializable;
 import javax.json.JsonObject;
-import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -31,10 +30,6 @@ import epf.work_products.schema.section.Tailoring;
 @Schema(name = WorkProducts.ARTIFACT, title = "Artifact")
 @Entity(name = WorkProducts.ARTIFACT)
 @Table(schema = WorkProducts.SCHEMA, name = "ARTIFACT")
-@JsonbPropertyOrder({
-    "name",
-    "fulfilledSlots"
-})
 public class Artifact implements Serializable {
 
     /**

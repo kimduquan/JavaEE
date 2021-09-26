@@ -5,7 +5,6 @@
  */
 package epf.roles.schema;
 
-import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -31,11 +30,6 @@ import epf.roles.schema.internal.QueryNames;
 @Schema(name = Roles.ROLE, title = "Role")
 @Entity(name = Roles.ROLE)
 @Table(schema = Roles.SCHEMA, name = "EPF_ROLE")
-@JsonbPropertyOrder({
-    "name",
-    "additionallyPerforms",
-    "modifies"
-})
 @NamedNativeQuery(name = QueryNames.FT_SEARCH_DATA, query = Queries.FT_SEARCH_DATA)
 public class Role implements Serializable {
 	

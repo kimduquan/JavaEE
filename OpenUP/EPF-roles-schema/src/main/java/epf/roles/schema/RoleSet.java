@@ -8,7 +8,6 @@ package epf.roles.schema;
 import java.io.Serializable;
 import java.util.List;
 import javax.json.JsonObject;
-import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -31,10 +30,6 @@ import javax.persistence.Index;
 @Schema(name = Roles.ROLE_SET, title = "Role Set")
 @Entity(name = Roles.ROLE_SET)
 @Table(schema = Roles.SCHEMA, name = "ROLE_SET")
-@JsonbPropertyOrder({
-    "name",
-    "roles"
-})
 @NamedQuery(
         name = RoleSet.ROLES, 
         query = "SELECT rs FROM EPF_RoleSet AS rs")

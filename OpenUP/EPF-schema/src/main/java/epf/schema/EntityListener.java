@@ -4,7 +4,6 @@
 package epf.schema;
 
 import java.time.Instant;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;

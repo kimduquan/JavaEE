@@ -7,7 +7,6 @@ package epf.work_products.schema;
 
 import java.io.Serializable;
 import java.util.List;
-import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -30,10 +29,6 @@ import javax.persistence.Index;
 @Schema(name = WorkProducts.DOMAIN, title = "Domain")
 @Entity(name = WorkProducts.DOMAIN)
 @Table(schema = WorkProducts.SCHEMA, name = "EPF_DOMAIN")
-@JsonbPropertyOrder({
-    "name",
-    "workProducts"
-})
 @NamedQuery(
         name = Domain.DOMAINS, 
         query = "SELECT d FROM EPF_Domain AS d")
