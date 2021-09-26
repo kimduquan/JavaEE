@@ -39,6 +39,7 @@
 		<liberty.env.epf_webapp_url>https://localhost:9443/webapp/</liberty.env.epf_webapp_url>
 		<liberty.env.epf_health_url>https://localhost:9443/health/</liberty.env.epf_health_url>
 		<liberty.env.epf_batch_api_url>https://localhost:9443/ibm/</liberty.env.epf_batch_api_url>
+		<liberty.env.epf_net_url>https://localhost:9443/net/net/</liberty.env.epf_net_url>
 		<liberty.env.openup_delivery_processes_url>https://localhost:9443/delivery-processes/delivery-processes/</liberty.env.openup_delivery_processes_url>
 		<liberty.env.openup_roles_url>https://localhost:9443/roles/roles/</liberty.env.openup_roles_url>
 		<liberty.env.openup_tasks_url>https://localhost:9443/tasks/tasks/</liberty.env.openup_tasks_url>
@@ -120,6 +121,11 @@
             <artifactId>EPF-work-products-schema</artifactId>
             <version>${project.version}</version>
         </dependency>
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-net-schema</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-client</artifactId>
@@ -139,6 +145,12 @@
             <groupId>openup</groupId>
             <artifactId>OpenUP-portlet-client</artifactId>
             <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-net</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
         </dependency>
 		<dependency>
             <groupId>openup</groupId>
@@ -354,6 +366,7 @@
                         <epf.webapp.url>https://localhost:${httpsPort}/webapp/</epf.webapp.url>
                         <epf.health.url>https://localhost:${httpsPort}/health/</epf.health.url>
 						<epf.batch.api.url>https://localhost:${httpsPort}/ibm/</epf.batch.api.url>
+						<epf.net.url>https://localhost:${httpsPort}/net/net/</epf.net.url>
 						<openup.delivery_processes.url>https://localhost:${httpsPort}/delivery-processes/delivery-processes/</openup.delivery_processes.url>
 						<openup.roles.url>https://localhost:${httpsPort}/roles/roles/</openup.roles.url>
 						<openup.tasks.url>https://localhost:${httpsPort}/tasks/tasks/</openup.tasks.url>

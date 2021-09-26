@@ -91,6 +91,9 @@
         <classloader apiTypeVisibility="+third-party"/>
     </application>
     <application id="EPF-webapp" name="EPF-webapp" context-root="webapp" location="EPF-webapp-1.0.0.war" startAfterRef="EPF-persistence,EPF-gateway" />
+    <application id="EPF-net" name="EPF-net" context-root="net" location="EPF-net-1.0.0.war" startAfterRef="EPF-messaging" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
     
     <!-- H2 Library Configuration -->
     <library id="H2JDBCLib">
@@ -182,6 +185,15 @@
             javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
             libraryRef="H2JDBCLib" />
         <properties URL="jdbc:h2:~/EPF_test;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE;SCHEMA=FT" />
+    </dataSource>
+    <dataSource id="epf_net" jndiName="jdbc/epf_net">
+        <!-- Define the DataSource class names on the <jdbcDriver> element -->
+        <jdbcDriver 
+            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
+            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
+            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
+            libraryRef="H2JDBCLib" />
+        <properties URL="jdbc:h2:~/EPF_test;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE;SCHEMA=EPF_NET" />
     </dataSource>
 
     <keyStore id="defaultKeyStore" password="password"/>

@@ -6,8 +6,8 @@
         <artifactId>OpenUP-parent</artifactId>
         <version>1.0.0</version>
     </parent>
-    <artifactId>EPF-messaging</artifactId>
-    <name>Eclipse Process Framework Messaging</name>
+    <artifactId>EPF-net</artifactId>
+    <name>Eclipse Process Framework Network</name>
     <packaging>war</packaging>
     <dependencies>
     	<!-- https://mvnrepository.com/artifact/javax.enterprise/cdi-api -->
@@ -22,17 +22,23 @@
 			<artifactId>javax.ws.rs-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-    	<!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
+		<!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
 		<dependency>
 		    <groupId>javax.annotation</groupId>
 		    <artifactId>javax.annotation-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api -->
+		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.jwt/microprofile-jwt-auth-api -->
 		<dependency>
-		    <groupId>javax.websocket</groupId>
-		    <artifactId>javax.websocket-api</artifactId>
-		    <scope>provided</scope>
+		    <groupId>org.eclipse.microprofile.jwt</groupId>
+		    <artifactId>microprofile-jwt-auth-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.config/microprofile-config-api -->
+		<dependency>
+		    <groupId>org.eclipse.microprofile.config</groupId>
+		    <artifactId>microprofile-config-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.context-propagation/microprofile-context-propagation-api -->
 		<dependency>
@@ -40,25 +46,14 @@
 		    <artifactId>microprofile-context-propagation-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.health/microprofile-health-api -->
 		<dependency>
-		    <groupId>org.eclipse.microprofile.health</groupId>
-		    <artifactId>microprofile-health-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-utility</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-client</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-		<dependency>
-            <groupId>openup</groupId>
-            <artifactId>OpenUP-schema</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-net-schema</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

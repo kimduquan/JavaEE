@@ -14,6 +14,7 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import epf.delivery_processes.schema.DeliveryProcesses;
+import epf.net.schema.Net;
 import epf.roles.schema.Roles;
 import epf.schema.EPF;
 import epf.tasks.schema.Tasks;
@@ -54,6 +55,7 @@ public class Application {
     	contexts.put(Tasks.SCHEMA, new Context(Tasks.SCHEMA));
     	contexts.put(WorkProducts.SCHEMA, new Context(WorkProducts.SCHEMA));
     	contexts.put(OpenUP.SCHEMA, new Context(OpenUP.SCHEMA));
+    	contexts.put(Net.SCHEMA, new Context(Net.SCHEMA));
     }
     
     /**

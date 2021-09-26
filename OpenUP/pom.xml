@@ -738,6 +738,7 @@
 		<module>EPF-management</module>
 		
         <module>EPF-schema</module>
+		<module>EPF-net-schema</module>
 		<module>EPF-delivery-processes-schema</module>
 		<module>EPF-roles-schema</module>
 		<module>EPF-tasks-schema</module>
@@ -745,6 +746,7 @@
 		
         <module>EPF-validation</module>
         <module>EPF-client</module>
+		<module>EPF-net</module>
 		<module>EPF-security</module>
 		<!--<module>EPF-persistence</module>-->
 		<module>EPF-file</module>

@@ -21,6 +21,7 @@ import epf.client.image.Image;
 import epf.client.lang.Lang;
 import epf.client.management.Management;
 import epf.client.messaging.Messaging;
+import epf.client.net.Net;
 import epf.client.script.Script;
 import epf.client.persistence.Persistence;
 import epf.client.planning.Planning;
@@ -71,7 +72,10 @@ public class Registry implements epf.client.registry.Registry {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			String remote = "file";
+			final URI netUrl = ConfigUtil.getURI(Net.NET_URL);
+			String remote = "net";
+			remotes.put(remote, netUrl);
+			remote = "file";
 			final URI fileUrl = ConfigUtil.getURI(Files.FILE_URL);
 			remotes.put(remote, fileUrl);
 			final URI persistenceUrl = ConfigUtil.getURI(Persistence.PERSISTENCE_URL);
