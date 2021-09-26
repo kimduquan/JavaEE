@@ -7,7 +7,6 @@ package epf.persistence.security;
 
 import java.io.Serializable;
 import java.net.URL;
-import java.security.Principal;
 import java.security.PrivateKey;
 import java.time.Duration;
 import java.time.Instant;
@@ -26,7 +25,6 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
@@ -205,9 +203,9 @@ public class Security implements epf.client.security.Security, epf.client.securi
     
     @Override
     public String logOut() {
-    	final Session defaultSession = removeSession(context.getUserPrincipal(), persistence.getDefaultContext());
+    	final Session defaultSession = SessionUtil.removeSession(context.getUserPrincipal(), persistence.getDefaultContext());
 		defaultSession.close();
-    	final List<Session> sessions = removeSessions(context, persistence);
+    	final List<Session> sessions = SessionUtil.removeSessions(context, persistence);
     	for(Session session : sessions){
             session.close();
         }
@@ -216,7 +214,7 @@ public class Security implements epf.client.security.Security, epf.client.securi
     
     @Override
     public Token authenticate() {
-    	if(getSession(context.getUserPrincipal(), persistence.getDefaultContext()) != null){
+    	if(SessionUtil.getSession(context.getUserPrincipal(), persistence.getDefaultContext()) != null){
     		final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
     		final Token token = TokenUtil.from(jwt);
     		token.setClaims(TokenUtil.getClaims(jwt));
@@ -226,116 +224,17 @@ public class Security implements epf.client.security.Security, epf.client.securi
         throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
     }
     
-    /**
-     * @param principal
-     * @param context
-     * @return
-     */
-    protected Session removeSession(final Principal principal, final epf.persistence.context.Context context){
-    	final Credential credential = context.getCredential(principal.getName());
-        if(credential != null ){
-        	final JsonWebToken jwt = (JsonWebToken)principal;
-        	final Session session = credential.removeSession(jwt.getTokenID());
-        	if(session != null) {
-        		return session;
-        	}
-        }
-        throw new ForbiddenException();
-    }
-    
-    /**
-     * @param context
-     * @param persistence
-     * @return
-     */
-    protected List<Session> removeSessions(final SecurityContext context, final Application persistence) {
-    	final Principal principal = context.getUserPrincipal();
-        if(principal != null && principal instanceof JsonWebToken){
-        	final Collection<epf.persistence.context.Context> contexts = persistence.getContexts();
-        	final List<Session> sessions = new ArrayList<>();
-        	for(epf.persistence.context.Context ctx : contexts) {
-        		final Session session = removeSession(principal, ctx);
-            	sessions.add(session);
-        	}
-        	return sessions;
-        }
-        throw new ForbiddenException();
-    }
-    
-    /**
-     * @param principal
-     * @param context
-     * @return
-     */
-    protected static Session getSession(final Principal principal, final epf.persistence.context.Context context){
-    	final Credential credential = context.getCredential(principal.getName());
-    	final JsonWebToken jwt = (JsonWebToken)principal;
-    	return credential.getSession(jwt.getTokenID());
-    }
-    
-    /**
-     * @param context
-     * @param persistence
-     * @return
-     */
-    protected static List<Session> getSessions(final SecurityContext context, final Application persistence) {
-    	List<Session> sessions = new ArrayList<>();
-    	final Principal principal = context.getUserPrincipal();
-    	if(principal instanceof JsonWebToken) {
-    		final Collection<epf.persistence.context.Context> contexts = persistence.getContexts();
-        	for(epf.persistence.context.Context ctx : contexts) {
-        		final Session session = getSession(principal, ctx);
-            	if(session != null) {
-            		sessions.add(session);
-            	}
-        	}
-    	}
-        return sessions;
-    }
-    
-    /**
-     * @param principal
-     * @param context
-     * @return
-     */
-    protected static Credential getCredential(final Principal principal, final epf.persistence.context.Context context){
-    	final Credential credential = context.getCredential(principal.getName());
-    	if(credential != null) {
-    		return credential;
-    	}
-    	throw new ForbiddenException();
-    }
-    
-    /**
-     * @param context
-     * @param persistence
-     * @return
-     */
-    protected static List<Credential> getCredentials(final SecurityContext context, final Application persistence) {
-    	final Principal principal = context.getUserPrincipal();
-    	if(principal != null) {
-        	final Collection<epf.persistence.context.Context> contexts = persistence.getContexts();
-        	final List<Credential> credentials = new ArrayList<>();
-        	for(epf.persistence.context.Context ctx : contexts) {
-        		final Credential credential = getCredential(principal, ctx);
-        		credentials.add(credential);
-        	}
-        	return credentials;
-    	}
-    	throw new ForbiddenException();
-    }
-
-	@Override
+    @Override
 	public void update(final String password) {
-		final Credential credential = getCredential(context.getUserPrincipal(), persistence.getDefaultContext());
+		final Credential credential = CredentialUtil.getCredential(context.getUserPrincipal(), persistence.getDefaultContext());
 		service.setUserPassword(credential.getDefaultManager(), context.getUserPrincipal().getName(), password.toCharArray());
 	}
 
 	@Override
 	public String revoke() {
-		final Session defaultSession = removeSession(context.getUserPrincipal(), persistence.getDefaultContext());
+		final Session defaultSession = SessionUtil.removeSession(context.getUserPrincipal(), persistence.getDefaultContext());
 		defaultSession.close();
-		final List<Session> sessions = removeSessions(context, persistence);
+		final List<Session> sessions = SessionUtil.removeSessions(context, persistence);
 		for(Session session : sessions) {
 			session.close();
 		}
@@ -344,9 +243,9 @@ public class Security implements epf.client.security.Security, epf.client.securi
 			final Token token = buildToken(jsonWebToken);
 			final TokenBuilder builder = new TokenBuilder(token, privateKey);
 			final Token newToken = builder.build();
-			final Credential defaultCredential = getCredential(context.getUserPrincipal(), persistence.getDefaultContext());
+			final Credential defaultCredential = CredentialUtil.getCredential(context.getUserPrincipal(), persistence.getDefaultContext());
 			defaultCredential.putSession(newToken.getTokenID());
-			for(Credential credential : getCredentials(context, persistence)) {
+			for(Credential credential : CredentialUtil.getCredentials(context, persistence)) {
 				credential.putSession(newToken.getTokenID());
 			}
 	        return newToken.getRawToken();
