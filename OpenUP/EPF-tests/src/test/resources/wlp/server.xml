@@ -120,7 +120,7 @@
         audiences ="http://localhost:${httpPort}/,https://localhost:${httpsPort}/,http://localhost/,https://localhost/,http://localhost:${httpWebPort}/,https://localhost:${httpsWebPort}/">
     </mpJwt>
 
-    <dataSource id="epf" jndiName="jdbc/epf">
+	<dataSource id="epf" jndiName="jdbc/epf">
         <!-- Define the DataSource class names on the <jdbcDriver> element -->
         <jdbcDriver 
             javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
@@ -128,6 +128,51 @@
             javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
             libraryRef="H2JDBCLib" />
         <properties URL="jdbc:h2:~/EPF_test;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE" />
+    </dataSource>
+    <dataSource id="epf_delivery_processes" jndiName="jdbc/epf_delivery_processes">
+        <!-- Define the DataSource class names on the <jdbcDriver> element -->
+        <jdbcDriver 
+            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
+            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
+            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
+            libraryRef="H2JDBCLib" />
+        <properties URL="jdbc:h2:~/EPF_test;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE;SCHEMA=EPF_DELIVERY_PROCESSES" />
+    </dataSource>
+    <dataSource id="epf_roles" jndiName="jdbc/epf_roles">
+        <!-- Define the DataSource class names on the <jdbcDriver> element -->
+        <jdbcDriver 
+            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
+            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
+            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
+            libraryRef="H2JDBCLib" />
+        <properties URL="jdbc:h2:~/EPF_test;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE;SCHEMA=EPF_ROLES" />
+    </dataSource>
+    <dataSource id="epf_tasks" jndiName="jdbc/epf_tasks">
+        <!-- Define the DataSource class names on the <jdbcDriver> element -->
+        <jdbcDriver 
+            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
+            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
+            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
+            libraryRef="H2JDBCLib" />
+        <properties URL="jdbc:h2:~/EPF_test;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE;SCHEMA=EPF_TASKS" />
+    </dataSource>
+    <dataSource id="epf_work_products" jndiName="jdbc/epf_work_products">
+        <!-- Define the DataSource class names on the <jdbcDriver> element -->
+        <jdbcDriver 
+            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
+            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
+            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
+            libraryRef="H2JDBCLib" />
+        <properties URL="jdbc:h2:~/EPF_test;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE;SCHEMA=EPF_WORK_PRODUCTS" />
+    </dataSource>
+    <dataSource id="openup" jndiName="jdbc/openup">
+        <!-- Define the DataSource class names on the <jdbcDriver> element -->
+        <jdbcDriver 
+            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
+            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
+            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
+            libraryRef="H2JDBCLib" />
+        <properties URL="jdbc:h2:~/EPF_test;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE;SCHEMA=OPENUP" />
     </dataSource>
 
     <keyStore id="defaultKeyStore" password="password"/>

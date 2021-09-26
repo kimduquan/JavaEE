@@ -20,9 +20,9 @@ import epf.util.Var;
 public class Context {
 	
 	/**
-     * 
-     */
-    public static final String SCHEMA = "EPF";
+	 * 
+	 */
+	private transient final String name;
     
     /**
      * 
@@ -30,10 +30,11 @@ public class Context {
     private transient final Map<String, Credential> credentials;
     
     /**
-     * 
+     * @param name
      */
-    public Context(){
-        credentials = new ConcurrentHashMap<>();
+    public Context(final String name){
+        this.name = name;
+		credentials = new ConcurrentHashMap<>();
     }
     
     /**
@@ -85,7 +86,7 @@ public class Context {
         EntityManager manager = null;
         Credential result = null;
         try{
-            factory = Persistence.createEntityManagerFactory(SCHEMA, props);
+            factory = Persistence.createEntityManagerFactory(name, props);
             manager = factory.createEntityManager();
             result = new Credential(factory, manager);
         }

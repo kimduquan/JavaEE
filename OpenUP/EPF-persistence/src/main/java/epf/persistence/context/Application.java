@@ -5,12 +5,19 @@
  */
 package epf.persistence.context;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import epf.delivery_processes.schema.DeliveryProcesses;
+import epf.roles.schema.Roles;
+import epf.tasks.schema.Tasks;
+import epf.work_products.schema.WorkProducts;
+import openup.schema.OpenUP;
 
 /**
  *
@@ -22,7 +29,12 @@ public class Application {
 	/**
 	 * 
 	 */
-	private transient final Map<String, Context> contexts;
+	private transient final Map<String, Context> contexts = new ConcurrentHashMap<>();
+	
+	/**
+	 * 
+	 */
+	private transient Context defaultContext;
     
     /**
      * 
@@ -33,8 +45,14 @@ public class Application {
     /**
      * 
      */
-    public Application() {
-    	contexts = new ConcurrentHashMap<>();
+    @PostConstruct
+    protected void postConstruct() {
+    	defaultContext = new Context("EPF");
+    	contexts.put(DeliveryProcesses.SCHEMA, new Context(DeliveryProcesses.SCHEMA));
+    	contexts.put(Roles.SCHEMA, new Context(Roles.SCHEMA));
+    	contexts.put(Tasks.SCHEMA, new Context(Tasks.SCHEMA));
+    	contexts.put(WorkProducts.SCHEMA, new Context(WorkProducts.SCHEMA));
+    	contexts.put(OpenUP.SCHEMA, new Context(OpenUP.SCHEMA));
     }
     
     /**
@@ -42,6 +60,7 @@ public class Application {
      */
     @PreDestroy
     protected void preDestroy(){
+    	defaultContext.close();
     	contexts.values().forEach(context -> {
             try {
                 context.close();
@@ -54,16 +73,18 @@ public class Application {
     }
     
     /**
+     * @param name
      * @return
      */
-    public Context putContext(){
-        return contexts.computeIfAbsent(Context.SCHEMA, name -> { return new Context();});
+    public Context getContext(final String name){
+        return contexts.get(name);
     }
     
-    /**
-     * @return
-     */
-    public Context getContext(){
-        return contexts.get(Context.SCHEMA);
+    public Collection<Context> getContexts(){
+    	return contexts.values();
+    }
+    
+    public Context getDefaultContext() {
+    	return defaultContext;
     }
 }

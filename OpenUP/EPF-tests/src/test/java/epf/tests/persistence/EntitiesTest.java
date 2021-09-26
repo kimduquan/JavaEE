@@ -195,6 +195,6 @@ public class EntitiesTest {
     	Artifact artifact = new Artifact();
         artifact.setName(StringUtil.randomString("Artifact Entities"));
         artifact.setSummary("Artifact Entities testPersistInvalidEntityType");
-        artifact = Entities.persist(client, Artifact.class, WorkProducts.SCHEMA, DeliveryProcesses.ACTIVITY, artifact);
+        artifact = Entities.persist(client, Artifact.class, DeliveryProcesses.SCHEMA, DeliveryProcesses.ACTIVITY, artifact);
     }
 }

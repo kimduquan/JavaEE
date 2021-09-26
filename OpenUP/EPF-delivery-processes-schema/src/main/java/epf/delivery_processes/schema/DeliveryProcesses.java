@@ -8,7 +8,7 @@ public interface DeliveryProcesses {
 	/**
 	 * 
 	 */
-	String SCHEMA = "EPF_DELIVERY_PROCESSES";
+	String SCHEMA = "EPF_Delivery_Processes";
 	/**
      * 
      */

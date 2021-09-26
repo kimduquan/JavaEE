@@ -11,7 +11,7 @@ public interface Tasks {
     /**
      * 
      */
-    String SCHEMA = "EPF_TASKS";
+    String SCHEMA = "EPF_Tasks";
     /**
      * 
      */

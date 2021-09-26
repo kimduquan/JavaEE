@@ -8,7 +8,7 @@ public interface Roles {
 	/**
      * 
      */
-    String SCHEMA = "EPF_ROLES";
+    String SCHEMA = "EPF_Roles";
     /**
      * 
      */

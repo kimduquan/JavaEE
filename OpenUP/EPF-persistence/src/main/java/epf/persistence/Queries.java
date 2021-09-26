@@ -34,6 +34,7 @@ import epf.client.persistence.SearchData;
 import epf.client.security.Security;
 import epf.persistence.impl.Entity;
 import epf.persistence.impl.QueryBuilder;
+import epf.roles.schema.Roles;
 import epf.roles.schema.internal.QueryNames;
 
 /**
@@ -69,10 +70,10 @@ public class Queries implements epf.client.persistence.Queries {
     	final Principal principal = context.getUserPrincipal();
         if(!paths.isEmpty()){
         	final PathSegment rootSegment = paths.get(0);
-        	entity = cache.findEntity(principal, rootSegment.getPath());
+        	entity = cache.findEntity(principal, schema, rootSegment.getPath());
         }
         if(entity != null && entity.getType() != null){
-        	final EntityManager manager = cache.getManager(principal);
+        	final EntityManager manager = cache.getManager(schema, principal);
         	final QueryBuilder queryBuilder = new QueryBuilder();
         	final Query query = queryBuilder
         			.manager(manager)
@@ -117,7 +118,8 @@ public class Queries implements epf.client.persistence.Queries {
 		final Map<String, Map<String, Attribute<?,?>>> entityAttributes = new ConcurrentHashMap<>();
 		cache.mapEntities(context.getUserPrincipal(), entityTables, entityAttributes);
 		final TypedQuery<SearchData> query = cache.createNamedQuery(
-				context.getUserPrincipal(), 
+				context.getUserPrincipal(),
+				Roles.SCHEMA,
 				QueryNames.FT_SEARCH_DATA, 
 				SearchData.class
 				);

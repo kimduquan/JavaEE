@@ -73,18 +73,9 @@ public class Request {
      * @param principal
      * @return
      */
-    protected EntityManager getManager(final Principal principal){
-        JsonWebToken jwt = null;
-        Session session = null;
-        final Context context = application.getContext();
-        if(principal != null && context != null){
-        	final Credential credential = context.getCredential(principal.getName());
-            if(credential != null && principal instanceof JsonWebToken){
-            	jwt = (JsonWebToken)principal;
-            	session = credential.getSession(jwt.getTokenID());
-            }
-        }
-        return getEntityManager(principal, jwt, session);
+    protected EntityManager getManager(final String schema, final Principal principal){
+    	final Context context = application.getContext(schema);
+        return getEntityManager(principal, context);
     }
     
     /**
@@ -107,30 +98,49 @@ public class Request {
     }
     
     /**
-     * @param <T>
      * @param principal
-     * @param name
-     * @param cls
+     * @param context
      * @return
      */
-    public <T> TypedQuery<T> createNamedQuery(final Principal principal, final String name, final Class<T> cls) {
-        return getManager(principal).createNamedQuery(name, cls);
+    protected static EntityManager getEntityManager(final Principal principal, final Context context) {
+    	JsonWebToken jwt = null;
+        Session session = null;
+        if(principal != null && context != null){
+        	final Credential credential = context.getCredential(principal.getName());
+            if(credential != null && principal instanceof JsonWebToken){
+            	jwt = (JsonWebToken)principal;
+            	session = credential.getSession(jwt.getTokenID());
+            }
+        }
+        return getEntityManager(principal, jwt, session);
     }
     
     /**
      * @param principal
+     * @param schema
+     * @param name
+     * @param cls
+     */
+    public <T> TypedQuery<T> createNamedQuery(final Principal principal, final String schema, final String name, final Class<T> cls) {
+        return getManager(schema, principal).createNamedQuery(name, cls);
+    }
+    
+    /**
+     * @param principal
+     * @param schema
      * @param name
      * @param object
-     * @return
      */
     @Transactional
     @CacheResult
     public Object persist(
             final  Principal principal,
             @CacheKey
+            final String schema,
+            @CacheKey
             final String name,
             final Object object) {
-        EntityManager manager = getManager(principal);
+        EntityManager manager = getManager(schema, principal);
         manager = joinTransaction(manager);
         manager.persist(object);
         manager.flush();
@@ -139,6 +149,7 @@ public class Request {
     
     /**
      * @param principal
+     * @param schema
      * @param name
      * @param entityId
      * @param object
@@ -148,38 +159,43 @@ public class Request {
     public void merge(
             final Principal principal,
             @CacheKey
+            final String schema,
+            @CacheKey
             final String name,
             @CacheKey
             final String entityId,
             @CacheValue
             final Object object) {
-        EntityManager manager = getManager(principal);
+        EntityManager manager = getManager(schema, principal);
         manager = joinTransaction(manager);
         manager.merge(object);
         manager.flush();
     }
     
     /**
-     * @param <T>
      * @param principal
+     * @param schema
      * @param name
      * @param cls
      * @param entityId
-     * @return
      */
     @CacheResult
     public <T> T find(
-    		final Principal principal, 
-    		@CacheKey final String name, 
+    		final Principal principal,
+    		@CacheKey
+            final String schema,
+    		@CacheKey 
+    		final String name, 
     		final Class<T> cls, 
     		@CacheKey final String entityId) {
-    	final EntityManager manager = getManager(principal);
+    	final EntityManager manager = getManager(schema, principal);
     	final T object = manager.find(cls, entityId);
         return object;
     }
     
     /**
      * @param principal
+     * @param schema
      * @param name
      * @param entityId
      * @param object
@@ -188,10 +204,14 @@ public class Request {
     @CacheRemove
     public void remove(
     		final Principal principal, 
-    		@CacheKey final String name, 
-    		@CacheKey final String entityId, 
+    		@CacheKey
+            final String schema,
+    		@CacheKey 
+    		final String name, 
+    		@CacheKey 
+    		final String entityId, 
     		final Object object) {
-        EntityManager manager = getManager(principal);
+        EntityManager manager = getManager(schema, principal);
         manager = joinTransaction(manager);
         manager.remove(object);
         manager.flush();
@@ -200,13 +220,19 @@ public class Request {
     /**
      * @param <T>
      * @param principal
+     * @param schema
      * @param name
      * @return
      */
     @CacheResult(cacheName = "EntityType")
-    public <T> Entity<T> findEntity(final Principal principal, @CacheKey final String name) {
+    public <T> Entity<T> findEntity(
+    		final Principal principal,
+    		@CacheKey
+            final String schema,
+    		@CacheKey 
+    		final String name) {
     	final Entity<T> result = new Entity<>();
-        getManager(principal).getMetamodel()
+        getManager(schema, principal).getMetamodel()
                 .getEntities()
                 .stream()
                 .filter(
@@ -233,8 +259,9 @@ public class Request {
      * @return
      */
     @CacheResult(cacheName = "EntityType")
-    public <T> List<Entity<T>> findEntities(final Principal principal) {
-    	return getManager(principal)
+    public <T> List<Entity<T>> findEntities(
+    		final Principal principal) {
+    	return getEntityManager(principal, application.getDefaultContext())
     			.getMetamodel()
     			.getEntities()
     			.stream()
@@ -262,8 +289,9 @@ public class Request {
      * @return
      */
     @CacheResult(cacheName = "EmbeddableType")
-    public <T> List<Embeddable<T>> findEmbeddables(final Principal principal) {
-    	return getManager(principal)
+    public <T> List<Embeddable<T>> findEmbeddables(
+    		final Principal principal) {
+    	return getEntityManager(principal, application.getDefaultContext())
     			.getMetamodel()
     			.getEmbeddables()
     			.stream()
@@ -285,41 +313,39 @@ public class Request {
     			.collect(Collectors.toList());
     }
     
-    /**
-     * @param <T>
-     * @param principal
-     * @param name
-     * @param cls
-     * @return
-     */
     @CacheResult(cacheName = "NamedQuery")
     public <T> List<T> getNamedQueryResult(
     		final Principal principal, 
-    		@CacheKey final String name, 
+    		@CacheKey
+            final String schema,
+    		@CacheKey 
+    		final String name, 
     		final Class<T> cls) {
-        return getManager(principal)
+        return getManager(schema, principal)
                 .createNamedQuery(name, cls)
                 .getResultStream()
                 .collect(Collectors.toList());
     }
     
     /**
-     * @param <T>
      * @param principal
+     * @param schema
      * @param name
      * @param cls
      * @param firstResult
      * @param maxResults
-     * @return
      */
     @CacheResult(cacheName = "NamedQuery")
     public <T> List<T> getNamedQueryResult(
     		final Principal principal, 
-    		@CacheKey final String name, 
+    		@CacheKey
+            final String schema,
+    		@CacheKey 
+    		final String name, 
     		final Class<T> cls, 
     		final Integer firstResult, 
     		final Integer maxResults) {
-        return getManager(principal)
+        return getManager(schema, principal)
                 .createNamedQuery(name, cls)
                 .setFirstResult(firstResult)
                 .setMaxResults(maxResults)
@@ -333,11 +359,10 @@ public class Request {
      * @param entityAttributes
      */
     public void mapEntities(
-    		final Principal principal, 
+    		final Principal principal,
     		final Map<String, EntityType<?>> entityTables, 
     		final Map<String, Map<String, Attribute<?,?>>> entityAttributes) {
-    	final EntityManager manager = getManager(principal);
-    	manager.getMetamodel().getEntities().forEach(entityType -> {
+    	getEntityManager(principal, application.getDefaultContext()).getMetamodel().getEntities().forEach(entityType -> {
 			String tableName = entityType.getName().toLowerCase(Locale.getDefault());
 			final Table tableAnnotation = entityType.getJavaType().getAnnotation(Table.class);
 			if(tableAnnotation != null) {

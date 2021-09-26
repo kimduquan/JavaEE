@@ -63,13 +63,13 @@ public class Entities implements epf.client.persistence.Entities {
             final String name,
             final InputStream body
             ){
-    	final Entity<Object> entity = findEntity(name);
+    	final Entity<Object> entity = findEntity(schema, name);
     	Object object = null;
         if(entity.getType() != null){
             try(Jsonb json = JsonbBuilder.create()){
             	final Object obj = json.fromJson(body, entity.getType().getJavaType());
                 validator.validate(obj);
-                object = cache.persist(context.getUserPrincipal(), name, obj);
+                object = cache.persist(context.getUserPrincipal(), schema, name, obj);
             }
             catch(JsonbException ex){
             	throw new BadRequestException(ex);
@@ -88,12 +88,12 @@ public class Entities implements epf.client.persistence.Entities {
 			final String entityId,
 			final InputStream body
 			) {
-    	final Entity<Object> entity = findEntityObject(name, entityId);
+    	final Entity<Object> entity = findEntityObject(schema, name, entityId);
         if(entity.getObject() != null){
             try(Jsonb json = JsonbBuilder.create()){
             	final Object obj = json.fromJson(body, entity.getType().getJavaType());
                 validator.validate(obj);
-                cache.merge(context.getUserPrincipal(), name, entityId, obj);
+                cache.merge(context.getUserPrincipal(), schema, name, entityId, obj);
             }
             catch(JsonbException ex){
             	logger.throwing(getClass().getName(), "merge", ex);
@@ -111,35 +111,30 @@ public class Entities implements epf.client.persistence.Entities {
     		final String name,
     		final String entityId
             ) {
-    	final Entity<Object> entity = findEntityObject(name, entityId);
+    	final Entity<Object> entity = findEntityObject(schema, name, entityId);
         if(entity.getObject() != null){
-            cache.remove(context.getUserPrincipal(), name, entityId, entity.getObject());
+            cache.remove(context.getUserPrincipal(), schema, name, entityId, entity.getObject());
         }
     }
     
     /**
      * @param <T>
+     * @param schema
      * @param name
      * @return
      */
-    protected <T> Entity<T> findEntity(final String name) {
-    	final Entity<T> entity = cache.findEntity(context.getUserPrincipal(), name);
+    protected <T> Entity<T> findEntity(final String schema, final String name) {
+    	final Entity<T> entity = cache.findEntity(context.getUserPrincipal(), schema, name);
         if(entity.getType() == null){
             throw new NotFoundException();
         }
         return entity;
     }
     
-    /**
-     * @param <T>
-     * @param name
-     * @param entityId
-     * @return
-     */
-    protected <T> Entity<T> findEntityObject(final String name, final String entityId) {
-    	final Entity<T> entity = findEntity(name);
+    protected <T> Entity<T> findEntityObject(final String schema, final String name, final String entityId) {
+    	final Entity<T> entity = findEntity(schema, name);
         if(entity.getType() != null){
-        	final T object = cache.find(context.getUserPrincipal(), name, entity.getType().getJavaType(), entityId);
+        	final T object = cache.find(context.getUserPrincipal(), schema, name, entity.getType().getJavaType(), entityId);
             if(object == null){
             	throw new NotFoundException();
             }
@@ -150,7 +145,7 @@ public class Entities implements epf.client.persistence.Entities {
 
 	@Override
 	public Response find(final String schema, final String name, final String entityId) {
-		final Entity<Object> entity = findEntityObject(name, entityId);
+		final Entity<Object> entity = findEntityObject(schema, name, entityId);
 		return Response.ok(entity.getObject()).build();
 	}
 }
