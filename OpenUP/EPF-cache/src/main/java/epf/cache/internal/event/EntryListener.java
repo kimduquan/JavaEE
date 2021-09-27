@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.cache.event;
+package epf.cache.internal.event;
 
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;

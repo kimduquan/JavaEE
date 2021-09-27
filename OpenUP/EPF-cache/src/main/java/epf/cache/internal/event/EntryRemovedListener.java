@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.cache.event;
+package epf.cache.internal.event;
 
 import javax.cache.event.CacheEntryEvent;
 import javax.cache.event.CacheEntryListenerException;

@@ -5,6 +5,8 @@ package epf.net.schema;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
@@ -24,8 +26,9 @@ public class URL {
 	 * 
 	 */
 	@Id
-	@Column(name = "EXTERNAL_FORM")
-	private String externalForm;
+	@Column(name = "ID")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
 	
 	/**
 	 * 
@@ -90,16 +93,8 @@ public class URL {
 	/**
 	 * 
 	 */
-	@Column(name = "URL", nullable = false)
-	private String url;
-
-	public String getExternalForm() {
-		return externalForm;
-	}
-
-	public void setExternalForm(final String externalForm) {
-		this.externalForm = externalForm;
-	}
+	@Column(name = "STRING", nullable = false)
+	private String string;
 
 	public String getAuthority() {
 		return authority;
@@ -181,11 +176,19 @@ public class URL {
 		this.userInfo = userInfo;
 	}
 
-	public String getUrl() {
-		return url;
+	public int getId() {
+		return id;
 	}
 
-	public void setUrl(final String url) {
-		this.url = url;
+	public void setId(final int id) {
+		this.id = id;
+	}
+
+	public String getString() {
+		return string;
+	}
+
+	public void setString(final String string) {
+		this.string = string;
 	}
 }

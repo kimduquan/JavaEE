@@ -24,6 +24,8 @@ import org.eclipse.microprofile.health.Readiness;
 import epf.cache.persistence.Persistence;
 import epf.cache.security.Security;
 import epf.client.security.Token;
+import epf.net.schema.Net;
+import epf.net.schema.URL;
 import epf.util.concurrent.ObjectQueue;
 
 /**
@@ -107,5 +109,16 @@ public class Cache implements epf.client.cache.Cache {
 	@Override
 	public Token getToken(final String tokenId) {
 		return security.getToken(tokenId);
+	}
+
+	@PermitAll
+	@Override
+	public String getUrl(final String id) {
+		final Object entity = persistence.getEntity(Net.URL, id);
+		if(entity instanceof URL) {
+			final URL url = (URL) entity;
+			return url.getString();
+		}
+		throw new NotFoundException();
 	}
 }

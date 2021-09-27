@@ -28,6 +28,12 @@
 		    <artifactId>javax.annotation-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+		<dependency>
+		    <groupId>javax.servlet</groupId>
+		    <artifactId>javax.servlet-api</artifactId>
+		    <scope>provided</scope>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.jwt/microprofile-jwt-auth-api -->
 		<dependency>
 		    <groupId>org.eclipse.microprofile.jwt</groupId>
@@ -54,6 +60,11 @@
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-net-schema</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

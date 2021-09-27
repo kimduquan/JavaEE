@@ -56,4 +56,23 @@ public class StringUtilTest {
 		Assert.assertNotEquals(random1, random2);
 	}
 
+	/**
+	 * Test method for {@link epf.util.StringUtil#toShortString(int)}.
+	 */
+	@Test
+	public void testToShortString() {
+		int number = 12345;
+		String shortString = StringUtil.toShortString(number);
+		Assert.assertEquals("dnh", shortString);
+	}
+
+	/**
+	 * Test method for {@link epf.util.StringUtil#fromShortString(java.lang.String)}.
+	 */
+	@Test
+	public void testFromShortString() {
+		String shortString = "dnh";
+		int number = StringUtil.fromShortString(shortString);
+		Assert.assertEquals(12345, number);
+	}
 }

@@ -208,4 +208,16 @@ public interface Cache {
 						)
 				.get(Token.class);
 	}
+	
+	/**
+	 * @param id
+	 * @return
+	 */
+	@GET
+    @Path("net/url")
+	@Produces(MediaType.TEXT_PLAIN)
+	String getUrl(
+			@QueryParam("id")
+			@NotBlank
+			final String id);
 }

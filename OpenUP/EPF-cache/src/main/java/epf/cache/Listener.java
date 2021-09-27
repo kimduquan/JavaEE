@@ -11,10 +11,11 @@ import javax.cache.CacheManager;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.eclipse.microprofile.context.ManagedExecutor;
-import epf.cache.event.EntryCreatedListener;
-import epf.cache.event.EntryExpiredListener;
-import epf.cache.event.EntryRemovedListener;
-import epf.cache.event.EntryUpdatedListener;
+
+import epf.cache.internal.event.EntryCreatedListener;
+import epf.cache.internal.event.EntryExpiredListener;
+import epf.cache.internal.event.EntryRemovedListener;
+import epf.cache.internal.event.EntryUpdatedListener;
 import epf.client.messaging.Client;
 import epf.client.messaging.Messaging;
 import epf.util.config.ConfigUtil;
