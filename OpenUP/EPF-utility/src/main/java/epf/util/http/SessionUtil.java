@@ -4,8 +4,8 @@
 package epf.util.http;
 
 import java.util.Optional;
-
 import javax.servlet.http.HttpServletRequest;
+import epf.util.StringUtil;
 
 /**
  * @author PC
@@ -16,12 +16,12 @@ public interface SessionUtil {
 	/**
 	 * 
 	 */
-	String HTTP_SESSION_ATTRIBUTE_FORMAT = "epf.http.session.attribute\0%s\0%s";
+	String HTTP_SESSION_ATTRIBUTE = "epf.http.session.attribute";
 	
 	/**
 	 * 
 	 */
-	String MAP_ATTRIBUTE_FORMAT = "%s\0key\0%s";
+	String MAP_ATTRIBUTE_SEPARATOR = "key";
 	
 	/**
 	 * @param service
@@ -29,7 +29,7 @@ public interface SessionUtil {
 	 * @return
 	 */
 	static String getAttributeName(final String service, final String name) {
-		return String.format(HTTP_SESSION_ATTRIBUTE_FORMAT, service, name);
+		return StringUtil.join(HTTP_SESSION_ATTRIBUTE, service, name);
 	}
 	
 	/**
@@ -39,8 +39,8 @@ public interface SessionUtil {
 	 * @return
 	 */
 	static String getMapAttributeName(final String service, final String name, final String key) {
-		final String attributeKey = String.format(MAP_ATTRIBUTE_FORMAT, name, key);
-		return String.format(HTTP_SESSION_ATTRIBUTE_FORMAT, service, attributeKey);
+		final String attributeKey = StringUtil.join(name, MAP_ATTRIBUTE_SEPARATOR, key);
+		return StringUtil.join(HTTP_SESSION_ATTRIBUTE, service, attributeKey);
 	}
 	
 	/**

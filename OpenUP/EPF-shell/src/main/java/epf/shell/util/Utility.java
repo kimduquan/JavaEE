@@ -27,6 +27,7 @@ import epf.shell.client.ClientUtil;
 import epf.shell.util.client.Entity;
 import epf.util.client.Client;
 import epf.util.logging.Logging;
+import epf.util.zip.ZipUtil;
 import epf.util.file.PathUtil;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -293,5 +294,34 @@ public class Utility {
 				stream.open();
 			}
 		}
+	}
+	
+	/**
+	 * @param directory
+	 * @param file
+	 * @throws Exception
+	 */
+	@Command(name = "zip")
+	public void zip(
+			@Option(names = {"-d", "--dir"}, description = "Directory")
+			final Path directory, 
+			@Option(names = {"-f", "--file"}, description = "File")
+			final Path file) throws Exception {
+		ZipUtil.zip(directory, file);
+	}
+	
+	/**
+	 * @param file
+	 * @param directory
+	 * @throws Exception
+	 */
+	@Command(name = "un-zip")
+	public void unZip(
+			@Option(names = {"-f", "--file"}, description = "File")
+			final Path file,
+			@Option(names = {"-d", "--dir"}, description = "Directory")
+			final Path directory 
+			) throws Exception {
+		ZipUtil.unZip(file, directory);
 	}
 }

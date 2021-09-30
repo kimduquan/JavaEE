@@ -10,6 +10,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.SecurityContext;
 import epf.util.client.Client;
 
 /**
@@ -37,7 +38,9 @@ public interface Net {
 			@NotNull
 			final URL url,
 			@Context 
-			final HttpServletRequest request) throws Exception;
+			final HttpServletRequest request,
+			@Context
+			final SecurityContext security) throws Exception;
 	
 	/**
 	 * @param client

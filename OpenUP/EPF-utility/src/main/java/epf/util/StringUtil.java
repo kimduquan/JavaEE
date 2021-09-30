@@ -4,6 +4,7 @@
 package epf.util;
 
 import java.time.Instant;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -24,6 +25,10 @@ public interface StringUtil {
 	 * 
 	 */
 	int INDEX_OF_0 = String.valueOf(SHORT_STRING_CHARS).indexOf('0');
+	/**
+	 * 
+	 */
+	String NULL = "\0";
 
 	/**
 	 * @param string
@@ -52,6 +57,7 @@ public interface StringUtil {
 	 * @return
 	 */
 	static int fromShortString(final String shortString) {
+		Objects.requireNonNull(shortString, "String");
 		int number = 0;
 		for (char ch : shortString.toCharArray())
         {
@@ -66,5 +72,21 @@ public interface StringUtil {
             }
         }
 		return number;
+	}
+	
+	/**
+	 * @param strings
+	 * @return
+	 */
+	static String join(final String...strings) {
+		return String.join(NULL, strings);
+	}
+	
+	/**
+	 * @param string
+	 * @return
+	 */
+	static String[] split(final String string) {
+		return string.split(NULL);
 	}
 }

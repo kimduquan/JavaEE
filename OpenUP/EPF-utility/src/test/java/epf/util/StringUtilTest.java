@@ -75,4 +75,25 @@ public class StringUtilTest {
 		int number = StringUtil.fromShortString(shortString);
 		Assert.assertEquals(12345, number);
 	}
+	
+	/**
+	 * Test method for {@link epf.util.StringUtil#join(java.lang.String[])}.
+	 */
+	@Test
+	public void testJoin() {
+		String str1 = "abc";
+		String str2 = "def";
+		String actual = StringUtil.join(str1, str2);
+		Assert.assertEquals("abc\0def", actual);
+	}
+
+	/**
+	 * Test method for {@link epf.util.StringUtil#split(java.lang.String)}.
+	 */
+	@Test
+	public void testSplit() {
+		String str = "abc\0def";
+		String[] actual = StringUtil.split(str);
+		Assert.assertArrayEquals(new String[] {"abc", "def"}, actual);
+	}
 }

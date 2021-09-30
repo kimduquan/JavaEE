@@ -35,6 +35,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.client.EPFException;
 import epf.client.security.Security;
 import epf.util.client.EntityOutput;
+import epf.util.file.FileUtil;
 
 /**
  *
@@ -133,7 +134,12 @@ public class FileStore implements epf.client.file.Files {
 				.paths(paths)
 				.build();
 		try {
-			Files.delete(targetFile);
+			if(Files.isDirectory(targetFile)) {
+				FileUtil.deleteDirectories(targetFile);
+			}
+			else {
+				Files.delete(targetFile);
+			}
 		} 
 		catch (IOException e) {
 			throw new EPFException(e);
