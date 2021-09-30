@@ -165,7 +165,7 @@ public class EntityCache extends ObjectQueue<EntityEvent> {
             final String name,
             final String entityId
             ) {
-		final String key = String.join(CACHE_KEY, name, entityId);
+		final String key = StringUtil.join(CACHE_KEY, name, entityId);
 		Object entity = null;
 		if(cache.containsKey(key)) {
 			entity = cache.get(key);
