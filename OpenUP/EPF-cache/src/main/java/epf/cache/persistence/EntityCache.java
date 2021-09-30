@@ -19,6 +19,7 @@ import epf.schema.PostPersist;
 import epf.schema.PostRemove;
 import epf.schema.PostUpdate;
 import epf.schema.SchemaUtil;
+import epf.util.StringUtil;
 import epf.util.concurrent.ObjectQueue;
 import epf.util.logging.Logging;
 
@@ -36,12 +37,12 @@ public class EntityCache extends ObjectQueue<EntityEvent> {
 	/**
 	 * 
 	 */
-	private static final String CACHE_KEY_FORMAT = "epf.cache.entry.key\0%s\0%s";
+	private static final String CACHE_KEY = "epf.cache.entry.key";
 	
 	/**
 	 * 
 	 */
-	private static final String CACHE_KEYS_FORMAT = "epf.cache.entry.keys\0%s";
+	private static final String CACHE_KEYS = "epf.cache.entry.keys";
 	
 	/**
 	 * 
@@ -65,7 +66,7 @@ public class EntityCache extends ObjectQueue<EntityEvent> {
 	 * @param key
 	 */
 	protected void putKey(final String entityName, final String key) {
-		final String keys = String.format(CACHE_KEYS_FORMAT, entityName);
+		final String keys = StringUtil.join(CACHE_KEYS, entityName);
 		@SuppressWarnings("unchecked")
 		final Set<String> cacheKeys = (Set<String>) cache.get(keys);
 		if(cacheKeys == null) {
@@ -84,7 +85,7 @@ public class EntityCache extends ObjectQueue<EntityEvent> {
 	 * @param key
 	 */
 	protected void removeKey(final String entityName, final String key) {
-		final String keys = String.format(CACHE_KEYS_FORMAT, entityName);
+		final String keys = StringUtil.join(CACHE_KEYS, entityName);
 		@SuppressWarnings("unchecked")
 		final Set<String> cacheKeys = (Set<String>) cache.get(keys);
 		if(cacheKeys != null && cacheKeys.contains(keys)) {
@@ -112,7 +113,7 @@ public class EntityCache extends ObjectQueue<EntityEvent> {
 		}
 		String key = null;
 		if(entityName != null && entityId != null) {
-			key = String.format(CACHE_KEY_FORMAT, entityName, String.valueOf(entityId));
+			key = StringUtil.join(CACHE_KEY, entityName, String.valueOf(entityId));
 		}
 		return key;
 	}
@@ -164,7 +165,7 @@ public class EntityCache extends ObjectQueue<EntityEvent> {
             final String name,
             final String entityId
             ) {
-		final String key = String.format(CACHE_KEY_FORMAT, name, entityId);
+		final String key = String.join(CACHE_KEY, name, entityId);
 		Object entity = null;
 		if(cache.containsKey(key)) {
 			entity = cache.get(key);
@@ -177,7 +178,7 @@ public class EntityCache extends ObjectQueue<EntityEvent> {
 	 * @return
 	 */
 	public List<Entry<String, Object>> getEntities(final String name){
-		final String keys = String.format(CACHE_KEYS_FORMAT, name);
+		final String keys = StringUtil.join(CACHE_KEYS, name);
 		@SuppressWarnings("unchecked")
 		final Set<String> cacheKeys = (Set<String>) cache.get(keys);
 		if(cacheKeys != null) {
@@ -194,7 +195,7 @@ public class EntityCache extends ObjectQueue<EntityEvent> {
 	 * @return
 	 */
 	public void forEachEntity(final String name, final ObjectQueue<Entry<String, Object>> queue) {
-		final String key = String.format(CACHE_KEY_FORMAT, name, "");
+		final String key = StringUtil.join(CACHE_KEY, name, "");
 		cache.forEach(entry -> {
 			if(entry.getKey().startsWith(key)) {
 				queue.add(new AbstractMap.SimpleImmutableEntry<>(entry.getKey(), entry.getValue()));
