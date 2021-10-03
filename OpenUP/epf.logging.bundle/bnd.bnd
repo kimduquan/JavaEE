@@ -2,7 +2,10 @@
 	osgi.annotation;version='7.0.0',\
 	osgi.core;version='7.0.0',\
 	osgi.cmpn;version='7.0.0',\
-	epf.logging;version=latest
+	epf.logging;version=latest,\
+	epf.config;version=latest,\
+	epf.file;version=latest,\
+	slf4j.jdk14;version='1.7'
 
 -testpath: \
 	${junit},\
