@@ -15,3 +15,4 @@ javac.source: 1.8
 javac.target: 1.8
 
 Bundle-Version: 1.0.0.${tstamp}
+-privatepackage: epf.logging.bundle
