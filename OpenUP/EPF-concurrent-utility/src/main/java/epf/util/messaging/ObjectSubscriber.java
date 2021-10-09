@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.util.concurrent;
+package epf.util.messaging;
 
 import java.io.Serializable;
 import java.util.concurrent.Flow.Subscriber;

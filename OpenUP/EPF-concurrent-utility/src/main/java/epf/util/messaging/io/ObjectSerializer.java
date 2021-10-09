@@ -1,4 +1,4 @@
-package epf.util.concurrent.io;
+package epf.util.messaging.io;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
