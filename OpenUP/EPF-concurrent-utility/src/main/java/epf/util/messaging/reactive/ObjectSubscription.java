@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.util.messaging;
+package epf.util.messaging.reactive;
 
 import org.reactivestreams.Subscription;
 

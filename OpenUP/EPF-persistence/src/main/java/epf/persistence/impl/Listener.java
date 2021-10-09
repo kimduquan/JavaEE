@@ -9,7 +9,8 @@ import java.net.URISyntaxException;
 import java.util.logging.Logger;
 import epf.util.config.ConfigUtil;
 import epf.util.logging.Logging;
-import epf.util.messaging.ObjectPublisher;
+import epf.util.messaging.PublisherUtil;
+import epf.util.messaging.reactive.ObjectPublisher;
 import epf.util.websocket.Message;
 import epf.util.websocket.MessageQueue;
 import javax.annotation.PostConstruct;
@@ -21,7 +22,6 @@ import javax.websocket.DeploymentException;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
 import org.eclipse.microprofile.reactive.streams.operators.PublisherBuilder;
-import org.eclipse.microprofile.reactive.streams.operators.ReactiveStreams;
 import epf.client.messaging.Client;
 import epf.client.messaging.Messaging;
 import epf.schema.EntityEvent;
@@ -150,7 +150,7 @@ public class Listener {
 	}
 	
 	@Outgoing("persistence")
-    protected PublisherBuilder<? extends EntityEvent> getPublisher(){
-		return ReactiveStreams.fromPublisher(publisher);
+    public PublisherBuilder<? extends EntityEvent> getPublisher(){
+		return PublisherUtil.newPublisher(publisher);
 	}
 }

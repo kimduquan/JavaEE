@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.util.messaging;
+package epf.util.messaging.reactive;
 
 import java.io.Serializable;
 import java.util.concurrent.Executor;

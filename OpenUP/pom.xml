@@ -734,7 +734,7 @@
         <module>EPF-shell</module>
 		<module>EPF-utility</module>
 		<module>EPF-file-utility</module>
-		<module>EPF-concurrent-utility</module>
+		<module>EPF-messaging-utility</module>
 		<module>EPF-security-utility</module>
 		<module>EPF-function</module>
 		<module>EPF-schedule</module>

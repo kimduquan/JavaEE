@@ -6,8 +6,8 @@
         <artifactId>OpenUP-parent</artifactId>
         <version>1.0.0</version>
     </parent>
-    <artifactId>EPF-concurrent-utility</artifactId>
-    <name>Eclipse Process Framework Concurrent Utility</name>
+    <artifactId>EPF-messaging-utility</artifactId>
+    <name>Eclipse Process Framework Messaging Utility</name>
     <packaging>jar</packaging>
     <dependencies>
     	<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.reactive.messaging/microprofile-reactive-messaging-api -->
