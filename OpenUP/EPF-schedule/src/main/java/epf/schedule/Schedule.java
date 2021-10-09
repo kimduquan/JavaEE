@@ -19,8 +19,9 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Path;
 import org.eclipse.microprofile.context.ManagedExecutor;
-import epf.client.messaging.Messaging;
+
 import epf.client.security.Security;
+import epf.messaging.client.Messaging;
 import epf.util.config.ConfigUtil;
 import epf.util.logging.Logging;
 import epf.util.websocket.Client;

@@ -20,8 +20,9 @@ import javax.websocket.DeploymentException;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
 import org.eclipse.microprofile.reactive.streams.operators.PublisherBuilder;
-import epf.client.messaging.Client;
-import epf.client.messaging.Messaging;
+
+import epf.messaging.client.Client;
+import epf.messaging.client.Messaging;
 import epf.messaging.util.PublisherUtil;
 import epf.messaging.util.reactive.ObjectPublisher;
 import epf.schema.EntityEvent;

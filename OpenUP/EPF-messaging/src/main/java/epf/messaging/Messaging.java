@@ -19,8 +19,9 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import org.eclipse.microprofile.context.ManagedExecutor;
-import epf.client.messaging.MessageDecoder;
-import epf.client.messaging.MessageEncoder;
+
+import epf.messaging.client.MessageDecoder;
+import epf.messaging.client.MessageEncoder;
 import epf.util.logging.Logging;
 import epf.util.websocket.Server;
 

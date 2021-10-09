@@ -14,9 +14,9 @@ import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
 import epf.cache.Manager;
-import epf.client.messaging.Client;
-import epf.client.messaging.Messaging;
 import epf.client.security.Token;
+import epf.messaging.client.Client;
+import epf.messaging.client.Messaging;
 import epf.util.config.ConfigUtil;
 import epf.util.logging.Logging;
 

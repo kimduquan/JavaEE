@@ -5,7 +5,8 @@ package epf.tests.messaging;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import epf.client.messaging.Messaging;
+
+import epf.messaging.client.Messaging;
 
 /**
  * @author PC
