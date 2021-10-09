@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import javax.ws.rs.core.Response;
 import epf.client.gateway.GatewayUtil;
 import epf.client.util.Client;
@@ -81,7 +82,7 @@ public class FileStore {
 		try(Client client = clientUtil.newClient(GatewayUtil.get("file"))){
 			client.authorization(credential.getToken());
 			try(InputStream in = epf.client.file.Files.read(client, path)){
-				Files.copy(in, output.toPath());
+				Files.copy(in, output.toPath(), StandardCopyOption.REPLACE_EXISTING);
 			}
 		}
 	}

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.persistence.impl;
 
 import java.io.IOException;
@@ -20,7 +17,6 @@ import javax.websocket.DeploymentException;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
 import org.eclipse.microprofile.reactive.streams.operators.PublisherBuilder;
-
 import epf.messaging.client.Client;
 import epf.messaging.client.Messaging;
 import epf.messaging.util.PublisherUtil;
@@ -109,7 +105,7 @@ public class Listener {
 			postLoadClient.close();
 		} 
 		catch (Exception e) {
-			LOGGER.throwing(client.getClass().getName(), "close", e);
+			LOGGER.throwing(getClass().getName(), "preDestroy", e);
 		}
 	}
 	
@@ -125,6 +121,7 @@ public class Listener {
 	 * @param event
 	 */
 	public void postPersist(@Observes final PostPersist event) {
+		publisher.submit(event);
 		send(event);
 	}
 	
@@ -132,6 +129,7 @@ public class Listener {
 	 * @param event
 	 */
 	public void postRemove(@Observes final PostRemove event) {
+		publisher.submit(event);
 		send(event);
 	}
 	
@@ -139,6 +137,7 @@ public class Listener {
 	 * @param event
 	 */
 	public void postUpdate(@Observes final PostUpdate event) {
+		publisher.submit(event);
 		send(event);
 	}
 	

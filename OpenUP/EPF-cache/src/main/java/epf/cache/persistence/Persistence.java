@@ -55,11 +55,6 @@ public class Persistence implements HealthCheck {
 	/**
 	 * 
 	 */
-	private transient Client client;
-	
-	/**
-	 * 
-	 */
 	private transient Client postLoadClient;
 
 	/**
@@ -84,12 +79,6 @@ public class Persistence implements HealthCheck {
 			entityCache = new EntityCache(cache);
 			executor.submit(entityCache);
 			final URI messagingUrl = ConfigUtil.getURI(Messaging.MESSAGING_URL);
-			client = Messaging.connectToServer(messagingUrl.resolve("persistence"));
-			client.onMessage(message -> {
-				if(message instanceof EntityEvent) {
-					entityCache.add((EntityEvent) message);
-				}
-			});
 			postLoadClient = Messaging.connectToServer(messagingUrl.resolve("persistence/post-load"));
 			postLoadClient.onMessage(message -> {
 				if(message instanceof PostLoad) {
@@ -109,11 +98,10 @@ public class Persistence implements HealthCheck {
 	protected void preDestroy() {
 		try {
 			postLoadClient.close();
-			client.close();
 			entityCache.close();
 		} 
 		catch (Exception e) {
-			LOGGER.throwing(client.getClass().getName(), "close", e);
+			LOGGER.throwing(getClass().getName(), "preDestroy", e);
 		}
 	}
 	
