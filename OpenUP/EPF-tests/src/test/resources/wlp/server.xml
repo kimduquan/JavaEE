@@ -5,6 +5,7 @@
         <feature>microProfile-4.0</feature>
         <feature>mpGraphQL-1.0</feature>
         <feature>mpContextPropagation-1.2</feature>
+        <feature>mpReactiveMessaging-1.0</feature>
         <feature>sessionCache-1.0</feature>
         <feature>transportSecurity-1.0</feature>
         <feature>batch-1.0</feature>

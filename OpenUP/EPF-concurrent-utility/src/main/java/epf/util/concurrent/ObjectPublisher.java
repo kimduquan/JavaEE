@@ -3,6 +3,7 @@
  */
 package epf.util.concurrent;
 
+import java.io.Serializable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Flow;
 import java.util.concurrent.SubmissionPublisher;
@@ -13,7 +14,7 @@ import org.reactivestreams.Subscriber;
  * @author PC
  *
  */
-public class ObjectPublisher<T extends Object> implements Publisher<T>, AutoCloseable {
+public class ObjectPublisher<T extends Serializable> implements Publisher<T>, AutoCloseable {
 	
 	/**
 	 * 

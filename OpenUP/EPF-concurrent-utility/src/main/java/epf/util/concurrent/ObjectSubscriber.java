@@ -3,6 +3,7 @@
  */
 package epf.util.concurrent;
 
+import java.io.Serializable;
 import java.util.concurrent.Flow.Subscriber;
 import java.util.concurrent.Flow.Subscription;
 
@@ -10,7 +11,7 @@ import java.util.concurrent.Flow.Subscription;
  * @author PC
  *
  */
-public class ObjectSubscriber<T extends Object> implements Subscriber<T> {
+public class ObjectSubscriber<T extends Serializable> implements Subscriber<T> {
 	
 	/**
 	 * 

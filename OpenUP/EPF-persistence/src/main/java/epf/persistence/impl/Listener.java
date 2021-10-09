@@ -20,7 +20,8 @@ import javax.inject.Inject;
 import javax.websocket.DeploymentException;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
-import org.reactivestreams.Publisher;
+import org.eclipse.microprofile.reactive.streams.operators.PublisherBuilder;
+import org.eclipse.microprofile.reactive.streams.operators.ReactiveStreams;
 import epf.client.messaging.Client;
 import epf.client.messaging.Messaging;
 import epf.schema.EntityEvent;
@@ -149,7 +150,7 @@ public class Listener {
 	}
 	
 	@Outgoing("persistence")
-    public Publisher<EntityEvent> getPublisher(){
-		return publisher;
+    protected PublisherBuilder<? extends EntityEvent> getPublisher(){
+		return ReactiveStreams.fromPublisher(publisher);
 	}
 }
