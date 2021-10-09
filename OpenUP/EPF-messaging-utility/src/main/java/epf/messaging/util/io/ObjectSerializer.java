@@ -1,4 +1,4 @@
-package epf.util.messaging.io;
+package epf.messaging.util.io;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;

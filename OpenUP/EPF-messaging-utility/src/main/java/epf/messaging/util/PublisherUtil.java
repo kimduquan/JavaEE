@@ -1,12 +1,13 @@
 /**
  * 
  */
-package epf.util.messaging;
+package epf.messaging.util;
 
 import java.io.Serializable;
 import org.eclipse.microprofile.reactive.streams.operators.PublisherBuilder;
 import org.eclipse.microprofile.reactive.streams.operators.ReactiveStreams;
-import epf.util.messaging.reactive.ObjectPublisher;
+
+import epf.messaging.util.reactive.ObjectPublisher;
 
 /**
  * @author PC
