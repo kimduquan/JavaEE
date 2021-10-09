@@ -19,6 +19,7 @@ import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
+import org.eclipse.microprofile.reactive.messaging.Incoming;
 import epf.cache.Manager;
 import epf.client.messaging.Client;
 import epf.client.messaging.Messaging;
@@ -148,5 +149,10 @@ public class Persistence implements HealthCheck {
 	@Override
 	public HealthCheckResponse call() {
 		return HealthCheckResponse.up("EPF-persistence-cache");
+	}
+	
+	@Incoming("persistence")
+	public void handleEvent(final EntityEvent event) {
+		entityCache.add(event);
 	}
 }

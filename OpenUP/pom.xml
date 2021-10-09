@@ -310,6 +310,12 @@
 			    <artifactId>com.liferay.faces.bridge.impl</artifactId>
 			    <version>4.2.1</version>
 			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients -->
+			<dependency>
+			    <groupId>org.apache.kafka</groupId>
+			    <artifactId>kafka-clients</artifactId>
+			    <version>3.0.0</version>
+			</dependency>
 			
 			
 			<!-- https://mvnrepository.com/artifact/org.jboss.resteasy/resteasy-client -->
@@ -383,6 +389,12 @@
 			    <groupId>org.eclipse.lsp4j</groupId>
 			    <artifactId>org.eclipse.lsp4j</artifactId>
 			    <version>0.12.0</version>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/io.reactivex.rxjava3/rxjava -->
+			<dependency>
+			    <groupId>io.reactivex.rxjava3</groupId>
+			    <artifactId>rxjava</artifactId>
+			    <version>3.1.1</version>
 			</dependency>
 			
 			
@@ -722,6 +734,7 @@
         <module>EPF-shell</module>
 		<module>EPF-utility</module>
 		<module>EPF-file-utility</module>
+		<module>EPF-concurrent-utility</module>
 		<module>EPF-security-utility</module>
 		<module>EPF-function</module>
 		<module>EPF-schedule</module>

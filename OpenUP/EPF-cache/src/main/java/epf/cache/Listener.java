@@ -11,7 +11,6 @@ import javax.cache.CacheManager;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.eclipse.microprofile.context.ManagedExecutor;
-
 import epf.cache.internal.event.EntryCreatedListener;
 import epf.cache.internal.event.EntryExpiredListener;
 import epf.cache.internal.event.EntryRemovedListener;
