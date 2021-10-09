@@ -25,9 +25,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import epf.client.gateway.GatewayUtil;
+import epf.client.util.Client;
 import epf.tests.client.ClientUtil;
 import epf.tests.security.SecurityUtil;
-import epf.util.client.Client;
 import epf.util.file.PathUtil;
 
 /**

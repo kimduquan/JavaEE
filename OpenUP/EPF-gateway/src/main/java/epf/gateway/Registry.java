@@ -8,8 +8,8 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import epf.util.client.Client;
-import epf.util.client.ClientQueue;
+import epf.client.util.Client;
+import epf.client.util.ClientQueue;
 import epf.util.config.ConfigUtil;
 
 /**

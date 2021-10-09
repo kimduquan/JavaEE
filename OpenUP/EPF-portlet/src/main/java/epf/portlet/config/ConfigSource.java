@@ -6,7 +6,8 @@ package epf.portlet.config;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.enterprise.context.ApplicationScoped;
-import epf.util.client.Client;
+
+import epf.client.util.Client;
 
 /**
  * @author PC

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.util.io;
+package epf.client.util.io;
 
 import java.io.IOException;
 import java.io.InputStream;

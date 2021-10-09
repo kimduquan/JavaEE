@@ -5,12 +5,12 @@ package epf.shell.rules;
 
 import javax.ws.rs.core.Response;
 import epf.client.gateway.GatewayUtil;
+import epf.client.util.Client;
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
 import epf.shell.rules.admin.Admin;
 import epf.shell.security.Credential;
 import epf.shell.security.CallerPrincipal;
-import epf.util.client.Client;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import picocli.CommandLine.ArgGroup;

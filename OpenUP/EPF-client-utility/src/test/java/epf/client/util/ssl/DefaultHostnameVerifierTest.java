@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.util.ssl;
+package epf.client.util.ssl;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -13,7 +13,7 @@ import org.junit.Test;
 public class DefaultHostnameVerifierTest {
 
 	/**
-	 * Test method for {@link epf.util.ssl.DefaultHostnameVerifier#verify(java.lang.String, javax.net.ssl.SSLSession)}.
+	 * Test method for {@link epf.client.util.ssl.DefaultHostnameVerifier#verify(java.lang.String, javax.net.ssl.SSLSession)}.
 	 */
 	@Test
 	public void testVerify() {

@@ -17,10 +17,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import epf.client.schema.Entity;
 import epf.client.schema.Schema;
+import epf.client.util.Client;
 import epf.tests.client.ClientUtil;
 import epf.tests.persistence.EntitiesTest;
 import epf.tests.security.SecurityUtil;
-import epf.util.client.Client;
 import epf.util.logging.Logging;
 import epf.client.gateway.GatewayUtil;
 

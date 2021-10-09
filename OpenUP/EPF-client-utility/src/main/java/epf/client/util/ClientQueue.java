@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.util.client;
+package epf.client.util;
 
 import java.net.URI;
 import java.util.Map;
@@ -18,8 +18,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import epf.util.ssl.DefaultHostnameVerifier;
-import epf.util.ssl.SSLContextHelper;
+import epf.client.util.ssl.DefaultHostnameVerifier;
+import epf.client.util.ssl.SSLContextHelper;
 
 /**
  *

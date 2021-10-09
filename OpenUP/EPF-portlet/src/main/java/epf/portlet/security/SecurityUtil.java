@@ -6,9 +6,10 @@ package epf.portlet.security;
 import java.net.URI;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+
+import epf.client.util.Client;
 import epf.portlet.CookieUtil;
 import epf.portlet.client.ClientUtil;
-import epf.util.client.Client;
 
 /**
  * @author PC

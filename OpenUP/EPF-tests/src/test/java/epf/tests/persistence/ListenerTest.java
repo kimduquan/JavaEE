@@ -45,7 +45,7 @@ public class ListenerTest {
 	private static ExecutorService executor;
 	private Client client;
 	private Queue<String> messages;
-	private static epf.util.client.Client streamClient;
+	private static epf.client.util.Client streamClient;
 	private static SseEventSource event;
 	private static Queue<String> events;
     
@@ -101,7 +101,7 @@ public class ListenerTest {
         artifact.setMoreInformation(new MoreInformation());
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
-    	try(epf.util.client.Client persistenceClient = ClientUtil.newClient(persistenceUrl)){
+    	try(epf.client.util.Client persistenceClient = ClientUtil.newClient(persistenceUrl)){
     		persistenceClient.authorization(token);
     		Entities.persist(persistenceClient, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
             Entities.remove(persistenceClient, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
@@ -140,7 +140,7 @@ public class ListenerTest {
         artifact.setMoreInformation(new MoreInformation());
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
-    	try(epf.util.client.Client persistenceClient = ClientUtil.newClient(persistenceUrl)){
+    	try(epf.client.util.Client persistenceClient = ClientUtil.newClient(persistenceUrl)){
     		persistenceClient.authorization(token);
     		Entities.persist(persistenceClient, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
             Entities.remove(persistenceClient, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());

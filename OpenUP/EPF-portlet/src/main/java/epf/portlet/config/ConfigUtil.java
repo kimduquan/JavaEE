@@ -5,9 +5,10 @@ package epf.portlet.config;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+
+import epf.client.util.Client;
 import epf.portlet.gateway.GatewayUtil;
 import epf.portlet.security.SecurityUtil;
-import epf.util.client.Client;
 
 /**
  * @author PC

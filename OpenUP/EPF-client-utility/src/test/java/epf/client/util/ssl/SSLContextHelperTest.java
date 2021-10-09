@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.util.ssl;
+package epf.client.util.ssl;
 
 import javax.net.ssl.SSLContext;
 import org.junit.Assert;
@@ -14,7 +14,7 @@ import org.junit.Test;
 public class SSLContextHelperTest {
 
 	/**
-	 * Test method for {@link epf.util.ssl.SSLContextHelper#build()}.
+	 * Test method for {@link epf.client.util.ssl.SSLContextHelper#build()}.
 	 */
 	@Test
 	public void testBuild() {

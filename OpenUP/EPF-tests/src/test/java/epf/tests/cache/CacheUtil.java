@@ -7,8 +7,8 @@ import javax.ws.rs.core.Response;
 import epf.client.cache.Cache;
 import epf.client.gateway.GatewayUtil;
 import epf.client.security.Token;
+import epf.client.util.Client;
 import epf.tests.client.ClientUtil;
-import epf.util.client.Client;
 
 /**
  * @author PC

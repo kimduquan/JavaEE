@@ -11,11 +11,11 @@ import org.junit.Test;
 import epf.client.gateway.GatewayUtil;
 import epf.client.net.Net;
 import epf.client.persistence.Entities;
+import epf.client.util.Client;
 import epf.tests.client.ClientUtil;
 import epf.tests.health.HealthUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
-import epf.util.client.Client;
 
 public class NetTest {
 	

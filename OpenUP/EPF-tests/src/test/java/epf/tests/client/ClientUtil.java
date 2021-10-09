@@ -5,8 +5,9 @@ import javax.json.JsonObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
-import epf.util.client.Client;
-import epf.util.client.ClientQueue;
+
+import epf.client.util.Client;
+import epf.client.util.ClientQueue;
 
 public class ClientUtil {
 

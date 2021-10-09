@@ -14,8 +14,7 @@ import javax.inject.Inject;
 import javax.security.enterprise.credential.BasicAuthenticationCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStore;
-import epf.util.client.Client;
-import epf.util.client.ClientQueue;
+
 import epf.util.config.ConfigUtil;
 import epf.util.logging.Logging;
 import epf.util.security.PasswordUtil;
@@ -23,6 +22,8 @@ import epf.webapp.WebApp;
 import epf.client.gateway.GatewayUtil;
 import epf.client.security.Security;
 import epf.client.security.Token;
+import epf.client.util.Client;
+import epf.client.util.ClientQueue;
 
 /**
  *

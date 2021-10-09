@@ -25,10 +25,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.faulttolerance.Asynchronous;
+
+import epf.client.util.Client;
+import epf.client.util.ClientUtil;
 import epf.gateway.Request;
 import epf.util.StringUtil;
-import epf.util.client.Client;
-import epf.util.client.ClientUtil;
 import epf.util.config.ConfigUtil;
 import epf.util.http.SessionUtil;
 

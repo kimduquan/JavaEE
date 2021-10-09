@@ -17,8 +17,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import epf.client.gateway.GatewayUtil;
 import epf.client.registry.Registry;
+import epf.client.util.Client;
 import epf.tests.client.ClientUtil;
-import epf.util.client.Client;
 import epf.util.logging.Logging;
 
 public class RegistryTest {

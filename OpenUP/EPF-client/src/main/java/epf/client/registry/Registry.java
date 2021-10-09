@@ -16,7 +16,8 @@ import javax.ws.rs.core.Form;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import epf.util.client.Client;
+
+import epf.client.util.Client;
 
 /**
  * @author PC

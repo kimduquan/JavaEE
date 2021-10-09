@@ -11,7 +11,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
-import epf.util.client.Client;
+
+import epf.client.util.Client;
 
 /**
  * @author PC

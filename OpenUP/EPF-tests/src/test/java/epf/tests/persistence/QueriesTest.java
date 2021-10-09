@@ -7,9 +7,9 @@ package epf.tests.persistence;
 
 import epf.client.gateway.GatewayUtil;
 import epf.client.persistence.Queries;
+import epf.client.util.Client;
 import epf.tests.client.ClientUtil;
 import epf.tests.security.SecurityUtil;
-import epf.util.client.Client;
 import epf.util.logging.Logging;
 import java.net.URI;
 import java.util.Set;

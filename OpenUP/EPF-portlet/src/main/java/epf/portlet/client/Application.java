@@ -7,8 +7,9 @@ import java.net.URI;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
-import epf.util.client.Client;
-import epf.util.client.ClientQueue;
+
+import epf.client.util.Client;
+import epf.client.util.ClientQueue;
 
 /**
  * @author PC

@@ -13,7 +13,6 @@ import javax.ws.rs.core.GenericType;
 
 import epf.portlet.gateway.GatewayUtil;
 import epf.portlet.security.SecurityUtil;
-import epf.util.client.Client;
 import epf.util.logging.Logging;
 import openup.client.portlet.Naming;
 import openup.client.portlet.roles.RolesView;
@@ -21,6 +20,7 @@ import java.io.Serializable;
 import openup.schema.OpenUP;
 import openup.schema.roles.Role;
 import epf.client.persistence.Queries;
+import epf.client.util.Client;
 
 /**
  * @author PC

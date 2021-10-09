@@ -5,17 +5,15 @@ package epf.shell.file;
 
 import java.io.File;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import javax.ws.rs.core.Response;
 import epf.client.gateway.GatewayUtil;
+import epf.client.util.Client;
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
 import epf.shell.security.Credential;
 import epf.shell.security.CallerPrincipal;
-import epf.util.client.Client;
-import epf.util.io.IOUtil;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import picocli.CommandLine.ArgGroup;
@@ -83,9 +81,7 @@ public class FileStore {
 		try(Client client = clientUtil.newClient(GatewayUtil.get("file"))){
 			client.authorization(credential.getToken());
 			try(InputStream in = epf.client.file.Files.read(client, path)){
-				try(OutputStream out = Files.newOutputStream(output.toPath())){
-					IOUtil.transferTo(in, out);
-				}
+				Files.copy(in, output.toPath());
 			}
 		}
 	}

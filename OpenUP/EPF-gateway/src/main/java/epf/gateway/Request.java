@@ -19,8 +19,9 @@ import javax.ws.rs.sse.OutboundSseEvent;
 import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
 import javax.ws.rs.sse.SseEventSource;
-import epf.util.client.Client;
-import epf.util.client.ClientUtil;
+
+import epf.client.util.Client;
+import epf.client.util.ClientUtil;
 import epf.util.logging.Logging;
 
 /**

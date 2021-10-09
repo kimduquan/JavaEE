@@ -733,6 +733,7 @@
     <modules>
         <module>EPF-shell</module>
 		<module>EPF-utility</module>
+		<module>EPF-client-utility</module>
 		<module>EPF-file-utility</module>
 		<module>EPF-messaging-utility</module>
 		<module>EPF-security-utility</module>

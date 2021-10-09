@@ -5,8 +5,8 @@ package epf.tests.persistence;
 
 import epf.client.gateway.GatewayUtil;
 import epf.client.persistence.Entities;
+import epf.client.util.Client;
 import epf.tests.client.ClientUtil;
-import epf.util.client.Client;
 
 /**
  * @author PC

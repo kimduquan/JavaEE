@@ -13,10 +13,10 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.client.gateway.GatewayUtil;
 import epf.client.persistence.Entities;
 import epf.client.security.Security;
+import epf.client.util.Client;
+import epf.client.util.ClientUtil;
 import epf.net.schema.URL;
 import epf.util.StringUtil;
-import epf.util.client.Client;
-import epf.util.client.ClientUtil;
 import epf.util.http.SessionUtil;
 
 /**

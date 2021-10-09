@@ -23,7 +23,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
-import epf.util.client.Client;
+
+import epf.client.util.Client;
+
 import javax.validation.constraints.*;
 
 /**

@@ -14,9 +14,9 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import epf.client.script.Script;
+import epf.client.util.Client;
 import epf.tests.client.ClientUtil;
 import epf.tests.security.SecurityUtil;
-import epf.util.client.Client;
 import epf.client.gateway.GatewayUtil;
 
 /**

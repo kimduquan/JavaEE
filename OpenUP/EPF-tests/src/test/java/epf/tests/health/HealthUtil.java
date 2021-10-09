@@ -5,8 +5,8 @@ package epf.tests.health;
 
 import javax.ws.rs.core.Response;
 import epf.client.health.Health;
+import epf.client.util.Client;
 import epf.tests.client.ClientUtil;
-import epf.util.client.Client;
 import epf.util.config.ConfigUtil;
 
 /**

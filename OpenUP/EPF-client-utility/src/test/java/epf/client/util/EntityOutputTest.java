@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.util.client;
+package epf.client.util;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,7 +33,7 @@ public class EntityOutputTest {
 	}
 
 	/**
-	 * Test method for {@link epf.util.client.EntityOutput#EntityOutput(java.io.InputStream)}.
+	 * Test method for {@link epf.client.util.EntityOutput#EntityOutput(java.io.InputStream)}.
 	 */
 	@Test
 	public void testEntityOutput() {
@@ -42,7 +42,7 @@ public class EntityOutputTest {
 	}
 	
 	/**
-	 * Test method for {@link epf.util.client.EntityOutput#EntityOutput(java.io.InputStream)}.
+	 * Test method for {@link epf.client.util.EntityOutput#EntityOutput(java.io.InputStream)}.
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testEntityOutput_NullInput() {
@@ -50,7 +50,7 @@ public class EntityOutputTest {
 	}
 
 	/**
-	 * Test method for {@link epf.util.client.EntityOutput#write(java.io.OutputStream)}.
+	 * Test method for {@link epf.client.util.EntityOutput#write(java.io.OutputStream)}.
 	 * @throws Exception 
 	 */
 	@Test
@@ -64,7 +64,7 @@ public class EntityOutputTest {
 	}
 
 	/**
-	 * Test method for {@link epf.util.client.EntityOutput#write(java.io.OutputStream)}.
+	 * Test method for {@link epf.client.util.EntityOutput#write(java.io.OutputStream)}.
 	 * @throws Exception 
 	 */
 	@Test(expected = IOException.class)

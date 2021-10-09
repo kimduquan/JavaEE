@@ -1,4 +1,4 @@
-package epf.util.client;
+package epf.client.util;
 
 import java.net.URI;
 import org.junit.After;

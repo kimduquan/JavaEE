@@ -34,7 +34,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.client.EPFException;
 import epf.client.security.Security;
-import epf.util.client.EntityOutput;
+import epf.client.util.EntityOutput;
 import epf.util.file.FileUtil;
 
 /**

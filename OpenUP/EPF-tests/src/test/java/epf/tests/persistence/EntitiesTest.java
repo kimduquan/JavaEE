@@ -7,11 +7,11 @@ package epf.tests.persistence;
 
 import epf.client.gateway.GatewayUtil;
 import epf.client.persistence.Entities;
+import epf.client.util.Client;
 import epf.delivery_processes.schema.DeliveryProcesses;
 import epf.tests.client.ClientUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
-import epf.util.client.Client;
 import epf.util.logging.Logging;
 import epf.work_products.schema.Artifact;
 import epf.work_products.schema.WorkProducts;

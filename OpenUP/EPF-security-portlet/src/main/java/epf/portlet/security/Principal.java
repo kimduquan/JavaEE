@@ -13,10 +13,10 @@ import javax.servlet.http.Cookie;
 import epf.client.portlet.security.PrincipalView;
 import epf.client.security.Credential;
 import epf.client.security.Token;
+import epf.client.util.Client;
 import epf.portlet.CookieUtil;
 import epf.portlet.RequestUtil;
 import epf.portlet.gateway.GatewayUtil;
-import epf.util.client.Client;
 
 /**
  * @author PC

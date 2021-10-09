@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.util.client;
+package epf.client.util;
 
 import java.net.URI;
 import javax.ws.rs.client.ClientBuilder;
@@ -46,7 +46,7 @@ public class ClientTest {
 	}
 
 	/**
-	 * Test method for {@link epf.util.client.Client#Client(epf.util.client.ClientQueue, java.net.URI, java.util.function.Function)}.
+	 * Test method for {@link epf.client.util.Client#Client(epf.client.util.ClientQueue, java.net.URI, java.util.function.Function)}.
 	 */
 	@Test
 	public void testClient() {
@@ -57,7 +57,7 @@ public class ClientTest {
 	}
 
 	/**
-	 * Test method for {@link epf.util.client.Client#authorization(java.lang.String)}.
+	 * Test method for {@link epf.client.util.Client#authorization(java.lang.String)}.
 	 */
 	@Test
 	public void testAuthorization() {
@@ -71,7 +71,7 @@ public class ClientTest {
 	}
 	
 	/**
-	 * Test method for {@link epf.util.client.Client#authorization(java.lang.String)}.
+	 * Test method for {@link epf.client.util.Client#authorization(java.lang.String)}.
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testAuthorization_NullToken() {
@@ -79,7 +79,7 @@ public class ClientTest {
 	}
 
 	/**
-	 * Test method for {@link epf.util.client.Client#close()}.
+	 * Test method for {@link epf.client.util.Client#close()}.
 	 * @throws Exception 
 	 */
 	@Test
@@ -89,7 +89,7 @@ public class ClientTest {
 	}
 
 	/**
-	 * Test method for {@link epf.util.client.Client#request(java.util.function.Function, java.util.function.Function)}.
+	 * Test method for {@link epf.client.util.Client#request(java.util.function.Function, java.util.function.Function)}.
 	 */
 	@Test
 	public void testRequest() {
@@ -111,7 +111,7 @@ public class ClientTest {
 	}
 
 	/**
-	 * Test method for {@link epf.util.client.Client#request(java.util.function.Function, java.util.function.Function)}.
+	 * Test method for {@link epf.client.util.Client#request(java.util.function.Function, java.util.function.Function)}.
 	 */
 	@Test
 	public void testRequest_Authorization() {

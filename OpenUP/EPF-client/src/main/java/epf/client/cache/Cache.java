@@ -19,7 +19,7 @@ import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
 import javax.ws.rs.sse.SseEventSource;
 import epf.client.security.Token;
-import epf.util.client.Client;
+import epf.client.util.Client;
 
 /**
  * @author PC

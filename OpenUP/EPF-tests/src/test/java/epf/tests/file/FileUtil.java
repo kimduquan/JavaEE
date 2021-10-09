@@ -9,8 +9,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import javax.ws.rs.core.Response;
 import epf.client.gateway.GatewayUtil;
+import epf.client.util.Client;
 import epf.tests.client.ClientUtil;
-import epf.util.client.Client;
 
 /**
  * @author PC

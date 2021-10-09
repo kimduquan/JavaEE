@@ -14,10 +14,10 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import epf.client.persistence.SearchData;
 import epf.client.portlet.persistence.SearchView;
+import epf.client.util.Client;
 import epf.portlet.config.ConfigUtil;
 import epf.portlet.gateway.GatewayUtil;
 import epf.portlet.security.SecurityUtil;
-import epf.util.client.Client;
 import epf.util.logging.Logging;
 
 /**

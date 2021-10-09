@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.util.client;
+package epf.client.util;
 
 import java.net.URI;
 import javax.enterprise.context.Dependent;

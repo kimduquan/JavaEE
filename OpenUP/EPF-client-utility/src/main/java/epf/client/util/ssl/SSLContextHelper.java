@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.util.ssl;
+package epf.client.util.ssl;
 
 import java.util.logging.Logger;
 import javax.net.ssl.SSLContext;

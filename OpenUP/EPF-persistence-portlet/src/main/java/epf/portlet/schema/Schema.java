@@ -17,13 +17,13 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import epf.client.portlet.persistence.SchemaView;
 import epf.client.schema.Entity;
+import epf.client.util.Client;
 import epf.portlet.Event;
 import epf.portlet.EventUtil;
 import epf.portlet.Parameter;
 import epf.portlet.ParameterUtil;
 import epf.portlet.gateway.GatewayUtil;
 import epf.portlet.security.SecurityUtil;
-import epf.util.client.Client;
 import epf.util.logging.Logging;
 
 /**
