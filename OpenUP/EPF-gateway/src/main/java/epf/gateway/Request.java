@@ -13,8 +13,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.CompletionStageRxInvoker;
-import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -66,19 +64,32 @@ public class Request {
             final UriInfo uriInfo,
             final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-    	ClientBuilder builder = ClientBuilder.newBuilder()
-    			.executorService(executor)
-    			.hostnameVerifier(new DefaultHostnameVerifier())
-    			.sslContext(SSLContextHelper.build());
-    	Client client = builder.build();
-    	URI uri = RequestUtil.buildUri(uriInfo, registry);
-    	WebTarget target = client.target(uri);
-    	target = RequestUtil.buildTarget(target, uriInfo, uri);
-    	Invocation.Builder invoke = target.request();
-    	invoke = RequestUtil.buildRequest(invoke, headers);
-    	CompletionStageRxInvoker rx = invoke.rx();
-    	CompletionStage<Response> response = RequestUtil.invoke(rx, req.getMethod(), headers.getMediaType(), body);
-    	return response.thenApply(res -> RequestUtil.buildResponse(res, uriInfo)).thenApply(ResponseBuilder::build);
+		URI uri = RequestUtil.buildUri(uriInfo, registry);
+		/*ClientBuilder builder = ClientBuilder.newBuilder()
+		.executorService(executor)
+		.hostnameVerifier(new DefaultHostnameVerifier())
+		.sslContext(SSLContextHelper.build());
+		Client client = builder.build();
+		WebTarget target = client.target(uri);
+		target = RequestUtil.buildTarget(target, uriInfo, uri);
+		Invocation.Builder invoke = target.request();
+		invoke = RequestUtil.buildRequest(invoke, headers);
+		CompletionStageRxInvoker rx = invoke.rx();
+		CompletionStage<Response> response = RequestUtil.invoke(rx, req.getMethod(), headers.getMediaType(), body);
+		return response.thenApply(res -> RequestUtil.buildResponse(res, uriInfo)).thenApply(ResponseBuilder::build);*/
+    	return executor.supplyAsync(ClientBuilder::newBuilder)
+    	.thenApply(builder -> builder.executorService(executor))
+    	.thenApply(builder -> builder.hostnameVerifier(new DefaultHostnameVerifier()))
+    	.thenApply(builder -> builder.sslContext(SSLContextHelper.build()))
+    	.thenApply(ClientBuilder::build)
+    	.thenApply(client -> client.target(uri))
+    	.thenApply(target -> RequestUtil.buildTarget(target, uriInfo, uri))
+    	.thenApply(WebTarget::request)
+    	.thenApply(invoke -> RequestUtil.buildRequest(invoke, headers))
+    	.thenApply(invoke -> invoke.rx())
+    	.thenCompose(rx -> RequestUtil.invoke(rx, req.getMethod(), headers.getMediaType(), body))
+    	.thenApply(res -> RequestUtil.buildResponse(res, uriInfo))
+    	.thenApply(ResponseBuilder::build);
     }
     
     /**
