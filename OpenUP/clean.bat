@@ -11,3 +11,5 @@ rmdir "EPF-persistence-portlet" /s /q
 rmdir "EPF-messaging-portlet" /s /q
 rmdir "EPF-file-portlet" /s /q
 cd %cur_dir%
+rmdir "C:\tmp\kafka-logs" /s /q
+rmdir "C:\tmp\zookeeper" /s /q
