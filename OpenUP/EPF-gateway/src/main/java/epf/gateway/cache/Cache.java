@@ -3,7 +3,6 @@
  */
 package epf.gateway.cache;
 
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -54,7 +53,7 @@ public class Cache {
             @PathParam("schema") final String schema,
             @PathParam("entity") final String entity,
             @PathParam("id") final String entityId) throws Exception {
-        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
+        return request.request(headers, uriInfo, req, null);
     }
 	
 	/**
@@ -74,7 +73,7 @@ public class Cache {
             @Context final javax.ws.rs.core.Request req,
             @PathParam("schema") final String schema,
             @PathParam("entity") final String entity) throws Exception {
-        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
+        return request.request(headers, uriInfo, req, null);
     }
 	
 	/**
@@ -116,6 +115,6 @@ public class Cache {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req) throws Exception {
-        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
+        return request.request(headers, uriInfo, req, null);
     }
 }

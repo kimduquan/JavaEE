@@ -70,7 +70,7 @@ public class Net {
             @Context final javax.ws.rs.core.Request req,
             final InputStream body
     ) throws Exception {
-        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, body));
+        return request.request(headers, uriInfo, req, body);
     }
     
     /**

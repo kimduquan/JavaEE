@@ -5,7 +5,6 @@
  */
 package epf.gateway.config;
 
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -48,6 +47,6 @@ public class Config {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req) throws Exception {
-        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
+        return request.request(headers, uriInfo, req, null);
     }
 }

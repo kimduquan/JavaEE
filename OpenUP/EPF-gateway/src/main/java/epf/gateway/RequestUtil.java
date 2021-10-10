@@ -12,8 +12,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.CompletionStage;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.ws.rs.client.CompletionStageRxInvoker;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.client.Invocation.Builder;
@@ -145,31 +148,21 @@ public interface RequestUtil {
     }
     
     /**
-     * @param builder
+     * @param invoker
      * @param method
      * @param type
-     * @param in
+     * @param body
      * @return
      */
-    static Response buildMethod(
-    		final Builder builder, 
+    static CompletionStage<Response> invoke(
+    		final CompletionStageRxInvoker invoker,
     		final String method, 
     		final MediaType type, 
     		final InputStream body){
-    	Response response;
     	if(body == null || type == null) {
-    		response = builder.method(method);
+    		return invoker.method(method);
     	}
-    	else {
-    		response = builder.method(
-                    method, 
-                    Entity.entity(
-                            body, 
-                            type
-                    )
-            );
-        }
-    	return response;
+    	return invoker.method(method, Entity.entity(body, type));
     }
     
     /**
@@ -200,12 +193,13 @@ public interface RequestUtil {
     }
     
     /**
+     * @param builder
      * @param res
      * @param uriInfo
      * @return
      */
     static ResponseBuilder buildResponse(final Response res, final UriInfo uriInfo){
-        ResponseBuilder builder = Response.fromResponse(res);
+    	ResponseBuilder builder = Response.fromResponse(res);
         final Set<String> methods = res.getAllowedMethods();
         if(methods != null){
             builder = builder.allow(methods);

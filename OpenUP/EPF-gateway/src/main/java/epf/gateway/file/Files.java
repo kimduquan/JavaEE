@@ -7,7 +7,6 @@ package epf.gateway.file;
 
 import java.io.InputStream;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -62,7 +61,7 @@ public class Files {
     		final List<PathSegment> paths,
             final InputStream body
     ) throws Exception {
-        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, body));
+        return request.request(headers, uriInfo, req, body);
     }
     
     /**
@@ -83,7 +82,7 @@ public class Files {
             @PathParam("paths")
     		final List<PathSegment> paths
     ) throws Exception {
-        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
+        return request.request(headers, uriInfo, req, null);
     }
     
     /**
@@ -103,6 +102,6 @@ public class Files {
             @PathParam("paths")
     		final List<PathSegment> paths
     ) throws Exception {
-        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
+        return request.request(headers, uriInfo, req, null);
     }
 }

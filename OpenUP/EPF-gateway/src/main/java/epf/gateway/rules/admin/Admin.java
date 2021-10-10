@@ -4,7 +4,6 @@
 package epf.gateway.rules.admin;
 
 import java.io.InputStream;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -54,7 +53,7 @@ public class Admin {
             @PathParam("ruleSet")
             final String ruleSet,
             final InputStream body) throws Exception {
-        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, body));
+        return request.request(headers, uriInfo, req, body);
     }
     
     /**
@@ -74,6 +73,6 @@ public class Admin {
             @Context final javax.ws.rs.core.Request req,
             @PathParam("ruleSet")
             final String ruleSet) throws Exception {
-        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
+        return request.request(headers, uriInfo, req, null);
     }
 }

@@ -1,7 +1,6 @@
 package epf.gateway.registry;
 
 import java.io.InputStream;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -51,7 +50,7 @@ public class Registry {
             @Context final javax.ws.rs.core.Request req,
             final InputStream body
     		) throws Exception {
-    	return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, body));
+    	return request.request(headers, uriInfo, req, body);
     }
 	
 	/**
@@ -68,7 +67,7 @@ public class Registry {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req
     		) throws Exception {
-		return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
+		return request.request(headers, uriInfo, req, null);
 	}
 	
 	/**
@@ -91,7 +90,7 @@ public class Registry {
             final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req
     		) throws Exception {
-		return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
+		return request.request(headers, uriInfo, req, null);
 	}
 	
 	/**
@@ -117,7 +116,7 @@ public class Registry {
             @Context final javax.ws.rs.core.Request req,
             final InputStream body
     		) throws Exception {
-		return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, body));
+		return request.request(headers, uriInfo, req, body);
 	}
 	
 	/**
@@ -140,6 +139,6 @@ public class Registry {
             final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req
     		) throws Exception {
-		return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
+		return request.request(headers, uriInfo, req, null);
 	}
 }

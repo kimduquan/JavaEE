@@ -6,7 +6,6 @@
 package epf.gateway.persistence;
 
 import java.io.InputStream;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -59,7 +58,7 @@ public class Entities {
             @PathParam("schema") final String schema,
             @PathParam("entity") final String entity,
             final InputStream body) throws Exception {
-        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, body));
+        return request.request(headers, uriInfo, req, body);
     }
     
     /**
@@ -84,7 +83,7 @@ public class Entities {
             @PathParam("id") final String entityId,
             final InputStream body
             ) throws Exception {
-    	return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, body));
+    	return request.request(headers, uriInfo, req, body);
     }
     
     /**
@@ -105,7 +104,7 @@ public class Entities {
             @PathParam("schema") final String schema,
             @PathParam("entity") final String entity,
             @PathParam("id") final String entityId) throws Exception {
-        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
+        return request.request(headers, uriInfo, req, null);
     }
     
     /**
@@ -130,6 +129,6 @@ public class Entities {
             @PathParam("id") final String entityId,
             final InputStream body
             ) throws Exception {
-    	return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, body));
+    	return request.request(headers, uriInfo, req, body);
     }
 }

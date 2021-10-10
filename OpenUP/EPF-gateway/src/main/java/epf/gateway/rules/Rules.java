@@ -4,7 +4,6 @@
 package epf.gateway.rules;
 
 import java.io.InputStream;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -59,7 +58,7 @@ public class Rules {
             @PathParam("ruleSet")
             final String ruleSet,
             final InputStream body) throws Exception {
-        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, body));
+        return request.request(headers, uriInfo, req, body);
     }
 	
 	/**
@@ -80,7 +79,7 @@ public class Rules {
             @Context final javax.ws.rs.core.Request req,
             @PathParam("ruleSet")
             final String ruleSet) throws Exception {
-        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
+        return request.request(headers, uriInfo, req, null);
     }
 	
 	/**
@@ -101,7 +100,7 @@ public class Rules {
             @Context final javax.ws.rs.core.Request req,
             @PathParam("ruleSet")
             final String ruleSet) throws Exception {
-        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
+        return request.request(headers, uriInfo, req, null);
     }
 	
 	/**
@@ -118,6 +117,6 @@ public class Rules {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req) throws Exception {
-        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
+        return request.request(headers, uriInfo, req, null);
     }
 }

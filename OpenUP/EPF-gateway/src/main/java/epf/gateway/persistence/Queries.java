@@ -6,7 +6,6 @@
 package epf.gateway.persistence;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -56,7 +55,7 @@ public class Queries {
             @PathParam("criteria")
             final List<PathSegment> paths
             ) throws Exception {
-        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
+        return request.request(headers, uriInfo, req, null);
     }
     
     /**
@@ -74,6 +73,6 @@ public class Queries {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req
             ) throws Exception {
-    	return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, null));
+    	return request.request(headers, uriInfo, req, null);
     }
 }

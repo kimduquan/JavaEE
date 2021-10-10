@@ -6,7 +6,6 @@
 package epf.gateway.image;
 
 import java.io.InputStream;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -55,6 +54,6 @@ public class Image {
             @Context final javax.ws.rs.core.Request req,
             final InputStream body
     ) throws Exception {
-        return CompletableFuture.completedFuture(request.request(headers, uriInfo, req, body));
+        return request.request(headers, uriInfo, req, body);
     }
 }
