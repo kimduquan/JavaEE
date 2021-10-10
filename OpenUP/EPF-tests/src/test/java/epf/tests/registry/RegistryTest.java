@@ -63,28 +63,28 @@ public class RegistryTest {
     	Set<URI> URIs = links.stream().map(link -> link.getUri()).collect(Collectors.toSet());
     	Set<URI> expected = new HashSet<>();
     	try {
-			expected.add(GatewayUtil.getUrl().resolve("config"));
-	    	expected.add(GatewayUtil.getUrl().resolve("file"));
-	    	expected.add(GatewayUtil.getUrl().resolve("persistence"));
-	    	expected.add(GatewayUtil.getUrl().resolve("registry"));
-	    	expected.add(GatewayUtil.getUrl().resolve("security"));
-	    	expected.add(GatewayUtil.getUrl().resolve("stream"));
-	    	expected.add(GatewayUtil.getUrl().resolve("cache"));
-	    	expected.add(GatewayUtil.getUrl().resolve("script"));
-	    	expected.add(GatewayUtil.getUrl().resolve("management"));
-	    	expected.add(GatewayUtil.getUrl().resolve("rules"));
-	    	expected.add(GatewayUtil.getUrl().resolve("schema"));
-	    	expected.add(GatewayUtil.getUrl().resolve("planning"));
-	    	expected.add(GatewayUtil.getUrl().resolve("image"));
-	    	expected.add(GatewayUtil.getUrl().resolve("net"));
-	    	URI messagingUrl = UriBuilder.fromUri(GatewayUtil.getUrl().resolve("messaging")).scheme("ws").port(9080).build();
+			expected.add(GatewayUtil.get("config"));
+	    	expected.add(GatewayUtil.get("file"));
+	    	expected.add(GatewayUtil.get("persistence"));
+	    	expected.add(GatewayUtil.get("registry"));
+	    	expected.add(GatewayUtil.get("security"));
+	    	expected.add(GatewayUtil.get("stream"));
+	    	expected.add(GatewayUtil.get("cache"));
+	    	expected.add(GatewayUtil.get("script"));
+	    	expected.add(GatewayUtil.get("management"));
+	    	expected.add(GatewayUtil.get("rules"));
+	    	expected.add(GatewayUtil.get("schema"));
+	    	expected.add(GatewayUtil.get("planning"));
+	    	expected.add(GatewayUtil.get("image"));
+	    	expected.add(GatewayUtil.get("net"));
+	    	URI messagingUrl = UriBuilder.fromUri(GatewayUtil.get("messaging")).scheme("ws").port(9080).build();
 	    	expected.add(messagingUrl);
-	    	URI langUrl = UriBuilder.fromUri(GatewayUtil.getUrl().resolve("lang")).scheme("ws").port(9080).build();
+	    	URI langUrl = UriBuilder.fromUri(GatewayUtil.get("lang")).scheme("ws").port(9080).build();
 	    	expected.add(langUrl);
-	    	expected.add(GatewayUtil.getUrl().resolve("delivery-processes"));
-	    	expected.add(GatewayUtil.getUrl().resolve("roles"));
-	    	expected.add(GatewayUtil.getUrl().resolve("tasks"));
-	    	expected.add(GatewayUtil.getUrl().resolve("work-products"));
+	    	expected.add(GatewayUtil.get("delivery-processes"));
+	    	expected.add(GatewayUtil.get("roles"));
+	    	expected.add(GatewayUtil.get("tasks"));
+	    	expected.add(GatewayUtil.get("work-products"));
 		} 
     	catch (Exception e) {
 			logger.log(Level.SEVERE, "testList_OK", e);

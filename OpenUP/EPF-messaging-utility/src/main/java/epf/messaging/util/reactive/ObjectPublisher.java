@@ -34,14 +34,14 @@ public class ObjectPublisher<T extends Serializable> implements Publisher<T>, Au
 	}
 
 	@Override
-	public void close() {
-		this.publisher.close();
+	public void close() throws Exception {
+		publisher.close();
 	}
 	
 	/**
 	 * @param object
 	 */
 	public void submit(final T object) {
-		this.publisher.submit(object);
+		publisher.submit(object);
 	}
 }

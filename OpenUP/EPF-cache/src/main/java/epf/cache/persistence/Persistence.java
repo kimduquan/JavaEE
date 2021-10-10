@@ -3,9 +3,7 @@
  */
 package epf.cache.persistence;
 
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
@@ -14,7 +12,6 @@ import javax.annotation.PreDestroy;
 import javax.cache.Cache;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.websocket.DeploymentException;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
@@ -28,6 +25,8 @@ import epf.schema.PostLoad;
 import epf.util.concurrent.ObjectQueue;
 import epf.util.config.ConfigUtil;
 import epf.util.logging.Logging;
+import epf.util.websocket.Message;
+import epf.util.websocket.MessageQueue;
 
 /**
  * @author PC
@@ -55,7 +54,22 @@ public class Persistence implements HealthCheck {
 	/**
 	 * 
 	 */
+	private transient Client client;
+	
+	/**
+	 * 
+	 */
+	private transient MessageQueue messages;
+	
+	/**
+	 * 
+	 */
 	private transient Client postLoadClient;
+	
+	/**
+	 * 
+	 */
+	private transient MessageQueue postLoadMessages;
 
 	/**
 	 * 
@@ -74,20 +88,22 @@ public class Persistence implements HealthCheck {
 	 */
 	@PostConstruct
 	protected void postConstruct() {
+		cache = manager.getCache("persistence");
+		entityCache = new EntityCache(cache);
+		executor.submit(entityCache);
 		try {
-			cache = manager.getCache("persistence");
-			entityCache = new EntityCache(cache);
-			executor.submit(entityCache);
 			final URI messagingUrl = ConfigUtil.getURI(Messaging.MESSAGING_URL);
+			client = Messaging.connectToServer(messagingUrl.resolve("persistence"));
+			client.onMessage(msg -> {});
+			messages = new MessageQueue(client.getSession());
+			executor.submit(messages);
 			postLoadClient = Messaging.connectToServer(messagingUrl.resolve("persistence/post-load"));
-			postLoadClient.onMessage(message -> {
-				if(message instanceof PostLoad) {
-					entityCache.add((PostLoad) message);
-				}
-			});
-		} 
-		catch (URISyntaxException | DeploymentException | IOException e) {
-			LOGGER.throwing(getClass().getName(), "postConstruct", e);
+			postLoadClient.onMessage(msg -> {});
+			postLoadMessages = new MessageQueue(postLoadClient.getSession());
+			executor.submit(postLoadMessages);
+		}
+		catch(Exception ex) {
+			LOGGER.throwing(getClass().getName(), "postConstruct", ex);
 		}
 	}
 	
@@ -97,8 +113,11 @@ public class Persistence implements HealthCheck {
 	@PreDestroy
 	protected void preDestroy() {
 		try {
-			postLoadClient.close();
 			entityCache.close();
+			messages.close();
+			client.close();
+			postLoadMessages.close();
+			postLoadClient.close();
 		} 
 		catch (Exception e) {
 			LOGGER.throwing(getClass().getName(), "preDestroy", e);
@@ -140,7 +159,14 @@ public class Persistence implements HealthCheck {
 	}
 	
 	@Incoming("persistence")
-	public void handleEvent(final EntityEvent event) {
+	public void postEvent(final EntityEvent event) {
 		entityCache.add(event);
+		messages.add(new Message(event));
+	}
+	
+	@Incoming("persistence-load")
+	public void postLoad(final PostLoad event) {
+		entityCache.add(event);
+		postLoadMessages.add(new Message(event));
 	}
 }

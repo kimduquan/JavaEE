@@ -3,7 +3,6 @@
  */
 package epf.security;
 
-import java.net.URI;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -11,14 +10,12 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import org.eclipse.microprofile.context.ManagedExecutor;
-
+import org.eclipse.microprofile.reactive.messaging.Outgoing;
+import org.eclipse.microprofile.reactive.streams.operators.PublisherBuilder;
 import epf.client.security.Token;
-import epf.messaging.client.Client;
-import epf.messaging.client.Messaging;
-import epf.util.config.ConfigUtil;
+import epf.messaging.util.PublisherUtil;
+import epf.messaging.util.reactive.ObjectPublisher;
 import epf.util.logging.Logging;
-import epf.util.websocket.Message;
-import epf.util.websocket.MessageQueue;
 
 /**
  * @author PC
@@ -35,12 +32,7 @@ public class Application {
 	/**
 	 * 
 	 */
-	private transient Client client;
-	
-	/**
-	 * 
-	 */
-	private transient MessageQueue messages;
+	private transient ObjectPublisher<Token> publisher;
 
 	/**
 	 * 
@@ -53,16 +45,7 @@ public class Application {
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		try {
-			final URI messagingUrl = ConfigUtil.getURI(Messaging.MESSAGING_URL);
-			client = Messaging.connectToServer(messagingUrl.resolve("security"));
-			client.onMessage(msg -> {});
-			messages = new MessageQueue(client.getSession());
-			executor.submit(messages);
-		}
-		catch(Exception ex) {
-			LOGGER.throwing(LOGGER.getName(), "postConstruct", ex);
-		}
+		publisher = new ObjectPublisher<Token>(executor);
 	}
 	
 	/**
@@ -70,12 +53,11 @@ public class Application {
 	 */
 	@PreDestroy
 	protected void preDestroy() {
-		messages.close();
 		try {
-			client.close();
+			publisher.close();
 		} 
 		catch (Exception e) {
-			LOGGER.throwing(LOGGER.getName(), "preDestroy", e);
+			LOGGER.throwing(getClass().getName(), "preDestroy", e);
 		}
 	}
 	
@@ -83,6 +65,14 @@ public class Application {
 	 * @param token
 	 */
 	public void login(@Observes final Token token) {
-		messages.add(new Message(token));
+		publisher.submit(token);
+	}
+	
+	/**
+	 * @return
+	 */
+	@Outgoing("security")
+	public PublisherBuilder<Token> getPublisher(){
+		return PublisherUtil.newPublisher(publisher);
 	}
 }

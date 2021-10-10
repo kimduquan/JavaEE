@@ -22,7 +22,7 @@ public class Encoder {
 	 * @param jsonb
 	 * @param object
 	 * @return
-	 * @throws EncodeException
+	 * @throws Exception
 	 */
 	public String encode(final Jsonb jsonb, final Object object) throws Exception {
 		final String json = jsonb.toJson(object);

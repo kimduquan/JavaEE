@@ -50,8 +50,8 @@ public class NetTest {
 	@Test
 	public void testRewriteUrlOk() throws Exception {
 		String shortUrl = Net.rewriteUrl(client, "https://google.com");
-		try(Client gateway = ClientUtil.newClient(GatewayUtil.getUrl())){
-			try(Response response = gateway.request(target -> target.path("net").path("url").queryParam("url", shortUrl), null).get()){
+		try(Client gateway = ClientUtil.newClient(GatewayUtil.get("net"))){
+			try(Response response = gateway.request(target -> target.path("url").queryParam("url", shortUrl), null).get()){
 				URI uri = response.getLocation();
 				Assert.assertEquals("Response.location", new URI("https://google.com"), uri);
 				Assert.assertEquals("Response.statusInfo", Response.Status.TEMPORARY_REDIRECT, response.getStatusInfo());

@@ -45,8 +45,8 @@ public class Remote implements Runnable, AutoCloseable {
 	public Remote(final URI uri) throws DeploymentException, IOException {
 		Objects.requireNonNull(uri, "URI");
 		client = Client.connectToServer(uri);
-		client.onMessage(this::addMessage);
 		messages = new MessageTopic();
+		client.onMessage(this::addMessage);
 	}
 	
 	/**

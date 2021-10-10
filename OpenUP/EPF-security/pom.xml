@@ -52,11 +52,16 @@
 		    <artifactId>microprofile-context-propagation-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api -->
+		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.reactive.messaging/microprofile-reactive-messaging-api -->
 		<dependency>
-		    <groupId>javax.websocket</groupId>
-		    <artifactId>javax.websocket-api</artifactId>
+		    <groupId>org.eclipse.microprofile.reactive.messaging</groupId>
+		    <artifactId>microprofile-reactive-messaging-api</artifactId>
 		    <scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients -->
+		<dependency>
+		    <groupId>org.apache.kafka</groupId>
+		    <artifactId>kafka-clients</artifactId>
 		</dependency>
         <!-- https://mvnrepository.com/artifact/com.ibm.websphere.appserver.api/com.ibm.websphere.appserver.api.jwt -->
 		<dependency>
@@ -81,7 +86,7 @@
         </dependency>
         <dependency>
             <groupId>openup</groupId>
-            <artifactId>EPF-messaging-client</artifactId>
+            <artifactId>EPF-messaging-utility</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

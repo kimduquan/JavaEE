@@ -34,6 +34,7 @@ import epf.tests.persistence.PersistenceUtil;
 import epf.tests.rules.RulesUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
+import epf.util.config.ConfigUtil;
 import epf.util.file.PathUtil;
 import epf.work_products.schema.Artifact;
 import epf.work_products.schema.WorkProducts;
@@ -74,7 +75,7 @@ public class ShellTest {
 		Path out = Files.createTempFile(tempDir, "out", "out");
 		ProcessBuilder builder = new ProcessBuilder();
 		builder.directory(workingDir.toFile());
-		builder.environment().put(Gateway.GATEWAY_URL, GatewayUtil.getUrl().toString());
+		builder.environment().put(Gateway.GATEWAY_URL, ConfigUtil.getString(Gateway.GATEWAY_URL));
 		builder.redirectOutput(out.toFile());
 		tokenID = ShellUtil.securityAuth(builder, token, out).getTokenID();
 		Files.delete(out);
@@ -92,7 +93,7 @@ public class ShellTest {
 	public static void tearDownAfterClass() throws Exception {
 		ProcessBuilder builder = new ProcessBuilder();
 		builder.directory(workingDir.toFile());
-		builder.environment().put(Gateway.GATEWAY_URL, GatewayUtil.getUrl().toString());
+		builder.environment().put(Gateway.GATEWAY_URL, ConfigUtil.getString(Gateway.GATEWAY_URL));
 		ShellUtil.securityLogout(builder, tokenID);
 		ShellUtil.securityLogout(builder, otherTokenID);
 		tempDir.toFile().delete();
@@ -108,7 +109,7 @@ public class ShellTest {
 		err = Files.createTempFile(tempDir, "err", "err");
 		builder = new ProcessBuilder();
 		builder.directory(workingDir.toFile());
-		builder.environment().put(Gateway.GATEWAY_URL, GatewayUtil.getUrl().toString());
+		builder.environment().put(Gateway.GATEWAY_URL, ConfigUtil.getString(Gateway.GATEWAY_URL));
 		builder.redirectError(err.toFile());
 		builder.redirectInput(in.toFile());
 		builder.redirectOutput(out.toFile());

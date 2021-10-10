@@ -44,6 +44,12 @@
 		    <artifactId>javax.annotation-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.json/javax.json-api -->
+		<dependency>
+		    <groupId>javax.json</groupId>
+		    <artifactId>javax.json-api</artifactId>
+		    <scope>provided</scope>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/javax.json.bind/javax.json.bind-api -->
 		<dependency>
 		    <groupId>javax.json.bind</groupId>
@@ -84,6 +90,16 @@
 		    <groupId>org.apache.kafka</groupId>
 		    <artifactId>kafka-clients</artifactId>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.jaegertracing/jaeger-client -->
+        <dependency>
+            <groupId>io.jaegertracing</groupId>
+            <artifactId>jaeger-client</artifactId>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-jdk14 -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+        </dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-client</artifactId>
@@ -101,12 +117,37 @@
         </dependency>
 		<dependency>
             <groupId>openup</groupId>
-            <artifactId>OpenUP-schema</artifactId>
+            <artifactId>EPF-schema</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-delivery-processes-schema</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-roles-schema</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-tasks-schema</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-work-products-schema</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-net-schema</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>OpenUP-schema</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

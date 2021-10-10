@@ -1,24 +1,14 @@
 package epf.persistence.impl;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.logging.Logger;
-import epf.util.config.ConfigUtil;
-import epf.util.logging.Logging;
-import epf.util.websocket.Message;
-import epf.util.websocket.MessageQueue;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
-import javax.websocket.DeploymentException;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
 import org.eclipse.microprofile.reactive.streams.operators.PublisherBuilder;
-import epf.messaging.client.Client;
-import epf.messaging.client.Messaging;
 import epf.messaging.util.PublisherUtil;
 import epf.messaging.util.reactive.ObjectPublisher;
 import epf.schema.EntityEvent;
@@ -26,6 +16,7 @@ import epf.schema.PostLoad;
 import epf.schema.PostPersist;
 import epf.schema.PostRemove;
 import epf.schema.PostUpdate;
+import epf.util.logging.Logging;
 
 /**
  * @author PC
@@ -47,22 +38,7 @@ public class Listener {
 	/**
 	 * 
 	 */
-	private transient Client client;
-	
-	/**
-	 * 
-	 */
-	private transient MessageQueue messages;
-	
-	/**
-	 * 
-	 */
-	private transient Client postLoadClient;
-	
-	/**
-	 * 
-	 */
-	private transient MessageQueue postLoadMessages;
+	private transient ObjectPublisher<PostLoad> postLoadPublisher;
 	
 	/**
 	 * 
@@ -75,21 +51,8 @@ public class Listener {
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		try {
-			final URI messagingUrl = ConfigUtil.getURI(Messaging.MESSAGING_URL);
-			client = Messaging.connectToServer(messagingUrl.resolve("persistence"));
-			client.onMessage(msg -> {});
-			messages = new MessageQueue(client.getSession());
-			executor.submit(messages);
-			postLoadClient = Messaging.connectToServer(messagingUrl.resolve("persistence/post-load"));
-			postLoadClient.onMessage(msg -> {});
-			postLoadMessages = new MessageQueue(postLoadClient.getSession());
-			executor.submit(postLoadMessages);
-			publisher = new ObjectPublisher<EntityEvent>(executor);
-		} 
-		catch (DeploymentException|IOException|URISyntaxException e) {
-			LOGGER.throwing(Messaging.class.getName(), "connectToServer", e);
-		}
+		publisher = new ObjectPublisher<EntityEvent>(executor);
+		postLoadPublisher = new ObjectPublisher<PostLoad>(executor);
 	}
 	
 	/**
@@ -99,22 +62,11 @@ public class Listener {
 	protected void preDestroy() {
 		try {
 			publisher.close();
-			messages.close();
-			client.close();
-			postLoadMessages.close();
-			postLoadClient.close();
-		} 
-		catch (Exception e) {
-			LOGGER.throwing(getClass().getName(), "preDestroy", e);
+			postLoadPublisher.close();
 		}
-	}
-	
-	/**
-	 * @param object
-	 */
-	protected void send(final Object event) {
-		final Message message = new Message(event);
-		messages.add(message);
+		catch(Exception ex) {
+			LOGGER.throwing(getClass().getName(), "preDestroy", ex);
+		}
 	}
 	
 	/**
@@ -122,7 +74,6 @@ public class Listener {
 	 */
 	public void postPersist(@Observes final PostPersist event) {
 		publisher.submit(event);
-		send(event);
 	}
 	
 	/**
@@ -130,7 +81,6 @@ public class Listener {
 	 */
 	public void postRemove(@Observes final PostRemove event) {
 		publisher.submit(event);
-		send(event);
 	}
 	
 	/**
@@ -138,19 +88,22 @@ public class Listener {
 	 */
 	public void postUpdate(@Observes final PostUpdate event) {
 		publisher.submit(event);
-		send(event);
 	}
 	
 	/**
 	 * @param event
 	 */
 	public void postLoad(@Observes final PostLoad event) {
-		final Message message = new Message(event);
-		postLoadMessages.add(message);
+		postLoadPublisher.submit(event);
 	}
 	
 	@Outgoing("persistence")
     public PublisherBuilder<? extends EntityEvent> getPublisher(){
 		return PublisherUtil.newPublisher(publisher);
+	}
+	
+	@Outgoing("persistence-load")
+    public PublisherBuilder<PostLoad> getPostLoadPublisher(){
+		return PublisherUtil.newPublisher(postLoadPublisher);
 	}
 }

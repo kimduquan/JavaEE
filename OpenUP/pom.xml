@@ -100,7 +100,6 @@
 			    <groupId>javax.security.enterprise</groupId>
 			    <artifactId>javax.security.enterprise-api</artifactId>
 			    <version>1.0</version>
-				<scope>provided</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/javax.faces/javax.faces-api -->
 			<dependency>

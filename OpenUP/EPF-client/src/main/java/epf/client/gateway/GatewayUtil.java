@@ -18,15 +18,7 @@ public interface GatewayUtil {
 	 * @throws Exception 
 	 */
 	static URI get(final String name) throws Exception {
-		return getUrl().resolve(name);
-	}
-	
-	/**
-	 * @return
-	 * @throws Exception 
-	 */
-	static URI getUrl() throws Exception {
 		final String uri = ConfigUtil.getString(Gateway.GATEWAY_URL);
-		return new URI(uri);
+		return new URI(uri).resolve(name);
 	}
 }
