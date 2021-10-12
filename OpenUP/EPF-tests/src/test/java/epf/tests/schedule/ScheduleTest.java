@@ -16,6 +16,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import epf.client.schedule.Schedule;
 import epf.client.util.Client;
+import epf.naming.Naming;
 import epf.tests.TestUtil;
 import epf.tests.client.ClientUtil;
 import epf.tests.health.HealthUtil;
@@ -40,11 +41,11 @@ public class ScheduleTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		HealthUtil.readỵ̣();
-		scheduleUrl = ConfigUtil.getURI(epf.client.schedule.Schedule.SCHEDULE_URL);
+		scheduleUrl = ConfigUtil.getURI(Naming.Schedule.SCHEDULE_URL);
 		client = ClientUtil.newClient(scheduleUrl);
 		token = SecurityUtil.login();
 		client.authorization(token);
-		URI messagingUrl = ConfigUtil.getURI(epf.messaging.client.Messaging.MESSAGING_URL);
+		URI messagingUrl = ConfigUtil.getURI(Naming.Messaging.MESSAGING_URL);
 		shell = epf.util.websocket.Client.connectToServer(messagingUrl.resolve("schedule/shell"));
 		messages = new ConcurrentLinkedQueue<>();
 		shell.onMessage(messages::add);

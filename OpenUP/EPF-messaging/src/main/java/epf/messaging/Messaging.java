@@ -21,6 +21,7 @@ import javax.websocket.server.ServerEndpoint;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.messaging.client.MessageDecoder;
 import epf.messaging.client.MessageEncoder;
+import epf.naming.Naming;
 import epf.util.logging.Logging;
 import epf.util.websocket.Server;
 
@@ -59,16 +60,16 @@ public class Messaging {
 	@PostConstruct
 	protected void postConstruct() {
 		final Server persistence = new Server();
-		servers.put("persistence", persistence);
+		servers.put(Naming.PERSISTENCE, persistence);
 		executor.submit(persistence);
 		final Server cache = new Server();
-		servers.put("cache", cache);
+		servers.put(Naming.CACHE, cache);
 		executor.submit(cache);
 		final Server security = new Server();
-		servers.put("security", security);
+		servers.put(Naming.SECURITY, security);
 		executor.submit(security);
 		final Server schedule = new Server();
-		servers.put("schedule", schedule);
+		servers.put(Naming.SCHEDULE, schedule);
 		executor.submit(schedule);
 	}
 	

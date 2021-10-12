@@ -20,6 +20,7 @@ import org.eclipse.microprofile.reactive.messaging.Incoming;
 import epf.cache.Manager;
 import epf.messaging.client.Client;
 import epf.messaging.client.Messaging;
+import epf.naming.Naming;
 import epf.schema.EntityEvent;
 import epf.schema.PostLoad;
 import epf.util.concurrent.ObjectQueue;
@@ -88,12 +89,12 @@ public class Persistence implements HealthCheck {
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		cache = manager.getCache("persistence");
+		cache = manager.getCache(Naming.PERSISTENCE);
 		entityCache = new EntityCache(cache);
 		executor.submit(entityCache);
 		try {
-			final URI messagingUrl = ConfigUtil.getURI(Messaging.MESSAGING_URL);
-			client = Messaging.connectToServer(messagingUrl.resolve("persistence"));
+			final URI messagingUrl = ConfigUtil.getURI(Naming.Messaging.MESSAGING_URL);
+			client = Messaging.connectToServer(messagingUrl.resolve(Naming.PERSISTENCE));
 			client.onMessage(msg -> {});
 			messages = new MessageQueue(client.getSession());
 			executor.submit(messages);

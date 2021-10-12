@@ -15,6 +15,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import epf.client.script.Script;
 import epf.client.util.Client;
+import epf.naming.Naming;
 import epf.tests.client.ClientUtil;
 import epf.tests.security.SecurityUtil;
 import epf.client.gateway.GatewayUtil;
@@ -34,7 +35,7 @@ public class ScriptTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		scriptUrl = GatewayUtil.get("script");
+		scriptUrl = GatewayUtil.get(Naming.SCRIPT);
 		token = SecurityUtil.login();
 	}
 

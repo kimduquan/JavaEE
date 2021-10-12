@@ -10,7 +10,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import epf.client.EPFException;
+
+import epf.util.EPFException;
 import epf.util.Var;
 
 /**

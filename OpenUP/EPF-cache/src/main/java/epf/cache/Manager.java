@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
+import epf.naming.Naming;
 
 /**
  * @author PC
@@ -40,8 +41,8 @@ public class Manager implements HealthCheck {
 	protected void postConstruct() {
 		manager = Caching.getCachingProvider().getCacheManager();
 		final MutableConfiguration<String, Object> config = new MutableConfiguration<>();
-		manager.createCache("persistence", config);
-		manager.createCache("security", config);
+		manager.createCache(Naming.PERSISTENCE, config);
+		manager.createCache(Naming.SECURITY, config);
 		listener.registerEvents(manager);
 	}
 	

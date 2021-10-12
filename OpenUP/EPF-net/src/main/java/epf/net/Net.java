@@ -12,20 +12,20 @@ import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.client.gateway.GatewayUtil;
 import epf.client.persistence.Entities;
-import epf.client.security.Security;
 import epf.client.util.Client;
 import epf.client.util.ClientUtil;
 import epf.net.schema.URL;
 import epf.util.StringUtil;
 import epf.util.http.SessionUtil;
+import epf.naming.Naming;
 
 /**
  * @author PC
  *
  */
-@Path("net")
+@Path(Naming.NET)
 @ApplicationScoped
-@RolesAllowed(Security.DEFAULT_ROLE)
+@RolesAllowed(Naming.Security.DEFAULT_ROLE)
 public class Net implements epf.client.net.Net {
 	
 	/**
@@ -48,12 +48,12 @@ public class Net implements epf.client.net.Net {
 		url.setRef(rawUrl.getRef());
 		url.setString(rawUrl.toString());
 		url.setUserInfo(rawUrl.getUserInfo());
-		try(Client client = clientUtil.newClient(GatewayUtil.get("persistence"))){
+		try(Client client = clientUtil.newClient(GatewayUtil.get(Naming.PERSISTENCE))){
 			final JsonWebToken jwt = (JsonWebToken) security.getUserPrincipal();
 			client.authorization(jwt.getRawToken());
 			final URL resultUrl = Entities.persist(client, URL.class, epf.net.schema.Net.SCHEMA, epf.net.schema.Net.URL, url);
 			final String shortString = StringUtil.toShortString(resultUrl.getId());
-			SessionUtil.setMapAttribute(request, "epf.net.url", "urls", shortString, rawUrl.toString());
+			SessionUtil.setMapAttribute(request, Naming.Net.NET_URL, "urls", shortString, rawUrl.toString());
 			return shortString;
 		}
 	}

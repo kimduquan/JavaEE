@@ -25,6 +25,7 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.gateway.security.SecurityUtil;
+import epf.naming.Naming;
 import epf.util.config.ConfigUtil;
 import epf.util.logging.Logging;
 
@@ -63,9 +64,9 @@ public class Messaging {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI messagingUrl = ConfigUtil.getURI("epf.messaging.url");
-			final Remote persistence = new Remote(messagingUrl.resolve("persistence"));
-			remotes.put("persistence", persistence);
+			final URI messagingUrl = ConfigUtil.getURI(Naming.Messaging.MESSAGING_URL);
+			final Remote persistence = new Remote(messagingUrl.resolve(Naming.PERSISTENCE));
+			remotes.put(Naming.PERSISTENCE, persistence);
 			executor.submit(persistence);
 		} 
 		catch (URISyntaxException | DeploymentException | IOException e) {

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.client.security.jwt;
+package epf.security.client.jwt;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.eclipse.microprofile.jwt.JsonWebToken;
-import epf.client.security.Token;
+import epf.security.schema.Token;
 
 /**
  * @author PC

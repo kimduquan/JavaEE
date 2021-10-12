@@ -6,6 +6,7 @@ package epf.shell.rules;
 import javax.ws.rs.core.Response;
 import epf.client.gateway.GatewayUtil;
 import epf.client.util.Client;
+import epf.naming.Naming;
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
 import epf.shell.rules.admin.Admin;
@@ -21,7 +22,7 @@ import picocli.CommandLine.Option;
  * @author PC
  *
  */
-@Command(name = "rules", subcommands = {Admin.class})
+@Command(name = Naming.RULES, subcommands = {Admin.class})
 @RequestScoped
 @Function
 public class Rules {
@@ -49,7 +50,7 @@ public class Rules {
 			@Option(names = {"-i", "--input"}, description = "Input", interactive = true, echo = true)
 			final String input
 			) throws Exception {
-		try(Client client = clientUtil.newClient(GatewayUtil.get("rules"))){
+		try(Client client = clientUtil.newClient(GatewayUtil.get(Naming.RULES))){
 			client.authorization(credential.getToken());
 			try(Response response = epf.client.rules.Rules.executeRules(client, ruleSet, input)){
 				return response.readEntity(String.class);
@@ -73,7 +74,7 @@ public class Rules {
 			@Option(names = {"-o", "--object"}, description = "Object", interactive = true, echo = true)
 			final String object
 			) throws Exception {
-		try(Client client = clientUtil.newClient(GatewayUtil.get("rules"))){
+		try(Client client = clientUtil.newClient(GatewayUtil.get(Naming.RULES))){
 			client.authorization(credential.getToken());
 			try(Response response = epf.client.rules.Rules.addObject(client, ruleSet, object)){
 				response.getStatus();
@@ -95,7 +96,7 @@ public class Rules {
 			@Option(names = {"-r", "--rule_set"}, description = "Rule Set")
 			final String ruleSet
 			) throws Exception {
-		try(Client client = clientUtil.newClient(GatewayUtil.get("rules"))){
+		try(Client client = clientUtil.newClient(GatewayUtil.get(Naming.RULES))){
 			client.authorization(credential.getToken());
 			try(Response response = epf.client.rules.Rules.executeRules(client, ruleSet)){
 				return response.readEntity(String.class);
@@ -113,7 +114,7 @@ public class Rules {
 			@ArgGroup(exclusive = true, multiplicity = "1")
 			@CallerPrincipal
 			final Credential credential) throws Exception {
-		try(Client client = clientUtil.newClient(GatewayUtil.get("rules"))){
+		try(Client client = clientUtil.newClient(GatewayUtil.get(Naming.RULES))){
 			client.authorization(credential.getToken());
 			try(Response response = epf.client.rules.Rules.getRegistrations(client)){
 				return response.readEntity(String.class);

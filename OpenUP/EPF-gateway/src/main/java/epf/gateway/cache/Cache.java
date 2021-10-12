@@ -19,12 +19,13 @@ import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
 import org.eclipse.microprofile.faulttolerance.Asynchronous;
 import epf.gateway.Request;
+import epf.naming.Naming;
 
 /**
  * @author PC
  *
  */
-@Path("cache")
+@Path(Naming.CACHE)
 @ApplicationScoped
 public class Cache {
 

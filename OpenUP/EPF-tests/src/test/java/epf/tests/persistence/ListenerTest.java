@@ -17,6 +17,7 @@ import org.junit.BeforeClass;
 import epf.client.gateway.GatewayUtil;
 import epf.client.persistence.Entities;
 import epf.messaging.client.MessageDecoder;
+import epf.naming.Naming;
 import epf.schema.PostPersist;
 import epf.schema.PostRemove;
 import epf.tests.TestUtil;
@@ -51,8 +52,8 @@ public class ListenerTest {
     
     @BeforeClass
     public static void beforeClass() throws Exception{
-    	persistenceUrl = GatewayUtil.get("persistence");
-    	URI messagingUrl = UriBuilder.fromUri(GatewayUtil.get("messaging")).scheme("ws").port(9080).build();
+    	persistenceUrl = GatewayUtil.get(Naming.PERSISTENCE);
+    	URI messagingUrl = UriBuilder.fromUri(GatewayUtil.get(Naming.PERSISTENCE)).scheme("ws").port(9080).build();
     	token = SecurityUtil.login();
     	tokenId = SecurityUtil.auth(token).getTokenID();
     	listenerUrl = new URI(messagingUrl.toString() + "/persistence?tid=" + tokenId);

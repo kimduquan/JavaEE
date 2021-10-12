@@ -31,7 +31,7 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import epf.client.persistence.SearchData;
-import epf.client.security.Security;
+import epf.naming.Naming;
 import epf.persistence.impl.Entity;
 import epf.persistence.impl.QueryBuilder;
 import epf.roles.schema.Roles;
@@ -41,8 +41,8 @@ import epf.roles.schema.internal.QueryNames;
  *
  * @author FOXCONN
  */
-@Path("persistence")
-@RolesAllowed(Security.DEFAULT_ROLE)
+@Path(Naming.PERSISTENCE)
+@RolesAllowed(Naming.Security.DEFAULT_ROLE)
 @RequestScoped
 public class Queries implements epf.client.persistence.Queries {
     

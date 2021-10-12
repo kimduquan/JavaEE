@@ -114,8 +114,8 @@ public class Persistence implements PersistenceView, Serializable {
 					.filter(AttributeUtil::isBasic)
 					.collect(Collectors.toList());
 			try {
-				firstResult = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT));
-				final int maxResults = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT));
+				firstResult = Integer.valueOf(configUtil.getProperty(epf.naming.Naming.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT));
+				final int maxResults = Integer.valueOf(configUtil.getProperty(epf.naming.Naming.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT));
 				objects = entityUtil.getEntities(entity.getTable().getSchema(), entity.getName(), firstResult, maxResults);
 			}
 			catch (Exception e) {
@@ -145,7 +145,7 @@ public class Persistence implements PersistenceView, Serializable {
 				final JsonValue idValue = object.get(id.getName());
 				if(idValue != null) {
 					final String value = JsonUtil.toString(idValue);
-					try(Client client = clientUtil.newClient(gatewayUtil.get("persistence"))){
+					try(Client client = clientUtil.newClient(gatewayUtil.get(epf.naming.Naming.PERSISTENCE))){
 						epf.client.persistence.Entities.remove(client, entity.getTable().getSchema(), entity.getName(), value);
 					}
 				}

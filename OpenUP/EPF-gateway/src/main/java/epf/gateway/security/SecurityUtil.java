@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import epf.gateway.cache.CacheUtil;
+import epf.naming.Naming;
 import epf.util.config.ConfigUtil;
 
 /**
@@ -56,11 +57,11 @@ public interface SecurityUtil {
 	 */
 	static boolean authenticateTokenId(final String tokenId) throws Exception {
 		boolean succeed = false;
-		final URI cacheUrl = ConfigUtil.getURI("epf.cache.url");
+		final URI cacheUrl = ConfigUtil.getURI(Naming.Cache.CACHE_URL);
 		final Map<String, Object> data = RestClientBuilder.newBuilder().baseUri(cacheUrl).build(CacheUtil.class).getToken(tokenId);
 		if(data != null && data.containsKey("rawToken")) {
 			final String rawToken = (String) data.get("rawToken");
-			final URI securityUrl = ConfigUtil.getURI("epf.security.url");
+			final URI securityUrl = ConfigUtil.getURI(Naming.Security.SECURITY_URL);
 			final StringBuilder builder = new StringBuilder();
 			builder.append("Bearer ").append(rawToken);
 			try(Response response = RestClientBuilder.newBuilder().baseUri(securityUrl).build(SecurityUtil.class).authenticate(builder.toString())){

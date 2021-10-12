@@ -20,16 +20,17 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-import epf.client.EPFException;
-import epf.client.security.Security;
+
 import epf.persistence.impl.Entity;
+import epf.util.EPFException;
+import epf.naming.Naming;
 
 /**
  *
  * @author FOXCONN
  */
-@Path("persistence")
-@RolesAllowed(Security.DEFAULT_ROLE)
+@Path(Naming.PERSISTENCE)
+@RolesAllowed(Naming.Security.DEFAULT_ROLE)
 @RequestScoped
 public class Entities implements epf.client.persistence.Entities {
 	

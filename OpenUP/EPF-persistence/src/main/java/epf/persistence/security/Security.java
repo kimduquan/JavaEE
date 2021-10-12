@@ -29,13 +29,15 @@ import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.jwt.config.Names;
-import epf.client.EPFException;
-import epf.client.security.Token;
-import epf.client.security.jwt.JWT;
-import epf.client.security.jwt.TokenUtil;
+
+import epf.naming.Naming;
 import epf.persistence.context.Application;
 import epf.persistence.context.Credential;
 import epf.persistence.context.Session;
+import epf.security.client.jwt.JWT;
+import epf.security.client.jwt.TokenUtil;
+import epf.security.schema.Token;
+import epf.util.EPFException;
 import epf.util.logging.Logging;
 import epf.util.security.KeyUtil;
 
@@ -43,10 +45,10 @@ import epf.util.security.KeyUtil;
  *
  * @author FOXCONN
  */
-@Path("security")
-@RolesAllowed(epf.client.security.Security.DEFAULT_ROLE)
+@Path(Naming.SECURITY)
+@RolesAllowed(Naming.Security.DEFAULT_ROLE)
 @RequestScoped
-public class Security implements epf.client.security.Security, epf.client.security.otp.OTPSecurity, Serializable {
+public class Security implements epf.security.client.Security, epf.security.client.otp.OTPSecurity, Serializable {
     
     /**
     * 
@@ -139,7 +141,7 @@ public class Security implements epf.client.security.Security, epf.client.securi
     	token.setAudience(new HashSet<>(Arrays.asList(String.format(AUDIENCE_FORMAT, url.getProtocol(), url.getHost(), url.getPort()))));
     	token.setClaims(new HashMap<>());
     	token.setExpirationTime(now + Duration.of(expireAmount, expireTimeUnit).getSeconds());
-    	token.setGroups(new HashSet<>(Arrays.asList(DEFAULT_ROLE)));
+    	token.setGroups(new HashSet<>(Arrays.asList(Naming.Security.DEFAULT_ROLE)));
     	token.setIssuedAtTime(now);
     	token.setIssuer(issuer);
     	token.setName(username);

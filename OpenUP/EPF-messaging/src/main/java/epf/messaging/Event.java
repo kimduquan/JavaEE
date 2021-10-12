@@ -22,6 +22,7 @@ import org.eclipse.microprofile.context.ManagedExecutor;
 
 import epf.messaging.client.MessageDecoder;
 import epf.messaging.client.MessageEncoder;
+import epf.naming.Naming;
 import epf.util.logging.Logging;
 import epf.util.websocket.Server;
 
@@ -65,13 +66,13 @@ public class Event {
 	@PostConstruct
 	protected void postConstruct() {
 		final Map<String, Server> scheduleServer = new ConcurrentHashMap<>();
-		servers.put("schedule", scheduleServer);
+		servers.put(Naming.SCHEDULE, scheduleServer);
 		final Server shellEvent = new Server();
 		scheduleServer.put("shell", shellEvent);
 		executor.submit(shellEvent);
 		
 		final Map<String, Server> persistenceServer = new ConcurrentHashMap<>();
-		servers.put("persistence", persistenceServer);
+		servers.put(Naming.PERSISTENCE, persistenceServer);
 		final Server postLoadEvent = new Server();
 		persistenceServer.put("post-load", postLoadEvent);
 		executor.submit(postLoadEvent);

@@ -52,6 +52,16 @@
 			<artifactId>javax.annotation-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-naming</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-security-schema</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-validation</artifactId>

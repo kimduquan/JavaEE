@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.client.security;
+package epf.security.client;
 
 import java.io.Serializable;
 import java.util.Arrays;

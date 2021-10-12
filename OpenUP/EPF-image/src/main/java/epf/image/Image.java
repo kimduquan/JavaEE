@@ -17,14 +17,14 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
-import epf.client.security.Security;
+import epf.naming.Naming;
 
 /**
  * @author PC
  *
  */
-@Path("image")
-@RolesAllowed(Security.DEFAULT_ROLE)
+@Path(Naming.IMAGE)
+@RolesAllowed(Naming.Security.DEFAULT_ROLE)
 @ApplicationScoped
 public class Image implements epf.client.image.Image {
 	
@@ -38,7 +38,7 @@ public class Image implements epf.client.image.Image {
 
 	@Override
 	public Response findContours(final InputStream input) throws Exception {
-		final java.nio.file.Path path = Files.createTempFile("image", ".img");
+		final java.nio.file.Path path = Files.createTempFile(Naming.IMAGE, ".img");
 		Files.copy(input, path);
 		final Mat image = Imgcodecs.imread(path.toString());
 		Files.delete(path);

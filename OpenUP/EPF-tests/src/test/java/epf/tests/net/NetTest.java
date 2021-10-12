@@ -12,6 +12,7 @@ import epf.client.gateway.GatewayUtil;
 import epf.client.net.Net;
 import epf.client.persistence.Entities;
 import epf.client.util.Client;
+import epf.naming.Naming;
 import epf.tests.client.ClientUtil;
 import epf.tests.health.HealthUtil;
 import epf.tests.security.SecurityUtil;
@@ -28,7 +29,7 @@ public class NetTest {
 	public static void setUpBeforeClass() throws Exception {
 		HealthUtil.readỵ̣();
 		token = SecurityUtil.login();
-		netUrl = GatewayUtil.get("net");
+		netUrl = GatewayUtil.get(Naming.NET);
 	}
 
 	@AfterClass
@@ -50,7 +51,7 @@ public class NetTest {
 	@Test
 	public void testRewriteUrlOk() throws Exception {
 		String shortUrl = Net.rewriteUrl(client, "https://google.com");
-		try(Client gateway = ClientUtil.newClient(GatewayUtil.get("net"))){
+		try(Client gateway = ClientUtil.newClient(GatewayUtil.get(Naming.NET))){
 			try(Response response = gateway.request(target -> target.path("url").queryParam("url", shortUrl), null).get()){
 				URI uri = response.getLocation();
 				Assert.assertEquals("Response.location", new URI("https://google.com"), uri);
@@ -58,7 +59,7 @@ public class NetTest {
 			}
 		}
 		int id = StringUtil.fromShortString(shortUrl);
-		try(Client entities = ClientUtil.newClient(GatewayUtil.get("persistence"))){
+		try(Client entities = ClientUtil.newClient(GatewayUtil.get(Naming.PERSISTENCE))){
 			Entities.remove(entities, epf.net.schema.Net.SCHEMA, epf.net.schema.Net.URL, String.valueOf(id));
 		}
 	}

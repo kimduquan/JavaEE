@@ -17,6 +17,7 @@ import epf.cache.internal.event.EntryRemovedListener;
 import epf.cache.internal.event.EntryUpdatedListener;
 import epf.messaging.client.Client;
 import epf.messaging.client.Messaging;
+import epf.naming.Naming;
 import epf.util.config.ConfigUtil;
 import epf.util.logging.Logging;
 import epf.util.websocket.MessageQueue;
@@ -75,8 +76,8 @@ public class Listener {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI messagingUrl = ConfigUtil.getURI(Messaging.MESSAGING_URL);
-			client = Messaging.connectToServer(messagingUrl.resolve("cache"));
+			final URI messagingUrl = ConfigUtil.getURI(Naming.Messaging.MESSAGING_URL);
+			client = Messaging.connectToServer(messagingUrl.resolve(Naming.CACHE));
 			events = new MessageQueue(client.getSession());
 			executor.submit(events);
 			created = new EntryCreatedListener(events);

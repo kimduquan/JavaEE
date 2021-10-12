@@ -11,6 +11,7 @@ import org.eclipse.microprofile.reactive.messaging.Outgoing;
 import org.eclipse.microprofile.reactive.streams.operators.PublisherBuilder;
 import epf.messaging.util.PublisherUtil;
 import epf.messaging.util.reactive.ObjectPublisher;
+import epf.naming.Naming;
 import epf.schema.EntityEvent;
 import epf.schema.PostLoad;
 import epf.schema.PostPersist;
@@ -97,7 +98,7 @@ public class Listener {
 		postLoadPublisher.submit(event);
 	}
 	
-	@Outgoing("persistence")
+	@Outgoing(Naming.PERSISTENCE)
     public PublisherBuilder<? extends EntityEvent> getPublisher(){
 		return PublisherUtil.newPublisher(publisher);
 	}

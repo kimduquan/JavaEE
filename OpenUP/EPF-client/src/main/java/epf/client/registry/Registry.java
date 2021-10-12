@@ -18,18 +18,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import epf.client.util.Client;
+import epf.naming.Naming;
 
 /**
  * @author PC
  *
  */
-@Path("registry")
+@Path(Naming.REGISTRY)
 public interface Registry {
-	
-    /**
-     * 
-     */
-    String REGISTRY_URL = "epf.registry.url";
     
 	/**
 	 * 

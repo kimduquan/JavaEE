@@ -12,9 +12,10 @@ import javax.inject.Inject;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
 import org.eclipse.microprofile.reactive.streams.operators.PublisherBuilder;
-import epf.client.security.Token;
 import epf.messaging.util.PublisherUtil;
 import epf.messaging.util.reactive.ObjectPublisher;
+import epf.naming.Naming;
+import epf.security.schema.Token;
 import epf.util.logging.Logging;
 
 /**
@@ -71,7 +72,7 @@ public class Application {
 	/**
 	 * @return
 	 */
-	@Outgoing("security")
+	@Outgoing(Naming.SECURITY)
 	public PublisherBuilder<Token> getPublisher(){
 		return PublisherUtil.newPublisher(publisher);
 	}

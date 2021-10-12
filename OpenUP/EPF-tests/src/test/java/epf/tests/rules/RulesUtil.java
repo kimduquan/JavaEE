@@ -13,6 +13,7 @@ import javax.json.bind.JsonbConfig;
 import javax.ws.rs.core.Response;
 import epf.client.gateway.GatewayUtil;
 import epf.client.util.Client;
+import epf.naming.Naming;
 import epf.tests.client.ClientUtil;
 import epf.util.json.Adapter;
 import epf.util.json.Decoder;
@@ -25,7 +26,7 @@ import epf.util.json.Encoder;
 public class RulesUtil {
 
 	public static void registerRuleExecutionSet(String token, Path ruleFile, String ruleSet) throws Exception {
-		try(Client client = ClientUtil.newClient(GatewayUtil.get("rules"))){
+		try(Client client = ClientUtil.newClient(GatewayUtil.get(Naming.RULES))){
 			client.authorization(token);
 			try(InputStream input = Files.newInputStream(ruleFile)){
 				try(Response response = epf.client.rules.admin.Admin.registerRuleExecutionSet(client, ruleSet, input)){

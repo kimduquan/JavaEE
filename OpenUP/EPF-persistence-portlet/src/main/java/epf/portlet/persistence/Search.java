@@ -82,8 +82,8 @@ public class Search implements SearchView, Serializable {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			firstResult = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT));
-			maxResults = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT));
+			firstResult = Integer.valueOf(configUtil.getProperty(epf.naming.Naming.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT));
+			maxResults = Integer.valueOf(configUtil.getProperty(epf.naming.Naming.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT));
 		}
 		catch (Exception e) {
 			LOGGER.throwing(getClass().getName(), "postConstruct", e);
@@ -92,7 +92,7 @@ public class Search implements SearchView, Serializable {
 	
 	@Override
 	public void search() throws Exception{
-		try(Client client = clientUtil.newClient(gatewayUtil.get("persistence"))){
+		try(Client client = clientUtil.newClient(gatewayUtil.get(epf.naming.Naming.PERSISTENCE))){
 			try(Response response = epf.client.persistence.Queries.search(client, text, firstResult, maxResults)){
 				resultList = response.readEntity(new GenericType<List<SearchData>>() {});
 			}

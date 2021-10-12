@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
-import epf.client.security.Token;
-import epf.client.shell.Shell;
+import epf.naming.Naming;
+import epf.security.schema.Token;
 import epf.tests.TestUtil;
 import epf.util.file.PathUtil;
 
@@ -29,7 +29,7 @@ public class ShellUtil {
 	/**
 	 * 
 	 */
-	private static final String COMMAND = System.getProperty(Shell.SHELL_COMMAND);
+	private static final String COMMAND = System.getProperty(Naming.Shell.SHELL_COMMAND);
 	
 	/**
 	 * 
@@ -41,7 +41,7 @@ public class ShellUtil {
 	 */
 	public static Path getShellPath() {
 		if(shellPath == null) {
-			shellPath = PathUtil.of(System.getProperty(Shell.SHELL_PATH));
+			shellPath = PathUtil.of(System.getProperty(Naming.Shell.SHELL_PATH));
 		}
 		return shellPath;
 	}
@@ -86,7 +86,7 @@ public class ShellUtil {
 	}
 	
 	public static Token securityAuth(ProcessBuilder builder, String token, Path out) throws Exception {
-		builder = command(builder, "./epf", "security", "auth", "-t", token);
+		builder = command(builder, "./epf", Naming.SECURITY, "auth", "-t", token);
 		Process process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
 		process.destroyForcibly();
@@ -96,7 +96,7 @@ public class ShellUtil {
 	}
 	
 	public static void securityLogout(ProcessBuilder builder, String tokenID) throws Exception {
-		builder = command(builder, "./epf", "security", "logout", "-tid", tokenID);
+		builder = command(builder, "./epf", Naming.SECURITY, "logout", "-tid", tokenID);
 		Process process = ShellUtil.waitFor(builder);
 		process.destroyForcibly();
 	}

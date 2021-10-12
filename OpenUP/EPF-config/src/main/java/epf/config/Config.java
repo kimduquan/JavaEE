@@ -13,13 +13,14 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Path;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import epf.naming.Naming;
 
 /**
  *
  * @author FOXCONN
  */
 @ApplicationScoped
-@Path("config")
+@Path(Naming.CONFIG)
 public class Config implements epf.client.config.Config {
     
     /**
@@ -30,14 +31,14 @@ public class Config implements epf.client.config.Config {
     /**
      * 
      */
-    @ConfigProperty(name = epf.client.persistence.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT)
+    @ConfigProperty(name = Naming.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT)
 	@Inject
 	private transient int firstResultDefault;
     
     /**
      * 
      */
-    @ConfigProperty(name = epf.client.persistence.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT)
+    @ConfigProperty(name = Naming.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT)
 	@Inject
 	private transient int maxResultsDefault;
     
@@ -46,8 +47,8 @@ public class Config implements epf.client.config.Config {
      */
     @PostConstruct
     protected void postConstruct() {
-    	configs.put(epf.client.persistence.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT, String.valueOf(firstResultDefault));
-    	configs.put(epf.client.persistence.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT, String.valueOf(maxResultsDefault));
+    	configs.put(Naming.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT, String.valueOf(firstResultDefault));
+    	configs.put(Naming.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT, String.valueOf(maxResultsDefault));
     }
     
     @Override

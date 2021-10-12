@@ -16,12 +16,13 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.faulttolerance.Asynchronous;
 import epf.gateway.Request;
+import epf.naming.Naming;
 
 /**
  * @author PC
  *
  */
-@Path("schema")
+@Path(Naming.SCHEMA)
 @ApplicationScoped
 public class Schema {
     

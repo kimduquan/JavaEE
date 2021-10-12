@@ -29,6 +29,7 @@ import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.gateway.security.SecurityUtil;
+import epf.naming.Naming;
 import epf.util.config.ConfigUtil;
 import epf.util.websocket.Client;
 
@@ -68,8 +69,8 @@ public class Stream {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI messagingUrl = ConfigUtil.getURI("epf.messaging.url");
-			clients.put("persistence", Client.connectToServer(messagingUrl.resolve("persistence")));
+			final URI messagingUrl = ConfigUtil.getURI(Naming.Messaging.MESSAGING_URL);
+			clients.put("persistence", Client.connectToServer(messagingUrl.resolve(Naming.PERSISTENCE)));
 		} 
 		catch (URISyntaxException | DeploymentException | IOException e) {
 			logger.log(Level.SEVERE, "postConstruct", e);

@@ -13,7 +13,8 @@ import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import epf.cache.Manager;
-import epf.client.security.Token;
+import epf.naming.Naming;
+import epf.security.schema.Token;
 
 /**
  * @author PC
@@ -45,7 +46,7 @@ public class Security implements HealthCheck {
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		tokenCache = new TokenCache(manager.getCache("security"));
+		tokenCache = new TokenCache(manager.getCache(Naming.SECURITY));
 		executor.submit(tokenCache);
 	}
 	
@@ -70,7 +71,7 @@ public class Security implements HealthCheck {
 		return HealthCheckResponse.up("EPF-security-cache");
 	}
 	
-	@Incoming("security")
+	@Incoming(Naming.SECURITY)
 	public void newToken(final Token token) {
 		tokenCache.add(token);
 	}

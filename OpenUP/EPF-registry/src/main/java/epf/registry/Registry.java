@@ -13,21 +13,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
-import epf.client.cache.Cache;
-import epf.client.config.Config;
-import epf.client.file.Files;
-import epf.client.gateway.Gateway;
-import epf.client.image.Image;
-import epf.client.lang.Lang;
-import epf.client.management.Management;
-import epf.client.net.Net;
-import epf.client.script.Script;
-import epf.client.persistence.Persistence;
-import epf.client.planning.Planning;
-import epf.client.rules.Rules;
-import epf.client.schema.Schema;
-import epf.client.security.Security;
-import epf.messaging.client.Messaging;
+import epf.naming.Naming;
 import epf.util.config.ConfigUtil;
 import openup.client.delivery_processes.DeliveryProcesses;
 import openup.client.roles.Roles;
@@ -38,7 +24,7 @@ import openup.client.work_products.WorkProducts;
  * @author PC
  *
  */
-@Path("registry")
+@Path(Naming.REGISTRY)
 @ApplicationScoped
 public class Registry implements epf.client.registry.Registry {
 	
@@ -72,52 +58,39 @@ public class Registry implements epf.client.registry.Registry {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI netUrl = ConfigUtil.getURI(Net.NET_URL);
-			String remote = "net";
-			remotes.put(remote, netUrl);
-			remote = "file";
-			final URI fileUrl = ConfigUtil.getURI(Files.FILE_URL);
-			remotes.put(remote, fileUrl);
-			final URI persistenceUrl = ConfigUtil.getURI(Persistence.PERSISTENCE_URL);
-			remote = "persistence";
-			remotes.put(remote, persistenceUrl);
-			final URI securityUrl = ConfigUtil.getURI(Security.SECURITY_URL);
-			remote = "security";
-			remotes.put(remote, securityUrl);
-			final URI gatewayUrl = ConfigUtil.getURI(Gateway.GATEWAY_URL);
+			final URI netUrl = ConfigUtil.getURI(Naming.Net.NET_URL);
+			String remote;
+			remotes.put(Naming.NET, netUrl);
+			final URI fileUrl = ConfigUtil.getURI(Naming.File.FILE_URL);
+			remotes.put(Naming.FILE, fileUrl);
+			final URI persistenceUrl = ConfigUtil.getURI(Naming.Persistence.PERSISTENCE_URL);
+			remotes.put(Naming.PERSISTENCE, persistenceUrl);
+			final URI securityUrl = ConfigUtil.getURI(Naming.Security.SECURITY_URL);
+			remotes.put(Naming.SECURITY, securityUrl);
+			final URI gatewayUrl = ConfigUtil.getURI(Naming.Gateway.GATEWAY_URL);
 			remote = "stream";
-			remotes.put(remote, gatewayUrl.resolve(remote));
-			final URI registryUrl = ConfigUtil.getURI(Registry.REGISTRY_URL);
-			remote = "registry";
-			remotes.put(remote, registryUrl);
-			final URI messagingUrl = ConfigUtil.getURI(Messaging.MESSAGING_URL);
-			remote = "messaging";
-			remotes.put(remote, messagingUrl);
-			final URI cacheUrl = ConfigUtil.getURI(Cache.CACHE_URL);
-			remote = "cache";
-			remotes.put(remote, cacheUrl);
-			final URI configUrl = ConfigUtil.getURI(Config.CONFIG_URL);
-			remote = "config";
-			remotes.put(remote, configUrl);
-			final URI scriptUrl = ConfigUtil.getURI(Script.SCRIPT_URL);
-			remote = "script";
-			remotes.put(remote, scriptUrl);
-			final URI managementUrl = ConfigUtil.getURI(Management.MANAGEMENT_URL);
-			remote = "management";
-			remotes.put(remote, managementUrl);
-			final URI rulesUrl = ConfigUtil.getURI(Rules.RULES_URL);
-			remote = "rules";
-			remotes.put(remote, rulesUrl);
-			final URI schemaUrl = ConfigUtil.getURI(Schema.SCHEMA_URL);
-			remote = "schema";
-			remotes.put(remote, schemaUrl);
-			final URI planningUrl = ConfigUtil.getURI(Planning.PLANNING_URL);
-			remote = "planning";
-			remotes.put(remote, planningUrl);
-			final URI imageUrl = ConfigUtil.getURI(Image.IMAGE_URL);
-			remote = "image";
-			remotes.put(remote, imageUrl);
-			final URI langUrl = ConfigUtil.getURI(Lang.LANG_URL);
+			remotes.put("stream", gatewayUrl.resolve(remote));
+			final URI registryUrl = ConfigUtil.getURI(Naming.Registry.REGISTRY_URL);
+			remotes.put(Naming.REGISTRY, registryUrl);
+			final URI messagingUrl = ConfigUtil.getURI(Naming.Messaging.MESSAGING_URL);
+			remotes.put(Naming.MESSAGING, messagingUrl);
+			final URI cacheUrl = ConfigUtil.getURI(Naming.Cache.CACHE_URL);
+			remotes.put(Naming.CACHE, cacheUrl);
+			final URI configUrl = ConfigUtil.getURI(Naming.Config.CONFIG_URL);
+			remotes.put(Naming.CONFIG, configUrl);
+			final URI scriptUrl = ConfigUtil.getURI(Naming.Script.SCRIPT_URL);
+			remotes.put(Naming.SCRIPT, scriptUrl);
+			final URI managementUrl = ConfigUtil.getURI(Naming.Management.MANAGEMENT_URL);
+			remotes.put(Naming.MANAGEMENT, managementUrl);
+			final URI rulesUrl = ConfigUtil.getURI(Naming.Rules.RULES_URL);
+			remotes.put(Naming.RULES, rulesUrl);
+			final URI schemaUrl = ConfigUtil.getURI(Naming.Schema.SCHEMA_URL);
+			remotes.put(Naming.SCHEMA, schemaUrl);
+			final URI planningUrl = ConfigUtil.getURI(Naming.Planning.PLANNING_URL);
+			remotes.put(Naming.PLANNING, planningUrl);
+			final URI imageUrl = ConfigUtil.getURI(Naming.Image.IMAGE_URL);
+			remotes.put(Naming.IMAGE, imageUrl);
+			final URI langUrl = ConfigUtil.getURI(Naming.Lang.LANG_URL);
 			remote = "lang";
 			remotes.put(remote, langUrl);
 			final URI rolesUrl = ConfigUtil.getURI(Roles.ROLES_URL);

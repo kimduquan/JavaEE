@@ -25,10 +25,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.faulttolerance.Asynchronous;
-
 import epf.client.util.Client;
 import epf.client.util.ClientUtil;
 import epf.gateway.Request;
+import epf.naming.Naming;
 import epf.util.StringUtil;
 import epf.util.config.ConfigUtil;
 import epf.util.http.SessionUtil;
@@ -37,7 +37,7 @@ import epf.util.http.SessionUtil;
  *
  * @author FOXCONN
  */
-@Path("net")
+@Path(Naming.NET)
 @ApplicationScoped
 public class Net {
     
@@ -88,11 +88,11 @@ public class Net {
             @Context 
             final HttpServletRequest request
     ) throws Exception {
-        final Optional<Object> attrValue = SessionUtil.getMapAttribute(request, "epf.net.url", "urls", url);
+        final Optional<Object> attrValue = SessionUtil.getMapAttribute(request, Naming.Net.NET_URL, "urls", url);
         String urlString = "";
         if(attrValue.isEmpty()) {
         	final int id = StringUtil.fromShortString(url);
-        	try(Client client = clientUtil.newClient(ConfigUtil.getURI("epf.cache.url"))){
+        	try(Client client = clientUtil.newClient(ConfigUtil.getURI(Naming.Cache.CACHE_URL))){
         		urlString = client.request(
         				target -> target.path("net/url").queryParam("id", String.valueOf(id)), 
         				req -> req)

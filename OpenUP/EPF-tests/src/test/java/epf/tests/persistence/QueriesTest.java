@@ -8,6 +8,7 @@ package epf.tests.persistence;
 import epf.client.gateway.GatewayUtil;
 import epf.client.persistence.Queries;
 import epf.client.util.Client;
+import epf.naming.Naming;
 import epf.tests.client.ClientUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.logging.Logging;
@@ -40,7 +41,7 @@ public class QueriesTest {
     @BeforeClass
     public static void beforeClass() throws Exception{
     	token = SecurityUtil.login();
-    	persistenceUrl = GatewayUtil.get("persistence");
+    	persistenceUrl = GatewayUtil.get(Naming.PERSISTENCE);
     }
     
     @AfterClass

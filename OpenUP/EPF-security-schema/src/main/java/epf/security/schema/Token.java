@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.client.security;
+package epf.security.schema;
 
 import java.io.Serializable;
 import java.util.Map;

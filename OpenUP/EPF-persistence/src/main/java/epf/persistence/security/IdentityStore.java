@@ -6,7 +6,8 @@ package epf.persistence.security;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.enterprise.context.ApplicationScoped;
-import epf.client.security.Token;
+
+import epf.security.schema.Token;
 
 /**
  * @author PC

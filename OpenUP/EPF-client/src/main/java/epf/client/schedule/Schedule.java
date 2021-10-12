@@ -20,18 +20,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import epf.client.util.Client;
+import epf.naming.Naming;
 
 /**
  * @author PC
  *
  */
-@Path("schedule")
+@Path(Naming.SCHEDULE)
 public interface Schedule {
-	
-	/**
-	 * 
-	 */
-	String SCHEDULE_URL = "epf.schedule.url";
 	
 	/**
 	 * 

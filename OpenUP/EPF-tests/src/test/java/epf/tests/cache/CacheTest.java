@@ -32,6 +32,7 @@ import epf.work_products.schema.section.Relationships;
 import epf.work_products.schema.section.Tailoring;
 import epf.client.gateway.GatewayUtil;
 import epf.client.util.Client;
+import epf.naming.Naming;
 
 /**
  * @author PC
@@ -49,7 +50,7 @@ public class CacheTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		HealthUtil.readỵ̣();
-		cacheUrl = GatewayUtil.get("cache");
+		cacheUrl = GatewayUtil.get(Naming.CACHE);
 		token = SecurityUtil.login();
 	}
 

@@ -13,11 +13,6 @@ import javax.websocket.DeploymentException;
  *
  */
 public interface Messaging {
-	
-    /**
-     * 
-     */
-    String MESSAGING_URL = "epf.messaging.url";
 
 	/**
 	 * @param uri

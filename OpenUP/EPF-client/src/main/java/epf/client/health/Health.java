@@ -10,18 +10,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import epf.client.util.Client;
+import epf.naming.Naming;
 
 /**
  * @author PC
  *
  */
-@Path("health")
+@Path(Naming.HEALTH)
 public interface Health {
-	
-	/**
-	 * 
-	 */
-	String HEALTH_URL = "epf.health.url";
 
 	/**
 	 * @return

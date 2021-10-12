@@ -13,18 +13,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 
 import epf.client.util.Client;
+import epf.naming.Naming;
 
 /**
  * @author PC
  *
  */
-@Path("net")
+@Path(Naming.NET)
 public interface Net {
-	
-	/**
-	 * 
-	 */
-	String NET_URL = "epf.net.url";
 
 	/**
 	 * @param url

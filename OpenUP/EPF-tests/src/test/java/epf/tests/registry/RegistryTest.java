@@ -18,6 +18,7 @@ import org.junit.Test;
 import epf.client.gateway.GatewayUtil;
 import epf.client.registry.Registry;
 import epf.client.util.Client;
+import epf.naming.Naming;
 import epf.tests.client.ClientUtil;
 import epf.util.logging.Logging;
 
@@ -31,7 +32,7 @@ public class RegistryTest {
     @BeforeClass
     public static void beforeClass() throws Exception{
     	try {
-			registryUrl = GatewayUtil.get("registry");
+			registryUrl = GatewayUtil.get(Naming.REGISTRY);
 		} 
     	catch (URISyntaxException e) {
 			logger.log(Level.SEVERE, "beforeClass", e);

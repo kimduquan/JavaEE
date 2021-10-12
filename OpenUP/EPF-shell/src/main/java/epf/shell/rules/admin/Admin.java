@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import javax.ws.rs.core.Response;
 import epf.client.gateway.GatewayUtil;
 import epf.client.util.Client;
+import epf.naming.Naming;
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
 import epf.shell.security.Credential;
@@ -50,7 +51,7 @@ public class Admin {
 			@Option(names = {"-f", "--file"}, description = "Rules file")
 			final File file 
 			) throws Exception {
-		try(Client client = clientUtil.newClient(GatewayUtil.get("rules"))){
+		try(Client client = clientUtil.newClient(GatewayUtil.get(Naming.RULES))){
 			client.authorization(credential.getToken());
 			try(InputStream input = Files.newInputStream(file.toPath())){
 				try(Response response = epf.client.rules.admin.Admin.registerRuleExecutionSet(client, name, input)){
@@ -73,7 +74,7 @@ public class Admin {
 			@Option(names = {"-n", "--name"}, description = "Name")
 			final String name
 			) throws Exception {
-		try(Client client = clientUtil.newClient(GatewayUtil.get("rules"))){
+		try(Client client = clientUtil.newClient(GatewayUtil.get(Naming.RULES))){
 			client.authorization(credential.getToken());
 			try(Response response = epf.client.rules.admin.Admin.deregisterRuleExecutionSet(client, name)){
 				response.getStatus();

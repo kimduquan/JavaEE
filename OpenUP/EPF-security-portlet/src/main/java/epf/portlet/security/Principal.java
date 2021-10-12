@@ -11,12 +11,12 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.Cookie;
 import epf.client.portlet.security.PrincipalView;
-import epf.client.security.Credential;
-import epf.client.security.Token;
 import epf.client.util.Client;
 import epf.portlet.CookieUtil;
 import epf.portlet.RequestUtil;
 import epf.portlet.gateway.GatewayUtil;
+import epf.security.client.Credential;
+import epf.security.schema.Token;
 
 /**
  * @author PC
@@ -79,8 +79,8 @@ public class Principal implements PrincipalView, Serializable {
 	 */
 	@Override
 	public String logout() throws Exception {
-		try(Client client = clientUtil.newClient(gatewayUtil.get("security"))){
-			epf.client.security.Security.logOut(client);
+		try(Client client = clientUtil.newClient(gatewayUtil.get(epf.naming.Naming.SECURITY))){
+			epf.security.client.Security.logOut(client);
 		}
 		session.setToken(null);
 		cookieUtil.deleteCookie(Naming.SECURITY_TOKEN);
@@ -93,8 +93,8 @@ public class Principal implements PrincipalView, Serializable {
 	 */
 	@Override
 	public String update() throws Exception {
-		try(Client client = clientUtil.newClient(gatewayUtil.get("security"))){
-			epf.client.security.Security.update(client, new String(credential.getPassword()));
+		try(Client client = clientUtil.newClient(gatewayUtil.get(epf.naming.Naming.SECURITY))){
+			epf.security.client.Security.update(client, new String(credential.getPassword()));
 		}
 		return "principal";
 	}
@@ -105,15 +105,15 @@ public class Principal implements PrincipalView, Serializable {
 	 */
 	@Override
 	public void revoke() throws Exception {
-		final URI securityUrl = gatewayUtil.get("security");
+		final URI securityUrl = gatewayUtil.get(epf.naming.Naming.SECURITY);
 		String rawToken;
 		try(Client client = clientUtil.newClient(securityUrl)){
-			rawToken = epf.client.security.Security.revoke(client);
+			rawToken = epf.security.client.Security.revoke(client);
 		}
 		Token token;
 		try(Client client = clientUtil.newClient(securityUrl)){
 			client.authorization(rawToken);
-			token = epf.client.security.Security.authenticate(client);
+			token = epf.security.client.Security.authenticate(client);
 		}
 		token.setRawToken(rawToken);
 		session.setToken(token);

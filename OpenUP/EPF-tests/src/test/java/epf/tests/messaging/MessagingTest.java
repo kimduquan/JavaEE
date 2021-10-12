@@ -14,6 +14,7 @@ import org.junit.BeforeClass;
 import epf.client.gateway.GatewayUtil;
 import epf.messaging.client.Client;
 import epf.messaging.client.Messaging;
+import epf.naming.Naming;
 import epf.schema.PostPersist;
 import epf.schema.PostRemove;
 import epf.tests.TestUtil;
@@ -41,7 +42,7 @@ public class MessagingTest {
     
     @BeforeClass
     public static void beforeClass() throws Exception{
-    	URI messagingUrl = UriBuilder.fromUri(GatewayUtil.get("messaging")).scheme("ws").port(9080).build();
+    	URI messagingUrl = UriBuilder.fromUri(GatewayUtil.get(Naming.MESSAGING)).scheme("ws").port(9080).build();
     	HealthUtil.readỵ̣();
     	token = SecurityUtil.login();
     	tokenId = SecurityUtil.auth(token).getTokenID();
@@ -101,7 +102,7 @@ public class MessagingTest {
     
     @Test
     public void testInvalidTokenId() throws Exception {
-    	URI messagingUrl = UriBuilder.fromUri(GatewayUtil.get("messaging")).scheme("ws").port(9080).build();
+    	URI messagingUrl = UriBuilder.fromUri(GatewayUtil.get(Naming.MESSAGING)).scheme("ws").port(9080).build();
     	URI url = new URI(messagingUrl.toString() + "/persistence");
     	try(Client invalidClient = Messaging.connectToServer(url)){
         	TestUtil.waitUntil(t -> !invalidClient.getSession().isOpen(), Duration.ofSeconds(10));

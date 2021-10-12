@@ -14,23 +14,19 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 import epf.client.util.Client;
+import epf.naming.Naming;
 
 /**
  * @author PC
  *
  */
-@Path("script")
+@Path(Naming.SCRIPT)
 public interface Script {
 	
 	/**
 	 * 
 	 */
 	String ROOT = "epf.script.root";
-	
-	/**
-	 * 
-	 */
-	String SCRIPT_URL = "epf.script.url";
 
 	/**
 	 * @param lang

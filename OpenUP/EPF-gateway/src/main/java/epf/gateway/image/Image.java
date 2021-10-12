@@ -20,12 +20,13 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.faulttolerance.Asynchronous;
 import epf.gateway.Request;
+import epf.naming.Naming;
 
 /**
  *
  * @author FOXCONN
  */
-@Path("image")
+@Path(Naming.IMAGE)
 @RequestScoped
 public class Image {
     

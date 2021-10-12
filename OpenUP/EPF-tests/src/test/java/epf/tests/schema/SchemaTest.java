@@ -18,6 +18,7 @@ import org.junit.Test;
 import epf.client.schema.Entity;
 import epf.client.schema.Schema;
 import epf.client.util.Client;
+import epf.naming.Naming;
 import epf.tests.client.ClientUtil;
 import epf.tests.persistence.EntitiesTest;
 import epf.tests.security.SecurityUtil;
@@ -40,7 +41,7 @@ public class SchemaTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		schemaUrl = GatewayUtil.get("schema");
+		schemaUrl = GatewayUtil.get(Naming.SCHEMA);
     	token = SecurityUtil.login();
 	}
 

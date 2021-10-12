@@ -20,10 +20,10 @@ import epf.util.logging.Logging;
 import epf.util.security.PasswordUtil;
 import epf.webapp.WebApp;
 import epf.client.gateway.GatewayUtil;
-import epf.client.security.Security;
-import epf.client.security.Token;
 import epf.client.util.Client;
 import epf.client.util.ClientQueue;
+import epf.security.client.Security;
+import epf.security.schema.Token;
 
 /**
  *

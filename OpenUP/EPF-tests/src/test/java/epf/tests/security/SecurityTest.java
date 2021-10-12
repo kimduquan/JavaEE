@@ -21,9 +21,11 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.Ignore;
-import epf.client.security.Security;
-import epf.client.security.Token;
+
 import epf.client.util.Client;
+import epf.naming.Naming;
+import epf.security.client.Security;
+import epf.security.schema.Token;
 import epf.tests.client.ClientUtil;
 import epf.util.security.PasswordUtil;
 import epf.client.gateway.GatewayUtil;
@@ -38,7 +40,7 @@ public class SecurityTest {
     
     @BeforeClass
     public static void beforeClass() throws Exception{
-    	securityUrl = GatewayUtil.get("security");
+    	securityUrl = GatewayUtil.get(Naming.SECURITY);
     }
     
     String login(String username, String password, URL targetUrl, boolean needHash) throws Exception{
@@ -189,7 +191,7 @@ public class SecurityTest {
                 "Token.audience", 
                 new String[]{
                     String.format(
-                    		epf.client.security.Security.AUDIENCE_FORMAT, 
+                    		epf.security.client.Security.AUDIENCE_FORMAT, 
                             securityUrl.getScheme(), 
                             securityUrl.getHost(), 
                             securityUrl.getPort()

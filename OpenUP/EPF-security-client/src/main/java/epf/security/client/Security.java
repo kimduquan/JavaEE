@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.client.security;
+package epf.security.client;
 
 import java.net.URL;
 import javax.validation.constraints.NotBlank;
@@ -23,20 +23,16 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import epf.client.util.Client;
+import epf.naming.Naming;
+import epf.security.schema.Token;
 
 /**
  *
  * @author FOXCONN
  */
-@Path("security")
+@Path(Naming.SECURITY)
 public interface Security {
-	
-	/**
-     * 
-     */
-    String SECURITY_URL = "epf.security.url";
     
     /**
      * 
@@ -55,11 +51,6 @@ public interface Security {
      * 
      */
     String URL = "url";
-    
-    /**
-     * 
-     */
-    String DEFAULT_ROLE = "Any_Role";
     
     /**
      * @param username

@@ -15,19 +15,14 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 
 import epf.client.util.Client;
+import epf.naming.Naming;
 
 /**
- * Config
+ * @author PC
  *
- * @author FOXCONN
  */
-@Path("config")
+@Path(Naming.CONFIG)
 public interface Config {
-	
-	/**
-	 * 
-	 */
-	String CONFIG_URL = "epf.config.url";
     
     /**
      * @param name

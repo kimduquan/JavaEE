@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import javax.ws.rs.core.Response;
 import epf.client.gateway.GatewayUtil;
 import epf.client.util.Client;
+import epf.naming.Naming;
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
 import epf.shell.security.CallerPrincipal;
@@ -23,7 +24,7 @@ import picocli.CommandLine.Option;
  * @author PC
  *
  */
-@Command(name = "image")
+@Command(name = Naming.IMAGE)
 @RequestScoped
 @Function
 public class Image {
@@ -46,7 +47,7 @@ public class Image {
 			final Credential credential,
 			@Option(names = {"-f", "--file"}, description = "File")
 			final File file) throws Exception {
-		try(Client client = clientUtil.newClient(GatewayUtil.get("image"))){
+		try(Client client = clientUtil.newClient(GatewayUtil.get(Naming.IMAGE))){
 			client.authorization(credential.getToken());
 			try(InputStream input = Files.newInputStream(file.toPath())){
 				try(Response response = epf.client.image.Image.findContours(client, input)){

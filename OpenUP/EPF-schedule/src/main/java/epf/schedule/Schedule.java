@@ -19,9 +19,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Path;
 import org.eclipse.microprofile.context.ManagedExecutor;
-
-import epf.client.security.Security;
-import epf.messaging.client.Messaging;
+import epf.naming.Naming;
 import epf.util.config.ConfigUtil;
 import epf.util.logging.Logging;
 import epf.util.websocket.Client;
@@ -32,8 +30,8 @@ import epf.util.websocket.MessageQueue;
  *
  */
 @ApplicationScoped
-@Path("schedule")
-@RolesAllowed(Security.DEFAULT_ROLE)
+@Path(Naming.SCHEDULE)
+@RolesAllowed(Naming.Security.DEFAULT_ROLE)
 public class Schedule implements epf.client.schedule.Schedule {
 	
 	/**
@@ -79,7 +77,7 @@ public class Schedule implements epf.client.schedule.Schedule {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI messagingUrl = ConfigUtil.getURI(Messaging.MESSAGING_URL);
+			final URI messagingUrl = ConfigUtil.getURI(Naming.Messaging.MESSAGING_URL);
 			shell = Client.connectToServer(messagingUrl.resolve("schedule/shell"));
 			shellMessages = new MessageQueue(shell.getSession());
 			executor.submit(shellMessages);

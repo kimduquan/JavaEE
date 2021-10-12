@@ -13,15 +13,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.health.Readiness;
-import epf.client.security.Security;
+import epf.naming.Naming;
 
 /**
  * @author PC
  *
  */
-@Path("rules/admin")
+@Path(Naming.Rules.RULES_ADMIN)
 @ApplicationScoped
-@RolesAllowed(Security.DEFAULT_ROLE)
+@RolesAllowed(Naming.Security.DEFAULT_ROLE)
 public class Admin implements epf.client.rules.admin.Admin {
 	
 	/**

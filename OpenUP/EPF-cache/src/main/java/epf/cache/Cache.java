@@ -23,18 +23,19 @@ import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.Readiness;
 import epf.cache.persistence.Persistence;
 import epf.cache.security.Security;
-import epf.client.security.Token;
 import epf.net.schema.Net;
 import epf.net.schema.URL;
+import epf.security.schema.Token;
 import epf.util.concurrent.ObjectQueue;
+import epf.naming.Naming;
 
 /**
  * @author PC
  *
  */
 @ApplicationScoped
-@Path("cache")
-@RolesAllowed(epf.client.security.Security.DEFAULT_ROLE)
+@Path(Naming.CACHE)
+@RolesAllowed(Naming.Security.DEFAULT_ROLE)
 public class Cache implements epf.client.cache.Cache {
 	
 	/**

@@ -6,9 +6,10 @@
 package epf.tests.security;
 
 import epf.client.gateway.GatewayUtil;
-import epf.client.security.Security;
-import epf.client.security.Token;
 import epf.client.util.Client;
+import epf.naming.Naming;
+import epf.security.client.Security;
+import epf.security.schema.Token;
 import epf.tests.client.ClientUtil;
 import epf.util.logging.Logging;
 import epf.util.security.PasswordUtil;
@@ -31,7 +32,7 @@ public class SecurityUtil {
     
 	public static String login(String username, String password) {
     	String token = null;
-    	try(Client client = ClientUtil.newClient(GatewayUtil.get("security"))){
+    	try(Client client = ClientUtil.newClient(GatewayUtil.get(Naming.SECURITY))){
     		token = Security.login(client, username, PasswordUtil.hash(username, password.toCharArray()), GatewayUtil.get("tests").toURL());
     	}
     	catch(Exception ex) {
@@ -41,7 +42,7 @@ public class SecurityUtil {
     }
     
     public static void logOut(String token) {
-    	try(Client client = ClientUtil.newClient(GatewayUtil.get("security"))){
+    	try(Client client = ClientUtil.newClient(GatewayUtil.get(Naming.SECURITY))){
     		client.authorization(token);
     		token = Security.logOut(client);
     	}
@@ -51,14 +52,14 @@ public class SecurityUtil {
     }
     
     public static Token auth(String token) throws Exception {
-    	try(Client client = ClientUtil.newClient(GatewayUtil.get("security"))){
+    	try(Client client = ClientUtil.newClient(GatewayUtil.get(Naming.SECURITY))){
     		client.authorization(token);
     		return Security.authenticate(client);
     	}
     }
     
     public static String revoke(String token) throws Exception {
-    	try(Client client = ClientUtil.newClient(GatewayUtil.get("security"))){
+    	try(Client client = ClientUtil.newClient(GatewayUtil.get(Naming.SECURITY))){
     		client.authorization(token);
     		return Security.revoke(client);
     	}

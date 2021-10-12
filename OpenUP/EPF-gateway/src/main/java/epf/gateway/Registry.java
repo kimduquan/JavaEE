@@ -10,6 +10,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import epf.client.util.Client;
 import epf.client.util.ClientQueue;
+import epf.naming.Naming;
 import epf.util.config.ConfigUtil;
 
 /**
@@ -22,7 +23,7 @@ public class Registry {
 	/**
 	 * 
 	 */
-	private static final String REGISTRY_URL = ConfigUtil.getString("epf.registry.url");
+	private static final String REGISTRY_URL = ConfigUtil.getString(Naming.Registry.REGISTRY_URL);
 	
 	/**
 	 * 

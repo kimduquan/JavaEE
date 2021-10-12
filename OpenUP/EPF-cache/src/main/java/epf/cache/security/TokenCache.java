@@ -5,7 +5,7 @@ package epf.cache.security;
 
 import javax.cache.Cache;
 import epf.cache.ObjectCache;
-import epf.client.security.Token;
+import epf.security.schema.Token;
 
 /**
  * @author PC

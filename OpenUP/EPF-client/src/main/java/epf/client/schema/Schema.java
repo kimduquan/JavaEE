@@ -10,18 +10,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import epf.client.util.Client;
+import epf.naming.Naming;
 
 /**
  * @author PC
  *
  */
-@Path("schema")
+@Path(Naming.SCHEMA)
 public interface Schema {
-
-	/**
-	 * 
-	 */
-	String SCHEMA_URL = "epf.schema.url";
 
     /**
      * @return

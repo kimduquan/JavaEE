@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.client.security.jwt;
+package epf.security.client.jwt;
 
 /**
  * @author PC

@@ -16,6 +16,8 @@ import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
+
+import epf.naming.Naming;
 import epf.util.config.ConfigUtil;
 import epf.util.websocket.Client;
 
@@ -65,10 +67,10 @@ public class Logging implements HealthCheck {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI messagingUrl = ConfigUtil.getURI("epf.messaging.url");
-			newLogger("EPF-persistence", messagingUrl.resolve("persistence"));
-			newLogger("EPF-security", messagingUrl.resolve("security"));
-			newLogger("EPF-cache", messagingUrl.resolve("cache"));
+			final URI messagingUrl = ConfigUtil.getURI(Naming.Messaging.MESSAGING_URL);
+			newLogger("EPF-persistence", messagingUrl.resolve(Naming.PERSISTENCE));
+			newLogger("EPF-security", messagingUrl.resolve(Naming.SECURITY));
+			newLogger("EPF-cache", messagingUrl.resolve(Naming.CACHE));
 			newLogger("EPF-shell-schedule", messagingUrl.resolve("schedule/shell"));
 			newLogger("EPF-persistence-load", messagingUrl.resolve("persistence/post-load"));
 		}

@@ -5,8 +5,7 @@ package epf.tests.messaging;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
-import epf.messaging.client.Messaging;
+import epf.naming.Naming;
 
 /**
  * @author PC
@@ -18,7 +17,7 @@ public class MessagingUtil {
 	
 	public static URI getMessagingUrl() throws URISyntaxException {
 		if(messagingUri == null) {
-			messagingUri = new URI(System.getProperty(Messaging.MESSAGING_URL));
+			messagingUri = new URI(System.getProperty(Naming.Messaging.MESSAGING_URL));
 		}
 		return messagingUri;
 	}

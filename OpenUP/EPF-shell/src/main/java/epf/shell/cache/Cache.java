@@ -3,6 +3,7 @@
  */
 package epf.shell.cache;
 
+import epf.naming.Naming;
 import epf.shell.Function;
 import jakarta.enterprise.context.RequestScoped;
 import picocli.CommandLine.Command;
@@ -11,7 +12,7 @@ import picocli.CommandLine.Command;
  * @author PC
  *
  */
-@Command(name = "cache", subcommands = { Persistence.class })
+@Command(name = Naming.CACHE, subcommands = { Persistence.class })
 @RequestScoped
 @Function
 public class Cache {

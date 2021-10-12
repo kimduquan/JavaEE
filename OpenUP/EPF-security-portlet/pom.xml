@@ -11,9 +11,9 @@
 	<packaging>war</packaging>
 	<name>Eclipse Process Framework Security Portlet</name>
 	<dependencies>
-		<dependency>
+        <dependency>
             <groupId>openup</groupId>
-            <artifactId>EPF-client</artifactId>
+            <artifactId>EPF-security-client</artifactId>
             <version>${project.version}</version>
         </dependency>
 		<dependency>

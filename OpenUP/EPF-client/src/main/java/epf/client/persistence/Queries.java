@@ -13,6 +13,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import epf.client.util.Client;
+import epf.naming.Naming;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -30,7 +31,7 @@ import javax.ws.rs.core.PathSegment;
  *
  * @author FOXCONN
  */
-@Path("persistence")
+@Path(Naming.PERSISTENCE)
 public interface Queries {
 	
 	/**

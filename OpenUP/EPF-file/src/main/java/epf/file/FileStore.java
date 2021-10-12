@@ -32,16 +32,18 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
-import epf.client.EPFException;
-import epf.client.security.Security;
+
 import epf.client.util.EntityOutput;
+import epf.util.EPFException;
 import epf.util.file.FileUtil;
+import epf.naming.Naming;
+import epf.naming.Naming.Security;
 
 /**
  *
  * @author FOXCONN
  */
-@javax.ws.rs.Path("file")
+@javax.ws.rs.Path(Naming.FILE)
 @RolesAllowed(Security.DEFAULT_ROLE)
 @ApplicationScoped
 public class FileStore implements epf.client.file.Files {

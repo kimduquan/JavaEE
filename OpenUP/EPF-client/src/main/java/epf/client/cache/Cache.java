@@ -18,20 +18,16 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
 import javax.ws.rs.sse.SseEventSource;
-import epf.client.security.Token;
 import epf.client.util.Client;
+import epf.security.schema.Token;
+import epf.naming.Naming;
 
 /**
  * @author PC
  *
  */
-@Path("cache")
+@Path(Naming.CACHE)
 public interface Cache {
-
-	/**
-	 * 
-	 */
-	String CACHE_URL = "epf.cache.url";
 	
 	/**
 	 * @param schema

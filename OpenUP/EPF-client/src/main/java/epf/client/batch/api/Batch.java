@@ -4,7 +4,6 @@
 package epf.client.batch.api;
 
 import java.time.LocalDate;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
@@ -17,18 +16,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import epf.naming.Naming;
 
 /**
  * @author PC
  *
  */
-@Path("api/batch")
+@Path(Naming.Batch.BATCH_API)
 public interface Batch {
-	
-	/**
-	 * 
-	 */
-	String BATCH_API_URL = "epf.batch.api.url";
 
 	/**
 	 * @param page

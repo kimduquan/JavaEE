@@ -22,12 +22,12 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
-import epf.client.EPFException;
-import epf.client.persistence.Persistence;
-import epf.client.security.Token;
-import epf.client.security.jwt.JWT;
+import epf.util.EPFException;
 import epf.client.util.Client;
 import epf.client.util.ClientUtil;
+import epf.naming.Naming;
+import epf.security.client.jwt.JWT;
+import epf.security.schema.Token;
 import epf.util.config.ConfigUtil;
 import epf.util.logging.Logging;
 import epf.util.security.KeyUtil;
@@ -39,10 +39,10 @@ import java.util.stream.Collectors;
  *
  * @author FOXCONN
  */
-@Path("security")
-@RolesAllowed(epf.client.security.Security.DEFAULT_ROLE)
+@Path(Naming.SECURITY)
+@RolesAllowed(Naming.Security.DEFAULT_ROLE)
 @RequestScoped
-public class Security implements epf.client.security.Security, Serializable {
+public class Security implements epf.security.client.Security, Serializable {
     
     /**
     * 
@@ -123,11 +123,11 @@ public class Security implements epf.client.security.Security, Serializable {
             final String username,
             final String passwordHash,
             final URL url) {
-    	try(Client securityClient = clientUtil.newClient(ConfigUtil.getURI(Persistence.PERSISTENCE_SECURITY_URL))){
-    		final String rawToken = epf.client.security.Security.login(securityClient, username, passwordHash, url);
+    	try(Client securityClient = clientUtil.newClient(ConfigUtil.getURI(Naming.Persistence.PERSISTENCE_SECURITY_URL))){
+    		final String rawToken = epf.security.client.Security.login(securityClient, username, passwordHash, url);
     		securityClient.authorization(rawToken);
-        	final Token token = epf.client.security.Security.authenticate(securityClient);
-    		try(Client persistenceClient = clientUtil.newClient(ConfigUtil.getURI(Persistence.PERSISTENCE_URL))){
+        	final Token token = epf.security.client.Security.authenticate(securityClient);
+    		try(Client persistenceClient = clientUtil.newClient(ConfigUtil.getURI(Naming.Persistence.PERSISTENCE_URL))){
     			persistenceClient.authorization(rawToken);
     			final Token newToken = buildToken(persistenceClient, token, rawToken);
         		login.fire(newToken);
@@ -143,9 +143,9 @@ public class Security implements epf.client.security.Security, Serializable {
     public String logOut() {
     	final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
     	final String rawToken = jwt.getClaim(JWT.TOKEN_CLAIM);
-    	try(Client client = clientUtil.newClient(ConfigUtil.getURI(Persistence.PERSISTENCE_SECURITY_URL))){
+    	try(Client client = clientUtil.newClient(ConfigUtil.getURI(Naming.Persistence.PERSISTENCE_SECURITY_URL))){
     		client.authorization(rawToken);
-    		return epf.client.security.Security.logOut(client);
+    		return epf.security.client.Security.logOut(client);
     	} 
     	catch (Exception e) {
 			throw new EPFException(e);
@@ -156,10 +156,10 @@ public class Security implements epf.client.security.Security, Serializable {
     public Token authenticate() {
     	final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
     	final String rawToken = jwt.getClaim(JWT.TOKEN_CLAIM);
-    	try(Client securityClient = clientUtil.newClient(ConfigUtil.getURI(Persistence.PERSISTENCE_SECURITY_URL))){
+    	try(Client securityClient = clientUtil.newClient(ConfigUtil.getURI(Naming.Persistence.PERSISTENCE_SECURITY_URL))){
     		securityClient.authorization(rawToken);
-    		final Token token = epf.client.security.Security.authenticate(securityClient);
-    		try(Client persistenceClient = clientUtil.newClient(ConfigUtil.getURI(Persistence.PERSISTENCE_URL))){
+    		final Token token = epf.security.client.Security.authenticate(securityClient);
+    		try(Client persistenceClient = clientUtil.newClient(ConfigUtil.getURI(Naming.Persistence.PERSISTENCE_URL))){
     			persistenceClient.authorization(rawToken);
     			final Token newToken = buildToken(persistenceClient, token, rawToken);
     			newToken.setRawToken(null);
@@ -176,9 +176,9 @@ public class Security implements epf.client.security.Security, Serializable {
 	public void update(final String password) {
 		final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
     	final String rawToken = jwt.getClaim(JWT.TOKEN_CLAIM);
-    	try(Client securityClient = clientUtil.newClient(ConfigUtil.getURI(Persistence.PERSISTENCE_SECURITY_URL))){
+    	try(Client securityClient = clientUtil.newClient(ConfigUtil.getURI(Naming.Persistence.PERSISTENCE_SECURITY_URL))){
     		securityClient.authorization(rawToken);
-    		epf.client.security.Security.update(securityClient, password);
+    		epf.security.client.Security.update(securityClient, password);
     	}
     	catch (Exception e) {
 			throw new EPFException(e);
@@ -189,12 +189,12 @@ public class Security implements epf.client.security.Security, Serializable {
 	public String revoke() {
 		final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
     	final String rawToken = jwt.getClaim(JWT.TOKEN_CLAIM);
-    	try(Client securityClient = clientUtil.newClient(ConfigUtil.getURI(Persistence.PERSISTENCE_SECURITY_URL))){
+    	try(Client securityClient = clientUtil.newClient(ConfigUtil.getURI(Naming.Persistence.PERSISTENCE_SECURITY_URL))){
     		securityClient.authorization(rawToken);
-    		final String newRawToken = epf.client.security.Security.revoke(securityClient);
+    		final String newRawToken = epf.security.client.Security.revoke(securityClient);
     		securityClient.authorization(newRawToken);
-    		final Token token = epf.client.security.Security.authenticate(securityClient);
-    		try(Client persistenceClient = clientUtil.newClient(ConfigUtil.getURI(Persistence.PERSISTENCE_URL))){
+    		final Token token = epf.security.client.Security.authenticate(securityClient);
+    		try(Client persistenceClient = clientUtil.newClient(ConfigUtil.getURI(Naming.Persistence.PERSISTENCE_URL))){
     			persistenceClient.authorization(newRawToken);
     			final Token newToken = buildToken(persistenceClient, token, newRawToken);
         		return newToken.getRawToken();

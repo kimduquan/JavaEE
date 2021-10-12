@@ -97,7 +97,7 @@ public class Schema implements SchemaView, Serializable {
 	 * @throws Exception
 	 */
 	protected List<Entity> fetchEntities() throws Exception{
-		final URI schemaUrl = gatewayUtil.get("schema");
+		final URI schemaUrl = gatewayUtil.get(epf.naming.Naming.SCHEMA);
 		try(Client client = clientUtil.newClient(schemaUrl)){
 			try(Response response = epf.client.schema.Schema.getEntities(client)){
 				return response.readEntity(new GenericType<List<Entity>>() {});

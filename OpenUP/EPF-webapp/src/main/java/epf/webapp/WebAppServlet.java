@@ -26,6 +26,7 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.util.Enumeration;
 import java.util.logging.Logger;
+import epf.naming.Naming;
 
 @WebServlet(urlPatterns = {"/*"}, loadOnStartup = 1)
 @ApplicationScoped
@@ -34,10 +35,10 @@ import java.util.logging.Logger;
 		@HttpConstraint(
 				value = EmptyRoleSemantic.PERMIT,
 				transportGuarantee = TransportGuarantee.CONFIDENTIAL,
-				rolesAllowed = {epf.client.security.Security.DEFAULT_ROLE}
+				rolesAllowed = {Naming.Security.DEFAULT_ROLE}
 				)
 		)
-@RolesAllowed(epf.client.security.Security.DEFAULT_ROLE)
+@RolesAllowed(Naming.Security.DEFAULT_ROLE)
 public class WebAppServlet extends HttpServlet {
 	
 	/**

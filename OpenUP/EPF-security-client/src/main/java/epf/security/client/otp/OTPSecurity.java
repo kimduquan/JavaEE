@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.client.security.otp;
+package epf.security.client.otp;
 
 import java.net.URL;
 import javax.validation.constraints.NotBlank;
@@ -18,12 +18,13 @@ import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 
 import epf.client.util.Client;
+import epf.naming.Naming;
 
 /**
  * @author PC
  *
  */
-@Path("security")
+@Path(Naming.SECURITY)
 public interface OTPSecurity {
 
     /**

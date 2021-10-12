@@ -11,6 +11,7 @@ import java.nio.file.StandardCopyOption;
 import javax.ws.rs.core.Response;
 import epf.client.gateway.GatewayUtil;
 import epf.client.util.Client;
+import epf.naming.Naming;
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
 import epf.shell.security.Credential;
@@ -25,7 +26,7 @@ import picocli.CommandLine.Option;
  * @author PC
  *
  */
-@Command(name = "file")
+@Command(name = Naming.FILE)
 @RequestScoped
 @Function
 public class FileStore {
@@ -52,7 +53,7 @@ public class FileStore {
 			final File file,
 			@Option(names = {"-p", "--path"}, description = "Path")
 			final Path path) throws Exception {
-		try(Client client = clientUtil.newClient(GatewayUtil.get("file"))){
+		try(Client client = clientUtil.newClient(GatewayUtil.get(Naming.FILE))){
 			client.authorization(credential.getToken());
 			try(InputStream input = Files.newInputStream(file.toPath())){
 				try(Response res = epf.client.file.Files.createFile(client, input, path)){
@@ -79,7 +80,7 @@ public class FileStore {
 			@Option(names = {"-o", "--output"}, description = "Output")
 			final File output
 			) throws Exception {
-		try(Client client = clientUtil.newClient(GatewayUtil.get("file"))){
+		try(Client client = clientUtil.newClient(GatewayUtil.get(Naming.FILE))){
 			client.authorization(credential.getToken());
 			try(InputStream in = epf.client.file.Files.read(client, path)){
 				Files.copy(in, output.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -100,7 +101,7 @@ public class FileStore {
 			@Option(names = {"-p", "--path"}, description = "Path")
 			final Path path
 			) throws Exception {
-		try(Client client = clientUtil.newClient(GatewayUtil.get("file"))){
+		try(Client client = clientUtil.newClient(GatewayUtil.get(Naming.FILE))){
 			client.authorization(credential.getToken());
 			try(Response response = epf.client.file.Files.delete(client, path)){
 				response.getStatus();

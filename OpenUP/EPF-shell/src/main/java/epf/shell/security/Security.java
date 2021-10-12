@@ -5,8 +5,9 @@ package epf.shell.security;
 
 import java.net.URL;
 import epf.client.gateway.GatewayUtil;
-import epf.client.security.Token;
 import epf.client.util.Client;
+import epf.naming.Naming;
+import epf.security.schema.Token;
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
 import epf.util.security.PasswordUtil;
@@ -20,7 +21,7 @@ import picocli.CommandLine.Option;
  * @author PC
  *
  */
-@Command(name = "security")
+@Command(name = Naming.SECURITY)
 @RequestScoped
 @Function
 public class Security {
@@ -60,8 +61,8 @@ public class Security {
 			@Option(names = {"-p", "--password"}, description = "Password", interactive = true)
 		    final char... password
 			) throws Exception {
-		try(Client client = clientUtil.newClient(GatewayUtil.get("security"))){
-			return epf.client.security.Security.login(
+		try(Client client = clientUtil.newClient(GatewayUtil.get(Naming.SECURITY))){
+			return epf.security.client.Security.login(
 					client,
 					user, 
 					PasswordUtil.hash(user, password), 
@@ -82,9 +83,9 @@ public class Security {
 			final Credential credential
 			) throws Exception {
 		identityStore.remove(credential);
-		try(Client client = clientUtil.newClient(GatewayUtil.get("security"))){
+		try(Client client = clientUtil.newClient(GatewayUtil.get(Naming.SECURITY))){
 			client.authorization(credential.getToken());
-			return epf.client.security.Security.logOut(client);
+			return epf.security.client.Security.logOut(client);
 		}
 	}
 	
@@ -98,9 +99,9 @@ public class Security {
 			@Option(names = {"-t", TOKEN_ARG}, description = TOKEN_DESC) 
 			final String token) throws Exception {
 		Token authToken = null;
-		try(Client client = clientUtil.newClient(GatewayUtil.get("security"))){
+		try(Client client = clientUtil.newClient(GatewayUtil.get(Naming.SECURITY))){
 			client.authorization(token);
-			authToken = epf.client.security.Security.authenticate(client);
+			authToken = epf.security.client.Security.authenticate(client);
 		}
 		final Credential credential = new Credential();
 		credential.token = token;
@@ -122,9 +123,9 @@ public class Security {
 			@Option(names = {"-p", "--password"}, description = "Password", interactive = true)
 		    final char... password
 		    ) throws Exception {
-		try(Client client = clientUtil.newClient(GatewayUtil.get("security"))){
+		try(Client client = clientUtil.newClient(GatewayUtil.get(Naming.SECURITY))){
 			client.authorization(credential.getToken());
-			epf.client.security.Security.update(client, new String(password));
+			epf.security.client.Security.update(client, new String(password));
 		}
 	}
 	
@@ -139,9 +140,9 @@ public class Security {
 			@CallerPrincipal
 			final Credential credential
 			) throws Exception {
-		try(Client client = clientUtil.newClient(GatewayUtil.get("security"))){
+		try(Client client = clientUtil.newClient(GatewayUtil.get(Naming.SECURITY))){
 			client.authorization(credential.getToken());
-			return epf.client.security.Security.revoke(client);
+			return epf.security.client.Security.revoke(client);
 		}
 	}
 }

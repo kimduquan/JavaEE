@@ -4,13 +4,13 @@
 package epf.portlet.security;
 
 import epf.client.portlet.security.CredentialView;
-import epf.client.security.Credential;
-import epf.client.security.Token;
 import epf.client.util.Client;
 import epf.portlet.CookieUtil;
 import epf.portlet.RequestUtil;
 import epf.portlet.client.ClientUtil;
 import epf.portlet.gateway.GatewayUtil;
+import epf.security.client.Credential;
+import epf.security.schema.Token;
 import epf.util.logging.Logging;
 import epf.util.security.PasswordUtil;
 import javax.faces.view.ViewScoped;
@@ -89,7 +89,7 @@ public class Security implements CredentialView, Serializable {
 	 */
 	@Override
 	public String login() throws Exception {
-		final URI securityUrl = gatewayUtil.get("security");
+		final URI securityUrl = gatewayUtil.get(epf.naming.Naming.SECURITY);
 		final String passwordHash = PasswordUtil.hash(credential.getCaller(), credential.getPassword());
 		final URL url = new URL(
 				request.getRequest().getScheme(), 
@@ -99,7 +99,7 @@ public class Security implements CredentialView, Serializable {
 				);
 		String rawToken;
 		try(Client client = clientUtil.newClient(securityUrl)){
-			rawToken = epf.client.security.Security.login(
+			rawToken = epf.security.client.Security.login(
 					client,
 					credential.getCaller(), 
 					passwordHash, 
@@ -109,7 +109,7 @@ public class Security implements CredentialView, Serializable {
 		Token token;
 		try(Client client = clientUtil.newClient(securityUrl)){
 			client.authorization(rawToken);
-			token = epf.client.security.Security.authenticate(client);
+			token = epf.security.client.Security.authenticate(client);
 		}
 		token.setRawToken(rawToken);
 		session.setToken(token);
@@ -128,8 +128,8 @@ public class Security implements CredentialView, Serializable {
 	public String authenticate() {
 		final Optional<Cookie> cookie = cookieUtil.getCookie(Naming.SECURITY_TOKEN);
 		if(cookie.isPresent() && session.getToken() == null) {
-			try(Client client = securityUtil.newClient(gatewayUtil.get("security"))){
-				final Token token = epf.client.security.Security.authenticate(client);
+			try(Client client = securityUtil.newClient(gatewayUtil.get(epf.naming.Naming.SECURITY))){
+				final Token token = epf.security.client.Security.authenticate(client);
 				final String rawToken = cookie.get().getValue();
 				token.setRawToken(rawToken);
 				session.setToken(token);
