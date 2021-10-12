@@ -26,7 +26,7 @@
 		<jar-file>../lib/OpenUP-schema-1.0.0.jar</jar-file>
 		<jar-file>../lib/EPF-net-schema-1.0.0.jar</jar-file>
     </persistence-unit>
-    <persistence-unit name="EPF_Delivery_Processes" transaction-type="JTA">
+    <!--<persistence-unit name="EPF_Delivery_Processes" transaction-type="JTA">
         <jta-data-source>jdbc/epf_delivery_processes</jta-data-source>
 		<jar-file>../lib/EPF-schema-1.0.0.jar</jar-file>
 		<jar-file>../lib/EPF-delivery-processes-schema-1.0.0.jar</jar-file>
@@ -62,5 +62,5 @@
         <jta-data-source>jdbc/epf_net</jta-data-source>
         <jar-file>../lib/EPF-schema-1.0.0.jar</jar-file>
 		<jar-file>../lib/EPF-net-schema-1.0.0.jar</jar-file>
-    </persistence-unit>
+    </persistence-unit>-->
 </persistence>

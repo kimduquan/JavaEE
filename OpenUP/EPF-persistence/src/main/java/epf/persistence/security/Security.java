@@ -11,14 +11,10 @@ import java.security.PrivateKey;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.security.PermitAll;
@@ -31,7 +27,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.jwt.config.Names;
 import epf.client.EPFException;
@@ -79,12 +74,6 @@ public class Security implements epf.client.security.Security, epf.client.securi
      */
     @Inject
     private transient IdentityStore identityStore;
-    
-    /**
-     * 
-     */
-    @Inject
-    private transient ManagedExecutor executor;
     
     /**
      * 
@@ -180,17 +169,9 @@ public class Security implements epf.client.security.Security, epf.client.securi
     	final Credential defaultCredential = persistence.getDefaultContext().putCredential(username, passwordHash);
     	final Token token = buildToken(username, url);
     	final TokenBuilder builder = new TokenBuilder(token, privateKey);
-    	final Collection<epf.persistence.context.Context> contexts = persistence.getContexts();
-    	final List<Future<Credential>> credentials = new ArrayList<>();
-    	for(epf.persistence.context.Context context : contexts) {
-    		credentials.add(executor.submit(() -> context.putCredential(username, passwordHash)));
-    	}
     	try {
 			final Token newToken = builder.build();
 			defaultCredential.putSession(newToken.getTokenID());
-	        for(Future<Credential> credential : credentials) {
-		        credential.get().putSession(newToken.getTokenID());
-	        }
 	        return newToken.getRawToken();
 		} 
         catch (ExecutionException e) {
@@ -205,10 +186,6 @@ public class Security implements epf.client.security.Security, epf.client.securi
     public String logOut() {
     	final Session defaultSession = SessionUtil.removeSession(context.getUserPrincipal(), persistence.getDefaultContext());
 		defaultSession.close();
-    	final List<Session> sessions = SessionUtil.removeSessions(context, persistence);
-    	for(Session session : sessions){
-            session.close();
-        }
     	return context.getUserPrincipal().getName();
     }
     
@@ -234,10 +211,6 @@ public class Security implements epf.client.security.Security, epf.client.securi
 	public String revoke() {
 		final Session defaultSession = SessionUtil.removeSession(context.getUserPrincipal(), persistence.getDefaultContext());
 		defaultSession.close();
-		final List<Session> sessions = SessionUtil.removeSessions(context, persistence);
-		for(Session session : sessions) {
-			session.close();
-		}
 		final JsonWebToken jsonWebToken = (JsonWebToken) context.getUserPrincipal();
 		try {
 			final Token token = buildToken(jsonWebToken);
@@ -245,10 +218,7 @@ public class Security implements epf.client.security.Security, epf.client.securi
 			final Token newToken = builder.build();
 			final Credential defaultCredential = CredentialUtil.getCredential(context.getUserPrincipal(), persistence.getDefaultContext());
 			defaultCredential.putSession(newToken.getTokenID());
-			for(Credential credential : CredentialUtil.getCredentials(context, persistence)) {
-				credential.putSession(newToken.getTokenID());
-			}
-	        return newToken.getRawToken();
+			return newToken.getRawToken();
 		} 
 		catch (Exception e) {
 			throw new EPFException(e);
@@ -261,17 +231,9 @@ public class Security implements epf.client.security.Security, epf.client.securi
 		final Credential defaultCredential = persistence.getDefaultContext().putCredential(username, passwordHash);
     	final Token token = buildToken(username, url);
     	final TokenBuilder builder = new TokenBuilder(token, privateKey);
-    	final Collection<epf.persistence.context.Context> contexts = persistence.getContexts();
-    	final List<Future<Credential>> credentials = new ArrayList<>();
-    	for(epf.persistence.context.Context context : contexts) {
-    		credentials.add(executor.submit(() -> context.putCredential(username, passwordHash)));
-    	}
 		try {
 			final Token newToken = builder.build();
 			defaultCredential.putSession(newToken.getTokenID());
-			for(Future<Credential> credential : credentials) {
-		        credential.get().putSession(newToken.getTokenID());
-			}
 	        identityStore.putToken(newToken);
 	        return newToken.getTokenID();
 		}

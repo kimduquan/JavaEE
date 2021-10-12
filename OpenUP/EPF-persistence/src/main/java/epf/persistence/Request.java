@@ -74,7 +74,7 @@ public class Request {
      * @return
      */
     protected EntityManager getManager(final String schema, final Principal principal){
-    	final Context context = application.getContext(schema);
+    	final Context context = application.getDefaultContext();
         return getEntityManager(principal, context);
     }
     

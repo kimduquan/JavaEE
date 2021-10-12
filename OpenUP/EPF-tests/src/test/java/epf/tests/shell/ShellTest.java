@@ -25,7 +25,6 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import epf.client.gateway.Gateway;
-import epf.client.gateway.GatewayUtil;
 import epf.client.schema.Entity;
 import epf.client.security.Token;
 import epf.tests.TestUtil;

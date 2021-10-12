@@ -5,7 +5,6 @@ package epf.persistence.security;
 
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.core.SecurityContext;
@@ -40,13 +39,11 @@ public interface SessionUtil {
 		List<Session> sessions = new ArrayList<>();
 		final Principal principal = context.getUserPrincipal();
 		if(principal instanceof JsonWebToken) {
-			final Collection<epf.persistence.context.Context> contexts = persistence.getContexts();
-	    	for(epf.persistence.context.Context ctx : contexts) {
-	    		final Session session = getSession(principal, ctx);
-	        	if(session != null) {
-	        		sessions.add(session);
-	        	}
-	    	}
+			final epf.persistence.context.Context ctx = persistence.getDefaultContext();
+    		final Session session = getSession(principal, ctx);
+        	if(session != null) {
+        		sessions.add(session);
+        	}
 		}
 	    return sessions;
 	}
@@ -76,12 +73,10 @@ public interface SessionUtil {
 	static List<Session> removeSessions(final SecurityContext context, final Application persistence) {
 		final Principal principal = context.getUserPrincipal();
 	    if(principal != null && principal instanceof JsonWebToken){
-	    	final Collection<epf.persistence.context.Context> contexts = persistence.getContexts();
 	    	final List<Session> sessions = new ArrayList<>();
-	    	for(epf.persistence.context.Context ctx : contexts) {
-	    		final Session session = removeSession(principal, ctx);
-	        	sessions.add(session);
-	    	}
+	    	final epf.persistence.context.Context ctx = persistence.getDefaultContext();
+    		final Session session = removeSession(principal, ctx);
+        	sessions.add(session);
 	    	return sessions;
 	    }
 	    throw new ForbiddenException();
