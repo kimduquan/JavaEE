@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.portlet.util;
+package epf.portlet.util.net;
 
 import java.net.MalformedURLException;
 import java.net.URL;
