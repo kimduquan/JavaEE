@@ -26,8 +26,8 @@ import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.security.client.Security;
 import epf.security.schema.Token;
+import epf.security.util.PasswordUtil;
 import epf.tests.client.ClientUtil;
-import epf.util.security.PasswordUtil;
 import epf.client.gateway.GatewayUtil;
 
 /**

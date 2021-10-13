@@ -17,13 +17,13 @@ import javax.security.enterprise.identitystore.IdentityStore;
 
 import epf.util.config.ConfigUtil;
 import epf.util.logging.Logging;
-import epf.util.security.PasswordUtil;
 import epf.webapp.WebApp;
 import epf.client.gateway.GatewayUtil;
 import epf.client.util.Client;
 import epf.client.util.ClientQueue;
 import epf.security.client.Security;
 import epf.security.schema.Token;
+import epf.security.util.PasswordUtil;
 
 /**
  *

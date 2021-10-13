@@ -10,9 +10,10 @@ import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.security.client.Security;
 import epf.security.schema.Token;
+import epf.security.util.PasswordUtil;
 import epf.tests.client.ClientUtil;
 import epf.util.logging.Logging;
-import epf.util.security.PasswordUtil;
+
 import java.util.Map.Entry;
 import java.util.AbstractMap;
 import java.util.Queue;

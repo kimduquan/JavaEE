@@ -11,8 +11,9 @@ import epf.portlet.client.ClientUtil;
 import epf.portlet.gateway.GatewayUtil;
 import epf.security.client.Credential;
 import epf.security.schema.Token;
+import epf.security.util.PasswordUtil;
 import epf.util.logging.Logging;
-import epf.util.security.PasswordUtil;
+
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;

@@ -6,6 +6,8 @@ package epf.util.security;
 import org.junit.Assert;
 import org.junit.Test;
 
+import epf.security.util.PasswordUtil;
+
 /**
  * @author PC
  *
@@ -13,7 +15,7 @@ import org.junit.Test;
 public class PasswordHelperTest {
 
 	/**
-	 * Test method for {@link epf.util.security.PasswordUtil#hash(java.lang.String, char[])}.
+	 * Test method for {@link epf.security.util.PasswordUtil#hash(java.lang.String, char[])}.
 	 * @throws Exception 
 	 */
 	@Test
@@ -26,7 +28,7 @@ public class PasswordHelperTest {
 	}
 
 	/**
-	 * Test method for {@link epf.util.security.PasswordUtil#hash(java.lang.String, char[])}.
+	 * Test method for {@link epf.security.util.PasswordUtil#hash(java.lang.String, char[])}.
 	 * @throws Exception 
 	 */
 	@Test(expected = NullPointerException.class)
@@ -36,7 +38,7 @@ public class PasswordHelperTest {
 	}
 	
 	/**
-	 * Test method for {@link epf.util.security.PasswordUtil#hash(java.lang.String, char[])}.
+	 * Test method for {@link epf.security.util.PasswordUtil#hash(java.lang.String, char[])}.
 	 * @throws Exception 
 	 */
 	@Test(expected = NullPointerException.class)

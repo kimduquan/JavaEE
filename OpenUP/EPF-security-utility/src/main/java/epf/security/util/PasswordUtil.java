@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.util.security;
+package epf.security.util;
 
 import java.util.Locale;
 import java.util.Objects;
