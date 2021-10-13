@@ -26,13 +26,11 @@ import epf.client.schema.Embeddable;
 import epf.client.util.Client;
 import epf.portlet.internal.gateway.GatewayUtil;
 import epf.portlet.internal.persistence.EntityUtil;
-import epf.portlet.internal.persistence.Naming;
 import epf.portlet.internal.security.SecurityUtil;
+import epf.portlet.naming.Naming;
 import epf.portlet.util.EventUtil;
-import epf.portlet.util.Parameter;
 import epf.portlet.util.ParameterUtil;
 import epf.portlet.util.RequestUtil;
-import epf.portlet.util.event.Event;
 import epf.portlet.util.json.JsonUtil;
 import epf.util.logging.Logging;
 
@@ -41,7 +39,7 @@ import epf.util.logging.Logging;
  *
  */
 @ViewScoped
-@Named(Naming.PERSISTENCE_ENTITY)
+@Named(Naming.Persistence.PERSISTENCE_ENTITY)
 public class Entity implements Serializable {
 	
 	/**
@@ -130,7 +128,7 @@ public class Entity implements Serializable {
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		entity = eventUtil.getEvent(Event.SCHEMA_ENTITY);
+		entity = eventUtil.getEvent(Naming.Event.SCHEMA_ENTITY);
 		if(entity != null) {
 			try {
 				entities = fetchEntities()
@@ -195,7 +193,7 @@ public class Entity implements Serializable {
 	public boolean preLoad() {
 		if(entity != null && object == null) {
 			try {
-				id = requestUtil.getRequest().getRenderParameters().getValue(Parameter.PERSISTENCE_ENTITY_ID);
+				id = requestUtil.getRequest().getRenderParameters().getValue(Naming.Parameter.PERSISTENCE_ENTITY_ID);
 				if(id != null && !id.isEmpty()) {
 					object = new EntityObject(entityUtil.getEntity(entity.getTable().getSchema(), entity.getName(), id));
 					final AttributeBuilder attrBuilder = new AttributeBuilder()
@@ -297,7 +295,7 @@ public class Entity implements Serializable {
 			final JsonValue idValue = object.get(entity.getId().getName());
 			id = JsonUtil.toString(idValue);
 			if(id != null) {
-				paramUtil.setValue(Parameter.PERSISTENCE_ENTITY_ID, id);
+				paramUtil.setValue(Naming.Parameter.PERSISTENCE_ENTITY_ID, id);
 			}
 		}
 	}

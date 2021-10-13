@@ -13,19 +13,19 @@ import javax.servlet.http.Cookie;
 import epf.client.portlet.security.PrincipalView;
 import epf.client.util.Client;
 import epf.portlet.internal.gateway.GatewayUtil;
-import epf.portlet.internal.security.Naming;
 import epf.portlet.internal.security.SecurityUtil;
 import epf.portlet.util.RequestUtil;
 import epf.portlet.util.http.CookieUtil;
 import epf.security.client.Credential;
 import epf.security.schema.Token;
+import epf.portlet.naming.Naming;
 
 /**
  * @author PC
  *
  */
 @ViewScoped
-@Named(Naming.SECURITY_PRINCIPAL)
+@Named(Naming.Security.SECURITY_PRINCIPAL)
 public class Principal implements PrincipalView, Serializable {
 
 	/**
@@ -85,7 +85,7 @@ public class Principal implements PrincipalView, Serializable {
 			epf.security.client.Security.logOut(client);
 		}
 		session.setToken(null);
-		cookieUtil.deleteCookie(Naming.SECURITY_TOKEN);
+		cookieUtil.deleteCookie(Naming.Security.SECURITY_TOKEN);
 		return "security";
 	}
 	
@@ -119,7 +119,7 @@ public class Principal implements PrincipalView, Serializable {
 		}
 		token.setRawToken(rawToken);
 		session.setToken(token);
-		final Cookie cookie = new Cookie(Naming.SECURITY_TOKEN, rawToken);
+		final Cookie cookie = new Cookie(Naming.Security.SECURITY_TOKEN, rawToken);
 		cookie.setMaxAge((int)(token.getExpirationTime() - Instant.EPOCH.getEpochSecond()));
 		cookie.setDomain(requestUtil.getRequest().getServerName());
 		cookie.setHttpOnly(true);

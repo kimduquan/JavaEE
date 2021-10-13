@@ -17,7 +17,7 @@ import epf.client.portlet.persistence.SearchView;
 import epf.client.util.Client;
 import epf.portlet.internal.config.ConfigUtil;
 import epf.portlet.internal.gateway.GatewayUtil;
-import epf.portlet.internal.persistence.Naming;
+import epf.portlet.naming.Naming;
 import epf.portlet.internal.security.SecurityUtil;
 import epf.util.logging.Logging;
 
@@ -25,7 +25,7 @@ import epf.util.logging.Logging;
  * @author PC
  *
  */
-@Named(Naming.PERSISTENCE_SEARCH)
+@Named(Naming.Persistence.PERSISTENCE_SEARCH)
 @ViewScoped
 public class Search implements SearchView, Serializable {
 

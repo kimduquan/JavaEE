@@ -20,12 +20,10 @@ import epf.client.util.Client;
 import epf.portlet.internal.config.ConfigUtil;
 import epf.portlet.internal.gateway.GatewayUtil;
 import epf.portlet.internal.persistence.EntityUtil;
-import epf.portlet.internal.persistence.Naming;
+import epf.portlet.naming.Naming;
 import epf.portlet.internal.security.SecurityUtil;
 import epf.portlet.util.EventUtil;
-import epf.portlet.util.Parameter;
 import epf.portlet.util.ParameterUtil;
-import epf.portlet.util.event.Event;
 import epf.portlet.util.json.JsonUtil;
 import epf.util.logging.Logging;
 
@@ -34,7 +32,7 @@ import epf.util.logging.Logging;
  *
  */
 @ViewScoped
-@Named(Naming.PERSISTENCE)
+@Named(Naming.Persistence.PERSISTENCE)
 public class Persistence implements PersistenceView, Serializable {
 	
 	/**
@@ -108,7 +106,7 @@ public class Persistence implements PersistenceView, Serializable {
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		entity = eventUtil.getEvent(Event.SCHEMA_ENTITY);
+		entity = eventUtil.getEvent(Naming.Event.SCHEMA_ENTITY);
 		if(entity != null) {
 			attributes = entity
 					.getAttributes()
@@ -164,7 +162,7 @@ public class Persistence implements PersistenceView, Serializable {
 				final JsonValue idValue = object.get(id.getName());
 				if(idValue != null) {
 					final String value = JsonUtil.toString(idValue);
-					paramUtil.setValue(Parameter.PERSISTENCE_ENTITY_ID, value);
+					paramUtil.setValue(Naming.Parameter.PERSISTENCE_ENTITY_ID, value);
 				}
 			}
 		}

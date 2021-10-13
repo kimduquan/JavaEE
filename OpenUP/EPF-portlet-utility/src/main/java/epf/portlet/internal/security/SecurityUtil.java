@@ -6,9 +6,9 @@ package epf.portlet.internal.security;
 import java.net.URI;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-
 import epf.client.util.Client;
 import epf.portlet.internal.client.ClientUtil;
+import epf.portlet.naming.Naming;
 import epf.portlet.util.http.CookieUtil;
 
 /**
@@ -36,7 +36,7 @@ public class SecurityUtil {
 	 */
 	public Client newClient(final URI url) {
 		final Client client = clientUtil.newClient(url);
-		cookieUtil.getCookie(Naming.SECURITY_TOKEN).ifPresent(cookie -> {
+		cookieUtil.getCookie(Naming.Security.SECURITY_TOKEN).ifPresent(cookie -> {
 			client.authorization(cookie.getValue());
 		});
 		return client;

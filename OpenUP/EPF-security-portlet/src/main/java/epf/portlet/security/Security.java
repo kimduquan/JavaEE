@@ -7,8 +7,8 @@ import epf.client.portlet.security.CredentialView;
 import epf.client.util.Client;
 import epf.portlet.internal.client.ClientUtil;
 import epf.portlet.internal.gateway.GatewayUtil;
-import epf.portlet.internal.security.Naming;
 import epf.portlet.internal.security.SecurityUtil;
+import epf.portlet.naming.Naming;
 import epf.portlet.util.RequestUtil;
 import epf.portlet.util.http.CookieUtil;
 import epf.security.client.Credential;
@@ -30,7 +30,7 @@ import java.util.logging.Logger;
  * @author PC
  *
  */
-@Named(Naming.SECURITY)
+@Named(Naming.Security.SECURITY)
 @ViewScoped
 public class Security implements CredentialView, Serializable {
 	
@@ -115,7 +115,7 @@ public class Security implements CredentialView, Serializable {
 		}
 		token.setRawToken(rawToken);
 		session.setToken(token);
-		final Cookie cookie = new Cookie(Naming.SECURITY_TOKEN, rawToken);
+		final Cookie cookie = new Cookie(Naming.Security.SECURITY_TOKEN, rawToken);
 		cookie.setMaxAge((int)(token.getExpirationTime() - Instant.EPOCH.getEpochSecond()));
 		cookie.setDomain(request.getRequest().getServerName());
 		cookie.setHttpOnly(true);
@@ -128,7 +128,7 @@ public class Security implements CredentialView, Serializable {
 	 * @return
 	 */
 	public String authenticate() {
-		final Optional<Cookie> cookie = cookieUtil.getCookie(Naming.SECURITY_TOKEN);
+		final Optional<Cookie> cookie = cookieUtil.getCookie(Naming.Security.SECURITY_TOKEN);
 		if(cookie.isPresent() && session.getToken() == null) {
 			try(Client client = securityUtil.newClient(gatewayUtil.get(epf.naming.Naming.SECURITY))){
 				final Token token = epf.security.client.Security.authenticate(client);
