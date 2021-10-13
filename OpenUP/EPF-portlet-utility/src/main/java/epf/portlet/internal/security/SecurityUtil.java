@@ -9,7 +9,7 @@ import javax.inject.Inject;
 
 import epf.client.util.Client;
 import epf.portlet.internal.client.ClientUtil;
-import epf.portlet.util.CookieUtil;
+import epf.portlet.util.http.CookieUtil;
 
 /**
  * @author PC

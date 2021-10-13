@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.portlet.PortletPreferences;
 import javax.portlet.annotations.PortletRequestScoped;
+import epf.portlet.naming.Naming;
 
 /**
  * @author PC
@@ -18,7 +19,7 @@ public class PreferenceUtil {
 	/**
 	 * 
 	 */
-	@Inject @Named(Bridge.PORTLET_PREFERENCES)
+	@Inject @Named(Naming.Bridge.PORTLET_PREFERENCES)
 	private transient PortletPreferences preferences;
 	
 	/**

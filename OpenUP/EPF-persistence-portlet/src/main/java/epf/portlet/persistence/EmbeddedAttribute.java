@@ -9,7 +9,7 @@ import javax.json.Json;
 import javax.json.JsonReader;
 import epf.client.schema.Attribute;
 import epf.client.schema.Embeddable;
-import epf.portlet.util.JsonUtil;
+import epf.portlet.util.json.JsonUtil;
 
 /**
  * @author PC

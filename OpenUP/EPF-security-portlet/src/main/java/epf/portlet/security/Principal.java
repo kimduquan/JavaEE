@@ -15,8 +15,8 @@ import epf.client.util.Client;
 import epf.portlet.internal.gateway.GatewayUtil;
 import epf.portlet.internal.security.Naming;
 import epf.portlet.internal.security.SecurityUtil;
-import epf.portlet.util.CookieUtil;
 import epf.portlet.util.RequestUtil;
+import epf.portlet.util.http.CookieUtil;
 import epf.security.client.Credential;
 import epf.security.schema.Token;
 

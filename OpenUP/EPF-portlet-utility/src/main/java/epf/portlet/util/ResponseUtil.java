@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.portlet.PortletResponse;
 import javax.portlet.annotations.PortletRequestScoped;
+import epf.portlet.naming.Naming;
 
 /**
  * @author PC
@@ -18,7 +19,7 @@ public class ResponseUtil {
 	/**
 	 * 
 	 */
-	@Inject @Named(Bridge.PORTLET_RESPONSE)
+	@Inject @Named(Naming.Bridge.PORTLET_RESPONSE)
 	private transient PortletResponse response;
 
 	/**

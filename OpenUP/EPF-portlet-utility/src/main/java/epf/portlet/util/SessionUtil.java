@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.portlet.PortletSession;
 import javax.portlet.annotations.PortletRequestScoped;
+import epf.portlet.naming.Naming;
 
 /**
  * @author PC
@@ -18,7 +19,7 @@ public class SessionUtil {
 	/**
 	 * 
 	 */
-	@Inject @Named(Bridge.PORTLET_SESSION)
+	@Inject @Named(Naming.Bridge.PORTLET_SESSION)
 	private transient PortletSession portletSession;
 	
 	/**

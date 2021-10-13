@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.portlet.util;
+package epf.portlet.util.json;
 
 import java.util.Arrays;
 import java.util.List;

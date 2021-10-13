@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.portlet.MutableRenderParameters;
 import javax.portlet.annotations.PortletRequestScoped;
+import epf.portlet.naming.Naming;
 
 /**
  * @author PC
@@ -18,7 +19,7 @@ public class ParameterUtil {
 	/**
 	 * 
 	 */
-	@Inject @Named(Bridge.MUTABLE_RENDER_PARAMETERS)
+	@Inject @Named(Naming.Bridge.MUTABLE_RENDER_PARAMETERS)
 	private transient MutableRenderParameters renderParams;
 	
 	/**

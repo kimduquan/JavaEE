@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.portlet.util;
+package epf.portlet.util.http;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -11,6 +11,7 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.annotations.PortletRequestScoped;
 import javax.servlet.http.Cookie;
+import epf.portlet.naming.Naming;
 
 /**
  * @author PC
@@ -22,13 +23,13 @@ public class CookieUtil {
 	/**
 	 * 
 	 */
-	@Inject @Named(Bridge.PORTLET_REQUEST)
+	@Inject @Named(Naming.Bridge.PORTLET_REQUEST)
 	private transient PortletRequest request;
 
 	/**
 	 * 
 	 */
-	@Inject @Named(Bridge.PORTLET_RESPONSE)
+	@Inject @Named(Naming.Bridge.PORTLET_RESPONSE)
 	private transient PortletResponse response;
 	
 	/**

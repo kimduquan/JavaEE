@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.portlet.util;
+package epf.portlet.util.json;
 
 import java.io.StringReader;
 import javax.faces.component.UIComponent;

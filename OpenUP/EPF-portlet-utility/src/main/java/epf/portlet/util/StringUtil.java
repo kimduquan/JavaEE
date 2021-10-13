@@ -5,13 +5,14 @@ package epf.portlet.util;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
+import epf.portlet.naming.Naming;
 
 /**
  * @author PC
  *
  */
 @ApplicationScoped
-@Named("string")
+@Named(Naming.STRING)
 public class StringUtil {
 
 	/**

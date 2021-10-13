@@ -10,6 +10,7 @@ import javax.portlet.PortletSession;
 import javax.portlet.StateAwareResponse;
 import javax.portlet.annotations.PortletRequestScoped;
 import javax.xml.namespace.QName;
+import epf.portlet.naming.Naming;
 
 /**
  * @author PC
@@ -21,13 +22,13 @@ public class EventUtil {
 	/**
 	 * 
 	 */
-	@Inject @Named(Bridge.STATE_AWARE_RESPONSE)
+	@Inject @Named(Naming.Bridge.STATE_AWARE_RESPONSE)
 	private transient StateAwareResponse state;
 	
 	/**
 	 * 
 	 */
-	@Inject @Named(Bridge.PORTLET_SESSION)
+	@Inject @Named(Naming.Bridge.PORTLET_SESSION)
 	private transient PortletSession portletSession;
 	
 	/**

@@ -21,10 +21,10 @@ import epf.client.util.Client;
 import epf.portlet.internal.gateway.GatewayUtil;
 import epf.portlet.internal.schema.Naming;
 import epf.portlet.internal.security.SecurityUtil;
-import epf.portlet.util.Event;
 import epf.portlet.util.EventUtil;
 import epf.portlet.util.Parameter;
 import epf.portlet.util.ParameterUtil;
+import epf.portlet.util.event.Event;
 import epf.util.logging.Logging;
 
 /**
