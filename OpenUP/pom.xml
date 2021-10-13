@@ -759,6 +759,7 @@
 		<module>EPF-work-products-schema</module>
 		
 		<module>EPF-naming</module>
+		<module>EPF-portlet-naming</module>
 		
         <module>EPF-validation</module>
         <module>EPF-client</module>

@@ -13,7 +13,6 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.ws.rs.core.Response;
-
 import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.portlet.util.gateway.GatewayUtil;
