@@ -27,6 +27,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-portlet-internal</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
 			<groupId>javax.enterprise</groupId>
 			<artifactId>cdi-api</artifactId>
 			<scope>provided</scope>

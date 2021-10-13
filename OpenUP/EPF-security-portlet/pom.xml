@@ -26,6 +26,11 @@
             <artifactId>EPF-portlet-utility</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-portlet-internal</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-portlet-client</artifactId>
