@@ -8,10 +8,11 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
-
 import epf.client.util.Client;
 import epf.naming.Naming;
 
@@ -46,9 +47,9 @@ public interface Net {
 	 */
 	static String rewriteUrl(final Client client, final String url) {
 		return client.request(
-    			target -> target.queryParam("url", url), 
+    			target -> target.path("url"), 
     			req -> req.accept(MediaType.TEXT_PLAIN)
     			)
-    			.get(String.class);
+    			.post(Entity.form(new Form().param("url", url)), String.class);
 	}
 }

@@ -12,7 +12,7 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonReader;
 import javax.json.JsonValue;
 import epf.client.schema.Attribute;
-import epf.portlet.JsonUtil;
+import epf.portlet.util.JsonUtil;
 
 /**
  * @author PC

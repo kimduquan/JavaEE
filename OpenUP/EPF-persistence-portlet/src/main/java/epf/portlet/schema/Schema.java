@@ -18,12 +18,13 @@ import javax.ws.rs.core.Response;
 import epf.client.portlet.persistence.SchemaView;
 import epf.client.schema.Entity;
 import epf.client.util.Client;
-import epf.portlet.Event;
-import epf.portlet.EventUtil;
-import epf.portlet.Parameter;
-import epf.portlet.ParameterUtil;
-import epf.portlet.gateway.GatewayUtil;
-import epf.portlet.security.SecurityUtil;
+import epf.portlet.util.Event;
+import epf.portlet.util.EventUtil;
+import epf.portlet.util.Parameter;
+import epf.portlet.util.ParameterUtil;
+import epf.portlet.util.gateway.GatewayUtil;
+import epf.portlet.util.schema.Naming;
+import epf.portlet.util.security.SecurityUtil;
 import epf.util.logging.Logging;
 
 /**

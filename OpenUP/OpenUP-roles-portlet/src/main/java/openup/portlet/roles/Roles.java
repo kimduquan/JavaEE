@@ -10,9 +10,6 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.GenericType;
-
-import epf.portlet.gateway.GatewayUtil;
-import epf.portlet.security.SecurityUtil;
 import epf.util.logging.Logging;
 import openup.client.portlet.Naming;
 import openup.client.portlet.roles.RolesView;
@@ -21,6 +18,8 @@ import openup.schema.OpenUP;
 import openup.schema.roles.Role;
 import epf.client.persistence.Queries;
 import epf.client.util.Client;
+import epf.portlet.util.gateway.GatewayUtil;
+import epf.portlet.util.security.SecurityUtil;
 
 /**
  * @author PC

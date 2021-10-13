@@ -10,7 +10,7 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 import epf.client.schema.Attribute;
-import epf.portlet.JsonUtil;
+import epf.portlet.util.JsonUtil;
 
 /**
  * @author PC

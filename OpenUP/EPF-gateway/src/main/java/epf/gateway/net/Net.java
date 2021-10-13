@@ -94,7 +94,7 @@ public class Net {
         	final int id = StringUtil.fromShortString(url);
         	try(Client client = clientUtil.newClient(ConfigUtil.getURI(Naming.Cache.CACHE_URL))){
         		urlString = client.request(
-        				target -> target.path("net/url").queryParam("id", String.valueOf(id)), 
+        				target -> target.path("net").path("url").queryParam("id", String.valueOf(id)), 
         				req -> req)
         		.accept(MediaType.TEXT_PLAIN)
         		.get(String.class);

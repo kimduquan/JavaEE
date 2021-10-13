@@ -22,6 +22,7 @@ public class NetTest {
 	
 	private static String token;
 	private static URI netUrl;
+	private static URI persistenceUrl;
 	
 	private Client client;
 
@@ -30,6 +31,7 @@ public class NetTest {
 		HealthUtil.readỵ̣();
 		token = SecurityUtil.login();
 		netUrl = GatewayUtil.get(Naming.NET);
+		persistenceUrl = GatewayUtil.get(Naming.PERSISTENCE);
 	}
 
 	@AfterClass
@@ -51,16 +53,17 @@ public class NetTest {
 	@Test
 	public void testRewriteUrlOk() throws Exception {
 		String shortUrl = Net.rewriteUrl(client, "https://google.com");
-		try(Client gateway = ClientUtil.newClient(GatewayUtil.get(Naming.NET))){
-			try(Response response = gateway.request(target -> target.path("url").queryParam("url", shortUrl), null).get()){
+		try(Client gateway = ClientUtil.newClient(netUrl)){
+			try(Response response = gateway.request(target -> target.path("url").queryParam("url", shortUrl), req -> req).get()){
 				URI uri = response.getLocation();
 				Assert.assertEquals("Response.location", new URI("https://google.com"), uri);
 				Assert.assertEquals("Response.statusInfo", Response.Status.TEMPORARY_REDIRECT, response.getStatusInfo());
 			}
 		}
 		int id = StringUtil.fromShortString(shortUrl);
-		try(Client entities = ClientUtil.newClient(GatewayUtil.get(Naming.PERSISTENCE))){
-			Entities.remove(entities, epf.net.schema.Net.SCHEMA, epf.net.schema.Net.URL, String.valueOf(id));
+		try(Client persistence = ClientUtil.newClient(persistenceUrl)){
+			persistence.authorization(token);
+			Entities.remove(persistence, epf.net.schema.Net.SCHEMA, epf.net.schema.Net.URL, String.valueOf(id));
 		}
 	}
 }

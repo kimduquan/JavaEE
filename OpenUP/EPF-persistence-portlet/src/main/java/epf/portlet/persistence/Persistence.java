@@ -17,14 +17,16 @@ import epf.client.portlet.persistence.PersistenceView;
 import epf.client.schema.Attribute;
 import epf.client.schema.Entity;
 import epf.client.util.Client;
-import epf.portlet.Event;
-import epf.portlet.EventUtil;
-import epf.portlet.JsonUtil;
-import epf.portlet.Parameter;
-import epf.portlet.ParameterUtil;
-import epf.portlet.config.ConfigUtil;
-import epf.portlet.gateway.GatewayUtil;
-import epf.portlet.security.SecurityUtil;
+import epf.portlet.util.Event;
+import epf.portlet.util.EventUtil;
+import epf.portlet.util.JsonUtil;
+import epf.portlet.util.Parameter;
+import epf.portlet.util.ParameterUtil;
+import epf.portlet.util.config.ConfigUtil;
+import epf.portlet.util.gateway.GatewayUtil;
+import epf.portlet.util.persistence.EntityUtil;
+import epf.portlet.util.persistence.Naming;
+import epf.portlet.util.security.SecurityUtil;
 import epf.util.logging.Logging;
 
 /**

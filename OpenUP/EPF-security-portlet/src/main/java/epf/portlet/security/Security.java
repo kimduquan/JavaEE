@@ -5,15 +5,16 @@ package epf.portlet.security;
 
 import epf.client.portlet.security.CredentialView;
 import epf.client.util.Client;
-import epf.portlet.CookieUtil;
-import epf.portlet.RequestUtil;
-import epf.portlet.client.ClientUtil;
-import epf.portlet.gateway.GatewayUtil;
+import epf.portlet.util.CookieUtil;
+import epf.portlet.util.RequestUtil;
+import epf.portlet.util.client.ClientUtil;
+import epf.portlet.util.gateway.GatewayUtil;
+import epf.portlet.util.security.Naming;
+import epf.portlet.util.security.SecurityUtil;
 import epf.security.client.Credential;
 import epf.security.schema.Token;
 import epf.security.util.PasswordUtil;
 import epf.util.logging.Logging;
-
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;

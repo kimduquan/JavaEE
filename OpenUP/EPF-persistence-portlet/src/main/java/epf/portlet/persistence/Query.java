@@ -16,13 +16,15 @@ import javax.json.JsonValue;
 import epf.client.portlet.persistence.QueryView;
 import epf.client.schema.Attribute;
 import epf.client.schema.Entity;
-import epf.portlet.Event;
-import epf.portlet.EventUtil;
-import epf.portlet.JsonObjectCollector;
-import epf.portlet.JsonUtil;
-import epf.portlet.Parameter;
-import epf.portlet.ParameterUtil;
-import epf.portlet.config.ConfigUtil;
+import epf.portlet.util.Event;
+import epf.portlet.util.EventUtil;
+import epf.portlet.util.JsonObjectCollector;
+import epf.portlet.util.JsonUtil;
+import epf.portlet.util.Parameter;
+import epf.portlet.util.ParameterUtil;
+import epf.portlet.util.config.ConfigUtil;
+import epf.portlet.util.persistence.EntityUtil;
+import epf.portlet.util.persistence.Naming;
 import epf.util.logging.Logging;
 
 /**
