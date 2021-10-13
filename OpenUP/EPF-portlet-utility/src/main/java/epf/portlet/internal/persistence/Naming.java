@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.portlet.util.persistence;
+package epf.portlet.internal.persistence;
 
 /**
  * @author PC

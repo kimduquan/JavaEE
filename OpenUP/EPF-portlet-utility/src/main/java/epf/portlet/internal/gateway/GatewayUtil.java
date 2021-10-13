@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.portlet.util.gateway;
+package epf.portlet.internal.gateway;
 
 import java.net.URI;
 import javax.enterprise.context.RequestScoped;

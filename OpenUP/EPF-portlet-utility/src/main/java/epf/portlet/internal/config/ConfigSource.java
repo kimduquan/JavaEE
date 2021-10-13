@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.portlet.util.config;
+package epf.portlet.internal.config;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

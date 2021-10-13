@@ -5,7 +5,8 @@ package epf.portlet.security;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
-import epf.portlet.util.security.Naming;
+
+import epf.portlet.internal.security.Naming;
 import epf.security.schema.Token;
 import java.io.Serializable;
 

@@ -24,16 +24,16 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import epf.client.schema.Embeddable;
 import epf.client.util.Client;
+import epf.portlet.internal.gateway.GatewayUtil;
+import epf.portlet.internal.persistence.EntityUtil;
+import epf.portlet.internal.persistence.Naming;
+import epf.portlet.internal.security.SecurityUtil;
 import epf.portlet.util.Event;
 import epf.portlet.util.EventUtil;
 import epf.portlet.util.JsonUtil;
 import epf.portlet.util.Parameter;
 import epf.portlet.util.ParameterUtil;
 import epf.portlet.util.RequestUtil;
-import epf.portlet.util.gateway.GatewayUtil;
-import epf.portlet.util.persistence.EntityUtil;
-import epf.portlet.util.persistence.Naming;
-import epf.portlet.util.security.SecurityUtil;
 import epf.util.logging.Logging;
 
 /**

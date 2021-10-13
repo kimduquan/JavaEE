@@ -15,10 +15,10 @@ import javax.ws.rs.core.Response;
 import epf.client.persistence.SearchData;
 import epf.client.portlet.persistence.SearchView;
 import epf.client.util.Client;
-import epf.portlet.util.config.ConfigUtil;
-import epf.portlet.util.gateway.GatewayUtil;
-import epf.portlet.util.persistence.Naming;
-import epf.portlet.util.security.SecurityUtil;
+import epf.portlet.internal.config.ConfigUtil;
+import epf.portlet.internal.gateway.GatewayUtil;
+import epf.portlet.internal.persistence.Naming;
+import epf.portlet.internal.security.SecurityUtil;
 import epf.util.logging.Logging;
 
 /**

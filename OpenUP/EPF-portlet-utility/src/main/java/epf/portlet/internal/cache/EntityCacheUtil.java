@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.portlet.util.cache;
+package epf.portlet.internal.cache;
 
 import java.io.InputStream;
 import java.util.List;
@@ -15,8 +15,8 @@ import javax.json.JsonReader;
 import javax.ws.rs.core.Response;
 import epf.client.util.Client;
 import epf.naming.Naming;
-import epf.portlet.util.gateway.GatewayUtil;
-import epf.portlet.util.security.SecurityUtil;
+import epf.portlet.internal.gateway.GatewayUtil;
+import epf.portlet.internal.security.SecurityUtil;
 import epf.util.logging.Logging;
 
 /**

@@ -1,15 +1,15 @@
 /**
  * 
  */
-package epf.portlet.util.security;
+package epf.portlet.internal.security;
 
 import java.net.URI;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
 import epf.client.util.Client;
+import epf.portlet.internal.client.ClientUtil;
 import epf.portlet.util.CookieUtil;
-import epf.portlet.util.client.ClientUtil;
 
 /**
  * @author PC

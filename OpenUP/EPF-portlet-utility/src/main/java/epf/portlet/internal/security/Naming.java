@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.portlet.util.security;
+package epf.portlet.internal.security;
 
 /**
  * @author PC

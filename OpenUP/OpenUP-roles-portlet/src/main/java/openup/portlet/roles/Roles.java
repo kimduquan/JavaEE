@@ -18,8 +18,8 @@ import openup.schema.OpenUP;
 import openup.schema.roles.Role;
 import epf.client.persistence.Queries;
 import epf.client.util.Client;
-import epf.portlet.util.gateway.GatewayUtil;
-import epf.portlet.util.security.SecurityUtil;
+import epf.portlet.internal.gateway.GatewayUtil;
+import epf.portlet.internal.security.SecurityUtil;
 
 /**
  * @author PC

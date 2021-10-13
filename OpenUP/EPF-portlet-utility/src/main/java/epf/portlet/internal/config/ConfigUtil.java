@@ -1,15 +1,15 @@
 /**
  * 
  */
-package epf.portlet.util.config;
+package epf.portlet.internal.config;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
 import epf.client.util.Client;
 import epf.naming.Naming;
-import epf.portlet.util.gateway.GatewayUtil;
-import epf.portlet.util.security.SecurityUtil;
+import epf.portlet.internal.gateway.GatewayUtil;
+import epf.portlet.internal.security.SecurityUtil;
 
 /**
  * @author PC

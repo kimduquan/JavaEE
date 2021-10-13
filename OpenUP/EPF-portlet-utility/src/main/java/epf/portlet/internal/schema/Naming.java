@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.portlet.util.schema;
+package epf.portlet.internal.schema;
 
 /**
  * @author PC

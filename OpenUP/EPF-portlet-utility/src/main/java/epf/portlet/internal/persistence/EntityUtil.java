@@ -1,14 +1,14 @@
 /**
  * 
  */
-package epf.portlet.util.persistence;
+package epf.portlet.internal.persistence;
 
 import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.json.JsonObject;
 
-import epf.portlet.util.cache.EntityCacheUtil;
+import epf.portlet.internal.cache.EntityCacheUtil;
 
 /**
  * @author PC

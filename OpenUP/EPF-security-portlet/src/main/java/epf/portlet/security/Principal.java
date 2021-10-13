@@ -12,11 +12,11 @@ import javax.inject.Named;
 import javax.servlet.http.Cookie;
 import epf.client.portlet.security.PrincipalView;
 import epf.client.util.Client;
+import epf.portlet.internal.gateway.GatewayUtil;
+import epf.portlet.internal.security.Naming;
+import epf.portlet.internal.security.SecurityUtil;
 import epf.portlet.util.CookieUtil;
 import epf.portlet.util.RequestUtil;
-import epf.portlet.util.gateway.GatewayUtil;
-import epf.portlet.util.security.Naming;
-import epf.portlet.util.security.SecurityUtil;
 import epf.security.client.Credential;
 import epf.security.schema.Token;
 
