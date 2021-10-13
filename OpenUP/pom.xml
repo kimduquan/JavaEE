@@ -782,7 +782,7 @@
 		<module>OpenUP-gateway</module>
 		
 		<module>EPF-portlet-client</module>
-		<module>EPF-portlet</module>
+		<module>EPF-portlet-utility</module>
 		<module>EPF-file-portlet</module>
 		<module>EPF-messaging-portlet</module>
 		<module>EPF-persistence-portlet</module>

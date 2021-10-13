@@ -7,9 +7,9 @@
 		<artifactId>OpenUP-parent</artifactId>
 		<version>1.0.0</version>
 	</parent>
-	<artifactId>EPF-portlet</artifactId>
+	<artifactId>EPF-portlet-utility</artifactId>
 	<packaging>jar</packaging>
-	<name>Eclipse Process Framework Portlet</name>
+	<name>Eclipse Process Framework Portlet Utility</name>
 	<dependencies>
 		<dependency>
             <groupId>openup</groupId>

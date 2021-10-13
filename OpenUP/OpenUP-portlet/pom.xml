@@ -13,7 +13,7 @@
 	<dependencies>
 		<dependency>
             <groupId>openup</groupId>
-            <artifactId>EPF-portlet</artifactId>
+            <artifactId>EPF-portlet-utility</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
