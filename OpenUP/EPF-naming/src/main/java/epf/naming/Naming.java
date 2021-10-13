@@ -23,7 +23,7 @@ public interface Naming {
 	 * @author PC
 	 *
 	 */
-	public interface Batch {
+	interface Batch {
 		
 		/**
 		 * 
@@ -45,7 +45,7 @@ public interface Naming {
 	 * @author PC
 	 *
 	 */
-	public interface Cache {
+	interface Cache {
 
 		/**
 		 * 
@@ -63,7 +63,7 @@ public interface Naming {
 	 * @author PC
 	 *
 	 */
-	public interface Config {
+	interface Config {
 		
 		/**
 		 * 
@@ -81,7 +81,7 @@ public interface Naming {
 	 * @author PC
 	 *
 	 */
-	public interface File {
+	interface File {
 	    
 	    /**
 	     * 
@@ -99,7 +99,7 @@ public interface Naming {
 	 * @author PC
 	 *
 	 */
-	public interface Gateway {
+	interface Gateway {
 		
 	    /**
 	     * 
@@ -116,7 +116,7 @@ public interface Naming {
 	 * @author PC
 	 *
 	 */
-	public interface Health {
+	interface Health {
 		
 		/**
 		 * 
@@ -133,7 +133,7 @@ public interface Naming {
 	 * @author PC
 	 *
 	 */
-	public interface Image {
+	interface Image {
 
 		/**
 		 * 
@@ -146,7 +146,7 @@ public interface Naming {
 	 * @author PC
 	 *
 	 */
-	public interface Lang {
+	interface Lang {
 
 		/**
 		 * 
@@ -163,7 +163,7 @@ public interface Naming {
 	 * @author PC
 	 *
 	 */
-	public interface Management {
+	interface Management {
 
 		/**
 		 * 
@@ -181,7 +181,7 @@ public interface Naming {
 	 * @author PC
 	 *
 	 */
-	public interface Messaging {
+	interface Messaging {
 		
 	    /**
 	     * 
@@ -199,7 +199,7 @@ public interface Naming {
 	 * @author PC
 	 *
 	 */
-	public interface Net {
+	interface Net {
 		
 		/**
 		 * 
@@ -217,7 +217,7 @@ public interface Naming {
 	 * @author PC
 	 *
 	 */
-	public interface Persistence {
+	interface Persistence {
 
 		/**
 		 * 
@@ -250,7 +250,7 @@ public interface Naming {
 	 * @author PC
 	 *
 	 */
-	public interface Planning {
+	interface Planning {
 
 		/**
 		 * 
@@ -268,7 +268,7 @@ public interface Naming {
 	 * @author PC
 	 *
 	 */
-	public interface Registry {
+	interface Registry {
 		
 	    /**
 	     * 
@@ -286,7 +286,7 @@ public interface Naming {
 	 * @author PC
 	 *
 	 */
-	public interface Rules {
+	interface Rules {
 		
 		/**
 		 * 
@@ -309,7 +309,7 @@ public interface Naming {
 	 * @author PC
 	 *
 	 */
-	public interface Schedule {
+	interface Schedule {
 		
 		/**
 		 * 
@@ -327,7 +327,7 @@ public interface Naming {
 	 * @author PC
 	 *
 	 */
-	public interface Schema {
+	interface Schema {
 
 		/**
 		 * 
@@ -345,7 +345,7 @@ public interface Naming {
 	 * @author PC
 	 *
 	 */
-	public interface Script {
+	interface Script {
 		
 		/**
 		 * 
@@ -363,7 +363,7 @@ public interface Naming {
 	 * @author PC
 	 *
 	 */
-	public interface Security {
+	interface Security {
 		
 		/**
 	     * 
@@ -380,7 +380,7 @@ public interface Naming {
 	 * @author PC
 	 *
 	 */
-	public interface Shell {
+	interface Shell {
 
 		/**
 		 * 

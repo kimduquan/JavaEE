@@ -53,7 +53,7 @@ public class ListenerTest {
     @BeforeClass
     public static void beforeClass() throws Exception{
     	persistenceUrl = GatewayUtil.get(Naming.PERSISTENCE);
-    	URI messagingUrl = UriBuilder.fromUri(GatewayUtil.get(Naming.PERSISTENCE)).scheme("ws").port(9080).build();
+    	URI messagingUrl = UriBuilder.fromUri(GatewayUtil.get(Naming.MESSAGING)).scheme("ws").port(9080).build();
     	token = SecurityUtil.login();
     	tokenId = SecurityUtil.auth(token).getTokenID();
     	listenerUrl = new URI(messagingUrl.toString() + "/persistence?tid=" + tokenId);
@@ -61,7 +61,7 @@ public class ListenerTest {
     	executor = Executors.newFixedThreadPool(1);
     	streamClient = ClientUtil.newClient(streamUrl);
     	events = new ConcurrentLinkedQueue<>();
-    	event = streamClient.stream(target -> target.path("persistence").matrixParam("tid", tokenId), b -> b);
+    	event = streamClient.stream(target -> target.path(Naming.PERSISTENCE).matrixParam("tid", tokenId), b -> b);
     	event.register(e -> {
     		String data = e.readData();
     		events.add(data);

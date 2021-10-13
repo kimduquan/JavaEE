@@ -44,11 +44,9 @@ public interface Net {
 	 * @param url
 	 * @return
 	 */
-	static String rewriteUrl(
-			final Client client,
-			final String url) {
+	static String rewriteUrl(final Client client, final String url) {
 		return client.request(
-    			target -> target.path("url"), 
+    			target -> target.queryParam("url", url), 
     			req -> req.accept(MediaType.TEXT_PLAIN)
     			)
     			.get(String.class);
