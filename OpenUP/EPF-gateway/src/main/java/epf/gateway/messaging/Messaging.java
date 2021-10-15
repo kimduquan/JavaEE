@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -96,15 +97,15 @@ public class Messaging {
 	 */
 	@OnOpen
     public void onOpen(@PathParam(PATH) final String path, final Session session) throws Exception {
-		final String tokenId = SecurityUtil.getTokenId(session);
-		if(tokenId != null) {
+		final Optional<String> tokenId = SecurityUtil.getTokenId(session);
+		if(tokenId.isPresent()) {
 			remotes.computeIfPresent(path, (p, remote) -> {
 				remote.onOpen(session);
 				return remote;
 				}
 			);
 		}
-		if(tokenId == null || !SecurityUtil.authenticateTokenId(tokenId)) {
+		if(tokenId.isEmpty() || !SecurityUtil.authenticateTokenId(tokenId.get())) {
 			final CloseReason reason = new CloseReason(CloseReason.CloseCodes.VIOLATED_POLICY, "");
 			remotes.computeIfPresent(path, (p, remote) -> {
 				remote.onClose(session, reason);

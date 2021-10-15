@@ -4,6 +4,7 @@
 package epf.cache;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -62,11 +63,8 @@ public class Cache implements epf.client.cache.Cache {
             final String name,
             final String entityId
             ) {
-		final Object entity = persistence.getEntity(name, entityId);
-		if(entity != null) {
-			return Response.ok(entity).build();
-		}
-		throw new NotFoundException();
+		final Optional<Object> entity = persistence.getEntity(name, entityId);
+		return Response.ok(entity.orElseThrow(NotFoundException::new)).build();
 	}
 
 	@PermitAll
@@ -90,15 +88,15 @@ public class Cache implements epf.client.cache.Cache {
 	}
 
 	@Override
-	public Response getEntities(final String schema, final String name, final Integer firstResult, final Integer maxResults) {
-		List<Entry<String,Object>> entities = persistence.getEntities(name);
+	public Response getEntities(final String schema, final String name, final Optional<Integer> firstResult, final Optional<Integer> maxResults) {
+		final List<Entry<String,Object>> entities = persistence.getEntities(name);
 		if(entities != null) {
 			Stream<Entry<String,Object>> stream = entities.stream();
-			if(firstResult != null) {
-				stream = stream.skip(firstResult);
+			if(firstResult.isPresent()) {
+				stream = stream.skip(firstResult.get());
 			}
-			if(maxResults != null) {
-				stream = stream.limit(maxResults);
+			if(maxResults.isPresent()) {
+				stream = stream.limit(maxResults.get());
 			}
 			final List<Object> objects = stream.map(entry -> entry.getValue()).collect(Collectors.toList());
 			return Response.ok(objects).build();
@@ -115,9 +113,10 @@ public class Cache implements epf.client.cache.Cache {
 	@PermitAll
 	@Override
 	public String getUrl(final String id) {
-		final Object entity = persistence.getEntity(Net.URL, id);
-		if(entity instanceof URL) {
-			final URL url = (URL) entity;
+		final Optional<Object> entity = persistence.getEntity(Net.URL, id);
+		entity.orElseThrow(NotFoundException::new);
+		if(entity.get() instanceof URL) {
+			final URL url = (URL) entity.get();
 			return url.getString();
 		}
 		throw new NotFoundException();

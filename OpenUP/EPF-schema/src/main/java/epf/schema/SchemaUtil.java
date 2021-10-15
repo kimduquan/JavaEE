@@ -19,24 +19,24 @@ public class SchemaUtil {
 	/**
 	 * 
 	 */
-	private transient final Map<String, Field> entityIdFields = new ConcurrentHashMap<>();
+	private transient final Map<String, Optional<Field>> entityIdFields = new ConcurrentHashMap<>();
 	
 	/**
 	 * 
 	 */
-	private transient final Map<String, String> entityNames = new ConcurrentHashMap<>();
+	private transient final Map<String, Optional<String>> entityNames = new ConcurrentHashMap<>();
 	
 	/**
 	 * @param cls
 	 * @return
 	 */
-	public Field getEntityIdField(final Class<?> cls) {
+	public Optional<Field> getEntityIdField(final Class<?> cls) {
 		return entityIdFields.computeIfAbsent(cls.getName(), name -> {
 			final Optional<Field> idField = Stream.of(cls.getDeclaredFields())
 					.filter(field -> field.isAnnotationPresent(Id.class))
 					.findAny();
 			idField.ifPresent(f -> f.setAccessible(true));
-			return idField.orElse(null);
+			return idField;
 		});
 	}
 	
@@ -44,11 +44,11 @@ public class SchemaUtil {
 	 * @param cls
 	 * @return
 	 */
-	public String getEntityName(final Class<?> cls) {
+	public Optional<String> getEntityName(final Class<?> cls) {
 		return entityNames.computeIfAbsent(cls.getName(), key -> {
-			String name = null;
+			Optional<String> name = Optional.empty();
 			if(cls.isAnnotationPresent(javax.persistence.Entity.class)) {
-				name = ((javax.persistence.Entity)cls.getAnnotation(javax.persistence.Entity.class)).name();
+				name = Optional.of(((javax.persistence.Entity)cls.getAnnotation(javax.persistence.Entity.class)).name());
 			}
 			return name;
 		});

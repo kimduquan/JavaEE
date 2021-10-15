@@ -7,6 +7,7 @@ package epf.client.util;
 
 import java.net.URI;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
@@ -27,7 +28,7 @@ public class Client implements AutoCloseable {
     /**
      * 
      */
-    private transient String authHeader;
+    private transient Optional<String> authHeader = Optional.empty();
     /**
      * 
      */
@@ -60,7 +61,7 @@ public class Client implements AutoCloseable {
 	/**
 	 * @return the authHeader
 	 */
-	protected String getAuthHeader() {
+	protected Optional<String> getAuthHeader() {
 		return authHeader;
 	}
 
@@ -85,13 +86,13 @@ public class Client implements AutoCloseable {
 	public Client authorization(final String token) {
 		Objects.requireNonNull(token);
 		final StringBuilder tokenHeader = new StringBuilder();
-    	authHeader = tokenHeader.append("Bearer ").append(token).toString();
+    	authHeader = Optional.of(tokenHeader.append("Bearer ").append(token).toString());
 		return this;
 	}
 
     @Override
     public void close() throws Exception {
-    	authHeader = null;
+    	authHeader = Optional.empty();
         clients.add(uri, rsClient);
     }
     
@@ -106,8 +107,8 @@ public class Client implements AutoCloseable {
     	WebTarget target = rsClient.target(uri);
     	target = buildTarget.apply(target);
     	Invocation.Builder request = target.request();
-    	if(authHeader != null) {
-        	request = request.header(HttpHeaders.AUTHORIZATION, authHeader);
+    	if(authHeader.isPresent()) {
+        	request = request.header(HttpHeaders.AUTHORIZATION, authHeader.get());
     	}
     	return buildRequest.apply(request);
     }

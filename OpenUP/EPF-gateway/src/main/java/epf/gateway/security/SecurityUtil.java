@@ -6,6 +6,7 @@ package epf.gateway.security;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.websocket.Session;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -38,13 +39,13 @@ public interface SecurityUtil {
 	 * @param session
 	 * @return
 	 */
-	static String getTokenId(final Session session) {
-		String tokenId = null;
+	static Optional<String> getTokenId(final Session session) {
+		Optional<String> tokenId = Optional.empty();
 		final Map<String, List<String>> params = session.getRequestParameterMap();
 		if(params != null && params.containsKey("tid")) {
 			final List<String> tid = session.getRequestParameterMap().get("tid");
 			if(tid != null && tid.size() > 0) {
-				tokenId = tid.get(0);
+				tokenId = Optional.of(tid.get(0));
 			}
 		}
 		return tokenId;

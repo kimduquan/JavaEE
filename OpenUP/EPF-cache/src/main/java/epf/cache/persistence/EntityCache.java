@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -98,22 +99,22 @@ public class EntityCache extends ObjectQueue<EntityEvent> {
 	 * @param entity
 	 * @return
 	 */
-	protected String getKey(final Object entity) {
+	protected Optional<String> getKey(final Object entity) {
 		final Class<?> cls = entity.getClass();
-		final String entityName = schemaUtil.getEntityName(cls);
-		final Field idField = schemaUtil.getEntityIdField(cls);
-		Object entityId = null;
-		if(entityName != null && idField != null) {
+		final Optional<String> entityName = schemaUtil.getEntityName(cls);
+		final Optional<Field> idField = schemaUtil.getEntityIdField(cls);
+		Optional<Object> entityId = Optional.empty();
+		if(entityName.isPresent() && idField.isPresent()) {
 			try {
-				entityId = idField.get(entity);
+				entityId = Optional.ofNullable(idField.get().get(entity));
 			} 
 			catch (IllegalAccessException | IllegalArgumentException e) {
-				LOGGER.throwing(cls.getName(), idField.getName(), e);
+				LOGGER.throwing(cls.getName(), idField.get().getName(), e);
 			}
 		}
-		String key = null;
-		if(entityName != null && entityId != null) {
-			key = StringUtil.join(CACHE_KEY, entityName, String.valueOf(entityId));
+		Optional<String> key = Optional.empty();
+		if(entityName.isPresent() && entityId.isPresent()) {
+			key = Optional.of(StringUtil.join(CACHE_KEY, entityName.get(), String.valueOf(entityId)));
 		}
 		return key;
 	}
@@ -122,36 +123,42 @@ public class EntityCache extends ObjectQueue<EntityEvent> {
 	public void accept(final EntityEvent event) {
 		if(event instanceof PostLoad) {
 			final PostLoad postLoad = (PostLoad) event;
-			final String key = getKey(postLoad.getEntity());
-			if(key != null) {
-				final String entityName = schemaUtil.getEntityName(postLoad.getEntity().getClass());
-				putKey(entityName, key);
-				cache.putIfAbsent(key, postLoad.getEntity());
+			final Optional<String> key = getKey(postLoad.getEntity());
+			if(key.isPresent()) {
+				final Optional<String> entityName = schemaUtil.getEntityName(postLoad.getEntity().getClass());
+				if(entityName.isPresent()) {
+					putKey(entityName.get(), key.get());
+					cache.putIfAbsent(key.get(), postLoad.getEntity());
+				}
 			}
 		}
 		else if(event instanceof PostUpdate) {
 			final PostUpdate postUpdate = (PostUpdate) event;
-			final String key = getKey(postUpdate.getEntity());
-			if(key != null) {
-				cache.replace(key, postUpdate.getEntity());
+			final Optional<String> key = getKey(postUpdate.getEntity());
+			if(key.isPresent()) {
+				cache.replace(key.get(), postUpdate.getEntity());
 			}
 		}
 		else if(event instanceof PostPersist) {
 			final PostPersist postPersist = (PostPersist) event;
-			final String key = getKey(postPersist.getEntity());
-			if(key != null) {
-				final String entityName = schemaUtil.getEntityName(postPersist.getEntity().getClass());
-				putKey(entityName, key);
-				cache.put(key, postPersist.getEntity());
+			final Optional<String> key = getKey(postPersist.getEntity());
+			if(key.isPresent()) {
+				final Optional<String> entityName = schemaUtil.getEntityName(postPersist.getEntity().getClass());
+				if(entityName.isPresent()) {
+					putKey(entityName.get(), key.get());
+					cache.put(key.get(), postPersist.getEntity());
+				}
 			}
 		}
 		else if(event instanceof PostRemove) {
 			final PostRemove postRemove = (PostRemove) event;
-			final String key = getKey(postRemove.getEntity());
-			if(key != null) {
-				final String entityName = schemaUtil.getEntityName(postRemove.getEntity().getClass());
-				removeKey(entityName, key);
-				cache.remove(key);
+			final Optional<String> key = getKey(postRemove.getEntity());
+			if(key.isPresent()) {
+				final Optional<String> entityName = schemaUtil.getEntityName(postRemove.getEntity().getClass());
+				if(entityName.isPresent()) {
+					removeKey(entityName.get(), key.get());
+					cache.remove(key.get());
+				}
 			}
 		}
 	}
@@ -161,14 +168,14 @@ public class EntityCache extends ObjectQueue<EntityEvent> {
 	 * @param entityId
 	 * @return
 	 */
-	public Object getEntity(
+	public Optional<Object> getEntity(
             final String name,
             final String entityId
             ) {
 		final String key = StringUtil.join(CACHE_KEY, name, entityId);
-		Object entity = null;
+		Optional<Object> entity = Optional.empty();
 		if(cache.containsKey(key)) {
-			entity = cache.get(key);
+			entity = Optional.ofNullable(cache.get(key));
 		}
 		return entity;
 	}

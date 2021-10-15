@@ -5,6 +5,7 @@ package epf.cache.internal.event;
 
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
+import java.util.Optional;
 import java.util.logging.Logger;
 import javax.cache.Cache;
 import javax.cache.configuration.FactoryBuilder.SingletonFactory;
@@ -35,7 +36,7 @@ public abstract class EntryListener implements CacheEntryListener<String, Object
 	/**
 	 * 
 	 */
-	private transient MutableCacheEntryListenerConfiguration<String, Object> config;
+	private transient Optional<MutableCacheEntryListenerConfiguration<String, Object>> config = Optional.empty();
 	
 	/**
 	 * 
@@ -68,20 +69,20 @@ public abstract class EntryListener implements CacheEntryListener<String, Object
 	 * @param cache
 	 */
 	public void register(final Cache<String, Object> cache) {
-		if(config == null) {
+		if(config.isEmpty()) {
 			final SingletonFactory<CacheEntryListener<String, Object>> factory = new SingletonFactory<CacheEntryListener<String, Object>>(this);
 			final SingletonFactory<CacheEntryEventFilter<String, Object>> factory2 = new SingletonFactory<CacheEntryEventFilter<String, Object>>(filter);
-			config = new MutableCacheEntryListenerConfiguration<String, Object>(factory, factory2, false, false);
+			config = Optional.of(new MutableCacheEntryListenerConfiguration<String, Object>(factory, factory2, false, false));
 		}
-		cache.registerCacheEntryListener(config);
+		cache.registerCacheEntryListener(config.get());
 	}
 	
 	/**
 	 * @param cache
 	 */
 	public void deregister(final Cache<String, Object> cache) {
-		if(config != null) {
+		config.ifPresent(config -> {
 			cache.deregisterCacheEntryListener(config);
-		}
+		});
 	}
 }

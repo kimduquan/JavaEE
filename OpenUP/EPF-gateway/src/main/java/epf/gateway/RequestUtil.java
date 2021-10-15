@@ -15,7 +15,6 @@ import java.util.Map.Entry;
 import java.util.concurrent.CompletionStage;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import javax.ws.rs.client.CompletionStageRxInvoker;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;

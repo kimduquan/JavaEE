@@ -5,6 +5,7 @@ package epf.cache.persistence;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -130,7 +131,7 @@ public class Persistence implements HealthCheck {
 	 * @param entityId
 	 * @return
 	 */
-	public Object getEntity(
+	public Optional<Object> getEntity(
             final String name,
             final String entityId
             ) {
