@@ -110,11 +110,17 @@ public class Listener {
 	 * @param event
 	 */
 	public void postLoad(@Observes final PostLoad event) {
-		submit(event);
+		try(Jsonb jsonb = JsonbBuilder.create()){
+			jsonb.toJson(event);
+		} 
+		catch (Exception e) {
+			LOGGER.throwing(getClass().getName(), "postLoad", e);
+		}
+		postLoadPublisher.submit(event);
 	}
 	
 	@Outgoing(Naming.Persistence.PERSISTENCE_ENTITY_LISTENERS)
-    public PublisherBuilder<? extends EntityEvent> getPublisher(){
+    public PublisherBuilder<EntityEvent> getPublisher(){
 		return PublisherUtil.newPublisher(publisher);
 	}
 	

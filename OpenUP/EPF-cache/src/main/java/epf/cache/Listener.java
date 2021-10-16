@@ -15,11 +15,10 @@ import epf.cache.internal.event.EntryCreatedListener;
 import epf.cache.internal.event.EntryExpiredListener;
 import epf.cache.internal.event.EntryRemovedListener;
 import epf.cache.internal.event.EntryUpdatedListener;
-import epf.messaging.client.Client;
-import epf.messaging.client.Messaging;
 import epf.naming.Naming;
 import epf.util.config.ConfigUtil;
 import epf.util.logging.LogManager;
+import epf.util.websocket.Client;
 import epf.util.websocket.MessageQueue;
 
 /**
@@ -77,7 +76,7 @@ public class Listener {
 	protected void postConstruct() {
 		try {
 			final URI messagingUrl = ConfigUtil.getURI(Naming.Messaging.MESSAGING_URL);
-			client = Messaging.connectToServer(messagingUrl.resolve(Naming.CACHE));
+			client = Client.connectToServer(messagingUrl.resolve(Naming.CACHE));
 			events = new MessageQueue(client.getSession());
 			executor.submit(events);
 			created = new EntryCreatedListener(events);

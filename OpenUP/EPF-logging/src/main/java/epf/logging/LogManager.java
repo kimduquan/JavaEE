@@ -27,12 +27,12 @@ import epf.util.websocket.Client;
  */
 @ApplicationScoped
 @Readiness
-public class Logging implements HealthCheck {
+public class LogManager implements HealthCheck {
 	
 	/**
 	 * 
 	 */
-	private static transient final java.util.logging.Logger LOGGER = epf.util.logging.LogManager.getLogger(Logging.class.getName());
+	private static transient final java.util.logging.Logger LOGGER = epf.util.logging.LogManager.getLogger(LogManager.class.getName());
 	
 	/**
 	 * 
