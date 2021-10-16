@@ -4,6 +4,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import org.apache.kafka.common.serialization.Deserializer;
 
+/**
+ * @author PC
+ *
+ */
 public class ObjectDeserializer implements Deserializer<Object> {
 
 	@Override

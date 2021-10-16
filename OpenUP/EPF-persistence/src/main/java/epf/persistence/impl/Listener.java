@@ -6,6 +6,8 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
 import org.eclipse.microprofile.reactive.streams.operators.PublisherBuilder;
@@ -73,29 +75,42 @@ public class Listener {
 	/**
 	 * @param event
 	 */
-	public void postPersist(@Observes final PostPersist event) {
+	protected void submit(final EntityEvent event) {
+		try(Jsonb jsonb = JsonbBuilder.create()){
+			jsonb.toJson(event);
+		} 
+		catch (Exception e) {
+			LOGGER.throwing(getClass().getName(), "submit", e);
+		}
 		publisher.submit(event);
+	}
+	
+	/**
+	 * @param event
+	 */
+	public void postPersist(@Observes final PostPersist event) {
+		submit(event);
 	}
 	
 	/**
 	 * @param event
 	 */
 	public void postRemove(@Observes final PostRemove event) {
-		publisher.submit(event);
+		submit(event);
 	}
 	
 	/**
 	 * @param event
 	 */
 	public void postUpdate(@Observes final PostUpdate event) {
-		publisher.submit(event);
+		submit(event);
 	}
 	
 	/**
 	 * @param event
 	 */
 	public void postLoad(@Observes final PostLoad event) {
-		postLoadPublisher.submit(event);
+		submit(event);
 	}
 	
 	@Outgoing(Naming.Persistence.PERSISTENCE_ENTITY_LISTENERS)

@@ -88,15 +88,15 @@ public class Cache implements epf.client.cache.Cache {
 	}
 
 	@Override
-	public Response getEntities(final String schema, final String name, final Optional<Integer> firstResult, final Optional<Integer> maxResults) {
+	public Response getEntities(final String schema, final String name, final Integer firstResult, final Integer maxResults) {
 		final List<Entry<String,Object>> entities = persistence.getEntities(name);
 		if(entities != null) {
 			Stream<Entry<String,Object>> stream = entities.stream();
-			if(firstResult.isPresent()) {
-				stream = stream.skip(firstResult.get());
+			if(firstResult != null) {
+				stream = stream.skip(firstResult);
 			}
-			if(maxResults.isPresent()) {
-				stream = stream.limit(maxResults.get());
+			if(maxResults != null) {
+				stream = stream.limit(maxResults);
 			}
 			final List<Object> objects = stream.map(entry -> entry.getValue()).collect(Collectors.toList());
 			return Response.ok(objects).build();

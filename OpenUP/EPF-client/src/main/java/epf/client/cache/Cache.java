@@ -4,7 +4,6 @@
 package epf.client.cache;
 
 import java.util.List;
-import java.util.Optional;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
@@ -104,9 +103,9 @@ public interface Cache {
             @NotBlank
             final String entity,
             @QueryParam("firstResult")
-            final Optional<Integer> firstResult,
+            final Integer firstResult,
             @QueryParam("maxResults")
-    		final Optional<Integer> maxResults
+    		final Integer maxResults
             );
 	
 	/**

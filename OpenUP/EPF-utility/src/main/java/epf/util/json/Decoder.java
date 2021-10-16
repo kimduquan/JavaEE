@@ -4,6 +4,7 @@
 package epf.util.json;
 
 import java.io.InputStream;
+import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -94,6 +95,25 @@ public class Decoder {
 	
 	/**
 	 * @param jsonb
+	 * @param reader
+	 * @return
+	 * @throws Exception
+	 */
+	public Object decode(final Jsonb jsonb, final Reader reader) throws Exception {
+		try(JsonReader jsonReader = Json.createReader(reader)){
+			final JsonObject jsonObject = jsonReader.readObject();
+			final String className = jsonObject.getString(Naming.CLASS);
+			final Class<?> cls = Class.forName(className);
+			return jsonb.fromJson(reader, cls);
+		}
+		catch(Exception ex) {
+			LOGGER.throwing(LOGGER.getName(), "decode", ex);
+			throw ex;
+		}
+	}
+	
+	/**
+	 * @param jsonb
 	 * @param string
 	 * @return
 	 * @throws Exception
@@ -101,6 +121,26 @@ public class Decoder {
 	public List<Object> decodeArray(final Jsonb jsonb, final InputStream stream) throws Exception {
 		final List<Object> array = new ArrayList<>();
 		try(JsonReader jsonReader = Json.createReader(stream)){
+			final JsonArray jsonArray = jsonReader.readArray();
+			final Iterator<JsonValue> it = jsonArray.iterator();
+			while(it.hasNext()) {
+				final JsonObject jsonObject = it.next().asJsonObject();
+				final String className = jsonObject.getString(Naming.CLASS);
+				final Class<?> cls = Class.forName(className);
+				final Object object = jsonb.fromJson(jsonObject.toString(), cls);
+				array.add(object);
+			}
+		}
+		catch(Exception ex) {
+			LOGGER.throwing(LOGGER.getName(), "decodeArray", ex);
+			throw ex;
+		}
+		return array;
+	}
+	
+	public List<Object> decodeArray(final Jsonb jsonb, final Reader reader) throws Exception {
+		final List<Object> array = new ArrayList<>();
+		try(JsonReader jsonReader = Json.createReader(reader)){
 			final JsonArray jsonArray = jsonReader.readArray();
 			final Iterator<JsonValue> it = jsonArray.iterator();
 			while(it.hasNext()) {
