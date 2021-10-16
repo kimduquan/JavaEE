@@ -57,7 +57,7 @@ public class NetTest {
 			try(Response response = gateway.request(target -> target.path("url").queryParam("url", shortUrl), req -> req).get()){
 				URI uri = response.getLocation();
 				Assert.assertEquals("Response.location", new URI("https://google.com"), uri);
-				Assert.assertEquals("Response.statusInfo", Response.Status.TEMPORARY_REDIRECT, response.getStatusInfo());
+				Assert.assertEquals("Response.statusInfo", Response.Status.TEMPORARY_REDIRECT.getStatusCode(), response.getStatus());
 			}
 		}
 		int id = StringUtil.fromShortString(shortUrl);
