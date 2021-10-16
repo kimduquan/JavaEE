@@ -119,11 +119,17 @@ public class Listener {
 		postLoadPublisher.submit(event);
 	}
 	
+	/**
+	 * @return
+	 */
 	@Outgoing(Naming.Persistence.PERSISTENCE_ENTITY_LISTENERS)
     public PublisherBuilder<EntityEvent> getPublisher(){
 		return PublisherUtil.newPublisher(publisher);
 	}
 	
+	/**
+	 * @return
+	 */
 	@Outgoing(Naming.Persistence.PERSISTENCE_ENTITY_LISTENERS_POSTLOAD)
     public PublisherBuilder<PostLoad> getPostLoadPublisher(){
 		return PublisherUtil.newPublisher(postLoadPublisher);
