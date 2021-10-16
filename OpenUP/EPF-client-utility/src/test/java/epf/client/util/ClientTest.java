@@ -64,10 +64,10 @@ public class ClientTest {
 		Client client = new Client(mockClientQueue, uri, b -> mockClientBuilder);
 		Client returnClient = client.authorization("authorization");
 		Assert.assertSame(client, returnClient);
-		Assert.assertEquals("Client.authHeader", "Bearer authorization", returnClient.getAuthHeader());
+		Assert.assertEquals("Client.authHeader", "Bearer authorization", returnClient.getAuthHeader().get());
 		returnClient = client.authorization("");
 		Assert.assertSame(client, returnClient);
-		Assert.assertEquals("Client.authHeader", "Bearer ", returnClient.getAuthHeader());
+		Assert.assertEquals("Client.authHeader", "Bearer ", returnClient.getAuthHeader().get());
 	}
 	
 	/**
