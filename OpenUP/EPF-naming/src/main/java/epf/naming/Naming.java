@@ -239,6 +239,16 @@ public interface Naming {
 		 */
 		String PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT = "epf.persistence.query.maxResults.default";
 		
+		/**
+		 * 
+		 */
+		String PERSISTENCE_ENTITY_LISTENERS = "persistence-EntityListeners";
+		
+		/**
+		 * 
+		 */
+		String PERSISTENCE_ENTITY_LISTENERS_POSTLOAD = "persistence-EntityListeners-PostLoad";
+		
 	}
 	
 	/**

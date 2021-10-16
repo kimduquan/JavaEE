@@ -149,7 +149,7 @@ public class Entity implements Serializable {
 	 * @throws Exception
 	 */
 	protected List<Embeddable> fetchEmbeddables() throws Exception{
-		try(Client client = securityUtil.newClient(gatewayUtil.get("schema"))){
+		try(Client client = securityUtil.newClient(gatewayUtil.get(epf.naming.Naming.SCHEMA))){
 			try(Response response = epf.client.schema.Schema.getEmbeddables(client)){
 				return response.readEntity(new GenericType<List<Embeddable>>() {});
 			}
@@ -161,7 +161,7 @@ public class Entity implements Serializable {
 	 * @throws Exception
 	 */
 	protected List<epf.client.schema.Entity> fetchEntities() throws Exception{
-		try(Client client = securityUtil.newClient(gatewayUtil.get("schema"))){
+		try(Client client = securityUtil.newClient(gatewayUtil.get(epf.naming.Naming.SCHEMA))){
 			try(Response response = epf.client.schema.Schema.getEntities(client)){
 				return response.readEntity(new GenericType<List<epf.client.schema.Entity>>() {});
 			}
@@ -277,7 +277,7 @@ public class Entity implements Serializable {
 	 * 
 	 */
 	public void persist() throws Exception {
-		try(Client client = securityUtil.newClient(gatewayUtil.get("persistence"))){
+		try(Client client = securityUtil.newClient(gatewayUtil.get(epf.naming.Naming.PERSISTENCE))){
 			try(Response response = epf.client.persistence.Entities.persist(
 					client, 
 					entity.getTable().getSchema(),
@@ -305,7 +305,7 @@ public class Entity implements Serializable {
 	 * 
 	 */
 	public void merge() throws Exception {
-		try(Client client = securityUtil.newClient(gatewayUtil.get("persistence"))){
+		try(Client client = securityUtil.newClient(gatewayUtil.get(epf.naming.Naming.PERSISTENCE))){
 			epf.client.persistence.Entities.merge(
 					client,
 					entity.getTable().getSchema(),
@@ -321,7 +321,7 @@ public class Entity implements Serializable {
 	 * 
 	 */
 	public String remove() throws Exception {
-		try(Client client = securityUtil.newClient(gatewayUtil.get("persistence"))){
+		try(Client client = securityUtil.newClient(gatewayUtil.get(epf.naming.Naming.PERSISTENCE))){
 			epf.client.persistence.Entities.remove(
 					client, 
 					entity.getTable().getSchema(),

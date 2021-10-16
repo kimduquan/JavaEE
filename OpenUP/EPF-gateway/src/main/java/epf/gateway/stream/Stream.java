@@ -70,7 +70,7 @@ public class Stream {
 	protected void postConstruct() {
 		try {
 			final URI messagingUrl = ConfigUtil.getURI(Naming.Messaging.MESSAGING_URL);
-			clients.put("persistence", Client.connectToServer(messagingUrl.resolve(Naming.PERSISTENCE)));
+			clients.put(Naming.PERSISTENCE, Client.connectToServer(messagingUrl.resolve(Naming.PERSISTENCE)));
 		} 
 		catch (URISyntaxException | DeploymentException | IOException e) {
 			logger.log(Level.SEVERE, "postConstruct", e);

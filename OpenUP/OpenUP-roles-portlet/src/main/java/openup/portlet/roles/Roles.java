@@ -66,7 +66,7 @@ public class Roles implements Serializable, RolesView {
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		try(Client client = securityUtil.newClient(gatewayUtil.get("persistence"))){
+		try(Client client = securityUtil.newClient(gatewayUtil.get(epf.naming.Naming.PERSISTENCE))){
 			roles = Queries.executeQuery(
 					client, 
 					OpenUP.SCHEMA,

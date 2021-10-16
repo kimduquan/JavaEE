@@ -160,13 +160,13 @@ public class Persistence implements HealthCheck {
 		return HealthCheckResponse.up("EPF-persistence-cache");
 	}
 	
-	@Incoming("persistence")
+	@Incoming(Naming.Persistence.PERSISTENCE_ENTITY_LISTENERS)
 	public void postEvent(final EntityEvent event) {
 		entityCache.add(event);
 		messages.add(new Message(event));
 	}
 	
-	@Incoming("persistence-load")
+	@Incoming(Naming.Persistence.PERSISTENCE_ENTITY_LISTENERS_POSTLOAD)
 	public void postLoad(final PostLoad event) {
 		entityCache.add(event);
 		postLoadMessages.add(new Message(event));

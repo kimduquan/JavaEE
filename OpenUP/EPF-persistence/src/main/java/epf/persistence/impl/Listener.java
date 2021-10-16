@@ -98,12 +98,12 @@ public class Listener {
 		postLoadPublisher.submit(event);
 	}
 	
-	@Outgoing(Naming.PERSISTENCE)
+	@Outgoing(Naming.Persistence.PERSISTENCE_ENTITY_LISTENERS)
     public PublisherBuilder<? extends EntityEvent> getPublisher(){
 		return PublisherUtil.newPublisher(publisher);
 	}
 	
-	@Outgoing("persistence-load")
+	@Outgoing(Naming.Persistence.PERSISTENCE_ENTITY_LISTENERS_POSTLOAD)
     public PublisherBuilder<PostLoad> getPostLoadPublisher(){
 		return PublisherUtil.newPublisher(postLoadPublisher);
 	}
