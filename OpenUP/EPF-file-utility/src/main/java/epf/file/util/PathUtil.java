@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.util.file;
+package epf.file.util;
 
 import java.nio.file.FileSystems;
 import java.nio.file.Path;

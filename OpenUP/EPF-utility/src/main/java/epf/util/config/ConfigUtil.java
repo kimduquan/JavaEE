@@ -18,11 +18,7 @@ public interface ConfigUtil {
 	 * @return
 	 */
 	static String getString(final String name) {
-		String value = SystemUtil.getenv(name);
-		if(value == null) {
-			value = System.getProperty(name);
-		}
-		return value;
+		return SystemUtil.getString(name);
 	}
 	
 	/**
@@ -32,6 +28,6 @@ public interface ConfigUtil {
 	 * @throws Exception 
 	 */
 	static URI getURI(final String name) throws URISyntaxException {
-		return new URI(getString(name));
+		return new URI(SystemUtil.getString(name));
 	}
 }

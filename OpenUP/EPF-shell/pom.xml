@@ -89,6 +89,11 @@
             <artifactId>EPF-security-utility</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-file-utility</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 		<dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-rs-mp-client</artifactId>

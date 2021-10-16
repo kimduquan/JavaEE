@@ -33,7 +33,7 @@ public class Adapter implements JsonbAdapter<Object, JsonObject> {
 					final JsonObject jsonObject = jsonReader.readObject();
 					return Json.
 							createObjectBuilder(jsonObject)
-							.add("class", obj.getClass().getName())
+							.add(Naming.CLASS, obj.getClass().getName())
 							.build();
 				}
 			}
@@ -46,9 +46,9 @@ public class Adapter implements JsonbAdapter<Object, JsonObject> {
 
 	@Override
 	public Object adaptFromJson(final JsonObject obj) throws Exception {
-		final String className = obj.getString("class");
+		final String className = obj.getString(Naming.CLASS);
 		final Class<?> cls = Class.forName(className);
-		final JsonObject adaptObject = Json.createObjectBuilder(obj).remove("class").build();
+		final JsonObject adaptObject = Json.createObjectBuilder(obj).remove(Naming.CLASS).build();
 		try(Jsonb jsonb = JsonbBuilder.create()){
 			return jsonb.fromJson(adaptObject.toString(), cls);
 		}

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.util.file;
+package epf.file.util;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;

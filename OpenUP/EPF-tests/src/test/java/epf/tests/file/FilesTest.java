@@ -26,10 +26,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import epf.client.gateway.GatewayUtil;
 import epf.client.util.Client;
+import epf.file.util.PathUtil;
 import epf.naming.Naming;
 import epf.tests.client.ClientUtil;
 import epf.tests.security.SecurityUtil;
-import epf.util.file.PathUtil;
 
 /**
  * @author PC
