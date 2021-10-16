@@ -153,6 +153,11 @@
         </dependency>
         <dependency>
             <groupId>openup</groupId>
+            <artifactId>EPF-file-utility</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
             <artifactId>EPF-portlet-client</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -392,7 +397,7 @@
                         <webdriver.gecko.driver>${geckodriver}</webdriver.gecko.driver>
                         <epf.tests.file.root>target/servers/test/epf.file.root</epf.tests.file.root>
                         <webdriver.timeouts.implicit>60</webdriver.timeouts.implicit>
-                        <webdriver.firefox.headless>false</webdriver.firefox.headless>
+                        <webdriver.firefox.headless>true</webdriver.firefox.headless>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
