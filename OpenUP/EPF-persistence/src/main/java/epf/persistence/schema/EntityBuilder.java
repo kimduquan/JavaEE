@@ -12,7 +12,7 @@ import epf.client.schema.Attribute;
 import epf.client.schema.Table;
 import epf.client.schema.util.AttributeComparator;
 import epf.persistence.impl.Entity;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
@@ -23,7 +23,7 @@ public class EntityBuilder {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(EntityBuilder.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(EntityBuilder.class.getName());
 
 	/**
 	 * @param entity

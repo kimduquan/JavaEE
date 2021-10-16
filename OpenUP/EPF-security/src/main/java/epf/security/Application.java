@@ -16,7 +16,7 @@ import epf.messaging.util.PublisherUtil;
 import epf.messaging.util.reactive.ObjectPublisher;
 import epf.naming.Naming;
 import epf.security.schema.Token;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
@@ -28,7 +28,7 @@ public class Application {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(Application.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Application.class.getName());
 	
 	/**
 	 * 

@@ -12,7 +12,7 @@ import epf.security.client.Security;
 import epf.security.schema.Token;
 import epf.security.util.PasswordUtil;
 import epf.tests.client.ClientUtil;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 
 import java.util.Map.Entry;
 import java.util.AbstractMap;
@@ -27,7 +27,7 @@ import java.util.logging.Logger;
  */
 public class SecurityUtil {
     
-	private static final Logger logger = Logging.getLogger(SecurityUtil.class.getName());
+	private static final Logger logger = LogManager.getLogger(SecurityUtil.class.getName());
 	
 	private static final Queue<Entry<String, String>> credentials = new ConcurrentLinkedQueue<>();
     

@@ -16,7 +16,7 @@ import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStore;
 
 import epf.util.config.ConfigUtil;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 import epf.webapp.WebApp;
 import epf.client.gateway.GatewayUtil;
 import epf.client.util.Client;
@@ -35,7 +35,7 @@ public class EPFIdentityStore implements IdentityStore {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(EPFIdentityStore.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(EPFIdentityStore.class.getName());
     
     /**
      * 

@@ -13,7 +13,7 @@ import epf.naming.Naming;
 import epf.tests.client.ClientUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 import epf.work_products.schema.Artifact;
 import epf.work_products.schema.WorkProducts;
 import epf.work_products.schema.section.Description;
@@ -40,7 +40,7 @@ import org.junit.Test;
  */
 public class EntitiesTest {
 	
-	private static final Logger logger = Logging.getLogger(EntitiesTest.class.getName());
+	private static final Logger logger = LogManager.getLogger(EntitiesTest.class.getName());
 	private static URI persistenceUrl;
     private static String token;
     private Client client;

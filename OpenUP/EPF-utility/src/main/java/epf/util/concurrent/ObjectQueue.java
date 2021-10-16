@@ -10,7 +10,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
@@ -21,7 +21,7 @@ public abstract class ObjectQueue<T extends Object> implements Runnable, Closeab
 	/**
 	 * 
 	 */
-	private static transient final Logger LOGGER = Logging.getLogger(ObjectQueue.class.getName());
+	private static transient final Logger LOGGER = LogManager.getLogger(ObjectQueue.class.getName());
 	
 	/**
 	 * 

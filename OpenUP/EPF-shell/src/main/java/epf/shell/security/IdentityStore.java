@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 import epf.util.file.PathUtil;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -29,7 +29,7 @@ public class IdentityStore implements ConstraintValidator<CallerPrincipal, Crede
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(IdentityStore.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(IdentityStore.class.getName());
 	
 	/**
 	 * @param credential

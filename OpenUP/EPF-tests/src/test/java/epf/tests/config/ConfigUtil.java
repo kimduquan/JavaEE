@@ -6,13 +6,13 @@ import epf.client.gateway.GatewayUtil;
 import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.tests.client.ClientUtil;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ConfigUtil {
 
-	private static final Logger logger = Logging.getLogger(ConfigUtil.class.getName());
+	private static final Logger logger = LogManager.getLogger(ConfigUtil.class.getName());
     private static Map<String, String> configs;
     
     static Map<String, String> properties(){

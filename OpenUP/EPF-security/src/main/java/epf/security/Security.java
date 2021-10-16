@@ -29,7 +29,7 @@ import epf.naming.Naming;
 import epf.security.client.jwt.JWT;
 import epf.security.schema.Token;
 import epf.util.config.ConfigUtil;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 import epf.util.security.KeyUtil;
 import openup.schema.OpenUP;
 import openup.schema.roles.Role;
@@ -52,7 +52,7 @@ public class Security implements epf.security.client.Security, Serializable {
     /**
      * 
      */
-    private static final Logger LOGGER = Logging.getLogger(Security.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(Security.class.getName());
     
     /**
      * 

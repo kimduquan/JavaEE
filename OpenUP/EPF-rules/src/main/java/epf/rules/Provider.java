@@ -16,7 +16,7 @@ import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
 import epf.client.rules.Rules;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
@@ -29,7 +29,7 @@ public class Provider implements HealthCheck {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(Provider.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Provider.class.getName());
 	
 	/**
 	 * 

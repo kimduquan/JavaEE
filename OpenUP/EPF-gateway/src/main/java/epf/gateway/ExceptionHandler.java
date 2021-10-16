@@ -15,7 +15,7 @@ import javax.ws.rs.ext.Provider;
 import org.eclipse.microprofile.faulttolerance.exceptions.BulkheadException;
 import org.eclipse.microprofile.faulttolerance.exceptions.CircuitBreakerOpenException;
 import org.eclipse.microprofile.faulttolerance.exceptions.TimeoutException;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 
 /**
  *
@@ -34,7 +34,7 @@ public class ExceptionHandler implements
     /**
      * 
      */
-    private static final Logger LOGGER = Logging.getLogger(ExceptionHandler.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(ExceptionHandler.class.getName());
     
     @Override
     public Response toResponse(final Exception exception) {

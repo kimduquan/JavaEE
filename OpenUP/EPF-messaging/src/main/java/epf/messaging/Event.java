@@ -23,7 +23,7 @@ import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.messaging.client.MessageDecoder;
 import epf.messaging.client.MessageEncoder;
 import epf.naming.Naming;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 import epf.util.websocket.Server;
 
 /**
@@ -37,7 +37,7 @@ public class Event {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(Event.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Event.class.getName());
 	
 	/**
 	 * 

@@ -16,7 +16,7 @@ import javax.interceptor.InvocationContext;
  */
 @Log
 @Interceptor
-public class Logging implements Serializable {
+public class LogManager implements Serializable {
 	
 	/**
 	 * 
@@ -45,7 +45,9 @@ public class Logging implements Serializable {
 		catch (Exception e) {
 			logger.throwing(cls, method, e);
 		}
-		logger.exiting(cls, invocationContext.getMethod().getName(), result);
+		finally {
+			logger.exiting(cls, invocationContext.getMethod().getName(), result);
+		}
 		return result;
 	}
 	

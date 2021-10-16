@@ -22,7 +22,7 @@ import epf.schema.PostUpdate;
 import epf.schema.SchemaUtil;
 import epf.util.StringUtil;
 import epf.util.concurrent.ObjectQueue;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
@@ -33,7 +33,7 @@ public class EntityCache extends ObjectQueue<EntityEvent> {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(EntityCache.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(EntityCache.class.getName());
 	
 	/**
 	 * 

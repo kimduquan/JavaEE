@@ -6,7 +6,7 @@ package epf.util.websocket;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 import javax.websocket.Session;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
@@ -17,7 +17,7 @@ public class MessageHandler implements Consumer<Message> {
 	/**
 	 * 
 	 */
-	private transient final Logger LOGGER = Logging.getLogger(MessageHandler.class.getName());
+	private transient final Logger LOGGER = LogManager.getLogger(MessageHandler.class.getName());
 	
 	/**
 	 * 

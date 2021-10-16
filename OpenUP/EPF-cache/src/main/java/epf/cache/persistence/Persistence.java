@@ -26,7 +26,7 @@ import epf.schema.EntityEvent;
 import epf.schema.PostLoad;
 import epf.util.concurrent.ObjectQueue;
 import epf.util.config.ConfigUtil;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 import epf.util.websocket.Message;
 import epf.util.websocket.MessageQueue;
 
@@ -41,7 +41,7 @@ public class Persistence implements HealthCheck {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(Persistence.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Persistence.class.getName());
 	
 	/**
 	 * 

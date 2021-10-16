@@ -32,7 +32,7 @@ import epf.portlet.util.EventUtil;
 import epf.portlet.util.ParameterUtil;
 import epf.portlet.util.RequestUtil;
 import epf.portlet.util.json.JsonUtil;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
@@ -50,7 +50,7 @@ public class Entity implements Serializable {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(Entity.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Entity.class.getName());
 	
 	/**
 	 * 

@@ -19,7 +19,7 @@ import epf.messaging.client.Client;
 import epf.messaging.client.Messaging;
 import epf.naming.Naming;
 import epf.util.config.ConfigUtil;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 import epf.util.websocket.MessageQueue;
 
 /**
@@ -32,7 +32,7 @@ public class Listener {
 	/**
 	 * 
 	 */
-	private static transient final Logger LOGGER = Logging.getLogger(Listener.class.getName());
+	private static transient final Logger LOGGER = LogManager.getLogger(Listener.class.getName());
 	
 	/**
 	 * 

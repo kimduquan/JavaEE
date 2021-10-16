@@ -10,7 +10,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.GenericType;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 import openup.client.portlet.Naming;
 import openup.client.portlet.roles.RolesView;
 import java.io.Serializable;
@@ -37,7 +37,7 @@ public class Roles implements Serializable, RolesView {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(Roles.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Roles.class.getName());
 	
 	/**
 	 * 

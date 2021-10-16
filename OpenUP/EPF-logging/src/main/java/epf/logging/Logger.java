@@ -16,7 +16,7 @@ public class Logger extends ObjectQueue<String> {
 	/**
 	 * 
 	 */
-	private static transient final java.util.logging.Logger LOGGER = epf.util.logging.Logging.getLogger(Logger.class.getName());
+	private static transient final java.util.logging.Logger LOGGER = epf.util.logging.LogManager.getLogger(Logger.class.getName());
 	
 	/**
 	 * 
@@ -34,7 +34,7 @@ public class Logger extends ObjectQueue<String> {
 	public Logger(final String name, final Client client) {
 		Objects.requireNonNull(name, "String");
 		Objects.requireNonNull(client, "Client");
-		logger = epf.util.logging.Logging.getLogger(name);
+		logger = epf.util.logging.LogManager.getLogger(name);
 		this.client = client;
 	}
 

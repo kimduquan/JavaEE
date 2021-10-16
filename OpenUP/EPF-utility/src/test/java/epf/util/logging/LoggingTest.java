@@ -24,7 +24,7 @@ public class LoggingTest {
 	}
 
 	/**
-	 * Test method for {@link epf.util.logging.Logging#logMethodEntry(javax.interceptor.InvocationContext)}.
+	 * Test method for {@link epf.util.logging.LogManager#logMethodEntry(javax.interceptor.InvocationContext)}.
 	 * @throws Exception 
 	 */
 	@Test
@@ -34,13 +34,13 @@ public class LoggingTest {
 		Mockito.when(mockContext.getMethod()).thenReturn(method);
 		Mockito.when(mockContext.getParameters()).thenReturn(new String[] {"arg"});
 		Mockito.when(mockContext.proceed()).thenReturn("arg");
-		Logging logging = new Logging();
-		Object obj = logging.logMethodEntry(mockContext);
+		LogManager logManager = new LogManager();
+		Object obj = logManager.logMethodEntry(mockContext);
 		Assert.assertEquals("arg", obj);
 	}
 	
 	/**
-	 * Test method for {@link epf.util.logging.Logging#logMethodEntry(javax.interceptor.InvocationContext)}.
+	 * Test method for {@link epf.util.logging.LogManager#logMethodEntry(javax.interceptor.InvocationContext)}.
 	 * @throws Exception 
 	 */
 	@Test
@@ -50,38 +50,38 @@ public class LoggingTest {
 		Mockito.when(mockContext.getMethod()).thenReturn(method);
 		Mockito.when(mockContext.getParameters()).thenReturn(new String[] {""});
 		Mockito.when(mockContext.proceed()).thenThrow(Exception.class);
-		Logging logging = new Logging();
-		Object obj = logging.logMethodEntry(mockContext);
+		LogManager logManager = new LogManager();
+		Object obj = logManager.logMethodEntry(mockContext);
 		Assert.assertNull(obj);
 	}
 
 	/**
-	 * Test method for {@link epf.util.logging.Logging#getLogger(java.lang.String)}.
+	 * Test method for {@link epf.util.logging.LogManager#getLogger(java.lang.String)}.
 	 */
 	@Test
 	public void testGetLogger() {
-		Logger logger = Logging.getLogger(LoggingTest.class.getName());
+		Logger logger = LogManager.getLogger(LoggingTest.class.getName());
 		Assert.assertNotNull(logger);
-		logger = Logging.getLogger("");
+		logger = LogManager.getLogger("");
 		Assert.assertNotNull(logger);
-		logger = Logging.getLogger("invalid");
+		logger = LogManager.getLogger("invalid");
 		Assert.assertNotNull(logger);
 	}
 
 	/**
-	 * Test method for {@link epf.util.logging.Logging#getLogger(java.lang.String)}.
+	 * Test method for {@link epf.util.logging.LogManager#getLogger(java.lang.String)}.
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testGetLogger_NullName() {
-		Logging.getLogger(null);
+		LogManager.getLogger(null);
 	}
 	
 	/**
-	 * Test method for {@link epf.util.logging.Logging#config(java.lang.Class)}.
+	 * Test method for {@link epf.util.logging.LogManager#config(java.lang.Class)}.
 	 */
 	@Test
 	public void testConfig() {
-		Logging.config(getClass());
+		LogManager.config(getClass());
 		String configFile = System.getProperty("java.util.logging.config.file");
 		Assert.assertNotNull("System.property.java.util.logging.config.file", configFile);
 	}

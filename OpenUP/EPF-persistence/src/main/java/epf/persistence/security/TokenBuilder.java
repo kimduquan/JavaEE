@@ -12,7 +12,7 @@ import com.ibm.websphere.security.jwt.JwtBuilder;
 import com.ibm.websphere.security.jwt.JwtToken;
 
 import epf.security.schema.Token;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
@@ -23,7 +23,7 @@ public class TokenBuilder {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(TokenBuilder.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(TokenBuilder.class.getName());
 	
 	/**
 	 * 

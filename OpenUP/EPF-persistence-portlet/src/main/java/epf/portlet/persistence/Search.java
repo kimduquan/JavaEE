@@ -19,7 +19,7 @@ import epf.portlet.internal.config.ConfigUtil;
 import epf.portlet.internal.gateway.GatewayUtil;
 import epf.portlet.naming.Naming;
 import epf.portlet.internal.security.SecurityUtil;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
@@ -37,7 +37,7 @@ public class Search implements SearchView, Serializable {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(Search.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Search.class.getName());
 	
 	/**
 	 * 

@@ -23,7 +23,7 @@ import epf.portlet.naming.Naming;
 import epf.portlet.internal.security.SecurityUtil;
 import epf.portlet.util.EventUtil;
 import epf.portlet.util.ParameterUtil;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
@@ -41,7 +41,7 @@ public class Schema implements SchemaView, Serializable {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(Schema.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Schema.class.getName());
 	
 	/**
 	 * 

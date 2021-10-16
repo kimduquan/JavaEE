@@ -14,7 +14,7 @@ import epf.portlet.util.http.CookieUtil;
 import epf.security.client.Credential;
 import epf.security.schema.Token;
 import epf.security.util.PasswordUtil;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -42,7 +42,7 @@ public class Security implements CredentialView, Serializable {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(Security.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Security.class.getName());
 
 	/**
 	 * 

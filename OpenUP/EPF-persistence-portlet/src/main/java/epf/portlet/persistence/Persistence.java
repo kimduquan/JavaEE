@@ -25,7 +25,7 @@ import epf.portlet.internal.security.SecurityUtil;
 import epf.portlet.util.EventUtil;
 import epf.portlet.util.ParameterUtil;
 import epf.portlet.util.json.JsonUtil;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
@@ -43,7 +43,7 @@ public class Persistence implements PersistenceView, Serializable {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(Persistence.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Persistence.class.getName());
 	
 	/**
 	 * 

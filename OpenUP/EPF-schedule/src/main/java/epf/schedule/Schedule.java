@@ -21,7 +21,7 @@ import javax.ws.rs.Path;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.naming.Naming;
 import epf.util.config.ConfigUtil;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 import epf.util.websocket.Client;
 import epf.util.websocket.MessageQueue;
 
@@ -37,7 +37,7 @@ public class Schedule implements epf.client.schedule.Schedule {
 	/**
 	 * 
 	 */
-	private static transient final Logger LOGGER = Logging.getLogger(Schedule.class.getName());
+	private static transient final Logger LOGGER = LogManager.getLogger(Schedule.class.getName());
 	
 	/**
 	 * 

@@ -13,7 +13,7 @@ import javax.cache.configuration.MutableCacheEntryListenerConfiguration;
 import javax.cache.event.CacheEntryEvent;
 import javax.cache.event.CacheEntryEventFilter;
 import javax.cache.event.CacheEntryListener;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 import epf.util.websocket.Message;
 import epf.util.websocket.MessageQueue;
 
@@ -26,7 +26,7 @@ public abstract class EntryListener implements CacheEntryListener<String, Object
 	/**
 	 * 
 	 */
-	private static transient final Logger LOGGER = Logging.getLogger(EntryListener.class.getName());
+	private static transient final Logger LOGGER = LogManager.getLogger(EntryListener.class.getName());
 
 	/**
 	 * 

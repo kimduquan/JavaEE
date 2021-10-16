@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import epf.util.config.ConfigUtil;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
@@ -49,7 +49,7 @@ public class WebAppServlet extends HttpServlet {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(WebAppServlet.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(WebAppServlet.class.getName());
        
     /**
      * 

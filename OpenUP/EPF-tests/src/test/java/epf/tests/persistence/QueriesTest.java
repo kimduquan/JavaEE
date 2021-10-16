@@ -11,7 +11,7 @@ import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.tests.client.ClientUtil;
 import epf.tests.security.SecurityUtil;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 import java.net.URI;
 import java.util.Set;
 import java.util.logging.Level;
@@ -33,7 +33,7 @@ import org.junit.Ignore;
  */
 public class QueriesTest {
     
-	private static final Logger logger = Logging.getLogger(QueriesTest.class.getName());
+	private static final Logger logger = LogManager.getLogger(QueriesTest.class.getName());
 	private static URI persistenceUrl;
     private static String token;
     private Client client;

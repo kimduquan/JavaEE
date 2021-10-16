@@ -17,7 +17,7 @@ import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.portlet.internal.gateway.GatewayUtil;
 import epf.portlet.internal.security.SecurityUtil;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
@@ -29,7 +29,7 @@ public class EntityCacheUtil {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(EntityCacheUtil.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(EntityCacheUtil.class.getName());
 
 	/**
 	 * 

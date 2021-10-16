@@ -17,7 +17,7 @@ import epf.schema.PostLoad;
 import epf.schema.PostPersist;
 import epf.schema.PostRemove;
 import epf.schema.PostUpdate;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
@@ -29,7 +29,7 @@ public class Listener {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(Listener.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Listener.class.getName());
 	
 	/**
 	 * 

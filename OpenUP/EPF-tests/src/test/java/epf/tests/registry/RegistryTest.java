@@ -20,11 +20,11 @@ import epf.client.registry.Registry;
 import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.tests.client.ClientUtil;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 
 public class RegistryTest {
 
-	private static final Logger logger = Logging.getLogger(RegistryTest.class.getName());
+	private static final Logger logger = LogManager.getLogger(RegistryTest.class.getName());
 	private static URI registryUrl;
 	
 	private Client client;

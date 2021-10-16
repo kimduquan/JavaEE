@@ -27,7 +27,7 @@ import epf.client.util.Client;
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
 import epf.shell.util.client.Entity;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 import epf.util.zip.ZipUtil;
 import epf.util.file.PathUtil;
 import jakarta.annotation.PostConstruct;
@@ -49,7 +49,7 @@ public class Utility {
 	/**
 	 * 
 	 */
-	private static final Logger LOG = Logging.getLogger(Utility.class.getName());
+	private static final Logger LOG = LogManager.getLogger(Utility.class.getName());
 	
 	/**
 	 * 

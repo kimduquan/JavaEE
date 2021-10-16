@@ -28,7 +28,7 @@ import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.gateway.security.SecurityUtil;
 import epf.naming.Naming;
 import epf.util.config.ConfigUtil;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
@@ -41,7 +41,7 @@ public class Messaging {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(Messaging.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Messaging.class.getName());
 	
 	/**
 	 * 

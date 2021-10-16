@@ -11,7 +11,7 @@ import javax.json.JsonReader;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.json.bind.adapter.JsonbAdapter;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
@@ -22,7 +22,7 @@ public class Adapter implements JsonbAdapter<Object, JsonObject> {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(Adapter.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Adapter.class.getName());
 	
 	@Override
 	public JsonObject adaptToJson(final Object obj) throws Exception {

@@ -9,7 +9,7 @@ import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseBroadcaster;
 import javax.ws.rs.sse.SseEventSink;
 import epf.util.concurrent.ObjectQueue;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 import epf.util.websocket.Client;
 
 /**
@@ -21,7 +21,7 @@ public class Broadcaster extends ObjectQueue<String> {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(Broadcaster.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Broadcaster.class.getName());
 	
 	/**
 	 * 

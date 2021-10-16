@@ -14,7 +14,7 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 import epf.util.EPFException;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 
 /**
  *
@@ -31,7 +31,7 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
     /**
      * 
      */
-    private static final Logger LOGGER = Logging.getLogger(ExceptionHandler.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(ExceptionHandler.class.getName());
 
     /**
      *

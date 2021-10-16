@@ -22,7 +22,7 @@ import epf.naming.Naming;
 import epf.tests.client.ClientUtil;
 import epf.tests.persistence.EntitiesTest;
 import epf.tests.security.SecurityUtil;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 import epf.client.gateway.GatewayUtil;
 
 /**
@@ -31,7 +31,7 @@ import epf.client.gateway.GatewayUtil;
  */
 public class SchemaTest {
 	
-	private static final Logger logger = Logging.getLogger(EntitiesTest.class.getName());
+	private static final Logger logger = LogManager.getLogger(EntitiesTest.class.getName());
 	private static URI schemaUrl;
     private static String token;
     private Client client;

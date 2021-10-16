@@ -10,7 +10,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.logging.Logger;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 import epf.util.websocket.Message;
 import epf.util.websocket.MessageQueue;
 
@@ -23,7 +23,7 @@ public class Scheduled implements Runnable, Serializable, Closeable {
 	/**
 	 * 
 	 */
-	private static transient final Logger LOGGER = Logging.getLogger(Scheduled.class.getName());
+	private static transient final Logger LOGGER = LogManager.getLogger(Scheduled.class.getName());
 
 	/**
 	 * 

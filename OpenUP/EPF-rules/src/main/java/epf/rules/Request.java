@@ -16,7 +16,7 @@ import javax.rules.RuleSessionCreateException;
 import javax.rules.RuleSessionTypeUnsupportedException;
 import javax.rules.StatelessRuleSession;
 import org.eclipse.microprofile.health.Readiness;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
@@ -28,7 +28,7 @@ public class Request {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(Request.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Request.class.getName());
 	
 	/**
 	 * 

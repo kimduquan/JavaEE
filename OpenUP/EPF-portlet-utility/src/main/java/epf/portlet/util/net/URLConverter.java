@@ -10,7 +10,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
@@ -22,7 +22,7 @@ public class URLConverter implements Converter<URL> {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(URLConverter.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(URLConverter.class.getName());
 
 	@Override
 	public URL getAsObject(final FacesContext context, final UIComponent component, final String value) {

@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 import javax.websocket.CloseReason;
 import javax.websocket.DeploymentException;
 import javax.websocket.Session;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 import epf.util.websocket.Client;
 import epf.util.websocket.Message;
 import epf.util.websocket.MessageHandler;
@@ -25,7 +25,7 @@ public class Remote implements Runnable, AutoCloseable {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(Remote.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Remote.class.getName());
 	
 	/**
 	 * 

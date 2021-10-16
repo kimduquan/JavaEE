@@ -38,7 +38,7 @@ import epf.security.client.jwt.JWT;
 import epf.security.client.jwt.TokenUtil;
 import epf.security.schema.Token;
 import epf.util.EPFException;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 import epf.util.security.KeyUtil;
 
 /**
@@ -58,7 +58,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
     /**
      * 
      */
-    private static final Logger LOGGER = Logging.getLogger(Security.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(Security.class.getName());
     
     /**
      * 

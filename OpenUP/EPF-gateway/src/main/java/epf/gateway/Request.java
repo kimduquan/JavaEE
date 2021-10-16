@@ -28,7 +28,7 @@ import javax.ws.rs.sse.SseEventSource;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.client.util.ssl.DefaultHostnameVerifier;
 import epf.client.util.ssl.SSLContextHelper;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 
 /**
  *
@@ -40,7 +40,7 @@ public class Request {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(Request.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Request.class.getName());
     
     /**
      * 

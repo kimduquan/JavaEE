@@ -32,7 +32,7 @@ public class Logging implements HealthCheck {
 	/**
 	 * 
 	 */
-	private static transient final java.util.logging.Logger LOGGER = epf.util.logging.Logging.getLogger(Logging.class.getName());
+	private static transient final java.util.logging.Logger LOGGER = epf.util.logging.LogManager.getLogger(Logging.class.getName());
 	
 	/**
 	 * 

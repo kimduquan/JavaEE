@@ -7,7 +7,7 @@ import java.io.Closeable;
 import java.util.logging.Logger;
 import javax.websocket.CloseReason;
 import javax.websocket.Session;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
@@ -18,7 +18,7 @@ public class Server implements Runnable, Closeable {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(Server.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Server.class.getName());
 	
 	/**
 	 * 

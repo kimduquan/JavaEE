@@ -11,7 +11,7 @@ import javax.websocket.DecodeException;
 import javax.websocket.Decoder;
 import javax.websocket.EndpointConfig;
 import epf.util.json.Adapter;
-import epf.util.logging.Logging;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
@@ -22,7 +22,7 @@ public class MessageDecoder implements Decoder.Text<Object> {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(MessageDecoder.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(MessageDecoder.class.getName());
 	
 	/**
 	 * 
