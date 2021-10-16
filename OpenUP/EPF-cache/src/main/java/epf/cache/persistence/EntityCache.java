@@ -114,7 +114,7 @@ public class EntityCache extends ObjectQueue<EntityEvent> {
 		}
 		Optional<String> key = Optional.empty();
 		if(entityName.isPresent() && entityId.isPresent()) {
-			key = Optional.of(StringUtil.join(CACHE_KEY, entityName.get(), String.valueOf(entityId)));
+			key = Optional.of(StringUtil.join(CACHE_KEY, entityName.get(), String.valueOf(entityId.get())));
 		}
 		return key;
 	}
