@@ -73,6 +73,7 @@ public class LogManager implements HealthCheck {
 			newLogger("EPF-cache", messagingUrl.resolve(Naming.CACHE));
 			newLogger("EPF-shell-schedule", messagingUrl.resolve("schedule/shell"));
 			newLogger("EPF-persistence-load", messagingUrl.resolve("persistence/post-load"));
+			newLogger("EPF-file", messagingUrl.resolve(Naming.FILE));
 		}
 		catch(Exception ex) {
 			LOGGER.throwing(LOGGER.getName(), "postConstruct", ex);

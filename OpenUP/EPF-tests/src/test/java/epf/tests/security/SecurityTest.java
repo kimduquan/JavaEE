@@ -267,11 +267,11 @@ public class SecurityTest {
     	String token = login(credential.getKey(), credential.getValue(), securityUrl.toURL(), true);
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
-    		Response response = Security.update(client, "any_role1");
+    		Response response = Security.update(client, credential.getValue() + "1");
     		Assert.assertEquals("Response.status", Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
     	}
     	logOut(token);
-    	token = login(credential.getKey(), credential.getValue(), securityUrl.toURL(), true);
+    	token = login(credential.getKey(), credential.getValue() + "1", securityUrl.toURL(), true);
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
     		Response response = Security.update(client, credential.getValue());

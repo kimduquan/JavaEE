@@ -71,6 +71,9 @@ public class Messaging {
 		final Server schedule = new Server();
 		servers.put(Naming.SCHEDULE, schedule);
 		executor.submit(schedule);
+		final Server file = new Server();
+		servers.put(Naming.FILE, file);
+		executor.submit(file);
 	}
 	
 	/**
