@@ -7,7 +7,7 @@ import java.nio.file.Path;
  * @author PC
  *
  */
-public class PathEvent implements Serializable {
+public class FileEvent implements Serializable {
 
 	/**
 	 * 
@@ -37,7 +37,7 @@ public class PathEvent implements Serializable {
 	/**
 	 * 
 	 */
-	public PathEvent() {
+	public FileEvent() {
 		
 	}
 
@@ -47,7 +47,7 @@ public class PathEvent implements Serializable {
 	 * @param count
 	 * @param kind
 	 */
-	public PathEvent(final Path path, final Object context, final int count, final EventKind kind) {
+	public FileEvent(final Path path, final Object context, final int count, final EventKind kind) {
 		this.source = path.toString();
 		this.context = String.valueOf(context);
 		this.count = count;

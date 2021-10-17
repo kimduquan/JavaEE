@@ -1,4 +1,4 @@
-package epf.file;
+package epf.file.internal;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -8,7 +8,7 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.concurrent.ScheduledFuture;
 import epf.client.file.EventKind;
-import epf.client.file.PathEvent;
+import epf.client.file.FileEvent;
 import epf.util.websocket.Message;
 import epf.util.websocket.MessageQueue;
 
@@ -50,8 +50,8 @@ public class FileWatch implements Runnable, Closeable {
 		final WatchKey watchKey = watchService.poll();
 		if(watchKey != null) {
 			for (WatchEvent<?> event : watchKey.pollEvents()) {
-		        final PathEvent pathEvent = new PathEvent(path, event.context(), event.count(), EventKind.valueOf(event.kind().name()));
-		        events.add(new Message(pathEvent));
+		        final FileEvent fileEvent = new FileEvent(path, event.context(), event.count(), EventKind.valueOf(event.kind().name()));
+		        events.add(new Message(fileEvent));
 		    }
 			watchKey.reset();
 		}

@@ -88,6 +88,10 @@ public interface Naming {
 	     */
 	    String FILE_URL = "epf.file.url";
 		
+	    /**
+	     * 
+	     */
+	    String ROOT = "epf.file.root";
 	}
 	
 	/**
