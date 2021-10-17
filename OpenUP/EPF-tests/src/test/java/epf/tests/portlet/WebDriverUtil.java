@@ -6,7 +6,7 @@ package epf.tests.portlet;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import epf.client.portlet.Portlet;
+import epf.portlet.naming.Naming;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
@@ -66,11 +66,11 @@ public class WebDriverUtil {
 		webDriver.quit();
 	}
 	
-	@Produces @Named(Portlet.PORTLET_URL)
+	@Produces @Named(Naming.PORTLET_URL)
 	public static URL getPortletURL() {
 		URL url = null;
 		try {
-			url = new URL(System.getProperty(Portlet.PORTLET_URL, "http://localhost:8080/pluto/portal/"));
+			url = new URL(System.getProperty(Naming.PORTLET_URL, "http://localhost:8080/pluto/portal/"));
 		} 
 		catch (MalformedURLException e) {
 			

@@ -6,7 +6,7 @@ package epf.tests.portlet;
 import java.net.URL;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import epf.client.portlet.Portlet;
+import epf.portlet.naming.Naming;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -25,7 +25,7 @@ public class PortletView {
 	private final URL url;
 	
 	@Inject
-	public PortletView(WebDriver driver, @Named(Portlet.PORTLET_URL) URL url) {
+	public PortletView(WebDriver driver, @Named(Naming.PORTLET_URL) URL url) {
 		this.driver = driver;
 		this.url = url;
 	}
