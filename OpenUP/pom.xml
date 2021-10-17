@@ -389,12 +389,6 @@
 			    <artifactId>org.eclipse.lsp4j</artifactId>
 			    <version>0.12.0</version>
 			</dependency>
-			<!-- https://mvnrepository.com/artifact/io.reactivex.rxjava3/rxjava -->
-			<dependency>
-			    <groupId>io.reactivex.rxjava3</groupId>
-			    <artifactId>rxjava</artifactId>
-			    <version>3.1.1</version>
-			</dependency>
 			
 			
             <!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-rs-mp-client -->
@@ -421,6 +415,12 @@
                 <artifactId>h2</artifactId>
                 <version>1.4.200</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+			<dependency>
+			    <groupId>mysql</groupId>
+			    <artifactId>mysql-connector-java</artifactId>
+			    <version>8.0.26</version>
+			</dependency>
             <!-- https://mvnrepository.com/artifact/org.eclipse.persistence/org.eclipse.persistence.core -->
             <dependency>
                 <groupId>org.eclipse.persistence</groupId>

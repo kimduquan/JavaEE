@@ -55,6 +55,11 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
         </dependency>
+       	<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+		<dependency>
+		    <groupId>mysql</groupId>
+		    <artifactId>mysql-connector-java</artifactId>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast -->
         <dependency>
             <groupId>com.hazelcast</groupId>
@@ -428,15 +433,28 @@
                             <!-- Drop application into apps/ directory -->
                             <appsDirectory>apps</appsDirectory>
 							<copyDependencies>
-                                <location>${project.build.directory}/shared/resources/epf/</location>
-                                <dependency>
-                                    <groupId>com.h2database</groupId>
-                                    <artifactId>h2</artifactId>
-                                </dependency>
-                                <dependency>
-                                    <groupId>com.hazelcast</groupId>
-                                    <artifactId>hazelcast</artifactId>
-                                </dependency>
+								<dependencyGroup>
+									<location>${project.build.directory}/shared/resources/epf/persistence/h2</location>
+	                                <dependency>
+	                                    <groupId>com.h2database</groupId>
+	                                    <artifactId>h2</artifactId>
+	                                </dependency>
+								</dependencyGroup>
+								<dependencyGroup>
+									<location>${project.build.directory}/shared/resources/epf/persistence</location>
+	                                <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+									<dependency>
+									    <groupId>mysql</groupId>
+									    <artifactId>mysql-connector-java</artifactId>
+									</dependency>
+								</dependencyGroup>
+								<dependencyGroup>
+									<location>${project.build.directory}/shared/resources/epf/cache</location>
+									<dependency>
+	                                    <groupId>com.hazelcast</groupId>
+	                                    <artifactId>hazelcast</artifactId>
+	                                </dependency>
+								</dependencyGroup>
                             </copyDependencies>
                         </configuration>
                     </execution>
