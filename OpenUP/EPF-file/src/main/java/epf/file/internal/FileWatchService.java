@@ -15,7 +15,6 @@ import javax.annotation.Resource;
 import javax.enterprise.concurrent.ManagedScheduledExecutorService;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.file.IWatchService;
 import epf.messaging.client.Client;
@@ -63,13 +62,6 @@ public class FileWatchService implements IWatchService {
 	 */
 	@Inject
 	private transient ManagedExecutor executor;
-	
-	/**
-	 * 
-	 */
-	@ConfigProperty(name = Naming.File.ROOT)
-	@Inject
-	private transient String rootFolder;
 	
 	/**
 	 * 

@@ -246,12 +246,12 @@ public interface Naming {
 		/**
 		 * 
 		 */
-		String PERSISTENCE_ENTITY_LISTENERS = "persistence-EntityListeners";
+		String PERSISTENCE_ENTITY_LISTENERS = "persistence";
 		
 		/**
 		 * 
 		 */
-		String PERSISTENCE_ENTITY_LISTENERS_POSTLOAD = "persistence-EntityListeners-PostLoad";
+		String PERSISTENCE_ENTITY_LISTENERS_POSTLOAD = "persistence-PostLoad";
 		
 	}
 	
