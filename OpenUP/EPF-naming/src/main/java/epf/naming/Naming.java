@@ -406,4 +406,18 @@ public interface Naming {
 		 */
 		String SHELL_COMMAND = "epf.shell.command";
 	}
+	
+	String WEB_APP = "webapp";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface WebApp {
+		
+		/**
+	     * 
+	     */
+	    String WEB_APP_URL = "epf.webapp.url";
+	}
 }

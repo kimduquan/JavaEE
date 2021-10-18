@@ -64,7 +64,7 @@ public class WebAppServlet extends HttpServlet {
      * @throws URISyntaxException
      */
     protected static URI buildRequestUri(final HttpServletRequest request) throws URISyntaxException {
-    	final String portletUrl = ConfigUtil.getString(WebApp.PORTLET_URL);
+    	final String portletUrl = ConfigUtil.getString(epf.portlet.naming.Naming.PORTLET_URL);
     	final String requestUri = request.getRequestURI();
     	final String queryString = request.getQueryString();
     	final String uri = portletUrl + requestUri + (queryString != null ? queryString : "");
