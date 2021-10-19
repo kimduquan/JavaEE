@@ -73,6 +73,8 @@ public class Security implements HealthCheck {
 	
 	@Incoming(Naming.SECURITY)
 	public void newToken(final Token token) {
-		tokenCache.add(token);
+		if(token != null) {
+			tokenCache.add(token);
+		}
 	}
 }

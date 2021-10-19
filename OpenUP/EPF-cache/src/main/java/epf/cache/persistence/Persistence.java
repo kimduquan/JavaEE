@@ -162,13 +162,17 @@ public class Persistence implements HealthCheck {
 	
 	@Incoming(Naming.Persistence.PERSISTENCE_ENTITY_LISTENERS)
 	public void postEvent(final EntityEvent event) {
-		entityCache.add(event);
-		messages.add(new Message(event));
+		if(event != null) {
+			entityCache.add(event);
+			messages.add(new Message(event));
+		}
 	}
 	
 	@Incoming(Naming.Persistence.PERSISTENCE_ENTITY_LISTENERS_POSTLOAD)
 	public void postLoad(final PostLoad event) {
-		entityCache.add(event);
-		postLoadMessages.add(new Message(event));
+		if(event != null) {
+			entityCache.add(event);
+			postLoadMessages.add(new Message(event));
+		}
 	}
 }
