@@ -16,6 +16,7 @@
         <feature>jpa-2.2</feature>
         <feature>websocket-1.1</feature>
         <feature>jca-1.7</feature>
+        <feature>jsf-2.3</feature>
     </featureManager>
 
     <httpEndpoint id="defaultHttpEndpoint"
