@@ -9,7 +9,7 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import epf.portlet.naming.Naming;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Disposes;
 import jakarta.enterprise.inject.Produces;
@@ -42,22 +42,20 @@ public class WebDriverUtil {
 		
 		final String implicit = System.getProperty("webdriver.timeouts.implicit");
 		if(implicit != null) {
-			driver.manage().timeouts().implicitlyWait(Long.valueOf(implicit), TimeUnit.SECONDS);
+			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(Long.valueOf(implicit)));
 		}
 		else {
-			driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
+			driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(60));
 		}
 		
 		final String pageLoad = System.getProperty("webdriver.timeouts.pageLoad");
 		if(pageLoad != null) {
-			driver.manage().timeouts()
-			.pageLoadTimeout(Long.valueOf(pageLoad), TimeUnit.SECONDS);
+			driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(Long.valueOf(pageLoad)));
 		}
 		
 		final String script = System.getProperty("webdriver.timeouts.script");
 		if(script != null) {
-			driver.manage().timeouts()
-			.setScriptTimeout(Long.valueOf(script), TimeUnit.SECONDS);
+			driver.manage().timeouts().scriptTimeout(Duration.ofSeconds(Long.valueOf(script)));
 		}
 		return driver;
 	}
