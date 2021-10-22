@@ -45,6 +45,11 @@
 		    <groupId>org.primefaces</groupId>
 		    <artifactId>primefaces</artifactId>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.jaxrs/jackson-jaxrs-json-provider -->
+		<dependency>
+		    <groupId>com.fasterxml.jackson.jaxrs</groupId>
+		    <artifactId>jackson-jaxrs-json-provider</artifactId>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

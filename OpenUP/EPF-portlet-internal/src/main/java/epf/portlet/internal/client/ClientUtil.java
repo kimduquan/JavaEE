@@ -6,7 +6,6 @@ package epf.portlet.internal.client;
 import java.net.URI;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-
 import epf.client.util.Client;
 
 /**
