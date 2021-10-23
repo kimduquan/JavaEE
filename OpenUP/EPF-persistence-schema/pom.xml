@@ -16,30 +16,6 @@
 		    <artifactId>javax.persistence-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-    	<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.jwt/microprofile-jwt-auth-api -->
-		<dependency>
-		    <groupId>org.eclipse.microprofile.jwt</groupId>
-		    <artifactId>microprofile-jwt-auth-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.config/microprofile-config-api -->
-		<dependency>
-		    <groupId>org.eclipse.microprofile.config</groupId>
-		    <artifactId>microprofile-config-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-        <!-- https://mvnrepository.com/artifact/com.ibm.websphere.appserver.api/com.ibm.websphere.appserver.api.jwt -->
-		<dependency>
-		    <groupId>com.ibm.websphere.appserver.api</groupId>
-		    <artifactId>com.ibm.websphere.appserver.api.jwt</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.transaction/javax.transaction-api -->
-		<dependency>
-		    <groupId>javax.transaction</groupId>
-		    <artifactId>javax.transaction-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-schema</artifactId>
@@ -81,4 +57,26 @@
             <version>${project.version}</version>
         </dependency>
     </dependencies>
+    <build>
+    	<plugins>
+    		<!-- https://mvnrepository.com/artifact/org.codehaus.mojo/exec-maven-plugin -->
+			<plugin>
+		        <groupId>org.codehaus.mojo</groupId>
+		        <artifactId>exec-maven-plugin</artifactId>
+		        <executions>
+		        	<execution>
+		        		<id>sql</id>
+		        		<goals>
+		        			<goal>exec</goal>
+		        		</goals>
+		        		<phase>package</phase>
+				        <configuration>
+				        	<executable>jshell</executable>
+				        	<arguments>sql.jsh</arguments>
+				        </configuration>
+		        	</execution>
+		        </executions>
+		    </plugin>
+    	</plugins>
+    </build>
 </project>

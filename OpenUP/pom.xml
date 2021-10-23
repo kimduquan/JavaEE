@@ -617,6 +617,12 @@
 				    <artifactId>maven-dependency-plugin</artifactId>
 				    <version>3.2.0</version>
 				</plugin>
+				<!-- https://mvnrepository.com/artifact/org.codehaus.mojo/exec-maven-plugin -->
+				<plugin>
+			        <groupId>org.codehaus.mojo</groupId>
+			        <artifactId>exec-maven-plugin</artifactId>
+			        <version>3.0.0</version>
+			    </plugin>
             </plugins>
         </pluginManagement>
     </build>
