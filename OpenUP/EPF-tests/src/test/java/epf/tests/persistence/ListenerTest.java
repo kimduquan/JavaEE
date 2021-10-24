@@ -22,6 +22,7 @@ import epf.schema.PostPersist;
 import epf.schema.PostRemove;
 import epf.tests.TestUtil;
 import epf.tests.client.ClientUtil;
+import epf.tests.health.HealthUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
 import epf.util.websocket.Client;
@@ -52,6 +53,7 @@ public class ListenerTest {
     
     @BeforeClass
     public static void beforeClass() throws Exception{
+    	HealthUtil.readỵ̣();
     	persistenceUrl = GatewayUtil.get(Naming.PERSISTENCE);
     	URI messagingUrl = UriBuilder.fromUri(GatewayUtil.get(Naming.MESSAGING)).scheme("ws").port(9080).build();
     	token = SecurityUtil.login();
