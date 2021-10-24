@@ -742,6 +742,7 @@
        </profile>
    </profiles>
     <modules>
+        <module>Azure-DevOps-Services</module>
         <module>EPF-shell</module>
 		<module>EPF-utility</module>
 		<module>EPF-client-utility</module>
