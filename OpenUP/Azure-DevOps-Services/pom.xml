@@ -8,4 +8,17 @@
   <artifactId>Azure-DevOps-Services</artifactId>
   <name>Azure-DevOps-Services</name>
   <description>Azure DevOps Services</description>
+  <dependencies>
+  	<!-- https://mvnrepository.com/artifact/org.jboss.resteasy/resteasy-client-microprofile -->
+	<dependency>
+	    <groupId>org.jboss.resteasy</groupId>
+	    <artifactId>resteasy-client-microprofile</artifactId>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.rest.client/microprofile-rest-client-api -->
+	<dependency>
+	    <groupId>org.eclipse.microprofile.rest.client</groupId>
+	    <artifactId>microprofile-rest-client-api</artifactId>
+		<scope>provided</scope>
+	</dependency>
+  </dependencies>
 </project>

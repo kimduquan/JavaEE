@@ -323,6 +323,12 @@
 			    <artifactId>resteasy-client</artifactId>
 			    <version>4.7.2.Final</version>
 			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.jboss.resteasy/resteasy-client-microprofile -->
+			<dependency>
+			    <groupId>org.jboss.resteasy</groupId>
+			    <artifactId>resteasy-client-microprofile</artifactId>
+			    <version>4.7.2.Final</version>
+			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.jboss.resteasy/resteasy-jackson2-provider -->
 			<dependency>
 			    <groupId>org.jboss.resteasy</groupId>
