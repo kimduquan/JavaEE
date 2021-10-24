@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epf.persistence.context;
+package epf.persistence.internal.context;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

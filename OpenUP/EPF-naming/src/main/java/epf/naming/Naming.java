@@ -222,11 +222,21 @@ public interface Naming {
 	 *
 	 */
 	interface Persistence {
+		
+		/**
+		 * 
+		 */
+		String PERSISTENCE = "epf.persistence";
 
 		/**
 		 * 
 		 */
 		String PERSISTENCE_URL = "epf.persistence.url";
+		
+		/**
+		 * 
+		 */
+		String PERSISTENCE_SECURITY = "epf.persistence.security";
 		
 		/**
 		 * 

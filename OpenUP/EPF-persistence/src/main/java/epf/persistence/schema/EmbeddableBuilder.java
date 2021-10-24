@@ -6,7 +6,7 @@ package epf.persistence.schema;
 import java.util.stream.Collectors;
 import javax.persistence.metamodel.EmbeddableType;
 import epf.client.schema.util.AttributeComparator;
-import epf.persistence.impl.Embeddable;
+import epf.persistence.internal.Embeddable;
 
 /**
  * @author PC

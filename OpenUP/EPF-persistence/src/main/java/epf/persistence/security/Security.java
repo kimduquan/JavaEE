@@ -7,6 +7,7 @@ package epf.persistence.security;
 
 import java.io.Serializable;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.security.PrivateKey;
 import java.time.Duration;
 import java.time.Instant;
@@ -14,12 +15,12 @@ import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.control.ActivateRequestContext;
 import javax.inject.Inject;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
@@ -29,11 +30,11 @@ import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.jwt.config.Names;
-
 import epf.naming.Naming;
-import epf.persistence.context.Application;
-import epf.persistence.context.Credential;
-import epf.persistence.context.Session;
+import epf.persistence.internal.context.Application;
+import epf.persistence.internal.context.Credential;
+import epf.persistence.internal.context.Session;
+import epf.security.client.SecurityInterface;
 import epf.security.client.jwt.JWT;
 import epf.security.client.jwt.TokenUtil;
 import epf.security.schema.Token;
@@ -48,7 +49,7 @@ import epf.util.security.KeyUtil;
 @Path(Naming.SECURITY)
 @RolesAllowed(Naming.Security.DEFAULT_ROLE)
 @RequestScoped
-public class Security implements epf.security.client.Security, epf.security.client.otp.OTPSecurity, Serializable {
+public class Security implements epf.security.client.Security, epf.security.client.otp.OTPSecurity, Serializable, SecurityInterface {
     
     /**
     * 
@@ -176,10 +177,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 			defaultCredential.putSession(newToken.getTokenID());
 	        return newToken.getRawToken();
 		} 
-        catch (ExecutionException e) {
-        	throw new EPFException(e.getCause());
-		} 
-		catch (Exception e) {
+        catch (Exception e) {
 			throw new EPFException(e);
 		}
     }
@@ -252,5 +250,38 @@ public class Security implements epf.security.client.Security, epf.security.clie
 			return token.getRawToken();
 		}
 		throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build()); 
+	}
+
+	@ActivateRequestContext
+	@Override
+	public Token login(final String username, final String passwordHash, final String url) throws RemoteException {
+		final Credential defaultCredential = persistence.getDefaultContext().putCredential(username, passwordHash);
+    	try {
+        	final Token token = buildToken(username, new URL(url));
+        	final TokenBuilder builder = new TokenBuilder(token, privateKey);
+			final Token newToken = builder.build();
+			defaultCredential.putSession(newToken.getTokenID());
+	        return newToken;
+		} 
+        catch (Exception e) {
+			throw new EPFException(e);
+		}
+	}
+
+	@ActivateRequestContext
+	@Override
+	public Token authenticate(final Token token) throws RemoteException {
+		if(SessionUtil.getSession(token.getName(), persistence.getDefaultContext(), token.getTokenID()) != null){
+    		return token;
+        }
+        throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
+	}
+
+	@ActivateRequestContext
+	@Override
+	public String logout(final Token token) throws RemoteException {
+		final Session defaultSession = SessionUtil.removeSession(context.getUserPrincipal(), persistence.getDefaultContext());
+		defaultSession.close();
+		return token.getName();
 	}
 }

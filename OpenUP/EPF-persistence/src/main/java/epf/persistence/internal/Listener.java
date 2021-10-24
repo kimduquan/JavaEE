@@ -1,4 +1,4 @@
-package epf.persistence.impl;
+package epf.persistence.internal;
 
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;

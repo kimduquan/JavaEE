@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.persistence.impl;
+package epf.persistence.internal;
 
 import java.util.ArrayList;
 import java.util.Collection;

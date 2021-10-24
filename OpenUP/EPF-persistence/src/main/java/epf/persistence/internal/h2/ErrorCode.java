@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.persistence.impl.h2;
+package epf.persistence.internal.h2;
 
 /**
  * @author PC

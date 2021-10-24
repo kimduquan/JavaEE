@@ -11,7 +11,7 @@ import javax.persistence.metamodel.Type.PersistenceType;
 import epf.client.schema.Attribute;
 import epf.client.schema.Table;
 import epf.client.schema.util.AttributeComparator;
-import epf.persistence.impl.Entity;
+import epf.persistence.internal.Entity;
 import epf.util.logging.LogManager;
 
 /**

@@ -46,6 +46,12 @@
 		    <artifactId>javax.annotation-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.cache/cache-api -->
+		<dependency>
+		    <groupId>javax.cache</groupId>
+		    <artifactId>cache-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
     	<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.jwt/microprofile-jwt-auth-api -->
 		<dependency>
 		    <groupId>org.eclipse.microprofile.jwt</groupId>
@@ -70,10 +76,10 @@
 		    <artifactId>microprofile-context-propagation-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.cache/cache-api -->
+		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.health/microprofile-health-api -->
 		<dependency>
-		    <groupId>javax.cache</groupId>
-		    <artifactId>cache-api</artifactId>
+		    <groupId>org.eclipse.microprofile.health</groupId>
+		    <artifactId>microprofile-health-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
         <!-- https://mvnrepository.com/artifact/com.ibm.websphere.appserver.api/com.ibm.websphere.appserver.api.jwt -->

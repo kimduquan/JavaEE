@@ -32,8 +32,8 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import epf.client.persistence.SearchData;
 import epf.naming.Naming;
-import epf.persistence.impl.Entity;
-import epf.persistence.impl.QueryBuilder;
+import epf.persistence.internal.Entity;
+import epf.persistence.internal.QueryBuilder;
 import epf.roles.schema.Roles;
 import epf.roles.schema.internal.QueryNames;
 

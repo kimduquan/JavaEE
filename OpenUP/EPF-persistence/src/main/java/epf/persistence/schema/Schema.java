@@ -17,8 +17,8 @@ import epf.client.schema.util.EmbeddableComparator;
 import epf.client.schema.util.EntityComparator;
 import epf.naming.Naming;
 import epf.persistence.Request;
-import epf.persistence.impl.Embeddable;
-import epf.persistence.impl.Entity;
+import epf.persistence.internal.Embeddable;
+import epf.persistence.internal.Entity;
 
 /**
  * @author PC

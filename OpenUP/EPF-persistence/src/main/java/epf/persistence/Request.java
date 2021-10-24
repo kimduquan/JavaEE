@@ -31,12 +31,13 @@ import javax.persistence.metamodel.EntityType;
 import javax.transaction.Transactional;
 import javax.ws.rs.ForbiddenException;
 import org.eclipse.microprofile.jwt.JsonWebToken;
-import epf.persistence.context.Application;
-import epf.persistence.context.Context;
-import epf.persistence.context.Credential;
-import epf.persistence.context.Session;
-import epf.persistence.impl.Embeddable;
-import epf.persistence.impl.Entity;
+
+import epf.persistence.internal.Embeddable;
+import epf.persistence.internal.Entity;
+import epf.persistence.internal.context.Application;
+import epf.persistence.internal.context.Context;
+import epf.persistence.internal.context.Credential;
+import epf.persistence.internal.context.Session;
 
 /**
  *
