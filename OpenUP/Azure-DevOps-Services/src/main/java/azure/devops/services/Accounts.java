@@ -1,11 +1,16 @@
 package azure.devops.services;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 
 /**
  * @author PC
  *
  */
+@Path("accounts")
 public interface Accounts {
 
 	/**
@@ -17,13 +22,15 @@ public interface Accounts {
 	 * @param properties
 	 * @return
 	 */
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	Account[] List(
 			@QueryParam("api-version") 
-			String api_version,
+			final String api_version,
 			@QueryParam("memberId")
-			String memberId,
+			final String memberId,
 			@QueryParam("ownerId")
-			String ownerId,
+			final String ownerId,
 			@QueryParam("properties")
-			String properties);
+			final String properties);
 }
