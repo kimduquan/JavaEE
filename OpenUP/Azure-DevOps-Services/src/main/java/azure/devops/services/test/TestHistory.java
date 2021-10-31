@@ -136,6 +136,7 @@ public interface TestHistory {
 			@PathParam("project")
 			String project,
 			@QueryParam("api-version")
-			String api_version
+			String api_version,
+			RequestBody body
 			);
 }
