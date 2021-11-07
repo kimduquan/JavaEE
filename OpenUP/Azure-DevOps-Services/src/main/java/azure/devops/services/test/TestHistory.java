@@ -7,7 +7,7 @@ import javax.ws.rs.QueryParam;
 
 public interface TestHistory {
 	
-	public class RequestBody {
+	class RequestBody {
 		/**
 		 * Automated test name of the TestCase.
 		 */

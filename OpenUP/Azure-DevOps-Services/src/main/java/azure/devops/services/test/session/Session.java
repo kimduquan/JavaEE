@@ -15,7 +15,7 @@ import azure.devops.services.test.ShallowReference;
 
 public interface Session {
 	
-	public class Create_RequestBody {
+	class Create_RequestBody {
 		
 		/**
 		 * Area path of the test session
@@ -230,7 +230,7 @@ public interface Session {
 			TestSessionSource source
 			);
 	
-	public class Update_RequestBody {
+	class Update_RequestBody {
 		/**
 		 * Area path of the test session
 		 */

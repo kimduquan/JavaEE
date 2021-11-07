@@ -121,7 +121,7 @@ public interface TestSuites {
 			String api_version
 			);
 	
-	public class Update_RequestBody {
+	class Update_RequestBody {
 		/**
 		 * Shallow reference of configurations for the test cases in the suite.
 		 */
