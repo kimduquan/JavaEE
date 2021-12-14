@@ -39,7 +39,7 @@ GRANT SELECT ON OPENUP.* TO 'Project_Manager';
 GRANT SELECT ON OPENUP.* TO 'Stakeholder';
 GRANT SELECT ON OPENUP.* TO 'Tester';
 
-REVOKE ALL ON sys.* FROM 'Analyst';
+/*REVOKE ALL ON sys.* FROM 'Analyst';
 REVOKE ALL ON sys.* FROM 'Any_Role';
 REVOKE ALL ON sys.* FROM 'Architect';
 REVOKE ALL ON sys.* FROM 'Developer';
@@ -53,7 +53,7 @@ REVOKE ALL ON sys.* FROM 'architect1'@'localhost';
 REVOKE ALL ON sys.* FROM 'developer1'@'localhost';
 REVOKE ALL ON sys.* FROM 'project_manager1'@'localhost';
 REVOKE ALL ON sys.* FROM 'stakeholder1'@'localhost';
-REVOKE ALL ON sys.* FROM 'tester1'@'localhost';
+REVOKE ALL ON sys.* FROM 'tester1'@'localhost';*/
 /*Basic Roles END*/
 
 /*Deployment BEGIN*/
@@ -92,7 +92,7 @@ GRANT SELECT ON OPENUP.* TO 'Product_Owner';
 GRANT SELECT ON OPENUP.* TO 'Technical_Writer';
 GRANT SELECT ON OPENUP.* TO 'Trainer';
 
-REVOKE ALL ON sys.* FROM 'Course_Developer';
+/*REVOKE ALL ON sys.* FROM 'Course_Developer';
 REVOKE ALL ON sys.* FROM 'Deployment_Engineer';
 REVOKE ALL ON sys.* FROM 'Deployment_Manager';
 REVOKE ALL ON sys.* FROM 'Product_Owner';
@@ -104,7 +104,7 @@ REVOKE ALL ON sys.* FROM 'deployment_engineer1'@'localhost';
 REVOKE ALL ON sys.* FROM 'deployment_manager1'@'localhost';
 REVOKE ALL ON sys.* FROM 'product_owner1'@'localhost';
 REVOKE ALL ON sys.* FROM 'technical_writer1'@'localhost';
-REVOKE ALL ON sys.* FROM 'trainer1'@'localhost';
+REVOKE ALL ON sys.* FROM 'trainer1'@'localhost';*/
 /*Deployment END*/
 
 /*Environment BEGIN*/
@@ -123,9 +123,9 @@ GRANT SELECT ON EPF_Work_Products.* TO 'Tool_Specialist';
 GRANT SELECT ON OPENUP.* TO 'Process_Engineer';
 GRANT SELECT ON OPENUP.* TO 'Tool_Specialist';
 
-REVOKE ALL ON sys.* FROM 'Process_Engineer';
+/*REVOKE ALL ON sys.* FROM 'Process_Engineer';
 REVOKE ALL ON sys.* FROM 'Tool_Specialist';
 
 REVOKE ALL ON sys.* FROM 'process_engineer1'@'localhost';
-REVOKE ALL ON sys.* FROM 'tool_specialist1'@'localhost';
+REVOKE ALL ON sys.* FROM 'tool_specialist1'@'localhost';*/
 /*Environment END*/
