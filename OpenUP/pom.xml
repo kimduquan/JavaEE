@@ -425,7 +425,7 @@
 			<dependency>
 			    <groupId>mysql</groupId>
 			    <artifactId>mysql-connector-java</artifactId>
-			    <version>8.0.26</version>
+			    <version>8.0.27</version>
 			</dependency>
             <!-- https://mvnrepository.com/artifact/org.eclipse.persistence/org.eclipse.persistence.core -->
             <dependency>
