@@ -138,6 +138,12 @@
         </dependency>
         <dependency>
             <groupId>openup</groupId>
+            <artifactId>EPF-persistence-schema</artifactId>
+            <version>${project.version}</version>
+			<type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
             <artifactId>EPF-client</artifactId>
             <version>${project.version}</version>
         </dependency>
