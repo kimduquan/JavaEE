@@ -1,22 +1,22 @@
 /*Basic Roles BEGIN*/
-GRANT 'Any_Role' TO 'Analyst';
-GRANT 'Any_Role' TO 'Architect';
-GRANT 'Any_Role' TO 'Developer';
-GRANT 'Any_Role' TO 'Project_Manager';
-GRANT 'Any_Role' TO 'Stakeholder';
-GRANT 'Any_Role' TO 'Tester';
+GRANT 'Any_Role'@'localhost' TO 'Analyst'@'localhost';
+GRANT 'Any_Role'@'localhost' TO 'Architect'@'localhost';
+GRANT 'Any_Role'@'localhost' TO 'Developer'@'localhost';
+GRANT 'Any_Role'@'localhost' TO 'Project_Manager'@'localhost';
+GRANT 'Any_Role'@'localhost' TO 'Stakeholder'@'localhost';
+GRANT 'Any_Role'@'localhost' TO 'Tester'@'localhost';
 /*Basic Roles END*/
 
 /*Deployment BEGIN*/
-GRANT 'Any_Role' TO 'Course_Developer';
-GRANT 'Any_Role' TO 'Deployment_Engineer';
-GRANT 'Any_Role' TO 'Deployment_Manager';
-GRANT 'Any_Role' TO 'Product_Owner';
-GRANT 'Any_Role' TO 'Technical_Writer';
-GRANT 'Any_Role' TO 'Trainer';
+GRANT 'Any_Role'@'localhost' TO 'Course_Developer'@'localhost';
+GRANT 'Any_Role'@'localhost' TO 'Deployment_Engineer'@'localhost';
+GRANT 'Any_Role'@'localhost' TO 'Deployment_Manager'@'localhost';
+GRANT 'Any_Role'@'localhost' TO 'Product_Owner'@'localhost';
+GRANT 'Any_Role'@'localhost' TO 'Technical_Writer'@'localhost';
+GRANT 'Any_Role'@'localhost' TO 'Trainer'@'localhost';
 /*Deployment END*/
 
 /*Environment BEGIN*/
-GRANT 'Any_Role' TO 'Process_Engineer';
-GRANT 'Any_Role' TO 'Tool_Specialist';
+GRANT 'Any_Role'@'localhost' TO 'Process_Engineer'@'localhost';
+GRANT 'Any_Role'@'localhost' TO 'Tool_Specialist'@'localhost';
 /*Environment END*/
