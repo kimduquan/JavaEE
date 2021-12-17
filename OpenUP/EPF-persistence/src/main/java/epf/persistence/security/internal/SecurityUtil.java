@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.persistence.security;
+package epf.persistence.security.internal;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;

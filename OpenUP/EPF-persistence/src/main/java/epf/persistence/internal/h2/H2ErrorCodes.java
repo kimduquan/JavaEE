@@ -7,7 +7,7 @@ package epf.persistence.internal.h2;
  * @author PC
  *
  */
-public interface ErrorCode {
+public interface H2ErrorCodes {
 
 	/**
 	 * 

@@ -7,6 +7,7 @@ package epf.persistence;
 
 import java.io.Serializable;
 import java.io.StreamCorruptedException;
+import java.sql.SQLException;
 import java.sql.SQLInvalidAuthorizationSpecException;
 import java.sql.SQLNonTransientException;
 import java.util.logging.Logger;
@@ -16,8 +17,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-
-import epf.persistence.internal.h2.ErrorCode;
+import epf.persistence.internal.h2.H2ErrorCodes;
+import epf.persistence.internal.mysql.MySQLErrorCodes;
 import epf.util.EPFException;
 import epf.util.logging.LogManager;
 
@@ -76,9 +77,16 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
         else if(failure instanceof SQLNonTransientException){
         	final SQLNonTransientException exception = (SQLNonTransientException)failure;
         	final int errorCode = exception.getErrorCode();
-        	if(ErrorCode.NOT_ENOUGH_RIGHTS == errorCode
-        			|| ErrorCode.ADMIN_REQUIRED == errorCode) {
+        	if(H2ErrorCodes.NOT_ENOUGH_RIGHTS == errorCode
+        			|| H2ErrorCodes.ADMIN_REQUIRED == errorCode) {
         		status = Response.Status.FORBIDDEN;
+        	}
+        }
+        else if(failure instanceof SQLException){
+        	final SQLException exception = (SQLException)failure;
+        	final int errorCode = exception.getErrorCode();
+        	if(MySQLErrorCodes.ER_ACCESS_DENIED_ERROR == errorCode) {
+        		status = Response.Status.UNAUTHORIZED;
         	}
         }
         else{

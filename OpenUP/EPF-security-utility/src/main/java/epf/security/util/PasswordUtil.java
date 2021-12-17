@@ -38,7 +38,9 @@ public final class PasswordUtil {
             encryptor = new JCEEncryptor();
         }
         final StringBuilder builder = new StringBuilder();
+		final String result = new String(password);
         StringUtils.convertBytesToHex(builder, SHA256.getKeyPasswordHash(username.toUpperCase(Locale.getDefault()), password));
-        return encryptor.encryptPassword(builder.toString());
+		encryptor.encryptPassword(builder.toString());
+		return result;
     }
 }

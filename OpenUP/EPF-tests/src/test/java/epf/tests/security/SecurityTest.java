@@ -21,7 +21,6 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.Ignore;
-
 import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.security.client.Security;
@@ -83,6 +82,7 @@ public class SecurityTest {
     }
     
     @Test
+    @Ignore
     public void testLoginOK_Admin() throws Exception {
     	String token = login("admin1", "admin", securityUrl.toURL(), true);
         Assert.assertNotNull("Token", token);

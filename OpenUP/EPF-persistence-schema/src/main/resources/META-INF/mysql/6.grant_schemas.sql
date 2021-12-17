@@ -39,21 +39,13 @@ GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OPENUP.* TO 'Project_Manager'@'
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OPENUP.* TO 'Stakeholder'@'localhost';
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OPENUP.* TO 'Tester'@'localhost';
 
-/*REVOKE ALL ON sys.* FROM 'Analyst';
-REVOKE ALL ON sys.* FROM 'Any_Role';
-REVOKE ALL ON sys.* FROM 'Architect';
-REVOKE ALL ON sys.* FROM 'Developer';
-REVOKE ALL ON sys.* FROM 'Project_Manager';
-REVOKE ALL ON sys.* FROM 'Stakeholder';
-REVOKE ALL ON sys.* FROM 'Tester';
-
-REVOKE ALL ON sys.* FROM 'analyst1'@'localhost';
-REVOKE ALL ON sys.* FROM 'any_role1'@'localhost';
-REVOKE ALL ON sys.* FROM 'architect1'@'localhost';
-REVOKE ALL ON sys.* FROM 'developer1'@'localhost';
-REVOKE ALL ON sys.* FROM 'project_manager1'@'localhost';
-REVOKE ALL ON sys.* FROM 'stakeholder1'@'localhost';
-REVOKE ALL ON sys.* FROM 'tester1'@'localhost';*/
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'Analyst'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'Any_Role'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'Architect'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'Developer'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'Project_Manager'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'Stakeholder'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'Tester'@'localhost';
 /*Basic Roles END*/
 
 /*Deployment BEGIN*/
@@ -92,19 +84,12 @@ GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OPENUP.* TO 'Product_Owner'@'lo
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OPENUP.* TO 'Technical_Writer'@'localhost';
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OPENUP.* TO 'Trainer'@'localhost';
 
-/*REVOKE ALL ON sys.* FROM 'Course_Developer';
-REVOKE ALL ON sys.* FROM 'Deployment_Engineer';
-REVOKE ALL ON sys.* FROM 'Deployment_Manager';
-REVOKE ALL ON sys.* FROM 'Product_Owner';
-REVOKE ALL ON sys.* FROM 'Technical_Writer';
-REVOKE ALL ON sys.* FROM 'Trainer';
-
-REVOKE ALL ON sys.* FROM 'course_developer1'@'localhost';
-REVOKE ALL ON sys.* FROM 'deployment_engineer1'@'localhost';
-REVOKE ALL ON sys.* FROM 'deployment_manager1'@'localhost';
-REVOKE ALL ON sys.* FROM 'product_owner1'@'localhost';
-REVOKE ALL ON sys.* FROM 'technical_writer1'@'localhost';
-REVOKE ALL ON sys.* FROM 'trainer1'@'localhost';*/
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'Course_Developer'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'Deployment_Engineer'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'Deployment_Manager'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'Product_Owner'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'Technical_Writer'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'Trainer'@'localhost';
 /*Deployment END*/
 
 /*Environment BEGIN*/
@@ -123,9 +108,6 @@ GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Work_Products.* TO 'Tool_Sp
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OPENUP.* TO 'Process_Engineer'@'localhost';
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OPENUP.* TO 'Tool_Specialist'@'localhost';
 
-/*REVOKE ALL ON sys.* FROM 'Process_Engineer';
-REVOKE ALL ON sys.* FROM 'Tool_Specialist';
-
-REVOKE ALL ON sys.* FROM 'process_engineer1'@'localhost';
-REVOKE ALL ON sys.* FROM 'tool_specialist1'@'localhost';*/
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'Process_Engineer'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'Tool_Specialist'@'localhost';
 /*Environment END*/

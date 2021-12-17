@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.persistence.security;
+package epf.persistence.security.internal;
 
 import java.security.Principal;
 import java.util.ArrayList;
