@@ -68,7 +68,7 @@
 	<application id="EPF-planning" name="EPF-planning" context-root="planning" location="EPF-planning-1.0.0.war" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-	<application id="EPF-persistence" name="EPF-persistence" context-root="persistence" location="EPF-persistence-1.0.0.war" startAfterRef="EPF-messaging" >
+	<application id="EPF-persistence" name="EPF-persistence" context-root="persistence" location="EPF-persistence-1.0.0.war" startAfterRef="EPF-persistence-schema,EPF-messaging" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
 	<application id="EPF-security" name="EPF-security" context-root="security" location="EPF-security-1.0.0.war" startAfterRef="EPF-persistence" >
@@ -129,6 +129,10 @@
     </mpJwt>
 
 	<dataSource id="epf" jndiName="jdbc/epf">
+        <jdbcDriver libraryRef="MySQLJDBCLib"/>
+    	<properties serverName="localhost" portNumber="3306" user="root" password="090323508" />
+    </dataSource>
+	<!--<dataSource id="epf" jndiName="jdbc/epf">
         <jdbcDriver 
             javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
             javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
@@ -136,7 +140,7 @@
             libraryRef="H2JDBCLib" />
         <properties URL="jdbc:h2:~/EPF_test;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE" />
     </dataSource>
-    <!--<dataSource id="epf_delivery_processes" jndiName="jdbc/epf_delivery_processes">
+    <dataSource id="epf_delivery_processes" jndiName="jdbc/epf_delivery_processes">
         <jdbcDriver 
             javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
             javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
