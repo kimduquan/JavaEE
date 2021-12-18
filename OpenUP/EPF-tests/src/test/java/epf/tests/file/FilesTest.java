@@ -49,7 +49,7 @@ public class FilesTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		token = SecurityUtil.login("any_role1", "any_role");
+		token = SecurityUtil.login("any_role1", "Any_Role1*");
 		filesUrl = GatewayUtil.get(Naming.FILE);
 		tempDir = Files.createTempDirectory("file");
 		rootDir = Paths.get(System.getProperty("epf.tests.file.root", "")).toAbsolutePath();

@@ -62,7 +62,7 @@ public class CredentialTest {
 	@Test
 	public void testLogin_ValidCredential_Succeed() throws Exception {
 		credential.setCaller("any_role1");
-		credential.setPassword("any_role".toCharArray());
+		credential.setPassword("Any_Role1*".toCharArray());
 		credential.login();
 		Assert.assertEquals("Security.principalFullName", "Any Role 1", principal.getFullName());
 		principal.logout();

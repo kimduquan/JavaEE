@@ -68,7 +68,7 @@ public class ShellTest {
 	public static void setUpBeforeClass() throws Exception {
 		workingDir = ShellUtil.getShellPath().toRealPath();
 		tempDir = Files.createTempDirectory("temp");
-		token = SecurityUtil.login("any_role1", "any_role");
+		token = SecurityUtil.login("any_role1", "Any_Role1*");
 		otherToken = SecurityUtil.login();
 		
 		Path out = Files.createTempFile(tempDir, "out", "out");
@@ -177,7 +177,7 @@ public class ShellTest {
 	@Test
 	public void testSecurity_UpdatePassword() throws InterruptedException, IOException {
 		builder = ShellUtil.command(builder, "./epf", Naming.SECURITY, "update", "-tid", tokenID, "-p");
-		process = ShellUtil.waitFor(builder, in, "any_role");
+		process = ShellUtil.waitFor(builder, in, "Any_Role1*");
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(1, lines.size());
 	}

@@ -69,27 +69,27 @@ public class SecurityUtil {
     public static Entry<String, String> peekCredential(){
     	if(credentials.isEmpty()) {
     		/*Basic Roles BEGIN*/
-    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("analyst1", "analyst"));
-    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("any_role1", "any_role"));
-    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("architect1", "architect"));
-    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("developer1", "developer"));
-    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("project_manager1", "project_manager"));
-    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("stakeholder1", "stakeholder"));
-    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("tester1", "tester"));
+    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("analyst1", "Analyst1*"));
+    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("any_role1", "Any_Role1*"));
+    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("architect1", "Architect1*"));
+    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("developer1", "Developer1*"));
+    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("project_manager1", "Project_Manager1*"));
+    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("stakeholder1", "Stakeholder1*"));
+    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("tester1", "Tester1*"));
     		/*Basic Roles END*/
 
     		/*Deployment BEGIN*/
-    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("course_developer1", "course_developer"));
-    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("deployment_engineer1", "deployment_engineer"));
-    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("deployment_manager1", "deployment_manager"));
-    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("product_owner1", "product_owner"));
-    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("technical_writer1", "technical_writer"));
-    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("trainer1", "trainer"));
+    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("course_developer1", "Course_Developer1*"));
+    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("deployment_engineer1", "Deployment_Engineer1*"));
+    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("deployment_manager1", "Deployment_Manager1*"));
+    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("product_owner1", "Product_Owner1*"));
+    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("technical_writer1", "Technical_Writer1*"));
+    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("trainer1", "Trainer"));
     		/*Deployment END*/
 
     		/*Environment BEGIN*/
-    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("process_engineer1", "process_engineer"));
-    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("tool_specialist1", "tool_specialist"));
+    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("process_engineer1", "Process_Engineer1*"));
+    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("tool_specialist1", "Tool_Specialist1*"));
     		/*Environment END*/
     	}
     	Entry<String, String> credential = credentials.poll();

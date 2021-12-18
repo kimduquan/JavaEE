@@ -82,9 +82,8 @@ public class SecurityTest {
     }
     
     @Test
-    @Ignore
     public void testLoginOK_Admin() throws Exception {
-    	String token = login("admin1", "admin", securityUrl.toURL(), true);
+    	String token = login("epf", "Password1234****", securityUrl.toURL(), true);
         Assert.assertNotNull("Token", token);
         Assert.assertNotEquals("Token", "", token);
         logOut(token);
@@ -107,17 +106,17 @@ public class SecurityTest {
     
     @Test(expected = BadRequestException.class)
     public void testLoginEmptyUser() throws Exception{
-        login("", "any_role", securityUrl.toURL(), false);
+        login("", "Any_Role1*", securityUrl.toURL(), false);
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginBlankUser() throws Exception{
-        login("     ", "any_role", securityUrl.toURL(), false);
+        login("     ", "Any_Role1*", securityUrl.toURL(), false);
     }
     
     @Test(expected = NotAuthorizedException.class)
     public void testLoginInvalidUser() throws Exception{
-        login("Invalid", "any_role", securityUrl.toURL(), true);
+        login("Invalid", "Any_Role1*", securityUrl.toURL(), true);
     }
     
     @Test(expected = BadRequestException.class)
@@ -182,7 +181,7 @@ public class SecurityTest {
     
     @Test
     public void testAuthenticateOK() throws Exception{
-        String token = login("any_role1", "any_role", securityUrl.toURL(), true);
+        String token = login("any_role1", "Any_Role1*", securityUrl.toURL(), true);
         Token jwt = authenticate(token);
         Assert.assertNotNull("Token", jwt);
         Assert.assertNotNull("Token.audience", jwt.getAudience());

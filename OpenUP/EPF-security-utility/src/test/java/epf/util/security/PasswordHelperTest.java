@@ -19,8 +19,8 @@ public class PasswordHelperTest {
 	 */
 	@Test
 	public void testHash() throws Exception {
-		String hash = PasswordUtil.hash("any_role1", "any_role".toCharArray());
-		Assert.assertEquals("any_role", hash);
+		String hash = PasswordUtil.hash("any_role1", "Any_Role1*".toCharArray());
+		Assert.assertEquals("Any_Role1*", hash);
 		
 		hash = PasswordUtil.hash("");
 		Assert.assertEquals("", hash);
