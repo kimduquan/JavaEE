@@ -211,7 +211,7 @@ public class FilesTest {
 	
 	@Test
 	public void testRead_ValidGroup_InvalidUser() throws Exception {
-		String otherToken = SecurityUtil.login("developer1", "developer");
+		String otherToken = SecurityUtil.login("developer1", "Developer1*");
 		Link link;
 		try(InputStream input = Files.newInputStream(tempFile)){
 			try(Client otherClient = ClientUtil.newClient(filesUrl)){

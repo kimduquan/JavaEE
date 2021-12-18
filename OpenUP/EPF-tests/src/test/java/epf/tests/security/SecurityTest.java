@@ -82,6 +82,7 @@ public class SecurityTest {
     }
     
     @Test
+	@Ignore
     public void testLoginOK_Admin() throws Exception {
     	String token = login("epf", "Password1234****", securityUrl.toURL(), true);
         Assert.assertNotNull("Token", token);

@@ -84,7 +84,7 @@ public class SecurityUtil {
     		credentials.add(new AbstractMap.SimpleImmutableEntry<>("deployment_manager1", "Deployment_Manager1*"));
     		credentials.add(new AbstractMap.SimpleImmutableEntry<>("product_owner1", "Product_Owner1*"));
     		credentials.add(new AbstractMap.SimpleImmutableEntry<>("technical_writer1", "Technical_Writer1*"));
-    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("trainer1", "Trainer"));
+    		credentials.add(new AbstractMap.SimpleImmutableEntry<>("trainer1", "Trainer1*"));
     		/*Deployment END*/
 
     		/*Environment BEGIN*/
