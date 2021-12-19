@@ -158,7 +158,7 @@ public class Request {
     		final Object object) {
     	application.getSession(jwt).peekManager(entityManager -> {
         	entityManager = EntityManagerUtil.joinTransaction(entityManager);
-        	entityManager.remove(object);
+        	entityManager.remove(entityManager.contains(object) ? object : entityManager.merge(object));
         	entityManager.flush();
         	return object;
         });

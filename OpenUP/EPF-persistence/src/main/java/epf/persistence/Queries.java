@@ -145,18 +145,18 @@ public class Queries implements epf.client.persistence.Queries {
 		final Map<String, Map<String, Attribute<?,?>>> entityAttributes = new ConcurrentHashMap<>();
 		final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
 		cache.mapEntities(jwt, entityTables, entityAttributes);
-		final TypedQuery<SearchData> query = cache.createNamedQuery(
-				jwt,
-				Roles.SCHEMA,
-				QueryNames.FT_SEARCH_DATA, 
-				SearchData.class
-				);
-		query.setFirstResult(firstResult);
-		query.setMaxResults(maxResults);
-		query.setParameter(1, text);
-		query.setParameter(2, maxResults);
-		query.setParameter(3, firstResult);
-		final List<SearchData> result = query.getResultList();
+		final List<SearchData> result = application.getSession(jwt).peekManager(entityManager -> {
+			final TypedQuery<SearchData> query = entityManager.createNamedQuery(
+					QueryNames.FT_SEARCH_DATA, 
+					SearchData.class
+					);
+			query.setFirstResult(firstResult);
+			query.setMaxResults(maxResults);
+			query.setParameter(1, text);
+			query.setParameter(2, maxResults);
+			query.setParameter(3, firstResult);
+			return query.getResultList();
+		}).get();
 		ResponseBuilder response = Response.ok(result);
 		final UriBuilder baseUri = uriInfo.getBaseUriBuilder();
 		final Iterator<Link> linksIt = result
