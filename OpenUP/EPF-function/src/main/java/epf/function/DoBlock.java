@@ -22,10 +22,7 @@ public class DoBlock extends Function {
 				.takeWhile(func -> {
 					if(func instanceof While) {
 						final While whileFunc = (While) func;
-						if(whileFunc.getPredicate().get() == null) {
-							return true;
-						}
-						return whileFunc.getPredicate().get();
+						return whileFunc.getPredicate().get().orElse(true);
 					}
 					else if(func instanceof Break) {
 						return false;

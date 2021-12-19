@@ -20,6 +20,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.util.EPFException;
 import epf.naming.Naming;
 import epf.persistence.internal.Entity;
@@ -69,7 +70,7 @@ public class Entities implements epf.client.persistence.Entities {
             try(Jsonb json = JsonbBuilder.create()){
             	final Object obj = json.fromJson(body, entity.getType().getJavaType());
                 validator.validate(obj);
-                object = cache.persist(context.getUserPrincipal(), schema, name, obj);
+                object = cache.persist((JsonWebToken)context.getUserPrincipal(), schema, name, obj);
             }
             catch(JsonbException ex){
             	throw new BadRequestException(ex);
@@ -93,7 +94,7 @@ public class Entities implements epf.client.persistence.Entities {
             try(Jsonb json = JsonbBuilder.create()){
             	final Object obj = json.fromJson(body, entity.getType().getJavaType());
                 validator.validate(obj);
-                cache.merge(context.getUserPrincipal(), schema, name, entityId, obj);
+                cache.merge((JsonWebToken)context.getUserPrincipal(), schema, name, entityId, obj);
             }
             catch(JsonbException ex){
             	logger.throwing(getClass().getName(), "merge", ex);
@@ -113,7 +114,7 @@ public class Entities implements epf.client.persistence.Entities {
             ) {
     	final Entity<Object> entity = findEntityObject(schema, name, entityId);
         if(entity.getObject() != null){
-            cache.remove(context.getUserPrincipal(), schema, name, entityId, entity.getObject());
+            cache.remove((JsonWebToken)context.getUserPrincipal(), schema, name, entityId, entity.getObject());
         }
     }
     
@@ -124,7 +125,7 @@ public class Entities implements epf.client.persistence.Entities {
      * @return
      */
     protected <T> Entity<T> findEntity(final String schema, final String name) {
-    	final Entity<T> entity = cache.findEntity(context.getUserPrincipal(), schema, name);
+    	final Entity<T> entity = cache.findEntity((JsonWebToken)context.getUserPrincipal(), schema, name);
         if(entity.getType() == null){
             throw new NotFoundException();
         }
@@ -134,7 +135,7 @@ public class Entities implements epf.client.persistence.Entities {
     protected <T> Entity<T> findEntityObject(final String schema, final String name, final String entityId) {
     	final Entity<T> entity = findEntity(schema, name);
         if(entity.getType() != null){
-        	final T object = cache.find(context.getUserPrincipal(), schema, name, entity.getType().getJavaType(), entityId);
+        	final T object = cache.find((JsonWebToken)context.getUserPrincipal(), schema, name, entity.getType().getJavaType(), entityId);
             if(object == null){
             	throw new NotFoundException();
             }

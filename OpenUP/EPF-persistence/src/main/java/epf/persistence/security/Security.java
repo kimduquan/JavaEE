@@ -15,6 +15,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.security.PermitAll;
@@ -22,6 +24,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.control.ActivateRequestContext;
 import javax.inject.Inject;
+import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
@@ -31,12 +34,10 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.jwt.config.Names;
 import epf.naming.Naming;
-import epf.persistence.internal.context.Application;
-import epf.persistence.internal.context.Credential;
-import epf.persistence.internal.context.Session;
-import epf.persistence.security.internal.CredentialUtil;
-import epf.persistence.security.internal.SecurityUtil;
-import epf.persistence.security.internal.SessionUtil;
+import epf.persistence.internal.Application;
+import epf.persistence.internal.Credential;
+import epf.persistence.internal.Session;
+import epf.persistence.security.internal.IdentityStore;
 import epf.persistence.security.otp.OTPIdentityStore;
 import epf.security.client.SecurityInterface;
 import epf.security.client.jwt.JWT;
@@ -114,7 +115,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
      * 
      */
     @Inject
-    private transient SecurityUtil service;
+    private transient IdentityStore identityStore;
     
     /**
      * 
@@ -140,17 +141,17 @@ public class Security implements epf.security.client.Security, epf.security.clie
      * @param url
      * @return
      */
-    protected Token buildToken(final String username, final URL url) {
+    protected Token newToken(final Credential credential, final URL url) {
     	final long now = Instant.now().getEpochSecond();
     	final Token token = new Token();
     	token.setAudience(new HashSet<>(Arrays.asList(String.format(AUDIENCE_FORMAT, url.getProtocol(), url.getHost(), url.getPort()))));
     	token.setClaims(new HashMap<>());
     	token.setExpirationTime(now + Duration.of(expireAmount, expireTimeUnit).getSeconds());
-    	token.setGroups(new HashSet<>(Arrays.asList(Naming.Security.DEFAULT_ROLE)));
+    	token.setGroups(Set.of());
     	token.setIssuedAtTime(now);
     	token.setIssuer(issuer);
-    	token.setName(username);
-    	token.setSubject(username);
+    	token.setName(credential.getPrincipal().getName());
+    	token.setSubject(credential.getPrincipal().getName());
     	return token;
     }
     
@@ -173,12 +174,13 @@ public class Security implements epf.security.client.Security, epf.security.clie
             final String username,
             final String passwordHash,
             final URL url) {
-    	final Credential defaultCredential = persistence.getDefaultContext().putCredential(username, passwordHash);
-    	final Token token = buildToken(username, url);
+    	final Optional<Credential> credential = persistence.login(username, passwordHash.toCharArray());
+    	final Token token = newToken(credential.get(), url);
+    	token.setGroups(identityStore.getCallerGroups(credential.get().getPrincipal()));
     	final TokenBuilder builder = new TokenBuilder(token, privateKey);
     	try {
 			final Token newToken = builder.build();
-			defaultCredential.putSession(newToken.getTokenID());
+			credential.get().putSession(newToken);
 	        return newToken.getRawToken();
 		} 
         catch (Exception e) {
@@ -188,40 +190,45 @@ public class Security implements epf.security.client.Security, epf.security.clie
     
     @Override
     public String logOut() {
-    	final Session defaultSession = SessionUtil.removeSession(context.getUserPrincipal(), persistence.getDefaultContext());
-		defaultSession.close();
-    	return context.getUserPrincipal().getName();
+    	final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
+    	final Session session = persistence.removeSession(jwt);
+    	session.close();
+    	return jwt.getName();
     }
     
     @Override
     public Token authenticate() {
-    	if(SessionUtil.getSession(context.getUserPrincipal(), persistence.getDefaultContext()) != null){
-    		final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
-    		final Token token = TokenUtil.from(jwt);
-    		token.setClaims(TokenUtil.getClaims(jwt));
-    		token.setRawToken(null);
-    		return token;
-        }
-        throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
+    	final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
+    	final Optional<Credential> credential = persistence.getCredential(jwt);
+    	credential.orElseThrow(() -> new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build()));
+    	final Optional<Session> session = credential.get().getSessioṇ̣(jwt);
+    	session.orElseThrow(() -> new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build()));
+    	final Token token = TokenUtil.from(jwt);
+		token.setClaims(TokenUtil.getClaims(jwt));
+		token.setRawToken(null);
+		return token;
     }
     
     @Override
 	public void update(final String password) {
-		final Credential credential = CredentialUtil.getCredential(context.getUserPrincipal(), persistence.getDefaultContext());
-		service.setUserPassword(credential.getDefaultManager(), context.getUserPrincipal().getName(), password.toCharArray());
+    	final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
+    	final Optional<Credential> credential = persistence.getCredential(jwt);
+    	credential.orElseThrow(ForbiddenException::new);
+    	identityStore.setPassword(credential.get().getPrincipal(), password.toCharArray());
 	}
 
 	@Override
 	public String revoke() {
-		final Session defaultSession = SessionUtil.removeSession(context.getUserPrincipal(), persistence.getDefaultContext());
-		defaultSession.close();
-		final JsonWebToken jsonWebToken = (JsonWebToken) context.getUserPrincipal();
+		final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
+		final Session session = persistence.removeSession(jwt);
+		session.close();
+		final Optional<Credential> credential = persistence.getCredential(jwt);
 		try {
-			final Token token = buildToken(jsonWebToken);
+			final Token token = buildToken(jwt);
+			token.setGroups(identityStore.getCallerGroups(credential.get().getPrincipal()));
 			final TokenBuilder builder = new TokenBuilder(token, privateKey);
 			final Token newToken = builder.build();
-			final Credential defaultCredential = CredentialUtil.getCredential(context.getUserPrincipal(), persistence.getDefaultContext());
-			defaultCredential.putSession(newToken.getTokenID());
+			credential.get().putSession(newToken);
 			return newToken.getRawToken();
 		} 
 		catch (Exception e) {
@@ -232,12 +239,13 @@ public class Security implements epf.security.client.Security, epf.security.clie
 	@PermitAll
 	@Override
 	public String loginOneTime(final String username, final String passwordHash, final  URL url) {
-		final Credential defaultCredential = persistence.getDefaultContext().putCredential(username, passwordHash);
-    	final Token token = buildToken(username, url);
+		final Optional<Credential> credential = persistence.login(username, passwordHash.toCharArray());
+    	final Token token = newToken(credential.get(), url);
+    	token.setGroups(identityStore.getCallerGroups(credential.get().getPrincipal()));
     	final TokenBuilder builder = new TokenBuilder(token, privateKey);
 		try {
 			final Token newToken = builder.build();
-			defaultCredential.putSession(newToken.getTokenID());
+			credential.get().putSession(newToken);
 	        oTPIdentityStore.putToken(newToken);
 	        return newToken.getTokenID();
 		}
@@ -249,22 +257,21 @@ public class Security implements epf.security.client.Security, epf.security.clie
 	@PermitAll
 	@Override
 	public String authenticateOneTime(final String oneTimePassword) {
-		final Token token = oTPIdentityStore.removeToken(oneTimePassword);
-		if(token != null) {
-			return token.getRawToken();
-		}
-		throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build()); 
+		final Optional<Token> token = oTPIdentityStore.removeToken(oneTimePassword);
+		token.orElseThrow(() -> new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build()));
+		return token.get().getRawToken();
 	}
 
 	@ActivateRequestContext
 	@Override
 	public Token login(final String username, final String passwordHash, final String url) throws RemoteException {
-		final Credential defaultCredential = persistence.getDefaultContext().putCredential(username, passwordHash);
+		final Optional<Credential> credential = persistence.login(username, passwordHash.toCharArray());
     	try {
-        	final Token token = buildToken(username, new URL(url));
+        	final Token token = newToken(credential.get(), new URL(url));
+        	token.setGroups(identityStore.getCallerGroups(credential.get().getPrincipal()));
         	final TokenBuilder builder = new TokenBuilder(token, privateKey);
 			final Token newToken = builder.build();
-			defaultCredential.putSession(newToken.getTokenID());
+			credential.get().putSession(newToken);
 	        return newToken;
 		} 
         catch (Exception e) {
@@ -275,17 +282,18 @@ public class Security implements epf.security.client.Security, epf.security.clie
 	@ActivateRequestContext
 	@Override
 	public Token authenticate(final Token token) throws RemoteException {
-		if(SessionUtil.getSession(token.getName(), persistence.getDefaultContext(), token.getTokenID()) != null){
-    		return token;
-        }
-        throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
+		final Optional<Credential> credential = persistence.getCredential(token);
+    	credential.orElseThrow(() -> new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build()));
+    	final Optional<Session> session = credential.get().getSessioṇ̣(token);
+    	session.orElseThrow(() -> new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build()));
+    	return session.get().getToken();
 	}
 
 	@ActivateRequestContext
 	@Override
 	public String logout(final Token token) throws RemoteException {
-		final Session defaultSession = SessionUtil.removeSession(context.getUserPrincipal(), persistence.getDefaultContext());
-		defaultSession.close();
-		return token.getName();
+		final Session session = persistence.removeSession(token);
+    	session.close();
+		return session.getToken().getName();
 	}
 }

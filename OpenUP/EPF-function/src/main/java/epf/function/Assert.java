@@ -29,7 +29,7 @@ public class Assert implements Runnable, Callable<Void> {
 	@Override
 	public Void call() throws Exception {
 		predicate.run();
-		if(!predicate.get()) {
+		if(!predicate.get().get()) {
 			throw new AssertionException();
 		}
 		return null;

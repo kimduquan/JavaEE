@@ -13,6 +13,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.client.schema.util.EmbeddableComparator;
 import epf.client.schema.util.EntityComparator;
 import epf.naming.Naming;
@@ -46,7 +47,7 @@ public class Schema implements epf.client.schema.Schema {
 	 * @return
 	 */
 	protected <T> List<Entity<T>> findEntities(){
-    	final List<Entity<T>> entities = cache.findEntities(context.getUserPrincipal());
+    	final List<Entity<T>> entities = cache.findEntities((JsonWebToken)context.getUserPrincipal());
     	if(entities.isEmpty()){
             throw new NotFoundException();
         }
@@ -58,7 +59,7 @@ public class Schema implements epf.client.schema.Schema {
 	 * @return
 	 */
 	protected <T> List<Embeddable<T>> findEmbeddables(){
-    	final List<Embeddable<T>> embeddables = cache.findEmbeddables(context.getUserPrincipal());
+    	final List<Embeddable<T>> embeddables = cache.findEmbeddables((JsonWebToken)context.getUserPrincipal());
     	if(embeddables.isEmpty()){
             throw new NotFoundException();
         }

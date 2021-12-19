@@ -27,7 +27,7 @@ import epf.util.logging.LogManager;
  * @author FOXCONN
  */
 @Provider
-public class ExceptionHandler implements ExceptionMapper<Exception>, Serializable {
+public class EPFExceptionMapper implements ExceptionMapper<Exception>, Serializable {
 
     /**
     * 
@@ -37,7 +37,7 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
     /**
      * 
      */
-    private static final Logger LOGGER = LogManager.getLogger(ExceptionHandler.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(EPFExceptionMapper.class.getName());
 
     /**
      *
@@ -118,7 +118,7 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
         	}
         	if(!mapStatus && rootCause != null) {
         		builder.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), rootCause.getMessage());
-        		LOGGER.throwing(ExceptionHandler.class.getName(), "handle", failure);
+        		LOGGER.throwing(EPFExceptionMapper.class.getName(), "handle", failure);
         	}
         }
         return builder.build();

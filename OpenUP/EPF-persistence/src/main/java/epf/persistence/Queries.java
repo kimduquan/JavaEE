@@ -5,7 +5,6 @@
  */
 package epf.persistence;
 
-import java.security.Principal;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +18,7 @@ import javax.persistence.EntityManager;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.metamodel.Attribute;
@@ -32,10 +32,12 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import epf.client.persistence.SearchData;
 import epf.naming.Naming;
+import epf.persistence.internal.Application;
 import epf.persistence.internal.Entity;
 import epf.persistence.internal.QueryBuilder;
 import epf.roles.schema.Roles;
 import epf.roles.schema.internal.QueryNames;
+import epf.util.Var;
 
 /**
  *
@@ -55,6 +57,12 @@ public class Queries implements epf.client.persistence.Queries {
     /**
      * 
      */
+    @Inject
+    private transient Application application;
+    
+    /**
+     * 
+     */
     @Context
     private transient SecurityContext context;
     
@@ -67,20 +75,21 @@ public class Queries implements epf.client.persistence.Queries {
             ) {
     	final ResponseBuilder response = Response.status(Response.Status.NOT_FOUND);
     	Entity<Object> entity = null;
-    	final Principal principal = context.getUserPrincipal();
+    	final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
         if(!paths.isEmpty()){
         	final PathSegment rootSegment = paths.get(0);
-        	entity = cache.findEntity(principal, schema, rootSegment.getPath());
+        	entity = cache.findEntity(jwt, schema, rootSegment.getPath());
         }
         if(entity != null && entity.getType() != null){
-        	final EntityManager manager = cache.getManager(schema, principal);
-        	final QueryBuilder queryBuilder = new QueryBuilder();
-        	final Query query = queryBuilder
-        			.manager(manager)
-        			.entity(entity)
-        			.paths(paths)
-        			.build();
-            getQueryResult(query, firstResult, maxResults, response);
+        	final Var<Entity<Object>> varEntity = new Var<>(entity);
+        	application
+        	.getSession(jwt)
+        	.peekManager(entityManager -> {
+        		final Query query = buildQuery(entityManager, varEntity.get().get(), paths);
+                return collectQueryResult(query, firstResult, maxResults, response);
+        	});
+        	
+        	
         }
         return response.build();
     }
@@ -92,7 +101,7 @@ public class Queries implements epf.client.persistence.Queries {
      * @param response
      * @return
      */
-    protected static ResponseBuilder getQueryResult(
+    protected static ResponseBuilder collectQueryResult(
     		final Query query,
     		final Integer firstResult,
             final Integer maxResults,
@@ -111,14 +120,33 @@ public class Queries implements epf.client.persistence.Queries {
         );
         return response;
     }
+    
+    /**
+     * @param entityManager
+     * @param entity
+     * @param paths
+     * @return
+     */
+    protected static Query buildQuery(
+    		final EntityManager entityManager, 
+    		final Entity<Object> entity, 
+    		final List<PathSegment> paths) {
+    	final QueryBuilder queryBuilder = new QueryBuilder();
+    	return queryBuilder
+    			.manager(entityManager)
+    			.entity(entity)
+    			.paths(paths)
+    			.build();
+    }
 
 	@Override
 	public Response search(final UriInfo uriInfo, final String text, final Integer firstResult, final Integer maxResults) {
 		final Map<String, EntityType<?>> entityTables = new ConcurrentHashMap<>();
 		final Map<String, Map<String, Attribute<?,?>>> entityAttributes = new ConcurrentHashMap<>();
-		cache.mapEntities(context.getUserPrincipal(), entityTables, entityAttributes);
+		final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
+		cache.mapEntities(jwt, entityTables, entityAttributes);
 		final TypedQuery<SearchData> query = cache.createNamedQuery(
-				context.getUserPrincipal(),
+				jwt,
 				Roles.SCHEMA,
 				QueryNames.FT_SEARCH_DATA, 
 				SearchData.class

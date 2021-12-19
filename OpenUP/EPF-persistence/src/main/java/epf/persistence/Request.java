@@ -6,10 +6,10 @@
 package epf.persistence;
 
 import java.lang.reflect.Field;
-import java.security.Principal;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -29,15 +29,11 @@ import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EmbeddableType;
 import javax.persistence.metamodel.EntityType;
 import javax.transaction.Transactional;
-import javax.ws.rs.ForbiddenException;
 import org.eclipse.microprofile.jwt.JsonWebToken;
-
+import epf.persistence.internal.Application;
 import epf.persistence.internal.Embeddable;
 import epf.persistence.internal.Entity;
-import epf.persistence.internal.context.Application;
-import epf.persistence.internal.context.Context;
-import epf.persistence.internal.context.Credential;
-import epf.persistence.internal.context.Session;
+import epf.persistence.util.EntityManagerUtil;
 
 /**
  *
@@ -60,70 +56,13 @@ public class Request {
     private transient Application application;
     
     /**
-     * @param manager
-     * @return
-     */
-    protected EntityManager joinTransaction(final EntityManager manager){
-        if(manager != null && !manager.isJoinedToTransaction()){
-        	manager.joinTransaction();
-        }
-        return manager;
-    }
-    
-    /**
-     * @param principal
-     * @return
-     */
-    protected EntityManager getManager(final String schema, final Principal principal){
-    	final Context context = application.getDefaultContext();
-        return getEntityManager(principal, context);
-    }
-    
-    /**
-     * @param principal
-     * @param jwt
-     * @param session
-     * @return
-     */
-    protected static EntityManager getEntityManager(final Principal principal, final JsonWebToken jwt, final Session session) {
-    	EntityManager manager = null;
-    	if(session != null && jwt != null){
-        	manager = session
-                    .putConversation(jwt.getTokenID())
-                    .putManager(jwt.getIssuedAtTime());
-        }
-        if(principal != null && manager == null){
-            throw new ForbiddenException();
-        }
-    	return manager;
-    }
-    
-    /**
-     * @param principal
-     * @param context
-     * @return
-     */
-    protected static EntityManager getEntityManager(final Principal principal, final Context context) {
-    	JsonWebToken jwt = null;
-        Session session = null;
-        if(principal != null && context != null){
-        	final Credential credential = context.getCredential(principal.getName());
-            if(credential != null && principal instanceof JsonWebToken){
-            	jwt = (JsonWebToken)principal;
-            	session = credential.getSession(jwt.getTokenID());
-            }
-        }
-        return getEntityManager(principal, jwt, session);
-    }
-    
-    /**
      * @param principal
      * @param schema
      * @param name
      * @param cls
      */
-    public <T> TypedQuery<T> createNamedQuery(final Principal principal, final String schema, final String name, final Class<T> cls) {
-        return getManager(schema, principal).createNamedQuery(name, cls);
+    public <T> TypedQuery<T> createNamedQuery(final JsonWebToken jwt, final String schema, final String name, final Class<T> cls) {
+    	return application.getSession(jwt).peekManager(entityManager -> entityManager.createNamedQuery(name, cls)).get();
     }
     
     /**
@@ -135,16 +74,18 @@ public class Request {
     @Transactional
     @CacheResult
     public Object persist(
-            final  Principal principal,
+            final JsonWebToken jwt,
             @CacheKey
             final String schema,
             @CacheKey
             final String name,
             final Object object) {
-        EntityManager manager = getManager(schema, principal);
-        manager = joinTransaction(manager);
-        manager.persist(object);
-        manager.flush();
+    	application.getSession(jwt).peekManager(entityManager -> {
+        	entityManager = EntityManagerUtil.joinTransaction(entityManager);
+        	entityManager.persist(object);
+        	entityManager.flush();
+        	return object;
+        });
         return object;
     }
     
@@ -158,7 +99,7 @@ public class Request {
     @Transactional
     @CachePut
     public void merge(
-            final Principal principal,
+            final JsonWebToken jwt,
             @CacheKey
             final String schema,
             @CacheKey
@@ -167,10 +108,12 @@ public class Request {
             final String entityId,
             @CacheValue
             final Object object) {
-        EntityManager manager = getManager(schema, principal);
-        manager = joinTransaction(manager);
-        manager.merge(object);
-        manager.flush();
+    	application.getSession(jwt).peekManager(entityManager -> {
+        	entityManager = EntityManagerUtil.joinTransaction(entityManager);
+        	entityManager.merge(object);
+        	entityManager.flush();
+            return object;
+        });
     }
     
     /**
@@ -182,16 +125,17 @@ public class Request {
      */
     @CacheResult
     public <T> T find(
-    		final Principal principal,
+    		final JsonWebToken jwt,
     		@CacheKey
             final String schema,
     		@CacheKey 
     		final String name, 
     		final Class<T> cls, 
     		@CacheKey final String entityId) {
-    	final EntityManager manager = getManager(schema, principal);
-    	final T object = manager.find(cls, entityId);
-        return object;
+    	return application.getSession(jwt).peekManager(entityManager -> {
+        	final T object = entityManager.find(cls, entityId);
+            return object;
+        }).orElse(null);
     }
     
     /**
@@ -204,7 +148,7 @@ public class Request {
     @Transactional
     @CacheRemove
     public void remove(
-    		final Principal principal, 
+    		final JsonWebToken jwt, 
     		@CacheKey
             final String schema,
     		@CacheKey 
@@ -212,10 +156,42 @@ public class Request {
     		@CacheKey 
     		final String entityId, 
     		final Object object) {
-        EntityManager manager = getManager(schema, principal);
-        manager = joinTransaction(manager);
-        manager.remove(object);
-        manager.flush();
+    	application.getSession(jwt).peekManager(entityManager -> {
+        	entityManager = EntityManagerUtil.joinTransaction(entityManager);
+        	entityManager.remove(object);
+        	entityManager.flush();
+        	return object;
+        });
+    }
+    
+    /**
+     * @param <T>
+     * @param manager
+     * @param schema
+     * @param name
+     * @return
+     */
+    protected <T> Entity<T> findFirstEntity(final EntityManager manager, final String schema, final String name){
+    	final Entity<T> result = new Entity<>();
+    	manager.getMetamodel()
+        .getEntities()
+        .stream()
+        .filter(
+                entityType -> {
+                    return entityType.getName().equals(name);
+                }
+        )
+        .findFirst()
+        .ifPresent(entityType -> {
+        	try {
+        		@SuppressWarnings("unchecked")
+        		final EntityType<T> type = entityType.getClass().cast(entityType);
+            	result.setType(type);
+            	}
+        	catch(ClassCastException ex) {
+        		logger.throwing(EntityType.class.getName(), "getClass", ex);
+        	}});
+    	return result;
     }
     
     /**
@@ -227,42 +203,22 @@ public class Request {
      */
     @CacheResult(cacheName = "EntityType")
     public <T> Entity<T> findEntity(
-    		final Principal principal,
+    		final JsonWebToken jwt,
     		@CacheKey
             final String schema,
     		@CacheKey 
     		final String name) {
-    	final Entity<T> result = new Entity<>();
-        getManager(schema, principal).getMetamodel()
-                .getEntities()
-                .stream()
-                .filter(
-                        entityType -> {
-                            return entityType.getName().equals(name);
-                        }
-                )
-                .findFirst()
-                .ifPresent(entityType -> {
-                	try {
-                		@SuppressWarnings("unchecked")
-                		final EntityType<T> type = entityType.getClass().cast(entityType);
-	                	result.setType(type);
-	                	}
-                	catch(ClassCastException ex) {
-                		logger.throwing(EntityType.class.getName(), "getClass", ex);
-                	}});
-        return result;
+    	final Optional<Entity<T>> entity = application.getSession(jwt).peekManager(entityManager -> findFirstEntity(entityManager, schema, name));
+        return entity.orElse(new Entity<>());
     }
     
     /**
      * @param <T>
-     * @param principal
+     * @param entityManager
      * @return
      */
-    @CacheResult(cacheName = "EntityType")
-    public <T> List<Entity<T>> findEntities(
-    		final Principal principal) {
-    	return getEntityManager(principal, application.getDefaultContext())
+    protected <T> List<Entity<T>> collectEntities(final EntityManager entityManager){
+    	return entityManager
     			.getMetamodel()
     			.getEntities()
     			.stream()
@@ -289,10 +245,19 @@ public class Request {
      * @param principal
      * @return
      */
-    @CacheResult(cacheName = "EmbeddableType")
-    public <T> List<Embeddable<T>> findEmbeddables(
-    		final Principal principal) {
-    	return getEntityManager(principal, application.getDefaultContext())
+    @CacheResult(cacheName = "EntityType")
+    public <T> List<Entity<T>> findEntities(final JsonWebToken jwt) {
+    	final Optional<List<Entity<T>>> entities = application.getSession(jwt).peekManager(entityManager -> collectEntities(entityManager));
+    	return entities.get();
+    }
+    
+    /**
+     * @param <T>
+     * @param entityManager
+     * @return
+     */
+    protected <T> List<Embeddable<T>> collectEmbeddables(final EntityManager entityManager){
+    	return entityManager
     			.getMetamodel()
     			.getEmbeddables()
     			.stream()
@@ -314,18 +279,69 @@ public class Request {
     			.collect(Collectors.toList());
     }
     
+    /**
+     * @param <T>
+     * @param principal
+     * @return
+     */
+    @CacheResult(cacheName = "EmbeddableType")
+    public <T> List<Embeddable<T>> findEmbeddables(
+    		final JsonWebToken jwt) {
+    	final Optional<List<Embeddable<T>>> embeddables = application.getSession(jwt).peekManager(entityManager -> this.collectEmbeddables(entityManager));
+    	return embeddables.get();
+    }
+    
+    /**
+     * @param <T>
+     * @param entityManager
+     * @param name
+     * @param cls
+     * @return
+     */
+    protected <T> List<T> collectNamedQueryResult(
+    		final EntityManager entityManager, 
+    		final String name, 
+    		final Class<T> cls){
+    	return entityManager
+    			.createNamedQuery(name, cls)
+                .getResultStream()
+                .collect(Collectors.toList());
+    }
+    
+    /**
+     * @param <T>
+     * @param entityManager
+     * @param name
+     * @param cls
+     * @param firstResult
+     * @param maxResults
+     * @return
+     */
+    protected <T> List<T> collectNamedQueryResult(
+    		final EntityManager entityManager, 
+    		final String name, 
+    		final Class<T> cls, 
+    		final Optional<Integer> firstResult, 
+    		final Optional<Integer> maxResults){
+    	TypedQuery<T> query = entityManager.createNamedQuery(name, cls);
+    	if(firstResult.isPresent()) {
+    		query = query.setFirstResult(firstResult.get());
+    	}
+    	if(maxResults.isPresent()) {
+    		query = query.setMaxResults(maxResults.get());
+    	}
+    	return query.getResultStream().collect(Collectors.toList());
+    }
+    
     @CacheResult(cacheName = "NamedQuery")
     public <T> List<T> getNamedQueryResult(
-    		final Principal principal, 
+    		final JsonWebToken jwt, 
     		@CacheKey
             final String schema,
     		@CacheKey 
     		final String name, 
     		final Class<T> cls) {
-        return getManager(schema, principal)
-                .createNamedQuery(name, cls)
-                .getResultStream()
-                .collect(Collectors.toList());
+    	return application.getSession(jwt).peekManager(entityManager -> collectNamedQueryResult(entityManager, name, cls)).get();
     }
     
     /**
@@ -338,7 +354,7 @@ public class Request {
      */
     @CacheResult(cacheName = "NamedQuery")
     public <T> List<T> getNamedQueryResult(
-    		final Principal principal, 
+    		final JsonWebToken jwt, 
     		@CacheKey
             final String schema,
     		@CacheKey 
@@ -346,24 +362,29 @@ public class Request {
     		final Class<T> cls, 
     		final Integer firstResult, 
     		final Integer maxResults) {
-        return getManager(schema, principal)
-                .createNamedQuery(name, cls)
-                .setFirstResult(firstResult)
-                .setMaxResults(maxResults)
-                .getResultStream()
-                .collect(Collectors.toList());
+    	return application.
+    			getSession(jwt)
+        		.peekManager(entityManager -> collectNamedQueryResult(
+        				entityManager,
+        				name,
+        				cls,
+        				Optional.ofNullable(firstResult),
+        				Optional.ofNullable(maxResults)))
+        		.get();
     }
     
     /**
-     * @param principal
+     * @param entityManager
      * @param entityTables
      * @param entityAttributes
      */
-    public void mapEntities(
-    		final Principal principal,
+    protected void mapEntities(
+    		final EntityManager entityManager,
     		final Map<String, EntityType<?>> entityTables, 
     		final Map<String, Map<String, Attribute<?,?>>> entityAttributes) {
-    	getEntityManager(principal, application.getDefaultContext()).getMetamodel().getEntities().forEach(entityType -> {
+    	entityManager
+    	.getMetamodel()
+    	.getEntities().forEach(entityType -> {
 			String tableName = entityType.getName().toLowerCase(Locale.getDefault());
 			final Table tableAnnotation = entityType.getJavaType().getAnnotation(Table.class);
 			if(tableAnnotation != null) {
@@ -384,5 +405,20 @@ public class Request {
 			});
 			entityAttributes.put(tableName, attributes);
 		});
+    }
+    
+    /**
+     * @param principal
+     * @param entityTables
+     * @param entityAttributes
+     */
+    public void mapEntities(
+    		final JsonWebToken jwt,
+    		final Map<String, EntityType<?>> entityTables, 
+    		final Map<String, Map<String, Attribute<?,?>>> entityAttributes) {
+    	application.getSession(jwt).peekManager(entityManager -> {
+    		mapEntities(entityManager, entityTables, entityAttributes);
+    		return null;
+    		});
     }
 }

@@ -33,12 +33,12 @@ public class Throw<T extends Exception> extends Var<Exception> implements Callab
 		@SuppressWarnings("unchecked")
 		final Constructor<T> constructor = (Constructor<T>) cls.getConstructor();
 		set(constructor.newInstance());
-		throw get();
+		throw get().get();
 	}
 
 	@Override
 	public void run() {
-		set(get());
+		set(get().get());
 	}
 
 }

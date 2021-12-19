@@ -115,11 +115,11 @@ public class QueryBuilder {
                 		builder
                 		)
         		);
-        if(parentJoin.get() == null){
+        if(parentJoin.get().isEmpty()){
         	rootQuery.select(rootFrom);
         }
         else{
-            rootQuery.select(parentJoin.get());
+            rootQuery.select(parentJoin.get().get());
         }
         if(!allParams.isEmpty()){
             rootQuery.where(allParams.toArray(new Predicate[0]));
@@ -143,25 +143,25 @@ public class QueryBuilder {
     		final List<Predicate> allParams,
     		final EntityManager manager,
     		final CriteriaBuilder builder) {
-    	final Attribute<?,?> attribute = parentType.get().getAttribute(segment.getPath());
+    	final Attribute<?,?> attribute = parentType.get().get().getAttribute(segment.getPath());
         if (attribute.getPersistentAttributeType() != PersistentAttributeType.BASIC) {
             Class<?> subClass = null;
             if(attribute.isCollection()){
                 if(attribute.getJavaType() == List.class){
-                    subClass = parentType.get().getList(segment.getPath()).getBindableJavaType();
+                    subClass = parentType.get().get().getList(segment.getPath()).getBindableJavaType();
                 }
                 else if(attribute.getJavaType() == Map.class){
-                    subClass = parentType.get().getMap(segment.getPath()).getBindableJavaType();
+                    subClass = parentType.get().get().getMap(segment.getPath()).getBindableJavaType();
                 }
                 else if(attribute.getJavaType() == Set.class){
-                    subClass = parentType.get().getSet(segment.getPath()).getBindableJavaType();
+                    subClass = parentType.get().get().getSet(segment.getPath()).getBindableJavaType();
                 }
                 else if(attribute.getJavaType() == Collection.class){
-                    subClass = parentType.get().getCollection(segment.getPath()).getBindableJavaType();
+                    subClass = parentType.get().get().getCollection(segment.getPath()).getBindableJavaType();
                 }
             }
             else if(attribute.isAssociation()){
-                subClass = parentType.get().getSingularAttribute(segment.getPath()).getBindableJavaType();
+                subClass = parentType.get().get().getSingularAttribute(segment.getPath()).getBindableJavaType();
             }
             
             Join<?,?> subJoin;
@@ -169,7 +169,7 @@ public class QueryBuilder {
                 subJoin = parentFrom.join(segment.getPath());
             }
             else{
-                subJoin = parentJoin.get().join(segment.getPath());
+                subJoin = parentJoin.get().get().join(segment.getPath());
             }
 
             segment.getMatrixParameters().forEach((name, values) -> {

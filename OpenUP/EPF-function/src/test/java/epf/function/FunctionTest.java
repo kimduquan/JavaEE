@@ -40,8 +40,8 @@ public class FunctionTest {
 						)
 				);
 		func.run();
-		Assert.assertNotNull("varCount", varCount.get());
-		Assert.assertEquals("varCount", 6, varCount.get().intValue());
+		Assert.assertNotNull("varCount", varCount.get().get());
+		Assert.assertEquals("varCount", 6, varCount.get().get().intValue());
 	}
 	
 	@Test
@@ -73,10 +73,10 @@ public class FunctionTest {
 						)
 				);
 		func.run();
-		Assert.assertNotNull("varCount", varCount.get());
-		Assert.assertEquals("varCount", 6, varCount.get().intValue());
-		Assert.assertNotNull("varNestedCount", varNestedCount.get());
-		Assert.assertEquals("varNestedCount", 12, varNestedCount.get().intValue());
+		Assert.assertNotNull("varCount", varCount.get().get());
+		Assert.assertEquals("varCount", 6, varCount.get().get().intValue());
+		Assert.assertNotNull("varNestedCount", varNestedCount.get().get());
+		Assert.assertEquals("varNestedCount", 12, varNestedCount.get().get().intValue());
 	}
 	
 	@Test
@@ -112,12 +112,12 @@ public class FunctionTest {
 						)
 				);
 		func.run();
-		Assert.assertNotNull("varCount", varCount.get());
-		Assert.assertEquals("varCount", 6, varCount.get().intValue());
-		Assert.assertNotNull("varNestedCount", varNestedCount.get());
-		Assert.assertEquals("varNestedCount", 12, varNestedCount.get().intValue());
-		Assert.assertNotNull("varNestedCount2", varNestedCount2.get());
-		Assert.assertEquals("varNestedCount2", 18, varNestedCount2.get().intValue());
+		Assert.assertNotNull("varCount", varCount.get().get());
+		Assert.assertEquals("varCount", 6, varCount.get().get().intValue());
+		Assert.assertNotNull("varNestedCount", varNestedCount.get().get());
+		Assert.assertEquals("varNestedCount", 12, varNestedCount.get().get().intValue());
+		Assert.assertNotNull("varNestedCount2", varNestedCount2.get().get());
+		Assert.assertEquals("varNestedCount2", 18, varNestedCount2.get().get().intValue());
 	}
 
 	@Test
@@ -163,14 +163,14 @@ public class FunctionTest {
 						)
 				);
 		func.run();
-		Assert.assertNotNull("varCount", varCount.get());
-		Assert.assertEquals("varCount", 6, varCount.get().intValue());
-		Assert.assertNotNull("varNestedCount", varNestedCount.get());
-		Assert.assertEquals("varNestedCount", 12, varNestedCount.get().intValue());
-		Assert.assertNotNull("varNestedCount2", varNestedCount2.get());
-		Assert.assertEquals("varNestedCount2", 18, varNestedCount2.get().intValue());
-		Assert.assertNotNull("varNestedCount3", varNestedCount3.get());
-		Assert.assertEquals("varNestedCount3", 24, varNestedCount3.get().intValue());
+		Assert.assertNotNull("varCount", varCount.get().get());
+		Assert.assertEquals("varCount", 6, varCount.get().get().intValue());
+		Assert.assertNotNull("varNestedCount", varNestedCount.get().get());
+		Assert.assertEquals("varNestedCount", 12, varNestedCount.get().get().intValue());
+		Assert.assertNotNull("varNestedCount2", varNestedCount2.get().get());
+		Assert.assertEquals("varNestedCount2", 18, varNestedCount2.get().get().intValue());
+		Assert.assertNotNull("varNestedCount3", varNestedCount3.get().get());
+		Assert.assertEquals("varNestedCount3", 24, varNestedCount3.get().get().intValue());
 	}
 	
 	@Test
@@ -186,8 +186,8 @@ public class FunctionTest {
 						)
 				);
 		func.run();
-		Assert.assertNotNull("varCount", varCount.get());
-		Assert.assertEquals("varCount", 6, varCount.get().intValue());
+		Assert.assertNotNull("varCount", varCount.get().get());
+		Assert.assertEquals("varCount", 6, varCount.get().get().intValue());
 		Assert.assertNotNull("Function.exception", func.getException());
 	}
 }

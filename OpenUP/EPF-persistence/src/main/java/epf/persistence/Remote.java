@@ -11,7 +11,7 @@ import epf.client.persistence.SearchData;
  * @author PC
  *
  */
-public class PersistenceProxy implements PersistenceInterface {
+public class Remote implements PersistenceInterface {
 
 	@Override
 	public <T extends Serializable> T persist(final String schema, final String entity, final T object) throws RemoteException {
