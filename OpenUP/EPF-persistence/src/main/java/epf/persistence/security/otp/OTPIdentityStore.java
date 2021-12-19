@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.persistence.security;
+package epf.persistence.security.otp;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,7 +14,7 @@ import epf.security.schema.Token;
  *
  */
 @ApplicationScoped
-public class IdentityStore {
+public class OTPIdentityStore {
 
 	/**
 	 * 

@@ -37,6 +37,7 @@ import epf.persistence.internal.context.Session;
 import epf.persistence.security.internal.CredentialUtil;
 import epf.persistence.security.internal.SecurityUtil;
 import epf.persistence.security.internal.SessionUtil;
+import epf.persistence.security.otp.OTPIdentityStore;
 import epf.security.client.SecurityInterface;
 import epf.security.client.jwt.JWT;
 import epf.security.client.jwt.TokenUtil;
@@ -79,7 +80,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
      * 
      */
     @Inject
-    private transient IdentityStore identityStore;
+    private transient OTPIdentityStore oTPIdentityStore;
     
     /**
      * 
@@ -237,7 +238,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 		try {
 			final Token newToken = builder.build();
 			defaultCredential.putSession(newToken.getTokenID());
-	        identityStore.putToken(newToken);
+	        oTPIdentityStore.putToken(newToken);
 	        return newToken.getTokenID();
 		}
 		catch(Exception ex) {
@@ -248,7 +249,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 	@PermitAll
 	@Override
 	public String authenticateOneTime(final String oneTimePassword) {
-		final Token token = identityStore.removeToken(oneTimePassword);
+		final Token token = oTPIdentityStore.removeToken(oneTimePassword);
 		if(token != null) {
 			return token.getRawToken();
 		}
