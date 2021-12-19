@@ -31,13 +31,13 @@ GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Work_Products.* TO 'project
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Work_Products.* TO 'stakeholder1'@'localhost';
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Work_Products.* TO 'tester1'@'localhost';
 
-GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OPENUP.* TO 'analyst1'@'localhost';
-GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OPENUP.* TO 'any_role1'@'localhost';
-GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OPENUP.* TO 'architect1'@'localhost';
-GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OPENUP.* TO 'developer1'@'localhost';
-GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OPENUP.* TO 'project_manager1'@'localhost';
-GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OPENUP.* TO 'stakeholder1'@'localhost';
-GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OPENUP.* TO 'tester1'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OpenUP.* TO 'analyst1'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OpenUP.* TO 'any_role1'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OpenUP.* TO 'architect1'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OpenUP.* TO 'developer1'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OpenUP.* TO 'project_manager1'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OpenUP.* TO 'stakeholder1'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OpenUP.* TO 'tester1'@'localhost';
 
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'analyst1'@'localhost';
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'any_role1'@'localhost';
@@ -77,12 +77,12 @@ GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Work_Products.* TO 'product
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Work_Products.* TO 'technical_writer1'@'localhost';
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Work_Products.* TO 'trainer1'@'localhost';
 
-GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OPENUP.* TO 'course_developer1'@'localhost';
-GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OPENUP.* TO 'deployment_engineer1'@'localhost';
-GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OPENUP.* TO 'deployment_manager1'@'localhost';
-GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OPENUP.* TO 'product_owner1'@'localhost';
-GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OPENUP.* TO 'technical_writer1'@'localhost';
-GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OPENUP.* TO 'trainer1'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OpenUP.* TO 'course_developer1'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OpenUP.* TO 'deployment_engineer1'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OpenUP.* TO 'deployment_manager1'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OpenUP.* TO 'product_owner1'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OpenUP.* TO 'technical_writer1'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OpenUP.* TO 'trainer1'@'localhost';
 
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'course_developer1'@'localhost';
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'deployment_engineer1'@'localhost';
@@ -105,8 +105,8 @@ GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Tasks.* TO 'tool_specialist
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Work_Products.* TO 'process_engineer1'@'localhost';
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Work_Products.* TO 'tool_specialist1'@'localhost';
 
-GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OPENUP.* TO 'process_engineer1'@'localhost';
-GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OPENUP.* TO 'tool_specialist1'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OpenUP.* TO 'process_engineer1'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OpenUP.* TO 'tool_specialist1'@'localhost';
 
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'process_engineer1'@'localhost';
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'tool_specialist1'@'localhost';

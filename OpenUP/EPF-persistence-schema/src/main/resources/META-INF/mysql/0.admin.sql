@@ -1,2 +1,2 @@
-create user if not exists 'epf'@'localhost' identified by 'Password1234****';
-grant all on *.* to 'epf'@'localhost' with grant option;
+CREATE USER IF NOT EXISTS 'epf'@'localhost' IDENTIFIED BY 'Password1234****';
+GRANT ALL ON *.* TO 'epf'@'localhost' WITH GRANT OPTION;
