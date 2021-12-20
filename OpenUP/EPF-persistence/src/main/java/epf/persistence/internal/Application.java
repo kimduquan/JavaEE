@@ -18,9 +18,7 @@ import javax.security.enterprise.credential.UsernamePasswordCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.CredentialValidationResult.Status;
 import javax.ws.rs.ForbiddenException;
-
 import org.eclipse.microprofile.jwt.JsonWebToken;
-
 import epf.persistence.security.internal.EPFPrincipal;
 import epf.persistence.security.internal.IdentityStore;
 import epf.security.schema.Token;
