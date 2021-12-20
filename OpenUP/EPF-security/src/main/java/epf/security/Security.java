@@ -33,7 +33,6 @@ import epf.util.logging.LogManager;
 import epf.util.security.KeyUtil;
 import openup.schema.OpenUP;
 import openup.schema.roles.Role;
-import java.util.stream.Collectors;
 
 /**
  *
@@ -106,10 +105,6 @@ public class Security implements epf.security.client.Security, Serializable {
      */
     protected Token buildToken(final Client client, final Token token, final String rawToken) throws Exception {
     	final Role role = epf.client.persistence.Entities.find(client, Role.class, OpenUP.SCHEMA, OpenUP.ROLE, token.getName());
-		token.setGroups(role.getRoles()
-				.stream()
-				.map(r -> r.getName())
-				.collect(Collectors.toSet()));
 		final Map<String, String> claims = new HashMap<>(role.getClaims());
 		claims.put(JWT.TOKEN_CLAIM, rawToken);
 		token.setClaims(claims);

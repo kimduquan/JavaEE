@@ -5,7 +5,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -57,9 +56,8 @@ public class MySQLIdentityStore implements IdentityStore {
 		if(callerPrincipal instanceof EPFPrincipal) {
 			final EPFPrincipal principal = (EPFPrincipal) callerPrincipal;
 			final Query query = principal.getManager().createNativeQuery(String.format(NativeQueries.GET_CURRENT_ROLES, principal.getName()));
-			@SuppressWarnings("unchecked")
-			final Stream<Object> roles = (Stream<Object>)query.getResultStream();
-			return roles.map(role -> new Role((String)role)).map(Role::getName).collect(Collectors.toSet());
+			final String roles = (String)query.getSingleResult();
+			return RoleUtil.parse(roles).stream().map(Role::getName).collect(Collectors.toSet());
 		}
 		return callerGroups;
 	}

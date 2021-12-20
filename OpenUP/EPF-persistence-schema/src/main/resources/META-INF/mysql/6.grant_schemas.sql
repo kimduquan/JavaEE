@@ -46,6 +46,14 @@ GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'Developer'@'local
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'Project_Manager'@'localhost';
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'Stakeholder'@'localhost';
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'Tester'@'localhost';
+
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Security.* TO 'Analyst'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Security.* TO 'Any_Role'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Security.* TO 'Architect'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Security.* TO 'Developer'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Security.* TO 'Project_Manager'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Security.* TO 'Stakeholder'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Security.* TO 'Tester'@'localhost';
 /*Basic Roles END*/
 
 /*Deployment BEGIN*/
@@ -90,6 +98,13 @@ GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'Deployment_Manage
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'Product_Owner'@'localhost';
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'Technical_Writer'@'localhost';
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'Trainer'@'localhost';
+
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Security.* TO 'Course_Developer'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Security.* TO 'Deployment_Engineer'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Security.* TO 'Deployment_Manager'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Security.* TO 'Product_Owner'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Security.* TO 'Technical_Writer'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Security.* TO 'Trainer'@'localhost';
 /*Deployment END*/
 
 /*Environment BEGIN*/
@@ -110,4 +125,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON OpenUP.* TO 'Tool_Specialist'@'
 
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'Process_Engineer'@'localhost';
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Net.* TO 'Tool_Specialist'@'localhost';
+
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Security.* TO 'Process_Engineer'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Security.* TO 'Tool_Specialist'@'localhost';
 /*Environment END*/

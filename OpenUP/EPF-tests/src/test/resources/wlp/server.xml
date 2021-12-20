@@ -18,7 +18,8 @@
         <feature>jca-1.7</feature>
         <feature>jsf-2.3</feature>
     </featureManager>
-
+    
+	<variable name="io.openliberty.enableGraphQLUI" value="true" />
     <httpEndpoint id="defaultHttpEndpoint"
                   host="localhost"
                   httpPort="${httpPort}"
@@ -139,62 +140,6 @@
             javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
             libraryRef="H2JDBCLib" />
         <properties URL="jdbc:h2:~/EPF_test;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE" />
-    </dataSource>
-    <dataSource id="epf_delivery_processes" jndiName="jdbc/epf_delivery_processes">
-        <jdbcDriver 
-            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
-            libraryRef="H2JDBCLib" />
-        <properties URL="jdbc:h2:~/EPF_test;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE;SCHEMA=EPF_DELIVERY_PROCESSES" />
-    </dataSource>
-    <dataSource id="epf_roles" jndiName="jdbc/epf_roles">
-        <jdbcDriver 
-            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
-            libraryRef="H2JDBCLib" />
-        <properties URL="jdbc:h2:~/EPF_test;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE;SCHEMA=EPF_ROLES" />
-    </dataSource>
-    <dataSource id="epf_tasks" jndiName="jdbc/epf_tasks">
-        <jdbcDriver 
-            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
-            libraryRef="H2JDBCLib" />
-        <properties URL="jdbc:h2:~/EPF_test;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE;SCHEMA=EPF_TASKS" />
-    </dataSource>
-    <dataSource id="epf_work_products" jndiName="jdbc/epf_work_products">
-        <jdbcDriver 
-            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
-            libraryRef="H2JDBCLib" />
-        <properties URL="jdbc:h2:~/EPF_test;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE;SCHEMA=EPF_WORK_PRODUCTS" />
-    </dataSource>
-    <dataSource id="openup" jndiName="jdbc/openup">
-        <jdbcDriver 
-            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
-            libraryRef="H2JDBCLib" />
-        <properties URL="jdbc:h2:~/EPF_test;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE;SCHEMA=OPENUP" />
-    </dataSource>
-    <dataSource id="ft" jndiName="jdbc/ft">
-        <jdbcDriver 
-            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
-            libraryRef="H2JDBCLib" />
-        <properties URL="jdbc:h2:~/EPF_test;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE;SCHEMA=FT" />
-    </dataSource>
-    <dataSource id="epf_net" jndiName="jdbc/epf_net">
-        <jdbcDriver 
-            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
-            libraryRef="H2JDBCLib" />
-        <properties URL="jdbc:h2:~/EPF_test;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE;SCHEMA=EPF_NET" />
     </dataSource>-->
     
     <library id="MySQLJDBCLib">
@@ -230,6 +175,10 @@
     	<properties serverName="localhost" portNumber="3306" />
     </dataSource>
     <dataSource id="epf_net" jndiName="jdbc/epf_net">
+        <jdbcDriver libraryRef="MySQLJDBCLib"/>
+    	<properties serverName="localhost" portNumber="3306" />
+    </dataSource>
+	<dataSource id="epf_security" jndiName="jdbc/epf_security">
         <jdbcDriver libraryRef="MySQLJDBCLib"/>
     	<properties serverName="localhost" portNumber="3306" />
     </dataSource>

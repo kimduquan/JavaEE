@@ -9,42 +9,6 @@
 		<jar-file>../lib/EPF-work-products-schema-1.0.0.jar</jar-file>
 		<jar-file>../lib/OpenUP-schema-1.0.0.jar</jar-file>
 		<jar-file>../lib/EPF-net-schema-1.0.0.jar</jar-file>
+		<jar-file>../lib/EPF-security-schema-1.0.0.jar</jar-file>
     </persistence-unit>
-    <!--<persistence-unit name="EPF_Delivery_Processes" transaction-type="JTA">
-        <jta-data-source>jdbc/epf_delivery_processes</jta-data-source>
-		<jar-file>../lib/EPF-schema-1.0.0.jar</jar-file>
-		<jar-file>../lib/EPF-delivery-processes-schema-1.0.0.jar</jar-file>
-    </persistence-unit>
-    <persistence-unit name="EPF_Roles" transaction-type="JTA">
-        <jta-data-source>jdbc/epf_roles</jta-data-source>
-		<jar-file>../lib/EPF-schema-1.0.0.jar</jar-file>
-		<jar-file>../lib/EPF-roles-schema-1.0.0.jar</jar-file>
-    </persistence-unit>
-    <persistence-unit name="EPF_Tasks" transaction-type="JTA">
-        <jta-data-source>jdbc/epf_tasks</jta-data-source>
-		<jar-file>../lib/EPF-schema-1.0.0.jar</jar-file>
-		<jar-file>../lib/EPF-tasks-schema-1.0.0.jar</jar-file>
-    </persistence-unit>
-    <persistence-unit name="EPF_Work_Products" transaction-type="JTA">
-        <jta-data-source>jdbc/epf_work_products</jta-data-source>
-		<jar-file>../lib/EPF-schema-1.0.0.jar</jar-file>
-		<jar-file>../lib/EPF-work-products-schema-1.0.0.jar</jar-file>
-    </persistence-unit>
-    <persistence-unit name="OpenUP" transaction-type="JTA">
-        <jta-data-source>jdbc/openup</jta-data-source>
-		<jar-file>../lib/EPF-schema-1.0.0.jar</jar-file>
-		<jar-file>../lib/EPF-delivery-processes-schema-1.0.0.jar</jar-file>
-		<jar-file>../lib/EPF-roles-schema-1.0.0.jar</jar-file>
-		<jar-file>../lib/EPF-tasks-schema-1.0.0.jar</jar-file>
-		<jar-file>../lib/EPF-work-products-schema-1.0.0.jar</jar-file>
-		<jar-file>../lib/OpenUP-schema-1.0.0.jar</jar-file>
-    </persistence-unit>
-    <persistence-unit name="FT" transaction-type="JTA">
-        <jta-data-source>jdbc/ft</jta-data-source>
-    </persistence-unit>
-    <persistence-unit name="EPF_Net" transaction-type="JTA">
-        <jta-data-source>jdbc/epf_net</jta-data-source>
-        <jar-file>../lib/EPF-schema-1.0.0.jar</jar-file>
-		<jar-file>../lib/EPF-net-schema-1.0.0.jar</jar-file>
-    </persistence-unit>-->
 </persistence>
