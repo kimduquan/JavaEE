@@ -11,12 +11,6 @@
 	<packaging>war</packaging>
 	<name>Eclipse Process Framework Persistence Portlet</name>
 	<dependencies>
-		<!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
-		<dependency>
-		    <groupId>javax.annotation</groupId>
-		    <artifactId>javax.annotation-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-client</artifactId>
@@ -37,6 +31,12 @@
             <artifactId>EPF-portlet-internal</artifactId>
             <version>${project.version}</version>
         </dependency>
+		<!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
+		<dependency>
+		    <groupId>javax.annotation</groupId>
+		    <artifactId>javax.annotation-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
         <dependency>
 			<groupId>javax.enterprise</groupId>
 			<artifactId>cdi-api</artifactId>
