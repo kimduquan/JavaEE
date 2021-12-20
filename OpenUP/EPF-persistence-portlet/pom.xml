@@ -11,6 +11,12 @@
 	<packaging>war</packaging>
 	<name>Eclipse Process Framework Persistence Portlet</name>
 	<dependencies>
+		<!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
+		<dependency>
+		    <groupId>javax.annotation</groupId>
+		    <artifactId>javax.annotation-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-client</artifactId>
