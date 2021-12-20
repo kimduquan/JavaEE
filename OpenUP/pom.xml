@@ -293,7 +293,7 @@
 			<dependency>
 			    <groupId>org.hibernate.validator</groupId>
 			    <artifactId>hibernate-validator-cdi</artifactId>
-			    <version>7.0.1.Final</version>
+			    <version>7.0.2.Final</version>
 			</dependency>
 			
 			
@@ -321,19 +321,19 @@
 			<dependency>
 			    <groupId>org.jboss.resteasy</groupId>
 			    <artifactId>resteasy-client</artifactId>
-			    <version>4.7.2.Final</version>
+			    <version>5.0.1.Final</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.jboss.resteasy/resteasy-client-microprofile -->
 			<dependency>
 			    <groupId>org.jboss.resteasy</groupId>
 			    <artifactId>resteasy-client-microprofile</artifactId>
-			    <version>4.7.2.Final</version>
+			    <version>4.7.4.Final</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.jboss.resteasy/resteasy-jackson2-provider -->
 			<dependency>
 			    <groupId>org.jboss.resteasy</groupId>
 			    <artifactId>resteasy-jackson2-provider</artifactId>
-			    <version>4.7.2.Final</version>
+			    <version>5.0.1.Final</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.apache.portals.pluto/pluto-container -->
 			<dependency>
@@ -363,7 +363,7 @@
 			<dependency>
 			    <groupId>info.picocli</groupId>
 			    <artifactId>picocli</artifactId>
-			    <version>4.6.1</version>
+			    <version>4.6.2</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.jboss.weld.se/weld-se-shaded -->
 			<dependency>
@@ -381,7 +381,7 @@
 			<dependency>
 			    <groupId>org.optaplanner</groupId>
 			    <artifactId>optaplanner-core</artifactId>
-			    <version>8.12.0.Final</version>
+			    <version>8.14.0.Final</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.lsp4j/org.eclipse.lsp4j.websocket -->
 			<dependency>
@@ -419,7 +419,7 @@
             <dependency>
                 <groupId>com.h2database</groupId>
                 <artifactId>h2</artifactId>
-                <version>1.4.200</version>
+                <version>2.0.202</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 			<dependency>
@@ -431,13 +431,13 @@
             <dependency>
                 <groupId>org.eclipse.persistence</groupId>
                 <artifactId>org.eclipse.persistence.core</artifactId>
-                <version>3.0.2</version>
+                <version>3.1.0-M1</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/com.ibm.websphere.appserver.api/com.ibm.websphere.appserver.api.jwt -->
 			<dependency>
 			    <groupId>com.ibm.websphere.appserver.api</groupId>
 			    <artifactId>com.ibm.websphere.appserver.api.jwt</artifactId>
-			    <version>1.1.57</version>
+			    <version>1.1.59</version>
 				<scope>provided</scope>
 			</dependency>
             <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-jdk14 -->
@@ -459,14 +459,14 @@
 			<dependency>
 			    <groupId>org.mockito</groupId>
 			    <artifactId>mockito-core</artifactId>
-			    <version>4.0.0</version>
+			    <version>4.2.0</version>
 			    <scope>test</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
 			<dependency>
 			    <groupId>org.seleniumhq.selenium</groupId>
 			    <artifactId>selenium-java</artifactId>
-			    <version>4.0.0</version>
+			    <version>4.1.1</version>
 			    <scope>test</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/com.microsoft.edge/msedge-selenium-tools-java -->
@@ -554,7 +554,7 @@
                 <plugin>
                     <groupId>io.openliberty.tools</groupId>
                     <artifactId>liberty-maven-plugin</artifactId>
-                    <version>3.4</version>
+                    <version>3.5.1</version>
                 </plugin>
                 <plugin>
                 	<groupId>org.apache.maven.plugins</groupId>

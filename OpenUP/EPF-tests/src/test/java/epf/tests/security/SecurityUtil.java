@@ -10,10 +10,8 @@ import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.security.client.Security;
 import epf.security.schema.Token;
-import epf.security.util.PasswordUtil;
 import epf.tests.client.ClientUtil;
 import epf.util.logging.LogManager;
-
 import java.util.Map.Entry;
 import java.util.AbstractMap;
 import java.util.Queue;
@@ -34,7 +32,7 @@ public class SecurityUtil {
 	public static String login(String username, String password) {
     	String token = null;
     	try(Client client = ClientUtil.newClient(GatewayUtil.get(Naming.SECURITY))){
-    		token = Security.login(client, username, PasswordUtil.hash(username, password.toCharArray()), GatewayUtil.get("tests").toURL());
+    		token = Security.login(client, username, password, GatewayUtil.get("tests").toURL());
     	}
     	catch(Exception ex) {
     		logger.log(Level.SEVERE, "login", ex);

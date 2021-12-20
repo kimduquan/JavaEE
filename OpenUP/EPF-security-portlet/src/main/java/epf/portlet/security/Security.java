@@ -13,7 +13,6 @@ import epf.portlet.util.RequestUtil;
 import epf.portlet.util.http.CookieUtil;
 import epf.security.client.Credential;
 import epf.security.schema.Token;
-import epf.security.util.PasswordUtil;
 import epf.util.logging.LogManager;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -92,7 +91,6 @@ public class Security implements CredentialView, Serializable {
 	@Override
 	public String login() throws Exception {
 		final URI securityUrl = gatewayUtil.get(epf.naming.Naming.SECURITY);
-		final String passwordHash = PasswordUtil.hash(credential.getCaller(), credential.getPassword());
 		final URL url = new URL(
 				request.getRequest().getScheme(), 
 				request.getRequest().getServerName(), 
@@ -104,7 +102,7 @@ public class Security implements CredentialView, Serializable {
 			rawToken = epf.security.client.Security.login(
 					client,
 					credential.getCaller(), 
-					passwordHash, 
+					new String(credential.getPassword()), 
 					url
 					);
 		}

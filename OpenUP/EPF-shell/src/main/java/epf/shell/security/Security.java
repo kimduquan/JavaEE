@@ -8,7 +8,6 @@ import epf.client.gateway.GatewayUtil;
 import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.security.schema.Token;
-import epf.security.util.PasswordUtil;
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
 import jakarta.enterprise.context.RequestScoped;
@@ -65,7 +64,7 @@ public class Security {
 			return epf.security.client.Security.login(
 					client,
 					user, 
-					PasswordUtil.hash(user, password), 
+					new String(password), 
 					new URL(GatewayUtil.get("shell").toString())
 					);
 		}

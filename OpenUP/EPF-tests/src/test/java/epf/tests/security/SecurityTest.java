@@ -25,7 +25,6 @@ import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.security.client.Security;
 import epf.security.schema.Token;
-import epf.security.util.PasswordUtil;
 import epf.tests.client.ClientUtil;
 import epf.client.gateway.GatewayUtil;
 
@@ -43,9 +42,6 @@ public class SecurityTest {
     }
     
     String login(String username, String password, URL targetUrl, boolean needHash) throws Exception{
-        if(needHash){
-        	password = PasswordUtil.hash(username, password.toCharArray());
-        }
         try(Client client = ClientUtil.newClient(securityUrl)){
         	return Security.login(client, username, password, targetUrl);
         }

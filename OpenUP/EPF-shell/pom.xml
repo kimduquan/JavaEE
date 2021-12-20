@@ -84,11 +84,6 @@
             <artifactId>EPF-security-client</artifactId>
             <version>${project.version}</version>
         </dependency>
-		<dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-security-utility</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-file-utility</artifactId>
