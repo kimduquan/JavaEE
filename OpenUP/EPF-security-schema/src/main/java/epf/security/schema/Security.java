@@ -9,7 +9,7 @@ public interface Security {
 	/**
      * 
      */
-    String SCHEMA = "EPF_Roles";
+    String SCHEMA = "EPF_Security";
     
     /**
      * 
