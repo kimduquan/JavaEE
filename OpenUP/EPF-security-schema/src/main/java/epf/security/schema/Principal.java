@@ -22,7 +22,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Type(Security.PRINCIPAL)
 @Schema(name = Security.PRINCIPAL, title = "Principal")
 @Entity(name = Security.PRINCIPAL)
-@Table(schema = Security.SCHEMA, name = "EPF_PRINCIPAL", indexes = {@Index(columnList = "NAME")})
+@Table(schema = Security.SCHEMA, name = "PRINCIPAL", indexes = {@Index(columnList = "NAME")})
 public class Principal implements Serializable {
 
     /**
