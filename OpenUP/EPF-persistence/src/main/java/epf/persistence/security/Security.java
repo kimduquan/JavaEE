@@ -214,7 +214,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
     	final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
     	final Optional<Credential> credential = persistence.getCredential(jwt);
     	credential.orElseThrow(ForbiddenException::new);
-    	identityStore.setPassword(credential.get().getPrincipal(), password.toCharArray());
+    	identityStore.setCallerPassword(credential.get().getPrincipal(), password.toCharArray());
 	}
 
 	@Override

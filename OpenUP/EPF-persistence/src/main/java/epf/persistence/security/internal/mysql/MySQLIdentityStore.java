@@ -64,7 +64,7 @@ public class MySQLIdentityStore implements IdentityStore {
 
 	@Override
 	@Transactional
-	public void setPassword(final CallerPrincipal callerPrincipal, final char... password) {
+	public void setCallerPassword(final CallerPrincipal callerPrincipal, final char... password) {
 		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
 		if(callerPrincipal instanceof EPFPrincipal) {
 			final EPFPrincipal principal = (EPFPrincipal) callerPrincipal;
