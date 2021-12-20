@@ -35,8 +35,6 @@ import epf.naming.Naming;
 import epf.persistence.internal.Application;
 import epf.persistence.internal.Entity;
 import epf.persistence.internal.QueryBuilder;
-import epf.roles.schema.Roles;
-import epf.roles.schema.internal.QueryNames;
 import epf.util.Var;
 
 /**
@@ -47,6 +45,11 @@ import epf.util.Var;
 @RolesAllowed(Naming.Security.DEFAULT_ROLE)
 @RequestScoped
 public class Queries implements epf.client.persistence.Queries {
+	
+	/**
+	 * 
+	 */
+	private static final String FT_SEARCH_DATA = "EPF.FulltextSearch";
     
     /**
      * 
@@ -147,7 +150,7 @@ public class Queries implements epf.client.persistence.Queries {
 		cache.mapEntities(jwt, entityTables, entityAttributes);
 		final List<SearchData> result = application.getSession(jwt).peekManager(entityManager -> {
 			final TypedQuery<SearchData> query = entityManager.createNamedQuery(
-					QueryNames.FT_SEARCH_DATA, 
+					FT_SEARCH_DATA, 
 					SearchData.class
 					);
 			query.setFirstResult(firstResult);

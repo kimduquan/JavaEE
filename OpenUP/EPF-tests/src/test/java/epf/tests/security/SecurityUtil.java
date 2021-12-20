@@ -94,6 +94,7 @@ public class SecurityUtil {
     	}
     	Entry<String, String> credential = credentials.poll();
     	credentials.add(credential);
+    	System.out.println(String.format("SecurityUtil.peekCredential(\"%s\",\"%s\")", credential.getKey(), credential.getValue()));
     	return credential;
     }
     

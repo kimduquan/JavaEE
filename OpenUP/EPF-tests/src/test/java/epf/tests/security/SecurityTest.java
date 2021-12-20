@@ -268,6 +268,7 @@ public class SecurityTest {
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
     		Response response = Security.update(client, credential.getValue() + "1");
+    		System.out.println(String.format("SecurityTest.testUpdateOk_Password(\"%s\",\"%s\"", credential.getKey(), credential.getValue() + "1"));
     		Assert.assertEquals("Response.status", Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
     	}
     	logOut(token);
@@ -275,6 +276,7 @@ public class SecurityTest {
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
     		Response response = Security.update(client, credential.getValue());
+    		System.out.println(String.format("SecurityTest.testUpdateOk_Password(\"%s\",\"%s\"", credential.getKey(), credential.getValue()));
     		Assert.assertEquals("Response.status", Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
     	}
     	logOut(token);
@@ -287,6 +289,7 @@ public class SecurityTest {
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
     		Response response = Security.update(client, null);
+    		System.out.println(String.format("SecurityTest.testUpdateInvalid_PasswordNull(\"%s\",\"%s\"", credential.getKey(), credential.getValue()));
     		Assert.assertEquals("Response.status", Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     	}
     	logOut(token);
@@ -299,6 +302,7 @@ public class SecurityTest {
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
     		Response response = Security.update(client, "");
+    		System.out.println(String.format("SecurityTest.testUpdateInvalid_PasswordEmpty(\"%s\",\"%s\"", credential.getKey(), credential.getValue()));
     		Assert.assertEquals("Response.status", Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     	}
     	logOut(token);
