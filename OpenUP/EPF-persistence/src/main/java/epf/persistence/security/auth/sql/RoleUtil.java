@@ -30,7 +30,7 @@ public interface RoleUtil {
 	 */
 	static List<Role> parse(final String string) {
 		Objects.requireNonNull(string, "String");
-		final String[] roles = string.split(ROLES_SEPARATOR);
+		final String[] roles = string.substring(1, string.length() - 1).split(ROLES_SEPARATOR);
 		return Arrays.asList(roles).stream().map(RoleUtil::fromString).collect(Collectors.toList());
 	}
 	
@@ -40,7 +40,7 @@ public interface RoleUtil {
 	 */
 	static Role fromString(final String string) {
 		Objects.requireNonNull(string, "String");
-		final String[] fragments = string.substring(1, string.length()).split(ROLE_DELIMITER);
+		final String[] fragments = string.split(ROLE_DELIMITER);
 		return new Role(fragments[0], fragments[1]);
 	}
 }
