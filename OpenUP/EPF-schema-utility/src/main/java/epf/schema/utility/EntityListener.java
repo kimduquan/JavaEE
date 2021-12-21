@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.schema;
+package epf.schema.utility;
 
 import java.time.Instant;
 import javax.enterprise.context.ApplicationScoped;
@@ -23,32 +23,32 @@ public class EntityListener {
 	 * 
 	 */
 	@Inject
-	private transient Event<epf.schema.PostLoad> loadEvent;
+	private transient Event<epf.schema.utility.PostLoad> loadEvent;
 	
 	/**
 	 * 
 	 */
 	@Inject
-	private transient Event<epf.schema.PostPersist> persistEvent;
+	private transient Event<epf.schema.utility.PostPersist> persistEvent;
 	
 	/**
 	 * 
 	 */
 	@Inject
-	private transient Event<epf.schema.PostRemove> removeEvent;
+	private transient Event<epf.schema.utility.PostRemove> removeEvent;
 	
 	/**
 	 * 
 	 */
 	@Inject
-	private transient Event<epf.schema.PostUpdate> updateEvent;
+	private transient Event<epf.schema.utility.PostUpdate> updateEvent;
 
 	/**
 	 * @param entity
 	 */
 	@PostLoad
 	protected void postLoad(final Object entity) {
-		final epf.schema.PostLoad event = new epf.schema.PostLoad();
+		final epf.schema.utility.PostLoad event = new epf.schema.utility.PostLoad();
 		event.setTime(Instant.now().toEpochMilli());
 		event.setEntity(entity);
 		loadEvent.fire(event);
@@ -59,7 +59,7 @@ public class EntityListener {
 	 */
 	@PostPersist
 	protected void postPersist(final Object entity) {
-		final epf.schema.PostPersist event = new epf.schema.PostPersist();
+		final epf.schema.utility.PostPersist event = new epf.schema.utility.PostPersist();
 		event.setTime(Instant.now().toEpochMilli());
 		event.setEntity(entity);
 		persistEvent.fire(event);
@@ -70,7 +70,7 @@ public class EntityListener {
 	 */
 	@PostRemove
 	protected void postRemove(final Object entity) {
-		final epf.schema.PostRemove event = new epf.schema.PostRemove();
+		final epf.schema.utility.PostRemove event = new epf.schema.utility.PostRemove();
 		event.setTime(Instant.now().toEpochMilli());
 		event.setEntity(entity);
 		removeEvent.fire(event);
@@ -81,7 +81,7 @@ public class EntityListener {
 	 */
 	@PostUpdate
 	protected void postUpdate(final Object entity) {
-		final epf.schema.PostUpdate event = new epf.schema.PostUpdate();
+		final epf.schema.utility.PostUpdate event = new epf.schema.utility.PostUpdate();
 		event.setTime(Instant.now().toEpochMilli());
 		event.setEntity(entity);
 		updateEvent.fire(event);

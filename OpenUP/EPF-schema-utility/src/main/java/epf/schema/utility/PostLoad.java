@@ -1,13 +1,13 @@
 /**
  * 
  */
-package epf.schema;
+package epf.schema.utility;
 
 /**
  * @author PC
  *
  */
-public class PostRemove extends EntityEvent {
+public class PostLoad extends EntityEvent {
 
 	/**
 	 * 

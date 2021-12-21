@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.schema;
+package epf.schema.utility;
 
 import java.lang.reflect.Field;
 import java.util.Map;

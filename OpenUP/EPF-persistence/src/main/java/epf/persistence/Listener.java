@@ -14,11 +14,11 @@ import org.eclipse.microprofile.reactive.streams.operators.PublisherBuilder;
 import epf.messaging.util.PublisherUtil;
 import epf.messaging.util.reactive.ObjectPublisher;
 import epf.naming.Naming;
-import epf.schema.EntityEvent;
-import epf.schema.PostLoad;
-import epf.schema.PostPersist;
-import epf.schema.PostRemove;
-import epf.schema.PostUpdate;
+import epf.schema.utility.EntityEvent;
+import epf.schema.utility.PostLoad;
+import epf.schema.utility.PostPersist;
+import epf.schema.utility.PostRemove;
+import epf.schema.utility.PostUpdate;
 import epf.util.logging.LogManager;
 
 /**

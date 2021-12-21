@@ -1,4 +1,4 @@
-package epf.schema;
+package epf.schema.utility;
 
 import java.io.StringReader;
 import javax.json.Json;

@@ -1,4 +1,4 @@
-package epf.schema;
+package epf.schema.utility;
 
 /**
  * @author PC
