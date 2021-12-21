@@ -771,11 +771,19 @@
 		
         <module>EPF-schema</module>
 		<module>EPF-net-schema</module>
+		<module>EPF-persistence-schema</module>
 		<module>EPF-security-schema</module>
 		<module>EPF-delivery-processes-schema</module>
 		<module>EPF-roles-schema</module>
 		<module>EPF-tasks-schema</module>
 		<module>EPF-work-products-schema</module>
+		<module>OpenUP-architecture-schema</module>
+		<module>OpenUP-deployment-schema</module>
+		<module>OpenUP-development-schema</module>
+		<module>OpenUP-environment-schema</module>
+		<module>OpenUP-project-management-schema</module>
+		<module>OpenUP-requirements-schema</module>
+		<module>OpenUP-test-schema</module>
 		
 		<module>EPF-naming</module>
 		<module>EPF-portlet-naming</module>
@@ -786,7 +794,6 @@
 		<module>EPF-security-client</module>
 		<module>EPF-net</module>
 		<module>EPF-security</module>
-		<module>EPF-persistence-schema</module>
 		<!--<module>EPF-persistence</module>-->
 		<module>EPF-file</module>
 		<module>EPF-image</module>
