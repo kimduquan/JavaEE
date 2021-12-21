@@ -1,4 +1,4 @@
-package epf.persistence.security.internal;
+package epf.persistence.security.auth;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -42,15 +42,6 @@ public class EPFPrincipal extends CallerPrincipal implements Closeable {
 	public void close() throws IOException {
 		manager.close();
 		factory.close();
-	}
-
-	/**
-	 * @param props
-	 * @return
-	 */
-	public boolean equals(final Map<String, Object> props) {
-		Objects.requireNonNull(props, "Map");
-		return factory.getProperties().equals(props);
 	}
 	
 	/**

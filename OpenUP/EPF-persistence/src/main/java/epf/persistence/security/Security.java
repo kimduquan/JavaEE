@@ -37,7 +37,7 @@ import epf.naming.Naming;
 import epf.persistence.internal.Application;
 import epf.persistence.internal.Credential;
 import epf.persistence.internal.Session;
-import epf.persistence.security.internal.IdentityStore;
+import epf.persistence.security.auth.IdentityStore;
 import epf.persistence.security.otp.OTPIdentityStore;
 import epf.security.client.SecurityInterface;
 import epf.security.client.jwt.JWT;

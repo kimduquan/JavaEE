@@ -1,4 +1,4 @@
-package epf.persistence.security.internal.mysql;
+package epf.persistence.security.auth.sql;
 
 /**
  * @author PC

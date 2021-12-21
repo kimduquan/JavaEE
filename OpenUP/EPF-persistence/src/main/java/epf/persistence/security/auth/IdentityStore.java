@@ -1,4 +1,4 @@
-package epf.persistence.security.internal;
+package epf.persistence.security.auth;
 
 import java.util.Set;
 import javax.security.enterprise.CallerPrincipal;

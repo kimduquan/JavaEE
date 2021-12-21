@@ -1,4 +1,4 @@
-package epf.persistence.security.internal.mysql;
+package epf.persistence.security.auth.sql;
 
 import java.util.Map;
 import java.util.Objects;
@@ -14,8 +14,9 @@ import javax.security.enterprise.CallerPrincipal;
 import javax.security.enterprise.credential.UsernamePasswordCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.transaction.Transactional;
-import epf.persistence.security.internal.EPFPrincipal;
-import epf.persistence.security.internal.IdentityStore;
+
+import epf.persistence.security.auth.EPFPrincipal;
+import epf.persistence.security.auth.IdentityStore;
 
 /**
  * @author PC

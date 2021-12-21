@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import org.eclipse.microprofile.jwt.JsonWebToken;
-import epf.persistence.security.internal.EPFPrincipal;
+import epf.persistence.security.auth.EPFPrincipal;
 import epf.security.schema.Token;
 import epf.util.MapUtil;
 

@@ -1,4 +1,4 @@
-package epf.persistence.object;
+package epf.persistence.internal.object;
 
 import java.util.function.Supplier;
 

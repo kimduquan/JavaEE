@@ -1,13 +1,13 @@
 /**
  * 
  */
-package epf.persistence.internal.mysql;
+package epf.persistence.internal.sql;
 
 /**
  * @author PC
  *
  */
-public interface MySQLErrorCodes {
+public interface ErrorCodes {
 
 	/**
 	 * 

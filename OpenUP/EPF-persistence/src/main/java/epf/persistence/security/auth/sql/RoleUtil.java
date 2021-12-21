@@ -1,4 +1,4 @@
-package epf.persistence.security.internal.mysql;
+package epf.persistence.security.auth.sql;
 
 import java.util.Arrays;
 import java.util.List;

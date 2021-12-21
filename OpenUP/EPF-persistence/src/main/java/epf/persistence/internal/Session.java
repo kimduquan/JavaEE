@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.persistence.internal;
 
 import java.util.Objects;
@@ -11,7 +6,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Function;
 import javax.persistence.EntityManager;
-import epf.persistence.security.internal.EPFPrincipal;
+import epf.persistence.security.auth.EPFPrincipal;
 import epf.security.schema.Token;
 import epf.util.QueueUtil;
 
