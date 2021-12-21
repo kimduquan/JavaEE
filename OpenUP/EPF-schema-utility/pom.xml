@@ -6,8 +6,8 @@
         <artifactId>OpenUP-parent</artifactId>
         <version>1.0.0</version>
     </parent>
-    <artifactId>EPF-schema</artifactId>
-    <name>Eclipse Process Framework Schema</name>
+    <artifactId>EPF-schema-utility</artifactId>
+    <name>Eclipse Process Framework Schema Utility</name>
     <packaging>jar</packaging>
     <dependencies>
     	<!-- https://mvnrepository.com/artifact/javax.enterprise/cdi-api -->
