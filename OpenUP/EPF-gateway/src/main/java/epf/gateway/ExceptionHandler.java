@@ -6,6 +6,7 @@
 package epf.gateway;
 
 import java.io.Serializable;
+import java.net.SocketTimeoutException;
 import java.util.logging.Logger;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -45,6 +46,9 @@ public class ExceptionHandler implements
     		builder = Response.fromResponse(error.getResponse());
     	}
     	else if(exception instanceof TimeoutException){
+            builder = Response.status(Response.Status.REQUEST_TIMEOUT);
+        }
+    	else if(exception instanceof SocketTimeoutException){
             builder = Response.status(Response.Status.REQUEST_TIMEOUT);
         }
         else if(exception instanceof BulkheadException){
