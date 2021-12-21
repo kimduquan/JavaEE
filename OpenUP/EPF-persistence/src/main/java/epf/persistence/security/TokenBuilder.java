@@ -10,7 +10,6 @@ import org.eclipse.microprofile.jwt.Claims;
 import com.ibm.websphere.security.jwt.InvalidClaimException;
 import com.ibm.websphere.security.jwt.JwtBuilder;
 import com.ibm.websphere.security.jwt.JwtToken;
-
 import epf.security.schema.Token;
 import epf.util.logging.LogManager;
 
