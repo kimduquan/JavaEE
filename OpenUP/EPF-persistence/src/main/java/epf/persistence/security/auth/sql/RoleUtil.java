@@ -40,7 +40,7 @@ public interface RoleUtil {
 	 */
 	static Role fromString(final String string) {
 		Objects.requireNonNull(string, "String");
-		final String[] fragments = string.split(ROLE_DELIMITER);
-		return new Role(fragments[0].substring(1), fragments[1]);
+		final String[] fragments = string.substring(1, string.length()).split(ROLE_DELIMITER);
+		return new Role(fragments[0], fragments[1]);
 	}
 }
