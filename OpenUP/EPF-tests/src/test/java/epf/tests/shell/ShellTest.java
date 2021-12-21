@@ -183,7 +183,7 @@ public class ShellTest {
 	}
 	
 	@Test
-	public void testSecurity_Revoke() throws InterruptedException, IOException {
+	public void testSecurity_Revoke() throws Exception {
 		String token = SecurityUtil.login();
 		builder = ShellUtil.command(builder, "./epf", Naming.SECURITY, "revoke", "-t", token);
 		process = ShellUtil.waitFor(builder);

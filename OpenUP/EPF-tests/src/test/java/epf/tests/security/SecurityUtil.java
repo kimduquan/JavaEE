@@ -29,15 +29,10 @@ public class SecurityUtil {
 	
 	private static final Queue<Entry<String, String>> credentials = new ConcurrentLinkedQueue<>();
     
-	public static String login(String username, String password) {
-    	String token = null;
-    	try(Client client = ClientUtil.newClient(GatewayUtil.get(Naming.SECURITY))){
-    		token = Security.login(client, username, password, GatewayUtil.get("tests").toURL());
+	public static String login(String username, String password) throws Exception {
+		try(Client client = ClientUtil.newClient(GatewayUtil.get(Naming.SECURITY))){
+    		return Security.login(client, username, password, GatewayUtil.get("tests").toURL());
     	}
-    	catch(Exception ex) {
-    		logger.log(Level.SEVERE, "login", ex);
-    	}
-    	return token;
     }
     
     public static void logOut(String token) {
@@ -96,7 +91,7 @@ public class SecurityUtil {
     	return credential;
     }
     
-    public static String login() {
+    public static String login() throws Exception {
     	Entry<String, String> credential = peekCredential();
     	return login(credential.getKey(), credential.getValue());
     }
