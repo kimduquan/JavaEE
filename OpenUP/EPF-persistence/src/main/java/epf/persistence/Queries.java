@@ -23,6 +23,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EntityType;
+import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Link;
@@ -87,6 +88,7 @@ public class Queries implements epf.client.persistence.Queries {
         	final Var<Entity<Object>> varEntity = new Var<>(entity);
         	application
         	.getSession(jwt)
+        	.orElseThrow(ForbiddenException::new)
         	.peekManager(entityManager -> {
         		final Query query = buildQuery(entityManager, varEntity.get().get(), paths);
                 return collectQueryResult(query, firstResult, maxResults, response);
@@ -148,18 +150,20 @@ public class Queries implements epf.client.persistence.Queries {
 		final Map<String, Map<String, Attribute<?,?>>> entityAttributes = new ConcurrentHashMap<>();
 		final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
 		cache.mapEntities(jwt, entityTables, entityAttributes);
-		final List<SearchData> result = application.getSession(jwt).peekManager(entityManager -> {
-			final TypedQuery<SearchData> query = entityManager.createNamedQuery(
-					FT_SEARCH_DATA, 
-					SearchData.class
-					);
-			query.setFirstResult(firstResult);
-			query.setMaxResults(maxResults);
-			query.setParameter(1, text);
-			query.setParameter(2, maxResults);
-			query.setParameter(3, firstResult);
-			return query.getResultList();
-		}).get();
+		final List<SearchData> result = application
+				.getSession(jwt)
+				.orElseThrow(ForbiddenException::new)
+				.peekManager(entityManager -> {
+					final TypedQuery<SearchData> query = entityManager.createNamedQuery(FT_SEARCH_DATA, SearchData.class);
+					query.setFirstResult(firstResult);
+					query.setMaxResults(maxResults);
+					query.setParameter(1, text);
+					query.setParameter(2, maxResults);
+					query.setParameter(3, firstResult);
+					return query.getResultList();
+					}
+				)
+				.get();
 		ResponseBuilder response = Response.ok(result);
 		final UriBuilder baseUri = uriInfo.getBaseUriBuilder();
 		final Iterator<Link> linksIt = result

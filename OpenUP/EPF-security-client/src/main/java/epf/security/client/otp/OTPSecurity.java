@@ -32,6 +32,7 @@ public interface OTPSecurity {
      * @param passwordHash
      * @param url
      * @return
+     * @throws Exception 
      */
     @POST
     @Path("otp")
@@ -47,7 +48,7 @@ public interface OTPSecurity {
             @QueryParam("url")
             @NotNull
             final URL url
-    );
+    ) throws Exception;
     
     /**
      * @param client

@@ -5,26 +5,16 @@
  */
 package epf.persistence.internal;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.security.enterprise.credential.Password;
-import javax.security.enterprise.credential.UsernamePasswordCredential;
-import javax.security.enterprise.identitystore.CredentialValidationResult;
-import javax.security.enterprise.identitystore.CredentialValidationResult.Status;
-import javax.ws.rs.ForbiddenException;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.persistence.security.auth.EPFPrincipal;
-import epf.persistence.security.auth.IdentityStore;
 import epf.security.schema.Token;
-import epf.util.EPFException;
 import epf.util.MapUtil;
-import epf.util.Var;
 
 /**
  *
@@ -32,183 +22,71 @@ import epf.util.Var;
  */
 @ApplicationScoped
 public class Application {
-	
-	/**
-     * 
-     */
-    private transient final Map<String, Credential> credentials = new ConcurrentHashMap<>();
     
     /**
      * 
      */
-    @Inject
-    private transient IdentityStore identityStore;
+    private transient final Map<String, Session> sessions = new ConcurrentHashMap<>();
     
     /**
      * 
      */
     @PreDestroy
     protected void preDestroy(){
-    	credentials.forEach((name, credential) -> {
-    		try {
-				credential.close();
-			} 
-    		catch (IOException e) {
-				e.printStackTrace();
-			}
-		});
-        credentials.clear();
-    }
-    
-    /**
-     * @param userName
-     * @param password
-     * @return
-     * @throws EPFException
-     */
-    public Optional<Credential> login(final String userName, final char... password) throws EPFException {
-    	final UsernamePasswordCredential identityCred = new UsernamePasswordCredential(userName, new Password(password));
-        final Var<Exception> error = new Var<>();
-        credentials.computeIfAbsent(userName, name -> {
-            return newCredential(identityCred).orElse(null);
+        sessions.forEach((time, session) -> {
+    		session.close();
         });
-        error.get().ifPresent(ex -> {
-        	throw new EPFException(ex);
-        });
-        final Var<Credential> cred = new Var<>();
-        credentials.computeIfPresent(userName, (name, credential) -> {
-            if(credential == null){
-                credential = newCredential(identityCred).orElse(null);
-            }
-            else{
-                synchronized(credential){
-                    if(!credential.getPrincipal().equals(identityCred)){
-                    	try {
-							credential.close();
-						} 
-                    	catch (IOException e) {
-							e.printStackTrace();
-						}
-                        credential = newCredential(identityCred).orElse(null);
-                    }
-                }
-            }
-            cred.set(credential);
-            return credential;
-        });
-        error.get().ifPresent(ex -> {
-        	throw new EPFException(ex);
-        });
-        return cred.get();
-    }
-    
-    /**
-     * @param credential
-     * @return
-     */
-    protected Optional<Credential> newCredential(final UsernamePasswordCredential credential){
-        final Optional<EPFPrincipal> principal = getPrincipal(credential);
-        return principal.isPresent() ? Optional.of(new Credential(principal.get())) : Optional.empty();
-    }
-    
-    /**
-     * @param credential
-     * @return
-     */
-    protected Optional<EPFPrincipal> getPrincipal(final UsernamePasswordCredential credential){
-    	Optional<EPFPrincipal> principal = Optional.empty();
-    	final CredentialValidationResult validationResult = identityStore.validate(credential);
-        if(Status.VALID.equals(validationResult.getStatus()) && validationResult.getCallerPrincipal() instanceof EPFPrincipal) {
-        	principal = Optional.of((EPFPrincipal)validationResult.getCallerPrincipal());
-        }
-        return principal;
+        sessions.clear();
     }
     
     /**
      * @param jwt
      * @return
      */
-    public Optional<Credential> getCredential(final JsonWebToken jwt){
+    public Optional<Session> getSession(final JsonWebToken jwt){
     	Objects.requireNonNull(jwt, "JsonWebToken");
-    	return MapUtil.get(credentials, jwt.getName());
+    	Objects.requireNonNull(jwt.getTokenID(), "JsonWebToken.tokenId");
+    	return MapUtil.get(sessions, jwt.getTokenID());
     }
     
     /**
      * @param token
      * @return
      */
-    public Optional<Credential> getCredential(final Token token){
+    public Optional<Session> getSession(final Token token){
     	Objects.requireNonNull(token, "Token");
-    	return MapUtil.get(credentials, token.getName());
+    	Objects.requireNonNull(token.getTokenID(), "Token.tokenId");
+    	return MapUtil.get(sessions, token.getTokenID());
     }
     
     /**
      * @param jwt
      * @return
      */
-    public Optional<Credential> removeCredential(final JsonWebToken jwt){
+    public Optional<Session> removeSession(final JsonWebToken jwt) {
     	Objects.requireNonNull(jwt, "JsonWebToken");
-    	return MapUtil.remove(credentials, jwt.getName());
+    	Objects.requireNonNull(jwt.getTokenID(), "JsonWebToken.tokenId");
+    	return MapUtil.remove(sessions, jwt.getTokenID());
     }
     
     /**
      * @param token
      * @return
      */
-    public Optional<Credential> removeCredential(final Token token){
+    public Optional<Session> removeSession(final Token token) {
     	Objects.requireNonNull(token, "Token");
-    	return MapUtil.remove(credentials, token.getName());
+    	Objects.requireNonNull(token.getTokenID(), "Token.tokenId");
+    	return MapUtil.remove(sessions, token.getTokenID());
     }
     
     /**
-     * @param jwt
+     * @param session
      * @return
      */
-    public Session getSession(final JsonWebToken jwt){
-    	Objects.requireNonNull(jwt, "JsonWebToken");
-    	final Optional<Credential> credential = getCredential(jwt);
-    	credential.orElseThrow(ForbiddenException::new);
-    	final Optional<Session> session = credential.get().getSessioṇ̣(jwt);
-    	session.orElseThrow(ForbiddenException::new);
-    	return session.get();
-    }
-    
-    /**
-     * @param token
-     * @return
-     */
-    public Session getSession(final Token token){
+    public Session putSession(final EPFPrincipal principal, final Token token){
+    	Objects.requireNonNull(principal, "EPFPrincipal");
     	Objects.requireNonNull(token, "Token");
-    	final Optional<Credential> credential = getCredential(token);
-    	credential.orElseThrow(ForbiddenException::new);
-    	final Optional<Session> session = credential.get().getSessioṇ̣(token);
-    	session.orElseThrow(ForbiddenException::new);
-    	return session.get();
-    }
-    
-    /**
-     * @param jwt
-     * @return
-     */
-    public Session removeSession(final JsonWebToken jwt) {
-    	Objects.requireNonNull(jwt, "JsonWebToken");
-    	final Optional<Credential> credential = getCredential(jwt);
-    	credential.orElseThrow(ForbiddenException::new);
-    	final Optional<Session> session = credential.get().removeSessioṇ̣(jwt);
-    	session.orElseThrow(ForbiddenException::new);
-    	return session.get();
-    }
-    
-    /**
-     * @param token
-     * @return
-     */
-    public Session removeSession(final Token token) {
-    	Objects.requireNonNull(token, "Token");
-    	final Optional<Credential> credential = getCredential(token);
-    	credential.orElseThrow(ForbiddenException::new);
-    	final Optional<Session> session = credential.get().removeSessioṇ̣(token);
-    	session.orElseThrow(ForbiddenException::new);
-    	return session.get();
+    	Objects.requireNonNull(token.getTokenID(), "Token.tokenId");
+        return sessions.computeIfAbsent(token.getTokenID(), time -> new Session(principal, token) );
     }
 }

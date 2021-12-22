@@ -29,6 +29,8 @@ import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EmbeddableType;
 import javax.persistence.metamodel.EntityType;
 import javax.transaction.Transactional;
+import javax.ws.rs.ForbiddenException;
+
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.persistence.internal.Application;
 import epf.persistence.internal.Embeddable;
@@ -62,7 +64,11 @@ public class Request {
      * @param cls
      */
     public <T> TypedQuery<T> createNamedQuery(final JsonWebToken jwt, final String schema, final String name, final Class<T> cls) {
-    	return application.getSession(jwt).peekManager(entityManager -> entityManager.createNamedQuery(name, cls)).get();
+    	return application
+    			.getSession(jwt)
+    			.orElseThrow(ForbiddenException::new)
+    			.peekManager(entityManager -> entityManager.createNamedQuery(name, cls))
+    			.get();
     }
     
     /**
@@ -80,8 +86,11 @@ public class Request {
             @CacheKey
             final String name,
             final Object object) {
-    	application.getSession(jwt).peekManager(entityManager -> {
-        	entityManager = EntityManagerUtil.joinTransaction(entityManager);
+    	application
+    	.getSession(jwt)
+    	.orElseThrow(ForbiddenException::new)
+    	.peekManager(entityManager -> {
+    		entityManager = EntityManagerUtil.joinTransaction(entityManager);
         	entityManager.persist(object);
         	entityManager.flush();
         	return object;
@@ -108,7 +117,10 @@ public class Request {
             final String entityId,
             @CacheValue
             final Object object) {
-    	application.getSession(jwt).peekManager(entityManager -> {
+    	application
+    	.getSession(jwt)
+    	.orElseThrow(ForbiddenException::new)
+    	.peekManager(entityManager -> {
         	entityManager = EntityManagerUtil.joinTransaction(entityManager);
         	entityManager.merge(object);
         	entityManager.flush();
@@ -131,11 +143,17 @@ public class Request {
     		@CacheKey 
     		final String name, 
     		final Class<T> cls, 
-    		@CacheKey final String entityId) {
-    	return application.getSession(jwt).peekManager(entityManager -> {
-        	final T object = entityManager.find(cls, entityId);
-            return object;
-        }).orElse(null);
+    		@CacheKey 
+    		final String entityId) {
+    	return application
+    			.getSession(jwt)
+    			.orElseThrow(ForbiddenException::new)
+    			.peekManager(entityManager -> {
+    				final T object = entityManager.find(cls, entityId);
+    				return object;
+    				}
+    			)
+    			.orElse(null);
     }
     
     /**
@@ -156,7 +174,10 @@ public class Request {
     		@CacheKey 
     		final String entityId, 
     		final Object object) {
-    	application.getSession(jwt).peekManager(entityManager -> {
+    	application
+    	.getSession(jwt)
+    	.orElseThrow(ForbiddenException::new)
+    	.peekManager(entityManager -> {
         	entityManager = EntityManagerUtil.joinTransaction(entityManager);
         	entityManager.remove(entityManager.contains(object) ? object : entityManager.merge(object));
         	entityManager.flush();
@@ -208,7 +229,10 @@ public class Request {
             final String schema,
     		@CacheKey 
     		final String name) {
-    	final Optional<Entity<T>> entity = application.getSession(jwt).peekManager(entityManager -> findFirstEntity(entityManager, schema, name));
+    	final Optional<Entity<T>> entity = application
+    			.getSession(jwt)
+    			.orElseThrow(ForbiddenException::new)
+    			.peekManager(entityManager -> findFirstEntity(entityManager, schema, name));
         return entity.orElse(new Entity<>());
     }
     
@@ -247,7 +271,10 @@ public class Request {
      */
     @CacheResult(cacheName = "EntityType")
     public <T> List<Entity<T>> findEntities(final JsonWebToken jwt) {
-    	final Optional<List<Entity<T>>> entities = application.getSession(jwt).peekManager(entityManager -> collectEntities(entityManager));
+    	final Optional<List<Entity<T>>> entities = application
+    			.getSession(jwt)
+    			.orElseThrow(ForbiddenException::new)
+    			.peekManager(entityManager -> collectEntities(entityManager));
     	return entities.get();
     }
     
@@ -287,7 +314,10 @@ public class Request {
     @CacheResult(cacheName = "EmbeddableType")
     public <T> List<Embeddable<T>> findEmbeddables(
     		final JsonWebToken jwt) {
-    	final Optional<List<Embeddable<T>>> embeddables = application.getSession(jwt).peekManager(entityManager -> this.collectEmbeddables(entityManager));
+    	final Optional<List<Embeddable<T>>> embeddables = application
+    			.getSession(jwt)
+    			.orElseThrow(ForbiddenException::new)
+    			.peekManager(entityManager -> this.collectEmbeddables(entityManager));
     	return embeddables.get();
     }
     
@@ -341,7 +371,11 @@ public class Request {
     		@CacheKey 
     		final String name, 
     		final Class<T> cls) {
-    	return application.getSession(jwt).peekManager(entityManager -> collectNamedQueryResult(entityManager, name, cls)).get();
+    	return application
+    			.getSession(jwt)
+    			.orElseThrow(ForbiddenException::new)
+    			.peekManager(entityManager -> collectNamedQueryResult(entityManager, name, cls))
+    			.get();
     }
     
     /**
@@ -364,6 +398,7 @@ public class Request {
     		final Integer maxResults) {
     	return application.
     			getSession(jwt)
+    			.orElseThrow(ForbiddenException::new)
         		.peekManager(entityManager -> collectNamedQueryResult(
         				entityManager,
         				name,
@@ -416,9 +451,13 @@ public class Request {
     		final JsonWebToken jwt,
     		final Map<String, EntityType<?>> entityTables, 
     		final Map<String, Map<String, Attribute<?,?>>> entityAttributes) {
-    	application.getSession(jwt).peekManager(entityManager -> {
+    	application
+    	.getSession(jwt)
+    	.orElseThrow(ForbiddenException::new)
+    	.peekManager(entityManager -> {
     		mapEntities(entityManager, entityTables, entityAttributes);
     		return null;
-    		});
+    		}
+    	);
     }
 }

@@ -2,6 +2,7 @@ package epf.persistence.security.auth;
 
 import java.util.Set;
 import javax.security.enterprise.CallerPrincipal;
+import javax.security.enterprise.credential.Password;
 import javax.security.enterprise.credential.UsernamePasswordCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.transaction.Transactional;
@@ -42,5 +43,5 @@ public interface IdentityStore {
 	 * @param password
 	 */
 	@Transactional
-	void setCallerPassword(final CallerPrincipal callerPrincipal, final char... password);
+	void setCallerPassword(final CallerPrincipal callerPrincipal, final Password password);
 }

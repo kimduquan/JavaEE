@@ -64,4 +64,8 @@ public class Session {
 	public Token getToken() {
 		return token;
 	}
+
+	public EPFPrincipal getPrincipal() {
+		return principal;
+	}
 }

@@ -71,7 +71,7 @@ public interface Security {
             @QueryParam(URL)
             @NotNull
             final URL url
-    );
+    ) throws Exception;
     
     /**
      * @param client
@@ -161,11 +161,12 @@ public interface Security {
     
     /**
      * @return
+     * @throws Exception 
      */
     @PUT
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
-    String revoke();
+    String revoke() throws Exception;
     
     /**
      * @param client

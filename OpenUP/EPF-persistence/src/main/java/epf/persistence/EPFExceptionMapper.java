@@ -38,6 +38,7 @@ public class EPFExceptionMapper implements ExceptionMapper<Exception>, Serializa
      */
     @Override
     public Response toResponse(final Exception exception) {
+    	exception.printStackTrace();
         return handle(exception);
     }
     
