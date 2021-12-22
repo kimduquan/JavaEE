@@ -82,6 +82,12 @@
 		    <artifactId>microprofile-health-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.opentracing/microprofile-opentracing-api -->
+		<dependency>
+		    <groupId>org.eclipse.microprofile.opentracing</groupId>
+		    <artifactId>microprofile-opentracing-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
         <!-- https://mvnrepository.com/artifact/com.ibm.websphere.appserver.api/com.ibm.websphere.appserver.api.jwt -->
 		<dependency>
 		    <groupId>com.ibm.websphere.appserver.api</groupId>
