@@ -95,4 +95,8 @@ public class SecurityUtil {
     	Entry<String, String> credential = peekCredential();
     	return login(credential.getKey(), credential.getValue());
     }
+    
+    public static Entry<String, String> getAdminCredential(){
+    	return new AbstractMap.SimpleImmutableEntry<>("epf", "Password1234****");
+    }
 }

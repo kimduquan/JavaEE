@@ -51,6 +51,7 @@ public class ShellTest {
 	
 	private static Path workingDir;
 	private static Path tempDir;
+	private static Entry<String, String> credential;
 	private static String token;
 	private static String tokenID;
 	private static String otherToken;
@@ -68,8 +69,10 @@ public class ShellTest {
 	public static void setUpBeforeClass() throws Exception {
 		workingDir = ShellUtil.getShellPath().toRealPath();
 		tempDir = Files.createTempDirectory("temp");
-		token = SecurityUtil.login("any_role1", "Any_Role1*");
-		otherToken = SecurityUtil.login();
+		credential = SecurityUtil.peekCredential();
+		token = SecurityUtil.login(credential.getKey(), credential.getValue());
+		Entry<String, String> otherCredential = SecurityUtil.peekCredential();
+		otherToken = SecurityUtil.login(otherCredential.getKey(), otherCredential.getValue());
 		
 		Path out = Files.createTempFile(tempDir, "out", "out");
 		ProcessBuilder builder = new ProcessBuilder();
@@ -168,7 +171,7 @@ public class ShellTest {
 		try(Jsonb jsonb = JsonbBuilder.create()){
 			Token securityToken = jsonb.fromJson(lines.get(1), Token.class);
 			Assert.assertNotNull("Token", securityToken);
-			Assert.assertEquals("Token.name", "any_role1", securityToken.getName());
+			Assert.assertEquals("Token.name", credential.getKey(), securityToken.getName());
 		}
 		lines = Files.readAllLines(err);
 		Assert.assertTrue(lines.isEmpty());
@@ -177,7 +180,7 @@ public class ShellTest {
 	@Test
 	public void testSecurity_UpdatePassword() throws InterruptedException, IOException {
 		builder = ShellUtil.command(builder, "./epf", Naming.SECURITY, "update", "-tid", tokenID, "-p");
-		process = ShellUtil.waitFor(builder, in, "Any_Role1*");
+		process = ShellUtil.waitFor(builder, in, credential.getValue());
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(1, lines.size());
 	}
@@ -294,7 +297,7 @@ public class ShellTest {
 	public void testFile_Create() throws Exception {
 		Path file = Files.createTempFile("file", ".in");
 		Files.write(file, Arrays.asList("this is a test"));
-		Path path = PathUtil.of("any_role1", "this", "is", "a", "test");
+		Path path = PathUtil.of(credential.getKey(), "this", "is", "a", "test");
 		builder = ShellUtil.command(builder, 
 				"./epf", 
 				Naming.FILE, "create", 
@@ -305,8 +308,8 @@ public class ShellTest {
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
 		Assert.assertEquals(2, lines.size());
-		Assert.assertTrue(lines.get(1).startsWith("any_role1/this/is/a/test/"));
-		FileUtil.delete(token, PathUtil.of("any_role1/this/is/a/test"));
+		Assert.assertTrue(lines.get(1).startsWith(credential.getKey() + "/this/is/a/test/"));
+		FileUtil.delete(token, PathUtil.of(credential.getKey() + "/this/is/a/test"));
 		file.toFile().delete();
 	}
 	
@@ -314,7 +317,7 @@ public class ShellTest {
 	public void testFile_Delete() throws Exception {
 		Path file = Files.createTempFile("file", ".in");
 		Files.write(file, Arrays.asList("this is a test"));
-		Path path = PathUtil.of("any_role1", "this", "is", "a", "test");
+		Path path = PathUtil.of(credential.getKey(), "this", "is", "a", "test");
 		String createdFile = FileUtil.createFile(token, file, path);
 		builder = ShellUtil.command(builder, 
 				"./epf", 
@@ -334,7 +337,7 @@ public class ShellTest {
 	public void testFile_Read() throws Exception {
 		Path file = Files.createTempFile("file", ".in");
 		Files.write(file, Arrays.asList("this is a test"));
-		Path path = PathUtil.of("any_role1", "this", "is", "a", "test");
+		Path path = PathUtil.of(credential.getKey(), "this", "is", "a", "test");
 		String createdFile = FileUtil.createFile(token, file, path);
 		Path output = Files.createTempFile("file", ".out");
 		builder = ShellUtil.command(builder, 

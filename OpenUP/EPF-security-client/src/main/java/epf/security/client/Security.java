@@ -96,10 +96,11 @@ public interface Security {
     
     /**
      * @return
+     * @throws Exception 
      */
     @DELETE
     @Produces(MediaType.TEXT_PLAIN)
-    String logOut();
+    String logOut() throws Exception;
     
     /**
      * @param client

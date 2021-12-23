@@ -3,6 +3,8 @@
  */
 package epf.tests.portlet.security;
 
+import java.util.Map.Entry;
+
 import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.After;
 import org.junit.Assert;
@@ -13,6 +15,7 @@ import org.junit.Test;
 import org.junit.rules.MethodRule;
 import epf.tests.portlet.PortletView;
 import epf.tests.portlet.WebDriverUtil;
+import epf.tests.security.SecurityUtil;
 import jakarta.inject.Inject;
 
 /**
@@ -61,10 +64,11 @@ public class CredentialTest {
 	
 	@Test
 	public void testLogin_ValidCredential_Succeed() throws Exception {
-		credential.setCaller("any_role1");
-		credential.setPassword("Any_Role1*".toCharArray());
+		Entry<String, String> cred = SecurityUtil.peekCredential();
+		credential.setCaller(cred.getKey());
+		credential.setPassword(cred.getValue().toCharArray());
 		credential.login();
-		Assert.assertEquals("Security.principalFullName", "Any Role 1", principal.getFullName());
+		Assert.assertFalse("Security.principalFullName", principal.getFullName().isEmpty());
 		principal.logout();
 	}
 }

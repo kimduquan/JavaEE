@@ -89,4 +89,12 @@ public class Application {
     	Objects.requireNonNull(token.getTokenID(), "Token.tokenId");
         return sessions.computeIfAbsent(token.getTokenID(), time -> new Session(principal, token) );
     }
+    
+    /**
+     * @param userName
+     * @return
+     */
+    public Optional<Session> findSession(final String userName){
+    	return sessions.values().parallelStream().filter(session -> session.getToken().getName().equals(userName)).findFirst();
+    }
 }

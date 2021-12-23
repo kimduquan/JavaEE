@@ -27,6 +27,7 @@ import javax.security.enterprise.credential.Password;
 import javax.security.enterprise.credential.UsernamePasswordCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.CredentialValidationResult.Status;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
@@ -179,6 +180,14 @@ public class Security implements epf.security.client.Security, epf.security.clie
             final URL url) throws Exception {
     	final Password password = new Password(passwordHash);
     	final UsernamePasswordCredential credential = new UsernamePasswordCredential(username, password);
+    	persistence.findSession(username).ifPresent(session -> {
+    		if(session.getPrincipal().equals(credential)) {
+    			throw new BadRequestException();
+    		}
+    		else {
+    			throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
+    		}
+    	});
     	final CredentialValidationResult validationResult = identityStore.validate(credential);
     	if(Status.VALID.equals(validationResult.getStatus()) && validationResult.getCallerPrincipal() instanceof EPFPrincipal) {
     		final Set<String> roles = identityStore.getCallerGroups(validationResult.getCallerPrincipal());
@@ -193,10 +202,11 @@ public class Security implements epf.security.client.Security, epf.security.clie
     }
     
     @Override
-    public String logOut() {
+    public String logOut() throws Exception {
     	final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
     	final Session session = persistence.removeSession(jwt).orElseThrow(ForbiddenException::new);
     	session.close();
+    	session.getPrincipal().close();
     	return jwt.getName();
     }
     

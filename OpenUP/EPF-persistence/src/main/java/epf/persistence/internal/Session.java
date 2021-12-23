@@ -45,7 +45,9 @@ public class Session {
      */
     public void close() {
     	managers.forEach(manager -> {
-    		manager.close();
+    		if(manager.isOpen()) {
+        		manager.close();
+    		}
         });
     	managers.clear();
     }

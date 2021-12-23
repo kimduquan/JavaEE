@@ -15,6 +15,7 @@ import javax.security.enterprise.credential.Password;
 import javax.security.enterprise.credential.UsernamePasswordCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.transaction.Transactional;
+import org.eclipse.microprofile.opentracing.Traced;
 import epf.persistence.security.auth.EPFPrincipal;
 import epf.persistence.security.auth.IdentityStore;
 
@@ -25,6 +26,7 @@ import epf.persistence.security.auth.IdentityStore;
 @ApplicationScoped
 public class MySQLIdentityStore implements IdentityStore {
 
+	@Traced
 	@Override
 	public CredentialValidationResult validate(final UsernamePasswordCredential credential) {
 		Objects.requireNonNull(credential, "UsernamePasswordCredential");
@@ -65,6 +67,7 @@ public class MySQLIdentityStore implements IdentityStore {
 
 	@Override
 	@Transactional
+	@Traced
 	public void setCallerPassword(final CallerPrincipal callerPrincipal, final Password password) {
 		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
 		if(callerPrincipal instanceof EPFPrincipal) {

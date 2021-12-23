@@ -40,8 +40,12 @@ public class EPFPrincipal extends CallerPrincipal implements Closeable {
 
 	@Override
 	public void close() throws IOException {
-		manager.close();
-		factory.close();
+		if(manager.isOpen()) {
+			manager.close();
+		}
+		if(factory.isOpen()) {
+			factory.close();
+		}
 	}
 	
 	/**
