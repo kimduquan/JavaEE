@@ -30,8 +30,8 @@ import javax.persistence.metamodel.EmbeddableType;
 import javax.persistence.metamodel.EntityType;
 import javax.transaction.Transactional;
 import javax.ws.rs.ForbiddenException;
-
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.eclipse.microprofile.opentracing.Traced;
 import epf.persistence.internal.Application;
 import epf.persistence.internal.Embeddable;
 import epf.persistence.internal.Entity;
@@ -43,6 +43,7 @@ import epf.persistence.util.EntityManagerUtil;
  */
 @CacheDefaults(cacheName = "Entity")
 @RequestScoped
+@Traced
 public class Request {
 	
 	/**
