@@ -24,9 +24,9 @@ import epf.persistence.security.auth.IdentityStore;
  *
  */
 @ApplicationScoped
+@Traced
 public class MySQLIdentityStore implements IdentityStore {
 
-	@Traced
 	@Override
 	public CredentialValidationResult validate(final UsernamePasswordCredential credential) {
 		Objects.requireNonNull(credential, "UsernamePasswordCredential");
@@ -67,7 +67,6 @@ public class MySQLIdentityStore implements IdentityStore {
 
 	@Override
 	@Transactional
-	@Traced
 	public void setCallerPassword(final CallerPrincipal callerPrincipal, final Password password) {
 		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
 		if(callerPrincipal instanceof EPFPrincipal) {
