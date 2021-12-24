@@ -18,12 +18,11 @@ import javax.persistence.EntityManager;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
-import org.eclipse.microprofile.jwt.JsonWebToken;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EntityType;
-import javax.ws.rs.ForbiddenException;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Link;
@@ -33,10 +32,9 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import epf.client.persistence.SearchData;
 import epf.naming.Naming;
-import epf.persistence.internal.Application;
 import epf.persistence.internal.Entity;
 import epf.persistence.internal.QueryBuilder;
-import epf.util.Var;
+import epf.persistence.internal.Session;
 
 /**
  *
@@ -56,13 +54,7 @@ public class Queries implements epf.client.persistence.Queries {
      * 
      */
     @Inject
-    private transient Request cache;
-    
-    /**
-     * 
-     */
-    @Inject
-    private transient Application application;
+    private transient Request request;
     
     /**
      * 
@@ -77,26 +69,23 @@ public class Queries implements epf.client.persistence.Queries {
             final Integer firstResult,
             final Integer maxResults
             ) {
-    	final ResponseBuilder response = Response.status(Response.Status.NOT_FOUND);
-    	Entity<Object> entity = null;
-    	final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
-        if(!paths.isEmpty()){
+    	final Session session = request.getSession(context);
+    	final Entity<Object> entity = new Entity<>();
+    	if(!paths.isEmpty()){
         	final PathSegment rootSegment = paths.get(0);
-        	entity = cache.findEntity(jwt, schema, rootSegment.getPath());
-        }
-        if(entity != null && entity.getType() != null){
-        	final Var<Entity<Object>> varEntity = new Var<>(entity);
-        	application
-        	.getSession(jwt)
-        	.orElseThrow(ForbiddenException::new)
-        	.peekManager(entityManager -> {
-        		final Query query = buildQuery(entityManager, varEntity.get().get(), paths);
+        	final String entityName = rootSegment.getPath();
+        	@SuppressWarnings("unchecked")
+			final EntityType<Object> entityType = (EntityType<Object>) request.getEntityType(session, entityName);
+        	entity.setType(entityType);
+        	return session.peekManager(entityManager -> {
+        		final Query query = buildQuery(entityManager, entity, paths);
+            	final ResponseBuilder response = Response.ok();
                 return collectQueryResult(query, firstResult, maxResults, response);
-        	});
-        	
-        	
+        	})
+        	.get()
+        	.build();
         }
-        return response.build();
+    	throw new NotFoundException();
     }
     
     /**
@@ -148,11 +137,9 @@ public class Queries implements epf.client.persistence.Queries {
 	public Response search(final UriInfo uriInfo, final String text, final Integer firstResult, final Integer maxResults) {
 		final Map<String, EntityType<?>> entityTables = new ConcurrentHashMap<>();
 		final Map<String, Map<String, Attribute<?,?>>> entityAttributes = new ConcurrentHashMap<>();
-		final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
-		cache.mapEntities(jwt, entityTables, entityAttributes);
-		final List<SearchData> result = application
-				.getSession(jwt)
-				.orElseThrow(ForbiddenException::new)
+		final Session session = request.getSession(context);
+		request.mapEntities(session, entityTables, entityAttributes);
+		final List<SearchData> result = session
 				.peekManager(entityManager -> {
 					final TypedQuery<SearchData> query = entityManager.createNamedQuery(FT_SEARCH_DATA, SearchData.class);
 					query.setFirstResult(firstResult);

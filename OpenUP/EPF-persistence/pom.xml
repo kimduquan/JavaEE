@@ -46,12 +46,6 @@
 		    <artifactId>javax.annotation-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.cache/cache-api -->
-		<dependency>
-		    <groupId>javax.cache</groupId>
-		    <artifactId>cache-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
     	<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.jwt/microprofile-jwt-auth-api -->
 		<dependency>
 		    <groupId>org.eclipse.microprofile.jwt</groupId>

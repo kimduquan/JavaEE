@@ -33,7 +33,7 @@ public class Application {
      */
     @PreDestroy
     protected void preDestroy(){
-        sessions.forEach((time, session) -> {
+        sessions.forEach((id, session) -> {
     		session.close();
         });
         sessions.clear();

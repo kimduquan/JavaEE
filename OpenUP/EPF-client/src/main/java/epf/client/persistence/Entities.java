@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.client.persistence;
 
 import java.io.InputStream;
@@ -34,6 +29,7 @@ public interface Entities {
      * @param entity
      * @param body
      * @return
+     * @throws Exception 
      */
     @POST
     @Path("{schema}/{entity}")
@@ -48,7 +44,7 @@ public interface Entities {
             final String entity,
             @NotNull
             final InputStream body
-            );
+            ) throws Exception;
     
     /**
      * @param client
@@ -95,6 +91,7 @@ public interface Entities {
      * @param entity
      * @param entityId
      * @param body
+     * @throws Exception 
      */
     @PUT
     @Path("{schema}/{entity}/{id}")
@@ -111,7 +108,7 @@ public interface Entities {
             final String entityId,
             @NotNull
             final InputStream body
-            );
+            ) throws Exception;
     
     /**
      * @param client

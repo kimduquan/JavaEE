@@ -3,23 +3,20 @@
  */
 package epf.persistence.schema;
 
-import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.client.schema.util.EmbeddableComparator;
 import epf.client.schema.util.EntityComparator;
 import epf.naming.Naming;
 import epf.persistence.Request;
-import epf.persistence.internal.Embeddable;
-import epf.persistence.internal.Entity;
+import epf.persistence.internal.Session;
 
 /**
  * @author PC
@@ -34,59 +31,34 @@ public class Schema implements epf.client.schema.Schema {
 	 * 
 	 */
 	@Inject
-    private transient Request cache;
+    private transient Request request;
 	
 	/**
 	 * 
 	 */
 	@Context
     private transient SecurityContext context;
-	
-	/**
-	 * @param <T>
-	 * @return
-	 */
-	protected <T> List<Entity<T>> findEntities(){
-    	final List<Entity<T>> entities = cache.findEntities((JsonWebToken)context.getUserPrincipal());
-    	if(entities.isEmpty()){
-            throw new NotFoundException();
-        }
-        return entities;
-    }
-	
-	/**
-	 * @param <T>
-	 * @return
-	 */
-	protected <T> List<Embeddable<T>> findEmbeddables(){
-    	final List<Embeddable<T>> embeddables = cache.findEmbeddables((JsonWebToken)context.getUserPrincipal());
-    	if(embeddables.isEmpty()){
-            throw new NotFoundException();
-        }
-        return embeddables;
-    }
 
 	@Override
 	public Response getEntities() {
+		final Session session = request.getSession(context);
 		final EntityBuilder builder = new EntityBuilder();
 		final EntityComparator comparator = new EntityComparator();
-		final List<epf.client.schema.Entity> entities = findEntities()
-				.stream()
+		final Stream<epf.client.schema.Entity> entities = request
+				.getEntities(session)
 				.map(builder::build)
-				.sorted(comparator)
-				.collect(Collectors.toList());
-		return Response.ok(entities).build();
+				.sorted(comparator);
+		return Response.ok(entities.collect(Collectors.toList())).build();
 	}
 
 	@Override
 	public Response getEmbeddables() {
+		final Session session = request.getSession(context);
 		final EmbeddableBuilder builder = new EmbeddableBuilder();
 		final EmbeddableComparator comparator = new EmbeddableComparator();
-		final List<epf.client.schema.Embeddable> embeddables = findEmbeddables()
-				.stream()
+		final Stream<epf.client.schema.Embeddable> embeddables = request.getEmbeddables(session)
 				.map(builder::build)
-				.sorted(comparator)
-				.collect(Collectors.toList());
-		return Response.ok(embeddables).build();
+				.sorted(comparator);
+		return Response.ok(embeddables.collect(Collectors.toList())).build();
 	}
 }
