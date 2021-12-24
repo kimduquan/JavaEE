@@ -20,7 +20,9 @@ import javax.ws.rs.core.Response;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.rules.TestName;
 import org.junit.Ignore;
+import org.junit.Rule;
 import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.security.client.Security;
@@ -34,6 +36,9 @@ import epf.client.gateway.GatewayUtil;
  */
 public class SecurityTest {
 	
+	@Rule
+    public TestName testName = new TestName();
+	
 	private static URI securityUrl;
     
     @BeforeClass
@@ -45,13 +50,6 @@ public class SecurityTest {
         try(Client client = ClientUtil.newClient(securityUrl)){
         	return Security.login(client, username, password, targetUrl);
         }
-    }
-    
-    String logOut(String token) throws Exception{
-    	try(Client client = ClientUtil.newClient(securityUrl)){
-    		client.authorization(token);
-    		return Security.logOut(client);
-    	}
     }
     
     Token authenticate(String token) throws Exception{
@@ -70,21 +68,20 @@ public class SecurityTest {
     
     @Test
     public void testLoginOK() throws Exception {
-    	Entry<String, String> credential = SecurityUtil.peekCredential();
-    	String token = login(credential.getKey(), credential.getValue(), securityUrl.toURL());
+    	String token = SecurityUtil.login();
         Assert.assertNotNull("Token", token);
         Assert.assertNotEquals("Token", "", token);
-        logOut(token);
+        SecurityUtil.logOut(token);
     }
     
     @Test
 	@Ignore
     public void testLoginOK_Admin() throws Exception {
     	Entry<String, String> adminCredential = SecurityUtil.getAdminCredential();
-    	String token = login(adminCredential.getKey(), adminCredential.getValue(), securityUrl.toURL());
+    	String token = SecurityUtil.login(adminCredential.getKey(), adminCredential.getValue());
         Assert.assertNotNull("Token", token);
         Assert.assertNotEquals("Token", "", token);
-        logOut(token);
+        SecurityUtil.logOut(token);
     }
     
     @Test
@@ -93,53 +90,58 @@ public class SecurityTest {
         Assert.assertThrows(
         		NotAuthorizedException.class, 
                 () -> {
-                    login(credential.getKey(), "Invalid", securityUrl.toURL());
+                    SecurityUtil.login(credential.getKey(), "Invalid");
                 }
         );
-        String token = login(credential.getKey(), credential.getValue(), securityUrl.toURL());
+        String token = SecurityUtil.login(credential.getKey(), credential.getValue());
 		Assert.assertNotNull("Token", token);
 		Assert.assertFalse("Token", token.isEmpty());
-		logOut(token);
+		SecurityUtil.logOut(token);
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginEmptyUser() throws Exception{
-        login("", "Any_Role1*", securityUrl.toURL());
+    	SecurityUtil.login("", "Any_Role1*");
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginBlankUser() throws Exception{
-        login("     ", "Any_Role1*", securityUrl.toURL());
+    	SecurityUtil.login("     ", "Any_Role1*");
     }
     
     @Test(expected = NotAuthorizedException.class)
     public void testLoginInvalidUser() throws Exception{
-        login("Invalid", "Any_Role1*", securityUrl.toURL());
+    	SecurityUtil.login("Invalid", "Any_Role1*");
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginEmptyPassword() throws Exception{
     	Entry<String, String> credential = SecurityUtil.peekCredential();
-        login(credential.getKey(), "", securityUrl.toURL());
+    	SecurityUtil.login(credential.getKey(), "");
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginBlankPassword() throws Exception{
     	Entry<String, String> credential = SecurityUtil.peekCredential();
-        login(credential.getValue(), "    ", securityUrl.toURL());
+    	SecurityUtil.login(credential.getValue(), "    ");
     }
     
     @Test(expected = NotAuthorizedException.class)
     public void testLoginInvalidPassword() throws Exception{
     	Entry<String, String> credential = SecurityUtil.peekCredential();
-        login(credential.getKey(), "Invalid", securityUrl.toURL());
+    	SecurityUtil.login(credential.getKey(), "Invalid");
     }
     
     @Test(expected = NotAuthorizedException.class)
     public void testLoginInvalidPasswordAfterLoginOK() throws Exception{
     	Entry<String, String> credential = SecurityUtil.peekCredential();
-        login(credential.getKey(), credential.getValue(), securityUrl.toURL());
-        login(credential.getKey(), "Invalid", securityUrl.toURL());
+    	String token = SecurityUtil.login(credential.getKey(), credential.getValue());
+    	try {
+        	SecurityUtil.login(credential.getKey(), "Invalid");
+    	}
+    	finally {
+        	SecurityUtil.logOut(token);
+    	}
     }
     
     @Test(expected = BadRequestException.class)
@@ -183,7 +185,7 @@ public class SecurityTest {
     @Test
     public void testAuthenticateOK() throws Exception{
     	Entry<String, String> credential = SecurityUtil.peekCredential();
-        String token = login(credential.getKey(), credential.getValue(), securityUrl.toURL());
+        String token = SecurityUtil.login(credential.getKey(), credential.getValue());
         Token jwt = authenticate(token);
         Assert.assertNotNull("Token", jwt);
         Assert.assertNotNull("Token.audience", jwt.getAudience());
@@ -227,7 +229,7 @@ public class SecurityTest {
         Assert.assertEquals("Token.claims.size", 2, jwt.getClaims().size());
         //Assert.assertEquals("Token.claims.full_name", "Any Role 1", jwt.getClaims().get("full_name"));
         Assert.assertEquals("Token.claims.email", String.format("%s@openup.org", credential.getKey()) , jwt.getClaims().get("email"));
-        logOut(token);
+        SecurityUtil.logOut(token);
     }
     
     @Ignore
@@ -251,62 +253,58 @@ public class SecurityTest {
     @Test(expected = NotAuthorizedException.class)
     public void testLogoutOK() throws Exception {
     	Entry<String, String> credential = SecurityUtil.peekCredential();
-        String token = login(credential.getKey(), credential.getValue(), securityUrl.toURL());
-        logOut(token);
+        String token = SecurityUtil.login(credential.getKey(), credential.getValue());
+        SecurityUtil.logOut(token);
         authenticate(token);
     }
     
     @Test
     public void testUpdateOk_Password() throws Exception {
     	Entry<String, String> credential = SecurityUtil.peekCredential();
-    	String token = login(credential.getKey(), credential.getValue(), securityUrl.toURL());
+    	String token = SecurityUtil.login(credential.getKey(), credential.getValue());
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
     		Response response = Security.update(client, credential.getValue() + "1");
-    		System.out.println(String.format("SecurityTest.testUpdateOk_Password(\"%s\",\"%s\"", credential.getKey(), credential.getValue() + "1"));
     		Assert.assertEquals("Response.status", Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
     	}
-    	logOut(token);
-    	token = login(credential.getKey(), credential.getValue() + "1", securityUrl.toURL());
+    	SecurityUtil.logOut(token);
+    	token = SecurityUtil.login(credential.getKey(), credential.getValue() + "1");
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
     		Response response = Security.update(client, credential.getValue());
-    		System.out.println(String.format("SecurityTest.testUpdateOk_Password(\"%s\",\"%s\"", credential.getKey(), credential.getValue()));
     		Assert.assertEquals("Response.status", Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
     	}
-    	logOut(token);
+    	SecurityUtil.logOut(token);
     }
     
     @Test
     public void testUpdateInvalid_PasswordNull() throws Exception {
     	Entry<String, String> credential = SecurityUtil.peekCredential();
-    	String token = login(credential.getKey(), credential.getValue(), securityUrl.toURL());
+    	String token = SecurityUtil.login(credential.getKey(), credential.getValue());
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
     		Response response = Security.update(client, null);
-    		System.out.println(String.format("SecurityTest.testUpdateInvalid_PasswordNull(\"%s\",\"%s\"", credential.getKey(), credential.getValue()));
     		Assert.assertEquals("Response.status", Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     	}
-    	logOut(token);
+    	SecurityUtil.logOut(token);
     }
     
     @Test
     public void testUpdateInvalid_PasswordEmpty() throws Exception {
     	Entry<String, String> credential = SecurityUtil.peekCredential();
-    	String token = login(credential.getKey(), credential.getValue(), securityUrl.toURL());
+    	String token = SecurityUtil.login(credential.getKey(), credential.getValue());
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
     		Response response = Security.update(client, "");
-    		System.out.println(String.format("SecurityTest.testUpdateInvalid_PasswordEmpty(\"%s\",\"%s\"", credential.getKey(), credential.getValue()));
     		Assert.assertEquals("Response.status", Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     	}
-    	logOut(token);
+    	SecurityUtil.logOut(token);
     }
     
     @Test
     public void testRevokeOk() throws Exception {
     	Entry<String, String> credential = SecurityUtil.peekCredential();
-    	final String token = login(credential.getKey(), credential.getValue(), securityUrl.toURL());
+    	final String token = SecurityUtil.login(credential.getKey(), credential.getValue());
     	Token jwt = authenticate(token);
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
@@ -318,14 +316,14 @@ public class SecurityTest {
     		Token newJwt = authenticate(newToken);
     		Assert.assertNotNull("Token", newJwt);
     		Assert.assertNotEquals("Token.tokenID", jwt.getTokenID(), newJwt.getTokenID());
-    		logOut(newToken);
+    		SecurityUtil.logOut(newToken);
     	}
     }
     
     @Test
     public void testRevokeOk_AfterRevoke() throws Exception {
     	Entry<String, String> credential = SecurityUtil.peekCredential();
-    	final String token = login(credential.getKey(), credential.getValue(), securityUrl.toURL());
+    	final String token = SecurityUtil.login(credential.getKey(), credential.getValue());
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		String newToken = revoke(token);
     		Token newJwt = authenticate(newToken);
@@ -334,7 +332,7 @@ public class SecurityTest {
     		Token newJwt2 = authenticate(newToken2);
     		Assert.assertNotNull("Token", newJwt2);
     		Assert.assertNotEquals("Token.tokenID", newJwt.getTokenID(), newJwt2.getTokenID());
-    		logOut(newToken2);
+    		SecurityUtil.logOut(newToken2);
     	}
     }
 }

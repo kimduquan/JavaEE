@@ -14,6 +14,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import epf.client.gateway.GatewayUtil;
 import epf.client.persistence.Entities;
 import epf.messaging.client.MessageDecoder;
@@ -33,10 +34,13 @@ import epf.work_products.schema.section.Illustrations;
 import epf.work_products.schema.section.MoreInformation;
 import epf.work_products.schema.section.Relationships;
 import epf.work_products.schema.section.Tailoring;
-
 import org.junit.Test;
+import org.junit.rules.TestName;
 
 public class ListenerTest {
+	
+	@Rule
+    public TestName testName = new TestName();
 	
 	private static int timeout = 60;
 	private static URI persistenceUrl;

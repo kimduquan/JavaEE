@@ -15,7 +15,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
 import epf.client.cache.Cache;
 import epf.tests.TestUtil;
 import epf.tests.client.ClientUtil;
@@ -39,6 +41,9 @@ import epf.naming.Naming;
  *
  */
 public class CacheTest {
+	
+	@Rule
+    public TestName testName = new TestName();
 	
 	static URI cacheUrl;
 	static String token;

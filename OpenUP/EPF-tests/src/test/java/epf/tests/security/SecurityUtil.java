@@ -33,7 +33,8 @@ public class SecurityUtil {
     public static void logOut(String token) throws Exception {
     	try(Client client = ClientUtil.newClient(GatewayUtil.get(Naming.SECURITY))){
     		client.authorization(token);
-    		token = Security.logOut(client);
+    		String userName = Security.logOut(client);
+        	System.out.println(String.format("SecurityUtil.logOut(\"%s\")", userName));
     	}
     }
     
@@ -79,7 +80,7 @@ public class SecurityUtil {
     	}
     	Entry<String, String> credential = credentials.poll();
     	credentials.add(credential);
-    	System.out.println(String.format("SecurityUtil.peekCredential(\"%s\",\"%s\")", credential.getKey(), credential.getValue()));
+    	System.out.println(String.format("SecurityUtil.peekCredential(\"%s\")", credential.getKey(), credential.getValue()));
     	return credential;
     }
     
@@ -89,6 +90,7 @@ public class SecurityUtil {
     }
     
     public static Entry<String, String> getAdminCredential(){
+    	System.out.println(String.format("SecurityUtil.getAdminCredential()"));
     	return new AbstractMap.SimpleImmutableEntry<>("epf", "Password1234****");
     }
 }

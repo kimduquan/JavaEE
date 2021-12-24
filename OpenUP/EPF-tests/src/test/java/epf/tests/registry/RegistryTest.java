@@ -14,7 +14,9 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
 import epf.client.gateway.GatewayUtil;
 import epf.client.registry.Registry;
 import epf.client.util.Client;
@@ -23,6 +25,9 @@ import epf.tests.client.ClientUtil;
 import epf.util.logging.LogManager;
 
 public class RegistryTest {
+	
+	@Rule
+    public TestName testName = new TestName();
 
 	private static final Logger logger = LogManager.getLogger(RegistryTest.class.getName());
 	private static URI registryUrl;

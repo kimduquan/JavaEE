@@ -11,6 +11,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import epf.client.gateway.GatewayUtil;
 import epf.messaging.client.Client;
 import epf.messaging.client.Messaging;
@@ -29,10 +30,13 @@ import epf.work_products.schema.section.Illustrations;
 import epf.work_products.schema.section.MoreInformation;
 import epf.work_products.schema.section.Relationships;
 import epf.work_products.schema.section.Tailoring;
-
 import org.junit.Test;
+import org.junit.rules.TestName;
 
 public class MessagingTest {
+	
+	@Rule
+    public TestName testName = new TestName();
 	
 	private static URI listenerUrl;
 	private static String token;

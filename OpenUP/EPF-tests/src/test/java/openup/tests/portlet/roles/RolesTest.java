@@ -12,6 +12,8 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.MethodRule;
+import org.junit.rules.TestName;
+
 import epf.tests.portlet.PortletView;
 import epf.tests.portlet.WebDriverUtil;
 import epf.tests.portlet.security.Security;
@@ -23,6 +25,9 @@ import jakarta.inject.Inject;
  */
 @Ignore
 public class RolesTest {
+	
+	@Rule
+    public TestName testName = new TestName();
 
 	@ClassRule
     public static WeldInitiator weld = WeldInitiator.from(

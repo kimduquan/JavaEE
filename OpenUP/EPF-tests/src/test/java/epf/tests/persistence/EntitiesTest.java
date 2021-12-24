@@ -29,13 +29,18 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
 
 /**
  *
  * @author FOXCONN
  */
 public class EntitiesTest {
+	
+	@Rule
+    public TestName testName = new TestName();
 	
 	private static URI persistenceUrl;
     private static String token;

@@ -13,7 +13,9 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
 import epf.client.schedule.Schedule;
 import epf.client.util.Client;
 import epf.naming.Naming;
@@ -28,6 +30,9 @@ import epf.util.config.ConfigUtil;
  *
  */
 public class ScheduleTest {
+	
+	@Rule
+    public TestName testName = new TestName();
 	
 	static URI scheduleUrl;
 	static Client client;

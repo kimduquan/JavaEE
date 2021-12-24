@@ -12,7 +12,9 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
 import epf.client.schema.Entity;
 import epf.client.schema.Schema;
 import epf.client.util.Client;
@@ -26,6 +28,9 @@ import epf.client.gateway.GatewayUtil;
  *
  */
 public class SchemaTest {
+	
+	@Rule
+    public TestName testName = new TestName();
 	
 	private static URI schemaUrl;
     private static String token;

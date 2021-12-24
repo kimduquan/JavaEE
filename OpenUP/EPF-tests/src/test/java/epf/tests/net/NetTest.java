@@ -7,7 +7,9 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
 import epf.client.gateway.GatewayUtil;
 import epf.client.net.Net;
 import epf.client.persistence.Entities;
@@ -19,6 +21,9 @@ import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
 
 public class NetTest {
+	
+	@Rule
+    public TestName testName = new TestName();
 	
 	private static String token;
 	private static URI netUrl;

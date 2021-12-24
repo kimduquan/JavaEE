@@ -24,7 +24,9 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
 import epf.client.gateway.GatewayUtil;
 import epf.client.util.Client;
 import epf.file.util.PathUtil;
@@ -37,6 +39,9 @@ import epf.tests.security.SecurityUtil;
  *
  */
 public class FilesTest {
+	
+	@Rule
+    public TestName testName = new TestName();
 	
 	private static Entry<String, String> credential;
 	private static String token;

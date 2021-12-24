@@ -12,7 +12,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
 import epf.client.script.Script;
 import epf.client.util.Client;
 import epf.naming.Naming;
@@ -25,6 +27,9 @@ import epf.client.gateway.GatewayUtil;
  *
  */
 public class ScriptTest {
+	
+	@Rule
+    public TestName testName = new TestName();
 	
 	static URI scriptUrl;
 	static String token;

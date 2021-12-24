@@ -11,6 +11,7 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.MethodRule;
+import org.junit.rules.TestName;
 import epf.tests.portlet.PortletView;
 import epf.tests.portlet.WebDriverUtil;
 import epf.tests.security.SecurityUtil;
@@ -21,6 +22,9 @@ import jakarta.inject.Inject;
  *
  */
 public class PrincipalTest {
+	
+	@Rule
+    public TestName testName = new TestName();
 	
 	Entry<String, String> cred;
 	

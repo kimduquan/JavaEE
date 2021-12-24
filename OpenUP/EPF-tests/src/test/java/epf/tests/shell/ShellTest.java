@@ -23,7 +23,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
+
 import epf.client.schema.Entity;
 import epf.file.util.PathUtil;
 import epf.naming.Naming;
@@ -48,6 +51,9 @@ import epf.work_products.schema.section.Tailoring;
  *
  */
 public class ShellTest {
+	
+	@Rule
+    public TestName testName = new TestName();
 	
 	private static Path workingDir;
 	private static Path tempDir;
