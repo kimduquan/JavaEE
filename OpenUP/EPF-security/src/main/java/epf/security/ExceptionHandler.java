@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.security;
 
 import java.io.Serializable;
@@ -38,6 +33,7 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
      */
     @Override
     public Response toResponse(final Exception exception) {
+    	exception.printStackTrace();
         return handle(exception);
     }
     
