@@ -11,11 +11,8 @@ import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.tests.client.ClientUtil;
 import epf.tests.security.SecurityUtil;
-import epf.util.logging.LogManager;
 import java.net.URI;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
@@ -33,7 +30,6 @@ import org.junit.Ignore;
  */
 public class QueriesTest {
     
-	private static final Logger logger = LogManager.getLogger(QueriesTest.class.getName());
 	private static URI persistenceUrl;
     private static String token;
     private Client client;
@@ -45,7 +41,7 @@ public class QueriesTest {
     }
     
     @AfterClass
-    public static void afterClass(){
+    public static void afterClass() throws Exception{
     	SecurityUtil.logOut(token);
     }
     
@@ -56,18 +52,13 @@ public class QueriesTest {
     }
     
     @After
-    public void after() {
-    	try {
-			client.close();
-		} 
-    	catch (Exception e) {
-    		logger.log(Level.WARNING, "after", e);
-		}
+    public void after() throws Exception {
+    	client.close();
     }
     
     @Test
     @Ignore
-    public void testSearchOK() {
+    public void testSearchOK() throws Exception {
     	Set<Link> entityLinks = Queries.search(client, "Any", 0, 100).getLinks();
     	Assert.assertFalse("Response.links.empty", entityLinks.isEmpty());
     	entityLinks.forEach(entityLink -> {
@@ -85,7 +76,7 @@ public class QueriesTest {
     			Assert.assertNotNull("Link.entity", entity);
     		} 
     		catch (Exception e) {
-				logger.log(Level.SEVERE, entityLink.toString(), e);
+				e.printStackTrace();
 			}
     	});
     }

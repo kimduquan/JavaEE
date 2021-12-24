@@ -13,7 +13,6 @@ import epf.naming.Naming;
 import epf.tests.client.ClientUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
-import epf.util.logging.LogManager;
 import epf.work_products.schema.Artifact;
 import epf.work_products.schema.WorkProducts;
 import epf.work_products.schema.section.Description;
@@ -22,8 +21,6 @@ import epf.work_products.schema.section.MoreInformation;
 import epf.work_products.schema.section.Relationships;
 import epf.work_products.schema.section.Tailoring;
 import java.net.URI;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import org.junit.After;
@@ -40,7 +37,6 @@ import org.junit.Test;
  */
 public class EntitiesTest {
 	
-	private static final Logger logger = LogManager.getLogger(EntitiesTest.class.getName());
 	private static URI persistenceUrl;
     private static String token;
     private Client client;
@@ -52,7 +48,7 @@ public class EntitiesTest {
     }
     
     @AfterClass
-    public static void afterClass(){
+    public static void afterClass() throws Exception{
     	SecurityUtil.logOut(token);
     }
     
@@ -63,13 +59,8 @@ public class EntitiesTest {
     }
     
     @After
-    public void after() {
-    	try {
-			client.close();
-		} 
-    	catch (Exception e) {
-    		logger.log(Level.WARNING, "after", e);
-		}
+    public void after() throws Exception {
+    	client.close();
     }
     
     @Test

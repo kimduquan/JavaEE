@@ -50,7 +50,7 @@ public class MessagingTest {
     }
     
     @AfterClass
-    public static void afterClass(){
+    public static void afterClass() throws Exception{
     	SecurityUtil.logOut(token);
     }
     

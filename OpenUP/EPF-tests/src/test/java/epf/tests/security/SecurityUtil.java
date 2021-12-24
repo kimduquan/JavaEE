@@ -11,13 +11,10 @@ import epf.naming.Naming;
 import epf.security.client.Security;
 import epf.security.schema.Token;
 import epf.tests.client.ClientUtil;
-import epf.util.logging.LogManager;
 import java.util.Map.Entry;
 import java.util.AbstractMap;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -25,8 +22,6 @@ import java.util.logging.Logger;
  */
 public class SecurityUtil {
     
-	private static final Logger logger = LogManager.getLogger(SecurityUtil.class.getName());
-	
 	private static final Queue<Entry<String, String>> credentials = new ConcurrentLinkedQueue<>();
     
 	public static String login(String username, String password) throws Exception {
@@ -35,13 +30,10 @@ public class SecurityUtil {
     	}
     }
     
-    public static void logOut(String token) {
+    public static void logOut(String token) throws Exception {
     	try(Client client = ClientUtil.newClient(GatewayUtil.get(Naming.SECURITY))){
     		client.authorization(token);
     		token = Security.logOut(client);
-    	}
-    	catch(Exception ex) {
-    		logger.log(Level.SEVERE, "logOut", ex);
     	}
     }
     

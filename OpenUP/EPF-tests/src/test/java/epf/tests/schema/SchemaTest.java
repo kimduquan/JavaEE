@@ -5,8 +5,6 @@ package epf.tests.schema;
 
 import java.net.URI;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import org.junit.After;
@@ -20,9 +18,7 @@ import epf.client.schema.Schema;
 import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.tests.client.ClientUtil;
-import epf.tests.persistence.EntitiesTest;
 import epf.tests.security.SecurityUtil;
-import epf.util.logging.LogManager;
 import epf.client.gateway.GatewayUtil;
 
 /**
@@ -31,7 +27,6 @@ import epf.client.gateway.GatewayUtil;
  */
 public class SchemaTest {
 	
-	private static final Logger logger = LogManager.getLogger(EntitiesTest.class.getName());
 	private static URI schemaUrl;
     private static String token;
     private Client client;
@@ -67,12 +62,7 @@ public class SchemaTest {
 	 */
 	@After
 	public void tearDown() throws Exception {
-		try {
-			client.close();
-		} 
-    	catch (Exception e) {
-    		logger.log(Level.WARNING, "after", e);
-		}
+		client.close();
 	}
 	
     @Test

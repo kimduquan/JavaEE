@@ -41,7 +41,7 @@ public class SecurityTest {
     	securityUrl = GatewayUtil.get(Naming.SECURITY);
     }
     
-    String login(String username, String password, URL targetUrl, boolean needHash) throws Exception{
+    String login(String username, String password, URL targetUrl) throws Exception{
         try(Client client = ClientUtil.newClient(securityUrl)){
         	return Security.login(client, username, password, targetUrl);
         }
@@ -71,7 +71,7 @@ public class SecurityTest {
     @Test
     public void testLoginOK() throws Exception {
     	Entry<String, String> credential = SecurityUtil.peekCredential();
-    	String token = login(credential.getKey(), credential.getValue(), securityUrl.toURL(), true);
+    	String token = login(credential.getKey(), credential.getValue(), securityUrl.toURL());
         Assert.assertNotNull("Token", token);
         Assert.assertNotEquals("Token", "", token);
         logOut(token);
@@ -81,7 +81,7 @@ public class SecurityTest {
 	@Ignore
     public void testLoginOK_Admin() throws Exception {
     	Entry<String, String> adminCredential = SecurityUtil.getAdminCredential();
-    	String token = login(adminCredential.getKey(), adminCredential.getValue(), securityUrl.toURL(), true);
+    	String token = login(adminCredential.getKey(), adminCredential.getValue(), securityUrl.toURL());
         Assert.assertNotNull("Token", token);
         Assert.assertNotEquals("Token", "", token);
         logOut(token);
@@ -93,10 +93,10 @@ public class SecurityTest {
         Assert.assertThrows(
         		NotAuthorizedException.class, 
                 () -> {
-                    login(credential.getKey(), "Invalid", securityUrl.toURL(), true);
+                    login(credential.getKey(), "Invalid", securityUrl.toURL());
                 }
         );
-        String token = login(credential.getKey(), credential.getValue(), securityUrl.toURL(), true);
+        String token = login(credential.getKey(), credential.getValue(), securityUrl.toURL());
 		Assert.assertNotNull("Token", token);
 		Assert.assertFalse("Token", token.isEmpty());
 		logOut(token);
@@ -104,48 +104,48 @@ public class SecurityTest {
     
     @Test(expected = BadRequestException.class)
     public void testLoginEmptyUser() throws Exception{
-        login("", "Any_Role1*", securityUrl.toURL(), false);
+        login("", "Any_Role1*", securityUrl.toURL());
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginBlankUser() throws Exception{
-        login("     ", "Any_Role1*", securityUrl.toURL(), false);
+        login("     ", "Any_Role1*", securityUrl.toURL());
     }
     
     @Test(expected = NotAuthorizedException.class)
     public void testLoginInvalidUser() throws Exception{
-        login("Invalid", "Any_Role1*", securityUrl.toURL(), true);
+        login("Invalid", "Any_Role1*", securityUrl.toURL());
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginEmptyPassword() throws Exception{
     	Entry<String, String> credential = SecurityUtil.peekCredential();
-        login(credential.getKey(), "", securityUrl.toURL(), false);
+        login(credential.getKey(), "", securityUrl.toURL());
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginBlankPassword() throws Exception{
     	Entry<String, String> credential = SecurityUtil.peekCredential();
-        login(credential.getValue(), "    ", securityUrl.toURL(), false);
+        login(credential.getValue(), "    ", securityUrl.toURL());
     }
     
     @Test(expected = NotAuthorizedException.class)
     public void testLoginInvalidPassword() throws Exception{
     	Entry<String, String> credential = SecurityUtil.peekCredential();
-        login(credential.getKey(), "Invalid", securityUrl.toURL(), true);
+        login(credential.getKey(), "Invalid", securityUrl.toURL());
     }
     
     @Test(expected = NotAuthorizedException.class)
     public void testLoginInvalidPasswordAfterLoginOK() throws Exception{
     	Entry<String, String> credential = SecurityUtil.peekCredential();
-        login(credential.getKey(), credential.getValue(), securityUrl.toURL(), true);
-        login(credential.getKey(), "Invalid", securityUrl.toURL(), true);
+        login(credential.getKey(), credential.getValue(), securityUrl.toURL());
+        login(credential.getKey(), "Invalid", securityUrl.toURL());
     }
     
     @Test(expected = BadRequestException.class)
     public void testLoginEmptyUrl() throws Exception{
     	Entry<String, String> credential = SecurityUtil.peekCredential();
-        login(credential.getKey(), credential.getValue(), null, false);
+        login(credential.getKey(), credential.getValue(), null);
     }
     
     @Test(expected = BadRequestException.class)
@@ -183,7 +183,7 @@ public class SecurityTest {
     @Test
     public void testAuthenticateOK() throws Exception{
     	Entry<String, String> credential = SecurityUtil.peekCredential();
-        String token = login(credential.getKey(), credential.getValue(), securityUrl.toURL(), true);
+        String token = login(credential.getKey(), credential.getValue(), securityUrl.toURL());
         Token jwt = authenticate(token);
         Assert.assertNotNull("Token", jwt);
         Assert.assertNotNull("Token.audience", jwt.getAudience());
@@ -251,7 +251,7 @@ public class SecurityTest {
     @Test(expected = NotAuthorizedException.class)
     public void testLogoutOK() throws Exception {
     	Entry<String, String> credential = SecurityUtil.peekCredential();
-        String token = login(credential.getKey(), credential.getValue(), securityUrl.toURL(), true);
+        String token = login(credential.getKey(), credential.getValue(), securityUrl.toURL());
         logOut(token);
         authenticate(token);
     }
@@ -259,7 +259,7 @@ public class SecurityTest {
     @Test
     public void testUpdateOk_Password() throws Exception {
     	Entry<String, String> credential = SecurityUtil.peekCredential();
-    	String token = login(credential.getKey(), credential.getValue(), securityUrl.toURL(), true);
+    	String token = login(credential.getKey(), credential.getValue(), securityUrl.toURL());
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
     		Response response = Security.update(client, credential.getValue() + "1");
@@ -267,7 +267,7 @@ public class SecurityTest {
     		Assert.assertEquals("Response.status", Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
     	}
     	logOut(token);
-    	token = login(credential.getKey(), credential.getValue() + "1", securityUrl.toURL(), true);
+    	token = login(credential.getKey(), credential.getValue() + "1", securityUrl.toURL());
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
     		Response response = Security.update(client, credential.getValue());
@@ -280,7 +280,7 @@ public class SecurityTest {
     @Test
     public void testUpdateInvalid_PasswordNull() throws Exception {
     	Entry<String, String> credential = SecurityUtil.peekCredential();
-    	String token = login(credential.getKey(), credential.getValue(), securityUrl.toURL(), true);
+    	String token = login(credential.getKey(), credential.getValue(), securityUrl.toURL());
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
     		Response response = Security.update(client, null);
@@ -293,7 +293,7 @@ public class SecurityTest {
     @Test
     public void testUpdateInvalid_PasswordEmpty() throws Exception {
     	Entry<String, String> credential = SecurityUtil.peekCredential();
-    	String token = login(credential.getKey(), credential.getValue(), securityUrl.toURL(), true);
+    	String token = login(credential.getKey(), credential.getValue(), securityUrl.toURL());
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
     		Response response = Security.update(client, "");
@@ -306,7 +306,7 @@ public class SecurityTest {
     @Test
     public void testRevokeOk() throws Exception {
     	Entry<String, String> credential = SecurityUtil.peekCredential();
-    	final String token = login(credential.getKey(), credential.getValue(), securityUrl.toURL(), true);
+    	final String token = login(credential.getKey(), credential.getValue(), securityUrl.toURL());
     	Token jwt = authenticate(token);
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
@@ -325,7 +325,7 @@ public class SecurityTest {
     @Test
     public void testRevokeOk_AfterRevoke() throws Exception {
     	Entry<String, String> credential = SecurityUtil.peekCredential();
-    	final String token = login(credential.getKey(), credential.getValue(), securityUrl.toURL(), true);
+    	final String token = login(credential.getKey(), credential.getValue(), securityUrl.toURL());
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		String newToken = revoke(token);
     		Token newJwt = authenticate(newToken);

@@ -133,7 +133,7 @@ public class ShellTest {
 	}
 
 	@Test
-	public void testSecurity_Login() throws IOException, InterruptedException {
+	public void testSecurity_Login() throws Exception {
 		Entry<String, String> credential = SecurityUtil.peekCredential();
 		builder = ShellUtil.command(builder, "./epf", Naming.SECURITY, "login", "-u", credential.getKey(), "-p");
 		process = builder.start();

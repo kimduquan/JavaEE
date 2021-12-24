@@ -245,6 +245,7 @@ public class FilesTest {
 			otherClient.authorization(otherToken);
 			otherClient.request(target -> target, req -> req).delete();
 		}
+		SecurityUtil.logOut(otherToken);
 	}
 	
 	@Test(expected = ForbiddenException.class)
