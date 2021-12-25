@@ -6,8 +6,8 @@
         <artifactId>OpenUP-parent</artifactId>
         <version>1.0.0</version>
     </parent>
-    <artifactId>EPF-persistence-schema</artifactId>
-    <name>Eclipse Process Framework Persistence Schema</name>
+    <artifactId>EPF-schema</artifactId>
+    <name>Eclipse Process Framework Schema</name>
     <packaging>war</packaging>
     <dependencies>
 		<!-- https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api -->

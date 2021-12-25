@@ -69,7 +69,7 @@
 	<application id="EPF-planning" name="EPF-planning" context-root="planning" location="EPF-planning-1.0.0.war" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-	<application id="EPF-persistence" name="EPF-persistence" context-root="persistence" location="EPF-persistence-1.0.0.war" startAfterRef="EPF-persistence-schema,EPF-messaging" >
+	<application id="EPF-persistence" name="EPF-persistence" context-root="persistence" location="EPF-persistence-1.0.0.war" startAfterRef="EPF-schema,EPF-messaging" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
 	<application id="EPF-security" name="EPF-security" context-root="security" location="EPF-security-1.0.0.war" startAfterRef="EPF-persistence" >
@@ -97,7 +97,7 @@
     <application id="EPF-net" name="EPF-net" context-root="net" location="EPF-net-1.0.0.war" startAfterRef="EPF-messaging" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-    <application id="EPF-persistence-schema" name="EPF-persistence-schema" context-root="persistence-schema" location="EPF-persistence-schema-1.0.0.war" startAfterRef="EPF-messaging" >
+    <application id="EPF-schema" name="EPF-schema" context-root="schema" location="EPF-schema-1.0.0.war">
         <classloader apiTypeVisibility="+third-party"/>
     </application>
     

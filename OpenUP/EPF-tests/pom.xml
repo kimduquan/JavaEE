@@ -138,7 +138,7 @@
         </dependency>
         <dependency>
             <groupId>openup</groupId>
-            <artifactId>EPF-persistence-schema</artifactId>
+            <artifactId>EPF-schema</artifactId>
             <version>${project.version}</version>
 			<type>war</type>
         </dependency>
