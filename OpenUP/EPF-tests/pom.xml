@@ -41,7 +41,6 @@
 		<liberty.env.epf_batch_api_url>https://localhost:9443/ibm/</liberty.env.epf_batch_api_url>
 		<liberty.env.epf_net_url>https://localhost:9443/net/net/</liberty.env.epf_net_url>
 		<liberty.env.openup_delivery_processes_url>https://localhost:9443/delivery-processes/delivery-processes/</liberty.env.openup_delivery_processes_url>
-		<liberty.env.openup_roles_url>https://localhost:9443/roles/roles/</liberty.env.openup_roles_url>
 		<liberty.env.openup_tasks_url>https://localhost:9443/tasks/tasks/</liberty.env.openup_tasks_url>
 		<liberty.env.openup_work_products_url>https://localhost:9443/work-products/work-products/</liberty.env.openup_work_products_url>
 		<liberty.env.openup_gateway_url>https://localhost:9443/openup/gateway/</liberty.env.openup_gateway_url>
@@ -393,7 +392,6 @@
 						<epf.batch.api.url>https://localhost:${httpsPort}/ibm/</epf.batch.api.url>
 						<epf.net.url>https://localhost:${httpsPort}/net/net/</epf.net.url>
 						<openup.delivery_processes.url>https://localhost:${httpsPort}/delivery-processes/delivery-processes/</openup.delivery_processes.url>
-						<openup.roles.url>https://localhost:${httpsPort}/roles/roles/</openup.roles.url>
 						<openup.tasks.url>https://localhost:${httpsPort}/tasks/tasks/</openup.tasks.url>
 						<openup.work_products.url>https://localhost:${httpsPort}/work-products/work-products/</openup.work_products.url>
 						<openup.gateway.url>https://localhost:${httpsPort}/openup/gateway/</openup.gateway.url>

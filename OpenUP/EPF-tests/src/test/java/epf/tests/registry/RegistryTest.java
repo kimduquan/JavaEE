@@ -88,7 +88,6 @@ public class RegistryTest {
 	    	URI langUrl = UriBuilder.fromUri(GatewayUtil.get("lang")).scheme("ws").port(9080).build();
 	    	expected.add(langUrl);
 	    	expected.add(GatewayUtil.get("delivery-processes"));
-	    	expected.add(GatewayUtil.get("roles"));
 	    	expected.add(GatewayUtil.get("tasks"));
 	    	expected.add(GatewayUtil.get("work-products"));
 		} 

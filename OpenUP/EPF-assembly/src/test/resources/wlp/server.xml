@@ -18,7 +18,8 @@
         <feature>jca-1.7</feature>
         <feature>jsf-2.3</feature>
     </featureManager>
-
+    
+	<variable name="io.openliberty.enableGraphQLUI" value="true" />
     <httpEndpoint id="defaultHttpEndpoint"
                   host="localhost"
                   httpPort="80"
@@ -68,7 +69,7 @@
 	<application id="EPF-planning" name="EPF-planning" context-root="planning" location="EPF-planning-1.0.0.war" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-	<application id="EPF-persistence" name="EPF-persistence" context-root="persistence" location="EPF-persistence-1.0.0.war" startAfterRef="EPF-messaging" >
+	<application id="EPF-persistence" name="EPF-persistence" context-root="persistence" location="EPF-persistence-1.0.0.war" startAfterRef="EPF-schema,EPF-messaging" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
 	<application id="EPF-security" name="EPF-security" context-root="security" location="EPF-security-1.0.0.war" startAfterRef="EPF-persistence" >
@@ -93,11 +94,9 @@
     <application id="EPF-net" name="EPF-net" context-root="net" location="EPF-net-1.0.0.war" startAfterRef="EPF-messaging" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-    
-    <!-- H2 Library Configuration -->
-    <library id="H2JDBCLib">
-        <fileset dir="${shared.resource.dir}/epf/persistence/h2" includes="*.jar"/>
-    </library>
+    <application id="EPF-schema" name="EPF-schema" context-root="schema" location="EPF-schema-1.0.0.war">
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
     
     <!-- EPF Library Configuration -->
     <library id="EPFLib">
@@ -123,77 +122,17 @@
     </mpJwt>
 
 	<dataSource id="epf" jndiName="jdbc/epf">
-        <jdbcDriver 
-            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
-            libraryRef="H2JDBCLib" />
-        <properties URL="jdbc:h2:~/EPF;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE" />
-    </dataSource>
-    <dataSource id="epf_delivery_processes" jndiName="jdbc/epf_delivery_processes">
-        <jdbcDriver 
-            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
-            libraryRef="H2JDBCLib" />
-        <properties URL="jdbc:h2:~/EPF;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE;SCHEMA=EPF_DELIVERY_PROCESSES" />
-    </dataSource>
-    <dataSource id="epf_roles" jndiName="jdbc/epf_roles">
-        <jdbcDriver 
-            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
-            libraryRef="H2JDBCLib" />
-        <properties URL="jdbc:h2:~/EPF;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE;SCHEMA=EPF_ROLES" />
-    </dataSource>
-    <dataSource id="epf_tasks" jndiName="jdbc/epf_tasks">
-        <jdbcDriver 
-            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
-            libraryRef="H2JDBCLib" />
-        <properties URL="jdbc:h2:~/EPF;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE;SCHEMA=EPF_TASKS" />
-    </dataSource>
-    <dataSource id="epf_work_products" jndiName="jdbc/epf_work_products">
-        <jdbcDriver 
-            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
-            libraryRef="H2JDBCLib" />
-        <properties URL="jdbc:h2:~/EPF;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE;SCHEMA=EPF_WORK_PRODUCTS" />
-    </dataSource>
-    <dataSource id="openup" jndiName="jdbc/openup">
-        <jdbcDriver 
-            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
-            libraryRef="H2JDBCLib" />
-        <properties URL="jdbc:h2:~/EPF;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE;SCHEMA=OPENUP" />
-    </dataSource>
-    <dataSource id="ft" jndiName="jdbc/ft">
-        <jdbcDriver 
-            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
-            libraryRef="H2JDBCLib" />
-        <properties URL="jdbc:h2:~/EPF;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE;SCHEMA=FT" />
-    </dataSource>
-    <dataSource id="epf_net" jndiName="jdbc/epf_net">
-        <jdbcDriver 
-            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
-            libraryRef="H2JDBCLib" />
-        <properties URL="jdbc:h2:~/EPF;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE;SCHEMA=EPF_NET" />
+        <jdbcDriver libraryRef="MySQLJDBCLib"/>
+    	<properties serverName="localhost" portNumber="3306" user="epf" password="Password1234****" />
     </dataSource>
     
     <library id="MySQLJDBCLib">
         <fileset dir="${shared.resource.dir}/epf/persistence" includes="*.jar"/>
     </library>
     
-    <!--<dataSource id="epf" jndiName="jdbc/epf">
+    <dataSource id="epf_schema" jndiName="jdbc/epf_schema">
         <jdbcDriver libraryRef="MySQLJDBCLib"/>
-    	<properties serverName="localhost" portNumber="3306" />
+    	<properties serverName="localhost" portNumber="3306" user="epf" password="Password1234****" />
     </dataSource>
 	<dataSource id="epf_delivery_processes" jndiName="jdbc/epf_delivery_processes">
         <jdbcDriver libraryRef="MySQLJDBCLib"/>
@@ -222,7 +161,11 @@
     <dataSource id="epf_net" jndiName="jdbc/epf_net">
         <jdbcDriver libraryRef="MySQLJDBCLib"/>
     	<properties serverName="localhost" portNumber="3306" />
-    </dataSource>-->
+    </dataSource>
+	<dataSource id="epf_security" jndiName="jdbc/epf_security">
+        <jdbcDriver libraryRef="MySQLJDBCLib"/>
+    	<properties serverName="localhost" portNumber="3306" />
+    </dataSource>
 
     <keyStore id="defaultKeyStore" password="password"/>
     
