@@ -440,13 +440,6 @@
                             <appsDirectory>apps</appsDirectory>
 							<copyDependencies>
 								<dependencyGroup>
-									<location>${project.build.directory}/shared/resources/epf/persistence/h2</location>
-	                                <dependency>
-	                                    <groupId>com.h2database</groupId>
-	                                    <artifactId>h2</artifactId>
-	                                </dependency>
-								</dependencyGroup>
-								<dependencyGroup>
 									<location>${project.build.directory}/shared/resources/epf/persistence</location>
 	                                <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 									<dependency>
@@ -474,7 +467,7 @@
                         <configuration>
                             <verifyTimeout>600</verifyTimeout>
                             <serverStartTimeout>600</serverStartTimeout>
-                            <applications>EPF-schedule,EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-persistence,EPF-registry,EPF-management,EPF-gateway,OpenUP-delivery-processes,OpenUP-roles,OpenUP-tasks,OpenUP-work-products</applications>
+                            <applications>EPF-schedule,EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-persistence,EPF-registry,EPF-management,EPF-gateway,OpenUP-delivery-processes,OpenUP-roles,OpenUP-tasks,OpenUP-work-products</applications>
                         </configuration>
                     </execution>
                     <!-- Stop the server -->
@@ -493,7 +486,7 @@
                     <deployPackages>dependencies</deployPackages>
 					<verifyTimeout>600</verifyTimeout>
 					<serverStartTimeout>600</serverStartTimeout>
-					<applications>EPF-schedule,EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-persistence,EPF-registry,EPF-management,EPF-gateway,OpenUP-delivery-processes,OpenUP-roles,OpenUP-tasks,OpenUP-work-products</applications>
+					<applications>EPF-schedule,EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-persistence,EPF-registry,EPF-management,EPF-gateway,OpenUP-delivery-processes,OpenUP-roles,OpenUP-tasks,OpenUP-work-products</applications>
                 </configuration>
             </plugin>
 			<plugin>

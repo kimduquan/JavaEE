@@ -8,7 +8,6 @@ import org.optaplanner.core.api.domain.solution.PlanningEntityCollectionProperty
 import org.optaplanner.core.api.domain.solution.PlanningSolution;
 import org.optaplanner.core.api.domain.solution.ProblemFactCollectionProperty;
 import org.optaplanner.core.api.domain.valuerange.ValueRangeProvider;
-
 import epf.delivery_processes.schema.DeliveryProcess;
 import epf.planning.schema.Activity;
 import epf.planning.schema.Artifact;

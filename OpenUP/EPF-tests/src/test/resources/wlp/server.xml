@@ -101,11 +101,6 @@
         <classloader apiTypeVisibility="+third-party"/>
     </application>
     
-    <!-- H2 Library Configuration -->
-    <library id="H2JDBCLib">
-        <fileset dir="${shared.resource.dir}/epf/persistence/h2" includes="*.jar"/>
-    </library>
-    
     <!-- EPF Library Configuration -->
     <library id="EPFLib">
         <fileset dir="${shared.resource.dir}/epf" includes="*.jar"/>
@@ -133,14 +128,6 @@
         <jdbcDriver libraryRef="MySQLJDBCLib"/>
     	<properties serverName="localhost" portNumber="3306" user="epf" password="Password1234****" />
     </dataSource>
-	<!--<dataSource id="epf" jndiName="jdbc/epf">
-        <jdbcDriver 
-            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
-            libraryRef="H2JDBCLib" />
-        <properties URL="jdbc:h2:~/EPF_test;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE" />
-    </dataSource>-->
     
     <library id="MySQLJDBCLib">
         <fileset dir="${shared.resource.dir}/epf/persistence" includes="*.jar"/>

@@ -116,7 +116,7 @@
         </dependency>
         <dependency>
             <groupId>openup</groupId>
-            <artifactId>OpenUP-schema</artifactId>
+            <artifactId>EPF-security-schema</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

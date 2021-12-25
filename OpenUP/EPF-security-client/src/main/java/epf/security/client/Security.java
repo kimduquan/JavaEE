@@ -116,10 +116,11 @@ public interface Security {
     
     /**
      * @return
+     * @throws Exception 
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    Token authenticate();
+    Token authenticate() throws Exception;
     
     /**
      * @param client
@@ -135,6 +136,7 @@ public interface Security {
     
     /**
      * @param info
+     * @throws Exception 
      */
     @PATCH
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -143,7 +145,7 @@ public interface Security {
     		@NotNull
     		@NotBlank
     		final String password
-    		);
+    		) throws Exception;
     
     /**
      * @param client

@@ -17,17 +17,17 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
-import epf.util.EPFException;
+import epf.client.persistence.Entities;
 import epf.client.util.Client;
 import epf.client.util.ClientUtil;
 import epf.naming.Naming;
 import epf.security.client.jwt.JWT;
+import epf.security.internal.TokenBuilder;
+import epf.security.schema.Principal;
 import epf.security.schema.Token;
 import epf.util.config.ConfigUtil;
 import epf.util.logging.LogManager;
 import epf.util.security.KeyUtil;
-import openup.schema.OpenUP;
-import openup.schema.roles.Role;
 
 /**
  *
@@ -99,8 +99,8 @@ public class Security implements epf.security.client.Security, Serializable {
      * @throws Exception
      */
     protected Token buildToken(final Client client, final Token token, final String rawToken) throws Exception {
-    	final Role role = epf.client.persistence.Entities.find(client, Role.class, OpenUP.SCHEMA, OpenUP.ROLE, token.getName());
-		final Map<String, String> claims = new HashMap<>(role.getClaims());
+    	final Principal principal = Entities.find(client, Principal.class, epf.security.schema.Security.SCHEMA, epf.security.schema.Security.PRINCIPAL, token.getName());
+		final Map<String, String> claims = new HashMap<>(principal.getClaims());
 		claims.put(JWT.TOKEN_CLAIM, rawToken);
 		token.setClaims(claims);
 		final TokenBuilder builder = new TokenBuilder(token, privateKey);
@@ -112,7 +112,7 @@ public class Security implements epf.security.client.Security, Serializable {
     public String login(
             final String username,
             final String passwordHash,
-            final URL url) {
+            final URL url) throws Exception {
     	try(Client securityClient = clientUtil.newClient(ConfigUtil.getURI(Naming.Persistence.PERSISTENCE_SECURITY_URL))){
     		final String rawToken = epf.security.client.Security.login(securityClient, username, passwordHash, url);
     		securityClient.authorization(rawToken);
@@ -123,27 +123,21 @@ public class Security implements epf.security.client.Security, Serializable {
         		login.fire(newToken);
     			return newToken.getRawToken();
     		}
-    	} 
-    	catch (Exception e) {
-			throw new EPFException(e);
-		}
+    	}
     }
     
     @Override
-    public String logOut() {
+    public String logOut() throws Exception {
     	final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
     	final String rawToken = jwt.getClaim(JWT.TOKEN_CLAIM);
     	try(Client client = clientUtil.newClient(ConfigUtil.getURI(Naming.Persistence.PERSISTENCE_SECURITY_URL))){
     		client.authorization(rawToken);
     		return epf.security.client.Security.logOut(client);
-    	} 
-    	catch (Exception e) {
-			throw new EPFException(e);
-		}
+    	}
     }
     
     @Override
-    public Token authenticate() {
+    public Token authenticate() throws Exception {
     	final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
     	final String rawToken = jwt.getClaim(JWT.TOKEN_CLAIM);
     	try(Client securityClient = clientUtil.newClient(ConfigUtil.getURI(Naming.Persistence.PERSISTENCE_SECURITY_URL))){
@@ -156,27 +150,21 @@ public class Security implements epf.security.client.Security, Serializable {
     			newToken.getClaims().remove(JWT.TOKEN_CLAIM);
     			return newToken;
     		}
-    	} 
-    	catch (Exception e) {
-			throw new EPFException(e);
-		}
+    	}
     }
 
 	@Override
-	public void update(final String password) {
+	public void update(final String password) throws Exception {
 		final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
     	final String rawToken = jwt.getClaim(JWT.TOKEN_CLAIM);
     	try(Client securityClient = clientUtil.newClient(ConfigUtil.getURI(Naming.Persistence.PERSISTENCE_SECURITY_URL))){
     		securityClient.authorization(rawToken);
     		epf.security.client.Security.update(securityClient, password);
     	}
-    	catch (Exception e) {
-			throw new EPFException(e);
-		}
 	}
 
 	@Override
-	public String revoke() {
+	public String revoke() throws Exception {
 		final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
     	final String rawToken = jwt.getClaim(JWT.TOKEN_CLAIM);
     	try(Client securityClient = clientUtil.newClient(ConfigUtil.getURI(Naming.Persistence.PERSISTENCE_SECURITY_URL))){
@@ -189,9 +177,6 @@ public class Security implements epf.security.client.Security, Serializable {
     			final Token newToken = buildToken(persistenceClient, token, newRawToken);
         		return newToken.getRawToken();
     		}
-    	} 
-    	catch (Exception e) {
-			throw new EPFException(e);
-		}
+    	}
 	}
 }

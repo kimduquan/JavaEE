@@ -42,7 +42,7 @@ public class Principal implements Serializable {
      */
     @ElementCollection
     @CollectionTable(
-    		name="CLAIMS", 
+    		name="PRINCIPAL_CLAIMS", 
     		schema = Security.SCHEMA,
     		uniqueConstraints = {@UniqueConstraint(columnNames = {"PRINCIPAL_NAME", "NAME"})}
     		)

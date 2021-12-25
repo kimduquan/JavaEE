@@ -831,7 +831,6 @@
 		<module>OpenUP-portlet-client</module>
 		<module>OpenUP-portlet</module>
 		<module>OpenUP-delivery-processes-portlet</module>
-		<module>OpenUP-roles-portlet</module>
 		<module>OpenUP-tasks-portlet</module>
 		<module>OpenUP-work-products-portlet</module>
 		

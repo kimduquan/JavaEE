@@ -20,8 +20,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.security.schema.Principal;
 import openup.schema.OpenUP;
-import openup.schema.roles.Role;
 
 /**
  *
@@ -57,7 +57,7 @@ public class Artifact implements Serializable {
      */
     @ManyToOne
     @JoinColumn(name = "RESPONSIBLE")
-    private Role responsible;
+    private Principal responsible;
     
     /**
      * 
@@ -70,7 +70,7 @@ public class Artifact implements Serializable {
     		inverseJoinColumns = {@JoinColumn(name = "NAME")},
     		indexes = {@Index(columnList = "NAME")}
     		)
-    private List<Role> modifiedBy;
+    private List<Principal> modifiedBy;
     
     /**
      * 
@@ -108,19 +108,19 @@ public class Artifact implements Serializable {
         this.summary = summary;
     }
 
-    public Role getResponsible() {
+    public Principal getResponsible() {
 		return responsible;
 	}
 
-	public void setResponsible(final Role responsible) {
+	public void setResponsible(final Principal responsible) {
 		this.responsible = responsible;
 	}
 
-	public List<Role> getModifiedBy() {
+	public List<Principal> getModifiedBy() {
 		return modifiedBy;
 	}
 
-	public void setModifiedBy(final List<Role> modifiedBy) {
+	public void setModifiedBy(final List<Principal> modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
 
