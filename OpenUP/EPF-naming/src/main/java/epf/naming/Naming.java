@@ -429,5 +429,10 @@ public interface Naming {
 	     * 
 	     */
 	    String WEB_APP_URL = "epf.webapp.url";
+	    
+	    /**
+	     * 
+	     */
+	    String REALM_NAME = "EPF";
 	}
 }

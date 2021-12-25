@@ -34,20 +34,15 @@
 			<artifactId>javax.ws.rs-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-        <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+		<!-- https://mvnrepository.com/artifact/javax.faces/javax.faces-api -->
 		<dependency>
-		    <groupId>javax.servlet</groupId>
-		    <artifactId>javax.servlet-api</artifactId>
+		    <groupId>javax.faces</groupId>
+		    <artifactId>javax.faces-api</artifactId>
 		    <scope>provided</scope>
 		</dependency>
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-client</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-portlet-naming</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
