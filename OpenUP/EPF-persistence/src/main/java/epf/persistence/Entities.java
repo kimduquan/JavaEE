@@ -1,6 +1,7 @@
 package epf.persistence;
 
 import java.io.InputStream;
+import java.util.Map;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -17,6 +18,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import epf.naming.Naming;
 import epf.persistence.internal.Session;
+import epf.util.MapUtil;
+import io.opentracing.Tracer;
+import io.opentracing.log.Fields;
 
 /**
  *
@@ -38,6 +42,12 @@ public class Entities implements epf.client.persistence.Entities {
      */
     @Inject
     private transient Request request;
+    
+    /**
+     * 
+     */
+    @Inject
+    private transient Tracer tracer;
     
     /**
      * 
@@ -72,7 +82,13 @@ public class Entities implements epf.client.persistence.Entities {
     	final EntityType<?> entityType = request.getEntityType(session, name);
     	final Object entity = toObject(entityType, body);
         validator.validate(entity);
-        return request.persistEntity(session, entity);
+        final Object object = request.persistEntity(session, entity);
+        
+        final Map<String, Object> fields = MapUtil.of(Fields.EVENT, "persistence.persist");
+        fields.put("schema", schema);
+        fields.put("entity", name);
+        tracer.activeSpan().log(fields);
+        return object;
     }
     
     @Override
@@ -88,6 +104,12 @@ public class Entities implements epf.client.persistence.Entities {
     	final Object entity = toObject(entityType, body);
     	validator.validate(entity);
     	request.mergeEntity(session, entity);
+    	
+    	final Map<String, Object> fields = MapUtil.of(Fields.EVENT, "persistence.persist");
+        fields.put("schema", schema);
+        fields.put("entity", name);
+    	fields.put("entity.id", entityId);
+        tracer.activeSpan().log(fields);
 	}
     
     @Override
@@ -100,6 +122,12 @@ public class Entities implements epf.client.persistence.Entities {
     	final EntityType<?> entityType = request.getEntityType(session, name);
     	request.removeEntity(session, entityType, entityId)
     	.orElseThrow(NotFoundException::new);
+    	
+    	final Map<String, Object> fields = MapUtil.of(Fields.EVENT, "persistence.persist");
+        fields.put("schema", schema);
+        fields.put("entity", name);
+    	fields.put("entity.id", entityId);
+        tracer.activeSpan().log(fields);
     }
     
 	@Override

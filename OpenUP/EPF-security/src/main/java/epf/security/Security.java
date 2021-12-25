@@ -25,9 +25,12 @@ import epf.security.client.jwt.JWT;
 import epf.security.internal.TokenBuilder;
 import epf.security.schema.Principal;
 import epf.security.schema.Token;
+import epf.util.MapUtil;
 import epf.util.config.ConfigUtil;
 import epf.util.logging.LogManager;
 import epf.util.security.KeyUtil;
+import io.opentracing.Tracer;
+import io.opentracing.log.Fields;
 
 /**
  *
@@ -81,6 +84,12 @@ public class Security implements epf.security.client.Security, Serializable {
     /**
      * 
      */
+    @Inject
+    private transient Tracer tracer;
+    
+    /**
+     * 
+     */
     @PostConstruct
     protected void postConstruct(){
         try {
@@ -120,6 +129,9 @@ public class Security implements epf.security.client.Security, Serializable {
     		try(Client persistenceClient = clientUtil.newClient(ConfigUtil.getURI(Naming.Persistence.PERSISTENCE_URL))){
     			persistenceClient.authorization(rawToken);
     			final Token newToken = buildToken(persistenceClient, token, rawToken);
+    			final Map<String, Object> fields = MapUtil.of(Fields.EVENT, "security.login");
+    			fields.put("credential.caller", username);
+    			tracer.activeSpan().log(fields);
         		login.fire(newToken);
     			return newToken.getRawToken();
     		}
@@ -132,7 +144,11 @@ public class Security implements epf.security.client.Security, Serializable {
     	final String rawToken = jwt.getClaim(JWT.TOKEN_CLAIM);
     	try(Client client = clientUtil.newClient(ConfigUtil.getURI(Naming.Persistence.PERSISTENCE_SECURITY_URL))){
     		client.authorization(rawToken);
-    		return epf.security.client.Security.logOut(client);
+    		final String name = epf.security.client.Security.logOut(client);
+    		final Map<String, Object> fields = MapUtil.of(Fields.EVENT, "security.logout");
+    		fields.put("principal.name", name);
+			tracer.activeSpan().log(fields);
+    		return name;
     	}
     }
     
@@ -160,6 +176,9 @@ public class Security implements epf.security.client.Security, Serializable {
     	try(Client securityClient = clientUtil.newClient(ConfigUtil.getURI(Naming.Persistence.PERSISTENCE_SECURITY_URL))){
     		securityClient.authorization(rawToken);
     		epf.security.client.Security.update(securityClient, password);
+    		final Map<String, Object> fields = MapUtil.of(Fields.EVENT, "security.setPassword");
+    		fields.put("principal.name", jwt.getName());
+			tracer.activeSpan().log(fields);
     	}
 	}
 
@@ -175,6 +194,9 @@ public class Security implements epf.security.client.Security, Serializable {
     		try(Client persistenceClient = clientUtil.newClient(ConfigUtil.getURI(Naming.Persistence.PERSISTENCE_URL))){
     			persistenceClient.authorization(newRawToken);
     			final Token newToken = buildToken(persistenceClient, token, newRawToken);
+    			final Map<String, Object> fields = MapUtil.of(Fields.EVENT, "security.revoke");
+        		fields.put("principal.name", jwt.getName());
+    			tracer.activeSpan().log(fields);
         		return newToken.getRawToken();
     		}
     	}
