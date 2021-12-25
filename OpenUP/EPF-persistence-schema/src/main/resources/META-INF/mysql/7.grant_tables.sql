@@ -1,3 +1,5 @@
+GRANT ALL ON *.* TO 'epf'@'localhost' WITH GRANT OPTION;
+
 /*Basic Roles BEGIN*/
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Delivery_Processes.* TO 'analyst1'@'localhost';
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON EPF_Delivery_Processes.* TO 'any_role1'@'localhost';

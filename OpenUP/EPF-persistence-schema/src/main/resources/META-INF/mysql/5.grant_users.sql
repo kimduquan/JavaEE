@@ -1,3 +1,5 @@
+GRANT 'Any_Role'@'localhost' TO 'epf'@'localhost';
+
 /*Basic Roles BEGIN*/
 GRANT 'Any_Role'@'localhost', 'Analyst'@'localhost' TO 'analyst1'@'localhost';
 GRANT 'Any_Role'@'localhost', 'Any_Role'@'localhost' TO 'any_role1'@'localhost';
@@ -45,3 +47,5 @@ SET DEFAULT ROLE 'Any_Role'@'localhost', 'Trainer'@'localhost' TO 'trainer1'@'lo
 SET DEFAULT ROLE 'Any_Role'@'localhost', 'Process_Engineer'@'localhost' TO 'process_engineer1'@'localhost';
 SET DEFAULT ROLE 'Any_Role'@'localhost', 'Tool_Specialist'@'localhost' TO 'tool_specialist1'@'localhost';
 /*Environment END*/
+
+SET DEFAULT ROLE 'Any_Role'@'localhost' TO 'epf'@'localhost';
