@@ -68,7 +68,7 @@ public class WebDriverUtil {
 	public static URL getPortletURL() {
 		URL url = null;
 		try {
-			url = new URL(System.getProperty(Naming.PORTLET_URL, "http://localhost:8282/pluto/portal/"));
+			url = new URL(System.getProperty(Naming.PORTLET_URL, "http://localhost:8080/pluto/portal/"));
 		} 
 		catch (MalformedURLException e) {
 			

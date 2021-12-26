@@ -85,7 +85,7 @@
 								<target>
 									<exec executable="jshell">
 										<arg value="../EPF-shell/target/appassembler/start.jsh"/>
-									    <arg value="-R-Dargs=&quot;/payara5/glassfish/bin/asadmin deploy --force=true ${project.build.finalName}&quot;"/>
+									    <arg value="-R-Dargs=/payara5/glassfish/bin/asadmin deploy --force=true ${project.build.directory}/${project.build.finalName}.war"/>
 								  	</exec>
 								</target >
 							</configuration>

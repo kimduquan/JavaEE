@@ -35,7 +35,7 @@
         <liberty.env.epf_cache_url>https://localhost:9443/cache/cache/</liberty.env.epf_cache_url>
         <liberty.env.epf_registry_url>https://localhost:9443/registry/registry/</liberty.env.epf_registry_url>
 		<liberty.env.epf_management_url>https://localhost:9443/management/management/</liberty.env.epf_management_url>
-		<liberty.env.epf_portlet_url>http://localhost:8282/pluto/portal</liberty.env.epf_portlet_url>
+		<liberty.env.epf_portlet_url>http://localhost:8080/pluto/portal</liberty.env.epf_portlet_url>
 		<liberty.env.epf_webapp_url>https://localhost:9443/webapp/</liberty.env.epf_webapp_url>
 		<liberty.env.epf_health_url>https://localhost:9443/health/</liberty.env.epf_health_url>
 		<liberty.env.epf_batch_api_url>https://localhost:9443/ibm/</liberty.env.epf_batch_api_url>
