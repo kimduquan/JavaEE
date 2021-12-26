@@ -28,8 +28,8 @@ public class ConfigUtilTest {
 	 */
 	@Test
 	public void testGetURI() throws Exception {
-		System.setProperty("abc", "http://localhost:8080/");
+		System.setProperty("abc", "http://localhost:8282/");
 		URI uri = ConfigUtil.getURI("abc");
-		Assert.assertEquals(new URI("http://localhost:8080/"), uri);
+		Assert.assertEquals(new URI("http://localhost:8282/"), uri);
 	}
 }

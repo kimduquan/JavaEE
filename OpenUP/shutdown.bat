@@ -12,7 +12,7 @@ call .\shutdown.bat
 cd %cur_dir%
 set payara_dir="C:\payara5\glassfish\bin\"
 cd %payara_dir%
-start .\startserv.bat
+call .\stopserv.bat
 cd %cur_dir%
 cd %kafka_dir%
 call .\zookeeper-server-stop.bat

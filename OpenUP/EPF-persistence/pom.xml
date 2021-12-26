@@ -46,6 +46,12 @@
 		    <artifactId>javax.annotation-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.security.enterprise/javax.security.enterprise-api -->
+		<dependency>
+			<groupId>javax.security.enterprise</groupId>
+			<artifactId>javax.security.enterprise-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
     	<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.jwt/microprofile-jwt-auth-api -->
 		<dependency>
 		    <groupId>org.eclipse.microprofile.jwt</groupId>
