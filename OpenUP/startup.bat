@@ -14,6 +14,10 @@ set portal_dir="C:\Program Files\pluto-3.1.0\bin\"
 cd %portal_dir%
 call .\startup.bat
 cd %cur_dir%
+set payara_dir="C:\payara5\glassfish\bin\"
+cd %payara_dir%
+start .\startserv.bat
+cd %cur_dir%
 cd %kafka_dir%
 start .\kafka-server-start.bat ..\..\config\server.properties
 cd %cur_dir%

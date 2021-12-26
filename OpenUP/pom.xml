@@ -148,22 +148,22 @@
 			<dependency>
 			    <groupId>org.eclipse.microprofile.openapi</groupId>
 			    <artifactId>microprofile-openapi-api</artifactId>
-				<scope>provided</scope>
 			    <version>1.1.1</version>
+			    <!--<scope>provided</scope>-->
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.fault-tolerance/microprofile-fault-tolerance-api -->
 			<dependency>
 			    <groupId>org.eclipse.microprofile.fault-tolerance</groupId>
 			    <artifactId>microprofile-fault-tolerance-api</artifactId>
-				<scope>provided</scope>
 			    <version>2.1</version>
+			    <!--<scope>provided</scope>-->
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.context-propagation/microprofile-context-propagation-api -->
 			<dependency>
 			    <groupId>org.eclipse.microprofile.context-propagation</groupId>
 			    <artifactId>microprofile-context-propagation-api</artifactId>
 			    <version>1.0</version>
-				<scope>provided</scope>
+				<!--<scope>provided</scope>-->
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.health/microprofile-health-api -->
 			<dependency>
@@ -177,21 +177,21 @@
 			    <groupId>org.eclipse.microprofile.rest.client</groupId>
 			    <artifactId>microprofile-rest-client-api</artifactId>
 			    <version>1.4.1</version>
-				<scope>provided</scope>
+				<!--<scope>provided</scope>-->
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.reactive.messaging/microprofile-reactive-messaging-api -->
 			<dependency>
 			    <groupId>org.eclipse.microprofile.reactive.messaging</groupId>
 			    <artifactId>microprofile-reactive-messaging-api</artifactId>
 			    <version>1.0</version>
-			    <scope>provided</scope>
+			    <!--<scope>provided</scope>-->
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.graphql/microprofile-graphql-api -->
 			<dependency>
 			    <groupId>org.eclipse.microprofile.graphql</groupId>
 			    <artifactId>microprofile-graphql-api</artifactId>
 			    <version>1.0</version>
-				<scope>provided</scope>
+				<!--<scope>provided</scope>-->
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.config/microprofile-config-api -->
 			<dependency>
@@ -205,14 +205,14 @@
 			    <groupId>org.eclipse.microprofile.jwt</groupId>
 			    <artifactId>microprofile-jwt-auth-api</artifactId>
 			    <version>1.2</version>
-				<scope>provided</scope>
+				<!--<scope>provided</scope>-->
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.opentracing/microprofile-opentracing-api -->
 			<dependency>
 			    <groupId>org.eclipse.microprofile.opentracing</groupId>
 			    <artifactId>microprofile-opentracing-api</artifactId>
 			    <version>1.3</version>
-				<scope>provided</scope>
+				<!--<scope>provided</scope>-->
 			</dependency>
 			
 			
@@ -454,6 +454,12 @@
                 <version>1.7.32</version>
             </dependency>
             
+            <!-- https://mvnrepository.com/artifact/org.glassfish.main.extras/glassfish-embedded-web -->
+			<dependency>
+			    <groupId>org.glassfish.main.extras</groupId>
+			    <artifactId>glassfish-embedded-web</artifactId>
+			    <version>6.2.3</version>
+			</dependency>
             
             <!-- https://mvnrepository.com/artifact/org.jboss.weld/weld-junit4 -->
 			<dependency>
@@ -636,6 +642,12 @@
 			        <artifactId>exec-maven-plugin</artifactId>
 			        <version>3.0.0</version>
 			    </plugin>
+			    <!-- https://mvnrepository.com/artifact/org.glassfish.embedded/maven-embedded-glassfish-plugin -->
+				<plugin>
+				    <groupId>org.glassfish.embedded</groupId>
+				    <artifactId>maven-embedded-glassfish-plugin</artifactId>
+				    <version>5.1</version>
+				</plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -804,7 +816,7 @@
 		<module>EPF-security-client</module>
 		<module>EPF-net</module>
 		<module>EPF-security</module>
-		<!--<module>EPF-persistence</module>-->
+		<module>EPF-persistence</module>
 		<module>EPF-file</module>
 		<module>EPF-image</module>
 		<module>EPF-rules</module>

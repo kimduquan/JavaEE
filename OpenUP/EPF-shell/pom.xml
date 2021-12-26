@@ -53,6 +53,7 @@
 		<dependency>
 			<groupId>javax.json.bind</groupId>
 			<artifactId>javax.json.bind-api</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api -->
 		<dependency>
@@ -173,6 +174,8 @@
 	        			<useWildcardClassPath>true</useWildcardClassPath>
 	        			<extraJvmArguments>-Depf.gateway.url="https://localhost:9443/gateway/"</extraJvmArguments>
 						<!--<useAllProjectDependencies>true</useAllProjectDependencies>-->
+	        			<preAssembleDirectory>${project.basedir}/bin</preAssembleDirectory>
+	        			<repositoryName>lib</repositoryName>
 	        		</configuration>
 	        	</execution>
 	        </executions>

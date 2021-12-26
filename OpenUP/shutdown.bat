@@ -10,6 +10,10 @@ set portal_dir="C:\Program Files\pluto-3.1.0\bin\"
 cd %portal_dir%
 call .\shutdown.bat
 cd %cur_dir%
+set payara_dir="C:\payara5\glassfish\bin\"
+cd %payara_dir%
+start .\startserv.bat
+cd %cur_dir%
 cd %kafka_dir%
 call .\zookeeper-server-stop.bat
 cd %cur_dir%

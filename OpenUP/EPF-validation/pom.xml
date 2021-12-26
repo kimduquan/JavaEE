@@ -32,6 +32,7 @@
 		<dependency>
 		    <groupId>javax.security.enterprise</groupId>
 		    <artifactId>javax.security.enterprise-api</artifactId>
+		    <scope>provided</scope>
 		</dependency>
     </dependencies>
 </project>
