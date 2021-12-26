@@ -82,7 +82,7 @@
 			    <artifactId>tomcat8-maven-plugin</artifactId>
 			    <configuration>
 			    	<server>Pluto</server>
-					<port>8282</port>
+					<url>http://localhost:8282/manager</url>
 			    </configuration>
 			    <executions>
 			    	<execution>
