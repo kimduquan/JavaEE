@@ -6,4 +6,4 @@ export JAVA_HOME=~/jdk-11.0.13+8
 ~/jaeger-1.24.0-linux-amd64/jaeger-all-in-one &
 Xvfb :10 -ac &
 export DISPLAY=:10
-~/kafka_2.13-2.8.1/bin/kafka-server-start.sh ~/kafka_2.13-2.8.1/config/server.properties &
+~/kafka_2.13-2.8.1/bin/kafka-server-start.sh ~/kafka_2.13-2.8.1/config/server.properties
