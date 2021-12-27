@@ -1,12 +1,12 @@
 System.out.println(System.getProperty("args"));
 var args = System.getProperty("args").split(" ");
 var ext = "";
-var workDir = Paths.get(args[0]).getParent();
-var absPath = Paths.get(args[0]).toFile().getAbsolutePath();
+var absPath = Paths.get(Paths.get(args[0]).toFile().getAbsolutePath());
+var workDir = absPath.getParent();
 if(System.getProperty("os.name").contains("Windows")) { ext = ".bat"; };
 if(System.getProperty("os.name").contains("Linux")) { ext = ""; };
 //args[0] = absPath + ext;
-args[0] = Paths.get(args[0]).getFileName() + ext;
+args[0] = absPath.getFileName() + ext;
 var builder = new ProcessBuilder(args);
 builder.inheritIO();
 builder.directory(workDir.toFile());
