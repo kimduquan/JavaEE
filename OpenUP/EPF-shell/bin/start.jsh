@@ -8,7 +8,7 @@ if(System.getProperty("os.name").contains("Linux")) { ext = ""; };
 args[0] = absPath + ext;
 var builder = new ProcessBuilder(args);
 builder.inheritIO();
-builder.directory(workDir.toFile());
+//builder.directory(workDir.toFile());
 var process = builder.start();
 var async = System.getProperty("async");
 if(async == null) { process.waitFor(); }
