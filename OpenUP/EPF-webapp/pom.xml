@@ -18,7 +18,6 @@
 		<dependency>
 			<groupId>javax.security.enterprise</groupId>
 			<artifactId>javax.security.enterprise-api</artifactId>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 		    <groupId>javax.annotation</groupId>
@@ -33,6 +32,11 @@
 		<dependency>
 		    <groupId>javax.faces</groupId>
 		    <artifactId>javax.faces-api</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		<dependency>
+		    <groupId>javax.servlet</groupId>
+		    <artifactId>javax.servlet-api</artifactId>
 		    <scope>provided</scope>
 		</dependency>
 		
@@ -84,8 +88,8 @@
 							<configuration>
 								<target>
 									<exec executable="jshell">
-										<arg value="../EPF-shell/target/appassembler/start.jsh"/>
-									    <arg value="-R-Dargs=/payara5/glassfish/bin/asadmin deploy --force=true ${project.build.directory}/${project.build.finalName}.war"/>
+										<arg value="../EPF-shell/bin/start.jsh"/>
+									    <arg value="-R-Dargs=/payara5/glassfish/bin/asadmin deploy --force=true --contextroot=epf ${project.build.directory}/${project.build.finalName}.war"/>
 								  	</exec>
 								</target >
 							</configuration>

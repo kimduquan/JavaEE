@@ -4,10 +4,8 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Set;
 import java.util.logging.Logger;
-import javax.annotation.security.DeclareRoles;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.security.enterprise.authentication.mechanism.http.BasicAuthenticationMechanismDefinition;
 import javax.security.enterprise.credential.BasicAuthenticationCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStore;
@@ -19,15 +17,12 @@ import epf.client.util.ClientQueue;
 import epf.naming.Naming;
 import epf.security.client.Security;
 import epf.security.schema.Token;
-import epf.naming.Naming.WebApp;
 
 /**
  *
  * @author FOXCONN
  */
 @ApplicationScoped
-@BasicAuthenticationMechanismDefinition(realmName = WebApp.REALM_NAME)
-@DeclareRoles(Naming.Security.DEFAULT_ROLE)
 public class EPFIdentityStore implements IdentityStore {
 	
 	/**
