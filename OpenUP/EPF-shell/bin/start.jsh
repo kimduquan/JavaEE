@@ -10,5 +10,6 @@ var builder = new ProcessBuilder(args);
 builder.inheritIO();
 builder.directory(workDir.toFile());
 var process = builder.start();
-process.waitFor();
+var async = System.getProperty("async");
+if(async == null) { process.waitFor(); }
 /exit

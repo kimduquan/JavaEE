@@ -1,1 +1,0 @@
-~/payara5/glassfish/bin/startserv &
