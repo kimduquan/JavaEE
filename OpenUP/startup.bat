@@ -16,7 +16,7 @@ call .\startup.bat
 cd %cur_dir%
 set payara_dir="C:\payara5\glassfish\bin\"
 cd %payara_dir%
-start .\startserv.bat
+start .\startserv.bat --debug
 cd %cur_dir%
 cd %kafka_dir%
 start .\kafka-server-start.bat ..\..\config\server.properties
