@@ -2,6 +2,7 @@ package epf.webapp.security;
 
 import java.net.URI;
 import java.net.URL;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
@@ -16,7 +17,6 @@ import epf.client.util.Client;
 import epf.client.util.ClientQueue;
 import epf.naming.Naming;
 import epf.security.client.Security;
-import epf.security.schema.Token;
 
 /**
  *
@@ -46,7 +46,6 @@ public class EPFIdentityStore implements IdentityStore {
         try {
         	final URL webAppUrl = new URL(ConfigUtil.getString(Naming.WebApp.WEB_APP_URL));
         	final URI securityUrl = GatewayUtil.get(Naming.SECURITY);
-        	Token token = null;
         	try(Client client = new Client(clients, securityUrl, b -> b)){
         		final String rawToken = Security.login(
             			client,
@@ -54,16 +53,11 @@ public class EPFIdentityStore implements IdentityStore {
     					credential.getPasswordAsString(),
     					webAppUrl
     					);
-                if(!rawToken.isEmpty()){
-                	client.authorization(rawToken);
-                	token = Security.authenticate(client);
-                	if(token != null) {
-                		token.setRawToken(rawToken);
-                	}
+                if(rawToken != null){
+                	final Set<String> groups = new HashSet<>();
+                	groups.add(Naming.Security.DEFAULT_ROLE);
+                	result = new CredentialValidationResult(new TokenPrincipal(credential.getCaller(), rawToken), groups);
                 }
-            }
-            if(token != null){
-            	result = new CredentialValidationResult(token.getName(), token.getGroups());
             }
         }
         catch(Exception ex) {

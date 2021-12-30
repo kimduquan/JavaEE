@@ -22,7 +22,11 @@ import epf.util.logging.LogManager;
  */
 @ApplicationScoped
 @FacesConfig
-@CustomFormAuthenticationMechanismDefinition(loginToContinue = @LoginToContinue())
+@CustomFormAuthenticationMechanismDefinition(
+		loginToContinue = @LoginToContinue(
+				useForwardToLogin = false
+				)
+		)
 @DeclareRoles(value = { Naming.Security.DEFAULT_ROLE })
 public class Config {
 	

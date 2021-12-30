@@ -13,8 +13,8 @@
     <properties>
         <httpPort>9080</httpPort>
         <httpsPort>9443</httpsPort>
-        <httpWebPort>8080</httpWebPort>
-        <httpsWebPort>8443</httpsWebPort>
+        <httpWebPort>8282</httpWebPort>
+        <httpsWebPort>8181</httpsWebPort>
         <!-- Jaeger configuration -->
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>

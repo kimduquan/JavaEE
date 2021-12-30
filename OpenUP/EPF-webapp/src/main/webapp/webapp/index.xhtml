@@ -8,7 +8,7 @@
 
 <ui:composition template="template.xhtml">
 	<ui:define name="header">
-	    Add your header here or delete to use the default
+	    <h:outputText value="#{epf_webapp_session.principal.name}"></h:outputText>
 	</ui:define>
 	<ui:define name="content">
 	    Add your content here or delete to use the default

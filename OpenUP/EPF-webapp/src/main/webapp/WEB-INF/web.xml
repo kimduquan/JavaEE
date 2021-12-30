@@ -4,7 +4,7 @@
   <security-constraint>
      <web-resource-collection>
          <web-resource-name>EPF-webapp</web-resource-name>
-         <url-pattern>/*</url-pattern>
+         <url-pattern>/webapp/*</url-pattern>
      </web-resource-collection>
      <auth-constraint>
          <role-name>Any_Role</role-name>

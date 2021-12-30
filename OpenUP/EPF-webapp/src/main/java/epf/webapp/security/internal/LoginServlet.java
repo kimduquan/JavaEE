@@ -1,6 +1,7 @@
 package epf.webapp.security.internal;
 
 import java.io.IOException;
+import java.util.Set;
 import javax.inject.Inject;
 import javax.security.enterprise.AuthenticationStatus;
 import javax.security.enterprise.SecurityContext;
@@ -13,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
+import epf.webapp.Naming;
+import epf.webapp.security.TokenPrincipal;
 
 /**
  * @author PC
@@ -36,28 +39,33 @@ public class LoginServlet extends HttpServlet {
 	 *
 	 */
 	protected void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
-		final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-		if(authHeader == null || authHeader.isEmpty()) {
-			response.setHeader(HttpHeaders.WWW_AUTHENTICATE, "BASIC realm=\"EPF\"");
-			response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-		}
-		else {
-			final String base64Header = authHeader.substring("BASIC ".length());
-			final BasicAuthenticationCredential credential = new BasicAuthenticationCredential(base64Header);
-			final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential);
-			final AuthenticationStatus status = context.authenticate(request, response, params);
-			switch(status) {
-			case NOT_DONE:
-				break;
-			case SEND_CONTINUE:
-				break;
-			case SEND_FAILURE:
-				response.sendError(Response.Status.UNAUTHORIZED.getStatusCode());
-				break;
-			case SUCCESS:
-				break;
-			default:
-				break;
+		final Set<TokenPrincipal> principals = context.getPrincipalsByType(TokenPrincipal.class);
+		final TokenPrincipal principal = principals.isEmpty() ? null : principals.iterator().next();
+		if(principal == null) {
+			final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+			if(authHeader == null || authHeader.isEmpty()) {
+				response.setHeader(HttpHeaders.WWW_AUTHENTICATE, HttpServletRequest.BASIC_AUTH + " realm=\"" + Naming.REALM_NAME + "\"");
+				response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+			}
+			else {
+				final String base64Header = authHeader.substring(HttpServletRequest.BASIC_AUTH.length() + 1);
+				final BasicAuthenticationCredential credential = new BasicAuthenticationCredential(base64Header);
+				final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential);
+				final AuthenticationStatus status = context.authenticate(request, response, params);
+				switch(status) {
+				case NOT_DONE:
+					response.sendError(Response.Status.UNAUTHORIZED.getStatusCode());
+					break;
+				case SEND_CONTINUE:
+					break;
+				case SEND_FAILURE:
+					response.sendError(Response.Status.UNAUTHORIZED.getStatusCode());
+					break;
+				case SUCCESS:
+					break;
+				default:
+					break;
+				}
 			}
 		}
 	}
