@@ -10,9 +10,6 @@ cd ../
 cd EPF-messaging-portlet
 mvn clean install
 cd ../
-cd OpenUP-delivery-processes-portlet
-mvn clean install
-cd ../
 cd OpenUP-tasks-portlet
 mvn clean install
 cd ../

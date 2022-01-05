@@ -4,7 +4,6 @@ cd %portal_dir%
 del ".\*.war" /s /f /q
 rmdir "OpenUP-work-products-portlet" /s /q
 rmdir "OpenUP-tasks-portlet" /s /q
-rmdir "OpenUP-delivery-processes-portlet" /s /q
 rmdir "EPF-security-portlet" /s /q
 rmdir "EPF-persistence-portlet" /s /q
 rmdir "EPF-messaging-portlet" /s /q
