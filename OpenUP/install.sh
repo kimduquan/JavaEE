@@ -13,6 +13,3 @@ cd ../
 cd OpenUP-tasks-portlet
 mvn clean install
 cd ../
-cd OpenUP-work-products-portlet
-mvn clean install
-cd ../

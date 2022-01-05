@@ -827,7 +827,6 @@
 		<module>OpenUP-portlet-client</module>
 		<module>OpenUP-portlet</module>
 		<module>OpenUP-tasks-portlet</module>
-		<module>OpenUP-work-products-portlet</module>
 		
         <module>EPF-tests</module>
         <module>EPF-assembly</module>
