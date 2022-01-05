@@ -825,7 +825,6 @@
 		<module>EPF-security-portlet</module>
 		
 		<module>OpenUP-portlet-client</module>
-		<module>OpenUP-portlet</module>
 		
         <module>EPF-tests</module>
         <module>EPF-assembly</module>
