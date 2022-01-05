@@ -78,16 +78,13 @@
     <application id="EPF-gateway" name="EPF-gateway" context-root="gateway" location="EPF-gateway-1.0.0.war" startAfterRef="EPF-registry" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-	<application id="OpenUP-delivery-processes" name="OpenUP-delivery-processes" context-root="delivery-processes" location="OpenUP-delivery-processes-1.0.0.war" startAfterRef="EPF-persistence,EPF-gateway" >
-        <classloader apiTypeVisibility="+third-party"/>
-    </application>
 	<application id="OpenUP-tasks" name="OpenUP-tasks" context-root="tasks" location="OpenUP-tasks-1.0.0.war" startAfterRef="EPF-persistence,EPF-gateway" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
 	<application id="OpenUP-work-products" name="OpenUP-work-products" context-root="work-products" location="OpenUP-work-products-1.0.0.war" startAfterRef="EPF-persistence,EPF-gateway" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-	<application id="OpenUP-gateway" name="OpenUP-gateway" context-root="openup" location="OpenUP-gateway-1.0.0.war" startAfterRef="OpenUP-delivery-processes,OpenUP-tasks,OpenUP-work-products" >
+	<application id="OpenUP-gateway" name="OpenUP-gateway" context-root="openup" location="OpenUP-gateway-1.0.0.war" startAfterRef="OpenUP-tasks,OpenUP-work-products" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
     <!-- <application id="EPF-webapp" name="EPF-webapp" context-root="webapp" location="EPF-webapp-1.0.0.war" startAfterRef="EPF-persistence,EPF-gateway" /> -->
