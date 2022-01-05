@@ -813,7 +813,6 @@
 		
 		<module>OpenUP-client</module>
         <module>OpenUP-schema</module>
-		<module>OpenUP-gateway</module>
 		
 		<module>EPF-portlet-client</module>
 		<module>EPF-portlet-utility</module>
