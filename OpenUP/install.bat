@@ -14,7 +14,3 @@ cd EPF-messaging-portlet
 call mvn clean install
 echo on
 cd ../
-cd OpenUP-tasks-portlet
-call mvn clean install
-echo on
-cd ../

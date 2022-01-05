@@ -10,6 +10,3 @@ cd ../
 cd EPF-messaging-portlet
 mvn clean install
 cd ../
-cd OpenUP-tasks-portlet
-mvn clean install
-cd ../
