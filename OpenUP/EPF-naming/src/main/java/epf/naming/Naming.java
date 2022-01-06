@@ -340,6 +340,10 @@ public interface Naming {
 		 */
 		String SCHEDULE_URL = "epf.schedule.url";
 		
+		/**
+		 * 
+		 */
+		String EXECUTOR_SERVICE = "java:comp/DefaultManagedScheduledExecutorService";
 	}
 	
 	/**

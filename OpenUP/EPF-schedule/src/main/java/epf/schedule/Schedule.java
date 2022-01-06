@@ -62,7 +62,7 @@ public class Schedule implements epf.client.schedule.Schedule {
 	/**
 	 * 
 	 */
-	@Resource(lookup = "java:comp/DefaultManagedScheduledExecutorService")
+	@Resource(lookup = Naming.Schedule.EXECUTOR_SERVICE)
 	private transient ManagedScheduledExecutorService scheduledExecutor;
 	
 	/**
