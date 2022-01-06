@@ -5,7 +5,6 @@ package epf.webapp;
  *
  */
 public interface Naming {
-
     
     /**
      * 
@@ -16,4 +15,9 @@ public interface Naming {
      * 
      */
     String SECURITY = "epf_webapp_security";
+    
+    /**
+     * 
+     */
+    String SECURITY_PAGE = "/security";
 }

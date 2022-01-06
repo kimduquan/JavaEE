@@ -24,6 +24,7 @@ import epf.util.logging.LogManager;
 @FacesConfig
 @CustomFormAuthenticationMechanismDefinition(
 		loginToContinue = @LoginToContinue(
+				loginPage = epf.webapp.Naming.SECURITY_PAGE,
 				useForwardToLogin = false
 				)
 		)

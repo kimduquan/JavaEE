@@ -1,4 +1,4 @@
-package epf.webapp.security.internal;
+package epf.webapp.security;
 
 import java.io.IOException;
 import java.util.Set;
@@ -15,14 +15,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import epf.webapp.Naming;
-import epf.webapp.security.TokenPrincipal;
 
 /**
  * @author PC
  *
  */
-@WebServlet(urlPatterns = "/login", loadOnStartup = 1)
-public class LoginServlet extends HttpServlet {
+@WebServlet(urlPatterns = Naming.SECURITY_PAGE, loadOnStartup = 1)
+public class SecurityServlet extends HttpServlet {
 
 	/**
 	 * 
