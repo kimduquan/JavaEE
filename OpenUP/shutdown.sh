@@ -1,4 +1,4 @@
-~/kafka_2.13-2.8.1/bin/kafka-server-stop.sh &
+~/kafka_2.13-2.8.1/bin/kafka-server-stop.sh
 killall jaeger-all-in-one
 killall geckodriver
 killall /usr/lib/firefox/firefox
