@@ -3,8 +3,8 @@
   <display-name>Eclipse Process Framework Web Application</display-name>
   <security-constraint>
      <web-resource-collection>
-         <web-resource-name>EPF-webapp</web-resource-name>
-         <url-pattern>/webapp/*</url-pattern>
+         <web-resource-name>EPF-security</web-resource-name>
+         <url-pattern>/security/*</url-pattern>
      </web-resource-collection>
      <auth-constraint>
          <role-name>Any_Role</role-name>
@@ -23,7 +23,7 @@
     <url-pattern>*.html</url-pattern>
   </servlet-mapping>
   <welcome-file-list>
-  	<welcome-file>webapp/index.html</welcome-file>
+  	<welcome-file>security/principal.html</welcome-file>
   </welcome-file-list>
 	<context-param>
 		<param-name>javax.faces.ENABLE_WEBSOCKET_ENDPOINT</param-name>

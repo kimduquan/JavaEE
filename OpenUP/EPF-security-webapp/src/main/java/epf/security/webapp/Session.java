@@ -2,6 +2,7 @@ package epf.security.webapp;
 
 import java.io.Serializable;
 import java.util.Set;
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -24,10 +25,19 @@ public class Session implements Serializable {
 	/**
 	 * 
 	 */
-	private final TokenPrincipal principal;
+	private TokenPrincipal principal;
 	
+	/**
+	 * 
+	 */
 	@Inject
-	public Session(final SecurityContext context) {
+	private transient SecurityContext context;
+	
+	/**
+	 * 
+	 */
+	@PostConstruct
+	protected void postConstruct() {
 		final Set<TokenPrincipal> principals = context.getPrincipalsByType(TokenPrincipal.class);
 		principal = principals.isEmpty() ? null : principals.iterator().next();
 	}

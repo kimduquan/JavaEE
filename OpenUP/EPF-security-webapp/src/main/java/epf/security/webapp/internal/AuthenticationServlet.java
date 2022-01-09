@@ -20,8 +20,8 @@ import epf.security.webapp.Naming;
  * @author PC
  *
  */
-@WebServlet(urlPatterns = Naming.SECURITY_PAGE, loadOnStartup = 1)
-public class SecurityServlet extends HttpServlet {
+@WebServlet(urlPatterns = Naming.LOGIN_PAGE, loadOnStartup = 1)
+public class AuthenticationServlet extends HttpServlet {
 
 	/**
 	 * 

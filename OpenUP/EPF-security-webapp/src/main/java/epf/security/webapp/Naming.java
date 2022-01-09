@@ -14,10 +14,15 @@ public interface Naming {
     /**
      * 
      */
-    String SESSION = "epf_webapp_security";
+    String SESSION = "webapp_session";
     
     /**
      * 
      */
-    String SECURITY_PAGE = "/security";
+    String SESSION_UTILITY = "webapp_session_util";
+    
+    /**
+     * 
+     */
+    String LOGIN_PAGE = "/login";
 }
