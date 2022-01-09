@@ -14,7 +14,7 @@ public interface Naming {
     /**
      * 
      */
-    String SECURITY = "epf_webapp_security";
+    String SESSION = "epf_webapp_security";
     
     /**
      * 

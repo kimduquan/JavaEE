@@ -25,4 +25,8 @@
   <welcome-file-list>
   	<welcome-file>webapp/index.html</welcome-file>
   </welcome-file-list>
+	<context-param>
+		<param-name>javax.faces.ENABLE_WEBSOCKET_ENDPOINT</param-name>
+		<param-value>true</param-value>
+	</context-param>
 </web-app>
