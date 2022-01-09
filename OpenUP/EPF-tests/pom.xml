@@ -47,6 +47,8 @@
 		<liberty.env.epf_shell_path>../EPF-shell/target/appassembler/bin</liberty.env.epf_shell_path>
 		<liberty.env.epf_shell_command>${command}</liberty.env.epf_shell_command>
 		<liberty.env.epf_tests_file_root>target/servers/test/epf.file.root</liberty.env.epf_tests_file_root>
+    	<liberty.env.WLP_LOGGING_MESSAGE_FORMAT>json</liberty.env.WLP_LOGGING_MESSAGE_FORMAT>
+    	<liberty.env.WLP_LOGGING_MESSAGE_SOURCE>message,trace,accessLog,ffdc,audit</liberty.env.WLP_LOGGING_MESSAGE_SOURCE>
     </properties>
     <dependencies>
 		<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
