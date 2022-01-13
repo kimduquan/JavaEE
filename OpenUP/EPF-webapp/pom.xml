@@ -90,7 +90,7 @@
 									<exec executable="jshell">
 										<arg value="../EPF-shell/bin/start.jsh"/>
 										<arg value="-R-Dwait"/>
-									    <arg value="-R-Dcmd=/payara5/glassfish/bin/asadmin deploy --force=true --contextroot=epf ${project.build.directory}/${project.build.finalName}.war"/>
+									    <arg value="-R-Dcmd=/glassfish5/glassfish/bin/asadmin deploy --force=true --contextroot=epf ${project.build.directory}/${project.build.finalName}.war"/>
 								  	</exec>
 								</target >
 							</configuration>

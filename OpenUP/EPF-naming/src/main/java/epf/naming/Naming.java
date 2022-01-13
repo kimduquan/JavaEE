@@ -433,5 +433,10 @@ public interface Naming {
 	     * 
 	     */
 	    String WEB_APP_URL = "epf.webapp.url";
+	    
+	    /**
+	     * 
+	     */
+	    String SECURITY_WEB_APP_URL = "epf.security.webapp.url";
 	}
 }

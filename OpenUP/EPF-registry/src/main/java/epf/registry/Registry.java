@@ -15,9 +15,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import epf.naming.Naming;
 import epf.util.config.ConfigUtil;
-import openup.client.delivery_processes.DeliveryProcesses;
-import openup.client.tasks.Tasks;
-import openup.client.work_products.WorkProducts;
 
 /**
  * @author PC
@@ -92,15 +89,6 @@ public class Registry implements epf.client.registry.Registry {
 			final URI langUrl = ConfigUtil.getURI(Naming.Lang.LANG_URL);
 			remote = "lang";
 			remotes.put(remote, langUrl);
-			final URI deliveryProcessesUrl = ConfigUtil.getURI(DeliveryProcesses.DELIVERY_PROCESSES_URL);
-			remote = "delivery-processes";
-			remotes.put(remote, deliveryProcessesUrl);
-			final URI tasksUrl = ConfigUtil.getURI(Tasks.TASKS_URL);
-			remote = "tasks";
-			remotes.put(remote, tasksUrl);
-			final URI workProductsUrl = ConfigUtil.getURI(WorkProducts.WORK_PRODUCTS_URL);
-			remote = "work-products";
-			remotes.put(remote, workProductsUrl);
 		} 
 		catch (Exception e) {
 			logger.throwing(getClass().getName(), "postConstruct", e);

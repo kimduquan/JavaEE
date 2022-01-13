@@ -87,9 +87,6 @@ public class RegistryTest {
 	    	expected.add(messagingUrl);
 	    	URI langUrl = UriBuilder.fromUri(GatewayUtil.get("lang")).scheme("ws").port(9080).build();
 	    	expected.add(langUrl);
-	    	expected.add(GatewayUtil.get("delivery-processes"));
-	    	expected.add(GatewayUtil.get("tasks"));
-	    	expected.add(GatewayUtil.get("work-products"));
 		} 
     	catch (Exception e) {
 			logger.log(Level.SEVERE, "testList_OK", e);

@@ -12,8 +12,8 @@ set portal_dir="C:\Program Files\pluto-3.1.0\bin\"
 cd %portal_dir%
 call .\shutdown.bat &
 cd %cur_dir%
-set payara_dir="C:\payara5\glassfish\bin\"
-cd %payara_dir%
+set glassfish_dir="C:\glassfish5\glassfish\bin\"
+cd %glassfish_dir%
 call .\stopserv.bat &
 cd %cur_dir%
 cd %kafka_dir%
