@@ -13,11 +13,13 @@
     <properties>
         <httpPort>9080</httpPort>
         <httpsPort>9443</httpsPort>
-        <httpWebPort>8282</httpWebPort>
-        <httpsWebPort>8181</httpsWebPort>
+        <httpWebPort>8585</httpWebPort>
+        <httpsWebPort>8686</httpsWebPort>
         <!-- Jaeger configuration -->
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
+    	<liberty.env.WLP_LOGGING_MESSAGE_FORMAT>json</liberty.env.WLP_LOGGING_MESSAGE_FORMAT>
+    	<liberty.env.WLP_LOGGING_MESSAGE_SOURCE>message,trace,accessLog,ffdc,audit</liberty.env.WLP_LOGGING_MESSAGE_SOURCE>
 		<liberty.env.epf_schedule_url>https://localhost:9443/schedule/schedule/</liberty.env.epf_schedule_url>
 		<liberty.env.epf_config_url>https://localhost:9443/config/config/</liberty.env.epf_config_url>
 		<liberty.env.epf_script_url>https://localhost:9443/script/script/</liberty.env.epf_script_url>
@@ -29,7 +31,7 @@
 		<liberty.env.epf_persistence_security_url>https://localhost:9443/persistence/security/</liberty.env.epf_persistence_security_url>
 		<liberty.env.epf_schema_url>https://localhost:9443/persistence/schema/</liberty.env.epf_schema_url>
 		<liberty.env.epf_security_url>https://localhost:9443/security/security/</liberty.env.epf_security_url>
-        <liberty.env.epf_security_webapp_url>https://localhost:8181/security/security/</liberty.env.epf_security_webapp_url>
+        <liberty.env.epf_security_webapp_url>https://localhost:8686/EPF-security-webapp-1.0.0/</liberty.env.epf_security_webapp_url>
         <liberty.env.epf_gateway_url>https://localhost:9443/gateway/</liberty.env.epf_gateway_url>
         <liberty.env.epf_messaging_url>ws://localhost:9080/messaging/messaging/</liberty.env.epf_messaging_url>
         <liberty.env.epf_lang_url>ws://localhost:9080/lang/lang/</liberty.env.epf_lang_url>
@@ -37,7 +39,7 @@
         <liberty.env.epf_registry_url>https://localhost:9443/registry/registry/</liberty.env.epf_registry_url>
 		<liberty.env.epf_management_url>https://localhost:9443/management/management/</liberty.env.epf_management_url>
 		<liberty.env.epf_portlet_url>http://localhost:8080/pluto/portal</liberty.env.epf_portlet_url>
-		<liberty.env.epf_webapp_url>https://localhost:9443/webapp/</liberty.env.epf_webapp_url>
+		<liberty.env.epf_webapp_url>https://localhost:8686/webapp/</liberty.env.epf_webapp_url>
 		<liberty.env.epf_health_url>https://localhost:9443/health/</liberty.env.epf_health_url>
 		<liberty.env.epf_batch_api_url>https://localhost:9443/ibm/</liberty.env.epf_batch_api_url>
 		<liberty.env.epf_net_url>https://localhost:9443/net/net/</liberty.env.epf_net_url>
@@ -48,15 +50,8 @@
 		<liberty.env.epf_shell_path>../EPF-shell/target/appassembler/bin</liberty.env.epf_shell_path>
 		<liberty.env.epf_shell_command>${command}</liberty.env.epf_shell_command>
 		<liberty.env.epf_tests_file_root>target/servers/test/epf.file.root</liberty.env.epf_tests_file_root>
-    	<liberty.env.WLP_LOGGING_MESSAGE_FORMAT>json</liberty.env.WLP_LOGGING_MESSAGE_FORMAT>
-    	<liberty.env.WLP_LOGGING_MESSAGE_SOURCE>message,trace,accessLog,ffdc,audit</liberty.env.WLP_LOGGING_MESSAGE_SOURCE>
     </properties>
     <dependencies>
-		<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-        </dependency>
        	<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 		<dependency>
 		    <groupId>mysql</groupId>
@@ -348,7 +343,7 @@
 						<epf.persistence.security.url>https://localhost:${httpsPort}/persistence/security/</epf.persistence.security.url>
 						<epf.schema.url>https://localhost:${httpsPort}/persistence/schema/</epf.schema.url>
 						<epf.security.url>https://localhost:${httpsPort}/security/security/</epf.security.url>
-                        <epf.security.webapp.url>https://localhost:8181/security/security/</epf.security.webapp.url>
+                        <epf.security.webapp.url>https://localhost:${httpsPort}/security/</epf.security.webapp.url>
                         <epf.gateway.url>https://localhost:${httpsPort}/gateway/</epf.gateway.url>
                         <epf.registry.url>https://localhost:${httpsPort}/registry/registry/</epf.registry.url>
 						<epf.management.url>https://localhost:${httpsPort}/management/management/</epf.management.url>

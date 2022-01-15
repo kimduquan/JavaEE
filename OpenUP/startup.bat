@@ -15,9 +15,9 @@ set portal_dir="C:\Program Files\pluto-3.1.0\bin\"
 cd %portal_dir%
 call .\startup.bat &
 cd %cur_dir%
-set glassfish_dir="C:\glassfish5\glassfish\bin\"
-cd %glassfish_dir%
-start .\startserv.bat --debug &
+set wildfly_dir="C:\wildfly-24.0.1.Final\bin"
+cd %wildfly_dir%
+start .\standalone.bat "-Djboss.http.port=8585" "-Djboss.https.port=8686" --debug &
 cd %cur_dir%
 cd %kafka_dir%
 start .\kafka-server-start.bat ..\..\config\server.properties &

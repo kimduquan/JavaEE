@@ -44,7 +44,7 @@ public class AuthenticationServlet extends HttpServlet {
 			final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 			if(authHeader == null || authHeader.isEmpty()) {
 				response.setHeader(HttpHeaders.WWW_AUTHENTICATE, HttpServletRequest.BASIC_AUTH + " realm=\"" + Naming.REALM_NAME + "\"");
-				response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+				response.sendError(Response.Status.UNAUTHORIZED.getStatusCode());
 			}
 			else {
 				final String base64Header = authHeader.substring(HttpServletRequest.BASIC_AUTH.length() + 1);

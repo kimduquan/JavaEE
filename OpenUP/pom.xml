@@ -641,6 +641,11 @@
 					<artifactId>dependency-check-maven</artifactId>
 					<version>6.5.3</version>
 		        </plugin>
+		        <plugin>
+		        	<groupId>org.wildfly.plugins</groupId>
+				    <artifactId>wildfly-maven-plugin</artifactId>
+				    <version>2.1.0.Final</version>
+		        </plugin>
             </plugins>
         </pluginManagement>
     </build>
