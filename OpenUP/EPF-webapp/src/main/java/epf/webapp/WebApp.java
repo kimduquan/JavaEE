@@ -1,18 +1,20 @@
-package epf.webapp.config;
+package epf.webapp;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
-import javax.annotation.security.DeclareRoles;
 import javax.enterprise.context.ApplicationScoped;
 import javax.faces.annotation.FacesConfig;
 import javax.inject.Inject;
-import javax.security.enterprise.authentication.mechanism.http.CustomFormAuthenticationMechanismDefinition;
-import javax.security.enterprise.authentication.mechanism.http.LoginToContinue;
+import javax.ws.rs.core.Link;
+import epf.client.config.Config;
+import epf.client.registry.Registry;
 import epf.client.util.Client;
 import epf.client.util.ClientUtil;
 import epf.naming.Naming;
+import epf.util.MapUtil;
 import epf.util.config.ConfigUtil;
 import epf.util.logging.LogManager;
 
@@ -22,24 +24,22 @@ import epf.util.logging.LogManager;
  */
 @ApplicationScoped
 @FacesConfig
-@CustomFormAuthenticationMechanismDefinition(
-		loginToContinue = @LoginToContinue(
-				loginPage = epf.webapp.Naming.SECURITY_PAGE,
-				useForwardToLogin = false
-				)
-		)
-@DeclareRoles(value = { Naming.Security.DEFAULT_ROLE })
-public class Config {
+public class WebApp {
 	
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = LogManager.getLogger(Config.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(WebApp.class.getName());
 
 	/**
 	 * 
 	 */
 	private final Map<String, String> properties = new ConcurrentHashMap<>();
+	
+	/**
+	 * 
+	 */
+	private final Map<String, String> remotes = new ConcurrentHashMap<>();
 	
 	/**
 	 * 
@@ -53,8 +53,10 @@ public class Config {
 	@PostConstruct
 	protected void postConstruct() {
 		try(Client client = clientUtil.newClient(ConfigUtil.getURI(Naming.Gateway.GATEWAY_URL))){
-			final Map<String, String> props = epf.client.config.Config.getProperties(client, "");
+			final Map<String, String> props = Config.getProperties(client, "");
 			props.forEach(properties::put);
+			final Set<Link> links = Registry.list(client, null);
+			links.forEach(link -> remotes.put(link.getTitle(), link.getUri().toString()));
 		} 
 		catch (Exception e) {
 			LOGGER.throwing(getClass().getName(), "postConstruct", e);
@@ -65,7 +67,7 @@ public class Config {
 	 * @param name
 	 * @return
 	 */
-	public String getProperty(final String name) {
-		return properties.get(name);
+	public String getUrl(final String name) {
+		return MapUtil.get(remotes, name).orElse(MapUtil.get(properties, name).orElse(""));
 	}
 }
