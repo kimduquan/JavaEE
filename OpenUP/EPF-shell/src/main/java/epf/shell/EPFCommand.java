@@ -11,13 +11,15 @@ import epf.shell.rules.Rules;
 import epf.shell.schema.Schema;
 import epf.shell.security.Security;
 import epf.shell.util.Utility;
-import jakarta.enterprise.context.ApplicationScoped;
+import io.quarkus.picocli.runtime.annotations.TopCommand;
+import javax.enterprise.context.ApplicationScoped;
 import picocli.CommandLine.Command;
 
 /**
  * @author PC
  *
  */
+@TopCommand
 @Command(name = "epf", subcommands = {Security.class, Persistence.class, Schema.class, FileStore.class, Rules.class, Utility.class, Image.class, Cache.class})
 @ApplicationScoped
 public class EPFCommand {

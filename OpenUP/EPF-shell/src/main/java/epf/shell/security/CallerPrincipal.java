@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.shell.security;
 
 import static java.lang.annotation.ElementType.PARAMETER;

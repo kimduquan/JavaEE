@@ -13,8 +13,8 @@ import epf.shell.Function;
 import epf.shell.client.ClientUtil;
 import epf.shell.security.Credential;
 import epf.shell.security.CallerPrincipal;
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 
@@ -31,7 +31,7 @@ public class Schema {
 	 * 
 	 */
 	@Inject
-	private transient ClientUtil clientUtil;
+	transient ClientUtil clientUtil;
 	
 	/**
 	 * @param credential

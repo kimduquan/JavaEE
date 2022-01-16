@@ -15,10 +15,10 @@ import epf.shell.SYSTEM;
 import epf.shell.client.ClientUtil;
 import epf.shell.security.CallerPrincipal;
 import epf.shell.security.Credential;
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.enterprise.inject.Instance;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
+import javax.enterprise.context.RequestScoped;
+import javax.enterprise.inject.Instance;
+import javax.inject.Inject;
+import javax.inject.Named;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -36,13 +36,13 @@ public class Persistence {
 	 * 
 	 */
 	@Inject
-	private transient ClientUtil clientUtil;
+	transient ClientUtil clientUtil;
 	
 	/**
 	 * 
 	 */
 	@Inject @Named(SYSTEM.OUT)
-	private transient Instance<PrintWriter> out;
+	transient Instance<PrintWriter> out;
 	
 	/**
 	 * @param credential

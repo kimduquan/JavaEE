@@ -5,7 +5,7 @@ package epf.shell.cache;
 
 import epf.naming.Naming;
 import epf.shell.Function;
-import jakarta.enterprise.context.RequestScoped;
+import javax.enterprise.context.RequestScoped;
 import picocli.CommandLine.Command;
 
 /**

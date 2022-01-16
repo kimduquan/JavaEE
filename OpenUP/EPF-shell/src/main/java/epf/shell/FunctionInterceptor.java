@@ -2,18 +2,17 @@ package epf.shell;
 
 import java.io.PrintWriter;
 import java.util.logging.Logger;
-
 import javax.json.JsonValue;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
-import jakarta.annotation.Priority;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import jakarta.interceptor.AroundInvoke;
-import jakarta.interceptor.Interceptor;
-import jakarta.interceptor.InvocationContext;
-import jakarta.validation.ValidationException;
-import jakarta.validation.executable.ExecutableValidator;
+import javax.annotation.Priority;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.Interceptor;
+import javax.interceptor.InvocationContext;
+import javax.validation.ValidationException;
 
 /**
  * @author PC
@@ -22,25 +21,26 @@ import jakarta.validation.executable.ExecutableValidator;
 @Function
 @Interceptor
 @Priority(value = Interceptor.Priority.APPLICATION)
+@ApplicationScoped
 public class FunctionInterceptor {
 	
 	/**
 	 * 
 	 */
 	@Inject @Named(SYSTEM.OUT)
-	private transient PrintWriter out;
+	transient PrintWriter out;
 	
 	/**
 	 * 
 	 */
 	@Inject @Named(SYSTEM.ERR)
-	private transient PrintWriter err;
+	transient PrintWriter err;
 	
 	/**
 	 * 
 	 */
-	@Inject
-	private transient ExecutableValidator validator;
+	//@Inject
+	//transient ExecutableValidator validator;
 	
 	/**
 	 * @param context
@@ -51,7 +51,7 @@ public class FunctionInterceptor {
 	public Object aroundInvoke(final InvocationContext context) throws Exception {
 		Object result = null;
 		try {
-			validator.validateParameters(context.getTarget(), context.getMethod(), context.getParameters());
+			//validator.validateParameters(context.getTarget(), context.getMethod(), context.getParameters());
 			result = invoke(context);
 		}
 		catch(ValidationException ex) {

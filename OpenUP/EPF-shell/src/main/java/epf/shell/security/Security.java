@@ -10,8 +10,8 @@ import epf.naming.Naming;
 import epf.security.schema.Token;
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -38,13 +38,13 @@ public class Security {
 	 * 
 	 */
 	@Inject
-	private transient ClientUtil clientUtil;
+	transient ClientUtil clientUtil;
 	
 	/**
 	 * 
 	 */
 	@Inject
-	private transient IdentityStore identityStore;
+	transient IdentityStore identityStore;
 
 	/**
 	 * @param user
