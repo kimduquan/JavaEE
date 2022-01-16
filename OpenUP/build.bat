@@ -11,6 +11,10 @@ cd EPF-persistence
 call mvn clean install
 echo on
 cd ../
+cd EPF-shell
+call .\build.bat
+echo on
+cd ../
 call mvn clean install
 echo on
 call .\shutdown.bat
