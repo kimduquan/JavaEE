@@ -96,7 +96,7 @@ public class ShellUtil {
 		List<String> lines = Files.readAllLines(out);
 		process.destroyForcibly();
 		try(Jsonb jsonb = JsonbBuilder.create()){
-			return jsonb.fromJson(lines.get(1), Token.class);
+			return jsonb.fromJson(lines.get(lines.size() - 1), Token.class);
 		}
 	}
 	
