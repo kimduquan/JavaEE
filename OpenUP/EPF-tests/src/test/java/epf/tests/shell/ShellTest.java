@@ -26,7 +26,6 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
-
 import epf.client.schema.Entity;
 import epf.file.util.PathUtil;
 import epf.naming.Naming;
@@ -145,9 +144,8 @@ public class ShellTest {
 		process = builder.start();
 		ShellUtil.waitFor(builder, in, credential.getValue());
 		List<String> lines = Files.readAllLines(out);
-		Assert.assertEquals(2, lines.size());
-		Assert.assertTrue(lines.get(0).startsWith("Enter value for --password (Password): "));
-		String newToken = lines.get(1);
+		Assert.assertTrue(lines.get(lines.size() - 2).startsWith("Enter value for --password (Password): "));
+		String newToken = lines.get(lines.size() - 1);
 		Assert.assertTrue(newToken.length() > 256);
 		SecurityUtil.logOut(newToken);
 		lines = Files.readAllLines(err);
@@ -161,8 +159,7 @@ public class ShellTest {
 		builder = ShellUtil.command(builder, Naming.SECURITY, "logout", "-t", newToken);
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
-		Assert.assertEquals(2, lines.size());
-		Assert.assertEquals(credential.getKey(), lines.get(1));
+		Assert.assertEquals(credential.getKey(), lines.get(lines.size() - 1));
 		SecurityUtil.auth(newToken);
 		lines = Files.readAllLines(err);
 		Assert.assertTrue(lines.isEmpty());
@@ -173,9 +170,8 @@ public class ShellTest {
 		builder = ShellUtil.command(builder, Naming.SECURITY, "auth", "-t", token);
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
-		Assert.assertEquals(2, lines.size());
 		try(Jsonb jsonb = JsonbBuilder.create()){
-			Token securityToken = jsonb.fromJson(lines.get(1), Token.class);
+			Token securityToken = jsonb.fromJson(lines.get(lines.size() - 1), Token.class);
 			Assert.assertNotNull("Token", securityToken);
 			Assert.assertEquals("Token.name", credential.getKey(), securityToken.getName());
 		}
@@ -187,8 +183,9 @@ public class ShellTest {
 	public void testSecurity_UpdatePassword() throws InterruptedException, IOException {
 		builder = ShellUtil.command(builder, Naming.SECURITY, "update", "-tid", tokenID, "-p");
 		process = ShellUtil.waitFor(builder, in, credential.getValue());
-		List<String> lines = Files.readAllLines(out);
-		Assert.assertEquals(1, lines.size());
+		Files.readAllLines(out);
+		List<String> lines = Files.readAllLines(err);
+		Assert.assertTrue(lines.isEmpty());
 	}
 	
 	@Test
@@ -197,8 +194,7 @@ public class ShellTest {
 		builder = ShellUtil.command(builder, Naming.SECURITY, "revoke", "-t", token);
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
-		Assert.assertEquals(2, lines.size());
-		String newToken = lines.get(1);
+		String newToken = lines.get(lines.size() - 1);
 		Assert.assertNotEquals("", newToken);
 		Assert.assertTrue(newToken.length() > 256);
 		Assert.assertNotEquals(token, newToken);
@@ -223,10 +219,9 @@ public class ShellTest {
 		process.waitFor(20, TimeUnit.SECONDS);
 		
 		List<String> lines = Files.readAllLines(out);
-		Assert.assertEquals(2, lines.size());
         Artifact updatedArtifact = null;
         try(Jsonb jsonb = JsonbBuilder.create()){
-        	updatedArtifact = jsonb.fromJson(lines.get(1), Artifact.class);
+        	updatedArtifact = jsonb.fromJson(lines.get(lines.size() - 1), Artifact.class);
         }
         Assert.assertNotNull("Artifact", updatedArtifact);
         Assert.assertEquals("Artifact.name", artifact.getName(), updatedArtifact.getName());
@@ -260,8 +255,9 @@ public class ShellTest {
         updatedArtifact.setTailoring(new Tailoring());
 		ShellUtil.writeJson(in, artifact);
 		process.waitFor(20, TimeUnit.SECONDS);
-		List<String> lines = Files.readAllLines(out);
-		Assert.assertEquals(1, lines.size());
+		Files.readAllLines(out);
+		List<String> lines = Files.readAllLines(err);
+		Assert.assertTrue(lines.isEmpty());
         
         PersistenceUtil.remove(otherToken, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, updatedArtifact.getName());
 	}
@@ -281,7 +277,6 @@ public class ShellTest {
         builder = ShellUtil.command(builder, Naming.PERSISTENCE, "remove", "-tid", otherTokenID, "-s", WorkProducts.SCHEMA, "-e", WorkProducts.ARTIFACT, "-i", artifact.getName());
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
-		Assert.assertEquals(1, lines.size());
 		lines = Files.readAllLines(err);
 		Assert.assertTrue(lines.isEmpty());
 	}
@@ -291,10 +286,9 @@ public class ShellTest {
 		builder = ShellUtil.command(builder, Naming.SCHEMA, "entities", "-tid", tokenID);
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
-		Assert.assertEquals(2, lines.size());
 		List<Entity> entities;
 		try(Jsonb jsonb = JsonbBuilder.create()){
-			entities = jsonb.fromJson(lines.get(1), (new GenericType<List<Entity>>() {}).getType());
+			entities = jsonb.fromJson(lines.get(lines.size() - 1), (new GenericType<List<Entity>>() {}).getType());
 		}
 		Assert.assertFalse(entities.isEmpty());
 	}
@@ -312,8 +306,7 @@ public class ShellTest {
 				);
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
-		Assert.assertEquals(2, lines.size());
-		Assert.assertTrue(lines.get(1).startsWith(credential.getKey() + "/this/is/a/test/"));
+		Assert.assertTrue(lines.get(lines.size() - 1).startsWith(credential.getKey() + "/this/is/a/test/"));
 		FileUtil.delete(token, PathUtil.of(credential.getKey() + "/this/is/a/test"));
 		file.toFile().delete();
 	}
@@ -331,7 +324,6 @@ public class ShellTest {
 				);
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
-		Assert.assertEquals(1, lines.size());
 		lines = Files.readAllLines(err);
 		Assert.assertTrue(lines.isEmpty());
 		file.toFile().delete();
@@ -352,7 +344,6 @@ public class ShellTest {
 				);
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
-		Assert.assertEquals(1, lines.size());
 		lines = Files.readAllLines(err);
 		Assert.assertTrue(lines.isEmpty());
 		Assert.assertArrayEquals(
@@ -377,7 +368,6 @@ public class ShellTest {
 				);
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
-		Assert.assertEquals(1, lines.size());
 		lines = Files.readAllLines(err);
 		Assert.assertTrue(lines.isEmpty());
 		RulesUtil.deregisterRuleExecutionSet(token, "Artifact1");
@@ -392,9 +382,8 @@ public class ShellTest {
 				"-n", "Artifact1"
 				);
 		process = ShellUtil.waitFor(builder);
-		List<String> lines = Files.readAllLines(out);
+		Files.readAllLines(out);
 		List<String> errors = Files.readAllLines(err);
-		Assert.assertEquals(1, lines.size());
 		Assert.assertTrue(errors.isEmpty());
 	}
 	
@@ -415,8 +404,7 @@ public class ShellTest {
 		process = ShellUtil.waitFor(builder, in, json);
 		List<String> lines = Files.readAllLines(out);
 		List<String> errors = Files.readAllLines(err);
-		Assert.assertEquals(2, lines.size());
-		List<Object> resultList = RulesUtil.decode(lines.get(1));
+		List<Object> resultList = RulesUtil.decode(lines.get(lines.size() - 1));
 		Assert.assertTrue(errors.isEmpty());
 		Assert.assertFalse(resultList.isEmpty());
 		Artifact resultArtifact = (Artifact) resultList.get(0);
@@ -436,8 +424,7 @@ public class ShellTest {
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
 		List<String> errors = Files.readAllLines(err);
-		Assert.assertEquals(2, lines.size());
-		List<Object> resultList = RulesUtil.decode(lines.get(1));
+		List<Object> resultList = RulesUtil.decode(lines.get(lines.size() - 1));
 		Assert.assertTrue(errors.isEmpty());
 		Assert.assertFalse(resultList.isEmpty());
 		RulesUtil.deregisterRuleExecutionSet(token, "Artifact1");
@@ -453,7 +440,6 @@ public class ShellTest {
 				);
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
-		Assert.assertEquals(1, lines.size());
 		lines = Files.readAllLines(err);
 		Assert.assertTrue(lines.isEmpty());
 	}
