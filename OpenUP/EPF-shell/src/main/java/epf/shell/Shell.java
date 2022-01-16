@@ -56,15 +56,7 @@ public class Shell implements QuarkusApplication {
 		return  commandLine.getErr();
 	}
 
-	/**
-	 * @param args
-	 * @return
-	 */
 	@ActivateRequestContext
-	public int execute(final String... args) {
-		return commandLine.execute(args);
-	}
-
 	@Override
 	public int run(String... args) throws Exception {
 		commandLine = new CommandLine(EPFCommand.class, factory);

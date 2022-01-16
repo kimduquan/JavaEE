@@ -12,8 +12,8 @@ import epf.shell.schema.Schema;
 import epf.shell.security.Security;
 import epf.shell.util.Utility;
 import io.quarkus.picocli.runtime.annotations.TopCommand;
-import javax.enterprise.context.ApplicationScoped;
 import picocli.CommandLine.Command;
+import javax.enterprise.context.ApplicationScoped;
 
 /**
  * @author PC

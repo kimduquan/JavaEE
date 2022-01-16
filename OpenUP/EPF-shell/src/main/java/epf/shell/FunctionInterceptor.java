@@ -6,7 +6,6 @@ import javax.json.JsonValue;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.annotation.Priority;
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.interceptor.AroundInvoke;
@@ -21,7 +20,6 @@ import javax.validation.ValidationException;
 @Function
 @Interceptor
 @Priority(value = Interceptor.Priority.APPLICATION)
-@ApplicationScoped
 public class FunctionInterceptor {
 	
 	/**

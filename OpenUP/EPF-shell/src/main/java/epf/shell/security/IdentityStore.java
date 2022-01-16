@@ -11,8 +11,8 @@ import java.util.logging.Logger;
 import epf.file.util.PathUtil;
 import epf.util.logging.LogManager;
 import javax.enterprise.context.ApplicationScoped;
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 
 /**
  * @author PC
