@@ -11,10 +11,7 @@ cd EPF-persistence
 call mvn clean install
 echo on
 cd ../
-cd EPF-shell
-call .\build.bat
-echo on
-cd ../
+call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
 call mvn clean install
 echo on
 call .\shutdown.bat

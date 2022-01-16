@@ -136,9 +136,7 @@
     <profile>
       <id>native</id>
       <activation>
-        <property>
-          <name>native</name>
-        </property>
+        <activeByDefault>true</activeByDefault>
       </activation>
       <build>
         <plugins>

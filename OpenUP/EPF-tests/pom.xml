@@ -484,7 +484,7 @@
 			</activation>
 			<properties>
         		<geckodriver>./geckodriver</geckodriver>
-        		<epf_shell_runner>EPF-shell-${project.version}-runner.exe</epf_shell_runner>
+        		<epf_shell_runner>EPF-shell-${project.version}-runner</epf_shell_runner>
         		<opencv_java>/usr/share/java/opencv-420.jar</opencv_java>
         		<opencv_core>/usr/lib/x86_64-linux-gnu/libopencv_core.so</opencv_core>
 			</properties>
@@ -498,7 +498,7 @@
 			</activation>
 			<properties>
         		<geckodriver>./geckodriver.exe</geckodriver>
-        		<epf_shell_runner>EPF-shell-${project.version}-runner</epf_shell_runner>
+        		<epf_shell_runner>EPF-shell-${project.version}-runner.exe</epf_shell_runner>
         		<opencv_java>C://Program Files/opencv/build/java/opencv-452.jar</opencv_java>
         		<opencv_core>C://Program Files/opencv/build/java/x64/opencv_java452.dll</opencv_core>
 			</properties>
