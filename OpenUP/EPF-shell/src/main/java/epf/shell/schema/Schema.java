@@ -5,7 +5,6 @@ package epf.shell.schema;
 
 import java.util.List;
 import javax.ws.rs.core.GenericType;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import epf.client.schema.Entity;
 import epf.client.util.Client;
 import epf.naming.Naming;
@@ -34,12 +33,6 @@ public class Schema {
 	transient ClientUtil clientUtil;
 	
 	/**
-	 * 
-	 */
-	@ConfigProperty(name = Naming.Gateway.GATEWAY_URL)
-	String gatewayUrl;
-	
-	/**
 	 * @param credential
 	 * @return
 	 * @throws Exception
@@ -49,7 +42,7 @@ public class Schema {
 			@ArgGroup(exclusive = true, multiplicity = "1")
 			@CallerPrincipal
 			final Credential credential) throws Exception{
-		try(Client client = clientUtil.newClient(gatewayUrl, Naming.SCHEMA)){
+		try(Client client = clientUtil.newClient(Naming.SCHEMA)){
 			client.authorization(credential.getToken());
 			return epf.client.schema.Schema.getEntities(client).readEntity(new GenericType<List<Entity>>() {});
 		}

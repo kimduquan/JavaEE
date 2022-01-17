@@ -3,9 +3,7 @@
  */
 package epf.shell.security;
 
-import java.net.URL;
 import epf.client.gateway.GatewayUtil;
-import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.security.schema.Token;
 import epf.shell.Function;
@@ -13,10 +11,9 @@ import epf.shell.client.ClientUtil;
 import epf.util.logging.Logging;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -30,7 +27,7 @@ import picocli.CommandLine.Option;
 @Function
 @Logging
 public class Security {
-
+	
 	/**
 	 * 
 	 */
@@ -55,8 +52,9 @@ public class Security {
 	/**
 	 * 
 	 */
-	@ConfigProperty(name = Naming.Gateway.GATEWAY_URL)
-	String gatewayUrl;
+	@Inject
+	@RestClient
+	transient SecurityClient security;
 
 	/**
 	 * @param user
@@ -66,7 +64,6 @@ public class Security {
 	 * @throws ShellException
 	 */
 	@Command(name = "login")
-	@Valid
 	public String login(
 			@Option(names = {"-u", "--user"}, required = true, description = "User name")
 			@NotBlank
@@ -75,14 +72,7 @@ public class Security {
 		    @NotEmpty
 			final char... password
 			) throws Exception {
-		try(Client client = clientUtil.newClient(gatewayUrl, Naming.SECURITY)){
-			return epf.security.client.Security.login(
-					client,
-					user, 
-					new String(password), 
-					new URL(GatewayUtil.get(gatewayUrl, Naming.SHELL).toString())
-					);
-		}
+		return security.login(user, new String(password), GatewayUtil.get(clientUtil.getBaseUri(), Naming.SHELL).toString());
 	}
 	
 	/**
@@ -97,10 +87,7 @@ public class Security {
 			final Credential credential
 			) throws Exception {
 		identityStore.remove(credential);
-		try(Client client = clientUtil.newClient(gatewayUrl, Naming.SECURITY)){
-			client.authorization(credential.getToken());
-			return epf.security.client.Security.logOut(client);
-		}
+		return security.logOut(credential.getToken());
 	}
 	
 	/**
@@ -112,11 +99,7 @@ public class Security {
 	public Token authenticate(
 			@Option(names = {"-t", TOKEN_ARG}, description = TOKEN_DESC) 
 			final String token) throws Exception {
-		Token authToken = null;
-		try(Client client = clientUtil.newClient(gatewayUrl, Naming.SECURITY)){
-			client.authorization(token);
-			authToken = epf.security.client.Security.authenticate(client);
-		}
+		final Token authToken = security.authenticate(token);
 		final Credential credential = new Credential();
 		credential.token = token;
 		credential.tokenID = authToken.getTokenID();
@@ -137,10 +120,7 @@ public class Security {
 			@Option(names = {"-p", "--password"}, description = "Password", interactive = true)
 		    final char... password
 		    ) throws Exception {
-		try(Client client = clientUtil.newClient(gatewayUrl, Naming.SECURITY)){
-			client.authorization(credential.getToken());
-			epf.security.client.Security.update(client, new String(password));
-		}
+		security.update(credential.getToken(), new String(password));
 	}
 	
 	/**
@@ -154,9 +134,6 @@ public class Security {
 			@CallerPrincipal
 			final Credential credential
 			) throws Exception {
-		try(Client client = clientUtil.newClient(gatewayUrl, Naming.SECURITY)){
-			client.authorization(credential.getToken());
-			return epf.security.client.Security.revoke(client);
-		}
+		return security.revoke(credential.getToken());
 	}
 }

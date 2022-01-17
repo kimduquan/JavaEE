@@ -9,7 +9,6 @@ import java.nio.file.Files;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.shell.Function;
@@ -36,12 +35,6 @@ public class Image {
 	transient ClientUtil clientUtil;
 	
 	/**
-	 * 
-	 */
-	@ConfigProperty(name = Naming.Gateway.GATEWAY_URL)
-	String gatewayUrl;
-	
-	/**
 	 * @param credential
 	 * @param file
 	 * @throws Exception 
@@ -53,7 +46,7 @@ public class Image {
 			final Credential credential,
 			@Option(names = {"-f", "--file"}, description = "File")
 			final File file) throws Exception {
-		try(Client client = clientUtil.newClient(gatewayUrl, Naming.IMAGE)){
+		try(Client client = clientUtil.newClient(Naming.IMAGE)){
 			client.authorization(credential.getToken());
 			try(InputStream input = Files.newInputStream(file.toPath())){
 				try(Response response = epf.client.image.Image.findContours(client, input)){

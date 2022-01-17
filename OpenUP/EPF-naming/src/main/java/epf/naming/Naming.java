@@ -57,6 +57,22 @@ public interface Naming {
 	/**
 	 * 
 	 */
+	String CLIENT = "client";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface Client {
+		/**
+		 * 
+		 */
+		String CLIENT_CONFIG = "epf.client.config";
+	}
+	
+	/**
+	 * 
+	 */
 	String CONFIG = "config";
 	
 	/**

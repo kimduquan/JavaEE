@@ -7,7 +7,6 @@ import java.io.PrintWriter;
 import java.util.Optional;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.sse.SseEventSource;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.shell.Function;
@@ -45,12 +44,6 @@ public class Persistence {
 	transient Instance<PrintWriter> out;
 	
 	/**
-	 * 
-	 */
-	@ConfigProperty(name = Naming.Gateway.GATEWAY_URL)
-	String gatewayUrl;
-	
-	/**
 	 * @param credential
 	 * @param schema
 	 * @param entity
@@ -68,7 +61,7 @@ public class Persistence {
 			@Option(names = {"-i", "--id"}, description = "ID")
 			final String entityId
 			) throws Exception {
-		try(Client client = clientUtil.newClient(gatewayUrl, Naming.CACHE)){
+		try(Client client = clientUtil.newClient(Naming.CACHE)){
 			client.authorization(credential.getToken());
 			try(Response response = epf.client.cache.Cache.getEntity(client, schema, entity, entityId)){
 				return response.readEntity(String.class);
@@ -91,7 +84,7 @@ public class Persistence {
 			final String schema,
 			@Option(names = {"-e", "--entity"}, description = "Entity")
 			final String entity) throws Exception {
-		try(Client client = clientUtil.newClient(gatewayUrl, Naming.CACHE)){
+		try(Client client = clientUtil.newClient(Naming.CACHE)){
 			client.authorization(credential.getToken());
 			try(SseEventSource stream = epf.client.cache.Cache.forEachEntity(client, schema, entity)){
 				stream.register(e -> {
@@ -122,7 +115,7 @@ public class Persistence {
 			final Optional<Integer> firstResult,
 			@Option(names = {"-m", "--max"}, description = "Max Result(s)")
 			final Optional<Integer> maxResults) throws Exception {
-		try(Client client = clientUtil.newClient(gatewayUrl, Naming.CACHE)){
+		try(Client client = clientUtil.newClient(Naming.CACHE)){
 			client.authorization(credential.getToken());
 			try(Response response = epf.client.cache.Cache.getEntities(
 					client, 

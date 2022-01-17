@@ -22,6 +22,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import epf.client.util.Client;
 import epf.naming.Naming;
@@ -85,9 +87,9 @@ public interface Security {
     		final String username, 
     		final String passwordHash, 
     		final URL url) {
-    	final Form form = new Form();
-    	form.param("username", username);
-    	form.param("password_hash", passwordHash);
+    	final MultivaluedMap<String, String> form = new MultivaluedHashMap<>();
+    	form.add("username", username);
+    	form.add("password_hash", passwordHash);
     	return client.request(
     			target -> target.queryParam(URL, url),
     			req -> req.accept(MediaType.TEXT_PLAIN))

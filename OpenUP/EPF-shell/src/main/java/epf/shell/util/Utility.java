@@ -22,12 +22,8 @@ import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.sse.SseEventSource;
-
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-
 import epf.client.util.Client;
 import epf.file.util.PathUtil;
-import epf.naming.Naming;
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
 import epf.shell.util.client.Entity;
@@ -52,7 +48,7 @@ public class Utility {
 	/**
 	 * 
 	 */
-	private static final Logger LOG = LogManager.getLogger(Utility.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Utility.class.getName());
 	
 	/**
 	 * 
@@ -68,19 +64,13 @@ public class Utility {
 	/**
 	 * 
 	 */
-	@ConfigProperty(name = Naming.Gateway.GATEWAY_URL)
-	String gatewayUrl;
-	
-	/**
-	 * 
-	 */
 	@PostConstruct
 	protected void postConstruct() {
 		try {
 			tempDir = Files.createTempDirectory(PathUtil.of(""), "utility");
 		} 
 		catch (IOException e) {
-			LOG.throwing(Files.class.getName(), "createTempDirectory", e);
+			LOGGER.throwing(Files.class.getName(), "createTempDirectory", e);
 		}
 	}
 	

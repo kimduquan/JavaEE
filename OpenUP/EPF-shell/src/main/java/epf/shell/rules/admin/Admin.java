@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import javax.ws.rs.core.Response;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.shell.Function;
@@ -34,12 +33,6 @@ public class Admin {
 	 */
 	@Inject
 	transient ClientUtil clientUtil;
-	
-	/**
-	 * 
-	 */
-	@ConfigProperty(name = Naming.Gateway.GATEWAY_URL)
-	String gatewayUrl;
 
 	/**
 	 * @param token
@@ -57,7 +50,7 @@ public class Admin {
 			@Option(names = {"-f", "--file"}, description = "Rules file")
 			final File file 
 			) throws Exception {
-		try(Client client = clientUtil.newClient(gatewayUrl, Naming.RULES)){
+		try(Client client = clientUtil.newClient(Naming.RULES)){
 			client.authorization(credential.getToken());
 			try(InputStream input = Files.newInputStream(file.toPath())){
 				try(Response response = epf.client.rules.admin.Admin.registerRuleExecutionSet(client, name, input)){
@@ -80,7 +73,7 @@ public class Admin {
 			@Option(names = {"-n", "--name"}, description = "Name")
 			final String name
 			) throws Exception {
-		try(Client client = clientUtil.newClient(gatewayUrl, Naming.RULES)){
+		try(Client client = clientUtil.newClient(Naming.RULES)){
 			client.authorization(credential.getToken());
 			try(Response response = epf.client.rules.admin.Admin.deregisterRuleExecutionSet(client, name)){
 				response.getStatus();
