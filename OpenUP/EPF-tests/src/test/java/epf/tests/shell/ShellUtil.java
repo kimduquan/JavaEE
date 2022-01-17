@@ -94,6 +94,7 @@ public class ShellUtil {
 		builder = command(builder, Naming.SECURITY, "auth", "-t", token);
 		Process process = ShellUtil.waitFor(builder);
 		List<String> lines = Files.readAllLines(out);
+		lines.stream().forEach(System.out::println);
 		process.destroyForcibly();
 		try(Jsonb jsonb = JsonbBuilder.create()){
 			return jsonb.fromJson(lines.get(lines.size() - 1), Token.class);
