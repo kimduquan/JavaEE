@@ -1,11 +1,11 @@
 package epf.util.logging;
 
 import java.io.Serializable;
-import java.net.URL;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
+import javax.annotation.Priority;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
@@ -14,8 +14,9 @@ import javax.interceptor.InvocationContext;
  * @author PC
  *
  */
-@Log
+@Logging
 @Interceptor
+@Priority(value = Interceptor.Priority.APPLICATION)
 public class LogManager implements Serializable {
 	
 	/**
@@ -33,7 +34,7 @@ public class LogManager implements Serializable {
 	 * @throws Exception
 	 */
 	@AroundInvoke
-	public Object logMethodEntry(final InvocationContext invocationContext) {
+	public Object logMethodEntry(final InvocationContext invocationContext) throws Exception {
 		final String cls = invocationContext.getMethod().getDeclaringClass().getName();
 		final String method = invocationContext.getMethod().getName();
 		final Logger logger = getLogger(cls);
@@ -41,14 +42,13 @@ public class LogManager implements Serializable {
 		Object result = null;
 		try {
 			result = invocationContext.proceed();
+			logger.exiting(cls, invocationContext.getMethod().getName(), result);
+			return result;
 		} 
 		catch (Exception e) {
 			logger.throwing(cls, method, e);
+			throw e;
 		}
-		finally {
-			logger.exiting(cls, invocationContext.getMethod().getName(), result);
-		}
-		return result;
 	}
 	
 	/**
@@ -60,18 +60,5 @@ public class LogManager implements Serializable {
 		return LOGGERS.computeIfAbsent(clsName, name -> {
 			return Logger.getLogger(name);
 		});
-	}
-	
-	/**
-	 * @param cls
-	 */
-	public static void config(final Class<?> cls) {
-		final String configFile = System.getProperty("java.util.logging.config.file");
-		if(configFile == null) {
-			final URL config = cls.getClassLoader().getResource("logging.properties");
-			if(config != null) {
-				System.setProperty("java.util.logging.config.file", config.getFile());
-			}
-		}
 	}
 }

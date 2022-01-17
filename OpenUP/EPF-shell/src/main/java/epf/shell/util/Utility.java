@@ -22,8 +22,12 @@ import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.sse.SseEventSource;
+
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
 import epf.client.util.Client;
 import epf.file.util.PathUtil;
+import epf.naming.Naming;
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
 import epf.shell.util.client.Entity;
@@ -60,6 +64,12 @@ public class Utility {
 	 */
 	@Inject
 	transient ClientUtil clientUtil;
+	
+	/**
+	 * 
+	 */
+	@ConfigProperty(name = Naming.Gateway.GATEWAY_URL)
+	String gatewayUrl;
 	
 	/**
 	 * 

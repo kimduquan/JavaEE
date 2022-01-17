@@ -136,7 +136,9 @@
     <profile>
       <id>native</id>
       <activation>
-        <activeByDefault>true</activeByDefault>
+        <property>
+          <name>epf-shell-native</name>
+        </property>
       </activation>
       <build>
         <plugins>

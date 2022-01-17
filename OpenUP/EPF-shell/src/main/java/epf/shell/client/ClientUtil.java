@@ -3,9 +3,10 @@
  */
 package epf.shell.client;
 
-import java.net.URI;
+import epf.client.gateway.GatewayUtil;
 import epf.client.util.Client;
 import epf.client.util.ClientQueue;
+import java.net.URI;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
@@ -45,5 +46,15 @@ public class ClientUtil {
 	 */
 	public Client newClient(final URI uri) {
 		return new Client(clients, uri, builder -> builder);
+	}
+	
+	/**
+	 * @param gatewayUrl
+	 * @param name
+	 * @return
+	 * @throws Exception
+	 */
+	public Client newClient(final String gatewayUrl, final String name) throws Exception {
+		return new Client(clients, GatewayUtil.get(gatewayUrl, name), builder -> builder);
 	}
 }

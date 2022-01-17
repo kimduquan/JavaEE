@@ -1,2 +1,3 @@
-mvn dependency:copy-dependencies -DincludeScope=compile
-jshell --class-path ./target/dependency/* shell.jsh
+set epf.gateway.url=https://localhost:9443/gateway/
+C:\jdk-11.0.13+8\bin\java.exe -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8000 "-Depf.gateway.url=https://localhost:9443/gateway/" -jar .\target\quarkus-app\quarkus-run.jar security login -u any_role1 -p
+C:\jdk-11.0.13+8\bin\java.exe -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8000 -jar .\target\quarkus-app\quarkus-run.jar security login -u any_role1 -p

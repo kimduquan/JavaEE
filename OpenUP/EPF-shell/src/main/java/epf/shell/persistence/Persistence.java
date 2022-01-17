@@ -4,7 +4,7 @@
 package epf.shell.persistence;
 
 import javax.ws.rs.core.Response;
-import epf.client.gateway.GatewayUtil;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.shell.Function;
@@ -33,6 +33,12 @@ public class Persistence {
 	transient ClientUtil clientUtil;
 	
 	/**
+	 * 
+	 */
+	@ConfigProperty(name = Naming.Gateway.GATEWAY_URL)
+	String gatewayUrl;
+	
+	/**
 	 * @param credential
 	 * @param schema
 	 * @param entity
@@ -49,7 +55,7 @@ public class Persistence {
 			final String entity, 
 			@Option(names = {"-d", "--data"}, description = "Entity", interactive = true, echo = true)
 			final String data) throws Exception {
-		try(Client client = clientUtil.newClient(GatewayUtil.get(Naming.PERSISTENCE))){
+		try(Client client = clientUtil.newClient(gatewayUrl, Naming.PERSISTENCE)){
 			client.authorization(credential.getToken());
 			try(Response response = epf.client.persistence.Entities.persist(client, schema, entity, data)){
 				return response.readEntity(String.class);
@@ -77,7 +83,7 @@ public class Persistence {
 			final String entityId,
 			@Option(names = {"-d", "--data"}, description = "Entity", interactive = true, echo = true)
 			final String data) throws Exception {
-		try(Client client = clientUtil.newClient(GatewayUtil.get(Naming.PERSISTENCE))){
+		try(Client client = clientUtil.newClient(gatewayUrl, Naming.PERSISTENCE)){
 			client.authorization(credential.getToken());
 			epf.client.persistence.Entities.merge(client, schema, entity, entityId, data);
 		}
@@ -101,7 +107,7 @@ public class Persistence {
 			final String entity, 
 			@Option(names = {"-i", "--id"}, description = "ID")
 			final String entityId) throws Exception {
-		try(Client client = clientUtil.newClient(GatewayUtil.get(Naming.PERSISTENCE))){
+		try(Client client = clientUtil.newClient(gatewayUrl, Naming.PERSISTENCE)){
 			client.authorization(credential.getToken());
 			epf.client.persistence.Entities.remove(client, schema, entity, entityId);
 		}
@@ -124,7 +130,7 @@ public class Persistence {
 			final String entity, 
 			@Option(names = {"-i", "--id"}, description = "ID")
 			final String entityId) throws Exception {
-		try(Client client = clientUtil.newClient(GatewayUtil.get(Naming.PERSISTENCE))){
+		try(Client client = clientUtil.newClient(gatewayUrl, Naming.PERSISTENCE)){
 			client.authorization(credential.getToken());
 			try(Response response = epf.client.persistence.Entities.find(client, schema, entity, entityId)){
 				return response.readEntity(String.class);

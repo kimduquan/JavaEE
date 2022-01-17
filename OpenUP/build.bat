@@ -12,7 +12,7 @@ call mvn clean install
 echo on
 cd ../
 call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
-call mvn clean install
+call mvn clean install -Depf-shell-native
 echo on
 call .\shutdown.bat
 echo on

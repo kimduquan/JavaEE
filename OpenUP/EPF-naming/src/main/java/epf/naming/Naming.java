@@ -405,6 +405,11 @@ public interface Naming {
 	}
 	
 	/**
+	 * 
+	 */
+	String SHELL = "shell";
+	
+	/**
 	 * @author PC
 	 *
 	 */
