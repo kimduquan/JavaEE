@@ -87,7 +87,7 @@ public class Security {
 			final Credential credential
 			) throws Exception {
 		identityStore.remove(credential);
-		return security.logOut(credential.getToken());
+		return security.logOut(credential.getAuthHeader());
 	}
 	
 	/**
@@ -120,7 +120,7 @@ public class Security {
 			@Option(names = {"-p", "--password"}, description = "Password", interactive = true)
 		    final char... password
 		    ) throws Exception {
-		security.update(credential.getToken(), new String(password));
+		security.update(credential.getAuthHeader(), new String(password));
 	}
 	
 	/**
@@ -134,6 +134,6 @@ public class Security {
 			@CallerPrincipal
 			final Credential credential
 			) throws Exception {
-		return security.revoke(credential.getToken());
+		return security.revoke(credential.getAuthHeader());
 	}
 }

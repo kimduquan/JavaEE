@@ -93,7 +93,7 @@ public class ShellUtil {
 	public static Token securityAuth(ProcessBuilder builder, String token, Path out) throws Exception {
 		builder = command(builder, Naming.SECURITY, "auth", "-t", token);
 		Process process = ShellUtil.waitFor(builder);
-		List<String> lines = Files.readAllLines(out);
+		List<String> lines = getOutput(out);
 		lines.stream().forEach(System.out::println);
 		process.destroyForcibly();
 		try(Jsonb jsonb = JsonbBuilder.create()){
@@ -105,6 +105,16 @@ public class ShellUtil {
 		builder = command(builder, Naming.SECURITY, "logout", "-tid", tokenID);
 		Process process = ShellUtil.waitFor(builder);
 		process.destroyForcibly();
+	}
+	
+	/**
+	 * @param path
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<String> getOutput(final Path path) throws Exception{
+		List<String> lines = Files.readAllLines(path);
+		return lines.subList(7, lines.size() - 1);
 	}
 	
 	/**

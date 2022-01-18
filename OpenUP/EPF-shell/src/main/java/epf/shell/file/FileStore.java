@@ -5,14 +5,18 @@ package epf.shell.file;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import javax.ws.rs.core.Response;
-import epf.client.util.Client;
+import javax.ws.rs.core.StreamingOutput;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import epf.naming.Naming;
 import epf.shell.Function;
-import epf.shell.client.ClientUtil;
 import epf.shell.security.Credential;
 import epf.shell.security.CallerPrincipal;
 import javax.enterprise.context.RequestScoped;
@@ -34,7 +38,21 @@ public class FileStore {
 	 * 
 	 */
 	@Inject
-	transient ClientUtil clientUtil;
+	@RestClient
+	transient FilesClient files;
+	
+	/**
+	 * @param path
+	 * @return
+	 */
+	protected List<String> toList(final Path path){
+		final List<String> paths = new ArrayList<>();
+		final Iterator<Path> it = path.iterator();
+		while(it.hasNext()) {
+			paths.add(it.next().toString());
+		}
+		return paths;
+	}
 	
 	/**
 	 * @param token
@@ -52,13 +70,10 @@ public class FileStore {
 			final File file,
 			@Option(names = {"-p", "--path"}, description = "Path")
 			final Path path) throws Exception {
-		try(Client client = clientUtil.newClient(Naming.FILE)){
-			client.authorization(credential.getToken());
-			try(InputStream input = Files.newInputStream(file.toPath())){
-				try(Response res = epf.client.file.Files.createFile(client, input, path)){
-					res.getStatus();
-					return res.getLink("self").getTitle();
-				}
+		try(InputStream input = Files.newInputStream(file.toPath())){
+			try(Response res = files.createFile(credential.getAuthHeader(), toList(file.toPath()), input)){
+				res.getStatus();
+				return res.getLink("self").getTitle();
 			}
 		}
 	}
@@ -79,11 +94,9 @@ public class FileStore {
 			@Option(names = {"-o", "--output"}, description = "Output")
 			final File output
 			) throws Exception {
-		try(Client client = clientUtil.newClient(Naming.FILE)){
-			client.authorization(credential.getToken());
-			try(InputStream in = epf.client.file.Files.read(client, path)){
-				Files.copy(in, output.toPath(), StandardCopyOption.REPLACE_EXISTING);
-			}
+		final StreamingOutput stream = files.read(credential.getAuthHeader(), toList(path));
+		try(OutputStream outputStream = Files.newOutputStream(output.toPath(), StandardOpenOption.TRUNCATE_EXISTING)){
+			stream.write(outputStream);
 		}
 	}
 	
@@ -100,11 +113,8 @@ public class FileStore {
 			@Option(names = {"-p", "--path"}, description = "Path")
 			final Path path
 			) throws Exception {
-		try(Client client = clientUtil.newClient(Naming.FILE)){
-			client.authorization(credential.getToken());
-			try(Response response = epf.client.file.Files.delete(client, path)){
-				response.getStatus();
-			}
+		try(Response response = files.delete(credential.getAuthHeader(), toList(path))){
+			response.getStatus();
 		}
 	}
 }

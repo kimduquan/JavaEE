@@ -7,10 +7,8 @@ import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import javax.ws.rs.core.Response;
-import epf.client.util.Client;
-import epf.naming.Naming;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import epf.shell.Function;
-import epf.shell.client.ClientUtil;
 import epf.shell.security.Credential;
 import epf.shell.security.CallerPrincipal;
 import javax.enterprise.context.RequestScoped;
@@ -32,7 +30,8 @@ public class Admin {
 	 * 
 	 */
 	@Inject
-	transient ClientUtil clientUtil;
+	@RestClient
+	transient AdminClient admin;
 
 	/**
 	 * @param token
@@ -50,12 +49,9 @@ public class Admin {
 			@Option(names = {"-f", "--file"}, description = "Rules file")
 			final File file 
 			) throws Exception {
-		try(Client client = clientUtil.newClient(Naming.RULES)){
-			client.authorization(credential.getToken());
-			try(InputStream input = Files.newInputStream(file.toPath())){
-				try(Response response = epf.client.rules.admin.Admin.registerRuleExecutionSet(client, name, input)){
-					response.getStatus();
-				}
+		try(InputStream input = Files.newInputStream(file.toPath())){
+			try(Response response = admin.registerRuleExecutionSet(credential.getAuthHeader(), name, input)){
+				response.getStatus();
 			}
 		}
 	}
@@ -73,11 +69,8 @@ public class Admin {
 			@Option(names = {"-n", "--name"}, description = "Name")
 			final String name
 			) throws Exception {
-		try(Client client = clientUtil.newClient(Naming.RULES)){
-			client.authorization(credential.getToken());
-			try(Response response = epf.client.rules.admin.Admin.deregisterRuleExecutionSet(client, name)){
-				response.getStatus();
-			}
+		try(Response response = admin.deregisterRuleExecutionSet(credential.getAuthHeader(), name)){
+			response.getStatus();
 		}
 	}
 }

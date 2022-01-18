@@ -4,12 +4,10 @@
 package epf.shell.schema;
 
 import java.util.List;
-import javax.ws.rs.core.GenericType;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import epf.client.schema.Entity;
-import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.shell.Function;
-import epf.shell.client.ClientUtil;
 import epf.shell.security.Credential;
 import epf.shell.security.CallerPrincipal;
 import javax.enterprise.context.RequestScoped;
@@ -30,7 +28,8 @@ public class Schema {
 	 * 
 	 */
 	@Inject
-	transient ClientUtil clientUtil;
+	@RestClient
+	transient SchemaClient schema;
 	
 	/**
 	 * @param credential
@@ -42,9 +41,6 @@ public class Schema {
 			@ArgGroup(exclusive = true, multiplicity = "1")
 			@CallerPrincipal
 			final Credential credential) throws Exception{
-		try(Client client = clientUtil.newClient(Naming.SCHEMA)){
-			client.authorization(credential.getToken());
-			return epf.client.schema.Schema.getEntities(client).readEntity(new GenericType<List<Entity>>() {});
-		}
+		return schema.getEntities(credential.getAuthHeader());
 	}
 }

@@ -9,10 +9,9 @@ import java.nio.file.Files;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
-import epf.client.util.Client;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import epf.naming.Naming;
 import epf.shell.Function;
-import epf.shell.client.ClientUtil;
 import epf.shell.security.CallerPrincipal;
 import epf.shell.security.Credential;
 import picocli.CommandLine.ArgGroup;
@@ -32,7 +31,8 @@ public class Image {
 	 * 
 	 */
 	@Inject
-	transient ClientUtil clientUtil;
+	@RestClient
+	transient ImageClient image;
 	
 	/**
 	 * @param credential
@@ -46,12 +46,9 @@ public class Image {
 			final Credential credential,
 			@Option(names = {"-f", "--file"}, description = "File")
 			final File file) throws Exception {
-		try(Client client = clientUtil.newClient(Naming.IMAGE)){
-			client.authorization(credential.getToken());
-			try(InputStream input = Files.newInputStream(file.toPath())){
-				try(Response response = epf.client.image.Image.findContours(client, input)){
-					response.getStatus();
-				}
+		try(InputStream input = Files.newInputStream(file.toPath())){
+			try(Response response = image.findContours(credential.getAuthHeader(), input)){
+				response.getStatus();
 			}
 		}
 	}

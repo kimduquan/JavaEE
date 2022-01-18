@@ -447,6 +447,19 @@ public interface Naming {
 		String SHELL_RUNNER = "epf.shell.runner";
 	}
 	
+	/**
+	 * 
+	 */
+	String UTILITY = "utility";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface Utility {
+		
+	}
+	
 	String WEB_APP = "webapp";
 	
 	/**

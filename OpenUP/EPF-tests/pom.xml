@@ -360,7 +360,7 @@
 						<openup.tasks.url>https://localhost:${httpsPort}/tasks/tasks/</openup.tasks.url>
 						<openup.work_products.url>https://localhost:${httpsPort}/work-products/work-products/</openup.work_products.url>
 						<openup.gateway.url>https://localhost:${httpsPort}/openup/gateway/</openup.gateway.url>
-                        <epf.shell.path>../EPF-shell/target/</epf.shell.path>
+                        <epf.shell.path>../EPF-shell/</epf.shell.path>
                         <epf.shell.command>${shell_command}</epf.shell.command>
                         <epf.shell.runner>${shell_runner}</epf.shell.runner>
                         <webdriver.gecko.driver>${geckodriver}</webdriver.gecko.driver>
@@ -487,7 +487,7 @@
 			<properties>
         		<geckodriver>./geckodriver</geckodriver>
         		<shell_command>bash</shell_command>
-        		<shell_runner>./EPF-shell-${project.version}-runner</shell_runner>
+        		<shell_runner>./target/EPF-shell-${project.version}-runner</shell_runner>
         		<opencv_java>/usr/share/java/opencv-420.jar</opencv_java>
         		<opencv_core>/usr/lib/x86_64-linux-gnu/libopencv_core.so</opencv_core>
 			</properties>
@@ -502,7 +502,7 @@
 			<properties>
         		<geckodriver>./geckodriver.exe</geckodriver>
         		<shell_command>powershell</shell_command>
-        		<shell_runner>./EPF-shell-${project.version}-runner.exe</shell_runner>
+        		<shell_runner>./target/EPF-shell-${project.version}-runner.exe</shell_runner>
         		<opencv_java>C://Program Files/opencv/build/java/opencv-452.jar</opencv_java>
         		<opencv_core>C://Program Files/opencv/build/java/x64/opencv_java452.dll</opencv_core>
 			</properties>
