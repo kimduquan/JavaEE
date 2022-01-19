@@ -1,15 +1,13 @@
 package epf.shell.schema;
 
-import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
-import epf.client.schema.Embeddable;
-import epf.client.schema.Entity;
 import epf.naming.Naming;
 
 /**
@@ -26,7 +24,7 @@ public interface SchemaClient {
 	 */
 	@GET
     @Produces(MediaType.APPLICATION_JSON)
-	List<Entity> getEntities(
+	Response getEntities(
     		@HeaderParam(HttpHeaders.AUTHORIZATION)
     		final String token
     		);
@@ -38,7 +36,7 @@ public interface SchemaClient {
 	@GET
     @Path("embeddable")
     @Produces(MediaType.APPLICATION_JSON)
-    List<Embeddable> getEmbeddables(
+    Response getEmbeddables(
     		@HeaderParam(HttpHeaders.AUTHORIZATION)
     		final String token
     		);

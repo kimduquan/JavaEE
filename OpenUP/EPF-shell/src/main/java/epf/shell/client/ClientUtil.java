@@ -3,7 +3,6 @@
  */
 package epf.shell.client;
 
-import epf.client.gateway.GatewayUtil;
 import epf.client.util.Client;
 import epf.client.util.ClientQueue;
 import epf.naming.Naming;
@@ -62,13 +61,14 @@ public class ClientUtil {
 	 * @throws Exception
 	 */
 	public Client newClient(final String name) throws Exception {
-		return new Client(clients, GatewayUtil.get(gatewayUrl, name), builder -> builder);
+		return new Client(clients, getBaseUri(), builder -> builder);
 	}
 	
 	/**
 	 * @return
+	 * @throws Exception 
 	 */
-	public String getBaseUri() {
-		return gatewayUrl;
+	public URI getBaseUri() throws Exception {
+		return new URI(gatewayUrl).resolve(Naming.SHELL);
 	}
 }

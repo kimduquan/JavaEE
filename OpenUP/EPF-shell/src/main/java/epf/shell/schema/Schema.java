@@ -3,15 +3,14 @@
  */
 package epf.shell.schema;
 
-import java.util.List;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
-import epf.client.schema.Entity;
 import epf.naming.Naming;
 import epf.shell.Function;
 import epf.shell.security.Credential;
 import epf.shell.security.CallerPrincipal;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.ws.rs.core.Response;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 
@@ -37,10 +36,12 @@ public class Schema {
 	 * @throws Exception
 	 */
 	@Command(name = "entities")
-	public List<Entity> getEntities(
+	public String getEntities(
 			@ArgGroup(exclusive = true, multiplicity = "1")
 			@CallerPrincipal
 			final Credential credential) throws Exception{
-		return schema.getEntities(credential.getAuthHeader());
+		try(Response response = schema.getEntities(credential.getAuthHeader())){
+			return response.readEntity(String.class);
+		}
 	}
 }

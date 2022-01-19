@@ -3,7 +3,6 @@
  */
 package epf.shell.security;
 
-import epf.client.gateway.GatewayUtil;
 import epf.naming.Naming;
 import epf.security.schema.Token;
 import epf.shell.Function;
@@ -72,7 +71,7 @@ public class Security {
 		    @NotEmpty
 			final char... password
 			) throws Exception {
-		return security.login(user, new String(password), GatewayUtil.get(clientUtil.getBaseUri(), Naming.SHELL).toString());
+		return security.login(user, new String(password), clientUtil.getBaseUri().toString());
 	}
 	
 	/**
