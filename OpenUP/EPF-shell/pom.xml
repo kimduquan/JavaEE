@@ -48,16 +48,8 @@
         <version>${project.version}</version>
     </dependency>
     <dependency>
-	    <groupId>io.quarkus</groupId>
-	    <artifactId>quarkus-jsonb</artifactId>
-	</dependency>
-    <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-websockets-client</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-rest-client</artifactId>
     </dependency>
 	<dependency>
 		<groupId>io.quarkus</groupId>
