@@ -15,6 +15,7 @@ import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EmbeddableType;
 import javax.persistence.metamodel.EntityType;
 import javax.transaction.Transactional;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.SecurityContext;
@@ -78,10 +79,35 @@ public class Request {
      * @param id
      * @return
      */
-    public Object getEntity(final Session session, final EntityType<?> entityType, final String id) {
+    public Object getEntity(final Session session, final EntityType<?> entityType, final Object id) {
     	return session
     			.peekManager(entityManager -> entityManager.find(entityType.getJavaType(), id))
     			.orElseThrow(NotFoundException::new);
+    }
+    
+    /**
+     * @param entityType
+     * @param id
+     * @return
+     */
+    public Object getEntityId(final EntityType<?> entityType, final String id) {
+    	Object entityId = id;
+    	try {
+	    	switch(entityType.getIdType().getJavaType().getName()) {
+	    		case "java.lang.Integer":
+	    			entityId = Integer.valueOf(id);
+	    			break;
+	    		case "java.lang.Long":
+	    			entityId = Long.valueOf(id);
+	    			break;
+	    		default:
+	    			break;
+	    	}
+    	}
+    	catch(NumberFormatException ex) {
+    		throw new BadRequestException(ex);
+    	}
+    	return entityId;
     }
     
     /**
@@ -91,7 +117,7 @@ public class Request {
      * @return
      */
     @Transactional
-    public Optional<Object> removeEntity(final Session session, final EntityType<?> entityType, final String id) {
+    public Optional<Object> removeEntity(final Session session, final EntityType<?> entityType, final Object id) {
     	return session.peekManager(entityManager -> {
     		entityManager = EntityManagerUtil.joinTransaction(entityManager);
     		final Object entity = entityManager.find(entityType.getJavaType(), id);

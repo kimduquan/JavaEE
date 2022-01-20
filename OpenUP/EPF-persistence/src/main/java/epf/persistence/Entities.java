@@ -95,11 +95,12 @@ public class Entities implements epf.client.persistence.Entities {
 	public void merge(
 			final String schema,
 			final String name, 
-			final String entityId,
+			final String id,
 			final InputStream body
 			) throws Exception {
     	final Session session = request.getSession(context);
     	final EntityType<?> entityType = request.getEntityType(session, name);
+    	final Object entityId = request.getEntityId(entityType, id);
     	request.getEntity(session, entityType, entityId);
     	final Object entity = toObject(entityType, body);
     	validator.validate(entity);
@@ -116,12 +117,12 @@ public class Entities implements epf.client.persistence.Entities {
     public void remove(
     		final String schema,
     		final String name,
-    		final String entityId
+    		final String id
             ) {
     	final Session session = request.getSession(context);
     	final EntityType<?> entityType = request.getEntityType(session, name);
-    	request.removeEntity(session, entityType, entityId)
-    	.orElseThrow(NotFoundException::new);
+    	final Object entityId = request.getEntityId(entityType, id);
+    	request.removeEntity(session, entityType, entityId).orElseThrow(NotFoundException::new);
     	
     	final Map<String, Object> fields = MapUtil.of(Fields.EVENT, "persistence.persist");
         fields.put("schema", schema);
@@ -131,9 +132,10 @@ public class Entities implements epf.client.persistence.Entities {
     }
     
 	@Override
-	public Response find(final String schema, final String name, final String entityId) {
+	public Response find(final String schema, final String name, final String id) {
 		final Session session = request.getSession(context);
     	final EntityType<?> entityType = request.getEntityType(session, name);
+    	final Object entityId = request.getEntityId(entityType, id);
     	final Object entity = request.getEntity(session, entityType, entityId);
 		return Response.ok(entity).build();
 	}
