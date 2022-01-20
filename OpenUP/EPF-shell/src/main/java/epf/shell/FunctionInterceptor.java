@@ -2,6 +2,7 @@ package epf.shell;
 
 import java.io.PrintWriter;
 import java.time.Instant;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.JsonValue;
 import javax.json.bind.Jsonb;
@@ -60,6 +61,7 @@ public class FunctionInterceptor {
 		}
 		catch(Exception ex) {
 			logger.throwing(cls, method, ex);
+			logger.log(Level.WARNING, method, ex);
 			err.println(ex.getMessage());
 			return null;
 		}
