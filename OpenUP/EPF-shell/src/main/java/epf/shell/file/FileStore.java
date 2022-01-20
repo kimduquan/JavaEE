@@ -14,7 +14,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
-
 import epf.file.util.PathUtil;
 import epf.naming.Naming;
 import epf.shell.Function;
@@ -47,6 +46,7 @@ public class FileStore {
 	 */
 	protected FilesClient buildClient(final Path path) throws Exception {
 		final URI baseUrl = new URI(gatewayUrl + Naming.FILE).resolve(PathUtil.toURI(path));
+		System.out.println(baseUrl.toString());
 		final FilesClient files = RestClientBuilder.newBuilder().baseUrl(baseUrl.toURL()).build(FilesClient.class);
 		return files;
 	}
