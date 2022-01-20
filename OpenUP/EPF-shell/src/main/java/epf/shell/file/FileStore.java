@@ -9,9 +9,6 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -42,19 +39,6 @@ public class FileStore {
 	transient FilesClient files;
 	
 	/**
-	 * @param path
-	 * @return
-	 */
-	protected List<String> toList(final Path path){
-		final List<String> paths = new ArrayList<>();
-		final Iterator<Path> it = path.iterator();
-		while(it.hasNext()) {
-			paths.add(it.next().toString());
-		}
-		return paths;
-	}
-	
-	/**
 	 * @param token
 	 * @param file
 	 * @param path
@@ -71,7 +55,7 @@ public class FileStore {
 			@Option(names = {"-p", "--path"}, description = "Path")
 			final Path path) throws Exception {
 		try(InputStream input = Files.newInputStream(file.toPath())){
-			try(Response res = files.createFile(credential.getAuthHeader(), toList(file.toPath()), input)){
+			try(Response res = files.createFile(credential.getAuthHeader(), file.toPath().toString(), input)){
 				res.getStatus();
 				return res.getLink("self").getTitle();
 			}
@@ -94,7 +78,7 @@ public class FileStore {
 			@Option(names = {"-o", "--output"}, description = "Output")
 			final File output
 			) throws Exception {
-		final StreamingOutput stream = files.read(credential.getAuthHeader(), toList(path));
+		final StreamingOutput stream = files.read(credential.getAuthHeader(), path.toString());
 		try(OutputStream outputStream = Files.newOutputStream(output.toPath(), StandardOpenOption.TRUNCATE_EXISTING)){
 			stream.write(outputStream);
 		}
@@ -113,7 +97,7 @@ public class FileStore {
 			@Option(names = {"-p", "--path"}, description = "Path")
 			final Path path
 			) throws Exception {
-		try(Response response = files.delete(credential.getAuthHeader(), toList(path))){
+		try(Response response = files.delete(credential.getAuthHeader(), path.toString())){
 			response.getStatus();
 		}
 	}

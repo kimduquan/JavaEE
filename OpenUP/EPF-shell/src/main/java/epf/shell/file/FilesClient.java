@@ -1,7 +1,6 @@
 package epf.shell.file;
 
 import java.io.InputStream;
-import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -37,7 +36,7 @@ public interface FilesClient {
 			@HeaderParam(HttpHeaders.AUTHORIZATION)
     		final String token,
 			@PathParam("paths")
-			final List<String> paths,
+			final String paths,
 			final InputStream input
 			);
 	
@@ -52,7 +51,7 @@ public interface FilesClient {
     		@HeaderParam(HttpHeaders.AUTHORIZATION)
     		final String token,
     		@PathParam("paths")
-    		final List<String> paths
+    		final String paths
     		);
 	
 	/**
@@ -65,5 +64,5 @@ public interface FilesClient {
     		@HeaderParam(HttpHeaders.AUTHORIZATION)
     		final String token,
     		@PathParam("paths")
-    		final List<String> paths);
+    		final String paths);
 }
