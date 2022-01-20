@@ -55,7 +55,7 @@ public class FileStore {
 			@Option(names = {"-p", "--path"}, description = "Path")
 			final Path path) throws Exception {
 		try(InputStream input = Files.newInputStream(file.toPath())){
-			try(Response res = files.createFile(credential.getAuthHeader(), file.toPath().toString(), input)){
+			try(Response res = files.createFile(credential.getAuthHeader(), path.toString(), input)){
 				res.getStatus();
 				return res.getLink("self").getTitle();
 			}
