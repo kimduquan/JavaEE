@@ -26,10 +26,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.gateway.security.SecurityUtil;
 import epf.naming.Naming;
-import epf.util.config.ConfigUtil;
+import epf.util.logging.LogManager;
 import epf.util.websocket.Client;
 
 /**
@@ -39,6 +40,11 @@ import epf.util.websocket.Client;
 @Path("stream")
 @ApplicationScoped
 public class Stream {
+	
+	/**
+	 * 
+	 */
+	private static final Logger LOGGER = LogManager.getLogger(Stream.class.getName());
 	
 	/**
 	 * 
@@ -53,14 +59,26 @@ public class Stream {
 	/**
 	 * 
 	 */
-	@Inject
-	private transient Logger logger;
+	@ConfigProperty(name = Naming.Messaging.MESSAGING_URL)
+	String messagingUrl;
+	
+	/**
+	 * 
+	 */
+	@ConfigProperty(name = Naming.Cache.CACHE_URL)
+	String cacheUrl;
+	
+	/**
+	 * 
+	 */
+	@ConfigProperty(name = Naming.Security.SECURITY_URL)
+	String securityUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
-	private transient ManagedExecutor executor;
+	transient ManagedExecutor executor;
 	
 	/**
 	 * 
@@ -68,11 +86,11 @@ public class Stream {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI messagingUrl = ConfigUtil.getURI(Naming.Messaging.MESSAGING_URL);
-			clients.put(Naming.PERSISTENCE, Client.connectToServer(messagingUrl.resolve(Naming.PERSISTENCE)));
+			final URI url = new URI(messagingUrl);
+			clients.put(Naming.PERSISTENCE, Client.connectToServer(url.resolve(Naming.PERSISTENCE)));
 		} 
 		catch (URISyntaxException | DeploymentException | IOException e) {
-			logger.log(Level.SEVERE, "postConstruct", e);
+			LOGGER.log(Level.SEVERE, "postConstruct", e);
 		}
 	}
 	
@@ -86,7 +104,7 @@ public class Stream {
 				client.close();
 			} 
 			catch (Exception e) {
-				logger.throwing(client.getClass().getName(), "close", e);
+				LOGGER.throwing(client.getClass().getName(), "close", e);
 			}
 		});
 		this.clients.clear();
@@ -95,7 +113,7 @@ public class Stream {
 				broadcaster.close();
 			} 
 			catch (Exception e) {
-				logger.throwing(broadcaster.getClass().getName(), "close", e);
+				LOGGER.throwing(broadcaster.getClass().getName(), "close", e);
 			}
 		});
 		this.broadcasters.clear();
@@ -118,7 +136,7 @@ public class Stream {
 			final Sse sse,
 			@MatrixParam("tid")
 			final String tokenId) throws Exception {
-		SecurityUtil.authenticateTokenId(tokenId).thenAccept(succeed -> {
+		SecurityUtil.authenticateTokenId(tokenId, new URI(cacheUrl), new URI(securityUrl)).thenAccept(succeed -> {
 			if(succeed) {
 				clients.computeIfPresent(path, (p, client) -> {
 					final Broadcaster broadcaster = broadcasters.computeIfAbsent(

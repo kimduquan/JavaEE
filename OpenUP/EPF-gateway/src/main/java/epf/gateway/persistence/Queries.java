@@ -35,7 +35,7 @@ public class Queries {
      * 
      */
     @Inject
-    private transient Request request;
+    transient Request request;
     
     /**
      * @param headers

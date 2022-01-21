@@ -8,10 +8,11 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import epf.client.util.Client;
 import epf.client.util.ClientQueue;
 import epf.naming.Naming;
-import epf.util.config.ConfigUtil;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
@@ -19,42 +20,35 @@ import epf.util.config.ConfigUtil;
  */
 @ApplicationScoped
 public class Registry {
-
-	/**
-	 * 
-	 */
-	private static final String REGISTRY_URL = ConfigUtil.getString(Naming.Registry.REGISTRY_URL);
 	
 	/**
 	 * 
 	 */
-	private transient final Map<String, URI> remotes;
+	private static final Logger LOGGER = LogManager.getLogger(Registry.class.getName());
 	
 	/**
 	 * 
 	 */
-	@Inject
-	private transient ClientQueue clients;
+	private transient final Map<String, URI> remotes = new ConcurrentHashMap<>();
 	
 	/**
 	 * 
 	 */
 	@Inject
-	private transient Logger logger;
+	transient ClientQueue clients;
 	
 	/**
 	 * 
 	 */
-	public Registry() {
-		remotes = new ConcurrentHashMap<>();
-	}
+	@ConfigProperty(name = Naming.Registry.REGISTRY_URL)
+	String registryUrl;
     
 	/**
 	 * 
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		try(Client client = new Client(clients, new URI(REGISTRY_URL), b -> b)){
+		try(Client client = new Client(clients, new URI(registryUrl), b -> b)){
 			client
 			.request(
 					target -> target, 
@@ -67,7 +61,7 @@ public class Registry {
 			});
 		} 
 		catch (Exception e) {
-			logger.log(Level.SEVERE, REGISTRY_URL, e);
+			LOGGER.log(Level.SEVERE, registryUrl, e);
 		}
 	}
 	

@@ -29,7 +29,7 @@ public class Script {
 	 * 
 	 */
 	@Inject
-    private transient Request request;
+    transient Request request;
 	
 	/**
 	 * @param headers

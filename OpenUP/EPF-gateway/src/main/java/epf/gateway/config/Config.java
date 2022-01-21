@@ -32,7 +32,7 @@ public class Config {
      * 
      */
     @Inject
-    private transient Request request;
+    transient Request request;
     
     /**
      * @param headers

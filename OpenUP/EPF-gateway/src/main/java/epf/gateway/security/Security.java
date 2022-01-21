@@ -38,7 +38,7 @@ public class Security {
      * 
      */
     @Inject
-    private transient Request request;
+    transient Request request;
     
     /**
      * @param headers

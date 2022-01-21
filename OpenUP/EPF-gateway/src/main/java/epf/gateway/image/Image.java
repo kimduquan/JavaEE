@@ -34,7 +34,7 @@ public class Image {
      * 
      */
     @Inject
-    private transient Request request;
+    transient Request request;
     
     /**
      * @param headers

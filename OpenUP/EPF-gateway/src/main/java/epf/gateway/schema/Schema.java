@@ -30,7 +30,7 @@ public class Schema {
      * 
      */
     @Inject
-    private transient Request request;
+    transient Request request;
     
     /**
      * @param headers

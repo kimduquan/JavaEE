@@ -4,7 +4,6 @@
 package epf.gateway.security;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -16,7 +15,6 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import epf.naming.Naming;
-import epf.util.config.ConfigUtil;
 
 /**
  * @author PC
@@ -45,12 +43,11 @@ public interface SecurityUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	static CompletionStage<Boolean> authenticateTokenId(final String tokenId) throws Exception {
-		final URI cacheUrl = ConfigUtil.getURI(Naming.Cache.CACHE_URL);
+	static CompletionStage<Boolean> authenticateTokenId(final String tokenId, final URI cacheUrl, final URI securityUrl) throws Exception {
 		final CompletionStage<Map<String, Object>> tokenClaims = ClientBuilder.newClient().target(cacheUrl).path(Naming.SECURITY).queryParam("tid", tokenId).request(MediaType.APPLICATION_JSON_TYPE).rx().get(new GenericType<Map<String, Object>>(){});
 		return tokenClaims
 		.thenApply(SecurityUtil::getRawToken)
-		.thenCompose(SecurityUtil::buildAuthenticateRequest)
+		.thenCompose(token -> buildAuthenticateRequest(token, securityUrl))
 		.thenApply(response -> response.getStatus() == Response.Status.OK.getStatusCode());
 	}
 	
@@ -71,14 +68,7 @@ public interface SecurityUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	static CompletionStage<Response> buildAuthenticateRequest(final String token){
-		URI securityUrl;
-		try {
-			securityUrl = ConfigUtil.getURI(Naming.Security.SECURITY_URL);
-		}
-		catch (URISyntaxException e) {
-			securityUrl = null;
-		}
+	static CompletionStage<Response> buildAuthenticateRequest(final String token, final URI securityUrl){
 		final StringBuilder builder = new StringBuilder();
 		builder.append("Bearer ").append(token);
 		return ClientBuilder.newClient().target(securityUrl).request(MediaType.APPLICATION_JSON_TYPE).header(HttpHeaders.AUTHORIZATION, builder.toString()).rx().get();

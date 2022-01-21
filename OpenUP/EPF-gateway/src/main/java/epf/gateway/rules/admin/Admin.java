@@ -33,7 +33,7 @@ public class Admin {
      * 
      */
     @Inject
-    private transient Request request;
+    transient Request request;
     
     /**
      * @param headers

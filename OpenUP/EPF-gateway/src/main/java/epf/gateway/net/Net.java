@@ -24,13 +24,13 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.faulttolerance.Asynchronous;
 import epf.client.util.Client;
 import epf.client.util.ClientUtil;
 import epf.gateway.Request;
 import epf.naming.Naming;
 import epf.util.StringUtil;
-import epf.util.config.ConfigUtil;
 import epf.util.http.SessionUtil;
 
 /**
@@ -45,13 +45,19 @@ public class Net {
      * 
      */
     @Inject
-    private transient Request request;
+    transient Request request;
     
     /**
      * 
      */
     @Inject
-    private transient ClientUtil clientUtil;
+    transient ClientUtil clientUtil;
+    
+    /**
+     * 
+     */
+    @ConfigProperty(name = Naming.Cache.CACHE_URL)
+    String cacheUrl;
     
     /**
      * @param headers
@@ -92,7 +98,7 @@ public class Net {
         String urlString = "";
         if(attrValue.isEmpty()) {
         	final int id = StringUtil.fromShortString(url);
-        	try(Client client = clientUtil.newClient(ConfigUtil.getURI(Naming.Cache.CACHE_URL))){
+        	try(Client client = clientUtil.newClient(new URI(cacheUrl))){
         		urlString = client.request(
         				target -> target.path("net").path("url").queryParam("id", String.valueOf(id)), 
         				req -> req)

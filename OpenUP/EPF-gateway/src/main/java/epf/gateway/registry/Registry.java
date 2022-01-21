@@ -32,7 +32,7 @@ public class Registry {
 	 * 
 	 */
 	@Inject
-    private transient Request request;
+    transient Request request;
     
     /**
      * @param headers

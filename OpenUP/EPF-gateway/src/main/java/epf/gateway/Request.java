@@ -46,13 +46,13 @@ public class Request {
      * 
      */
     @Inject
-    private transient Registry registry;
+    transient Registry registry;
     
     /**
      * 
      */
     @Inject
-    private transient ManagedExecutor executor;
+    transient ManagedExecutor executor;
     
     /**
      * @param headers

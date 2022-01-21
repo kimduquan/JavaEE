@@ -37,7 +37,7 @@ public class Entities {
      * 
      */
     @Inject
-    private transient Request request;
+    transient Request request;
     
     /**
      * @param headers

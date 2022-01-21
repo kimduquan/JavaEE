@@ -33,7 +33,7 @@ public class Cache {
 	 * 
 	 */
 	@Inject
-    private transient Request request;
+    transient Request request;
 	
 	/**
 	 * @param headers

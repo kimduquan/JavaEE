@@ -24,10 +24,10 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.gateway.security.SecurityUtil;
 import epf.naming.Naming;
-import epf.util.config.ConfigUtil;
 import epf.util.logging.LogManager;
 
 /**
@@ -57,7 +57,25 @@ public class Messaging {
 	 * 
 	 */
 	@Inject
-	private transient ManagedExecutor executor;
+	transient ManagedExecutor executor;
+	
+	/**
+	 * 
+	 */
+	@ConfigProperty(name = Naming.Messaging.MESSAGING_URL)
+	String messagingUrl;
+	
+	/**
+	 * 
+	 */
+	@ConfigProperty(name = Naming.Cache.CACHE_URL)
+	String cacheUrl;
+	
+	/**
+	 * 
+	 */
+	@ConfigProperty(name = Naming.Security.SECURITY_URL)
+	String securityUrl;
 	
 	/**
 	 * 
@@ -65,8 +83,8 @@ public class Messaging {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI messagingUrl = ConfigUtil.getURI(Naming.Messaging.MESSAGING_URL);
-			final Remote persistence = new Remote(messagingUrl.resolve(Naming.PERSISTENCE));
+			final URI url = new URI(messagingUrl);
+			final Remote persistence = new Remote(url.resolve(Naming.PERSISTENCE));
 			remotes.put(Naming.PERSISTENCE, persistence);
 			executor.submit(persistence);
 		} 
@@ -109,7 +127,7 @@ public class Messaging {
 			closeSession(path, session);
 		}
 		else {
-			SecurityUtil.authenticateTokenId(tokenId.get()).thenAccept(succeed -> {
+			SecurityUtil.authenticateTokenId(tokenId.get(), new URI(cacheUrl), new URI(securityUrl)).thenAccept(succeed -> {
 				if(!succeed) {
 					closeSession(path, session);
 				}
