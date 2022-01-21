@@ -1,3 +1,6 @@
+cd EPF-tests
+mvn liberty:stop
+cd ../
 ~/kafka_2.13-2.8.1/bin/kafka-server-stop.sh
 killall jaeger-all-in-one
 killall geckodriver
