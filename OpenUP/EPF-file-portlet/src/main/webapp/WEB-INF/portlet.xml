@@ -25,7 +25,7 @@
 		<portlet-preferences>
 			<preference>
 				<name>epf.gateway.url</name>
-				<value>https://localhost:9543/gateway/</value>
+				<value>http://localhost:9543/gateway/</value>
 			</preference>
 		</portlet-preferences>
 		<security-role-ref>

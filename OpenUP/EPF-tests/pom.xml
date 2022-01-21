@@ -340,7 +340,7 @@
 						<epf.schema.url>https://localhost:${httpsPort}/persistence/schema/</epf.schema.url>
 						<epf.security.url>https://localhost:${httpsPort}/security/security/</epf.security.url>
                         <epf.security.webapp.url>https://localhost:${httpsPort}/security/</epf.security.webapp.url>
-                        <epf.gateway.url>https://localhost:${gatewayPort}/gateway/</epf.gateway.url>
+                        <epf.gateway.url>http://localhost:${gatewayPort}/gateway/</epf.gateway.url>
                         <epf.registry.url>https://localhost:${httpsPort}/registry/registry/</epf.registry.url>
 						<epf.management.url>https://localhost:${httpsPort}/management/management/</epf.management.url>
                         <epf.messaging.url>ws://localhost:${httpPort}/messaging/messaging/</epf.messaging.url>
