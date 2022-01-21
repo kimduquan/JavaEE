@@ -45,7 +45,7 @@ public class FileStore {
 	 * @throws Exception
 	 */
 	protected FilesClient buildClient(final Path path) throws Exception {
-		final URI baseUrl = new URI(gatewayUrl + Naming.FILE).resolve(PathUtil.toURI(path));
+		final URI baseUrl = new URI(gatewayUrl + Naming.FILE + "/" + PathUtil.toURI(path));
 		System.out.println(baseUrl.toString());
 		final FilesClient files = RestClientBuilder.newBuilder().baseUrl(baseUrl.toURL()).build(FilesClient.class);
 		return files;
