@@ -1,3 +1,6 @@
+cd EPF-tests
+call mvn liberty:stop
+cd ../
 setlocal
 set cur_dir=%CD%
 set cur_java=$JAVA_HOME

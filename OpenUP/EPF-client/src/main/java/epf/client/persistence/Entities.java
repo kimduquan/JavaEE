@@ -13,7 +13,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import epf.client.util.Client;
 import epf.naming.Naming;
 

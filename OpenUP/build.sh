@@ -3,12 +3,11 @@ git clean -f -d
 cp settings.xml ~/.m2
 ./clean.sh
 ./copy_dependency.sh
-cd EPF-shell
-mvn clean install
-cd ../
+. ./config.sh
 ./startup.sh
 cd EPF-persistence
 mvn clean install
 cd ../
-mvn clean install
+#sudo apt-get install build-essential libz-dev zlib1g-dev
+mvn clean install -Depf-shell-native
 ./shutdown.sh

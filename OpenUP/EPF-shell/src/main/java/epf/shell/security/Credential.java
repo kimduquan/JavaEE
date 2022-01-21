@@ -23,7 +23,11 @@ public class Credential {
 	@Option(names = {"-tid", "--tokenID"}, required = true, description = "Token ID")  
     protected transient String tokenID;
     
-    public String getToken() {
-    	return token;
+    /**
+     * @return
+     */
+    public String getAuthHeader() {
+    	final StringBuilder tokenHeader = new StringBuilder();
+    	return tokenHeader.append("Bearer ").append(token).toString();
     }
 }

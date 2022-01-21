@@ -49,10 +49,11 @@ public class LoggingTest {
 		Method method = LoggingTest.class.getDeclaredMethod("mockMethod", String.class);
 		Mockito.when(mockContext.getMethod()).thenReturn(method);
 		Mockito.when(mockContext.getParameters()).thenReturn(new String[] {""});
-		Mockito.when(mockContext.proceed()).thenThrow(Exception.class);
+		Mockito.when(mockContext.proceed()).thenThrow(new Exception("testLogMethodEntry"));
 		LogManager logManager = new LogManager();
-		Object obj = logManager.logMethodEntry(mockContext);
-		Assert.assertNull(obj);
+		Assert.assertThrows("testLogMethodEntry", Exception.class, () -> {
+			logManager.logMethodEntry(mockContext);
+		});
 	}
 
 	/**
@@ -74,15 +75,5 @@ public class LoggingTest {
 	@Test(expected = NullPointerException.class)
 	public void testGetLogger_NullName() {
 		LogManager.getLogger(null);
-	}
-	
-	/**
-	 * Test method for {@link epf.util.logging.LogManager#config(java.lang.Class)}.
-	 */
-	@Test
-	public void testConfig() {
-		LogManager.config(getClass());
-		String configFile = System.getProperty("java.util.logging.config.file");
-		Assert.assertNotNull("System.property.java.util.logging.config.file", configFile);
 	}
 }

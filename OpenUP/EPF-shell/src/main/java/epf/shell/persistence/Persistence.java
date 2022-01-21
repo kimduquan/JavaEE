@@ -4,15 +4,13 @@
 package epf.shell.persistence;
 
 import javax.ws.rs.core.Response;
-import epf.client.gateway.GatewayUtil;
-import epf.client.util.Client;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import epf.naming.Naming;
 import epf.shell.Function;
-import epf.shell.client.ClientUtil;
 import epf.shell.security.Credential;
 import epf.shell.security.CallerPrincipal;
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -30,7 +28,8 @@ public class Persistence {
 	 * 
 	 */
 	@Inject
-	private transient ClientUtil clientUtil;
+	@RestClient
+	transient PersistenceClient persistence;
 	
 	/**
 	 * @param credential
@@ -49,11 +48,8 @@ public class Persistence {
 			final String entity, 
 			@Option(names = {"-d", "--data"}, description = "Entity", interactive = true, echo = true)
 			final String data) throws Exception {
-		try(Client client = clientUtil.newClient(GatewayUtil.get(Naming.PERSISTENCE))){
-			client.authorization(credential.getToken());
-			try(Response response = epf.client.persistence.Entities.persist(client, schema, entity, data)){
-				return response.readEntity(String.class);
-			}
+		try(Response response = persistence.persist(credential.getAuthHeader(), schema, entity, data)){
+			return response.readEntity(String.class);
 		}
 	}
 	
@@ -77,10 +73,7 @@ public class Persistence {
 			final String entityId,
 			@Option(names = {"-d", "--data"}, description = "Entity", interactive = true, echo = true)
 			final String data) throws Exception {
-		try(Client client = clientUtil.newClient(GatewayUtil.get(Naming.PERSISTENCE))){
-			client.authorization(credential.getToken());
-			epf.client.persistence.Entities.merge(client, schema, entity, entityId, data);
-		}
+		persistence.merge(credential.getAuthHeader(), schema, entity, entityId, data);
 	}
 	
 	/**
@@ -101,10 +94,7 @@ public class Persistence {
 			final String entity, 
 			@Option(names = {"-i", "--id"}, description = "ID")
 			final String entityId) throws Exception {
-		try(Client client = clientUtil.newClient(GatewayUtil.get(Naming.PERSISTENCE))){
-			client.authorization(credential.getToken());
-			epf.client.persistence.Entities.remove(client, schema, entity, entityId);
-		}
+		persistence.remove(credential.getAuthHeader(), schema, entity, entityId);
 	}
 	
 	/**
@@ -124,11 +114,8 @@ public class Persistence {
 			final String entity, 
 			@Option(names = {"-i", "--id"}, description = "ID")
 			final String entityId) throws Exception {
-		try(Client client = clientUtil.newClient(GatewayUtil.get(Naming.PERSISTENCE))){
-			client.authorization(credential.getToken());
-			try(Response response = epf.client.persistence.Entities.find(client, schema, entity, entityId)){
-				return response.readEntity(String.class);
-			}
+		try(Response response = persistence.find(credential.getAuthHeader(), schema, entity, entityId)){
+			return response.readEntity(String.class);
 		}
 	}
 }

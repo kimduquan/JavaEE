@@ -29,10 +29,10 @@ import epf.shell.client.ClientUtil;
 import epf.shell.util.client.Entity;
 import epf.util.logging.LogManager;
 import epf.util.zip.ZipUtil;
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -48,7 +48,7 @@ public class Utility {
 	/**
 	 * 
 	 */
-	private static final Logger LOG = LogManager.getLogger(Utility.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Utility.class.getName());
 	
 	/**
 	 * 
@@ -59,7 +59,7 @@ public class Utility {
 	 * 
 	 */
 	@Inject
-	private transient ClientUtil clientUtil;
+	transient ClientUtil clientUtil;
 	
 	/**
 	 * 
@@ -70,7 +70,7 @@ public class Utility {
 			tempDir = Files.createTempDirectory(PathUtil.of(""), "utility");
 		} 
 		catch (IOException e) {
-			LOG.throwing(Files.class.getName(), "createTempDirectory", e);
+			LOGGER.throwing(Files.class.getName(), "createTempDirectory", e);
 		}
 	}
 	

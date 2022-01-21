@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
@@ -18,6 +20,7 @@ import org.opencv.core.MatOfPoint;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import epf.naming.Naming;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
@@ -31,9 +34,19 @@ public class Image implements epf.client.image.Image {
 	/**
 	 * 
 	 */
+	private transient final Logger LOGGER = LogManager.getLogger(Image.class.getName());
+	
+	/**
+	 * 
+	 */
 	@PostConstruct
 	protected void postConstruct() {
-		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+		try {
+			System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+		}
+		catch(Throwable ex) {
+			LOGGER.log(Level.SEVERE, "postConstruct", ex);
+		}
 	}
 
 	@Override

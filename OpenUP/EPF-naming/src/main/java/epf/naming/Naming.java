@@ -57,6 +57,22 @@ public interface Naming {
 	/**
 	 * 
 	 */
+	String CLIENT = "client";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface Client {
+		/**
+		 * 
+		 */
+		String CLIENT_CONFIG = "epf.client.config";
+	}
+	
+	/**
+	 * 
+	 */
 	String CONFIG = "config";
 	
 	/**
@@ -405,6 +421,11 @@ public interface Naming {
 	}
 	
 	/**
+	 * 
+	 */
+	String SHELL = "shell";
+	
+	/**
 	 * @author PC
 	 *
 	 */
@@ -419,6 +440,24 @@ public interface Naming {
 		 * 
 		 */
 		String SHELL_COMMAND = "epf.shell.command";
+		
+		/**
+		 * 
+		 */
+		String SHELL_RUNNER = "epf.shell.runner";
+	}
+	
+	/**
+	 * 
+	 */
+	String UTILITY = "utility";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface Utility {
+		
 	}
 	
 	String WEB_APP = "webapp";

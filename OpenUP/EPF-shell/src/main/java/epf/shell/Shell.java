@@ -6,12 +6,13 @@ package epf.shell;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 import epf.shell.file.PathTypeConverter;
-import jakarta.annotation.PostConstruct;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.context.control.ActivateRequestContext;
-import jakarta.enterprise.inject.Produces;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
+import io.quarkus.runtime.QuarkusApplication;
+import io.quarkus.runtime.annotations.QuarkusMain;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.control.ActivateRequestContext;
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+import javax.inject.Named;
 import picocli.CommandLine;
 import picocli.CommandLine.IFactory;
 
@@ -19,8 +20,9 @@ import picocli.CommandLine.IFactory;
  * @author PC
  *
  */
+@QuarkusMain
 @ApplicationScoped
-public class Shell {
+public class Shell implements QuarkusApplication {
 	
 	/**
 	 * 
@@ -36,17 +38,7 @@ public class Shell {
 	 * 
 	 */
 	@Inject
-	private transient IFactory factory;
-	
-	/**
-	 * 
-	 */
-	@PostConstruct
-	protected void postConstruct() {
-		commandLine = new CommandLine(EPFCommand.class, factory);
-		commandLine.registerConverter(Path.class, pathConverter);
-		commandLine.setTrimQuotes(true);
-	}
+	transient IFactory factory;
 	
 	/**
 	 * @return
@@ -64,12 +56,12 @@ public class Shell {
 		return  commandLine.getErr();
 	}
 
-	/**
-	 * @param args
-	 * @return
-	 */
 	@ActivateRequestContext
-	public int execute(final String... args) {
+	@Override
+	public int run(String... args) throws Exception {
+		commandLine = new CommandLine(EPFCommand.class, factory);
+		commandLine.registerConverter(Path.class, pathConverter);
+		commandLine.setTrimQuotes(true);
 		return commandLine.execute(args);
 	}
 }

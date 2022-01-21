@@ -78,10 +78,6 @@
     <application id="EPF-gateway" name="EPF-gateway" context-root="gateway" location="EPF-gateway-1.0.0.war" startAfterRef="EPF-registry" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-	<application id="OpenUP-gateway" name="OpenUP-gateway" context-root="openup" location="OpenUP-gateway-1.0.0.war">
-        <classloader apiTypeVisibility="+third-party"/>
-    </application>
-    <!-- <application id="EPF-webapp" name="EPF-webapp" context-root="webapp" location="EPF-webapp-1.0.0.war" startAfterRef="EPF-persistence,EPF-gateway" /> -->
     <application id="EPF-net" name="EPF-net" context-root="net" location="EPF-net-1.0.0.war" startAfterRef="EPF-messaging" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>

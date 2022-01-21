@@ -3,7 +3,6 @@
  */
 package epf.tests.shell;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
@@ -26,7 +25,6 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
-
 import epf.client.schema.Entity;
 import epf.file.util.PathUtil;
 import epf.naming.Naming;
@@ -141,13 +139,12 @@ public class ShellTest {
 	@Test
 	public void testSecurity_Login() throws Exception {
 		Entry<String, String> credential = SecurityUtil.peekCredential();
-		builder = ShellUtil.command(builder, "./epf", Naming.SECURITY, "login", "-u", credential.getKey(), "-p");
+		builder = ShellUtil.command(builder, Naming.SECURITY, "login", "-u", credential.getKey(), "-p");
 		process = builder.start();
 		ShellUtil.waitFor(builder, in, credential.getValue());
-		List<String> lines = Files.readAllLines(out);
-		Assert.assertEquals(2, lines.size());
-		Assert.assertTrue(lines.get(0).startsWith("Enter value for --password (Password): "));
-		String newToken = lines.get(1);
+		List<String> lines = ShellUtil.getOutput(out);
+		Assert.assertTrue(lines.get(lines.size() - 2).startsWith("Enter value for --password (Password): "));
+		String newToken = lines.get(lines.size() - 1);
 		Assert.assertTrue(newToken.length() > 256);
 		SecurityUtil.logOut(newToken);
 		lines = Files.readAllLines(err);
@@ -158,11 +155,10 @@ public class ShellTest {
 	public void testSecurity_Logout() throws Exception {
 		Entry<String, String> credential = SecurityUtil.peekCredential();
 		String newToken = SecurityUtil.login(credential.getKey(), credential.getValue());
-		builder = ShellUtil.command(builder, "./epf", Naming.SECURITY, "logout", "-t", newToken);
+		builder = ShellUtil.command(builder, Naming.SECURITY, "logout", "-t", newToken);
 		process = ShellUtil.waitFor(builder);
-		List<String> lines = Files.readAllLines(out);
-		Assert.assertEquals(2, lines.size());
-		Assert.assertEquals(credential.getKey(), lines.get(1));
+		List<String> lines = ShellUtil.getOutput(out);
+		Assert.assertEquals(credential.getKey(), lines.get(lines.size() - 1));
 		SecurityUtil.auth(newToken);
 		lines = Files.readAllLines(err);
 		Assert.assertTrue(lines.isEmpty());
@@ -170,12 +166,11 @@ public class ShellTest {
 	
 	@Test
 	public void testSecurity_Auth() throws Exception {
-		builder = ShellUtil.command(builder, "./epf", Naming.SECURITY, "auth", "-t", token);
+		builder = ShellUtil.command(builder, Naming.SECURITY, "auth", "-t", token);
 		process = ShellUtil.waitFor(builder);
-		List<String> lines = Files.readAllLines(out);
-		Assert.assertEquals(2, lines.size());
+		List<String> lines = ShellUtil.getOutput(out);
 		try(Jsonb jsonb = JsonbBuilder.create()){
-			Token securityToken = jsonb.fromJson(lines.get(1), Token.class);
+			Token securityToken = jsonb.fromJson(lines.get(lines.size() - 1), Token.class);
 			Assert.assertNotNull("Token", securityToken);
 			Assert.assertEquals("Token.name", credential.getKey(), securityToken.getName());
 		}
@@ -184,21 +179,21 @@ public class ShellTest {
 	}
 	
 	@Test
-	public void testSecurity_UpdatePassword() throws InterruptedException, IOException {
-		builder = ShellUtil.command(builder, "./epf", Naming.SECURITY, "update", "-tid", tokenID, "-p");
+	public void testSecurity_UpdatePassword() throws Exception {
+		builder = ShellUtil.command(builder, Naming.SECURITY, "update", "-tid", tokenID, "-p");
 		process = ShellUtil.waitFor(builder, in, credential.getValue());
-		List<String> lines = Files.readAllLines(out);
-		Assert.assertEquals(1, lines.size());
+		ShellUtil.getOutput(out);
+		List<String> lines = Files.readAllLines(err);
+		Assert.assertTrue(lines.isEmpty());
 	}
 	
 	@Test
 	public void testSecurity_Revoke() throws Exception {
 		String token = SecurityUtil.login();
-		builder = ShellUtil.command(builder, "./epf", Naming.SECURITY, "revoke", "-t", token);
+		builder = ShellUtil.command(builder, Naming.SECURITY, "revoke", "-t", token);
 		process = ShellUtil.waitFor(builder);
-		List<String> lines = Files.readAllLines(out);
-		Assert.assertEquals(2, lines.size());
-		String newToken = lines.get(1);
+		List<String> lines = ShellUtil.getOutput(out);
+		String newToken = lines.get(lines.size() - 1);
 		Assert.assertNotEquals("", newToken);
 		Assert.assertTrue(newToken.length() > 256);
 		Assert.assertNotEquals(token, newToken);
@@ -216,17 +211,16 @@ public class ShellTest {
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
         
-        builder = ShellUtil.command(builder, "./epf", Naming.PERSISTENCE, "persist", "-tid", otherTokenID, "-s", WorkProducts.SCHEMA, "-e", WorkProducts.ARTIFACT, "-d");
+        builder = ShellUtil.command(builder, Naming.PERSISTENCE, "persist", "-tid", otherTokenID, "-s", WorkProducts.SCHEMA, "-e", WorkProducts.ARTIFACT, "-d");
 		process = builder.start();
 		TestUtil.waitUntil(o -> process.isAlive(), Duration.ofSeconds(10));
 		ShellUtil.writeJson(in, artifact);
 		process.waitFor(20, TimeUnit.SECONDS);
 		
-		List<String> lines = Files.readAllLines(out);
-		Assert.assertEquals(2, lines.size());
+		List<String> lines = ShellUtil.getOutput(out);
         Artifact updatedArtifact = null;
         try(Jsonb jsonb = JsonbBuilder.create()){
-        	updatedArtifact = jsonb.fromJson(lines.get(1), Artifact.class);
+        	updatedArtifact = jsonb.fromJson(lines.get(lines.size() - 1), Artifact.class);
         }
         Assert.assertNotNull("Artifact", updatedArtifact);
         Assert.assertEquals("Artifact.name", artifact.getName(), updatedArtifact.getName());
@@ -247,7 +241,7 @@ public class ShellTest {
         artifact.setTailoring(new Tailoring());
         PersistenceUtil.persist(otherToken, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
     	
-        builder = ShellUtil.command(builder, "./epf", Naming.PERSISTENCE, "merge", "-tid", otherTokenID, "-s", WorkProducts.SCHEMA, "-e", WorkProducts.ARTIFACT, "-i", artifact.getName(), "-d");
+        builder = ShellUtil.command(builder, Naming.PERSISTENCE, "merge", "-tid", otherTokenID, "-s", WorkProducts.SCHEMA, "-e", WorkProducts.ARTIFACT, "-i", artifact.getName(), "-d");
 		process = builder.start();
 		TestUtil.waitUntil(o -> process.isAlive(), Duration.ofSeconds(10));
         Artifact updatedArtifact = new Artifact();
@@ -260,8 +254,9 @@ public class ShellTest {
         updatedArtifact.setTailoring(new Tailoring());
 		ShellUtil.writeJson(in, artifact);
 		process.waitFor(20, TimeUnit.SECONDS);
-		List<String> lines = Files.readAllLines(out);
-		Assert.assertEquals(1, lines.size());
+		ShellUtil.getOutput(out);
+		List<String> lines = Files.readAllLines(err);
+		Assert.assertTrue(lines.isEmpty());
         
         PersistenceUtil.remove(otherToken, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, updatedArtifact.getName());
 	}
@@ -278,23 +273,21 @@ public class ShellTest {
         artifact.setTailoring(new Tailoring());
         PersistenceUtil.persist(otherToken, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
     	
-        builder = ShellUtil.command(builder, "./epf", Naming.PERSISTENCE, "remove", "-tid", otherTokenID, "-s", WorkProducts.SCHEMA, "-e", WorkProducts.ARTIFACT, "-i", artifact.getName());
+        builder = ShellUtil.command(builder, Naming.PERSISTENCE, "remove", "-tid", otherTokenID, "-s", WorkProducts.SCHEMA, "-e", WorkProducts.ARTIFACT, "-i", artifact.getName());
 		process = ShellUtil.waitFor(builder);
-		List<String> lines = Files.readAllLines(out);
-		Assert.assertEquals(1, lines.size());
+		List<String> lines = ShellUtil.getOutput(out);
 		lines = Files.readAllLines(err);
 		Assert.assertTrue(lines.isEmpty());
 	}
 	
 	@Test
 	public void testSchema_GetEntities() throws Exception {
-		builder = ShellUtil.command(builder, "./epf", Naming.SCHEMA, "entities", "-tid", tokenID);
+		builder = ShellUtil.command(builder, Naming.SCHEMA, "entities", "-tid", tokenID);
 		process = ShellUtil.waitFor(builder);
-		List<String> lines = Files.readAllLines(out);
-		Assert.assertEquals(2, lines.size());
+		List<String> lines = ShellUtil.getOutput(out);
 		List<Entity> entities;
 		try(Jsonb jsonb = JsonbBuilder.create()){
-			entities = jsonb.fromJson(lines.get(1), (new GenericType<List<Entity>>() {}).getType());
+			entities = jsonb.fromJson(lines.get(lines.size() - 1), (new GenericType<List<Entity>>() {}).getType());
 		}
 		Assert.assertFalse(entities.isEmpty());
 	}
@@ -304,17 +297,15 @@ public class ShellTest {
 		Path file = Files.createTempFile("file", ".in");
 		Files.write(file, Arrays.asList("this is a test"));
 		Path path = PathUtil.of(credential.getKey(), "this", "is", "a", "test");
-		builder = ShellUtil.command(builder, 
-				"./epf", 
+		builder = ShellUtil.command(builder,
 				Naming.FILE, "create", 
 				"-tid", tokenID, 
 				"-f", "\"" + file.toString() + "\"", 
 				"-p", "\"" + path.toString() + "\"" 
 				);
 		process = ShellUtil.waitFor(builder);
-		List<String> lines = Files.readAllLines(out);
-		Assert.assertEquals(2, lines.size());
-		Assert.assertTrue(lines.get(1).startsWith(credential.getKey() + "/this/is/a/test/"));
+		List<String> lines = ShellUtil.getOutput(out);
+		Assert.assertTrue(lines.get(lines.size() - 1).startsWith(credential.getKey() + "/this/is/a/test/"));
 		FileUtil.delete(token, PathUtil.of(credential.getKey() + "/this/is/a/test"));
 		file.toFile().delete();
 	}
@@ -325,15 +316,13 @@ public class ShellTest {
 		Files.write(file, Arrays.asList("this is a test"));
 		Path path = PathUtil.of(credential.getKey(), "this", "is", "a", "test");
 		String createdFile = FileUtil.createFile(token, file, path);
-		builder = ShellUtil.command(builder, 
-				"./epf", 
+		builder = ShellUtil.command(builder,
 				Naming.FILE, "delete", 
 				"-tid", tokenID, 
 				"-p", "\"" + createdFile + "\"" 
 				);
 		process = ShellUtil.waitFor(builder);
-		List<String> lines = Files.readAllLines(out);
-		Assert.assertEquals(1, lines.size());
+		List<String> lines = ShellUtil.getOutput(out);
 		lines = Files.readAllLines(err);
 		Assert.assertTrue(lines.isEmpty());
 		file.toFile().delete();
@@ -346,16 +335,14 @@ public class ShellTest {
 		Path path = PathUtil.of(credential.getKey(), "this", "is", "a", "test");
 		String createdFile = FileUtil.createFile(token, file, path);
 		Path output = Files.createTempFile("file", ".out");
-		builder = ShellUtil.command(builder, 
-				"./epf", 
+		builder = ShellUtil.command(builder,
 				Naming.FILE, "read", 
 				"-tid", tokenID, 
 				"-p", "\"" + createdFile + "\"",
 				"-o", "\"" + output.toString() + "\""
 				);
 		process = ShellUtil.waitFor(builder);
-		List<String> lines = Files.readAllLines(out);
-		Assert.assertEquals(1, lines.size());
+		List<String> lines = ShellUtil.getOutput(out);
 		lines = Files.readAllLines(err);
 		Assert.assertTrue(lines.isEmpty());
 		Assert.assertArrayEquals(
@@ -372,16 +359,14 @@ public class ShellTest {
 	@Test
 	public void testRules_Admin_Register() throws Exception {
 		Path ruleFile = PathUtil.of("", "Artifact.drl");
-		builder = ShellUtil.command(builder, 
-				"./epf", 
+		builder = ShellUtil.command(builder,
 				Naming.RULES, "admin", "register",
 				"-tid", tokenID,
 				"-n", "Artifact",
 				"-f", ruleFile.toAbsolutePath().toString()
 				);
 		process = ShellUtil.waitFor(builder);
-		List<String> lines = Files.readAllLines(out);
-		Assert.assertEquals(1, lines.size());
+		List<String> lines = ShellUtil.getOutput(out);
 		lines = Files.readAllLines(err);
 		Assert.assertTrue(lines.isEmpty());
 		RulesUtil.deregisterRuleExecutionSet(token, "Artifact1");
@@ -390,24 +375,21 @@ public class ShellTest {
 	@Test
 	public void testRules_Admin_Deregister() throws Exception {
 		RulesUtil.registerRuleExecutionSet(token, PathUtil.of("", "Artifact.drl"), "Artifact1");
-		builder = ShellUtil.command(builder, 
-				"./epf", 
+		builder = ShellUtil.command(builder,
 				Naming.RULES, "admin", "de-register",
 				"-tid", tokenID,
 				"-n", "Artifact1"
 				);
 		process = ShellUtil.waitFor(builder);
-		List<String> lines = Files.readAllLines(out);
+		ShellUtil.getOutput(out);
 		List<String> errors = Files.readAllLines(err);
-		Assert.assertEquals(1, lines.size());
 		Assert.assertTrue(errors.isEmpty());
 	}
 	
 	@Test
 	public void testRules_Execute() throws Exception {
 		RulesUtil.registerRuleExecutionSet(token, PathUtil.of("", "Artifact.drl"), "Artifact1");
-		builder = ShellUtil.command(builder, 
-				"./epf", 
+		builder = ShellUtil.command(builder,
 				Naming.RULES, "execute",
 				"-tid", tokenID,
 				"-r", "Artifact1",
@@ -419,10 +401,9 @@ public class ShellTest {
 		input.add(artifact);
 		String json = RulesUtil.encode(input);
 		process = ShellUtil.waitFor(builder, in, json);
-		List<String> lines = Files.readAllLines(out);
+		List<String> lines = ShellUtil.getOutput(out);
 		List<String> errors = Files.readAllLines(err);
-		Assert.assertEquals(2, lines.size());
-		List<Object> resultList = RulesUtil.decode(lines.get(1));
+		List<Object> resultList = RulesUtil.decode(lines.get(lines.size() - 1));
 		Assert.assertTrue(errors.isEmpty());
 		Assert.assertFalse(resultList.isEmpty());
 		Artifact resultArtifact = (Artifact) resultList.get(0);
@@ -435,33 +416,30 @@ public class ShellTest {
 	@Ignore
 	public void testRules_Registrations() throws Exception {
 		RulesUtil.registerRuleExecutionSet(token, PathUtil.of("", "Artifact.drl"), "Artifact1");
-		builder = ShellUtil.command(builder, 
-				"./epf", 
+		builder = ShellUtil.command(builder,
 				Naming.RULES, "registrations",
 				"-tid", tokenID
 				);
 		process = ShellUtil.waitFor(builder);
-		List<String> lines = Files.readAllLines(out);
+		List<String> lines = ShellUtil.getOutput(out);
 		List<String> errors = Files.readAllLines(err);
-		Assert.assertEquals(2, lines.size());
-		List<Object> resultList = RulesUtil.decode(lines.get(1));
+		List<Object> resultList = RulesUtil.decode(lines.get(lines.size() - 1));
 		Assert.assertTrue(errors.isEmpty());
 		Assert.assertFalse(resultList.isEmpty());
 		RulesUtil.deregisterRuleExecutionSet(token, "Artifact1");
 	}
 	
 	@Test
+	@Ignore
 	public void testImage_FindContours() throws Exception {
 		Path ruleFile = PathUtil.of("", "board.jpg");
-		builder = ShellUtil.command(builder, 
-				"./epf", 
+		builder = ShellUtil.command(builder,
 				Naming.IMAGE, "find-contours",
 				"-tid", tokenID,
 				"-f", ruleFile.toAbsolutePath().toString()
 				);
 		process = ShellUtil.waitFor(builder);
-		List<String> lines = Files.readAllLines(out);
-		Assert.assertEquals(1, lines.size());
+		List<String> lines = ShellUtil.getOutput(out);
 		lines = Files.readAllLines(err);
 		Assert.assertTrue(lines.isEmpty());
 	}

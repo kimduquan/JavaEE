@@ -80,19 +80,6 @@ public class Request {
 		return RequestUtil.invoke(rx, req.getMethod(), headers.getMediaType(), body)
 				.thenApply(res -> RequestUtil.buildResponse(res, uriInfo))
 				.thenApply(ResponseBuilder::build);
-    	/*return executor.supplyAsync(ClientBuilder::newBuilder)
-    	.thenApply(builder -> builder.executorService(executor))
-    	.thenApply(builder -> builder.hostnameVerifier(new DefaultHostnameVerifier()))
-    	.thenApply(builder -> builder.sslContext(SSLContextHelper.build()))
-    	.thenApply(ClientBuilder::build)
-    	.thenApply(client -> client.target(uri))
-    	.thenApply(target -> RequestUtil.buildTarget(target, uriInfo, uri))
-    	.thenApply(WebTarget::request)
-    	.thenApply(invoke -> RequestUtil.buildRequest(invoke, headers))
-    	.thenApply(invoke -> invoke.rx())
-    	.thenCompose(rx -> RequestUtil.invoke(rx, req.getMethod(), headers.getMediaType(), body))
-    	.thenApply(res -> RequestUtil.buildResponse(res, uriInfo))
-    	.thenApply(ResponseBuilder::build);*/
     }
     
     /**

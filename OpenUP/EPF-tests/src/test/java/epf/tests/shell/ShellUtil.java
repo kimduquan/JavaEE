@@ -34,6 +34,11 @@ public class ShellUtil {
 	/**
 	 * 
 	 */
+	private static final String RUNNER = System.getProperty(Naming.Shell.SHELL_RUNNER);
+	
+	/**
+	 * 
+	 */
 	private static Path shellPath;
 
 	/**
@@ -86,19 +91,30 @@ public class ShellUtil {
 	}
 	
 	public static Token securityAuth(ProcessBuilder builder, String token, Path out) throws Exception {
-		builder = command(builder, "./epf", Naming.SECURITY, "auth", "-t", token);
+		builder = command(builder, Naming.SECURITY, "auth", "-t", token);
 		Process process = ShellUtil.waitFor(builder);
-		List<String> lines = Files.readAllLines(out);
+		List<String> lines = getOutput(out);
+		lines.stream().forEach(System.out::println);
 		process.destroyForcibly();
 		try(Jsonb jsonb = JsonbBuilder.create()){
-			return jsonb.fromJson(lines.get(1), Token.class);
+			return jsonb.fromJson(lines.get(lines.size() - 1), Token.class);
 		}
 	}
 	
 	public static void securityLogout(ProcessBuilder builder, String tokenID) throws Exception {
-		builder = command(builder, "./epf", Naming.SECURITY, "logout", "-tid", tokenID);
+		builder = command(builder, Naming.SECURITY, "logout", "-tid", tokenID);
 		Process process = ShellUtil.waitFor(builder);
 		process.destroyForcibly();
+	}
+	
+	/**
+	 * @param path
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<String> getOutput(final Path path) throws Exception{
+		List<String> lines = Files.readAllLines(path);
+		return lines.subList(7, lines.size() - 1);
 	}
 	
 	/**
@@ -109,6 +125,7 @@ public class ShellUtil {
 	static ProcessBuilder command(final ProcessBuilder builder, final String...command) {
 		final List<String> cmd = new ArrayList<>();
 		cmd.add(COMMAND);
+		cmd.add(RUNNER);
 		cmd.addAll(Arrays.asList(command));
 		return builder.command(cmd);
 	}

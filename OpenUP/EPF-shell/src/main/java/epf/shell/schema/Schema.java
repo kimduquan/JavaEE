@@ -3,18 +3,14 @@
  */
 package epf.shell.schema;
 
-import java.util.List;
-import javax.ws.rs.core.GenericType;
-import epf.client.gateway.GatewayUtil;
-import epf.client.schema.Entity;
-import epf.client.util.Client;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import epf.naming.Naming;
 import epf.shell.Function;
-import epf.shell.client.ClientUtil;
 import epf.shell.security.Credential;
 import epf.shell.security.CallerPrincipal;
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.ws.rs.core.Response;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 
@@ -31,7 +27,8 @@ public class Schema {
 	 * 
 	 */
 	@Inject
-	private transient ClientUtil clientUtil;
+	@RestClient
+	transient SchemaClient schema;
 	
 	/**
 	 * @param credential
@@ -39,13 +36,12 @@ public class Schema {
 	 * @throws Exception
 	 */
 	@Command(name = "entities")
-	public List<Entity> getEntities(
+	public String getEntities(
 			@ArgGroup(exclusive = true, multiplicity = "1")
 			@CallerPrincipal
 			final Credential credential) throws Exception{
-		try(Client client = clientUtil.newClient(GatewayUtil.get(Naming.SCHEMA))){
-			client.authorization(credential.getToken());
-			return epf.client.schema.Schema.getEntities(client).readEntity(new GenericType<List<Entity>>() {});
+		try(Response response = schema.getEntities(credential.getAuthHeader())){
+			return response.readEntity(String.class);
 		}
 	}
 }
