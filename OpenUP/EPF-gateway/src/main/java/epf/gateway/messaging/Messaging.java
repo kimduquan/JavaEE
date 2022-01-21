@@ -105,19 +105,34 @@ public class Messaging {
 				}
 			);
 		}
-		if(tokenId.isEmpty() || !SecurityUtil.authenticateTokenId(tokenId.get())) {
-			final CloseReason reason = new CloseReason(CloseReason.CloseCodes.VIOLATED_POLICY, "");
-			remotes.computeIfPresent(path, (p, remote) -> {
-				remote.onClose(session, reason);
-				return remote;
+		if(tokenId.isEmpty()) {
+			closeSession(path, session);
+		}
+		else {
+			SecurityUtil.authenticateTokenId(tokenId.get()).thenAccept(succeed -> {
+				if(!succeed) {
+					closeSession(path, session);
 				}
-			);
-			try {
-				session.close(reason);
-			} 
-			catch (IOException e) {
-				LOGGER.throwing(LOGGER.getName(), "onOpen", e);
+			});
+		}
+	}
+	
+	/**
+	 * @param path
+	 * @param session
+	 */
+	protected void closeSession(final String path, final Session session) {
+		final CloseReason reason = new CloseReason(CloseReason.CloseCodes.VIOLATED_POLICY, "");
+		remotes.computeIfPresent(path, (p, remote) -> {
+			remote.onClose(session, reason);
+			return remote;
 			}
+		);
+		try {
+			session.close(reason);
+		} 
+		catch (IOException e) {
+			LOGGER.throwing(LOGGER.getName(), "onOpen", e);
 		}
 	}
 	

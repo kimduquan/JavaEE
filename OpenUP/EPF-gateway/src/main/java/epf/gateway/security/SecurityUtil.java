@@ -4,19 +4,17 @@
 package epf.gateway.security;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletionStage;
 import javax.websocket.Session;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.eclipse.microprofile.rest.client.RestClientBuilder;
-import epf.gateway.cache.CacheUtil;
 import epf.naming.Naming;
 import epf.util.config.ConfigUtil;
 
@@ -24,16 +22,7 @@ import epf.util.config.ConfigUtil;
  * @author PC
  *
  */
-@Path("/")
 public interface SecurityUtil {
-	
-	/**
-	 * @param token
-	 * @return
-	 */
-	@GET
-    @Produces(MediaType.APPLICATION_JSON)
-	Response authenticate(@HeaderParam(HttpHeaders.AUTHORIZATION) final String token);
 	
 	/**
 	 * @param session
@@ -56,21 +45,42 @@ public interface SecurityUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	static boolean authenticateTokenId(final String tokenId) throws Exception {
-		boolean succeed = false;
+	static CompletionStage<Boolean> authenticateTokenId(final String tokenId) throws Exception {
 		final URI cacheUrl = ConfigUtil.getURI(Naming.Cache.CACHE_URL);
-		final Map<String, Object> data = RestClientBuilder.newBuilder().baseUri(cacheUrl).build(CacheUtil.class).getToken(tokenId);
-		if(data != null && data.containsKey("rawToken")) {
-			final String rawToken = (String) data.get("rawToken");
-			final URI securityUrl = ConfigUtil.getURI(Naming.Security.SECURITY_URL);
-			final StringBuilder builder = new StringBuilder();
-			builder.append("Bearer ").append(rawToken);
-			try(Response response = RestClientBuilder.newBuilder().baseUri(securityUrl).build(SecurityUtil.class).authenticate(builder.toString())){
-				if(response.getStatus() == Response.Status.OK.getStatusCode()) {
-					succeed = true;
-				}
-			}
+		final CompletionStage<Map<String, Object>> tokenClaims = ClientBuilder.newClient().target(cacheUrl).path(Naming.SECURITY).queryParam("tid", tokenId).request(MediaType.APPLICATION_JSON_TYPE).rx().get(new GenericType<Map<String, Object>>(){});
+		return tokenClaims
+		.thenApply(SecurityUtil::getRawToken)
+		.thenCompose(SecurityUtil::buildAuthenticateRequest)
+		.thenApply(response -> response.getStatus() == Response.Status.OK.getStatusCode());
+	}
+	
+	/**
+	 * @param claims
+	 * @return
+	 */
+	static String getRawToken(final Map<String, Object> claims) {
+		if(claims != null && claims.containsKey("rawToken")) {
+			final String rawToken = (String) claims.get("rawToken");
+			return rawToken;
 		}
-		return succeed;
+		return "";
+	}
+	
+	/**
+	 * @param token
+	 * @return
+	 * @throws Exception
+	 */
+	static CompletionStage<Response> buildAuthenticateRequest(final String token){
+		URI securityUrl;
+		try {
+			securityUrl = ConfigUtil.getURI(Naming.Security.SECURITY_URL);
+		}
+		catch (URISyntaxException e) {
+			securityUrl = null;
+		}
+		final StringBuilder builder = new StringBuilder();
+		builder.append("Bearer ").append(token);
+		return ClientBuilder.newClient().target(securityUrl).request(MediaType.APPLICATION_JSON_TYPE).header(HttpHeaders.AUTHORIZATION, builder.toString()).rx().get();
 	}
 }

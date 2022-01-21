@@ -14,7 +14,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.validation.constraints.NotBlank;
 import javax.websocket.DeploymentException;
 import javax.ws.rs.GET;
 import javax.ws.rs.MatrixParam;
@@ -112,29 +111,29 @@ public class Stream {
 	@Produces(MediaType.SERVER_SENT_EVENTS)
 	public void stream(
 			@PathParam("path")
-			@NotBlank
 			final String path, 
 			@Context 
 			final SseEventSink sink, 
 			@Context 
 			final Sse sse,
 			@MatrixParam("tid")
-			@NotBlank
 			final String tokenId) throws Exception {
-		if(SecurityUtil.authenticateTokenId(tokenId)) {
-			clients.computeIfPresent(path, (p, client) -> {
-				final Broadcaster broadcaster = broadcasters.computeIfAbsent(
-						path, p2 -> {
-							final Broadcaster newBroadcaster = new Broadcaster(client, sse);
-							executor.submit(newBroadcaster);
-							return newBroadcaster;
-						});
-				broadcaster.register(sink);
-				return client;
-			});
-		}
-		else {
-			throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
-		}
+		SecurityUtil.authenticateTokenId(tokenId).thenAccept(succeed -> {
+			if(succeed) {
+				clients.computeIfPresent(path, (p, client) -> {
+					final Broadcaster broadcaster = broadcasters.computeIfAbsent(
+							path, p2 -> {
+								final Broadcaster newBroadcaster = new Broadcaster(client, sse);
+								executor.submit(newBroadcaster);
+								return newBroadcaster;
+							});
+					broadcaster.register(sink);
+					return client;
+				});
+			}
+			else {
+				throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
+			}
+		});
 	}
 }
