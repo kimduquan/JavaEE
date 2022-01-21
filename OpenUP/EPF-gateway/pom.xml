@@ -108,7 +108,7 @@
       <id>native</id>
       <activation>
         <property>
-          <name>EPF-gateway-native</name>
+          <name>epf-gateway-native</name>
         </property>
       </activation>
       <build>
