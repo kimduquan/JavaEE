@@ -11,7 +11,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
 
 /**
  * @author PC
@@ -39,7 +38,7 @@ public interface FilesClient {
 	 */
 	@GET
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    StreamingOutput read(
+    Response read(
     		@HeaderParam(HttpHeaders.AUTHORIZATION)
     		final String token
     		);

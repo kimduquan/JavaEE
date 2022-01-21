@@ -5,13 +5,11 @@ package epf.shell.file;
 
 import java.io.File;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.StandardCopyOption;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import epf.file.util.PathUtil;
@@ -92,9 +90,10 @@ public class FileStore {
 			final File output
 			) throws Exception {
 		final FilesClient files = buildClient(path);
-		final StreamingOutput stream = files.read(credential.getAuthHeader());
-		try(OutputStream outputStream = Files.newOutputStream(output.toPath(), StandardOpenOption.TRUNCATE_EXISTING)){
-			stream.write(outputStream);
+		try(Response response = files.read(credential.getAuthHeader())){
+			try(InputStream stream = response.readEntity(InputStream.class)){
+				Files.copy(stream, output.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			}
 		}
 	}
 	
