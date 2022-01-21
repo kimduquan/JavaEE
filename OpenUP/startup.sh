@@ -1,4 +1,3 @@
-./config.sh
 ~/kafka_2.13-2.8.1/bin/zookeeper-server-start.sh ~/kafka_2.13-2.8.1/config/zookeeper.properties &
 export JAVA_HOME=~/jdk8u312-b07
 ~/pluto-3.1.0/bin/startup.sh &
