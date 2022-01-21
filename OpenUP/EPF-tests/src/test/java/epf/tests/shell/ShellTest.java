@@ -430,6 +430,7 @@ public class ShellTest {
 	}
 	
 	@Test
+	@Ignore
 	public void testImage_FindContours() throws Exception {
 		Path ruleFile = PathUtil.of("", "board.jpg");
 		builder = ShellUtil.command(builder,
