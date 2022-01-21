@@ -12,6 +12,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.ws.rs.core.MultivaluedHashMap;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
@@ -133,6 +134,6 @@ public class Security {
 			@CallerPrincipal
 			final Credential credential
 			) throws Exception {
-		return security.revoke(credential.getAuthHeader());
+		return security.revoke(credential.getAuthHeader(), new MultivaluedHashMap<>());
 	}
 }

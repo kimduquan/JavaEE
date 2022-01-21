@@ -13,6 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import epf.naming.Naming;
 import epf.security.schema.Token;
@@ -86,5 +87,6 @@ public interface SecurityClient {
     @Produces(MediaType.TEXT_PLAIN)
     String revoke(
     		@HeaderParam(HttpHeaders.AUTHORIZATION)
-    		final String token) throws Exception;
+    		final String token,
+    		final MultivaluedMap<String, String> body) throws Exception;
 }
