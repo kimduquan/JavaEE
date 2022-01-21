@@ -19,6 +19,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -26,8 +27,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.faulttolerance.Asynchronous;
-import epf.client.util.Client;
-import epf.client.util.ClientUtil;
 import epf.gateway.Request;
 import epf.naming.Naming;
 import epf.util.StringUtil;
@@ -46,12 +45,6 @@ public class Net {
      */
     @Inject
     transient Request request;
-    
-    /**
-     * 
-     */
-    @Inject
-    transient ClientUtil clientUtil;
     
     /**
      * 
@@ -95,20 +88,18 @@ public class Net {
             final HttpServletRequest request
     ) throws Exception {
         final Optional<Object> attrValue = SessionUtil.getMapAttribute(request, Naming.Net.NET_URL, "urls", url);
-        String urlString = "";
         if(attrValue.isEmpty()) {
         	final int id = StringUtil.fromShortString(url);
-        	try(Client client = clientUtil.newClient(new URI(cacheUrl))){
-        		urlString = client.request(
-        				target -> target.path("net").path("url").queryParam("id", String.valueOf(id)), 
-        				req -> req)
-        		.accept(MediaType.TEXT_PLAIN)
-        		.get(String.class);
-        	}
+        	return ClientBuilder.newClient().target(cacheUrl).path(Naming.NET).path("url").queryParam("id", String.valueOf(id)).request(MediaType.TEXT_PLAIN_TYPE).rx().get(String.class)
+        	.thenApply(urlString -> {
+        		try {
+					return Response.temporaryRedirect(new URI(urlString)).build();
+				} 
+        		catch (Exception e) {
+					return Response.serverError().build();
+				}
+        	});
         }
-        else {
-        	urlString = attrValue.get().toString();
-        }
-        return CompletableFuture.completedFuture(Response.temporaryRedirect(new URI(urlString)).build());
+        return CompletableFuture.completedFuture(Response.temporaryRedirect(new URI(attrValue.get().toString())).build());
     }
 }

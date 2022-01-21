@@ -59,11 +59,6 @@
         <artifactId>EPF-utility</artifactId>
         <version>${project.version}</version>
     </dependency>
-    <dependency>
-        <groupId>openup</groupId>
-        <artifactId>EPF-client-utility</artifactId>
-        <version>${project.version}</version>
-    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -101,6 +96,19 @@
           </systemPropertyVariables>
         </configuration>
       </plugin>
+	  <plugin>
+		  <groupId>org.jboss.jandex</groupId>
+		  <artifactId>jandex-maven-plugin</artifactId>
+		  <version>1.2.2</version>
+		  <executions>
+			<execution>
+			  <id>make-index</id>
+			  <goals>
+				<goal>jandex</goal>
+			  </goals>
+			</execution>
+		  </executions>
+		</plugin>
     </plugins>
   </build>
   <profiles>

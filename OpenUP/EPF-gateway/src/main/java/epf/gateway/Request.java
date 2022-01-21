@@ -25,9 +25,6 @@ import javax.ws.rs.sse.OutboundSseEvent;
 import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
 import javax.ws.rs.sse.SseEventSource;
-import org.eclipse.microprofile.context.ManagedExecutor;
-import epf.client.util.ssl.DefaultHostnameVerifier;
-import epf.client.util.ssl.SSLContextHelper;
 import epf.util.logging.LogManager;
 
 /**
@@ -49,12 +46,6 @@ public class Request {
     transient Registry registry;
     
     /**
-     * 
-     */
-    @Inject
-    transient ManagedExecutor executor;
-    
-    /**
      * @param headers
      * @param uriInfo
      * @param req
@@ -67,11 +58,7 @@ public class Request {
             final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
 		final URI uri = RequestUtil.buildUri(uriInfo, registry);
-		final ClientBuilder builder = ClientBuilder.newBuilder()
-		.executorService(executor)
-		.hostnameVerifier(new DefaultHostnameVerifier())
-		.sslContext(SSLContextHelper.build());
-		final Client client = builder.build();
+		final Client client = ClientBuilder.newClient();
 		WebTarget target = client.target(uri);
 		target = RequestUtil.buildTarget(target, uriInfo, uri);
 		Invocation.Builder invoke = target.request();
@@ -94,11 +81,7 @@ public class Request {
             final UriInfo uriInfo,
             final SseEventSink sseEventSink,
             final Sse sse) throws Exception {
-    	ClientBuilder clientBuilder = ClientBuilder.newBuilder()
-    			.executorService(executor)
-    			.hostnameVerifier(new DefaultHostnameVerifier())
-    			.sslContext(SSLContextHelper.build());
-    	Client client = clientBuilder.build();
+    	Client client = ClientBuilder.newClient();
     	URI uri = RequestUtil.buildUri(uriInfo, registry);
     	WebTarget target = client.target(uri);
     	target = RequestUtil.buildTarget(target, uriInfo, uri);
