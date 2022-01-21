@@ -53,7 +53,7 @@ public class FunctionInterceptor {
 			logger.exiting(cls, method, result);
 			out.println(String.format("Proceed.(%dms)", duration));
 			final Class<?> returnType = context.getMethod().getReturnType();
-			if(returnType != null && !returnType.equals(void.class)) {
+			if(returnType != null && !returnType.getName().equals(void.class.getName())) {
 				out.println(valueOf(result));
 			}
 			return result;
