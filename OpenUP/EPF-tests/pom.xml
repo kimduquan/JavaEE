@@ -15,6 +15,7 @@
         <httpsPort>9443</httpsPort>
         <httpWebPort>8585</httpWebPort>
         <httpsWebPort>8686</httpsWebPort>
+        <gatewayPort>9543</gatewayPort>
         <!-- Jaeger configuration -->
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
@@ -32,7 +33,7 @@
 		<liberty.env.epf_schema_url>https://localhost:9443/persistence/schema/</liberty.env.epf_schema_url>
 		<liberty.env.epf_security_url>https://localhost:9443/security/security/</liberty.env.epf_security_url>
         <liberty.env.epf_security_webapp_url>https://localhost:8686/EPF-security-webapp-1.0.0/</liberty.env.epf_security_webapp_url>
-        <liberty.env.epf_gateway_url>https://localhost:9443/gateway/</liberty.env.epf_gateway_url>
+        <liberty.env.epf_gateway_url>https://localhost:9543/gateway/</liberty.env.epf_gateway_url>
         <liberty.env.epf_messaging_url>ws://localhost:9080/messaging/messaging/</liberty.env.epf_messaging_url>
         <liberty.env.epf_lang_url>ws://localhost:9080/lang/lang/</liberty.env.epf_lang_url>
         <liberty.env.epf_cache_url>https://localhost:9443/cache/cache/</liberty.env.epf_cache_url>
@@ -279,12 +280,6 @@
             <type>war</type>
         </dependency>
         <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-gateway</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-rs-mp-client</artifactId>
 		    <scope>test</scope>
@@ -345,7 +340,7 @@
 						<epf.schema.url>https://localhost:${httpsPort}/persistence/schema/</epf.schema.url>
 						<epf.security.url>https://localhost:${httpsPort}/security/security/</epf.security.url>
                         <epf.security.webapp.url>https://localhost:${httpsPort}/security/</epf.security.webapp.url>
-                        <epf.gateway.url>https://localhost:${httpsPort}/gateway/</epf.gateway.url>
+                        <epf.gateway.url>https://localhost:${gatewayPort}/gateway/</epf.gateway.url>
                         <epf.registry.url>https://localhost:${httpsPort}/registry/registry/</epf.registry.url>
 						<epf.management.url>https://localhost:${httpsPort}/management/management/</epf.management.url>
                         <epf.messaging.url>ws://localhost:${httpPort}/messaging/messaging/</epf.messaging.url>
