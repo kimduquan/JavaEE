@@ -32,13 +32,10 @@ public class Registry {
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		ClientBuilder.newClient().target(registryUrl).request().rx().get()
-		.thenAccept(response -> {
-			response
-			.getLinks()
-			.forEach(link -> {
-				remotes.put(link.getRel(), link.getUri());
-			});
+		ClientBuilder.newClient().target(registryUrl).request().get()
+		.getLinks()
+		.forEach(link -> {
+			remotes.put(link.getRel(), link.getUri());
 		});
 	}
 	

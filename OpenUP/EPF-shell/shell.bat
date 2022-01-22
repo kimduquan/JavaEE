@@ -1,3 +1,1 @@
-set epf.gateway.url=http://localhost:9543/gateway/
-C:\jdk-11.0.13+8\bin\java.exe -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8000 "-Depf.gateway.url=http://localhost:9543/gateway/" -jar .\target\quarkus-app\quarkus-run.jar security login -u any_role1 -p
 C:\jdk-11.0.13+8\bin\java.exe -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8000 -jar .\target\quarkus-app\quarkus-run.jar security login -u any_role1 -p
