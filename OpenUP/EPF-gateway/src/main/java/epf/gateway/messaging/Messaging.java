@@ -5,7 +5,6 @@ package epf.gateway.messaging;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,7 +15,6 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.websocket.CloseReason;
-import javax.websocket.DeploymentException;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -24,8 +22,8 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.context.ManagedExecutor;
+import epf.gateway.Registry;
 import epf.gateway.security.SecurityUtil;
 import epf.naming.Naming;
 import epf.util.logging.LogManager;
@@ -62,20 +60,8 @@ public class Messaging {
 	/**
 	 * 
 	 */
-	@ConfigProperty(name = Naming.Messaging.MESSAGING_URL)
-	String messagingUrl;
-	
-	/**
-	 * 
-	 */
-	@ConfigProperty(name = Naming.Cache.CACHE_URL)
-	String cacheUrl;
-	
-	/**
-	 * 
-	 */
-	@ConfigProperty(name = Naming.Security.SECURITY_URL)
-	String securityUrl;
+	@Inject
+	transient Registry registry;
 	
 	/**
 	 * 
@@ -83,12 +69,12 @@ public class Messaging {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI url = new URI(messagingUrl);
-			final Remote persistence = new Remote(url.resolve(Naming.PERSISTENCE));
+			final URI messagingUrl = registry.lookup(Naming.MESSAGING);
+			final Remote persistence = new Remote(messagingUrl.resolve(Naming.PERSISTENCE));
 			remotes.put(Naming.PERSISTENCE, persistence);
 			executor.submit(persistence);
 		} 
-		catch (URISyntaxException | DeploymentException | IOException e) {
+		catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "postConstruct", e);
 		}
 	}
@@ -127,7 +113,9 @@ public class Messaging {
 			closeSession(path, session);
 		}
 		else {
-			SecurityUtil.authenticateTokenId(tokenId.get(), new URI(cacheUrl), new URI(securityUrl)).thenAccept(succeed -> {
+			final URI cacheUrl = registry.lookup(Naming.CACHE);
+			final URI securityUrl = registry.lookup(Naming.SECURITY);
+			SecurityUtil.authenticateTokenId(tokenId.get(), cacheUrl, securityUrl).thenAccept(succeed -> {
 				if(!succeed) {
 					closeSession(path, session);
 				}

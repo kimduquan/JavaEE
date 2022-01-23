@@ -10,14 +10,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import javax.ws.rs.core.Response;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import epf.file.util.PathUtil;
 import epf.naming.Naming;
 import epf.shell.Function;
+import epf.shell.client.ClientUtil;
 import epf.shell.security.Credential;
 import epf.shell.security.CallerPrincipal;
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -34,8 +35,8 @@ public class FileStore {
 	/**
 	 * 
 	 */
-	@ConfigProperty(name = Naming.Client.CLIENT_CONFIG + "/mp-rest/uri")
-	String gatewayUrl;
+	@Inject
+	transient ClientUtil clientUtil;
 	
 	/**
 	 * @param path
@@ -43,7 +44,7 @@ public class FileStore {
 	 * @throws Exception
 	 */
 	protected FilesClient buildClient(final Path path) throws Exception {
-		final URI baseUrl = new URI(gatewayUrl + Naming.FILE + "/" + PathUtil.toURI(path));
+		final URI baseUrl = new URI(clientUtil.getUrl(Naming.FILE) + "/" + PathUtil.toURI(path));
 		final FilesClient files = RestClientBuilder.newBuilder().baseUrl(baseUrl.toURL()).build(FilesClient.class);
 		return files;
 	}

@@ -28,7 +28,7 @@ public class ClientUtil {
 	 * 
 	 */
 	@ConfigProperty(name = Naming.Client.CLIENT_CONFIG + "/mp-rest/uri")
-	String gatewayUrl;
+	URI gatewayUrl;
 
 	/**
 	 * 
@@ -61,14 +61,14 @@ public class ClientUtil {
 	 * @throws Exception
 	 */
 	public Client newClient(final String name) throws Exception {
-		return new Client(clients, getBaseUri(), builder -> builder);
+		return new Client(clients, gatewayUrl.resolve(name), builder -> builder);
 	}
 	
 	/**
+	 * @param name
 	 * @return
-	 * @throws Exception 
 	 */
-	public URI getBaseUri() throws Exception {
-		return new URI(gatewayUrl).resolve(Naming.SHELL);
+	public URI getUrl(final String name) {
+		return gatewayUrl.resolve(name);
 	}
 }

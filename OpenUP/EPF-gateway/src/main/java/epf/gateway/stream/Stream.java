@@ -3,9 +3,7 @@
  */
 package epf.gateway.stream;
 
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -14,7 +12,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.websocket.DeploymentException;
 import javax.ws.rs.GET;
 import javax.ws.rs.MatrixParam;
 import javax.ws.rs.NotAuthorizedException;
@@ -26,8 +23,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.context.ManagedExecutor;
+import epf.gateway.Registry;
 import epf.gateway.security.SecurityUtil;
 import epf.naming.Naming;
 import epf.util.logging.LogManager;
@@ -59,20 +56,8 @@ public class Stream {
 	/**
 	 * 
 	 */
-	@ConfigProperty(name = Naming.Messaging.MESSAGING_URL)
-	String messagingUrl;
-	
-	/**
-	 * 
-	 */
-	@ConfigProperty(name = Naming.Cache.CACHE_URL)
-	String cacheUrl;
-	
-	/**
-	 * 
-	 */
-	@ConfigProperty(name = Naming.Security.SECURITY_URL)
-	String securityUrl;
+	@Inject
+	transient Registry registry;
 	
 	/**
 	 * 
@@ -86,10 +71,10 @@ public class Stream {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI url = new URI(messagingUrl);
-			clients.put(Naming.PERSISTENCE, Client.connectToServer(url.resolve(Naming.PERSISTENCE)));
+			final URI messagingUrl = registry.lookup(Naming.MESSAGING);
+			clients.put(Naming.PERSISTENCE, Client.connectToServer(messagingUrl.resolve(Naming.PERSISTENCE)));
 		} 
-		catch (URISyntaxException | DeploymentException | IOException e) {
+		catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "postConstruct", e);
 		}
 	}
@@ -136,7 +121,9 @@ public class Stream {
 			final Sse sse,
 			@MatrixParam("tid")
 			final String tokenId) throws Exception {
-		SecurityUtil.authenticateTokenId(tokenId, new URI(cacheUrl), new URI(securityUrl)).thenAccept(succeed -> {
+		final URI cacheUrl = registry.lookup(Naming.CACHE);
+		final URI securityUrl = registry.lookup(Naming.SECURITY);
+		SecurityUtil.authenticateTokenId(tokenId, cacheUrl, securityUrl).thenAccept(succeed -> {
 			if(succeed) {
 				clients.computeIfPresent(path, (p, client) -> {
 					final Broadcaster broadcaster = broadcasters.computeIfAbsent(

@@ -32,7 +32,7 @@ public class Registry {
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		ClientBuilder.newClient().target(registryUrl).request().get()
+		ClientBuilder.newClient().target(registryUrl).queryParam(Naming.Registry.Filter.SCHEME, "http", "ws").request().get()
 		.getLinks()
 		.forEach(link -> {
 			remotes.put(link.getRel(), link.getUri());

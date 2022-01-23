@@ -15,6 +15,7 @@
         <httpsPort>9443</httpsPort>
         <httpWebPort>8585</httpWebPort>
         <httpsWebPort>8686</httpsWebPort>
+        <portalPort>8080</portalPort>
         <gatewayPort>9543</gatewayPort>
         <!-- Jaeger configuration -->
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
@@ -44,6 +45,7 @@
 		<liberty.env.epf_health_url>https://localhost:9443/health/</liberty.env.epf_health_url>
 		<liberty.env.epf_batch_api_url>https://localhost:9443/ibm/</liberty.env.epf_batch_api_url>
 		<liberty.env.epf_net_url>https://localhost:9443/net/net/</liberty.env.epf_net_url>
+		<liberty.env.epf_net_http_port>9080</liberty.env.epf_net_http_port>
 		<liberty.env.openup_delivery_processes_url>https://localhost:9443/delivery-processes/delivery-processes/</liberty.env.openup_delivery_processes_url>
 		<liberty.env.openup_tasks_url>https://localhost:9443/tasks/tasks/</liberty.env.openup_tasks_url>
 		<liberty.env.openup_work_products_url>https://localhost:9443/work-products/work-products/</liberty.env.openup_work_products_url>
@@ -351,6 +353,7 @@
                         <epf.health.url>https://localhost:${httpsPort}/health/</epf.health.url>
 						<epf.batch.api.url>https://localhost:${httpsPort}/ibm/</epf.batch.api.url>
 						<epf.net.url>https://localhost:${httpsPort}/net/net/</epf.net.url>
+						<epf.net.http.port>${httpPort}</epf.net.http.port>
 						<openup.delivery_processes.url>https://localhost:${httpsPort}/delivery-processes/delivery-processes/</openup.delivery_processes.url>
 						<openup.tasks.url>https://localhost:${httpsPort}/tasks/tasks/</openup.tasks.url>
 						<openup.work_products.url>https://localhost:${httpsPort}/work-products/work-products/</openup.work_products.url>

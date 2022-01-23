@@ -25,8 +25,8 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.faulttolerance.Asynchronous;
+import epf.gateway.Registry;
 import epf.gateway.Request;
 import epf.naming.Naming;
 import epf.util.StringUtil;
@@ -49,8 +49,8 @@ public class Net {
     /**
      * 
      */
-    @ConfigProperty(name = Naming.Cache.CACHE_URL)
-    String cacheUrl;
+    @Inject
+    transient Registry registry;
     
     /**
      * @param headers
@@ -90,6 +90,7 @@ public class Net {
         final Optional<Object> attrValue = SessionUtil.getMapAttribute(request, Naming.Net.NET_URL, "urls", url);
         if(attrValue.isEmpty()) {
         	final int id = StringUtil.fromShortString(url);
+        	final URI cacheUrl = registry.lookup(Naming.CACHE);
         	return ClientBuilder.newClient().target(cacheUrl).path(Naming.NET).path("url").queryParam("id", String.valueOf(id)).request(MediaType.TEXT_PLAIN_TYPE).rx().get(String.class)
         	.thenApply(urlString -> {
         		try {

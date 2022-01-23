@@ -226,6 +226,10 @@ public interface Naming {
 		 */
 		String NET_URL = "epf.net.url";
 		
+		/**
+		 * 
+		 */
+		String HTTP_PORT = "epf.net.http.port";
 	}
 	
 	/**
@@ -314,7 +318,63 @@ public interface Naming {
 	     * 
 	     */
 	    String REGISTRY_URL = "epf.registry.url";
-		
+	    
+	    /**
+	     * @author PC
+	     *
+	     */
+	    interface Filter {
+	    	
+		    /**
+		     * 
+		     */
+		    String ABSOLUTE = "absolute";
+		    
+		    /**
+		     * 
+		     */
+		    String OPAQUE = "opaque";
+		    
+		    /**
+		     * 
+		     */
+		    String AUTHORITY = "authority";
+		    
+		    /**
+		     * 
+		     */
+		    String FRAGMENT = "fragment";
+		    
+		    /**
+		     * 
+		     */
+		    String HOST = "host";
+		    
+		    /**
+		     * 
+		     */
+		    String PATH = "path";
+		    
+		    /**
+		     * 
+		     */
+		    String PORT = "port";
+		    
+		    /**
+		     * 
+		     */
+		    String QUERY = "query";
+		    
+		    /**
+		     * 
+		     */
+		    String SCHEME = "scheme";
+		    
+		    /**
+		     * 
+		     */
+		    String USER_INFO = "user-info";
+	    }
 	}
 	
 	/**
@@ -430,6 +490,11 @@ public interface Naming {
 	 *
 	 */
 	interface Shell {
+		
+		/**
+		 * 
+		 */
+		String SHELL_URL = "epf.shell.url";
 
 		/**
 		 * 
