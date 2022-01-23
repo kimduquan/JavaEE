@@ -1,13 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.gateway;
 
 import java.io.InputStream;
 import java.net.URI;
 import java.util.concurrent.CompletionStage;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -19,12 +15,12 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.sse.OutboundSseEvent;
 import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
 import javax.ws.rs.sse.SseEventSource;
+import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.util.logging.LogManager;
 
 /**
@@ -66,7 +62,11 @@ public class Request {
 		final CompletionStageRxInvoker rx = invoke.rx();
 		return RequestUtil.invoke(rx, req.getMethod(), headers.getMediaType(), body)
 				.thenApply(res -> RequestUtil.buildResponse(res, uriInfo))
-				.thenApply(ResponseBuilder::build);
+				.thenApply(ResponseBuilder::build)
+				.exceptionally(ex -> { 
+					LOGGER.log(Level.WARNING, "request", ex);
+					return Response.serverError().build(); 
+					});
     }
     
     /**

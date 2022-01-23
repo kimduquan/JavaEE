@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.gateway;
 
 import java.io.Serializable;
@@ -25,7 +20,7 @@ import epf.util.logging.LogManager;
 @Provider
 public class ExceptionHandler implements 
         Serializable,
-        ExceptionMapper<Exception> {
+        ExceptionMapper<Throwable> {
 
     /**
     * 
@@ -38,7 +33,7 @@ public class ExceptionHandler implements
     private static final Logger LOGGER = LogManager.getLogger(ExceptionHandler.class.getName());
     
     @Override
-    public Response toResponse(final Exception exception) {
+    public Response toResponse(final Throwable exception) {
     	LOGGER.throwing(getClass().getName(), "toResponse", exception);
     	ResponseBuilder builder;
     	if(exception instanceof WebApplicationException) {
