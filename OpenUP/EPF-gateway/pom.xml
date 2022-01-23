@@ -30,6 +30,10 @@
   <dependencies>
   	<dependency>
 	    <groupId>io.quarkus</groupId>
+	    <artifactId>quarkus-smallrye-jwt</artifactId>
+	</dependency>
+  	<dependency>
+	    <groupId>io.quarkus</groupId>
 	    <artifactId>quarkus-smallrye-opentracing</artifactId>
 	</dependency>
     <dependency>

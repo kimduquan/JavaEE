@@ -89,6 +89,15 @@ public class Client implements AutoCloseable {
     	authHeader = Optional.of(tokenHeader.append("Bearer ").append(token).toString());
 		return this;
 	}
+	
+	/**
+	 * @param header
+	 * @return
+	 */
+	public Client authorizationHeader(final String header) {
+		authHeader = Optional.of(header);
+		return this;
+	}
 
     @Override
     public void close() throws Exception {

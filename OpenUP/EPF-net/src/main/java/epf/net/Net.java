@@ -8,8 +8,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.SecurityContext;
-import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.client.gateway.GatewayUtil;
 import epf.client.persistence.Entities;
 import epf.client.util.Client;
@@ -49,8 +49,7 @@ public class Net implements epf.client.net.Net {
 		url.setString(rawUrl.toString());
 		url.setUserInfo(rawUrl.getUserInfo());
 		try(Client client = clientUtil.newClient(GatewayUtil.get(Naming.PERSISTENCE))){
-			final JsonWebToken jwt = (JsonWebToken) security.getUserPrincipal();
-			client.authorization(jwt.getRawToken());
+			client.authorizationHeader(request.getHeader(HttpHeaders.AUTHORIZATION));
 			final URL resultUrl = Entities.persist(client, URL.class, epf.net.schema.Net.SCHEMA, epf.net.schema.Net.URL, url);
 			final String shortString = StringUtil.toShortString(resultUrl.getId());
 			SessionUtil.setMapAttribute(request, Naming.Net.NET_URL, "urls", shortString, rawUrl.toString());

@@ -15,6 +15,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.faulttolerance.Asynchronous;
 import epf.gateway.Request;
@@ -46,12 +47,13 @@ public class Registry {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Asynchronous
     public CompletionStage<Response> bind(
+    		@Context final SecurityContext context,
     		@Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body
     		) throws Exception {
-    	return request.request(headers, uriInfo, req, body);
+    	return request.request(context, headers, uriInfo, req, body);
     }
 	
 	/**
@@ -64,11 +66,12 @@ public class Registry {
 	@GET
 	@Asynchronous
     public CompletionStage<Response> list(
+    		@Context final SecurityContext context,
     		@Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req
     		) throws Exception {
-		return request.request(headers, uriInfo, req, null);
+		return request.request(context, headers, uriInfo, req, null);
 	}
 	
 	/**
@@ -83,6 +86,8 @@ public class Registry {
 	@Path("{name}")
 	@Asynchronous
     public CompletionStage<Response> lookup(
+    		@Context 
+    		final SecurityContext context,
     		@PathParam("name") 
     		final String name,
     		@Context 
@@ -91,7 +96,7 @@ public class Registry {
             final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req
     		) throws Exception {
-		return request.request(headers, uriInfo, req, null);
+		return request.request(context, headers, uriInfo, req, null);
 	}
 	
 	/**
@@ -108,6 +113,8 @@ public class Registry {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Asynchronous
     public CompletionStage<Response> rebind(
+    		@Context 
+    		final SecurityContext context,
     		@PathParam("name") 
     		final String name, 
     		@Context 
@@ -117,7 +124,7 @@ public class Registry {
             @Context final javax.ws.rs.core.Request req,
             final InputStream body
     		) throws Exception {
-		return request.request(headers, uriInfo, req, body);
+		return request.request(context, headers, uriInfo, req, body);
 	}
 	
 	/**
@@ -132,6 +139,8 @@ public class Registry {
 	@Path("{name}")
 	@Asynchronous
     public CompletionStage<Response> unbind(
+    		@Context 
+    		final SecurityContext context,
     		@PathParam("name") 
     		final String name,
     		@Context 
@@ -140,6 +149,6 @@ public class Registry {
             final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req
     		) throws Exception {
-		return request.request(headers, uriInfo, req, null);
+		return request.request(context, headers, uriInfo, req, null);
 	}
 }

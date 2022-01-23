@@ -1,12 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.gateway.persistence;
 
 import java.io.InputStream;
 import java.util.concurrent.CompletionStage;
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -20,6 +16,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.faulttolerance.Asynchronous;
 import epf.gateway.Request;
@@ -31,6 +28,7 @@ import epf.naming.Naming;
  */
 @Path(Naming.PERSISTENCE)
 @ApplicationScoped
+@RolesAllowed(Naming.Security.DEFAULT_ROLE)
 public class Entities {
     
     /**
@@ -53,13 +51,14 @@ public class Entities {
     @Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
     public CompletionStage<Response> persist(
+    		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             @PathParam("schema") final String schema,
             @PathParam("entity") final String entity,
             final InputStream body) throws Exception {
-        return request.request(headers, uriInfo, req, body);
+        return request.request(context, headers, uriInfo, req, body);
     }
     
     /**
@@ -76,6 +75,7 @@ public class Entities {
     @Consumes(MediaType.APPLICATION_JSON)
     @Asynchronous
     public CompletionStage<Response> merge(
+    		@Context final SecurityContext context,
     		@Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
@@ -84,7 +84,7 @@ public class Entities {
             @PathParam("id") final String entityId,
             final InputStream body
             ) throws Exception {
-    	return request.request(headers, uriInfo, req, body);
+    	return request.request(context, headers, uriInfo, req, body);
     }
     
     /**
@@ -99,13 +99,14 @@ public class Entities {
     @Path("{schema}/{entity}/{id}")
     @Asynchronous
     public CompletionStage<Response> remove(
+    		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             @PathParam("schema") final String schema,
             @PathParam("entity") final String entity,
             @PathParam("id") final String entityId) throws Exception {
-        return request.request(headers, uriInfo, req, null);
+        return request.request(context, headers, uriInfo, req, null);
     }
     
     /**
@@ -122,6 +123,7 @@ public class Entities {
     @Produces(MediaType.APPLICATION_JSON)
     @Asynchronous
     public CompletionStage<Response> find(
+    		@Context final SecurityContext context,
     		@Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
@@ -130,6 +132,6 @@ public class Entities {
             @PathParam("id") final String entityId,
             final InputStream body
             ) throws Exception {
-    	return request.request(headers, uriInfo, req, body);
+    	return request.request(context, headers, uriInfo, req, body);
     }
 }

@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
-import javax.annotation.security.RolesAllowed;
 import javax.enterprise.concurrent.ManagedScheduledExecutorService;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -31,7 +30,6 @@ import epf.util.websocket.MessageQueue;
  */
 @ApplicationScoped
 @Path(Naming.SCHEDULE)
-@RolesAllowed(Naming.Security.DEFAULT_ROLE)
 public class Schedule implements epf.client.schedule.Schedule {
 	
 	/**
