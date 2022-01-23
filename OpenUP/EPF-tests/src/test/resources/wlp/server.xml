@@ -105,7 +105,7 @@
     
     <mpJwt 
         id="EPF"
-        audiences ="http://localhost:${httpPort}/,https://localhost:${httpsPort}/,http://localhost/,https://localhost/,http://localhost:${httpWebPort}/,https://localhost:${httpsWebPort}/,http://localhost:${portalPort}/,https://localhost:${gatewayPort}/"
+        audiences ="http://localhost:${httpPort}/,https://localhost:${httpsPort}/,http://localhost/,https://localhost/,http://localhost:${httpWebPort}/,https://localhost:${httpsWebPort}/,http://localhost:${portalPort}/,http://localhost:${gatewayPort}/"
         ignoreApplicationAuthMethod="false" />
 
 	<dataSource id="epf" jndiName="jdbc/epf">
