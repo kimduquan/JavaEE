@@ -28,6 +28,10 @@
     </dependencies>
   </dependencyManagement>
   <dependencies>
+  	<dependency>
+	    <groupId>io.quarkus</groupId>
+	    <artifactId>quarkus-jaeger</artifactId>
+	</dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-jaxrs-client-reactive</artifactId>
