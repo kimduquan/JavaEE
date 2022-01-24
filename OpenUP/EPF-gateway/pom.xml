@@ -36,22 +36,18 @@
 	    <groupId>io.quarkus</groupId>
 	    <artifactId>quarkus-smallrye-opentracing</artifactId>
 	</dependency>
-    <dependency>
+	<dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-jaxrs-client-reactive</artifactId>
+      <artifactId>quarkus-rest-client-jsonb</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy-reactive</artifactId>
+      <artifactId>quarkus-resteasy</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-websockets</artifactId>
     </dependency>
-    <dependency>
-	    <groupId>io.quarkus</groupId>
-	    <artifactId>quarkus-smallrye-fault-tolerance</artifactId>
-	</dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-arc</artifactId>

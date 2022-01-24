@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.gateway.schema;
 
 import java.util.concurrent.CompletionStage;
@@ -16,8 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import org.eclipse.microprofile.faulttolerance.Asynchronous;
-import epf.gateway.Request;
+import epf.gateway.Application;
 import epf.naming.Naming;
 
 /**
@@ -33,7 +29,7 @@ public class Schema {
      * 
      */
     @Inject
-    transient Request request;
+    transient Application request;
     
     /**
      * @param headers
@@ -44,7 +40,6 @@ public class Schema {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Asynchronous
     public CompletionStage<Response> getEntities(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -63,7 +58,6 @@ public class Schema {
     @GET
     @Path("embeddable")
     @Produces(MediaType.APPLICATION_JSON)
-    @Asynchronous
     public CompletionStage<Response> getEmbeddables(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 

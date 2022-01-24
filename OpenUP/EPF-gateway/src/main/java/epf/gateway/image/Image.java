@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.gateway.image;
 
 import java.io.InputStream;
@@ -19,8 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import org.eclipse.microprofile.faulttolerance.Asynchronous;
-import epf.gateway.Request;
+import epf.gateway.Application;
 import epf.naming.Naming;
 
 /**
@@ -35,7 +29,7 @@ public class Image {
      * 
      */
     @Inject
-    transient Request request;
+    transient Application request;
     
     /**
      * @param headers
@@ -49,7 +43,6 @@ public class Image {
 	@POST
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
 	@Produces(MediaType.APPLICATION_JSON)
-    @Asynchronous
     public CompletionStage<Response> findContours(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 

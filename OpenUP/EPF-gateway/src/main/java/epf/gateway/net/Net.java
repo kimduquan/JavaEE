@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.gateway.net;
 
 import java.io.InputStream;
@@ -26,9 +21,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import org.eclipse.microprofile.faulttolerance.Asynchronous;
 import epf.gateway.Registry;
-import epf.gateway.Request;
+import epf.gateway.Application;
 import epf.naming.Naming;
 import epf.util.StringUtil;
 import epf.util.http.SessionUtil;
@@ -45,7 +39,7 @@ public class Net {
      * 
      */
     @Inject
-    transient Request request;
+    transient Application request;
     
     /**
      * 
@@ -63,7 +57,6 @@ public class Net {
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
-    @Asynchronous
     public CompletionStage<Response> rewriteUrl(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -82,7 +75,6 @@ public class Net {
      */
     @Path("url")
 	@GET
-    @Asynchronous
     public CompletionStage<Response> temporaryRedirect(
     		@QueryParam("url")
     		final String url,

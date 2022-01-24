@@ -17,8 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import org.eclipse.microprofile.faulttolerance.Asynchronous;
-import epf.gateway.Request;
+import epf.gateway.Application;
 import epf.naming.Naming;
 
 /**
@@ -33,7 +32,7 @@ public class Registry {
 	 * 
 	 */
 	@Inject
-    transient Request request;
+    transient Application request;
     
     /**
      * @param headers
@@ -45,7 +44,6 @@ public class Registry {
      */
     @POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Asynchronous
     public CompletionStage<Response> bind(
     		@Context final SecurityContext context,
     		@Context final HttpHeaders headers, 
@@ -64,7 +62,6 @@ public class Registry {
 	 * @throws Exception 
 	 */
 	@GET
-	@Asynchronous
     public CompletionStage<Response> list(
     		@Context final SecurityContext context,
     		@Context final HttpHeaders headers, 
@@ -84,7 +81,6 @@ public class Registry {
 	 */
 	@GET
 	@Path("{name}")
-	@Asynchronous
     public CompletionStage<Response> lookup(
     		@Context 
     		final SecurityContext context,
@@ -111,7 +107,6 @@ public class Registry {
 	@PUT
 	@Path("{name}")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@Asynchronous
     public CompletionStage<Response> rebind(
     		@Context 
     		final SecurityContext context,
@@ -137,7 +132,6 @@ public class Registry {
 	 */
 	@DELETE
 	@Path("{name}")
-	@Asynchronous
     public CompletionStage<Response> unbind(
     		@Context 
     		final SecurityContext context,

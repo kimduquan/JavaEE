@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.gateway.cache;
 
 import java.util.concurrent.CompletionStage;
@@ -20,8 +17,7 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
-import org.eclipse.microprofile.faulttolerance.Asynchronous;
-import epf.gateway.Request;
+import epf.gateway.Application;
 import epf.naming.Naming;
 
 /**
@@ -37,7 +33,7 @@ public class Cache {
 	 * 
 	 */
 	@Inject
-    transient Request request;
+    transient Application request;
 	
 	/**
 	 * @param headers
@@ -50,7 +46,6 @@ public class Cache {
 	@GET
 	@Path("persistence/{schema}/{entity}/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-    @Asynchronous
     public CompletionStage<Response> getEntity(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -72,7 +67,6 @@ public class Cache {
 	@GET
 	@Path("persistence/{schema}/{entity}")
 	@Produces(MediaType.APPLICATION_JSON)
-    @Asynchronous
     public CompletionStage<Response> getEntities(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -121,7 +115,6 @@ public class Cache {
 	@GET
 	@Path("security")
 	@Produces(MediaType.APPLICATION_JSON)
-    @Asynchronous
     public CompletionStage<Response> getToken(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 

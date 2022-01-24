@@ -18,8 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import org.eclipse.microprofile.faulttolerance.Asynchronous;
-import epf.gateway.Request;
+import epf.gateway.Application;
 import epf.naming.Naming;
 
 /**
@@ -35,7 +34,7 @@ public class Entities {
      * 
      */
     @Inject
-    transient Request request;
+    transient Application request;
     
     /**
      * @param headers
@@ -49,7 +48,6 @@ public class Entities {
     @Path("{schema}/{entity}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Asynchronous
     public CompletionStage<Response> persist(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -73,7 +71,6 @@ public class Entities {
     @PUT
     @Path("{schema}/{entity}/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Asynchronous
     public CompletionStage<Response> merge(
     		@Context final SecurityContext context,
     		@Context final HttpHeaders headers, 
@@ -97,7 +94,6 @@ public class Entities {
      */
     @DELETE
     @Path("{schema}/{entity}/{id}")
-    @Asynchronous
     public CompletionStage<Response> remove(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -121,7 +117,6 @@ public class Entities {
     @POST
     @Path("{schema}/{entity}/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Asynchronous
     public CompletionStage<Response> find(
     		@Context final SecurityContext context,
     		@Context final HttpHeaders headers, 

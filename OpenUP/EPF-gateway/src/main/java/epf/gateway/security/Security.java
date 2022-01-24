@@ -20,9 +20,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import org.eclipse.microprofile.faulttolerance.Asynchronous;
-import epf.gateway.Request;
+import epf.gateway.Application;
 import epf.naming.Naming;
+import io.smallrye.common.annotation.Blocking;
 
 /**
  *
@@ -37,7 +37,7 @@ public class Security {
      * 
      */
     @Inject
-    transient Request request;
+    transient Application request;
     
     /**
      * @param headers
@@ -51,7 +51,6 @@ public class Security {
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
-    @Asynchronous
     public CompletionStage<Response> login(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -70,7 +69,6 @@ public class Security {
      */
     @DELETE
     @Produces(MediaType.TEXT_PLAIN)
-    @Asynchronous
     public CompletionStage<Response> logOut(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -89,7 +87,6 @@ public class Security {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Asynchronous
     public CompletionStage<Response> authenticate(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -108,7 +105,6 @@ public class Security {
      */
     @PATCH
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Asynchronous
     public CompletionStage<Response> update(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -129,7 +125,6 @@ public class Security {
     @PUT
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
-    @Asynchronous
     public CompletionStage<Response> revoke(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 

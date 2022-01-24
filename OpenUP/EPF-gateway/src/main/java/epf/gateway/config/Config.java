@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.gateway.config;
 
 import java.util.concurrent.CompletionStage;
@@ -17,8 +12,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import org.eclipse.microprofile.faulttolerance.Asynchronous;
-import epf.gateway.Request;
+import epf.gateway.Application;
 import epf.naming.Naming;
 
 /**
@@ -33,7 +27,7 @@ public class Config {
      * 
      */
     @Inject
-    transient Request request;
+    transient Application request;
     
     /**
      * @param headers
@@ -44,7 +38,6 @@ public class Config {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Asynchronous
     public CompletionStage<Response> getConfigurations(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 

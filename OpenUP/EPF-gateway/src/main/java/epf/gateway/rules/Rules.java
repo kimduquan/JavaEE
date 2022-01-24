@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.gateway.rules;
 
 import java.io.InputStream;
@@ -22,8 +19,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import org.eclipse.microprofile.faulttolerance.Asynchronous;
-import epf.gateway.Request;
+import epf.gateway.Application;
 import epf.naming.Naming;
 
 /**
@@ -39,7 +35,7 @@ public class Rules {
      * 
      */
     @Inject
-    transient Request request;
+    transient Application request;
 
 	/**
 	 * @param headers
@@ -54,7 +50,6 @@ public class Rules {
 	@Path("{ruleSet}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-    @Asynchronous
 	public CompletionStage<Response> executeRules(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -77,7 +72,6 @@ public class Rules {
 	@PUT
 	@Path("{ruleSet}")
 	@Produces(MediaType.APPLICATION_JSON)
-    @Asynchronous
 	public CompletionStage<Response> executeRules(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -99,7 +93,6 @@ public class Rules {
 	@PATCH
 	@Path("{ruleSet}")
 	@Consumes(MediaType.APPLICATION_JSON)
-    @Asynchronous
 	public CompletionStage<Response> addObject(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -119,7 +112,6 @@ public class Rules {
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-    @Asynchronous
 	public CompletionStage<Response> getRegistrations(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 

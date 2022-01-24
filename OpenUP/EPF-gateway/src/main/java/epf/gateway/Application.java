@@ -29,12 +29,12 @@ import epf.util.logging.LogManager;
  * @author FOXCONN
  */
 @ApplicationScoped
-public class Request {
+public class Application {
 	
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = LogManager.getLogger(Request.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Application.class.getName());
     
     /**
      * 

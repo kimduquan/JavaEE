@@ -14,8 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import org.eclipse.microprofile.faulttolerance.Asynchronous;
-import epf.gateway.Request;
+import epf.gateway.Application;
 import epf.naming.Naming;
 
 /**
@@ -30,7 +29,7 @@ public class Script {
 	 * 
 	 */
 	@Inject
-    transient Request request;
+    transient Application request;
 	
 	/**
 	 * @param headers
@@ -42,7 +41,6 @@ public class Script {
 	@POST
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
 	@Produces(MediaType.APPLICATION_JSON)
-	@Asynchronous
     public CompletionStage<Response> eval(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 

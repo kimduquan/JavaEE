@@ -47,10 +47,6 @@
         <artifactId>EPF-file-utility</artifactId>
         <version>${project.version}</version>
     </dependency>
-	<dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-vertx-http</artifactId>
-    </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-websockets-client</artifactId>

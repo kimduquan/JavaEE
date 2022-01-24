@@ -16,8 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import org.eclipse.microprofile.faulttolerance.Asynchronous;
-import epf.gateway.Request;
+import epf.gateway.Application;
 import epf.naming.Naming;
 
 /**
@@ -33,7 +32,7 @@ public class Admin {
      * 
      */
     @Inject
-    transient Request request;
+    transient Application request;
     
     /**
      * @param headers
@@ -46,7 +45,6 @@ public class Admin {
     @Path("{ruleSet}")
     @PUT
     @Consumes(MediaType.APPLICATION_OCTET_STREAM)
-    @Asynchronous
     public CompletionStage<Response> registerRuleExecutionSet(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -68,7 +66,6 @@ public class Admin {
      */
     @Path("{ruleSet}")
     @DELETE
-    @Asynchronous
     public CompletionStage<Response> deregisterRuleExecutionSet(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 

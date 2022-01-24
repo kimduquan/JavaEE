@@ -16,8 +16,7 @@ import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import org.eclipse.microprofile.faulttolerance.Asynchronous;
-import epf.gateway.Request;
+import epf.gateway.Application;
 import epf.naming.Naming;
 
 /**
@@ -33,7 +32,7 @@ public class Queries {
      * 
      */
     @Inject
-    transient Request request;
+    transient Application request;
     
     /**
      * @param headers
@@ -45,7 +44,6 @@ public class Queries {
     @GET
     @Path("{schema}/{criteria: .+}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Asynchronous
     public CompletionStage<Response> executeQuery(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -67,7 +65,6 @@ public class Queries {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Asynchronous
     public CompletionStage<Response> search(
     		@Context final SecurityContext context,
     		@Context final HttpHeaders headers, 
