@@ -125,6 +125,28 @@ public interface Naming {
 	     * 
 	     */
 	    String GATEWAY_URL = "epf.gateway.url";
+	    
+	    /**
+	     * @author PC
+	     *
+	     */
+	    interface Headers {
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String X_FORWARDED_PORT = "X-Forwarded-Port";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String X_FORWARDED_PROTO = "X-Forwarded-Proto";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String X_FORWARDED_HOST = "X-Forwarded-Host";
+	    }
 	}
 	
 	/**

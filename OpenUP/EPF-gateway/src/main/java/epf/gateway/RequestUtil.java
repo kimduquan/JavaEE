@@ -5,6 +5,7 @@ package epf.gateway;
 
 import java.io.InputStream;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
@@ -33,6 +34,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.StatusType;
 import javax.ws.rs.sse.SseEventSource;
+import epf.naming.Naming;
 
 /**
  * @author PC
@@ -120,7 +122,7 @@ public interface RequestUtil {
      * @param headers
      * @return
      */
-    static Builder buildRequest(final Builder input, final HttpHeaders headers){
+    static Builder buildRequest(final Builder input, final HttpHeaders headers, final UriInfo uriInfo){
     	Builder builder = input;
         if(headers != null){
         	final List<MediaType> mediaTypes = headers.getAcceptableMediaTypes();
@@ -142,6 +144,24 @@ public interface RequestUtil {
             if(requestHeaders.containsKey(HttpHeaders.AUTHORIZATION)){
             	builder = builder.header(HttpHeaders.AUTHORIZATION, headers.getHeaderString(HttpHeaders.AUTHORIZATION));
             }
+            List<String> forwardedHost = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_HOST);
+            List<String> forwardedPort = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_PORT);
+            List<String> forwardedProto = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_PROTO);
+            if(forwardedHost == null) {
+            	forwardedHost = new ArrayList<>();
+            }
+            forwardedHost.add(uriInfo.getBaseUri().getHost());
+            builder = builder.header(Naming.Gateway.Headers.X_FORWARDED_HOST, forwardedHost);
+            if(forwardedPort == null) {
+            	forwardedPort = new ArrayList<>();
+            }
+            forwardedPort.add(String.valueOf(uriInfo.getBaseUri().getPort()));
+            builder = builder.header(Naming.Gateway.Headers.X_FORWARDED_PORT, forwardedPort);
+            if(forwardedProto == null) {
+            	forwardedProto = new ArrayList<>();
+            }
+            forwardedProto.add(uriInfo.getBaseUri().getScheme());
+            builder = builder.header(Naming.Gateway.Headers.X_FORWARDED_PROTO, forwardedProto);
         }
         return builder;
     }

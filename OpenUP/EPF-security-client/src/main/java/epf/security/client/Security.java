@@ -20,7 +20,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Form;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
@@ -72,7 +74,9 @@ public interface Security {
             final String passwordHash, 
             @QueryParam(URL)
             @NotNull
-            final URL url
+            final URL url,
+            @Context
+            final HttpHeaders headers
     ) throws Exception;
     
     /**

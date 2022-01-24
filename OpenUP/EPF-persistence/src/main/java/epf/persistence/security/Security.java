@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.persistence.security;
 
 import java.io.Serializable;
@@ -12,9 +7,9 @@ import java.security.PrivateKey;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -32,6 +27,7 @@ import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -144,10 +140,10 @@ public class Security implements epf.security.client.Security, epf.security.clie
      * @param url
      * @return
      */
-    protected Token newToken(final String name, final Set<String> groups, final URL audience) {
+    protected Token newToken(final String name, final Set<String> groups, final Set<String> audience) {
     	final long now = Instant.now().getEpochSecond();
     	final Token token = new Token();
-    	token.setAudience(new HashSet<>(Arrays.asList(String.format(AUDIENCE_FORMAT, audience.getProtocol(), audience.getHost(), audience.getPort()))));
+    	token.setAudience(audience);
     	token.setClaims(new HashMap<>());
     	token.setExpirationTime(now + Duration.of(expireAmount, expireTimeUnit).getSeconds());
     	token.setGroups(groups);
@@ -172,12 +168,28 @@ public class Security implements epf.security.client.Security, epf.security.clie
 		return token;
     }
     
+    /**
+     * @return
+     */
+    protected Set<String> buildAudience(final HttpHeaders headers, final URL url){
+    	final Set<String> audience = new HashSet<>();
+		audience.add(String.format(AUDIENCE_FORMAT, url.getProtocol(), url.getHost(), url.getPort()));
+		final List<String> forwardedHost = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_HOST);
+		final List<String> forwardedPort = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_PORT);
+		final List<String> forwardedProto = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_PROTO);
+		for(int i = 0; i < forwardedHost.size(); i++) {
+			audience.add(String.format(AUDIENCE_FORMAT, forwardedProto.get(i), forwardedHost.get(i), forwardedPort.get(i)));
+		}
+		return audience;
+    }
+    
     @PermitAll
     @Override
     public String login(
             final String username,
             final String passwordHash,
-            final URL url) throws Exception {
+            final URL url,
+            final HttpHeaders headers) throws Exception {
     	final Password password = new Password(passwordHash);
     	final UsernamePasswordCredential credential = new UsernamePasswordCredential(username, password);
     	persistence.findSession(username).ifPresent(session -> {
@@ -191,7 +203,8 @@ public class Security implements epf.security.client.Security, epf.security.clie
     	final CredentialValidationResult validationResult = identityStore.validate(credential);
     	if(Status.VALID.equals(validationResult.getStatus()) && validationResult.getCallerPrincipal() instanceof EPFPrincipal) {
     		final Set<String> roles = identityStore.getCallerGroups(validationResult.getCallerPrincipal());
-    		final Token token = newToken(username, roles, url);
+    		final Set<String> audience = buildAudience(headers, url);
+    		final Token token = newToken(username, roles, audience);
     		final TokenBuilder builder = new TokenBuilder(token, privateKey);
     		final Token newToken = builder.build();
     		final EPFPrincipal principal = (EPFPrincipal) validationResult.getCallerPrincipal();
@@ -244,13 +257,18 @@ public class Security implements epf.security.client.Security, epf.security.clie
 
 	@PermitAll
 	@Override
-	public String loginOneTime(final String username, final String passwordHash, final  URL url) throws Exception {
+	public String loginOneTime(
+			final String username, 
+			final String passwordHash, 
+			final  URL url,
+			final HttpHeaders headers) throws Exception {
 		final Password password = new Password(passwordHash);
     	final UsernamePasswordCredential credential = new UsernamePasswordCredential(username, password);
     	final CredentialValidationResult validationResult = identityStore.validate(credential);
     	if(Status.VALID.equals(validationResult.getStatus()) && validationResult.getCallerPrincipal() instanceof EPFPrincipal) {
     		final Set<String> roles = identityStore.getCallerGroups(validationResult.getCallerPrincipal());
-    		final Token token = newToken(username, roles, url);
+    		final Set<String> audience = buildAudience(headers, url);
+    		final Token token = newToken(username, roles, audience);
     		final TokenBuilder builder = new TokenBuilder(token, privateKey);
     		final Token newToken = builder.build();
     		otpIdentityStore.putToken(newToken);
@@ -276,7 +294,10 @@ public class Security implements epf.security.client.Security, epf.security.clie
 	    	final UsernamePasswordCredential credential = new UsernamePasswordCredential(username, password);
 	    	final CredentialValidationResult validationResult = identityStore.validate(credential);
 	    	final Set<String> roles = identityStore.getCallerGroups(validationResult.getCallerPrincipal());
-    		final Token token = newToken(username, roles, new URL(url));
+    		final Set<String> audience = new HashSet<>();
+    		final URL audUrl = new URL(url);
+    		audience.add(String.format(AUDIENCE_FORMAT, audUrl.getProtocol(), audUrl.getHost(), audUrl.getPort()));
+	    	final Token token = newToken(username, roles, audience);
     		final TokenBuilder builder = new TokenBuilder(token, privateKey);
     		final Token newToken = builder.build();
     		final EPFPrincipal principal = (EPFPrincipal) validationResult.getCallerPrincipal();
