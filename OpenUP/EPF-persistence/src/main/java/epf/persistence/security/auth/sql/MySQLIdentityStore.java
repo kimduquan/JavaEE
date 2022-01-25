@@ -1,5 +1,7 @@
 package epf.persistence.security.auth.sql;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -18,6 +20,7 @@ import javax.transaction.Transactional;
 import org.eclipse.microprofile.opentracing.Traced;
 import epf.persistence.security.auth.EPFPrincipal;
 import epf.persistence.security.auth.IdentityStore;
+import epf.security.schema.Principal;
 
 /**
  * @author PC
@@ -55,7 +58,7 @@ public class MySQLIdentityStore implements IdentityStore {
 	@Override
 	public Set<String> getCallerGroups(final CallerPrincipal callerPrincipal) {
 		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
-		Set<String> callerGroups = Set.of();
+		Set<String> callerGroups = new HashSet<>();
 		if(callerPrincipal instanceof EPFPrincipal) {
 			final EPFPrincipal principal = (EPFPrincipal) callerPrincipal;
 			final Query query = principal.getManager().createNativeQuery(String.format(NativeQueries.GET_CURRENT_ROLES, principal.getName()));
@@ -82,5 +85,18 @@ public class MySQLIdentityStore implements IdentityStore {
 			.executeUpdate();
 			manager.flush();
 		}
+	}
+
+	@Override
+	public Map<String, Object> getCallerClaims(final CallerPrincipal callerPrincipal) {
+		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
+		final Map<String, Object> claims = new HashMap<>();
+		if(callerPrincipal instanceof EPFPrincipal) {
+			final EPFPrincipal caller = (EPFPrincipal) callerPrincipal;
+			final EntityManager manager = caller.getManager();
+			final Principal principal = manager.find(Principal.class, callerPrincipal.getName());
+			claims.putAll(principal.getClaims());
+		}
+		return claims;
 	}
 }

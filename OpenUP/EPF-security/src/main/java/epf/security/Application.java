@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.security;
 
 import java.util.logging.Logger;

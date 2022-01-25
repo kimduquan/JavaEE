@@ -170,7 +170,9 @@ public interface Security {
     @PUT
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
-    String revoke() throws Exception;
+    String revoke(
+    		@Context
+            final HttpHeaders headers) throws Exception;
     
     /**
      * @param client

@@ -3,7 +3,6 @@ package epf.security;
 import java.io.Serializable;
 import java.net.URL;
 import java.security.PrivateKey;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -103,16 +102,25 @@ public class Security implements epf.security.client.Security, Serializable {
     
     /**
      * @param client
+     * @param name
+     * @return
+     */
+    protected Map<String, String> buildClaims(final Client client, final String name){
+    	final Principal principal = Entities.find(client, Principal.class, epf.security.schema.Security.SCHEMA, epf.security.schema.Security.PRINCIPAL, name);
+    	return principal.getClaims();
+    }
+    
+    /**
+     * @param client
      * @param username
      * @param rawToken
      * @return
      * @throws Exception
      */
     protected Token buildToken(final Client client, final Token token, final String rawToken) throws Exception {
-    	final Principal principal = Entities.find(client, Principal.class, epf.security.schema.Security.SCHEMA, epf.security.schema.Security.PRINCIPAL, token.getName());
-		final Map<String, String> claims = new HashMap<>(principal.getClaims());
-		claims.put(JWT.TOKEN_CLAIM, rawToken);
+    	final Map<String, String> claims = buildClaims(client, token.getName());
 		token.setClaims(claims);
+		claims.put(JWT.TOKEN_CLAIM, rawToken);
 		final TokenBuilder builder = new TokenBuilder(token, privateKey);
 		return builder.build();
     }
@@ -185,7 +193,7 @@ public class Security implements epf.security.client.Security, Serializable {
 	}
 
 	@Override
-	public String revoke() throws Exception {
+	public String revoke(final HttpHeaders headers) throws Exception {
 		final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
     	final String rawToken = jwt.getClaim(JWT.TOKEN_CLAIM);
     	try(Client securityClient = clientUtil.newClient(ConfigUtil.getURI(Naming.Persistence.PERSISTENCE_SECURITY_URL))){
