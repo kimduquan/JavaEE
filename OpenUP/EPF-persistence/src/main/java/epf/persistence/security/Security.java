@@ -177,8 +177,10 @@ public class Security implements epf.security.client.Security, epf.security.clie
 		final List<String> forwardedHost = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_HOST);
 		final List<String> forwardedPort = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_PORT);
 		final List<String> forwardedProto = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_PROTO);
-		for(int i = 0; i < forwardedHost.size(); i++) {
-			audience.add(String.format(AUDIENCE_FORMAT, forwardedProto.get(i), forwardedHost.get(i), forwardedPort.get(i)));
+		if(forwardedHost != null && forwardedPort != null && forwardedProto != null) {
+			for(int i = 0; i < forwardedHost.size(); i++) {
+				audience.add(String.format(AUDIENCE_FORMAT, forwardedProto.get(i), forwardedHost.get(i), forwardedPort.get(i)));
+			}
 		}
 		return audience;
     }
