@@ -4,8 +4,10 @@
 package epf.util;
 
 import java.time.Instant;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * @author PC
@@ -88,5 +90,14 @@ public interface StringUtil {
 	 */
 	static String[] split(final String string) {
 		return string.split(NULL);
+	}
+	
+	/**
+	 * @param collection
+	 * @param separator
+	 * @return
+	 */
+	static String valueOf(final Collection<?> collection, final String separator) {
+		return collection.stream().map(String::valueOf).collect(Collectors.joining(separator));
 	}
 }

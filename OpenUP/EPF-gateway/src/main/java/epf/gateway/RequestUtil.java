@@ -35,6 +35,7 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.StatusType;
 import javax.ws.rs.sse.SseEventSource;
 import epf.naming.Naming;
+import epf.util.StringUtil;
 
 /**
  * @author PC
@@ -144,24 +145,18 @@ public interface RequestUtil {
             if(requestHeaders.containsKey(HttpHeaders.AUTHORIZATION)){
             	builder = builder.header(HttpHeaders.AUTHORIZATION, headers.getHeaderString(HttpHeaders.AUTHORIZATION));
             }
-            List<String> forwardedHost = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_HOST);
-            List<String> forwardedPort = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_PORT);
-            List<String> forwardedProto = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_PROTO);
-            if(forwardedHost == null) {
-            	forwardedHost = new ArrayList<>();
-            }
-            forwardedHost.add(uriInfo.getBaseUri().getHost());
-            builder = builder.header(Naming.Gateway.Headers.X_FORWARDED_HOST, forwardedHost);
-            if(forwardedPort == null) {
-            	forwardedPort = new ArrayList<>();
-            }
-            forwardedPort.add(String.valueOf(uriInfo.getBaseUri().getPort()));
-            builder = builder.header(Naming.Gateway.Headers.X_FORWARDED_PORT, forwardedPort);
-            if(forwardedProto == null) {
-            	forwardedProto = new ArrayList<>();
-            }
-            forwardedProto.add(uriInfo.getBaseUri().getScheme());
-            builder = builder.header(Naming.Gateway.Headers.X_FORWARDED_PROTO, forwardedProto);
+            final List<String> forwardedHost = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_HOST);
+            final List<String> forwardedPort = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_PORT);
+            final List<String> forwardedProto = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_PROTO);
+            final List<String> newForwardedHost = new ArrayList<>(forwardedHost);
+            newForwardedHost.add(uriInfo.getBaseUri().getHost());
+            final List<String> newForwardedPort = new ArrayList<>(forwardedPort);
+            newForwardedPort.add(String.valueOf(uriInfo.getBaseUri().getPort()));
+            final List<String> newForwardedProto = new ArrayList<>(forwardedProto);
+            newForwardedProto.add(uriInfo.getBaseUri().getScheme());
+            builder = builder.header(Naming.Gateway.Headers.X_FORWARDED_HOST, StringUtil.valueOf(newForwardedHost, ","));
+            builder = builder.header(Naming.Gateway.Headers.X_FORWARDED_PORT, StringUtil.valueOf(newForwardedPort, ","));
+            builder = builder.header(Naming.Gateway.Headers.X_FORWARDED_PROTO, StringUtil.valueOf(newForwardedProto, ","));
         }
         return builder;
     }
