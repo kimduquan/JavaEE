@@ -54,7 +54,7 @@
     <application id="EPF-lang" name="EPF-lang" context-root="lang" location="EPF-lang-1.0.0.war" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-    <application id="EPF-cache" name="EPF-cache" context-root="cache" location="EPF-cache-1.0.0.war" startAfterRef="EPF-messaging,EPF-persistence,EPF-security" >
+    <application id="EPF-cache" name="EPF-cache" context-root="cache" location="EPF-cache-1.0.0.war" startAfterRef="EPF-messaging,EPF-persistence" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
 	<application id="EPF-file" name="EPF-file" context-root="file" location="EPF-file-1.0.0.war" startAfterRef="EPF-messaging" >
@@ -70,9 +70,6 @@
         <classloader apiTypeVisibility="+third-party"/>
     </application>
 	<application id="EPF-persistence" name="EPF-persistence" context-root="persistence" location="EPF-persistence-1.0.0.war" startAfterRef="EPF-schema,EPF-messaging" >
-        <classloader apiTypeVisibility="+third-party"/>
-    </application>
-	<application id="EPF-security" name="EPF-security" context-root="security" location="EPF-security-1.0.0.war" startAfterRef="EPF-persistence" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
     <application id="EPF-net" name="EPF-net" context-root="net" location="EPF-net-1.0.0.war" startAfterRef="EPF-messaging" >

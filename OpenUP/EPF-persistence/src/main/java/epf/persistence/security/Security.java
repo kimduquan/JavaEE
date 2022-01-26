@@ -268,7 +268,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 		final Map<String, Object> claims = identityStore.getCallerClaims(session.getPrincipal());
 		session.close();
 		final Token token = buildToken(jwt, groups, audience, claims);
-		final TokenBuilder builder = new TokenBuilder(token, privateKey);
+		final TokenBuilder builder = new TokenBuilder(token, privateKey, encryptKey);
 		final Token newToken = builder.build();
 		persistence.putSession(session.getPrincipal(), newToken);
 		return newToken.getRawToken();
@@ -289,7 +289,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
     		final Set<String> roles = identityStore.getCallerGroups(validationResult.getCallerPrincipal());
     		final Map<String, Object> claims = identityStore.getCallerClaims(validationResult.getCallerPrincipal());
     		final Token token = newToken(username, roles, audience, claims);
-    		final TokenBuilder builder = new TokenBuilder(token, privateKey);
+    		final TokenBuilder builder = new TokenBuilder(token, privateKey, encryptKey);
     		final Token newToken = builder.build();
     		otpIdentityStore.putToken(newToken);
     		return newToken.getTokenID();
@@ -319,7 +319,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
     		audience.add(String.format(AUDIENCE_FORMAT, audUrl.getProtocol(), audUrl.getHost(), audUrl.getPort()));
     		final Map<String, Object> claims = identityStore.getCallerClaims(validationResult.getCallerPrincipal());
     		final Token token = newToken(username, roles, audience, claims);
-    		final TokenBuilder builder = new TokenBuilder(token, privateKey);
+    		final TokenBuilder builder = new TokenBuilder(token, privateKey, encryptKey);
     		final Token newToken = builder.build();
     		final EPFPrincipal principal = (EPFPrincipal) validationResult.getCallerPrincipal();
     		persistence.putSession(principal, newToken);

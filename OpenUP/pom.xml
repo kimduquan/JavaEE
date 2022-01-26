@@ -804,7 +804,6 @@
 		<module>EPF-messaging-client</module>
 		<module>EPF-security-client</module>
 		<module>EPF-net</module>
-		<module>EPF-security</module>
 		<!--<module>EPF-persistence</module>-->
 		<module>EPF-file</module>
 		<module>EPF-image</module>
