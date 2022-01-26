@@ -1,6 +1,7 @@
 package epf.persistence.security;
 
 import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
@@ -35,13 +36,22 @@ public class TokenBuilder {
 	private transient final PrivateKey privateKey;
 	
 	/**
-	 * @param token
+	 * 
 	 */
-	public TokenBuilder(final Token token, final PrivateKey privateKey) {
+	private transient final PublicKey encryptKey;
+	
+	/**
+	 * @param token
+	 * @param privateKey
+	 * @param encryptKey
+	 */
+	public TokenBuilder(final Token token, final PrivateKey privateKey, final PublicKey encryptKey) {
 		Objects.requireNonNull(token, "Token");
 		Objects.requireNonNull(privateKey, "PrivateKey");
+		Objects.requireNonNull(encryptKey, "PublicKey");
 		this.token = token;
 		this.privateKey = privateKey;
+		this.encryptKey = encryptKey;
 	}
 
 	/**
@@ -70,7 +80,8 @@ public class TokenBuilder {
         		LOGGER.throwing(getClass().getName(), "build", e);
 			}
         });
-        builder.signWith("RS256", privateKey);
+		builder.encryptWith("RSA-OAEP", encryptKey, "A256GCM");
+		builder.signWith("RS256", privateKey);
 		final JwtToken jwt = builder.buildJwt();
 		final Token newToken = new Token();
 		newToken.setAudience(

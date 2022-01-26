@@ -500,6 +500,37 @@ public interface Naming {
 	     * 
 	     */
 	    String DEFAULT_ROLE = "Any_Role";
+	    
+	    /**
+	     * @author PC
+	     *
+	     */
+	    interface JWT {
+	    	
+	        /**
+	         * 
+	         */
+	        String PRIVATE_KEY = "mp.jwt.issue.privatekey";
+	        
+	        /**
+	         * 
+	         */
+	        String ENCRYPT_KEY = "epf.security.jwt.encrypt.key";
+	        
+	        /**
+	         * 
+	         */
+	        String EXPIRE_DURATION = "epf.security.jwt.exp.duration";
+	        /**
+	         * 
+	         */
+	        String EXPIRE_TIMEUNIT = "epf.security.jwt.exp.timeunit";
+	        
+	        /**
+	         * 
+	         */
+	        String TOKEN_CLAIM = "token";
+	    }
 	}
 	
 	/**

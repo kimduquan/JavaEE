@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -40,7 +41,6 @@ import epf.persistence.security.auth.EPFPrincipal;
 import epf.persistence.security.auth.IdentityStore;
 import epf.persistence.security.otp.OTPIdentityStore;
 import epf.security.client.SecurityInterface;
-import epf.security.client.jwt.JWT;
 import epf.security.client.jwt.TokenUtil;
 import epf.security.schema.Token;
 import epf.util.logging.LogManager;
@@ -73,6 +73,11 @@ public class Security implements epf.security.client.Security, epf.security.clie
     /**
      * 
      */
+    private transient PublicKey encryptKey;
+    
+    /**
+     * 
+     */
     @Inject
     private transient Application persistence;
     
@@ -86,7 +91,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
      * 
      */
     @Inject
-    @ConfigProperty(name = JWT.PRIVATE_KEY)
+    @ConfigProperty(name = Naming.Security.JWT.PRIVATE_KEY)
     private transient String privateKeyText;
     
     /**
@@ -100,15 +105,22 @@ public class Security implements epf.security.client.Security, epf.security.clie
      * 
      */
     @Inject
-    @ConfigProperty(name = JWT.EXPIRE_DURATION)
+    @ConfigProperty(name = Naming.Security.JWT.EXPIRE_DURATION)
     private transient Long expireAmount;
     
     /**
      * 
      */
     @Inject
-    @ConfigProperty(name = JWT.EXPIRE_TIMEUNIT)
+    @ConfigProperty(name = Naming.Security.JWT.EXPIRE_TIMEUNIT)
     private transient ChronoUnit expireTimeUnit;
+    
+    /**
+     * 
+     */
+    @Inject
+    @ConfigProperty(name = Naming.Security.JWT.ENCRYPT_KEY)
+    private transient String encryptKeyText;
     
     /**
      * 
@@ -129,6 +141,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
     protected void postConstruct(){
         try {
             privateKey = KeyUtil.generatePrivate("RSA", privateKeyText);
+            encryptKey = KeyUtil.generatePublic("RSA", encryptKeyText);
         } 
         catch (Exception ex) {
             LOGGER.throwing(getClass().getName(), "postConstruct", ex);
@@ -211,7 +224,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
     		final Set<String> roles = identityStore.getCallerGroups(validationResult.getCallerPrincipal());
     		final Map<String, Object> claims = identityStore.getCallerClaims(validationResult.getCallerPrincipal());
     		final Token token = newToken(username, roles, audience, claims);
-    		final TokenBuilder builder = new TokenBuilder(token, privateKey);
+    		final TokenBuilder builder = new TokenBuilder(token, privateKey, encryptKey);
     		final Token newToken = builder.build();
     		final EPFPrincipal principal = (EPFPrincipal) validationResult.getCallerPrincipal();
     		persistence.putSession(principal, newToken);
