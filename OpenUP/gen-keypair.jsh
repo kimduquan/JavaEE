@@ -37,7 +37,8 @@ default:
 	encoder = Base64.getEncoder();
 	break;
 }
-String privateText = encoder.encodeToString(privateKey.getEncoded());
+byte[] privateBytes = encoder.encode(privateKey.getEncoded());
+String privateText = new String(privateBytes, "UTF-8");
 List<String> privateLines = StringUtil.split(privateText, 64);
 privateLines.add(0, "-----BEGIN PRIVATE KEY-----");
 privateLines.add("-----END PRIVATE KEY-----");
@@ -49,7 +50,8 @@ Files.write(
 		StandardOpenOption.TRUNCATE_EXISTING,
 		StandardOpenOption.CREATE
 		);
-String publicText = encoder.encodeToString(publicKey.getEncoded());
+byte[] publicBytes = encoder.encode(publicKey.getEncoded());
+String publicText = new String(publicBytes, "UTF-8");
 List<String> publicLines = StringUtil.split(publicText, 64);
 publicLines.add(0, "-----BEGIN PUBLIC KEY-----");
 publicLines.add("-----END PUBLIC KEY-----");
