@@ -80,7 +80,8 @@ public class TokenBuilder {
         		LOGGER.throwing(getClass().getName(), "build", e);
 			}
         });
-		builder.encryptWith("RSA-OAEP", encryptKey, "A256GCM");
+		encryptKey.getAlgorithm();
+		//builder.encryptWith("RSA-OAEP", encryptKey, "A256GCM");
 		builder.signWith("RS256", privateKey);
 		final JwtToken jwt = builder.buildJwt();
 		final Token newToken = new Token();

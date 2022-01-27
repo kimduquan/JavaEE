@@ -15,9 +15,9 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Base64.Encoder;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,6 +37,7 @@ import epf.shell.Function;
 import epf.shell.SYSTEM;
 import epf.shell.client.ClientUtil;
 import epf.shell.util.client.Entity;
+import epf.util.StringUtil;
 import epf.util.logging.LogManager;
 import epf.util.zip.ZipUtil;
 import javax.annotation.PostConstruct;
@@ -378,26 +379,26 @@ public class Utility {
 				break;
 		}
 		final String privateText = encoder.encodeToString(privateKey.getEncoded());
+		final List<String> privateLines = StringUtil.split(privateText, 64);
+		privateLines.add(0, "-----BEGIN PRIVATE KEY-----");
+		privateLines.add("-----END PRIVATE KEY-----");
 		out.println("Private Key");
 		out.println(privateText);
 		Files.write(
 				privateFile, 
-				Arrays.asList(
-						"-----BEGIN PRIVATE KEY-----", 
-						privateText, 
-						"-----END PRIVATE KEY-----"),
+				privateLines,
 				StandardOpenOption.TRUNCATE_EXISTING,
 				StandardOpenOption.CREATE
 				);
 		out.println("Public Key");
 		final String publicText = encoder.encodeToString(publicKey.getEncoded());
+		final List<String> publicLines = StringUtil.split(publicText, 64);
+		publicLines.add(0, "-----BEGIN PUBLIC KEY-----");
+		publicLines.add("-----END PUBLIC KEY-----");
 		out.println(publicText);
 		Files.write(
 				publicFile, 
-				Arrays.asList(
-						"-----BEGIN PUBLIC KEY-----", 
-						publicText, 
-						"-----END PUBLIC KEY-----"),
+				publicLines,
 				StandardOpenOption.TRUNCATE_EXISTING,
 				StandardOpenOption.CREATE
 				);

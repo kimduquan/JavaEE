@@ -4,7 +4,9 @@
 package epf.util;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -99,5 +101,21 @@ public interface StringUtil {
 	 */
 	static String valueOf(final Collection<?> collection, final String separator) {
 		return collection.stream().map(String::valueOf).collect(Collectors.joining(separator));
+	}
+	
+	/**
+	 * @param string
+	 * @param size
+	 * @return
+	 */
+	static List<String> split(final String string, final int size) {
+		final List<String> strings = new ArrayList<>();
+		for(int start = 0, end = size; end <= string.length(); start = end, end += size) {
+			strings.add(string.substring(start, end));
+			if(end + size > string.length()) {
+				strings.add(string.substring(end));
+			}
+		}
+		return strings;
 	}
 }
