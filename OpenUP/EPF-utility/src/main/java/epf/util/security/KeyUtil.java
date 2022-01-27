@@ -1,5 +1,6 @@
 package epf.util.security;
 
+import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
@@ -19,13 +20,14 @@ public interface KeyUtil {
 	 * @param privateText
 	 * @return
 	 * @throws GeneralSecurityException
+	 * @throws IOException 
 	 */
-	static PrivateKey generatePrivate(final String algorithm, final String privateText) throws GeneralSecurityException {
+	static PrivateKey generatePrivate(final String algorithm, final String privateText) throws GeneralSecurityException, IOException {
 		final Base64.Decoder decoder = Base64.getUrlDecoder();
         return KeyFactory.getInstance(algorithm)
                     .generatePrivate(
                             new PKCS8EncodedKeySpec(
-                                decoder.decode(privateText)
+                                decoder.decode(privateText.getBytes("UTF-8"))
                             )
                     );
 	}
@@ -35,13 +37,14 @@ public interface KeyUtil {
 	 * @param publicText
 	 * @return
 	 * @throws GeneralSecurityException
+	 * @throws IOException 
 	 */
-	static PublicKey generatePublic(final String algorithm, final String publicText) throws GeneralSecurityException {
+	static PublicKey generatePublic(final String algorithm, final String publicText) throws GeneralSecurityException, IOException {
 		final Base64.Decoder decoder = Base64.getUrlDecoder();
         return KeyFactory.getInstance(algorithm)
                     .generatePublic(
                             new X509EncodedKeySpec(
-                                decoder.decode(publicText)
+                                decoder.decode(publicText.getBytes("UTF-8"))
                             )
                     );
 	}
