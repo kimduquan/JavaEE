@@ -8,6 +8,7 @@ import java.security.PublicKey;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -133,8 +134,8 @@ public class Security implements epf.security.client.Security, epf.security.clie
     @PostConstruct
     protected void postConstruct(){
         try {
-            privateKey = KeyUtil.generatePrivate("RSA", privateKeyText);
-            encryptKey = KeyUtil.generatePublic("RSA", encryptKeyText);
+            privateKey = KeyUtil.generatePrivate("RSA", privateKeyText, Base64.getDecoder());
+            encryptKey = KeyUtil.generatePublic("RSA", encryptKeyText, Base64.getDecoder());
         } 
         catch (Exception ex) {
             LOGGER.throwing(getClass().getName(), "postConstruct", ex);

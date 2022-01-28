@@ -19,7 +19,7 @@ String algorithm = System.getProperty("algorithm", "RSA");
 int keySize = Integer.valueOf(System.getProperty("keysize", "2048"));
 Path privateFile = Paths.get(System.getProperty("private", "private.pem"));
 Path publicFile = Paths.get(System.getProperty("public", "public.pem"));
-String encode = System.getProperty("encode", "url");
+String encode = System.getProperty("encode", "");
 KeyPairGenerator generator = KeyPairGenerator.getInstance(algorithm);
 generator.initialize(keySize);
 KeyPair keyPair = generator.generateKeyPair();

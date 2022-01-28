@@ -66,6 +66,7 @@ public class TokenBuilder {
 			claims.setClaim(entry.getKey(), entry.getValue());
 		}
 		final JsonWebSignature jws = new JsonWebSignature();
+		jws.setHeader("typ", "JWT");
 	    jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.RSA_USING_SHA256);
 		jws.setPayload(claims.toJson());
 	    jws.setKey(privateKey);

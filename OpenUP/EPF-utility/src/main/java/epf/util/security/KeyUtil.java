@@ -18,13 +18,13 @@ public interface KeyUtil {
 	/**
 	 * @param algorithm
 	 * @param privateText
+	 * @param decoder
 	 * @return
 	 * @throws GeneralSecurityException
-	 * @throws IOException 
+	 * @throws IOException
 	 */
-	static PrivateKey generatePrivate(final String algorithm, final String privateText) throws GeneralSecurityException, IOException {
-		final Base64.Decoder decoder = Base64.getUrlDecoder();
-        return KeyFactory.getInstance(algorithm)
+	static PrivateKey generatePrivate(final String algorithm, final String privateText, final Base64.Decoder decoder) throws GeneralSecurityException, IOException {
+		return KeyFactory.getInstance(algorithm)
                     .generatePrivate(
                             new PKCS8EncodedKeySpec(
                                 decoder.decode(privateText.getBytes("UTF-8"))
@@ -35,13 +35,13 @@ public interface KeyUtil {
 	/**
 	 * @param algorithm
 	 * @param publicText
+	 * @param decoder
 	 * @return
 	 * @throws GeneralSecurityException
-	 * @throws IOException 
+	 * @throws IOException
 	 */
-	static PublicKey generatePublic(final String algorithm, final String publicText) throws GeneralSecurityException, IOException {
-		final Base64.Decoder decoder = Base64.getUrlDecoder();
-        return KeyFactory.getInstance(algorithm)
+	static PublicKey generatePublic(final String algorithm, final String publicText, final Base64.Decoder decoder) throws GeneralSecurityException, IOException {
+		return KeyFactory.getInstance(algorithm)
                     .generatePublic(
                             new X509EncodedKeySpec(
                                 decoder.decode(publicText.getBytes("UTF-8"))
