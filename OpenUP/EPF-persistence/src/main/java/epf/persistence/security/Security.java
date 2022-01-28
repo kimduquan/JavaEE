@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.control.ActivateRequestContext;
 import javax.inject.Inject;
 import javax.security.enterprise.credential.Password;
@@ -27,7 +27,6 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
@@ -52,7 +51,7 @@ import epf.util.security.KeyUtil;
  */
 @Path(Naming.SECURITY)
 @RolesAllowed(Naming.Security.DEFAULT_ROLE)
-@RequestScoped
+@ApplicationScoped
 public class Security implements epf.security.client.Security, epf.security.client.otp.OTPSecurity, Serializable, SecurityInterface {
     
     /**
@@ -127,12 +126,6 @@ public class Security implements epf.security.client.Security, epf.security.clie
      */
     @Inject
     private transient IdentityStore identityStore;
-    
-    /**
-     * 
-     */
-    @Context 
-    private transient SecurityContext context;
     
     /**
      * 
@@ -234,7 +227,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
     }
     
     @Override
-    public String logOut() throws Exception {
+    public String logOut(final SecurityContext context) throws Exception {
     	final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
     	final Session session = persistence.removeSession(jwt).orElseThrow(ForbiddenException::new);
     	session.close();
@@ -243,7 +236,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
     }
     
     @Override
-    public Token authenticate() {
+    public Token authenticate(final SecurityContext context) {
     	final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
     	persistence.getSession(jwt).orElseThrow(() -> new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build()));
     	final Token token = TokenUtil.from(jwt);
@@ -253,14 +246,14 @@ public class Security implements epf.security.client.Security, epf.security.clie
     }
     
     @Override
-	public void update(final String password) {
+	public void update(final String password, final SecurityContext context) {
     	final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
     	final Session session = persistence.getSession(jwt).orElseThrow(ForbiddenException::new);
     	identityStore.setCallerPassword(session.getPrincipal(), new Password(password));
 	}
 
 	@Override
-	public String revoke(final HttpHeaders headers) throws Exception {
+	public String revoke(final HttpHeaders headers, final SecurityContext context) throws Exception {
 		final Set<String> audience = buildAudience(headers, null);
 		final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
 		final Session session = persistence.removeSession(jwt).orElseThrow(ForbiddenException::new);

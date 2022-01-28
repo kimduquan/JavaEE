@@ -22,6 +22,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.security.schema.Token;
@@ -101,7 +102,9 @@ public interface Security {
      */
     @DELETE
     @Produces(MediaType.TEXT_PLAIN)
-    String logOut() throws Exception;
+    String logOut(
+    		@Context
+            final SecurityContext context) throws Exception;
     
     /**
      * @param client
@@ -121,7 +124,9 @@ public interface Security {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    Token authenticate() throws Exception;
+    Token authenticate(
+            @Context
+            final SecurityContext context) throws Exception;
     
     /**
      * @param client
@@ -145,7 +150,9 @@ public interface Security {
     		@FormParam("password")
     		@NotNull
     		@NotBlank
-    		final String password
+    		final String password,
+            @Context
+            final SecurityContext context
     		) throws Exception;
     
     /**
@@ -172,7 +179,9 @@ public interface Security {
     @Produces(MediaType.TEXT_PLAIN)
     String revoke(
     		@Context
-            final HttpHeaders headers) throws Exception;
+            final HttpHeaders headers,
+            @Context
+            final SecurityContext context) throws Exception;
     
     /**
      * @param client
