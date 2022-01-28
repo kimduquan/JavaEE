@@ -510,7 +510,7 @@ public interface Naming {
 	        /**
 	         * 
 	         */
-	        String PRIVATE_KEY = "mp.jwt.issue.privatekey";
+	        String ISSUE_KEY = "epf.security.jwt.issue.key";
 	        
 	        /**
 	         * 

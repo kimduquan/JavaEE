@@ -90,7 +90,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
      * 
      */
     @Inject
-    @ConfigProperty(name = Naming.Security.JWT.PRIVATE_KEY)
+    @ConfigProperty(name = Naming.Security.JWT.ISSUE_KEY)
     private transient String privateKeyText;
     
     /**
