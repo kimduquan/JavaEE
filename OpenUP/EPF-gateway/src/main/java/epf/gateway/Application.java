@@ -15,7 +15,6 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.sse.OutboundSseEvent;
@@ -62,9 +61,13 @@ public class Application {
 		Invocation.Builder invoke = target.request();
 		invoke = RequestUtil.buildRequest(invoke, headers, uriInfo);
 		final CompletionStageRxInvoker rx = invoke.rx();
+		final URI baseUri = uriInfo.getBaseUri();
 		return RequestUtil.invoke(rx, req.getMethod(), headers.getMediaType(), body)
-				.thenApply(res -> RequestUtil.buildResponse(res, uriInfo))
-				.thenApply(ResponseBuilder::build)
+				.thenApply(res -> RequestUtil.buildResponse(res, baseUri))
+				.whenComplete((res, err) -> {
+					client.close();
+					//res.close();
+				})
 				.exceptionally(ex -> { 
 					LOGGER.log(Level.WARNING, "request", ex);
 					return Response.serverError().build(); 
@@ -83,11 +86,11 @@ public class Application {
             final UriInfo uriInfo,
             final SseEventSink sseEventSink,
             final Sse sse) throws Exception {
-    	Client client = ClientBuilder.newClient();
-    	URI uri = RequestUtil.buildUri(uriInfo, registry);
+    	final Client client = ClientBuilder.newClient();
+    	final URI uri = RequestUtil.buildUri(uriInfo, registry);
     	WebTarget target = client.target(uri);
     	target = RequestUtil.buildTarget(target, uriInfo, uri);
-    	SseEventSource.Builder builder = SseEventSource.target(target);
+    	final SseEventSource.Builder builder = SseEventSource.target(target);
     	try(SseEventSource source = builder.build()){
     		final OutboundSseEvent.Builder eventBuilder = sse.newEventBuilder();
     		source.register(

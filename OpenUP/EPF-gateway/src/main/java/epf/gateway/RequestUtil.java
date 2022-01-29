@@ -181,20 +181,20 @@ public interface RequestUtil {
     
     /**
      * @param link
-     * @param uriInfo
+     * @param baseUri
      * @return
      */
-    static Link buildLink(final Link link, final UriInfo uriInfo) {
-    	final URI uri = buildUri(link, uriInfo);
+    static Link buildLink(final Link link, final URI baseUri) {
+    	final URI uri = buildUri(link, baseUri);
     	return Link.fromLink(link).uri(uri).build();
     }
     
     /**
      * @param link
-     * @param uriInfo
+     * @param baseUri
      * @return
      */
-    static URI buildUri(final Link link, final UriInfo uriInfo) {
+    static URI buildUri(final Link link, final URI baseUri) {
     	final URI linkUri = link.getUri();
     	final String[] linkPaths = linkUri.getPath().split("/");
     	String path = "";
@@ -203,7 +203,7 @@ public interface RequestUtil {
     	}
     	final String linkScheme = linkUri.getScheme();
     	final int linkPort = linkUri.getPort();
-    	return uriInfo.getBaseUriBuilder().path(path).scheme(linkScheme).port(linkPort).build();
+    	return UriBuilder.fromUri(baseUri).path(path).scheme(linkScheme).port(linkPort).build();
     }
     
     /**
@@ -212,58 +212,61 @@ public interface RequestUtil {
      * @param uriInfo
      * @return
      */
-    static ResponseBuilder buildResponse(final Response res, final UriInfo uriInfo){
-    	ResponseBuilder builder = Response.fromResponse(res);
-        final Set<String> methods = res.getAllowedMethods();
-        if(methods != null){
-            builder = builder.allow(methods);
-        }
-        final Map<String, NewCookie> cookies = res.getCookies();
-        if(cookies != null){
-            builder = builder.cookie(cookies.values().toArray(new NewCookie[0]));
-        }
-        final URI location = res.getLocation();
-        if(location != null){
-            builder = builder.contentLocation(location);
-        }
-        if(res.hasEntity()){
-        	final Object entity = res.getEntity();
-            if(entity != null){
-                builder = builder.entity(entity);
+    static Response buildResponse(final Response res, final URI baseUri){
+    	try(Response response = res){
+    		response.bufferEntity();
+        	ResponseBuilder builder = Response.fromResponse(response);
+            final Set<String> methods = response.getAllowedMethods();
+            if(methods != null){
+                builder = builder.allow(methods);
             }
-        }
-        final Locale lang = res.getLanguage();
-        if(lang != null){
-            builder = builder.language(lang);
-        }
-        final Date modified = res.getLastModified();
-        if(modified != null){
-            builder = builder.lastModified(modified);
-        }
-        Set<Link> links = res.getLinks();
-        if(links != null){
-        	links = links
-        			.stream()
-        			.map(link -> buildLink(link, uriInfo))
-        			.collect(Collectors.toSet());
-        	builder = builder.links().links(links.toArray(new Link[0]));
-        }
-        if(location != null){
-            builder = builder.location(location);
-        }
-        final StatusType status = res.getStatusInfo();
-        if(status != null){
-            builder = builder.status(status);
-        }
-        final EntityTag tag = res.getEntityTag();
-        if(tag != null){
-            builder = builder.tag(tag);
-        }
-        final MediaType type = res.getMediaType();
-        if(type != null){
-            builder = builder.type(type);
-        }
-        return builder;
+            final Map<String, NewCookie> cookies = response.getCookies();
+            if(cookies != null){
+                builder = builder.cookie(cookies.values().toArray(new NewCookie[0]));
+            }
+            final URI location = response.getLocation();
+            if(location != null){
+                builder = builder.contentLocation(location);
+            }
+            if(response.hasEntity()){
+            	final Object entity = response.getEntity();
+                if(entity != null){
+                    builder = builder.entity(entity);
+                }
+            }
+            final Locale lang = response.getLanguage();
+            if(lang != null){
+                builder = builder.language(lang);
+            }
+            final Date modified = response.getLastModified();
+            if(modified != null){
+                builder = builder.lastModified(modified);
+            }
+            Set<Link> links = response.getLinks();
+            if(links != null){
+            	links = links
+            			.stream()
+            			.map(link -> buildLink(link, baseUri))
+            			.collect(Collectors.toSet());
+            	builder = builder.links().links(links.toArray(new Link[0]));
+            }
+            if(location != null){
+                builder = builder.location(location);
+            }
+            final StatusType status = response.getStatusInfo();
+            if(status != null){
+                builder = builder.status(status);
+            }
+            final EntityTag tag = response.getEntityTag();
+            if(tag != null){
+                builder = builder.tag(tag);
+            }
+            final MediaType type = response.getMediaType();
+            if(type != null){
+                builder = builder.type(type);
+            }
+            return builder.build();
+    	}
     }
     
     /**

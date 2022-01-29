@@ -50,7 +50,7 @@
 		<liberty.env.openup_tasks_url>https://localhost:9443/tasks/tasks/</liberty.env.openup_tasks_url>
 		<liberty.env.openup_work_products_url>https://localhost:9443/work-products/work-products/</liberty.env.openup_work_products_url>
 		<liberty.env.openup_gateway_url>https://localhost:9443/openup/gateway/</liberty.env.openup_gateway_url>
-		<liberty.env.epf_shell_path>../EPF-shell/target/</liberty.env.epf_shell_path>
+		<liberty.env.epf_shell_path>../EPF-shell/</liberty.env.epf_shell_path>
 		<liberty.env.epf_shell_command>${shell_command}</liberty.env.epf_shell_command>
 		<liberty.env.epf_shell_runner>${shell_runner}</liberty.env.epf_shell_runner>
 		<liberty.env.epf_tests_file_root>target/servers/test/epf.file.root</liberty.env.epf_tests_file_root>
