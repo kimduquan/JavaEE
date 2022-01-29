@@ -1,3 +1,4 @@
+pkill EPF-gateway-
 cd EPF-tests
 mvn liberty:stop
 cd ../

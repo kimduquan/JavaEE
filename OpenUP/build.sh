@@ -6,8 +6,8 @@ cp settings.xml ~/.m2
 . ./config.sh
 ./startup.sh
 cd EPF-persistence
-mvn clean install
+mvn clean install -U
 cd ../
 #sudo apt-get install build-essential libz-dev zlib1g-dev
-mvn clean install -Depf-shell-native
+mvn clean install -U -Depf-shell-native -Depf-gateway-native
 ./shutdown.sh

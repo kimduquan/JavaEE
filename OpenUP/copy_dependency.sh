@@ -1,3 +1,3 @@
 cd dependency
-mvn clean install
+mvn clean install -U
 cd ../
