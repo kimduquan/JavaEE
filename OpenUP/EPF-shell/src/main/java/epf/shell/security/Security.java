@@ -106,9 +106,9 @@ public class Security {
 	public Token authenticate(
 			@Option(names = {"-t", TOKEN_ARG}, description = TOKEN_DESC) 
 			final String token) throws Exception {
-		final Token authToken = security.authenticate(token);
 		final Credential credential = new Credential();
 		credential.token = token;
+		final Token authToken = security.authenticate(credential.getAuthHeader());
 		credential.tokenID = authToken.getTokenID();
 		identityStore.put(credential);
 		return authToken;
