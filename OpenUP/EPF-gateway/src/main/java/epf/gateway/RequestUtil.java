@@ -226,12 +226,6 @@ public interface RequestUtil {
 		if(location != null){
 			builder = builder.contentLocation(location);
 		}
-		if(response.hasEntity()){
-			final Object entity = response.getEntity();
-			if(entity != null){
-				builder = builder.entity(entity);
-			}
-		}
 		final Locale lang = response.getLanguage();
 		if(lang != null){
 			builder = builder.language(lang);

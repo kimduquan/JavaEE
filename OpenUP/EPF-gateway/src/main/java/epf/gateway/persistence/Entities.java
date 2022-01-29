@@ -20,11 +20,13 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import epf.gateway.Application;
 import epf.naming.Naming;
+import io.smallrye.common.annotation.Blocking;
 
 /**
  *
  * @author FOXCONN
  */
+@Blocking
 @Path(Naming.PERSISTENCE)
 @ApplicationScoped
 @RolesAllowed(Naming.Security.DEFAULT_ROLE)

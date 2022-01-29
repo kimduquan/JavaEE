@@ -1,6 +1,7 @@
 package epf.gateway;
 
 import java.io.Serializable;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -30,7 +31,7 @@ public class ExceptionHandler implements
     
     @Override
     public Response toResponse(final Throwable exception) {
-    	LOGGER.throwing(getClass().getName(), "toResponse", exception);
+    	LOGGER.log(Level.SEVERE, "toResponse", exception);
     	ResponseBuilder builder;
     	if(exception instanceof WebApplicationException) {
     		final WebApplicationException error = (WebApplicationException) exception;

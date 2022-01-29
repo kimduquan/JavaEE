@@ -19,11 +19,13 @@ import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
 import epf.gateway.Application;
 import epf.naming.Naming;
+import io.smallrye.common.annotation.Blocking;
 
 /**
  * @author PC
  *
  */
+@Blocking
 @Path(Naming.CACHE)
 @ApplicationScoped
 @RolesAllowed(Naming.Security.DEFAULT_ROLE)
