@@ -3,7 +3,6 @@
  */
 package epf.net;
 
-import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +24,6 @@ import epf.naming.Naming;
  */
 @Path(Naming.NET)
 @ApplicationScoped
-@RolesAllowed(Naming.Security.DEFAULT_ROLE)
 public class Net implements epf.client.net.Net {
 	
 	/**

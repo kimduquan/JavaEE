@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.Column;
 import javax.persistence.Table;
@@ -31,7 +31,7 @@ import epf.persistence.util.EntityManagerUtil;
  *
  * @author FOXCONN
  */
-@RequestScoped
+@ApplicationScoped
 @Traced
 public class Request {
     

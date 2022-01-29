@@ -123,7 +123,7 @@ public interface RequestUtil {
      * @param headers
      * @return
      */
-    static Builder buildRequest(final Builder input, final HttpHeaders headers, final UriInfo uriInfo){
+    static Builder buildRequest(final Builder input, final HttpHeaders headers, final URI baseUri){
     	Builder builder = input;
         if(headers != null){
         	final List<MediaType> mediaTypes = headers.getAcceptableMediaTypes();
@@ -149,11 +149,11 @@ public interface RequestUtil {
             final List<String> forwardedPort = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_PORT);
             final List<String> forwardedProto = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_PROTO);
             final List<String> newForwardedHost = new ArrayList<>(forwardedHost);
-            newForwardedHost.add(uriInfo.getBaseUri().getHost());
+            newForwardedHost.add(baseUri.getHost());
             final List<String> newForwardedPort = new ArrayList<>(forwardedPort);
-            newForwardedPort.add(String.valueOf(uriInfo.getBaseUri().getPort()));
+            newForwardedPort.add(String.valueOf(baseUri.getPort()));
             final List<String> newForwardedProto = new ArrayList<>(forwardedProto);
-            newForwardedProto.add(uriInfo.getBaseUri().getScheme());
+            newForwardedProto.add(baseUri.getScheme());
             builder = builder.header(Naming.Gateway.Headers.X_FORWARDED_HOST, StringUtil.valueOf(newForwardedHost, ","));
             builder = builder.header(Naming.Gateway.Headers.X_FORWARDED_PORT, StringUtil.valueOf(newForwardedPort, ","));
             builder = builder.header(Naming.Gateway.Headers.X_FORWARDED_PROTO, StringUtil.valueOf(newForwardedProto, ","));
@@ -212,61 +212,58 @@ public interface RequestUtil {
      * @param uriInfo
      * @return
      */
-    static Response buildResponse(final Response res, final URI baseUri){
-    	try(Response response = res){
-    		response.bufferEntity();
-        	ResponseBuilder builder = Response.fromResponse(response);
-            final Set<String> methods = response.getAllowedMethods();
-            if(methods != null){
-                builder = builder.allow(methods);
-            }
-            final Map<String, NewCookie> cookies = response.getCookies();
-            if(cookies != null){
-                builder = builder.cookie(cookies.values().toArray(new NewCookie[0]));
-            }
-            final URI location = response.getLocation();
-            if(location != null){
-                builder = builder.contentLocation(location);
-            }
-            if(response.hasEntity()){
-            	final Object entity = response.getEntity();
-                if(entity != null){
-                    builder = builder.entity(entity);
-                }
-            }
-            final Locale lang = response.getLanguage();
-            if(lang != null){
-                builder = builder.language(lang);
-            }
-            final Date modified = response.getLastModified();
-            if(modified != null){
-                builder = builder.lastModified(modified);
-            }
-            Set<Link> links = response.getLinks();
-            if(links != null){
-            	links = links
-            			.stream()
-            			.map(link -> buildLink(link, baseUri))
-            			.collect(Collectors.toSet());
-            	builder = builder.links().links(links.toArray(new Link[0]));
-            }
-            if(location != null){
-                builder = builder.location(location);
-            }
-            final StatusType status = response.getStatusInfo();
-            if(status != null){
-                builder = builder.status(status);
-            }
-            final EntityTag tag = response.getEntityTag();
-            if(tag != null){
-                builder = builder.tag(tag);
-            }
-            final MediaType type = response.getMediaType();
-            if(type != null){
-                builder = builder.type(type);
-            }
-            return builder.build();
-    	}
+    static Response buildResponse(final Response response, final URI baseUri){
+		ResponseBuilder builder = Response.fromResponse(response);
+		final Set<String> methods = response.getAllowedMethods();
+		if(methods != null){
+			builder = builder.allow(methods);
+		}
+		final Map<String, NewCookie> cookies = response.getCookies();
+		if(cookies != null){
+			builder = builder.cookie(cookies.values().toArray(new NewCookie[0]));
+		}
+		final URI location = response.getLocation();
+		if(location != null){
+			builder = builder.contentLocation(location);
+		}
+		if(response.hasEntity()){
+			final Object entity = response.getEntity();
+			if(entity != null){
+				builder = builder.entity(entity);
+			}
+		}
+		final Locale lang = response.getLanguage();
+		if(lang != null){
+			builder = builder.language(lang);
+		}
+		final Date modified = response.getLastModified();
+		if(modified != null){
+			builder = builder.lastModified(modified);
+		}
+		Set<Link> links = response.getLinks();
+		if(links != null){
+			links = links
+					.stream()
+					.map(link -> buildLink(link, baseUri))
+					.collect(Collectors.toSet());
+			builder = builder.links().links(links.toArray(new Link[0]));
+		}
+		if(location != null){
+			builder = builder.location(location);
+		}
+		final StatusType status = response.getStatusInfo();
+		if(status != null){
+			builder = builder.status(status);
+		}
+		final EntityTag tag = response.getEntityTag();
+		if(tag != null){
+			builder = builder.tag(tag);
+		}
+		final MediaType type = response.getMediaType();
+		if(type != null){
+			builder = builder.type(type);
+		}
+		return builder.build();
     }
     
     /**

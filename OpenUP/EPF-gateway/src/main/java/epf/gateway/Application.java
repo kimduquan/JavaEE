@@ -59,9 +59,9 @@ public class Application {
 		WebTarget target = client.target(uri);
 		target = RequestUtil.buildTarget(target, uriInfo, uri);
 		Invocation.Builder invoke = target.request();
-		invoke = RequestUtil.buildRequest(invoke, headers, uriInfo);
-		final CompletionStageRxInvoker rx = invoke.rx();
 		final URI baseUri = uriInfo.getBaseUri();
+		invoke = RequestUtil.buildRequest(invoke, headers, baseUri);
+		final CompletionStageRxInvoker rx = invoke.rx();
 		return RequestUtil.invoke(rx, req.getMethod(), headers.getMediaType(), body)
 				.thenApply(res -> RequestUtil.buildResponse(res, baseUri))
 				.whenComplete((res, err) -> {

@@ -2,7 +2,7 @@ package epf.gateway.image;
 
 import java.io.InputStream;
 import java.util.concurrent.CompletionStage;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -22,7 +22,7 @@ import epf.naming.Naming;
  * @author FOXCONN
  */
 @Path(Naming.IMAGE)
-@RequestScoped
+@ApplicationScoped
 public class Image {
     
     /**

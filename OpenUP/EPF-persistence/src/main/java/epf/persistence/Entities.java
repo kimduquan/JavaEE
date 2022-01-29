@@ -1,9 +1,8 @@
 package epf.persistence;
 
 import java.io.InputStream;
-import java.util.Map;
 import javax.annotation.security.RolesAllowed;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
@@ -13,14 +12,10 @@ import javax.validation.Validator;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import epf.naming.Naming;
 import epf.persistence.internal.Session;
-import epf.util.MapUtil;
-import io.opentracing.Tracer;
-import io.opentracing.log.Fields;
 
 /**
  *
@@ -28,7 +23,7 @@ import io.opentracing.log.Fields;
  */
 @Path(Naming.PERSISTENCE)
 @RolesAllowed(Naming.Security.DEFAULT_ROLE)
-@RequestScoped
+@ApplicationScoped
 public class Entities implements epf.client.persistence.Entities {
     
     /**
@@ -42,18 +37,6 @@ public class Entities implements epf.client.persistence.Entities {
      */
     @Inject
     private transient Request request;
-    
-    /**
-     * 
-     */
-    @Inject
-    private transient Tracer tracer;
-    
-    /**
-     * 
-     */
-    @Context
-    private transient SecurityContext context;
     
 
     
@@ -76,6 +59,7 @@ public class Entities implements epf.client.persistence.Entities {
     public Object persist(
     		final String schema,
             final String name,
+            final SecurityContext context,
             final InputStream body
             ) throws Exception{
     	final Session session = request.getSession(context);
@@ -83,11 +67,6 @@ public class Entities implements epf.client.persistence.Entities {
     	final Object entity = toObject(entityType, body);
         validator.validate(entity);
         final Object object = request.persistEntity(session, entity);
-        
-        final Map<String, Object> fields = MapUtil.of(Fields.EVENT, "persistence.persist");
-        fields.put("schema", schema);
-        fields.put("entity", name);
-        tracer.activeSpan().log(fields);
         return object;
     }
     
@@ -96,6 +75,7 @@ public class Entities implements epf.client.persistence.Entities {
 			final String schema,
 			final String name, 
 			final String id,
+			final SecurityContext context,
 			final InputStream body
 			) throws Exception {
     	final Session session = request.getSession(context);
@@ -105,34 +85,23 @@ public class Entities implements epf.client.persistence.Entities {
     	final Object entity = toObject(entityType, body);
     	validator.validate(entity);
     	request.mergeEntity(session, entity);
-    	
-    	final Map<String, Object> fields = MapUtil.of(Fields.EVENT, "persistence.persist");
-        fields.put("schema", schema);
-        fields.put("entity", name);
-    	fields.put("entity.id", entityId);
-        tracer.activeSpan().log(fields);
 	}
     
     @Override
     public void remove(
     		final String schema,
     		final String name,
-    		final String id
+    		final String id,
+    		final SecurityContext context
             ) {
     	final Session session = request.getSession(context);
     	final EntityType<?> entityType = request.getEntityType(session, name);
     	final Object entityId = request.getEntityId(entityType, id);
     	request.removeEntity(session, entityType, entityId).orElseThrow(NotFoundException::new);
-    	
-    	final Map<String, Object> fields = MapUtil.of(Fields.EVENT, "persistence.persist");
-        fields.put("schema", schema);
-        fields.put("entity", name);
-    	fields.put("entity.id", entityId);
-        tracer.activeSpan().log(fields);
     }
     
 	@Override
-	public Response find(final String schema, final String name, final String id) {
+	public Response find(final String schema, final String name, final String id, final SecurityContext context) {
 		final Session session = request.getSession(context);
     	final EntityType<?> entityType = request.getEntityType(session, name);
     	final Object entityId = request.getEntityId(entityType, id);

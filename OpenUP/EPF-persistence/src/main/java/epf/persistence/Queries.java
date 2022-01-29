@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.security.RolesAllowed;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.ws.rs.core.Response;
@@ -24,7 +24,6 @@ import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EntityType;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.SecurityContext;
@@ -42,7 +41,7 @@ import epf.persistence.internal.Session;
  */
 @Path(Naming.PERSISTENCE)
 @RolesAllowed(Naming.Security.DEFAULT_ROLE)
-@RequestScoped
+@ApplicationScoped
 public class Queries implements epf.client.persistence.Queries {
 	
 	/**
@@ -56,18 +55,13 @@ public class Queries implements epf.client.persistence.Queries {
     @Inject
     private transient Request request;
     
-    /**
-     * 
-     */
-    @Context
-    private transient SecurityContext context;
-    
     @Override
     public Response executeQuery(
     		final String schema,
             final List<PathSegment> paths,
             final Integer firstResult,
-            final Integer maxResults
+            final Integer maxResults,
+            final SecurityContext context
             ) {
     	final Session session = request.getSession(context);
     	final Entity<Object> entity = new Entity<>();
@@ -134,7 +128,7 @@ public class Queries implements epf.client.persistence.Queries {
     }
 
 	@Override
-	public Response search(final UriInfo uriInfo, final String text, final Integer firstResult, final Integer maxResults) {
+	public Response search(final UriInfo uriInfo, final String text, final Integer firstResult, final Integer maxResults, final SecurityContext context) {
 		final Map<String, EntityType<?>> entityTables = new ConcurrentHashMap<>();
 		final Map<String, Map<String, Attribute<?,?>>> entityAttributes = new ConcurrentHashMap<>();
 		final Session session = request.getSession(context);

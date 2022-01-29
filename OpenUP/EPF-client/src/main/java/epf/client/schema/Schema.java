@@ -6,9 +6,10 @@ package epf.client.schema;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
+import javax.ws.rs.core.SecurityContext;
 import epf.client.util.Client;
 import epf.naming.Naming;
 
@@ -24,7 +25,7 @@ public interface Schema {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    Response getEntities();
+    Response getEntities(@Context final SecurityContext context);
     
     /**
      * @param client
@@ -44,7 +45,7 @@ public interface Schema {
     @GET
     @Path("embeddable")
     @Produces(MediaType.APPLICATION_JSON)
-    Response getEmbeddables();
+    Response getEmbeddables(@Context final SecurityContext context);
     
     /**
      * @param client
