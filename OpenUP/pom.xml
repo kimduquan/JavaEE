@@ -262,7 +262,7 @@
 			<dependency>
 			    <groupId>com.hazelcast</groupId>
 			    <artifactId>hazelcast</artifactId>
-			    <version>3.12.12</version>
+			    <version>4.0.5</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.glassfish/jakarta.el -->
 			<dependency>
