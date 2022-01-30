@@ -48,10 +48,10 @@ public class MessagingTest {
     @BeforeClass
     public static void beforeClass() throws Exception{
     	URI messagingUrl = ConfigUtil.getURI(Naming.Gateway.MESSAGING_URL);
-    	HealthUtil.readỵ̣();
+    	HealthUtil.isReady();
     	token = SecurityUtil.login();
     	tokenId = SecurityUtil.auth(token).getTokenID();
-    	listenerUrl = new URI(messagingUrl.toString() + "/persistence?tid=" + tokenId);
+    	listenerUrl = new URI(messagingUrl.toString() + "persistence?tid=" + tokenId);
     }
     
     @AfterClass
@@ -107,8 +107,8 @@ public class MessagingTest {
     
     @Test
     public void testInvalidTokenId() throws Exception {
-    	URI messagingUrl = UriBuilder.fromUri(GatewayUtil.get(Naming.MESSAGING)).scheme("ws").port(9080).build();
-    	URI url = new URI(messagingUrl.toString() + "/persistence");
+    	URI messagingUrl = ConfigUtil.getURI(Naming.Gateway.MESSAGING_URL);
+    	URI url = new URI(messagingUrl.toString() + "persistence");
     	try(Client invalidClient = Messaging.connectToServer(url)){
         	TestUtil.waitUntil(t -> !invalidClient.getSession().isOpen(), Duration.ofSeconds(10));
         	Assert.assertFalse("Client.session.open", invalidClient.getSession().isOpen());

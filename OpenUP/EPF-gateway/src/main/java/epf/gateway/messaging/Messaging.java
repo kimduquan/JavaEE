@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.annotation.security.PermitAll;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.websocket.CloseReason;
@@ -34,6 +35,7 @@ import epf.util.logging.LogManager;
  */
 @ServerEndpoint("/messaging/{path}")
 @ApplicationScoped
+@PermitAll
 public class Messaging {
 	
 	/**

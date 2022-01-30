@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.gateway.stream;
 
 import java.net.URI;
@@ -10,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.annotation.security.PermitAll;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -114,6 +112,7 @@ public class Stream {
 	@GET
 	@Path("{path}")
 	@Produces(MediaType.SERVER_SENT_EVENTS)
+	@PermitAll
 	public void stream(
 			@PathParam("path")
 			final String path, 
