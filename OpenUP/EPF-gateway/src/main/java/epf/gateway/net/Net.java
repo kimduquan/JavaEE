@@ -2,12 +2,9 @@ package epf.gateway.net;
 
 import java.io.InputStream;
 import java.net.URI;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -25,7 +22,6 @@ import epf.gateway.Registry;
 import epf.gateway.Application;
 import epf.naming.Naming;
 import epf.util.StringUtil;
-import epf.util.http.SessionUtil;
 import io.smallrye.common.annotation.Blocking;
 
 /**
@@ -71,7 +67,6 @@ public class Net {
     
     /**
      * @param url
-     * @param request
      * @return
      * @throws Exception
      */
@@ -79,24 +74,18 @@ public class Net {
 	@GET
     public CompletionStage<Response> temporaryRedirect(
     		@QueryParam("url")
-    		final String url,
-            @Context 
-            final HttpServletRequest request
+    		final String url
     ) throws Exception {
-        final Optional<Object> attrValue = SessionUtil.getMapAttribute(request, Naming.Net.NET_URL, "urls", url);
-        if(attrValue.isEmpty()) {
-        	final int id = StringUtil.fromShortString(url);
-        	final URI cacheUrl = registry.lookup(Naming.CACHE);
-        	return ClientBuilder.newClient().target(cacheUrl).path(Naming.NET).path("url").queryParam("id", String.valueOf(id)).request(MediaType.TEXT_PLAIN_TYPE).rx().get(String.class)
-        	.thenApply(urlString -> {
-        		try {
-					return Response.temporaryRedirect(new URI(urlString)).build();
-				} 
-        		catch (Exception e) {
-					return Response.serverError().build();
-				}
-        	});
-        }
-        return CompletableFuture.completedFuture(Response.temporaryRedirect(new URI(attrValue.get().toString())).build());
+    	final int id = StringUtil.fromShortString(url);
+    	final URI cacheUrl = registry.lookup(Naming.CACHE);
+    	return ClientBuilder.newClient().target(cacheUrl).path(Naming.NET).path("url").queryParam("id", String.valueOf(id)).request(MediaType.TEXT_PLAIN_TYPE).rx().get(String.class)
+    	.thenApply(urlString -> {
+    		try {
+				return Response.temporaryRedirect(new URI(urlString)).build();
+			} 
+    		catch (Exception e) {
+				return Response.serverError().build();
+			}
+    	});
     }
 }

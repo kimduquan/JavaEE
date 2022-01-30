@@ -32,10 +32,6 @@
 	    <groupId>io.quarkus</groupId>
 	    <artifactId>quarkus-smallrye-jwt</artifactId>
 	</dependency>
-  	<dependency>
-	    <groupId>io.quarkus</groupId>
-	    <artifactId>quarkus-smallrye-opentracing</artifactId>
-	</dependency>
 	<dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-rest-client</artifactId>
@@ -52,11 +48,6 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-arc</artifactId>
     </dependency>
-    <dependency>
-	    <groupId>javax.servlet</groupId>
-	    <artifactId>javax.servlet-api</artifactId>
-	    <version>3.0.1</version>
-	</dependency>
     <dependency>
         <groupId>openup</groupId>
         <artifactId>EPF-naming</artifactId>

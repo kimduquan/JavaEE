@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.security.PermitAll;
@@ -138,7 +139,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
             encryptKey = KeyUtil.generatePublic("RSA", encryptKeyText, Base64.getDecoder());
         } 
         catch (Exception ex) {
-            LOGGER.throwing(getClass().getName(), "postConstruct", ex);
+            LOGGER.log(Level.SEVERE, "postConstruct", ex);
         }
     }
     

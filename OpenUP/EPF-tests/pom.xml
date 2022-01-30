@@ -346,9 +346,9 @@
                         <epf.registry.url>https://localhost:${httpsPort}/registry/registry/</epf.registry.url>
 						<epf.management.url>https://localhost:${httpsPort}/management/management/</epf.management.url>
                         <epf.messaging.url>ws://localhost:${httpPort}/messaging/messaging/</epf.messaging.url>
-                        <epf.lang.url>ws://localhost:9080/lang/lang/</epf.lang.url>
+                        <epf.lang.url>ws://localhost:${httpPort}/lang/lang/</epf.lang.url>
                         <epf.cache.url>https://localhost:${httpsPort}/cache/cache/</epf.cache.url>
-                        <epf.portlet.url>http://localhost:8080/pluto/portal</epf.portlet.url>
+                        <epf.portlet.url>http://localhost:${portalPort}/pluto/portal</epf.portlet.url>
                         <epf.webapp.url>https://localhost:${httpsPort}/webapp/</epf.webapp.url>
                         <epf.health.url>https://localhost:${httpsPort}/health/</epf.health.url>
 						<epf.batch.api.url>https://localhost:${httpsPort}/ibm/</epf.batch.api.url>
