@@ -3,6 +3,8 @@
  */
 package epf.tests.portlet.security;
 
+import java.util.Map.Entry;
+
 import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.After;
 import org.junit.Assert;
@@ -11,8 +13,10 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.MethodRule;
-import epf.tests.WebDriverUtil;
-import epf.tests.portlet.View;
+import org.junit.rules.TestName;
+import epf.tests.portlet.PortletView;
+import epf.tests.portlet.WebDriverUtil;
+import epf.tests.security.SecurityUtil;
 import jakarta.inject.Inject;
 
 /**
@@ -21,10 +25,14 @@ import jakarta.inject.Inject;
  */
 public class CredentialTest {
 	
+	@Rule
+    public TestName testName = new TestName();
+	
 	@ClassRule
     public static WeldInitiator weld = WeldInitiator.from(
-    		WebDriverUtil.class, 
-    		View.class,
+    		WebDriverUtil.class,
+    		PortletView.class,
+    		Security.class,
     		Credential.class,
     		Principal.class,
     		CredentialTest.class
@@ -35,7 +43,7 @@ public class CredentialTest {
     public MethodRule testClassInjectorRule = weld.getTestClassInjectorRule();
 	
 	@Inject
-	View view;
+	PortletView view;
 	
 	@Inject
 	Credential credential;
@@ -60,10 +68,11 @@ public class CredentialTest {
 	
 	@Test
 	public void testLogin_ValidCredential_Succeed() throws Exception {
-		credential.setCaller("any_role1");
-		credential.setPassword("any_role".toCharArray());
+		Entry<String, String> cred = SecurityUtil.peekCredential();
+		credential.setCaller(cred.getKey());
+		credential.setPassword(cred.getValue().toCharArray());
 		credential.login();
-		Assert.assertEquals("Security.principalName", "any_role1", principal.getName());
+		Assert.assertFalse("Security.principalFullName", principal.getFullName().isEmpty());
 		principal.logout();
 	}
 }

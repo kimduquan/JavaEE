@@ -45,7 +45,7 @@ public class Task implements Serializable {
      */
     @ManyToOne
     @JoinColumn(name = "TASK")
-    private epf.schema.tasks.Task task;
+    private epf.tasks.schema.Task task;
     
     /**
      * 
@@ -59,11 +59,11 @@ public class Task implements Serializable {
     @Column(name = "SUMMARY")
     private String summary;
 
-    public epf.schema.tasks.Task getTask() {
+    public epf.tasks.schema.Task getTask() {
         return task;
     }
 
-    public void setTask(final epf.schema.tasks.Task task) {
+    public void setTask(final epf.tasks.schema.Task task) {
         this.task = task;
     }
 

@@ -2,7 +2,7 @@ package epf.gateway.script;
 
 import java.io.InputStream;
 import java.util.concurrent.CompletionStage;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -12,43 +12,44 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import org.eclipse.microprofile.faulttolerance.Asynchronous;
-import epf.gateway.Request;
+import epf.gateway.Application;
+import epf.naming.Naming;
+import io.smallrye.common.annotation.Blocking;
 
 /**
  * @author PC
  *
  */
-@Path("script")
-@RequestScoped
+@Blocking
+@Path(Naming.SCRIPT)
+@ApplicationScoped
 public class Script {
 
 	/**
 	 * 
 	 */
 	@Inject
-    private transient Request request;
+    transient Application request;
 	
 	/**
 	 * @param headers
 	 * @param uriInfo
 	 * @param req
 	 * @param body
+	 * @throws Exception 
 	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
 	@Produces(MediaType.APPLICATION_JSON)
-	@Asynchronous
     public CompletionStage<Response> eval(
+    		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body
-    ) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(body);
+    ) throws Exception {
+        return request.request(context, headers, uriInfo, req, body);
     }
 }

@@ -8,11 +8,11 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
-import epf.util.file.PathUtil;
-import epf.util.logging.Logging;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
+import epf.file.util.PathUtil;
+import epf.util.logging.LogManager;
+import javax.enterprise.context.ApplicationScoped;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 
 /**
  * @author PC
@@ -29,7 +29,7 @@ public class IdentityStore implements ConstraintValidator<CallerPrincipal, Crede
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(IdentityStore.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(IdentityStore.class.getName());
 	
 	/**
 	 * @param credential

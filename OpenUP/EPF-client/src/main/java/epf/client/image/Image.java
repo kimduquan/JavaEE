@@ -11,19 +11,15 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import epf.util.client.Client;
+import epf.client.util.Client;
+import epf.naming.Naming;
 
 /**
  * @author PC
  *
  */
-@Path("image")
+@Path(Naming.IMAGE)
 public interface Image {
-
-	/**
-	 * 
-	 */
-	String IMAGE_URL = "epf.image.url";
 	
 	/**
 	 * @param input

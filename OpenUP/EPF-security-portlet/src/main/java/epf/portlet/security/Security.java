@@ -4,15 +4,16 @@
 package epf.portlet.security;
 
 import epf.client.portlet.security.CredentialView;
-import epf.client.security.Credential;
-import epf.client.security.Token;
-import epf.portlet.CookieUtil;
-import epf.portlet.RequestUtil;
-import epf.portlet.client.ClientUtil;
-import epf.portlet.registry.RegistryUtil;
-import epf.util.client.Client;
-import epf.util.logging.Logging;
-import epf.util.security.PasswordUtil;
+import epf.client.util.Client;
+import epf.portlet.internal.client.ClientUtil;
+import epf.portlet.internal.gateway.GatewayUtil;
+import epf.portlet.internal.security.SecurityUtil;
+import epf.portlet.naming.Naming;
+import epf.portlet.util.RequestUtil;
+import epf.portlet.util.http.CookieUtil;
+import epf.security.client.Credential;
+import epf.security.schema.Token;
+import epf.util.logging.LogManager;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -28,7 +29,7 @@ import java.util.logging.Logger;
  * @author PC
  *
  */
-@Named(Naming.SECURITY)
+@Named(Naming.Security.SECURITY)
 @ViewScoped
 public class Security implements CredentialView, Serializable {
 	
@@ -40,7 +41,7 @@ public class Security implements CredentialView, Serializable {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(Security.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Security.class.getName());
 
 	/**
 	 * 
@@ -63,7 +64,13 @@ public class Security implements CredentialView, Serializable {
 	 * 
 	 */
 	@Inject
-	private transient RegistryUtil registryUtil;
+	private transient GatewayUtil gatewayUtil;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	private transient SecurityUtil securityUtil;
 	
 	/**
 	 * 
@@ -83,8 +90,7 @@ public class Security implements CredentialView, Serializable {
 	 */
 	@Override
 	public String login() throws Exception {
-		final URI securityUrl = registryUtil.get("security");
-		final String passwordHash = PasswordUtil.hash(credential.getCaller(), credential.getPassword());
+		final URI securityUrl = gatewayUtil.get(epf.naming.Naming.SECURITY);
 		final URL url = new URL(
 				request.getRequest().getScheme(), 
 				request.getRequest().getServerName(), 
@@ -93,21 +99,21 @@ public class Security implements CredentialView, Serializable {
 				);
 		String rawToken;
 		try(Client client = clientUtil.newClient(securityUrl)){
-			rawToken = epf.client.security.Security.login(
+			rawToken = epf.security.client.Security.login(
 					client,
 					credential.getCaller(), 
-					passwordHash, 
+					new String(credential.getPassword()), 
 					url
 					);
 		}
 		Token token;
 		try(Client client = clientUtil.newClient(securityUrl)){
 			client.authorization(rawToken);
-			token = epf.client.security.Security.authenticate(client);
+			token = epf.security.client.Security.authenticate(client);
 		}
 		token.setRawToken(rawToken);
 		session.setToken(token);
-		final Cookie cookie = new Cookie(Naming.SECURITY_TOKEN, rawToken);
+		final Cookie cookie = new Cookie(Naming.Security.SECURITY_TOKEN, rawToken);
 		cookie.setMaxAge((int)(token.getExpirationTime() - Instant.EPOCH.getEpochSecond()));
 		cookie.setDomain(request.getRequest().getServerName());
 		cookie.setHttpOnly(true);
@@ -120,10 +126,10 @@ public class Security implements CredentialView, Serializable {
 	 * @return
 	 */
 	public String authenticate() {
-		final Optional<Cookie> cookie = cookieUtil.getCookie(Naming.SECURITY_TOKEN);
+		final Optional<Cookie> cookie = cookieUtil.getCookie(Naming.Security.SECURITY_TOKEN);
 		if(cookie.isPresent() && session.getToken() == null) {
-			try(Client client = clientUtil.newClient(registryUtil.get("security"))){
-				final Token token = epf.client.security.Security.authenticate(client);
+			try(Client client = securityUtil.newClient(gatewayUtil.get(epf.naming.Naming.SECURITY))){
+				final Token token = epf.security.client.Security.authenticate(client);
 				final String rawToken = cookie.get().getValue();
 				token.setRawToken(rawToken);
 				session.setToken(token);

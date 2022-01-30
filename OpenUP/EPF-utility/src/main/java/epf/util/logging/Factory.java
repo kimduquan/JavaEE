@@ -24,6 +24,6 @@ public class Factory implements Serializable {
 	 */
 	@Produces 
 	public Logger getLogger(final InjectionPoint injectionPoint) {
-		return Logging.getLogger(injectionPoint.getMember().getDeclaringClass().getName());
+		return LogManager.getLogger(injectionPoint.getMember().getDeclaringClass().getName());
 	}
 }

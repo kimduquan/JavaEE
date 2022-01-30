@@ -1,13 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.gateway.persistence;
 
 import java.util.List;
 import java.util.concurrent.CompletionStage;
-import javax.enterprise.context.RequestScoped;
+import javax.annotation.security.RolesAllowed;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -18,46 +14,48 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import org.eclipse.microprofile.faulttolerance.Asynchronous;
-import epf.gateway.Request;
+import epf.gateway.Application;
+import epf.naming.Naming;
+import io.smallrye.common.annotation.Blocking;
 
 /**
  *
  * @author FOXCONN
  */
-@RequestScoped
-@Path("persistence")
+@Blocking
+@ApplicationScoped
+@Path(Naming.PERSISTENCE)
+@RolesAllowed(Naming.Security.DEFAULT_ROLE)
 public class Queries {
     
     /**
      * 
      */
     @Inject
-    private transient Request request;
+    transient Application request;
     
     /**
      * @param headers
      * @param uriInfo
      * @param req
+     * @param schema
      * @param paths
-     * @return
      */
     @GET
-    @Path("{criteria: .+}")
+    @Path("{schema}/{criteria: .+}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Asynchronous
-    public CompletionStage<Response> getCriteriaQueryResult(
+    public CompletionStage<Response> executeQuery(
+    		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
+            @PathParam("schema") final String schema,
             @PathParam("criteria")
             final List<PathSegment> paths
-            ) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(null);
+            ) throws Exception {
+        return request.request(context, headers, uriInfo, req, null);
     }
     
     /**
@@ -65,18 +63,16 @@ public class Queries {
      * @param uriInfo
      * @param req
      * @return
+     * @throws Exception 
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Asynchronous
     public CompletionStage<Response> search(
+    		@Context final SecurityContext context,
     		@Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req
-            ) {
-    	request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(null);
+            ) throws Exception {
+    	return request.request(context, headers, uriInfo, req, null);
     }
 }

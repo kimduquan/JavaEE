@@ -18,8 +18,11 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
-import epf.client.messaging.MessageDecoder;
-import epf.client.messaging.MessageEncoder;
+import org.eclipse.microprofile.context.ManagedExecutor;
+import epf.messaging.client.MessageDecoder;
+import epf.messaging.client.MessageEncoder;
+import epf.naming.Naming;
+import epf.util.logging.LogManager;
 import epf.util.websocket.Server;
 
 /**
@@ -29,6 +32,11 @@ import epf.util.websocket.Server;
 @ServerEndpoint(value = "/messaging/{path}", encoders = {MessageEncoder.class}, decoders = {MessageDecoder.class})
 @ApplicationScoped
 public class Messaging {
+	
+	/**
+	 * 
+	 */
+	private static final Logger LOGGER = LogManager.getLogger(Messaging.class.getName());
 	
 	/**
 	 * 
@@ -44,15 +52,28 @@ public class Messaging {
 	 * 
 	 */
 	@Inject
-	private transient Logger logger;
+	private transient ManagedExecutor executor;
 	
 	/**
 	 * 
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		servers.put("persistence", new Server());
-		servers.put("cache", new Server());
+		final Server persistence = new Server();
+		servers.put(Naming.PERSISTENCE, persistence);
+		executor.submit(persistence);
+		final Server cache = new Server();
+		servers.put(Naming.CACHE, cache);
+		executor.submit(cache);
+		final Server security = new Server();
+		servers.put(Naming.SECURITY, security);
+		executor.submit(security);
+		final Server schedule = new Server();
+		servers.put(Naming.SCHEDULE, schedule);
+		executor.submit(schedule);
+		final Server file = new Server();
+		servers.put(Naming.FILE, file);
+		executor.submit(file);
 	}
 	
 	/**
@@ -65,7 +86,7 @@ public class Messaging {
 				server.close();
 			} 
 			catch (Exception e) {
-				logger.throwing(Server.class.getName(), "close", e);
+				LOGGER.throwing(Server.class.getName(), "close", e);
 			}
 		});
 	}
@@ -102,10 +123,9 @@ public class Messaging {
 	 * @param session
 	 */
 	@OnMessage
-    public void onMessage(@PathParam(PATH) final String path, final Object message, final Session session) {
+    public void onMessage(@PathParam(PATH) final String path, final String message, final Session session) {
 		servers.computeIfPresent(path, (p, server) -> {
 			server.onMessage(message, session);
-			server.forEach(ss -> ss.getAsyncRemote().sendObject(message));
 			return server;
 		});
 	}

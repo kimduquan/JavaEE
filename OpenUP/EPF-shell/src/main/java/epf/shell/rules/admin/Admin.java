@@ -5,19 +5,14 @@ package epf.shell.rules.admin;
 
 import java.io.File;
 import java.io.InputStream;
-import java.net.URI;
 import java.nio.file.Files;
 import javax.ws.rs.core.Response;
-
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import epf.shell.Function;
-import epf.shell.client.ClientUtil;
 import epf.shell.security.Credential;
 import epf.shell.security.CallerPrincipal;
-import epf.util.Var;
-import epf.util.client.Client;
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -34,14 +29,9 @@ public class Admin {
 	/**
 	 * 
 	 */
-	@Inject @Named(epf.client.rules.Rules.RULES_URL)
-	private transient Var<URI> rulesUrl;
-	
-	/**
-	 * 
-	 */
 	@Inject
-	private transient ClientUtil clientUtil;
+	@RestClient
+	transient AdminClient admin;
 
 	/**
 	 * @param token
@@ -59,12 +49,9 @@ public class Admin {
 			@Option(names = {"-f", "--file"}, description = "Rules file")
 			final File file 
 			) throws Exception {
-		try(Client client = clientUtil.newClient(rulesUrl.get())){
-			client.authorization(credential.getToken());
-			try(InputStream input = Files.newInputStream(file.toPath())){
-				try(Response response = epf.client.rules.admin.Admin.registerRuleExecutionSet(client, name, input)){
-					response.getStatus();
-				}
+		try(InputStream input = Files.newInputStream(file.toPath())){
+			try(Response response = admin.registerRuleExecutionSet(credential.getAuthHeader(), name, input)){
+				response.getStatus();
 			}
 		}
 	}
@@ -82,11 +69,8 @@ public class Admin {
 			@Option(names = {"-n", "--name"}, description = "Name")
 			final String name
 			) throws Exception {
-		try(Client client = clientUtil.newClient(rulesUrl.get())){
-			client.authorization(credential.getToken());
-			try(Response response = epf.client.rules.admin.Admin.deregisterRuleExecutionSet(client, name)){
-				response.getStatus();
-			}
+		try(Response response = admin.deregisterRuleExecutionSet(credential.getAuthHeader(), name)){
+			response.getStatus();
 		}
 	}
 }

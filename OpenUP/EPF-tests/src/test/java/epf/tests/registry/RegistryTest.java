@@ -1,8 +1,4 @@
-<<<<<<< HEAD:OpenUP/EPF-tests/src/test/java/epf/tests/service/registry/RegistryTest.java
-package epf.tests.service.registry;
-=======
 package epf.tests.registry;
->>>>>>> remotes/origin/micro:OpenUP/EPF-tests/src/test/java/epf/tests/registry/RegistryTest.java
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -18,31 +14,30 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
-<<<<<<< HEAD:OpenUP/EPF-tests/src/test/java/epf/tests/service/registry/RegistryTest.java
-
+import org.junit.rules.TestName;
 import epf.client.registry.Registry;
+import epf.client.util.Client;
+import epf.naming.Naming;
 import epf.tests.client.ClientUtil;
-import epf.tests.service.GatewayUtil;
-=======
-import epf.client.registry.Registry;
-import epf.tests.client.ClientUtil;
-import epf.tests.gateway.GatewayUtil;
->>>>>>> remotes/origin/micro:OpenUP/EPF-tests/src/test/java/epf/tests/registry/RegistryTest.java
-import epf.util.client.Client;
-import epf.util.logging.Logging;
+import epf.util.config.ConfigUtil;
+import epf.util.logging.LogManager;
 
 public class RegistryTest {
+	
+	@Rule
+    public TestName testName = new TestName();
 
-	private static final Logger logger = Logging.getLogger(RegistryTest.class.getName());
+	private static final Logger logger = LogManager.getLogger(RegistryTest.class.getName());
 	private static URI registryUrl;
 	
 	private Client client;
     
     @BeforeClass
-    public static void beforeClass(){
+    public static void beforeClass() throws Exception{
     	try {
-			registryUrl = GatewayUtil.getGatewayUrl().resolve("registry");
+			registryUrl = ConfigUtil.getURI(Naming.Registry.REGISTRY_URL);
 		} 
     	catch (URISyntaxException e) {
 			logger.log(Level.SEVERE, "beforeClass", e);
@@ -69,39 +64,31 @@ public class RegistryTest {
     }
     
     @Test
-    public void testList_OK() {
+    public void testList_OK() throws Exception {
     	Set<Link> links = Registry.list(client, null);
     	Set<URI> URIs = links.stream().map(link -> link.getUri()).collect(Collectors.toSet());
     	Set<URI> expected = new HashSet<>();
+    	URI baseUri = new URI("https://localhost:9443/");
     	try {
-			expected.add(GatewayUtil.getGatewayUrl().resolve("config"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("file"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("persistence"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("registry"));
-<<<<<<< HEAD:OpenUP/EPF-tests/src/test/java/epf/tests/service/registry/RegistryTest.java
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("schema"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("security"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("system"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("stream"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("cache"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("script"));
-=======
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("security"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("stream"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("cache"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("script"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("management"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("rules"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("schema"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("planning"));
-	    	expected.add(GatewayUtil.getGatewayUrl().resolve("image"));
->>>>>>> remotes/origin/micro:OpenUP/EPF-tests/src/test/java/epf/tests/registry/RegistryTest.java
-	    	URI messagingUrl = UriBuilder.fromUri(GatewayUtil.getGatewayUrl().resolve("messaging")).scheme("ws").port(9080).build();
+			expected.add(baseUri.resolve("config/config/"));
+	    	expected.add(baseUri.resolve("file/file/"));
+	    	expected.add(baseUri.resolve("persistence/persistence/"));
+	    	expected.add(baseUri.resolve("registry/registry/"));
+	    	expected.add(baseUri.resolve("persistence/security/"));
+	    	expected.add(baseUri.resolve("cache/cache/"));
+	    	expected.add(baseUri.resolve("script/script/"));
+	    	expected.add(baseUri.resolve("management/management/"));
+	    	expected.add(baseUri.resolve("rules/rules/"));
+	    	expected.add(baseUri.resolve("persistence/schema/"));
+	    	expected.add(baseUri.resolve("planning/planning/"));
+	    	expected.add(baseUri.resolve("image/image/"));
+	    	expected.add(baseUri.resolve("net/net/"));
+	    	URI messagingUrl = UriBuilder.fromUri(baseUri.resolve("messaging/messaging/")).scheme("ws").port(9080).build();
 	    	expected.add(messagingUrl);
-	    	URI langUrl = UriBuilder.fromUri(GatewayUtil.getGatewayUrl().resolve("lang")).scheme("ws").port(9080).build();
+	    	URI langUrl = UriBuilder.fromUri(baseUri.resolve("lang/lang/")).scheme("ws").port(9080).build();
 	    	expected.add(langUrl);
 		} 
-    	catch (URISyntaxException e) {
+    	catch (Exception e) {
 			logger.log(Level.SEVERE, "testList_OK", e);
 		}
     	Assert.assertEquals("list", expected, URIs);

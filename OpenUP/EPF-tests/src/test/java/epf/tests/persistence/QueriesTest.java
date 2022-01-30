@@ -3,26 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-<<<<<<< HEAD:OpenUP/EPF-tests/src/test/java/epf/tests/service/persistence/QueriesTest.java
-package epf.tests.service.persistence;
-
-import epf.tests.client.ClientUtil;
-import epf.tests.service.RegistryUtil;
-import epf.tests.service.SecurityUtil;
-=======
 package epf.tests.persistence;
 
+import epf.client.gateway.GatewayUtil;
 import epf.client.persistence.Queries;
+import epf.client.util.Client;
+import epf.naming.Naming;
 import epf.tests.client.ClientUtil;
-import epf.tests.registry.RegistryUtil;
 import epf.tests.security.SecurityUtil;
->>>>>>> remotes/origin/micro:OpenUP/EPF-tests/src/test/java/epf/tests/persistence/QueriesTest.java
-import epf.util.client.Client;
-import epf.util.logging.Logging;
 import java.net.URI;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
@@ -32,27 +22,31 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.rules.TestName;
 import org.junit.Ignore;
+import org.junit.Rule;
 
 /**
  *
  * @author FOXCONN
  */
 public class QueriesTest {
+	
+	@Rule
+    public TestName testName = new TestName();
     
-	private static final Logger logger = Logging.getLogger(QueriesTest.class.getName());
 	private static URI persistenceUrl;
     private static String token;
     private Client client;
     
     @BeforeClass
-    public static void beforeClass(){
-    	token = SecurityUtil.login("any_role1", "any_role");
-    	persistenceUrl = RegistryUtil.lookup("persistence", null);
+    public static void beforeClass() throws Exception{
+    	token = SecurityUtil.login();
+    	persistenceUrl = GatewayUtil.get(Naming.PERSISTENCE);
     }
     
     @AfterClass
-    public static void afterClass(){
+    public static void afterClass() throws Exception{
     	SecurityUtil.logOut(token);
     }
     
@@ -63,18 +57,13 @@ public class QueriesTest {
     }
     
     @After
-    public void after() {
-    	try {
-			client.close();
-		} 
-    	catch (Exception e) {
-    		logger.log(Level.WARNING, "after", e);
-		}
+    public void after() throws Exception {
+    	client.close();
     }
     
     @Test
     @Ignore
-    public void testSearchOK() {
+    public void testSearchOK() throws Exception {
     	Set<Link> entityLinks = Queries.search(client, "Any", 0, 100).getLinks();
     	Assert.assertFalse("Response.links.empty", entityLinks.isEmpty());
     	entityLinks.forEach(entityLink -> {
@@ -92,7 +81,7 @@ public class QueriesTest {
     			Assert.assertNotNull("Link.entity", entity);
     		} 
     		catch (Exception e) {
-				logger.log(Level.SEVERE, entityLink.toString(), e);
+				e.printStackTrace();
 			}
     	});
     }

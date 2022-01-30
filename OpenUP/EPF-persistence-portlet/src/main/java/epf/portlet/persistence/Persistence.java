@@ -3,7 +3,6 @@
  */
 package epf.portlet.persistence;
 
-import java.io.InputStream;
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Logger;
@@ -12,31 +11,28 @@ import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.json.Json;
 import javax.json.JsonObject;
-import javax.json.JsonReader;
 import javax.json.JsonValue;
-import javax.ws.rs.core.Response;
 import epf.client.portlet.persistence.PersistenceView;
 import epf.client.schema.Attribute;
 import epf.client.schema.Entity;
-import epf.portlet.Event;
-import epf.portlet.EventUtil;
-import epf.portlet.JsonUtil;
-import epf.portlet.Parameter;
-import epf.portlet.ParameterUtil;
-import epf.portlet.client.ClientUtil;
-import epf.portlet.config.ConfigUtil;
-import epf.portlet.registry.RegistryUtil;
-import epf.util.client.Client;
-import epf.util.logging.Logging;
+import epf.client.util.Client;
+import epf.portlet.internal.config.ConfigUtil;
+import epf.portlet.internal.gateway.GatewayUtil;
+import epf.portlet.internal.persistence.EntityUtil;
+import epf.portlet.naming.Naming;
+import epf.portlet.internal.security.SecurityUtil;
+import epf.portlet.util.EventUtil;
+import epf.portlet.util.ParameterUtil;
+import epf.portlet.util.json.JsonUtil;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
  *
  */
 @ViewScoped
-@Named(Naming.PERSISTENCE)
+@Named(Naming.Persistence.PERSISTENCE)
 public class Persistence implements PersistenceView, Serializable {
 	
 	/**
@@ -47,7 +43,7 @@ public class Persistence implements PersistenceView, Serializable {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(Persistence.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Persistence.class.getName());
 	
 	/**
 	 * 
@@ -73,7 +69,7 @@ public class Persistence implements PersistenceView, Serializable {
 	 * 
 	 */
 	@Inject
-	private transient RegistryUtil registryUtil;
+	private transient GatewayUtil gatewayUtil;
 	
 	/**
 	 * 
@@ -85,7 +81,7 @@ public class Persistence implements PersistenceView, Serializable {
 	 * 
 	 */
 	@Inject
-	private transient ClientUtil clientUtil;
+	private transient SecurityUtil clientUtil;
 	
 	/**
 	 * 
@@ -102,9 +98,15 @@ public class Persistence implements PersistenceView, Serializable {
 	/**
 	 * 
 	 */
+	@Inject
+	private transient EntityUtil entityUtil;
+	
+	/**
+	 * 
+	 */
 	@PostConstruct
 	protected void postConstruct() {
-		entity = eventUtil.getEvent(Event.SCHEMA_ENTITY);
+		entity = eventUtil.getEvent(Naming.Event.SCHEMA_ENTITY);
 		if(entity != null) {
 			attributes = entity
 					.getAttributes()
@@ -112,36 +114,12 @@ public class Persistence implements PersistenceView, Serializable {
 					.filter(AttributeUtil::isBasic)
 					.collect(Collectors.toList());
 			try {
-				firstResult = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT));
-				final int maxResults = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT));
-				objects = fetchObjects(firstResult, maxResults);
+				firstResult = Integer.valueOf(configUtil.getProperty(epf.naming.Naming.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT));
+				final int maxResults = Integer.valueOf(configUtil.getProperty(epf.naming.Naming.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT));
+				objects = entityUtil.getEntities(entity.getTable().getSchema(), entity.getName(), firstResult, maxResults);
 			}
 			catch (Exception e) {
 				LOGGER.throwing(getClass().getName(), "postConstruct", e);
-			}
-		}
-	}
-	
-	/**
-	 * @return
-	 * @throws Exception
-	 */
-	protected List<JsonObject> fetchObjects(final int firstResult, final int maxResults) throws Exception{
-		try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
-			try(Response response = epf.client.persistence.Queries.executeQuery(
-					client, 
-					path -> path.path(entity.getName()), 
-					firstResult, 
-					maxResults)){
-				try(InputStream stream = response.readEntity(InputStream.class)){
-					try(JsonReader reader = Json.createReader(stream)){
-						return reader
-						.readArray()
-						.stream()
-						.map(value -> value.asJsonObject())
-						.collect(Collectors.toList());
-					}
-				}
 			}
 		}
 	}
@@ -167,8 +145,8 @@ public class Persistence implements PersistenceView, Serializable {
 				final JsonValue idValue = object.get(id.getName());
 				if(idValue != null) {
 					final String value = JsonUtil.toString(idValue);
-					try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
-						epf.client.persistence.Entities.remove(client, entity.getName(), value);
+					try(Client client = clientUtil.newClient(gatewayUtil.get(epf.naming.Naming.PERSISTENCE))){
+						epf.client.persistence.Entities.remove(client, entity.getTable().getSchema(), entity.getName(), value);
 					}
 				}
 			}
@@ -184,7 +162,7 @@ public class Persistence implements PersistenceView, Serializable {
 				final JsonValue idValue = object.get(id.getName());
 				if(idValue != null) {
 					final String value = JsonUtil.toString(idValue);
-					paramUtil.setValue(Parameter.PERSISTENCE_ENTITY_ID, value);
+					paramUtil.setValue(Naming.Parameter.PERSISTENCE_ENTITY_ID, value);
 				}
 			}
 		}

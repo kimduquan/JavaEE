@@ -3,16 +3,14 @@
  */
 package epf.shell.client;
 
+import epf.client.util.Client;
+import epf.client.util.ClientQueue;
+import epf.naming.Naming;
 import java.net.URI;
-import javax.json.JsonObject;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
-import epf.util.client.Client;
-import epf.util.client.ClientQueue;
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
-import jakarta.enterprise.context.ApplicationScoped;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.enterprise.context.ApplicationScoped;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 /**
  * @author PC
@@ -24,12 +22,13 @@ public class ClientUtil {
 	/**
 	 * 
 	 */
-	private transient JacksonJsonProvider provider;
+	private transient ClientQueue clients;
 	
 	/**
 	 * 
 	 */
-	private transient ClientQueue clients;
+	@ConfigProperty(name = Naming.Client.CLIENT_CONFIG + "/mp-rest/uri")
+	URI gatewayUrl;
 
 	/**
 	 * 
@@ -38,12 +37,6 @@ public class ClientUtil {
 	protected void postConstruct() {
 		clients = new ClientQueue();
 		clients.initialize();
-		final SimpleModule module = new SimpleModule();
-        module.addDeserializer(JsonObject.class, new JsonObjectDeserializer());
-        module.addSerializer(JsonObject.class, new JsonObjectSerializer());
-		final ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(module);
-        provider = new JacksonJsonProvider(mapper);
 	}
 	
 	/**
@@ -59,6 +52,23 @@ public class ClientUtil {
 	 * @return
 	 */
 	public Client newClient(final URI uri) {
-		return new Client(clients, uri, builder -> builder.register(provider));
+		return new Client(clients, uri, builder -> builder);
+	}
+	
+	/**
+	 * @param name
+	 * @return
+	 * @throws Exception
+	 */
+	public Client newClient(final String name) throws Exception {
+		return new Client(clients, gatewayUrl.resolve(name), builder -> builder);
+	}
+	
+	/**
+	 * @param name
+	 * @return
+	 */
+	public URI getUrl(final String name) {
+		return gatewayUrl.resolve(name);
 	}
 }

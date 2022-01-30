@@ -5,10 +5,9 @@ package epf.util.websocket;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 import javax.websocket.ClientEndpoint;
+import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -40,14 +39,8 @@ public class Client implements AutoCloseable {
 	/**
 	 * 
 	 */
-	private transient final Queue<String> messages;
-	
-	/**
-	 * 
-	 */
 	protected Client() {
 		super();
-		messages = new ConcurrentLinkedQueue<>();
 	}
 	
 	public Session getSession() {
@@ -57,7 +50,6 @@ public class Client implements AutoCloseable {
 	@Override
 	public void close() throws Exception {
 		session.close();
-		messages.clear();
 		messageConsumer = null;
 	}
 	
@@ -67,10 +59,7 @@ public class Client implements AutoCloseable {
 	 */
 	@OnMessage
     public void onMessage(final String message, final Session session) {
-		if(messageConsumer == null) {
-			messages.add(message);
-		}
-		else {
+		if(messageConsumer != null) {
 			messageConsumer.accept(message);
 		}
 	}
@@ -107,7 +96,7 @@ public class Client implements AutoCloseable {
 	 * @throws DeploymentException
 	 * @throws IOException
 	 */
-	public static Client connectToServer(
+	protected static Client connectToServer(
 			final WebSocketContainer container,
 			final URI uri) throws DeploymentException, IOException {
 		final Client client = new Client();
@@ -115,7 +104,13 @@ public class Client implements AutoCloseable {
 		return client;
 	}
 	
-	public Queue<String> getMessages() {
-		return messages;
+	/**
+	 * @param uri
+	 * @return
+	 * @throws DeploymentException
+	 * @throws IOException
+	 */
+	public static Client connectToServer(final URI uri) throws DeploymentException, IOException {
+		return connectToServer(ContainerProvider.getWebSocketContainer(), uri);
 	}
 }

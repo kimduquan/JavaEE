@@ -1,5 +1,5 @@
 package epf.rules.work_products
-import epf.schema.work_products.Artifact
+import epf.work_products.schema.Artifact
 
 rule "Rule 1"
 	when artifact : Artifact(summary == null)

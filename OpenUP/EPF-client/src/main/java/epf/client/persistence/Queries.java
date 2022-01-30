@@ -10,8 +10,10 @@ import java.util.function.Function;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import epf.util.client.Client;
+import epf.client.util.Client;
+import epf.naming.Naming;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
@@ -28,7 +30,7 @@ import javax.ws.rs.core.PathSegment;
  *
  * @author FOXCONN
  */
-@Path("persistence")
+@Path(Naming.PERSISTENCE)
 public interface Queries {
 	
 	/**
@@ -41,34 +43,40 @@ public interface Queries {
 	String MAX = "max";
     
     /**
+     * @param schema
      * @param paths
      * @param firstResult
      * @param maxResults
      * @return
      */
     @GET
-    @Path("{criteria: .+}")
+    @Path("{schema}/{criteria: .+}")
     @Produces(MediaType.APPLICATION_JSON)
     Response executeQuery(
+    		@PathParam("schema")
+            @NotBlank
+            final String schema,
             @PathParam("criteria")
             final List<PathSegment> paths,
             @QueryParam(FIRST)
             final Integer firstResult,
             @QueryParam(MAX)
-            final Integer maxResults
+            final Integer maxResults,
+            @Context
+            final SecurityContext context
             );
     
     /**
-     * @param <T>
      * @param client
+     * @param schema
      * @param type
      * @param paths
      * @param firstResult
      * @param maxResults
-     * @return
      */
     static <T extends Object> List<T> executeQuery(
     		final Client client,
+    		final String schema,
     		final GenericType<List<T>> type,
     		final Function<WebTarget, WebTarget> paths,
     		final Integer firstResult,
@@ -76,7 +84,7 @@ public interface Queries {
             ) {
     	return client.request(
     			target -> paths.apply(
-    					target.queryParam(FIRST, firstResult).queryParam(MAX, maxResults)
+    					target.path(schema).queryParam(FIRST, firstResult).queryParam(MAX, maxResults)
     					), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
@@ -85,19 +93,20 @@ public interface Queries {
     
     /**
      * @param client
+     * @param schema
      * @param paths
      * @param firstResult
      * @param maxResults
-     * @return
      */
     static Response executeQuery(
     		final Client client,
+    		final String schema,
     		final Function<WebTarget, WebTarget> paths,
     		final Integer firstResult,
     		final Integer maxResults){
     	return client.request(
     			target -> paths.apply(
-    					target.queryParam(FIRST, firstResult).queryParam(MAX, maxResults)
+    					target.path(schema).queryParam(FIRST, firstResult).queryParam(MAX, maxResults)
     					), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
@@ -124,7 +133,9 @@ public interface Queries {
     		@QueryParam(FIRST)
     		final Integer firstResult,
             @QueryParam(MAX)
-    		final Integer maxResults);
+    		final Integer maxResults,
+            @Context
+            final SecurityContext context);
     
     /**
      * @param client

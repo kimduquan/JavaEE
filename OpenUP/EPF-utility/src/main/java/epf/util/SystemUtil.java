@@ -21,4 +21,16 @@ public interface SystemUtil {
 	static String getenv(final String name) {
 		return System.getenv(name.replace('.', '_'));
 	}
+	
+	/**
+	 * @param name
+	 * @return
+	 */
+	static String getString(final String name) {
+		String value = getenv(name);
+		if(value == null) {
+			value = System.getProperty(name);
+		}
+		return value;
+	}
 }

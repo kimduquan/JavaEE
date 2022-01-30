@@ -55,6 +55,11 @@ public class Entity implements Serializable {
 	private Attribute id;
 	
 	/**
+	 * 
+	 */
+	private Table table;
+	
+	/**
 	 * @return the attributes
 	 */
 	public List<Attribute> getAttributes() {
@@ -138,5 +143,13 @@ public class Entity implements Serializable {
 
 	public void setSingleId(final boolean singleId) {
 		this.singleId = singleId;
+	}
+
+	public Table getTable() {
+		return table;
+	}
+
+	public void setTable(final Table table) {
+		this.table = table;
 	}
 }

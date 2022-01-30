@@ -1,0 +1,599 @@
+/**
+ * 
+ */
+package epf.naming;
+
+/**
+ * @author PC
+ *
+ */
+public interface Naming {
+	
+	/**
+	 * 
+	 */
+	String EPF = "EPF";
+	
+	/**
+	 * 
+	 */
+	String BATCH = "batch";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface Batch {
+		
+		/**
+		 * 
+		 */
+		String BATCH_API = "api/batch";
+		
+		/**
+		 * 
+		 */
+		String BATCH_API_URL = "epf.batch.api.url";
+	}
+	
+	/**
+	 * 
+	 */
+	String CACHE = "cache";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface Cache {
+
+		/**
+		 * 
+		 */
+		String CACHE_URL = "epf.cache.url";
+		
+	}
+	
+	/**
+	 * 
+	 */
+	String CLIENT = "client";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface Client {
+		/**
+		 * 
+		 */
+		String CLIENT_CONFIG = "epf.client.config";
+	}
+	
+	/**
+	 * 
+	 */
+	String CONFIG = "config";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface Config {
+		
+		/**
+		 * 
+		 */
+		String CONFIG_URL = "epf.config.url";
+		
+	}
+	
+	/**
+	 * 
+	 */
+	String FILE = "file";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface File {
+	    
+	    /**
+	     * 
+	     */
+	    String FILE_URL = "epf.file.url";
+		
+	    /**
+	     * 
+	     */
+	    String ROOT = "epf.file.root";
+	}
+	
+	/**
+	 * 
+	 */
+	String GATEWAY = "gateway";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface Gateway {
+		
+	    /**
+	     * 
+	     */
+	    String GATEWAY_URL = "epf.gateway.url";
+	    
+	    /**
+	     * @author PC
+	     *
+	     */
+	    interface Headers {
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String X_FORWARDED_PORT = "X-Forwarded-Port";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String X_FORWARDED_PROTO = "X-Forwarded-Proto";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String X_FORWARDED_HOST = "X-Forwarded-Host";
+	    }
+	}
+	
+	/**
+	 * 
+	 */
+	String HEALTH = "health";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface Health {
+		
+		/**
+		 * 
+		 */
+		String HEALTH_URL = "epf.health.url";
+	}
+	
+	/**
+	 * 
+	 */
+	String IMAGE = "image";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface Image {
+
+		/**
+		 * 
+		 */
+		String IMAGE_URL = "epf.image.url";
+		
+	}
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface Lang {
+
+		/**
+		 * 
+		 */
+		String LANG_URL = "epf.lang.url";
+	}
+	
+	/**
+	 * 
+	 */
+	String MANAGEMENT = "management";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface Management {
+
+		/**
+		 * 
+		 */
+		String MANAGEMENT_URL = "epf.management.url";
+		
+	}
+	
+	/**
+	 * 
+	 */
+	String MESSAGING = "messaging";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface Messaging {
+		
+	    /**
+	     * 
+	     */
+	    String MESSAGING_URL = "epf.messaging.url";
+		
+	}
+	
+	/**
+	 * 
+	 */
+	String NET = "net";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface Net {
+		
+		/**
+		 * 
+		 */
+		String NET_URL = "epf.net.url";
+		
+		/**
+		 * 
+		 */
+		String HTTP_PORT = "epf.net.http.port";
+	}
+	
+	/**
+	 * 
+	 */
+	String PERSISTENCE = "persistence";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface Persistence {
+		
+		/**
+		 * 
+		 */
+		String PERSISTENCE = "epf.persistence";
+
+		/**
+		 * 
+		 */
+		String PERSISTENCE_URL = "epf.persistence.url";
+		
+		/**
+		 * 
+		 */
+		String PERSISTENCE_SECURITY = "epf.persistence.security";
+		
+		/**
+		 * 
+		 */
+		String PERSISTENCE_SECURITY_URL = "epf.persistence.security.url";
+		
+		/**
+		 * 
+		 */
+		String PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT = "epf.persistence.query.firstResult.default";
+		
+		/**
+		 * 
+		 */
+		String PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT = "epf.persistence.query.maxResults.default";
+		
+		/**
+		 * 
+		 */
+		String PERSISTENCE_ENTITY_LISTENERS = "persistence";
+		
+		/**
+		 * 
+		 */
+		String PERSISTENCE_ENTITY_LISTENERS_POSTLOAD = "persistence-PostLoad";
+		
+	}
+	
+	/**
+	 * 
+	 */
+	String PLANNING = "planning";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface Planning {
+
+		/**
+		 * 
+		 */
+		String PLANNING_URL = "epf.planning.url";
+		
+	}
+	
+	/**
+	 * 
+	 */
+	String REGISTRY = "registry";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface Registry {
+		
+	    /**
+	     * 
+	     */
+	    String REGISTRY_URL = "epf.registry.url";
+	    
+	    /**
+	     * @author PC
+	     *
+	     */
+	    interface Filter {
+	    	
+		    /**
+		     * 
+		     */
+		    String ABSOLUTE = "absolute";
+		    
+		    /**
+		     * 
+		     */
+		    String OPAQUE = "opaque";
+		    
+		    /**
+		     * 
+		     */
+		    String AUTHORITY = "authority";
+		    
+		    /**
+		     * 
+		     */
+		    String FRAGMENT = "fragment";
+		    
+		    /**
+		     * 
+		     */
+		    String HOST = "host";
+		    
+		    /**
+		     * 
+		     */
+		    String PATH = "path";
+		    
+		    /**
+		     * 
+		     */
+		    String PORT = "port";
+		    
+		    /**
+		     * 
+		     */
+		    String QUERY = "query";
+		    
+		    /**
+		     * 
+		     */
+		    String SCHEME = "scheme";
+		    
+		    /**
+		     * 
+		     */
+		    String USER_INFO = "user-info";
+	    }
+	}
+	
+	/**
+	 * 
+	 */
+	String RULES = "rules";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface Rules {
+		
+		/**
+		 * 
+		 */
+		String RULES_URL = "epf.rules.url";
+		
+		/**
+		 * 
+		 */
+		String RULES_ADMIN = "rules/admin";
+		
+	}
+	
+	/**
+	 * 
+	 */
+	String SCHEDULE = "schedule";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface Schedule {
+		
+		/**
+		 * 
+		 */
+		String SCHEDULE_URL = "epf.schedule.url";
+		
+		/**
+		 * 
+		 */
+		String EXECUTOR_SERVICE = "java:comp/DefaultManagedScheduledExecutorService";
+	}
+	
+	/**
+	 * 
+	 */
+	String SCHEMA = "schema";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface Schema {
+
+		/**
+		 * 
+		 */
+		String SCHEMA_URL = "epf.schema.url";
+		
+	}
+	
+	/**
+	 * 
+	 */
+	String SCRIPT = "script";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface Script {
+		
+		/**
+		 * 
+		 */
+		String SCRIPT_URL = "epf.script.url";
+		
+	}
+	
+	/**
+	 * 
+	 */
+	String SECURITY = "security";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface Security {
+		
+		/**
+	     * 
+	     */
+	    String SECURITY_URL = "epf.security.url";
+	    
+	    /**
+	     * 
+	     */
+	    String DEFAULT_ROLE = "Any_Role";
+	    
+	    /**
+	     * @author PC
+	     *
+	     */
+	    interface JWT {
+	    	
+	        /**
+	         * 
+	         */
+	        String ISSUE_KEY = "epf.security.jwt.issue.key";
+	        
+	        /**
+	         * 
+	         */
+	        String ENCRYPT_KEY = "epf.security.jwt.encrypt.key";
+	        
+	        /**
+	         * 
+	         */
+	        String EXPIRE_DURATION = "epf.security.jwt.exp.duration";
+	        /**
+	         * 
+	         */
+	        String EXPIRE_TIMEUNIT = "epf.security.jwt.exp.timeunit";
+	        
+	        /**
+	         * 
+	         */
+	        String TOKEN_CLAIM = "token";
+	    }
+	}
+	
+	/**
+	 * 
+	 */
+	String SHELL = "shell";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface Shell {
+		
+		/**
+		 * 
+		 */
+		String SHELL_URL = "epf.shell.url";
+
+		/**
+		 * 
+		 */
+		String SHELL_PATH = "epf.shell.path";
+		
+		/**
+		 * 
+		 */
+		String SHELL_COMMAND = "epf.shell.command";
+		
+		/**
+		 * 
+		 */
+		String SHELL_RUNNER = "epf.shell.runner";
+	}
+	
+	/**
+	 * 
+	 */
+	String UTILITY = "utility";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface Utility {
+		
+	}
+	
+	String WEB_APP = "webapp";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface WebApp {
+		
+		/**
+	     * 
+	     */
+	    String WEB_APP_URL = "epf.webapp.url";
+	    
+	    /**
+	     * 
+	     */
+	    String SECURITY_WEB_APP_URL = "epf.security.webapp.url";
+	}
+}

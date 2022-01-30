@@ -45,7 +45,7 @@ public class DeliveryProcess implements Serializable {
      */
     @ManyToOne
     @JoinColumn(name = "DELIVERY_PROCESS")
-    private epf.schema.delivery_processes.DeliveryProcess deliveryProcess;
+    private epf.delivery_processes.schema.DeliveryProcess deliveryProcess;
     
     /**
      * 
@@ -58,12 +58,17 @@ public class DeliveryProcess implements Serializable {
      */
     @Column(name = "SUMMARY")
     private String summary;
+    
+    @Override
+    public String toString() {
+    	return String.format("%s@%s:%d", getClass().getName(), name, id);
+    }
 
-    public epf.schema.delivery_processes.DeliveryProcess getDeliveryProcess() {
+    public epf.delivery_processes.schema.DeliveryProcess getDeliveryProcess() {
         return deliveryProcess;
     }
 
-    public void setDeliveryProcess(final epf.schema.delivery_processes.DeliveryProcess deliveryProcess) {
+    public void setDeliveryProcess(final epf.delivery_processes.schema.DeliveryProcess deliveryProcess) {
         this.deliveryProcess = deliveryProcess;
     }
 

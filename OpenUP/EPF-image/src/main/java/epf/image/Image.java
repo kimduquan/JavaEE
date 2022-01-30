@@ -7,8 +7,9 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
-import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
@@ -17,28 +18,38 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
-import epf.schema.roles.Role;
+import epf.naming.Naming;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
  *
  */
-@Path("image")
-@RolesAllowed(Role.DEFAULT_ROLE)
+@Path(Naming.IMAGE)
 @ApplicationScoped
 public class Image implements epf.client.image.Image {
 	
 	/**
 	 * 
 	 */
+	private transient final Logger LOGGER = LogManager.getLogger(Image.class.getName());
+	
+	/**
+	 * 
+	 */
 	@PostConstruct
 	protected void postConstruct() {
-		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+		try {
+			System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+		}
+		catch(Throwable ex) {
+			LOGGER.log(Level.SEVERE, "postConstruct", ex);
+		}
 	}
 
 	@Override
 	public Response findContours(final InputStream input) throws Exception {
-		final java.nio.file.Path path = Files.createTempFile("image", ".img");
+		final java.nio.file.Path path = Files.createTempFile(Naming.IMAGE, ".img");
 		Files.copy(input, path);
 		final Mat image = Imgcodecs.imread(path.toString());
 		Files.delete(path);

@@ -18,7 +18,7 @@ public class VarTest {
 	@Test
 	public void testVar() {
 		final Var<String> var = new Var<>();
-		Assert.assertNull(var.get());
+		Assert.assertNull(var.get().orElse(null));
 	}
 
 	/**
@@ -27,8 +27,8 @@ public class VarTest {
 	@Test
 	public void testVarT() {
 		final Var<String> var = new Var<>("var");
-		Assert.assertNotNull(var.get());
-		Assert.assertEquals("var", var.get());
+		Assert.assertTrue("Var", var.get().isPresent());
+		Assert.assertEquals("var", var.get().get());
 	}
 
 	/**
@@ -38,9 +38,9 @@ public class VarTest {
 	public void testSetT() {
 		final Var<String> var = new Var<>("");
 		var.set("var");
-		Assert.assertEquals("var", var.get());
+		Assert.assertEquals("var", var.get().get());
 		var.set("var1");
-		Assert.assertEquals("var1", var.get());
+		Assert.assertEquals("var1", var.get().get());
 	}
 
 	/**
@@ -50,9 +50,9 @@ public class VarTest {
 	public void testGet() {
 		final Var<String> var = new Var<>();
 		var.set("");
-		Assert.assertEquals("", var.get());
+		Assert.assertEquals("", var.get().get());
 		var.set("var");
-		Assert.assertEquals("var", var.get());
+		Assert.assertEquals("var", var.get().get());
 	}
 
 	/**
@@ -65,12 +65,12 @@ public class VarTest {
 			Assert.assertNull(v);
 			return "var";
 		});
-		Assert.assertEquals("var", var.get());
+		Assert.assertEquals("var", var.get().get());
 		var.set(v -> {
 			Assert.assertEquals("var", v);
 			return "";
 		});
-		Assert.assertEquals("", var.get());
+		Assert.assertEquals("", var.get().get());
 	}
 
 	/**

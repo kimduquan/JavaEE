@@ -1,51 +1,80 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.persistence.security;
 
 import java.io.Serializable;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.Principal;
+import java.rmi.RemoteException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Base64;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.control.ActivateRequestContext;
 import javax.inject.Inject;
+import javax.security.enterprise.credential.Password;
+import javax.security.enterprise.credential.UsernamePasswordCredential;
+import javax.security.enterprise.identitystore.CredentialValidationResult;
+import javax.security.enterprise.identitystore.CredentialValidationResult.Status;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.jwt.config.Names;
-import epf.client.EPFException;
-import epf.client.security.CredentialInfo;
-import epf.client.security.Token;
-import epf.client.security.jwt.JWTConfig;
-import epf.persistence.context.Application;
-import epf.persistence.context.Credential;
-import epf.persistence.context.Session;
-import epf.schema.roles.Role;
+import epf.naming.Naming;
+import epf.persistence.internal.Application;
+import epf.persistence.internal.Session;
+import epf.persistence.security.auth.EPFPrincipal;
+import epf.persistence.security.auth.IdentityStore;
+import epf.persistence.security.otp.OTPIdentityStore;
+import epf.security.client.SecurityInterface;
+import epf.security.client.jwt.TokenUtil;
+import epf.security.schema.Token;
+import epf.util.logging.LogManager;
+import epf.util.security.KeyUtil;
 
 /**
  *
  * @author FOXCONN
  */
-@Path("security")
-@RolesAllowed(Role.DEFAULT_ROLE)
-@RequestScoped
-public class Security implements epf.client.security.Security, Serializable {
+@Path(Naming.SECURITY)
+@RolesAllowed(Naming.Security.DEFAULT_ROLE)
+@ApplicationScoped
+public class Security implements epf.security.client.Security, epf.security.client.otp.OTPSecurity, Serializable, SecurityInterface {
     
     /**
     * 
     */
     private static final long serialVersionUID = 1L;
+    
+    /**
+     * 
+     */
+    private static final Logger LOGGER = LogManager.getLogger(Security.class.getName());
+    
+    /**
+     * 
+     */
+    private transient PrivateKey privateKey;
+    
+    /**
+     * 
+     */
+    private transient PublicKey encryptKey;
     
     /**
      * 
@@ -57,13 +86,14 @@ public class Security implements epf.client.security.Security, Serializable {
      * 
      */
     @Inject
-    private transient IdentityStore identityStore;
+    private transient OTPIdentityStore otpIdentityStore;
     
     /**
      * 
      */
     @Inject
-    private transient TokenGenerator generator;
+    @ConfigProperty(name = Naming.Security.JWT.ISSUE_KEY)
+    private transient String privateKeyText;
     
     /**
      * 
@@ -76,200 +106,237 @@ public class Security implements epf.client.security.Security, Serializable {
      * 
      */
     @Inject
-    @ConfigProperty(name = JWTConfig.EXPIRE_DURATION)
-    private transient Long jwtExpDuration;
+    @ConfigProperty(name = Naming.Security.JWT.EXPIRE_DURATION)
+    private transient Long expireAmount;
     
     /**
      * 
      */
     @Inject
-    @ConfigProperty(name = JWTConfig.EXPIRE_TIMEUNIT)
-    private transient ChronoUnit jwtExpTimeUnit;
+    @ConfigProperty(name = Naming.Security.JWT.EXPIRE_TIMEUNIT)
+    private transient ChronoUnit expireTimeUnit;
     
     /**
      * 
      */
     @Inject
-    private transient SecurityService service;
+    @ConfigProperty(name = Naming.Security.JWT.ENCRYPT_KEY)
+    private transient String encryptKeyText;
     
     /**
      * 
      */
-    @Context 
-    private transient SecurityContext context;
+    @Inject
+    private transient IdentityStore identityStore;
+    
+    /**
+     * 
+     */
+    @PostConstruct
+    protected void postConstruct(){
+        try {
+            privateKey = KeyUtil.generatePrivate("RSA", privateKeyText, Base64.getDecoder());
+            encryptKey = KeyUtil.generatePublic("RSA", encryptKeyText, Base64.getDecoder());
+        } 
+        catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "postConstruct", ex);
+        }
+    }
+    
+    /**
+     * @param username
+     * @param url
+     * @return
+     */
+    protected Token newToken(final String name, final Set<String> groups, final Set<String> audience, final Map<String, Object> claims) {
+    	final long now = Instant.now().getEpochSecond();
+    	final Token token = new Token();
+    	token.setAudience(audience);
+    	token.setClaims(claims);
+    	token.setExpirationTime(now + Duration.of(expireAmount, expireTimeUnit).getSeconds());
+    	token.setGroups(groups);
+    	token.setIssuedAtTime(now);
+    	token.setIssuer(issuer);
+    	token.setName(name);
+    	token.setSubject(name);
+    	return token;
+    }
+    
+    /**
+     * @param jsonWebToken
+     * @return
+     */
+    protected Token buildToken(final JsonWebToken jsonWebToken, final Set<String> groups, final Set<String> audience, final Map<String, Object> claims) {
+    	final long now = Instant.now().getEpochSecond();
+		final Token token = TokenUtil.from(jsonWebToken);
+		token.setAudience(audience);
+		token.setClaims(claims);
+		token.setExpirationTime(now + Duration.of(expireAmount, expireTimeUnit).getSeconds());
+		token.setIssuedAtTime(now);
+		token.setGroups(groups);
+		return token;
+    }
+    
+    /**
+     * @return
+     */
+    protected Set<String> buildAudience(final HttpHeaders headers, final URL url){
+    	final Set<String> audience = new HashSet<>();
+    	if(url != null) {
+    		audience.add(String.format(AUDIENCE_FORMAT, url.getProtocol(), url.getHost(), url.getPort()));
+    	}
+		final List<String> forwardedHost = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_HOST);
+		final List<String> forwardedPort = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_PORT);
+		final List<String> forwardedProto = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_PROTO);
+		if(forwardedHost != null && forwardedPort != null && forwardedProto != null) {
+			for(int i = 0; i < forwardedHost.size(); i++) {
+				audience.add(String.format(AUDIENCE_FORMAT, forwardedProto.get(i), forwardedHost.get(i), forwardedPort.get(i)));
+			}
+		}
+		return audience;
+    }
     
     @PermitAll
     @Override
     public String login(
             final String username,
             final String passwordHash,
-            final URL url) {
-    	final Credential credential = persistence.putContext()
-                .putCredential(
-                        username,
-                        passwordHash
-                );
-    	final TokenBuilder builder = new TokenBuilder(issuer, service);
-    	final long time = Instant.now().getEpochSecond();
-        final Token jwt = builder
-        		.expire(jwtExpTimeUnit, jwtExpDuration)
-        		.fromCredential(credential)
-        		.generator(generator)
-        		.time(time)
-        		.url(url)
-        		.userName(username)
-        		.build();
-        credential.putSession(jwt.getTokenID());
-        return jwt.getRawToken();
-    }
-    
-    @Override
-    public String logOut() {
-    	final Session session = removeSession(context, persistence);
-        if(session != null){
-            session.close();
-            return context.getUserPrincipal().getName();
-        }
-        throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
-    }
-    
-    @Override
-    public Token authenticate() {
-    	if(getSession(context, persistence) != null){
-    		final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
-    		final Token token = new TokenBuilder(issuer, service).build(jwt);
-    		token.setRawToken(null);
-    		return token;
-        }
-        throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
-    }
-    
-    /**
-     * @param context
-     * @param persistence
-     * @return
-     */
-    protected Session removeSession(final SecurityContext context, final Application persistence) {
-    	final Principal principal = context.getUserPrincipal();
-    	final epf.persistence.context.Context ctx = persistence.getContext();
-        if(principal != null && ctx != null){
-        	final Credential credential = ctx.getCredential(principal.getName());
-            if(credential != null && principal instanceof JsonWebToken){
-            	final JsonWebToken jwt = (JsonWebToken)principal;
-                return credential.removeSession(jwt.getTokenID());
-            }
-        }
-        throw new ForbiddenException();
-    }
-    
-    /**
-     * @param context
-     * @param persistence
-     * @return
-     */
-    protected static Session getSession(final SecurityContext context, final Application persistence) {
-    	Session session = null;
-    	final Principal principal = context.getUserPrincipal();
-    	final epf.persistence.context.Context ctx = persistence.getContext();
-    	Credential credential = null;
-    	JsonWebToken jwt = null;
-        if(principal != null && ctx != null){
-        	credential = ctx.getCredential(principal.getName());
-        }
-        if(credential != null && principal instanceof JsonWebToken){
-        	jwt = (JsonWebToken)principal;
-        	session = credential.getSession(jwt.getTokenID());
-        }
-        if(session != null && !session.checkExpirationTime(jwt.getExpirationTime())) {
-        	throw new ForbiddenException();
-        }
-        return session;
-    }
-    
-    /**
-     * @param context
-     * @param persistence
-     * @return
-     */
-    protected static Credential getCredential(final SecurityContext context, final Application persistence) {
-    	final Principal principal = context.getUserPrincipal();
-    	final epf.persistence.context.Context ctx = persistence.getContext();
-    	if(principal != null && ctx != null) {
-    		final Credential credential = ctx.getCredential(principal.getName());
-    		if(credential != null) {
-    			return credential;
+            final URL url,
+            final HttpHeaders headers) throws Exception {
+		final Set<String> audience = buildAudience(headers, url);
+    	final Password password = new Password(passwordHash);
+    	final UsernamePasswordCredential credential = new UsernamePasswordCredential(username, password);
+    	persistence.findSession(username).ifPresent(session -> {
+    		if(session.getPrincipal().equals(credential)) {
+    			throw new BadRequestException();
     		}
+    		else {
+    			throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
+    		}
+    	});
+    	final CredentialValidationResult validationResult = identityStore.validate(credential);
+    	if(Status.VALID.equals(validationResult.getStatus()) && validationResult.getCallerPrincipal() instanceof EPFPrincipal) {
+    		final Set<String> roles = identityStore.getCallerGroups(validationResult.getCallerPrincipal());
+    		final Map<String, Object> claims = identityStore.getCallerClaims(validationResult.getCallerPrincipal());
+    		final Token token = newToken(username, roles, audience, claims);
+    		final TokenBuilder builder = new TokenBuilder(token, privateKey, encryptKey);
+    		final Token newToken = builder.build();
+    		final EPFPrincipal principal = (EPFPrincipal) validationResult.getCallerPrincipal();
+    		persistence.putSession(principal, newToken);
+    		return newToken.getRawToken();
     	}
-    	throw new ForbiddenException();
+    	throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
     }
-
-	@Override
-	public void update(final CredentialInfo info) {
-		final Credential credential = getCredential(context, persistence);
-		service.setUserPassword(credential.getDefaultManager(), context.getUserPrincipal().getName(), info.getPassword().toCharArray());
+    
+    @Override
+    public String logOut(final SecurityContext context) throws Exception {
+    	final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
+    	final Session session = persistence.removeSession(jwt).orElseThrow(ForbiddenException::new);
+    	session.close();
+    	session.getPrincipal().close();
+    	return jwt.getName();
+    }
+    
+    @Override
+    public Token authenticate(final SecurityContext context) {
+    	final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
+    	persistence.getSession(jwt).orElseThrow(() -> new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build()));
+    	final Token token = TokenUtil.from(jwt);
+		token.setClaims(TokenUtil.getClaims(jwt));
+		token.setRawToken(null);
+		return token;
+    }
+    
+    @Override
+	public void update(final String password, final SecurityContext context) {
+    	final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
+    	final Session session = persistence.getSession(jwt).orElseThrow(ForbiddenException::new);
+    	identityStore.setCallerPassword(session.getPrincipal(), new Password(password));
 	}
 
 	@Override
-	public String revoke() {
-		final Session session = removeSession(context, persistence);
-		if(session != null) {
-			session.close();
-			if(context.getUserPrincipal() instanceof JsonWebToken) {
-				final JsonWebToken jsonWebToken = (JsonWebToken) context.getUserPrincipal();
-				try {
-					final URL url = new URL(jsonWebToken.getAudience().iterator().next());
-					final TokenBuilder builder = new TokenBuilder(issuer, service);
-					final Credential credential = getCredential(context, persistence);
-					final long time = Instant.now().getEpochSecond();
-			        final Token jwt = builder
-			        		.expire(jwtExpTimeUnit, jwtExpDuration)
-			        		.fromCredential(credential)
-			        		.generator(generator)
-			        		.time(time)
-			        		.url(url)
-			        		.userName(jsonWebToken.getName())
-			        		.build();
-			        credential.putSession(jwt.getTokenID());
-			        return jwt.getRawToken();
-				} 
-				catch (MalformedURLException e) {
-					throw new EPFException(e);
-				}
-			}
-		}
-        throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
-	}
-
-	@PermitAll
-	@Override
-	public String newOneTimePassword(final String username, final String passwordHash, final  URL url) {
-		final Credential credential = persistence.putContext()
-                .putCredential(
-                        username,
-                        passwordHash
-                );
-    	final TokenBuilder builder = new TokenBuilder(issuer, service);
-    	final long time = Instant.now().getEpochSecond();
-        final Token jwt = builder
-        		.expire(jwtExpTimeUnit, jwtExpDuration)
-        		.fromCredential(credential)
-        		.generator(generator)
-        		.time(time)
-        		.url(url)
-        		.userName(username)
-        		.build();
-        credential.putSession(jwt.getTokenID());
-        identityStore.putToken(jwt);
-        return jwt.getTokenID();
+	public String revoke(final HttpHeaders headers, final SecurityContext context) throws Exception {
+		final Set<String> audience = buildAudience(headers, null);
+		final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
+		final Session session = persistence.removeSession(jwt).orElseThrow(ForbiddenException::new);
+		final Set<String> groups = identityStore.getCallerGroups(session.getPrincipal());
+		final Map<String, Object> claims = identityStore.getCallerClaims(session.getPrincipal());
+		session.close();
+		final Token token = buildToken(jwt, groups, audience, claims);
+		final TokenBuilder builder = new TokenBuilder(token, privateKey, encryptKey);
+		final Token newToken = builder.build();
+		persistence.putSession(session.getPrincipal(), newToken);
+		return newToken.getRawToken();
 	}
 
 	@PermitAll
 	@Override
-	public String loginOneTimePassword(final String oneTimePassword) {
-		final Token token = identityStore.removeToken(oneTimePassword);
-		if(token != null) {
-			return token.getRawToken();
+	public String loginOneTime(
+			final String username, 
+			final String passwordHash, 
+			final  URL url,
+			final HttpHeaders headers) throws Exception {
+		final Set<String> audience = buildAudience(headers, url);
+		final Password password = new Password(passwordHash);
+    	final UsernamePasswordCredential credential = new UsernamePasswordCredential(username, password);
+    	final CredentialValidationResult validationResult = identityStore.validate(credential);
+    	if(Status.VALID.equals(validationResult.getStatus()) && validationResult.getCallerPrincipal() instanceof EPFPrincipal) {
+    		final Set<String> roles = identityStore.getCallerGroups(validationResult.getCallerPrincipal());
+    		final Map<String, Object> claims = identityStore.getCallerClaims(validationResult.getCallerPrincipal());
+    		final Token token = newToken(username, roles, audience, claims);
+    		final TokenBuilder builder = new TokenBuilder(token, privateKey, encryptKey);
+    		final Token newToken = builder.build();
+    		otpIdentityStore.putToken(newToken);
+    		return newToken.getTokenID();
+    	}
+    	throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
+	}
+
+	@PermitAll
+	@Override
+	public String authenticateOneTime(final String oneTimePassword) {
+		return otpIdentityStore
+				.removeToken(oneTimePassword)
+				.orElseThrow(() -> new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build()))
+				.getRawToken();
+	}
+
+	@ActivateRequestContext
+	@Override
+	public Token login(final String username, final String passwordHash, final String url) throws RemoteException {
+		try {
+			final Password password = new Password(passwordHash);
+	    	final UsernamePasswordCredential credential = new UsernamePasswordCredential(username, password);
+	    	final CredentialValidationResult validationResult = identityStore.validate(credential);
+	    	final Set<String> roles = identityStore.getCallerGroups(validationResult.getCallerPrincipal());
+    		final Set<String> audience = new HashSet<>();
+    		final URL audUrl = new URL(url);
+    		audience.add(String.format(AUDIENCE_FORMAT, audUrl.getProtocol(), audUrl.getHost(), audUrl.getPort()));
+    		final Map<String, Object> claims = identityStore.getCallerClaims(validationResult.getCallerPrincipal());
+    		final Token token = newToken(username, roles, audience, claims);
+    		final TokenBuilder builder = new TokenBuilder(token, privateKey, encryptKey);
+    		final Token newToken = builder.build();
+    		final EPFPrincipal principal = (EPFPrincipal) validationResult.getCallerPrincipal();
+    		persistence.putSession(principal, newToken);
+    		return newToken;
 		}
-		throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build()); 
+		catch(Exception ex) {
+			throw new RemoteException(ex.getMessage(), ex);
+		}
+	}
+
+	@ActivateRequestContext
+	@Override
+	public Token authenticate(final Token token) throws RemoteException {
+		final Session session = persistence.getSession(token).orElseThrow(() -> new RemoteException());
+    	return session.getToken();
+	}
+
+	@ActivateRequestContext
+	@Override
+	public String logout(final Token token) throws RemoteException {
+		final Session session = persistence.removeSession(token).orElseThrow(() -> new RemoteException());
+		session.close();
+		return session.getToken().getName();
 	}
 }

@@ -6,27 +6,26 @@ package epf.portlet.security;
 import java.io.Serializable;
 import java.net.URI;
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.Cookie;
 import epf.client.portlet.security.PrincipalView;
-import epf.client.security.Credential;
-import epf.client.security.Token;
-import epf.portlet.CookieUtil;
-import epf.portlet.RequestUtil;
-import epf.portlet.client.ClientUtil;
-import epf.portlet.registry.RegistryUtil;
-import epf.util.client.Client;
+import epf.client.util.Client;
+import epf.portlet.internal.gateway.GatewayUtil;
+import epf.portlet.internal.security.SecurityUtil;
+import epf.portlet.util.RequestUtil;
+import epf.portlet.util.http.CookieUtil;
+import epf.security.client.Credential;
+import epf.security.schema.Token;
+import epf.portlet.naming.Naming;
 
 /**
  * @author PC
  *
  */
 @ViewScoped
-@Named(Naming.SECURITY_PRINCIPAL)
+@Named(Naming.Security.SECURITY_PRINCIPAL)
 public class Principal implements PrincipalView, Serializable {
 
 	/**
@@ -49,13 +48,13 @@ public class Principal implements PrincipalView, Serializable {
 	 * 
 	 */
 	@Inject
-	private transient RegistryUtil registryUtil;
+	private transient GatewayUtil gatewayUtil;
 	
 	/**
 	 * 
 	 */
 	@Inject
-	private transient ClientUtil clientUtil;
+	private transient SecurityUtil clientUtil;
 	
 	/**
 	 * 
@@ -82,11 +81,11 @@ public class Principal implements PrincipalView, Serializable {
 	 */
 	@Override
 	public String logout() throws Exception {
-		try(Client client = clientUtil.newClient(registryUtil.get("security"))){
-			epf.client.security.Security.logOut(client);
+		try(Client client = clientUtil.newClient(gatewayUtil.get(epf.naming.Naming.SECURITY))){
+			epf.security.client.Security.logOut(client);
 		}
 		session.setToken(null);
-		cookieUtil.deleteCookie(Naming.SECURITY_TOKEN);
+		cookieUtil.deleteCookie(Naming.Security.SECURITY_TOKEN);
 		return "security";
 	}
 	
@@ -96,10 +95,8 @@ public class Principal implements PrincipalView, Serializable {
 	 */
 	@Override
 	public String update() throws Exception {
-		final Map<String, String> info = new HashMap<>();
-		info.put("password", new String(credential.getPassword()));
-		try(Client client = clientUtil.newClient(registryUtil.get("security"))){
-			epf.client.security.Security.update(client, info);
+		try(Client client = clientUtil.newClient(gatewayUtil.get(epf.naming.Naming.SECURITY))){
+			epf.security.client.Security.update(client, new String(credential.getPassword()));
 		}
 		return "principal";
 	}
@@ -110,19 +107,19 @@ public class Principal implements PrincipalView, Serializable {
 	 */
 	@Override
 	public void revoke() throws Exception {
-		final URI securityUrl = registryUtil.get("security");
+		final URI securityUrl = gatewayUtil.get(epf.naming.Naming.SECURITY);
 		String rawToken;
 		try(Client client = clientUtil.newClient(securityUrl)){
-			rawToken = epf.client.security.Security.revoke(client);
+			rawToken = epf.security.client.Security.revoke(client);
 		}
 		Token token;
 		try(Client client = clientUtil.newClient(securityUrl)){
 			client.authorization(rawToken);
-			token = epf.client.security.Security.authenticate(client);
+			token = epf.security.client.Security.authenticate(client);
 		}
 		token.setRawToken(rawToken);
 		session.setToken(token);
-		final Cookie cookie = new Cookie(Naming.SECURITY_TOKEN, rawToken);
+		final Cookie cookie = new Cookie(Naming.Security.SECURITY_TOKEN, rawToken);
 		cookie.setMaxAge((int)(token.getExpirationTime() - Instant.EPOCH.getEpochSecond()));
 		cookie.setDomain(requestUtil.getRequest().getServerName());
 		cookie.setHttpOnly(true);
@@ -141,7 +138,7 @@ public class Principal implements PrincipalView, Serializable {
 	}
 
 	@Override
-	public String getName() {
-		return session.getToken().getName();
+	public String getFullName() {
+		return (String)session.getToken().getClaims().get("full_name");
 	}
 }

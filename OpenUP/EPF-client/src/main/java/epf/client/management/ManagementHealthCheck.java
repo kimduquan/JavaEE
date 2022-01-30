@@ -13,23 +13,15 @@ import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadMXBean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.enterprise.context.ApplicationScoped;
-import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
-import org.eclipse.microprofile.health.Liveness;
-import org.eclipse.microprofile.health.Readiness;
 
 /**
  * @author PC
  *
  */
-@Liveness
-@Readiness
-@ApplicationScoped
-public class ManagementHealthCheck implements HealthCheck {
+public interface ManagementHealthCheck {
 
-	@Override
-	public HealthCheckResponse call() {
+	default HealthCheckResponse call() {
 		final ClassLoadingMXBean classLoading = ManagementFactory.getClassLoadingMXBean();
 		final CompilationMXBean compilation = ManagementFactory.getCompilationMXBean();
 		final MemoryMXBean memory = ManagementFactory.getMemoryMXBean();

@@ -36,7 +36,7 @@ public class AttributeBuilder {
 	/**
 	 * @return
 	 */
-	protected EmbeddedAttribute buidEmbeddedAttribute() {
+	protected EmbeddedAttribute buildEmbeddedAttribute() {
 		final Embeddable embeddable = embeddables.get(attribute.getType());
 		final JsonValue value = object.get(attribute.getName());
 		final EntityObject embeddedObject = new EntityObject(value != null ? value.asJsonObject() : JsonValue.EMPTY_JSON_OBJECT);
@@ -44,10 +44,10 @@ public class AttributeBuilder {
 				.getAttributes()
 				.stream()
 				.map(attr -> new AttributeBuilder()
-						.setAttribute(attr)
-						.setEmbeddables(embeddables)
-						.setEntities(entities)
-						.setObject(embeddedObject)
+						.attribute(attr)
+						.embeddables(embeddables)
+						.entities(entities)
+						.object(embeddedObject)
 						.build()
 						)
 				.collect(Collectors.toList());
@@ -67,27 +67,27 @@ public class AttributeBuilder {
 	 */
 	public BasicAttribute build() {
 		if(AttributeUtil.isEmbedded(attribute)) {
-			return buidEmbeddedAttribute();
+			return buildEmbeddedAttribute();
 		}
 		return buildBasicAttribute();
 	}
 
-	public AttributeBuilder setAttribute(final Attribute attribute) {
+	public AttributeBuilder attribute(final Attribute attribute) {
 		this.attribute = attribute;
 		return this;
 	}
 
-	public AttributeBuilder setObject(final EntityObject object) {
+	public AttributeBuilder object(final EntityObject object) {
 		this.object = object;
 		return this;
 	}
 
-	public AttributeBuilder setEmbeddables(final Map<String, Embeddable> embeddables) {
+	public AttributeBuilder embeddables(final Map<String, Embeddable> embeddables) {
 		this.embeddables = embeddables;
 		return this;
 	}
 
-	public AttributeBuilder setEntities(final Map<String, epf.client.schema.Entity> entities) {
+	public AttributeBuilder entities(final Map<String, epf.client.schema.Entity> entities) {
 		this.entities = entities;
 		return this;
 	}

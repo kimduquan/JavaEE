@@ -3,17 +3,14 @@
  */
 package epf.shell.persistence;
 
-import java.net.URI;
 import javax.ws.rs.core.Response;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
+import epf.naming.Naming;
 import epf.shell.Function;
-import epf.shell.client.ClientUtil;
 import epf.shell.security.Credential;
 import epf.shell.security.CallerPrincipal;
-import epf.util.Var;
-import epf.util.client.Client;
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -22,71 +19,67 @@ import picocli.CommandLine.Option;
  * @author PC
  *
  */
-@Command(name = "persistence")
+@Command(name = Naming.PERSISTENCE)
 @RequestScoped
 @Function
 public class Persistence {
-	/**
-	 * 
-	 */
-	@Inject @Named(epf.client.persistence.Persistence.PERSISTENCE_URL)
-	private transient Var<URI> persistenceUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
-	private transient ClientUtil clientUtil;
+	@RestClient
+	transient PersistenceClient persistence;
 	
 	/**
-	 * @param name
+	 * @param credential
+	 * @param schema
 	 * @param entity
-	 * @return
-	 * @throws Exception
+	 * @param data
 	 */
 	@Command(name = "persist")
 	public String persist(
 			@ArgGroup(exclusive = true, multiplicity = "1")
 			@CallerPrincipal
 			final Credential credential,
-			@Option(names = {"-n", "--name"}, description = "Name")
-			final String name, 
-			@Option(names = {"-e", "--entity"}, description = "Entity", interactive = true, echo = true)
-			final String entity) throws Exception {
-		try(Client client = clientUtil.newClient(persistenceUrl.get())){
-			client.authorization(credential.getToken());
-			try(Response response = epf.client.persistence.Entities.persist(client, name, entity)){
-				return response.readEntity(String.class);
-			}
+			@Option(names = {"-s", "--schema"}, description = "Schema")
+			final String schema,
+			@Option(names = {"-e", "--entity"}, description = "Entity")
+			final String entity, 
+			@Option(names = {"-d", "--data"}, description = "Entity", interactive = true, echo = true)
+			final String data) throws Exception {
+		try(Response response = persistence.persist(credential.getAuthHeader(), schema, entity, data)){
+			return response.readEntity(String.class);
 		}
 	}
 	
 	/**
-	 * @param name
-	 * @param id
+	 * @param credential
+	 * @param schema
 	 * @param entity
-	 * @throws Exception
+	 * @param entityId
+	 * @param data
 	 */
 	@Command(name = "merge")
 	public void merge(
 			@ArgGroup(exclusive = true, multiplicity = "1")
 			@CallerPrincipal
 			final Credential credential,
-			@Option(names = {"-n", "--name"}, description = "Name")
-			final String name, 
+			@Option(names = {"-s", "--schema"}, description = "Schema")
+			final String schema,
+			@Option(names = {"-e", "--entity"}, description = "Entity")
+			final String entity, 
 			@Option(names = {"-i", "--id"}, description = "ID")
 			final String entityId,
-			@Option(names = {"-e", "--entity"}, description = "Entity", interactive = true, echo = true)
-			final String entity) throws Exception {
-		try(Client client = clientUtil.newClient(persistenceUrl.get())){
-			client.authorization(credential.getToken());
-			epf.client.persistence.Entities.merge(client, name, entityId, entity);
-		}
+			@Option(names = {"-d", "--data"}, description = "Entity", interactive = true, echo = true)
+			final String data) throws Exception {
+		persistence.merge(credential.getAuthHeader(), schema, entity, entityId, data);
 	}
 	
 	/**
 	 * @param credential
-	 * @param name
+	 * @param schema
+	 * @param entity
 	 * @param entityId
 	 * @throws Exception
 	 */
@@ -95,13 +88,34 @@ public class Persistence {
 			@ArgGroup(exclusive = true, multiplicity = "1")
 			@CallerPrincipal
 			final Credential credential,
-			@Option(names = {"-n", "--name"}, description = "Name")
-			final String name, 
+			@Option(names = {"-s", "--schema"}, description = "Schema")
+			final String schema,
+			@Option(names = {"-e", "--entity"}, description = "Entity")
+			final String entity, 
 			@Option(names = {"-i", "--id"}, description = "ID")
 			final String entityId) throws Exception {
-		try(Client client = clientUtil.newClient(persistenceUrl.get())){
-			client.authorization(credential.getToken());
-			epf.client.persistence.Entities.remove(client, name, entityId);
+		persistence.remove(credential.getAuthHeader(), schema, entity, entityId);
+	}
+	
+	/**
+	 * @param credential
+	 * @param schema
+	 * @param entity
+	 * @param entityId
+	 */
+	@Command(name = "find")
+	public String find(
+			@ArgGroup(exclusive = true, multiplicity = "1")
+			@CallerPrincipal
+			final Credential credential,
+			@Option(names = {"-s", "--schema"}, description = "Schema")
+			final String schema,
+			@Option(names = {"-e", "--entity"}, description = "Entity")
+			final String entity, 
+			@Option(names = {"-i", "--id"}, description = "ID")
+			final String entityId) throws Exception {
+		try(Response response = persistence.find(credential.getAuthHeader(), schema, entity, entityId)){
+			return response.readEntity(String.class);
 		}
 	}
 }

@@ -17,7 +17,7 @@ import javax.resource.cci.ConnectionFactory;
  *
  */
 @ApplicationScoped
-@ApplicationPath("/script")
+@ApplicationPath("/")
 public class Engine extends Application {
 
 	/**

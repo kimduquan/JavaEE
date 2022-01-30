@@ -49,8 +49,8 @@ public class Principal implements PrincipalView {
 	}
 	
 	@Override
-	public String getName() {
-		return driver.findElement(By.cssSelector(".security.session.token.name")).getText();
+	public String getFullName() {
+		return driver.findElement(By.cssSelector(".security.session.token.claims.full_name")).getText();
 	}
 	
 	public void navigateToUpdate() {

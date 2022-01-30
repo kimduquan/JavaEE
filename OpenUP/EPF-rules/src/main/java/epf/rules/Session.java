@@ -17,7 +17,8 @@ import javax.rules.RuleRuntime;
 import javax.rules.RuleSessionCreateException;
 import javax.rules.RuleSessionTypeUnsupportedException;
 import javax.rules.StatefulRuleSession;
-import epf.util.logging.Logging;
+import org.eclipse.microprofile.health.Readiness;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
@@ -29,7 +30,7 @@ public class Session implements Serializable {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(Session.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Session.class.getName());
 
 	/**
 	 * 
@@ -44,7 +45,7 @@ public class Session implements Serializable {
 	/**
 	 * 
 	 */
-	@Inject
+	@Inject @Readiness
 	private transient Provider provider;
 	
 	/**

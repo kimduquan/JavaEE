@@ -23,25 +23,18 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
-import epf.util.client.Client;
+
+import epf.client.util.Client;
+import epf.naming.Naming;
+
 import javax.validation.constraints.*;
 
 /**
  *
  * @author FOXCONN
  */
-@Path("file")
+@Path(Naming.FILE)
 public interface Files {
-	
-    /**
-     * 
-     */
-    String ROOT = "epf.file.root";
-    
-    /**
-     * 
-     */
-    String FILE_URL = "epf.file.url";
 	
 	/**
 	 * @param paths

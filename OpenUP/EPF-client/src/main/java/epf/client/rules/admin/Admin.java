@@ -7,7 +7,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import epf.util.client.Client;
+import epf.client.util.Client;
+import epf.naming.Naming;
 import java.io.InputStream;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -20,7 +21,7 @@ import javax.ws.rs.client.Entity;
  * @author PC
  *
  */
-@Path("rules/admin")
+@Path(Naming.Rules.RULES_ADMIN)
 public interface Admin {
 
 	/**

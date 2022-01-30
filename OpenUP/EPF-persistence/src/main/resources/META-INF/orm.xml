@@ -3,7 +3,7 @@
 	<persistence-unit-metadata>
 		<persistence-unit-defaults>
 			<entity-listeners>
-				<entity-listener class="epf.schema.EntityListener">
+				<entity-listener class="epf.schema.utility.EntityListener">
 				</entity-listener>
 			</entity-listeners>
 		</persistence-unit-defaults>

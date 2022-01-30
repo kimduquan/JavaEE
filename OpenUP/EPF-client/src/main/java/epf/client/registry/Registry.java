@@ -12,23 +12,21 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import epf.util.client.Client;
+import javax.ws.rs.core.UriInfo;
+import epf.client.util.Client;
+import epf.naming.Naming;
 
 /**
  * @author PC
  *
  */
-@Path("registry")
+@Path(Naming.REGISTRY)
 public interface Registry {
-	
-    /**
-     * 
-     */
-    String REGISTRY_URL = "epf.registry.url";
     
 	/**
 	 * 
@@ -75,7 +73,7 @@ public interface Registry {
 	 * @return
 	 */
 	@GET
-	Response list(@QueryParam(VERSION) final String version);
+	Response list(@QueryParam(VERSION) final String version, @Context final UriInfo uriInfo);
 	
 	/**
 	 * @param client

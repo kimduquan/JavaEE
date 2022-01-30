@@ -9,6 +9,7 @@
 	<f:metadata>
 		<f:viewAction action="#{epf_persistence_entity.prePersist}"/>
 	</f:metadata>
+	<h:head></h:head>
 	<h:body>
 		<ui:composition template="../template.xhtml">
 			<ui:define name="main">
@@ -43,7 +44,7 @@
 										value="#{embeddedAttributeVar.value}"
 										styleClass="#{style.css(epf_persistence_entity.entity.type.concat('.').concat(attributeVar.attribute.name).concat('.').concat(embeddedAttributeVar.attribute.name))}">
 										<f:selectItems 
-											value="#{epf_persistence_entity.getValues(embeddedAttributeVar)}" 
+											value="#{epf_persistence_entity.getAssociationValues(embeddedAttributeVar)}" 
 											var="embeddedValueVar" 
 											itemLabel="#{embeddedValueVar.toString()}" 
 											itemValue="#{embeddedValueVar.id}"></f:selectItems>
@@ -53,7 +54,7 @@
 										value="#{embeddedAttributeVar.values}" 
 										styleClass="#{style.css(epf_persistence_entity.entity.type.concat('.').concat(attributeVar.attribute.name).concat('.').concat(embeddedAttributeVar.attribute.name))}">
 										<f:selectItems 
-											value="#{epf_persistence_entity.getValues(embeddedAttributeVar)}" 
+											value="#{epf_persistence_entity.getAssociationValues(embeddedAttributeVar)}" 
 											var="embeddedValueVar" 
 											itemLabel="#{embeddedValueVar.toString()}" 
 											itemValue="#{embeddedValueVar.id}"></f:selectItems>
@@ -64,7 +65,7 @@
 									value="#{attributeVar.value}" 
 									styleClass="#{style.css(epf_persistence_entity.entity.type.concat('.').concat(attributeVar.attribute.name))}">
 									<f:selectItems 
-										value="#{epf_persistence_entity.getValues(attributeVar)}" 
+										value="#{epf_persistence_entity.getAssociationValues(attributeVar)}" 
 										var="valueVar" 
 										itemLabel="#{valueVar.toString()}" 
 										itemValue="#{valueVar.id}"></f:selectItems>
@@ -74,7 +75,7 @@
 									value="#{attributeVar.values}" 
 									styleClass="#{style.css(epf_persistence_entity.entity.type.concat('.').concat(attributeVar.attribute.name))}">
 									<f:selectItems 
-										value="#{epf_persistence_entity.getValues(attributeVar)}" 
+										value="#{epf_persistence_entity.getAssociationValues(attributeVar)}" 
 										var="valueVar" 
 										itemLabel="#{valueVar.toString()}" 
 										itemValue="#{valueVar.id}"></f:selectItems>

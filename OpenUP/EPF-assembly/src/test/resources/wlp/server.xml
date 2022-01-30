@@ -2,24 +2,34 @@
 
     <!-- Enable features -->
     <featureManager>
-        <feature>microProfile-4.0</feature>
-        <feature>jpa-2.2</feature>
+        <feature>microProfile-3.3</feature>
         <feature>mpGraphQL-1.0</feature>
-        <feature>mpContextPropagation-1.2</feature>
-        <!--<feature>sessionCache-1.0</feature>-->
+        <feature>mpContextPropagation-1.0</feature>
+        <feature>mpReactiveMessaging-1.0</feature>
+        <feature>sessionCache-1.0</feature>
         <feature>transportSecurity-1.0</feature>
         <feature>batch-1.0</feature>
         <feature>batchManagement-1.0</feature>
         <feature>wasJmsServer-1.0</feature>
         <feature>wasJmsClient-2.0</feature>
-        <feature>webProfile-8.0</feature>
+        <feature>beanValidation-2.0</feature>
+        <feature>jpa-2.2</feature>
+        <feature>websocket-1.1</feature>
         <feature>jca-1.7</feature>
+        <feature>jsf-2.3</feature>
     </featureManager>
-
+    
+	<variable name="io.openliberty.enableGraphQLUI" value="true" />
     <httpEndpoint id="defaultHttpEndpoint"
                   host="localhost"
                   httpPort="80"
                   httpsPort="443" />
+	<application id="EPF-schedule" name="EPF-schedule" context-root="schedule" location="EPF-schedule-1.0.0.war" startAfterRef="EPF-messaging" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
+    <application id="EPF-shell-schedule" name="EPF-shell-schedule" context-root="shell-schedule" location="EPF-shell-schedule-1.0.0.war" startAfterRef="EPF-messaging" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
 	<application id="EPF-batch" name="EPF-batch" context-root="batch" location="EPF-batch-1.0.0.war" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
@@ -38,13 +48,16 @@
 	<application id="EPF-messaging" name="EPF-messaging" context-root="messaging" location="EPF-messaging-1.0.0.war" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
+	<application id="EPF-logging" name="EPF-logging" context-root="logging" location="EPF-logging-1.0.0.war" startAfterRef="EPF-messaging" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
     <application id="EPF-lang" name="EPF-lang" context-root="lang" location="EPF-lang-1.0.0.war" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-    <application id="EPF-cache" name="EPF-cache" context-root="cache" location="EPF-cache-1.0.0.war" startAfterRef="EPF-messaging" >
+    <application id="EPF-cache" name="EPF-cache" context-root="cache" location="EPF-cache-1.0.0.war" startAfterRef="EPF-messaging,EPF-persistence" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-	<application id="EPF-file" name="EPF-file" context-root="file" location="EPF-file-1.0.0.war" >
+	<application id="EPF-file" name="EPF-file" context-root="file" location="EPF-file-1.0.0.war" startAfterRef="EPF-messaging" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
     <application id="EPF-image" name="EPF-image" context-root="image" location="EPF-image-1.0.0.war" >
@@ -56,18 +69,16 @@
 	<application id="EPF-planning" name="EPF-planning" context-root="planning" location="EPF-planning-1.0.0.war" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-	<application id="EPF-persistence" name="EPF-persistence" context-root="persistence" location="EPF-persistence-1.0.0.war" startAfterRef="EPF-messaging" >
+	<application id="EPF-persistence" name="EPF-persistence" context-root="persistence" location="EPF-persistence-1.0.0.war" startAfterRef="EPF-schema,EPF-messaging" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-    <application id="EPF-gateway" name="EPF-gateway" context-root="gateway" location="EPF-gateway-1.0.0.war" startAfterRef="EPF-registry" >
+    <!-- <application id="EPF-webapp" name="EPF-webapp" context-root="webapp" location="EPF-webapp-1.0.0.war" startAfterRef="EPF-persistence,EPF-gateway" /> -->
+    <application id="EPF-net" name="EPF-net" context-root="net" location="EPF-net-1.0.0.war" startAfterRef="EPF-messaging" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-	<application id="EPF-webapp" name="EPF-webapp" context-root="webapp" location="EPF-webapp-1.0.0.war" startAfterRef="EPF-persistence,EPF-gateway" />
-    
-    <!-- H2 Library Configuration -->
-    <library id="H2JDBCLib">
-        <fileset dir="${shared.resource.dir}/epf" includes="h2*.jar"/>
-    </library>
+    <application id="EPF-schema" name="EPF-schema" context-root="schema" location="EPF-schema-1.0.0.war">
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
     
     <!-- EPF Library Configuration -->
     <library id="EPFLib">
@@ -75,30 +86,67 @@
     </library>
     
     <library id="JCacheLib">
-        <file name="${shared.resource.dir}/epf/hazelcast-4.2.jar"/>
+        <file name="${shared.resource.dir}/epf/cache/hazelcast-3.12.12.jar"/>
     </library>
     
     <library id="OpenCVLib">
-        <file name="/usr/share/java/opencv-420.jar"/>
-        <file name="/usr/lib/x86_64-linux-gnu/libopencv_core.so"/>
+        <file name="${opencv_java}"/>
+        <file name="${opencv_core}"/>
     </library>
     
-    <!-- uri="file://${server.config.dir}hazelcast.xml" -->
-    <httpSessionCache libraryRef="JCacheLib" uri="file://${server.config.dir}hazelcast-config.xml" />
+    <httpSessionCache libraryRef="JCacheLib" uri="file:${server.config.dir}hazelcast-config.xml">
+    	<!--<properties hazelcast.config.location="file:${server.config.dir}hazelcast-config.xml" hazelcast.jcache.provider.type="member"/>-->
+    </httpSessionCache>
     
     <mpJwt 
         id="EPF"
-        audiences ="http://localhost/,https://localhost/,http://localhost:8080/,https://localhost:8443/">
+        audiences ="http://localhost/,https://localhost/,http://localhost:${httpWebPort}/,https://localhost:${httpsWebPort}/">
     </mpJwt>
 
-    <dataSource id="epf" jndiName="jdbc/epf">
-        <!-- Define the DataSource class names on the <jdbcDriver> element -->
-        <jdbcDriver 
-            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
-            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
-            libraryRef="H2JDBCLib" />
-        <properties URL="jdbc:h2:~/EPF;AUTO_SERVER=TRUE;PASSWORD_HASH=TRUE;AUTO_RECONNECT=TRUE" />
+	<dataSource id="epf" jndiName="jdbc/epf">
+        <jdbcDriver libraryRef="MySQLJDBCLib"/>
+    	<properties serverName="localhost" portNumber="3306" user="epf" password="Password1234****" />
+    </dataSource>
+    
+    <library id="MySQLJDBCLib">
+        <fileset dir="${shared.resource.dir}/epf/persistence" includes="*.jar"/>
+    </library>
+    
+    <dataSource id="epf_schema" jndiName="jdbc/epf_schema">
+        <jdbcDriver libraryRef="MySQLJDBCLib"/>
+    	<properties serverName="localhost" portNumber="3306" user="epf" password="Password1234****" />
+    </dataSource>
+	<dataSource id="epf_delivery_processes" jndiName="jdbc/epf_delivery_processes">
+        <jdbcDriver libraryRef="MySQLJDBCLib"/>
+    	<properties serverName="localhost" portNumber="3306" />
+    </dataSource>
+    <dataSource id="epf_roles" jndiName="jdbc/epf_roles">
+        <jdbcDriver libraryRef="MySQLJDBCLib"/>
+    	<properties serverName="localhost" portNumber="3306" />
+    </dataSource>
+    <dataSource id="epf_tasks" jndiName="jdbc/epf_tasks">
+        <jdbcDriver libraryRef="MySQLJDBCLib"/>
+    	<properties serverName="localhost" portNumber="3306" />
+    </dataSource>
+    <dataSource id="epf_work_products" jndiName="jdbc/epf_work_products">
+        <jdbcDriver libraryRef="MySQLJDBCLib"/>
+    	<properties serverName="localhost" portNumber="3306" />
+    </dataSource>
+    <dataSource id="openup" jndiName="jdbc/openup">
+        <jdbcDriver libraryRef="MySQLJDBCLib"/>
+    	<properties serverName="localhost" portNumber="3306" />
+    </dataSource>
+    <dataSource id="ft" jndiName="jdbc/ft">
+        <jdbcDriver libraryRef="MySQLJDBCLib"/>
+    	<properties serverName="localhost" portNumber="3306" />
+    </dataSource>
+    <dataSource id="epf_net" jndiName="jdbc/epf_net">
+        <jdbcDriver libraryRef="MySQLJDBCLib"/>
+    	<properties serverName="localhost" portNumber="3306" />
+    </dataSource>
+	<dataSource id="epf_security" jndiName="jdbc/epf_security">
+        <jdbcDriver libraryRef="MySQLJDBCLib"/>
+    	<properties serverName="localhost" portNumber="3306" />
     </dataSource>
 
     <keyStore id="defaultKeyStore" password="password"/>
@@ -118,7 +166,7 @@
     <jmsQueue id="batchJobSubmissionQueue" 
              jndiName="jms/batch/jobSubmissionQueue">
             <properties.wasJms deliveryMode="Persistent" 
-                               queuename="batchEPFQueue">
+                               queueName="batchEPFQueue">
             </properties.wasJms>
     </jmsQueue>
     <batchJmsExecutor />

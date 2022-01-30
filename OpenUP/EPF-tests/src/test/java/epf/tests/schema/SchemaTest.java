@@ -5,8 +5,6 @@ package epf.tests.schema;
 
 import java.net.URI;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import org.junit.After;
@@ -14,15 +12,16 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
 import epf.client.schema.Entity;
 import epf.client.schema.Schema;
+import epf.client.util.Client;
+import epf.naming.Naming;
 import epf.tests.client.ClientUtil;
-import epf.tests.persistence.EntitiesTest;
-import epf.tests.registry.RegistryUtil;
 import epf.tests.security.SecurityUtil;
-import epf.util.client.Client;
-import epf.util.logging.Logging;
+import epf.client.gateway.GatewayUtil;
 
 /**
  * @author PC
@@ -30,10 +29,11 @@ import epf.util.logging.Logging;
  */
 public class SchemaTest {
 	
-	private static final Logger logger = Logging.getLogger(EntitiesTest.class.getName());
+	@Rule
+    public TestName testName = new TestName();
+	
 	private static URI schemaUrl;
     private static String token;
-    private static String adminToken;
     private Client client;
 
 	/**
@@ -41,9 +41,8 @@ public class SchemaTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		schemaUrl = RegistryUtil.lookup("schema", null);
-    	token = SecurityUtil.login("any_role1", "any_role");
-    	adminToken = SecurityUtil.login("admin1", "admin");
+		schemaUrl = GatewayUtil.get(Naming.SCHEMA);
+    	token = SecurityUtil.login();
 	}
 
 	/**
@@ -52,7 +51,6 @@ public class SchemaTest {
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		SecurityUtil.logOut(token);
-    	SecurityUtil.logOut(adminToken);
 	}
 
 	/**
@@ -69,12 +67,7 @@ public class SchemaTest {
 	 */
 	@After
 	public void tearDown() throws Exception {
-		try {
-			client.close();
-		} 
-    	catch (Exception e) {
-    		logger.log(Level.WARNING, "after", e);
-		}
+		client.close();
 	}
 	
     @Test

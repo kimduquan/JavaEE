@@ -9,9 +9,10 @@ import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Type;
 import javax.persistence.metamodel.Type.PersistenceType;
 import epf.client.schema.Attribute;
+import epf.client.schema.Table;
 import epf.client.schema.util.AttributeComparator;
-import epf.persistence.impl.Entity;
-import epf.util.logging.Logging;
+import epf.persistence.internal.Entity;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
@@ -22,7 +23,7 @@ public class EntityBuilder {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(EntityBuilder.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(EntityBuilder.class.getName());
 
 	/**
 	 * @param entity
@@ -56,6 +57,7 @@ public class EntityBuilder {
 				LOGGER.throwing(getClass().getName(), "build", ex);
 			}
 		}
+		entityType.setTable(buildTable(type.getJavaType()));
 		return entityType;
 	}
 	
@@ -82,5 +84,18 @@ public class EntityBuilder {
 			break;
 		}
 		return entityType;
+	}
+	
+	/**
+	 * @param cls
+	 * @return
+	 */
+	protected static Table buildTable(final Class<?> cls) {
+		final javax.persistence.Table tableAnnotation = cls.getAnnotation(javax.persistence.Table.class);
+		final Table table = new Table();
+		table.setCatalog(tableAnnotation.catalog());
+		table.setName(tableAnnotation.name());
+		table.setSchema(tableAnnotation.schema());
+		return table;
 	}
 }

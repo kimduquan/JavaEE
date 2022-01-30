@@ -5,8 +5,8 @@ package epf.gateway.messaging;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,18 +15,18 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.websocket.CloseReason;
-import javax.websocket.ContainerProvider;
-import javax.websocket.DeploymentException;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
-import javax.websocket.WebSocketContainer;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
-
-import epf.util.SystemUtil;
+import org.eclipse.microprofile.context.ManagedExecutor;
+import epf.gateway.Registry;
+import epf.gateway.security.SecurityUtil;
+import epf.naming.Naming;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
@@ -35,6 +35,11 @@ import epf.util.SystemUtil;
 @ServerEndpoint("/messaging/{path}")
 @ApplicationScoped
 public class Messaging {
+	
+	/**
+	 * 
+	 */
+	private static final Logger LOGGER = LogManager.getLogger(Messaging.class.getName());
 	
 	/**
 	 * 
@@ -50,7 +55,13 @@ public class Messaging {
 	 * 
 	 */
 	@Inject
-	private transient Logger logger;
+	transient ManagedExecutor executor;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	transient Registry registry;
 	
 	/**
 	 * 
@@ -58,12 +69,13 @@ public class Messaging {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI messagingUrl = new URI(SystemUtil.getenv("epf.messaging.url"));
-			final WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-			remotes.put("persistence", new Remote(container, messagingUrl.resolve("persistence")));
+			final URI messagingUrl = registry.lookup(Naming.MESSAGING);
+			final Remote persistence = new Remote(messagingUrl.resolve(Naming.PERSISTENCE));
+			remotes.put(Naming.PERSISTENCE, persistence);
+			executor.submit(persistence);
 		} 
-		catch (URISyntaxException | DeploymentException | IOException e) {
-			logger.log(Level.SEVERE, "postConstruct", e);
+		catch (Exception e) {
+			LOGGER.log(Level.SEVERE, "postConstruct", e);
 		}
 	}
 	
@@ -77,7 +89,7 @@ public class Messaging {
 				server.close();
 			} 
 			catch (Exception e) {
-				logger.throwing(Remote.class.getName(), "close", e);
+				LOGGER.throwing(Remote.class.getName(), "close", e);
 			}
 		});
 	}
@@ -85,14 +97,49 @@ public class Messaging {
 	/**
 	 * @param path
 	 * @param session
+	 * @throws Exception 
 	 */
 	@OnOpen
-    public void onOpen(@PathParam(PATH) final String path, final Session session) {
+    public void onOpen(@PathParam(PATH) final String path, final Session session) throws Exception {
+		final Optional<String> tokenId = SecurityUtil.getTokenId(session);
+		if(tokenId.isPresent()) {
+			remotes.computeIfPresent(path, (p, remote) -> {
+				remote.onOpen(session);
+				return remote;
+				}
+			);
+		}
+		if(tokenId.isEmpty()) {
+			closeSession(path, session);
+		}
+		else {
+			final URI cacheUrl = registry.lookup(Naming.CACHE);
+			final URI securityUrl = registry.lookup(Naming.SECURITY);
+			SecurityUtil.authenticateTokenId(tokenId.get(), cacheUrl, securityUrl).thenAccept(succeed -> {
+				if(!succeed) {
+					closeSession(path, session);
+				}
+			});
+		}
+	}
+	
+	/**
+	 * @param path
+	 * @param session
+	 */
+	protected void closeSession(final String path, final Session session) {
+		final CloseReason reason = new CloseReason(CloseReason.CloseCodes.VIOLATED_POLICY, "");
 		remotes.computeIfPresent(path, (p, remote) -> {
-			remote.getServer().onOpen(session);
+			remote.onClose(session, reason);
 			return remote;
 			}
 		);
+		try {
+			session.close(reason);
+		} 
+		catch (IOException e) {
+			LOGGER.throwing(LOGGER.getName(), "onOpen", e);
+		}
 	}
 	
 	/**
@@ -103,7 +150,7 @@ public class Messaging {
 	@OnClose
     public void onClose(@PathParam(PATH) final String path, final Session session, final CloseReason closeReason) {
 		remotes.computeIfPresent(path, (p, remote) -> {
-			remote.getServer().onClose(session, closeReason);
+			remote.onClose(session, closeReason);
 			return remote;
 			}
 		);
@@ -116,11 +163,7 @@ public class Messaging {
 	 */
 	@OnMessage
     public void onMessage(@PathParam(PATH) final String path, final String message, final Session session) {
-		remotes.computeIfPresent(path, (p, remote) -> {
-			remote.getServer().onMessage(message, session);
-			return remote;
-			}
-		);
+		
 	}
 	
 	/**
@@ -131,7 +174,7 @@ public class Messaging {
 	@OnError
     public void onError(@PathParam(PATH) final String path, final Session session, final Throwable throwable) {
 		remotes.computeIfPresent(path, (p, remote) -> {
-			remote.getServer().onError(session, throwable);
+			remote.onError(session, throwable);
 			return remote;
 			}
 		);

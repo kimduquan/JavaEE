@@ -9,6 +9,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import epf.client.portlet.persistence.QueryView;
+import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
 
 /**
@@ -18,10 +19,17 @@ import jakarta.inject.Inject;
 public class Query implements QueryView {
 	
 	private final WebDriver driver;
+	private Persistence view;
 	
 	@Inject
-	public Query(WebDriver driver) {
+	public Query(WebDriver driver, Persistence view) {
 		this.driver = driver;
+		this.view = view;
+	}
+	
+	@PostConstruct
+	void navigateTo() {
+		view.navigateToQuery();
 	}
 
 	@Override

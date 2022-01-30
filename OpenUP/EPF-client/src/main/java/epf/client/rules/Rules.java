@@ -16,13 +16,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import epf.util.client.Client;
+import epf.client.util.Client;
+import epf.naming.Naming;
 
 /**
  * @author PC
  *
  */
-@Path("rules")
+@Path(Naming.RULES)
 public interface Rules {
 
 	/**
@@ -34,11 +35,6 @@ public interface Rules {
 	 * 
 	 */
 	String PROVIDER_URI = "epf.rules.provider.uri";
-	
-	/**
-	 * 
-	 */
-	String RULES_URL = "epf.rules.url";
 	
 	/**
 	 * @param ruleSet

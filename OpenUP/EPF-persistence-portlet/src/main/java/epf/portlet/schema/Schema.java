@@ -17,21 +17,20 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import epf.client.portlet.persistence.SchemaView;
 import epf.client.schema.Entity;
-import epf.portlet.Event;
-import epf.portlet.EventUtil;
-import epf.portlet.Parameter;
-import epf.portlet.ParameterUtil;
-import epf.portlet.client.ClientUtil;
-import epf.portlet.registry.RegistryUtil;
-import epf.util.client.Client;
-import epf.util.logging.Logging;
+import epf.client.util.Client;
+import epf.portlet.internal.gateway.GatewayUtil;
+import epf.portlet.naming.Naming;
+import epf.portlet.internal.security.SecurityUtil;
+import epf.portlet.util.EventUtil;
+import epf.portlet.util.ParameterUtil;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
  *
  */
 @ViewScoped
-@Named(Naming.SCHEMA)
+@Named(Naming.Schema.SCHEMA)
 public class Schema implements SchemaView, Serializable {
 	
 	/**
@@ -42,7 +41,7 @@ public class Schema implements SchemaView, Serializable {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(Schema.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Schema.class.getName());
 	
 	/**
 	 * 
@@ -58,13 +57,13 @@ public class Schema implements SchemaView, Serializable {
 	 * 
 	 */
 	@Inject
-	private transient RegistryUtil registryUtil;
+	private transient GatewayUtil gatewayUtil;
 	
 	/**
 	 * 
 	 */
 	@Inject
-	private transient ClientUtil clientUtil;
+	private transient SecurityUtil clientUtil;
 	
 	/**
 	 * 
@@ -85,7 +84,7 @@ public class Schema implements SchemaView, Serializable {
 	protected void postConstruct() {
 		try {
 			entities = fetchEntities();
-			entity = paramUtil.getValue(Parameter.SCHEMA_ENTITY);
+			entity = paramUtil.getValue(Naming.Parameter.SCHEMA_ENTITY);
 		} 
 		catch (Exception e) {
 			LOGGER.throwing(getClass().getName(), "postConstruct", e);
@@ -97,7 +96,7 @@ public class Schema implements SchemaView, Serializable {
 	 * @throws Exception
 	 */
 	protected List<Entity> fetchEntities() throws Exception{
-		final URI schemaUrl = registryUtil.get("schema");
+		final URI schemaUrl = gatewayUtil.get(epf.naming.Naming.SCHEMA);
 		try(Client client = clientUtil.newClient(schemaUrl)){
 			try(Response response = epf.client.schema.Schema.getEntities(client)){
 				return response.readEntity(new GenericType<List<Entity>>() {});
@@ -135,8 +134,8 @@ public class Schema implements SchemaView, Serializable {
 		entity = event.getNewValue().toString();
 		final Optional<Entity> selectedEntity = entities.stream().filter(e -> e.getName().equals(entity)).findFirst();
 		if(selectedEntity.isPresent()) {
-			eventUtil.setEvent(Event.SCHEMA_ENTITY, selectedEntity.get());
+			eventUtil.setEvent(Naming.Event.SCHEMA_ENTITY, selectedEntity.get());
 		}
-		paramUtil.setValue(Parameter.SCHEMA_ENTITY, entity);
+		paramUtil.setValue(Naming.Parameter.SCHEMA_ENTITY, entity);
 	}
 }

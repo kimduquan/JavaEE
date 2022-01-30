@@ -1,5 +1,6 @@
 package epf.util;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -13,20 +14,20 @@ public class Var<T> {
 	/**
 	 * 
 	 */
-	private transient T object;
+	private transient Optional<T> object;
 	
 	/**
 	 * 
 	 */
 	public Var() {
-		super();
+		object = Optional.empty();
 	}
 	
 	/**
 	 * @param object
 	 */
 	public Var(final T object) {
-		this.object = object;
+		this.object = Optional.ofNullable(object);
 	}
 	
 	/**
@@ -34,14 +35,14 @@ public class Var<T> {
 	 * @return
 	 */
 	public T set(final T object) {
-		this.object = object;
+		this.object = Optional.ofNullable(object);
 		return object;
 	}
 	
 	/**
 	 * @return
 	 */
-	public T get() {
+	public Optional<T> get() {
 		return object;
 	}
 	
@@ -49,13 +50,14 @@ public class Var<T> {
 	 * @param setter
 	 */
 	public void set(final Function<T, T> setter) {
-		object = setter.apply(object);
+		final T newObject = setter.apply(object.orElse(null));
+		object = Optional.ofNullable(newObject);
 	}
 	
 	/**
 	 * @param getter
 	 */
 	public void get(final Consumer<T> getter) {
-		getter.accept(object);
+		getter.accept(object.orElse(null));
 	}
 }

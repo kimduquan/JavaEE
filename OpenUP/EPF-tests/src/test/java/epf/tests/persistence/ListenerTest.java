@@ -1,73 +1,73 @@
-<<<<<<< HEAD:OpenUP/EPF-tests/src/test/java/epf/tests/service/persistence/ListenerTest.java
-package epf.tests.service.persistence;
-=======
 package epf.tests.persistence;
->>>>>>> remotes/origin/micro:OpenUP/EPF-tests/src/test/java/epf/tests/persistence/ListenerTest.java
 
 import java.net.URI;
 import java.time.Duration;
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import javax.websocket.ContainerProvider;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.sse.SseEventSource;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-
-import epf.client.messaging.MessageDecoder;
+import org.junit.Rule;
+import epf.client.gateway.GatewayUtil;
 import epf.client.persistence.Entities;
-import epf.schema.EPF;
-import epf.schema.PostPersist;
-import epf.schema.PostRemove;
-import epf.schema.work_products.Artifact;
-import epf.schema.work_products.section.Description;
-import epf.schema.work_products.section.Illustrations;
-import epf.schema.work_products.section.MoreInformation;
-import epf.schema.work_products.section.Relationships;
-import epf.schema.work_products.section.Tailoring;
+import epf.messaging.client.MessageDecoder;
+import epf.naming.Naming;
+import epf.schema.utility.PostPersist;
+import epf.schema.utility.PostRemove;
 import epf.tests.TestUtil;
 import epf.tests.client.ClientUtil;
-<<<<<<< HEAD:OpenUP/EPF-tests/src/test/java/epf/tests/service/persistence/ListenerTest.java
-import epf.tests.service.RegistryUtil;
-import epf.tests.service.SecurityUtil;
-=======
-import epf.tests.registry.RegistryUtil;
+import epf.tests.health.HealthUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
->>>>>>> remotes/origin/micro:OpenUP/EPF-tests/src/test/java/epf/tests/persistence/ListenerTest.java
 import epf.util.websocket.Client;
+import epf.work_products.schema.Artifact;
+import epf.work_products.schema.WorkProducts;
+import epf.work_products.schema.section.Description;
+import epf.work_products.schema.section.Illustrations;
+import epf.work_products.schema.section.MoreInformation;
+import epf.work_products.schema.section.Relationships;
+import epf.work_products.schema.section.Tailoring;
 import org.junit.Test;
+import org.junit.rules.TestName;
 
 public class ListenerTest {
+	
+	@Rule
+    public TestName testName = new TestName();
 	
 	private static int timeout = 60;
 	private static URI persistenceUrl;
 	private static URI listenerUrl;
 	private static URI streamUrl;
 	private static String token;
+	private static String tokenId;
 	private static ExecutorService executor;
 	private Client client;
-	private static epf.util.client.Client streamClient;
+	private Queue<String> messages;
+	private static epf.client.util.Client streamClient;
 	private static SseEventSource event;
 	private static Queue<String> events;
     
     @BeforeClass
     public static void beforeClass() throws Exception{
-    	persistenceUrl = RegistryUtil.lookup("persistence", null);
-    	URI messagingUrl = RegistryUtil.lookup("messaging", null);
-    	listenerUrl = new URI(messagingUrl.toString() + "/persistence");
-    	token = SecurityUtil.login("admin1", "admin");
-    	streamUrl = RegistryUtil.lookup("stream", null);
+    	HealthUtil.readỵ̣();
+    	persistenceUrl = GatewayUtil.get(Naming.PERSISTENCE);
+    	URI messagingUrl = UriBuilder.fromUri(GatewayUtil.get(Naming.MESSAGING)).scheme("ws").port(9080).build();
+    	token = SecurityUtil.login();
+    	tokenId = SecurityUtil.auth(token).getTokenID();
+    	listenerUrl = new URI(messagingUrl.toString() + "/persistence?tid=" + tokenId);
+    	streamUrl = GatewayUtil.get("stream");
     	executor = Executors.newFixedThreadPool(1);
     	streamClient = ClientUtil.newClient(streamUrl);
     	events = new ConcurrentLinkedQueue<>();
-    	event = streamClient.stream(target -> target.path("persistence"), b -> b);
+    	event = streamClient.stream(target -> target.path(Naming.PERSISTENCE).matrixParam("tid", tokenId), b -> b);
     	event.register(e -> {
     		String data = e.readData();
     		events.add(data);
@@ -87,40 +87,39 @@ public class ListenerTest {
     public void after() throws Exception {
     	client.close();
     	events.clear();
+    	messages.clear();
     }
     
     @Before
     public void before() throws Exception {
-    	client = Client.connectToServer(ContainerProvider.getWebSocketContainer(), listenerUrl);
+    	messages = new ConcurrentLinkedQueue<>();
+    	client = Client.connectToServer(listenerUrl);
+    	client.onMessage(messages::add);
     	TestUtil.waitUntil(t -> client.getSession().isOpen(), Duration.ofSeconds(timeout));
     }
 
     @Test
     public void test() throws Exception {
     	Artifact artifact = new Artifact();
-<<<<<<< HEAD:OpenUP/EPF-tests/src/test/java/epf/tests/service/persistence/ListenerTest.java
-        artifact.setName("Artifact Listener" + String.valueOf(Instant.now().toEpochMilli()));
-=======
         artifact.setName(StringUtil.randomString("Artifact Listener"));
->>>>>>> remotes/origin/micro:OpenUP/EPF-tests/src/test/java/epf/tests/persistence/ListenerTest.java
-        artifact.setSummary("Artifact Listener Summary");
+        artifact.setSummary("Artifact Listener test");
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
         artifact.setMoreInformation(new MoreInformation());
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
-    	try(epf.util.client.Client persistenceClient = ClientUtil.newClient(persistenceUrl)){
+    	try(epf.client.util.Client persistenceClient = ClientUtil.newClient(persistenceUrl)){
     		persistenceClient.authorization(token);
-    		Entities.persist(persistenceClient, Artifact.class, EPF.ARTIFACT, artifact);
-            Entities.remove(persistenceClient, EPF.ARTIFACT, artifact.getName());
+    		Entities.persist(persistenceClient, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
+            Entities.remove(persistenceClient, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
     	}
     	
-    	TestUtil.waitUntil((t) -> client.getMessages().stream().anyMatch(msg -> msg.contains(PostPersist.class.getName()) && msg.contains(artifact.getName())), Duration.ofSeconds(timeout));
-    	TestUtil.waitUntil((t) -> client.getMessages().stream().anyMatch(msg -> msg.contains(PostRemove.class.getName()) && msg.contains(artifact.getName())), Duration.ofSeconds(timeout));
+    	TestUtil.waitUntil((t) -> messages.stream().anyMatch(msg -> msg.contains(PostPersist.class.getName()) && msg.contains(artifact.getName())), Duration.ofSeconds(timeout));
+    	TestUtil.waitUntil((t) -> messages.stream().anyMatch(msg -> msg.contains(PostRemove.class.getName()) && msg.contains(artifact.getName())), Duration.ofSeconds(timeout));
     	MessageDecoder decoder = new MessageDecoder();
-    	String message = client.getMessages().stream().filter(msg -> msg.contains(PostPersist.class.getName()) && msg.contains(artifact.getName())).findFirst().get();
+    	String message = messages.stream().filter(msg -> msg.contains(PostPersist.class.getName()) && msg.contains(artifact.getName())).findFirst().get();
     	PostPersist persist = (PostPersist) decoder.decode(message);
-    	message = client.getMessages().stream().filter(msg -> msg.contains(PostRemove.class.getName()) && msg.contains(artifact.getName())).findFirst().get();
+    	message = messages.stream().filter(msg -> msg.contains(PostRemove.class.getName()) && msg.contains(artifact.getName())).findFirst().get();
     	PostRemove remove = (PostRemove) decoder.decode(message);
     	
     	Assert.assertNotNull("PostPersist", persist);
@@ -141,21 +140,17 @@ public class ListenerTest {
     @Test
     public void testStream() throws Exception {
     	Artifact artifact = new Artifact();
-<<<<<<< HEAD:OpenUP/EPF-tests/src/test/java/epf/tests/service/persistence/ListenerTest.java
-        artifact.setName("Artifact Listener Event" + String.valueOf(Instant.now().toEpochMilli()));
-=======
-        artifact.setName(StringUtil.randomString("Artifact Listener Event"));
->>>>>>> remotes/origin/micro:OpenUP/EPF-tests/src/test/java/epf/tests/persistence/ListenerTest.java
-        artifact.setSummary("Artifact Listener Event Summary");
+        artifact.setName(StringUtil.randomString("Artifact Listener"));
+        artifact.setSummary("Artifact Listener testStream");
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
         artifact.setMoreInformation(new MoreInformation());
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
-    	try(epf.util.client.Client persistenceClient = ClientUtil.newClient(persistenceUrl)){
+    	try(epf.client.util.Client persistenceClient = ClientUtil.newClient(persistenceUrl)){
     		persistenceClient.authorization(token);
-    		Entities.persist(persistenceClient, Artifact.class, EPF.ARTIFACT, artifact);
-            Entities.remove(persistenceClient, EPF.ARTIFACT, artifact.getName());
+    		Entities.persist(persistenceClient, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
+            Entities.remove(persistenceClient, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
     	}
     	
     	TestUtil.waitUntil((t) -> events.stream().anyMatch(msg -> msg.contains(PostPersist.class.getName()) && msg.contains(artifact.getName())), Duration.ofSeconds(timeout));

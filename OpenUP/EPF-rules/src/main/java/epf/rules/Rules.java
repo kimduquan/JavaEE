@@ -5,7 +5,6 @@ package epf.rules;
 
 import java.io.InputStream;
 import java.util.List;
-import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.json.bind.Jsonb;
@@ -16,7 +15,8 @@ import javax.rules.StatelessRuleSession;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import epf.schema.roles.Role;
+import org.eclipse.microprofile.health.Readiness;
+import epf.naming.Naming;
 import epf.util.json.Adapter;
 import epf.util.json.Decoder;
 import epf.util.json.Encoder;
@@ -25,15 +25,14 @@ import epf.util.json.Encoder;
  * @author PC
  *
  */
-@Path("rules")
+@Path(Naming.RULES)
 @RequestScoped
-@RolesAllowed(Role.DEFAULT_ROLE)
 public class Rules implements epf.client.rules.Rules {
 	
 	/**
 	 * 
 	 */
-	@Inject
+	@Inject @Readiness
 	private transient Provider provider;
 	
 	/**

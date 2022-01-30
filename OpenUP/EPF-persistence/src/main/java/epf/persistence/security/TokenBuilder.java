@@ -1,165 +1,79 @@
 package epf.persistence.security;
 
-import java.net.URL;
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
-import java.util.HashSet;
-import java.util.Set;
-import org.eclipse.microprofile.jwt.JsonWebToken;
-import epf.client.EPFException;
-import epf.client.security.Token;
-import epf.persistence.context.Credential;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import org.eclipse.microprofile.jwt.Claims;
+import org.jose4j.jws.AlgorithmIdentifiers;
+import org.jose4j.jws.JsonWebSignature;
+import org.jose4j.jwt.JwtClaims;
+import org.jose4j.jwt.NumericDate;
+import epf.security.schema.Token;
 
 /**
  * @author PC
  *
  */
 public class TokenBuilder {
-
-	/**
-	 * 
-	 */
-	private transient Credential credential;
-	/**
-	 * 
-	 */
-	private transient String name;
-	/**
-	 * 
-	 */
-	private transient long issuedAtTime;
-	/**
-	 * 
-	 */
-	private transient TokenGenerator tokenGenerator;
-	/**
-	 * 
-	 */
-	private transient URL audience;
-	/**
-	 * 
-	 */
-	private transient long expireDuration;
-	/**
-	 * 
-	 */
-	private transient ChronoUnit expireTimeUnit;
-	/**
-	 * 
-	 */
-	private transient final String issuer;
 	
 	/**
 	 * 
 	 */
-	private transient final SecurityService service;
+	private transient final Token token;
 	
 	/**
-	 * @param issuer
+	 * 
 	 */
-	public TokenBuilder(final String issuer, final SecurityService service) {
-		this.issuer = issuer;
-		this.service = service;
-	}
+	private transient final PrivateKey privateKey;
 	
 	/**
-	 * @param credential
-	 * @return
+	 * 
 	 */
-	public TokenBuilder fromCredential(final Credential credential) {
-		this.credential = credential;
-		return this;
-	}
-
+	private transient final PublicKey encryptKey;
+	
 	/**
-	 * @param name
-	 * @return
+	 * @param token
+	 * @param privateKey
+	 * @param encryptKey
 	 */
-	public TokenBuilder userName(final String name) {
-		this.name = name;
-		return this;
-	}
-
-	/**
-	 * @param issuedAtTime
-	 * @return
-	 */
-	public TokenBuilder time(final long issuedAtTime) {
-		this.issuedAtTime = issuedAtTime;
-		return this;
-	}
-
-	/**
-	 * @param generator
-	 * @return
-	 */
-	public TokenBuilder generator(final TokenGenerator generator) {
-		this.tokenGenerator = generator;
-		return this;
-	}
-
-	/**
-	 * @param url
-	 * @return
-	 */
-	public TokenBuilder url(final URL url) {
-		this.audience = url;
-		return this;
-	}
-
-	/**
-	 * @param timeUnit
-	 * @param duration
-	 * @return
-	 */
-	public TokenBuilder expire(final ChronoUnit timeUnit, final long duration) {
-		this.expireDuration = duration;
-		this.expireTimeUnit = timeUnit;
-		return this;
+	public TokenBuilder(final Token token, final PrivateKey privateKey, final PublicKey encryptKey) {
+		Objects.requireNonNull(token, "Token");
+		Objects.requireNonNull(privateKey, "PrivateKey");
+		Objects.requireNonNull(encryptKey, "PublicKey");
+		this.token = token;
+		this.privateKey = privateKey;
+		this.encryptKey = encryptKey;
 	}
 
 	/**
 	 * @return
+	 * @throws Exception
 	 */
-	public Token build() {
-		Token jwt = new Token();
-        jwt.setIssuedAtTime(issuedAtTime);
-        jwt.setExpirationTime(issuedAtTime + Duration.of(expireDuration, expireTimeUnit).getSeconds());
-        jwt.setIssuer(issuer);
-        jwt.setName(name);
-        jwt.setSubject(name);
-		final Set<String> aud = new HashSet<>();
-        aud.add(String.format(
-                Security.AUDIENCE_FORMAT, 
-                audience.getProtocol(), 
-                audience.getHost(), 
-                audience.getPort()));
-        jwt.setAudience(aud);
-        jwt.setGroups(service.getUserRoles(credential.getDefaultManager(), name));
-	    try {
-			jwt = tokenGenerator.generate(jwt);
-		} 
-	    catch (Exception e) {
-	    	throw new EPFException(e);
+	public Token build() throws Exception {
+		final JwtClaims claims = new JwtClaims();
+		claims.setAudience(token.getAudience().stream().collect(Collectors.toList()));
+		claims.setExpirationTime(NumericDate.fromSeconds(token.getExpirationTime()));
+		claims.setGeneratedJwtId();
+		claims.setIssuedAt(NumericDate.fromSeconds(token.getIssuedAtTime()));
+		claims.setIssuer(token.getIssuer());
+		claims.setNotBefore(NumericDate.fromSeconds(token.getIssuedAtTime()));
+		claims.setSubject(token.getSubject());
+		claims.setStringClaim(Claims.upn.name(), token.getName());
+		claims.setStringListClaim(Claims.groups.name(), token.getGroups().stream().collect(Collectors.toList()));
+		for(Entry<? extends String, ? extends Object> entry : token.getClaims().entrySet()) {
+			claims.setClaim(entry.getKey(), entry.getValue());
 		}
-	    return jwt;
+		final JsonWebSignature jws = new JsonWebSignature();
+		jws.setHeader("typ", "JWT");
+	    jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.RSA_USING_SHA256);
+		jws.setPayload(claims.toJson());
+	    jws.setKey(privateKey);
+	    final String jwt = jws.getCompactSerialization();
+	    token.setRawToken(jwt);
+	    token.setTokenID(claims.getJwtId());
+	    encryptKey.getAlgorithm();
+		return token;
 	}
-    
-    /**
-     * @param jwt
-     * @return
-     */
-    public Token build(final JsonWebToken jwt){
-    	final Token token = new Token();
-        token.setAudience(jwt.getAudience());
-        token.setExpirationTime(jwt.getExpirationTime());
-        token.setGroups(jwt.getGroups());
-        token.setIssuedAtTime(jwt.getIssuedAtTime());
-        token.setIssuer(jwt.getIssuer());
-        token.setName(jwt.getName());
-        token.setRawToken(jwt.getRawToken());
-        token.setSubject(jwt.getSubject());
-        token.setTokenID(jwt.getTokenID());
-        return token;
-    }
 }

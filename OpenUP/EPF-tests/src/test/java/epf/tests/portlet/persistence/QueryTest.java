@@ -11,8 +11,9 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.MethodRule;
-import epf.tests.WebDriverUtil;
-import epf.tests.portlet.View;
+import org.junit.rules.TestName;
+import epf.tests.portlet.PortletView;
+import epf.tests.portlet.WebDriverUtil;
 import epf.tests.portlet.security.Security;
 import jakarta.inject.Inject;
 
@@ -22,12 +23,15 @@ import jakarta.inject.Inject;
  */
 public class QueryTest {
 	
+	@Rule
+    public TestName testName = new TestName();
+	
 	@ClassRule
     public static WeldInitiator weld = WeldInitiator.from(
     		WebDriverUtil.class, 
-    		View.class,
-    		Security.class,
+    		PortletView.class,
     		Persistence.class,
+    		Security.class,
     		Schema.class,
     		Query.class,
     		QueryTest.class
@@ -38,7 +42,7 @@ public class QueryTest {
     public MethodRule testClassInjectorRule = weld.getTestClassInjectorRule();
 	
 	@Inject
-	Persistence persistence;
+	PortletView view;
 	
 	@Inject
 	Schema schema;
@@ -51,9 +55,9 @@ public class QueryTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		persistence.navigateToPersistence();
 		schema.setEntity("Artifact");
-		persistence.navigateToQuery();
+		schema.getEntity();
+		query.getResultSize();
 	}
 
 	/**
@@ -65,10 +69,17 @@ public class QueryTest {
 
 	@Test
 	public void test_DefaultValues_TheSameConfiguredValues() {
+		/*int resultSize = query.getResultSize();
+		if(resultSize != 29) {
+			view.refresh();
+			schema.setEntity("Artifact");
+			schema.getEntity();
+			query.getResultSize();
+		}*/
 		Assert.assertEquals("Query.firstResult", 0, query.getFirstResult());
 		Assert.assertEquals("Query.maxResults", 100, query.getMaxResults());
-		Assert.assertEquals("Query.resultSize", 100, query.getResultSize());
-		Assert.assertEquals("Query.result.size", 100, query.getResultList("name").size());
+		Assert.assertEquals("Query.resultSize", 29, query.getResultSize());
+		Assert.assertEquals("Query.result.size", 29, query.getResultList("name").size());
 	}
 
 	@Test
@@ -81,10 +92,10 @@ public class QueryTest {
 	
 	@Test
 	public void test_SetMaxResults_TheResultSizeIsCorrect() throws Exception {
-		query.setMaxResults(20);
+		query.setMaxResults(29);
 		query.executeQuery();
-		Assert.assertEquals("Query.resultSize", 20, query.getResultSize());
-		Assert.assertEquals("Query.result.size", 20, query.getResultList("name").size());
+		Assert.assertEquals("Query.resultSize", 29, query.getResultSize());
+		Assert.assertEquals("Query.result.size", 29, query.getResultList("name").size());
 	}
 	
 	@Test

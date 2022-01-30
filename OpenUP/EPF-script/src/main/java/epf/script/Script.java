@@ -20,13 +20,15 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jppf.client.JPPFJob;
 import org.jppf.node.protocol.ScriptedTask;
 import org.jppf.node.protocol.Task;
-import epf.client.EPFException;
+
+import epf.naming.Naming;
+import epf.util.EPFException;
 
 /**
  * @author PC
  *
  */
-@Path("/")
+@Path(Naming.SCRIPT)
 @ApplicationScoped
 public class Script implements epf.client.script.Script {
 	

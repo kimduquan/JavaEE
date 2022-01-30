@@ -28,7 +28,7 @@ public class PredicateFunction extends Function {
 	@Override
 	public void run() {
 		predicate.run();
-		if(predicate.get()) {
+		if(predicate.get().get()) {
 			super.run();
 		}
 	}

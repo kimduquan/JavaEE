@@ -1,21 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.gateway;
 
 import java.io.Serializable;
+import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-import org.eclipse.microprofile.faulttolerance.exceptions.BulkheadException;
-import org.eclipse.microprofile.faulttolerance.exceptions.CircuitBreakerOpenException;
-import org.eclipse.microprofile.faulttolerance.exceptions.TimeoutException;
+import epf.util.logging.LogManager;
 
 /**
  *
@@ -24,40 +17,26 @@ import org.eclipse.microprofile.faulttolerance.exceptions.TimeoutException;
 @Provider
 public class ExceptionHandler implements 
         Serializable,
-        ExceptionMapper<Exception> {
+        ExceptionMapper<Throwable> {
 
     /**
     * 
     */
     private static final long serialVersionUID = 1L;
-    /**
-     * 
-     */
-    private static final String CLASS_NAME = ExceptionHandler.class.getName();
     
     /**
      * 
      */
-    @Inject
-    private transient Logger logger;
+    private static final Logger LOGGER = LogManager.getLogger(ExceptionHandler.class.getName());
     
     @Override
-    public Response toResponse(final Exception exception) {
-    	logger.throwing(CLASS_NAME, "toResponse", exception);
+    public Response toResponse(final Throwable exception) {
+    	LOGGER.log(Level.SEVERE, "toResponse", exception);
     	ResponseBuilder builder;
     	if(exception instanceof WebApplicationException) {
     		final WebApplicationException error = (WebApplicationException) exception;
     		builder = Response.fromResponse(error.getResponse());
     	}
-    	else if(exception instanceof TimeoutException){
-            builder = Response.status(Response.Status.REQUEST_TIMEOUT);
-        }
-        else if(exception instanceof BulkheadException){
-            builder = Response.status(Response.Status.TOO_MANY_REQUESTS);
-        }
-        else if(exception instanceof CircuitBreakerOpenException){
-            builder = Response.status(Response.Status.SERVICE_UNAVAILABLE);
-        }
     	else {
     		builder = Response.serverError();
     	}

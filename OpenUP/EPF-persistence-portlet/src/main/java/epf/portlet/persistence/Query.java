@@ -3,7 +3,6 @@
  */
 package epf.portlet.persistence;
 
-import java.io.InputStream;
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Logger;
@@ -12,32 +11,26 @@ import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.json.Json;
 import javax.json.JsonObject;
-import javax.json.JsonReader;
 import javax.json.JsonValue;
-import javax.ws.rs.core.Response;
 import epf.client.portlet.persistence.QueryView;
 import epf.client.schema.Attribute;
 import epf.client.schema.Entity;
-import epf.portlet.Event;
-import epf.portlet.EventUtil;
-import epf.portlet.JsonObjectCollector;
-import epf.portlet.JsonUtil;
-import epf.portlet.Parameter;
-import epf.portlet.ParameterUtil;
-import epf.portlet.client.ClientUtil;
-import epf.portlet.config.ConfigUtil;
-import epf.portlet.registry.RegistryUtil;
-import epf.util.client.Client;
-import epf.util.logging.Logging;
+import epf.portlet.internal.config.ConfigUtil;
+import epf.portlet.internal.persistence.EntityUtil;
+import epf.portlet.naming.Naming;
+import epf.portlet.util.EventUtil;
+import epf.portlet.util.ParameterUtil;
+import epf.portlet.util.json.JsonObjectCollector;
+import epf.portlet.util.json.JsonUtil;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
  *
  */
 @ViewScoped
-@Named(Naming.PERSISTENCE_QUERY)
+@Named(Naming.Persistence.PERSISTENCE_QUERY)
 public class Query implements QueryView, Serializable {
 
 	/**
@@ -48,7 +41,7 @@ public class Query implements QueryView, Serializable {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = Logging.getLogger(Persistence.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Query.class.getName());
 	
 	/**
 	 * 
@@ -84,19 +77,7 @@ public class Query implements QueryView, Serializable {
 	 * 
 	 */
 	@Inject
-	private transient RegistryUtil registryUtil;
-	
-	/**
-	 * 
-	 */
-	@Inject
 	private transient ConfigUtil configUtil;
-	
-	/**
-	 * 
-	 */
-	@Inject
-	private transient ClientUtil clientUtil;
 	
 	/**
 	 * 
@@ -113,9 +94,15 @@ public class Query implements QueryView, Serializable {
 	/**
 	 * 
 	 */
+	@Inject
+	private transient EntityUtil entityUtil;
+	
+	/**
+	 * 
+	 */
 	@PostConstruct
 	protected void postConstruct() {
-		entity = eventUtil.getEvent(Event.SCHEMA_ENTITY);
+		entity = eventUtil.getEvent(Naming.Event.SCHEMA_ENTITY);
 		if(entity != null) {
 			attributes = entity
 					.getAttributes()
@@ -123,36 +110,12 @@ public class Query implements QueryView, Serializable {
 					.collect(Collectors.toList());
 			collector = new JsonObjectCollector(attributes.stream().map(Attribute::getName).collect(Collectors.toList()));
 			try {
-				firstResult = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT));
-				maxResults = Integer.valueOf(configUtil.getProperty(epf.client.persistence.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT));
-				resultList = getResultList();
+				firstResult = Integer.valueOf(configUtil.getProperty(epf.naming.Naming.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT));
+				maxResults = Integer.valueOf(configUtil.getProperty(epf.naming.Naming.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT));
+				resultList = entityUtil.getEntities(entity.getTable().getSchema(), entity.getName(), firstResult, maxResults);
 			}
 			catch (Exception e) {
 				LOGGER.throwing(getClass().getName(), "postConstruct", e);
-			}
-		}
-	}
-	
-	/**
-	 * @return
-	 * @throws Exception
-	 */
-	protected List<JsonObject> getResultList() throws Exception{
-		try(Client client = clientUtil.newClient(registryUtil.get("persistence"))){
-			try(Response response = epf.client.persistence.Queries.executeQuery(
-					client, 
-					path -> path.path(entity.getName()), 
-					firstResult, 
-					maxResults)){
-				try(InputStream stream = response.readEntity(InputStream.class)){
-					try(JsonReader reader = Json.createReader(stream)){
-						return reader
-								.readArray()
-								.stream()
-								.map(value -> value.asJsonObject())
-								.collect(Collectors.toList());
-					}
-				}
 			}
 		}
 	}
@@ -174,7 +137,7 @@ public class Query implements QueryView, Serializable {
 					.stream()
 					.collect(Collectors.toList());
 			collector = new JsonObjectCollector(attributes.stream().map(Attribute::getName).collect(Collectors.toList()));
-			resultList = getResultList();
+			resultList = entityUtil.getEntities(entity.getTable().getSchema(), entity.getName(), firstResult, maxResults);
 		}
 	}
 	
@@ -187,7 +150,7 @@ public class Query implements QueryView, Serializable {
 				final JsonValue idValue = object.get(id.getName());
 				final String value = JsonUtil.toString(idValue);
 				if(value != null) {
-					paramUtil.setValue(Parameter.PERSISTENCE_ENTITY_ID, value);
+					paramUtil.setValue(Naming.Parameter.PERSISTENCE_ENTITY_ID, value);
 				}
 			}
 		}

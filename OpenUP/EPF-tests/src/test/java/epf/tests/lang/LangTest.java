@@ -7,12 +7,17 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.rules.TestName;
 
 /**
  * @author PC
  *
  */
 public class LangTest {
+	
+	@Rule
+    public TestName testName = new TestName();
 
 	/**
 	 * @throws java.lang.Exception

@@ -13,13 +13,13 @@
 	<dependencies>
 		<dependency>
             <groupId>openup</groupId>
-            <artifactId>EPF-client</artifactId>
-            <version>1.0.0</version>
+            <artifactId>EPF-portlet-client</artifactId>
+            <version>${project.version}</version>
         </dependency>
 		<dependency>
             <groupId>openup</groupId>
-            <artifactId>EPF-portlet</artifactId>
-            <version>1.0.0</version>
+            <artifactId>EPF-portlet-utility</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
 			<groupId>javax.enterprise</groupId>
@@ -38,13 +38,17 @@
 		    <artifactId>portlet-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-        <dependency>
-		    <groupId>org.glassfish</groupId>
-		    <artifactId>javax.json</artifactId>
+        <!-- https://mvnrepository.com/artifact/javax.json/javax.json-api -->
+		<dependency>
+			<groupId>javax.json</groupId>
+			<artifactId>javax.json-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.liferay.faces/com.liferay.faces.bridge.api -->
 		<dependency>
 			<groupId>com.liferay.faces</groupId>
-			<artifactId>com.liferay.faces.bridge.impl</artifactId>
+			<artifactId>com.liferay.faces.bridge.api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 		    <groupId>org.jboss.resteasy</groupId>

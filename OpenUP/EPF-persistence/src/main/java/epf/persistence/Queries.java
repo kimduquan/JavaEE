@@ -5,7 +5,6 @@
  */
 package epf.persistence;
 
-import java.security.Principal;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.security.RolesAllowed;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.ws.rs.core.Response;
@@ -23,64 +22,64 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EntityType;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import epf.client.persistence.SearchData;
-import epf.persistence.impl.Entity;
-import epf.persistence.impl.QueryBuilder;
-import epf.schema.h2.QueryNames;
-import epf.schema.roles.Role;
+import epf.naming.Naming;
+import epf.persistence.internal.Entity;
+import epf.persistence.internal.QueryBuilder;
+import epf.persistence.internal.Session;
 
 /**
  *
  * @author FOXCONN
  */
-@Path("persistence")
-@RolesAllowed(Role.DEFAULT_ROLE)
-@RequestScoped
+@Path(Naming.PERSISTENCE)
+@RolesAllowed(Naming.Security.DEFAULT_ROLE)
+@ApplicationScoped
 public class Queries implements epf.client.persistence.Queries {
+	
+	/**
+	 * 
+	 */
+	private static final String FT_SEARCH_DATA = "EPF.FulltextSearch";
     
     /**
      * 
      */
     @Inject
-    private transient Request cache;
-    
-    /**
-     * 
-     */
-    @Context
-    private transient SecurityContext context;
+    private transient Request request;
     
     @Override
     public Response executeQuery(
+    		final String schema,
             final List<PathSegment> paths,
             final Integer firstResult,
-            final Integer maxResults
+            final Integer maxResults,
+            final SecurityContext context
             ) {
-    	final ResponseBuilder response = Response.status(Response.Status.NOT_FOUND);
-    	Entity<Object> entity = null;
-    	final Principal principal = context.getUserPrincipal();
-        if(!paths.isEmpty()){
+    	final Session session = request.getSession(context);
+    	final Entity<Object> entity = new Entity<>();
+    	if(!paths.isEmpty()){
         	final PathSegment rootSegment = paths.get(0);
-        	entity = cache.findEntity(principal, rootSegment.getPath());
+        	final String entityName = rootSegment.getPath();
+        	@SuppressWarnings("unchecked")
+			final EntityType<Object> entityType = (EntityType<Object>) request.getEntityType(session, entityName);
+        	entity.setType(entityType);
+        	return session.peekManager(entityManager -> {
+        		final Query query = buildQuery(entityManager, entity, paths);
+            	final ResponseBuilder response = Response.ok();
+                return collectQueryResult(query, firstResult, maxResults, response);
+        	})
+        	.get()
+        	.build();
         }
-        if(entity != null && entity.getType() != null){
-        	final EntityManager manager = cache.getManager(principal);
-        	final QueryBuilder queryBuilder = new QueryBuilder();
-        	final Query query = queryBuilder
-        			.manager(manager)
-        			.entity(entity)
-        			.paths(paths)
-        			.build();
-            getQueryResult(query, firstResult, maxResults, response);
-        }
-        return response.build();
+    	throw new NotFoundException();
     }
     
     /**
@@ -90,7 +89,7 @@ public class Queries implements epf.client.persistence.Queries {
      * @param response
      * @return
      */
-    protected static ResponseBuilder getQueryResult(
+    protected static ResponseBuilder collectQueryResult(
     		final Query query,
     		final Integer firstResult,
             final Integer maxResults,
@@ -109,23 +108,43 @@ public class Queries implements epf.client.persistence.Queries {
         );
         return response;
     }
+    
+    /**
+     * @param entityManager
+     * @param entity
+     * @param paths
+     * @return
+     */
+    protected static Query buildQuery(
+    		final EntityManager entityManager, 
+    		final Entity<Object> entity, 
+    		final List<PathSegment> paths) {
+    	final QueryBuilder queryBuilder = new QueryBuilder();
+    	return queryBuilder
+    			.manager(entityManager)
+    			.entity(entity)
+    			.paths(paths)
+    			.build();
+    }
 
 	@Override
-	public Response search(final UriInfo uriInfo, final String text, final Integer firstResult, final Integer maxResults) {
+	public Response search(final UriInfo uriInfo, final String text, final Integer firstResult, final Integer maxResults, final SecurityContext context) {
 		final Map<String, EntityType<?>> entityTables = new ConcurrentHashMap<>();
 		final Map<String, Map<String, Attribute<?,?>>> entityAttributes = new ConcurrentHashMap<>();
-		cache.mapEntities(context.getUserPrincipal(), entityTables, entityAttributes);
-		final TypedQuery<SearchData> query = cache.createNamedQuery(
-				context.getUserPrincipal(), 
-				QueryNames.FT_SEARCH_DATA, 
-				SearchData.class
-				);
-		query.setFirstResult(firstResult);
-		query.setMaxResults(maxResults);
-		query.setParameter(1, text);
-		query.setParameter(2, maxResults);
-		query.setParameter(3, firstResult);
-		final List<SearchData> result = query.getResultList();
+		final Session session = request.getSession(context);
+		request.mapEntities(session, entityTables, entityAttributes);
+		final List<SearchData> result = session
+				.peekManager(entityManager -> {
+					final TypedQuery<SearchData> query = entityManager.createNamedQuery(FT_SEARCH_DATA, SearchData.class);
+					query.setFirstResult(firstResult);
+					query.setMaxResults(maxResults);
+					query.setParameter(1, text);
+					query.setParameter(2, maxResults);
+					query.setParameter(3, firstResult);
+					return query.getResultList();
+					}
+				)
+				.get();
 		ResponseBuilder response = Response.ok(result);
 		final UriBuilder baseUri = uriInfo.getBaseUriBuilder();
 		final Iterator<Link> linksIt = result

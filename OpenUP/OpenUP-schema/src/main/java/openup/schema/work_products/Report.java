@@ -42,7 +42,7 @@ public class Report implements Serializable {
      */
     @ManyToOne
     @JoinColumn(name = "REPORT")
-    private epf.schema.work_products.Report report;
+    private epf.work_products.schema.Report report;
 
 	public Long getId() {
 		return id;
@@ -52,11 +52,11 @@ public class Report implements Serializable {
 		this.id = id;
 	}
 
-	public epf.schema.work_products.Report getReport() {
+	public epf.work_products.schema.Report getReport() {
 		return report;
 	}
 
-	public void setReport(final epf.schema.work_products.Report report) {
+	public void setReport(final epf.work_products.schema.Report report) {
 		this.report = report;
 	}
 }

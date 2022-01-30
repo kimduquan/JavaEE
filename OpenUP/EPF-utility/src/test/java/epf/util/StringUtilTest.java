@@ -56,4 +56,44 @@ public class StringUtilTest {
 		Assert.assertNotEquals(random1, random2);
 	}
 
+	/**
+	 * Test method for {@link epf.util.StringUtil#toShortString(int)}.
+	 */
+	@Test
+	public void testToShortString() {
+		int number = 12345;
+		String shortString = StringUtil.toShortString(number);
+		Assert.assertEquals("dnh", shortString);
+	}
+
+	/**
+	 * Test method for {@link epf.util.StringUtil#fromShortString(java.lang.String)}.
+	 */
+	@Test
+	public void testFromShortString() {
+		String shortString = "dnh";
+		int number = StringUtil.fromShortString(shortString);
+		Assert.assertEquals(12345, number);
+	}
+	
+	/**
+	 * Test method for {@link epf.util.StringUtil#join(java.lang.String[])}.
+	 */
+	@Test
+	public void testJoin() {
+		String str1 = "abc";
+		String str2 = "def";
+		String actual = StringUtil.join(str1, str2);
+		Assert.assertEquals("abc\0def", actual);
+	}
+
+	/**
+	 * Test method for {@link epf.util.StringUtil#split(java.lang.String)}.
+	 */
+	@Test
+	public void testSplit() {
+		String str = "abc\0def";
+		String[] actual = StringUtil.split(str);
+		Assert.assertArrayEquals(new String[] {"abc", "def"}, actual);
+	}
 }

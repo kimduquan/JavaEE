@@ -7,6 +7,7 @@ package epf.file;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -31,17 +32,18 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
-import epf.client.EPFException;
-import epf.schema.roles.Role;
-import epf.util.client.EntityOutput;
-import epf.util.file.PathUtil;
+import epf.client.util.EntityOutput;
+import epf.file.util.FileUtil;
+import epf.util.EPFException;
+import epf.naming.Naming;
+import epf.naming.Naming.Security;
 
 /**
  *
  * @author FOXCONN
  */
-@javax.ws.rs.Path("file")
-@RolesAllowed(Role.DEFAULT_ROLE)
+@javax.ws.rs.Path(Naming.FILE)
+@RolesAllowed(Security.DEFAULT_ROLE)
 @ApplicationScoped
 public class FileStore implements epf.client.file.Files {
 	
@@ -53,9 +55,21 @@ public class FileStore implements epf.client.file.Files {
 	/**
 	 * 
 	 */
-	@ConfigProperty(name = ROOT)
+	@Inject
+	private transient FileSystem system;
+	
+	/**
+	 * 
+	 */
+	@ConfigProperty(name = Naming.File.ROOT)
 	@Inject
 	private transient String rootFolder;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	private transient IWatchService watchService;
 
 	@Override
 	public Response createFile(
@@ -64,7 +78,8 @@ public class FileStore implements epf.client.file.Files {
 			final InputStream input, 
 			final SecurityContext security) {
 		validatePaths(paths, security, HttpMethod.POST);
-		final PathBuilder builder = new PathBuilder(rootFolder);
+		watchService.register(system.getPath(rootFolder, security.getUserPrincipal().getName()));
+		final PathBuilder builder = new PathBuilder(rootFolder, system);
 		final Path targetFolder = builder
 				.paths(paths)
 				.build();
@@ -81,7 +96,7 @@ public class FileStore implements epf.client.file.Files {
 		catch (IOException e) {
 			throw new EPFException(e);
 		}
-		final Path root = PathUtil.of(rootFolder);
+		final Path root = system.getPath(rootFolder);
 		final Link[] links = files
 				.stream()
 				.map(path -> {
@@ -104,7 +119,8 @@ public class FileStore implements epf.client.file.Files {
 			final List<PathSegment> paths,
 			final SecurityContext security) {
 		validatePaths(paths, security, HttpMethod.GET);
-		final PathBuilder builder = new PathBuilder(rootFolder);
+		watchService.register(system.getPath(rootFolder, security.getUserPrincipal().getName()));
+		final PathBuilder builder = new PathBuilder(rootFolder, system);
 		final Path targetFile = builder
 				.paths(paths)
 				.build();
@@ -122,12 +138,18 @@ public class FileStore implements epf.client.file.Files {
 			final List<PathSegment> paths, 
 			final SecurityContext security) {
 		validatePaths(paths, security, HttpMethod.DELETE);
-		final PathBuilder builder = new PathBuilder(rootFolder);
+		watchService.register(system.getPath(rootFolder, security.getUserPrincipal().getName()));
+		final PathBuilder builder = new PathBuilder(rootFolder, system);
 		final Path targetFile = builder
 				.paths(paths)
 				.build();
 		try {
-			Files.delete(targetFile);
+			if(Files.isDirectory(targetFile)) {
+				FileUtil.deleteDirectories(targetFile);
+			}
+			else {
+				Files.delete(targetFile);
+			}
 		} 
 		catch (IOException e) {
 			throw new EPFException(e);

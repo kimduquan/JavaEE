@@ -1,11 +1,9 @@
-/**
- * 
- */
 package epf.gateway.rules.admin;
 
 import java.io.InputStream;
 import java.util.concurrent.CompletionStage;
-import javax.enterprise.context.RequestScoped;
+import javax.annotation.security.RolesAllowed;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -16,23 +14,27 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import org.eclipse.microprofile.faulttolerance.Asynchronous;
-import epf.gateway.Request;
+import epf.gateway.Application;
+import epf.naming.Naming;
+import io.smallrye.common.annotation.Blocking;
 
 /**
  * @author PC
  *
  */
-@Path("rules/admin")
-@RequestScoped
+@Blocking
+@Path(Naming.Rules.RULES_ADMIN)
+@ApplicationScoped
+@RolesAllowed(Naming.Security.DEFAULT_ROLE)
 public class Admin {
 	
     /**
      * 
      */
     @Inject
-    private transient Request request;
+    transient Application request;
     
     /**
      * @param headers
@@ -40,22 +42,20 @@ public class Admin {
      * @param req
      * @param body
      * @return
+     * @throws Exception 
      */
     @Path("{ruleSet}")
     @PUT
     @Consumes(MediaType.APPLICATION_OCTET_STREAM)
-    @Asynchronous
     public CompletionStage<Response> registerRuleExecutionSet(
+    		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             @PathParam("ruleSet")
             final String ruleSet,
-            final InputStream body) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(body);
+            final InputStream body) throws Exception {
+        return request.request(context, headers, uriInfo, req, body);
     }
     
     /**
@@ -64,19 +64,17 @@ public class Admin {
      * @param req
      * @param ruleSet
      * @return
+     * @throws Exception 
      */
     @Path("{ruleSet}")
     @DELETE
-    @Asynchronous
     public CompletionStage<Response> deregisterRuleExecutionSet(
+    		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             @PathParam("ruleSet")
-            final String ruleSet) {
-        request.setHeaders(headers);
-        request.setUriInfo(uriInfo);
-        request.setRequest(req);
-        return request.request(null);
+            final String ruleSet) throws Exception {
+        return request.request(context, headers, uriInfo, req, null);
     }
 }

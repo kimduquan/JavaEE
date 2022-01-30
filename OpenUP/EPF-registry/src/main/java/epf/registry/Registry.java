@@ -1,11 +1,15 @@
 package epf.registry;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -13,53 +17,152 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
-import epf.client.cache.Cache;
-import epf.client.config.Config;
-import epf.client.file.Files;
-import epf.client.gateway.Gateway;
-import epf.client.image.Image;
-import epf.client.lang.Lang;
-import epf.client.management.Management;
-import epf.client.messaging.Messaging;
-import epf.client.script.Script;
-import epf.client.persistence.Persistence;
-import epf.client.planning.Planning;
-import epf.client.rules.Rules;
-import epf.client.schema.Schema;
-import epf.client.security.Security;
-import epf.util.SystemUtil;
+import javax.ws.rs.core.UriInfo;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+import epf.naming.Naming;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
  *
  */
-@Path("registry")
+@Path(Naming.REGISTRY)
 @ApplicationScoped
 public class Registry implements epf.client.registry.Registry {
 	
 	/**
 	 * 
 	 */
-	private transient final Map<String, URI> remotes;
+	private static final Logger LOGGER = LogManager.getLogger(Registry.class.getName());
 	
 	/**
 	 * 
 	 */
-	private transient final Map<String, Map<String, URI>> remoteVersions;
+	private transient final Map<String, URI> remotes = new ConcurrentHashMap<>();
+	
+	/**
+	 * 
+	 */
+	private transient final Map<String, Map<String, URI>> remoteVersions = new ConcurrentHashMap<>();
 	
 	/**
 	 * 
 	 */
 	@Inject
-	private transient Logger logger;
+	@ConfigProperty(name = Naming.Net.NET_URL)
+	private transient URI netUrl;
 	
 	/**
 	 * 
 	 */
-	public Registry() {
-		remotes = new ConcurrentHashMap<>();
-		remoteVersions = new ConcurrentHashMap<>();
-	}
+	@Inject
+	@ConfigProperty(name = Naming.File.FILE_URL)
+	private transient URI fileUrl;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	@ConfigProperty(name = Naming.Persistence.PERSISTENCE_URL)
+	private transient URI persistenceUrl;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	@ConfigProperty(name = Naming.Security.SECURITY_URL)
+	private transient URI securityUrl;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	@ConfigProperty(name = Naming.Gateway.GATEWAY_URL)
+	private transient URI gatewayUrl;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	@ConfigProperty(name = Naming.Registry.REGISTRY_URL)
+	private transient URI registryUrl;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	@ConfigProperty(name = Naming.Messaging.MESSAGING_URL)
+	private transient URI messagingUrl;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	@ConfigProperty(name = Naming.Cache.CACHE_URL)
+	private transient URI cacheUrl;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	@ConfigProperty(name = Naming.Config.CONFIG_URL)
+	private transient URI configUrl;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	@ConfigProperty(name = Naming.Script.SCRIPT_URL)
+	private transient URI scriptUrl;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	@ConfigProperty(name = Naming.Management.MANAGEMENT_URL)
+	private transient URI managementUrl;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	@ConfigProperty(name = Naming.Rules.RULES_URL)
+	private transient URI rulesUrl;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	@ConfigProperty(name = Naming.Schema.SCHEMA_URL)
+	private transient URI schemaUrl;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	@ConfigProperty(name = Naming.Planning.PLANNING_URL)
+	private transient URI planningUrl;
+
+	/**
+	 * 
+	 */
+	@Inject
+	@ConfigProperty(name = Naming.Image.IMAGE_URL)
+	private transient URI imageUrl;
+
+	/**
+	 * 
+	 */
+	@Inject
+	@ConfigProperty(name = Naming.Lang.LANG_URL)
+	private transient URI langUrl;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	@ConfigProperty(name = Naming.Net.HTTP_PORT)
+	private transient int httpPort;
 	
 	/**
 	 * 
@@ -67,60 +170,24 @@ public class Registry implements epf.client.registry.Registry {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI gatewayUrl = new URI(SystemUtil.getenv(Gateway.GATEWAY_URL));
-			String remote = "file";
-			final URI fileUrl = new URI(SystemUtil.getenv(Files.FILE_URL));
-			remotes.put(remote, fileUrl);
-			final URI persistenceUrl = new URI(SystemUtil.getenv(Persistence.PERSISTENCE_URL));
-			remote = "persistence";
-			remotes.put(remote, persistenceUrl);
-			final URI securityUrl = new URI(SystemUtil.getenv(Security.SECURITY_URL));
-			remote = "security";
-			remotes.put(remote, securityUrl);
-			remote = "stream";
-			remotes.put(remote, gatewayUrl.resolve(remote));
-			final URI registryUrl = new URI(SystemUtil.getenv(Registry.REGISTRY_URL));
-			remote = "registry";
-			remotes.put(remote, registryUrl);
-			final URI messagingUrl = new URI(SystemUtil.getenv(Messaging.MESSAGING_URL));
-			remote = "messaging";
-			remotes.put(remote, messagingUrl);
-			final URI cacheUrl = new URI(SystemUtil.getenv(Cache.CACHE_URL));
-			remote = "cache";
-			remotes.put(remote, cacheUrl);
-			final URI configUrl = new URI(SystemUtil.getenv(Config.CONFIG_URL));
-			remote = "config";
-			remotes.put(remote, configUrl);
-			final URI scriptUrl = new URI(SystemUtil.getenv(Script.SCRIPT_URL));
-			remote = "script";
-			remotes.put(remote, scriptUrl);
-			final URI managementUrl = new URI(SystemUtil.getenv(Management.MANAGEMENT_URL));
-			remote = "management";
-			remotes.put(remote, managementUrl);
-			final URI rulesUrl = new URI(SystemUtil.getenv(Rules.RULES_URL));
-			remote = "rules";
-			remotes.put(remote, rulesUrl);
-			final URI schemaUrl = new URI(SystemUtil.getenv(Schema.SCHEMA_URL));
-			remote = "schema";
-			remotes.put(remote, schemaUrl);
-			final URI planningUrl = new URI(SystemUtil.getenv(Planning.PLANNING_URL));
-			remote = "planning";
-			remotes.put(remote, planningUrl);
-			final URI imageUrl = new URI(SystemUtil.getenv(Image.IMAGE_URL));
-			remote = "image";
-			remotes.put(remote, imageUrl);
-			final URI langUrl = new URI(SystemUtil.getenv(Lang.LANG_URL));
-			remote = "lang";
-			remotes.put(remote, langUrl);
-			final String openupUrl = SystemUtil.getenv("openup.url");
-			final String[] openupUrls = openupUrl.split(",");
-			for(String name : openupUrls) {
-				final String url = SystemUtil.getenv(name);
-				remotes.put(name, new URI(url));
-			}
+			remotes.put(Naming.NET, netUrl);
+			remotes.put(Naming.FILE, fileUrl);
+			remotes.put(Naming.PERSISTENCE, persistenceUrl);
+			remotes.put(Naming.SECURITY, securityUrl);
+			remotes.put(Naming.REGISTRY, registryUrl);
+			remotes.put(Naming.MESSAGING, messagingUrl);
+			remotes.put(Naming.CACHE, cacheUrl);
+			remotes.put(Naming.CONFIG, configUrl);
+			remotes.put(Naming.SCRIPT, scriptUrl);
+			remotes.put(Naming.MANAGEMENT, managementUrl);
+			remotes.put(Naming.RULES, rulesUrl);
+			remotes.put(Naming.SCHEMA, schemaUrl);
+			remotes.put(Naming.PLANNING, planningUrl);
+			remotes.put(Naming.IMAGE, imageUrl);
+			remotes.put("lang", langUrl);
 		} 
 		catch (Exception e) {
-			logger.throwing(getClass().getName(), "postConstruct", e);
+			LOGGER.log(Level.SEVERE, "postConstruct", e);
 		}
 		
 	}
@@ -136,6 +203,82 @@ public class Registry implements epf.client.registry.Registry {
 		}
 		return remoteURIs;
 	}
+	
+	/**
+	 * @param links
+	 * @param scheme
+	 * @return
+	 */
+	protected Stream<Link> mapScheme(final Stream<Link> links, final String scheme, final String defaultSchem, final int port){
+		return links.flatMap(link -> {
+			if(defaultSchem.equals(link.getUri().getScheme())) {
+				final Link httpLink = Link.fromLink(link).uriBuilder(link.getUriBuilder().scheme(scheme).port(port)).build();
+				return Stream.of(httpLink);
+			}
+			return Stream.of(link);
+		});
+	}
+	
+	/**
+	 * @param links
+	 * @param schemes
+	 * @return
+	 */
+	protected Stream<Link> filterScheme(final Stream<Link> links, final List<String> schemes){
+		Stream<Link> stream = links;
+		if(schemes.contains("http")) {
+			stream = mapScheme(stream, "http", "https", httpPort);
+		}
+		if(schemes.contains("ws")) {
+			stream = mapScheme(stream, "ws", "wss", httpPort);
+		}
+		return stream;
+	}
+	
+	/**
+	 * @param links
+	 * @param uriInfo
+	 * @return
+	 */
+	protected Stream<Link> filter(final Stream<Link> links, final UriInfo uriInfo){
+		final List<Predicate<? super Link>> filters = new ArrayList<>();
+		Stream<Link> stream = links;
+		uriInfo.getQueryParameters().forEach((name, values) -> {
+			switch(name) {
+			case Naming.Registry.Filter.ABSOLUTE:
+				filters.add(link -> values.contains("" + link.getUri().isAbsolute()));
+				break;
+			case Naming.Registry.Filter.OPAQUE:
+				filters.add(link -> values.contains("" + link.getUri().isOpaque()));
+				break;
+			case Naming.Registry.Filter.AUTHORITY:
+				filters.add(link -> values.contains(link.getUri().getAuthority()));
+				break;
+			case Naming.Registry.Filter.FRAGMENT:
+				filters.add(link -> values.contains(link.getUri().getFragment()));
+				break;
+			case Naming.Registry.Filter.HOST:
+				filters.add(link -> values.contains(link.getUri().getHost()));
+				break;
+			case Naming.Registry.Filter.PATH:
+				filters.add(link -> values.contains(link.getUri().getPath()));
+				break;
+			case Naming.Registry.Filter.PORT:
+				filters.add(link -> values.contains("" + link.getUri().getPort()));
+				break;
+			case Naming.Registry.Filter.QUERY:
+				filters.add(link -> values.contains(link.getUri().getQuery()));
+				break;
+			case Naming.Registry.Filter.USER_INFO:
+				filters.add(link -> values.contains(link.getUri().getUserInfo()));
+				break;
+			}
+		});
+		for(Predicate<? super Link> filter : filters) {
+			stream = stream.filter(filter);
+		}
+		return stream;
+	}
 
 	@Override
 	public void bind(final String name, final URI remote, final String version) {
@@ -143,18 +286,21 @@ public class Registry implements epf.client.registry.Registry {
 	}
 
 	@Override
-	public Response list(final String version) {
+	public Response list(final String version, final UriInfo uriInfo) {
 		ResponseBuilder builder = Response.ok();
-		final List<Link> links = getRemotes(version)
+		Stream<Link> links = getRemotes(version)
 				.entrySet()
 				.stream()
 				.map(entry -> Link
 						.fromUri(entry.getValue())
 						.rel(entry.getKey())
 						.build()
-						)
-				.collect(Collectors.toList());
-		builder = builder.links(links.toArray(new Link[0]));
+						);
+		if(uriInfo.getQueryParameters().containsKey(Naming.Registry.Filter.SCHEME)) {
+			links = filterScheme(links, uriInfo.getQueryParameters().get(Naming.Registry.Filter.SCHEME));
+		}
+		links = filter(links, uriInfo);
+		builder = builder.links(links.collect(Collectors.toList()).toArray(new Link[0]));
 		return builder.build();
 	}
 

@@ -5,16 +5,27 @@ package epf.gateway.messaging;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Objects;
+import java.util.logging.Logger;
+import javax.websocket.CloseReason;
 import javax.websocket.DeploymentException;
-import javax.websocket.WebSocketContainer;
+import javax.websocket.Session;
+import epf.util.logging.LogManager;
 import epf.util.websocket.Client;
-import epf.util.websocket.Server;
+import epf.util.websocket.Message;
+import epf.util.websocket.MessageHandler;
+import epf.util.websocket.MessageTopic;
 
 /**
  * @author PC
  *
  */
-public class Remote implements AutoCloseable {
+public class Remote implements Runnable, AutoCloseable {
+	
+	/**
+	 * 
+	 */
+	private static final Logger LOGGER = LogManager.getLogger(Remote.class.getName());
 	
 	/**
 	 * 
@@ -24,34 +35,58 @@ public class Remote implements AutoCloseable {
 	/**
 	 * 
 	 */
-	private transient final Server server;
+	private transient final MessageTopic messages;
 	
 	/**
-	 * @param message
-	 */
-	protected void onMessage(final String message) {
-		server.forEach(session -> session.getAsyncRemote().sendText(message));
-	}
-	
-	/**
-	 * @param container
 	 * @param uri
 	 * @throws DeploymentException
 	 * @throws IOException
 	 */
-	public Remote(final WebSocketContainer container, final URI uri) throws DeploymentException, IOException {
-		client = Client.connectToServer(container, uri);
-		this.server = new Server();
-		client.onMessage(this::onMessage);
+	public Remote(final URI uri) throws DeploymentException, IOException {
+		Objects.requireNonNull(uri, "URI");
+		client = Client.connectToServer(uri);
+		messages = new MessageTopic();
+		client.onMessage(this::addMessage);
+	}
+	
+	/**
+	 * @param message
+	 */
+	protected void addMessage(final String message) {
+		messages.add(new Message(message));
 	}
 
 	@Override
 	public void close() throws Exception {
 		client.close();
-		server.close();
+		messages.close();
 	}
 	
-	public Server getServer() {
-		return server;
+	/**
+	 * @param session
+	 */
+	public void onOpen(final Session session) {
+		messages.addConsumer(session.getId(), new MessageHandler(session));
+    }
+ 
+    /**
+     * @param session
+     * @param closeReason
+     */
+    public void onClose(final Session session, final CloseReason closeReason) {
+    	messages.removeConsumer(session.getId());
+    }
+    
+    /**
+     * @param session
+     * @param throwable
+     */
+    public void onError(final Session session, final Throwable throwable) {
+    	LOGGER.throwing(getClass().getName(), "onError", throwable);
+    }
+
+	@Override
+	public void run() {
+		messages.run();
 	}
 }

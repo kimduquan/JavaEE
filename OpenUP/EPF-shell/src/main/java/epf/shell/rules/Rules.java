@@ -3,18 +3,15 @@
  */
 package epf.shell.rules;
 
-import java.net.URI;
 import javax.ws.rs.core.Response;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
+import epf.naming.Naming;
 import epf.shell.Function;
-import epf.shell.client.ClientUtil;
 import epf.shell.rules.admin.Admin;
 import epf.shell.security.Credential;
 import epf.shell.security.CallerPrincipal;
-import epf.util.Var;
-import epf.util.client.Client;
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -23,7 +20,7 @@ import picocli.CommandLine.Option;
  * @author PC
  *
  */
-@Command(name = "rules", subcommands = {Admin.class})
+@Command(name = Naming.RULES, subcommands = {Admin.class})
 @RequestScoped
 @Function
 public class Rules {
@@ -31,14 +28,9 @@ public class Rules {
 	/**
 	 * 
 	 */
-	@Inject @Named(epf.client.rules.Rules.RULES_URL)
-	private transient Var<URI> rulesUrl;
-	
-	/**
-	 * 
-	 */
 	@Inject
-	private transient ClientUtil clientUtil;
+	@RestClient
+	transient RulesClient rules;
 	
 	/**
 	 * @param tokenArg
@@ -57,11 +49,8 @@ public class Rules {
 			@Option(names = {"-i", "--input"}, description = "Input", interactive = true, echo = true)
 			final String input
 			) throws Exception {
-		try(Client client = clientUtil.newClient(rulesUrl.get())){
-			client.authorization(credential.getToken());
-			try(Response response = epf.client.rules.Rules.executeRules(client, ruleSet, input)){
-				return response.readEntity(String.class);
-			}
+		try(Response response = rules.executeRules(credential.getAuthHeader(), ruleSet, input)){
+			return response.readEntity(String.class);
 		}
 	}
 	
@@ -81,11 +70,8 @@ public class Rules {
 			@Option(names = {"-o", "--object"}, description = "Object", interactive = true, echo = true)
 			final String object
 			) throws Exception {
-		try(Client client = clientUtil.newClient(rulesUrl.get())){
-			client.authorization(credential.getToken());
-			try(Response response = epf.client.rules.Rules.addObject(client, ruleSet, object)){
-				response.getStatus();
-			}
+		try(Response response = rules.addObject(credential.getAuthHeader(), ruleSet, object)){
+			response.getStatus();
 		}
 	}
 	
@@ -103,11 +89,8 @@ public class Rules {
 			@Option(names = {"-r", "--rule_set"}, description = "Rule Set")
 			final String ruleSet
 			) throws Exception {
-		try(Client client = clientUtil.newClient(rulesUrl.get())){
-			client.authorization(credential.getToken());
-			try(Response response = epf.client.rules.Rules.executeRules(client, ruleSet)){
-				return response.readEntity(String.class);
-			}
+		try(Response response = rules.executeRules(credential.getAuthHeader(), ruleSet)){
+			return response.readEntity(String.class);
 		}
 	}
 	
@@ -121,11 +104,8 @@ public class Rules {
 			@ArgGroup(exclusive = true, multiplicity = "1")
 			@CallerPrincipal
 			final Credential credential) throws Exception {
-		try(Client client = clientUtil.newClient(rulesUrl.get())){
-			client.authorization(credential.getToken());
-			try(Response response = epf.client.rules.Rules.getRegistrations(client)){
-				return response.readEntity(String.class);
-			}
+		try(Response response = rules.getRegistrations(credential.getAuthHeader())){
+			return response.readEntity(String.class);
 		}
 	}
 }

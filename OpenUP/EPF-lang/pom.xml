@@ -20,6 +20,7 @@
 		<dependency>
 		    <groupId>javax.annotation</groupId>
 		    <artifactId>javax.annotation-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api -->
 		<dependency>
@@ -27,10 +28,16 @@
 		    <artifactId>javax.websocket-api</artifactId>
 		    <scope>provided</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.context-propagation/microprofile-context-propagation-api -->
+		<dependency>
+			<groupId>org.eclipse.microprofile.context-propagation</groupId>
+			<artifactId>microprofile-context-propagation-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-client</artifactId>
-            <version>1.0.0</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
 		    <groupId>org.eclipse.lsp4j</groupId>

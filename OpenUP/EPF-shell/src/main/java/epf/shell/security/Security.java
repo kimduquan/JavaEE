@@ -3,19 +3,18 @@
  */
 package epf.shell.security;
 
-import java.net.URI;
-import java.net.URL;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import epf.client.security.Token;
+import epf.naming.Naming;
+import epf.security.schema.Token;
 import epf.shell.Function;
 import epf.shell.client.ClientUtil;
-import epf.util.Var;
-import epf.util.client.Client;
-import epf.util.security.PasswordUtil;
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
+import epf.util.logging.Logging;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.ws.rs.core.MultivaluedHashMap;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -24,11 +23,12 @@ import picocli.CommandLine.Option;
  * @author PC
  *
  */
-@Command(name = "security")
+@Command(name = Naming.SECURITY)
 @RequestScoped
 @Function
+@Logging
 public class Security {
-
+	
 	/**
 	 * 
 	 */
@@ -41,20 +41,27 @@ public class Security {
 	/**
 	 * 
 	 */
-	@Inject @Named(epf.client.security.Security.SECURITY_URL)
-	private transient Var<URI> securityUrl;
+	@Inject
+	transient ClientUtil clientUtil;
 	
 	/**
 	 * 
 	 */
 	@Inject
-	private transient ClientUtil clientUtil;
+	transient IdentityStore identityStore;
 	
 	/**
 	 * 
 	 */
 	@Inject
-	private transient IdentityStore identityStore;
+	@RestClient
+	transient SecurityClient security;
+	
+	/**
+	 * 
+	 */
+	@ConfigProperty(name = Naming.Shell.SHELL_URL)
+	String shellUrl;
 
 	/**
 	 * @param user
@@ -65,19 +72,14 @@ public class Security {
 	 */
 	@Command(name = "login")
 	public String login(
-			@Option(names = {"-u", "--user"}, description = "User name")
+			@Option(names = {"-u", "--user"}, required = true, description = "User name")
+			@NotBlank
 			final String user,
-			@Option(names = {"-p", "--password"}, description = "Password", interactive = true)
-		    final char... password
+			@Option(names = {"-p", "--password"}, required = true, description = "Password", interactive = true)
+		    @NotEmpty
+			final char... password
 			) throws Exception {
-		try(Client client = clientUtil.newClient(securityUrl.get())){
-			return epf.client.security.Security.login(
-					client,
-					user, 
-					PasswordUtil.hash(user, password), 
-					new URL(securityUrl.get().toString())
-					);
-		}
+		return security.login(user, new String(password), shellUrl);
 	}
 	
 	/**
@@ -92,10 +94,7 @@ public class Security {
 			final Credential credential
 			) throws Exception {
 		identityStore.remove(credential);
-		try(Client client = clientUtil.newClient(securityUrl.get())){
-			client.authorization(credential.getToken());
-			return epf.client.security.Security.logOut(client);
-		}
+		return security.logOut(credential.getAuthHeader());
 	}
 	
 	/**
@@ -107,13 +106,9 @@ public class Security {
 	public Token authenticate(
 			@Option(names = {"-t", TOKEN_ARG}, description = TOKEN_DESC) 
 			final String token) throws Exception {
-		Token authToken = null;
-		try(Client client = clientUtil.newClient(securityUrl.get())){
-			client.authorization(token);
-			authToken = epf.client.security.Security.authenticate(client);
-		}
 		final Credential credential = new Credential();
 		credential.token = token;
+		final Token authToken = security.authenticate(credential.getAuthHeader());
 		credential.tokenID = authToken.getTokenID();
 		identityStore.put(credential);
 		return authToken;
@@ -132,12 +127,7 @@ public class Security {
 			@Option(names = {"-p", "--password"}, description = "Password", interactive = true)
 		    final char... password
 		    ) throws Exception {
-		try(Client client = clientUtil.newClient(securityUrl.get())){
-			client.authorization(credential.getToken());
-			final Map<String, String> infos = new ConcurrentHashMap<>();
-			infos.put("password", new String(password));
-			epf.client.security.Security.update(client, infos);
-		}
+		security.update(credential.getAuthHeader(), new String(password));
 	}
 	
 	/**
@@ -151,9 +141,6 @@ public class Security {
 			@CallerPrincipal
 			final Credential credential
 			) throws Exception {
-		try(Client client = clientUtil.newClient(securityUrl.get())){
-			client.authorization(credential.getToken());
-			return epf.client.security.Security.revoke(client);
-		}
+		return security.revoke(credential.getAuthHeader(), new MultivaluedHashMap<>());
 	}
 }
