@@ -23,6 +23,7 @@ import epf.tests.health.HealthUtil;
 import epf.tests.persistence.PersistenceUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
+import epf.util.config.ConfigUtil;
 import epf.work_products.schema.Artifact;
 import epf.work_products.schema.WorkProducts;
 import epf.work_products.schema.section.Description;
@@ -46,7 +47,7 @@ public class MessagingTest {
     
     @BeforeClass
     public static void beforeClass() throws Exception{
-    	URI messagingUrl = UriBuilder.fromUri(GatewayUtil.get(Naming.MESSAGING)).scheme("ws").port(9080).build();
+    	URI messagingUrl = ConfigUtil.getURI(Naming.Gateway.MESSAGING_URL);
     	HealthUtil.readỵ̣();
     	token = SecurityUtil.login();
     	tokenId = SecurityUtil.auth(token).getTokenID();

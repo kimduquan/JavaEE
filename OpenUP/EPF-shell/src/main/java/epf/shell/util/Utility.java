@@ -359,7 +359,7 @@ public class Utility {
 			final Path privateFile, 
 			@Option(names = {"-pu", "--public"}, description = "Public Key")
 			final Path publicFile,
-			@Option(names = {"-e", "--encode"}, description = "Encoder", defaultValue = "url")
+			@Option(names = {"-e", "--encode"}, description = "Encoder", defaultValue = "")
 			final String encode) throws Exception {
 		final KeyPairGenerator generator = KeyPairGenerator.getInstance(algorithm);
 		generator.initialize(keySize);

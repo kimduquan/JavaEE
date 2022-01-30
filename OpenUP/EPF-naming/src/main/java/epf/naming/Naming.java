@@ -127,6 +127,11 @@ public interface Naming {
 	    String GATEWAY_URL = "epf.gateway.url";
 	    
 	    /**
+	     * 
+	     */
+	    String MESSAGING_URL = "epf.gateway.messaging.url";
+	    
+	    /**
 	     * @author PC
 	     *
 	     */
