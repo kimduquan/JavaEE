@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.security.client;
 
 import java.net.URL;
@@ -20,11 +15,14 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Form;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.security.schema.Token;
@@ -72,7 +70,9 @@ public interface Security {
             final String passwordHash, 
             @QueryParam(URL)
             @NotNull
-            final URL url
+            final URL url,
+            @Context
+            final HttpHeaders headers
     ) throws Exception;
     
     /**
@@ -102,7 +102,9 @@ public interface Security {
      */
     @DELETE
     @Produces(MediaType.TEXT_PLAIN)
-    String logOut() throws Exception;
+    String logOut(
+    		@Context
+            final SecurityContext context) throws Exception;
     
     /**
      * @param client
@@ -122,7 +124,9 @@ public interface Security {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    Token authenticate() throws Exception;
+    Token authenticate(
+            @Context
+            final SecurityContext context) throws Exception;
     
     /**
      * @param client
@@ -146,7 +150,9 @@ public interface Security {
     		@FormParam("password")
     		@NotNull
     		@NotBlank
-    		final String password
+    		final String password,
+            @Context
+            final SecurityContext context
     		) throws Exception;
     
     /**
@@ -171,7 +177,11 @@ public interface Security {
     @PUT
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
-    String revoke() throws Exception;
+    String revoke(
+    		@Context
+            final HttpHeaders headers,
+            @Context
+            final SecurityContext context) throws Exception;
     
     /**
      * @param client

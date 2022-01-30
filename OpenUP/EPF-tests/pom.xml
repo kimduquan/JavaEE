@@ -15,6 +15,8 @@
         <httpsPort>9443</httpsPort>
         <httpWebPort>8585</httpWebPort>
         <httpsWebPort>8686</httpsWebPort>
+        <portalPort>8080</portalPort>
+        <gatewayPort>9180</gatewayPort>
         <!-- Jaeger configuration -->
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
@@ -30,9 +32,9 @@
 		<liberty.env.epf_persistence_url>https://localhost:9443/persistence/persistence/</liberty.env.epf_persistence_url>
 		<liberty.env.epf_persistence_security_url>https://localhost:9443/persistence/security/</liberty.env.epf_persistence_security_url>
 		<liberty.env.epf_schema_url>https://localhost:9443/persistence/schema/</liberty.env.epf_schema_url>
-		<liberty.env.epf_security_url>https://localhost:9443/security/security/</liberty.env.epf_security_url>
+		<liberty.env.epf_security_url>https://localhost:9443/persistence/security/</liberty.env.epf_security_url>
         <liberty.env.epf_security_webapp_url>https://localhost:8686/EPF-security-webapp-1.0.0/</liberty.env.epf_security_webapp_url>
-        <liberty.env.epf_gateway_url>https://localhost:9443/gateway/</liberty.env.epf_gateway_url>
+        <liberty.env.epf_gateway_url>http://localhost:9180/gateway/</liberty.env.epf_gateway_url>
         <liberty.env.epf_messaging_url>ws://localhost:9080/messaging/messaging/</liberty.env.epf_messaging_url>
         <liberty.env.epf_lang_url>ws://localhost:9080/lang/lang/</liberty.env.epf_lang_url>
         <liberty.env.epf_cache_url>https://localhost:9443/cache/cache/</liberty.env.epf_cache_url>
@@ -43,11 +45,12 @@
 		<liberty.env.epf_health_url>https://localhost:9443/health/</liberty.env.epf_health_url>
 		<liberty.env.epf_batch_api_url>https://localhost:9443/ibm/</liberty.env.epf_batch_api_url>
 		<liberty.env.epf_net_url>https://localhost:9443/net/net/</liberty.env.epf_net_url>
+		<liberty.env.epf_net_http_port>9080</liberty.env.epf_net_http_port>
 		<liberty.env.openup_delivery_processes_url>https://localhost:9443/delivery-processes/delivery-processes/</liberty.env.openup_delivery_processes_url>
 		<liberty.env.openup_tasks_url>https://localhost:9443/tasks/tasks/</liberty.env.openup_tasks_url>
 		<liberty.env.openup_work_products_url>https://localhost:9443/work-products/work-products/</liberty.env.openup_work_products_url>
 		<liberty.env.openup_gateway_url>https://localhost:9443/openup/gateway/</liberty.env.openup_gateway_url>
-		<liberty.env.epf_shell_path>../EPF-shell/target/</liberty.env.epf_shell_path>
+		<liberty.env.epf_shell_path>../EPF-shell/</liberty.env.epf_shell_path>
 		<liberty.env.epf_shell_command>${shell_command}</liberty.env.epf_shell_command>
 		<liberty.env.epf_shell_runner>${shell_runner}</liberty.env.epf_shell_runner>
 		<liberty.env.epf_tests_file_root>target/servers/test/epf.file.root</liberty.env.epf_tests_file_root>
@@ -279,12 +282,6 @@
             <type>war</type>
         </dependency>
         <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-gateway</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-rs-mp-client</artifactId>
 		    <scope>test</scope>
@@ -343,19 +340,20 @@
 						<epf.persistence.url>https://localhost:${httpsPort}/persistence/persistence/</epf.persistence.url>
 						<epf.persistence.security.url>https://localhost:${httpsPort}/persistence/security/</epf.persistence.security.url>
 						<epf.schema.url>https://localhost:${httpsPort}/persistence/schema/</epf.schema.url>
-						<epf.security.url>https://localhost:${httpsPort}/security/security/</epf.security.url>
+						<epf.security.url>https://localhost:${httpsPort}/persistence/security/</epf.security.url>
                         <epf.security.webapp.url>https://localhost:${httpsPort}/security/</epf.security.webapp.url>
-                        <epf.gateway.url>https://localhost:${httpsPort}/gateway/</epf.gateway.url>
+                        <epf.gateway.url>http://localhost:${gatewayPort}/gateway/</epf.gateway.url>
                         <epf.registry.url>https://localhost:${httpsPort}/registry/registry/</epf.registry.url>
 						<epf.management.url>https://localhost:${httpsPort}/management/management/</epf.management.url>
                         <epf.messaging.url>ws://localhost:${httpPort}/messaging/messaging/</epf.messaging.url>
-                        <epf.lang.url>ws://localhost:9080/lang/lang/</epf.lang.url>
+                        <epf.lang.url>ws://localhost:${httpPort}/lang/lang/</epf.lang.url>
                         <epf.cache.url>https://localhost:${httpsPort}/cache/cache/</epf.cache.url>
-                        <epf.portlet.url>http://localhost:8080/pluto/portal</epf.portlet.url>
+                        <epf.portlet.url>http://localhost:${portalPort}/pluto/portal</epf.portlet.url>
                         <epf.webapp.url>https://localhost:${httpsPort}/webapp/</epf.webapp.url>
                         <epf.health.url>https://localhost:${httpsPort}/health/</epf.health.url>
 						<epf.batch.api.url>https://localhost:${httpsPort}/ibm/</epf.batch.api.url>
 						<epf.net.url>https://localhost:${httpsPort}/net/net/</epf.net.url>
+						<epf.net.http.port>${httpPort}</epf.net.http.port>
 						<openup.delivery_processes.url>https://localhost:${httpsPort}/delivery-processes/delivery-processes/</openup.delivery_processes.url>
 						<openup.tasks.url>https://localhost:${httpsPort}/tasks/tasks/</openup.tasks.url>
 						<openup.work_products.url>https://localhost:${httpsPort}/work-products/work-products/</openup.work_products.url>
@@ -425,7 +423,7 @@
                         <configuration>
                             <verifyTimeout>600</verifyTimeout>
                             <serverStartTimeout>600</serverStartTimeout>
-                            <applications>EPF-schedule,EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-persistence,EPF-registry,EPF-management,EPF-gateway</applications>
+                            <applications>EPF-schedule,EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-persistence,EPF-registry,EPF-management</applications>
                         </configuration>
                     </execution>
                     <!-- Stop the server -->
@@ -444,7 +442,7 @@
                     <deployPackages>dependencies</deployPackages>
 					<verifyTimeout>600</verifyTimeout>
 					<serverStartTimeout>600</serverStartTimeout>
-					<applications>EPF-schedule,EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-persistence,EPF-registry,EPF-management,EPF-gateway</applications>
+					<applications>EPF-schedule,EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-persistence,EPF-registry,EPF-management</applications>
                 </configuration>
             </plugin>
 			<plugin>

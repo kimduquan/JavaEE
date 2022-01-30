@@ -5,10 +5,19 @@ package epf.shell.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringReader;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.util.Base64;
+import java.util.Base64.Encoder;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,14 +34,17 @@ import javax.ws.rs.sse.SseEventSource;
 import epf.client.util.Client;
 import epf.file.util.PathUtil;
 import epf.shell.Function;
+import epf.shell.SYSTEM;
 import epf.shell.client.ClientUtil;
 import epf.shell.util.client.Entity;
+import epf.util.StringUtil;
 import epf.util.logging.LogManager;
 import epf.util.zip.ZipUtil;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.inject.Named;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -60,6 +72,12 @@ public class Utility {
 	 */
 	@Inject
 	transient ClientUtil clientUtil;
+	
+	/**
+	 * 
+	 */
+	@Inject @Named(SYSTEM.OUT)
+	transient PrintWriter out;
 	
 	/**
 	 * 
@@ -323,5 +341,66 @@ public class Utility {
 			final Path directory 
 			) throws Exception {
 		ZipUtil.unZip(file, directory);
+	}
+	
+	/**
+	 * @param algorithm
+	 * @param privateFile
+	 * @param publicFile
+	 * @throws Exception 
+	 */
+	@Command(name = "gen-keypair")
+	public void generateKeyPair(
+			@Option(names = {"-a", "--algorithm"}, description = "Algorithm", defaultValue = "RSA")
+			final String algorithm, 
+			@Option(names = {"-s", "--keysize"}, description = "Key Size", defaultValue = "2048")
+			final int keySize, 
+			@Option(names = {"-pr", "--private"}, description = "Private Key")
+			final Path privateFile, 
+			@Option(names = {"-pu", "--public"}, description = "Public Key")
+			final Path publicFile,
+			@Option(names = {"-e", "--encode"}, description = "Encoder", defaultValue = "url")
+			final String encode) throws Exception {
+		final KeyPairGenerator generator = KeyPairGenerator.getInstance(algorithm);
+		generator.initialize(keySize);
+		final KeyPair keyPair = generator.generateKeyPair();
+		final PrivateKey privateKey = keyPair.getPrivate();
+		final PublicKey publicKey = keyPair.getPublic();
+		Encoder encoder;
+		switch(encode) {
+		case "url":
+			encoder = Base64.getUrlEncoder();
+			break;
+		case "mime":
+			encoder = Base64.getMimeEncoder();
+			break;
+			default:
+				encoder = Base64.getEncoder();
+				break;
+		}
+		final String privateText = encoder.encodeToString(privateKey.getEncoded());
+		final List<String> privateLines = StringUtil.split(privateText, 64);
+		privateLines.add(0, "-----BEGIN PRIVATE KEY-----");
+		privateLines.add("-----END PRIVATE KEY-----");
+		out.println("Private Key");
+		out.println(privateText);
+		Files.write(
+				privateFile, 
+				privateLines,
+				StandardOpenOption.TRUNCATE_EXISTING,
+				StandardOpenOption.CREATE
+				);
+		out.println("Public Key");
+		final String publicText = encoder.encodeToString(publicKey.getEncoded());
+		final List<String> publicLines = StringUtil.split(publicText, 64);
+		publicLines.add(0, "-----BEGIN PUBLIC KEY-----");
+		publicLines.add("-----END PUBLIC KEY-----");
+		out.println(publicText);
+		Files.write(
+				publicFile, 
+				publicLines,
+				StandardOpenOption.TRUNCATE_EXISTING,
+				StandardOpenOption.CREATE
+				);
 	}
 }

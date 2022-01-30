@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.ws.rs.core.MultivaluedHashMap;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
@@ -55,6 +56,12 @@ public class Security {
 	@Inject
 	@RestClient
 	transient SecurityClient security;
+	
+	/**
+	 * 
+	 */
+	@ConfigProperty(name = Naming.Shell.SHELL_URL)
+	String shellUrl;
 
 	/**
 	 * @param user
@@ -72,7 +79,7 @@ public class Security {
 		    @NotEmpty
 			final char... password
 			) throws Exception {
-		return security.login(user, new String(password), clientUtil.getBaseUri().toString());
+		return security.login(user, new String(password), shellUrl);
 	}
 	
 	/**
@@ -99,9 +106,9 @@ public class Security {
 	public Token authenticate(
 			@Option(names = {"-t", TOKEN_ARG}, description = TOKEN_DESC) 
 			final String token) throws Exception {
-		final Token authToken = security.authenticate(token);
 		final Credential credential = new Credential();
 		credential.token = token;
+		final Token authToken = security.authenticate(credential.getAuthHeader());
 		credential.tokenID = authToken.getTokenID();
 		identityStore.put(credential);
 		return authToken;

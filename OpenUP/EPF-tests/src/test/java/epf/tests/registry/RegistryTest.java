@@ -17,11 +17,11 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
-import epf.client.gateway.GatewayUtil;
 import epf.client.registry.Registry;
 import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.tests.client.ClientUtil;
+import epf.util.config.ConfigUtil;
 import epf.util.logging.LogManager;
 
 public class RegistryTest {
@@ -37,7 +37,7 @@ public class RegistryTest {
     @BeforeClass
     public static void beforeClass() throws Exception{
     	try {
-			registryUrl = GatewayUtil.get(Naming.REGISTRY);
+			registryUrl = ConfigUtil.getURI(Naming.Registry.REGISTRY_URL);
 		} 
     	catch (URISyntaxException e) {
 			logger.log(Level.SEVERE, "beforeClass", e);
@@ -64,28 +64,28 @@ public class RegistryTest {
     }
     
     @Test
-    public void testList_OK() {
+    public void testList_OK() throws Exception {
     	Set<Link> links = Registry.list(client, null);
     	Set<URI> URIs = links.stream().map(link -> link.getUri()).collect(Collectors.toSet());
     	Set<URI> expected = new HashSet<>();
+    	URI baseUri = new URI("https://localhost:9443/");
     	try {
-			expected.add(GatewayUtil.get("config"));
-	    	expected.add(GatewayUtil.get("file"));
-	    	expected.add(GatewayUtil.get("persistence"));
-	    	expected.add(GatewayUtil.get("registry"));
-	    	expected.add(GatewayUtil.get("security"));
-	    	expected.add(GatewayUtil.get("stream"));
-	    	expected.add(GatewayUtil.get("cache"));
-	    	expected.add(GatewayUtil.get("script"));
-	    	expected.add(GatewayUtil.get("management"));
-	    	expected.add(GatewayUtil.get("rules"));
-	    	expected.add(GatewayUtil.get("schema"));
-	    	expected.add(GatewayUtil.get("planning"));
-	    	expected.add(GatewayUtil.get("image"));
-	    	expected.add(GatewayUtil.get("net"));
-	    	URI messagingUrl = UriBuilder.fromUri(GatewayUtil.get("messaging")).scheme("ws").port(9080).build();
+			expected.add(baseUri.resolve("config/config/"));
+	    	expected.add(baseUri.resolve("file/file/"));
+	    	expected.add(baseUri.resolve("persistence/persistence/"));
+	    	expected.add(baseUri.resolve("registry/registry/"));
+	    	expected.add(baseUri.resolve("persistence/security/"));
+	    	expected.add(baseUri.resolve("cache/cache/"));
+	    	expected.add(baseUri.resolve("script/script/"));
+	    	expected.add(baseUri.resolve("management/management/"));
+	    	expected.add(baseUri.resolve("rules/rules/"));
+	    	expected.add(baseUri.resolve("persistence/schema/"));
+	    	expected.add(baseUri.resolve("planning/planning/"));
+	    	expected.add(baseUri.resolve("image/image/"));
+	    	expected.add(baseUri.resolve("net/net/"));
+	    	URI messagingUrl = UriBuilder.fromUri(baseUri.resolve("messaging/messaging/")).scheme("ws").port(9080).build();
 	    	expected.add(messagingUrl);
-	    	URI langUrl = UriBuilder.fromUri(GatewayUtil.get("lang")).scheme("ws").port(9080).build();
+	    	URI langUrl = UriBuilder.fromUri(baseUri.resolve("lang/lang/")).scheme("ws").port(9080).build();
 	    	expected.add(langUrl);
 		} 
     	catch (Exception e) {

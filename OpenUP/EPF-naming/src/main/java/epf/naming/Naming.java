@@ -125,6 +125,28 @@ public interface Naming {
 	     * 
 	     */
 	    String GATEWAY_URL = "epf.gateway.url";
+	    
+	    /**
+	     * @author PC
+	     *
+	     */
+	    interface Headers {
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String X_FORWARDED_PORT = "X-Forwarded-Port";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String X_FORWARDED_PROTO = "X-Forwarded-Proto";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String X_FORWARDED_HOST = "X-Forwarded-Host";
+	    }
 	}
 	
 	/**
@@ -226,6 +248,10 @@ public interface Naming {
 		 */
 		String NET_URL = "epf.net.url";
 		
+		/**
+		 * 
+		 */
+		String HTTP_PORT = "epf.net.http.port";
 	}
 	
 	/**
@@ -314,7 +340,63 @@ public interface Naming {
 	     * 
 	     */
 	    String REGISTRY_URL = "epf.registry.url";
-		
+	    
+	    /**
+	     * @author PC
+	     *
+	     */
+	    interface Filter {
+	    	
+		    /**
+		     * 
+		     */
+		    String ABSOLUTE = "absolute";
+		    
+		    /**
+		     * 
+		     */
+		    String OPAQUE = "opaque";
+		    
+		    /**
+		     * 
+		     */
+		    String AUTHORITY = "authority";
+		    
+		    /**
+		     * 
+		     */
+		    String FRAGMENT = "fragment";
+		    
+		    /**
+		     * 
+		     */
+		    String HOST = "host";
+		    
+		    /**
+		     * 
+		     */
+		    String PATH = "path";
+		    
+		    /**
+		     * 
+		     */
+		    String PORT = "port";
+		    
+		    /**
+		     * 
+		     */
+		    String QUERY = "query";
+		    
+		    /**
+		     * 
+		     */
+		    String SCHEME = "scheme";
+		    
+		    /**
+		     * 
+		     */
+		    String USER_INFO = "user-info";
+	    }
 	}
 	
 	/**
@@ -418,6 +500,37 @@ public interface Naming {
 	     * 
 	     */
 	    String DEFAULT_ROLE = "Any_Role";
+	    
+	    /**
+	     * @author PC
+	     *
+	     */
+	    interface JWT {
+	    	
+	        /**
+	         * 
+	         */
+	        String ISSUE_KEY = "epf.security.jwt.issue.key";
+	        
+	        /**
+	         * 
+	         */
+	        String ENCRYPT_KEY = "epf.security.jwt.encrypt.key";
+	        
+	        /**
+	         * 
+	         */
+	        String EXPIRE_DURATION = "epf.security.jwt.exp.duration";
+	        /**
+	         * 
+	         */
+	        String EXPIRE_TIMEUNIT = "epf.security.jwt.exp.timeunit";
+	        
+	        /**
+	         * 
+	         */
+	        String TOKEN_CLAIM = "token";
+	    }
 	}
 	
 	/**
@@ -430,6 +543,11 @@ public interface Naming {
 	 *
 	 */
 	interface Shell {
+		
+		/**
+		 * 
+		 */
+		String SHELL_URL = "epf.shell.url";
 
 		/**
 		 * 

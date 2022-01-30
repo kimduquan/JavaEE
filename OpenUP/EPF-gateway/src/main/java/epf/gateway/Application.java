@@ -1,13 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.gateway;
 
 import java.io.InputStream;
 import java.net.URI;
 import java.util.concurrent.CompletionStage;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -19,15 +15,12 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.sse.OutboundSseEvent;
 import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
 import javax.ws.rs.sse.SseEventSource;
-import org.eclipse.microprofile.context.ManagedExecutor;
-import epf.client.util.ssl.DefaultHostnameVerifier;
-import epf.client.util.ssl.SSLContextHelper;
 import epf.util.logging.LogManager;
 
 /**
@@ -35,24 +28,18 @@ import epf.util.logging.LogManager;
  * @author FOXCONN
  */
 @ApplicationScoped
-public class Request {
+public class Application {
 	
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = LogManager.getLogger(Request.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Application.class.getName());
     
     /**
      * 
      */
     @Inject
-    private transient Registry registry;
-    
-    /**
-     * 
-     */
-    @Inject
-    private transient ManagedExecutor executor;
+    transient Registry registry;
     
     /**
      * @param headers
@@ -62,24 +49,29 @@ public class Request {
      * @throws Exception 
      */
     public CompletionStage<Response> request(
+    		final SecurityContext context,
     		final HttpHeaders headers, 
             final UriInfo uriInfo,
             final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
 		final URI uri = RequestUtil.buildUri(uriInfo, registry);
-		final ClientBuilder builder = ClientBuilder.newBuilder()
-		.executorService(executor)
-		.hostnameVerifier(new DefaultHostnameVerifier())
-		.sslContext(SSLContextHelper.build());
-		final Client client = builder.build();
+		final Client client = ClientBuilder.newClient();
 		WebTarget target = client.target(uri);
 		target = RequestUtil.buildTarget(target, uriInfo, uri);
 		Invocation.Builder invoke = target.request();
-		invoke = RequestUtil.buildRequest(invoke, headers);
+		final URI baseUri = uriInfo.getBaseUri();
+		invoke = RequestUtil.buildRequest(invoke, headers, baseUri);
 		final CompletionStageRxInvoker rx = invoke.rx();
 		return RequestUtil.invoke(rx, req.getMethod(), headers.getMediaType(), body)
-				.thenApply(res -> RequestUtil.buildResponse(res, uriInfo))
-				.thenApply(ResponseBuilder::build);
+				.thenApply(res -> RequestUtil.buildResponse(res, baseUri))
+				.whenComplete((res, err) -> {
+					client.close();
+					//res.close();
+				})
+				.exceptionally(ex -> { 
+					LOGGER.log(Level.WARNING, "request", ex);
+					return Response.serverError().build(); 
+					});
     }
     
     /**
@@ -94,15 +86,11 @@ public class Request {
             final UriInfo uriInfo,
             final SseEventSink sseEventSink,
             final Sse sse) throws Exception {
-    	ClientBuilder clientBuilder = ClientBuilder.newBuilder()
-    			.executorService(executor)
-    			.hostnameVerifier(new DefaultHostnameVerifier())
-    			.sslContext(SSLContextHelper.build());
-    	Client client = clientBuilder.build();
-    	URI uri = RequestUtil.buildUri(uriInfo, registry);
+    	final Client client = ClientBuilder.newClient();
+    	final URI uri = RequestUtil.buildUri(uriInfo, registry);
     	WebTarget target = client.target(uri);
     	target = RequestUtil.buildTarget(target, uriInfo, uri);
-    	SseEventSource.Builder builder = SseEventSource.target(target);
+    	final SseEventSource.Builder builder = SseEventSource.target(target);
     	try(SseEventSource source = builder.build()){
     		final OutboundSseEvent.Builder eventBuilder = sse.newEventBuilder();
     		source.register(

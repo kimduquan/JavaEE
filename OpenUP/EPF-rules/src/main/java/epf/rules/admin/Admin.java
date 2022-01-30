@@ -5,7 +5,6 @@ package epf.rules.admin;
 
 import java.io.InputStream;
 import java.util.HashMap;
-import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.rules.admin.RuleExecutionSet;
@@ -21,7 +20,6 @@ import epf.naming.Naming;
  */
 @Path(Naming.Rules.RULES_ADMIN)
 @ApplicationScoped
-@RolesAllowed(Naming.Security.DEFAULT_ROLE)
 public class Admin implements epf.client.rules.admin.Admin {
 	
 	/**

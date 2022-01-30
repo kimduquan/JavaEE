@@ -5,6 +5,7 @@ package epf.gateway;
 
 import java.io.InputStream;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
@@ -33,6 +34,8 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.StatusType;
 import javax.ws.rs.sse.SseEventSource;
+import epf.naming.Naming;
+import epf.util.StringUtil;
 
 /**
  * @author PC
@@ -120,7 +123,7 @@ public interface RequestUtil {
      * @param headers
      * @return
      */
-    static Builder buildRequest(final Builder input, final HttpHeaders headers){
+    static Builder buildRequest(final Builder input, final HttpHeaders headers, final URI baseUri){
     	Builder builder = input;
         if(headers != null){
         	final List<MediaType> mediaTypes = headers.getAcceptableMediaTypes();
@@ -142,6 +145,18 @@ public interface RequestUtil {
             if(requestHeaders.containsKey(HttpHeaders.AUTHORIZATION)){
             	builder = builder.header(HttpHeaders.AUTHORIZATION, headers.getHeaderString(HttpHeaders.AUTHORIZATION));
             }
+            final List<String> forwardedHost = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_HOST);
+            final List<String> forwardedPort = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_PORT);
+            final List<String> forwardedProto = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_PROTO);
+            final List<String> newForwardedHost = new ArrayList<>(forwardedHost);
+            newForwardedHost.add(baseUri.getHost());
+            final List<String> newForwardedPort = new ArrayList<>(forwardedPort);
+            newForwardedPort.add(String.valueOf(baseUri.getPort()));
+            final List<String> newForwardedProto = new ArrayList<>(forwardedProto);
+            newForwardedProto.add(baseUri.getScheme());
+            builder = builder.header(Naming.Gateway.Headers.X_FORWARDED_HOST, StringUtil.valueOf(newForwardedHost, ","));
+            builder = builder.header(Naming.Gateway.Headers.X_FORWARDED_PORT, StringUtil.valueOf(newForwardedPort, ","));
+            builder = builder.header(Naming.Gateway.Headers.X_FORWARDED_PROTO, StringUtil.valueOf(newForwardedProto, ","));
         }
         return builder;
     }
@@ -166,20 +181,20 @@ public interface RequestUtil {
     
     /**
      * @param link
-     * @param uriInfo
+     * @param baseUri
      * @return
      */
-    static Link buildLink(final Link link, final UriInfo uriInfo) {
-    	final URI uri = buildUri(link, uriInfo);
+    static Link buildLink(final Link link, final URI baseUri) {
+    	final URI uri = buildUri(link, baseUri);
     	return Link.fromLink(link).uri(uri).build();
     }
     
     /**
      * @param link
-     * @param uriInfo
+     * @param baseUri
      * @return
      */
-    static URI buildUri(final Link link, final UriInfo uriInfo) {
+    static URI buildUri(final Link link, final URI baseUri) {
     	final URI linkUri = link.getUri();
     	final String[] linkPaths = linkUri.getPath().split("/");
     	String path = "";
@@ -188,7 +203,7 @@ public interface RequestUtil {
     	}
     	final String linkScheme = linkUri.getScheme();
     	final int linkPort = linkUri.getPort();
-    	return uriInfo.getBaseUriBuilder().path(path).scheme(linkScheme).port(linkPort).build();
+    	return UriBuilder.fromUri(baseUri).path(path).scheme(linkScheme).port(linkPort).build();
     }
     
     /**
@@ -197,58 +212,52 @@ public interface RequestUtil {
      * @param uriInfo
      * @return
      */
-    static ResponseBuilder buildResponse(final Response res, final UriInfo uriInfo){
-    	ResponseBuilder builder = Response.fromResponse(res);
-        final Set<String> methods = res.getAllowedMethods();
-        if(methods != null){
-            builder = builder.allow(methods);
-        }
-        final Map<String, NewCookie> cookies = res.getCookies();
-        if(cookies != null){
-            builder = builder.cookie(cookies.values().toArray(new NewCookie[0]));
-        }
-        final URI location = res.getLocation();
-        if(location != null){
-            builder = builder.contentLocation(location);
-        }
-        if(res.hasEntity()){
-        	final Object entity = res.getEntity();
-            if(entity != null){
-                builder = builder.entity(entity);
-            }
-        }
-        final Locale lang = res.getLanguage();
-        if(lang != null){
-            builder = builder.language(lang);
-        }
-        final Date modified = res.getLastModified();
-        if(modified != null){
-            builder = builder.lastModified(modified);
-        }
-        Set<Link> links = res.getLinks();
-        if(links != null){
-        	links = links
-        			.stream()
-        			.map(link -> buildLink(link, uriInfo))
-        			.collect(Collectors.toSet());
-        	builder = builder.links().links(links.toArray(new Link[0]));
-        }
-        if(location != null){
-            builder = builder.location(location);
-        }
-        final StatusType status = res.getStatusInfo();
-        if(status != null){
-            builder = builder.status(status);
-        }
-        final EntityTag tag = res.getEntityTag();
-        if(tag != null){
-            builder = builder.tag(tag);
-        }
-        final MediaType type = res.getMediaType();
-        if(type != null){
-            builder = builder.type(type);
-        }
-        return builder;
+    static Response buildResponse(final Response response, final URI baseUri){
+		ResponseBuilder builder = Response.fromResponse(response);
+		final Set<String> methods = response.getAllowedMethods();
+		if(methods != null){
+			builder = builder.allow(methods);
+		}
+		final Map<String, NewCookie> cookies = response.getCookies();
+		if(cookies != null){
+			builder = builder.cookie(cookies.values().toArray(new NewCookie[0]));
+		}
+		final URI location = response.getLocation();
+		if(location != null){
+			builder = builder.contentLocation(location);
+		}
+		final Locale lang = response.getLanguage();
+		if(lang != null){
+			builder = builder.language(lang);
+		}
+		final Date modified = response.getLastModified();
+		if(modified != null){
+			builder = builder.lastModified(modified);
+		}
+		Set<Link> links = response.getLinks();
+		if(links != null){
+			links = links
+					.stream()
+					.map(link -> buildLink(link, baseUri))
+					.collect(Collectors.toSet());
+			builder = builder.links().links(links.toArray(new Link[0]));
+		}
+		if(location != null){
+			builder = builder.location(location);
+		}
+		final StatusType status = response.getStatusInfo();
+		if(status != null){
+			builder = builder.status(status);
+		}
+		final EntityTag tag = response.getEntityTag();
+		if(tag != null){
+			builder = builder.tag(tag);
+		}
+		final MediaType type = response.getMediaType();
+		if(type != null){
+			builder = builder.type(type);
+		}
+		return builder.build();
     }
     
     /**

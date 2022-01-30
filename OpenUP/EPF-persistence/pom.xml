@@ -87,11 +87,10 @@
 		    <artifactId>microprofile-opentracing-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-        <!-- https://mvnrepository.com/artifact/com.ibm.websphere.appserver.api/com.ibm.websphere.appserver.api.jwt -->
+        <!-- https://mvnrepository.com/artifact/org.bitbucket.b_c/jose4j -->
 		<dependency>
-		    <groupId>com.ibm.websphere.appserver.api</groupId>
-		    <artifactId>com.ibm.websphere.appserver.api.jwt</artifactId>
-			<scope>provided</scope>
+		    <groupId>org.bitbucket.b_c</groupId>
+		    <artifactId>jose4j</artifactId>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/javax.transaction/javax.transaction-api -->
 		<dependency>
@@ -113,6 +112,11 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-jdk14</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-naming</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>openup</groupId>

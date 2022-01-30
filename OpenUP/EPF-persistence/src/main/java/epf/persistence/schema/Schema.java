@@ -6,10 +6,9 @@ package epf.persistence.schema;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.security.RolesAllowed;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import epf.client.schema.util.EmbeddableComparator;
@@ -24,7 +23,7 @@ import epf.persistence.internal.Session;
  */
 @Path(Naming.SCHEMA)
 @RolesAllowed(Naming.Security.DEFAULT_ROLE)
-@RequestScoped
+@ApplicationScoped
 public class Schema implements epf.client.schema.Schema {
 	
 	/**
@@ -32,15 +31,9 @@ public class Schema implements epf.client.schema.Schema {
 	 */
 	@Inject
     private transient Request request;
-	
-	/**
-	 * 
-	 */
-	@Context
-    private transient SecurityContext context;
 
 	@Override
-	public Response getEntities() {
+	public Response getEntities(final SecurityContext context) {
 		final Session session = request.getSession(context);
 		final EntityBuilder builder = new EntityBuilder();
 		final EntityComparator comparator = new EntityComparator();
@@ -52,7 +45,7 @@ public class Schema implements epf.client.schema.Schema {
 	}
 
 	@Override
-	public Response getEmbeddables() {
+	public Response getEmbeddables(final SecurityContext context) {
 		final Session session = request.getSession(context);
 		final EmbeddableBuilder builder = new EmbeddableBuilder();
 		final EmbeddableComparator comparator = new EmbeddableComparator();

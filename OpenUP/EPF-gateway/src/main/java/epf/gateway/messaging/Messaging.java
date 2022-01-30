@@ -5,7 +5,6 @@ package epf.gateway.messaging;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,7 +15,6 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.websocket.CloseReason;
-import javax.websocket.DeploymentException;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -25,9 +23,9 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import org.eclipse.microprofile.context.ManagedExecutor;
+import epf.gateway.Registry;
 import epf.gateway.security.SecurityUtil;
 import epf.naming.Naming;
-import epf.util.config.ConfigUtil;
 import epf.util.logging.LogManager;
 
 /**
@@ -57,7 +55,13 @@ public class Messaging {
 	 * 
 	 */
 	@Inject
-	private transient ManagedExecutor executor;
+	transient ManagedExecutor executor;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	transient Registry registry;
 	
 	/**
 	 * 
@@ -65,12 +69,12 @@ public class Messaging {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI messagingUrl = ConfigUtil.getURI(Naming.Messaging.MESSAGING_URL);
+			final URI messagingUrl = registry.lookup(Naming.MESSAGING);
 			final Remote persistence = new Remote(messagingUrl.resolve(Naming.PERSISTENCE));
 			remotes.put(Naming.PERSISTENCE, persistence);
 			executor.submit(persistence);
 		} 
-		catch (URISyntaxException | DeploymentException | IOException e) {
+		catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "postConstruct", e);
 		}
 	}
@@ -105,19 +109,36 @@ public class Messaging {
 				}
 			);
 		}
-		if(tokenId.isEmpty() || !SecurityUtil.authenticateTokenId(tokenId.get())) {
-			final CloseReason reason = new CloseReason(CloseReason.CloseCodes.VIOLATED_POLICY, "");
-			remotes.computeIfPresent(path, (p, remote) -> {
-				remote.onClose(session, reason);
-				return remote;
+		if(tokenId.isEmpty()) {
+			closeSession(path, session);
+		}
+		else {
+			final URI cacheUrl = registry.lookup(Naming.CACHE);
+			final URI securityUrl = registry.lookup(Naming.SECURITY);
+			SecurityUtil.authenticateTokenId(tokenId.get(), cacheUrl, securityUrl).thenAccept(succeed -> {
+				if(!succeed) {
+					closeSession(path, session);
 				}
-			);
-			try {
-				session.close(reason);
-			} 
-			catch (IOException e) {
-				LOGGER.throwing(LOGGER.getName(), "onOpen", e);
+			});
+		}
+	}
+	
+	/**
+	 * @param path
+	 * @param session
+	 */
+	protected void closeSession(final String path, final Session session) {
+		final CloseReason reason = new CloseReason(CloseReason.CloseCodes.VIOLATED_POLICY, "");
+		remotes.computeIfPresent(path, (p, remote) -> {
+			remote.onClose(session, reason);
+			return remote;
 			}
+		);
+		try {
+			session.close(reason);
+		} 
+		catch (IOException e) {
+			LOGGER.throwing(LOGGER.getName(), "onOpen", e);
 		}
 	}
 	

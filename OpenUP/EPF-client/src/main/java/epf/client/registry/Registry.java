@@ -12,11 +12,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
+import javax.ws.rs.core.UriInfo;
 import epf.client.util.Client;
 import epf.naming.Naming;
 
@@ -72,7 +73,7 @@ public interface Registry {
 	 * @return
 	 */
 	@GET
-	Response list(@QueryParam(VERSION) final String version);
+	Response list(@QueryParam(VERSION) final String version, @Context final UriInfo uriInfo);
 	
 	/**
 	 * @param client

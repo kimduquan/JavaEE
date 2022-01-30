@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
-import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
@@ -27,7 +26,6 @@ import epf.util.logging.LogManager;
  *
  */
 @Path(Naming.IMAGE)
-@RolesAllowed(Naming.Security.DEFAULT_ROLE)
 @ApplicationScoped
 public class Image implements epf.client.image.Image {
 	

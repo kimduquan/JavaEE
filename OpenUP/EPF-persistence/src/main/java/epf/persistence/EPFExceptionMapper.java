@@ -5,6 +5,7 @@ import java.io.StreamCorruptedException;
 import java.net.SocketTimeoutException;
 import java.sql.SQLException;
 import java.sql.SQLInvalidAuthorizationSpecException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.validation.ValidationException;
 import javax.ws.rs.WebApplicationException;
@@ -107,7 +108,7 @@ public class EPFExceptionMapper implements ExceptionMapper<Exception>, Serializa
         	}
         	if(!mapStatus && rootCause != null) {
         		builder.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), rootCause.getMessage());
-        		LOGGER.throwing(EPFExceptionMapper.class.getName(), "handle", failure);
+        		LOGGER.log(Level.SEVERE, "handle", failure);
         	}
         }
         return builder.build();

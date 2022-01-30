@@ -3,15 +3,11 @@ package epf.gateway;
 import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import epf.client.util.Client;
-import epf.client.util.ClientQueue;
+import javax.ws.rs.client.ClientBuilder;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import epf.naming.Naming;
-import epf.util.config.ConfigUtil;
 
 /**
  * @author PC
@@ -19,56 +15,28 @@ import epf.util.config.ConfigUtil;
  */
 @ApplicationScoped
 public class Registry {
-
-	/**
-	 * 
-	 */
-	private static final String REGISTRY_URL = ConfigUtil.getString(Naming.Registry.REGISTRY_URL);
 	
 	/**
 	 * 
 	 */
-	private transient final Map<String, URI> remotes;
+	private transient final Map<String, URI> remotes = new ConcurrentHashMap<>();
 	
 	/**
 	 * 
 	 */
-	@Inject
-	private transient ClientQueue clients;
-	
-	/**
-	 * 
-	 */
-	@Inject
-	private transient Logger logger;
-	
-	/**
-	 * 
-	 */
-	public Registry() {
-		remotes = new ConcurrentHashMap<>();
-	}
+	@ConfigProperty(name = Naming.Registry.REGISTRY_URL)
+	String registryUrl;
     
 	/**
 	 * 
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		try(Client client = new Client(clients, new URI(REGISTRY_URL), b -> b)){
-			client
-			.request(
-					target -> target, 
-					req -> req
-					)
-			.get()
-			.getLinks()
-			.forEach(link -> {
-				remotes.put(link.getRel(), link.getUri());
-			});
-		} 
-		catch (Exception e) {
-			logger.log(Level.SEVERE, REGISTRY_URL, e);
-		}
+		ClientBuilder.newClient().target(registryUrl).queryParam(Naming.Registry.Filter.SCHEME, "http", "ws").request().get()
+		.getLinks()
+		.forEach(link -> {
+			remotes.put(link.getRel(), link.getUri());
+		});
 	}
 	
 	/**

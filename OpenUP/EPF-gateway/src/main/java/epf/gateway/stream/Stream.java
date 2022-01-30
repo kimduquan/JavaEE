@@ -3,9 +3,7 @@
  */
 package epf.gateway.stream;
 
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -14,8 +12,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.validation.constraints.NotBlank;
-import javax.websocket.DeploymentException;
 import javax.ws.rs.GET;
 import javax.ws.rs.MatrixParam;
 import javax.ws.rs.NotAuthorizedException;
@@ -28,18 +24,26 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
 import org.eclipse.microprofile.context.ManagedExecutor;
+import epf.gateway.Registry;
 import epf.gateway.security.SecurityUtil;
 import epf.naming.Naming;
-import epf.util.config.ConfigUtil;
+import epf.util.logging.LogManager;
 import epf.util.websocket.Client;
+import io.smallrye.common.annotation.Blocking;
 
 /**
  * @author PC
  *
  */
+@Blocking
 @Path("stream")
 @ApplicationScoped
 public class Stream {
+	
+	/**
+	 * 
+	 */
+	private static final Logger LOGGER = LogManager.getLogger(Stream.class.getName());
 	
 	/**
 	 * 
@@ -55,13 +59,13 @@ public class Stream {
 	 * 
 	 */
 	@Inject
-	private transient Logger logger;
+	transient Registry registry;
 	
 	/**
 	 * 
 	 */
 	@Inject
-	private transient ManagedExecutor executor;
+	transient ManagedExecutor executor;
 	
 	/**
 	 * 
@@ -69,11 +73,11 @@ public class Stream {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI messagingUrl = ConfigUtil.getURI(Naming.Messaging.MESSAGING_URL);
+			final URI messagingUrl = registry.lookup(Naming.MESSAGING);
 			clients.put(Naming.PERSISTENCE, Client.connectToServer(messagingUrl.resolve(Naming.PERSISTENCE)));
 		} 
-		catch (URISyntaxException | DeploymentException | IOException e) {
-			logger.log(Level.SEVERE, "postConstruct", e);
+		catch (Exception e) {
+			LOGGER.log(Level.SEVERE, "postConstruct", e);
 		}
 	}
 	
@@ -87,7 +91,7 @@ public class Stream {
 				client.close();
 			} 
 			catch (Exception e) {
-				logger.throwing(client.getClass().getName(), "close", e);
+				LOGGER.throwing(client.getClass().getName(), "close", e);
 			}
 		});
 		this.clients.clear();
@@ -96,7 +100,7 @@ public class Stream {
 				broadcaster.close();
 			} 
 			catch (Exception e) {
-				logger.throwing(broadcaster.getClass().getName(), "close", e);
+				LOGGER.throwing(broadcaster.getClass().getName(), "close", e);
 			}
 		});
 		this.broadcasters.clear();
@@ -112,29 +116,31 @@ public class Stream {
 	@Produces(MediaType.SERVER_SENT_EVENTS)
 	public void stream(
 			@PathParam("path")
-			@NotBlank
 			final String path, 
 			@Context 
 			final SseEventSink sink, 
 			@Context 
 			final Sse sse,
 			@MatrixParam("tid")
-			@NotBlank
 			final String tokenId) throws Exception {
-		if(SecurityUtil.authenticateTokenId(tokenId)) {
-			clients.computeIfPresent(path, (p, client) -> {
-				final Broadcaster broadcaster = broadcasters.computeIfAbsent(
-						path, p2 -> {
-							final Broadcaster newBroadcaster = new Broadcaster(client, sse);
-							executor.submit(newBroadcaster);
-							return newBroadcaster;
-						});
-				broadcaster.register(sink);
-				return client;
-			});
-		}
-		else {
-			throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
-		}
+		final URI cacheUrl = registry.lookup(Naming.CACHE);
+		final URI securityUrl = registry.lookup(Naming.SECURITY);
+		SecurityUtil.authenticateTokenId(tokenId, cacheUrl, securityUrl).thenAccept(succeed -> {
+			if(succeed) {
+				clients.computeIfPresent(path, (p, client) -> {
+					final Broadcaster broadcaster = broadcasters.computeIfAbsent(
+							path, p2 -> {
+								final Broadcaster newBroadcaster = new Broadcaster(client, sse);
+								executor.submit(newBroadcaster);
+								return newBroadcaster;
+							});
+					broadcaster.register(sink);
+					return client;
+				});
+			}
+			else {
+				throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
+			}
+		});
 	}
 }

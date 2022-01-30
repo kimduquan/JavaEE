@@ -9,7 +9,6 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
@@ -36,7 +35,6 @@ import epf.naming.Naming;
  */
 @ApplicationScoped
 @Path(Naming.CACHE)
-@RolesAllowed(Naming.Security.DEFAULT_ROLE)
 public class Cache implements epf.client.cache.Cache {
 	
 	/**
@@ -104,13 +102,11 @@ public class Cache implements epf.client.cache.Cache {
 		throw new NotFoundException();
 	}
 
-	@PermitAll
 	@Override
 	public Token getToken(final String tokenId) {
 		return security.getToken(tokenId);
 	}
 
-	@PermitAll
 	@Override
 	public String getUrl(final String id) {
 		final Optional<Object> entity = persistence.getEntity(Net.URL, id);

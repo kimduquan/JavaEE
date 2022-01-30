@@ -14,9 +14,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Form;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-
 import epf.client.util.Client;
 import epf.naming.Naming;
 
@@ -47,7 +48,9 @@ public interface OTPSecurity {
             final String passwordHash, 
             @QueryParam("url")
             @NotNull
-            final URL url
+            final URL url,
+            @Context
+            final HttpHeaders headers
     ) throws Exception;
     
     /**

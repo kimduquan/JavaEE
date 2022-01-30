@@ -1,13 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.gateway.image;
 
 import java.io.InputStream;
 import java.util.concurrent.CompletionStage;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -17,24 +12,26 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import org.eclipse.microprofile.faulttolerance.Asynchronous;
-import epf.gateway.Request;
+import epf.gateway.Application;
 import epf.naming.Naming;
+import io.smallrye.common.annotation.Blocking;
 
 /**
  *
  * @author FOXCONN
  */
+@Blocking
 @Path(Naming.IMAGE)
-@RequestScoped
+@ApplicationScoped
 public class Image {
     
     /**
      * 
      */
     @Inject
-    private transient Request request;
+    transient Application request;
     
     /**
      * @param headers
@@ -48,13 +45,13 @@ public class Image {
 	@POST
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
 	@Produces(MediaType.APPLICATION_JSON)
-    @Asynchronous
     public CompletionStage<Response> findContours(
+    		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body
     ) throws Exception {
-        return request.request(headers, uriInfo, req, body);
+        return request.request(context, headers, uriInfo, req, body);
     }
 }

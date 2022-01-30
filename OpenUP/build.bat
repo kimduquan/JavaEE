@@ -8,11 +8,10 @@ echo on
 call .\startup.bat
 echo on
 cd EPF-persistence
-call mvn clean install
+call mvn clean install -U
 echo on
 cd ../
-call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
-call mvn clean install -Depf-shell-native
+call mvn clean install -U -Depf-shell-native -Depf-gateway-native
 echo on
 call .\shutdown.bat
 echo on

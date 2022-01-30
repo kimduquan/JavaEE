@@ -1,3 +1,3 @@
 cd dependency
-call mvn clean install
+call mvn clean install -U
 cd ../

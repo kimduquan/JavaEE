@@ -10,11 +10,10 @@ import java.util.function.Function;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-
 import epf.client.util.Client;
 import epf.naming.Naming;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
@@ -62,7 +61,9 @@ public interface Queries {
             @QueryParam(FIRST)
             final Integer firstResult,
             @QueryParam(MAX)
-            final Integer maxResults
+            final Integer maxResults,
+            @Context
+            final SecurityContext context
             );
     
     /**
@@ -132,7 +133,9 @@ public interface Queries {
     		@QueryParam(FIRST)
     		final Integer firstResult,
             @QueryParam(MAX)
-    		final Integer maxResults);
+    		final Integer maxResults,
+            @Context
+            final SecurityContext context);
     
     /**
      * @param client

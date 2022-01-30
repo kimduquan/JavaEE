@@ -5,7 +5,6 @@ package epf.rules;
 
 import java.io.InputStream;
 import java.util.List;
-import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.json.bind.Jsonb;
@@ -28,7 +27,6 @@ import epf.util.json.Encoder;
  */
 @Path(Naming.RULES)
 @RequestScoped
-@RolesAllowed(Naming.Security.DEFAULT_ROLE)
 public class Rules implements epf.client.rules.Rules {
 	
 	/**

@@ -1,9 +1,8 @@
-/**
- * 
- */
 package epf.gateway.cache;
 
 import java.util.concurrent.CompletionStage;
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -14,26 +13,29 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
-import org.eclipse.microprofile.faulttolerance.Asynchronous;
-import epf.gateway.Request;
+import epf.gateway.Application;
 import epf.naming.Naming;
+import io.smallrye.common.annotation.Blocking;
 
 /**
  * @author PC
  *
  */
+@Blocking
 @Path(Naming.CACHE)
 @ApplicationScoped
+@RolesAllowed(Naming.Security.DEFAULT_ROLE)
 public class Cache {
 
 	/**
 	 * 
 	 */
 	@Inject
-    private transient Request request;
+    transient Application request;
 	
 	/**
 	 * @param headers
@@ -46,15 +48,15 @@ public class Cache {
 	@GET
 	@Path("persistence/{schema}/{entity}/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-    @Asynchronous
     public CompletionStage<Response> getEntity(
+    		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             @PathParam("schema") final String schema,
             @PathParam("entity") final String entity,
             @PathParam("id") final String entityId) throws Exception {
-        return request.request(headers, uriInfo, req, null);
+        return request.request(context, headers, uriInfo, req, null);
     }
 	
 	/**
@@ -67,14 +69,14 @@ public class Cache {
 	@GET
 	@Path("persistence/{schema}/{entity}")
 	@Produces(MediaType.APPLICATION_JSON)
-    @Asynchronous
     public CompletionStage<Response> getEntities(
+    		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             @PathParam("schema") final String schema,
             @PathParam("entity") final String entity) throws Exception {
-        return request.request(headers, uriInfo, req, null);
+        return request.request(context, headers, uriInfo, req, null);
     }
 	
 	/**
@@ -84,10 +86,13 @@ public class Cache {
 	 * @param sse
 	 * @param schema
 	 */
+	@PermitAll
 	@GET
 	@Path("persistence/{schema}")
 	@Produces(MediaType.SERVER_SENT_EVENTS)
 	public void forEachEntity(
+    		@Context 
+    		final SecurityContext context,
 			@Context 
 			final HttpHeaders headers, 
             @Context 
@@ -108,14 +113,15 @@ public class Cache {
 	 * @return
 	 * @throws Exception
 	 */
+	@PermitAll
 	@GET
 	@Path("security")
 	@Produces(MediaType.APPLICATION_JSON)
-    @Asynchronous
     public CompletionStage<Response> getToken(
+    		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req) throws Exception {
-        return request.request(headers, uriInfo, req, null);
+        return request.request(context, headers, uriInfo, req, null);
     }
 }

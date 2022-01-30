@@ -29,7 +29,7 @@
 		<liberty.env.epf_persistence_security_url>https://localhost/persistence/security/</liberty.env.epf_persistence_security_url>
 		<liberty.env.epf_schema_url>https://localhost/persistence/schema/</liberty.env.epf_schema_url>
 		<liberty.env.epf_security_url>https://localhost/security/security/</liberty.env.epf_security_url>
-        <liberty.env.epf_gateway_url>https://localhost/gateway/</liberty.env.epf_gateway_url>
+        <liberty.env.epf_gateway_url>http://localhost/gateway/</liberty.env.epf_gateway_url>
         <liberty.env.epf_messaging_url>ws://localhost/messaging/messaging/</liberty.env.epf_messaging_url>
         <liberty.env.epf_lang_url>ws://localhost/lang/lang/</liberty.env.epf_lang_url>
         <liberty.env.epf_cache_url>https://localhost/cache/cache/</liberty.env.epf_cache_url>
@@ -192,12 +192,6 @@
         </dependency>
 		<dependency>
             <groupId>openup</groupId>
-            <artifactId>EPF-security</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
-		<dependency>
-            <groupId>openup</groupId>
             <artifactId>EPF-registry</artifactId>
             <version>${project.version}</version>
             <type>war</type>
@@ -205,12 +199,6 @@
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-management</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-gateway</artifactId>
             <version>${project.version}</version>
             <type>war</type>
         </dependency>

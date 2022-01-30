@@ -1,10 +1,8 @@
-/**
- * 
- */
 package epf.gateway.rules;
 
 import java.io.InputStream;
 import java.util.concurrent.CompletionStage;
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -19,24 +17,27 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import org.eclipse.microprofile.faulttolerance.Asynchronous;
-import epf.gateway.Request;
+import epf.gateway.Application;
 import epf.naming.Naming;
+import io.smallrye.common.annotation.Blocking;
 
 /**
  * @author PC
  *
  */
+@Blocking
 @Path(Naming.RULES)
 @ApplicationScoped
+@RolesAllowed(Naming.Security.DEFAULT_ROLE)
 public class Rules {
 	
     /**
      * 
      */
     @Inject
-    private transient Request request;
+    transient Application request;
 
 	/**
 	 * @param headers
@@ -51,15 +52,15 @@ public class Rules {
 	@Path("{ruleSet}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-    @Asynchronous
 	public CompletionStage<Response> executeRules(
+    		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             @PathParam("ruleSet")
             final String ruleSet,
             final InputStream body) throws Exception {
-        return request.request(headers, uriInfo, req, body);
+        return request.request(context, headers, uriInfo, req, body);
     }
 	
 	/**
@@ -73,14 +74,14 @@ public class Rules {
 	@PUT
 	@Path("{ruleSet}")
 	@Produces(MediaType.APPLICATION_JSON)
-    @Asynchronous
 	public CompletionStage<Response> executeRules(
+    		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             @PathParam("ruleSet")
             final String ruleSet) throws Exception {
-        return request.request(headers, uriInfo, req, null);
+        return request.request(context, headers, uriInfo, req, null);
     }
 	
 	/**
@@ -94,14 +95,14 @@ public class Rules {
 	@PATCH
 	@Path("{ruleSet}")
 	@Consumes(MediaType.APPLICATION_JSON)
-    @Asynchronous
 	public CompletionStage<Response> addObject(
+    		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             @PathParam("ruleSet")
             final String ruleSet) throws Exception {
-        return request.request(headers, uriInfo, req, null);
+        return request.request(context, headers, uriInfo, req, null);
     }
 	
 	/**
@@ -113,11 +114,11 @@ public class Rules {
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-    @Asynchronous
 	public CompletionStage<Response> getRegistrations(
+    		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req) throws Exception {
-        return request.request(headers, uriInfo, req, null);
+        return request.request(context, headers, uriInfo, req, null);
     }
 }

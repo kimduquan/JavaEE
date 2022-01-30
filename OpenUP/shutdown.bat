@@ -1,3 +1,4 @@
+Taskkill /IM EPF-gateway-* /F
 cd EPF-tests
 call mvn liberty:stop
 cd ../

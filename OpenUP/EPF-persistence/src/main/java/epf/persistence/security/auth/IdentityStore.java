@@ -1,5 +1,6 @@
 package epf.persistence.security.auth;
 
+import java.util.Map;
 import java.util.Set;
 import javax.security.enterprise.CallerPrincipal;
 import javax.security.enterprise.credential.Password;
@@ -37,6 +38,12 @@ public interface IdentityStore {
 	 * @return
 	 */
 	Set<String> getCallerGroups(final CallerPrincipal callerPrincipal);
+	
+	/**
+	 * @param callerPrincipal
+	 * @return
+	 */
+	Map<String, Object> getCallerClaims(final CallerPrincipal callerPrincipal);
 	
 	/**
 	 * @param callerPrincipal

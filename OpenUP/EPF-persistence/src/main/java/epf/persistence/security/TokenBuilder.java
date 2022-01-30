@@ -1,28 +1,22 @@
 package epf.persistence.security;
 
 import java.security.PrivateKey;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.security.PublicKey;
+import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.eclipse.microprofile.jwt.Claims;
-import com.ibm.websphere.security.jwt.InvalidClaimException;
-import com.ibm.websphere.security.jwt.JwtBuilder;
-import com.ibm.websphere.security.jwt.JwtToken;
+import org.jose4j.jws.AlgorithmIdentifiers;
+import org.jose4j.jws.JsonWebSignature;
+import org.jose4j.jwt.JwtClaims;
+import org.jose4j.jwt.NumericDate;
 import epf.security.schema.Token;
-import epf.util.logging.LogManager;
 
 /**
  * @author PC
  *
  */
 public class TokenBuilder {
-	
-	/**
-	 * 
-	 */
-	private static final Logger LOGGER = LogManager.getLogger(TokenBuilder.class.getName());
 	
 	/**
 	 * 
@@ -35,13 +29,22 @@ public class TokenBuilder {
 	private transient final PrivateKey privateKey;
 	
 	/**
-	 * @param token
+	 * 
 	 */
-	public TokenBuilder(final Token token, final PrivateKey privateKey) {
+	private transient final PublicKey encryptKey;
+	
+	/**
+	 * @param token
+	 * @param privateKey
+	 * @param encryptKey
+	 */
+	public TokenBuilder(final Token token, final PrivateKey privateKey, final PublicKey encryptKey) {
 		Objects.requireNonNull(token, "Token");
 		Objects.requireNonNull(privateKey, "PrivateKey");
+		Objects.requireNonNull(encryptKey, "PublicKey");
 		this.token = token;
 		this.privateKey = privateKey;
+		this.encryptKey = encryptKey;
 	}
 
 	/**
@@ -49,46 +52,28 @@ public class TokenBuilder {
 	 * @throws Exception
 	 */
 	public Token build() throws Exception {
-		final JwtBuilder builder = JwtBuilder.create()
-				.audience(token.getAudience()
-						.stream()
-						.collect(Collectors.toList())
-						)
-				.issuer(token.getIssuer())
-                .subject(token.getSubject())
-                .expirationTime(token.getExpirationTime())
-                .notBefore(token.getIssuedAtTime())
-                .jwtId(true)
-                .claim(Claims.iat.name(), token.getIssuedAtTime())
-                .claim(Claims.upn.name(), token.getName())
-                .claim(Claims.groups.name(), token.getGroups().toArray(new String[token.getGroups().size()]));
-		token.getClaims().forEach((claim, value) -> {
-        	try {
-				builder.claim(claim, value);
-			} 
-        	catch (InvalidClaimException e) {
-        		LOGGER.throwing(getClass().getName(), "build", e);
-			}
-        });
-        builder.signWith("RS256", privateKey);
-		final JwtToken jwt = builder.buildJwt();
-		final Token newToken = new Token();
-		newToken.setAudience(
-				jwt
-        		.getClaims()
-        		.getAudience()
-        		.stream()
-        		.collect(Collectors.toSet())
-        		);
-		newToken.setClaims(new HashMap<>(token.getClaims()));
-		newToken.setExpirationTime(jwt.getClaims().getExpiration());
-		newToken.setGroups(new HashSet<>(token.getGroups()));
-		newToken.setIssuedAtTime(jwt.getClaims().getIssuedAt());
-		newToken.setIssuer(jwt.getClaims().getIssuer());
-		newToken.setName(jwt.getClaims().get(Claims.upn.name()).toString());
-		newToken.setSubject(jwt.getClaims().getSubject());
-		newToken.setTokenID(jwt.getClaims().getJwtId());
-		newToken.setRawToken(jwt.compact());
-		return newToken;
+		final JwtClaims claims = new JwtClaims();
+		claims.setAudience(token.getAudience().stream().collect(Collectors.toList()));
+		claims.setExpirationTime(NumericDate.fromSeconds(token.getExpirationTime()));
+		claims.setGeneratedJwtId();
+		claims.setIssuedAt(NumericDate.fromSeconds(token.getIssuedAtTime()));
+		claims.setIssuer(token.getIssuer());
+		claims.setNotBefore(NumericDate.fromSeconds(token.getIssuedAtTime()));
+		claims.setSubject(token.getSubject());
+		claims.setStringClaim(Claims.upn.name(), token.getName());
+		claims.setStringListClaim(Claims.groups.name(), token.getGroups().stream().collect(Collectors.toList()));
+		for(Entry<? extends String, ? extends Object> entry : token.getClaims().entrySet()) {
+			claims.setClaim(entry.getKey(), entry.getValue());
+		}
+		final JsonWebSignature jws = new JsonWebSignature();
+		jws.setHeader("typ", "JWT");
+	    jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.RSA_USING_SHA256);
+		jws.setPayload(claims.toJson());
+	    jws.setKey(privateKey);
+	    final String jwt = jws.getCompactSerialization();
+	    token.setRawToken(jwt);
+	    token.setTokenID(claims.getJwtId());
+	    encryptKey.getAlgorithm();
+		return token;
 	}
 }
