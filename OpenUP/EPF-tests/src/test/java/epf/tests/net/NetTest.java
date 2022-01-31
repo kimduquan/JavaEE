@@ -33,7 +33,7 @@ public class NetTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		HealthUtil.readỵ̣();
+		HealthUtil.isReady();
 		token = SecurityUtil.login();
 		netUrl = GatewayUtil.get(Naming.NET);
 		persistenceUrl = GatewayUtil.get(Naming.PERSISTENCE);

@@ -175,7 +175,6 @@ public interface Security {
      * @throws Exception 
      */
     @PUT
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
     String revoke(
     		@Context
@@ -191,6 +190,6 @@ public interface Security {
     	return client.request(
     			target -> target,
     			req -> req.accept(MediaType.TEXT_PLAIN))
-    			.put(Entity.form(new Form()), String.class);
+    			.put(null, String.class);
     }
 }

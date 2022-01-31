@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.client.schema.util;
 
 import java.util.Comparator;

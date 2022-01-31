@@ -83,7 +83,6 @@ public interface SecurityClient {
 	 * @throws Exception
 	 */
 	@PUT
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
     String revoke(
     		@HeaderParam(HttpHeaders.AUTHORIZATION)

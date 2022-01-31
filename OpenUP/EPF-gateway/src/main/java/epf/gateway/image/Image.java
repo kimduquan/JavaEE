@@ -52,6 +52,6 @@ public class Image {
             @Context final javax.ws.rs.core.Request req,
             final InputStream body
     ) throws Exception {
-        return request.request(context, headers, uriInfo, req, body);
+        return request.request(Naming.IMAGE, context, headers, uriInfo, req, body);
     }
 }

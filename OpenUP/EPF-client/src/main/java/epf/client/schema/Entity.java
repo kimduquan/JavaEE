@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.client.schema;
 
 import java.io.Serializable;

@@ -52,7 +52,11 @@ public interface Script {
 	 * @param input
 	 * @param cls
 	 */
-	static <T> T eval(final Client client, final String lang, final InputStream input, final Class<T> cls) {
+	static <T> T eval(
+			final Client client, 
+			final String lang, 
+			final InputStream input, 
+			final Class<T> cls) {
 		return client
 				.request(
 						target -> target.queryParam("lang", lang), 

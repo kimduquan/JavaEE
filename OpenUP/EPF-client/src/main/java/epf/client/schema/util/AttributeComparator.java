@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.client.schema.util;
 
 import java.util.Comparator;
@@ -13,10 +10,10 @@ import epf.client.schema.Attribute;
 public class AttributeComparator implements Comparator<Attribute> {
 
 	@Override
-	public int compare(final Attribute o1, final Attribute o2) {
-		int result = Integer.compare(o1.getName().length(), o2.getName().length());
+	public int compare(final Attribute attr1, final Attribute attr2) {
+		int result = Integer.compare(attr1.getName().length(), attr2.getName().length());
 		if(result == 0) {
-			result = o1.getName().compareTo(o2.getName());
+			result = attr1.getName().compareTo(attr2.getName());
 		}
 		return result;
 	}
