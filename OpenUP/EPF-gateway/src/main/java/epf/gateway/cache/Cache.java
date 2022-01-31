@@ -56,7 +56,7 @@ public class Cache {
             @PathParam("schema") final String schema,
             @PathParam("entity") final String entity,
             @PathParam("id") final String entityId) throws Exception {
-        return request.request(context, headers, uriInfo, req, null);
+        return request.request(Naming.CACHE, context, headers, uriInfo, req, null);
     }
 	
 	/**
@@ -76,7 +76,7 @@ public class Cache {
             @Context final javax.ws.rs.core.Request req,
             @PathParam("schema") final String schema,
             @PathParam("entity") final String entity) throws Exception {
-        return request.request(context, headers, uriInfo, req, null);
+        return request.request(Naming.CACHE, context, headers, uriInfo, req, null);
     }
 	
 	/**
@@ -103,7 +103,7 @@ public class Cache {
 			final Sse sse,
 			@PathParam("schema") 
 			final String schema) throws Exception {
-		request.stream(headers, uriInfo, sseEventSink, sse);
+		request.stream(Naming.CACHE, headers, uriInfo, sseEventSink, sse);
 	}
 	
 	/**
@@ -122,6 +122,6 @@ public class Cache {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req) throws Exception {
-        return request.request(context, headers, uriInfo, req, null);
+        return request.request(Naming.CACHE, context, headers, uriInfo, req, null);
     }
 }

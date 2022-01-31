@@ -71,7 +71,7 @@ public class Stream {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI messagingUrl = registry.lookup(Naming.MESSAGING);
+			final URI messagingUrl = registry.lookup(Naming.MESSAGING).orElseThrow();
 			clients.put(Naming.PERSISTENCE, Client.connectToServer(messagingUrl.resolve(Naming.PERSISTENCE)));
 		} 
 		catch (Exception e) {
@@ -122,8 +122,8 @@ public class Stream {
 			final Sse sse,
 			@MatrixParam("tid")
 			final String tokenId) throws Exception {
-		final URI cacheUrl = registry.lookup(Naming.CACHE);
-		final URI securityUrl = registry.lookup(Naming.SECURITY);
+		final URI cacheUrl = registry.lookup(Naming.CACHE).orElseThrow();
+		final URI securityUrl = registry.lookup(Naming.SECURITY).orElseThrow();
 		SecurityUtil.authenticateTokenId(tokenId, cacheUrl, securityUrl).thenAccept(succeed -> {
 			if(succeed) {
 				clients.computeIfPresent(path, (p, client) -> {

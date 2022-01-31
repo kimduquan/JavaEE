@@ -60,7 +60,7 @@ public class Rules {
             @PathParam("ruleSet")
             final String ruleSet,
             final InputStream body) throws Exception {
-        return request.request(context, headers, uriInfo, req, body);
+        return request.request(Naming.RULES, context, headers, uriInfo, req, body);
     }
 	
 	/**
@@ -81,7 +81,7 @@ public class Rules {
             @Context final javax.ws.rs.core.Request req,
             @PathParam("ruleSet")
             final String ruleSet) throws Exception {
-        return request.request(context, headers, uriInfo, req, null);
+        return request.request(Naming.RULES, context, headers, uriInfo, req, null);
     }
 	
 	/**
@@ -102,7 +102,7 @@ public class Rules {
             @Context final javax.ws.rs.core.Request req,
             @PathParam("ruleSet")
             final String ruleSet) throws Exception {
-        return request.request(context, headers, uriInfo, req, null);
+        return request.request(Naming.RULES, context, headers, uriInfo, req, null);
     }
 	
 	/**
@@ -119,6 +119,6 @@ public class Rules {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req) throws Exception {
-        return request.request(context, headers, uriInfo, req, null);
+        return request.request(Naming.RULES, context, headers, uriInfo, req, null);
     }
 }

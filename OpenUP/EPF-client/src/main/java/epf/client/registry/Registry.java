@@ -50,14 +50,24 @@ public interface Registry {
 	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	void bind(@FormParam(NAME) final String name, @FormParam(REMOTE) final URI remote, @QueryParam(VERSION) final String version);
+	void bind(
+			@FormParam(NAME) 
+			final String name, 
+			@FormParam(REMOTE) 
+			final URI remote, 
+			@QueryParam(VERSION) 
+			final String version);
 	/**
 	 * @param client
 	 * @param name
 	 * @param remote
 	 * @throws Exception
 	 */
-	static void bind(final Client client, final String name, final URI remote, final String version){
+	static void bind(
+			final Client client, 
+			final String name, 
+			final URI remote, 
+			final String version){
 		final Form form = new Form();
 		form.param(NAME, name);
 		form.param(REMOTE, remote.toString());
@@ -73,13 +83,19 @@ public interface Registry {
 	 * @return
 	 */
 	@GET
-	Response list(@QueryParam(VERSION) final String version, @Context final UriInfo uriInfo);
+	Response list(
+			@QueryParam(VERSION) 
+			final String version, 
+			@Context 
+			final UriInfo uriInfo);
 	
 	/**
 	 * @param client
 	 * @return
 	 */
-	static Set<Link> list(final Client client, final String version) {
+	static Set<Link> list(
+			final Client client, 
+			final String version) {
 		return client
 				.request(
 						target -> version != null ? target.queryParam(VERSION, version) : target, 
@@ -95,14 +111,21 @@ public interface Registry {
 	 */
 	@GET
 	@Path("{name}")
-	Response lookup(@PathParam(NAME) final String name, @QueryParam(VERSION) final String version);
+	Response lookup(
+			@PathParam(NAME) 
+			final String name, 
+			@QueryParam(VERSION) 
+			final String version);
 	
 	/**
 	 * @param client
 	 * @param name
 	 * @return
 	 */
-	static Response lookup(final Client client, final String name, final String version){
+	static Response lookup(
+			final Client client, 
+			final String name, 
+			final String version){
 		return client
 				.request(
 						target -> target.path(name).queryParam(VERSION, version), 
@@ -118,14 +141,24 @@ public interface Registry {
 	@PUT
 	@Path("{name}")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	void rebind(@PathParam(NAME) final String name, @FormParam(REMOTE) final URI remote, @QueryParam(VERSION) final String version);
+	void rebind(
+			@PathParam(NAME) 
+			final String name, 
+			@FormParam(REMOTE) 
+			final URI remote, 
+			@QueryParam(VERSION) 
+			final String version);
 	
 	/**
 	 * @param client
 	 * @param name
 	 * @param remote
 	 */
-	static void rebind(final Client client, final String name, final URI remote, final String version) {
+	static void rebind(
+			final Client client, 
+			final String name, 
+			final URI remote, 
+			final String version) {
 		final Form form = new Form();
 		form.param(REMOTE, remote.toString());
 		client
@@ -141,13 +174,20 @@ public interface Registry {
 	 */
 	@DELETE
 	@Path("{name}")
-	void unbind(@PathParam(NAME) final String name, @QueryParam(VERSION) final String version);
+	void unbind(
+			@PathParam(NAME) 
+			final String name, 
+			@QueryParam(VERSION) 
+			final String version);
 	
 	/**
 	 * @param client
 	 * @param name
 	 */
-	static void unbind(final Client client, final String name, final String version) {
+	static void unbind(
+			final Client client, 
+			final String name, 
+			final String version) {
 		client
 		.request(
 				target -> target.path(name).queryParam(VERSION, version), 

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.gateway;
 
 import java.io.InputStream;
@@ -47,83 +44,107 @@ public interface RequestUtil {
 	 * 
 	 */
 	int MIN_PATHS_COUNT = 1;
-
+	
 	/**
-     * @param uriInfo
-     * @param registry
-     * @return
-     */
-    static URI buildUri(final UriInfo uriInfo, final Registry registry) {
-    	URI uri = null;
-    	if(uriInfo.getPathSegments() != null && !uriInfo.getPathSegments().isEmpty()) {
-    		final String service = uriInfo.getPathSegments().get(0).getPath();
-    		uri = registry.lookup(service);
-    	}
-    	if(uri != null) {
-    		final String[] paths = uri.getPath().split("/");
-    		if(paths.length > MIN_PATHS_COUNT) {
-        		uri = UriBuilder.fromUri(uri).replacePath(paths[1]).build();
+	 * @param webTarget
+	 * @param segment
+	 * @return
+	 */
+	static WebTarget buildMatrixParameters(WebTarget webTarget, final PathSegment segment) {
+		final MultivaluedMap<String, String> matrixParams = segment.getMatrixParameters();
+        if(matrixParams != null){
+        	for(Entry<String, List<String>> entry : matrixParams.entrySet()) {
+        		final String key = entry.getKey();
+        		final List<String> value = entry.getValue();
+        		if(value == null) {
+            		webTarget = webTarget.matrixParam(key);
+            	}
+            	else {
+                	webTarget = webTarget.matrixParam(key, value.toArray(new Object[0]));
+            	}
         	}
-    	}
-    	if(uri == null) {
-    		uri = uriInfo.getBaseUri();
-    	}
-    	return uri;
-    }
+        }
+		return webTarget;
+	}
+	
+	/**
+	 * @param webTarget
+	 * @param uriInfo
+	 * @return
+	 */
+	static WebTarget buildQueryParameters(WebTarget webTarget, final UriInfo uriInfo) {
+		final MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();        
+        if(queryParams != null){
+        	for(Entry<String, List<String>> entry : queryParams.entrySet()) {
+        		final String key = entry.getKey();
+        		final List<String> value = entry.getValue();
+        		if(value == null) {
+            		webTarget = webTarget.queryParam(key);
+            	}
+            	else {
+            		webTarget = webTarget.queryParam(key, value.toArray(new Object[0]));
+            	}
+        	}
+        }
+        return webTarget;
+	}
+	
+	/**
+	 * @param webTarget
+	 * @param firstSegment
+	 * @return
+	 */
+	static WebTarget buildProperties(WebTarget webTarget, final PathSegment firstSegment) {
+		final MultivaluedMap<String, String> matrixParams = firstSegment.getMatrixParameters();
+        if(matrixParams != null){
+        	for(Entry<String, List<String>> entry : matrixParams.entrySet()) {
+        		final String key = entry.getKey();
+        		final List<String> value = entry.getValue();
+        		if(value == null) {
+            		webTarget = webTarget.property(key, null);
+            	}
+            	else {
+                	webTarget = webTarget.property(key, value.stream().collect(Collectors.joining(",")));
+            	}
+        	}
+        }
+		return webTarget;
+	}
     
     /**
-     * @param client
+     * @param webTarget
      * @param uriInfo
      * @param serviceUri
      * @return
      */
-    static WebTarget buildTarget(final WebTarget input,final  UriInfo uriInfo, final URI serviceUri){
-    	WebTarget webTarget = input;
+    static WebTarget buildTarget(
+    		WebTarget webTarget,
+    		final UriInfo uriInfo, 
+    		final URI serviceUri){
         if(uriInfo != null){
         	final List<PathSegment> segments = uriInfo.getPathSegments();
             if(segments != null){
             	final Iterator<PathSegment> segmentIt = segments.iterator();
+            	final PathSegment firstSegment = segmentIt.next();
+            	webTarget = buildProperties(webTarget, firstSegment);
             	while(segmentIt.hasNext()) {
             		final PathSegment segment = segmentIt.next();
             		webTarget = webTarget.path(segment.getPath());
-            		final MultivaluedMap<String, String> matrixParams = segment.getMatrixParameters();
-                    if(matrixParams != null){
-                    	for(Entry<String, List<String>> entry : matrixParams.entrySet()) {
-                    		final String key = entry.getKey();
-                    		final List<String> value = entry.getValue();
-                    		if(value == null) {
-                        		webTarget = webTarget.matrixParam(key);
-                        	}
-                        	else {
-                            	webTarget = webTarget.matrixParam(key, value.toArray(new Object[0]));
-                        	}
-                    	}
-                    }
+            		webTarget = buildMatrixParameters(webTarget, segment);
             	}
             }
-            final MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();        
-            if(queryParams != null){
-            	for(Entry<String, List<String>> entry : queryParams.entrySet()) {
-            		final String key = entry.getKey();
-            		final List<String> value = entry.getValue();
-            		if(value == null) {
-                		webTarget = webTarget.queryParam(key);
-                	}
-                	else {
-                		webTarget = webTarget.queryParam(key, value.toArray(new Object[0]));
-                	}
-            	}
-            }
+            webTarget = buildQueryParameters(webTarget, uriInfo);
         }
         return webTarget;
     }
     
     /**
-     * @param target
+     * @param input
      * @param headers
+     * @param baseUri
      * @return
      */
-    static Builder buildRequest(final Builder input, final HttpHeaders headers, final URI baseUri){
+    static Builder buildHeaders(final Builder input, final HttpHeaders headers, final URI baseUri){
     	Builder builder = input;
         if(headers != null){
         	final List<MediaType> mediaTypes = headers.getAcceptableMediaTypes();
@@ -184,8 +205,8 @@ public interface RequestUtil {
      * @param baseUri
      * @return
      */
-    static Link buildLink(final Link link, final URI baseUri) {
-    	final URI uri = buildUri(link, baseUri);
+    static Link mapLink(final Link link, final URI baseUri) {
+    	final URI uri = mapUri(link, baseUri);
     	return Link.fromLink(link).uri(uri).build();
     }
     
@@ -194,7 +215,7 @@ public interface RequestUtil {
      * @param baseUri
      * @return
      */
-    static URI buildUri(final Link link, final URI baseUri) {
+    static URI mapUri(final Link link, final URI baseUri) {
     	final URI linkUri = link.getUri();
     	final String[] linkPaths = linkUri.getPath().split("/");
     	String path = "";
@@ -246,7 +267,7 @@ public interface RequestUtil {
     		if(links != null){
     			links = links
     					.stream()
-    					.map(link -> buildLink(link, baseUri))
+    					.map(link -> mapLink(link, baseUri))
     					.collect(Collectors.toSet());
     			builder = builder.links().links(links.toArray(new Link[0]));
     		}

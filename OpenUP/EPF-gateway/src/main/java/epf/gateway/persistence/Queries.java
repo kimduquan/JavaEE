@@ -55,7 +55,7 @@ public class Queries {
             @PathParam("criteria")
             final List<PathSegment> paths
             ) throws Exception {
-        return request.request(context, headers, uriInfo, req, null);
+        return request.request(Naming.PERSISTENCE, context, headers, uriInfo, req, null);
     }
     
     /**
@@ -73,6 +73,6 @@ public class Queries {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req
             ) throws Exception {
-    	return request.request(context, headers, uriInfo, req, null);
+    	return request.request(Naming.PERSISTENCE, context, headers, uriInfo, req, null);
     }
 }

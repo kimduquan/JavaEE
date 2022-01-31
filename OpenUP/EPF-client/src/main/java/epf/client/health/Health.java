@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.client.health;
 
 import javax.ws.rs.GET;

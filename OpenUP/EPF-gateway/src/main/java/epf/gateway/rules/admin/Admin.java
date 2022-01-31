@@ -55,7 +55,7 @@ public class Admin {
             @PathParam("ruleSet")
             final String ruleSet,
             final InputStream body) throws Exception {
-        return request.request(context, headers, uriInfo, req, body);
+        return request.request(Naming.RULES, context, headers, uriInfo, req, body);
     }
     
     /**
@@ -75,6 +75,6 @@ public class Admin {
             @Context final javax.ws.rs.core.Request req,
             @PathParam("ruleSet")
             final String ruleSet) throws Exception {
-        return request.request(context, headers, uriInfo, req, null);
+        return request.request(Naming.RULES, context, headers, uriInfo, req, null);
     }
 }
