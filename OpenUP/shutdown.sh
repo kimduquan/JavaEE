@@ -9,7 +9,7 @@ killall geckodriver
 killall /usr/lib/firefox/firefox
 killall Xvfb
 export JAVA_HOME=$JAVA8_HOME
-$PLUTO_HOME/shutdown.sh &
+$PLUTO_HOME/bin/shutdown.sh &
 export JAVA_HOME=$JAVA11_HOME
 $WILDFLY_HOME/jboss-cli.sh --connect command=:shutdown &
 $KAFKA_HOME/zookeeper-server-stop.sh &
