@@ -22,8 +22,8 @@
 	<variable name="io.openliberty.enableGraphQLUI" value="true" />
     <httpEndpoint id="defaultHttpEndpoint"
                   host="localhost"
-                  httpPort="80"
-                  httpsPort="443" />
+                  httpPort="${httpPort}"
+                  httpsPort="${httpsPort}" />
 	<application id="EPF-schedule" name="EPF-schedule" context-root="schedule" location="EPF-schedule-1.0.0.war" startAfterRef="EPF-messaging" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
@@ -72,13 +72,15 @@
 	<application id="EPF-persistence" name="EPF-persistence" context-root="persistence" location="EPF-persistence-1.0.0.war" startAfterRef="EPF-schema,EPF-messaging" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-    <!-- <application id="EPF-webapp" name="EPF-webapp" context-root="webapp" location="EPF-webapp-1.0.0.war" startAfterRef="EPF-persistence,EPF-gateway" /> -->
     <application id="EPF-net" name="EPF-net" context-root="net" location="EPF-net-1.0.0.war" startAfterRef="EPF-messaging" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
     <application id="EPF-schema" name="EPF-schema" context-root="schema" location="EPF-schema-1.0.0.war">
         <classloader apiTypeVisibility="+third-party"/>
     </application>
+    
+    <webAppSecurity allowAuthenticationFailOverToAuthMethod="APP_DEFINED" />
+    
     
     <!-- EPF Library Configuration -->
     <library id="EPFLib">
@@ -100,8 +102,11 @@
     
     <mpJwt 
         id="EPF"
-        audiences ="http://localhost/,https://localhost/,http://localhost:${httpWebPort}/,https://localhost:${httpsWebPort}/">
-    </mpJwt>
+        audiences ="http://localhost:${httpPort}/,https://localhost:${httpsPort}/,http://localhost/,https://localhost/,http://localhost:${httpWebPort}/,https://localhost:${httpsWebPort}/,http://localhost:${portalPort}/,http://localhost:${gatewayPort}/"
+        ignoreApplicationAuthMethod="false" 
+        contentEncryptionAlgorithm="A256GCM" 
+        keyManagementKeyAlgorithm="RSA-OAEP"
+        jwkEnabled="true"/>
 
 	<dataSource id="epf" jndiName="jdbc/epf">
         <jdbcDriver libraryRef="MySQLJDBCLib"/>
