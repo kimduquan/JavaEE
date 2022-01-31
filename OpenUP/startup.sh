@@ -3,7 +3,7 @@
 $KAFKA_HOME$/zookeeper-server-start.sh $KAFKA_DIR$/config/zookeeper.properties &
 $JAEGER_HOME$/jaeger-all-in-one &
 export JAVA_HOME=$JAVA8_HOME$
-$PLUTO_HOME$/startup.sh &
+$PLUTO_HOME$/bin/startup.sh &
 export JAVA_HOME=$JAVA11_HOME$
 $WILDFLY_HOME$/standalone.sh "-Djboss.http.port=80" "-Djboss.https.port=443" --debug &
 Xvfb :10 -ac &

@@ -9,7 +9,7 @@ cd %JAEGER_HOME%
 start .\jaeger-all-in-one.exe &
 cd %CUR_DIR%
 set JAVA_HOME=%JAVA8_HOME%
-cd %PLUTO_HOME%
+cd %PLUTO_HOME%\bin
 call .\startup.bat &
 cd %CUR_DIR%
 cd %WILDFLY_HOME%
