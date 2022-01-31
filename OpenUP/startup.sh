@@ -4,7 +4,7 @@
 export JAVA_HOME=~/jdk8u312-b07
 ~/pluto-3.1.0/bin/startup.sh &
 export JAVA_HOME=~/jdk-11.0.13+8
-~/wildfly-24.0.1.Final/bin/standalone.sh "-Djboss.http.port=8585" "-Djboss.https.port=8686" --debug &
+~/wildfly-24.0.1.Final/bin/standalone.sh "-Djboss.http.port=80" "-Djboss.https.port=443" --debug &
 Xvfb :10 -ac &
 export DISPLAY=:10
 ~/kafka_2.13-2.8.1/bin/kafka-server-start.sh ~/kafka_2.13-2.8.1/config/server.properties &

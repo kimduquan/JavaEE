@@ -13,8 +13,8 @@
     <properties>
         <httpPort>9080</httpPort>
         <httpsPort>9443</httpsPort>
-        <httpWebPort>8585</httpWebPort>
-        <httpsWebPort>8686</httpsWebPort>
+        <httpWebPort>80</httpWebPort>
+        <httpsWebPort>443</httpsWebPort>
         <portalPort>8080</portalPort>
         <gatewayPort>9180</gatewayPort>
         <!-- Jaeger configuration -->
@@ -33,7 +33,7 @@
 		<liberty.env.epf_persistence_security_url>https://localhost:9443/persistence/security/</liberty.env.epf_persistence_security_url>
 		<liberty.env.epf_schema_url>https://localhost:9443/persistence/schema/</liberty.env.epf_schema_url>
 		<liberty.env.epf_security_url>https://localhost:9443/persistence/security/</liberty.env.epf_security_url>
-        <liberty.env.epf_security_webapp_url>https://localhost:8686/EPF-security-webapp-1.0.0/</liberty.env.epf_security_webapp_url>
+        <liberty.env.epf_security_webapp_url>https://localhost/EPF-security-webapp-1.0.0/</liberty.env.epf_security_webapp_url>
         <liberty.env.epf_gateway_url>http://localhost:9180/gateway/</liberty.env.epf_gateway_url>
         <liberty.env.epf_gateway_messaging_url>http://localhost:9180/messaging/</liberty.env.epf_gateway_messaging_url>
         <liberty.env.epf_messaging_url>ws://localhost:9080/messaging/messaging/</liberty.env.epf_messaging_url>
@@ -42,7 +42,7 @@
         <liberty.env.epf_registry_url>https://localhost:9443/registry/registry/</liberty.env.epf_registry_url>
 		<liberty.env.epf_management_url>https://localhost:9443/management/management/</liberty.env.epf_management_url>
 		<liberty.env.epf_portlet_url>http://localhost:8080/pluto/portal</liberty.env.epf_portlet_url>
-		<liberty.env.epf_webapp_url>https://localhost:8686/webapp/</liberty.env.epf_webapp_url>
+		<liberty.env.epf_webapp_url>https://localhost/webapp/</liberty.env.epf_webapp_url>
 		<liberty.env.epf_health_url>https://localhost:9443/health/</liberty.env.epf_health_url>
 		<liberty.env.epf_batch_api_url>https://localhost:9443/ibm/</liberty.env.epf_batch_api_url>
 		<liberty.env.epf_net_url>https://localhost:9443/net/net/</liberty.env.epf_net_url>

@@ -17,7 +17,7 @@ call .\startup.bat &
 cd %cur_dir%
 set wildfly_dir="C:\wildfly-24.0.1.Final\bin"
 cd %wildfly_dir%
-start .\standalone.bat "-Djboss.http.port=8585" "-Djboss.https.port=8686" --debug &
+start .\standalone.bat "-Djboss.http.port=80" "-Djboss.https.port=443" --debug &
 cd %cur_dir%
 cd %kafka_dir%
 start .\kafka-server-start.bat ..\..\config\server.properties &
