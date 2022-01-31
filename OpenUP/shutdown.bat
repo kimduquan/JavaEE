@@ -1,27 +1,24 @@
+call .\env.bat
 Taskkill /IM EPF-gateway-* /F
 cd EPF-tests
 call mvn liberty:stop
 cd ../
 setlocal
-set cur_dir=%CD%
-set cur_java=$JAVA_HOME
-set kafka_dir="C:\kafka_2.13-2.8.1\bin\windows"
-cd %kafka_dir%
+set CUR_DIR=%CD%
+cd %KAFKA_HOME%
 call .\kafka-server-stop.bat &
 Taskkill /IM jaeger-all-in-one.exe /F
 Taskkill /IM geckodriver.exe /F
 Taskkill /IM firefox.exe /F
-set JAVA_HOME=C:\jdk8u312-b07
-set portal_dir="C:\Program Files\pluto-3.1.0\bin\"
-cd %portal_dir%
+set JAVA_HOME=%JAVA8_HOME%
+cd %PLUTO_HOME%\bin
 call .\shutdown.bat &
-cd %cur_dir%
-set wildfly_dir="C:\wildfly-24.0.1.Final\bin"
+cd %CUR_DIR%
 set NOPAUSE=true
-cd %wildfly_dir%
+cd %WILDFLY_HOME%
 call .\jboss-cli.bat --connect command=:shutdown &
-cd %cur_dir%
-cd %kafka_dir%
+cd %CUR_DIR%
+cd %KAFKA_HOME%
 call .\zookeeper-server-stop.bat &
-cd %cur_dir%
+cd %CUR_DIR%
 endlocal
