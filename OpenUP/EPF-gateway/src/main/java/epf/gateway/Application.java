@@ -68,12 +68,10 @@ public class Application {
 				.thenApply(res -> RequestUtil.buildResponse(res, baseUri))
 				.whenComplete((res, err) -> {
 					client.close();
-					//res.close();
-				})
-				.exceptionally(ex -> { 
-					LOGGER.log(Level.WARNING, "request", ex);
-					return Response.serverError().build(); 
-					});
+					if(err != null) {
+						res.close();
+					}
+				});
     }
     
     /**
