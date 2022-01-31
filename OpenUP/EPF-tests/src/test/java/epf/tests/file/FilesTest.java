@@ -58,7 +58,9 @@ public class FilesTest {
 		filesUrl = GatewayUtil.get(Naming.FILE);
 		tempDir = Files.createTempDirectory("file");
 		rootDir = Paths.get(System.getProperty("epf.tests.file.root", "")).toAbsolutePath();
-		epf.file.util.FileUtil.deleteDirectories(rootDir);
+		if(Files.exists(rootDir)) {
+			epf.file.util.FileUtil.deleteDirectories(rootDir);
+		}
 		rootDir.toFile().mkdirs();
 	}
 
