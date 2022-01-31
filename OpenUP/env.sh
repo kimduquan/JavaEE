@@ -1,10 +1,10 @@
-export GRAALVM_HOME=
+export GRAALVM_HOME=~/graalvm-ce-java11-22.0.0.2
 export PATH=$GRAALVM_HOME$/bin;$PATH$
-export JAVA8_HOME=~/jdk8u312-b07
-export JAVA11_HOME=~/jdk-11.0.13+8
+export JAVA8_HOME=~/jdk8u322-b06
+export JAVA11_HOME=~/jdk-11.0.14+9
 export JAVA_HOME=$JAVA11_HOME$
 export PLUTO_HOME=~/pluto-3.1.0
 export KAFKA_DIR=~/kafka_2.13-2.8.1
 export KAFKA_HOME=$KAFKA_DIR$/bin
 export WILDFLY_HOME=~/wildfly-24.0.1.Final/bin
-export JAEGER_HOME=~/jaeger-1.24.0-linux-amd64
+export JAEGER_HOME=~/jaeger-1.30.0-linux-amd64
