@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.tests.file;
 
 import java.io.BufferedReader;
@@ -61,6 +58,8 @@ public class FilesTest {
 		filesUrl = GatewayUtil.get(Naming.FILE);
 		tempDir = Files.createTempDirectory("file");
 		rootDir = Paths.get(System.getProperty("epf.tests.file.root", "")).toAbsolutePath();
+		epf.file.util.FileUtil.deleteDirectories(rootDir);
+		rootDir.toFile().mkdirs();
 	}
 
 	/**
@@ -73,10 +72,6 @@ public class FilesTest {
 			paths.forEach(path -> path.toFile().delete());
 		}
 		tempDir.toFile().delete();
-		try(Stream<Path> paths = Files.walk(rootDir)){
-			paths.forEach(path -> path.toFile().delete());
-		}
-		rootDir.toFile().delete();
 	}
 
 	/**
@@ -106,6 +101,7 @@ public class FilesTest {
 			Assert.assertEquals("Response.status", Response.Status.OK.getStatusCode(), response.getStatusInfo().getStatusCode());
 			Link link = response.getLink("self");
 			Assert.assertNotNull("Response.link", link);
+			System.out.println("Response.self.uri=" + link.getUri());
 			try(Client newclient = ClientUtil.newClient(link.getUri())){
 				newclient.authorization(token);
 				InputStream input2 = newclient
@@ -132,6 +128,7 @@ public class FilesTest {
 			Assert.assertEquals("Response.status", Response.Status.OK.getStatusCode(), response.getStatusInfo().getStatusCode());
 			Link link = response.getLink("self");
 			Assert.assertNotNull("Response.link", link);
+			System.out.println("Response.self.uri=" + link.getUri());
 			try(Client newclient = ClientUtil.newClient(link.getUri())){
 				newclient.authorization(token);
 				InputStream input2 = newclient
@@ -231,6 +228,7 @@ public class FilesTest {
 				Assert.assertNotNull("Response.link", link);
 			}
 		}
+		System.out.println("Response.self.uri=" + link.getUri());
 		try(Client newclient = ClientUtil.newClient(link.getUri())){
 			newclient.authorization(token);
 			InputStream input = newclient
