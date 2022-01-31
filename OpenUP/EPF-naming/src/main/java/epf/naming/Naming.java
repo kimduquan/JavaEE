@@ -488,6 +488,19 @@ public interface Naming {
 	/**
 	 * 
 	 */
+	String SEARCH = "search";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface Search {
+		
+	}
+	
+	/**
+	 * 
+	 */
 	String SECURITY = "security";
 	
 	/**

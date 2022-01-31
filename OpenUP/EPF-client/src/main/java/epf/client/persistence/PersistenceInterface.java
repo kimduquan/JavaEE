@@ -1,6 +1,7 @@
 package epf.client.persistence;
 
 import java.io.Serializable;
+import java.net.URI;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
@@ -56,5 +57,5 @@ public interface PersistenceInterface extends Remote {
 	 * @return
 	 * @throws RemoteException
 	 */
-	List<SearchData> search(final String text, final Integer firstResult, final Integer maxResults) throws RemoteException;
+	List<URI> search(final String text, final Integer firstResult, final Integer maxResults) throws RemoteException;
 }

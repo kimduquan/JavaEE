@@ -1,12 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.tests.persistence;
 
 import epf.client.gateway.GatewayUtil;
-import epf.client.persistence.Queries;
+import epf.client.search.Search;
 import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.tests.client.ClientUtil;
@@ -64,7 +59,7 @@ public class QueriesTest {
     @Test
     @Ignore
     public void testSearchOK() throws Exception {
-    	Set<Link> entityLinks = Queries.search(client, "Any", 0, 100).getLinks();
+    	Set<Link> entityLinks = Search.search(client, "Any", 0, 100).getLinks();
     	Assert.assertFalse("Response.links.empty", entityLinks.isEmpty());
     	entityLinks.forEach(entityLink -> {
     		Assert.assertNotNull("Link", entityLink);
@@ -88,25 +83,25 @@ public class QueriesTest {
     
     @Test
     public void testSearchOK_EmptyResult() {
-    	Set<Link> entityLinks = Queries.search(client, "EPF", 0, 100).getLinks();
+    	Set<Link> entityLinks = Search.search(client, "EPF", 0, 100).getLinks();
     	Assert.assertTrue("Response.links.empty", entityLinks.isEmpty());
     }
     
     @Test(expected = BadRequestException.class)
     @Ignore
     public void testSearch_EmptyText() {
-    	Queries.search(client, "", 0, 100);
+    	Search.search(client, "", 0, 100);
     }
     
     @Test(expected = BadRequestException.class)
     @Ignore
     public void testSearch_BlankText() {
-    	Queries.search(client, "    ", 0, 100);
+    	Search.search(client, "    ", 0, 100);
     }
     
     @Test(expected = BadRequestException.class)
     @Ignore
     public void testSearch_InvalidText() {
-    	Queries.search(client, "'abc'", 0, 100);
+    	Search.search(client, "'abc'", 0, 100);
     }
 }
