@@ -18,4 +18,5 @@ cd %CUR_DIR%
 cd %KAFKA_HOME%
 start .\kafka-server-start.bat ..\..\config\server.properties &
 cd %CUR_DIR%
+set JAVA_HOME=%JAVA11_HOME%
 endlocal

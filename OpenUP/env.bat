@@ -1,9 +1,9 @@
-set GRAALVM_HOME=C:\graalvm-ce-java11-21.3.0
+set GRAALVM_HOME=C:\graalvm-ce-java11-22.0.0.2
 set PATH=%GRAALVM_HOME%/bin;%PATH%
-set JAVA8_HOME=C:\jdk8u312-b07
-set JAVA11_HOME=C:\jdk-11.0.13+8
+set JAVA8_HOME=C:\jdk8u322-b06
+set JAVA11_HOME=C:\jdk-11.0.14+9
 set JAVA_HOME=%JAVA11_HOME%
 set PLUTO_HOME="C:\Program Files\pluto-3.1.0"
 set KAFKA_HOME="C:\kafka_2.13-2.8.1\bin\windows"
 set WILDFLY_HOME="C:\wildfly-24.0.1.Final\bin"
-set JAEGER_HOME="C:\jaeger-1.27.0-windows-amd64"
+set JAEGER_HOME="C:\jaeger-1.30.0-windows-amd64"
