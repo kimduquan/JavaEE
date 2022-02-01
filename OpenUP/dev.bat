@@ -1,3 +1,4 @@
+call ./env.bat
 call ./shutdown.bat
 call ./clean.bat
 call ./startup.bat

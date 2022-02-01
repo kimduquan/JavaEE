@@ -1,3 +1,4 @@
+call .\env.bat
 call git pull
 call git clean -f -d
 copy .\settings.xml ~/.m2
