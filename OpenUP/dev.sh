@@ -1,3 +1,4 @@
+. ./env.sh
 ./shutdown.sh
 ./clean.sh
 ./startup.sh

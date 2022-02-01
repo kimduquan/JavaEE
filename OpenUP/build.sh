@@ -1,9 +1,9 @@
+. ./env.sh
 git pull
 git clean -f -d
 cp settings.xml ~/.m2
 ./clean.sh
 ./copy_dependency.sh
-. ./env.sh
 #gu install native-image
 . ./config.sh
 ./startup.sh
