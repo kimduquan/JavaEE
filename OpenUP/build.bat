@@ -9,7 +9,7 @@ echo on
 call .\startup.bat
 echo on
 cd EPF-persistence
-call mvn clean install -U
+call mvn clean install -U &
 echo on
 cd ../
 call mvn clean install -U -Depf-shell-native -Depf-gateway-native
