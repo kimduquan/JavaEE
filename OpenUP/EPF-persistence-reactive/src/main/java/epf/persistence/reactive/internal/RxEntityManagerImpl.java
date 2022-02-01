@@ -1,10 +1,11 @@
-package epf.persistence.reactive;
+package epf.persistence.reactive.internal;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.metamodel.Metamodel;
 import org.hibernate.reactive.mutiny.Mutiny.SessionFactory;
+import epf.persistence.reactive.RxEntityManager;
 import io.smallrye.mutiny.Uni;
 
 @ApplicationScoped

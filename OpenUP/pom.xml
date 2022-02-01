@@ -767,6 +767,7 @@
 		<module>EPF-client-utility</module>
 		<module>EPF-file-utility</module>
 		<module>EPF-messaging-utility</module>
+		<module>EPF-persistence-utility</module>
 		<module>EPF-security-utility</module>
 		<module>EPF-function</module>
 		<module>EPF-schedule</module>
