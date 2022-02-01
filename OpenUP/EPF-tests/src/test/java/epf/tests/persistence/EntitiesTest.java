@@ -6,10 +6,10 @@
 package epf.tests.persistence;
 
 import epf.client.gateway.GatewayUtil;
-import epf.client.persistence.Entities;
 import epf.client.util.Client;
 import epf.delivery_processes.schema.DeliveryProcesses;
 import epf.naming.Naming;
+import epf.persistence.client.Entities;
 import epf.tests.client.ClientUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;

@@ -1,4 +1,4 @@
-package epf.client.persistence;
+package epf.persistence.client;
 
 import java.io.InputStream;
 import javax.validation.constraints.NotBlank;
@@ -15,7 +15,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-
 import epf.client.util.Client;
 import epf.naming.Naming;
 

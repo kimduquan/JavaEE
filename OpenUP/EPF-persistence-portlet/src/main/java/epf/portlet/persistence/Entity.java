@@ -278,7 +278,7 @@ public class Entity implements Serializable {
 	 */
 	public void persist() throws Exception {
 		try(Client client = securityUtil.newClient(gatewayUtil.get(epf.naming.Naming.PERSISTENCE))){
-			try(Response response = epf.client.persistence.Entities.persist(
+			try(Response response = epf.persistence.client.Entities.persist(
 					client, 
 					entity.getTable().getSchema(),
 					entity.getName(), 
@@ -306,7 +306,7 @@ public class Entity implements Serializable {
 	 */
 	public void merge() throws Exception {
 		try(Client client = securityUtil.newClient(gatewayUtil.get(epf.naming.Naming.PERSISTENCE))){
-			epf.client.persistence.Entities.merge(
+			epf.persistence.client.Entities.merge(
 					client,
 					entity.getTable().getSchema(),
 					entity.getName(), 
@@ -322,7 +322,7 @@ public class Entity implements Serializable {
 	 */
 	public String remove() throws Exception {
 		try(Client client = securityUtil.newClient(gatewayUtil.get(epf.naming.Naming.PERSISTENCE))){
-			epf.client.persistence.Entities.remove(
+			epf.persistence.client.Entities.remove(
 					client, 
 					entity.getTable().getSchema(),
 					entity.getName(), 

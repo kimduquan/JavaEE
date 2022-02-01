@@ -5,7 +5,8 @@ import java.net.URI;
 import java.rmi.RemoteException;
 import java.util.List;
 import javax.enterprise.inject.spi.CDI;
-import epf.client.persistence.PersistenceInterface;
+
+import epf.persistence.client.PersistenceInterface;
 
 /**
  * @author PC

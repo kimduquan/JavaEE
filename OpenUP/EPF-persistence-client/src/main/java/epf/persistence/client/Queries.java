@@ -1,4 +1,4 @@
-package epf.client.persistence;
+package epf.persistence.client;
 
 import java.util.List;
 import java.util.function.Function;

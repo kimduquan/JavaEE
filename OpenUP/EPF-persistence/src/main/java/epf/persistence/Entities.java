@@ -24,7 +24,7 @@ import epf.persistence.internal.Session;
 @Path(Naming.PERSISTENCE)
 @RolesAllowed(Naming.Security.DEFAULT_ROLE)
 @ApplicationScoped
-public class Entities implements epf.client.persistence.Entities {
+public class Entities implements epf.persistence.client.Entities {
     
     /**
      * 

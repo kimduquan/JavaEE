@@ -146,7 +146,7 @@ public class Persistence implements PersistenceView, Serializable {
 				if(idValue != null) {
 					final String value = JsonUtil.toString(idValue);
 					try(Client client = clientUtil.newClient(gatewayUtil.get(epf.naming.Naming.PERSISTENCE))){
-						epf.client.persistence.Entities.remove(client, entity.getTable().getSchema(), entity.getName(), value);
+						epf.persistence.client.Entities.remove(client, entity.getTable().getSchema(), entity.getName(), value);
 					}
 				}
 			}

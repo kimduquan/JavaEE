@@ -9,8 +9,9 @@ import javax.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
-import epf.client.persistence.PersistenceInterface;
+
 import epf.naming.Naming;
+import epf.persistence.client.PersistenceInterface;
 import epf.persistence.security.SecurityProxy;
 import epf.security.client.SecurityInterface;
 import epf.util.logging.LogManager;

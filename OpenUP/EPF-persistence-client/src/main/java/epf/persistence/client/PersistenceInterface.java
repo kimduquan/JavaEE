@@ -1,4 +1,4 @@
-package epf.client.persistence;
+package epf.persistence.client;
 
 import java.io.Serializable;
 import java.net.URI;
