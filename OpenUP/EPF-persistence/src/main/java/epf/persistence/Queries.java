@@ -1,25 +1,24 @@
 package epf.persistence;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.core.Response.Status;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.metamodel.EntityType;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.SecurityContext;
 import epf.naming.Naming;
-import epf.persistence.internal.Entity;
-import epf.persistence.internal.QueryBuilder;
 import epf.persistence.internal.Session;
+import epf.persistence.util.Entity;
+import epf.persistence.util.QueryBuilder;
+import epf.persistence.util.QueryUtil;
 
 /**
  *
@@ -54,40 +53,13 @@ public class Queries implements epf.persistence.client.Queries {
         	entity.setType(entityType);
         	return session.peekManager(entityManager -> {
         		final Query query = buildQuery(entityManager, entity, paths);
-            	final ResponseBuilder response = Response.ok();
-                return collectQueryResult(query, firstResult, maxResults, response);
+            	final ResponseBuilder response = QueryUtil.collectResult(query, firstResult, maxResults, Response.ok());
+                return response;
         	})
         	.get()
         	.build();
         }
     	throw new NotFoundException();
-    }
-    
-    /**
-     * @param query
-     * @param firstResult
-     * @param maxResults
-     * @param response
-     * @return
-     */
-    protected static ResponseBuilder collectQueryResult(
-    		final Query query,
-    		final Integer firstResult,
-            final Integer maxResults,
-    		final ResponseBuilder response
-    		) {
-    	if(firstResult != null){
-            query.setFirstResult(firstResult);
-        }
-        if(maxResults != null){
-            query.setMaxResults(maxResults);
-        }
-        final Stream<?> result = query.getResultStream();
-        response.status(Status.OK).entity(
-                    		result
-                            .collect(Collectors.toList())
-        );
-        return response;
     }
     
     /**
@@ -101,10 +73,12 @@ public class Queries implements epf.persistence.client.Queries {
     		final Entity<Object> entity, 
     		final List<PathSegment> paths) {
     	final QueryBuilder queryBuilder = new QueryBuilder();
-    	return queryBuilder
-    			.manager(entityManager)
+    	final CriteriaQuery<Object> criteria = queryBuilder
+    			.metamodel(entityManager.getMetamodel())
+    			.criteria(entityManager.getCriteriaBuilder())
     			.entity(entity)
     			.paths(paths)
     			.build();
+    	return entityManager.createQuery(criteria);
     }
 }

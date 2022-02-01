@@ -11,7 +11,8 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonReader;
 import javax.json.JsonValue;
-import epf.client.schema.Attribute;
+
+import epf.persistence.schema.client.Attribute;
 import epf.portlet.util.json.JsonUtil;
 
 /**

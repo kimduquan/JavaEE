@@ -10,9 +10,10 @@ import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
 import javax.json.JsonValue;
-import epf.client.schema.Attribute;
-import epf.client.schema.AttributeType;
-import epf.client.schema.Entity;
+
+import epf.persistence.schema.client.Attribute;
+import epf.persistence.schema.client.AttributeType;
+import epf.persistence.schema.client.Entity;
 
 /**
  * @author PC

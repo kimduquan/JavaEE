@@ -1,4 +1,4 @@
-package epf.client.schema;
+package epf.persistence.schema.client;
 
 /**
  * @author PC

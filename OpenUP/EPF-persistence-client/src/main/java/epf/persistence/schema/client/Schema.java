@@ -1,4 +1,4 @@
-package epf.client.schema;
+package epf.persistence.schema.client;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

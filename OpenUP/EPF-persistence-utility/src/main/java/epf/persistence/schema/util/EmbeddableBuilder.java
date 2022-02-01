@@ -1,9 +1,8 @@
-package epf.persistence.schema;
+package epf.persistence.schema.util;
 
 import java.util.stream.Collectors;
 import javax.persistence.metamodel.EmbeddableType;
-import epf.client.schema.util.AttributeComparator;
-import epf.persistence.internal.Embeddable;
+import epf.persistence.util.Embeddable;
 
 /**
  * @author PC
@@ -15,9 +14,9 @@ public class EmbeddableBuilder {
 	 * @param entity
 	 * @return
 	 */
-	public epf.client.schema.Embeddable build(final Embeddable<?> embeddable){
+	public epf.persistence.schema.client.Embeddable build(final Embeddable<?> embeddable){
 		final EmbeddableType<?> type = embeddable.getType();
-		final epf.client.schema.Embeddable embeddableType = new epf.client.schema.Embeddable();
+		final epf.persistence.schema.client.Embeddable embeddableType = new epf.persistence.schema.client.Embeddable();
 		final AttributeBuilder builder = new AttributeBuilder();
 		final AttributeComparator comparator = new AttributeComparator();
 		embeddableType.setAttributes(

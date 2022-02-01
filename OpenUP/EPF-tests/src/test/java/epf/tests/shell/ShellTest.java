@@ -22,9 +22,10 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
-import epf.client.schema.Entity;
+
 import epf.file.util.PathUtil;
 import epf.naming.Naming;
+import epf.persistence.schema.client.Entity;
 import epf.security.schema.Token;
 import epf.tests.TestUtil;
 import epf.tests.file.FileUtil;

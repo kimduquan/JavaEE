@@ -7,8 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.json.JsonValue;
-import epf.client.schema.Attribute;
-import epf.client.schema.Embeddable;
+
+import epf.persistence.schema.client.Attribute;
+import epf.persistence.schema.client.Embeddable;
 
 /**
  * @author PC
@@ -31,7 +32,7 @@ public class AttributeBuilder {
 	/**
 	 * 
 	 */
-	private transient Map<String, epf.client.schema.Entity> entities;
+	private transient Map<String, epf.persistence.schema.client.Entity> entities;
 	
 	/**
 	 * @return
@@ -87,7 +88,7 @@ public class AttributeBuilder {
 		return this;
 	}
 
-	public AttributeBuilder entities(final Map<String, epf.client.schema.Entity> entities) {
+	public AttributeBuilder entities(final Map<String, epf.persistence.schema.client.Entity> entities) {
 		this.entities = entities;
 		return this;
 	}

@@ -15,10 +15,11 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
-import epf.client.schema.Entity;
-import epf.client.schema.Schema;
+
 import epf.client.util.Client;
 import epf.naming.Naming;
+import epf.persistence.schema.client.Entity;
+import epf.persistence.schema.client.Schema;
 import epf.tests.client.ClientUtil;
 import epf.tests.security.SecurityUtil;
 import epf.client.gateway.GatewayUtil;

@@ -1,12 +1,10 @@
-package epf.persistence.internal;
+package epf.persistence.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
@@ -15,6 +13,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.ManagedType;
+import javax.persistence.metamodel.Metamodel;
 import javax.persistence.metamodel.Attribute.PersistentAttributeType;
 import javax.ws.rs.core.PathSegment;
 import epf.util.Var;
@@ -28,7 +27,11 @@ public class QueryBuilder {
 	/**
 	 * 
 	 */
-	private transient EntityManager entityManager;
+	private transient Metamodel metamodel;
+	/**
+	 * 
+	 */
+	private transient CriteriaBuilder criteria;
 	/**
 	 * 
 	 */
@@ -42,8 +45,13 @@ public class QueryBuilder {
 	 * @param manager
 	 * @return
 	 */
-	public QueryBuilder manager(final EntityManager manager) {
-		this.entityManager = manager;
+	public QueryBuilder criteria(final CriteriaBuilder criteria) {
+		this.criteria = criteria;
+		return this;
+	}
+	
+	public QueryBuilder metamodel(final Metamodel metamodel) {
+		this.metamodel = metamodel;
 		return this;
 	}
 
@@ -68,31 +76,32 @@ public class QueryBuilder {
 	/**
 	 * @return
 	 */
-	public Query build() {
-		return build(entityManager, entityObject, pathSegments.get(0), pathSegments);
+	public CriteriaQuery<Object> build() {
+		return build(metamodel, criteria, entityObject, pathSegments.get(0), pathSegments);
 	}
 	
 	/**
-	 * @param manager
+	 * @param metamodel
+	 * @param builder
 	 * @param entity
 	 * @param rootSegment
 	 * @param paths
 	 * @return
 	 */
-	protected static Query build(
-			final EntityManager manager, 
+	protected static CriteriaQuery<Object> build(
+			final Metamodel metamodel, 
+			final CriteriaBuilder criteria,
 			final Entity<Object> entity, 
 			final PathSegment rootSegment,
 			final List<PathSegment> paths) {
-    	final CriteriaBuilder builder = manager.getCriteriaBuilder();
     	final EntityType<Object> rootType = entity.getType();
     	final Class<Object> rootClass = rootType.getJavaType();
-    	final CriteriaQuery<Object> rootQuery = builder.createQuery(rootClass);
+    	final CriteriaQuery<Object> rootQuery = criteria.createQuery(rootClass);
     	final Root<Object> rootFrom = rootQuery.from(rootClass);
     	final List<Predicate> allParams = new ArrayList<>();
         rootSegment.getMatrixParameters().forEach((name, values) -> {
         	allParams.add(
-                    builder.isMember(
+        			criteria.isMember(
                             values,
                             rootFrom.get(name)
                     )
@@ -108,8 +117,8 @@ public class QueryBuilder {
                 		parentJoin, 
                 		parentFrom, 
                 		allParams, 
-                		manager, 
-                		builder
+                		metamodel, 
+                		criteria
                 		)
         		);
         if(parentJoin.get().isEmpty()){
@@ -121,7 +130,7 @@ public class QueryBuilder {
         if(!allParams.isEmpty()){
             rootQuery.where(allParams.toArray(new Predicate[0]));
         }
-        return manager.createQuery(rootQuery);
+        return rootQuery;
 	}
 	
 	/**
@@ -138,8 +147,8 @@ public class QueryBuilder {
     		final Var<Join<?,?>> parentJoin,
     		final Root<?> parentFrom,
     		final List<Predicate> allParams,
-    		final EntityManager manager,
-    		final CriteriaBuilder builder) {
+    		final Metamodel metamodel,
+    		final CriteriaBuilder criteria) {
     	final Attribute<?,?> attribute = parentType.get().get().getAttribute(segment.getPath());
         if (attribute.getPersistentAttributeType() != PersistentAttributeType.BASIC) {
             Class<?> subClass = null;
@@ -171,14 +180,14 @@ public class QueryBuilder {
 
             segment.getMatrixParameters().forEach((name, values) -> {
             	allParams.add(
-                        builder.isMember(
+            			criteria.isMember(
                                 values,
                                 subJoin.get(name)
                         )
                 );
             });
             
-            final ManagedType<?> subType = manager.getMetamodel().managedType(subClass);
+            final ManagedType<?> subType = metamodel.managedType(subClass);
             parentType.set(subType);
             parentJoin.set(subJoin);
         }

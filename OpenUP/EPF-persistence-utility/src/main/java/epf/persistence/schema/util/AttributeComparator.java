@@ -1,7 +1,7 @@
-package epf.client.schema.util;
+package epf.persistence.schema.util;
 
 import java.util.Comparator;
-import epf.client.schema.Attribute;
+import epf.persistence.schema.client.Attribute;
 
 /**
  * @author PC

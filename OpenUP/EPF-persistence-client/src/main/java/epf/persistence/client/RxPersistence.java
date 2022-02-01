@@ -2,7 +2,6 @@ package epf.persistence.client;
 
 import java.io.InputStream;
 import java.util.List;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
@@ -14,12 +13,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 import epf.naming.Naming;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
 /**
@@ -48,8 +45,6 @@ public interface RxPersistence {
             @PathParam("entity")
             @NotBlank
             final String entity,
-            @Context
-            final SecurityContext context,
             @NotNull
             final InputStream body
             ) throws Exception;
@@ -76,8 +71,6 @@ public interface RxPersistence {
             @PathParam("id")
             @NotBlank
             final String entityId,
-            @Context
-            final SecurityContext context,
             @NotNull
             final InputStream body
             ) throws Exception;
@@ -100,9 +93,7 @@ public interface RxPersistence {
             final String entity,
             @PathParam("id")
             @NotBlank
-            final String entityId,
-            @Context
-            final SecurityContext context
+            final String entityId
             );
 	
 	/**
@@ -115,7 +106,7 @@ public interface RxPersistence {
 	@POST
     @Path("{schema}/{entity}/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    Uni<Response> find(
+    Uni<Object> find(
     		@PathParam("schema")
             @NotBlank
             final String schema,
@@ -124,9 +115,7 @@ public interface RxPersistence {
             final String entity,
             @PathParam("id")
             @NotBlank
-            final String entityId,
-            @Context
-            final SecurityContext context
+            final String entityId
             );
 	
 	/**
@@ -140,7 +129,7 @@ public interface RxPersistence {
 	@GET
     @Path("{schema}/{criteria: .+}")
     @Produces(MediaType.APPLICATION_JSON)
-    Uni<Response> executeQuery(
+    Multi<Object> executeQuery(
     		@PathParam("schema")
             @NotBlank
             final String schema,
@@ -149,8 +138,6 @@ public interface RxPersistence {
             @QueryParam("first")
             final Integer firstResult,
             @QueryParam("max")
-            final Integer maxResults,
-            @Context
-            final SecurityContext context
+            final Integer maxResults
             );
 }
