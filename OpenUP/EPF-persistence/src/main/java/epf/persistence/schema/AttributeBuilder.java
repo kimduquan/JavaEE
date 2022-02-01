@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.persistence.schema;
 
 import javax.persistence.metamodel.Attribute;

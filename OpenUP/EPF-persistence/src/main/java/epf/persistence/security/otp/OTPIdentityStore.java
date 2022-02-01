@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.persistence.security.otp;
 
 import java.util.Map;

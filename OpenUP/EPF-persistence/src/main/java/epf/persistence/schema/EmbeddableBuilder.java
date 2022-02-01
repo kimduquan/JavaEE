@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.persistence.schema;
 
 import java.util.stream.Collectors;

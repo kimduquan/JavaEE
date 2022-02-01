@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.persistence.internal;
 
 import java.util.ArrayList;
