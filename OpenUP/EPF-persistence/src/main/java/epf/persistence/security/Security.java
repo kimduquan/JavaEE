@@ -82,60 +82,60 @@ public class Security implements epf.security.client.Security, epf.security.clie
      * 
      */
     @Inject
-    private transient SessionStore sessionStore;
+    transient SessionStore sessionStore;
     
     /**
      * 
      */
     @Inject
-    private transient OTPPrincipalStore otpPrincipalStore;
+    transient OTPPrincipalStore otpPrincipalStore;
     
     /**
      * 
      */
     @Inject
     @ConfigProperty(name = Naming.Security.JWT.ISSUE_KEY)
-    private transient String privateKeyText;
+    transient String privateKeyText;
     
     /**
      * 
      */
     @Inject
     @ConfigProperty(name = Names.ISSUER)
-    private transient String issuer;
+    transient String issuer;
     
     /**
      * 
      */
     @Inject
     @ConfigProperty(name = Naming.Security.JWT.EXPIRE_DURATION)
-    private transient Long expireAmount;
+    transient Long expireAmount;
     
     /**
      * 
      */
     @Inject
     @ConfigProperty(name = Naming.Security.JWT.EXPIRE_TIMEUNIT)
-    private transient ChronoUnit expireTimeUnit;
+    transient ChronoUnit expireTimeUnit;
     
     /**
      * 
      */
     @Inject
     @ConfigProperty(name = Naming.Security.JWT.ENCRYPT_KEY)
-    private transient String encryptKeyText;
+    transient String encryptKeyText;
     
     /**
      * 
      */
     @Inject
-    private transient IdentityStore identityStore;
+    transient IdentityStore identityStore;
     
     /**
      * 
      */
     @Inject
-    private transient PrincipalStore principalStore;
+    transient PrincipalStore principalStore;
     
     /**
      * 
@@ -232,9 +232,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
     			.thenApply(CredentialValidationResult::getCallerPrincipal)
     			.thenCompose(principal -> {
     				return identityStore.getCallerGroups(principal)
-					.thenCombine(
-							principalStore.getCallerClaims(principal), 
-							(groups, claims) -> newToken(username, groups, audience, claims))
+					.thenCombine(principalStore.getCallerClaims(principal), (groups, claims) -> newToken(username, groups, audience, claims))
 					.thenApply(token -> new TokenBuilder(token, privateKey, encryptKey))
 					.thenApply(builder -> builder.build())
 					.thenApply(newToken -> {
@@ -272,10 +270,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 		final Set<String> audience = buildAudience(headers, null);
 		final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
 		return identityStore.getCallerGroups(session.getPrincipal())
-				.thenCombine(
-						principalStore.getCallerClaims(session.getPrincipal()), 
-						(groups, claims) -> newToken(jwt, groups, audience, claims)
-						)
+				.thenCombine(principalStore.getCallerClaims(session.getPrincipal()), (groups, claims) -> newToken(jwt, groups, audience, claims))
 						.thenApply(token -> new TokenBuilder(token, privateKey, encryptKey))
 						.thenApply(builder -> builder.build())
 						.thenApply(newToken -> {
@@ -321,9 +316,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 		final CallerPrincipal principal = otpPrincipalStore.removePrincipal(oneTimePassword).orElseThrow(() -> new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build()));
 		final Set<String> audience = buildAudience(headers, null);
 		return identityStore.getCallerGroups(principal)
-		.thenCombine(
-				principalStore.getCallerClaims(principal), 
-				(groups, claims) -> newToken(principal.getName(), groups, audience, claims))
+		.thenCombine(principalStore.getCallerClaims(principal), (groups, claims) -> newToken(principal.getName(), groups, audience, claims))
 		.thenApply(token -> new TokenBuilder(token, privateKey, encryptKey))
 		.thenApply(builder -> builder.build())
 		.thenApply(newToken -> {

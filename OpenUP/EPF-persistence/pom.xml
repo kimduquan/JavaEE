@@ -217,6 +217,40 @@
               </execution>
             </executions>
           </plugin>
+          <plugin>
+			  <groupId>org.jboss.jandex</groupId>
+			  <artifactId>jandex-maven-plugin</artifactId>
+			  <version>1.2.2</version>
+			  <executions>
+				<execution>
+				  <id>make-index</id>
+				  <goals>
+					<goal>jandex</goal>
+				  </goals>
+				</execution>
+			  </executions>
+		  </plugin>
+		  <plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-antrun-plugin</artifactId>
+			<version>3.0.0</version>
+			<executions>
+				<execution>
+					<phase>pre-integration-test</phase>
+						<configuration>
+							<target>
+								<exec executable="jshell">
+									<arg value="../start.jsh"/>
+								    <arg value="-R-Dcmd=${project.build.directory}/${project.build.finalName}-runner"/>
+							  	</exec>
+							</target >
+						</configuration>
+					<goals>
+						<goal>run</goal>
+					</goals>
+				</execution>
+			</executions>
+		  </plugin>
         </plugins>
       </build>
       <properties>

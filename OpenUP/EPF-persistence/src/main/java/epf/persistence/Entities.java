@@ -33,13 +33,13 @@ public class Entities implements epf.persistence.client.Entities {
      * 
      */
     @Inject
-    private transient Validator validator;
+    transient Validator validator;
     
     /**
      * 
      */
     @Inject
-    private transient SessionStore sessionStore;
+    transient SessionStore sessionStore;
     
     @Override
     @Transactional

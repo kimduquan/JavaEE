@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletionStage;
+import javax.enterprise.context.ApplicationScoped;
 import javax.security.enterprise.CallerPrincipal;
 import javax.security.enterprise.credential.Password;
 import javax.transaction.Transactional;
@@ -16,6 +17,7 @@ import epf.util.concurrent.Stage;
  * @author PC
  *
  */
+@ApplicationScoped
 public class MySQLPrincipalStore implements PrincipalStore {
 
 	@Override

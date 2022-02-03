@@ -33,7 +33,7 @@ public class Queries implements epf.persistence.client.Queries {
      * 
      */
     @Inject
-    private transient SessionStore sessionStore;
+    transient SessionStore sessionStore;
     
     @Override
     public CompletionStage<List<Object>> executeQuery(

@@ -1,5 +1,6 @@
 . ./env.sh
 pkill EPF-gateway-
+pkill EPF-persistence-
 cd EPF-tests
 mvn liberty:stop
 cd ../

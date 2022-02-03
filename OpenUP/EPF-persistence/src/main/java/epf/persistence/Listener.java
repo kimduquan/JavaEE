@@ -47,7 +47,7 @@ public class Listener {
 	 * 
 	 */
 	@Inject
-	private transient ManagedExecutor executor;
+	transient ManagedExecutor executor;
 	
 	/**
 	 * 

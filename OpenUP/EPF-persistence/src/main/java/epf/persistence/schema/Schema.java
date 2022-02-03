@@ -35,7 +35,7 @@ public class Schema implements epf.persistence.schema.client.Schema {
 	 * 
 	 */
 	@Inject
-    private transient SessionStore sessionStore;
+    transient SessionStore sessionStore;
 
 	@Override
 	public CompletionStage<List<Entity>> getEntities(final SecurityContext context) {

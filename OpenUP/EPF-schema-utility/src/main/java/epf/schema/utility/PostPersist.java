@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.schema.utility;
 
 /**

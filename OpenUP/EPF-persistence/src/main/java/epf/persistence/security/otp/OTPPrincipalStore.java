@@ -38,7 +38,7 @@ public class OTPPrincipalStore {
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Security.OTP.EXPIRE_DURATION)
-	private String expireDuration;
+	String expireDuration;
 	
 	/**
 	 * @param principal
