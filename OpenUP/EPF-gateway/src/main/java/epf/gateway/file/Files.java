@@ -61,7 +61,7 @@ public class Files {
     		final List<PathSegment> paths,
             final InputStream body
     ) throws Exception {
-        return request.request(context, headers, uriInfo, req, body);
+        return request.request(Naming.FILE, context, headers, uriInfo, req, body);
     }
     
     /**
@@ -83,7 +83,7 @@ public class Files {
             @PathParam("paths")
     		final List<PathSegment> paths
     ) throws Exception {
-        return request.request(context, headers, uriInfo, req, null);
+        return request.request(Naming.FILE, context, headers, uriInfo, req, null);
     }
     
     /**
@@ -104,6 +104,6 @@ public class Files {
             @PathParam("paths")
     		final List<PathSegment> paths
     ) throws Exception {
-        return request.request(context, headers, uriInfo, req, null);
+        return request.request(Naming.FILE, context, headers, uriInfo, req, null);
     }
 }

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.client.rules;
 
 import java.io.InputStream;
@@ -59,7 +56,10 @@ public interface Rules {
 	 * @return
 	 * @throws Exception
 	 */
-	static Response executeRules(final Client client, final String ruleSet,final String input
+	static Response executeRules(
+			final Client client, 
+			final String ruleSet,
+			final String input
 			) throws Exception{
 		return client
 				.request(
@@ -88,7 +88,9 @@ public interface Rules {
 	 * @return
 	 * @throws Exception
 	 */
-	static Response executeRules(final Client client, final String ruleSet) throws Exception{
+	static Response executeRules(
+			final Client client, 
+			final String ruleSet) throws Exception{
 		return client
 				.request(
 						target -> target.path(ruleSet), 
@@ -116,7 +118,10 @@ public interface Rules {
 	 * @param input
 	 * @return
 	 */
-	static Response addObject(final Client client, final String ruleSet, final String input) {
+	static Response addObject(
+			final Client client, 
+			final String ruleSet, 
+			final String input) {
 		return client
 				.request(
 						target -> target.path(ruleSet), 

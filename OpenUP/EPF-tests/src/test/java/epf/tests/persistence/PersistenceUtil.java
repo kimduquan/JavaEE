@@ -4,9 +4,9 @@
 package epf.tests.persistence;
 
 import epf.client.gateway.GatewayUtil;
-import epf.client.persistence.Entities;
 import epf.client.util.Client;
 import epf.naming.Naming;
+import epf.persistence.client.Entities;
 import epf.tests.client.ClientUtil;
 
 /**

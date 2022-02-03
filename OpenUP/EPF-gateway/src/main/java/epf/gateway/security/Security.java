@@ -58,7 +58,7 @@ public class Security {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-        return request.request(context, headers, uriInfo, req, body);
+        return request.request(Naming.SECURITY, context, headers, uriInfo, req, body);
     }
     
     /**
@@ -76,7 +76,7 @@ public class Security {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req
             ) throws Exception {
-        return request.request(context, headers, uriInfo, req, null);
+        return request.request(Naming.SECURITY, context, headers, uriInfo, req, null);
     }
     
     /**
@@ -93,7 +93,7 @@ public class Security {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req) throws Exception {
-        return request.request(context, headers, uriInfo, req, null);
+        return request.request(Naming.SECURITY, context, headers, uriInfo, req, null);
     }
     
     /**
@@ -112,7 +112,7 @@ public class Security {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-    	return request.request(context, headers, uriInfo, req, body);
+    	return request.request(Naming.SECURITY, context, headers, uriInfo, req, body);
     }
     
     /**
@@ -124,14 +124,12 @@ public class Security {
      * @throws Exception 
      */
     @PUT
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
     public CompletionStage<Response> revoke(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
-            @Context final javax.ws.rs.core.Request req,
-            final InputStream body) throws Exception {
-    	return request.request(context, headers, uriInfo, req, body);
+            @Context final javax.ws.rs.core.Request req) throws Exception {
+    	return request.request(Naming.SECURITY, context, headers, uriInfo, req, null);
     }
 }

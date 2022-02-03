@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.CompletionStageRxInvoker;
@@ -49,29 +50,28 @@ public class Application {
      * @throws Exception 
      */
     public CompletionStage<Response> request(
+    		final String service,
     		final SecurityContext context,
     		final HttpHeaders headers, 
             final UriInfo uriInfo,
             final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-		final URI uri = RequestUtil.buildUri(uriInfo, registry);
+		final URI serviceUri = registry.lookup(service).orElseThrow(NotFoundException::new);
 		final Client client = ClientBuilder.newClient();
-		WebTarget target = client.target(uri);
-		target = RequestUtil.buildTarget(target, uriInfo, uri);
+		WebTarget target = client.target(serviceUri);
+		target = RequestUtil.buildTarget(target, uriInfo, serviceUri);
 		Invocation.Builder invoke = target.request();
 		final URI baseUri = uriInfo.getBaseUri();
-		invoke = RequestUtil.buildRequest(invoke, headers, baseUri);
+		invoke = RequestUtil.buildHeaders(invoke, headers, baseUri);
 		final CompletionStageRxInvoker rx = invoke.rx();
 		return RequestUtil.invoke(rx, req.getMethod(), headers.getMediaType(), body)
 				.thenApply(res -> RequestUtil.buildResponse(res, baseUri))
 				.whenComplete((res, err) -> {
 					client.close();
-					//res.close();
-				})
-				.exceptionally(ex -> { 
-					LOGGER.log(Level.WARNING, "request", ex);
-					return Response.serverError().build(); 
-					});
+					if(err != null) {
+						res.close();
+					}
+				});
     }
     
     /**
@@ -82,14 +82,15 @@ public class Application {
      * @throws Exception 
      */
     public void stream(
+    		final String service,
     		final HttpHeaders headers, 
             final UriInfo uriInfo,
             final SseEventSink sseEventSink,
             final Sse sse) throws Exception {
     	final Client client = ClientBuilder.newClient();
-    	final URI uri = RequestUtil.buildUri(uriInfo, registry);
-    	WebTarget target = client.target(uri);
-    	target = RequestUtil.buildTarget(target, uriInfo, uri);
+    	final URI serviceUri = registry.lookup(service).orElseThrow(NotFoundException::new);
+    	WebTarget target = client.target(serviceUri);
+    	target = RequestUtil.buildTarget(target, uriInfo, serviceUri);
     	final SseEventSource.Builder builder = SseEventSource.target(target);
     	try(SseEventSource source = builder.build()){
     		final OutboundSseEvent.Builder eventBuilder = sse.newEventBuilder();
@@ -107,7 +108,7 @@ public class Application {
 	    				}
 					,
 					error -> {
-						LOGGER.throwing(getClass().getName(), "stream", error);
+						LOGGER.log(Level.WARNING, "stream", error);
 					});
     		source.open();
     	}

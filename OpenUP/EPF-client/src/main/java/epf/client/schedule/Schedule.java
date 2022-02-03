@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.client.schedule;
 
 import java.util.concurrent.TimeUnit;

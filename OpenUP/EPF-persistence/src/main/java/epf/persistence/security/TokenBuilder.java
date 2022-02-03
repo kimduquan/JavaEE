@@ -11,6 +11,7 @@ import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.jwt.NumericDate;
 import epf.security.schema.Token;
+import epf.util.EPFException;
 
 /**
  * @author PC
@@ -51,7 +52,7 @@ public class TokenBuilder {
 	 * @return
 	 * @throws Exception
 	 */
-	public Token build() throws Exception {
+	public Token build() {
 		final JwtClaims claims = new JwtClaims();
 		claims.setAudience(token.getAudience().stream().collect(Collectors.toList()));
 		claims.setExpirationTime(NumericDate.fromSeconds(token.getExpirationTime()));
@@ -70,10 +71,15 @@ public class TokenBuilder {
 	    jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.RSA_USING_SHA256);
 		jws.setPayload(claims.toJson());
 	    jws.setKey(privateKey);
-	    final String jwt = jws.getCompactSerialization();
-	    token.setRawToken(jwt);
-	    token.setTokenID(claims.getJwtId());
 	    encryptKey.getAlgorithm();
+	    try {
+			final String jwt = jws.getCompactSerialization();
+		    token.setRawToken(jwt);
+		    token.setTokenID(claims.getJwtId());
+		} 
+		catch (Exception e) {
+			throw new EPFException(e);
+		}
 		return token;
 	}
 }

@@ -4,6 +4,7 @@
 package epf.security.client.otp;
 
 import java.net.URL;
+import java.util.concurrent.CompletionStage;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
@@ -39,7 +40,7 @@ public interface OTPSecurity {
     @Path("otp")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
-    String loginOneTime(
+    CompletionStage<String> loginOneTime(
             @FormParam("username")
             @NotBlank
             final String username,
@@ -82,10 +83,12 @@ public interface OTPSecurity {
     @Path("otp")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
-    String authenticateOneTime(
+    CompletionStage<String> authenticateOneTime(
             @FormParam("otp")
             @NotBlank
-            final String oneTimePassword
+            final String oneTimePassword,
+            @Context
+            final HttpHeaders headers
     );
     
     /**

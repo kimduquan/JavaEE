@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.client.planning;
 
 import javax.ws.rs.Path;

@@ -9,7 +9,8 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
-import epf.client.schema.Attribute;
+
+import epf.persistence.schema.client.Attribute;
 import epf.portlet.util.json.JsonUtil;
 
 /**
@@ -37,7 +38,7 @@ public class Identifiable implements Serializable {
 	 * @param object
 	 * @param entity
 	 */
-	public Identifiable(final JsonObject object, final epf.client.schema.Entity entity) {
+	public Identifiable(final JsonObject object, final epf.persistence.schema.client.Entity entity) {
 		if(entity.isSingleId() && entity.getId() != null) {
 			final JsonObjectBuilder builder = Json.createObjectBuilder();
 			final JsonValue idValue = object.get(entity.getId().getName());

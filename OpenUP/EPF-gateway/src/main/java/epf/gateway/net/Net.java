@@ -7,6 +7,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -62,7 +63,7 @@ public class Net {
             @Context final javax.ws.rs.core.Request req,
             final InputStream body
     ) throws Exception {
-        return request.request(context, headers, uriInfo, req, body);
+        return request.request(Naming.NET, context, headers, uriInfo, req, body);
     }
     
     /**
@@ -77,7 +78,7 @@ public class Net {
     		final String url
     ) throws Exception {
     	final int id = StringUtil.fromShortString(url);
-    	final URI cacheUrl = registry.lookup(Naming.CACHE);
+    	final URI cacheUrl = registry.lookup(Naming.CACHE).orElseThrow(NotFoundException::new);
     	return ClientBuilder.newClient().target(cacheUrl).path(Naming.NET).path("url").queryParam("id", String.valueOf(id)).request(MediaType.TEXT_PLAIN_TYPE).rx().get(String.class)
     	.thenApply(urlString -> {
     		try {

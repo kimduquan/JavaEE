@@ -12,9 +12,9 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 import epf.client.gateway.GatewayUtil;
 import epf.client.net.Net;
-import epf.client.persistence.Entities;
 import epf.client.util.Client;
 import epf.naming.Naming;
+import epf.persistence.client.Entities;
 import epf.tests.client.ClientUtil;
 import epf.tests.health.HealthUtil;
 import epf.tests.security.SecurityUtil;
@@ -33,7 +33,7 @@ public class NetTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		HealthUtil.readỵ̣();
+		HealthUtil.isReady();
 		token = SecurityUtil.login();
 		netUrl = GatewayUtil.get(Naming.NET);
 		persistenceUrl = GatewayUtil.get(Naming.PERSISTENCE);

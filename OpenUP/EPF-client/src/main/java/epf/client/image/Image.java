@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.client.image;
 
 import java.io.InputStream;

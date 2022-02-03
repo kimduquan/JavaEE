@@ -58,7 +58,7 @@ public class Entities {
             @PathParam("schema") final String schema,
             @PathParam("entity") final String entity,
             final InputStream body) throws Exception {
-        return request.request(context, headers, uriInfo, req, body);
+        return request.request(Naming.PERSISTENCE, context, headers, uriInfo, req, body);
     }
     
     /**
@@ -83,7 +83,7 @@ public class Entities {
             @PathParam("id") final String entityId,
             final InputStream body
             ) throws Exception {
-    	return request.request(context, headers, uriInfo, req, body);
+    	return request.request(Naming.PERSISTENCE, context, headers, uriInfo, req, body);
     }
     
     /**
@@ -104,7 +104,7 @@ public class Entities {
             @PathParam("schema") final String schema,
             @PathParam("entity") final String entity,
             @PathParam("id") final String entityId) throws Exception {
-        return request.request(context, headers, uriInfo, req, null);
+        return request.request(Naming.PERSISTENCE, context, headers, uriInfo, req, null);
     }
     
     /**
@@ -129,6 +129,6 @@ public class Entities {
             @PathParam("id") final String entityId,
             final InputStream body
             ) throws Exception {
-    	return request.request(context, headers, uriInfo, req, body);
+    	return request.request(Naming.PERSISTENCE, context, headers, uriInfo, req, body);
     }
 }

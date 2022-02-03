@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.file;
 
 import java.nio.file.FileSystem;

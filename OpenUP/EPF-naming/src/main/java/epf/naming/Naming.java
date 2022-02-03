@@ -127,6 +127,11 @@ public interface Naming {
 	    String GATEWAY_URL = "epf.gateway.url";
 	    
 	    /**
+	     * 
+	     */
+	    String MESSAGING_URL = "epf.gateway.messaging.url";
+	    
+	    /**
 	     * @author PC
 	     *
 	     */
@@ -483,6 +488,19 @@ public interface Naming {
 	/**
 	 * 
 	 */
+	String SEARCH = "search";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface Search {
+		
+	}
+	
+	/**
+	 * 
+	 */
 	String SECURITY = "security";
 	
 	/**
@@ -530,6 +548,17 @@ public interface Naming {
 	         * 
 	         */
 	        String TOKEN_CLAIM = "token";
+	    }
+	    
+	    /**
+	     * @author PC
+	     *
+	     */
+	    interface OTP {
+	    	/**
+	         * 
+	         */
+	        String EXPIRE_DURATION = "epf.security.otp.exp.duration";
 	    }
 	}
 	

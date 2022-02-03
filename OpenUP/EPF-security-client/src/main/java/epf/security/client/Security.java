@@ -1,6 +1,8 @@
 package epf.security.client;
 
 import java.net.URL;
+import java.util.concurrent.CompletionStage;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
@@ -61,7 +63,7 @@ public interface Security {
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
-    String login(
+    CompletionStage<String> login(
             @FormParam("username")
             @NotBlank
             final String username,
@@ -146,7 +148,7 @@ public interface Security {
      */
     @PATCH
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    void update(
+    CompletionStage<Void> update(
     		@FormParam("password")
     		@NotNull
     		@NotBlank
@@ -175,9 +177,8 @@ public interface Security {
      * @throws Exception 
      */
     @PUT
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
-    String revoke(
+    CompletionStage<String> revoke(
     		@Context
             final HttpHeaders headers,
             @Context
@@ -191,6 +192,6 @@ public interface Security {
     	return client.request(
     			target -> target,
     			req -> req.accept(MediaType.TEXT_PLAIN))
-    			.put(Entity.form(new Form()), String.class);
+    			.put(null, String.class);
     }
 }

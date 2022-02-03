@@ -8,6 +8,7 @@ import java.nio.file.WatchService;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -81,7 +82,7 @@ public class FileWatchService implements IWatchService {
 			executor.submit(events);
 		}
 		catch (Exception e) {
-			LOGGER.throwing(LOGGER.getName(), "postConstruct", e);
+			LOGGER.log(Level.SEVERE, "postConstruct", e);
 		}
 	}
 	
@@ -95,14 +96,14 @@ public class FileWatchService implements IWatchService {
 			client.close();
 		} 
 		catch (Exception e) {
-			LOGGER.throwing(LOGGER.getName(), "preDestroy", e);
+			LOGGER.log(Level.SEVERE, "preDestroy", e);
 		}
 		fileWatches.values().parallelStream().forEach(watch -> {
 			try {
 				watch.close();
 			} 
 			catch (IOException e) {
-				LOGGER.throwing(LOGGER.getName(), "preDestroy", e);
+				LOGGER.log(Level.SEVERE, "preDestroy", e);
 			}
 		});
 	}
@@ -121,7 +122,7 @@ public class FileWatchService implements IWatchService {
 				return fileWatch;
 			} 
 			catch (IOException e) {
-				LOGGER.throwing(LOGGER.getName(), "register", e);
+				LOGGER.log(Level.SEVERE, "register", e);
 				return null;
 			}
 		});

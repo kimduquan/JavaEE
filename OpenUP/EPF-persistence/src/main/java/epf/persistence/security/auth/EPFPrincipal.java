@@ -5,47 +5,46 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.security.enterprise.CallerPrincipal;
 import javax.security.enterprise.credential.UsernamePasswordCredential;
+import epf.persistence.util.EntityManager;
+import epf.persistence.util.EntityManagerFactory;
 
 /**
  * @author PC
  *
  */
 public class EPFPrincipal extends CallerPrincipal implements Closeable {
-	
+
 	/**
 	 * 
 	 */
 	private transient final EntityManagerFactory factory;
+	
 	/**
 	 * 
 	 */
-	private transient final EntityManager manager;
+	private transient final EntityManager defaultManager;
 
 	/**
 	 * @param name
+	 * @param factory
+	 * @param manager
 	 */
-	public EPFPrincipal(final String name, final EntityManager manager, final EntityManagerFactory factory) {
+	public EPFPrincipal(final String name, final EntityManagerFactory factory, final EntityManager manager) {
 		super(name);
 		this.factory = factory;
-		this.manager = manager;
+		this.defaultManager = manager;
 	}
-
-	public EntityManager getManager() {
-		return manager;
+	
+	public EntityManager getDefaultManager() {
+		return defaultManager;
 	}
 
 	@Override
 	public void close() throws IOException {
-		if(manager.isOpen()) {
-			manager.close();
-		}
-		if(factory.isOpen()) {
-			factory.close();
-		}
+		defaultManager.close();
+		factory.close();
 	}
 	
 	/**
@@ -57,13 +56,10 @@ public class EPFPrincipal extends CallerPrincipal implements Closeable {
 		final Map<String, Object> props = new HashMap<>();
         props.put(IdentityStore.JDBC_USER, credential.getCaller());
         props.put(IdentityStore.JDBC_PASSWORD, credential.getPasswordAsString());
-        return props.equals(factory.getProperties());
+        return factory.equals(props);
 	}
 	
-	/**
-	 * @return
-	 */
-	public EntityManager newManager() {
-		return factory.createEntityManager();
+	public EntityManagerFactory getFactory() {
+		return factory;
 	}
 }

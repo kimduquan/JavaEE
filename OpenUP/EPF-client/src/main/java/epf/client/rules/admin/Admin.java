@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.client.rules.admin;
 
 import javax.ws.rs.core.Context;
@@ -47,7 +44,10 @@ public interface Admin {
 	 * @param input
 	 * @return
 	 */
-	static Response registerRuleExecutionSet(final Client client, final String name, final InputStream input) {
+	static Response registerRuleExecutionSet(
+			final Client client, 
+			final String name, 
+			final InputStream input) {
 		return client
 				.request(
 						target -> target.path("admin").path(name), 

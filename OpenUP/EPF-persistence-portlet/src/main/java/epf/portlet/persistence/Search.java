@@ -1,9 +1,7 @@
-/**
- * 
- */
 package epf.portlet.persistence;
 
 import java.io.Serializable;
+import java.net.URI;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -12,7 +10,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
-import epf.client.persistence.SearchData;
 import epf.client.portlet.persistence.SearchView;
 import epf.client.util.Client;
 import epf.portlet.internal.config.ConfigUtil;
@@ -57,7 +54,7 @@ public class Search implements SearchView, Serializable {
 	/**
 	 * 
 	 */
-	private List<SearchData> resultList;
+	private List<URI> resultList;
 	
 	/**
 	 * 
@@ -94,8 +91,8 @@ public class Search implements SearchView, Serializable {
 	@Override
 	public void search() throws Exception{
 		try(Client client = clientUtil.newClient(gatewayUtil.get(epf.naming.Naming.PERSISTENCE))){
-			try(Response response = epf.client.persistence.Queries.search(client, text, firstResult, maxResults)){
-				resultList = response.readEntity(new GenericType<List<SearchData>>() {});
+			try(Response response = epf.client.search.Search.search(client, text, firstResult, maxResults)){
+				resultList = response.readEntity(new GenericType<List<URI>>() {});
 			}
 		}
 	}
@@ -104,7 +101,7 @@ public class Search implements SearchView, Serializable {
 	 * @param object
 	 * @return
 	 */
-	public int indexOf(final SearchData data) {
+	public int indexOf(final URI data) {
 		return firstResult + resultList.indexOf(data);
 	}
 

@@ -50,6 +50,6 @@ public class Script {
             @Context final javax.ws.rs.core.Request req,
             final InputStream body
     ) throws Exception {
-        return request.request(context, headers, uriInfo, req, body);
+        return request.request(Naming.SCRIPT, context, headers, uriInfo, req, body);
     }
 }

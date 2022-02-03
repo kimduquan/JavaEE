@@ -14,9 +14,9 @@ import javax.inject.Named;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 import epf.client.portlet.persistence.PersistenceView;
-import epf.client.schema.Attribute;
-import epf.client.schema.Entity;
 import epf.client.util.Client;
+import epf.persistence.schema.client.Attribute;
+import epf.persistence.schema.client.Entity;
 import epf.portlet.internal.config.ConfigUtil;
 import epf.portlet.internal.gateway.GatewayUtil;
 import epf.portlet.internal.persistence.EntityUtil;
@@ -146,7 +146,7 @@ public class Persistence implements PersistenceView, Serializable {
 				if(idValue != null) {
 					final String value = JsonUtil.toString(idValue);
 					try(Client client = clientUtil.newClient(gatewayUtil.get(epf.naming.Naming.PERSISTENCE))){
-						epf.client.persistence.Entities.remove(client, entity.getTable().getSchema(), entity.getName(), value);
+						epf.persistence.client.Entities.remove(client, entity.getTable().getSchema(), entity.getName(), value);
 					}
 				}
 			}

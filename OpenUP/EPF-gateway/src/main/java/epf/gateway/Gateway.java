@@ -14,7 +14,7 @@ import epf.naming.Naming;
  * @author FOXCONN
  */
 @ApplicationScoped
-@ApplicationPath("/")
+@ApplicationPath(Naming.GATEWAY)
 @LoginConfig(authMethod = "MP-JWT", realmName = Naming.EPF)
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
