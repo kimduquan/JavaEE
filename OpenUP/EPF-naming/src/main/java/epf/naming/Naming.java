@@ -549,6 +549,17 @@ public interface Naming {
 	         */
 	        String TOKEN_CLAIM = "token";
 	    }
+	    
+	    /**
+	     * @author PC
+	     *
+	     */
+	    interface OTP {
+	    	/**
+	         * 
+	         */
+	        String EXPIRE_DURATION = "epf.security.otp.exp.duration";
+	    }
 	}
 	
 	/**

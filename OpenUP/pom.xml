@@ -414,11 +414,11 @@
 			    <artifactId>jose4j</artifactId>
 			    <version>0.7.9</version>
 			</dependency>
-			<!-- https://mvnrepository.com/artifact/io.smallrye.reactive/mutiny -->
+			<!-- https://mvnrepository.com/artifact/org.hibernate.reactive/hibernate-reactive-core -->
 			<dependency>
-			    <groupId>io.smallrye.reactive</groupId>
-			    <artifactId>mutiny</artifactId>
-			    <version>1.2.0</version>
+			    <groupId>org.hibernate.reactive</groupId>
+			    <artifactId>hibernate-reactive-core</artifactId>
+			    <version>1.1.2.Final</version>
 			</dependency>
             <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-jdk14 -->
             <dependency>
@@ -709,7 +709,7 @@
 												<limit>
 													<counter>LINE</counter>
 													<value>COVEREDRATIO</value>
-													<minimum>0.45</minimum>
+													<minimum>0.42</minimum>
 												</limit>
 												<limit>
 													<counter>BRANCH</counter>
@@ -719,7 +719,7 @@
 												<limit>
 													<counter>COMPLEXITY</counter>
 													<value>COVEREDRATIO</value>
-													<minimum>0.43</minimum>
+													<minimum>0.42</minimum>
 												</limit>
 											</limits>
 										</rule>

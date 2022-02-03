@@ -1,9 +1,8 @@
 package epf.persistence.security.auth.sql;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author PC
@@ -28,10 +27,10 @@ public interface RoleUtil {
 	 * @param string
 	 * @return
 	 */
-	static List<Role> parse(final String string) {
+	static Stream<Role> parse(final String string) {
 		Objects.requireNonNull(string, "String");
 		final String[] roles = string.substring(1, string.length() - 1).split(ROLES_SEPARATOR);
-		return Arrays.asList(roles).stream().map(RoleUtil::fromString).collect(Collectors.toList());
+		return Arrays.asList(roles).stream().map(RoleUtil::fromString);
 	}
 	
 	/**

@@ -1,6 +1,7 @@
 package epf.persistence.client;
 
 import java.util.List;
+import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -44,7 +45,7 @@ public interface Queries {
     @GET
     @Path("{schema}/{criteria: .+}")
     @Produces(MediaType.APPLICATION_JSON)
-    Response executeQuery(
+    CompletionStage<List<Object>> executeQuery(
     		@PathParam("schema")
             @NotBlank
             final String schema,

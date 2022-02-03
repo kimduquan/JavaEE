@@ -22,7 +22,7 @@ import epf.util.logging.LogManager;
  * @author FOXCONN
  */
 @Provider
-public class EPFExceptionMapper implements ExceptionMapper<Exception>, Serializable {
+public class ExceptionHelper implements ExceptionMapper<Exception>, Serializable {
 
     /**
     * 
@@ -32,7 +32,7 @@ public class EPFExceptionMapper implements ExceptionMapper<Exception>, Serializa
     /**
      * 
      */
-    private static final Logger LOGGER = LogManager.getLogger(EPFExceptionMapper.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(ExceptionHelper.class.getName());
 
     /**
      *

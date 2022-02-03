@@ -6,7 +6,10 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
+import javax.security.enterprise.CallerPrincipal;
+import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.eclipse.microprofile.opentracing.Traced;
 import epf.persistence.security.auth.EPFPrincipal;
 import epf.security.schema.Token;
 import epf.util.MapUtil;
@@ -16,8 +19,9 @@ import epf.util.MapUtil;
  * @author FOXCONN
  */
 @ApplicationScoped
-public class Application {
-    
+@Traced
+public class SessionStore {
+	
     /**
      * 
      */
@@ -28,17 +32,15 @@ public class Application {
      */
     @PreDestroy
     protected void preDestroy(){
-        sessions.forEach((id, session) -> {
-    		session.close();
-        });
         sessions.clear();
     }
     
     /**
-     * @param jwt
      * @return
      */
-    public Optional<Session> getSession(final JsonWebToken jwt){
+    public Optional<Session> getSession(final SecurityContext context) {
+    	Objects.requireNonNull(context, "SecurityContext");
+    	final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
     	Objects.requireNonNull(jwt, "JsonWebToken");
     	Objects.requireNonNull(jwt.getTokenID(), "JsonWebToken.tokenId");
     	return MapUtil.get(sessions, jwt.getTokenID());
@@ -58,7 +60,9 @@ public class Application {
      * @param jwt
      * @return
      */
-    public Optional<Session> removeSession(final JsonWebToken jwt) {
+    public Optional<Session> removeSession(final SecurityContext context) {
+    	Objects.requireNonNull(context, "SecurityContext");
+    	final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
     	Objects.requireNonNull(jwt, "JsonWebToken");
     	Objects.requireNonNull(jwt.getTokenID(), "JsonWebToken.tokenId");
     	return MapUtil.remove(sessions, jwt.getTokenID());
@@ -78,11 +82,13 @@ public class Application {
      * @param session
      * @return
      */
-    public Session putSession(final EPFPrincipal principal, final Token token){
-    	Objects.requireNonNull(principal, "EPFPrincipal");
+    public Session putSession(final CallerPrincipal principal, final Token token){
+    	Objects.requireNonNull(principal, "CallerPrincipal");
     	Objects.requireNonNull(token, "Token");
     	Objects.requireNonNull(token.getTokenID(), "Token.tokenId");
-        return sessions.computeIfAbsent(token.getTokenID(), time -> new Session(principal, token) );
+    	final Session session = new Session((EPFPrincipal)principal, token);
+        MapUtil.put(sessions, token.getTokenID(), session);
+        return session;
     }
     
     /**
@@ -90,6 +96,6 @@ public class Application {
      * @return
      */
     public Optional<Session> findSession(final String userName){
-    	return sessions.values().parallelStream().filter(session -> session.getToken().getName().equals(userName)).findFirst();
+    	return MapUtil.findAny(sessions, session -> session.getToken().getName().equals(userName));
     }
 }

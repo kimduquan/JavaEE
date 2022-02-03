@@ -113,6 +113,11 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-jdk14</artifactId>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.hibernate.reactive/hibernate-reactive-core -->
+		<dependency>
+		    <groupId>org.hibernate.reactive</groupId>
+		    <artifactId>hibernate-reactive-core</artifactId>
+		</dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-naming</artifactId>

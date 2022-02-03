@@ -1,5 +1,8 @@
 package epf.persistence.schema.client;
 
+import java.util.List;
+import java.util.concurrent.CompletionStage;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -22,7 +25,7 @@ public interface Schema {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    Response getEntities(@Context final SecurityContext context);
+    CompletionStage<List<Entity>> getEntities(@Context final SecurityContext context);
     
     /**
      * @param client
@@ -42,7 +45,7 @@ public interface Schema {
     @GET
     @Path("embeddable")
     @Produces(MediaType.APPLICATION_JSON)
-    Response getEmbeddables(@Context final SecurityContext context);
+    CompletionStage<List<Embeddable>> getEmbeddables(@Context final SecurityContext context);
     
     /**
      * @param client

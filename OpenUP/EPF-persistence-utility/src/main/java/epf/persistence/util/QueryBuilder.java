@@ -111,7 +111,7 @@ public class QueryBuilder {
         final Root<?> parentFrom = rootFrom;
         final Var<Join<?,?>> parentJoin = new Var<>();
         paths.subList(1, paths.size()).forEach(
-        		segment -> buildSegment(
+        		segment -> buildAttributeSegment(
         				segment, 
                 		parentType, 
                 		parentJoin, 
@@ -141,7 +141,7 @@ public class QueryBuilder {
      * @param allParams
      * @param manager
      */
-    protected static void buildSegment(
+    protected static void buildAttributeSegment(
     		final PathSegment segment, 
     		final Var<ManagedType<?>> parentType, 
     		final Var<Join<?,?>> parentJoin,
