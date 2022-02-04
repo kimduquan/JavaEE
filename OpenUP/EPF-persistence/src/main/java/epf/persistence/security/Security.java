@@ -245,7 +245,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
     @Override
     public String logOut(final SecurityContext context) throws Exception {
     	final Session session = sessionStore.removeSession(context).orElseThrow(ForbiddenException::new);
-    	return session.getPrincipal().getName();
+    	return session.getToken().getName();
     }
     
     @Override

@@ -9,7 +9,7 @@ mvn quarkus:dev &
 cd ../
 cd EPF-persistence
 mvn clean install -U
-mvn quarkus:dev &
+mvn quarkus:dev -Ddebug=5006 &
 cd ../
 cd EPF-shell
 mvn clean install -U -Depf-shell-native &
