@@ -29,10 +29,10 @@
 		<liberty.env.epf_image_url>https://localhost/image/image/</liberty.env.epf_image_url>
 		<liberty.env.epf_rules_url>https://localhost/rules/rules/</liberty.env.epf_rules_url>
 		<liberty.env.epf_planning_url>https://localhost/planning/planning/</liberty.env.epf_planning_url>
-		<liberty.env.epf_persistence_url>https://localhost/persistence/persistence/</liberty.env.epf_persistence_url>
-		<liberty.env.epf_persistence_security_url>https://localhost/persistence/security/</liberty.env.epf_persistence_security_url>
-		<liberty.env.epf_schema_url>https://localhost/persistence/schema/</liberty.env.epf_schema_url>
-		<liberty.env.epf_security_url>https://localhost/persistence/security/</liberty.env.epf_security_url>
+		<liberty.env.epf_persistence_url>http://localhost/persistence/persistence/</liberty.env.epf_persistence_url>
+		<liberty.env.epf_persistence_security_url>http://localhost/persistence/security/</liberty.env.epf_persistence_security_url>
+		<liberty.env.epf_schema_url>http://localhost/persistence/schema/</liberty.env.epf_schema_url>
+		<liberty.env.epf_security_url>http://localhost/persistence/security/</liberty.env.epf_security_url>
         <liberty.env.epf_security_webapp_url>https://localhost/EPF-security-webapp-1.0.0/</liberty.env.epf_security_webapp_url>
         <liberty.env.epf_gateway_url>http://localhost:9180/gateway/</liberty.env.epf_gateway_url>
         <liberty.env.epf_gateway_messaging_url>http://localhost:9180/messaging/</liberty.env.epf_gateway_messaging_url>
