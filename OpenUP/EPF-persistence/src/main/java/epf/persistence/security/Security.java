@@ -31,7 +31,6 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -141,7 +140,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
      * 
      */
     @PostConstruct
-    protected void postConstruct(){
+    void postConstruct(){
         try {
             privateKey = KeyUtil.generatePrivate("RSA", privateKeyText, Base64.getDecoder());
             encryptKey = KeyUtil.generatePublic("RSA", encryptKeyText, Base64.getDecoder());
@@ -156,7 +155,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
      * @param url
      * @return
      */
-    protected Token newToken(final String name, final Set<String> groups, final Set<String> audience, final Map<String, Object> claims) {
+    Token newToken(final String name, final Set<String> groups, final Set<String> audience, final Map<String, Object> claims) {
     	final long now = Instant.now().getEpochSecond();
     	final Token token = new Token();
     	token.setAudience(audience);
@@ -174,7 +173,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
      * @param jsonWebToken
      * @return
      */
-    protected Token newToken(final JsonWebToken jsonWebToken, final Set<String> groups, final Set<String> audience, final Map<String, Object> claims) {
+    Token newToken(final JsonWebToken jsonWebToken, final Set<String> groups, final Set<String> audience, final Map<String, Object> claims) {
     	final long now = Instant.now().getEpochSecond();
 		final Token token = TokenUtil.from(jsonWebToken);
 		token.setAudience(audience);
@@ -188,14 +187,15 @@ public class Security implements epf.security.client.Security, epf.security.clie
     /**
      * @return
      */
-    protected Set<String> buildAudience(final HttpHeaders headers, final URL url){
+    Set<String> buildAudience(
+            final URL url,
+            final List<String> forwardedHost,
+            final List<String> forwardedPort,
+            final List<String> forwardedProto){
     	final Set<String> audience = new HashSet<>();
     	if(url != null) {
     		audience.add(String.format(AUDIENCE_FORMAT, url.getProtocol(), url.getHost(), url.getPort()));
     	}
-		final List<String> forwardedHost = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_HOST);
-		final List<String> forwardedPort = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_PORT);
-		final List<String> forwardedProto = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_PROTO);
 		if(forwardedHost != null && forwardedPort != null && forwardedProto != null) {
 			for(int i = 0; i < forwardedHost.size(); i++) {
 				audience.add(String.format(AUDIENCE_FORMAT, forwardedProto.get(i), forwardedHost.get(i), forwardedPort.get(i)));
@@ -210,7 +210,9 @@ public class Security implements epf.security.client.Security, epf.security.clie
             final String username,
             final String passwordHash,
             final URL url,
-            final HttpHeaders headers) throws Exception {
+            final List<String> forwardedHost,
+            final List<String> forwardedPort,
+            final List<String> forwardedProto) throws Exception {
     	final Password password = new Password(passwordHash);
     	final UsernamePasswordCredential credential = new UsernamePasswordCredential(username, password);
     	sessionStore.findSession(username).ifPresent(session -> {
@@ -221,7 +223,6 @@ public class Security implements epf.security.client.Security, epf.security.clie
     			throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
     		}
     	});
-		final Set<String> audience = buildAudience(headers, url);
 		return identityStore.validate(credential)
     			.thenApply(result -> {
     				if(Status.VALID.equals(result.getStatus())) {
@@ -232,7 +233,12 @@ public class Security implements epf.security.client.Security, epf.security.clie
     			.thenApply(CredentialValidationResult::getCallerPrincipal)
     			.thenCompose(principal -> {
     				return identityStore.getCallerGroups(principal)
-					.thenCombine(principalStore.getCallerClaims(principal), (groups, claims) -> newToken(username, groups, audience, claims))
+					.thenCombine(
+							principalStore.getCallerClaims(principal), 
+							(groups, claims) -> {
+								final Set<String> audience = buildAudience(url, forwardedHost, forwardedPort, forwardedProto);
+								return newToken(username, groups, audience, claims);
+							})
 					.thenApply(token -> new TokenBuilder(token, privateKey, encryptKey))
 					.thenApply(builder -> builder.build())
 					.thenApply(newToken -> {
@@ -265,10 +271,15 @@ public class Security implements epf.security.client.Security, epf.security.clie
 	}
 
 	@Override
-	public CompletionStage<String> revoke(final HttpHeaders headers, final SecurityContext context) throws Exception {
+	public CompletionStage<String> revoke( 
+            final SecurityContext context,
+			final List<String> forwardedHost,
+            final List<String> forwardedPort,
+            final List<String> forwardedProto) throws Exception {
 		final Session session = sessionStore.removeSession(context).orElseThrow(ForbiddenException::new);
-		final Set<String> audience = buildAudience(headers, null);
 		final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
+		final Set<String> audience = buildAudience(null, forwardedHost, forwardedPort, forwardedProto);
+		audience.addAll(jwt.getAudience());
 		return identityStore.getCallerGroups(session.getPrincipal())
 				.thenCombine(principalStore.getCallerClaims(session.getPrincipal()), (groups, claims) -> newToken(jwt, groups, audience, claims))
 						.thenApply(token -> new TokenBuilder(token, privateKey, encryptKey))
@@ -284,8 +295,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 	public CompletionStage<String> loginOneTime(
 			final String username, 
 			final String passwordHash, 
-			final  URL url,
-			final HttpHeaders headers) throws Exception {
+			final  URL url) throws Exception {
 		final Password password = new Password(passwordHash);
     	final UsernamePasswordCredential credential = new UsernamePasswordCredential(username, password);
     	sessionStore.findSession(username).ifPresent(session -> {
@@ -312,9 +322,14 @@ public class Security implements epf.security.client.Security, epf.security.clie
 
 	@PermitAll
 	@Override
-	public CompletionStage<String> authenticateOneTime(final String oneTimePassword, final HttpHeaders headers) {
+	public CompletionStage<String> authenticateOneTime(
+			final String oneTimePassword,
+			final URL url,
+			final List<String> forwardedHost,
+            final List<String> forwardedPort,
+            final List<String> forwardedProto) {
 		final CallerPrincipal principal = otpPrincipalStore.removePrincipal(oneTimePassword).orElseThrow(() -> new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build()));
-		final Set<String> audience = buildAudience(headers, null);
+		final Set<String> audience = buildAudience(url, forwardedHost, forwardedPort, forwardedProto);
 		return identityStore.getCallerGroups(principal)
 		.thenCombine(principalStore.getCallerClaims(principal), (groups, claims) -> newToken(principal.getName(), groups, audience, claims))
 		.thenApply(token -> new TokenBuilder(token, privateKey, encryptKey))

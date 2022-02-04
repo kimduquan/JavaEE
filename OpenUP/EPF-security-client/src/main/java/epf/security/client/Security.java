@@ -1,14 +1,15 @@
 package epf.security.client;
 
 import java.net.URL;
+import java.util.List;
 import java.util.concurrent.CompletionStage;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
@@ -19,7 +20,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Form;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
@@ -73,8 +73,12 @@ public interface Security {
             @QueryParam(URL)
             @NotNull
             final URL url,
-            @Context
-            final HttpHeaders headers
+            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_HOST)
+            final List<String> forwardedHost,
+            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PORT)
+            final List<String> forwardedPort,
+            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PROTO)
+            final List<String> forwardedProto
     ) throws Exception;
     
     /**
@@ -179,10 +183,14 @@ public interface Security {
     @PUT
     @Produces(MediaType.TEXT_PLAIN)
     CompletionStage<String> revoke(
-    		@Context
-            final HttpHeaders headers,
             @Context
-            final SecurityContext context) throws Exception;
+            final SecurityContext context,
+            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_HOST)
+            final List<String> forwardedHost,
+            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PORT)
+            final List<String> forwardedPort,
+            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PROTO)
+            final List<String> forwardedProto) throws Exception;
     
     /**
      * @param client
