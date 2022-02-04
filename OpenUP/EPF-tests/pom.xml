@@ -30,9 +30,8 @@
 		<liberty.env.epf_rules_url>https://localhost:9443/rules/rules/</liberty.env.epf_rules_url>
 		<liberty.env.epf_planning_url>https://localhost:9443/planning/planning/</liberty.env.epf_planning_url>
 		<liberty.env.epf_persistence_url>http://localhost:9181/persistence/persistence/</liberty.env.epf_persistence_url>
-		<liberty.env.epf_persistence_security_url>http://localhost:9181/persistence/security/</liberty.env.epf_persistence_security_url>
 		<liberty.env.epf_schema_url>http://localhost:9181/persistence/schema/</liberty.env.epf_schema_url>
-		<liberty.env.epf_security_url>http://localhost:9181/persistence/security/</liberty.env.epf_security_url>
+		<liberty.env.epf_security_url>http://localhost:9182/security/security/</liberty.env.epf_security_url>
         <liberty.env.epf_security_webapp_url>https://localhost/EPF-security-webapp-1.0.0/</liberty.env.epf_security_webapp_url>
         <liberty.env.epf_gateway_url>http://localhost:9180/gateway/</liberty.env.epf_gateway_url>
         <liberty.env.epf_gateway_messaging_url>http://localhost:9180/messaging/</liberty.env.epf_gateway_messaging_url>
@@ -328,9 +327,8 @@
 						<epf.rules.url>https://localhost:${httpsPort}/rules/rules/</epf.rules.url>
 						<epf.planning.url>https://localhost:${httpsPort}/planning/planning/</epf.planning.url>
 						<epf.persistence.url>http://localhost:9181/persistence/persistence/</epf.persistence.url>
-						<epf.persistence.security.url>http://localhost:9181/persistence/security/</epf.persistence.security.url>
 						<epf.schema.url>http://localhost:9181/persistence/schema/</epf.schema.url>
-						<epf.security.url>http://localhost:9181/persistence/security/</epf.security.url>
+						<epf.security.url>http://localhost:9182/security/security/</epf.security.url>
                         <epf.security.webapp.url>http://localhost:9181/security/</epf.security.webapp.url>
                         <epf.gateway.url>http://localhost:${gatewayPort}/gateway/</epf.gateway.url>
                         <epf.gateway.messaging.url>ws://localhost:${gatewayPort}/messaging/</epf.gateway.messaging.url>

@@ -9,13 +9,11 @@ import javax.inject.Inject;
 import javax.persistence.metamodel.EntityType;
 import javax.transaction.Transactional;
 import javax.validation.Validator;
-import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.SecurityContext;
 import epf.naming.Naming;
-import epf.persistence.internal.SessionStore;
-import epf.persistence.internal.Session;
+import epf.persistence.util.EntityManagerFactory;
 import epf.persistence.util.EntityTypeUtil;
 import epf.persistence.util.EntityUtil;
 import epf.util.concurrent.Stage;
@@ -39,7 +37,7 @@ public class Entities implements epf.persistence.client.Entities {
      * 
      */
     @Inject
-    transient SessionStore sessionStore;
+    transient EntityManagerFactory factory;
     
     @Override
     @Transactional
@@ -49,11 +47,10 @@ public class Entities implements epf.persistence.client.Entities {
             final SecurityContext context,
             final InputStream body
             ) throws Exception{
-    	final Session session = sessionStore.getSession(context).orElseThrow(ForbiddenException::new);
-    	final EntityType<?> entityType = EntityTypeUtil.findEntityType(session.getPrincipal().getFactory().getMetamodel(), name).orElseThrow(NotFoundException::new);
+    	final EntityType<?> entityType = EntityTypeUtil.findEntityType(factory.getMetamodel(), name).orElseThrow(NotFoundException::new);
     	final Object entity = EntityUtil.toObject(entityType, body);
         validator.validate(entity);
-        return Stage.stage(session.getPrincipal().getFactory().createEntityManager())
+        return Stage.stage(factory.createEntityManager())
         		.compose(manager -> manager.persist(entity))
         		.apply(v -> entity)
         		.complete();
@@ -68,10 +65,9 @@ public class Entities implements epf.persistence.client.Entities {
 			final SecurityContext context,
 			final InputStream body
 			) throws Exception {
-    	final Session session = sessionStore.getSession(context).orElseThrow(ForbiddenException::new);
-    	final EntityType<?> entityType = EntityTypeUtil.findEntityType(session.getPrincipal().getFactory().getMetamodel(), name).orElseThrow(NotFoundException::new);
+    	final EntityType<?> entityType = EntityTypeUtil.findEntityType(factory.getMetamodel(), name).orElseThrow(NotFoundException::new);
     	final Object entityId = EntityUtil.getEntityId(entityType, id);
-    	return Stage.stage(session.getPrincipal().getFactory().createEntityManager())
+    	return Stage.stage(factory.createEntityManager())
     	.compose(manager -> manager.find(entityType.getJavaType(), entityId))
     	.apply(entity -> Optional.ofNullable(entity).orElseThrow(NotFoundException::new))
 		.apply(entity -> EntityUtil.toObject(entityType, body))
@@ -92,10 +88,9 @@ public class Entities implements epf.persistence.client.Entities {
     		final String id,
     		final SecurityContext context
             ) {
-    	final Session session = sessionStore.getSession(context).orElseThrow(ForbiddenException::new);
-    	final EntityType<?> entityType = EntityTypeUtil.findEntityType(session.getPrincipal().getFactory().getMetamodel(), name).orElseThrow(NotFoundException::new);
+    	final EntityType<?> entityType = EntityTypeUtil.findEntityType(factory.getMetamodel(), name).orElseThrow(NotFoundException::new);
     	final Object entityId = EntityUtil.getEntityId(entityType, id);
-    	return Stage.stage(session.getPrincipal().getFactory().createEntityManager())
+    	return Stage.stage(factory.createEntityManager())
     	.compose(manager -> manager.find(entityType.getJavaType(), entityId))
     	.apply(entity -> Optional.ofNullable(entity).orElseThrow(NotFoundException::new))
     	.stage((manager, entity) -> manager.remove(entity))
@@ -105,10 +100,9 @@ public class Entities implements epf.persistence.client.Entities {
     
 	@Override
 	public CompletionStage<Object> find(final String schema, final String name, final String id, final SecurityContext context) {
-		final Session session = sessionStore.getSession(context).orElseThrow(ForbiddenException::new);
-    	final EntityType<?> entityType = EntityTypeUtil.findEntityType(session.getPrincipal().getFactory().getMetamodel(), name).orElseThrow(NotFoundException::new);
+		final EntityType<?> entityType = EntityTypeUtil.findEntityType(factory.getMetamodel(), name).orElseThrow(NotFoundException::new);
     	final Object entityId = EntityUtil.getEntityId(entityType, id);
-    	return Stage.stage(session.getPrincipal().getFactory().createEntityManager())
+    	return Stage.stage(factory.createEntityManager())
     			.compose(manager -> manager.find(entityType.getJavaType(), entityId))
     			.apply(entity -> (Object)entity)
     			.complete();

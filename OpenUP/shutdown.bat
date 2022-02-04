@@ -1,6 +1,7 @@
 call .\env.bat
 Taskkill /IM EPF-gateway-* /F
 Taskkill /IM EPF-persistence-* /F
+Taskkill /IM EPF-security-* /F
 cd EPF-tests
 call mvn liberty:stop
 cd ../

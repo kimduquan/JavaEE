@@ -10,10 +10,22 @@
     <name>Eclipse Process Framework Security Utility</name>
     <packaging>jar</packaging>
     <dependencies>
-        <dependency>
-		    <groupId>org.mockito</groupId>
-		    <artifactId>mockito-core</artifactId>
-		    <scope>test</scope>
+    	<!-- https://mvnrepository.com/artifact/javax.security.enterprise/javax.security.enterprise-api -->
+		<dependency>
+		    <groupId>javax.security.enterprise</groupId>
+		    <artifactId>javax.security.enterprise-api</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api -->
+		<dependency>
+		    <groupId>javax.persistence</groupId>
+		    <artifactId>javax.persistence-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.transaction/javax.transaction-api -->
+		<dependency>
+		    <groupId>javax.transaction</groupId>
+		    <artifactId>javax.transaction-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
     </dependencies>
 </project>

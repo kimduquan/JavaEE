@@ -8,18 +8,16 @@ import java.util.stream.Stream;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.SecurityContext;
 import epf.naming.Naming;
-import epf.persistence.internal.SessionStore;
-import epf.persistence.internal.Session;
 import epf.persistence.schema.client.Embeddable;
 import epf.persistence.schema.client.Entity;
 import epf.persistence.schema.util.EmbeddableBuilder;
 import epf.persistence.schema.util.EmbeddableComparator;
 import epf.persistence.schema.util.EntityBuilder;
 import epf.persistence.schema.util.EntityComparator;
+import epf.persistence.util.EntityManagerFactory;
 import epf.persistence.util.SchemaUtil;
 
 /**
@@ -35,15 +33,14 @@ public class Schema implements epf.persistence.schema.client.Schema {
 	 * 
 	 */
 	@Inject
-    transient SessionStore sessionStore;
+    transient EntityManagerFactory factory;
 
 	@Override
 	public CompletionStage<List<Entity>> getEntities(final SecurityContext context) {
-		final Session session = sessionStore.getSession(context).orElseThrow(ForbiddenException::new);
 		final EntityBuilder builder = new EntityBuilder();
 		final EntityComparator comparator = new EntityComparator();
 		final Stream<Entity> entities = SchemaUtil
-				.getEntities(session.getPrincipal().getFactory().getMetamodel())
+				.getEntities(factory.getMetamodel())
 				.map(builder::build)
 				.sorted(comparator);
 		return CompletableFuture.completedStage(entities.collect(Collectors.toList()));
@@ -51,11 +48,10 @@ public class Schema implements epf.persistence.schema.client.Schema {
 
 	@Override
 	public CompletionStage<List<Embeddable>> getEmbeddables(final SecurityContext context) {
-		final Session session = sessionStore.getSession(context).orElseThrow(ForbiddenException::new);
 		final EmbeddableBuilder builder = new EmbeddableBuilder();
 		final EmbeddableComparator comparator = new EmbeddableComparator();
 		final Stream<Embeddable> embeddables = SchemaUtil
-				.getEmbeddables(session.getPrincipal().getFactory().getMetamodel())
+				.getEmbeddables(factory.getMetamodel())
 				.map(builder::build)
 				.sorted(comparator);
 		return CompletableFuture.completedStage(embeddables.collect(Collectors.toList()));

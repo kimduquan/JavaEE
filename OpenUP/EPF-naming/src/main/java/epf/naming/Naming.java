@@ -539,10 +539,6 @@ public interface Naming {
 	         * 
 	         */
 	        String EXPIRE_DURATION = "epf.security.jwt.exp.duration";
-	        /**
-	         * 
-	         */
-	        String EXPIRE_TIMEUNIT = "epf.security.jwt.exp.timeunit";
 	        
 	        /**
 	         * 

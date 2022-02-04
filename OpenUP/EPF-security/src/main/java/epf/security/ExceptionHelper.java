@@ -1,8 +1,9 @@
-package epf.persistence;
+package epf.security;
 
 import java.io.Serializable;
 import java.io.StreamCorruptedException;
 import java.net.SocketTimeoutException;
+import java.sql.SQLException;
 import java.sql.SQLInvalidAuthorizationSpecException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,6 +13,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
+
+import epf.security.internal.sql.SQLError;
 import epf.util.EPFException;
 import epf.util.logging.LogManager;
 
@@ -69,6 +72,13 @@ public class ExceptionHelper implements ExceptionMapper<Exception>, Serializable
         }
         else if(failure instanceof StreamCorruptedException){
             mapped = true;
+        }
+        else if(failure instanceof SQLException){
+        	final SQLException exception = (SQLException)failure;
+        	final int errorCode = exception.getErrorCode();
+        	if(SQLError.ER_ACCESS_DENIED_ERROR.getCode() == errorCode) {
+        		status = Response.Status.UNAUTHORIZED;
+        	}
         }
         else{
             mapped = false;
