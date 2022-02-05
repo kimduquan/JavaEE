@@ -3,20 +3,18 @@
 ./clean.sh
 ./startup.sh
 . ./config.sh
+mvn clean install -U -DskipTests -T 1C
 cd EPF-gateway
-mvn clean install -U
 mvn quarkus:dev &
 cd ../
 cd EPF-persistence
-mvn clean install -U
 mvn quarkus:dev -Ddebug=5006 &
 cd ../
 cd EPF-security
-mvn clean install -U
 mvn quarkus:dev -Ddebug=5007 &
 cd ../
 cd EPF-shell
-mvn clean install -U -Depf-shell-native &
+mvn install -Depf-shell-native
 cd ../
 ./install.sh &
 cd EPF-tests
