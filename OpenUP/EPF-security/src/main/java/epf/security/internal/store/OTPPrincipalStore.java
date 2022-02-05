@@ -11,7 +11,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import epf.naming.Naming;
-import epf.security.internal.util.TokenIdGenerator;
+import epf.security.internal.token.TokenIdGenerator;
 import epf.security.schema.Token;
 import epf.security.util.JPAPrincipal;
 import epf.util.MapUtil;

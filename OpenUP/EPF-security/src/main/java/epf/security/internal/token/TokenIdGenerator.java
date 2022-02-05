@@ -1,4 +1,4 @@
-package epf.security.internal.util;
+package epf.security.internal.token;
 
 import org.jose4j.jwt.JwtClaims;
 import epf.util.EPFException;

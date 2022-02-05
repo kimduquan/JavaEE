@@ -30,12 +30,15 @@ import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.jwt.config.Names;
+import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.eclipse.microprofile.reactive.messaging.Emitter;
+
 import epf.naming.Naming;
 import epf.security.client.jwt.TokenUtil;
 import epf.security.internal.Session;
 import epf.security.internal.store.OTPPrincipalStore;
 import epf.security.internal.store.SessionStore;
-import epf.security.internal.util.TokenBuilder;
+import epf.security.internal.token.TokenBuilder;
 import epf.security.schema.Token;
 import epf.security.util.IdentityStore;
 import epf.security.util.JPAPrincipal;
@@ -123,6 +126,12 @@ public class Security implements epf.security.client.Security, epf.security.clie
      */
     @Inject
     transient SessionStore sessionStore;
+    
+    /**
+     * 
+     */
+    @Channel(Naming.SECURITY)
+    transient Emitter<Token> emitter;
     
     /**
      * 
@@ -224,7 +233,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 									}
 								)
     			)
-    			.thenApply(token -> token.getRawToken());
+    			.thenCompose(token -> emitter.send(token).thenApply(v -> token.getRawToken()));
     }
     
     @Override
@@ -265,8 +274,9 @@ public class Security implements epf.security.client.Security, epf.security.clie
 						.thenApply(builder -> builder.build())
 						.thenApply(newToken -> {
 							sessionStore.putSession(session.getPrincipal(), newToken);
-							return newToken.getRawToken();
-						});
+							return newToken;
+						})
+						.thenCompose(token -> emitter.send(token).thenApply(v -> token.getRawToken()));
 	}
 
 	@PermitAll
@@ -303,7 +313,8 @@ public class Security implements epf.security.client.Security, epf.security.clie
 		.thenApply(builder -> builder.build())
 		.thenApply(newToken -> {
 			sessionStore.putSession(principal, newToken);
-			return newToken.getRawToken();
-		});
+			return newToken;
+		})
+		.thenCompose(token -> emitter.send(token).thenApply(v -> token.getRawToken()));
 	}
 }
