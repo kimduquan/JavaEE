@@ -1,8 +1,9 @@
-package epf.persistence.schema.util;
+package epf.persistence.schema.internal;
 
 import java.util.stream.Collectors;
 import javax.persistence.metamodel.EmbeddableType;
-import epf.persistence.util.Embeddable;
+
+import epf.persistence.internal.Embeddable;
 
 /**
  * @author PC

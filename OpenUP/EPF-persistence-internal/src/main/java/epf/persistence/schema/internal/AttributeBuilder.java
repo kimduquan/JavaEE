@@ -1,4 +1,4 @@
-package epf.persistence.schema.util;
+package epf.persistence.schema.internal;
 
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.Attribute.PersistentAttributeType;

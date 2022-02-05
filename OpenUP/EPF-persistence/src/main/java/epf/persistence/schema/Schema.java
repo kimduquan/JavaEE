@@ -17,7 +17,7 @@ import epf.persistence.schema.util.EmbeddableBuilder;
 import epf.persistence.schema.util.EmbeddableComparator;
 import epf.persistence.schema.util.EntityBuilder;
 import epf.persistence.schema.util.EntityComparator;
-import epf.persistence.util.EntityManagerFactory;
+import epf.persistence.ext.EntityManagerFactory;
 import epf.persistence.util.SchemaUtil;
 
 /**

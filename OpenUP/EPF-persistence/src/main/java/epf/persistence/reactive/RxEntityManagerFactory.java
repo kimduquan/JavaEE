@@ -5,11 +5,9 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.metamodel.Metamodel;
-import org.hibernate.reactive.mutiny.Mutiny.Session;
 import org.hibernate.reactive.mutiny.Mutiny.SessionFactory;
-import epf.persistence.util.EntityManager;
-import epf.persistence.util.EntityManagerFactory;
-import io.smallrye.mutiny.Uni;
+import epf.persistence.ext.EntityManager;
+import epf.persistence.ext.EntityManagerFactory;
 
 /**
  * @author PC
@@ -22,12 +20,11 @@ public class RxEntityManagerFactory implements EntityManagerFactory {
 	 * 
 	 */
 	@Inject
-	private transient SessionFactory sessionFactory;
+	transient SessionFactory sessionFactory;
 
 	@Override
 	public CompletionStage<EntityManager> createEntityManager() {
-		final Uni<Session> session = sessionFactory.openSession();
-		return session.subscribeAsCompletionStage().thenApply(ss -> new RxEntityManager(ss));
+		return sessionFactory.openSession().subscribeAsCompletionStage().thenApply(ss -> new RxEntityManager(ss));
 	}
 
 	@Override

@@ -13,7 +13,7 @@ import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.SecurityContext;
 import epf.naming.Naming;
-import epf.persistence.util.EntityManagerFactory;
+import epf.persistence.ext.EntityManagerFactory;
 import epf.persistence.util.EntityTypeUtil;
 import epf.persistence.util.EntityUtil;
 import epf.util.concurrent.Stage;

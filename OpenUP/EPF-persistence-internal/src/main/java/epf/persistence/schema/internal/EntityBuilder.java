@@ -1,13 +1,14 @@
-package epf.persistence.schema.util;
+package epf.persistence.schema.internal;
 
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Type;
 import javax.persistence.metamodel.Type.PersistenceType;
+
+import epf.persistence.internal.Entity;
 import epf.persistence.schema.client.Attribute;
 import epf.persistence.schema.client.Table;
-import epf.persistence.util.Entity;
 import epf.util.logging.LogManager;
 
 /**

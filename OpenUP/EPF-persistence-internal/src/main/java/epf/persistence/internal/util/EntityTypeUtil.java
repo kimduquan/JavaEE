@@ -1,4 +1,4 @@
-package epf.persistence.util;
+package epf.persistence.internal.util;
 
 import java.util.Optional;
 import javax.persistence.metamodel.EntityType;

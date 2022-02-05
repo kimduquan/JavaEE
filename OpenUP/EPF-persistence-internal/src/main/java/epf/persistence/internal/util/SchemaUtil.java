@@ -1,17 +1,18 @@
-package epf.persistence.util;
+package epf.persistence.internal.util;
 
 import java.lang.reflect.Field;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
-
 import javax.persistence.Column;
 import javax.persistence.Table;
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EmbeddableType;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
+import epf.persistence.internal.Embeddable;
+import epf.persistence.internal.Entity;
 
 /**
  * @author PC

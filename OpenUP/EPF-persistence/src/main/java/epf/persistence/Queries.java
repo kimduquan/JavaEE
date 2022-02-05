@@ -13,7 +13,7 @@ import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.SecurityContext;
 import epf.naming.Naming;
 import epf.persistence.util.Entity;
-import epf.persistence.util.EntityManagerFactory;
+import epf.persistence.ext.EntityManagerFactory;
 import epf.persistence.util.EntityTypeUtil;
 import epf.persistence.util.QueryBuilder;
 import epf.util.concurrent.Stage;

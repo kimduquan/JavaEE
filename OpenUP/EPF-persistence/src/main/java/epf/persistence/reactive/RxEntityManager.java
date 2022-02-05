@@ -4,8 +4,8 @@ import java.util.concurrent.CompletionStage;
 import javax.persistence.criteria.CriteriaQuery;
 import org.hibernate.reactive.mutiny.Mutiny;
 import org.hibernate.reactive.mutiny.Mutiny.Session;
-import epf.persistence.util.EntityManager;
-import epf.persistence.util.Query;
+import epf.persistence.ext.EntityManager;
+import epf.persistence.ext.Query;
 
 /**
  * @author PC
@@ -20,9 +20,8 @@ public class RxEntityManager implements EntityManager {
 	
 	/**
 	 * @param session
-	 * @param factory
 	 */
-	public RxEntityManager(final Session session) {
+	RxEntityManager(final Session session) {
 		this.session = session;
 	}
 

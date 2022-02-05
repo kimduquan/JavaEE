@@ -1,27 +1,27 @@
-package epf.persistence.util;
+package epf.persistence.internal;
 
-import javax.persistence.metamodel.EmbeddableType;
+import javax.persistence.metamodel.EntityType;
 
 /**
  *
  * @author FOXCONN
  */
-public class Embeddable<T> {
+public class Entity<T> {
     
     /**
      * 
      */
-    private EmbeddableType<T> type;
+    private EntityType<T> type;
     /**
      * 
      */
     private T object;
 
-    public EmbeddableType<T> getType() {
+    public EntityType<T> getType() {
         return type;
     }
 
-    public void setType(final EmbeddableType<T> type) {
+    public void setType(final EntityType<T> type) {
         this.type = type;
     }
 

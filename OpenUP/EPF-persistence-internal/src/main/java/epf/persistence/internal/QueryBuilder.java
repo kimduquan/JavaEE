@@ -1,4 +1,4 @@
-package epf.persistence.util;
+package epf.persistence.internal;
 
 import java.util.ArrayList;
 import java.util.Collection;
