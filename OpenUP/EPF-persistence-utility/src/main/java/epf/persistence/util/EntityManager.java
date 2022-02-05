@@ -2,13 +2,12 @@ package epf.persistence.util;
 
 import java.util.concurrent.CompletionStage;
 import javax.persistence.criteria.CriteriaQuery;
-import epf.util.io.Closeable;
 
 /**
  * @author PC
  *
  */
-public interface EntityManager extends Closeable {
+public interface EntityManager extends epf.util.AutoCloseable {
 
 	/**
 	 * @param entity

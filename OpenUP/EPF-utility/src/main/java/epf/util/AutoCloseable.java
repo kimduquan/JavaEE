@@ -1,4 +1,4 @@
-package epf.util.io;
+package epf.util;
 
 import java.util.concurrent.CompletionStage;
 
@@ -6,7 +6,7 @@ import java.util.concurrent.CompletionStage;
  * @author PC
  *
  */
-public interface Closeable {
+public interface AutoCloseable {
 
 	/**
 	 * @return

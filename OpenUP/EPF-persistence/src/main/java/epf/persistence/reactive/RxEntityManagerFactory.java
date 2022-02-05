@@ -1,16 +1,15 @@
 package epf.persistence.reactive;
 
-import java.util.Map;
 import java.util.concurrent.CompletionStage;
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.metamodel.Metamodel;
-import org.hibernate.reactive.stage.Stage.Session;
-import org.hibernate.reactive.stage.Stage.SessionFactory;
+import org.hibernate.reactive.mutiny.Mutiny.Session;
+import org.hibernate.reactive.mutiny.Mutiny.SessionFactory;
 import epf.persistence.util.EntityManager;
 import epf.persistence.util.EntityManagerFactory;
+import io.smallrye.mutiny.Uni;
 
 /**
  * @author PC
@@ -22,46 +21,27 @@ public class RxEntityManagerFactory implements EntityManagerFactory {
 	/**
 	 * 
 	 */
-	private transient SessionFactory sessionFactory;
-	
-	/**
-	 * 
-	 */
 	@Inject
-	transient javax.persistence.EntityManagerFactory factory;
-	
-	/**
-	 * 
-	 */
-	@PostConstruct
-	void postConstruct() {
-		sessionFactory = factory.unwrap(SessionFactory.class);
-	}
+	private transient SessionFactory sessionFactory;
 
 	@Override
 	public CompletionStage<EntityManager> createEntityManager() {
-		final CompletionStage<Session> session = sessionFactory.openSession();
-		return session.thenApply(ss -> new RxEntityManager(session, sessionFactory));
+		final Uni<Session> session = sessionFactory.openSession();
+		return session.subscribeAsCompletionStage().thenApply(ss -> new RxEntityManager(ss));
 	}
 
 	@Override
 	public CriteriaBuilder getCriteriaBuilder() {
-		return factory.getCriteriaBuilder();
+		return sessionFactory.getCriteriaBuilder();
 	}
 
 	@Override
 	public Metamodel getMetamodel() {
-		return factory.getMetamodel();
+		return sessionFactory.getMetamodel();
 	}
 
 	@Override
 	public void close() {
 		sessionFactory.close();
-		factory.close();
-	}
-
-	@Override
-	public boolean equals(final Map<String, Object> props) {
-		return factory.getProperties().equals(props);
 	}
 }
