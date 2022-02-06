@@ -11,6 +11,7 @@ import epf.naming.Naming;
 import epf.security.client.Security;
 import epf.security.schema.Token;
 import epf.tests.client.ClientUtil;
+import epf.tests.health.HealthUtil;
 import java.util.Map.Entry;
 import java.util.AbstractMap;
 import java.util.Queue;
@@ -52,7 +53,7 @@ public class SecurityUtil {
     	}
     }
     
-    public static Entry<String, String> peekCredential(){
+    public static Entry<String, String> peekCredential() throws Exception{
     	if(credentials.isEmpty()) {
     		/*Basic Roles BEGIN*/
     		credentials.add(new AbstractMap.SimpleImmutableEntry<>("analyst1", "Analyst1*"));
@@ -77,6 +78,8 @@ public class SecurityUtil {
     		credentials.add(new AbstractMap.SimpleImmutableEntry<>("process_engineer1", "Process_Engineer1*"));
     		credentials.add(new AbstractMap.SimpleImmutableEntry<>("tool_specialist1", "Tool_Specialist1*"));
     		/*Environment END*/
+    		
+    		HealthUtil.isReady();
     	}
     	Entry<String, String> credential = credentials.poll();
     	credentials.add(credential);
@@ -89,8 +92,8 @@ public class SecurityUtil {
     	return login(credential.getKey(), credential.getValue());
     }
     
-    public static Entry<String, String> getAdminCredential(){
+    static Entry<String, String> getAdminCredential(){
     	System.out.println(String.format("SecurityUtil.getAdminCredential()"));
-    	return new AbstractMap.SimpleImmutableEntry<>("epf", "Password1234****");
+    	return new AbstractMap.SimpleImmutableEntry<>("test", "123456");
     }
 }

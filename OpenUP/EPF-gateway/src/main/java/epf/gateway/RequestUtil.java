@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Map.Entry;
 import java.util.concurrent.CompletionStage;
 import java.util.Set;
@@ -22,6 +23,7 @@ import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.PathSegment;
@@ -90,43 +92,52 @@ public interface RequestUtil {
 	}
 	
 	/**
-	 * @param webTarget
-	 * @param firstSegment
+	 * @param uriInfo
 	 * @return
 	 */
-	static WebTarget buildProperties(WebTarget webTarget, final PathSegment firstSegment) {
-		final MultivaluedMap<String, String> matrixParams = firstSegment.getMatrixParameters();
-        if(matrixParams != null){
-        	for(Entry<String, List<String>> entry : matrixParams.entrySet()) {
-        		final String key = entry.getKey();
-        		final List<String> value = entry.getValue();
-        		if(value == null) {
-            		webTarget = webTarget.property(key, null);
-            	}
-            	else {
-                	webTarget = webTarget.property(key, value.stream().collect(Collectors.joining(",")));
-            	}
-        	}
-        }
-		return webTarget;
+	static Optional<String> getTernant(final UriInfo uriInfo) {
+		Optional<String> ternant = Optional.empty();
+		final List<PathSegment> segments = uriInfo.getPathSegments();
+		if(segments != null && segments.size() > 0) {
+			final PathSegment firstSegment = segments.get(0);
+			final MultivaluedMap<String, String> matrixParams = firstSegment.getMatrixParameters();
+			if(matrixParams != null) {
+				ternant = Optional.ofNullable(matrixParams.getFirst(Naming.Management.TERNANT));
+			}
+		}
+		return ternant;
+	}
+	
+	/**
+	 * @param uriInfo
+	 * @return
+	 */
+	static MultivaluedMap<String, String> getParamters(final UriInfo uriInfo) {
+		MultivaluedMap<String, String> params = new MultivaluedHashMap<>();
+		final List<PathSegment> segments = uriInfo.getPathSegments();
+		if(segments != null && segments.size() > 0) {
+			final PathSegment firstSegment = segments.get(0);
+			final MultivaluedMap<String, String> matrixParams = firstSegment.getMatrixParameters();
+			if(matrixParams != null) {
+				params = firstSegment.getMatrixParameters();
+			}
+		}
+		return params;
 	}
     
     /**
      * @param webTarget
      * @param uriInfo
-     * @param serviceUri
      * @return
      */
     static WebTarget buildTarget(
     		WebTarget webTarget,
-    		final UriInfo uriInfo, 
-    		final URI serviceUri){
+    		final UriInfo uriInfo){
         if(uriInfo != null){
         	final List<PathSegment> segments = uriInfo.getPathSegments();
             if(segments != null){
             	final Iterator<PathSegment> segmentIt = segments.iterator();
-            	final PathSegment firstSegment = segmentIt.next();
-            	webTarget = buildProperties(webTarget, firstSegment);
+            	segmentIt.next();
             	while(segmentIt.hasNext()) {
             		final PathSegment segment = segmentIt.next();
             		webTarget = webTarget.path(segment.getPath());

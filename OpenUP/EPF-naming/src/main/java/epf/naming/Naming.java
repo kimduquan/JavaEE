@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.naming;
 
 /**
@@ -217,6 +214,10 @@ public interface Naming {
 		 */
 		String MANAGEMENT_URL = "epf.management.url";
 		
+		/**
+		 * 
+		 */
+		String TERNANT = "ternant";
 	}
 	
 	/**
@@ -518,6 +519,14 @@ public interface Naming {
 	     * 
 	     */
 	    String DEFAULT_ROLE = "Any_Role";
+	    
+	    /**
+	     * @author PC
+	     *
+	     */
+	    interface Internal {
+	    	
+	    }
 	    
 	    /**
 	     * @author PC
