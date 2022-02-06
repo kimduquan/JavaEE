@@ -10,9 +10,6 @@ cd ../
 cd EPF-persistence
 mvn quarkus:dev -Ddebug=5006 &
 cd ../
-cd EPF-security
-mvn quarkus:dev -Ddebug=5007 &
-cd ../
 cd EPF-shell
 mvn install -Depf-shell-native
 cd ../
