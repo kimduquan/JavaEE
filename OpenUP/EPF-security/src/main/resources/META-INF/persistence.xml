@@ -4,5 +4,9 @@
     	<jta-data-source>jdbc/epf_security</jta-data-source>
 		<jar-file>../lib/EPF-schema-utility-1.0.0.jar</jar-file>
 		<jar-file>../lib/EPF-security-schema-1.0.0.jar</jar-file>
+		<properties>
+			<property name="javax.persistence.schema-generation.database.action" value="create"/>
+			<property name="javax.persistence.schema-generation.create-source" value="metadata"/>
+		</properties>
     </persistence-unit>
 </persistence>
