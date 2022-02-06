@@ -1,10 +1,8 @@
-package epf.security.internal.sql;
+package epf.security.internal.sql.mysql;
 
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Stream;
-
-import epf.security.internal.Role;
 
 /**
  * @author PC

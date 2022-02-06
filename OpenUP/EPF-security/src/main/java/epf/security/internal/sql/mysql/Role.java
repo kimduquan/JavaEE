@@ -1,4 +1,4 @@
-package epf.security.internal;
+package epf.security.internal.sql.mysql;
 
 /**
  * @author PC

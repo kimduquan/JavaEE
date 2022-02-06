@@ -18,6 +18,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.security.enterprise.credential.Password;
 import javax.security.enterprise.credential.UsernamePasswordCredential;
@@ -30,9 +31,6 @@ import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.jwt.config.Names;
-import org.eclipse.microprofile.reactive.messaging.Channel;
-import org.eclipse.microprofile.reactive.messaging.Emitter;
-
 import epf.naming.Naming;
 import epf.security.client.jwt.TokenUtil;
 import epf.security.internal.Session;
@@ -130,8 +128,8 @@ public class Security implements epf.security.client.Security, epf.security.clie
     /**
      * 
      */
-    @Channel(Naming.SECURITY)
-    transient Emitter<Token> emitter;
+    @Inject
+    transient Event<Token> event;
     
     /**
      * 
@@ -233,7 +231,11 @@ public class Security implements epf.security.client.Security, epf.security.clie
 									}
 								)
     			)
-    			.thenCompose(token -> emitter.send(token).thenApply(v -> token.getRawToken()));
+    			.thenApply(token -> { 
+    				event.fire(token);
+    				return token.getRawToken();
+    				}
+    			);
     }
     
     @Override
@@ -276,7 +278,10 @@ public class Security implements epf.security.client.Security, epf.security.clie
 							sessionStore.putSession(session.getPrincipal(), newToken);
 							return newToken;
 						})
-						.thenCompose(token -> emitter.send(token).thenApply(v -> token.getRawToken()));
+						.thenApply(token -> {
+							event.fire(token);
+							return token.getRawToken();
+						});
 	}
 
 	@PermitAll
@@ -315,6 +320,9 @@ public class Security implements epf.security.client.Security, epf.security.clie
 			sessionStore.putSession(principal, newToken);
 			return newToken;
 		})
-		.thenCompose(token -> emitter.send(token).thenApply(v -> token.getRawToken()));
+		.thenApply(token -> { 
+			event.fire(token);
+			return token.getRawToken();
+			});
 	}
 }

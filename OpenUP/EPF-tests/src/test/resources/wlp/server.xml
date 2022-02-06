@@ -54,7 +54,7 @@
     <application id="EPF-lang" name="EPF-lang" context-root="lang" location="EPF-lang-1.0.0.war" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-    <application id="EPF-cache" name="EPF-cache" context-root="cache" location="EPF-cache-1.0.0.war" startAfterRef="EPF-messaging" >
+    <application id="EPF-cache" name="EPF-cache" context-root="cache" location="EPF-cache-1.0.0.war" startAfterRef="EPF-messaging,EPF-security" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
 	<application id="EPF-file" name="EPF-file" context-root="file" location="EPF-file-1.0.0.war" startAfterRef="EPF-messaging" >
@@ -73,6 +73,9 @@
         <classloader apiTypeVisibility="+third-party"/>
     </application>
     <application id="EPF-schema" name="EPF-schema" context-root="schema" location="EPF-schema-1.0.0.war">
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
+    <application id="EPF-security" name="EPF-security" context-root="security" location="EPF-security-1.0.0.war">
         <classloader apiTypeVisibility="+third-party"/>
     </application>
     
@@ -104,6 +107,11 @@
         contentEncryptionAlgorithm="A256GCM" 
         keyManagementKeyAlgorithm="RSA-OAEP"
         jwkEnabled="true"/>
+
+	<!-- H2 Library Configuration -->
+    <library id="H2JDBCLib">
+        <fileset dir="${shared.resource.dir}/epf/security" includes="*.jar"/>
+    </library>
 
 	<dataSource id="epf" jndiName="jdbc/epf">
         <jdbcDriver libraryRef="MySQLJDBCLib"/>
@@ -147,8 +155,12 @@
     	<properties serverName="localhost" portNumber="3306" />
     </dataSource>
 	<dataSource id="epf_security" jndiName="jdbc/epf_security">
-        <jdbcDriver libraryRef="MySQLJDBCLib"/>
-    	<properties serverName="localhost" portNumber="3306" />
+        <jdbcDriver 
+            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
+            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
+            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
+            libraryRef="H2JDBCLib" />
+        <properties URL="jdbc:h2:~/EPF-security;AUTO_SERVER=TRUE;AUTO_RECONNECT=TRUE" />
     </dataSource>
 
     <keyStore id="defaultKeyStore" password="password"/>

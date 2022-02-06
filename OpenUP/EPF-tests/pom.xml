@@ -31,7 +31,7 @@
 		<liberty.env.epf_planning_url>https://localhost:9443/planning/planning/</liberty.env.epf_planning_url>
 		<liberty.env.epf_persistence_url>http://localhost:9181/persistence/persistence/</liberty.env.epf_persistence_url>
 		<liberty.env.epf_schema_url>http://localhost:9181/persistence/schema/</liberty.env.epf_schema_url>
-		<liberty.env.epf_security_url>http://localhost:9182/security/security/</liberty.env.epf_security_url>
+		<liberty.env.epf_security_url>https://localhost:9443/security/security/</liberty.env.epf_security_url>
         <liberty.env.epf_security_webapp_url>https://localhost/EPF-security-webapp-1.0.0/</liberty.env.epf_security_webapp_url>
         <liberty.env.epf_gateway_url>http://localhost:9180/gateway/</liberty.env.epf_gateway_url>
         <liberty.env.epf_gateway_messaging_url>http://localhost:9180/messaging/</liberty.env.epf_gateway_messaging_url>
@@ -56,6 +56,11 @@
 		<dependency>
 		    <groupId>mysql</groupId>
 		    <artifactId>mysql-connector-java</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+		<dependency>
+		    <groupId>com.h2database</groupId>
+		    <artifactId>h2</artifactId>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast -->
         <dependency>
@@ -234,6 +239,12 @@
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-security</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-file</artifactId>
@@ -328,7 +339,7 @@
 						<epf.planning.url>https://localhost:${httpsPort}/planning/planning/</epf.planning.url>
 						<epf.persistence.url>http://localhost:9181/persistence/persistence/</epf.persistence.url>
 						<epf.schema.url>http://localhost:9181/persistence/schema/</epf.schema.url>
-						<epf.security.url>http://localhost:9182/security/security/</epf.security.url>
+						<epf.security.url>https://localhost:${httpsPort}/security/security/</epf.security.url>
                         <epf.security.webapp.url>http://localhost:9181/security/</epf.security.webapp.url>
                         <epf.gateway.url>http://localhost:${gatewayPort}/gateway/</epf.gateway.url>
                         <epf.gateway.messaging.url>ws://localhost:${gatewayPort}/messaging/</epf.gateway.messaging.url>
@@ -389,6 +400,14 @@
 									</dependency>
 								</dependencyGroup>
 								<dependencyGroup>
+									<location>${project.build.directory}/shared/resources/epf/security</location>
+									<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+									<dependency>
+										<groupId>com.h2database</groupId>
+										<artifactId>h2</artifactId>
+									</dependency>
+								</dependencyGroup>
+								<dependencyGroup>
 									<location>${project.build.directory}/shared/resources/epf/cache</location>
 									<dependency>
 	                                    <groupId>com.hazelcast</groupId>
@@ -408,7 +427,7 @@
                         <configuration>
                             <verifyTimeout>600</verifyTimeout>
                             <serverStartTimeout>600</serverStartTimeout>
-                            <applications>EPF-schedule,EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-registry,EPF-management</applications>
+                            <applications>EPF-schedule,EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-registry,EPF-management,EPF-security</applications>
                         </configuration>
                     </execution>
                     <!-- Stop the server -->
@@ -427,7 +446,7 @@
                     <deployPackages>dependencies</deployPackages>
 					<verifyTimeout>600</verifyTimeout>
 					<serverStartTimeout>600</serverStartTimeout>
-					<applications>EPF-schedule,EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-registry,EPF-management</applications>
+					<applications>EPF-schedule,EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-registry,EPF-management,EPF-security</applications>
                 </configuration>
             </plugin>
 			<plugin>

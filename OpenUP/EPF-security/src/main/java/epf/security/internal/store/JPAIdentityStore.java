@@ -14,12 +14,10 @@ import javax.security.enterprise.CallerPrincipal;
 import javax.security.enterprise.credential.UsernamePasswordCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import org.eclipse.microprofile.context.ManagedExecutor;
-
-import epf.security.internal.Role;
 import epf.security.internal.sql.NativeQueries;
-import epf.security.internal.sql.RoleUtil;
 import epf.security.util.IdentityStore;
 import epf.security.util.JPAPrincipal;
+import epf.util.StringUtil;
 
 /**
  * @author PC
@@ -61,7 +59,8 @@ public class JPAIdentityStore implements IdentityStore {
 		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
 		return executor.supplyAsync(() -> (JPAPrincipal) callerPrincipal)
 				.thenApply(principal -> principal.getDefaultManager().createQuery(NativeQueries.GET_CURRENT_ROLES, String.class))
-				.thenApply(query -> query.getSingleResult())
-				.thenApply(roles -> RoleUtil.parse(roles).map(Role::getName).collect(Collectors.toSet()));
+				.thenApply(query -> query.getResultStream().map(role -> {
+					return StringUtil.toPascalSnakeCase(role.split("_"));
+				}).collect(Collectors.toSet()));
 	}
 }
