@@ -148,6 +148,11 @@ public interface Naming {
 	    	 * 
 	    	 */
 	    	String X_FORWARDED_HOST = "X-Forwarded-Host";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String TERNANT = "Ternant";
 	    }
 	}
 	
@@ -310,6 +315,26 @@ public interface Naming {
 		 * 
 		 */
 		String PERSISTENCE_ENTITY_LISTENERS_POSTLOAD = "persistence-PostLoad";
+		
+		/**
+		 * @author PC
+		 *
+		 */
+		interface JDBC {
+
+			/**
+			 * 
+			 */
+			String JDBC_USER = "javax.persistence.jdbc.user";
+			/**
+			 * 
+			 */
+			String JDBC_PASSWORD = "javax.persistence.jdbc.password";
+			/**
+			 * 
+			 */
+			String JDBC_URL = "javax.persistence.jdbc.url";
+		}
 		
 	}
 	
@@ -525,7 +550,10 @@ public interface Naming {
 	     *
 	     */
 	    interface Internal {
-	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String USERNAME_TERNANT_SEPARATOR = "@";
 	    }
 	    
 	    /**

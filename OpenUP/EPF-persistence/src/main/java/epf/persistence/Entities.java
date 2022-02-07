@@ -1,6 +1,7 @@
 package epf.persistence;
 
 import java.io.InputStream;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import javax.annotation.security.RolesAllowed;
@@ -14,8 +15,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.SecurityContext;
 import epf.naming.Naming;
 import epf.persistence.ext.EntityManagerFactory;
-import epf.persistence.util.EntityTypeUtil;
-import epf.persistence.util.EntityUtil;
+import epf.persistence.internal.util.PrincipalUtil;
+import epf.persistence.internal.util.EntityTypeUtil;
+import epf.persistence.internal.util.EntityUtil;
 import epf.util.concurrent.Stage;
 
 /**
@@ -50,7 +52,8 @@ public class Entities implements epf.persistence.client.Entities {
     	final EntityType<?> entityType = EntityTypeUtil.findEntityType(factory.getMetamodel(), name).orElseThrow(NotFoundException::new);
     	final Object entity = EntityUtil.toObject(entityType, body);
         validator.validate(entity);
-        return Stage.stage(factory.createEntityManager())
+        final Map<String, Object> claims = PrincipalUtil.getClaims(context.getUserPrincipal());
+        return Stage.stage(factory.createEntityManager(claims))
         		.compose(manager -> manager.persist(entity))
         		.apply(v -> entity)
         		.complete();
@@ -67,7 +70,8 @@ public class Entities implements epf.persistence.client.Entities {
 			) throws Exception {
     	final EntityType<?> entityType = EntityTypeUtil.findEntityType(factory.getMetamodel(), name).orElseThrow(NotFoundException::new);
     	final Object entityId = EntityUtil.getEntityId(entityType, id);
-    	return Stage.stage(factory.createEntityManager())
+    	final Map<String, Object> claims = PrincipalUtil.getClaims(context.getUserPrincipal());
+    	return Stage.stage(factory.createEntityManager(claims))
     	.compose(manager -> manager.find(entityType.getJavaType(), entityId))
     	.apply(entity -> Optional.ofNullable(entity).orElseThrow(NotFoundException::new))
 		.apply(entity -> EntityUtil.toObject(entityType, body))
@@ -90,7 +94,8 @@ public class Entities implements epf.persistence.client.Entities {
             ) {
     	final EntityType<?> entityType = EntityTypeUtil.findEntityType(factory.getMetamodel(), name).orElseThrow(NotFoundException::new);
     	final Object entityId = EntityUtil.getEntityId(entityType, id);
-    	return Stage.stage(factory.createEntityManager())
+    	final Map<String, Object> claims = PrincipalUtil.getClaims(context.getUserPrincipal());
+    	return Stage.stage(factory.createEntityManager(claims))
     	.compose(manager -> manager.find(entityType.getJavaType(), entityId))
     	.apply(entity -> Optional.ofNullable(entity).orElseThrow(NotFoundException::new))
     	.stage((manager, entity) -> manager.remove(entity))
@@ -102,7 +107,8 @@ public class Entities implements epf.persistence.client.Entities {
 	public CompletionStage<Object> find(final String schema, final String name, final String id, final SecurityContext context) {
 		final EntityType<?> entityType = EntityTypeUtil.findEntityType(factory.getMetamodel(), name).orElseThrow(NotFoundException::new);
     	final Object entityId = EntityUtil.getEntityId(entityType, id);
-    	return Stage.stage(factory.createEntityManager())
+    	final Map<String, Object> claims = PrincipalUtil.getClaims(context.getUserPrincipal());
+    	return Stage.stage(factory.createEntityManager(claims))
     			.compose(manager -> manager.find(entityType.getJavaType(), entityId))
     			.apply(entity -> (Object)entity)
     			.complete();

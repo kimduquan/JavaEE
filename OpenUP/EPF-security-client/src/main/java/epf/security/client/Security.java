@@ -73,6 +73,8 @@ public interface Security {
             @QueryParam(URL)
             @NotNull
             final URL url,
+            @HeaderParam(Naming.Gateway.Headers.TERNANT)
+            final String ternant,
             @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_HOST)
             final List<String> forwardedHost,
             @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PORT)

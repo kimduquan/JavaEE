@@ -155,7 +155,7 @@ public interface RequestUtil {
      * @param baseUri
      * @return
      */
-    static Builder buildHeaders(final Builder input, final HttpHeaders headers, final URI baseUri){
+    static Builder buildHeaders(final Builder input, final HttpHeaders headers, final URI baseUri, final Optional<String> ternant){
     	Builder builder = input;
         if(headers != null){
         	final List<MediaType> mediaTypes = headers.getAcceptableMediaTypes();
@@ -172,6 +172,9 @@ public interface RequestUtil {
             		final Cookie value = entry.getValue();
             		builder = builder.cookie(value);
             	}
+            }
+            if(ternant.isPresent()) {
+            	builder = builder.header(Naming.Gateway.Headers.TERNANT, ternant.get());
             }
             final MultivaluedMap<String, String> requestHeaders = headers.getRequestHeaders();
             if(requestHeaders.containsKey(HttpHeaders.AUTHORIZATION)){

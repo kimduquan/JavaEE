@@ -1,6 +1,7 @@
 package epf.persistence;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletionStage;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
@@ -12,10 +13,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.SecurityContext;
 import epf.naming.Naming;
-import epf.persistence.util.Entity;
 import epf.persistence.ext.EntityManagerFactory;
-import epf.persistence.util.EntityTypeUtil;
-import epf.persistence.util.QueryBuilder;
+import epf.persistence.internal.Entity;
+import epf.persistence.internal.QueryBuilder;
+import epf.persistence.internal.util.EntityTypeUtil;
+import epf.persistence.internal.util.PrincipalUtil;
 import epf.util.concurrent.Stage;
 
 /**
@@ -55,7 +57,8 @@ public class Queries implements epf.persistence.client.Queries {
         			.entity(entity)
         			.paths(paths)
         			.build();
-        	return Stage.stage(factory.createEntityManager())
+        	final Map<String, Object> claims = PrincipalUtil.getClaims(context.getUserPrincipal());
+        	return Stage.stage(factory.createEntityManager(claims))
         	.apply(entityManager -> entityManager.createQuery(criteria))
         	.compose(query -> {
         		if(firstResult != null){

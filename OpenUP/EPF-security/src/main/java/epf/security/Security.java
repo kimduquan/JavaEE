@@ -7,6 +7,7 @@ import java.security.PublicKey;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -199,12 +200,26 @@ public class Security implements epf.security.client.Security, epf.security.clie
 		return audience;
     }
     
+    /**
+     * @param claims
+     * @param ternant
+     * @return
+     */
+    Map<String, Object> buildClaims(final Map<String, Object> claims, final String ternant){
+    	final Map<String, Object> newClaims = new HashMap<>(claims);
+    	if(ternant != null) {
+        	newClaims.put(Naming.Management.TERNANT, ternant);
+    	}
+    	return newClaims;
+    }
+    
     @PermitAll
     @Override
     public CompletionStage<String> login(
             final String username,
             final String passwordHash,
             final URL url,
+            final String ternant,
             final List<String> forwardedHost,
             final List<String> forwardedPort,
             final List<String> forwardedProto) throws Exception {
@@ -223,7 +238,8 @@ public class Security implements epf.security.client.Security, epf.security.clie
 								principalStore.getCallerClaims(principal), 
 								(groups, claims) -> {
 									final Set<String> audience = buildAudience(url, forwardedHost, forwardedPort, forwardedProto);
-									final Token token = newToken(principal.getName(), groups, audience, claims);
+									final Map<String, Object> newClaims = buildClaims(claims, ternant);
+									final Token token = newToken(principal.getName(), groups, audience, newClaims);
 									final TokenBuilder builder = new TokenBuilder(token, privateKey, encryptKey);
 									final Token newToken = builder.build();
 									sessionStore.putSession(principal, newToken);

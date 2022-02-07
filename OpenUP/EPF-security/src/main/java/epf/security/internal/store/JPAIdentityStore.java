@@ -14,10 +14,14 @@ import javax.persistence.Persistence;
 import javax.security.enterprise.CallerPrincipal;
 import javax.security.enterprise.credential.UsernamePasswordCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.context.ManagedExecutor;
+import epf.naming.Naming;
 import epf.security.internal.sql.NativeQueries;
+import epf.security.util.CredentialUtil;
 import epf.security.util.IdentityStore;
 import epf.security.util.JPAPrincipal;
+import epf.security.util.JdbcUtil;
 import epf.util.StringUtil;
 
 /**
@@ -32,20 +36,33 @@ public class JPAIdentityStore implements IdentityStore {
 	 */
 	@Inject
 	transient ManagedExecutor executor;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	@ConfigProperty(name = Naming.Persistence.JDBC.JDBC_URL)
+	transient String jdbcUrl;
 
 	@Override
 	public CompletionStage<CredentialValidationResult> validate(final UsernamePasswordCredential credential) {
 		Objects.requireNonNull(credential, "UsernamePasswordCredential");
 		Objects.requireNonNull(credential.getCaller(), "UsernamePasswordCredential.caller");
 		Objects.requireNonNull(credential.getPassword(), "UsernamePasswordCredential.password");
+		final StringBuilder ternant = new StringBuilder();
+		final String user = CredentialUtil.getUsername(credential, ternant);
 		final Map<String, Object> props = new ConcurrentHashMap<>();
-        props.put(JDBC_USER, credential.getCaller());
-        props.put(JDBC_PASSWORD, credential.getPasswordAsString());
+        props.put(Naming.Persistence.JDBC.JDBC_USER, user);
+        props.put(Naming.Persistence.JDBC.JDBC_PASSWORD, credential.getPasswordAsString());
+        if(!"".equals(ternant.toString())) {
+        	final String ternantUrl = JdbcUtil.formatTernantUrl(jdbcUrl, ternant.toString());
+        	props.put(Naming.Persistence.JDBC.JDBC_URL, ternantUrl);
+        }
         return executor.supplyAsync(() -> Persistence.createEntityManagerFactory(PERSISTENCE_UNIT, props))
         		.thenApply(factory -> {
         			try {
         				final EntityManager manager = factory.createEntityManager();
-        				return new JPAPrincipal(credential.getCaller(), factory, manager);
+        				return new JPAPrincipal(user, ternant.toString(), factory, manager);
 		        	}
 		        	catch(Exception ex) {
 		        		factory.close();

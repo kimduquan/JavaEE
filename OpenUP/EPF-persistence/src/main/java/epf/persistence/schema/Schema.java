@@ -13,12 +13,12 @@ import javax.ws.rs.core.SecurityContext;
 import epf.naming.Naming;
 import epf.persistence.schema.client.Embeddable;
 import epf.persistence.schema.client.Entity;
-import epf.persistence.schema.util.EmbeddableBuilder;
-import epf.persistence.schema.util.EmbeddableComparator;
-import epf.persistence.schema.util.EntityBuilder;
-import epf.persistence.schema.util.EntityComparator;
+import epf.persistence.schema.internal.EmbeddableBuilder;
+import epf.persistence.schema.internal.EmbeddableComparator;
+import epf.persistence.schema.internal.EntityBuilder;
+import epf.persistence.schema.internal.EntityComparator;
 import epf.persistence.ext.EntityManagerFactory;
-import epf.persistence.util.SchemaUtil;
+import epf.persistence.internal.util.SchemaUtil;
 
 /**
  * @author PC

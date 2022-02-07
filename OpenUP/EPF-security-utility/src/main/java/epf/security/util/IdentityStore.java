@@ -19,14 +19,6 @@ public interface IdentityStore {
 	/**
 	 * 
 	 */
-	String JDBC_USER = "javax.persistence.jdbc.user";
-	/**
-	 * 
-	 */
-	String JDBC_PASSWORD = "javax.persistence.jdbc.password";
-	/**
-	 * 
-	 */
 	String SCHEMA_GENERATION_DATABASE_ACTION = "javax.persistence.schema-generation.database.action";
 	/**
 	 * 

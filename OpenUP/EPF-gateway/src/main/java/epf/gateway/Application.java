@@ -2,6 +2,7 @@ package epf.gateway;
 
 import java.io.InputStream;
 import java.net.URI;
+import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,12 +58,13 @@ public class Application {
             final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
 		final URI serviceUri = registry.lookup(service).orElseThrow(NotFoundException::new);
+		final Optional<String> ternant = RequestUtil.getTernant(uriInfo);
 		final Client client = ClientBuilder.newClient();
 		WebTarget target = client.target(serviceUri);
 		target = RequestUtil.buildTarget(target, uriInfo);
 		Invocation.Builder invoke = target.request();
 		final URI baseUri = uriInfo.getBaseUri();
-		invoke = RequestUtil.buildHeaders(invoke, headers, baseUri);
+		invoke = RequestUtil.buildHeaders(invoke, headers, baseUri, ternant);
 		final CompletionStageRxInvoker rx = invoke.rx();
 		return RequestUtil.invoke(rx, req.getMethod(), headers.getMediaType(), body)
 				.thenApply(res -> RequestUtil.buildResponse(res, baseUri))
