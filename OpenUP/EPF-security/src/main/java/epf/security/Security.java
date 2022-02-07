@@ -39,6 +39,7 @@ import epf.security.internal.store.OTPPrincipalStore;
 import epf.security.internal.store.SessionStore;
 import epf.security.internal.token.TokenBuilder;
 import epf.security.schema.Token;
+import epf.security.util.CredentialUtil;
 import epf.security.util.IdentityStore;
 import epf.security.util.JPAPrincipal;
 import epf.security.util.PrincipalStore;
@@ -224,7 +225,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
             final List<String> forwardedPort,
             final List<String> forwardedProto) throws Exception {
     	final Password password = new Password(passwordHash);
-    	final UsernamePasswordCredential credential = new UsernamePasswordCredential(username, password);
+    	final UsernamePasswordCredential credential = CredentialUtil.newTernantCredential(ternant, username, password);
     	return identityStore.validate(credential)
     			.thenApply(result -> {
     				if(Status.VALID.equals(result.getStatus())){
@@ -305,9 +306,10 @@ public class Security implements epf.security.client.Security, epf.security.clie
 	public CompletionStage<String> loginOneTime(
 			final String username, 
 			final String passwordHash, 
-			final  URL url) throws Exception {
+			final  URL url,
+			final String ternant) throws Exception {
 		final Password password = new Password(passwordHash);
-    	final UsernamePasswordCredential credential = new UsernamePasswordCredential(username, password);
+    	final UsernamePasswordCredential credential = CredentialUtil.newTernantCredential(ternant, username, password);
     	return identityStore.validate(credential)
     			.thenApply(result -> {
     				if(Status.VALID.equals(result.getStatus())) {

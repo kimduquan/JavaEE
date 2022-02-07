@@ -148,11 +148,6 @@ public interface Naming {
 	    	 * 
 	    	 */
 	    	String X_FORWARDED_HOST = "X-Forwarded-Host";
-	    	
-	    	/**
-	    	 * 
-	    	 */
-	    	String TERNANT = "Ternant";
 	    }
 	}
 	

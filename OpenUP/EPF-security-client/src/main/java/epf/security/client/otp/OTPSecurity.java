@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.security.client.otp;
 
 import java.net.URL;
@@ -11,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.MatrixParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -49,7 +47,9 @@ public interface OTPSecurity {
             final String passwordHash, 
             @QueryParam("url")
             @NotNull
-            final URL url
+            final URL url,
+            @MatrixParam(Naming.Management.TERNANT)
+            final String ternant
     ) throws Exception;
     
     /**

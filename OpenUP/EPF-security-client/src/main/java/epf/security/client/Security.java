@@ -11,6 +11,7 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.HttpMethod;
+import javax.ws.rs.MatrixParam;
 import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -73,7 +74,7 @@ public interface Security {
             @QueryParam(URL)
             @NotNull
             final URL url,
-            @HeaderParam(Naming.Gateway.Headers.TERNANT)
+            @MatrixParam(Naming.Management.TERNANT)
             final String ternant,
             @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_HOST)
             final List<String> forwardedHost,
