@@ -59,7 +59,7 @@ public class JPAIdentityStore implements IdentityStore {
 	public CompletionStage<Set<String>> getCallerGroups(final CallerPrincipal callerPrincipal) {
 		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
 		return executor.supplyAsync(() -> (JPAPrincipal) callerPrincipal)
-				.thenApply(principal -> principal.getDefaultManager().createNativeQuery(NativeQueries.GET_CURRENT_ROLES, String.class))
+				.thenApply(principal -> principal.getDefaultManager().createNativeQuery(NativeQueries.GET_CURRENT_ROLES))
 				.thenApply(query -> {
 					final Stream<?> stream = query.getResultStream();
 					return stream.map(role -> {

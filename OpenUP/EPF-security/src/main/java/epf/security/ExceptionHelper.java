@@ -13,7 +13,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-
 import epf.security.internal.sql.SQLError;
 import epf.util.EPFException;
 import epf.util.logging.LogManager;
@@ -76,9 +75,12 @@ public class ExceptionHelper implements ExceptionMapper<Exception>, Serializable
         else if(failure instanceof SQLException){
         	final SQLException exception = (SQLException)failure;
         	final int errorCode = exception.getErrorCode();
-        	if(SQLError.ER_ACCESS_DENIED_ERROR.getCode() == errorCode) {
+        	if(SQLError.WRONG_USER_OR_PASSWORD.getCode() == errorCode) {
         		status = Response.Status.UNAUTHORIZED;
         	}
+			else if(SQLError.NOT_ENOUGH_RIGHTS_FOR.getCode() == errorCode) {
+				status = Response.Status.FORBIDDEN;
+			}
         }
         else{
             mapped = false;

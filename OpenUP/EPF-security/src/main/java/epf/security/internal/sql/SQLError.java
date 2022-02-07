@@ -5,7 +5,8 @@ package epf.security.internal.sql;
  *
  */
 public enum SQLError {
-	ER_ACCESS_DENIED_ERROR("28000", 1045);
+	WRONG_USER_OR_PASSWORD("28000", 1045),
+	NOT_ENOUGH_RIGHTS_FOR("90096", 210);
 	
 	/**
 	 * 
