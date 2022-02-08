@@ -9,6 +9,5 @@
 		<jar-file>../lib/EPF-work-products-schema-1.0.0.jar</jar-file>
 		<jar-file>../lib/OpenUP-schema-1.0.0.jar</jar-file>
 		<jar-file>../lib/EPF-net-schema-1.0.0.jar</jar-file>
-		<jar-file>../lib/EPF-security-schema-1.0.0.jar</jar-file>
     </persistence-unit>
 </persistence>

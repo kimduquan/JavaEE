@@ -15,6 +15,8 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.sse.SseEventSource;
 
+import epf.naming.Naming;
+
 /**
  *
  * @author FOXCONN
@@ -37,6 +39,11 @@ public class Client implements AutoCloseable {
      * 
      */
     private transient final ClientQueue clients;
+    
+    /**
+     * 
+     */
+    private transient Optional<String> ternant = Optional.empty();
     
     /**
      * @param clients
@@ -91,6 +98,15 @@ public class Client implements AutoCloseable {
 	}
 	
 	/**
+	 * @param ternant
+	 * @return
+	 */
+	public Client ternant(final String ternant) {
+		this.ternant = Optional.ofNullable(ternant);
+		return this;
+	}
+	
+	/**
 	 * @param header
 	 * @return
 	 */
@@ -114,6 +130,9 @@ public class Client implements AutoCloseable {
     	Objects.requireNonNull(buildTarget);
     	Objects.requireNonNull(buildRequest);
     	WebTarget target = rsClient.target(uri);
+    	if(ternant.isPresent()) {
+    		target = target.matrixParam(Naming.Management.TERNANT, ternant.get());
+    	}
     	target = buildTarget.apply(target);
     	Invocation.Builder request = target.request();
     	if(authHeader.isPresent()) {

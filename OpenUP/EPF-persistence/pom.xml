@@ -47,6 +47,10 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-reactive-mysql-client</artifactId>
     </dependency>
+	<dependency>
+	    <groupId>io.quarkus</groupId>
+	    <artifactId>quarkus-reactive-pg-client</artifactId>
+	</dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-websockets-client</artifactId>
@@ -101,12 +105,22 @@
 	</dependency>
 	<dependency>
 		<groupId>openup</groupId>
-		<artifactId>EPF-persistence-utility</artifactId>
+		<artifactId>EPF-persistence-internal</artifactId>
+		<version>${project.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>openup</groupId>
+		<artifactId>EPF-persistence-ext</artifactId>
 		<version>${project.version}</version>
 	</dependency>
 	<dependency>
 		<groupId>openup</groupId>
 		<artifactId>EPF-security-client</artifactId>
+		<version>${project.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>openup</groupId>
+		<artifactId>EPF-security-utility</artifactId>
 		<version>${project.version}</version>
 	</dependency>
 	<dependency>
@@ -217,6 +231,40 @@
               </execution>
             </executions>
           </plugin>
+          <plugin>
+			  <groupId>org.jboss.jandex</groupId>
+			  <artifactId>jandex-maven-plugin</artifactId>
+			  <version>1.2.2</version>
+			  <executions>
+				<execution>
+				  <id>make-index</id>
+				  <goals>
+					<goal>jandex</goal>
+				  </goals>
+				</execution>
+			  </executions>
+		  </plugin>
+		  <plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-antrun-plugin</artifactId>
+			<version>3.0.0</version>
+			<executions>
+				<execution>
+					<phase>pre-integration-test</phase>
+						<configuration>
+							<target>
+								<exec executable="jshell">
+									<arg value="../start.jsh"/>
+								    <arg value="-R-Dcmd=${project.build.directory}/${project.build.finalName}-runner"/>
+							  	</exec>
+							</target >
+						</configuration>
+					<goals>
+						<goal>run</goal>
+					</goals>
+				</execution>
+			</executions>
+		  </plugin>
         </plugins>
       </build>
       <properties>

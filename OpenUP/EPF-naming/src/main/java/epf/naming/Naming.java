@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.naming;
 
 /**
@@ -217,6 +214,10 @@ public interface Naming {
 		 */
 		String MANAGEMENT_URL = "epf.management.url";
 		
+		/**
+		 * 
+		 */
+		String TERNANT = "ternant";
 	}
 	
 	/**
@@ -309,6 +310,26 @@ public interface Naming {
 		 * 
 		 */
 		String PERSISTENCE_ENTITY_LISTENERS_POSTLOAD = "persistence-PostLoad";
+		
+		/**
+		 * @author PC
+		 *
+		 */
+		interface JDBC {
+
+			/**
+			 * 
+			 */
+			String JDBC_USER = "javax.persistence.jdbc.user";
+			/**
+			 * 
+			 */
+			String JDBC_PASSWORD = "javax.persistence.jdbc.password";
+			/**
+			 * 
+			 */
+			String JDBC_URL = "javax.persistence.jdbc.url";
+		}
 		
 	}
 	
@@ -523,6 +544,17 @@ public interface Naming {
 	     * @author PC
 	     *
 	     */
+	    interface Internal {
+	    	/**
+	    	 * 
+	    	 */
+	    	String USERNAME_TERNANT_SEPARATOR = "@";
+	    }
+	    
+	    /**
+	     * @author PC
+	     *
+	     */
 	    interface JWT {
 	    	
 	        /**
@@ -539,10 +571,6 @@ public interface Naming {
 	         * 
 	         */
 	        String EXPIRE_DURATION = "epf.security.jwt.exp.duration";
-	        /**
-	         * 
-	         */
-	        String EXPIRE_TIMEUNIT = "epf.security.jwt.exp.timeunit";
 	        
 	        /**
 	         * 

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.util;
 
 import java.time.Instant;
@@ -10,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author PC
@@ -117,5 +115,65 @@ public interface StringUtil {
 			}
 		}
 		return strings;
+	}
+	
+	/**
+	 * @param words
+	 * @return
+	 */
+	static String toCamelCase(final String... words) {
+		final StringBuilder camelCase = new StringBuilder();
+		if(words.length > 0) {
+			final String firstWord = words[0];
+			camelCase.append(firstWord.toLowerCase());
+			for(int i = 1; i < words.length; i++) {
+				final String word = words[i].toLowerCase();
+				if(word.length() > 0) {
+					camelCase.append(Character.toUpperCase(word.charAt(0)));
+					camelCase.append(word.substring(1).toLowerCase());
+				}
+			}
+		}
+		return camelCase.toString();
+	}
+	
+	/**
+	 * @param words
+	 * @return
+	 */
+	static String toPascalCase(final String... words) {
+		final StringBuilder camelCase = new StringBuilder();
+		for(int i = 0; i < words.length; i++) {
+			final String word = words[i];
+			if(word.length() > 0) {
+				camelCase.append(Character.toUpperCase(word.charAt(0)));
+				camelCase.append(word.substring(1).toLowerCase());
+			}
+		}
+		return camelCase.toString();
+	}
+	
+	/**
+	 * @param words
+	 * @return
+	 */
+	static String toKebabCase(final String... words) {
+		return Stream.of(words).map(String::toLowerCase).collect(Collectors.joining("-"));
+	}
+	
+	/**
+	 * @param words
+	 * @return
+	 */
+	static String toSnakeCase(final String... words) {
+		return Stream.of(words).map(String::toLowerCase).collect(Collectors.joining("_"));
+	}
+	
+	/**
+	 * @param words
+	 * @return
+	 */
+	static String toPascalSnakeCase(final String... words) {
+		return Stream.of(words).map(word -> "" + Character.toUpperCase(word.charAt(0)) + word.substring(1).toLowerCase()).collect(Collectors.joining("_"));
 	}
 }

@@ -2,7 +2,6 @@ package epf.security.schema;
 
 import java.io.Serializable;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -44,11 +43,11 @@ public class Principal implements Serializable {
     @CollectionTable(
     		name="PRINCIPAL_CLAIMS", 
     		schema = Security.SCHEMA,
-    		uniqueConstraints = {@UniqueConstraint(columnNames = {"PRINCIPAL_NAME", "NAME"})}
+    		uniqueConstraints = {@UniqueConstraint(columnNames = {"PRINCIPAL_NAME", "CLAIM"})}
     		)
-    @MapKeyColumn(name = "NAME")
-    @Column(name = "VALUE")
-    private Map<String, String> claims = new ConcurrentHashMap<>();
+    @MapKeyColumn(name = "CLAIM")
+    @Column(name = "CLAIM_VALUE")
+    private Map<String, String> claims;
     
     @Override
     public String toString() {

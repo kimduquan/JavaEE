@@ -8,3 +8,5 @@ export KAFKA_DIR=~/kafka_2.13-2.8.1
 export KAFKA_HOME=$KAFKA_DIR/bin
 export WILDFLY_HOME=~/wildfly-24.0.1.Final/bin
 export JAEGER_HOME=~/jaeger-1.30.0-linux-amd64
+export MAVEN_HOME=~/apache-maven-3.8.4/bin
+export PATH=$MAVEN_HOME:$PATH

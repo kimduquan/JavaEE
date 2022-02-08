@@ -6,13 +6,12 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import epf.util.Var;
-import epf.util.io.Closeable;
 
 /**
  * @author PC
  *
  */
-public class Stage<C extends Closeable, T> {
+public class Stage<C extends epf.util.AutoCloseable, T> {
 
 	/**
 	 * 
@@ -152,7 +151,7 @@ public class Stage<C extends Closeable, T> {
 	 * @param stage
 	 * @return
 	 */
-	public static <U extends Closeable> Stage<U, U> stage(final CompletionStage<U> stage) {
+	public static <U extends epf.util.AutoCloseable> Stage<U, U> stage(final CompletionStage<U> stage) {
 		return new Stage<>(stage);
 	}
 }

@@ -59,7 +59,7 @@ public class Application {
 		final URI serviceUri = registry.lookup(service).orElseThrow(NotFoundException::new);
 		final Client client = ClientBuilder.newClient();
 		WebTarget target = client.target(serviceUri);
-		target = RequestUtil.buildTarget(target, uriInfo, serviceUri);
+		target = RequestUtil.buildTarget(target, uriInfo);
 		Invocation.Builder invoke = target.request();
 		final URI baseUri = uriInfo.getBaseUri();
 		invoke = RequestUtil.buildHeaders(invoke, headers, baseUri);
@@ -90,7 +90,7 @@ public class Application {
     	final Client client = ClientBuilder.newClient();
     	final URI serviceUri = registry.lookup(service).orElseThrow(NotFoundException::new);
     	WebTarget target = client.target(serviceUri);
-    	target = RequestUtil.buildTarget(target, uriInfo, serviceUri);
+    	target = RequestUtil.buildTarget(target, uriInfo);
     	final SseEventSource.Builder builder = SseEventSource.target(target);
     	try(SseEventSource source = builder.build()){
     		final OutboundSseEvent.Builder eventBuilder = sse.newEventBuilder();

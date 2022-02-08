@@ -282,6 +282,12 @@
 			    <artifactId>hibernate-validator-cdi</artifactId>
 			    <version>7.0.2.Final</version>
 			</dependency>
+			<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+			<dependency>
+			    <groupId>com.h2database</groupId>
+			    <artifactId>h2</artifactId>
+			    <version>2.1.210</version>
+			</dependency>
 			
 			
             <!-- https://mvnrepository.com/artifact/io.jaegertracing/jaeger-client -->
@@ -709,7 +715,7 @@
 												<limit>
 													<counter>LINE</counter>
 													<value>COVEREDRATIO</value>
-													<minimum>0.42</minimum>
+													<minimum>0.40</minimum>
 												</limit>
 												<limit>
 													<counter>BRANCH</counter>
@@ -719,7 +725,7 @@
 												<limit>
 													<counter>COMPLEXITY</counter>
 													<value>COVEREDRATIO</value>
-													<minimum>0.42</minimum>
+													<minimum>0.40</minimum>
 												</limit>
 											</limits>
 										</rule>
@@ -767,7 +773,8 @@
 		<module>EPF-client-utility</module>
 		<module>EPF-file-utility</module>
 		<module>EPF-messaging-utility</module>
-		<module>EPF-persistence-utility</module>
+		<module>EPF-persistence-internal</module>
+		<module>EPF-persistence-ext</module>
 		<module>EPF-security-utility</module>
 		<module>EPF-function</module>
 		<module>EPF-schedule</module>
@@ -812,6 +819,7 @@
 		<module>EPF-persistence-client</module>
 		<module>EPF-net</module>
 		<module>EPF-persistence</module>
+		<module>EPF-security</module>
 		<module>EPF-file</module>
 		<module>EPF-image</module>
 		<module>EPF-rules</module>
