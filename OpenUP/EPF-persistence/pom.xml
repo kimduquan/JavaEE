@@ -47,6 +47,10 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-reactive-mysql-client</artifactId>
     </dependency>
+	<dependency>
+	    <groupId>io.quarkus</groupId>
+	    <artifactId>quarkus-reactive-pg-client</artifactId>
+	</dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-websockets-client</artifactId>

@@ -10,7 +10,6 @@ import javax.security.enterprise.CallerPrincipal;
 import javax.security.enterprise.credential.Password;
 import javax.transaction.Transactional;
 import org.eclipse.microprofile.context.ManagedExecutor;
-
 import epf.security.internal.sql.NativeQueries;
 import epf.security.schema.Principal;
 import epf.security.util.JPAPrincipal;
@@ -45,6 +44,6 @@ public class JPAPrincipalStore implements PrincipalStore {
 		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
 		return executor.supplyAsync(() -> (JPAPrincipal) callerPrincipal)
 		.thenApply(principal -> principal.getDefaultManager().find(Principal.class, principal.getName()))
-		.thenApply(principal -> new HashMap<>(principal.getClaims()));
+		.thenApply(principal -> principal.getClaims() != null ? new HashMap<>(principal.getClaims()) : new HashMap<>());
 	}
 }

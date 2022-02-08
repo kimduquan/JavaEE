@@ -37,9 +37,8 @@
 		<jar-file>lib/EPF-security-schema-1.0.0.jar</jar-file>
         <properties>
 			<property name="javax.persistence.schema-generation.database.action" value="create"/>
-			<property name="javax.persistence.schema-generation.create-source" value="script-then-metadata"/>
-			<property name="javax.persistence.schema-generation.create-script-source" value="META-INF/h2/schemas.sql" />
-			<property name="javax.persistence.sql-load-script-source" value="META-INF/h2/data.sql" />
+			<property name="javax.persistence.schema-generation.create-source" value="metadata"/>
+			<!--<property name="javax.persistence.sql-load-script-source" value="META-INF/h2/data.sql" />-->
         </properties>
     </persistence-unit>
 </persistence>
