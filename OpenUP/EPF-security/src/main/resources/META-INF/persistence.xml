@@ -5,4 +5,7 @@
 		<jar-file>../lib/EPF-schema-utility-1.0.0.jar</jar-file>
 		<jar-file>../lib/EPF-security-schema-1.0.0.jar</jar-file>
     </persistence-unit>
+    <persistence-unit name="EPF-Schema" transaction-type="JTA">
+    	<jta-data-source>jdbc/epf_security_schema</jta-data-source>
+    </persistence-unit>
 </persistence>

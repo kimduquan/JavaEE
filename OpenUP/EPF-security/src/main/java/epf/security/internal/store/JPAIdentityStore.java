@@ -11,6 +11,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.security.enterprise.CallerPrincipal;
 import javax.security.enterprise.credential.UsernamePasswordCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
@@ -43,6 +45,12 @@ public class JPAIdentityStore implements IdentityStore {
 	@Inject
 	@ConfigProperty(name = Naming.Persistence.JDBC.JDBC_URL)
 	transient String jdbcUrl;
+	
+	/**
+	 * 
+	 */
+	@PersistenceContext(unitName = "EPF-Schema")
+	transient EntityManager manager;
 
 	@Override
 	public CompletionStage<CredentialValidationResult> validate(final UsernamePasswordCredential credential) {
@@ -75,13 +83,13 @@ public class JPAIdentityStore implements IdentityStore {
 	@Override
 	public CompletionStage<Set<String>> getCallerGroups(final CallerPrincipal callerPrincipal) {
 		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
-		return executor.supplyAsync(() -> (JPAPrincipal) callerPrincipal)
-				.thenApply(principal -> principal.getDefaultManager().createNativeQuery(NativeQueries.GET_CURRENT_ROLES))
-				.thenApply(query -> {
-					final Stream<?> stream = query.getResultStream();
-					return stream.map(role -> {
-						return StringUtil.toPascalSnakeCase(role.toString().split("_"));
-					}).collect(Collectors.toSet());
-				});
+		final Query query = manager.createNativeQuery(NativeQueries.GET_CURRENT_ROLES);
+		final Stream<?> stream = query.setParameter(1, callerPrincipal.getName()).getResultStream();
+		return executor.supplyAsync(() -> {
+			final Set<String> groups = stream.map(role -> {
+				return StringUtil.toPascalSnakeCase(role.toString().split("_"));
+				}).collect(Collectors.toSet());
+			return groups;
+		});
 	}
 }

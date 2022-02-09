@@ -7,10 +7,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.metamodel.Metamodel;
-
 import org.hibernate.reactive.mutiny.Mutiny.Session;
 import org.hibernate.reactive.mutiny.Mutiny.SessionFactory;
-
 import epf.naming.Naming;
 import epf.persistence.ext.EntityManager;
 import epf.persistence.ext.EntityManagerFactory;
