@@ -1,22 +1,59 @@
 package epf.util.concurrent;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import epf.util.Var;
 
 /**
  * @author PC
  *
  */
 public class Stage<C extends epf.util.AutoCloseable, T> {
+	
+	/**
+	 * @author PC
+	 *
+	 * @param <S>
+	 */
+	public class CloseableVar<S extends epf.util.AutoCloseable> implements epf.util.AutoCloseable {
+		
+		/**
+		 * 
+		 */
+		private transient S var;
+		
+		/**
+		 * @param var
+		 * @return
+		 */
+		public S set(final S var) {
+			this.var = var;
+			return this.var;
+		}
+		
+		/**
+		 * @return
+		 */
+		public S get() {
+			return this.var;
+		}
+
+		@Override
+		public CompletionStage<Void> close() {
+			if(var != null) {
+				return var.close();
+			}
+			return CompletableFuture.completedStage(null);
+		}
+	}
 
 	/**
 	 * 
 	 */
-	private transient final Var<C> var;
+	private transient final CloseableVar<C> var;
 	
 	/**
 	 * 
@@ -27,11 +64,8 @@ public class Stage<C extends epf.util.AutoCloseable, T> {
 	 * @param stage
 	 */
 	private Stage(final CompletionStage<C> stage) {
-		this.var = new Var<>();
-		final CompletionStage<C> newStage = stage.thenApply(var::set);
-		@SuppressWarnings("unchecked")
-		final CompletionStage<T> thisStage = newStage.thenApply(c -> (T)c);
-		this.stage = thisStage;
+		var = new CloseableVar<>();
+		this.stage = stage.thenApply(c -> var.set(c));
 	}
 	
 	/**
@@ -114,7 +148,7 @@ public class Stage<C extends epf.util.AutoCloseable, T> {
 	public CompletionStage<T> complete(final BiConsumer<? super T, ? super Throwable> function) {
 		@SuppressWarnings("unchecked")
 		final CompletionStage<T> curStage = stage.thenApply(t -> (T)t);
-		final CompletionStage<T> newStage = curStage.thenCombine(var.get().get().close(), (r, v) -> r).whenComplete(function);
+		final CompletionStage<T> newStage = curStage.thenCombine(var.close(), (r, v) -> r).whenComplete(function);
 		stage = newStage;
 		return newStage;
 	}
@@ -126,7 +160,7 @@ public class Stage<C extends epf.util.AutoCloseable, T> {
 	public CompletionStage<T> complete() {
 		@SuppressWarnings("unchecked")
 		final CompletionStage<T> curStage = stage.thenApply(t -> (T)t);
-		final CompletionStage<T> newStage = curStage.thenCombine(var.get().get().close(), (r, v) -> r).whenComplete((r, ex) -> {});
+		final CompletionStage<T> newStage = curStage.thenCombine(var.close(), (r, v) -> r).whenComplete((r, ex) -> {});
 		stage = newStage;
 		return newStage;
 	}
@@ -139,7 +173,7 @@ public class Stage<C extends epf.util.AutoCloseable, T> {
 	public <U> Stage<C, U> stage(final BiFunction<? super C,? super T,? extends CompletionStage<U>> function) {
 		 @SuppressWarnings("unchecked")
 		 final CompletionStage<T> curStage = stage.thenApply(t -> (T)t);
-		 final CompletionStage<U> newStage = curStage.thenCompose(t -> function.apply(var.get().get(), t));
+		 final CompletionStage<U> newStage = curStage.thenCompose(t -> function.apply(var.get(), t));
 		 this.stage = newStage;
 		 @SuppressWarnings("unchecked")
 		final Stage<C, U> thisStage = (Stage<C, U>) this;
