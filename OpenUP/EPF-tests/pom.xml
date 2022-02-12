@@ -20,8 +20,8 @@
         <!-- Jaeger configuration -->
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
-    	<liberty.env.WLP_LOGGING_MESSAGE_FORMAT>json</liberty.env.WLP_LOGGING_MESSAGE_FORMAT>
-    	<liberty.env.WLP_LOGGING_MESSAGE_SOURCE>message,trace,accessLog,ffdc,audit</liberty.env.WLP_LOGGING_MESSAGE_SOURCE>
+    	<!--<liberty.env.WLP_LOGGING_MESSAGE_FORMAT>json</liberty.env.WLP_LOGGING_MESSAGE_FORMAT>
+    	<liberty.env.WLP_LOGGING_MESSAGE_SOURCE>message,trace,accessLog,ffdc,audit</liberty.env.WLP_LOGGING_MESSAGE_SOURCE>-->
 		<liberty.env.epf_schedule_url>https://localhost:9443/schedule/schedule/</liberty.env.epf_schedule_url>
 		<liberty.env.epf_config_url>https://localhost:9443/config/config/</liberty.env.epf_config_url>
 		<liberty.env.epf_script_url>https://localhost:9443/script/script/</liberty.env.epf_script_url>

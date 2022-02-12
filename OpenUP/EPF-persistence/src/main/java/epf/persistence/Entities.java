@@ -19,6 +19,7 @@ import epf.persistence.internal.util.PrincipalUtil;
 import epf.persistence.internal.util.EntityTypeUtil;
 import epf.persistence.internal.util.EntityUtil;
 import epf.util.concurrent.Stage;
+import io.smallrye.common.annotation.NonBlocking;
 
 /**
  *
@@ -27,6 +28,7 @@ import epf.util.concurrent.Stage;
 @Path(Naming.PERSISTENCE)
 @RolesAllowed(Naming.Security.DEFAULT_ROLE)
 @ApplicationScoped
+@NonBlocking
 public class Entities implements epf.persistence.client.Entities {
     
     /**

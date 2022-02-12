@@ -32,7 +32,11 @@ public class RxEntityManagerFactory implements EntityManagerFactory {
 	public CompletionStage<EntityManager> createEntityManager(final Map<String, Object> props) {
 		final Optional<Object> ternant = MapUtil.get(props, Naming.Management.TERNANT);
 		final Uni<Session> session = ternant.isPresent() ? sessionFactory.openSession(ternant.get().toString()) : sessionFactory.openSession();
-		return session.subscribeAsCompletionStage().thenApply(ss -> new RxEntityManager(ss));
+		return session.map(ss -> {
+			final EntityManager manager = new RxEntityManager(ss);
+			return manager;
+		})
+		.subscribeAsCompletionStage();
 	}
 
 	@Override

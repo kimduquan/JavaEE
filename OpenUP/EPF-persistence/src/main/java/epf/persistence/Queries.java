@@ -19,6 +19,7 @@ import epf.persistence.internal.QueryBuilder;
 import epf.persistence.internal.util.EntityTypeUtil;
 import epf.persistence.internal.util.PrincipalUtil;
 import epf.util.concurrent.Stage;
+import io.smallrye.common.annotation.NonBlocking;
 
 /**
  *
@@ -27,6 +28,7 @@ import epf.util.concurrent.Stage;
 @Path(Naming.PERSISTENCE)
 @RolesAllowed(Naming.Security.DEFAULT_ROLE)
 @ApplicationScoped
+@NonBlocking
 public class Queries implements epf.persistence.client.Queries {
     
     /**
