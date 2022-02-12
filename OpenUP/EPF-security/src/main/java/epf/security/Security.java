@@ -22,7 +22,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.security.enterprise.credential.Password;
-import javax.security.enterprise.credential.UsernamePasswordCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult.Status;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;
@@ -35,14 +34,16 @@ import org.eclipse.microprofile.jwt.config.Names;
 import epf.naming.Naming;
 import epf.security.client.jwt.TokenUtil;
 import epf.security.internal.Session;
-import epf.security.internal.store.OTPPrincipalStore;
+import epf.security.internal.store.OTPSessionStore;
 import epf.security.internal.store.SessionStore;
 import epf.security.internal.token.TokenBuilder;
 import epf.security.schema.Token;
-import epf.security.util.CredentialUtil;
+import epf.security.util.Credential;
 import epf.security.util.IdentityStore;
 import epf.security.util.JPAPrincipal;
+import epf.security.util.PasswordUtil;
 import epf.security.util.PrincipalStore;
+import epf.util.StringUtil;
 import epf.util.logging.LogManager;
 import epf.util.security.KeyUtil;
 
@@ -79,7 +80,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
      * 
      */
     @Inject
-    transient OTPPrincipalStore otpPrincipalStore;
+    transient OTPSessionStore otpSessionStore;
     
     /**
      * 
@@ -139,8 +140,8 @@ public class Security implements epf.security.client.Security, epf.security.clie
     @PostConstruct
     void postConstruct(){
         try {
-            privateKey = KeyUtil.generatePrivate("RSA", privateKeyText, Base64.getDecoder());
-            encryptKey = KeyUtil.generatePublic("RSA", encryptKeyText, Base64.getDecoder());
+            privateKey = KeyUtil.generatePrivate("RSA", privateKeyText, Base64.getDecoder(), "UTF-8");
+            encryptKey = KeyUtil.generatePublic("RSA", encryptKeyText, Base64.getDecoder(), "UTF-8");
         } 
         catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "postConstruct", ex);
@@ -218,14 +219,15 @@ public class Security implements epf.security.client.Security, epf.security.clie
     @Override
     public CompletionStage<String> login(
             final String username,
-            final String passwordHash,
+            final String passwordText,
             final URL url,
             final String ternant,
             final List<String> forwardedHost,
             final List<String> forwardedPort,
             final List<String> forwardedProto) throws Exception {
+    	final String passwordHash = StringUtil.toHex(PasswordUtil.getPasswordHash(username.toUpperCase(), passwordText.toCharArray(), "SHA-256"));
     	final Password password = new Password(passwordHash);
-    	final UsernamePasswordCredential credential = CredentialUtil.newTernantCredential(ternant, username, password);
+    	final Credential credential = new Credential(ternant, username, password);
     	return identityStore.validate(credential)
     			.thenApply(result -> {
     				if(Status.VALID.equals(result.getStatus())){
@@ -243,7 +245,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 									final Token token = newToken(principal.getName(), groups, audience, newClaims);
 									final TokenBuilder builder = new TokenBuilder(token, privateKey, encryptKey);
 									final Token newToken = builder.build();
-									sessionStore.putSession(principal, newToken);
+									sessionStore.putSession(principal, newToken, credential);
 									return newToken;
 									}
 								)
@@ -292,7 +294,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 						.thenApply(token -> new TokenBuilder(token, privateKey, encryptKey))
 						.thenApply(builder -> builder.build())
 						.thenApply(newToken -> {
-							sessionStore.putSession(session.getPrincipal(), newToken);
+							sessionStore.putSession(session.getPrincipal(), newToken, session.getCredential());
 							return newToken;
 						})
 						.thenApply(token -> {
@@ -305,11 +307,12 @@ public class Security implements epf.security.client.Security, epf.security.clie
 	@Override
 	public CompletionStage<String> loginOneTime(
 			final String username, 
-			final String passwordHash, 
+			final String passwordText, 
 			final  URL url,
 			final String ternant) throws Exception {
+		final String passwordHash = StringUtil.toHex(PasswordUtil.getPasswordHash(username.toUpperCase(), passwordText.toCharArray(), "SHA-256"));
 		final Password password = new Password(passwordHash);
-    	final UsernamePasswordCredential credential = CredentialUtil.newTernantCredential(ternant, username, password);
+    	final Credential credential = new Credential(ternant, username, password);
     	return identityStore.validate(credential)
     			.thenApply(result -> {
     				if(Status.VALID.equals(result.getStatus())) {
@@ -317,7 +320,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
     					}
 					throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
     				})
-    			.thenApply(principal -> otpPrincipalStore.putPrincipal(principal));
+    			.thenApply(principal -> otpSessionStore.putSession(principal, credential));
 	}
 
 	@PermitAll
@@ -328,14 +331,14 @@ public class Security implements epf.security.client.Security, epf.security.clie
 			final List<String> forwardedHost,
             final List<String> forwardedPort,
             final List<String> forwardedProto) {
-		final JPAPrincipal principal = otpPrincipalStore.removePrincipal(oneTimePassword).orElseThrow(() -> new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build()));
+		final Session session = otpSessionStore.removeSession(oneTimePassword).orElseThrow(() -> new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build()));
 		final Set<String> audience = buildAudience(url, forwardedHost, forwardedPort, forwardedProto);
-		return identityStore.getCallerGroups(principal)
-		.thenCombine(principalStore.getCallerClaims(principal), (groups, claims) -> newToken(principal.getName(), groups, audience, claims))
+		return identityStore.getCallerGroups(session.getPrincipal())
+		.thenCombine(principalStore.getCallerClaims(session.getPrincipal()), (groups, claims) -> newToken(session.getPrincipal().getName(), groups, audience, claims))
 		.thenApply(token -> new TokenBuilder(token, privateKey, encryptKey))
 		.thenApply(builder -> builder.build())
 		.thenApply(newToken -> {
-			sessionStore.putSession(principal, newToken);
+			sessionStore.putSession(session.getPrincipal(), newToken, session.getCredential());
 			return newToken;
 		})
 		.thenApply(token -> { 

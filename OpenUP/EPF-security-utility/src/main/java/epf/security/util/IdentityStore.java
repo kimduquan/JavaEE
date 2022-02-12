@@ -3,7 +3,6 @@ package epf.security.util;
 import java.util.Set;
 import java.util.concurrent.CompletionStage;
 import javax.security.enterprise.CallerPrincipal;
-import javax.security.enterprise.credential.UsernamePasswordCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 
 /**
@@ -21,7 +20,7 @@ public interface IdentityStore {
 	 * @param credential
 	 * @return
 	 */
-	CompletionStage<CredentialValidationResult> validate(final UsernamePasswordCredential credential);
+	CompletionStage<CredentialValidationResult> validate(final Credential credential) throws Exception;
 	
 	/**
 	 * @param callerPrincipal

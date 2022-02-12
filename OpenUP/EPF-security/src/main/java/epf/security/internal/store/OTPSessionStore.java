@@ -11,8 +11,10 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import epf.naming.Naming;
+import epf.security.internal.Session;
 import epf.security.internal.token.TokenIdGenerator;
 import epf.security.schema.Token;
+import epf.security.util.Credential;
 import epf.security.util.JPAPrincipal;
 import epf.util.MapUtil;
 
@@ -21,12 +23,12 @@ import epf.util.MapUtil;
  *
  */
 @ApplicationScoped
-public class OTPPrincipalStore {
+public class OTPSessionStore {
 	
 	/**
 	 * 
 	 */
-	private transient final Map<String, JPAPrincipal> principals = new ConcurrentHashMap<>();
+	private transient final Map<String, Session> sessions = new ConcurrentHashMap<>();
 	
 	/**
 	 * 
@@ -55,12 +57,9 @@ public class OTPPrincipalStore {
     	return token;
     }
 	
-	/**
-	 * @param principal
-	 */
-	public String putPrincipal(final JPAPrincipal principal) {
+	public String putSession(final JPAPrincipal principal, final Credential credential) {
 		final Token token = newToken(principal.getName());
-		principals.put(token.getTokenID(), principal);
+		sessions.put(token.getTokenID(), new Session(principal, token, credential));
 		return token.getTokenID();
 	}
 	
@@ -68,15 +67,15 @@ public class OTPPrincipalStore {
 	 * @param oneTimePassword
 	 * @return
 	 */
-	public Optional<JPAPrincipal> removePrincipal(final String oneTimePassword) {
-		return MapUtil.remove(principals, oneTimePassword);
+	public Optional<Session> removeSession(final String oneTimePassword) {
+		return MapUtil.remove(sessions, oneTimePassword);
 	}
 	
 	/**
 	 * @param name
 	 * @return
 	 */
-	public Optional<JPAPrincipal> findPrincipal(final String name){
-		return MapUtil.findAny(principals, principal -> principal.getName().equals(name));
+	public Optional<Session> findSession(final String name){
+		return MapUtil.findAny(sessions, session -> session.getToken().getName().equals(name));
 	}
 }

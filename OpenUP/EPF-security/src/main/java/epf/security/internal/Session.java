@@ -1,15 +1,16 @@
 package epf.security.internal;
 
 import epf.security.schema.Token;
+import epf.security.util.Credential;
 import epf.security.util.JPAPrincipal;
 
 /**
  *
  * @author FOXCONN
  */
-public class Session implements AutoCloseable {
-   
-    /**
+public class Session {
+
+	/**
      * 
      */
     private transient final JPAPrincipal principal;
@@ -18,14 +19,21 @@ public class Session implements AutoCloseable {
      * 
      */
     private final Token token;
+    
+    /**
+     * 
+     */
+    private transient final Credential credential;
 
     /**
      * @param principal
      * @param token
+     * @param credential
      */
-    public Session(final JPAPrincipal principal, final Token token) {
+    public Session(final JPAPrincipal principal, final Token token, final Credential credential) {
     	this.principal = principal;
 		this.token = token;
+		this.credential = credential;
     }
 
 	public Token getToken() {
@@ -35,9 +43,8 @@ public class Session implements AutoCloseable {
 	public JPAPrincipal getPrincipal() {
 		return principal;
 	}
-
-	@Override
-	public void close() throws Exception {
-		principal.close();
+   
+    public Credential getCredential() {
+		return credential;
 	}
 }

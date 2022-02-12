@@ -39,8 +39,8 @@ public interface SecurityClient {
     String login(
     		@FormParam("username")
             final String username,
-            @FormParam("password_hash")
-            final String passwordHash, 
+            @FormParam("password")
+            final String password, 
             @QueryParam("url")
             final String url
     ) throws Exception;
