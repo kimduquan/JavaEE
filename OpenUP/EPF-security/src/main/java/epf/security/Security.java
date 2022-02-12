@@ -2,6 +2,7 @@ package epf.security;
 
 import java.io.Serializable;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.time.Duration;
@@ -225,7 +226,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
             final List<String> forwardedHost,
             final List<String> forwardedPort,
             final List<String> forwardedProto) throws Exception {
-    	final String passwordHash = StringUtil.toHex(PasswordUtil.getPasswordHash(username.toUpperCase(), passwordText.toCharArray(), "SHA-256"));
+    	final String passwordHash = StringUtil.toHex(PasswordUtil.getPasswordHash(username.toUpperCase(), passwordText.toCharArray(), "SHA-256"), StandardCharsets.ISO_8859_1);
     	final Password password = new Password(passwordHash);
     	final Credential credential = new Credential(ternant, username, password);
     	return identityStore.validate(credential)
@@ -310,7 +311,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 			final String passwordText, 
 			final  URL url,
 			final String ternant) throws Exception {
-		final String passwordHash = StringUtil.toHex(PasswordUtil.getPasswordHash(username.toUpperCase(), passwordText.toCharArray(), "SHA-256"));
+		final String passwordHash = StringUtil.toHex(PasswordUtil.getPasswordHash(username.toUpperCase(), passwordText.toCharArray(), "SHA-256"), StandardCharsets.ISO_8859_1);
 		final Password password = new Password(passwordHash);
     	final Credential credential = new Credential(ternant, username, password);
     	return identityStore.validate(credential)

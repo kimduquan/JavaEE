@@ -1,6 +1,6 @@
 package epf.util;
 
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -186,16 +186,17 @@ public interface StringUtil {
 	
 	/**
 	 * @param value
+	 * @param charset
 	 * @return
 	 */
-	static String toHex(byte[] value) {
-        byte[] bytes = new byte[value.length * 2];
-        char[] hex = HEX_CHARS;
+	static String toHex(final byte[] value, final Charset charset) {
+        final byte[] bytes = new byte[value.length * 2];
+        final char[] hex = HEX_CHARS;
         for (int i = 0, j = 0; i < value.length; i++) {
-            int c = value[i] & 0xff;
+            final int c = value[i] & 0xff;
             bytes[j++] = (byte) hex[c >> 4];
             bytes[j++] = (byte) hex[c & 0xf];
         }
-        return new String(bytes, StandardCharsets.ISO_8859_1);
+        return new String(bytes, charset);
     }
 }
