@@ -2,7 +2,9 @@ package epf.security.internal.store;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -20,6 +22,7 @@ import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.naming.Naming;
 import epf.security.internal.sql.NativeQueries;
 import epf.security.util.Credential;
+import epf.security.util.CredentialComparator;
 import epf.security.util.IdentityStore;
 import epf.security.util.JPAPrincipal;
 import epf.security.util.JdbcUtil;
@@ -50,15 +53,42 @@ public class JPAIdentityStore implements IdentityStore {
 	 */
 	@PersistenceContext(unitName = "EPF-Schema")
 	transient EntityManager manager;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	transient JPAPrincipalStore principalStore;
+	
+	/**
+	 * @param credential
+	 * @param oldCredential
+	 * @return
+	 */
+	protected CompletionStage<CredentialValidationResult> validate(final Credential credential, final Credential oldCredential){
+		CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
+		final CredentialComparator comparator = new CredentialComparator();
+		if(comparator.compare(credential, oldCredential) == 0) {
+			final Optional<JPAPrincipal> principal = principalStore.getPrincipal(credential.getCaller());
+			if(principal.isPresent()) {
+				result = new CredentialValidationResult(principal.get());
+			}
+		}
+		return CompletableFuture.completedStage(result);
+	}
 
 	@Override
 	public CompletionStage<CredentialValidationResult> validate(final Credential credential) throws Exception {
 		Objects.requireNonNull(credential, "Credential");
 		Objects.requireNonNull(credential.getCaller(), "Credential.caller");
 		Objects.requireNonNull(credential.getPassword(), "Credential.password");
+		final Optional<Credential> oldCredential = principalStore.getCredential(credential.getCaller());
+		if (oldCredential.isPresent()) {
+			return validate(credential, oldCredential.get());
+		}
 		final Map<String, Object> props = new ConcurrentHashMap<>();
         props.put(Naming.Persistence.JDBC.JDBC_USER, credential.getCaller());
-        props.put(Naming.Persistence.JDBC.JDBC_PASSWORD, credential.getPasswordAsString());
+        props.put(Naming.Persistence.JDBC.JDBC_PASSWORD, String.valueOf(credential.getPassword().getValue()));
         credential.getTernant().ifPresent(ternant -> {
         	final String ternantUrl = JdbcUtil.formatTernantUrl(jdbcUrl, ternant.toString());
         	props.put(Naming.Persistence.JDBC.JDBC_URL, ternantUrl);
@@ -68,7 +98,7 @@ public class JPAIdentityStore implements IdentityStore {
         			CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
         			try {
         				final EntityManager manager = factory.createEntityManager();
-        				final JPAPrincipal principal = new JPAPrincipal(credential.getTernant(), credential.getCaller(), factory, manager);
+        				final JPAPrincipal principal = principalStore.putPrincipaḷ̣̣̣̣(credential, factory, manager);
         				result = new CredentialValidationResult(principal);
 		        	}
 		        	catch(Exception ex) {

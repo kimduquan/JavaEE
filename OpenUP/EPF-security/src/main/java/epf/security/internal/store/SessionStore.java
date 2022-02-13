@@ -89,12 +89,4 @@ public class SessionStore {
         MapUtil.put(sessions, token.getTokenID(), session);
         return session;
     }
-    
-    /**
-     * @param userName
-     * @return
-     */
-    public Optional<Session> findSession(final String userName){
-    	return MapUtil.findAny(sessions, session -> session.getToken().getName().equals(userName));
-    }
 }

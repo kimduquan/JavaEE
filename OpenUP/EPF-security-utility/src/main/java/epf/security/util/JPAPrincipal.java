@@ -14,12 +14,12 @@ public class JPAPrincipal extends CallerPrincipal implements AutoCloseable {
 	/**
 	 * 
 	 */
-	private transient final EntityManagerFactory factory;
+	private transient EntityManagerFactory factory;
 	
 	/**
 	 * 
 	 */
-	private transient final EntityManager defaultManager;
+	private transient EntityManager defaultManager;
 	
 	/**
 	 * 
@@ -38,10 +38,6 @@ public class JPAPrincipal extends CallerPrincipal implements AutoCloseable {
 		this.factory = factory;
 		this.defaultManager = manager;
 	}
-	
-	public EntityManager getDefaultManager() {
-		return defaultManager;
-	}
 
 	@Override
 	public void close() {
@@ -55,5 +51,14 @@ public class JPAPrincipal extends CallerPrincipal implements AutoCloseable {
 	
 	public EntityManagerFactory getFactory() {
 		return factory;
+	}
+	
+	/**
+	 * @param factory
+	 * @param manager
+	 */
+	public void reset(final EntityManagerFactory factory, final EntityManager manager){
+		defaultManager = manager;
+		this.factory = factory;
 	}
 }

@@ -70,12 +70,4 @@ public class OTPSessionStore {
 	public Optional<Session> removeSession(final String oneTimePassword) {
 		return MapUtil.remove(sessions, oneTimePassword);
 	}
-	
-	/**
-	 * @param name
-	 * @return
-	 */
-	public Optional<Session> findSession(final String name){
-		return MapUtil.findAny(sessions, session -> session.getToken().getName().equals(name));
-	}
 }
