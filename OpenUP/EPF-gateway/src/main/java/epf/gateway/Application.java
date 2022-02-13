@@ -22,6 +22,8 @@ import javax.ws.rs.sse.OutboundSseEvent;
 import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
 import javax.ws.rs.sse.SseEventSource;
+import epf.gateway.internal.RequestUtil;
+import epf.gateway.internal.ResponseUtil;
 import epf.util.logging.LogManager;
 
 /**
@@ -65,7 +67,7 @@ public class Application {
 		invoke = RequestUtil.buildHeaders(invoke, headers, baseUri);
 		final CompletionStageRxInvoker rx = invoke.rx();
 		return RequestUtil.invoke(rx, req.getMethod(), headers.getMediaType(), body)
-				.thenApply(res -> RequestUtil.buildResponse(res, baseUri))
+				.thenApply(res -> ResponseUtil.buildResponse(res, baseUri))
 				.whenComplete((res, err) -> {
 					client.close();
 					if(err != null) {

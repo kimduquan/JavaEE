@@ -72,9 +72,9 @@ public class RegistryTest {
     	try {
 			expected.add(baseUri.resolve("config/config/"));
 	    	expected.add(baseUri.resolve("file/file/"));
-	    	expected.add(baseUri.resolve("persistence/persistence/"));
+	    	expected.add(new URI("http://localhost:9181/persistence/persistence/"));
 	    	expected.add(baseUri.resolve("registry/registry/"));
-	    	expected.add(baseUri.resolve("persistence/security/"));
+	    	expected.add(baseUri.resolve("security/security/"));
 	    	expected.add(baseUri.resolve("cache/cache/"));
 	    	expected.add(baseUri.resolve("script/script/"));
 	    	expected.add(baseUri.resolve("management/management/"));

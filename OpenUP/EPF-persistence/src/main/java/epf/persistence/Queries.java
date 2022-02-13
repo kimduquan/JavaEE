@@ -20,6 +20,7 @@ import epf.persistence.internal.Entity;
 import epf.persistence.internal.QueryBuilder;
 import epf.persistence.internal.util.EntityTypeUtil;
 import epf.persistence.internal.util.PrincipalUtil;
+import epf.util.concurrent.StageUtil;
 import io.smallrye.common.annotation.NonBlocking;
 
 /**
@@ -89,9 +90,7 @@ public class Queries implements epf.persistence.client.Queries {
         			.build();
         	final Map<String, Object> props = PrincipalUtil.getClaims(context.getUserPrincipal());
         	props.put(Naming.Persistence.Internal.SCHEMA, schema);
-        	return factory.createEntityManager(props).thenCompose(
-        			manager -> executeQuery(manager, criteria, firstResult, maxResults).thenCombine(manager.close(), (res, v) -> res)
-        			);
+        	return StageUtil.stage(factory.createEntityManager(props), manager -> executeQuery(manager, criteria, firstResult, maxResults));
         }
     	throw new NotFoundException();
     }
