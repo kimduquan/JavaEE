@@ -52,10 +52,16 @@ public class Entities implements epf.persistence.client.Entities {
             final InputStream body
             ) throws Exception{
     	final EntityType<?> entityType = EntityTypeUtil.findEntityType(factory.getMetamodel(), name).orElseThrow(NotFoundException::new);
+    	EntityTypeUtil.getSchema(entityType).ifPresent(entitySchema -> {
+    		if(!entitySchema.equals(schema)) {
+    			throw new NotFoundException();
+    		}
+    	});
     	final Object entity = EntityUtil.toObject(entityType, body);
         validator.validate(entity);
-        final Map<String, Object> claims = PrincipalUtil.getClaims(context.getUserPrincipal());
-        return Stage.stage(factory.createEntityManager(claims))
+        final Map<String, Object> props = PrincipalUtil.getClaims(context.getUserPrincipal());
+    	props.put(Naming.Persistence.Internal.SCHEMA, schema);
+        return Stage.stage(factory.createEntityManager(props))
         		.compose(manager -> manager.persist(entity))
         		.apply(v -> entity)
         		.complete();
@@ -71,9 +77,15 @@ public class Entities implements epf.persistence.client.Entities {
 			final InputStream body
 			) throws Exception {
     	final EntityType<?> entityType = EntityTypeUtil.findEntityType(factory.getMetamodel(), name).orElseThrow(NotFoundException::new);
+    	EntityTypeUtil.getSchema(entityType).ifPresent(entitySchema -> {
+    		if(!entitySchema.equals(schema)) {
+    			throw new NotFoundException();
+    		}
+    	});
     	final Object entityId = EntityUtil.getEntityId(entityType, id);
-    	final Map<String, Object> claims = PrincipalUtil.getClaims(context.getUserPrincipal());
-    	return Stage.stage(factory.createEntityManager(claims))
+    	final Map<String, Object> props = PrincipalUtil.getClaims(context.getUserPrincipal());
+    	props.put(Naming.Persistence.Internal.SCHEMA, schema);
+    	return Stage.stage(factory.createEntityManager(props))
     	.compose(manager -> manager.find(entityType.getJavaType(), entityId))
     	.apply(entity -> Optional.ofNullable(entity).orElseThrow(NotFoundException::new))
 		.apply(entity -> EntityUtil.toObject(entityType, body))
@@ -95,9 +107,15 @@ public class Entities implements epf.persistence.client.Entities {
     		final SecurityContext context
             ) {
     	final EntityType<?> entityType = EntityTypeUtil.findEntityType(factory.getMetamodel(), name).orElseThrow(NotFoundException::new);
+    	EntityTypeUtil.getSchema(entityType).ifPresent(entitySchema -> {
+    		if(!entitySchema.equals(schema)) {
+    			throw new NotFoundException();
+    		}
+    	});
     	final Object entityId = EntityUtil.getEntityId(entityType, id);
-    	final Map<String, Object> claims = PrincipalUtil.getClaims(context.getUserPrincipal());
-    	return Stage.stage(factory.createEntityManager(claims))
+    	final Map<String, Object> props = PrincipalUtil.getClaims(context.getUserPrincipal());
+    	props.put(Naming.Persistence.Internal.SCHEMA, schema);
+    	return Stage.stage(factory.createEntityManager(props))
     	.compose(manager -> manager.find(entityType.getJavaType(), entityId))
     	.apply(entity -> Optional.ofNullable(entity).orElseThrow(NotFoundException::new))
     	.stage((manager, entity) -> manager.remove(entity))
@@ -108,9 +126,15 @@ public class Entities implements epf.persistence.client.Entities {
 	@Override
 	public CompletionStage<Object> find(final String schema, final String name, final String id, final SecurityContext context) {
 		final EntityType<?> entityType = EntityTypeUtil.findEntityType(factory.getMetamodel(), name).orElseThrow(NotFoundException::new);
-    	final Object entityId = EntityUtil.getEntityId(entityType, id);
-    	final Map<String, Object> claims = PrincipalUtil.getClaims(context.getUserPrincipal());
-    	return Stage.stage(factory.createEntityManager(claims))
+		EntityTypeUtil.getSchema(entityType).ifPresent(entitySchema -> {
+    		if(!entitySchema.equals(schema)) {
+    			throw new NotFoundException();
+    		}
+    	});
+		final Object entityId = EntityUtil.getEntityId(entityType, id);
+    	final Map<String, Object> props = PrincipalUtil.getClaims(context.getUserPrincipal());
+    	props.put(Naming.Persistence.Internal.SCHEMA, schema);
+    	return Stage.stage(factory.createEntityManager(props))
     			.compose(manager -> manager.find(entityType.getJavaType(), entityId))
     			.apply(entity -> (Object)entity)
     			.complete();

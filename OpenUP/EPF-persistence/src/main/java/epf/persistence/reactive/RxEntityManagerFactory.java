@@ -12,6 +12,7 @@ import org.hibernate.reactive.mutiny.Mutiny.SessionFactory;
 import epf.naming.Naming;
 import epf.persistence.ext.EntityManager;
 import epf.persistence.ext.EntityManagerFactory;
+import epf.persistence.internal.util.SchemaUtil;
 import epf.util.MapUtil;
 import io.smallrye.mutiny.Uni;
 
@@ -31,12 +32,21 @@ public class RxEntityManagerFactory implements EntityManagerFactory {
 	@Override
 	public CompletionStage<EntityManager> createEntityManager(final Map<String, Object> props) {
 		final Optional<Object> ternant = MapUtil.get(props, Naming.Management.TERNANT);
-		final Uni<Session> session = ternant.isPresent() ? sessionFactory.openSession(ternant.get().toString()) : sessionFactory.openSession();
+		Uni<Session> session;
+		if(ternant.isPresent()) {
+			final String schema = props.get(Naming.Persistence.Internal.SCHEMA).toString();
+			final String ternantId = SchemaUtil.formatTernantId(schema, ternant.get().toString());
+			session = sessionFactory.openSession(ternantId);
+		}
+		else {
+			session = sessionFactory.openSession();
+		}
 		return session.map(ss -> {
-			final EntityManager manager = new RxEntityManager(ss);
-			return manager;
-		})
-		.subscribeAsCompletionStage();
+					final EntityManager manager = new RxEntityManager(ss);
+					return manager;
+					}
+				)
+				.subscribeAsCompletionStage();
 	}
 
 	@Override

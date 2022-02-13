@@ -51,6 +51,11 @@ public class Queries implements epf.persistence.client.Queries {
         	final String entityName = rootSegment.getPath();
         	@SuppressWarnings("unchecked")
 			final EntityType<Object> entityType = (EntityType<Object>) EntityTypeUtil.findEntityType(factory.getMetamodel(), entityName).orElseThrow(NotFoundException::new);
+        	EntityTypeUtil.getSchema(entityType).ifPresent(entitySchema -> {
+        		if(!entitySchema.equals(schema)) {
+        			throw new NotFoundException();
+        		}
+        	});
         	entity.setType(entityType);
         	final QueryBuilder queryBuilder = new QueryBuilder();
         	final CriteriaQuery<Object> criteria = queryBuilder

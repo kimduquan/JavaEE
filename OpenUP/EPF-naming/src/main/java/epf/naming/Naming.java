@@ -331,6 +331,16 @@ public interface Naming {
 			String JDBC_URL = "javax.persistence.jdbc.url";
 		}
 		
+		/**
+		 * @author PC
+		 *
+		 */
+		interface Internal {
+			/**
+			 * 
+			 */
+			String SCHEMA = "epf.persistence.schema";
+		}
 	}
 	
 	/**

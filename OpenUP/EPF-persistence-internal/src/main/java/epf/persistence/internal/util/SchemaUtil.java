@@ -21,6 +21,11 @@ import epf.persistence.internal.Entity;
 public interface SchemaUtil {
 	
 	/**
+	 * 
+	 */
+	String TERNANT_ID_FORMAT = "%s_%s";
+	
+	/**
 	 * @param <T>
 	 * @param metamodel
 	 * @return
@@ -104,5 +109,14 @@ public interface SchemaUtil {
 			});
 			entityAttributes.put(tableName, attributes);
 		});
+	}
+	
+	/**
+	 * @param schema
+	 * @param ternant
+	 * @return
+	 */
+	static String formatTernantId(final String schema, final String ternant) {
+		return String.format(TERNANT_ID_FORMAT, schema, ternant);
 	}
 }

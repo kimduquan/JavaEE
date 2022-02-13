@@ -2,7 +2,6 @@ package epf.security;
 
 import java.io.Serializable;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.time.Duration;
@@ -40,12 +39,10 @@ import epf.security.internal.store.SessionStore;
 import epf.security.internal.token.TokenBuilder;
 import epf.security.schema.Token;
 import epf.security.util.Credential;
-import epf.security.util.CryptoUtil;
+import epf.security.util.CredentialUtil;
 import epf.security.util.IdentityStore;
 import epf.security.util.JPAPrincipal;
-import epf.security.util.PasswordUtil;
 import epf.security.util.PrincipalStore;
-import epf.util.StringUtil;
 import epf.util.logging.LogManager;
 import epf.util.security.KeyUtil;
 
@@ -227,11 +224,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
             final List<String> forwardedHost,
             final List<String> forwardedPort,
             final List<String> forwardedProto) throws Exception {
-    	final byte[] passwordBytes = PasswordUtil.getPasswordHash(username.toUpperCase(), passwordText.toCharArray(), "SHA-256");
-    	final String passwordHash = StringUtil.toHex(passwordBytes, StandardCharsets.ISO_8859_1);
-    	final String encryptPassword = CryptoUtil.encrypt(passwordHash);
-    	final Password password = new Password(encryptPassword);
-    	final Credential credential = new Credential(ternant, username, password);
+    	final Credential credential = CredentialUtil.newCredential(ternant, username, passwordText);
     	return identityStore.validate(credential)
     			.thenApply(result -> {
     				if(Status.VALID.equals(result.getStatus())){
@@ -314,11 +307,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 			final String passwordText, 
 			final  URL url,
 			final String ternant) throws Exception {
-		final byte[] passwordBytes = PasswordUtil.getPasswordHash(username.toUpperCase(), passwordText.toCharArray(), "SHA-256");
-    	final String passwordHash = StringUtil.toHex(passwordBytes, StandardCharsets.ISO_8859_1);
-    	final String encryptPassword = CryptoUtil.encrypt(passwordHash);
-    	final Password password = new Password(encryptPassword);
-    	final Credential credential = new Credential(ternant, username, password);
+		final Credential credential = CredentialUtil.newCredential(ternant, username, passwordText);
     	return identityStore.validate(credential)
     			.thenApply(result -> {
     				if(Status.VALID.equals(result.getStatus())) {

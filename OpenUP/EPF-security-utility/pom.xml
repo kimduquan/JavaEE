@@ -37,5 +37,10 @@
 			<artifactId>EPF-naming</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>openup</groupId>
+			<artifactId>EPF-utility</artifactId>
+			<version>${project.version}</version>
+		</dependency>
     </dependencies>
 </project>

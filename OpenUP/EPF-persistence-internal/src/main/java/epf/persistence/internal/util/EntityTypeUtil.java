@@ -1,6 +1,8 @@
 package epf.persistence.internal.util;
 
 import java.util.Optional;
+
+import javax.persistence.Table;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
 
@@ -20,5 +22,18 @@ public interface EntityTypeUtil {
 				.stream()
 				.filter(type -> type.getName().equals(name))
 				.findFirst();
+	}
+	
+	/**
+	 * @param entityType
+	 * @return
+	 */
+	static Optional<String> getSchema(final EntityType<?> entityType) {
+		Optional<String> schema = Optional.empty();
+		final Table table = entityType.getJavaType().getAnnotation(Table.class);
+		if(table != null) {
+			schema = Optional.ofNullable(table.schema());
+		}
+		return schema;
 	}
 }
