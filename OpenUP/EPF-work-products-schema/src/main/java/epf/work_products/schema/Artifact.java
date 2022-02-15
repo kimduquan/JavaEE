@@ -5,6 +5,7 @@ import javax.json.JsonObject;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -25,6 +26,7 @@ import epf.work_products.schema.section.Tailoring;
 @Schema(name = WorkProducts.ARTIFACT, title = "Artifact")
 @Entity(name = WorkProducts.ARTIFACT)
 @Table(schema = WorkProducts.SCHEMA, name = "ARTIFACT")
+@NamedEntityGraph(includeAllAttributes = true)
 public class Artifact implements Serializable {
 
     /**

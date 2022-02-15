@@ -17,6 +17,7 @@ import epf.delivery_processes.schema.section.WorkBreakdownStructure;
 import epf.delivery_processes.schema.section.WorkProductUsage;
 import javax.persistence.Index;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.NamedQuery;
 
 /**
@@ -31,6 +32,7 @@ import javax.persistence.NamedQuery;
         name = Phase.PHASES,
         query = "SELECT ph FROM EPF_Phase ph JOIN ph.parentActivities dp WHERE dp.name = :name"
 )
+@NamedEntityGraph(includeAllAttributes = true)
 public class Phase implements Serializable {
     
     /**

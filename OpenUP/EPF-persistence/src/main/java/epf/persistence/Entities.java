@@ -13,6 +13,7 @@ import javax.validation.Validator;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import epf.naming.Naming;
 import epf.persistence.ext.EntityManager;
@@ -50,8 +51,11 @@ public class Entities implements epf.persistence.client.Entities {
      * @param entity
      * @return
      */
-    CompletionStage<Object> persist(final EntityManager manager, final Object entity){
-    	return manager.persist(entity).thenApply(v -> entity);
+    CompletionStage<Response> persist(final EntityManager manager, final Object entity){
+    	return manager.persist(entity).thenApply(v -> {
+    		manager.detach(entity);
+    		return Response.ok(entity).build();
+    	});
     }
     
     /**
@@ -61,11 +65,11 @@ public class Entities implements epf.persistence.client.Entities {
      * @param entity
      * @return
      */
-    CompletionStage<Void> merge(final EntityManager manager, final EntityType<?> entityType, final Object entityId, final Object entity){
+    CompletionStage<Response> merge(final EntityManager manager, final EntityType<?> entityType, final Object entityId, final Object entity){
     	return manager.find(entityType.getJavaType(), entityId)
     			.thenApply(oldEntity -> Optional.ofNullable(oldEntity).orElseThrow(NotFoundException::new))
     			.thenCompose(oldEntity -> manager.merge(entity))
-    			.thenAccept(v -> {});
+    			.thenApply(e -> Response.ok().build());
     }
     
     /**
@@ -74,10 +78,11 @@ public class Entities implements epf.persistence.client.Entities {
      * @param entityId
      * @return
      */
-    CompletionStage<Void> remove(final EntityManager manager, final EntityType<?> entityType, final Object entityId){
+    CompletionStage<Response> remove(final EntityManager manager, final EntityType<?> entityType, final Object entityId){
     	return manager.find(entityType.getJavaType(), entityId)
     			.thenApply(entity -> Optional.ofNullable(entity).orElseThrow(NotFoundException::new))
-    			.thenCompose(entity -> manager.remove(entity));
+    			.thenCompose(entity -> manager.remove(entity))
+    			.thenApply(v -> Response.ok().build());
     }
     
     /**
@@ -86,14 +91,18 @@ public class Entities implements epf.persistence.client.Entities {
      * @param entityId
      * @return
      */
-    CompletionStage<Object> find(final EntityManager manager, final EntityType<?> entityType, final Object entityId){
+    CompletionStage<Response> find(final EntityManager manager, final EntityType<?> entityType, final Object entityId){
     	return manager.find(entityType.getJavaType(), entityId)
-    			.thenApply(entity -> Optional.ofNullable(entity).orElseThrow(NotFoundException::new));
+    			.thenApply(entity -> {
+    				Optional.ofNullable(entity).orElseThrow(NotFoundException::new);
+    				manager.detach(entity);
+    				return Response.ok(entity).build();
+    			});
     }
     
     @Override
     @Transactional
-    public CompletionStage<Object> persist(
+    public CompletionStage<Response> persist(
     		final String schema,
             final String name,
             final SecurityContext context,
@@ -116,7 +125,7 @@ public class Entities implements epf.persistence.client.Entities {
     
     @Override
     @Transactional
-	public CompletionStage<Void> merge(
+	public CompletionStage<Response> merge(
 			final String schema,
 			final String name, 
 			final String id,
@@ -141,7 +150,7 @@ public class Entities implements epf.persistence.client.Entities {
     
     @Override
     @Transactional
-    public CompletionStage<Void> remove(
+    public CompletionStage<Response> remove(
     		final String schema,
     		final String name,
     		final String id,
@@ -160,7 +169,8 @@ public class Entities implements epf.persistence.client.Entities {
     }
     
 	@Override
-	public CompletionStage<Object> find(final String schema, final String name, final String id, final SecurityContext context) {
+	@Transactional
+	public CompletionStage<Response> find(final String schema, final String name, final String id, final SecurityContext context) {
 		final EntityType<?> entityType = EntityTypeUtil.findEntityType(factory.getMetamodel(), name).orElseThrow(NotFoundException::new);
 		EntityTypeUtil.getSchema(entityType).ifPresent(entitySchema -> {
     		if(!entitySchema.equals(schema)) {

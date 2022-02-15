@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.work_products.schema;
 
 import java.io.Serializable;
@@ -13,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -32,6 +28,7 @@ import javax.persistence.Index;
 @NamedQuery(
         name = Domain.DOMAINS, 
         query = "SELECT d FROM EPF_Domain AS d")
+@NamedEntityGraph(includeAllAttributes = true)
 public class Domain implements Serializable {
 
     /**

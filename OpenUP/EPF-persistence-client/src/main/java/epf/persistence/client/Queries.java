@@ -45,7 +45,7 @@ public interface Queries {
     @GET
     @Path("{schema}/{criteria: .+}")
     @Produces(MediaType.APPLICATION_JSON)
-    CompletionStage<List<Object>> executeQuery(
+    CompletionStage<Response> executeQuery(
     		@PathParam("schema")
             @NotBlank
             final String schema,

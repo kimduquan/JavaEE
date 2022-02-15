@@ -11,6 +11,7 @@ import javax.persistence.metamodel.EntityType;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.PathSegment;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import epf.naming.Naming;
 import epf.persistence.ext.EntityManager;
@@ -46,7 +47,7 @@ public class Queries implements epf.persistence.client.Queries {
      * @param maxResults
      * @return
      */
-    CompletionStage<List<Object>> executeQuery(
+    CompletionStage<Response> executeQuery(
     		final EntityManager manager, 
     		final CriteriaQuery<Object> criteria,
     		final Integer firstResult,
@@ -58,11 +59,11 @@ public class Queries implements epf.persistence.client.Queries {
         if(maxResults != null){
             query.setMaxResults(maxResults);
         }
-        return query.getResultList();
+        return query.getResultList().thenApply(resultList -> Response.ok(resultList).build());
     }
     
     @Override
-    public CompletionStage<List<Object>> executeQuery(
+    public CompletionStage<Response> executeQuery(
     		final String schema,
             final List<PathSegment> paths,
             final Integer firstResult,

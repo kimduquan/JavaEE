@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.roles.schema;
 
 import java.io.Serializable;
@@ -14,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -33,6 +29,7 @@ import javax.persistence.Index;
 @NamedQuery(
         name = RoleSet.ROLES, 
         query = "SELECT rs FROM EPF_RoleSet AS rs")
+@NamedEntityGraph(includeAllAttributes = true)
 public class RoleSet implements Serializable {
 
     /**

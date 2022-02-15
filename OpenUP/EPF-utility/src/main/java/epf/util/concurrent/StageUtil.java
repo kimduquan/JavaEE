@@ -19,6 +19,6 @@ public interface StageUtil {
 	static <C extends epf.util.AutoCloseable, V> CompletionStage<V> stage(
 			final CompletionStage<C> stage,
 			final Function<C, ? extends CompletionStage<V>> function) {
-		return stage.thenCompose(c -> function.apply(c).thenCombine(c.close(), (res, v) -> res));
+		return stage.thenCompose(c -> function.apply(c).whenComplete((v, err) -> { c.close(); }));
 	}
 }

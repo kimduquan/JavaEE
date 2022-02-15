@@ -5,6 +5,7 @@ import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -28,6 +29,7 @@ import epf.delivery_processes.schema.section.WorkProductUsage;
         name = DeliveryProcess.DELIVERY_PROCESSES, 
         query = "SELECT dp FROM EPF_DeliveryProcess AS dp"
 )
+@NamedEntityGraph(includeAllAttributes = true)
 public class DeliveryProcess implements Serializable {
 	
     /**

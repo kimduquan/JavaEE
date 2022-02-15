@@ -1,6 +1,8 @@
 package epf.persistence.ext;
 
+import java.util.Map;
 import java.util.concurrent.CompletionStage;
+import javax.persistence.EntityGraph;
 import javax.persistence.criteria.CriteriaQuery;
 
 /**
@@ -8,6 +10,11 @@ import javax.persistence.criteria.CriteriaQuery;
  *
  */
 public interface EntityManager extends epf.util.AutoCloseable {
+	
+	/**
+	 * 
+	 */
+	String FETCH_GRAPH = "javax.persistence.fetchgraph";
 
 	/**
 	 * @param entity
@@ -39,6 +46,15 @@ public interface EntityManager extends epf.util.AutoCloseable {
 	
 	/**
 	 * @param <T>
+	 * @param entityClass
+	 * @param primaryKey
+	 * @param properties
+	 * @return
+	 */
+	<T> CompletionStage<T> find(final Class<T> entityClass, final Object primaryKey, final Map<String, Object> properties);
+	
+	/**
+	 * @param <T>
 	 * @param entity
 	 * @return
 	 */
@@ -56,4 +72,16 @@ public interface EntityManager extends epf.util.AutoCloseable {
 	 * @return
 	 */
 	<R> Query<R> createNativeQuery(final String sqlString);
+	
+	/**
+	 * @param entity
+	 */
+	void detach(final Object entity); 
+	
+	/**
+	 * @param <T>
+	 * @param rootType
+	 * @return
+	 */
+	<T> EntityGraph<T> createEntityGraph(final Class<T> rootType);
 }

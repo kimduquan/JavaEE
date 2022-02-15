@@ -13,6 +13,7 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.MapsId;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.OneToOne;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -25,6 +26,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Schema(name = DeliveryProcesses.ACTIVITY, title = "Activity")
 @Entity(name = DeliveryProcesses.ACTIVITY)
 @Table(schema = DeliveryProcesses.SCHEMA, name = "ACTIVITY")
+@NamedEntityGraph(includeAllAttributes = true)
 public class Activity implements Serializable {
     
     /**

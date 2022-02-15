@@ -37,7 +37,7 @@ public interface Entities {
     @Path("{schema}/{entity}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    CompletionStage<Object> persist(
+    CompletionStage<Response> persist(
     		@PathParam("schema")
             @NotBlank
             final String schema,
@@ -100,7 +100,7 @@ public interface Entities {
     @PUT
     @Path("{schema}/{entity}/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    CompletionStage<Void> merge(
+    CompletionStage<Response> merge(
     		@PathParam("schema")
             @NotBlank
             final String schema,
@@ -165,7 +165,7 @@ public interface Entities {
      */
     @DELETE
     @Path("{schema}/{entity}/{id}")
-    CompletionStage<Void> remove(
+    CompletionStage<Response> remove(
     		@PathParam("schema")
             @NotBlank
             final String schema,
@@ -207,7 +207,7 @@ public interface Entities {
     @POST
     @Path("{schema}/{entity}/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    CompletionStage<Object> find(
+    CompletionStage<Response> find(
     		@PathParam("schema")
             @NotBlank
             final String schema,

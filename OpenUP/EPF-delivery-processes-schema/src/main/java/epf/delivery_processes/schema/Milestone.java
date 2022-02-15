@@ -6,6 +6,7 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -21,6 +22,7 @@ import epf.delivery_processes.schema.section.Properties;
 @Schema(name = DeliveryProcesses.MILESTONE, title = "Milestone")
 @Entity(name = DeliveryProcesses.MILESTONE)
 @Table(schema = DeliveryProcesses.SCHEMA, name = "MILESTONE")
+@NamedEntityGraph(includeAllAttributes = true)
 public class Milestone implements Serializable {
 
     /**

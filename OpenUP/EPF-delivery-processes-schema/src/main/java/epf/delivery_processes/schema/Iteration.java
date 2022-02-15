@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.MapsId;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -31,6 +32,7 @@ import javax.persistence.NamedQuery;
         name = Iteration.ITERATIONS,
         query = "SELECT it FROM EPF_Iteration it JOIN it.parentActivities ph WHERE ph.name = :name"
 )
+@NamedEntityGraph(includeAllAttributes = true)
 public class Iteration implements Serializable {
     
     /**

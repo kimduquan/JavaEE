@@ -3,6 +3,7 @@ package epf.roles.schema;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -22,6 +23,7 @@ import epf.roles.schema.section.Staffing;
 @Schema(name = Roles.ROLE, title = "Role")
 @Entity(name = Roles.ROLE)
 @Table(schema = Roles.SCHEMA, name = "EPF_ROLE")
+@NamedEntityGraph(includeAllAttributes = true)
 public class Role implements Serializable {
 	
 	/**

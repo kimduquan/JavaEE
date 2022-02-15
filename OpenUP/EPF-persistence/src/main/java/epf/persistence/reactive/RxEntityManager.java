@@ -1,6 +1,9 @@
 package epf.persistence.reactive;
 
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletionStage;
+import javax.persistence.EntityGraph;
 import javax.persistence.criteria.CriteriaQuery;
 import org.hibernate.reactive.mutiny.Mutiny;
 import org.hibernate.reactive.mutiny.Mutiny.Session;
@@ -67,4 +70,21 @@ public class RxEntityManager implements EntityManager {
 		return new RxQuery<>(query);
 	}
 
+	@Override
+	public void detach(final Object entity) {
+		session.detach(entity);
+	}
+
+	@Override
+	public <T> CompletionStage<T> find(final Class<T> entityClass, final Object primaryKey, final Map<String, Object> properties) {
+		@SuppressWarnings("unchecked")
+		final EntityGraph<T> fetchGraph = (EntityGraph<T>) properties.get(FETCH_GRAPH);
+		Objects.requireNonNull(fetchGraph, FETCH_GRAPH);
+		return session.find(fetchGraph, primaryKey).subscribeAsCompletionStage();
+	}
+
+	@Override
+	public <T> EntityGraph<T> createEntityGraph(final Class<T> rootType) {
+		return session.createEntityGraph(rootType);
+	}
 }

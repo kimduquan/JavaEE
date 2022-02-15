@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -33,6 +34,7 @@ import javax.persistence.Index;
 @NamedQuery(
         name = Discipline.DISCIPLINES, 
         query = "SELECT d FROM EPF_Discipline AS d")
+@NamedEntityGraph(includeAllAttributes = true)
 public class Discipline implements Serializable {
 
     /**
