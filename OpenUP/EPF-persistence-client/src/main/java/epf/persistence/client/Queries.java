@@ -9,6 +9,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import epf.client.util.Client;
 import epf.naming.Naming;
+import javax.json.JsonArray;
 import javax.validation.constraints.NotBlank;
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
@@ -45,7 +46,7 @@ public interface Queries {
     @GET
     @Path("{schema}/{criteria: .+}")
     @Produces(MediaType.APPLICATION_JSON)
-    CompletionStage<Response> executeQuery(
+    CompletionStage<JsonArray> executeQuery(
     		@PathParam("schema")
             @NotBlank
             final String schema,

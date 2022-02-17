@@ -1,8 +1,7 @@
 package epf.persistence.ext;
 
-import java.util.Map;
 import java.util.concurrent.CompletionStage;
-import javax.persistence.EntityGraph;
+import java.util.function.Function;
 import javax.persistence.criteria.CriteriaQuery;
 
 /**
@@ -25,9 +24,10 @@ public interface EntityManager extends epf.util.AutoCloseable {
 	/**
 	 * @param <T>
 	 * @param entity
+	 * @param function
 	 * @return
 	 */
-	<T> CompletionStage<T> merge(final T entity);
+	<T> CompletionStage<T> merge(final T entity, final Function<T, T> function);
 	
 	/**
 	 * @param <T>
@@ -38,50 +38,42 @@ public interface EntityManager extends epf.util.AutoCloseable {
 	
 	/**
 	 * @param <T>
+	 * @param <R>
 	 * @param entityClass
 	 * @param primaryKey
+	 * @param function
 	 * @return
 	 */
-	<T> CompletionStage<T> find(final Class<T> entityClass, final Object primaryKey);
+	<T, R> CompletionStage<R> find(
+			final Class<T> entityClass, 
+			final Object primaryKey,
+			final Function<T, R> function);
 	
 	/**
-	 * @param <T>
-	 * @param entityClass
-	 * @param primaryKey
-	 * @param properties
-	 * @return
-	 */
-	<T> CompletionStage<T> find(final Class<T> entityClass, final Object primaryKey, final Map<String, Object> properties);
-	
-	/**
-	 * @param <T>
-	 * @param entity
-	 * @return
-	 */
-	<T> CompletionStage<Void> refresh(final T entity);
-	
-	/**
+	 * @param <R>
 	 * @param <T>
 	 * @param criteriaQuery
+	 * @param function
 	 * @return
 	 */
-	<R> Query<R> createQuery(final CriteriaQuery<R> criteriaQuery); 
+	<R, T> CompletionStage<T> createQuery(final CriteriaQuery<R> criteriaQuery, final Function<Query<R>, CompletionStage<T>> function); 
 	
 	/**
-	 * @param sqlString
-	 * @return
-	 */
-	<R> Query<R> createNativeQuery(final String sqlString);
-	
-	/**
-	 * @param entity
-	 */
-	void detach(final Object entity); 
-	
-	/**
+	 * @param <R>
 	 * @param <T>
-	 * @param rootType
+	 * @param sqlString
+	 * @param function
 	 * @return
 	 */
-	<T> EntityGraph<T> createEntityGraph(final Class<T> rootType);
+	<R, T> CompletionStage<T> createNativeQuery(final String sqlString, final Function<Query<R>, CompletionStage<T>> function);
+	
+	/**
+	 * 
+	 */
+	void joinTransaction();
+	
+	/**
+	 * @return
+	 */
+	boolean isJoinedToTransaction();
 }

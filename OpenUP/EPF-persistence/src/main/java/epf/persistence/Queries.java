@@ -6,22 +6,21 @@ import java.util.concurrent.CompletionStage;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.json.JsonArray;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.metamodel.EntityType;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.PathSegment;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import epf.naming.Naming;
 import epf.persistence.ext.EntityManager;
 import epf.persistence.ext.EntityManagerFactory;
-import epf.persistence.ext.Query;
 import epf.persistence.internal.Entity;
 import epf.persistence.internal.QueryBuilder;
 import epf.persistence.internal.util.EntityTypeUtil;
 import epf.persistence.internal.util.PrincipalUtil;
-import epf.util.concurrent.StageUtil;
+import epf.util.json.JsonUtil;
 import io.smallrye.common.annotation.NonBlocking;
 
 /**
@@ -47,23 +46,24 @@ public class Queries implements epf.persistence.client.Queries {
      * @param maxResults
      * @return
      */
-    CompletionStage<Response> executeQuery(
+    CompletionStage<JsonArray> executeQuery(
     		final EntityManager manager, 
     		final CriteriaQuery<Object> criteria,
     		final Integer firstResult,
             final Integer maxResults){
-    	final Query<Object> query = manager.createQuery(criteria);
-    	if(firstResult != null){
-            query.setFirstResult(firstResult);
-        }
-        if(maxResults != null){
-            query.setMaxResults(maxResults);
-        }
-        return query.getResultList().thenApply(resultList -> Response.ok(resultList).build());
+    	return manager.createQuery(criteria, query -> {
+        	if(firstResult != null){
+                query.setFirstResult(firstResult);
+            }
+            if(maxResults != null){
+                query.setMaxResults(maxResults);
+            }
+            return query.getResultList().thenApply(resultList -> JsonUtil.toJsonArray(resultList));
+    	});
     }
     
     @Override
-    public CompletionStage<Response> executeQuery(
+    public CompletionStage<JsonArray> executeQuery(
     		final String schema,
             final List<PathSegment> paths,
             final Integer firstResult,
@@ -91,7 +91,8 @@ public class Queries implements epf.persistence.client.Queries {
         			.build();
         	final Map<String, Object> props = PrincipalUtil.getClaims(context.getUserPrincipal());
         	props.put(Naming.Persistence.Internal.SCHEMA, schema);
-        	return StageUtil.stage(factory.createEntityManager(props), manager -> executeQuery(manager, criteria, firstResult, maxResults));
+        	final EntityManager manager = factory.createEntityManager(props);
+        	return executeQuery(manager, criteria, firstResult, maxResults);
         }
     	throw new NotFoundException();
     }

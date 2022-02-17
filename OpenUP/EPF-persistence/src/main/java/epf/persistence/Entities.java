@@ -4,22 +4,25 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.json.JsonObject;
 import javax.persistence.metamodel.EntityType;
 import javax.transaction.Transactional;
 import javax.validation.Validator;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import epf.naming.Naming;
 import epf.persistence.ext.EntityManager;
 import epf.persistence.ext.EntityManagerFactory;
 import epf.persistence.internal.util.PrincipalUtil;
-import epf.util.concurrent.StageUtil;
+import epf.util.json.JsonUtil;
+import epf.util.logging.LogManager;
 import epf.persistence.internal.util.EntityTypeUtil;
 import epf.persistence.internal.util.EntityUtil;
 import io.smallrye.common.annotation.NonBlocking;
@@ -33,6 +36,11 @@ import io.smallrye.common.annotation.NonBlocking;
 @ApplicationScoped
 @NonBlocking
 public class Entities implements epf.persistence.client.Entities {
+	
+	/**
+	 * 
+	 */
+	private transient static final Logger LOGGER = LogManager.getLogger(Entities.class.getName());
     
     /**
      * 
@@ -51,10 +59,16 @@ public class Entities implements epf.persistence.client.Entities {
      * @param entity
      * @return
      */
-    CompletionStage<Response> persist(final EntityManager manager, final Object entity){
+    CompletionStage<JsonObject> persist(final EntityManager manager, final Object entity){
+    	manager.joinTransaction();
     	return manager.persist(entity).thenApply(v -> {
-    		manager.detach(entity);
-    		return Response.ok(entity).build();
+    		try {
+				return JsonUtil.toJson(entity);
+			} 
+    		catch (Exception e) {
+				LOGGER.log(Level.SEVERE, "persist", e);
+				return JsonUtil.empty();
+			}
     	});
     }
     
@@ -65,11 +79,17 @@ public class Entities implements epf.persistence.client.Entities {
      * @param entity
      * @return
      */
-    CompletionStage<Response> merge(final EntityManager manager, final EntityType<?> entityType, final Object entityId, final Object entity){
-    	return manager.find(entityType.getJavaType(), entityId)
-    			.thenApply(oldEntity -> Optional.ofNullable(oldEntity).orElseThrow(NotFoundException::new))
-    			.thenCompose(oldEntity -> manager.merge(entity))
-    			.thenApply(e -> Response.ok().build());
+    CompletionStage<Void> merge(final EntityManager manager, final EntityType<?> entityType, final Object entityId, final Object entity){
+    	manager.joinTransaction();
+    	return manager.find(
+    			entityType.getJavaType(), 
+    			entityId, 
+    			foundEntity -> Optional.ofNullable(foundEntity).orElseThrow(NotFoundException::new)
+    			)
+    			.thenCompose(
+    					foundEntity -> manager.merge(entity, e -> e)
+    					)
+    			.thenAccept(obj -> {});
     }
     
     /**
@@ -78,11 +98,10 @@ public class Entities implements epf.persistence.client.Entities {
      * @param entityId
      * @return
      */
-    CompletionStage<Response> remove(final EntityManager manager, final EntityType<?> entityType, final Object entityId){
-    	return manager.find(entityType.getJavaType(), entityId)
-    			.thenApply(entity -> Optional.ofNullable(entity).orElseThrow(NotFoundException::new))
-    			.thenCompose(entity -> manager.remove(entity))
-    			.thenApply(v -> Response.ok().build());
+    CompletionStage<Void> remove(final EntityManager manager, final EntityType<?> entityType, final Object entityId){
+    	manager.joinTransaction();
+    	final CompletionStage<Object> oldEntity = manager.find(entityType.getJavaType(), entityId, entity -> Optional.ofNullable(entity).orElseThrow(NotFoundException::new));
+    	return oldEntity.thenCompose(entity -> manager.remove(entity));
     }
     
     /**
@@ -91,18 +110,26 @@ public class Entities implements epf.persistence.client.Entities {
      * @param entityId
      * @return
      */
-    CompletionStage<Response> find(final EntityManager manager, final EntityType<?> entityType, final Object entityId){
-    	return manager.find(entityType.getJavaType(), entityId)
-    			.thenApply(entity -> {
+    CompletionStage<JsonObject> find(final EntityManager manager, final EntityType<?> entityType, final Object entityId){
+    	return manager.find(
+    			entityType.getJavaType(), 
+    			entityId, 
+    			entity -> {
     				Optional.ofNullable(entity).orElseThrow(NotFoundException::new);
-    				manager.detach(entity);
-    				return Response.ok(entity).build();
-    			});
+		    		try {
+		        		return JsonUtil.toJson(entity);
+		        		}
+		    		catch (Exception e) {
+		    			LOGGER.log(Level.SEVERE, "find", e);
+						return JsonUtil.empty();
+						}
+		    		}
+    			);
     }
     
     @Override
     @Transactional
-    public CompletionStage<Response> persist(
+    public CompletionStage<JsonObject> persist(
     		final String schema,
             final String name,
             final SecurityContext context,
@@ -120,12 +147,13 @@ public class Entities implements epf.persistence.client.Entities {
         }
         final Map<String, Object> props = PrincipalUtil.getClaims(context.getUserPrincipal());
     	props.put(Naming.Persistence.Internal.SCHEMA, schema);
-    	return StageUtil.stage(factory.createEntityManager(props), manager -> persist(manager, entity));
+    	final EntityManager manager = factory.createEntityManager(props);
+    	return persist(manager, entity);
     }
     
     @Override
     @Transactional
-	public CompletionStage<Response> merge(
+	public CompletionStage<Void> merge(
 			final String schema,
 			final String name, 
 			final String id,
@@ -145,12 +173,13 @@ public class Entities implements epf.persistence.client.Entities {
     	final Object entityId = EntityUtil.getEntityId(entityType, id);
     	final Map<String, Object> props = PrincipalUtil.getClaims(context.getUserPrincipal());
     	props.put(Naming.Persistence.Internal.SCHEMA, schema);
-    	return StageUtil.stage(factory.createEntityManager(props), manager -> merge(manager, entityType, entityId, entity));
+    	final EntityManager manager = factory.createEntityManager(props);
+    	return merge(manager, entityType, entityId, entity);
 	}
     
     @Override
     @Transactional
-    public CompletionStage<Response> remove(
+    public CompletionStage<Void> remove(
     		final String schema,
     		final String name,
     		final String id,
@@ -165,12 +194,13 @@ public class Entities implements epf.persistence.client.Entities {
     	final Object entityId = EntityUtil.getEntityId(entityType, id);
     	final Map<String, Object> props = PrincipalUtil.getClaims(context.getUserPrincipal());
     	props.put(Naming.Persistence.Internal.SCHEMA, schema);
-    	return StageUtil.stage(factory.createEntityManager(props), manager -> remove(manager, entityType, entityId));
+    	final EntityManager manager = factory.createEntityManager(props);
+    	return remove(manager, entityType, entityId);
     }
     
 	@Override
 	@Transactional
-	public CompletionStage<Response> find(final String schema, final String name, final String id, final SecurityContext context) {
+	public CompletionStage<JsonObject> find(final String schema, final String name, final String id, final SecurityContext context) {
 		final EntityType<?> entityType = EntityTypeUtil.findEntityType(factory.getMetamodel(), name).orElseThrow(NotFoundException::new);
 		EntityTypeUtil.getSchema(entityType).ifPresent(entitySchema -> {
     		if(!entitySchema.equals(schema)) {
@@ -180,6 +210,7 @@ public class Entities implements epf.persistence.client.Entities {
 		final Object entityId = EntityUtil.getEntityId(entityType, id);
     	final Map<String, Object> props = PrincipalUtil.getClaims(context.getUserPrincipal());
     	props.put(Naming.Persistence.Internal.SCHEMA, schema);
-    	return StageUtil.stage(factory.createEntityManager(props), manager -> find(manager, entityType, entityId));
+    	final EntityManager manager = factory.createEntityManager(props);
+    	return find(manager, entityType, entityId);
 	}
 }

@@ -2,7 +2,6 @@ package epf.persistence.ext;
 
 import java.io.Closeable;
 import java.util.Map;
-import java.util.concurrent.CompletionStage;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.metamodel.Metamodel;
 
@@ -11,11 +10,12 @@ import javax.persistence.metamodel.Metamodel;
  *
  */
 public interface EntityManagerFactory extends Closeable {
-
+	
 	/**
+	 * @param props
 	 * @return
 	 */
-	CompletionStage<EntityManager> createEntityManager(final Map<String, Object> props);
+	EntityManager createEntityManager(final Map<String, Object> props);
 	
 	/**
 	 * @return
