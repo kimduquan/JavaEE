@@ -1,13 +1,27 @@
 package epf.persistence.reactive;
 
+import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.metamodel.Attribute;
+import javax.persistence.metamodel.EmbeddableType;
+import javax.persistence.metamodel.Attribute.PersistentAttributeType;
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.Metamodel;
+import javax.persistence.metamodel.PluralAttribute;
+import org.hibernate.reactive.mutiny.Mutiny.Session;
 import org.hibernate.reactive.mutiny.Mutiny.SessionFactory;
 import epf.persistence.ext.EntityManager;
 import epf.persistence.ext.Query;
+import epf.persistence.internal.util.EntityTypeUtil;
+import epf.util.logging.LogManager;
 import io.smallrye.mutiny.Uni;
 
 /**
@@ -15,6 +29,11 @@ import io.smallrye.mutiny.Uni;
  *
  */
 public class RxEntityManager implements EntityManager {
+	
+	/**
+	 * 
+	 */
+	private transient static final Logger LOGGER = LogManager.getLogger(RxEntityManager.class.getName());
 	
 	/**
 	 * 
@@ -39,6 +58,50 @@ public class RxEntityManager implements EntityManager {
 	RxEntityManager(final SessionFactory factory, final Optional<Object> ternant) {
 		this.ternant = ternant;
 		this.factory = factory;
+	}
+	
+	/**
+	 * @param <T>
+	 * @param entityType
+	 * @param session
+	 * @param entity
+	 * @return
+	 */
+	protected <T> Uni<T> fetchAttributes(final Metamodel metamodel, final Session session, final EntityType<?> entityType, final Uni<T> entity) {
+		Uni<T> result = entity;
+		for(PluralAttribute<?, ?, ?> attr : entityType.getPluralAttributes()) {
+			@SuppressWarnings("unchecked")
+			final Attribute<T, ?> attribute = (Attribute<T, ?>) attr;
+			result = result.chain(entityObject -> session.fetch(entityObject, attribute).map(r -> entityObject));
+		}
+		final List<EmbeddableType<?>> embeddedAttributes = 
+		entityType.getSingularAttributes()
+		.stream()
+		.filter(attr -> attr.getPersistentAttributeType() == PersistentAttributeType.EMBEDDED)
+		.map(attr -> metamodel.embeddable(attr.getJavaType()))
+		.collect(Collectors.toList());
+		for(EmbeddableType<?> embeddable : embeddedAttributes) {
+			for(PluralAttribute<?, ?, ?> attribute : embeddable.getPluralAttributes()) {
+				final Field field = (Field) attribute.getJavaMember();
+				field.setAccessible(true);
+				@SuppressWarnings("unchecked")
+				final Attribute<Object, ?> embeddedAttribute = (Attribute<Object, ?>) attribute;
+				result = result.chain(entityObject -> {
+					try {
+						field.setAccessible(true);
+						final Object object = field.get(entityObject);
+						if(object != null) {
+							return session.fetch(object, embeddedAttribute).map(r -> entityObject);
+						}
+					} 
+					catch (Exception e) {
+						LOGGER.log(Level.SEVERE, "fetchAttributes", e);
+					}
+					return Uni.createFrom().item(entityObject);
+				});
+			}
+		}
+		return result;
 	}
 
 	@Override
@@ -106,22 +169,21 @@ public class RxEntityManager implements EntityManager {
 
 	@Override
 	public <T, R> CompletionStage<R> find(final Class<T> entityClass, final Object primaryKey, final Function<T, R> function) {
+		final EntityType<?> entityType = EntityTypeUtil.findEntityType(factory.getMetamodel(), entityClass).get();
 		if(isJoinedToTransaction()) {
 			if(ternant.isPresent()) {
 				return factory.withTransaction(
 						ternant.get().toString(),
 						(session, transaction) -> {
-							//final String name = EntityGraphUtil.getEntityGraphName(entityClass);
-							//final EntityGraph<T> entityGraph = session.getEntityGraph(entityClass, name);
-							return session.find(entityClass, primaryKey).map(function);
+							final Uni<T> entity = session.find(entityClass, primaryKey);
+							return fetchAttributes(factory.getMetamodel(), session, entityType, entity).map(function);
 						})
 						.subscribeAsCompletionStage();
 			}
 			return factory.withTransaction(
 					(session, transaction) -> {
-						//final String name = EntityGraphUtil.getEntityGraphName(entityClass);
-						//final EntityGraph<T> entityGraph = session.getEntityGraph(entityClass, name);
-						return session.find(entityClass, primaryKey).map(function);
+						final Uni<T> entity = session.find(entityClass, primaryKey);
+						return fetchAttributes(factory.getMetamodel(), session, entityType, entity).map(function);
 						}
 					)
 					.subscribeAsCompletionStage();
@@ -129,15 +191,13 @@ public class RxEntityManager implements EntityManager {
 		else {
 			if(ternant.isPresent()) {
 				return factory.withSession(ternant.get().toString(), session -> {
-					//final String name = EntityGraphUtil.getEntityGraphName(entityClass);
-					//final EntityGraph<T> entityGraph = session.getEntityGraph(entityClass, name);
-					return session.find(entityClass, primaryKey).map(function);
+					final Uni<T> entity = session.find(entityClass, primaryKey);
+					return fetchAttributes(factory.getMetamodel(), session, entityType, entity).map(function);
 				}).subscribeAsCompletionStage();
 			}
 			return factory.withSession(session -> {
-				//final String name = EntityGraphUtil.getEntityGraphName(entityClass);
-				//final EntityGraph<T> entityGraph = session.getEntityGraph(entityClass, name);
-				return session.find(entityClass, primaryKey).map(function);
+				final Uni<T> entity = session.find(entityClass, primaryKey);
+				return fetchAttributes(factory.getMetamodel(), session, entityType, entity).map(function);
 			}).subscribeAsCompletionStage();
 		}
 	}

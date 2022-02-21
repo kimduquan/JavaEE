@@ -1,7 +1,6 @@
 package epf.persistence.internal.util;
 
 import java.util.Optional;
-
 import javax.persistence.Table;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
@@ -21,6 +20,18 @@ public interface EntityTypeUtil {
 		return metamodel.getEntities()
 				.stream()
 				.filter(type -> type.getName().equals(name))
+				.findFirst();
+	}
+	
+	/**
+	 * @param metamodel
+	 * @param cls
+	 * @return
+	 */
+	static Optional<EntityType<?>> findEntityType(final Metamodel metamodel, final Class<?> cls){
+		return metamodel.getEntities()
+				.stream()
+				.filter(type -> type.getJavaType().getName().equals(cls.getName()))
 				.findFirst();
 	}
 	
