@@ -1,7 +1,7 @@
 package epf.roles.schema;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 import javax.json.JsonObject;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -67,7 +67,7 @@ public class RoleSet implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "ROLE"),
             indexes = {@Index(columnList = "ROLE_SET")}
     )
-    private List<Role> roles;
+    private Set<Role> roles;
     
     /**
      * 
@@ -97,11 +97,11 @@ public class RoleSet implements Serializable {
     }
     
     @Name("Roles")
-    public List<Role> getRoles(){
+    public Set<Role> getRoles(){
         return roles;
     }
 
-    public void setRoles(final List<Role> roles){
+    public void setRoles(final Set<Role> roles){
         this.roles = roles;
     }
 

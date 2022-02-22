@@ -3,7 +3,7 @@ package epf.work_products.schema.section;
 import epf.work_products.schema.WorkProductSlot;
 import epf.work_products.schema.WorkProducts;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -42,7 +42,7 @@ public class Relationships implements Serializable {
                     name = "WORK_PRODUCT_SLOT"
             )
     )
-    private List<WorkProductSlot> fulfilledSlots;
+    private Set<WorkProductSlot> fulfilledSlots;
     
     /**
      * 
@@ -60,13 +60,13 @@ public class Relationships implements Serializable {
     		joinColumns = @JoinColumn(name = "ARTIFACT"),
     		indexes = {@Index(columnList = "ARTIFACT")})
     @Column(name = "ROLE", nullable = false)
-    private List<String> modifiedBy;
+    private Set<String> modifiedBy;
 
-    public List<WorkProductSlot> getFulfilledSlots() {
+    public Set<WorkProductSlot> getFulfilledSlots() {
         return fulfilledSlots;
     }
 
-    public void setFulfilledSlots(final List<WorkProductSlot> fulfilledSlots) {
+    public void setFulfilledSlots(final Set<WorkProductSlot> fulfilledSlots) {
         this.fulfilledSlots = fulfilledSlots;
     }
     
@@ -80,11 +80,11 @@ public class Relationships implements Serializable {
     }
     
     @Name("Modified_By")
-    public List<String> getModifiedBy(){
+    public Set<String> getModifiedBy(){
         return modifiedBy;
     }
 
-    public void setModifiedBy(final List<String> modifiedBy) {
+    public void setModifiedBy(final Set<String> modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
 }

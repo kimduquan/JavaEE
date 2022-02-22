@@ -1,7 +1,7 @@
 package epf.work_products.schema;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -66,7 +66,7 @@ public class Domain implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "ARTIFACT"),
             indexes = {@Index(columnList = "DOMAIN")}
     )
-    private List<Artifact> workProducts;
+    private Set<Artifact> workProducts;
     
     @Override
     public String toString() {
@@ -90,11 +90,11 @@ public class Domain implements Serializable {
     }
     
     @Name("Work_Products")
-    public List<Artifact> getWorkProducts(){
+    public Set<Artifact> getWorkProducts(){
         return workProducts;
     }
 
-    public void setWorkProducts(final List<Artifact> workProducts) {
+    public void setWorkProducts(final Set<Artifact> workProducts) {
         this.workProducts = workProducts;
     }
 }

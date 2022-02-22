@@ -1,7 +1,7 @@
 package epf.delivery_processes.schema;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -85,7 +85,7 @@ public class Iteration implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "ACTIVITY")},
             indexes = {@Index(columnList = "ITERATION")}
     )
-    private List<Activity> activities;
+    private Set<Activity> activities;
     
     @Override
     public String toString() {
@@ -124,11 +124,11 @@ public class Iteration implements Serializable {
         this.parentActivities = parentActivities;
     }
 
-    public List<Activity> getActivities() {
+    public Set<Activity> getActivities() {
         return activities;
     }
 
-    public void setActivities(final List<Activity> activities) {
+    public void setActivities(final Set<Activity> activities) {
         this.activities = activities;
     }
 }

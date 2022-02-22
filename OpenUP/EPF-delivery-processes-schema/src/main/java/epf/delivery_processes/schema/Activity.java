@@ -1,7 +1,7 @@
 package epf.delivery_processes.schema;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
@@ -67,7 +67,7 @@ public class Activity implements Serializable {
     		joinColumns = @JoinColumn(name = "ACTIVITY"),
     		indexes = {@Index(columnList = "ACTIVITY")})
     @Column(name = "TASK")
-    private List<String> tasks;
+    private Set<String> tasks;
     
     @Override
     public String toString() {
@@ -98,11 +98,11 @@ public class Activity implements Serializable {
         this.parentActivities = parentActivities;
     }
 
-    public List<String> getTasks() {
+    public Set<String> getTasks() {
         return tasks;
     }
 
-    public void setTasks(final List<String> tasks) {
+    public void setTasks(final Set<String> tasks) {
         this.tasks = tasks;
     }
 }

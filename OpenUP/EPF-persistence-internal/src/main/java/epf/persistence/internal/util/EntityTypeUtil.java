@@ -28,10 +28,12 @@ public interface EntityTypeUtil {
 	 * @param cls
 	 * @return
 	 */
-	static Optional<EntityType<?>> findEntityType(final Metamodel metamodel, final Class<?> cls){
+	@SuppressWarnings("unchecked")
+	static <T> Optional<EntityType<T>> findEntityType(final Metamodel metamodel, final Class<T> cls){
 		return metamodel.getEntities()
 				.stream()
 				.filter(type -> type.getJavaType().getName().equals(cls.getName()))
+				.map(type -> (EntityType<T>)type)
 				.findFirst();
 	}
 	
