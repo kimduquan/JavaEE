@@ -48,8 +48,8 @@ public interface OTPSecurity {
             @QueryParam("url")
             @NotNull
             final URL url,
-            @MatrixParam(Naming.Management.TERNANT)
-            final String ternant
+            @MatrixParam(Naming.Management.TENANT)
+            final String tenant
     ) throws Exception;
     
     /**

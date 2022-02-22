@@ -217,7 +217,7 @@ public interface Naming {
 		/**
 		 * 
 		 */
-		String TERNANT = "ternant";
+		String TENANT = "tenant";
 	}
 	
 	/**
@@ -555,10 +555,7 @@ public interface Naming {
 	     *
 	     */
 	    interface Internal {
-	    	/**
-	    	 * 
-	    	 */
-	    	String USERNAME_TERNANT_SEPARATOR = "@";
+	    	
 	    }
 	    
 	    /**

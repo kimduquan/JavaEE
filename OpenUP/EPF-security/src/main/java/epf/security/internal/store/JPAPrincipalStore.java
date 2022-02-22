@@ -90,7 +90,7 @@ public class JPAPrincipalStore implements PrincipalStore {
 	 * @return
 	 */
 	protected JPAPrincipal putPrincipaḷ̣̣̣̣(final Credential credential, final EntityManagerFactory factory, final EntityManager manager) {
-		final JPAPrincipal principal = new JPAPrincipal(credential.getTernant(), credential.getCaller(), factory, manager);
+		final JPAPrincipal principal = new JPAPrincipal(credential.getTenant(), credential.getCaller(), factory, manager);
 		principals.put(credential.getCaller(), principal);
 		credentials.put(credential.getCaller(), credential);
 		principalCredentials.put(principal.getName(), credential);

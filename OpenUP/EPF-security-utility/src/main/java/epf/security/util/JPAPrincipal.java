@@ -24,17 +24,17 @@ public class JPAPrincipal extends CallerPrincipal implements AutoCloseable {
 	/**
 	 * 
 	 */
-	private transient final Optional<String> ternant;
+	private transient final Optional<String> tenant;
 
 	/**
-	 * @param ternant
+	 * @param tenant
 	 * @param name
 	 * @param factory
 	 * @param manager
 	 */
-	public JPAPrincipal(final Optional<String> ternant, final String name, final EntityManagerFactory factory, final EntityManager manager) {
+	public JPAPrincipal(final Optional<String> tenant, final String name, final EntityManagerFactory factory, final EntityManager manager) {
 		super(name);
-		this.ternant = ternant;
+		this.tenant = tenant;
 		this.factory = factory;
 		this.defaultManager = manager;
 	}
@@ -45,8 +45,8 @@ public class JPAPrincipal extends CallerPrincipal implements AutoCloseable {
 		factory.close();
 	}
 
-	public Optional<String> getTernant() {
-		return ternant;
+	public Optional<String> getTenant() {
+		return tenant;
 	}
 	
 	public EntityManagerFactory getFactory() {

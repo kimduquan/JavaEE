@@ -81,17 +81,17 @@ public interface RequestUtil {
 	 * @param uriInfo
 	 * @return
 	 */
-	static Optional<String> getTernantParameter(final UriInfo uriInfo) {
-		Optional<String> ternant = Optional.empty();
+	static Optional<String> getTenantParameter(final UriInfo uriInfo) {
+		Optional<String> tenant = Optional.empty();
 		final List<PathSegment> segments = uriInfo.getPathSegments();
 		if(segments != null && segments.size() > 0) {
 			final PathSegment firstSegment = segments.get(0);
 			final MultivaluedMap<String, String> matrixParams = firstSegment.getMatrixParameters();
 			if(matrixParams != null) {
-				ternant = Optional.ofNullable(matrixParams.getFirst(Naming.Management.TERNANT));
+				tenant = Optional.ofNullable(matrixParams.getFirst(Naming.Management.TENANT));
 			}
 		}
-		return ternant;
+		return tenant;
 	}
 	
 	/**

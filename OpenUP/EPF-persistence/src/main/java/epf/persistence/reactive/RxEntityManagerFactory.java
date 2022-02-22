@@ -49,7 +49,7 @@ public class RxEntityManagerFactory implements EntityManagerFactory {
 
 	@Override
 	public EntityManager createEntityManager(final Map<String, Object> props) {
-		final Optional<Object> ternant = MapUtil.get(props, Naming.Management.TERNANT);
-		return new RxEntityManager(sessionFactory, ternant);
+		final Optional<Object> tenant = MapUtil.get(props, Naming.Management.TENANT);
+		return new RxEntityManager(sessionFactory, tenant);
 	}
 }

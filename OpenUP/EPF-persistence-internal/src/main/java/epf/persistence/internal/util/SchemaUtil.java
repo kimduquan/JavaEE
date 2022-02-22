@@ -23,7 +23,7 @@ public interface SchemaUtil {
 	/**
 	 * 
 	 */
-	String TERNANT_ID_FORMAT = "%s_%s";
+	String TENANT_ID_FORMAT = "%s_%s";
 	
 	/**
 	 * @param <T>
@@ -113,10 +113,10 @@ public interface SchemaUtil {
 	
 	/**
 	 * @param schema
-	 * @param ternant
+	 * @param tenant
 	 * @return
 	 */
-	static String formatTernantId(final String schema, final String ternant) {
-		return String.format(TERNANT_ID_FORMAT, schema, ternant);
+	static String formatTenantId(final String schema, final String tenant) {
+		return String.format(TENANT_ID_FORMAT, schema, tenant);
 	}
 }

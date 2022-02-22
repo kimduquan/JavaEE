@@ -23,6 +23,6 @@ public class EPFSqlClientPool extends DefaultSqlClientPool {
 	
 	@Override
 	protected Pool getTenantPool(final String tenantId) {
-		return clientPool.computeIfAbsent(tenantId, ternant -> getPool());
+		return clientPool.computeIfAbsent(tenantId, tenant -> getPool());
 	}
 }

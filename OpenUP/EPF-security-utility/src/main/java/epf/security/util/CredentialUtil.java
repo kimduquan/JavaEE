@@ -11,18 +11,18 @@ import epf.util.StringUtil;
 public interface CredentialUtil {
 
 	/**
-	 * @param ternant
+	 * @param tenant
 	 * @param username
 	 * @param passwordText
 	 * @return
 	 * @throws Exception
 	 */
-	static Credential newCredential(final String ternant, final String username, final String passwordText) throws Exception {
+	static Credential newCredential(final String tenant, final String username, final String passwordText) throws Exception {
 		final byte[] passwordBytes = PasswordUtil.getPasswordHash(username.toUpperCase(), passwordText.toCharArray(), "SHA-256");
     	final String passwordHash = StringUtil.toHex(passwordBytes, StandardCharsets.ISO_8859_1);
     	final String encryptPassword = CryptoUtil.encrypt(passwordHash);
     	final Password password = new Password(encryptPassword);
-    	final Credential credential = new Credential(ternant, username, password);
+    	final Credential credential = new Credential(tenant, username, password);
     	return credential;
 	}
 }

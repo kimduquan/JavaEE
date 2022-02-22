@@ -13,7 +13,7 @@ public class Credential {
 	/**
 	 * 
 	 */
-	private final Optional<String> ternant;
+	private final Optional<String> tenant;
 	
 	/**
 	 * 
@@ -21,17 +21,17 @@ public class Credential {
 	private transient UsernamePasswordCredential credential;
 
 	/**
-	 * @param ternant
+	 * @param tenant
 	 * @param callerName
 	 * @param password
 	 */
-	public Credential(final String ternant, final String callerName, final Password password) {
+	public Credential(final String tenant, final String callerName, final Password password) {
 		credential = new UsernamePasswordCredential(callerName, password);
-		this.ternant = Optional.ofNullable(ternant);
+		this.tenant = Optional.ofNullable(tenant);
 	}
 	
-	public Optional<String> getTernant() {
-		return ternant;
+	public Optional<String> getTenant() {
+		return tenant;
 	}
 	
 	public String getCaller() {

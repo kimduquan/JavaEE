@@ -203,13 +203,13 @@ public class Security implements epf.security.client.Security, epf.security.clie
     
     /**
      * @param claims
-     * @param ternant
+     * @param tenant
      * @return
      */
-    Map<String, Object> buildClaims(final Map<String, Object> claims, final String ternant){
+    Map<String, Object> buildClaims(final Map<String, Object> claims, final String tenant){
     	final Map<String, Object> newClaims = new HashMap<>(claims);
-    	if(ternant != null) {
-        	newClaims.put(Naming.Management.TERNANT, ternant);
+    	if(tenant != null) {
+        	newClaims.put(Naming.Management.TENANT, tenant);
     	}
     	return newClaims;
     }
@@ -220,11 +220,11 @@ public class Security implements epf.security.client.Security, epf.security.clie
             final String username,
             final String passwordText,
             final URL url,
-            final String ternant,
+            final String tenant,
             final List<String> forwardedHost,
             final List<String> forwardedPort,
             final List<String> forwardedProto) throws Exception {
-    	final Credential credential = CredentialUtil.newCredential(ternant, username, passwordText);
+    	final Credential credential = CredentialUtil.newCredential(tenant, username, passwordText);
     	return identityStore.validate(credential)
     			.thenApply(result -> {
     				if(Status.VALID.equals(result.getStatus())){
@@ -238,7 +238,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 								principalStore.getCallerClaims(principal), 
 								(groups, claims) -> {
 									final Set<String> audience = buildAudience(url, forwardedHost, forwardedPort, forwardedProto);
-									final Map<String, Object> newClaims = buildClaims(claims, ternant);
+									final Map<String, Object> newClaims = buildClaims(claims, tenant);
 									final Token token = newToken(principal.getName(), groups, audience, newClaims);
 									final TokenBuilder builder = new TokenBuilder(token, privateKey, encryptKey);
 									final Token newToken = builder.build();
@@ -306,8 +306,8 @@ public class Security implements epf.security.client.Security, epf.security.clie
 			final String username, 
 			final String passwordText, 
 			final  URL url,
-			final String ternant) throws Exception {
-		final Credential credential = CredentialUtil.newCredential(ternant, username, passwordText);
+			final String tenant) throws Exception {
+		final Credential credential = CredentialUtil.newCredential(tenant, username, passwordText);
     	return identityStore.validate(credential)
     			.thenApply(result -> {
     				if(Status.VALID.equals(result.getStatus())) {

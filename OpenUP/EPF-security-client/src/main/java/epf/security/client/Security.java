@@ -74,8 +74,8 @@ public interface Security {
             @QueryParam(URL)
             @NotNull
             final URL url,
-            @MatrixParam(Naming.Management.TERNANT)
-            final String ternant,
+            @MatrixParam(Naming.Management.TENANT)
+            final String tenant,
             @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_HOST)
             final List<String> forwardedHost,
             @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PORT)

@@ -89,9 +89,9 @@ public class JPAIdentityStore implements IdentityStore {
 		final Map<String, Object> props = new ConcurrentHashMap<>();
         props.put(Naming.Persistence.JDBC.JDBC_USER, credential.getCaller());
         props.put(Naming.Persistence.JDBC.JDBC_PASSWORD, String.valueOf(credential.getPassword().getValue()));
-        credential.getTernant().ifPresent(ternant -> {
-        	final String ternantUrl = JdbcUtil.formatTernantUrl(jdbcUrl, ternant.toString());
-        	props.put(Naming.Persistence.JDBC.JDBC_URL, ternantUrl);
+        credential.getTenant().ifPresent(tenant -> {
+        	final String tenantUrl = JdbcUtil.formatTenantUrl(jdbcUrl, tenant.toString());
+        	props.put(Naming.Persistence.JDBC.JDBC_URL, tenantUrl);
         });
         return executor.supplyAsync(() -> Persistence.createEntityManagerFactory(PERSISTENCE_UNIT, props))
         		.thenApply(factory -> {

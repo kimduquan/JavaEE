@@ -48,15 +48,15 @@ public class RxEntityManager implements EntityManager {
 	/**
 	 * 
 	 */
-	private transient final Optional<Object> ternant;
+	private transient final Optional<Object> tenant;
 	
 	/**
 	 * @param session
 	 * @param factory
-	 * @param ternant
+	 * @param tenant
 	 */
-	RxEntityManager(final SessionFactory factory, final Optional<Object> ternant) {
-		this.ternant = ternant;
+	RxEntityManager(final SessionFactory factory, final Optional<Object> tenant) {
+		this.tenant = tenant;
 		this.factory = factory;
 	}
 	
@@ -107,9 +107,9 @@ public class RxEntityManager implements EntityManager {
 	@Override
 	public <T> CompletionStage<Void> persist(final T entity) {
 		if(isJoinedToTransaction()) {
-			if(ternant.isPresent()) {
+			if(tenant.isPresent()) {
 				return factory.withTransaction(
-						ternant.get().toString(), 
+						tenant.get().toString(), 
 						(session, transaction) -> session.persist(entity)
 						)
 						.subscribeAsCompletionStage();
@@ -118,8 +118,8 @@ public class RxEntityManager implements EntityManager {
 					.subscribeAsCompletionStage();
 		}
 		else {
-			if(ternant.isPresent()) {
-				return factory.withSession(ternant.get().toString(), session -> session.persist(entity)).subscribeAsCompletionStage();
+			if(tenant.isPresent()) {
+				return factory.withSession(tenant.get().toString(), session -> session.persist(entity)).subscribeAsCompletionStage();
 			}
 			return factory.withSession(session -> session.persist(entity)).subscribeAsCompletionStage();
 		}
@@ -128,9 +128,9 @@ public class RxEntityManager implements EntityManager {
 	@Override
 	public <T> CompletionStage<T> merge(final T entity, final Function<T, T> function) {
 		if(isJoinedToTransaction()) {
-			if(ternant.isPresent()) {
+			if(tenant.isPresent()) {
 				return factory.withTransaction(
-						ternant.get().toString(), 
+						tenant.get().toString(), 
 						(session, transaction) -> session.merge(entity).map(function)
 						)
 						.subscribeAsCompletionStage();
@@ -139,8 +139,8 @@ public class RxEntityManager implements EntityManager {
 					.subscribeAsCompletionStage();
 		}
 		else {
-			if(ternant.isPresent()) {
-				return factory.withSession(ternant.get().toString(), session -> session.merge(entity).map(function)).subscribeAsCompletionStage();
+			if(tenant.isPresent()) {
+				return factory.withSession(tenant.get().toString(), session -> session.merge(entity).map(function)).subscribeAsCompletionStage();
 			}
 			return factory.withSession(session -> session.merge(entity).map(function)).subscribeAsCompletionStage();
 		}
@@ -149,9 +149,9 @@ public class RxEntityManager implements EntityManager {
 	@Override
 	public <T> CompletionStage<Void> remove(final T entity) {
 		if(isJoinedToTransaction()) {
-			if(ternant.isPresent()) {
+			if(tenant.isPresent()) {
 				return factory.withTransaction(
-						ternant.get().toString(), 
+						tenant.get().toString(), 
 						(session, transaction) -> session.remove(entity)
 						)
 						.subscribeAsCompletionStage();
@@ -160,8 +160,8 @@ public class RxEntityManager implements EntityManager {
 					.subscribeAsCompletionStage();
 		}
 		else {
-			if(ternant.isPresent()) {
-				return factory.withSession(ternant.get().toString(), session -> session.remove(entity)).subscribeAsCompletionStage();
+			if(tenant.isPresent()) {
+				return factory.withSession(tenant.get().toString(), session -> session.remove(entity)).subscribeAsCompletionStage();
 			}
 			return factory.withSession(session -> session.remove(entity)).subscribeAsCompletionStage();
 		}
@@ -171,9 +171,9 @@ public class RxEntityManager implements EntityManager {
 	public <T, R> CompletionStage<R> find(final Class<T> entityClass, final Object primaryKey, final Function<T, R> function) {
 		final EntityType<?> entityType = EntityTypeUtil.findEntityType(factory.getMetamodel(), entityClass).get();
 		if(isJoinedToTransaction()) {
-			if(ternant.isPresent()) {
+			if(tenant.isPresent()) {
 				return factory.withTransaction(
-						ternant.get().toString(),
+						tenant.get().toString(),
 						(session, transaction) -> {
 							final Uni<T> entity = session.find(entityClass, primaryKey);
 							return fetchAttributes(factory.getMetamodel(), session, entityType, entity).map(function);
@@ -189,8 +189,8 @@ public class RxEntityManager implements EntityManager {
 					.subscribeAsCompletionStage();
 		}
 		else {
-			if(ternant.isPresent()) {
-				return factory.withSession(ternant.get().toString(), session -> {
+			if(tenant.isPresent()) {
+				return factory.withSession(tenant.get().toString(), session -> {
 					final Uni<T> entity = session.find(entityClass, primaryKey);
 					return fetchAttributes(factory.getMetamodel(), session, entityType, entity).map(function);
 				}).subscribeAsCompletionStage();
@@ -210,9 +210,9 @@ public class RxEntityManager implements EntityManager {
 	@Override
 	public <R, T> CompletionStage<T> createQuery(final CriteriaQuery<R> criteriaQuery, final Function<Query<R>, CompletionStage<T>> function) {
 		if(isJoinedToTransaction()) {
-			if(ternant.isPresent()) {
+			if(tenant.isPresent()) {
 				return factory.withTransaction(
-						ternant.get().toString(), 
+						tenant.get().toString(), 
 						(session, transaction) -> {
 							final Query<R> query = new RxQuery<>(session.createQuery(criteriaQuery));
 							return Uni.createFrom().completionStage(function.apply(query));
@@ -225,9 +225,9 @@ public class RxEntityManager implements EntityManager {
 			}).subscribeAsCompletionStage();
 		}
 		else {
-			if(ternant.isPresent()) {
+			if(tenant.isPresent()) {
 				return factory.withSession(
-						ternant.get().toString(), 
+						tenant.get().toString(), 
 						session -> {
 							final Query<R> query = new RxQuery<>(session.createQuery(criteriaQuery));
 							return Uni.createFrom().completionStage(function.apply(query));
@@ -248,9 +248,9 @@ public class RxEntityManager implements EntityManager {
 	@Override
 	public <R, T> CompletionStage<T> createNativeQuery(final String sqlString, final Function<Query<R>, CompletionStage<T>> function) {
 		if(isJoinedToTransaction()) {
-			if(ternant.isPresent()) {
+			if(tenant.isPresent()) {
 				return factory.withTransaction(
-						ternant.get().toString(), 
+						tenant.get().toString(), 
 						(session, transaction) -> {
 							final Query<R> query = new RxQuery<>(session.createNativeQuery(sqlString));
 							return Uni.createFrom().completionStage(function.apply(query));
@@ -263,9 +263,9 @@ public class RxEntityManager implements EntityManager {
 			}).subscribeAsCompletionStage();
 		}
 		else {
-			if(ternant.isPresent()) {
+			if(tenant.isPresent()) {
 				return factory.withSession(
-						ternant.get().toString(), 
+						tenant.get().toString(), 
 						session -> {
 							final Query<R> query = new RxQuery<>(session.createNativeQuery(sqlString));
 							return Uni.createFrom().completionStage(function.apply(query));
