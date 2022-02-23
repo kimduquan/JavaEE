@@ -77,13 +77,6 @@ public class Registry implements epf.client.registry.Registry {
 	 * 
 	 */
 	@Inject
-	@ConfigProperty(name = Naming.Gateway.GATEWAY_URL)
-	private transient URI gatewayUrl;
-	
-	/**
-	 * 
-	 */
-	@Inject
 	@ConfigProperty(name = Naming.Registry.REGISTRY_URL)
 	private transient URI registryUrl;
 	
