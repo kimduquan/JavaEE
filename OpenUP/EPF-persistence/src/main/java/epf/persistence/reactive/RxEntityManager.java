@@ -120,18 +120,18 @@ public class RxEntityManager implements EntityManager {
 			if(tenant.isPresent()) {
 				return factory.withTransaction(
 						tenant.get().toString(), 
-						(session, transaction) -> session.remove(entity)
+						(session, transaction) -> session.remove(session.merge(entity))
 						)
 						.subscribeAsCompletionStage();
 			}
-			return factory.withTransaction((session, transaction) -> session.remove(entity))
+			return factory.withTransaction((session, transaction) -> session.remove(session.merge(entity)))
 					.subscribeAsCompletionStage();
 		}
 		else {
 			if(tenant.isPresent()) {
-				return factory.withSession(tenant.get().toString(), session -> session.remove(entity)).subscribeAsCompletionStage();
+				return factory.withSession(tenant.get().toString(), session -> session.remove(session.merge(entity))).subscribeAsCompletionStage();
 			}
-			return factory.withSession(session -> session.remove(entity)).subscribeAsCompletionStage();
+			return factory.withSession(session -> session.remove(session.merge(entity))).subscribeAsCompletionStage();
 		}
 	}
 
