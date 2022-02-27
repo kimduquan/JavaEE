@@ -3,6 +3,7 @@ package epf.tasks.schema;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.NamedEntityGraph;
 import javax.persistence.Table;
@@ -13,6 +14,7 @@ import javax.json.JsonObject;
 import javax.persistence.Embedded;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.utility.EntityListener;
 import epf.tasks.schema.section.MoreInformation;
 import epf.tasks.schema.section.Relationships;
 
@@ -31,6 +33,7 @@ import epf.tasks.schema.section.Relationships;
     "outputs"
 })
 @NamedEntityGraph(includeAllAttributes = true)
+@EntityListeners(EntityListener.class)
 public class Task implements Serializable {
 
     /**

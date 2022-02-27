@@ -1,17 +1,17 @@
-/**
- * 
- */
 package epf.net.schema;
 
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
+import epf.schema.utility.EntityListener;
 
 /**
  * @author PC
@@ -21,6 +21,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Schema(name = Net.URL, title = "URL")
 @Entity(name = Net.URL)
 @Table(schema = Net.SCHEMA, name = "URL")
+@EntityListeners(EntityListener.class)
 public class URL implements Serializable {
 
 	/**

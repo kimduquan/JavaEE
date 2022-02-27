@@ -4,6 +4,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.NamedEntityGraph;
 import javax.persistence.Table;
@@ -15,6 +16,7 @@ import epf.delivery_processes.schema.section.Description;
 import epf.delivery_processes.schema.section.TeamAllocation;
 import epf.delivery_processes.schema.section.WorkBreakdownStructure;
 import epf.delivery_processes.schema.section.WorkProductUsage;
+import epf.schema.utility.EntityListener;
 
 /**
  *
@@ -25,6 +27,7 @@ import epf.delivery_processes.schema.section.WorkProductUsage;
 @Entity(name = DeliveryProcesses.CAPABILITY_PATTERN)
 @Table(schema = DeliveryProcesses.SCHEMA, name = "CAPABILITY_PATTERN")
 @NamedEntityGraph(includeAllAttributes = true)
+@EntityListeners(EntityListener.class)
 public class CapabilityPattern implements Serializable {
 	
     /**

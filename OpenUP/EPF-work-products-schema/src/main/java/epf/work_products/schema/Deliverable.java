@@ -3,6 +3,7 @@ package epf.work_products.schema;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
@@ -13,6 +14,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.utility.EntityListener;
 
 /**
  *
@@ -23,6 +25,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Entity(name = WorkProducts.DELIVERABLE)
 @Table(schema = WorkProducts.SCHEMA, name = "DELIVERABLE")
 @NamedEntityGraph(includeAllAttributes = true)
+@EntityListeners(EntityListener.class)
 public class Deliverable implements Serializable {
     
     /**

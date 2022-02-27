@@ -2,6 +2,7 @@ package epf.roles.schema;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.NamedEntityGraph;
 import javax.persistence.Table;
@@ -15,6 +16,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.roles.schema.section.MoreInformation;
 import epf.roles.schema.section.Relationships;
 import epf.roles.schema.section.Staffing;
+import epf.schema.utility.EntityListener;
 /**
  *
  * @author FOXCONN
@@ -24,6 +26,7 @@ import epf.roles.schema.section.Staffing;
 @Entity(name = Roles.ROLE)
 @Table(schema = Roles.SCHEMA, name = "EPF_ROLE")
 @NamedEntityGraph(includeAllAttributes = true)
+@EntityListeners(EntityListener.class)
 public class Role implements Serializable {
 	
 	/**

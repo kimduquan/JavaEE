@@ -6,6 +6,7 @@ import javax.json.JsonObject;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -17,6 +18,7 @@ import javax.validation.constraints.NotBlank;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.utility.EntityListener;
 import javax.persistence.Index;
 
 /**
@@ -35,6 +37,7 @@ import javax.persistence.Index;
         name = Discipline.DISCIPLINES, 
         query = "SELECT d FROM EPF_Discipline AS d")
 @NamedEntityGraph(includeAllAttributes = true)
+@EntityListeners(EntityListener.class)
 public class Discipline implements Serializable {
 
     /**

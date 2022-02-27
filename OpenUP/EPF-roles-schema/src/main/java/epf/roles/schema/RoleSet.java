@@ -5,6 +5,7 @@ import java.util.Set;
 import javax.json.JsonObject;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -16,6 +17,7 @@ import javax.validation.constraints.NotBlank;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.utility.EntityListener;
 import javax.persistence.Index;
 
 /**
@@ -30,6 +32,7 @@ import javax.persistence.Index;
         name = RoleSet.ROLES, 
         query = "SELECT rs FROM EPF_RoleSet AS rs")
 @NamedEntityGraph(includeAllAttributes = true)
+@EntityListeners(EntityListener.class)
 public class RoleSet implements Serializable {
 
     /**

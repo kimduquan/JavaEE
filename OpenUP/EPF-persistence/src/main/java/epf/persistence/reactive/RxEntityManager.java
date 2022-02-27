@@ -68,9 +68,6 @@ public class RxEntityManager implements EntityManager {
 					subgraph.addAttributeNodes(embeddableAttribute.getName());
 				}
 			}
-			else {
-				entityGraph.addAttributeNodes(attribute.getName());
-			}
 		}
 		return session.find(entityGraph, primaryKey);
 	}
