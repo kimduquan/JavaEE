@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 import javax.security.enterprise.CallerPrincipal;
 import javax.security.enterprise.credential.Password;
 import javax.transaction.Transactional;
@@ -19,6 +20,7 @@ import epf.naming.Naming;
 import epf.security.internal.sql.NativeQueries;
 import epf.security.schema.Principal;
 import epf.security.util.Credential;
+import epf.security.util.CredentialUtil;
 import epf.security.util.IdentityStore;
 import epf.security.util.JPAPrincipal;
 import epf.security.util.PrincipalStore;
@@ -54,24 +56,26 @@ public class JPAPrincipalStore implements PrincipalStore {
 
 	@Override
 	@Transactional
-	public CompletionStage<Void> setCallerPassword(final CallerPrincipal callerPrincipal, final Password password) {
+	public CompletionStage<Void> setCallerPassword(final CallerPrincipal callerPrincipal, final Password password) throws Exception{
 		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
 		final JPAPrincipal principal = (JPAPrincipal)callerPrincipal;
-		return executor.supplyAsync(() -> principal.getFactory().createEntityManager())
-				.thenApply(manager -> manager.createQuery(NativeQueries.SET_PASSWORD))
-				.thenApply(query -> query.setParameter(1, new String(password.getValue())))
-				.thenApply(query -> query.executeUpdate())
-				.thenAccept(i -> {
-					principal.close();
-					final Map<String, Object> props = principal.getFactory().getProperties();
-					props.put(Naming.Persistence.JDBC.JDBC_PASSWORD, String.valueOf(password.getValue()));
-					final EntityManagerFactory factory = Persistence.createEntityManagerFactory(IdentityStore.PERSISTENCE_UNIT, props);
-					final EntityManager manager = factory.createEntityManager();
-					principal.reset(factory, manager);
-					MapUtil.get(principalCredentials, principal.getName()).ifPresent(credential -> {
-						credential.setPassword(password);
-					});
-				});
+		final EntityManager manager = principal.getFactory().createEntityManager();
+		manager.joinTransaction();
+		final Query query = manager.createNativeQuery(NativeQueries.SET_PASSWORD);
+		query.setParameter(1, new String(password.getValue()));
+		query.executeUpdate();
+		final Optional<Credential> oldCredential = MapUtil.get(principalCredentials, principal.getName());
+		final String passwordHash = CredentialUtil.encryptPassword(oldCredential.get().getCaller(), new String(password.getValue()));
+		return executor.supplyAsync(() -> {
+			final Map<String, Object> props = new HashMap<>(principal.getFactory().getProperties());
+			principal.close();
+			props.put(Naming.Persistence.JDBC.JDBC_PASSWORD, passwordHash);
+			final EntityManagerFactory factory = Persistence.createEntityManagerFactory(IdentityStore.PERSISTENCE_UNIT, props);
+			final EntityManager newManager = factory.createEntityManager();
+			principal.reset(factory, newManager);
+			oldCredential.get().setPassword(new Password(passwordHash));
+			return null;
+		});
 	}
 
 	@Override
@@ -80,7 +84,13 @@ public class JPAPrincipalStore implements PrincipalStore {
 		final JPAPrincipal principal = (JPAPrincipal) callerPrincipal;
 		return executor.supplyAsync(() -> principal.getFactory().createEntityManager())
 		.thenApply(manager -> manager.find(Principal.class, principal.getName()))
-		.thenApply(p -> p.getClaims() != null ? new HashMap<>(p.getClaims()) : new HashMap<>());
+		.thenApply(p -> {
+			final Map<String, Object> claims = new HashMap<>();
+			if(p.getClaims() != null) {
+				claims.putAll(claims);
+			}
+			return claims;
+		});
 	}
 	
 	/**

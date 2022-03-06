@@ -10,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-
 import epf.schema.utility.EntityListener;
 
 /**

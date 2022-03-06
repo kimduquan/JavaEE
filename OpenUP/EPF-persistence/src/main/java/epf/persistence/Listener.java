@@ -82,7 +82,7 @@ public class Listener {
 			jsonb.toJson(event);
 		} 
 		catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "postLoad", e);
+			LOGGER.log(Level.SEVERE, event.getEntity().toString(), e);
 		}
 		postLoadEmitter.send(event);
 	}

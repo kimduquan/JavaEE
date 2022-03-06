@@ -100,8 +100,7 @@ public class Entities implements epf.persistence.client.Entities {
      */
     CompletionStage<Void> remove(final EntityManager manager, final EntityType<?> entityType, final Object entityId){
     	manager.joinTransaction();
-    	final CompletionStage<Object> oldEntity = manager.find(entityType.getJavaType(), entityId, entity -> Optional.ofNullable(entity).orElseThrow(NotFoundException::new));
-    	return oldEntity.thenCompose(entity -> manager.remove(entity));
+    	return manager.remove(entityType.getJavaType(), entityId);
     }
     
     /**

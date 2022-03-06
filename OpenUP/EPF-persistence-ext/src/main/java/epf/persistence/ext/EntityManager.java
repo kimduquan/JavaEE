@@ -31,10 +31,11 @@ public interface EntityManager extends epf.util.AutoCloseable {
 	
 	/**
 	 * @param <T>
-	 * @param entity
+	 * @param cls
+	 * @param primaryKey
 	 * @return
 	 */
-	<T> CompletionStage<Void> remove(final T entity);
+	<T> CompletionStage<Void> remove(final Class<T> cls, final Object primaryKey);
 	
 	/**
 	 * @param <T>

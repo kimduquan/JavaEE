@@ -23,5 +23,5 @@ public interface PrincipalStore {
 	 * @param password
 	 */
 	@Transactional
-	CompletionStage<Void> setCallerPassword(final CallerPrincipal callerPrincipal, final Password password);
+	CompletionStage<Void> setCallerPassword(final CallerPrincipal callerPrincipal, final Password password) throws Exception;
 }

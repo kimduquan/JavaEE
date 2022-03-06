@@ -59,6 +59,18 @@ public class RxEntityManager implements EntityManager {
 	 * @return
 	 */
 	protected <T> Uni<T> find(final Metamodel metamodel, final Session session, final EntityType<T> entityType, final Object primaryKey) {
+		final EntityGraph<T> entityGraph = createEntityGraph(metamodel, session, entityType);
+		return session.find(entityGraph, primaryKey);
+	}
+	
+	/**
+	 * @param <T>
+	 * @param metamodel
+	 * @param session
+	 * @param entityType
+	 * @return
+	 */
+	protected <T> EntityGraph<T> createEntityGraph(final Metamodel metamodel, final Session session, final EntityType<T> entityType){
 		final EntityGraph<T> entityGraph = session.createEntityGraph(entityType.getJavaType());
 		for(Attribute<? super T, ?> attribute : entityType.getAttributes()) {
 			if(attribute.getPersistentAttributeType().equals(PersistentAttributeType.EMBEDDED)) {
@@ -68,8 +80,11 @@ public class RxEntityManager implements EntityManager {
 					subgraph.addAttributeNodes(embeddableAttribute.getName());
 				}
 			}
+			else {
+				entityGraph.addAttributeNodes(attribute.getName());
+			}
 		}
-		return session.find(entityGraph, primaryKey);
+		return entityGraph;
 	}
 
 	@Override
@@ -115,23 +130,31 @@ public class RxEntityManager implements EntityManager {
 	}
 
 	@Override
-	public <T> CompletionStage<Void> remove(final T entity) {
+	public <T> CompletionStage<Void> remove(final Class<T> cls, final Object primaryKey) {
+		final EntityType<T> entityType = EntityTypeUtil.findEntityType(factory.getMetamodel(), cls).get();
 		if(isJoinedToTransaction()) {
 			if(tenant.isPresent()) {
 				return factory.withTransaction(
 						tenant.get().toString(), 
-						(session, transaction) -> session.remove(session.merge(entity))
+						(session, transaction) -> find(factory.getMetamodel(), session, entityType, primaryKey).chain(object -> session.remove(object))
 						)
 						.subscribeAsCompletionStage();
 			}
-			return factory.withTransaction((session, transaction) -> session.remove(session.merge(entity)))
+			return factory.withTransaction(
+					(session, transaction) -> find(factory.getMetamodel(), session, entityType, primaryKey).chain(object -> session.remove(object))
+					)
 					.subscribeAsCompletionStage();
 		}
 		else {
 			if(tenant.isPresent()) {
-				return factory.withSession(tenant.get().toString(), session -> session.remove(session.merge(entity))).subscribeAsCompletionStage();
+				return factory.withSession(
+						tenant.get().toString(), 
+						session -> find(factory.getMetamodel(), session, entityType, primaryKey).chain(object -> session.remove(object))
+						).subscribeAsCompletionStage();
 			}
-			return factory.withSession(session -> session.remove(session.merge(entity))).subscribeAsCompletionStage();
+			return factory.withSession(
+					session -> find(factory.getMetamodel(), session, entityType, primaryKey).chain(object -> session.remove(object))
+					).subscribeAsCompletionStage();
 		}
 	}
 
