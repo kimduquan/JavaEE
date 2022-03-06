@@ -25,7 +25,7 @@ public class EntityEvent implements Serializable {
 	
 	@Override
 	public String toString() {
-		return String.format("%s/%s", getClass().getName(), entity);
+		return String.format("[%d]%s/%s", time, getClass().getName(), entity);
 	}
 
 	public Object getEntity() {

@@ -87,7 +87,7 @@ public class JPAPrincipalStore implements PrincipalStore {
 		.thenApply(p -> {
 			final Map<String, Object> claims = new HashMap<>();
 			if(p.getClaims() != null) {
-				claims.putAll(claims);
+				claims.putAll(p.getClaims());
 			}
 			return claims;
 		});
