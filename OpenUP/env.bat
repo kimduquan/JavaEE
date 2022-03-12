@@ -9,3 +9,5 @@ set WILDFLY_HOME="C:\wildfly-24.0.1.Final\bin"
 set JAEGER_HOME="C:\jaeger-1.30.0-windows-amd64"
 set MAVEN_HOME=C:\apache-maven-3.8.4\bin
 set PATH=%MAVEN_HOME%;%PATH%
+set QUARKUS_HTTP_SSL_CERTIFICATE_KEY_STORE_FILE=%JAVA11_HOME%/lib/security/cacerts
+set QUARKUS_HTTP_SSL_CERTIFICATE_KEY_STORE_PASSWORD=changeit
