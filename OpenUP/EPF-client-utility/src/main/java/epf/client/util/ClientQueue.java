@@ -13,7 +13,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import epf.client.util.ssl.DefaultHostnameVerifier;
 import epf.client.util.ssl.SSLContextHelper;
 
 /**
@@ -79,9 +78,9 @@ public class ClientQueue {
      */
     protected static ClientBuilder newBuilder(final SSLContext context){
     	return ClientBuilder
-    			.newBuilder()
-    			.sslContext(context)
-                .hostnameVerifier(new DefaultHostnameVerifier());
+    			.newBuilder();
+    			//.sslContext(context)
+                //.hostnameVerifier(new DefaultHostnameVerifier());
     }
     
     /**

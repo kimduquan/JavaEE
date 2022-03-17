@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.tests.health;
 
 import javax.ws.rs.core.Response;

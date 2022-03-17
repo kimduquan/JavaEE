@@ -68,7 +68,7 @@ public class RegistryTest {
     	Set<Link> links = Registry.list(client, null);
     	Set<URI> URIs = links.stream().map(link -> link.getUri()).collect(Collectors.toSet());
     	Set<URI> expected = new HashSet<>();
-    	URI baseUri = new URI("https://localhost:9443/");
+    	URI baseUri = new URI("http://localhost:9080/");
     	try {
 			expected.add(baseUri.resolve("config/config/"));
 	    	expected.add(baseUri.resolve("file/file/"));

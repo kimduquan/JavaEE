@@ -41,7 +41,7 @@ public interface ResponseUtil {
     	}
     	final String linkScheme = linkUri.getScheme();
     	final int linkPort = linkUri.getPort();
-    	return UriBuilder.fromUri(baseUri).path(path).scheme(linkScheme).port(linkPort).build();
+    	return UriBuilder.fromUri(baseUri).path(path).build();
     }
     
     /**
