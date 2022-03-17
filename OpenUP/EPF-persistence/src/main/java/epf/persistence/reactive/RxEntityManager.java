@@ -109,23 +109,29 @@ public class RxEntityManager implements EntityManager {
 	}
 
 	@Override
-	public <T> CompletionStage<T> merge(final T entity, final Function<T, T> function) {
+	public <T> CompletionStage<T> merge(final EntityType<?> entityType, final Object primaryKey, final T entity) {
 		if(isJoinedToTransaction()) {
 			if(tenant.isPresent()) {
 				return factory.withTransaction(
 						tenant.get().toString(), 
-						(session, transaction) -> session.merge(entity).map(function)
+						(session, transaction) -> find(factory.getMetamodel(), session, entityType, primaryKey).chain(object -> session.merge(entity))
 						)
 						.subscribeAsCompletionStage();
 			}
-			return factory.withTransaction((session, transaction) -> session.merge(entity).map(function))
+			return factory.withTransaction((session, transaction) -> find(factory.getMetamodel(), session, entityType, primaryKey).chain(object -> session.merge(entity)))
 					.subscribeAsCompletionStage();
 		}
 		else {
 			if(tenant.isPresent()) {
-				return factory.withSession(tenant.get().toString(), session -> session.merge(entity).map(function)).subscribeAsCompletionStage();
+				return factory.withSession(
+						tenant.get().toString(), 
+						session -> find(factory.getMetamodel(), session, entityType, primaryKey).chain(object -> session.merge(entity)))
+						.subscribeAsCompletionStage();
 			}
-			return factory.withSession(session -> session.merge(entity).map(function)).subscribeAsCompletionStage();
+			return factory.withSession(
+					session -> find(factory.getMetamodel(), session, entityType, primaryKey).chain(object -> session.merge(entity))
+					)
+					.subscribeAsCompletionStage();
 		}
 	}
 

@@ -3,6 +3,7 @@ package epf.persistence.ext;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.metamodel.EntityType;
 
 /**
  * @author PC
@@ -27,7 +28,7 @@ public interface EntityManager extends epf.util.AutoCloseable {
 	 * @param function
 	 * @return
 	 */
-	<T> CompletionStage<T> merge(final T entity, final Function<T, T> function);
+	<T> CompletionStage<T> merge(final EntityType<?> entityType, final Object primaryKey, final T entity);
 	
 	/**
 	 * @param <T>

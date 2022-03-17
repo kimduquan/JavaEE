@@ -87,7 +87,7 @@ public class Entities implements epf.persistence.client.Entities {
     			foundEntity -> Optional.ofNullable(foundEntity).orElseThrow(NotFoundException::new)
     			)
     			.thenCompose(
-    					foundEntity -> manager.merge(entity, e -> e)
+    					foundEntity -> manager.merge(entityType, entityId, entity)
     					)
     			.thenAccept(obj -> {});
     }
