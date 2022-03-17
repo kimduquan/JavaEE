@@ -366,7 +366,7 @@
                         <webdriver.gecko.driver>${geckodriver}</webdriver.gecko.driver>
                         <epf.tests.file.root>target/servers/test/epf.file.root</epf.tests.file.root>
                         <webdriver.timeouts.implicit>60</webdriver.timeouts.implicit>
-                        <webdriver.firefox.headless>false</webdriver.firefox.headless>
+                        <webdriver.firefox.headless>true</webdriver.firefox.headless>
 						<javax.net.ssl.keyStore>${project.basedir}/dev.p12</javax.net.ssl.keyStore>
 						<javax.net.ssl.keyStorePassword>changeit</javax.net.ssl.keyStorePassword>
 						<javax.net.ssl.keyStoreType>PKCS12</javax.net.ssl.keyStoreType>
