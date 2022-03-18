@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.gateway.messaging;
 
 import java.io.IOException;
@@ -12,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.annotation.security.PermitAll;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.websocket.CloseReason;
@@ -34,6 +32,7 @@ import epf.util.logging.LogManager;
  */
 @ServerEndpoint("/messaging/{path}")
 @ApplicationScoped
+@PermitAll
 public class Messaging {
 	
 	/**
@@ -69,7 +68,7 @@ public class Messaging {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI messagingUrl = registry.lookup(Naming.MESSAGING);
+			final URI messagingUrl = registry.lookup(Naming.MESSAGING).orElseThrow();
 			final Remote persistence = new Remote(messagingUrl.resolve(Naming.PERSISTENCE));
 			remotes.put(Naming.PERSISTENCE, persistence);
 			executor.submit(persistence);
@@ -89,7 +88,7 @@ public class Messaging {
 				server.close();
 			} 
 			catch (Exception e) {
-				LOGGER.throwing(Remote.class.getName(), "close", e);
+				LOGGER.log(Level.SEVERE, "preDestroy", e);
 			}
 		});
 	}
@@ -113,8 +112,8 @@ public class Messaging {
 			closeSession(path, session);
 		}
 		else {
-			final URI cacheUrl = registry.lookup(Naming.CACHE);
-			final URI securityUrl = registry.lookup(Naming.SECURITY);
+			final URI cacheUrl = registry.lookup(Naming.CACHE).orElseThrow();
+			final URI securityUrl = registry.lookup(Naming.SECURITY).orElseThrow();
 			SecurityUtil.authenticateTokenId(tokenId.get(), cacheUrl, securityUrl).thenAccept(succeed -> {
 				if(!succeed) {
 					closeSession(path, session);
@@ -138,7 +137,7 @@ public class Messaging {
 			session.close(reason);
 		} 
 		catch (IOException e) {
-			LOGGER.throwing(LOGGER.getName(), "onOpen", e);
+			LOGGER.log(Level.WARNING, "closeSession", e);
 		}
 	}
 	

@@ -1,18 +1,13 @@
 package epf.persistence;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
-import javax.inject.Inject;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
-import org.eclipse.microprofile.context.ManagedExecutor;
-import org.eclipse.microprofile.reactive.messaging.Outgoing;
-import org.eclipse.microprofile.reactive.streams.operators.PublisherBuilder;
-import epf.messaging.util.PublisherUtil;
-import epf.messaging.util.reactive.ObjectPublisher;
+import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.eclipse.microprofile.reactive.messaging.Emitter;
 import epf.naming.Naming;
 import epf.schema.utility.EntityEvent;
 import epf.schema.utility.PostLoad;
@@ -36,41 +31,14 @@ public class Listener {
 	/**
 	 * 
 	 */
-	private transient ObjectPublisher<EntityEvent> publisher;
+	@Channel(Naming.Persistence.PERSISTENCE_ENTITY_LISTENERS)
+	transient Emitter<EntityEvent> emitter;
 	
 	/**
 	 * 
 	 */
-	private transient ObjectPublisher<PostLoad> postLoadPublisher;
-	
-	/**
-	 * 
-	 */
-	@Inject
-	private transient ManagedExecutor executor;
-	
-	/**
-	 * 
-	 */
-	@PostConstruct
-	protected void postConstruct() {
-		publisher = new ObjectPublisher<EntityEvent>(executor);
-		postLoadPublisher = new ObjectPublisher<PostLoad>(executor);
-	}
-	
-	/**
-	 * 
-	 */
-	@PreDestroy
-	protected void preDestroy() {
-		try {
-			publisher.close();
-			postLoadPublisher.close();
-		}
-		catch(Exception ex) {
-			LOGGER.throwing(getClass().getName(), "preDestroy", ex);
-		}
-	}
+	@Channel(Naming.Persistence.PERSISTENCE_ENTITY_LISTENERS_POSTLOAD)
+	transient Emitter<PostLoad> postLoadEmitter;
 	
 	/**
 	 * @param event
@@ -80,9 +48,9 @@ public class Listener {
 			jsonb.toJson(event);
 		} 
 		catch (Exception e) {
-			LOGGER.throwing(getClass().getName(), "submit", e);
+			LOGGER.log(Level.SEVERE, event.toString(), e);
 		}
-		publisher.submit(event);
+		emitter.send(event);
 	}
 	
 	/**
@@ -114,24 +82,8 @@ public class Listener {
 			jsonb.toJson(event);
 		} 
 		catch (Exception e) {
-			LOGGER.throwing(getClass().getName(), "postLoad", e);
+			LOGGER.log(Level.SEVERE, event.toString(), e);
 		}
-		postLoadPublisher.submit(event);
-	}
-	
-	/**
-	 * @return
-	 */
-	@Outgoing(Naming.Persistence.PERSISTENCE_ENTITY_LISTENERS)
-    public PublisherBuilder<EntityEvent> getPublisher(){
-		return PublisherUtil.newPublisher(publisher);
-	}
-	
-	/**
-	 * @return
-	 */
-	@Outgoing(Naming.Persistence.PERSISTENCE_ENTITY_LISTENERS_POSTLOAD)
-    public PublisherBuilder<PostLoad> getPostLoadPublisher(){
-		return PublisherUtil.newPublisher(postLoadPublisher);
+		postLoadEmitter.send(event);
 	}
 }

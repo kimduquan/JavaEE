@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.net;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -9,12 +6,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.SecurityContext;
-import epf.client.gateway.GatewayUtil;
-import epf.client.persistence.Entities;
 import epf.client.util.Client;
 import epf.client.util.ClientUtil;
 import epf.net.schema.URL;
+import epf.persistence.client.Entities;
 import epf.util.StringUtil;
+import epf.util.config.ConfigUtil;
 import epf.util.http.SessionUtil;
 import epf.naming.Naming;
 
@@ -46,7 +43,7 @@ public class Net implements epf.client.net.Net {
 		url.setRef(rawUrl.getRef());
 		url.setString(rawUrl.toString());
 		url.setUserInfo(rawUrl.getUserInfo());
-		try(Client client = clientUtil.newClient(GatewayUtil.get(Naming.PERSISTENCE))){
+		try(Client client = clientUtil.newClient(ConfigUtil.getURI(Naming.Persistence.PERSISTENCE_URL))){
 			client.authorizationHeader(request.getHeader(HttpHeaders.AUTHORIZATION));
 			final URL resultUrl = Entities.persist(client, URL.class, epf.net.schema.Net.SCHEMA, epf.net.schema.Net.URL, url);
 			final String shortString = StringUtil.toShortString(resultUrl.getId());

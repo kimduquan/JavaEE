@@ -54,7 +54,7 @@ public class CacheTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		HealthUtil.readỵ̣();
+		HealthUtil.isReady();
 		cacheUrl = GatewayUtil.get(Naming.CACHE);
 		token = SecurityUtil.login();
 	}

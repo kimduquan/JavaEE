@@ -1,22 +1,21 @@
-/**
- * 
- */
 package epf.security.client.otp;
 
 import java.net.URL;
+import java.util.List;
+import java.util.concurrent.CompletionStage;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.MatrixParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Form;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import epf.client.util.Client;
 import epf.naming.Naming;
@@ -39,18 +38,18 @@ public interface OTPSecurity {
     @Path("otp")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
-    String loginOneTime(
+    CompletionStage<String> loginOneTime(
             @FormParam("username")
             @NotBlank
             final String username,
-            @FormParam("password_hash")
+            @FormParam("password")
             @NotBlank
-            final String passwordHash, 
+            final String password, 
             @QueryParam("url")
             @NotNull
             final URL url,
-            @Context
-            final HttpHeaders headers
+            @MatrixParam(Naming.Management.TENANT)
+            final String tenant
     ) throws Exception;
     
     /**
@@ -63,11 +62,11 @@ public interface OTPSecurity {
     static String loginOneTime(
     		final Client client,
     		final String username, 
-    		final String passwordHash, 
+    		final String password, 
     		final URL url) {
     	final Form form = new Form();
     	form.param("username", username);
-    	form.param("password_hash", passwordHash);
+    	form.param("password", password);
     	return client.request(
     			target -> target.path("otp").queryParam("url", url),
     			req -> req.accept(MediaType.TEXT_PLAIN))
@@ -82,10 +81,19 @@ public interface OTPSecurity {
     @Path("otp")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
-    String authenticateOneTime(
-            @FormParam("otp")
+    CompletionStage<String> authenticateOneTime(
+            @FormParam("password")
             @NotBlank
-            final String oneTimePassword
+            final String oneTimePassword,
+            @FormParam("url")
+            @NotBlank
+            final URL url,
+            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_HOST)
+            final List<String> forwardedHost,
+            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PORT)
+            final List<String> forwardedPort,
+            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PROTO)
+            final List<String> forwardedProto
     );
     
     /**
@@ -95,10 +103,12 @@ public interface OTPSecurity {
      */
     static String authenticateOneTime(
     		final Client client,
-    		final String oneTimePassword
+    		final String oneTimePassword,
+    		final URL url
     		) {
     	final Form form = new Form();
-    	form.param("otp", oneTimePassword);
+    	form.param("password", oneTimePassword);
+    	form.param("url", url.toString());
     	return client.request(
     			target -> target.path("otp"),
     			req -> req.accept(MediaType.TEXT_PLAIN))

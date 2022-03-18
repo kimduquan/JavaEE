@@ -9,9 +9,8 @@ import javax.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
-import epf.client.persistence.PersistenceInterface;
 import epf.naming.Naming;
-import epf.persistence.security.SecurityProxy;
+import epf.persistence.client.PersistenceInterface;
 import epf.security.client.SecurityInterface;
 import epf.util.logging.LogManager;
 
@@ -45,7 +44,6 @@ public class Server implements HealthCheck {
     protected void postConstruct() {
 		try {
 			persistence = (PersistenceInterface) UnicastRemoteObject.exportObject(new Remote(), 0);
-			security = (SecurityInterface) UnicastRemoteObject.exportObject(new SecurityProxy(), 0);
 			LocateRegistry.getRegistry().bind(Naming.Persistence.PERSISTENCE, persistence);
 			LocateRegistry.getRegistry().bind(Naming.Persistence.PERSISTENCE_SECURITY, security);
 		} 

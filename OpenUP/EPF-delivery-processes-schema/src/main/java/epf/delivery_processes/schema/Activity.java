@@ -1,8 +1,9 @@
 package epf.delivery_processes.schema;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -13,9 +14,11 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.MapsId;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.OneToOne;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.utility.EntityListener;
 
 /**
  *
@@ -25,6 +28,8 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Schema(name = DeliveryProcesses.ACTIVITY, title = "Activity")
 @Entity(name = DeliveryProcesses.ACTIVITY)
 @Table(schema = DeliveryProcesses.SCHEMA, name = "ACTIVITY")
+@NamedEntityGraph(includeAllAttributes = true)
+@EntityListeners(EntityListener.class)
 public class Activity implements Serializable {
     
     /**
@@ -65,7 +70,7 @@ public class Activity implements Serializable {
     		joinColumns = @JoinColumn(name = "ACTIVITY"),
     		indexes = {@Index(columnList = "ACTIVITY")})
     @Column(name = "TASK")
-    private List<String> tasks;
+    private Set<String> tasks;
     
     @Override
     public String toString() {
@@ -96,11 +101,11 @@ public class Activity implements Serializable {
         this.parentActivities = parentActivities;
     }
 
-    public List<String> getTasks() {
+    public Set<String> getTasks() {
         return tasks;
     }
 
-    public void setTasks(final List<String> tasks) {
+    public void setTasks(final Set<String> tasks) {
         this.tasks = tasks;
     }
 }

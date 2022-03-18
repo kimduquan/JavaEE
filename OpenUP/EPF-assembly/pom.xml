@@ -11,13 +11,17 @@
     <packaging>liberty-assembly</packaging>
 
     <properties>
-        <httpPort>80</httpPort>
-        <httpsPort>443</httpsPort>
-        <httpWebPort>8080</httpWebPort>
-        <httpsWebPort>8443</httpsWebPort>
+        <httpPort>9080</httpPort>
+        <httpsPort>9443</httpsPort>
+        <httpWebPort>80</httpWebPort>
+        <httpsWebPort>443</httpsWebPort>
+        <portalPort>8080</portalPort>
+        <gatewayPort>9543</gatewayPort>
         <!-- Jaeger configuration -->
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
+    	<liberty.env.WLP_LOGGING_MESSAGE_FORMAT>json</liberty.env.WLP_LOGGING_MESSAGE_FORMAT>
+    	<liberty.env.WLP_LOGGING_MESSAGE_SOURCE>message,trace,accessLog,ffdc,audit</liberty.env.WLP_LOGGING_MESSAGE_SOURCE>
 		<liberty.env.epf_schedule_url>https://localhost/schedule/schedule/</liberty.env.epf_schedule_url>
 		<liberty.env.epf_config_url>https://localhost/config/config/</liberty.env.epf_config_url>
 		<liberty.env.epf_script_url>https://localhost/script/script/</liberty.env.epf_script_url>
@@ -25,27 +29,31 @@
 		<liberty.env.epf_image_url>https://localhost/image/image/</liberty.env.epf_image_url>
 		<liberty.env.epf_rules_url>https://localhost/rules/rules/</liberty.env.epf_rules_url>
 		<liberty.env.epf_planning_url>https://localhost/planning/planning/</liberty.env.epf_planning_url>
-		<liberty.env.epf_persistence_url>https://localhost/persistence/persistence/</liberty.env.epf_persistence_url>
-		<liberty.env.epf_persistence_security_url>https://localhost/persistence/security/</liberty.env.epf_persistence_security_url>
-		<liberty.env.epf_schema_url>https://localhost/persistence/schema/</liberty.env.epf_schema_url>
-		<liberty.env.epf_security_url>https://localhost/security/security/</liberty.env.epf_security_url>
-        <liberty.env.epf_gateway_url>http://localhost/gateway/</liberty.env.epf_gateway_url>
+		<liberty.env.epf_persistence_url>http://localhost/persistence/persistence/</liberty.env.epf_persistence_url>
+		<liberty.env.epf_persistence_security_url>http://localhost/persistence/security/</liberty.env.epf_persistence_security_url>
+		<liberty.env.epf_schema_url>http://localhost/persistence/schema/</liberty.env.epf_schema_url>
+		<liberty.env.epf_security_url>http://localhost/persistence/security/</liberty.env.epf_security_url>
+        <liberty.env.epf_security_webapp_url>https://localhost/EPF-security-webapp-1.0.0/</liberty.env.epf_security_webapp_url>
+        <liberty.env.epf_gateway_url>https://localhost:9543/gateway/</liberty.env.epf_gateway_url>
+        <liberty.env.epf_gateway_messaging_url>https://localhost:9543/messaging/</liberty.env.epf_gateway_messaging_url>
         <liberty.env.epf_messaging_url>ws://localhost/messaging/messaging/</liberty.env.epf_messaging_url>
         <liberty.env.epf_lang_url>ws://localhost/lang/lang/</liberty.env.epf_lang_url>
         <liberty.env.epf_cache_url>https://localhost/cache/cache/</liberty.env.epf_cache_url>
         <liberty.env.epf_registry_url>https://localhost/registry/registry/</liberty.env.epf_registry_url>
 		<liberty.env.epf_management_url>https://localhost/management/management/</liberty.env.epf_management_url>
-		<liberty.env.epf_portlet_url>http://localhost/pluto/portal</liberty.env.epf_portlet_url>
+		<liberty.env.epf_portlet_url>http://localhost:8080/pluto/portal</liberty.env.epf_portlet_url>
 		<liberty.env.epf_webapp_url>https://localhost/webapp/</liberty.env.epf_webapp_url>
 		<liberty.env.epf_health_url>https://localhost/health/</liberty.env.epf_health_url>
 		<liberty.env.epf_batch_api_url>https://localhost/ibm/</liberty.env.epf_batch_api_url>
 		<liberty.env.epf_net_url>https://localhost/net/net/</liberty.env.epf_net_url>
+		<liberty.env.epf_net_http_port>80</liberty.env.epf_net_http_port>
 		<liberty.env.openup_delivery_processes_url>https://localhost/delivery-processes/delivery-processes/</liberty.env.openup_delivery_processes_url>
 		<liberty.env.openup_tasks_url>https://localhost/tasks/tasks/</liberty.env.openup_tasks_url>
 		<liberty.env.openup_work_products_url>https://localhost/work-products/work-products/</liberty.env.openup_work_products_url>
 		<liberty.env.openup_gateway_url>https://localhost/openup/gateway/</liberty.env.openup_gateway_url>
-		<liberty.env.epf_shell_path>../EPF-shell/target/appassembler/bin</liberty.env.epf_shell_path>
-		<liberty.env.epf_shell_command>${command}</liberty.env.epf_shell_command>
+		<liberty.env.epf_shell_path>../EPF-shell/</liberty.env.epf_shell_path>
+		<liberty.env.epf_shell_command>${shell_command}</liberty.env.epf_shell_command>
+		<liberty.env.epf_shell_runner>${shell_runner}</liberty.env.epf_shell_runner>
 		<liberty.env.epf_tests_file_root>target/servers/test/epf.file.root</liberty.env.epf_tests_file_root>
     </properties>
     <dependencies>
@@ -186,12 +194,6 @@
         </dependency>
 		<dependency>
             <groupId>openup</groupId>
-            <artifactId>EPF-persistence</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
-		<dependency>
-            <groupId>openup</groupId>
             <artifactId>EPF-registry</artifactId>
             <version>${project.version}</version>
             <type>war</type>
@@ -199,12 +201,6 @@
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-management</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-webapp</artifactId>
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
@@ -254,6 +250,9 @@
 				</os>
 			</activation>
 			<properties>
+        		<geckodriver>./geckodriver</geckodriver>
+        		<shell_command>bash</shell_command>
+        		<shell_runner>./target/EPF-shell-${project.version}-runner</shell_runner>
         		<opencv_java>/usr/share/java/opencv-420.jar</opencv_java>
         		<opencv_core>/usr/lib/x86_64-linux-gnu/libopencv_core.so</opencv_core>
 			</properties>
@@ -266,6 +265,9 @@
 				</os>
 			</activation>
 			<properties>
+        		<geckodriver>./geckodriver.exe</geckodriver>
+        		<shell_command>powershell</shell_command>
+        		<shell_runner>./target/EPF-shell-${project.version}-runner.exe</shell_runner>
         		<opencv_java>C://Program Files/opencv/build/java/opencv-452.jar</opencv_java>
         		<opencv_core>C://Program Files/opencv/build/java/x64/opencv_java452.dll</opencv_core>
 			</properties>

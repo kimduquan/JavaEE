@@ -1,9 +1,11 @@
-~/kafka_2.13-2.8.1/bin/zookeeper-server-start.sh ~/kafka_2.13-2.8.1/config/zookeeper.properties &
-export JAVA_HOME=~/jdk8u312-b07
-~/pluto-3.1.0/bin/startup.sh &
-export JAVA_HOME=~/jdk-11.0.13+8
-~/wildfly-24.0.1.Final/bin/standalone.sh "-Djboss.http.port=8585" "-Djboss.https.port=8686" --debug &
-~/jaeger-1.24.0-linux-amd64/jaeger-all-in-one &
+. ./env.sh
+. ./config.sh
+$KAFKA_HOME/zookeeper-server-start.sh $KAFKA_DIR/config/zookeeper.properties &
+$JAEGER_HOME/jaeger-all-in-one &
+export JAVA_HOME=$JAVA8_HOME
+$PLUTO_HOME/bin/startup.sh &
+$WILDFLY_HOME/standalone.sh "-Djboss.http.port=80" "-Djboss.https.port=443" --debug &
 Xvfb :10 -ac &
 export DISPLAY=:10
-~/kafka_2.13-2.8.1/bin/kafka-server-start.sh ~/kafka_2.13-2.8.1/config/server.properties &
+$KAFKA_HOME/kafka-server-start.sh $KAFKA_DIR/config/server.properties &
+export JAVA_HOME=$JAVA11_HOME

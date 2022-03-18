@@ -1,6 +1,3 @@
-/**
- * 
- */
 package openup.schema.work_products;
 
 import java.io.Serializable;

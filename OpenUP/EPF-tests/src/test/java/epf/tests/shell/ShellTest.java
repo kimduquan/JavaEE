@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.tests.shell;
 
 import java.nio.file.Files;
@@ -25,9 +22,10 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
-import epf.client.schema.Entity;
+
 import epf.file.util.PathUtil;
 import epf.naming.Naming;
+import epf.persistence.schema.client.Entity;
 import epf.security.schema.Token;
 import epf.tests.TestUtil;
 import epf.tests.file.FileUtil;
@@ -203,7 +201,7 @@ public class ShellTest {
 	@Test
 	public void testPersistence_Persist() throws Exception {
 		Artifact artifact = new Artifact();
-		artifact.setName(StringUtil.randomString("Artifact Shell"));
+		artifact.setName(StringUtil.randomString("ShellTest testPersistence_Persist"));
         artifact.setSummary("Artifact Shell testPersistence_Persist");
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
@@ -232,7 +230,7 @@ public class ShellTest {
 	@Test
 	public void testPersistence_Merge() throws Exception {
 		Artifact artifact = new Artifact();
-        artifact.setName(StringUtil.randomString("Artifact_Shell"));
+        artifact.setName(StringUtil.randomString("ShellTest_testPersistence_Merge"));
         artifact.setSummary(StringUtil.randomString("Artifact_Shell testPersistence_Merge"));
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
@@ -264,7 +262,7 @@ public class ShellTest {
 	@Test
 	public void testPersistence_Remove() throws Exception {
 		Artifact artifact = new Artifact();
-        artifact.setName(StringUtil.randomString("Artifact_Shell"));
+        artifact.setName(StringUtil.randomString("ShellTest_testPersistence_Remove"));
         artifact.setSummary("Artifact Shell testPersistence_Remove");
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());

@@ -1,20 +1,23 @@
 package epf.delivery_processes.schema;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.MapsId;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.utility.EntityListener;
 import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
@@ -31,6 +34,8 @@ import javax.persistence.NamedQuery;
         name = Iteration.ITERATIONS,
         query = "SELECT it FROM EPF_Iteration it JOIN it.parentActivities ph WHERE ph.name = :name"
 )
+@NamedEntityGraph(includeAllAttributes = true)
+@EntityListeners(EntityListener.class)
 public class Iteration implements Serializable {
     
     /**
@@ -83,7 +88,7 @@ public class Iteration implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "ACTIVITY")},
             indexes = {@Index(columnList = "ITERATION")}
     )
-    private List<Activity> activities;
+    private Set<Activity> activities;
     
     @Override
     public String toString() {
@@ -122,11 +127,11 @@ public class Iteration implements Serializable {
         this.parentActivities = parentActivities;
     }
 
-    public List<Activity> getActivities() {
+    public Set<Activity> getActivities() {
         return activities;
     }
 
-    public void setActivities(final List<Activity> activities) {
+    public void setActivities(final Set<Activity> activities) {
         this.activities = activities;
     }
 }

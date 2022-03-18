@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.schema.utility;
 
 import java.time.Instant;
@@ -23,25 +20,25 @@ public class EntityListener {
 	 * 
 	 */
 	@Inject
-	private transient Event<epf.schema.utility.PostLoad> loadEvent;
+	transient Event<epf.schema.utility.PostLoad> loadEvent;
 	
 	/**
 	 * 
 	 */
 	@Inject
-	private transient Event<epf.schema.utility.PostPersist> persistEvent;
+	transient Event<epf.schema.utility.PostPersist> persistEvent;
 	
 	/**
 	 * 
 	 */
 	@Inject
-	private transient Event<epf.schema.utility.PostRemove> removeEvent;
+	transient Event<epf.schema.utility.PostRemove> removeEvent;
 	
 	/**
 	 * 
 	 */
 	@Inject
-	private transient Event<epf.schema.utility.PostUpdate> updateEvent;
+	transient Event<epf.schema.utility.PostUpdate> updateEvent;
 
 	/**
 	 * @param entity

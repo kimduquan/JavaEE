@@ -13,7 +13,7 @@
 	<dependencies>
 		<dependency>
             <groupId>openup</groupId>
-            <artifactId>EPF-client</artifactId>
+            <artifactId>EPF-persistence-client</artifactId>
             <version>${project.version}</version>
         </dependency>
 		<dependency>
@@ -52,6 +52,12 @@
 		<dependency>
 		    <groupId>javax.portlet</groupId>
 		    <artifactId>portlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>javax.ws.rs-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
         <!-- https://mvnrepository.com/artifact/javax.json/javax.json-api -->

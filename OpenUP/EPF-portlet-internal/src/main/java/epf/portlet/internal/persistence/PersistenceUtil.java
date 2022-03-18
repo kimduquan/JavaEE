@@ -44,7 +44,7 @@ public class PersistenceUtil {
 	 */
 	public List<JsonObject> getEntities(final String schema, final String entity, final Integer firstResult, final Integer maxResults) throws Exception{
 		try(Client client = securityUtil.newClient(gatewayUtil.get(epf.naming.Naming.PERSISTENCE))){
-			try(Response response = epf.client.persistence.Queries.executeQuery(
+			try(Response response = epf.persistence.client.Queries.executeQuery(
 					client, 
 					schema,
 					path -> path.path(entity), 
@@ -72,7 +72,7 @@ public class PersistenceUtil {
 	 */
 	public JsonObject getEntity(final String schema, final String entity, final String id) throws Exception {
 		try(Client client = securityUtil.newClient(gatewayUtil.get(epf.naming.Naming.PERSISTENCE))){
-			try(Response response = epf.client.persistence.Entities.find(client, schema, entity, id)){
+			try(Response response = epf.persistence.client.Entities.find(client, schema, entity, id)){
 				try(InputStream stream = response.readEntity(InputStream.class)){
 					try(JsonReader reader = Json.createReader(stream)){
 						return reader.readObject();

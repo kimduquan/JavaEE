@@ -91,7 +91,7 @@
 				</os>
 			</activation>
 			<properties>
-				<pluto.home>C://Program Files/pluto-3.1.0/lib</pluto.home>
+				<pluto.home>C://pluto-3.1.1/lib</pluto.home>
 			</properties>
 		</profile>
 	</profiles>

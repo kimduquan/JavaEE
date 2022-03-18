@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.client.cache;
 
 import java.util.List;
@@ -62,7 +59,7 @@ public interface Cache {
 	 */
 	static <T> T getEntity(final Client client, final Class<T> cls, final String schema, final String entity, final String entityId) {
 		return client.request(
-    			target -> target.path("persistence").path(schema).path(entity).path(entityId), 
+    			target -> target.path(Naming.PERSISTENCE).path(schema).path(entity).path(entityId), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.get(cls);
@@ -77,7 +74,7 @@ public interface Cache {
 	 */
 	static Response getEntity(final Client client, final String schema, final String entity, final String entityId) {
 		return client.request(
-    			target -> target.path("persistence").path(schema).path(entity).path(entityId), 
+    			target -> target.path(Naming.PERSISTENCE).path(schema).path(entity).path(entityId), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
 				.get();
@@ -124,7 +121,7 @@ public interface Cache {
 			final Integer firstResult, 
 			final Integer maxResults) {
 		return client.request(
-    			target -> target.path("persistence").path(schema).path(entity).queryParam("firstResult", firstResult).queryParam("maxResults", maxResults), 
+    			target -> target.path(Naming.PERSISTENCE).path(schema).path(entity).queryParam("firstResult", firstResult).queryParam("maxResults", maxResults), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.get(new GenericType<List<T>>() {});
@@ -144,7 +141,7 @@ public interface Cache {
 			final Integer firstResult, 
 			final Integer maxResults) {
 		return client.request(
-    			target -> target.path("persistence").path(schema).path(entity).queryParam("firstResult", firstResult).queryParam("maxResults", maxResults), 
+    			target -> target.path(Naming.PERSISTENCE).path(schema).path(entity).queryParam("firstResult", firstResult).queryParam("maxResults", maxResults), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
 				.get();
@@ -180,7 +177,7 @@ public interface Cache {
 	 * @return
 	 */
 	static SseEventSource forEachEntity(final Client client, final String schema, final String entity) {
-		return client.stream(target -> target.path("persistence").path(schema).queryParam("entity", entity), req -> req);
+		return client.stream(target -> target.path(Naming.PERSISTENCE).path(schema).queryParam("entity", entity), req -> req);
 	}
 	
 	/**
@@ -188,7 +185,7 @@ public interface Cache {
 	 * @return
 	 */
 	@GET
-    @Path("security")
+    @Path(Naming.SECURITY)
 	@Produces(MediaType.APPLICATION_JSON)
 	Token getToken(@QueryParam("tid") final String tokenId);
 	
@@ -199,7 +196,7 @@ public interface Cache {
 	 */
 	static Token getToken(final Client client, final String tokenId) {
 		return client
-				.request(target -> target.path("security").queryParam("tid", tokenId), 
+				.request(target -> target.path(Naming.SECURITY).queryParam("tid", tokenId), 
 						req -> req.accept(MediaType.APPLICATION_JSON)
 						)
 				.get(Token.class);

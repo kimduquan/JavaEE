@@ -2,12 +2,14 @@ package epf.gateway;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.client.ClientBuilder;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import epf.naming.Naming;
+import epf.util.MapUtil;
 
 /**
  * @author PC
@@ -43,7 +45,7 @@ public class Registry {
 	 * @param name
 	 * @return
 	 */
-	public URI lookup(final String name) {
-		return remotes.get(name);
+	public Optional<URI> lookup(final String name) {
+		return MapUtil.get(remotes, name);
 	}
 }

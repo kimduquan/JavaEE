@@ -4,6 +4,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
@@ -15,8 +16,10 @@ import epf.delivery_processes.schema.section.Description;
 import epf.delivery_processes.schema.section.TeamAllocation;
 import epf.delivery_processes.schema.section.WorkBreakdownStructure;
 import epf.delivery_processes.schema.section.WorkProductUsage;
+import epf.schema.utility.EntityListener;
 import javax.persistence.Index;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.NamedQuery;
 
 /**
@@ -31,6 +34,8 @@ import javax.persistence.NamedQuery;
         name = Phase.PHASES,
         query = "SELECT ph FROM EPF_Phase ph JOIN ph.parentActivities dp WHERE dp.name = :name"
 )
+@NamedEntityGraph(includeAllAttributes = true)
+@EntityListeners(EntityListener.class)
 public class Phase implements Serializable {
     
     /**

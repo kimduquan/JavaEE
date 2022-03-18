@@ -1,11 +1,12 @@
 package epf.persistence;
 
 import java.io.Serializable;
+import java.net.URI;
 import java.rmi.RemoteException;
 import java.util.List;
 import javax.enterprise.inject.spi.CDI;
-import epf.client.persistence.PersistenceInterface;
-import epf.client.persistence.SearchData;
+
+import epf.persistence.client.PersistenceInterface;
 
 /**
  * @author PC
@@ -35,7 +36,7 @@ public class Remote implements PersistenceInterface {
 	}
 
 	@Override
-	public List<SearchData> search(final String text, final Integer firstResult, final Integer maxResults) throws RemoteException {
+	public List<URI> search(final String text, final Integer firstResult, final Integer maxResults) throws RemoteException {
 		return CDI.current().select(PersistenceInterface.class).get().search(text, firstResult, maxResults);
 	}
 

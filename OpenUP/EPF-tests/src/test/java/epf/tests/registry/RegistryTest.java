@@ -68,18 +68,18 @@ public class RegistryTest {
     	Set<Link> links = Registry.list(client, null);
     	Set<URI> URIs = links.stream().map(link -> link.getUri()).collect(Collectors.toSet());
     	Set<URI> expected = new HashSet<>();
-    	URI baseUri = new URI("https://localhost:9443/");
+    	URI baseUri = new URI("http://localhost:9080/");
     	try {
 			expected.add(baseUri.resolve("config/config/"));
 	    	expected.add(baseUri.resolve("file/file/"));
-	    	expected.add(baseUri.resolve("persistence/persistence/"));
+	    	expected.add(new URI("http://localhost:9181/persistence/persistence/"));
 	    	expected.add(baseUri.resolve("registry/registry/"));
-	    	expected.add(baseUri.resolve("persistence/security/"));
+	    	expected.add(baseUri.resolve("security/security/"));
 	    	expected.add(baseUri.resolve("cache/cache/"));
 	    	expected.add(baseUri.resolve("script/script/"));
 	    	expected.add(baseUri.resolve("management/management/"));
 	    	expected.add(baseUri.resolve("rules/rules/"));
-	    	expected.add(baseUri.resolve("persistence/schema/"));
+	    	expected.add(new URI("http://localhost:9181/persistence/schema/"));
 	    	expected.add(baseUri.resolve("planning/planning/"));
 	    	expected.add(baseUri.resolve("image/image/"));
 	    	expected.add(baseUri.resolve("net/net/"));

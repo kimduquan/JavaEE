@@ -1,13 +1,17 @@
 package epf.security.client;
 
 import java.net.URL;
+import java.util.List;
+import java.util.concurrent.CompletionStage;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.HttpMethod;
+import javax.ws.rs.MatrixParam;
 import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -17,7 +21,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Form;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
@@ -61,18 +64,24 @@ public interface Security {
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
-    String login(
+    CompletionStage<String> login(
             @FormParam("username")
             @NotBlank
             final String username,
-            @FormParam("password_hash")
+            @FormParam("password")
             @NotBlank
-            final String passwordHash, 
+            final String password, 
             @QueryParam(URL)
             @NotNull
             final URL url,
-            @Context
-            final HttpHeaders headers
+            @MatrixParam(Naming.Management.TENANT)
+            final String tenant,
+            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_HOST)
+            final List<String> forwardedHost,
+            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PORT)
+            final List<String> forwardedPort,
+            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PROTO)
+            final List<String> forwardedProto
     ) throws Exception;
     
     /**
@@ -85,11 +94,11 @@ public interface Security {
     static String login(
     		final Client client,
     		final String username, 
-    		final String passwordHash, 
+    		final String password, 
     		final URL url) {
     	final MultivaluedMap<String, String> form = new MultivaluedHashMap<>();
     	form.add("username", username);
-    	form.add("password_hash", passwordHash);
+    	form.add("password", password);
     	return client.request(
     			target -> target.queryParam(URL, url),
     			req -> req.accept(MediaType.TEXT_PLAIN))
@@ -146,7 +155,7 @@ public interface Security {
      */
     @PATCH
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    void update(
+    CompletionStage<Void> update(
     		@FormParam("password")
     		@NotNull
     		@NotBlank
@@ -175,13 +184,16 @@ public interface Security {
      * @throws Exception 
      */
     @PUT
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
-    String revoke(
-    		@Context
-            final HttpHeaders headers,
+    CompletionStage<String> revoke(
             @Context
-            final SecurityContext context) throws Exception;
+            final SecurityContext context,
+            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_HOST)
+            final List<String> forwardedHost,
+            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PORT)
+            final List<String> forwardedPort,
+            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PROTO)
+            final List<String> forwardedProto) throws Exception;
     
     /**
      * @param client
@@ -191,6 +203,6 @@ public interface Security {
     	return client.request(
     			target -> target,
     			req -> req.accept(MediaType.TEXT_PLAIN))
-    			.put(Entity.form(new Form()), String.class);
+    			.put(null, String.class);
     }
 }

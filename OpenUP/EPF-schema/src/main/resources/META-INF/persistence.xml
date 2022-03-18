@@ -28,4 +28,17 @@
             <property name="javax.persistence.sql-load-script-source" value="META-INF/data.sql"/>
         </properties>
     </persistence-unit>
+	<persistence-unit name="EPF_Security" transaction-type="JTA">
+    	<jta-data-source>jdbc/epf_security_schema</jta-data-source>
+		<jar-file>../../lib/EPF-schema-utility-1.0.0.jar</jar-file>
+		<jar-file>../../lib/EPF-security-schema-1.0.0.jar</jar-file>
+		
+		<jar-file>lib/EPF-schema-utility-1.0.0.jar</jar-file>
+		<jar-file>lib/EPF-security-schema-1.0.0.jar</jar-file>
+        <properties>
+			<property name="javax.persistence.schema-generation.database.action" value="create"/>
+			<property name="javax.persistence.schema-generation.create-source" value="metadata"/>
+			<!--<property name="javax.persistence.sql-load-script-source" value="META-INF/h2/data.sql" />-->
+        </properties>
+    </persistence-unit>
 </persistence>

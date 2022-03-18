@@ -1,22 +1,20 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.work_products.schema;
 
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.utility.EntityListener;
 
 /**
  *
@@ -26,6 +24,8 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Schema(name = WorkProducts.DELIVERABLE, title = "Deliverable")
 @Entity(name = WorkProducts.DELIVERABLE)
 @Table(schema = WorkProducts.SCHEMA, name = "DELIVERABLE")
+@NamedEntityGraph(includeAllAttributes = true)
+@EntityListeners(EntityListener.class)
 public class Deliverable implements Serializable {
     
     /**

@@ -39,8 +39,8 @@ public interface SecurityClient {
     String login(
     		@FormParam("username")
             final String username,
-            @FormParam("password_hash")
-            final String passwordHash, 
+            @FormParam("password")
+            final String password, 
             @QueryParam("url")
             final String url
     ) throws Exception;
@@ -83,7 +83,6 @@ public interface SecurityClient {
 	 * @throws Exception
 	 */
 	@PUT
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
     String revoke(
     		@HeaderParam(HttpHeaders.AUTHORIZATION)

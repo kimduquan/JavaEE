@@ -1,13 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.roles.schema;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Id;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -19,6 +16,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.roles.schema.section.MoreInformation;
 import epf.roles.schema.section.Relationships;
 import epf.roles.schema.section.Staffing;
+import epf.schema.utility.EntityListener;
 /**
  *
  * @author FOXCONN
@@ -27,6 +25,8 @@ import epf.roles.schema.section.Staffing;
 @Schema(name = Roles.ROLE, title = "Role")
 @Entity(name = Roles.ROLE)
 @Table(schema = Roles.SCHEMA, name = "EPF_ROLE")
+@NamedEntityGraph(includeAllAttributes = true)
+@EntityListeners(EntityListener.class)
 public class Role implements Serializable {
 	
 	/**

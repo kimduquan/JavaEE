@@ -1,15 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.tests.persistence;
 
 import epf.client.gateway.GatewayUtil;
-import epf.client.persistence.Entities;
 import epf.client.util.Client;
 import epf.delivery_processes.schema.DeliveryProcesses;
 import epf.naming.Naming;
+import epf.persistence.client.Entities;
 import epf.tests.client.ClientUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
@@ -71,7 +66,7 @@ public class EntitiesTest {
     @Test
     public void testPersistOK() throws Exception{
     	Artifact artifact = new Artifact();
-        artifact.setName(StringUtil.randomString("Artifact Entities"));
+        artifact.setName(StringUtil.randomString("EntitiesTest testPersistOK"));
         artifact.setSummary("Artifact Entities testPersistOK");
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
@@ -93,7 +88,7 @@ public class EntitiesTest {
     @Test
     public void testMergeOK() throws Exception{
     	Artifact artifact = new Artifact();
-        artifact.setName(StringUtil.randomString("Artifact Entities"));
+        artifact.setName(StringUtil.randomString("EntitiesTest testMergeOK"));
         artifact.setSummary(StringUtil.randomString("Artifact Entities testMergeOK"));
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
@@ -120,7 +115,7 @@ public class EntitiesTest {
     @Test
     public void testRemoveOK() throws Exception{
     	Artifact artifact = new Artifact();
-        artifact.setName(StringUtil.randomString("Artifact Entities"));
+        artifact.setName(StringUtil.randomString("EntitiesTest testRemoveOK"));
         artifact.setSummary("Artifact Entities testRemoveOK");
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
@@ -140,7 +135,7 @@ public class EntitiesTest {
     @Test(expected = NotFoundException.class)
     public void testPersistEmptyName() {
     	Artifact artifact = new Artifact();
-        artifact.setName(StringUtil.randomString("Artifact Entities"));
+        artifact.setName(StringUtil.randomString("EntitiesTest testPersistEmptyName"));
         artifact.setSummary("Artifact Entities testPersistEmptyName");
         artifact = Entities.persist(client, Artifact.class, WorkProducts.SCHEMA, "", artifact);
     }
@@ -148,7 +143,7 @@ public class EntitiesTest {
     @Test(expected = BadRequestException.class)
     public void testPersistBlankName() {
     	Artifact artifact = new Artifact();
-        artifact.setName(StringUtil.randomString("Artifact Entities"));
+        artifact.setName(StringUtil.randomString("EntitiesTest testPersistBlankName"));
         artifact.setSummary("Artifact Entities testPersistBlankName");
         artifact = Entities.persist(client, Artifact.class, WorkProducts.SCHEMA, "    ", artifact);
     }
@@ -182,7 +177,7 @@ public class EntitiesTest {
     @Test(expected = BadRequestException.class)
     public void testPersistNullEntityRequiredField() {
     	Artifact artifact = new Artifact();
-        artifact.setName(StringUtil.randomString("Artifact Entities"));
+        artifact.setName(StringUtil.randomString("EntitiesTest testPersistNullEntityRequiredField"));
         artifact.setSummary("Artifact Entities testPersistNullEntityRequiredField");
         artifact = Entities.persist(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
     }
@@ -190,7 +185,7 @@ public class EntitiesTest {
     @Test(expected = BadRequestException.class)
     public void testPersistInvalidEntityType() {
     	Artifact artifact = new Artifact();
-        artifact.setName(StringUtil.randomString("Artifact Entities"));
+        artifact.setName(StringUtil.randomString("EntitiesTest testPersistInvalidEntityType"));
         artifact.setSummary("Artifact Entities testPersistInvalidEntityType");
         artifact = Entities.persist(client, Artifact.class, DeliveryProcesses.SCHEMA, DeliveryProcesses.ACTIVITY, artifact);
     }

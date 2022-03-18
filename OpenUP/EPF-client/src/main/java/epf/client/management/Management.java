@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.client.management;
 
 import javax.ws.rs.Path;

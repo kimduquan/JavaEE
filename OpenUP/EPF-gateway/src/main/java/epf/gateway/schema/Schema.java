@@ -47,7 +47,7 @@ public class Schema {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req) throws Exception {
-        return request.request(context, headers, uriInfo, req, null);
+        return request.request(Naming.SCHEMA, context, headers, uriInfo, req, null);
     }
     
     /**
@@ -65,6 +65,6 @@ public class Schema {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req) throws Exception {
-    	return request.request(context, headers, uriInfo, req, null);
+    	return request.request(Naming.SCHEMA, context, headers, uriInfo, req, null);
     }
 }

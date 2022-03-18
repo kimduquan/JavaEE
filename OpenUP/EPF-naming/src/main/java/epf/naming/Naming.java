@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.naming;
 
 /**
@@ -127,6 +124,11 @@ public interface Naming {
 	    String GATEWAY_URL = "epf.gateway.url";
 	    
 	    /**
+	     * 
+	     */
+	    String MESSAGING_URL = "epf.gateway.messaging.url";
+	    
+	    /**
 	     * @author PC
 	     *
 	     */
@@ -212,6 +214,10 @@ public interface Naming {
 		 */
 		String MANAGEMENT_URL = "epf.management.url";
 		
+		/**
+		 * 
+		 */
+		String TENANT = "tenant";
 	}
 	
 	/**
@@ -305,6 +311,36 @@ public interface Naming {
 		 */
 		String PERSISTENCE_ENTITY_LISTENERS_POSTLOAD = "persistence-PostLoad";
 		
+		/**
+		 * @author PC
+		 *
+		 */
+		interface JDBC {
+
+			/**
+			 * 
+			 */
+			String JDBC_USER = "javax.persistence.jdbc.user";
+			/**
+			 * 
+			 */
+			String JDBC_PASSWORD = "javax.persistence.jdbc.password";
+			/**
+			 * 
+			 */
+			String JDBC_URL = "javax.persistence.jdbc.url";
+		}
+		
+		/**
+		 * @author PC
+		 *
+		 */
+		interface Internal {
+			/**
+			 * 
+			 */
+			String SCHEMA = "epf.persistence.schema";
+		}
 	}
 	
 	/**
@@ -483,6 +519,19 @@ public interface Naming {
 	/**
 	 * 
 	 */
+	String SEARCH = "search";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface Search {
+		
+	}
+	
+	/**
+	 * 
+	 */
 	String SECURITY = "security";
 	
 	/**
@@ -505,6 +554,14 @@ public interface Naming {
 	     * @author PC
 	     *
 	     */
+	    interface Internal {
+	    	
+	    }
+	    
+	    /**
+	     * @author PC
+	     *
+	     */
 	    interface JWT {
 	    	
 	        /**
@@ -521,15 +578,22 @@ public interface Naming {
 	         * 
 	         */
 	        String EXPIRE_DURATION = "epf.security.jwt.exp.duration";
-	        /**
-	         * 
-	         */
-	        String EXPIRE_TIMEUNIT = "epf.security.jwt.exp.timeunit";
 	        
 	        /**
 	         * 
 	         */
 	        String TOKEN_CLAIM = "token";
+	    }
+	    
+	    /**
+	     * @author PC
+	     *
+	     */
+	    interface OTP {
+	    	/**
+	         * 
+	         */
+	        String EXPIRE_DURATION = "epf.security.otp.exp.duration";
 	    }
 	}
 	

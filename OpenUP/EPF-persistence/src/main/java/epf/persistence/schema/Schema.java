@@ -1,21 +1,24 @@
-/**
- * 
- */
 package epf.persistence.schema;
 
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-import epf.client.schema.util.EmbeddableComparator;
-import epf.client.schema.util.EntityComparator;
 import epf.naming.Naming;
-import epf.persistence.Request;
-import epf.persistence.internal.Session;
+import epf.persistence.schema.client.Embeddable;
+import epf.persistence.schema.client.Entity;
+import epf.persistence.schema.internal.EmbeddableBuilder;
+import epf.persistence.schema.internal.EmbeddableComparator;
+import epf.persistence.schema.internal.EntityBuilder;
+import epf.persistence.schema.internal.EntityComparator;
+import epf.persistence.ext.EntityManagerFactory;
+import epf.persistence.internal.util.SchemaUtil;
 
 /**
  * @author PC
@@ -24,34 +27,33 @@ import epf.persistence.internal.Session;
 @Path(Naming.SCHEMA)
 @RolesAllowed(Naming.Security.DEFAULT_ROLE)
 @ApplicationScoped
-public class Schema implements epf.client.schema.Schema {
+public class Schema implements epf.persistence.schema.client.Schema {
 	
 	/**
 	 * 
 	 */
 	@Inject
-    private transient Request request;
+    transient EntityManagerFactory factory;
 
 	@Override
-	public Response getEntities(final SecurityContext context) {
-		final Session session = request.getSession(context);
+	public CompletionStage<List<Entity>> getEntities(final SecurityContext context) {
 		final EntityBuilder builder = new EntityBuilder();
 		final EntityComparator comparator = new EntityComparator();
-		final Stream<epf.client.schema.Entity> entities = request
-				.getEntities(session)
+		final Stream<Entity> entities = SchemaUtil
+				.getEntities(factory.getMetamodel())
 				.map(builder::build)
 				.sorted(comparator);
-		return Response.ok(entities.collect(Collectors.toList())).build();
+		return CompletableFuture.completedStage(entities.collect(Collectors.toList()));
 	}
 
 	@Override
-	public Response getEmbeddables(final SecurityContext context) {
-		final Session session = request.getSession(context);
+	public CompletionStage<List<Embeddable>> getEmbeddables(final SecurityContext context) {
 		final EmbeddableBuilder builder = new EmbeddableBuilder();
 		final EmbeddableComparator comparator = new EmbeddableComparator();
-		final Stream<epf.client.schema.Embeddable> embeddables = request.getEmbeddables(session)
+		final Stream<Embeddable> embeddables = SchemaUtil
+				.getEmbeddables(factory.getMetamodel())
 				.map(builder::build)
 				.sorted(comparator);
-		return Response.ok(embeddables.collect(Collectors.toList())).build();
+		return CompletableFuture.completedStage(embeddables.collect(Collectors.toList()));
 	}
 }

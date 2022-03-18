@@ -45,7 +45,7 @@ public class ScheduleTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		HealthUtil.readỵ̣();
+		HealthUtil.isReady();
 		scheduleUrl = ConfigUtil.getURI(Naming.Schedule.SCHEDULE_URL);
 		client = ClientUtil.newClient(scheduleUrl);
 		token = SecurityUtil.login();

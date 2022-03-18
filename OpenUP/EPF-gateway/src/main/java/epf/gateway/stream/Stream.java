@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.gateway.stream;
 
 import java.net.URI;
@@ -10,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.annotation.security.PermitAll;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -73,7 +71,7 @@ public class Stream {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI messagingUrl = registry.lookup(Naming.MESSAGING);
+			final URI messagingUrl = registry.lookup(Naming.MESSAGING).orElseThrow();
 			clients.put(Naming.PERSISTENCE, Client.connectToServer(messagingUrl.resolve(Naming.PERSISTENCE)));
 		} 
 		catch (Exception e) {
@@ -114,6 +112,7 @@ public class Stream {
 	@GET
 	@Path("{path}")
 	@Produces(MediaType.SERVER_SENT_EVENTS)
+	@PermitAll
 	public void stream(
 			@PathParam("path")
 			final String path, 
@@ -123,8 +122,8 @@ public class Stream {
 			final Sse sse,
 			@MatrixParam("tid")
 			final String tokenId) throws Exception {
-		final URI cacheUrl = registry.lookup(Naming.CACHE);
-		final URI securityUrl = registry.lookup(Naming.SECURITY);
+		final URI cacheUrl = registry.lookup(Naming.CACHE).orElseThrow();
+		final URI securityUrl = registry.lookup(Naming.SECURITY).orElseThrow();
 		SecurityUtil.authenticateTokenId(tokenId, cacheUrl, securityUrl).thenAccept(succeed -> {
 			if(succeed) {
 				clients.computeIfPresent(path, (p, client) -> {
