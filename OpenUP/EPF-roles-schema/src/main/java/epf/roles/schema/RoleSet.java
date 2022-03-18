@@ -1,25 +1,23 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.roles.schema;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 import javax.json.JsonObject;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.utility.EntityListener;
 import javax.persistence.Index;
 
 /**
@@ -33,6 +31,8 @@ import javax.persistence.Index;
 @NamedQuery(
         name = RoleSet.ROLES, 
         query = "SELECT rs FROM EPF_RoleSet AS rs")
+@NamedEntityGraph(includeAllAttributes = true)
+@EntityListeners(EntityListener.class)
 public class RoleSet implements Serializable {
 
     /**
@@ -70,7 +70,7 @@ public class RoleSet implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "ROLE"),
             indexes = {@Index(columnList = "ROLE_SET")}
     )
-    private List<Role> roles;
+    private Set<Role> roles;
     
     /**
      * 
@@ -100,11 +100,11 @@ public class RoleSet implements Serializable {
     }
     
     @Name("Roles")
-    public List<Role> getRoles(){
+    public Set<Role> getRoles(){
         return roles;
     }
 
-    public void setRoles(final List<Role> roles){
+    public void setRoles(final Set<Role> roles){
         this.roles = roles;
     }
 

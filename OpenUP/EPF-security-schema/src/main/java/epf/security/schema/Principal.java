@@ -6,13 +6,16 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.MapKeyColumn;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.utility.EntityListener;
 
 /**
  *
@@ -22,6 +25,8 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Schema(name = Security.PRINCIPAL, title = "Principal")
 @Entity(name = Security.PRINCIPAL)
 @Table(schema = Security.SCHEMA, name = "PRINCIPAL", indexes = {@Index(columnList = "NAME")})
+@NamedEntityGraph(includeAllAttributes = true)
+@EntityListeners(EntityListener.class)
 public class Principal implements Serializable {
 
     /**

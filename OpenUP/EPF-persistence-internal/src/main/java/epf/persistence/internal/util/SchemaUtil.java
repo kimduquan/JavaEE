@@ -21,6 +21,11 @@ import epf.persistence.internal.Entity;
 public interface SchemaUtil {
 	
 	/**
+	 * 
+	 */
+	String TENANT_ID_FORMAT = "%s_%s";
+	
+	/**
 	 * @param <T>
 	 * @param metamodel
 	 * @return
@@ -104,5 +109,14 @@ public interface SchemaUtil {
 			});
 			entityAttributes.put(tableName, attributes);
 		});
+	}
+	
+	/**
+	 * @param schema
+	 * @param tenant
+	 * @return
+	 */
+	static String formatTenantId(final String schema, final String tenant) {
+		return String.format(TENANT_ID_FORMAT, schema, tenant);
 	}
 }

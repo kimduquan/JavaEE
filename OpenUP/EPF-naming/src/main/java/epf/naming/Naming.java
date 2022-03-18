@@ -217,7 +217,7 @@ public interface Naming {
 		/**
 		 * 
 		 */
-		String TERNANT = "ternant";
+		String TENANT = "tenant";
 	}
 	
 	/**
@@ -331,6 +331,16 @@ public interface Naming {
 			String JDBC_URL = "javax.persistence.jdbc.url";
 		}
 		
+		/**
+		 * @author PC
+		 *
+		 */
+		interface Internal {
+			/**
+			 * 
+			 */
+			String SCHEMA = "epf.persistence.schema";
+		}
 	}
 	
 	/**
@@ -545,10 +555,7 @@ public interface Naming {
 	     *
 	     */
 	    interface Internal {
-	    	/**
-	    	 * 
-	    	 */
-	    	String USERNAME_TERNANT_SEPARATOR = "@";
+	    	
 	    }
 	    
 	    /**

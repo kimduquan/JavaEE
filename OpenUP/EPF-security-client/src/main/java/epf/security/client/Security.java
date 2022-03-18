@@ -68,14 +68,14 @@ public interface Security {
             @FormParam("username")
             @NotBlank
             final String username,
-            @FormParam("password_hash")
+            @FormParam("password")
             @NotBlank
-            final String passwordHash, 
+            final String password, 
             @QueryParam(URL)
             @NotNull
             final URL url,
-            @MatrixParam(Naming.Management.TERNANT)
-            final String ternant,
+            @MatrixParam(Naming.Management.TENANT)
+            final String tenant,
             @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_HOST)
             final List<String> forwardedHost,
             @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PORT)
@@ -94,11 +94,11 @@ public interface Security {
     static String login(
     		final Client client,
     		final String username, 
-    		final String passwordHash, 
+    		final String password, 
     		final URL url) {
     	final MultivaluedMap<String, String> form = new MultivaluedHashMap<>();
     	form.add("username", username);
-    	form.add("password_hash", passwordHash);
+    	form.add("password", password);
     	return client.request(
     			target -> target.queryParam(URL, url),
     			req -> req.accept(MediaType.TEXT_PLAIN))

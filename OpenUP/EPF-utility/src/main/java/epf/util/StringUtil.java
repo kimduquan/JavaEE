@@ -1,5 +1,6 @@
 package epf.util;
 
+import java.nio.charset.Charset;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,6 +20,12 @@ public interface StringUtil {
 	 * 
 	 */
 	char[] SHORT_STRING_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray();
+	
+	/**
+	 * 
+	 */
+	char[] HEX_CHARS = "0123456789abcdef".toCharArray();
+	
 	/**
 	 * 
 	 */
@@ -176,4 +183,20 @@ public interface StringUtil {
 	static String toPascalSnakeCase(final String... words) {
 		return Stream.of(words).map(word -> "" + Character.toUpperCase(word.charAt(0)) + word.substring(1).toLowerCase()).collect(Collectors.joining("_"));
 	}
+	
+	/**
+	 * @param value
+	 * @param charset
+	 * @return
+	 */
+	static String toHex(final byte[] value, final Charset charset) {
+        final byte[] bytes = new byte[value.length * 2];
+        final char[] hex = HEX_CHARS;
+        for (int i = 0, j = 0; i < value.length; i++) {
+            final int c = value[i] & 0xff;
+            bytes[j++] = (byte) hex[c >> 4];
+            bytes[j++] = (byte) hex[c & 0xf];
+        }
+        return new String(bytes, charset);
+    }
 }

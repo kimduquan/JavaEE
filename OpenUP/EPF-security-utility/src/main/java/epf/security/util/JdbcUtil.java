@@ -8,10 +8,10 @@ public interface JdbcUtil {
 
 	/**
 	 * @param url
-	 * @param ternant
+	 * @param tenant
 	 * @return
 	 */
-	static String formatTernantUrl(final String url, final String ternant) {
-		return url + "SCHEMA=" + ternant;
+	static String formatTenantUrl(final String url, final String tenant) {
+		return url + "SCHEMA=" + tenant;
 	}
 }

@@ -2,7 +2,7 @@ package epf.tasks.schema.section;
 
 import epf.tasks.schema.Tasks;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -41,7 +41,7 @@ public class Relationships implements Serializable {
     		joinColumns = @JoinColumn(name = "TASK"),
     		indexes = {@Index(columnList = "TASK")})
     @Column(name = "ROLE", nullable = false)
-    private List<String> additionallyPerforms;
+    private Set<String> additionallyPerforms;
     
     /**
      * 
@@ -53,7 +53,7 @@ public class Relationships implements Serializable {
     		joinColumns = @JoinColumn(name = "TASK"),
     		indexes = {@Index(columnList = "TASK")})
     @Column(name = "ARTIFACT", nullable = false)
-    private List<String> mandatory;
+    private Set<String> mandatory;
     
     /**
      * 
@@ -65,7 +65,7 @@ public class Relationships implements Serializable {
     		joinColumns = @JoinColumn(name = "TASK"),
     		indexes = {@Index(columnList = "TASK")})
     @Column(name = "ARTIFACT", nullable = false)
-    private List<String> optional;
+    private Set<String> optional;
     
     /**
      * 
@@ -78,7 +78,7 @@ public class Relationships implements Serializable {
     		joinColumns = @JoinColumn(name = "TASK"),
     		indexes = {@Index(columnList = "TASK")})
     @Column(name = "ARTIFACT", nullable = false)
-    private List<String> outputs;
+    private Set<String> outputs;
 
     public String getPrimaryPerformer() {
         return primaryPerformer;
@@ -89,35 +89,35 @@ public class Relationships implements Serializable {
     }
     
     @Name("Additionally_Performs")
-    public List<String> getAdditionallyPerforms(){
+    public Set<String> getAdditionallyPerforms(){
         return additionallyPerforms;
     }
 
-    public void setAdditionallyPerforms(final List<String> additionallyPerforms) {
+    public void setAdditionallyPerforms(final Set<String> additionallyPerforms) {
         this.additionallyPerforms = additionallyPerforms;
     }
 
-    public List<String> getMandatory() {
+    public Set<String> getMandatory() {
         return mandatory;
     }
 
-    public void setMandatory(final List<String> mandatory) {
+    public void setMandatory(final Set<String> mandatory) {
         this.mandatory = mandatory;
     }
 
-    public List<String> getOptional() {
+    public Set<String> getOptional() {
         return optional;
     }
 
-    public void setOptional(final List<String> optional) {
+    public void setOptional(final Set<String> optional) {
         this.optional = optional;
     }
 
-    public List<String> getOutputs() {
+    public Set<String> getOutputs() {
         return outputs;
     }
 
-    public void setOutputs(final List<String> outputs) {
+    public void setOutputs(final Set<String> outputs) {
         this.outputs = outputs;
     }
 }

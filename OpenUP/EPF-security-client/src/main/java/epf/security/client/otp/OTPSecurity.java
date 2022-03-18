@@ -42,14 +42,14 @@ public interface OTPSecurity {
             @FormParam("username")
             @NotBlank
             final String username,
-            @FormParam("password_hash")
+            @FormParam("password")
             @NotBlank
-            final String passwordHash, 
+            final String password, 
             @QueryParam("url")
             @NotNull
             final URL url,
-            @MatrixParam(Naming.Management.TERNANT)
-            final String ternant
+            @MatrixParam(Naming.Management.TENANT)
+            final String tenant
     ) throws Exception;
     
     /**
@@ -62,11 +62,11 @@ public interface OTPSecurity {
     static String loginOneTime(
     		final Client client,
     		final String username, 
-    		final String passwordHash, 
+    		final String password, 
     		final URL url) {
     	final Form form = new Form();
     	form.param("username", username);
-    	form.param("password_hash", passwordHash);
+    	form.param("password", password);
     	return client.request(
     			target -> target.path("otp").queryParam("url", url),
     			req -> req.accept(MediaType.TEXT_PLAIN))

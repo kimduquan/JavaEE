@@ -201,7 +201,7 @@ public class ShellTest {
 	@Test
 	public void testPersistence_Persist() throws Exception {
 		Artifact artifact = new Artifact();
-		artifact.setName(StringUtil.randomString("Artifact Shell"));
+		artifact.setName(StringUtil.randomString("ShellTest testPersistence_Persist"));
         artifact.setSummary("Artifact Shell testPersistence_Persist");
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
@@ -230,7 +230,7 @@ public class ShellTest {
 	@Test
 	public void testPersistence_Merge() throws Exception {
 		Artifact artifact = new Artifact();
-        artifact.setName(StringUtil.randomString("Artifact_Shell"));
+        artifact.setName(StringUtil.randomString("ShellTest_testPersistence_Merge"));
         artifact.setSummary(StringUtil.randomString("Artifact_Shell testPersistence_Merge"));
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
@@ -262,7 +262,7 @@ public class ShellTest {
 	@Test
 	public void testPersistence_Remove() throws Exception {
 		Artifact artifact = new Artifact();
-        artifact.setName(StringUtil.randomString("Artifact_Shell"));
+        artifact.setName(StringUtil.randomString("ShellTest_testPersistence_Remove"));
         artifact.setSummary("Artifact Shell testPersistence_Remove");
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());

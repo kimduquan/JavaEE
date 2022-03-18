@@ -43,7 +43,7 @@ public class Client implements AutoCloseable {
     /**
      * 
      */
-    private transient Optional<String> ternant = Optional.empty();
+    private transient Optional<String> tenant = Optional.empty();
     
     /**
      * @param clients
@@ -98,11 +98,11 @@ public class Client implements AutoCloseable {
 	}
 	
 	/**
-	 * @param ternant
+	 * @param tenant
 	 * @return
 	 */
-	public Client ternant(final String ternant) {
-		this.ternant = Optional.ofNullable(ternant);
+	public Client tenant(final String tenant) {
+		this.tenant = Optional.ofNullable(tenant);
 		return this;
 	}
 	
@@ -130,8 +130,8 @@ public class Client implements AutoCloseable {
     	Objects.requireNonNull(buildTarget);
     	Objects.requireNonNull(buildRequest);
     	WebTarget target = rsClient.target(uri);
-    	if(ternant.isPresent()) {
-    		target = target.matrixParam(Naming.Management.TERNANT, ternant.get());
+    	if(tenant.isPresent()) {
+    		target = target.matrixParam(Naming.Management.TENANT, tenant.get());
     	}
     	target = buildTarget.apply(target);
     	Invocation.Builder request = target.request();

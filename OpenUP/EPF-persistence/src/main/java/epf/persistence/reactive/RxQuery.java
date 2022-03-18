@@ -13,6 +13,7 @@ public class RxQuery<R> implements epf.persistence.ext.Query<R> {
 	
 	/**
 	 * @param query
+	 * @param session
 	 */
 	RxQuery(final org.hibernate.reactive.mutiny.Mutiny.Query<R> query) {
 		this.query = query;

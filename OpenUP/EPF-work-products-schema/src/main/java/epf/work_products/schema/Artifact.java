@@ -4,13 +4,16 @@ import java.io.Serializable;
 import javax.json.JsonObject;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Id;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.persistence.Embedded;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.utility.EntityListener;
 import epf.work_products.schema.section.Description;
 import epf.work_products.schema.section.Illustrations;
 import epf.work_products.schema.section.MoreInformation;
@@ -25,6 +28,8 @@ import epf.work_products.schema.section.Tailoring;
 @Schema(name = WorkProducts.ARTIFACT, title = "Artifact")
 @Entity(name = WorkProducts.ARTIFACT)
 @Table(schema = WorkProducts.SCHEMA, name = "ARTIFACT")
+@NamedEntityGraph(includeAllAttributes = true)
+@EntityListeners(EntityListener.class)
 public class Artifact implements Serializable {
 
     /**

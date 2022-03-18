@@ -23,11 +23,11 @@ public interface KeyUtil {
 	 * @throws GeneralSecurityException
 	 * @throws IOException
 	 */
-	static PrivateKey generatePrivate(final String algorithm, final String privateText, final Base64.Decoder decoder) throws GeneralSecurityException, IOException {
+	static PrivateKey generatePrivate(final String algorithm, final String privateText, final Base64.Decoder decoder, final String charset) throws GeneralSecurityException, IOException {
 		return KeyFactory.getInstance(algorithm)
                     .generatePrivate(
                             new PKCS8EncodedKeySpec(
-                                decoder.decode(privateText.getBytes("UTF-8"))
+                                decoder.decode(privateText.getBytes(charset))
                             )
                     );
 	}
@@ -40,11 +40,11 @@ public interface KeyUtil {
 	 * @throws GeneralSecurityException
 	 * @throws IOException
 	 */
-	static PublicKey generatePublic(final String algorithm, final String publicText, final Base64.Decoder decoder) throws GeneralSecurityException, IOException {
+	static PublicKey generatePublic(final String algorithm, final String publicText, final Base64.Decoder decoder, final String charset) throws GeneralSecurityException, IOException {
 		return KeyFactory.getInstance(algorithm)
                     .generatePublic(
                             new X509EncodedKeySpec(
-                                decoder.decode(publicText.getBytes("UTF-8"))
+                                decoder.decode(publicText.getBytes(charset))
                             )
                     );
 	}

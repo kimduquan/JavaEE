@@ -27,9 +27,19 @@
 		    <artifactId>javax.transaction-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.persistence/org.eclipse.persistence.core -->
+		<dependency>
+		    <groupId>org.eclipse.persistence</groupId>
+		    <artifactId>org.eclipse.persistence.core</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>openup</groupId>
 			<artifactId>EPF-naming</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>openup</groupId>
+			<artifactId>EPF-utility</artifactId>
 			<version>${project.version}</version>
 		</dependency>
     </dependencies>

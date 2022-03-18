@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.messaging.client;
 
 import java.io.IOException;
@@ -20,7 +17,7 @@ public interface Messaging {
 	 * @throws DeploymentException
 	 * @throws IOException
 	 */
-	static Client connectToServer(URI uri) throws DeploymentException, IOException {
+	static Client connectToServer(final URI uri) throws DeploymentException, IOException {
 		final Client client = new Client();
 		client.setSession(ContainerProvider.getWebSocketContainer().connectToServer(client, uri));
 		return client;

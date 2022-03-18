@@ -155,7 +155,7 @@ public class SecurityTest {
     	Entry<String, String> credential = SecurityUtil.peekCredential();
         MultivaluedMap<String, String> form = new MultivaluedHashMap<>();
         form.putSingle("username", credential.getKey());
-        form.putSingle("password_hash", credential.getValue());
+        form.putSingle("password", credential.getValue());
         form.putSingle("url", "    ");
         try(Client client = ClientUtil.newClient(securityUrl)){
         	client.request(
@@ -171,7 +171,7 @@ public class SecurityTest {
     	Entry<String, String> credential = SecurityUtil.peekCredential();
         MultivaluedMap<String, String> form = new MultivaluedHashMap<>();
         form.putSingle("username", credential.getKey());
-        form.putSingle("password_hash", credential.getValue());
+        form.putSingle("password", credential.getValue());
         form.putSingle("url", "Invalid");
         try(Client client = ClientUtil.newClient(securityUrl)){
         	client.request(

@@ -1,24 +1,22 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.work_products.schema;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.utility.EntityListener;
 import javax.persistence.Index;
 
 /**
@@ -32,6 +30,8 @@ import javax.persistence.Index;
 @NamedQuery(
         name = Domain.DOMAINS, 
         query = "SELECT d FROM EPF_Domain AS d")
+@NamedEntityGraph(includeAllAttributes = true)
+@EntityListeners(EntityListener.class)
 public class Domain implements Serializable {
 
     /**
@@ -69,7 +69,7 @@ public class Domain implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "ARTIFACT"),
             indexes = {@Index(columnList = "DOMAIN")}
     )
-    private List<Artifact> workProducts;
+    private Set<Artifact> workProducts;
     
     @Override
     public String toString() {
@@ -93,11 +93,11 @@ public class Domain implements Serializable {
     }
     
     @Name("Work_Products")
-    public List<Artifact> getWorkProducts(){
+    public Set<Artifact> getWorkProducts(){
         return workProducts;
     }
 
-    public void setWorkProducts(final List<Artifact> workProducts) {
+    public void setWorkProducts(final Set<Artifact> workProducts) {
         this.workProducts = workProducts;
     }
 }
