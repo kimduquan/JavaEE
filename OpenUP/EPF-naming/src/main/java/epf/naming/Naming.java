@@ -659,5 +659,17 @@ public interface Naming {
 	     * 
 	     */
 	    String SECURITY_WEB_APP_URL = "epf.security.webapp.url";
+	    
+	    /**
+	     * @author PC
+	     *
+	     */
+	    interface Security {
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String LOGIN = "/login";
+	    }
 	}
 }

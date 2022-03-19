@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" id="WebApp_ID" version="4.0">
   <display-name>Eclipse Process Framework Web Application</display-name>
-  <!-- <security-constraint>
+  <security-constraint>
      <web-resource-collection>
          <web-resource-name>EPF-webapp</web-resource-name>
          <url-pattern>/webapp/*</url-pattern>
@@ -12,7 +12,15 @@
      <user-data-constraint>
      	<transport-guarantee>CONFIDENTIAL</transport-guarantee>
      </user-data-constraint>
-  </security-constraint> -->
+  </security-constraint>
+  <login-config>
+        <auth-method>FORM</auth-method>
+        <realm-name>EPF</realm-name>
+        <form-login-config>
+            <form-login-page>/webapp/login.xhtml</form-login-page>
+            <form-error-page>/webapp/register.xhtml</form-error-page>
+        </form-login-config>
+    </login-config>
   <servlet>
     <servlet-name>Faces Servlet</servlet-name>
     <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
