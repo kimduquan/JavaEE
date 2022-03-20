@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f = "http://xmlns.jcp.org/jsf/core">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f = "http://xmlns.jcp.org/jsf/core" xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
 
 <h:head>
 
@@ -9,7 +9,7 @@
     <meta name="description" content=""/>
     <meta name="author" content=""/>
 
-    <title>SB Admin 2 - Login</title>
+    <title><h:outputText value="#{i18n['epf.webapp']}" /> - <h:outputText value="#{i18n['epf.security.login']}" /></title>
 
     <!-- Custom fonts for this template-->
     <h:outputStylesheet library="startbootstrap-sb-admin-2-gh-pages" name="vendor/fontawesome-free/css/all.min.css" />
@@ -39,42 +39,42 @@
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+                                        <h1 class="h4 text-gray-900 mb-4"><h:outputText value="#{i18n['epf.security.login.welcome']}" /></h1>
                                     </div>
                                     <h:form styleClass="user">
                                         <div class="form-group">
-                                            <h:inputText type="email" styleClass="form-control form-control-user"
-                                                id="exampleInputEmail" aria-describedby="emailHelp"
-                                                placeholder="Enter Email Address..." value="#{login.credential.caller}"/>
+                                            <h:inputText name="caller" type="email" styleClass="form-control form-control-user"
+                                                id="caller" a:aria-describedby="emailHelp"
+                                                a:placeholder="#{i18n['epf.security.credential.caller']}" value="#{security_login.caller}"/>
                                         </div>
                                         <div class="form-group">
-                                            <h:inputSecret styleClass="form-control form-control-user"
-                                                id="exampleInputPassword" placeholder="Password" value="#{login.credential.password}"/>
+                                            <h:inputSecret name="password" styleClass="form-control form-control-user"
+                                                id="password" a:placeholder="#{i18n['epf.security.credential.password']}" value="#{security_login.password}" converter="PasswordConverter"/>
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
                                                 <h:selectBooleanCheckbox styleClass="custom-control-input" id="customCheck"/>
-                                                <h:outputLabel styleClass="custom-control-label" for="customCheck">Remember
-                                                    Me</h:outputLabel>
+                                                <h:outputLabel styleClass="custom-control-label" for="customCheck"><h:outputText value="#{i18n['epf.security.login.remember_me']}" />
+                                                    </h:outputLabel>
                                             </div>
                                         </div>
-                                        <h:commandButton styleClass="btn btn-primary btn-user btn-block" value="Login" action="#{login.authenticate}">
+                                        <h:commandButton a:name="login" styleClass="btn btn-primary btn-user btn-block" value="#{i18n['epf.security.login']}" action="#{security_login.login}">
                                             <f:ajax execute="@form" render="@form" />
                                         </h:commandButton>
                                         <hr/>
                                         <h:link outcome="index" styleClass="btn btn-google btn-user btn-block">
-                                            <i class="fab fa-google fa-fw"></i> Login with Google
+                                            <i class="fab fa-google fa-fw"></i><h:outputFormat value="#{i18n['epf.security.login.with']}"><f:param value = "Google" /></h:outputFormat>
                                         </h:link>
                                         <h:link outcome="index" styleClass="btn btn-facebook btn-user btn-block">
-                                            <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
+                                            <i class="fab fa-facebook-f fa-fw"></i><h:outputFormat value="#{i18n['epf.security.login.with']}"><f:param value = "Facebook" /></h:outputFormat>
                                         </h:link>
                                     </h:form>
                                     <hr/>
                                     <div class="text-center">
-                                        <h:link styleClass="small" outcome="forgot-password">Forgot Password?</h:link>
+                                        <h:link styleClass="small" outcome="forgot-password"><h:outputText value="#{i18n['epf.security.credential.password.forget']}" /></h:link>
                                     </div>
                                     <div class="text-center">
-                                        <h:link styleClass="small" outcome="register">Create an Account!</h:link>
+                                        <h:link styleClass="small" outcome="register"><h:outputText value="#{i18n['epf.security.credential.new']}" /></h:link>
                                     </div>
                                 </div>
                             </div>

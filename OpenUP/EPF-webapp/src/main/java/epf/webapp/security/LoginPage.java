@@ -7,17 +7,18 @@ import javax.inject.Named;
 import javax.security.enterprise.AuthenticationStatus;
 import javax.security.enterprise.SecurityContext;
 import javax.security.enterprise.authentication.mechanism.http.AuthenticationParameters;
+import javax.security.enterprise.credential.Password;
 import javax.security.enterprise.credential.UsernamePasswordCredential;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import epf.webapp.security.view.LoginView;
+import epf.security.view.LoginView;
 
 /**
  * @author PC
  *
  */
 @RequestScoped
-@Named("login")
+@Named(LoginView.NAME)
 public class LoginPage implements LoginView {
 	
 	/**
@@ -35,14 +36,37 @@ public class LoginPage implements LoginView {
 	/**
 	 * 
 	 */
-	private final Credential credential = new Credential();
+	private String caller;
 	
 	/**
-	 * @return
+	 * 
 	 */
-	public String authenticate() {
-		final UsernamePasswordCredential usernamePassword = new UsernamePasswordCredential(credential.getCaller(), credential.getPassword());
-		final AuthenticationParameters params = AuthenticationParameters.withParams().credential(usernamePassword);
+	private transient char[] password;
+
+	@Override
+	public String getCaller() {
+		return caller;
+	}
+
+	@Override
+	public void setCaller(final String caller) {
+		this.caller = caller;
+	}
+
+	@Override
+	public char[] getPassword() {
+		return password;
+	}
+
+	@Override
+	public void setPassword(final char[] password) {
+		this.password = password;
+	}
+
+	@Override
+	public String login() throws Exception {
+		final UsernamePasswordCredential credential = new UsernamePasswordCredential(caller, new Password(password));
+		final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential);
 		final HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
 		final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
 		final AuthenticationStatus status = context.authenticate(request, response, params);
@@ -50,9 +74,5 @@ public class LoginPage implements LoginView {
 			return "index";
 		}
 		return "login";
-	}
-
-	public Credential getCredential() {
-		return credential;
 	}
 }

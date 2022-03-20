@@ -602,7 +602,7 @@ public interface Naming {
 	        /**
 	         * 
 	         */
-	        String ENCRYPT_KEY = "epf.security.jwt.encrypt.key";
+	        String VERIFY_KEY = "epf.security.jwt.verify.publickey";
 	        
 	        /**
 	         * 

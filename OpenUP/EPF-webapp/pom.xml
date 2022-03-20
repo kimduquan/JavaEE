@@ -62,6 +62,12 @@
 		    <artifactId>microprofile-openapi-api</artifactId>
 		</dependency>
 		
+		<!-- https://mvnrepository.com/artifact/org.bitbucket.b_c/jose4j -->
+		<dependency>
+		    <groupId>org.bitbucket.b_c</groupId>
+		    <artifactId>jose4j</artifactId>
+		</dependency>
+		
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-client</artifactId>
@@ -70,6 +76,16 @@
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-security-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-view</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-security-view</artifactId>
             <version>${project.version}</version>
         </dependency>
 		<dependency>

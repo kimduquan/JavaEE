@@ -1,19 +1,12 @@
-/**
- * 
- */
-package epf.tests.portlet;
+package epf.tests;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import epf.portlet.naming.Naming;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.time.Duration;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Disposes;
 import jakarta.enterprise.inject.Produces;
-import jakarta.inject.Named;
 
 /**
  * @author PC
@@ -62,17 +55,5 @@ public class WebDriverUtil {
 	
 	public static void close(@Disposes WebDriver webDriver) {
 		webDriver.quit();
-	}
-	
-	@Produces @Named(Naming.PORTLET_URL)
-	public static URL getPortletURL() {
-		URL url = null;
-		try {
-			url = new URL(System.getProperty(Naming.PORTLET_URL, "http://localhost:8080/pluto/portal/"));
-		} 
-		catch (MalformedURLException e) {
-			
-		}
-		return url;
 	}
 }
