@@ -65,6 +65,36 @@ public interface Naming {
 		 * 
 		 */
 		String CLIENT_CONFIG = "epf.client.config";
+		
+		/**
+		 * 
+		 */
+		String SSL_KEY_STORE = "epf.client.net.ssl.keyStore";
+		
+		/**
+		 * 
+		 */
+		String SSL_KEY_STORE_TYPE = "epf.client.net.ssl.keyStoreType";
+		
+		/**
+		 * 
+		 */
+		String SSL_KEY_STORE_PASSWORD = "epf.client.net.ssl.keyStorePassword";
+		
+		/**
+		 * 
+		 */
+		String SSL_TRUST_STORE = "epf.client.net.ssl.trustStore";
+		
+		/**
+		 * 
+		 */
+		String SSL_TRUST_STORE_TYPE = "epf.client.net.ssl.trustStoreType";
+		
+		/**
+		 * 
+		 */
+		String SSL_TRUST_STORE_PASSWORD = "epf.client.net.ssl.trustStorePassword";
 	}
 	
 	/**

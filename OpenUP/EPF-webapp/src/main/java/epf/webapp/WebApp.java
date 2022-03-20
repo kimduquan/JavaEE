@@ -5,9 +5,12 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.annotation.security.DeclareRoles;
 import javax.enterprise.context.ApplicationScoped;
 import javax.faces.annotation.FacesConfig;
 import javax.inject.Inject;
+import javax.security.enterprise.authentication.mechanism.http.CustomFormAuthenticationMechanismDefinition;
+import javax.security.enterprise.authentication.mechanism.http.LoginToContinue;
 import javax.ws.rs.core.Link;
 import epf.client.config.Config;
 import epf.client.registry.Registry;
@@ -24,6 +27,12 @@ import epf.util.logging.LogManager;
  */
 @ApplicationScoped
 @FacesConfig
+@CustomFormAuthenticationMechanismDefinition(
+		loginToContinue = @LoginToContinue(
+				loginPage = "/webapp/login.xhtml"
+				)
+		)
+@DeclareRoles(value = { Naming.Security.DEFAULT_ROLE })
 public class WebApp {
 	
 	/**

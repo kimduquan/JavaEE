@@ -18,6 +18,7 @@
 		<dependency>
 			<groupId>javax.security.enterprise</groupId>
 			<artifactId>javax.security.enterprise-api</artifactId>
+		    <scope>provided</scope>
 		</dependency>
 		<dependency>
 		    <groupId>javax.annotation</groupId>
@@ -86,7 +87,7 @@
                     <execution>
                         <phase>pre-integration-test</phase>
                         <goals>
-                            <goal>deploy</goal>
+                            <goal>redeploy</goal>
                         </goals>
                     </execution>
                 </executions>

@@ -50,12 +50,6 @@
 		<liberty.env.epf_shell_command>${shell_command}</liberty.env.epf_shell_command>
 		<liberty.env.epf_shell_runner>${shell_runner}</liberty.env.epf_shell_runner>
 		<liberty.env.epf_tests_file_root>target/servers/test/epf.file.root</liberty.env.epf_tests_file_root>
-		<!--<liberty.env.javax.net.ssl.keyStore>${project.basedir}/dev.p12</liberty.env.javax.net.ssl.keyStore>
-		<liberty.env.javax.net.ssl.keyStorePassword>changeit</liberty.env.javax.net.ssl.keyStorePassword>
-		<liberty.env.javax.net.ssl.keyStoreType>PKCS12</liberty.env.javax.net.ssl.keyStoreType>
-		<liberty.env.javax.net.ssl.trustStore>${project.basedir}/dev.p12</liberty.env.javax.net.ssl.trustStore>
-		<liberty.env.javax.net.ssl.trustStorePassword>changeit</liberty.env.javax.net.ssl.trustStorePassword>
-		<liberty.env.javax.net.ssl.trustStoreType>PKCS12</liberty.env.javax.net.ssl.trustStoreType>-->
     </properties>
     <dependencies>
        	<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
@@ -367,12 +361,9 @@
                         <epf.tests.file.root>target/servers/test/epf.file.root</epf.tests.file.root>
                         <webdriver.timeouts.implicit>60</webdriver.timeouts.implicit>
                         <webdriver.firefox.headless>true</webdriver.firefox.headless>
-						<javax.net.ssl.keyStore>${project.basedir}/dev.p12</javax.net.ssl.keyStore>
-						<javax.net.ssl.keyStorePassword>changeit</javax.net.ssl.keyStorePassword>
-						<javax.net.ssl.keyStoreType>PKCS12</javax.net.ssl.keyStoreType>
-						<javax.net.ssl.trustStore>${project.basedir}/dev.p12</javax.net.ssl.trustStore>
-						<javax.net.ssl.trustStorePassword>changeit</javax.net.ssl.trustStorePassword>
-						<javax.net.ssl.trustStoreType>PKCS12</javax.net.ssl.trustStoreType>
+						<epf.client.net.ssl.keyStore>${project.basedir}/dev.p12</epf.client.net.ssl.keyStore>
+						<epf.client.net.ssl.keyStorePassword>changeit</epf.client.net.ssl.keyStorePassword>
+						<epf.client.net.ssl.keyStoreType>PKCS12</epf.client.net.ssl.keyStoreType>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>

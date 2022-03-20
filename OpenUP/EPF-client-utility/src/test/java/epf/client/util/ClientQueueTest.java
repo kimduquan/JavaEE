@@ -4,7 +4,6 @@
 package epf.client.util;
 
 import java.net.URI;
-import javax.net.ssl.SSLContext;
 import javax.ws.rs.client.ClientBuilder;
 import org.junit.After;
 import org.junit.Assert;
@@ -47,16 +46,6 @@ public class ClientQueueTest {
 	@Test
 	public void testClientQueue() {
 		Assert.assertTrue("ClientQueue.clients.empty", clientQueue.getClients().isEmpty());
-		Assert.assertNull("ClientQueue.clients.context", clientQueue.getContext());
-	}
-
-	/**
-	 * Test method for {@link epf.client.util.ClientQueue#initialize()}.
-	 */
-	@Test
-	public void testInitialize() {
-		clientQueue.initialize();
-		Assert.assertNotNull("ClientQueue.clients.context", clientQueue.getContext());
 	}
 
 	/**
@@ -71,16 +60,6 @@ public class ClientQueueTest {
 		clientQueue.close();
 		Assert.assertTrue("ClientQueue.clients.empty", clientQueue.getClients().isEmpty());
 		Mockito.verify(mockClient, Mockito.times(1)).close();
-	}
-
-	/**
-	 * Test method for {@link epf.client.util.ClientQueue#newBuilder(javax.net.ssl.SSLContext)}.
-	 */
-	@Test
-	@Ignore
-	public void testNewBuilder() {
-		ClientBuilder clientBuilder = ClientQueue.newBuilder(Mockito.mock(SSLContext.class));
-		Assert.assertNotNull(clientBuilder);
 	}
 
 	/**
