@@ -57,4 +57,14 @@ public class LoginPage implements LoginView {
 		return passwordElement.getText().toCharArray();
 	}
 
+	@Override
+	public boolean isRememberMe() {
+		return false;
+	}
+
+	@Override
+	public void setRememberMe(boolean rememberMe) {
+		
+	}
+
 }

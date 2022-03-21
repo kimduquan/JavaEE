@@ -42,6 +42,11 @@ public class LoginPage implements LoginView {
 	 * 
 	 */
 	private transient char[] password;
+	
+	/**
+	 * 
+	 */
+	private boolean rememberMe;
 
 	@Override
 	public String getCaller() {
@@ -64,9 +69,19 @@ public class LoginPage implements LoginView {
 	}
 
 	@Override
+	public boolean isRememberMe() {
+		return rememberMe;
+	}
+
+	@Override
+	public void setRememberMe(boolean rememberMe) {
+		this.rememberMe = rememberMe;
+	}
+
+	@Override
 	public String login() throws Exception {
 		final UsernamePasswordCredential credential = new UsernamePasswordCredential(caller, new Password(password));
-		final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential);
+		final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(rememberMe);
 		final HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
 		final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
 		final AuthenticationStatus status = context.authenticate(request, response, params);

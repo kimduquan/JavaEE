@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.tests.security;
 
 import epf.client.gateway.GatewayUtil;
@@ -13,6 +8,7 @@ import epf.security.schema.Token;
 import epf.tests.client.ClientUtil;
 import epf.tests.health.HealthUtil;
 import java.util.Map.Entry;
+import java.time.Duration;
 import java.util.AbstractMap;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -46,10 +42,10 @@ public class SecurityUtil {
     	}
     }
     
-    public static String revoke(String token) throws Exception {
+    public static String revoke(String token, Duration duration) throws Exception {
     	try(Client client = ClientUtil.newClient(GatewayUtil.get(Naming.SECURITY))){
     		client.authorization(token);
-    		return Security.revoke(client);
+    		return Security.revoke(client, duration);
     	}
     }
     

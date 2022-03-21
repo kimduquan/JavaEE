@@ -152,12 +152,12 @@ public class Security implements epf.security.client.Security, epf.security.clie
      * @param url
      * @return
      */
-    Token newToken(final String name, final Set<String> groups, final Set<String> audience, final Map<String, Object> claims) {
+    Token newToken(final String name, final Set<String> groups, final Set<String> audience, final Map<String, Object> claims, final String duration) {
     	final long now = Instant.now().getEpochSecond();
     	final Token token = new Token();
     	token.setAudience(audience);
     	token.setClaims(claims);
-    	token.setExpirationTime(now + Duration.parse(expireDuration).getSeconds());
+    	token.setExpirationTime(now + Duration.parse(duration).getSeconds());
     	token.setGroups(groups);
     	token.setIssuedAtTime(now);
     	token.setIssuer(issuer);
@@ -170,12 +170,12 @@ public class Security implements epf.security.client.Security, epf.security.clie
      * @param jsonWebToken
      * @return
      */
-    Token newToken(final JsonWebToken jsonWebToken, final Set<String> groups, final Set<String> audience, final Map<String, Object> claims) {
+    Token newToken(final JsonWebToken jsonWebToken, final Set<String> groups, final Set<String> audience, final Map<String, Object> claims, final String duration) {
     	final long now = Instant.now().getEpochSecond();
 		final Token token = TokenUtil.from(jsonWebToken);
 		token.setAudience(audience);
 		token.setClaims(claims);
-		token.setExpirationTime(now + Duration.parse(expireDuration).getSeconds());
+		token.setExpirationTime(now + Duration.parse(duration).getSeconds());
 		token.setIssuedAtTime(now);
 		token.setGroups(groups);
 		return token;
@@ -239,7 +239,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 								(groups, claims) -> {
 									final Set<String> audience = buildAudience(url, forwardedHost, forwardedPort, forwardedProto);
 									final Map<String, Object> newClaims = buildClaims(claims, tenant);
-									final Token token = newToken(principal.getName(), groups, audience, newClaims);
+									final Token token = newToken(principal.getName(), groups, audience, newClaims, expireDuration);
 									final TokenBuilder builder = new TokenBuilder(token, privateKey, publicKey);
 									final Token newToken = builder.build();
 									sessionStore.putSession(principal, newToken, credential);
@@ -281,13 +281,15 @@ public class Security implements epf.security.client.Security, epf.security.clie
             final SecurityContext context,
 			final List<String> forwardedHost,
             final List<String> forwardedPort,
-            final List<String> forwardedProto) throws Exception {
+            final List<String> forwardedProto,
+            final String duration) throws Exception {
+		final String tokenDuration = duration != null && !duration.isEmpty() ? duration : expireDuration;
 		final Session session = sessionStore.removeSession(context).orElseThrow(ForbiddenException::new);
 		final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
 		final Set<String> audience = buildAudience(null, forwardedHost, forwardedPort, forwardedProto);
 		audience.addAll(jwt.getAudience());
 		return identityStore.getCallerGroups(session.getPrincipal())
-				.thenCombine(principalStore.getCallerClaims(session.getPrincipal()), (groups, claims) -> newToken(jwt, groups, audience, claims))
+				.thenCombine(principalStore.getCallerClaims(session.getPrincipal()), (groups, claims) -> newToken(jwt, groups, audience, claims, tokenDuration))
 						.thenApply(token -> new TokenBuilder(token, privateKey, publicKey))
 						.thenApply(builder -> builder.build())
 						.thenApply(newToken -> {
@@ -329,7 +331,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 		final Session session = otpSessionStore.removeSession(oneTimePassword).orElseThrow(() -> new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build()));
 		final Set<String> audience = buildAudience(url, forwardedHost, forwardedPort, forwardedProto);
 		return identityStore.getCallerGroups(session.getPrincipal())
-		.thenCombine(principalStore.getCallerClaims(session.getPrincipal()), (groups, claims) -> newToken(session.getPrincipal().getName(), groups, audience, claims))
+		.thenCombine(principalStore.getCallerClaims(session.getPrincipal()), (groups, claims) -> newToken(session.getPrincipal().getName(), groups, audience, claims, expireDuration))
 		.thenApply(token -> new TokenBuilder(token, privateKey, publicKey))
 		.thenApply(builder -> builder.build())
 		.thenApply(newToken -> {

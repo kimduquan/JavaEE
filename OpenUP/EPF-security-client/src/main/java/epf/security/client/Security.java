@@ -1,6 +1,7 @@
 package epf.security.client;
 
 import java.net.URL;
+import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
 import javax.validation.constraints.NotBlank;
@@ -184,6 +185,7 @@ public interface Security {
      * @throws Exception 
      */
     @PUT
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
     CompletionStage<String> revoke(
             @Context
@@ -193,16 +195,22 @@ public interface Security {
             @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PORT)
             final List<String> forwardedPort,
             @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PROTO)
-            final List<String> forwardedProto) throws Exception;
+            final List<String> forwardedProto,
+            @FormParam("duration")
+            final String duration) throws Exception;
     
     /**
      * @param client
      * @return
      */
-    static String revoke(final Client client) {
+    static String revoke(final Client client, final Duration duration) {
+    	final Form form = new Form();
+    	if(duration != null) {
+    		form.param("duration", duration.toString());
+    	}
     	return client.request(
     			target -> target,
     			req -> req.accept(MediaType.TEXT_PLAIN))
-    			.put(null, String.class);
+    			.put(Entity.form(form), String.class);
     }
 }

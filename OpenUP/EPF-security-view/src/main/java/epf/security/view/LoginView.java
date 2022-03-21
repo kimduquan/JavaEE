@@ -33,6 +33,16 @@ public interface LoginView {
 	
 	/**
 	 * @return
+	 */
+	boolean isRememberMe();
+	
+	/**
+	 * @param rememberMe
+	 */
+	void setRememberMe(final boolean rememberMe);
+	
+	/**
+	 * @return
 	 * @throws Exception
 	 */
 	String login() throws Exception;

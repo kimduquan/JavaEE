@@ -1,12 +1,14 @@
 package epf.webapp.security;
 
 import java.security.PublicKey;
+import java.time.Duration;
 import java.util.Base64;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.security.enterprise.CallerPrincipal;
 import javax.security.enterprise.credential.RememberMeCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
@@ -17,10 +19,13 @@ import org.jose4j.jwt.MalformedClaimException;
 import org.jose4j.jwt.consumer.InvalidJwtException;
 import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
+import epf.client.util.Client;
 import epf.naming.Naming;
+import epf.security.client.Security;
 import epf.util.config.ConfigUtil;
 import epf.util.logging.LogManager;
 import epf.util.security.KeyUtil;
+import epf.webapp.GatewayUtil;
 
 @ApplicationScoped
 public class EPFRememberMeIdentityStore implements RememberMeIdentityStore {
@@ -34,6 +39,12 @@ public class EPFRememberMeIdentityStore implements RememberMeIdentityStore {
 	 * 
 	 */
 	private transient JwtConsumer jwtConsumer;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	private transient GatewayUtil gatewayUtil;
 	
 	/**
 	 * 
@@ -82,16 +93,30 @@ public class EPFRememberMeIdentityStore implements RememberMeIdentityStore {
 
 	@Override
 	public String generateLoginToken(final CallerPrincipal callerPrincipal, final Set<String> groups) {
+		String newToken = "";
 		if(callerPrincipal instanceof TokenPrincipal) {
 			final TokenPrincipal principal = (TokenPrincipal) callerPrincipal;
-			return principal.getToken();
+			newToken = principal.getToken();
+			try(Client client = gatewayUtil.newClient(Naming.SECURITY)){
+				client.authorization(principal.getToken());
+				newToken = Security.revoke(client, Duration.ofDays(1));
+			} 
+			catch (Exception e) {
+				LOGGER.log(Level.SEVERE, "[EPFRememberMeIdentityStore.generateLoginToken]", e);
+			}
 		}
-		return "";
+		return newToken;
 	}
 
 	@Override
 	public void removeLoginToken(final String token) {
-		
+		try(Client client = gatewayUtil.newClient(Naming.SECURITY)){
+			client.authorization(token);
+			Security.logOut(client);
+		} 
+		catch (Exception e) {
+			LOGGER.log(Level.SEVERE, "[EPFRememberMeIdentityStore.removeLoginToken]", e);
+		}
 	}
 
 }

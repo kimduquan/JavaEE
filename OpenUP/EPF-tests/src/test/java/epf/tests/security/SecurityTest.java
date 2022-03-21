@@ -59,10 +59,10 @@ public class SecurityTest {
     	}
     }
     
-    String revoke(String token) throws Exception{
+    String revoke(String token, Duration duration) throws Exception{
     	try(Client client = ClientUtil.newClient(securityUrl)){
 			client.authorization(token);
-    		return Security.revoke(client);
+    		return Security.revoke(client, duration);
     	}
     }
     
@@ -308,7 +308,7 @@ public class SecurityTest {
     	Token jwt = authenticate(token);
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token);
-    		String newToken = Security.revoke(client);
+    		String newToken = Security.revoke(client, null);
     		Assert.assertNotEquals(token, newToken);
     		Assert.assertThrows(NotAuthorizedException.class, () -> {
     			authenticate(token);
@@ -325,10 +325,10 @@ public class SecurityTest {
     	Entry<String, String> credential = SecurityUtil.peekCredential();
     	final String token = SecurityUtil.login(credential.getKey(), credential.getValue());
     	try(Client client = ClientUtil.newClient(securityUrl)){
-    		String newToken = revoke(token);
+    		String newToken = revoke(token, null);
     		Token newJwt = authenticate(newToken);
     		client.authorization(newToken);
-    		String newToken2 = Security.revoke(client);
+    		String newToken2 = Security.revoke(client, null);
     		Token newJwt2 = authenticate(newToken2);
     		Assert.assertNotNull("Token", newJwt2);
     		Assert.assertNotEquals("Token.tokenID", newJwt.getTokenID(), newJwt2.getTokenID());
