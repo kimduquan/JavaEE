@@ -20,7 +20,7 @@ import epf.webapp.security.Session;
  *
  */
 @RequestScoped
-@Named(LoginView.NAME)
+@Named(Naming.Security.LOGIN)
 public class LoginPage implements LoginView {
 	
 	/**
@@ -89,8 +89,8 @@ public class LoginPage implements LoginView {
 		final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
 		final AuthenticationStatus status = context.authenticate(request, response, params);
 		if(AuthenticationStatus.SUCCESS.equals(status)) {
-			return "index";
+			return Naming.DEFAULT_VIEW;
 		}
-		return "login";
+		return Naming.Security.LOGIN;
 	}
 }

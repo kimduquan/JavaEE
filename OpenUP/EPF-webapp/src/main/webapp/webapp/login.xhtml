@@ -58,9 +58,9 @@
                                                     </h:outputLabel>
                                             </div>
                                         </div>
-                                        <h:commandButton a:name="login" styleClass="btn btn-primary btn-user btn-block" value="#{i18n['epf.security.login']}" action="#{security_login.login}">
+                                        <h:commandLink a:name="login" styleClass="btn btn-primary btn-user btn-block" value="#{i18n['epf.security.login']}" action="#{security_login.login}">
                                             <f:ajax execute="@form" render="@form" />
-                                        </h:commandButton>
+                                        </h:commandLink>
                                         <hr/>
                                         <h:link outcome="index" styleClass="btn btn-google btn-user btn-block">
                                             <i class="fab fa-google fa-fw"></i><h:outputFormat value="#{i18n['epf.security.login.with']}"><f:param value = "Google" /></h:outputFormat>

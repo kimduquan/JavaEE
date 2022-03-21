@@ -7,11 +7,6 @@ package epf.security.view;
 public interface LoginView {
 	
 	/**
-	 * 
-	 */
-	String NAME = "security_login";
-	
-	/**
 	 * @return
 	 */
 	String getCaller();

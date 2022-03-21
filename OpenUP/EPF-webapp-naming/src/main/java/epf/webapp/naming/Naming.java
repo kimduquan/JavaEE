@@ -12,6 +12,11 @@ public interface Naming {
 	String VIEW = "epf_view";
 	
 	/**
+	 * 
+	 */
+	String DEFAULT_VIEW = "index";
+	
+	/**
 	 * @author PC
 	 *
 	 */
@@ -20,6 +25,21 @@ public interface Naming {
 		/**
 		 * 
 		 */
+		String LOGIN = "security_login";
+		
+		/**
+		 * 
+		 */
 		String SESSION = "security_session";
+		
+		/**
+		 * 
+		 */
+		String CONVERSATION = "security_conversation";
+		
+		/**
+		 * 
+		 */
+		String PRINCIPAL = "security_principal";
 	}
 }

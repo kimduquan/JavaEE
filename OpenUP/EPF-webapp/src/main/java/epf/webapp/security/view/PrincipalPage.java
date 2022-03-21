@@ -1,5 +1,8 @@
 package epf.webapp.security.view;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -7,6 +10,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.security.enterprise.SecurityContext;
+import javax.servlet.http.HttpServletRequest;
 import org.eclipse.microprofile.jwt.Claims;
 import epf.client.util.Client;
 import epf.security.client.Security;
@@ -14,6 +18,7 @@ import epf.security.schema.Token;
 import epf.security.view.PrincipalView;
 import epf.util.logging.LogManager;
 import epf.webapp.GatewayUtil;
+import epf.webapp.naming.Naming;
 import epf.webapp.security.TokenPrincipal;
 
 /**
@@ -21,7 +26,7 @@ import epf.webapp.security.TokenPrincipal;
  *
  */
 @RequestScoped
-@Named(PrincipalView.NAME)
+@Named(Naming.Security.PRINCIPAL)
 public class PrincipalPage implements PrincipalView {
 	
 	/**
@@ -40,6 +45,12 @@ public class PrincipalPage implements PrincipalView {
 	 */
 	@Inject
 	private transient GatewayUtil gatewayUtil;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	private transient HttpServletRequest request;
 	
 	/**
 	 * 
@@ -64,7 +75,27 @@ public class PrincipalPage implements PrincipalView {
 	/**
 	 * @return
 	 */
-	public String getFullName() {
+	@Override
+	public String getName() {
 		return token.getClaims().get(Claims.full_name.name()).toString();
+	}
+
+	@Override
+	public String logout() throws Exception {
+		request.logout();
+		request.getSession(false).invalidate();
+		return Naming.DEFAULT_VIEW;
+	}
+
+	@Override
+	public List<String> getClaimNames() {
+		final List<String> names = Arrays.asList(token.getClaims().keySet().toArray(new String[0]));
+		Collections.sort(names);
+		return names;
+	}
+
+	@Override
+	public String getClaim(final String name) {
+		return String.valueOf(token.getClaims().get(name));
 	}
 }
