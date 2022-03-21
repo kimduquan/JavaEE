@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
 
 <h:head>
 
@@ -170,8 +170,8 @@
                     <h:form
                         styleClass="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
-                            <h:inputText styleClass="form-control bg-light border-0 small" placeholder="Search for..."
-                                aria-label="Search" aria-describedby="basic-addon2" />
+                            <h:inputText styleClass="form-control bg-light border-0 small" a:placeholder="Search for..."
+                                a:aria-label="Search" a:aria-describedby="basic-addon2" />
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="button">
                                     <i class="fas fa-search fa-sm"></i>
@@ -195,8 +195,8 @@
                                 <h:form styleClass="form-inline mr-auto w-100 navbar-search">
                                     <div class="input-group">
                                         <h:inputText styleClass="form-control bg-light border-0 small"
-                                            placeholder="Search for..." aria-label="Search"
-                                            aria-describedby="basic-addon2" />
+                                            a:placeholder="Search for..." a:aria-label="Search"
+                                            a:aria-describedby="basic-addon2" />
                                         <div class="input-group-append">
                                             <button class="btn btn-primary" type="button">
                                                 <i class="fas fa-search fa-sm"></i>
@@ -330,7 +330,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><h:outputText value="#{security_principal.fullName}" /></span>
                                 <h:graphicImage library="startbootstrap-sb-admin-2-gh-pages" styleClass="img-profile rounded-circle"
                                     name="img/undraw_profile.svg" />
                             </a>

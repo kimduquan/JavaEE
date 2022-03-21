@@ -1,4 +1,4 @@
-package epf.webapp.security;
+package epf.webapp.security.view;
 
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.ExternalContext;
@@ -12,6 +12,8 @@ import javax.security.enterprise.credential.UsernamePasswordCredential;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import epf.security.view.LoginView;
+import epf.webapp.naming.Naming;
+import epf.webapp.security.Session;
 
 /**
  * @author PC
@@ -36,17 +38,18 @@ public class LoginPage implements LoginView {
 	/**
 	 * 
 	 */
+	@Inject @Named(Naming.Security.SESSION)
+	private Session session;
+	
+	/**
+	 * 
+	 */
 	private String caller;
 	
 	/**
 	 * 
 	 */
 	private transient char[] password;
-	
-	/**
-	 * 
-	 */
-	private boolean rememberMe;
 
 	@Override
 	public String getCaller() {
@@ -70,18 +73,18 @@ public class LoginPage implements LoginView {
 
 	@Override
 	public boolean isRememberMe() {
-		return rememberMe;
+		return session.isRemember();
 	}
 
 	@Override
-	public void setRememberMe(boolean rememberMe) {
-		this.rememberMe = rememberMe;
+	public void setRememberMe(final boolean rememberMe) {
+		session.setRemember(rememberMe);
 	}
 
 	@Override
 	public String login() throws Exception {
 		final UsernamePasswordCredential credential = new UsernamePasswordCredential(caller, new Password(password));
-		final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(rememberMe);
+		final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(session.isRemember());
 		final HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
 		final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
 		final AuthenticationStatus status = context.authenticate(request, response, params);

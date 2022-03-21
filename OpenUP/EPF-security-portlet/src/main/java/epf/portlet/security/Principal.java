@@ -110,7 +110,7 @@ public class Principal implements PrincipalView, Serializable {
 		final URI securityUrl = gatewayUtil.get(epf.naming.Naming.SECURITY);
 		String rawToken;
 		try(Client client = clientUtil.newClient(securityUrl)){
-			rawToken = epf.security.client.Security.revoke(client);
+			rawToken = epf.security.client.Security.revoke(client, null);
 		}
 		Token token;
 		try(Client client = clientUtil.newClient(securityUrl)){

@@ -27,6 +27,10 @@ import epf.util.logging.LogManager;
 import epf.util.security.KeyUtil;
 import epf.webapp.GatewayUtil;
 
+/**
+ * @author PC
+ *
+ */
 @ApplicationScoped
 public class EPFRememberMeIdentityStore implements RememberMeIdentityStore {
 	
@@ -96,10 +100,11 @@ public class EPFRememberMeIdentityStore implements RememberMeIdentityStore {
 		String newToken = "";
 		if(callerPrincipal instanceof TokenPrincipal) {
 			final TokenPrincipal principal = (TokenPrincipal) callerPrincipal;
-			newToken = principal.getToken();
+			newToken = principal.getRawToken();
 			try(Client client = gatewayUtil.newClient(Naming.SECURITY)){
-				client.authorization(principal.getToken());
+				client.authorization(principal.getRawToken());
 				newToken = Security.revoke(client, Duration.ofDays(1));
+				principal.setRememberToken(newToken);
 			} 
 			catch (Exception e) {
 				LOGGER.log(Level.SEVERE, "[EPFRememberMeIdentityStore.generateLoginToken]", e);
