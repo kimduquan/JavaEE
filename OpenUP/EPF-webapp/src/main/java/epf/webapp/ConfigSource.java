@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.inject.Named;
 import epf.client.config.Config;
 import epf.client.util.Client;
 import epf.naming.Naming;
@@ -19,7 +18,6 @@ import epf.util.logging.LogManager;
  *
  */
 @ApplicationScoped
-@Named(Naming.CONFIG)
 public class ConfigSource {
 	
 	/**

@@ -625,6 +625,38 @@ public interface Naming {
 	         */
 	        String EXPIRE_DURATION = "epf.security.otp.exp.duration";
 	    }
+	    
+	    /**
+	     * @author PC
+	     *
+	     */
+	    interface Auth {
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String AUTH_URL = "epf.security.auth.url";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String GOOGLE_PROVIDER = "epf.security.auth.openid.discovery.google";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String GOOGLE_CLIENT_ID = "epf.security.auth.openid.client.id.google";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String GOOGLE_CLIENT_SECRET = "epf.security.auth.openid.client.secret.google";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String FACEBOOK_PROVIDER = "epf.security.auth.openid.discovery.facebook";
+	    }
 	}
 	
 	/**

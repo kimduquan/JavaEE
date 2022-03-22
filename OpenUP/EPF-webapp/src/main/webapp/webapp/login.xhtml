@@ -62,12 +62,12 @@
                                             <f:ajax execute="@form" render="@form" />
                                         </h:commandLink>
                                         <hr/>
-                                        <h:link outcome="index" styleClass="btn btn-google btn-user btn-block">
+                                        <h:commandLink styleClass="btn btn-google btn-user btn-block" action="#{security_login.loginWithGoogle}">
                                             <i class="fab fa-google fa-fw"></i><h:outputFormat value="#{i18n['epf.security.login.with']}"><f:param value = "Google" /></h:outputFormat>
-                                        </h:link>
-                                        <h:link outcome="index" styleClass="btn btn-facebook btn-user btn-block">
+                                        </h:commandLink>
+                                        <h:commandLink styleClass="btn btn-facebook btn-user btn-block" action="#{security_login.loginWithFacebook}">
                                             <i class="fab fa-facebook-f fa-fw"></i><h:outputFormat value="#{i18n['epf.security.login.with']}"><f:param value = "Facebook" /></h:outputFormat>
-                                        </h:link>
+                                        </h:commandLink>
                                     </h:form>
                                     <hr/>
                                     <div class="text-center">

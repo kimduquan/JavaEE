@@ -1,6 +1,7 @@
 package epf.webapp.security;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -12,8 +13,12 @@ import javax.security.enterprise.identitystore.IdentityStore;
 import epf.util.config.ConfigUtil;
 import epf.util.logging.LogManager;
 import epf.webapp.GatewayUtil;
+import epf.webapp.security.auth.AuthCodeCredential;
+import epf.webapp.security.auth.OpenIDPrincipal;
+import epf.webapp.security.auth.SecurityAuth;
 import epf.client.util.Client;
 import epf.naming.Naming;
+import epf.security.auth.openid.TokenResponse;
 import epf.security.client.Security;
 
 /**
@@ -33,6 +38,12 @@ public class EPFIdentityStore implements IdentityStore {
      */
     @Inject
     private transient GatewayUtil gatewayUtil;
+    
+    /**
+     * 
+     */
+    @Inject
+    private transient SecurityAuth securityAuth;
     
     /**
      * @param credential
@@ -66,5 +77,20 @@ public class EPFIdentityStore implements IdentityStore {
     @Override
     public Set<String> getCallerGroups(final CredentialValidationResult validationResult){
         return validationResult.getCallerGroups();
+    }
+    
+    /**
+     * @param credential
+     * @return
+     */
+    public CredentialValidationResult validate(final AuthCodeCredential credential) {
+    	CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
+    	final TokenResponse tokenResponse = securityAuth.requestToken(credential.getProviderMetadata().getToken_endpoint(), credential.getTokenRequest());
+    	if(tokenResponse != null) {
+    		final OpenIDPrincipal principal = new OpenIDPrincipal(credential.getTokenRequest().getCode(), tokenResponse);
+    		final Set<String> groups = Set.copyOf(Arrays.asList(Naming.Security.DEFAULT_ROLE));
+    		result = new CredentialValidationResult(principal, groups);
+    	}
+    	return result;
     }
 }

@@ -46,10 +46,10 @@
 		<liberty.env.epf_batch_api_url>http://localhost:9080/ibm/</liberty.env.epf_batch_api_url>
 		<liberty.env.epf_net_url>http://localhost:9080/net/net/</liberty.env.epf_net_url>
 		<liberty.env.epf_net_http_port>9080</liberty.env.epf_net_http_port>
-		<liberty.env.epf_shell_path>../EPF-shell/</liberty.env.epf_shell_path>
+		<!--<liberty.env.epf_shell_path>../EPF-shell/</liberty.env.epf_shell_path>
 		<liberty.env.epf_shell_command>${shell_command}</liberty.env.epf_shell_command>
 		<liberty.env.epf_shell_runner>${shell_runner}</liberty.env.epf_shell_runner>
-		<liberty.env.epf_tests_file_root>target/servers/test/epf.file.root</liberty.env.epf_tests_file_root>
+		<liberty.env.epf_tests_file_root>target/servers/test/epf.file.root</liberty.env.epf_tests_file_root>-->
     </properties>
     <dependencies>
        	<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->

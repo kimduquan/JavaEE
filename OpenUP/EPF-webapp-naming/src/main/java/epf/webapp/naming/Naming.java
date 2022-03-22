@@ -41,5 +41,10 @@ public interface Naming {
 		 * 
 		 */
 		String PRINCIPAL = "security_principal";
+		
+		/**
+		 * 
+		 */
+		String AUTH = "security_auth";
 	}
 }

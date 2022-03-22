@@ -67,4 +67,16 @@ public class LoginPage implements LoginView {
 		
 	}
 
+	@Override
+	public String loginWithGoogle() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String loginWithFacebook() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

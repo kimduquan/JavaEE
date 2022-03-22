@@ -26,6 +26,7 @@ import epf.util.config.ConfigUtil;
 import epf.util.logging.LogManager;
 import epf.util.security.KeyUtil;
 import epf.webapp.GatewayUtil;
+import epf.webapp.security.auth.OpenIDPrincipal;
 
 /**
  * @author PC
@@ -109,6 +110,10 @@ public class EPFRememberMeIdentityStore implements RememberMeIdentityStore {
 			catch (Exception e) {
 				LOGGER.log(Level.SEVERE, "[EPFRememberMeIdentityStore.generateLoginToken]", e);
 			}
+		}
+		else if(callerPrincipal instanceof OpenIDPrincipal) {
+			final OpenIDPrincipal principal = (OpenIDPrincipal) callerPrincipal;
+			newToken = principal.getToken().getRefresh_token();
 		}
 		return newToken;
 	}
