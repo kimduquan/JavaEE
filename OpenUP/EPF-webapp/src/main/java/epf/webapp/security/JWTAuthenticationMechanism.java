@@ -25,8 +25,7 @@ import epf.webapp.naming.Naming;
 @RememberMe(isRememberMeExpression = "#{self.rememberMe}")
 @AutoApplySession
 @LoginToContinue(
-		loginPage = "/security/login.xhtml",
-		useForwardToLogin = false
+		loginPage = "/security/login.xhtml"
 		)
 public class JWTAuthenticationMechanism implements HttpAuthenticationMechanism {
 	

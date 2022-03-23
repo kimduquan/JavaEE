@@ -5,8 +5,11 @@
     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_3.xsd"
     version="2.3">
     <protected-views>
-    	<url-pattern>/webapp/security/login.xhtml</url-pattern>
-		<url-pattern>/webapp/security/register.xhtml</url-pattern>
+    	<url-pattern>/security/auth.xhtml</url-pattern>
+    	<url-pattern>/security/openid.xhtml</url-pattern>
+		<url-pattern>/security/register.xhtml</url-pattern>
+		<url-pattern>/security/forgot-password.xhtml</url-pattern>
+		<url-pattern>/webapp/index.xhtml</url-pattern>
     </protected-views>
 	<application>
 		<resource-bundle>

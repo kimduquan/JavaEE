@@ -1,6 +1,5 @@
 package epf.webapp.security.view;
 
-import javax.enterprise.context.Conversation;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.ExternalContext;
 import javax.inject.Inject;
@@ -15,8 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import epf.security.view.LoginView;
 import epf.webapp.naming.Naming;
 import epf.webapp.security.Session;
-import epf.webapp.security.auth.AuthFlow;
-import epf.webapp.security.auth.SecurityAuth;
 
 /**
  * @author PC
@@ -25,12 +22,6 @@ import epf.webapp.security.auth.SecurityAuth;
 @RequestScoped
 @Named(Naming.Security.LOGIN)
 public class LoginPage implements LoginView {
-	
-	/**
-	 * 
-	 */
-	@Inject
-	private transient SecurityAuth securityAuth;
 	
 	/**
 	 * 
@@ -47,20 +38,8 @@ public class LoginPage implements LoginView {
 	/**
 	 * 
 	 */
-	@Inject
-	private transient Conversation conversation;
-	
-	/**
-	 * 
-	 */
 	@Inject @Named(Naming.Security.SESSION)
 	private Session session;
-	
-	/**
-	 * 
-	 */
-	@Inject
-	private AuthFlow authFlow;
 	
 	/**
 	 * 
@@ -113,20 +92,5 @@ public class LoginPage implements LoginView {
 			return Naming.DEFAULT_VIEW;
 		}
 		return Naming.Security.LOGIN;
-	}
-
-	@Override
-	public String loginWithGoogle() throws Exception {
-		conversation.begin();
-		authFlow.setId(conversation.getId());
-		final String authRequestUrl = securityAuth.prepareLoginWithGoogle(authFlow);
-		externalContext.redirect(authRequestUrl);
-		return "";
-	}
-
-	@Override
-	public String loginWithFacebook() throws Exception {
-		
-		return "";
 	}
 }

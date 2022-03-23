@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import epf.security.auth.openid.AuthRequest;
+
 /**
  * @author PC
  *
@@ -30,7 +32,10 @@ public class SecurityAuthServlet extends HttpServlet {
 	        throws ServletException, IOException {
 		final String state = req.getParameter("state");
 		if(state != null && !state.isEmpty()) {
-			final String redirectUrl = "/webapp/login.xhtml?cid=" + state + req.getQueryString();
+			final String[] fragments = state.split(AuthRequest.STATE_SEPARATOR);
+			final String cid = fragments[0];
+			final String securityToken = fragments[1];
+			final String redirectUrl = "/webapp/security/auth.xhtml?" + req.getQueryString() + "&cid=" + cid + "&javax.faces.Token=" + securityToken;
 			resp.sendRedirect(redirectUrl);
 		}
 	}

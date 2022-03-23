@@ -5,6 +5,11 @@ package epf.security.auth.openid;
  *
  */
 public class AuthRequest {
+	
+	/**
+	 * 
+	 */
+	public static final String STATE_SEPARATOR = "\n";
 
 	/**
 	 * 

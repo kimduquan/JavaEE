@@ -1,6 +1,7 @@
 package epf.webapp.security.auth;
 
 import java.net.URLEncoder;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -13,7 +14,6 @@ import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
 import epf.naming.Naming;
 import epf.security.auth.openid.AuthRequest;
 import epf.security.auth.openid.TokenErrorResponse;
@@ -65,7 +65,7 @@ public class SecurityAuth {
 	 * @param authFlow
 	 * @throws Exception 
 	 */
-	public String prepareLoginWithGoogle(final AuthFlow authFlow) throws Exception {
+	public String prepareAuthRequestWithGoogle(final AuthFlow authFlow) throws Exception {
 		authFlow.setProviderMetadata(googleProvider);
 		
 		final AuthRequest authRequest = new AuthRequest();
@@ -78,30 +78,41 @@ public class SecurityAuth {
 		
 		final StringBuilder authRequestUrl = new StringBuilder();
 		authRequestUrl.append(authFlow.getProviderMetadata().getAuthorization_endpoint());
-		if(authFlow.getAuthRequest().getClient_id() != null) {
+		authRequestUrl.append('?');
+		Optional.ofNullable(authFlow.getAuthRequest().getClient_id()).ifPresent(client_id -> {
 			authRequestUrl.append("&client_id=");
-			authRequestUrl.append(authFlow.getAuthRequest().getClient_id());
-		}
-		if(authFlow.getAuthRequest().getNonce() != null) {
+			authRequestUrl.append(client_id);
+		});
+		Optional.ofNullable(authFlow.getAuthRequest().getNonce()).ifPresent(nonce -> {
 			authRequestUrl.append("&nonce=");
-			authRequestUrl.append(authFlow.getAuthRequest().getNonce());
-		}
-		if(authFlow.getAuthRequest().getRedirect_uri() != null) {
+			authRequestUrl.append(nonce);
+		});
+		Optional.ofNullable(authFlow.getAuthRequest().getRedirect_uri()).ifPresent(redirect_uri -> {
 			authRequestUrl.append("&redirect_uri=");
-			authRequestUrl.append(URLEncoder.encode(authFlow.getAuthRequest().getRedirect_uri(), "UTF-8"));
-		}
-		if(authFlow.getAuthRequest().getResponse_type() != null) {
+			try {
+				authRequestUrl.append(URLEncoder.encode(redirect_uri, "UTF-8"));
+			} 
+			catch (Exception e) {
+				LOGGER.log(Level.SEVERE, "[AuthRequest.redirect_uri]", e);
+			}
+		});
+		Optional.ofNullable(authFlow.getAuthRequest().getResponse_type()).ifPresent(response_type -> {
 			authRequestUrl.append("&response_type=");
-			authRequestUrl.append(authFlow.getAuthRequest().getResponse_type());
-		}
-		if(authFlow.getAuthRequest().getScope() != null) {
+			authRequestUrl.append(response_type);
+		});
+		Optional.ofNullable(authFlow.getAuthRequest().getScope()).ifPresent(scope -> {
 			authRequestUrl.append("&scope=");
-			authRequestUrl.append(authFlow.getAuthRequest().getScope());
-		}
-		if(authFlow.getAuthRequest().getState() != null) {
+			authRequestUrl.append(scope);
+		});
+		Optional.ofNullable(authFlow.getAuthRequest().getState()).ifPresent(state -> {
 			authRequestUrl.append("&state=");
-			authRequestUrl.append(authFlow.getAuthRequest().getState());
-		}
+			try {
+				authRequestUrl.append(URLEncoder.encode(state, "UTF-8"));
+			}
+			catch (Exception e) {
+				LOGGER.log(Level.SEVERE, "[AuthRequest.state]", e);
+			}
+		});
 		return authRequestUrl.toString();
 	}
 	
@@ -126,6 +137,10 @@ public class SecurityAuth {
 	public TokenResponse requestToken(final String tokenEndpoint, final TokenRequest tokenRequest) {
 		TokenResponse tokenResponse = null;
 		final Form form = new Form();
+		form.param("client_id", tokenRequest.getClient_id());
+		form.param("code", tokenRequest.getCode());
+		form.param("grant_type", tokenRequest.getGrant_type());
+		form.param("redirect_uri", tokenRequest.getRedirect_uri());
 		final Client client = ClientBuilder.newClient();
 		final Response response = client
 				.target(tokenEndpoint)

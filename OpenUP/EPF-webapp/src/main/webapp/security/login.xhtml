@@ -62,9 +62,9 @@
                                             <f:ajax execute="@form" render="@form" />
                                         </h:commandLink>
                                         <hr/>
-                                        <h:commandLink styleClass="btn btn-google btn-user btn-block" action="#{security_login.loginWithGoogle}">
+                                        <h:link styleClass="btn btn-google btn-user btn-block" outcome="openid">
                                             <i class="fab fa-google fa-fw"></i><h:outputFormat value="#{i18n['epf.security.login.with']}"><f:param value = "Google" /></h:outputFormat>
-                                        </h:commandLink>
+                                        </h:link>
                                         <h:commandLink styleClass="btn btn-facebook btn-user btn-block" action="#{security_login.loginWithFacebook}">
                                             <i class="fab fa-facebook-f fa-fw"></i><h:outputFormat value="#{i18n['epf.security.login.with']}"><f:param value = "Facebook" /></h:outputFormat>
                                         </h:commandLink>

@@ -41,16 +41,4 @@ public interface LoginView {
 	 * @throws Exception
 	 */
 	String login() throws Exception;
-	
-	/**
-	 * @return
-	 * @throws Exception
-	 */
-	String loginWithGoogle() throws Exception;
-	
-	/**
-	 * @return
-	 * @throws Exception
-	 */
-	String loginWithFacebook() throws Exception;
 }
