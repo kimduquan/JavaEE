@@ -47,6 +47,27 @@ public class Config implements epf.client.config.Config {
     /**
      * 
      */
+    @ConfigProperty(name = Naming.Security.Auth.GOOGLE_CLIENT_ID)
+	@Inject
+	private transient String googleClientId;
+    
+    /**
+     * 
+     */
+    @ConfigProperty(name = Naming.Security.Auth.GOOGLE_CLIENT_SECRET)
+	@Inject
+	private transient String googleClientSecret;
+    
+    /**
+     * 
+     */
+    @ConfigProperty(name = Naming.Security.Auth.AUTH_URL)
+    @Inject
+    private transient String authUrl;
+    
+    /**
+     * 
+     */
     @ConfigProperty(name = Naming.Security.Auth.FACEBOOK_PROVIDER)
 	@Inject
 	private transient String facebookOpenIDDiscoveryUrl;
@@ -59,7 +80,10 @@ public class Config implements epf.client.config.Config {
     	configs.put(Naming.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT, String.valueOf(firstResultDefault));
     	configs.put(Naming.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT, String.valueOf(maxResultsDefault));
     	configs.put(Naming.Security.Auth.GOOGLE_PROVIDER, googleOpenIDDiscoveryUrl);
+    	configs.put(Naming.Security.Auth.GOOGLE_CLIENT_ID, googleClientId);
+    	configs.put(Naming.Security.Auth.GOOGLE_CLIENT_SECRET, googleClientSecret);
     	configs.put(Naming.Security.Auth.FACEBOOK_PROVIDER, facebookOpenIDDiscoveryUrl);
+    	configs.put(Naming.Security.Auth.AUTH_URL, authUrl);
     }
     
     @Override

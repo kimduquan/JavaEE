@@ -12,7 +12,6 @@ import javax.security.enterprise.SecurityContext;
 import javax.security.enterprise.authentication.mechanism.http.AuthenticationParameters;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import epf.security.auth.openid.AuthError;
 import epf.security.auth.openid.AuthResponse;
 import epf.security.auth.openid.TokenRequest;
@@ -76,7 +75,7 @@ public class AuthPage {
 			authFlow.setAuthResponse(authResponse);
 		}
 		else {
-			final epf.security.auth.openid.AuthError.Error err = epf.security.auth.openid.AuthError.Error.valueOf(error);
+			final AuthError.Error err = AuthError.Error.valueOf(error);
 			final AuthError authError = new AuthError();
 			authError.setError(err);
 			authError.setState(queryParams.get("state"));

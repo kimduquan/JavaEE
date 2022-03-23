@@ -30,7 +30,7 @@ public class SecurityAuthServlet extends HttpServlet {
 	        throws ServletException, IOException {
 		final String state = req.getParameter("state");
 		if(state != null && !state.isEmpty()) {
-			final String redirectUrl = "/webapp/security/auth?cid=" + state + req.getQueryString();
+			final String redirectUrl = "/webapp/login.xhtml?cid=" + state + req.getQueryString();
 			resp.sendRedirect(redirectUrl);
 		}
 	}
