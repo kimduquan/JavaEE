@@ -64,9 +64,9 @@ public class AuthPage implements AuthView {
 	@Override
 	public String loginWithGoogle() throws Exception {
 		final HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
-		final String securityToken = request.getParameter("javax.faces.Token");
+		final String csrfToken = request.getParameter("javax.faces.Token");
 		conversation.begin();
-		authFlow.setId(conversation.getId() + AuthRequest.STATE_SEPARATOR + securityToken);
+		authFlow.setId(conversation.getId() + AuthRequest.STATE_SEPARATOR + csrfToken);
 		final String authRequestUrl = securityAuth.prepareAuthRequestWithGoogle(authFlow);
 		externalContext.redirect(authRequestUrl);
 		return "";

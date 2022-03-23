@@ -34,8 +34,9 @@ public class SecurityAuthServlet extends HttpServlet {
 		if(state != null && !state.isEmpty()) {
 			final String[] fragments = state.split(AuthRequest.STATE_SEPARATOR);
 			final String cid = fragments[0];
-			final String securityToken = fragments[1];
-			final String redirectUrl = "/webapp/security/auth.xhtml?" + req.getQueryString() + "&cid=" + cid + "&javax.faces.Token=" + securityToken;
+			final String csrfToken = fragments[1];
+			final String redirectUrl = "/webapp/security/auth.xhtml?" + req.getQueryString() + "&cid=" + cid + "&javax.faces.Token=" + csrfToken;
+			resp.setHeader("Referrer-Policy", "no-referrer");
 			resp.sendRedirect(redirectUrl);
 		}
 	}
