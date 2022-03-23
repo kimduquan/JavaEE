@@ -21,12 +21,17 @@ public class AuthCodeCredential implements Credential {
 	private final TokenRequest tokenRequest;
 	
 	/**
+	 * 
+	 */
+	private transient final char[] clientSecret;
+	
+	/**
 	 * @param tokenRequest
 	 */
-	public AuthCodeCredential(final TokenRequest tokenRequest, final ProviderMetadata providerMetadata) {
+	public AuthCodeCredential(final TokenRequest tokenRequest, final ProviderMetadata providerMetadata, final char[] clientSecret) {
 		this.providerMetadata = providerMetadata;
 		this.tokenRequest = tokenRequest;
-		
+		this.clientSecret = clientSecret;
 	}
 
 	public TokenRequest getTokenRequest() {
@@ -35,5 +40,9 @@ public class AuthCodeCredential implements Credential {
 
 	public ProviderMetadata getProviderMetadata() {
 		return providerMetadata;
+	}
+
+	public char[] getClientSecret() {
+		return clientSecret;
 	}
 }

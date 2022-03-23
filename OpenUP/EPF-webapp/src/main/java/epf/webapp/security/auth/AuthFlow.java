@@ -22,6 +22,11 @@ public class AuthFlow implements Serializable {
 	/**
 	 * 
 	 */
+	private transient char[] clientSecret;
+	
+	/**
+	 * 
+	 */
 	private String id;
 	
 	/**
@@ -82,5 +87,13 @@ public class AuthFlow implements Serializable {
 
 	public void setAuthError(final AuthError authError) {
 		this.authError = authError;
+	}
+
+	public char[] getClientSecret() {
+		return clientSecret;
+	}
+
+	public void setClientSecret(final char[] clientSecret) {
+		this.clientSecret = clientSecret;
 	}
 }

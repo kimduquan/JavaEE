@@ -9,7 +9,6 @@
     	<url-pattern>/security/openid.xhtml</url-pattern>
 		<url-pattern>/security/register.xhtml</url-pattern>
 		<url-pattern>/security/forgot-password.xhtml</url-pattern>
-		<url-pattern>/webapp/index.xhtml</url-pattern>
     </protected-views>
 	<application>
 		<resource-bundle>

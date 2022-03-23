@@ -85,10 +85,13 @@ public class EPFIdentityStore implements IdentityStore {
      */
     public CredentialValidationResult validate(final AuthCodeCredential credential) {
     	CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
-    	final TokenResponse tokenResponse = securityAuth.requestToken(credential.getProviderMetadata().getToken_endpoint(), credential.getTokenRequest());
+    	final TokenResponse tokenResponse = securityAuth.requestToken(
+    			credential.getProviderMetadata().getToken_endpoint(), 
+    			credential.getTokenRequest(), 
+    			credential.getClientSecret());
     	if(tokenResponse != null) {
     		final OpenIDPrincipal principal = new OpenIDPrincipal(credential.getTokenRequest().getCode(), tokenResponse);
-    		final Set<String> groups = Set.copyOf(Arrays.asList(Naming.Security.DEFAULT_ROLE));
+    		final Set<String> groups = new HashSet<>(Arrays.asList(Naming.Security.DEFAULT_ROLE));
     		result = new CredentialValidationResult(principal, groups);
     	}
     	return result;

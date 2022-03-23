@@ -67,6 +67,7 @@ public class SecurityAuth {
 	 */
 	public String prepareAuthRequestWithGoogle(final AuthFlow authFlow) throws Exception {
 		authFlow.setProviderMetadata(googleProvider);
+		authFlow.setClientSecret(config.getProperty(Naming.Security.Auth.GOOGLE_CLIENT_SECRET).toCharArray());
 		
 		final AuthRequest authRequest = new AuthRequest();
 		authRequest.setClient_id(config.getProperty(Naming.Security.Auth.GOOGLE_CLIENT_ID));
@@ -134,13 +135,14 @@ public class SecurityAuth {
 	 * @param tokenRequest
 	 * @return
 	 */
-	public TokenResponse requestToken(final String tokenEndpoint, final TokenRequest tokenRequest) {
+	public TokenResponse requestToken(final String tokenEndpoint, final TokenRequest tokenRequest, final char[] clientSecret) {
 		TokenResponse tokenResponse = null;
 		final Form form = new Form();
 		form.param("client_id", tokenRequest.getClient_id());
 		form.param("code", tokenRequest.getCode());
 		form.param("grant_type", tokenRequest.getGrant_type());
 		form.param("redirect_uri", tokenRequest.getRedirect_uri());
+		form.param("client_secret", new String(clientSecret));
 		final Client client = ClientBuilder.newClient();
 		final Response response = client
 				.target(tokenEndpoint)

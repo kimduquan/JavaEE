@@ -98,8 +98,8 @@ public class AuthPage implements AuthView {
 		}
 		
 		final TokenRequest tokenRequest = securityAuth.prepareTokenRequest(authFlow);
-		final AuthCodeCredential credential = new AuthCodeCredential(tokenRequest, authFlow.getProviderMetadata());
-		session.setRemember(true);
+		final AuthCodeCredential credential = new AuthCodeCredential(tokenRequest, authFlow.getProviderMetadata(), authFlow.getClientSecret());
+		//session.setRemember(true);
 		final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(session.isRemember());
 		final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
 		final AuthenticationStatus status = context.authenticate(request, response, params);
