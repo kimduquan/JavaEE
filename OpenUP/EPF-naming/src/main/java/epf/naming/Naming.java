@@ -656,6 +656,16 @@ public interface Naming {
 	    	 * 
 	    	 */
 	    	String FACEBOOK_PROVIDER = "epf.security.auth.openid.discovery.facebook";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String FACEBOOK_CLIENT_ID = "epf.security.auth.openid.client.id.facebook";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String FACEBOOK_CLIENT_SECRET = "epf.security.auth.openid.client.secret.facebook";
 	    }
 	}
 	

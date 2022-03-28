@@ -84,6 +84,17 @@ public class AuthPage implements AuthView {
 
 	@Override
 	public String loginWithFacebook() throws Exception {
+		final HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
+		final String csrfToken = request.getParameter("javax.faces.Token");
+		conversation.begin();
+		authFlow.setId(conversation.getId() + AuthRequest.STATE_SEPARATOR + csrfToken);
+		final AuthRequest authRequest = new AuthRequest();
+		authRequest.setState(conversation.getId() + AuthRequest.STATE_SEPARATOR + csrfToken);
+		final Provider provider = securityAuth.initFacebookProvider(authFlow, authRequest);
+		authFlow.setAuthRequest(authRequest);
+		authFlow.setProvider(provider);
+		final String authRequestUrl = provider.authorizeUrl(authRequest);
+		externalContext.redirect(authRequestUrl);
 		return "";
 	}
 	

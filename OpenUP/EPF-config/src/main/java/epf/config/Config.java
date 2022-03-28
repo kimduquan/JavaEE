@@ -75,6 +75,20 @@ public class Config implements epf.client.config.Config {
     /**
      * 
      */
+    @ConfigProperty(name = Naming.Security.Auth.FACEBOOK_CLIENT_ID)
+	@Inject
+	private transient String facebookClientId;
+    
+    /**
+     * 
+     */
+    @ConfigProperty(name = Naming.Security.Auth.FACEBOOK_CLIENT_SECRET)
+	@Inject
+	private transient String facebookClientSecret;
+    
+    /**
+     * 
+     */
     @ConfigProperty(name = Naming.Security.JWT.VERIFY_KEY)
     @Inject
     private transient String verifyKey;
@@ -90,6 +104,8 @@ public class Config implements epf.client.config.Config {
     	configs.put(Naming.Security.Auth.GOOGLE_CLIENT_ID, googleClientId);
     	configs.put(Naming.Security.Auth.GOOGLE_CLIENT_SECRET, googleClientSecret);
     	configs.put(Naming.Security.Auth.FACEBOOK_PROVIDER, facebookOpenIDDiscoveryUrl);
+    	configs.put(Naming.Security.Auth.FACEBOOK_CLIENT_ID, facebookClientId);
+    	configs.put(Naming.Security.Auth.FACEBOOK_CLIENT_SECRET, facebookClientSecret);
     	configs.put(Naming.Security.Auth.AUTH_URL, authUrl);
     	configs.put(Naming.Security.JWT.VERIFY_KEY, verifyKey);
     }

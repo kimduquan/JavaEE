@@ -3,7 +3,6 @@ package epf.security.auth.openid.provider;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -178,9 +177,6 @@ public class StandardProvider implements Provider {
 			}
 			if(isValid) {
 				isValid = "RS256".equals(claims.getClaimValue("alg")) || Arrays.asList(metadata.getId_token_signing_alg_values_supported()).contains(claims.getClaimValue("alg"));
-			}
-			if(isValid && claims.getClaimValue("nonce") != null) {
-				isValid = Instant.ofEpochSecond(Long.parseLong(claims.getClaimValueAsString("nonce"))).plus(5, ChronoUnit.MINUTES).isBefore(Instant.now());
 			}
 		}
 		catch (Exception ex) {

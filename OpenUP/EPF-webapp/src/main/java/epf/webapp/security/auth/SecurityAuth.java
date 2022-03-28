@@ -39,11 +39,18 @@ public class SecurityAuth {
 	/**
 	 * 
 	 */
+	private transient Provider facebookProvider;
+	
+	/**
+	 * 
+	 */
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI discoveryUrl = new URI(config.getProperty(Naming.Security.Auth.GOOGLE_PROVIDER));
-			googleProvider = new StandardProvider(discoveryUrl);
+			final URI googleDiscoveryUrl = new URI(config.getProperty(Naming.Security.Auth.GOOGLE_PROVIDER));
+			googleProvider = new StandardProvider(googleDiscoveryUrl);
+			final URI facebookDiscoveryUrl = new URI(config.getProperty(Naming.Security.Auth.FACEBOOK_PROVIDER));
+			facebookProvider = new StandardProvider(facebookDiscoveryUrl);
 		} 
 		catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "[SecurityAuth.googleProvider]");
@@ -63,12 +70,27 @@ public class SecurityAuth {
 	}
 	
 	/**
+	 * @param authFlow
+	 * @param authRequest
+	 * @return
+	 */
+	public Provider initFacebookProvider(final AuthFlow authFlow, final AuthRequest authRequest) {
+		authFlow.setClientSecret(config.getProperty(Naming.Security.Auth.FACEBOOK_CLIENT_SECRET).toCharArray());
+		authRequest.setClient_id(config.getProperty(Naming.Security.Auth.FACEBOOK_CLIENT_ID));
+		authRequest.setRedirect_uri(config.getProperty(Naming.Security.Auth.AUTH_URL));
+		return facebookProvider;
+	}
+	
+	/**
 	 * @param issuer
 	 * @return
 	 */
 	public Provider getProvider(final String issuer) {
 		if(issuer.contains("google.com")) {
 			return googleProvider;
+		}
+		else if(issuer.contains("facebook.com")) {
+			return facebookProvider;
 		}
 		return null;
 	}
