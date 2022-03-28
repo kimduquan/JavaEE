@@ -66,17 +66,4 @@ public class LoginPage implements LoginView {
 	public void setRememberMe(boolean rememberMe) {
 		
 	}
-
-	@Override
-	public String loginWithGoogle() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String loginWithFacebook() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

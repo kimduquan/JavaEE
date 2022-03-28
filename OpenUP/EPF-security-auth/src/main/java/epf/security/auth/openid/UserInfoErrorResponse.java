@@ -4,7 +4,7 @@ package epf.security.auth.openid;
  * @author PC
  *
  */
-public class TokenErrorResponse extends Exception {
+public class UserInfoErrorResponse extends Exception {
 
 	/**
 	 * 
@@ -23,23 +23,11 @@ public class TokenErrorResponse extends Exception {
 		/**
 		 * 
 		 */
-		invalid_client,
+		invalid_token,
 		/**
 		 * 
 		 */
-		invalid_grant,
-		/**
-		 * 
-		 */
-		unauthorized_client,
-		/**
-		 * 
-		 */
-		unsupported_grant_type,
-		/**
-		 * 
-		 */
-		invalid_scope
+		insufficient_scope
 	}
 	
 	/**
@@ -83,4 +71,5 @@ public class TokenErrorResponse extends Exception {
 	public String toString() {
 		return String.format("[error=%s\terror_uri=%s\terror_description=%s", error, error_uri, error_description);
 	}
+
 }

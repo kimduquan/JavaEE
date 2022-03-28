@@ -5,7 +5,7 @@ import javax.enterprise.context.ConversationScoped;
 import epf.security.auth.openid.AuthError;
 import epf.security.auth.openid.AuthRequest;
 import epf.security.auth.openid.AuthResponse;
-import epf.security.auth.openid.spi.ProviderMetadata;
+import epf.security.auth.openid.ProviderMetadata;
 
 /**
  * @author PC

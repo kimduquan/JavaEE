@@ -75,6 +75,13 @@ public class Config implements epf.client.config.Config {
     /**
      * 
      */
+    @ConfigProperty(name = Naming.Security.JWT.VERIFY_KEY)
+    @Inject
+    private transient String verifyKey;
+    
+    /**
+     * 
+     */
     @PostConstruct
     protected void postConstruct() {
     	configs.put(Naming.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT, String.valueOf(firstResultDefault));
@@ -84,6 +91,7 @@ public class Config implements epf.client.config.Config {
     	configs.put(Naming.Security.Auth.GOOGLE_CLIENT_SECRET, googleClientSecret);
     	configs.put(Naming.Security.Auth.FACEBOOK_PROVIDER, facebookOpenIDDiscoveryUrl);
     	configs.put(Naming.Security.Auth.AUTH_URL, authUrl);
+    	configs.put(Naming.Security.JWT.VERIFY_KEY, verifyKey);
     }
     
     @Override

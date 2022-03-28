@@ -3,6 +3,7 @@ package epf.webapp.security;
 import java.security.PublicKey;
 import java.time.Duration;
 import java.util.Base64;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,18 +16,17 @@ import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.RememberMeIdentityStore;
 import org.eclipse.microprofile.jwt.Claims;
 import org.jose4j.jwt.JwtClaims;
-import org.jose4j.jwt.MalformedClaimException;
-import org.jose4j.jwt.consumer.InvalidJwtException;
-import org.jose4j.jwt.consumer.JwtConsumer;
-import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.security.client.Security;
 import epf.util.config.ConfigUtil;
 import epf.util.logging.LogManager;
 import epf.util.security.KeyUtil;
+import epf.webapp.ConfigSource;
 import epf.webapp.GatewayUtil;
 import epf.webapp.security.auth.OpenIDPrincipal;
+import epf.webapp.security.auth.SecurityAuth;
+import epf.webapp.security.util.JwtUtil;
 
 /**
  * @author PC
@@ -43,7 +43,7 @@ public class EPFRememberMeIdentityStore implements RememberMeIdentityStore {
 	/**
 	 * 
 	 */
-	private transient JwtConsumer jwtConsumer;
+	private transient final JwtUtil jwtUtil = new JwtUtil();
 	
 	/**
 	 * 
@@ -54,44 +54,54 @@ public class EPFRememberMeIdentityStore implements RememberMeIdentityStore {
 	/**
 	 * 
 	 */
+	@Inject
+	private transient ConfigSource config;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	private transient SecurityAuth securityAuth;
+	
+	/**
+	 * 
+	 */
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final String verifyKeyText = ConfigUtil.getString(Naming.Security.JWT.VERIFY_KEY);
+			final String verifyKeyText = config.getProperty(Naming.Security.JWT.VERIFY_KEY);
 			final String webAppUrl = ConfigUtil.getString(Naming.WebApp.WEB_APP_URL);
 			final PublicKey verifyKey = KeyUtil.generatePublic("RSA", verifyKeyText, Base64.getDecoder(), "UTF-8");
-			jwtConsumer = new JwtConsumerBuilder()
-					.setExpectedAudience(webAppUrl)
-					.setExpectedIssuer(Naming.EPF)
-					.setRequireExpirationTime()
-					.setRequireIssuedAt()
-					.setRequireJwtId()
-					.setRequireNotBefore()
-					.setRequireSubject()
-					.setVerificationKey(verifyKey)
-		            .build();
+			jwtUtil.initialize(Naming.EPF, webAppUrl, verifyKey);
 		}
 		catch(Exception ex) {
-			LOGGER.log(Level.SEVERE, "[EPFRememberMeIdentityStore.jwtConsumer]", ex);
+			LOGGER.log(Level.SEVERE, "[EPFRememberMeIdentityStore.jwtUtil]", ex);
 		}
 	}
 
 	@Override
 	public CredentialValidationResult validate(final RememberMeCredential credential) {
 		CredentialValidationResult result = CredentialValidationResult.NOT_VALIDATED_RESULT;
-		if(jwtConsumer != null) {
-			try {
-				final JwtClaims claims = jwtConsumer.processToClaims(credential.getToken());
-				final Set<String> groups = Set.copyOf(claims.getStringListClaimValue(Claims.groups.name()));
-				if(groups.contains(Naming.Security.DEFAULT_ROLE)) {
-					final TokenPrincipal principal = new TokenPrincipal(claims.getSubject(), credential.getToken());
-					result = new CredentialValidationResult(principal, groups);
-				}
-			} 
-			catch (InvalidJwtException | MalformedClaimException e) {
-				LOGGER.log(Level.WARNING, "[EPFRememberMeIdentityStore.validate]", e);
+		try {
+			final JwtClaims claims = JwtUtil.decode(credential.getToken());
+			if(Naming.EPF.equals(claims.getIssuer())) {
+				final JwtClaims validClaims = jwtUtil.process(credential.getToken());
+				final Set<String> groups = new HashSet<>(validClaims.getStringListClaimValue(Claims.groups.name()));
+				final TokenPrincipal principal = new TokenPrincipal(validClaims.getSubject(), credential.getToken());
+				result = new CredentialValidationResult(principal, groups);
+			}
+			else if(securityAuth.validateToken(claims.getIssuer(), credential.getToken())) {
+				final TokenPrincipal principal = new TokenPrincipal(claims.getSubject(), credential.getToken());
+				final Set<String> groups = new HashSet<>(claims.getStringListClaimValue(Claims.groups.name()));
+				result = new CredentialValidationResult(principal, groups);
+			}
+			else {
 				result = CredentialValidationResult.INVALID_RESULT;
 			}
+		} 
+		catch (Exception e) {
+			LOGGER.log(Level.WARNING, "[EPFRememberMeIdentityStore.validate]", e);
+			result = CredentialValidationResult.INVALID_RESULT;
 		}
 		return result;
 	}
@@ -113,16 +123,21 @@ public class EPFRememberMeIdentityStore implements RememberMeIdentityStore {
 		}
 		else if(callerPrincipal instanceof OpenIDPrincipal) {
 			final OpenIDPrincipal principal = (OpenIDPrincipal) callerPrincipal;
-			newToken = principal.getToken().getRefresh_token();
+			newToken = principal.getToken().getId_token();
 		}
 		return newToken;
 	}
 
 	@Override
 	public void removeLoginToken(final String token) {
-		try(Client client = gatewayUtil.newClient(Naming.SECURITY)){
-			client.authorization(token);
-			Security.logOut(client);
+		try {
+			final JwtClaims claims = JwtUtil.decode(token);
+			if(Naming.EPF.equals(claims.getIssuer())) {
+				try(Client client = gatewayUtil.newClient(Naming.SECURITY)){
+					client.authorization(token);
+					Security.logOut(client);
+				}
+			}
 		} 
 		catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "[EPFRememberMeIdentityStore.removeLoginToken]", e);

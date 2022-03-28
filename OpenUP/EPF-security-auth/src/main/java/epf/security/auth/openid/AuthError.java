@@ -5,7 +5,7 @@ package epf.security.auth.openid;
  *
  */
 public class AuthError {
-	
+
 	/**
 	 * @author PC
 	 *

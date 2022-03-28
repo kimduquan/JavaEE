@@ -67,7 +67,7 @@ public class AuthPage implements AuthView {
 		final String csrfToken = request.getParameter("javax.faces.Token");
 		conversation.begin();
 		authFlow.setId(conversation.getId() + AuthRequest.STATE_SEPARATOR + csrfToken);
-		final String authRequestUrl = securityAuth.prepareAuthRequestWithGoogle(authFlow);
+		final String authRequestUrl = securityAuth.prepareAuthRequestWithGoogle(authFlow, conversation.getId(), csrfToken);
 		externalContext.redirect(authRequestUrl);
 		return "";
 	}
@@ -99,7 +99,7 @@ public class AuthPage implements AuthView {
 		
 		final TokenRequest tokenRequest = securityAuth.prepareTokenRequest(authFlow);
 		final AuthCodeCredential credential = new AuthCodeCredential(tokenRequest, authFlow.getProviderMetadata(), authFlow.getClientSecret());
-		//session.setRemember(true);
+		session.setRemember(true);
 		final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(session.isRemember());
 		final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
 		final AuthenticationStatus status = context.authenticate(request, response, params);

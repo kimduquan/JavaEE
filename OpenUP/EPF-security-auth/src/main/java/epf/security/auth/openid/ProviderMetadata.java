@@ -1,4 +1,4 @@
-package epf.security.auth.openid.spi;
+package epf.security.auth.openid;
 
 /**
  * @author PC

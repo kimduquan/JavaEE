@@ -31,6 +31,11 @@ public class TokenResponse {
 	 */
 	private String scope;
 	
+	/**
+	 * 
+	 */
+	private String id_token;
+	
 	public String getAccess_token() {
 		return access_token;
 	}
@@ -69,5 +74,13 @@ public class TokenResponse {
 	
 	public void setScope(final String scope) {
 		this.scope = scope;
+	}
+
+	public String getId_token() {
+		return id_token;
+	}
+
+	public void setId_token(final String id_token) {
+		this.id_token = id_token;
 	}
 }

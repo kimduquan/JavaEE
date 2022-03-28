@@ -1,10 +1,12 @@
 package epf.webapp.security.view;
 
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -13,6 +15,8 @@ import javax.security.enterprise.SecurityContext;
 import javax.servlet.http.HttpServletRequest;
 import org.eclipse.microprofile.jwt.Claims;
 import epf.client.util.Client;
+import epf.security.auth.openid.StandardClaims;
+import epf.security.auth.openid.UserInfo;
 import epf.security.client.Security;
 import epf.security.schema.Token;
 import epf.security.view.PrincipalView;
@@ -20,6 +24,8 @@ import epf.util.logging.LogManager;
 import epf.webapp.GatewayUtil;
 import epf.webapp.naming.Naming;
 import epf.webapp.security.TokenPrincipal;
+import epf.webapp.security.auth.OpenIDPrincipal;
+import epf.webapp.security.auth.SecurityAuth;
 
 /**
  * @author PC
@@ -55,20 +61,43 @@ public class PrincipalPage implements PrincipalView {
 	/**
 	 * 
 	 */
+	@Inject
+	private transient SecurityAuth securityAuth;
+	
+	/**
+	 * 
+	 */
 	private transient Token token;
+	
+	/**
+	 * 
+	 */
+	private transient UserInfo userInfo;
 	
 	/**
 	 * 
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		final TokenPrincipal principal = (TokenPrincipal) context.getCallerPrincipal();
-		try(Client client = gatewayUtil.newClient(epf.naming.Naming.SECURITY)){
-			client.authorization(principal.getRememberToken().orElse(principal.getRawToken()));
-			token = Security.authenticate(client);
-		} 
-		catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "[PrincipalPage.token]", e);
+		final Principal principal = context.getCallerPrincipal();
+		if(principal instanceof TokenPrincipal) {
+			final TokenPrincipal tokenPrincipal = (TokenPrincipal) principal;
+			try(Client client = gatewayUtil.newClient(epf.naming.Naming.SECURITY)){
+				client.authorization(tokenPrincipal.getRememberToken().orElse(tokenPrincipal.getRawToken()));
+				token = Security.authenticate(client);
+			} 
+			catch (Exception e) {
+				LOGGER.log(Level.SEVERE, "[PrincipalPage.token]", e);
+			}
+		}
+		else if(principal instanceof OpenIDPrincipal) {
+			final OpenIDPrincipal openidPrincipal = (OpenIDPrincipal) principal;
+			try {
+				userInfo = securityAuth.getUserInfo(openidPrincipal.getProviderMetadata().getUserinfo_endpoint(), openidPrincipal.getToken().getAccess_token(), openidPrincipal.getToken().getToken_type());
+			} 
+			catch (Exception e) {
+				LOGGER.log(Level.SEVERE, "[PrincipalPage.userInfo]", e);
+			}
 		}
 	}
 	
@@ -77,6 +106,9 @@ public class PrincipalPage implements PrincipalView {
 	 */
 	@Override
 	public String getName() {
+		if(userInfo != null) {
+			return userInfo.getName();
+		}
 		return token.getClaims().get(Claims.full_name.name()).toString();
 	}
 
@@ -89,6 +121,9 @@ public class PrincipalPage implements PrincipalView {
 
 	@Override
 	public List<String> getClaimNames() {
+		if(userInfo != null) {
+			return Arrays.asList(StandardClaims.values()).stream().map(claim -> claim.name()).collect(Collectors.toList());
+		}
 		final List<String> names = Arrays.asList(token.getClaims().keySet().toArray(new String[0]));
 		Collections.sort(names);
 		return names;
@@ -96,6 +131,9 @@ public class PrincipalPage implements PrincipalView {
 
 	@Override
 	public String getClaim(final String name) {
+		if(userInfo != null) {
+			return "";
+		}
 		return String.valueOf(token.getClaims().get(name));
 	}
 }
