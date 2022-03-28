@@ -35,8 +35,15 @@ public interface Provider {
 	
 	/**
 	 * @param idToken
-	 * @param clientId
 	 * @return
 	 */
-	boolean validateIDToken(final String idToken, final String clientId);
+	boolean validateIDToken(final String idToken);
+	
+	/**
+	 * @param accessToken
+	 * @param tokenType
+	 * @return
+	 * @throws Exception
+	 */
+	UserInfo getUserInfo(final String accessToken, final String tokenType) throws Exception;
 }

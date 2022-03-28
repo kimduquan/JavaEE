@@ -3,6 +3,8 @@ package epf.security.auth.openid.provider;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Map.Entry;
@@ -12,10 +14,12 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Form;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import org.jose4j.jwk.HttpsJwks;
+import org.jose4j.jwt.JwtClaims;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.keys.resolvers.JwksVerificationKeyResolver;
 import epf.security.auth.openid.AuthRequest;
@@ -24,6 +28,8 @@ import epf.security.auth.openid.ProviderMetadata;
 import epf.security.auth.openid.TokenErrorResponse;
 import epf.security.auth.openid.TokenRequest;
 import epf.security.auth.openid.TokenResponse;
+import epf.security.auth.openid.UserInfo;
+import epf.security.auth.openid.UserInfoErrorResponse;
 import epf.util.logging.LogManager;
 
 /**
@@ -153,21 +159,58 @@ public class StandardProvider implements Provider {
 	}
 
 	@Override
-	public boolean validateIDToken(final String idToken, final String clientId) {
+	public boolean validateIDToken(final String idToken) {
+		if(metadata == null) {
+			discovery();
+		}
 		boolean isValid = false;
 		try {
 			final JwksVerificationKeyResolver jwksResolver = new JwksVerificationKeyResolver(jwks.getJsonWebKeys());
-			new JwtConsumerBuilder()
+			final JwtClaims claims = new JwtConsumerBuilder()
 			.setVerificationKeyResolver(jwksResolver)
 			.setExpectedIssuer(metadata.getIssuer())
-			.setExpectedAudience(clientId)
+			.setSkipDefaultAudienceValidation()
 			.build()
 			.processToClaims(idToken);
 			isValid = true;
+			if(isValid && claims.getAudience().size() > 1) {
+				isValid = claims.getClaimValue("azp") != null;
+			}
+			if(isValid) {
+				isValid = "RS256".equals(claims.getClaimValue("alg")) || Arrays.asList(metadata.getId_token_signing_alg_values_supported()).contains(claims.getClaimValue("alg"));
+			}
+			if(isValid && claims.getClaimValue("nonce") != null) {
+				isValid = Instant.ofEpochSecond(Long.parseLong(claims.getClaimValueAsString("nonce"))).plus(5, ChronoUnit.MINUTES).isBefore(Instant.now());
+			}
 		}
 		catch (Exception ex) {
 			LOGGER.log(Level.INFO, "[SecurityAuth.validateToken]", ex);
 		}
 		return isValid;
+	}
+
+	@Override
+	public UserInfo getUserInfo(final String accessToken, final String tokenType) throws Exception {
+		if(metadata == null) {
+			discovery();
+		}
+		final Client client = ClientBuilder.newClient();
+		try(Response response = client
+				.target(metadata.getUserinfo_endpoint())
+				.request(MediaType.APPLICATION_JSON)
+				.header(HttpHeaders.AUTHORIZATION, tokenType + " " + accessToken)
+				.get()){
+			if(response.getStatus() == Status.OK.getStatusCode()) {
+				return response.readEntity(UserInfo.class);
+			}
+			else {
+				final UserInfoErrorResponse userInfoError = response.readEntity(UserInfoErrorResponse.class);
+				LOGGER.log(Level.SEVERE, "[SecurityAuth.userInfo]" + userInfoError.toString());
+				throw userInfoError;
+			}
+		}
+		finally {
+			client.close();
+		}
 	}
 }

@@ -15,6 +15,7 @@ import javax.security.enterprise.SecurityContext;
 import javax.servlet.http.HttpServletRequest;
 import org.eclipse.microprofile.jwt.Claims;
 import epf.client.util.Client;
+import epf.security.auth.openid.Provider;
 import epf.security.auth.openid.StandardClaims;
 import epf.security.auth.openid.UserInfo;
 import epf.security.client.Security;
@@ -93,7 +94,8 @@ public class PrincipalPage implements PrincipalView {
 		else if(principal instanceof OpenIDPrincipal) {
 			final OpenIDPrincipal openidPrincipal = (OpenIDPrincipal) principal;
 			try {
-				userInfo = securityAuth.getUserInfo(openidPrincipal.getProviderMetadata().getUserinfo_endpoint(), openidPrincipal.getToken().getAccess_token(), openidPrincipal.getToken().getToken_type());
+				final Provider provider = securityAuth.getProvider(openidPrincipal.getProviderMetadata().getIssuer());
+				userInfo = provider.getUserInfo(openidPrincipal.getToken().getAccess_token(), openidPrincipal.getToken().getToken_type());
 			} 
 			catch (Exception e) {
 				LOGGER.log(Level.SEVERE, "[PrincipalPage.userInfo]", e);
