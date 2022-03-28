@@ -1,5 +1,7 @@
 package epf.security.auth.openid;
 
+import java.util.List;
+import java.util.Map.Entry;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -29,12 +31,12 @@ public interface Provider {
 	 * @return
 	 * @throws TokenErrorResponse
 	 */
-	TokenResponse accessToken(final TokenRequest tokenRequest) throws TokenErrorResponse;
+	TokenResponse accessToken(final TokenRequest tokenRequest, final List<Entry<String, String>> params) throws TokenErrorResponse;
 	
 	/**
 	 * @param idToken
+	 * @param clientId
 	 * @return
-	 * @throws Exception
 	 */
-	boolean validateIDToken(final String idToken);
+	boolean validateIDToken(final String idToken, final String clientId);
 }

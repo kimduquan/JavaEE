@@ -5,7 +5,7 @@ import javax.enterprise.context.ConversationScoped;
 import epf.security.auth.openid.AuthError;
 import epf.security.auth.openid.AuthRequest;
 import epf.security.auth.openid.AuthResponse;
-import epf.security.auth.openid.ProviderMetadata;
+import epf.security.auth.openid.Provider;
 
 /**
  * @author PC
@@ -32,7 +32,7 @@ public class AuthFlow implements Serializable {
 	/**
 	 * 
 	 */
-	private ProviderMetadata providerMetadata;
+	private Provider provider;
 	
 	/**
 	 * 
@@ -55,14 +55,6 @@ public class AuthFlow implements Serializable {
 
 	public void setId(final String id) {
 		this.id = id;
-	}
-
-	public ProviderMetadata getProviderMetadata() {
-		return providerMetadata;
-	}
-
-	public void setProviderMetadata(final ProviderMetadata provider) {
-		this.providerMetadata = provider;
 	}
 
 	public AuthRequest getAuthRequest() {
@@ -95,5 +87,13 @@ public class AuthFlow implements Serializable {
 
 	public void setClientSecret(final char[] clientSecret) {
 		this.clientSecret = clientSecret;
+	}
+
+	public Provider getProvider() {
+		return provider;
+	}
+
+	public void setProvider(Provider provider) {
+		this.provider = provider;
 	}
 }

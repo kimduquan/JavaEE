@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import epf.security.auth.openid.AuthError;
 import epf.security.auth.openid.AuthRequest;
 import epf.security.auth.openid.AuthResponse;
+import epf.security.auth.openid.Provider;
 import epf.security.auth.openid.TokenRequest;
 import epf.security.auth.view.AuthView;
 import epf.webapp.naming.Naming;
@@ -21,6 +22,10 @@ import epf.webapp.security.auth.AuthCodeCredential;
 import epf.webapp.security.auth.AuthFlow;
 import epf.webapp.security.auth.SecurityAuth;
 
+/**
+ * @author PC
+ *
+ */
 @RequestScoped
 @Named(Naming.Security.AUTH)
 public class AuthPage implements AuthView {
@@ -67,7 +72,12 @@ public class AuthPage implements AuthView {
 		final String csrfToken = request.getParameter("javax.faces.Token");
 		conversation.begin();
 		authFlow.setId(conversation.getId() + AuthRequest.STATE_SEPARATOR + csrfToken);
-		final String authRequestUrl = securityAuth.prepareAuthRequestWithGoogle(authFlow, conversation.getId(), csrfToken);
+		final AuthRequest authRequest = new AuthRequest();
+		authRequest.setState(conversation.getId() + AuthRequest.STATE_SEPARATOR + csrfToken);
+		final Provider provider = securityAuth.initGoogleProvider(authFlow, authRequest);
+		authFlow.setAuthRequest(authRequest);
+		authFlow.setProvider(provider);
+		final String authRequestUrl = provider.authorizeUrl(authRequest);
 		externalContext.redirect(authRequestUrl);
 		return "";
 	}
@@ -97,8 +107,11 @@ public class AuthPage implements AuthView {
 			authFlow.setAuthError(authError);
 		}
 		
-		final TokenRequest tokenRequest = securityAuth.prepareTokenRequest(authFlow);
-		final AuthCodeCredential credential = new AuthCodeCredential(tokenRequest, authFlow.getProviderMetadata(), authFlow.getClientSecret());
+		final TokenRequest tokenRequest = new TokenRequest();
+		tokenRequest.setClient_id(authFlow.getAuthRequest().getClient_id());
+		tokenRequest.setCode(authFlow.getAuthResponse().getCode());
+		tokenRequest.setRedirect_uri(authFlow.getAuthRequest().getRedirect_uri());
+		final AuthCodeCredential credential = new AuthCodeCredential(tokenRequest, authFlow.getProvider(), authFlow.getClientSecret());
 		session.setRemember(true);
 		final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(session.isRemember());
 		final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();

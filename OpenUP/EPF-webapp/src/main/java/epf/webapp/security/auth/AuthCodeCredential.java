@@ -1,8 +1,7 @@
 package epf.webapp.security.auth;
 
 import javax.security.enterprise.credential.Credential;
-
-import epf.security.auth.openid.ProviderMetadata;
+import epf.security.auth.openid.Provider;
 import epf.security.auth.openid.TokenRequest;
 
 /**
@@ -14,7 +13,7 @@ public class AuthCodeCredential implements Credential {
 	/**
 	 * 
 	 */
-	private final ProviderMetadata providerMetadata;
+	private transient final Provider provider;
 
 	/**
 	 * 
@@ -26,11 +25,8 @@ public class AuthCodeCredential implements Credential {
 	 */
 	private transient final char[] clientSecret;
 	
-	/**
-	 * @param tokenRequest
-	 */
-	public AuthCodeCredential(final TokenRequest tokenRequest, final ProviderMetadata providerMetadata, final char[] clientSecret) {
-		this.providerMetadata = providerMetadata;
+	public AuthCodeCredential(final TokenRequest tokenRequest, final Provider provider, final char[] clientSecret) {
+		this.provider = provider;
 		this.tokenRequest = tokenRequest;
 		this.clientSecret = clientSecret;
 	}
@@ -38,12 +34,12 @@ public class AuthCodeCredential implements Credential {
 	public TokenRequest getTokenRequest() {
 		return tokenRequest;
 	}
-
-	public ProviderMetadata getProviderMetadata() {
-		return providerMetadata;
-	}
-
+	
 	public char[] getClientSecret() {
 		return clientSecret;
+	}
+
+	public Provider getProvider() {
+		return provider;
 	}
 }

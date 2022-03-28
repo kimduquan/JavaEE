@@ -3,7 +3,9 @@ package epf.security.auth.openid.provider;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.client.Client;
@@ -13,11 +15,9 @@ import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
 import org.jose4j.jwk.HttpsJwks;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.keys.resolvers.JwksVerificationKeyResolver;
-
 import epf.security.auth.openid.AuthRequest;
 import epf.security.auth.openid.Provider;
 import epf.security.auth.openid.ProviderMetadata;
@@ -50,20 +50,13 @@ public class StandardProvider implements Provider {
 	/**
 	 * 
 	 */
-	private transient final String clientId;
-	
-	/**
-	 * 
-	 */
 	private transient HttpsJwks jwks;
 	
 	/**
 	 * @param discoveryUrl
-	 * @param clientId
 	 */
-	public StandardProvider(final URI discoveryUrl, final String clientId) {
+	public StandardProvider(final URI discoveryUrl) {
 		this.discoveryUrl = discoveryUrl;
-		this.clientId = clientId;
 	}
 
 	@Override
@@ -80,9 +73,10 @@ public class StandardProvider implements Provider {
 		if(metadata == null) {
 			discovery();
 		}
-		authRequest.setClient_id(clientId);
 		authRequest.setResponse_type("code");
+		authRequest.setScope("openid email profile");
 		authRequest.setNonce(String.valueOf(Instant.now().getEpochSecond()));
+		
 		final StringBuilder authRequestUrl = new StringBuilder();
 		authRequestUrl.append(metadata.getAuthorization_endpoint());
 		authRequestUrl.append('?');
@@ -124,17 +118,21 @@ public class StandardProvider implements Provider {
 	}
 
 	@Override
-	public TokenResponse accessToken(final TokenRequest tokenRequest) throws TokenErrorResponse {
+	public TokenResponse accessToken(final TokenRequest tokenRequest, final List<Entry<String, String>> params) throws TokenErrorResponse {
 		if(metadata == null) {
 			discovery();
 		}
-		tokenRequest.setClient_id(clientId);
 		tokenRequest.setGrant_type("authorization_code");
 		final Form form = new Form();
 		form.param("client_id", tokenRequest.getClient_id());
 		form.param("code", tokenRequest.getCode());
 		form.param("grant_type", tokenRequest.getGrant_type());
 		form.param("redirect_uri", tokenRequest.getRedirect_uri());
+		if(params != null) {
+			for(Entry<String, String> param : params) {
+				form.param(param.getKey(), param.getValue());
+			}
+		}
 		final Client client = ClientBuilder.newClient();
 		try(Response response = client
 				.target(metadata.getToken_endpoint())
@@ -155,7 +153,7 @@ public class StandardProvider implements Provider {
 	}
 
 	@Override
-	public boolean validateIDToken(final String idToken) {
+	public boolean validateIDToken(final String idToken, final String clientId) {
 		boolean isValid = false;
 		try {
 			final JwksVerificationKeyResolver jwksResolver = new JwksVerificationKeyResolver(jwks.getJsonWebKeys());
