@@ -1,8 +1,7 @@
-package epf.webapp.security.auth;
+package epf.webapp.security.auth.core;
 
 import java.io.Serializable;
 import javax.enterprise.context.ConversationScoped;
-
 import epf.security.auth.Provider;
 import epf.security.auth.core.AuthError;
 import epf.security.auth.core.AuthRequest;
@@ -13,7 +12,7 @@ import epf.security.auth.core.AuthResponse;
  *
  */
 @ConversationScoped
-public class AuthFlow implements Serializable {
+public class CodeFlow implements Serializable {
 
 	/**
 	 * 
@@ -24,11 +23,6 @@ public class AuthFlow implements Serializable {
 	 * 
 	 */
 	private transient char[] clientSecret;
-	
-	/**
-	 * 
-	 */
-	private String id;
 	
 	/**
 	 * 
@@ -49,14 +43,6 @@ public class AuthFlow implements Serializable {
 	 * 
 	 */
 	private AuthError authError;
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(final String id) {
-		this.id = id;
-	}
 
 	public AuthRequest getAuthRequest() {
 		return authRequest;

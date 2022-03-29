@@ -15,15 +15,17 @@ import epf.security.auth.core.AuthError;
 import epf.security.auth.core.AuthRequest;
 import epf.security.auth.core.AuthResponse;
 import epf.security.auth.core.ImplicitAuthError;
+import epf.security.auth.core.ImplicitAuthRequest;
 import epf.security.auth.core.ImplicitAuthResponse;
 import epf.security.auth.core.TokenRequest;
 import epf.security.auth.view.AuthView;
 import epf.webapp.naming.Naming;
 import epf.webapp.security.Session;
 import epf.webapp.security.auth.AuthCodeCredential;
-import epf.webapp.security.auth.AuthFlow;
 import epf.webapp.security.auth.ImplicitCredential;
 import epf.webapp.security.auth.SecurityAuth;
+import epf.webapp.security.auth.core.CodeFlow;
+import epf.webapp.security.auth.core.ImplicitFlow;
 
 /**
  * @author PC
@@ -67,19 +69,24 @@ public class AuthPage implements AuthView {
 	 * 
 	 */
 	@Inject
-	private AuthFlow authFlow;
+	private CodeFlow codeFlow;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	private ImplicitFlow implicitFlow;
 
 	@Override
 	public String loginWithGoogle() throws Exception {
 		final HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
 		final String csrfToken = request.getParameter("javax.faces.Token");
 		conversation.begin();
-		authFlow.setId(conversation.getId() + System.lineSeparator() + csrfToken);
 		final AuthRequest authRequest = new AuthRequest();
 		authRequest.setState("CodeFlowAuth" + System.lineSeparator() + conversation.getId() + System.lineSeparator() + csrfToken);
-		final Provider provider = securityAuth.initGoogleProvider(authFlow, authRequest);
-		authFlow.setAuthRequest(authRequest);
-		authFlow.setProvider(provider);
+		final Provider provider = securityAuth.initGoogleProvider(codeFlow, authRequest);
+		codeFlow.setAuthRequest(authRequest);
+		codeFlow.setProvider(provider);
 		final String authRequestUrl = provider.authorizeUrl(authRequest);
 		externalContext.redirect(authRequestUrl);
 		return "";
@@ -90,12 +97,10 @@ public class AuthPage implements AuthView {
 		final HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
 		final String csrfToken = request.getParameter("javax.faces.Token");
 		conversation.begin();
-		authFlow.setId(conversation.getId() + System.lineSeparator() + csrfToken);
-		final AuthRequest authRequest = new AuthRequest();
+		final ImplicitAuthRequest authRequest = new ImplicitAuthRequest();
 		authRequest.setState("ImplicitFlowAuth" + System.lineSeparator() + conversation.getId() + System.lineSeparator() + csrfToken);
-		final Provider provider = securityAuth.initFacebookProvider(authFlow, authRequest);
-		authFlow.setAuthRequest(authRequest);
-		authFlow.setProvider(provider);
+		final Provider provider = securityAuth.initFacebookProvider(codeFlow, authRequest);
+		implicitFlow.setAuthRequest(authRequest);
 		final String authRequestUrl = provider.authorizeUrl(authRequest);
 		externalContext.redirect(authRequestUrl);
 		return "";
@@ -111,28 +116,29 @@ public class AuthPage implements AuthView {
 			final AuthResponse authResponse = new AuthResponse();
 			authResponse.setCode(request.getParameter("code"));
 			authResponse.setState(request.getParameter("state"));
-			authFlow.setAuthResponse(authResponse);
+			codeFlow.setAuthResponse(authResponse);
+			
+			final TokenRequest tokenRequest = new TokenRequest();
+			tokenRequest.setClient_id(codeFlow.getAuthRequest().getClient_id());
+			tokenRequest.setCode(codeFlow.getAuthResponse().getCode());
+			tokenRequest.setRedirect_uri(codeFlow.getAuthRequest().getRedirect_uri());
+			final AuthCodeCredential credential = new AuthCodeCredential(tokenRequest, codeFlow.getProvider(), codeFlow.getClientSecret());
+			session.setRemember(true);
+			final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(session.isRemember());
+			final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
+			final AuthenticationStatus status = context.authenticate(request, response, params);
+			conversation.end();
+			if(AuthenticationStatus.SUCCESS.equals(status)) {
+				return Naming.DEFAULT_VIEW;
+			}
 		}
 		else {
 			final AuthError authError = new AuthError();
 			authError.setError(error);
 			authError.setState(request.getParameter("state"));
-			authFlow.setAuthError(authError);
+			codeFlow.setAuthError(authError);
 		}
-		
-		final TokenRequest tokenRequest = new TokenRequest();
-		tokenRequest.setClient_id(authFlow.getAuthRequest().getClient_id());
-		tokenRequest.setCode(authFlow.getAuthResponse().getCode());
-		tokenRequest.setRedirect_uri(authFlow.getAuthRequest().getRedirect_uri());
-		final AuthCodeCredential credential = new AuthCodeCredential(tokenRequest, authFlow.getProvider(), authFlow.getClientSecret());
-		session.setRemember(true);
-		final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(session.isRemember());
-		final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
-		final AuthenticationStatus status = context.authenticate(request, response, params);
 		conversation.end();
-		if(AuthenticationStatus.SUCCESS.equals(status)) {
-			return Naming.DEFAULT_VIEW;
-		}
 		return Naming.Security.LOGIN;
 	}
 	
@@ -149,6 +155,7 @@ public class AuthPage implements AuthView {
 			authResponse.setId_token(request.getParameter("id_token"));
 			authResponse.setState(request.getParameter("state"));
 			authResponse.setToken_type(request.getParameter("token_type"));
+			implicitFlow.setAuthResponse(authResponse);
 			
 			final ImplicitCredential credential = new ImplicitCredential(authResponse);
 			session.setRemember(true);
@@ -166,8 +173,9 @@ public class AuthPage implements AuthView {
 			authError.setError_description(request.getParameter("error_description"));
 			authError.setError_uri(request.getParameter("error_uri"));
 			authError.setState(request.getParameter("state"));
-			authFlow.setAuthError(authError);
+			implicitFlow.setAuthError(authError);
 		}
+		conversation.end();
 		return Naming.Security.LOGIN;
 	}
 	

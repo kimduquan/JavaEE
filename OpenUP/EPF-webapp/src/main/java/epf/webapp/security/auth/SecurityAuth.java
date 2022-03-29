@@ -11,6 +11,7 @@ import epf.security.auth.Provider;
 import epf.security.auth.core.AuthRequest;
 import epf.util.logging.LogManager;
 import epf.webapp.ConfigSource;
+import epf.webapp.security.auth.core.CodeFlow;
 import epf.security.auth.StandardProvider;
 
 /**
@@ -62,7 +63,7 @@ public class SecurityAuth {
 	 * @param authRequest
 	 * @return
 	 */
-	public Provider initGoogleProvider(final AuthFlow authFlow, final AuthRequest authRequest) {
+	public Provider initGoogleProvider(final CodeFlow authFlow, final AuthRequest authRequest) {
 		authFlow.setClientSecret(config.getProperty(Naming.Security.Auth.GOOGLE_CLIENT_SECRET).toCharArray());
 		authRequest.setClient_id(config.getProperty(Naming.Security.Auth.GOOGLE_CLIENT_ID));
 		authRequest.setRedirect_uri(config.getProperty(Naming.Security.Auth.AUTH_URL));
@@ -74,7 +75,7 @@ public class SecurityAuth {
 	 * @param authRequest
 	 * @return
 	 */
-	public Provider initFacebookProvider(final AuthFlow authFlow, final AuthRequest authRequest) {
+	public Provider initFacebookProvider(final CodeFlow authFlow, final AuthRequest authRequest) {
 		authFlow.setClientSecret(config.getProperty(Naming.Security.Auth.FACEBOOK_CLIENT_SECRET).toCharArray());
 		authRequest.setClient_id(config.getProperty(Naming.Security.Auth.FACEBOOK_CLIENT_ID));
 		authRequest.setRedirect_uri(config.getProperty(Naming.Security.Auth.AUTH_URL));
