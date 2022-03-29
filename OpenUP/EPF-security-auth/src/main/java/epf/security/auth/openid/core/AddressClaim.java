@@ -1,4 +1,4 @@
-package epf.security.auth.openid;
+package epf.security.auth.openid.core;
 
 /**
  * @author PC

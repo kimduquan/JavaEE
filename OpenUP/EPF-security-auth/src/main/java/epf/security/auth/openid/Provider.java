@@ -5,6 +5,12 @@ import java.util.Map.Entry;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import epf.security.auth.openid.core.AuthRequest;
+import epf.security.auth.openid.core.TokenErrorResponse;
+import epf.security.auth.openid.core.TokenRequest;
+import epf.security.auth.openid.core.TokenResponse;
+import epf.security.auth.openid.core.UserInfo;
+import epf.security.auth.openid.discovery.ProviderMetadata;
 
 /**
  * @author PC

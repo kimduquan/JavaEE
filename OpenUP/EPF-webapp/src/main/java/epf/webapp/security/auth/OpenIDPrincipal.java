@@ -1,8 +1,8 @@
 package epf.webapp.security.auth;
 
 import javax.security.enterprise.CallerPrincipal;
-import epf.security.auth.openid.ProviderMetadata;
-import epf.security.auth.openid.TokenResponse;
+import epf.security.auth.openid.core.TokenResponse;
+import epf.security.auth.openid.discovery.ProviderMetadata;
 
 /**
  * @author PC

@@ -10,11 +10,11 @@ import javax.security.enterprise.SecurityContext;
 import javax.security.enterprise.authentication.mechanism.http.AuthenticationParameters;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import epf.security.auth.openid.AuthError;
-import epf.security.auth.openid.AuthRequest;
-import epf.security.auth.openid.AuthResponse;
 import epf.security.auth.openid.Provider;
-import epf.security.auth.openid.TokenRequest;
+import epf.security.auth.openid.core.AuthError;
+import epf.security.auth.openid.core.AuthRequest;
+import epf.security.auth.openid.core.AuthResponse;
+import epf.security.auth.openid.core.TokenRequest;
 import epf.security.auth.view.AuthView;
 import epf.webapp.naming.Naming;
 import epf.webapp.security.Session;
@@ -71,9 +71,9 @@ public class AuthPage implements AuthView {
 		final HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
 		final String csrfToken = request.getParameter("javax.faces.Token");
 		conversation.begin();
-		authFlow.setId(conversation.getId() + AuthRequest.STATE_SEPARATOR + csrfToken);
+		authFlow.setId(conversation.getId() + System.lineSeparator() + csrfToken);
 		final AuthRequest authRequest = new AuthRequest();
-		authRequest.setState(conversation.getId() + AuthRequest.STATE_SEPARATOR + csrfToken);
+		authRequest.setState(conversation.getId() + System.lineSeparator() + csrfToken);
 		final Provider provider = securityAuth.initGoogleProvider(authFlow, authRequest);
 		authFlow.setAuthRequest(authRequest);
 		authFlow.setProvider(provider);
@@ -87,9 +87,9 @@ public class AuthPage implements AuthView {
 		final HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
 		final String csrfToken = request.getParameter("javax.faces.Token");
 		conversation.begin();
-		authFlow.setId(conversation.getId() + AuthRequest.STATE_SEPARATOR + csrfToken);
+		authFlow.setId(conversation.getId() + System.lineSeparator() + csrfToken);
 		final AuthRequest authRequest = new AuthRequest();
-		authRequest.setState(conversation.getId() + AuthRequest.STATE_SEPARATOR + csrfToken);
+		authRequest.setState(conversation.getId() + System.lineSeparator() + csrfToken);
 		final Provider provider = securityAuth.initFacebookProvider(authFlow, authRequest);
 		authFlow.setAuthRequest(authRequest);
 		authFlow.setProvider(provider);
@@ -111,9 +111,8 @@ public class AuthPage implements AuthView {
 			authFlow.setAuthResponse(authResponse);
 		}
 		else {
-			final AuthError.Error err = AuthError.Error.valueOf(error);
 			final AuthError authError = new AuthError();
-			authError.setError(err);
+			authError.setError(error);
 			authError.setState(request.getParameter("state"));
 			authFlow.setAuthError(authError);
 		}

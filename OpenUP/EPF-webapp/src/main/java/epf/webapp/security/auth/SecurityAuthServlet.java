@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import epf.security.auth.openid.AuthRequest;
 
 /**
  * @author PC
@@ -34,7 +33,7 @@ public class SecurityAuthServlet extends HttpServlet {
 	        throws ServletException, IOException {
 		final String state = req.getParameter("state");
 		if(state != null && !state.isEmpty()) {
-			final String[] fragments = state.split(AuthRequest.STATE_SEPARATOR);
+			final String[] fragments = state.split(System.lineSeparator());
 			if(fragments.length == 2) {
 				final String cid = fragments[0];
 				final String csrfToken = fragments[1];

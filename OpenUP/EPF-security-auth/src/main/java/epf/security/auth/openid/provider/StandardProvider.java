@@ -21,14 +21,14 @@ import org.jose4j.jwk.HttpsJwks;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.keys.resolvers.JwksVerificationKeyResolver;
-import epf.security.auth.openid.AuthRequest;
 import epf.security.auth.openid.Provider;
-import epf.security.auth.openid.ProviderMetadata;
-import epf.security.auth.openid.TokenErrorResponse;
-import epf.security.auth.openid.TokenRequest;
-import epf.security.auth.openid.TokenResponse;
-import epf.security.auth.openid.UserInfo;
-import epf.security.auth.openid.UserInfoErrorResponse;
+import epf.security.auth.openid.core.AuthRequest;
+import epf.security.auth.openid.core.TokenErrorResponse;
+import epf.security.auth.openid.core.TokenRequest;
+import epf.security.auth.openid.core.TokenResponse;
+import epf.security.auth.openid.core.UserInfo;
+import epf.security.auth.openid.core.UserInfoError;
+import epf.security.auth.openid.discovery.ProviderMetadata;
 import epf.util.logging.LogManager;
 
 /**
@@ -36,6 +36,11 @@ import epf.util.logging.LogManager;
  *
  */
 public class StandardProvider implements Provider {
+	
+	/**
+	 * 
+	 */
+	public static final String OPENID_CONNECT_SCOPE = "openid email profile";
 	
 	/**
 	 * 
@@ -50,6 +55,11 @@ public class StandardProvider implements Provider {
 	/**
 	 * 
 	 */
+	private transient final String scope;
+	
+	/**
+	 * 
+	 */
 	private transient ProviderMetadata metadata;
 	
 	/**
@@ -59,9 +69,11 @@ public class StandardProvider implements Provider {
 	
 	/**
 	 * @param discoveryUrl
+	 * @param scope
 	 */
-	public StandardProvider(final URI discoveryUrl) {
+	public StandardProvider(final URI discoveryUrl, final String scope) {
 		this.discoveryUrl = discoveryUrl;
+		this.scope = scope;
 	}
 
 	@Override
@@ -79,7 +91,7 @@ public class StandardProvider implements Provider {
 			discovery();
 		}
 		authRequest.setResponse_type("code");
-		authRequest.setScope("openid email profile");
+		authRequest.setScope(scope);
 		authRequest.setNonce(String.valueOf(Instant.now().getEpochSecond()));
 		
 		final StringBuilder authRequestUrl = new StringBuilder();
@@ -200,7 +212,7 @@ public class StandardProvider implements Provider {
 				return response.readEntity(UserInfo.class);
 			}
 			else {
-				final UserInfoErrorResponse userInfoError = response.readEntity(UserInfoErrorResponse.class);
+				final UserInfoError userInfoError = response.readEntity(UserInfoError.class);
 				LOGGER.log(Level.SEVERE, "[SecurityAuth.userInfo]" + userInfoError.toString());
 				throw userInfoError;
 			}

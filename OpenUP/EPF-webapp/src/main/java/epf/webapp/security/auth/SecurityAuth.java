@@ -7,8 +7,8 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import epf.naming.Naming;
-import epf.security.auth.openid.AuthRequest;
 import epf.security.auth.openid.Provider;
+import epf.security.auth.openid.core.AuthRequest;
 import epf.security.auth.openid.provider.StandardProvider;
 import epf.util.logging.LogManager;
 import epf.webapp.ConfigSource;
@@ -48,9 +48,9 @@ public class SecurityAuth {
 	protected void postConstruct() {
 		try {
 			final URI googleDiscoveryUrl = new URI(config.getProperty(Naming.Security.Auth.GOOGLE_PROVIDER));
-			googleProvider = new StandardProvider(googleDiscoveryUrl);
+			googleProvider = new StandardProvider(googleDiscoveryUrl, StandardProvider.OPENID_CONNECT_SCOPE);
 			final URI facebookDiscoveryUrl = new URI(config.getProperty(Naming.Security.Auth.FACEBOOK_PROVIDER));
-			facebookProvider = new StandardProvider(facebookDiscoveryUrl);
+			facebookProvider = new StandardProvider(facebookDiscoveryUrl, "openid email public_profile");
 		} 
 		catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "[SecurityAuth.googleProvider]");

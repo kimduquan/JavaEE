@@ -2,10 +2,10 @@ package epf.webapp.security.auth;
 
 import java.io.Serializable;
 import javax.enterprise.context.ConversationScoped;
-import epf.security.auth.openid.AuthError;
-import epf.security.auth.openid.AuthRequest;
-import epf.security.auth.openid.AuthResponse;
 import epf.security.auth.openid.Provider;
+import epf.security.auth.openid.core.AuthError;
+import epf.security.auth.openid.core.AuthRequest;
+import epf.security.auth.openid.core.AuthResponse;
 
 /**
  * @author PC
