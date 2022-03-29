@@ -34,11 +34,12 @@ public class SecurityAuthServlet extends HttpServlet {
 		final String state = req.getParameter("state");
 		if(state != null && !state.isEmpty()) {
 			final String[] fragments = state.split(System.lineSeparator());
-			if(fragments.length == 2) {
-				final String cid = fragments[0];
-				final String csrfToken = fragments[1];
+			if(fragments.length == 3) {
+				final String flow = fragments[0];
+				final String cid = fragments[1];
+				final String csrfToken = fragments[2];
 				if(!cid.isEmpty() && !csrfToken.isEmpty() ) {
-					final String redirectUrl = "/webapp/security/auth.xhtml?" + req.getQueryString() + "&cid=" + cid + "&javax.faces.Token=" + URLEncoder.encode(csrfToken, "UTF-8");
+					final String redirectUrl = "/webapp/security/auth.xhtml?" + req.getQueryString() + "&flow=" + flow + "&cid=" + cid + "&javax.faces.Token=" + URLEncoder.encode(csrfToken, "UTF-8");
 					resp.setHeader("Referrer-Policy", "no-referrer");
 					resp.sendRedirect(redirectUrl);
 					return;
