@@ -1,10 +1,10 @@
-package epf.security.auth.openid.core;
+package epf.security.auth.core;
 
 /**
  * @author PC
  *
  */
-public class TokenErrorResponse extends Exception {
+public class AuthError extends Exception {
 
 	/**
 	 * 
@@ -23,6 +23,10 @@ public class TokenErrorResponse extends Exception {
 	 * 
 	 */
 	private String error_uri;
+	/**
+	 * 
+	 */
+	private String state;
 	
 	public String getError() {
 		return error;
@@ -41,5 +45,11 @@ public class TokenErrorResponse extends Exception {
 	}
 	public void setError_uri(final String error_uri) {
 		this.error_uri = error_uri;
+	}
+	public String getState() {
+		return state;
+	}
+	public void setState(final String state) {
+		this.state = state;
 	}
 }

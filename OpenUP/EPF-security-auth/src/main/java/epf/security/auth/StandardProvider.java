@@ -1,4 +1,4 @@
-package epf.security.auth.openid.provider;
+package epf.security.auth;
 
 import java.net.URI;
 import java.net.URLEncoder;
@@ -21,14 +21,14 @@ import org.jose4j.jwk.HttpsJwks;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.keys.resolvers.JwksVerificationKeyResolver;
-import epf.security.auth.openid.Provider;
-import epf.security.auth.openid.core.AuthRequest;
-import epf.security.auth.openid.core.TokenErrorResponse;
-import epf.security.auth.openid.core.TokenRequest;
-import epf.security.auth.openid.core.TokenResponse;
-import epf.security.auth.openid.core.UserInfo;
-import epf.security.auth.openid.core.UserInfoError;
-import epf.security.auth.openid.discovery.ProviderMetadata;
+
+import epf.security.auth.core.AuthRequest;
+import epf.security.auth.core.TokenErrorResponse;
+import epf.security.auth.core.TokenRequest;
+import epf.security.auth.core.TokenResponse;
+import epf.security.auth.core.UserInfo;
+import epf.security.auth.core.UserInfoError;
+import epf.security.auth.discovery.ProviderMetadata;
 import epf.util.logging.LogManager;
 
 /**

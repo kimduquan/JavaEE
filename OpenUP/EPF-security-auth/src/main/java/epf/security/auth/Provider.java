@@ -1,16 +1,17 @@
-package epf.security.auth.openid;
+package epf.security.auth;
 
 import java.util.List;
 import java.util.Map.Entry;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import epf.security.auth.openid.core.AuthRequest;
-import epf.security.auth.openid.core.TokenErrorResponse;
-import epf.security.auth.openid.core.TokenRequest;
-import epf.security.auth.openid.core.TokenResponse;
-import epf.security.auth.openid.core.UserInfo;
-import epf.security.auth.openid.discovery.ProviderMetadata;
+
+import epf.security.auth.core.AuthRequest;
+import epf.security.auth.core.TokenErrorResponse;
+import epf.security.auth.core.TokenRequest;
+import epf.security.auth.core.TokenResponse;
+import epf.security.auth.core.UserInfo;
+import epf.security.auth.discovery.ProviderMetadata;
 
 /**
  * @author PC

@@ -1,4 +1,4 @@
-package epf.security.auth.openid.discovery;
+package epf.security.auth.discovery;
 
 /**
  * @author PC

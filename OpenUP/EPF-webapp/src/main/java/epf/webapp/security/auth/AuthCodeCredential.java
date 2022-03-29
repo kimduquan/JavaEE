@@ -1,8 +1,9 @@
 package epf.webapp.security.auth;
 
 import javax.security.enterprise.credential.Credential;
-import epf.security.auth.openid.Provider;
-import epf.security.auth.openid.core.TokenRequest;
+
+import epf.security.auth.Provider;
+import epf.security.auth.core.TokenRequest;
 
 /**
  * @author PC

@@ -10,11 +10,12 @@ import javax.security.enterprise.SecurityContext;
 import javax.security.enterprise.authentication.mechanism.http.AuthenticationParameters;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import epf.security.auth.openid.Provider;
-import epf.security.auth.openid.core.AuthError;
-import epf.security.auth.openid.core.AuthRequest;
-import epf.security.auth.openid.core.AuthResponse;
-import epf.security.auth.openid.core.TokenRequest;
+
+import epf.security.auth.Provider;
+import epf.security.auth.core.AuthError;
+import epf.security.auth.core.AuthRequest;
+import epf.security.auth.core.AuthResponse;
+import epf.security.auth.core.TokenRequest;
 import epf.security.auth.view.AuthView;
 import epf.webapp.naming.Naming;
 import epf.webapp.security.Session;

@@ -7,9 +7,9 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import epf.naming.Naming;
-import epf.security.auth.openid.Provider;
-import epf.security.auth.openid.core.AuthRequest;
-import epf.security.auth.openid.provider.StandardProvider;
+import epf.security.auth.Provider;
+import epf.security.auth.StandardProvider;
+import epf.security.auth.core.AuthRequest;
 import epf.util.logging.LogManager;
 import epf.webapp.ConfigSource;
 

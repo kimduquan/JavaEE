@@ -20,7 +20,7 @@ import epf.webapp.security.auth.AuthCodeCredential;
 import epf.webapp.security.auth.OpenIDPrincipal;
 import epf.client.util.Client;
 import epf.naming.Naming;
-import epf.security.auth.openid.core.TokenResponse;
+import epf.security.auth.core.TokenResponse;
 import epf.security.client.Security;
 
 /**
