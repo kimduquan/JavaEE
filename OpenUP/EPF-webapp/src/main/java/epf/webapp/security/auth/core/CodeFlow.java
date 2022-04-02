@@ -6,13 +6,15 @@ import epf.security.auth.Provider;
 import epf.security.auth.core.AuthError;
 import epf.security.auth.core.AuthRequest;
 import epf.security.auth.core.AuthResponse;
+import epf.security.auth.core.CodeFlowAuth;
+import epf.security.auth.core.TokenResponse;
 
 /**
  * @author PC
  *
  */
 @ConversationScoped
-public class CodeFlow implements Serializable {
+public class CodeFlow extends Flow implements CodeFlowAuth, Serializable {
 
 	/**
 	 * 
@@ -80,7 +82,17 @@ public class CodeFlow implements Serializable {
 		return provider;
 	}
 
-	public void setProvider(Provider provider) {
+	public void setProvider(final Provider provider) {
 		this.provider = provider;
+	}
+
+	@Override
+	public boolean validate(final AuthResponse authResponse) {
+		return true;
+	}
+
+	@Override
+	public boolean validate(final TokenResponse tokenResponse) {
+		return true;
 	}
 }

@@ -5,13 +5,14 @@ import javax.enterprise.context.ConversationScoped;
 import epf.security.auth.core.ImplicitAuthError;
 import epf.security.auth.core.ImplicitAuthRequest;
 import epf.security.auth.core.ImplicitAuthResponse;
+import epf.security.auth.core.ImplicitFlowAuth;
 
 /**
  * @author PC
  *
  */
 @ConversationScoped
-public class ImplicitFlow implements Serializable {
+public class ImplicitFlow extends Flow implements ImplicitFlowAuth, Serializable {
 
 	/**
 	 * 
@@ -55,5 +56,10 @@ public class ImplicitFlow implements Serializable {
 
 	public void setAuthError(final ImplicitAuthError authError) {
 		this.authError = authError;
+	}
+
+	@Override
+	public boolean validate(final ImplicitAuthResponse implicitAuthResponse) {
+		return true;
 	}
 }

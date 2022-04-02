@@ -1,5 +1,6 @@
 package epf.security.auth.core;
 
+import java.net.URI;
 import java.net.URLEncoder;
 import java.time.Instant;
 import java.util.Optional;
@@ -23,11 +24,16 @@ public interface ImplicitFlowAuth {
 	Logger LOGGER = LogManager.getLogger(ImplicitFlowAuth.class.getName());
 	
 	/**
+	 * 
+	 */
+	String DEFAULT_PROFILE = "profile";
+	
+	/**
 	 * @param discoveryUrl
 	 * @return
 	 * @throws Exception
 	 */
-	default ProviderMetadata getProviderConfig(final String discoveryUrl) throws Exception {
+	default ProviderMetadata getProviderConfig(final URI discoveryUrl) throws Exception {
 		final Client client = ClientBuilder.newClient();
 		final ProviderMetadata metadata = client.target(discoveryUrl).request(MediaType.APPLICATION_JSON).get(ProviderMetadata.class);
 		client.close();
@@ -39,14 +45,18 @@ public interface ImplicitFlowAuth {
 	 * @param authRequest
 	 * @return
 	 */
-	default String getAuthorizeUrl(final ProviderMetadata metadata, final ImplicitAuthRequest authRequest) {
+	default String getAuthorizeUrl(final ProviderMetadata metadata, final ImplicitAuthRequest authRequest, final String profile) {
 		authRequest.setResponse_type("id_token token");
-		authRequest.setScope("openid email profile");
+		authRequest.setScope("openid email " + profile != null ? profile : DEFAULT_PROFILE);
 		authRequest.setNonce(String.valueOf(Instant.now().getEpochSecond()));
 		
 		final StringBuilder authRequestUrl = new StringBuilder();
 		authRequestUrl.append(metadata.getAuthorization_endpoint());
 		authRequestUrl.append('?');
+		Optional.ofNullable(authRequest.getResponse_mode()).ifPresent(response_mode -> {
+			authRequestUrl.append("&response_mode=");
+			authRequestUrl.append(response_mode);
+		});
 		Optional.ofNullable(authRequest.getClient_id()).ifPresent(client_id -> {
 			authRequestUrl.append("&client_id=");
 			authRequestUrl.append(client_id);

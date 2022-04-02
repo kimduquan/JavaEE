@@ -1,4 +1,4 @@
-package epf.portlet.util;
+package epf.webapp.util;
 
 import javax.faces.context.ExceptionHandler;
 import javax.faces.context.ExceptionHandlerFactory;

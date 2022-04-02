@@ -93,7 +93,8 @@ public class EPFRememberMeIdentityStore implements RememberMeIdentityStore {
 			}
 			else if(securityAuth.getProvider(claims.getIssuer()).validateIDToken(credential.getToken())) {
 				final IDTokenPrincipal principal = new IDTokenPrincipal(claims.getSubject(), credential.getToken());
-				final Set<String> groups = new HashSet<>(claims.getStringListClaimValue(Claims.groups.name()));
+				final Set<String> groups = new HashSet<>();
+				groups.add(Naming.Security.DEFAULT_ROLE);
 				result = new CredentialValidationResult(principal, groups);
 			}
 			else {

@@ -3,7 +3,6 @@ package epf.security.auth;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Map.Entry;
@@ -187,9 +186,9 @@ public class StandardProvider implements Provider {
 			if(isValid && claims.getAudience().size() > 1) {
 				isValid = claims.getClaimValue("azp") != null;
 			}
-			if(isValid) {
+			/*if(isValid) {
 				isValid = "RS256".equals(claims.getClaimValue("alg")) || Arrays.asList(metadata.getId_token_signing_alg_values_supported()).contains(claims.getClaimValue("alg"));
-			}
+			}*/
 		}
 		catch (Exception ex) {
 			LOGGER.log(Level.INFO, "[SecurityAuth.validateToken]", ex);

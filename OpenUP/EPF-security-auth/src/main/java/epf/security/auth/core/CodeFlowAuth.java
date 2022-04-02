@@ -1,5 +1,6 @@
 package epf.security.auth.core;
 
+import java.net.URI;
 import java.net.URLEncoder;
 import java.time.Instant;
 import java.util.Optional;
@@ -31,7 +32,7 @@ public interface CodeFlowAuth {
 	 * @return
 	 * @throws Exception
 	 */
-	default ProviderMetadata getProviderConfig(final String discoveryUrl) throws Exception {
+	default ProviderMetadata getProviderConfig(final URI discoveryUrl) throws Exception {
 		final Client client = ClientBuilder.newClient();
 		final ProviderMetadata metadata = client.target(discoveryUrl).request(MediaType.APPLICATION_JSON).get(ProviderMetadata.class);
 		client.close();

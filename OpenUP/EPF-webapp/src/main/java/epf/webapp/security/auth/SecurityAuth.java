@@ -12,6 +12,7 @@ import epf.security.auth.core.AuthRequest;
 import epf.util.logging.LogManager;
 import epf.webapp.ConfigSource;
 import epf.webapp.security.auth.core.CodeFlow;
+import epf.webapp.security.auth.core.ImplicitFlow;
 import epf.security.auth.StandardProvider;
 
 /**
@@ -40,7 +41,17 @@ public class SecurityAuth {
 	/**
 	 * 
 	 */
+	private transient URI googleDiscoveryUrl;
+	
+	/**
+	 * 
+	 */
 	private transient Provider facebookProvider;
+	
+	/**
+	 * 
+	 */
+	private transient URI facebookDiscoveryUrl;
 	
 	/**
 	 * 
@@ -48,9 +59,9 @@ public class SecurityAuth {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI googleDiscoveryUrl = new URI(config.getProperty(Naming.Security.Auth.GOOGLE_PROVIDER));
+			googleDiscoveryUrl = new URI(config.getProperty(Naming.Security.Auth.GOOGLE_PROVIDER));
 			googleProvider = new StandardProvider(googleDiscoveryUrl, StandardProvider.OPENID_CONNECT_SCOPE);
-			final URI facebookDiscoveryUrl = new URI(config.getProperty(Naming.Security.Auth.FACEBOOK_PROVIDER));
+			facebookDiscoveryUrl = new URI(config.getProperty(Naming.Security.Auth.FACEBOOK_PROVIDER));
 			facebookProvider = new StandardProvider(facebookDiscoveryUrl, "openid email public_profile");
 		} 
 		catch (Exception e) {
@@ -62,11 +73,13 @@ public class SecurityAuth {
 	 * @param authFlow
 	 * @param authRequest
 	 * @return
+	 * @throws Exception
 	 */
-	public Provider initGoogleProvider(final CodeFlow authFlow, final AuthRequest authRequest) {
+	public Provider initGoogleProvider(final CodeFlow authFlow, final AuthRequest authRequest) throws Exception {
 		authFlow.setClientSecret(config.getProperty(Naming.Security.Auth.GOOGLE_CLIENT_SECRET).toCharArray());
 		authRequest.setClient_id(config.getProperty(Naming.Security.Auth.GOOGLE_CLIENT_ID));
 		authRequest.setRedirect_uri(config.getProperty(Naming.Security.Auth.AUTH_URL));
+		authFlow.setProviderMetadata(authFlow.getProviderConfig(googleDiscoveryUrl));
 		return googleProvider;
 	}
 	
@@ -74,11 +87,13 @@ public class SecurityAuth {
 	 * @param authFlow
 	 * @param authRequest
 	 * @return
+	 * @throws Exception
 	 */
-	public Provider initFacebookProvider(final CodeFlow authFlow, final AuthRequest authRequest) {
-		authFlow.setClientSecret(config.getProperty(Naming.Security.Auth.FACEBOOK_CLIENT_SECRET).toCharArray());
+	public Provider initFacebookProvider(final ImplicitFlow authFlow, final AuthRequest authRequest) throws Exception {
+		//authFlow.setClientSecret(config.getProperty(Naming.Security.Auth.FACEBOOK_CLIENT_SECRET).toCharArray());
 		authRequest.setClient_id(config.getProperty(Naming.Security.Auth.FACEBOOK_CLIENT_ID));
 		authRequest.setRedirect_uri(config.getProperty(Naming.Security.Auth.AUTH_URL));
+		authFlow.setProviderMetadata(authFlow.getProviderConfig(facebookDiscoveryUrl));
 		return facebookProvider;
 	}
 	

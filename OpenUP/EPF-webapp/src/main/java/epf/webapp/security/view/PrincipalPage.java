@@ -14,6 +14,8 @@ import javax.inject.Named;
 import javax.security.enterprise.SecurityContext;
 import javax.servlet.http.HttpServletRequest;
 import org.eclipse.microprofile.jwt.Claims;
+import org.jose4j.jwt.JwtClaims;
+
 import epf.client.util.Client;
 import epf.security.auth.Provider;
 import epf.security.auth.core.StandardClaims;
@@ -25,8 +27,10 @@ import epf.util.logging.LogManager;
 import epf.webapp.GatewayUtil;
 import epf.webapp.naming.Naming;
 import epf.webapp.security.TokenPrincipal;
+import epf.webapp.security.auth.IDTokenPrincipal;
 import epf.webapp.security.auth.OpenIDPrincipal;
 import epf.webapp.security.auth.SecurityAuth;
+import epf.webapp.security.util.JwtUtil;
 
 /**
  * @author PC
@@ -78,6 +82,11 @@ public class PrincipalPage implements PrincipalView {
 	/**
 	 * 
 	 */
+	private transient JwtClaims claims;
+	
+	/**
+	 * 
+	 */
 	@PostConstruct
 	protected void postConstruct() {
 		final Principal principal = context.getCallerPrincipal();
@@ -101,6 +110,15 @@ public class PrincipalPage implements PrincipalView {
 				LOGGER.log(Level.SEVERE, "[PrincipalPage.userInfo]", e);
 			}
 		}
+		else if(principal instanceof IDTokenPrincipal) {
+			final IDTokenPrincipal idTokenPrincipal = (IDTokenPrincipal) principal;
+			try {
+				claims = JwtUtil.decode(idTokenPrincipal.getId_token());
+			} 
+			catch (Exception e) {
+				LOGGER.log(Level.SEVERE, "[PrincipalPage.claims]", e);
+			}
+		}
 	}
 	
 	/**
@@ -108,6 +126,9 @@ public class PrincipalPage implements PrincipalView {
 	 */
 	@Override
 	public String getName() {
+		if(claims != null) {
+			return claims.getClaimValueAsString(StandardClaims.name.name());
+		}
 		if(userInfo != null) {
 			return userInfo.getName();
 		}
@@ -123,6 +144,9 @@ public class PrincipalPage implements PrincipalView {
 
 	@Override
 	public List<String> getClaimNames() {
+		if(claims != null) {
+			return claims.getClaimNames().stream().collect(Collectors.toList());
+		}
 		if(userInfo != null) {
 			return Arrays.asList(StandardClaims.values()).stream().map(claim -> claim.name()).collect(Collectors.toList());
 		}
@@ -133,6 +157,9 @@ public class PrincipalPage implements PrincipalView {
 
 	@Override
 	public String getClaim(final String name) {
+		if(claims != null) {
+			return claims.getClaimValueAsString(name);
+		}
 		if(userInfo != null) {
 			return "";
 		}

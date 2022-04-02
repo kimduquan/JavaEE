@@ -1,11 +1,10 @@
-package epf.portlet.util;
+package epf.webapp.util;
 
 import java.util.Iterator;
 import javax.faces.FacesException;
-import javax.faces.application.FacesMessage;
+import javax.faces.application.ProtectedViewException;
 import javax.faces.context.ExceptionHandler;
 import javax.faces.context.ExceptionHandlerWrapper;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ExceptionQueuedEvent;
 
 /**
@@ -28,8 +27,11 @@ public class ExceptionHelper extends ExceptionHandlerWrapper {
 			final ExceptionQueuedEvent event = it.next();
 			final Throwable exception = event.getContext().getException();
 			final Throwable rootCause = getRootCause(exception);
-			final FacesMessage msg = new FacesMessage(exception.getLocalizedMessage(), rootCause.getLocalizedMessage());
-			FacesContext.getCurrentInstance().addMessage(null, msg);
+			String outcome = "/webapp/error?faces-redirect=true";
+			if(rootCause instanceof ProtectedViewException) {
+				outcome += "&error=" + "ProtectedViewException";
+			}
+			event.getFacesContext().getApplication().getNavigationHandler().handleNavigation(event.getFacesContext(), null, outcome);
 			it.remove();
 		}
 	}

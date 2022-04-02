@@ -76,6 +76,19 @@ public class AuthPage implements AuthView {
 	 */
 	@Inject
 	private ImplicitFlow implicitFlow;
+	
+	/**
+	 * 
+	 */
+	private String provider;
+
+	public String getProvider() {
+		return provider;
+	}
+
+	public void setProvider(final String provider) {
+		this.provider = provider;
+	}
 
 	@Override
 	public String loginWithGoogle() throws Exception {
@@ -83,11 +96,11 @@ public class AuthPage implements AuthView {
 		final String csrfToken = request.getParameter("javax.faces.Token");
 		conversation.begin();
 		final AuthRequest authRequest = new AuthRequest();
-		authRequest.setState("CodeFlowAuth" + System.lineSeparator() + conversation.getId() + System.lineSeparator() + csrfToken);
+		authRequest.setState("Code" + System.lineSeparator() + conversation.getId() + System.lineSeparator() + csrfToken);
 		final Provider provider = securityAuth.initGoogleProvider(codeFlow, authRequest);
 		codeFlow.setAuthRequest(authRequest);
 		codeFlow.setProvider(provider);
-		final String authRequestUrl = provider.authorizeUrl(authRequest);
+		final String authRequestUrl = codeFlow.getAuthorizeUrl(codeFlow.getProviderMetadata(), authRequest);
 		externalContext.redirect(authRequestUrl);
 		return "";
 	}
@@ -98,10 +111,11 @@ public class AuthPage implements AuthView {
 		final String csrfToken = request.getParameter("javax.faces.Token");
 		conversation.begin();
 		final ImplicitAuthRequest authRequest = new ImplicitAuthRequest();
-		authRequest.setState("ImplicitFlowAuth" + System.lineSeparator() + conversation.getId() + System.lineSeparator() + csrfToken);
-		final Provider provider = securityAuth.initFacebookProvider(codeFlow, authRequest);
+		authRequest.setState("Implicit" + System.lineSeparator() + conversation.getId() + System.lineSeparator() + csrfToken);
+		authRequest.setResponse_mode("query");
+		securityAuth.initFacebookProvider(implicitFlow, authRequest);
 		implicitFlow.setAuthRequest(authRequest);
-		final String authRequestUrl = provider.authorizeUrl(authRequest);
+		final String authRequestUrl = implicitFlow.getAuthorizeUrl(implicitFlow.getProviderMetadata(), authRequest, "public_profile");
 		externalContext.redirect(authRequestUrl);
 		return "";
 	}
@@ -127,8 +141,8 @@ public class AuthPage implements AuthView {
 			final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(session.isRemember());
 			final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
 			final AuthenticationStatus status = context.authenticate(request, response, params);
-			conversation.end();
 			if(AuthenticationStatus.SUCCESS.equals(status)) {
+				conversation.end();
 				return Naming.DEFAULT_VIEW;
 			}
 		}
@@ -162,8 +176,8 @@ public class AuthPage implements AuthView {
 			final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(session.isRemember());
 			final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
 			final AuthenticationStatus status = context.authenticate(request, response, params);
-			conversation.end();
 			if(AuthenticationStatus.SUCCESS.equals(status)) {
+				conversation.end();
 				return Naming.DEFAULT_VIEW;
 			}
 		}
@@ -185,12 +199,26 @@ public class AuthPage implements AuthView {
 	public String authenticate() {
 		final HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
 		final String flow = request.getParameter("flow");
-		if("CodeFlowAuth".equals(flow)) {
+		if("Code".equals(flow)) {
 			return this.authenticateCodeFlow(request);
 		}
-		else if("ImplicitFlowAuth".equals(flow)) {
+		else if("Implicit".equals(flow)) {
 			return this.authenticateImplicitFlow(request);
 		}
 		return Naming.Security.LOGIN;
+	}
+	
+	/**
+	 * @return
+	 * @throws Exception
+	 */
+	public String login() throws Exception {
+		if("Google".equals(provider)) {
+			return loginWithGoogle();
+		}
+		else if("Facebook".equals(provider)) {
+			return loginWithFacebook();
+		}
+		return "";
 	}
 }

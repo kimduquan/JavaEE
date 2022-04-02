@@ -695,12 +695,12 @@
 												<limit>
 													<counter>LINE</counter>
 													<value>COVEREDRATIO</value>
-													<minimum>0.39</minimum>
+													<minimum>0.38</minimum>
 												</limit>
 												<limit>
 													<counter>BRANCH</counter>
 													<value>COVEREDRATIO</value>
-													<minimum>0.30</minimum>
+													<minimum>0.29</minimum>
 												</limit>
 												<limit>
 													<counter>COMPLEXITY</counter>
