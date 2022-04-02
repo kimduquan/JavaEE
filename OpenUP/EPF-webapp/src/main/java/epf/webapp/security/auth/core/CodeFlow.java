@@ -2,7 +2,6 @@ package epf.webapp.security.auth.core;
 
 import java.io.Serializable;
 import javax.enterprise.context.ConversationScoped;
-import epf.security.auth.Provider;
 import epf.security.auth.core.AuthError;
 import epf.security.auth.core.AuthRequest;
 import epf.security.auth.core.AuthResponse;
@@ -20,16 +19,6 @@ public class CodeFlow extends Flow implements CodeFlowAuth, Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	/**
-	 * 
-	 */
-	private transient char[] clientSecret;
-	
-	/**
-	 * 
-	 */
-	private Provider provider;
 	
 	/**
 	 * 
@@ -68,22 +57,6 @@ public class CodeFlow extends Flow implements CodeFlowAuth, Serializable {
 
 	public void setAuthError(final AuthError authError) {
 		this.authError = authError;
-	}
-
-	public char[] getClientSecret() {
-		return clientSecret;
-	}
-
-	public void setClientSecret(final char[] clientSecret) {
-		this.clientSecret = clientSecret;
-	}
-
-	public Provider getProvider() {
-		return provider;
-	}
-
-	public void setProvider(final Provider provider) {
-		this.provider = provider;
 	}
 
 	@Override

@@ -99,7 +99,7 @@ public class AuthPage implements AuthView {
 		authRequest.setState("Code" + System.lineSeparator() + conversation.getId() + System.lineSeparator() + csrfToken);
 		final Provider provider = securityAuth.initGoogleProvider(codeFlow, authRequest);
 		codeFlow.setAuthRequest(authRequest);
-		codeFlow.setProvider(provider);
+		codeFlow.setProviderMetadata(provider.discovery());
 		final String authRequestUrl = codeFlow.getAuthorizeUrl(codeFlow.getProviderMetadata(), authRequest);
 		externalContext.redirect(authRequestUrl);
 		return "";
@@ -113,8 +113,9 @@ public class AuthPage implements AuthView {
 		final ImplicitAuthRequest authRequest = new ImplicitAuthRequest();
 		authRequest.setState("Implicit" + System.lineSeparator() + conversation.getId() + System.lineSeparator() + csrfToken);
 		authRequest.setResponse_mode("query");
-		securityAuth.initFacebookProvider(implicitFlow, authRequest);
+		final Provider provider = securityAuth.initFacebookProvider(implicitFlow, authRequest);
 		implicitFlow.setAuthRequest(authRequest);
+		implicitFlow.setProviderMetadata(provider.discovery());
 		final String authRequestUrl = implicitFlow.getAuthorizeUrl(implicitFlow.getProviderMetadata(), authRequest, "public_profile");
 		externalContext.redirect(authRequestUrl);
 		return "";
@@ -136,7 +137,7 @@ public class AuthPage implements AuthView {
 			tokenRequest.setClient_id(codeFlow.getAuthRequest().getClient_id());
 			tokenRequest.setCode(codeFlow.getAuthResponse().getCode());
 			tokenRequest.setRedirect_uri(codeFlow.getAuthRequest().getRedirect_uri());
-			final AuthCodeCredential credential = new AuthCodeCredential(tokenRequest, codeFlow.getProvider(), codeFlow.getClientSecret());
+			final AuthCodeCredential credential = new AuthCodeCredential(tokenRequest, codeFlow.getProviderMetadata());
 			session.setRemember(true);
 			final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(session.isRemember());
 			final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();

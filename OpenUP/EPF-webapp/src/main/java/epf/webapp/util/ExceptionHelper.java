@@ -27,7 +27,7 @@ public class ExceptionHelper extends ExceptionHandlerWrapper {
 			final ExceptionQueuedEvent event = it.next();
 			final Throwable exception = event.getContext().getException();
 			final Throwable rootCause = getRootCause(exception);
-			String outcome = "/webapp/error?faces-redirect=true";
+			String outcome = "/webapp/error.xhtml?faces-redirect=true";
 			if(rootCause instanceof ProtectedViewException) {
 				outcome += "&error=" + "ProtectedViewException";
 			}

@@ -1,12 +1,8 @@
 package epf.security.auth;
 
-import java.util.List;
-import java.util.Map.Entry;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
-import epf.security.auth.core.AuthRequest;
 import epf.security.auth.core.TokenErrorResponse;
 import epf.security.auth.core.TokenRequest;
 import epf.security.auth.core.TokenResponse;
@@ -29,16 +25,9 @@ public interface Provider {
 	/**
 	 * @param request
 	 * @return
-	 * @throws AuthError
-	 */
-	String authorizeUrl(final AuthRequest request);
-	
-	/**
-	 * @param request
-	 * @return
 	 * @throws TokenErrorResponse
 	 */
-	TokenResponse accessToken(final TokenRequest tokenRequest, final List<Entry<String, String>> params) throws TokenErrorResponse;
+	TokenResponse accessToken(final TokenRequest tokenRequest) throws TokenErrorResponse;
 	
 	/**
 	 * @param idToken

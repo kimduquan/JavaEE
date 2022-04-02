@@ -1,11 +1,6 @@
 package epf.security.auth;
 
 import java.net.URI;
-import java.net.URLEncoder;
-import java.time.Instant;
-import java.util.List;
-import java.util.Optional;
-import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.client.Client;
@@ -20,8 +15,6 @@ import org.jose4j.jwk.HttpsJwks;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.keys.resolvers.JwksVerificationKeyResolver;
-
-import epf.security.auth.core.AuthRequest;
 import epf.security.auth.core.TokenErrorResponse;
 import epf.security.auth.core.TokenRequest;
 import epf.security.auth.core.TokenResponse;
@@ -39,11 +32,6 @@ public class StandardProvider implements Provider {
 	/**
 	 * 
 	 */
-	public static final String OPENID_CONNECT_SCOPE = "openid email profile";
-	
-	/**
-	 * 
-	 */
 	private transient final static Logger LOGGER = LogManager.getLogger(StandardProvider.class.getName());
 	
 	/**
@@ -54,7 +42,7 @@ public class StandardProvider implements Provider {
 	/**
 	 * 
 	 */
-	private transient final String scope;
+	private transient final char[] clientSecret;
 	
 	/**
 	 * 
@@ -68,11 +56,11 @@ public class StandardProvider implements Provider {
 	
 	/**
 	 * @param discoveryUrl
-	 * @param scope
+	 * @param clientSecret
 	 */
-	public StandardProvider(final URI discoveryUrl, final String scope) {
+	public StandardProvider(final URI discoveryUrl, final char[] clientSecret) {
 		this.discoveryUrl = discoveryUrl;
-		this.scope = scope;
+		this.clientSecret = clientSecret;
 	}
 
 	@Override
@@ -85,56 +73,7 @@ public class StandardProvider implements Provider {
 	}
 
 	@Override
-	public String authorizeUrl(final AuthRequest authRequest) {
-		if(metadata == null) {
-			discovery();
-		}
-		authRequest.setResponse_type("code");
-		authRequest.setScope(scope);
-		authRequest.setNonce(String.valueOf(Instant.now().getEpochSecond()));
-		
-		final StringBuilder authRequestUrl = new StringBuilder();
-		authRequestUrl.append(metadata.getAuthorization_endpoint());
-		authRequestUrl.append('?');
-		Optional.ofNullable(authRequest.getClient_id()).ifPresent(client_id -> {
-			authRequestUrl.append("&client_id=");
-			authRequestUrl.append(client_id);
-		});
-		Optional.ofNullable(authRequest.getNonce()).ifPresent(nonce -> {
-			authRequestUrl.append("&nonce=");
-			authRequestUrl.append(nonce);
-		});
-		Optional.ofNullable(authRequest.getRedirect_uri()).ifPresent(redirect_uri -> {
-			authRequestUrl.append("&redirect_uri=");
-			try {
-				authRequestUrl.append(URLEncoder.encode(redirect_uri, "UTF-8"));
-			} 
-			catch (Exception e) {
-				LOGGER.log(Level.SEVERE, "[AuthRequest.redirect_uri]", e);
-			}
-		});
-		Optional.ofNullable(authRequest.getResponse_type()).ifPresent(response_type -> {
-			authRequestUrl.append("&response_type=");
-			authRequestUrl.append(response_type);
-		});
-		Optional.ofNullable(authRequest.getScope()).ifPresent(scope -> {
-			authRequestUrl.append("&scope=");
-			authRequestUrl.append(scope);
-		});
-		Optional.ofNullable(authRequest.getState()).ifPresent(state -> {
-			authRequestUrl.append("&state=");
-			try {
-				authRequestUrl.append(URLEncoder.encode(state, "UTF-8"));
-			}
-			catch (Exception e) {
-				LOGGER.log(Level.SEVERE, "[AuthRequest.state]", e);
-			}
-		});
-		return authRequestUrl.toString();
-	}
-
-	@Override
-	public TokenResponse accessToken(final TokenRequest tokenRequest, final List<Entry<String, String>> params) throws TokenErrorResponse {
+	public TokenResponse accessToken(final TokenRequest tokenRequest) throws TokenErrorResponse {
 		if(metadata == null) {
 			discovery();
 		}
@@ -144,11 +83,7 @@ public class StandardProvider implements Provider {
 		form.param("code", tokenRequest.getCode());
 		form.param("grant_type", tokenRequest.getGrant_type());
 		form.param("redirect_uri", tokenRequest.getRedirect_uri());
-		if(params != null) {
-			for(Entry<String, String> param : params) {
-				form.param(param.getKey(), param.getValue());
-			}
-		}
+		form.param("client_secret", new String(clientSecret));
 		final Client client = ClientBuilder.newClient();
 		try(Response response = client
 				.target(metadata.getToken_endpoint())

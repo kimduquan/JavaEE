@@ -60,9 +60,9 @@ public class SecurityAuth {
 	protected void postConstruct() {
 		try {
 			googleDiscoveryUrl = new URI(config.getProperty(Naming.Security.Auth.GOOGLE_PROVIDER));
-			googleProvider = new StandardProvider(googleDiscoveryUrl, StandardProvider.OPENID_CONNECT_SCOPE);
+			googleProvider = new StandardProvider(googleDiscoveryUrl, config.getProperty(Naming.Security.Auth.GOOGLE_CLIENT_SECRET).toCharArray());
 			facebookDiscoveryUrl = new URI(config.getProperty(Naming.Security.Auth.FACEBOOK_PROVIDER));
-			facebookProvider = new StandardProvider(facebookDiscoveryUrl, "openid email public_profile");
+			facebookProvider = new StandardProvider(facebookDiscoveryUrl, config.getProperty(Naming.Security.Auth.FACEBOOK_CLIENT_SECRET).toCharArray());
 		} 
 		catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "[SecurityAuth.googleProvider]");
@@ -76,7 +76,6 @@ public class SecurityAuth {
 	 * @throws Exception
 	 */
 	public Provider initGoogleProvider(final CodeFlow authFlow, final AuthRequest authRequest) throws Exception {
-		authFlow.setClientSecret(config.getProperty(Naming.Security.Auth.GOOGLE_CLIENT_SECRET).toCharArray());
 		authRequest.setClient_id(config.getProperty(Naming.Security.Auth.GOOGLE_CLIENT_ID));
 		authRequest.setRedirect_uri(config.getProperty(Naming.Security.Auth.AUTH_URL));
 		authFlow.setProviderMetadata(authFlow.getProviderConfig(googleDiscoveryUrl));
@@ -90,7 +89,6 @@ public class SecurityAuth {
 	 * @throws Exception
 	 */
 	public Provider initFacebookProvider(final ImplicitFlow authFlow, final AuthRequest authRequest) throws Exception {
-		//authFlow.setClientSecret(config.getProperty(Naming.Security.Auth.FACEBOOK_CLIENT_SECRET).toCharArray());
 		authRequest.setClient_id(config.getProperty(Naming.Security.Auth.FACEBOOK_CLIENT_ID));
 		authRequest.setRedirect_uri(config.getProperty(Naming.Security.Auth.AUTH_URL));
 		authFlow.setProviderMetadata(authFlow.getProviderConfig(facebookDiscoveryUrl));

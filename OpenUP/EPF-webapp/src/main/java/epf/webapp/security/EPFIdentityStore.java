@@ -1,10 +1,8 @@
 package epf.webapp.security;
 
 import java.net.URI;
-import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,8 +16,10 @@ import epf.util.logging.LogManager;
 import epf.webapp.GatewayUtil;
 import epf.webapp.security.auth.AuthCodeCredential;
 import epf.webapp.security.auth.OpenIDPrincipal;
+import epf.webapp.security.auth.SecurityAuth;
 import epf.client.util.Client;
 import epf.naming.Naming;
+import epf.security.auth.Provider;
 import epf.security.auth.core.TokenResponse;
 import epf.security.client.Security;
 
@@ -40,6 +40,12 @@ public class EPFIdentityStore implements IdentityStore {
      */
     @Inject
     private transient GatewayUtil gatewayUtil;
+    
+    /**
+     * 
+     */
+    @Inject
+    private transient SecurityAuth securityAuth;
     
     /**
      * @param credential
@@ -81,11 +87,11 @@ public class EPFIdentityStore implements IdentityStore {
      */
     public CredentialValidationResult validate(final AuthCodeCredential credential) {
     	CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
-    	final Entry<String, String> clientSecret = new AbstractMap.SimpleEntry<>("client_secret", new String(credential.getClientSecret()));
+    	final Provider provider = securityAuth.getProvider(credential.getProviderMetadata().getIssuer());
     	try {
-        	final TokenResponse tokenResponse = credential.getProvider().accessToken(credential.getTokenRequest(), Arrays.asList(clientSecret));
+        	final TokenResponse tokenResponse = provider.accessToken(credential.getTokenRequest());
         	if(tokenResponse != null) {
-        		final OpenIDPrincipal principal = new OpenIDPrincipal(credential.getTokenRequest().getCode(), tokenResponse, credential.getProvider().discovery());
+        		final OpenIDPrincipal principal = new OpenIDPrincipal(credential.getTokenRequest().getCode(), tokenResponse, credential.getProviderMetadata());
         		final Set<String> groups = new HashSet<>(Arrays.asList(Naming.Security.DEFAULT_ROLE));
         		result = new CredentialValidationResult(principal, groups);
         	}
