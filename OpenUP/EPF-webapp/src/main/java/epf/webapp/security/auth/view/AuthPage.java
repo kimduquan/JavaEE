@@ -112,7 +112,6 @@ public class AuthPage implements AuthView {
 		conversation.begin();
 		final ImplicitAuthRequest authRequest = new ImplicitAuthRequest();
 		authRequest.setState("Implicit" + System.lineSeparator() + conversation.getId() + System.lineSeparator() + csrfToken);
-		authRequest.setResponse_mode("query");
 		final Provider provider = securityAuth.initFacebookProvider(implicitFlow, authRequest);
 		implicitFlow.setAuthRequest(authRequest);
 		implicitFlow.setProviderMetadata(provider.discovery());

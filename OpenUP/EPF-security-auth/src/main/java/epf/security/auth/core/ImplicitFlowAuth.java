@@ -53,10 +53,6 @@ public interface ImplicitFlowAuth {
 		final StringBuilder authRequestUrl = new StringBuilder();
 		authRequestUrl.append(metadata.getAuthorization_endpoint());
 		authRequestUrl.append('?');
-		Optional.ofNullable(authRequest.getResponse_mode()).ifPresent(response_mode -> {
-			authRequestUrl.append("&response_mode=");
-			authRequestUrl.append(response_mode);
-		});
 		Optional.ofNullable(authRequest.getClient_id()).ifPresent(client_id -> {
 			authRequestUrl.append("&client_id=");
 			authRequestUrl.append(client_id);
