@@ -44,5 +44,6 @@ public class SecurityAuthServlet extends HttpServlet {
 				}
 			}
 		}
+		resp.sendRedirect("/webapp/security/implicit.xhtml");
 	}
 }

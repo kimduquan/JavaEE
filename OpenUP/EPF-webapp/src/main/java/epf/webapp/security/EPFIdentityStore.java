@@ -11,12 +11,16 @@ import javax.inject.Inject;
 import javax.security.enterprise.credential.UsernamePasswordCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStore;
+import org.jose4j.jwt.JwtClaims;
 import epf.util.config.ConfigUtil;
 import epf.util.logging.LogManager;
 import epf.webapp.GatewayUtil;
 import epf.webapp.security.auth.AuthCodeCredential;
+import epf.webapp.security.auth.IDTokenPrincipal;
+import epf.webapp.security.auth.ImplicitCredential;
 import epf.webapp.security.auth.OpenIDPrincipal;
 import epf.webapp.security.auth.SecurityAuth;
+import epf.webapp.security.util.JwtUtil;
 import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.security.auth.Provider;
@@ -100,5 +104,18 @@ public class EPFIdentityStore implements IdentityStore {
     		LOGGER.log(Level.SEVERE, "validate", e);
     	}
     	return result;
+    }
+    
+    /**
+     * @param credential
+     * @return
+     * @throws Exception 
+     */
+    public CredentialValidationResult validate(final ImplicitCredential credential) throws Exception {
+    	final JwtClaims claims = JwtUtil.decode(credential.getAuthResponse().getId_token());
+    	final IDTokenPrincipal principal = new IDTokenPrincipal(claims.getSubject(), credential.getAuthResponse().getId_token());
+		final Set<String> groups = new HashSet<>();
+		groups.add(Naming.Security.DEFAULT_ROLE);
+		return new CredentialValidationResult(principal, groups);
     }
 }

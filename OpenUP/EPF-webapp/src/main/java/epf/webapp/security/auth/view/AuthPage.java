@@ -153,7 +153,7 @@ public class AuthPage implements AuthView {
 			codeFlow.setAuthError(authError);
 		}
 		conversation.end();
-		return Naming.Security.LOGIN;
+		return "";
 	}
 	
 	/**
@@ -190,7 +190,7 @@ public class AuthPage implements AuthView {
 			implicitFlow.setAuthError(authError);
 		}
 		conversation.end();
-		return Naming.Security.LOGIN;
+		return "";
 	}
 	
 	/**
@@ -205,7 +205,7 @@ public class AuthPage implements AuthView {
 		else if("Implicit".equals(flow)) {
 			return this.authenticateImplicitFlow(request);
 		}
-		return Naming.Security.LOGIN;
+		return "";
 	}
 	
 	/**
