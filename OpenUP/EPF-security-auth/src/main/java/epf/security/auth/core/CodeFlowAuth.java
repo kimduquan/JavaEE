@@ -2,7 +2,6 @@ package epf.security.auth.core;
 
 import java.net.URI;
 import java.net.URLEncoder;
-import java.time.Instant;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,7 +44,6 @@ public interface CodeFlowAuth {
 	default String getAuthorizeUrl(final ProviderMetadata metadata, final AuthRequest authRequest) {
 		authRequest.setResponse_type("code");
 		authRequest.setScope("openid email profile");
-		authRequest.setNonce(String.valueOf(Instant.now().getEpochSecond()));
 		
 		final StringBuilder authRequestUrl = new StringBuilder();
 		authRequestUrl.append(metadata.getAuthorization_endpoint());

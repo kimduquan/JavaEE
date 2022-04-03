@@ -2,7 +2,6 @@ package epf.security.auth.core;
 
 import java.net.URI;
 import java.net.URLEncoder;
-import java.time.Instant;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,7 +47,6 @@ public interface ImplicitFlowAuth {
 	default String getAuthorizeUrl(final ProviderMetadata metadata, final ImplicitAuthRequest authRequest, final String profile) {
 		authRequest.setResponse_type("id_token token");
 		authRequest.setScope("openid email " + profile != null ? profile : DEFAULT_PROFILE);
-		authRequest.setNonce(String.valueOf(Instant.now().getEpochSecond()));
 		
 		final StringBuilder authRequestUrl = new StringBuilder();
 		authRequestUrl.append(metadata.getAuthorization_endpoint());

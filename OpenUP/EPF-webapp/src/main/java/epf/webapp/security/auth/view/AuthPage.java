@@ -1,8 +1,9 @@
 package epf.webapp.security.auth.view;
 
+import java.io.Serializable;
 import javax.enterprise.context.Conversation;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.context.ExternalContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.security.enterprise.AuthenticationStatus;
@@ -31,10 +32,15 @@ import epf.webapp.security.auth.core.ImplicitFlow;
  * @author PC
  *
  */
-@RequestScoped
+@ViewScoped
 @Named(Naming.Security.AUTH)
-public class AuthPage implements AuthView {
+public class AuthPage implements AuthView, Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * 
 	 */
@@ -94,9 +100,11 @@ public class AuthPage implements AuthView {
 	public String loginWithGoogle() throws Exception {
 		final HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
 		final String csrfToken = request.getParameter("javax.faces.Token");
+		final String windowId = externalContext.getClientWindow().getId();
 		conversation.begin();
 		final AuthRequest authRequest = new AuthRequest();
-		authRequest.setState("Code" + System.lineSeparator() + conversation.getId() + System.lineSeparator() + csrfToken);
+		authRequest.setNonce(windowId);
+		authRequest.setState("Code" + System.lineSeparator() + windowId + System.lineSeparator() + conversation.getId() + System.lineSeparator() + csrfToken);
 		final ProviderMetadata metadata = securityAuth.initGoogleProvider(codeFlow, authRequest);
 		codeFlow.setProviderMetadata(metadata);
 		codeFlow.setAuthRequest(authRequest);
@@ -109,9 +117,11 @@ public class AuthPage implements AuthView {
 	public String loginWithFacebook() throws Exception {
 		final HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
 		final String csrfToken = request.getParameter("javax.faces.Token");
+		final String windowId = externalContext.getClientWindow().getId();
 		conversation.begin();
 		final ImplicitAuthRequest authRequest = new ImplicitAuthRequest();
-		authRequest.setState("Implicit" + System.lineSeparator() + conversation.getId() + System.lineSeparator() + csrfToken);
+		authRequest.setNonce(windowId);
+		authRequest.setState("Implicit" + System.lineSeparator() + windowId + System.lineSeparator() + conversation.getId() + System.lineSeparator() + csrfToken);
 		final ProviderMetadata metadata = securityAuth.initFacebookProvider(implicitFlow, authRequest);
 		implicitFlow.setProviderMetadata(metadata);
 		implicitFlow.setAuthRequest(authRequest);

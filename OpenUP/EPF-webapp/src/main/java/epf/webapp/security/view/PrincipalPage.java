@@ -1,5 +1,6 @@
 package epf.webapp.security.view;
 
+import java.io.Serializable;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
@@ -8,8 +9,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.context.ExternalContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.security.enterprise.SecurityContext;
@@ -30,10 +31,15 @@ import epf.webapp.security.auth.IDTokenPrincipal;
  * @author PC
  *
  */
-@RequestScoped
+@ViewScoped
 @Named(Naming.Security.PRINCIPAL)
-public class PrincipalPage implements PrincipalView {
+public class PrincipalPage implements PrincipalView, Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * 
 	 */
@@ -66,17 +72,17 @@ public class PrincipalPage implements PrincipalView {
 	/**
 	 * 
 	 */
-	private transient Token token;
+	private Token token;
 	
 	/**
 	 * 
 	 */
-	private transient Map<String, Object> claims;
+	private Map<String, Object> claims;
 	
 	/**
 	 * 
 	 */
-	private transient List<String> claimNames;
+	private List<String> claimNames;
 	
 	/**
 	 * 
