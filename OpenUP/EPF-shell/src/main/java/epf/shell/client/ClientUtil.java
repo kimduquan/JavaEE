@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.shell.client;
 
 import epf.client.util.Client;
@@ -36,7 +33,6 @@ public class ClientUtil {
 	@PostConstruct
 	protected void postConstruct() {
 		clients = new ClientQueue();
-		clients.initialize();
 	}
 	
 	/**

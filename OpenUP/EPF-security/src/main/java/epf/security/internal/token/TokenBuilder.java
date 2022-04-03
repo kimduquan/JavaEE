@@ -32,20 +32,20 @@ public class TokenBuilder {
 	/**
 	 * 
 	 */
-	private transient final PublicKey encryptKey;
+	private transient final PublicKey publicKey;
 	
 	/**
 	 * @param token
 	 * @param privateKey
 	 * @param encryptKey
 	 */
-	public TokenBuilder(final Token token, final PrivateKey privateKey, final PublicKey encryptKey) {
+	public TokenBuilder(final Token token, final PrivateKey privateKey, final PublicKey publicKey) {
 		Objects.requireNonNull(token, "Token");
 		Objects.requireNonNull(privateKey, "PrivateKey");
-		Objects.requireNonNull(encryptKey, "PublicKey");
+		Objects.requireNonNull(publicKey, "PublicKey");
 		this.token = token;
 		this.privateKey = privateKey;
-		this.encryptKey = encryptKey;
+		this.publicKey = publicKey;
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class TokenBuilder {
 	    jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.RSA_USING_SHA256);
 		jws.setPayload(claims.toJson());
 	    jws.setKey(privateKey);
-	    encryptKey.getAlgorithm();
+	    publicKey.getAlgorithm();
 	    try {
 			final String jwt = jws.getCompactSerialization();
 		    token.setRawToken(jwt);

@@ -1,0 +1,18 @@
+package epf.webapp.security;
+
+import java.io.Serializable;
+import javax.enterprise.context.ConversationScoped;
+
+/**
+ * @author PC
+ *
+ */
+@ConversationScoped
+public class EPFConversation implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+}

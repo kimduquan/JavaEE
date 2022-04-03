@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.util;
 
 /**
@@ -27,9 +24,9 @@ public interface SystemUtil {
 	 * @return
 	 */
 	static String getString(final String name) {
-		String value = getenv(name);
+		String value = System.getProperty(name);
 		if(value == null) {
-			value = System.getProperty(name);
+			value = getenv(name);
 		}
 		return value;
 	}

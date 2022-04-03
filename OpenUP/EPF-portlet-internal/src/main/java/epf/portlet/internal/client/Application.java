@@ -28,7 +28,6 @@ public class Application {
 	@PostConstruct
 	protected void postConstruct() {
 		clients = new ClientQueue();
-		clients.initialize();
 	}
 	
 	/**
