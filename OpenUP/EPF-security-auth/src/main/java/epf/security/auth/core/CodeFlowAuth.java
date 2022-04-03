@@ -40,11 +40,11 @@ public interface CodeFlowAuth {
 	/**
 	 * @param authRequest
 	 * @return
+	 * @throws Exception 
 	 */
-	default String getAuthorizeUrl(final ProviderMetadata metadata, final AuthRequest authRequest) {
+	default String getAuthorizeUrl(final ProviderMetadata metadata, final AuthRequest authRequest) throws Exception {
 		authRequest.setResponse_type("code");
 		authRequest.setScope("openid email profile");
-		
 		final StringBuilder authRequestUrl = new StringBuilder();
 		authRequestUrl.append(metadata.getAuthorization_endpoint());
 		authRequestUrl.append('?');

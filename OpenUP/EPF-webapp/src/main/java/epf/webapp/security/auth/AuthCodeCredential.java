@@ -1,7 +1,6 @@
 package epf.webapp.security.auth;
 
 import javax.security.enterprise.credential.Credential;
-
 import epf.security.auth.core.CodeFlowAuth;
 import epf.security.auth.core.TokenRequest;
 import epf.security.auth.discovery.ProviderMetadata;

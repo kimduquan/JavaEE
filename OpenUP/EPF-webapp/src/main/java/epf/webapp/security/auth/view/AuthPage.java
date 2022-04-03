@@ -20,6 +20,7 @@ import epf.security.auth.core.ImplicitAuthResponse;
 import epf.security.auth.core.TokenRequest;
 import epf.security.auth.discovery.ProviderMetadata;
 import epf.security.auth.view.AuthView;
+import epf.util.security.CryptoUtil;
 import epf.webapp.naming.Naming;
 import epf.webapp.security.Session;
 import epf.webapp.security.auth.AuthCodeCredential;
@@ -52,6 +53,12 @@ public class AuthPage implements AuthView, Serializable {
 	 */
 	@Inject
     private transient ExternalContext externalContext;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	private transient HttpServletRequest request;
 	
 	/**
 	 * 
@@ -95,16 +102,34 @@ public class AuthPage implements AuthView, Serializable {
 	public void setProvider(final String provider) {
 		this.provider = provider;
 	}
+	
+	/**
+	 * @param flow
+	 * @return
+	 */
+	private String buildAuthRequestState(final String flow) {
+		final String csrfToken = request.getParameter("javax.faces.Token");
+		final String windowId = externalContext.getClientWindow().getId();
+		if(conversation.isTransient()) {
+			conversation.begin();
+		}
+		return flow + System.lineSeparator() + windowId + System.lineSeparator() + conversation.getId() + System.lineSeparator() + csrfToken;
+	}
+	
+	/**
+	 * @return
+	 * @throws Exception 
+	 */
+	private String buildAuthRequestNonce() throws Exception {
+		final String sessionId = externalContext.getSessionId(false);
+		return CryptoUtil.hash(sessionId);
+	}
 
 	@Override
 	public String loginWithGoogle() throws Exception {
-		final HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
-		final String csrfToken = request.getParameter("javax.faces.Token");
-		final String windowId = externalContext.getClientWindow().getId();
-		conversation.begin();
 		final AuthRequest authRequest = new AuthRequest();
-		authRequest.setNonce(windowId);
-		authRequest.setState("Code" + System.lineSeparator() + windowId + System.lineSeparator() + conversation.getId() + System.lineSeparator() + csrfToken);
+		authRequest.setNonce(buildAuthRequestNonce());
+		authRequest.setState(buildAuthRequestState("Code"));
 		final ProviderMetadata metadata = securityAuth.initGoogleProvider(codeFlow, authRequest);
 		codeFlow.setProviderMetadata(metadata);
 		codeFlow.setAuthRequest(authRequest);
@@ -115,13 +140,9 @@ public class AuthPage implements AuthView, Serializable {
 
 	@Override
 	public String loginWithFacebook() throws Exception {
-		final HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
-		final String csrfToken = request.getParameter("javax.faces.Token");
-		final String windowId = externalContext.getClientWindow().getId();
-		conversation.begin();
 		final ImplicitAuthRequest authRequest = new ImplicitAuthRequest();
-		authRequest.setNonce(windowId);
-		authRequest.setState("Implicit" + System.lineSeparator() + windowId + System.lineSeparator() + conversation.getId() + System.lineSeparator() + csrfToken);
+		authRequest.setNonce(buildAuthRequestNonce());
+		authRequest.setState(buildAuthRequestState("Implicit"));
 		final ProviderMetadata metadata = securityAuth.initFacebookProvider(implicitFlow, authRequest);
 		implicitFlow.setProviderMetadata(metadata);
 		implicitFlow.setAuthRequest(authRequest);
@@ -170,7 +191,7 @@ public class AuthPage implements AuthView, Serializable {
 	 * @param request
 	 * @return
 	 */
-	private String authenticateImplicitFlow(final HttpServletRequest request) {
+	private String authenticateImplicitFlow(final HttpServletRequest request, final String sessionId) {
 		final String error = request.getParameter("error");
 		if(error == null) {
 			final ImplicitAuthResponse authResponse = new ImplicitAuthResponse();
@@ -181,7 +202,7 @@ public class AuthPage implements AuthView, Serializable {
 			authResponse.setToken_type(request.getParameter("token_type"));
 			implicitFlow.setAuthResponse(authResponse);
 			
-			final ImplicitCredential credential = new ImplicitCredential(authResponse);
+			final ImplicitCredential credential = new ImplicitCredential(authResponse, sessionId);
 			session.setRemember(true);
 			final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(session.isRemember());
 			final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
@@ -207,13 +228,13 @@ public class AuthPage implements AuthView, Serializable {
 	 * @return
 	 */
 	public String authenticate() {
-		final HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
 		final String flow = request.getParameter("flow");
 		if("Code".equals(flow)) {
 			return this.authenticateCodeFlow(request);
 		}
 		else if("Implicit".equals(flow)) {
-			return this.authenticateImplicitFlow(request);
+			final String sessionId = externalContext.getSessionId(false);
+			return this.authenticateImplicitFlow(request, sessionId);
 		}
 		return "";
 	}

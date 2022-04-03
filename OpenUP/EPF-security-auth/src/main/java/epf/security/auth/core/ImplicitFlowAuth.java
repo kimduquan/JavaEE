@@ -43,11 +43,11 @@ public interface ImplicitFlowAuth {
 	 * @param metadata
 	 * @param authRequest
 	 * @return
+	 * @throws Exception
 	 */
-	default String getAuthorizeUrl(final ProviderMetadata metadata, final ImplicitAuthRequest authRequest, final String profile) {
+	default String getAuthorizeUrl(final ProviderMetadata metadata, final ImplicitAuthRequest authRequest, final String profile) throws Exception {
 		authRequest.setResponse_type("id_token token");
 		authRequest.setScope("openid email " + profile != null ? profile : DEFAULT_PROFILE);
-		
 		final StringBuilder authRequestUrl = new StringBuilder();
 		authRequestUrl.append(metadata.getAuthorization_endpoint());
 		authRequestUrl.append('?');

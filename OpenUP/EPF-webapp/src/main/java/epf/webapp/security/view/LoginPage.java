@@ -1,7 +1,8 @@
 package epf.webapp.security.view;
 
-import javax.enterprise.context.RequestScoped;
+import java.io.Serializable;
 import javax.faces.context.ExternalContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.security.enterprise.AuthenticationStatus;
@@ -19,10 +20,15 @@ import epf.webapp.security.Session;
  * @author PC
  *
  */
-@RequestScoped
+@ViewScoped
 @Named(Naming.Security.LOGIN)
-public class LoginPage implements LoginView {
+public class LoginPage implements LoginView, Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * 
 	 */
@@ -34,6 +40,12 @@ public class LoginPage implements LoginView {
 	 */
 	@Inject
     private transient ExternalContext externalContext;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	private transient HttpServletRequest request;
 	
 	/**
 	 * 
@@ -85,12 +97,11 @@ public class LoginPage implements LoginView {
 	public String login() throws Exception {
 		final UsernamePasswordCredential credential = new UsernamePasswordCredential(caller, new Password(password));
 		final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(session.isRemember());
-		final HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
 		final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
 		final AuthenticationStatus status = context.authenticate(request, response, params);
-		if(AuthenticationStatus.SUCCESS.equals(status) || AuthenticationStatus.SEND_CONTINUE.equals(status)) {
+		if(AuthenticationStatus.SUCCESS.equals(status)) {
 			return Naming.DEFAULT_VIEW;
 		}
-		return Naming.Security.LOGIN;
+		return "";
 	}
 }

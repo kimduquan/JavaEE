@@ -31,9 +31,10 @@ public interface Provider {
 	
 	/**
 	 * @param idToken
+	 * @param sessionId
 	 * @return
 	 */
-	boolean validateIDToken(final String idToken);
+	boolean validateIDToken(final String idToken, final String sessionId);
 	
 	/**
 	 * @param accessToken

@@ -113,9 +113,13 @@ public class EPFIdentityStore implements IdentityStore {
      */
     public CredentialValidationResult validate(final ImplicitCredential credential) throws Exception {
     	final JwtClaims claims = JwtUtil.decode(credential.getAuthResponse().getId_token());
-    	final IDTokenPrincipal principal = new IDTokenPrincipal(claims.getSubject(), credential.getAuthResponse().getId_token(), claims.getClaimsMap());
-		final Set<String> groups = new HashSet<>();
-		groups.add(Naming.Security.DEFAULT_ROLE);
-		return new CredentialValidationResult(principal, groups);
+    	final Provider provider = securityAuth.getProvider(claims.getIssuer());
+    	if(provider.validateIDToken(credential.getAuthResponse().getId_token(), credential.getSessionId())) {
+        	final IDTokenPrincipal principal = new IDTokenPrincipal(claims.getSubject(), credential.getAuthResponse().getId_token(), claims.getClaimsMap());
+    		final Set<String> groups = new HashSet<>();
+    		groups.add(Naming.Security.DEFAULT_ROLE);
+    		return new CredentialValidationResult(principal, groups);
+    	}
+    	return CredentialValidationResult.INVALID_RESULT;
     }
 }

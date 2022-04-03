@@ -15,13 +15,24 @@ public class ImplicitCredential implements Credential {
 	private transient final ImplicitAuthResponse authResponse;
 	
 	/**
-	 * @param implicitAuthResponse
+	 * 
 	 */
-	public ImplicitCredential(final ImplicitAuthResponse implicitAuthResponse) {
+	private transient final String sessionId;
+	
+	/**
+	 * @param implicitAuthResponse
+	 * @param sessionId
+	 */
+	public ImplicitCredential(final ImplicitAuthResponse implicitAuthResponse, final String sessionId) {
 		this.authResponse = implicitAuthResponse;
+		this.sessionId = sessionId;
 	}
 
 	public ImplicitAuthResponse getAuthResponse() {
 		return authResponse;
+	}
+
+	public String getSessionId() {
+		return sessionId;
 	}
 }

@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.security.enterprise.CallerPrincipal;
 import javax.security.enterprise.credential.RememberMeCredential;
@@ -90,7 +91,7 @@ public class EPFRememberMeIdentityStore implements RememberMeIdentityStore {
 				final TokenPrincipal principal = new TokenPrincipal(validClaims.getSubject(), credential.getToken());
 				result = new CredentialValidationResult(principal, groups);
 			}
-			else if(securityAuth.getProvider(claims.getIssuer()).validateIDToken(credential.getToken())) {
+			else if(securityAuth.getProvider(claims.getIssuer()).validateIDToken(credential.getToken(), FacesContext.getCurrentInstance().getExternalContext().getSessionId(false))) {
 				final IDTokenPrincipal principal = new IDTokenPrincipal(claims.getSubject(), credential.getToken(), claims.getClaimsMap());
 				final Set<String> groups = new HashSet<>();
 				groups.add(Naming.Security.DEFAULT_ROLE);

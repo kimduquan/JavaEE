@@ -22,6 +22,7 @@ import epf.security.auth.core.UserInfo;
 import epf.security.auth.core.UserInfoError;
 import epf.security.auth.discovery.ProviderMetadata;
 import epf.util.logging.LogManager;
+import epf.util.security.CryptoUtil;
 
 /**
  * @author PC
@@ -104,7 +105,7 @@ public class StandardProvider implements Provider {
 	}
 
 	@Override
-	public boolean validateIDToken(final String idToken) {
+	public boolean validateIDToken(final String idToken, final String sessionId) {
 		if(metadata == null) {
 			discovery();
 		}
@@ -124,6 +125,13 @@ public class StandardProvider implements Provider {
 			/*if(isValid) {
 				isValid = "RS256".equals(claims.getClaimValue("alg")) || Arrays.asList(metadata.getId_token_signing_alg_values_supported()).contains(claims.getClaimValue("alg"));
 			}*/
+			if(isValid) {
+				isValid = false;
+				final String nonce = claims.getClaimValueAsString("nonce");
+				if(nonce != null && !nonce.isEmpty()) {
+					isValid = nonce.equals(CryptoUtil.hash(sessionId));
+				}
+			}
 		}
 		catch (Exception ex) {
 			LOGGER.log(Level.INFO, "[SecurityAuth.validateToken]", ex);
