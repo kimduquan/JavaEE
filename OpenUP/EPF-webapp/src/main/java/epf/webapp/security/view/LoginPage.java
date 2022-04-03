@@ -100,7 +100,7 @@ public class LoginPage implements LoginView, Serializable {
 		final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
 		final AuthenticationStatus status = context.authenticate(request, response, params);
 		if(AuthenticationStatus.SUCCESS.equals(status)) {
-			return Naming.DEFAULT_VIEW;
+			externalContext.redirect(Naming.CONTEXT_ROOT);
 		}
 		return "";
 	}
