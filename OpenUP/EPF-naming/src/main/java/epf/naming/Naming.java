@@ -65,6 +65,36 @@ public interface Naming {
 		 * 
 		 */
 		String CLIENT_CONFIG = "epf.client.config";
+		
+		/**
+		 * 
+		 */
+		String SSL_KEY_STORE = "epf.client.net.ssl.keyStore";
+		
+		/**
+		 * 
+		 */
+		String SSL_KEY_STORE_TYPE = "epf.client.net.ssl.keyStoreType";
+		
+		/**
+		 * 
+		 */
+		String SSL_KEY_STORE_PASSWORD = "epf.client.net.ssl.keyStorePassword";
+		
+		/**
+		 * 
+		 */
+		String SSL_TRUST_STORE = "epf.client.net.ssl.trustStore";
+		
+		/**
+		 * 
+		 */
+		String SSL_TRUST_STORE_TYPE = "epf.client.net.ssl.trustStoreType";
+		
+		/**
+		 * 
+		 */
+		String SSL_TRUST_STORE_PASSWORD = "epf.client.net.ssl.trustStorePassword";
 	}
 	
 	/**
@@ -572,7 +602,7 @@ public interface Naming {
 	        /**
 	         * 
 	         */
-	        String ENCRYPT_KEY = "epf.security.jwt.encrypt.key";
+	        String VERIFY_KEY = "epf.security.jwt.verify.publickey";
 	        
 	        /**
 	         * 
@@ -594,6 +624,48 @@ public interface Naming {
 	         * 
 	         */
 	        String EXPIRE_DURATION = "epf.security.otp.exp.duration";
+	    }
+	    
+	    /**
+	     * @author PC
+	     *
+	     */
+	    interface Auth {
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String AUTH_URL = "epf.security.auth.url";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String GOOGLE_PROVIDER = "epf.security.auth.openid.discovery.google";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String GOOGLE_CLIENT_ID = "epf.security.auth.openid.client.id.google";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String GOOGLE_CLIENT_SECRET = "epf.security.auth.openid.client.secret.google";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String FACEBOOK_PROVIDER = "epf.security.auth.openid.discovery.facebook";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String FACEBOOK_CLIENT_ID = "epf.security.auth.openid.client.id.facebook";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String FACEBOOK_CLIENT_SECRET = "epf.security.auth.openid.client.secret.facebook";
 	    }
 	}
 	
@@ -659,5 +731,17 @@ public interface Naming {
 	     * 
 	     */
 	    String SECURITY_WEB_APP_URL = "epf.security.webapp.url";
+	    
+	    /**
+	     * @author PC
+	     *
+	     */
+	    interface Security {
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String LOGIN = "/login";
+	    }
 	}
 }

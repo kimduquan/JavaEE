@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+
+<h:head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+
+    <title><h:outputText value="#{i18n['epf.webapp']}" /> - <h:outputText value="#{i18n['epf.security.login']}" /></title>
+
+    <!-- Custom fonts for this template-->
+    <h:outputStylesheet library="startbootstrap-sb-admin-2-gh-pages" name="vendor/fontawesome-free/css/all.min.css" />
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet"/>
+
+    <!-- Custom styles for this template-->
+    <h:outputStylesheet library="startbootstrap-sb-admin-2-gh-pages" name="css/sb-admin-2.min.css" />
+
+</h:head>
+
+<h:body styleClass="bg-gradient-primary">
+
+    <div class="container">
+
+        <!-- Outer Row -->
+        <div class="row justify-content-center">
+
+            <div class="col-xl-10 col-lg-12 col-md-9">
+
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-body p-0">
+                        <!-- Nested Row within Card Body -->
+                        <div class="row">
+                            <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h1 class="h4 text-gray-900 mb-4"><h:outputText value="#{i18n['epf.security.login.welcome']}" /></h1>
+                                    </div>
+                                    <h:form styleClass="user">
+                                        <div class="form-group">
+                                            <h:inputText name="caller" a:type="email" styleClass="form-control form-control-user"
+                                                id="caller" a:aria-describedby="emailHelp"
+                                                a:placeholder="#{i18n['epf.security.credential.caller']}" value="#{security_login.caller}"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <h:inputSecret name="password" styleClass="form-control form-control-user"
+                                                id="password" a:placeholder="#{i18n['epf.security.credential.password']}" value="#{security_login.password}" converter="PasswordConverter"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="custom-control custom-checkbox small">
+                                                <h:selectBooleanCheckbox styleClass="custom-control-input" id="customCheck" value="#{security_login.rememberMe}"/>
+                                                <h:outputLabel styleClass="custom-control-label" for="customCheck" value="#{i18n['epf.security.login.remember_me']}">
+                                                    </h:outputLabel>
+                                            </div>
+                                        </div>
+                                        <h:commandLink a:name="login" styleClass="btn btn-primary btn-user btn-block" value="#{i18n['epf.security.login']}" action="#{security_login.login}">
+                                            <!-- <f:ajax execute="@form" render="@form" /> -->
+                                        </h:commandLink>
+                                        <hr/>
+                                        <h:link styleClass="btn btn-google btn-user btn-block" outcome="openid"><f:param name="provider" value="Google" />
+                                            <i class="fab fa-google fa-fw"></i><h:outputFormat value="#{i18n['epf.security.login.with']}"><f:param value = "Google" /></h:outputFormat>
+                                        </h:link>
+                                        <h:link styleClass="btn btn-facebook btn-user btn-block" outcome="openid"><f:param name="provider" value="Facebook" />
+                                            <i class="fab fa-facebook-f fa-fw"></i><h:outputFormat value="#{i18n['epf.security.login.with']}"><f:param value = "Facebook" /></h:outputFormat>
+                                        </h:link>
+                                    </h:form>
+                                    <hr/>
+                                    <div class="text-center">
+                                        <h:link styleClass="small" outcome="forgot-password"><h:outputText value="#{i18n['epf.security.credential.password.forget']}" /></h:link>
+                                    </div>
+                                    <div class="text-center">
+                                        <h:link styleClass="small" outcome="register"><h:outputText value="#{i18n['epf.security.credential.new']}" /></h:link>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <h:outputScript library="startbootstrap-sb-admin-2-gh-pages" name="vendor/jquery/jquery.min.js" />
+    <h:outputScript library="startbootstrap-sb-admin-2-gh-pages" name="vendor/bootstrap/js/bootstrap.bundle.min.js" />
+
+    <!-- Core plugin JavaScript-->
+    <h:outputScript library="startbootstrap-sb-admin-2-gh-pages" name="vendor/jquery-easing/jquery.easing.min.js" />
+
+    <!-- Custom scripts for all pages-->
+    <h:outputScript library="startbootstrap-sb-admin-2-gh-pages" name="js/sb-admin-2.min.js" />
+
+</h:body>
+
+</html>

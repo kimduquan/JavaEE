@@ -4,5 +4,22 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_3.xsd"
     version="2.3">
-
+    <factory>
+		<exception-handler-factory>epf.webapp.util.ExceptionUtil</exception-handler-factory>
+	</factory>
+    <protected-views>
+    	<url-pattern>/security/auth.xhtml</url-pattern>
+    	<url-pattern>/security/openid.xhtml</url-pattern>
+		<url-pattern>/security/register.xhtml</url-pattern>
+		<url-pattern>/security/forgot-password.xhtml</url-pattern>
+    </protected-views>
+	<application>
+		<resource-bundle>
+			<base-name>i18n</base-name>
+			<var>i18n</var>
+		</resource-bundle>
+		<locale-config>
+			<default-locale>en</default-locale>
+		</locale-config>
+	</application>
 </faces-config>

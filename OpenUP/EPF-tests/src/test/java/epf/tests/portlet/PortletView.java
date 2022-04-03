@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.tests.portlet;
 
 import java.net.URL;

@@ -39,8 +39,6 @@ public interface ResponseUtil {
     	if(linkPaths.length > MIN_PATHS_COUNT) {
     		path = String.join("/", Arrays.asList(linkPaths).subList(2, linkPaths.length));
     	}
-    	final String linkScheme = linkUri.getScheme();
-    	final int linkPort = linkUri.getPort();
     	return UriBuilder.fromUri(baseUri).path(path).build();
     }
     

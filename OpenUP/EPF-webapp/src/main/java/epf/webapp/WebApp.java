@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.annotation.security.DeclareRoles;
 import javax.enterprise.context.ApplicationScoped;
 import javax.faces.annotation.FacesConfig;
 import javax.inject.Inject;
@@ -24,6 +25,7 @@ import epf.util.logging.LogManager;
  */
 @ApplicationScoped
 @FacesConfig
+@DeclareRoles(value = { Naming.Security.DEFAULT_ROLE })
 public class WebApp {
 	
 	/**

@@ -695,12 +695,12 @@
 												<limit>
 													<counter>LINE</counter>
 													<value>COVEREDRATIO</value>
-													<minimum>0.39</minimum>
+													<minimum>0.38</minimum>
 												</limit>
 												<limit>
 													<counter>BRANCH</counter>
 													<value>COVEREDRATIO</value>
-													<minimum>0.30</minimum>
+													<minimum>0.29</minimum>
 												</limit>
 												<limit>
 													<counter>COMPLEXITY</counter>
@@ -769,6 +769,7 @@
 		<module>EPF-cache</module>
 		<module>EPF-registry</module>
 		<module>EPF-management</module>
+		<module>EPF-security-auth</module>
 		
 		<module>EPF-schema-utility</module>
 		<module>EPF-net-schema</module>
@@ -791,21 +792,24 @@
 		
 		<module>EPF-naming</module>
 		<module>EPF-portlet-naming</module>
+		<module>EPF-webapp-naming</module>
 		
         <module>EPF-validation</module>
         <module>EPF-client</module>
-		<module>EPF-messaging-client</module>
 		<module>EPF-security-client</module>
-		<module>EPF-persistence-client</module>
-		<module>EPF-net</module>
-		<module>EPF-persistence</module>
 		<module>EPF-security</module>
+		<module>EPF-view</module>
+		<module>EPF-security-view</module>
+		<module>EPF-security-webapp</module>
+		<module>EPF-persistence-client</module>
+		<module>EPF-persistence</module>
+		<module>EPF-messaging-client</module>
+		<module>EPF-net</module>
 		<module>EPF-file</module>
 		<module>EPF-image</module>
 		<module>EPF-rules</module>
 		<module>EPF-planning</module>
 		<module>EPF-webapp</module>
-		<module>EPF-security-webapp</module>
 		
 		<module>OpenUP-client</module>
         <module>OpenUP-schema</module>

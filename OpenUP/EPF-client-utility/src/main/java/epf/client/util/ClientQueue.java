@@ -7,13 +7,10 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Function;
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
-import javax.net.ssl.SSLContext;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import epf.client.util.ssl.SSLContextHelper;
 
 /**
  *
@@ -26,10 +23,6 @@ public class ClientQueue {
 	 * 
 	 */
 	private transient final Map<String, Queue<Client>> clients;
-    /**
-     * 
-     */
-    private transient SSLContext context;
     
     /**
      * 
@@ -44,21 +37,6 @@ public class ClientQueue {
 	protected Map<String, Queue<Client>> getClients() {
 		return clients;
 	}
-
-	/**
-	 * @return the context
-	 */
-	protected SSLContext getContext() {
-		return context;
-	}
-    
-    /**
-     * 
-     */
-    @PostConstruct
-    public void initialize(){
-        context = SSLContextHelper.build();
-    }
     
     /**
      * 
@@ -73,17 +51,6 @@ public class ClientQueue {
     }
     
     /**
-     * @param context
-     * @return
-     */
-    protected static ClientBuilder newBuilder(final SSLContext context){
-    	return ClientBuilder
-    			.newBuilder();
-    			//.sslContext(context)
-                //.hostnameVerifier(new DefaultHostnameVerifier());
-    }
-    
-    /**
      * @param uri
      * @param buildClient
      * @return
@@ -95,20 +62,20 @@ public class ClientQueue {
                 key -> {
                     final Queue<Client> queue = new ConcurrentLinkedQueue<>();
                     if(buildClient == null) {
-                        queue.add(newBuilder(context).build());
+                        queue.add(ClientBuilder.newBuilder().build());
                     }
                     else {
-                    	queue.add(buildClient.apply(newBuilder(context)).build());
+                    	queue.add(buildClient.apply(ClientBuilder.newBuilder()).build());
                     }
                     return queue;
                 }
         );
         if(pool.isEmpty()){
         	if(buildClient == null) {
-        		pool.add(newBuilder(context).build());
+        		pool.add(ClientBuilder.newBuilder().build());
         	}
         	else {
-                pool.add(buildClient.apply(newBuilder(context)).build());
+                pool.add(buildClient.apply(ClientBuilder.newBuilder()).build());
         	}
         }
         return pool.poll();
