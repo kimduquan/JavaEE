@@ -11,15 +11,10 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import epf.naming.Naming;
-<<<<<<< HEAD:OpenUP/EPF-security/src/main/java/epf/security/internal/store/OTPPrincipalStore.java
-import epf.security.internal.token.TokenIdGenerator;
-import epf.security.schema.Token;
-=======
 import epf.security.internal.Session;
 import epf.security.internal.token.TokenIdGenerator;
 import epf.security.schema.Token;
 import epf.security.util.Credential;
->>>>>>> remotes/origin/native:OpenUP/EPF-security/src/main/java/epf/security/internal/store/OTPSessionStore.java
 import epf.security.util.JPAPrincipal;
 import epf.util.MapUtil;
 
@@ -28,20 +23,12 @@ import epf.util.MapUtil;
  *
  */
 @ApplicationScoped
-<<<<<<< HEAD:OpenUP/EPF-security/src/main/java/epf/security/internal/store/OTPPrincipalStore.java
-public class OTPPrincipalStore {
-=======
 public class OTPSessionStore {
->>>>>>> remotes/origin/native:OpenUP/EPF-security/src/main/java/epf/security/internal/store/OTPSessionStore.java
 	
 	/**
 	 * 
 	 */
-<<<<<<< HEAD:OpenUP/EPF-security/src/main/java/epf/security/internal/store/OTPPrincipalStore.java
-	private transient final Map<String, JPAPrincipal> principals = new ConcurrentHashMap<>();
-=======
 	private transient final Map<String, Session> sessions = new ConcurrentHashMap<>();
->>>>>>> remotes/origin/native:OpenUP/EPF-security/src/main/java/epf/security/internal/store/OTPSessionStore.java
 	
 	/**
 	 * 
@@ -70,18 +57,9 @@ public class OTPSessionStore {
     	return token;
     }
 	
-<<<<<<< HEAD:OpenUP/EPF-security/src/main/java/epf/security/internal/store/OTPPrincipalStore.java
-	/**
-	 * @param principal
-	 */
-	public String putPrincipal(final JPAPrincipal principal) {
-		final Token token = newToken(principal.getName());
-		principals.put(token.getTokenID(), principal);
-=======
 	public String putSession(final JPAPrincipal principal, final Credential credential) {
 		final Token token = newToken(principal.getName());
 		sessions.put(token.getTokenID(), new Session(principal, token, credential));
->>>>>>> remotes/origin/native:OpenUP/EPF-security/src/main/java/epf/security/internal/store/OTPSessionStore.java
 		return token.getTokenID();
 	}
 	
@@ -89,20 +67,7 @@ public class OTPSessionStore {
 	 * @param oneTimePassword
 	 * @return
 	 */
-<<<<<<< HEAD:OpenUP/EPF-security/src/main/java/epf/security/internal/store/OTPPrincipalStore.java
-	public Optional<JPAPrincipal> removePrincipal(final String oneTimePassword) {
-		return MapUtil.remove(principals, oneTimePassword);
-	}
-	
-	/**
-	 * @param name
-	 * @return
-	 */
-	public Optional<JPAPrincipal> findPrincipal(final String name){
-		return MapUtil.findAny(principals, principal -> principal.getName().equals(name));
-=======
 	public Optional<Session> removeSession(final String oneTimePassword) {
 		return MapUtil.remove(sessions, oneTimePassword);
->>>>>>> remotes/origin/native:OpenUP/EPF-security/src/main/java/epf/security/internal/store/OTPSessionStore.java
 	}
 }
