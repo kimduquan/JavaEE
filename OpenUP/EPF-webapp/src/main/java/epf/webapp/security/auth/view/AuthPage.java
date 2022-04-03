@@ -80,7 +80,7 @@ public class AuthPage implements AuthView {
 	/**
 	 * 
 	 */
-	private String provider;
+	private String provider = "";
 
 	public String getProvider() {
 		return provider;
@@ -136,7 +136,7 @@ public class AuthPage implements AuthView {
 			tokenRequest.setClient_id(codeFlow.getAuthRequest().getClient_id());
 			tokenRequest.setCode(codeFlow.getAuthResponse().getCode());
 			tokenRequest.setRedirect_uri(codeFlow.getAuthRequest().getRedirect_uri());
-			final AuthCodeCredential credential = new AuthCodeCredential(tokenRequest, codeFlow.getProviderMetadata());
+			final AuthCodeCredential credential = new AuthCodeCredential(codeFlow.getProviderMetadata(), tokenRequest, codeFlow);
 			session.setRemember(true);
 			final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(session.isRemember());
 			final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();

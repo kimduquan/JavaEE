@@ -18,7 +18,6 @@ import epf.webapp.GatewayUtil;
 import epf.webapp.security.auth.AuthCodeCredential;
 import epf.webapp.security.auth.IDTokenPrincipal;
 import epf.webapp.security.auth.ImplicitCredential;
-import epf.webapp.security.auth.OpenIDPrincipal;
 import epf.webapp.security.auth.SecurityAuth;
 import epf.webapp.security.util.JwtUtil;
 import epf.client.util.Client;
@@ -95,7 +94,8 @@ public class EPFIdentityStore implements IdentityStore {
     	try {
         	final TokenResponse tokenResponse = provider.accessToken(credential.getTokenRequest());
         	if(tokenResponse != null) {
-        		final OpenIDPrincipal principal = new OpenIDPrincipal(credential.getTokenRequest().getCode(), tokenResponse, credential.getProviderMetadata());
+        		final JwtClaims claims = JwtUtil.decode(tokenResponse.getId_token());
+        		final IDTokenPrincipal principal = new IDTokenPrincipal(claims.getSubject(), tokenResponse.getId_token(), claims.getClaimsMap());
         		final Set<String> groups = new HashSet<>(Arrays.asList(Naming.Security.DEFAULT_ROLE));
         		result = new CredentialValidationResult(principal, groups);
         	}
@@ -113,7 +113,7 @@ public class EPFIdentityStore implements IdentityStore {
      */
     public CredentialValidationResult validate(final ImplicitCredential credential) throws Exception {
     	final JwtClaims claims = JwtUtil.decode(credential.getAuthResponse().getId_token());
-    	final IDTokenPrincipal principal = new IDTokenPrincipal(claims.getSubject(), credential.getAuthResponse().getId_token());
+    	final IDTokenPrincipal principal = new IDTokenPrincipal(claims.getSubject(), credential.getAuthResponse().getId_token(), claims.getClaimsMap());
 		final Set<String> groups = new HashSet<>();
 		groups.add(Naming.Security.DEFAULT_ROLE);
 		return new CredentialValidationResult(principal, groups);

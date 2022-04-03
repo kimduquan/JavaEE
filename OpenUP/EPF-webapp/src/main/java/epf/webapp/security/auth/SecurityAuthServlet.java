@@ -1,6 +1,7 @@
 package epf.webapp.security.auth;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URLEncoder;
 import javax.enterprise.context.ApplicationScoped;
 import javax.servlet.ServletException;
@@ -37,13 +38,31 @@ public class SecurityAuthServlet extends HttpServlet {
 				final String cid = fragments[1];
 				final String csrfToken = fragments[2];
 				if(!flow.isEmpty() && !cid.isEmpty() && !csrfToken.isEmpty() ) {
-					final String redirectUrl = "/webapp/security/auth.xhtml?" + req.getQueryString() + "&flow=" + flow + "&cid=" + cid + "&javax.faces.Token=" + URLEncoder.encode(csrfToken, "UTF-8");
+					final String redirectUrl = epf.webapp.naming.Naming.CONTEXT_ROOT + "/security/auth.xhtml?" + req.getQueryString() + "&flow=" + flow + "&cid=" + cid + "&javax.faces.Token=" + URLEncoder.encode(csrfToken, "UTF-8");
 					resp.setHeader("Referrer-Policy", "no-referrer");
 					resp.sendRedirect(redirectUrl);
 					return;
 				}
 			}
 		}
-		resp.sendRedirect("/webapp/security/implicit.xhtml");
+		else {
+			handleFragment(resp);
+		}
+	}
+	
+	/**
+	 * @param resp
+	 * @throws IOException
+	 */
+	private void handleFragment(final HttpServletResponse resp) throws IOException {
+		final PrintWriter writer = resp.getWriter();
+		writer.println("<!DOCTYPE html>");
+		writer.println("<html>");
+		writer.println("<head>");
+		writer.println("<script type=\"text/javascript\">");
+		writer.println("window.onload = function() { if (window.location.href.includes('#')){ window.location.href = window.location.href.replace('#', '?'); } }");
+		writer.println("</script>");
+		writer.println("</head>");
+		writer.println("</html>");
 	}
 }

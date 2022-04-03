@@ -2,24 +2,21 @@ package epf.webapp.security.view;
 
 import java.security.Principal;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.context.ExternalContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.security.enterprise.SecurityContext;
 import javax.servlet.http.HttpServletRequest;
 import org.eclipse.microprofile.jwt.Claims;
-import org.jose4j.jwt.JwtClaims;
-
 import epf.client.util.Client;
-import epf.security.auth.Provider;
 import epf.security.auth.core.StandardClaims;
-import epf.security.auth.core.UserInfo;
 import epf.security.client.Security;
 import epf.security.schema.Token;
 import epf.security.view.PrincipalView;
@@ -28,9 +25,6 @@ import epf.webapp.GatewayUtil;
 import epf.webapp.naming.Naming;
 import epf.webapp.security.TokenPrincipal;
 import epf.webapp.security.auth.IDTokenPrincipal;
-import epf.webapp.security.auth.OpenIDPrincipal;
-import epf.webapp.security.auth.SecurityAuth;
-import epf.webapp.security.util.JwtUtil;
 
 /**
  * @author PC
@@ -67,7 +61,7 @@ public class PrincipalPage implements PrincipalView {
 	 * 
 	 */
 	@Inject
-	private transient SecurityAuth securityAuth;
+    private transient ExternalContext externalContext;
 	
 	/**
 	 * 
@@ -77,12 +71,12 @@ public class PrincipalPage implements PrincipalView {
 	/**
 	 * 
 	 */
-	private transient UserInfo userInfo;
+	private transient Map<String, Object> claims;
 	
 	/**
 	 * 
 	 */
-	private transient JwtClaims claims;
+	private transient List<String> claimNames;
 	
 	/**
 	 * 
@@ -95,25 +89,17 @@ public class PrincipalPage implements PrincipalView {
 			try(Client client = gatewayUtil.newClient(epf.naming.Naming.SECURITY)){
 				client.authorization(tokenPrincipal.getRememberToken().orElse(tokenPrincipal.getRawToken()));
 				token = Security.authenticate(client);
+				claimNames = Arrays.asList(token.getClaims().keySet().toArray(new String[0]));
 			} 
 			catch (Exception e) {
 				LOGGER.log(Level.SEVERE, "[PrincipalPage.token]", e);
 			}
 		}
-		else if(principal instanceof OpenIDPrincipal) {
-			final OpenIDPrincipal openidPrincipal = (OpenIDPrincipal) principal;
-			try {
-				final Provider provider = securityAuth.getProvider(openidPrincipal.getProviderMetadata().getIssuer());
-				userInfo = provider.getUserInfo(openidPrincipal.getToken().getAccess_token(), openidPrincipal.getToken().getToken_type());
-			} 
-			catch (Exception e) {
-				LOGGER.log(Level.SEVERE, "[PrincipalPage.userInfo]", e);
-			}
-		}
 		else if(principal instanceof IDTokenPrincipal) {
 			final IDTokenPrincipal idTokenPrincipal = (IDTokenPrincipal) principal;
 			try {
-				claims = JwtUtil.decode(idTokenPrincipal.getId_token());
+				claims = idTokenPrincipal.getClaims();
+				claimNames = Arrays.asList(StandardClaims.values()).stream().map(claim -> claim.name()).collect(Collectors.toList());
 			} 
 			catch (Exception e) {
 				LOGGER.log(Level.SEVERE, "[PrincipalPage.claims]", e);
@@ -127,10 +113,7 @@ public class PrincipalPage implements PrincipalView {
 	@Override
 	public String getName() {
 		if(claims != null) {
-			return claims.getClaimValueAsString(StandardClaims.name.name());
-		}
-		if(userInfo != null) {
-			return userInfo.getName();
+			return claims.get(StandardClaims.name.name()).toString();
 		}
 		return token.getClaims().get(Claims.full_name.name()).toString();
 	}
@@ -138,31 +121,25 @@ public class PrincipalPage implements PrincipalView {
 	@Override
 	public String logout() throws Exception {
 		request.logout();
-		request.getSession(false).invalidate();
-		return Naming.DEFAULT_VIEW;
+		externalContext.invalidateSession();
+		externalContext.redirect(Naming.CONTEXT_ROOT);
+		return "";
 	}
 
 	@Override
 	public List<String> getClaimNames() {
-		if(claims != null) {
-			return claims.getClaimNames().stream().collect(Collectors.toList());
-		}
-		if(userInfo != null) {
-			return Arrays.asList(StandardClaims.values()).stream().map(claim -> claim.name()).collect(Collectors.toList());
-		}
-		final List<String> names = Arrays.asList(token.getClaims().keySet().toArray(new String[0]));
-		Collections.sort(names);
-		return names;
+		return claimNames;
 	}
 
 	@Override
 	public String getClaim(final String name) {
+		Object claim = null;
 		if(claims != null) {
-			return claims.getClaimValueAsString(name);
+			claim = claims.get(name);
 		}
-		if(userInfo != null) {
-			return "";
+		else {
+			claim = token.getClaims().get(name);
 		}
-		return String.valueOf(token.getClaims().get(name));
+		return claim != null ? String.valueOf(claim) : null;
 	}
 }

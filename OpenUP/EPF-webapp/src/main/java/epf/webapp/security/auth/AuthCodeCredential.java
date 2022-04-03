@@ -1,6 +1,8 @@
 package epf.webapp.security.auth;
 
 import javax.security.enterprise.credential.Credential;
+
+import epf.security.auth.core.CodeFlowAuth;
 import epf.security.auth.core.TokenRequest;
 import epf.security.auth.discovery.ProviderMetadata;
 
@@ -21,12 +23,19 @@ public class AuthCodeCredential implements Credential {
 	private final ProviderMetadata providerMetadata;
 	
 	/**
-	 * @param tokenRequest
-	 * @param providerMetadata
+	 * 
 	 */
-	public AuthCodeCredential(final TokenRequest tokenRequest, final ProviderMetadata providerMetadata) {
+	private transient final CodeFlowAuth flow;
+	
+	/**
+	 * @param providerMetadata
+	 * @param tokenRequest
+	 * @param flow
+	 */
+	public AuthCodeCredential(final ProviderMetadata providerMetadata, final TokenRequest tokenRequest, final CodeFlowAuth flow) {
 		this.tokenRequest = tokenRequest;
 		this.providerMetadata = providerMetadata;
+		this.flow = flow;
 	}
 
 	public TokenRequest getTokenRequest() {
@@ -35,5 +44,9 @@ public class AuthCodeCredential implements Credential {
 
 	public ProviderMetadata getProviderMetadata() {
 		return providerMetadata;
+	}
+
+	public CodeFlowAuth getFlow() {
+		return flow;
 	}
 }

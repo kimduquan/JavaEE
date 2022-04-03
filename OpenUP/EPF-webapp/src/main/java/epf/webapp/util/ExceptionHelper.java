@@ -32,7 +32,6 @@ public class ExceptionHelper extends ExceptionHandlerWrapper {
 				final String outcome = "/404";
 				final FacesContext context = FacesContext.getCurrentInstance();
 				context.getApplication().getNavigationHandler().handleNavigation(context, null, outcome);
-				context.renderResponse();
 				it.remove();
 			}
 		}

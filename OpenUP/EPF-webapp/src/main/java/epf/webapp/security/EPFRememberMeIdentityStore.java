@@ -25,7 +25,6 @@ import epf.util.security.KeyUtil;
 import epf.webapp.ConfigSource;
 import epf.webapp.GatewayUtil;
 import epf.webapp.security.auth.IDTokenPrincipal;
-import epf.webapp.security.auth.OpenIDPrincipal;
 import epf.webapp.security.auth.SecurityAuth;
 import epf.webapp.security.util.JwtUtil;
 
@@ -92,7 +91,7 @@ public class EPFRememberMeIdentityStore implements RememberMeIdentityStore {
 				result = new CredentialValidationResult(principal, groups);
 			}
 			else if(securityAuth.getProvider(claims.getIssuer()).validateIDToken(credential.getToken())) {
-				final IDTokenPrincipal principal = new IDTokenPrincipal(claims.getSubject(), credential.getToken());
+				final IDTokenPrincipal principal = new IDTokenPrincipal(claims.getSubject(), credential.getToken(), claims.getClaimsMap());
 				final Set<String> groups = new HashSet<>();
 				groups.add(Naming.Security.DEFAULT_ROLE);
 				result = new CredentialValidationResult(principal, groups);
@@ -123,10 +122,6 @@ public class EPFRememberMeIdentityStore implements RememberMeIdentityStore {
 				LOGGER.log(Level.SEVERE, "[EPFRememberMeIdentityStore.generateLoginToken]", e);
 			}
 		}
-		else if(callerPrincipal instanceof OpenIDPrincipal) {
-			final OpenIDPrincipal principal = (OpenIDPrincipal) callerPrincipal;
-			newToken = principal.getToken().getId_token();
-		}
 		else if(callerPrincipal instanceof IDTokenPrincipal) {
 			final IDTokenPrincipal principal = (IDTokenPrincipal) callerPrincipal;
 			newToken = principal.getId_token();
@@ -149,5 +144,4 @@ public class EPFRememberMeIdentityStore implements RememberMeIdentityStore {
 			LOGGER.log(Level.SEVERE, "[EPFRememberMeIdentityStore.removeLoginToken]", e);
 		}
 	}
-
 }

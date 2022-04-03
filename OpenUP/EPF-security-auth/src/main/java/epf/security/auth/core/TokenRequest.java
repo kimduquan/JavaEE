@@ -9,19 +9,23 @@ public class TokenRequest {
 	/**
 	 * 
 	 */
-	String grant_type;
+	private String grant_type;
 	/**
 	 * 
 	 */
-	String code;
+	private String code;
 	/**
 	 * 
 	 */
-	String redirect_uri;
+	private String redirect_uri;
 	/**
 	 * 
 	 */
-	String client_id;
+	private String client_id;
+	/**
+	 * 
+	 */
+	private char[] client_secret;
 	
 	public String getGrant_type() {
 		return grant_type;
@@ -46,5 +50,11 @@ public class TokenRequest {
 	}
 	public void setClient_id(final String client_id) {
 		this.client_id = client_id;
+	}
+	public String getClient_secret() {
+		return client_secret != null ? new String(client_secret) : null;
+	}
+	public void setClient_secret(final char[] client_secret) {
+		this.client_secret = client_secret;
 	}
 }

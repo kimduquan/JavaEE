@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -125,31 +124,4 @@ public interface CodeFlowAuth {
 	 * @return
 	 */
 	boolean validate(final TokenResponse tokenResponse);
-	
-	/**
-	 * @param metadata
-	 * @param tokenResponse
-	 * @return
-	 * @throws UserInfoError
-	 */
-	default UserInfo getUserInfo(final ProviderMetadata metadata, final TokenResponse tokenResponse) throws UserInfoError {
-		final Client client = ClientBuilder.newClient();
-		try(Response response = client
-				.target(metadata.getUserinfo_endpoint())
-				.request(MediaType.APPLICATION_JSON)
-				.header(HttpHeaders.AUTHORIZATION, tokenResponse.getToken_type() + " " + tokenResponse.getAccess_token())
-				.get()){
-			if(response.getStatus() == Status.OK.getStatusCode()) {
-				return response.readEntity(UserInfo.class);
-			}
-			else {
-				final UserInfoError userInfoError = response.readEntity(UserInfoError.class);
-				LOGGER.log(Level.SEVERE, "[CodeFlowAuth.userInfo]" + userInfoError.toString());
-				throw userInfoError;
-			}
-		}
-		finally {
-			client.close();
-		}
-	}
 }
