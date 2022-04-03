@@ -1,6 +1,8 @@
 package epf.webapp.security.auth;
 
 import java.net.URI;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -9,6 +11,7 @@ import javax.inject.Inject;
 import epf.naming.Naming;
 import epf.security.auth.Provider;
 import epf.security.auth.core.AuthRequest;
+import epf.security.auth.discovery.ProviderMetadata;
 import epf.util.logging.LogManager;
 import epf.webapp.ConfigSource;
 import epf.webapp.security.auth.core.CodeFlow;
@@ -26,12 +29,6 @@ public class SecurityAuth {
 	 * 
 	 */
 	private transient final static Logger LOGGER = LogManager.getLogger(SecurityAuth.class.getName());
-	
-	/**
-	 * 
-	 */
-	@Inject
-	private transient ConfigSource config;
 	
 	/**
 	 * 
@@ -56,6 +53,17 @@ public class SecurityAuth {
 	/**
 	 * 
 	 */
+	@Inject
+	private transient ConfigSource config;
+	
+	/**
+	 * 
+	 */
+	private transient final Map<String, Provider> providers = new ConcurrentHashMap<>();
+	
+	/**
+	 * 
+	 */
 	@PostConstruct
 	protected void postConstruct() {
 		try {
@@ -65,7 +73,7 @@ public class SecurityAuth {
 			facebookProvider = new StandardProvider(facebookDiscoveryUrl, config.getProperty(Naming.Security.Auth.FACEBOOK_CLIENT_SECRET).toCharArray());
 		} 
 		catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "[SecurityAuth.googleProvider]");
+			LOGGER.log(Level.SEVERE, "[SecurityAuth.providers]");
 		}
 	}
 	
@@ -78,7 +86,9 @@ public class SecurityAuth {
 	public Provider initGoogleProvider(final CodeFlow authFlow, final AuthRequest authRequest) throws Exception {
 		authRequest.setClient_id(config.getProperty(Naming.Security.Auth.GOOGLE_CLIENT_ID));
 		authRequest.setRedirect_uri(config.getProperty(Naming.Security.Auth.AUTH_URL));
-		authFlow.setProviderMetadata(authFlow.getProviderConfig(googleDiscoveryUrl));
+		final ProviderMetadata metadata = authFlow.getProviderConfig(googleDiscoveryUrl);
+		providers.put(metadata.getIssuer(), googleProvider);
+		authFlow.setProviderMetadata(metadata);
 		return googleProvider;
 	}
 	
@@ -91,7 +101,9 @@ public class SecurityAuth {
 	public Provider initFacebookProvider(final ImplicitFlow authFlow, final AuthRequest authRequest) throws Exception {
 		authRequest.setClient_id(config.getProperty(Naming.Security.Auth.FACEBOOK_CLIENT_ID));
 		authRequest.setRedirect_uri(config.getProperty(Naming.Security.Auth.AUTH_URL));
-		authFlow.setProviderMetadata(authFlow.getProviderConfig(facebookDiscoveryUrl));
+		final ProviderMetadata metadata = authFlow.getProviderConfig(facebookDiscoveryUrl);
+		providers.put(metadata.getIssuer(), facebookProvider);
+		authFlow.setProviderMetadata(metadata);
 		return facebookProvider;
 	}
 	
@@ -100,12 +112,6 @@ public class SecurityAuth {
 	 * @return
 	 */
 	public Provider getProvider(final String issuer) {
-		if(issuer.contains("google.com")) {
-			return googleProvider;
-		}
-		else if(issuer.contains("facebook.com")) {
-			return facebookProvider;
-		}
-		return null;
+		return providers.get(issuer);
 	}
 }

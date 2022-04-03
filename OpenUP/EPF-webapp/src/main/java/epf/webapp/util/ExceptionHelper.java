@@ -5,6 +5,7 @@ import javax.faces.FacesException;
 import javax.faces.application.ProtectedViewException;
 import javax.faces.context.ExceptionHandler;
 import javax.faces.context.ExceptionHandlerWrapper;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ExceptionQueuedEvent;
 
 /**
@@ -27,12 +28,12 @@ public class ExceptionHelper extends ExceptionHandlerWrapper {
 			final ExceptionQueuedEvent event = it.next();
 			final Throwable exception = event.getContext().getException();
 			final Throwable rootCause = getRootCause(exception);
-			String outcome = "/webapp/error.xhtml?faces-redirect=true";
 			if(rootCause instanceof ProtectedViewException) {
-				outcome += "&error=" + "ProtectedViewException";
+				final String outcome = "/webapp/404.xhtml";
+				final FacesContext context = FacesContext.getCurrentInstance();
+				context.getApplication().getNavigationHandler().handleNavigation(context, null, outcome);
+				it.remove();
 			}
-			event.getFacesContext().getApplication().getNavigationHandler().handleNavigation(event.getFacesContext(), null, outcome);
-			it.remove();
 		}
 	}
 }
