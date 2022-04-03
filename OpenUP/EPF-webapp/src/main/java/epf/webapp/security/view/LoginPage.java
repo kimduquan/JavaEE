@@ -88,7 +88,7 @@ public class LoginPage implements LoginView {
 		final HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
 		final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
 		final AuthenticationStatus status = context.authenticate(request, response, params);
-		if(AuthenticationStatus.SUCCESS.equals(status)) {
+		if(AuthenticationStatus.SUCCESS.equals(status) || AuthenticationStatus.SEND_CONTINUE.equals(status)) {
 			return Naming.DEFAULT_VIEW;
 		}
 		return Naming.Security.LOGIN;

@@ -10,7 +10,6 @@ import javax.security.enterprise.SecurityContext;
 import javax.security.enterprise.authentication.mechanism.http.AuthenticationParameters;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import epf.security.auth.Provider;
 import epf.security.auth.core.AuthError;
 import epf.security.auth.core.AuthRequest;
 import epf.security.auth.core.AuthResponse;
@@ -18,6 +17,7 @@ import epf.security.auth.core.ImplicitAuthError;
 import epf.security.auth.core.ImplicitAuthRequest;
 import epf.security.auth.core.ImplicitAuthResponse;
 import epf.security.auth.core.TokenRequest;
+import epf.security.auth.discovery.ProviderMetadata;
 import epf.security.auth.view.AuthView;
 import epf.webapp.naming.Naming;
 import epf.webapp.security.Session;
@@ -97,10 +97,10 @@ public class AuthPage implements AuthView {
 		conversation.begin();
 		final AuthRequest authRequest = new AuthRequest();
 		authRequest.setState("Code" + System.lineSeparator() + conversation.getId() + System.lineSeparator() + csrfToken);
-		final Provider provider = securityAuth.initGoogleProvider(codeFlow, authRequest);
+		final ProviderMetadata metadata = securityAuth.initGoogleProvider(codeFlow, authRequest);
+		codeFlow.setProviderMetadata(metadata);
 		codeFlow.setAuthRequest(authRequest);
-		codeFlow.setProviderMetadata(provider.discovery());
-		final String authRequestUrl = codeFlow.getAuthorizeUrl(codeFlow.getProviderMetadata(), authRequest);
+		final String authRequestUrl = codeFlow.getAuthorizeUrl(metadata, authRequest);
 		externalContext.redirect(authRequestUrl);
 		return "";
 	}
@@ -112,10 +112,10 @@ public class AuthPage implements AuthView {
 		conversation.begin();
 		final ImplicitAuthRequest authRequest = new ImplicitAuthRequest();
 		authRequest.setState("Implicit" + System.lineSeparator() + conversation.getId() + System.lineSeparator() + csrfToken);
-		final Provider provider = securityAuth.initFacebookProvider(implicitFlow, authRequest);
+		final ProviderMetadata metadata = securityAuth.initFacebookProvider(implicitFlow, authRequest);
+		implicitFlow.setProviderMetadata(metadata);
 		implicitFlow.setAuthRequest(authRequest);
-		implicitFlow.setProviderMetadata(provider.discovery());
-		final String authRequestUrl = implicitFlow.getAuthorizeUrl(implicitFlow.getProviderMetadata(), authRequest, "public_profile");
+		final String authRequestUrl = implicitFlow.getAuthorizeUrl(metadata, authRequest, "public_profile");
 		externalContext.redirect(authRequestUrl);
 		return "";
 	}

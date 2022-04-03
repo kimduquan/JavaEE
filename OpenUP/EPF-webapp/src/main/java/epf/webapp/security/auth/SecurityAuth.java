@@ -83,13 +83,12 @@ public class SecurityAuth {
 	 * @return
 	 * @throws Exception
 	 */
-	public Provider initGoogleProvider(final CodeFlow authFlow, final AuthRequest authRequest) throws Exception {
+	public ProviderMetadata initGoogleProvider(final CodeFlow authFlow, final AuthRequest authRequest) throws Exception {
 		authRequest.setClient_id(config.getProperty(Naming.Security.Auth.GOOGLE_CLIENT_ID));
 		authRequest.setRedirect_uri(config.getProperty(Naming.Security.Auth.AUTH_URL));
 		final ProviderMetadata metadata = authFlow.getProviderConfig(googleDiscoveryUrl);
 		providers.put(metadata.getIssuer(), googleProvider);
-		authFlow.setProviderMetadata(metadata);
-		return googleProvider;
+		return metadata;
 	}
 	
 	/**
@@ -98,13 +97,12 @@ public class SecurityAuth {
 	 * @return
 	 * @throws Exception
 	 */
-	public Provider initFacebookProvider(final ImplicitFlow authFlow, final AuthRequest authRequest) throws Exception {
+	public ProviderMetadata initFacebookProvider(final ImplicitFlow authFlow, final AuthRequest authRequest) throws Exception {
 		authRequest.setClient_id(config.getProperty(Naming.Security.Auth.FACEBOOK_CLIENT_ID));
 		authRequest.setRedirect_uri(config.getProperty(Naming.Security.Auth.AUTH_URL));
 		final ProviderMetadata metadata = authFlow.getProviderConfig(facebookDiscoveryUrl);
 		providers.put(metadata.getIssuer(), facebookProvider);
-		authFlow.setProviderMetadata(metadata);
-		return facebookProvider;
+		return metadata;
 	}
 	
 	/**

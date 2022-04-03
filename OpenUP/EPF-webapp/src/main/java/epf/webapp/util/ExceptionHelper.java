@@ -29,11 +29,13 @@ public class ExceptionHelper extends ExceptionHandlerWrapper {
 			final Throwable exception = event.getContext().getException();
 			final Throwable rootCause = getRootCause(exception);
 			if(rootCause instanceof ProtectedViewException) {
-				final String outcome = "/webapp/404.xhtml";
+				final String outcome = "/404";
 				final FacesContext context = FacesContext.getCurrentInstance();
 				context.getApplication().getNavigationHandler().handleNavigation(context, null, outcome);
+				context.renderResponse();
 				it.remove();
 			}
 		}
+		getWrapped().handle();
 	}
 }
