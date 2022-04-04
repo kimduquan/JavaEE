@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import epf.webapp.naming.Naming;
 
@@ -13,7 +13,7 @@ import epf.webapp.naming.Naming;
  * @author PC
  *
  */
-@ViewScoped
+@RequestScoped
 @Named(Naming.MESSAGES)
 public class Messages implements MessagesView, Serializable {
 	

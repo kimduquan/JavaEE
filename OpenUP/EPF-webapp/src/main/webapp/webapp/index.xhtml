@@ -213,7 +213,7 @@
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-bell fa-fw"></i>
                                 <!-- Counter - Alerts -->
-                                <span jsf:rendered="#{not empty epf_messages.messages}" class="badge badge-danger badge-counter"><h:outputText value="#{epf_messages.messages.size}" /></span>
+                                <span jsf:rendered="#{not empty epf_messages.messages}" class="badge badge-danger badge-counter"><h:outputText value="#{epf_messages.messages.size()}" /></span>
                             </a>
                             <!-- Dropdown - Alerts -->
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
