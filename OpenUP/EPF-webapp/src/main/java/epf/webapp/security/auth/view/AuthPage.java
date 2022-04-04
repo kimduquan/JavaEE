@@ -174,7 +174,7 @@ public class AuthPage implements AuthView, Serializable {
 			final AuthenticationStatus status = context.authenticate(request, response, params);
 			if(AuthenticationStatus.SUCCESS.equals(status)) {
 				conversation.end();
-				return Naming.DEFAULT_VIEW;
+				return "";
 			}
 		}
 		else {
@@ -209,7 +209,7 @@ public class AuthPage implements AuthView, Serializable {
 			final AuthenticationStatus status = context.authenticate(request, response, params);
 			if(AuthenticationStatus.SUCCESS.equals(status)) {
 				conversation.end();
-				return Naming.DEFAULT_VIEW;
+				return "";
 			}
 		}
 		else {

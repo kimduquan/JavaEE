@@ -14,11 +14,6 @@ public interface Naming {
 	/**
 	 * 
 	 */
-	String DEFAULT_VIEW = "index";
-	
-	/**
-	 * 
-	 */
 	String CONTEXT_ROOT = "/webapp";
 	
 	/**
