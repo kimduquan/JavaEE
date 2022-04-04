@@ -2,7 +2,9 @@ package epf.webapp.security.auth.view;
 
 import java.io.Serializable;
 import javax.enterprise.context.Conversation;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -174,14 +176,18 @@ public class AuthPage implements AuthView, Serializable {
 			final AuthenticationStatus status = context.authenticate(request, response, params);
 			if(AuthenticationStatus.SUCCESS.equals(status)) {
 				conversation.end();
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Authentication success", "Authentication success"));
 				return "";
 			}
 		}
 		else {
 			final AuthError authError = new AuthError();
 			authError.setError(error);
+			authError.setError_description(request.getParameter("error_description"));
+			authError.setError_uri(request.getParameter("error_uri"));
 			authError.setState(request.getParameter("state"));
 			codeFlow.setAuthError(authError);
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, authError.getError(), authError.getError_description()));
 		}
 		conversation.end();
 		return "";
@@ -209,6 +215,7 @@ public class AuthPage implements AuthView, Serializable {
 			final AuthenticationStatus status = context.authenticate(request, response, params);
 			if(AuthenticationStatus.SUCCESS.equals(status)) {
 				conversation.end();
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Authentication success", "Authentication success"));
 				return "";
 			}
 		}
@@ -219,6 +226,7 @@ public class AuthPage implements AuthView, Serializable {
 			authError.setError_uri(request.getParameter("error_uri"));
 			authError.setState(request.getParameter("state"));
 			implicitFlow.setAuthError(authError);
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, authError.getError(), authError.getError_description()));
 		}
 		conversation.end();
 		return "";
