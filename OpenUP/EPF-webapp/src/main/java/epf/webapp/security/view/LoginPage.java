@@ -1,9 +1,9 @@
 package epf.webapp.security.view;
 
 import java.io.Serializable;
-import javax.faces.application.FacesMessage;
+import java.security.Principal;
+import javax.enterprise.event.Event;
 import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -58,6 +58,12 @@ public class LoginPage implements LoginView, Serializable {
 	/**
 	 * 
 	 */
+	@Inject
+	private transient Event<Principal> event;
+	
+	/**
+	 * 
+	 */
 	private String caller;
 	
 	/**
@@ -102,7 +108,7 @@ public class LoginPage implements LoginView, Serializable {
 		final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
 		final AuthenticationStatus status = context.authenticate(request, response, params);
 		if(AuthenticationStatus.SUCCESS.equals(status)) {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Authentication success", "Authentication success"));
+			event.fire(context.getCallerPrincipal());
 			return Naming.CONTEXT_ROOT;
 		}
 		return "";

@@ -249,7 +249,7 @@
                         </li>
 
                         <!-- Nav Item - Messages -->
-                        <f:websocket channel="messaging_session" user="#{request.remoteUser}" onmessage="addMessage" />
+                        <f:websocket channel="epf_messaging_session" user="#{request.remoteUser}" onmessage="addMessage" />
                         <li jsf:id="messages" class="nav-item dropdown no-arrow mx-1">
                             <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -280,7 +280,7 @@
 	                                   </div>
 	                               </a>
                                  </ui:repeat>
-                                <a class="dropdown-item text-center small text-gray-500" onclick="collectMessages();" href="#">Read More Messages</a>
+                                <a class="dropdown-item text-center small text-gray-500" onclick="collectMessages(); return false;" href="#">Read More Messages</a>
                             </div>
                         </li>
 

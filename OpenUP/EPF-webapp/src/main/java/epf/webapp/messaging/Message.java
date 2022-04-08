@@ -39,7 +39,7 @@ public class Message {
 	/**
 	 * 
 	 */
-	private Integer priority;
+	private Integer priority = 4;
 	/**
 	 * 
 	 */

@@ -1,7 +1,9 @@
 package epf.webapp.security.auth.view;
 
 import java.io.Serializable;
+import java.security.Principal;
 import javax.enterprise.context.Conversation;
+import javax.enterprise.event.Event;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -95,6 +97,12 @@ public class AuthPage implements AuthView, Serializable {
 	/**
 	 * 
 	 */
+	@Inject
+	private transient Event<Principal> event;
+	
+	/**
+	 * 
+	 */
 	private String provider = "";
 
 	public String getProvider() {
@@ -176,7 +184,7 @@ public class AuthPage implements AuthView, Serializable {
 			final AuthenticationStatus status = context.authenticate(request, response, params);
 			if(AuthenticationStatus.SUCCESS.equals(status)) {
 				conversation.end();
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Authentication success", "Authentication success"));
+				event.fire(context.getCallerPrincipal());
 				return "";
 			}
 		}
@@ -215,7 +223,7 @@ public class AuthPage implements AuthView, Serializable {
 			final AuthenticationStatus status = context.authenticate(request, response, params);
 			if(AuthenticationStatus.SUCCESS.equals(status)) {
 				conversation.end();
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Authentication success", "Authentication success"));
+				event.fire(context.getCallerPrincipal());
 				return "";
 			}
 		}
