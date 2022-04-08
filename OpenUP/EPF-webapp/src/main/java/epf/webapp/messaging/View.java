@@ -1,4 +1,4 @@
-package epf.webapp.view;
+package epf.webapp.messaging;
 
 import java.io.Serializable;
 import java.util.List;
@@ -6,16 +6,17 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
-import epf.webapp.naming.Naming;
+import epf.webapp.naming.Naming.Messaging;
 
 /**
  * @author PC
  *
  */
 @RequestScoped
-@Named(Naming.MESSAGES)
-public class Messages implements MessagesView, Serializable {
+@Named(Messaging.VIEW)
+public class View implements Serializable {
 	
 	/**
 	 * 
@@ -24,18 +25,23 @@ public class Messages implements MessagesView, Serializable {
 	/**
 	 * 
 	 */
-	private List<MessageView> messages;
+	private List<ViewMessage> messages;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	private transient FacesContext context;
 	
 	/**
 	 * 
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		messages = FacesContext.getCurrentInstance().getMessageList().stream().map(Message::new).collect(Collectors.toList());
+		messages = context.getMessageList().stream().map(ViewMessage::new).collect(Collectors.toList());
 	}
 
-	@Override
-	public List<MessageView> getMessages() {
+	public List<ViewMessage> getMessages() {
 		return messages;
 	}
 }

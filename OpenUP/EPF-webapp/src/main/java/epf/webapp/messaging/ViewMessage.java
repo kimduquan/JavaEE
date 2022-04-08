@@ -1,4 +1,4 @@
-package epf.webapp.view;
+package epf.webapp.messaging;
 
 import java.io.Serializable;
 import javax.faces.application.FacesMessage;
@@ -7,12 +7,34 @@ import javax.faces.application.FacesMessage;
  * @author PC
  *
  */
-public class Message implements MessageView, Serializable {
+public class ViewMessage implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+
+	
+	/**
+	 * 
+	 */
+	public static final String ERROR = "ERROR";
+	
+	/**
+	 * 
+	 */
+	public static final String INFO = "INFO";
+	
+	/**
+	 * 
+	 */
+	public static final String WARN = "WARN";
+	
+	/**
+	 * 
+	 */
+	public static final String FATAL = "FATAL";
 	
 	/**
 	 * 
@@ -22,12 +44,11 @@ public class Message implements MessageView, Serializable {
 	/**
 	 * @param message
 	 */
-	public Message(final FacesMessage message) {
+	public ViewMessage(final FacesMessage message) {
 		this.message = message;
 		
 	}
 
-	@Override
 	public String getSeverity() {
 		String severity = "";
 		if(FacesMessage.SEVERITY_ERROR.equals(message.getSeverity())) {
@@ -45,12 +66,10 @@ public class Message implements MessageView, Serializable {
 		return severity;
 	}
 
-	@Override
 	public String getSummary() {
 		return message.getSummary();
 	}
 
-	@Override
 	public String getDetail() {
 		return message.getDetail();
 	}

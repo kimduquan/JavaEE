@@ -736,6 +736,18 @@ public interface Naming {
 	     * @author PC
 	     *
 	     */
+	    interface Messaging {
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String MESSAGES_LIMIT = "epf.webapp.messaging.messages.limit";
+	    }
+	    
+	    /**
+	     * @author PC
+	     *
+	     */
 	    interface Security {
 	    	
 	    	/**

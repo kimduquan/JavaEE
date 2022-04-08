@@ -17,9 +17,26 @@ public interface Naming {
 	String CONTEXT_ROOT = "/webapp";
 	
 	/**
-	 * 
+	 * @author PC
+	 *
 	 */
-	String MESSAGES = "epf_messages";
+	interface Messaging {
+		
+		/**
+		 * 
+		 */
+		String MESSAGING = "epf_messaging";
+		
+		/**
+		 * 
+		 */
+		String VIEW = "epf_messaging_view";
+		
+		/**
+		 * 
+		 */
+		String SESSION = "epf_messaging_session";
+	}
 	
 	/**
 	 * @author PC
