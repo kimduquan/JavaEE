@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 @LoginToContinue(
 		loginPage = "/security/login.xhtml"
 		)
-public class JWTAuthenticationMechanism implements HttpAuthenticationMechanism {
+public class AuthMechanism implements HttpAuthenticationMechanism {
 	
 	/**
 	 * 

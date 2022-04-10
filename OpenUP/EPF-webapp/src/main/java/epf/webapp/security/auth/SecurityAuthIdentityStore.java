@@ -1,4 +1,4 @@
-package epf.webapp.security;
+package epf.webapp.security.auth;
 
 import java.security.PublicKey;
 import java.time.Duration;
@@ -25,8 +25,7 @@ import epf.util.logging.LogManager;
 import epf.util.security.KeyUtil;
 import epf.webapp.ConfigSource;
 import epf.webapp.GatewayUtil;
-import epf.webapp.security.auth.IDTokenPrincipal;
-import epf.webapp.security.auth.SecurityAuth;
+import epf.webapp.security.TokenPrincipal;
 import epf.webapp.security.util.JwtUtil;
 
 /**
@@ -34,12 +33,12 @@ import epf.webapp.security.util.JwtUtil;
  *
  */
 @ApplicationScoped
-public class EPFRememberMeIdentityStore implements RememberMeIdentityStore {
+public class SecurityAuthIdentityStore implements RememberMeIdentityStore {
 	
 	/**
 	 * 
 	 */
-	private transient final static Logger LOGGER = LogManager.getLogger(EPFRememberMeIdentityStore.class.getName());
+	private transient final static Logger LOGGER = LogManager.getLogger(SecurityAuthIdentityStore.class.getName());
 	
 	/**
 	 * 
