@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.security.schema;
 
 import java.io.Serializable;
@@ -60,7 +55,7 @@ public class Token implements Serializable {
     /**
      * 
      */
-    private Map<? extends String, ? extends Object> claims;
+    private Map<String, Object> claims;
     
     @Override
     public String toString() {
@@ -139,11 +134,11 @@ public class Token implements Serializable {
         this.groups = groups;
     }
     
-    public Map<? extends String, ? extends Object> getClaims() {
+    public Map<String, Object> getClaims() {
 		return claims;
 	}
 
-	public void setClaims(final Map<? extends String, ? extends Object> claims) {
+	public void setClaims(final Map<String, Object> claims) {
 		this.claims = claims;
 	}
 }
