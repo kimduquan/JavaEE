@@ -20,12 +20,12 @@ import epf.webapp.security.util.JwtUtil;
  *
  */
 @ApplicationScoped
-public class UserInfoStore {
+public class PrincipalStore {
 
 	/**
 	 * 
 	 */
-	private transient final Map<String, Map<String, Object>> userInfos = new ConcurrentHashMap<>();
+	private transient final Map<String, Map<String, Object>> principals = new ConcurrentHashMap<>();
 	
 	/**
 	 * 
@@ -49,17 +49,17 @@ public class UserInfoStore {
 	 * @param name
 	 * @return
 	 */
-	public Map<String, Object> getUserInfo(final String name) {
-		return userInfos.get(name);
+	public Map<String, Object> getClaims(final String name) {
+		return principals.get(name);
 	}
 	
 	/**
 	 * @param principal
 	 * @throws Exception 
 	 */
-	public void putUserInfo(@Observes final IDTokenPrincipal principal) throws Exception {
-		final Set<String> otherUsers = userInfos.keySet();
-		userInfos.put(principal.getName(), JwtUtil.decode(principal.getId_token()).getClaimsMap());
+	public void putPrincipal(@Observes final IDTokenPrincipal principal) throws Exception {
+		final Set<String> otherUsers = principals.keySet();
+		principals.put(principal.getName(), JwtUtil.decode(principal.getId_token()).getClaimsMap());
 		send(principal.getName(), otherUsers);
 	}
 	
@@ -67,9 +67,9 @@ public class UserInfoStore {
 	 * @param principal
 	 * @throws Exception
 	 */
-	public void putUserInfo(@Observes final TokenPrincipal principal) throws Exception {
-		final Set<String> otherUsers = userInfos.keySet();
-		userInfos.put(principal.getName(), JwtUtil.decode(principal.getRememberToken().orElse(principal.getRawToken())).getClaimsMap());
+	public void putPrincipal(@Observes final TokenPrincipal principal) throws Exception {
+		final Set<String> otherUsers = principals.keySet();
+		principals.put(principal.getName(), JwtUtil.decode(principal.getRememberToken().orElse(principal.getRawToken())).getClaimsMap());
 		send(principal.getName(), otherUsers);
 	}
 }

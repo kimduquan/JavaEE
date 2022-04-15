@@ -14,12 +14,10 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-
 import org.eclipse.microprofile.jwt.Claims;
-
 import epf.security.auth.core.StandardClaims;
 import epf.webapp.ConfigSource;
-import epf.webapp.internal.UserInfoStore;
+import epf.webapp.internal.PrincipalStore;
 import epf.webapp.naming.Naming.Messaging;
 
 /**
@@ -65,7 +63,7 @@ public class Session implements Serializable {
 	 * 
 	 */
 	@Inject
-	private transient UserInfoStore userStore;
+	private transient PrincipalStore userStore;
 	
 	/**
 	 * 
@@ -108,7 +106,7 @@ public class Session implements Serializable {
 	 * @return
 	 */
 	public String getReplyTo(final Message message) {
-		final Map<String, Object> userInfo = userStore.getUserInfo(message.getReplyTo());
+		final Map<String, Object> userInfo = userStore.getClaims(message.getReplyTo());
 		Object name = userInfo.get(StandardClaims.name.name());
 		if(name == null) {
 			name = userInfo.get(Claims.full_name.name());
@@ -142,7 +140,7 @@ public class Session implements Serializable {
 	 * @return
 	 */
 	public String getPicture(final Message message) {
-		final Map<String, Object> userInfo = userStore.getUserInfo(message.getReplyTo());
+		final Map<String, Object> userInfo = userStore.getClaims(message.getReplyTo());
 		final Object picture = userInfo.get(StandardClaims.picture.name());
 		return picture != null ? (String)picture : "";
 	}
