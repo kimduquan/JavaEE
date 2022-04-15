@@ -31,12 +31,12 @@ import epf.security.client.Security;
  * @author FOXCONN
  */
 @ApplicationScoped
-public class EPFIdentityStore implements IdentityStore {
+public class AuthIdentityStore implements IdentityStore {
 	
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = LogManager.getLogger(EPFIdentityStore.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(AuthIdentityStore.class.getName());
     
     /**
      * 

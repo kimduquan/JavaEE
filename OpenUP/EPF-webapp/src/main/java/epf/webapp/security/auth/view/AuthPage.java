@@ -2,7 +2,9 @@ package epf.webapp.security.auth.view;
 
 import java.io.Serializable;
 import javax.enterprise.context.Conversation;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -22,7 +24,7 @@ import epf.security.auth.discovery.ProviderMetadata;
 import epf.security.auth.view.AuthView;
 import epf.util.security.CryptoUtil;
 import epf.webapp.naming.Naming;
-import epf.webapp.security.Session;
+import epf.webapp.security.AuthParams;
 import epf.webapp.security.auth.AuthCodeCredential;
 import epf.webapp.security.auth.ImplicitCredential;
 import epf.webapp.security.auth.SecurityAuth;
@@ -69,12 +71,6 @@ public class AuthPage implements AuthView, Serializable {
 	/**
 	 * 
 	 */
-	@Inject @Named(Naming.Security.SESSION)
-	private transient Session session;
-	
-	/**
-	 * 
-	 */
 	@Inject
 	private transient Conversation conversation;
 
@@ -89,6 +85,12 @@ public class AuthPage implements AuthView, Serializable {
 	 */
 	@Inject
 	private ImplicitFlow implicitFlow;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	private AuthParams authParams;
 	
 	/**
 	 * 
@@ -121,7 +123,7 @@ public class AuthPage implements AuthView, Serializable {
 	 * @throws Exception 
 	 */
 	private String buildAuthRequestNonce() throws Exception {
-		final String sessionId = externalContext.getSessionId(false);
+		final String sessionId = externalContext.getSessionId(true);
 		return CryptoUtil.hash(sessionId);
 	}
 
@@ -168,20 +170,23 @@ public class AuthPage implements AuthView, Serializable {
 			tokenRequest.setCode(codeFlow.getAuthResponse().getCode());
 			tokenRequest.setRedirect_uri(codeFlow.getAuthRequest().getRedirect_uri());
 			final AuthCodeCredential credential = new AuthCodeCredential(codeFlow.getProviderMetadata(), tokenRequest, codeFlow);
-			session.setRemember(true);
-			final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(session.isRemember());
+			final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(true);
+			authParams.setRememberMe(true);
 			final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
 			final AuthenticationStatus status = context.authenticate(request, response, params);
 			if(AuthenticationStatus.SUCCESS.equals(status)) {
 				conversation.end();
-				return Naming.DEFAULT_VIEW;
+				return "";
 			}
 		}
 		else {
 			final AuthError authError = new AuthError();
 			authError.setError(error);
+			authError.setError_description(request.getParameter("error_description"));
+			authError.setError_uri(request.getParameter("error_uri"));
 			authError.setState(request.getParameter("state"));
 			codeFlow.setAuthError(authError);
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, authError.getError(), authError.getError_description()));
 		}
 		conversation.end();
 		return "";
@@ -203,13 +208,13 @@ public class AuthPage implements AuthView, Serializable {
 			implicitFlow.setAuthResponse(authResponse);
 			
 			final ImplicitCredential credential = new ImplicitCredential(authResponse, sessionId);
-			session.setRemember(true);
-			final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(session.isRemember());
+			final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(true);
+			authParams.setRememberMe(true);
 			final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
 			final AuthenticationStatus status = context.authenticate(request, response, params);
 			if(AuthenticationStatus.SUCCESS.equals(status)) {
 				conversation.end();
-				return Naming.DEFAULT_VIEW;
+				return "";
 			}
 		}
 		else {
@@ -219,6 +224,7 @@ public class AuthPage implements AuthView, Serializable {
 			authError.setError_uri(request.getParameter("error_uri"));
 			authError.setState(request.getParameter("state"));
 			implicitFlow.setAuthError(authError);
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, authError.getError(), authError.getError_description()));
 		}
 		conversation.end();
 		return "";
