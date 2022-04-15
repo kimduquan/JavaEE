@@ -5,7 +5,6 @@ import javax.faces.context.ExternalContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.security.enterprise.AuthenticationStatus;
 import javax.security.enterprise.SecurityContext;
 import javax.security.enterprise.authentication.mechanism.http.AuthenticationParameters;
 import javax.security.enterprise.credential.Password;
@@ -14,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import epf.security.view.LoginView;
 import epf.webapp.naming.Naming;
-import epf.webapp.security.Session;
+import epf.webapp.security.AuthParams;
 
 /**
  * @author PC
@@ -50,8 +49,8 @@ public class LoginPage implements LoginView, Serializable {
 	/**
 	 * 
 	 */
-	@Inject @Named(Naming.Security.SESSION)
-	private Session session;
+	@Inject
+	private AuthParams authParams;
 	
 	/**
 	 * 
@@ -85,24 +84,20 @@ public class LoginPage implements LoginView, Serializable {
 
 	@Override
 	public boolean isRememberMe() {
-		return session.isRemember();
+		return authParams.isRememberMe();
 	}
 
 	@Override
 	public void setRememberMe(final boolean rememberMe) {
-		session.setRemember(rememberMe);
+		authParams.setRememberMe(rememberMe);
 	}
 
 	@Override
 	public String login() throws Exception {
 		final UsernamePasswordCredential credential = new UsernamePasswordCredential(caller, new Password(password));
-		final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(session.isRemember());
+		final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(authParams.isRememberMe());
 		final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
-		final AuthenticationStatus status = context.authenticate(request, response, params);
-		if(AuthenticationStatus.SUCCESS.equals(status)) {
-			//externalContext.redirect(Naming.CONTEXT_ROOT);
-			return Naming.CONTEXT_ROOT;
-		}
+		context.authenticate(request, response, params);
 		return "";
 	}
 }

@@ -26,6 +26,13 @@ public class Config implements epf.client.config.Config {
     /**
      * 
      */
+    @ConfigProperty(name = Naming.WebApp.Messaging.MESSAGES_LIMIT)
+	@Inject
+	private transient long messagesLimit;
+    
+    /**
+     * 
+     */
     @ConfigProperty(name = Naming.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT)
 	@Inject
 	private transient int firstResultDefault;
@@ -108,6 +115,7 @@ public class Config implements epf.client.config.Config {
     	configs.put(Naming.Security.Auth.FACEBOOK_CLIENT_SECRET, facebookClientSecret);
     	configs.put(Naming.Security.Auth.AUTH_URL, authUrl);
     	configs.put(Naming.Security.JWT.VERIFY_KEY, verifyKey);
+    	configs.put(Naming.WebApp.Messaging.MESSAGES_LIMIT, String.valueOf(messagesLimit));
     }
     
     @Override
