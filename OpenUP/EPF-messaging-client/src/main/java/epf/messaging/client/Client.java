@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.messaging.client;
 
 import java.util.function.Consumer;

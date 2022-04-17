@@ -2,6 +2,7 @@ package epf.messaging.util.io;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.kafka.common.serialization.Serializer;
 import epf.util.logging.LogManager;
@@ -26,8 +27,8 @@ public class ObjectSerializer implements Serializer<java.io.Serializable> {
 			return output.toByteArray();
 		} 
 		catch (Exception e) {
-			LOGGER.throwing(LOGGER.getName(), "serialize", e);
-			return null;
+			LOGGER.log(Level.SEVERE, "[ObjectSerializer.serialize]", e);
+			return new byte[0];
 		}
 	}
 

@@ -1,6 +1,8 @@
 package epf.schema.utility;
 
 import java.io.Serializable;
+import javax.json.bind.annotation.JsonbTypeAdapter;
+import epf.util.json.Adapter;
 
 /**
  * @author PC
@@ -21,6 +23,7 @@ public class EntityEvent implements Serializable {
 	/**
 	 * 
 	 */
+	@JsonbTypeAdapter(Adapter.class)
 	private Object entity;
 	
 	@Override

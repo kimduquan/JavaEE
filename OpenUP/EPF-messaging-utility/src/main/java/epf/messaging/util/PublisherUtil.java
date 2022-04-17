@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.messaging.util;
 
 import java.io.Serializable;

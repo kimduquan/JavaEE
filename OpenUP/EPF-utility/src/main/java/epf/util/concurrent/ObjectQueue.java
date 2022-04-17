@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.util.concurrent;
 
 import java.io.Closeable;

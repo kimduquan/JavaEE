@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>openup</groupId>
+        <artifactId>OpenUP-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    <artifactId>EPF-json-utility</artifactId>
+    <name>Eclipse Process Framework JSON Utility</name>
+    <packaging>jar</packaging>
+    <dependencies>
+    	<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
+		<dependency>
+		    <groupId>javax.ws.rs</groupId>
+		    <artifactId>javax.ws.rs-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.enterprise/cdi-api -->
+		<dependency>
+		    <groupId>javax.enterprise</groupId>
+		    <artifactId>cdi-api</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
+		<dependency>
+		    <groupId>javax.annotation</groupId>
+		    <artifactId>javax.annotation-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.context-propagation/microprofile-context-propagation-api -->
+		<dependency>
+		    <groupId>org.eclipse.microprofile.context-propagation</groupId>
+		    <artifactId>microprofile-context-propagation-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api -->
+		<dependency>
+		    <groupId>javax.websocket</groupId>
+		    <artifactId>javax.websocket-api</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.json/javax.json-api -->
+		<dependency>
+		    <groupId>javax.json</groupId>
+		    <artifactId>javax.json-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.json.bind/javax.json.bind-api -->
+		<dependency>
+		    <groupId>javax.json.bind</groupId>
+		    <artifactId>javax.json.bind-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+		<dependency>
+		    <groupId>javax.servlet</groupId>
+		    <artifactId>javax.servlet-api</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.glassfish/javax.json -->
+		<dependency>
+		    <groupId>org.glassfish</groupId>
+		    <artifactId>javax.json</artifactId>
+		    <scope>test</scope>
+		</dependency>
+        <dependency>
+		    <groupId>org.mockito</groupId>
+		    <artifactId>mockito-core</artifactId>
+		    <scope>test</scope>
+		</dependency>
+    </dependencies>
+    <build>
+    	<plugins>
+    		<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>jacoco-prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>jacoco-check</id>
+						<goals>
+							<goal>check</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<rule>
+									<element>BUNDLE</element>
+									<limits>
+										<limit>
+											<counter>LINE</counter>
+											<value>COVEREDRATIO</value>
+											<minimum>0</minimum>
+										</limit>
+										<limit>
+											<counter>BRANCH</counter>
+											<value>COVEREDRATIO</value>
+											<minimum>0</minimum>
+										</limit>
+										<limit>
+											<counter>COMPLEXITY</counter>
+											<value>COVEREDRATIO</value>
+											<minimum>0</minimum>
+										</limit>
+									</limits>
+								</rule>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+    	</plugins>
+    </build>
+</project>
