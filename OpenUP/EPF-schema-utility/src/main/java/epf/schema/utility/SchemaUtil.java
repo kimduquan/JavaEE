@@ -24,6 +24,11 @@ public class SchemaUtil {
 	private transient final Map<String, Optional<String>> entityNames = new ConcurrentHashMap<>();
 	
 	/**
+	 * 
+	 */
+	private transient final Map<String, Optional<String>> entitySchemas = new ConcurrentHashMap<>();
+	
+	/**
 	 * @param cls
 	 * @return
 	 */
@@ -46,6 +51,20 @@ public class SchemaUtil {
 			Optional<String> name = Optional.empty();
 			if(cls.isAnnotationPresent(javax.persistence.Entity.class)) {
 				name = Optional.of(((javax.persistence.Entity)cls.getAnnotation(javax.persistence.Entity.class)).name());
+			}
+			return name;
+		});
+	}
+	
+	/**
+	 * @param cls
+	 * @return
+	 */
+	public Optional<String> getEntitySchema(final Class<?> cls){
+		return entitySchemas.computeIfAbsent(cls.getName(), key -> {
+			Optional<String> name = Optional.empty();
+			if(cls.isAnnotationPresent(javax.persistence.Entity.class)) {
+				name = Optional.of(((javax.persistence.Table)cls.getAnnotation(javax.persistence.Table.class)).schema());
 			}
 			return name;
 		});

@@ -1,9 +1,7 @@
 package epf.cache.persistence;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
-import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -21,7 +19,6 @@ import epf.messaging.client.Client;
 import epf.messaging.client.Messaging;
 import epf.naming.Naming;
 import epf.schema.utility.EntityEvent;
-import epf.util.concurrent.ObjectQueue;
 import epf.util.config.ConfigUtil;
 import epf.util.logging.LogManager;
 import epf.util.websocket.Message;
@@ -108,32 +105,17 @@ public class Persistence implements HealthCheck {
 	}
 	
 	/**
+	 * @param schema
 	 * @param name
 	 * @param entityId
 	 * @return
 	 */
 	public Optional<Object> getEntity(
+			final String schema,
             final String name,
             final String entityId
             ) {
-		return entityCache.getEntity(name, entityId);
-	}
-	
-	/**
-	 * @param name
-	 * @return
-	 */
-	public List<Entry<String, Object>> getEntities(final String name){
-		return entityCache.getEntities(name);
-	}
-	
-	/**
-	 * @param name
-	 * @return
-	 */
-	public void forEachEntity(final String name, final ObjectQueue<Entry<String, Object>> queue) {
-		entityCache.forEachEntity(name, queue);
-		queue.close();
+		return entityCache.getEntity(schema, name, entityId);
 	}
 
 	@Override

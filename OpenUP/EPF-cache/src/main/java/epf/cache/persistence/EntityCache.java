@@ -1,16 +1,9 @@
 package epf.cache.persistence;
 
 import java.lang.reflect.Field;
-import java.util.AbstractMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import javax.cache.Cache;
 import epf.schema.utility.EntityEvent;
 import epf.schema.utility.PostPersist;
@@ -35,16 +28,6 @@ public class EntityCache extends ObjectQueue<EntityEvent> {
 	/**
 	 * 
 	 */
-	private static final String CACHE_KEY = "epf.cache.entry.key";
-	
-	/**
-	 * 
-	 */
-	private static final String CACHE_KEYS = "epf.cache.entry.keys";
-	
-	/**
-	 * 
-	 */
 	private transient final SchemaUtil schemaUtil = new SchemaUtil();
 	
 	/**
@@ -60,48 +43,16 @@ public class EntityCache extends ObjectQueue<EntityEvent> {
 	}
 	
 	/**
-	 * @param cls
-	 * @param key
-	 */
-	protected void putKey(final String entityName, final String key) {
-		final String keys = StringUtil.join(CACHE_KEYS, entityName);
-		@SuppressWarnings("unchecked")
-		final Set<String> cacheKeys = (Set<String>) cache.get(keys);
-		if(cacheKeys == null) {
-			final ConcurrentSkipListSet<String> newKeys = new ConcurrentSkipListSet<>();
-			newKeys.add(key);
-			cache.putIfAbsent(keys, newKeys);
-		}
-		else if(!cacheKeys.contains(key)) {
-			cacheKeys.add(key);
-			cache.replace(keys, cacheKeys);
-		}
-	}
-	
-	/**
-	 * @param cls
-	 * @param key
-	 */
-	protected void removeKey(final String entityName, final String key) {
-		final String keys = StringUtil.join(CACHE_KEYS, entityName);
-		@SuppressWarnings("unchecked")
-		final Set<String> cacheKeys = (Set<String>) cache.get(keys);
-		if(cacheKeys != null && cacheKeys.contains(keys)) {
-			cacheKeys.remove(key);
-			cache.replace(keys, cacheKeys);
-		}
-	}
-	
-	/**
 	 * @param entity
 	 * @return
 	 */
 	protected Optional<String> getKey(final Object entity) {
 		final Class<?> cls = entity.getClass();
+		final Optional<String> entitySchema = schemaUtil.getEntitySchema(cls);
 		final Optional<String> entityName = schemaUtil.getEntityName(cls);
 		final Optional<Field> idField = schemaUtil.getEntityIdField(cls);
 		Optional<Object> entityId = Optional.empty();
-		if(entityName.isPresent() && idField.isPresent()) {
+		if(entitySchema.isPresent() && entityName.isPresent() && idField.isPresent()) {
 			try {
 				entityId = Optional.ofNullable(idField.get().get(entity));
 			} 
@@ -110,41 +61,24 @@ public class EntityCache extends ObjectQueue<EntityEvent> {
 			}
 		}
 		Optional<String> key = Optional.empty();
-		if(entityName.isPresent() && entityId.isPresent()) {
-			key = Optional.of(StringUtil.join(CACHE_KEY, entityName.get(), String.valueOf(entityId.get())));
+		if(entitySchema.isPresent() && entityName.isPresent() && entityId.isPresent()) {
+			key = Optional.of(StringUtil.join(entitySchema.get(), entityName.get(), String.valueOf(entityId.get())));
 		}
 		return key;
 	}
 
 	@Override
 	public void accept(final EntityEvent event) {
-		if(event instanceof PostUpdate) {
-			final PostUpdate postUpdate = (PostUpdate) event;
-			final Optional<String> key = getKey(postUpdate.getEntity());
-			if(key.isPresent()) {
-				cache.replace(key.get(), postUpdate.getEntity());
+		final Optional<String> key = getKey(event.getEntity());
+		if(key.isPresent()) {
+			if(event instanceof PostUpdate) {
+				cache.replace(key.get(), event.getEntity());
 			}
-		}
-		else if(event instanceof PostPersist) {
-			final PostPersist postPersist = (PostPersist) event;
-			final Optional<String> key = getKey(postPersist.getEntity());
-			if(key.isPresent()) {
-				final Optional<String> entityName = schemaUtil.getEntityName(postPersist.getEntity().getClass());
-				if(entityName.isPresent()) {
-					putKey(entityName.get(), key.get());
-					cache.put(key.get(), postPersist.getEntity());
-				}
+			else if(event instanceof PostPersist) {
+				cache.put(key.get(), event.getEntity());
 			}
-		}
-		else if(event instanceof PostRemove) {
-			final PostRemove postRemove = (PostRemove) event;
-			final Optional<String> key = getKey(postRemove.getEntity());
-			if(key.isPresent()) {
-				final Optional<String> entityName = schemaUtil.getEntityName(postRemove.getEntity().getClass());
-				if(entityName.isPresent()) {
-					removeKey(entityName.get(), key.get());
-					cache.remove(key.get());
-				}
+			else if(event instanceof PostRemove) {
+				cache.remove(key.get());
 			}
 		}
 	}
@@ -155,44 +89,15 @@ public class EntityCache extends ObjectQueue<EntityEvent> {
 	 * @return
 	 */
 	public Optional<Object> getEntity(
+			final String schema,
             final String name,
             final String entityId
             ) {
-		final String key = StringUtil.join(CACHE_KEY, name, entityId);
+		final String key = StringUtil.join(schema, name, entityId);
 		Optional<Object> entity = Optional.empty();
 		if(cache.containsKey(key)) {
 			entity = Optional.ofNullable(cache.get(key));
 		}
 		return entity;
-	}
-	
-	/**
-	 * @param name
-	 * @return
-	 */
-	public List<Entry<String, Object>> getEntities(final String name){
-		final String keys = StringUtil.join(CACHE_KEYS, name);
-		@SuppressWarnings("unchecked")
-		final Set<String> cacheKeys = (Set<String>) cache.get(keys);
-		if(cacheKeys != null) {
-			final Map<String, Object> entries = cache.getAll(cacheKeys);
-			if(cacheKeys.size() == entries.size()) {
-				return entries.entrySet().stream().collect(Collectors.toList());
-			}
-		}
-		return null;
-	}
-	
-	/**
-	 * @param name
-	 * @return
-	 */
-	public void forEachEntity(final String name, final ObjectQueue<Entry<String, Object>> queue) {
-		final String key = StringUtil.join(CACHE_KEY, name, "");
-		cache.forEach(entry -> {
-			if(entry.getKey().startsWith(key)) {
-				queue.add(new AbstractMap.SimpleImmutableEntry<>(entry.getKey(), entry.getValue()));
-			}
-		});
 	}
 }

@@ -53,7 +53,7 @@ public class EntityCacheUtil {
 	public List<JsonObject> getEntities(final String schema, final String entity, final Integer firstResult, final Integer maxResults) {
 		List<JsonObject> objects = null;
 		try(Client client = securityUtil.newClient(gatewayUtil.get(Naming.CACHE))){
-			try(Response response = epf.client.cache.Cache.getEntities(client, schema, entity, firstResult, maxResults)){
+			try(Response response = epf.client.cache.Cache.executeQuery(client, schema, t -> t.path(entity), firstResult, maxResults)){
 				try(InputStream stream = response.readEntity(InputStream.class)){
 					try(JsonReader reader = Json.createReader(stream)){
 						objects = reader
