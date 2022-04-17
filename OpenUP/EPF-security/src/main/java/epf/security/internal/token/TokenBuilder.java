@@ -59,7 +59,6 @@ public class TokenBuilder {
 		claims.setGeneratedJwtId();
 		claims.setIssuedAt(NumericDate.fromSeconds(token.getIssuedAtTime()));
 		claims.setIssuer(token.getIssuer());
-		claims.setNotBefore(NumericDate.fromSeconds(token.getIssuedAtTime()));
 		claims.setSubject(token.getSubject());
 		claims.setStringClaim(Claims.upn.name(), token.getName());
 		claims.setStringListClaim(Claims.groups.name(), token.getGroups().stream().collect(Collectors.toList()));
