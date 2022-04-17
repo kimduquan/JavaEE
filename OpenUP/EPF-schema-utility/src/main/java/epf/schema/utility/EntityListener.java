@@ -4,7 +4,6 @@ import java.time.Instant;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
-import javax.persistence.PostLoad;
 import javax.persistence.PostPersist;
 import javax.persistence.PostRemove;
 import javax.persistence.PostUpdate;
@@ -15,12 +14,6 @@ import javax.persistence.PostUpdate;
  */
 @ApplicationScoped
 public class EntityListener {
-	
-	/**
-	 * 
-	 */
-	@Inject
-	transient Event<epf.schema.utility.PostLoad> loadEvent;
 	
 	/**
 	 * 
@@ -39,17 +32,6 @@ public class EntityListener {
 	 */
 	@Inject
 	transient Event<epf.schema.utility.PostUpdate> updateEvent;
-
-	/**
-	 * @param entity
-	 */
-	@PostLoad
-	protected void postLoad(final Object entity) {
-		final epf.schema.utility.PostLoad event = new epf.schema.utility.PostLoad();
-		event.setTime(Instant.now().toEpochMilli());
-		event.setEntity(entity);
-		loadEvent.fire(event);
-	}
 	
 	/**
 	 * @param entity

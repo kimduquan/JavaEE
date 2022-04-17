@@ -114,22 +114,22 @@ public class RxEntityManager implements EntityManager {
 			if(tenant.isPresent()) {
 				return factory.withTransaction(
 						tenant.get().toString(), 
-						(session, transaction) -> find(factory.getMetamodel(), session, entityType, primaryKey).chain(object -> session.merge(entity))
+						(session, transaction) -> find(factory.getMetamodel(), session, entityType, primaryKey).onItem().ifNotNull().transformToUni(object -> session.merge(entity))
 						)
 						.subscribeAsCompletionStage();
 			}
-			return factory.withTransaction((session, transaction) -> find(factory.getMetamodel(), session, entityType, primaryKey).chain(object -> session.merge(entity)))
+			return factory.withTransaction((session, transaction) -> find(factory.getMetamodel(), session, entityType, primaryKey).onItem().ifNotNull().transformToUni(object -> session.merge(entity)))
 					.subscribeAsCompletionStage();
 		}
 		else {
 			if(tenant.isPresent()) {
 				return factory.withSession(
 						tenant.get().toString(), 
-						session -> find(factory.getMetamodel(), session, entityType, primaryKey).chain(object -> session.merge(entity)))
+						session -> find(factory.getMetamodel(), session, entityType, primaryKey).onItem().ifNotNull().transformToUni(object -> session.merge(entity)))
 						.subscribeAsCompletionStage();
 			}
 			return factory.withSession(
-					session -> find(factory.getMetamodel(), session, entityType, primaryKey).chain(object -> session.merge(entity))
+					session -> find(factory.getMetamodel(), session, entityType, primaryKey).onItem().ifNotNull().transformToUni(object -> session.merge(entity))
 					)
 					.subscribeAsCompletionStage();
 		}
@@ -142,12 +142,12 @@ public class RxEntityManager implements EntityManager {
 			if(tenant.isPresent()) {
 				return factory.withTransaction(
 						tenant.get().toString(), 
-						(session, transaction) -> find(factory.getMetamodel(), session, entityType, primaryKey).chain(object -> session.remove(object))
+						(session, transaction) -> find(factory.getMetamodel(), session, entityType, primaryKey).onItem().ifNotNull().transformToUni(object -> session.remove(object))
 						)
 						.subscribeAsCompletionStage();
 			}
 			return factory.withTransaction(
-					(session, transaction) -> find(factory.getMetamodel(), session, entityType, primaryKey).chain(object -> session.remove(object))
+					(session, transaction) -> find(factory.getMetamodel(), session, entityType, primaryKey).onItem().ifNotNull().transformToUni(object -> session.remove(object))
 					)
 					.subscribeAsCompletionStage();
 		}
@@ -155,11 +155,11 @@ public class RxEntityManager implements EntityManager {
 			if(tenant.isPresent()) {
 				return factory.withSession(
 						tenant.get().toString(), 
-						session -> find(factory.getMetamodel(), session, entityType, primaryKey).chain(object -> session.remove(object))
+						session -> find(factory.getMetamodel(), session, entityType, primaryKey).onItem().ifNotNull().transformToUni(object -> session.remove(object))
 						).subscribeAsCompletionStage();
 			}
 			return factory.withSession(
-					session -> find(factory.getMetamodel(), session, entityType, primaryKey).chain(object -> session.remove(object))
+					session -> find(factory.getMetamodel(), session, entityType, primaryKey).onItem().ifNotNull().transformToUni(object -> session.remove(object))
 					).subscribeAsCompletionStage();
 		}
 	}

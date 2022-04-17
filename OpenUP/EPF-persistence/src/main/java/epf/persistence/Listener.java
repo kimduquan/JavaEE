@@ -10,7 +10,6 @@ import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 import epf.naming.Naming;
 import epf.schema.utility.EntityEvent;
-import epf.schema.utility.PostLoad;
 import epf.schema.utility.PostPersist;
 import epf.schema.utility.PostRemove;
 import epf.schema.utility.PostUpdate;
@@ -33,12 +32,6 @@ public class Listener {
 	 */
 	@Channel(Naming.Persistence.PERSISTENCE_ENTITY_LISTENERS)
 	transient Emitter<EntityEvent> emitter;
-	
-	/**
-	 * 
-	 */
-	@Channel(Naming.Persistence.PERSISTENCE_ENTITY_LISTENERS_POSTLOAD)
-	transient Emitter<PostLoad> postLoadEmitter;
 	
 	/**
 	 * @param event
@@ -72,18 +65,5 @@ public class Listener {
 	 */
 	public void postUpdate(@Observes final PostUpdate event) {
 		submit(event);
-	}
-	
-	/**
-	 * @param event
-	 */
-	public void postLoad(@Observes final PostLoad event) {
-		try(Jsonb jsonb = JsonbBuilder.create()){
-			jsonb.toJson(event);
-		} 
-		catch (Exception e) {
-			LOGGER.log(Level.SEVERE, event.toString(), e);
-		}
-		postLoadEmitter.send(event);
 	}
 }

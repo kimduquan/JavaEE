@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.util.json;
 
 import java.io.InputStream;
@@ -9,25 +6,18 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.JsonValue;
 import javax.json.bind.Jsonb;
-import epf.util.logging.LogManager;
 
 /**
  * @author PC
  *
  */
 public class Decoder {
-	
-	/**
-	 * 
-	 */
-	private static final Logger LOGGER = LogManager.getLogger(Decoder.class.getName());
 
 	/**
 	 * @param jsonb
@@ -44,10 +34,6 @@ public class Decoder {
 				return jsonb.fromJson(string, cls);
 			}
 		}
-		catch(Exception ex) {
-			LOGGER.throwing(LOGGER.getName(), "decode", ex);
-			throw ex;
-		}
 	}
 	
 	/**
@@ -57,21 +43,17 @@ public class Decoder {
 	 * @throws Exception
 	 */
 	public List<Object> decodeArray(final Jsonb jsonb, final String string) throws Exception {
-		final List<Object> array = new ArrayList<>();
 		try(StringReader reader = new StringReader(string)){
 			try(JsonReader jsonReader = Json.createReader(reader)){
 				final JsonArray jsonArray = jsonReader.readArray();
 				final Iterator<JsonValue> it = jsonArray.iterator();
+				final List<Object> array = new ArrayList<>();
 				while(it.hasNext()) {
 					array.add(decode(jsonb, it.next().toString()));
 				}
+				return array;
 			}
 		}
-		catch(Exception ex) {
-			LOGGER.throwing(LOGGER.getName(), "decodeArray", ex);
-			throw ex;
-		}
-		return array;
 	}
 	
 	/**
@@ -86,10 +68,6 @@ public class Decoder {
 			final String className = jsonObject.getString(Naming.CLASS);
 			final Class<?> cls = Class.forName(className);
 			return jsonb.fromJson(stream, cls);
-		}
-		catch(Exception ex) {
-			LOGGER.throwing(LOGGER.getName(), "decode", ex);
-			throw ex;
 		}
 	}
 	
@@ -106,10 +84,6 @@ public class Decoder {
 			final Class<?> cls = Class.forName(className);
 			return jsonb.fromJson(reader, cls);
 		}
-		catch(Exception ex) {
-			LOGGER.throwing(LOGGER.getName(), "decode", ex);
-			throw ex;
-		}
 	}
 	
 	/**
@@ -119,10 +93,10 @@ public class Decoder {
 	 * @throws Exception
 	 */
 	public List<Object> decodeArray(final Jsonb jsonb, final InputStream stream) throws Exception {
-		final List<Object> array = new ArrayList<>();
 		try(JsonReader jsonReader = Json.createReader(stream)){
 			final JsonArray jsonArray = jsonReader.readArray();
 			final Iterator<JsonValue> it = jsonArray.iterator();
+			final List<Object> array = new ArrayList<>();
 			while(it.hasNext()) {
 				final JsonObject jsonObject = it.next().asJsonObject();
 				final String className = jsonObject.getString(Naming.CLASS);
@@ -130,19 +104,21 @@ public class Decoder {
 				final Object object = jsonb.fromJson(jsonObject.toString(), cls);
 				array.add(object);
 			}
+			return array;
 		}
-		catch(Exception ex) {
-			LOGGER.throwing(LOGGER.getName(), "decodeArray", ex);
-			throw ex;
-		}
-		return array;
 	}
 	
+	/**
+	 * @param jsonb
+	 * @param reader
+	 * @return
+	 * @throws Exception
+	 */
 	public List<Object> decodeArray(final Jsonb jsonb, final Reader reader) throws Exception {
-		final List<Object> array = new ArrayList<>();
 		try(JsonReader jsonReader = Json.createReader(reader)){
 			final JsonArray jsonArray = jsonReader.readArray();
 			final Iterator<JsonValue> it = jsonArray.iterator();
+			final List<Object> array = new ArrayList<>();
 			while(it.hasNext()) {
 				final JsonObject jsonObject = it.next().asJsonObject();
 				final String className = jsonObject.getString(Naming.CLASS);
@@ -150,11 +126,7 @@ public class Decoder {
 				final Object object = jsonb.fromJson(jsonObject.toString(), cls);
 				array.add(object);
 			}
+			return array;
 		}
-		catch(Exception ex) {
-			LOGGER.throwing(LOGGER.getName(), "decodeArray", ex);
-			throw ex;
-		}
-		return array;
 	}
 }

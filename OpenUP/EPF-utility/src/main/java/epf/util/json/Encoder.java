@@ -1,29 +1,19 @@
-/**
- * 
- */
 package epf.util.json;
 
 import java.io.StringReader;
 import java.util.List;
-import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
 import javax.json.bind.Jsonb;
-import epf.util.logging.LogManager;
 
 /**
  * @author PC
  *
  */
 public class Encoder {
-	
-	/**
-	 * 
-	 */
-	private static final Logger LOGGER = LogManager.getLogger(Encoder.class.getName());
 
 	/**
 	 * @param jsonb
@@ -42,10 +32,6 @@ public class Encoder {
 						.build();
 				return encodedJsonObject.toString();
 			}
-		}
-		catch(Exception ex) {
-			LOGGER.throwing(LOGGER.getName(), "encode", ex);
-			throw ex;
 		}
 	}
 	
@@ -66,10 +52,6 @@ public class Encoder {
 							.add(Naming.CLASS, object.getClass().getName());
 					arrayBuilder.add(objectBuilder);
 				}
-			}
-			catch(Exception ex) {
-				LOGGER.throwing(LOGGER.getName(), "encodeArray", ex);
-				throw ex;
 			}
 		}
 		return arrayBuilder.build().toString();

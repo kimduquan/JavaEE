@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.cache;
 
 import javax.enterprise.context.ApplicationScoped;

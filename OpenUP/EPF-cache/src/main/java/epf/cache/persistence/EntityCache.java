@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.cache.persistence;
 
 import java.lang.reflect.Field;
@@ -15,7 +12,6 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.cache.Cache;
 import epf.schema.utility.EntityEvent;
-import epf.schema.utility.PostLoad;
 import epf.schema.utility.PostPersist;
 import epf.schema.utility.PostRemove;
 import epf.schema.utility.PostUpdate;
@@ -121,18 +117,7 @@ public class EntityCache extends ObjectQueue<EntityEvent> {
 
 	@Override
 	public void accept(final EntityEvent event) {
-		if(event instanceof PostLoad) {
-			final PostLoad postLoad = (PostLoad) event;
-			final Optional<String> key = getKey(postLoad.getEntity());
-			if(key.isPresent()) {
-				final Optional<String> entityName = schemaUtil.getEntityName(postLoad.getEntity().getClass());
-				if(entityName.isPresent()) {
-					putKey(entityName.get(), key.get());
-					cache.putIfAbsent(key.get(), postLoad.getEntity());
-				}
-			}
-		}
-		else if(event instanceof PostUpdate) {
+		if(event instanceof PostUpdate) {
 			final PostUpdate postUpdate = (PostUpdate) event;
 			final Optional<String> key = getKey(postUpdate.getEntity());
 			if(key.isPresent()) {

@@ -24,7 +24,7 @@ public class JsonSerializer implements Serializer<Object> {
 	@Override
 	public byte[] serialize(final String topic, final Object object) {
 		try {
-			return encoder.encode(jsonb, object).getBytes();
+			return encoder.encode(jsonb, object).getBytes("UTF-8");
 		} 
 		catch (Exception e) {
 			return new byte[0];

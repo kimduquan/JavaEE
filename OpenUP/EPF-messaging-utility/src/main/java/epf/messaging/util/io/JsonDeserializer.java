@@ -1,11 +1,14 @@
 package epf.messaging.util.io;
 
-import java.io.ByteArrayInputStream;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import org.apache.kafka.common.serialization.Deserializer;
 import epf.util.json.Decoder;
 
+/**
+ * @author PC
+ *
+ */
 public class JsonDeserializer implements Deserializer<Object> {
 	
 	/**
@@ -20,8 +23,9 @@ public class JsonDeserializer implements Deserializer<Object> {
 
 	@Override
 	public Object deserialize(final String topic, final byte[] data) {
-		try(ByteArrayInputStream input = new ByteArrayInputStream(data)){
-			return decoder.decode(jsonb, input);
+		try {
+			final String string = new String(data, "UTF-8");
+			return decoder.decode(jsonb, string);
 		} 
 		catch (Exception e) {
 			return null;

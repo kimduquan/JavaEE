@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.security.client.jwt;
 
 import java.util.Arrays;
@@ -26,16 +23,14 @@ public interface TokenUtil {
 	 * @param jwt
 	 * @return
 	 */
-	static Map<String, String> getClaims(final JsonWebToken jwt){
-		final Map<String, String> claims = new HashMap<>();
+	static Map<String, Object> getClaims(final JsonWebToken jwt){
+		final Map<String, Object> claims = new HashMap<>();
 		final Set<String> names = new HashSet<>();
 		names.addAll(jwt.getClaimNames());
 		names.removeAll(Arrays.asList(DEFAULT_CLAIMS));
 		names.forEach(name -> {
 			final Object value = jwt.getClaim(name);
-			if(value instanceof String) {
-				claims.put(name, (String)value);
-			}
+			claims.put(name, value);
 		});
 		return claims;
 	}

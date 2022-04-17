@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.cache;
 
 import javax.annotation.PostConstruct;
@@ -9,7 +6,6 @@ import javax.cache.CacheManager;
 import javax.cache.Caching;
 import javax.cache.configuration.MutableConfiguration;
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
@@ -31,19 +27,12 @@ public class Manager implements HealthCheck {
 	/**
 	 * 
 	 */
-	@Inject
-	private transient Listener listener;
-	
-	/**
-	 * 
-	 */
 	@PostConstruct
 	protected void postConstruct() {
 		manager = Caching.getCachingProvider().getCacheManager();
 		final MutableConfiguration<String, Object> config = new MutableConfiguration<>();
 		manager.createCache(Naming.PERSISTENCE, config);
 		manager.createCache(Naming.SECURITY, config);
-		listener.registerEvents(manager);
 	}
 	
 	/**
@@ -51,7 +40,6 @@ public class Manager implements HealthCheck {
 	 */
 	@PreDestroy
 	protected void preDestroy() {
-		listener.deregisterEvents(manager);
 		manager.close();
 	}
 

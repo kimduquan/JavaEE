@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.cache.persistence;
 
 import java.net.URI;
@@ -23,7 +20,6 @@ import epf.messaging.client.Client;
 import epf.messaging.client.Messaging;
 import epf.naming.Naming;
 import epf.schema.utility.EntityEvent;
-import epf.schema.utility.PostLoad;
 import epf.util.concurrent.ObjectQueue;
 import epf.util.config.ConfigUtil;
 import epf.util.logging.LogManager;
@@ -62,16 +58,6 @@ public class Persistence implements HealthCheck {
 	 * 
 	 */
 	private transient MessageQueue messages;
-	
-	/**
-	 * 
-	 */
-	private transient Client postLoadClient;
-	
-	/**
-	 * 
-	 */
-	private transient MessageQueue postLoadMessages;
 
 	/**
 	 * 
@@ -99,10 +85,6 @@ public class Persistence implements HealthCheck {
 			client.onMessage(msg -> {});
 			messages = new MessageQueue(client.getSession());
 			executor.submit(messages);
-			postLoadClient = Messaging.connectToServer(messagingUrl.resolve("persistence/post-load"));
-			postLoadClient.onMessage(msg -> {});
-			postLoadMessages = new MessageQueue(postLoadClient.getSession());
-			executor.submit(postLoadMessages);
 		}
 		catch(Exception ex) {
 			LOGGER.throwing(getClass().getName(), "postConstruct", ex);
@@ -118,8 +100,6 @@ public class Persistence implements HealthCheck {
 			entityCache.close();
 			messages.close();
 			client.close();
-			postLoadMessages.close();
-			postLoadClient.close();
 		} 
 		catch (Exception e) {
 			LOGGER.throwing(getClass().getName(), "preDestroy", e);
@@ -165,14 +145,6 @@ public class Persistence implements HealthCheck {
 		if(event != null) {
 			entityCache.add(event);
 			messages.add(new Message(event));
-		}
-	}
-	
-	@Incoming(Naming.Persistence.PERSISTENCE_ENTITY_LISTENERS_POSTLOAD)
-	public void postLoad(final PostLoad event) {
-		if(event != null) {
-			entityCache.add(event);
-			postLoadMessages.add(new Message(event));
 		}
 	}
 }
