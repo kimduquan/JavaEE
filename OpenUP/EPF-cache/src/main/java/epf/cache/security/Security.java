@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.cache.security;
 
 import javax.annotation.PostConstruct;

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.cache.internal.event;
 
 import javax.json.bind.Jsonb;

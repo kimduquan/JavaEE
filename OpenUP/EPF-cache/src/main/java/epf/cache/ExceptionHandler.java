@@ -1,12 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.cache;
 
 import java.io.Serializable;
 import java.io.StreamCorruptedException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -92,7 +88,7 @@ public class ExceptionHandler implements ExceptionMapper<Exception>, Serializabl
         	}
         	if(!mapStatus && rootCause != null) {
         		builder.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), rootCause.getMessage());
-        		LOGGER.throwing(ExceptionHandler.class.getName(), "handle", failure);
+        		LOGGER.log(Level.SEVERE, "[ExceptionHandler.handle]", failure);
         	}
         }
         return builder.build();

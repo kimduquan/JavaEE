@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.cache.Cache;
@@ -105,7 +106,7 @@ public class EntityCache extends ObjectQueue<EntityEvent> {
 				entityId = Optional.ofNullable(idField.get().get(entity));
 			} 
 			catch (IllegalAccessException | IllegalArgumentException e) {
-				LOGGER.throwing(cls.getName(), idField.get().getName(), e);
+				LOGGER.log(Level.SEVERE, cls.getName() + "." + idField.get().getName(), e);
 			}
 		}
 		Optional<String> key = Optional.empty();

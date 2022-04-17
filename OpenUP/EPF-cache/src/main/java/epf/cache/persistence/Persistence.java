@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.Map.Entry;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -87,7 +88,7 @@ public class Persistence implements HealthCheck {
 			executor.submit(messages);
 		}
 		catch(Exception ex) {
-			LOGGER.throwing(getClass().getName(), "postConstruct", ex);
+			LOGGER.log(Level.SEVERE, "[Persistence.postConstruct]", ex);
 		}
 	}
 	
@@ -102,7 +103,7 @@ public class Persistence implements HealthCheck {
 			client.close();
 		} 
 		catch (Exception e) {
-			LOGGER.throwing(getClass().getName(), "preDestroy", e);
+			LOGGER.log(Level.SEVERE, "[Persistence.preDestroy]", e);
 		}
 	}
 	
