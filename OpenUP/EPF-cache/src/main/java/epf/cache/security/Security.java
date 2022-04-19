@@ -4,7 +4,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
@@ -35,16 +34,9 @@ public class Security implements HealthCheck {
 	/**
 	 * 
 	 */
-	@Inject
-	private transient ManagedExecutor executor;
-	
-	/**
-	 * 
-	 */
 	@PostConstruct
 	protected void postConstruct() {
 		tokenCache = new TokenCache(manager.getCache(Naming.SECURITY));
-		executor.submit(tokenCache);
 	}
 	
 	/**
@@ -68,10 +60,13 @@ public class Security implements HealthCheck {
 		return HealthCheckResponse.up("EPF-security-cache");
 	}
 	
+	/**
+	 * @param token
+	 */
 	@Incoming(Naming.SECURITY)
 	public void newToken(final Token token) {
 		if(token != null) {
-			tokenCache.add(token);
+			tokenCache.accept(token);
 		}
 	}
 }

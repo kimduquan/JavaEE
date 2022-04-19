@@ -170,6 +170,14 @@
             libraryRef="H2JDBCLib" />
         <properties URL="jdbc:h2:~/EPF-security;AUTO_SERVER=TRUE;AUTO_RECONNECT=TRUE;PASSWORD_HASH=TRUE" />
     </dataSource>
+    <dataSource id="epf_cache" jndiName="jdbc/epf_cache">
+        <jdbcDriver 
+            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
+            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
+            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
+            libraryRef="H2JDBCLib" />
+        <properties URL="jdbc:h2:~/EPF-cache;AUTO_SERVER=TRUE;AUTO_RECONNECT=TRUE" user="test" password="123456" />
+    </dataSource>
 
     <keyStore id="defaultKeyStore" password="password"/>
     

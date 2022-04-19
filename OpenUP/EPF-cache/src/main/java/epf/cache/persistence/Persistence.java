@@ -76,7 +76,6 @@ public class Persistence implements HealthCheck {
 	protected void postConstruct() {
 		cache = manager.getCache(Naming.PERSISTENCE);
 		entityCache = new EntityCache(cache);
-		executor.submit(entityCache);
 		try {
 			final URI messagingUrl = ConfigUtil.getURI(Naming.Messaging.MESSAGING_URL);
 			client = Messaging.connectToServer(messagingUrl.resolve(Naming.PERSISTENCE));
@@ -123,10 +122,13 @@ public class Persistence implements HealthCheck {
 		return HealthCheckResponse.up("EPF-persistence-cache");
 	}
 	
+	/**
+	 * @param event
+	 */
 	@Incoming(Naming.Persistence.PERSISTENCE_ENTITY_LISTENERS)
 	public void postEvent(final EntityEvent event) {
 		if(event != null) {
-			entityCache.add(event);
+			entityCache.accept(event);
 			messages.add(new Message(event));
 		}
 	}
