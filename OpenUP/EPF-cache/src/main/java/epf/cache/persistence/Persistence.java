@@ -9,6 +9,8 @@ import javax.annotation.PreDestroy;
 import javax.cache.Cache;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
@@ -19,6 +21,9 @@ import epf.messaging.client.Client;
 import epf.messaging.client.Messaging;
 import epf.naming.Naming;
 import epf.schema.utility.EntityEvent;
+import epf.schema.utility.PostPersist;
+import epf.schema.utility.PostRemove;
+import epf.schema.utility.PostUpdate;
 import epf.util.config.ConfigUtil;
 import epf.util.logging.LogManager;
 import epf.util.websocket.Message;
@@ -68,6 +73,12 @@ public class Persistence implements HealthCheck {
 	 */
 	@Inject
 	private transient ManagedExecutor executor;
+	
+	/**
+	 * 
+	 */
+	@PersistenceContext(unitName = "EPF_Cache")
+	private transient EntityManager entityManager;
 	
 	/**
 	 * 
@@ -129,7 +140,23 @@ public class Persistence implements HealthCheck {
 	public void postEvent(final EntityEvent event) {
 		if(event != null) {
 			entityCache.accept(event);
+			accept(event);
 			messages.add(new Message(event));
+		}
+	}
+	
+	/**
+	 * @param event
+	 */
+	private void accept(final EntityEvent event) {
+		if(event instanceof PostUpdate) {
+			entityManager.merge(event.getEntity());
+		}
+		else if(event instanceof PostPersist) {
+			entityManager.persist(event.getEntity());
+		}
+		else if(event instanceof PostRemove) {
+			entityManager.remove(event.getEntity());
 		}
 	}
 }
