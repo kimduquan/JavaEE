@@ -11,6 +11,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
@@ -137,6 +138,7 @@ public class Persistence implements HealthCheck {
 	 * @param event
 	 */
 	@Incoming(Naming.Persistence.PERSISTENCE_ENTITY_LISTENERS)
+	@Transactional
 	public void postEvent(final EntityEvent event) {
 		if(event != null) {
 			entityCache.accept(event);
@@ -156,7 +158,7 @@ public class Persistence implements HealthCheck {
 			entityManager.persist(event.getEntity());
 		}
 		else if(event instanceof PostRemove) {
-			entityManager.remove(event.getEntity());
+			entityManager.remove(entityManager.merge(event.getEntity()));
 		}
 	}
 }
