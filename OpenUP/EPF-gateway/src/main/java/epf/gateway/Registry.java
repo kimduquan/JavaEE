@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.ws.rs.client.ClientBuilder;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import epf.naming.Naming;
@@ -26,6 +27,7 @@ public class Registry {
 	/**
 	 * 
 	 */
+	@Inject
 	@ConfigProperty(name = Naming.Registry.REGISTRY_URL)
 	String registryUrl;
     
