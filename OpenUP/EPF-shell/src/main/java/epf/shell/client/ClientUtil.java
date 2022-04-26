@@ -10,6 +10,8 @@ import java.net.URI;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 /**
@@ -27,6 +29,7 @@ public class ClientUtil {
 	/**
 	 * 
 	 */
+	@Inject
 	@ConfigProperty(name = Naming.Client.CLIENT_CONFIG + "/mp-rest/uri")
 	URI gatewayUrl;
 
