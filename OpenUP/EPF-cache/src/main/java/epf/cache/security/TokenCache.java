@@ -1,24 +1,38 @@
 package epf.cache.security;
 
 import javax.cache.Cache;
-import epf.cache.ObjectCache;
 import epf.security.schema.Token;
 
 /**
  * @author PC
  *
  */
-public class TokenCache extends ObjectCache<Token> {
+public class TokenCache {
+	
+	/**
+	 * 
+	 */
+	private transient final Cache<String, Object> cache;
 
 	/**
 	 * @param cache
 	 */
 	public TokenCache(final Cache<String, Object> cache) {
-		super(cache);
+		this.cache = cache;
 	}
 
-	@Override
+	/**
+	 * @param token
+	 */
 	public void accept(final Token token) {
-		getCache().put(token.getTokenID(), token);
+		cache.put(token.getTokenID(), token);
+	}
+	
+	/**
+	 * @param tokenId
+	 * @return
+	 */
+	public Token get(final String tokenId) {
+		return (Token) cache.get(tokenId);
 	}
 }

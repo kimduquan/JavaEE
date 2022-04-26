@@ -1,14 +1,15 @@
 package epf.cache.security;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
+import javax.cache.Cache;
+import javax.cache.CacheManager;
+import javax.cache.Caching;
+import javax.cache.configuration.MutableConfiguration;
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
-import epf.cache.Manager;
 import epf.naming.Naming;
 import epf.security.schema.Token;
 
@@ -25,26 +26,22 @@ public class Security implements HealthCheck {
 	 */
 	private transient TokenCache tokenCache;
 
+
+
 	/**
 	 * 
 	 */
-	@Inject @Readiness
-	private transient Manager manager;
+	private transient CacheManager manager;
 	
 	/**
 	 * 
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		tokenCache = new TokenCache(manager.getCache(Naming.SECURITY));
-	}
-	
-	/**
-	 * 
-	 */
-	@PreDestroy
-	protected void preDestroy() {
-		tokenCache.close();
+		manager = Caching.getCachingProvider().getCacheManager();
+		final MutableConfiguration<String, Object> config = new MutableConfiguration<>();
+		final Cache<String, Object> cache = manager.createCache(Naming.SECURITY, config);
+		tokenCache = new TokenCache(cache);
 	}
 	
 	/**
