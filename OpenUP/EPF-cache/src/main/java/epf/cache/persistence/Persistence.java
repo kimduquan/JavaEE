@@ -117,7 +117,7 @@ public class Persistence implements HealthCheck {
 
 	@Override
 	public HealthCheckResponse call() {
-		return HealthCheckResponse.up("EPF-persistence-cache");
+		return HealthCheckResponse.up("EPF-persistence");
 	}
 	
 	/**

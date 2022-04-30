@@ -36,13 +36,17 @@
 		<groupId>io.quarkus</groupId>
 		<artifactId>quarkus-agroal</artifactId>
 	</dependency>
+	<dependency>
+	    <groupId>io.quarkus</groupId>
+	    <artifactId>quarkus-narayana-jta</artifactId>
+	</dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-smallrye-opentracing</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy-reactive-jsonb</artifactId>
+      <artifactId>quarkus-resteasy-jsonb</artifactId>
     </dependency>
     <dependency>
 	    <groupId>io.quarkus</groupId>
@@ -181,9 +185,11 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${compiler-plugin.version}</version>
         <configuration>
-          <compilerArgs>
-            <arg>-parameters</arg>
-          </compilerArgs>
+			<!-- the parameters=true option is critical so that RESTEasy works fine -->
+			<parameters>true</parameters>
+			<compilerArgs>
+				<arg>-parameters</arg>
+			</compilerArgs>
         </configuration>
       </plugin>
       <plugin>

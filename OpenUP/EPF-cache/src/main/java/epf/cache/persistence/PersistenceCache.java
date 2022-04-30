@@ -1,5 +1,8 @@
 package epf.cache.persistence;
 
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.cache.Cache;
 import javax.cache.CacheManager;
@@ -10,6 +13,8 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import org.eclipse.microprofile.health.HealthCheck;
+import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import epf.naming.Naming;
@@ -17,6 +22,7 @@ import epf.schema.utility.EntityEvent;
 import epf.schema.utility.PostPersist;
 import epf.schema.utility.PostRemove;
 import epf.schema.utility.PostUpdate;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
@@ -24,7 +30,12 @@ import epf.schema.utility.PostUpdate;
  */
 @ApplicationScoped
 @Readiness
-public class PersistenceCache {
+public class PersistenceCache implements HealthCheck {
+	
+	/**
+	 *
+	 */
+	private transient static final Logger LOGGER = LogManager.getLogger(PersistenceCache.class.getName());
 	
 	/**
 	 * 
@@ -75,18 +86,31 @@ public class PersistenceCache {
 	 * @param event
 	 */
 	private void accept(final EntityEvent event) {
-		if(event instanceof PostUpdate) {
-			entityManager.merge(event.getEntity());
+		try {
+			if(event instanceof PostUpdate) {
+				entityManager.merge(event.getEntity());
+			}
+			else if(event instanceof PostPersist) {
+				entityManager.persist(event.getEntity());
+			}
+			else if(event instanceof PostRemove) {
+				final Optional<Object> entityId = schemaCache.getEntityId(event.getEntity());
+				if(entityId.isPresent()) {
+					entityManager.remove(entityManager.getReference(event.getEntity().getClass(), entityId.get()));
+				}
+			}
 		}
-		else if(event instanceof PostPersist) {
-			entityManager.persist(event.getEntity());
-		}
-		else if(event instanceof PostRemove) {
-			entityManager.remove(entityManager.merge(event.getEntity()));
+		catch(Exception ex) {
+			LOGGER.log(Level.SEVERE, "[PersistenceCache.accept]", ex);
 		}
 	}
 	
 	public Cache<String, Object> getCache(){
 		return cache;
+	}
+
+	@Override
+	public HealthCheckResponse call() {
+		return HealthCheckResponse.up("EPF-persistence-cache");
 	}
 }

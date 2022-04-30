@@ -16,7 +16,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.SecurityContext;
 import epf.naming.Naming;
 import epf.util.json.JsonUtil;
-import io.smallrye.common.annotation.Blocking;
 import epf.persistence.internal.util.EntityTypeUtil;
 import epf.persistence.internal.util.EntityUtil;
 
@@ -27,7 +26,6 @@ import epf.persistence.internal.util.EntityUtil;
 @Path(Naming.PERSISTENCE)
 @RolesAllowed(Naming.Security.DEFAULT_ROLE)
 @ApplicationScoped
-@Blocking
 public class Entities implements epf.persistence.client.Entities {
     
     /**

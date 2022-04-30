@@ -75,4 +75,19 @@ public class SchemaCache {
 	public Optional<Class<?>> getEntityClass(final String entityName){
 		return schemaUtil.getEntityClass(entityName);
 	}
+	
+	/**
+	 * @param entity
+	 * @return
+	 * @throws Exception  
+	 */
+	public Optional<Object> getEntityId(final Object entity) throws Exception{
+		final Class<?> cls = entity.getClass();
+		final Optional<Field> idField = schemaUtil.getEntityIdField(cls);
+		Optional<Object> entityId = Optional.empty();
+		if(idField.isPresent()) {
+			return Optional.ofNullable(idField.get().get(entity));
+		}
+		return entityId;
+	}
 }

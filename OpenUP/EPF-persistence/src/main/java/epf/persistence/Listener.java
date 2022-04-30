@@ -1,5 +1,7 @@
 package epf.persistence;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import org.eclipse.microprofile.reactive.messaging.Channel;
@@ -9,6 +11,7 @@ import epf.schema.utility.EntityEvent;
 import epf.schema.utility.PostPersist;
 import epf.schema.utility.PostRemove;
 import epf.schema.utility.PostUpdate;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
@@ -16,6 +19,11 @@ import epf.schema.utility.PostUpdate;
  */
 @ApplicationScoped
 public class Listener {
+	
+	/**
+	 *
+	 */
+	private transient static final Logger LOGGER = LogManager.getLogger(Listener.class.getName());
 	
 	/**
 	 * 
@@ -27,20 +35,35 @@ public class Listener {
 	 * @param event
 	 */
 	public void postPersist(@Observes final PostPersist event) {
-		emitter.send(event);
+		try {
+			emitter.send(event);
+		}
+		catch(Exception ex) {
+			LOGGER.log(Level.SEVERE, "[Listener.postPersist]", ex);
+		}
 	}
 	
 	/**
 	 * @param event
 	 */
 	public void postRemove(@Observes final PostRemove event) {
-		emitter.send(event);
+		try {
+			emitter.send(event);
+		}
+		catch(Exception ex) {
+			LOGGER.log(Level.SEVERE, "[Listener.postRemove]", ex);
+		}
 	}
 	
 	/**
 	 * @param event
 	 */
 	public void postUpdate(@Observes final PostUpdate event) {
-		emitter.send(event);
+		try {
+			emitter.send(event);
+		}
+		catch(Exception ex) {
+			LOGGER.log(Level.SEVERE, "[Listener.postUpdate]", ex);
+		}
 	}
 }
