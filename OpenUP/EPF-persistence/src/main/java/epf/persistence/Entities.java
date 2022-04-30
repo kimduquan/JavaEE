@@ -5,14 +5,12 @@ import java.util.Optional;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.json.JsonObject;
 import javax.persistence.EntityManager;
 import javax.persistence.metamodel.EntityType;
 import javax.transaction.Transactional;
 import javax.validation.Validator;
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import epf.naming.Naming;
 import epf.util.json.JsonUtil;
@@ -42,68 +40,79 @@ public class Entities implements epf.persistence.client.Entities {
     
     @Override
     @Transactional
-    public JsonObject persist(
+    public Response persist(
     		final String schema,
             final String name,
             final SecurityContext context,
             final InputStream body
             ) throws Exception{
-    	final EntityType<?> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), name).orElseThrow(NotFoundException::new);
-    	EntityTypeUtil.getSchema(entityType).ifPresent(entitySchema -> {
-    		if(!entitySchema.equals(schema)) {
-    			throw new NotFoundException();
-    		}
-    	});
-    	final Object entity = EntityUtil.toObject(entityType, body);
+    	final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), name);
+    	if(entityType.isEmpty()) {
+    		return Response.status(Response.Status.NOT_FOUND).build();
+    	}
+    	final Optional<String> entitySchema = EntityTypeUtil.getSchema(entityType.get());
+    	if(entitySchema.isPresent() && !entitySchema.get().equals(schema)) {
+    		return Response.status(Response.Status.NOT_FOUND).build();
+    	}
+    	final Object entity = EntityUtil.toObject(entityType.get(), body);
     	if(!validator.validate(entity).isEmpty()) {
-        	throw new BadRequestException();
+    		return Response.status(Response.Status.BAD_REQUEST).build();
         }
         manager.persist(entity);
-    	return JsonUtil.toJson(entity);
+    	return Response.ok(JsonUtil.toJson(entity)).build();
     }
     
     @Override
     @Transactional
-	public void merge(
+	public Response merge(
 			final String schema,
 			final String name, 
 			final String id,
 			final SecurityContext context,
 			final InputStream body
 			) throws Exception {
-    	final EntityType<?> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), name).orElseThrow(NotFoundException::new);
-    	EntityTypeUtil.getSchema(entityType).ifPresent(entitySchema -> {
-    		if(!entitySchema.equals(schema)) {
-    			throw new NotFoundException();
-    		}
-    	});
-    	final Object entityId = EntityUtil.getEntityId(entityType, id);
-    	final Optional<Object> entityObject = Optional.ofNullable(manager.find(entityType.getJavaType(), entityId));
-    	entityObject.orElseThrow(NotFoundException::new);
-    	final Object entity = EntityUtil.toObject(entityType, body);
+    	final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), name);
+    	if(entityType.isEmpty()) {
+    		return Response.status(Response.Status.NOT_FOUND).build();
+    	}
+    	final Optional<String> entitySchema = EntityTypeUtil.getSchema(entityType.get());
+    	if(entitySchema.isPresent() && !entitySchema.get().equals(schema)) {
+    		return Response.status(Response.Status.NOT_FOUND).build();
+    	}
+    	final Object entityId = EntityUtil.getEntityId(entityType.get(), id);
+    	final Object entityObject = manager.find(entityType.get().getJavaType(), entityId);
+    	if(entityObject == null) {
+    		return Response.status(Response.Status.NOT_FOUND).build();
+    	}
+    	final Object entity = EntityUtil.toObject(entityType.get(), body);
     	if(!validator.validate(entity).isEmpty()) {
-        	throw new BadRequestException();
+    		return Response.status(Response.Status.BAD_REQUEST).build();
         }
-    	manager.merge(entity);
+    	return Response.ok(manager.merge(entity)).build();
 	}
     
     @Override
     @Transactional
-    public void remove(
+    public Response remove(
     		final String schema,
     		final String name,
     		final String id,
     		final SecurityContext context
             ) throws Exception {
-    	final EntityType<?> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), name).orElseThrow(NotFoundException::new);
-    	EntityTypeUtil.getSchema(entityType).ifPresent(entitySchema -> {
-    		if(!entitySchema.equals(schema)) {
-    			throw new NotFoundException();
-    		}
-    	});
-    	final Object entityId = EntityUtil.getEntityId(entityType, id);
-    	final Optional<Object> entityObject = Optional.ofNullable(manager.getReference(entityType.getJavaType(), entityId));
-    	JsonUtil.toJson(entityObject.orElseThrow(NotFoundException::new));
-    	manager.remove(entityObject.orElseThrow(NotFoundException::new));
+    	final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), name);
+    	if(entityType.isEmpty()) {
+    		return Response.status(Response.Status.NOT_FOUND).build();
+    	}
+    	final Optional<String> entitySchema = EntityTypeUtil.getSchema(entityType.get());
+    	if(entitySchema.isPresent() && !entitySchema.get().equals(schema)) {
+    		return Response.status(Response.Status.NOT_FOUND).build();
+    	}
+    	final Object entityId = EntityUtil.getEntityId(entityType.get(), id);
+    	final Object entityObject = manager.find(entityType.get().getJavaType(), entityId);
+    	if(entityObject == null) {
+    		return Response.status(Response.Status.NOT_FOUND).build();
+    	}
+    	manager.remove(entityObject);
+    	return Response.ok().build();
     }
 }

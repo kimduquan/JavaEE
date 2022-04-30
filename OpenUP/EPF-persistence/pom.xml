@@ -36,10 +36,6 @@
 		<groupId>io.quarkus</groupId>
 		<artifactId>quarkus-agroal</artifactId>
 	</dependency>
-	<dependency>
-	    <groupId>io.quarkus</groupId>
-	    <artifactId>quarkus-narayana-jta</artifactId>
-	</dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-smallrye-opentracing</artifactId>

@@ -1,7 +1,6 @@
 package epf.persistence.client;
 
 import java.io.InputStream;
-import javax.json.JsonObject;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.DELETE;
@@ -37,7 +36,7 @@ public interface Entities {
     @Path("{schema}/{entity}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    JsonObject persist(
+    Response persist(
     		@PathParam("schema")
             @NotBlank
             final String schema,
@@ -100,7 +99,7 @@ public interface Entities {
     @PUT
     @Path("{schema}/{entity}/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    void merge(
+    Response merge(
     		@PathParam("schema")
             @NotBlank
             final String schema,
@@ -165,7 +164,7 @@ public interface Entities {
      */
     @DELETE
     @Path("{schema}/{entity}/{id}")
-    void remove(
+    Response remove(
     		@PathParam("schema")
             @NotBlank
             final String schema,
