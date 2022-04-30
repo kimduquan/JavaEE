@@ -1,13 +1,12 @@
 package epf.persistence.schema;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.SecurityContext;
 import epf.naming.Naming;
@@ -17,7 +16,6 @@ import epf.persistence.schema.internal.EmbeddableBuilder;
 import epf.persistence.schema.internal.EmbeddableComparator;
 import epf.persistence.schema.internal.EntityBuilder;
 import epf.persistence.schema.internal.EntityComparator;
-import epf.persistence.ext.EntityManagerFactory;
 import epf.persistence.internal.util.SchemaUtil;
 
 /**
@@ -33,27 +31,27 @@ public class Schema implements epf.persistence.schema.client.Schema {
 	 * 
 	 */
 	@Inject
-    transient EntityManagerFactory factory;
+    transient EntityManager manager;
 
 	@Override
-	public CompletionStage<List<Entity>> getEntities(final SecurityContext context) {
+	public List<Entity> getEntities(final SecurityContext context) {
 		final EntityBuilder builder = new EntityBuilder();
 		final EntityComparator comparator = new EntityComparator();
 		final Stream<Entity> entities = SchemaUtil
-				.getEntities(factory.getMetamodel())
+				.getEntities(manager.getMetamodel())
 				.map(builder::build)
 				.sorted(comparator);
-		return CompletableFuture.completedStage(entities.collect(Collectors.toList()));
+		return entities.collect(Collectors.toList());
 	}
 
 	@Override
-	public CompletionStage<List<Embeddable>> getEmbeddables(final SecurityContext context) {
+	public List<Embeddable> getEmbeddables(final SecurityContext context) {
 		final EmbeddableBuilder builder = new EmbeddableBuilder();
 		final EmbeddableComparator comparator = new EmbeddableComparator();
 		final Stream<Embeddable> embeddables = SchemaUtil
-				.getEmbeddables(factory.getMetamodel())
+				.getEmbeddables(manager.getMetamodel())
 				.map(builder::build)
 				.sorted(comparator);
-		return CompletableFuture.completedStage(embeddables.collect(Collectors.toList()));
+		return embeddables.collect(Collectors.toList());
 	}
 }

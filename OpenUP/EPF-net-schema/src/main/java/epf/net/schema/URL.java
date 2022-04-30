@@ -33,7 +33,7 @@ public class URL implements Serializable {
 	@Id
 	@Column(name = "ID")
 	@GeneratedValue
-	private int id;
+	private Integer id;
 	
 	/**
 	 * 
@@ -181,11 +181,11 @@ public class URL implements Serializable {
 		this.userInfo = userInfo;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(final int id) {
+	public void setId(final Integer id) {
 		this.id = id;
 	}
 

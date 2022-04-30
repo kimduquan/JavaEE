@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.portlet.internal.persistence;
 
 import java.io.InputStream;
@@ -12,7 +9,7 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.ws.rs.core.Response;
-
+import epf.client.cache.Cache;
 import epf.client.util.Client;
 import epf.portlet.internal.gateway.GatewayUtil;
 import epf.portlet.internal.security.SecurityUtil;
@@ -44,7 +41,7 @@ public class PersistenceUtil {
 	 */
 	public List<JsonObject> getEntities(final String schema, final String entity, final Integer firstResult, final Integer maxResults) throws Exception{
 		try(Client client = securityUtil.newClient(gatewayUtil.get(epf.naming.Naming.PERSISTENCE))){
-			try(Response response = epf.persistence.client.Queries.executeQuery(
+			try(Response response = Cache.executeQuery(
 					client, 
 					schema,
 					path -> path.path(entity), 
@@ -72,7 +69,7 @@ public class PersistenceUtil {
 	 */
 	public JsonObject getEntity(final String schema, final String entity, final String id) throws Exception {
 		try(Client client = securityUtil.newClient(gatewayUtil.get(epf.naming.Naming.PERSISTENCE))){
-			try(Response response = epf.persistence.client.Entities.find(client, schema, entity, id)){
+			try(Response response = Cache.getEntity(client, schema, entity, id)){
 				try(InputStream stream = response.readEntity(InputStream.class)){
 					try(JsonReader reader = Json.createReader(stream)){
 						return reader.readObject();

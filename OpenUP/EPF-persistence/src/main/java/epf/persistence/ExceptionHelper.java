@@ -6,12 +6,17 @@ import java.net.SocketTimeoutException;
 import java.sql.SQLInvalidAuthorizationSpecException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.persistence.EntityNotFoundException;
 import javax.validation.ValidationException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
+
+import org.hibernate.exception.ConstraintViolationException;
+
 import epf.util.EPFException;
 import epf.util.logging.LogManager;
 
@@ -50,6 +55,12 @@ public class ExceptionHelper implements ExceptionMapper<Exception>, Serializable
         boolean mapped = true;
         if(failure instanceof EPFException) {
         	mapped = false;
+        }
+        else if(failure instanceof EntityNotFoundException) {
+        	status = Response.Status.NOT_FOUND;
+        }
+        else if(failure instanceof ConstraintViolationException) {
+        	status = Response.Status.BAD_REQUEST;
         }
         else if(failure instanceof SQLInvalidAuthorizationSpecException){
             status = Response.Status.UNAUTHORIZED;

@@ -8,6 +8,6 @@ import epf.naming.Naming;
  *
  */
 @Path(Naming.PERSISTENCE)
-public interface Persistence extends Entities, Queries {
+public interface Persistence extends Entities {
 
 }

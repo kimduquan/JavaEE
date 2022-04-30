@@ -1,7 +1,6 @@
 package epf.persistence.client;
 
 import java.io.InputStream;
-import java.util.concurrent.CompletionStage;
 import javax.json.JsonObject;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -38,7 +37,7 @@ public interface Entities {
     @Path("{schema}/{entity}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    CompletionStage<JsonObject> persist(
+    JsonObject persist(
     		@PathParam("schema")
             @NotBlank
             final String schema,
@@ -101,7 +100,7 @@ public interface Entities {
     @PUT
     @Path("{schema}/{entity}/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    CompletionStage<Void> merge(
+    void merge(
     		@PathParam("schema")
             @NotBlank
             final String schema,
@@ -166,7 +165,7 @@ public interface Entities {
      */
     @DELETE
     @Path("{schema}/{entity}/{id}")
-    CompletionStage<Void> remove(
+    void remove(
     		@PathParam("schema")
             @NotBlank
             final String schema,
@@ -178,7 +177,7 @@ public interface Entities {
             final String entityId,
             @Context
             final SecurityContext context
-            );
+            ) throws Exception;
     
     /**
      * @param client
@@ -197,70 +196,5 @@ public interface Entities {
     			req -> req
     			)
     	.delete();
-    }
-    
-    /**
-     * @param schema
-     * @param entity
-     * @param entityId
-     * @return
-     */
-    @POST
-    @Path("{schema}/{entity}/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    CompletionStage<JsonObject> find(
-    		@PathParam("schema")
-            @NotBlank
-            final String schema,
-            @PathParam("entity")
-            @NotBlank
-            final String entity,
-            @PathParam("id")
-            @NotBlank
-            final String entityId,
-            @Context
-            final SecurityContext context
-            );
-    
-    /**
-     * @param client
-     * @param schema
-     * @param entity
-     * @param entityId
-     * @return
-     */
-    static Response find(
-    		final Client client,
-    		final String schema,
-            final String entity,
-            final String entityId
-            ) {
-    	return client.request(
-    			target -> target.path(schema).path(entity).path(entityId), 
-    			req -> req.accept(MediaType.APPLICATION_JSON)
-    			)
-    			.post(Entity.text(""));
-    }
-    
-    /**
-     * @param client
-     * @param cls
-     * @param schema
-     * @param entity
-     * @param entityId
-     */
-    static <T extends Object> T find(
-    		final Client client,
-    		final Class<T> cls,
-    		final String schema,
-            final String entity,
-            final String entityId
-            ) {
-    	return client.request(
-    			target -> target.path(schema).path(entity).path(entityId), 
-    			req -> req.accept(MediaType.APPLICATION_JSON)
-    			)
-    			.post(Entity.text(""))
-    			.readEntity(cls);
     }
 }
