@@ -34,10 +34,5 @@
 		    <artifactId>microprofile-openapi-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>openup</groupId>
-			<artifactId>EPF-schema-utility</artifactId>
-			<version>${project.version}</version>
-		</dependency>
     </dependencies>
 </project>
