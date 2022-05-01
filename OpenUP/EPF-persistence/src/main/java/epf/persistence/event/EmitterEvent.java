@@ -1,4 +1,4 @@
-package epf.persistence;
+package epf.persistence.event;
 
 import epf.schema.utility.EntityEvent;
 

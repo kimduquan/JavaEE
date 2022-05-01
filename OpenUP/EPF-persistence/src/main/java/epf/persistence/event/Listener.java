@@ -1,4 +1,4 @@
-package epf.persistence;
+package epf.persistence.event;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
