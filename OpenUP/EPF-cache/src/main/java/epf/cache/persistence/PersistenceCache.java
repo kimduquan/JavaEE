@@ -16,7 +16,6 @@ import javax.transaction.Transactional;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
-import org.eclipse.microprofile.reactive.messaging.Incoming;
 import epf.naming.Naming;
 import epf.schema.utility.EntityEvent;
 import epf.schema.utility.PostPersist;
@@ -74,18 +73,8 @@ public class PersistenceCache implements HealthCheck {
 	/**
 	 * @param event
 	 */
-	@Incoming(Naming.Persistence.PERSISTENCE_ENTITY_LISTENERS)
 	@Transactional
-	public void postEvent(final EntityEvent event) {
-		if(event != null) {
-			accept(event);
-		}
-	}
-	
-	/**
-	 * @param event
-	 */
-	private void accept(final EntityEvent event) {
+	public void accept(final EntityEvent event) {
 		try {
 			if(event instanceof PostUpdate) {
 				entityManager.merge(event.getEntity());

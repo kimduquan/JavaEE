@@ -8,7 +8,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
@@ -124,11 +123,16 @@ public class Persistence implements HealthCheck {
 	 * @param event
 	 */
 	@Incoming(Naming.Persistence.PERSISTENCE_ENTITY_LISTENERS)
-	@Transactional
 	public void postEvent(final EntityEvent event) {
 		if(event != null) {
-			entityCache.accept(event);
-			messages.add(new Message(event));
+			try {
+				cache.accept(event);
+				entityCache.accept(event);
+				messages.add(new Message(event));
+			}
+			catch(Exception ex) {
+				LOGGER.log(Level.SEVERE, "[Persistence.postEvent]", ex);
+			}
 		}
 	}
 }
