@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:a="http://xmlns.jcp.org/jsf/passthrough" xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:a="http://xmlns.jcp.org/jsf/passthrough" xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:p="http://primefaces.org/ui">
 
 <h:head>
 
@@ -9,7 +9,7 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <title>SB Admin 2 - Tables</title>
+    <title><h:outputText value="#{i18n['epf.webapp']}" /> - Tables</title>
 
     <!-- Custom fonts for this template -->
     <h:outputStylesheet library="startbootstrap-sb-admin-2-gh-pages" name="vendor/fontawesome-free/css/all.min.css" />
@@ -376,7 +376,7 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <p:dataTable styleClass="table table-bordered" a:id="dataTable" a:width="100%" a:cellspacing="0">
                                     <thead>
                                         <tr>
                                             <th>Name</th>
@@ -855,7 +855,7 @@
                                             <td>$112,000</td>
                                         </tr>
                                     </tbody>
-                                </table>
+                                </p:dataTable>
                             </div>
                         </div>
                     </div>

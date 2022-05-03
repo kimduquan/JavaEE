@@ -14,6 +14,9 @@ import epf.util.config.ConfigUtil;
 import epf.util.logging.LogManager;
 import epf.util.security.KeyStoreUtil;
 
+/**
+ * 
+ */
 @ApplicationScoped
 public class GatewayUtil {
 	
@@ -55,6 +58,11 @@ public class GatewayUtil {
 		}
 	}
 	
+	/**
+	 * @param service
+	 * @return
+	 * @throws Exception
+	 */
 	public Client newClient(final String service) throws Exception {
 		return clientUtil.newClient(epf.client.gateway.GatewayUtil.get(service));
 	}

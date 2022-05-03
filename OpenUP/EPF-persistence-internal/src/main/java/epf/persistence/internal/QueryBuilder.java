@@ -8,6 +8,7 @@ import java.util.Set;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.Attribute;
@@ -40,6 +41,11 @@ public class QueryBuilder {
 	 * 
 	 */
 	private transient List<PathSegment> pathSegments;
+	
+	/**
+	 *
+	 */
+	private transient List<String> sort;
 
 	/**
 	 * @param manager
@@ -74,10 +80,19 @@ public class QueryBuilder {
 	}
 	
 	/**
+	 * @param sort
+	 * @return
+	 */
+	public QueryBuilder sort(final List<String> sort) {
+		this.sort = sort;
+		return this;
+	}
+	
+	/**
 	 * @return
 	 */
 	public CriteriaQuery<Object> build() {
-		return build(metamodel, criteria, entityObject, pathSegments.get(0), pathSegments);
+		return build(metamodel, criteria, entityObject, pathSegments.get(0), pathSegments, sort);
 	}
 	
 	/**
@@ -93,7 +108,8 @@ public class QueryBuilder {
 			final CriteriaBuilder criteria,
 			final Entity<Object> entity, 
 			final PathSegment rootSegment,
-			final List<PathSegment> paths) {
+			final List<PathSegment> paths,
+			final List<String> sort) {
     	final EntityType<Object> rootType = entity.getType();
     	final Class<Object> rootClass = rootType.getJavaType();
     	final CriteriaQuery<Object> rootQuery = criteria.createQuery(rootClass);
@@ -129,6 +145,13 @@ public class QueryBuilder {
         }
         if(!allParams.isEmpty()){
             rootQuery.where(allParams.toArray(new Predicate[0]));
+        }
+        if(sort != null && !sort.isEmpty() && parentJoin.get().isPresent()) {
+        	final List<Order> orders = new ArrayList<>();
+        	for(String order : sort) {
+        		orders.add(criteria.asc(parentJoin.get().get().get(order)));
+        	}
+        	rootQuery.orderBy(orders);
         }
         return rootQuery;
 	}

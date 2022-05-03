@@ -1,6 +1,7 @@
 package epf.cache.persistence;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -8,6 +9,9 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.ws.rs.core.PathSegment;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
@@ -112,6 +116,16 @@ public class Persistence implements HealthCheck {
             final String entityId
             ) {
 		return entityCache.getEntity(schema, name, entityId);
+	}
+	
+	public Response executeQuery(
+			final String schema, 
+			final List<PathSegment> paths, 
+			final Integer firstResult, 
+			final Integer maxResults,
+			final SecurityContext context,
+			final List<String> sort) {
+		return cache.executeQuery(schema, paths, firstResult, maxResults, context, sort);
 	}
 
 	@Override

@@ -52,6 +52,11 @@ public class Session implements Serializable {
 	private List<String> claimNames;
 	
 	/**
+	 *
+	 */
+	private String token;
+	
+	/**
 	 * 
 	 */
 	@Inject
@@ -77,8 +82,9 @@ public class Session implements Serializable {
 		final Principal principal = context.getCallerPrincipal();
 		if(principal instanceof TokenPrincipal) {
 			final TokenPrincipal tokenPrincipal = (TokenPrincipal) principal;
+			token = tokenPrincipal.getRememberToken().orElse(tokenPrincipal.getRawToken());
 			try(Client client = gatewayUtil.newClient(epf.naming.Naming.SECURITY)){
-				client.authorization(tokenPrincipal.getRememberToken().orElse(tokenPrincipal.getRawToken()));
+				client.authorization(token);
 				final Token token = Security.authenticate(client);
 				claims = token.getClaims();
 				claimNames = Arrays.asList(token.getClaims().keySet().toArray(new String[0]));
@@ -90,6 +96,7 @@ public class Session implements Serializable {
 		}
 		else if(principal instanceof IDTokenPrincipal) {
 			final IDTokenPrincipal idTokenPrincipal = (IDTokenPrincipal) principal;
+			token = idTokenPrincipal.getId_token();
 			claims = idTokenPrincipal.getClaims();
 			claimNames = Arrays.asList(StandardClaims.values()).stream().map(claim -> claim.name()).collect(Collectors.toList());
 			event.fire(idTokenPrincipal);
@@ -110,5 +117,9 @@ public class Session implements Serializable {
 			claim = claims.get(name);
 		}
 		return claim != null ? String.valueOf(claim) : null;
+	}
+
+	public String getToken() {
+		return token;
 	}
 }

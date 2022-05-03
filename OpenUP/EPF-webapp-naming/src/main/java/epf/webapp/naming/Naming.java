@@ -69,4 +69,15 @@ public interface Naming {
 		 */
 		String AUTH = "security_auth";
 	}
+	
+	/**
+	 * 
+	 */
+	interface Persistence {
+		
+		/**
+		 * 
+		 */
+		String VIEW = "epf_persistence_view";
+	}
 }

@@ -37,6 +37,11 @@ public interface Cache {
 	String MAX = "max";
 	
 	/**
+	 *
+	 */
+	String SORT = "sort";
+	
+	/**
 	 * @param schema
 	 * @param entity
 	 * @param entityId
@@ -112,7 +117,9 @@ public interface Cache {
             @QueryParam(MAX)
             final Integer maxResults,
             @Context
-            final SecurityContext context
+            final SecurityContext context,
+            @QueryParam(SORT)
+    		final List<String> sort
             );
     
     /**
@@ -122,6 +129,7 @@ public interface Cache {
      * @param paths
      * @param firstResult
      * @param maxResults
+     * @param sort
      */
     static <T extends Object> List<T> executeQuery(
     		final Client client,
@@ -129,11 +137,12 @@ public interface Cache {
     		final GenericType<List<T>> type,
     		final Function<WebTarget, WebTarget> paths,
     		final Integer firstResult,
-    		final Integer maxResults
+    		final Integer maxResults,
+    		final Object... sort
             ) {
     	return client.request(
     			target -> paths.apply(
-    					target.path(Naming.PERSISTENCE + "-query").path(schema).queryParam(FIRST, firstResult).queryParam(MAX, maxResults)
+    					target.path(Naming.PERSISTENCE + "-query").path(schema).queryParam(FIRST, firstResult).queryParam(MAX, maxResults).queryParam(SORT, sort)
     					), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
@@ -146,16 +155,18 @@ public interface Cache {
      * @param paths
      * @param firstResult
      * @param maxResults
+     * @param sort
      */
     static Response executeQuery(
     		final Client client,
     		final String schema,
     		final Function<WebTarget, WebTarget> paths,
     		final Integer firstResult,
-    		final Integer maxResults){
+    		final Integer maxResults,
+    		final Object... sort){
     	return client.request(
     			target -> paths.apply(
-    					target.path(Naming.PERSISTENCE + "-query").path(schema).queryParam(FIRST, firstResult).queryParam(MAX, maxResults)
+    					target.path(Naming.PERSISTENCE + "-query").path(schema).queryParam(FIRST, firstResult).queryParam(MAX, maxResults).queryParam(SORT, sort)
     					), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
