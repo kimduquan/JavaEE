@@ -36,9 +36,10 @@ public interface JsonUtil {
 	/**
 	 * @param collection
 	 * @return
+	 * @throws Exception 
 	 */
-	static JsonArray toJsonArray(final Collection<?> collection) {
-		return Json.createArrayBuilder(collection).build();
+	static JsonArray toJsonArray(final Collection<?> collection) throws Exception {
+		return toJson(collection).asJsonArray();
 	}
 	
 	/**

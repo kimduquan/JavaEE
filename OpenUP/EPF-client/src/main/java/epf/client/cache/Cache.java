@@ -120,7 +120,7 @@ public interface Cache {
             final SecurityContext context,
             @QueryParam(SORT)
     		final List<String> sort
-            );
+            ) throws Exception;
     
     /**
      * @param client

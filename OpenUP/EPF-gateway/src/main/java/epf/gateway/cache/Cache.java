@@ -1,10 +1,12 @@
 package epf.gateway.cache;
 
+import java.util.List;
 import java.util.concurrent.CompletionStage;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.validation.constraints.NotBlank;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -12,6 +14,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
@@ -19,13 +22,11 @@ import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
 import epf.gateway.Application;
 import epf.naming.Naming;
-import io.smallrye.common.annotation.Blocking;
 
 /**
  * @author PC
  *
  */
-@Blocking
 @Path(Naming.CACHE)
 @ApplicationScoped
 @RolesAllowed(Naming.Security.DEFAULT_ROLE)
@@ -60,24 +61,28 @@ public class Cache {
     }
 	
 	/**
+	 * @param context
 	 * @param headers
 	 * @param uriInfo
 	 * @param req
 	 * @param schema
-	 * @param entity
+	 * @param paths
 	 */
 	@GET
-	@Path("persistence/{schema}/{entity}")
-	@Produces(MediaType.APPLICATION_JSON)
-    public CompletionStage<Response> getEntities(
+    @Path("persistence-query/{schema}/{criteria: .+}")
+    @Produces(MediaType.APPLICATION_JSON)
+	public CompletionStage<Response> executeQuery(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
-            @PathParam("schema") final String schema,
-            @PathParam("entity") final String entity) throws Exception {
-        return request.request(Naming.CACHE, context, headers, uriInfo, req, null);
-    }
+    		@PathParam("schema")
+            @NotBlank
+            final String schema,
+            @PathParam("criteria")
+            final List<PathSegment> paths) throws Exception {
+		return request.request(Naming.CACHE, context, headers, uriInfo, req, null);
+	}
 	
 	/**
 	 * @param headers

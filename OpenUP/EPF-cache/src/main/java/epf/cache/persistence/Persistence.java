@@ -118,13 +118,21 @@ public class Persistence implements HealthCheck {
 		return entityCache.getEntity(schema, name, entityId);
 	}
 	
+	/**
+	 * @param schema
+	 * @param paths
+	 * @param firstResult
+	 * @param maxResults
+	 * @param context
+	 * @param sort
+	 */
 	public Response executeQuery(
 			final String schema, 
 			final List<PathSegment> paths, 
 			final Integer firstResult, 
 			final Integer maxResults,
 			final SecurityContext context,
-			final List<String> sort) {
+			final List<String> sort) throws Exception {
 		return cache.executeQuery(schema, paths, firstResult, maxResults, context, sort);
 	}
 

@@ -11,7 +11,6 @@ import javax.cache.Caching;
 import javax.cache.configuration.MutableConfiguration;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.json.JsonArray;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -124,6 +123,7 @@ public class PersistenceCache implements HealthCheck {
 	 * @param context
 	 * @param sort
 	 * @return
+	 * @throws Exception 
 	 */
 	public Response executeQuery(
 			final String schema, 
@@ -131,7 +131,7 @@ public class PersistenceCache implements HealthCheck {
 			final Integer firstResult, 
 			final Integer maxResults,
 			final SecurityContext context,
-			final List<String> sort) {
+			final List<String> sort) throws Exception {
 		final Entity<Object> entity = new Entity<>();
     	if(!paths.isEmpty()){
         	final PathSegment rootSegment = paths.get(0);
@@ -152,8 +152,7 @@ public class PersistenceCache implements HealthCheck {
         			.paths(paths)
         			.sort(sort)
         			.build();
-        	final JsonArray json = executeQuery(entityManager, criteria, firstResult, maxResults);
-        	return Response.ok(json).build();
+        	return executeQuery(entityManager, criteria, firstResult, maxResults);
         }
     	throw new NotFoundException();
 	}
@@ -164,12 +163,13 @@ public class PersistenceCache implements HealthCheck {
 	 * @param firstResult
 	 * @param maxResults
 	 * @return
+	 * @throws Exception 
 	 */
-	private JsonArray executeQuery(
+	private Response executeQuery(
     		final EntityManager manager, 
     		final CriteriaQuery<Object> criteria,
     		final Integer firstResult,
-            final Integer maxResults){
+            final Integer maxResults) throws Exception{
 		final TypedQuery<Object> query = manager.createQuery(criteria);
 		if(firstResult != null){
             query.setFirstResult(firstResult);
@@ -177,6 +177,6 @@ public class PersistenceCache implements HealthCheck {
         if(maxResults != null){
             query.setMaxResults(maxResults);
         }
-        return JsonUtil.toJsonArray(query.getResultList());
+        return Response.ok(JsonUtil.toJsonArray(query.getResultList())).build();
     }
 }

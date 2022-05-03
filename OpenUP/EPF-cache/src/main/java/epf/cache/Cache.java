@@ -57,7 +57,7 @@ public class Cache implements epf.client.cache.Cache {
 			final Integer firstResult, 
 			final Integer maxResults,
 			final SecurityContext context,
-			final List<String> sort) {
+			final List<String> sort) throws Exception {
 		return persistence.executeQuery(schema, paths, firstResult, maxResults, context, sort);
 	}
 }

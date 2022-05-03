@@ -9,6 +9,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.Attribute;
@@ -146,10 +147,14 @@ public class QueryBuilder {
         if(!allParams.isEmpty()){
             rootQuery.where(allParams.toArray(new Predicate[0]));
         }
-        if(sort != null && !sort.isEmpty() && parentJoin.get().isPresent()) {
+        if(sort != null && !sort.isEmpty()) {
+        	Path<?> path = rootFrom;
+        	if(parentJoin.get().isPresent()) {
+        		path = parentJoin.get().get();
+        	}
         	final List<Order> orders = new ArrayList<>();
         	for(String order : sort) {
-        		orders.add(criteria.asc(parentJoin.get().get().get(order)));
+        		orders.add(criteria.asc(path.get(order)));
         	}
         	rootQuery.orderBy(orders);
         }
@@ -192,9 +197,12 @@ public class QueryBuilder {
             else if(attribute.isAssociation()){
                 subClass = parentType.get().get().getSingularAttribute(segment.getPath()).getBindableJavaType();
             }
+            else {
+            	subClass = parentType.get().get().getSingularAttribute(segment.getPath()).getJavaType();
+            }
             
             Join<?,?> subJoin;
-            if(parentJoin.get() == null){
+            if(parentJoin.get().isEmpty()){
                 subJoin = parentFrom.join(segment.getPath());
             }
             else{
