@@ -60,7 +60,7 @@ public class SchemaTest {
 	@Before
 	public void setUp() throws Exception {
 		client = ClientUtil.newClient(schemaUrl);
-    	client.authorization(token);
+    	client.authorization(token.toCharArray());
 	}
 
 	/**

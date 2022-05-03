@@ -12,7 +12,7 @@ public class IDTokenPrincipal extends CallerPrincipal {
 	/**
 	 * 
 	 */
-	private final String id_token;
+	private transient final char[] id_token;
 	
 	/**
 	 * 
@@ -24,13 +24,13 @@ public class IDTokenPrincipal extends CallerPrincipal {
 	 * @param id_token
 	 * @param claims
 	 */
-	public IDTokenPrincipal(final String name, final String id_token, final Map<String, Object> claims) {
+	public IDTokenPrincipal(final String name, final char[] id_token, final Map<String, Object> claims) {
 		super(name);
 		this.id_token = id_token;
 		this.claims = claims;
 	}
 
-	public String getId_token() {
+	public char[] getId_token() {
 		return id_token;
 	}
 

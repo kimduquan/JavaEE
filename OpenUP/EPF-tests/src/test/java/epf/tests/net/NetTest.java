@@ -47,7 +47,7 @@ public class NetTest {
 	@Before
 	public void setUp() throws Exception {
 		client = ClientUtil.newClient(netUrl);
-    	client.authorization(token);
+    	client.authorization(token.toCharArray());
 	}
 
 	@After
@@ -67,7 +67,7 @@ public class NetTest {
 		}
 		int id = StringUtil.fromShortString(shortUrl);
 		try(Client persistence = ClientUtil.newClient(persistenceUrl)){
-			persistence.authorization(token);
+			persistence.authorization(token.toCharArray());
 			Entities.remove(persistence, epf.net.schema.Net.SCHEMA, epf.net.schema.Net.URL, String.valueOf(id));
 		}
 	}

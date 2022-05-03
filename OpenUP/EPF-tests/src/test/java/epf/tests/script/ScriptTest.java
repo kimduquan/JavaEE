@@ -58,7 +58,7 @@ public class ScriptTest {
 	@Before
 	public void setUp() throws Exception {
 		client = ClientUtil.newClient(scriptUrl);
-		client.authorization(token);
+		client.authorization(token.toCharArray());
 	}
 
 	/**

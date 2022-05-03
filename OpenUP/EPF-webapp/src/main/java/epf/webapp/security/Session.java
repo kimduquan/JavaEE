@@ -54,7 +54,7 @@ public class Session implements Serializable {
 	/**
 	 *
 	 */
-	private String token;
+	private transient char[] token;
 	
 	/**
 	 * 
@@ -82,7 +82,7 @@ public class Session implements Serializable {
 		final Principal principal = context.getCallerPrincipal();
 		if(principal instanceof TokenPrincipal) {
 			final TokenPrincipal tokenPrincipal = (TokenPrincipal) principal;
-			token = tokenPrincipal.getRememberToken().orElse(tokenPrincipal.getRawToken());
+			token = tokenPrincipal.getRememberToken() != null ? tokenPrincipal.getRememberToken() : tokenPrincipal.getRawToken();
 			try(Client client = gatewayUtil.newClient(epf.naming.Naming.SECURITY)){
 				client.authorization(token);
 				final Token token = Security.authenticate(client);
@@ -119,7 +119,7 @@ public class Session implements Serializable {
 		return claim != null ? String.valueOf(claim) : null;
 	}
 
-	public String getToken() {
+	public char[] getToken() {
 		return token;
 	}
 }

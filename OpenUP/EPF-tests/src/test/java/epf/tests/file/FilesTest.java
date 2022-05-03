@@ -82,7 +82,7 @@ public class FilesTest {
 	@Before
 	public void setUp() throws Exception {
 		client = ClientUtil.newClient(filesUrl);
-    	client.authorization(token);
+    	client.authorization(token.toCharArray());
     	tempFile = Files.createTempFile(tempDir, "", "");
     	Files.write(tempFile, Arrays.asList("this is a test"));
 	}
@@ -105,7 +105,7 @@ public class FilesTest {
 			Assert.assertNotNull("Response.link", link);
 			System.out.println("Response.self.uri=" + link.getUri());
 			try(Client newclient = ClientUtil.newClient(link.getUri())){
-				newclient.authorization(token);
+				newclient.authorization(token.toCharArray());
 				InputStream input2 = newclient
 						.request(
 						target -> target, 
@@ -132,7 +132,7 @@ public class FilesTest {
 			Assert.assertNotNull("Response.link", link);
 			System.out.println("Response.self.uri=" + link.getUri());
 			try(Client newclient = ClientUtil.newClient(link.getUri())){
-				newclient.authorization(token);
+				newclient.authorization(token.toCharArray());
 				InputStream input2 = newclient
 						.request(
 						target -> target, 
@@ -223,7 +223,7 @@ public class FilesTest {
 		Link link;
 		try(InputStream input = Files.newInputStream(tempFile)){
 			try(Client otherClient = ClientUtil.newClient(filesUrl)){
-				otherClient.authorization(otherToken);
+				otherClient.authorization(otherToken.toCharArray());
 				Response response = epf.client.file.Files.createFile(otherClient, input, PathUtil.of("Any_Role", otherCredential.getKey()));
 				Assert.assertEquals("Response.status", Response.Status.OK.getStatusCode(), response.getStatusInfo().getStatusCode());
 				link = response.getLink("self");
@@ -232,7 +232,7 @@ public class FilesTest {
 		}
 		System.out.println("Response.self.uri=" + link.getUri());
 		try(Client newclient = ClientUtil.newClient(link.getUri())){
-			newclient.authorization(token);
+			newclient.authorization(token.toCharArray());
 			InputStream input = newclient
 					.request(
 					target -> target, 
@@ -247,7 +247,7 @@ public class FilesTest {
 			}
 		}
 		try(Client otherClient = ClientUtil.newClient(filesUrl)){
-			otherClient.authorization(otherToken);
+			otherClient.authorization(otherToken.toCharArray());
 			otherClient.request(target -> target, req -> req).delete();
 		}
 		SecurityUtil.logOut(otherToken);

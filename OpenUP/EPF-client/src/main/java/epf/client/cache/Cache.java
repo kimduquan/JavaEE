@@ -138,11 +138,11 @@ public interface Cache {
     		final Function<WebTarget, WebTarget> paths,
     		final Integer firstResult,
     		final Integer maxResults,
-    		final Object... sort
+    		final String... sort
             ) {
     	return client.request(
     			target -> paths.apply(
-    					target.path(Naming.PERSISTENCE + "-query").path(schema).queryParam(FIRST, firstResult).queryParam(MAX, maxResults).queryParam(SORT, sort)
+    					target.path(Naming.PERSISTENCE + "-query").path(schema).queryParam(FIRST, firstResult).queryParam(MAX, maxResults).queryParam(SORT, (Object[])sort)
     					), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
@@ -163,10 +163,10 @@ public interface Cache {
     		final Function<WebTarget, WebTarget> paths,
     		final Integer firstResult,
     		final Integer maxResults,
-    		final Object... sort){
+    		final String... sort){
     	return client.request(
     			target -> paths.apply(
-    					target.path(Naming.PERSISTENCE + "-query").path(schema).queryParam(FIRST, firstResult).queryParam(MAX, maxResults).queryParam(SORT, sort)
+    					target.path(Naming.PERSISTENCE + "-query").path(schema).queryParam(FIRST, firstResult).queryParam(MAX, maxResults).queryParam(SORT, (Object[])sort)
     					), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)

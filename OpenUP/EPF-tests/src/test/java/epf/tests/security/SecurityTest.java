@@ -54,14 +54,14 @@ public class SecurityTest {
     
     Token authenticate(String token) throws Exception{
     	try(Client client = ClientUtil.newClient(securityUrl)){
-    		client.authorization(token);
+    		client.authorization(token.toCharArray());
     		return Security.authenticate(client);
     	}
     }
     
     String revoke(String token, Duration duration) throws Exception{
     	try(Client client = ClientUtil.newClient(securityUrl)){
-			client.authorization(token);
+			client.authorization(token.toCharArray());
     		return Security.revoke(client, duration);
     	}
     }
@@ -263,14 +263,14 @@ public class SecurityTest {
     	Entry<String, String> credential = SecurityUtil.peekCredential();
     	String token = SecurityUtil.login(credential.getKey(), credential.getValue());
     	try(Client client = ClientUtil.newClient(securityUrl)){
-    		client.authorization(token);
+    		client.authorization(token.toCharArray());
     		Response response = Security.update(client, credential.getValue() + "1");
     		Assert.assertEquals("Response.status", Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
     	}
     	SecurityUtil.logOut(token);
     	token = SecurityUtil.login(credential.getKey(), credential.getValue() + "1");
     	try(Client client = ClientUtil.newClient(securityUrl)){
-    		client.authorization(token);
+    		client.authorization(token.toCharArray());
     		Response response = Security.update(client, credential.getValue());
     		Assert.assertEquals("Response.status", Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
     	}
@@ -282,7 +282,7 @@ public class SecurityTest {
     	Entry<String, String> credential = SecurityUtil.peekCredential();
     	String token = SecurityUtil.login(credential.getKey(), credential.getValue());
     	try(Client client = ClientUtil.newClient(securityUrl)){
-    		client.authorization(token);
+    		client.authorization(token.toCharArray());
     		Response response = Security.update(client, null);
     		Assert.assertEquals("Response.status", Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     	}
@@ -294,7 +294,7 @@ public class SecurityTest {
     	Entry<String, String> credential = SecurityUtil.peekCredential();
     	String token = SecurityUtil.login(credential.getKey(), credential.getValue());
     	try(Client client = ClientUtil.newClient(securityUrl)){
-    		client.authorization(token);
+    		client.authorization(token.toCharArray());
     		Response response = Security.update(client, "");
     		Assert.assertEquals("Response.status", Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     	}
@@ -307,7 +307,7 @@ public class SecurityTest {
     	final String token = SecurityUtil.login(credential.getKey(), credential.getValue());
     	Token jwt = authenticate(token);
     	try(Client client = ClientUtil.newClient(securityUrl)){
-    		client.authorization(token);
+    		client.authorization(token.toCharArray());
     		String newToken = Security.revoke(client, null);
     		Assert.assertNotEquals(token, newToken);
     		Assert.assertThrows(NotAuthorizedException.class, () -> {
@@ -327,7 +327,7 @@ public class SecurityTest {
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		String newToken = revoke(token, null);
     		Token newJwt = authenticate(newToken);
-    		client.authorization(newToken);
+    		client.authorization(newToken.toCharArray());
     		String newToken2 = Security.revoke(client, null);
     		Token newJwt2 = authenticate(newToken2);
     		Assert.assertNotNull("Token", newJwt2);

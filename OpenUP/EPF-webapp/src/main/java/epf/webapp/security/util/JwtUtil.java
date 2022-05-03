@@ -36,9 +36,9 @@ public class JwtUtil {
 	 * @param token
 	 * @return
 	 */
-	public JwtClaims process(final String token) throws Exception {
+	public JwtClaims process(final char[] token) throws Exception {
 		if(jwtConsumer != null) {
-			return jwtConsumer.processToClaims(token);
+			return jwtConsumer.processToClaims(new String(token));
 		}
 		return null;
 	}
@@ -48,7 +48,7 @@ public class JwtUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static JwtClaims decode(final String jwt) throws Exception {
-		return new JwtConsumerBuilder().setSkipSignatureVerification().setSkipDefaultAudienceValidation().build().process(jwt).getJwtClaims();
+	public static JwtClaims decode(final char[] jwt) throws Exception {
+		return new JwtConsumerBuilder().setSkipSignatureVerification().setSkipDefaultAudienceValidation().build().process(new String(jwt)).getJwtClaims();
 	}
 }

@@ -66,7 +66,7 @@ public class CacheTest {
 	@Before
 	public void setUp() throws Exception {
 		client = ClientUtil.newClient(cacheUrl);
-		client.authorization(token);
+		client.authorization(token.toCharArray());
 	}
 
 	/**

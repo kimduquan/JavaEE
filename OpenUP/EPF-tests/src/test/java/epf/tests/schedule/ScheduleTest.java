@@ -49,7 +49,7 @@ public class ScheduleTest {
 		scheduleUrl = ConfigUtil.getURI(Naming.Schedule.SCHEDULE_URL);
 		client = ClientUtil.newClient(scheduleUrl);
 		token = SecurityUtil.login();
-		client.authorization(token);
+		client.authorization(token.toCharArray());
 		URI messagingUrl = ConfigUtil.getURI(Naming.Messaging.MESSAGING_URL);
 		shell = epf.util.websocket.Client.connectToServer(messagingUrl.resolve("schedule/shell"));
 		messages = new ConcurrentLinkedQueue<>();

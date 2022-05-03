@@ -55,7 +55,7 @@ public class EntitiesTest {
     @Before
     public void before() {
     	client = ClientUtil.newClient(persistenceUrl);
-    	client.authorization(token);
+    	client.authorization(token.toCharArray());
     }
     
     @After
@@ -75,7 +75,7 @@ public class EntitiesTest {
         artifact.setTailoring(new Tailoring());
         Artifact updatedArtifact = null;
         try(Client adminClient = ClientUtil.newClient(persistenceUrl)){
-        	adminClient.authorization(token);
+        	adminClient.authorization(token.toCharArray());
         	updatedArtifact = Entities.persist(adminClient, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
         }
         Assert.assertNotNull("Artifact", updatedArtifact);
@@ -98,7 +98,7 @@ public class EntitiesTest {
         PersistenceUtil.persist(token, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
         Artifact updatedArtifact = null;
         try(Client adminClient = ClientUtil.newClient(persistenceUrl)){
-        	adminClient.authorization(token);
+        	adminClient.authorization(token.toCharArray());
             updatedArtifact = new Artifact();
             updatedArtifact.setName(artifact.getName());
             updatedArtifact.setSummary(StringUtil.randomString("Artifact Entities testMergeOK"));
@@ -124,7 +124,7 @@ public class EntitiesTest {
         artifact.setTailoring(new Tailoring());
         PersistenceUtil.persist(token, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
         try(Client adminClient = ClientUtil.newClient(persistenceUrl)){
-        	adminClient.authorization(token);
+        	adminClient.authorization(token.toCharArray());
             Entities.remove(adminClient, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
         }
     }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.client.util;
 
 import java.net.URI;
@@ -14,7 +9,6 @@ import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.sse.SseEventSource;
-
 import epf.naming.Naming;
 
 /**
@@ -30,10 +24,6 @@ public class Client implements AutoCloseable {
     /**
      * 
      */
-    private transient Optional<String> authHeader = Optional.empty();
-    /**
-     * 
-     */
     private transient final javax.ws.rs.client.Client rsClient;
     /**
      * 
@@ -44,6 +34,11 @@ public class Client implements AutoCloseable {
      * 
      */
     private transient Optional<String> tenant = Optional.empty();
+    
+    /**
+     *
+     */
+    private transient char[] authToken;
     
     /**
      * @param clients
@@ -64,12 +59,12 @@ public class Client implements AutoCloseable {
 	protected URI getUri() {
 		return uri;
 	}
-
+	
 	/**
-	 * @return the authHeader
+	 * @return
 	 */
-	protected Optional<String> getAuthHeader() {
-		return authHeader;
+	protected char[] getAuthToken() {
+		return authToken;
 	}
 
 	/**
@@ -85,15 +80,24 @@ public class Client implements AutoCloseable {
 	protected ClientQueue getClients() {
 		return clients;
 	}
-
+	
 	/**
 	 * @param token
 	 * @return
 	 */
-	public Client authorization(final String token) {
+	public Client authorization(final char[] token) {
 		Objects.requireNonNull(token);
-		final StringBuilder tokenHeader = new StringBuilder();
-    	authHeader = Optional.of(tokenHeader.append("Bearer ").append(token).toString());
+		authToken = token;
+		return this;
+	}
+	
+	/**
+	 * @param header
+	 * @return
+	 */
+	public Client authorizationHeader(final String header) {
+		Objects.requireNonNull(header);
+		authToken = header.substring("Bearer ".length()).toCharArray();
 		return this;
 	}
 	
@@ -105,19 +109,10 @@ public class Client implements AutoCloseable {
 		this.tenant = Optional.ofNullable(tenant);
 		return this;
 	}
-	
-	/**
-	 * @param header
-	 * @return
-	 */
-	public Client authorizationHeader(final String header) {
-		authHeader = Optional.of(header);
-		return this;
-	}
 
     @Override
     public void close() throws Exception {
-    	authHeader = Optional.empty();
+    	authToken = null;
         clients.add(uri, rsClient);
     }
     
@@ -135,8 +130,10 @@ public class Client implements AutoCloseable {
     	}
     	target = buildTarget.apply(target);
     	Invocation.Builder request = target.request();
-    	if(authHeader.isPresent()) {
-        	request = request.header(HttpHeaders.AUTHORIZATION, authHeader.get());
+    	if(authToken != null) {
+    		final StringBuilder builder = new StringBuilder();
+    		builder.append("Bearer ").append(authToken);
+        	request = request.header(HttpHeaders.AUTHORIZATION, builder.toString());
     	}
     	return buildRequest.apply(request);
     }

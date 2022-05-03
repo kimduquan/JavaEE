@@ -22,7 +22,7 @@ public class FileUtil {
 	public static String createFile(String token, Path file, Path path) throws Exception {
 		URI fileUrl = GatewayUtil.get(Naming.FILE);
 		try(Client client = ClientUtil.newClient(fileUrl)){
-			client.authorization(token);
+			client.authorization(token.toCharArray());
 			try(InputStream input = Files.newInputStream(file)){
 				try(Response response = epf.client.file.Files.createFile(client, input, path)){
 					response.getStatus();
@@ -35,7 +35,7 @@ public class FileUtil {
 	public static void delete(String token, Path path) throws Exception {
 		URI fileUrl = GatewayUtil.get(Naming.FILE);
 		try(Client client = ClientUtil.newClient(fileUrl)){
-			client.authorization(token);
+			client.authorization(token.toCharArray());
 			epf.client.file.Files.delete(client, path).getStatus();
 		}
 	}

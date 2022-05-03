@@ -1,6 +1,5 @@
 package epf.webapp.security;
 
-import java.util.Optional;
 import javax.security.enterprise.CallerPrincipal;
 
 /**
@@ -12,37 +11,37 @@ public class TokenPrincipal extends CallerPrincipal {
 	/**
 	 * 
 	 */
-	private final String rawToken;
+	private transient final char[] rawToken;
 	
 	/**
 	 * 
 	 */
-	private Optional<String> rememberToken = Optional.empty();
+	private transient char[] rememberToken;
 
 	/**
 	 * @param name
 	 * @param token
 	 */
-	public TokenPrincipal(final String name, final String rawToken) {
+	public TokenPrincipal(final String name, final char[] rawToken) {
 		super(name);
 		this.rawToken = rawToken;
 	}
 
-	public String getRawToken() {
+	public char[] getRawToken() {
 		return rawToken;
 	}
 	
 	/**
 	 * @param token
 	 */
-	public void setRememberToken(final String token) {
-		rememberToken = Optional.of(token);
+	public void setRememberToken(final char[] token) {
+		rememberToken = token;
 	}
 	
 	/**
 	 * @return
 	 */
-	public Optional<String> getRememberToken(){
+	public char[] getRememberToken(){
 		return this.rememberToken;
 	}
 }

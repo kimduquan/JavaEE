@@ -69,7 +69,7 @@ public class PrincipalStore {
 	 */
 	public void putPrincipal(@Observes final TokenPrincipal principal) throws Exception {
 		final Set<String> otherUsers = principals.keySet();
-		principals.put(principal.getName(), JwtUtil.decode(principal.getRememberToken().orElse(principal.getRawToken())).getClaimsMap());
+		principals.put(principal.getName(), JwtUtil.decode(principal.getRememberToken() != null ? principal.getRememberToken() : principal.getRawToken()).getClaimsMap());
 		send(principal.getName(), otherUsers);
 	}
 }

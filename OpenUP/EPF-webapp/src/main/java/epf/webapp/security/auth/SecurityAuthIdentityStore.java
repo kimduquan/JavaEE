@@ -91,7 +91,7 @@ public class SecurityAuthIdentityStore implements RememberMeIdentityStore {
 				result = new CredentialValidationResult(principal, groups);
 			}
 			else if(securityAuth.getProvider(claims.getIssuer()).validateIDToken(credential.getToken(), FacesContext.getCurrentInstance().getExternalContext().getSessionId(false))) {
-				final IDTokenPrincipal principal = new IDTokenPrincipal(claims.getSubject(), credential.getToken(), claims.getClaimsMap());
+				final IDTokenPrincipal principal = new IDTokenPrincipal(claims.getSubject(), credential.getToken().toCharArray(), claims.getClaimsMap());
 				final Set<String> groups = new HashSet<>();
 				groups.add(Naming.Security.DEFAULT_ROLE);
 				result = new CredentialValidationResult(principal, groups);
@@ -124,7 +124,7 @@ public class SecurityAuthIdentityStore implements RememberMeIdentityStore {
 		}
 		else if(callerPrincipal instanceof IDTokenPrincipal) {
 			final IDTokenPrincipal principal = (IDTokenPrincipal) callerPrincipal;
-			newToken = principal.getId_token();
+			newToken = new String(principal.getId_token());
 		}
 		return newToken;
 	}

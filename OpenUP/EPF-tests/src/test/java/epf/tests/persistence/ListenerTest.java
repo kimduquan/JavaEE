@@ -109,7 +109,7 @@ public class ListenerTest {
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
     	try(epf.client.util.Client persistenceClient = ClientUtil.newClient(persistenceUrl)){
-    		persistenceClient.authorization(token);
+    		persistenceClient.authorization(token.toCharArray());
     		Entities.persist(persistenceClient, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
             Entities.remove(persistenceClient, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
     	}
@@ -148,7 +148,7 @@ public class ListenerTest {
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
     	try(epf.client.util.Client persistenceClient = ClientUtil.newClient(persistenceUrl)){
-    		persistenceClient.authorization(token);
+    		persistenceClient.authorization(token.toCharArray());
     		Entities.persist(persistenceClient, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
             Entities.remove(persistenceClient, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
     	}

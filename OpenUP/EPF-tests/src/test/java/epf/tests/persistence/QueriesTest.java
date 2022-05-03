@@ -48,7 +48,7 @@ public class QueriesTest {
     @Before
     public void before() {
     	client = ClientUtil.newClient(persistenceUrl);
-    	client.authorization(token);
+    	client.authorization(token.toCharArray());
     }
     
     @After
@@ -67,7 +67,7 @@ public class QueriesTest {
     		Assert.assertNotEquals("Link.title", "", entityLink.getTitle());
     		try(Client client = ClientUtil.newClient(entityLink.getUri())){
     			Object entity = client
-    					.authorization(token)
+    					.authorization(token.toCharArray())
     					.request(
     							t -> t, 
     							req -> req.accept(MediaType.APPLICATION_JSON)

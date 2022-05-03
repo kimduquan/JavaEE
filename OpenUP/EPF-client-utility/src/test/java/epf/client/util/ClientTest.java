@@ -62,12 +62,12 @@ public class ClientTest {
 	@Test
 	public void testAuthorization() {
 		Client client = new Client(mockClientQueue, uri, b -> mockClientBuilder);
-		Client returnClient = client.authorization("authorization");
+		Client returnClient = client.authorization("authorization".toCharArray());
 		Assert.assertSame(client, returnClient);
-		Assert.assertEquals("Client.authHeader", "Bearer authorization", returnClient.getAuthHeader().get());
-		returnClient = client.authorization("");
+		Assert.assertArrayEquals("Client.authToken", "authorization".toCharArray(), returnClient.getAuthToken());
+		returnClient = client.authorization("".toCharArray());
 		Assert.assertSame(client, returnClient);
-		Assert.assertEquals("Client.authHeader", "Bearer ", returnClient.getAuthHeader().get());
+		Assert.assertArrayEquals("Client.authToken", "".toCharArray(), returnClient.getAuthToken());
 	}
 	
 	/**
@@ -120,7 +120,7 @@ public class ClientTest {
 		Builder mockRequest = Mockito.mock(Builder.class);
 		Mockito.when(mockTarget.request()).thenReturn(mockRequest);
 		Mockito.when(mockRequest.header(Mockito.eq("Authorization"), Mockito.eq("Bearer authorization"))).thenReturn(mockRequest);
-		client.authorization("authorization");
+		client.authorization("authorization".toCharArray());
 		client.request(
 				target -> {
 					Assert.assertSame(mockTarget, target);

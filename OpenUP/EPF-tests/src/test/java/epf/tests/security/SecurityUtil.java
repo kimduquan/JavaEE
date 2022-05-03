@@ -29,7 +29,7 @@ public class SecurityUtil {
     
     public static void logOut(String token) throws Exception {
     	try(Client client = ClientUtil.newClient(GatewayUtil.get(Naming.SECURITY))){
-    		client.authorization(token);
+    		client.authorization(token.toCharArray());
     		String userName = Security.logOut(client);
         	System.out.println(String.format("SecurityUtil.logOut(\"%s\")", userName));
     	}
@@ -37,14 +37,14 @@ public class SecurityUtil {
     
     public static Token auth(String token) throws Exception {
     	try(Client client = ClientUtil.newClient(GatewayUtil.get(Naming.SECURITY))){
-    		client.authorization(token);
+    		client.authorization(token.toCharArray());
     		return Security.authenticate(client);
     	}
     }
     
     public static String revoke(String token, Duration duration) throws Exception {
     	try(Client client = ClientUtil.newClient(GatewayUtil.get(Naming.SECURITY))){
-    		client.authorization(token);
+    		client.authorization(token.toCharArray());
     		return Security.revoke(client, duration);
     	}
     }
