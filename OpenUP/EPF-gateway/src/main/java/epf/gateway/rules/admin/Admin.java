@@ -18,13 +18,11 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import epf.gateway.Application;
 import epf.naming.Naming;
-import io.smallrye.common.annotation.Blocking;
 
 /**
  * @author PC
  *
  */
-@Blocking
 @Path(Naming.Rules.RULES_ADMIN)
 @ApplicationScoped
 @RolesAllowed(Naming.Security.DEFAULT_ROLE)

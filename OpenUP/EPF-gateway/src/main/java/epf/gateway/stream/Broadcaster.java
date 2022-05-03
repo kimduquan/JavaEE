@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.gateway.stream;
 
 import java.util.logging.Logger;

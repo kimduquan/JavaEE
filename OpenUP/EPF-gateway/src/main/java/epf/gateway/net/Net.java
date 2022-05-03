@@ -25,13 +25,11 @@ import epf.gateway.Registry;
 import epf.gateway.Application;
 import epf.naming.Naming;
 import epf.util.StringUtil;
-import io.smallrye.common.annotation.Blocking;
 
 /**
  *
  * @author FOXCONN
  */
-@Blocking
 @Path(Naming.NET)
 @ApplicationScoped
 public class Net {

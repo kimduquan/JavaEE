@@ -28,13 +28,11 @@ import epf.gateway.security.SecurityUtil;
 import epf.naming.Naming;
 import epf.util.logging.LogManager;
 import epf.util.websocket.Client;
-import io.smallrye.common.annotation.Blocking;
 
 /**
  * @author PC
  *
  */
-@Blocking
 @Path("stream")
 @ApplicationScoped
 public class Stream {
