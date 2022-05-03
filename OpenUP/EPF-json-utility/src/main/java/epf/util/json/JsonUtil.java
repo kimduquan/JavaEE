@@ -5,6 +5,7 @@ import java.io.StringWriter;
 import java.util.Collection;
 import javax.json.Json;
 import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.bind.Jsonb;
@@ -39,7 +40,11 @@ public interface JsonUtil {
 	 * @throws Exception 
 	 */
 	static JsonArray toJsonArray(final Collection<?> collection) throws Exception {
-		return toJson(collection).asJsonArray();
+		final JsonArrayBuilder builder = Json.createArrayBuilder();
+		for(Object object : collection) {
+			builder.add(toJson(object));
+		}
+		return builder.build();
 	}
 	
 	/**

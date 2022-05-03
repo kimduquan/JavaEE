@@ -2,6 +2,7 @@ package epf.gateway.stream;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -71,7 +72,7 @@ public class Stream {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI messagingUrl = registry.lookup(Naming.MESSAGING).orElseThrow();
+			final URI messagingUrl = registry.lookup(Naming.MESSAGING).orElseThrow(() -> new NoSuchElementException(Naming.MESSAGING));
 			clients.put(Naming.PERSISTENCE, Client.connectToServer(messagingUrl.resolve(Naming.PERSISTENCE)));
 		} 
 		catch (Exception e) {
@@ -122,8 +123,8 @@ public class Stream {
 			final Sse sse,
 			@MatrixParam("tid")
 			final String tokenId) throws Exception {
-		final URI cacheUrl = registry.lookup(Naming.CACHE).orElseThrow();
-		final URI securityUrl = registry.lookup(Naming.SECURITY).orElseThrow();
+		final URI cacheUrl = registry.lookup(Naming.CACHE).orElseThrow(() -> new NoSuchElementException(Naming.CACHE));
+		final URI securityUrl = registry.lookup(Naming.SECURITY).orElseThrow(() -> new NoSuchElementException(Naming.SECURITY));
 		SecurityUtil.authenticateTokenId(tokenId, cacheUrl, securityUrl).thenAccept(succeed -> {
 			if(succeed) {
 				clients.computeIfPresent(path, (p, client) -> {

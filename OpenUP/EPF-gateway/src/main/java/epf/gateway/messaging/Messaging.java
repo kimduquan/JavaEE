@@ -3,6 +3,7 @@ package epf.gateway.messaging;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -68,7 +69,7 @@ public class Messaging {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI messagingUrl = registry.lookup(Naming.MESSAGING).orElseThrow();
+			final URI messagingUrl = registry.lookup(Naming.MESSAGING).orElseThrow(() -> new NoSuchElementException(Naming.MESSAGING));
 			final Remote persistence = new Remote(messagingUrl.resolve(Naming.PERSISTENCE));
 			remotes.put(Naming.PERSISTENCE, persistence);
 			executor.submit(persistence);
@@ -108,12 +109,12 @@ public class Messaging {
 				}
 			);
 		}
-		if(tokenId.isEmpty()) {
+		if(!tokenId.isPresent()) {
 			closeSession(path, session);
 		}
 		else {
-			final URI cacheUrl = registry.lookup(Naming.CACHE).orElseThrow();
-			final URI securityUrl = registry.lookup(Naming.SECURITY).orElseThrow();
+			final URI cacheUrl = registry.lookup(Naming.CACHE).orElseThrow(() -> new NoSuchElementException(Naming.CACHE));
+			final URI securityUrl = registry.lookup(Naming.SECURITY).orElseThrow(() -> new NoSuchElementException(Naming.SECURITY));
 			SecurityUtil.authenticateTokenId(tokenId.get(), cacheUrl, securityUrl).thenAccept(succeed -> {
 				if(!succeed) {
 					closeSession(path, session);

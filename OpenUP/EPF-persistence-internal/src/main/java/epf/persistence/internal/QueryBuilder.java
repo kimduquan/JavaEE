@@ -17,6 +17,7 @@ import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.ManagedType;
 import javax.persistence.metamodel.Metamodel;
 import javax.persistence.metamodel.Attribute.PersistentAttributeType;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.PathSegment;
 import epf.util.Var;
 
@@ -116,7 +117,8 @@ public class QueryBuilder {
     	final CriteriaQuery<Object> rootQuery = criteria.createQuery(rootClass);
     	final Root<Object> rootFrom = rootQuery.from(rootClass);
     	final List<Predicate> allParams = new ArrayList<>();
-        rootSegment.getMatrixParameters().forEach((name, values) -> {
+    	final MultivaluedMap<String, String> matrixParams = rootSegment.getMatrixParameters();
+    	matrixParams.forEach((name, values) -> {
         	allParams.add(
         			criteria.isMember(
                             values,
