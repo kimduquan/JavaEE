@@ -39,7 +39,7 @@ public class SecurityAuthServlet extends HttpServlet {
 				final String cid = fragments[2];
 				final String csrfToken = fragments[3];
 				if(!flow.isEmpty() && !windowId.isEmpty() && !cid.isEmpty() && !csrfToken.isEmpty() ) {
-					final String redirectUrl = epf.webapp.naming.Naming.CONTEXT_ROOT + "/security/auth.xhtml?" + req.getQueryString() + "&flow=" + flow + "&jfwid=" + URLEncoder.encode(windowId, "UTF-8") + "&cid=" + cid + "&javax.faces.Token=" + URLEncoder.encode(csrfToken, "UTF-8");
+					final String redirectUrl = epf.webapp.naming.Naming.CONTEXT_ROOT + "/security/auth/auth.xhtml?" + req.getQueryString() + "&flow=" + flow + "&jfwid=" + URLEncoder.encode(windowId, "UTF-8") + "&cid=" + cid + "&javax.faces.Token=" + URLEncoder.encode(csrfToken, "UTF-8");
 					resp.setHeader("Referrer-Policy", "no-referrer");
 					resp.sendRedirect(redirectUrl);
 					return;
