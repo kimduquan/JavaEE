@@ -1,6 +1,6 @@
 set GRAALVM_HOME=C:\graalvm-ce-java11-22.1.0
 set PATH=%GRAALVM_HOME%/bin;%PATH%
-set JAVA8_HOME=C:\jdk8u332-b09
+set JAVA8_HOME=C:\jdk8u322-b06
 set JAVA11_HOME=C:\jdk-11.0.15+10
 set JAVA_HOME=%JAVA11_HOME%
 set PLUTO_HOME="C:\pluto-3.1.1"
