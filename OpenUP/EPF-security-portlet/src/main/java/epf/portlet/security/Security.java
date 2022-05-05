@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.portlet.security;
 
 import epf.client.portlet.security.CredentialView;
@@ -108,7 +105,7 @@ public class Security implements CredentialView, Serializable {
 		}
 		Token token;
 		try(Client client = clientUtil.newClient(securityUrl)){
-			client.authorization(rawToken);
+			client.authorization(rawToken.toCharArray());
 			token = epf.security.client.Security.authenticate(client);
 		}
 		token.setRawToken(rawToken);

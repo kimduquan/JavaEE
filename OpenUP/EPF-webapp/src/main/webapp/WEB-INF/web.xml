@@ -31,6 +31,10 @@
 	    <param-name>javax.faces.CLIENT_WINDOW_MODE</param-name>
 	    <param-value>url</param-value>
 	</context-param>
+	<context-param>
+	    <param-name>primefaces.THEME</param-name>
+	    <param-value>none</param-value>
+	</context-param>
 	<error-page>
 		<error-code>404</error-code>
 		<location>/webapp/404.xhtml</location>

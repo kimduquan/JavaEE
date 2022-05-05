@@ -83,15 +83,16 @@ public class SecurityAuthIdentityStore implements RememberMeIdentityStore {
 	public CredentialValidationResult validate(final RememberMeCredential credential) {
 		CredentialValidationResult result = CredentialValidationResult.NOT_VALIDATED_RESULT;
 		try {
-			final JwtClaims claims = JwtUtil.decode(credential.getToken());
+			final char[] token = credential.getToken().toCharArray();
+			final JwtClaims claims = JwtUtil.decode(token);
 			if(Naming.EPF.equals(claims.getIssuer())) {
-				final JwtClaims validClaims = jwtUtil.process(credential.getToken());
+				final JwtClaims validClaims = jwtUtil.process(token);
 				final Set<String> groups = new HashSet<>(validClaims.getStringListClaimValue(Claims.groups.name()));
-				final TokenPrincipal principal = new TokenPrincipal(validClaims.getSubject(), credential.getToken());
+				final TokenPrincipal principal = new TokenPrincipal(validClaims.getSubject(), token);
 				result = new CredentialValidationResult(principal, groups);
 			}
 			else if(securityAuth.getProvider(claims.getIssuer()).validateIDToken(credential.getToken(), FacesContext.getCurrentInstance().getExternalContext().getSessionId(false))) {
-				final IDTokenPrincipal principal = new IDTokenPrincipal(claims.getSubject(), credential.getToken().toCharArray(), claims.getClaimsMap());
+				final IDTokenPrincipal principal = new IDTokenPrincipal(claims.getSubject(), token, claims.getClaimsMap());
 				final Set<String> groups = new HashSet<>();
 				groups.add(Naming.Security.DEFAULT_ROLE);
 				result = new CredentialValidationResult(principal, groups);
@@ -109,13 +110,13 @@ public class SecurityAuthIdentityStore implements RememberMeIdentityStore {
 
 	@Override
 	public String generateLoginToken(final CallerPrincipal callerPrincipal, final Set<String> groups) {
-		String newToken = "";
+		char[] newToken = new char[0];
 		if(callerPrincipal instanceof TokenPrincipal) {
 			final TokenPrincipal principal = (TokenPrincipal) callerPrincipal;
 			newToken = principal.getRawToken();
 			try(Client client = gatewayUtil.newClient(Naming.SECURITY)){
 				client.authorization(principal.getRawToken());
-				newToken = Security.revoke(client, Duration.ofDays(1));
+				newToken = Security.revoke(client, Duration.ofDays(1)).toCharArray();
 				principal.setRememberToken(newToken);
 			} 
 			catch (Exception e) {
@@ -124,18 +125,19 @@ public class SecurityAuthIdentityStore implements RememberMeIdentityStore {
 		}
 		else if(callerPrincipal instanceof IDTokenPrincipal) {
 			final IDTokenPrincipal principal = (IDTokenPrincipal) callerPrincipal;
-			newToken = new String(principal.getId_token());
+			newToken = principal.getId_token();
 		}
-		return newToken;
+		return new String(newToken);
 	}
 
 	@Override
 	public void removeLoginToken(final String token) {
 		try {
-			final JwtClaims claims = JwtUtil.decode(token);
+			final char[] raw = token.toCharArray();
+			final JwtClaims claims = JwtUtil.decode(raw);
 			if(Naming.EPF.equals(claims.getIssuer())) {
 				try(Client client = gatewayUtil.newClient(Naming.SECURITY)){
-					client.authorization(token);
+					client.authorization(raw);
 					Security.logOut(client);
 				}
 			}

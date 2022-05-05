@@ -9,12 +9,10 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;

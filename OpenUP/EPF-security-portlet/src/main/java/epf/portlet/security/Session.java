@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.portlet.security;
 
 import javax.enterprise.context.SessionScoped;

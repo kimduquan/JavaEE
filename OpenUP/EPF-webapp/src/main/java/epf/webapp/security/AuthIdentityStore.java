@@ -69,7 +69,7 @@ public class AuthIdentityStore implements IdentityStore {
                 if(rawToken != null){
                 	final Set<String> groups = new HashSet<>();
                 	groups.add(Naming.Security.DEFAULT_ROLE);
-                	result = new CredentialValidationResult(new TokenPrincipal(credential.getCaller(), rawToken), groups);
+                	result = new CredentialValidationResult(new TokenPrincipal(credential.getCaller(), rawToken.toCharArray()), groups);
                 }
             }
         }
@@ -94,8 +94,9 @@ public class AuthIdentityStore implements IdentityStore {
     	try {
         	final TokenResponse tokenResponse = provider.accessToken(credential.getTokenRequest());
         	if(tokenResponse != null) {
-        		final JwtClaims claims = JwtUtil.decode(tokenResponse.getId_token());
-        		final IDTokenPrincipal principal = new IDTokenPrincipal(claims.getSubject(), tokenResponse.getId_token().toCharArray(), claims.getClaimsMap());
+        		final char[] idToken = tokenResponse.getId_token().toCharArray();
+        		final JwtClaims claims = JwtUtil.decode(idToken);
+        		final IDTokenPrincipal principal = new IDTokenPrincipal(claims.getSubject(), idToken, claims.getClaimsMap());
         		final Set<String> groups = new HashSet<>(Arrays.asList(Naming.Security.DEFAULT_ROLE));
         		result = new CredentialValidationResult(principal, groups);
         	}
@@ -112,10 +113,11 @@ public class AuthIdentityStore implements IdentityStore {
      * @throws Exception 
      */
     public CredentialValidationResult validate(final ImplicitCredential credential) throws Exception {
-    	final JwtClaims claims = JwtUtil.decode(credential.getAuthResponse().getId_token());
+    	final char[] idToken = credential.getAuthResponse().getId_token().toCharArray();
+    	final JwtClaims claims = JwtUtil.decode(idToken);
     	final Provider provider = securityAuth.getProvider(claims.getIssuer());
     	if(provider.validateIDToken(credential.getAuthResponse().getId_token(), credential.getSessionId())) {
-        	final IDTokenPrincipal principal = new IDTokenPrincipal(claims.getSubject(), credential.getAuthResponse().getId_token().toCharArray(), claims.getClaimsMap());
+        	final IDTokenPrincipal principal = new IDTokenPrincipal(claims.getSubject(), idToken, claims.getClaimsMap());
     		final Set<String> groups = new HashSet<>();
     		groups.add(Naming.Security.DEFAULT_ROLE);
     		return new CredentialValidationResult(principal, groups);

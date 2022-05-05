@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.portlet.security;
 
 import java.io.Serializable;
@@ -114,7 +111,7 @@ public class Principal implements PrincipalView, Serializable {
 		}
 		Token token;
 		try(Client client = clientUtil.newClient(securityUrl)){
-			client.authorization(rawToken);
+			client.authorization(rawToken.toCharArray());
 			token = epf.security.client.Security.authenticate(client);
 		}
 		token.setRawToken(rawToken);
