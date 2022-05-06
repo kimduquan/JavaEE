@@ -102,6 +102,8 @@ public class EntityCollector extends LazyDataModel<JsonObject> {
         final Integer maxResults = pageSize;
 		try(Client client = gateway.newClient(Naming.CACHE)){
 			client.authorization(token);
+			final Integer count = Cache.executeCountQuery(client, schema, target -> buildFilters(target.path(entity.getName()), filterBy.values()));
+			setRowCount(count);
         	try(Response response = Cache.executeQuery(client, schema, target -> buildFilters(target.path(entity.getName()), filterBy.values()), firstResult, maxResults, sort)){
         		try(InputStream stream = response.readEntity(InputStream.class)){
 					try(JsonReader reader = Json.createReader(stream)){
@@ -116,7 +118,6 @@ public class EntityCollector extends LazyDataModel<JsonObject> {
     			entities.forEach(object -> {
     				entityMap.put(object.get(entity.getId().getName()).toString(), object);
     			});
-    			this.setRowCount(entities.size());
         	}
         } 
 		catch (Exception e) {

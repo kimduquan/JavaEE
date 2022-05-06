@@ -73,6 +73,11 @@ public class PersistenceCache implements HealthCheck {
 	/**
 	 * 
 	 */
+	private transient Cache<String, Integer> queryCache;
+	
+	/**
+	 * 
+	 */
 	@PostConstruct
 	protected void postConstruct() {
 		manager = Caching.getCachingProvider().getCacheManager();
@@ -80,6 +85,11 @@ public class PersistenceCache implements HealthCheck {
 		persistenceConfig.setCacheLoaderFactory(new EntityCacheLoaderFactory(entityManager, schemaCache));
 		persistenceConfig.setReadThrough(true);
 		cache = manager.createCache(Naming.PERSISTENCE, persistenceConfig);
+		
+		final MutableConfiguration<String, Integer> queryConfig = new MutableConfiguration<>();
+		queryConfig.setCacheLoaderFactory(new QueryCacheLoaderFactory(entityManager, schemaCache));
+		queryConfig.setReadThrough(true);
+		queryCache = manager.createCache(Naming.Persistence.QUERY, queryConfig);
 	}
 	
 	/**
@@ -108,6 +118,10 @@ public class PersistenceCache implements HealthCheck {
 	
 	public Cache<String, Object> getCache(){
 		return cache;
+	}
+	
+	public Cache<String, Integer> getQueryCache(){
+		return queryCache;
 	}
 
 	@Override
@@ -158,6 +172,43 @@ public class PersistenceCache implements HealthCheck {
 	}
 	
 	/**
+	 * @param schema
+	 * @param paths
+	 * @param context
+	 * @return
+	 * @throws Exception
+	 */
+	public Response executeCountQuery(
+			final String schema, 
+			final List<PathSegment> paths,
+			final SecurityContext context) throws Exception {
+		final Entity<Object> entity = new Entity<>();
+    	if(!paths.isEmpty()){
+        	final PathSegment rootSegment = paths.get(0);
+        	final String entityName = rootSegment.getPath();
+        	@SuppressWarnings("unchecked")
+			final EntityType<Object> entityType = (EntityType<Object>) EntityTypeUtil.findEntityType(entityManager.getMetamodel(), entityName).orElseThrow(NotFoundException::new);
+        	EntityTypeUtil.getSchema(entityType).ifPresent(entitySchema -> {
+        		if(!entitySchema.equals(schema)) {
+        			throw new NotFoundException();
+        		}
+        	});
+        	entity.setType(entityType);
+        	final QueryBuilder queryBuilder = new QueryBuilder();
+        	final CriteriaQuery<Object> criteria = queryBuilder
+        			.metamodel(entityManager.getMetamodel())
+        			.criteria(entityManager.getCriteriaBuilder())
+        			.entity(entity)
+        			.paths(paths)
+        			.countOnly()
+        			.build();
+        	final TypedQuery<?> query = entityManager.createQuery(criteria);
+        	return Response.ok().header(Naming.Persistence.ENTITY_COUNT, query.getSingleResult()).build();
+        }
+    	throw new NotFoundException();
+	}
+	
+	/**
 	 * @param manager
 	 * @param criteria
 	 * @param firstResult
@@ -177,6 +228,7 @@ public class PersistenceCache implements HealthCheck {
         if(maxResults != null){
             query.setMaxResults(maxResults);
         }
-        return Response.ok(JsonUtil.toJsonArray(query.getResultList())).build();
+        final List<?> resultList = query.getResultList();
+        return Response.ok(JsonUtil.toJsonArray(resultList)).header(Naming.Persistence.ENTITY_COUNT, resultList.size()).build();
     }
 }

@@ -5,6 +5,7 @@ import java.util.function.Function;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -97,6 +98,40 @@ public interface Cache {
 	
 	/**
 	 * @param schema
+	 * @param entity
+	 * @return
+	 */
+	@HEAD
+	@Path("persistence/{schema}/{entity}")
+    Response countEntity(
+    		@PathParam("schema")
+            @NotNull
+            @NotBlank
+            final String schema,
+            @PathParam("entity")
+            @NotNull
+            @NotBlank
+            final String entity
+            );
+	
+	/**
+	 * @param client
+	 * @param schema
+	 * @param entity
+	 * @return
+	 */
+	static Integer countEntity(final Client client, final String schema, final String entity) {
+		final String count = client.request(
+    			target -> target.path(Naming.PERSISTENCE).path(schema).path(entity), 
+    			req -> req
+    			)
+				.head()
+				.getHeaderString(Naming.Persistence.ENTITY_COUNT);
+		return Integer.parseInt(count);
+	}
+	
+	/**
+	 * @param schema
 	 * @param paths
 	 * @param firstResult
 	 * @param maxResults
@@ -171,6 +206,46 @@ public interface Cache {
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.get();
+    }
+    
+    /**
+     * @param schema
+     * @param paths
+     * @param context
+     * @return
+     * @throws Exception
+     */
+    @HEAD
+    @Path("persistence-query/{schema}/{criteria: .+}")
+	Response executeCountQuery(
+    		@PathParam("schema")
+            @NotBlank
+            final String schema,
+            @PathParam("criteria")
+            final List<PathSegment> paths,
+            @Context
+            final SecurityContext context
+            ) throws Exception;
+    
+    /**
+     * @param client
+     * @param schema
+     * @param paths
+     * @return
+     */
+    static Integer executeCountQuery(
+    		final Client client,
+    		final String schema,
+    		final Function<WebTarget, WebTarget> paths){
+    	final String count = client.request(
+    			target -> paths.apply(
+    					target.path(Naming.Persistence.QUERY).path(schema)
+    					), 
+    			req -> req.accept(MediaType.APPLICATION_JSON)
+    			)
+    			.head()
+    			.getHeaderString(Naming.Persistence.ENTITY_COUNT);
+    	return Integer.parseInt(count);
     }
 	
 	/**

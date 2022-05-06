@@ -61,10 +61,6 @@ public class EntityCache {
             final String entityId
             ) {
 		final EntityKey key = schemaCache.getKey(schema, name, entityId);
-		Optional<Object> entity = Optional.empty();
-		if(cache.containsKey(key.toString())) {
-			entity = Optional.ofNullable(cache.get(key.toString()));
-		}
-		return entity;
+		return Optional.ofNullable(cache.get(key.toString()));
 	}
 }

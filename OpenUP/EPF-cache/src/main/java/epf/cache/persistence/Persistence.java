@@ -47,6 +47,11 @@ public class Persistence implements HealthCheck {
 	/**
 	 * 
 	 */
+	private transient QueryCache queryCache;
+	
+	/**
+	 * 
+	 */
 	private transient Client client;
 	
 	/**
@@ -78,6 +83,7 @@ public class Persistence implements HealthCheck {
 	@PostConstruct
 	protected void postConstruct() {
 		entityCache = new EntityCache(cache.getCache(), schemaCache);
+		queryCache = new QueryCache(cache.getQueryCache(), schemaCache);
 		try {
 			final URI messagingUrl = ConfigUtil.getURI(Naming.Messaging.MESSAGING_URL);
 			client = Messaging.connectToServer(messagingUrl.resolve(Naming.PERSISTENCE));
@@ -120,6 +126,15 @@ public class Persistence implements HealthCheck {
 	
 	/**
 	 * @param schema
+	 * @param entity
+	 * @return
+	 */
+	public Optional<Integer> countEntity(final String schema, final String entity) {
+		return queryCache.countEntity(schema, entity);
+	}
+	
+	/**
+	 * @param schema
 	 * @param paths
 	 * @param firstResult
 	 * @param maxResults
@@ -135,6 +150,21 @@ public class Persistence implements HealthCheck {
 			final List<String> sort) throws Exception {
 		return cache.executeQuery(schema, paths, firstResult, maxResults, context, sort);
 	}
+	
+	/**
+	 * @param schema
+	 * @param paths
+	 * @param context
+	 * @return
+	 * @throws Exception
+	 */
+	public Response executeCountQuery(
+			final String schema, 
+			final List<PathSegment> paths, 
+			final SecurityContext context)
+			throws Exception {
+		return cache.executeCountQuery(schema, paths, context);
+	}
 
 	@Override
 	public HealthCheckResponse call() {
@@ -148,6 +178,7 @@ public class Persistence implements HealthCheck {
 	public void postEvent(final EntityEvent event) {
 		if(event != null) {
 			try {
+				//queryCache.accept(event);
 				cache.accept(event);
 				entityCache.accept(event);
 				messages.add(new Message(event));

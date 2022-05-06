@@ -302,6 +302,16 @@ public interface Naming {
 	interface Persistence {
 		
 		/**
+		 *
+		 */
+		String QUERY = "persistence-query";
+		
+		/**
+		 *
+		 */
+		String ENTITY_COUNT = "entity-count";
+		
+		/**
 		 * 
 		 */
 		String PERSISTENCE = "epf.persistence";

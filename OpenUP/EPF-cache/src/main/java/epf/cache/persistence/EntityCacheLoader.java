@@ -38,7 +38,7 @@ public class EntityCacheLoader implements CacheLoader<String, Object> {
 		Object value = null;
 		final EntityKey entityKey = schemaCache.parseKey(key);
 		if(entityKey != null) {
-			final Optional<Class<?>> entityClass = schemaCache.getEntityClass(entityKey.getEntity());
+			final Optional<Class<?>> entityClass = schemaCache.getEntityClass(entityKey.getSchema(), entityKey.getEntity());
 			if(entityClass.isPresent()) {
 				value = manager.find(entityClass.get(), entityKey.getId());
 			}

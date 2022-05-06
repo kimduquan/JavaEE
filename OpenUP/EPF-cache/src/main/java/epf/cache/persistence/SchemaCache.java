@@ -51,6 +51,20 @@ public class SchemaCache {
 	}
 	
 	/**
+	 * @param entityCls
+	 * @return
+	 */
+	public Optional<QueryKey> getQueryKey(final Class<?> entityCls) {
+		final Optional<String> entitySchema = schemaUtil.getEntitySchema(entityCls);
+		final Optional<String> entityName = schemaUtil.getEntityName(entityCls);
+		if(entitySchema.isPresent() && entityName.isPresent()) {
+			final QueryKey queryKey = new QueryKey(entitySchema.get(), entityName.get());
+			return Optional.of(queryKey);
+		}
+		return Optional.empty();
+	}
+	
+	/**
 	 * @param schema
 	 * @param entityName
 	 * @param entityId
@@ -58,6 +72,15 @@ public class SchemaCache {
 	 */
 	public EntityKey getKey(final String schema, final String entityName, final Object entityId) {
 		return new EntityKey(schema, entityName, entityId);
+	}
+	
+	/**
+	 * @param schema
+	 * @param entityName
+	 * @return
+	 */
+	public QueryKey getQueryKey(final String schema, final String entityName) {
+		return new QueryKey(schema, entityName);
 	}
 	
 	/**
@@ -69,10 +92,18 @@ public class SchemaCache {
 	}
 	
 	/**
+	 * @param key
+	 * @return
+	 */
+	public Optional<QueryKey> parseQueryKey(final String key) {
+		return Optional.ofNullable(QueryKey.valueOf(key));
+	}
+	
+	/**
 	 * @param entityName
 	 * @return
 	 */
-	public Optional<Class<?>> getEntityClass(final String entityName){
+	public Optional<Class<?>> getEntityClass(final String schema, final String entityName){
 		return schemaUtil.getEntityClass(entityName);
 	}
 	

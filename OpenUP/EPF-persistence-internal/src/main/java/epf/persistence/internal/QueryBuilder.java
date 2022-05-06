@@ -48,6 +48,11 @@ public class QueryBuilder {
 	 *
 	 */
 	private transient List<String> sort;
+	
+	/**
+	 *
+	 */
+	private transient boolean countOnly = false;
 
 	/**
 	 * @param manager
@@ -93,16 +98,26 @@ public class QueryBuilder {
 	/**
 	 * @return
 	 */
+	public QueryBuilder countOnly() {
+		this.countOnly = true;
+		return this;
+	}
+	
+	/**
+	 * @return
+	 */
 	public CriteriaQuery<Object> build() {
-		return build(metamodel, criteria, entityObject, pathSegments.get(0), pathSegments, sort);
+		return build(metamodel, criteria, entityObject, pathSegments.get(0), pathSegments, sort, countOnly);
 	}
 	
 	/**
 	 * @param metamodel
-	 * @param builder
+	 * @param criteria
 	 * @param entity
 	 * @param rootSegment
 	 * @param paths
+	 * @param sort
+	 * @param countOnly
 	 * @return
 	 */
 	protected static CriteriaQuery<Object> build(
@@ -111,10 +126,11 @@ public class QueryBuilder {
 			final Entity<Object> entity, 
 			final PathSegment rootSegment,
 			final List<PathSegment> paths,
-			final List<String> sort) {
+			final List<String> sort,
+			final boolean countOnly) {
     	final EntityType<Object> rootType = entity.getType();
     	final Class<Object> rootClass = rootType.getJavaType();
-    	final CriteriaQuery<Object> rootQuery = criteria.createQuery(rootClass);
+    	final CriteriaQuery<Object> rootQuery = countOnly ? criteria.createQuery() : criteria.createQuery(rootClass);
     	final Root<Object> rootFrom = rootQuery.from(rootClass);
     	final List<Predicate> allParams = new ArrayList<>();
     	final MultivaluedMap<String, String> matrixParams = rootSegment.getMatrixParameters();
@@ -141,10 +157,20 @@ public class QueryBuilder {
                 		)
         		);
         if(parentJoin.get().isEmpty()){
-        	rootQuery.select(rootFrom);
+        	if(countOnly) {
+            	rootQuery.select(criteria.count(rootFrom));
+        	}
+        	else {
+            	rootQuery.select(rootFrom);
+        	}
         }
         else{
-            rootQuery.select(parentJoin.get().get());
+        	if(countOnly) {
+            	rootQuery.select(criteria.count(parentJoin.get().get()));
+        	}
+        	else {
+            	rootQuery.select(parentJoin.get().get());
+        	}
         }
         if(!allParams.isEmpty()){
             rootQuery.where(allParams.toArray(new Predicate[0]));

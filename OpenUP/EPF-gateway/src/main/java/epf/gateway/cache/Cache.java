@@ -6,8 +6,8 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.validation.constraints.NotBlank;
 import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -66,23 +66,73 @@ public class Cache {
 	 * @param uriInfo
 	 * @param req
 	 * @param schema
+	 * @param entity
+	 */
+	@HEAD
+	@Path("persistence/{schema}/{entity}")
+	public CompletionStage<Response> countEntity(
+			@Context final SecurityContext context,
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req,
+            @PathParam("schema") final String schema,
+            @PathParam("entity") final String entity
+            ) throws Exception {
+        return request.request(Naming.CACHE, context, headers, uriInfo, req, null);
+    }
+	
+	/**
+	 * @param context
+	 * @param headers
+	 * @param uriInfo
+	 * @param req
+	 * @param schema
 	 * @param paths
 	 */
 	@GET
     @Path("persistence-query/{schema}/{criteria: .+}")
     @Produces(MediaType.APPLICATION_JSON)
 	public CompletionStage<Response> executeQuery(
-    		@Context final SecurityContext context,
-            @Context final HttpHeaders headers, 
-            @Context final UriInfo uriInfo,
-            @Context final javax.ws.rs.core.Request req,
+    		@Context 
+    		final SecurityContext context,
+            @Context 
+            final HttpHeaders headers, 
+            @Context 
+            final UriInfo uriInfo,
+            @Context 
+            final javax.ws.rs.core.Request req,
     		@PathParam("schema")
-            @NotBlank
+            final String schema,
+            @PathParam("criteria")
+            final List<PathSegment> paths) throws Exception { 
+		return request.request(Naming.CACHE, context, headers, uriInfo, req, null);
+		}
+	
+	/**
+	 * @param context
+	 * @param headers
+	 * @param uriInfo
+	 * @param req
+	 * @param schema
+	 * @param paths
+	 */
+	@HEAD
+    @Path("persistence-query/{schema}/{criteria: .+}")
+	public CompletionStage<Response> executeCountQuery(
+			@Context 
+			final SecurityContext context,
+            @Context 
+            final HttpHeaders headers, 
+            @Context 
+            final UriInfo uriInfo,
+            @Context 
+            final javax.ws.rs.core.Request req,
+    		@PathParam("schema")
             final String schema,
             @PathParam("criteria")
             final List<PathSegment> paths) throws Exception {
-		return request.request(Naming.CACHE, context, headers, uriInfo, req, null);
-	}
+        		return request.request(Naming.CACHE, context, headers, uriInfo, req, null);
+        	}
 	
 	/**
 	 * @param headers
@@ -123,10 +173,14 @@ public class Cache {
 	@Path("security")
 	@Produces(MediaType.APPLICATION_JSON)
     public CompletionStage<Response> getToken(
-    		@Context final SecurityContext context,
-            @Context final HttpHeaders headers, 
-            @Context final UriInfo uriInfo,
-            @Context final javax.ws.rs.core.Request req) throws Exception {
+    		@Context 
+    		final SecurityContext context,
+            @Context 
+            final HttpHeaders headers, 
+            @Context 
+            final UriInfo uriInfo,
+            @Context 
+            final javax.ws.rs.core.Request req) throws Exception {
         return request.request(Naming.CACHE, context, headers, uriInfo, req, null);
     }
 }
