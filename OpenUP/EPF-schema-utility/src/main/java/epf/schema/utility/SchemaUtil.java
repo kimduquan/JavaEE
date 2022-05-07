@@ -1,6 +1,7 @@
 package epf.schema.utility;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -72,7 +73,7 @@ public class SchemaUtil {
 	/**
 	 * @param entityClasses
 	 */
-	public SchemaUtil(final Stream<Class<?>> entityClasses) {
+	public SchemaUtil(final List<Class<?>> entityClasses) {
 		entityClasses.forEach(entityClass -> entitySchemas.put(entityClass.getName(), computeEntitySchema(entityClass)));
 		entityClasses.forEach(entityClass -> {
 			final Optional<String> entityName = computeEntityName(entityClass);

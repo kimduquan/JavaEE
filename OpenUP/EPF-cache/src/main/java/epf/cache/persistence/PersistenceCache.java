@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.cache.Cache;
 import javax.cache.CacheManager;
 import javax.cache.Caching;
@@ -12,6 +13,7 @@ import javax.cache.configuration.MutableConfiguration;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
@@ -49,7 +51,7 @@ public class PersistenceCache implements HealthCheck {
 	private transient static final Logger LOGGER = LogManager.getLogger(PersistenceCache.class.getName());
 	
 	/**
-	 * 
+	 *
 	 */
 	@PersistenceContext(unitName = "EPF_Cache")
 	private transient EntityManager entityManager;
@@ -64,6 +66,12 @@ public class PersistenceCache implements HealthCheck {
 	 * 
 	 */
 	private transient CacheManager manager;
+	
+	/**
+	 *
+	 */
+	@PersistenceContext(unitName = "EPF_Cache")
+	private transient EntityManagerFactory factory;
 	
 	/**
 	 * 
@@ -82,14 +90,25 @@ public class PersistenceCache implements HealthCheck {
 	protected void postConstruct() {
 		manager = Caching.getCachingProvider().getCacheManager();
 		final MutableConfiguration<String, Object> persistenceConfig = new MutableConfiguration<>();
-		persistenceConfig.setCacheLoaderFactory(new EntityCacheLoaderFactory(entityManager, schemaCache.getSchemaUtil()));
+		persistenceConfig.setCacheLoaderFactory(new EntityCacheLoaderFactory(factory, schemaCache.getSchemaUtil()));
 		persistenceConfig.setReadThrough(true);
 		cache = manager.createCache(Naming.PERSISTENCE, persistenceConfig);
 		
 		final MutableConfiguration<String, Integer> queryConfig = new MutableConfiguration<>();
-		queryConfig.setCacheLoaderFactory(new QueryCacheLoaderFactory(entityManager, schemaCache.getSchemaUtil()));
+		queryConfig.setCacheLoaderFactory(new QueryCacheLoaderFactory(factory, schemaCache.getSchemaUtil()));
 		queryConfig.setReadThrough(true);
 		queryCache = manager.createCache(Naming.Persistence.QUERY, queryConfig);
+	}
+	
+	/**
+	 * 
+	 */
+	@PreDestroy
+	protected void preDestroy() {
+		queryCache.close();
+		cache.close();
+		manager.close();
+		factory.close();
 	}
 	
 	/**

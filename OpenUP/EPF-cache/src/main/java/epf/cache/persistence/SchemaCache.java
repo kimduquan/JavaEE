@@ -1,10 +1,11 @@
 package epf.cache.persistence;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
@@ -41,7 +42,7 @@ public class SchemaCache {
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		final Stream<Class<?>> entityClasses = entityManager.getMetamodel().getEntities().stream().map(entity -> entity.getBindableJavaType());
+		final List<Class<?>> entityClasses = entityManager.getMetamodel().getEntities().stream().map(entity -> entity.getBindableJavaType()).collect(Collectors.toList());
 		schemaUtil = new SchemaUtil(entityClasses);
 	}
 	

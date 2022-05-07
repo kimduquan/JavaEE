@@ -1,7 +1,7 @@
 package epf.cache.persistence;
 
 import javax.cache.configuration.Factory;
-import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import epf.schema.utility.SchemaUtil;
 
 /**
@@ -21,11 +21,11 @@ public class QueryCacheLoaderFactory implements Factory<QueryCacheLoader> {
 	private transient final QueryCacheLoader loader;
 	
 	/**
-	 * @param manager
-	 * @param schemaCache
+	 * @param factory
+	 * @param schemaUtil
 	 */
-	public QueryCacheLoaderFactory(final EntityManager manager, final SchemaUtil schemaUtil) {
-		loader = new QueryCacheLoader(manager, schemaUtil);
+	public QueryCacheLoaderFactory(final EntityManagerFactory factory, final SchemaUtil schemaUtil) {
+		loader = new QueryCacheLoader(factory, schemaUtil);
 	}
 
 	@Override

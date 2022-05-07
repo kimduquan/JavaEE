@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheLoaderException;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -21,7 +22,7 @@ public class QueryCacheLoader implements CacheLoader<String, Integer> {
 	/**
 	 * 
 	 */
-	private transient final EntityManager manager;
+	private transient final EntityManagerFactory factory;
 	
 	/**
 	 * 
@@ -29,28 +30,31 @@ public class QueryCacheLoader implements CacheLoader<String, Integer> {
 	private transient final SchemaUtil schemaUtil;
 	
 	/**
-	 * @param manager
+	 * @param factory
 	 * @param schemaUtil
 	 */
-	public QueryCacheLoader(final EntityManager manager, final SchemaUtil schemaUtil) {
-		this.manager = manager;
+	public QueryCacheLoader(final EntityManagerFactory factory, final SchemaUtil schemaUtil) {
+		this.factory = factory;
 		this.schemaUtil = schemaUtil;
 	}
 
 	@Override
 	public Integer load(final String key) throws CacheLoaderException {
+		Integer count = null;
 		final Optional<QueryKey> queryKey = QueryKey.parseString(key);
 		if(queryKey.isPresent()) {
 			final Optional<Class<?>> entityClass = schemaUtil.getEntityClass(queryKey.get().getEntity());
 			if(entityClass.isPresent()) {
+				final EntityManager manager = factory.createEntityManager();
 				final CriteriaBuilder builder = manager.getCriteriaBuilder();
 				final CriteriaQuery<Long> query = builder.createQuery(Long.class);
 				final Root<?> from = query.from(entityClass.get());
 				query.select(builder.count(from));
-				return manager.createQuery(query).getSingleResult().intValue();
+				count = manager.createQuery(query).getSingleResult().intValue();
+				manager.close();
 			}
 		}
-		return null;
+		return count;
 	}
 
 	@Override

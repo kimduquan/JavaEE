@@ -1,7 +1,7 @@
 package epf.cache.persistence;
 
 import javax.cache.configuration.Factory;
-import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import epf.schema.utility.SchemaUtil;
 
 /**
@@ -21,11 +21,11 @@ public class EntityCacheLoaderFactory implements Factory<EntityCacheLoader> {
 	private transient final EntityCacheLoader loader;
 	
 	/**
-	 * @param manager
-	 * @param schemaCache
+	 * @param factory
+	 * @param schemaUtil
 	 */
-	public EntityCacheLoaderFactory(final EntityManager manager, final SchemaUtil schemaUtil) {
-		loader = new EntityCacheLoader(manager, schemaUtil);
+	public EntityCacheLoaderFactory(final EntityManagerFactory factory, final SchemaUtil schemaUtil) {
+		loader = new EntityCacheLoader(factory, schemaUtil);
 	}
 
 	@Override
