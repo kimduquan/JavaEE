@@ -1,5 +1,6 @@
 package epf.cache.persistence;
 
+import java.util.Optional;
 import epf.util.StringUtil;
 
 /**
@@ -41,12 +42,12 @@ public class EntityKey {
 	 * @param key
 	 * @return
 	 */
-	public static EntityKey valueOf(final String key) {
+	public static Optional<EntityKey> parseString(final String key) {
 		final String[] fragments = StringUtil.split(key);
 		if(fragments.length == 3) {
-			return new EntityKey(fragments[0], fragments[1], fragments[2]);
+			return Optional.of(new EntityKey(fragments[0], fragments[1], fragments[2]));
 		}
-		return null;
+		return Optional.empty();
 	}
 
 	public String getSchema() {

@@ -1,5 +1,6 @@
 package epf.cache.persistence;
 
+import java.util.Optional;
 import epf.util.StringUtil;
 
 /**
@@ -35,12 +36,12 @@ public class QueryKey {
 	 * @param key
 	 * @return
 	 */
-	public static QueryKey valueOf(final String key) {
+	public static Optional<QueryKey> parseString(final String key) {
 		final String[] fragments = StringUtil.split(key);
 		if(fragments.length == 2) {
-			return new QueryKey(fragments[0], fragments[1]);
+			return Optional.of(new QueryKey(fragments[0], fragments[1]));
 		}
-		return null;
+		return Optional.empty();
 	}
 
 	public String getSchema() {

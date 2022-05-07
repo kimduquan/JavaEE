@@ -4,7 +4,12 @@ import java.lang.reflect.Field;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import epf.schema.utility.SchemaUtil;
 import epf.util.logging.LogManager;
 
@@ -23,7 +28,30 @@ public class SchemaCache {
 	/**
 	 * 
 	 */
-	private final transient SchemaUtil schemaUtil = new SchemaUtil();
+	private transient SchemaUtil schemaUtil;
+	
+	/**
+	 *
+	 */
+	@PersistenceContext(unitName = "EPF_Cache")
+	private transient EntityManager entityManager;
+	
+	/**
+	 * 
+	 */
+	@PostConstruct
+	protected void postConstruct() {
+		final Stream<Class<?>> entityClasses = entityManager.getMetamodel().getEntities().stream().map(entity -> entity.getBindableJavaType());
+		schemaUtil = new SchemaUtil(entityClasses);
+	}
+	
+	/**
+	 * 
+	 */
+	@PreDestroy
+	protected void preDestroy() {
+		schemaUtil.clear();
+	}
 	
 	/**
 	 * @param entity
@@ -58,8 +86,7 @@ public class SchemaCache {
 		final Optional<String> entitySchema = schemaUtil.getEntitySchema(entityCls);
 		final Optional<String> entityName = schemaUtil.getEntityName(entityCls);
 		if(entitySchema.isPresent() && entityName.isPresent()) {
-			final QueryKey queryKey = new QueryKey(entitySchema.get(), entityName.get());
-			return Optional.of(queryKey);
+			return Optional.of(new QueryKey(entitySchema.get(), entityName.get()));
 		}
 		return Optional.empty();
 	}
@@ -84,22 +111,6 @@ public class SchemaCache {
 	}
 	
 	/**
-	 * @param key
-	 * @return
-	 */
-	public EntityKey parseKey(final String key) {
-		return EntityKey.valueOf(key);
-	}
-	
-	/**
-	 * @param key
-	 * @return
-	 */
-	public Optional<QueryKey> parseQueryKey(final String key) {
-		return Optional.ofNullable(QueryKey.valueOf(key));
-	}
-	
-	/**
 	 * @param entityName
 	 * @return
 	 */
@@ -120,5 +131,9 @@ public class SchemaCache {
 			return Optional.ofNullable(idField.get().get(entity));
 		}
 		return entityId;
+	}
+
+	public SchemaUtil getSchemaUtil() {
+		return schemaUtil;
 	}
 }

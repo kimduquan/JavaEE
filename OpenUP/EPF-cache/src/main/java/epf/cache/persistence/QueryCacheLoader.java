@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import epf.schema.utility.SchemaUtil;
 
 /**
  * @author PC
@@ -25,22 +26,22 @@ public class QueryCacheLoader implements CacheLoader<String, Integer> {
 	/**
 	 * 
 	 */
-	private transient final SchemaCache schemaCache;
+	private transient final SchemaUtil schemaUtil;
 	
 	/**
 	 * @param manager
-	 * @param schemaCache
+	 * @param schemaUtil
 	 */
-	public QueryCacheLoader(final EntityManager manager, final SchemaCache schemaCache) {
+	public QueryCacheLoader(final EntityManager manager, final SchemaUtil schemaUtil) {
 		this.manager = manager;
-		this.schemaCache = schemaCache;
+		this.schemaUtil = schemaUtil;
 	}
 
 	@Override
 	public Integer load(final String key) throws CacheLoaderException {
-		final Optional<QueryKey> queryKey = schemaCache.parseQueryKey(key);
+		final Optional<QueryKey> queryKey = QueryKey.parseString(key);
 		if(queryKey.isPresent()) {
-			final Optional<Class<?>> entityClass = schemaCache.getEntityClass(queryKey.get().getSchema(), queryKey.get().getEntity());
+			final Optional<Class<?>> entityClass = schemaUtil.getEntityClass(queryKey.get().getEntity());
 			if(entityClass.isPresent()) {
 				final CriteriaBuilder builder = manager.getCriteriaBuilder();
 				final CriteriaQuery<Long> query = builder.createQuery(Long.class);

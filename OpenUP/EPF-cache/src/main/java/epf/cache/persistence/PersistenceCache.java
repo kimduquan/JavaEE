@@ -82,12 +82,12 @@ public class PersistenceCache implements HealthCheck {
 	protected void postConstruct() {
 		manager = Caching.getCachingProvider().getCacheManager();
 		final MutableConfiguration<String, Object> persistenceConfig = new MutableConfiguration<>();
-		persistenceConfig.setCacheLoaderFactory(new EntityCacheLoaderFactory(entityManager, schemaCache));
+		persistenceConfig.setCacheLoaderFactory(new EntityCacheLoaderFactory(entityManager, schemaCache.getSchemaUtil()));
 		persistenceConfig.setReadThrough(true);
 		cache = manager.createCache(Naming.PERSISTENCE, persistenceConfig);
 		
 		final MutableConfiguration<String, Integer> queryConfig = new MutableConfiguration<>();
-		queryConfig.setCacheLoaderFactory(new QueryCacheLoaderFactory(entityManager, schemaCache));
+		queryConfig.setCacheLoaderFactory(new QueryCacheLoaderFactory(entityManager, schemaCache.getSchemaUtil()));
 		queryConfig.setReadThrough(true);
 		queryCache = manager.createCache(Naming.Persistence.QUERY, queryConfig);
 	}

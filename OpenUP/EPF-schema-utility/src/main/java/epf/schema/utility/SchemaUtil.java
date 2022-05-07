@@ -37,14 +37,69 @@ public class SchemaUtil {
 	 * @param cls
 	 * @return
 	 */
-	public Optional<Field> getEntityIdField(final Class<?> cls) {
-		return entityIdFields.computeIfAbsent(cls.getName(), name -> {
-			final Optional<Field> idField = Stream.of(cls.getDeclaredFields())
-					.filter(field -> field.isAnnotationPresent(Id.class))
-					.findAny();
-			idField.ifPresent(f -> f.setAccessible(true));
-			return idField;
+	private Optional<Field> computeEntityIdField(final Class<?> cls) {
+		final Optional<Field> idField = Stream.of(cls.getDeclaredFields())
+				.filter(field -> field.isAnnotationPresent(Id.class))
+				.findAny();
+		idField.ifPresent(f -> f.setAccessible(true));
+		return idField;
+	}
+	
+	/**
+	 * @param cls
+	 * @return
+	 */
+	private Optional<String> computeEntityName(final Class<?> cls) {
+		Optional<String> name = Optional.empty();
+		if(cls.isAnnotationPresent(javax.persistence.Entity.class)) {
+			name = Optional.of(((javax.persistence.Entity)cls.getAnnotation(javax.persistence.Entity.class)).name());
+		}
+		return name;
+	}
+	
+	/**
+	 * @param cls
+	 * @return
+	 */
+	private Optional<String> computeEntitySchema(final Class<?> cls){
+		Optional<String> name = Optional.empty();
+		if(cls.isAnnotationPresent(javax.persistence.Entity.class)) {
+			name = Optional.of(((javax.persistence.Table)cls.getAnnotation(javax.persistence.Table.class)).schema());
+		}
+		return name;
+	}
+	
+	/**
+	 * @param entityClasses
+	 */
+	public SchemaUtil(final Stream<Class<?>> entityClasses) {
+		entityClasses.forEach(entityClass -> entitySchemas.put(entityClass.getName(), computeEntitySchema(entityClass)));
+		entityClasses.forEach(entityClass -> {
+			final Optional<String> entityName = computeEntityName(entityClass);
+			entityNames.put(entityClass.getName(), entityName);
+			if(entityName.isPresent()) {
+				this.entityClasses.put(entityName.get(), entityClass);
+			}
 		});
+		entityClasses.forEach(entityClass -> entityIdFields.put(entityClass.getName(), computeEntityIdField(entityClass)));
+	}
+	
+	/**
+	 * 
+	 */
+	public void clear() {
+		entityIdFields.clear();
+		entityClasses.clear();
+		entitySchemas.clear();
+		entityNames.clear();
+	}
+	
+	/**
+	 * @param cls
+	 * @return
+	 */
+	public Optional<Field> getEntityIdField(final Class<?> cls) {
+		return entityIdFields.computeIfAbsent(cls.getName(), name -> computeEntityIdField(cls));
 	}
 	
 	/**
@@ -52,15 +107,12 @@ public class SchemaUtil {
 	 * @return
 	 */
 	public Optional<String> getEntityName(final Class<?> cls) {
-		return entityNames.computeIfAbsent(cls.getName(), key -> {
-			Optional<String> name = Optional.empty();
-			if(cls.isAnnotationPresent(javax.persistence.Entity.class)) {
-				name = Optional.of(((javax.persistence.Entity)cls.getAnnotation(javax.persistence.Entity.class)).name());
-				if(name.isPresent()) {
-					entityClasses.put(name.get(), cls);
-				}
+		return entityNames.computeIfAbsent(cls.getName(), name -> {
+			final Optional<String> entityName = computeEntityName(cls);
+			if(entityName.isPresent()) {
+				entityClasses.putIfAbsent(entityName.get(), cls);
 			}
-			return name;
+			return entityName;
 		});
 	}
 	
@@ -69,13 +121,7 @@ public class SchemaUtil {
 	 * @return
 	 */
 	public Optional<String> getEntitySchema(final Class<?> cls){
-		return entitySchemas.computeIfAbsent(cls.getName(), key -> {
-			Optional<String> name = Optional.empty();
-			if(cls.isAnnotationPresent(javax.persistence.Entity.class)) {
-				name = Optional.of(((javax.persistence.Table)cls.getAnnotation(javax.persistence.Table.class)).schema());
-			}
-			return name;
-		});
+		return entitySchemas.computeIfAbsent(cls.getName(), key -> computeEntitySchema(cls));
 	}
 	
 	/**

@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheLoaderException;
 import javax.persistence.EntityManager;
+import epf.schema.utility.SchemaUtil;
 
 /**
  * @author PC
@@ -22,25 +23,25 @@ public class EntityCacheLoader implements CacheLoader<String, Object> {
 	/**
 	 * 
 	 */
-	private transient final SchemaCache schemaCache;
+	private transient final SchemaUtil schemaUtil;
 	
 	/**
 	 * @param manager
-	 * @param schemaCache
+	 * @param schemaUtil
 	 */
-	public EntityCacheLoader(final EntityManager manager, final SchemaCache schemaCache) {
+	public EntityCacheLoader(final EntityManager manager, final SchemaUtil schemaUtil) {
 		this.manager = manager;
-		this.schemaCache = schemaCache;
+		this.schemaUtil = schemaUtil;
 	}
 
 	@Override
 	public Object load(final String key) throws CacheLoaderException {
 		Object value = null;
-		final EntityKey entityKey = schemaCache.parseKey(key);
-		if(entityKey != null) {
-			final Optional<Class<?>> entityClass = schemaCache.getEntityClass(entityKey.getSchema(), entityKey.getEntity());
+		final Optional<EntityKey> entityKey = EntityKey.parseString(key);
+		if(entityKey.isPresent()) {
+			final Optional<Class<?>> entityClass = schemaUtil.getEntityClass(entityKey.get().getEntity());
 			if(entityClass.isPresent()) {
-				value = manager.find(entityClass.get(), entityKey.getId());
+				value = manager.find(entityClass.get(), entityKey.get().getId());
 			}
 		}
 		return value;
