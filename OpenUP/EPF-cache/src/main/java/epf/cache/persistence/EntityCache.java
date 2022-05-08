@@ -9,9 +9,12 @@ import javax.cache.Caching;
 import javax.cache.configuration.MutableConfiguration;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
+import epf.cache.persistence.event.EntityLoad;
+import epf.cache.util.EventQueue;
 import epf.naming.Naming;
 import epf.schema.utility.EntityEvent;
 import epf.schema.utility.PostPersist;
@@ -36,7 +39,13 @@ public class EntityCache implements HealthCheck {
 	 *
 	 */
 	@Inject
-	private transient EntityCacheLoaderFactory loaderFactory;
+	private transient EventQueue<EntityLoad> eventQueue;
+	
+	/**
+	 *
+	 */
+	@Inject
+	private transient ManagedExecutor executor;
 	
 	/**
 	 * 
@@ -48,9 +57,10 @@ public class EntityCache implements HealthCheck {
 	 */
 	@PostConstruct
 	protected void postConstruct() {
+		executor.submit(eventQueue);
 		final CacheManager manager = Caching.getCachingProvider().getCacheManager();
 		final MutableConfiguration<String, Object> config = new MutableConfiguration<>();
-		config.setCacheLoaderFactory(loaderFactory);
+		config.setCacheLoaderFactory(new LoaderFactory<String, Object, EntityLoad>(eventQueue.getEmitter(), EntityLoad::new));
 		config.setReadThrough(true);
 		entityCache = manager.createCache(Naming.PERSISTENCE, config);
 	}
