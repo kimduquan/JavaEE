@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheLoaderException;
 import epf.cache.persistence.event.CacheLoad;
-import epf.cache.util.EventEmitter;
+import epf.util.event.EventEmitter;
 
 /**
  * @param <K>

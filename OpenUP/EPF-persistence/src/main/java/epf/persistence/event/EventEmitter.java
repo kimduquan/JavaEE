@@ -21,8 +21,10 @@ public class EventEmitter {
 	
 	/**
 	 * @param event
+	 * @throws Exception 
+	 * @throws InterruptedException 
 	 */
-	public void send(@ObservesAsync final EmitterEvent event) {
-		emitter.send(event.getEvent());
+	public void send(@ObservesAsync final AsyncEvent event) throws Exception {
+		emitter.send(event.getEvent()).toCompletableFuture().get();
 	}
 }

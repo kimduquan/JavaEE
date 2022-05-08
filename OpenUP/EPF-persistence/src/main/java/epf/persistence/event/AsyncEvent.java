@@ -5,7 +5,7 @@ import epf.schema.utility.EntityEvent;
 /**
  * 
  */
-public class EmitterEvent {
+public class AsyncEvent {
 
 	/**
 	 *
@@ -15,7 +15,7 @@ public class EmitterEvent {
 	/**
 	 * @param event
 	 */
-	public EmitterEvent(final EntityEvent event) {
+	public AsyncEvent(final EntityEvent event) {
 		this.event = event;
 	}
 

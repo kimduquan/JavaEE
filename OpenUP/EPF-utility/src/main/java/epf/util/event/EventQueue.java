@@ -1,4 +1,4 @@
-package epf.cache.util;
+package epf.util.event;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;

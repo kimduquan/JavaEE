@@ -3,7 +3,7 @@ package epf.cache.persistence;
 import java.util.function.Supplier;
 import javax.cache.configuration.Factory;
 import epf.cache.persistence.event.CacheLoad;
-import epf.cache.util.EventEmitter;
+import epf.util.event.EventEmitter;
 
 /**
  * 

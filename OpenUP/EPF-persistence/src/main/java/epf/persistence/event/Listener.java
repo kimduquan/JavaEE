@@ -19,27 +19,27 @@ public class Listener {
 	 * 
 	 */
 	@Inject
-	transient Event<EmitterEvent> emitter;
+	transient Event<AsyncEvent> emitter;
 	
 	/**
 	 * @param event
 	 * @throws Exception
 	 */
 	public void postPersist(@Observes final PostPersist event) throws Exception {
-		emitter.fireAsync(new EmitterEvent(event)).toCompletableFuture().get();
+		emitter.fireAsync(new AsyncEvent(event)).toCompletableFuture().get();
 	}
 	
 	/**
 	 * @param event
 	 */
 	public void postRemove(@Observes final PostRemove event) throws Exception {
-		emitter.fireAsync(new EmitterEvent(event)).toCompletableFuture().get();
+		emitter.fireAsync(new AsyncEvent(event)).toCompletableFuture().get();
 	}
 	
 	/**
 	 * @param event
 	 */
 	public void postUpdate(@Observes final PostUpdate event) throws Exception {
-		emitter.fireAsync(new EmitterEvent(event)).toCompletableFuture().get();
+		emitter.fireAsync(new AsyncEvent(event)).toCompletableFuture().get();
 	}
 }
