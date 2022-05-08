@@ -65,14 +65,15 @@ public class QueryCache implements HealthCheck {
 	public void accept(final EntityEvent event) {
 		final Optional<QueryKey> queryKey = schemaCache.getQueryKey(event.getEntity().getClass());
 		if(queryKey.isPresent()) {
+			final String key = queryKey.get().toString();
 			if(event instanceof PostPersist) {
-				queryCache.putIfAbsent(queryKey.get().toString(), Integer.valueOf(0));
-				final Integer count = queryCache.get(queryKey.get().toString());
-				queryCache.replace(queryKey.get().toString(), count, count + 1);
+				queryCache.putIfAbsent(key, Integer.valueOf(0));
+				final Integer count = queryCache.get(key);
+				queryCache.replace(key, count, count + 1);
 			}
-			else if(event instanceof PostRemove) {
-				final Integer count = queryCache.get(queryKey.get().toString());
-				queryCache.replace(queryKey.get().toString(), count, count - 1);
+			else if(event instanceof PostRemove && queryCache.containsKey(key)) {
+				final Integer count = queryCache.get(key);
+				queryCache.replace(key, count, count - 1);
 			}
 		}
 	}

@@ -23,22 +23,23 @@ public class Listener {
 	
 	/**
 	 * @param event
+	 * @throws Exception
 	 */
-	public void postPersist(@Observes final PostPersist event) {
-		emitter.fireAsync(new EmitterEvent(event));
+	public void postPersist(@Observes final PostPersist event) throws Exception {
+		emitter.fireAsync(new EmitterEvent(event)).toCompletableFuture().get();
 	}
 	
 	/**
 	 * @param event
 	 */
-	public void postRemove(@Observes final PostRemove event) {
-		emitter.fireAsync(new EmitterEvent(event));
+	public void postRemove(@Observes final PostRemove event) throws Exception {
+		emitter.fireAsync(new EmitterEvent(event)).toCompletableFuture().get();
 	}
 	
 	/**
 	 * @param event
 	 */
-	public void postUpdate(@Observes final PostUpdate event) {
-		emitter.fireAsync(new EmitterEvent(event));
+	public void postUpdate(@Observes final PostUpdate event) throws Exception {
+		emitter.fireAsync(new EmitterEvent(event)).toCompletableFuture().get();
 	}
 }
