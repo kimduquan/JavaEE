@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import epf.cache.persistence.EntityKey;
 import epf.cache.persistence.SchemaCache;
 import epf.cache.persistence.event.EntityLoad;
+import epf.util.json.JsonUtil;
 
 /**
  * @author PC
@@ -40,7 +41,12 @@ public class EntityLoader implements CacheLoader<String, Object> {
 		if(entityKey.isPresent()) {
 			final Optional<Class<?>> entityClass = schemaCache.getSchemaUtil().getEntityClass(entityKey.get().getEntity());
 			if(entityClass.isPresent()) {
-				return manager.find(entityClass.get(), entityKey.get().getId());
+				final Object entity = manager.find(entityClass.get(), entityKey.get().getId());
+				if(entity != null) {
+					JsonUtil.toString(entity);
+					manager.detach(entity);
+				}
+				return entity;
 			}
 		}
 		return null;

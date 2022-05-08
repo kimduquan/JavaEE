@@ -112,7 +112,7 @@ public class Entities implements epf.persistence.client.Entities {
     	if(entityObject == null) {
     		return Response.status(Response.Status.NOT_FOUND).build();
     	}
-    	JsonUtil.toJson(entityObject);
+    	JsonUtil.toString(entityObject);
     	manager.remove(entityObject);
     	return Response.ok().build();
     }

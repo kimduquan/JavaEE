@@ -60,4 +60,15 @@ public interface JsonUtil {
 	static JsonObject empty() {
 		return Json.createObjectBuilder().build();
 	}
+	
+	/**
+	 * @param object
+	 * @return
+	 * @throws Exception 
+	 */
+	static String toString(final Object object) throws Exception {
+		try(Jsonb jsonb = JsonbBuilder.create()){
+			return jsonb.toJson(object);
+		}
+	}
 }
