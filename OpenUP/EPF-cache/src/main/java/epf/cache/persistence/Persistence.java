@@ -174,8 +174,8 @@ public class Persistence implements HealthCheck {
 			try {
 				cache.accept(event);
 				entityCache.accept(event);
-				messages.add(new Message(event));
 				queryCache.accept(event);
+				messages.add(new Message(event));
 			}
 			catch(Exception ex) {
 				LOGGER.log(Level.SEVERE, "[Persistence.postEvent]", ex);

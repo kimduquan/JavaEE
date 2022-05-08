@@ -1,6 +1,7 @@
 package epf.cache.persistence.event;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -14,7 +15,7 @@ public class CacheLoad<K, V> {
 	/**
 	 *
 	 */
-	private List<V> values;
+	private Map<K, V> entries;
 	
 	public List<K> getKeys() {
 		return keys;
@@ -22,10 +23,10 @@ public class CacheLoad<K, V> {
 	public void setKeys(final List<K> keys) {
 		this.keys = keys;
 	}
-	public List<V> getValues() {
-		return values;
+	public Map<K, V> getEntries() {
+		return entries;
 	}
-	public void setValues(final List<V> values) {
-		this.values = values;
+	public void setEntries(final Map<K, V> entries) {
+		this.entries = entries;
 	}
 }
