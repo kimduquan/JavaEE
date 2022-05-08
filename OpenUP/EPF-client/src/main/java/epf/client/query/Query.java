@@ -106,7 +106,7 @@ public interface Query {
 	 * @return
 	 */
 	@HEAD
-	@Path("query/{schema}/{entity}")
+	@Path("entity/{schema}/{entity}")
     Response countEntity(
     		@PathParam("schema")
             @NotNull
@@ -126,7 +126,7 @@ public interface Query {
 	 */
 	static Integer countEntity(final Client client, final String schema, final String entity) {
 		final String count = client.request(
-    			target -> target.path(Naming.QUERY).path(schema).path(entity), 
+    			target -> target.path(ENTITY).path(schema).path(entity), 
     			req -> req
     			)
 				.head()

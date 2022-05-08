@@ -443,7 +443,7 @@
                         <configuration>
                             <verifyTimeout>600</verifyTimeout>
                             <serverStartTimeout>600</serverStartTimeout>
-                            <applications>EPF-schedule,EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-registry,EPF-management,EPF-security</applications>
+                            <applications>EPF-schedule,EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-query,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-registry,EPF-management,EPF-security</applications>
                         </configuration>
                     </execution>
                     <!-- Stop the server -->
@@ -462,7 +462,7 @@
                     <deployPackages>dependencies</deployPackages>
 					<verifyTimeout>600</verifyTimeout>
 					<serverStartTimeout>600</serverStartTimeout>
-					<applications>EPF-schedule,EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-registry,EPF-management,EPF-security</applications>
+					<applications>EPF-schedule,EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-query,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-registry,EPF-management,EPF-security</applications>
                 </configuration>
             </plugin>
 			<plugin>

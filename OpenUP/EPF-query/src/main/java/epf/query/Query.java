@@ -21,7 +21,7 @@ import epf.query.persistence.PersistenceCache;
  *
  */
 @ApplicationScoped
-@Path(Naming.CACHE)
+@Path(Naming.QUERY)
 public class Query implements epf.client.query.Query {
 
 	/**
