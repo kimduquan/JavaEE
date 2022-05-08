@@ -1,7 +1,18 @@
 package epf.cache.persistence;
 
 import java.util.Optional;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.cache.Cache;
+import javax.cache.CacheManager;
+import javax.cache.Caching;
+import javax.cache.configuration.MutableConfiguration;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import org.eclipse.microprofile.health.HealthCheck;
+import org.eclipse.microprofile.health.HealthCheckResponse;
+import org.eclipse.microprofile.health.Readiness;
+import epf.naming.Naming;
 import epf.schema.utility.EntityEvent;
 import epf.schema.utility.PostPersist;
 import epf.schema.utility.PostRemove;
@@ -11,25 +22,42 @@ import epf.schema.utility.PostUpdate;
  * @author PC
  *
  */
-public class EntityCache {
+@ApplicationScoped
+@Readiness
+public class EntityCache implements HealthCheck {
 	
 	/**
 	 * 
 	 */
-	private transient final SchemaCache schemaCache;
+	@Inject
+	private transient SchemaCache schemaCache;
+	
+	/**
+	 *
+	 */
+	@Inject
+	private transient EntityCacheLoaderFactory loaderFactory;
 	
 	/**
 	 * 
 	 */
-	private transient final Cache<String, Object> cache;
+	private transient Cache<String, Object> entityCache;
 	
 	/**
-	 * @param cache
-	 * @param schemaCache
+	 * 
 	 */
-	public EntityCache(final Cache<String, Object> cache, final SchemaCache schemaCache) {
-		this.schemaCache = schemaCache;
-		this.cache = cache;
+	@PostConstruct
+	protected void postConstruct() {
+		final CacheManager manager = Caching.getCachingProvider().getCacheManager();
+		final MutableConfiguration<String, Object> config = new MutableConfiguration<>();
+		config.setCacheLoaderFactory(loaderFactory);
+		config.setReadThrough(true);
+		entityCache = manager.createCache(Naming.PERSISTENCE, config);
+	}
+	
+	@PreDestroy
+	protected void preDestroy() {
+		entityCache.close();
 	}
 
 	/**
@@ -39,13 +67,13 @@ public class EntityCache {
 		final Optional<EntityKey> key = schemaCache.getKey(event.getEntity());
 		if(key.isPresent()) {
 			if(event instanceof PostUpdate) {
-				cache.replace(key.get().toString(), event.getEntity());
+				entityCache.replace(key.get().toString(), event.getEntity());
 			}
 			else if(event instanceof PostPersist) {
-				cache.put(key.get().toString(), event.getEntity());
+				entityCache.put(key.get().toString(), event.getEntity());
 			}
 			else if(event instanceof PostRemove) {
-				cache.remove(key.get().toString());
+				entityCache.remove(key.get().toString());
 			}
 		}
 	}
@@ -61,6 +89,11 @@ public class EntityCache {
             final String entityId
             ) {
 		final EntityKey key = schemaCache.getKey(schema, name, entityId);
-		return Optional.ofNullable(cache.get(key.toString()));
+		return Optional.ofNullable(entityCache.get(key.toString()));
+	}
+
+	@Override
+	public HealthCheckResponse call() {
+		return HealthCheckResponse.up("EPF-persistence-entity-cache");
 	}
 }

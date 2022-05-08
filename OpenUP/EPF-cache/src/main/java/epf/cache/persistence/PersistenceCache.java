@@ -4,16 +4,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.cache.Cache;
-import javax.cache.CacheManager;
-import javax.cache.Caching;
-import javax.cache.configuration.MutableConfiguration;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
@@ -61,55 +54,6 @@ public class PersistenceCache implements HealthCheck {
 	 */
 	@Inject
 	private transient SchemaCache schemaCache;
-
-	/**
-	 * 
-	 */
-	private transient CacheManager manager;
-	
-	/**
-	 *
-	 */
-	@PersistenceContext(unitName = "EPF_Cache")
-	private transient EntityManagerFactory factory;
-	
-	/**
-	 * 
-	 */
-	private transient Cache<String, Object> cache;
-	
-	/**
-	 * 
-	 */
-	private transient Cache<String, Integer> queryCache;
-	
-	/**
-	 * 
-	 */
-	@PostConstruct
-	protected void postConstruct() {
-		manager = Caching.getCachingProvider().getCacheManager();
-		final MutableConfiguration<String, Object> persistenceConfig = new MutableConfiguration<>();
-		persistenceConfig.setCacheLoaderFactory(new EntityCacheLoaderFactory(factory, schemaCache.getSchemaUtil()));
-		persistenceConfig.setReadThrough(true);
-		cache = manager.createCache(Naming.PERSISTENCE, persistenceConfig);
-		
-		final MutableConfiguration<String, Integer> queryConfig = new MutableConfiguration<>();
-		queryConfig.setCacheLoaderFactory(new QueryCacheLoaderFactory(factory, schemaCache.getSchemaUtil()));
-		queryConfig.setReadThrough(true);
-		queryCache = manager.createCache(Naming.Persistence.QUERY, queryConfig);
-	}
-	
-	/**
-	 * 
-	 */
-	@PreDestroy
-	protected void preDestroy() {
-		queryCache.close();
-		cache.close();
-		manager.close();
-		factory.close();
-	}
 	
 	/**
 	 * @param event
@@ -133,14 +77,6 @@ public class PersistenceCache implements HealthCheck {
 		catch(Exception ex) {
 			LOGGER.log(Level.SEVERE, "[PersistenceCache.accept]", ex);
 		}
-	}
-	
-	public Cache<String, Object> getCache(){
-		return cache;
-	}
-	
-	public Cache<String, Integer> getQueryCache(){
-		return queryCache;
 	}
 
 	@Override

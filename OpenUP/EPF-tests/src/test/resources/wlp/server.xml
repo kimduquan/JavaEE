@@ -88,7 +88,7 @@
     </library>
     
     <library id="JCacheLib">
-        <file name="${shared.resource.dir}/epf/cache/hazelcast-3.12.12.jar"/>
+        <file name="${shared.resource.dir}/epf/cache/hazelcast-5.1.1.jar"/>
     </library>
     
     <library id="OpenCVLib">

@@ -6,49 +6,40 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheLoaderException;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-
-import epf.schema.utility.SchemaUtil;
+import javax.persistence.PersistenceContext;
 
 /**
  * @author PC
  *
  */
+@ApplicationScoped
 public class EntityCacheLoader implements CacheLoader<String, Object> {
 	
 	/**
-	 * 
+	 *
 	 */
-	private transient final EntityManagerFactory factory;
-	
+	@PersistenceContext(unitName = "EPF_Cache")
+	private transient EntityManager manager;
+
 	/**
-	 * 
+	 *
 	 */
-	private transient final SchemaUtil schemaUtil;
-	
-	/**
-	 * @param factory
-	 * @param schemaUtil
-	 */
-	public EntityCacheLoader(final EntityManagerFactory factory, final SchemaUtil schemaUtil) {
-		this.factory = factory;
-		this.schemaUtil = schemaUtil;
-	}
+	@Inject
+	private transient SchemaCache schemaCache;
 
 	@Override
 	public Object load(final String key) throws CacheLoaderException {
-		Object value = null;
 		final Optional<EntityKey> entityKey = EntityKey.parseString(key);
 		if(entityKey.isPresent()) {
-			final Optional<Class<?>> entityClass = schemaUtil.getEntityClass(entityKey.get().getEntity());
+			final Optional<Class<?>> entityClass = schemaCache.getSchemaUtil().getEntityClass(entityKey.get().getEntity());
 			if(entityClass.isPresent()) {
-				final EntityManager manager = factory.createEntityManager();
-				value = manager.find(entityClass.get(), entityKey.get().getId());
-				manager.close();
+				return manager.find(entityClass.get(), entityKey.get().getId());
 			}
 		}
-		return value;
+		return null;
 	}
 
 	@Override

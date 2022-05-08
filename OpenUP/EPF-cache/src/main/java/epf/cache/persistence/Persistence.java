@@ -42,16 +42,6 @@ public class Persistence implements HealthCheck {
 	/**
 	 * 
 	 */
-	private transient EntityCache entityCache;
-	
-	/**
-	 * 
-	 */
-	private transient QueryCache queryCache;
-	
-	/**
-	 * 
-	 */
 	private transient Client client;
 	
 	/**
@@ -68,8 +58,14 @@ public class Persistence implements HealthCheck {
 	/**
 	 * 
 	 */
-	@Inject
-	private transient SchemaCache schemaCache;
+	@Inject @Readiness
+	private transient EntityCache entityCache;
+	
+	/**
+	 * 
+	 */
+	@Inject @Readiness
+	private transient QueryCache queryCache;
 	
 	/**
 	 * 
@@ -82,8 +78,6 @@ public class Persistence implements HealthCheck {
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		entityCache = new EntityCache(cache.getCache(), schemaCache);
-		queryCache = new QueryCache(cache.getQueryCache(), schemaCache);
 		try {
 			final URI messagingUrl = ConfigUtil.getURI(Naming.Messaging.MESSAGING_URL);
 			client = Messaging.connectToServer(messagingUrl.resolve(Naming.PERSISTENCE));

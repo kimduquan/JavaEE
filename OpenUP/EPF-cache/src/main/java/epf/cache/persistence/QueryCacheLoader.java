@@ -6,55 +6,47 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheLoaderException;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import epf.schema.utility.SchemaUtil;
 
 /**
  * @author PC
  *
  */
+@ApplicationScoped
 public class QueryCacheLoader implements CacheLoader<String, Integer> {
 	
 	/**
-	 * 
+	 *
 	 */
-	private transient final EntityManagerFactory factory;
-	
+	@PersistenceContext(unitName = "EPF_Cache")
+	private transient EntityManager manager;
+
 	/**
-	 * 
+	 *
 	 */
-	private transient final SchemaUtil schemaUtil;
-	
-	/**
-	 * @param factory
-	 * @param schemaUtil
-	 */
-	public QueryCacheLoader(final EntityManagerFactory factory, final SchemaUtil schemaUtil) {
-		this.factory = factory;
-		this.schemaUtil = schemaUtil;
-	}
+	@Inject
+	private transient SchemaCache schemaCache;
 
 	@Override
 	public Integer load(final String key) throws CacheLoaderException {
-		Integer count = null;
 		final Optional<QueryKey> queryKey = QueryKey.parseString(key);
 		if(queryKey.isPresent()) {
-			final Optional<Class<?>> entityClass = schemaUtil.getEntityClass(queryKey.get().getEntity());
+			final Optional<Class<?>> entityClass = schemaCache.getSchemaUtil().getEntityClass(queryKey.get().getEntity());
 			if(entityClass.isPresent()) {
-				final EntityManager manager = factory.createEntityManager();
 				final CriteriaBuilder builder = manager.getCriteriaBuilder();
 				final CriteriaQuery<Long> query = builder.createQuery(Long.class);
 				final Root<?> from = query.from(entityClass.get());
 				query.select(builder.count(from));
-				count = manager.createQuery(query).getSingleResult().intValue();
-				manager.close();
+				return manager.createQuery(query).getSingleResult().intValue();
 			}
 		}
-		return count;
+		return null;
 	}
 
 	@Override

@@ -1,7 +1,18 @@
 package epf.cache.persistence;
 
 import java.util.Optional;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.cache.Cache;
+import javax.cache.CacheManager;
+import javax.cache.Caching;
+import javax.cache.configuration.MutableConfiguration;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import org.eclipse.microprofile.health.HealthCheck;
+import org.eclipse.microprofile.health.HealthCheckResponse;
+import org.eclipse.microprofile.health.Readiness;
+import epf.naming.Naming;
 import epf.schema.utility.EntityEvent;
 import epf.schema.utility.PostPersist;
 import epf.schema.utility.PostRemove;
@@ -10,25 +21,42 @@ import epf.schema.utility.PostRemove;
  * @author PC
  *
  */
-public class QueryCache {
+@ApplicationScoped
+@Readiness
+public class QueryCache implements HealthCheck {
 	
 	/**
 	 * 
 	 */
-	private transient final SchemaCache schemaCache;
+	@Inject
+	private transient SchemaCache schemaCache;
+	
+	/**
+	 *
+	 */
+	@Inject
+	private transient QueryCacheLoaderFactory loaderFactory;
 	
 	/**
 	 * 
 	 */
-	private transient final Cache<String, Integer> cache;
+	private transient Cache<String, Integer> queryCache;
 	
 	/**
-	 * @param cache
-	 * @param schemaCache
+	 * 
 	 */
-	public QueryCache(final Cache<String, Integer> cache, final SchemaCache schemaCache) {
-		this.schemaCache = schemaCache;
-		this.cache = cache;
+	@PostConstruct
+	protected void postConstruct() {
+		final CacheManager manager = Caching.getCachingProvider().getCacheManager();
+		final MutableConfiguration<String, Integer> config = new MutableConfiguration<>();
+		config.setCacheLoaderFactory(loaderFactory);
+		config.setReadThrough(true);
+		queryCache = manager.createCache(Naming.Persistence.QUERY, config);
+	}
+	
+	@PreDestroy
+	protected void preDestroy() {
+		queryCache.close();
 	}
 
 	/**
@@ -38,12 +66,13 @@ public class QueryCache {
 		final Optional<QueryKey> queryKey = schemaCache.getQueryKey(event.getEntity().getClass());
 		if(queryKey.isPresent()) {
 			if(event instanceof PostPersist) {
-				final Integer count = cache.get(queryKey.get().toString());
-				cache.replace(queryKey.get().toString(), count, count + 1);
+				queryCache.putIfAbsent(queryKey.get().toString(), Integer.valueOf(0));
+				final Integer count = queryCache.get(queryKey.get().toString());
+				queryCache.replace(queryKey.get().toString(), count, count + 1);
 			}
 			else if(event instanceof PostRemove) {
-				final Integer count = cache.get(queryKey.get().toString());
-				cache.replace(queryKey.get().toString(), count, count - 1);
+				final Integer count = queryCache.get(queryKey.get().toString());
+				queryCache.replace(queryKey.get().toString(), count, count - 1);
 			}
 		}
 	}
@@ -58,6 +87,11 @@ public class QueryCache {
             final String entity
             ) {
 		final QueryKey queryKey = schemaCache.getQueryKey(schema, entity);
-		return Optional.ofNullable(cache.get(queryKey.toString()));
+		return Optional.ofNullable(queryCache.get(queryKey.toString()));
+	}
+
+	@Override
+	public HealthCheckResponse call() {
+		return HealthCheckResponse.up("EPF-persistence-query-cache");
 	}
 }
