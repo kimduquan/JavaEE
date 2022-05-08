@@ -1,4 +1,4 @@
-package epf.cache.persistence.event;
+package epf.query.cache.event;
 
 import java.util.List;
 import java.util.Map;

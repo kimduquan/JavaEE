@@ -1,4 +1,4 @@
-package epf.cache.persistence;
+package epf.query.cache;
 
 import java.util.Optional;
 import javax.annotation.PostConstruct;
@@ -13,8 +13,10 @@ import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
-import epf.cache.persistence.event.QueryLoad;
+
 import epf.naming.Naming;
+import epf.query.cache.event.QueryLoad;
+import epf.query.cache.util.LoaderFactory;
 import epf.schema.utility.EntityEvent;
 import epf.schema.utility.PostPersist;
 import epf.schema.utility.PostRemove;
@@ -106,6 +108,6 @@ public class QueryCache implements HealthCheck {
 
 	@Override
 	public HealthCheckResponse call() {
-		return HealthCheckResponse.up("EPF-persistence-query-cache");
+		return HealthCheckResponse.up("EPF-query-cache");
 	}
 }

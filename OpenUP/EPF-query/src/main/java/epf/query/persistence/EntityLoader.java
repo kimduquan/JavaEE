@@ -1,4 +1,4 @@
-package epf.cache.persistence.internal;
+package epf.query.persistence;
 
 import java.util.Optional;
 import javax.enterprise.context.ApplicationScoped;
@@ -6,9 +6,9 @@ import javax.enterprise.event.ObservesAsync;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import epf.cache.persistence.EntityKey;
-import epf.cache.persistence.SchemaCache;
-import epf.cache.persistence.event.EntityLoad;
+import epf.query.cache.EntityKey;
+import epf.query.cache.SchemaCache;
+import epf.query.cache.event.EntityLoad;
 import epf.util.json.JsonUtil;
 
 /**

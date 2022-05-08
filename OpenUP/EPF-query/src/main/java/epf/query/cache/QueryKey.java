@@ -1,4 +1,4 @@
-package epf.cache.persistence;
+package epf.query.cache;
 
 import java.util.Optional;
 import epf.util.StringUtil;
@@ -7,7 +7,7 @@ import epf.util.StringUtil;
  * @author PC
  *
  */
-public class EntityKey {
+public class QueryKey {
 
 	/**
 	 * 
@@ -17,35 +17,29 @@ public class EntityKey {
 	 * 
 	 */
 	private final String entity;
-	/**
-	 * 
-	 */
-	private final Object id;
 	
 	/**
 	 * @param schema
 	 * @param entity
-	 * @param id
 	 */
-	protected EntityKey(final String schema, final String entity, final Object id) {
+	public QueryKey(final String schema, final String entity) {
 		this.schema = schema;
 		this.entity = entity;
-		this.id = id;
 	}
 	
 	@Override
 	public String toString() {
-		return StringUtil.join(schema, entity, String.valueOf(id));
+		return StringUtil.join(schema, entity);
 	}
 	
 	/**
 	 * @param key
 	 * @return
 	 */
-	public static Optional<EntityKey> parseString(final String key) {
+	public static Optional<QueryKey> parseString(final String key) {
 		final String[] fragments = StringUtil.split(key);
-		if(fragments.length == 3) {
-			return Optional.of(new EntityKey(fragments[0], fragments[1], fragments[2]));
+		if(fragments.length == 2) {
+			return Optional.of(new QueryKey(fragments[0], fragments[1]));
 		}
 		return Optional.empty();
 	}
@@ -56,9 +50,5 @@ public class EntityKey {
 
 	public String getEntity() {
 		return entity;
-	}
-
-	public Object getId() {
-		return id;
 	}
 }

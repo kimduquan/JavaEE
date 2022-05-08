@@ -768,6 +768,7 @@
 		<module>EPF-logging</module>
 		<module>EPF-lang</module>
 		<module>EPF-cache</module>
+		<module>EPF-query</module>
 		<module>EPF-registry</module>
 		<module>EPF-management</module>
 		<module>EPF-security-auth</module>

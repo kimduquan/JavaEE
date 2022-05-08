@@ -158,7 +158,7 @@ public class PersistenceCache implements HealthCheck {
         			.countOnly()
         			.build();
         	final TypedQuery<?> query = entityManager.createQuery(criteria);
-        	return Response.ok().header(Naming.Persistence.ENTITY_COUNT, query.getSingleResult()).build();
+        	return Response.ok().header(Naming.Query.ENTITY_COUNT, query.getSingleResult()).build();
         }
     	throw new NotFoundException();
 	}
@@ -184,6 +184,6 @@ public class PersistenceCache implements HealthCheck {
             query.setMaxResults(maxResults);
         }
         final List<?> resultList = query.getResultList();
-        return Response.ok(JsonUtil.toJsonArray(resultList)).header(Naming.Persistence.ENTITY_COUNT, resultList.size()).build();
+        return Response.ok(JsonUtil.toJsonArray(resultList)).header(Naming.Query.ENTITY_COUNT, resultList.size()).build();
     }
 }

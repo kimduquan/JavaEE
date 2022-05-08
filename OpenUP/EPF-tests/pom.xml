@@ -38,6 +38,7 @@
         <liberty.env.epf_messaging_url>ws://localhost:9080/messaging/messaging/</liberty.env.epf_messaging_url>
         <liberty.env.epf_lang_url>ws://localhost:9080/lang/lang/</liberty.env.epf_lang_url>
         <liberty.env.epf_cache_url>http://localhost:9080/cache/cache/</liberty.env.epf_cache_url>
+        <liberty.env.epf_query_url>http://localhost:9080/query/query/</liberty.env.epf_query_url>
         <liberty.env.epf_registry_url>http://localhost:9080/registry/registry/</liberty.env.epf_registry_url>
 		<liberty.env.epf_management_url>http://localhost:9080/management/management/</liberty.env.epf_management_url>
 		<liberty.env.epf_portlet_url>http://localhost:8080/pluto/portal</liberty.env.epf_portlet_url>
@@ -246,6 +247,12 @@
         </dependency>
         <dependency>
             <groupId>openup</groupId>
+            <artifactId>EPF-query</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
             <artifactId>EPF-security</artifactId>
             <version>${project.version}</version>
             <type>war</type>
@@ -353,6 +360,7 @@
                         <epf.messaging.url>ws://localhost:${httpPort}/messaging/messaging/</epf.messaging.url>
                         <epf.lang.url>ws://localhost:${httpPort}/lang/lang/</epf.lang.url>
                         <epf.cache.url>http://localhost:${httpPort}/cache/cache/</epf.cache.url>
+                        <epf.query.url>http://localhost:${httpPort}/query/query/</epf.query.url>
                         <epf.portlet.url>http://localhost:${portalPort}/pluto/portal</epf.portlet.url>
                         <epf.webapp.url>https://localhost:${httpsPort}/webapp/</epf.webapp.url>
                         <epf.health.url>http://localhost:${httpPort}/health/</epf.health.url>

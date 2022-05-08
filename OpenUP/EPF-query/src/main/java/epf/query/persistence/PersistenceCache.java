@@ -1,4 +1,4 @@
-package epf.cache.persistence;
+package epf.query.persistence;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +23,7 @@ import epf.naming.Naming;
 import epf.persistence.internal.Entity;
 import epf.persistence.internal.QueryBuilder;
 import epf.persistence.internal.util.EntityTypeUtil;
+import epf.query.cache.SchemaCache;
 import epf.schema.utility.EntityEvent;
 import epf.schema.utility.PostPersist;
 import epf.schema.utility.PostRemove;
@@ -158,7 +159,7 @@ public class PersistenceCache implements HealthCheck {
         			.countOnly()
         			.build();
         	final TypedQuery<?> query = entityManager.createQuery(criteria);
-        	return Response.ok().header(Naming.Persistence.ENTITY_COUNT, query.getSingleResult()).build();
+        	return Response.ok().header(Naming.Query.ENTITY_COUNT, query.getSingleResult()).build();
         }
     	throw new NotFoundException();
 	}
@@ -184,6 +185,6 @@ public class PersistenceCache implements HealthCheck {
             query.setMaxResults(maxResults);
         }
         final List<?> resultList = query.getResultList();
-        return Response.ok(JsonUtil.toJsonArray(resultList)).header(Naming.Persistence.ENTITY_COUNT, resultList.size()).build();
+        return Response.ok(JsonUtil.toJsonArray(resultList)).header(Naming.Query.ENTITY_COUNT, resultList.size()).build();
     }
 }

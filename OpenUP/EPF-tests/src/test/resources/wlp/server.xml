@@ -57,6 +57,9 @@
     <application id="EPF-cache" name="EPF-cache" context-root="cache" location="EPF-cache-1.0.0.war" startAfterRef="EPF-messaging,EPF-security" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
+    <application id="EPF-query" name="EPF-query" context-root="query" location="EPF-query-1.0.0.war" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
 	<application id="EPF-file" name="EPF-file" context-root="file" location="EPF-file-1.0.0.war" startAfterRef="EPF-messaging" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
@@ -177,6 +180,14 @@
             javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
             libraryRef="H2JDBCLib" />
         <properties URL="jdbc:h2:~/EPF-cache;AUTO_SERVER=TRUE;AUTO_RECONNECT=TRUE" user="test" password="123456" />
+    </dataSource>
+    <dataSource id="epf_query" jndiName="jdbc/epf_query">
+        <jdbcDriver 
+            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
+            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
+            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
+            libraryRef="H2JDBCLib" />
+        <properties URL="jdbc:h2:~/EPF-query;AUTO_SERVER=TRUE;AUTO_RECONNECT=TRUE" user="test" password="123456" />
     </dataSource>
 
     <keyStore id="defaultKeyStore" password="password"/>

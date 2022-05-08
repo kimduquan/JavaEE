@@ -1,4 +1,4 @@
-package epf.client.cache;
+package epf.client.query;
 
 import java.util.List;
 import java.util.function.Function;
@@ -18,15 +18,19 @@ import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import epf.client.util.Client;
-import epf.security.schema.Token;
 import epf.naming.Naming;
 
 /**
  * @author PC
  *
  */
-@Path(Naming.CACHE)
-public interface Cache {
+@Path(Naming.QUERY)
+public interface Query {
+	
+	/**
+	 *
+	 */
+	String ENTITY = "entity";
 	
 	/**
 	 * 
@@ -49,7 +53,7 @@ public interface Cache {
 	 * @return
 	 */
 	@GET
-    @Path("persistence/{schema}/{entity}/{id}")
+    @Path("entity/{schema}/{entity}/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
     Response getEntity(
     		@PathParam("schema")
@@ -75,7 +79,7 @@ public interface Cache {
 	 */
 	static <T> T getEntity(final Client client, final Class<T> cls, final String schema, final String entity, final String entityId) {
 		return client.request(
-    			target -> target.path(Naming.PERSISTENCE).path(schema).path(entity).path(entityId), 
+    			target -> target.path(ENTITY).path(schema).path(entity).path(entityId), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.get(cls);
@@ -90,7 +94,7 @@ public interface Cache {
 	 */
 	static Response getEntity(final Client client, final String schema, final String entity, final String entityId) {
 		return client.request(
-    			target -> target.path(Naming.PERSISTENCE).path(schema).path(entity).path(entityId), 
+    			target -> target.path(ENTITY).path(schema).path(entity).path(entityId), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
 				.get();
@@ -102,7 +106,7 @@ public interface Cache {
 	 * @return
 	 */
 	@HEAD
-	@Path("persistence/{schema}/{entity}")
+	@Path("query/{schema}/{entity}")
     Response countEntity(
     		@PathParam("schema")
             @NotNull
@@ -122,7 +126,7 @@ public interface Cache {
 	 */
 	static Integer countEntity(final Client client, final String schema, final String entity) {
 		final String count = client.request(
-    			target -> target.path(Naming.PERSISTENCE).path(schema).path(entity), 
+    			target -> target.path(Naming.QUERY).path(schema).path(entity), 
     			req -> req
     			)
 				.head()
@@ -139,7 +143,7 @@ public interface Cache {
 	 * @return
 	 */
 	@GET
-    @Path("persistence-query/{schema}/{criteria: .+}")
+    @Path("query/{schema}/{criteria: .+}")
     @Produces(MediaType.APPLICATION_JSON)
 	Response executeQuery(
     		@PathParam("schema")
@@ -177,7 +181,7 @@ public interface Cache {
             ) {
     	return client.request(
     			target -> paths.apply(
-    					target.path(Naming.PERSISTENCE + "-query").path(schema).queryParam(FIRST, firstResult).queryParam(MAX, maxResults).queryParam(SORT, (Object[])sort)
+    					target.path(Naming.QUERY).path(schema).queryParam(FIRST, firstResult).queryParam(MAX, maxResults).queryParam(SORT, (Object[])sort)
     					), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
@@ -201,7 +205,7 @@ public interface Cache {
     		final String... sort){
     	return client.request(
     			target -> paths.apply(
-    					target.path(Naming.PERSISTENCE + "-query").path(schema).queryParam(FIRST, firstResult).queryParam(MAX, maxResults).queryParam(SORT, (Object[])sort)
+    					target.path(Naming.QUERY).path(schema).queryParam(FIRST, firstResult).queryParam(MAX, maxResults).queryParam(SORT, (Object[])sort)
     					), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
@@ -216,7 +220,7 @@ public interface Cache {
      * @throws Exception
      */
     @HEAD
-    @Path("persistence-query/{schema}/{criteria: .+}")
+    @Path("query/{schema}/{criteria: .+}")
 	Response executeCountQuery(
     		@PathParam("schema")
             @NotBlank
@@ -239,7 +243,7 @@ public interface Cache {
     		final Function<WebTarget, WebTarget> paths){
     	final String count = client.request(
     			target -> paths.apply(
-    					target.path(Naming.Persistence.QUERY).path(schema)
+    					target.path(Naming.QUERY).path(schema)
     					), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
@@ -247,26 +251,4 @@ public interface Cache {
     			.getHeaderString(Naming.Query.ENTITY_COUNT);
     	return Integer.parseInt(count);
     }
-	
-	/**
-	 * @param tokenId
-	 * @return
-	 */
-	@GET
-    @Path(Naming.SECURITY)
-	@Produces(MediaType.APPLICATION_JSON)
-	Token getToken(@QueryParam("tid") final String tokenId);
-	
-	/**
-	 * @param client
-	 * @param tokenId
-	 * @return
-	 */
-	static Token getToken(final Client client, final String tokenId) {
-		return client
-				.request(target -> target.path(Naming.SECURITY).queryParam("tid", tokenId), 
-						req -> req.accept(MediaType.APPLICATION_JSON)
-						)
-				.get(Token.class);
-	}
 }

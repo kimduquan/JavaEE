@@ -50,7 +50,7 @@ public class Cache implements epf.client.cache.Cache {
 	public Response countEntity(final String schema, final String entity) {
 		final Optional<Integer> count = persistence.countEntity(schema, entity);
 		if(count.isPresent()) {
-			return Response.ok().header(Naming.Persistence.ENTITY_COUNT, count.get()).build();
+			return Response.ok().header(Naming.Query.ENTITY_COUNT, count.get()).build();
 		}
 		else {
 			return Response.status(Status.NOT_FOUND).build();

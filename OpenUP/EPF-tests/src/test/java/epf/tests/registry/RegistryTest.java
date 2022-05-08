@@ -76,6 +76,7 @@ public class RegistryTest {
 	    	expected.add(baseUri.resolve("registry/registry/"));
 	    	expected.add(baseUri.resolve("security/security/"));
 	    	expected.add(baseUri.resolve("cache/cache/"));
+	    	expected.add(baseUri.resolve("query/query/"));
 	    	expected.add(baseUri.resolve("script/script/"));
 	    	expected.add(baseUri.resolve("management/management/"));
 	    	expected.add(baseUri.resolve("rules/rules/"));

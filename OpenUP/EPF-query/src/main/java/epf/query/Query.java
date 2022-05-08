@@ -1,4 +1,4 @@
-package epf.cache;
+package epf.query;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,10 +11,10 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.health.Readiness;
-import epf.cache.persistence.Persistence;
-import epf.cache.security.Security;
-import epf.security.schema.Token;
 import epf.naming.Naming;
+import epf.query.cache.EntityCache;
+import epf.query.cache.QueryCache;
+import epf.query.persistence.PersistenceCache;
 
 /**
  * @author PC
@@ -22,19 +22,25 @@ import epf.naming.Naming;
  */
 @ApplicationScoped
 @Path(Naming.CACHE)
-public class Cache implements epf.client.cache.Cache {
-	
-	/**
-	 * 
-	 */
-	@Inject @Readiness
-	private transient Security security;
+public class Query implements epf.client.query.Query {
 
 	/**
 	 * 
 	 */
 	@Inject @Readiness
-	private transient Persistence persistence;
+	private transient EntityCache entityCache;
+	
+	/**
+	 * 
+	 */
+	@Inject @Readiness
+	private transient QueryCache queryCache;
+	
+	/**
+	 * 
+	 */
+	@Inject @Readiness
+	private transient PersistenceCache persistence;
 	
 	@Override
     public Response getEntity(
@@ -42,24 +48,19 @@ public class Cache implements epf.client.cache.Cache {
             final String name,
             final String entityId
             ) {
-		final Optional<Object> entity = persistence.getEntity(schema, name, entityId);
+		final Optional<Object> entity = entityCache.getEntity(schema, name, entityId);
 		return Response.ok(entity.orElseThrow(NotFoundException::new)).build();
 	}
 
 	@Override
 	public Response countEntity(final String schema, final String entity) {
-		final Optional<Integer> count = persistence.countEntity(schema, entity);
+		final Optional<Integer> count = queryCache.countEntity(schema, entity);
 		if(count.isPresent()) {
-			return Response.ok().header(Naming.Persistence.ENTITY_COUNT, count.get()).build();
+			return Response.ok().header(Naming.Query.ENTITY_COUNT, count.get()).build();
 		}
 		else {
 			return Response.status(Status.NOT_FOUND).build();
 		}
-	}
-
-	@Override
-	public Token getToken(final String tokenId) {
-		return security.getToken(tokenId);
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package epf.cache.persistence;
+package epf.query.cache;
 
 import java.lang.reflect.Field;
 import java.util.List;

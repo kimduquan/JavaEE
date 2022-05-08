@@ -1,4 +1,4 @@
-package epf.cache;
+package epf.query;
 
 import java.io.Serializable;
 import java.io.StreamCorruptedException;

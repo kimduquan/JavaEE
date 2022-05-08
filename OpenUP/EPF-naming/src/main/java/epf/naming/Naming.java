@@ -307,11 +307,6 @@ public interface Naming {
 		String QUERY = "persistence-query";
 		
 		/**
-		 *
-		 */
-		String ENTITY_COUNT = "entity-count";
-		
-		/**
 		 * 
 		 */
 		String PERSISTENCE = "epf.persistence";
@@ -394,6 +389,27 @@ public interface Naming {
 		 */
 		String PLANNING_URL = "epf.planning.url";
 		
+	}
+	
+	/**
+	 *
+	 */
+	String QUERY = "query";
+	
+	/**
+	 * 
+	 */
+	interface Query {
+		
+		/**
+		 *
+		 */
+		String QUERY_URL = "epf.query.url";
+		
+		/**
+		 *
+		 */
+		String ENTITY_COUNT = "entity-count";
 	}
 	
 	/**

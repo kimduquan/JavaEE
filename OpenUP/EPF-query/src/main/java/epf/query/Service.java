@@ -1,4 +1,4 @@
-package epf.cache;
+package epf.query;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.ApplicationPath;
