@@ -213,4 +213,49 @@ public interface Security {
     			req -> req.accept(MediaType.TEXT_PLAIN))
     			.put(Entity.form(form), String.class);
     }
+
+    /**
+     * @param token
+     * @return
+     * @throws Exception
+     */
+    @Path("auth")
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    Token authenticateIDToken(
+            @FormParam("provider")
+            final String provider,
+            @FormParam("session")
+            final String session,
+            @FormParam("token")
+            final String token,
+            @MatrixParam(Naming.Management.TENANT)
+            final String tenant,
+            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_HOST)
+            final List<String> forwardedHost,
+            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PORT)
+            final List<String> forwardedPort,
+            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PROTO)
+            final List<String> forwardedProto) throws Exception;
+    
+    /**
+     * @param client
+     * @param provider
+     * @param session
+     * @param token
+     * @return
+     */
+    static Token authenticateIDToken(
+    		final Client client, 
+    		final String provider, 
+    		final String session, 
+    		final String token) {
+    	return client.request(
+    			target -> target, 
+    			req -> req.accept(MediaType.APPLICATION_JSON)
+    			)
+    			.post(Entity.form(new Form().param("provider", provider).param("session", session).param("token", token)))
+    			.readEntity(Token.class);
+    }
 }

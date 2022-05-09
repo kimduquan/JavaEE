@@ -13,6 +13,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import org.jose4j.jwk.HttpsJwks;
 import org.jose4j.jwt.JwtClaims;
+import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.keys.resolvers.JwksVerificationKeyResolver;
 import epf.security.auth.core.TokenErrorResponse;
@@ -41,6 +42,11 @@ public class StandardProvider implements Provider {
 	private transient final URI discoveryUrl;
 	
 	/**
+	 *
+	 */
+	private transient final String clientId;
+	
+	/**
 	 * 
 	 */
 	private transient final char[] clientSecret;
@@ -56,25 +62,42 @@ public class StandardProvider implements Provider {
 	private transient HttpsJwks jwks;
 	
 	/**
+	 * 
+	 */
+	private transient JwtConsumer jwtConsumer;
+	
+	/**
 	 * @param discoveryUrl
 	 * @param clientSecret
+	 * @param clientId
 	 */
-	public StandardProvider(final URI discoveryUrl, final char[] clientSecret) {
+	public StandardProvider(final URI discoveryUrl, final char[] clientSecret, final String clientId) {
 		this.discoveryUrl = discoveryUrl;
 		this.clientSecret = clientSecret;
+		this.clientId = clientId;
 	}
 
 	@Override
-	public ProviderMetadata discovery() {
+	public ProviderMetadata discovery() throws Exception {
 		final Client client = ClientBuilder.newClient();
 		metadata = client.target(discoveryUrl).request(MediaType.APPLICATION_JSON).get(ProviderMetadata.class);
 		client.close();
 		jwks = new HttpsJwks(metadata.getJwks_uri());
+		jwtConsumer = new JwtConsumerBuilder()
+				.setExpectedAudience(clientId)
+				.setExpectedIssuer(metadata.getIssuer())
+				.setRequireExpirationTime()
+				.setRequireIssuedAt()
+				.setRequireJwtId()
+				.setRequireNotBefore()
+				.setRequireSubject()
+				.setVerificationKeyResolver(new JwksVerificationKeyResolver(jwks.getJsonWebKeys()))
+	            .build();
 		return metadata;
 	}
 
 	@Override
-	public TokenResponse accessToken(final TokenRequest tokenRequest) throws TokenErrorResponse {
+	public TokenResponse accessToken(final TokenRequest tokenRequest) throws TokenErrorResponse, Exception {
 		if(metadata == null) {
 			discovery();
 		}
@@ -105,28 +128,22 @@ public class StandardProvider implements Provider {
 	}
 
 	@Override
-	public boolean validateIDToken(final String idToken, final String sessionId) {
+	public boolean validateIDToken(final String idToken, final String sessionId) throws Exception {
 		if(metadata == null) {
 			discovery();
 		}
 		boolean isValid = false;
 		try {
-			final JwksVerificationKeyResolver jwksResolver = new JwksVerificationKeyResolver(jwks.getJsonWebKeys());
-			final JwtClaims claims = new JwtConsumerBuilder()
-			.setVerificationKeyResolver(jwksResolver)
-			.setExpectedIssuer(metadata.getIssuer())
-			.setSkipDefaultAudienceValidation()
-			.build()
-			.processToClaims(idToken);
+			final JwtClaims claims = jwtConsumer.processToClaims(idToken);
 			isValid = true;
-			if(isValid && claims.getAudience().size() > 1) {
-				isValid = claims.getClaimValue("azp") != null;
+			if(claims.getAudience().size() > 1) {
+				final String azp = claims.getClaimValueAsString("azp");
+				isValid = azp != null;
+				if(isValid) {
+					isValid = clientId.equals(azp);
+				}
 			}
-			/*if(isValid) {
-				isValid = "RS256".equals(claims.getClaimValue("alg")) || Arrays.asList(metadata.getId_token_signing_alg_values_supported()).contains(claims.getClaimValue("alg"));
-			}*/
 			if(isValid) {
-				isValid = false;
 				final String nonce = claims.getClaimValueAsString("nonce");
 				if(nonce != null && !nonce.isEmpty()) {
 					isValid = nonce.equals(CryptoUtil.hash(sessionId));

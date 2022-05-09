@@ -119,19 +119,22 @@ public class AuthPage implements AuthView, Serializable {
 	}
 	
 	/**
+	 * @param sessionId
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	private String buildAuthRequestNonce() throws Exception {
-		final String sessionId = externalContext.getSessionId(true);
+	private String buildAuthRequestNonce(final String sessionId) throws Exception {
 		return CryptoUtil.hash(sessionId);
 	}
 
 	@Override
 	public String loginWithGoogle() throws Exception {
+		final String sessionId = externalContext.getSessionId(true);
 		final AuthRequest authRequest = new AuthRequest();
-		authRequest.setNonce(buildAuthRequestNonce());
+		authRequest.setNonce(buildAuthRequestNonce(sessionId));
 		authRequest.setState(buildAuthRequestState("Code"));
+		codeFlow.setProvider(epf.naming.Naming.Security.Auth.GOOGLE);
+		codeFlow.setSessionId(sessionId);
 		final ProviderMetadata metadata = securityAuth.initGoogleProvider(codeFlow, authRequest);
 		codeFlow.setProviderMetadata(metadata);
 		codeFlow.setAuthRequest(authRequest);
@@ -142,9 +145,12 @@ public class AuthPage implements AuthView, Serializable {
 
 	@Override
 	public String loginWithFacebook() throws Exception {
+		final String sessionId = externalContext.getSessionId(true);
 		final ImplicitAuthRequest authRequest = new ImplicitAuthRequest();
-		authRequest.setNonce(buildAuthRequestNonce());
+		authRequest.setNonce(buildAuthRequestNonce(sessionId));
 		authRequest.setState(buildAuthRequestState("Implicit"));
+		implicitFlow.setProvider(epf.naming.Naming.Security.Auth.FACEBOOK);
+		implicitFlow.setSessionId(sessionId);
 		final ProviderMetadata metadata = securityAuth.initFacebookProvider(implicitFlow, authRequest);
 		implicitFlow.setProviderMetadata(metadata);
 		implicitFlow.setAuthRequest(authRequest);
@@ -169,7 +175,7 @@ public class AuthPage implements AuthView, Serializable {
 			tokenRequest.setClient_id(codeFlow.getAuthRequest().getClient_id());
 			tokenRequest.setCode(codeFlow.getAuthResponse().getCode());
 			tokenRequest.setRedirect_uri(codeFlow.getAuthRequest().getRedirect_uri());
-			final AuthCodeCredential credential = new AuthCodeCredential(codeFlow.getProviderMetadata(), tokenRequest, codeFlow);
+			final AuthCodeCredential credential = new AuthCodeCredential(codeFlow.getProviderMetadata(), tokenRequest, codeFlow.getProvider(), codeFlow.getSessionId());
 			final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(true);
 			authParams.setRememberMe(true);
 			final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
@@ -207,7 +213,7 @@ public class AuthPage implements AuthView, Serializable {
 			authResponse.setToken_type(request.getParameter("token_type"));
 			implicitFlow.setAuthResponse(authResponse);
 			
-			final ImplicitCredential credential = new ImplicitCredential(authResponse, sessionId);
+			final ImplicitCredential credential = new ImplicitCredential(authResponse, implicitFlow.getProvider(), sessionId);
 			final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(true);
 			authParams.setRememberMe(true);
 			final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
@@ -250,10 +256,10 @@ public class AuthPage implements AuthView, Serializable {
 	 * @throws Exception
 	 */
 	public String login() throws Exception {
-		if("Google".equals(provider)) {
+		if(epf.naming.Naming.Security.Auth.GOOGLE.equals(provider)) {
 			return loginWithGoogle();
 		}
-		else if("Facebook".equals(provider)) {
+		else if(epf.naming.Naming.Security.Auth.FACEBOOK.equals(provider)) {
 			return loginWithFacebook();
 		}
 		return "";

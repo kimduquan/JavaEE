@@ -19,6 +19,7 @@ import org.eclipse.microprofile.jwt.Claims;
 import org.jose4j.jwt.JwtClaims;
 import epf.client.util.Client;
 import epf.naming.Naming;
+import epf.security.auth.util.JwtUtil;
 import epf.security.client.Security;
 import epf.util.config.ConfigUtil;
 import epf.util.logging.LogManager;
@@ -26,7 +27,6 @@ import epf.util.security.KeyUtil;
 import epf.webapp.ConfigSource;
 import epf.webapp.GatewayUtil;
 import epf.webapp.security.TokenPrincipal;
-import epf.webapp.security.util.JwtUtil;
 
 /**
  * @author PC

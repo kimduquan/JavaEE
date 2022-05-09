@@ -68,9 +68,9 @@ public class SecurityAuth {
 	protected void postConstruct() {
 		try {
 			googleDiscoveryUrl = new URI(config.getProperty(Naming.Security.Auth.GOOGLE_PROVIDER));
-			googleProvider = new StandardProvider(googleDiscoveryUrl, config.getProperty(Naming.Security.Auth.GOOGLE_CLIENT_SECRET).toCharArray());
+			googleProvider = new StandardProvider(googleDiscoveryUrl, config.getProperty(Naming.Security.Auth.GOOGLE_CLIENT_SECRET).toCharArray(), config.getProperty(Naming.Security.Auth.GOOGLE_CLIENT_ID));
 			facebookDiscoveryUrl = new URI(config.getProperty(Naming.Security.Auth.FACEBOOK_PROVIDER));
-			facebookProvider = new StandardProvider(facebookDiscoveryUrl, config.getProperty(Naming.Security.Auth.FACEBOOK_CLIENT_SECRET).toCharArray());
+			facebookProvider = new StandardProvider(facebookDiscoveryUrl, config.getProperty(Naming.Security.Auth.FACEBOOK_CLIENT_SECRET).toCharArray(), config.getProperty(Naming.Security.Auth.FACEBOOK_CLIENT_ID));
 		} 
 		catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "[SecurityAuth.providers]");
@@ -87,7 +87,7 @@ public class SecurityAuth {
 		authRequest.setClient_id(config.getProperty(Naming.Security.Auth.GOOGLE_CLIENT_ID));
 		authRequest.setRedirect_uri(config.getProperty(Naming.Security.Auth.AUTH_URL));
 		final ProviderMetadata metadata = authFlow.getProviderConfig(googleDiscoveryUrl);
-		providers.put(metadata.getIssuer(), googleProvider);
+		providers.put(epf.naming.Naming.Security.Auth.GOOGLE, googleProvider);
 		return metadata;
 	}
 	
@@ -101,15 +101,15 @@ public class SecurityAuth {
 		authRequest.setClient_id(config.getProperty(Naming.Security.Auth.FACEBOOK_CLIENT_ID));
 		authRequest.setRedirect_uri(config.getProperty(Naming.Security.Auth.AUTH_URL));
 		final ProviderMetadata metadata = authFlow.getProviderConfig(facebookDiscoveryUrl);
-		providers.put(metadata.getIssuer(), facebookProvider);
+		providers.put(epf.naming.Naming.Security.Auth.FACEBOOK, facebookProvider);
 		return metadata;
 	}
 	
 	/**
-	 * @param issuer
+	 * @param provider
 	 * @return
 	 */
-	public Provider getProvider(final String issuer) {
-		return providers.get(issuer);
+	public Provider getProvider(final String provider) {
+		return providers.get(provider);
 	}
 }

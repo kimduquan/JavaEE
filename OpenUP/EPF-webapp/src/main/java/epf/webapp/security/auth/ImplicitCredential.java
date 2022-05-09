@@ -1,13 +1,12 @@
 package epf.webapp.security.auth;
 
-import javax.security.enterprise.credential.Credential;
 import epf.security.auth.core.ImplicitAuthResponse;
 
 /**
  * @author PC
  *
  */
-public class ImplicitCredential implements Credential {
+public class ImplicitCredential extends Credential {
 
 	/**
 	 * 
@@ -15,24 +14,16 @@ public class ImplicitCredential implements Credential {
 	private transient final ImplicitAuthResponse authResponse;
 	
 	/**
-	 * 
-	 */
-	private transient final String sessionId;
-	
-	/**
 	 * @param implicitAuthResponse
+	 * @param provider
 	 * @param sessionId
 	 */
-	public ImplicitCredential(final ImplicitAuthResponse implicitAuthResponse, final String sessionId) {
+	public ImplicitCredential(final ImplicitAuthResponse implicitAuthResponse, final String provider, final String sessionId) {
+		super(provider, sessionId);
 		this.authResponse = implicitAuthResponse;
-		this.sessionId = sessionId;
 	}
 
 	public ImplicitAuthResponse getAuthResponse() {
 		return authResponse;
-	}
-
-	public String getSessionId() {
-		return sessionId;
 	}
 }

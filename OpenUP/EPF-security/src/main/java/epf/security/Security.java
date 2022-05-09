@@ -1,6 +1,7 @@
 package epf.security;
 
 import java.io.Serializable;
+import java.net.URI;
 import java.net.URL;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -23,6 +25,7 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.security.enterprise.credential.Password;
 import javax.security.enterprise.identitystore.CredentialValidationResult.Status;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
@@ -31,7 +34,11 @@ import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.jwt.config.Names;
+import org.jose4j.jwt.JwtClaims;
 import epf.naming.Naming;
+import epf.security.auth.Provider;
+import epf.security.auth.StandardProvider;
+import epf.security.auth.util.JwtUtil;
 import epf.security.client.jwt.TokenUtil;
 import epf.security.internal.Session;
 import epf.security.internal.store.OTPSessionStore;
@@ -76,6 +83,11 @@ public class Security implements epf.security.client.Security, epf.security.clie
     private transient PublicKey publicKey;
     
     /**
+     *
+     */
+    private transient final Map<String, Provider> authProviders = new ConcurrentHashMap<>();
+    
+    /**
      * 
      */
     @Inject
@@ -112,6 +124,48 @@ public class Security implements epf.security.client.Security, epf.security.clie
     /**
      * 
      */
+    @ConfigProperty(name = Naming.Security.Auth.GOOGLE_PROVIDER)
+	@Inject
+	transient String googleDiscoveryUrl;
+    
+    /**
+     * 
+     */
+    @ConfigProperty(name = Naming.Security.Auth.GOOGLE_CLIENT_ID)
+	@Inject
+	transient String googleClientId;
+    
+    /**
+     * 
+     */
+    @ConfigProperty(name = Naming.Security.Auth.GOOGLE_CLIENT_SECRET)
+	@Inject
+	transient String googleClientSecret;
+    
+    /**
+     * 
+     */
+    @ConfigProperty(name = Naming.Security.Auth.FACEBOOK_PROVIDER)
+	@Inject
+	transient String facebookDiscoveryUrl;
+    
+    /**
+     * 
+     */
+    @ConfigProperty(name = Naming.Security.Auth.FACEBOOK_CLIENT_ID)
+	@Inject
+	transient String facebookClientId;
+    
+    /**
+     * 
+     */
+    @ConfigProperty(name = Naming.Security.Auth.FACEBOOK_CLIENT_SECRET)
+	@Inject
+	transient String facebookClientSecret;
+    
+    /**
+     * 
+     */
     @Inject
     transient IdentityStore identityStore;
     
@@ -141,6 +195,8 @@ public class Security implements epf.security.client.Security, epf.security.clie
         try {
             privateKey = KeyUtil.generatePrivate("RSA", privateKeyText, Base64.getDecoder(), "UTF-8");
             publicKey = KeyUtil.generatePublic("RSA", publicKeyText, Base64.getDecoder(), "UTF-8");
+            authProviders.put(Naming.Security.Auth.GOOGLE, new StandardProvider(new URI(this.googleDiscoveryUrl), this.googleClientSecret.toCharArray(), this.googleClientId));
+            authProviders.put(Naming.Security.Auth.FACEBOOK, new StandardProvider(new URI(this.facebookDiscoveryUrl), this.facebookClientSecret.toCharArray(), this.facebookClientId));
         } 
         catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "postConstruct", ex);
@@ -342,5 +398,42 @@ public class Security implements epf.security.client.Security, epf.security.clie
 			event.fire(token);
 			return token.getRawToken();
 			});
+	}
+
+	@Override
+	public Token authenticateIDToken(
+			final String provider, 
+			final String session, 
+			final String token,
+			final String tenant,
+            final List<String> forwardedHost,
+            final List<String> forwardedPort,
+            final List<String> forwardedProto) throws Exception {
+		final Provider authProvider = authProviders.get(provider);
+		if(authProvider == null) {
+			throw new BadRequestException();
+		}
+		if(!authProvider.validateIDToken(token, session)) {
+			throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED));
+		}
+		final JwtClaims claims = JwtUtil.decode(token.toCharArray());
+		final Set<String> audience = buildAudience(null, forwardedHost, forwardedPort, forwardedProto);
+		final Set<String> groups = new HashSet<>();
+		groups.add(Naming.Security.DEFAULT_ROLE);
+		final Map<String, Object> newClaims = new HashMap<>();
+		if(tenant != null) {
+			newClaims.put(Naming.Management.TENANT, tenant);
+		}
+		final Token newToken = new Token();
+		newToken.setAudience(audience);
+		newToken.setClaims(newClaims);
+		newToken.setExpirationTime(claims.getExpirationTime().getValue());
+		newToken.setGroups(groups);
+		newToken.setIssuedAtTime(claims.getIssuedAt().getValue());
+		newToken.setIssuer(issuer);
+		newToken.setName(claims.getSubject());
+		newToken.setSubject(claims.getSubject());
+		final TokenBuilder builder = new TokenBuilder(newToken, privateKey, publicKey);
+		return builder.build();
 	}
 }

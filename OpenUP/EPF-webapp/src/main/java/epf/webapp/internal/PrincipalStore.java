@@ -9,11 +9,11 @@ import javax.enterprise.event.Observes;
 import javax.faces.push.Push;
 import javax.faces.push.PushContext;
 import javax.inject.Inject;
+import epf.security.auth.util.JwtUtil;
 import epf.webapp.messaging.TextMessage;
 import epf.webapp.naming.Naming;
 import epf.webapp.security.TokenPrincipal;
 import epf.webapp.security.auth.IDTokenPrincipal;
-import epf.webapp.security.util.JwtUtil;
 
 /**
  * @author PC

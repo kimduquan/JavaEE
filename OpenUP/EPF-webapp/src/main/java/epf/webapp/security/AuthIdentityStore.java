@@ -19,11 +19,11 @@ import epf.webapp.security.auth.AuthCodeCredential;
 import epf.webapp.security.auth.IDTokenPrincipal;
 import epf.webapp.security.auth.ImplicitCredential;
 import epf.webapp.security.auth.SecurityAuth;
-import epf.webapp.security.util.JwtUtil;
 import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.security.auth.Provider;
 import epf.security.auth.core.TokenResponse;
+import epf.security.auth.util.JwtUtil;
 import epf.security.client.Security;
 
 /**
@@ -90,7 +90,7 @@ public class AuthIdentityStore implements IdentityStore {
      */
     public CredentialValidationResult validate(final AuthCodeCredential credential) {
     	CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
-    	final Provider provider = securityAuth.getProvider(credential.getProviderMetadata().getIssuer());
+    	final Provider provider = securityAuth.getProvider(credential.getProvider());
     	try {
         	final TokenResponse tokenResponse = provider.accessToken(credential.getTokenRequest());
         	if(tokenResponse != null) {
@@ -115,7 +115,7 @@ public class AuthIdentityStore implements IdentityStore {
     public CredentialValidationResult validate(final ImplicitCredential credential) throws Exception {
     	final char[] idToken = credential.getAuthResponse().getId_token().toCharArray();
     	final JwtClaims claims = JwtUtil.decode(idToken);
-    	final Provider provider = securityAuth.getProvider(claims.getIssuer());
+    	final Provider provider = securityAuth.getProvider(credential.getProvider());
     	if(provider.validateIDToken(credential.getAuthResponse().getId_token(), credential.getSessionId())) {
         	final IDTokenPrincipal principal = new IDTokenPrincipal(claims.getSubject(), idToken, claims.getClaimsMap());
     		final Set<String> groups = new HashSet<>();

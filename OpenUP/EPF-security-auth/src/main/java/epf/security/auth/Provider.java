@@ -1,8 +1,5 @@
 package epf.security.auth;
 
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import epf.security.auth.core.TokenErrorResponse;
 import epf.security.auth.core.TokenRequest;
 import epf.security.auth.core.TokenResponse;
@@ -14,27 +11,25 @@ import epf.security.auth.discovery.ProviderMetadata;
  *
  */
 public interface Provider {
-
+	
 	/**
 	 * @return
 	 */
-	@Path(".well-known/openid-configuration")
-	@Produces(MediaType.APPLICATION_JSON)
-	ProviderMetadata discovery();
+	ProviderMetadata discovery() throws Exception;
 	
 	/**
 	 * @param request
 	 * @return
 	 * @throws TokenErrorResponse
 	 */
-	TokenResponse accessToken(final TokenRequest tokenRequest) throws TokenErrorResponse;
+	TokenResponse accessToken(final TokenRequest tokenRequest) throws TokenErrorResponse, Exception;
 	
 	/**
 	 * @param idToken
 	 * @param sessionId
 	 * @return
 	 */
-	boolean validateIDToken(final String idToken, final String sessionId);
+	boolean validateIDToken(final String idToken, final String sessionId) throws Exception;
 	
 	/**
 	 * @param accessToken

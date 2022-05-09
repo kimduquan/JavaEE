@@ -1,4 +1,4 @@
-package epf.webapp.security.util;
+package epf.security.auth.util;
 
 import java.security.PublicKey;
 import org.jose4j.jwt.JwtClaims;

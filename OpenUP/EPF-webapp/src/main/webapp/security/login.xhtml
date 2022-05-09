@@ -62,10 +62,10 @@
                                             <!-- <f:ajax execute="@form" render="@form" /> -->
                                         </h:commandLink>
                                         <hr/>
-                                        <h:link styleClass="btn btn-google btn-user btn-block" outcome="auth/openid"><f:param name="provider" value="Google" />
+                                        <h:link styleClass="btn btn-google btn-user btn-block" outcome="auth/openid"><f:param name="provider" value="google" />
                                             <i class="fab fa-google fa-fw"></i><h:outputFormat value="#{i18n['epf.security.login.with']}"><f:param value = "Google" /></h:outputFormat>
                                         </h:link>
-                                        <h:link styleClass="btn btn-facebook btn-user btn-block" outcome="auth/openid"><f:param name="provider" value="Facebook" />
+                                        <h:link styleClass="btn btn-facebook btn-user btn-block" outcome="auth/openid"><f:param name="provider" value="facebook" />
                                             <i class="fab fa-facebook-f fa-fw"></i><h:outputFormat value="#{i18n['epf.security.login.with']}"><f:param value = "Facebook" /></h:outputFormat>
                                         </h:link>
                                     </h:form>

@@ -130,4 +130,27 @@ public class Security {
             @Context final javax.ws.rs.core.Request req) throws Exception {
     	return request.request(Naming.SECURITY, context, headers, uriInfo, req, null);
     }
+    
+    /**
+     * @param context
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @param body
+     * @return
+     * @throws Exception
+     */
+    @PermitAll
+    @Path("auth")
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public CompletionStage<Response> authenticateIDToken(
+    		@Context final SecurityContext context,
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req,
+            final InputStream body) throws Exception {
+    	return request.request(Naming.SECURITY, context, headers, uriInfo, req, body);
+    }
 }
