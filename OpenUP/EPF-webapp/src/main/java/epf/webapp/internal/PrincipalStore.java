@@ -13,7 +13,6 @@ import epf.security.auth.util.JwtUtil;
 import epf.webapp.messaging.TextMessage;
 import epf.webapp.naming.Naming;
 import epf.webapp.security.TokenPrincipal;
-import epf.webapp.security.auth.IDTokenPrincipal;
 
 /**
  * @author PC
@@ -51,16 +50,6 @@ public class PrincipalStore {
 	 */
 	public Map<String, Object> getClaims(final String name) {
 		return principals.get(name);
-	}
-	
-	/**
-	 * @param principal
-	 * @throws Exception 
-	 */
-	public void putPrincipal(@Observes final IDTokenPrincipal principal) throws Exception {
-		final Set<String> otherUsers = principals.keySet();
-		principals.put(principal.getName(), JwtUtil.decode(principal.getId_token()).getClaimsMap());
-		send(principal.getName(), otherUsers);
 	}
 	
 	/**

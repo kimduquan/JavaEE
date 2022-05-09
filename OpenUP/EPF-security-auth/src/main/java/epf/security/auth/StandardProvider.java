@@ -84,6 +84,7 @@ public class StandardProvider implements Provider {
 		client.close();
 		jwks = new HttpsJwks(metadata.getJwks_uri());
 		jwtConsumer = new JwtConsumerBuilder()
+				.setEnableRequireIntegrity()
 				.setExpectedAudience(clientId)
 				.setExpectedIssuer(metadata.getIssuer())
 				.setRequireExpirationTime()

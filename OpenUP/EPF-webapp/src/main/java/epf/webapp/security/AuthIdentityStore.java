@@ -1,7 +1,6 @@
 package epf.webapp.security;
 
 import java.net.URI;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -11,20 +10,18 @@ import javax.inject.Inject;
 import javax.security.enterprise.credential.UsernamePasswordCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStore;
-import org.jose4j.jwt.JwtClaims;
 import epf.util.config.ConfigUtil;
 import epf.util.logging.LogManager;
 import epf.webapp.GatewayUtil;
 import epf.webapp.security.auth.AuthCodeCredential;
-import epf.webapp.security.auth.IDTokenPrincipal;
 import epf.webapp.security.auth.ImplicitCredential;
 import epf.webapp.security.auth.SecurityAuth;
 import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.security.auth.Provider;
 import epf.security.auth.core.TokenResponse;
-import epf.security.auth.util.JwtUtil;
 import epf.security.client.Security;
+import epf.security.schema.Token;
 
 /**
  *
@@ -94,11 +91,11 @@ public class AuthIdentityStore implements IdentityStore {
     	try {
         	final TokenResponse tokenResponse = provider.accessToken(credential.getTokenRequest());
         	if(tokenResponse != null) {
-        		final char[] idToken = tokenResponse.getId_token().toCharArray();
-        		final JwtClaims claims = JwtUtil.decode(idToken);
-        		final IDTokenPrincipal principal = new IDTokenPrincipal(claims.getSubject(), idToken, claims.getClaimsMap());
-        		final Set<String> groups = new HashSet<>(Arrays.asList(Naming.Security.DEFAULT_ROLE));
-        		result = new CredentialValidationResult(principal, groups);
+        		try(Client client = gatewayUtil.newClient(Naming.SECURITY)){
+        			final Token token = Security.authenticateIDToken(client, credential.getProvider(), credential.getSessionId(), tokenResponse.getId_token());
+        			final TokenPrincipal principal = new TokenPrincipal(token.getName(), token.getRawToken().toCharArray());
+        			result = new CredentialValidationResult(principal, token.getGroups());
+        		}
         	}
     	}
     	catch(Exception e) {
@@ -113,15 +110,12 @@ public class AuthIdentityStore implements IdentityStore {
      * @throws Exception 
      */
     public CredentialValidationResult validate(final ImplicitCredential credential) throws Exception {
-    	final char[] idToken = credential.getAuthResponse().getId_token().toCharArray();
-    	final JwtClaims claims = JwtUtil.decode(idToken);
-    	final Provider provider = securityAuth.getProvider(credential.getProvider());
-    	if(provider.validateIDToken(credential.getAuthResponse().getId_token(), credential.getSessionId())) {
-        	final IDTokenPrincipal principal = new IDTokenPrincipal(claims.getSubject(), idToken, claims.getClaimsMap());
-    		final Set<String> groups = new HashSet<>();
-    		groups.add(Naming.Security.DEFAULT_ROLE);
-    		return new CredentialValidationResult(principal, groups);
+    	CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
+    	try(Client client = gatewayUtil.newClient(Naming.SECURITY)){
+    		final Token token = Security.authenticateIDToken(client, credential.getProvider(), credential.getSessionId(), credential.getAuthResponse().getId_token());
+    		final TokenPrincipal principal = new TokenPrincipal(token.getName(), token.getRawToken().toCharArray());
+			result = new CredentialValidationResult(principal, token.getGroups());
     	}
-    	return CredentialValidationResult.INVALID_RESULT;
+    	return result;
     }
 }

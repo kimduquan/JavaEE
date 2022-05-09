@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.event.Event;
@@ -15,13 +14,11 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.security.enterprise.SecurityContext;
 import epf.client.util.Client;
-import epf.security.auth.core.StandardClaims;
 import epf.security.client.Security;
 import epf.security.schema.Token;
 import epf.util.logging.LogManager;
 import epf.webapp.GatewayUtil;
 import epf.webapp.naming.Naming;
-import epf.webapp.security.auth.IDTokenPrincipal;
 
 /**
  * @author PC
@@ -93,13 +90,6 @@ public class Session implements Serializable {
 			catch (Exception e) {
 				LOGGER.log(Level.SEVERE, "[Session.TokenPrincipal]", e);
 			}
-		}
-		else if(principal instanceof IDTokenPrincipal) {
-			final IDTokenPrincipal idTokenPrincipal = (IDTokenPrincipal) principal;
-			token = idTokenPrincipal.getId_token();
-			claims = idTokenPrincipal.getClaims();
-			claimNames = Arrays.asList(StandardClaims.values()).stream().map(claim -> claim.name()).collect(Collectors.toList());
-			event.fire(idTokenPrincipal);
 		}
 	}
 

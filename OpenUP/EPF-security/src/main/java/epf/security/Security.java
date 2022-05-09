@@ -25,7 +25,6 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.security.enterprise.credential.Password;
 import javax.security.enterprise.identitystore.CredentialValidationResult.Status;
-import javax.ws.rs.BadRequestException;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
@@ -400,8 +399,9 @@ public class Security implements epf.security.client.Security, epf.security.clie
 			});
 	}
 
+	@PermitAll
 	@Override
-	public Token authenticateIDToken(
+	public Response authenticateIDToken(
 			final String provider, 
 			final String session, 
 			final String token,
@@ -411,10 +411,10 @@ public class Security implements epf.security.client.Security, epf.security.clie
             final List<String> forwardedProto) throws Exception {
 		final Provider authProvider = authProviders.get(provider);
 		if(authProvider == null) {
-			throw new BadRequestException();
+			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
 		if(!authProvider.validateIDToken(token, session)) {
-			throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED));
+			return Response.status(Response.Status.UNAUTHORIZED).build();
 		}
 		final JwtClaims claims = JwtUtil.decode(token.toCharArray());
 		final Set<String> audience = buildAudience(null, forwardedHost, forwardedPort, forwardedProto);
@@ -431,9 +431,9 @@ public class Security implements epf.security.client.Security, epf.security.clie
 		newToken.setGroups(groups);
 		newToken.setIssuedAtTime(claims.getIssuedAt().getValue());
 		newToken.setIssuer(issuer);
-		newToken.setName(claims.getSubject());
+		newToken.setName(claims.getStringClaimValue("email"));
 		newToken.setSubject(claims.getSubject());
 		final TokenBuilder builder = new TokenBuilder(newToken, privateKey, publicKey);
-		return builder.build();
+		return Response.ok(builder.build()).build();
 	}
 }

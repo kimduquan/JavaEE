@@ -21,6 +21,7 @@ public class JwtUtil {
 	 */
 	public void initialize(final String issuer, final String audience, final PublicKey verifyKey) {
 		jwtConsumer = new JwtConsumerBuilder()
+				.setEnableRequireIntegrity()
 				.setExpectedAudience(audience)
 				.setExpectedIssuer(issuer)
 				.setRequireExpirationTime()

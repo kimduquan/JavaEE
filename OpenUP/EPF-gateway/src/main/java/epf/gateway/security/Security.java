@@ -143,7 +143,7 @@ public class Security {
     @PermitAll
     @Path("auth")
     @POST
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public CompletionStage<Response> authenticateIDToken(
     		@Context final SecurityContext context,

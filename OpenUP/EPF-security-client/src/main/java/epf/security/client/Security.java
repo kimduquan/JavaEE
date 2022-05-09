@@ -221,9 +221,9 @@ public interface Security {
      */
     @Path("auth")
     @POST
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    Token authenticateIDToken(
+    Response authenticateIDToken(
             @FormParam("provider")
             final String provider,
             @FormParam("session")
@@ -252,7 +252,7 @@ public interface Security {
     		final String session, 
     		final String token) {
     	return client.request(
-    			target -> target, 
+    			target -> target.path("auth"), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.post(Entity.form(new Form().param("provider", provider).param("session", session).param("token", token)))

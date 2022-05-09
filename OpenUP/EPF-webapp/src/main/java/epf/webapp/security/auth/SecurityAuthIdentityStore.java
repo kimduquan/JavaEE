@@ -9,7 +9,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.security.enterprise.CallerPrincipal;
 import javax.security.enterprise.credential.RememberMeCredential;
@@ -60,12 +59,6 @@ public class SecurityAuthIdentityStore implements RememberMeIdentityStore {
 	/**
 	 * 
 	 */
-	@Inject
-	private transient SecurityAuth securityAuth;
-	
-	/**
-	 * 
-	 */
 	@PostConstruct
 	protected void postConstruct() {
 		try {
@@ -84,22 +77,10 @@ public class SecurityAuthIdentityStore implements RememberMeIdentityStore {
 		CredentialValidationResult result = CredentialValidationResult.NOT_VALIDATED_RESULT;
 		try {
 			final char[] token = credential.getToken().toCharArray();
-			final JwtClaims claims = JwtUtil.decode(token);
-			if(Naming.EPF.equals(claims.getIssuer())) {
-				final JwtClaims validClaims = jwtUtil.process(token);
-				final Set<String> groups = new HashSet<>(validClaims.getStringListClaimValue(Claims.groups.name()));
-				final TokenPrincipal principal = new TokenPrincipal(validClaims.getSubject(), token);
-				result = new CredentialValidationResult(principal, groups);
-			}
-			else if(securityAuth.getProvider(claims.getIssuer()).validateIDToken(credential.getToken(), FacesContext.getCurrentInstance().getExternalContext().getSessionId(false))) {
-				final IDTokenPrincipal principal = new IDTokenPrincipal(claims.getSubject(), token, claims.getClaimsMap());
-				final Set<String> groups = new HashSet<>();
-				groups.add(Naming.Security.DEFAULT_ROLE);
-				result = new CredentialValidationResult(principal, groups);
-			}
-			else {
-				result = CredentialValidationResult.INVALID_RESULT;
-			}
+			final JwtClaims validClaims = jwtUtil.process(credential.getToken().toCharArray());
+			final Set<String> groups = new HashSet<>(validClaims.getStringListClaimValue(Claims.groups.name()));
+			final TokenPrincipal principal = new TokenPrincipal(validClaims.getClaimValueAsString(Claims.upn.name()), token);
+			result = new CredentialValidationResult(principal, groups);
 		} 
 		catch (Exception e) {
 			LOGGER.log(Level.WARNING, "[EPFRememberMeIdentityStore.validate]", e);
@@ -123,27 +104,17 @@ public class SecurityAuthIdentityStore implements RememberMeIdentityStore {
 				LOGGER.log(Level.SEVERE, "[EPFRememberMeIdentityStore.generateLoginToken]", e);
 			}
 		}
-		else if(callerPrincipal instanceof IDTokenPrincipal) {
-			final IDTokenPrincipal principal = (IDTokenPrincipal) callerPrincipal;
-			newToken = principal.getId_token();
-		}
 		return new String(newToken);
 	}
 
 	@Override
 	public void removeLoginToken(final String token) {
-		try {
-			final char[] raw = token.toCharArray();
-			final JwtClaims claims = JwtUtil.decode(raw);
-			if(Naming.EPF.equals(claims.getIssuer())) {
-				try(Client client = gatewayUtil.newClient(Naming.SECURITY)){
-					client.authorization(raw);
-					Security.logOut(client);
-				}
-			}
-		} 
+		try(Client client = gatewayUtil.newClient(Naming.SECURITY)){
+			client.authorization(token.toCharArray());
+			Security.logOut(client);
+		}
 		catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "[EPFRememberMeIdentityStore.removeLoginToken]", e);
+			LOGGER.log(Level.WARNING, "[EPFRememberMeIdentityStore.removeLoginToken]", e);
 		}
 	}
 }
