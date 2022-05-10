@@ -67,19 +67,26 @@ public class StandardProvider implements Provider {
 	private transient JwtConsumer jwtConsumer;
 	
 	/**
+	 *
+	 */
+	private transient final ClientBuilder clientBuilder;
+	
+	/**
 	 * @param discoveryUrl
 	 * @param clientSecret
 	 * @param clientId
+	 * @param clientBuilder
 	 */
-	public StandardProvider(final URI discoveryUrl, final char[] clientSecret, final String clientId) {
+	public StandardProvider(final URI discoveryUrl, final char[] clientSecret, final String clientId, ClientBuilder clientBuilder) {
 		this.discoveryUrl = discoveryUrl;
 		this.clientSecret = clientSecret;
 		this.clientId = clientId;
+		this.clientBuilder = clientBuilder;
 	}
 
 	@Override
 	public ProviderMetadata discovery() throws Exception {
-		final Client client = ClientBuilder.newClient();
+		final Client client = clientBuilder.build();
 		metadata = client.target(discoveryUrl).request(MediaType.APPLICATION_JSON).get(ProviderMetadata.class);
 		client.close();
 		jwks = new HttpsJwks(metadata.getJwks_uri());

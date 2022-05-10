@@ -3,6 +3,7 @@ package epf.security;
 import java.io.Serializable;
 import java.net.URI;
 import java.net.URL;
+import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.time.Duration;
@@ -28,6 +29,7 @@ import javax.security.enterprise.identitystore.CredentialValidationResult.Status
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -49,7 +51,9 @@ import epf.security.util.CredentialUtil;
 import epf.security.util.IdentityStore;
 import epf.security.util.JPAPrincipal;
 import epf.security.util.PrincipalStore;
+import epf.util.config.ConfigUtil;
 import epf.util.logging.LogManager;
+import epf.util.security.KeyStoreUtil;
 import epf.util.security.KeyUtil;
 
 /**
@@ -80,6 +84,16 @@ public class Security implements epf.security.client.Security, epf.security.clie
      * 
      */
     private transient PublicKey publicKey;
+    
+	/**
+	 *
+	 */
+	private transient KeyStore trustStore;
+	
+	/**
+	 *
+	 */
+	private transient ClientBuilder builder;
     
     /**
      *
@@ -192,10 +206,16 @@ public class Security implements epf.security.client.Security, epf.security.clie
     @PostConstruct
     void postConstruct(){
         try {
-            privateKey = KeyUtil.generatePrivate("RSA", privateKeyText, Base64.getDecoder(), "UTF-8");
+        	final java.nio.file.Path trustStoreFile = ConfigUtil.getPath(Naming.Client.SSL_TRUST_STORE);
+        	final String trustStoreType = ConfigUtil.getString(Naming.Client.SSL_TRUST_STORE_TYPE);
+        	final char[] trustStorePassword = ConfigUtil.getChars(Naming.Client.SSL_TRUST_STORE_PASSWORD);
+        	trustStore = KeyStoreUtil.loadKeyStore(trustStoreType, trustStoreFile, trustStorePassword);
+        	builder = ClientBuilder.newBuilder().trustStore(trustStore);
+            
+        	privateKey = KeyUtil.generatePrivate("RSA", privateKeyText, Base64.getDecoder(), "UTF-8");
             publicKey = KeyUtil.generatePublic("RSA", publicKeyText, Base64.getDecoder(), "UTF-8");
-            authProviders.put(Naming.Security.Auth.GOOGLE, new StandardProvider(new URI(this.googleDiscoveryUrl), this.googleClientSecret.toCharArray(), this.googleClientId));
-            authProviders.put(Naming.Security.Auth.FACEBOOK, new StandardProvider(new URI(this.facebookDiscoveryUrl), this.facebookClientSecret.toCharArray(), this.facebookClientId));
+            authProviders.put(Naming.Security.Auth.GOOGLE, new StandardProvider(new URI(googleDiscoveryUrl), googleClientSecret.toCharArray(), googleClientId, builder));
+            authProviders.put(Naming.Security.Auth.FACEBOOK, new StandardProvider(new URI(facebookDiscoveryUrl), facebookClientSecret.toCharArray(), facebookClientId, builder));
         } 
         catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "postConstruct", ex);
