@@ -80,8 +80,7 @@ public class SecurityAuth {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			clientBuilder = ClientBuilder.newBuilder();
-			clientBuilder.trustStore(securityUtil.getTrustStore());
+			clientBuilder = ClientBuilder.newBuilder().trustStore(securityUtil.getTrustStore());
 			googleDiscoveryUrl = new URI(config.getProperty(Naming.Security.Auth.GOOGLE_PROVIDER));
 			googleProvider = new StandardProvider(googleDiscoveryUrl, config.getProperty(Naming.Security.Auth.GOOGLE_CLIENT_SECRET).toCharArray(), config.getProperty(Naming.Security.Auth.GOOGLE_CLIENT_ID), clientBuilder);
 			facebookDiscoveryUrl = new URI(config.getProperty(Naming.Security.Auth.FACEBOOK_PROVIDER));

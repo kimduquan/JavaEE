@@ -96,8 +96,6 @@ public class StandardProvider implements Provider {
 				.setExpectedIssuer(metadata.getIssuer())
 				.setRequireExpirationTime()
 				.setRequireIssuedAt()
-				.setRequireJwtId()
-				.setRequireNotBefore()
 				.setRequireSubject()
 				.setVerificationKeyResolver(new JwksVerificationKeyResolver(jwks.getJsonWebKeys()))
 	            .build();

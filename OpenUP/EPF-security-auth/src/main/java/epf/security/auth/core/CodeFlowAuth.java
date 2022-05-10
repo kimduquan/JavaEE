@@ -54,7 +54,12 @@ public interface CodeFlowAuth {
 		});
 		Optional.ofNullable(authRequest.getNonce()).ifPresent(nonce -> {
 			authRequestUrl.append("&nonce=");
-			authRequestUrl.append(nonce);
+			try {
+				authRequestUrl.append(URLEncoder.encode(nonce, "UTF-8"));
+			} 
+			catch (Exception e) {
+				LOGGER.log(Level.SEVERE, "[CodeFlowAuth.authRequest.nonce]", e);
+			}
 		});
 		Optional.ofNullable(authRequest.getRedirect_uri()).ifPresent(redirect_uri -> {
 			authRequestUrl.append("&redirect_uri=");
