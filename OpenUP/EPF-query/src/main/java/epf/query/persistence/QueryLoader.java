@@ -23,7 +23,7 @@ public class QueryLoader implements CacheLoader<String, Integer> {
 	/**
 	 *
 	 */
-	@PersistenceContext(unitName = "EPF_Cache")
+	@PersistenceContext(unitName = epf.query.Naming.QUERY_UNIT)
 	private transient EntityManager manager;
 
 	/**

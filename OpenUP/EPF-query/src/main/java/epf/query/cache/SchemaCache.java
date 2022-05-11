@@ -34,7 +34,7 @@ public class SchemaCache {
 	/**
 	 *
 	 */
-	@PersistenceContext(unitName = "EPF_Cache")
+	@PersistenceContext(unitName = epf.query.Naming.QUERY_UNIT)
 	private transient EntityManager entityManager;
 	
 	/**

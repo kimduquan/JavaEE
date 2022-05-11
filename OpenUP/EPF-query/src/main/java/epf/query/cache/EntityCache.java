@@ -13,7 +13,6 @@ import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
-import epf.naming.Naming;
 import epf.query.cache.event.EntityLoad;
 import epf.query.cache.util.LoaderFactory;
 import epf.schema.utility.EntityEvent;
@@ -63,7 +62,7 @@ public class EntityCache implements HealthCheck {
 		final MutableConfiguration<String, Object> config = new MutableConfiguration<>();
 		config.setCacheLoaderFactory(new LoaderFactory<String, Object, EntityLoad>(eventQueue.getEmitter(), EntityLoad::new));
 		config.setReadThrough(true);
-		entityCache = manager.createCache(Naming.PERSISTENCE, config);
+		entityCache = manager.createCache(epf.query.Naming.ENTITY_CACHE, config);
 	}
 	
 	@PreDestroy

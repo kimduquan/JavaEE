@@ -102,7 +102,7 @@ public class Query {
             final String schema,
             @PathParam("criteria")
             final List<PathSegment> paths) throws Exception { 
-		return request.request(Naming.CACHE, context, headers, uriInfo, req, null);
+		return request.request(Naming.QUERY, context, headers, uriInfo, req, null);
 		}
 	
 	/**
@@ -128,6 +128,6 @@ public class Query {
             final String schema,
             @PathParam("criteria")
             final List<PathSegment> paths) throws Exception {
-        		return request.request(Naming.CACHE, context, headers, uriInfo, req, null);
+        		return request.request(Naming.QUERY, context, headers, uriInfo, req, null);
         	}
 }
