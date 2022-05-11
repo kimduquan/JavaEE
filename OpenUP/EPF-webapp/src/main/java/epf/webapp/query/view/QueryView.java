@@ -1,4 +1,4 @@
-package epf.webapp.persistence.view;
+package epf.webapp.query.view;
 
 import java.io.Serializable;
 import java.util.List;
@@ -16,16 +16,16 @@ import epf.persistence.schema.client.AttributeType;
 import epf.persistence.schema.client.Entity;
 import epf.webapp.GatewayUtil;
 import epf.webapp.naming.Naming;
-import epf.webapp.persistence.internal.EntityCollector;
-import epf.webapp.persistence.schema.SchemaCache;
+import epf.webapp.query.QueryCollector;
+import epf.webapp.schema.SchemaCache;
 import epf.webapp.security.Session;
 
 /**
  * 
  */
 @ViewScoped
-@Named(Naming.Persistence.VIEW)
-public class PersistenceView implements Serializable {
+@Named(Naming.Query.VIEW)
+public class QueryView implements Serializable {
 
 	/**
 	 *
@@ -50,7 +50,7 @@ public class PersistenceView implements Serializable {
 	/**
 	 *
 	 */
-	private EntityCollector collector;
+	private QueryCollector collector;
 	
 	/**
 	 *
@@ -88,7 +88,7 @@ public class PersistenceView implements Serializable {
 			attributes = currentEntity.get().getAttributes().stream().filter(
 					attribute -> !attribute.isAssociation() && !attribute.isCollection() && AttributeType.BASIC.equals(attribute.getAttributeType()))
 					.collect(Collectors.toList());
-			collector = new EntityCollector(gateway, session.getToken(), schema, currentEntity.get());
+			collector = new QueryCollector(gateway, session.getToken(), schema, currentEntity.get());
 		}
 	}
 
@@ -112,7 +112,7 @@ public class PersistenceView implements Serializable {
 		return attributes;
 	}
 
-	public EntityCollector getCollector() {
+	public QueryCollector getCollector() {
 		return collector;
 	}
 	

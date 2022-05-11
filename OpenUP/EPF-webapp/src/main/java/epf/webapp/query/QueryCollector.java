@@ -1,4 +1,4 @@
-package epf.webapp.persistence.internal;
+package epf.webapp.query;
 
 import java.io.InputStream;
 import java.util.Arrays;
@@ -27,7 +27,7 @@ import epf.webapp.GatewayUtil;
 /**
  * 
  */
-public class EntityCollector extends LazyDataModel<JsonObject> {
+public class QueryCollector extends LazyDataModel<JsonObject> {
 
 	/**
 	 *
@@ -37,7 +37,7 @@ public class EntityCollector extends LazyDataModel<JsonObject> {
 	/**
 	 *
 	 */
-	private transient static final Logger LOGGER = LogManager.getLogger(EntityCollector.class.getName());
+	private transient static final Logger LOGGER = LogManager.getLogger(QueryCollector.class.getName());
 	
 	/**
 	 *
@@ -75,7 +75,7 @@ public class EntityCollector extends LazyDataModel<JsonObject> {
 	 * @param schema
 	 * @param entity
 	 */
-	public EntityCollector(final GatewayUtil gateway, final char[] token, final String schema, final Entity entity) {
+	public QueryCollector(final GatewayUtil gateway, final char[] token, final String schema, final Entity entity) {
 		this.gateway = gateway;
 		this.token = token;
 		this.schema = schema;

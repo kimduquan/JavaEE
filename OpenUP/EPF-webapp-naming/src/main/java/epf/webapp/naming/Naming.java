@@ -75,9 +75,16 @@ public interface Naming {
 	 */
 	interface Persistence {
 		
+	}
+	
+	/**
+	 * 
+	 */
+	interface Query {
+		
 		/**
 		 * 
 		 */
-		String VIEW = "epf_persistence_view";
+		String VIEW = "epf_query_view";
 	}
 }

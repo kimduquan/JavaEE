@@ -22,7 +22,7 @@
 
     <!-- Custom styles for this page -->
     <h:outputStylesheet library="startbootstrap-sb-admin-2-gh-pages" name="vendor/datatables/dataTables.bootstrap4.min.css" />
-	<f:metadata><f:viewParam name="schema" value="#{epf_persistence_view.schema}" /><f:viewParam name="entity" value="#{epf_persistence_view.entity}" /></f:metadata>
+	<f:metadata><f:viewParam name="schema" value="#{epf_query_view.schema}" /><f:viewParam name="entity" value="#{epf_query_view.entity}" /></f:metadata>
 </h:head>
 
 <h:body a:id="page-top">
@@ -376,15 +376,15 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <h:form><p:dataTable value="#{epf_persistence_view.collector}" lazy="true" var="entityValue" tableStyleClass="table table-bordered" a:id="dataTable" tableStyle="width: 100%;" paginator="true" rows="10">
-                                    <p:columns value="#{epf_persistence_view.attributes}" var="attribute" columnIndexVar="attributeIndex">
+                                <h:form><p:dataTable value="#{epf_query_view.collector}" lazy="true" var="entityValue" tableStyleClass="table table-bordered" a:id="dataTable" tableStyle="width: 100%;" paginator="true" rows="10">
+                                    <p:columns value="#{epf_query_view.attributes}" var="attribute" columnIndexVar="attributeIndex">
 							            <f:facet name="header">
 							                <h:outputText value="#{attribute.name}" />
 							            </f:facet>
 							            <f:facet name="footer">
 							                <h:outputText value="#{attribute.name}" />
 							            </f:facet>
-							            <h:outputText value="#{epf_persistence_view.getAttribute(entityValue, attribute.name)}" />
+							            <h:outputText value="#{epf_query_view.getAttribute(entityValue, attribute.name)}" />
 							        </p:columns>
                                 </p:dataTable></h:form>
                             </div>

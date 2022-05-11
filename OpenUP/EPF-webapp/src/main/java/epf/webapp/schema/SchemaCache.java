@@ -1,4 +1,4 @@
-package epf.webapp.persistence.schema;
+package epf.webapp.schema;
 
 import java.util.List;
 import java.util.Optional;
