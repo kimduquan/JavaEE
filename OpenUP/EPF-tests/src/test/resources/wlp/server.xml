@@ -191,6 +191,10 @@
     </dataSource>
 
     <keyStore id="defaultKeyStore" password="password"/>
+    <ssl id="defaultSSLConfig"
+      keyStoreRef="defaultKeyStore"
+      trustStoreRef="defaultTrustStore"
+      trustDefaultCerts="true"/>
     
     <messagingEngine>
         <!-- queue for batch jms message. -->
