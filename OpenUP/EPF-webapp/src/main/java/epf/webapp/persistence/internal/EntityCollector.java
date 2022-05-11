@@ -17,7 +17,7 @@ import javax.ws.rs.core.Response;
 import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortMeta;
-import epf.client.cache.Cache;
+import epf.client.query.Query;
 import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.persistence.schema.client.Entity;
@@ -100,11 +100,11 @@ public class EntityCollector extends LazyDataModel<JsonObject> {
         final String[] sort = sortBy.keySet().toArray(new String[0]);
         final Integer firstResult = first;
         final Integer maxResults = pageSize;
-		try(Client client = gateway.newClient(Naming.CACHE)){
+		try(Client client = gateway.newClient(Naming.QUERY)){
 			client.authorization(token);
-			final Integer count = Cache.executeCountQuery(client, schema, target -> buildFilters(target.path(entity.getName()), filterBy.values()));
+			final Integer count = Query.executeCountQuery(client, schema, target -> buildFilters(target.path(entity.getName()), filterBy.values()));
 			setRowCount(count);
-        	try(Response response = Cache.executeQuery(client, schema, target -> buildFilters(target.path(entity.getName()), filterBy.values()), firstResult, maxResults, sort)){
+        	try(Response response = Query.executeQuery(client, schema, target -> buildFilters(target.path(entity.getName()), filterBy.values()), firstResult, maxResults, sort)){
         		try(InputStream stream = response.readEntity(InputStream.class)){
 					try(JsonReader reader = Json.createReader(stream)){
 						entities = reader
