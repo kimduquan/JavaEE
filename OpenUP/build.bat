@@ -7,8 +7,9 @@ echo on
 call .\copy_dependency.bat
 echo on
 call .\startup.bat
+call .\config.bat
 echo on
-call mvn clean install -U -Depf-shell-native -Depf-gateway-native -Depf-persistence-native -Depf-security-native
+call mvn clean install -U -Depf-shell-native -Depf-gateway-native -Depf-persistence-native
 echo on
 call .\shutdown.bat
 echo on
