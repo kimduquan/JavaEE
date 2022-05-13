@@ -6,8 +6,8 @@
         <artifactId>OpenUP-parent</artifactId>
         <version>1.0.0</version>
     </parent>
-    <artifactId>EPF-cache</artifactId>
-    <name>Eclipse Process Framework Cache</name>
+    <artifactId>EPF-transaction</artifactId>
+    <name>Eclipse Process Framework Transaction</name>
     <packaging>war</packaging>
     <dependencies>
     	<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
@@ -22,11 +22,6 @@
 		    <artifactId>cdi-api</artifactId>
 		    <scope>provided</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.cache/cache-api -->
-		<dependency>
-		    <groupId>javax.cache</groupId>
-		    <artifactId>cache-api</artifactId>
-		</dependency>
 		<!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
 		<dependency>
 		    <groupId>javax.annotation</groupId>
@@ -38,12 +33,6 @@
 		    <groupId>javax.json</groupId>
 		    <artifactId>javax.json-api</artifactId>
 		    <scope>provided</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.json.bind/javax.json.bind-api -->
-		<dependency>
-		    <groupId>javax.json.bind</groupId>
-		    <artifactId>javax.json.bind-api</artifactId>
-			<scope>provided</scope>
 		</dependency>
         <!-- https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api -->
 		<dependency>
@@ -69,16 +58,23 @@
 		    <artifactId>microprofile-health-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.graphql/microprofile-graphql-api -->
+		<dependency>
+		    <groupId>org.eclipse.microprofile.graphql</groupId>
+		    <artifactId>microprofile-graphql-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.openapi/microprofile-openapi-api -->
+		<dependency>
+		    <groupId>org.eclipse.microprofile.openapi</groupId>
+		    <artifactId>microprofile-openapi-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.reactive.messaging/microprofile-reactive-messaging-api -->
 		<dependency>
 		    <groupId>org.eclipse.microprofile.reactive.messaging</groupId>
 		    <artifactId>microprofile-reactive-messaging-api</artifactId>
 		    <scope>provided</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast -->
-		<dependency>
-			<groupId>com.hazelcast</groupId>
-			<artifactId>hazelcast</artifactId>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients -->
 		<dependency>
@@ -107,7 +103,12 @@
         </dependency>
         <dependency>
             <groupId>openup</groupId>
-            <artifactId>EPF-security-schema</artifactId>
+            <artifactId>EPF-transaction-schema</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-schema-utility</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

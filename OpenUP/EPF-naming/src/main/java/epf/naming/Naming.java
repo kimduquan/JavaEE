@@ -733,6 +733,22 @@ public interface Naming {
 	}
 	
 	/**
+	 *
+	 */
+	String TRANSACTION = "transaction";
+	
+	/**
+	 * 
+	 */
+	interface Transaction {
+		
+		/**
+	     * 
+	     */
+	    String TRANSACTION_URL = "epf.transaction.url";
+	}
+	
+	/**
 	 * 
 	 */
 	String UTILITY = "utility";
