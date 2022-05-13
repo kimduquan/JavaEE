@@ -125,7 +125,7 @@
     </dataSource>
     
     <library id="MySQLJDBCLib">
-        <fileset dir="${shared.resource.dir}/epf/persistence" includes="*.jar"/>
+        <fileset dir="${shared.resource.dir}/epf/transaction" includes="*.jar"/>
     </library>
     
     <dataSource id="epf_schema" jndiName="jdbc/epf_schema">
