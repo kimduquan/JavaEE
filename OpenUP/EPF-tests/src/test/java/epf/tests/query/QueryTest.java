@@ -1,4 +1,4 @@
-package epf.tests.cache;
+package epf.tests.query;
 
 import java.net.URI;
 import java.time.Duration;
@@ -11,7 +11,6 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
-import epf.client.cache.Cache;
 import epf.tests.TestUtil;
 import epf.tests.client.ClientUtil;
 import epf.tests.health.HealthUtil;
@@ -26,6 +25,7 @@ import epf.work_products.schema.section.MoreInformation;
 import epf.work_products.schema.section.Relationships;
 import epf.work_products.schema.section.Tailoring;
 import epf.client.gateway.GatewayUtil;
+import epf.client.query.Query;
 import epf.client.util.Client;
 import epf.naming.Naming;
 
@@ -33,12 +33,12 @@ import epf.naming.Naming;
  * @author PC
  *
  */
-public class CacheTest {
+public class QueryTest {
 	
 	@Rule
     public TestName testName = new TestName();
 	
-	static URI cacheUrl;
+	static URI queryUrl;
 	static String token;
 	Client client;
 
@@ -48,7 +48,7 @@ public class CacheTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		HealthUtil.isReady();
-		cacheUrl = GatewayUtil.get(Naming.CACHE);
+		queryUrl = GatewayUtil.get(Naming.QUERY);
 		token = SecurityUtil.login();
 	}
 
@@ -65,7 +65,7 @@ public class CacheTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		client = ClientUtil.newClient(cacheUrl);
+		client = ClientUtil.newClient(queryUrl);
 		client.authorization(token.toCharArray());
 	}
 
@@ -80,8 +80,8 @@ public class CacheTest {
 	@Test
 	public void testGetEntityOk() throws Exception {
 		final Artifact artifact = new Artifact();
-        artifact.setName(StringUtil.randomString("Artifact Cache"));
-        artifact.setSummary("Artifact Cache testGetEntityOk");
+        artifact.setName(StringUtil.randomString("Artifact Query"));
+        artifact.setSummary("Artifact Query testGetEntityOk");
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
         artifact.setMoreInformation(new MoreInformation());
@@ -92,7 +92,7 @@ public class CacheTest {
         		(t) -> {
 				        	Artifact art = null;
 				        	try {
-				        		art = Cache.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
+				        		art = Query.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
 				        	}
 				        	catch(Exception ex) {
 				        		ex.printStackTrace();
@@ -101,7 +101,7 @@ public class CacheTest {
 				        }, 
         		Duration.ofSeconds(10)
         		);
-        Artifact cachedArtifact = Cache.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
+        Artifact cachedArtifact = Query.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
         Assert.assertNotNull("Artifact", cachedArtifact);
         Assert.assertEquals("Artifact.name", artifact.getName(), cachedArtifact.getName());
         Assert.assertEquals("Artifact.summary", artifact.getSummary(), cachedArtifact.getSummary());
@@ -111,8 +111,8 @@ public class CacheTest {
 	@Test(expected = NotFoundException.class)
 	public void testGetEntity_AfterRemoveEntity_NotFound() throws Exception {
 		final Artifact artifact = new Artifact();
-        artifact.setName(StringUtil.randomString("Artifact Cache"));
-        artifact.setSummary("Artifact Cache testGetEntity_AfterRemoveEntity_NotFound");
+        artifact.setName(StringUtil.randomString("Artifact Query"));
+        artifact.setSummary("Artifact Query testGetEntity_AfterRemoveEntity_NotFound");
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
         artifact.setMoreInformation(new MoreInformation());
@@ -123,7 +123,7 @@ public class CacheTest {
         		(t) -> {
 				        	Artifact art = null;
 				        	try {
-				        		art = Cache.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
+				        		art = Query.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
 				        	}
 				        	catch(Exception ex) {
 				        		ex.printStackTrace();
@@ -134,14 +134,14 @@ public class CacheTest {
         		);
         PersistenceUtil.remove(token, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
         Thread.sleep(80);
-        Cache.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
+        Query.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
 	}
 	
 	@Test
 	public void testGetEntity_AfterUpdateEntity_TheEntityFieldUpdated() throws Exception {
 		final Artifact artifact = new Artifact();
-        artifact.setName(StringUtil.randomString("Artifact Cache"));
-        artifact.setSummary("Artifact Cache testGetEntity_AfterUpdateEntity_TheEntityFieldUpdated");
+        artifact.setName(StringUtil.randomString("Artifact Query"));
+        artifact.setSummary("Artifact Query testGetEntity_AfterUpdateEntity_TheEntityFieldUpdated");
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
         artifact.setMoreInformation(new MoreInformation());
@@ -152,7 +152,7 @@ public class CacheTest {
         		(t) -> {
 				        	Artifact art = null;
 				        	try {
-				        		art = Cache.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
+				        		art = Query.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
 				        	}
 				        	catch(Exception ex) {
 				        		ex.printStackTrace();
@@ -161,10 +161,10 @@ public class CacheTest {
 				        }, 
         		Duration.ofSeconds(10)
         		);
-        artifact.setSummary(StringUtil.randomString("Artifact Cache Summary"));
+        artifact.setSummary(StringUtil.randomString("Artifact Query Summary"));
         PersistenceUtil.merge(token, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName(), artifact);
         Thread.sleep(80);
-        Artifact actualArtifact = Cache.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
+        Artifact actualArtifact = Query.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
         Assert.assertEquals("Artifact.summary", artifact.getSummary(), actualArtifact.getSummary());
         PersistenceUtil.remove(token, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
 	}
@@ -172,6 +172,6 @@ public class CacheTest {
 	@Test(expected = NotFoundException.class)
 	public void testGetEntity_NotFound() throws Exception {
 		Thread.sleep(20);
-        Cache.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, StringUtil.randomString("Artifact Cache"));
+		Query.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, StringUtil.randomString("Artifact Cache"));
 	}
 }
