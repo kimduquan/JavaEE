@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.portlet.internal.cache;
 
 import java.io.InputStream;
@@ -52,8 +49,8 @@ public class EntityCacheUtil {
 	 */
 	public List<JsonObject> getEntities(final String schema, final String entity, final Integer firstResult, final Integer maxResults) {
 		List<JsonObject> objects = null;
-		try(Client client = securityUtil.newClient(gatewayUtil.get(Naming.CACHE))){
-			try(Response response = epf.client.cache.Cache.executeQuery(client, schema, t -> t.path(entity), firstResult, maxResults)){
+		try(Client client = securityUtil.newClient(gatewayUtil.get(Naming.QUERY))){
+			try(Response response = epf.client.query.Query.executeQuery(client, schema, t -> t.path(entity), firstResult, maxResults)){
 				try(InputStream stream = response.readEntity(InputStream.class)){
 					try(JsonReader reader = Json.createReader(stream)){
 						objects = reader
@@ -79,8 +76,8 @@ public class EntityCacheUtil {
 	 */
 	public JsonObject getEntity(final String schema, final String entity, final String id) {
 		JsonObject object = null;
-		try(Client client = securityUtil.newClient(gatewayUtil.get(Naming.CACHE))){
-			try(Response response = epf.client.cache.Cache.getEntity(client, schema, entity, id)){
+		try(Client client = securityUtil.newClient(gatewayUtil.get(Naming.QUERY))){
+			try(Response response = epf.client.query.Query.getEntity(client, schema, entity, id)){
 				try(InputStream stream = response.readEntity(InputStream.class)){
 					try(JsonReader reader = Json.createReader(stream)){
 						object = reader.readObject();

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.portlet.internal.persistence;
 
 import java.util.List;
