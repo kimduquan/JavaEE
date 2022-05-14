@@ -8,5 +8,5 @@ cp settings.xml ~/.m2
 . ./config.sh
 ./startup.sh
 #sudo apt-get install build-essential libz-dev zlib1g-dev
-mvn clean install -U -Depf-shell-native -Depf-gateway-native -Depf-persistence-native -Depf-security-native
+mvn clean install -U -Depf-shell-native -Depf-gateway-native -Depf-persistence-native
 ./shutdown.sh
