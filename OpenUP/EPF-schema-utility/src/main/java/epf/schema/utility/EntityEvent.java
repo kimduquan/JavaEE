@@ -1,6 +1,7 @@
 package epf.schema.utility;
 
 import java.io.Serializable;
+import java.util.Map;
 import javax.json.bind.annotation.JsonbTypeAdapter;
 import epf.util.json.Adapter;
 
@@ -19,6 +20,11 @@ public class EntityEvent implements Serializable {
 	 * 
 	 */
 	private long time; 
+	
+	/**
+	 *
+	 */
+	private Map<String, Object> metadata;
 	
 	/**
 	 * 
@@ -45,5 +51,13 @@ public class EntityEvent implements Serializable {
 
 	public void setTime(final long time) {
 		this.time = time;
+	}
+
+	public Map<String, Object> getMetadata() {
+		return metadata;
+	}
+
+	public void setMetadata(final Map<String, Object> metadata) {
+		this.metadata = metadata;
 	}
 }
