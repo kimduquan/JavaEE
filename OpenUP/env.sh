@@ -10,5 +10,5 @@ export WILDFLY_HOME=~/wildfly-24.0.1.Final/bin
 export JAEGER_HOME=~/jaeger-1.34.0-linux-amd64
 export MAVEN_HOME=~/apache-maven-3.8.5/bin
 export PATH=$MAVEN_HOME:$PATH
-export QUARKUS_HTTP_SSL_CERTIFICATE_KEY_STORE_FILE=$JAVA11_HOME/lib/security/cacerts
+export QUARKUS_HTTP_SSL_CERTIFICATE_KEY_STORE_FILE=~/git/JavaEE/OpenUP/dev.p12
 export QUARKUS_HTTP_SSL_CERTIFICATE_KEY_STORE_PASSWORD=changeit

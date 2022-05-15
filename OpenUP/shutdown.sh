@@ -1,7 +1,7 @@
 . ./env.sh
 killall EPF-gateway-
 killall EPF-persistence-
-killall EPF-security-
+killall EPF-shell-
 cd EPF-tests
 mvn liberty:stop
 cd ../
