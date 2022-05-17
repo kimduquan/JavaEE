@@ -1,4 +1,4 @@
-package epf.query.cache.event;
+package epf.query.internal.event;
 
 /**
  * 

@@ -1,4 +1,4 @@
-package epf.query.persistence;
+package epf.query.internal.persistence;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +23,7 @@ import epf.naming.Naming;
 import epf.persistence.internal.Entity;
 import epf.persistence.internal.QueryBuilder;
 import epf.persistence.internal.util.EntityTypeUtil;
-import epf.query.cache.SchemaCache;
+import epf.query.internal.SchemaCache;
 import epf.schema.utility.EntityEvent;
 import epf.schema.utility.PostPersist;
 import epf.schema.utility.PostRemove;

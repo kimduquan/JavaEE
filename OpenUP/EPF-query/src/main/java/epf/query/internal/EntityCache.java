@@ -1,4 +1,4 @@
-package epf.query.cache;
+package epf.query.internal;
 
 import java.util.Optional;
 import javax.annotation.PostConstruct;
@@ -13,11 +13,13 @@ import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
-import epf.query.cache.event.QueryLoad;
-import epf.query.cache.util.LoaderFactory;
+
+import epf.query.internal.event.EntityLoad;
+import epf.query.internal.util.LoaderFactory;
 import epf.schema.utility.EntityEvent;
 import epf.schema.utility.PostPersist;
 import epf.schema.utility.PostRemove;
+import epf.schema.utility.PostUpdate;
 import epf.util.event.EventQueue;
 
 /**
@@ -26,7 +28,7 @@ import epf.util.event.EventQueue;
  */
 @ApplicationScoped
 @Readiness
-public class QueryCache implements HealthCheck {
+public class EntityCache implements HealthCheck {
 	
 	/**
 	 * 
@@ -34,13 +36,11 @@ public class QueryCache implements HealthCheck {
 	@Inject
 	private transient SchemaCache schemaCache;
 	
-
-	
 	/**
 	 *
 	 */
 	@Inject
-	private transient EventQueue<QueryLoad> eventQueue;
+	private transient EventQueue<EntityLoad> eventQueue;
 	
 	/**
 	 *
@@ -51,7 +51,7 @@ public class QueryCache implements HealthCheck {
 	/**
 	 * 
 	 */
-	private transient Cache<String, Integer> queryCache;
+	private transient Cache<String, Object> entityCache;
 	
 	/**
 	 * 
@@ -60,52 +60,51 @@ public class QueryCache implements HealthCheck {
 	protected void postConstruct() {
 		executor.submit(eventQueue);
 		final CacheManager manager = Caching.getCachingProvider().getCacheManager();
-		final MutableConfiguration<String, Integer> config = new MutableConfiguration<>();
-		config.setCacheLoaderFactory(new LoaderFactory<String, Integer, QueryLoad>(eventQueue.getEmitter(), QueryLoad::new));
+		final MutableConfiguration<String, Object> config = new MutableConfiguration<>();
+		config.setCacheLoaderFactory(new LoaderFactory<String, Object, EntityLoad>(eventQueue.getEmitter(), EntityLoad::new));
 		config.setReadThrough(true);
-		queryCache = manager.createCache(epf.query.Naming.QUERY_CACHE, config);
+		entityCache = manager.createCache(epf.query.Naming.ENTITY_CACHE, config);
 	}
 	
 	@PreDestroy
 	protected void preDestroy() {
-		queryCache.close();
+		entityCache.close();
 	}
 
 	/**
 	 * @param event
 	 */
 	public void accept(final EntityEvent event) {
-		final Optional<QueryKey> queryKey = schemaCache.getQueryKey(event.getEntity().getClass());
-		if(queryKey.isPresent()) {
-			final String key = queryKey.get().toString();
-			final boolean hasLoaded = queryCache.containsKey(key);
-			final Integer count = queryCache.get(key);
-			if(hasLoaded) {
-				if(event instanceof PostPersist) {
-					queryCache.replace(key, count, count + 1);
-				}
-				else if(event instanceof PostRemove) {
-					queryCache.replace(key, count, count - 1);
-				}
+		final Optional<EntityKey> key = schemaCache.getKey(event.getEntity());
+		if(key.isPresent()) {
+			if(event instanceof PostUpdate) {
+				entityCache.replace(key.get().toString(), event.getEntity());
+			}
+			else if(event instanceof PostPersist) {
+				entityCache.put(key.get().toString(), event.getEntity());
+			}
+			else if(event instanceof PostRemove) {
+				entityCache.remove(key.get().toString());
 			}
 		}
 	}
 	
 	/**
-	 * @param schema
-	 * @param entity
+	 * @param name
+	 * @param entityId
 	 * @return
 	 */
-	public Optional<Integer> countEntity(
+	public Optional<Object> getEntity(
 			final String schema,
-            final String entity
+            final String name,
+            final String entityId
             ) {
-		final QueryKey queryKey = schemaCache.getQueryKey(schema, entity);
-		return Optional.ofNullable(queryCache.get(queryKey.toString()));
+		final EntityKey key = schemaCache.getKey(schema, name, entityId);
+		return Optional.ofNullable(entityCache.get(key.toString()));
 	}
 
 	@Override
 	public HealthCheckResponse call() {
-		return HealthCheckResponse.up("EPF-query-cache");
+		return HealthCheckResponse.up("EPF-entity-cache");
 	}
 }

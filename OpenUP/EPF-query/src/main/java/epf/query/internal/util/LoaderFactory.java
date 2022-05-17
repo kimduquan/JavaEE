@@ -1,8 +1,9 @@
-package epf.query.cache.util;
+package epf.query.internal.util;
 
 import java.util.function.Supplier;
 import javax.cache.configuration.Factory;
-import epf.query.cache.event.CacheLoad;
+
+import epf.query.internal.event.CacheLoad;
 import epf.util.event.EventEmitter;
 
 /**

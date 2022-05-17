@@ -1,4 +1,4 @@
-package epf.query.cache;
+package epf.query.internal;
 
 import java.util.Optional;
 import epf.util.StringUtil;

@@ -12,9 +12,9 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.health.Readiness;
 import epf.naming.Naming;
-import epf.query.cache.EntityCache;
-import epf.query.cache.QueryCache;
-import epf.query.persistence.PersistenceCache;
+import epf.query.internal.EntityCache;
+import epf.query.internal.QueryCache;
+import epf.query.internal.persistence.PersistenceCache;
 
 /**
  * @author PC

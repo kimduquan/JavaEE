@@ -9,9 +9,9 @@ import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import epf.naming.Naming;
-import epf.query.cache.EntityCache;
-import epf.query.cache.QueryCache;
-import epf.query.persistence.PersistenceCache;
+import epf.query.internal.EntityCache;
+import epf.query.internal.QueryCache;
+import epf.query.internal.persistence.PersistenceCache;
 import epf.schema.utility.EntityEvent;
 import epf.util.logging.LogManager;
 

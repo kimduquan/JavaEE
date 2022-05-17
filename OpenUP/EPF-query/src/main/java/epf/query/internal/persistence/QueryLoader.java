@@ -1,4 +1,4 @@
-package epf.query.persistence;
+package epf.query.internal.persistence;
 
 import java.util.Optional;
 import javax.enterprise.context.ApplicationScoped;
@@ -9,9 +9,10 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import epf.query.cache.QueryKey;
-import epf.query.cache.SchemaCache;
-import epf.query.cache.event.QueryLoad;
+
+import epf.query.internal.QueryKey;
+import epf.query.internal.SchemaCache;
+import epf.query.internal.event.QueryLoad;
 
 /**
  * @author PC

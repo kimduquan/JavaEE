@@ -1,10 +1,11 @@
-package epf.query.cache;
+package epf.query.internal;
 
 import javax.cache.configuration.Factory;
 import javax.cache.integration.CacheLoader;
 import javax.enterprise.context.ApplicationScoped;
-import epf.query.cache.event.QueryLoad;
-import epf.query.cache.util.Loader;
+
+import epf.query.internal.event.QueryLoad;
+import epf.query.internal.util.Loader;
 
 /**
  * 

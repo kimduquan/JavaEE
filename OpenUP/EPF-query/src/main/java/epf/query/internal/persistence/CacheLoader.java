@@ -1,4 +1,4 @@
-package epf.query.persistence;
+package epf.query.internal.persistence;
 
 import java.util.Iterator;
 import java.util.Map;
