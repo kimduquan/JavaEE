@@ -14,7 +14,12 @@ public interface IdentityStore {
 	/**
 	 * 
 	 */
-	String PERSISTENCE_UNIT = "EPF-Security";
+	String SECURITY_UNIT_NAME = "EPF-security";
+	
+	/**
+	 * 
+	 */
+	String SECURITY_SCHEMA_UNIT_NAME = "EPF-security-schema";
 
 	/**
 	 * @param credential

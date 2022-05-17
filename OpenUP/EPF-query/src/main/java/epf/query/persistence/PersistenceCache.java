@@ -47,7 +47,7 @@ public class PersistenceCache implements HealthCheck {
 	/**
 	 *
 	 */
-	@PersistenceContext(unitName = epf.query.Naming.QUERY_UNIT)
+	@PersistenceContext(unitName = epf.query.Naming.QUERY_UNIT_NAME)
 	private transient EntityManager entityManager;
 	
 	/**

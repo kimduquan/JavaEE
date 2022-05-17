@@ -70,7 +70,7 @@ public class JPAPrincipalStore implements PrincipalStore {
 			final Map<String, Object> props = new HashMap<>(principal.getFactory().getProperties());
 			principal.close();
 			props.put(Naming.Persistence.JDBC.JDBC_PASSWORD, passwordHash);
-			final EntityManagerFactory factory = Persistence.createEntityManagerFactory(IdentityStore.PERSISTENCE_UNIT, props);
+			final EntityManagerFactory factory = Persistence.createEntityManagerFactory(IdentityStore.SECURITY_UNIT_NAME, props);
 			final EntityManager newManager = factory.createEntityManager();
 			principal.reset(factory, newManager);
 			oldCredential.get().setPassword(new Password(passwordHash));

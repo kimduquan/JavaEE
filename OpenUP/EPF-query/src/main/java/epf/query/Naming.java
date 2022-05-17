@@ -18,5 +18,5 @@ public interface Naming {
 	/**
 	 *
 	 */
-	String QUERY_UNIT = "EPF_Query";
+	String QUERY_UNIT_NAME = "EPF-query";
 }

@@ -23,7 +23,8 @@ import javax.servlet.http.HttpServletResponse;
 @RememberMe(isRememberMeExpression = "#{self.rememberMe}")
 @AutoApplySession
 @LoginToContinue(
-		loginPage = "/security/login.xhtml"
+		loginPage = "/security/login.xhtml",
+		useForwardToLoginExpression = "#{self.useForwardToLogin(request)}"
 		)
 public class AuthMechanism implements HttpAuthenticationMechanism {
 	
@@ -55,5 +56,15 @@ public class AuthMechanism implements HttpAuthenticationMechanism {
 	 */
 	public boolean isRememberMe() {
 		return authParams.isRememberMe();
+	}
+	
+	/**
+	 * @param request
+	 * @return
+	 */
+	public boolean useForwardToLogin(final HttpServletRequest request) {
+		final String url = request.getRequestURI();
+		request.setAttribute("epf.security.http.request.uri", url);
+		return true;
 	}
 }

@@ -51,7 +51,7 @@ public class JPAIdentityStore implements IdentityStore {
 	/**
 	 * 
 	 */
-	@PersistenceContext(unitName = "EPF-Schema")
+	@PersistenceContext(unitName = SECURITY_SCHEMA_UNIT_NAME)
 	transient EntityManager manager;
 	
 	/**
@@ -93,7 +93,7 @@ public class JPAIdentityStore implements IdentityStore {
         	final String tenantUrl = JdbcUtil.formatTenantUrl(jdbcUrl, tenant.toString());
         	props.put(Naming.Persistence.JDBC.JDBC_URL, tenantUrl);
         });
-        return executor.supplyAsync(() -> Persistence.createEntityManagerFactory(PERSISTENCE_UNIT, props))
+        return executor.supplyAsync(() -> Persistence.createEntityManagerFactory(SECURITY_UNIT_NAME, props))
         		.thenApply(factory -> {
         			CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
         			try {
