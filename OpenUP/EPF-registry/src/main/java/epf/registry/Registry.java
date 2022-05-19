@@ -112,6 +112,13 @@ public class Registry implements epf.client.registry.Registry {
 	 * 
 	 */
 	@Inject
+	@ConfigProperty(name = Naming.Search.SEARCH_URL)
+	private transient URI searchUrl;
+	
+	/**
+	 * 
+	 */
+	@Inject
 	@ConfigProperty(name = Naming.Config.CONFIG_URL)
 	private transient URI configUrl;
 	
@@ -186,6 +193,7 @@ public class Registry implements epf.client.registry.Registry {
 			remotes.put(Naming.MESSAGING, messagingUrl);
 			remotes.put(Naming.CACHE, cacheUrl);
 			remotes.put(Naming.QUERY, queryUrl);
+			remotes.put(Naming.SEARCH, searchUrl);
 			remotes.put(Naming.CONFIG, configUrl);
 			remotes.put(Naming.SCRIPT, scriptUrl);
 			remotes.put(Naming.MANAGEMENT, managementUrl);

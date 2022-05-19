@@ -2,6 +2,7 @@ package epf.client.search;
 
 import java.util.List;
 import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -10,7 +11,6 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.UriInfo;
 import epf.client.util.Client;
 import epf.naming.Naming;
 
@@ -21,10 +21,12 @@ import epf.naming.Naming;
 @Path(Naming.SEARCH)
 public interface Search {
 
-
+	/**
+	 *
+	 */
+	String ENTITY_COUNT = "entity-count";
     
     /**
-     * @param uriInfo
      * @param text
      * @param firstResult
      * @param maxResults
@@ -33,16 +35,12 @@ public interface Search {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     Response search(
-    		@Context
-    		final UriInfo uriInfo,
     		@QueryParam("text")
     		final String text, 
     		@QueryParam("first")
     		final Integer firstResult,
             @QueryParam("max")
-    		final Integer maxResults,
-            @Context
-            final SecurityContext context);
+    		final Integer maxResults);
     
     /**
      * @param client
@@ -61,5 +59,23 @@ public interface Search {
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.get(new GenericType<List<SearchEntity>>() {});
+    }
+	
+	/**
+	 * @param text
+	 * @return
+	 */
+	@HEAD
+	Response count(
+			@QueryParam("text")
+			final String text);
+    
+    /**
+     * @param client
+     * @param text
+     * @return
+     */
+    static Integer count(final Client client, final String text) {
+    	return Integer.parseInt(client.request(target -> target.queryParam("text", text), req -> req).head().getHeaderString(ENTITY_COUNT));
     }
 }

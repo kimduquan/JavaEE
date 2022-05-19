@@ -4,10 +4,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.Id;
-import javax.persistence.NamedEntityGraph;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -17,7 +14,6 @@ import epf.delivery_processes.schema.section.Description;
 import epf.delivery_processes.schema.section.TeamAllocation;
 import epf.delivery_processes.schema.section.WorkBreakdownStructure;
 import epf.delivery_processes.schema.section.WorkProductUsage;
-import epf.schema.utility.EntityListener;
 
 /**
  *
@@ -27,23 +23,12 @@ import epf.schema.utility.EntityListener;
 @Schema(name = DeliveryProcesses.DELIVERY_PROCESS, title = "Delivery Process")
 @Entity(name = DeliveryProcesses.DELIVERY_PROCESS)
 @Table(schema = DeliveryProcesses.SCHEMA, name = "DELIVERY_PROCESS")
-@NamedQuery(
-        name = DeliveryProcess.DELIVERY_PROCESSES, 
-        query = "SELECT dp FROM EPF_DeliveryProcess AS dp"
-)
-@NamedEntityGraph(includeAllAttributes = true)
-@EntityListeners(EntityListener.class)
 public class DeliveryProcess implements Serializable {
 	
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-    
-    /**
-     * 
-     */
-    public static final String DELIVERY_PROCESSES = "EPF_DeliveryProcess.DeliveryProcesses";
 
 	/**
      * 

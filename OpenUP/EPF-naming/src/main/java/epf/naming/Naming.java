@@ -578,6 +578,10 @@ public interface Naming {
 	 */
 	interface Search {
 		
+		/**
+	     * 
+	     */
+	    String SEARCH_URL = "epf.search.url";
 	}
 	
 	/**

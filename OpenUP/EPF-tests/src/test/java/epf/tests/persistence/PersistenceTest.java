@@ -32,7 +32,7 @@ import org.junit.rules.TestName;
  *
  * @author FOXCONN
  */
-public class EntitiesTest {
+public class PersistenceTest {
 	
 	@Rule
     public TestName testName = new TestName();

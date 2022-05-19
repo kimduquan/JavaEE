@@ -97,6 +97,11 @@
         <file name="${shared.resource.dir}/epf/cache/hazelcast-5.1.1.jar"/>
     </library>
     
+    <library id="H2LuceneLib">
+        <fileset dir="${shared.resource.dir}/epf/search" includes="*.jar"/>
+        <fileset dir="${shared.resource.dir}/epf/security" includes="*.jar"/>
+    </library>
+    
     <library id="OpenCVLib">
         <file name="${opencv_java}"/>
         <file name="${opencv_core}"/>
@@ -189,7 +194,7 @@
             javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
             javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
             javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
-            libraryRef="H2JDBCLib" />
+            libraryRef="H2LuceneLib" />
         <properties URL="jdbc:h2:~/EPF-query;AUTO_SERVER=TRUE;AUTO_RECONNECT=TRUE;PASSWORD_HASH=TRUE" user="test" password="22ddf5abe1672b3d6c12fe7387ecc15e2ff0f405595dd756111b17d29b5f4486" />
     </dataSource>
 

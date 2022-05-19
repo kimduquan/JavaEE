@@ -40,6 +40,7 @@
         <liberty.env.epf_lang_url>ws://localhost:9080/lang/lang/</liberty.env.epf_lang_url>
         <liberty.env.epf_cache_url>http://localhost:9080/cache/cache/</liberty.env.epf_cache_url>
         <liberty.env.epf_query_url>http://localhost:9080/query/query/</liberty.env.epf_query_url>
+        <liberty.env.epf_search_url>http://localhost:9080/query/search/</liberty.env.epf_search_url>
         <liberty.env.epf_registry_url>http://localhost:9080/registry/registry/</liberty.env.epf_registry_url>
 		<liberty.env.epf_management_url>http://localhost:9080/management/management/</liberty.env.epf_management_url>
 		<liberty.env.epf_portlet_url>http://localhost:8080/pluto/portal</liberty.env.epf_portlet_url>
@@ -54,6 +55,11 @@
 		<liberty.env.epf_tests_file_root>target/servers/test/epf.file.root</liberty.env.epf_tests_file_root>-->
     </properties>
     <dependencies>
+    	<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-core -->
+		<dependency>
+		    <groupId>org.apache.lucene</groupId>
+		    <artifactId>lucene-core</artifactId>
+		</dependency>
        	<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 		<dependency>
 		    <groupId>mysql</groupId>
@@ -374,6 +380,7 @@
                         <epf.lang.url>ws://localhost:${httpPort}/lang/lang/</epf.lang.url>
                         <epf.cache.url>http://localhost:${httpPort}/cache/cache/</epf.cache.url>
                         <epf.query.url>http://localhost:${httpPort}/query/query/</epf.query.url>
+                        <epf.search.url>http://localhost:${httpPort}/query/search/</epf.search.url>
                         <epf.portlet.url>http://localhost:${portalPort}/pluto/portal</epf.portlet.url>
                         <epf.webapp.url>https://localhost:${httpsPort}/webapp/</epf.webapp.url>
                         <epf.health.url>http://localhost:${httpPort}/health/</epf.health.url>
@@ -442,6 +449,14 @@
 	                                    <groupId>com.hazelcast</groupId>
 	                                    <artifactId>hazelcast</artifactId>
 	                                </dependency>
+								</dependencyGroup>
+								<dependencyGroup>
+									<location>${project.build.directory}/shared/resources/epf/search</location>
+									<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-core -->
+									<dependency>
+									    <groupId>org.apache.lucene</groupId>
+									    <artifactId>lucene-core</artifactId>
+									</dependency>
 								</dependencyGroup>
                             </copyDependencies>
                         </configuration>

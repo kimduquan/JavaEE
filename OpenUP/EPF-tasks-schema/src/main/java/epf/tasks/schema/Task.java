@@ -4,7 +4,6 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.NamedEntityGraph;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -30,7 +29,6 @@ import epf.tasks.schema.section.Relationships;
     "optional",
     "outputs"
 })
-@NamedEntityGraph(includeAllAttributes = true)
 public class Task implements Serializable {
 
     /**

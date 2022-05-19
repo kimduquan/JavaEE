@@ -4,7 +4,6 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.NamedEntityGraph;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -17,7 +16,6 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Schema(name = WorkProducts.REPORT, title = "Report")
 @Entity(name = WorkProducts.REPORT)
 @Table(schema = WorkProducts.SCHEMA, name = "REPORT")
-@NamedEntityGraph(includeAllAttributes = true)
 public class Report implements Serializable {
 
 	/**

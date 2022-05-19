@@ -8,8 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.NamedEntityGraph;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import org.eclipse.microprofile.graphql.Name;
@@ -25,21 +23,12 @@ import javax.persistence.Index;
 @Schema(name = WorkProducts.DOMAIN, title = "Domain")
 @Entity(name = WorkProducts.DOMAIN)
 @Table(schema = WorkProducts.SCHEMA, name = "EPF_DOMAIN")
-@NamedQuery(
-        name = Domain.DOMAINS, 
-        query = "SELECT d FROM EPF_Domain AS d")
-@NamedEntityGraph(includeAllAttributes = true)
 public class Domain implements Serializable {
 
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-    
-    /**
-     * 
-     */
-    public static final String DOMAINS = "EPF_Domain.Domains";
 
 	/**
      * 

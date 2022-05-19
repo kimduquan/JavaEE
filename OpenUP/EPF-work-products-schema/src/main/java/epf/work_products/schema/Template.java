@@ -5,7 +5,6 @@ import javax.json.JsonObject;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.NamedEntityGraph;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import org.eclipse.microprofile.graphql.Type;
@@ -19,7 +18,6 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Schema(name = WorkProducts.TEMPLATE, title = "Template")
 @Entity(name = WorkProducts.TEMPLATE)
 @Table(schema = WorkProducts.SCHEMA, name = "TEMPLATE")
-@NamedEntityGraph(includeAllAttributes = true)
 public class Template implements Serializable {
 	
     /**

@@ -9,8 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.NamedEntityGraph;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import org.eclipse.microprofile.graphql.Name;
@@ -26,21 +24,12 @@ import javax.persistence.Index;
 @Schema(name = Roles.ROLE_SET, title = "Role Set")
 @Entity(name = Roles.ROLE_SET)
 @Table(schema = Roles.SCHEMA, name = "ROLE_SET")
-@NamedQuery(
-        name = RoleSet.ROLES, 
-        query = "SELECT rs FROM EPF_RoleSet AS rs")
-@NamedEntityGraph(includeAllAttributes = true)
 public class RoleSet implements Serializable {
 
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-    
-    /**
-     * 
-     */
-    public static final String ROLES = "EPF_RoleSet.Roles";
 
 	/**
      * 
