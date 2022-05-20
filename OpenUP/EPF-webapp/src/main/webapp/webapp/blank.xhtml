@@ -9,7 +9,7 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <title>SB Admin 2 - Blank</title>
+    <title><h:outputText value="#{i18n['epf.webapp']}" /> - <h:outputText value="#{i18n['epf.webapp.index']}" /></title>
 
     <!-- Custom fonts for this template-->
     <h:outputStylesheet library="startbootstrap-sb-admin-2-gh-pages" name="vendor/fontawesome-free/css/all.min.css" />
@@ -22,7 +22,7 @@
 
 </h:head>
 
-<h:body id="page-top">
+<h:body a:id="page-top">
 
     <!-- Page Wrapper -->
     <div id="wrapper">
@@ -167,9 +167,9 @@
                             <h:inputText styleClass="form-control bg-light border-0 small" a:placeholder="Search for..."
                                 a:aria-label="Search" a:aria-describedby="basic-addon2" />
                             <div class="input-group-append">
-                                <h:commandButton styleClass="btn btn-primary" a:type="button">
+                                <button class="btn btn-primary" type="button">
                                     <i class="fas fa-search fa-sm"></i>
-                                </h:commandButton>
+                                </button>
                             </div>
                         </div>
                     </h:form>
@@ -192,9 +192,9 @@
                                             a:placeholder="Search for..." a:aria-label="Search"
                                             a:aria-describedby="basic-addon2" />
                                         <div class="input-group-append">
-                                            <h:commandButton styleClass="btn btn-primary" a:type="button">
+                                            <button class="btn btn-primary" type="button">
                                                 <i class="fas fa-search fa-sm"></i>
-                                            </h:commandButton>
+                                            </button>
                                         </div>
                                     </div>
                                 </h:form>
@@ -252,69 +252,36 @@
                             </div>
                         </li>
 
-                        <!-- Nav Item - Messages -->
-                        <li class="nav-item dropdown no-arrow mx-1">
+                        <!-- Nav Item - Messages --><f:websocket channel="epf_messaging_session" user="#{request.remoteUser}" onmessage="addMessage" />
+                        <li jsf:id="messages" class="nav-item dropdown no-arrow mx-1">
                             <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-envelope fa-fw"></i>
                                 <!-- Counter - Messages -->
-                                <span class="badge badge-danger badge-counter">7</span>
+                                <span jsf:rendered="#{not empty epf_messaging_session.messages}" class="badge badge-danger badge-counter"><h:outputText value="#{epf_messaging_session.remainingSize}" /></span>
                             </a>
                             <!-- Dropdown - Messages -->
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="messagesDropdown">
                                 <h6 class="dropdown-header">
                                     Message Center
-                                </h6>
+                                </h6><ui:repeat var="message" value="#{epf_messaging_session.messages}" varStatus="status">
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
-                                        <h:graphicImage library="startbootstrap-sb-admin-2-gh-pages" styleClass="rounded-circle" name="img/undraw_profile_1.svg"
-                                            a:alt="..." />
-                                        <div class="status-indicator bg-success"></div>
+                                        <img jsf:styleClass="rounded-circle" a:src="#{epf_messaging_session.getPicture(message)}"
+	                                       		a:alt="..."/>
+                                      	<div jsf:rendered="message.priority == 4" class="status-indicator bg-info"></div>
+                                       	<div jsf:rendered="message.priority == 3" class="status-indicator bg-primary"></div>
+                                       	<div jsf:rendered="message.priority == 2" class="status-indicator bg-warning"></div>
+                                       	<div jsf:rendered="message.priority == 1" class="status-indicator bg-danger"></div>
                                     </div>
-                                    <div class="font-weight-bold">
-                                        <div class="text-truncate">Hi there! I am wondering if you can help me with a
-                                            problem I've been having.</div>
-                                        <div class="small text-gray-500">Emily Fowler · 58m</div>
+                                    <div jsf:styleClass="#{status.first ? 'font-weight-bold' : ''}">
+                                        <div class="text-truncate">
+                                            <h:outputText value="#{epf_messaging_session.getText(message)}" /></div>
+                                        <div class="small text-gray-500"><h:outputText value="#{epf_messaging_session.getReplyTo(message)}" /> · <h:outputText value="#{epf_messaging_session.getDeliveryTime(message)}" /></div>
                                     </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <h:graphicImage library="startbootstrap-sb-admin-2-gh-pages" styleClass="rounded-circle" name="img/undraw_profile_2.svg"
-                                            a:alt="..." />
-                                        <div class="status-indicator"></div>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">I have the photos that you ordered last month, how
-                                            would you like them sent to you?</div>
-                                        <div class="small text-gray-500">Jae Chun · 1d</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <h:graphicImage library="startbootstrap-sb-admin-2-gh-pages" styleClass="rounded-circle" name="img/undraw_profile_3.svg"
-                                            a:alt="..." />
-                                        <div class="status-indicator bg-warning"></div>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">Last month's report looks great, I am very happy with
-                                            the progress so far, keep up the good work!</div>
-                                        <div class="small text-gray-500">Morgan Alvarez · 2d</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60"
-                                            alt="..." />
-                                        <div class="status-indicator bg-success"></div>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">Am I a good boy? The reason I ask is because someone
-                                            told me that people say this to all dogs, even if they aren't good...</div>
-                                        <div class="small text-gray-500">Chicken the Dog · 2w</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
+                                </a></ui:repeat>
+                                <a class="dropdown-item text-center small text-gray-500" href="#" onclick="collectMessages(); return false;" >Read More Messages</a>
                             </div>
                         </li>
 
@@ -324,9 +291,9 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-                                <h:graphicImage library="startbootstrap-sb-admin-2-gh-pages" styleClass="img-profile rounded-circle"
-                                    name="img/undraw_profile.svg" />
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><h:outputText value="#{security_principal.name}" /></span>
+                                <h:graphicImage rendered="#{security_principal.getClaim('picture') == null}" library="startbootstrap-sb-admin-2-gh-pages" styleClass="img-profile rounded-circle"
+                                    name="img/undraw_profile.svg" /><img jsf:rendered="#{security_principal.getClaim('picture') != null}" src="#{security_principal.getClaim('picture')}" class="img-profile rounded-circle" />
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -391,7 +358,7 @@
 
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
+        aria-hidden="true"><h:form>
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -403,11 +370,11 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    <h:commandLink styleClass="btn btn-primary" action="#{security_principal.logout}" value="#{i18n['epf.security.logout']}" />
                 </div>
             </div>
         </div>
-    </div>
+    </h:form></div>
 
     <!-- Bootstrap core JavaScript-->
     <h:outputScript library="startbootstrap-sb-admin-2-gh-pages" name="vendor/jquery/jquery.min.js"></h:outputScript>
