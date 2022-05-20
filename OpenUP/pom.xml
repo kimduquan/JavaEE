@@ -390,11 +390,11 @@
 			</dependency>
 			
 			
-			<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-core -->
+			<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-queryparser -->
 			<dependency>
 			    <groupId>org.apache.lucene</groupId>
-			    <artifactId>lucene-core</artifactId>
-			    <version>9.1.0</version>
+			    <artifactId>lucene-queryparser</artifactId>
+			    <version>8.5.2</version>
 			</dependency>
             <!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-rs-mp-client -->
             <dependency>

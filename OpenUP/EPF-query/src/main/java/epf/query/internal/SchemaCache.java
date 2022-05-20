@@ -11,7 +11,7 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import epf.client.search.SearchEntity;
+import epf.client.schema.EntityId;
 import epf.schema.utility.SchemaUtil;
 import epf.util.logging.LogManager;
 
@@ -107,8 +107,8 @@ public class SchemaCache {
 	 * @param entity
 	 * @return
 	 */
-	public EntityKey getSearchKey(final SearchEntity entity) {
-		return new EntityKey(entity.getSchema(), entity.getName(), entity.getAttributes().values().iterator().next());
+	public EntityKey getSearchKey(final EntityId entityId) {
+		return new EntityKey(entityId.getSchema(), entityId.getName(), entityId.getAttributes().values().iterator().next());
 	}
 	
 	/**
@@ -145,5 +145,13 @@ public class SchemaCache {
 
 	public SchemaUtil getSchemaUtil() {
 		return schemaUtil;
+	}
+	
+	/**
+	 * @param table
+	 * @return
+	 */
+	public Optional<String> getEntityName(final String table){
+		return schemaUtil.getEntityName(table);
 	}
 }

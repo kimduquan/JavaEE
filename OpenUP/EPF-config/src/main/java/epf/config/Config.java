@@ -33,14 +33,14 @@ public class Config implements epf.client.config.Config {
     /**
      * 
      */
-    @ConfigProperty(name = Naming.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT)
+    @ConfigProperty(name = Naming.Query.FIRST_RESULT_DEFAULT)
 	@Inject
 	private transient int firstResultDefault;
     
     /**
      * 
      */
-    @ConfigProperty(name = Naming.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT)
+    @ConfigProperty(name = Naming.Query.MAX_RESULTS_DEFAULT)
 	@Inject
 	private transient int maxResultsDefault;
     
@@ -105,8 +105,8 @@ public class Config implements epf.client.config.Config {
      */
     @PostConstruct
     protected void postConstruct() {
-    	configs.put(Naming.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT, String.valueOf(firstResultDefault));
-    	configs.put(Naming.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT, String.valueOf(maxResultsDefault));
+    	configs.put(Naming.Query.FIRST_RESULT_DEFAULT, String.valueOf(firstResultDefault));
+    	configs.put(Naming.Query.MAX_RESULTS_DEFAULT, String.valueOf(maxResultsDefault));
     	configs.put(Naming.Security.Auth.GOOGLE_PROVIDER, googleOpenIDDiscoveryUrl);
     	configs.put(Naming.Security.Auth.GOOGLE_CLIENT_ID, googleClientId);
     	configs.put(Naming.Security.Auth.GOOGLE_CLIENT_SECRET, googleClientSecret);

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.portlet.persistence;
 
 import java.io.Serializable;
@@ -110,8 +107,8 @@ public class Query implements QueryView, Serializable {
 					.collect(Collectors.toList());
 			collector = new JsonObjectCollector(attributes.stream().map(Attribute::getName).collect(Collectors.toList()));
 			try {
-				firstResult = Integer.valueOf(configUtil.getProperty(epf.naming.Naming.Persistence.PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT));
-				maxResults = Integer.valueOf(configUtil.getProperty(epf.naming.Naming.Persistence.PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT));
+				firstResult = Integer.valueOf(configUtil.getProperty(epf.naming.Naming.Query.FIRST_RESULT_DEFAULT));
+				maxResults = Integer.valueOf(configUtil.getProperty(epf.naming.Naming.Query.MAX_RESULTS_DEFAULT));
 				resultList = entityUtil.getEntities(entity.getTable().getSchema(), entity.getName(), firstResult, maxResults);
 			}
 			catch (Exception e) {

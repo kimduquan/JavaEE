@@ -329,16 +329,6 @@ public interface Naming {
 		/**
 		 * 
 		 */
-		String PERSISTENCE_QUERY_FIRST_RESULT_DEFAULT = "epf.persistence.query.firstResult.default";
-		
-		/**
-		 * 
-		 */
-		String PERSISTENCE_QUERY_MAX_RESULTS_DEFAULT = "epf.persistence.query.maxResults.default";
-		
-		/**
-		 * 
-		 */
 		String PERSISTENCE_ENTITY_LISTENERS = "persistence";
 		
 		/**
@@ -405,6 +395,16 @@ public interface Naming {
 		 *
 		 */
 		String QUERY_URL = "epf.query.url";
+		
+		/**
+		 * 
+		 */
+		String FIRST_RESULT_DEFAULT = "epf.query.firstResult.default";
+		
+		/**
+		 * 
+		 */
+		String MAX_RESULTS_DEFAULT = "epf.query.maxResults.default";
 		
 		/**
 		 *

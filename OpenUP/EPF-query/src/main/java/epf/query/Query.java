@@ -11,6 +11,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.health.Readiness;
+import epf.client.schema.EntityId;
 import epf.naming.Naming;
 import epf.query.internal.EntityCache;
 import epf.query.internal.QueryCache;
@@ -81,5 +82,11 @@ public class Query implements epf.client.query.Query {
 			final SecurityContext context)
 			throws Exception {
 		return persistence.executeCountQuery(schema, paths, context);
+	}
+
+	@Override
+	public Response fetchEntities(final List<EntityId> entityIds) {
+		final List<Object> entities = entityCache.getEntities(entityIds);
+		return Response.ok(entities).build();
 	}
 }

@@ -6,7 +6,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * @author PC
@@ -35,6 +37,11 @@ public class SchemaUtil {
 	private transient final Map<String, Class<?>> entityClasses = new ConcurrentHashMap<>();
 	
 	/**
+	 *
+	 */
+	private transient final Map<String, String> entityTables = new ConcurrentHashMap<>();
+	
+	/**
 	 * @param cls
 	 * @return
 	 */
@@ -52,8 +59,8 @@ public class SchemaUtil {
 	 */
 	private Optional<String> computeEntityName(final Class<?> cls) {
 		Optional<String> name = Optional.empty();
-		if(cls.isAnnotationPresent(javax.persistence.Entity.class)) {
-			name = Optional.of(((javax.persistence.Entity)cls.getAnnotation(javax.persistence.Entity.class)).name());
+		if(cls.isAnnotationPresent(Entity.class)) {
+			name = Optional.of(((Entity)cls.getAnnotation(Entity.class)).name());
 		}
 		return name;
 	}
@@ -64,25 +71,42 @@ public class SchemaUtil {
 	 */
 	private Optional<String> computeEntitySchema(final Class<?> cls){
 		Optional<String> name = Optional.empty();
-		if(cls.isAnnotationPresent(javax.persistence.Entity.class)) {
-			name = Optional.of(((javax.persistence.Table)cls.getAnnotation(javax.persistence.Table.class)).schema());
+		if(cls.isAnnotationPresent(Entity.class)) {
+			name = Optional.of(((Table)cls.getAnnotation(Table.class)).schema());
 		}
 		return name;
 	}
 	
 	/**
-	 * @param entityClasses
+	 * @param cls
+	 * @return
 	 */
-	public SchemaUtil(final List<Class<?>> entityClasses) {
-		entityClasses.forEach(entityClass -> entitySchemas.put(entityClass.getName(), computeEntitySchema(entityClass)));
-		entityClasses.forEach(entityClass -> {
+	private Optional<Table> computeEntityTable(final Class<?> cls) {
+		Optional<Table> table = Optional.empty();
+		if(cls.isAnnotationPresent(Table.class)) {
+			table = Optional.of(cls.getAnnotation(Table.class));
+		}
+		return table;
+	}
+	
+	/**
+	 * @param classes
+	 */
+	public SchemaUtil(final List<Class<?>> classes) {
+		classes.forEach(entityClass -> entitySchemas.put(entityClass.getName(), computeEntitySchema(entityClass)));
+		classes.forEach(entityClass -> {
 			final Optional<String> entityName = computeEntityName(entityClass);
-			entityNames.put(entityClass.getName(), entityName);
 			if(entityName.isPresent()) {
-				this.entityClasses.put(entityName.get(), entityClass);
+				entityNames.put(entityClass.getName(), entityName);
+				entityClasses.put(entityName.get(), entityClass);
+				final Optional<Table> entityTable = computeEntityTable(entityClass);
+				if(entityTable.isPresent()) {
+					entitySchemas.put(entityClass.getName(), Optional.of(entityTable.get().schema()));
+					entityTables.put(entityTable.get().name(), entityName.get());
+				}
 			}
 		});
-		entityClasses.forEach(entityClass -> entityIdFields.put(entityClass.getName(), computeEntityIdField(entityClass)));
+		classes.forEach(entityClass -> entityIdFields.put(entityClass.getName(), computeEntityIdField(entityClass)));
 	}
 	
 	/**
@@ -131,5 +155,13 @@ public class SchemaUtil {
 	 */
 	public Optional<Class<?>> getEntityClass(final String entityName){
 		return Optional.ofNullable(entityClasses.get(entityName));
+	}
+	
+	/**
+	 * @param entityTable
+	 * @return
+	 */
+	public Optional<String> getEntityName(final String entityTable){
+		return Optional.ofNullable(entityTables.get(entityTable));
 	}
 }

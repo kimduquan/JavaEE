@@ -55,10 +55,10 @@
 		<liberty.env.epf_tests_file_root>target/servers/test/epf.file.root</liberty.env.epf_tests_file_root>-->
     </properties>
     <dependencies>
-    	<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-core -->
+    	<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-queryparser -->
 		<dependency>
 		    <groupId>org.apache.lucene</groupId>
-		    <artifactId>lucene-core</artifactId>
+		    <artifactId>lucene-queryparser</artifactId>
 		</dependency>
        	<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 		<dependency>
@@ -452,10 +452,10 @@
 								</dependencyGroup>
 								<dependencyGroup>
 									<location>${project.build.directory}/shared/resources/epf/search</location>
-									<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-core -->
+									<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-queryparser -->
 									<dependency>
 									    <groupId>org.apache.lucene</groupId>
-									    <artifactId>lucene-core</artifactId>
+									    <artifactId>lucene-queryparser</artifactId>
 									</dependency>
 								</dependencyGroup>
                             </copyDependencies>

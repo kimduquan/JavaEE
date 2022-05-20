@@ -4,12 +4,16 @@ import java.util.List;
 import java.util.function.Function;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HEAD;
+import javax.ws.rs.HttpMethod;
+import javax.ws.rs.PATCH;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericType;
@@ -17,6 +21,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import epf.client.schema.EntityId;
 import epf.client.util.Client;
 import epf.naming.Naming;
 
@@ -133,6 +138,28 @@ public interface Query {
 				.getHeaderString(Naming.Query.ENTITY_COUNT);
 		return Integer.parseInt(count);
 	}
+	
+
+    
+    /**
+     * @param entityIds
+     * @return
+     */
+    @PATCH
+    @Path(ENTITY)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    Response fetchEntities(final List<EntityId> entityIds);
+    
+    /**
+     * @param client
+     * @param entityIds
+     * @return
+     */
+    static Response fetchEntities(final Client client, final List<EntityId> entityIds) {
+    	return client.request(target -> target.path(ENTITY), req -> req.accept(MediaType.APPLICATION_JSON))
+    			.method(HttpMethod.PATCH, Entity.json(entityIds));
+    }
 	
 	/**
 	 * @param schema

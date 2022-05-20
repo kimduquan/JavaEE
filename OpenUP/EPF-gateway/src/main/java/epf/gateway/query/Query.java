@@ -1,12 +1,15 @@
 package epf.gateway.query;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HEAD;
+import javax.ws.rs.PATCH;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -14,6 +17,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
+import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
@@ -50,7 +54,7 @@ public class Query {
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
-            @Context final javax.ws.rs.core.Request req,
+            @Context final Request req,
             @PathParam("schema") final String schema,
             @PathParam("entity") final String entity,
             @PathParam("id") final String entityId) throws Exception {
@@ -71,11 +75,32 @@ public class Query {
 			@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
-            @Context final javax.ws.rs.core.Request req,
+            @Context final Request req,
             @PathParam("schema") final String schema,
             @PathParam("entity") final String entity
             ) throws Exception {
         return request.request(Naming.QUERY, context, headers, uriInfo, req, null);
+    }
+	
+	/**
+	 * @param context
+	 * @param headers
+	 * @param uriInfo
+	 * @param req
+	 * @return
+	 * @throws Exception
+	 */
+	@PATCH
+    @Path("entity")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+	public CompletionStage<Response> fetchEntities(
+			@Context final SecurityContext context,
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final Request req,
+            final InputStream body) throws Exception {
+        return request.request(Naming.QUERY, context, headers, uriInfo, req, body);
     }
 	
 	/**
@@ -97,7 +122,7 @@ public class Query {
             @Context 
             final UriInfo uriInfo,
             @Context 
-            final javax.ws.rs.core.Request req,
+            final Request req,
     		@PathParam("schema")
             final String schema,
             @PathParam("criteria")
@@ -123,7 +148,7 @@ public class Query {
             @Context 
             final UriInfo uriInfo,
             @Context 
-            final javax.ws.rs.core.Request req,
+            final Request req,
     		@PathParam("schema")
             final String schema,
             @PathParam("criteria")

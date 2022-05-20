@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -18,7 +17,7 @@ import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
-import epf.client.search.SearchEntity;
+import epf.client.schema.EntityId;
 import epf.query.internal.event.EntityLoad;
 import epf.query.internal.util.LoaderFactory;
 import epf.schema.utility.EntityEvent;
@@ -112,8 +111,8 @@ public class EntityCache implements HealthCheck {
 	 * @param entities
 	 * @return
 	 */
-	public List<Object> getEntities(final List<SearchEntity> entities){
-		final List<EntityKey> entityKeys = entities.stream().map(entity -> schemaCache.getSearchKey(entity)).collect(Collectors.toList());
+	public List<Object> getEntities(final List<EntityId> entityIds){
+		final List<EntityKey> entityKeys = entityIds.stream().map(entity -> schemaCache.getSearchKey(entity)).collect(Collectors.toList());
 		final List<String> keys = entityKeys.stream().map(EntityKey::toString).collect(Collectors.toList());
 		final Map<String, Object> values = entityCache.getAll(keys.stream().collect(Collectors.toSet()));
 		final List<Object> result = new ArrayList<>();

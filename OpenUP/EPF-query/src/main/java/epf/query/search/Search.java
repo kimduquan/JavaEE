@@ -1,15 +1,20 @@
 package epf.query.search;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
-import epf.client.search.SearchEntity;
+import epf.client.schema.EntityId;
 import epf.naming.Naming;
+import epf.query.internal.SchemaCache;
 
 /**
  * 
@@ -28,6 +33,12 @@ public class Search implements epf.client.search.Search {
 	 */
 	@PersistenceContext(unitName = "EPF-query")
 	private transient EntityManager manager;
+	
+	/**
+	 *
+	 */
+	@Inject
+	private transient SchemaCache schemaCache;
 
 	@Override
 	public Response search(final String text, final Integer firstResult, final Integer maxResults) {
@@ -36,7 +47,7 @@ public class Search implements epf.client.search.Search {
 				.setParameter(1, maxResults != null ? maxResults : 0)
 				.setParameter(2, firstResult != null ? firstResult : 0);
 		final List<?> resultList = query.getResultList();
-		final List<SearchEntity> entities = resultList.stream().map(object -> new SearchEntity()).collect(Collectors.toList());
+		final List<EntityId> entities = resultList.stream().map(this::toEntityId).filter(entityId -> entityId != null).collect(Collectors.toList());
 		return Response.ok(entities).header(ENTITY_COUNT, resultList.size()).build();
 	}
 
@@ -50,4 +61,31 @@ public class Search implements epf.client.search.Search {
 		return Response.ok().header(ENTITY_COUNT, resultList.size()).build();
 	}
 	
+	/**
+	 * @param obj
+	 * @return
+	 */
+	private EntityId toEntityId(final Object obj) {
+		final Object[] data = (Object[]) obj;
+		final String schema = String.valueOf(data[0]);
+		final String table = String.valueOf(data[1]);
+		final Object[] columns = (Object[]) data[2];
+		final Object[] keys = (Object[]) data[3];
+		final Optional<String> entityName = schemaCache.getEntityName(table);
+		EntityId entityId = null;
+		if(entityName.isPresent()) {
+			entityId = new EntityId();
+			entityId.setSchema(schema);
+			entityId.setName(entityName.get());
+			final Map<String, Object> entityAttributes = new HashMap<>();
+			int columnIndex = 0;
+			for(Object column : columns) {
+				final Object key = keys[columnIndex];
+				entityAttributes.put(String.valueOf(column), key);
+				columnIndex++;
+			}
+			entityId.setAttributes(entityAttributes);
+		}
+		return entityId;
+	}
 }

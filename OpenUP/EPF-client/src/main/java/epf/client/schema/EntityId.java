@@ -1,11 +1,11 @@
-package epf.client.search;
+package epf.client.schema;
 
 import java.util.Map;
 
 /**
  * 
  */
-public class SearchEntity {
+public class EntityId {
 
 	/**
 	 *
@@ -29,7 +29,7 @@ public class SearchEntity {
 	public String getName() {
 		return name;
 	}
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 	public Map<String, Object> getAttributes() {
