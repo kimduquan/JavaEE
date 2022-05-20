@@ -43,9 +43,9 @@ public class Search implements epf.client.search.Search {
 	@Override
 	public Response search(final String text, final Integer firstResult, final Integer maxResults) {
 		final Query query = manager.createNativeQuery(FULLTEXT_SEARCH)
-				.setParameter(0, text)
-				.setParameter(1, maxResults != null ? maxResults : 0)
-				.setParameter(2, firstResult != null ? firstResult : 0);
+				.setParameter(1, text)
+				.setParameter(2, maxResults != null ? maxResults : 0)
+				.setParameter(3, firstResult != null ? firstResult : 0);
 		final List<?> resultList = query.getResultList();
 		final List<EntityId> entities = resultList.stream().map(this::toEntityId).filter(entityId -> entityId != null).collect(Collectors.toList());
 		return Response.ok(entities).header(ENTITY_COUNT, resultList.size()).build();
@@ -54,9 +54,9 @@ public class Search implements epf.client.search.Search {
 	@Override
 	public Response count(final String text) {
 		final Query query = manager.createNativeQuery(FULLTEXT_SEARCH)
-				.setParameter(0, text)
-				.setParameter(1, 0)
-				.setParameter(2, 0);
+				.setParameter(1, text)
+				.setParameter(2, 0)
+				.setParameter(3, 0);
 		final List<?> resultList = query.getResultList();
 		return Response.ok().header(ENTITY_COUNT, resultList.size()).build();
 	}
