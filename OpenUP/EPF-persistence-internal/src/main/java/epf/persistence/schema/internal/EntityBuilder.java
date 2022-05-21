@@ -35,7 +35,7 @@ public class EntityBuilder {
 				type
 				.getAttributes()
 				.stream()
-				.map(builder::build)
+				.map(attribute -> builder.build(type.getJavaType(), attribute))
 				.sorted(comparator)
 				.collect(Collectors.toList())
 				);
@@ -47,7 +47,7 @@ public class EntityBuilder {
 		if(type.hasSingleIdAttribute()) {
 			final Type<?> idType = type.getIdType();
 			try {
-				final Attribute id = builder.build(type.getId(idType.getJavaType()));
+				final Attribute id = builder.build(type.getJavaType(), type.getId(idType.getJavaType()));
 				entityType.setId(id);
 			}
 			catch(Exception ex) {

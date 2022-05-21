@@ -24,7 +24,7 @@ public class EmbeddableBuilder {
 				type
 				.getAttributes()
 				.stream()
-				.map(builder::build)
+				.map(attribute -> builder.build(type.getJavaType(), attribute))
 				.sorted(comparator)
 				.collect(Collectors.toList())
 				);

@@ -9,7 +9,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-
 import epf.query.internal.QueryKey;
 import epf.query.internal.SchemaCache;
 import epf.query.internal.event.QueryLoad;
@@ -37,11 +36,12 @@ public class QueryLoader implements CacheLoader<String, Integer> {
 	public Integer load(final String key) throws Exception {
 		final Optional<QueryKey> queryKey = QueryKey.parseString(key);
 		if(queryKey.isPresent()) {
-			final Optional<Class<?>> entityClass = schemaCache.getSchemaUtil().getEntityClass(queryKey.get().getEntity());
-			if(entityClass.isPresent()) {
+			final Optional<String> entityClassName = schemaCache.getEntityClassName(queryKey.get().getEntity());
+			if(entityClassName.isPresent()) {
+				final Class<?> entityClass = Class.forName(entityClassName.get());
 				final CriteriaBuilder builder = manager.getCriteriaBuilder();
 				final CriteriaQuery<Long> query = builder.createQuery(Long.class);
-				final Root<?> from = query.from(entityClass.get());
+				final Root<?> from = query.from(entityClass);
 				query.select(builder.count(from));
 				return manager.createQuery(query).getSingleResult().intValue();
 			}

@@ -44,6 +44,10 @@ public class Attribute implements Serializable {
 	 */
 	private boolean collection;
 	/**
+	 *
+	 */
+	private Column column;
+	/**
 	 * @return the type
 	 */
 	public String getType() {
@@ -126,5 +130,17 @@ public class Attribute implements Serializable {
 	 */
 	public void setBindable(BindableType bindable) {
 		this.bindable = bindable;
+	}
+	/**
+	 * @return
+	 */
+	public Column getColumn() {
+		return column;
+	}
+	/**
+	 * @param column
+	 */
+	public void setColumn(final Column column) {
+		this.column = column;
 	}
 }

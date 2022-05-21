@@ -3,7 +3,9 @@ package epf.persistence.schema.internal;
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.Attribute.PersistentAttributeType;
 import javax.persistence.metamodel.Bindable;
+
 import epf.persistence.schema.client.AttributeType;
+import epf.persistence.schema.client.Column;
 
 /**
  * @author PC
@@ -12,10 +14,11 @@ import epf.persistence.schema.client.AttributeType;
 public class AttributeBuilder {
 
 	/**
-	 * @param attribute
+	 * @param entityClass
+	 * @param attr
 	 * @return
 	 */
-	public epf.persistence.schema.client.Attribute build(final Attribute<?, ?> attr){
+	public epf.persistence.schema.client.Attribute build(final Class<?> entityClass, final Attribute<?, ?> attr){
 		final epf.persistence.schema.client.Attribute attribute = new epf.persistence.schema.client.Attribute();
 		attribute.setType(attr.getJavaType().getName());
 		attribute.setName(attr.getName());
@@ -26,6 +29,10 @@ public class AttributeBuilder {
 			final Bindable<?> bindable = (Bindable<?>) attr;
 			attribute.setBindable(buildBindableType(bindable));
 			attribute.setBindableType(bindable.getBindableJavaType().getName());
+		}
+		if(entityClass.isAnnotationPresent(javax.persistence.Column.class)) {
+			final Column column = buildColumn(entityClass.getAnnotation(javax.persistence.Column.class));
+			attribute.setColumn(column);
 		}
 		return attribute;
 	}
@@ -83,5 +90,24 @@ public class AttributeBuilder {
 			break;
 		}
 		return type;
+	}
+	
+	/**
+	 * @param columnAnnotation
+	 * @return
+	 */
+	protected static Column buildColumn(final javax.persistence.Column columnAnnotation) {
+		final Column column = new Column();
+		column.setColumnDefinition(columnAnnotation.columnDefinition());
+		column.setName(columnAnnotation.name());
+		column.setTable(columnAnnotation.table());
+		column.setInsertable(columnAnnotation.insertable());
+		column.setNullable(columnAnnotation.nullable());
+		column.setUnique(columnAnnotation.unique());
+		column.setUpdatable(columnAnnotation.updatable());
+		column.setLength(columnAnnotation.length());
+		column.setPrecision(columnAnnotation.precision());
+		column.setScale(columnAnnotation.scale());
+		return column;
 	}
 }

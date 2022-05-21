@@ -2,7 +2,9 @@ package epf.query.internal;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -11,6 +13,7 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.metamodel.EntityType;
 import epf.client.schema.EntityId;
 import epf.schema.utility.SchemaUtil;
 import epf.util.logging.LogManager;
@@ -39,12 +42,28 @@ public class SchemaCache {
 	private transient EntityManager entityManager;
 	
 	/**
+	 *
+	 */
+	private transient Map<String, EntityType<?>> entityClasses;
+	
+	/**
+	 *
+	 */
+	private transient Map<String, EntityType<?>> entityNames;
+	
+	/**
 	 * 
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		final List<Class<?>> entityClasses = entityManager.getMetamodel().getEntities().stream().map(entity -> entity.getBindableJavaType()).collect(Collectors.toList());
+		final List<Class<?>> entityClasses = entityManager.getMetamodel().getEntities().stream().map(entity -> entity.getJavaType()).collect(Collectors.toList());
 		schemaUtil = new SchemaUtil(entityClasses);
+		this.entityClasses = new ConcurrentHashMap<>();
+		entityNames = new ConcurrentHashMap<>();
+		entityManager.getMetamodel().getEntities().forEach(entityType -> {
+			this.entityClasses.put(entityType.getJavaType().getName(), entityType);
+			entityNames.put(entityType.getName(), entityType);
+		});
 	}
 	
 	/**
@@ -121,14 +140,6 @@ public class SchemaCache {
 	}
 	
 	/**
-	 * @param entityName
-	 * @return
-	 */
-	public Optional<Class<?>> getEntityClass(final String schema, final String entityName){
-		return schemaUtil.getEntityClass(entityName);
-	}
-	
-	/**
 	 * @param entity
 	 * @return
 	 * @throws Exception  
@@ -142,10 +153,6 @@ public class SchemaCache {
 		}
 		return entityId;
 	}
-
-	public SchemaUtil getSchemaUtil() {
-		return schemaUtil;
-	}
 	
 	/**
 	 * @param table
@@ -153,5 +160,18 @@ public class SchemaCache {
 	 */
 	public Optional<String> getEntityName(final String table){
 		return schemaUtil.getEntityName(table);
+	}
+	
+	/**
+	 * @param entity
+	 * @return
+	 */
+	public Optional<String> getEntityClassName(final String entity) {
+		final Optional<EntityType<?>> entityType = Optional.ofNullable(entityNames.get(entity));
+		Optional<String> entityClassName = Optional.empty();
+		if(entityType.isPresent()) {
+			entityClassName = Optional.of(entityType.get().getJavaType().getName());
+		}
+		return entityClassName;
 	}
 }
