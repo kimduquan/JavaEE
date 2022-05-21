@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -40,6 +41,11 @@ public class SchemaUtil {
 	 *
 	 */
 	private transient final Map<String, String> entityTables = new ConcurrentHashMap<>();
+	
+	/**
+	 *
+	 */
+	private transient final Map<String, Map<String, String>> entityColumnFields = new ConcurrentHashMap<>();
 	
 	/**
 	 * @param cls
@@ -104,6 +110,14 @@ public class SchemaUtil {
 					entitySchemas.put(entityClass.getName(), Optional.of(entityTable.get().schema()));
 					entityTables.put(entityTable.get().name(), entityName.get());
 				}
+				final Map<String, String> fields = new ConcurrentHashMap<>();
+				for(Field field : entityClass.getDeclaredFields()) {
+					if(field.isAnnotationPresent(Column.class)) {
+						final Column column = field.getAnnotation(Column.class);
+						fields.put(column.name(), field.getName());
+					}
+				}
+				entityColumnFields.put(entityName.get(), fields);
 			}
 		});
 		classes.forEach(entityClass -> entityIdFields.put(entityClass.getName(), computeEntityIdField(entityClass)));
@@ -117,6 +131,8 @@ public class SchemaUtil {
 		entityClasses.clear();
 		entitySchemas.clear();
 		entityNames.clear();
+		entityTables.clear();
+		entityColumnFields.clear();
 	}
 	
 	/**
@@ -150,18 +166,26 @@ public class SchemaUtil {
 	}
 	
 	/**
-	 * @param entityName
-	 * @return
-	 */
-	public Optional<Class<?>> getEntityClass(final String entityName){
-		return Optional.ofNullable(entityClasses.get(entityName));
-	}
-	
-	/**
 	 * @param entityTable
 	 * @return
 	 */
 	public Optional<String> getEntityName(final String entityTable){
 		return Optional.ofNullable(entityTables.get(entityTable));
+	}
+	
+	/**
+	 * @param entityName
+	 * @return
+	 */
+	public Map<String, String> getEntityColumnFields(final String entityName){
+		return entityColumnFields.get(entityName);
+	}
+	
+	/**
+	 * @param entityName
+	 * @return
+	 */
+	public Class<?> getEntityClass(final String entityName){
+		return entityClasses.get(entityName);
 	}
 }

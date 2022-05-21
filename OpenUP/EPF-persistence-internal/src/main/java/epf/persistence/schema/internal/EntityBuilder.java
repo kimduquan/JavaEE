@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Type;
 import javax.persistence.metamodel.Type.PersistenceType;
-
 import epf.persistence.internal.Entity;
 import epf.persistence.schema.client.Attribute;
 import epf.persistence.schema.client.Table;
@@ -35,7 +34,7 @@ public class EntityBuilder {
 				type
 				.getAttributes()
 				.stream()
-				.map(attribute -> builder.build(type.getJavaType(), attribute))
+				.map(builder::build)
 				.sorted(comparator)
 				.collect(Collectors.toList())
 				);
@@ -47,7 +46,7 @@ public class EntityBuilder {
 		if(type.hasSingleIdAttribute()) {
 			final Type<?> idType = type.getIdType();
 			try {
-				final Attribute id = builder.build(type.getJavaType(), type.getId(idType.getJavaType()));
+				final Attribute id = builder.build(type.getId(idType.getJavaType()));
 				entityType.setId(id);
 			}
 			catch(Exception ex) {

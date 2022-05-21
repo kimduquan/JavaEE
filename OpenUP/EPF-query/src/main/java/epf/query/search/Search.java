@@ -78,10 +78,13 @@ public class Search implements epf.client.search.Search {
 			entityId.setSchema(schema);
 			entityId.setName(entityName.get());
 			final Map<String, Object> entityAttributes = new HashMap<>();
+			final Map<String, String> entityFields = schemaCache.getColumnFields(entityName.get());
 			int columnIndex = 0;
 			for(Object column : columns) {
 				final Object key = keys[columnIndex];
-				entityAttributes.put(String.valueOf(column), key);
+				final String columnName = String.valueOf(column);
+				final String attributeName = entityFields.getOrDefault(columnName, columnName);
+				entityAttributes.put(attributeName, key);
 				columnIndex++;
 			}
 			entityId.setAttributes(entityAttributes);

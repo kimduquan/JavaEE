@@ -2,7 +2,6 @@ package epf.persistence.schema.internal;
 
 import java.util.stream.Collectors;
 import javax.persistence.metamodel.EmbeddableType;
-
 import epf.persistence.internal.Embeddable;
 
 /**
@@ -24,7 +23,7 @@ public class EmbeddableBuilder {
 				type
 				.getAttributes()
 				.stream()
-				.map(attribute -> builder.build(type.getJavaType(), attribute))
+				.map(builder::build)
 				.sorted(comparator)
 				.collect(Collectors.toList())
 				);

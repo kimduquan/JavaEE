@@ -14,11 +14,10 @@ import epf.persistence.schema.client.Column;
 public class AttributeBuilder {
 
 	/**
-	 * @param entityClass
 	 * @param attr
 	 * @return
 	 */
-	public epf.persistence.schema.client.Attribute build(final Class<?> entityClass, final Attribute<?, ?> attr){
+	public epf.persistence.schema.client.Attribute build(final Attribute<?, ?> attr){
 		final epf.persistence.schema.client.Attribute attribute = new epf.persistence.schema.client.Attribute();
 		attribute.setType(attr.getJavaType().getName());
 		attribute.setName(attr.getName());
@@ -30,8 +29,8 @@ public class AttributeBuilder {
 			attribute.setBindable(buildBindableType(bindable));
 			attribute.setBindableType(bindable.getBindableJavaType().getName());
 		}
-		if(entityClass.isAnnotationPresent(javax.persistence.Column.class)) {
-			final Column column = buildColumn(entityClass.getAnnotation(javax.persistence.Column.class));
+		if(attr.getJavaType().isAnnotationPresent(javax.persistence.Column.class)) {
+			final Column column = buildColumn(attr.getJavaType().getAnnotation(javax.persistence.Column.class));
 			attribute.setColumn(column);
 		}
 		return attribute;
