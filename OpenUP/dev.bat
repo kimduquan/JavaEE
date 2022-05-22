@@ -5,10 +5,10 @@ call ./startup.bat
 call ./config.bat
 call mvn clean install -U -DskipTests -T 1C
 cd EPF-gateway
-start mvn quarkus:dev &
+start dev.bat &
 cd ../
 cd EPF-persistence
-start mvn quarkus:dev -Ddebug=5006 &
+start dev.bat &
 cd ../
 cd EPF-shell
 start mvn install -Depf-shell-native &
