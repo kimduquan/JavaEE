@@ -5,10 +5,10 @@
 . ./config.sh
 mvn clean install -U -DskipTests -T 1C
 cd EPF-gateway
-mvn quarkus:dev &
+./dev.sh &
 cd ../
 cd EPF-persistence
-mvn quarkus:dev -Ddebug=5006 &
+./dev.sh &
 cd ../
 cd EPF-shell
 mvn install -Depf-shell-native &
