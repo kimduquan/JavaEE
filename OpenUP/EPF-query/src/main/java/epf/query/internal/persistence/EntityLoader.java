@@ -39,10 +39,9 @@ public class EntityLoader implements CacheLoader<String, Object> {
 	public Object load(final String key) throws Exception {
 		final Optional<EntityKey> entityKey = EntityKey.parseString(key);
 		if(entityKey.isPresent()) {
-			final Optional<String> entityClassName = schemaCache.getEntityClassName(entityKey.get().getEntity());
-			if(entityClassName.isPresent()) {
-				final Class<?> entityClass = Class.forName(entityClassName.get());
-				final Object entity = manager.find(entityClass, entityKey.get().getId());
+			final Optional<Class<?>> entityClass = schemaCache.getEntityClass(entityKey.get().getEntity());
+			if(entityClass.isPresent()) {
+				final Object entity = manager.find(entityClass.get(), entityKey.get().getId());
 				if(entity != null) {
 					JsonUtil.toString(entity);
 					manager.detach(entity);

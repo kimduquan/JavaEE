@@ -75,8 +75,13 @@ public class Search implements epf.client.search.Search {
 		EntityId entityId = null;
 		if(entityName.isPresent()) {
 			entityId = new EntityId();
-			entityId.setSchema(schema);
 			entityId.setName(entityName.get());
+			final Optional<Class<?>> entityClass = schemaCache.getEntityClass(entityName.get());
+			entityId.setSchema(schema);
+			if(entityClass.isPresent()) {
+				final Optional<String> entitySchema = schemaCache.getEntitySchema(entityClass.get());
+				entitySchema.ifPresent(entityId::setSchema);
+			}
 			final Map<String, Object> entityAttributes = new HashMap<>();
 			final Map<String, String> entityFields = schemaCache.getColumnFields(entityName.get());
 			int columnIndex = 0;

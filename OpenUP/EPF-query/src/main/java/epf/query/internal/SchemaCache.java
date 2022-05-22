@@ -148,13 +148,16 @@ public class SchemaCache {
 	 * @param entity
 	 * @return
 	 */
-	public Optional<String> getEntityClassName(final String entity) {
-		final Optional<Class<?>> entityClass = Optional.ofNullable(schemaUtil.getEntityClass(entity));
-		Optional<String> entityClassName = Optional.empty();
-		if(entityClass.isPresent()) {
-			entityClassName = Optional.of(entityClass.get().getName());
-		}
-		return entityClassName;
+	public Optional<Class<?>> getEntityClass(final String entity) {
+		return Optional.ofNullable(schemaUtil.getEntityClass(entity));
+	}
+	
+	/**
+	 * @param cls
+	 * @return
+	 */
+	public Optional<String> getEntitySchema(final Class<?> cls){
+		return schemaUtil.getEntitySchema(cls);
 	}
 	
 	/**

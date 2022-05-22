@@ -36,12 +36,11 @@ public class QueryLoader implements CacheLoader<String, Integer> {
 	public Integer load(final String key) throws Exception {
 		final Optional<QueryKey> queryKey = QueryKey.parseString(key);
 		if(queryKey.isPresent()) {
-			final Optional<String> entityClassName = schemaCache.getEntityClassName(queryKey.get().getEntity());
-			if(entityClassName.isPresent()) {
-				final Class<?> entityClass = Class.forName(entityClassName.get());
+			final Optional<Class<?>> entityClass = schemaCache.getEntityClass(queryKey.get().getEntity());
+			if(entityClass.isPresent()) {
 				final CriteriaBuilder builder = manager.getCriteriaBuilder();
 				final CriteriaQuery<Long> query = builder.createQuery(Long.class);
-				final Root<?> from = query.from(entityClass);
+				final Root<?> from = query.from(entityClass.get());
 				query.select(builder.count(from));
 				return manager.createQuery(query).getSingleResult().intValue();
 			}

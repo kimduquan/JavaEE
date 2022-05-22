@@ -8,7 +8,6 @@ import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.health.Readiness;
 import epf.client.schema.EntityId;
@@ -59,9 +58,7 @@ public class Query implements epf.client.query.Query {
 		if(count.isPresent()) {
 			return Response.ok().header(Naming.Query.ENTITY_COUNT, count.get()).build();
 		}
-		else {
-			return Response.status(Status.NOT_FOUND).build();
-		}
+		throw new NotFoundException();
 	}
 
 	@Override
@@ -72,7 +69,11 @@ public class Query implements epf.client.query.Query {
 			final Integer maxResults,
 			final SecurityContext context,
 			final List<String> sort) throws Exception {
-		return persistence.executeQuery(schema, paths, firstResult, maxResults, context, sort);
+		if(!paths.isEmpty()) {
+			final List<?> resultList = persistence.executeQuery(schema, paths, firstResult, maxResults, context, sort);
+			return Response.ok(resultList).header(Naming.Query.ENTITY_COUNT, resultList.size()).build();
+		}
+		throw new NotFoundException();
 	}
 
 	@Override
@@ -81,7 +82,11 @@ public class Query implements epf.client.query.Query {
 			final List<PathSegment> paths, 
 			final SecurityContext context)
 			throws Exception {
-		return persistence.executeCountQuery(schema, paths, context);
+		if(!paths.isEmpty()) {
+			final Object count = persistence.executeCountQuery(schema, paths, context);
+	    	return Response.ok().header(Naming.Query.ENTITY_COUNT, count).build();
+		}
+		throw new NotFoundException();
 	}
 
 	@Override
