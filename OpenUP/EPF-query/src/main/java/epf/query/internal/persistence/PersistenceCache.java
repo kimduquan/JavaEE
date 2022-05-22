@@ -6,8 +6,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -28,6 +26,7 @@ import epf.schema.utility.EntityEvent;
 import epf.schema.utility.PostPersist;
 import epf.schema.utility.PostRemove;
 import epf.schema.utility.PostUpdate;
+import epf.util.json.JsonUtil;
 import epf.util.logging.LogManager;
 
 /**
@@ -178,9 +177,14 @@ public class PersistenceCache implements HealthCheck {
             query.setMaxResults(maxResults);
         }
         final List<?> resultList = query.getResultList();
-        try(Jsonb jsonb = JsonbBuilder.create()){
-            resultList.forEach(jsonb::toJson);
-        }
+        resultList.forEach(object -> {
+        	try {
+				JsonUtil.toString(object);
+			} 
+        	catch (Exception e) {
+				LOGGER.warning("[PersistenceCache][executeQuery]" + e.getMessage());
+			}
+        });
         return resultList;
     }
 }

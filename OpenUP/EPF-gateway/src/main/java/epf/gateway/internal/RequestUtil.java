@@ -150,7 +150,7 @@ public interface RequestUtil {
                 builder = builder.accept(mediaTypes.toArray(new MediaType[0]));
             }
             List<Locale> languages = headers.getAcceptableLanguages();
-            if(languages == null || languages.isEmpty()) {
+            if(languages == null || languages.isEmpty() || languages.get(0).getLanguage().isEmpty()) {
             	languages = Arrays.asList(Locale.getDefault());
             }
             builder = builder.acceptLanguage(languages.toArray(new Locale[0]));
