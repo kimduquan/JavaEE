@@ -17,9 +17,10 @@ import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
+import epf.cache.util.Loader;
+import epf.cache.util.LoaderFactory;
 import epf.client.schema.EntityId;
 import epf.query.internal.event.EntityLoad;
-import epf.query.internal.util.LoaderFactory;
 import epf.schema.utility.EntityEvent;
 import epf.schema.utility.PostPersist;
 import epf.schema.utility.PostRemove;
@@ -65,7 +66,7 @@ public class EntityCache implements HealthCheck {
 		executor.submit(eventQueue);
 		final CacheManager manager = Caching.getCachingProvider().getCacheManager();
 		final MutableConfiguration<String, Object> config = new MutableConfiguration<>();
-		config.setCacheLoaderFactory(new LoaderFactory<String, Object, EntityLoad>(eventQueue.getEmitter(), EntityLoad::new));
+		config.setCacheLoaderFactory(new LoaderFactory<>(new Loader<String, Object, EntityLoad>(eventQueue.getEmitter(), EntityLoad::new)));
 		config.setReadThrough(true);
 		entityCache = manager.createCache(epf.query.Naming.ENTITY_CACHE, config);
 	}

@@ -1,5 +1,7 @@
 package epf.query.internal.event;
 
+import epf.cache.util.CacheLoad;
+
 /**
  * 
  */

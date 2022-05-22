@@ -759,6 +759,7 @@
 		<module>EPF-json-utility</module>
 		<module>EPF-client-utility</module>
 		<module>EPF-file-utility</module>
+		<module>EPF-cache-utility</module>
 		<module>EPF-messaging-utility</module>
 		<module>EPF-persistence-internal</module>
 		<module>EPF-persistence-ext</module>

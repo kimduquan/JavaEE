@@ -1,5 +1,6 @@
-package epf.query.internal.util;
+package epf.cache.util;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -7,16 +8,19 @@ import java.util.Map;
 import java.util.function.Supplier;
 import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheLoaderException;
-
-import epf.query.internal.event.CacheLoad;
 import epf.util.event.EventEmitter;
 
 /**
  * @param <K>
  * @param <V>
  */
-public class Loader<K, V, E extends CacheLoad<K, V>> implements CacheLoader<K, V> {
+public class Loader<K, V, E extends CacheLoad<K, V>> implements CacheLoader<K, V>, Serializable {
 	
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 *
 	 */
