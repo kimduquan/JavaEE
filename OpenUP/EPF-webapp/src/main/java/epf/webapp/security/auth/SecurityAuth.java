@@ -15,7 +15,6 @@ import epf.security.auth.core.AuthRequest;
 import epf.security.auth.discovery.ProviderMetadata;
 import epf.util.logging.LogManager;
 import epf.webapp.ConfigSource;
-import epf.webapp.SecurityUtil;
 import epf.webapp.security.auth.core.CodeFlow;
 import epf.webapp.security.auth.core.ImplicitFlow;
 import epf.security.auth.StandardProvider;
@@ -59,12 +58,6 @@ public class SecurityAuth {
 	private transient ConfigSource config;
 	
 	/**
-	 *
-	 */
-	@Inject
-	private transient SecurityUtil securityUtil;
-	
-	/**
 	 * 
 	 */
 	private transient final Map<String, Provider> providers = new ConcurrentHashMap<>();
@@ -80,7 +73,7 @@ public class SecurityAuth {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			clientBuilder = ClientBuilder.newBuilder().trustStore(securityUtil.getTrustStore());
+			clientBuilder = ClientBuilder.newBuilder();
 			googleDiscoveryUrl = new URI(config.getProperty(Naming.Security.Auth.GOOGLE_PROVIDER));
 			googleProvider = new StandardProvider(googleDiscoveryUrl, config.getProperty(Naming.Security.Auth.GOOGLE_CLIENT_SECRET).toCharArray(), config.getProperty(Naming.Security.Auth.GOOGLE_CLIENT_ID), clientBuilder);
 			facebookDiscoveryUrl = new URI(config.getProperty(Naming.Security.Auth.FACEBOOK_PROVIDER));
@@ -100,7 +93,7 @@ public class SecurityAuth {
 	public ProviderMetadata initGoogleProvider(final CodeFlow authFlow, final AuthRequest authRequest) throws Exception {
 		authRequest.setClient_id(config.getProperty(Naming.Security.Auth.GOOGLE_CLIENT_ID));
 		authRequest.setRedirect_uri(config.getProperty(Naming.Security.Auth.AUTH_URL));
-		final ProviderMetadata metadata = authFlow.getProviderConfig(googleDiscoveryUrl);
+		final ProviderMetadata metadata = authFlow.getProviderConfig(clientBuilder, googleDiscoveryUrl);
 		providers.put(epf.naming.Naming.Security.Auth.GOOGLE, googleProvider);
 		return metadata;
 	}
@@ -114,7 +107,7 @@ public class SecurityAuth {
 	public ProviderMetadata initFacebookProvider(final ImplicitFlow authFlow, final AuthRequest authRequest) throws Exception {
 		authRequest.setClient_id(config.getProperty(Naming.Security.Auth.FACEBOOK_CLIENT_ID));
 		authRequest.setRedirect_uri(config.getProperty(Naming.Security.Auth.AUTH_URL));
-		final ProviderMetadata metadata = authFlow.getProviderConfig(facebookDiscoveryUrl);
+		final ProviderMetadata metadata = authFlow.getProviderConfig(clientBuilder, facebookDiscoveryUrl);
 		providers.put(epf.naming.Naming.Security.Auth.FACEBOOK, facebookProvider);
 		return metadata;
 	}

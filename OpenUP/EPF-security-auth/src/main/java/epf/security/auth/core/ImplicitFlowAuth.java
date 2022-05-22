@@ -28,12 +28,13 @@ public interface ImplicitFlowAuth {
 	String DEFAULT_PROFILE = "profile";
 	
 	/**
+	 * @param builder
 	 * @param discoveryUrl
 	 * @return
 	 * @throws Exception
 	 */
-	default ProviderMetadata getProviderConfig(final URI discoveryUrl) throws Exception {
-		final Client client = ClientBuilder.newClient();
+	default ProviderMetadata getProviderConfig(final ClientBuilder builder, final URI discoveryUrl) throws Exception {
+		final Client client = builder.build();
 		final ProviderMetadata metadata = client.target(discoveryUrl).request(MediaType.APPLICATION_JSON).get(ProviderMetadata.class);
 		client.close();
 		return metadata;

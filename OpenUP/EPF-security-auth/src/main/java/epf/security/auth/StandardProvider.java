@@ -114,7 +114,7 @@ public class StandardProvider implements Provider {
 		form.param("grant_type", tokenRequest.getGrant_type());
 		form.param("redirect_uri", tokenRequest.getRedirect_uri());
 		form.param("client_secret", new String(clientSecret));
-		final Client client = ClientBuilder.newClient();
+		final Client client = clientBuilder.build();
 		try(Response response = client
 				.target(metadata.getToken_endpoint())
 				.request(MediaType.APPLICATION_JSON)
@@ -167,7 +167,7 @@ public class StandardProvider implements Provider {
 		if(metadata == null) {
 			discovery();
 		}
-		final Client client = ClientBuilder.newClient();
+		final Client client = clientBuilder.build();
 		try(Response response = client
 				.target(metadata.getUserinfo_endpoint())
 				.request(MediaType.APPLICATION_JSON)

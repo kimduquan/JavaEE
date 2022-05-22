@@ -26,12 +26,13 @@ public interface CodeFlowAuth {
 	Logger LOGGER = LogManager.getLogger(CodeFlowAuth.class.getName());
 	
 	/**
+	 * @param builder
 	 * @param discoveryUrl
 	 * @return
 	 * @throws Exception
 	 */
-	default ProviderMetadata getProviderConfig(final URI discoveryUrl) throws Exception {
-		final Client client = ClientBuilder.newClient();
+	default ProviderMetadata getProviderConfig(final ClientBuilder builder, final URI discoveryUrl) throws Exception {
+		final Client client = builder.build();
 		final ProviderMetadata metadata = client.target(discoveryUrl).request(MediaType.APPLICATION_JSON).get(ProviderMetadata.class);
 		client.close();
 		return metadata;
@@ -97,13 +98,14 @@ public interface CodeFlowAuth {
 	boolean validate(final AuthResponse authResponse);
 	
 	/**
+	 * @param builder
 	 * @param metadata
 	 * @param tokenRequest
 	 * @return
 	 * @throws TokenErrorResponse
 	 */
-	default TokenResponse requestToken(final ProviderMetadata metadata, final TokenRequest tokenRequest) throws TokenErrorResponse {
-		final Client client = ClientBuilder.newClient();
+	default TokenResponse requestToken(final ClientBuilder builder, final ProviderMetadata metadata, final TokenRequest tokenRequest) throws TokenErrorResponse {
+		final Client client = builder.build();
 		try(Response response = client
 				.target(metadata.getToken_endpoint())
 				.request(MediaType.APPLICATION_JSON)
