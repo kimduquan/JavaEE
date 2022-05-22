@@ -103,7 +103,7 @@ public class ExceptionHelper implements ExceptionMapper<Exception>, Serializable
         	}
         	if(!mapStatus && rootCause != null) {
         		builder.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), rootCause.getMessage());
-        		LOGGER.log(Level.SEVERE, "handle", failure);
+        		LOGGER.log(Level.SEVERE, "[ExceptionHelper][handle]", failure);
         	}
         }
         return builder.build();

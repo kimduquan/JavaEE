@@ -46,6 +46,12 @@
 		    <artifactId>javax.transaction-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.fault-tolerance/microprofile-fault-tolerance-api -->
+		<dependency>
+		    <groupId>org.eclipse.microprofile.fault-tolerance</groupId>
+		    <artifactId>microprofile-fault-tolerance-api</artifactId>
+		    <scope>provided</scope>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.context-propagation/microprofile-context-propagation-api -->
 		<dependency>
 		    <groupId>org.eclipse.microprofile.context-propagation</groupId>

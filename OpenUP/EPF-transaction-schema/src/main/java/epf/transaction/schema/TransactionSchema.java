@@ -14,4 +14,20 @@ public interface TransactionSchema {
 	 *
 	 */
 	String TRANSACTION = "Transaction";
+	
+	/**
+	 * 
+	 */
+	interface Query {
+		
+		/**
+		 *
+		 */
+		String CURRENT_TRANSACTION_ID = "CURRENT_TRANSACTION_ID";
+		
+		/**
+		 *
+		 */
+		String COMMIT_TRANSACTION = "COMMIT_TRANSACTION";
+	}
 }
