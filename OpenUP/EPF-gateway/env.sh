@@ -1,6 +1,6 @@
-export epf.registry.url=http://localhost:9080/registry/registry/
-export mp.jwt.verify.audiences=http://localhost:9080/,https://localhost:9443,https://localhost:9543/
-export quarkus.http.ssl-port=9543
-export quarkus.http.insecure-requests=disabled
-export quarkus.log.file.enable=true
-export quarkus.log.file.path=EPF-gateway.log
+export EPF_REGISTRY_URL=http://localhost:9080/registry/registry/
+export MP_JWT_VERIFY_AUDIENCES=http://localhost:9080/,https://localhost:9443,https://localhost:9543/
+export QUARKUS_HTTP_SSL_PORT=9543
+export QUARKUS_HTTP_INSECURE_REQUESTS=disabled
+export QUARKUS_LOG_FILE_ENABLE=true
+export QUARKUS_LOG_FILE_PATH=EPF-gateway.log
