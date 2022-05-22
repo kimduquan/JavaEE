@@ -140,7 +140,7 @@ public class PersistenceTest {
         artifact = Entities.persist(client, Artifact.class, WorkProducts.SCHEMA, "", artifact);
     }
     
-    @Test(expected = BadRequestException.class)
+    @Test(expected = NotFoundException.class)
     public void testPersistBlankName() {
     	Artifact artifact = new Artifact();
         artifact.setName(StringUtil.randomString("EntitiesTest testPersistBlankName"));
