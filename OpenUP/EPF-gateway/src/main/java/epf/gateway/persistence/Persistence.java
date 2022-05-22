@@ -29,7 +29,7 @@ import epf.naming.Naming;
 @Path(Naming.PERSISTENCE)
 @ApplicationScoped
 @RolesAllowed(Naming.Security.DEFAULT_ROLE)
-public class Entities {
+public class Persistence {
     
     /**
      * 
@@ -104,30 +104,5 @@ public class Entities {
             @PathParam("entity") final String entity,
             @PathParam("id") final String entityId) throws Exception {
         return request.request(Naming.PERSISTENCE, context, headers, uriInfo, req, null);
-    }
-    
-    /**
-     * @param headers
-     * @param uriInfo
-     * @param req
-     * @param schema
-     * @param entity
-     * @param entityId
-     * @param body
-     */
-    @POST
-    @Path("{schema}/{entity}/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public CompletionStage<Response> find(
-    		@Context final SecurityContext context,
-    		@Context final HttpHeaders headers, 
-            @Context final UriInfo uriInfo,
-            @Context final Request req,
-            @PathParam("schema") final String schema,
-            @PathParam("entity") final String entity,
-            @PathParam("id") final String entityId,
-            final InputStream body
-            ) throws Exception {
-    	return request.request(Naming.PERSISTENCE, context, headers, uriInfo, req, body);
     }
 }

@@ -87,6 +87,6 @@ public class Query implements epf.client.query.Query {
 	@Override
 	public Response fetchEntities(final List<EntityId> entityIds) {
 		final List<Object> entities = entityCache.getEntities(entityIds);
-		return Response.ok(entities).build();
+		return Response.ok(entities).header(Naming.Query.ENTITY_COUNT, entities.size()).build();
 	}
 }
