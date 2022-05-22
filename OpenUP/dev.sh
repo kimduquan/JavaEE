@@ -11,7 +11,7 @@ cd EPF-persistence
 mvn quarkus:dev -Ddebug=5006 &
 cd ../
 cd EPF-shell
-mvn install -Depf-shell-native
+mvn install -Depf-shell-native &
 cd ../
 ./install.sh &
 cd EPF-tests

@@ -40,7 +40,8 @@
         <liberty.env.epf_lang_url>ws://localhost/lang/lang/</liberty.env.epf_lang_url>
         <liberty.env.epf_cache_url>http://localhost/cache/cache/</liberty.env.epf_cache_url>
         <liberty.env.epf_query_url>http://localhost/query/query/</liberty.env.epf_query_url>
-		<liberty.env.epf_registry_url>http://localhost/registry/registry/</liberty.env.epf_registry_url>
+        <liberty.env.epf_search_url>http://localhost/query/search/</liberty.env.epf_search_url>
+        <liberty.env.epf_registry_url>http://localhost/registry/registry/</liberty.env.epf_registry_url>
 		<liberty.env.epf_management_url>http://localhost/management/management/</liberty.env.epf_management_url>
 		<liberty.env.epf_portlet_url>http://localhost:8080/pluto/portal</liberty.env.epf_portlet_url>
 		<liberty.env.epf_webapp_url>https://localhost/webapp/</liberty.env.epf_webapp_url>
@@ -50,6 +51,11 @@
 		<liberty.env.epf_net_http_port>80</liberty.env.epf_net_http_port>
     </properties>
     <dependencies>
+		<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-queryparser -->
+		<dependency>
+		    <groupId>org.apache.lucene</groupId>
+		    <artifactId>lucene-queryparser</artifactId>
+		</dependency>
        	<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 		<dependency>
 		    <groupId>mysql</groupId>
@@ -241,31 +247,39 @@
                     <!-- Drop application into apps/ directory -->
                     <appsDirectory>apps</appsDirectory>
                     <deployPackages>dependencies</deployPackages>
-					<copyDependencies>
-						<dependencyGroup>
-							<location>${project.build.directory}/shared/resources/epf/transaction</location>
-                            <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
-							<dependency>
-							    <groupId>mysql</groupId>
-							    <artifactId>mysql-connector-java</artifactId>
-							</dependency>
-						</dependencyGroup>
-						<dependencyGroup>
-							<location>${project.build.directory}/shared/resources/epf/security</location>
-							<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
-							<dependency>
-								<groupId>com.h2database</groupId>
-								<artifactId>h2</artifactId>
-							</dependency>
-						</dependencyGroup>
-						<dependencyGroup>
-							<location>${project.build.directory}/shared/resources/epf/cache</location>
-							<dependency>
-                                <groupId>com.hazelcast</groupId>
-                                <artifactId>hazelcast</artifactId>
-                            </dependency>
-						</dependencyGroup>
-                    </copyDependencies>
+							<copyDependencies>
+								<dependencyGroup>
+									<location>${project.build.directory}/shared/resources/epf/transaction</location>
+	                                <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+									<dependency>
+									    <groupId>mysql</groupId>
+									    <artifactId>mysql-connector-java</artifactId>
+									</dependency>
+								</dependencyGroup>
+								<dependencyGroup>
+									<location>${project.build.directory}/shared/resources/epf/security</location>
+									<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+									<dependency>
+										<groupId>com.h2database</groupId>
+										<artifactId>h2</artifactId>
+									</dependency>
+								</dependencyGroup>
+								<dependencyGroup>
+									<location>${project.build.directory}/shared/resources/epf/cache</location>
+									<dependency>
+	                                    <groupId>com.hazelcast</groupId>
+	                                    <artifactId>hazelcast</artifactId>
+	                                </dependency>
+								</dependencyGroup>
+								<dependencyGroup>
+									<location>${project.build.directory}/shared/resources/epf/search</location>
+									<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-queryparser -->
+									<dependency>
+									    <groupId>org.apache.lucene</groupId>
+									    <artifactId>lucene-queryparser</artifactId>
+									</dependency>
+								</dependencyGroup>
+                            </copyDependencies>
 				</configuration>
             </plugin>
         </plugins>
