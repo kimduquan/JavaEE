@@ -15,3 +15,5 @@ $PLUTO_HOME/bin/shutdown.sh &
 export JAVA_HOME=$JAVA11_HOME
 $WILDFLY_HOME/jboss-cli.sh --connect command=:shutdown &
 $KAFKA_HOME/zookeeper-server-stop.sh &
+killall java
+sudo killall java
