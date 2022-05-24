@@ -1,14 +1,11 @@
-/**
- * 
- */
 package epf.shell.rules.admin;
 
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import javax.ws.rs.core.Response;
-import org.eclipse.microprofile.rest.client.inject.RestClient;
 import epf.shell.Function;
+import epf.shell.client.RestClientUtil;
 import epf.shell.security.Credential;
 import epf.shell.security.CallerPrincipal;
 import javax.enterprise.context.RequestScoped;
@@ -30,8 +27,7 @@ public class Admin {
 	 * 
 	 */
 	@Inject
-	@RestClient
-	transient AdminClient admin;
+	transient RestClientUtil restClient;
 
 	/**
 	 * @param token
@@ -50,7 +46,7 @@ public class Admin {
 			final File file 
 			) throws Exception {
 		try(InputStream input = Files.newInputStream(file.toPath())){
-			try(Response response = admin.registerRuleExecutionSet(credential.getAuthHeader(), name, input)){
+			try(Response response = restClient.newClient(AdminClient.class).registerRuleExecutionSet(credential.getAuthHeader(), name, input)){
 				response.getStatus();
 			}
 		}
@@ -69,7 +65,7 @@ public class Admin {
 			@Option(names = {"-n", "--name"}, description = "Name")
 			final String name
 			) throws Exception {
-		try(Response response = admin.deregisterRuleExecutionSet(credential.getAuthHeader(), name)){
+		try(Response response = restClient.newClient(AdminClient.class).deregisterRuleExecutionSet(credential.getAuthHeader(), name)){
 			response.getStatus();
 		}
 	}

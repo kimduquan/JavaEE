@@ -1,15 +1,12 @@
-/**
- * 
- */
 package epf.shell.cache;
 
 import java.io.PrintWriter;
 import java.util.Optional;
 import javax.ws.rs.core.Response;
-import org.eclipse.microprofile.rest.client.inject.RestClient;
 import epf.naming.Naming;
 import epf.shell.Function;
 import epf.shell.SYSTEM;
+import epf.shell.client.RestClientUtil;
 import epf.shell.security.CallerPrincipal;
 import epf.shell.security.Credential;
 import javax.enterprise.context.RequestScoped;
@@ -32,8 +29,7 @@ public class Cache {
 	 * 
 	 */
 	@Inject
-	@RestClient
-	transient CacheClient cache;
+	transient RestClientUtil restClient;
 	
 	/**
 	 * 
@@ -65,7 +61,7 @@ public class Cache {
 			@Option(names = {"-i", "--id"}, description = "ID")
 			final String entityId
 			) throws Exception {
-		try(Response response = cache.getEntity(credential.getAuthHeader(), schema, entity, entityId)){
+		try(Response response = restClient.newClient(CacheClient.class).getEntity(credential.getAuthHeader(), schema, entity, entityId)){
 			return response.readEntity(String.class);
 		}
 	}
@@ -85,7 +81,7 @@ public class Cache {
 			final String schema,
 			@Option(names = {"-e", "--entity"}, description = "Entity")
 			final String entity) throws Exception {
-		cache.forEachEntity(credential.getAuthHeader(), schema, entity).subscribe(new CacheSubscriber(out, err));
+		restClient.newClient(CacheClient.class).forEachEntity(credential.getAuthHeader(), schema, entity).subscribe(new CacheSubscriber(out, err));
 	}
 	
 	/**
@@ -108,7 +104,7 @@ public class Cache {
 			final Optional<Integer> firstResult,
 			@Option(names = {"-m", "--max"}, description = "Max Result(s)")
 			final Optional<Integer> maxResults) throws Exception {
-		try(Response response = cache.getEntities(
+		try(Response response = restClient.newClient(CacheClient.class).getEntities(
 				credential.getAuthHeader(), 
 				schema,
 				entity,

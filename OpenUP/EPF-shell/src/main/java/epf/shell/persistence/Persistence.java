@@ -1,12 +1,9 @@
-/**
- * 
- */
 package epf.shell.persistence;
 
 import javax.ws.rs.core.Response;
-import org.eclipse.microprofile.rest.client.inject.RestClient;
 import epf.naming.Naming;
 import epf.shell.Function;
+import epf.shell.client.RestClientUtil;
 import epf.shell.security.Credential;
 import epf.shell.security.CallerPrincipal;
 import javax.enterprise.context.RequestScoped;
@@ -28,8 +25,7 @@ public class Persistence {
 	 * 
 	 */
 	@Inject
-	@RestClient
-	transient PersistenceClient persistence;
+	transient RestClientUtil restClient;
 	
 	/**
 	 * @param credential
@@ -48,7 +44,7 @@ public class Persistence {
 			final String entity, 
 			@Option(names = {"-d", "--data"}, description = "Entity", interactive = true, echo = true)
 			final String data) throws Exception {
-		try(Response response = persistence.persist(credential.getAuthHeader(), schema, entity, data)){
+		try(Response response = restClient.newClient(PersistenceClient.class).persist(credential.getAuthHeader(), schema, entity, data)){
 			return response.readEntity(String.class);
 		}
 	}
@@ -73,7 +69,7 @@ public class Persistence {
 			final String entityId,
 			@Option(names = {"-d", "--data"}, description = "Entity", interactive = true, echo = true)
 			final String data) throws Exception {
-		persistence.merge(credential.getAuthHeader(), schema, entity, entityId, data);
+		restClient.newClient(PersistenceClient.class).merge(credential.getAuthHeader(), schema, entity, entityId, data);
 	}
 	
 	/**
@@ -94,7 +90,7 @@ public class Persistence {
 			final String entity, 
 			@Option(names = {"-i", "--id"}, description = "ID")
 			final String entityId) throws Exception {
-		persistence.remove(credential.getAuthHeader(), schema, entity, entityId);
+		restClient.newClient(PersistenceClient.class).remove(credential.getAuthHeader(), schema, entity, entityId);
 	}
 	
 	/**
@@ -114,7 +110,7 @@ public class Persistence {
 			final String entity, 
 			@Option(names = {"-i", "--id"}, description = "ID")
 			final String entityId) throws Exception {
-		try(Response response = persistence.find(credential.getAuthHeader(), schema, entity, entityId)){
+		try(Response response = restClient.newClient(PersistenceClient.class).find(credential.getAuthHeader(), schema, entity, entityId)){
 			return response.readEntity(String.class);
 		}
 	}

@@ -1,11 +1,8 @@
-/**
- * 
- */
 package epf.shell.schema;
 
-import org.eclipse.microprofile.rest.client.inject.RestClient;
 import epf.naming.Naming;
 import epf.shell.Function;
+import epf.shell.client.RestClientUtil;
 import epf.shell.security.Credential;
 import epf.shell.security.CallerPrincipal;
 import javax.enterprise.context.RequestScoped;
@@ -27,8 +24,7 @@ public class Schema {
 	 * 
 	 */
 	@Inject
-	@RestClient
-	transient SchemaClient schema;
+	transient RestClientUtil restClient;
 	
 	/**
 	 * @param credential
@@ -40,7 +36,7 @@ public class Schema {
 			@ArgGroup(exclusive = true, multiplicity = "1")
 			@CallerPrincipal
 			final Credential credential) throws Exception{
-		try(Response response = schema.getEntities(credential.getAuthHeader())){
+		try(Response response = restClient.newClient(SchemaClient.class).getEntities(credential.getAuthHeader())){
 			return response.readEntity(String.class);
 		}
 	}

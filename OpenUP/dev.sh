@@ -11,7 +11,7 @@ cd EPF-persistence
 ./dev.sh &>/dev/null &
 cd ../
 cd EPF-shell
-mvn install -Depf-shell-native &
+./dev.sh &>/dev/null &
 cd ../
 ./install.sh &
 cd EPF-tests

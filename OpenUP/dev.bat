@@ -11,7 +11,7 @@ cd EPF-persistence
 start dev.bat &
 cd ../
 cd EPF-shell
-start mvn install -Depf-shell-native &
+call dev.bat
 cd ../
 call ./install.bat &
 cd EPF-tests

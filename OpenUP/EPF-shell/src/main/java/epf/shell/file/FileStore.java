@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.shell.file;
 
 import java.io.File;
