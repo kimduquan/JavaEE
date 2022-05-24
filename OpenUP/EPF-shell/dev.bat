@@ -1,6 +1,5 @@
 call ../env.bat
 call ../config.bat
-call env.bat
 call mvn clean install -U -Depf-shell-native
 :: call .\target\EPF-shell-1.0.0-runner.exe security login -u any_role1@openup.org -p
 :: call mvn clean install -U
