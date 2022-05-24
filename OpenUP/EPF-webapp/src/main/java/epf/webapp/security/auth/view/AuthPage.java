@@ -8,7 +8,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.security.enterprise.AuthenticationStatus;
 import javax.security.enterprise.SecurityContext;
 import javax.security.enterprise.authentication.mechanism.http.AuthenticationParameters;
 import javax.servlet.http.HttpServletRequest;
@@ -179,11 +178,7 @@ public class AuthPage implements AuthView, Serializable {
 			final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(true);
 			authParams.setRememberMe(true);
 			final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
-			final AuthenticationStatus status = context.authenticate(request, response, params);
-			if(AuthenticationStatus.SUCCESS.equals(status)) {
-				conversation.end();
-				return "";
-			}
+			context.authenticate(request, response, params);
 		}
 		else {
 			final AuthError authError = new AuthError();
@@ -217,11 +212,7 @@ public class AuthPage implements AuthView, Serializable {
 			final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(true);
 			authParams.setRememberMe(true);
 			final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
-			final AuthenticationStatus status = context.authenticate(request, response, params);
-			if(AuthenticationStatus.SUCCESS.equals(status)) {
-				conversation.end();
-				return "";
-			}
+			context.authenticate(request, response, params);
 		}
 		else {
 			final ImplicitAuthError authError = new ImplicitAuthError();

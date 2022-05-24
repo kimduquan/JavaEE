@@ -21,6 +21,7 @@ import epf.tests.health.HealthUtil;
 import epf.tests.persistence.PersistenceUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
+import epf.util.SystemUtil;
 import epf.util.config.ConfigUtil;
 import epf.work_products.schema.Artifact;
 import epf.work_products.schema.WorkProducts;
@@ -37,6 +38,13 @@ public class MessagingTest {
 	@Rule
     public TestName testName = new TestName();
 	
+	private static String keyStore;
+	private static String keyStoreType;
+	private static String keyStorePassword;
+	private static String trustStore;
+	private static String trustStoreType;
+	private static String trustStorePassword;
+	
 	private static URI listenerUrl;
 	private static String token;
 	private static String tokenId;
@@ -45,6 +53,21 @@ public class MessagingTest {
     
     @BeforeClass
     public static void beforeClass() throws Exception{
+    	
+    	keyStore = System.getProperty("javax.net.ssl.keyStore");
+    	keyStoreType = System.getProperty("javax.net.ssl.keyStoreType");
+    	keyStorePassword = System.getProperty("javax.net.ssl.keyStorePassword");
+    	trustStore = System.getProperty("javax.net.ssl.trustStore");
+    	trustStoreType = System.getProperty("javax.net.ssl.trustStoreType");
+    	trustStorePassword = System.getProperty("javax.net.ssl.trustStorePassword");
+    	
+    	System.setProperty("javax.net.ssl.keyStore", SystemUtil.getString(Naming.Client.SSL_KEY_STORE));
+    	System.setProperty("javax.net.ssl.keyStoreType", SystemUtil.getString(Naming.Client.SSL_KEY_STORE_TYPE));
+    	System.setProperty("javax.net.ssl.keyStorePassword", SystemUtil.getString(Naming.Client.SSL_KEY_STORE_PASSWORD));
+    	System.setProperty("javax.net.ssl.trustStore", SystemUtil.getString(Naming.Client.SSL_TRUST_STORE));
+    	System.setProperty("javax.net.ssl.trustStoreType", SystemUtil.getString(Naming.Client.SSL_TRUST_STORE_TYPE));
+    	System.setProperty("javax.net.ssl.trustStorePassword", SystemUtil.getString(Naming.Client.SSL_TRUST_STORE_PASSWORD));
+    	
     	URI messagingUrl = ConfigUtil.getURI(Naming.Gateway.MESSAGING_URL);
     	HealthUtil.isReady();
     	token = SecurityUtil.login();
@@ -55,6 +78,13 @@ public class MessagingTest {
     @AfterClass
     public static void afterClass() throws Exception{
     	SecurityUtil.logOut(token);
+    	
+    	System.setProperty("javax.net.ssl.keyStore", keyStore);
+    	System.setProperty("javax.net.ssl.keyStoreType", keyStoreType);
+    	System.setProperty("javax.net.ssl.keyStorePassword", keyStorePassword);
+    	System.setProperty("javax.net.ssl.trustStore", trustStore);
+    	System.setProperty("javax.net.ssl.trustStoreType", trustStoreType);
+    	System.setProperty("javax.net.ssl.trustStorePassword", trustStorePassword);
     }
     
     @After

@@ -18,6 +18,10 @@ public class ClientUtil {
     private static ClientQueue clients;
 
 	private static KeyStore trustStore;
+	
+	private static KeyStore keyStore;
+	
+	private transient static char[] keyStorePassword;
 
 	private static JacksonJsonProvider buildJsonProvider() {
 		SimpleModule module = new SimpleModule();
@@ -42,6 +46,17 @@ public class ClientUtil {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+        	
+        	final Path keyStoreFile = ConfigUtil.getPath(Naming.Client.SSL_KEY_STORE);
+        	final String keyStoreType = ConfigUtil.getString(Naming.Client.SSL_KEY_STORE_TYPE);
+        	keyStorePassword = ConfigUtil.getChars(Naming.Client.SSL_KEY_STORE_PASSWORD);
+        	try {
+        		keyStore = KeyStoreUtil.loadKeyStore(keyStoreType, keyStoreFile, keyStorePassword);
+			} 
+        	catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
     		clients = queue;
     	}
     	return clients;
@@ -51,7 +66,7 @@ public class ClientUtil {
     	return new Client(
     			clients(), 
     			uri, 
-    			builder -> builder.register(buildJsonProvider()).trustStore(trustStore)
+    			builder -> builder.register(buildJsonProvider()).trustStore(trustStore).keyStore(keyStore, keyStorePassword)
     			);
     }
     

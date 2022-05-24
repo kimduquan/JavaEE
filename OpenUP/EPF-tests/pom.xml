@@ -371,7 +371,7 @@
 						<epf.schema.url>http://localhost:9181/persistence/schema/</epf.schema.url>
 						<epf.security.url>http://localhost:${httpPort}/security/security/</epf.security.url>
                         <epf.security.webapp.url>http://localhost:9181/security/</epf.security.webapp.url>
-                        <epf.transaction.url>http://localhost:9080/transaction/transaction/</epf.transaction.url>
+                        <epf.transaction.url>http://localhost:${httpPort}/transaction/transaction/</epf.transaction.url>
                         <epf.gateway.url>https://localhost:${gatewayPort}/gateway/</epf.gateway.url>
                         <epf.gateway.messaging.url>wss://localhost:${gatewayPort}/messaging/</epf.gateway.messaging.url>
                         <epf.registry.url>http://localhost:${httpPort}/registry/registry/</epf.registry.url>
@@ -382,7 +382,7 @@
                         <epf.query.url>http://localhost:${httpPort}/query/query/</epf.query.url>
                         <epf.search.url>http://localhost:${httpPort}/query/search/</epf.search.url>
                         <epf.portlet.url>http://localhost:${portalPort}/pluto/portal</epf.portlet.url>
-                        <epf.webapp.url>https://localhost:${httpsPort}/webapp/</epf.webapp.url>
+                        <epf.webapp.url>https://localhost/webapp/</epf.webapp.url>
                         <epf.health.url>http://localhost:${httpPort}/health/</epf.health.url>
 						<epf.batch.api.url>http://localhost:${httpPort}/ibm/</epf.batch.api.url>
 						<epf.net.url>http://localhost:${httpPort}/net/net/</epf.net.url>
@@ -397,6 +397,9 @@
 						<epf.client.net.ssl.keyStore>${project.basedir}/dev.p12</epf.client.net.ssl.keyStore>
 						<epf.client.net.ssl.keyStorePassword>changeit</epf.client.net.ssl.keyStorePassword>
 						<epf.client.net.ssl.keyStoreType>PKCS12</epf.client.net.ssl.keyStoreType>
+						<epf.client.net.ssl.trustStore>${project.basedir}/dev.p12</epf.client.net.ssl.trustStore>
+						<epf.client.net.ssl.trustStorePassword>changeit</epf.client.net.ssl.trustStorePassword>
+						<epf.client.net.ssl.trustStoreType>PKCS12</epf.client.net.ssl.trustStoreType>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.tests.script;
 
 import java.io.ByteArrayInputStream;

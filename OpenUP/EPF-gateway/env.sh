@@ -1,5 +1,5 @@
 export EPF_REGISTRY_URL=http://localhost:9080/registry/registry/
-export MP_JWT_VERIFY_AUDIENCES=http://localhost:9080/,https://localhost:9443,https://localhost:9543/
+export MP_JWT_VERIFY_AUDIENCES=http://localhost:9080/,https://localhost:9543/
 export QUARKUS_HTTP_SSL_PORT=9543
 export QUARKUS_HTTP_INSECURE_REQUESTS=disabled
 export QUARKUS_LOG_FILE_ENABLE=true

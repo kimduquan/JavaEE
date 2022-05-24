@@ -1,6 +1,7 @@
-set mp.jwt.verify.audiences=http://localhost:9080/,https://localhost:9443,https://localhost:9543/
+set mp.jwt.verify.audiences=http://localhost:9080/,https://localhost:9543/
 set quarkus.http.port=9181
 set quarkus.http.ssl-port=9544
+set quarkus.ssl.native=false
 set quarkus.log.file.enable=true
 set quarkus.log.file.path=EPF-persistence.log
 set JAEGER_SAMPLER_TYPE=const
