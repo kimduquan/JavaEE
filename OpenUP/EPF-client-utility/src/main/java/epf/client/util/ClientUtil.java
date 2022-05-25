@@ -21,7 +21,7 @@ public class ClientUtil {
 	/**
 	 * 
 	 */
-	private transient Optional<char[]> keyStorePassword = Optional.empty();
+	private transient Optional<char[]> keyPassword = Optional.empty();
 	/**
 	 * 
 	 */
@@ -35,11 +35,11 @@ public class ClientUtil {
 	
 	/**
 	 * @param keyStore
-	 * @param keyStorePassword
+	 * @param keyPassword
 	 */
-	public void setKeyStore(final KeyStore keyStore, final char[] keyStorePassword) {
+	public void setKeyStore(final KeyStore keyStore, final char[] keyPassword) {
 		this.keyStore = Optional.of(keyStore);
-		this.keyStorePassword = Optional.of(keyStorePassword);
+		this.keyPassword = Optional.of(keyPassword);
 	}
 	
 	/**
@@ -55,8 +55,8 @@ public class ClientUtil {
 	 */
 	protected ClientBuilder buildClient(final ClientBuilder builder) {
 		ClientBuilder newClient = builder;
-		if(keyStore.isPresent() && keyStorePassword.isPresent()) {
-			newClient = newClient.keyStore(keyStore.get(), keyStorePassword.get());
+		if(keyStore.isPresent() && keyPassword.isPresent()) {
+			newClient = newClient.keyStore(keyStore.get(), keyPassword.get());
 		}
 		if(trustStore.isPresent()) {
 			newClient = newClient.trustStore(trustStore.get());

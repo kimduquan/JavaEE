@@ -29,7 +29,7 @@ public class GatewayUtil {
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		clientUtil.setKeyStore(securityUtil.getKeyStore(), securityUtil.getKeyStorePassword());
+		clientUtil.setKeyStore(securityUtil.getKeyStore(), securityUtil.getKeyPassword());
 		clientUtil.setTrustStore(securityUtil.getTrustStore());
 	}
 	

@@ -396,6 +396,7 @@
                         <webdriver.firefox.headless>true</webdriver.firefox.headless>
 						<epf.client.net.ssl.keyStore>${project.basedir}/dev.p12</epf.client.net.ssl.keyStore>
 						<epf.client.net.ssl.keyStorePassword>changeit</epf.client.net.ssl.keyStorePassword>
+						<epf.client.net.ssl.keyPassword>changeit</epf.client.net.ssl.keyPassword>
 						<epf.client.net.ssl.keyStoreType>PKCS12</epf.client.net.ssl.keyStoreType>
 						<epf.client.net.ssl.trustStore>${project.basedir}/dev.p12</epf.client.net.ssl.trustStore>
 						<epf.client.net.ssl.trustStorePassword>changeit</epf.client.net.ssl.trustStorePassword>

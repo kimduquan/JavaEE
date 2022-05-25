@@ -84,6 +84,11 @@ public interface Naming {
 		/**
 		 * 
 		 */
+		String SSL_KEY_PASSWORD = "epf.client.net.ssl.keyPassword";
+		
+		/**
+		 * 
+		 */
 		String SSL_TRUST_STORE = "epf.client.net.ssl.trustStore";
 		
 		/**

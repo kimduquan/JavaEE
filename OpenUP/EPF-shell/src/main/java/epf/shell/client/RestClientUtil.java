@@ -55,6 +55,12 @@ public class RestClientUtil {
 	/**
 	 *
 	 */
+	@ConfigProperty(name = Naming.Client.SSL_KEY_PASSWORD)
+	transient String keyPassword;
+	
+	/**
+	 *
+	 */
 	@ConfigProperty(name = Naming.Client.SSL_TRUST_STORE)
 	transient String trustStoreFile;
 	
@@ -96,6 +102,6 @@ public class RestClientUtil {
 	 * @return
 	 */
 	public <T> T newClient(final Class<T> cls) {
-		return RestClientBuilder.newBuilder().keyStore(keyStore, keyStorePassword).trustStore(trustStore).baseUri(gatewayUrl).build(cls);
+		return RestClientBuilder.newBuilder().keyStore(keyStore, keyPassword).trustStore(trustStore).baseUri(gatewayUrl).build(cls);
 	}
 }

@@ -30,7 +30,7 @@ public class SecurityUtil {
 	/**
 	 *
 	 */
-	private transient char[] keyStorePassword;
+	private transient char[] keyPassword;
 	
 	/**
 	 *
@@ -44,7 +44,7 @@ public class SecurityUtil {
 	protected void postConstruct() {
 		final Path keyStoreFile = ConfigUtil.getPath(Naming.Client.SSL_KEY_STORE);
     	final String keyStoreType = ConfigUtil.getString(Naming.Client.SSL_KEY_STORE_TYPE);
-    	keyStorePassword = ConfigUtil.getChars(Naming.Client.SSL_KEY_STORE_PASSWORD);
+    	final char[] keyStorePassword = ConfigUtil.getChars(Naming.Client.SSL_KEY_STORE_PASSWORD);
     	try {
     		keyStore = KeyStoreUtil.loadKeyStore(keyStoreType, keyStoreFile, keyStorePassword);
 		} 
@@ -60,6 +60,7 @@ public class SecurityUtil {
 		catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "[SecurityUtil.trustStore]", e);
 		}
+		keyPassword = ConfigUtil.getChars(Naming.Client.SSL_KEY_PASSWORD);
 	}
 
 	public KeyStore getKeyStore() {
@@ -70,7 +71,7 @@ public class SecurityUtil {
 		return trustStore;
 	}
 
-	public char[] getKeyStorePassword() {
-		return keyStorePassword;
+	public char[] getKeyPassword() {
+		return keyPassword;
 	}
 }
