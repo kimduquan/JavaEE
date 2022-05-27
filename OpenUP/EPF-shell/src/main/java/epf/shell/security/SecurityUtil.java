@@ -5,21 +5,22 @@ import java.security.KeyStore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import epf.naming.Naming;
-import epf.shell.client.RestClientUtil;
 import epf.util.logging.LogManager;
 import epf.util.security.KeyStoreUtil;
 
 /**
  * 
  */
+@ApplicationScoped
 public class SecurityUtil {
 	
 	/**
 	 *
 	 */
-	private transient static final Logger LOGGER = LogManager.getLogger(RestClientUtil.class.getName());
+	private transient static final Logger LOGGER = LogManager.getLogger(SecurityUtil.class.getName());
 
 	
 	/**

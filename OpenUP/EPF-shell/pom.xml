@@ -13,7 +13,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-    <quarkus.platform.version>2.9.1.Final</quarkus.platform.version>
+    <quarkus.platform.version>2.9.2.Final</quarkus.platform.version>
     <surefire-plugin.version>3.0.0-M6</surefire-plugin.version>
   </properties>
   <dependencyManagement>
@@ -24,18 +24,6 @@
 			<version>${quarkus.platform.version}</version>
 			<type>pom</type>
 			<scope>import</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.aayushatharva.brotli4j/brotli4j -->
-		<dependency>
-			<groupId>com.aayushatharva.brotli4j</groupId>
-			<artifactId>brotli4j</artifactId>
-			<version>1.6.0</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.github.luben/zstd-jni -->
-		<dependency>
-			<groupId>com.github.luben</groupId>
-			<artifactId>zstd-jni</artifactId>
-			<version>1.5.0-2</version>
 		</dependency>
 	</dependencies>
   </dependencyManagement>
@@ -84,16 +72,6 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-arc</artifactId>
     </dependency>
-	<!-- https://mvnrepository.com/artifact/com.aayushatharva.brotli4j/brotli4j -->
-	<dependency>
-		<groupId>com.aayushatharva.brotli4j</groupId>
-		<artifactId>brotli4j</artifactId>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/com.github.luben/zstd-jni -->
-	<dependency>
-		<groupId>com.github.luben</groupId>
-		<artifactId>zstd-jni</artifactId>
-	</dependency>
   </dependencies>
   <build>
     <plugins>
