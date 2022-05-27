@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import javax.ws.rs.core.Response;
 import epf.shell.Function;
-import epf.shell.client.RestClientUtil;
+import epf.shell.client.ClientUtil;
 import epf.shell.security.Credential;
 import epf.shell.security.CallerPrincipal;
 import javax.enterprise.context.RequestScoped;
@@ -27,7 +27,7 @@ public class Admin {
 	 * 
 	 */
 	@Inject
-	transient RestClientUtil restClient;
+	transient ClientUtil clientUtil;
 
 	/**
 	 * @param token
@@ -46,7 +46,7 @@ public class Admin {
 			final File file 
 			) throws Exception {
 		try(InputStream input = Files.newInputStream(file.toPath())){
-			try(Response response = restClient.newClient(AdminClient.class).registerRuleExecutionSet(credential.getAuthHeader(), name, input)){
+			try(Response response = clientUtil.newClient(AdminClient.class).registerRuleExecutionSet(credential.getAuthHeader(), name, input)){
 				response.getStatus();
 			}
 		}
@@ -65,7 +65,7 @@ public class Admin {
 			@Option(names = {"-n", "--name"}, description = "Name")
 			final String name
 			) throws Exception {
-		try(Response response = restClient.newClient(AdminClient.class).deregisterRuleExecutionSet(credential.getAuthHeader(), name)){
+		try(Response response = clientUtil.newClient(AdminClient.class).deregisterRuleExecutionSet(credential.getAuthHeader(), name)){
 			response.getStatus();
 		}
 	}

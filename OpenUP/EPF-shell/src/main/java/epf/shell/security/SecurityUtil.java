@@ -1,28 +1,26 @@
-package epf.shell.client;
+package epf.shell.security;
 
-import java.net.URI;
 import java.nio.file.Paths;
 import java.security.KeyStore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import epf.naming.Naming;
+import epf.shell.client.RestClientUtil;
 import epf.util.logging.LogManager;
 import epf.util.security.KeyStoreUtil;
 
 /**
  * 
  */
-@ApplicationScoped
-public class RestClientUtil {
+public class SecurityUtil {
 	
 	/**
 	 *
 	 */
 	private transient static final Logger LOGGER = LogManager.getLogger(RestClientUtil.class.getName());
+
 	
 	/**
 	 *
@@ -77,12 +75,6 @@ public class RestClientUtil {
 	transient String trustStorePassword;
 	
 	/**
-	 *
-	 */
-	@ConfigProperty(name = Naming.Client.CLIENT_CONFIG + "/mp-rest/uri")
-	transient URI gatewayUrl;
-
-	/**
 	 * 
 	 */
 	@PostConstruct
@@ -92,16 +84,19 @@ public class RestClientUtil {
 			trustStore = KeyStoreUtil.loadKeyStore(trustStoreType, Paths.get(trustStoreFile), trustStorePassword.toCharArray());
 		} 
 		catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "[RestClientUtil][postConstruct]", e);
+			LOGGER.log(Level.SEVERE, "[SecurityUtil][postConstruct]", e);
 		}
 	}
 	
-	/**
-	 * @param <T>
-	 * @param cls
-	 * @return
-	 */
-	public <T> T newClient(final Class<T> cls) {
-		return RestClientBuilder.newBuilder().keyStore(keyStore, keyPassword).trustStore(trustStore).baseUri(gatewayUrl).build(cls);
+	public KeyStore getKeyStore() {
+		return keyStore;
+	}
+	
+	public KeyStore getTrustStore() {
+		return trustStore;
+	}
+	
+	public String getKeyPassword() {
+		return keyPassword;
 	}
 }

@@ -2,7 +2,7 @@ package epf.shell.schema;
 
 import epf.naming.Naming;
 import epf.shell.Function;
-import epf.shell.client.RestClientUtil;
+import epf.shell.client.ClientUtil;
 import epf.shell.security.Credential;
 import epf.shell.security.CallerPrincipal;
 import javax.enterprise.context.RequestScoped;
@@ -24,7 +24,7 @@ public class Schema {
 	 * 
 	 */
 	@Inject
-	transient RestClientUtil restClient;
+	transient ClientUtil clientUtil;
 	
 	/**
 	 * @param credential
@@ -36,7 +36,7 @@ public class Schema {
 			@ArgGroup(exclusive = true, multiplicity = "1")
 			@CallerPrincipal
 			final Credential credential) throws Exception{
-		try(Response response = restClient.newClient(SchemaClient.class).getEntities(credential.getAuthHeader())){
+		try(Response response = clientUtil.newClient(SchemaClient.class).getEntities(credential.getAuthHeader())){
 			return response.readEntity(String.class);
 		}
 	}

@@ -6,7 +6,7 @@ import javax.ws.rs.core.Response;
 import epf.naming.Naming;
 import epf.shell.Function;
 import epf.shell.SYSTEM;
-import epf.shell.client.RestClientUtil;
+import epf.shell.client.ClientUtil;
 import epf.shell.security.CallerPrincipal;
 import epf.shell.security.Credential;
 import javax.enterprise.context.RequestScoped;
@@ -29,7 +29,7 @@ public class Cache {
 	 * 
 	 */
 	@Inject
-	transient RestClientUtil restClient;
+	transient ClientUtil clientUtil;
 	
 	/**
 	 * 
@@ -61,7 +61,7 @@ public class Cache {
 			@Option(names = {"-i", "--id"}, description = "ID")
 			final String entityId
 			) throws Exception {
-		try(Response response = restClient.newClient(CacheClient.class).getEntity(credential.getAuthHeader(), schema, entity, entityId)){
+		try(Response response = clientUtil.newClient(CacheClient.class).getEntity(credential.getAuthHeader(), schema, entity, entityId)){
 			return response.readEntity(String.class);
 		}
 	}
@@ -81,7 +81,7 @@ public class Cache {
 			final String schema,
 			@Option(names = {"-e", "--entity"}, description = "Entity")
 			final String entity) throws Exception {
-		restClient.newClient(CacheClient.class).forEachEntity(credential.getAuthHeader(), schema, entity).subscribe(new CacheSubscriber(out, err));
+		clientUtil.newClient(CacheClient.class).forEachEntity(credential.getAuthHeader(), schema, entity).subscribe(new CacheSubscriber(out, err));
 	}
 	
 	/**
@@ -104,7 +104,7 @@ public class Cache {
 			final Optional<Integer> firstResult,
 			@Option(names = {"-m", "--max"}, description = "Max Result(s)")
 			final Optional<Integer> maxResults) throws Exception {
-		try(Response response = restClient.newClient(CacheClient.class).getEntities(
+		try(Response response = clientUtil.newClient(CacheClient.class).getEntities(
 				credential.getAuthHeader(), 
 				schema,
 				entity,

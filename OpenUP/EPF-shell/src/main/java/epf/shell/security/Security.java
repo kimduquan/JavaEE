@@ -3,7 +3,7 @@ package epf.shell.security;
 import epf.naming.Naming;
 import epf.security.schema.Token;
 import epf.shell.Function;
-import epf.shell.client.RestClientUtil;
+import epf.shell.client.ClientUtil;
 import epf.util.logging.Logging;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -44,7 +44,7 @@ public class Security {
 	 * 
 	 */
 	@Inject
-	transient RestClientUtil restClient;
+	transient ClientUtil clientUtil;
 	
 	/**
 	 * 
@@ -69,7 +69,7 @@ public class Security {
 			final char... password
 			) throws Exception {
 		
-		return restClient.newClient(SecurityClient.class).login(user, new String(password), shellUrl);
+		return clientUtil.newClient(SecurityClient.class).login(user, new String(password), shellUrl);
 	}
 	
 	/**
@@ -84,7 +84,7 @@ public class Security {
 			final Credential credential
 			) throws Exception {
 		identityStore.remove(credential);
-		return restClient.newClient(SecurityClient.class).logOut(credential.getAuthHeader());
+		return clientUtil.newClient(SecurityClient.class).logOut(credential.getAuthHeader());
 	}
 	
 	/**
@@ -98,7 +98,7 @@ public class Security {
 			final String token) throws Exception {
 		final Credential credential = new Credential();
 		credential.token = token;
-		final Token authToken = restClient.newClient(SecurityClient.class).authenticate(credential.getAuthHeader());
+		final Token authToken = clientUtil.newClient(SecurityClient.class).authenticate(credential.getAuthHeader());
 		credential.tokenID = authToken.getTokenID();
 		identityStore.put(credential);
 		return authToken;
@@ -117,7 +117,7 @@ public class Security {
 			@Option(names = {"-p", "--password"}, description = "Password", interactive = true)
 		    final char... password
 		    ) throws Exception {
-		restClient.newClient(SecurityClient.class).update(credential.getAuthHeader(), new String(password));
+		clientUtil.newClient(SecurityClient.class).update(credential.getAuthHeader(), new String(password));
 	}
 	
 	/**
@@ -131,6 +131,6 @@ public class Security {
 			@CallerPrincipal
 			final Credential credential
 			) throws Exception {
-		return restClient.newClient(SecurityClient.class).revoke(credential.getAuthHeader(), new MultivaluedHashMap<>());
+		return clientUtil.newClient(SecurityClient.class).revoke(credential.getAuthHeader(), new MultivaluedHashMap<>());
 	}
 }

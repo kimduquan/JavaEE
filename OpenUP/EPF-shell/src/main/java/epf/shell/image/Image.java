@@ -8,7 +8,7 @@ import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import epf.naming.Naming;
 import epf.shell.Function;
-import epf.shell.client.RestClientUtil;
+import epf.shell.client.ClientUtil;
 import epf.shell.security.CallerPrincipal;
 import epf.shell.security.Credential;
 import picocli.CommandLine.ArgGroup;
@@ -28,7 +28,7 @@ public class Image {
 	 * 
 	 */
 	@Inject
-	transient RestClientUtil restClient;
+	transient ClientUtil clientUtil;
 	
 	/**
 	 * @param credential
@@ -43,7 +43,7 @@ public class Image {
 			@Option(names = {"-f", "--file"}, description = "File")
 			final File file) throws Exception {
 		try(InputStream input = Files.newInputStream(file.toPath())){
-			try(Response response = restClient.newClient(ImageClient.class).findContours(credential.getAuthHeader(), input)){
+			try(Response response = clientUtil.newClient(ImageClient.class).findContours(credential.getAuthHeader(), input)){
 				response.getStatus();
 			}
 		}
