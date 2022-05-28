@@ -47,7 +47,6 @@ public class Net implements epf.client.net.Net {
 			client.authorizationHeader(request.getHeader(HttpHeaders.AUTHORIZATION));
 			final URL resultUrl = Entities.persist(client, URL.class, epf.net.schema.Net.SCHEMA, epf.net.schema.Net.URL, url);
 			final String shortString = StringUtil.toShortString(resultUrl.getId());
-			SessionUtil.setMapAttribute(request, Naming.Net.NET_URL, "urls", shortString, rawUrl.toString());
 			return shortString;
 		}
 	}

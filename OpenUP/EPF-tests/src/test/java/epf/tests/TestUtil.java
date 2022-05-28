@@ -4,6 +4,7 @@
 package epf.tests;
 
 import java.time.Duration;
+import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 
 /**
@@ -18,5 +19,17 @@ public class TestUtil {
 		while(!predicate.test(null) && (System.currentTimeMillis() < targetTime)) {
 			Thread.sleep(40);
 		}
+	}
+	
+	public static <T> T doWhile(Callable<T> callable, Predicate<T> predicate, Duration duration) throws Exception {
+		long currentTime = System.currentTimeMillis();
+		long targetTime = currentTime + duration.toMillis();
+		T object = null;
+		do {
+			object = callable.call();
+			Thread.sleep(40);
+		}
+		while(predicate.test(object) && (System.currentTimeMillis() < targetTime));
+		return object;
 	}
 }

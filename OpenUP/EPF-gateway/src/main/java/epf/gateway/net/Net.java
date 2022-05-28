@@ -79,7 +79,7 @@ public class Net {
     ) throws Exception {
     	final int id = StringUtil.fromShortString(url);
     	final URI cacheUrl = registry.lookup(Naming.CACHE).orElseThrow(NotFoundException::new);
-    	return ClientBuilder.newClient().target(cacheUrl).path(Naming.PERSISTENCE).path("EPF_Net").path("URL").path(String.valueOf(id)).request(MediaType.APPLICATION_JSON).rx().get(Map.class)
+    	return ClientBuilder.newClient().target(cacheUrl).path(Naming.QUERY).path("entity").path("EPF_Net").path("URL").path(String.valueOf(id)).request(MediaType.APPLICATION_JSON).rx().get(Map.class)
     	.thenApply(urlMap -> {
     		try {
 				return Response.temporaryRedirect(new URI(String.valueOf(urlMap.get("string"))));
