@@ -76,7 +76,7 @@ public class SchemaCache {
 		}
 		Optional<EntityKey> key = Optional.empty();
 		if(entitySchema.isPresent() && entityName.isPresent() && entityId.isPresent()) {
-			key = Optional.of(new EntityKey(entitySchema.get(), entityName.get(), String.valueOf(entityId.get())));
+			key = Optional.of(new EntityKey(entitySchema.get(), entityName.get(), entityId.get()));
 		}
 		return key;
 	}
@@ -182,5 +182,21 @@ public class SchemaCache {
 	 */
 	public Map<String, String> getColumnFields(final String entity){
 		return schemaUtil.getEntityColumnFields(entity);
+	}
+	
+	/**
+	 * @param entity
+	 * @return
+	 */
+	public Optional<String> getEntityIdFieldType(final String entity){
+		Optional<String> entityIdFieldType = Optional.empty();
+		final Optional<Class<?>> entityClass = Optional.ofNullable(schemaUtil.getEntityClass(entity));
+		if(entityClass.isPresent()) {
+			final Optional<Field> entityIdField = schemaUtil.getEntityIdField(entityClass.get());
+			if(entityIdField.isPresent()) {
+				entityIdFieldType = Optional.of(entityIdField.get().getType().getName());
+			}
+		}
+		return entityIdFieldType;
 	}
 }

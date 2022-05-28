@@ -1,4 +1,4 @@
-package epf.persistence.internal.util;
+package epf.persistence.util;
 
 import javax.persistence.Entity;
 import javax.persistence.NamedEntityGraph;

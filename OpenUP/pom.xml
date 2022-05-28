@@ -761,6 +761,7 @@
 		<module>EPF-file-utility</module>
 		<module>EPF-cache-utility</module>
 		<module>EPF-messaging-utility</module>
+		<module>EPF-persistence-utility</module>
 		<module>EPF-persistence-internal</module>
 		<module>EPF-persistence-ext</module>
 		<module>EPF-security-utility</module>

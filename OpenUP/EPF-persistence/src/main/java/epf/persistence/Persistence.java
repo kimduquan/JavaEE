@@ -13,9 +13,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import epf.naming.Naming;
+import epf.persistence.util.EntityTypeUtil;
+import epf.persistence.util.EntityUtil;
 import epf.util.json.JsonUtil;
-import epf.persistence.internal.util.EntityTypeUtil;
-import epf.persistence.internal.util.EntityUtil;
 
 /**
  *

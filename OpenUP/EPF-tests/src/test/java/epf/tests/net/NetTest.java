@@ -1,6 +1,7 @@
 package epf.tests.net;
 
 import java.net.URI;
+import java.time.Duration;
 import javax.ws.rs.core.Response;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -15,6 +16,7 @@ import epf.client.net.Net;
 import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.persistence.client.Entities;
+import epf.tests.TestUtil;
 import epf.tests.client.ClientUtil;
 import epf.tests.health.HealthUtil;
 import epf.tests.security.SecurityUtil;
@@ -59,10 +61,15 @@ public class NetTest {
 	public void testRewriteUrlOk() throws Exception {
 		String shortUrl = Net.rewriteUrl(client, "https://google.com");
 		try(Client gateway = ClientUtil.newClient(netUrl)){
+			TestUtil.doWhile(() -> {
+				try(Response response = gateway.request(target -> target.path("url").queryParam("url", shortUrl), req -> req).get()){
+					return response.getStatus();
+				}
+			}, status -> status.equals(Response.Status.NOT_FOUND.getStatusCode()), Duration.ofSeconds(10));
 			try(Response response = gateway.request(target -> target.path("url").queryParam("url", shortUrl), req -> req).get()){
 				URI uri = response.getLocation();
-				Assert.assertEquals("Response.location", new URI("https://google.com"), uri);
 				Assert.assertEquals("Response.statusInfo", Response.Status.TEMPORARY_REDIRECT.getStatusCode(), response.getStatus());
+				Assert.assertEquals("Response.location", new URI("https://google.com"), uri);
 			}
 		}
 		int id = StringUtil.fromShortString(shortUrl);

@@ -41,12 +41,26 @@ public class EntityLoader implements CacheLoader<String, Object> {
 		if(entityKey.isPresent()) {
 			final Optional<Class<?>> entityClass = schemaCache.getEntityClass(entityKey.get().getEntity());
 			if(entityClass.isPresent()) {
-				final Object entity = manager.find(entityClass.get(), entityKey.get().getId());
-				if(entity != null) {
-					JsonUtil.toString(entity);
-					manager.detach(entity);
+				final Optional<String> entityIdFieldType = schemaCache.getEntityIdFieldType(entityKey.get().getEntity());
+				if(entityIdFieldType.isPresent()) {
+					Object entityId = entityKey.get().getId();
+					switch(entityIdFieldType.get()) {
+			    		case "java.lang.Integer":
+			    			entityId = Integer.valueOf(String.valueOf(entityId));
+			    			break;
+			    		case "java.lang.Long":
+			    			entityId = Long.valueOf(String.valueOf(entityId));
+			    			break;
+			    		default:
+			    			break;
+			    	}
+					final Object entity = manager.find(entityClass.get(), entityId);
+					if(entity != null) {
+						JsonUtil.toString(entity);
+						manager.detach(entity);
+					}
+					return entity;
 				}
-				return entity;
 			}
 		}
 		return null;

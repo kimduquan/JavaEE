@@ -18,7 +18,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import epf.gateway.Registry;
@@ -78,16 +77,21 @@ public class Net {
     		final String url
     ) throws Exception {
     	final int id = StringUtil.fromShortString(url);
-    	final URI cacheUrl = registry.lookup(Naming.CACHE).orElseThrow(NotFoundException::new);
-    	return ClientBuilder.newClient().target(cacheUrl).path(Naming.QUERY).path("entity").path("EPF_Net").path("URL").path(String.valueOf(id)).request(MediaType.APPLICATION_JSON).rx().get(Map.class)
-    	.thenApply(urlMap -> {
-    		try {
-				return Response.temporaryRedirect(new URI(String.valueOf(urlMap.get("string"))));
-			} 
-    		catch (Exception e) {
-				return Response.serverError();
-			}
-    	})
-    	.thenApply(ResponseBuilder::build);
+    	final URI queryUrl = registry.lookup(Naming.QUERY).orElseThrow(NotFoundException::new);
+    	return ClientBuilder.newClient().target(queryUrl).path("entity").path("EPF_Net").path("URL").path(String.valueOf(id)).request(MediaType.APPLICATION_JSON).rx()
+    	.get()
+    	.thenApply(response -> {
+    		if(response.getStatus() == 200) {
+    			final Map<String, Object> map = response.readEntity(Map.class);
+    			final String string = String.valueOf(map.get("string"));
+    			try {
+					return Response.temporaryRedirect(new URI(string)).build();
+				} 
+    			catch (Exception e) {
+					return response;
+				}
+    		}
+    		return response;
+    	});
     }
 }

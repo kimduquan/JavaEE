@@ -12,7 +12,6 @@ import epf.net.schema.URL;
 import epf.persistence.client.Entities;
 import epf.util.StringUtil;
 import epf.util.config.ConfigUtil;
-import epf.util.http.SessionUtil;
 import epf.naming.Naming;
 
 /**

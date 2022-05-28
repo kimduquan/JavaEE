@@ -1,4 +1,4 @@
-package epf.persistence.internal.util;
+package epf.persistence.util;
 
 import java.io.InputStream;
 import javax.json.bind.Jsonb;

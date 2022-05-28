@@ -20,7 +20,7 @@ import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
 import epf.persistence.internal.Entity;
 import epf.persistence.internal.QueryBuilder;
-import epf.persistence.internal.util.EntityTypeUtil;
+import epf.persistence.util.EntityTypeUtil;
 import epf.query.internal.SchemaCache;
 import epf.schema.utility.EntityEvent;
 import epf.schema.utility.PostPersist;
