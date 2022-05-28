@@ -3,6 +3,7 @@ package epf.tests.webapp.security;
 import java.util.Map.Entry;
 import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Test;
 import epf.tests.WebDriverUtil;
 import epf.tests.security.SecurityUtil;
@@ -14,6 +15,7 @@ import jakarta.inject.Inject;
  * @author PC
  *
  */
+@Ignore
 public class LoginPageTest {
 	
 	@ClassRule

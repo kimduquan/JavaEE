@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.portlet.internal.client;
 
 import java.net.URI;

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.portlet.internal.gateway;
 
 import java.net.URI;

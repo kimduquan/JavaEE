@@ -5,11 +5,11 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.MethodRule;
 import org.junit.rules.TestName;
-
 import epf.tests.WebDriverUtil;
 import epf.tests.portlet.PortletUtil;
 import epf.tests.portlet.PortletView;
@@ -20,6 +20,7 @@ import jakarta.inject.Inject;
  * @author PC
  *
  */
+@Ignore
 public class QueryTest {
 	
 	@Rule

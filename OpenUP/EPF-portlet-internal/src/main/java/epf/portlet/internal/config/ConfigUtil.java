@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.portlet.internal.config;
 
 import javax.enterprise.context.RequestScoped;

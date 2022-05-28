@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.portlet.internal.config;
 
 import java.util.Map;
