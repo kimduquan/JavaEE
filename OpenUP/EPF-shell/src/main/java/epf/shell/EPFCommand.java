@@ -1,9 +1,5 @@
-/**
- * 
- */
 package epf.shell;
 
-import epf.shell.cache.Cache;
 import epf.shell.file.FileStore;
 import epf.shell.image.Image;
 import epf.shell.persistence.Persistence;
@@ -20,7 +16,7 @@ import javax.enterprise.context.ApplicationScoped;
  *
  */
 @TopCommand
-@Command(name = "epf", subcommands = {Security.class, Persistence.class, Schema.class, FileStore.class, Rules.class, Utility.class, Image.class, Cache.class})
+@Command(name = "epf", subcommands = {Security.class, Persistence.class, Schema.class, FileStore.class, Rules.class, Utility.class, Image.class})
 @ApplicationScoped
 public class EPFCommand {
 	
