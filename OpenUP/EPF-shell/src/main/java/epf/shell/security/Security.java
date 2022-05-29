@@ -3,7 +3,6 @@ package epf.shell.security;
 import epf.naming.Naming;
 import epf.security.schema.Token;
 import epf.shell.Function;
-import epf.shell.client.ClientUtil;
 import epf.util.logging.Logging;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -11,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.ws.rs.core.MultivaluedHashMap;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -44,7 +44,8 @@ public class Security {
 	 * 
 	 */
 	@Inject
-	transient ClientUtil clientUtil;
+	@RestClient
+	transient SecurityClient security;
 	
 	/**
 	 * 
@@ -69,7 +70,7 @@ public class Security {
 			final char... password
 			) throws Exception {
 		
-		return clientUtil.newClient(SecurityClient.class).login(user, new String(password), shellUrl);
+		return security.login(user, new String(password), shellUrl);
 	}
 	
 	/**
@@ -84,7 +85,7 @@ public class Security {
 			final Credential credential
 			) throws Exception {
 		identityStore.remove(credential);
-		return clientUtil.newClient(SecurityClient.class).logOut(credential.getAuthHeader());
+		return security.logOut(credential.getAuthHeader());
 	}
 	
 	/**
@@ -98,7 +99,7 @@ public class Security {
 			final String token) throws Exception {
 		final Credential credential = new Credential();
 		credential.token = token;
-		final Token authToken = clientUtil.newClient(SecurityClient.class).authenticate(credential.getAuthHeader());
+		final Token authToken = security.authenticate(credential.getAuthHeader());
 		credential.tokenID = authToken.getTokenID();
 		identityStore.put(credential);
 		return authToken;
@@ -117,7 +118,7 @@ public class Security {
 			@Option(names = {"-p", "--password"}, description = "Password", interactive = true)
 		    final char... password
 		    ) throws Exception {
-		clientUtil.newClient(SecurityClient.class).update(credential.getAuthHeader(), new String(password));
+		security.update(credential.getAuthHeader(), new String(password));
 	}
 	
 	/**
@@ -131,6 +132,6 @@ public class Security {
 			@CallerPrincipal
 			final Credential credential
 			) throws Exception {
-		return clientUtil.newClient(SecurityClient.class).revoke(credential.getAuthHeader(), new MultivaluedHashMap<>());
+		return security.revoke(credential.getAuthHeader(), new MultivaluedHashMap<>());
 	}
 }

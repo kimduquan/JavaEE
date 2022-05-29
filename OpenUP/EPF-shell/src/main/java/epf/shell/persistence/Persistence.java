@@ -1,9 +1,9 @@
 package epf.shell.persistence;
 
 import javax.ws.rs.core.Response;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import epf.naming.Naming;
 import epf.shell.Function;
-import epf.shell.client.ClientUtil;
 import epf.shell.security.Credential;
 import epf.shell.security.CallerPrincipal;
 import javax.enterprise.context.RequestScoped;
@@ -25,7 +25,8 @@ public class Persistence {
 	 * 
 	 */
 	@Inject
-	transient ClientUtil clientUtil;
+	@RestClient
+	transient PersistenceClient persistence;
 	
 	/**
 	 * @param credential
@@ -44,7 +45,7 @@ public class Persistence {
 			final String entity, 
 			@Option(names = {"-d", "--data"}, description = "Entity", interactive = true, echo = true)
 			final String data) throws Exception {
-		try(Response response = clientUtil.newClient(PersistenceClient.class).persist(credential.getAuthHeader(), schema, entity, data)){
+		try(Response response = persistence.persist(credential.getAuthHeader(), schema, entity, data)){
 			return response.readEntity(String.class);
 		}
 	}
@@ -69,7 +70,7 @@ public class Persistence {
 			final String entityId,
 			@Option(names = {"-d", "--data"}, description = "Entity", interactive = true, echo = true)
 			final String data) throws Exception {
-		clientUtil.newClient(PersistenceClient.class).merge(credential.getAuthHeader(), schema, entity, entityId, data);
+		persistence.merge(credential.getAuthHeader(), schema, entity, entityId, data);
 	}
 	
 	/**
@@ -90,28 +91,6 @@ public class Persistence {
 			final String entity, 
 			@Option(names = {"-i", "--id"}, description = "ID")
 			final String entityId) throws Exception {
-		clientUtil.newClient(PersistenceClient.class).remove(credential.getAuthHeader(), schema, entity, entityId);
-	}
-	
-	/**
-	 * @param credential
-	 * @param schema
-	 * @param entity
-	 * @param entityId
-	 */
-	@Command(name = "find")
-	public String find(
-			@ArgGroup(exclusive = true, multiplicity = "1")
-			@CallerPrincipal
-			final Credential credential,
-			@Option(names = {"-s", "--schema"}, description = "Schema")
-			final String schema,
-			@Option(names = {"-e", "--entity"}, description = "Entity")
-			final String entity, 
-			@Option(names = {"-i", "--id"}, description = "ID")
-			final String entityId) throws Exception {
-		try(Response response = clientUtil.newClient(PersistenceClient.class).find(credential.getAuthHeader(), schema, entity, entityId)){
-			return response.readEntity(String.class);
-		}
+		persistence.remove(credential.getAuthHeader(), schema, entity, entityId);
 	}
 }

@@ -1,9 +1,9 @@
 package epf.shell.rules;
 
 import javax.ws.rs.core.Response;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import epf.naming.Naming;
 import epf.shell.Function;
-import epf.shell.client.ClientUtil;
 import epf.shell.rules.admin.Admin;
 import epf.shell.security.Credential;
 import epf.shell.security.CallerPrincipal;
@@ -26,7 +26,8 @@ public class Rules {
 	 * 
 	 */
 	@Inject
-	transient ClientUtil clientUtil;
+	@RestClient
+	transient RulesClient rules;
 	
 	/**
 	 * @param tokenArg
@@ -45,7 +46,7 @@ public class Rules {
 			@Option(names = {"-i", "--input"}, description = "Input", interactive = true, echo = true)
 			final String input
 			) throws Exception {
-		try(Response response = clientUtil.newClient(RulesClient.class).executeRules(credential.getAuthHeader(), ruleSet, input)){
+		try(Response response = rules.executeRules(credential.getAuthHeader(), ruleSet, input)){
 			return response.readEntity(String.class);
 		}
 	}
@@ -66,7 +67,7 @@ public class Rules {
 			@Option(names = {"-o", "--object"}, description = "Object", interactive = true, echo = true)
 			final String object
 			) throws Exception {
-		try(Response response = clientUtil.newClient(RulesClient.class).addObject(credential.getAuthHeader(), ruleSet, object)){
+		try(Response response = rules.addObject(credential.getAuthHeader(), ruleSet, object)){
 			response.getStatus();
 		}
 	}
@@ -85,7 +86,7 @@ public class Rules {
 			@Option(names = {"-r", "--rule_set"}, description = "Rule Set")
 			final String ruleSet
 			) throws Exception {
-		try(Response response = clientUtil.newClient(RulesClient.class).executeRules(credential.getAuthHeader(), ruleSet)){
+		try(Response response = rules.executeRules(credential.getAuthHeader(), ruleSet)){
 			return response.readEntity(String.class);
 		}
 	}
@@ -100,7 +101,7 @@ public class Rules {
 			@ArgGroup(exclusive = true, multiplicity = "1")
 			@CallerPrincipal
 			final Credential credential) throws Exception {
-		try(Response response = clientUtil.newClient(RulesClient.class).getRegistrations(credential.getAuthHeader())){
+		try(Response response = rules.getRegistrations(credential.getAuthHeader())){
 			return response.readEntity(String.class);
 		}
 	}

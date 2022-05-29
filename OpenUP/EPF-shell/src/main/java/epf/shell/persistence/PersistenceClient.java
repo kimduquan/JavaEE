@@ -85,25 +85,4 @@ public interface PersistenceClient {
             @PathParam("id")
             final String entityId
             );
-	
-	/**
-	 * @param token
-	 * @param schema
-	 * @param entity
-	 * @param entityId
-	 * @return
-	 */
-	@POST
-    @Path("{schema}/{entity}/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    Response find(
-    		@HeaderParam(HttpHeaders.AUTHORIZATION)
-    		final String token,
-    		@PathParam("schema")
-            final String schema,
-            @PathParam("entity")
-            final String entity,
-            @PathParam("id")
-            final String entityId
-            );
 }
