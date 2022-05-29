@@ -21,6 +21,7 @@ import epf.client.registry.Registry;
 import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.tests.client.ClientUtil;
+import epf.tests.health.HealthUtil;
 import epf.util.config.ConfigUtil;
 import epf.util.logging.LogManager;
 
@@ -36,6 +37,7 @@ public class RegistryTest {
     
     @BeforeClass
     public static void beforeClass() throws Exception{
+    	HealthUtil.isReady();
     	try {
 			registryUrl = ConfigUtil.getURI(Naming.Registry.REGISTRY_URL);
 		} 

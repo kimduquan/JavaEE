@@ -29,6 +29,7 @@ import epf.persistence.schema.client.Entity;
 import epf.security.schema.Token;
 import epf.tests.TestUtil;
 import epf.tests.file.FileUtil;
+import epf.tests.health.HealthUtil;
 import epf.tests.persistence.PersistenceUtil;
 import epf.tests.rules.RulesUtil;
 import epf.tests.security.SecurityUtil;
@@ -69,6 +70,7 @@ public class ShellTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		HealthUtil.isReady();
 		workingDir = ShellUtil.getShellPath().toRealPath();
 		tempDir = Files.createTempDirectory("temp");
 		credential = SecurityUtil.peekCredential();

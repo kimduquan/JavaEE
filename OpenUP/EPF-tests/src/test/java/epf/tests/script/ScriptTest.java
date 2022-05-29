@@ -16,6 +16,7 @@ import epf.client.script.Script;
 import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.tests.client.ClientUtil;
+import epf.tests.health.HealthUtil;
 import epf.tests.security.SecurityUtil;
 import epf.client.gateway.GatewayUtil;
 
@@ -37,6 +38,7 @@ public class ScriptTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		HealthUtil.isReady();
 		scriptUrl = GatewayUtil.get(Naming.SCRIPT);
 		token = SecurityUtil.login();
 	}

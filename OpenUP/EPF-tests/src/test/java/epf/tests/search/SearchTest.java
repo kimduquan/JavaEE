@@ -5,6 +5,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import epf.tests.health.HealthUtil;
 
 /**
  * 
@@ -17,6 +18,7 @@ public class SearchTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		HealthUtil.isReady();
 	}
 
 	/**

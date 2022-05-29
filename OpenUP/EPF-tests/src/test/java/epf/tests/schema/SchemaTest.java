@@ -21,6 +21,7 @@ import epf.naming.Naming;
 import epf.persistence.schema.client.Entity;
 import epf.persistence.schema.client.Schema;
 import epf.tests.client.ClientUtil;
+import epf.tests.health.HealthUtil;
 import epf.tests.security.SecurityUtil;
 import epf.client.gateway.GatewayUtil;
 
@@ -42,6 +43,7 @@ public class SchemaTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		HealthUtil.isReady();
 		schemaUrl = GatewayUtil.get(Naming.SCHEMA);
     	token = SecurityUtil.login();
 	}
