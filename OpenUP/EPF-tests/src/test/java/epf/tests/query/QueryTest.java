@@ -95,7 +95,7 @@ public class QueryTest {
 				        		art = Query.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
 				        	}
 				        	catch(Exception ex) {
-				        		ex.printStackTrace();
+				        		//ex.printStackTrace();
 				        	}
 				        	return art != null;
 				        }, 
@@ -126,14 +126,26 @@ public class QueryTest {
 				        		art = Query.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
 				        	}
 				        	catch(Exception ex) {
-				        		ex.printStackTrace();
+				        		//ex.printStackTrace();
 				        	}
 				        	return art != null;
 				        }, 
         		Duration.ofSeconds(10)
         		);
         PersistenceUtil.remove(token, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
-        Thread.sleep(80);
+        TestUtil.waitUntil(
+        		(t) -> {
+				        	Artifact art = null;
+				        	try {
+				        		art = Query.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
+				        	}
+				        	catch(Exception ex) {
+				        		//ex.printStackTrace();
+				        	}
+				        	return art == null;
+				        }, 
+        		Duration.ofSeconds(10)
+        		);
         Query.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
 	}
 	
@@ -155,7 +167,7 @@ public class QueryTest {
 				        		art = Query.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
 				        	}
 				        	catch(Exception ex) {
-				        		ex.printStackTrace();
+				        		//ex.printStackTrace();
 				        	}
 				        	return art != null;
 				        }, 
@@ -163,7 +175,7 @@ public class QueryTest {
         		);
         artifact.setSummary(StringUtil.randomString("Artifact Query Summary"));
         PersistenceUtil.merge(token, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName(), artifact);
-        Thread.sleep(80);
+        TestUtil.doWhile(() -> Query.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName()), art -> !artifact.getSummary().equals(art.getSummary()), Duration.ofSeconds(10));
         Artifact actualArtifact = Query.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
         Assert.assertEquals("Artifact.summary", artifact.getSummary(), actualArtifact.getSummary());
         PersistenceUtil.remove(token, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
@@ -172,6 +184,6 @@ public class QueryTest {
 	@Test(expected = NotFoundException.class)
 	public void testGetEntity_NotFound() throws Exception {
 		Thread.sleep(20);
-		Query.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, StringUtil.randomString("Artifact Cache"));
+		Query.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, StringUtil.randomString("Artifact Query"));
 	}
 }

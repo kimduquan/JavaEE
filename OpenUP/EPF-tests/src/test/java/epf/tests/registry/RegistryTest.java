@@ -1,11 +1,8 @@
 package epf.tests.registry;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.UriBuilder;
@@ -23,14 +20,12 @@ import epf.naming.Naming;
 import epf.tests.client.ClientUtil;
 import epf.tests.health.HealthUtil;
 import epf.util.config.ConfigUtil;
-import epf.util.logging.LogManager;
 
 public class RegistryTest {
 	
 	@Rule
     public TestName testName = new TestName();
-
-	private static final Logger logger = LogManager.getLogger(RegistryTest.class.getName());
+	
 	private static URI registryUrl;
 	
 	private Client client;
@@ -41,8 +36,8 @@ public class RegistryTest {
     	try {
 			registryUrl = ConfigUtil.getURI(Naming.Registry.REGISTRY_URL);
 		} 
-    	catch (URISyntaxException e) {
-			logger.log(Level.SEVERE, "beforeClass", e);
+    	catch (Exception e) {
+			e.printStackTrace();
 		}
     }
     
@@ -61,7 +56,7 @@ public class RegistryTest {
 			client.close();
 		} 
     	catch (Exception e) {
-			logger.log(Level.WARNING, "after", e);
+    		e.printStackTrace();
 		}
     }
     
@@ -94,7 +89,7 @@ public class RegistryTest {
 	    	expected.add(langUrl);
 		} 
     	catch (Exception e) {
-			logger.log(Level.SEVERE, "testList_OK", e);
+    		e.printStackTrace();
 		}
     	Assert.assertEquals("list", expected, URIs);
     }

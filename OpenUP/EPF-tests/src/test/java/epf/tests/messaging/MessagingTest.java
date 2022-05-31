@@ -10,6 +10,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Rule;
 import epf.messaging.client.Client;
 import epf.messaging.client.Messaging;
@@ -33,6 +34,7 @@ import epf.work_products.schema.section.Tailoring;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
+@Ignore
 public class MessagingTest {
 	
 	@Rule
