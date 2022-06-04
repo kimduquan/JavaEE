@@ -2,6 +2,7 @@ package epf.query;
 
 import java.util.List;
 import java.util.Optional;
+import javax.annotation.security.PermitAll;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
@@ -15,7 +16,6 @@ import epf.naming.Naming;
 import epf.query.internal.EntityCache;
 import epf.query.internal.QueryCache;
 import epf.query.internal.TokenCache;
-import epf.query.internal.TokenKey;
 import epf.query.internal.persistence.PersistenceCache;
 import epf.security.schema.Token;
 
@@ -104,10 +104,10 @@ public class Query implements epf.client.query.Query {
 		return Response.ok(entities).header(Naming.Query.ENTITY_COUNT, entities.size()).build();
 	}
 
+	@PermitAll
 	@Override
 	public Token getToken(final String tokenHash) {
-		final TokenKey tokenKey = TokenKey.parseString(tokenHash);
-		final Optional<Token> token = tokenCache.getToken(tokenKey);
+		final Optional<Token> token = tokenCache.getToken(tokenHash);
 		return token.orElseThrow(NotFoundException::new);
 	}
 }

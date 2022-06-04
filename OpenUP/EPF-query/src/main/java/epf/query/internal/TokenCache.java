@@ -49,7 +49,8 @@ public class TokenCache implements HealthCheck {
 	 * @param tokenKey
 	 * @return
 	 */
-	public Optional<Token> getToken(final TokenKey tokenKey) {
+	public Optional<Token> getToken(final String tokenHash) {
+		final TokenKey tokenKey = TokenKey.parseString(tokenHash);
 		return Optional.ofNullable(cache.get(tokenKey.toString()));
 	}
 

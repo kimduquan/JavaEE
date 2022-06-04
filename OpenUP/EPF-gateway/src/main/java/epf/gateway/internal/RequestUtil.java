@@ -147,11 +147,19 @@ public interface RequestUtil {
             final MultivaluedHashMap<String, Object> forwardHeaders = new MultivaluedHashMap<String, Object>(requestHeaders);
             forwardHeaders.remove(HttpHeaders.CONTENT_LENGTH);
             forwardHeaders.remove(HttpHeaders.CONTENT_LENGTH.toLowerCase());
+            forwardHeaders.remove(HttpHeaders.AUTHORIZATION);
+            forwardHeaders.remove(HttpHeaders.AUTHORIZATION.toLowerCase());
             builder = builder.headers(forwardHeaders);
             List<Locale> languages = headers.getAcceptableLanguages();
             if(languages == null || languages.isEmpty() || languages.get(0).getLanguage().isEmpty()) {
             	languages = Arrays.asList(Locale.getDefault());
                 builder = builder.acceptLanguage(languages.toArray(new Locale[0]));
+            }
+            if(requestHeaders.containsKey(HttpHeaders.AUTHORIZATION)){
+            	builder = builder.header(HttpHeaders.AUTHORIZATION, headers.getHeaderString(HttpHeaders.AUTHORIZATION));
+            }
+            else if(requestHeaders.containsKey(HttpHeaders.AUTHORIZATION.toLowerCase())){
+            	builder = builder.header(HttpHeaders.AUTHORIZATION, headers.getHeaderString(HttpHeaders.AUTHORIZATION.toLowerCase()));
             }
             final List<String> forwardedHost = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_HOST);
             final List<String> forwardedPort = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_PORT);
