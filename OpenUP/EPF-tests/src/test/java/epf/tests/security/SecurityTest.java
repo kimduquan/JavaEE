@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.tests.security;
 
 import java.net.URI;
@@ -267,14 +262,14 @@ public class SecurityTest {
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token.toCharArray());
     		Response response = Security.update(client, credential.getValue() + "1");
-    		Assert.assertEquals("Response.status", Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
+    		Assert.assertEquals("Response.status", Response.Status.OK.getStatusCode(), response.getStatus());
     	}
     	SecurityUtil.logOut(token);
     	token = SecurityUtil.login(credential.getKey(), credential.getValue() + "1");
     	try(Client client = ClientUtil.newClient(securityUrl)){
     		client.authorization(token.toCharArray());
     		Response response = Security.update(client, credential.getValue());
-    		Assert.assertEquals("Response.status", Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
+    		Assert.assertEquals("Response.status", Response.Status.OK.getStatusCode(), response.getStatus());
     	}
     	SecurityUtil.logOut(token);
     }
