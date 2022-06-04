@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.client.ResponseProcessingException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -35,6 +36,10 @@ public class ExceptionHandler implements
     	ResponseBuilder builder;
     	if(exception instanceof WebApplicationException) {
     		final WebApplicationException error = (WebApplicationException) exception;
+    		builder = Response.fromResponse(error.getResponse());
+    	}
+    	else if(exception instanceof ResponseProcessingException) {
+    		final ResponseProcessingException error = (ResponseProcessingException) exception;
     		builder = Response.fromResponse(error.getResponse());
     	}
     	else {
