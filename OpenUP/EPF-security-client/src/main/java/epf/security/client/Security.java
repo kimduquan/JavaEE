@@ -156,7 +156,7 @@ public interface Security {
      */
     @PATCH
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    CompletionStage<Void> update(
+    CompletionStage<Response> update(
     		@FormParam("password")
     		@NotNull
     		@NotBlank

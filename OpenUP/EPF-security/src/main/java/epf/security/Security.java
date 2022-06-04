@@ -346,9 +346,9 @@ public class Security implements epf.security.client.Security, epf.security.clie
     }
     
     @Override
-	public CompletionStage<Void> update(final String password, final SecurityContext context) throws Exception {
+	public CompletionStage<Response> update(final String password, final SecurityContext context) throws Exception {
     	final Session session = sessionStore.getSession(context).orElseThrow(ForbiddenException::new);
-    	return principalStore.setCallerPassword(session.getPrincipal(), new Password(password));
+    	return principalStore.setCallerPassword(session.getPrincipal(), new Password(password)).thenApply((v) -> Response.ok().build());
 	}
 
 	@Override

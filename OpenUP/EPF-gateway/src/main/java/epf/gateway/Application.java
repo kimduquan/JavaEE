@@ -68,12 +68,7 @@ public class Application {
 		final CompletionStageRxInvoker rx = invoke.rx();
 		return RequestUtil.invoke(rx, req.getMethod(), headers.getMediaType(), body)
 				.thenApply(res -> ResponseUtil.buildResponse(res, baseUri))
-				.whenComplete((res, err) -> {
-					client.close();
-					if(err != null) {
-						res.close();
-					}
-				});
+				.whenComplete((res, err) -> ResponseUtil.closeResponse(client, res, err));
     }
     
     /**

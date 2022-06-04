@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Map.Entry;
 import java.util.concurrent.CompletionStage;
@@ -15,7 +14,6 @@ import javax.ws.rs.client.CompletionStageRxInvoker;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.client.Invocation.Builder;
-import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
@@ -145,25 +143,15 @@ public interface RequestUtil {
     static Builder buildHeaders(final Builder input, final HttpHeaders headers, final URI baseUri){
     	Builder builder = input;
         if(headers != null){
-        	final List<MediaType> mediaTypes = headers.getAcceptableMediaTypes();
-            if(mediaTypes != null){
-                builder = builder.accept(mediaTypes.toArray(new MediaType[0]));
-            }
+            final MultivaluedMap<String, String> requestHeaders = headers.getRequestHeaders();
+            final MultivaluedHashMap<String, Object> forwardHeaders = new MultivaluedHashMap<String, Object>(requestHeaders);
+            forwardHeaders.remove(HttpHeaders.CONTENT_LENGTH);
+            forwardHeaders.remove(HttpHeaders.CONTENT_LENGTH.toLowerCase());
+            builder = builder.headers(forwardHeaders);
             List<Locale> languages = headers.getAcceptableLanguages();
             if(languages == null || languages.isEmpty() || languages.get(0).getLanguage().isEmpty()) {
             	languages = Arrays.asList(Locale.getDefault());
-            }
-            builder = builder.acceptLanguage(languages.toArray(new Locale[0]));
-            final Map<String, Cookie> cookies = headers.getCookies();
-            if(cookies != null){
-            	for(Entry<String, Cookie> entry : cookies.entrySet()) {
-            		final Cookie value = entry.getValue();
-            		builder = builder.cookie(value);
-            	}
-            }
-            final MultivaluedMap<String, String> requestHeaders = headers.getRequestHeaders();
-            if(requestHeaders.containsKey(HttpHeaders.AUTHORIZATION)){
-            	builder = builder.header(HttpHeaders.AUTHORIZATION, headers.getHeaderString(HttpHeaders.AUTHORIZATION));
+                builder = builder.acceptLanguage(languages.toArray(new Locale[0]));
             }
             final List<String> forwardedHost = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_HOST);
             final List<String> forwardedPort = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_PORT);
