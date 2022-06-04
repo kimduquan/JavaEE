@@ -212,7 +212,7 @@ public class SecurityTest {
                 Instant.ofEpochSecond(jwt.getIssuedAtTime()),
                 Instant.ofEpochSecond(jwt.getExpirationTime())
         );
-        Assert.assertEquals("duration", 30, duration.toMinutes());
+        Assert.assertEquals("duration", 60, duration.toMinutes());
         Assert.assertNotNull("Token.issuer", jwt.getIssuer());
         Assert.assertEquals("Token.issuer", "EPF", jwt.getIssuer());
         Assert.assertNotNull("Token.name", jwt.getName());
