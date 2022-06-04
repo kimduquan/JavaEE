@@ -11,8 +11,10 @@ import org.eclipse.microprofile.reactive.messaging.Incoming;
 import epf.naming.Naming;
 import epf.query.internal.EntityCache;
 import epf.query.internal.QueryCache;
+import epf.query.internal.TokenCache;
 import epf.query.internal.persistence.PersistenceCache;
 import epf.schema.utility.EntityEvent;
+import epf.security.schema.Token;
 import epf.util.logging.LogManager;
 
 /**
@@ -45,6 +47,12 @@ public class Listener implements HealthCheck {
 	 */
 	@Inject @Readiness
 	private transient PersistenceCache cache;
+	
+	/**
+	 * 
+	 */
+	@Inject @Readiness
+	private transient TokenCache tokenCache;
 
 	@Override
 	public HealthCheckResponse call() {
@@ -65,6 +73,17 @@ public class Listener implements HealthCheck {
 			catch(Exception ex) {
 				LOGGER.log(Level.SEVERE, "[Listener.postEvent]", ex);
 			}
+		}
+	}
+	
+	/**
+	 * @param token
+	 * @throws Exception 
+	 */
+	@Incoming(Naming.SECURITY)
+	public void newToken(final Token token) throws Exception {
+		if(token != null) {
+			tokenCache.accept(token);
 		}
 	}
 }

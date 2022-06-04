@@ -29,8 +29,8 @@ public interface SecurityUtil {
 	static Optional<String> getTokenId(final Session session) {
 		Optional<String> tokenId = Optional.empty();
 		final Map<String, List<String>> params = session.getRequestParameterMap();
-		if(params != null && params.containsKey("tid")) {
-			final List<String> tid = session.getRequestParameterMap().get("tid");
+		if(params != null && params.containsKey("t")) {
+			final List<String> tid = session.getRequestParameterMap().get("t");
 			if(tid != null && tid.size() > 0) {
 				tokenId = Optional.of(tid.get(0));
 			}
@@ -43,8 +43,8 @@ public interface SecurityUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	static CompletionStage<Boolean> authenticateTokenId(final String tokenId, final URI cacheUrl, final URI securityUrl) throws Exception {
-		final CompletionStage<Map<String, Object>> tokenClaims = ClientBuilder.newClient().target(cacheUrl).path(Naming.SECURITY).queryParam("tid", tokenId).request(MediaType.APPLICATION_JSON_TYPE).rx().get(new GenericType<Map<String, Object>>(){});
+	static CompletionStage<Boolean> authenticateTokenId(final String tokenId, final URI queryUrl, final URI securityUrl) throws Exception {
+		final CompletionStage<Map<String, Object>> tokenClaims = ClientBuilder.newClient().target(queryUrl).path(Naming.SECURITY).queryParam("t", tokenId).request(MediaType.APPLICATION_JSON_TYPE).rx().get(new GenericType<Map<String, Object>>(){});
 		return tokenClaims
 		.thenApply(SecurityUtil::getRawToken)
 		.thenCompose(token -> buildAuthenticateRequest(token, securityUrl))

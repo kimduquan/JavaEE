@@ -113,9 +113,9 @@ public class Messaging {
 			closeSession(path, session);
 		}
 		else {
-			final URI cacheUrl = registry.lookup(Naming.CACHE).orElseThrow(() -> new NoSuchElementException(Naming.CACHE));
+			final URI queryUrl = registry.lookup(Naming.QUERY).orElseThrow(() -> new NoSuchElementException(Naming.QUERY));
 			final URI securityUrl = registry.lookup(Naming.SECURITY).orElseThrow(() -> new NoSuchElementException(Naming.SECURITY));
-			SecurityUtil.authenticateTokenId(tokenId.get(), cacheUrl, securityUrl).thenAccept(succeed -> {
+			SecurityUtil.authenticateTokenId(tokenId.get(), queryUrl, securityUrl).thenAccept(succeed -> {
 				if(!succeed) {
 					closeSession(path, session);
 				}

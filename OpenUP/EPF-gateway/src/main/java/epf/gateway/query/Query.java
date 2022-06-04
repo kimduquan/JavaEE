@@ -3,6 +3,7 @@ package epf.gateway.query;
 import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -155,4 +156,27 @@ public class Query {
             final List<PathSegment> paths) throws Exception {
         		return request.request(Naming.QUERY, context, headers, uriInfo, req, null);
         	}
+	
+	/**
+	 * @param headers
+	 * @param uriInfo
+	 * @param req
+	 * @return
+	 * @throws Exception
+	 */
+	@PermitAll
+	@GET
+	@Path(Naming.SECURITY)
+	@Produces(MediaType.APPLICATION_JSON)
+    public CompletionStage<Response> getToken(
+    		@Context 
+    		final SecurityContext context,
+            @Context 
+            final HttpHeaders headers, 
+            @Context 
+            final UriInfo uriInfo,
+            @Context 
+            final javax.ws.rs.core.Request req) throws Exception {
+        return request.request(Naming.CACHE, context, headers, uriInfo, req, null);
+    }
 }

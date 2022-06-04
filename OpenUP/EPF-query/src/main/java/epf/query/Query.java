@@ -14,7 +14,10 @@ import epf.client.schema.EntityId;
 import epf.naming.Naming;
 import epf.query.internal.EntityCache;
 import epf.query.internal.QueryCache;
+import epf.query.internal.TokenCache;
+import epf.query.internal.TokenKey;
 import epf.query.internal.persistence.PersistenceCache;
+import epf.security.schema.Token;
 
 /**
  * @author PC
@@ -41,6 +44,12 @@ public class Query implements epf.client.query.Query {
 	 */
 	@Inject @Readiness
 	private transient PersistenceCache persistence;
+	
+	/**
+	 *
+	 */
+	@Inject @Readiness
+	private transient TokenCache tokenCache;
 	
 	@Override
     public Response getEntity(
@@ -93,5 +102,12 @@ public class Query implements epf.client.query.Query {
 	public Response fetchEntities(final List<EntityId> entityIds) {
 		final List<Object> entities = entityCache.getEntities(entityIds);
 		return Response.ok(entities).header(Naming.Query.ENTITY_COUNT, entities.size()).build();
+	}
+
+	@Override
+	public Token getToken(final String tokenHash) {
+		final TokenKey tokenKey = TokenKey.parseString(tokenHash);
+		final Optional<Token> token = tokenCache.getToken(tokenKey);
+		return token.orElseThrow(NotFoundException::new);
 	}
 }
