@@ -60,10 +60,10 @@
 		    <groupId>org.apache.lucene</groupId>
 		    <artifactId>lucene-queryparser</artifactId>
 		</dependency>
-       	<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+		<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
 		<dependency>
-		    <groupId>mysql</groupId>
-		    <artifactId>mysql-connector-java</artifactId>
+		    <groupId>org.postgresql</groupId>
+		    <artifactId>postgresql</artifactId>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
 		<dependency>
@@ -426,11 +426,11 @@
                             <appsDirectory>apps</appsDirectory>
 							<copyDependencies>
 								<dependencyGroup>
-									<location>${project.build.directory}/shared/resources/epf/transaction</location>
-	                                <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+									<location>${project.build.directory}/shared/resources/epf/persistence</location>
+	                                <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
 									<dependency>
-									    <groupId>mysql</groupId>
-									    <artifactId>mysql-connector-java</artifactId>
+									    <groupId>org.postgresql</groupId>
+			    						<artifactId>postgresql</artifactId>
 									</dependency>
 								</dependencyGroup>
 								<dependencyGroup>

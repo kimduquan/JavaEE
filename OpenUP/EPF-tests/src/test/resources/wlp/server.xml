@@ -121,13 +121,16 @@
         <fileset dir="${shared.resource.dir}/epf/security" includes="*.jar"/>
     </library>
     
-    <library id="MySQLJDBCLib">
-        <fileset dir="${shared.resource.dir}/epf/transaction" includes="*.jar"/>
+    <library id="PostgreSQLJDBCLib">
+        <fileset dir="${shared.resource.dir}/epf/persistence" includes="*.jar"/>
     </library>
     
     <dataSource id="epf_schema" jndiName="jdbc/epf_schema">
-        <jdbcDriver libraryRef="MySQLJDBCLib"/>
-    	<properties serverName="localhost" portNumber="3306" user="epf" password="Password1234****" />
+        <jdbcDriver libraryRef="PostgreSQLJDBCLib"/>
+	    <properties.postgresql serverName="localhost" portNumber="5432"
+	                databaseName="epf"
+	                user="postgres"
+	                password="090323508"/>
     </dataSource>
 	<dataSource id="epf_security_schema" jndiName="jdbc/epf_security_schema">
         <jdbcDriver 
@@ -136,34 +139,6 @@
             javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
             libraryRef="H2JDBCLib" />
         <properties URL="jdbc:h2:~/EPF-security;AUTO_SERVER=TRUE;AUTO_RECONNECT=TRUE;PASSWORD_HASH=TRUE" user="test" password="22ddf5abe1672b3d6c12fe7387ecc15e2ff0f405595dd756111b17d29b5f4486" />
-    </dataSource>
-	<dataSource id="epf_delivery_processes" jndiName="jdbc/epf_delivery_processes">
-        <jdbcDriver libraryRef="MySQLJDBCLib"/>
-    	<properties serverName="localhost" portNumber="3306" />
-    </dataSource>
-    <dataSource id="epf_roles" jndiName="jdbc/epf_roles">
-        <jdbcDriver libraryRef="MySQLJDBCLib"/>
-    	<properties serverName="localhost" portNumber="3306" />
-    </dataSource>
-    <dataSource id="epf_tasks" jndiName="jdbc/epf_tasks">
-        <jdbcDriver libraryRef="MySQLJDBCLib"/>
-    	<properties serverName="localhost" portNumber="3306" />
-    </dataSource>
-    <dataSource id="epf_work_products" jndiName="jdbc/epf_work_products">
-        <jdbcDriver libraryRef="MySQLJDBCLib"/>
-    	<properties serverName="localhost" portNumber="3306" />
-    </dataSource>
-    <dataSource id="openup" jndiName="jdbc/openup">
-        <jdbcDriver libraryRef="MySQLJDBCLib"/>
-    	<properties serverName="localhost" portNumber="3306" />
-    </dataSource>
-    <dataSource id="ft" jndiName="jdbc/ft">
-        <jdbcDriver libraryRef="MySQLJDBCLib"/>
-    	<properties serverName="localhost" portNumber="3306" />
-    </dataSource>
-    <dataSource id="epf_net" jndiName="jdbc/epf_net">
-        <jdbcDriver libraryRef="MySQLJDBCLib"/>
-    	<properties serverName="localhost" portNumber="3306" />
     </dataSource>
 	<dataSource id="epf_security" jndiName="jdbc/epf_security">
         <jdbcDriver 
