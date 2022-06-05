@@ -4,6 +4,9 @@
 ./startup.sh
 . ./config.sh
 mvn clean install -U -DskipTests -T 1C
+cd EPF-transaction-internal
+./dev.sh &>/dev/null &
+cd ../
 cd EPF-gateway
 ./dev.sh &>/dev/null &
 cd ../

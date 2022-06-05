@@ -4,6 +4,9 @@ call ./clean.bat
 call ./startup.bat
 call ./config.bat
 call mvn clean install -U -DskipTests -T 1C
+cd EPF-transaction-internal
+start dev.bat &
+cd ../
 cd EPF-gateway
 start dev.bat &
 cd ../
