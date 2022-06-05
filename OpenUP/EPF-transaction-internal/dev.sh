@@ -1,4 +1,4 @@
-. ../config.sh
-. ./env.sh
+. ../env.sh
+. ./config.sh
 mvn clean install -U
-mvn quarkus:dev
+java -jar ./target/quarkus-app/quarkus-run.jar

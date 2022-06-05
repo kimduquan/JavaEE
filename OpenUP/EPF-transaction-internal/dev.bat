@@ -1,6 +1,6 @@
 setlocal
-call ../config.bat
-call env.bat
+call ../env.bat
+call config.bat
 call mvn clean install -U
-call mvn quarkus:dev
+java -jar ./target/quarkus-app/quarkus-run.jar
 endlocal

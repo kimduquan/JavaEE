@@ -35,15 +35,12 @@
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-narayana-lra</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
       <artifactId>quarkus-rest-client-reactive-jackson</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-arc</artifactId>
+      <groupId>org.jboss.narayana.rts</groupId>
+      <artifactId>lra-coordinator-jar</artifactId>
+      <version>5.12.0.Final</version>
     </dependency>
   </dependencies>
   <build>

@@ -7,4 +7,12 @@ set epf_client_net_ssl_keyPassword=changeit
 set epf_client_net_ssl_trustStore=C://GIT/JavaEE/OpenUP/dev.p12
 set epf_client_net_ssl_trustStoreType=PKCS12
 set epf_client_net_ssl_trustStorePassword=changeit
-call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
+set QUARKUS_HTTP_SSL_CERTIFICATE_KEY_STORE_FILE=C://GIT/JavaEE/OpenUP/dev.p12
+set QUARKUS_HTTP_SSL_CERTIFICATE_KEY_STORE_FILE_TYPE=PKCS12
+set QUARKUS_HTTP_SSL_CERTIFICATE_KEY_STORE_PASSWORD=changeit
+set QUARKUS_HTTP_SSL_CERTIFICATE_KEY_STORE_KEY_ALIAS=localhost
+set QUARKUS_HTTP_SSL_CERTIFICATE_KEY_STORE_KEY_PASSWORD=changeit
+set QUARKUS_HTTP_SSL_CERTIFICATE_TRUST_STORE_FILE=C://GIT/JavaEE/OpenUP/dev.p12
+set QUARKUS_HTTP_SSL_CERTIFICATE_TRUST_STORE_FILE_TYPE=PKCS12
+set QUARKUS_HTTP_SSL_CERTIFICATE_TRUST_STORE_PASSWORD=changeit
+set QUARKUS_HTTP_SSL_CERTIFICATE_TRUST_STORE_CERT_ALIAS=localhost
