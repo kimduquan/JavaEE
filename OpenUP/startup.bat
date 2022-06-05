@@ -1,6 +1,6 @@
+setlocal
 call .\env.bat
 call .\config.bat
-setlocal
 set CUR_DIR=%CD%
 cd %KAFKA_HOME%
 start .\zookeeper-server-start.bat ..\..\config\zookeeper.properties &
