@@ -1,5 +1,6 @@
 call .\env.bat
 Taskkill /IM EPF-gateway-* /F
+Taskkill /IM EPF-transaction-* /F
 Taskkill /IM EPF-persistence-* /F
 Taskkill /IM EPF-shell-* /F
 cd EPF-tests

@@ -49,6 +49,11 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-resteasy-reactive</artifactId>
     </dependency>
+    <dependency>
+        <groupId>openup</groupId>
+        <artifactId>EPF-utility</artifactId>
+        <version>${project.version}</version>
+    </dependency>
   </dependencies>
   <build>
     <plugins>

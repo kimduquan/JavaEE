@@ -2,7 +2,6 @@ package epf.persistence;
 
 import java.io.InputStream;
 import java.util.Optional;
-import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -11,7 +10,6 @@ import javax.transaction.Transactional;
 import javax.validation.Validator;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 import epf.naming.Naming;
 import epf.persistence.util.EntityTypeUtil;
 import epf.persistence.util.EntityUtil;
@@ -22,7 +20,6 @@ import epf.util.json.JsonUtil;
  * @author FOXCONN
  */
 @Path(Naming.PERSISTENCE)
-@RolesAllowed(Naming.Security.DEFAULT_ROLE)
 @ApplicationScoped
 public class Persistence implements epf.persistence.client.Entities {
     
@@ -43,7 +40,6 @@ public class Persistence implements epf.persistence.client.Entities {
     public Response persist(
     		final String schema,
             final String name,
-            final SecurityContext context,
             final InputStream body
             ) throws Exception{
     	final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), name);
@@ -68,7 +64,6 @@ public class Persistence implements epf.persistence.client.Entities {
 			final String schema,
 			final String name, 
 			final String id,
-			final SecurityContext context,
 			final InputStream body
 			) throws Exception {
     	final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), name);
@@ -96,8 +91,7 @@ public class Persistence implements epf.persistence.client.Entities {
     public Response remove(
     		final String schema,
     		final String name,
-    		final String id,
-    		final SecurityContext context
+    		final String id
             ) throws Exception {
     	final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), name);
     	if(entityType.isEmpty()) {

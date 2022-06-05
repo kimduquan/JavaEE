@@ -81,9 +81,6 @@
     <application id="EPF-security" name="EPF-security" context-root="security" location="EPF-security-1.0.0.war" startAfterRef="EPF-schema" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-    <application id="EPF-transaction" name="EPF-transaction" context-root="transaction" location="EPF-transaction-1.0.0.war" >
-        <classloader apiTypeVisibility="+third-party"/>
-    </application>
     
     <webAppSecurity allowAuthenticationFailOverToAuthMethod="APP_DEFINED" />
     
@@ -123,11 +120,6 @@
     <library id="H2JDBCLib">
         <fileset dir="${shared.resource.dir}/epf/security" includes="*.jar"/>
     </library>
-
-	<dataSource id="epf_transaction" jndiName="jdbc/epf_transaction">
-        <jdbcDriver libraryRef="MySQLJDBCLib"/>
-    	<properties serverName="localhost" portNumber="3306" user="epf" password="Password1234****" />
-    </dataSource>
     
     <library id="MySQLJDBCLib">
         <fileset dir="${shared.resource.dir}/epf/transaction" includes="*.jar"/>

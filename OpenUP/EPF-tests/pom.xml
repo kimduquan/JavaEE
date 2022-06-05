@@ -32,7 +32,7 @@
 		<liberty.env.epf_persistence_url>http://localhost:9181/persistence/persistence/</liberty.env.epf_persistence_url>
 		<liberty.env.epf_schema_url>http://localhost:9181/persistence/schema/</liberty.env.epf_schema_url>
 		<liberty.env.epf_security_url>http://localhost:9080/security/security/</liberty.env.epf_security_url>
-		<liberty.env.epf_transaction_url>http://localhost:9080/transaction/transaction/</liberty.env.epf_transaction_url>
+		<liberty.env.epf_transaction_url>http://localhost:9182/transaction/transaction/</liberty.env.epf_transaction_url>
         <liberty.env.epf_security_webapp_url>https://localhost/EPF-security-webapp-1.0.0/</liberty.env.epf_security_webapp_url>
         <liberty.env.epf_gateway_url>https://localhost:9543/gateway/</liberty.env.epf_gateway_url>
         <liberty.env.epf_gateway_messaging_url>https://localhost:9543/messaging/</liberty.env.epf_gateway_messaging_url>
@@ -269,12 +269,6 @@
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-transaction</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-file</artifactId>
@@ -371,7 +365,7 @@
 						<epf.schema.url>http://localhost:9181/persistence/schema/</epf.schema.url>
 						<epf.security.url>http://localhost:${httpPort}/security/security/</epf.security.url>
                         <epf.security.webapp.url>http://localhost:9181/security/</epf.security.webapp.url>
-                        <epf.transaction.url>http://localhost:${httpPort}/transaction/transaction/</epf.transaction.url>
+                        <epf.transaction.url>http://localhost:9182/transaction/transaction/</epf.transaction.url>
                         <epf.gateway.url>https://localhost:${gatewayPort}/gateway/</epf.gateway.url>
                         <epf.gateway.messaging.url>wss://localhost:${gatewayPort}/messaging/</epf.gateway.messaging.url>
                         <epf.registry.url>http://localhost:${httpPort}/registry/registry/</epf.registry.url>
@@ -475,7 +469,7 @@
                         <configuration>
                             <verifyTimeout>600</verifyTimeout>
                             <serverStartTimeout>600</serverStartTimeout>
-                            <applications>EPF-schedule,EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-query,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-registry,EPF-management,EPF-security,EPF-transaction</applications>
+                            <applications>EPF-schedule,EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-query,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-registry,EPF-management,EPF-security</applications>
                         </configuration>
                     </execution>
                     <!-- Stop the server -->
@@ -494,7 +488,7 @@
                     <deployPackages>dependencies</deployPackages>
 					<verifyTimeout>600</verifyTimeout>
 					<serverStartTimeout>600</serverStartTimeout>
-					<applications>EPF-schedule,EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-query,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-registry,EPF-management,EPF-security,EPF-transaction</applications>
+					<applications>EPF-schedule,EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-query,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-registry,EPF-management,EPF-security</applications>
                 </configuration>
             </plugin>
 			<plugin>
