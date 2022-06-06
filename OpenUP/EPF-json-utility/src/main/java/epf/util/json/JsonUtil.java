@@ -1,5 +1,7 @@
 package epf.util.json;
 
+import java.io.InputStream;
+import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Collection;
@@ -27,10 +29,7 @@ public interface JsonUtil {
 			try(Jsonb jsonb = JsonbBuilder.create()){
 				jsonb.toJson(object, writer);
     		}
-			try(StringReader reader = new StringReader(writer.toString())){
-				JsonReader objectReader = Json.createReader(reader);
-				return objectReader.readObject();
-			}
+			return readObject(writer.toString());
 		}
 	}
 	
@@ -69,6 +68,66 @@ public interface JsonUtil {
 	static String toString(final Object object) throws Exception {
 		try(Jsonb jsonb = JsonbBuilder.create()){
 			return jsonb.toJson(object);
+		}
+	}
+	
+	/**
+	 * @param input
+	 * @return
+	 */
+	static JsonArray readArray(final InputStream input) {
+		try(JsonReader jsonReader = Json.createReader(input)){
+			return jsonReader.readArray();
+		}
+	}
+	
+	/**
+	 * @param input
+	 * @return
+	 */
+	static JsonObject readObject(final InputStream input) {
+		try(JsonReader jsonReader = Json.createReader(input)){
+			return jsonReader.readObject();
+		}
+	}
+	
+	/**
+	 * @param reader
+	 * @return
+	 */
+	static JsonArray readArray(final Reader reader) {
+		try(JsonReader jsonReader = Json.createReader(reader)){
+			return jsonReader.readArray();
+		}
+	}
+	
+	/**
+	 * @param reader
+	 * @return
+	 */
+	static JsonObject readObject(final Reader reader) {
+		try(JsonReader jsonReader = Json.createReader(reader)){
+			return jsonReader.readObject();
+		}
+	}
+	
+	/**
+	 * @param input
+	 * @return
+	 */
+	static JsonArray readArray(final String input) {
+		try(StringReader reader = new StringReader(input)){
+			return readArray(reader);
+		}
+	}
+	
+	/**
+	 * @param input
+	 * @return
+	 */
+	static JsonObject readObject(final String input) {
+		try(StringReader reader = new StringReader(input)){
+			return readObject(reader);
 		}
 	}
 }

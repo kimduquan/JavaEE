@@ -1,12 +1,10 @@
 package epf.util.json;
 
-import java.io.StringReader;
 import java.util.List;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-import javax.json.JsonReader;
 import javax.json.bind.Jsonb;
 
 /**
@@ -23,16 +21,12 @@ public class Encoder {
 	 */
 	public String encode(final Jsonb jsonb, final Object object) throws Exception {
 		final String json = jsonb.toJson(object);
-		try(StringReader reader = new StringReader(json)){
-			try(JsonReader jsonReader = Json.createReader(reader)){
-				final JsonObject jsonObject = jsonReader.readObject();
-				final JsonObject encodedJsonObject = Json
-						.createObjectBuilder(jsonObject)
-						.add(Naming.CLASS, object.getClass().getName())
-						.build();
-				return encodedJsonObject.toString();
-			}
-		}
+		final JsonObject jsonObject = JsonUtil.readObject(json);
+		final JsonObject encodedJsonObject = Json
+				.createObjectBuilder(jsonObject)
+				.add(Naming.CLASS, object.getClass().getName())
+				.build();
+		return encodedJsonObject.toString();
 	}
 	
 	/**
@@ -45,14 +39,10 @@ public class Encoder {
 		final JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
 		for(Object object : array) {
 			final String json = jsonb.toJson(object);
-			try(StringReader reader = new StringReader(json)){
-				try(JsonReader jsonReader = Json.createReader(reader)){
-					final JsonObjectBuilder objectBuilder = Json
-							.createObjectBuilder(jsonReader.readObject())
-							.add(Naming.CLASS, object.getClass().getName());
-					arrayBuilder.add(objectBuilder);
-				}
-			}
+			final JsonObjectBuilder objectBuilder = Json
+					.createObjectBuilder(JsonUtil.readObject(json))
+					.add(Naming.CLASS, object.getClass().getName());
+			arrayBuilder.add(objectBuilder);
 		}
 		return arrayBuilder.build().toString();
 	}

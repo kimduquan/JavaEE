@@ -1,9 +1,7 @@
 package epf.util.json;
 
-import java.io.StringReader;
 import javax.json.Json;
 import javax.json.JsonObject;
-import javax.json.JsonReader;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.json.bind.adapter.JsonbAdapter;
@@ -18,15 +16,11 @@ public class Adapter implements JsonbAdapter<Object, JsonObject> {
 	public JsonObject adaptToJson(final Object obj) throws Exception {
 		try(Jsonb jsonb = JsonbBuilder.create()){
 			final String json = jsonb.toJson(obj);
-			try(StringReader reader = new StringReader(json)){
-				try(JsonReader jsonReader = Json.createReader(reader)){
-					final JsonObject jsonObject = jsonReader.readObject();
-					return Json.
-							createObjectBuilder(jsonObject)
-							.add(Naming.CLASS, obj.getClass().getName())
-							.build();
-				}
-			}
+			final JsonObject jsonObject = JsonUtil.readObject(json);
+			return Json.
+					createObjectBuilder(jsonObject)
+					.add(Naming.CLASS, obj.getClass().getName())
+					.build();
 		}
 	}
 
