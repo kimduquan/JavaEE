@@ -1,15 +1,13 @@
 package epf.tests.client;
 
 import java.io.IOException;
-import java.io.StringReader;
-import javax.json.Json;
 import javax.json.JsonObject;
-import javax.json.JsonReader;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
+import epf.util.json.JsonUtil;
 
 public class JsonObjectDeserializer extends JsonDeserializer<JsonObject> {
 
@@ -20,11 +18,7 @@ public class JsonObjectDeserializer extends JsonDeserializer<JsonObject> {
 		if(node != null) {
 			String value = node.toString();
 			JsonObject object;
-			try(StringReader reader = new StringReader(value)){
-				try(JsonReader jsonReader = Json.createReader(reader)){
-					object = jsonReader.readObject();
-				}
-			}
+			object = JsonUtil.readObject(value);
 			return object;
 		}
 		return null;

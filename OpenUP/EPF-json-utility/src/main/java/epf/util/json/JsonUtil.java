@@ -10,6 +10,8 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
+import javax.json.JsonString;
+import javax.json.JsonValue;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 
@@ -129,5 +131,50 @@ public interface JsonUtil {
 		try(StringReader reader = new StringReader(input)){
 			return readObject(reader);
 		}
+	}
+	
+	/**
+	 * @param input
+	 * @return
+	 */
+	static JsonValue readValue(final String input) {
+		try(StringReader reader = new StringReader(input)){
+			return readValue(reader);
+		}
+	}
+	
+	/**
+	 * @param input
+	 * @return
+	 */
+	static JsonValue readValue(final InputStream input) {
+		try(JsonReader jsonReader = Json.createReader(input)){
+			return jsonReader.readValue();
+		}
+	}
+	
+	/**
+	 * @param reader
+	 * @return
+	 */
+	static JsonValue readValue(final Reader reader) {
+		try(JsonReader jsonReader = Json.createReader(reader)){
+			return jsonReader.readValue();
+		}
+	}
+	
+	/**
+	 * @param value
+	 * @return
+	 */
+	static String toString(final JsonValue value) {
+		String string = null;
+		if(value instanceof JsonString) {
+			string = ((JsonString)value).getString();
+		}
+		else if(value != null){
+			string = value.toString();
+		}
+		return string;
 	}
 }

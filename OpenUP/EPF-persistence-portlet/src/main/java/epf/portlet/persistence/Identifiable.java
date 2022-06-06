@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.portlet.persistence;
 
 import java.io.Serializable;
@@ -9,9 +6,8 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
-
 import epf.persistence.schema.client.Attribute;
-import epf.portlet.util.json.JsonUtil;
+import epf.util.json.JsonUtil;
 
 /**
  * @author PC

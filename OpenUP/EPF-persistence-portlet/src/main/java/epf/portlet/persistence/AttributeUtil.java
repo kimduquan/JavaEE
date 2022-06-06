@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.portlet.persistence;
 
 import java.io.StringReader;
@@ -14,6 +11,7 @@ import javax.json.JsonValue;
 import epf.persistence.schema.client.Attribute;
 import epf.persistence.schema.client.AttributeType;
 import epf.persistence.schema.client.Entity;
+import epf.util.json.JsonUtil;
 
 /**
  * @author PC
@@ -134,12 +132,8 @@ public class AttributeUtil {
 			object.put(attribute.getName(), Json.createValue(value));
 		}
 		else if (value != null && !value.isEmpty()){
-			try(StringReader reader = new StringReader(value)){
-				try(JsonReader jsonReader = Json.createReader(reader)){
-					final JsonValue jsonValue = jsonReader.readValue();
-					object.put(attribute.getName(), jsonValue);
-				}
-			}
+			final JsonValue jsonValue = JsonUtil.readValue(value);
+			object.put(attribute.getName(), jsonValue);
 		}
 	}
 }

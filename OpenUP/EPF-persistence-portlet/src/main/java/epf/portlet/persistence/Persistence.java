@@ -21,7 +21,7 @@ import epf.portlet.naming.Naming;
 import epf.portlet.internal.security.SecurityUtil;
 import epf.portlet.util.EventUtil;
 import epf.portlet.util.ParameterUtil;
-import epf.portlet.util.json.JsonUtil;
+import epf.util.json.JsonUtil;
 import epf.util.logging.LogManager;
 
 /**

@@ -13,6 +13,7 @@ import epf.client.query.Query;
 import epf.client.util.Client;
 import epf.portlet.internal.gateway.GatewayUtil;
 import epf.portlet.internal.security.SecurityUtil;
+import epf.util.json.JsonUtil;
 
 /**
  * @author PC
@@ -48,13 +49,10 @@ public class PersistenceUtil {
 					firstResult, 
 					maxResults)){
 				try(InputStream stream = response.readEntity(InputStream.class)){
-					try(JsonReader reader = Json.createReader(stream)){
-						return reader
-						.readArray()
-						.stream()
-						.map(value -> value.asJsonObject())
-						.collect(Collectors.toList());
-					}
+					return JsonUtil.readArray(stream)
+							.stream()
+							.map(value -> value.asJsonObject())
+							.collect(Collectors.toList());
 				}
 			}
 		}
@@ -71,9 +69,7 @@ public class PersistenceUtil {
 		try(Client client = securityUtil.newClient(gatewayUtil.get(epf.naming.Naming.QUERY))){
 			try(Response response = Query.getEntity(client, schema, entity, id)){
 				try(InputStream stream = response.readEntity(InputStream.class)){
-					try(JsonReader reader = Json.createReader(stream)){
-						return reader.readObject();
-					}
+					return JsonUtil.readObject(stream);
 				}
 			}
 		}

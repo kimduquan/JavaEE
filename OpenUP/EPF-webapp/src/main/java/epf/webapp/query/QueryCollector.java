@@ -21,6 +21,7 @@ import epf.client.query.Query;
 import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.persistence.schema.client.Entity;
+import epf.util.json.JsonUtil;
 import epf.util.logging.LogManager;
 import epf.webapp.GatewayUtil;
 
@@ -106,13 +107,10 @@ public class QueryCollector extends LazyDataModel<JsonObject> {
 			setRowCount(count);
         	try(Response response = Query.executeQuery(client, schema, target -> buildFilters(target.path(entity.getName()), filterBy.values()), firstResult, maxResults, sort)){
         		try(InputStream stream = response.readEntity(InputStream.class)){
-					try(JsonReader reader = Json.createReader(stream)){
-						entities = reader
-								.readArray()
-								.stream()
-								.map(value -> value.asJsonObject())
-								.collect(Collectors.toList());
-					}
+        			entities = JsonUtil.readArray(stream)
+							.stream()
+							.map(value -> value.asJsonObject())
+							.collect(Collectors.toList());
 				}
     			entityMap = new HashMap<>();
     			entities.forEach(object -> {

@@ -1,19 +1,13 @@
-/**
- * 
- */
 package epf.portlet.persistence;
 
-import java.io.StringReader;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
-import javax.json.JsonReader;
 import javax.json.JsonValue;
-
 import epf.persistence.schema.client.Attribute;
-import epf.portlet.util.json.JsonUtil;
+import epf.util.json.JsonUtil;
 
 /**
  * @author PC
@@ -75,11 +69,7 @@ public class BasicAttribute {
 	public void setValues(final String[] values) {
 		final JsonArrayBuilder builder = Json.createArrayBuilder();
 		Stream.of(values).forEach(value -> {
-			try(StringReader reader = new StringReader(value)){
-				try(JsonReader json = Json.createReader(reader)){
-					builder.add(json.readValue());
-				}
-			}
+			builder.add(JsonUtil.readValue(value));
 		});
 		object.put(attribute.getName(), builder.build());
 	}

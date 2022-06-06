@@ -14,6 +14,7 @@ import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.portlet.internal.gateway.GatewayUtil;
 import epf.portlet.internal.security.SecurityUtil;
+import epf.util.json.JsonUtil;
 import epf.util.logging.LogManager;
 
 /**
@@ -52,13 +53,10 @@ public class EntityCacheUtil {
 		try(Client client = securityUtil.newClient(gatewayUtil.get(Naming.QUERY))){
 			try(Response response = epf.client.query.Query.executeQuery(client, schema, t -> t.path(entity), firstResult, maxResults)){
 				try(InputStream stream = response.readEntity(InputStream.class)){
-					try(JsonReader reader = Json.createReader(stream)){
-						objects = reader
-								.readArray()
-								.stream()
-								.map(value -> value.asJsonObject())
-								.collect(Collectors.toList());
-					}
+					objects = JsonUtil.readArray(stream)
+							.stream()
+							.map(value -> value.asJsonObject())
+							.collect(Collectors.toList());
 				}
 			}
 		}
@@ -79,9 +77,7 @@ public class EntityCacheUtil {
 		try(Client client = securityUtil.newClient(gatewayUtil.get(Naming.QUERY))){
 			try(Response response = epf.client.query.Query.getEntity(client, schema, entity, id)){
 				try(InputStream stream = response.readEntity(InputStream.class)){
-					try(JsonReader reader = Json.createReader(stream)){
-						object = reader.readObject();
-					}
+					object = JsonUtil.readObject(stream);
 				}
 			}
 		} 

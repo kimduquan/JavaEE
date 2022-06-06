@@ -1,4 +1,4 @@
-package epf.client.transaction;
+package epf.client;
 
 import java.util.Map;
 

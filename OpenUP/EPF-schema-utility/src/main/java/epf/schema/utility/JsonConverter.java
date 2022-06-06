@@ -1,11 +1,10 @@
 package epf.schema.utility;
 
-import java.io.StringReader;
-import javax.json.Json;
 import javax.json.JsonObject;
-import javax.json.JsonReader;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
+
+import epf.util.json.JsonUtil;
 
 /**
  * @author PC
@@ -33,11 +32,7 @@ public class JsonConverter implements AttributeConverter<JsonObject, String> {
 	public JsonObject convertToEntityAttribute(final String dbData) {
             JsonObject result = null;
             if(dbData != null){
-                try(StringReader strReader = new StringReader(dbData)){
-                        try(JsonReader reader = Json.createReader(strReader)){
-                                result = reader.readObject();
-                        }
-                }
+            	result = JsonUtil.readObject(dbData);
             }
             return result;
 	}

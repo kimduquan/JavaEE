@@ -1,9 +1,7 @@
-/**
- * 
- */
 package epf.portlet.util.json;
 
 import javax.json.JsonObject;
+import epf.util.json.JsonUtil;
 
 /**
  * @author PC

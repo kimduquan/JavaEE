@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.portlet.persistence;
 
 import java.io.InputStream;
@@ -18,11 +15,9 @@ import javax.inject.Named;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-import javax.json.JsonReader;
 import javax.json.JsonValue;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
-
 import epf.client.util.Client;
 import epf.persistence.schema.client.Embeddable;
 import epf.portlet.internal.gateway.GatewayUtil;
@@ -32,7 +27,7 @@ import epf.portlet.naming.Naming;
 import epf.portlet.util.EventUtil;
 import epf.portlet.util.ParameterUtil;
 import epf.portlet.util.RequestUtil;
-import epf.portlet.util.json.JsonUtil;
+import epf.util.json.JsonUtil;
 import epf.util.logging.LogManager;
 
 /**
@@ -286,9 +281,7 @@ public class Entity implements Serializable {
 					object.merge().toString()
 					)){
 				try(InputStream stream = response.readEntity(InputStream.class)){
-					try(JsonReader reader = Json.createReader(stream)){
-						object = new EntityObject(reader.readObject());
-					}
+					object = new EntityObject(JsonUtil.readObject(stream));
 				}
 			}
 		}

@@ -24,7 +24,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.lra.annotation.Compensate;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
-import epf.client.transaction.Request;
+
+import epf.client.Request;
 import epf.naming.Naming;
 import epf.util.io.InputStreamUtil;
 import epf.util.logging.LogManager;
@@ -48,10 +49,10 @@ public class Transaction implements epf.client.transaction.Transaction {
 			final UriInfo uriInfo, 
 			final javax.ws.rs.core.Request request,
             final List<Request> requests) throws Exception {
-		CompletionStage<epf.client.transaction.Response> stage = null;
-		final List<CompletionStage<epf.client.transaction.Response>> responses = new ArrayList<>();
+		CompletionStage<epf.client.Response> stage = null;
+		final List<CompletionStage<epf.client.Response>> responses = new ArrayList<>();
 		for(Request req : requests) {
-			final CompletionStage<epf.client.transaction.Response> response = invokeRequest(req);
+			final CompletionStage<epf.client.Response> response = invokeRequest(req);
 			responses.add(response);
 			if(stage == null) {
 				stage = response;
@@ -71,7 +72,7 @@ public class Transaction implements epf.client.transaction.Transaction {
 	 * @return
 	 * @throws Exception
 	 */
-	private CompletionStage<epf.client.transaction.Response> invokeRequest(final Request request) throws Exception {
+	private CompletionStage<epf.client.Response> invokeRequest(final Request request) throws Exception {
 		final Client client = ClientBuilder.newClient();
 		WebTarget target = client.target(request.getTarget());
 		if(request.getMatrixParams() != null) {
@@ -107,8 +108,8 @@ public class Transaction implements epf.client.transaction.Transaction {
 	 * @param res
 	 * @return
 	 */
-	private epf.client.transaction.Response buildResponse(final Response res) {
-		final epf.client.transaction.Response response = new epf.client.transaction.Response();
+	private epf.client.Response buildResponse(final Response res) {
+		final epf.client.Response response = new epf.client.Response();
 		final InputStream entity = Base64.getDecoder().wrap(res.readEntity(InputStream.class));
 		try {
 			response.setEntity(InputStreamUtil.readString(entity, "UTF-8", System.lineSeparator()));
@@ -128,7 +129,7 @@ public class Transaction implements epf.client.transaction.Transaction {
 	 * @param responses
 	 * @return
 	 */
-	private List<epf.client.transaction.Response> buildResponses(final List<CompletionStage<epf.client.transaction.Response>> responses){
+	private List<epf.client.Response> buildResponses(final List<CompletionStage<epf.client.Response>> responses){
 		return responses.stream().map(r -> {
 			try {
 				return r.toCompletableFuture().get();

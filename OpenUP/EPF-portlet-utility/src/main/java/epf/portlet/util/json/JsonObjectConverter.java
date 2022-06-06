@@ -1,16 +1,11 @@
-/**
- * 
- */
 package epf.portlet.util.json;
 
-import java.io.StringReader;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
-import javax.json.Json;
 import javax.json.JsonObject;
-import javax.json.JsonReader;
+import epf.util.json.JsonUtil;
 
 /**
  * @author PC
@@ -21,11 +16,7 @@ public class JsonObjectConverter implements Converter<JsonObject> {
 
 	@Override
 	public JsonObject getAsObject(final FacesContext context, final UIComponent component, final String value) {
-		try(StringReader reader = new StringReader(value)){
-			try(JsonReader json = Json.createReader(reader)){
-				return json.readObject();
-			}
-		}
+		return JsonUtil.readObject(value);
 	}
 
 	@Override
