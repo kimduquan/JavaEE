@@ -25,4 +25,5 @@ cd %KAFKA_HOME%
 call .\zookeeper-server-stop.bat &
 cd %CUR_DIR%
 Taskkill /IM java.exe /F
+Taskkill /IM cmd.exe /F
 endlocal
