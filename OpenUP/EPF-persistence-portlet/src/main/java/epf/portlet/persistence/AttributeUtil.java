@@ -1,13 +1,10 @@
 package epf.portlet.persistence;
 
-import java.io.StringReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
-import javax.json.JsonReader;
 import javax.json.JsonValue;
-
 import epf.persistence.schema.client.Attribute;
 import epf.persistence.schema.client.AttributeType;
 import epf.persistence.schema.client.Entity;

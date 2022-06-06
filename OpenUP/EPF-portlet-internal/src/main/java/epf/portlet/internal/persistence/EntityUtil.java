@@ -4,7 +4,6 @@ import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.json.JsonObject;
-
 import epf.portlet.internal.cache.EntityCacheUtil;
 
 /**

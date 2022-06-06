@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.portlet.schema;
 
 import java.io.Serializable;
