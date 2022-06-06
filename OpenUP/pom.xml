@@ -787,6 +787,7 @@
 		<module>EPF-registry</module>
 		<module>EPF-management</module>
 		<module>EPF-security-auth</module>
+		<module>EPF-api</module>
 		
 		<module>EPF-schema-utility</module>
 		<module>EPF-net-schema</module>
