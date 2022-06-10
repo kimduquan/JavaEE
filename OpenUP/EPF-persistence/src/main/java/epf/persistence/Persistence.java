@@ -246,7 +246,6 @@ public class Persistence implements epf.persistence.client.Entities {
     @Complete
     @Path(Naming.Transaction.TRANSACTION_ACTIVE)
     @PUT
-    @Transactional
     public Response commit(
     		@Context
     		final HttpHeaders headers) {
