@@ -9,6 +9,7 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 
 /**
  * @author PC
@@ -30,6 +31,17 @@ public class Decoder {
 	}
 	
 	/**
+	 * @param string
+	 * @return
+	 * @throws Exception
+	 */
+	public Object decode(final String string) throws Exception {
+		try(Jsonb jsonb = JsonbBuilder.create()){
+			return decode(jsonb, string);
+		}
+	}
+	
+	/**
 	 * @param jsonb
 	 * @param string
 	 * @return
@@ -43,6 +55,17 @@ public class Decoder {
 			array.add(decode(jsonb, it.next().toString()));
 		}
 		return array;
+	}
+	
+	/**
+	 * @param string
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Object> decodeArray(final String string) throws Exception {
+		try(Jsonb jsonb = JsonbBuilder.create()){
+			return decodeArray(jsonb, string);
+		}
 	}
 	
 	/**

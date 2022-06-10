@@ -11,6 +11,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import epf.client.util.Client;
@@ -41,6 +43,8 @@ public interface Entities {
             @PathParam("entity")
             @NotBlank
             final String entity,
+            @Context
+            final HttpHeaders headers,
             @NotNull
             final InputStream body
             ) throws Exception;
@@ -105,6 +109,8 @@ public interface Entities {
             @PathParam("id")
             @NotBlank
             final String entityId,
+            @Context
+            final HttpHeaders headers,
             @NotNull
             final InputStream body
             ) throws Exception;
@@ -167,7 +173,9 @@ public interface Entities {
             final String entity,
             @PathParam("id")
             @NotBlank
-            final String entityId
+            final String entityId,
+            @Context
+            final HttpHeaders headers
             ) throws Exception;
     
     /**

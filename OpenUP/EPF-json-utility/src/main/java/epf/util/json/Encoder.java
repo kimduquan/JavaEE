@@ -6,6 +6,7 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 
 /**
  * @author PC
@@ -30,6 +31,17 @@ public class Encoder {
 	}
 	
 	/**
+	 * @param object
+	 * @return
+	 * @throws Exception
+	 */
+	public String encode(final Object object) throws Exception {
+		try(Jsonb jsonb = JsonbBuilder.create()){
+			return encode(object);
+		}
+	}
+	
+	/**
 	 * @param jsonb
 	 * @param array
 	 * @return
@@ -45,5 +57,16 @@ public class Encoder {
 			arrayBuilder.add(objectBuilder);
 		}
 		return arrayBuilder.build().toString();
+	}
+	
+	/**
+	 * @param array
+	 * @return
+	 * @throws Exception
+	 */
+	public String encodeArray(final List<Object> array) throws Exception {
+		try(Jsonb jsonb = JsonbBuilder.create()){
+			return encodeArray(array);
+		}
 	}
 }
