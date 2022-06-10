@@ -21,7 +21,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import org.eclipse.microprofile.lra.annotation.Compensate;
-import org.eclipse.microprofile.lra.annotation.Complete;
+import org.eclipse.microprofile.lra.annotation.Forget;
 import org.eclipse.microprofile.lra.annotation.ParticipantStatus;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
 import epf.naming.Naming;
@@ -243,7 +243,7 @@ public class Persistence implements epf.persistence.client.Entities {
      * @param headers
      * @return
      */
-    @Complete
+    @Forget
     @Path(Naming.Transaction.TRANSACTION_ACTIVE)
     @PUT
     public Response commit(
