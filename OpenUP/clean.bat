@@ -9,3 +9,4 @@ rmdir "EPF-file-portlet" /s /q
 cd %CUR_DIR%
 rmdir "C:\tmp\kafka-logs" /s /q
 rmdir "C:\tmp\zookeeper" /s /q
+rmdir "ObjectStore" /s /q

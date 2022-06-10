@@ -755,6 +755,11 @@ public interface Naming {
 	     * 
 	     */
 	    String TRANSACTION_URL = "epf.transaction.url";
+	    
+	    /**
+	     *
+	     */
+	    String TRANSACTION_ACTIVE = "transaction/active";
 	}
 	
 	/**

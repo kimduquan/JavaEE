@@ -145,6 +145,8 @@ public interface RequestUtil {
         if(headers != null){
             final MultivaluedMap<String, String> requestHeaders = headers.getRequestHeaders();
             final MultivaluedHashMap<String, Object> forwardHeaders = new MultivaluedHashMap<String, Object>(requestHeaders);
+            forwardHeaders.remove(HttpHeaders.HOST);
+            forwardHeaders.remove(HttpHeaders.HOST.toLowerCase());
             forwardHeaders.remove(HttpHeaders.CONTENT_LENGTH);
             forwardHeaders.remove(HttpHeaders.CONTENT_LENGTH.toLowerCase());
             forwardHeaders.remove(HttpHeaders.AUTHORIZATION);

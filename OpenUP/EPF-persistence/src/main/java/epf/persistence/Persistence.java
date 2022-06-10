@@ -1,9 +1,14 @@
 package epf.persistence;
 
 import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -16,6 +21,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import org.eclipse.microprofile.lra.annotation.Compensate;
+import org.eclipse.microprofile.lra.annotation.Complete;
+import org.eclipse.microprofile.lra.annotation.ParticipantStatus;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
 import epf.naming.Naming;
 import epf.persistence.util.EntityTypeUtil;
@@ -24,6 +31,7 @@ import epf.schema.utility.EntityEvent;
 import epf.schema.utility.PostPersist;
 import epf.schema.utility.PostRemove;
 import epf.schema.utility.PostUpdate;
+import epf.schema.utility.SchemaUtil;
 import epf.util.json.JsonUtil;
 
 /**
@@ -38,6 +46,11 @@ public class Persistence implements epf.persistence.client.Entities {
 	 *
 	 */
 	private final transient Map<String, EntityTransaction> transactionStore = new ConcurrentHashMap<>();
+	
+	/**
+	 * 
+	 */
+	private transient SchemaUtil schemaUtil;
     
     /**
      * 
@@ -50,6 +63,23 @@ public class Persistence implements epf.persistence.client.Entities {
      */
     @Inject
     transient EntityManager manager;
+    
+    /**
+	 * 
+	 */
+	@PostConstruct
+	protected void postConstruct() {
+		final List<Class<?>> entityClasses = manager.getMetamodel().getEntities().stream().map(entity -> entity.getJavaType()).collect(Collectors.toList());
+		schemaUtil = new SchemaUtil(entityClasses);
+	}
+	
+	/**
+	 * 
+	 */
+	@PreDestroy
+	protected void preDestroy() {
+		schemaUtil.clear();
+	}
     
     @Override
     @Transactional
@@ -74,13 +104,20 @@ public class Persistence implements epf.persistence.client.Entities {
         }
         manager.persist(entity);
         final String jsonEntity = JsonUtil.toString(entity);
+        
         manager.detach(entity);;
         final Object transactionEntity = entity;
         final PostPersist transactionEvent = new PostPersist();
         transactionEvent.setEntity(transactionEntity);
         final EntityTransaction transaction = new EntityTransaction();
         transaction.setEvent(transactionEvent);
+        
+        final Optional<Field> entityIdField = schemaUtil.getEntityIdField(transactionEntity.getClass());
+        final Object entityId = entityIdField.get().get(transactionEntity);
+    	transaction.setEntityId(entityId);
+    	
         transactionStore.put(headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER), transaction);
+        
     	return Response.ok(jsonEntity).build();
     }
     
@@ -199,6 +236,22 @@ public class Persistence implements epf.persistence.client.Entities {
     			manager.persist(transactionEvent.getEntity());
     		}
 		}
-    	return Response.ok().build();
+    	return Response.ok(ParticipantStatus.Compensated.name()).build();
+    }
+    
+    /**
+     * @param headers
+     * @return
+     */
+    @Complete
+    @Path(Naming.Transaction.TRANSACTION_ACTIVE)
+    @PUT
+    @Transactional
+    public Response commit(
+    		@Context
+    		final HttpHeaders headers) {
+    	final String transactionId = headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER);
+    	transactionStore.remove(transactionId);
+    	return Response.ok(ParticipantStatus.Completed.name()).build();
     }
 }
