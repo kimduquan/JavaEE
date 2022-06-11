@@ -193,8 +193,7 @@ public class SecurityTest {
                     String.format(
                     		epf.security.client.Security.AUDIENCE_FORMAT, 
                             securityUrl.getScheme(), 
-                            securityUrl.getHost(), 
-                            securityUrl.getPort()
+                            securityUrl.getHost() + ":" + securityUrl.getPort()
                     )
                 }, 
                 jwt.getAudience().toArray()

@@ -19,6 +19,7 @@ import epf.query.internal.event.QueryLoad;
 import epf.schema.utility.EntityEvent;
 import epf.schema.utility.PostPersist;
 import epf.schema.utility.PostRemove;
+import epf.util.event.EventEmitter;
 import epf.util.event.EventQueue;
 
 /**
@@ -62,7 +63,7 @@ public class QueryCache implements HealthCheck {
 		executor.submit(eventQueue);
 		final CacheManager manager = Caching.getCachingProvider().getCacheManager();
 		final MutableConfiguration<String, Integer> config = new MutableConfiguration<>();
-		config.setCacheLoaderFactory(new LoaderFactory<>(new Loader<String, Integer, QueryLoad>(eventQueue.getEmitter(), QueryLoad::new)));
+		config.setCacheLoaderFactory(new LoaderFactory<>(new Loader<String, Integer, QueryLoad>(new EventEmitter<QueryLoad>(eventQueue), QueryLoad::new)));
 		config.setReadThrough(true);
 		queryCache = manager.createCache(epf.query.Naming.QUERY_CACHE, config);
 	}

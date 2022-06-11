@@ -25,6 +25,7 @@ import epf.schema.utility.EntityEvent;
 import epf.schema.utility.PostPersist;
 import epf.schema.utility.PostRemove;
 import epf.schema.utility.PostUpdate;
+import epf.util.event.EventEmitter;
 import epf.util.event.EventQueue;
 
 /**
@@ -66,7 +67,7 @@ public class EntityCache implements HealthCheck {
 		executor.submit(eventQueue);
 		final CacheManager manager = Caching.getCachingProvider().getCacheManager();
 		final MutableConfiguration<String, Object> config = new MutableConfiguration<>();
-		config.setCacheLoaderFactory(new LoaderFactory<>(new Loader<String, Object, EntityLoad>(eventQueue.getEmitter(), EntityLoad::new)));
+		config.setCacheLoaderFactory(new LoaderFactory<>(new Loader<String, Object, EntityLoad>(new EventEmitter<EntityLoad>(eventQueue), EntityLoad::new)));
 		config.setReadThrough(true);
 		entityCache = manager.createCache(epf.query.Naming.ENTITY_CACHE, config);
 	}

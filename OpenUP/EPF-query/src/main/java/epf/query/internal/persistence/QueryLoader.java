@@ -1,7 +1,7 @@
 package epf.query.internal.persistence;
 
 import java.util.Optional;
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Dependent;
 import javax.enterprise.event.ObservesAsync;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -17,7 +17,7 @@ import epf.query.internal.event.QueryLoad;
  * @author PC
  *
  */
-@ApplicationScoped
+@Dependent
 public class QueryLoader implements CacheLoader<String, Integer> {
 	
 	/**
