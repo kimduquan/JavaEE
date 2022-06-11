@@ -80,6 +80,7 @@ public class SecurityAuthIdentityStore implements RememberMeIdentityStore {
 			final JwtClaims validClaims = jwtUtil.process(credential.getToken().toCharArray());
 			final Set<String> groups = new HashSet<>(validClaims.getStringListClaimValue(Claims.groups.name()));
 			final TokenPrincipal principal = new TokenPrincipal(validClaims.getClaimValueAsString(Claims.upn.name()), token);
+			principal.setRememberToken(principal.getRawToken());
 			result = new CredentialValidationResult(principal, groups);
 		} 
 		catch (Exception e) {

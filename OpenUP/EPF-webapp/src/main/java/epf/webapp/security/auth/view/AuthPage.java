@@ -175,8 +175,8 @@ public class AuthPage implements AuthView, Serializable {
 			tokenRequest.setCode(codeFlow.getAuthResponse().getCode());
 			tokenRequest.setRedirect_uri(codeFlow.getAuthRequest().getRedirect_uri());
 			final AuthCodeCredential credential = new AuthCodeCredential(codeFlow.getProviderMetadata(), tokenRequest, codeFlow.getProvider(), codeFlow.getSessionId());
-			final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(true);
-			authParams.setRememberMe(true);
+			final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(false);
+			authParams.setRememberMe(false);
 			final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
 			context.authenticate(request, response, params);
 		}
@@ -209,8 +209,8 @@ public class AuthPage implements AuthView, Serializable {
 			implicitFlow.setAuthResponse(authResponse);
 			
 			final ImplicitCredential credential = new ImplicitCredential(authResponse, implicitFlow.getProvider(), sessionId);
-			final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(true);
-			authParams.setRememberMe(true);
+			final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(false);
+			authParams.setRememberMe(false);
 			final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
 			context.authenticate(request, response, params);
 		}

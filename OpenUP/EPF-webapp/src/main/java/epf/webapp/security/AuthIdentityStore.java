@@ -1,6 +1,6 @@
 package epf.webapp.security;
 
-import java.net.URI;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -55,13 +55,13 @@ public class AuthIdentityStore implements IdentityStore {
     public CredentialValidationResult validate(final UsernamePasswordCredential credential) {
         CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
         try {
-        	final URI webAppUrl = ConfigUtil.getURI(Naming.WebApp.WEB_APP_URL);
+        	final URL webAppUrl = ConfigUtil.getURL(Naming.WebApp.WEB_APP_URL);
         	try(Client client = gatewayUtil.newClient(Naming.SECURITY)){
         		final String rawToken = Security.login(
             			client,
     					credential.getCaller(),
     					credential.getPasswordAsString(),
-    					webAppUrl.toURL()
+    					webAppUrl
     					);
                 if(rawToken != null){
                 	final Set<String> groups = new HashSet<>();
@@ -91,8 +91,9 @@ public class AuthIdentityStore implements IdentityStore {
     	try {
         	final TokenResponse tokenResponse = provider.accessToken(credential.getTokenRequest());
         	if(tokenResponse != null) {
+        		final URL webAppUrl = ConfigUtil.getURL(Naming.WebApp.WEB_APP_URL);
         		try(Client client = gatewayUtil.newClient(Naming.SECURITY)){
-        			final Token token = Security.authenticateIDToken(client, credential.getProvider(), credential.getSessionId(), tokenResponse.getId_token());
+        			final Token token = Security.authenticateIDToken(client, credential.getProvider(), credential.getSessionId(), tokenResponse.getId_token(), webAppUrl);
         			final TokenPrincipal principal = new TokenPrincipal(token.getName(), token.getRawToken().toCharArray());
         			result = new CredentialValidationResult(principal, token.getGroups());
         		}
@@ -111,8 +112,9 @@ public class AuthIdentityStore implements IdentityStore {
      */
     public CredentialValidationResult validate(final ImplicitCredential credential) throws Exception {
     	CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
+    	final URL webAppUrl = ConfigUtil.getURL(Naming.WebApp.WEB_APP_URL);
     	try(Client client = gatewayUtil.newClient(Naming.SECURITY)){
-    		final Token token = Security.authenticateIDToken(client, credential.getProvider(), credential.getSessionId(), credential.getAuthResponse().getId_token());
+    		final Token token = Security.authenticateIDToken(client, credential.getProvider(), credential.getSessionId(), credential.getAuthResponse().getId_token(), webAppUrl);
     		final TokenPrincipal principal = new TokenPrincipal(token.getName(), token.getRawToken().toCharArray());
 			result = new CredentialValidationResult(principal, token.getGroups());
     	}

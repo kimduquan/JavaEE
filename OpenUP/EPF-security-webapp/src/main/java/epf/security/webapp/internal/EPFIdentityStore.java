@@ -44,7 +44,7 @@ public class EPFIdentityStore implements IdentityStore {
     public CredentialValidationResult validate(final BasicAuthenticationCredential credential) {
         CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
         try {
-        	final URL webAppUrl = new URL(ConfigUtil.getString(Naming.WebApp.WEB_APP_URL));
+        	final URL webAppUrl = ConfigUtil.getURL(Naming.WebApp.WEB_APP_URL);
         	final URI securityUrl = GatewayUtil.get(Naming.SECURITY);
         	try(Client client = new Client(clients, securityUrl, b -> b)){
         		final String rawToken = Security.login(

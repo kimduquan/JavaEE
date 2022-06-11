@@ -41,7 +41,7 @@ public interface Security {
     /**
      * 
      */
-    String AUDIENCE_FORMAT = "%s://%s:%s/";
+    String AUDIENCE_FORMAT = "%s://%s/";
     /**
      * 
      */
@@ -230,6 +230,8 @@ public interface Security {
             final String session,
             @FormParam("token")
             final String token,
+            @FormParam("url")
+            final URL url,
             @MatrixParam(Naming.Management.TENANT)
             final String tenant,
             @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_HOST)
@@ -244,18 +246,20 @@ public interface Security {
      * @param provider
      * @param session
      * @param token
+     * @param url
      * @return
      */
     static Token authenticateIDToken(
     		final Client client, 
     		final String provider, 
     		final String session, 
-    		final String token) {
+    		final String token,
+    		final URL url) {
     	return client.request(
     			target -> target.path("auth"), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
-    			.post(Entity.form(new Form().param("provider", provider).param("session", session).param("token", token)))
+    			.post(Entity.form(new Form().param("provider", provider).param("session", session).param("token", token).param("url", url.toString())))
     			.readEntity(Token.class);
     }
 }

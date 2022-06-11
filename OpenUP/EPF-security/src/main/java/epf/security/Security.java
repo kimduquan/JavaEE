@@ -266,11 +266,11 @@ public class Security implements epf.security.client.Security, epf.security.clie
             final List<String> forwardedProto){
     	final Set<String> audience = new HashSet<>();
     	if(url != null) {
-    		audience.add(String.format(AUDIENCE_FORMAT, url.getProtocol(), url.getHost(), url.getPort()));
+    		audience.add(String.format(AUDIENCE_FORMAT, url.getProtocol(), url.getAuthority()));
     	}
 		if(forwardedHost != null && forwardedPort != null && forwardedProto != null) {
 			for(int i = 0; i < forwardedHost.size(); i++) {
-				audience.add(String.format(AUDIENCE_FORMAT, forwardedProto.get(i), forwardedHost.get(i), forwardedPort.get(i)));
+				audience.add(String.format(AUDIENCE_FORMAT, forwardedProto.get(i), forwardedHost.get(i) + ":" + forwardedPort.get(i)));
 			}
 		}
 		return audience;
@@ -425,6 +425,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 			final String provider, 
 			final String session, 
 			final String token,
+            final URL url,
 			final String tenant,
             final List<String> forwardedHost,
             final List<String> forwardedPort,
@@ -437,7 +438,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 			return Response.status(Response.Status.UNAUTHORIZED).build();
 		}
 		final JwtClaims claims = JwtUtil.decode(token.toCharArray());
-		final Set<String> audience = buildAudience(null, forwardedHost, forwardedPort, forwardedProto);
+		final Set<String> audience = buildAudience(url, forwardedHost, forwardedPort, forwardedProto);
 		final Set<String> groups = new HashSet<>();
 		groups.add(Naming.Security.DEFAULT_ROLE);
 		final Map<String, Object> newClaims = new HashMap<>();

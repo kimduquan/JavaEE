@@ -1,7 +1,9 @@
 package epf.util.config;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
@@ -29,6 +31,15 @@ public interface ConfigUtil {
 	 */
 	static URI getURI(final String name) throws URISyntaxException {
 		return new URI(SystemUtil.getString(name));
+	}
+	
+	/**
+	 * @param name
+	 * @return
+	 * @throws MalformedURLException
+	 */
+	static URL getURL(final String name) throws MalformedURLException {
+		return new URL(SystemUtil.getString(name));
 	}
 	
 	/**

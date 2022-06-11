@@ -1,7 +1,6 @@
 package epf.tests.webapp;
 
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import epf.naming.Naming;
 import epf.util.config.ConfigUtil;
@@ -13,12 +12,9 @@ public class WebAppUtil {
 	@Produces @Named(Naming.WebApp.WEB_APP_URL)
 	public static URL getPortletURL() {
 		try {
-			return ConfigUtil.getURI(Naming.WebApp.WEB_APP_URL).toURL();
+			return ConfigUtil.getURL(Naming.WebApp.WEB_APP_URL);
 		} 
 		catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
