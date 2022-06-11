@@ -19,25 +19,29 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>Faces Servlet</servlet-name>
-    <url-pattern>*.xhtml</url-pattern>
+    <url-pattern>*.html</url-pattern>
   </servlet-mapping>
   <welcome-file-list>
-  	<welcome-file>webapp/index.xhtml</welcome-file>
+  	<welcome-file>webapp/index.html</welcome-file>
   </welcome-file-list>
 	<context-param>
 		<param-name>javax.faces.ENABLE_WEBSOCKET_ENDPOINT</param-name>
 		<param-value>true</param-value>
 	</context-param>
-	<context-param>
+	<!-- <context-param>
 	    <param-name>javax.faces.CLIENT_WINDOW_MODE</param-name>
 	    <param-value>url</param-value>
 	</context-param>
+	<session-config>
+		<session-timeout>30</session-timeout>
+		<tracking-mode>SSL</tracking-mode>
+	</session-config> -->
 	<context-param>
 	    <param-name>primefaces.THEME</param-name>
 	    <param-value>none</param-value>
 	</context-param>
 	<error-page>
 		<error-code>404</error-code>
-		<location>/webapp/404.xhtml</location>
+		<location>/webapp/404.html</location>
 	</error-page>
 </web-app>

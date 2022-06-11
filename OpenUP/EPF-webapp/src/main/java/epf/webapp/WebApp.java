@@ -3,6 +3,7 @@ package epf.webapp;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.security.DeclareRoles;
@@ -61,7 +62,7 @@ public class WebApp {
 			links.forEach(link -> remotes.put(link.getTitle(), link.getUri().toString()));
 		} 
 		catch (Exception e) {
-			LOGGER.throwing(getClass().getName(), "postConstruct", e);
+			LOGGER.log(Level.SEVERE, "[WebApp.postConstruct]", e);
 		}
 	}
 	

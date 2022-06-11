@@ -110,11 +110,11 @@ public class AuthPage implements AuthView, Serializable {
 	 */
 	private String buildAuthRequestState(final String flow) {
 		final String csrfToken = request.getParameter("javax.faces.Token");
-		final String windowId = externalContext.getClientWindow().getId();
+		//final String windowId = externalContext.getClientWindow().getId();
 		if(conversation.isTransient()) {
 			conversation.begin();
 		}
-		return flow + System.lineSeparator() + windowId + System.lineSeparator() + conversation.getId() + System.lineSeparator() + csrfToken;
+		return flow + System.lineSeparator() + conversation.getId() + System.lineSeparator() + csrfToken;
 	}
 	
 	/**

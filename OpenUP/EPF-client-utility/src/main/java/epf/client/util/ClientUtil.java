@@ -69,6 +69,6 @@ public class ClientUtil {
 	 * @return
 	 */
 	public Client newClient(final URI url) {
-		return new Client(clients, url, b -> buildClient(b));
+		return new Client(clients, url, this::buildClient);
 	}
 }

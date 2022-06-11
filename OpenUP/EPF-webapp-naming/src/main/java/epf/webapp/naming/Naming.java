@@ -17,6 +17,17 @@ public interface Naming {
 	String CONTEXT_ROOT = "/webapp";
 	
 	/**
+	 * 
+	 */
+	interface Internal {
+		
+		/**
+		 *
+		 */
+		String VIEW_EXTENSION = ".html";
+	}
+	
+	/**
 	 * @author PC
 	 *
 	 */
