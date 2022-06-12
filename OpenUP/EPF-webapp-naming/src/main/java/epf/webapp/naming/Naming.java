@@ -98,4 +98,15 @@ public interface Naming {
 		 */
 		String VIEW = "epf_query_view";
 	}
+	
+	/**
+	 * 
+	 */
+	interface Search {
+		
+		/**
+		 * 
+		 */
+		String VIEW = "epf_search_view";
+	}
 }

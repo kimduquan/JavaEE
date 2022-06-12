@@ -1,18 +1,14 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html">
-<h:body>
-	<!-- Begin Page Content -->
-	<ui:composition template="./blank.xhtml">
-		<ui:define name="content">
-			<!-- 404 Error Text -->
-			<div class="text-center">
-			    <div class="error mx-auto" data-text="404">404</div>
-			    <p class="lead text-gray-800 mb-5">Page Not Found</p>
-			    <p class="text-gray-500 mb-0">It looks like you found a glitch in the matrix...</p>
-			    <h:link outcome="index"><h:outputText value="&amp;larr; Back to Dashboard" /></h:link>
-			</div>
-		</ui:define>
-	</ui:composition>
-	<!-- /.container-fluid -->
-</h:body>
+<html xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html">
+<ui:composition template="./blank.xhtml">
+	<ui:define name="title">404</ui:define>
+	<ui:define name="page-content">
+		<!-- 404 Error Text -->
+		<div class="text-center">
+		    <div class="error mx-auto" data-text="404">404</div>
+		    <p class="lead text-gray-800 mb-5">Page Not Found</p>
+		    <p class="text-gray-500 mb-0">It looks like you found a glitch in the matrix...</p>
+		    <h:link outcome="index"><h:outputText value="&amp;larr; Back to Dashboard" /></h:link>
+		</div>
+	</ui:define>
+</ui:composition>
 </html>

@@ -9,7 +9,7 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <title><h:outputText value="#{i18n['epf.webapp']}" /> - <h:outputText value="#{i18n['epf.webapp.index']}" /></title>
+    <title><h:outputText value="#{i18n['epf.webapp']}" /> - <ui:insert name="title"></ui:insert></title>
 
     <!-- Custom fonts for this template-->
     <h:outputStylesheet library="startbootstrap-sb-admin-2-gh-pages" name="vendor/fontawesome-free/css/all.min.css" />
@@ -19,16 +19,16 @@
 
     <!-- Custom styles for this template-->
     <h:outputStylesheet library="startbootstrap-sb-admin-2-gh-pages" name="css/sb-admin-2.min.css" />
-
+	<ui:insert name="head"></ui:insert>
 </h:head>
 
 <h:body a:id="page-top">
-
+	<ui:insert name="page-top">
     <!-- Page Wrapper -->
-    <div id="wrapper">
+    <div id="wrapper"><ui:insert name="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar"><ui:insert name="accordionSidebar">
 
             <!-- Sidebar - Brand -->
             <h:link styleClass="sidebar-brand d-flex align-items-center justify-content-center" outcome="index">
@@ -63,13 +63,13 @@
                     <i class="fas fa-fw fa-cog"></i>
                     <span>Components</span>
                 </a>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar"><ui:insert name="collapseTwo">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Custom Components:</h6>
                         <h:link styleClass="collapse-item" outcome="buttons">Buttons</h:link>
                         <h:link styleClass="collapse-item" outcome="cards">Cards</h:link>
                     </div>
-                </div>
+                </ui:insert></div>
             </li>
 
             <!-- Nav Item - Utilities Collapse Menu -->
@@ -80,7 +80,7 @@
                     <span>Utilities</span>
                 </a>
                 <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-                    data-parent="#accordionSidebar">
+                    data-parent="#accordionSidebar"><ui:insert name="collapseUtilities">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Custom Utilities:</h6>
                         <h:link styleClass="collapse-item" outcome="utilities-color">Colors</h:link>
@@ -88,7 +88,7 @@
                         <h:link styleClass="collapse-item" outcome="utilities-animation">Animations</h:link>
                         <h:link styleClass="collapse-item" outcome="utilities-other">Other</h:link>
                     </div>
-                </div>
+                </ui:insert></div>
             </li>
 
             <!-- Divider -->
@@ -107,7 +107,7 @@
                     <span>Pages</span>
                 </a>
                 <div id="collapsePages" class="collapse show" aria-labelledby="headingPages"
-                    data-parent="#accordionSidebar">
+                    data-parent="#accordionSidebar"><ui:insert name="collapsePages">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Login Screens:</h6>
                         <h:link styleClass="collapse-item" outcome="login">Login</h:link>
@@ -118,7 +118,7 @@
                         <h:link styleClass="collapse-item" outcome="404">404 Page</h:link>
                         <h:link styleClass="collapse-item active" outcome="blank">Blank Page</h:link>
                     </div>
-                </div>
+                </ui:insert></div>
             </li>
 
             <!-- Nav Item - Charts -->
@@ -143,15 +143,15 @@
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
 
-        </ul>
+        </ui:insert></ul>
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
-
+			<ui:insert name="content-wrapper">
             <!-- Main Content -->
             <div id="content">
-
+				<ui:insert name="content">
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
@@ -358,13 +358,13 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-
+					<ui:insert name="page-content">
                     <!-- Page Heading -->
-                    <ui:insert name="content"><h1 class="h3 mb-4 text-gray-800">Blank Page</h1></ui:insert>
-
+                    <h1 class="h3 mb-4 text-gray-800">Blank Page</h1>
+					</ui:insert>
                 </div>
                 <!-- /.container-fluid -->
-
+				</ui:insert>
             </div>
             <!-- End of Main Content -->
 
@@ -377,11 +377,11 @@
                 </div>
             </footer>
             <!-- End of Footer -->
-
+			</ui:insert>
         </div>
         <!-- End of Content Wrapper -->
 
-    </div>
+    </ui:insert></div>
     <!-- End of Page Wrapper -->
 
     <!-- Scroll to Top Button-->
@@ -391,11 +391,11 @@
 
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true"><h:form>
+        aria-hidden="true"><ui:insert name="logoutModal"><h:form>
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <h5 class="modal-title" id="exampleModalLabel"><ui:insert name="exampleModalLabel">Ready to Leave?</ui:insert></h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -407,7 +407,7 @@
                 </div>
             </div>
         </div>
-    </h:form></div>
+    </h:form></ui:insert></div>
 
     <!-- Bootstrap core JavaScript-->
     <h:outputScript library="startbootstrap-sb-admin-2-gh-pages" name="vendor/jquery/jquery.min.js"></h:outputScript>
@@ -418,7 +418,7 @@
 
     <!-- Custom scripts for all pages-->
     <h:outputScript library="startbootstrap-sb-admin-2-gh-pages" name="js/sb-admin-2.min.js"></h:outputScript>
-
+	<ui:insert name="script"></ui:insert></ui:insert>
 </h:body>
 
 </html>
