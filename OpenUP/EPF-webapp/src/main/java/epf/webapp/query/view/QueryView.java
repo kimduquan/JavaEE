@@ -9,11 +9,11 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.json.JsonObject;
-import javax.json.JsonValue;
 import javax.servlet.http.HttpServletRequest;
 import epf.persistence.schema.client.Attribute;
 import epf.persistence.schema.client.AttributeType;
 import epf.persistence.schema.client.Entity;
+import epf.util.json.JsonUtil;
 import epf.webapp.GatewayUtil;
 import epf.webapp.naming.Naming;
 import epf.webapp.query.QueryCollector;
@@ -122,21 +122,6 @@ public class QueryView implements Serializable {
 	 * @return
 	 */
 	public String getAttribute(final JsonObject object, final String attribute) {
-		final JsonValue value = object.get(attribute);
-		String string = "";
-		if(value != null) {
-			string = value.toString();
-			switch(value.getValueType()) {
-				case NULL:
-					string = "";
-					break;
-				case STRING:
-					string = object.getString(attribute);
-				default:
-					break;
-				
-			}
-		}
-		return string;
+		return JsonUtil.getString(object, attribute, "");
 	}
 }

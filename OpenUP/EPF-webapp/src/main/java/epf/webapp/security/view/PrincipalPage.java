@@ -2,14 +2,17 @@ package epf.webapp.security.view;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 import javax.faces.context.ExternalContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import org.eclipse.microprofile.jwt.Claims;
 import epf.security.auth.core.StandardClaims;
 import epf.security.view.PrincipalView;
+import epf.webapp.CookieUtil;
 import epf.webapp.naming.Naming;
 import epf.webapp.security.Session;
 
@@ -61,6 +64,8 @@ public class PrincipalPage implements PrincipalView, Serializable {
 		request.logout();
 		externalContext.invalidateSession();
 		externalContext.redirect(Naming.CONTEXT_ROOT);
+		final Optional<Cookie> sessionIdCookie = CookieUtil.getCookie(request, "JSESSIONID");
+		CookieUtil.deleteCookie(externalContext, sessionIdCookie.get());
 		return "";
 	}
 

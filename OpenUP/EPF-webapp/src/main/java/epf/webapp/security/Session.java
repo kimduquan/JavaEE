@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
@@ -54,6 +53,11 @@ public class Session implements Serializable {
 	private transient char[] token;
 	
 	/**
+	 *
+	 */
+	private transient Principal principal;
+	
+	/**
 	 * 
 	 */
 	@Inject
@@ -74,34 +78,38 @@ public class Session implements Serializable {
 	/**
 	 * 
 	 */
-	@PostConstruct
-	protected void postConstruct() {
-		final Principal principal = context.getCallerPrincipal();
-		if(principal instanceof TokenPrincipal) {
-			final TokenPrincipal tokenPrincipal = (TokenPrincipal) principal;
-			token = tokenPrincipal.getRememberToken() != null ? tokenPrincipal.getRememberToken() : tokenPrincipal.getRawToken();
-			try(Client client = gatewayUtil.newClient(epf.naming.Naming.SECURITY)){
-				client.authorization(token);
-				final Token token = Security.authenticate(client);
-				claims = token.getClaims();
-				claimNames = Arrays.asList(token.getClaims().keySet().toArray(new String[0]));
-				event.fire(tokenPrincipal);
-			} 
-			catch (Exception e) {
-				LOGGER.log(Level.SEVERE, "[Session.TokenPrincipal]", e);
+	private void initialize() {
+		if(principal == null) {
+			principal = context.getCallerPrincipal();
+			if(principal instanceof TokenPrincipal) {
+				final TokenPrincipal tokenPrincipal = (TokenPrincipal) principal;
+				token = tokenPrincipal.getRememberToken() != null ? tokenPrincipal.getRememberToken() : tokenPrincipal.getRawToken();
+				try(Client client = gatewayUtil.newClient(epf.naming.Naming.SECURITY)){
+					client.authorization(token);
+					final Token token = Security.authenticate(client);
+					claims = token.getClaims();
+					claimNames = Arrays.asList(token.getClaims().keySet().toArray(new String[0]));
+					event.fire(tokenPrincipal);
+				} 
+				catch (Exception e) {
+					LOGGER.log(Level.SEVERE, "[Session.TokenPrincipal]", e);
+				}
 			}
 		}
 	}
 
 	public List<String> getClaimNames() {
+		initialize();
 		return claimNames;
 	}
 	
 	/**
 	 * @param name
 	 * @return
+	 * @throws Exception 
 	 */
 	public String getClaim(final String name) {
+		initialize();
 		Object claim = null;
 		if(claims != null) {
 			claim = claims.get(name);
@@ -110,6 +118,7 @@ public class Session implements Serializable {
 	}
 
 	public char[] getToken() {
+		initialize();
 		return token;
 	}
 }

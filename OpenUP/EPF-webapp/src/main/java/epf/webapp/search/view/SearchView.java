@@ -1,13 +1,14 @@
 package epf.webapp.search.view;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.json.JsonObject;
 import javax.json.JsonValue;
 import javax.servlet.http.HttpServletRequest;
+import epf.util.json.JsonUtil;
 import epf.webapp.GatewayUtil;
 import epf.webapp.naming.Naming;
 import epf.webapp.search.SearchCollector;
@@ -28,7 +29,7 @@ public class SearchView implements Serializable {
 	/**
 	 *
 	 */
-	private String text;
+	private String text = "";
 	
 	/**
 	 *
@@ -67,28 +68,38 @@ public class SearchView implements Serializable {
 	public SearchCollector getCollector() {
 		return collector;
 	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(final String text) {
+		this.text = text;
+	}
 	
 	/**
-	 * @param object
-	 * @param attribute
 	 * @return
 	 */
-	public String getAttribute(final JsonObject object, final String attribute) {
-		final JsonValue value = object.get(attribute);
-		String string = "";
-		if(value != null) {
-			string = value.toString();
-			switch(value.getValueType()) {
-				case NULL:
-					string = "";
-					break;
-				case STRING:
-					string = object.getString(attribute);
-				default:
-					break;
-				
-			}
+	public String search() {
+		if(text != null ) {
+			collector = new SearchCollector(gateway, session.getToken(), text);
 		}
-		return string;
+		return "";
+	}
+	
+	/**
+	 * @param value
+	 * @return
+	 */
+	public String toString(final JsonValue value) {
+		return JsonUtil.toString(value);
+	}
+	
+	/**
+	 * @param array
+	 * @return
+	 */
+	public List<JsonValue> toList(final JsonValue array) {
+		return array.asJsonArray().getValuesAs(JsonValue.class);
 	}
 }

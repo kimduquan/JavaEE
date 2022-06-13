@@ -177,4 +177,29 @@ public interface JsonUtil {
 		}
 		return string;
 	}
+	
+	/**
+	 * @param object
+	 * @param attribute
+	 * @param def
+	 * @return
+	 */
+	static String getString(final JsonObject object, final String attribute, final String def) {
+		final JsonValue value = object.get(attribute);
+		String string = def;
+		if(value != null) {
+			string = value.toString();
+			switch(value.getValueType()) {
+				case NULL:
+					string = def;
+					break;
+				case STRING:
+					string = object.getString(attribute);
+				default:
+					break;
+				
+			}
+		}
+		return string;
+	}
 }

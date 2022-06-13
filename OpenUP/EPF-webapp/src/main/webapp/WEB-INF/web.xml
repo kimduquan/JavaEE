@@ -7,6 +7,7 @@
          <url-pattern>/webapp/*</url-pattern>
          <url-pattern>/javax.faces.push/*</url-pattern>
          <url-pattern>/query/*</url-pattern>
+         <url-pattern>/search/*</url-pattern>
      </web-resource-collection>
      <auth-constraint>
          <role-name>Any_Role</role-name>

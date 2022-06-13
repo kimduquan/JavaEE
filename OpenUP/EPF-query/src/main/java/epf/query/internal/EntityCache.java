@@ -114,7 +114,7 @@ public class EntityCache implements HealthCheck {
 	 * @return
 	 */
 	public List<Object> getEntities(final List<EntityId> entityIds){
-		final List<EntityKey> entityKeys = entityIds.stream().map(entity -> schemaCache.getSearchKey(entity)).collect(Collectors.toList());
+		final List<EntityKey> entityKeys = entityIds.stream().map(schemaCache::getSearchKey).collect(Collectors.toList());
 		final List<String> keys = entityKeys.stream().map(EntityKey::toString).collect(Collectors.toList());
 		final Map<String, Object> values = entityCache.getAll(keys.stream().collect(Collectors.toSet()));
 		final List<Object> result = new ArrayList<>();

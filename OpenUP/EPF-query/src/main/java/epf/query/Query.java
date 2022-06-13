@@ -9,6 +9,7 @@ import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.health.Readiness;
 import epf.client.schema.EntityId;
@@ -17,6 +18,7 @@ import epf.query.internal.EntityCache;
 import epf.query.internal.QueryCache;
 import epf.query.internal.TokenCache;
 import epf.query.internal.persistence.PersistenceCache;
+import epf.query.util.LinkUtil;
 import epf.security.schema.Token;
 
 /**
@@ -101,7 +103,9 @@ public class Query implements epf.client.query.Query {
 	@Override
 	public Response fetchEntities(final List<EntityId> entityIds) {
 		final List<Object> entities = entityCache.getEntities(entityIds);
-		return Response.ok(entities).header(Naming.Query.ENTITY_COUNT, entities.size()).build();
+		ResponseBuilder response = Response.ok(entities).header(Naming.Query.ENTITY_COUNT, entities.size());
+		response = LinkUtil.links(response, "", entityIds);
+		return response.build();
 	}
 
 	@PermitAll

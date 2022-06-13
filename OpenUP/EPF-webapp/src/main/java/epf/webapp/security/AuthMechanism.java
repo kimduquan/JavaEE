@@ -24,8 +24,7 @@ import epf.webapp.naming.Naming;
 @RememberMe(isRememberMeExpression = "#{self.rememberMe}")
 @AutoApplySession
 @LoginToContinue(
-		loginPage = "/security/login" + Naming.Internal.VIEW_EXTENSION,
-		useForwardToLoginExpression = "#{self.useForwardToLogin(request)}"
+		loginPage = "/security/login" + Naming.Internal.VIEW_EXTENSION
 		)
 public class AuthMechanism implements HttpAuthenticationMechanism {
 	
@@ -57,15 +56,5 @@ public class AuthMechanism implements HttpAuthenticationMechanism {
 	 */
 	public boolean isRememberMe() {
 		return authParams.isRememberMe();
-	}
-	
-	/**
-	 * @param request
-	 * @return
-	 */
-	public boolean useForwardToLogin(final HttpServletRequest request) {
-		final String url = request.getRequestURI();
-		request.setAttribute("epf.security.http.request.uri", url);
-		return true;
 	}
 }

@@ -130,7 +130,7 @@
 
             <!-- Nav Item - Tables -->
             <li class="nav-item">
-                <h:link styleClass="nav-link" outcome="tables">
+                <h:link styleClass="nav-link" outcome="/query/tables"><f:param name="schema" value="EPF_Work_Products" /><f:param name="entity" value="EPF_Artifact" />
                     <i class="fas fa-fw fa-table"></i>
                     <span>Tables</span></h:link>
             </li>
@@ -165,11 +165,11 @@
                         styleClass="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
                             <h:inputText styleClass="form-control bg-light border-0 small" a:placeholder="Search for..."
-                                a:aria-label="Search" a:aria-describedby="basic-addon2" />
+                                a:aria-label="Search" a:aria-describedby="basic-addon2" value="#{epf_search_view.text}" />
                             <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
+                                <h:commandLink styleClass="btn btn-primary" a:type="button" action="#{epf_search_view.search}">
                                     <i class="fas fa-search fa-sm"></i>
-                                </button>
+                                </h:commandLink>
                             </div>
                         </div>
                     </h:form>
@@ -190,11 +190,11 @@
                                     <div class="input-group">
                                         <h:inputText styleClass="form-control bg-light border-0 small"
                                             a:placeholder="Search for..." a:aria-label="Search"
-                                            a:aria-describedby="basic-addon2" />
+                                            a:aria-describedby="basic-addon2" value="#{epf_search_view.text}" />
                                         <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button">
-                                                <i class="fas fa-search fa-sm"></i>
-                                            </button>
+                                            <h:commandLink styleClass="btn btn-primary" a:type="button" action="#{epf_search_view.search}">
+			                                    <i class="fas fa-search fa-sm"></i>
+			                                </h:commandLink>
                                         </div>
                                     </div>
                                 </h:form>
@@ -359,8 +359,8 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 					<ui:insert name="page-content">
-                    <!-- Page Heading -->
-                    <h1 class="h3 mb-4 text-gray-800">Blank Page</h1>
+	                    <!-- Page Heading -->
+	                    <h1 class="h3 mb-4 text-gray-800">Blank Page</h1>
 					</ui:insert>
                 </div>
                 <!-- /.container-fluid -->

@@ -75,6 +75,7 @@ public class SearchCollector extends LazyDataModel<JsonObject> {
 			setRowCount(count);
 			final List<EntityId> entityIds = Search.search(client, text, first, pageSize);
 			try(Client client2 = gateway.newClient(Naming.QUERY)){
+				client2.authorization(token);
 				try(Response response = Query.fetchEntities(client2, entityIds)){
 					try(InputStream stream = response.readEntity(InputStream.class)){
 						entities = JsonUtil.readArray(stream)
