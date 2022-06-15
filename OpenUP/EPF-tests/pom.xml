@@ -26,6 +26,7 @@
 		<liberty.env.epf_config_url>http://localhost:9080/config/config/</liberty.env.epf_config_url>
 		<liberty.env.epf_script_url>http://localhost:9080/script/script/</liberty.env.epf_script_url>
 		<liberty.env.epf_file_url>http://localhost:9080/file/file/</liberty.env.epf_file_url>
+		<liberty.env.epf_mail_url>http://localhost:9080/mail/mail/</liberty.env.epf_mail_url>
 		<liberty.env.epf_image_url>http://localhost:9080/image/image/</liberty.env.epf_image_url>
 		<liberty.env.epf_rules_url>http://localhost:9080/rules/rules/</liberty.env.epf_rules_url>
 		<liberty.env.epf_planning_url>http://localhost:9080/planning/planning/</liberty.env.epf_planning_url>
@@ -275,6 +276,12 @@
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-mail</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-image</artifactId>
@@ -358,6 +365,7 @@
 						<epf.config.url>http://localhost:${httpPort}/config/config/</epf.config.url>
 						<epf.script.url>http://localhost:${httpPort}/script/script/</epf.script.url>
 						<epf.file.url>http://localhost:${httpPort}/file/file/</epf.file.url>
+						<epf.mail.url>http://localhost:${httpPort}/mail/mail/</epf.mail.url>
 						<epf.image.url>http://localhost:${httpPort}/image/image/</epf.image.url>
 						<epf.rules.url>http://localhost:${httpPort}/rules/rules/</epf.rules.url>
 						<epf.planning.url>http://localhost:${httpPort}/planning/planning/</epf.planning.url>
@@ -469,7 +477,7 @@
                         <configuration>
                             <verifyTimeout>600</verifyTimeout>
                             <serverStartTimeout>600</serverStartTimeout>
-                            <applications>EPF-schedule,EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-query,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-registry,EPF-management,EPF-security</applications>
+                            <applications>EPF-schedule,EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-query,EPF-file,EPF-mail,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-registry,EPF-management,EPF-security</applications>
                         </configuration>
                     </execution>
                     <!-- Stop the server -->
@@ -488,7 +496,7 @@
                     <deployPackages>dependencies</deployPackages>
 					<verifyTimeout>600</verifyTimeout>
 					<serverStartTimeout>600</serverStartTimeout>
-					<applications>EPF-schedule,EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-query,EPF-file,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-registry,EPF-management,EPF-security</applications>
+					<applications>EPF-schedule,EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-query,EPF-file,EPF-mail,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-registry,EPF-management,EPF-security</applications>
                 </configuration>
             </plugin>
 			<plugin>

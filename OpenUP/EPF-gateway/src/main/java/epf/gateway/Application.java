@@ -58,7 +58,7 @@ public class Application {
             final UriInfo uriInfo,
             final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-		final URI serviceUri = registry.lookup(service).orElseThrow(NotFoundException::new);
+    	final URI serviceUri = registry.lookup(service).orElseThrow(NotFoundException::new);
 		final Client client = ClientBuilder.newClient();
 		WebTarget target = client.target(serviceUri);
 		target = RequestUtil.buildTarget(target, uriInfo);

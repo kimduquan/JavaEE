@@ -2,6 +2,7 @@ package epf.security.internal.store;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
@@ -121,5 +122,44 @@ public class JPAPrincipalStore implements PrincipalStore {
 	 */
 	protected Optional<Credential> getCredential(final String caller){
 		return MapUtil.get(credentials, caller);
+	}
+
+	@Override
+	@Transactional
+	public CompletionStage<Void> setCallerClaims(final CallerPrincipal callerPrincipal, final Map<String, Object> claims) {
+		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
+		final JPAPrincipal principal = (JPAPrincipal) callerPrincipal;
+		return executor.supplyAsync(() -> principal.getFactory().createEntityManager())
+		.thenApply(manager -> {
+			final Principal p = manager.find(Principal.class, principal.getName());
+			if(p != null) {
+				if(p.getClaims() == null) {
+					p.setClaims(new HashMap<>());
+				}
+				for(Entry<String, Object> claim : claims.entrySet()) {
+					p.getClaims().put(claim.getKey(), String.valueOf(claim.getValue()));
+				}
+				manager.merge(p);
+			}
+			return null;
+		});
+	}
+
+	@Override
+	@Transactional
+	public CompletionStage<Void> putCaller(final CallerPrincipal callerPrincipal, final Map<String, Object> claims) throws Exception {
+		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
+		final JPAPrincipal principal = (JPAPrincipal) callerPrincipal;
+		return executor.supplyAsync(() -> principal.getFactory().createEntityManager())
+				.thenApply(manager -> {
+					final Principal p = new Principal();
+					p.setName(callerPrincipal.getName());
+					p.setClaims(new HashMap<>());
+					for(Entry<String, Object> claim : claims.entrySet()) {
+						p.getClaims().put(claim.getKey(), String.valueOf(claim.getValue()));
+					}
+					manager.persist(p);
+					return null;
+				});
 	}
 }

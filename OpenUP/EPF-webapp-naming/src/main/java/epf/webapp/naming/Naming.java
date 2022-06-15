@@ -63,6 +63,11 @@ public interface Naming {
 		/**
 		 * 
 		 */
+		String REGISTER = "security_register";
+		
+		/**
+		 * 
+		 */
 		String SESSION = "security_session";
 		
 		/**

@@ -20,8 +20,24 @@ public interface PrincipalStore {
 	
 	/**
 	 * @param callerPrincipal
+	 * @return
+	 */
+	@Transactional
+	CompletionStage<Void> setCallerClaims(final CallerPrincipal callerPrincipal, final Map<String, Object> claims);
+	
+	/**
+	 * @param callerPrincipal
 	 * @param password
 	 */
 	@Transactional
 	CompletionStage<Void> setCallerPassword(final CallerPrincipal callerPrincipal, final Password password) throws Exception;
+	
+	/**
+	 * @param callerPrincipal
+	 * @param claims
+	 * @return
+	 * @throws Exception
+	 */
+	@Transactional
+	CompletionStage<Void> putCaller(final CallerPrincipal callerPrincipal, final Map<String, Object> claims) throws Exception;
 }

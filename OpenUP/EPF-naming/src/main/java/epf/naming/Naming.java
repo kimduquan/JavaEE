@@ -234,6 +234,22 @@ public interface Naming {
 	}
 	
 	/**
+	 *
+	 */
+	String MAIL = "mail";
+	
+	/**
+	 * 
+	 */
+	interface Mail {
+		
+		/**
+		 *
+		 */
+		String MAIL_URL = "epf.mail.url";
+	}
+	
+	/**
 	 * 
 	 */
 	String MANAGEMENT = "management";
@@ -611,6 +627,37 @@ public interface Naming {
 	    String DEFAULT_ROLE = "Any_Role";
 	    
 	    /**
+	     *
+	     */
+	    String PRINCIPAL = "principal";
+	    
+	    /**
+	     *
+	     */
+	    String CREDENTIAL = "credential";
+	    
+	    /**
+	     *
+	     */
+	    String AUTH = "auth";
+	    
+	    /**
+	     * 
+	     */
+	    interface Credential {
+	    	
+	    	/**
+	    	 *
+	    	 */
+	    	String USERNAME = "username";
+	    	
+	    	/**
+	    	 *
+	    	 */
+	    	String PASSWORD = "password";
+	    }
+	    
+	    /**
 	     * @author PC
 	     *
 	     */
@@ -706,6 +753,27 @@ public interface Naming {
 	    	 * 
 	    	 */
 	    	String FACEBOOK_CLIENT_SECRET = "epf.security.auth.openid.client.secret.facebook";
+	    }
+	    
+	    /**
+	     * 
+	     */
+	    interface Claims {
+	    	
+	    	/**
+	    	 *
+	    	 */
+	    	String FIRST_NAME = "given_name";
+	    	
+	    	/**
+	    	 *
+	    	 */
+	    	String LAST_NAME = "family_name";
+	    	
+	    	/**
+	    	 *
+	    	 */
+	    	String EMAIL = "email";
 	    }
 	}
 	

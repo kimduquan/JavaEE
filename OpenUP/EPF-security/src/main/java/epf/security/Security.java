@@ -13,7 +13,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -456,5 +458,70 @@ public class Security implements epf.security.client.Security, epf.security.clie
 		newToken.setSubject(claims.getSubject());
 		final TokenBuilder builder = new TokenBuilder(newToken, privateKey, publicKey);
 		return Response.ok(builder.build()).build();
+	}
+
+	@PermitAll
+	@Override
+	public Response createCredential(
+			final String tenant,
+			final String email, 
+			final String password, 
+			final String firstName, 
+			final String lastName,
+			final List<String> forwardedHost,
+            final List<String> forwardedPort,
+            final List<String> forwardedProto) throws Exception {
+		final Credential credential = new Credential(tenant, email, new Password(password));
+		identityStore.putCredential(credential);
+		final Set<String> audience = buildAudience(null, forwardedHost, forwardedPort, forwardedProto);
+		final Set<String> groups = new HashSet<>();
+		groups.add(Naming.EPF);
+		final Map<String, Object> claims = new HashMap<>();
+		if(tenant != null) {
+			claims.put(Naming.Management.TENANT, tenant);
+		}
+		claims.put(Naming.Security.Claims.FIRST_NAME, firstName);
+		claims.put(Naming.Security.Claims.LAST_NAME, lastName);
+		claims.put(Naming.Security.Claims.EMAIL, email);
+		claims.put("password_hash", CredentialUtil.encryptPassword(email, password));
+		
+		final Token newToken = new Token();
+		newToken.setAudience(audience);
+		newToken.setClaims(claims);
+		newToken.setExpirationTime(Instant.EPOCH.getEpochSecond() + Duration.ofDays(3).toSeconds());
+		newToken.setGroups(groups);
+		newToken.setIssuedAtTime(Instant.EPOCH.getEpochSecond());
+		newToken.setIssuer(Naming.EPF);
+		newToken.setName(email);
+		newToken.setSubject(email);
+		
+		final TokenBuilder builder = new TokenBuilder(newToken, privateKey, publicKey);
+		return Response.ok(builder.build().getRawToken()).build();
+	}
+
+	@RolesAllowed(Naming.EPF)
+	@Override
+	public Response createPrincipal(final SecurityContext context) throws Exception {
+		final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
+		final Password password = new Password(CredentialUtil.encryptPassword(jwt.getName(), jwt.getClaim("password_hash")));
+		final Optional<String> tenant = jwt.claim(Naming.Management.TENANT);
+		final Credential credential = new Credential(tenant.orElse(null), jwt.getName(), password);
+		final Map<String, Object> claims = new HashMap<>();
+		claims.put(Naming.Security.Claims.FIRST_NAME, jwt.getClaim(Naming.Security.Claims.FIRST_NAME));
+		claims.put(Naming.Security.Claims.LAST_NAME, jwt.getClaim(Naming.Security.Claims.LAST_NAME));
+		claims.put(Naming.Security.Claims.EMAIL, jwt.getClaim(Naming.Security.Claims.EMAIL));
+		jwt.claim(Naming.Management.TENANT).ifPresent(tenantClaim -> claims.put(Naming.Management.TENANT, tenantClaim));
+		identityStore.authenticate(credential).thenCompose(principal -> {
+			try {
+				if(principal != null) {
+					return principalStore.putCaller(principal, claims);
+				}
+			} 
+			catch (Exception e) {
+				return CompletableFuture.failedStage(e);
+			}
+			return CompletableFuture.completedStage(null);
+		}).toCompletableFuture().get();
+		return Response.ok().build();
 	}
 }

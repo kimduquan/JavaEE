@@ -14,4 +14,9 @@ public interface NativeQueries {
 	 * 
 	 */
 	String SET_PASSWORD = "SET PASSWORD ?;";
+	
+	/**
+	 *
+	 */
+	String CREATE_USER = "CREATE USER ? PASSWORD ?;";
 }

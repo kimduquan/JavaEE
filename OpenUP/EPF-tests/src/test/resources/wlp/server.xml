@@ -17,6 +17,7 @@
         <feature>websocket-1.1</feature>
         <feature>jca-1.7</feature>
         <feature>jsf-2.3</feature>
+        <feature>javaMail-1.6</feature>
     </featureManager>
     
 	<variable name="io.openliberty.enableGraphQLUI" value="true" />
@@ -61,6 +62,9 @@
         <classloader apiTypeVisibility="+third-party"/>
     </application>
 	<application id="EPF-file" name="EPF-file" context-root="file" location="EPF-file-1.0.0.war" startAfterRef="EPF-messaging" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
+    <application id="EPF-mail" name="EPF-mail" context-root="mail" location="EPF-mail-1.0.0.war">
         <classloader apiTypeVisibility="+third-party"/>
     </application>
     <application id="EPF-image" name="EPF-image" context-root="image" location="EPF-image-1.0.0.war" >
@@ -115,6 +119,22 @@
         contentEncryptionAlgorithm="A256GCM" 
         keyManagementKeyAlgorithm="RSA-OAEP"
         jwkEnabled="true"/>
+        
+    <mailSession>
+	    <mailSessionID>gmailSMTPSession</mailSessionID>
+	    <jndiName>mail/gmailSMTPSession</jndiName>
+	    <description>EPF Gmail SMTP Session</description>
+	    <storeProtocol>imaps</storeProtocol>
+	    <transportProtocol>smtp</transportProtocol>
+	    <host>smtp.gmail.com</host>
+	    <user>kimduquan01@gmail.com</user>
+	    <password>Kim.Du.Qu@n01234</password>
+	    <from>kimduquan01@gmail.com</from>
+	    <property name="mail.imap.host" value="imap.gmail.com" />
+	    <property name="mail.smtp.port" value="587" />
+	    <property name="mail.smtp.auth" value="true" />
+	    <property name="mail.smtp.starttls.enable" value="true" />
+	</mailSession>
 
 	<!-- H2 Library Configuration -->
     <library id="H2JDBCLib">

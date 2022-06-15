@@ -17,6 +17,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.security.enterprise.CallerPrincipal;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
+import javax.transaction.Transactional;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.naming.Naming;
@@ -86,26 +87,9 @@ public class JPAIdentityStore implements IdentityStore {
 		if (oldCredential.isPresent()) {
 			return validate(credential, oldCredential.get());
 		}
-		final Map<String, Object> props = new ConcurrentHashMap<>();
-        props.put(Naming.Persistence.JDBC.JDBC_USER, credential.getCaller());
-        props.put(Naming.Persistence.JDBC.JDBC_PASSWORD, String.valueOf(credential.getPassword().getValue()));
-        credential.getTenant().ifPresent(tenant -> {
-        	final String tenantUrl = JdbcUtil.formatTenantUrl(jdbcUrl, tenant.toString());
-        	props.put(Naming.Persistence.JDBC.JDBC_URL, tenantUrl);
-        });
-        return executor.supplyAsync(() -> Persistence.createEntityManagerFactory(SECURITY_UNIT_NAME, props))
-        		.thenApply(factory -> {
-        			CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
-        			try {
-        				final EntityManager manager = factory.createEntityManager();
-        				final JPAPrincipal principal = principalStore.putPrincipaḷ̣̣̣̣(credential, factory, manager);
-        				result = new CredentialValidationResult(principal);
-		        	}
-		        	catch(Exception ex) {
-		        		factory.close();
-		        	}
-        			return result;
-        		});
+		return authenticate(credential).thenApply(principal -> {
+			return principal != null ? new CredentialValidationResult(principal) : CredentialValidationResult.INVALID_RESULT;
+		});
 	}
 
 	@Override
@@ -119,5 +103,40 @@ public class JPAIdentityStore implements IdentityStore {
 				}).collect(Collectors.toSet());
 			return groups;
 		});
+	}
+
+	@Override
+	@Transactional
+	public CompletionStage<Void> putCredential(final Credential credential) throws Exception {
+		Objects.requireNonNull(credential, "Credential");
+		Objects.requireNonNull(credential.getCaller(), "Credential.caller");
+		Objects.requireNonNull(credential.getPassword(), "Credential.password");
+		final Query query = manager.createNativeQuery(NativeQueries.CREATE_USER);
+		query.setParameter(1, credential.getCaller());
+		query.setParameter(2, new String(credential.getPassword().getValue()));
+		query.executeUpdate();
+		return executor.completedStage(null);
+	}
+
+	@Override
+	public CompletionStage<CallerPrincipal> authenticate(Credential credential) throws Exception {
+		final Map<String, Object> props = new ConcurrentHashMap<>();
+        props.put(Naming.Persistence.JDBC.JDBC_USER, credential.getCaller());
+        props.put(Naming.Persistence.JDBC.JDBC_PASSWORD, String.valueOf(credential.getPassword().getValue()));
+        credential.getTenant().ifPresent(tenant -> {
+        	final String tenantUrl = JdbcUtil.formatTenantUrl(jdbcUrl, tenant.toString());
+        	props.put(Naming.Persistence.JDBC.JDBC_URL, tenantUrl);
+        });
+        return executor.supplyAsync(() -> Persistence.createEntityManagerFactory(SECURITY_UNIT_NAME, props))
+        		.thenApply(factory -> {
+        			try {
+        				final EntityManager manager = factory.createEntityManager();
+        				return principalStore.putPrincipaḷ̣̣̣̣(credential, factory, manager);
+		        	}
+		        	catch(Exception ex) {
+		        		factory.close();
+		        		return null;
+		        	}
+        		});
 	}
 }

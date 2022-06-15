@@ -66,10 +66,10 @@ public interface Security {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
     CompletionStage<String> login(
-            @FormParam("username")
+            @FormParam(Naming.Security.Credential.USERNAME)
             @NotBlank
             final String username,
-            @FormParam("password")
+            @FormParam(Naming.Security.Credential.PASSWORD)
             @NotBlank
             final String password, 
             @QueryParam(URL)
@@ -98,8 +98,8 @@ public interface Security {
     		final String password, 
     		final URL url) {
     	final MultivaluedMap<String, String> form = new MultivaluedHashMap<>();
-    	form.add("username", username);
-    	form.add("password", password);
+    	form.add(Naming.Security.Credential.USERNAME, username);
+    	form.add(Naming.Security.Credential.PASSWORD, password);
     	return client.request(
     			target -> target.queryParam(URL, url),
     			req -> req.accept(MediaType.TEXT_PLAIN))
@@ -157,7 +157,7 @@ public interface Security {
     @PATCH
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     CompletionStage<Response> update(
-    		@FormParam("password")
+    		@FormParam(Naming.Security.Credential.PASSWORD)
     		@NotNull
     		@NotBlank
     		final String password,
@@ -171,7 +171,7 @@ public interface Security {
      * @return
      */
     static Response update(final Client client, final String password) {
-    	final Form form = new Form().param("password", password);
+    	final Form form = new Form().param(Naming.Security.Credential.PASSWORD, password);
     	return client.request(
     			target -> target, 
     			req -> req
@@ -219,7 +219,7 @@ public interface Security {
      * @return
      * @throws Exception
      */
-    @Path("auth")
+    @Path(Naming.Security.AUTH)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -230,7 +230,7 @@ public interface Security {
             final String session,
             @FormParam("token")
             final String token,
-            @FormParam("url")
+            @FormParam(URL)
             final URL url,
             @MatrixParam(Naming.Management.TENANT)
             final String tenant,
@@ -256,10 +256,89 @@ public interface Security {
     		final String token,
     		final URL url) {
     	return client.request(
-    			target -> target.path("auth"), 
+    			target -> target.path(Naming.Security.AUTH), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
-    			.post(Entity.form(new Form().param("provider", provider).param("session", session).param("token", token).param("url", url.toString())))
+    			.post(Entity.form(new Form().param("provider", provider).param("session", session).param("token", token).param(URL, url.toString())))
     			.readEntity(Token.class);
+    }
+    
+    /**
+     * @param email
+     * @param password
+     * @return
+     * @throws Exception
+     */
+    @Path(Naming.Security.CREDENTIAL)
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    Response createCredential(
+    		@MatrixParam(Naming.Management.TENANT)
+            final String tenant,
+    		@FormParam(Naming.Security.Claims.EMAIL)
+    		@NotBlank
+    		final String email,
+    		@FormParam(Naming.Security.Credential.PASSWORD)
+    		@NotBlank
+    		final String password,
+    		@FormParam(Naming.Security.Claims.FIRST_NAME)
+    		@NotBlank
+    		final String firstName,
+    		@FormParam(Naming.Security.Claims.LAST_NAME)
+    		@NotBlank
+    		final String lastName,
+    		@HeaderParam(Naming.Gateway.Headers.X_FORWARDED_HOST)
+            final List<String> forwardedHost,
+            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PORT)
+            final List<String> forwardedPort,
+            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PROTO)
+            final List<String> forwardedProto
+    		) throws Exception;
+    
+    /**
+     * @param client
+     * @param email
+     * @param password
+     * @return
+     * @throws Exception
+     */
+    static Response createCredential(final Client client, final String email, final String password, final String firstName, final String lastName) throws Exception {
+    	return client.request(
+    			target -> target.path(Naming.Security.CREDENTIAL), 
+    			req -> req.accept(MediaType.TEXT_PLAIN)
+    			)
+    			.post(Entity.form(new Form()
+    					.param(Naming.Security.Claims.EMAIL, email)
+    					.param(Naming.Security.Credential.PASSWORD, password)
+    					.param(Naming.Security.Claims.FIRST_NAME, firstName)
+    					.param(Naming.Security.Claims.LAST_NAME, lastName)
+    					)
+    					);
+    }
+    
+    /**
+     * @param context
+     * @return
+     * @throws Exception
+     */
+    @Path(Naming.Security.PRINCIPAL)
+    @POST
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    Response createPrincipal(
+    		@Context 
+    		final SecurityContext context) throws Exception;
+    
+    /**
+     * @param client
+     * @return
+     * @throws Exception
+     */
+    static Response createPrincipal(final Client client) throws Exception {
+    	return client.request(
+    			target -> target.path(Naming.Security.PRINCIPAL), 
+    			req -> req
+    			)
+    			.post(Entity.form(new Form()));
     }
 }
