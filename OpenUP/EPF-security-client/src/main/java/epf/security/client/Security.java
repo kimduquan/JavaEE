@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.CompletionStage;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -70,6 +71,7 @@ public interface Security {
             @NotBlank
             final String username,
             @FormParam(Naming.Security.Credential.PASSWORD)
+            @NotNull
             @NotBlank
             final String password, 
             @QueryParam(URL)
@@ -278,6 +280,7 @@ public interface Security {
             final String tenant,
     		@FormParam(Naming.Security.Claims.EMAIL)
     		@NotBlank
+    		@Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
     		final String email,
     		@FormParam(Naming.Security.Credential.PASSWORD)
     		@NotBlank

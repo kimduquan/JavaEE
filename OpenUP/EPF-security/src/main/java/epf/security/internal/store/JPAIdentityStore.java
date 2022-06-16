@@ -111,9 +111,8 @@ public class JPAIdentityStore implements IdentityStore {
 		Objects.requireNonNull(credential, "Credential");
 		Objects.requireNonNull(credential.getCaller(), "Credential.caller");
 		Objects.requireNonNull(credential.getPassword(), "Credential.password");
-		final Query query = manager.createNativeQuery(NativeQueries.CREATE_USER);
-		query.setParameter(1, credential.getCaller());
-		query.setParameter(2, new String(credential.getPassword().getValue()));
+		final Query query = manager.createNativeQuery(String.format(NativeQueries.CREATE_USER, credential.getCaller()));
+		query.setParameter(1, new String(credential.getPassword().getValue()));
 		query.executeUpdate();
 		return executor.completedStage(null);
 	}

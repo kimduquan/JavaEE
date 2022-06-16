@@ -1,7 +1,7 @@
 package epf.webapp.security.view;
 
 import java.io.Serializable;
-
+import java.util.HashMap;
 import epf.client.mail.Mail;
 import epf.client.mail.Message;
 import epf.client.util.Client;
@@ -11,7 +11,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.Response;
-
+import javax.ws.rs.core.Response.Status;
 import epf.webapp.GatewayUtil;
 import epf.webapp.naming.Naming;
 
@@ -113,18 +113,21 @@ public class RegisterPage implements RegisterView, Serializable {
 		char[] token = null;
 		try(Client client = gatewayUtil.newClient(epf.naming.Naming.SECURITY)){
 			try(Response response = Security.createCredential(client, email, password, firstName, lastName)){
-				token = response.readEntity(String.class).toCharArray();
+				if(response.getStatus() == Status.OK.getStatusCode()) {
+					token = response.readEntity(String.class).toCharArray();
+				}
 			}
 		}
 		if(token != null) {
 			final Message message = new Message();
-			message.setFrom(email);
-			message.setSubject("");
+			message.setRecipients(new HashMap<>());
+			message.getRecipients().put(Message.TO, email);
+			message.setSubject(email);
 			message.setText(new String(token));
 			try(Client client = gatewayUtil.newClient(epf.naming.Naming.MAIL)){
 				client.authorization(token);
 				try(Response res = Mail.send(client, message)){
-					
+					res.getStatus();
 				}
 			}
 		}

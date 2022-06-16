@@ -247,6 +247,11 @@ public interface Naming {
 		 *
 		 */
 		String MAIL_URL = "epf.mail.url";
+		
+		/**
+		 *
+		 */
+		String MAIL_FROM = "epf.mail.from";
 	}
 	
 	/**

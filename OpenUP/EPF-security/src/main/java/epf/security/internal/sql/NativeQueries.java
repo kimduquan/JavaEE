@@ -18,5 +18,5 @@ public interface NativeQueries {
 	/**
 	 *
 	 */
-	String CREATE_USER = "CREATE USER ? PASSWORD ?;";
+	String CREATE_USER = "CREATE USER \"%s\" PASSWORD ?;";
 }

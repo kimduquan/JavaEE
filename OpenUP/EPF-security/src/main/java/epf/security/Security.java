@@ -488,9 +488,9 @@ public class Security implements epf.security.client.Security, epf.security.clie
 		final Token newToken = new Token();
 		newToken.setAudience(audience);
 		newToken.setClaims(claims);
-		newToken.setExpirationTime(Instant.EPOCH.getEpochSecond() + Duration.ofDays(3).toSeconds());
+		newToken.setIssuedAtTime(Instant.now().getEpochSecond());
+		newToken.setExpirationTime(newToken.getIssuedAtTime() + Duration.ofDays(3).toSeconds());
 		newToken.setGroups(groups);
-		newToken.setIssuedAtTime(Instant.EPOCH.getEpochSecond());
 		newToken.setIssuer(Naming.EPF);
 		newToken.setName(email);
 		newToken.setSubject(email);
