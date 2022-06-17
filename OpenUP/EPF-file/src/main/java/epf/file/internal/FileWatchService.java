@@ -76,7 +76,7 @@ public class FileWatchService implements IWatchService {
 	 */
 	@PreDestroy
 	protected void preDestroy() {
-		fileWatches.values().parallelStream().forEach(watch -> {
+		fileWatches.forEach((p, watch) -> {
 			try {
 				watch.close();
 			} 

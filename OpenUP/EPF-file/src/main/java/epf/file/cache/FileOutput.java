@@ -1,4 +1,4 @@
-package epf.file.internal;
+package epf.file.cache;
 
 import java.io.IOException;
 import java.io.OutputStream;

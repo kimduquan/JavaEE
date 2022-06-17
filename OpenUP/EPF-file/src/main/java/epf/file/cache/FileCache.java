@@ -1,4 +1,4 @@
-package epf.file.internal;
+package epf.file.cache;
 
 import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
@@ -75,23 +75,24 @@ public class FileCache {
 	 * @throws Exception
 	 */
 	public Optional<FileOutput> getFile(final Path path) throws Exception {
-		Optional<FileOutput> output = Optional.empty();
-		final MappedByteBuffer buffer = files.computeIfAbsent(path, p -> {
-			try(RandomAccessFile file = new RandomAccessFile(p.toFile(), "r")) 
+		Optional<FileOutput> fileOutput = Optional.empty();
+		final MappedByteBuffer fileBuffer = files.computeIfAbsent(path, file -> {
+			MappedByteBuffer newFileBuffer = null;
+			try(RandomAccessFile raf = new RandomAccessFile(file.toFile(), "r")) 
 		    {
-				try(FileChannel channel = file.getChannel()){
-					final MappedByteBuffer newBuffer = channel.map(FileChannel.MapMode.READ_ONLY, 0, channel.size());
-					return newBuffer.load();
+				try(FileChannel fileChannel = raf.getChannel()){
+					newFileBuffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, 0, fileChannel.size());
+					return newFileBuffer.load();
 				}
 		    }
 			catch(Throwable ex) {
 				LOGGER.log(Level.SEVERE, "[FileCache.read]", ex);
-				return null;
 			}
+			return null;
 		});
-		if(buffer != null) {
-			Optional.of( new FileOutput(buffer));
+		if(fileBuffer != null) {
+			Optional.of( new FileOutput(fileBuffer));
 		}
-		return output;
+		return fileOutput;
 	}
 }
