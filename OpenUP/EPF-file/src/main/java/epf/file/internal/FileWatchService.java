@@ -1,11 +1,11 @@
 package epf.file.internal;
 
-import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchService;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -16,14 +16,12 @@ import javax.annotation.Resource;
 import javax.enterprise.concurrent.ManagedScheduledExecutorService;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import org.eclipse.microprofile.context.ManagedExecutor;
+import epf.client.file.FileEvent;
 import epf.file.IWatchService;
-import epf.messaging.client.Client;
-import epf.messaging.client.Messaging;
-import epf.naming.Naming;
-import epf.util.config.ConfigUtil;
+import epf.util.event.Emitter;
+import epf.util.event.EventEmitter;
+import epf.util.event.EventQueue;
 import epf.util.logging.LogManager;
-import epf.util.websocket.MessageQueue;
 
 /**
  * @author PC
@@ -40,29 +38,24 @@ public class FileWatchService implements IWatchService {
 	/**
 	 * 
 	 */
-	private transient final Map<String, FileWatch> fileWatches = new ConcurrentHashMap<>();
+	private transient final Map<Path, FileWatch> fileWatches = new ConcurrentHashMap<>();
+	
+	/**
+	 *
+	 */
+	private transient Emitter<FileEvent> emitter;
 	
 	/**
 	 * 
 	 */
-	private transient Client client;
-	
-	/**
-	 * 
-	 */
-	private transient MessageQueue events;
+	@Inject
+	private transient EventQueue<FileEvent> events;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	private transient FileSystem system;
-	
-	/**
-	 * 
-	 */
-	@Inject
-	private transient ManagedExecutor executor;
 	
 	/**
 	 * 
@@ -75,15 +68,7 @@ public class FileWatchService implements IWatchService {
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		try {
-			client = Messaging.connectToServer(ConfigUtil.getURI(Naming.Messaging.MESSAGING_URL).resolve(Naming.FILE));
-			client.onMessage(msg -> {});
-			events = new MessageQueue(client.getSession());
-			executor.submit(events);
-		}
-		catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "postConstruct", e);
-		}
+		emitter = new EventEmitter<>(events);
 	}
 	
 	/**
@@ -91,38 +76,30 @@ public class FileWatchService implements IWatchService {
 	 */
 	@PreDestroy
 	protected void preDestroy() {
-		events.close();
-		try {
-			client.close();
-		} 
-		catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "preDestroy", e);
-		}
 		fileWatches.values().parallelStream().forEach(watch -> {
 			try {
 				watch.close();
 			} 
-			catch (IOException e) {
-				LOGGER.log(Level.SEVERE, "preDestroy", e);
+			catch (Exception e) {
+				LOGGER.log(Level.SEVERE, "[FileWatchService.preDestroy]", e);
 			}
 		});
+		events.close();
 	}
 	
-	/**
-	 * @param security
-	 */
 	@Override
 	public void register(final Path path) {
-		fileWatches.computeIfAbsent(path.toString(), name -> {
+		Objects.requireNonNull(path, "Path");
+		fileWatches.computeIfAbsent(path, name -> {
 			try {
 				final WatchService watchService = system.newWatchService();
 				path.register(watchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY, StandardWatchEventKinds.OVERFLOW);
-				final FileWatch fileWatch = new FileWatch(path, watchService, events);
+				final FileWatch fileWatch = new FileWatch(path, watchService, emitter);
 				fileWatch.setResult(scheduledExecutor.scheduleWithFixedDelay(fileWatch, 0, 40, TimeUnit.MILLISECONDS));
 				return fileWatch;
 			} 
-			catch (IOException e) {
-				LOGGER.log(Level.SEVERE, "register", e);
+			catch (Exception e) {
+				LOGGER.log(Level.SEVERE, "[FileWatchService.register]", e);
 				return null;
 			}
 		});

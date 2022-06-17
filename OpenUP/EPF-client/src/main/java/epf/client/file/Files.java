@@ -94,7 +94,7 @@ public interface Files {
     		final List<PathSegment> paths,
     		@Context
 			final SecurityContext security
-    		);
+    		) throws Exception;
     
     /**
      * @param client
