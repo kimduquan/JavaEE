@@ -6,6 +6,7 @@ import java.nio.channels.FileChannel;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -47,6 +48,7 @@ public class FileCache {
 		files.forEach((p, buffer) -> {
 			buffer.clear();
 		});
+		files.clear();
 	}
 	
 	/**
@@ -61,7 +63,8 @@ public class FileCache {
 			case ENTRY_DELETE:
 			case ENTRY_MODIFY:
 				final Path path = system.getPath(event.getSource()).resolve(event.getContext());
-				files.remove(path).clear();
+				files.remove(path);
+				LOGGER.log(Level.INFO, "[FileCache.observes]remove path=" + path);
 				break;
 			case OVERFLOW:
 				break;
@@ -75,8 +78,10 @@ public class FileCache {
 	 * @throws Exception
 	 */
 	public Optional<FileOutput> getFile(final Path path) throws Exception {
+		Objects.requireNonNull(path, "Path");
 		Optional<FileOutput> fileOutput = Optional.empty();
 		final MappedByteBuffer fileBuffer = files.computeIfAbsent(path, file -> {
+			LOGGER.log(Level.INFO, "[FileCache.getFile]load path=" + path);
 			MappedByteBuffer newFileBuffer = null;
 			try(RandomAccessFile raf = new RandomAccessFile(file.toFile(), "r")) 
 		    {
@@ -86,7 +91,7 @@ public class FileCache {
 				}
 		    }
 			catch(Throwable ex) {
-				LOGGER.log(Level.SEVERE, "[FileCache.read]", ex);
+				LOGGER.log(Level.SEVERE, "[FileCache.getFile]paht=" + path, ex);
 			}
 			return null;
 		});

@@ -10,6 +10,7 @@ import javax.validation.ValidationException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 import epf.util.EPFException;
@@ -37,7 +38,11 @@ public class ExceptionHelper implements ExceptionMapper<Exception>, Serializable
      */
     @Override
     public Response toResponse(final Exception exception) {
-        return handle(exception);
+        final Response response = handle(exception);
+        if(response.getStatus() == Status.INTERNAL_SERVER_ERROR.getStatusCode()) {
+        	LOGGER.log(Level.SEVERE, "[ExceptionHelper.toResponse]", exception);
+        }
+        return response;
     }
     
     /**
@@ -99,7 +104,6 @@ public class ExceptionHelper implements ExceptionMapper<Exception>, Serializable
         	}
         	if(!mapStatus && rootCause != null) {
         		builder.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), rootCause.getMessage());
-        		LOGGER.log(Level.SEVERE, "handle", failure);
         	}
         }
         return builder.build();

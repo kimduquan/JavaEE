@@ -1,6 +1,5 @@
 package epf.file;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
@@ -10,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
@@ -27,11 +25,9 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import epf.client.util.EntityOutput;
-import epf.file.cache.FileCache;
-import epf.file.cache.FileOutput;
+import epf.file.internal.FileWatchService;
 import epf.file.util.FileUtil;
 import epf.file.validation.PathValidator;
-import epf.util.EPFException;
 import epf.naming.Naming;
 import epf.naming.Naming.Security;
 
@@ -61,13 +57,7 @@ public class FileStore implements epf.client.file.Files {
 	 * 
 	 */
 	@Inject
-	private transient IWatchService watchService;
-	
-	/**
-	 *
-	 */
-	@Inject
-	private transient FileCache cache;
+	private transient FileWatchService watchService;
 	
 	/**
 	 * 
@@ -82,7 +72,7 @@ public class FileStore implements epf.client.file.Files {
 			final List<PathSegment> paths,
 			final UriInfo uriInfo,
 			final InputStream input, 
-			final SecurityContext security) {
+			final SecurityContext security) throws Exception {
 		PathValidator.validate(paths, security, HttpMethod.POST);
 		final PathBuilder builder = new PathBuilder(rootFolder, system);
 		final Path targetFolder = builder
@@ -91,16 +81,11 @@ public class FileStore implements epf.client.file.Files {
 		final String relativePath = builder.buildRelative();
 		final List<Path> files = new ArrayList<>();
 		final Map<String, String> targetFilePaths = new ConcurrentHashMap<>();
-		try {
-			targetFolder.toFile().mkdirs();
-			final Path targetFile = Files.createTempFile(targetFolder, "", "");
-			Files.copy(input, targetFile, StandardCopyOption.REPLACE_EXISTING);
-			files.add(targetFile);
-			targetFilePaths.put(targetFile.getFileName().toString(), relativePath + "/" + targetFile.getFileName().toString());
-		} 
-		catch (IOException e) {
-			throw new EPFException(e);
-		}
+		targetFolder.toFile().mkdirs();
+		final Path targetFile = Files.createTempFile(targetFolder, "", "");
+		Files.copy(input, targetFile, StandardCopyOption.REPLACE_EXISTING);
+		files.add(targetFile);
+		targetFilePaths.put(targetFile.getFileName().toString(), relativePath + "/" + targetFile.getFileName().toString());
 		final Path root = system.getPath(rootFolder);
 		final Link[] links = files
 				.stream()
@@ -128,33 +113,24 @@ public class FileStore implements epf.client.file.Files {
 		final Path targetFile = builder
 				.paths(paths)
 				.build();
-		final Optional<FileOutput> fileOutput = cache.getFile(targetFile);
-		if(!fileOutput.isPresent()) {
-			return new EntityOutput(Files.newInputStream(targetFile));
-		}
-		return fileOutput.get();
+		return new EntityOutput(Files.newInputStream(targetFile));
 	}
 
 	@Override
 	public Response delete(
 			final UriInfo uriInfo, 
 			final List<PathSegment> paths, 
-			final SecurityContext security) {
+			final SecurityContext security) throws Exception {
 		PathValidator.validate(paths, security, HttpMethod.DELETE);
 		final PathBuilder builder = new PathBuilder(rootFolder, system);
 		final Path targetFile = builder
 				.paths(paths)
 				.build();
-		try {
-			if(Files.isDirectory(targetFile)) {
-				FileUtil.deleteDirectories(targetFile);
-			}
-			else {
-				Files.delete(targetFile);
-			}
-		} 
-		catch (IOException e) {
-			throw new EPFException(e);
+		if(Files.isDirectory(targetFile)) {
+			FileUtil.deleteDirectories(targetFile);
+		}
+		else {
+			Files.delete(targetFile);
 		}
 		return Response.ok(targetFile.toString()).build();
 	}

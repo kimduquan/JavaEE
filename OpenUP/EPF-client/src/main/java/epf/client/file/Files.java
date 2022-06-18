@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epf.client.file;
 
 import java.io.InputStream;
@@ -23,10 +18,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
-
 import epf.client.util.Client;
 import epf.naming.Naming;
-
 import javax.validation.constraints.*;
 
 /**
@@ -42,6 +35,7 @@ public interface Files {
 	 * @param input
 	 * @param security
 	 * @return
+	 * @throws Exception
 	 */
 	@POST
 	@Path("{paths: .+}")
@@ -55,7 +49,7 @@ public interface Files {
 			final InputStream input,
 			@Context
 			final SecurityContext security
-			);
+			) throws Exception;
 	
 	/**
 	 * @param client
@@ -82,6 +76,7 @@ public interface Files {
      * @param paths
      * @param security
      * @return
+     * @throws Exception
      */
     @GET
     @Path("{paths: .+}")
@@ -121,6 +116,7 @@ public interface Files {
      * @param paths
      * @param security
      * @return
+     * @throws Exception
      */
     @DELETE
     @Path("{paths: .+}")
@@ -131,7 +127,7 @@ public interface Files {
     		@NotEmpty
     		final List<PathSegment> paths,
     		@Context
-			final SecurityContext security);
+			final SecurityContext security) throws Exception;
     
     /**
      * @param client

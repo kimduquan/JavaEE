@@ -21,6 +21,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
@@ -189,6 +190,64 @@ public class FilesTest {
 		try (InputStream input = Files.newInputStream(tempFile)){
 			Response response = epf.client.file.Files.createFile(client, input, PathUtil.of("Developer", "any_role2"));
 			Assert.assertEquals("Response.status", Response.Status.FORBIDDEN.getStatusCode(), response.getStatusInfo().getStatusCode());
+		}
+	}
+	
+	@Test
+	public void testDeleteFileOK_User() throws Exception {
+		try (InputStream input = Files.newInputStream(tempFile)){
+			Response response = epf.client.file.Files.createFile(client, input, PathUtil.of(credential.getKey()));
+			Link link = response.getLink("self");
+			System.out.println("Response.self.uri=" + link.getUri());
+			try(Client newclient = ClientUtil.newClient(link.getUri())){
+				newclient.authorization(token.toCharArray());
+				response = newclient.request(target -> target, req -> req).delete();
+				Assert.assertEquals("Response.status", Response.Status.OK.getStatusCode(), response.getStatusInfo().getStatusCode());
+			}
+		}
+	}
+	
+	@Test @Ignore
+	public void testDeleteFileOK_Group() throws Exception {
+		try (InputStream input = Files.newInputStream(tempFile)){
+			Response response = epf.client.file.Files.createFile(client, input, PathUtil.of("Any_Role", credential.getKey()));
+			Link link = response.getLink("self");
+			System.out.println("Response.self.uri=" + link.getUri());
+			try(Client newclient = ClientUtil.newClient(link.getUri())){
+				response = newclient.request(target -> target, req -> req).delete();
+				Assert.assertEquals("Response.status", Response.Status.OK.getStatusCode(), response.getStatusInfo().getStatusCode());
+			}
+		}
+	}
+	
+	@Test
+	public void testDeleteFileOKAfterRead_User() throws Exception {
+		Link link = null;
+		try (InputStream input = Files.newInputStream(tempFile)){
+			Response response = epf.client.file.Files.createFile(client, input, PathUtil.of(credential.getKey()));
+			link = response.getLink("self");
+			System.out.println("Response.self.uri=" + link.getUri());
+		}
+		Thread.sleep(100);
+		try(Client newclient = ClientUtil.newClient(link.getUri())){
+			newclient.authorization(token.toCharArray());
+			InputStream input2 = newclient
+					.request(
+					target -> target, 
+					req -> req.accept(MediaType.APPLICATION_OCTET_STREAM)
+					)
+					.get(InputStream.class);
+			try(InputStreamReader reader = new InputStreamReader(input2)){
+				try(BufferedReader buffer = new BufferedReader(reader)){
+					String text = buffer.lines().collect(Collectors.joining());
+					Assert.assertEquals("this is a test", text);
+				}
+			}
+		}
+		try(Client newclient = ClientUtil.newClient(link.getUri())){
+			newclient.authorization(token.toCharArray());
+			Response response = newclient.request(target -> target, req -> req).delete();
+			Assert.assertEquals("Response.status", Response.Status.OK.getStatusCode(), response.getStatusInfo().getStatusCode());
 		}
 	}
 	

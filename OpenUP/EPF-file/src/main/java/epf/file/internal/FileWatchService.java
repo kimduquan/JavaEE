@@ -16,8 +16,8 @@ import javax.annotation.Resource;
 import javax.enterprise.concurrent.ManagedScheduledExecutorService;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.client.file.FileEvent;
-import epf.file.IWatchService;
 import epf.util.event.Emitter;
 import epf.util.event.EventEmitter;
 import epf.util.event.EventQueue;
@@ -28,7 +28,7 @@ import epf.util.logging.LogManager;
  *
  */
 @ApplicationScoped
-public class FileWatchService implements IWatchService {
+public class FileWatchService {
 	
 	/**
 	 * 
@@ -64,10 +64,17 @@ public class FileWatchService implements IWatchService {
 	private transient ManagedScheduledExecutorService scheduledExecutor;
 	
 	/**
+	 *
+	 */
+	@Inject
+	private transient ManagedExecutor executor;
+	
+	/**
 	 * 
 	 */
 	@PostConstruct
 	protected void postConstruct() {
+		executor.submit(events);
 		emitter = new EventEmitter<>(events);
 	}
 	
@@ -87,7 +94,9 @@ public class FileWatchService implements IWatchService {
 		events.close();
 	}
 	
-	@Override
+	/**
+	 * @param path
+	 */
 	public void register(final Path path) {
 		Objects.requireNonNull(path, "Path");
 		fileWatches.computeIfAbsent(path, name -> {
