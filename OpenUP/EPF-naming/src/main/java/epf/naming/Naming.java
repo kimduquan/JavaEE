@@ -140,6 +140,17 @@ public interface Naming {
 	     * 
 	     */
 	    String ROOT = "epf.file.root";
+	    
+	    /**
+	     * 
+	     */
+	    interface Cache {
+	    	
+	    	/**
+		     * 
+		     */
+		    String ROOT = "epf.file.cache.root";
+	    }
 	}
 	
 	/**

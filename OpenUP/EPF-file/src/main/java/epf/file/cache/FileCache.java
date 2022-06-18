@@ -16,6 +16,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.ObservesAsync;
 import javax.inject.Inject;
 import epf.client.file.FileEvent;
+import epf.util.io.ByteBufferUtil;
 import epf.util.logging.LogManager;
 
 /**
@@ -63,8 +64,17 @@ public class FileCache {
 			case ENTRY_DELETE:
 			case ENTRY_MODIFY:
 				final Path path = system.getPath(event.getSource()).resolve(event.getContext());
-				files.remove(path);
-				LOGGER.log(Level.INFO, "[FileCache.observes]remove path=" + path);
+				final MappedByteBuffer buffer = files.remove(path);
+				if(buffer != null) {
+					buffer.clear();
+					try {
+						ByteBufferUtil.clean(buffer);
+					} 
+					catch (Exception e) {
+						LOGGER.log(Level.SEVERE, "[FileCache.observes]clean path=" + path, e);
+					}
+					LOGGER.log(Level.INFO, "[FileCache.observes]remove path=" + path);
+				}
 				break;
 			case OVERFLOW:
 				break;
@@ -91,7 +101,7 @@ public class FileCache {
 				}
 		    }
 			catch(Throwable ex) {
-				LOGGER.log(Level.SEVERE, "[FileCache.getFile]paht=" + path, ex);
+				LOGGER.log(Level.SEVERE, "[FileCache.getFile]path=" + path, ex);
 			}
 			return null;
 		});
