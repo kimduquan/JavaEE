@@ -1,6 +1,5 @@
 package epf.work_products.schema;
 
-import java.io.Serializable;
 import javax.json.JsonObject;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +8,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.utility.EPFEntity;
 
 /**
  *
@@ -18,7 +18,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Schema(name = WorkProducts.TEMPLATE, title = "Template")
 @Entity(name = WorkProducts.TEMPLATE)
 @Table(schema = WorkProducts.SCHEMA, name = "TEMPLATE")
-public class Template implements Serializable {
+public class Template extends EPFEntity {
 	
     /**
 	 * 

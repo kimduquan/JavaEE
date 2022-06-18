@@ -1,6 +1,5 @@
 package epf.work_products.schema;
 
-import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -8,6 +7,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.utility.EPFEntity;
 
 /**
  *
@@ -17,7 +17,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Schema(name = WorkProducts.WORK_PRODUCT_SLOT, title = "Work Product Slot")
 @Entity(name = WorkProducts.WORK_PRODUCT_SLOT)
 @Table(schema = WorkProducts.SCHEMA, name = "WORK_PRODUCT_SLOT")
-public class WorkProductSlot implements Serializable {
+public class WorkProductSlot extends EPFEntity {
 	
     /**
 	 * 

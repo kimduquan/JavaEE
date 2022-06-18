@@ -668,6 +668,10 @@ public interface Naming {
 	     */
 	    interface Internal {
 	    	
+	    	/**
+	    	 *
+	    	 */
+	    	String JDBC_URL_FORMAT = "jdbc:h2:~/%s.%s;AUTO_SERVER=TRUE;AUTO_RECONNECT=TRUE;PASSWORD_HASH=TRUE";
 	    }
 	    
 	    /**

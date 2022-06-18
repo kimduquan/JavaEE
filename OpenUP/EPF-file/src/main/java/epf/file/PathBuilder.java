@@ -28,7 +28,8 @@ public class PathBuilder {
 	private transient List<String> subPaths;
 
 	/**
-	 * 
+	 * @param rootFolder
+	 * @param system
 	 */
 	public PathBuilder(final String rootFolder, final FileSystem system) {
 		this.rootFolder = rootFolder;

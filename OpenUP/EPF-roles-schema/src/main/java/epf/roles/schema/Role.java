@@ -6,7 +6,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import javax.json.JsonObject;
 import javax.persistence.Embedded;
 import org.eclipse.microprofile.graphql.Type;
@@ -14,6 +13,8 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import epf.roles.schema.section.MoreInformation;
 import epf.roles.schema.section.Relationships;
 import epf.roles.schema.section.Staffing;
+import epf.schema.utility.EPFEntity;
+
 /**
  *
  * @author FOXCONN
@@ -22,7 +23,7 @@ import epf.roles.schema.section.Staffing;
 @Schema(name = Roles.ROLE, title = "Role")
 @Entity(name = Roles.ROLE)
 @Table(schema = Roles.SCHEMA, name = "EPF_ROLE")
-public class Role implements Serializable {
+public class Role extends EPFEntity {
 	
 	/**
 	 * 

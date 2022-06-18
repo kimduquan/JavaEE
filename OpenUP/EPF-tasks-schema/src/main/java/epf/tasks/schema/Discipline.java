@@ -1,6 +1,5 @@
 package epf.tasks.schema;
 
-import java.io.Serializable;
 import java.util.Set;
 import javax.json.JsonObject;
 import javax.json.bind.annotation.JsonbPropertyOrder;
@@ -15,6 +14,7 @@ import javax.validation.constraints.NotBlank;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.utility.EPFEntity;
 import javax.persistence.Index;
 
 /**
@@ -29,7 +29,7 @@ import javax.persistence.Index;
     "name",
     "tasks"
 })
-public class Discipline implements Serializable {
+public class Discipline extends EPFEntity {
 
     /**
 	 * 

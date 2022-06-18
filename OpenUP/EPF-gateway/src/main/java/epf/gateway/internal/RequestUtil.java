@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.Map.Entry;
 import java.util.concurrent.CompletionStage;
+import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.client.CompletionStageRxInvoker;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
@@ -20,8 +21,10 @@ import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.sse.SseEventSource;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.naming.Naming;
 import epf.util.StringUtil;
 
@@ -41,13 +44,15 @@ public interface RequestUtil {
         if(matrixParams != null){
         	for(Entry<String, List<String>> entry : matrixParams.entrySet()) {
         		final String key = entry.getKey();
-        		final List<String> value = entry.getValue();
-        		if(value == null) {
-            		webTarget = webTarget.matrixParam(key);
-            	}
-            	else {
-                	webTarget = webTarget.matrixParam(key, value.toArray(new Object[0]));
-            	}
+        		if(!Naming.Management.TENANT.equals(key)) {
+            		final List<String> value = entry.getValue();
+            		if(value == null) {
+                		webTarget = webTarget.matrixParam(key);
+                	}
+                	else {
+                    	webTarget = webTarget.matrixParam(key, value.toArray(new Object[0]));
+                	}
+        		}
         	}
         }
 		return webTarget;
@@ -74,40 +79,6 @@ public interface RequestUtil {
         }
         return webTarget;
 	}
-	
-	/**
-	 * @param uriInfo
-	 * @return
-	 */
-	static Optional<String> getTenantParameter(final UriInfo uriInfo) {
-		Optional<String> tenant = Optional.empty();
-		final List<PathSegment> segments = uriInfo.getPathSegments();
-		if(segments != null && segments.size() > 0) {
-			final PathSegment firstSegment = segments.get(0);
-			final MultivaluedMap<String, String> matrixParams = firstSegment.getMatrixParameters();
-			if(matrixParams != null) {
-				tenant = Optional.ofNullable(matrixParams.getFirst(Naming.Management.TENANT));
-			}
-		}
-		return tenant;
-	}
-	
-	/**
-	 * @param uriInfo
-	 * @return
-	 */
-	static MultivaluedMap<String, String> getParamters(final UriInfo uriInfo) {
-		MultivaluedMap<String, String> params = new MultivaluedHashMap<>();
-		final List<PathSegment> segments = uriInfo.getPathSegments();
-		if(segments != null && segments.size() > 0) {
-			final PathSegment firstSegment = segments.get(0);
-			final MultivaluedMap<String, String> matrixParams = firstSegment.getMatrixParameters();
-			if(matrixParams != null) {
-				params = firstSegment.getMatrixParameters();
-			}
-		}
-		return params;
-	}
     
     /**
      * @param webTarget
@@ -116,12 +87,14 @@ public interface RequestUtil {
      */
     static WebTarget buildTarget(
     		WebTarget webTarget,
-    		final UriInfo uriInfo){
+    		final UriInfo uriInfo,
+    		final SecurityContext context){
         if(uriInfo != null){
         	final List<PathSegment> segments = uriInfo.getPathSegments();
             if(segments != null){
             	final Iterator<PathSegment> segmentIt = segments.iterator();
             	final PathSegment firstSegemnt = segmentIt.next();
+            	getTenantParameter(context, firstSegemnt);
             	webTarget = buildMatrixParameters(webTarget, firstSegemnt);
             	while(segmentIt.hasNext()) {
             		final PathSegment segment = segmentIt.next();
@@ -132,6 +105,28 @@ public interface RequestUtil {
             webTarget = buildQueryParameters(webTarget, uriInfo);
         }
         return webTarget;
+    }
+    
+    /**
+     * @param context
+     * @param firstSegemnt
+     */
+    static Optional<String> getTenantParameter(final SecurityContext context, final PathSegment firstSegemnt) {
+    	Optional<String> tenant = Optional.empty();
+    	final Optional<String> tenantParam = firstSegemnt.getMatrixParameters() != null ? Optional.ofNullable(firstSegemnt.getMatrixParameters().getFirst(Naming.Management.TENANT)) : Optional.empty();
+		if(tenantParam.isPresent()) {
+			final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
+	    	if(jwt != null) {
+	    		final Optional<String> tenantClaim = jwt.getClaim(Naming.Management.TENANT);
+	    		if(tenantClaim.isPresent() && tenantClaim.get().equals(tenant.get())) {
+	    			tenant = tenantParam;
+	    		}
+	    		else {
+	    			throw new ForbiddenException();
+	    		}
+	    	}
+		}
+    	return tenant;
     }
     
     /**

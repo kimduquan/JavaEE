@@ -1,6 +1,5 @@
 package epf.work_products.schema;
 
-import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +12,7 @@ import javax.validation.constraints.NotBlank;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.utility.EPFEntity;
 import javax.persistence.Index;
 
 /**
@@ -23,7 +23,7 @@ import javax.persistence.Index;
 @Schema(name = WorkProducts.DOMAIN, title = "Domain")
 @Entity(name = WorkProducts.DOMAIN)
 @Table(schema = WorkProducts.SCHEMA, name = "EPF_DOMAIN")
-public class Domain implements Serializable {
+public class Domain extends EPFEntity {
 
     /**
 	 * 

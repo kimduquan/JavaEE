@@ -1,6 +1,5 @@
 package epf.roles.schema;
 
-import java.io.Serializable;
 import java.util.Set;
 import javax.json.JsonObject;
 import javax.persistence.Column;
@@ -14,6 +13,7 @@ import javax.validation.constraints.NotBlank;
 import org.eclipse.microprofile.graphql.Name;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.utility.EPFEntity;
 import javax.persistence.Index;
 
 /**
@@ -24,7 +24,7 @@ import javax.persistence.Index;
 @Schema(name = Roles.ROLE_SET, title = "Role Set")
 @Entity(name = Roles.ROLE_SET)
 @Table(schema = Roles.SCHEMA, name = "ROLE_SET")
-public class RoleSet implements Serializable {
+public class RoleSet extends EPFEntity {
 
     /**
 	 * 

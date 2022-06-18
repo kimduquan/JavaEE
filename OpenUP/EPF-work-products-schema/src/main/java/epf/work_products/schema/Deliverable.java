@@ -1,6 +1,5 @@
 package epf.work_products.schema;
 
-import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -13,6 +12,8 @@ import javax.validation.constraints.NotNull;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
+import epf.schema.utility.EPFEntity;
+
 /**
  *
  * @author FOXCONN
@@ -21,7 +22,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Schema(name = WorkProducts.DELIVERABLE, title = "Deliverable")
 @Entity(name = WorkProducts.DELIVERABLE)
 @Table(schema = WorkProducts.SCHEMA, name = "DELIVERABLE")
-public class Deliverable implements Serializable {
+public class Deliverable extends EPFEntity {
     
     /**
 	 * 

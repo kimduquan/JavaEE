@@ -1,6 +1,5 @@
 package epf.delivery_processes.schema;
 
-import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -16,6 +15,7 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.utility.EPFEntity;
 
 /**
  *
@@ -25,7 +25,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Schema(name = DeliveryProcesses.ACTIVITY, title = "Activity")
 @Entity(name = DeliveryProcesses.ACTIVITY)
 @Table(schema = DeliveryProcesses.SCHEMA, name = "ACTIVITY")
-public class Activity implements Serializable {
+public class Activity extends EPFEntity {
     
     /**
 	 * 

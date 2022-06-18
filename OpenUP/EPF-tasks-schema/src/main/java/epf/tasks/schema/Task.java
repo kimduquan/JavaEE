@@ -7,11 +7,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import javax.json.JsonObject;
 import javax.persistence.Embedded;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.utility.EPFEntity;
 import epf.tasks.schema.section.MoreInformation;
 import epf.tasks.schema.section.Relationships;
 
@@ -29,7 +29,7 @@ import epf.tasks.schema.section.Relationships;
     "optional",
     "outputs"
 })
-public class Task implements Serializable {
+public class Task extends EPFEntity {
 
     /**
 	 * 

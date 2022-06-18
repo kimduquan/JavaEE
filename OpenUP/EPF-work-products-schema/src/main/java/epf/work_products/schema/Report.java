@@ -1,12 +1,12 @@
 package epf.work_products.schema;
 
-import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import epf.schema.utility.EPFEntity;
 
 /**
  * @author PC
@@ -16,7 +16,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 @Schema(name = WorkProducts.REPORT, title = "Report")
 @Entity(name = WorkProducts.REPORT)
 @Table(schema = WorkProducts.SCHEMA, name = "REPORT")
-public class Report implements Serializable {
+public class Report extends EPFEntity {
 
 	/**
 	 * 
