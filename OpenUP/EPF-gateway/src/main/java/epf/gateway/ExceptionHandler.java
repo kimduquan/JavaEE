@@ -32,7 +32,7 @@ public class ExceptionHandler implements
     
     @Override
     public Response toResponse(final Throwable exception) {
-    	LOGGER.log(Level.SEVERE, "toResponse", exception);
+    	LOGGER.log(Level.SEVERE, "[ExceptionHandler.toResponse]", exception);
     	ResponseBuilder builder;
     	if(exception instanceof WebApplicationException) {
     		final WebApplicationException error = (WebApplicationException) exception;

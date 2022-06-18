@@ -3,7 +3,6 @@ package epf.gateway;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.concurrent.CompletionStage;
-import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
@@ -18,7 +17,6 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import epf.gateway.internal.RequestUtil;
 import epf.gateway.internal.ResponseUtil;
-import epf.util.logging.LogManager;
 
 /**
  *
@@ -26,11 +24,6 @@ import epf.util.logging.LogManager;
  */
 @ApplicationScoped
 public class Application {
-	
-	/**
-	 * 
-	 */
-	private static final Logger LOGGER = LogManager.getLogger(Application.class.getName());
     
     /**
      * 

@@ -265,7 +265,8 @@ public class Security implements epf.security.client.Security, epf.security.clie
             final URL url,
             final List<String> forwardedHost,
             final List<String> forwardedPort,
-            final List<String> forwardedProto){
+            final List<String> forwardedProto,
+            final Optional<String> tenant){
     	final Set<String> audience = new HashSet<>();
     	if(url != null) {
     		audience.add(String.format(AUDIENCE_FORMAT, url.getProtocol(), url.getAuthority()));
@@ -275,6 +276,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 				audience.add(String.format(AUDIENCE_FORMAT, forwardedProto.get(i), forwardedHost.get(i) + ":" + forwardedPort.get(i)));
 			}
 		}
+		tenant.ifPresent(audience::add);
 		return audience;
     }
     
@@ -283,9 +285,9 @@ public class Security implements epf.security.client.Security, epf.security.clie
      * @param tenant
      * @return
      */
-    Map<String, Object> buildClaims(final Map<String, Object> claims, final String tenant){
+    Map<String, Object> buildClaims(final Map<String, Object> claims, final Optional<String> tenant){
     	final Map<String, Object> newClaims = new HashMap<>(claims);
-    	if(tenant != null) {
+    	if(tenant.isPresent()) {
         	newClaims.put(Naming.Management.TENANT, tenant);
     	}
     	return newClaims;
@@ -314,8 +316,8 @@ public class Security implements epf.security.client.Security, epf.security.clie
     					.thenCombine(
 								principalStore.getCallerClaims(principal), 
 								(groups, claims) -> {
-									final Set<String> audience = buildAudience(url, forwardedHost, forwardedPort, forwardedProto);
-									final Map<String, Object> newClaims = buildClaims(claims, tenant);
+									final Set<String> audience = buildAudience(url, forwardedHost, forwardedPort, forwardedProto, credential.getTenant());
+									final Map<String, Object> newClaims = buildClaims(claims, credential.getTenant());
 									final Token token = newToken(principal.getName(), groups, audience, newClaims, expireDuration);
 									final TokenBuilder builder = new TokenBuilder(token, privateKey, publicKey);
 									final Token newToken = builder.build();
@@ -363,7 +365,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 		final String tokenDuration = duration != null && !duration.isEmpty() ? duration : expireDuration;
 		final Session session = sessionStore.removeSession(context).orElseThrow(ForbiddenException::new);
 		final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
-		final Set<String> audience = buildAudience(null, forwardedHost, forwardedPort, forwardedProto);
+		final Set<String> audience = buildAudience(null, forwardedHost, forwardedPort, forwardedProto, Optional.ofNullable(jwt.getClaim(Naming.Management.TENANT)));
 		audience.addAll(jwt.getAudience());
 		return identityStore.getCallerGroups(session.getPrincipal())
 				.thenCombine(principalStore.getCallerClaims(session.getPrincipal()), (groups, claims) -> newToken(jwt, groups, audience, claims, tokenDuration))
@@ -404,9 +406,10 @@ public class Security implements epf.security.client.Security, epf.security.clie
 			final URL url,
 			final List<String> forwardedHost,
             final List<String> forwardedPort,
-            final List<String> forwardedProto) {
+            final List<String> forwardedProto,
+            final String tenant) {
 		final Session session = otpSessionStore.removeSession(oneTimePassword).orElseThrow(() -> new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build()));
-		final Set<String> audience = buildAudience(url, forwardedHost, forwardedPort, forwardedProto);
+		final Set<String> audience = buildAudience(url, forwardedHost, forwardedPort, forwardedProto, Optional.ofNullable(tenant));
 		return identityStore.getCallerGroups(session.getPrincipal())
 		.thenCombine(principalStore.getCallerClaims(session.getPrincipal()), (groups, claims) -> newToken(session.getPrincipal().getName(), groups, audience, claims, expireDuration))
 		.thenApply(token -> new TokenBuilder(token, privateKey, publicKey))
@@ -440,7 +443,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 			return Response.status(Response.Status.UNAUTHORIZED).build();
 		}
 		final JwtClaims claims = JwtUtil.decode(token.toCharArray());
-		final Set<String> audience = buildAudience(url, forwardedHost, forwardedPort, forwardedProto);
+		final Set<String> audience = buildAudience(url, forwardedHost, forwardedPort, forwardedProto, Optional.ofNullable(tenant));
 		final Set<String> groups = new HashSet<>();
 		groups.add(Naming.Security.DEFAULT_ROLE);
 		final Map<String, Object> newClaims = new HashMap<>();
@@ -473,7 +476,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
             final List<String> forwardedProto) throws Exception {
 		final Credential credential = new Credential(tenant, email, new Password(password));
 		identityStore.putCredential(credential);
-		final Set<String> audience = buildAudience(null, forwardedHost, forwardedPort, forwardedProto);
+		final Set<String> audience = buildAudience(null, forwardedHost, forwardedPort, forwardedProto, Optional.ofNullable(tenant));
 		final Set<String> groups = new HashSet<>();
 		groups.add(Naming.EPF);
 		final Map<String, Object> claims = new HashMap<>();

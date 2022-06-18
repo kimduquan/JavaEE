@@ -93,7 +93,9 @@ public interface OTPSecurity {
             @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PORT)
             final List<String> forwardedPort,
             @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PROTO)
-            final List<String> forwardedProto
+            final List<String> forwardedProto,
+            @MatrixParam(Naming.Management.TENANT)
+            final String tenant
     );
     
     /**

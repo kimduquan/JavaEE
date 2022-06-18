@@ -66,7 +66,7 @@ public class FilesTest {
 				rootDir.toFile().mkdirs();
 			}
 			catch(Exception ex) {
-				ex.printStackTrace();
+				System.err.print(ex.getMessage());
 			}
 		}
 		else {

@@ -117,7 +117,7 @@ public interface RequestUtil {
 		if(tenantParam.isPresent()) {
 			final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
 	    	if(jwt != null) {
-	    		final Optional<String> tenantClaim = jwt.getClaim(Naming.Management.TENANT);
+	    		final Optional<String> tenantClaim = Optional.ofNullable(jwt.getClaim(Naming.Management.TENANT));
 	    		if(tenantClaim.isPresent() && tenantClaim.get().equals(tenant.get())) {
 	    			tenant = tenantParam;
 	    		}

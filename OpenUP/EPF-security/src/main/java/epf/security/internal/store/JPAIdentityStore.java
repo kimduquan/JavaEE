@@ -22,6 +22,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.naming.Naming;
 import epf.security.internal.sql.NativeQueries;
+import epf.security.schema.Security;
 import epf.security.util.Credential;
 import epf.security.util.CredentialComparator;
 import epf.security.util.IdentityStore;
@@ -62,6 +63,12 @@ public class JPAIdentityStore implements IdentityStore {
 	transient JPAPrincipalStore principalStore;
 	
 	/**
+	 *
+	 */
+	@Inject
+	transient TenantPersistence persistence;
+	
+	/**
 	 * @param credential
 	 * @param oldCredential
 	 * @return
@@ -70,7 +77,7 @@ public class JPAIdentityStore implements IdentityStore {
 		CredentialValidationResult result = CredentialValidationResult.INVALID_RESULT;
 		final CredentialComparator comparator = new CredentialComparator();
 		if(comparator.compare(credential, oldCredential) == 0) {
-			final Optional<JPAPrincipal> principal = principalStore.getPrincipal(credential.getCaller());
+			final Optional<JPAPrincipal> principal = principalStore.getPrincipal(credential.getCaller(), credential.getTenant());
 			if(principal.isPresent()) {
 				result = new CredentialValidationResult(principal.get());
 			}
@@ -83,7 +90,7 @@ public class JPAIdentityStore implements IdentityStore {
 		Objects.requireNonNull(credential, "Credential");
 		Objects.requireNonNull(credential.getCaller(), "Credential.caller");
 		Objects.requireNonNull(credential.getPassword(), "Credential.password");
-		final Optional<Credential> oldCredential = principalStore.getCredential(credential.getCaller());
+		final Optional<Credential> oldCredential = principalStore.getCredential(credential.getCaller(), credential.getTenant());
 		if (oldCredential.isPresent()) {
 			return validate(credential, oldCredential.get());
 		}
@@ -95,7 +102,12 @@ public class JPAIdentityStore implements IdentityStore {
 	@Override
 	public CompletionStage<Set<String>> getCallerGroups(final CallerPrincipal callerPrincipal) {
 		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
-		final Query query = manager.createNativeQuery(NativeQueries.GET_CURRENT_ROLES);
+		EntityManager entityManager = manager;
+		final JPAPrincipal principal = (JPAPrincipal) callerPrincipal;
+		if(principal.getTenant().isPresent()) {
+			entityManager = persistence.createManager(principal.getTenant().get());
+		}
+		final Query query = entityManager.createNativeQuery(NativeQueries.GET_CURRENT_ROLES);
 		final Stream<?> stream = query.setParameter(1, callerPrincipal.getName()).getResultStream();
 		return executor.supplyAsync(() -> {
 			final Set<String> groups = stream.map(role -> {
@@ -111,7 +123,14 @@ public class JPAIdentityStore implements IdentityStore {
 		Objects.requireNonNull(credential, "Credential");
 		Objects.requireNonNull(credential.getCaller(), "Credential.caller");
 		Objects.requireNonNull(credential.getPassword(), "Credential.password");
-		final Query query = manager.createNativeQuery(String.format(NativeQueries.CREATE_USER, credential.getCaller()));
+		EntityManager entityManager = manager;
+		if(credential.getTenant().isPresent()) {
+			entityManager = persistence.createManager(credential.getTenant().get());
+			if(!entityManager.isJoinedToTransaction()) {
+				entityManager.joinTransaction();
+			}
+		}
+		final Query query = entityManager.createNativeQuery(String.format(NativeQueries.CREATE_USER, credential.getCaller()));
 		query.setParameter(1, new String(credential.getPassword().getValue()));
 		query.executeUpdate();
 		return executor.completedStage(null);
@@ -123,8 +142,8 @@ public class JPAIdentityStore implements IdentityStore {
         props.put(Naming.Persistence.JDBC.JDBC_USER, credential.getCaller());
         props.put(Naming.Persistence.JDBC.JDBC_PASSWORD, String.valueOf(credential.getPassword().getValue()));
         credential.getTenant().ifPresent(tenant -> {
-        	final String tenantUrl = JdbcUtil.formatTenantUrl(jdbcUrl, tenant.toString());
-        	props.put(Naming.Persistence.JDBC.JDBC_URL, tenantUrl);
+        	final String jdbcUrl = JdbcUtil.formatJdbcUrl(Naming.Security.Internal.JDBC_URL_FORMAT, Security.SCHEMA, tenant, "-");
+        	props.put(Naming.Persistence.JDBC.JDBC_URL, jdbcUrl);
         });
         return executor.supplyAsync(() -> Persistence.createEntityManagerFactory(SECURITY_UNIT_NAME, props))
         		.thenApply(factory -> {

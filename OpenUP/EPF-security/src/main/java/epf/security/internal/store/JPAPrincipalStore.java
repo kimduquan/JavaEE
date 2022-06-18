@@ -26,6 +26,7 @@ import epf.security.util.IdentityStore;
 import epf.security.util.JPAPrincipal;
 import epf.security.util.PrincipalStore;
 import epf.util.MapUtil;
+import epf.util.StringUtil;
 
 /**
  * @author PC
@@ -65,7 +66,7 @@ public class JPAPrincipalStore implements PrincipalStore {
 		final Query query = manager.createNativeQuery(NativeQueries.SET_PASSWORD);
 		query.setParameter(1, new String(password.getValue()));
 		query.executeUpdate();
-		final Optional<Credential> oldCredential = MapUtil.get(principalCredentials, principal.getName());
+		final Optional<Credential> oldCredential = getPrincipalCredential(principal.getName(), principal.getTenant());
 		final String passwordHash = CredentialUtil.encryptPassword(oldCredential.get().getCaller(), new String(password.getValue()));
 		return executor.supplyAsync(() -> {
 			final Map<String, Object> props = new HashMap<>(principal.getFactory().getProperties());
@@ -102,26 +103,43 @@ public class JPAPrincipalStore implements PrincipalStore {
 	 */
 	protected JPAPrincipal putPrincipaḷ̣̣̣̣(final Credential credential, final EntityManagerFactory factory, final EntityManager manager) {
 		final JPAPrincipal principal = new JPAPrincipal(credential.getTenant(), credential.getCaller(), factory, manager);
-		principals.put(credential.getCaller(), principal);
-		credentials.put(credential.getCaller(), credential);
-		principalCredentials.put(principal.getName(), credential);
+		final String key = getKey(credential.getCaller(), credential.getTenant());
+		principals.put(key, principal);
+		credentials.put(key, credential);
+		final String principalKey = getKey(principal.getName(), principal.getTenant());
+		principalCredentials.put(principalKey, credential);
 		return principal;
 	}
 	
 	/**
 	 * @param caller
+	 * @param tenant
 	 * @return
 	 */
-	protected Optional<JPAPrincipal> getPrincipal(final String caller){
-		return MapUtil.get(principals, caller);
+	protected Optional<JPAPrincipal> getPrincipal(final String caller, final Optional<String> tenant){
+		return MapUtil.get(principals, getKey(caller, tenant));
 	}
 	
 	/**
 	 * @param caller
+	 * @param tenant
 	 * @return
 	 */
-	protected Optional<Credential> getCredential(final String caller){
-		return MapUtil.get(credentials, caller);
+	protected Optional<Credential> getCredential(final String caller, final Optional<String> tenant){
+		return MapUtil.get(credentials, getKey(caller, tenant));
+	}
+	
+	/**
+	 * @param caller
+	 * @param tenant
+	 * @return
+	 */
+	protected Optional<Credential> getPrincipalCredential(final String name, final Optional<String> tenant){
+		return MapUtil.get(principalCredentials, getKey(name, tenant));
+	}
+	
+	private String getKey(final String caller, final Optional<String> tenant) {
+		return StringUtil.join(tenant.orElse(""), caller);
 	}
 
 	@Override

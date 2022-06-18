@@ -15,6 +15,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -82,7 +83,7 @@ public class Net {
     	.get()
     	.thenApply(response -> {
     		if(response.getStatus() == 200) {
-    			final Map<String, Object> map = response.readEntity(Map.class);
+    			final Map<String, Object> map = response.readEntity(new GenericType<Map<String, Object>>(){});
     			final String string = String.valueOf(map.get("string"));
     			try {
 					return Response.temporaryRedirect(new URI(string)).build();
