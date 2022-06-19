@@ -671,6 +671,11 @@ public interface Naming {
 	    	 *
 	    	 */
 	    	String PASSWORD = "password";
+	    	
+	    	/**
+	    	 *
+	    	 */
+	    	String PASSWORD_HASH = "password_hash";
 	    }
 	    
 	    /**

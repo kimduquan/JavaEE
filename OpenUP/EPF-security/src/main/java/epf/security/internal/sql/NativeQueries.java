@@ -19,4 +19,9 @@ public interface NativeQueries {
 	 *
 	 */
 	String CREATE_USER = "CREATE USER \"%s\" PASSWORD ?;";
+	
+	/**
+	 *
+	 */
+	String SET_ROLE = "GRANT %s TO \"%s\"";
 }

@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -486,7 +485,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 		claims.put(Naming.Security.Claims.FIRST_NAME, firstName);
 		claims.put(Naming.Security.Claims.LAST_NAME, lastName);
 		claims.put(Naming.Security.Claims.EMAIL, email);
-		claims.put("password_hash", CredentialUtil.encryptPassword(email, password));
+		claims.put(Naming.Security.Credential.PASSWORD_HASH, CredentialUtil.encryptPassword(email, password));
 		
 		final Token newToken = new Token();
 		newToken.setAudience(audience);
@@ -500,31 +499,5 @@ public class Security implements epf.security.client.Security, epf.security.clie
 		
 		final TokenBuilder builder = new TokenBuilder(newToken, privateKey, publicKey);
 		return Response.ok(builder.build().getRawToken()).build();
-	}
-
-	@RolesAllowed(Naming.EPF)
-	@Override
-	public Response createPrincipal(final SecurityContext context) throws Exception {
-		final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
-		final Password password = new Password(CredentialUtil.encryptPassword(jwt.getName(), jwt.getClaim("password_hash")));
-		final Optional<String> tenant = jwt.claim(Naming.Management.TENANT);
-		final Credential credential = new Credential(tenant.orElse(null), jwt.getName(), password);
-		final Map<String, Object> claims = new HashMap<>();
-		claims.put(Naming.Security.Claims.FIRST_NAME, jwt.getClaim(Naming.Security.Claims.FIRST_NAME));
-		claims.put(Naming.Security.Claims.LAST_NAME, jwt.getClaim(Naming.Security.Claims.LAST_NAME));
-		claims.put(Naming.Security.Claims.EMAIL, jwt.getClaim(Naming.Security.Claims.EMAIL));
-		jwt.claim(Naming.Management.TENANT).ifPresent(tenantClaim -> claims.put(Naming.Management.TENANT, tenantClaim));
-		identityStore.authenticate(credential).thenCompose(principal -> {
-			try {
-				if(principal != null) {
-					return principalStore.putCaller(principal, claims);
-				}
-			} 
-			catch (Exception e) {
-				return CompletableFuture.failedStage(e);
-			}
-			return CompletableFuture.completedStage(null);
-		}).toCompletableFuture().get();
-		return Response.ok().build();
 	}
 }

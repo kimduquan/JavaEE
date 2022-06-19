@@ -46,4 +46,12 @@ public interface IdentityStore {
 	 * @throws Exception
 	 */
 	CompletionStage<CallerPrincipal> authenticate(final Credential credential) throws Exception;
+	
+	/**
+	 * @param callerPrincipal
+	 * @param group
+	 * @return
+	 * @throws Exception
+	 */
+	CompletionStage<Void> setCallerGroup(final CallerPrincipal callerPrincipal, final String group) throws Exception;
 }

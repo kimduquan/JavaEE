@@ -319,29 +319,4 @@ public interface Security {
     					)
     					);
     }
-    
-    /**
-     * @param context
-     * @return
-     * @throws Exception
-     */
-    @Path(Naming.Security.PRINCIPAL)
-    @POST
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    Response createPrincipal(
-    		@Context 
-    		final SecurityContext context) throws Exception;
-    
-    /**
-     * @param client
-     * @return
-     * @throws Exception
-     */
-    static Response createPrincipal(final Client client) throws Exception {
-    	return client.request(
-    			target -> target.path(Naming.Security.PRINCIPAL), 
-    			req -> req
-    			)
-    			.post(Entity.form(new Form()));
-    }
 }

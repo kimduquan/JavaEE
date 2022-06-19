@@ -8,7 +8,7 @@ import javax.inject.Named;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import epf.client.util.Client;
-import epf.security.client.Security;
+import epf.security.client.Registration;
 import epf.webapp.GatewayUtil;
 import epf.webapp.naming.Naming;
 
@@ -56,7 +56,7 @@ public class RegistrationPage implements Serializable {
 	public String createPrincipal() throws Exception {
 		try(Client client = gatewayUtil.newClient(epf.naming.Naming.SECURITY)){
 			client.authorization(token.toCharArray());
-			try(Response response = Security.createPrincipal(client)){
+			try(Response response = Registration.createPrincipal(client)){
 				if(response.getStatus() == Status.OK.getStatusCode()) {
 					final String redirectUrl = Naming.CONTEXT_ROOT + "/security/login" + Naming.Internal.VIEW_EXTENSION;
 					externalContext.redirect(redirectUrl);

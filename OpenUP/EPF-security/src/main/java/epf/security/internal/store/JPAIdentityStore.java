@@ -157,4 +157,21 @@ public class JPAIdentityStore implements IdentityStore {
 		        	}
         		});
 	}
+
+	@Override
+	@Transactional
+	public CompletionStage<Void> setCallerGroup(final CallerPrincipal callerPrincipal, final String group) throws Exception {
+		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
+		EntityManager entityManager = manager;
+		final JPAPrincipal principal = (JPAPrincipal) callerPrincipal;
+		if(principal.getTenant().isPresent()) {
+			entityManager = persistence.createManager(principal.getTenant().get());
+			if(!entityManager.isJoinedToTransaction()) {
+				entityManager.joinTransaction();
+			}
+		}
+		final Query query = entityManager.createNativeQuery(String.format(NativeQueries.SET_ROLE, group, principal.getName()));
+		query.executeUpdate();
+		return executor.completedStage(null);
+	}
 }

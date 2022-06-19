@@ -176,26 +176,4 @@ public class Security {
             final InputStream body) throws Exception {
     	return request.request(Naming.SECURITY, context, headers, uriInfo, req, body);
     }
-    
-    /**
-     * @param context
-     * @param headers
-     * @param uriInfo
-     * @param req
-     * @param body
-     * @return
-     * @throws Exception
-     */
-    @RolesAllowed(Naming.EPF)
-    @Path(Naming.Security.PRINCIPAL)
-    @POST
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public CompletionStage<Response> createPrincipal(
-    		@Context final SecurityContext context,
-            @Context final HttpHeaders headers, 
-            @Context final UriInfo uriInfo,
-            @Context final javax.ws.rs.core.Request req,
-            final InputStream body) throws Exception {
-    	return request.request(Naming.SECURITY, context, headers, uriInfo, req, body);
-    }
 }
