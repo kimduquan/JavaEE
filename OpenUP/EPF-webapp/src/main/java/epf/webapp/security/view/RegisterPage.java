@@ -1,7 +1,6 @@
 package epf.webapp.security.view;
 
 import java.io.Serializable;
-import java.net.URLEncoder;
 import java.security.PublicKey;
 import java.util.HashMap;
 import epf.client.mail.Mail;
@@ -20,7 +19,6 @@ import javax.ws.rs.core.Response.Status;
 import epf.webapp.GatewayUtil;
 import epf.webapp.SecurityUtil;
 import epf.webapp.naming.Naming;
-import epf.webapp.security.util.TokenUtil;
 
 /**
  * 

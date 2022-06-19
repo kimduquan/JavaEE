@@ -2,7 +2,6 @@ package epf.query.internal;
 
 import java.io.Serializable;
 import epf.security.schema.Token;
-import epf.util.security.CryptoUtil;
 import epf.util.security.SecurityUtil;
 
 /**
