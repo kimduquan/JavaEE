@@ -10,6 +10,6 @@ import epf.naming.Naming;
  */
 @ApplicationScoped
 @Path(Naming.CACHE)
-public class Cache implements epf.client.cache.FileCache {
+public class Cache {
 	
 }
