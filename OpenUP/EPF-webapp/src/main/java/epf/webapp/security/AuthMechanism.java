@@ -24,7 +24,8 @@ import epf.webapp.naming.Naming;
 @RememberMe(isRememberMeExpression = "#{self.rememberMe}")
 @AutoApplySession
 @LoginToContinue(
-		loginPage = "/security/login" + Naming.Internal.VIEW_EXTENSION
+		loginPage = "/security/login" + Naming.Internal.VIEW_EXTENSION,
+		useForwardToLogin = false
 		)
 public class AuthMechanism implements HttpAuthenticationMechanism {
 	

@@ -68,6 +68,11 @@ public interface Naming {
 		/**
 		 * 
 		 */
+		String REGISTRATION = "security_registration";
+		
+		/**
+		 * 
+		 */
 		String SESSION = "security_session";
 		
 		/**

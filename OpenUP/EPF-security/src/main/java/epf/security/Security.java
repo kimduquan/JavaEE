@@ -457,7 +457,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 		newToken.setGroups(groups);
 		newToken.setIssuedAtTime(claims.getIssuedAt().getValue());
 		newToken.setIssuer(issuer);
-		newToken.setName(claims.getStringClaimValue("email"));
+		newToken.setName(claims.getStringClaimValue(Naming.Security.Claims.EMAIL));
 		newToken.setSubject(claims.getSubject());
 		final TokenBuilder builder = new TokenBuilder(newToken, privateKey, publicKey);
 		return Response.ok(builder.build()).build();

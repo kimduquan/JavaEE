@@ -1,12 +1,15 @@
 package epf.webapp.security.view;
 
 import java.io.Serializable;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import epf.client.mail.Mail;
 import epf.client.mail.Message;
 import epf.client.util.Client;
 import epf.security.client.Security;
 import epf.security.view.RegisterView;
+import epf.util.config.ConfigUtil;
+import javax.faces.context.ExternalContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -57,6 +60,12 @@ public class RegisterPage implements RegisterView, Serializable {
 	 */
 	@Inject
 	private transient GatewayUtil gatewayUtil;
+	
+	/**
+	 * 
+	 */
+	@Inject
+    private transient ExternalContext externalContext;
 
 	@Override
 	public String getEmail() {
@@ -119,15 +128,18 @@ public class RegisterPage implements RegisterView, Serializable {
 			}
 		}
 		if(token != null) {
+			final String webAppUrl = ConfigUtil.getString(epf.naming.Naming.WebApp.WEB_APP_URL);
+			final String registrationUrl = webAppUrl + "security/registration.html?token=" + URLEncoder.encode(new String(token), "UTF-8");
 			final Message message = new Message();
 			message.setRecipients(new HashMap<>());
 			message.getRecipients().put(Message.TO, email);
 			message.setSubject(email);
-			message.setText(new String(token));
+			message.setText(registrationUrl);
 			try(Client client = gatewayUtil.newClient(epf.naming.Naming.MAIL)){
 				client.authorization(token);
 				try(Response res = Mail.send(client, message)){
-					res.getStatus();
+					final String redirectUrl = Naming.CONTEXT_ROOT + "/security/login" + Naming.Internal.VIEW_EXTENSION;
+					externalContext.redirect(redirectUrl);
 				}
 			}
 		}

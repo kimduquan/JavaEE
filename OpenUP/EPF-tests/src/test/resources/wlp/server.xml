@@ -128,7 +128,7 @@
 	    <transportProtocol>smtp</transportProtocol>
 	    <host>smtp.gmail.com</host>
 	    <user>kimduquan01@gmail.com</user>
-	    <password>Kim.Du.Qu@n01234</password>
+	    <password>fCS9raQ7gz5kTfZ</password>
 	    <from>kimduquan01@gmail.com</from>
 	    <property name="mail.imap.host" value="imap.gmail.com" />
 	    <property name="mail.smtp.port" value="587" />

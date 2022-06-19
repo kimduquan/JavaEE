@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.io.StreamCorruptedException;
 import java.net.SocketTimeoutException;
 import java.sql.SQLInvalidAuthorizationSpecException;
+import java.sql.SQLSyntaxErrorException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.validation.ValidationException;
@@ -58,6 +59,9 @@ public class ExceptionHelper implements ExceptionMapper<Exception>, Serializable
         }
         else if(failure instanceof SQLInvalidAuthorizationSpecException){
             status = Response.Status.UNAUTHORIZED;
+        }
+        else if(failure instanceof SQLSyntaxErrorException){
+            status = Response.Status.BAD_REQUEST;
         }
         else if(failure instanceof java.util.concurrent.TimeoutException){
             status = Response.Status.REQUEST_TIMEOUT;
