@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.security.enterprise.CallerPrincipal;
 import javax.security.enterprise.credential.Password;
@@ -55,6 +56,18 @@ public class JPAPrincipalStore implements PrincipalStore {
 	 */
 	@Inject
 	transient ManagedExecutor executor;
+	
+	/**
+	 * 
+	 */
+	@PersistenceContext(unitName = IdentityStore.SECURITY_UNIT_NAME)
+	transient EntityManager manager;
+	
+	/**
+	 *
+	 */
+	@Inject
+	transient TenantPersistence persistence;
 
 	@Override
 	@Transactional
@@ -165,19 +178,20 @@ public class JPAPrincipalStore implements PrincipalStore {
 
 	@Override
 	@Transactional
-	public CompletionStage<Void> putCaller(final CallerPrincipal callerPrincipal, final Map<String, Object> claims) throws Exception {
+	public CompletionStage<Void> putCaller(final CallerPrincipal callerPrincipal) throws Exception {
 		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
+		EntityManager entityManager = manager;
 		final JPAPrincipal principal = (JPAPrincipal) callerPrincipal;
-		return executor.supplyAsync(() -> principal.getFactory().createEntityManager())
-				.thenApply(manager -> {
-					final Principal p = new Principal();
-					p.setName(callerPrincipal.getName());
-					p.setClaims(new HashMap<>());
-					for(Entry<String, Object> claim : claims.entrySet()) {
-						p.getClaims().put(claim.getKey(), String.valueOf(claim.getValue()));
-					}
-					manager.persist(p);
-					return null;
-				});
+		if(principal.getTenant().isPresent()) {
+			entityManager = persistence.createManager(principal.getTenant().get());
+			if(!entityManager.isJoinedToTransaction()) {
+				entityManager.joinTransaction();
+			}
+		}
+		final Principal p = new Principal();
+		p.setName(callerPrincipal.getName());
+		p.setClaims(new HashMap<>());
+		entityManager.persist(p);
+		return executor.completedStage(null);
 	}
 }

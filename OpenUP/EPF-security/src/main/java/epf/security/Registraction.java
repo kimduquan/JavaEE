@@ -52,9 +52,9 @@ public class Registraction implements epf.security.client.Registration {
 		final CallerPrincipal principal = identityStore.authenticate(credential).toCompletableFuture().get();
 		if(principal != null) {
 			identityStore.setCallerGroup(principal, Naming.Security.DEFAULT_ROLE).toCompletableFuture().get();
-			principalStore.putCaller(principal, claims).toCompletableFuture().get();
-		}
+			principalStore.putCaller(principal).toCompletableFuture().get();
+			principalStore.setCallerClaims(principal, claims).toCompletableFuture().get();
+			}
 		return Response.ok().build();
 	}
-
 }

@@ -34,10 +34,9 @@ public interface PrincipalStore {
 	
 	/**
 	 * @param callerPrincipal
-	 * @param claims
 	 * @return
 	 * @throws Exception
 	 */
 	@Transactional
-	CompletionStage<Void> putCaller(final CallerPrincipal callerPrincipal, final Map<String, Object> claims) throws Exception;
+	CompletionStage<Void> putCaller(final CallerPrincipal callerPrincipal) throws Exception;
 }

@@ -10,7 +10,6 @@ import javax.inject.Named;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import org.eclipse.microprofile.jwt.Claims;
-import epf.security.auth.core.StandardClaims;
 import epf.security.view.PrincipalView;
 import epf.webapp.CookieUtil;
 import epf.webapp.naming.Naming;
@@ -52,9 +51,17 @@ public class PrincipalPage implements PrincipalView, Serializable {
 	 */
 	@Override
 	public String getName() {
-		String name = session.getClaim(StandardClaims.name.name());
+		final String fullName = session.getClaim(Claims.full_name.name());
+		String name = fullName;
 		if(name == null) {
-			name = session.getClaim(Claims.full_name.name());
+			final String firstName = session.getClaim(epf.naming.Naming.Security.Claims.FIRST_NAME);
+			final String lastName = session.getClaim(epf.naming.Naming.Security.Claims.LAST_NAME);
+			if(firstName != null && lastName != null && !lastName.isEmpty()) {
+				name = firstName + " " + lastName;
+			}
+			else {
+				name = "";
+			}
 		}
 		return name;
 	}
