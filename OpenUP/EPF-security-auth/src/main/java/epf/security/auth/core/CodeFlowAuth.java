@@ -1,7 +1,6 @@
 package epf.security.auth.core;
 
 import java.net.URI;
-import java.net.URLEncoder;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,6 +11,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import epf.security.auth.discovery.ProviderMetadata;
+import epf.util.StringUtil;
 import epf.util.logging.LogManager;
 
 /**
@@ -56,7 +56,7 @@ public interface CodeFlowAuth {
 		Optional.ofNullable(authRequest.getNonce()).ifPresent(nonce -> {
 			authRequestUrl.append("&nonce=");
 			try {
-				authRequestUrl.append(URLEncoder.encode(nonce, "UTF-8"));
+				authRequestUrl.append(StringUtil.encodeURL(nonce));
 			} 
 			catch (Exception e) {
 				LOGGER.log(Level.SEVERE, "[CodeFlowAuth.authRequest.nonce]", e);
@@ -65,7 +65,7 @@ public interface CodeFlowAuth {
 		Optional.ofNullable(authRequest.getRedirect_uri()).ifPresent(redirect_uri -> {
 			authRequestUrl.append("&redirect_uri=");
 			try {
-				authRequestUrl.append(URLEncoder.encode(redirect_uri, "UTF-8"));
+				authRequestUrl.append(StringUtil.encodeURL(redirect_uri));
 			} 
 			catch (Exception e) {
 				LOGGER.log(Level.SEVERE, "[CodeFlowAuth.authRequest.redirect_uri]", e);
@@ -82,7 +82,7 @@ public interface CodeFlowAuth {
 		Optional.ofNullable(authRequest.getState()).ifPresent(state -> {
 			authRequestUrl.append("&state=");
 			try {
-				authRequestUrl.append(URLEncoder.encode(state, "UTF-8"));
+				authRequestUrl.append(StringUtil.encodeURL(state));
 			}
 			catch (Exception e) {
 				LOGGER.log(Level.SEVERE, "[CodeFlowAuth.authRequest.state]", e);

@@ -3,6 +3,7 @@ export epf_webapp_url=https://localhost/webapp
 export epf_client_net_ssl_keyStore=~/git/JavaEE/OpenUP/dev.p12
 export epf_client_net_ssl_keyStoreType=PKCS12
 export epf_client_net_ssl_keyStorePassword=changeit
+export epf_client_net_ssl_keyAlias=localhost
 export epf_client_net_ssl_keyPassword=changeit
 export epf_client_net_ssl_trustStore=~/git/JavaEE/OpenUP/dev.p12
 export epf_client_net_ssl_trustStoreType=PKCS12

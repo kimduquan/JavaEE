@@ -1,8 +1,10 @@
 package epf.util;
 
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -199,4 +201,31 @@ public interface StringUtil {
         }
         return new String(bytes, charset);
     }
+	
+	/**
+	 * @param bytes
+	 * @return
+	 * @throws Exception
+	 */
+	static String encode(final byte[] bytes) throws Exception {
+		return new String(Base64.getEncoder().encode(bytes), "UTF-8");
+	}
+	
+	/**
+	 * @param string
+	 * @return
+	 * @throws Exception
+	 */
+	static byte[] decode(final String string) throws Exception {
+		return Base64.getDecoder().decode(string.getBytes("UTF-8"));
+	}
+	
+	/**
+	 * @param string
+	 * @return
+	 * @throws Exception 
+	 */
+	static String encodeURL(final String string) throws Exception {
+		return URLEncoder.encode(string, "UTF-8");
+	}
 }

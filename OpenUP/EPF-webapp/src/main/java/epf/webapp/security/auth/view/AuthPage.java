@@ -21,7 +21,7 @@ import epf.security.auth.core.ImplicitAuthResponse;
 import epf.security.auth.core.TokenRequest;
 import epf.security.auth.discovery.ProviderMetadata;
 import epf.security.auth.view.AuthView;
-import epf.util.security.CryptoUtil;
+import epf.util.security.SecurityUtil;
 import epf.webapp.naming.Naming;
 import epf.webapp.security.AuthParams;
 import epf.webapp.security.auth.AuthCodeCredential;
@@ -123,7 +123,7 @@ public class AuthPage implements AuthView, Serializable {
 	 * @throws Exception
 	 */
 	private String buildAuthRequestNonce(final String sessionId) throws Exception {
-		return CryptoUtil.hash(sessionId);
+		return SecurityUtil.hash(sessionId);
 	}
 
 	@Override

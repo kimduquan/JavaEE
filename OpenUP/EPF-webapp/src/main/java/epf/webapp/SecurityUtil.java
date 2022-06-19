@@ -30,6 +30,11 @@ public class SecurityUtil {
 	/**
 	 *
 	 */
+	private transient String keyAlias;
+	
+	/**
+	 *
+	 */
 	private transient char[] keyPassword;
 	
 	/**
@@ -60,6 +65,7 @@ public class SecurityUtil {
 		catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "[SecurityUtil.trustStore]", e);
 		}
+		keyAlias = ConfigUtil.getString(Naming.Client.SSL_KEY_ALIAS);
 		keyPassword = ConfigUtil.getChars(Naming.Client.SSL_KEY_PASSWORD);
 	}
 
@@ -73,5 +79,9 @@ public class SecurityUtil {
 
 	public char[] getKeyPassword() {
 		return keyPassword;
+	}
+
+	public String getKeyAlias() {
+		return keyAlias;
 	}
 }

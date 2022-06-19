@@ -2,7 +2,8 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html">
 <h:head>
     <f:metadata>
-    	<f:viewParam name="token" value="#{security_registration.token}" />
+    	<f:viewParam name="code" value="#{security_registration.code}" />
+    	<f:viewParam name="data" value="#{security_registration.data}" />
         <f:viewAction action="#{security_registration.createPrincipal}"/>
     </f:metadata>
 </h:head>

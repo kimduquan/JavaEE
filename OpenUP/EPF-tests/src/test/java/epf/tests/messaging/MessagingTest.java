@@ -74,7 +74,7 @@ public class MessagingTest {
     	URI messagingUrl = ConfigUtil.getURI(Naming.Gateway.MESSAGING_URL);
     	HealthUtil.isReady();
     	token = SecurityUtil.login();
-    	tokenId = CryptoUtil.hash(token);
+    	tokenId = epf.util.security.SecurityUtil.hash(token);
     	listenerUrl = new URI(messagingUrl.toString() + "persistence?t=" + tokenId);
     }
     

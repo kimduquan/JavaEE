@@ -84,6 +84,11 @@ public interface Naming {
 		/**
 		 * 
 		 */
+		String SSL_KEY_ALIAS = "epf.client.net.ssl.keyAlias";
+		
+		/**
+		 * 
+		 */
 		String SSL_KEY_PASSWORD = "epf.client.net.ssl.keyPassword";
 		
 		/**

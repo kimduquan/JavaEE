@@ -3,6 +3,7 @@ package epf.query.internal;
 import java.io.Serializable;
 import epf.security.schema.Token;
 import epf.util.security.CryptoUtil;
+import epf.util.security.SecurityUtil;
 
 /**
  * 
@@ -31,7 +32,7 @@ public class TokenKey implements Serializable {
 	}
 	
 	public static TokenKey valueOf(final Token token) throws Exception {
-		return new TokenKey(CryptoUtil.hash(token.getRawToken()));
+		return new TokenKey(SecurityUtil.hash(token.getRawToken()));
 	}
 	
 	/**

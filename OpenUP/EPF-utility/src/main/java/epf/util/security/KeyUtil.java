@@ -5,9 +5,12 @@ import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.SecureRandom;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 
 /**
  * @author PC
@@ -47,5 +50,30 @@ public interface KeyUtil {
                                 decoder.decode(publicText.getBytes(charset))
                             )
                     );
+	}
+	
+	/**
+	 * @param algorithm
+	 * @param keySize
+	 * @return
+	 * @throws GeneralSecurityException
+	 */
+	static SecretKey generateSecret(final String algorithm, final int keySize) throws GeneralSecurityException {
+		final KeyGenerator keyGenerator = KeyGenerator.getInstance(algorithm);
+		keyGenerator.init(keySize);
+		return keyGenerator.generateKey();
+	}
+	
+	/**
+	 * @param algorithm
+	 * @param keySize
+	 * @param random
+	 * @return
+	 * @throws GeneralSecurityException
+	 */
+	static SecretKey generateSecret(final String algorithm, final int keySize, final SecureRandom random) throws GeneralSecurityException {
+		final KeyGenerator keyGenerator = KeyGenerator.getInstance(algorithm);
+		keyGenerator.init(keySize, random);
+		return keyGenerator.generateKey();
 	}
 }

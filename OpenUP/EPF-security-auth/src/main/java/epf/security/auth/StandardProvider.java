@@ -23,7 +23,7 @@ import epf.security.auth.core.UserInfo;
 import epf.security.auth.core.UserInfoError;
 import epf.security.auth.discovery.ProviderMetadata;
 import epf.util.logging.LogManager;
-import epf.util.security.CryptoUtil;
+import epf.util.security.SecurityUtil;
 
 /**
  * @author PC
@@ -152,7 +152,7 @@ public class StandardProvider implements Provider {
 			if(isValid) {
 				final String nonce = claims.getClaimValueAsString("nonce");
 				if(nonce != null && !nonce.isEmpty()) {
-					isValid = nonce.equals(CryptoUtil.hash(sessionId));
+					isValid = nonce.equals(SecurityUtil.hash(sessionId));
 				}
 			}
 		}
