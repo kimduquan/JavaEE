@@ -58,7 +58,7 @@ public interface SecurityUtil {
 	 * @throws Exception
 	 */
 	static String decrypt(final String encryptKey, final String encryptString, final PrivateKey privateKey) throws Exception {
-		return new String(decrypt(encryptKey.getBytes("UTF-8"), encryptString, privateKey), "UTF-8");
+		return new String(decrypt(StringUtil.decode(encryptKey), encryptString, privateKey), "UTF-8");
 	}
 	
 	/**

@@ -3,6 +3,7 @@ package epf.webapp.security.view;
 import java.io.Serializable;
 import java.security.PublicKey;
 import java.util.HashMap;
+import java.util.logging.Logger;
 import epf.client.mail.Mail;
 import epf.client.mail.Message;
 import epf.client.util.Client;
@@ -10,6 +11,7 @@ import epf.security.client.Security;
 import epf.security.view.RegisterView;
 import epf.util.StringUtil;
 import epf.util.config.ConfigUtil;
+import epf.util.logging.LogManager;
 import javax.faces.context.ExternalContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -31,6 +33,11 @@ public class RegisterPage implements RegisterView, Serializable {
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 *
+	 */
+	private static transient final Logger LOGGER = LogManager.getLogger(RegisterPage.class.getName());
 	
 	/**
 	 *
@@ -149,8 +156,13 @@ public class RegisterPage implements RegisterView, Serializable {
 			try(Client client = gatewayUtil.newClient(epf.naming.Naming.MAIL)){
 				client.authorization(token.toCharArray());
 				try(Response res = Mail.send(client, message)){
-					final String redirectUrl = Naming.CONTEXT_ROOT + "/security/login" + Naming.Internal.VIEW_EXTENSION;
-					externalContext.redirect(redirectUrl);
+					if(res.getStatus() == Status.OK.getStatusCode()) {
+						final String redirectUrl = Naming.CONTEXT_ROOT + "/security/login" + Naming.Internal.VIEW_EXTENSION;
+						externalContext.redirect(redirectUrl);
+					}
+					else {
+						LOGGER.severe(registrationUrl);
+					}
 				}
 			}
 		}
