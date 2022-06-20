@@ -96,6 +96,12 @@ public class Management implements epf.security.client.Management {
 	transient EntityManager manager;
 	
 	/**
+	 * 
+	 */
+	@PersistenceContext(unitName = IdentityStore.SECURITY_UNIT_NAME)
+	transient EntityManager principalManager;
+	
+	/**
 	 *
 	 */
 	@Inject
@@ -171,8 +177,9 @@ public class Management implements epf.security.client.Management {
 			identityStore.setCallerGroup(principal, Naming.Security.DEFAULT_ROLE).toCompletableFuture().get();
 			principalStore.putCaller(principal).toCompletableFuture().get();
 			principalStore.setCallerClaims(principal, claims).toCompletableFuture().get();
-			}
-		return Response.ok().build();
+			return Response.ok().build();
+		}
+		throw new BadRequestException();
 	}
 
 	@PermitAll

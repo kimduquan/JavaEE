@@ -1,7 +1,6 @@
 package epf.webapp.security.management.view;
 
 import java.io.Serializable;
-
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import epf.security.view.ResetPasswordView;
