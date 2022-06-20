@@ -205,7 +205,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
      * 
      */
     @PostConstruct
-    void postConstruct(){
+    void postConstruct() {
         try {
         	final java.nio.file.Path trustStoreFile = ConfigUtil.getPath(Naming.Client.SSL_TRUST_STORE);
         	final String trustStoreType = ConfigUtil.getString(Naming.Client.SSL_TRUST_STORE_TYPE);
@@ -219,7 +219,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
             authProviders.put(Naming.Security.Auth.FACEBOOK, new StandardProvider(new URI(facebookDiscoveryUrl), facebookClientSecret.toCharArray(), facebookClientId, builder));
         } 
         catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, "postConstruct", ex);
+            LOGGER.log(Level.SEVERE, "[Security.postConstruct]", ex);
         }
     }
     
@@ -257,41 +257,6 @@ public class Security implements epf.security.client.Security, epf.security.clie
 		return token;
     }
     
-    /**
-     * @return
-     */
-    Set<String> buildAudience(
-            final URL url,
-            final List<String> forwardedHost,
-            final List<String> forwardedPort,
-            final List<String> forwardedProto,
-            final Optional<String> tenant){
-    	final Set<String> audience = new HashSet<>();
-    	if(url != null) {
-    		audience.add(String.format(AUDIENCE_FORMAT, url.getProtocol(), url.getAuthority()));
-    	}
-		if(forwardedHost != null && forwardedPort != null && forwardedProto != null) {
-			for(int i = 0; i < forwardedHost.size(); i++) {
-				audience.add(String.format(AUDIENCE_FORMAT, forwardedProto.get(i), forwardedHost.get(i) + ":" + forwardedPort.get(i)));
-			}
-		}
-		tenant.ifPresent(audience::add);
-		return audience;
-    }
-    
-    /**
-     * @param claims
-     * @param tenant
-     * @return
-     */
-    Map<String, Object> buildClaims(final Map<String, Object> claims, final Optional<String> tenant){
-    	final Map<String, Object> newClaims = new HashMap<>(claims);
-    	if(tenant.isPresent()) {
-        	newClaims.put(Naming.Management.TENANT, tenant);
-    	}
-    	return newClaims;
-    }
-    
     @PermitAll
     @Override
     public CompletionStage<String> login(
@@ -315,8 +280,8 @@ public class Security implements epf.security.client.Security, epf.security.clie
     					.thenCombine(
 								principalStore.getCallerClaims(principal), 
 								(groups, claims) -> {
-									final Set<String> audience = buildAudience(url, forwardedHost, forwardedPort, forwardedProto, credential.getTenant());
-									final Map<String, Object> newClaims = buildClaims(claims, credential.getTenant());
+									final Set<String> audience = TokenBuilder.buildAudience(url, forwardedHost, forwardedPort, forwardedProto, credential.getTenant());
+									final Map<String, Object> newClaims = TokenBuilder.buildClaims(claims, credential.getTenant());
 									final Token token = newToken(principal.getName(), groups, audience, newClaims, expireDuration);
 									final TokenBuilder builder = new TokenBuilder(token, privateKey, publicKey);
 									final Token newToken = builder.build();
@@ -364,7 +329,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 		final String tokenDuration = duration != null && !duration.isEmpty() ? duration : expireDuration;
 		final Session session = sessionStore.removeSession(context).orElseThrow(ForbiddenException::new);
 		final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
-		final Set<String> audience = buildAudience(null, forwardedHost, forwardedPort, forwardedProto, Optional.ofNullable(jwt.getClaim(Naming.Management.TENANT)));
+		final Set<String> audience = TokenBuilder.buildAudience(null, forwardedHost, forwardedPort, forwardedProto, Optional.ofNullable(jwt.getClaim(Naming.Management.TENANT)));
 		audience.addAll(jwt.getAudience());
 		return identityStore.getCallerGroups(session.getPrincipal())
 				.thenCombine(principalStore.getCallerClaims(session.getPrincipal()), (groups, claims) -> newToken(jwt, groups, audience, claims, tokenDuration))
@@ -408,7 +373,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
             final List<String> forwardedProto,
             final String tenant) {
 		final Session session = otpSessionStore.removeSession(oneTimePassword).orElseThrow(() -> new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build()));
-		final Set<String> audience = buildAudience(url, forwardedHost, forwardedPort, forwardedProto, Optional.ofNullable(tenant));
+		final Set<String> audience = TokenBuilder.buildAudience(url, forwardedHost, forwardedPort, forwardedProto, Optional.ofNullable(tenant));
 		return identityStore.getCallerGroups(session.getPrincipal())
 		.thenCombine(principalStore.getCallerClaims(session.getPrincipal()), (groups, claims) -> newToken(session.getPrincipal().getName(), groups, audience, claims, expireDuration))
 		.thenApply(token -> new TokenBuilder(token, privateKey, publicKey))
@@ -442,7 +407,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 			return Response.status(Response.Status.UNAUTHORIZED).build();
 		}
 		final JwtClaims claims = JwtUtil.decode(token.toCharArray());
-		final Set<String> audience = buildAudience(url, forwardedHost, forwardedPort, forwardedProto, Optional.ofNullable(tenant));
+		final Set<String> audience = TokenBuilder.buildAudience(url, forwardedHost, forwardedPort, forwardedProto, Optional.ofNullable(tenant));
 		final Set<String> groups = new HashSet<>();
 		groups.add(Naming.Security.DEFAULT_ROLE);
 		final Map<String, Object> newClaims = new HashMap<>();
@@ -460,44 +425,5 @@ public class Security implements epf.security.client.Security, epf.security.clie
 		newToken.setSubject(claims.getSubject());
 		final TokenBuilder builder = new TokenBuilder(newToken, privateKey, publicKey);
 		return Response.ok(builder.build()).build();
-	}
-
-	@PermitAll
-	@Override
-	public Response createCredential(
-			final String tenant,
-			final String email, 
-			final String password, 
-			final String firstName, 
-			final String lastName,
-			final List<String> forwardedHost,
-            final List<String> forwardedPort,
-            final List<String> forwardedProto) throws Exception {
-		final Credential credential = new Credential(tenant, email, new Password(password));
-		identityStore.putCredential(credential);
-		final Set<String> audience = buildAudience(null, forwardedHost, forwardedPort, forwardedProto, Optional.ofNullable(tenant));
-		final Set<String> groups = new HashSet<>();
-		groups.add(Naming.EPF);
-		final Map<String, Object> claims = new HashMap<>();
-		if(tenant != null) {
-			claims.put(Naming.Management.TENANT, tenant);
-		}
-		claims.put(Naming.Security.Claims.FIRST_NAME, firstName);
-		claims.put(Naming.Security.Claims.LAST_NAME, lastName);
-		claims.put(Naming.Security.Claims.EMAIL, email);
-		claims.put(Naming.Security.Credential.PASSWORD_HASH, CredentialUtil.encryptPassword(email, password));
-		
-		final Token newToken = new Token();
-		newToken.setAudience(audience);
-		newToken.setClaims(claims);
-		newToken.setIssuedAtTime(Instant.now().getEpochSecond());
-		newToken.setExpirationTime(newToken.getIssuedAtTime() + Duration.ofDays(3).toSeconds());
-		newToken.setGroups(groups);
-		newToken.setIssuer(Naming.EPF);
-		newToken.setName(email);
-		newToken.setSubject(email);
-		
-		final TokenBuilder builder = new TokenBuilder(newToken, privateKey, publicKey);
-		return Response.ok(builder.build().getRawToken()).build();
 	}
 }

@@ -1,4 +1,4 @@
-package epf.webapp.security.view;
+package epf.webapp.security.management.view;
 
 import java.io.Serializable;
 import java.security.PublicKey;
@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 import epf.client.mail.Mail;
 import epf.client.mail.Message;
 import epf.client.util.Client;
-import epf.security.client.Security;
+import epf.security.client.Management;
 import epf.security.view.RegisterView;
 import epf.util.StringUtil;
 import epf.util.config.ConfigUtil;
@@ -136,7 +136,7 @@ public class RegisterPage implements RegisterView, Serializable {
 	public String register() throws Exception {
 		String token = null;
 		try(Client client = gatewayUtil.newClient(epf.naming.Naming.SECURITY)){
-			try(Response response = Security.createCredential(client, email, password, firstName, lastName)){
+			try(Response response = Management.createCredential(client, email, password, firstName, lastName)){
 				if(response.getStatus() == Status.OK.getStatusCode()) {
 					token = response.readEntity(String.class);
 				}
@@ -147,7 +147,7 @@ public class RegisterPage implements RegisterView, Serializable {
 			final StringBuilder data = new StringBuilder();
 			final String code = epf.util.security.SecurityUtil.encrypt(token, data, publicKey);
 			final String webAppUrl = ConfigUtil.getString(epf.naming.Naming.WebApp.WEB_APP_URL);
-			final String registrationUrl = webAppUrl + "security/registration.html?code=" + StringUtil.encodeURL(code) + "&data=" + StringUtil.encodeURL(data.toString());
+			final String registrationUrl = webAppUrl + Naming.View.REGISTRATION_PAGE + "?code=" + StringUtil.encodeURL(code) + "&data=" + StringUtil.encodeURL(data.toString());
 			final Message message = new Message();
 			message.setRecipients(new HashMap<>());
 			message.getRecipients().put(Message.TO, email);
@@ -157,7 +157,7 @@ public class RegisterPage implements RegisterView, Serializable {
 				client.authorization(token.toCharArray());
 				try(Response res = Mail.send(client, message)){
 					if(res.getStatus() == Status.OK.getStatusCode()) {
-						final String redirectUrl = Naming.CONTEXT_ROOT + "/security/login" + Naming.Internal.VIEW_EXTENSION;
+						final String redirectUrl = Naming.CONTEXT_ROOT + Naming.View.LOGIN_PAGE;
 						externalContext.redirect(redirectUrl);
 					}
 					else {

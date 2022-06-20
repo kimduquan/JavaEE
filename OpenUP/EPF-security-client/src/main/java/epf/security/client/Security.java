@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.concurrent.CompletionStage;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -38,11 +37,6 @@ import epf.security.schema.Token;
  */
 @Path(Naming.SECURITY)
 public interface Security {
-    
-    /**
-     * 
-     */
-    String AUDIENCE_FORMAT = "%s://%s/";
     /**
      * 
      */
@@ -263,60 +257,5 @@ public interface Security {
     			)
     			.post(Entity.form(new Form().param("provider", provider).param("session", session).param("token", token).param(URL, url.toString())))
     			.readEntity(Token.class);
-    }
-    
-    /**
-     * @param email
-     * @param password
-     * @return
-     * @throws Exception
-     */
-    @Path(Naming.Security.CREDENTIAL)
-    @POST
-    @Produces(MediaType.TEXT_PLAIN)
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    Response createCredential(
-    		@MatrixParam(Naming.Management.TENANT)
-            final String tenant,
-    		@FormParam(Naming.Security.Claims.EMAIL)
-    		@NotBlank
-    		@Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
-    		final String email,
-    		@FormParam(Naming.Security.Credential.PASSWORD)
-    		@NotBlank
-    		final String password,
-    		@FormParam(Naming.Security.Claims.FIRST_NAME)
-    		@NotBlank
-    		final String firstName,
-    		@FormParam(Naming.Security.Claims.LAST_NAME)
-    		@NotBlank
-    		final String lastName,
-    		@HeaderParam(Naming.Gateway.Headers.X_FORWARDED_HOST)
-            final List<String> forwardedHost,
-            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PORT)
-            final List<String> forwardedPort,
-            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PROTO)
-            final List<String> forwardedProto
-    		) throws Exception;
-    
-    /**
-     * @param client
-     * @param email
-     * @param password
-     * @return
-     * @throws Exception
-     */
-    static Response createCredential(final Client client, final String email, final String password, final String firstName, final String lastName) throws Exception {
-    	return client.request(
-    			target -> target.path(Naming.Security.CREDENTIAL), 
-    			req -> req.accept(MediaType.TEXT_PLAIN)
-    			)
-    			.post(Entity.form(new Form()
-    					.param(Naming.Security.Claims.EMAIL, email)
-    					.param(Naming.Security.Credential.PASSWORD, password)
-    					.param(Naming.Security.Claims.FIRST_NAME, firstName)
-    					.param(Naming.Security.Claims.LAST_NAME, lastName)
-    					)
-    					);
     }
 }

@@ -1,15 +1,24 @@
 package epf.security.internal.token;
 
+import java.net.URL;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Map.Entry;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.eclipse.microprofile.jwt.Claims;
 import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.jwt.NumericDate;
+
+import epf.naming.Naming;
 import epf.security.schema.Token;
 import epf.util.EPFException;
 
@@ -18,6 +27,11 @@ import epf.util.EPFException;
  *
  */
 public class TokenBuilder {
+	
+    /**
+     * 
+     */
+    private static final String AUDIENCE_FORMAT = "%s://%s/";
 	
 	/**
 	 * 
@@ -81,4 +95,39 @@ public class TokenBuilder {
 		}
 		return token;
 	}
+	
+	/**
+     * @return
+     */
+    public static Set<String> buildAudience(
+            final URL url,
+            final List<String> forwardedHost,
+            final List<String> forwardedPort,
+            final List<String> forwardedProto,
+            final Optional<String> tenant){
+    	final Set<String> audience = new HashSet<>();
+    	if(url != null) {
+    		audience.add(String.format(AUDIENCE_FORMAT, url.getProtocol(), url.getAuthority()));
+    	}
+		if(forwardedHost != null && forwardedPort != null && forwardedProto != null) {
+			for(int i = 0; i < forwardedHost.size(); i++) {
+				audience.add(String.format(AUDIENCE_FORMAT, forwardedProto.get(i), forwardedHost.get(i) + ":" + forwardedPort.get(i)));
+			}
+		}
+		tenant.ifPresent(audience::add);
+		return audience;
+    }
+    
+    /**
+     * @param claims
+     * @param tenant
+     * @return
+     */
+    public static Map<String, Object> buildClaims(final Map<String, Object> claims, final Optional<String> tenant){
+    	final Map<String, Object> newClaims = new HashMap<>(claims);
+    	if(tenant.isPresent()) {
+        	newClaims.put(Naming.Management.TENANT, tenant);
+    	}
+    	return newClaims;
+    }
 }

@@ -663,6 +663,11 @@ public interface Naming {
 	    String AUTH = "auth";
 	    
 	    /**
+	     *
+	     */
+	    String MANAGEMENT = "management";
+	    
+	    /**
 	     * 
 	     */
 	    interface Credential {
@@ -804,6 +809,11 @@ public interface Naming {
 	    	 *
 	    	 */
 	    	String EMAIL = "email";
+	    	
+	    	/**
+	    	 *
+	    	 */
+	    	String EMAIL_REGEXP = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
 	    }
 	}
 	

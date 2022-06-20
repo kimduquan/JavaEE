@@ -73,6 +73,11 @@ public interface Naming {
 		/**
 		 * 
 		 */
+		String RESET_PASSWORD = "security_reset_password";
+		
+		/**
+		 * 
+		 */
 		String SESSION = "security_session";
 		
 		/**
@@ -118,5 +123,26 @@ public interface Naming {
 		 * 
 		 */
 		String VIEW = "epf_search_view";
+	}
+	
+	/**
+	 * 
+	 */
+	interface View {
+		
+		/**
+		 *
+		 */
+		String LOGIN_PAGE = "/security/login.html";
+		
+		/**
+		 *
+		 */
+		String SECURITY_AUTH_PAGE = "/security/auth/auth.html";
+		
+		/**
+		 *
+		 */
+		String REGISTRATION_PAGE = "security/registration.html";
 	}
 }

@@ -7,9 +7,6 @@ import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -24,33 +21,34 @@ import epf.gateway.Application;
 import epf.naming.Naming;
 
 /**
- *
- * @author FOXCONN
+ * 
  */
 @Path(Naming.SECURITY)
 @ApplicationScoped
-@RolesAllowed(Naming.Security.DEFAULT_ROLE)
-public class Security {
+@RolesAllowed(Naming.EPF)
+public class Management {
     
     /**
      * 
      */
     @Inject
     transient Application request;
-    
-    /**
-     * @param headers
-     * @param uriInfo
-     * @param req
-     * @param body
-     * @return
-     * @throws Exception 
-     */
+
+	/**
+	 * @param context
+	 * @param headers
+	 * @param uriInfo
+	 * @param req
+	 * @param body
+	 * @return
+	 * @throws Exception
+	 */
     @PermitAll
+	@Path(Naming.Security.CREDENTIAL)
     @POST
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
-    public CompletionStage<Response> login(
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public CompletionStage<Response> createCredential(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -60,75 +58,23 @@ public class Security {
     }
     
     /**
-     * @param headers
-     * @param uriInfo
-     * @param req
-     * @return
-     * @throws Exception 
-     */
-    @DELETE
-    @Produces(MediaType.TEXT_PLAIN)
-    public CompletionStage<Response> logOut(
-    		@Context final SecurityContext context,
-            @Context final HttpHeaders headers, 
-            @Context final UriInfo uriInfo,
-            @Context final javax.ws.rs.core.Request req
-            ) throws Exception {
-        return request.request(Naming.SECURITY, context, headers, uriInfo, req, null);
-    }
-    
-    /**
-     * @param headers
-     * @param uriInfo
-     * @param req
-     * @return
-     * @throws Exception 
-     */
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public CompletionStage<Response> authenticate(
-    		@Context final SecurityContext context,
-            @Context final HttpHeaders headers, 
-            @Context final UriInfo uriInfo,
-            @Context final javax.ws.rs.core.Request req) throws Exception {
-        return request.request(Naming.SECURITY, context, headers, uriInfo, req, null);
-    }
-    
-    /**
+     * @param context
      * @param headers
      * @param uriInfo
      * @param req
      * @param body
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
-    @PATCH
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public CompletionStage<Response> update(
+    @Path(Naming.Security.PRINCIPAL)
+    @POST
+    public CompletionStage<Response> createPrincipal(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-    	return request.request(Naming.SECURITY, context, headers, uriInfo, req, body);
-    }
-    
-    /**
-     * @param headers
-     * @param uriInfo
-     * @param req
-     * @param body
-     * @return
-     * @throws Exception 
-     */
-    @PUT
-    @Produces(MediaType.TEXT_PLAIN)
-    public CompletionStage<Response> revoke(
-    		@Context final SecurityContext context,
-            @Context final HttpHeaders headers, 
-            @Context final UriInfo uriInfo,
-            @Context final javax.ws.rs.core.Request req) throws Exception {
-    	return request.request(Naming.SECURITY, context, headers, uriInfo, req, null);
+        return request.request(Naming.SECURITY, context, headers, uriInfo, req, body);
     }
     
     /**
@@ -141,16 +87,37 @@ public class Security {
      * @throws Exception
      */
     @PermitAll
-    @Path(Naming.Security.AUTH)
+    @Path(Naming.Security.Credential.PASSWORD)
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public CompletionStage<Response> authenticateIDToken(
+    public CompletionStage<Response> resetPassword(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-    	return request.request(Naming.SECURITY, context, headers, uriInfo, req, body);
+        return request.request(Naming.SECURITY, context, headers, uriInfo, req, body);
+    }
+    
+    /**
+     * @param context
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @param body
+     * @return
+     * @throws Exception
+     */
+    @Path(Naming.Security.Credential.PASSWORD)
+    @PUT
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public CompletionStage<Response> setPassword(
+    		@Context final SecurityContext context,
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req,
+            final InputStream body) throws Exception {
+        return request.request(Naming.SECURITY, context, headers, uriInfo, req, body);
     }
 }

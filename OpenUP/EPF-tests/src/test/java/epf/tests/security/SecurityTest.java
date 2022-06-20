@@ -191,7 +191,7 @@ public class SecurityTest {
                 "Token.audience", 
                 new String[]{
                     String.format(
-                    		epf.security.client.Security.AUDIENCE_FORMAT, 
+                    		"%s://%s/", 
                             securityUrl.getScheme(), 
                             securityUrl.getHost() + ":" + securityUrl.getPort()
                     )

@@ -1,4 +1,4 @@
-package epf.webapp.security.view;
+package epf.webapp.security.management.view;
 
 import java.io.Serializable;
 import java.security.PrivateKey;
@@ -9,7 +9,8 @@ import javax.inject.Named;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import epf.client.util.Client;
-import epf.security.client.Registration;
+import epf.security.client.Management;
+import epf.security.view.RegistrationView;
 import epf.webapp.GatewayUtil;
 import epf.webapp.SecurityUtil;
 import epf.webapp.naming.Naming;
@@ -19,7 +20,7 @@ import epf.webapp.naming.Naming;
  */
 @ViewScoped
 @Named(Naming.Security.REGISTRATION)
-public class RegistrationPage implements Serializable {
+public class RegistrationPage implements RegistrationView, Serializable {
 	
 	/**
 	 *
@@ -79,9 +80,9 @@ public class RegistrationPage implements Serializable {
 		final String token = epf.util.security.SecurityUtil.decrypt(code, data, privateKey);
 		try(Client client = gatewayUtil.newClient(epf.naming.Naming.SECURITY)){
 			client.authorization(token.toCharArray());
-			try(Response response = Registration.createPrincipal(client)){
+			try(Response response = Management.createPrincipal(client)){
 				if(response.getStatus() == Status.OK.getStatusCode()) {
-					final String redirectUrl = Naming.CONTEXT_ROOT + "/security/login" + Naming.Internal.VIEW_EXTENSION;
+					final String redirectUrl = Naming.CONTEXT_ROOT + Naming.View.LOGIN_PAGE;
 					externalContext.redirect(redirectUrl);
 				}
 			}
