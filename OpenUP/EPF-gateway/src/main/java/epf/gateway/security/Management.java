@@ -25,7 +25,6 @@ import epf.naming.Naming;
  */
 @Path(Naming.SECURITY)
 @ApplicationScoped
-@RolesAllowed(Naming.EPF)
 public class Management {
     
     /**
@@ -66,6 +65,7 @@ public class Management {
      * @return
      * @throws Exception
      */
+    @RolesAllowed(Naming.EPF)
     @Path(Naming.Security.PRINCIPAL)
     @POST
     public CompletionStage<Response> createPrincipal(
@@ -109,6 +109,7 @@ public class Management {
      * @return
      * @throws Exception
      */
+    @RolesAllowed(Naming.EPF)
     @Path(Naming.Security.Credential.PASSWORD)
     @PUT
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
