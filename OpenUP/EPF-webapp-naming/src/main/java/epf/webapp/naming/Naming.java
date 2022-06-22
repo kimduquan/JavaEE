@@ -68,6 +68,11 @@ public interface Naming {
 		/**
 		 * 
 		 */
+		String FORGOT_PASSWORD = "security_forgot_password";
+		
+		/**
+		 * 
+		 */
 		String REGISTRATION = "security_registration";
 		
 		/**
@@ -143,6 +148,11 @@ public interface Naming {
 		/**
 		 *
 		 */
-		String REGISTRATION_PAGE = "security/registration.html";
+		String REGISTRATION_PAGE = "security/management/registration.html";
+		
+		/**
+		 *
+		 */
+		String RESET_PASSWORD_PAGE = "security/management/reset-password.html";
 	}
 }

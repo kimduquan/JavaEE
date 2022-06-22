@@ -3,17 +3,17 @@ package epf.security.view;
 /**
  * 
  */
-public interface ResetPasswordView {
+public interface ForgotPasswordView {
 
 	/**
 	 * @return
 	 */
-	String getEmail();
+	 String getEmail();
 
 	/**
 	 * @param email
 	 */
-	void setEmail(final String email);
+	 void setEmail(final String email);
 	
 	/**
 	 * @return

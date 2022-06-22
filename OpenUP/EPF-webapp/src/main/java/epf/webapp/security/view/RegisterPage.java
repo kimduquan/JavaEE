@@ -1,4 +1,4 @@
-package epf.webapp.security.management.view;
+package epf.webapp.security.view;
 
 import java.io.Serializable;
 import java.security.PublicKey;

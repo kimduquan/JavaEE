@@ -10,7 +10,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import epf.client.util.Client;
 import epf.security.client.Management;
-import epf.security.view.RegistrationView;
+import epf.security.management.view.RegistrationView;
 import epf.webapp.GatewayUtil;
 import epf.webapp.SecurityUtil;
 import epf.webapp.naming.Naming;
