@@ -1,4 +1,4 @@
-package epf.function;
+package epf.function.internal;
 
 import java.util.function.Supplier;
 import java.util.stream.Stream;

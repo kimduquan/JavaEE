@@ -27,6 +27,16 @@
             <artifactId>EPF-utility</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit -->
+		<dependency>
+		    <groupId>org.eclipse.jgit</groupId>
+		    <artifactId>org.eclipse.jgit</artifactId>
+		</dependency>
+		<dependency>
+            <groupId>org.apache.karaf.shell</groupId>
+            <artifactId>org.apache.karaf.shell.core</artifactId>
+            <version>4.4.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -47,6 +57,7 @@
                         <Import-Package>
                             *
                         </Import-Package>
+                        <Karaf-Commands>epf.function.git*</Karaf-Commands>
                     </instructions>
                 </configuration>
             </plugin>
@@ -56,10 +67,8 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
-                    <maxmem>256M</maxmem>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
 

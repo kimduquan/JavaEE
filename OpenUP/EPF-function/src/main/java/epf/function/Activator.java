@@ -1,16 +1,21 @@
 package epf.function;
 
+import org.eclipse.jgit.api.Git;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
+/**
+ * 
+ */
 public class Activator implements BundleActivator {
 
-    public void start(BundleContext context) {
-        System.out.println("Starting the bundle");
-    }
+	@Override
+	public void start(final BundleContext context) throws Exception {
+		
+	}
 
-    public void stop(BundleContext context) {
-        System.out.println("Stopping the bundle");
-    }
-
+	@Override
+	public void stop(final BundleContext context) throws Exception {
+		Git.shutdown();
+	}
 }

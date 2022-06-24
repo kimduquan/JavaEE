@@ -1,13 +1,14 @@
-package epf.function;
+package epf.function.internal;
 
 /**
  * @author PC
  *
  */
-public class Break implements Runnable {
+public class Continue implements Runnable {
 
 	@Override
 	public void run() {
 		toString();
 	}
+
 }

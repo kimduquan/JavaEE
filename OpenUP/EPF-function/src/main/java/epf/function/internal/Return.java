@@ -1,4 +1,4 @@
-package epf.function;
+package epf.function.internal;
 
 import epf.util.Var;
 
