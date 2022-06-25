@@ -52,12 +52,11 @@
                         <Bundle-Version>${project.version}</Bundle-Version>
                         <Bundle-Activator>epf.function.Activator</Bundle-Activator>
                         <Export-Package>
-                            epf.function*;version=${project.version}
+                            epf.function,epf.function.git;version=${project.version};-noimport:=true
                         </Export-Package>
-                        <Import-Package>
-                            *
-                        </Import-Package>
-                        <Karaf-Commands>epf.function.git*</Karaf-Commands>
+                        <Karaf-Commands>epf.function.git.</Karaf-Commands>
+                        <Embed-Dependency>*;scope=compile;inline=true</Embed-Dependency>
+                        <Embed-Transitive>true</Embed-Transitive>
                     </instructions>
                 </configuration>
             </plugin>
