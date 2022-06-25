@@ -29,7 +29,6 @@ import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.naming.Naming;
-import epf.security.internal.sql.NativeQueries;
 import epf.security.internal.store.TenantPersistence;
 import epf.security.internal.token.TokenBuilder;
 import epf.security.schema.Token;
@@ -189,13 +188,11 @@ public class Management implements epf.security.client.Management {
 			final String email,
 			final List<String> forwardedHost,
             final List<String> forwardedPort,
-            final List<String> forwardedProto) {
-		EntityManager entityManager = manager;
-		if(tenant != null) {
-			entityManager = persistence.createManager(tenant);
-		}
-		final Integer count = (Integer) entityManager.createNativeQuery(NativeQueries.CHECK_USER).setParameter(1, email).getSingleResult();
-		if(count > 0) {
+            final List<String> forwardedProto) throws Exception {
+		final Password pass = new Password(new char[0]);
+		final Credential credential = new Credential(tenant, email, pass);
+		final Boolean exist = identityStore.isCaller(credential).toCompletableFuture().get();
+		if(!exist) {
 			final Set<String> audience = TokenBuilder.buildAudience(null, forwardedHost, forwardedPort, forwardedProto, Optional.ofNullable(tenant));
 			final Set<String> groups = new HashSet<>();
 			groups.add(Naming.EPF);
@@ -225,11 +222,9 @@ public class Management implements epf.security.client.Management {
 	public Response setPassword(final String password, final SecurityContext context) throws Exception {
 		final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
 		final Optional<String> tenant = Optional.ofNullable(jwt.getClaim(Naming.Management.TENANT));
-		EntityManager entityManager = manager;
-		if(tenant.isPresent()) {
-			entityManager = persistence.createManager(tenant.get());
-		}
-		entityManager.createNativeQuery(String.format(NativeQueries.SET_USER__PASSWORD, jwt.getName())).setParameter(1, password).executeUpdate();
+		final Password pass = new Password(password.toCharArray());
+		final Credential credential = new Credential(tenant.orElse(null), jwt.getName(), pass);
+		identityStore.setCredential(credential).toCompletableFuture().get();
 		return Response.ok().build();
 	}
 }

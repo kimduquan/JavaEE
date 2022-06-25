@@ -124,7 +124,7 @@ public interface Management {
             @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PORT)
             final List<String> forwardedPort,
             @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PROTO)
-            final List<String> forwardedProto);
+            final List<String> forwardedProto) throws Exception;
     
     /**
      * @param client

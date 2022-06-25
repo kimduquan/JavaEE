@@ -174,4 +174,33 @@ public class JPAIdentityStore implements IdentityStore {
 		query.executeUpdate();
 		return executor.completedStage(null);
 	}
+
+	@Override
+	@Transactional
+	public CompletionStage<Void> setCredential(final Credential credential) throws Exception {
+		Objects.requireNonNull(credential, "Credential");
+		Objects.requireNonNull(credential.getCaller(), "Credential.caller");
+		Objects.requireNonNull(credential.getPassword(), "Credential.password");
+		EntityManager entityManager = manager;
+		if(credential.getTenant().isPresent()) {
+			entityManager = persistence.createManager(credential.getTenant().get());
+			if(!entityManager.isJoinedToTransaction()) {
+				entityManager.joinTransaction();
+			}
+		}
+		entityManager.createNativeQuery(String.format(NativeQueries.SET_USER__PASSWORD, credential.getCaller())).setParameter(1, new String(credential.getPassword().getValue())).executeUpdate();
+		return executor.completedStage(null);
+	}
+
+	@Override
+	public CompletionStage<Boolean> isCaller(final Credential credential) throws Exception {
+		Objects.requireNonNull(credential, "Credential");
+		Objects.requireNonNull(credential.getCaller(), "Credential.caller");
+		EntityManager entityManager = manager;
+		if(credential.getTenant().isPresent()) {
+			entityManager = persistence.createManager(credential.getTenant().get());
+		}
+		final Long count = (Long) entityManager.createNativeQuery(NativeQueries.CHECK_USER).setParameter(1, credential.getCaller()).getSingleResult();
+		return executor.completedStage(count > 0);
+	}
 }

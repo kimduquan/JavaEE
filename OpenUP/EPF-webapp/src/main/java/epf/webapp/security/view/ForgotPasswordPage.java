@@ -77,7 +77,9 @@ public class ForgotPasswordPage implements ForgotPasswordView, Serializable {
 		String token = null;
 		try(Client client = gatewayUtil.newClient(epf.naming.Naming.SECURITY)){
 			try(Response response = Management.resetPassword(client, email)){
-				token = response.readEntity(String.class);
+				if(response.getStatus() == Status.OK.getStatusCode()) {
+					token = response.readEntity(String.class);
+				}
 			}
 		}
 		if(token != null && !token.isEmpty()) {
