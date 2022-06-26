@@ -830,6 +830,7 @@
         <module>EPF-client</module>
 		<module>EPF-security-client</module>
 		<module>EPF-security</module>
+		<module>EPF-security-management</module>
 		<module>EPF-transaction</module>
 		<module>EPF-view</module>
 		<module>EPF-security-view</module>
