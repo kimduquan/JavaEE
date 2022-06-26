@@ -118,6 +118,9 @@ public class Management implements epf.security.client.Management {
             final List<String> forwardedPort,
             final List<String> forwardedProto) throws Exception {
 		final Credential credential = new Credential(tenant, email, new Password(password));
+		if(identityStore.isCaller(credential).toCompletableFuture().get()) {
+			throw new BadRequestException();
+		}
 		identityStore.putCredential(credential).toCompletableFuture().get();
 		final Set<String> audience = TokenBuilder.buildAudience(null, forwardedHost, forwardedPort, forwardedProto, Optional.ofNullable(tenant));
 		final Set<String> groups = new HashSet<>();
