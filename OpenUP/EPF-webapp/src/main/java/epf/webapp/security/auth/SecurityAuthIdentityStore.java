@@ -20,10 +20,9 @@ import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.security.auth.util.JwtUtil;
 import epf.security.client.Security;
-import epf.util.config.ConfigUtil;
 import epf.util.logging.LogManager;
 import epf.util.security.KeyUtil;
-import epf.webapp.internal.ConfigSource;
+import epf.webapp.internal.ConfigUtil;
 import epf.webapp.internal.GatewayUtil;
 import epf.webapp.security.TokenPrincipal;
 
@@ -54,7 +53,7 @@ public class SecurityAuthIdentityStore implements RememberMeIdentityStore {
 	 * 
 	 */
 	@Inject
-	private transient ConfigSource config;
+	private transient ConfigUtil config;
 	
 	/**
 	 * 
@@ -63,7 +62,7 @@ public class SecurityAuthIdentityStore implements RememberMeIdentityStore {
 	protected void postConstruct() {
 		try {
 			final String verifyKeyText = config.getProperty(Naming.Security.JWT.VERIFY_KEY);
-			final String webAppUrl = ConfigUtil.getString(Naming.WebApp.WEB_APP_URL);
+			final String webAppUrl = epf.util.config.ConfigUtil.getString(Naming.WebApp.WEB_APP_URL);
 			final PublicKey verifyKey = KeyUtil.generatePublic("RSA", verifyKeyText, Base64.getDecoder(), "UTF-8");
 			jwtUtil.initialize(Naming.EPF, webAppUrl, verifyKey);
 		}

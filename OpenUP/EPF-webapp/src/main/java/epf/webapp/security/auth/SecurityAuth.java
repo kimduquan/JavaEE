@@ -14,7 +14,7 @@ import epf.security.auth.Provider;
 import epf.security.auth.core.AuthRequest;
 import epf.security.auth.discovery.ProviderMetadata;
 import epf.util.logging.LogManager;
-import epf.webapp.internal.ConfigSource;
+import epf.webapp.internal.ConfigUtil;
 import epf.webapp.security.auth.core.CodeFlow;
 import epf.webapp.security.auth.core.ImplicitFlow;
 import epf.security.auth.StandardProvider;
@@ -55,7 +55,7 @@ public class SecurityAuth {
 	 * 
 	 */
 	@Inject
-	private transient ConfigSource config;
+	private transient ConfigUtil config;
 	
 	/**
 	 * 

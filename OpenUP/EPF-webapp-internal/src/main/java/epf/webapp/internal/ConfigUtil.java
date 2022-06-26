@@ -18,12 +18,12 @@ import epf.util.logging.LogManager;
  *
  */
 @ApplicationScoped
-public class ConfigSource {
+public class ConfigUtil {
 	
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = LogManager.getLogger(ConfigSource.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(ConfigUtil.class.getName());
 
 	/**
 	 * 

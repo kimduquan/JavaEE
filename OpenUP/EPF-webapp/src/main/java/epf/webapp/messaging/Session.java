@@ -17,7 +17,7 @@ import javax.inject.Named;
 import org.eclipse.microprofile.jwt.Claims;
 import epf.security.auth.core.StandardClaims;
 import epf.webapp.PrincipalStore;
-import epf.webapp.internal.ConfigSource;
+import epf.webapp.internal.ConfigUtil;
 import epf.webapp.naming.Naming.Messaging;
 
 /**
@@ -57,7 +57,7 @@ public class Session implements Serializable {
 	 * 
 	 */
 	@Inject
-	private transient ConfigSource config;
+	private transient ConfigUtil config;
 	
 	/**
 	 * 

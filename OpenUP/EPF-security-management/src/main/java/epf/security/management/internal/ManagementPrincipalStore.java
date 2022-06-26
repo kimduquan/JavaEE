@@ -14,7 +14,6 @@ import javax.persistence.Persistence;
 import javax.security.enterprise.CallerPrincipal;
 import javax.transaction.Transactional;
 import org.eclipse.microprofile.context.ManagedExecutor;
-
 import epf.security.internal.IdentityStore;
 import epf.security.internal.JPAPrincipal;
 import epf.security.schema.Principal;
