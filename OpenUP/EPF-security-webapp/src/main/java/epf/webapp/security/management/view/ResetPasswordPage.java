@@ -100,8 +100,8 @@ public class ResetPasswordPage implements ResetPasswordView, Serializable {
 	
 	@Override
 	public String reset() throws Exception {
+		final PrivateKey privateKey = securityUtil.getPrivateKey();
 		try {
-			final PrivateKey privateKey = (PrivateKey) securityUtil.getKeyStore().getKey(securityUtil.getKeyAlias(), securityUtil.getKeyPassword());
 			final String token = epf.util.security.SecurityUtil.decrypt(code, data, privateKey);
 			try(Client client = gatewayUtil.newClient(epf.naming.Naming.SECURITY)){
 				client.authorization(token.toCharArray());

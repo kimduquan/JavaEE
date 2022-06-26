@@ -2,6 +2,8 @@ package epf.webapp.internal;
 
 import java.nio.file.Path;
 import java.security.KeyStore;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -41,6 +43,16 @@ public class SecurityUtil {
 	 *
 	 */
 	private transient KeyStore trustStore;
+	
+	/**
+	 *
+	 */
+	private transient PrivateKey privateKey;
+	
+	/**
+	 *
+	 */
+	private transient PublicKey publicKey;
 
 	/**
 	 * 
@@ -67,6 +79,18 @@ public class SecurityUtil {
 		}
 		keyAlias = ConfigUtil.getString(Naming.Client.SSL_KEY_ALIAS);
 		keyPassword = ConfigUtil.getChars(Naming.Client.SSL_KEY_PASSWORD);
+		try {
+			privateKey = (PrivateKey) keyStore.getKey(keyAlias, keyPassword);
+		}
+		catch (Exception e) {
+			LOGGER.log(Level.SEVERE, "[SecurityUtil.privateKey]", e);
+		}
+		try {
+			publicKey = trustStore.getCertificate(keyAlias).getPublicKey();
+		}
+		catch (Exception e) {
+			LOGGER.log(Level.SEVERE, "[SecurityUtil.publicKey]", e);
+		}
 	}
 
 	public KeyStore getKeyStore() {
@@ -83,5 +107,13 @@ public class SecurityUtil {
 
 	public String getKeyAlias() {
 		return keyAlias;
+	}
+	
+	public PrivateKey getPrivateKey() {
+		return privateKey;
+	}
+	
+	public PublicKey getPublicKey() {
+		return publicKey;
 	}
 }

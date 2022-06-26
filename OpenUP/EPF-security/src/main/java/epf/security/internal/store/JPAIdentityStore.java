@@ -188,7 +188,7 @@ public class JPAIdentityStore implements IdentityStore {
 				entityManager.joinTransaction();
 			}
 		}
-		entityManager.createNativeQuery(String.format(NativeQueries.SET_USER__PASSWORD, credential.getCaller())).setParameter(1, new String(credential.getPassword().getValue())).executeUpdate();
+		entityManager.createNativeQuery(String.format(NativeQueries.SET_USER_PASSWORD, credential.getCaller())).setParameter(1, new String(credential.getPassword().getValue())).executeUpdate();
 		return executor.completedStage(null);
 	}
 

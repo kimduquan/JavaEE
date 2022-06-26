@@ -40,43 +40,6 @@
 		    <artifactId>javax.servlet-api</artifactId>
 		    <scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>javax.json</groupId>
-			<artifactId>javax.json-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		
-		<dependency>
-		    <groupId>org.eclipse.microprofile.jwt</groupId>
-		    <artifactId>microprofile-jwt-auth-api</artifactId>
-		</dependency>
-		<dependency>
-		    <groupId>org.eclipse.microprofile.health</groupId>
-		    <artifactId>microprofile-health-api</artifactId>
-		</dependency>
-		<dependency>
-		    <groupId>org.eclipse.microprofile.context-propagation</groupId>
-		    <artifactId>microprofile-context-propagation-api</artifactId>
-		</dependency>
-		<dependency>
-		    <groupId>org.eclipse.microprofile.graphql</groupId>
-		    <artifactId>microprofile-graphql-api</artifactId>
-		</dependency>
-		<dependency>
-		    <groupId>org.eclipse.microprofile.openapi</groupId>
-		    <artifactId>microprofile-openapi-api</artifactId>
-		</dependency>
-		
-		<!-- https://mvnrepository.com/artifact/org.bitbucket.b_c/jose4j -->
-		<dependency>
-		    <groupId>org.bitbucket.b_c</groupId>
-		    <artifactId>jose4j</artifactId>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.primefaces/primefaces -->
-		<dependency>
-		    <groupId>org.primefaces</groupId>
-		    <artifactId>primefaces</artifactId>
-		</dependency>
 		
 		<dependency>
             <groupId>openup</groupId>
@@ -85,17 +48,7 @@
         </dependency>
         <dependency>
             <groupId>openup</groupId>
-            <artifactId>EPF-persistence-client</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
             <artifactId>EPF-security-client</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-security-auth</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -111,11 +64,6 @@
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-utility</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-json-utility</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

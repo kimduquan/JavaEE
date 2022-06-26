@@ -77,7 +77,7 @@ public class RegistrationPage implements RegistrationView, Serializable {
 	 * @throws Exception 
 	 */
 	public String createPrincipal() throws Exception {
-		final PrivateKey privateKey = (PrivateKey) securityUtil.getKeyStore().getKey(securityUtil.getKeyAlias(), securityUtil.getKeyPassword());
+		final PrivateKey privateKey = securityUtil.getPrivateKey();
 		try {
 			final String token = epf.util.security.SecurityUtil.decrypt(code, data, privateKey);
 			try(Client client = gatewayUtil.newClient(epf.naming.Naming.SECURITY)){
