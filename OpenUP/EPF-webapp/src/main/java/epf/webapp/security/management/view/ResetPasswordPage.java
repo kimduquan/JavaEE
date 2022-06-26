@@ -2,6 +2,8 @@ package epf.webapp.security.management.view;
 
 import java.io.Serializable;
 import java.security.PrivateKey;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.context.ExternalContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -11,6 +13,7 @@ import javax.ws.rs.core.Response.Status;
 import epf.client.util.Client;
 import epf.security.client.Management;
 import epf.security.management.view.ResetPasswordView;
+import epf.util.logging.LogManager;
 import epf.webapp.GatewayUtil;
 import epf.webapp.SecurityUtil;
 import epf.webapp.naming.Naming;
@@ -26,6 +29,11 @@ public class ResetPasswordPage implements ResetPasswordView, Serializable {
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 *
+	 */
+	private static transient final Logger LOGGER = LogManager.getLogger(ResetPasswordPage.class.getName());
 	
 	/**
 	 *
@@ -101,16 +109,21 @@ public class ResetPasswordPage implements ResetPasswordView, Serializable {
 	 * @see epf.security.view.ResetPasswordView#reset()
 	 */
 	public String reset() throws Exception {
-		final PrivateKey privateKey = (PrivateKey) securityUtil.getKeyStore().getKey(securityUtil.getKeyAlias(), securityUtil.getKeyPassword());
-		final String token = epf.util.security.SecurityUtil.decrypt(code, data, privateKey);
-		try(Client client = gatewayUtil.newClient(epf.naming.Naming.SECURITY)){
-			client.authorization(token.toCharArray());
-			try(Response response = Management.setPassword(client, password)){
-				if(response.getStatus() == Status.OK.getStatusCode()) {
-					final String redirectUrl = Naming.CONTEXT_ROOT + Naming.View.LOGIN_PAGE;
-					externalContext.redirect(redirectUrl);
+		try {
+			final PrivateKey privateKey = (PrivateKey) securityUtil.getKeyStore().getKey(securityUtil.getKeyAlias(), securityUtil.getKeyPassword());
+			final String token = epf.util.security.SecurityUtil.decrypt(code, data, privateKey);
+			try(Client client = gatewayUtil.newClient(epf.naming.Naming.SECURITY)){
+				client.authorization(token.toCharArray());
+				try(Response response = Management.setPassword(client, password)){
+					if(response.getStatus() == Status.OK.getStatusCode()) {
+						final String redirectUrl = Naming.CONTEXT_ROOT + Naming.View.LOGIN_PAGE;
+						externalContext.redirect(redirectUrl);
+					}
 				}
 			}
+		}
+		catch(Exception ex) {
+			LOGGER.log(Level.SEVERE, "[ResetPasswordPage.reset]", ex);
 		}
 		return "";
 	}
