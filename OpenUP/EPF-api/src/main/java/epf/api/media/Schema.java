@@ -38,7 +38,7 @@ public class Schema extends Extensible {
        public String toString() {
            return value;
        }
-	};
+	}
 	
 	/**
 	 *

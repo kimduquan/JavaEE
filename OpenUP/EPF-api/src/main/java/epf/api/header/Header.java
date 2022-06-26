@@ -19,7 +19,7 @@ public class Header extends Extensible {
 	
 	public enum Style {
 		simple
-	};
+	}
 	
 	/**
 	 *

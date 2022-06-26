@@ -26,6 +26,7 @@
 		<liberty.env.epf_config_url>http://localhost/config/config/</liberty.env.epf_config_url>
 		<liberty.env.epf_script_url>http://localhost/script/script/</liberty.env.epf_script_url>
 		<liberty.env.epf_file_url>http://localhost/file/file/</liberty.env.epf_file_url>
+		<liberty.env.epf_mail_url>http://localhost/mail/mail/</liberty.env.epf_mail_url>
 		<liberty.env.epf_image_url>http://localhost/image/image/</liberty.env.epf_image_url>
 		<liberty.env.epf_rules_url>http://localhost/rules/rules/</liberty.env.epf_rules_url>
 		<liberty.env.epf_planning_url>http://localhost/planning/planning/</liberty.env.epf_planning_url>
@@ -51,15 +52,15 @@
 		<liberty.env.epf_net_http_port>80</liberty.env.epf_net_http_port>
     </properties>
     <dependencies>
-		<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-queryparser -->
+    	<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-queryparser -->
 		<dependency>
 		    <groupId>org.apache.lucene</groupId>
 		    <artifactId>lucene-queryparser</artifactId>
 		</dependency>
-       	<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+		<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
 		<dependency>
-		    <groupId>mysql</groupId>
-		    <artifactId>mysql-connector-java</artifactId>
+		    <groupId>org.postgresql</groupId>
+		    <artifactId>postgresql</artifactId>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
 		<dependency>
@@ -189,15 +190,15 @@
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-transaction</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-file</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-mail</artifactId>
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
@@ -249,11 +250,11 @@
                     <deployPackages>dependencies</deployPackages>
 							<copyDependencies>
 								<dependencyGroup>
-									<location>${project.build.directory}/shared/resources/epf/transaction</location>
-	                                <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+									<location>${project.build.directory}/shared/resources/epf/persistence</location>
+	                                <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
 									<dependency>
-									    <groupId>mysql</groupId>
-									    <artifactId>mysql-connector-java</artifactId>
+									    <groupId>org.postgresql</groupId>
+			    						<artifactId>postgresql</artifactId>
 									</dependency>
 								</dependencyGroup>
 								<dependencyGroup>
@@ -280,7 +281,7 @@
 									</dependency>
 								</dependencyGroup>
                             </copyDependencies>
-				</configuration>
+                        </configuration>
             </plugin>
         </plugins>
     </build>

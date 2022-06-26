@@ -22,14 +22,14 @@ public class Parameter extends Extensible {
 		spaceDelimited,
 		pipeDelimited,
 		deepObject
-	};
+	}
 	
 	enum In {
 		path,
 		query,
 		header,
 		cookie
-	};
+	}
 	
 	private String name;
 	

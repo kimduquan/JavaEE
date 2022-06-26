@@ -25,7 +25,7 @@ public class PathItem extends Extensible {
         HEAD, 
         OPTIONS, 
         TRACE
-    };
+    }
     
     /**
      *

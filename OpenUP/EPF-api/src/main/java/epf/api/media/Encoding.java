@@ -18,7 +18,7 @@ public class Encoding extends Extensible {
 		spaceDelimited, 
 		pipeDelimited, 
 		deepObject;
-	};
+	}
 	
 	/**
 	 *
