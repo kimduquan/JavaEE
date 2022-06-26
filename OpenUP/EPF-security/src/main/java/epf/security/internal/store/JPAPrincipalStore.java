@@ -17,6 +17,7 @@ import javax.persistence.Query;
 import javax.security.enterprise.CallerPrincipal;
 import javax.security.enterprise.credential.Password;
 import javax.transaction.Transactional;
+import javax.ws.rs.BadRequestException;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.naming.Naming;
 import epf.security.internal.IdentityStore;
@@ -190,6 +191,7 @@ public class JPAPrincipalStore implements PrincipalStore {
 	@Transactional
 	public CompletionStage<Void> putCaller(final CallerPrincipal callerPrincipal) throws Exception {
 		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
+		Objects.requireNonNull(callerPrincipal.getName(), "CallerPrincipal.name");
 		EntityManager entityManager = factory.createEntityManager();
 		final JPAPrincipal principal = (JPAPrincipal) callerPrincipal;
 		if(principal.getTenant().isPresent()) {
@@ -197,6 +199,9 @@ public class JPAPrincipalStore implements PrincipalStore {
 		}
 		if(!entityManager.isJoinedToTransaction()) {
 			entityManager.joinTransaction();
+		}
+		if(entityManager.find(Principal.class, callerPrincipal.getName()) != null) {
+			return executor.failedStage(new BadRequestException());
 		}
 		final Principal p = new Principal();
 		p.setName(callerPrincipal.getName());

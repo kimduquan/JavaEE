@@ -87,8 +87,8 @@ public class ForgotPasswordPage implements ForgotPasswordView, Serializable {
 			final PublicKey publicKey = securityUtil.getTrustStore().getCertificate(securityUtil.getKeyAlias()).getPublicKey();
 			final StringBuilder data = new StringBuilder();
 			final String code = epf.util.security.SecurityUtil.encrypt(token, data, publicKey);
-			final String webAppUrl = ConfigUtil.getString(epf.naming.Naming.WebApp.WEB_APP_URL);
-			final String resetPasswordUrl = webAppUrl + Naming.View.RESET_PASSWORD_PAGE + "?code=" + StringUtil.encodeURL(code) + "&data=" + StringUtil.encodeURL(data.toString());
+			final String securityWebAppUrl = ConfigUtil.getString(epf.naming.Naming.WebApp.SECURITY_WEB_APP_URL);
+			final String resetPasswordUrl = securityWebAppUrl + Naming.Security.View.RESET_PASSWORD_PAGE + "?code=" + StringUtil.encodeURL(code) + "&data=" + StringUtil.encodeURL(data.toString());
 			final Message message = new Message();
 			message.setRecipients(new HashMap<>());
 			message.getRecipients().put(Message.TO, email);

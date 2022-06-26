@@ -160,15 +160,5 @@ public interface Naming {
 		 *
 		 */
 		String SECURITY_AUTH_PAGE = "/security/auth/auth.html";
-		
-		/**
-		 *
-		 */
-		String REGISTRATION_PAGE = "security/management/registration.html";
-		
-		/**
-		 *
-		 */
-		String RESET_PASSWORD_PAGE = "security/management/reset-password.html";
 	}
 }
