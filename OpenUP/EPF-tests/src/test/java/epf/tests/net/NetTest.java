@@ -72,7 +72,7 @@ public class NetTest {
 				Assert.assertEquals("Response.location", new URI("https://google.com"), uri);
 			}
 		}
-		int id = StringUtil.fromShortString(shortUrl);
+		long id = StringUtil.fromShortString(shortUrl);
 		try(Client persistence = ClientUtil.newClient(persistenceUrl)){
 			persistence.authorization(token.toCharArray());
 			Entities.remove(persistence, epf.net.schema.Net.SCHEMA, epf.net.schema.Net.URL, String.valueOf(id));

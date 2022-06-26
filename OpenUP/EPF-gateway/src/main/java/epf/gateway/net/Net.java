@@ -77,7 +77,7 @@ public class Net {
     		@QueryParam("url")
     		final String url
     ) throws Exception {
-    	final int id = StringUtil.fromShortString(url);
+    	final long id = StringUtil.fromShortString(url);
     	final URI queryUrl = registry.lookup(Naming.QUERY).orElseThrow(NotFoundException::new);
     	return ClientBuilder.newClient().target(queryUrl).path("entity").path("EPF_Net").path("URL").path(String.valueOf(id)).request(MediaType.APPLICATION_JSON).rx()
     	.get()

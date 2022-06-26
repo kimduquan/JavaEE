@@ -33,7 +33,7 @@ public class URL extends EPFEntity {
 	@Column(name = "ID")
 	@SequenceGenerator(name = "EPF_Net_URL", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EPF_Net_URL")
-	private Integer id;
+	private Long id;
 	
 	/**
 	 * 
@@ -181,11 +181,11 @@ public class URL extends EPFEntity {
 		this.userInfo = userInfo;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(final Integer id) {
+	public void setId(final Long id) {
 		this.id = id;
 	}
 

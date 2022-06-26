@@ -53,11 +53,11 @@ public interface StringUtil {
 	 * @param number
 	 * @return
 	 */
-	static String toShortString(int number) {
+	static String toShortString(long number) {
 		final StringBuffer shortString = new StringBuffer();
         while (number > 0)
         {
-        	shortString.append(SHORT_STRING_CHARS[number % SHORT_STRING_CHARS.length]);
+        	shortString.append(SHORT_STRING_CHARS[(int)(number % SHORT_STRING_CHARS.length)]);
         	number = number / SHORT_STRING_CHARS.length;
         }
         return shortString.reverse().toString();
@@ -67,9 +67,9 @@ public interface StringUtil {
 	 * @param shortString
 	 * @return
 	 */
-	static int fromShortString(final String shortString) {
+	static long fromShortString(final String shortString) {
 		Objects.requireNonNull(shortString, "String");
-		int number = 0;
+		long number = 0;
 		for (char ch : shortString.toCharArray())
         {
             if ('a' <= ch && ch <= 'z') {
