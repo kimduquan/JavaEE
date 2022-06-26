@@ -95,7 +95,7 @@
     </library>
     
     <library id="JCacheLib">
-        <file name="${shared.resource.dir}/epf/cache/hazelcast-5.1.1.jar"/>
+        <fileset dir="${shared.resource.dir}/epf/cache" includes="*.jar"/>
     </library>
     
     <library id="H2LuceneLib">
