@@ -1,12 +1,10 @@
 package epf.webapp.util;
 
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.FacesException;
 import javax.faces.application.ProtectedViewException;
-import javax.faces.application.ViewExpiredException;
 import javax.faces.context.ExceptionHandler;
 import javax.faces.context.ExceptionHandlerWrapper;
 import javax.faces.context.FacesContext;
@@ -39,20 +37,19 @@ public class ExceptionHelper extends ExceptionHandlerWrapper {
 			final Throwable exception = event.getContext().getException();
 			final Throwable rootCause = getRootCause(exception);
 			final FacesContext context = FacesContext.getCurrentInstance();
-			if(rootCause instanceof ProtectedViewException) {
-				final String outcome = "/404";
-				context.getApplication().getNavigationHandler().handleNavigation(context, null, outcome);
-				it.remove();
+			if(rootCause instanceof WebAppException) {
+				final WebAppException webException = (WebAppException) exception;
+				context.getExternalContext().setResponseStatus(webException.getStatus());
 			}
-			else if(rootCause instanceof ViewExpiredException) {
-				try {
-					context.getExternalContext().redirect(epf.webapp.naming.Naming.CONTEXT_ROOT);
-				} 
-				catch (IOException e) {
-					LOGGER.log(Level.SEVERE, "[ExceptionHelper.handle]", e);
-				}
+			else if(rootCause instanceof ProtectedViewException) {
+				context.getExternalContext().setResponseStatus(400);
 			}
+			else {
+				context.getExternalContext().setResponseStatus(500);
+			}
+			LOGGER.log(Level.SEVERE, "[ExceptionHelper.handle]", exception);
+			context.responseComplete();
+			it.remove();
 		}
-		getWrapped().handle();
 	}
 }
