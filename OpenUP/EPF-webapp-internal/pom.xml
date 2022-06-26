@@ -21,9 +21,25 @@
 		    <artifactId>javax.annotation-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>javax.security.enterprise</groupId>
+			<artifactId>javax.security.enterprise-api</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>javax.ws.rs-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
     	<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-naming</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-webapp-naming</artifactId>
             <version>${project.version}</version>
         </dependency>
     	<dependency>
@@ -39,6 +55,11 @@
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-client-utility</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-security-client</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

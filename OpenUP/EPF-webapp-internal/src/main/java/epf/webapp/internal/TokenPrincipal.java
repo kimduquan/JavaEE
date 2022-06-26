@@ -1,4 +1,4 @@
-package epf.webapp.security;
+package epf.webapp.internal;
 
 import javax.security.enterprise.CallerPrincipal;
 

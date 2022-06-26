@@ -18,7 +18,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
 import epf.webapp.internal.GatewayUtil;
 import epf.webapp.internal.SecurityUtil;
 import epf.webapp.naming.Naming;

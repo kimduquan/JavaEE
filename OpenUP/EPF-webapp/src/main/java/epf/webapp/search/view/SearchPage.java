@@ -10,9 +10,9 @@ import javax.json.JsonValue;
 import javax.servlet.http.HttpServletRequest;
 import epf.util.json.JsonUtil;
 import epf.webapp.internal.GatewayUtil;
+import epf.webapp.internal.Session;
 import epf.webapp.naming.Naming;
 import epf.webapp.search.SearchCollector;
-import epf.webapp.security.Session;
 
 /**
  * 

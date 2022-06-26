@@ -24,7 +24,7 @@ import epf.util.logging.LogManager;
 import epf.util.security.KeyUtil;
 import epf.webapp.internal.ConfigUtil;
 import epf.webapp.internal.GatewayUtil;
-import epf.webapp.security.TokenPrincipal;
+import epf.webapp.internal.TokenPrincipal;
 
 /**
  * @author PC

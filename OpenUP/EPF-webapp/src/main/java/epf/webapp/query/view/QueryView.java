@@ -15,10 +15,10 @@ import epf.persistence.schema.client.AttributeType;
 import epf.persistence.schema.client.Entity;
 import epf.util.json.JsonUtil;
 import epf.webapp.internal.GatewayUtil;
+import epf.webapp.internal.Session;
 import epf.webapp.naming.Naming;
 import epf.webapp.query.QueryCollector;
 import epf.webapp.schema.SchemaCache;
-import epf.webapp.security.Session;
 
 /**
  * 

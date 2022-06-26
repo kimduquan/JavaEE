@@ -13,6 +13,7 @@ import javax.security.enterprise.identitystore.IdentityStore;
 import epf.util.config.ConfigUtil;
 import epf.util.logging.LogManager;
 import epf.webapp.internal.GatewayUtil;
+import epf.webapp.internal.TokenPrincipal;
 import epf.webapp.security.auth.AuthCodeCredential;
 import epf.webapp.security.auth.ImplicitCredential;
 import epf.webapp.security.auth.SecurityAuth;

@@ -14,7 +14,7 @@ import epf.persistence.schema.client.Entity;
 import epf.persistence.schema.client.Schema;
 import epf.util.logging.LogManager;
 import epf.webapp.internal.GatewayUtil;
-import epf.webapp.security.Session;
+import epf.webapp.internal.Session;
 
 /**
  * 

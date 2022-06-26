@@ -10,9 +10,9 @@ import javax.faces.push.Push;
 import javax.faces.push.PushContext;
 import javax.inject.Inject;
 import epf.security.auth.util.JwtUtil;
+import epf.webapp.internal.TokenPrincipal;
 import epf.webapp.messaging.TextMessage;
 import epf.webapp.naming.Naming;
-import epf.webapp.security.TokenPrincipal;
 
 /**
  * @author PC
