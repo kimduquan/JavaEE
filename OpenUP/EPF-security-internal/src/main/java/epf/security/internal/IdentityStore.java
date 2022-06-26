@@ -1,9 +1,10 @@
-package epf.security.util;
+package epf.security.internal;
 
 import java.util.Set;
 import java.util.concurrent.CompletionStage;
 import javax.security.enterprise.CallerPrincipal;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
+import epf.security.util.Credential;
 
 /**
  * @author PC

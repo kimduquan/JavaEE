@@ -27,14 +27,13 @@ import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.naming.Naming;
-import epf.security.management.internal.store.TenantPersistence;
-import epf.security.management.internal.token.TokenBuilder;
-import epf.security.management.util.ManangementIdentityStore;
+import epf.security.internal.token.TokenBuilder;
+import epf.security.management.internal.ManagementIdentityStore;
+import epf.security.management.internal.ManagementPrincipalStore;
+import epf.security.management.internal.TenantPersistence;
 import epf.security.schema.Token;
 import epf.security.util.Credential;
 import epf.security.util.CredentialUtil;
-import epf.security.util.IdentityStore;
-import epf.security.util.PrincipalStore;
 import epf.util.logging.LogManager;
 import epf.util.security.KeyUtil;
 
@@ -79,13 +78,13 @@ public class Management implements epf.security.client.Management {
      * 
      */
     @Inject
-    transient ManangementIdentityStore identityStore;
+    transient ManagementIdentityStore identityStore;
     
     /**
      * 
      */
     @Inject
-    transient PrincipalStore principalStore;
+    transient ManagementPrincipalStore principalStore;
 	
 	/**
 	 *

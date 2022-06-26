@@ -8,10 +8,11 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.jwt.JsonWebToken;
+
+import epf.security.internal.JPAPrincipal;
 import epf.security.internal.Session;
 import epf.security.schema.Token;
 import epf.security.util.Credential;
-import epf.security.util.JPAPrincipal;
 import epf.util.MapUtil;
 
 /**

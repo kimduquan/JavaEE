@@ -2,7 +2,6 @@ package epf.security.internal;
 
 import epf.security.schema.Token;
 import epf.security.util.Credential;
-import epf.security.util.JPAPrincipal;
 
 /**
  *

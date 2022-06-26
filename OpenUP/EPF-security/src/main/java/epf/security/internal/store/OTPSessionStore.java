@@ -11,11 +11,11 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import epf.naming.Naming;
+import epf.security.internal.JPAPrincipal;
 import epf.security.internal.Session;
 import epf.security.internal.token.TokenIdGenerator;
 import epf.security.schema.Token;
 import epf.security.util.Credential;
-import epf.security.util.JPAPrincipal;
 import epf.util.MapUtil;
 
 /**

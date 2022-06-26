@@ -1,4 +1,4 @@
-package epf.security.util;
+package epf.security.internal;
 
 import java.util.Optional;
 import javax.persistence.EntityManager;

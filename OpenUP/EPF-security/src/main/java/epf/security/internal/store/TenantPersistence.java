@@ -8,8 +8,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import epf.naming.Naming;
+import epf.security.internal.IdentityStore;
 import epf.security.schema.Security;
-import epf.security.util.IdentityStore;
 import epf.security.util.JdbcUtil;
 
 /**

@@ -19,13 +19,13 @@ import javax.security.enterprise.credential.Password;
 import javax.transaction.Transactional;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.naming.Naming;
+import epf.security.internal.IdentityStore;
+import epf.security.internal.JPAPrincipal;
+import epf.security.internal.PrincipalStore;
 import epf.security.internal.sql.NativeQueries;
 import epf.security.schema.Principal;
 import epf.security.util.Credential;
 import epf.security.util.CredentialUtil;
-import epf.security.util.IdentityStore;
-import epf.security.util.JPAPrincipal;
-import epf.security.util.PrincipalStore;
 import epf.util.MapUtil;
 import epf.util.StringUtil;
 

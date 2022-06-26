@@ -27,13 +27,13 @@ import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.naming.Naming;
+import epf.security.internal.IdentityStore;
+import epf.security.internal.PrincipalStore;
 import epf.security.internal.store.TenantPersistence;
 import epf.security.internal.token.TokenBuilder;
 import epf.security.schema.Token;
 import epf.security.util.Credential;
 import epf.security.util.CredentialUtil;
-import epf.security.util.IdentityStore;
-import epf.security.util.PrincipalStore;
 import epf.util.logging.LogManager;
 import epf.util.security.KeyUtil;
 

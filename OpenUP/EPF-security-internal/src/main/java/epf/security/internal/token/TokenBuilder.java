@@ -1,4 +1,4 @@
-package epf.security.management.internal.token;
+package epf.security.internal.token;
 
 import java.net.URL;
 import java.security.PrivateKey;
@@ -17,7 +17,6 @@ import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.jwt.NumericDate;
-
 import epf.naming.Naming;
 import epf.security.schema.Token;
 import epf.util.EPFException;
