@@ -9,7 +9,7 @@ import javax.inject.Named;
 import javax.json.JsonValue;
 import javax.servlet.http.HttpServletRequest;
 import epf.util.json.JsonUtil;
-import epf.webapp.GatewayUtil;
+import epf.webapp.internal.GatewayUtil;
 import epf.webapp.naming.Naming;
 import epf.webapp.search.SearchCollector;
 import epf.webapp.security.Session;

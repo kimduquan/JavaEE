@@ -18,8 +18,8 @@ import epf.security.view.ForgotPasswordView;
 import epf.util.StringUtil;
 import epf.util.config.ConfigUtil;
 import epf.util.logging.LogManager;
-import epf.webapp.GatewayUtil;
-import epf.webapp.SecurityUtil;
+import epf.webapp.internal.GatewayUtil;
+import epf.webapp.internal.SecurityUtil;
 import epf.webapp.naming.Naming;
 
 /**

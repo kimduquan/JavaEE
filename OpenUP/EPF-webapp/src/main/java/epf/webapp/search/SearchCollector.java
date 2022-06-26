@@ -19,7 +19,7 @@ import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.util.json.JsonUtil;
 import epf.util.logging.LogManager;
-import epf.webapp.GatewayUtil;
+import epf.webapp.internal.GatewayUtil;
 
 /**
  * 

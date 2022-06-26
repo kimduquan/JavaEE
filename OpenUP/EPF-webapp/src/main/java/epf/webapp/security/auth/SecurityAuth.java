@@ -14,7 +14,7 @@ import epf.security.auth.Provider;
 import epf.security.auth.core.AuthRequest;
 import epf.security.auth.discovery.ProviderMetadata;
 import epf.util.logging.LogManager;
-import epf.webapp.ConfigSource;
+import epf.webapp.internal.ConfigSource;
 import epf.webapp.security.auth.core.CodeFlow;
 import epf.webapp.security.auth.core.ImplicitFlow;
 import epf.security.auth.StandardProvider;

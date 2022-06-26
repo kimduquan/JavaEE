@@ -785,6 +785,8 @@
 		<module>EPF-persistence-ext</module>
 		<module>EPF-security-utility</module>
 		<module>EPF-security-internal</module>
+		<module>EPF-webapp-utility</module>
+		<module>EPF-webapp-internal</module>
 		<module>EPF-function</module>
 		<module>EPF-schedule</module>
 		<module>EPF-shell-schedule</module>

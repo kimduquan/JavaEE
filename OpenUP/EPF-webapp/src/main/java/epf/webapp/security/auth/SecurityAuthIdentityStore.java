@@ -23,8 +23,8 @@ import epf.security.client.Security;
 import epf.util.config.ConfigUtil;
 import epf.util.logging.LogManager;
 import epf.util.security.KeyUtil;
-import epf.webapp.ConfigSource;
-import epf.webapp.GatewayUtil;
+import epf.webapp.internal.ConfigSource;
+import epf.webapp.internal.GatewayUtil;
 import epf.webapp.security.TokenPrincipal;
 
 /**

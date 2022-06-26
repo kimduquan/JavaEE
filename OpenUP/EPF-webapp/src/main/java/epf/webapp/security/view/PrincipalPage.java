@@ -11,9 +11,9 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import org.eclipse.microprofile.jwt.Claims;
 import epf.security.view.PrincipalView;
-import epf.webapp.CookieUtil;
 import epf.webapp.naming.Naming;
 import epf.webapp.security.Session;
+import epf.webapp.util.CookieUtil;
 
 /**
  * @author PC

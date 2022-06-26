@@ -1,4 +1,4 @@
-package epf.webapp;
+package epf.webapp.internal;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

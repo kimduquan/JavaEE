@@ -21,7 +21,7 @@ import epf.naming.Naming;
 import epf.persistence.schema.client.Entity;
 import epf.util.json.JsonUtil;
 import epf.util.logging.LogManager;
-import epf.webapp.GatewayUtil;
+import epf.webapp.internal.GatewayUtil;
 
 /**
  * 

@@ -14,8 +14,8 @@ import epf.client.util.Client;
 import epf.security.client.Management;
 import epf.security.management.view.ResetPasswordView;
 import epf.util.logging.LogManager;
-import epf.webapp.GatewayUtil;
-import epf.webapp.SecurityUtil;
+import epf.webapp.internal.GatewayUtil;
+import epf.webapp.internal.SecurityUtil;
 import epf.webapp.naming.Naming;
 
 /**

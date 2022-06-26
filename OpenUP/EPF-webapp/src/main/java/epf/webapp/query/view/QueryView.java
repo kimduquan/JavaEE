@@ -14,7 +14,7 @@ import epf.persistence.schema.client.Attribute;
 import epf.persistence.schema.client.AttributeType;
 import epf.persistence.schema.client.Entity;
 import epf.util.json.JsonUtil;
-import epf.webapp.GatewayUtil;
+import epf.webapp.internal.GatewayUtil;
 import epf.webapp.naming.Naming;
 import epf.webapp.query.QueryCollector;
 import epf.webapp.schema.SchemaCache;

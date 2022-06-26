@@ -1,4 +1,4 @@
-package epf.webapp;
+package epf.webapp.internal;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;

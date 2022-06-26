@@ -16,7 +16,7 @@ import epf.client.util.Client;
 import epf.security.client.Security;
 import epf.security.schema.Token;
 import epf.util.logging.LogManager;
-import epf.webapp.GatewayUtil;
+import epf.webapp.internal.GatewayUtil;
 import epf.webapp.naming.Naming;
 
 /**

@@ -1,4 +1,4 @@
-package epf.webapp.internal;
+package epf.webapp;
 
 import java.time.Instant;
 import java.util.Map;
