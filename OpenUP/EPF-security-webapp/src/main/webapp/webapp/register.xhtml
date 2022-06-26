@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+
+<h:head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+
+    <title><h:outputText value="#{i18n['epf.webapp']}" /> - <h:outputText value="#{i18n['epf.security.register']}" /></title>
+
+    <!-- Custom fonts for this template-->
+    <h:outputStylesheet library="startbootstrap-sb-admin-2-gh-pages" name="vendor/fontawesome-free/css/all.min.css" />
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet" />
+
+    <!-- Custom styles for this template-->
+    <h:outputStylesheet library="startbootstrap-sb-admin-2-gh-pages" name="css/sb-admin-2.min.css" />
+
+</h:head>
+
+<h:body styleClass="bg-gradient-primary">
+
+    <div class="container">
+
+        <div class="card o-hidden border-0 shadow-lg my-5">
+            <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+                <div class="row">
+                    <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
+                    <div class="col-lg-7">
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
+                            </div>
+                            <h:form styleClass="user">
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <h:inputText styleClass="form-control form-control-user" id="exampleFirstName" value="#{security_register.firstName}"
+                                            a:placeholder="First Name" />
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <h:inputText styleClass="form-control form-control-user" id="exampleLastName" value="#{security_register.lastName}"
+                                            a:placeholder="Last Name" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <h:inputText a:type="email" styleClass="form-control form-control-user" id="exampleInputEmail" value="#{security_register.email}"
+                                        a:placeholder="Email Address" />
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <h:inputSecret styleClass="form-control form-control-user" value="#{security_register.password}"
+                                            id="exampleInputPassword" a:placeholder="Password" />
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <h:inputSecret styleClass="form-control form-control-user" value="#{security_register.repeatPassword}"
+                                            id="exampleRepeatPassword" a:placeholder="Repeat Password" />
+                                    </div>
+                                </div>
+                                <h:commandLink styleClass="btn btn-primary btn-user btn-block" action="#{security_register.register}" >
+                                    Register Account
+                                </h:commandLink>
+                                <hr />
+                                <h:link outcome="" styleClass="btn btn-google btn-user btn-block">
+                                    <i class="fab fa-google fa-fw"></i> Register with Google
+                                </h:link>
+                                <h:link outcome="" styleClass="btn btn-facebook btn-user btn-block">
+                                    <i class="fab fa-facebook-f fa-fw"></i> Register with Facebook
+                                </h:link>
+                            </h:form>
+                            <hr />
+                            <div class="text-center">
+                                <h:link styleClass="small" outcome="forgot-password">Forgot Password?</h:link>
+                            </div>
+                            <div class="text-center">
+                                <h:link styleClass="small" outcome="login">Already have an account? Login!</h:link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <h:outputScript library="startbootstrap-sb-admin-2-gh-pages" name="vendor/jquery/jquery.min.js" />
+    <h:outputScript library="startbootstrap-sb-admin-2-gh-pages" name="vendor/bootstrap/js/bootstrap.bundle.min.js" />
+
+    <!-- Core plugin JavaScript-->
+    <h:outputScript library="startbootstrap-sb-admin-2-gh-pages" name="vendor/jquery-easing/jquery.easing.min.js" />
+
+    <!-- Custom scripts for all pages-->
+    <h:outputScript library="startbootstrap-sb-admin-2-gh-pages" name="js/sb-admin-2.min.js" />
+
+</h:body>
+
+</html>

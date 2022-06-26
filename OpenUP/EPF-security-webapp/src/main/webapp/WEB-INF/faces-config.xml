@@ -4,7 +4,14 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_3.xsd"
     version="2.3">
-    <application>
+	<factory>
+		<exception-handler-factory>epf.webapp.util.ExceptionUtil</exception-handler-factory>
+	</factory>
+    <protected-views>
+		<url-pattern>/webapp/register.xhtml</url-pattern>
+		<url-pattern>/webapp/forgot-password.xhtml</url-pattern>
+    </protected-views>
+	<application>
 		<resource-bundle>
 			<base-name>i18n</base-name>
 			<var>i18n</var>

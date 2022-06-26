@@ -1,4 +1,4 @@
-package epf.security.webapp.management.view;
+package epf.webapp.security.management.view;
 
 import java.io.Serializable;
 import java.security.PrivateKey;
