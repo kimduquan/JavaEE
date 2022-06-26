@@ -70,15 +70,16 @@ public class ForgotPasswordPage implements ForgotPasswordView, Serializable {
 		this.email = email;
 	}
 	
-	/* (non-Javadoc)
-	 * @see epf.security.view.ResetPasswordView#reset()
-	 */
+	@Override
 	public String reset() throws Exception {
 		String token = null;
 		try(Client client = gatewayUtil.newClient(epf.naming.Naming.SECURITY)){
 			try(Response response = Management.resetPassword(client, email)){
 				if(response.getStatus() == Status.OK.getStatusCode()) {
 					token = response.readEntity(String.class);
+				}
+				else {
+					externalContext.responseSendError(response.getStatus(), response.getStatusInfo().getReasonPhrase());
 				}
 			}
 		}
@@ -102,6 +103,7 @@ public class ForgotPasswordPage implements ForgotPasswordView, Serializable {
 					}
 					else {
 						LOGGER.severe(resetPasswordUrl);
+						externalContext.responseSendError(res.getStatus(), res.getStatusInfo().getReasonPhrase());
 					}
 				}
 			}

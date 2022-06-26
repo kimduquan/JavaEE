@@ -140,6 +140,9 @@ public class RegisterPage implements RegisterView, Serializable {
 				if(response.getStatus() == Status.OK.getStatusCode()) {
 					token = response.readEntity(String.class);
 				}
+				else {
+					externalContext.responseSendError(response.getStatus(), response.getStatusInfo().getReasonPhrase());
+				}
 			}
 		}
 		if(token != null && !token.isEmpty()) {
@@ -162,6 +165,7 @@ public class RegisterPage implements RegisterView, Serializable {
 					}
 					else {
 						LOGGER.severe(registrationUrl);
+						externalContext.responseSendError(res.getStatus(), res.getStatusInfo().getReasonPhrase());
 					}
 				}
 			}

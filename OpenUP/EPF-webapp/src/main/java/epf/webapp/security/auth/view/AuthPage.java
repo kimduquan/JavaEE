@@ -2,9 +2,7 @@ package epf.webapp.security.auth.view;
 
 import java.io.Serializable;
 import javax.enterprise.context.Conversation;
-import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -12,6 +10,7 @@ import javax.security.enterprise.SecurityContext;
 import javax.security.enterprise.authentication.mechanism.http.AuthenticationParameters;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.Response.Status;
 import epf.security.auth.core.AuthError;
 import epf.security.auth.core.AuthRequest;
 import epf.security.auth.core.AuthResponse;
@@ -161,8 +160,9 @@ public class AuthPage implements AuthView, Serializable {
 	/**
 	 * @param request
 	 * @return
+	 * @throws Exception 
 	 */
-	private String authenticateCodeFlow(final HttpServletRequest request) {
+	private String authenticateCodeFlow(final HttpServletRequest request) throws Exception {
 		final String error = request.getParameter("error");
 		if(error == null) {
 			final AuthResponse authResponse = new AuthResponse();
@@ -187,7 +187,7 @@ public class AuthPage implements AuthView, Serializable {
 			authError.setError_uri(request.getParameter("error_uri"));
 			authError.setState(request.getParameter("state"));
 			codeFlow.setAuthError(authError);
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, authError.getError(), authError.getError_description()));
+			externalContext.responseSendError(Status.UNAUTHORIZED.getStatusCode(), authError.getError_description());
 		}
 		conversation.end();
 		return "";
@@ -196,8 +196,9 @@ public class AuthPage implements AuthView, Serializable {
 	/**
 	 * @param request
 	 * @return
+	 * @throws Exception 
 	 */
-	private String authenticateImplicitFlow(final HttpServletRequest request, final String sessionId) {
+	private String authenticateImplicitFlow(final HttpServletRequest request, final String sessionId) throws Exception {
 		final String error = request.getParameter("error");
 		if(error == null) {
 			final ImplicitAuthResponse authResponse = new ImplicitAuthResponse();
@@ -221,7 +222,7 @@ public class AuthPage implements AuthView, Serializable {
 			authError.setError_uri(request.getParameter("error_uri"));
 			authError.setState(request.getParameter("state"));
 			implicitFlow.setAuthError(authError);
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, authError.getError(), authError.getError_description()));
+			externalContext.responseSendError(Status.UNAUTHORIZED.getStatusCode(), authError.getError_description());
 		}
 		conversation.end();
 		return "";
@@ -229,8 +230,9 @@ public class AuthPage implements AuthView, Serializable {
 	
 	/**
 	 * @return
+	 * @throws Exception 
 	 */
-	public String authenticate() {
+	public String authenticate() throws Exception {
 		final String flow = request.getParameter("flow");
 		if("Code".equals(flow)) {
 			return this.authenticateCodeFlow(request);

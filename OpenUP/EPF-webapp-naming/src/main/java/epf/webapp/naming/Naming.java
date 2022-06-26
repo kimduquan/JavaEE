@@ -99,6 +99,22 @@ public interface Naming {
 		 * 
 		 */
 		String AUTH = "security_auth";
+		
+		/**
+		 * 
+		 */
+		interface View {
+			
+			/**
+			 *
+			 */
+			String REGISTRATION_PAGE = "management/registration.html";
+			
+			/**
+			 *
+			 */
+			String RESET_PASSWORD_PAGE = "management/reset-password.html";
+		}
 	}
 	
 	/**
