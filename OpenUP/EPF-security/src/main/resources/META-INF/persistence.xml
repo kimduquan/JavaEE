@@ -10,7 +10,7 @@
 			<!--<property name="javax.persistence.sql-load-script-source" value="META-INF/security/h2/data.sql" />-->
         </properties>
     </persistence-unit>
-    <persistence-unit name="EPF-security-schema" transaction-type="JTA">
-    	<jta-data-source>jdbc/epf_security_schema</jta-data-source>
+    <persistence-unit name="EPF-security-management" transaction-type="JTA">
+    	<jta-data-source>jdbc/epf_security_management</jta-data-source>
     </persistence-unit>
 </persistence>

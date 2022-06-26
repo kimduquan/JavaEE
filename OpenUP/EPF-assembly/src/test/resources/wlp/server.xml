@@ -152,7 +152,7 @@
 	                user="postgres"
 	                password="090323508"/>
     </dataSource>
-	<dataSource id="epf_security_schema" jndiName="jdbc/epf_security_schema">
+	<dataSource id="epf_security_management" jndiName="jdbc/epf_security_management">
         <jdbcDriver 
             javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
             javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"

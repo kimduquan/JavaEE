@@ -44,7 +44,7 @@ public class ManagementIdentityStore {
 	/**
 	 * 
 	 */
-	@PersistenceContext(unitName = IdentityStore.SECURITY_SCHEMA_UNIT_NAME)
+	@PersistenceContext(unitName = IdentityStore.SECURITY_MANAGEMENT_UNIT_NAME)
 	transient EntityManager manager;
 	
 	/**

@@ -53,7 +53,7 @@ public class JPAIdentityStore implements IdentityStore {
 	/**
 	 * 
 	 */
-	@PersistenceContext(unitName = SECURITY_SCHEMA_UNIT_NAME)
+	@PersistenceContext(unitName = SECURITY_MANAGEMENT_UNIT_NAME)
 	transient EntityManager manager;
 	
 	/**

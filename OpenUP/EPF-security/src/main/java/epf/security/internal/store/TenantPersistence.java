@@ -51,6 +51,6 @@ public class TenantPersistence {
 	 * @return
 	 */
 	public EntityManager createManager(final String tenant) {
-		return managerFactories.computeIfAbsent(tenant, t -> createFactory(IdentityStore.SECURITY_SCHEMA_UNIT_NAME, Security.SCHEMA, tenant, new ConcurrentHashMap<>())).createEntityManager();
+		return managerFactories.computeIfAbsent(tenant, t -> createFactory(IdentityStore.SECURITY_MANAGEMENT_UNIT_NAME, Security.SCHEMA, tenant, new ConcurrentHashMap<>())).createEntityManager();
 	}
 }
