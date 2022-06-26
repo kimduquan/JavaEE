@@ -18,8 +18,6 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.security.enterprise.CallerPrincipal;
 import javax.security.enterprise.credential.Password;
 import javax.ws.rs.BadRequestException;
@@ -87,18 +85,6 @@ public class Management implements epf.security.client.Management {
      */
     @Inject
     transient PrincipalStore principalStore;
-    
-    /**
-	 * 
-	 */
-	@PersistenceContext(unitName = IdentityStore.SECURITY_SCHEMA_UNIT_NAME)
-	transient EntityManager manager;
-	
-	/**
-	 * 
-	 */
-	@PersistenceContext(unitName = IdentityStore.SECURITY_UNIT_NAME)
-	transient EntityManager principalManager;
 	
 	/**
 	 *
@@ -192,7 +178,7 @@ public class Management implements epf.security.client.Management {
 		final Password pass = new Password(new char[0]);
 		final Credential credential = new Credential(tenant, email, pass);
 		final Boolean exist = identityStore.isCaller(credential).toCompletableFuture().get();
-		if(!exist) {
+		if(exist) {
 			final Set<String> audience = TokenBuilder.buildAudience(null, forwardedHost, forwardedPort, forwardedProto, Optional.ofNullable(tenant));
 			final Set<String> groups = new HashSet<>();
 			groups.add(Naming.EPF);

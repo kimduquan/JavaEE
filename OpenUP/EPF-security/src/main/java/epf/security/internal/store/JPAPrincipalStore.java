@@ -7,12 +7,12 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ConcurrentHashMap;
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.security.enterprise.CallerPrincipal;
 import javax.security.enterprise.credential.Password;
@@ -54,20 +54,27 @@ public class JPAPrincipalStore implements PrincipalStore {
 	/**
 	 * 
 	 */
-	@Inject
-	transient ManagedExecutor executor;
+	transient EntityManagerFactory factory;
 	
 	/**
 	 * 
 	 */
-	@PersistenceContext(unitName = IdentityStore.SECURITY_UNIT_NAME)
-	transient EntityManager manager;
+	@Inject
+	transient ManagedExecutor executor;
 	
 	/**
 	 *
 	 */
 	@Inject
 	transient TenantPersistence persistence;
+	
+	/**
+	 * 
+	 */
+	@PostConstruct
+	protected void postConstruct() {
+		factory = Persistence.createEntityManagerFactory(IdentityStore.SECURITY_UNIT_NAME);
+	}
 
 	@Override
 	@Transactional
@@ -160,38 +167,43 @@ public class JPAPrincipalStore implements PrincipalStore {
 	public CompletionStage<Void> setCallerClaims(final CallerPrincipal callerPrincipal, final Map<String, Object> claims) {
 		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
 		final JPAPrincipal principal = (JPAPrincipal) callerPrincipal;
-		return executor.supplyAsync(() -> principal.getFactory().createEntityManager())
-		.thenApply(manager -> {
-			final Principal p = manager.find(Principal.class, principal.getName());
-			if(p != null) {
-				if(p.getClaims() == null) {
-					p.setClaims(new HashMap<>());
-				}
-				for(Entry<String, Object> claim : claims.entrySet()) {
-					p.getClaims().put(claim.getKey(), String.valueOf(claim.getValue()));
-				}
-				manager.merge(p);
+		final EntityManager manager = principal.getFactory().createEntityManager();
+		if(!manager.isJoinedToTransaction()) {
+			manager.joinTransaction();
+		}
+		final Principal p = manager.find(Principal.class, principal.getName());
+		if(p != null) {
+			if(p.getClaims() == null) {
+				p.setClaims(new HashMap<>());
 			}
-			return null;
-		});
+			for(Entry<String, Object> claim : claims.entrySet()) {
+				p.getClaims().put(claim.getKey(), String.valueOf(claim.getValue()));
+			}
+			manager.merge(p);
+			manager.flush();
+		}
+		manager.close();
+		return executor.completedStage(null);
 	}
 
 	@Override
 	@Transactional
 	public CompletionStage<Void> putCaller(final CallerPrincipal callerPrincipal) throws Exception {
 		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
-		EntityManager entityManager = manager;
+		EntityManager entityManager = factory.createEntityManager();
 		final JPAPrincipal principal = (JPAPrincipal) callerPrincipal;
 		if(principal.getTenant().isPresent()) {
 			entityManager = persistence.createManager(principal.getTenant().get());
-			if(!entityManager.isJoinedToTransaction()) {
-				entityManager.joinTransaction();
-			}
+		}
+		if(!entityManager.isJoinedToTransaction()) {
+			entityManager.joinTransaction();
 		}
 		final Principal p = new Principal();
 		p.setName(callerPrincipal.getName());
 		p.setClaims(new HashMap<>());
 		entityManager.persist(p);
+		entityManager.flush();
+		entityManager.close();
 		return executor.completedStage(null);
 	}
 }
