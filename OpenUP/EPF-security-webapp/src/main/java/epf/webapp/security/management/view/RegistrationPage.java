@@ -10,6 +10,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import epf.client.util.Client;
 import epf.security.client.Management;
+import epf.security.client.Security;
 import epf.security.management.view.RegistrationView;
 import epf.webapp.internal.GatewayUtil;
 import epf.webapp.internal.SecurityUtil;
@@ -80,15 +81,29 @@ public class RegistrationPage implements RegistrationView, Serializable {
 		final PrivateKey privateKey = securityUtil.getPrivateKey();
 		try {
 			final String token = epf.util.security.SecurityUtil.decrypt(code, data, privateKey);
-			try(Client client = gatewayUtil.newClient(epf.naming.Naming.SECURITY)){
+			boolean isOk = false;
+			try(Client client = gatewayUtil.newClient(epf.naming.Naming.Security.SECURITY_MANAGEMENT)){
 				client.authorization(token.toCharArray());
-				try(Response response = Management.createPrincipal(client)){
+				try(Response response = Management.activeCredential(client)){
 					if(response.getStatus() == Status.OK.getStatusCode()) {
-						final String redirectUrl = Naming.CONTEXT_ROOT + Naming.View.LOGIN_PAGE;
-						externalContext.redirect(redirectUrl);
+						isOk = true;
 					}
 					else {
 						externalContext.responseSendError(response.getStatus(), response.getStatusInfo().getReasonPhrase());
+					}
+				}
+			}
+			if(isOk) {
+				try(Client client = gatewayUtil.newClient(epf.naming.Naming.SECURITY)){
+					client.authorization(token.toCharArray());
+					try(Response response = Security.createPrincipal(client)){
+						if(response.getStatus() == Status.OK.getStatusCode()) {
+							final String redirectUrl = Naming.CONTEXT_ROOT + Naming.View.LOGIN_PAGE;
+							externalContext.redirect(redirectUrl);
+						}
+						else {
+							externalContext.responseSendError(response.getStatus(), response.getStatusInfo().getReasonPhrase());
+						}
 					}
 				}
 			}

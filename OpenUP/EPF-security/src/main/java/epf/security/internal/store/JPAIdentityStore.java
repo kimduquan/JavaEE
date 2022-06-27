@@ -17,12 +17,11 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.security.enterprise.CallerPrincipal;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
-import javax.transaction.Transactional;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.naming.Naming;
-import epf.security.internal.IdentityStore;
 import epf.security.internal.JPAPrincipal;
+import epf.security.internal.TenantPersistence;
 import epf.security.internal.sql.NativeQueries;
 import epf.security.schema.Security;
 import epf.security.util.Credential;
@@ -35,7 +34,7 @@ import epf.util.StringUtil;
  *
  */
 @ApplicationScoped
-public class JPAIdentityStore implements IdentityStore {
+public class JPAIdentityStore {
 	
 	/**
 	 * 
@@ -53,7 +52,7 @@ public class JPAIdentityStore implements IdentityStore {
 	/**
 	 * 
 	 */
-	@PersistenceContext(unitName = SECURITY_MANAGEMENT_UNIT_NAME)
+	@PersistenceContext(unitName = Naming.Security.Internal.SECURITY_UNIT_NAME)
 	transient EntityManager manager;
 	
 	/**
@@ -85,7 +84,6 @@ public class JPAIdentityStore implements IdentityStore {
 		return CompletableFuture.completedStage(result);
 	}
 
-	@Override
 	public CompletionStage<CredentialValidationResult> validate(final Credential credential) throws Exception {
 		Objects.requireNonNull(credential, "Credential");
 		Objects.requireNonNull(credential.getCaller(), "Credential.caller");
@@ -99,13 +97,12 @@ public class JPAIdentityStore implements IdentityStore {
 		});
 	}
 
-	@Override
 	public CompletionStage<Set<String>> getCallerGroups(final CallerPrincipal callerPrincipal) {
 		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
 		EntityManager entityManager = manager;
 		final JPAPrincipal principal = (JPAPrincipal) callerPrincipal;
 		if(principal.getTenant().isPresent()) {
-			entityManager = persistence.createManager(principal.getTenant().get());
+			entityManager = persistence.createManager(Naming.Security.Internal.SECURITY_UNIT_NAME, principal.getTenant().get());
 		}
 		final Query query = entityManager.createNativeQuery(NativeQueries.GET_CURRENT_ROLES);
 		final Stream<?> stream = query.setParameter(1, callerPrincipal.getName()).getResultStream();
@@ -117,27 +114,7 @@ public class JPAIdentityStore implements IdentityStore {
 		});
 	}
 
-	@Override
-	@Transactional
-	public CompletionStage<Void> putCredential(final Credential credential) throws Exception {
-		Objects.requireNonNull(credential, "Credential");
-		Objects.requireNonNull(credential.getCaller(), "Credential.caller");
-		Objects.requireNonNull(credential.getPassword(), "Credential.password");
-		EntityManager entityManager = manager;
-		if(credential.getTenant().isPresent()) {
-			entityManager = persistence.createManager(credential.getTenant().get());
-			if(!entityManager.isJoinedToTransaction()) {
-				entityManager.joinTransaction();
-			}
-		}
-		final Query query = entityManager.createNativeQuery(String.format(NativeQueries.CREATE_USER, credential.getCaller()));
-		query.setParameter(1, new String(credential.getPassword().getValue()));
-		query.executeUpdate();
-		return executor.completedStage(null);
-	}
-
-	@Override
-	public CompletionStage<CallerPrincipal> authenticate(Credential credential) throws Exception {
+	public CompletionStage<CallerPrincipal> authenticate(final Credential credential) throws Exception {
 		final Map<String, Object> props = new ConcurrentHashMap<>();
         props.put(Naming.Persistence.JDBC.JDBC_USER, credential.getCaller());
         props.put(Naming.Persistence.JDBC.JDBC_PASSWORD, String.valueOf(credential.getPassword().getValue()));
@@ -145,7 +122,7 @@ public class JPAIdentityStore implements IdentityStore {
         	final String jdbcUrl = JdbcUtil.formatJdbcUrl(Naming.Security.Internal.JDBC_URL_FORMAT, Security.SCHEMA, tenant, "-");
         	props.put(Naming.Persistence.JDBC.JDBC_URL, jdbcUrl);
         });
-        return executor.supplyAsync(() -> Persistence.createEntityManagerFactory(SECURITY_UNIT_NAME, props))
+        return executor.supplyAsync(() -> Persistence.createEntityManagerFactory(Naming.Security.Internal.SECURITY_UNIT_NAME, props))
         		.thenApply(factory -> {
         			try {
         				final EntityManager manager = factory.createEntityManager();
@@ -156,51 +133,5 @@ public class JPAIdentityStore implements IdentityStore {
 		        		return null;
 		        	}
         		});
-	}
-
-	@Override
-	@Transactional
-	public CompletionStage<Void> setCallerGroup(final CallerPrincipal callerPrincipal, final String group) throws Exception {
-		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
-		EntityManager entityManager = manager;
-		final JPAPrincipal principal = (JPAPrincipal) callerPrincipal;
-		if(principal.getTenant().isPresent()) {
-			entityManager = persistence.createManager(principal.getTenant().get());
-			if(!entityManager.isJoinedToTransaction()) {
-				entityManager.joinTransaction();
-			}
-		}
-		final Query query = entityManager.createNativeQuery(String.format(NativeQueries.SET_ROLE, group, principal.getName()));
-		query.executeUpdate();
-		return executor.completedStage(null);
-	}
-
-	@Override
-	@Transactional
-	public CompletionStage<Void> setCredential(final Credential credential) throws Exception {
-		Objects.requireNonNull(credential, "Credential");
-		Objects.requireNonNull(credential.getCaller(), "Credential.caller");
-		Objects.requireNonNull(credential.getPassword(), "Credential.password");
-		EntityManager entityManager = manager;
-		if(credential.getTenant().isPresent()) {
-			entityManager = persistence.createManager(credential.getTenant().get());
-			if(!entityManager.isJoinedToTransaction()) {
-				entityManager.joinTransaction();
-			}
-		}
-		entityManager.createNativeQuery(String.format(NativeQueries.SET_USER_PASSWORD, credential.getCaller())).setParameter(1, new String(credential.getPassword().getValue())).executeUpdate();
-		return executor.completedStage(null);
-	}
-
-	@Override
-	public CompletionStage<Boolean> isCaller(final Credential credential) throws Exception {
-		Objects.requireNonNull(credential, "Credential");
-		Objects.requireNonNull(credential.getCaller(), "Credential.caller");
-		EntityManager entityManager = manager;
-		if(credential.getTenant().isPresent()) {
-			entityManager = persistence.createManager(credential.getTenant().get());
-		}
-		final Long count = (Long) entityManager.createNativeQuery(NativeQueries.CHECK_USER).setParameter(1, credential.getCaller()).getSingleResult();
-		return executor.completedStage(count > 0);
 	}
 }

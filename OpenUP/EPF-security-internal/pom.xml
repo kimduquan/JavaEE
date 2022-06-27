@@ -10,10 +10,22 @@
     <name>Eclipse Process Framework Security Internal</name>
     <packaging>jar</packaging>
     <dependencies>
-    	<!-- https://mvnrepository.com/artifact/javax.security.enterprise/javax.security.enterprise-api -->
+    	<!-- https://mvnrepository.com/artifact/javax.enterprise/cdi-api -->
+		<dependency>
+		    <groupId>javax.enterprise</groupId>
+		    <artifactId>cdi-api</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.security.enterprise/javax.security.enterprise-api -->
 		<dependency>
 		    <groupId>javax.security.enterprise</groupId>
 		    <artifactId>javax.security.enterprise-api</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
+		<dependency>
+		    <groupId>javax.annotation</groupId>
+		    <artifactId>javax.annotation-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api -->
 		<dependency>

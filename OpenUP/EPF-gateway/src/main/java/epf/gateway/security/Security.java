@@ -29,7 +29,6 @@ import epf.naming.Naming;
  */
 @Path(Naming.SECURITY)
 @ApplicationScoped
-@RolesAllowed(Naming.Security.DEFAULT_ROLE)
 public class Security {
     
     /**
@@ -66,6 +65,7 @@ public class Security {
      * @return
      * @throws Exception 
      */
+    @RolesAllowed(Naming.Security.DEFAULT_ROLE)
     @DELETE
     @Produces(MediaType.TEXT_PLAIN)
     public CompletionStage<Response> logOut(
@@ -84,6 +84,7 @@ public class Security {
      * @return
      * @throws Exception 
      */
+    @RolesAllowed(Naming.Security.DEFAULT_ROLE)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public CompletionStage<Response> authenticate(
@@ -102,6 +103,7 @@ public class Security {
      * @return
      * @throws Exception 
      */
+    @RolesAllowed(Naming.Security.DEFAULT_ROLE)
     @PATCH
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public CompletionStage<Response> update(
@@ -121,6 +123,7 @@ public class Security {
      * @return
      * @throws Exception 
      */
+    @RolesAllowed(Naming.Security.DEFAULT_ROLE)
     @PUT
     @Produces(MediaType.TEXT_PLAIN)
     public CompletionStage<Response> revoke(
@@ -152,5 +155,26 @@ public class Security {
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
     	return request.request(Naming.SECURITY, context, headers, uriInfo, req, body);
+    }
+    
+    /**
+     * @param context
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @param body
+     * @return
+     * @throws Exception
+     */
+    @RolesAllowed(Naming.EPF)
+    @Path(Naming.Security.PRINCIPAL)
+    @POST
+    public CompletionStage<Response> createPrincipal(
+    		@Context final SecurityContext context,
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final javax.ws.rs.core.Request req,
+            final InputStream body) throws Exception {
+        return request.request(Naming.SECURITY, context, headers, uriInfo, req, body);
     }
 }

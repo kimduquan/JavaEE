@@ -1,4 +1,4 @@
-package epf.gateway.security;
+package epf.gateway.security.management;
 
 import java.io.InputStream;
 import java.util.concurrent.CompletionStage;
@@ -23,7 +23,7 @@ import epf.naming.Naming;
 /**
  * 
  */
-@Path(Naming.SECURITY)
+@Path(Naming.Security.SECURITY_MANAGEMENT)
 @ApplicationScoped
 public class Management {
     
@@ -53,7 +53,7 @@ public class Management {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-        return request.request(Naming.SECURITY, context, headers, uriInfo, req, body);
+        return request.request(Naming.Security.SECURITY_MANAGEMENT, context, headers, uriInfo, req, body);
     }
     
     /**
@@ -66,15 +66,15 @@ public class Management {
      * @throws Exception
      */
     @RolesAllowed(Naming.EPF)
-    @Path(Naming.Security.PRINCIPAL)
-    @POST
-    public CompletionStage<Response> createPrincipal(
+    @Path(Naming.Security.CREDENTIAL)
+    @PUT
+    public CompletionStage<Response> activeCredential(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-        return request.request(Naming.SECURITY, context, headers, uriInfo, req, body);
+        return request.request(Naming.Security.SECURITY_MANAGEMENT, context, headers, uriInfo, req, body);
     }
     
     /**
@@ -97,7 +97,7 @@ public class Management {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-        return request.request(Naming.SECURITY, context, headers, uriInfo, req, body);
+        return request.request(Naming.Security.SECURITY_MANAGEMENT, context, headers, uriInfo, req, body);
     }
     
     /**
@@ -119,6 +119,6 @@ public class Management {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-        return request.request(Naming.SECURITY, context, headers, uriInfo, req, body);
+        return request.request(Naming.Security.SECURITY_MANAGEMENT, context, headers, uriInfo, req, body);
     }
 }

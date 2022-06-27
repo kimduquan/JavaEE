@@ -1,4 +1,4 @@
-package epf.security.internal.store;
+package epf.security.internal;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -8,7 +8,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import epf.naming.Naming;
-import epf.security.internal.IdentityStore;
 import epf.security.schema.Security;
 import epf.security.util.JdbcUtil;
 
@@ -50,7 +49,7 @@ public class TenantPersistence {
 	 * @param tenant
 	 * @return
 	 */
-	public EntityManager createManager(final String tenant) {
-		return managerFactories.computeIfAbsent(tenant, t -> createFactory(IdentityStore.SECURITY_MANAGEMENT_UNIT_NAME, Security.SCHEMA, tenant, new ConcurrentHashMap<>())).createEntityManager();
+	public EntityManager createManager(final String unitName, final String tenant) {
+		return managerFactories.computeIfAbsent(tenant, t -> createFactory(unitName, Security.SCHEMA, tenant, new ConcurrentHashMap<>())).createEntityManager();
 	}
 }

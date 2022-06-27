@@ -31,6 +31,15 @@ public class Mail {
     @Inject
     transient Application request;
     
+    /**
+     * @param context
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @param body
+     * @return
+     * @throws Exception
+     */
     @POST
 	@Consumes(MediaType.APPLICATION_JSON)
     public CompletionStage<Response> send(

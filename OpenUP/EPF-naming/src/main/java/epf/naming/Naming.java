@@ -665,7 +665,18 @@ public interface Naming {
 	    /**
 	     *
 	     */
-	    String MANAGEMENT = "management";
+	    String SECURITY_MANAGEMENT = "security-management";
+	    
+	    /**
+	     * 
+	     */
+	    interface Management {
+	    	
+	    	/**
+		     * 
+		     */
+		    String SECURITY_MANAGEMENT_URL = "epf.security.management.url";
+	    }
 	    
 	    /**
 	     * 
@@ -698,6 +709,16 @@ public interface Naming {
 	    	 *
 	    	 */
 	    	String JDBC_URL_FORMAT = "jdbc:h2:~/%s.%s;AUTO_SERVER=TRUE;AUTO_RECONNECT=TRUE;PASSWORD_HASH=TRUE";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String SECURITY_UNIT_NAME = "EPF-security";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String SECURITY_MANAGEMENT_UNIT_NAME = "EPF-security-management";
 	    }
 	    
 	    /**

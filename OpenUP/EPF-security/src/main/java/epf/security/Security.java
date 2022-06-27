@@ -25,8 +25,10 @@ import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.security.enterprise.CallerPrincipal;
 import javax.security.enterprise.credential.Password;
 import javax.security.enterprise.identitystore.CredentialValidationResult.Status;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
@@ -42,10 +44,10 @@ import epf.security.auth.Provider;
 import epf.security.auth.StandardProvider;
 import epf.security.auth.util.JwtUtil;
 import epf.security.client.jwt.TokenUtil;
-import epf.security.internal.IdentityStore;
 import epf.security.internal.JPAPrincipal;
-import epf.security.internal.PrincipalStore;
 import epf.security.internal.Session;
+import epf.security.internal.store.JPAIdentityStore;
+import epf.security.internal.store.JPAPrincipalStore;
 import epf.security.internal.store.OTPSessionStore;
 import epf.security.internal.store.SessionStore;
 import epf.security.internal.token.TokenBuilder;
@@ -62,7 +64,6 @@ import epf.util.security.KeyUtil;
  * @author FOXCONN
  */
 @Path(Naming.SECURITY)
-@RolesAllowed(Naming.Security.DEFAULT_ROLE)
 @ApplicationScoped
 public class Security implements epf.security.client.Security, epf.security.client.otp.OTPSecurity, Serializable {
     
@@ -181,13 +182,13 @@ public class Security implements epf.security.client.Security, epf.security.clie
      * 
      */
     @Inject
-    transient IdentityStore identityStore;
+    transient JPAIdentityStore identityStore;
     
     /**
      * 
      */
     @Inject
-    transient PrincipalStore principalStore;
+    transient JPAPrincipalStore principalStore;
     
     /**
      * 
@@ -296,13 +297,15 @@ public class Security implements epf.security.client.Security, epf.security.clie
     				}
     			);
     }
-    
+
+    @RolesAllowed(Naming.Security.DEFAULT_ROLE)
     @Override
     public String logOut(final SecurityContext context) throws Exception {
     	final Session session = sessionStore.removeSession(context).orElseThrow(ForbiddenException::new);
     	return session.getToken().getName();
     }
     
+    @RolesAllowed(Naming.Security.DEFAULT_ROLE)
     @Override
     public Token authenticate(final SecurityContext context) {
     	sessionStore.getSession(context).orElseThrow(() -> new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build()));
@@ -313,13 +316,15 @@ public class Security implements epf.security.client.Security, epf.security.clie
 		return token;
     }
     
+    @RolesAllowed(Naming.Security.DEFAULT_ROLE)
     @Override
 	public CompletionStage<Response> update(final String password, final SecurityContext context) throws Exception {
     	final Session session = sessionStore.getSession(context).orElseThrow(ForbiddenException::new);
     	return principalStore.setCallerPassword(session.getPrincipal(), new Password(password)).thenApply((v) -> Response.ok().build());
 	}
 
-	@Override
+    @RolesAllowed(Naming.Security.DEFAULT_ROLE)
+    @Override
 	public CompletionStage<String> revoke( 
             final SecurityContext context,
 			final List<String> forwardedHost,
@@ -425,5 +430,27 @@ public class Security implements epf.security.client.Security, epf.security.clie
 		newToken.setSubject(claims.getSubject());
 		final TokenBuilder builder = new TokenBuilder(newToken, privateKey, publicKey);
 		return Response.ok(builder.build()).build();
+	}
+	
+	@RolesAllowed(Naming.EPF)
+    @Override
+	public Response createPrincipal(final SecurityContext context) throws Exception {
+		final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
+		final String password_hash = jwt.getClaim(Naming.Security.Credential.PASSWORD_HASH);
+		final Password password = new Password(password_hash.toCharArray());
+		final Optional<String> tenant = Optional.ofNullable(jwt.getClaim(Naming.Management.TENANT));
+		final Credential credential = new Credential(tenant.orElse(null), jwt.getName(), password);
+		final Map<String, Object> claims = new HashMap<>();
+		claims.put(Naming.Security.Claims.FIRST_NAME, jwt.getClaim(Naming.Security.Claims.FIRST_NAME));
+		claims.put(Naming.Security.Claims.LAST_NAME, jwt.getClaim(Naming.Security.Claims.LAST_NAME));
+		claims.put(Naming.Security.Claims.EMAIL, jwt.getClaim(Naming.Security.Claims.EMAIL));
+		tenant.ifPresent(tenantClaim -> claims.put(Naming.Management.TENANT, tenantClaim));
+		final CallerPrincipal principal = identityStore.authenticate(credential).toCompletableFuture().get();
+		if(principal != null) {
+			principalStore.putCaller(principal).toCompletableFuture().get();
+			principalStore.setCallerClaims(principal, claims).toCompletableFuture().get();
+			return Response.ok().build();
+		}
+		throw new BadRequestException();
 	}
 }

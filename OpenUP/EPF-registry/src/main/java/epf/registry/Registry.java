@@ -84,6 +84,13 @@ public class Registry implements epf.client.registry.Registry {
 	 * 
 	 */
 	@Inject
+	@ConfigProperty(name = Naming.Security.Management.SECURITY_MANAGEMENT_URL)
+	private transient URI securityManagementUrl;
+	
+	/**
+	 * 
+	 */
+	@Inject
 	@ConfigProperty(name = Naming.Transaction.TRANSACTION_URL)
 	private transient URI transactionUrl;
 	
@@ -196,6 +203,7 @@ public class Registry implements epf.client.registry.Registry {
 			remotes.put(Naming.MAIL, mailUrl);
 			remotes.put(Naming.PERSISTENCE, persistenceUrl);
 			remotes.put(Naming.SECURITY, securityUrl);
+			remotes.put(Naming.Security.SECURITY_MANAGEMENT, securityManagementUrl);
 			remotes.put(Naming.TRANSACTION, transactionUrl);
 			remotes.put(Naming.REGISTRY, registryUrl);
 			remotes.put(Naming.MESSAGING, messagingUrl);

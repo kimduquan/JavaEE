@@ -80,15 +80,15 @@ public interface Management {
     					)
     					);
     }
-
+    
     /**
      * @param context
      * @return
      * @throws Exception
      */
-    @Path(Naming.Security.PRINCIPAL)
-    @POST
-    Response createPrincipal(
+    @Path(Naming.Security.CREDENTIAL)
+    @PUT
+    Response activeCredential(
     		@Context 
     		final SecurityContext context) throws Exception;
     
@@ -97,12 +97,12 @@ public interface Management {
      * @return
      * @throws Exception
      */
-    static Response createPrincipal(final Client client) throws Exception {
+    static Response activeCredential(final Client client) throws Exception {
     	return client.request(
-    			target -> target.path(Naming.Security.PRINCIPAL), 
+    			target -> target.path(Naming.Security.CREDENTIAL), 
     			req -> req
     			)
-    			.post(null);
+    			.put(null);
     }
 
     /**

@@ -24,5 +24,5 @@ public interface NativeQueries {
 	/**
 	 * 
 	 */
-	String SET_USER__PASSWORD = "ALTER USER \"%s\" SET PASSWORD ?;";
+	String SET_USER_PASSWORD = "ALTER USER \"%s\" SET PASSWORD ?;";
 }

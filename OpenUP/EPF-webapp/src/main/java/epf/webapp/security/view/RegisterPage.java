@@ -135,7 +135,7 @@ public class RegisterPage implements RegisterView, Serializable {
 	@Override
 	public String register() throws Exception {
 		String token = null;
-		try(Client client = gatewayUtil.newClient(epf.naming.Naming.SECURITY)){
+		try(Client client = gatewayUtil.newClient(epf.naming.Naming.Security.SECURITY_MANAGEMENT)){
 			try(Response response = Management.createCredential(client, email, password, firstName, lastName)){
 				if(response.getStatus() == Status.OK.getStatusCode()) {
 					token = response.readEntity(String.class);

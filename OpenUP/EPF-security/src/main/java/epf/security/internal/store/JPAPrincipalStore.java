@@ -20,9 +20,8 @@ import javax.transaction.Transactional;
 import javax.ws.rs.BadRequestException;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.naming.Naming;
-import epf.security.internal.IdentityStore;
 import epf.security.internal.JPAPrincipal;
-import epf.security.internal.PrincipalStore;
+import epf.security.internal.TenantPersistence;
 import epf.security.internal.sql.NativeQueries;
 import epf.security.schema.Principal;
 import epf.security.util.Credential;
@@ -35,7 +34,7 @@ import epf.util.StringUtil;
  *
  */
 @ApplicationScoped
-public class JPAPrincipalStore implements PrincipalStore {
+public class JPAPrincipalStore {
 	
 	/**
 	 * 
@@ -74,10 +73,9 @@ public class JPAPrincipalStore implements PrincipalStore {
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		factory = Persistence.createEntityManagerFactory(IdentityStore.SECURITY_UNIT_NAME);
+		factory = Persistence.createEntityManagerFactory(Naming.Security.Internal.SECURITY_UNIT_NAME);
 	}
 
-	@Override
 	@Transactional
 	public CompletionStage<Void> setCallerPassword(final CallerPrincipal callerPrincipal, final Password password) throws Exception{
 		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
@@ -93,7 +91,7 @@ public class JPAPrincipalStore implements PrincipalStore {
 			final Map<String, Object> props = new HashMap<>(principal.getFactory().getProperties());
 			principal.close();
 			props.put(Naming.Persistence.JDBC.JDBC_PASSWORD, passwordHash);
-			final EntityManagerFactory factory = Persistence.createEntityManagerFactory(IdentityStore.SECURITY_UNIT_NAME, props);
+			final EntityManagerFactory factory = Persistence.createEntityManagerFactory(Naming.Security.Internal.SECURITY_UNIT_NAME, props);
 			final EntityManager newManager = factory.createEntityManager();
 			principal.reset(factory, newManager);
 			oldCredential.get().setPassword(new Password(passwordHash));
@@ -101,7 +99,6 @@ public class JPAPrincipalStore implements PrincipalStore {
 		});
 	}
 
-	@Override
 	public CompletionStage<Map<String, Object>> getCallerClaims(final CallerPrincipal callerPrincipal) {
 		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
 		final JPAPrincipal principal = (JPAPrincipal) callerPrincipal;
@@ -163,7 +160,6 @@ public class JPAPrincipalStore implements PrincipalStore {
 		return StringUtil.join(tenant.orElse(""), caller);
 	}
 
-	@Override
 	@Transactional
 	public CompletionStage<Void> setCallerClaims(final CallerPrincipal callerPrincipal, final Map<String, Object> claims) {
 		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
@@ -187,7 +183,6 @@ public class JPAPrincipalStore implements PrincipalStore {
 		return executor.completedStage(null);
 	}
 
-	@Override
 	@Transactional
 	public CompletionStage<Void> putCaller(final CallerPrincipal callerPrincipal) throws Exception {
 		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
@@ -195,7 +190,7 @@ public class JPAPrincipalStore implements PrincipalStore {
 		EntityManager entityManager = factory.createEntityManager();
 		final JPAPrincipal principal = (JPAPrincipal) callerPrincipal;
 		if(principal.getTenant().isPresent()) {
-			entityManager = persistence.createManager(principal.getTenant().get());
+			entityManager = persistence.createManager(Naming.Security.Internal.SECURITY_UNIT_NAME, principal.getTenant().get());
 		}
 		if(!entityManager.isJoinedToTransaction()) {
 			entityManager.joinTransaction();

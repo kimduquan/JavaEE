@@ -258,4 +258,28 @@ public interface Security {
     			.post(Entity.form(new Form().param("provider", provider).param("session", session).param("token", token).param(URL, url.toString())))
     			.readEntity(Token.class);
     }
+    
+    /**
+     * @param context
+     * @return
+     * @throws Exception
+     */
+    @Path(Naming.Security.PRINCIPAL)
+    @POST
+    Response createPrincipal(
+    		@Context 
+    		final SecurityContext context) throws Exception;
+    
+    /**
+     * @param client
+     * @return
+     * @throws Exception
+     */
+    static Response createPrincipal(final Client client) throws Exception {
+    	return client.request(
+    			target -> target.path(Naming.Security.PRINCIPAL), 
+    			req -> req
+    			)
+    			.post(null);
+    }
 }

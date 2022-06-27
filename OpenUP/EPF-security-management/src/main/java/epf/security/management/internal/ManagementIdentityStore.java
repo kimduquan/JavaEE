@@ -15,8 +15,8 @@ import javax.transaction.Transactional;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.naming.Naming;
-import epf.security.internal.IdentityStore;
 import epf.security.internal.JPAPrincipal;
+import epf.security.internal.TenantPersistence;
 import epf.security.schema.Security;
 import epf.security.util.Credential;
 import epf.security.util.JdbcUtil;
@@ -44,7 +44,7 @@ public class ManagementIdentityStore {
 	/**
 	 * 
 	 */
-	@PersistenceContext(unitName = IdentityStore.SECURITY_MANAGEMENT_UNIT_NAME)
+	@PersistenceContext(unitName = Naming.Security.Internal.SECURITY_MANAGEMENT_UNIT_NAME)
 	transient EntityManager manager;
 	
 	/**
@@ -60,7 +60,7 @@ public class ManagementIdentityStore {
 		Objects.requireNonNull(credential.getPassword(), "Credential.password");
 		EntityManager entityManager = manager;
 		if(credential.getTenant().isPresent()) {
-			entityManager = persistence.createManager(credential.getTenant().get());
+			entityManager = persistence.createManager(Naming.Security.Internal.SECURITY_MANAGEMENT_UNIT_NAME, credential.getTenant().get());
 			if(!entityManager.isJoinedToTransaction()) {
 				entityManager.joinTransaction();
 			}
@@ -71,7 +71,7 @@ public class ManagementIdentityStore {
 		return executor.completedStage(null);
 	}
 
-	public CompletionStage<CallerPrincipal> authenticate(Credential credential) throws Exception {
+	public CompletionStage<CallerPrincipal> authenticate(final Credential credential) throws Exception {
 		final Map<String, Object> props = new ConcurrentHashMap<>();
         props.put(Naming.Persistence.JDBC.JDBC_USER, credential.getCaller());
         props.put(Naming.Persistence.JDBC.JDBC_PASSWORD, String.valueOf(credential.getPassword().getValue()));
@@ -79,7 +79,7 @@ public class ManagementIdentityStore {
         	final String jdbcUrl = JdbcUtil.formatJdbcUrl(Naming.Security.Internal.JDBC_URL_FORMAT, Security.SCHEMA, tenant, "-");
         	props.put(Naming.Persistence.JDBC.JDBC_URL, jdbcUrl);
         });
-        return executor.supplyAsync(() -> Persistence.createEntityManagerFactory(IdentityStore.SECURITY_UNIT_NAME, props))
+        return executor.supplyAsync(() -> Persistence.createEntityManagerFactory(Naming.Security.Internal.SECURITY_MANAGEMENT_UNIT_NAME, props))
         		.thenApply(factory -> {
         			try {
         				final EntityManager manager = factory.createEntityManager();
@@ -99,7 +99,7 @@ public class ManagementIdentityStore {
 		EntityManager entityManager = manager;
 		final JPAPrincipal principal = (JPAPrincipal) callerPrincipal;
 		if(principal.getTenant().isPresent()) {
-			entityManager = persistence.createManager(principal.getTenant().get());
+			entityManager = persistence.createManager(Naming.Security.Internal.SECURITY_MANAGEMENT_UNIT_NAME, principal.getTenant().get());
 			if(!entityManager.isJoinedToTransaction()) {
 				entityManager.joinTransaction();
 			}
@@ -116,12 +116,12 @@ public class ManagementIdentityStore {
 		Objects.requireNonNull(credential.getPassword(), "Credential.password");
 		EntityManager entityManager = manager;
 		if(credential.getTenant().isPresent()) {
-			entityManager = persistence.createManager(credential.getTenant().get());
+			entityManager = persistence.createManager(Naming.Security.Internal.SECURITY_MANAGEMENT_UNIT_NAME, credential.getTenant().get());
 			if(!entityManager.isJoinedToTransaction()) {
 				entityManager.joinTransaction();
 			}
 		}
-		entityManager.createNativeQuery(String.format(NativeQueries.SET_USER__PASSWORD, credential.getCaller())).setParameter(1, new String(credential.getPassword().getValue())).executeUpdate();
+		entityManager.createNativeQuery(String.format(NativeQueries.SET_USER_PASSWORD, credential.getCaller())).setParameter(1, new String(credential.getPassword().getValue())).executeUpdate();
 		return executor.completedStage(null);
 	}
 
@@ -130,7 +130,7 @@ public class ManagementIdentityStore {
 		Objects.requireNonNull(credential.getCaller(), "Credential.caller");
 		EntityManager entityManager = manager;
 		if(credential.getTenant().isPresent()) {
-			entityManager = persistence.createManager(credential.getTenant().get());
+			entityManager = persistence.createManager(Naming.Security.Internal.SECURITY_MANAGEMENT_UNIT_NAME, credential.getTenant().get());
 		}
 		final Long count = (Long) entityManager.createNativeQuery(NativeQueries.CHECK_USER).setParameter(1, credential.getCaller()).getSingleResult();
 		return executor.completedStage(count > 0);
