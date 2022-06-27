@@ -6,6 +6,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import epf.naming.Naming;
 import epf.util.logging.LogManager;
@@ -37,42 +39,49 @@ public class SecurityUtil {
 	 *
 	 */
 	@ConfigProperty(name = Naming.Client.SSL_KEY_STORE)
+	@Inject
 	transient String keyStoreFile;
 	
 	/**
 	 *
 	 */
 	@ConfigProperty(name = Naming.Client.SSL_KEY_STORE_TYPE)
+	@Inject
 	transient String keyStoreType;
 	
 	/**
 	 *
 	 */
 	@ConfigProperty(name = Naming.Client.SSL_KEY_STORE_PASSWORD)
+	@Inject
 	transient String keyStorePassword;
 	
 	/**
 	 *
 	 */
 	@ConfigProperty(name = Naming.Client.SSL_KEY_PASSWORD)
+	@Inject
 	transient String keyPassword;
 	
 	/**
 	 *
 	 */
 	@ConfigProperty(name = Naming.Client.SSL_TRUST_STORE)
+	@Inject
 	transient String trustStoreFile;
 	
 	/**
 	 *
 	 */
 	@ConfigProperty(name = Naming.Client.SSL_TRUST_STORE_TYPE)
+	@Inject
 	transient String trustStoreType;
 	
 	/**
 	 *
 	 */
 	@ConfigProperty(name = Naming.Client.SSL_TRUST_STORE_PASSWORD)
+	@Inject
 	transient String trustStorePassword;
 	
 	/**

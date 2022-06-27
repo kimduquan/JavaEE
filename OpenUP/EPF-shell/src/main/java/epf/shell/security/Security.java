@@ -51,6 +51,7 @@ public class Security {
 	 * 
 	 */
 	@ConfigProperty(name = Naming.Shell.SHELL_URL)
+	@Inject
 	String shellUrl;
 
 	/**

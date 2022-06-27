@@ -35,6 +35,7 @@ public class ClientUtil {
 	 * 
 	 */
 	@ConfigProperty(name = Naming.Client.CLIENT_CONFIG + "/mp-rest/uri")
+	@Inject
 	URI gatewayUrl;
 
 	/**
