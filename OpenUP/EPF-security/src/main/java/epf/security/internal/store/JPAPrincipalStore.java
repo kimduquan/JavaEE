@@ -4,9 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.CompletionStage;
-import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -21,13 +19,10 @@ import javax.ws.rs.BadRequestException;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.naming.Naming;
 import epf.security.internal.JPAPrincipal;
+import epf.security.internal.NativeQueries;
 import epf.security.internal.TenantPersistence;
-import epf.security.internal.sql.NativeQueries;
 import epf.security.schema.Principal;
 import epf.security.util.Credential;
-import epf.security.util.CredentialUtil;
-import epf.util.MapUtil;
-import epf.util.StringUtil;
 
 /**
  * @author PC
@@ -35,21 +30,6 @@ import epf.util.StringUtil;
  */
 @ApplicationScoped
 public class JPAPrincipalStore {
-	
-	/**
-	 * 
-	 */
-	private transient final Map<String, Credential> credentials = new ConcurrentHashMap<>();
-	
-	/**
-	 * 
-	 */
-	private transient final Map<String, JPAPrincipal> principals = new ConcurrentHashMap<>();
-	
-	/**
-	 * 
-	 */
-	private transient final Map<String, Credential> principalCredentials = new ConcurrentHashMap<>();
 	
 	/**
 	 * 
@@ -76,90 +56,47 @@ public class JPAPrincipalStore {
 		factory = Persistence.createEntityManagerFactory(Naming.Security.Internal.SECURITY_UNIT_NAME);
 	}
 
-	@Transactional
-	public CompletionStage<Void> setCallerPassword(final CallerPrincipal callerPrincipal, final Password password) throws Exception{
-		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
-		final JPAPrincipal principal = (JPAPrincipal)callerPrincipal;
-		final EntityManager manager = principal.getFactory().createEntityManager();
-		manager.joinTransaction();
-		final Query query = manager.createNativeQuery(NativeQueries.SET_PASSWORD);
-		query.setParameter(1, new String(password.getValue()));
-		query.executeUpdate();
-		final Optional<Credential> oldCredential = getPrincipalCredential(principal.getName(), principal.getTenant());
-		final String passwordHash = CredentialUtil.encryptPassword(oldCredential.get().getCaller(), new String(password.getValue()));
-		return executor.supplyAsync(() -> {
-			final Map<String, Object> props = new HashMap<>(principal.getFactory().getProperties());
-			principal.close();
-			props.put(Naming.Persistence.JDBC.JDBC_PASSWORD, passwordHash);
-			final EntityManagerFactory factory = Persistence.createEntityManagerFactory(Naming.Security.Internal.SECURITY_UNIT_NAME, props);
-			final EntityManager newManager = factory.createEntityManager();
-			principal.reset(factory, newManager);
-			oldCredential.get().setPassword(new Password(passwordHash));
-			return null;
-		});
-	}
-
-	public CompletionStage<Map<String, Object>> getCallerClaims(final CallerPrincipal callerPrincipal) {
-		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
-		final JPAPrincipal principal = (JPAPrincipal) callerPrincipal;
-		return executor.supplyAsync(() -> principal.getFactory().createEntityManager())
-		.thenApply(manager -> manager.find(Principal.class, principal.getName()))
-		.thenApply(p -> {
-			final Map<String, Object> claims = new HashMap<>();
-			if(p.getClaims() != null) {
-				claims.putAll(p.getClaims());
-			}
-			return claims;
-		});
-	}
-	
 	/**
 	 * @param credential
-	 * @param factory
-	 * @param manager
+	 * @param password
 	 * @return
+	 * @throws Exception
 	 */
-	protected JPAPrincipal putPrincipaḷ̣̣̣̣(final Credential credential, final EntityManagerFactory factory, final EntityManager manager) {
-		final JPAPrincipal principal = new JPAPrincipal(credential.getTenant(), credential.getCaller(), factory, manager);
-		final String key = getKey(credential.getCaller(), credential.getTenant());
-		principals.put(key, principal);
-		credentials.put(key, credential);
-		final String principalKey = getKey(principal.getName(), principal.getTenant());
-		principalCredentials.put(principalKey, credential);
-		return principal;
-	}
-	
-	/**
-	 * @param caller
-	 * @param tenant
-	 * @return
-	 */
-	protected Optional<JPAPrincipal> getPrincipal(final String caller, final Optional<String> tenant){
-		return MapUtil.get(principals, getKey(caller, tenant));
-	}
-	
-	/**
-	 * @param caller
-	 * @param tenant
-	 * @return
-	 */
-	protected Optional<Credential> getCredential(final String caller, final Optional<String> tenant){
-		return MapUtil.get(credentials, getKey(caller, tenant));
-	}
-	
-	/**
-	 * @param caller
-	 * @param tenant
-	 * @return
-	 */
-	protected Optional<Credential> getPrincipalCredential(final String name, final Optional<String> tenant){
-		return MapUtil.get(principalCredentials, getKey(name, tenant));
-	}
-	
-	private String getKey(final String caller, final Optional<String> tenant) {
-		return StringUtil.join(tenant.orElse(""), caller);
+	@Transactional
+	public CompletionStage<Void> setCallerPassword(final Credential credential, final Password password) throws Exception{
+		Objects.requireNonNull(credential, "Credential");
+		final EntityManager manager = factory.createEntityManager();
+		if(!manager.isJoinedToTransaction()) {
+			manager.joinTransaction();
+		}
+		final Query query = manager.createNativeQuery(String.format(NativeQueries.SET_PASSWORD, credential.getCaller()));
+		query.setParameter(1, new String(password.getValue()));
+		query.executeUpdate();
+		manager.close();
+		return executor.completedStage(null);
 	}
 
+	/**
+	 * @param credential
+	 * @return
+	 */
+	public CompletionStage<Map<String, Object>> getCallerClaims(final Credential credential) {
+		Objects.requireNonNull(credential, "Credential");
+		final EntityManager manager = factory.createEntityManager();
+		final Principal principal = manager.find(Principal.class, credential.getCaller());
+		final Map<String, Object> claims = new HashMap<>();
+		if(principal.getClaims() != null) {
+			claims.putAll(principal.getClaims());
+		}
+		manager.close();
+		return executor.completedStage(claims);
+	}
+
+	/**
+	 * @param callerPrincipal
+	 * @param claims
+	 * @return
+	 */
 	@Transactional
 	public CompletionStage<Void> setCallerClaims(final CallerPrincipal callerPrincipal, final Map<String, Object> claims) {
 		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
@@ -183,6 +120,11 @@ public class JPAPrincipalStore {
 		return executor.completedStage(null);
 	}
 
+	/**
+	 * @param callerPrincipal
+	 * @return
+	 * @throws Exception
+	 */
 	@Transactional
 	public CompletionStage<Void> putCaller(final CallerPrincipal callerPrincipal) throws Exception {
 		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
@@ -196,6 +138,7 @@ public class JPAPrincipalStore {
 			entityManager.joinTransaction();
 		}
 		if(entityManager.find(Principal.class, callerPrincipal.getName()) != null) {
+			entityManager.close();
 			return executor.failedStage(new BadRequestException());
 		}
 		final Principal p = new Principal();

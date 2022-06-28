@@ -8,8 +8,6 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.jwt.JsonWebToken;
-
-import epf.security.internal.JPAPrincipal;
 import epf.security.internal.Session;
 import epf.security.schema.Token;
 import epf.security.util.Credential;
@@ -79,14 +77,14 @@ public class SessionStore {
     }
     
     /**
-     * @param session
+     * @param token
+     * @param credential
      * @return
      */
-    public Session putSession(final JPAPrincipal principal, final Token token, final Credential credential){
-    	Objects.requireNonNull(principal, "CallerPrincipal");
+    public Session putSession(final Token token, final Credential credential){
     	Objects.requireNonNull(token, "Token");
     	Objects.requireNonNull(token.getTokenID(), "Token.tokenId");
-    	final Session session = new Session(principal, token, credential);
+    	final Session session = new Session(token, credential);
         MapUtil.put(sessions, token.getTokenID(), session);
         return session;
     }

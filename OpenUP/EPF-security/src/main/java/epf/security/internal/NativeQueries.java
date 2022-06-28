@@ -1,4 +1,4 @@
-package epf.security.internal.sql;
+package epf.security.internal;
 
 /**
  * @author PC
@@ -14,5 +14,5 @@ public interface NativeQueries {
 	/**
 	 * 
 	 */
-	String SET_PASSWORD = "SET PASSWORD ?;";
+	String SET_PASSWORD = "ALTER USER \"%s\" SET PASSWORD ?;";
 }

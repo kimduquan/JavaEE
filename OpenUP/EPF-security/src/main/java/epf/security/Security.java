@@ -25,8 +25,8 @@ import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
-import javax.security.enterprise.CallerPrincipal;
 import javax.security.enterprise.credential.Password;
+import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.CredentialValidationResult.Status;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.ForbiddenException;
@@ -277,16 +277,17 @@ public class Security implements epf.security.client.Security, epf.security.clie
     					throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
     					}
     			)
-    			.thenCompose(principal -> identityStore.getCallerGroups(principal)
+    			.thenCompose(principal -> identityStore.getCallerGroups(credential)
     					.thenCombine(
-								principalStore.getCallerClaims(principal), 
+								principalStore.getCallerClaims(credential), 
 								(groups, claims) -> {
 									final Set<String> audience = TokenBuilder.buildAudience(url, forwardedHost, forwardedPort, forwardedProto, credential.getTenant());
 									final Map<String, Object> newClaims = TokenBuilder.buildClaims(claims, credential.getTenant());
 									final Token token = newToken(principal.getName(), groups, audience, newClaims, expireDuration);
+									principal.close();
 									final TokenBuilder builder = new TokenBuilder(token, privateKey, publicKey);
 									final Token newToken = builder.build();
-									sessionStore.putSession(principal, newToken, credential);
+									sessionStore.putSession(newToken, credential);
 									return newToken;
 									}
 								)
@@ -320,7 +321,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
     @Override
 	public CompletionStage<Response> update(final String password, final SecurityContext context) throws Exception {
     	final Session session = sessionStore.getSession(context).orElseThrow(ForbiddenException::new);
-    	return principalStore.setCallerPassword(session.getPrincipal(), new Password(password)).thenApply((v) -> Response.ok().build());
+    	return principalStore.setCallerPassword(session.getCredential(), new Password(password)).thenApply((v) -> Response.ok().build());
 	}
 
     @RolesAllowed(Naming.Security.DEFAULT_ROLE)
@@ -336,12 +337,12 @@ public class Security implements epf.security.client.Security, epf.security.clie
 		final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
 		final Set<String> audience = TokenBuilder.buildAudience(null, forwardedHost, forwardedPort, forwardedProto, Optional.ofNullable(jwt.getClaim(Naming.Management.TENANT)));
 		audience.addAll(jwt.getAudience());
-		return identityStore.getCallerGroups(session.getPrincipal())
-				.thenCombine(principalStore.getCallerClaims(session.getPrincipal()), (groups, claims) -> newToken(jwt, groups, audience, claims, tokenDuration))
+		return identityStore.getCallerGroups(session.getCredential())
+				.thenCombine(principalStore.getCallerClaims(session.getCredential()), (groups, claims) -> newToken(jwt, groups, audience, claims, tokenDuration))
 						.thenApply(token -> new TokenBuilder(token, privateKey, publicKey))
 						.thenApply(builder -> builder.build())
 						.thenApply(newToken -> {
-							sessionStore.putSession(session.getPrincipal(), newToken, session.getCredential());
+							sessionStore.putSession(newToken, session.getCredential());
 							return newToken;
 						})
 						.thenApply(token -> {
@@ -365,7 +366,10 @@ public class Security implements epf.security.client.Security, epf.security.clie
     					}
 					throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
     				})
-    			.thenApply(principal -> otpSessionStore.putSession(principal, credential));
+    			.thenApply(principal -> {
+    				principal.close();
+    				return otpSessionStore.putSession(credential);
+    			});
 	}
 
 	@PermitAll
@@ -379,12 +383,12 @@ public class Security implements epf.security.client.Security, epf.security.clie
             final String tenant) {
 		final Session session = otpSessionStore.removeSession(oneTimePassword).orElseThrow(() -> new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build()));
 		final Set<String> audience = TokenBuilder.buildAudience(url, forwardedHost, forwardedPort, forwardedProto, Optional.ofNullable(tenant));
-		return identityStore.getCallerGroups(session.getPrincipal())
-		.thenCombine(principalStore.getCallerClaims(session.getPrincipal()), (groups, claims) -> newToken(session.getPrincipal().getName(), groups, audience, claims, expireDuration))
+		return identityStore.getCallerGroups(session.getCredential())
+		.thenCombine(principalStore.getCallerClaims(session.getCredential()), (groups, claims) -> newToken(session.getCredential().getCaller(), groups, audience, claims, expireDuration))
 		.thenApply(token -> new TokenBuilder(token, privateKey, publicKey))
 		.thenApply(builder -> builder.build())
 		.thenApply(newToken -> {
-			sessionStore.putSession(session.getPrincipal(), newToken, session.getCredential());
+			sessionStore.putSession(newToken, session.getCredential());
 			return newToken;
 		})
 		.thenApply(token -> { 
@@ -445,10 +449,12 @@ public class Security implements epf.security.client.Security, epf.security.clie
 		claims.put(Naming.Security.Claims.LAST_NAME, jwt.getClaim(Naming.Security.Claims.LAST_NAME));
 		claims.put(Naming.Security.Claims.EMAIL, jwt.getClaim(Naming.Security.Claims.EMAIL));
 		tenant.ifPresent(tenantClaim -> claims.put(Naming.Management.TENANT, tenantClaim));
-		final CallerPrincipal principal = identityStore.authenticate(credential).toCompletableFuture().get();
-		if(principal != null) {
+		final CredentialValidationResult result = identityStore.validate(credential).toCompletableFuture().get();
+		if(Status.VALID.equals(result.getStatus())) {
+			final JPAPrincipal principal = (JPAPrincipal) result.getCallerPrincipal();
 			principalStore.putCaller(principal).toCompletableFuture().get();
 			principalStore.setCallerClaims(principal, claims).toCompletableFuture().get();
+			principal.close();
 			return Response.ok().build();
 		}
 		throw new BadRequestException();

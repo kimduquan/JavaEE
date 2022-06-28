@@ -11,7 +11,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import epf.naming.Naming;
-import epf.security.internal.JPAPrincipal;
 import epf.security.internal.Session;
 import epf.security.internal.token.TokenIdGenerator;
 import epf.security.schema.Token;
@@ -57,9 +56,13 @@ public class OTPSessionStore {
     	return token;
     }
 	
-	public String putSession(final JPAPrincipal principal, final Credential credential) {
-		final Token token = newToken(principal.getName());
-		sessions.put(token.getTokenID(), new Session(principal, token, credential));
+	/**
+	 * @param credential
+	 * @return
+	 */
+	public String putSession(final Credential credential) {
+		final Token token = newToken(credential.getCaller());
+		sessions.put(token.getTokenID(), new Session(token, credential));
 		return token.getTokenID();
 	}
 	
