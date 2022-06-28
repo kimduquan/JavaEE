@@ -65,7 +65,13 @@ public class JPAPrincipalStore {
 	@Transactional
 	public CompletionStage<Void> setCallerPassword(final Credential credential, final Password password) throws Exception{
 		Objects.requireNonNull(credential, "Credential");
-		final EntityManager manager = factory.createEntityManager();
+		EntityManager manager;
+		if(credential.getTenant().isPresent()) {
+			manager = persistence.createManager(Naming.Security.Internal.SECURITY_UNIT_NAME, credential.getTenant().get());
+		}
+		else {
+			manager = factory.createEntityManager();
+		}
 		if(!manager.isJoinedToTransaction()) {
 			manager.joinTransaction();
 		}
@@ -82,10 +88,16 @@ public class JPAPrincipalStore {
 	 */
 	public CompletionStage<Map<String, Object>> getCallerClaims(final Credential credential) {
 		Objects.requireNonNull(credential, "Credential");
-		final EntityManager manager = factory.createEntityManager();
+		EntityManager manager;
+		if(credential.getTenant().isPresent()) {
+			manager = persistence.createManager(Naming.Security.Internal.SECURITY_UNIT_NAME, credential.getTenant().get());
+		}
+		else {
+			manager = factory.createEntityManager();
+		}
 		final Principal principal = manager.find(Principal.class, credential.getCaller());
 		final Map<String, Object> claims = new HashMap<>();
-		if(principal.getClaims() != null) {
+		if(principal != null && principal.getClaims() != null) {
 			claims.putAll(principal.getClaims());
 		}
 		manager.close();
@@ -141,10 +153,10 @@ public class JPAPrincipalStore {
 			entityManager.close();
 			return executor.failedStage(new BadRequestException());
 		}
-		final Principal p = new Principal();
-		p.setName(callerPrincipal.getName());
-		p.setClaims(new HashMap<>());
-		entityManager.persist(p);
+		final Principal newPrincipal = new Principal();
+		newPrincipal.setName(callerPrincipal.getName());
+		newPrincipal.setClaims(new HashMap<>());
+		entityManager.persist(newPrincipal);
 		entityManager.flush();
 		entityManager.close();
 		return executor.completedStage(null);

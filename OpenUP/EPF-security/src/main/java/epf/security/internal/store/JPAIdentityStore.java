@@ -7,11 +7,12 @@ import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -35,6 +36,11 @@ public class JPAIdentityStore {
 	/**
 	 * 
 	 */
+	transient EntityManagerFactory factory;
+	
+	/**
+	 * 
+	 */
 	@Inject
 	transient ManagedExecutor executor;
 	
@@ -46,16 +52,18 @@ public class JPAIdentityStore {
 	transient String jdbcUrl;
 	
 	/**
-	 * 
-	 */
-	@PersistenceContext(unitName = Naming.Security.Internal.SECURITY_UNIT_NAME)
-	transient EntityManager manager;
-	
-	/**
 	 *
 	 */
 	@Inject
 	transient TenantPersistence persistence;
+	
+	/**
+	 * 
+	 */
+	@PostConstruct
+	protected void postConstruct() {
+		factory = Persistence.createEntityManagerFactory(Naming.Security.Internal.SECURITY_UNIT_NAME);
+	}
 
 	/**
 	 * @param credential
@@ -77,18 +85,18 @@ public class JPAIdentityStore {
 	 */
 	public CompletionStage<Set<String>> getCallerGroups(final Credential credential) {
 		Objects.requireNonNull(credential, "Credential");
-		EntityManager entityManager = manager;
+		EntityManager entityManager;
 		if(credential.getTenant().isPresent()) {
 			entityManager = persistence.createManager(Naming.Security.Internal.SECURITY_UNIT_NAME, credential.getTenant().get());
 		}
+		else {
+			entityManager = factory.createEntityManager();
+		}
 		final Query query = entityManager.createNativeQuery(NativeQueries.GET_CURRENT_ROLES);
 		final Stream<?> stream = query.setParameter(1, credential.getCaller()).getResultStream();
-		return executor.supplyAsync(() -> {
-			final Set<String> groups = stream.map(role -> {
-				return StringUtil.toPascalSnakeCase(role.toString().split("_"));
-				}).collect(Collectors.toSet());
-			return groups;
-		});
+		final Set<String> groups = stream.map(role -> StringUtil.toPascalSnakeCase(role.toString().split("_"))).collect(Collectors.toSet());
+		entityManager.close();
+		return executor.completedStage(groups);
 	}
 
 	/**
