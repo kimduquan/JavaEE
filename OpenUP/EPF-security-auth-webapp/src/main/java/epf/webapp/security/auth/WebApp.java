@@ -1,4 +1,4 @@
-package epf.webapp;
+package epf.webapp.security.auth;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.faces.annotation.FacesConfig;
