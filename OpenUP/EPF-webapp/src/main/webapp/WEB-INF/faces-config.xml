@@ -10,8 +10,6 @@
     <protected-views>
     	<url-pattern>/security/auth/auth.xhtml</url-pattern>
     	<url-pattern>/security/auth/openid.xhtml</url-pattern>
-		<url-pattern>/security/register.xhtml</url-pattern>
-		<url-pattern>/security/forgot-password.xhtml</url-pattern>
     </protected-views>
 	<application>
 		<resource-bundle>
