@@ -50,6 +50,22 @@
 		    <groupId>org.eclipse.microprofile.jwt</groupId>
 		    <artifactId>microprofile-jwt-auth-api</artifactId>
 		</dependency>
+		<dependency>
+		    <groupId>org.eclipse.microprofile.health</groupId>
+		    <artifactId>microprofile-health-api</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.eclipse.microprofile.context-propagation</groupId>
+		    <artifactId>microprofile-context-propagation-api</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.eclipse.microprofile.graphql</groupId>
+		    <artifactId>microprofile-graphql-api</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.eclipse.microprofile.openapi</groupId>
+		    <artifactId>microprofile-openapi-api</artifactId>
+		</dependency>
 		
 		<dependency>
             <groupId>openup</groupId>
@@ -101,7 +117,7 @@
                     <execution>
                         <phase>pre-integration-test</phase>
                         <goals>
-                            <goal>deploy</goal>
+                            <goal>redeploy</goal>
                         </goals>
                     </execution>
                 </executions>

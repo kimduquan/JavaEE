@@ -1,7 +1,9 @@
-package epf.webapp.security.auth;
+package epf.webapp.security;
 
+import javax.annotation.security.DeclareRoles;
 import javax.enterprise.context.ApplicationScoped;
 import javax.faces.annotation.FacesConfig;
+import epf.naming.Naming;
 
 /**
  * @author PC
@@ -9,6 +11,7 @@ import javax.faces.annotation.FacesConfig;
  */
 @ApplicationScoped
 @FacesConfig
+@DeclareRoles(value = { Naming.Security.DEFAULT_ROLE })
 public class WebApp {
 	
 }

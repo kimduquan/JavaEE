@@ -103,6 +103,22 @@ public interface Naming {
 		/**
 		 * 
 		 */
+		interface Auth {
+			
+			/**
+			 *
+			 */
+			String CONTEXT_ROOT = "/security-auth";
+			
+			/**
+			 *
+			 */
+			String AUTH_PAGE = "/webapp/auth.html";
+		}
+		
+		/**
+		 * 
+		 */
 		interface View {
 			
 			/**
