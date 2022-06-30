@@ -7,11 +7,16 @@ import javax.faces.context.ExternalContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.security.enterprise.SecurityContext;
+import javax.security.enterprise.authentication.mechanism.http.AuthenticationParameters;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.eclipse.microprofile.jwt.Claims;
-import epf.security.view.PrincipalView;
+import epf.security.view.SecurityView;
 import epf.webapp.internal.Session;
+import epf.webapp.internal.TokenCredential;
 import epf.webapp.naming.Naming;
 import epf.webapp.util.CookieUtil;
 
@@ -21,7 +26,7 @@ import epf.webapp.util.CookieUtil;
  */
 @ViewScoped
 @Named(Naming.Security.PRINCIPAL)
-public class PrincipalPage implements PrincipalView, Serializable {
+public class SecurityPage implements SecurityView, Serializable {
 	
 	/**
 	 * 
@@ -39,6 +44,12 @@ public class PrincipalPage implements PrincipalView, Serializable {
 	 */
 	@Inject
     private transient ExternalContext externalContext;
+	
+	/**
+	 *
+	 */
+	@Inject
+	private transient SecurityContext context;
 	
 	/**
 	 * 
@@ -85,5 +96,20 @@ public class PrincipalPage implements PrincipalView, Serializable {
 	@Override
 	public String getClaim(String name) {
 		return session.getClaim(name);
+	}
+
+	@Override
+	public String login() throws Exception {
+		externalContext.redirect("/security-auth/security/login.html");
+		return "";
+	}
+
+	@Override
+	public String authenticate() throws Exception {
+		final TokenCredential credential = new TokenCredential(request.getParameter("token").toCharArray());
+		final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(false);
+		final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
+		context.authenticate(request, response, params);
+		return "";
 	}
 }

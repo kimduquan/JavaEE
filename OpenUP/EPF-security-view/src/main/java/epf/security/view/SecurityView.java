@@ -6,7 +6,7 @@ import java.util.List;
  * @author PC
  *
  */
-public interface PrincipalView {
+public interface SecurityView {
 	
 	/**
 	 * @return
@@ -23,6 +23,18 @@ public interface PrincipalView {
 	 * @return
 	 */
 	String getClaim(final String name);
+	
+	/**
+	 * @return
+	 * @throws Exception
+	 */
+	String login() throws Exception;
+	
+	/**
+	 * @return
+	 * @throws Exception
+	 */
+	String authenticate() throws Exception;
 	
 	/**
 	 * @return
