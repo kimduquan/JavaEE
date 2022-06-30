@@ -20,97 +20,9 @@
 			<artifactId>javax.security.enterprise-api</artifactId>
 		    <scope>provided</scope>
 		</dependency>
-		<dependency>
-		    <groupId>javax.annotation</groupId>
-		    <artifactId>javax.annotation-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.ws.rs</groupId>
-			<artifactId>javax.ws.rs-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-		    <groupId>javax.faces</groupId>
-		    <artifactId>javax.faces-api</artifactId>
-		    <scope>provided</scope>
-		</dependency>
-		<dependency>
-		    <groupId>javax.servlet</groupId>
-		    <artifactId>javax.servlet-api</artifactId>
-		    <scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.json</groupId>
-			<artifactId>javax.json-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		
-		<dependency>
-		    <groupId>org.eclipse.microprofile.jwt</groupId>
-		    <artifactId>microprofile-jwt-auth-api</artifactId>
-		</dependency>
-		<dependency>
-		    <groupId>org.eclipse.microprofile.health</groupId>
-		    <artifactId>microprofile-health-api</artifactId>
-		</dependency>
-		<dependency>
-		    <groupId>org.eclipse.microprofile.context-propagation</groupId>
-		    <artifactId>microprofile-context-propagation-api</artifactId>
-		</dependency>
-		<dependency>
-		    <groupId>org.eclipse.microprofile.graphql</groupId>
-		    <artifactId>microprofile-graphql-api</artifactId>
-		</dependency>
-		<dependency>
-		    <groupId>org.eclipse.microprofile.openapi</groupId>
-		    <artifactId>microprofile-openapi-api</artifactId>
-		</dependency>
-		
-		<!-- https://mvnrepository.com/artifact/org.primefaces/primefaces -->
-		<dependency>
-		    <groupId>org.primefaces</groupId>
-		    <artifactId>primefaces</artifactId>
-		</dependency>
-		
-		<dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-client</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-persistence-client</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-security-view</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-security-auth</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-		<dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-utility</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-json-utility</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-webapp-utility</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-webapp-internal</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

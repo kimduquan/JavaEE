@@ -8,6 +8,6 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>Faces Servlet</servlet-name>
-    <url-pattern>*.html</url-pattern>
+    <url-pattern>/webapp/*</url-pattern>
   </servlet-mapping>
 </web-app>
