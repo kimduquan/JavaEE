@@ -1,4 +1,4 @@
-package epf.webapp.security.view;
+package epf.webapp.view;
 
 import java.io.Serializable;
 import java.util.List;

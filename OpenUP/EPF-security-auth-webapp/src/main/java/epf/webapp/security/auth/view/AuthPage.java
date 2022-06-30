@@ -22,6 +22,7 @@ import epf.security.auth.discovery.ProviderMetadata;
 import epf.security.auth.view.AuthView;
 import epf.util.security.SecurityUtil;
 import epf.webapp.naming.Naming;
+import epf.webapp.security.AuthParams;
 import epf.webapp.security.auth.AuthCodeCredential;
 import epf.webapp.security.auth.ImplicitCredential;
 import epf.webapp.security.auth.SecurityAuth;
@@ -82,6 +83,12 @@ public class AuthPage implements AuthView, Serializable {
 	 */
 	@Inject
 	private ImplicitFlow implicitFlow;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	private AuthParams authParams;
 	
 	/**
 	 * 
@@ -168,6 +175,7 @@ public class AuthPage implements AuthView, Serializable {
 			tokenRequest.setRedirect_uri(codeFlow.getAuthRequest().getRedirect_uri());
 			final AuthCodeCredential credential = new AuthCodeCredential(codeFlow.getProviderMetadata(), tokenRequest, codeFlow.getProvider(), codeFlow.getSessionId());
 			final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(false);
+			authParams.setRememberMe(false);
 			final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
 			context.authenticate(request, response, params);
 		}
@@ -202,6 +210,7 @@ public class AuthPage implements AuthView, Serializable {
 			
 			final ImplicitCredential credential = new ImplicitCredential(authResponse, implicitFlow.getProvider(), sessionId);
 			final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(false);
+			authParams.setRememberMe(false);
 			final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
 			context.authenticate(request, response, params);
 		}
@@ -225,11 +234,11 @@ public class AuthPage implements AuthView, Serializable {
 	public String authenticate() throws Exception {
 		final String flow = request.getParameter("flow");
 		if("Code".equals(flow)) {
-			return this.authenticateCodeFlow(request);
+			return authenticateCodeFlow(request);
 		}
 		else if("Implicit".equals(flow)) {
 			final String sessionId = externalContext.getSessionId(false);
-			return this.authenticateImplicitFlow(request, sessionId);
+			return authenticateImplicitFlow(request, sessionId);
 		}
 		return "";
 	}

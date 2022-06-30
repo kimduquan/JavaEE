@@ -9,13 +9,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import epf.webapp.naming.Naming;
 
 /**
  * @author PC
  *
  */
-@WebServlet("/auth/")
+@WebServlet("/security/auth/")
 @ApplicationScoped
 public class SecurityAuthServlet extends HttpServlet {
 
@@ -39,7 +38,7 @@ public class SecurityAuthServlet extends HttpServlet {
 				final String cid = fragments[1];
 				final String csrfToken = fragments[2];
 				if(!flow.isEmpty() && !cid.isEmpty() && !csrfToken.isEmpty() ) {
-					final String redirectUrl = Naming.Security.Auth.CONTEXT_ROOT + Naming.Security.Auth.AUTH_PAGE + "?" + req.getQueryString() + "&flow=" + flow + "&cid=" + cid + "&javax.faces.Token=" + URLEncoder.encode(csrfToken, "UTF-8");
+					final String redirectUrl = epf.webapp.naming.Naming.CONTEXT_ROOT + epf.webapp.naming.Naming.View.SECURITY_AUTH_PAGE + "?" + req.getQueryString() + "&flow=" + flow + "&cid=" + cid + "&javax.faces.Token=" + URLEncoder.encode(csrfToken, "UTF-8");
 					resp.setHeader("Referrer-Policy", "no-referrer");
 					resp.sendRedirect(redirectUrl);
 					return;

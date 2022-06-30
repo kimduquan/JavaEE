@@ -11,7 +11,6 @@ import javax.enterprise.context.SessionScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.security.enterprise.SecurityContext;
 import epf.client.util.Client;
 import epf.security.client.Security;
 import epf.security.schema.Token;
@@ -52,17 +51,6 @@ public class Session implements Serializable {
 	private transient char[] token;
 	
 	/**
-	 *
-	 */
-	private transient Principal principal;
-	
-	/**
-	 * 
-	 */
-	@Inject
-	private transient SecurityContext context;
-	
-	/**
 	 * 
 	 */
 	@Inject
@@ -75,30 +63,23 @@ public class Session implements Serializable {
 	private transient Event<Principal> event;
 	
 	/**
-	 * 
+	 * @param tokenPrincipal
 	 */
-	private void initialize() {
-		if(principal == null) {
-			principal = context.getCallerPrincipal();
-			if(principal instanceof TokenPrincipal) {
-				final TokenPrincipal tokenPrincipal = (TokenPrincipal) principal;
-				token = tokenPrincipal.getRememberToken() != null ? tokenPrincipal.getRememberToken() : tokenPrincipal.getRawToken();
-				try(Client client = gatewayUtil.newClient(epf.naming.Naming.SECURITY)){
-					client.authorization(token);
-					final Token token = Security.authenticate(client);
-					claims = token.getClaims();
-					claimNames = Arrays.asList(token.getClaims().keySet().toArray(new String[0]));
-					event.fire(tokenPrincipal);
-				} 
-				catch (Exception e) {
-					LOGGER.log(Level.SEVERE, "[Session.TokenPrincipal]", e);
-				}
-			}
+	public void initialize(final TokenPrincipal tokenPrincipal) {
+		token = tokenPrincipal.getRememberToken() != null ? tokenPrincipal.getRememberToken() : tokenPrincipal.getRawToken();
+		try(Client client = gatewayUtil.newClient(epf.naming.Naming.SECURITY)){
+			client.authorization(token);
+			final Token token = Security.authenticate(client);
+			claims = token.getClaims();
+			claimNames = Arrays.asList(token.getClaims().keySet().toArray(new String[0]));
+			event.fire(tokenPrincipal);
+		} 
+		catch (Exception e) {
+			LOGGER.log(Level.SEVERE, "[Session.initialize]", e);
 		}
 	}
 
 	public List<String> getClaimNames() {
-		initialize();
 		return claimNames;
 	}
 	
@@ -108,7 +89,6 @@ public class Session implements Serializable {
 	 * @throws Exception 
 	 */
 	public String getClaim(final String name) {
-		initialize();
 		Object claim = null;
 		if(claims != null) {
 			claim = claims.get(name);
@@ -117,7 +97,6 @@ public class Session implements Serializable {
 	}
 
 	public char[] getToken() {
-		initialize();
 		return token;
 	}
 	
@@ -132,6 +111,5 @@ public class Session implements Serializable {
 			claimNames.clear();
 		}
 		token = null;
-		principal = null;
 	}
 }

@@ -8,8 +8,8 @@
 		<exception-handler-factory>epf.webapp.util.ExceptionUtil</exception-handler-factory>
 	</factory>
     <protected-views>
-    	<url-pattern>/webapp/auth.xhtml</url-pattern>
-    	<url-pattern>/webapp/openid.xhtml</url-pattern>
+    	<url-pattern>/security/auth/auth.xhtml</url-pattern>
+    	<url-pattern>/security/auth/openid.xhtml</url-pattern>
     </protected-views>
 	<application>
 		<resource-bundle>
