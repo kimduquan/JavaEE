@@ -26,8 +26,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.security.enterprise.credential.Password;
-import javax.security.enterprise.identitystore.CredentialValidationResult;
-import javax.security.enterprise.identitystore.CredentialValidationResult.Status;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;
@@ -269,14 +267,15 @@ public class Security implements epf.security.client.Security, epf.security.clie
             final List<String> forwardedPort,
             final List<String> forwardedProto) throws Exception {
     	final Credential credential = CredentialUtil.newCredential(tenant, username, passwordText);
-    	return identityStore.validate(credential)
-    			.thenApply(result -> {
-    				if(Status.VALID.equals(result.getStatus())){
-    					return (JPAPrincipal)result.getCallerPrincipal();
-    					}
-    					throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
-    					}
-    			)
+    	return identityStore.authenticate(credential)
+    			.thenApply(
+    					principal -> {
+    						if(principal == null){ 
+    							throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build()); 
+    							}
+    						principal.close();
+    						return principal;
+    				})
     			.thenCompose(principal -> identityStore.getCallerGroups(credential)
     					.thenCombine(
 								principalStore.getCallerClaims(credential), 
@@ -284,7 +283,6 @@ public class Security implements epf.security.client.Security, epf.security.clie
 									final Set<String> audience = TokenBuilder.buildAudience(url, forwardedHost, forwardedPort, forwardedProto, credential.getTenant());
 									final Map<String, Object> newClaims = TokenBuilder.buildClaims(claims, credential.getTenant());
 									final Token token = newToken(principal.getName(), groups, audience, newClaims, expireDuration);
-									principal.close();
 									final TokenBuilder builder = new TokenBuilder(token, privateKey, publicKey);
 									final Token newToken = builder.build();
 									sessionStore.putSession(newToken, credential);
@@ -359,17 +357,12 @@ public class Security implements epf.security.client.Security, epf.security.clie
 			final  URL url,
 			final String tenant) throws Exception {
 		final Credential credential = CredentialUtil.newCredential(tenant, username, passwordText);
-    	return identityStore.validate(credential)
-    			.thenApply(result -> {
-    				if(Status.VALID.equals(result.getStatus())) {
-        				return (JPAPrincipal)result.getCallerPrincipal();
-    					}
-					throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
-    				})
+    	return identityStore.authenticate(credential)
     			.thenApply(principal -> {
     				principal.close();
     				return otpSessionStore.putSession(credential);
-    			});
+    				}
+    			);
 	}
 
 	@PermitAll
@@ -449,9 +442,8 @@ public class Security implements epf.security.client.Security, epf.security.clie
 		claims.put(Naming.Security.Claims.LAST_NAME, jwt.getClaim(Naming.Security.Claims.LAST_NAME));
 		claims.put(Naming.Security.Claims.EMAIL, jwt.getClaim(Naming.Security.Claims.EMAIL));
 		tenant.ifPresent(tenantClaim -> claims.put(Naming.Management.TENANT, tenantClaim));
-		final CredentialValidationResult result = identityStore.validate(credential).toCompletableFuture().get();
-		if(Status.VALID.equals(result.getStatus())) {
-			final JPAPrincipal principal = (JPAPrincipal) result.getCallerPrincipal();
+		final JPAPrincipal principal = identityStore.authenticate(credential).toCompletableFuture().get();
+		if(principal != null) {
 			principalStore.putCaller(principal).toCompletableFuture().get();
 			principalStore.setCallerClaims(principal, claims).toCompletableFuture().get();
 			principal.close();

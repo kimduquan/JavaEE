@@ -12,6 +12,7 @@ import javax.security.enterprise.credential.UsernamePasswordCredential;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import epf.security.view.LoginView;
+import epf.webapp.internal.Session;
 import epf.webapp.naming.Naming;
 import epf.webapp.security.AuthParams;
 
@@ -50,7 +51,13 @@ public class LoginPage implements LoginView, Serializable {
 	 * 
 	 */
 	@Inject
-	private AuthParams authParams;
+	private transient AuthParams authParams;
+	
+	/**
+	 *
+	 */
+	@Inject
+	private transient Session session;
 	
 	/**
 	 * 
@@ -94,6 +101,7 @@ public class LoginPage implements LoginView, Serializable {
 
 	@Override
 	public String login() throws Exception {
+		session.clear();
 		final UsernamePasswordCredential credential = new UsernamePasswordCredential(caller, new Password(password));
 		final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(authParams.isRememberMe());
 		final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();

@@ -14,7 +14,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
-import javax.security.enterprise.identitystore.CredentialValidationResult;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.naming.Naming;
@@ -66,20 +65,6 @@ public class JPAIdentityStore {
 	}
 
 	/**
-	 * @param credential
-	 * @return
-	 * @throws Exception
-	 */
-	public CompletionStage<CredentialValidationResult> validate(final Credential credential) throws Exception {
-		Objects.requireNonNull(credential, "Credential");
-		Objects.requireNonNull(credential.getCaller(), "Credential.caller");
-		Objects.requireNonNull(credential.getPassword(), "Credential.password");
-		return authenticate(credential).thenApply(principal -> {
-			return principal != null ? new CredentialValidationResult(principal) : CredentialValidationResult.INVALID_RESULT;
-		});
-	}
-
-	/**
 	 * @param callerPrincipal
 	 * @return
 	 */
@@ -104,7 +89,7 @@ public class JPAIdentityStore {
 	 * @return
 	 * @throws Exception
 	 */
-	private CompletionStage<JPAPrincipal> authenticate(final Credential credential) throws Exception {
+	public CompletionStage<JPAPrincipal> authenticate(final Credential credential) throws Exception {
 		final Map<String, Object> props = new ConcurrentHashMap<>();
         props.put(Naming.Persistence.JDBC.JDBC_USER, credential.getCaller());
         props.put(Naming.Persistence.JDBC.JDBC_PASSWORD, String.valueOf(credential.getPassword().getValue()));

@@ -68,6 +68,7 @@ public class PrincipalPage implements PrincipalView, Serializable {
 
 	@Override
 	public String logout() throws Exception {
+		session.clear();
 		request.logout();
 		externalContext.invalidateSession();
 		externalContext.redirect(Naming.CONTEXT_ROOT);

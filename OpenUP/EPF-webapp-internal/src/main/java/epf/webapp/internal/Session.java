@@ -120,4 +120,18 @@ public class Session implements Serializable {
 		initialize();
 		return token;
 	}
+	
+	/**
+	 * 
+	 */
+	public void clear() {
+		if(claims != null) {
+			claims.clear();
+		}
+		if(claimNames != null) {
+			claimNames.clear();
+		}
+		token = null;
+		principal = null;
+	}
 }
