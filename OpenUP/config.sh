@@ -1,5 +1,4 @@
 export epf_gateway_url=https://localhost:9543/gateway/
-export epf_gateway_webapp_url=https://localhost/gateway/
 export epf_webapp_url=https://localhost/webapp/
 export epf_security_webapp_url=https://localhost/security/
 export epf_client_net_ssl_keyStore=~/git/JavaEE/OpenUP/dev.p12

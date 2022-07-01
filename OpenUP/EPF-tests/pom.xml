@@ -46,7 +46,6 @@
         <liberty.env.epf_registry_url>http://localhost:9080/registry/registry/</liberty.env.epf_registry_url>
 		<liberty.env.epf_management_url>http://localhost:9080/management/management/</liberty.env.epf_management_url>
 		<liberty.env.epf_portlet_url>http://localhost:8080/pluto/portal</liberty.env.epf_portlet_url>
-		<liberty.env.epf_gateway_webapp_url>https://localhost/gateway/</liberty.env.epf_gateway_webapp_url>
 		<liberty.env.epf_webapp_url>http://localhost/webapp/</liberty.env.epf_webapp_url>
 		<liberty.env.epf_health_url>http://localhost:9080/health/</liberty.env.epf_health_url>
 		<liberty.env.epf_batch_api_url>http://localhost:9080/ibm/</liberty.env.epf_batch_api_url>
@@ -393,7 +392,6 @@
                         <epf.query.url>http://localhost:${httpPort}/query/query/</epf.query.url>
                         <epf.search.url>http://localhost:${httpPort}/query/search/</epf.search.url>
                         <epf.portlet.url>http://localhost:${portalPort}/pluto/portal</epf.portlet.url>
-						<epf.gateway.webapp.url>https://localhost/gateway/</epf.gateway.webapp.url>
                         <epf.webapp.url>https://localhost/webapp/</epf.webapp.url>
                         <epf.health.url>http://localhost:${httpPort}/health/</epf.health.url>
 						<epf.batch.api.url>http://localhost:${httpPort}/ibm/</epf.batch.api.url>
