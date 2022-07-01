@@ -1,7 +1,6 @@
 package epf.webapp.security;
 
 import java.net.URL;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -64,10 +63,10 @@ public class AuthIdentityStore implements IdentityStore {
     					credential.getPasswordAsString(),
     					webAppUrl
     					);
-                if(rawToken != null){
-                	final Set<String> groups = new HashSet<>();
-                	groups.add(Naming.Security.DEFAULT_ROLE);
-                	result = new CredentialValidationResult(new TokenPrincipal(credential.getCaller(), rawToken.toCharArray()), groups);
+                if(rawToken != null && !rawToken.isEmpty()){
+                	client.authorization(rawToken.toCharArray());
+                	final Token token = Security.authenticate(client);
+                	result = new CredentialValidationResult(new TokenPrincipal(token.getName(), rawToken.toCharArray(), token.getClaims()), token.getGroups());
                 }
             }
         }
@@ -95,7 +94,7 @@ public class AuthIdentityStore implements IdentityStore {
         		final URL webAppUrl = ConfigUtil.getURL(Naming.WebApp.WEB_APP_URL);
         		try(Client client = gatewayUtil.newClient(Naming.SECURITY)){
         			final Token token = Security.authenticateIDToken(client, credential.getProvider(), credential.getSessionId(), tokenResponse.getId_token(), webAppUrl);
-        			final TokenPrincipal principal = new TokenPrincipal(token.getName(), token.getRawToken().toCharArray());
+        			final TokenPrincipal principal = new TokenPrincipal(token.getName(), token.getRawToken().toCharArray(), token.getClaims());
         			result = new CredentialValidationResult(principal, token.getGroups());
         		}
         	}
@@ -116,7 +115,7 @@ public class AuthIdentityStore implements IdentityStore {
     	final URL webAppUrl = ConfigUtil.getURL(Naming.WebApp.WEB_APP_URL);
     	try(Client client = gatewayUtil.newClient(Naming.SECURITY)){
     		final Token token = Security.authenticateIDToken(client, credential.getProvider(), credential.getSessionId(), credential.getAuthResponse().getId_token(), webAppUrl);
-    		final TokenPrincipal principal = new TokenPrincipal(token.getName(), token.getRawToken().toCharArray());
+    		final TokenPrincipal principal = new TokenPrincipal(token.getName(), token.getRawToken().toCharArray(), token.getClaims());
 			result = new CredentialValidationResult(principal, token.getGroups());
     	}
     	return result;

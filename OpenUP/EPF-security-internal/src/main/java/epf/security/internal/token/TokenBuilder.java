@@ -69,6 +69,7 @@ public class TokenBuilder {
 		final JwtClaims claims = new JwtClaims();
 		claims.setAudience(token.getAudience().stream().collect(Collectors.toList()));
 		claims.setExpirationTime(NumericDate.fromSeconds(token.getExpirationTime()));
+		claims.setNotBefore(NumericDate.fromSeconds(token.getIssuedAtTime()));
 		claims.setGeneratedJwtId();
 		claims.setIssuedAt(NumericDate.fromSeconds(token.getIssuedAtTime()));
 		claims.setIssuer(token.getIssuer());
@@ -106,7 +107,7 @@ public class TokenBuilder {
             final Optional<String> tenant){
     	final Set<String> audience = new HashSet<>();
     	if(url != null) {
-    		audience.add(String.format(AUDIENCE_FORMAT, url.getProtocol(), url.getAuthority()));
+    		audience.add(url.toString());
     	}
 		if(forwardedHost != null && forwardedPort != null && forwardedProto != null) {
 			for(int i = 0; i < forwardedHost.size(); i++) {

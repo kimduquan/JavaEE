@@ -67,7 +67,7 @@ public class SecurityAuthIdentityStore implements RememberMeIdentityStore {
 			jwtUtil.initialize(Naming.EPF, webAppUrl, verifyKey);
 		}
 		catch(Exception ex) {
-			LOGGER.log(Level.SEVERE, "[EPFRememberMeIdentityStore.jwtUtil]", ex);
+			LOGGER.log(Level.SEVERE, "[SecurityAuthIdentityStore.jwtUtil]", ex);
 		}
 	}
 
@@ -76,14 +76,14 @@ public class SecurityAuthIdentityStore implements RememberMeIdentityStore {
 		CredentialValidationResult result = CredentialValidationResult.NOT_VALIDATED_RESULT;
 		try {
 			final char[] token = credential.getToken().toCharArray();
-			final JwtClaims validClaims = jwtUtil.process(credential.getToken().toCharArray());
+			final JwtClaims validClaims = jwtUtil.process(token);
 			final Set<String> groups = new HashSet<>(validClaims.getStringListClaimValue(Claims.groups.name()));
-			final TokenPrincipal principal = new TokenPrincipal(validClaims.getClaimValueAsString(Claims.upn.name()), token);
+			final TokenPrincipal principal = new TokenPrincipal(validClaims.getClaimValueAsString(Claims.upn.name()), token, validClaims.getClaimsMap());
 			principal.setRememberToken(principal.getRawToken());
 			result = new CredentialValidationResult(principal, groups);
 		} 
 		catch (Exception e) {
-			LOGGER.log(Level.WARNING, "[EPFRememberMeIdentityStore.validate]", e);
+			LOGGER.log(Level.WARNING, "[SecurityAuthIdentityStore.validate]", e);
 			result = CredentialValidationResult.INVALID_RESULT;
 		}
 		return result;

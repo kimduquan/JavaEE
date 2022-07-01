@@ -2,14 +2,12 @@ package epf.webapp.view;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Optional;
 import javax.faces.context.ExternalContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.security.enterprise.SecurityContext;
 import javax.security.enterprise.authentication.mechanism.http.AuthenticationParameters;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.eclipse.microprofile.jwt.Claims;
@@ -18,7 +16,6 @@ import epf.util.StringUtil;
 import epf.webapp.internal.Session;
 import epf.webapp.internal.TokenCredential;
 import epf.webapp.naming.Naming;
-import epf.webapp.util.CookieUtil;
 
 /**
  * @author PC
@@ -82,9 +79,7 @@ public class SecurityPage implements SecurityView, Serializable {
 		session.clear();
 		request.logout();
 		externalContext.invalidateSession();
-		externalContext.redirect(Naming.CONTEXT_ROOT);
-		final Optional<Cookie> sessionIdCookie = CookieUtil.getCookie(request, "JSESSIONID");
-		CookieUtil.deleteCookie(externalContext, sessionIdCookie.get());
+		externalContext.redirect("/security-auth/security/logout.html");
 		return "";
 	}
 

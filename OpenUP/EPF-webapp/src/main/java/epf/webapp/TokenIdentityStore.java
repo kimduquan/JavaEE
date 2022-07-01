@@ -1,17 +1,25 @@
 package epf.webapp;
 
+import java.security.PublicKey;
+import java.util.Base64;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStore;
-import epf.webapp.internal.GatewayUtil;
+import org.eclipse.microprofile.jwt.Claims;
+import org.jose4j.jwt.JwtClaims;
+import epf.webapp.internal.ConfigUtil;
 import epf.webapp.internal.TokenCredential;
 import epf.webapp.internal.TokenPrincipal;
-import epf.client.util.Client;
 import epf.naming.Naming;
-import epf.security.client.Security;
-import epf.security.schema.Token;
+import epf.security.auth.util.JwtUtil;
+import epf.util.logging.LogManager;
+import epf.util.security.KeyUtil;
 
 /**
  *
@@ -19,12 +27,38 @@ import epf.security.schema.Token;
  */
 @ApplicationScoped
 public class TokenIdentityStore implements IdentityStore {
+	
+	/**
+	 *
+	 */
+	private transient static final Logger LOGGER = LogManager.getLogger(TokenIdentityStore.class.getName());
     
-    /**
-     * 
-     */
-    @Inject
-    private transient GatewayUtil gatewayUtil;
+	/**
+	 * 
+	 */
+	private transient final JwtUtil jwtUtil = new JwtUtil();
+	
+	/**
+	 * 
+	 */
+	@Inject
+	private transient ConfigUtil config;
+	
+	/**
+	 * 
+	 */
+	@PostConstruct
+	protected void postConstruct() {
+		try {
+			final String verifyKeyText = config.getProperty(Naming.Security.JWT.VERIFY_KEY);
+			final String webAppUrl = epf.util.config.ConfigUtil.getString(Naming.WebApp.WEB_APP_URL);
+			final PublicKey verifyKey = KeyUtil.generatePublic("RSA", verifyKeyText, Base64.getDecoder(), "UTF-8");
+			jwtUtil.initialize(Naming.EPF, webAppUrl, verifyKey);
+		}
+		catch(Exception ex) {
+			LOGGER.log(Level.SEVERE, "[TokenIdentityStore.jwtUtil]", ex);
+		}
+	}
     
     /**
      * @param credential
@@ -32,12 +66,10 @@ public class TokenIdentityStore implements IdentityStore {
      * @throws Exception
      */
     public CredentialValidationResult validate(final TokenCredential credential) throws Exception {
-        try(Client client = gatewayUtil.newClient(Naming.SECURITY)){
-        	client.authorization(credential.getToken());
-    		final Token token = Security.authenticate(client);
-    		final TokenPrincipal principal = new TokenPrincipal(token.getName(), credential.getToken());
-    		return new CredentialValidationResult(principal, token.getGroups());
-        }
+    	final JwtClaims claims = jwtUtil.process(credential.getToken());
+    	final Set<String> groups = new HashSet<>(claims.getStringListClaimValue(Claims.groups.name()));
+    	final TokenPrincipal principal = new TokenPrincipal(claims.getSubject(), credential.getToken(), claims.getClaimsMap());
+    	return new CredentialValidationResult(principal, groups);
     }
     
     @Override

@@ -7,6 +7,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.security.enterprise.SecurityContext;
+import javax.servlet.http.HttpServletRequest;
 import epf.util.StringUtil;
 import epf.webapp.internal.TokenPrincipal;
 import epf.webapp.naming.Naming;
@@ -28,6 +29,12 @@ public class SecurityAuthPage implements Serializable {
 	 *
 	 */
 	private String url;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	private transient HttpServletRequest request;
 
 	/**
 	 * 
@@ -81,6 +88,12 @@ public class SecurityAuthPage implements Serializable {
 			}
 			conversation.end();
 		}
+		return "";
+	}
+	
+	public String logout() throws Exception {
+		request.logout();
+		externalContext.invalidateSession();
 		return "";
 	}
 }

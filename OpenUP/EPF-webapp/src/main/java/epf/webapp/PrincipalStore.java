@@ -9,7 +9,6 @@ import javax.enterprise.event.Observes;
 import javax.faces.push.Push;
 import javax.faces.push.PushContext;
 import javax.inject.Inject;
-import epf.security.auth.util.JwtUtil;
 import epf.webapp.internal.TokenPrincipal;
 import epf.webapp.messaging.TextMessage;
 import epf.webapp.naming.Naming;
@@ -58,7 +57,7 @@ public class PrincipalStore {
 	 */
 	public void putPrincipal(@Observes final TokenPrincipal principal) throws Exception {
 		final Set<String> otherUsers = principals.keySet();
-		principals.put(principal.getName(), JwtUtil.decode(principal.getRememberToken() != null ? principal.getRememberToken() : principal.getRawToken()).getClaimsMap());
+		principals.put(principal.getName(), principal.getClaims());
 		send(principal.getName(), otherUsers);
 	}
 }
