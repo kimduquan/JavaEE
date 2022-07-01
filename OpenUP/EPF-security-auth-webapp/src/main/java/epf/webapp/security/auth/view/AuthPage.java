@@ -6,6 +6,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.security.enterprise.AuthenticationStatus;
 import javax.security.enterprise.SecurityContext;
 import javax.security.enterprise.authentication.mechanism.http.AuthenticationParameters;
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +27,9 @@ import epf.webapp.security.AuthParams;
 import epf.webapp.security.auth.AuthCodeCredential;
 import epf.webapp.security.auth.ImplicitCredential;
 import epf.webapp.security.auth.SecurityAuth;
+import epf.webapp.security.auth.core.AuthFlowConversation;
 import epf.webapp.security.auth.core.CodeFlow;
+import epf.webapp.security.auth.core.Flow;
 import epf.webapp.security.auth.core.ImplicitFlow;
 
 /**
@@ -71,6 +74,12 @@ public class AuthPage implements AuthView, Serializable {
 	 */
 	@Inject
 	private transient Conversation conversation;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	private AuthFlowConversation authFlow;
 
 	/**
 	 * 
@@ -91,9 +100,22 @@ public class AuthPage implements AuthView, Serializable {
 	private AuthParams authParams;
 	
 	/**
+	 *
+	 */
+	private String url;
+	
+	/**
 	 * 
 	 */
 	private String provider = "";
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(final String url) {
+		this.url = url;
+	}
 
 	public String getProvider() {
 		return provider;
@@ -107,12 +129,12 @@ public class AuthPage implements AuthView, Serializable {
 	 * @param flow
 	 * @return
 	 */
-	private String buildAuthRequestState(final String flow) {
+	private String buildAuthRequestState() {
 		final String csrfToken = request.getParameter("javax.faces.Token");
 		if(conversation.isTransient()) {
 			conversation.begin();
 		}
-		return flow + System.lineSeparator() + conversation.getId() + System.lineSeparator() + csrfToken;
+		return conversation.getId() + System.lineSeparator() + csrfToken;
 	}
 	
 	/**
@@ -129,11 +151,12 @@ public class AuthPage implements AuthView, Serializable {
 		final String sessionId = externalContext.getSessionId(true);
 		final AuthRequest authRequest = new AuthRequest();
 		authRequest.setNonce(buildAuthRequestNonce(sessionId));
-		authRequest.setState(buildAuthRequestState("Code"));
-		codeFlow.setProvider(epf.naming.Naming.Security.Auth.GOOGLE);
-		codeFlow.setSessionId(sessionId);
+		authRequest.setState(buildAuthRequestState());
+		authFlow.setFlow(Flow.Code);
+		authFlow.setProvider(epf.naming.Naming.Security.Auth.GOOGLE);
+		authFlow.setUrl(url);
 		final ProviderMetadata metadata = securityAuth.initGoogleProvider(codeFlow, authRequest);
-		codeFlow.setProviderMetadata(metadata);
+		authFlow.setProviderMetadata(metadata);
 		codeFlow.setAuthRequest(authRequest);
 		final String authRequestUrl = codeFlow.getAuthorizeUrl(metadata, authRequest);
 		externalContext.redirect(authRequestUrl);
@@ -145,11 +168,12 @@ public class AuthPage implements AuthView, Serializable {
 		final String sessionId = externalContext.getSessionId(true);
 		final ImplicitAuthRequest authRequest = new ImplicitAuthRequest();
 		authRequest.setNonce(buildAuthRequestNonce(sessionId));
-		authRequest.setState(buildAuthRequestState("Implicit"));
-		implicitFlow.setProvider(epf.naming.Naming.Security.Auth.FACEBOOK);
-		implicitFlow.setSessionId(sessionId);
+		authRequest.setState(buildAuthRequestState());
+		authFlow.setFlow(Flow.Implicit);
+		authFlow.setProvider(epf.naming.Naming.Security.Auth.FACEBOOK);
+		authFlow.setUrl(url);
 		final ProviderMetadata metadata = securityAuth.initFacebookProvider(implicitFlow, authRequest);
-		implicitFlow.setProviderMetadata(metadata);
+		authFlow.setProviderMetadata(metadata);
 		implicitFlow.setAuthRequest(authRequest);
 		final String authRequestUrl = implicitFlow.getAuthorizeUrl(metadata, authRequest, "public_profile");
 		externalContext.redirect(authRequestUrl);
@@ -161,7 +185,7 @@ public class AuthPage implements AuthView, Serializable {
 	 * @return
 	 * @throws Exception 
 	 */
-	private String authenticateCodeFlow(final HttpServletRequest request) throws Exception {
+	private String authenticateCodeFlow(final HttpServletRequest request, final String sessionId) throws Exception {
 		final String error = request.getParameter("error");
 		if(error == null) {
 			final AuthResponse authResponse = new AuthResponse();
@@ -173,11 +197,14 @@ public class AuthPage implements AuthView, Serializable {
 			tokenRequest.setClient_id(codeFlow.getAuthRequest().getClient_id());
 			tokenRequest.setCode(codeFlow.getAuthResponse().getCode());
 			tokenRequest.setRedirect_uri(codeFlow.getAuthRequest().getRedirect_uri());
-			final AuthCodeCredential credential = new AuthCodeCredential(codeFlow.getProviderMetadata(), tokenRequest, codeFlow.getProvider(), codeFlow.getSessionId());
+			final AuthCodeCredential credential = new AuthCodeCredential(authFlow.getProviderMetadata(), tokenRequest, authFlow.getProvider(), sessionId);
 			final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(false);
 			authParams.setRememberMe(false);
 			final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
-			context.authenticate(request, response, params);
+			final AuthenticationStatus status = context.authenticate(request, response, params);
+			if(AuthenticationStatus.SUCCESS.equals(status) || AuthenticationStatus.SEND_CONTINUE.equals(status)) {
+				externalContext.redirect("webapp/index.html?cid=" + conversation.getId());
+			}
 		}
 		else {
 			final AuthError authError = new AuthError();
@@ -186,9 +213,9 @@ public class AuthPage implements AuthView, Serializable {
 			authError.setError_uri(request.getParameter("error_uri"));
 			authError.setState(request.getParameter("state"));
 			codeFlow.setAuthError(authError);
+			conversation.end();
 			externalContext.responseSendError(Status.UNAUTHORIZED.getStatusCode(), authError.getError_description());
 		}
-		conversation.end();
 		return "";
 	}
 	
@@ -208,11 +235,14 @@ public class AuthPage implements AuthView, Serializable {
 			authResponse.setToken_type(request.getParameter("token_type"));
 			implicitFlow.setAuthResponse(authResponse);
 			
-			final ImplicitCredential credential = new ImplicitCredential(authResponse, implicitFlow.getProvider(), sessionId);
+			final ImplicitCredential credential = new ImplicitCredential(authResponse, authFlow.getProvider(), sessionId);
 			final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(false);
 			authParams.setRememberMe(false);
 			final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
-			context.authenticate(request, response, params);
+			final AuthenticationStatus status = context.authenticate(request, response, params);
+			if(AuthenticationStatus.SUCCESS.equals(status) || AuthenticationStatus.SEND_CONTINUE.equals(status)) {
+				externalContext.redirect("webapp/index.html?cid=" + conversation.getId());
+			}
 		}
 		else {
 			final ImplicitAuthError authError = new ImplicitAuthError();
@@ -221,9 +251,9 @@ public class AuthPage implements AuthView, Serializable {
 			authError.setError_uri(request.getParameter("error_uri"));
 			authError.setState(request.getParameter("state"));
 			implicitFlow.setAuthError(authError);
+			conversation.end();
 			externalContext.responseSendError(Status.UNAUTHORIZED.getStatusCode(), authError.getError_description());
 		}
-		conversation.end();
 		return "";
 	}
 	
@@ -232,13 +262,16 @@ public class AuthPage implements AuthView, Serializable {
 	 * @throws Exception 
 	 */
 	public String authenticate() throws Exception {
-		final String flow = request.getParameter("flow");
-		if("Code".equals(flow)) {
-			return authenticateCodeFlow(request);
-		}
-		else if("Implicit".equals(flow)) {
+		if(!conversation.isTransient()) {
 			final String sessionId = externalContext.getSessionId(false);
-			return authenticateImplicitFlow(request, sessionId);
+			switch(authFlow.getFlow()) {
+				case Code:
+					return authenticateCodeFlow(request, sessionId);
+				case Implicit:
+					return authenticateImplicitFlow(request, sessionId);
+				default:
+					break;
+			}
 		}
 		return "";
 	}

@@ -14,7 +14,6 @@ import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStoreHandler;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import epf.webapp.naming.Naming;
 
 /**
  * @author PC
@@ -24,8 +23,7 @@ import epf.webapp.naming.Naming;
 @RememberMe(isRememberMeExpression = "#{self.rememberMe}")
 @AutoApplySession
 @LoginToContinue(
-		loginPage = "/security/login" + Naming.Internal.VIEW_EXTENSION,
-		useForwardToLogin = false
+		loginPage = "/security/login.html"
 		)
 public class AuthMechanism implements HttpAuthenticationMechanism {
 	

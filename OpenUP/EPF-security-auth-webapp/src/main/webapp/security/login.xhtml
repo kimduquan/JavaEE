@@ -19,7 +19,7 @@
 
     <!-- Custom styles for this template-->
     <link type="text/css" rel="stylesheet" href="/gateway/resources/startbootstrap-sb-admin-2-gh-pages/css/sb-admin-2.min.css" />
-
+	<f:metadata><f:viewParam name="url" value="#{security_login.url}" /></f:metadata>
 </h:head>
 
 <h:body styleClass="bg-gradient-primary">
@@ -62,10 +62,10 @@
                                             
                                         </h:commandLink>
                                         <hr/>
-                                        <h:link styleClass="btn btn-google btn-user btn-block" outcome="auth/openid"><f:param name="provider" value="google" />
+                                        <h:link styleClass="btn btn-google btn-user btn-block" outcome="auth/openid" includeViewParams="true"><f:param name="provider" value="google" />
                                             <i class="fab fa-google fa-fw"></i><h:outputFormat value="#{i18n['epf.security.login.with']}"><f:param value = "Google" /></h:outputFormat>
                                         </h:link>
-                                        <h:link styleClass="btn btn-facebook btn-user btn-block" outcome="auth/openid"><f:param name="provider" value="facebook" />
+                                        <h:link styleClass="btn btn-facebook btn-user btn-block" outcome="auth/openid" includeViewParams="true"><f:param name="provider" value="facebook" />
                                             <i class="fab fa-facebook-f fa-fw"></i><h:outputFormat value="#{i18n['epf.security.login.with']}"><f:param value = "Facebook" /></h:outputFormat>
                                         </h:link>
                                     </h:form>

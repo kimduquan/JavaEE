@@ -7,6 +7,9 @@ import javax.security.enterprise.credential.Credential;
  */
 public class TokenCredential implements Credential {
 
+	/**
+	 *
+	 */
 	private transient final char[] token;
 	
 	/**

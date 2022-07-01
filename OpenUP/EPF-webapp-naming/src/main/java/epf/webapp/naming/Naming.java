@@ -113,6 +113,11 @@ public interface Naming {
 			/**
 			 *
 			 */
+			String AUTH_VIEW = "security_auth_view";
+			
+			/**
+			 *
+			 */
 			String AUTH_PAGE = "/webapp/auth.html";
 		}
 		

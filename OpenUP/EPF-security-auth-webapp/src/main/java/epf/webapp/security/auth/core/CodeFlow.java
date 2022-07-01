@@ -13,7 +13,7 @@ import epf.security.auth.core.TokenResponse;
  *
  */
 @ConversationScoped
-public class CodeFlow extends Flow implements CodeFlowAuth, Serializable {
+public class CodeFlow implements CodeFlowAuth, Serializable {
 
 	/**
 	 * 

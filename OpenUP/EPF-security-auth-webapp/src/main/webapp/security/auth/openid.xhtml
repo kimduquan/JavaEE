@@ -2,6 +2,7 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html">
 <h:head>
     <f:metadata>
+    	<f:viewParam name="url" value="#{security_auth.url}" />
     	<f:viewParam name="provider" value="#{security_auth.provider}" />
         <f:viewAction action="#{security_auth.login}"/>
     </f:metadata>

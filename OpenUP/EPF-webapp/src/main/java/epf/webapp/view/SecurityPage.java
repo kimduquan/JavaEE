@@ -12,9 +12,9 @@ import javax.security.enterprise.authentication.mechanism.http.AuthenticationPar
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.eclipse.microprofile.jwt.Claims;
 import epf.security.view.SecurityView;
+import epf.util.StringUtil;
 import epf.webapp.internal.Session;
 import epf.webapp.internal.TokenCredential;
 import epf.webapp.naming.Naming;
@@ -100,13 +100,13 @@ public class SecurityPage implements SecurityView, Serializable {
 
 	@Override
 	public String login() throws Exception {
-		externalContext.redirect("/security-auth/security/login.html");
+		externalContext.redirect("/security-auth/webapp/index.html?url=" + StringUtil.encodeURL("/webapp/security/auth.html"));
 		return "";
 	}
 
 	@Override
 	public String authenticate() throws Exception {
-		final TokenCredential credential = new TokenCredential(request.getParameter("token").toCharArray());
+		final TokenCredential credential = new TokenCredential(request.getParameter("credential").toCharArray());
 		final AuthenticationParameters params = AuthenticationParameters.withParams().credential(credential).rememberMe(false);
 		final HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
 		context.authenticate(request, response, params);

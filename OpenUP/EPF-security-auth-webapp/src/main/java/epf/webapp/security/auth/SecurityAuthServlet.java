@@ -33,12 +33,11 @@ public class SecurityAuthServlet extends HttpServlet {
 		final String state = req.getParameter("state");
 		if(state != null && !state.isEmpty()) {
 			final String[] fragments = state.split(System.lineSeparator());
-			if(fragments.length == 3) {
-				final String flow = fragments[0];
-				final String cid = fragments[1];
-				final String csrfToken = fragments[2];
-				if(!flow.isEmpty() && !cid.isEmpty() && !csrfToken.isEmpty() ) {
-					final String redirectUrl = epf.webapp.naming.Naming.CONTEXT_ROOT + epf.webapp.naming.Naming.View.SECURITY_AUTH_PAGE + "?" + req.getQueryString() + "&flow=" + flow + "&cid=" + cid + "&javax.faces.Token=" + URLEncoder.encode(csrfToken, "UTF-8");
+			if(fragments.length == 2) {
+				final String cid = fragments[0];
+				final String csrfToken = fragments[1];
+				if(!cid.isEmpty() && !csrfToken.isEmpty() ) {
+					final String redirectUrl = epf.webapp.naming.Naming.Security.Auth.CONTEXT_ROOT + epf.webapp.naming.Naming.View.SECURITY_AUTH_PAGE + "?" + req.getQueryString() + "&cid=" + cid + "&javax.faces.Token=" + URLEncoder.encode(csrfToken, "UTF-8");
 					resp.setHeader("Referrer-Policy", "no-referrer");
 					resp.sendRedirect(redirectUrl);
 					return;

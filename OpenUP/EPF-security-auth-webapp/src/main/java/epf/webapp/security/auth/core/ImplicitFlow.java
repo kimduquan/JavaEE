@@ -12,7 +12,7 @@ import epf.security.auth.core.ImplicitFlowAuth;
  *
  */
 @ConversationScoped
-public class ImplicitFlow extends Flow implements ImplicitFlowAuth, Serializable {
+public class ImplicitFlow implements ImplicitFlowAuth, Serializable {
 
 	/**
 	 * 

@@ -7,9 +7,6 @@
     <factory>
 		<exception-handler-factory>epf.webapp.util.ExceptionUtil</exception-handler-factory>
 	</factory>
-	<protected-views>
-    	<url-pattern>/security/auth.xhtml</url-pattern>
-    </protected-views>
 	<application>
 		<resource-bundle>
 			<base-name>i18n</base-name>
