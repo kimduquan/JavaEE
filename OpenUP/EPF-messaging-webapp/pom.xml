@@ -6,8 +6,8 @@
         <artifactId>OpenUP-parent</artifactId>
         <version>1.0.0</version>
     </parent>
-    <artifactId>EPF-gateway-webapp</artifactId>
-    <name>Eclipse Process Framework Gateway Web Application</name>
+    <artifactId>EPF-messaging-webapp</artifactId>
+    <name>Eclipse Process Framework Messaging Web Application</name>
     <packaging>war</packaging>
     <dependencies>
     	<dependency>

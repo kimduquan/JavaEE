@@ -5,7 +5,6 @@
      <web-resource-collection>
          <web-resource-name>EPF-webapp</web-resource-name>
          <url-pattern>/webapp/*</url-pattern>
-         <url-pattern>/javax.faces.push/*</url-pattern>
          <url-pattern>/query/*</url-pattern>
          <url-pattern>/search/*</url-pattern>
      </web-resource-collection>
@@ -25,10 +24,6 @@
   <welcome-file-list>
   	<welcome-file>webapp/index.html</welcome-file>
   </welcome-file-list>
-	<context-param>
-		<param-name>javax.faces.ENABLE_WEBSOCKET_ENDPOINT</param-name>
-		<param-value>true</param-value>
-	</context-param>
 	<!--<context-param>
 	    <param-name>javax.faces.CLIENT_WINDOW_MODE</param-name>
 	    <param-value>url</param-value>

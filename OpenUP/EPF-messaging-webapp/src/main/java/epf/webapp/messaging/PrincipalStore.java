@@ -1,4 +1,4 @@
-package epf.webapp;
+package epf.webapp.messaging;
 
 import java.time.Instant;
 import java.util.Map;
@@ -10,7 +10,6 @@ import javax.faces.push.Push;
 import javax.faces.push.PushContext;
 import javax.inject.Inject;
 import epf.webapp.internal.TokenPrincipal;
-import epf.webapp.messaging.TextMessage;
 import epf.webapp.naming.Naming;
 
 /**
