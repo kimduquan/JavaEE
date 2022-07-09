@@ -1,4 +1,4 @@
-package epf.webapp;
+package epf.webapp.internal;
 
 import java.security.PublicKey;
 import java.util.Base64;
@@ -10,12 +10,8 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
-import javax.security.enterprise.identitystore.IdentityStore;
 import org.eclipse.microprofile.jwt.Claims;
 import org.jose4j.jwt.JwtClaims;
-import epf.webapp.internal.ConfigUtil;
-import epf.webapp.internal.TokenCredential;
-import epf.webapp.internal.TokenPrincipal;
 import epf.naming.Naming;
 import epf.security.auth.util.JwtUtil;
 import epf.util.logging.LogManager;
@@ -26,7 +22,7 @@ import epf.util.security.KeyUtil;
  * @author FOXCONN
  */
 @ApplicationScoped
-public class TokenIdentityStore implements IdentityStore {
+public class TokenIdentityStore {
 	
 	/**
 	 *
@@ -72,8 +68,11 @@ public class TokenIdentityStore implements IdentityStore {
     	return new CredentialValidationResult(principal, groups);
     }
     
-    @Override
-    public Set<String> getCallerGroups(final CredentialValidationResult validationResult){
+	/**
+	* @param validationResult
+	* @return
+	*/
+	public Set<String> getCallerGroups(final CredentialValidationResult validationResult){
         return validationResult.getCallerGroups();
     }
 }

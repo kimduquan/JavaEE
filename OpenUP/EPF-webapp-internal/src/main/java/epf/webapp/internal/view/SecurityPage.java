@@ -1,4 +1,4 @@
-package epf.webapp.view;
+package epf.webapp.internal.view;
 
 import java.io.Serializable;
 import java.util.List;

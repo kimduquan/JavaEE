@@ -1,4 +1,4 @@
-package epf.webapp;
+package epf.webapp.messaging;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -8,11 +8,9 @@ import javax.security.enterprise.authentication.mechanism.http.AutoApplySession;
 import javax.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanism;
 import javax.security.enterprise.authentication.mechanism.http.HttpMessageContext;
 import javax.security.enterprise.authentication.mechanism.http.LoginToContinue;
-import javax.security.enterprise.credential.Credential;
-import javax.security.enterprise.identitystore.CredentialValidationResult;
-import javax.security.enterprise.identitystore.IdentityStoreHandler;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import epf.webapp.internal.AuthMechanism;
 
 /**
  * @author PC
@@ -23,22 +21,18 @@ import javax.servlet.http.HttpServletResponse;
 @LoginToContinue(
 		loginPage = "/security/login.html"
 		)
-public class AuthMechanism implements HttpAuthenticationMechanism {
+public class WebAppAuthMechanism implements HttpAuthenticationMechanism {
 	
 	/**
 	 * 
 	 */
 	@Inject
-	private transient IdentityStoreHandler handler;
+	private transient AuthMechanism authMechanism;
 
 	@Override
 	public AuthenticationStatus validateRequest(final HttpServletRequest request, final HttpServletResponse response,
 			final HttpMessageContext httpMessageContext) throws AuthenticationException {
-		if(httpMessageContext.isAuthenticationRequest()) {
-			final Credential credential = httpMessageContext.getAuthParameters().getCredential();
-			final CredentialValidationResult result = handler.validate(credential);
-			return httpMessageContext.notifyContainerAboutLogin(result);
-		}
-		return httpMessageContext.doNothing();
+		return authMechanism.validateRequest(request, response, httpMessageContext);
 	}
+
 }

@@ -6,30 +6,19 @@
         <artifactId>OpenUP-parent</artifactId>
         <version>1.0.0</version>
     </parent>
-    <artifactId>EPF-security-auth</artifactId>
-    <name>Eclipse Process Framework Auth</name>
+    <artifactId>EPF-security-auth-utility</artifactId>
+    <name>Eclipse Process Framework Security Auth Utility</name>
     <packaging>jar</packaging>
     <dependencies>
-    	<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
-		<dependency>
-			<groupId>javax.ws.rs</groupId>
-			<artifactId>javax.ws.rs-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.bitbucket.b_c/jose4j -->
 		<dependency>
 		    <groupId>org.bitbucket.b_c</groupId>
 		    <artifactId>jose4j</artifactId>
 		</dependency>
 		<dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-utility</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-security-auth-utility</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+			<groupId>openup</groupId>
+			<artifactId>EPF-utility</artifactId>
+			<version>${project.version}</version>
+		</dependency>
     </dependencies>
 </project>
