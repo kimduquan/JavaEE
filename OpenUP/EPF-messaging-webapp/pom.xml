@@ -16,10 +16,31 @@
 		    <scope>provided</scope>
 		</dependency>
 		<dependency>
+		    <groupId>javax.annotation</groupId>
+		    <artifactId>javax.annotation-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>javax.security.enterprise</groupId>
 			<artifactId>javax.security.enterprise-api</artifactId>
 		    <scope>provided</scope>
 		</dependency>
+		
+		<dependency>
+		    <groupId>org.eclipse.microprofile.jwt</groupId>
+		    <artifactId>microprofile-jwt-auth-api</artifactId>
+		</dependency>
+		
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-security-auth</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-webapp-internal</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-webapp-utility</artifactId>

@@ -1,4 +1,4 @@
-package epf.webapp.messaging;
+package epf.webapp.persistence;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.faces.annotation.FacesConfig;

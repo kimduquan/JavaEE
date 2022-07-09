@@ -16,7 +16,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.eclipse.microprofile.jwt.Claims;
 import epf.security.auth.core.StandardClaims;
-import epf.webapp.PrincipalStore;
 import epf.webapp.internal.ConfigUtil;
 import epf.webapp.naming.Naming.Messaging;
 
