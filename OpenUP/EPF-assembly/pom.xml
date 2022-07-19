@@ -11,8 +11,8 @@
     <packaging>liberty-assembly</packaging>
 
     <properties>
-        <httpPort>9080</httpPort>
-        <httpsPort>9443</httpsPort>
+        <httpPort>81</httpPort>
+        <httpsPort>453</httpsPort>
         <httpWebPort>80</httpWebPort>
         <httpsWebPort>443</httpsWebPort>
         <portalPort>8080</portalPort>
