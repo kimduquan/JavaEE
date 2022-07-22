@@ -1,5 +1,5 @@
-. ./env.sh
-. ./config.sh
+./env.sh
+./config.sh
 $KAFKA_HOME/zookeeper-server-start.sh $KAFKA_DIR/config/zookeeper.properties &
 $JAEGER_HOME/jaeger-all-in-one &
 export JAVA_HOME=$JAVA8_HOME
