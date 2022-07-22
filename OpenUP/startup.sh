@@ -6,6 +6,7 @@ export JAVA_HOME=$JAVA8_HOME
 $PLUTO_HOME/bin/startup.sh &
 $CUR_DIR=$PWD
 cd $WILDFLY_HOME
+sudo ./config.sh
 sudo ./standalone.sh "-Djboss.http.port=80" "-Djboss.https.port=443" --debug &
 cd $CUR_DIR
 Xvfb :10 -ac &
