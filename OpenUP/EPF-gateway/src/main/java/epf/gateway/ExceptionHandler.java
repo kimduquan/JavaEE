@@ -43,7 +43,7 @@ public class ExceptionHandler implements
     	}
     	else {
     		builder = Response.serverError();
-        	LOGGER.log(Level.SEVERE, "[ExceptionHandler.toResponse]", exception);
+        	LOGGER.log(Level.SEVERE, exception.getMessage(), exception);
     	}
         return builder.build();
     }
