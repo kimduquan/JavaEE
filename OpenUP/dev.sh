@@ -1,3 +1,5 @@
+sudo service mysql start
+sudo service postgresql start
 . ./env.sh
 ./shutdown.sh
 ./clean.sh
