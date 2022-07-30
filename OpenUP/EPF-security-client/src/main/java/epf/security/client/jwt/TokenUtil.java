@@ -17,7 +17,7 @@ public interface TokenUtil {
 	/**
 	 * 
 	 */
-	String[] DEFAULT_CLAIMS = new String[] {"aud", "exp", "groups", "iat", "iss", "raw_token", "sub", "jti", "upn", "token_type"};
+	String[] DEFAULT_CLAIMS = new String[] {"aud", "exp", "groups", "iat", "iss", "raw_token", "sub", "jti", "upn", "token_type", "nbf"};
 
 	/**
 	 * @param jwt

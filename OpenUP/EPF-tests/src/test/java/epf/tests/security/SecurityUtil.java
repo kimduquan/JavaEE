@@ -8,6 +8,7 @@ import epf.security.schema.Token;
 import epf.tests.client.ClientUtil;
 import epf.tests.health.HealthUtil;
 import java.util.Map.Entry;
+import java.net.URL;
 import java.time.Duration;
 import java.util.AbstractMap;
 import java.util.Queue;
@@ -24,6 +25,12 @@ public class SecurityUtil {
 	public static String login(String username, String password) throws Exception {
 		try(Client client = ClientUtil.newClient(GatewayUtil.get(Naming.SECURITY))){
     		return Security.login(client, username, password, GatewayUtil.get("tests").toURL());
+    	}
+    }
+	
+	public static String login(String username, String password, URL url) throws Exception {
+		try(Client client = ClientUtil.newClient(GatewayUtil.get(Naming.SECURITY))){
+    		return Security.login(client, username, password, url);
     	}
     }
     

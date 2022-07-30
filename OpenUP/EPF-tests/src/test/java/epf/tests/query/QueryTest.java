@@ -88,7 +88,7 @@ public class QueryTest {
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
         PersistenceUtil.persist(token, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
-        TestUtil.waitUntil(
+        /*TestUtil.waitUntil(
         		(t) -> {
 				        	Artifact art = null;
 				        	try {
@@ -100,7 +100,7 @@ public class QueryTest {
 				        	return art != null;
 				        }, 
         		Duration.ofSeconds(10)
-        		);
+        		);*/
         Artifact cachedArtifact = Query.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
         Assert.assertNotNull("Artifact", cachedArtifact);
         Assert.assertEquals("Artifact.name", artifact.getName(), cachedArtifact.getName());

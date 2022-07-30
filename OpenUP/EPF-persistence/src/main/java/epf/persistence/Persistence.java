@@ -105,7 +105,6 @@ public class Persistence implements epf.persistence.client.Entities {
         manager.persist(entity);
         final String jsonEntity = JsonUtil.toString(entity);
         
-        manager.detach(entity);;
         final Object transactionEntity = entity;
         final PostPersist transactionEvent = new PostPersist();
         transactionEvent.setEntity(transactionEntity);
@@ -150,7 +149,7 @@ public class Persistence implements epf.persistence.client.Entities {
         }
 
         JsonUtil.toString(entityObject);
-        manager.detach(entityObject);
+        
     	final Object transactionEntity = entityObject;
         final PostUpdate transactionEvent = new PostUpdate();
         transactionEvent.setEntity(transactionEntity);
@@ -160,7 +159,6 @@ public class Persistence implements epf.persistence.client.Entities {
         
         final Object mergedEntity = manager.merge(entity);
         final String jsonEntity = JsonUtil.toString(mergedEntity);
-        manager.detach(mergedEntity);
         
         transactionStore.put(headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER), transaction);
         
@@ -193,7 +191,6 @@ public class Persistence implements epf.persistence.client.Entities {
     	JsonUtil.toString(entityObject);
     	manager.remove(entityObject);
     	
-    	manager.detach(entityObject);
     	final Object transactionEntity = entityObject;
         final PostRemove transactionEvent = new PostRemove();
         transactionEvent.setEntity(transactionEntity);

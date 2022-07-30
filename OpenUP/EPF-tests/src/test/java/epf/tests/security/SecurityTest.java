@@ -182,11 +182,12 @@ public class SecurityTest {
     @Test
     public void testAuthenticateOK() throws Exception{
     	Entry<String, String> credential = SecurityUtil.peekCredential();
-        String token = SecurityUtil.login(credential.getKey(), credential.getValue());
+    	URL url = GatewayUtil.get("tests").toURL();
+        String token = SecurityUtil.login(credential.getKey(), credential.getValue(), url);
         Token jwt = authenticate(token);
         Assert.assertNotNull("Token", jwt);
         Assert.assertNotNull("Token.audience", jwt.getAudience());
-        Assert.assertEquals("Token.audience.size", 1, jwt.getAudience().size());
+        Assert.assertEquals("Token.audience.size", 2, jwt.getAudience().size());
         Assert.assertArrayEquals(
                 "Token.audience", 
                 new String[]{
@@ -194,7 +195,8 @@ public class SecurityTest {
                     		"%s://%s/", 
                             securityUrl.getScheme(), 
                             securityUrl.getHost() + ":" + securityUrl.getPort()
-                    )
+                    ),
+                    url.toString()
                 }, 
                 jwt.getAudience().toArray()
         );
@@ -223,7 +225,6 @@ public class SecurityTest {
         Assert.assertNotEquals("Token.tokenID", "", jwt.getTokenID());
         Assert.assertNotNull("Token.claims", jwt.getClaims());
         Assert.assertEquals("Token.claims.size", 2, jwt.getClaims().size());
-        //Assert.assertEquals("Token.claims.full_name", "Any Role 1", jwt.getClaims().get("full_name"));
         Assert.assertEquals("Token.claims.email", String.format("%s", credential.getKey()) , jwt.getClaims().get("email"));
         SecurityUtil.logOut(token);
     }
