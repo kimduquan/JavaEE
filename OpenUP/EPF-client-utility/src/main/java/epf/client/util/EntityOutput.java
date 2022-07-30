@@ -23,7 +23,7 @@ public class EntityOutput implements StreamingOutput {
      * @param input
      */
     public EntityOutput(final InputStream input) {
-    	Objects.requireNonNull(input);
+    	Objects.requireNonNull(input, "InputStream");
         this.input = input;
     }
 

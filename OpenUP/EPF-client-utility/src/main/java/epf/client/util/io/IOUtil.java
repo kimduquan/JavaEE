@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.client.util.io;
 
 import java.io.IOException;
@@ -23,7 +20,8 @@ public interface IOUtil {
 	 * @throws IOException
 	 */
 	static long transferTo(final InputStream in, final OutputStream out) throws IOException {
-		Objects.requireNonNull(out, "out");
+		Objects.requireNonNull(in, "InputStream");
+		Objects.requireNonNull(out, "OutputStream");
         long transferred = 0;
         final byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
         int read;
