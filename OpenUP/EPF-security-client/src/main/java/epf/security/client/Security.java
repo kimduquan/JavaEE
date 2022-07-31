@@ -167,12 +167,12 @@ public interface Security {
      * @return
      */
     static Response update(final Client client, final String password) {
-    	final Form form = new Form().param(Naming.Security.Credential.PASSWORD, password);
+    	final Form form = new Form();
     	return client.request(
     			target -> target, 
     			req -> req
     			)
-    	.build(HttpMethod.PATCH, Entity.form(form))
+    	.build(HttpMethod.PATCH, Entity.form(password == null ? form : form.param(Naming.Security.Credential.PASSWORD, password)))
     	.invoke();
     }
     

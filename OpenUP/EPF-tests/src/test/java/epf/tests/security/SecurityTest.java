@@ -274,6 +274,7 @@ public class SecurityTest {
     	SecurityUtil.logOut(token);
     }
     
+    @Ignore
     @Test
     public void testUpdateInvalid_PasswordNull() throws Exception {
     	Entry<String, String> credential = SecurityUtil.peekCredential();

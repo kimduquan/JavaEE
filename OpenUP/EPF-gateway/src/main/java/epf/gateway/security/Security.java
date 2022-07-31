@@ -125,6 +125,7 @@ public class Security {
      */
     @RolesAllowed(Naming.Security.DEFAULT_ROLE)
     @PUT
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
     public CompletionStage<Response> revoke(
     		@Context final SecurityContext context,
