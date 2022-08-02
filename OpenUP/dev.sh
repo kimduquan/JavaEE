@@ -1,11 +1,9 @@
 sudo service mysql start
 sudo service postgresql start
-. ./env.sh
 ./shutdown.sh
 ./clean.sh
 ./startup.sh
-. ./config.sh
-mvn clean install -U -DskipTests -T 1C
+./compile.sh
 cd EPF-persistence
 ./dev.sh &>/dev/null &
 cd ../
@@ -23,4 +21,5 @@ cd EPF-shell
 ./dev.sh &>/dev/null &
 cd ../
 cd EPF-tests
+. ./env.sh
 mvn liberty:dev

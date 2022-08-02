@@ -1,3 +1,4 @@
+setlocal
 call .\env.bat
 set CUR_DIR=%CD%
 cd %PLUTO_HOME%\webapps
@@ -10,3 +11,4 @@ cd %CUR_DIR%
 rmdir "C:\tmp\kafka-logs" /s /q
 rmdir "C:\tmp\zookeeper" /s /q
 rmdir "ObjectStore" /s /q
+endlocal

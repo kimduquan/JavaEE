@@ -1,3 +1,4 @@
+setlocal
 call .\env.bat
 Taskkill /IM EPF-gateway-* /F
 Taskkill /IM EPF-transaction-* /F
@@ -6,7 +7,6 @@ Taskkill /IM EPF-shell-* /F
 cd EPF-tests
 call mvn liberty:stop
 cd ../
-setlocal
 set CUR_DIR=%CD%
 cd %KAFKA_HOME%
 call .\kafka-server-stop.bat &

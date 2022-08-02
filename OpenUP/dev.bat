@@ -1,8 +1,10 @@
-call ./env.bat
 call ./shutdown.bat
 call ./clean.bat
 call ./startup.bat
+setlocal
+call ./env.bat
 call mvn clean install -U -DskipTests -T 1C
+endlocal
 cd EPF-persistence
 start dev.bat &
 cd ../
@@ -20,4 +22,7 @@ cd EPF-shell
 call dev.bat
 cd ../
 cd EPF-tests
+setlocal
+call ./env.bat
 call mvn liberty:dev
+endlocal
