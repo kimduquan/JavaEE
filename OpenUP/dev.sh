@@ -22,4 +22,5 @@ cd EPF-shell
 cd ../
 cd EPF-tests
 . ./env.sh
+. ./config.sh
 mvn liberty:dev
