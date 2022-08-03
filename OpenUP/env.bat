@@ -1,4 +1,4 @@
-set GRAALVM_HOME=C:\graalvm-ce-java11-22.1.0
+set GRAALVM_HOME=C:\graalvm-ce-java11-22.2.0
 set PATH=%GRAALVM_HOME%/bin;%PATH%
 set JAVA8_HOME=C:\jdk8u322-b06
 set JAVA11_HOME=C:\jdk-11.0.15+10
