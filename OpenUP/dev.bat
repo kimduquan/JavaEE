@@ -3,7 +3,7 @@ call ./clean.bat
 call ./startup.bat
 setlocal
 call ./env.bat
-call mvn clean install -U -DskipTests -T 1C
+call mvn clean install -U -DskipTests
 endlocal
 cd EPF-persistence
 start dev.bat &
