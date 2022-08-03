@@ -1,4 +1,4 @@
-export GRAALVM_HOME=~/graalvm-ce-java11-22.1.0
+export GRAALVM_HOME=~/graalvm-ce-java11-22.2.0
 export PATH=$GRAALVM_HOME/bin:$PATH
 export JAVA8_HOME=~/jdk8u322-b06
 export JAVA11_HOME=~/jdk-11.0.15+10
