@@ -5,13 +5,13 @@ setlocal
 call ./env.bat
 call mvn clean install -U -DskipTests -T 1C
 endlocal
-cd EPF-persistence
-start dev.bat &
-cd ../
 cd EPF-transaction-internal
 start dev.bat &
 cd ../
 cd EPF-transaction
+start dev.bat &
+cd ../
+cd EPF-persistence
 start dev.bat &
 cd ../
 cd EPF-gateway
