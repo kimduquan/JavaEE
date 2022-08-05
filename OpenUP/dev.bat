@@ -1,10 +1,7 @@
 call ./shutdown.bat
 call ./clean.bat
 call ./startup.bat
-setlocal
-call ./env.bat
-call mvn clean install -U -DskipTests -T 1C
-endlocal
+call ./compile.bat
 cd EPF-transaction-internal
 start dev.bat &
 cd ../
