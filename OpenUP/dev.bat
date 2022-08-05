@@ -19,7 +19,7 @@ start dev.bat &
 cd ../
 call ./install.bat &
 cd EPF-shell
-call dev.bat
+call ./dev.bat
 cd ../
 cd EPF-tests
 setlocal
