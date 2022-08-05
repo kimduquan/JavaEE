@@ -1,3 +1,4 @@
+del .\EPF-transaction.log.*
 setlocal
 call ../env.bat
 call config.bat

@@ -1,3 +1,4 @@
+del .\EPF-gateway.log.*
 setlocal
 call ../env.bat
 call ../config.bat

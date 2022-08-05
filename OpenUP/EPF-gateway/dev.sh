@@ -1,3 +1,4 @@
+rm EPF-gateway.log.*
 . ../env.sh
 . ../config.sh
 . ./config.sh

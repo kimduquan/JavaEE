@@ -1,3 +1,4 @@
+del .\EPF-persistence.log.*
 setlocal
 call ../env.bat
 call config.bat
