@@ -8,4 +8,5 @@ keytool -importcert -noprompt -alias oauth2.googleapis.com -file cert/oauth2.goo
 keytool -importcert -noprompt -alias openidconnect.googleapis.com -file cert/openidconnect.googleapis.com.cer -keystore dev.p12 -storepass changeit -storetype PKCS12
 keytool -importcert -noprompt -alias www.facebook.com -file cert/www.facebook.com.cer -keystore dev.p12 -storepass changeit -storetype PKCS12
 keytool -importcert -noprompt -alias www.googleapis.com -file cert/www.googleapis.com.cer -keystore dev.p12 -storepass changeit -storetype PKCS12
+keytool -list -v -keystore dev.p12 -storepass changeit -storetype PKCS12
 endlocal
