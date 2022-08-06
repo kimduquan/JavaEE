@@ -113,8 +113,7 @@ public class ShellUtil {
 	 * @throws Exception
 	 */
 	public static List<String> getOutput(final Path path) throws Exception{
-		List<String> lines = Files.readAllLines(path);
-		return lines.subList(7, lines.size() - 1);
+		return Files.readAllLines(path);
 	}
 	
 	/**

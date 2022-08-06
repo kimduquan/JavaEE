@@ -20,6 +20,7 @@ call ./dev.bat
 cd ../
 cd EPF-tests
 setlocal
-call ./env.bat
-call mvn liberty:dev
+call ../env.bat
+call ../config.bat
+call mvn liberty:dev -Dmaven.failsafe.debug
 endlocal
