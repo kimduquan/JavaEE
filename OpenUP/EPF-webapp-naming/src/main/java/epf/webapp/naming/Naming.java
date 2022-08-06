@@ -25,6 +25,11 @@ public interface Naming {
 		 *
 		 */
 		String VIEW_EXTENSION = ".html";
+		
+		/**
+		 * 
+		 */
+		String UTILITY_VIEW = "webapp_utility";
 	}
 	
 	/**

@@ -25,10 +25,11 @@ public interface SecurityView {
 	String getClaim(final String name);
 	
 	/**
+	 * @param url
 	 * @return
 	 * @throws Exception
 	 */
-	String login() throws Exception;
+	String login(final String url) throws Exception;
 	
 	/**
 	 * @return
