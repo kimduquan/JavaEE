@@ -95,7 +95,7 @@ public class SecurityPage implements SecurityView, Serializable {
 
 	@Override
 	public String login() throws Exception {
-		externalContext.redirect("/security-auth/webapp/index.html?url=" + StringUtil.encodeURL("/webapp/security/auth.html"));
+		externalContext.redirect("/security-auth?url=" + StringUtil.encodeURL("/webapp/security/auth.html"));
 		return "";
 	}
 

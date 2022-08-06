@@ -77,7 +77,7 @@ public class SecurityAuthPage implements Serializable {
 			if(url != null && context.getCallerPrincipal() != null) {
 				final TokenPrincipal principal = (TokenPrincipal) context.getCallerPrincipal();
 				final char[] token = principal.getRememberToken() != null ? principal.getRememberToken() : principal.getRawToken();
-				externalContext.redirect(url + "?credential=" + StringUtil.encodeURL(new String(token)));
+				url += "?credential=" + StringUtil.encodeURL(new String(token));
 			}
 		}
 		else {
@@ -91,6 +91,10 @@ public class SecurityAuthPage implements Serializable {
 		return "";
 	}
 	
+	/**
+	 * @return
+	 * @throws Exception
+	 */
 	public String logout() throws Exception {
 		request.logout();
 		externalContext.invalidateSession();
