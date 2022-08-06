@@ -1,6 +1,7 @@
 <html xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-       xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
 <h:head>
     <f:metadata>
     	<f:viewParam name="url" value="#{security_auth_view.url}" />
@@ -8,11 +9,13 @@
     </f:metadata>
     <script type="text/javascript">
 	    window.onload = function() { 
-	    	window.location.href = document.getElementsByName("url")[0].value;
+	    	window.location.href = document.getElementsByName("url")[0].value + "?credential=" + document.getElementsByName("credential")[0].value;
 	    }
     </script>
 </h:head>
 <h:body>
 	<h:inputHidden value="#{security_auth_view.url}" a:name="url" />
+	<h:inputHidden value="#{security_auth_view.credential}" a:name="credential" />
+	<iframe jsf:rendered="#{not empty security_auth_view.credential}" a:src="#{'/persistence/security/auth.html?credential='.concat(security_auth_view.credential)}" style="display:none;"></iframe>
 </h:body>
 </html>

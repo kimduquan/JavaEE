@@ -33,6 +33,11 @@ public class SecurityAuthPage implements Serializable {
 	/**
 	 * 
 	 */
+	private String credential;
+	
+	/**
+	 * 
+	 */
 	@Inject
 	private transient HttpServletRequest request;
 
@@ -68,6 +73,14 @@ public class SecurityAuthPage implements Serializable {
 		this.url = url;
 	}
 
+	public String getCredential() {
+		return credential;
+	}
+
+	public void setCredential(final String credential) {
+		this.credential = credential;
+	}
+
 	/**
 	 * @return
 	 * @throws Exception
@@ -77,14 +90,15 @@ public class SecurityAuthPage implements Serializable {
 			if(url != null && context.getCallerPrincipal() != null) {
 				final TokenPrincipal principal = (TokenPrincipal) context.getCallerPrincipal();
 				final char[] token = principal.getRememberToken() != null ? principal.getRememberToken() : principal.getRawToken();
-				url += "?credential=" + StringUtil.encodeURL(new String(token));
+				credential = StringUtil.encodeURL(new String(token));
 			}
 		}
 		else {
 			if(context.getCallerPrincipal() != null) {
 				final TokenPrincipal principal = (TokenPrincipal) context.getCallerPrincipal();
 				final char[] token = principal.getRememberToken() != null ? principal.getRememberToken() : principal.getRawToken();
-				externalContext.redirect(authFlow.getUrl() + "?credential=" + StringUtil.encodeURL(new String(token)));
+				credential = StringUtil.encodeURL(new String(token));
+				url = authFlow.getUrl();
 			}
 			conversation.end();
 		}

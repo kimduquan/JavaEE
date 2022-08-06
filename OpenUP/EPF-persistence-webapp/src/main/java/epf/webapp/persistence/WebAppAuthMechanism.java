@@ -18,9 +18,7 @@ import epf.webapp.internal.AuthMechanism;
  */
 @ApplicationScoped
 @AutoApplySession
-@LoginToContinue(
-		loginPage = "/security/login.html"
-		)
+@LoginToContinue
 public class WebAppAuthMechanism implements HttpAuthenticationMechanism {
 	
 	/**
