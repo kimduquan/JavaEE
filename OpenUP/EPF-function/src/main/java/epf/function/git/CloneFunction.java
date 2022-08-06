@@ -5,15 +5,19 @@ import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 import org.eclipse.jgit.api.Git;
-import epf.function.git.internal.GitFunction;
 
 /**
  * 
  */
 @Command(scope = "epf", name = "git-clone")
 @Service
-public class CloneFunction extends GitFunction<Git> {
+public class CloneFunction extends GitTask<Void> {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 *
 	 */
@@ -48,7 +52,7 @@ public class CloneFunction extends GitFunction<Git> {
 	 *
 	 */
 	@Argument
-	private String gidDir;
+	private String gitDir;
 	
 	/**
 	 *
@@ -81,14 +85,14 @@ public class CloneFunction extends GitFunction<Git> {
 	private String uri;
 
 	@Override
-	public Git call() throws Exception {
-		final Git git = Git.cloneRepository()
+	public Void call() throws Exception {
+		Git.cloneRepository()
 				.setBare(bare)
 				.setBranch(branch)
 				.setCloneAllBranches(cloneAllBranches)
 				.setCloneSubmodules(cloneSubmodules)
 				.setDirectory(Paths.get(directory).toFile())
-				.setGitDir(Paths.get(gidDir).toFile())
+				.setGitDir(Paths.get(gitDir).toFile())
 				.setMirror(mirror)
 				.setNoCheckout(noCheckout)
 				.setNoTags()
@@ -96,7 +100,6 @@ public class CloneFunction extends GitFunction<Git> {
 				.setTimeout(timeout)
 				.setURI(uri)
 				.call();
-		addGit(git);
-		return git;
+		return null;
 	}
 }

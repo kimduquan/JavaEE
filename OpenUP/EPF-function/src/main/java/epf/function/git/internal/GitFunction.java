@@ -5,12 +5,17 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import org.apache.karaf.shell.api.action.Action;
 import org.eclipse.jgit.api.Git;
+import org.jppf.node.protocol.AbstractTask;
 
 /**
  * @param <T>
  */
-public abstract class GitFunction<T> implements Callable<T>, Action {
+public abstract class GitFunction<T> extends AbstractTask<T> implements Callable<T>, Action {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/**
 	 *
 	 */
@@ -37,5 +42,15 @@ public abstract class GitFunction<T> implements Callable<T>, Action {
 	@Override
 	public Object execute() throws Exception {
 		return call();
+	}
+	
+	@Override
+	public void run() {
+		try {
+			call();
+		} 
+		catch (Throwable e) {
+			setThrowable(e);
+		}
 	}
 }

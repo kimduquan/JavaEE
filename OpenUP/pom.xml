@@ -457,6 +457,12 @@
 			    <artifactId>org.eclipse.jgit</artifactId>
 			    <version>6.2.0.202206071550-r</version>
 			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.apache.maven/maven-embedder -->
+			<dependency>
+			    <groupId>org.apache.maven</groupId>
+			    <artifactId>maven-embedder</artifactId>
+			    <version>3.8.6</version>
+			</dependency>
             
             <!-- https://mvnrepository.com/artifact/org.jboss.weld/weld-junit4 -->
 			<dependency>

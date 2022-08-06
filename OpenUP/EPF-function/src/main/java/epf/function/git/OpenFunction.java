@@ -15,6 +15,10 @@ import epf.function.git.internal.GitFunction;
 public class OpenFunction extends GitFunction<Git> {
 	
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
 	 *
 	 */
 	@Argument
