@@ -79,7 +79,6 @@ public class SecurityPage implements SecurityView, Serializable {
 		session.clear();
 		request.logout();
 		externalContext.invalidateSession();
-		externalContext.redirect("/security-auth/security/logout.html");
 		return "";
 	}
 
