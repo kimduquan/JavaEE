@@ -112,21 +112,21 @@ public interface RequestUtil {
      * @param firstSegemnt
      */
     static Optional<String> getTenantParameter(final SecurityContext context, final PathSegment firstSegemnt) {
-    	Optional<String> tenant = Optional.empty();
+    	Optional<String> tenantClaim = Optional.empty();
     	final Optional<String> tenantParam = firstSegemnt.getMatrixParameters() != null ? Optional.ofNullable(firstSegemnt.getMatrixParameters().getFirst(Naming.Management.TENANT)) : Optional.empty();
-		if(tenantParam.isPresent()) {
-			final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
-	    	if(jwt != null) {
-	    		final Optional<String> tenantClaim = Optional.ofNullable(jwt.getClaim(Naming.Management.TENANT));
-	    		if(tenantClaim.isPresent() && tenantClaim.get().equals(tenant.get())) {
-	    			tenant = tenantParam;
-	    		}
-	    		else {
-	    			throw new ForbiddenException();
-	    		}
-	    	}
+		final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
+		if(jwt != null) {
+    		tenantClaim = Optional.ofNullable(jwt.getClaim(Naming.Management.TENANT));
 		}
-    	return tenant;
+		if(tenantClaim.isPresent()) {
+			if(!tenantParam.isPresent()) {
+				return tenantClaim;
+			}
+			else if(!tenantClaim.get().equals(tenantParam.get())) {
+				throw new ForbiddenException();
+			}
+		}
+		return tenantParam;
     }
     
     /**

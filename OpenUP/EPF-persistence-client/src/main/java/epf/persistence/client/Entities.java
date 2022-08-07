@@ -4,6 +4,7 @@ import java.io.InputStream;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.MatrixParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -24,6 +25,16 @@ import epf.naming.Naming;
  */
 @Path(Naming.PERSISTENCE)
 public interface Entities {
+	
+	/**
+	 * 
+	 */
+	String SCHEMA = "schema";
+	
+	/**
+	 * 
+	 */
+	String ENTITY = "entity";
     
     /**
      * @param schema
@@ -37,10 +48,12 @@ public interface Entities {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response persist(
-    		@PathParam("schema")
+    		@MatrixParam(Naming.Management.TENANT)
+    		final String tenant,
+    		@PathParam(SCHEMA)
             @NotBlank
             final String schema,
-            @PathParam("entity")
+            @PathParam(ENTITY)
             @NotBlank
             final String entity,
             @Context
@@ -100,10 +113,12 @@ public interface Entities {
     @Path("{schema}/{entity}/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     Response merge(
-    		@PathParam("schema")
+    		@MatrixParam(Naming.Management.TENANT)
+    		final String tenant,
+    		@PathParam(SCHEMA)
             @NotBlank
             final String schema,
-            @PathParam("entity")
+            @PathParam(ENTITY)
             @NotBlank
             final String entity,
             @PathParam("id")
@@ -165,10 +180,12 @@ public interface Entities {
     @DELETE
     @Path("{schema}/{entity}/{id}")
     Response remove(
-    		@PathParam("schema")
+    		@MatrixParam(Naming.Management.TENANT)
+    		final String tenant,
+    		@PathParam(SCHEMA)
             @NotBlank
             final String schema,
-            @PathParam("entity")
+            @PathParam(ENTITY)
             @NotBlank
             final String entity,
             @PathParam("id")

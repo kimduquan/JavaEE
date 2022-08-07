@@ -31,6 +31,7 @@ import epf.schema.utility.EntityEvent;
 import epf.schema.utility.PostPersist;
 import epf.schema.utility.PostRemove;
 import epf.schema.utility.PostUpdate;
+import epf.schema.utility.Request;
 import epf.schema.utility.SchemaUtil;
 import epf.util.json.JsonUtil;
 
@@ -65,6 +66,12 @@ public class Persistence implements epf.persistence.client.Entities {
     transient EntityManager manager;
     
     /**
+     * 
+     */
+    @Inject
+    transient Request request;
+    
+    /**
 	 * 
 	 */
 	@PostConstruct
@@ -85,11 +92,14 @@ public class Persistence implements epf.persistence.client.Entities {
     @Transactional
     @LRA(LRA.Type.NESTED)
     public Response persist(
+    		final String tenant,
     		final String schema,
             final String name,
             final HttpHeaders headers,
             final InputStream body
             ) throws Exception{
+    	request.setTenant(tenant);
+    	request.setSchema(schema);
     	final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), name);
     	if(entityType.isEmpty()) {
     		return Response.status(Response.Status.NOT_FOUND).build();
@@ -124,12 +134,15 @@ public class Persistence implements epf.persistence.client.Entities {
     @Transactional
     @LRA(LRA.Type.NESTED)
 	public Response merge(
+    		final String tenant,
 			final String schema,
 			final String name, 
 			final String id,
             final HttpHeaders headers,
 			final InputStream body
 			) throws Exception {
+    	request.setTenant(tenant);
+    	request.setSchema(schema);
     	final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), name);
     	if(entityType.isEmpty()) {
     		return Response.status(Response.Status.NOT_FOUND).build();
@@ -169,11 +182,14 @@ public class Persistence implements epf.persistence.client.Entities {
     @Transactional
     @LRA(LRA.Type.NESTED)
     public Response remove(
+    		final String tenant,
     		final String schema,
     		final String name,
     		final String id,
             final HttpHeaders headers
             ) throws Exception {
+    	request.setTenant(tenant);
+    	request.setSchema(schema);
     	final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), name);
     	if(entityType.isEmpty()) {
     		return Response.status(Response.Status.NOT_FOUND).build();
@@ -216,6 +232,8 @@ public class Persistence implements epf.persistence.client.Entities {
     	final String transactionId = headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER);
     	final EntityTransaction transaction = transactionStore.remove(transactionId);
 		if(transaction != null) {
+			request.setTenant(transaction.getTenant());
+			request.setSchema(transaction.getSchema());
     		final EntityEvent transactionEvent = transaction.getEvent();
     		if(transactionEvent instanceof PostPersist) {
      			final Object entity = manager.find(transactionEvent.getEntity().getClass(), transaction.getEntityId());

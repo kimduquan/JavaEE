@@ -106,13 +106,15 @@ public class Client implements AutoCloseable {
 	 * @return
 	 */
 	public Client tenant(final String tenant) {
-		this.tenant = Optional.ofNullable(tenant);
+		Objects.requireNonNull(tenant);
+		this.tenant = Optional.of(tenant);
 		return this;
 	}
 
     @Override
     public void close() throws Exception {
     	authToken = null;
+    	tenant = Optional.empty();
         clients.add(uri, rsClient);
     }
     
