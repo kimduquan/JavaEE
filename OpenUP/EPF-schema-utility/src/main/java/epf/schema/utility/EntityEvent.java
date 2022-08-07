@@ -28,6 +28,11 @@ public class EntityEvent implements Serializable {
 	/**
 	 * 
 	 */
+	private String schema;
+	
+	/**
+	 * 
+	 */
 	@JsonbTypeAdapter(Adapter.class)
 	private Object entity;
 	
@@ -58,5 +63,13 @@ public class EntityEvent implements Serializable {
 
 	public void setTenant(final String tenant) {
 		this.tenant = tenant;
+	}
+
+	public String getSchema() {
+		return schema;
+	}
+
+	public void setSchema(final String schema) {
+		this.schema = schema;
 	}
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import javax.validation.constraints.NotEmpty;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.MatrixParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -39,6 +40,8 @@ public interface FileCache {
 	@Path("{paths: .+}")
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
 	Response putFile(
+			@MatrixParam(Naming.Management.TENANT)
+			final String tenant,
 			@PathParam("paths")
 			@NotEmpty
 			final List<PathSegment> paths,
@@ -73,6 +76,8 @@ public interface FileCache {
     @Path("{paths: .+}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     StreamingOutput getFile(
+			@MatrixParam(Naming.Management.TENANT)
+			final String tenant,
     		@Context 
     		final UriInfo uriInfo, 
     		@PathParam("paths")

@@ -69,12 +69,13 @@ public class FileStore implements epf.client.file.Files {
 
 	@Override
 	public Response createFile(
+			final String tenant,
 			final List<PathSegment> paths,
 			final UriInfo uriInfo,
 			final InputStream input, 
 			final SecurityContext security) throws Exception {
 		PathValidator.validate(paths, security, HttpMethod.POST);
-		final PathBuilder builder = new PathBuilder(rootFolder, system);
+		final PathBuilder builder = new PathBuilder(system, rootFolder, tenant);
 		final Path targetFolder = builder
 				.paths(paths)
 				.build();
@@ -105,11 +106,12 @@ public class FileStore implements epf.client.file.Files {
 
 	@Override
 	public StreamingOutput read(
+			final String tenant,
 			final UriInfo uriInfo, 
 			final List<PathSegment> paths,
 			final SecurityContext security) throws Exception {
 		PathValidator.validate(paths, security, HttpMethod.GET);
-		final PathBuilder builder = new PathBuilder(rootFolder, system);
+		final PathBuilder builder = new PathBuilder(system, rootFolder, tenant);
 		final Path targetFile = builder
 				.paths(paths)
 				.build();
@@ -118,11 +120,12 @@ public class FileStore implements epf.client.file.Files {
 
 	@Override
 	public Response delete(
+			final String tenant,
 			final UriInfo uriInfo, 
 			final List<PathSegment> paths, 
 			final SecurityContext security) throws Exception {
 		PathValidator.validate(paths, security, HttpMethod.DELETE);
-		final PathBuilder builder = new PathBuilder(rootFolder, system);
+		final PathBuilder builder = new PathBuilder(system, rootFolder, tenant);
 		final Path targetFile = builder
 				.paths(paths)
 				.build();

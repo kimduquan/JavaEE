@@ -50,9 +50,9 @@ public class Cache implements epf.client.cache.FileCache {
 	private transient FileCache cache;
 
 	@Override
-	public Response putFile(final List<PathSegment> paths, final UriInfo uriInfo, final InputStream input, final SecurityContext security) throws Exception {
+	public Response putFile(final String tenant, final List<PathSegment> paths, final UriInfo uriInfo, final InputStream input, final SecurityContext security) throws Exception {
 		PathValidator.validate(paths, security, HttpMethod.POST);
-		final PathBuilder builder = new PathBuilder(rootFolder, system);
+		final PathBuilder builder = new PathBuilder(system, rootFolder, tenant);
 		final Path targetFolder = builder
 				.paths(paths)
 				.build();
@@ -63,10 +63,10 @@ public class Cache implements epf.client.cache.FileCache {
 	}
 
 	@Override
-	public StreamingOutput getFile(final UriInfo uriInfo, final List<PathSegment> paths, final SecurityContext security)
+	public StreamingOutput getFile(final String tenant, final UriInfo uriInfo, final List<PathSegment> paths, final SecurityContext security)
 			throws Exception {
 		PathValidator.validate(paths, security, HttpMethod.GET);
-		final PathBuilder builder = new PathBuilder(rootFolder, system);
+		final PathBuilder builder = new PathBuilder(system, rootFolder, tenant);
 		final Path targetFile = builder
 				.paths(paths)
 				.build();

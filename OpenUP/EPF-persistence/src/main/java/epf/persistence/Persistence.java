@@ -117,6 +117,8 @@ public class Persistence implements epf.persistence.client.Entities {
         
         final Object transactionEntity = entity;
         final PostPersist transactionEvent = new PostPersist();
+        transactionEvent.setTenant(request.getTenant());
+        transactionEvent.setSchema(request.getSchema());
         transactionEvent.setEntity(transactionEntity);
         final EntityTransaction transaction = new EntityTransaction();
         transaction.setEvent(transactionEvent);
@@ -165,6 +167,8 @@ public class Persistence implements epf.persistence.client.Entities {
         
     	final Object transactionEntity = entityObject;
         final PostUpdate transactionEvent = new PostUpdate();
+        transactionEvent.setTenant(request.getTenant());
+        transactionEvent.setSchema(request.getSchema());
         transactionEvent.setEntity(transactionEntity);
         final EntityTransaction transaction = new EntityTransaction();
         transaction.setEvent(transactionEvent);
@@ -209,6 +213,8 @@ public class Persistence implements epf.persistence.client.Entities {
     	
     	final Object transactionEntity = entityObject;
         final PostRemove transactionEvent = new PostRemove();
+        transactionEvent.setTenant(request.getTenant());
+        transactionEvent.setSchema(request.getSchema());
         transactionEvent.setEntity(transactionEntity);
         final EntityTransaction transaction = new EntityTransaction();
         transaction.setEvent(transactionEvent);
@@ -232,9 +238,9 @@ public class Persistence implements epf.persistence.client.Entities {
     	final String transactionId = headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER);
     	final EntityTransaction transaction = transactionStore.remove(transactionId);
 		if(transaction != null) {
-			request.setTenant(transaction.getTenant());
-			request.setSchema(transaction.getSchema());
     		final EntityEvent transactionEvent = transaction.getEvent();
+			request.setTenant(transactionEvent.getTenant());
+			request.setSchema(transactionEvent.getSchema());
     		if(transactionEvent instanceof PostPersist) {
      			final Object entity = manager.find(transactionEvent.getEntity().getClass(), transaction.getEntityId());
     			if(entity != null) {

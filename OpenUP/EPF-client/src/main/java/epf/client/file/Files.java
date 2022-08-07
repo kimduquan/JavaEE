@@ -6,6 +6,7 @@ import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.MatrixParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -41,6 +42,8 @@ public interface Files {
 	@Path("{paths: .+}")
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
 	Response createFile(
+			@MatrixParam(Naming.Management.TENANT)
+			final String tenant,
 			@PathParam("paths")
 			@NotEmpty
 			final List<PathSegment> paths,
@@ -82,6 +85,8 @@ public interface Files {
     @Path("{paths: .+}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     StreamingOutput read(
+			@MatrixParam(Naming.Management.TENANT)
+			final String tenant,
     		@Context 
     		final UriInfo uriInfo, 
     		@PathParam("paths")
@@ -121,6 +126,8 @@ public interface Files {
     @DELETE
     @Path("{paths: .+}")
     Response delete(
+			@MatrixParam(Naming.Management.TENANT)
+			final String tenant,
     		@Context 
     		final UriInfo uriInfo, 
     		@PathParam("paths")

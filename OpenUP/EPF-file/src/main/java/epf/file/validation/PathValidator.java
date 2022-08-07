@@ -26,7 +26,7 @@ public interface PathValidator {
 	static void validate(final List<PathSegment> paths, final SecurityContext security, final String httpMethod) {
 		final Principal principal = security.getUserPrincipal();
 		final String principalName = principal.getName();
-		final String firstPath = paths.get(0).toString();
+		final String firstPath = paths.get(0).getPath();
 		if(!principalName.equals(firstPath)) {
 			if(principal instanceof JsonWebToken) {
 				final JsonWebToken jwt = (JsonWebToken) principal;
