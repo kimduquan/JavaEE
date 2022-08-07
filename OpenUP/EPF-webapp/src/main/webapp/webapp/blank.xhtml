@@ -130,7 +130,7 @@
 
             <!-- Nav Item - Tables -->
             <li class="nav-item">
-                <h:link styleClass="nav-link" outcome="/query/tables"><f:param name="schema" value="EPF_Work_Products" /><f:param name="entity" value="EPF_Artifact" />
+                <h:link styleClass="nav-link" outcome="/query/tables">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Tables</span></h:link>
             </li>
@@ -403,7 +403,7 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <h:commandLink styleClass="btn btn-primary" action="#{security_principal.logout}" value="#{i18n['epf.security.logout']}" />
+                    <a class="btn btn-primary" href="/security-auth/security/logout.html"><h:outputText value="#{i18n['epf.security.logout']}" /></a>
                 </div>
             </div>
         </div>
