@@ -16,6 +16,7 @@ import epf.util.StringUtil;
 import epf.webapp.internal.Session;
 import epf.webapp.internal.TokenCredential;
 import epf.webapp.naming.Naming;
+import epf.webapp.util.CookieUtil;
 
 /**
  * @author PC
@@ -79,6 +80,7 @@ public class SecurityPage implements SecurityView, Serializable {
 		session.clear();
 		request.logout();
 		externalContext.invalidateSession();
+		CookieUtil.getCookie(request, "JSESSIONID").forEach(cookie -> CookieUtil.deleteCookie(externalContext, cookie));
 		return "";
 	}
 

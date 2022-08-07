@@ -2,12 +2,10 @@ package epf.webapp.security.view;
 
 import java.io.Serializable;
 import javax.enterprise.context.Conversation;
-import javax.faces.context.ExternalContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.security.enterprise.SecurityContext;
-import javax.servlet.http.HttpServletRequest;
 import epf.util.StringUtil;
 import epf.webapp.internal.TokenPrincipal;
 import epf.webapp.naming.Naming;
@@ -34,24 +32,12 @@ public class SecurityAuthPage implements Serializable {
 	 * 
 	 */
 	private String credential;
-	
-	/**
-	 * 
-	 */
-	@Inject
-	private transient HttpServletRequest request;
 
 	/**
 	 * 
 	 */
 	@Inject
 	private transient SecurityContext context;
-	
-	/**
-	 * 
-	 */
-	@Inject
-    private transient ExternalContext externalContext;
 	
 	/**
 	 * 
@@ -102,16 +88,6 @@ public class SecurityAuthPage implements Serializable {
 			}
 			conversation.end();
 		}
-		return "";
-	}
-	
-	/**
-	 * @return
-	 * @throws Exception
-	 */
-	public String logout() throws Exception {
-		request.logout();
-		externalContext.invalidateSession();
 		return "";
 	}
 }
