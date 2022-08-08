@@ -15,6 +15,7 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
 import epf.naming.Naming;
 
@@ -31,6 +32,12 @@ public class Search {
 	 */
 	@Inject
     transient Application request;
+    
+    /**
+     * 
+     */
+    @Inject
+    transient JsonWebToken jwt;
 	
 	/**
 	 * @param context
@@ -47,7 +54,7 @@ public class Search {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final Request req) throws Exception {
-        return request.request(Naming.SEARCH, context, headers, uriInfo, req, null);
+        return request.request(Naming.SEARCH, jwt, headers, uriInfo, req, null);
     }
 	
 	/**
@@ -64,6 +71,6 @@ public class Search {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final Request req) throws Exception {
-        return request.request(Naming.SEARCH, context, headers, uriInfo, req, null);
+        return request.request(Naming.SEARCH, jwt, headers, uriInfo, req, null);
     }
 }

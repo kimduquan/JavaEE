@@ -83,18 +83,19 @@ public interface RequestUtil {
     /**
      * @param webTarget
      * @param uriInfo
+     * @param jwt
      * @return
      */
     static WebTarget buildTarget(
     		WebTarget webTarget,
     		final UriInfo uriInfo,
-    		final SecurityContext context){
+    		final JsonWebToken jwt){
         if(uriInfo != null){
         	final List<PathSegment> segments = uriInfo.getPathSegments();
             if(segments != null){
             	final Iterator<PathSegment> segmentIt = segments.iterator();
             	final PathSegment firstSegemnt = segmentIt.next();
-            	getTenantParameter(context, firstSegemnt);
+            	getTenantParameter(jwt, firstSegemnt);
             	webTarget = buildMatrixParameters(webTarget, firstSegemnt);
             	while(segmentIt.hasNext()) {
             		final PathSegment segment = segmentIt.next();
@@ -108,13 +109,13 @@ public interface RequestUtil {
     }
     
     /**
-     * @param context
+     * @param jwt
      * @param firstSegemnt
+     * @return
      */
-    static Optional<String> getTenantParameter(final SecurityContext context, final PathSegment firstSegemnt) {
+    static Optional<String> getTenantParameter(final JsonWebToken jwt, final PathSegment firstSegemnt) {
     	Optional<String> tenantClaim = Optional.empty();
     	final Optional<String> tenantParam = firstSegemnt.getMatrixParameters() != null ? Optional.ofNullable(firstSegemnt.getMatrixParameters().getFirst(Naming.Management.TENANT)) : Optional.empty();
-		final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
 		if(jwt != null) {
     		tenantClaim = Optional.ofNullable(jwt.getClaim(Naming.Management.TENANT));
 		}

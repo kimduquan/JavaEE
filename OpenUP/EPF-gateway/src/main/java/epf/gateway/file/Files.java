@@ -20,6 +20,7 @@ import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
 import epf.naming.Naming;
 
@@ -37,6 +38,12 @@ public class Files {
      */
     @Inject
     transient Application request;
+    
+    /**
+     * 
+     */
+    @Inject
+    transient JsonWebToken jwt;
     
     /**
      * @param headers
@@ -59,7 +66,7 @@ public class Files {
     		final List<PathSegment> paths,
             final InputStream body
     ) throws Exception {
-        return request.request(Naming.FILE, context, headers, uriInfo, req, body);
+        return request.request(Naming.FILE, jwt, headers, uriInfo, req, body);
     }
     
     /**
@@ -81,7 +88,7 @@ public class Files {
             @PathParam("paths")
     		final List<PathSegment> paths
     ) throws Exception {
-        return request.request(Naming.FILE, context, headers, uriInfo, req, null);
+        return request.request(Naming.FILE, jwt, headers, uriInfo, req, null);
     }
     
     /**
@@ -102,6 +109,6 @@ public class Files {
             @PathParam("paths")
     		final List<PathSegment> paths
     ) throws Exception {
-        return request.request(Naming.FILE, context, headers, uriInfo, req, null);
+        return request.request(Naming.FILE, jwt, headers, uriInfo, req, null);
     }
 }

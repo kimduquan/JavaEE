@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
 import epf.naming.Naming;
 
@@ -32,6 +33,12 @@ public class Mail {
     transient Application request;
     
     /**
+     * 
+     */
+    @Inject
+    transient JsonWebToken jwt;
+    
+    /**
      * @param context
      * @param headers
      * @param uriInfo
@@ -48,6 +55,6 @@ public class Mail {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-        return request.request(Naming.MAIL, context, headers, uriInfo, req, body);
+        return request.request(Naming.MAIL, jwt, headers, uriInfo, req, body);
     }
 }

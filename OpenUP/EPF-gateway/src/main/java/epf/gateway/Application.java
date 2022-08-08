@@ -15,6 +15,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.internal.RequestUtil;
 import epf.gateway.internal.ResponseUtil;
 
@@ -32,15 +33,18 @@ public class Application {
     transient Registry registry;
     
     /**
+     * @param service
+     * @param jwt
      * @param headers
      * @param uriInfo
      * @param req
      * @param body
-     * @throws Exception 
+     * @return
+     * @throws Exception
      */
     public CompletionStage<Response> request(
     		final String service,
-    		final SecurityContext context,
+    		final JsonWebToken jwt,
     		final HttpHeaders headers, 
             final UriInfo uriInfo,
             final javax.ws.rs.core.Request req,
@@ -48,7 +52,7 @@ public class Application {
     	final URI serviceUri = registry.lookup(service).orElseThrow(NotFoundException::new);
 		final Client client = ClientBuilder.newClient();
 		WebTarget target = client.target(serviceUri);
-		target = RequestUtil.buildTarget(target, uriInfo, context);
+		target = RequestUtil.buildTarget(target, uriInfo, jwt);
 		Invocation.Builder invoke = target.request();
 		final URI baseUri = uriInfo.getBaseUri();
 		invoke = RequestUtil.buildHeaders(invoke, headers, baseUri);

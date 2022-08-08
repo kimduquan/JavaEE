@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
 import epf.naming.Naming;
 
@@ -32,6 +33,12 @@ public class Schema {
     transient Application request;
     
     /**
+     * 
+     */
+    @Inject
+    transient JsonWebToken jwt;
+    
+    /**
      * @param headers
      * @param uriInfo
      * @param req
@@ -45,7 +52,7 @@ public class Schema {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req) throws Exception {
-        return request.request(Naming.SCHEMA, context, headers, uriInfo, req, null);
+        return request.request(Naming.SCHEMA, jwt, headers, uriInfo, req, null);
     }
     
     /**
@@ -63,6 +70,6 @@ public class Schema {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req) throws Exception {
-    	return request.request(Naming.SCHEMA, context, headers, uriInfo, req, null);
+    	return request.request(Naming.SCHEMA, jwt, headers, uriInfo, req, null);
     }
 }

@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
 import epf.naming.Naming;
 
@@ -33,6 +34,12 @@ public class Admin {
      */
     @Inject
     transient Application request;
+    
+    /**
+     * 
+     */
+    @Inject
+    transient JsonWebToken jwt;
     
     /**
      * @param headers
@@ -53,7 +60,7 @@ public class Admin {
             @PathParam("ruleSet")
             final String ruleSet,
             final InputStream body) throws Exception {
-        return request.request(Naming.RULES, context, headers, uriInfo, req, body);
+        return request.request(Naming.RULES, jwt, headers, uriInfo, req, body);
     }
     
     /**
@@ -73,6 +80,6 @@ public class Admin {
             @Context final javax.ws.rs.core.Request req,
             @PathParam("ruleSet")
             final String ruleSet) throws Exception {
-        return request.request(Naming.RULES, context, headers, uriInfo, req, null);
+        return request.request(Naming.RULES, jwt, headers, uriInfo, req, null);
     }
 }

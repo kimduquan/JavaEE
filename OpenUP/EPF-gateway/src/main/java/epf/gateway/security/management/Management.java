@@ -17,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
 import epf.naming.Naming;
 
@@ -32,6 +33,12 @@ public class Management {
      */
     @Inject
     transient Application request;
+    
+    /**
+     * 
+     */
+    @Inject
+    transient JsonWebToken jwt;
 
 	/**
 	 * @param context
@@ -53,7 +60,7 @@ public class Management {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-        return request.request(Naming.Security.SECURITY_MANAGEMENT, context, headers, uriInfo, req, body);
+        return request.request(Naming.Security.SECURITY_MANAGEMENT, null, headers, uriInfo, req, body);
     }
     
     /**
@@ -74,7 +81,7 @@ public class Management {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-        return request.request(Naming.Security.SECURITY_MANAGEMENT, context, headers, uriInfo, req, body);
+        return request.request(Naming.Security.SECURITY_MANAGEMENT, jwt, headers, uriInfo, req, body);
     }
     
     /**
@@ -97,7 +104,7 @@ public class Management {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-        return request.request(Naming.Security.SECURITY_MANAGEMENT, context, headers, uriInfo, req, body);
+        return request.request(Naming.Security.SECURITY_MANAGEMENT, null, headers, uriInfo, req, body);
     }
     
     /**
@@ -119,6 +126,6 @@ public class Management {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-        return request.request(Naming.Security.SECURITY_MANAGEMENT, context, headers, uriInfo, req, body);
+        return request.request(Naming.Security.SECURITY_MANAGEMENT, jwt, headers, uriInfo, req, body);
     }
 }

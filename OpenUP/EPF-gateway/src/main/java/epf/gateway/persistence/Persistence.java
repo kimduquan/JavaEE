@@ -19,6 +19,7 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
 import epf.naming.Naming;
 
@@ -36,6 +37,12 @@ public class Persistence {
      */
     @Inject
     transient Application request;
+    
+    /**
+     * 
+     */
+    @Inject
+    transient JsonWebToken jwt;
     
     /**
      * @param headers
@@ -57,7 +64,7 @@ public class Persistence {
             @PathParam("schema") final String schema,
             @PathParam("entity") final String entity,
             final InputStream body) throws Exception {
-        return request.request(Naming.PERSISTENCE, context, headers, uriInfo, req, body);
+        return request.request(Naming.PERSISTENCE, jwt, headers, uriInfo, req, body);
     }
     
     /**
@@ -82,7 +89,7 @@ public class Persistence {
             @PathParam("id") final String entityId,
             final InputStream body
             ) throws Exception {
-    	return request.request(Naming.PERSISTENCE, context, headers, uriInfo, req, body);
+    	return request.request(Naming.PERSISTENCE, jwt, headers, uriInfo, req, body);
     }
     
     /**
@@ -103,6 +110,6 @@ public class Persistence {
             @PathParam("schema") final String schema,
             @PathParam("entity") final String entity,
             @PathParam("id") final String entityId) throws Exception {
-        return request.request(Naming.PERSISTENCE, context, headers, uriInfo, req, null);
+        return request.request(Naming.PERSISTENCE, jwt, headers, uriInfo, req, null);
     }
 }

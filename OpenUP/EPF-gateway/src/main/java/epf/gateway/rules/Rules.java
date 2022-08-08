@@ -19,6 +19,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
 import epf.naming.Naming;
 
@@ -36,6 +37,12 @@ public class Rules {
      */
     @Inject
     transient Application request;
+    
+    /**
+     * 
+     */
+    @Inject
+    transient JsonWebToken jwt;
 
 	/**
 	 * @param headers
@@ -58,7 +65,7 @@ public class Rules {
             @PathParam("ruleSet")
             final String ruleSet,
             final InputStream body) throws Exception {
-        return request.request(Naming.RULES, context, headers, uriInfo, req, body);
+        return request.request(Naming.RULES, jwt, headers, uriInfo, req, body);
     }
 	
 	/**
@@ -79,7 +86,7 @@ public class Rules {
             @Context final javax.ws.rs.core.Request req,
             @PathParam("ruleSet")
             final String ruleSet) throws Exception {
-        return request.request(Naming.RULES, context, headers, uriInfo, req, null);
+        return request.request(Naming.RULES, jwt, headers, uriInfo, req, null);
     }
 	
 	/**
@@ -100,7 +107,7 @@ public class Rules {
             @Context final javax.ws.rs.core.Request req,
             @PathParam("ruleSet")
             final String ruleSet) throws Exception {
-        return request.request(Naming.RULES, context, headers, uriInfo, req, null);
+        return request.request(Naming.RULES, jwt, headers, uriInfo, req, null);
     }
 	
 	/**
@@ -117,6 +124,6 @@ public class Rules {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req) throws Exception {
-        return request.request(Naming.RULES, context, headers, uriInfo, req, null);
+        return request.request(Naming.RULES, jwt, headers, uriInfo, req, null);
     }
 }

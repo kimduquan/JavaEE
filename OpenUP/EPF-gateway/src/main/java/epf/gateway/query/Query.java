@@ -22,6 +22,7 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
 import epf.naming.Naming;
 
@@ -39,6 +40,12 @@ public class Query {
 	 */
 	@Inject
     transient Application request;
+    
+    /**
+     * 
+     */
+    @Inject
+    transient JsonWebToken jwt;
 	
 	/**
 	 * @param headers
@@ -59,7 +66,7 @@ public class Query {
             @PathParam("schema") final String schema,
             @PathParam("entity") final String entity,
             @PathParam("id") final String entityId) throws Exception {
-        return request.request(Naming.QUERY, context, headers, uriInfo, req, null);
+        return request.request(Naming.QUERY, jwt, headers, uriInfo, req, null);
     }
 	
 	/**
@@ -80,7 +87,7 @@ public class Query {
             @PathParam("schema") final String schema,
             @PathParam("entity") final String entity
             ) throws Exception {
-        return request.request(Naming.QUERY, context, headers, uriInfo, req, null);
+        return request.request(Naming.QUERY, jwt, headers, uriInfo, req, null);
     }
 	
 	/**
@@ -101,7 +108,7 @@ public class Query {
             @Context final UriInfo uriInfo,
             @Context final Request req,
             final InputStream body) throws Exception {
-        return request.request(Naming.QUERY, context, headers, uriInfo, req, body);
+        return request.request(Naming.QUERY, jwt, headers, uriInfo, req, body);
     }
 	
 	/**
@@ -128,7 +135,7 @@ public class Query {
             final String schema,
             @PathParam("criteria")
             final List<PathSegment> paths) throws Exception { 
-		return request.request(Naming.QUERY, context, headers, uriInfo, req, null);
+		return request.request(Naming.QUERY, jwt, headers, uriInfo, req, null);
 		}
 	
 	/**
@@ -154,7 +161,7 @@ public class Query {
             final String schema,
             @PathParam("criteria")
             final List<PathSegment> paths) throws Exception {
-        		return request.request(Naming.QUERY, context, headers, uriInfo, req, null);
+        		return request.request(Naming.QUERY, jwt, headers, uriInfo, req, null);
         	}
 	
 	/**
@@ -177,6 +184,6 @@ public class Query {
             final UriInfo uriInfo,
             @Context 
             final javax.ws.rs.core.Request req) throws Exception {
-        return request.request(Naming.CACHE, context, headers, uriInfo, req, null);
+        return request.request(Naming.CACHE, null, headers, uriInfo, req, null);
     }
 }
