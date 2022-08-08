@@ -24,7 +24,6 @@ import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
 import epf.util.SystemUtil;
 import epf.util.config.ConfigUtil;
-import epf.util.security.CryptoUtil;
 import epf.work_products.schema.Artifact;
 import epf.work_products.schema.WorkProducts;
 import epf.work_products.schema.section.Description;

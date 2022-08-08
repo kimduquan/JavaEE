@@ -10,6 +10,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.security.RolesAllowed;
@@ -30,6 +32,7 @@ import epf.file.util.FileUtil;
 import epf.file.validation.PathValidator;
 import epf.naming.Naming;
 import epf.naming.Naming.Security;
+import epf.util.logging.LogManager;
 
 /**
  *
@@ -39,6 +42,11 @@ import epf.naming.Naming.Security;
 @RolesAllowed(Security.DEFAULT_ROLE)
 @ApplicationScoped
 public class FileStore implements epf.client.file.Files {
+	
+	/**
+	 * 
+	 */
+	private transient static final Logger LOGGER = LogManager.getLogger(FileStore.class.getName());
 	
 	/**
 	 * 
@@ -64,7 +72,13 @@ public class FileStore implements epf.client.file.Files {
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		watchService.register(system.getPath(rootFolder));
+		final Path rootPath = system.getPath(rootFolder);
+		try {
+			Files.list(rootPath).forEach(watchService::register);
+		}
+		catch(Exception ex) {
+			LOGGER.log(Level.SEVERE, "[FileStore.watchService]", ex);
+		}
 	}
 
 	@Override
@@ -87,7 +101,7 @@ public class FileStore implements epf.client.file.Files {
 		Files.copy(input, targetFile, StandardCopyOption.REPLACE_EXISTING);
 		files.add(targetFile);
 		targetFilePaths.put(targetFile.getFileName().toString(), relativePath + "/" + targetFile.getFileName().toString());
-		final Path root = system.getPath(rootFolder);
+		final Path root = tenant != null ? system.getPath(rootFolder) : system.getPath(rootFolder, tenant);
 		final Link[] links = files
 				.stream()
 				.map(path -> {

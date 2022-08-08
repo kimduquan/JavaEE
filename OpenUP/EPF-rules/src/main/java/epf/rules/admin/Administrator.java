@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.rules.admin;
 
 import java.rmi.RemoteException;

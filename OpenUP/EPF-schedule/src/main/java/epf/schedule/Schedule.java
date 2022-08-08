@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.schedule;
 
 import java.net.URI;

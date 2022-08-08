@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.rules;
 
 import java.io.InputStream;
