@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -31,8 +30,7 @@ public class URL extends EPFEntity {
 	 */
 	@Id
 	@Column(name = "ID")
-	@SequenceGenerator(name = "EPF_Net_URL", allocationSize = 1, initialValue = 1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EPF_Net_URL")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	/**
