@@ -14,6 +14,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.internal.RequestUtil;
 import epf.gateway.internal.ResponseUtil;
@@ -28,7 +29,7 @@ public class Application {
     /**
      * 
      */
-    @Inject
+    @Inject @Readiness
     transient Registry registry;
     
     /**

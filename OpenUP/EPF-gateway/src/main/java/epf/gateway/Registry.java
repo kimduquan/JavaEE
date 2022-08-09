@@ -4,11 +4,13 @@ import java.net.URI;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.client.ClientBuilder;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.health.HealthCheck;
+import org.eclipse.microprofile.health.HealthCheckResponse;
+import org.eclipse.microprofile.health.Readiness;
 import epf.naming.Naming;
 import epf.util.MapUtil;
 
@@ -17,7 +19,8 @@ import epf.util.MapUtil;
  *
  */
 @ApplicationScoped
-public class Registry {
+@Readiness
+public class Registry implements HealthCheck  {
 	
 	/**
 	 * 
@@ -30,18 +33,6 @@ public class Registry {
 	@ConfigProperty(name = Naming.Registry.REGISTRY_URL)
 	@Inject
 	String registryUrl;
-    
-	/**
-	 * 
-	 */
-	@PostConstruct
-	protected void postConstruct() {
-		ClientBuilder.newClient().target(registryUrl).queryParam(Naming.Registry.Filter.SCHEME, "http", "ws").request().get()
-		.getLinks()
-		.forEach(link -> {
-			remotes.put(link.getRel(), link.getUri());
-		});
-	}
 	
 	/**
 	 * @param name
@@ -49,5 +40,18 @@ public class Registry {
 	 */
 	public Optional<URI> lookup(final String name) {
 		return MapUtil.get(remotes, name);
+	}
+
+	@Override
+	public HealthCheckResponse call() {
+		ClientBuilder
+				.newClient()
+				.target(registryUrl)
+				.queryParam(Naming.Registry.Filter.SCHEME, "http", "ws")
+				.request()
+				.get()
+				.getLinks()
+				.forEach(link -> remotes.put(link.getRel(), link.getUri()));
+		return HealthCheckResponse.up("EPF-gateway-registry");
 	}
 }

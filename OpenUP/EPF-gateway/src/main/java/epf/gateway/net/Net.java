@@ -21,6 +21,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+import org.eclipse.microprofile.health.Readiness;
 import epf.gateway.Registry;
 import epf.gateway.Application;
 import epf.naming.Naming;
@@ -43,7 +44,7 @@ public class Net {
     /**
      * 
      */
-    @Inject
+    @Inject @Readiness
     transient Registry registry;
     
     /**

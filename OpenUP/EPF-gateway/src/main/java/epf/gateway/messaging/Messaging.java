@@ -22,6 +22,7 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import org.eclipse.microprofile.context.ManagedExecutor;
+import org.eclipse.microprofile.health.Readiness;
 import epf.gateway.Registry;
 import epf.gateway.security.SecurityUtil;
 import epf.naming.Naming;
@@ -60,7 +61,7 @@ public class Messaging {
 	/**
 	 * 
 	 */
-	@Inject
+	@Inject @Readiness
 	transient Registry registry;
 	
 	/**

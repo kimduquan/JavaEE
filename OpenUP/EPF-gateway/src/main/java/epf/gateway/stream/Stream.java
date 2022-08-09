@@ -23,6 +23,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
 import org.eclipse.microprofile.context.ManagedExecutor;
+import org.eclipse.microprofile.health.Readiness;
 import epf.gateway.Registry;
 import epf.gateway.security.SecurityUtil;
 import epf.naming.Naming;
@@ -55,7 +56,7 @@ public class Stream {
 	/**
 	 * 
 	 */
-	@Inject
+	@Inject @Readiness
 	transient Registry registry;
 	
 	/**

@@ -180,6 +180,11 @@ public interface Naming {
 	    String MESSAGING_URL = "epf.gateway.messaging.url";
 	    
 	    /**
+	     *
+	     */
+	    String HEALTH_URL = "epf.gateway.health.url";
+	    
+	    /**
 	     * @author PC
 	     *
 	     */
