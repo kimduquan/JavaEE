@@ -1,6 +1,7 @@
 package epf.gateway.security.management;
 
 import java.io.InputStream;
+import java.util.concurrent.CompletionStage;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
@@ -20,7 +21,6 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
 import epf.gateway.internal.ResponseUtil;
 import epf.naming.Naming;
-import io.smallrye.common.annotation.Blocking;
 
 /**
  * 
@@ -55,13 +55,13 @@ public class Management {
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response createCredential(
+	public CompletionStage<Response> createCredential(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-    	return ResponseUtil.buildResponse(request.buildRequest(Naming.Security.SECURITY_MANAGEMENT, null, headers, uriInfo, req, body).invoke(), uriInfo.getBaseUri());
+    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.Security.SECURITY_MANAGEMENT, null, headers, uriInfo, req, body), uriInfo.getBaseUri());
     }
     
     /**
@@ -76,13 +76,13 @@ public class Management {
     @RolesAllowed(Naming.EPF)
     @Path(Naming.Security.CREDENTIAL)
     @PUT
-    public Response activeCredential(
+    public CompletionStage<Response> activeCredential(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-    	return ResponseUtil.buildResponse(request.buildRequest(Naming.Security.SECURITY_MANAGEMENT, jwt, headers, uriInfo, req, body).invoke(), uriInfo.getBaseUri());
+    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.Security.SECURITY_MANAGEMENT, jwt, headers, uriInfo, req, body), uriInfo.getBaseUri());
     }
     
     /**
@@ -99,13 +99,13 @@ public class Management {
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Response resetPassword(
+    public CompletionStage<Response> resetPassword(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-    	return ResponseUtil.buildResponse(request.buildRequest(Naming.Security.SECURITY_MANAGEMENT, null, headers, uriInfo, req, body).invoke(), uriInfo.getBaseUri());
+    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.Security.SECURITY_MANAGEMENT, null, headers, uriInfo, req, body), uriInfo.getBaseUri());
     }
     
     /**
@@ -121,12 +121,12 @@ public class Management {
     @Path(Naming.Security.Credential.PASSWORD)
     @PUT
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Response setPassword(
+    public CompletionStage<Response> setPassword(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-    	return ResponseUtil.buildResponse(request.buildRequest(Naming.Security.SECURITY_MANAGEMENT, jwt, headers, uriInfo, req, body).invoke(), uriInfo.getBaseUri());
+    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.Security.SECURITY_MANAGEMENT, jwt, headers, uriInfo, req, body), uriInfo.getBaseUri());
     }
 }

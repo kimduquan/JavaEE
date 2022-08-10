@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.concurrent.CompletionStage;
 import java.util.Map.Entry;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.client.Entity;
@@ -19,6 +20,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.PathSegment;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.sse.SseEventSource;
 import org.eclipse.microprofile.jwt.JsonWebToken;
@@ -188,6 +190,24 @@ public interface RequestUtil {
     		return invoker.build(method);
     	}
     	return invoker.build(method, Entity.entity(body, type));
+    }
+    
+    /**
+     * @param invoker
+     * @param method
+     * @param type
+     * @param body
+     * @return
+     */
+    static CompletionStage<Response> buildRxInvoke(
+    		final Builder invoker,
+    		final String method, 
+    		final MediaType type, 
+    		final InputStream body) {
+    	if(body == null || type == null) {
+    		return invoker.rx().method(method);
+    	}
+    	return invoker.rx().method(method, Entity.entity(body, type));
     }
     
     /**

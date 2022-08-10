@@ -1,6 +1,7 @@
 package epf.gateway.mail;
 
 import java.io.InputStream;
+import java.util.concurrent.CompletionStage;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -49,12 +50,12 @@ public class Mail {
      */
     @POST
 	@Consumes(MediaType.APPLICATION_JSON)
-    public Response send(
+    public CompletionStage<Response> send(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-    	return ResponseUtil.buildResponse(request.buildRequest(Naming.MAIL, jwt, headers, uriInfo, req, body).invoke(), uriInfo.getBaseUri());
+    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.MAIL, jwt, headers, uriInfo, req, body), uriInfo.getBaseUri());
     }
 }

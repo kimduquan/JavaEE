@@ -1,6 +1,7 @@
 package epf.gateway.persistence;
 
 import java.io.InputStream;
+import java.util.concurrent.CompletionStage;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -56,7 +57,7 @@ public class Persistence {
     @Path("{schema}/{entity}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response persist(
+    public CompletionStage<Response> persist(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -64,7 +65,7 @@ public class Persistence {
             @PathParam("schema") final String schema,
             @PathParam("entity") final String entity,
             final InputStream body) throws Exception {
-    	return ResponseUtil.buildResponse(request.buildRequest(Naming.PERSISTENCE, jwt, headers, uriInfo, req, body).invoke(), uriInfo.getBaseUri());
+    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.PERSISTENCE, jwt, headers, uriInfo, req, body), uriInfo.getBaseUri());
     }
     
     /**
@@ -79,7 +80,7 @@ public class Persistence {
     @PUT
     @Path("{schema}/{entity}/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response merge(
+    public CompletionStage<Response> merge(
     		@Context final SecurityContext context,
     		@Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -89,7 +90,7 @@ public class Persistence {
             @PathParam("id") final String entityId,
             final InputStream body
             ) throws Exception {
-    	return ResponseUtil.buildResponse(request.buildRequest(Naming.PERSISTENCE, jwt, headers, uriInfo, req, body).invoke(), uriInfo.getBaseUri());
+    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.PERSISTENCE, jwt, headers, uriInfo, req, body), uriInfo.getBaseUri());
     }
     
     /**
@@ -102,7 +103,7 @@ public class Persistence {
      */
     @DELETE
     @Path("{schema}/{entity}/{id}")
-    public Response remove(
+    public CompletionStage<Response> remove(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -110,6 +111,6 @@ public class Persistence {
             @PathParam("schema") final String schema,
             @PathParam("entity") final String entity,
             @PathParam("id") final String entityId) throws Exception {
-    	return ResponseUtil.buildResponse(request.buildRequest(Naming.PERSISTENCE, jwt, headers, uriInfo, req, null).invoke(), uriInfo.getBaseUri());
+    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.PERSISTENCE, jwt, headers, uriInfo, req, null), uriInfo.getBaseUri());
     }
 }

@@ -1,6 +1,7 @@
 package epf.gateway.rules.admin;
 
 import java.io.InputStream;
+import java.util.concurrent.CompletionStage;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -52,7 +53,7 @@ public class Admin {
     @Path("{ruleSet}")
     @PUT
     @Consumes(MediaType.APPLICATION_OCTET_STREAM)
-    public Response registerRuleExecutionSet(
+    public CompletionStage<Response> registerRuleExecutionSet(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -60,7 +61,7 @@ public class Admin {
             @PathParam("ruleSet")
             final String ruleSet,
             final InputStream body) throws Exception {
-    	return ResponseUtil.buildResponse(request.buildRequest(Naming.RULES, jwt, headers, uriInfo, req, body).invoke(), uriInfo.getBaseUri());
+    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.RULES, jwt, headers, uriInfo, req, body), uriInfo.getBaseUri());
     }
     
     /**
@@ -73,13 +74,13 @@ public class Admin {
      */
     @Path("{ruleSet}")
     @DELETE
-    public Response deregisterRuleExecutionSet(
+    public CompletionStage<Response> deregisterRuleExecutionSet(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             @PathParam("ruleSet")
             final String ruleSet) throws Exception {
-    	return ResponseUtil.buildResponse(request.buildRequest(Naming.RULES, jwt, headers, uriInfo, req, null).invoke(), uriInfo.getBaseUri());
+    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.RULES, jwt, headers, uriInfo, req, null), uriInfo.getBaseUri());
     }
 }

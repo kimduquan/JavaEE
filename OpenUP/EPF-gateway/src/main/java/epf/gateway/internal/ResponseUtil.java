@@ -3,6 +3,7 @@ package epf.gateway.internal;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Set;
+import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.Response;
@@ -62,5 +63,25 @@ public interface ResponseUtil {
 			builder = builder.links().links(links.toArray(new Link[0]));
 		}
 		return builder.build();
+    }
+    
+    /**
+     * @param res
+     * @param baseUri
+     * @return
+     */
+    static CompletionStage<Response> buildRxResponse(final CompletionStage<Response> res, final URI baseUri){
+    	return res.thenApply(response -> {
+        	ResponseBuilder builder = Response.fromResponse(response);
+    		Set<Link> links = response.getLinks();
+    		if(links != null){
+    			links = links
+    					.stream()
+    					.map(link -> mapLink(link, baseUri))
+    					.collect(Collectors.toSet());
+    			builder = builder.links().links(links.toArray(new Link[0]));
+    		}
+    		return builder.build();
+    	});
     }
 }

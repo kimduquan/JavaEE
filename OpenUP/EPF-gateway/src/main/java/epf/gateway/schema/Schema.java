@@ -1,5 +1,6 @@
 package epf.gateway.schema;
 
+import java.util.concurrent.CompletionStage;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -47,12 +48,12 @@ public class Schema {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getEntities(
+    public CompletionStage<Response> getEntities(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req) throws Exception {
-    	return ResponseUtil.buildResponse(request.buildRequest(Naming.SCHEMA, jwt, headers, uriInfo, req, null).invoke(), uriInfo.getBaseUri());
+    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.SCHEMA, jwt, headers, uriInfo, req, null), uriInfo.getBaseUri());
     }
     
     /**
@@ -65,11 +66,11 @@ public class Schema {
     @GET
     @Path("embeddable")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getEmbeddables(
+    public CompletionStage<Response> getEmbeddables(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req) throws Exception {
-    	return ResponseUtil.buildResponse(request.buildRequest(Naming.SCHEMA, jwt, headers, uriInfo, req, null).invoke(), uriInfo.getBaseUri());
+    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.SCHEMA, jwt, headers, uriInfo, req, null), uriInfo.getBaseUri());
     }
 }

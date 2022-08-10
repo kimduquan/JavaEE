@@ -2,6 +2,7 @@ package epf.gateway.file;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.concurrent.CompletionStage;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -57,7 +58,7 @@ public class Files {
     @POST
 	@Path("{paths: .+}")
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
-    public Response createFile(
+    public CompletionStage<Response> createFile(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -66,7 +67,7 @@ public class Files {
     		final List<PathSegment> paths,
             final InputStream body
     ) throws Exception {
-    	return ResponseUtil.buildResponse(request.buildRequest(Naming.FILE, jwt, headers, uriInfo, req, body).invoke(), uriInfo.getBaseUri());
+    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.FILE, jwt, headers, uriInfo, req, body), uriInfo.getBaseUri());
     }
     
     /**
@@ -80,7 +81,7 @@ public class Files {
     @GET
     @Path("{paths: .+}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public Response lines(
+    public CompletionStage<Response> lines(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -88,7 +89,7 @@ public class Files {
             @PathParam("paths")
     		final List<PathSegment> paths
     ) throws Exception {
-    	return ResponseUtil.buildResponse(request.buildRequest(Naming.FILE, jwt, headers, uriInfo, req, null).invoke(), uriInfo.getBaseUri());
+    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.FILE, jwt, headers, uriInfo, req, null), uriInfo.getBaseUri());
     }
     
     /**
@@ -101,7 +102,7 @@ public class Files {
      */
     @DELETE
     @Path("{paths: .+}")
-    public Response delete(
+    public CompletionStage<Response> delete(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -109,6 +110,6 @@ public class Files {
             @PathParam("paths")
     		final List<PathSegment> paths
     ) throws Exception {
-    	return ResponseUtil.buildResponse(request.buildRequest(Naming.FILE, jwt, headers, uriInfo, req, null).invoke(), uriInfo.getBaseUri());
+    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.FILE, jwt, headers, uriInfo, req, null), uriInfo.getBaseUri());
     }
 }

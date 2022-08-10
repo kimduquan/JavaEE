@@ -1,5 +1,6 @@
 package epf.gateway.search;
 
+import java.util.concurrent.CompletionStage;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -49,12 +50,12 @@ public class Search {
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-    public Response search(
+    public CompletionStage<Response> search(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final Request req) throws Exception {
-		return ResponseUtil.buildResponse(request.buildRequest(Naming.SEARCH, jwt, headers, uriInfo, req, null).invoke(), uriInfo.getBaseUri());
+		return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.SEARCH, jwt, headers, uriInfo, req, null), uriInfo.getBaseUri());
     }
 	
 	/**
@@ -66,11 +67,11 @@ public class Search {
 	 * @throws Exception
 	 */
 	@HEAD
-	public Response count(
+	public CompletionStage<Response> count(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final Request req) throws Exception {
-		return ResponseUtil.buildResponse(request.buildRequest(Naming.SEARCH, jwt, headers, uriInfo, req, null).invoke(), uriInfo.getBaseUri());
+		return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.SEARCH, jwt, headers, uriInfo, req, null), uriInfo.getBaseUri());
     }
 }

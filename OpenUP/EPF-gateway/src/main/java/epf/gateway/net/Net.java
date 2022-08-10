@@ -3,6 +3,9 @@ package epf.gateway.net;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Map;
+import java.util.concurrent.CompletionStage;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -26,6 +29,7 @@ import epf.gateway.internal.ResponseUtil;
 import epf.gateway.Application;
 import epf.naming.Naming;
 import epf.util.StringUtil;
+import epf.util.logging.LogManager;
 
 /**
  *
@@ -34,6 +38,11 @@ import epf.util.StringUtil;
 @Path(Naming.NET)
 @ApplicationScoped
 public class Net {
+	
+	/**
+	 *
+	 */
+	private transient static final Logger LOGGER = LogManager.getLogger(Net.class.getName());
     
     /**
      * 
@@ -57,14 +66,14 @@ public class Net {
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
-    public Response rewriteUrl(
+    public CompletionStage<Response> rewriteUrl(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body
     ) throws Exception {
-    	return ResponseUtil.buildResponse(request.buildRequest(Naming.NET, null, headers, uriInfo, req, body).invoke(), uriInfo.getBaseUri());
+    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.NET, null, headers, uriInfo, req, body), uriInfo.getBaseUri());
     }
     
     /**
@@ -74,25 +83,33 @@ public class Net {
      */
     @Path("url")
 	@GET
-    public Response temporaryRedirect(
+    public CompletionStage<Response> temporaryRedirect(
     		@QueryParam("url")
     		final String url
     ) throws Exception {
     	final long id = StringUtil.fromShortString(url);
     	final URI queryUrl = registry.lookup(Naming.QUERY).orElseThrow(NotFoundException::new);
-    	final Response response = ClientBuilder.newClient()
+    	return ClientBuilder.newClient()
     			.target(queryUrl)
     			.path("entity")
     			.path("EPF_Net")
     			.path("URL")
     			.path(String.valueOf(id))
     			.request(MediaType.APPLICATION_JSON)
-    			.get();
-    	if(response.getStatus() == 200) {
-			final Map<String, Object> map = response.readEntity(new GenericType<Map<String, Object>>(){});
-			final String string = String.valueOf(map.get("string"));
-			return Response.temporaryRedirect(new URI(string)).build();
-    	}
-    	return response;
+    			.rx()
+    			.get()
+    			.thenApply(response -> {
+					try {
+	    				if(response.getStatus() == 200) {
+	    					final Map<String, Object> map = response.readEntity(new GenericType<Map<String, Object>>(){});
+	    					final String string = String.valueOf(map.get("string"));
+							return Response.temporaryRedirect(new URI(string)).build();
+	    		    	}
+					} 
+					catch (Exception e) {
+						LOGGER.log(Level.SEVERE, e.getMessage(), e);
+					}
+    		    	return response;
+    			});
     }
 }

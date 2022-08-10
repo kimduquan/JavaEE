@@ -1,6 +1,7 @@
 package epf.gateway.image;
 
 import java.io.InputStream;
+import java.util.concurrent.CompletionStage;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -43,13 +44,13 @@ public class Image {
 	@POST
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
 	@Produces(MediaType.APPLICATION_JSON)
-    public Response findContours(
+    public CompletionStage<Response> findContours(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body
     ) throws Exception {
-    	return ResponseUtil.buildResponse(request.buildRequest(Naming.IMAGE, null, headers, uriInfo, req, body).invoke(), uriInfo.getBaseUri());
+    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.IMAGE, null, headers, uriInfo, req, body), uriInfo.getBaseUri());
     }
 }

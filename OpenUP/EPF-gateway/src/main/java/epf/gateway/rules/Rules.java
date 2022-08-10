@@ -1,6 +1,7 @@
 package epf.gateway.rules;
 
 import java.io.InputStream;
+import java.util.concurrent.CompletionStage;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -57,7 +58,7 @@ public class Rules {
 	@Path("{ruleSet}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response executeRules(
+	public CompletionStage<Response> executeRules(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -65,7 +66,7 @@ public class Rules {
             @PathParam("ruleSet")
             final String ruleSet,
             final InputStream body) throws Exception {
-		return ResponseUtil.buildResponse(request.buildRequest(Naming.RULES, jwt, headers, uriInfo, req, body).invoke(), uriInfo.getBaseUri());
+		return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.RULES, jwt, headers, uriInfo, req, body), uriInfo.getBaseUri());
     }
 	
 	/**
@@ -79,14 +80,14 @@ public class Rules {
 	@PUT
 	@Path("{ruleSet}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response executeRules(
+	public CompletionStage<Response> executeRules(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             @PathParam("ruleSet")
             final String ruleSet) throws Exception {
-		return ResponseUtil.buildResponse(request.buildRequest(Naming.RULES, jwt, headers, uriInfo, req, null).invoke(), uriInfo.getBaseUri());
+		return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.RULES, jwt, headers, uriInfo, req, null), uriInfo.getBaseUri());
     }
 	
 	/**
@@ -100,14 +101,14 @@ public class Rules {
 	@PATCH
 	@Path("{ruleSet}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response addObject(
+	public CompletionStage<Response> addObject(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             @PathParam("ruleSet")
             final String ruleSet) throws Exception {
-		return ResponseUtil.buildResponse(request.buildRequest(Naming.RULES, jwt, headers, uriInfo, req, null).invoke(), uriInfo.getBaseUri());
+		return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.RULES, jwt, headers, uriInfo, req, null), uriInfo.getBaseUri());
     }
 	
 	/**
@@ -119,11 +120,11 @@ public class Rules {
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getRegistrations(
+	public CompletionStage<Response> getRegistrations(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req) throws Exception {
-		return ResponseUtil.buildResponse(request.buildRequest(Naming.RULES, jwt, headers, uriInfo, req, null).invoke(), uriInfo.getBaseUri());
+		return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.RULES, jwt, headers, uriInfo, req, null), uriInfo.getBaseUri());
     }
 }
