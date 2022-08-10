@@ -6,3 +6,6 @@ set quarkus.log.file.enable=true
 set quarkus.log.file.path=EPF-gateway.log
 set quarkus.log.level=DEBUG
 set quarkus.vertx.max-event-loop-execute-time=20S
+set quarkus.jaeger.service-name=EPF-gateway
+set quarkus.jaeger.sampler-type=const
+set quarkus.jaeger.sampler-param=1
