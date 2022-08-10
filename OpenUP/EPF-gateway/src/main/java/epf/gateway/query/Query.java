@@ -2,7 +2,6 @@ package epf.gateway.query;
 
 import java.io.InputStream;
 import java.util.List;
-import java.util.concurrent.CompletionStage;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
@@ -24,6 +23,7 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
+import epf.gateway.internal.ResponseUtil;
 import epf.naming.Naming;
 
 /**
@@ -58,7 +58,7 @@ public class Query {
 	@GET
     @Path("entity/{schema}/{entity}/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-    public CompletionStage<Response> getEntity(
+    public Response getEntity(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -66,7 +66,7 @@ public class Query {
             @PathParam("schema") final String schema,
             @PathParam("entity") final String entity,
             @PathParam("id") final String entityId) throws Exception {
-        return request.request(Naming.QUERY, jwt, headers, uriInfo, req, null);
+		return ResponseUtil.buildResponse(request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, null).invoke(), uriInfo.getBaseUri());
     }
 	
 	/**
@@ -79,7 +79,7 @@ public class Query {
 	 */
 	@HEAD
 	@Path("entity/{schema}/{entity}")
-	public CompletionStage<Response> countEntity(
+	public Response countEntity(
 			@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -87,7 +87,7 @@ public class Query {
             @PathParam("schema") final String schema,
             @PathParam("entity") final String entity
             ) throws Exception {
-        return request.request(Naming.QUERY, jwt, headers, uriInfo, req, null);
+		return ResponseUtil.buildResponse(request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, null).invoke(), uriInfo.getBaseUri());
     }
 	
 	/**
@@ -102,13 +102,13 @@ public class Query {
     @Path("entity")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-	public CompletionStage<Response> fetchEntities(
+	public Response fetchEntities(
 			@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final Request req,
             final InputStream body) throws Exception {
-        return request.request(Naming.QUERY, jwt, headers, uriInfo, req, body);
+		return ResponseUtil.buildResponse(request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, body).invoke(), uriInfo.getBaseUri());
     }
 	
 	/**
@@ -122,7 +122,7 @@ public class Query {
 	@GET
     @Path("query/{schema}/{criteria: .+}")
     @Produces(MediaType.APPLICATION_JSON)
-	public CompletionStage<Response> executeQuery(
+	public Response executeQuery(
     		@Context 
     		final SecurityContext context,
             @Context 
@@ -135,7 +135,7 @@ public class Query {
             final String schema,
             @PathParam("criteria")
             final List<PathSegment> paths) throws Exception { 
-		return request.request(Naming.QUERY, jwt, headers, uriInfo, req, null);
+			return ResponseUtil.buildResponse(request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, null).invoke(), uriInfo.getBaseUri());
 		}
 	
 	/**
@@ -148,7 +148,7 @@ public class Query {
 	 */
 	@HEAD
     @Path("query/{schema}/{criteria: .+}")
-	public CompletionStage<Response> executeCountQuery(
+	public Response executeCountQuery(
 			@Context 
 			final SecurityContext context,
             @Context 
@@ -161,7 +161,7 @@ public class Query {
             final String schema,
             @PathParam("criteria")
             final List<PathSegment> paths) throws Exception {
-        		return request.request(Naming.QUERY, jwt, headers, uriInfo, req, null);
+		return ResponseUtil.buildResponse(request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, null).invoke(), uriInfo.getBaseUri());
         	}
 	
 	/**
@@ -175,7 +175,7 @@ public class Query {
 	@GET
 	@Path(Naming.SECURITY)
 	@Produces(MediaType.APPLICATION_JSON)
-    public CompletionStage<Response> getToken(
+    public Response getToken(
     		@Context 
     		final SecurityContext context,
             @Context 
@@ -184,6 +184,6 @@ public class Query {
             final UriInfo uriInfo,
             @Context 
             final javax.ws.rs.core.Request req) throws Exception {
-        return request.request(Naming.CACHE, null, headers, uriInfo, req, null);
+		return ResponseUtil.buildResponse(request.buildRequest(Naming.CACHE, null, headers, uriInfo, req, null).invoke(), uriInfo.getBaseUri());
     }
 }

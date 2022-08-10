@@ -1,7 +1,6 @@
 package epf.gateway.security;
 
 import java.io.InputStream;
-import java.util.concurrent.CompletionStage;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
@@ -22,6 +21,7 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
+import epf.gateway.internal.ResponseUtil;
 import epf.naming.Naming;
 
 /**
@@ -56,13 +56,13 @@ public class Security {
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
-    public CompletionStage<Response> login(
+    public Response login(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-        return request.request(Naming.SECURITY, null, headers, uriInfo, req, body);
+    	return ResponseUtil.buildResponse(request.buildRequest(Naming.SECURITY, null, headers, uriInfo, req, body).invoke(), uriInfo.getBaseUri());
     }
     
     /**
@@ -75,13 +75,13 @@ public class Security {
     @RolesAllowed(Naming.Security.DEFAULT_ROLE)
     @DELETE
     @Produces(MediaType.TEXT_PLAIN)
-    public CompletionStage<Response> logOut(
+    public Response logOut(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req
             ) throws Exception {
-        return request.request(Naming.SECURITY, jwt, headers, uriInfo, req, null);
+    	return ResponseUtil.buildResponse(request.buildRequest(Naming.SECURITY, jwt, headers, uriInfo, req, null).invoke(), uriInfo.getBaseUri());
     }
     
     /**
@@ -94,12 +94,12 @@ public class Security {
     @RolesAllowed(Naming.Security.DEFAULT_ROLE)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public CompletionStage<Response> authenticate(
+    public Response authenticate(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req) throws Exception {
-        return request.request(Naming.SECURITY, jwt, headers, uriInfo, req, null);
+    	return ResponseUtil.buildResponse(request.buildRequest(Naming.SECURITY, jwt, headers, uriInfo, req, null).invoke(), uriInfo.getBaseUri());
     }
     
     /**
@@ -113,13 +113,13 @@ public class Security {
     @RolesAllowed(Naming.Security.DEFAULT_ROLE)
     @PATCH
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public CompletionStage<Response> update(
+    public Response update(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-    	return request.request(Naming.SECURITY, jwt, headers, uriInfo, req, body);
+    	return ResponseUtil.buildResponse(request.buildRequest(Naming.SECURITY, jwt, headers, uriInfo, req, body).invoke(), uriInfo.getBaseUri());
     }
     
     /**
@@ -134,12 +134,12 @@ public class Security {
     @PUT
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
-    public CompletionStage<Response> revoke(
+    public Response revoke(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req) throws Exception {
-    	return request.request(Naming.SECURITY, jwt, headers, uriInfo, req, null);
+    	return ResponseUtil.buildResponse(request.buildRequest(Naming.SECURITY, jwt, headers, uriInfo, req, null).invoke(), uriInfo.getBaseUri());
     }
     
     /**
@@ -156,13 +156,13 @@ public class Security {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public CompletionStage<Response> authenticateIDToken(
+    public Response authenticateIDToken(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-    	return request.request(Naming.SECURITY, null, headers, uriInfo, req, body);
+    	return ResponseUtil.buildResponse(request.buildRequest(Naming.SECURITY, null, headers, uriInfo, req, body).invoke(), uriInfo.getBaseUri());
     }
     
     /**
@@ -177,12 +177,12 @@ public class Security {
     @RolesAllowed(Naming.EPF)
     @Path(Naming.Security.PRINCIPAL)
     @POST
-    public CompletionStage<Response> createPrincipal(
+    public Response createPrincipal(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-        return request.request(Naming.SECURITY, jwt, headers, uriInfo, req, body);
+    	return ResponseUtil.buildResponse(request.buildRequest(Naming.SECURITY, jwt, headers, uriInfo, req, body).invoke(), uriInfo.getBaseUri());
     }
 }

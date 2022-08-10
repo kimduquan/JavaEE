@@ -1,7 +1,6 @@
 package epf.gateway.mail;
 
 import java.io.InputStream;
-import java.util.concurrent.CompletionStage;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -16,6 +15,7 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
+import epf.gateway.internal.ResponseUtil;
 import epf.naming.Naming;
 
 /**
@@ -49,12 +49,12 @@ public class Mail {
      */
     @POST
 	@Consumes(MediaType.APPLICATION_JSON)
-    public CompletionStage<Response> send(
+    public Response send(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-        return request.request(Naming.MAIL, jwt, headers, uriInfo, req, body);
+    	return ResponseUtil.buildResponse(request.buildRequest(Naming.MAIL, jwt, headers, uriInfo, req, body).invoke(), uriInfo.getBaseUri());
     }
 }

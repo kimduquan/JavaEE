@@ -1,6 +1,5 @@
 package epf.gateway.config;
 
-import java.util.concurrent.CompletionStage;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -13,6 +12,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import epf.gateway.Application;
+import epf.gateway.internal.ResponseUtil;
 import epf.naming.Naming;
 
 /**
@@ -38,11 +38,11 @@ public class Config {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public CompletionStage<Response> getConfigurations(
+    public Response getConfigurations(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req) throws Exception {
-        return request.request(Naming.CONFIG, null, headers, uriInfo, req, null);
+    	return ResponseUtil.buildResponse(request.buildRequest(Naming.CONFIG, null, headers, uriInfo, req, null).invoke(), uriInfo.getBaseUri());
     }
 }

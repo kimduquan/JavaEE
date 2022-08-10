@@ -1,6 +1,5 @@
 package epf.gateway.search;
 
-import java.util.concurrent.CompletionStage;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -17,6 +16,7 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
+import epf.gateway.internal.ResponseUtil;
 import epf.naming.Naming;
 
 /**
@@ -49,12 +49,12 @@ public class Search {
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-    public CompletionStage<Response> search(
+    public Response search(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final Request req) throws Exception {
-        return request.request(Naming.SEARCH, jwt, headers, uriInfo, req, null);
+		return ResponseUtil.buildResponse(request.buildRequest(Naming.SEARCH, jwt, headers, uriInfo, req, null).invoke(), uriInfo.getBaseUri());
     }
 	
 	/**
@@ -66,11 +66,11 @@ public class Search {
 	 * @throws Exception
 	 */
 	@HEAD
-	public CompletionStage<Response> count(
+	public Response count(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final Request req) throws Exception {
-        return request.request(Naming.SEARCH, jwt, headers, uriInfo, req, null);
+		return ResponseUtil.buildResponse(request.buildRequest(Naming.SEARCH, jwt, headers, uriInfo, req, null).invoke(), uriInfo.getBaseUri());
     }
 }

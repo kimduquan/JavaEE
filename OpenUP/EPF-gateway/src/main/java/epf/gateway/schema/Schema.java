@@ -1,6 +1,5 @@
 package epf.gateway.schema;
 
-import java.util.concurrent.CompletionStage;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -15,6 +14,7 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
+import epf.gateway.internal.ResponseUtil;
 import epf.naming.Naming;
 
 /**
@@ -47,12 +47,12 @@ public class Schema {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public CompletionStage<Response> getEntities(
+    public Response getEntities(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req) throws Exception {
-        return request.request(Naming.SCHEMA, jwt, headers, uriInfo, req, null);
+    	return ResponseUtil.buildResponse(request.buildRequest(Naming.SCHEMA, jwt, headers, uriInfo, req, null).invoke(), uriInfo.getBaseUri());
     }
     
     /**
@@ -65,11 +65,11 @@ public class Schema {
     @GET
     @Path("embeddable")
     @Produces(MediaType.APPLICATION_JSON)
-    public CompletionStage<Response> getEmbeddables(
+    public Response getEmbeddables(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req) throws Exception {
-    	return request.request(Naming.SCHEMA, jwt, headers, uriInfo, req, null);
+    	return ResponseUtil.buildResponse(request.buildRequest(Naming.SCHEMA, jwt, headers, uriInfo, req, null).invoke(), uriInfo.getBaseUri());
     }
 }

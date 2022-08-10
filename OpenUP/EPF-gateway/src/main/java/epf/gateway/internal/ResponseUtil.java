@@ -4,7 +4,6 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.ws.rs.client.Client;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -52,32 +51,16 @@ public interface ResponseUtil {
      * @param uriInfo
      * @return
      */
-    static Response buildResponse(final Response res, final URI baseUri){
-    	try(Response response = res){
-    		response.bufferEntity();
-    		ResponseBuilder builder = Response.fromResponse(response);
-    		Set<Link> links = response.getLinks();
-    		if(links != null){
-    			links = links
-    					.stream()
-    					.map(link -> mapLink(link, baseUri))
-    					.collect(Collectors.toSet());
-    			builder = builder.links().links(links.toArray(new Link[0]));
-    		}
-    		return builder.build();
-    	}
-    }
-    
-    /**
-     * @param client
-     * @param response
-     * @param error
-     * @return
-     */
-    static void closeResponse(final Client client, final Response response, final Throwable error) {
-		client.close();
-    	if(error != null) {
-    		response.close();
+    static Response buildResponse(final Response response, final URI baseUri){
+    	ResponseBuilder builder = Response.fromResponse(response);
+		Set<Link> links = response.getLinks();
+		if(links != null){
+			links = links
+					.stream()
+					.map(link -> mapLink(link, baseUri))
+					.collect(Collectors.toSet());
+			builder = builder.links().links(links.toArray(new Link[0]));
 		}
+		return builder.build();
     }
 }
