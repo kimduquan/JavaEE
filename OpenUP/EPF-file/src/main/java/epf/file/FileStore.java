@@ -101,7 +101,7 @@ public class FileStore implements epf.client.file.Files {
 		Files.copy(input, targetFile, StandardCopyOption.REPLACE_EXISTING);
 		files.add(targetFile);
 		targetFilePaths.put(targetFile.getFileName().toString(), relativePath + "/" + targetFile.getFileName().toString());
-		final Path root = tenant != null ? system.getPath(rootFolder) : system.getPath(rootFolder, tenant);
+		final Path root = tenant != null ? system.getPath(rootFolder, tenant) : system.getPath(rootFolder);
 		final Link[] links = files
 				.stream()
 				.map(path -> {
