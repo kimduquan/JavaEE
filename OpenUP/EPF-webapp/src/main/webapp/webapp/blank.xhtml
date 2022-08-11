@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:a="http://xmlns.jcp.org/jsf/passthrough" xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<html lang="en" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
 
 <h:head>
 
@@ -9,43 +9,43 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <title><h:outputText value="#{i18n['epf.webapp']}" /> - <ui:insert name="title"></ui:insert></title>
+    <title>SB Admin 2 - Blank</title>
 
     <!-- Custom fonts for this template-->
-    <link type="text/css" rel="stylesheet" href="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/vendor/fontawesome-free/css/all.min.css" />
+    <link href="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet" />
 
     <!-- Custom styles for this template-->
-     <link type="text/css" rel="stylesheet" href="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/css/sb-admin-2.min.css" />
-	<ui:insert name="head"></ui:insert>
+    <link href="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/css/sb-admin-2.min.css" rel="stylesheet" />
+
 </h:head>
 
-<h:body a:id="page-top">
-	<ui:insert name="page-top">
+<h:body a:id="page-top"><ui:insert name="page-top">
+
     <!-- Page Wrapper -->
-    <div id="wrapper"><ui:insert name="wrapper">
+    <ui:insert name="wrapper"><div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar"><ui:insert name="accordionSidebar">
+        <ui:insert name="accordionSidebar"><ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <h:link styleClass="sidebar-brand d-flex align-items-center justify-content-center" outcome="index">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
                 <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
-            </h:link>
+            </a>
 
             <!-- Divider -->
             <hr class="sidebar-divider my-0" />
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <h:link styleClass="nav-link" outcome="index">
+                <a class="nav-link" href="index.html">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span></h:link>
+                    <span>Dashboard</span></a>
             </li>
 
             <!-- Divider -->
@@ -63,13 +63,13 @@
                     <i class="fas fa-fw fa-cog"></i>
                     <span>Components</span>
                 </a>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar"><ui:insert name="collapseTwo">
+                <ui:insert name="collapseTwo"><div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Custom Components:</h6>
-                        <h:link styleClass="collapse-item" outcome="buttons">Buttons</h:link>
-                        <h:link styleClass="collapse-item" outcome="cards">Cards</h:link>
+                        <a class="collapse-item" href="buttons.html">Buttons</a>
+                        <a class="collapse-item" href="cards.html">Cards</a>
                     </div>
-                </ui:insert></div>
+                </div></ui:insert>
             </li>
 
             <!-- Nav Item - Utilities Collapse Menu -->
@@ -79,16 +79,16 @@
                     <i class="fas fa-fw fa-wrench"></i>
                     <span>Utilities</span>
                 </a>
-                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-                    data-parent="#accordionSidebar"><ui:insert name="collapseUtilities">
+                <ui:insert name="collapseUtilities"><div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Custom Utilities:</h6>
-                        <h:link styleClass="collapse-item" outcome="utilities-color">Colors</h:link>
-                        <h:link styleClass="collapse-item" outcome="utilities-border">Borders</h:link>
-                        <h:link styleClass="collapse-item" outcome="utilities-animation">Animations</h:link>
-                        <h:link styleClass="collapse-item" outcome="utilities-other">Other</h:link>
+                        <a class="collapse-item" href="utilities-color.html">Colors</a>
+                        <a class="collapse-item" href="utilities-border.html">Borders</a>
+                        <a class="collapse-item" href="utilities-animation.html">Animations</a>
+                        <a class="collapse-item" href="utilities-other.html">Other</a>
                     </div>
-                </ui:insert></div>
+                </div></ui:insert>
             </li>
 
             <!-- Divider -->
@@ -106,33 +106,33 @@
                     <i class="fas fa-fw fa-folder"></i>
                     <span>Pages</span>
                 </a>
-                <div id="collapsePages" class="collapse show" aria-labelledby="headingPages"
-                    data-parent="#accordionSidebar"><ui:insert name="collapsePages">
+                <ui:insert name="collapsePages"><div id="collapsePages" class="collapse show" aria-labelledby="headingPages"
+                    data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Login Screens:</h6>
-                        <h:link styleClass="collapse-item" outcome="login">Login</h:link>
-                        <h:link styleClass="collapse-item" outcome="register">Register</h:link>
-                        <h:link styleClass="collapse-item" outcome="forgot-password">Forgot Password</h:link>
+                        <a class="collapse-item" href="login.html">Login</a>
+                        <a class="collapse-item" href="register.html">Register</a>
+                        <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Other Pages:</h6>
-                        <h:link styleClass="collapse-item" outcome="404">404 Page</h:link>
-                        <h:link styleClass="collapse-item active" outcome="blank">Blank Page</h:link>
+                        <a class="collapse-item" href="404.html">404 Page</a>
+                        <a class="collapse-item active" href="blank.html">Blank Page</a>
                     </div>
-                </ui:insert></div>
+                </div></ui:insert>
             </li>
 
             <!-- Nav Item - Charts -->
             <li class="nav-item">
-                <h:link styleClass="nav-link" outcome="charts">
+                <a class="nav-link" href="charts.html">
                     <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Charts</span></h:link>
+                    <span>Charts</span></a>
             </li>
 
             <!-- Nav Item - Tables -->
             <li class="nav-item">
-                <h:link styleClass="nav-link" outcome="/query/tables">
+                <a class="nav-link" href="tables.html">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Tables</span></h:link>
+                    <span>Tables</span></a>
             </li>
 
             <!-- Divider -->
@@ -143,15 +143,15 @@
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
 
-        </ui:insert></ul>
+        </ul></ui:insert>
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column">
-			<ui:insert name="content-wrapper">
+        <ui:insert name="content-wrapper"><div id="content-wrapper" class="d-flex flex-column">
+
             <!-- Main Content -->
-            <div id="content">
-				<ui:insert name="content">
+            <ui:insert name="content"><div id="content">
+
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
@@ -164,12 +164,12 @@
                     <h:form
                         styleClass="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
-                            <h:inputText styleClass="form-control bg-light border-0 small" a:placeholder="Search for..."
-                                a:aria-label="Search" a:aria-describedby="basic-addon2" value="#{epf_search_view.text}" />
+                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                                aria-label="Search" aria-describedby="basic-addon2" />
                             <div class="input-group-append">
-                                <h:commandLink styleClass="btn btn-primary" a:type="button" action="#{epf_search_view.search}">
+                                <button class="btn btn-primary" type="button">
                                     <i class="fas fa-search fa-sm"></i>
-                                </h:commandLink>
+                                </button>
                             </div>
                         </div>
                     </h:form>
@@ -188,13 +188,13 @@
                                 aria-labelledby="searchDropdown">
                                 <h:form styleClass="form-inline mr-auto w-100 navbar-search">
                                     <div class="input-group">
-                                        <h:inputText styleClass="form-control bg-light border-0 small"
-                                            a:placeholder="Search for..." a:aria-label="Search"
-                                            a:aria-describedby="basic-addon2" value="#{epf_search_view.text}" />
+                                        <input type="text" class="form-control bg-light border-0 small"
+                                            placeholder="Search for..." aria-label="Search"
+                                            aria-describedby="basic-addon2" />
                                         <div class="input-group-append">
-                                            <h:commandLink styleClass="btn btn-primary" a:type="button" action="#{epf_search_view.search}">
-			                                    <i class="fas fa-search fa-sm"></i>
-			                                </h:commandLink>
+                                            <button class="btn btn-primary" type="button">
+                                                <i class="fas fa-search fa-sm"></i>
+                                            </button>
                                         </div>
                                     </div>
                                 </h:form>
@@ -324,9 +324,9 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"></span>
-                                <img class="img-profile rounded-circle" src="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/img/undraw_profile.svg"
-                                    />
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <img class="img-profile rounded-circle"
+                                    src="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/img/undraw_profile.svg" />
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -358,30 +358,30 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-					<ui:insert name="page-content">
-	                    <!-- Page Heading -->
-	                    <h1 class="h3 mb-4 text-gray-800">Blank Page</h1>
-					</ui:insert>
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-4 text-gray-800">Blank Page</h1>
+
                 </div>
                 <!-- /.container-fluid -->
-				</ui:insert>
-            </div>
+
+            </div></ui:insert>
             <!-- End of Main Content -->
 
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span><h:outputText value="Copyright &amp;copy; Your Website 2020" /></span>
+                        <span>Copyright  Your Website 2020</span>
                     </div>
                 </div>
             </footer>
             <!-- End of Footer -->
-			</ui:insert>
-        </div>
+
+        </div></ui:insert>
         <!-- End of Content Wrapper -->
 
-    </ui:insert></div>
+    </div></ui:insert>
     <!-- End of Page Wrapper -->
 
     <!-- Scroll to Top Button-->
@@ -390,12 +390,12 @@
     </a>
 
     <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true"><ui:insert name="logoutModal"><h:form>
+    <ui:insert name="logoutModal"><div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel"><ui:insert name="exampleModalLabel">Ready to Leave?</ui:insert></h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -403,22 +403,22 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="/security-auth/security/logout.html"><h:outputText value="#{i18n['epf.security.logout']}" /></a>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
                 </div>
             </div>
         </div>
-    </h:form></ui:insert></div>
-
+    </div></ui:insert>
+	
     <!-- Bootstrap core JavaScript-->
-    <script type="text/javascript" src="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/vendor/jquery/jquery.min.js" />
-    <script type="text/javascript" src="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/vendor/bootstrap/js/bootstrap.bundle.min.js" />
+    <script src="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/vendor/jquery/jquery.min.js"></script>
+    <script src="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
-    <script type="text/javascript" src="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/vendor/jquery-easing/jquery.easing.min.js" />
+    <script src="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/vendor/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Custom scripts for all pages-->
-    <script type="text/javascript" src="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/js/sb-admin-2.min.js" />
-	<ui:insert name="script"></ui:insert></ui:insert>
-</h:body>
+    <script src="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/js/sb-admin-2.min.js"></script>
+
+</ui:insert></h:body>
 
 </html>
