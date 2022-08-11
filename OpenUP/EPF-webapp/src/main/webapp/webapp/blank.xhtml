@@ -19,7 +19,7 @@
 
     <!-- Custom styles for this template-->
     <link href="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/css/sb-admin-2.min.css" rel="stylesheet" />
-
+	<ui:insert name="head">
 </h:head>
 
 <h:body a:id="page-top"><ui:insert name="page-top">
@@ -161,7 +161,7 @@
                     </button>
 
                     <!-- Topbar Search -->
-                    <h:form
+                    <ui:insert name="navbar-search"><h:form
                         styleClass="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
                             <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
@@ -172,7 +172,7 @@
                                 </button>
                             </div>
                         </div>
-                    </h:form>
+                    </h:form></ui:insert>
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -210,7 +210,7 @@
                                 <span class="badge badge-danger badge-counter">3+</span>
                             </a>
                             <!-- Dropdown - Alerts -->
-                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                            <ui:insert name="alertsDropdown"><div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="alertsDropdown">
                                 <h6 class="dropdown-header">
                                     Alerts Center
@@ -249,7 +249,7 @@
                                     </div>
                                 </a>
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
-                            </div>
+                            </div></ui:insert>
                         </li>
 
                         <!-- Nav Item - Messages -->
@@ -261,7 +261,7 @@
                                 <span class="badge badge-danger badge-counter">7</span>
                             </a>
                             <!-- Dropdown - Messages -->
-                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                            <ui:insert name="messagesDropdown"><div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="messagesDropdown">
                                 <h6 class="dropdown-header">
                                     Message Center
@@ -315,7 +315,7 @@
                                     </div>
                                 </a>
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
-                            </div>
+                            </div></ui:insert>
                         </li>
 
                         <div class="topbar-divider d-none d-sm-block"></div>
@@ -329,7 +329,7 @@
                                     src="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/img/undraw_profile.svg" />
                             </a>
                             <!-- Dropdown - User Information -->
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                            <ui:insert name="userDropdown"><div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
                                 <a class="dropdown-item" href="#">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -348,7 +348,7 @@
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
-                            </div>
+                            </div></ui:insert>
                         </li>
 
                     </ul>
@@ -418,7 +418,7 @@
 
     <!-- Custom scripts for all pages-->
     <script src="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/js/sb-admin-2.min.js"></script>
-
+	<ui:insert name="script">
 </ui:insert></h:body>
 
 </html>
