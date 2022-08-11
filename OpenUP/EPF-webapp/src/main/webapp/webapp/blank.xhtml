@@ -19,7 +19,7 @@
 
     <!-- Custom styles for this template-->
     <link href="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/css/sb-admin-2.min.css" rel="stylesheet" />
-	<ui:insert name="head">
+	<ui:insert name="head" />
 </h:head>
 
 <h:body a:id="page-top"><ui:insert name="page-top">
@@ -403,7 +403,7 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    <a class="btn btn-primary" href="/security-auth/security/logout.html">Logout</a>
                 </div>
             </div>
         </div>
@@ -418,7 +418,7 @@
 
     <!-- Custom scripts for all pages-->
     <script src="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/js/sb-admin-2.min.js"></script>
-	<ui:insert name="script">
+	<ui:insert name="script" />
 </ui:insert></h:body>
 
 </html>
