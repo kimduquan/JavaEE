@@ -4,6 +4,7 @@ call ../env.bat
 call ../config.bat
 call config.bat
 java -version
-call mvn quarkus:dev -Ddebug=5006 -Djavax.net.debug=ssl,handshake
+call mvn clean install -U
+call mvn quarkus:dev -Ddebug=5006
 :: call mvn quarkus:dev -Ddebug=5006 -Djavax.net.debug=ssl,handshake
 endlocal
