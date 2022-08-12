@@ -7,6 +7,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import epf.tests.WebDriverUtil;
 import epf.tests.security.SecurityUtil;
+import epf.tests.webapp.DefaultPage;
 import epf.tests.webapp.WebAppUtil;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -22,6 +23,7 @@ public class LoginPageTest {
     public static WeldInitiator weld = WeldInitiator.from(
     		WebDriverUtil.class, 
     		WebAppUtil.class,
+    		DefaultPage.class,
     		LoginPage.class,
     		LoginPageTest.class)
     .activate(RequestScoped.class)

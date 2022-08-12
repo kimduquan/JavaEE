@@ -43,17 +43,17 @@
                                     </div>
                                     <h:form styleClass="user">
                                         <div class="form-group">
-                                            <h:inputText name="caller" a:type="email" styleClass="form-control form-control-user"
-                                                id="caller" a:aria-describedby="emailHelp"
+                                            <h:inputText a:type="email" styleClass="form-control form-control-user"
+                                                a:id="exampleInputEmail" a:aria-describedby="emailHelp"
                                                 a:placeholder="#{i18n['epf.security.credential.caller']}" value="#{security_login.caller}"/>
                                         </div>
                                         <div class="form-group">
-                                            <h:inputSecret name="password" styleClass="form-control form-control-user"
-                                                id="password" a:placeholder="#{i18n['epf.security.credential.password']}" value="#{security_login.password}" converter="PasswordConverter"/>
+                                            <h:inputSecret styleClass="form-control form-control-user"
+                                                a:id="exampleInputPassword" a:placeholder="#{i18n['epf.security.credential.password']}" value="#{security_login.password}" converter="PasswordConverter"/>
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
-                                                <h:selectBooleanCheckbox styleClass="custom-control-input" id="customCheck" value="#{security_login.rememberMe}"/>
+                                                <h:selectBooleanCheckbox styleClass="custom-control-input" a:id="customCheck" value="#{security_login.rememberMe}"/>
                                                 <h:outputLabel styleClass="custom-control-label" for="customCheck" value="#{i18n['epf.security.login.remember_me']}">
                                                     </h:outputLabel>
                                             </div>

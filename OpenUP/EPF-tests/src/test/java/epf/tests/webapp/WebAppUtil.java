@@ -1,6 +1,5 @@
 package epf.tests.webapp;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import epf.naming.Naming;
 import epf.util.config.ConfigUtil;
@@ -14,7 +13,7 @@ public class WebAppUtil {
 		try {
 			return ConfigUtil.getURL(Naming.WebApp.WEB_APP_URL);
 		} 
-		catch (MalformedURLException e) {
+		catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

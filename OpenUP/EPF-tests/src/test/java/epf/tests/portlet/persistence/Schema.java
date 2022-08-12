@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.tests.portlet.persistence;
 
 import org.openqa.selenium.By;
