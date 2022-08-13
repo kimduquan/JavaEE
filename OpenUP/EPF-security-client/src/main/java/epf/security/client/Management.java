@@ -6,7 +6,6 @@ import javax.validation.constraints.Pattern;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.HeaderParam;
-import javax.ws.rs.MatrixParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -37,8 +36,6 @@ public interface Management {
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     Response createCredential(
-    		@MatrixParam(Naming.Management.TENANT)
-            final String tenant,
     		@FormParam(Naming.Security.Claims.EMAIL)
     		@NotBlank
     		@Pattern(regexp = Naming.Security.Claims.EMAIL_REGEXP)
@@ -114,8 +111,6 @@ public interface Management {
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     Response resetPassword(
-    		@MatrixParam(Naming.Management.TENANT)
-            final String tenant,
     		@FormParam(Naming.Security.Claims.EMAIL) 
     		@Pattern(regexp = Naming.Security.Claims.EMAIL_REGEXP)
     		final String email,

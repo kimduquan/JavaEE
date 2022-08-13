@@ -92,11 +92,18 @@ public class Management implements epf.security.client.Management {
 			LOGGER.log(Level.SEVERE, "[Management.postConstruct]", e);
 		}
     }
+    
+    private String getTenant(final String email) {
+    	final String[] fragments = email.split("@");
+    	if(fragments.length == 2) {
+    		return fragments[1];
+    	}
+    	return null;
+    }
 
     @PermitAll
 	@Override
 	public Response createCredential(
-			final String tenant,
 			final String email, 
 			final String password, 
 			final String firstName, 
@@ -104,6 +111,7 @@ public class Management implements epf.security.client.Management {
 			final List<String> forwardedHost,
             final List<String> forwardedPort,
             final List<String> forwardedProto) throws Exception {
+		final String tenant = getTenant(email);
 		final Credential credential = new Credential(tenant, email, new Password(password));
 		if(identityStore.isCaller(credential).toCompletableFuture().get()) {
 			throw new BadRequestException();
@@ -138,11 +146,11 @@ public class Management implements epf.security.client.Management {
 	@PermitAll
 	@Override
 	public Response resetPassword(
-			final String tenant,
 			final String email,
 			final List<String> forwardedHost,
             final List<String> forwardedPort,
             final List<String> forwardedProto) throws Exception {
+		final String tenant = getTenant(email);
 		final Credential credential = new Credential(tenant, email, new Password(new char[0]));
 		final Boolean exist = identityStore.isCaller(credential).toCompletableFuture().get();
 		if(exist) {
