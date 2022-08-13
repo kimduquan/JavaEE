@@ -2,6 +2,10 @@ call ./shutdown.bat
 call ./clean.bat
 call ./startup.bat
 call ./compile.bat
+setlocal
+call ../env.bat
+gu install native-image
+endlocal
 cd EPF-transaction-internal
 start dev.bat &
 cd ../

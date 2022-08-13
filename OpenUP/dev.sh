@@ -4,6 +4,8 @@ sudo service postgresql start
 ./clean.sh
 ./startup.sh
 ./compile.sh
+. ./env.sh
+gu install native-image
 cd EPF-transaction-internal
 ./dev.sh &>/dev/null &
 cd ../
@@ -20,7 +22,6 @@ cd ../
 cd EPF-shell
 ./dev.sh &>/dev/null &
 cd ../
-. ./env.sh
 . ./config.sh
 cd EPF-tests
 mvn liberty:dev
