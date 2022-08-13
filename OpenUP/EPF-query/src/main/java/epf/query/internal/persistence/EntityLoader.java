@@ -6,6 +6,7 @@ import javax.enterprise.event.ObservesAsync;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import epf.naming.Naming;
 import epf.query.internal.EntityKey;
 import epf.query.internal.SchemaCache;
 import epf.query.internal.event.EntityLoad;
@@ -39,6 +40,10 @@ public class EntityLoader implements CacheLoader<String, Object> {
 	public Object load(final String key) throws Exception {
 		final Optional<EntityKey> entityKey = EntityKey.parseString(key);
 		if(entityKey.isPresent()) {
+			final String tenant = entityKey.get().getTenant();
+			if(tenant != null) {
+				manager.setProperty(Naming.Management.MANAGEMENT_TENANT, entityKey.get().getTenant());
+			}
 			final Optional<Class<?>> entityClass = schemaCache.getEntityClass(entityKey.get().getEntity());
 			if(entityClass.isPresent()) {
 				final Optional<String> entityIdFieldType = schemaCache.getEntityIdFieldType(entityKey.get().getEntity());

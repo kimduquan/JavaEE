@@ -77,7 +77,7 @@ public class QueryCache implements HealthCheck {
 	 * @param event
 	 */
 	public void accept(final EntityEvent event) {
-		final Optional<QueryKey> queryKey = schemaCache.getQueryKey(event.getEntity().getClass());
+		final Optional<QueryKey> queryKey = schemaCache.getQueryKey(event.getTenant(), event.getEntity().getClass());
 		if(queryKey.isPresent()) {
 			final String key = queryKey.get().toString();
 			final boolean hasLoaded = queryCache.containsKey(key);
@@ -94,15 +94,17 @@ public class QueryCache implements HealthCheck {
 	}
 	
 	/**
+	 * @param tenant
 	 * @param schema
 	 * @param entity
 	 * @return
 	 */
 	public Optional<Integer> countEntity(
+    		final String tenant,
 			final String schema,
             final String entity
             ) {
-		final QueryKey queryKey = schemaCache.getQueryKey(schema, entity);
+		final QueryKey queryKey = schemaCache.getQueryKey(tenant, schema, entity);
 		return Optional.ofNullable(queryCache.get(queryKey.toString()));
 	}
 

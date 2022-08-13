@@ -8,6 +8,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HEAD;
 import javax.ws.rs.HttpMethod;
+import javax.ws.rs.MatrixParam;
 import javax.ws.rs.PATCH;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -36,6 +37,11 @@ public interface Query {
 	/**
 	 *
 	 */
+	String SCHEMA = "schema";
+	
+	/**
+	 *
+	 */
 	String ENTITY = "entity";
 	
 	/**
@@ -53,6 +59,7 @@ public interface Query {
 	String SORT = "sort";
 	
 	/**
+	 * @param tenant
 	 * @param schema
 	 * @param entity
 	 * @param entityId
@@ -62,11 +69,13 @@ public interface Query {
     @Path("entity/{schema}/{entity}/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
     Response getEntity(
-    		@PathParam("schema")
+    		@MatrixParam(Naming.Management.TENANT)
+    		final String tenant,
+    		@PathParam(SCHEMA)
             @NotNull
             @NotBlank
             final String schema,
-            @PathParam("entity")
+            @PathParam(ENTITY)
             @NotNull
             @NotBlank
             final String entity,
@@ -107,6 +116,7 @@ public interface Query {
 	}
 	
 	/**
+	 * @param tenant
 	 * @param schema
 	 * @param entity
 	 * @return
@@ -114,11 +124,13 @@ public interface Query {
 	@HEAD
 	@Path("entity/{schema}/{entity}")
     Response countEntity(
-    		@PathParam("schema")
+    		@MatrixParam(Naming.Management.TENANT)
+    		final String tenant,
+    		@PathParam(SCHEMA)
             @NotNull
             @NotBlank
             final String schema,
-            @PathParam("entity")
+            @PathParam(ENTITY)
             @NotNull
             @NotBlank
             final String entity
@@ -140,17 +152,19 @@ public interface Query {
 		return Integer.parseInt(count);
 	}
 	
-
-    
-    /**
-     * @param entityIds
-     * @return
-     */
-    @PATCH
+	/**
+	 * @param tenant
+	 * @param entityIds
+	 * @return
+	 */
+	@PATCH
     @Path(ENTITY)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response fetchEntities(final List<EntityId> entityIds);
+    Response fetchEntities(
+    		@MatrixParam(Naming.Management.TENANT)
+    		final String tenant,
+    		final List<EntityId> entityIds);
     
     /**
      * @param client
@@ -163,18 +177,21 @@ public interface Query {
     }
 	
 	/**
+	 * @param tenant
 	 * @param schema
 	 * @param paths
 	 * @param firstResult
 	 * @param maxResults
 	 * @param context
-	 * @return
+	 * @param sort
 	 */
 	@GET
     @Path("query/{schema}/{criteria: .+}")
     @Produces(MediaType.APPLICATION_JSON)
 	Response executeQuery(
-    		@PathParam("schema")
+    		@MatrixParam(Naming.Management.TENANT)
+    		final String tenant,
+    		@PathParam(SCHEMA)
             @NotBlank
             final String schema,
             @PathParam("criteria")
@@ -241,16 +258,18 @@ public interface Query {
     }
     
     /**
+     * @param tenant
      * @param schema
      * @param paths
      * @param context
      * @return
-     * @throws Exception
      */
     @HEAD
     @Path("query/{schema}/{criteria: .+}")
 	Response executeCountQuery(
-    		@PathParam("schema")
+    		@MatrixParam(Naming.Management.TENANT)
+    		final String tenant,
+    		@PathParam(SCHEMA)
             @NotBlank
             final String schema,
             @PathParam("criteria")

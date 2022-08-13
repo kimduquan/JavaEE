@@ -81,7 +81,7 @@ public class EntityCache implements HealthCheck {
 	 * @param event
 	 */
 	public void accept(final EntityEvent event) {
-		final Optional<EntityKey> key = schemaCache.getKey(event.getEntity());
+		final Optional<EntityKey> key = schemaCache.getKey(event.getTenant(), event.getEntity());
 		if(key.isPresent()) {
 			if(event instanceof PostUpdate) {
 				entityCache.replace(key.get().toString(), event.getEntity());
@@ -101,11 +101,12 @@ public class EntityCache implements HealthCheck {
 	 * @return
 	 */
 	public Optional<Object> getEntity(
+			final String tenant,
 			final String schema,
             final String name,
             final String entityId
             ) {
-		final EntityKey key = schemaCache.getKey(schema, name, entityId);
+		final EntityKey key = schemaCache.getKey(tenant, schema, name, entityId);
 		return Optional.ofNullable(entityCache.get(key.toString()));
 	}
 	
@@ -113,8 +114,8 @@ public class EntityCache implements HealthCheck {
 	 * @param entities
 	 * @return
 	 */
-	public List<Object> getEntities(final List<EntityId> entityIds){
-		final List<EntityKey> entityKeys = entityIds.stream().map(schemaCache::getSearchKey).collect(Collectors.toList());
+	public List<Object> getEntities(final String tenant, final List<EntityId> entityIds){
+		final List<EntityKey> entityKeys = entityIds.stream().map(key -> schemaCache.getSearchKey(tenant, key)).collect(Collectors.toList());
 		final List<String> keys = entityKeys.stream().map(EntityKey::toString).collect(Collectors.toList());
 		final Map<String, Object> values = entityCache.getAll(keys.stream().collect(Collectors.toSet()));
 		final List<Object> result = new ArrayList<>();

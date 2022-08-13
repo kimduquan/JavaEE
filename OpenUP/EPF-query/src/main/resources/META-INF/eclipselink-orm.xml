@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<entity-mappings
+	xmlns="http://www.eclipse.org/eclipselink/xsds/persistence/orm"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.eclipse.org/eclipselink/xsds/persistence/orm http://www.eclipse.org/eclipselink/xsds/eclipselink_orm_3_0.xsd"
+	version="3.0">
+	<entity class="epf.delivery_processes.schema.Activity">
+		<multitenant type="TABLE_PER_TENANT">
+			<tenant-table-discriminator type="SCHEMA" context-property="epf.management.tenant" />
+		</multitenant>
+	</entity>
+	<entity class="epf.delivery_processes.schema.CapabilityPattern">
+		<multitenant type="TABLE_PER_TENANT">
+			<tenant-table-discriminator type="SCHEMA" context-property="epf.management.tenant" />
+		</multitenant>
+	</entity>
+	<entity class="epf.delivery_processes.schema.DeliveryProcess">
+		<multitenant type="TABLE_PER_TENANT">
+			<tenant-table-discriminator type="SCHEMA" context-property="epf.management.tenant" />
+		</multitenant>
+	</entity>
+	<entity class="epf.delivery_processes.schema.Iteration">
+		<multitenant type="TABLE_PER_TENANT">
+			<tenant-table-discriminator type="SCHEMA" context-property="epf.management.tenant" />
+		</multitenant>
+	</entity>
+	<entity class="epf.delivery_processes.schema.Milestone">
+		<multitenant type="TABLE_PER_TENANT">
+			<tenant-table-discriminator type="SCHEMA" context-property="epf.management.tenant" />
+		</multitenant>
+	</entity>
+	<entity class="epf.delivery_processes.schema.Phase">
+		<multitenant type="TABLE_PER_TENANT">
+			<tenant-table-discriminator type="SCHEMA" context-property="epf.management.tenant" />
+		</multitenant>
+	</entity>
+	
+	<entity class="epf.net.schema.URL">
+		<multitenant type="TABLE_PER_TENANT">
+			<tenant-table-discriminator type="SCHEMA" context-property="epf.management.tenant" />
+		</multitenant>
+	</entity>
+	
+	<entity class="epf.roles.schema.Role">
+		<multitenant type="TABLE_PER_TENANT">
+			<tenant-table-discriminator type="SCHEMA" context-property="epf.management.tenant" />
+		</multitenant>
+	</entity>
+	<entity class="epf.roles.schema.RoleSet">
+		<multitenant type="TABLE_PER_TENANT">
+			<tenant-table-discriminator type="SCHEMA" context-property="epf.management.tenant" />
+		</multitenant>
+	</entity>
+	
+	<entity class="epf.security.schema.Principal">
+		<multitenant type="TABLE_PER_TENANT">
+			<tenant-table-discriminator type="SCHEMA" context-property="epf.management.tenant" />
+		</multitenant>
+	</entity>
+	
+	<entity class="epf.tasks.schema.Discipline">
+		<multitenant type="TABLE_PER_TENANT">
+			<tenant-table-discriminator type="SCHEMA" context-property="epf.management.tenant" />
+		</multitenant>
+	</entity>
+	<entity class="epf.tasks.schema.Discipline">
+		<multitenant type="TABLE_PER_TENANT">
+			<tenant-table-discriminator type="SCHEMA" context-property="epf.management.tenant" />
+		</multitenant>
+	</entity>
+	
+	<entity class="epf.work_products.schema.Artifact">
+		<multitenant type="TABLE_PER_TENANT">
+			<tenant-table-discriminator type="SCHEMA" context-property="epf.management.tenant" />
+		</multitenant>
+	</entity>
+	<entity class="epf.work_products.schema.Deliverable">
+		<multitenant type="TABLE_PER_TENANT">
+			<tenant-table-discriminator type="SCHEMA" context-property="epf.management.tenant" />
+		</multitenant>
+	</entity>
+	<entity class="epf.work_products.schema.Domain">
+		<multitenant type="TABLE_PER_TENANT">
+			<tenant-table-discriminator type="SCHEMA" context-property="epf.management.tenant" />
+		</multitenant>
+	</entity>
+	<entity class="epf.work_products.schema.Report">
+		<multitenant type="TABLE_PER_TENANT">
+			<tenant-table-discriminator type="SCHEMA" context-property="epf.management.tenant" />
+		</multitenant>
+	</entity>
+	<entity class="epf.work_products.schema.Template">
+		<multitenant type="TABLE_PER_TENANT">
+			<tenant-table-discriminator type="SCHEMA" context-property="epf.management.tenant" />
+		</multitenant>
+	</entity>
+	<entity class="epf.work_products.schema.WorkProductSlot">
+		<multitenant type="TABLE_PER_TENANT">
+			<tenant-table-discriminator type="SCHEMA" context-property="epf.management.tenant" />
+		</multitenant>
+	</entity>
+</entity-mappings>

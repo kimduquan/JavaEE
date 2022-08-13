@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import epf.naming.Naming;
 import epf.query.internal.QueryKey;
 import epf.query.internal.SchemaCache;
 import epf.query.internal.event.QueryLoad;
@@ -42,6 +43,10 @@ public class QueryLoader implements CacheLoader<String, Integer> {
 				final CriteriaQuery<Long> query = builder.createQuery(Long.class);
 				final Root<?> from = query.from(entityClass.get());
 				query.select(builder.count(from));
+				final String tenant = queryKey.get().getTenant();
+				if(tenant != null) {
+					manager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenant);
+				}
 				return manager.createQuery(query).getSingleResult().intValue();
 			}
 		}

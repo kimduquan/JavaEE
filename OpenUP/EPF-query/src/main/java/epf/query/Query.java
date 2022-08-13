@@ -55,17 +55,21 @@ public class Query implements epf.client.query.Query {
 	
 	@Override
     public Response getEntity(
+    		final String tenant,
     		final String schema,
             final String name,
             final String entityId
             ) {
-		final Optional<Object> entity = entityCache.getEntity(schema, name, entityId);
+		final Optional<Object> entity = entityCache.getEntity(tenant, schema, name, entityId);
 		return Response.ok(entity.orElseThrow(NotFoundException::new)).build();
 	}
 
 	@Override
-	public Response countEntity(final String schema, final String entity) {
-		final Optional<Integer> count = queryCache.countEntity(schema, entity);
+	public Response countEntity(
+    		final String tenant,
+    		final String schema, 
+    		final String entity) {
+		final Optional<Integer> count = queryCache.countEntity(tenant, schema, entity);
 		if(count.isPresent()) {
 			return Response.ok().header(Naming.Query.ENTITY_COUNT, count.get()).build();
 		}
@@ -74,6 +78,7 @@ public class Query implements epf.client.query.Query {
 
 	@Override
 	public Response executeQuery(
+    		final String tenant,
 			final String schema, 
 			final List<PathSegment> paths, 
 			final Integer firstResult, 
@@ -81,7 +86,7 @@ public class Query implements epf.client.query.Query {
 			final SecurityContext context,
 			final List<String> sort) throws Exception {
 		if(!paths.isEmpty()) {
-			final List<?> resultList = persistence.executeQuery(schema, paths, firstResult, maxResults, context, sort);
+			final List<?> resultList = persistence.executeQuery(tenant, schema, paths, firstResult, maxResults, context, sort);
 			return Response.ok(resultList).header(Naming.Query.ENTITY_COUNT, resultList.size()).build();
 		}
 		throw new NotFoundException();
@@ -89,20 +94,23 @@ public class Query implements epf.client.query.Query {
 
 	@Override
 	public Response executeCountQuery(
+    		final String tenant,
 			final String schema, 
 			final List<PathSegment> paths, 
 			final SecurityContext context)
 			throws Exception {
 		if(!paths.isEmpty()) {
-			final Object count = persistence.executeCountQuery(schema, paths, context);
+			final Object count = persistence.executeCountQuery(tenant, schema, paths, context);
 	    	return Response.ok().header(Naming.Query.ENTITY_COUNT, count).build();
 		}
 		throw new NotFoundException();
 	}
 
 	@Override
-	public Response fetchEntities(final List<EntityId> entityIds) {
-		final List<Object> entities = entityCache.getEntities(entityIds);
+	public Response fetchEntities(
+    		final String tenant,
+    		final List<EntityId> entityIds) {
+		final List<Object> entities = entityCache.getEntities(tenant, entityIds);
 		ResponseBuilder response = Response.ok(entities).header(Naming.Query.ENTITY_COUNT, entities.size());
 		response = LinkUtil.links(response, "", entityIds);
 		return response.build();

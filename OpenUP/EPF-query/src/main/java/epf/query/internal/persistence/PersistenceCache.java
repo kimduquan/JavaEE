@@ -18,6 +18,7 @@ import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
+import epf.naming.Naming;
 import epf.persistence.internal.Entity;
 import epf.persistence.internal.QueryBuilder;
 import epf.persistence.util.EntityTypeUtil;
@@ -61,14 +62,23 @@ public class PersistenceCache implements HealthCheck {
 	public void accept(final EntityEvent event) {
 		try {
 			if(event instanceof PostUpdate) {
+				if(event.getTenant() != null) {
+					entityManager.setProperty(Naming.Management.MANAGEMENT_TENANT, event.getTenant());
+				}
 				entityManager.merge(event.getEntity());
 			}
 			else if(event instanceof PostPersist) {
+				if(event.getTenant() != null) {
+					entityManager.setProperty(Naming.Management.MANAGEMENT_TENANT, event.getTenant());
+				}
 				entityManager.persist(event.getEntity());
 			}
 			else if(event instanceof PostRemove) {
 				final Optional<Object> entityId = schemaCache.getEntityId(event.getEntity());
 				if(entityId.isPresent()) {
+					if(event.getTenant() != null) {
+						entityManager.setProperty(Naming.Management.MANAGEMENT_TENANT, event.getTenant());
+					}
 					entityManager.remove(entityManager.getReference(event.getEntity().getClass(), entityId.get()));
 				}
 			}
@@ -84,6 +94,7 @@ public class PersistenceCache implements HealthCheck {
 	}
 	
 	/**
+	 * @param tenant
 	 * @param schema
 	 * @param paths
 	 * @param firstResult
@@ -91,15 +102,19 @@ public class PersistenceCache implements HealthCheck {
 	 * @param context
 	 * @param sort
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public List<?> executeQuery(
+    		final String tenant,
 			final String schema, 
 			final List<PathSegment> paths, 
 			final Integer firstResult, 
 			final Integer maxResults,
 			final SecurityContext context,
 			final List<String> sort) throws Exception {
+		if(tenant != null) {
+			entityManager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenant);
+		}
 		final Entity<Object> entity = new Entity<>();
 		final PathSegment rootSegment = paths.get(0);
     	final String entityName = rootSegment.getPath();
@@ -123,6 +138,7 @@ public class PersistenceCache implements HealthCheck {
 	}
 	
 	/**
+	 * @param tenant
 	 * @param schema
 	 * @param paths
 	 * @param context
@@ -130,9 +146,13 @@ public class PersistenceCache implements HealthCheck {
 	 * @throws Exception
 	 */
 	public Object executeCountQuery(
+    		final String tenant,
 			final String schema, 
 			final List<PathSegment> paths,
 			final SecurityContext context) throws Exception {
+		if(tenant != null) {
+			entityManager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenant);
+		}
 		final Entity<Object> entity = new Entity<>();
 		final PathSegment rootSegment = paths.get(0);
     	final String entityName = rootSegment.getPath();

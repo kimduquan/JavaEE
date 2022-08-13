@@ -8,6 +8,11 @@ import epf.util.StringUtil;
  *
  */
 public class QueryKey {
+	
+	/**
+	 *
+	 */
+	private final String tenant;
 
 	/**
 	 * 
@@ -19,17 +24,24 @@ public class QueryKey {
 	private final String entity;
 	
 	/**
+	 * @param tenant
 	 * @param schema
 	 * @param entity
 	 */
-	public QueryKey(final String schema, final String entity) {
+	public QueryKey(final String tenant,final String schema, final String entity) {
+		this.tenant = tenant;
 		this.schema = schema;
 		this.entity = entity;
 	}
 	
 	@Override
 	public String toString() {
-		return StringUtil.join(schema, entity);
+		if(tenant != null) {
+			return StringUtil.join(tenant, schema, entity);
+		}
+		else {
+			return StringUtil.join(schema, entity);
+		}
 	}
 	
 	/**
@@ -38,8 +50,11 @@ public class QueryKey {
 	 */
 	public static Optional<QueryKey> parseString(final String key) {
 		final String[] fragments = StringUtil.split(key);
-		if(fragments.length == 2) {
-			return Optional.of(new QueryKey(fragments[0], fragments[1]));
+		if(fragments.length == 3) {
+			return Optional.of(new QueryKey(fragments[0], fragments[1], fragments[2]));
+		}
+		else if(fragments.length == 2) {
+			return Optional.of(new QueryKey(null, fragments[0], fragments[1]));
 		}
 		return Optional.empty();
 	}
@@ -50,5 +65,9 @@ public class QueryKey {
 
 	public String getEntity() {
 		return entity;
+	}
+
+	public String getTenant() {
+		return tenant;
 	}
 }

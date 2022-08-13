@@ -295,6 +295,11 @@ public interface Naming {
 		 * 
 		 */
 		String TENANT = "tenant";
+		
+		/**
+		 *
+		 */
+		String MANAGEMENT_TENANT = "epf.management.tenant";
 	}
 	
 	/**

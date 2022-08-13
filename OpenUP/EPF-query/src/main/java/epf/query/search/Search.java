@@ -41,7 +41,14 @@ public class Search implements epf.client.search.Search {
 	private transient SchemaCache schemaCache;
 
 	@Override
-	public Response search(final String text, final Integer firstResult, final Integer maxResults) {
+	public Response search(
+    		final String tenant,
+    		final String text, 
+    		final Integer firstResult, 
+    		final Integer maxResults) {
+		if(tenant != null) {
+			manager.setProperty(Naming.Management.TENANT, tenant);
+		}
 		final Query query = manager.createNativeQuery(FULLTEXT_SEARCH)
 				.setParameter(1, text)
 				.setParameter(2, maxResults != null ? maxResults : 0)
@@ -52,7 +59,12 @@ public class Search implements epf.client.search.Search {
 	}
 
 	@Override
-	public Response count(final String text) {
+	public Response count(
+    		final String tenant,
+    		final String text) {
+		if(tenant != null) {
+			manager.setProperty(Naming.Management.TENANT, tenant);
+		}
 		final Query query = manager.createNativeQuery(FULLTEXT_SEARCH)
 				.setParameter(1, text)
 				.setParameter(2, 0)
@@ -67,7 +79,6 @@ public class Search implements epf.client.search.Search {
 	 */
 	private EntityId toEntityId(final Object obj) {
 		final Object[] data = (Object[]) obj;
-		final String schema = String.valueOf(data[0]);
 		final String table = String.valueOf(data[1]);
 		final Object[] columns = (Object[]) data[2];
 		final Object[] keys = (Object[]) data[3];
@@ -77,7 +88,6 @@ public class Search implements epf.client.search.Search {
 			entityId = new EntityId();
 			entityId.setName(entityName.get());
 			final Optional<Class<?>> entityClass = schemaCache.getEntityClass(entityName.get());
-			entityId.setSchema(schema);
 			if(entityClass.isPresent()) {
 				final Optional<String> entitySchema = schemaCache.getEntitySchema(entityClass.get());
 				entitySchema.ifPresent(entityId::setSchema);

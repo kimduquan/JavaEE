@@ -8,6 +8,11 @@ import epf.util.StringUtil;
  *
  */
 public class EntityKey {
+	
+	/**
+	 *
+	 */
+	private final String tenant;
 
 	/**
 	 * 
@@ -23,11 +28,13 @@ public class EntityKey {
 	private final Object id;
 	
 	/**
+	 * @param tenant
 	 * @param schema
 	 * @param entity
 	 * @param id
 	 */
-	protected EntityKey(final String schema, final String entity, final Object id) {
+	protected EntityKey(final String tenant, final String schema, final String entity, final Object id) {
+		this.tenant = tenant;
 		this.schema = schema;
 		this.entity = entity;
 		this.id = id;
@@ -35,7 +42,12 @@ public class EntityKey {
 	
 	@Override
 	public String toString() {
-		return StringUtil.join(schema, entity, String.valueOf(id));
+		if(tenant != null) {
+			return StringUtil.join(tenant, schema, entity, String.valueOf(id));
+		}
+		else {
+			return StringUtil.join(schema, entity, String.valueOf(id));
+		}
 	}
 	
 	/**
@@ -44,8 +56,11 @@ public class EntityKey {
 	 */
 	public static Optional<EntityKey> parseString(final String key) {
 		final String[] fragments = StringUtil.split(key);
-		if(fragments.length == 3) {
-			return Optional.of(new EntityKey(fragments[0], fragments[1], fragments[2]));
+		if(fragments.length == 4) {
+			return Optional.of(new EntityKey(fragments[0], fragments[1], fragments[2], fragments[3]));
+		}
+		else if(fragments.length == 3) {
+			return Optional.of(new EntityKey(null, fragments[0], fragments[1], fragments[2]));
 		}
 		return Optional.empty();
 	}
@@ -60,5 +75,9 @@ public class EntityKey {
 
 	public Object getId() {
 		return id;
+	}
+
+	public String getTenant() {
+		return tenant;
 	}
 }

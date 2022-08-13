@@ -3,6 +3,7 @@ package epf.client.search;
 import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.HEAD;
+import javax.ws.rs.MatrixParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -26,6 +27,7 @@ public interface Search {
 	String ENTITY_COUNT = "entity-count";
     
     /**
+     * @param tenant
      * @param text
      * @param firstResult
      * @param maxResults
@@ -34,6 +36,8 @@ public interface Search {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     Response search(
+    		@MatrixParam(Naming.Management.TENANT)
+    		final String tenant,
     		@QueryParam("text")
     		final String text, 
     		@QueryParam("first")
@@ -61,11 +65,14 @@ public interface Search {
     }
 	
 	/**
+	 * @param tenant
 	 * @param text
 	 * @return
 	 */
 	@HEAD
 	Response count(
+    		@MatrixParam(Naming.Management.TENANT)
+    		final String tenant,
 			@QueryParam("text")
 			final String text);
     
