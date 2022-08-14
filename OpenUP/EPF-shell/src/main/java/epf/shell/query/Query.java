@@ -15,7 +15,7 @@ import picocli.CommandLine.Option;
 /**
  * 
  */
-@Command(name = Naming.PERSISTENCE)
+@Command(name = Naming.QUERY)
 @RequestScoped
 @Function
 public class Query {
