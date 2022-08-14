@@ -27,6 +27,7 @@ import epf.schema.utility.EntityEvent;
 import epf.schema.utility.PostPersist;
 import epf.schema.utility.PostRemove;
 import epf.schema.utility.PostUpdate;
+import epf.schema.utility.TenantUtil;
 import epf.util.json.JsonUtil;
 import epf.util.logging.LogManager;
 
@@ -61,10 +62,7 @@ public class PersistenceCache implements HealthCheck {
 	@Transactional
 	public void accept(final EntityEvent event) {
 		try {
-			String tenant = event.getTenant();
-			if(tenant == null) {
-				tenant = event.getSchema();
-			}
+			final String tenant = TenantUtil.getTenantId(event.getSchema(), event.getTenant());
 			entityManager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenant);
 			if(event instanceof PostUpdate) {
 				entityManager.merge(event.getEntity());
@@ -108,12 +106,8 @@ public class PersistenceCache implements HealthCheck {
 			final Integer maxResults,
 			final SecurityContext context,
 			final List<String> sort) throws Exception {
-		if(tenant != null) {
-			entityManager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenant);
-		}
-		else {
-			entityManager.setProperty(Naming.Management.MANAGEMENT_TENANT, schema);
-		}
+		final String tenantId = TenantUtil.getTenantId(schema, tenant);
+		entityManager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenantId);
 		final Entity<Object> entity = new Entity<>();
 		final PathSegment rootSegment = paths.get(0);
     	final String entityName = rootSegment.getPath();
@@ -149,12 +143,8 @@ public class PersistenceCache implements HealthCheck {
 			final String schema, 
 			final List<PathSegment> paths,
 			final SecurityContext context) throws Exception {
-		if(tenant != null) {
-			entityManager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenant);
-		}
-		else {
-			entityManager.setProperty(Naming.Management.MANAGEMENT_TENANT, schema);
-		}
+		final String tenantId = TenantUtil.getTenantId(schema, tenant);
+		entityManager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenantId);
 		final Entity<Object> entity = new Entity<>();
 		final PathSegment rootSegment = paths.get(0);
     	final String entityName = rootSegment.getPath();

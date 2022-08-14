@@ -3,6 +3,7 @@ package epf.persistence.internal;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import epf.schema.utility.Request;
+import epf.schema.utility.TenantUtil;
 import io.quarkus.hibernate.orm.PersistenceUnitExtension;
 import io.quarkus.hibernate.orm.runtime.tenant.TenantResolver;
 
@@ -27,11 +28,9 @@ public class EPFTenantResolver implements TenantResolver {
 
 	@Override
 	public String resolveTenantId() {
-		if(request.getSchema() != null) {
-			if(request.getTenant() != null) {
-				return request.getSchema() + "_" + request.getTenant();
-			}
-			return request.getSchema();
+		final String tenantId = TenantUtil.getTenantId(request.getSchema(), request.getTenant());
+		if(tenantId != null) {
+			return tenantId;
 		}
 		return getDefaultTenantId();
 	}

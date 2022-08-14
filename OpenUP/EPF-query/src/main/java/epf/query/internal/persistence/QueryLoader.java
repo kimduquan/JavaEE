@@ -13,6 +13,7 @@ import epf.naming.Naming;
 import epf.query.internal.QueryKey;
 import epf.query.internal.SchemaCache;
 import epf.query.internal.event.QueryLoad;
+import epf.schema.utility.TenantUtil;
 
 /**
  * @author PC
@@ -37,11 +38,8 @@ public class QueryLoader implements CacheLoader<String, Integer> {
 	public Integer load(final String key) throws Exception {
 		final Optional<QueryKey> queryKey = QueryKey.parseString(key);
 		if(queryKey.isPresent()) {
-			String tenant = queryKey.get().getTenant();
-			if(tenant == null) {
-				tenant = queryKey.get().getSchema();
-			}
-			manager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenant);
+			final String tenantId = TenantUtil.getTenantId(queryKey.get().getSchema(), queryKey.get().getTenant());
+			manager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenantId);
 			final Optional<Class<?>> entityClass = schemaCache.getEntityClass(queryKey.get().getEntity());
 			if(entityClass.isPresent()) {
 				final CriteriaBuilder builder = manager.getCriteriaBuilder();

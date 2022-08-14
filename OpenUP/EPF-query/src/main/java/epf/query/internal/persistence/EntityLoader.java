@@ -10,6 +10,7 @@ import epf.naming.Naming;
 import epf.query.internal.EntityKey;
 import epf.query.internal.SchemaCache;
 import epf.query.internal.event.EntityLoad;
+import epf.schema.utility.TenantUtil;
 import epf.util.json.JsonUtil;
 
 /**
@@ -40,10 +41,7 @@ public class EntityLoader implements CacheLoader<String, Object> {
 	public Object load(final String key) throws Exception {
 		final Optional<EntityKey> entityKey = EntityKey.parseString(key);
 		if(entityKey.isPresent()) {
-			String tenant = entityKey.get().getTenant();
-			if(tenant == null) {
-				tenant = entityKey.get().getSchema();
-			}
+			final String tenant = TenantUtil.getTenantId(entityKey.get().getSchema(), entityKey.get().getTenant());
 			manager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenant);
 			final Optional<Class<?>> entityClass = schemaCache.getEntityClass(entityKey.get().getEntity());
 			if(entityClass.isPresent()) {
