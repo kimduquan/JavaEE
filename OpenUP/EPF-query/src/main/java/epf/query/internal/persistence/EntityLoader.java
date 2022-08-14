@@ -40,10 +40,11 @@ public class EntityLoader implements CacheLoader<String, Object> {
 	public Object load(final String key) throws Exception {
 		final Optional<EntityKey> entityKey = EntityKey.parseString(key);
 		if(entityKey.isPresent()) {
-			final String tenant = entityKey.get().getTenant();
-			if(tenant != null) {
-				manager.setProperty(Naming.Management.MANAGEMENT_TENANT, entityKey.get().getTenant());
+			String tenant = entityKey.get().getTenant();
+			if(tenant == null) {
+				tenant = entityKey.get().getSchema();
 			}
+			manager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenant);
 			final Optional<Class<?>> entityClass = schemaCache.getEntityClass(entityKey.get().getEntity());
 			if(entityClass.isPresent()) {
 				final Optional<String> entityIdFieldType = schemaCache.getEntityIdFieldType(entityKey.get().getEntity());

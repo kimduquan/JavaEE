@@ -49,6 +49,9 @@ public class Search implements epf.client.search.Search {
 		if(tenant != null) {
 			manager.setProperty(Naming.Management.TENANT, tenant);
 		}
+		else {
+			manager.setProperty(Naming.Management.TENANT, "");
+		}
 		final Query query = manager.createNativeQuery(FULLTEXT_SEARCH)
 				.setParameter(1, text)
 				.setParameter(2, maxResults != null ? maxResults : 0)
@@ -64,6 +67,9 @@ public class Search implements epf.client.search.Search {
     		final String text) {
 		if(tenant != null) {
 			manager.setProperty(Naming.Management.TENANT, tenant);
+		}
+		else {
+			manager.setProperty(Naming.Management.TENANT, "");
 		}
 		final Query query = manager.createNativeQuery(FULLTEXT_SEARCH)
 				.setParameter(1, text)

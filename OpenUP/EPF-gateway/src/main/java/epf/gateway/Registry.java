@@ -44,14 +44,16 @@ public class Registry implements HealthCheck  {
 
 	@Override
 	public HealthCheckResponse call() {
-		ClientBuilder
-				.newClient()
-				.target(registryUrl)
-				.queryParam(Naming.Registry.Filter.SCHEME, "http", "ws")
-				.request()
-				.get()
-				.getLinks()
-				.forEach(link -> remotes.put(link.getRel(), link.getUri()));
+		if(remotes.isEmpty()) {
+			ClientBuilder
+			.newClient()
+			.target(registryUrl)
+			.queryParam(Naming.Registry.Filter.SCHEME, "http", "ws")
+			.request()
+			.get()
+			.getLinks()
+			.forEach(link -> remotes.put(link.getRel(), link.getUri()));
+		}
 		return HealthCheckResponse.up("EPF-gateway-registry");
 	}
 }

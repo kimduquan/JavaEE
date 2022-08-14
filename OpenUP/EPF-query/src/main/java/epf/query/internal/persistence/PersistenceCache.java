@@ -61,24 +61,20 @@ public class PersistenceCache implements HealthCheck {
 	@Transactional
 	public void accept(final EntityEvent event) {
 		try {
+			String tenant = event.getTenant();
+			if(tenant == null) {
+				tenant = event.getSchema();
+			}
+			entityManager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenant);
 			if(event instanceof PostUpdate) {
-				if(event.getTenant() != null) {
-					entityManager.setProperty(Naming.Management.MANAGEMENT_TENANT, event.getTenant());
-				}
 				entityManager.merge(event.getEntity());
 			}
 			else if(event instanceof PostPersist) {
-				if(event.getTenant() != null) {
-					entityManager.setProperty(Naming.Management.MANAGEMENT_TENANT, event.getTenant());
-				}
 				entityManager.persist(event.getEntity());
 			}
 			else if(event instanceof PostRemove) {
 				final Optional<Object> entityId = schemaCache.getEntityId(event.getEntity());
 				if(entityId.isPresent()) {
-					if(event.getTenant() != null) {
-						entityManager.setProperty(Naming.Management.MANAGEMENT_TENANT, event.getTenant());
-					}
 					entityManager.remove(entityManager.getReference(event.getEntity().getClass(), entityId.get()));
 				}
 			}
@@ -114,6 +110,9 @@ public class PersistenceCache implements HealthCheck {
 			final List<String> sort) throws Exception {
 		if(tenant != null) {
 			entityManager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenant);
+		}
+		else {
+			entityManager.setProperty(Naming.Management.MANAGEMENT_TENANT, schema);
 		}
 		final Entity<Object> entity = new Entity<>();
 		final PathSegment rootSegment = paths.get(0);
@@ -152,6 +151,9 @@ public class PersistenceCache implements HealthCheck {
 			final SecurityContext context) throws Exception {
 		if(tenant != null) {
 			entityManager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenant);
+		}
+		else {
+			entityManager.setProperty(Naming.Management.MANAGEMENT_TENANT, schema);
 		}
 		final Entity<Object> entity = new Entity<>();
 		final PathSegment rootSegment = paths.get(0);
