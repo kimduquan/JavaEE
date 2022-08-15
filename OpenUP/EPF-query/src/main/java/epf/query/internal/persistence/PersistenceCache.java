@@ -66,14 +66,17 @@ public class PersistenceCache implements HealthCheck {
 			entityManager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenant);
 			if(event instanceof PostUpdate) {
 				entityManager.merge(event.getEntity());
+				entityManager.flush();
 			}
 			else if(event instanceof PostPersist) {
 				entityManager.persist(event.getEntity());
+				entityManager.flush();
 			}
 			else if(event instanceof PostRemove) {
 				final Optional<Object> entityId = schemaCache.getEntityId(event.getEntity());
 				if(entityId.isPresent()) {
 					entityManager.remove(entityManager.getReference(event.getEntity().getClass(), entityId.get()));
+					entityManager.flush();
 				}
 			}
 		}
