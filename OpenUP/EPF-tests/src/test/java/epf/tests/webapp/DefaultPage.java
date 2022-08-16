@@ -1,28 +1,19 @@
 package epf.tests.webapp;
 
-import java.net.URL;
-import org.openqa.selenium.WebDriver;
-import epf.naming.Naming;
-import jakarta.annotation.PostConstruct;
+import org.openqa.selenium.By;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 
 @RequestScoped
-public class DefaultPage {
-
-	private final WebDriver driver;
-	
-	private final URL url;
+public class DefaultPage extends Page {
 	
 	@Inject
-	public DefaultPage(WebDriver driver, @Named(Naming.WebApp.WEB_APP_URL) URL url) {
-		this.driver = driver;
-		this.url = url;
+	public DefaultPage(RemoteWebDriver driver) {
+		super(driver);
 	}
 	
-	@PostConstruct
-	void navigateTo() {
-		driver.navigate().to(url);
+	public void clickProfile() {
+		driver.findElement(By.id("userDropdown")).click();
 	}
 }

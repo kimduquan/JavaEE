@@ -1,21 +1,31 @@
 package epf.tests.webapp.security;
 
+import java.net.URL;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import epf.naming.Naming;
 import epf.security.view.LoginView;
-import epf.tests.webapp.DefaultPage;
+import epf.tests.webapp.Page;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 @RequestScoped
-public class LoginPage implements LoginView {
+public class LoginPage extends Page implements LoginView {
 	
-	final WebDriver driver;
+	final URL url;
 	
 	@Inject
-	public LoginPage(DefaultPage page, WebDriver driver) {
-		this.driver = driver;
+	public LoginPage(RemoteWebDriver driver, @Named(Naming.WebApp.WEB_APP_URL) URL url) {
+		super(driver);
+		this.url = url;
+	}
+	
+	@PostConstruct
+	void navigateTo() {
+		driver.navigate().to(url);
 	}
 
 	@Override
@@ -33,14 +43,13 @@ public class LoginPage implements LoginView {
 	@Override
 	public void setPassword(char[] password) {
 		WebElement passwordElement = driver.findElement(By.id("exampleInputPassword"));
-		passwordElement.clear();
 		passwordElement.sendKeys(new String(password));
 	}
 
 	@Override
 	public String login() throws Exception {
 		WebElement login = driver.findElement(By.linkText("Login"));
-		login.submit();
+		login.click();
 		return driver.getTitle();
 	}
 

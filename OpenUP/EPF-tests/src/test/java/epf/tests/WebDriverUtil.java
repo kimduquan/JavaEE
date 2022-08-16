@@ -1,8 +1,8 @@
 package epf.tests;
 
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import java.time.Duration;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Disposes;
@@ -19,19 +19,19 @@ public class WebDriverUtil {
 	 * @return
 	 */
 	@Produces @ApplicationScoped
-	public static WebDriver newWebDriver() {
+	public static RemoteWebDriver newWebDriver() {
 		final FirefoxOptions options = new FirefoxOptions();
 		
-		final String headless = System.getProperty("webdriver.firefox.headless");
+		/*final String headless = System.getProperty("webdriver.firefox.headless");
 		if(headless != null) {
 			options.setHeadless(Boolean.valueOf(headless));
-		}
+		}*/
 		
 		final String webdriverDriver = System.getProperty("webdriver.gecko.driver");
 		if(webdriverDriver == null) {
 			System.setProperty("webdriver.gecko.driver", "./geckodriver.exe");
 		}
-		final WebDriver driver = new FirefoxDriver(options);
+		final RemoteWebDriver driver = new FirefoxDriver(options);
 		
 		final String implicit = System.getProperty("webdriver.timeouts.implicit");
 		if(implicit != null) {
@@ -53,7 +53,7 @@ public class WebDriverUtil {
 		return driver;
 	}
 	
-	public static void close(@Disposes WebDriver webDriver) {
+	public static void close(@Disposes RemoteWebDriver webDriver) {
 		webDriver.quit();
 	}
 }
