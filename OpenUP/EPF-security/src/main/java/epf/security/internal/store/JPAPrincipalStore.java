@@ -18,10 +18,11 @@ import javax.transaction.Transactional;
 import javax.ws.rs.BadRequestException;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.naming.Naming;
+import epf.schema.utility.TenantUtil;
 import epf.security.internal.JPAPrincipal;
 import epf.security.internal.NativeQueries;
-import epf.security.internal.TenantPersistence;
 import epf.security.schema.Principal;
+import epf.security.schema.Security;
 import epf.security.util.Credential;
 
 /**
@@ -43,12 +44,6 @@ public class JPAPrincipalStore {
 	transient ManagedExecutor executor;
 	
 	/**
-	 *
-	 */
-	@Inject
-	transient TenantPersistence persistence;
-	
-	/**
 	 * 
 	 */
 	@PostConstruct
@@ -65,19 +60,17 @@ public class JPAPrincipalStore {
 	@Transactional
 	public CompletionStage<Void> setCallerPassword(final Credential credential, final Password password) throws Exception{
 		Objects.requireNonNull(credential, "Credential");
-		EntityManager manager;
-		if(credential.getTenant().isPresent()) {
-			manager = persistence.createManager(Naming.Security.Internal.SECURITY_UNIT_NAME, credential.getTenant().get());
-		}
-		else {
-			manager = factory.createEntityManager();
-		}
+		final Map<String, Object> props = new HashMap<>();
+		final String tenant = TenantUtil.getTenantId(Security.SCHEMA, credential.getTenant().orElse(null));
+		props.put(Naming.Management.TENANT, tenant);
+		final EntityManager manager = factory.createEntityManager(props);
 		if(!manager.isJoinedToTransaction()) {
 			manager.joinTransaction();
 		}
 		final Query query = manager.createNativeQuery(String.format(NativeQueries.SET_PASSWORD, credential.getCaller()));
 		query.setParameter(1, new String(password.getValue()));
 		query.executeUpdate();
+		manager.flush();
 		manager.close();
 		return executor.completedStage(null);
 	}
@@ -88,13 +81,10 @@ public class JPAPrincipalStore {
 	 */
 	public CompletionStage<Map<String, Object>> getCallerClaims(final Credential credential) {
 		Objects.requireNonNull(credential, "Credential");
-		EntityManager manager;
-		if(credential.getTenant().isPresent()) {
-			manager = persistence.createManager(Naming.Security.Internal.SECURITY_UNIT_NAME, credential.getTenant().get());
-		}
-		else {
-			manager = factory.createEntityManager();
-		}
+		final Map<String, Object> props = new HashMap<>();
+		final String tenant = TenantUtil.getTenantId(Security.SCHEMA, credential.getTenant().orElse(null));
+		props.put(Naming.Management.TENANT, tenant);
+		final EntityManager manager = factory.createEntityManager(props);
 		final Principal principal = manager.find(Principal.class, credential.getCaller());
 		final Map<String, Object> claims = new HashMap<>();
 		if(principal != null && principal.getClaims() != null) {
@@ -113,7 +103,10 @@ public class JPAPrincipalStore {
 	public CompletionStage<Void> setCallerClaims(final CallerPrincipal callerPrincipal, final Map<String, Object> claims) {
 		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
 		final JPAPrincipal principal = (JPAPrincipal) callerPrincipal;
-		final EntityManager manager = principal.getFactory().createEntityManager();
+		final Map<String, Object> props = new HashMap<>();
+		final String tenant = TenantUtil.getTenantId(Security.SCHEMA, principal.getTenant().orElse(null));
+		props.put(Naming.Management.TENANT, tenant);
+		final EntityManager manager = principal.getFactory().createEntityManager(props);
 		if(!manager.isJoinedToTransaction()) {
 			manager.joinTransaction();
 		}
@@ -141,11 +134,11 @@ public class JPAPrincipalStore {
 	public CompletionStage<Void> putCaller(final CallerPrincipal callerPrincipal) throws Exception {
 		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
 		Objects.requireNonNull(callerPrincipal.getName(), "CallerPrincipal.name");
-		EntityManager entityManager = factory.createEntityManager();
 		final JPAPrincipal principal = (JPAPrincipal) callerPrincipal;
-		if(principal.getTenant().isPresent()) {
-			entityManager = persistence.createManager(Naming.Security.Internal.SECURITY_UNIT_NAME, principal.getTenant().get());
-		}
+		final Map<String, Object> props = new HashMap<>();
+		final String tenant = TenantUtil.getTenantId(Security.SCHEMA, principal.getTenant().orElse(null));
+		props.put(Naming.Management.TENANT, tenant);
+		EntityManager entityManager = factory.createEntityManager(props);
 		if(!entityManager.isJoinedToTransaction()) {
 			entityManager.joinTransaction();
 		}

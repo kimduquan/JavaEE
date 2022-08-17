@@ -397,10 +397,6 @@ public interface Naming {
 			 * 
 			 */
 			String JDBC_PASSWORD = "javax.persistence.jdbc.password";
-			/**
-			 * 
-			 */
-			String JDBC_URL = "javax.persistence.jdbc.url";
 		}
 		
 		/**
