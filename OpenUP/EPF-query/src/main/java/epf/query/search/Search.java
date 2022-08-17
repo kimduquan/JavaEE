@@ -26,7 +26,12 @@ public class Search implements epf.client.search.Search {
 	/**
 	 *
 	 */
-	private static final String FULLTEXT_SEARCH = "SELECT * FROM FTL_SEARCH_DATA(?, ?, ?);";
+	private static final String FULLTEXT_SEARCH = "SELECT * FROM FTL_SEARCH_DATA(?, ?, ?) WHERE SCHEMA LIKE ?;";
+	
+	/**
+	 *
+	 */
+	private static final String FULLTEXT_SEARCH_COUNT = "SELECT COUNT(*) FROM FTL_SEARCH_DATA(?, ?, ?) WHERE SCHEMA LIKE ?;";
 	
 	/**
 	 *
@@ -46,16 +51,7 @@ public class Search implements epf.client.search.Search {
     		final String text, 
     		final Integer firstResult, 
     		final Integer maxResults) {
-		if(tenant != null) {
-			manager.setProperty(Naming.Management.TENANT, tenant);
-		}
-		else {
-			manager.setProperty(Naming.Management.TENANT, "");
-		}
-		final Query query = manager.createNativeQuery(FULLTEXT_SEARCH)
-				.setParameter(1, text)
-				.setParameter(2, maxResults != null ? maxResults : 0)
-				.setParameter(3, firstResult != null ? firstResult : 0);
+		final Query query = createSearchQuery(FULLTEXT_SEARCH, tenant, text, maxResults != null ? maxResults : 0, firstResult != null ? firstResult : 0);
 		final List<?> resultList = query.getResultList();
 		final List<EntityId> entities = resultList.stream().map(this::toEntityId).filter(entityId -> entityId != null).collect(Collectors.toList());
 		return Response.ok(entities).header(ENTITY_COUNT, resultList.size()).build();
@@ -65,18 +61,9 @@ public class Search implements epf.client.search.Search {
 	public Response count(
     		final String tenant,
     		final String text) {
-		if(tenant != null) {
-			manager.setProperty(Naming.Management.TENANT, tenant);
-		}
-		else {
-			manager.setProperty(Naming.Management.TENANT, "");
-		}
-		final Query query = manager.createNativeQuery(FULLTEXT_SEARCH)
-				.setParameter(1, text)
-				.setParameter(2, 0)
-				.setParameter(3, 0);
-		final List<?> resultList = query.getResultList();
-		return Response.ok().header(ENTITY_COUNT, resultList.size()).build();
+		final Query query = createSearchQuery(FULLTEXT_SEARCH_COUNT, tenant, text, 0, 0);
+		final Long count = (Long) query.getSingleResult();
+		return Response.ok().header(ENTITY_COUNT, count).build();
 	}
 	
 	/**
@@ -91,25 +78,46 @@ public class Search implements epf.client.search.Search {
 		final Optional<String> entityName = schemaCache.getEntityName(table);
 		EntityId entityId = null;
 		if(entityName.isPresent()) {
-			entityId = new EntityId();
-			entityId.setName(entityName.get());
 			final Optional<Class<?>> entityClass = schemaCache.getEntityClass(entityName.get());
 			if(entityClass.isPresent()) {
 				final Optional<String> entitySchema = schemaCache.getEntitySchema(entityClass.get());
-				entitySchema.ifPresent(entityId::setSchema);
+				if(entitySchema.isPresent()) {
+					entityId = new EntityId();
+					entityId.setName(entityName.get());
+					entityId.setSchema(entitySchema.get());
+
+					final Map<String, Object> entityAttributes = new HashMap<>();
+					final Map<String, String> entityFields = schemaCache.getColumnFields(entityName.get());
+					int columnIndex = 0;
+					for(Object column : columns) {
+						final Object key = keys[columnIndex];
+						final String columnName = String.valueOf(column);
+						final String attributeName = entityFields.getOrDefault(columnName, columnName);
+						entityAttributes.put(attributeName, key);
+						columnIndex++;
+					}
+					entityId.setAttributes(entityAttributes);
+				}
 			}
-			final Map<String, Object> entityAttributes = new HashMap<>();
-			final Map<String, String> entityFields = schemaCache.getColumnFields(entityName.get());
-			int columnIndex = 0;
-			for(Object column : columns) {
-				final Object key = keys[columnIndex];
-				final String columnName = String.valueOf(column);
-				final String attributeName = entityFields.getOrDefault(columnName, columnName);
-				entityAttributes.put(attributeName, key);
-				columnIndex++;
-			}
-			entityId.setAttributes(entityAttributes);
 		}
 		return entityId;
+	}
+	
+	/**
+	 * @param query
+	 * @param tenant
+	 * @param text
+	 * @param maxResults
+	 * @param firstResult
+	 * @return
+	 */
+	private Query createSearchQuery(final String query, final String tenant, final String text, final int maxResults, final int firstResult) {
+		manager.setProperty(Naming.Management.TENANT, "");
+		final String filter = tenant == null ? "%" : "%_" + tenant;
+		return manager.createNativeQuery(query)
+				.setParameter(1, text)
+				.setParameter(2, maxResults)
+				.setParameter(3, firstResult)
+				.setParameter(4, filter);
 	}
 }

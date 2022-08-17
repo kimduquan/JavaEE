@@ -9,7 +9,6 @@
 		<jar-file>lib/EPF-work-products-schema-1.0.0.jar</jar-file>
 		<jar-file>lib/OpenUP-schema-1.0.0.jar</jar-file>
 		<jar-file>lib/EPF-net-schema-1.0.0.jar</jar-file>
-		<jar-file>lib/EPF-security-schema-1.0.0.jar</jar-file>
 		
 		<jar-file>../../lib/EPF-schema-utility-1.0.0.jar</jar-file>
 		<jar-file>../../lib/EPF-delivery-processes-schema-1.0.0.jar</jar-file>
@@ -18,7 +17,6 @@
 		<jar-file>../../lib/EPF-work-products-schema-1.0.0.jar</jar-file>
 		<jar-file>../../lib/OpenUP-schema-1.0.0.jar</jar-file>
 		<jar-file>../../lib/EPF-net-schema-1.0.0.jar</jar-file>
-		<jar-file>../../lib/EPF-security-schema-1.0.0.jar</jar-file>
         <!--<properties>
             <property name="javax.persistence.schema-generation.database.action" value="create"/>
             <property name="javax.persistence.schema-generation.create-source" value="metadata"/>
