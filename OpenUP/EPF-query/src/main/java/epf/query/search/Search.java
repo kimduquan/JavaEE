@@ -112,7 +112,7 @@ public class Search implements epf.client.search.Search {
 	 * @return
 	 */
 	private Query createSearchQuery(final String query, final String tenant, final String text, final int maxResults, final int firstResult) {
-		manager.setProperty(Naming.Management.TENANT, "");
+		manager.setProperty(Naming.Management.MANAGEMENT_TENANT, "");
 		final String filter = tenant == null ? "%" : "%_" + tenant;
 		return manager.createNativeQuery(query)
 				.setParameter(1, text)

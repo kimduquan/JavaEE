@@ -1,6 +1,5 @@
 package epf.security.internal.store;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -8,12 +7,11 @@ import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.naming.Naming;
@@ -34,21 +32,14 @@ public class JPAIdentityStore {
 	/**
 	 * 
 	 */
-	transient EntityManagerFactory factory;
-	
-	/**
-	 * 
-	 */
 	@Inject
-	transient ManagedExecutor executor;
+	private transient ManagedExecutor executor;
 	
 	/**
-	 * 
+	 *
 	 */
-	@PostConstruct
-	protected void postConstruct() {
-		factory = Persistence.createEntityManagerFactory(Naming.Security.Internal.SECURITY_UNIT_NAME);
-	}
+	@PersistenceContext(unitName = Naming.Security.Internal.SECURITY_UNIT_NAME)
+	private transient EntityManager manager;
 
 	/**
 	 * @param callerPrincipal
@@ -56,14 +47,11 @@ public class JPAIdentityStore {
 	 */
 	public CompletionStage<Set<String>> getCallerGroups(final Credential credential) {
 		Objects.requireNonNull(credential, "Credential");
-		final Map<String, Object> props = new HashMap<>();
 		final String tenant = TenantUtil.getTenantId(Security.SCHEMA, credential.getTenant().orElse(null));
-		props.put(Naming.Management.TENANT, tenant);
-		final EntityManager entityManager = factory.createEntityManager(props);
-		final Query query = entityManager.createNativeQuery(NativeQueries.GET_CURRENT_ROLES);
+		manager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenant);
+		final Query query = manager.createNativeQuery(NativeQueries.GET_CURRENT_ROLES);
 		final Stream<?> stream = query.setParameter(1, credential.getCaller()).getResultStream();
 		final Set<String> groups = stream.map(role -> StringUtil.toPascalSnakeCase(role.toString().split("_"))).collect(Collectors.toSet());
-		entityManager.close();
 		return executor.completedStage(groups);
 	}
 
@@ -77,12 +65,12 @@ public class JPAIdentityStore {
         props.put(Naming.Persistence.JDBC.JDBC_USER, credential.getCaller());
         props.put(Naming.Persistence.JDBC.JDBC_PASSWORD, String.valueOf(credential.getPassword().getValue()));
         final String tenant = TenantUtil.getTenantId(Security.SCHEMA, credential.getTenant().orElse(null));
-        props.put(Naming.Management.TENANT, tenant);
+        props.put(Naming.Management.MANAGEMENT_TENANT, tenant);
         return executor.supplyAsync(() -> Persistence.createEntityManagerFactory(Naming.Security.Internal.SECURITY_UNIT_NAME, props))
         		.thenApply(factory -> {
         			try {
         				final Map<String, Object> newProps = new ConcurrentHashMap<>();
-        				newProps.put(Naming.Management.TENANT, tenant);
+        				newProps.put(Naming.Management.MANAGEMENT_TENANT, tenant);
         				final EntityManager manager = factory.createEntityManager(newProps);
         				return new JPAPrincipal(credential.getTenant(), credential.getCaller(), factory, manager);
 		        	}
