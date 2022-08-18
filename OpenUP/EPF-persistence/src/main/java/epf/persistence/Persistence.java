@@ -113,6 +113,7 @@ public class Persistence implements epf.persistence.client.Entities {
     		return Response.status(Response.Status.BAD_REQUEST).build();
         }
         manager.persist(entity);
+        manager.flush();
         final String jsonEntity = JsonUtil.toString(entity);
         
         final Object transactionEntity = entity;
@@ -175,6 +176,7 @@ public class Persistence implements epf.persistence.client.Entities {
         transaction.setEntityId(entityId);
         
         final Object mergedEntity = manager.merge(entity);
+        manager.flush();
         final String jsonEntity = JsonUtil.toString(mergedEntity);
         
         transactionStore.put(headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER), transaction);
@@ -210,6 +212,7 @@ public class Persistence implements epf.persistence.client.Entities {
     	
     	JsonUtil.toString(entityObject);
     	manager.remove(entityObject);
+    	manager.flush();
     	
     	final Object transactionEntity = entityObject;
         final PostRemove transactionEvent = new PostRemove();
@@ -245,16 +248,19 @@ public class Persistence implements epf.persistence.client.Entities {
      			final Object entity = manager.find(transactionEvent.getEntity().getClass(), transaction.getEntityId());
     			if(entity != null) {
     				manager.remove(entity);
+    				manager.flush();
     			}
     		}
     		else if(transactionEvent instanceof PostUpdate) {
     			final Object entity = manager.find(transactionEvent.getEntity().getClass(), transaction.getEntityId());
     			if(entity != null) {
     				manager.merge(transactionEvent.getEntity());
+    				manager.flush();
     			}
     		}
      		else if(transactionEvent instanceof PostRemove) {
     			manager.persist(transactionEvent.getEntity());
+    			manager.flush();
     		}
 		}
     	return Response.ok(ParticipantStatus.Compensated.name()).build();
