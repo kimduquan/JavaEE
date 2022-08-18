@@ -5,6 +5,7 @@ import java.time.Duration;
 import java.util.Map.Entry;
 import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -12,6 +13,7 @@ import org.junit.rules.MethodRule;
 import epf.naming.Naming;
 import epf.tests.TestUtil;
 import epf.tests.WebDriverUtil;
+import epf.tests.health.HealthUtil;
 import epf.tests.security.SecurityUtil;
 import epf.tests.webapp.DefaultPage;
 import epf.tests.webapp.WebAppUtil;
@@ -50,6 +52,11 @@ public class LoginPageTest {
 	
 	@Inject
 	DefaultPage defPage;
+	
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		HealthUtil.isReady();
+	}
 
 	@Test
 	public void testLoginOk() throws Exception {
