@@ -70,4 +70,9 @@ public class LoginPage extends Page implements LoginView {
 		WebElement isRememberMeElement = driver.findElement(By.id("customCheck"));
 		isRememberMeElement.click();
 	}
+	
+	public void createCredential() {
+		WebElement createCredential = driver.findElement(By.linkText("Create an Account!"));
+		createCredential.click();
+	}
 }

@@ -59,7 +59,7 @@ public class LoginPageTest {
 	}
 
 	@Test
-	public void testLoginOk() throws Exception {
+	public void testLoginCorrectUsernamePassword_LoginOk() throws Exception {
 		Entry<String, String> credential = SecurityUtil.peekCredential();
 		page.setCaller(credential.getKey());
 		page.setPassword(credential.getValue().toCharArray());
@@ -69,6 +69,17 @@ public class LoginPageTest {
 		confirm.logout();
 		TestUtil.waitUntil((t) -> page.isComplete(), Duration.ofSeconds(10));
 		Assert.assertEquals("currentUrl", "https://localhost/security-auth/security/logout.html", page.getCurrentUrl());
+	}
+	
+	@Test
+	public void testLoginInvalidPassword_NotLogin() throws Exception {
+		page.getDriver().navigate().to(webappUrl);
+		Entry<String, String> credential = SecurityUtil.peekCredential();
+		page.setCaller(credential.getKey());
+		page.setPassword("invalid".toCharArray());
+		page.login();
+		TestUtil.waitUntil((t) -> page.isComplete(), Duration.ofSeconds(10));
+		Assert.assertNotEquals("title", "SB Admin 2 - Dashboard", page.getTitle());
 	}
 	
 	@Test

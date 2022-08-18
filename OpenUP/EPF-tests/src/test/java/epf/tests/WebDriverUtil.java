@@ -22,10 +22,10 @@ public class WebDriverUtil {
 	public static RemoteWebDriver newWebDriver() {
 		final FirefoxOptions options = new FirefoxOptions();
 		
-		/*final String headless = System.getProperty("webdriver.firefox.headless");
+		final String headless = System.getProperty("webdriver.firefox.headless");
 		if(headless != null) {
 			options.setHeadless(Boolean.valueOf(headless));
-		}*/
+		}
 		
 		final String webdriverDriver = System.getProperty("webdriver.gecko.driver");
 		if(webdriverDriver == null) {
