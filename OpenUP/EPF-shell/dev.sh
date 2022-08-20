@@ -1,4 +1,6 @@
 rm EPF-shell.log.*
+mv .env env
+rm env
 cp unix.env env
 mv env ".env"
 . ../env.sh
