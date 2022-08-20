@@ -395,7 +395,6 @@
 						<epf.net.url>http://localhost:${httpPort}/net/net/</epf.net.url>
 						<epf.net.http.port>${httpPort}</epf.net.http.port>
                         <epf.shell.path>../EPF-shell/</epf.shell.path>
-                        <epf.shell.command>${shell_command}</epf.shell.command>
                         <epf.shell.runner>${shell_runner}</epf.shell.runner>
                         <webdriver.gecko.driver>${geckodriver}</webdriver.gecko.driver>
                         <epf.tests.file.root>target/servers/test/epf.file.root</epf.tests.file.root>
