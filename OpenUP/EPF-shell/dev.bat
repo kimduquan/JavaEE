@@ -1,5 +1,5 @@
 del .\EPF-shell.log.*
-copy ./win.env ./.env
+copy win.env .env
 setlocal
 call ../env.bat
 call ../config.bat
