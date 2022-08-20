@@ -868,11 +868,6 @@ public interface Naming {
 		/**
 		 * 
 		 */
-		String SHELL_COMMAND = "epf.shell.command";
-		
-		/**
-		 * 
-		 */
 		String SHELL_RUNNER = "epf.shell.runner";
 	}
 	

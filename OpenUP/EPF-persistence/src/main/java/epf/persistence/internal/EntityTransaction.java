@@ -1,5 +1,6 @@
-package epf.persistence;
+package epf.persistence.internal;
 
+import javax.json.JsonPatch;
 import epf.schema.utility.EntityEvent;
 
 /**
@@ -16,6 +17,11 @@ public class EntityTransaction {
 	 *
 	 */
 	private Object entityId;
+	
+	/**
+	 *
+	 */
+	private String diff;
 
 	public EntityEvent getEvent() {
 		return event;
@@ -31,5 +37,13 @@ public class EntityTransaction {
 
 	public void setEntityId(final Object entityId) {
 		this.entityId = entityId;
+	}
+
+	public String getDiff() {
+		return diff;
+	}
+
+	public void setDiff(final String diff) {
+		this.diff = diff;
 	}
 }

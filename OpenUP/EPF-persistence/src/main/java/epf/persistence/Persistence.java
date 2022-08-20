@@ -11,6 +11,9 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonPatch;
 import javax.persistence.EntityManager;
 import javax.persistence.metamodel.EntityType;
 import javax.transaction.Transactional;
@@ -25,6 +28,7 @@ import org.eclipse.microprofile.lra.annotation.Forget;
 import org.eclipse.microprofile.lra.annotation.ParticipantStatus;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
 import epf.naming.Naming;
+import epf.persistence.internal.EntityTransaction;
 import epf.persistence.util.EntityTypeUtil;
 import epf.persistence.util.EntityUtil;
 import epf.schema.utility.EntityEvent;
@@ -112,9 +116,10 @@ public class Persistence implements epf.persistence.client.Entities {
     	if(!validator.validate(entity).isEmpty()) {
     		return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        manager.persist(entity);
+    	
+    	manager.persist(entity);
         manager.flush();
-        final String jsonEntity = JsonUtil.toString(entity);
+        final JsonPatch diff = JsonUtil.createDiff(new Object(), entity);
         
         final Object transactionEntity = entity;
         final PostPersist transactionEvent = new PostPersist();
@@ -123,6 +128,7 @@ public class Persistence implements epf.persistence.client.Entities {
         transactionEvent.setEntity(transactionEntity);
         final EntityTransaction transaction = new EntityTransaction();
         transaction.setEvent(transactionEvent);
+        transaction.setDiff(JsonUtil.toString(diff.toJsonArray()));
         
         final Optional<Field> entityIdField = schemaUtil.getEntityIdField(transactionEntity.getClass());
         final Object entityId = entityIdField.get().get(transactionEntity);
@@ -130,7 +136,7 @@ public class Persistence implements epf.persistence.client.Entities {
     	
         transactionStore.put(headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER), transaction);
         
-    	return Response.ok(jsonEntity).build();
+    	return Response.ok(JsonUtil.toString(entity)).build();
     }
     
     @Override
@@ -164,7 +170,7 @@ public class Persistence implements epf.persistence.client.Entities {
     		return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
-        JsonUtil.toString(entityObject);
+        final JsonObject preEntity = JsonUtil.toJson(entityObject);
         
     	final Object transactionEntity = entityObject;
         final PostUpdate transactionEvent = new PostUpdate();
@@ -177,11 +183,14 @@ public class Persistence implements epf.persistence.client.Entities {
         
         final Object mergedEntity = manager.merge(entity);
         manager.flush();
-        final String jsonEntity = JsonUtil.toString(mergedEntity);
+        
+        final JsonObject postEntity = JsonUtil.toJson(mergedEntity);
+        final JsonPatch diff = Json.createDiff(preEntity, postEntity);
+        transaction.setDiff(JsonUtil.toString(diff.toJsonArray()));
         
         transactionStore.put(headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER), transaction);
         
-    	return Response.ok(jsonEntity).build();
+    	return Response.ok(JsonUtil.toString(mergedEntity)).build();
 	}
     
     @Override
@@ -210,7 +219,8 @@ public class Persistence implements epf.persistence.client.Entities {
     		return Response.status(Response.Status.NOT_FOUND).build();
     	}
     	
-    	JsonUtil.toString(entityObject);
+    	final JsonPatch diff = JsonUtil.createDiff(entityObject, new Object());
+    	
     	manager.remove(entityObject);
     	manager.flush();
     	
@@ -222,6 +232,8 @@ public class Persistence implements epf.persistence.client.Entities {
         final EntityTransaction transaction = new EntityTransaction();
         transaction.setEvent(transactionEvent);
         transaction.setEntityId(entityId);
+        transaction.setDiff(JsonUtil.toString(diff.toJsonArray()));
+        
         transactionStore.put(headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER), transaction);
         
     	return Response.ok().build();

@@ -1,4 +1,4 @@
-package epf.persistence.internal;
+package epf.persistence.internal.util;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;

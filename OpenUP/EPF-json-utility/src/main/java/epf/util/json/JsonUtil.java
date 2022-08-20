@@ -9,6 +9,7 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import javax.json.JsonPatch;
 import javax.json.JsonReader;
 import javax.json.JsonString;
 import javax.json.JsonValue;
@@ -201,5 +202,15 @@ public interface JsonUtil {
 			}
 		}
 		return string;
+	}
+	
+	/**
+	 * @param source
+	 * @param target
+	 * @return
+	 * @throws Exception
+	 */
+	static JsonPatch createDiff(final Object source, final Object target) throws Exception {
+		return Json.createDiff(toJson(source), toJson(target));
 	}
 }

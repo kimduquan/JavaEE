@@ -29,11 +29,6 @@ public class ShellUtil {
 	/**
 	 * 
 	 */
-	private static final String COMMAND = System.getProperty(Naming.Shell.SHELL_COMMAND);
-	
-	/**
-	 * 
-	 */
 	private static final String RUNNER = System.getProperty(Naming.Shell.SHELL_RUNNER);
 	
 	/**
@@ -123,7 +118,6 @@ public class ShellUtil {
 	 */
 	static ProcessBuilder command(final ProcessBuilder builder, final String...command) {
 		final List<String> cmd = new ArrayList<>();
-		cmd.add(COMMAND);
 		cmd.add(RUNNER);
 		cmd.addAll(Arrays.asList(command));
 		return builder.command(cmd);
