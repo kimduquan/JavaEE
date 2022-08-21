@@ -12,11 +12,11 @@ import javax.annotation.security.PermitAll;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
-import javax.ws.rs.MatrixParam;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -120,26 +120,23 @@ public class Stream {
 			final SseEventSink sink, 
 			@Context 
 			final Sse sse,
-			@MatrixParam("tid")
-			final String tokenId) throws Exception {
-		final URI cacheUrl = registry.lookup(Naming.CACHE).orElseThrow(() -> new NoSuchElementException(Naming.CACHE));
+			@QueryParam("token")
+			final String token) throws Exception {
 		final URI securityUrl = registry.lookup(Naming.SECURITY).orElseThrow(() -> new NoSuchElementException(Naming.SECURITY));
-		SecurityUtil.authenticateTokenId(tokenId, cacheUrl, securityUrl).thenAccept(succeed -> {
-			if(succeed) {
-				clients.computeIfPresent(path, (p, client) -> {
-					final Broadcaster broadcaster = broadcasters.computeIfAbsent(
-							path, p2 -> {
-								final Broadcaster newBroadcaster = new Broadcaster(client, sse);
-								executor.submit(newBroadcaster);
-								return newBroadcaster;
-							});
-					broadcaster.register(sink);
-					return client;
-				});
-			}
-			else {
-				throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
-			}
-		});
+		if(SecurityUtil.authenticate(securityUrl, token)) {
+			clients.computeIfPresent(path, (p, client) -> {
+				final Broadcaster broadcaster = broadcasters.computeIfAbsent(
+						path, p2 -> {
+							final Broadcaster newBroadcaster = new Broadcaster(client, sse);
+							executor.submit(newBroadcaster);
+							return newBroadcaster;
+						});
+				broadcaster.register(sink);
+				return client;
+			});
+		}
+		else {
+			throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
+		}
 	}
 }

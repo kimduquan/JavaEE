@@ -23,7 +23,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.security.enterprise.credential.Password;
 import javax.ws.rs.BadRequestException;
@@ -197,12 +196,6 @@ public class Security implements epf.security.client.Security, epf.security.clie
     /**
      * 
      */
-    @Inject
-    transient Event<Token> event;
-    
-    /**
-     * 
-     */
     @PostConstruct
     void postConstruct() {
         try {
@@ -290,11 +283,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 									}
 								)
     			)
-    			.thenApply(token -> { 
-    				event.fire(token);
-    				return token.getRawToken();
-    				}
-    			);
+    			.thenApply(token -> token.getRawToken());
     }
 
     @RolesAllowed(Naming.Security.DEFAULT_ROLE)
@@ -343,10 +332,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 							sessionStore.putSession(newToken, session.getCredential());
 							return newToken;
 						})
-						.thenApply(token -> {
-							event.fire(token);
-							return token.getRawToken();
-						});
+						.thenApply(token -> token.getRawToken());
 	}
 
 	@PermitAll
@@ -384,10 +370,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 			sessionStore.putSession(newToken, session.getCredential());
 			return newToken;
 		})
-		.thenApply(token -> { 
-			event.fire(token);
-			return token.getRawToken();
-			});
+		.thenApply(token -> token.getRawToken());
 	}
 
 	@PermitAll

@@ -25,7 +25,6 @@ import javax.ws.rs.core.SecurityContext;
 import epf.client.schema.EntityId;
 import epf.client.util.Client;
 import epf.naming.Naming;
-import epf.security.schema.Token;
 
 /**
  * @author PC
@@ -298,28 +297,4 @@ public interface Query {
     			.getHeaderString(Naming.Query.ENTITY_COUNT);
     	return Integer.parseInt(count);
     }
-    
-
-	
-	/**
-	 * @param tokenHash
-	 * @return
-	 */
-	@GET
-    @Path(Naming.SECURITY)
-	@Produces(MediaType.APPLICATION_JSON)
-	Token getToken(@QueryParam("t") final String tokenHash);
-	
-	/**
-	 * @param client
-	 * @param tokenHash
-	 * @return
-	 */
-	static Token getToken(final Client client, final String tokenHash) {
-		return client
-				.request(target -> target.path(Naming.SECURITY).queryParam("t", tokenHash), 
-						req -> req.accept(MediaType.APPLICATION_JSON)
-						)
-				.get(Token.class);
-	}
 }

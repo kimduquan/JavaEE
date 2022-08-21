@@ -1,5 +1,3 @@
-set GRAALVM_HOME=C:\graalvm-ce-java11-22.2.0
-set PATH=%PATH%;%GRAALVM_HOME%/bin
 set JAVA8_HOME=C:\jdk8u322-b06
 set JAVA11_HOME=C:\jdk-11.0.15+10
 set JAVA_HOME=%JAVA11_HOME%
@@ -9,4 +7,3 @@ set WILDFLY_HOME="C:\wildfly-24.0.1.Final\bin"
 set JAEGER_HOME="C:\jaeger-1.36.0-windows-amd64"
 set MAVEN_HOME=C:\apache-maven-3.8.6\bin
 set PATH=%MAVEN_HOME%;%PATH%
-call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"

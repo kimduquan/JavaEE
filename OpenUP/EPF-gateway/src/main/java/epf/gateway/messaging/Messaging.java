@@ -102,25 +102,22 @@ public class Messaging {
 	 */
 	@OnOpen
     public void onOpen(@PathParam(PATH) final String path, final Session session) throws Exception {
-		final Optional<String> tokenId = SecurityUtil.getTokenId(session);
-		if(tokenId.isPresent()) {
+		final Optional<String> token = SecurityUtil.getToken(session);
+		if(token.isPresent()) {
 			remotes.computeIfPresent(path, (p, remote) -> {
 				remote.onOpen(session);
 				return remote;
 				}
 			);
 		}
-		if(!tokenId.isPresent()) {
+		if(!token.isPresent()) {
 			closeSession(path, session);
 		}
 		else {
-			final URI queryUrl = registry.lookup(Naming.QUERY).orElseThrow(() -> new NoSuchElementException(Naming.QUERY));
 			final URI securityUrl = registry.lookup(Naming.SECURITY).orElseThrow(() -> new NoSuchElementException(Naming.SECURITY));
-			SecurityUtil.authenticateTokenId(tokenId.get(), queryUrl, securityUrl).thenAccept(succeed -> {
-				if(!succeed) {
-					closeSession(path, session);
-				}
-			});
+			if(!SecurityUtil.authenticate(securityUrl, token.get())) {
+				closeSession(path, session);
+			}
 		}
 	}
 	
