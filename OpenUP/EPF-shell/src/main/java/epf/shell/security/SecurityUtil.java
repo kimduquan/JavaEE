@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import epf.naming.Naming;
 import epf.util.logging.LogManager;
@@ -108,5 +107,9 @@ public class SecurityUtil {
 	
 	public String getKeyPassword() {
 		return keyPassword;
+	}
+	
+	public char[] getKeyStorePassword() {
+		return keyStorePassword.toCharArray();
 	}
 }

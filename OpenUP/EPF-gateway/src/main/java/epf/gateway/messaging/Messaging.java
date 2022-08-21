@@ -1,6 +1,5 @@
 package epf.gateway.messaging;
 
-import java.io.IOException;
 import java.net.URI;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -124,20 +123,16 @@ public class Messaging {
 	/**
 	 * @param path
 	 * @param session
+	 * @throws Exception 
 	 */
-	protected void closeSession(final String path, final Session session) {
+	protected void closeSession(final String path, final Session session) throws Exception {
 		final CloseReason reason = new CloseReason(CloseReason.CloseCodes.VIOLATED_POLICY, "");
 		remotes.computeIfPresent(path, (p, remote) -> {
 			remote.onClose(session, reason);
 			return remote;
 			}
 		);
-		try {
-			session.close(reason);
-		} 
-		catch (IOException e) {
-			LOGGER.log(Level.WARNING, "closeSession", e);
-		}
+		session.close(reason);
 	}
 	
 	/**

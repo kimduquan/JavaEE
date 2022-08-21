@@ -29,33 +29,13 @@
 	</dependencies>
   </dependencyManagement>
   <dependencies>
-  	<dependency>
-        <groupId>openup</groupId>
-        <artifactId>EPF-utility</artifactId>
-        <version>${project.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>openup</groupId>
-        <artifactId>EPF-client-utility</artifactId>
-        <version>${project.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>openup</groupId>
-        <artifactId>EPF-security-client</artifactId>
-        <version>${project.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>openup</groupId>
-        <artifactId>EPF-file-utility</artifactId>
-        <version>${project.version}</version>
-    </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-websockets-client</artifactId>
     </dependency>
 	<dependency>
 		<groupId>io.quarkus</groupId>
-		<artifactId>quarkus-rest-client-reactive-jackson</artifactId>
+		<artifactId>quarkus-rest-client-reactive-jsonb</artifactId>
 	</dependency>
 	<dependency>
 		<groupId>io.quarkus</groupId>
@@ -72,6 +52,28 @@
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-arc</artifactId>
+    </dependency>
+    
+  	<dependency>
+        <groupId>openup</groupId>
+        <artifactId>EPF-utility</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>openup</groupId>
+        <artifactId>EPF-client-utility</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>openup</groupId>
+        <artifactId>EPF-file-utility</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+    
+    <dependency>
+        <groupId>openup</groupId>
+        <artifactId>EPF-security-client</artifactId>
+        <version>${project.version}</version>
     </dependency>
   </dependencies>
   <build>

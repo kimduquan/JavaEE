@@ -59,7 +59,7 @@ public class FunctionInterceptor {
 			return result;
 		}
 		catch(Exception ex) {
-			err.println(ex.getMessage());
+			ex.printStackTrace(err);
 			return null;
 		}
 	}

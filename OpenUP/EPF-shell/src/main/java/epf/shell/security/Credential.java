@@ -30,4 +30,8 @@ public class Credential {
     	final StringBuilder tokenHeader = new StringBuilder();
     	return tokenHeader.append("Bearer ").append(token).toString();
     }
+    
+    public String getToken() {
+    	return token;
+    }
 }
