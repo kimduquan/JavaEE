@@ -1,5 +1,3 @@
-sudo service mysql stop
-sudo service postgresql stop
 . ./env.sh
 killall EPF-gateway-
 killall EPF-transaction-
