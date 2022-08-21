@@ -1,4 +1,4 @@
-package epf.client.util.io;
+package epf.util.io;
 
 import java.io.IOException;
 import java.io.InputStream;

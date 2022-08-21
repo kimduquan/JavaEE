@@ -1,4 +1,4 @@
-package epf.client.util.ssl;
+package epf.util.ssl;
 
 import java.security.KeyStore;
 import javax.net.ssl.KeyManagerFactory;
