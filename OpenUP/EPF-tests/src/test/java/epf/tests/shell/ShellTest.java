@@ -27,6 +27,7 @@ import epf.naming.Naming;
 import epf.persistence.schema.client.Entity;
 import epf.security.schema.Token;
 import epf.tests.TestUtil;
+import epf.tests.client.ClientUtil;
 import epf.tests.file.FileUtil;
 import epf.tests.health.HealthUtil;
 import epf.tests.persistence.PersistenceUtil;
@@ -102,6 +103,7 @@ public class ShellTest {
 		ShellUtil.securityLogout(builder, tokenID);
 		ShellUtil.securityLogout(builder, otherTokenID);
 		tempDir.toFile().delete();
+		ClientUtil.afterClass();
 	}
 
 	/**

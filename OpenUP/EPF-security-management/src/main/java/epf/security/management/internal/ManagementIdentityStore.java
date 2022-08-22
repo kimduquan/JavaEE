@@ -44,6 +44,7 @@ public class ManagementIdentityStore {
 		final Query query = manager.createNativeQuery(String.format(NativeQueries.CREATE_USER, credential.getCaller()));
 		query.setParameter(1, new String(credential.getPassword().getValue()));
 		query.executeUpdate();
+		manager.flush();
 		return executor.completedStage(null);
 	}
 
@@ -70,6 +71,7 @@ public class ManagementIdentityStore {
 		Objects.requireNonNull(callerPrincipal, "CallerPrincipal");
 		final Query query = manager.createNativeQuery(String.format(NativeQueries.SET_ROLE, group, callerPrincipal.getName()));
 		query.executeUpdate();
+		manager.flush();
 		return executor.completedStage(null);
 	}
 
@@ -79,6 +81,7 @@ public class ManagementIdentityStore {
 		Objects.requireNonNull(credential.getCaller(), "Credential.caller");
 		Objects.requireNonNull(credential.getPassword(), "Credential.password");
 		manager.createNativeQuery(String.format(NativeQueries.SET_USER_PASSWORD, credential.getCaller())).setParameter(1, new String(credential.getPassword().getValue())).executeUpdate();
+		manager.flush();
 		return executor.completedStage(null);
 	}
 

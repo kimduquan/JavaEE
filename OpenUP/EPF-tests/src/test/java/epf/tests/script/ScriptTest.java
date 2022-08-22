@@ -66,6 +66,7 @@ public class ScriptTest {
 	@After
 	public void tearDown() throws Exception {
 		client.close();
+		ClientUtil.afterClass();
 	}
 
 	@Test

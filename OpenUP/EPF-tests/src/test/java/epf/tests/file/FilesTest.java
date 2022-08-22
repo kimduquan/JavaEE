@@ -105,6 +105,7 @@ public class FilesTest {
 	public void tearDown() throws Exception {
 		client.close();
 		tempFile.toFile().delete();
+		ClientUtil.afterClass();
 	}
 
 	@Test

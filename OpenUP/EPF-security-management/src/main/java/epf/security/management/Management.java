@@ -92,14 +92,6 @@ public class Management implements epf.security.client.Management {
 			LOGGER.log(Level.SEVERE, "[Management.postConstruct]", e);
 		}
     }
-    
-    private String getTenant(final String email) {
-    	final String[] fragments = email.split("@");
-    	if(fragments.length == 2) {
-    		return fragments[1];
-    	}
-    	return null;
-    }
 
     @PermitAll
 	@Override
@@ -111,19 +103,15 @@ public class Management implements epf.security.client.Management {
 			final List<String> forwardedHost,
             final List<String> forwardedPort,
             final List<String> forwardedProto) throws Exception {
-		final String tenant = getTenant(email);
-		final Credential credential = new Credential(tenant, email, new Password(password));
+		final Credential credential = new Credential(null, email, new Password(password));
 		if(identityStore.isCaller(credential).toCompletableFuture().get()) {
 			throw new BadRequestException();
 		}
 		identityStore.putCredential(credential).toCompletableFuture().get();
-		final Set<String> audience = TokenBuilder.buildAudience(null, forwardedHost, forwardedPort, forwardedProto, Optional.ofNullable(tenant));
+		final Set<String> audience = TokenBuilder.buildAudience(null, forwardedHost, forwardedPort, forwardedProto, Optional.empty());
 		final Set<String> groups = new HashSet<>();
 		groups.add(Naming.EPF);
 		final Map<String, Object> claims = new HashMap<>();
-		if(tenant != null) {
-			claims.put(Naming.Management.TENANT, tenant);
-		}
 		claims.put(Naming.Security.Claims.FIRST_NAME, firstName);
 		claims.put(Naming.Security.Claims.LAST_NAME, lastName);
 		claims.put(Naming.Security.Claims.EMAIL, email);
@@ -150,17 +138,13 @@ public class Management implements epf.security.client.Management {
 			final List<String> forwardedHost,
             final List<String> forwardedPort,
             final List<String> forwardedProto) throws Exception {
-		final String tenant = getTenant(email);
-		final Credential credential = new Credential(tenant, email, new Password(new char[0]));
+		final Credential credential = new Credential(null, email, new Password(new char[0]));
 		final Boolean exist = identityStore.isCaller(credential).toCompletableFuture().get();
 		if(exist) {
-			final Set<String> audience = TokenBuilder.buildAudience(null, forwardedHost, forwardedPort, forwardedProto, Optional.ofNullable(tenant));
+			final Set<String> audience = TokenBuilder.buildAudience(null, forwardedHost, forwardedPort, forwardedProto, Optional.empty());
 			final Set<String> groups = new HashSet<>();
 			groups.add(Naming.EPF);
 			final Map<String, Object> claims = new HashMap<>();
-			if(tenant != null) {
-				claims.put(Naming.Management.TENANT, tenant);
-			}
 			claims.put(Naming.Security.Claims.EMAIL, email);
 			
 			final Token newToken = new Token();

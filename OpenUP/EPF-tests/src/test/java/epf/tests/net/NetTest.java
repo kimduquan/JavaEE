@@ -55,6 +55,7 @@ public class NetTest {
 	@After
 	public void tearDown() throws Exception {
 		client.close();
+		ClientUtil.afterClass();
 	}
 
 	@Test

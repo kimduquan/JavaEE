@@ -54,6 +54,7 @@ public class SchemaTest {
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		SecurityUtil.logOut(token);
+		ClientUtil.afterClass();
 	}
 
 	/**

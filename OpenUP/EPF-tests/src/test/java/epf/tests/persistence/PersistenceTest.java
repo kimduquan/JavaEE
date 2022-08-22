@@ -52,6 +52,7 @@ public class PersistenceTest {
     @AfterClass
     public static void afterClass() throws Exception{
     	SecurityUtil.logOut(token);
+		ClientUtil.afterClass();
     }
     
     @Before

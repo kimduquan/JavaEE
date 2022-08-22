@@ -58,6 +58,7 @@ public class QueryTest {
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		SecurityUtil.logOut(token);
+		ClientUtil.afterClass();
 	}
 
 	/**

@@ -65,6 +65,7 @@ public class ScheduleTest {
 		shell.close();
 		messages.clear();
 		SecurityUtil.logOut(token);
+		ClientUtil.afterClass();
 	}
 
 	/**
