@@ -20,6 +20,9 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+import javax.ws.rs.ForbiddenException;
+import javax.ws.rs.NotAuthorizedException;
+import javax.ws.rs.core.Response;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.Readiness;
 import epf.gateway.Registry;
@@ -111,11 +114,13 @@ public class Messaging {
 		}
 		if(!token.isPresent()) {
 			closeSession(path, session);
+			throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
 		}
 		else {
 			final URI securityUrl = registry.lookup(Naming.SECURITY).orElseThrow(() -> new NoSuchElementException(Naming.SECURITY));
 			if(!SecurityUtil.authenticate(securityUrl, token.get())) {
 				closeSession(path, session);
+				throw new ForbiddenException();
 			}
 		}
 	}
