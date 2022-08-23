@@ -7,9 +7,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -31,15 +28,16 @@ public class Application {
     transient Registry registry;
     
     /**
+     * @param client
      * @param service
      * @param jwt
      * @param headers
      * @param uriInfo
      * @param req
      * @param body
-     * @return
      */
-    public Invocation buildRequest(
+    public CompletionStage<Response> buildRequest(
+    		final Client client,
     		final String service,
     		final JsonWebToken jwt,
     		final HttpHeaders headers, 
@@ -47,38 +45,6 @@ public class Application {
             final javax.ws.rs.core.Request req,
             final InputStream body) {
     	final URI serviceUri = registry.lookup(service).orElseThrow(NotFoundException::new);
-		final Client client = ClientBuilder.newClient();
-		WebTarget target = client.target(serviceUri);
-		target = RequestUtil.buildTarget(target, uriInfo, jwt);
-		Invocation.Builder invoke = target.request();
-		final URI baseUri = uriInfo.getBaseUri();
-		invoke = RequestUtil.buildHeaders(invoke, headers, baseUri);
-		return RequestUtil.buildInvoke(invoke, req.getMethod(), headers.getMediaType(), body);
-    }
-    
-    /**
-     * @param service
-     * @param jwt
-     * @param headers
-     * @param uriInfo
-     * @param req
-     * @param body
-     * @return
-     */
-    public CompletionStage<Response> buildRxRequest(
-    		final String service,
-    		final JsonWebToken jwt,
-    		final HttpHeaders headers, 
-            final UriInfo uriInfo,
-            final javax.ws.rs.core.Request req,
-            final InputStream body) {
-    	final URI serviceUri = registry.lookup(service).orElseThrow(NotFoundException::new);
-		final Client client = ClientBuilder.newClient();
-		WebTarget target = client.target(serviceUri);
-		target = RequestUtil.buildTarget(target, uriInfo, jwt);
-		Invocation.Builder invoke = target.request();
-		final URI baseUri = uriInfo.getBaseUri();
-		invoke = RequestUtil.buildHeaders(invoke, headers, baseUri);
-		return RequestUtil.buildRxInvoke(invoke, req.getMethod(), headers.getMediaType(), body);
+		return RequestUtil.buildRequest(client, serviceUri, jwt, headers, uriInfo, req, body);
     }
 }

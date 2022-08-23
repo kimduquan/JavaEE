@@ -13,6 +13,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -67,7 +69,8 @@ public class Files {
     		final List<PathSegment> paths,
             final InputStream body
     ) throws Exception {
-    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.FILE, jwt, headers, uriInfo, req, body), uriInfo.getBaseUri());
+    	final Client client = ClientBuilder.newClient();
+    	return ResponseUtil.buildResponse(client, request.buildRequest(client, Naming.FILE, jwt, headers, uriInfo, req, body), uriInfo.getBaseUri());
     }
     
     /**
@@ -89,7 +92,8 @@ public class Files {
             @PathParam("paths")
     		final List<PathSegment> paths
     ) throws Exception {
-    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.FILE, jwt, headers, uriInfo, req, null), uriInfo.getBaseUri());
+    	final Client client = ClientBuilder.newClient();
+    	return ResponseUtil.buildResponse(client, request.buildRequest(client, Naming.FILE, jwt, headers, uriInfo, req, null), uriInfo.getBaseUri());
     }
     
     /**
@@ -110,6 +114,7 @@ public class Files {
             @PathParam("paths")
     		final List<PathSegment> paths
     ) throws Exception {
-    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.FILE, jwt, headers, uriInfo, req, null), uriInfo.getBaseUri());
+    	final Client client = ClientBuilder.newClient();
+    	return ResponseUtil.buildResponse(client, request.buildRequest(client, Naming.FILE, jwt, headers, uriInfo, req, null), uriInfo.getBaseUri());
     }
 }

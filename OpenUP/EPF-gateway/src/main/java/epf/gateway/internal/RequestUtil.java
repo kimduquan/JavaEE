@@ -11,6 +11,9 @@ import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import java.util.Map.Entry;
 import javax.ws.rs.ForbiddenException;
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
@@ -171,24 +174,6 @@ public interface RequestUtil {
      * @param body
      * @return
      */
-    static Invocation buildInvoke(
-    		final Builder invoker,
-    		final String method, 
-    		final MediaType type, 
-    		final InputStream body) {
-    	if(body == null || type == null) {
-    		return invoker.build(method);
-    	}
-    	return invoker.build(method, Entity.entity(body, type));
-    }
-    
-    /**
-     * @param invoker
-     * @param method
-     * @param type
-     * @param body
-     * @return
-     */
     static CompletionStage<Response> buildRxInvoke(
     		final Builder invoker,
     		final String method, 
@@ -198,6 +183,31 @@ public interface RequestUtil {
     		return invoker.rx().method(method);
     	}
     	return invoker.rx().method(method, Entity.entity(body, type));
+    }
+    
+    /**
+     * @param client
+     * @param serviceUri
+     * @param jwt
+     * @param headers
+     * @param uriInfo
+     * @param req
+     * @param body
+     */
+    static CompletionStage<Response> buildRequest(
+    		final Client client,
+    		final URI serviceUri,
+    		final JsonWebToken jwt,
+    		final HttpHeaders headers, 
+            final UriInfo uriInfo,
+            final javax.ws.rs.core.Request req,
+            final InputStream body) {
+		WebTarget target = client.target(serviceUri);
+		target = RequestUtil.buildTarget(target, uriInfo, jwt);
+		Invocation.Builder invoke = target.request();
+		final URI baseUri = uriInfo.getBaseUri();
+		invoke = RequestUtil.buildHeaders(invoke, headers, baseUri);
+		return RequestUtil.buildRxInvoke(invoke, req.getMethod(), headers.getMediaType(), body);
     }
     
     /**

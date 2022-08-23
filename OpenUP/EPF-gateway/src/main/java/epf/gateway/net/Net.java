@@ -15,6 +15,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericType;
@@ -73,7 +74,8 @@ public class Net {
             @Context final javax.ws.rs.core.Request req,
             final InputStream body
     ) throws Exception {
-    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.NET, null, headers, uriInfo, req, body), uriInfo.getBaseUri());
+    	final Client client = ClientBuilder.newClient();
+    	return ResponseUtil.buildResponse(client, request.buildRequest(client, Naming.NET, null, headers, uriInfo, req, body), uriInfo.getBaseUri());
     }
     
     /**
@@ -89,8 +91,8 @@ public class Net {
     ) throws Exception {
     	final long id = StringUtil.fromShortString(url);
     	final URI queryUrl = registry.lookup(Naming.QUERY).orElseThrow(NotFoundException::new);
-    	return ClientBuilder.newClient()
-    			.target(queryUrl)
+    	final Client client = ClientBuilder.newClient();
+    	return client.target(queryUrl)
     			.path("entity")
     			.path("EPF_Net")
     			.path("URL")
@@ -110,6 +112,9 @@ public class Net {
 						LOGGER.log(Level.SEVERE, e.getMessage(), e);
 					}
     		    	return response;
+    			})
+    			.whenComplete((r, err) -> {
+    				client.close();
     			});
     }
 }

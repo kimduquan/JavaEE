@@ -14,6 +14,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -63,7 +65,8 @@ public class Security {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.SECURITY, null, headers, uriInfo, req, body), uriInfo.getBaseUri());
+		final Client client = ClientBuilder.newClient();
+    	return ResponseUtil.buildResponse(client, request.buildRequest(client, Naming.SECURITY, null, headers, uriInfo, req, body), uriInfo.getBaseUri());
     }
     
     /**
@@ -82,7 +85,8 @@ public class Security {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req
             ) throws Exception {
-    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.SECURITY, jwt, headers, uriInfo, req, null), uriInfo.getBaseUri());
+		final Client client = ClientBuilder.newClient();
+    	return ResponseUtil.buildResponse(client, request.buildRequest(client, Naming.SECURITY, jwt, headers, uriInfo, req, null), uriInfo.getBaseUri());
     }
     
     /**
@@ -100,7 +104,8 @@ public class Security {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req) throws Exception {
-    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.SECURITY, jwt, headers, uriInfo, req, null), uriInfo.getBaseUri());
+		final Client client = ClientBuilder.newClient();
+    	return ResponseUtil.buildResponse(client, request.buildRequest(client, Naming.SECURITY, jwt, headers, uriInfo, req, null), uriInfo.getBaseUri());
     }
     
     /**
@@ -120,7 +125,8 @@ public class Security {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.SECURITY, jwt, headers, uriInfo, req, body), uriInfo.getBaseUri());
+		final Client client = ClientBuilder.newClient();
+    	return ResponseUtil.buildResponse(client, request.buildRequest(client, Naming.SECURITY, jwt, headers, uriInfo, req, body), uriInfo.getBaseUri());
     }
     
     /**
@@ -140,7 +146,8 @@ public class Security {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req) throws Exception {
-    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.SECURITY, jwt, headers, uriInfo, req, null), uriInfo.getBaseUri());
+		final Client client = ClientBuilder.newClient();
+    	return ResponseUtil.buildResponse(client, request.buildRequest(client, Naming.SECURITY, jwt, headers, uriInfo, req, null), uriInfo.getBaseUri());
     }
     
     /**
@@ -163,7 +170,8 @@ public class Security {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.SECURITY, null, headers, uriInfo, req, body), uriInfo.getBaseUri());
+		final Client client = ClientBuilder.newClient();
+    	return ResponseUtil.buildResponse(client, request.buildRequest(client, Naming.SECURITY, null, headers, uriInfo, req, body), uriInfo.getBaseUri());
     }
     
     /**
@@ -184,6 +192,7 @@ public class Security {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.SECURITY, jwt, headers, uriInfo, req, body), uriInfo.getBaseUri());
+		final Client client = ClientBuilder.newClient();
+    	return ResponseUtil.buildResponse(client, request.buildRequest(client, Naming.SECURITY, jwt, headers, uriInfo, req, body), uriInfo.getBaseUri());
     }
 }

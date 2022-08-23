@@ -12,6 +12,8 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -65,7 +67,8 @@ public class Persistence {
             @PathParam("schema") final String schema,
             @PathParam("entity") final String entity,
             final InputStream body) throws Exception {
-    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.PERSISTENCE, jwt, headers, uriInfo, req, body), uriInfo.getBaseUri());
+    	final Client client = ClientBuilder.newClient();
+    	return ResponseUtil.buildResponse(client, request.buildRequest(client, Naming.PERSISTENCE, jwt, headers, uriInfo, req, body), uriInfo.getBaseUri());
     }
     
     /**
@@ -90,7 +93,8 @@ public class Persistence {
             @PathParam("id") final String entityId,
             final InputStream body
             ) throws Exception {
-    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.PERSISTENCE, jwt, headers, uriInfo, req, body), uriInfo.getBaseUri());
+    	final Client client = ClientBuilder.newClient();
+    	return ResponseUtil.buildResponse(client, request.buildRequest(client, Naming.PERSISTENCE, jwt, headers, uriInfo, req, body), uriInfo.getBaseUri());
     }
     
     /**
@@ -111,6 +115,7 @@ public class Persistence {
             @PathParam("schema") final String schema,
             @PathParam("entity") final String entity,
             @PathParam("id") final String entityId) throws Exception {
-    	return ResponseUtil.buildRxResponse(request.buildRxRequest(Naming.PERSISTENCE, jwt, headers, uriInfo, req, null), uriInfo.getBaseUri());
+    	final Client client = ClientBuilder.newClient();
+    	return ResponseUtil.buildResponse(client, request.buildRequest(client, Naming.PERSISTENCE, jwt, headers, uriInfo, req, null), uriInfo.getBaseUri());
     }
 }
