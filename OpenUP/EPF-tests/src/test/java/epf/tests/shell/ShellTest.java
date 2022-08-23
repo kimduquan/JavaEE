@@ -81,7 +81,6 @@ public class ShellTest {
 		Path out = Files.createTempFile(tempDir, "out", "out");
 		ProcessBuilder builder = new ProcessBuilder();
 		builder.directory(workingDir.toFile());
-		builder.environment().put(Naming.Gateway.GATEWAY_URL, ConfigUtil.getString(Naming.Gateway.GATEWAY_URL));
 		builder.redirectOutput(out.toFile());
 		tokenID = ShellUtil.securityAuth(builder, token, out).getTokenID();
 		Files.delete(out);
