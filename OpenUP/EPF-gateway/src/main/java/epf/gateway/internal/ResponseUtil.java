@@ -1,5 +1,6 @@
 package epf.gateway.internal;
 
+import java.io.InputStream;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Set;
@@ -55,8 +56,9 @@ public interface ResponseUtil {
      */
     static CompletionStage<Response> buildResponse(final Client client, final CompletionStage<Response> res, final URI baseUri){
     	return res.thenApply(response -> {
-    		response.bufferEntity();
         	ResponseBuilder builder = Response.fromResponse(response);
+    		final InputStream input = response.readEntity(InputStream.class);
+    		builder = builder.entity(input);
     		Set<Link> links = response.getLinks();
     		if(links != null){
     			links = links
@@ -65,8 +67,10 @@ public interface ResponseUtil {
     					.collect(Collectors.toSet());
     			builder = builder.links().links(links.toArray(new Link[0]));
     		}
-    		return builder.build();
+    		final Response newResponse = builder.build();
+    		return newResponse;
     	}).whenComplete((r, err) -> {
+    		r.bufferEntity();
     		client.close();
     	});
     }

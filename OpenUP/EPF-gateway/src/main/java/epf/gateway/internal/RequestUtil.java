@@ -11,9 +11,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import java.util.Map.Entry;
 import javax.ws.rs.ForbiddenException;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
@@ -174,7 +172,7 @@ public interface RequestUtil {
      * @param body
      * @return
      */
-    static CompletionStage<Response> buildRxInvoke(
+    static CompletionStage<Response> buildInvoke(
     		final Builder invoker,
     		final String method, 
     		final MediaType type, 
@@ -207,7 +205,7 @@ public interface RequestUtil {
 		Invocation.Builder invoke = target.request();
 		final URI baseUri = uriInfo.getBaseUri();
 		invoke = RequestUtil.buildHeaders(invoke, headers, baseUri);
-		return RequestUtil.buildRxInvoke(invoke, req.getMethod(), headers.getMediaType(), body);
+		return RequestUtil.buildInvoke(invoke, req.getMethod(), headers.getMediaType(), body);
     }
     
     /**
