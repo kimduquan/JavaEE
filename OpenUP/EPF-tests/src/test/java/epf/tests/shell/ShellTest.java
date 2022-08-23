@@ -98,7 +98,6 @@ public class ShellTest {
 	public static void tearDownAfterClass() throws Exception {
 		ProcessBuilder builder = new ProcessBuilder();
 		builder.directory(workingDir.toFile());
-		builder.environment().put(Naming.Gateway.GATEWAY_URL, ConfigUtil.getString(Naming.Gateway.GATEWAY_URL));
 		ShellUtil.securityLogout(builder, tokenID);
 		ShellUtil.securityLogout(builder, otherTokenID);
 		tempDir.toFile().delete();
@@ -115,7 +114,6 @@ public class ShellTest {
 		err = Files.createTempFile(tempDir, "err", "err");
 		builder = new ProcessBuilder();
 		builder.directory(workingDir.toFile());
-		builder.environment().put(Naming.Gateway.GATEWAY_URL, ConfigUtil.getString(Naming.Gateway.GATEWAY_URL));
 		builder.redirectError(err.toFile());
 		builder.redirectInput(in.toFile());
 		builder.redirectOutput(out.toFile());
