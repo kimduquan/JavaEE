@@ -34,7 +34,6 @@ import epf.tests.persistence.PersistenceUtil;
 import epf.tests.rules.RulesUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
-import epf.util.config.ConfigUtil;
 import epf.work_products.schema.Artifact;
 import epf.work_products.schema.WorkProducts;
 import epf.work_products.schema.section.Description;
