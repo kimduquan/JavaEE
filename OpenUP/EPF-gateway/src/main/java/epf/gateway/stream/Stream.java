@@ -12,20 +12,17 @@ import javax.annotation.security.PermitAll;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
-import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseEventSink;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.Readiness;
 import epf.gateway.Registry;
-import epf.gateway.security.SecurityUtil;
 import epf.naming.Naming;
 import epf.util.logging.LogManager;
 import epf.util.websocket.Client;
@@ -122,21 +119,15 @@ public class Stream {
 			final Sse sse,
 			@QueryParam("token")
 			final String token) throws Exception {
-		final URI securityUrl = registry.lookup(Naming.SECURITY).orElseThrow(() -> new NoSuchElementException(Naming.SECURITY));
-		if(SecurityUtil.authenticate(securityUrl, token)) {
-			clients.computeIfPresent(path, (p, client) -> {
-				final Broadcaster broadcaster = broadcasters.computeIfAbsent(
-						path, p2 -> {
-							final Broadcaster newBroadcaster = new Broadcaster(client, sse);
-							executor.submit(newBroadcaster);
-							return newBroadcaster;
-						});
-				broadcaster.register(sink);
-				return client;
-			});
-		}
-		else {
-			throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
-		}
+		clients.computeIfPresent(path, (p, client) -> {
+			final Broadcaster broadcaster = broadcasters.computeIfAbsent(
+					path, p2 -> {
+						final Broadcaster newBroadcaster = new Broadcaster(client, sse);
+						executor.submit(newBroadcaster);
+						return newBroadcaster;
+					});
+			broadcaster.register(sink);
+			return client;
+		});
 	}
 }

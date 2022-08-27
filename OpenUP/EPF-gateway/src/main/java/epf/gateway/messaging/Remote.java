@@ -1,89 +1,112 @@
 package epf.gateway.messaging;
 
-import java.io.IOException;
 import java.net.URI;
+import java.util.Map;
 import java.util.Objects;
-import java.util.logging.Logger;
-import javax.websocket.CloseReason;
-import javax.websocket.DeploymentException;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.websocket.Session;
-import epf.util.logging.LogManager;
+import epf.naming.Naming;
+import epf.util.StringUtil;
 import epf.util.websocket.Client;
-import epf.util.websocket.Message;
-import epf.util.websocket.MessageHandler;
-import epf.util.websocket.MessageTopic;
 
 /**
  * @author PC
  *
  */
-public class Remote implements Runnable, AutoCloseable {
+public class Remote implements AutoCloseable {
 	
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = LogManager.getLogger(Remote.class.getName());
+	private transient Client client;
 	
 	/**
-	 * 
+	 *
 	 */
-	private transient final Client client;
+	private final URI url;
 	
 	/**
-	 * 
+	 *
 	 */
-	private transient final MessageTopic messages;
+	private final String path;
+	
+	/**
+	 *
+	 */
+	private transient final Map<String, Session> sessions;
 	
 	/**
 	 * @param uri
-	 * @throws DeploymentException
-	 * @throws IOException
+	 * @param tenant
+	 * @param service
+	 * @param path
 	 */
-	public Remote(final URI uri) throws DeploymentException, IOException {
+	public Remote(final URI uri, final String path) {
 		Objects.requireNonNull(uri, "URI");
-		client = Client.connectToServer(uri);
-		messages = new MessageTopic();
-		client.onMessage(this::addMessage);
+		this.url = uri;
+		this.path = path;
+		this.sessions = new ConcurrentHashMap<>();
 	}
 	
 	/**
 	 * @param message
 	 */
-	protected void addMessage(final String message) {
-		messages.add(new Message(message));
+	private void onMessage(final String message) {
+		sessions.values().forEach(session -> {
+			session.getAsyncRemote().sendText(message);
+		});
 	}
 
 	@Override
 	public void close() throws Exception {
 		client.close();
-		messages.close();
+	}
+	
+	/**
+	 * @throws Exception
+	 */
+	public void connectToServer() throws Exception {
+		client = Client.connectToServer(url);
+		client.onMessage(this::onMessage);
 	}
 	
 	/**
 	 * @param session
 	 */
-	public void onOpen(final Session session) {
-		messages.addConsumer(session.getId(), new MessageHandler(session));
-    }
- 
-    /**
-     * @param session
-     * @param closeReason
-     */
-    public void onClose(final Session session, final CloseReason closeReason) {
-    	messages.removeConsumer(session.getId());
-    }
-    
-    /**
-     * @param session
-     * @param throwable
-     */
-    public void onError(final Session session, final Throwable throwable) {
-    	LOGGER.throwing(getClass().getName(), "onError", throwable);
-    }
+	public void putSession(final Session session) {
+		sessions.put(session.getId(), session);
+	}
+	
+	/**
+	 * @param session
+	 * @return
+	 */
+	public Session removeSession(final Session session) {
+		return sessions.remove(session.getId());
+	}
 
-	@Override
-	public void run() {
-		messages.run();
+	public String getPath() {
+		return path;
+	}
+	
+	/**
+	 * @param tenant
+	 * @param service
+	 * @param path
+	 * @return
+	 */
+	public static String pathOf(final Optional<String> tenant, final String service, final String... path) {
+		return StringUtil.join(tenant.orElse(Naming.Messaging.DEFAULT_PATH), service, path.length > 0 ? StringUtil.join(path) : Naming.Messaging.DEFAULT_PATH);
+	}
+	
+	/**
+	 * @param tenant
+	 * @param service
+	 * @param path
+	 * @return
+	 */
+	public static String urlOf(final Optional<String> tenant, final String service, final String... path) {
+		return String.join("/", tenant.orElse(Naming.Messaging.DEFAULT_PATH), service, path.length > 0 ? String.join("/", path) : Naming.Messaging.DEFAULT_PATH);
 	}
 }

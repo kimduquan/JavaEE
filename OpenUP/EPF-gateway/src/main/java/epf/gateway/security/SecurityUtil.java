@@ -4,7 +4,9 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletionStage;
 import javax.websocket.Session;
+import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -33,15 +35,14 @@ public interface SecurityUtil {
 	}
 	
 	/**
+	 * @param client
 	 * @param securityUrl
 	 * @param token
 	 * @return
 	 */
-	static boolean authenticate(final URI securityUrl, final String token) {
+	static CompletionStage<Response> authenticate(final Client client, final URI securityUrl, final String token) {
 		final StringBuilder builder = new StringBuilder();
 		builder.append("Bearer ").append(token);
-		try(Response response = ClientBuilder.newClient().target(securityUrl).request(MediaType.APPLICATION_JSON_TYPE).header(HttpHeaders.AUTHORIZATION, builder.toString()).get()){
-			return response.getStatus() == Response.Status.OK.getStatusCode();
-		}
+		return client.target(securityUrl).request(MediaType.APPLICATION_JSON_TYPE).header(HttpHeaders.AUTHORIZATION, builder.toString()).rx().get();
 	}
 }

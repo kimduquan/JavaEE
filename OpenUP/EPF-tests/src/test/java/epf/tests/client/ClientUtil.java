@@ -4,6 +4,7 @@ import java.net.URI;
 import java.nio.file.Path;
 import java.security.KeyStore;
 import javax.json.JsonObject;
+import javax.net.ssl.SSLContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
@@ -12,6 +13,7 @@ import epf.client.util.ClientQueue;
 import epf.naming.Naming;
 import epf.util.config.ConfigUtil;
 import epf.util.security.KeyStoreUtil;
+import epf.util.ssl.SSLContextUtil;
 
 public class ClientUtil {
 
@@ -22,6 +24,8 @@ public class ClientUtil {
 	private static KeyStore keyStore;
 	
 	private transient static char[] keyPassword;
+	
+	private static SSLContext sslContext;
 
 	private static JacksonJsonProvider buildJsonProvider() {
 		SimpleModule module = new SimpleModule();
@@ -59,6 +63,13 @@ public class ClientUtil {
 			}
     		clients = queue;
     		keyPassword = ConfigUtil.getChars(Naming.Client.SSL_KEY_PASSWORD);
+    		try {
+				sslContext = SSLContextUtil.getDefault(SSLContextUtil.TLS, keyStore, keyStorePassword);
+			} 
+    		catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
     	}
     	return clients;
     }
@@ -75,5 +86,9 @@ public class ClientUtil {
     	if(clients != null) {
     		clients.close();
     	}
+    }
+    
+    public static SSLContext getSSLContext() {
+    	return sslContext;
     }
 }

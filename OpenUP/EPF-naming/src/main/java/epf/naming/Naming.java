@@ -318,6 +318,10 @@ public interface Naming {
 	     */
 	    String MESSAGING_URL = "epf.messaging.url";
 		
+	    /**
+	     *
+	     */
+	    String DEFAULT_PATH = "_";
 	}
 	
 	/**

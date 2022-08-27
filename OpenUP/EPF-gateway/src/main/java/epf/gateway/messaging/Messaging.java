@@ -4,39 +4,39 @@ import java.net.URI;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.annotation.security.PermitAll;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
-import javax.websocket.OnError;
-import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
-import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
-import org.eclipse.microprofile.context.ManagedExecutor;
+import javax.ws.rs.core.Response.Status;
 import org.eclipse.microprofile.health.Readiness;
 import epf.gateway.Registry;
 import epf.gateway.security.SecurityUtil;
 import epf.naming.Naming;
+import epf.util.StringUtil;
 import epf.util.logging.LogManager;
 
 /**
  * @author PC
  *
  */
-@ServerEndpoint("/messaging/{path}")
+@ServerEndpoint("/messaging/{tenant}/{service}/{path}")
 @ApplicationScoped
-@PermitAll
 public class Messaging {
 	
 	/**
@@ -55,10 +55,9 @@ public class Messaging {
 	private final transient Map<String, Remote> remotes = new ConcurrentHashMap<>();
 	
 	/**
-	 * 
+	 *
 	 */
-	@Inject
-	transient ManagedExecutor executor;
+	private URI messagingUrl;
 	
 	/**
 	 * 
@@ -72,13 +71,13 @@ public class Messaging {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI messagingUrl = registry.lookup(Naming.MESSAGING).orElseThrow(() -> new NoSuchElementException(Naming.MESSAGING));
-			final Remote persistence = new Remote(messagingUrl.resolve(Naming.PERSISTENCE));
-			remotes.put(Naming.PERSISTENCE, persistence);
-			executor.submit(persistence);
+			messagingUrl = registry.lookup(Naming.MESSAGING).orElseThrow(() -> new NoSuchElementException(Naming.MESSAGING));
+			final Remote remote = new Remote(messagingUrl.resolve(Remote.urlOf(Optional.empty(), Naming.QUERY)), Remote.pathOf(Optional.empty(), Naming.QUERY));
+			remote.connectToServer();
+			remotes.put(remote.getPath(), remote);
 		} 
 		catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "postConstruct", e);
+			LOGGER.log(Level.SEVERE, "[Messaging.remotes]", e);
 		}
 	}
 	
@@ -87,7 +86,7 @@ public class Messaging {
 	 */
 	@PreDestroy
 	protected void preDestroy() {
-		remotes.values().parallelStream().forEach(server -> {
+		remotes.values().stream().forEach(server -> {
 			try {
 				server.close();
 			} 
@@ -103,77 +102,108 @@ public class Messaging {
 	 * @throws Exception 
 	 */
 	@OnOpen
-    public void onOpen(@PathParam(PATH) final String path, final Session session) throws Exception {
-		final Optional<String> token = SecurityUtil.getToken(session);
-		if(token.isPresent()) {
-			remotes.computeIfPresent(path, (p, remote) -> {
-				remote.onOpen(session);
-				return remote;
-				}
-			);
-		}
-		if(!token.isPresent()) {
-			closeSession(path, session);
-			throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
-		}
-		else {
-			final URI securityUrl = registry.lookup(Naming.SECURITY).orElseThrow(() -> new NoSuchElementException(Naming.SECURITY));
-			if(!SecurityUtil.authenticate(securityUrl, token.get())) {
-				closeSession(path, session);
-				throw new ForbiddenException();
+    public void onOpen(
+    		@PathParam(Naming.Management.TENANT)
+    		final String tenant,
+    		@PathParam("service")
+    		final String service,
+    		@PathParam(PATH) 
+    		final String path, 
+    		final Session session) throws Exception {
+		final String remotePath = getRemotePath(tenant, service, path);
+		if(remotes.containsKey(remotePath)) {
+			final Optional<String> token = SecurityUtil.getToken(session);
+			if(token.isPresent()) {
+				authenticate(token.get(), remotePath, session);
+			}
+			else {
+				closeSession(session, new CloseReason(CloseReason.CloseCodes.VIOLATED_POLICY, ""));
+				throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build());
 			}
 		}
+		else {
+			closeSession(session, new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, ""));
+			throw new NotFoundException();
+		}
+	}
+	
+	/**
+	 * @param tenant
+	 * @param service
+	 * @param path
+	 * @return
+	 * @throws Exception 
+	 */
+	private String getRemotePath(final String tenant, final String service, final String path) throws Exception {
+		final String decodedPath = StringUtil.decodeURL(path);
+		return Remote.pathOf(Optional.of(tenant), service, decodedPath.split("/"));
+	}
+	
+	/**
+	 * @param token
+	 * @param remotePath
+	 * @param session
+	 */
+	private void authenticate(final String token, final String remotePath, final Session session) {
+		final URI securityUrl = registry.lookup(Naming.SECURITY).orElseThrow(() -> new NoSuchElementException(Naming.SECURITY));
+		final Client client = ClientBuilder.newClient();
+		final CompletionStage<Response> response = SecurityUtil.authenticate(client, securityUrl, token);
+		response.thenApply(res -> res.getStatus() == Status.OK.getStatusCode()).whenComplete((isOk, err) -> {
+			if(err != null || !isOk) {
+				closeSession(session, new CloseReason(CloseReason.CloseCodes.VIOLATED_POLICY, ""));
+			}
+			else {
+				openSession(remotePath, session);
+			}
+			client.close();
+		});
 	}
 	
 	/**
 	 * @param path
 	 * @param session
-	 * @throws Exception 
 	 */
-	protected void closeSession(final String path, final Session session) throws Exception {
-		final CloseReason reason = new CloseReason(CloseReason.CloseCodes.VIOLATED_POLICY, "");
+	private void openSession(final String path, final Session session) {
 		remotes.computeIfPresent(path, (p, remote) -> {
-			remote.onClose(session, reason);
+			remote.putSession(session);
 			return remote;
-			}
-		);
-		session.close(reason);
+		});
+	}
+	
+	/**
+	 * @param session
+	 * @param reason
+	 */
+	private void closeSession(final Session session, final CloseReason reason) {
+		try {
+			session.close(reason);
+			session.close();
+		}
+		catch(Exception ex) {
+			LOGGER.log(Level.WARNING, "Session.close", ex);
+		}
 	}
 	
 	/**
 	 * @param path
 	 * @param session
 	 * @param closeReason
+	 * @throws Exception 
 	 */
 	@OnClose
-    public void onClose(@PathParam(PATH) final String path, final Session session, final CloseReason closeReason) {
-		remotes.computeIfPresent(path, (p, remote) -> {
-			remote.onClose(session, closeReason);
-			return remote;
-			}
-		);
-	}
-	
-	/**
-	 * @param path
-	 * @param message
-	 * @param session
-	 */
-	@OnMessage
-    public void onMessage(@PathParam(PATH) final String path, final String message, final Session session) {
-		
-	}
-	
-	/**
-	 * @param path
-	 * @param session
-	 * @param throwable
-	 */
-	@OnError
-    public void onError(@PathParam(PATH) final String path, final Session session, final Throwable throwable) {
-		remotes.computeIfPresent(path, (p, remote) -> {
-			remote.onError(session, throwable);
-			return remote;
+    public void onClose(
+    		@PathParam(Naming.Management.TENANT)
+    		final String tenant,
+    		@PathParam("service")
+    		final String service,
+    		@PathParam(PATH) 
+    		final String path,
+    		final Session session, 
+    		final CloseReason closeReason) throws Exception {
+		final String remotePath = getRemotePath(tenant, service, path);
+		remotes.computeIfPresent(remotePath, (p, remote) -> {
+			remote.removeSession(session);
+			return null;
 			}
 		);
 	}

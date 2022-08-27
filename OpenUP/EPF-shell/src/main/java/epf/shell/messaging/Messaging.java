@@ -2,22 +2,21 @@ package epf.shell.messaging;
 
 import java.io.PrintWriter;
 import java.net.URI;
+import java.util.Optional;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.net.ssl.SSLContext;
 import javax.validation.constraints.NotBlank;
-import javax.websocket.ContainerProvider;
-import javax.websocket.Session;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import epf.messaging.client.Client;
 import epf.naming.Naming;
 import epf.shell.Function;
 import epf.shell.SYSTEM;
 import epf.shell.security.CallerPrincipal;
 import epf.shell.security.Credential;
 import epf.shell.security.SecurityUtil;
-import epf.util.StringUtil;
 import epf.util.ssl.SSLContextUtil;
 import io.undertow.websockets.DefaultWebSocketClientSslProvider;
 import picocli.CommandLine.ArgGroup;
@@ -81,11 +80,23 @@ public class Messaging {
 			@ArgGroup(exclusive = true, multiplicity = "1")
 			@CallerPrincipal
 			final Credential credential,
-			@Option(names = {"-p", "--path"}, required = true, description = "Path")
+			@Option(names = {"-tn", "--tenant"}, description = "Tenant")
+			final String tenant,
+			@Option(names = {"-s", "--service"}, required = true, description = "Service")
 			@NotBlank
+			final String service,
+			@Option(names = {"-p", "--path"}, description = "Path")
 			final String path) throws Exception {
-		final Session session = ContainerProvider.getWebSocketContainer().connectToServer(MessagingClient.class, messagingUrl.resolve(path + "?token=" + StringUtil.encodeURL(credential.getToken())));
+		URI url;
+		if(path != null) {
+			final String[] paths = path.split("/");
+			url = epf.messaging.client.Messaging.getUrl(messagingUrl, Optional.ofNullable(tenant), service, Optional.of(credential.getToken()), paths);
+		}
+		else {
+			url = epf.messaging.client.Messaging.getUrl(messagingUrl, Optional.ofNullable(tenant), service, Optional.of(credential.getToken()));
+		}
+		final Client client = epf.messaging.client.Messaging.connectToServer(url, MessagingClient.class);
 		System.in.read();
-		session.close();
+		client.close();
 	}
 }

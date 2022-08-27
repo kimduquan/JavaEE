@@ -1,5 +1,6 @@
 package epf.util;
 
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.time.Instant;
@@ -227,5 +228,14 @@ public interface StringUtil {
 	 */
 	static String encodeURL(final String string) throws Exception {
 		return URLEncoder.encode(string, "UTF-8");
+	}
+	
+	/**
+	 * @param string
+	 * @return
+	 * @throws Exception
+	 */
+	static String decodeURL(final String string) throws Exception {
+		return URLDecoder.decode(string, "UTF-8");
 	}
 }
