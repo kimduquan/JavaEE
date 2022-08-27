@@ -3,6 +3,7 @@ package epf.tests.messaging;
 import java.net.URI;
 import java.time.Duration;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import org.junit.After;
@@ -10,7 +11,6 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Rule;
 import epf.messaging.client.Client;
 import epf.messaging.client.Messaging;
@@ -35,7 +35,6 @@ import io.undertow.websockets.jsr.DefaultWebSocketClientSslProvider;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
-@Ignore
 public class MessagingTest {
 	
 	static URI messagingUrl;
@@ -69,7 +68,7 @@ public class MessagingTest {
     
     @Before
     public void before() throws Exception {
-    	client = Messaging.connectToServer(messagingUrl, null, Naming.QUERY, token);
+    	client = Messaging.connectToServer(messagingUrl, Optional.empty(), Naming.QUERY, Optional.of(token));
     	messages = new ConcurrentLinkedQueue<>();
     	client.onMessage(messages::add);
     	TestUtil.waitUntil(t -> client.getSession().isOpen(), Duration.ofSeconds(20));
@@ -109,7 +108,7 @@ public class MessagingTest {
     
     @Test
     public void testInvalidToken() throws Exception {
-    	try(Client invalidClient = Messaging.connectToServer(messagingUrl, null, Naming.QUERY, "invalid")){
+    	try(Client invalidClient = Messaging.connectToServer(messagingUrl, Optional.empty(), Naming.QUERY, Optional.of("invalid"))){
         	TestUtil.waitUntil(t -> !invalidClient.getSession().isOpen(), Duration.ofSeconds(10));
         	Assert.assertFalse("Client.session.open", invalidClient.getSession().isOpen());
     	}

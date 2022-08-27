@@ -8,7 +8,6 @@ import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -59,22 +58,6 @@ public class Server implements HealthCheck {
 	 */
 	@Inject @Readiness
 	transient Registry registry;
-	
-	/**
-	 * 
-	 */
-	@PostConstruct
-	protected void postConstruct() {
-		try {
-			messagingUrl = registry.lookup(Naming.MESSAGING).orElseThrow(() -> new NoSuchElementException(Naming.MESSAGING));
-			final Remote remote = new Remote(messagingUrl.resolve(Remote.urlOf(Optional.empty(), Naming.QUERY)), Remote.pathOf(Optional.empty(), Naming.QUERY));
-			remote.connectToServer();
-			remotes.put(remote.getPath(), remote);
-		} 
-		catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "[Server.remotes]", e);
-		}
-	}
 	
 	/**
 	 * 
@@ -205,6 +188,20 @@ public class Server implements HealthCheck {
 
 	@Override
 	public HealthCheckResponse call() {
+		if(remotes.isEmpty()) {
+			messagingUrl = registry.lookup(Naming.MESSAGING).orElseThrow(() -> new NoSuchElementException(Naming.MESSAGING));
+			final Remote remote = new Remote(messagingUrl.resolve(Remote.urlOf(Optional.empty(), Naming.QUERY)), Remote.pathOf(Optional.empty(), Naming.QUERY));
+			try {
+				remote.connectToServer();
+				remotes.put(remote.getPath(), remote);
+			} 
+			catch (Exception e) {
+				LOGGER.log(Level.SEVERE, "[Server.remotes]", e);
+			}
+		}
+		if(remotes.isEmpty()) {
+			return HealthCheckResponse.down("EPF-gateway-messaging");
+		}
 		return HealthCheckResponse.up("EPF-gateway-messaging");
 	}
 }

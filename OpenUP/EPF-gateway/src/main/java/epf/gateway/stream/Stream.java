@@ -3,6 +3,7 @@ package epf.gateway.stream;
 import java.net.URI;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,6 +24,7 @@ import javax.ws.rs.sse.SseEventSink;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.Readiness;
 import epf.gateway.Registry;
+import epf.gateway.messaging.Remote;
 import epf.naming.Naming;
 import epf.util.logging.LogManager;
 import epf.util.websocket.Client;
@@ -69,7 +71,7 @@ public class Stream {
 	protected void postConstruct() {
 		try {
 			final URI messagingUrl = registry.lookup(Naming.MESSAGING).orElseThrow(() -> new NoSuchElementException(Naming.MESSAGING));
-			clients.put(Naming.PERSISTENCE, Client.connectToServer(messagingUrl.resolve(Naming.PERSISTENCE)));
+			clients.put(Naming.QUERY, Client.connectToServer(messagingUrl.resolve(Remote.urlOf(Optional.empty(), Naming.QUERY))));
 		} 
 		catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "postConstruct", e);

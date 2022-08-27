@@ -54,6 +54,9 @@ public class Registry implements HealthCheck  {
 			.getLinks()
 			.forEach(link -> remotes.put(link.getRel(), link.getUri()));
 		}
+		if(remotes.isEmpty()) {
+			return HealthCheckResponse.down("EPF-gateway-registry");
+		}
 		return HealthCheckResponse.up("EPF-gateway-registry");
 	}
 }
