@@ -8,8 +8,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.HEAD;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -19,7 +17,6 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
-import epf.gateway.internal.ResponseUtil;
 import epf.naming.Naming;
 
 /**
@@ -57,8 +54,7 @@ public class Search {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final Request req) throws Exception {
-		final Client client = ClientBuilder.newClient();
-    	return ResponseUtil.buildResponse(client, request.buildRequest(client, Naming.SEARCH, jwt, headers, uriInfo, req, null), uriInfo.getBaseUri());
+		return request.buildRequest(Naming.SEARCH, jwt, headers, uriInfo, req, null);
     }
 	
 	/**
@@ -75,7 +71,6 @@ public class Search {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final Request req) throws Exception {
-		final Client client = ClientBuilder.newClient();
-    	return ResponseUtil.buildResponse(client, request.buildRequest(client, Naming.SEARCH, jwt, headers, uriInfo, req, null), uriInfo.getBaseUri());
+		return request.buildRequest(Naming.SEARCH, jwt, headers, uriInfo, req, null);
     }
 }

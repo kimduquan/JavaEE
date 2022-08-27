@@ -49,12 +49,11 @@ public interface ResponseUtil {
     }
     
     /**
-     * @param client
      * @param res
      * @param baseUri
      * @return
      */
-    static CompletionStage<Response> buildResponse(final Client client, final CompletionStage<Response> res, final URI baseUri){
+    static CompletionStage<Response> buildResponse(final CompletionStage<Response> res, final URI baseUri){
     	return res.thenApply(response -> {
         	ResponseBuilder builder = Response.fromResponse(response);
     		final InputStream input = response.readEntity(InputStream.class);
@@ -68,10 +67,8 @@ public interface ResponseUtil {
     			builder = builder.links().links(links.toArray(new Link[0]));
     		}
     		final Response newResponse = builder.build();
+    		newResponse.bufferEntity();
     		return newResponse;
-    	}).whenComplete((r, err) -> {
-    		r.bufferEntity();
-    		client.close();
     	});
     }
 }

@@ -6,8 +6,6 @@ import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -15,7 +13,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import epf.gateway.Application;
-import epf.gateway.internal.ResponseUtil;
 import epf.naming.Naming;
 
 /**
@@ -46,7 +43,6 @@ public class Config {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req) throws Exception {
-    	final Client client = ClientBuilder.newClient();
-    	return ResponseUtil.buildResponse(client, request.buildRequest(client, Naming.CONFIG, null, headers, uriInfo, req, null), uriInfo.getBaseUri());
+    	return request.buildRequest(Naming.CONFIG, null, headers, uriInfo, req, null);
     }
 }

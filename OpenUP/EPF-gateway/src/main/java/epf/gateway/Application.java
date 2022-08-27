@@ -12,7 +12,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.jwt.JsonWebToken;
-import epf.gateway.internal.RequestUtil;
+import epf.client.util.ClientQueue;
+import epf.gateway.internal.RequestBuilder;
 
 /**
  *
@@ -20,6 +21,9 @@ import epf.gateway.internal.RequestUtil;
  */
 @ApplicationScoped
 public class Application {
+	
+	@Inject
+	transient ClientQueue clients;
     
     /**
      * 
@@ -28,23 +32,26 @@ public class Application {
     transient Registry registry;
     
     /**
-     * @param client
      * @param service
      * @param jwt
      * @param headers
      * @param uriInfo
      * @param req
      * @param body
+     * @return
      */
     public CompletionStage<Response> buildRequest(
-    		final Client client,
     		final String service,
     		final JsonWebToken jwt,
     		final HttpHeaders headers, 
             final UriInfo uriInfo,
             final javax.ws.rs.core.Request req,
             final InputStream body) {
-    	final URI serviceUri = registry.lookup(service).orElseThrow(NotFoundException::new);
-		return RequestUtil.buildRequest(client, serviceUri, jwt, headers, uriInfo, req, body);
+    	final URI serviceUrl = registry.lookup(service).orElseThrow(NotFoundException::new);
+    	final Client client = clients.poll(serviceUrl, null);
+    	final RequestBuilder builder = new RequestBuilder(client, serviceUrl, jwt, req, headers, uriInfo, body);
+    	return builder.build().whenComplete((response, error) -> {
+    		clients.add(serviceUrl, client);
+    	});
     }
 }

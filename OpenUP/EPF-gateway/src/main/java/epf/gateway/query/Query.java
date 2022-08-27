@@ -13,8 +13,6 @@ import javax.ws.rs.PATCH;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -25,7 +23,6 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
-import epf.gateway.internal.ResponseUtil;
 import epf.naming.Naming;
 
 /**
@@ -68,8 +65,7 @@ public class Query {
             @PathParam("schema") final String schema,
             @PathParam("entity") final String entity,
             @PathParam("id") final String entityId) throws Exception {
-    	final Client client = ClientBuilder.newClient();
-    	return ResponseUtil.buildResponse(client, request.buildRequest(client, Naming.QUERY, jwt, headers, uriInfo, req, null), uriInfo.getBaseUri());
+    	return request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, null);
     }
 	
 	/**
@@ -90,8 +86,7 @@ public class Query {
             @PathParam("schema") final String schema,
             @PathParam("entity") final String entity
             ) throws Exception {
-    	final Client client = ClientBuilder.newClient();
-    	return ResponseUtil.buildResponse(client, request.buildRequest(client, Naming.QUERY, jwt, headers, uriInfo, req, null), uriInfo.getBaseUri());
+    	return request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, null);
     }
 	
 	/**
@@ -112,8 +107,7 @@ public class Query {
             @Context final UriInfo uriInfo,
             @Context final Request req,
             final InputStream body) throws Exception {
-    	final Client client = ClientBuilder.newClient();
-    	return ResponseUtil.buildResponse(client, request.buildRequest(client, Naming.QUERY, jwt, headers, uriInfo, req, body), uriInfo.getBaseUri());
+    	return request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, body);
     }
 	
 	/**
@@ -140,8 +134,7 @@ public class Query {
             final String schema,
             @PathParam("criteria")
             final List<PathSegment> paths) throws Exception {
-    	final Client client = ClientBuilder.newClient();
-    	return ResponseUtil.buildResponse(client, request.buildRequest(client, Naming.QUERY, jwt, headers, uriInfo, req, null), uriInfo.getBaseUri());
+    	return request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, null);
 	}
 	
 	/**
@@ -167,7 +160,6 @@ public class Query {
             final String schema,
             @PathParam("criteria")
             final List<PathSegment> paths) throws Exception {
-		final Client client = ClientBuilder.newClient();
-    	return ResponseUtil.buildResponse(client, request.buildRequest(client, Naming.QUERY, jwt, headers, uriInfo, req, null), uriInfo.getBaseUri());
+		return request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, null);
     	}
 }
