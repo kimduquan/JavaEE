@@ -51,6 +51,7 @@ public class Application {
     	final Client client = clients.poll(serviceUrl, null);
     	final RequestBuilder builder = new RequestBuilder(client, serviceUrl, jwt, req, headers, uriInfo, body);
     	return builder.build().whenComplete((response, error) -> {
+    		response.bufferEntity();
     		clients.add(serviceUrl, client);
     	});
     }
