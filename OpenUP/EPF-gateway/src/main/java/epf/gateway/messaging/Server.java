@@ -174,7 +174,7 @@ public class Server implements HealthCheck {
 	private void removeSession(final String path, final Session session) {
 		remotes.computeIfPresent(path, (p, remote) -> {
 			remote.removeSession(session);
-			return null;
+			return remote;
 			}
 		);
 	}
