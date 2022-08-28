@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.client.Client;
@@ -50,15 +51,14 @@ public class Registry implements HealthCheck  {
 	String registryUrl;
 	
 	/**
-	 * @param name
-	 * @return
+	 * 
 	 */
-	public Optional<URI> lookup(final String name) {
-		return MapUtil.get(remotes, name);
+	@PostConstruct
+	protected void postConstruct() {
+		initialize();
 	}
-
-	@Override
-	public HealthCheckResponse call() {
+	
+	private void initialize() {
 		if(remotes.isEmpty()) {
 			try {
 				final Client client = clients.poll(new URI(registryUrl), null);
@@ -74,6 +74,19 @@ public class Registry implements HealthCheck  {
 				LOGGER.log(Level.SEVERE, "[Registry.call]", ex);
 			}
 		}
+	}
+	
+	/**
+	 * @param name
+	 * @return
+	 */
+	public Optional<URI> lookup(final String name) {
+		return MapUtil.get(remotes, name);
+	}
+
+	@Override
+	public HealthCheckResponse call() {
+		initialize();
 		if(remotes.isEmpty()) {
 			return HealthCheckResponse.down("EPF-gateway-registry");
 		}

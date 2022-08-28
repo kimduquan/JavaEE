@@ -71,6 +71,9 @@ public class Server implements HealthCheck {
 	@Inject
 	transient ClientQueue clients;
 	
+	/**
+	 * 
+	 */
 	@PostConstruct
 	protected void postConstruct() {
 		initialize();
