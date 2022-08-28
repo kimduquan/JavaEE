@@ -96,6 +96,7 @@ public class Messaging {
 			url = epf.messaging.client.Messaging.getUrl(messagingUrl, Optional.ofNullable(tenant), service, Optional.of(credential.getToken()));
 		}
 		final Client client = epf.messaging.client.Messaging.connectToServer(url, MessagingClient.class);
+		out.println(client.getSession().getId());
 		System.in.read();
 		client.close();
 	}

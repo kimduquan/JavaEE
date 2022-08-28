@@ -5,9 +5,14 @@ import java.nio.file.Path;
 import java.security.KeyStore;
 import javax.json.JsonObject;
 import javax.net.ssl.SSLContext;
+import javax.websocket.ContainerProvider;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
+
+import org.eclipse.jetty.websocket.jsr356.ClientContainer;
+
 import epf.client.util.Client;
 import epf.client.util.ClientQueue;
 import epf.naming.Naming;
@@ -70,6 +75,19 @@ public class ClientUtil {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+
+        	/*ClientContainer container = (ClientContainer) ContainerProvider.getWebSocketContainer();
+        	container.getClient().getSslContextFactory().setSslContext(ClientUtil.getSSLContext());
+        	container.getClient().getSslContextFactory().setTrustAll(true);
+        	container.getClient().getSslContextFactory().setTrustStore(trustStore);
+        	container.getClient().getSslContextFactory().setTrustStoreType(trustStoreType);
+        	container.getClient().getSslContextFactory().setTrustStorePassword(new String(trustStorePassword));
+        	container.getClient().getSslContextFactory().setKeyStore(keyStore);
+        	container.getClient().getSslContextFactory().setKeyStorePassword(new String(keyStorePassword));
+        	container.getClient().getSslContextFactory().setKeyStoreType(keyStoreType);
+        	container.getClient().getSslContextFactory().setCertAlias("localhost");
+        	container.getClient().getSslContextFactory().setTrustStorePath(trustStoreFile.toString());
+        	container.getClient().getSslContextFactory().setKeyStorePath(keyStoreFile.toString());*/
     	}
     	return clients;
     }
@@ -89,6 +107,7 @@ public class ClientUtil {
     }
     
     public static SSLContext getSSLContext() {
+    	clients();
     	return sslContext;
     }
 }

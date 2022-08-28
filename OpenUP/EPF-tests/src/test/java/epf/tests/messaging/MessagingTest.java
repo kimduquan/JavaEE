@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import javax.websocket.ContainerProvider;
+import org.eclipse.jetty.websocket.jsr356.ClientContainer;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -31,7 +33,6 @@ import epf.work_products.schema.section.Illustrations;
 import epf.work_products.schema.section.MoreInformation;
 import epf.work_products.schema.section.Relationships;
 import epf.work_products.schema.section.Tailoring;
-import io.undertow.websockets.jsr.DefaultWebSocketClientSslProvider;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
@@ -51,7 +52,7 @@ public class MessagingTest {
     	HealthUtil.isReady();
     	messagingUrl = ConfigUtil.getURI(Naming.Gateway.MESSAGING_URL);
     	token = SecurityUtil.login();
-    	DefaultWebSocketClientSslProvider.setSslContext(ClientUtil.getSSLContext());
+		ClientUtil.getSSLContext();
     }
     
     @AfterClass

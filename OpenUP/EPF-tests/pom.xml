@@ -73,10 +73,10 @@
             <groupId>com.hazelcast</groupId>
             <artifactId>hazelcast</artifactId>
         </dependency>
-		<!-- https://mvnrepository.com/artifact/io.undertow/undertow-websockets-jsr -->
+		<!-- https://mvnrepository.com/artifact/org.eclipse.jetty.websocket/javax-websocket-client-impl -->
 		<dependency>
-		    <groupId>io.undertow</groupId>
-		    <artifactId>undertow-websockets-jsr</artifactId>
+		    <groupId>org.eclipse.jetty.websocket</groupId>
+		    <artifactId>javax-websocket-client-impl</artifactId>
 	    	<scope>test</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.glassfish/javax.json -->
@@ -408,6 +408,7 @@
 						<epf.client.net.ssl.trustStore>${project.basedir}/dev.p12</epf.client.net.ssl.trustStore>
 						<epf.client.net.ssl.trustStorePassword>changeit</epf.client.net.ssl.trustStorePassword>
 						<epf.client.net.ssl.trustStoreType>PKCS12</epf.client.net.ssl.trustStoreType>
+						<org.eclipse.jetty.websocket.jsr356.ssl-trust-all>true</org.eclipse.jetty.websocket.jsr356.ssl-trust-all>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>

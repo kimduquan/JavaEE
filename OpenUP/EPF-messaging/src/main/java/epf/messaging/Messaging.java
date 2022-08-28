@@ -6,6 +6,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
+import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
@@ -34,6 +35,8 @@ public class Messaging {
 	private final static String PATH = "path";
 
 	/**
+	 * @param tenant
+	 * @param service
 	 * @param path
 	 * @param session
 	 */
@@ -50,6 +53,28 @@ public class Messaging {
 	}
 	
 	/**
+	 * @param tenant
+	 * @param service
+	 * @param path
+	 * @param message
+	 * @param session
+	 */
+	@OnMessage
+    public void onMessage(
+    		@PathParam(Naming.Management.TENANT)
+    		final String tenant,
+    		@PathParam("service")
+    		final String service,
+    		@PathParam(PATH) 
+    		final String path,
+    		final String message, 
+    		final Session session) {
+		LOGGER.log(Level.INFO, String.format("[Messaging.message][%s/%s/%s]session.id=%s", tenant, service, path, session.getId()));
+	}
+	
+	/**
+	 * @param tenant
+	 * @param service
 	 * @param path
 	 * @param session
 	 * @param closeReason
@@ -68,6 +93,8 @@ public class Messaging {
 	}
 	
 	/**
+	 * @param tenant
+	 * @param service
 	 * @param path
 	 * @param session
 	 * @param throwable
