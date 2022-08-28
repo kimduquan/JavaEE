@@ -8,6 +8,7 @@ import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -54,6 +55,11 @@ public class Server implements HealthCheck {
 	private URI messagingUrl;
 	
 	/**
+	 *
+	 */
+	private URI securityUrl;
+	
+	/**
 	 * 
 	 */
 	@Inject @Readiness
@@ -64,6 +70,11 @@ public class Server implements HealthCheck {
 	 */
 	@Inject
 	transient ClientQueue clients;
+	
+	@PostConstruct
+	protected void postConstruct() {
+		initialize();
+	}
 	
 	/**
 	 * 
@@ -78,6 +89,21 @@ public class Server implements HealthCheck {
 				LOGGER.log(Level.SEVERE, "preDestroy", e);
 			}
 		});
+	}
+	
+	private void initialize() {
+		if(remotes.isEmpty()) {
+			messagingUrl = registry.lookup(Naming.MESSAGING).orElseThrow(() -> new NoSuchElementException(Naming.MESSAGING));
+			securityUrl = registry.lookup(Naming.SECURITY).orElseThrow(() -> new NoSuchElementException(Naming.SECURITY));
+			final Remote remote = new Remote(messagingUrl.resolve(Remote.urlOf(Optional.empty(), Naming.QUERY)), Remote.pathOf(Optional.empty(), Naming.QUERY));
+			try {
+				remote.connectToServer();
+				remotes.put(remote.getPath(), remote);
+			} 
+			catch (Exception e) {
+				LOGGER.log(Level.SEVERE, "[Server.remotes]", e);
+			}
+		}
 	}
 
 	/**
@@ -125,7 +151,6 @@ public class Server implements HealthCheck {
 	 * @param session
 	 */
 	private void authenticate(final String token, final String remotePath, final Session session) {
-		final URI securityUrl = registry.lookup(Naming.SECURITY).orElseThrow(() -> new NoSuchElementException(Naming.SECURITY));
 		final Client client = clients.poll(securityUrl, null);
 		final CompletionStage<Response> response = SecurityUtil.authenticate(client, securityUrl, token);
 		response.thenApply(res -> res.getStatus() == Status.OK.getStatusCode()).whenComplete((isOk, err) -> {
@@ -194,17 +219,7 @@ public class Server implements HealthCheck {
 
 	@Override
 	public HealthCheckResponse call() {
-		if(remotes.isEmpty()) {
-			messagingUrl = registry.lookup(Naming.MESSAGING).orElseThrow(() -> new NoSuchElementException(Naming.MESSAGING));
-			final Remote remote = new Remote(messagingUrl.resolve(Remote.urlOf(Optional.empty(), Naming.QUERY)), Remote.pathOf(Optional.empty(), Naming.QUERY));
-			try {
-				remote.connectToServer();
-				remotes.put(remote.getPath(), remote);
-			} 
-			catch (Exception e) {
-				LOGGER.log(Level.SEVERE, "[Server.remotes]", e);
-			}
-		}
+		initialize();
 		if(remotes.isEmpty()) {
 			return HealthCheckResponse.down("EPF-gateway-messaging");
 		}

@@ -34,7 +34,7 @@ public class MessagingClient {
 	 */
 	@OnMessage
     public void onMessage(final String message, final Session session) {
-		out.println(String.format("[%s]%s", session.getId(), message));
+		out.println(message);
 	}
 	
 	/**
@@ -43,7 +43,6 @@ public class MessagingClient {
 	 */
 	@OnError
 	public void onError(final Session session, final Throwable throwable) {
-		err.println(String.format("[%s]", session.getId()));
 		throwable.printStackTrace(err);
 	}
 }

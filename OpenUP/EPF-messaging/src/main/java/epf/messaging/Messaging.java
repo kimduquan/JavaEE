@@ -70,6 +70,9 @@ public class Messaging {
     		final String message, 
     		final Session session) {
 		LOGGER.log(Level.INFO, String.format("[Messaging.message][%s/%s/%s]session.id=%s", tenant, service, path, session.getId()));
+		session.getOpenSessions().stream().forEach(ss -> {
+			ss.getAsyncRemote().sendText(message);
+		});
 	}
 	
 	/**
