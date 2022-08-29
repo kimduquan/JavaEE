@@ -1,22 +1,15 @@
-/**
- * 
- */
 package epf.logging;
 
-import java.io.IOException;
 import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.websocket.DeploymentException;
-import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
-
 import epf.naming.Naming;
 import epf.util.config.ConfigUtil;
 import epf.util.websocket.Client;
@@ -40,25 +33,14 @@ public class LogManager implements HealthCheck {
 	private transient final Map<String, Logger> loggers = new ConcurrentHashMap<>();
 	
 	/**
-	 * 
-	 */
-	@Inject
-	private transient ManagedExecutor executor;
-	
-	/**
 	 * @param name
 	 * @param url
-	 * @throws DeploymentException
-	 * @throws IOException
+	 * @throws Exception
 	 */
-	protected void newLogger(final String name, final URI url) throws DeploymentException, IOException {
+	protected void newLogger(final String name, final URI url) throws Exception {
 		final Client client = Client.connectToServer(url);
 		final Logger logger = new Logger(name, client);
-		executor.submit(logger);
 		loggers.put(name, logger);
-		client.onMessage(message -> {
-			logger.add(message);
-		});
 	}
 	
 	/**
@@ -68,15 +50,10 @@ public class LogManager implements HealthCheck {
 	protected void postConstruct() {
 		try {
 			final URI messagingUrl = ConfigUtil.getURI(Naming.Messaging.MESSAGING_URL);
-			newLogger("EPF-persistence", messagingUrl.resolve(Naming.PERSISTENCE));
-			newLogger("EPF-security", messagingUrl.resolve(Naming.SECURITY));
-			newLogger("EPF-cache", messagingUrl.resolve(Naming.CACHE));
-			newLogger("EPF-shell-schedule", messagingUrl.resolve("schedule/shell"));
-			newLogger("EPF-persistence-load", messagingUrl.resolve("persistence/post-load"));
-			newLogger("EPF-file", messagingUrl.resolve(Naming.FILE));
+			newLogger("EPF-query", messagingUrl.resolve("_/query/_"));
 		}
 		catch(Exception ex) {
-			LOGGER.throwing(LOGGER.getName(), "postConstruct", ex);
+			LOGGER.throwing(LOGGER.getName(), "[LogManager.loggers]", ex);
 		}
 	}
 	
@@ -85,7 +62,14 @@ public class LogManager implements HealthCheck {
 	 */
 	@PreDestroy
 	protected void preDestroy() {
-		loggers.values().parallelStream().forEach(Logger::close);
+		loggers.values().stream().forEach(logger -> {
+			try {
+				logger.close();
+			} 
+			catch (Exception e) {
+				LOGGER.log(Level.WARNING, "[Logger.close]", e);
+			}
+		});
 		loggers.clear();
 	}
 

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.tests.schedule;
 
 import java.net.URI;
@@ -53,7 +50,7 @@ public class ScheduleTest {
 		URI messagingUrl = ConfigUtil.getURI(Naming.Messaging.MESSAGING_URL);
 		shell = epf.util.websocket.Client.connectToServer(messagingUrl.resolve("schedule/shell"));
 		messages = new ConcurrentLinkedQueue<>();
-		shell.onMessage(messages::add);
+		shell.onMessage((message, session) -> messages.add(message));
 	}
 
 	/**

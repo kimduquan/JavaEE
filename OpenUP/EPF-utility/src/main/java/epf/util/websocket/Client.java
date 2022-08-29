@@ -2,12 +2,16 @@ package epf.util.websocket;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import javax.websocket.ClientEndpoint;
+import javax.websocket.CloseReason;
 import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
+import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
 
@@ -26,12 +30,22 @@ public class Client implements AutoCloseable {
 	/**
 	 * 
 	 */
-	private transient Consumer<? super String> messageConsumer;
+	private transient BiConsumer<String, Session> messageConsumer;
 	
 	/**
 	 * 
 	 */
-	private transient Consumer<? super Throwable> errorConsumer;
+	private transient BiConsumer<Throwable, Session> errorConsumer;
+	
+	/**
+	 * 
+	 */
+	private transient BiConsumer<CloseReason, Session> closeConsumer;
+	
+	/**
+	 * 
+	 */
+	private transient Consumer<Session> openConsumer;
 	
 	/**
 	 * 
@@ -47,7 +61,16 @@ public class Client implements AutoCloseable {
 	@Override
 	public void close() throws Exception {
 		session.close();
-		messageConsumer = null;
+	}
+	
+	/**
+	 * @param session
+	 */
+	@OnOpen
+	public void onOpen(final Session session) {
+		if(openConsumer != null) {
+			openConsumer.accept(session);
+		}
 	}
 	
 	/**
@@ -57,32 +80,57 @@ public class Client implements AutoCloseable {
 	@OnMessage
     public void onMessage(final String message, final Session session) {
 		if(messageConsumer != null) {
-			messageConsumer.accept(message);
+			messageConsumer.accept(message, session);
 		}
 	}
 	
 	/**
+	 * @param reason
 	 * @param session
+	 */
+	@OnClose
+	public void onClose(final CloseReason reason, final Session session) {
+		if(closeConsumer != null) {
+			closeConsumer.accept(reason, session);
+		}
+	}
+	
+	/**
 	 * @param throwable
+	 * @param session
 	 */
 	@OnError
-	public void onError(final Session session, final Throwable throwable) {
+	public void onError(final Throwable throwable, final Session session) {
 		if(errorConsumer != null) {
-			errorConsumer.accept(throwable);
+			errorConsumer.accept(throwable, session);
 		}
+	}
+	
+	/**
+	 * @param openConsumer
+	 */
+	public void onOpen(final Consumer<Session> openConsumer) {
+		this.openConsumer = openConsumer;
 	}
 	
 	/**
 	 * @param messageConsumer
 	 */
-	public void onMessage(final Consumer<? super String> messageConsumer) {
+	public void onMessage(final BiConsumer<String, Session> messageConsumer) {
 		this.messageConsumer = messageConsumer;
+	}
+	
+	/**
+	 * @param closeConsumer
+	 */
+	public void onClose(final BiConsumer<CloseReason, Session> closeConsumer) {
+		this.closeConsumer = closeConsumer;
 	}
 	
 	/**
 	 * @param errorConsumer
 	 */
-	public void onError(final Consumer<? super Throwable> errorConsumer) {
+	public void onError(final BiConsumer<Throwable, Session> errorConsumer) {
 		this.errorConsumer = errorConsumer;
 	}
 	

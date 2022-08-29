@@ -49,10 +49,7 @@ public class Remote implements AutoCloseable {
 		this.sessions = new ConcurrentHashMap<>();
 	}
 	
-	/**
-	 * @param message
-	 */
-	private void onMessage(final String message) {
+	private void onMessage(final String message, final Session ss) {
 		sessions.values().forEach(session -> {
 			session.getAsyncRemote().sendText(message);
 		});

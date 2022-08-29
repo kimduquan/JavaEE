@@ -1,22 +1,14 @@
-/**
- * 
- */
 package epf.logging;
 
 import java.util.Objects;
-import epf.util.concurrent.ObjectQueue;
+import java.util.logging.Level;
 import epf.util.websocket.Client;
 
 /**
  * @author PC
  *
  */
-public class Logger extends ObjectQueue<String> {
-	
-	/**
-	 * 
-	 */
-	private static transient final java.util.logging.Logger LOGGER = epf.util.logging.LogManager.getLogger(Logger.class.getName());
+public class Logger implements AutoCloseable {
 	
 	/**
 	 * 
@@ -30,27 +22,20 @@ public class Logger extends ObjectQueue<String> {
 	
 	/**
 	 * @param name
+	 * @param client
 	 */
 	public Logger(final String name, final Client client) {
 		Objects.requireNonNull(name, "String");
 		Objects.requireNonNull(client, "Client");
 		logger = epf.util.logging.LogManager.getLogger(name);
 		this.client = client;
-	}
-
-	@Override
-	public void accept(final String log) {
-		logger.info(log);
+		this.client.onMessage((message, session) -> {
+			logger.log(Level.INFO, message);
+		});
 	}
 	
 	@Override
-	public void close() {
-		try {
-			client.close();
-		} 
-		catch (Exception e) {
-			LOGGER.throwing(LOGGER.getName(), "close", e);
-		}
-		super.close();
+	public void close() throws Exception {
+		client.close();
 	}
 }

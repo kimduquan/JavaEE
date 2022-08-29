@@ -78,7 +78,7 @@ public class ClientTest {
 		client.onMessage("messages", session);
 		
 		List<Object> messages = new ArrayList<>();
-		client.onMessage(msg -> {
+		client.onMessage((msg, ss) -> {
 			messages.add(msg);
 		});
 		client.onMessage("messages", session);
@@ -93,9 +93,9 @@ public class ClientTest {
 	@Test
 	public void testOnErrorConsumerOfQsuperThrowable() {
 		List<Throwable> errors = new ArrayList<>();
-		client.onError(errors::add);
+		client.onError((err, ss) -> errors.add(err));
 		Throwable error = Mockito.mock(Throwable.class);
-		client.onError(session, error);
+		client.onError(error, session);
 		Assert.assertFalse(errors.isEmpty());
 		Assert.assertSame(error, errors.get(0));
 	}
@@ -106,7 +106,7 @@ public class ClientTest {
 	@Test
 	public void testOnMessageConsumerOfQsuperObject() {
 		List<Object> messages = new ArrayList<>();
-		client.onMessage(msg -> {
+		client.onMessage((msg, ss) -> {
 			messages.add(msg);
 		});
 		client.onMessage("messages", session);
@@ -115,7 +115,7 @@ public class ClientTest {
 		Assert.assertEquals("messages", messages.get(0));
 		
 		List<Object> otherMessages = new ArrayList<>();
-		client.onMessage(msg -> {
+		client.onMessage((msg, ss) -> {
 			otherMessages.add(msg);
 		});
 		client.onMessage("otherMessages", session);

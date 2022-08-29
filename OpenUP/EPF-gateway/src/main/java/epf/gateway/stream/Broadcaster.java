@@ -37,7 +37,7 @@ public class Broadcaster extends ObjectQueue<String> {
 	public Broadcaster(final Client client, final Sse sse) {
 		this.builder = sse.newEventBuilder();
 		this.broadcaster = sse.newBroadcaster();
-		client.onMessage(this::add);
+		client.onMessage((message, session) -> add(message));
 	}
 
 	@Override

@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import javax.websocket.Session;
 import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.shell.util;
 
 import java.io.File;
@@ -276,8 +273,8 @@ public class Utility {
 			@Option(names = {"-u", "--uri"}, required = true, description = "URI") 
 			final URI uri) throws Exception {
 		try(epf.util.websocket.Client client = epf.util.websocket.Client.connectToServer(uri)){
-			client.onError(error -> error.printStackTrace());
-			client.onMessage(msg -> System.out.println(msg));
+			client.onError((error, session) -> error.printStackTrace());
+			client.onMessage((msg, session) -> System.out.println(msg));
 			try(Scanner scanner = new Scanner(System.in)){
 				while(scanner.hasNext()) {
 					final String line = scanner.next();
