@@ -80,7 +80,7 @@
 				</os>
 			</activation>
 			<properties>
-        		<pluto.home>/home/kimduquan/pluto-3.1.0/lib</pluto.home>
+        		<pluto.home>/home/kimduquan/pluto-3.1.1/lib</pluto.home>
 			</properties>
 		</profile>
 		<profile>
