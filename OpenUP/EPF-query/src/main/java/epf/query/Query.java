@@ -15,7 +15,7 @@ import epf.client.schema.EntityId;
 import epf.naming.Naming;
 import epf.query.internal.EntityCache;
 import epf.query.internal.QueryCache;
-import epf.query.internal.persistence.PersistenceCache;
+import epf.query.internal.persistence.PersistenceQuery;
 import epf.query.util.LinkUtil;
 
 /**
@@ -42,7 +42,7 @@ public class Query implements epf.client.query.Query {
 	 * 
 	 */
 	@Inject
-	private transient PersistenceCache persistence;
+	private transient PersistenceQuery persistence;
 	
 	@Override
     public Response getEntity(
