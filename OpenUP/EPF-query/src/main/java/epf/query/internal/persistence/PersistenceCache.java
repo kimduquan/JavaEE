@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,9 +15,6 @@ import javax.transaction.Transactional;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.SecurityContext;
-import org.eclipse.microprofile.health.HealthCheck;
-import org.eclipse.microprofile.health.HealthCheckResponse;
-import org.eclipse.microprofile.health.Readiness;
 import epf.naming.Naming;
 import epf.persistence.internal.Entity;
 import epf.persistence.internal.QueryBuilder;
@@ -35,9 +32,8 @@ import epf.util.logging.LogManager;
  * @author PC
  *
  */
-@ApplicationScoped
-@Readiness
-public class PersistenceCache implements HealthCheck {
+@RequestScoped
+public class PersistenceCache {
 	
 	/**
 	 *
@@ -83,11 +79,6 @@ public class PersistenceCache implements HealthCheck {
 		catch(Exception ex) {
 			LOGGER.log(Level.SEVERE, "[PersistenceCache.accept]", ex);
 		}
-	}
-
-	@Override
-	public HealthCheckResponse call() {
-		return HealthCheckResponse.up("EPF-persistence-cache");
 	}
 	
 	/**

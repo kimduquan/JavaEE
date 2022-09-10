@@ -44,7 +44,7 @@ public class Listener implements HealthCheck {
 	/**
 	 * 
 	 */
-	@Inject @Readiness
+	@Inject
 	private transient PersistenceCache cache;
 	
 	/**
