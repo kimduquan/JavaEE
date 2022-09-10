@@ -143,7 +143,7 @@ public class PersistenceQuery {
 				JsonUtil.toString(object);
 			} 
         	catch (Exception e) {
-				LOGGER.warning("[PersistenceCache][executeQuery]" + e.getMessage());
+				LOGGER.warning("[PersistenceQuery][executeQuery]" + e.getMessage());
 			}
         });
         return resultList;

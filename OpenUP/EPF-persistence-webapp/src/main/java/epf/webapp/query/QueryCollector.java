@@ -117,7 +117,7 @@ public class QueryCollector extends LazyDataModel<JsonObject> {
         	}
         } 
 		catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "[EntityCollector.entities]", e);
+			LOGGER.log(Level.SEVERE, "[QueryCollector.entities]", e);
 		}
 		return entities;
     }

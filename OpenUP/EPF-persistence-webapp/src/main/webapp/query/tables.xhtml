@@ -376,7 +376,7 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <h:form><p:dataTable value="#{epf_query_view.collector}" lazy="true" var="entityValue" tableStyleClass="table table-bordered" a:id="dataTable" tableStyle="width: 100%;" paginator="true" rows="10">
+                                <h:form><p:dataTable value="#{epf_query_view.collector}" lazy="true" var="entityValue" tableStyleClass="table table-bordered" a:id="dataTable" tableStyle="width: 100%;" paginator="true" rows="10" editable="true">
                                     <p:columns value="#{epf_query_view.attributes}" var="attribute" columnIndexVar="attributeIndex">
 							            <f:facet name="header">
 							                <h:outputText value="#{attribute.name}" />
@@ -384,8 +384,18 @@
 							            <f:facet name="footer">
 							                <h:outputText value="#{attribute.name}" />
 							            </f:facet>
-							            <h:outputText value="#{epf_query_view.getAttribute(entityValue, attribute.name)}" />
+							            <p:cellEditor>
+								            <f:facet name="output">
+								            	<h:outputText value="#{epf_query_view.getAttribute(entityValue, attribute.name)}" />
+								            </f:facet>
+								            <f:facet name="input">
+								            	<p:inputText style="width:100%" />
+								            </f:facet>
+							            </p:cellEditor>
 							        </p:columns>
+							        <p:column style="width:35px">
+							            <p:rowEditor />
+							        </p:column>
                                 </p:dataTable></h:form>
                             </div>
                         </div>
