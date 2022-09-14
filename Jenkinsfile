@@ -4,7 +4,8 @@ pipeline {
     stage('checkout') {
       steps {
         checkout([$class: 'GitSCM', 
-                branches: [[name: '*/native']])
+                branches: [[name: '*/native']]
+                ])
       }
     }
 
