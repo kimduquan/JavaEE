@@ -1,12 +1,12 @@
 pipeline {
   agent any
   stages {
-    stage('checkout') {
+    stage('dev') {
       steps {
-        checkout([$class: 'GitSCM', 
-                        branches: [[name: '*/native']]
-                        ])
-        dir(path: 'OpenUP')
+        dir(path: 'OpenUP') {
+          bat(script: 'dev.bat', returnStatus: true, returnStdout: true)
+        }
+
       }
     }
 
