@@ -3,7 +3,10 @@ pipeline {
   stages {
     stage('package') {
       steps {
-        dir(path: 'OpenUP')
+        dir(path: 'OpenUP') {
+          bat(returnStatus: true, returnStdout: true, script: 'mvn clean package')
+        }
+
       }
     }
 
