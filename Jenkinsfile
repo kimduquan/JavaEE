@@ -1,12 +1,9 @@
 pipeline {
   agent any
   stages {
-    stage('package') {
+    stage('checkout') {
       steps {
-        dir(path: 'OpenUP') {
-          bat(returnStatus: true, returnStdout: true, script: 'mvn clean package')
-        }
-
+        dir(path: 'OpenUP')
       }
     }
 
