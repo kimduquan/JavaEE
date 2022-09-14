@@ -1,12 +1,9 @@
 pipeline {
   agent any
   stages {
-    stage('dev') {
+    stage('package') {
       steps {
-        dir(path: 'OpenUP') {
-          bat(script: 'dev.bat', returnStatus: true, returnStdout: true)
-        }
-
+        dir(path: 'OpenUP')
       }
     }
 
