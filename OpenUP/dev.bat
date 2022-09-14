@@ -22,5 +22,5 @@ cd EPF-tests
 setlocal
 call ../env.bat
 call ../config.bat
-call mvn liberty:dev
+call mvn liberty:devc
 endlocal
