@@ -868,8 +868,7 @@
 		<module>EPF-messaging-webapp</module>
 		<module>EPF-webapp</module>
 		
-		<module>OpenUP-client</module>
-        <module>OpenUP-schema</module>
+		<module>OpenUP-schema</module>
 		
 		<module>EPF-portlet-client</module>
 		<module>EPF-portlet-utility</module>
