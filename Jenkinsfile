@@ -4,7 +4,7 @@ pipeline {
     stage('checkout') {
       steps {
         dir(path: 'OpenUP') {
-          bat 'mvn clean package'
+          bat 'mvn clean install -U'
         }
 
       }
