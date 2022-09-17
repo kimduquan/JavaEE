@@ -19,8 +19,4 @@ cd EPF-shell
 call ./dev.bat
 cd ../
 cd EPF-tests
-setlocal
-call ../env.bat
-call ../config.bat
-call mvn liberty:devc
-endlocal
+call ./dev.bat

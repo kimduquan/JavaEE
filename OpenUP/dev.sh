@@ -20,7 +20,5 @@ cd ../
 cd EPF-shell
 ./dev.sh &>/dev/null &
 cd ../
-. ./env.sh
-. ./config.sh
 cd EPF-tests
-mvn liberty:dev
+./dev.sh
