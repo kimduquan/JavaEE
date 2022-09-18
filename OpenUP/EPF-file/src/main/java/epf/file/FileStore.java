@@ -74,6 +74,7 @@ public class FileStore implements epf.client.file.Files {
 	protected void postConstruct() {
 		final Path rootPath = system.getPath(rootFolder);
 		try {
+			LOGGER.info("[FileStore]epf.file.root=" + rootPath.toAbsolutePath().toString());
 			Files.list(rootPath).forEach(watchService::register);
 		}
 		catch(Exception ex) {
