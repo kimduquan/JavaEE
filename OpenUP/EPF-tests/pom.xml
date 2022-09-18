@@ -51,6 +51,12 @@
 		<liberty.env.epf_batch_api_url>http://localhost:9080/ibm/</liberty.env.epf_batch_api_url>
 		<liberty.env.epf_net_url>http://localhost:9080/net/net/</liberty.env.epf_net_url>
 		<liberty.env.epf_net_http_port>9080</liberty.env.epf_net_http_port>
+		<liberty.env.epf_client_net_ssl_keyStorePassword>changeit</liberty.env.epf_client_net_ssl_keyStorePassword>
+		<liberty.env.epf_client_net_ssl_keyAlias>localhost</liberty.env.epf_client_net_ssl_keyAlias>
+		<liberty.env.epf_client_net_ssl_keyPassword>changeit</liberty.env.epf_client_net_ssl_keyPassword>
+		<liberty.env.epf_client_net_ssl_keyStoreType>PKCS12</liberty.env.epf_client_net_ssl_keyStoreType>
+		<liberty.env.epf_client_net_ssl_trustStorePassword>changeit</liberty.env.epf_client_net_ssl_trustStorePassword>
+		<liberty.env.epf_client_net_ssl_trustStoreType>PKCS12</liberty.env.epf_client_net_ssl_trustStoreType>
     </properties>
     <dependencies>
     	<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-queryparser -->
@@ -503,7 +509,7 @@
 					<verifyTimeout>600</verifyTimeout>
 					<serverStartTimeout>600</serverStartTimeout>
 					<applications>EPF-schedule,EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-query,EPF-file,EPF-mail,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-registry,EPF-management,EPF-security,EPF-security-management</applications>
-					<dockerRunOpts>-p 7286:7286</dockerRunOpts>
+					<dockerRunOpts>-p 7286:7286 -e epf_client_net_ssl_keyStore=/tmp/dev.p12 -e epf_client_net_ssl_trustStore=/tmp/dev.p12</dockerRunOpts>
 				</configuration>
             </plugin>
 			<plugin>
