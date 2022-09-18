@@ -23,4 +23,7 @@ RUN mv /tmp/EPF-query.mv.db ~/
 RUN mv /tmp/EPF-query.trace.db ~/
 RUN mv /tmp/EPF-security.mv.db ~/
 
+RUN mkdir /opt/ol/wlp/usr/servers/defaultServer/epf.file.root
+RUN mkdir /opt/ol/wlp/usr/servers/defaultServer/epf.file.cache.root
+
 RUN configure.sh
