@@ -15,6 +15,7 @@ cd %CUR_DIR%
 start .\webapp_startup.bat &
 cd %CUR_DIR%
 cd %KAFKA_HOME%
+set JAVA_HOME=%JAVA11_HOME%
 start .\kafka-server-start.bat ..\..\config\server.properties &
 cd %CUR_DIR%
 set JAVA_HOME=%JAVA11_HOME%
