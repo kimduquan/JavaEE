@@ -32,16 +32,6 @@ spec:
   # tag::healthProbes[]
   # tag::startupProbe[]
   probes:
-    startup:
-      failureThreshold: 12
-      httpGet:
-        path: /health/started
-        port: 9080
-        scheme: HTTP
-      initialDelaySeconds: 30
-      periodSeconds: 2
-      timeoutSeconds: 10
-  # end::startupProbe[]
   # tag::livenessProbe[]
     liveness:
       failureThreshold: 12
@@ -49,8 +39,8 @@ spec:
         path: /health/live
         port: 9080
         scheme: HTTP
-      initialDelaySeconds: 30
-      periodSeconds: 2
+      initialDelaySeconds: 600
+      periodSeconds: 60
       timeoutSeconds: 10
   # end::livenessProbe[]
   # tag::readinessProbe[]
@@ -60,8 +50,8 @@ spec:
         path: /health/ready
         port: 9080
         scheme: HTTP
-      initialDelaySeconds: 30
-      periodSeconds: 2
+      initialDelaySeconds: 600
+      periodSeconds: 60
       timeoutSeconds: 10
   # end::readinessProbe[]
   # end::healthProbes[]
