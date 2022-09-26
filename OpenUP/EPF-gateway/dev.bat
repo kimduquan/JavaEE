@@ -1,8 +1,7 @@
 del .\EPF-gateway.log.*
 setlocal
 call ../env.bat
-call ../config.bat
-call config.bat
+:: call ../config.bat
 call mvn clean install -U -Dquarkus.container-image.build=true
 :: call mvn quarkus:dev -Ddebug=5006
 call kubectl delete -f target/kubernetes/kubernetes.yml

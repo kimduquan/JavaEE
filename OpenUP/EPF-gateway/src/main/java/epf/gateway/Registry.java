@@ -69,6 +69,9 @@ public class Registry implements HealthCheck  {
 				.getLinks()
 				.forEach(link -> remotes.put(link.getRel(), link.getUri()));
 				clients.add(new URI(registryUrl), client);
+				remotes.forEach((name, url) -> {
+					LOGGER.info(String.format("%s=%s", name, url));
+				});
 			}
 			catch(Exception ex) {
 				LOGGER.log(Level.SEVERE, "[Registry.call]", ex);

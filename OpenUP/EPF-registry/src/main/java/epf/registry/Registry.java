@@ -218,6 +218,9 @@ public class Registry implements epf.client.registry.Registry {
 			remotes.put(Naming.PLANNING, planningUrl);
 			remotes.put(Naming.IMAGE, imageUrl);
 			remotes.put("lang", langUrl);
+			remotes.forEach((name, url) -> {
+				LOGGER.info(String.format("%s=%s", name, url));
+			});
 		} 
 		catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "postConstruct", e);
@@ -234,6 +237,9 @@ public class Registry implements epf.client.registry.Registry {
 		if(version != null && !version.isEmpty()) {
 			remoteURIs = remoteVersions.computeIfAbsent(version, ver -> new ConcurrentHashMap<>());
 		}
+		remoteURIs.forEach((name, url) -> {
+			LOGGER.info(String.format("%s=%s", name, url));
+		});
 		return remoteURIs;
 	}
 	
