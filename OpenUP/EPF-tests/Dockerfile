@@ -16,6 +16,8 @@ COPY --chown=1001:0 EPF-query.trace.db /tmp/
 COPY --chown=1001:0 EPF-security.mv.db /tmp/
 COPY --chown=1001:0 dev.p12 /tmp/
 
+ENV epf_client_net_ssl_trustStore=/tmp/dev.p12
+
 USER root
 
 RUN mv /tmp/EPF-security.trace.db ~/

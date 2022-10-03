@@ -10,8 +10,8 @@ mkdir -p "./target/servers/test/epf.file.root/"
 setlocal
 call ../env.bat
 call ../config.bat
+call mvn package -U
 call docker build -t openup:1.0.0 ./
 call kubectl delete -f ../deploy.yaml
-:: call mvn liberty:devc
 call kubectl apply -f ../deploy.yaml
 endlocal

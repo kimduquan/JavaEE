@@ -24,9 +24,9 @@ spec:
     pathType: ImplementationSpecific
   # tag::systemEnv[]
   env:
-    - name: WLP_LOGGING_MESSAGE_FORMAT
-      value: "json"
-    - name: WLP_LOGGING_MESSAGE_SOURCE
+    - name: WLP_LOGGING_CONSOLE_FORMAT
+      value: "simple"
+    - name: WLP_LOGGING_CONSOLE_SOURCE
       value: "message,trace,accessLog,ffdc,audit"
   # end::systemEnv[]
   # tag::healthProbes[]
