@@ -11,14 +11,12 @@ COPY --chown=1001:0 target/servers/test/hazelcast-config.xml /config/
 
 COPY --chown=1001:0 target/shared /liberty/usr/shared
 
-COPY EPF-security.trace.db /tmp/
-COPY EPF-query.mv.db /tmp/
-COPY EPF-query.trace.db /tmp/
-COPY EPF-security.mv.db /tmp/
+COPY --chown=1001:0 dev.p12 /
 
-COPY --chown=1001:0 dev.p12 /tmp/
-
-ENV epf_client_net_ssl_trustStore=/tmp/dev.p12
+COPY --chown=1001:0 EPF-security.trace.db /liberty/usr/
+COPY --chown=1001:0 EPF-query.mv.db /liberty/usr/
+COPY --chown=1001:0 EPF-query.trace.db /liberty/usr/
+COPY --chown=1001:0 EPF-security.mv.db /liberty/usr/
 
 RUN mkdir /config/epf.file.root
 RUN mkdir /config/epf.file.cache.root
@@ -28,16 +26,7 @@ COPY --chown=1001:0 target/servers/test/epf.file.root /config/epf.file.root
 COPY --chown=1001:0 target/servers/test/server.xml /config/
 COPY --chown=1001:0 target/servers/test/apps /config/apps
 
-USER root
-
-RUN mv /tmp/EPF-security.trace.db ~/
-RUN mv /tmp/EPF-query.mv.db ~/
-RUN mv /tmp/EPF-query.trace.db ~/
-RUN mv /tmp/EPF-security.mv.db ~/
-
 # RUN yum -y install opencv
-
-USER 1001
 
 CMD ["/opt/ol/wlp/bin/server", "run", "defaultServer"]
 

@@ -18,6 +18,7 @@
         <httpsWebPort>443</httpsWebPort>
         <portalPort>8080</portalPort>
         <gatewayPort>9543</gatewayPort>
+		<userHome>~/</userHome>
         <!-- Jaeger configuration -->
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
@@ -511,7 +512,7 @@
 					<verifyTimeout>600</verifyTimeout>
 					<serverStartTimeout>600</serverStartTimeout>
 					<applications>EPF-schedule,EPF-script,EPF-config,EPF-messaging,EPF-logging,EPF-batch,EPF-cache,EPF-query,EPF-file,EPF-mail,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-registry,EPF-management,EPF-security,EPF-security-management</applications>
-					<dockerRunOpts>-p 7286:7286 -e epf_client_net_ssl_keyStore=/tmp/dev.p12 -e epf_client_net_ssl_trustStore=/tmp/dev.p12</dockerRunOpts>
+					<dockerRunOpts>-p 7286:7286</dockerRunOpts>
 				</configuration>
             </plugin>
 			<plugin>
@@ -553,6 +554,8 @@
 			</activation>
 			<properties>
 				<httpHost>localhost</httpHost>
+				<liberty.env.epf_client_net_ssl_keyStore>~/git/JavaEE/OpenUP/dev.p12</liberty.env.epf_client_net_ssl_keyStore>
+				<liberty.env.epf_client_net_ssl_trustStore>~/git/JavaEE/OpenUP/dev.p12</liberty.env.epf_client_net_ssl_trustStore>
         		<geckodriver>./geckodriver</geckodriver>
         		<shell_runner>./target/EPF-shell-${project.version}-runner</shell_runner>
         		<opencv_java>/usr/share/java/opencv-420.jar</opencv_java>
@@ -568,6 +571,8 @@
 			</activation>
 			<properties>
 				<httpHost>localhost</httpHost>
+				<liberty.env.epf_client_net_ssl_keyStore>C://GIT/JavaEE/OpenUP/dev.p12</liberty.env.epf_client_net_ssl_keyStore>
+				<liberty.env.epf_client_net_ssl_trustStore>C://GIT/JavaEE/OpenUP/dev.p12</liberty.env.epf_client_net_ssl_trustStore>
         		<geckodriver>./geckodriver.exe</geckodriver>
         		<shell_runner>C://GIT/JavaEE/OpenUP/EPF-shell/target/EPF-shell-${project.version}-runner.exe</shell_runner>
         		<opencv_java>C://Program Files/opencv/build/java/opencv-452.jar</opencv_java>
@@ -583,6 +588,9 @@
 			</activation>
 			<properties>
 				<httpHost>openup.default.svc.cluster.local</httpHost>
+				<userHome>/liberty/usr/</userHome>
+				<liberty.env.epf_client_net_ssl_keyStore>/dev.p12</liberty.env.epf_client_net_ssl_keyStore>
+				<liberty.env.epf_client_net_ssl_trustStore>/dev.p12</liberty.env.epf_client_net_ssl_trustStore>
         		<geckodriver>./geckodriver</geckodriver>
         		<shell_runner>./target/EPF-shell-${project.version}-runner</shell_runner>
         		<opencv_java>/usr/share/java/opencv-420.jar</opencv_java>

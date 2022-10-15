@@ -161,7 +161,7 @@
             javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
             javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
             libraryRef="H2JDBCLib" />
-        <properties URL="jdbc:h2:~/EPF-security;AUTO_SERVER=TRUE;AUTO_RECONNECT=TRUE;PASSWORD_HASH=TRUE" user="test" password="22ddf5abe1672b3d6c12fe7387ecc15e2ff0f405595dd756111b17d29b5f4486" />
+        <properties URL="jdbc:h2:${userHome}EPF-security;AUTO_SERVER=TRUE;AUTO_RECONNECT=TRUE;PASSWORD_HASH=TRUE" user="test" password="22ddf5abe1672b3d6c12fe7387ecc15e2ff0f405595dd756111b17d29b5f4486" />
     </dataSource>
 	<dataSource id="epf_security" jndiName="jdbc/epf_security">
         <jdbcDriver 
@@ -169,7 +169,7 @@
             javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
             javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
             libraryRef="H2JDBCLib" />
-        <properties URL="jdbc:h2:~/EPF-security;AUTO_SERVER=TRUE;AUTO_RECONNECT=TRUE;PASSWORD_HASH=TRUE" user="test" password="22ddf5abe1672b3d6c12fe7387ecc15e2ff0f405595dd756111b17d29b5f4486" />
+        <properties URL="jdbc:h2:${userHome}EPF-security;AUTO_SERVER=TRUE;AUTO_RECONNECT=TRUE;PASSWORD_HASH=TRUE" user="test" password="22ddf5abe1672b3d6c12fe7387ecc15e2ff0f405595dd756111b17d29b5f4486" />
     </dataSource>
     <dataSource id="epf_cache" jndiName="jdbc/epf_cache">
         <jdbcDriver 
@@ -177,7 +177,7 @@
             javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
             javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
             libraryRef="H2JDBCLib" />
-        <properties URL="jdbc:h2:~/EPF-cache;AUTO_SERVER=TRUE;AUTO_RECONNECT=TRUE;PASSWORD_HASH=TRUE" user="test" password="22ddf5abe1672b3d6c12fe7387ecc15e2ff0f405595dd756111b17d29b5f4486" />
+        <properties URL="jdbc:h2:${userHome}EPF-cache;AUTO_SERVER=TRUE;AUTO_RECONNECT=TRUE;PASSWORD_HASH=TRUE" user="test" password="22ddf5abe1672b3d6c12fe7387ecc15e2ff0f405595dd756111b17d29b5f4486" />
     </dataSource>
     <dataSource id="epf_query" jndiName="jdbc/epf_query">
         <jdbcDriver 
@@ -185,7 +185,7 @@
             javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
             javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
             libraryRef="H2LuceneLib" />
-        <properties URL="jdbc:h2:~/EPF-query;AUTO_SERVER=TRUE;AUTO_RECONNECT=TRUE;PASSWORD_HASH=TRUE" user="test" password="22ddf5abe1672b3d6c12fe7387ecc15e2ff0f405595dd756111b17d29b5f4486" />
+        <properties URL="jdbc:h2:${userHome}EPF-query;AUTO_SERVER=TRUE;AUTO_RECONNECT=TRUE;PASSWORD_HASH=TRUE" user="test" password="22ddf5abe1672b3d6c12fe7387ecc15e2ff0f405595dd756111b17d29b5f4486" />
     </dataSource>
 
     <keyStore id="defaultKeyStore" password="password"/>
