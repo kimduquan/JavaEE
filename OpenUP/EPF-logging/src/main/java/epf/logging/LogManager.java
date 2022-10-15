@@ -49,7 +49,7 @@ public class LogManager implements HealthCheck {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI messagingUrl = ConfigUtil.getURI(Naming.Messaging.MESSAGING_URL);
+			final URI messagingUrl = ConfigUtil.getURI(Naming.Messaging.Internal.URL);
 			newLogger("EPF-query", messagingUrl.resolve("_/query/_"));
 		}
 		catch(Exception ex) {

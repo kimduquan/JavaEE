@@ -39,7 +39,8 @@
         <liberty.env.epf_security_webapp_url>https://localhost/security/</liberty.env.epf_security_webapp_url>
         <liberty.env.epf_gateway_url>https://${httpHost}:9543/gateway/</liberty.env.epf_gateway_url>
         <liberty.env.epf_gateway_messaging_url>https://${httpHost}:9543/messaging/</liberty.env.epf_gateway_messaging_url>
-        <liberty.env.epf_messaging_url>ws://localhost:${httpPort}/messaging/messaging/</liberty.env.epf_messaging_url>
+        <liberty.env.epf_messaging_url>ws://${httpHost}:${httpPort}/messaging/messaging/</liberty.env.epf_messaging_url>
+		<liberty.env.epf_messaging_internal_url>ws://localhost:${httpPort}/messaging/messaging/</liberty.env.epf_messaging_internal_url>
         <liberty.env.epf_lang_url>ws://${httpHost}:${httpPort}/lang/lang/</liberty.env.epf_lang_url>
         <liberty.env.epf_cache_url>http://${httpHost}:${httpPort}/cache/cache/</liberty.env.epf_cache_url>
         <liberty.env.epf_query_url>http://${httpHost}:${httpPort}/query/query/</liberty.env.epf_query_url>

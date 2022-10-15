@@ -322,6 +322,17 @@ public interface Naming {
 	     *
 	     */
 	    String DEFAULT_PATH = "_";
+	    
+	    /**
+	     * 
+	     */
+	    interface Internal {
+	    	
+	    	/**
+	    	 *
+	    	 */
+	    	String URL = "epf.messaging.internal.url";
+	    }
 	}
 	
 	/**
