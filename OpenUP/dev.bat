@@ -3,16 +3,16 @@ call ./clean.bat
 call ./startup.bat
 call ./compile.bat
 cd EPF-transaction-internal
-start dev.bat
+call ./dev.bat
 cd ../
 cd EPF-transaction
-start dev.bat
+call ./dev.bat
 cd ../
 cd EPF-persistence
-start dev.bat
+call ./dev.bat
 cd ../
 cd EPF-gateway
-start dev.bat
+call ./dev.bat
 cd ../
 call ./install.bat &
 cd EPF-shell
