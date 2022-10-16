@@ -73,6 +73,14 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-narayana-lra</artifactId>
     </dependency>
+	<dependency>
+	   <groupId>io.quarkus</groupId>
+	   <artifactId>quarkus-kubernetes</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>io.quarkus</groupId>
+		<artifactId>quarkus-container-image-jib</artifactId>
+	</dependency>
 	
 	<dependency>
 		<groupId>openup</groupId>
