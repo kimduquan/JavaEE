@@ -9,15 +9,16 @@ RUN yum -y install wget \
     && tar -xzf kafka_$SCALA_VERSION-$KAFKA_VERSION.tgz \
     && rm kafka_$SCALA_VERSION-$KAFKA_VERSION.tgz \
 	&& mv kafka_$SCALA_VERSION-$KAFKA_VERSION kafka \
-    && adduser -u 145 -r -g root -s /usr/sbin/nologin default \
+    && adduser -u 1001 -r -g root -s /usr/sbin/nologin default \
     && yum -y remove wget \
     && yum clean all \
     && chown -R 1001:0 kafka \
     && chmod -R g+rw kafka
     
-USER 145
+USER 1001
 
 EXPOSE 2181 9092
 
-ENTRYPOINT ["kafka/bin/zookeeper-server-start.sh", "config/zookeeper.properties"]
-CMD ["kafka/bin/kafka-server-start.sh", "config/server.properties"]
+RUN kafka/bin/zookeeper-server-start.sh config/zookeeper.properties
+
+ENTRYPOINT ["kafka/bin/kafka-server-start.sh", "config/server.properties"]
