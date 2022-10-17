@@ -589,7 +589,6 @@
 			<properties>
 				<httpHost>openup.default.svc.cluster.local</httpHost>
 				<userHome>/liberty/usr/</userHome>
-				<liberty.env.QUARKUS_LRA_COORDINATOR_URL>http://epf-transaction-internal.default.svc.cluster.local:50000/lra-coordinator</liberty.env.QUARKUS_LRA_COORDINATOR_URL>
 				<liberty.env.epf_persistence_url>http://epf-persistence.default.svc.cluster.local:9181/persistence/persistence/</liberty.env.epf_persistence_url>
 				<liberty.env.epf_transaction_url>http://epf-transaction.default.svc.cluster.local:9182/transaction/transaction/</liberty.env.epf_transaction_url>
 				<liberty.env.epf_client_net_ssl_keyStore>/dev.p12</liberty.env.epf_client_net_ssl_keyStore>
