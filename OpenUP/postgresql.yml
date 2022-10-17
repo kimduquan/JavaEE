@@ -5,7 +5,8 @@ metadata:
   name: postgresql-volume
   labels:
     type: local
-    app: postgresql
+    app.kubernetes.io/name: postgresql
+    app.kubernetes.io/version: 1.0.0
 spec:
   storageClassName: manual
   capacity:
@@ -20,7 +21,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: postgresql-claim
   labels:
-    app: postgresql
+    app.kubernetes.io/name: postgresql
+    app.kubernetes.io/version: 1.0.0
 spec:
   storageClassName: manual
   accessModes:
@@ -80,10 +82,6 @@ spec:
             - containerPort: 5432
               name: http
               protocol: TCP
-          volumeMounts:
-            - mountPath: /var/lib/postgresql/data
-              name: postgresql-data
-              readOnly: false
       volumes:
         - name: postgresql-data
           persistentVolumeClaim:
