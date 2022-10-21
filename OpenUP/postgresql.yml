@@ -14,7 +14,7 @@ spec:
   accessModes:
     - ReadWriteMany
   hostPath:
-    path: "C:\\postgresql"
+    path: "/mnt/postgresql"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -82,6 +82,10 @@ spec:
             - containerPort: 5432
               name: http
               protocol: TCP
+          volumeMounts:
+            - mountPath: ~/
+              name: postgresql-data
+              readOnly: false
       volumes:
         - name: postgresql-data
           persistentVolumeClaim:
