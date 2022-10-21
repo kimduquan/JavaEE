@@ -151,7 +151,12 @@
 		<groupId>openup</groupId>
 		<artifactId>EPF-net-schema</artifactId>
 		<version>${project.version}</version>
-	</dependency>	
+	</dependency>
+	<dependency>
+		<groupId>openup</groupId>
+		<artifactId>EPF-security-schema</artifactId>
+		<version>${project.version}</version>
+	</dependency>
   </dependencies>
   <build>
     <plugins>
