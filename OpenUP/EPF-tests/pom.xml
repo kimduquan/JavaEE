@@ -38,8 +38,8 @@
 		<liberty.env.epf_security_management_url>http://${httpHost}:${httpPort}/security-management/security/</liberty.env.epf_security_management_url>
 		<liberty.env.epf_transaction_url>http://${httpHost}:9182/transaction/transaction/</liberty.env.epf_transaction_url>
         <liberty.env.epf_security_webapp_url>https://localhost/security/</liberty.env.epf_security_webapp_url>
-        <liberty.env.epf_gateway_url>https://${httpHost}:9543/gateway/</liberty.env.epf_gateway_url>
-        <liberty.env.epf_gateway_messaging_url>https://${httpHost}:9543/messaging/</liberty.env.epf_gateway_messaging_url>
+        <liberty.env.epf_gateway_url>https://localhost:${gatewayPort}/gateway/</liberty.env.epf_gateway_url>
+        <liberty.env.epf_gateway_messaging_url>https://localhost:${gatewayPort}/messaging/</liberty.env.epf_gateway_messaging_url>
         <liberty.env.epf_messaging_url>ws://${httpHost}:${httpPort}/messaging/messaging/</liberty.env.epf_messaging_url>
 		<liberty.env.epf_messaging_internal_url>ws://localhost:${httpPort}/messaging/messaging/</liberty.env.epf_messaging_internal_url>
         <liberty.env.epf_lang_url>ws://${httpHost}:${httpPort}/lang/lang/</liberty.env.epf_lang_url>
@@ -590,6 +590,7 @@
 				<httpHost>openup.default.svc.cluster.local</httpHost>
 				<userHome>/liberty/usr/</userHome>
 				<liberty.env.epf_persistence_url>http://epf-persistence.default.svc.cluster.local:9181/persistence/persistence/</liberty.env.epf_persistence_url>
+				<liberty.env.epf_schema_url>http://epf-persistence.default.svc.cluster.local:9181/persistence/schema/</liberty.env.epf_schema_url>
 				<liberty.env.epf_transaction_url>http://epf-transaction.default.svc.cluster.local:9182/transaction/transaction/</liberty.env.epf_transaction_url>
 				<liberty.env.epf_client_net_ssl_keyStore>/dev.p12</liberty.env.epf_client_net_ssl_keyStore>
 				<liberty.env.epf_client_net_ssl_trustStore>/dev.p12</liberty.env.epf_client_net_ssl_trustStore>
