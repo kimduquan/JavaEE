@@ -14,12 +14,12 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
+import epf.client.gateway.GatewayUtil;
 import epf.client.registry.Registry;
 import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.tests.client.ClientUtil;
 import epf.tests.health.HealthUtil;
-import epf.util.config.ConfigUtil;
 
 public class RegistryTest {
 	
@@ -34,7 +34,7 @@ public class RegistryTest {
     public static void beforeClass() throws Exception{
     	HealthUtil.isReady();
     	try {
-			registryUrl = ConfigUtil.getURI(Naming.Registry.REGISTRY_URL);
+			registryUrl = GatewayUtil.get(Naming.Registry.REGISTRY_URL);
 		} 
     	catch (Exception e) {
 			e.printStackTrace();
