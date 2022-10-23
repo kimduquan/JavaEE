@@ -581,11 +581,6 @@
 		</profile>
 		<profile>
 			<id>Container</id>
-			<activation>
-				<os>
-					<name>Linux</name>
-				</os>
-			</activation>
 			<properties>
 				<httpHost>openup.default.svc.cluster.local</httpHost>
 				<userHome>/liberty/usr/</userHome>
@@ -594,8 +589,8 @@
 				<liberty.env.epf_transaction_url>http://epf-transaction.default.svc.cluster.local:9182/transaction/transaction/</liberty.env.epf_transaction_url>
 				<liberty.env.epf_client_net_ssl_keyStore>/dev.p12</liberty.env.epf_client_net_ssl_keyStore>
 				<liberty.env.epf_client_net_ssl_trustStore>/dev.p12</liberty.env.epf_client_net_ssl_trustStore>
-        		<geckodriver>./geckodriver</geckodriver>
-        		<shell_runner>./target/EPF-shell-${project.version}-runner</shell_runner>
+        		<geckodriver>./geckodriver.exe</geckodriver>
+        		<shell_runner>C://GIT/JavaEE/OpenUP/EPF-shell/target/EPF-shell-${project.version}-runner.exe</shell_runner>
         		<opencv_java>/usr/share/java/opencv-420.jar</opencv_java>
         		<opencv_core>/usr/lib/x86_64-linux-gnu/libopencv_core.so</opencv_core>
 			</properties>
