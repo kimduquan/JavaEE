@@ -38,7 +38,7 @@ public class Application {
      * @param uriInfo
      * @param req
      * @param body
-     * @return
+     * @param useTargetHost
      */
     public CompletionStage<Response> buildRequest(
     		final String service,
@@ -46,10 +46,14 @@ public class Application {
     		final HttpHeaders headers, 
             final UriInfo uriInfo,
             final javax.ws.rs.core.Request req,
-            final InputStream body) {
+            final InputStream body,
+            final boolean useTargetHost) {
     	final URI serviceUrl = registry.lookup(service).orElseThrow(NotFoundException::new);
     	final Client client = clients.poll(serviceUrl, null);
     	final RequestBuilder builder = new RequestBuilder(client, serviceUrl, jwt, req, headers, uriInfo, body);
+    	if(useTargetHost) {
+    		builder.useTargetHost();
+    	}
     	return builder.build().whenComplete((response, error) -> {
     		response.bufferEntity();
     		clients.add(serviceUrl, client);

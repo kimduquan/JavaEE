@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -38,6 +39,7 @@ import epf.schema.utility.PostUpdate;
 import epf.schema.utility.Request;
 import epf.schema.utility.SchemaUtil;
 import epf.util.json.JsonUtil;
+import epf.util.logging.LogManager;
 
 /**
  *
@@ -46,6 +48,11 @@ import epf.util.json.JsonUtil;
 @Path(Naming.PERSISTENCE)
 @ApplicationScoped
 public class Persistence implements epf.persistence.client.Entities {
+	
+	/**
+	 *
+	 */
+	private transient final static Logger LOGGER = LogManager.getLogger(Persistence.class.getName());
 	
 	/**
 	 *
@@ -126,7 +133,7 @@ public class Persistence implements epf.persistence.client.Entities {
         transactionEvent.setTenant(request.getTenant());
         transactionEvent.setSchema(request.getSchema());
         transactionEvent.setEntity(transactionEntity);
-        final EntityTransaction transaction = new EntityTransaction();
+        final EntityTransaction transaction = new EntityTransaction(headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER));
         transaction.setEvent(transactionEvent);
         transaction.setDiff(JsonUtil.toString(diff.toJsonArray()));
         
@@ -134,7 +141,8 @@ public class Persistence implements epf.persistence.client.Entities {
         final Object entityId = entityIdField.get().get(transactionEntity);
     	transaction.setEntityId(entityId);
     	
-        transactionStore.put(headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER), transaction);
+        transactionStore.put(transaction.getId(), transaction);
+        LOGGER.info(String.format("put[%s]id=%s", headers.getHeaderString(HttpHeaders.HOST), transaction.getId()));
         
     	return Response.ok(JsonUtil.toString(entity)).build();
     }
@@ -177,7 +185,7 @@ public class Persistence implements epf.persistence.client.Entities {
         transactionEvent.setTenant(request.getTenant());
         transactionEvent.setSchema(request.getSchema());
         transactionEvent.setEntity(transactionEntity);
-        final EntityTransaction transaction = new EntityTransaction();
+        final EntityTransaction transaction = new EntityTransaction(headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER));
         transaction.setEvent(transactionEvent);
         transaction.setEntityId(entityId);
         
@@ -188,7 +196,9 @@ public class Persistence implements epf.persistence.client.Entities {
         final JsonPatch diff = Json.createDiff(preEntity, postEntity);
         transaction.setDiff(JsonUtil.toString(diff.toJsonArray()));
         
-        transactionStore.put(headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER), transaction);
+        transactionStore.put(transaction.getId(), transaction);
+        LOGGER.info(String.format("put[%s]id=%s", headers.getHeaderString(HttpHeaders.HOST), transaction.getId()));
+        
         
     	return Response.ok(JsonUtil.toString(mergedEntity)).build();
 	}
@@ -229,12 +239,13 @@ public class Persistence implements epf.persistence.client.Entities {
         transactionEvent.setTenant(request.getTenant());
         transactionEvent.setSchema(request.getSchema());
         transactionEvent.setEntity(transactionEntity);
-        final EntityTransaction transaction = new EntityTransaction();
+        final EntityTransaction transaction = new EntityTransaction(headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER));
         transaction.setEvent(transactionEvent);
         transaction.setEntityId(entityId);
         transaction.setDiff(JsonUtil.toString(diff.toJsonArray()));
         
-        transactionStore.put(headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER), transaction);
+        transactionStore.put(transaction.getId(), transaction);
+        LOGGER.info(String.format("put[%s]id=%s", headers.getHeaderString(HttpHeaders.HOST), transaction.getId()));
         
     	return Response.ok().build();
     }
@@ -274,6 +285,7 @@ public class Persistence implements epf.persistence.client.Entities {
     			manager.persist(transactionEvent.getEntity());
     			manager.flush();
     		}
+            LOGGER.info(String.format("rollback[%s]id=%s", headers.getHeaderString(HttpHeaders.HOST), transaction.getId()));
 		}
     	return Response.ok(ParticipantStatus.Compensated.name()).build();
     }
@@ -290,6 +302,7 @@ public class Persistence implements epf.persistence.client.Entities {
     		final HttpHeaders headers) {
     	final String transactionId = headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER);
     	transactionStore.remove(transactionId);
+        LOGGER.info(String.format("commit[%s]id=%s", headers.getHeaderString(HttpHeaders.HOST), transactionId));
     	return Response.ok(ParticipantStatus.Completed.name()).build();
     }
 }

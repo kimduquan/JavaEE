@@ -134,20 +134,28 @@ public interface RequestUtil {
      * @param input
      * @param headers
      * @param baseUri
-     * @return
+     * @param useTargetHost
+     * @param targetUrl
      */
-    static Builder buildHeaders(final Builder input, final HttpHeaders headers, final URI baseUri){
+    static Builder buildHeaders(final Builder input, final HttpHeaders headers, final URI baseUri, final boolean useTargetHost, final URI targetUrl){
     	Builder builder = input;
         if(headers != null){
             final MultivaluedMap<String, String> requestHeaders = headers.getRequestHeaders();
             final MultivaluedHashMap<String, Object> forwardHeaders = new MultivaluedHashMap<String, Object>(requestHeaders);
             forwardHeaders.remove(HttpHeaders.CONTENT_LENGTH);
             forwardHeaders.remove(HttpHeaders.CONTENT_LENGTH.toLowerCase());
+            if(useTargetHost) {
+            	forwardHeaders.remove(HttpHeaders.HOST);
+            	forwardHeaders.remove(HttpHeaders.HOST.toLowerCase());
+            }
             builder = builder.headers(forwardHeaders);
             List<Locale> languages = headers.getAcceptableLanguages();
             if(languages == null || languages.isEmpty() || languages.get(0).getLanguage().isEmpty()) {
             	languages = Arrays.asList(Locale.getDefault());
                 builder = builder.acceptLanguage(languages.toArray(new Locale[0]));
+            }
+            if(useTargetHost) {
+            	builder = builder.header(HttpHeaders.HOST, targetUrl.getAuthority());
             }
             final List<String> forwardedHost = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_HOST);
             final List<String> forwardedPort = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_PORT);
@@ -191,6 +199,7 @@ public interface RequestUtil {
      * @param uriInfo
      * @param req
      * @param body
+     * @param useTargetHost
      */
     static CompletionStage<Response> buildRequest(
     		final Client client,
@@ -199,12 +208,13 @@ public interface RequestUtil {
     		final HttpHeaders headers, 
             final UriInfo uriInfo,
             final javax.ws.rs.core.Request req,
-            final InputStream body) {
+            final InputStream body,
+            final boolean useTargetHost) {
 		WebTarget target = client.target(serviceUri);
 		target = RequestUtil.buildTarget(target, uriInfo, jwt);
 		Invocation.Builder invoke = target.request();
 		final URI baseUri = uriInfo.getBaseUri();
-		invoke = RequestUtil.buildHeaders(invoke, headers, baseUri);
+		invoke = RequestUtil.buildHeaders(invoke, headers, baseUri, useTargetHost, serviceUri);
 		return RequestUtil.buildInvoke(invoke, req.getMethod(), headers.getMediaType(), body);
     }
     

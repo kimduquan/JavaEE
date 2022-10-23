@@ -48,6 +48,6 @@ public class Script {
             @Context final javax.ws.rs.core.Request req,
             final InputStream body
     ) throws Exception {
-		return request.buildRequest(Naming.SCRIPT, null, headers, uriInfo, req, body);
+		return request.buildRequest(Naming.SCRIPT, null, headers, uriInfo, req, body, false);
     }
 }

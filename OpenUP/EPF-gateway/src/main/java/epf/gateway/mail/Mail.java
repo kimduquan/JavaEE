@@ -55,6 +55,6 @@ public class Mail {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-    	return request.buildRequest(Naming.MAIL, jwt, headers, uriInfo, req, body);
+    	return request.buildRequest(Naming.MAIL, jwt, headers, uriInfo, req, body, false);
     }
 }

@@ -46,6 +46,11 @@ public class RequestBuilder {
 	private transient final InputStream body;
 	
 	/**
+	 *
+	 */
+	private transient boolean useTargetHost;
+	
+	/**
 	 * @param client
 	 * @param serviceUrl
 	 * @param jwt
@@ -68,8 +73,16 @@ public class RequestBuilder {
 	/**
 	 * @return
 	 */
+	public RequestBuilder useTargetHost() {
+		useTargetHost = true;
+		return this;
+	}
+	
+	/**
+	 * @return
+	 */
 	public CompletionStage<Response> build(){
-		final CompletionStage<Response> builtRequest = RequestUtil.buildRequest(client, serviceUrl, jwt, headers, uriInfo, request, body);
+		final CompletionStage<Response> builtRequest = RequestUtil.buildRequest(client, serviceUrl, jwt, headers, uriInfo, request, body, useTargetHost);
 		return ResponseUtil.buildResponse(builtRequest, uriInfo.getBaseUri());
 	}
 }
