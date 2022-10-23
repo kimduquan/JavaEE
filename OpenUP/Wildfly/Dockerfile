@@ -1,5 +1,7 @@
 FROM jboss/wildfly:24.0.0.Final
 
+COPY --chown=jboss:0 dev.p12 /
+
 USER jboss
 
 RUN /opt/jboss/wildfly/bin/add-user.sh admin admin

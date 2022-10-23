@@ -47,6 +47,28 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
+            - name: epf_gateway_url
+              value: "https://epf-gateway.default.svc.cluster.local:9543/gateway/"
+            - name: epf_webapp_url
+              value: "https://localhost/webapp/"
+            - name: epf_security_webapp_url
+              value: "https://localhost/security/"
+            - name: epf_client_net_ssl_keyStore
+              value: "/dev.p12"
+            - name: epf_client_net_ssl_keyStoreType
+              value: "PKCS12"
+            - name: epf_client_net_ssl_keyStorePassword
+              value: "changeit"
+            - name: epf_client_net_ssl_keyAlias
+              value: "localhost"
+            - name: epf_client_net_ssl_keyPassword
+              value: "changeit"
+            - name: epf_client_net_ssl_trustStore
+              value: "/dev.p12"
+            - name: epf_client_net_ssl_trustStoreType
+              value: "PKCS12"
+            - name: epf_client_net_ssl_trustStorePassword
+              value: "changeit"
           image: "wildfly:1.0.0"
           imagePullPolicy: IfNotPresent
           name: wildfly
