@@ -48,7 +48,7 @@ spec:
                 fieldRef:
                   fieldPath: metadata.namespace
             - name: epf_gateway_url
-              value: "https://epf-gateway.default.svc.cluster.local:9543/gateway/"
+              value: "http://epf-gateway.default.svc.cluster.local:8080/gateway/"
             - name: epf_webapp_url
               value: "https://localhost/webapp/"
             - name: epf_security_webapp_url
