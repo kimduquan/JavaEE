@@ -14,9 +14,9 @@ cd ../
 cd EPF-gateway
 call ./dev.bat
 cd ../
-call ./install.bat &
+:: call ./install.bat &
 cd EPF-shell
 call ./dev.bat
 cd ../
 cd EPF-tests
-call ./dev.bat
+call ./test.bat

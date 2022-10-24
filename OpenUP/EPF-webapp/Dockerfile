@@ -37,4 +37,4 @@ EXPOSE 9990
 
 # Set the default command to run on boot
 # This will boot WildFly in standalone mode and bind to all interfaces
-CMD ["/opt/jboss/wildfly/bin/standalone.sh", "-Djboss.http.port=80", "-Djboss.https.port=443", "-b", "0.0.0.0"]
+CMD ["/opt/jboss/wildfly/bin/standalone.sh", "-Djboss.http.port=80", "-Djboss.https.port=443", "--debug", "-b", "0.0.0.0"]
