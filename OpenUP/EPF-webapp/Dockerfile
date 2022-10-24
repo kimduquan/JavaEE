@@ -1,5 +1,7 @@
-# Use latest jboss/base-jdk:8
-FROM jboss/base-jdk:8
+FROM adoptopenjdk/openjdk8-openj9:latest
+
+RUN groupadd -r jboss -g 1000 && useradd -u 1000 -r -g jboss -m -d /opt/jboss -s /sbin/nologin -c "JBoss user" jboss && \
+    chmod 755 /opt/jboss
 
 # Set the WILDFLY_VERSION env variable
 ENV WILDFLY_VERSION 24.0.1.Final
