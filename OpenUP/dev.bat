@@ -1,4 +1,4 @@
-call ./shutdown.bat
+call ./shutdownc.bat
 call ./clean.bat
 call ./startupc.bat
 call ./compile.bat
