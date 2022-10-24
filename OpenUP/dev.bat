@@ -1,6 +1,6 @@
 call ./shutdown.bat
 call ./clean.bat
-call ./startup.bat
+call ./startupc.bat
 call ./compile.bat
 cd EPF-transaction-internal
 call ./dev.bat

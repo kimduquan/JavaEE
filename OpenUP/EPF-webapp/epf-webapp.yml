@@ -14,6 +14,20 @@ spec:
     - name: https
       port: 443
       targetPort: 443
+  selector:
+    app.kubernetes.io/name: epf-webapp
+    app.kubernetes.io/version: 1.0.0
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: epf-webapp
+    app.kubernetes.io/version: 1.0.0
+  name: epf-webapp-internal
+spec:
+  ports:
     - name: admin
       port: 9990
       targetPort: 9990
@@ -48,7 +62,7 @@ spec:
                 fieldRef:
                   fieldPath: metadata.namespace
             - name: epf_gateway_url
-              value: "http://epf-gateway.default.svc.cluster.local:8080/gateway/"
+              value: "http://epf-gateway-internal.default.svc.cluster.local:8080/gateway/"
             - name: epf_webapp_url
               value: "https://localhost/webapp/"
             - name: epf_security_webapp_url
