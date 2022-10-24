@@ -13,11 +13,10 @@
     <properties>
     	<httpHost>localhost</httpHost>
         <httpPort>9080</httpPort>
-        <httpsPort>9443</httpsPort>
         <httpWebPort>80</httpWebPort>
         <httpsWebPort>443</httpsWebPort>
         <portalPort>8080</portalPort>
-        <gatewayPort>9543</gatewayPort>
+        <gatewayPort>8443</gatewayPort>
 		<userHome>~/</userHome>
         <!-- Jaeger configuration -->
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
@@ -48,7 +47,7 @@
         <liberty.env.epf_search_url>http://${httpHost}:${httpPort}/query/search/</liberty.env.epf_search_url>
         <liberty.env.epf_registry_url>http://${httpHost}:${httpPort}/registry/registry/</liberty.env.epf_registry_url>
 		<liberty.env.epf_management_url>http://${httpHost}:${httpPort}/management/management/</liberty.env.epf_management_url>
-		<liberty.env.epf_portlet_url>http://localhost:8080/pluto/portal</liberty.env.epf_portlet_url>
+		<liberty.env.epf_portlet_url>http://localhost:${portalPort}/pluto/portal</liberty.env.epf_portlet_url>
 		<liberty.env.epf_webapp_url>http://localhost/webapp/</liberty.env.epf_webapp_url>
 		<liberty.env.epf_health_url>http://${httpHost}:${httpPort}/health/</liberty.env.epf_health_url>
 		<liberty.env.epf_batch_api_url>http://${httpHost}:${httpPort}/ibm/</liberty.env.epf_batch_api_url>

@@ -16,7 +16,7 @@
         <httpWebPort>80</httpWebPort>
         <httpsWebPort>443</httpsWebPort>
         <portalPort>8080</portalPort>
-        <gatewayPort>9543</gatewayPort>
+        <gatewayPort>8443</gatewayPort>
         <!-- Jaeger configuration -->
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
@@ -36,8 +36,8 @@
 		<liberty.env.epf_security_management_url>http://localhost/security-management/security/</liberty.env.epf_security_management_url>
 		<liberty.env.epf_transaction_url>http://localhost/transaction/transaction/</liberty.env.epf_transaction_url>
         <liberty.env.epf_security_webapp_url>https://localhost/security/</liberty.env.epf_security_webapp_url>
-        <liberty.env.epf_gateway_url>https://localhost:9543/gateway/</liberty.env.epf_gateway_url>
-        <liberty.env.epf_gateway_messaging_url>https://localhost:9543/messaging/</liberty.env.epf_gateway_messaging_url>
+        <liberty.env.epf_gateway_url>https://localhost:${gatewayPort}/gateway/</liberty.env.epf_gateway_url>
+        <liberty.env.epf_gateway_messaging_url>https://localhost:${gatewayPort}/messaging/</liberty.env.epf_gateway_messaging_url>
         <liberty.env.epf_messaging_url>ws://localhost/messaging/messaging/</liberty.env.epf_messaging_url>
         <liberty.env.epf_lang_url>ws://localhost/lang/lang/</liberty.env.epf_lang_url>
         <liberty.env.epf_cache_url>http://localhost/cache/cache/</liberty.env.epf_cache_url>
