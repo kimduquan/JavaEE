@@ -37,4 +37,6 @@ call kubectl delete -f ./kafka.yaml
 call kubectl wait --for=delete -f ./kafka.yaml
 call kubectl delete -f ./zookeeper.yaml
 call kubectl wait --for=delete -f ./zookeeper.yaml
+call kubectl delete -f ./postgresql.yaml
+call kubectl wait --for=delete -f ./postgresql.yaml
 endlocal

@@ -1,3 +1,5 @@
+call kubectl apply -f ./postgresql.yaml
+call kubectl wait deployment --for condition=available postgresql
 call kubectl apply -f ./zookeeper.yaml
 call kubectl wait deployment --for condition=available zookeeper
 call kubectl apply -f ./kafka.yaml
