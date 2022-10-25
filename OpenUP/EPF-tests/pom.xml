@@ -17,6 +17,7 @@
         <httpsWebPort>443</httpsWebPort>
         <portalPort>8080</portalPort>
         <gatewayPort>8443</gatewayPort>
+		<internalPort>8080</internalPort>
 		<userHome>~/</userHome>
         <!-- Jaeger configuration -->
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
