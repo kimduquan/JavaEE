@@ -389,7 +389,7 @@
                         <epf.transaction.url>http://localhost:9182/transaction/transaction/</epf.transaction.url>
                         <epf.gateway.url>https://localhost:${gatewayPort}/gateway/</epf.gateway.url>
                         <epf.gateway.health.url>https://localhost:${gatewayPort}/q/health/</epf.gateway.health.url>
-                        <epf.gateway.messaging.url>wss://localhost:${gatewayPort}/messaging/</epf.gateway.messaging.url>
+                        <epf.gateway.messaging.url>ws://localhost:${internalPort}/messaging/</epf.gateway.messaging.url>
                         <epf.registry.url>http://localhost:${httpPort}/registry/registry/</epf.registry.url>
 						<epf.management.url>http://localhost:${httpPort}/management/management/</epf.management.url>
                         <epf.messaging.url>ws://localhost:${httpPort}/messaging/messaging/</epf.messaging.url>
