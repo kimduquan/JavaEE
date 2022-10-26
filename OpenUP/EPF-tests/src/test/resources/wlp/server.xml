@@ -6,7 +6,6 @@
         <feature>mpGraphQL-1.0</feature>
         <feature>mpContextPropagation-1.0</feature>
         <feature>mpReactiveMessaging-1.0</feature>
-        <feature>sessionCache-1.0</feature>
         <feature>transportSecurity-1.0</feature>
         <feature>batch-1.0</feature>
         <feature>batchManagement-1.0</feature>
@@ -97,10 +96,6 @@
         <fileset dir="${shared.resource.dir}/epf" includes="*.jar"/>
     </library>
     
-    <library id="JCacheLib">
-        <fileset dir="${shared.resource.dir}/epf/cache" includes="*.jar"/>
-    </library>
-    
     <library id="H2LuceneLib">
         <fileset dir="${shared.resource.dir}/epf/search" includes="*.jar"/>
         <fileset dir="${shared.resource.dir}/epf/security" includes="*.jar"/>
@@ -110,10 +105,6 @@
         <file name="${opencv_java}"/>
         <file name="${opencv_core}"/>
     </library>
-    
-    <httpSessionCache libraryRef="JCacheLib" uri="file:${server.config.dir}hazelcast-config.xml">
-    	<!--<properties hazelcast.config.location="file:${server.config.dir}hazelcast-config.xml" hazelcast.jcache.provider.type="member"/>-->
-    </httpSessionCache>
     
     <mpJwt 
         id="EPF"

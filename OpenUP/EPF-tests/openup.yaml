@@ -18,15 +18,6 @@ spec:
     - name: WLP_LOGGING_CONSOLE_SOURCE
       value: "message,trace,accessLog,ffdc,audit"
   probes:
-    startup:
-      failureThreshold: 12
-      httpGet:
-        path: /health/ready
-        port: 9080
-        scheme: HTTP
-      initialDelaySeconds: 60
-      periodSeconds: 60
-      timeoutSeconds: 10
     liveness:
       failureThreshold: 12
       httpGet:
