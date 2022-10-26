@@ -10,28 +10,22 @@ Taskkill /IM java.exe /F
 
 Taskkill /IM kubectl.exe /F
 cd EPF-webapp
-kubectl delete -f ./epf-webapp.yaml
-kubectl wait --for=delete -f ./epf-webapp.yaml
+call stop.bat
 cd ../
 cd EPF-gateway
-kubectl delete -f ./epf-gateway.yaml
-kubectl wait --for=delete -f ./epf-gateway.yaml
+call stop.bat
 cd ../
 cd EPF-tests
-kubectl delete -f ./openup.yaml
-kubectl wait --for=delete -f ./openup.yaml
+call stop.bat
 cd ../
 cd EPF-persistence
-kubectl delete -f target/kubernetes/kubernetes.yml
-kubectl wait --for=delete -f target/kubernetes/kubernetes.yml
+call stop.bat
 cd ../
 cd EPF-transaction
-kubectl delete -f target/kubernetes/kubernetes.yml
-kubectl wait --for=delete -f target/kubernetes/kubernetes.yml
+call stop.bat
 cd ../
 cd EPF-transaction-internal
-kubectl delete -f target/kubernetes/kubernetes.yml
-kubectl wait --for=delete -f target/kubernetes/kubernetes.yml
+call stop.bat
 cd ../
 kubectl delete -f ./kafka.yaml
 kubectl wait --for=delete -f ./kafka.yaml

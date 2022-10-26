@@ -12,6 +12,6 @@ call ../env.bat
 call ../config.bat
 call mvn package -U -P Container
 call docker build -t openup:1.0.0 ./
-call kubectl delete -f ./openup.yaml
-call kubectl apply -f ./openup.yaml
+call stop.bat
+call start.bat
 endlocal
