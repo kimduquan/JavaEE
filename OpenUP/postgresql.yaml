@@ -14,7 +14,7 @@ spec:
   accessModes:
     - ReadWriteMany
   hostPath:
-    path: "/mnt/c/postgresql_data"
+    path: "/mnt/data"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -29,7 +29,7 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 2Gi
+      storage: 1Gi
 ---
 apiVersion: v1
 kind: Service
@@ -74,7 +74,6 @@ spec:
           volumeMounts:
             - mountPath: "/bitnami/postgresql"
               name: postgresql-data
-              readOnly: false
       containers:
         - env:
             - name: KUBERNETES_NAMESPACE
@@ -97,9 +96,7 @@ spec:
           volumeMounts:
             - mountPath: "/bitnami/postgresql"
               name: postgresql-data
-              readOnly: false
       volumes:
         - name: postgresql-data
           persistentVolumeClaim:
             claimName: postgresql-claim
-            readOnly: false
