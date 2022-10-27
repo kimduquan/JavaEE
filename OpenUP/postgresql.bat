@@ -1,0 +1,1 @@
+helm install postgresql bitnami/postgresql --set auth.postgresPassword=090323508 --set auth.database=epf
