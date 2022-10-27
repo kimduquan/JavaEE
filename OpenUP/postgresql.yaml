@@ -10,11 +10,11 @@ metadata:
 spec:
   storageClassName: manual
   capacity:
-    storage: 1Gi
+    storage: 2Gi
   accessModes:
     - ReadWriteMany
   hostPath:
-    path: "/mnt/postgresql"
+    path: "/mnt/c/postgresql_data"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -29,7 +29,7 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 1Gi
+      storage: 2Gi
 ---
 apiVersion: v1
 kind: Service
@@ -67,6 +67,14 @@ spec:
         app.kubernetes.io/name: postgresql
         app.kubernetes.io/version: 1.0.0
     spec:
+      initContainers:
+        - name: volume-permissions
+          image: busybox
+          command: ['sh', '-c', "chown -R 1001:1001 /bitnami/postgresql"]
+          volumeMounts:
+            - mountPath: "/bitnami/postgresql"
+              name: postgresql-data
+              readOnly: false
       containers:
         - env:
             - name: KUBERNETES_NAMESPACE
@@ -87,7 +95,7 @@ spec:
               name: http
               protocol: TCP
           volumeMounts:
-            - mountPath: ~/
+            - mountPath: "/bitnami/postgresql"
               name: postgresql-data
               readOnly: false
       volumes:
