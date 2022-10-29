@@ -10,6 +10,7 @@ mkdir -p "./target/servers/test/epf.file.root/"
 setlocal
 call ../env.bat
 call ../config.bat
+copy %SOURCE_DIR%\dev.p12 .\
 call mvn package -U -P Container
 call docker build -t openup:1.0.0 ./
 call stop.bat

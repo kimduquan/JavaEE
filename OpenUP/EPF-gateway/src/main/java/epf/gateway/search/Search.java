@@ -54,7 +54,7 @@ public class Search {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final Request req) throws Exception {
-		return request.buildRequest(Naming.SEARCH, jwt, headers, uriInfo, req, null, false);
+		return request.buildRequest(Naming.SEARCH, jwt, headers, uriInfo, req, null);
     }
 	
 	/**
@@ -71,6 +71,6 @@ public class Search {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final Request req) throws Exception {
-		return request.buildRequest(Naming.SEARCH, jwt, headers, uriInfo, req, null, false);
+		return request.buildRequest(Naming.SEARCH, jwt, headers, uriInfo, req, null);
     }
 }

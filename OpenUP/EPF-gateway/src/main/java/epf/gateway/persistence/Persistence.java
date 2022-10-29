@@ -64,7 +64,7 @@ public class Persistence {
             @PathParam("schema") final String schema,
             @PathParam("entity") final String entity,
             final InputStream body) throws Exception {
-    	return request.buildRequest(Naming.PERSISTENCE, jwt, headers, uriInfo, req, body, true);
+    	return request.buildRequest(Naming.PERSISTENCE, jwt, headers, uriInfo, req, body);
     }
     
     /**
@@ -89,7 +89,7 @@ public class Persistence {
             @PathParam("id") final String entityId,
             final InputStream body
             ) throws Exception {
-    	return request.buildRequest(Naming.PERSISTENCE, jwt, headers, uriInfo, req, body, true);
+    	return request.buildRequest(Naming.PERSISTENCE, jwt, headers, uriInfo, req, body);
     }
     
     /**
@@ -110,6 +110,6 @@ public class Persistence {
             @PathParam("schema") final String schema,
             @PathParam("entity") final String entity,
             @PathParam("id") final String entityId) throws Exception {
-    	return request.buildRequest(Naming.PERSISTENCE, jwt, headers, uriInfo, req, null, true);
+    	return request.buildRequest(Naming.PERSISTENCE, jwt, headers, uriInfo, req, null);
     }
 }

@@ -27,11 +27,6 @@ import epf.util.EPFException;
  */
 public class TokenBuilder {
 	
-    /**
-     * 
-     */
-    private static final String AUDIENCE_FORMAT = "%s://%s/";
-	
 	/**
 	 * 
 	 */
@@ -102,17 +97,13 @@ public class TokenBuilder {
     public static Set<String> buildAudience(
             final URL url,
             final List<String> forwardedHost,
-            final List<String> forwardedPort,
-            final List<String> forwardedProto,
             final Optional<String> tenant){
     	final Set<String> audience = new HashSet<>();
     	if(url != null) {
     		audience.add(url.toString());
     	}
-		if(forwardedHost != null && forwardedPort != null && forwardedProto != null) {
-			for(int i = 0; i < forwardedHost.size(); i++) {
-				audience.add(String.format(AUDIENCE_FORMAT, forwardedProto.get(i), forwardedHost.get(i) + ":" + forwardedPort.get(i)));
-			}
+		if(forwardedHost != null) {
+			forwardedHost.forEach(audience::add);
 		}
 		tenant.ifPresent(audience::add);
 		return audience;

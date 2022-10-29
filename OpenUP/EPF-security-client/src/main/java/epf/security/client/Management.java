@@ -50,11 +50,7 @@ public interface Management {
     		@NotBlank
     		final String lastName,
     		@HeaderParam(Naming.Gateway.Headers.X_FORWARDED_HOST)
-            final List<String> forwardedHost,
-            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PORT)
-            final List<String> forwardedPort,
-            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PROTO)
-            final List<String> forwardedProto
+            final List<String> forwardedHost
     		) throws Exception;
     
     /**
@@ -115,11 +111,7 @@ public interface Management {
     		@Pattern(regexp = Naming.Security.Claims.EMAIL_REGEXP)
     		final String email,
     		@HeaderParam(Naming.Gateway.Headers.X_FORWARDED_HOST)
-            final List<String> forwardedHost,
-            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PORT)
-            final List<String> forwardedPort,
-            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PROTO)
-            final List<String> forwardedProto) throws Exception;
+            final List<String> forwardedHost) throws Exception;
     
     /**
      * @param client

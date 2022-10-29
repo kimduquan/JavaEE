@@ -16,7 +16,9 @@
         <httpWebPort>80</httpWebPort>
         <httpsWebPort>443</httpsWebPort>
         <portalPort>8080</portalPort>
+		<gatewayHost>localhost</gatewayHost>
         <gatewayPort>8443</gatewayPort>
+		<internalHost>localhost</internalHost>
 		<internalPort>8080</internalPort>
 		<userHome>~/</userHome>
         <!-- Jaeger configuration -->
@@ -571,6 +573,8 @@
 			<id>Container</id>
 			<properties>
 				<httpHost>openup.default.svc.cluster.local</httpHost>
+				<gatewayHost>epf-gateway.default.svc.cluster.local</gatewayHost>
+				<internalHost>epf-gateway-internal.default.svc.cluster.local</internalHost>
 				<userHome>/liberty/usr/</userHome>
 				<liberty.env.epf_persistence_url>http://epf-persistence.default.svc.cluster.local:9181/persistence/persistence/</liberty.env.epf_persistence_url>
 				<liberty.env.epf_schema_url>http://epf-persistence.default.svc.cluster.local:9181/persistence/schema/</liberty.env.epf_schema_url>

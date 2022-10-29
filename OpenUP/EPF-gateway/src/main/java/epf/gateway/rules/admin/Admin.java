@@ -60,7 +60,7 @@ public class Admin {
             @PathParam("ruleSet")
             final String ruleSet,
             final InputStream body) throws Exception {
-		return request.buildRequest(Naming.RULES, jwt, headers, uriInfo, req, body, false);
+		return request.buildRequest(Naming.RULES, jwt, headers, uriInfo, req, body);
     }
     
     /**
@@ -80,6 +80,6 @@ public class Admin {
             @Context final javax.ws.rs.core.Request req,
             @PathParam("ruleSet")
             final String ruleSet) throws Exception {
-		return request.buildRequest(Naming.RULES, jwt, headers, uriInfo, req, null, false);
+		return request.buildRequest(Naming.RULES, jwt, headers, uriInfo, req, null);
     }
 }

@@ -60,7 +60,7 @@ public class Management {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-		return request.buildRequest(Naming.Security.SECURITY_MANAGEMENT, null, headers, uriInfo, req, body, false);
+		return request.buildRequest(Naming.Security.SECURITY_MANAGEMENT, null, headers, uriInfo, req, body);
     }
     
     /**
@@ -81,7 +81,7 @@ public class Management {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-		return request.buildRequest(Naming.Security.SECURITY_MANAGEMENT, jwt, headers, uriInfo, req, body, false);
+		return request.buildRequest(Naming.Security.SECURITY_MANAGEMENT, jwt, headers, uriInfo, req, body);
     }
     
     /**
@@ -104,7 +104,7 @@ public class Management {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-		return request.buildRequest(Naming.Security.SECURITY_MANAGEMENT, null, headers, uriInfo, req, body, false);
+		return request.buildRequest(Naming.Security.SECURITY_MANAGEMENT, null, headers, uriInfo, req, body);
     }
     
     /**
@@ -126,6 +126,6 @@ public class Management {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-		return request.buildRequest(Naming.Security.SECURITY_MANAGEMENT, jwt, headers, uriInfo, req, body, false);
+		return request.buildRequest(Naming.Security.SECURITY_MANAGEMENT, jwt, headers, uriInfo, req, body);
     }
 }

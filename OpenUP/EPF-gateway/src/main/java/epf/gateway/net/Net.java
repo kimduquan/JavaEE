@@ -79,7 +79,7 @@ public class Net {
             @Context final javax.ws.rs.core.Request req,
             final InputStream body
     ) throws Exception {
-    	return request.buildRequest(Naming.NET, null, headers, uriInfo, req, body, false);
+    	return request.buildRequest(Naming.NET, null, headers, uriInfo, req, body);
     }
     
     /**

@@ -65,7 +65,7 @@ public class Query {
             @PathParam("schema") final String schema,
             @PathParam("entity") final String entity,
             @PathParam("id") final String entityId) throws Exception {
-    	return request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, null, false);
+    	return request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, null);
     }
 	
 	/**
@@ -86,7 +86,7 @@ public class Query {
             @PathParam("schema") final String schema,
             @PathParam("entity") final String entity
             ) throws Exception {
-    	return request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, null, false);
+    	return request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, null);
     }
 	
 	/**
@@ -107,7 +107,7 @@ public class Query {
             @Context final UriInfo uriInfo,
             @Context final Request req,
             final InputStream body) throws Exception {
-    	return request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, body, false);
+    	return request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, body);
     }
 	
 	/**
@@ -134,7 +134,7 @@ public class Query {
             final String schema,
             @PathParam("criteria")
             final List<PathSegment> paths) throws Exception {
-    	return request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, null, false);
+    	return request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, null);
 	}
 	
 	/**
@@ -160,6 +160,6 @@ public class Query {
             final String schema,
             @PathParam("criteria")
             final List<PathSegment> paths) throws Exception {
-		return request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, null, false);
+		return request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, null);
     	}
 }

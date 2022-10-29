@@ -62,7 +62,7 @@ public class Security {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-		return request.buildRequest(Naming.SECURITY, null, headers, uriInfo, req, body, false);
+		return request.buildRequest(Naming.SECURITY, null, headers, uriInfo, req, body);
     }
     
     /**
@@ -81,7 +81,7 @@ public class Security {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req
             ) throws Exception {
-		return request.buildRequest(Naming.SECURITY, jwt, headers, uriInfo, req, null, false);
+		return request.buildRequest(Naming.SECURITY, jwt, headers, uriInfo, req, null);
     }
     
     /**
@@ -99,7 +99,7 @@ public class Security {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req) throws Exception {
-		return request.buildRequest(Naming.SECURITY, jwt, headers, uriInfo, req, null, false);
+		return request.buildRequest(Naming.SECURITY, jwt, headers, uriInfo, req, null);
     }
     
     /**
@@ -119,7 +119,7 @@ public class Security {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-		return request.buildRequest(Naming.SECURITY, jwt, headers, uriInfo, req, body, false);
+		return request.buildRequest(Naming.SECURITY, jwt, headers, uriInfo, req, body);
     }
     
     /**
@@ -139,7 +139,7 @@ public class Security {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req) throws Exception {
-		return request.buildRequest(Naming.SECURITY, jwt, headers, uriInfo, req, null, false);
+		return request.buildRequest(Naming.SECURITY, jwt, headers, uriInfo, req, null);
     }
     
     /**
@@ -162,7 +162,7 @@ public class Security {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-		return request.buildRequest(Naming.SECURITY, null, headers, uriInfo, req, body, false);
+		return request.buildRequest(Naming.SECURITY, null, headers, uriInfo, req, body);
     }
     
     /**
@@ -183,6 +183,6 @@ public class Security {
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req,
             final InputStream body) throws Exception {
-		return request.buildRequest(Naming.SECURITY, jwt, headers, uriInfo, req, body, false);
+		return request.buildRequest(Naming.SECURITY, jwt, headers, uriInfo, req, body);
     }
 }

@@ -134,41 +134,30 @@ public interface RequestUtil {
      * @param input
      * @param headers
      * @param baseUri
-     * @param useTargetHost
      * @param targetUrl
+     * @return
      */
-    static Builder buildHeaders(final Builder input, final HttpHeaders headers, final URI baseUri, final boolean useTargetHost, final URI targetUrl){
+    static Builder buildHeaders(final Builder input, final HttpHeaders headers, final URI baseUri, final URI targetUrl){
     	Builder builder = input;
         if(headers != null){
             final MultivaluedMap<String, String> requestHeaders = headers.getRequestHeaders();
             final MultivaluedHashMap<String, Object> forwardHeaders = new MultivaluedHashMap<String, Object>(requestHeaders);
             forwardHeaders.remove(HttpHeaders.CONTENT_LENGTH);
             forwardHeaders.remove(HttpHeaders.CONTENT_LENGTH.toLowerCase());
-            if(useTargetHost) {
-            	forwardHeaders.remove(HttpHeaders.HOST);
-            	forwardHeaders.remove(HttpHeaders.HOST.toLowerCase());
-            }
+            final String host = forwardHeaders.getFirst(HttpHeaders.HOST).toString();
+        	forwardHeaders.remove(HttpHeaders.HOST);
+        	forwardHeaders.remove(HttpHeaders.HOST.toLowerCase());
             builder = builder.headers(forwardHeaders);
             List<Locale> languages = headers.getAcceptableLanguages();
             if(languages == null || languages.isEmpty() || languages.get(0).getLanguage().isEmpty()) {
             	languages = Arrays.asList(Locale.getDefault());
                 builder = builder.acceptLanguage(languages.toArray(new Locale[0]));
             }
-            if(useTargetHost) {
-            	builder = builder.header(HttpHeaders.HOST, targetUrl.getAuthority());
-            }
+            builder = builder.header(HttpHeaders.HOST, targetUrl.getAuthority());
             final List<String> forwardedHost = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_HOST);
-            final List<String> forwardedPort = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_PORT);
-            final List<String> forwardedProto = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_PROTO);
             final List<String> newForwardedHost = new ArrayList<>(forwardedHost);
-            newForwardedHost.add(baseUri.getHost());
-            final List<String> newForwardedPort = new ArrayList<>(forwardedPort);
-            newForwardedPort.add(String.valueOf(baseUri.getPort()));
-            final List<String> newForwardedProto = new ArrayList<>(forwardedProto);
-            newForwardedProto.add(baseUri.getScheme());
+            newForwardedHost.add(host);
             builder = builder.header(Naming.Gateway.Headers.X_FORWARDED_HOST, StringUtil.valueOf(newForwardedHost, ","));
-            builder = builder.header(Naming.Gateway.Headers.X_FORWARDED_PORT, StringUtil.valueOf(newForwardedPort, ","));
-            builder = builder.header(Naming.Gateway.Headers.X_FORWARDED_PROTO, StringUtil.valueOf(newForwardedProto, ","));
         }
         return builder;
     }
@@ -199,7 +188,6 @@ public interface RequestUtil {
      * @param uriInfo
      * @param req
      * @param body
-     * @param useTargetHost
      */
     static CompletionStage<Response> buildRequest(
     		final Client client,
@@ -208,13 +196,12 @@ public interface RequestUtil {
     		final HttpHeaders headers, 
             final UriInfo uriInfo,
             final javax.ws.rs.core.Request req,
-            final InputStream body,
-            final boolean useTargetHost) {
+            final InputStream body) {
 		WebTarget target = client.target(serviceUri);
 		target = RequestUtil.buildTarget(target, uriInfo, jwt);
 		Invocation.Builder invoke = target.request();
 		final URI baseUri = uriInfo.getBaseUri();
-		invoke = RequestUtil.buildHeaders(invoke, headers, baseUri, useTargetHost, serviceUri);
+		invoke = RequestUtil.buildHeaders(invoke, headers, baseUri, serviceUri);
 		return RequestUtil.buildInvoke(invoke, req.getMethod(), headers.getMediaType(), body);
     }
     

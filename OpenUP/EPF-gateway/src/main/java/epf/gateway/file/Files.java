@@ -66,7 +66,7 @@ public class Files {
     		final List<PathSegment> paths,
             final InputStream body
     ) throws Exception {
-    	return request.buildRequest(Naming.FILE, jwt, headers, uriInfo, req, body, false);
+    	return request.buildRequest(Naming.FILE, jwt, headers, uriInfo, req, body);
     }
     
     /**
@@ -88,7 +88,7 @@ public class Files {
             @PathParam("paths")
     		final List<PathSegment> paths
     ) throws Exception {
-    	return request.buildRequest(Naming.FILE, jwt, headers, uriInfo, req, null, false);
+    	return request.buildRequest(Naming.FILE, jwt, headers, uriInfo, req, null);
     }
     
     /**
@@ -109,6 +109,6 @@ public class Files {
             @PathParam("paths")
     		final List<PathSegment> paths
     ) throws Exception {
-    	return request.buildRequest(Naming.FILE, jwt, headers, uriInfo, req, null, false);
+    	return request.buildRequest(Naming.FILE, jwt, headers, uriInfo, req, null);
     }
 }

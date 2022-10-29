@@ -108,7 +108,7 @@
     
     <mpJwt 
         id="EPF"
-        audiences ="http://localhost/,https://localhost/,http://localhost:8080/,https://localhost:8443/"
+        audiences ="${internalHost}:${internalPort},${gatewayHost}:${gatewayPort},localhost:${internalPort},localhost:${gatewayPort}"
         ignoreApplicationAuthMethod="false" 
         contentEncryptionAlgorithm="A256GCM" 
         keyManagementKeyAlgorithm="RSA-OAEP"

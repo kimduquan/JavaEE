@@ -43,6 +43,6 @@ public class Config {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final javax.ws.rs.core.Request req) throws Exception {
-    	return request.buildRequest(Naming.CONFIG, null, headers, uriInfo, req, null, false);
+    	return request.buildRequest(Naming.CONFIG, null, headers, uriInfo, req, null);
     }
 }

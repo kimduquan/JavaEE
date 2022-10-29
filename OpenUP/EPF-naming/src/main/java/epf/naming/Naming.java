@@ -193,16 +193,6 @@ public interface Naming {
 	    	/**
 	    	 * 
 	    	 */
-	    	String X_FORWARDED_PORT = "X-Forwarded-Port";
-	    	
-	    	/**
-	    	 * 
-	    	 */
-	    	String X_FORWARDED_PROTO = "X-Forwarded-Proto";
-	    	
-	    	/**
-	    	 * 
-	    	 */
 	    	String X_FORWARDED_HOST = "X-Forwarded-Host";
 	    }
 	}

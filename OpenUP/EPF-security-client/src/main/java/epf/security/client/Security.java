@@ -74,11 +74,7 @@ public interface Security {
             @MatrixParam(Naming.Management.TENANT)
             final String tenant,
             @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_HOST)
-            final List<String> forwardedHost,
-            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PORT)
-            final List<String> forwardedPort,
-            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PROTO)
-            final List<String> forwardedProto
+            final List<String> forwardedHost
     ) throws Exception;
     
     /**
@@ -188,10 +184,6 @@ public interface Security {
             final SecurityContext context,
             @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_HOST)
             final List<String> forwardedHost,
-            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PORT)
-            final List<String> forwardedPort,
-            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PROTO)
-            final List<String> forwardedProto,
             @FormParam("duration")
             final String duration) throws Exception;
     
@@ -231,11 +223,7 @@ public interface Security {
             @MatrixParam(Naming.Management.TENANT)
             final String tenant,
             @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_HOST)
-            final List<String> forwardedHost,
-            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PORT)
-            final List<String> forwardedPort,
-            @HeaderParam(Naming.Gateway.Headers.X_FORWARDED_PROTO)
-            final List<String> forwardedProto) throws Exception;
+            final List<String> forwardedHost) throws Exception;
     
     /**
      * @param client

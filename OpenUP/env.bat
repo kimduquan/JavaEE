@@ -1,3 +1,4 @@
+set SOURCE_DIR=C:\GIT\JavaEE\OpenUP
 set JAVA8_HOME=C:\jdk8u345-b01
 set JAVA11_HOME=C:\jdk-11.0.16.1+1
 set JAVA_HOME=%JAVA11_HOME%
