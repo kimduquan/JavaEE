@@ -1,7 +1,6 @@
 package epf.webapp.internal;
 
 import java.security.PublicKey;
-import java.util.Base64;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -46,9 +45,9 @@ public class TokenIdentityStore {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final String verifyKeyText = config.getProperty(Naming.Security.JWT.VERIFY_KEY);
+			final String verifyKeyText = config.getProperty(Naming.Security.JWT.VERIFIER_PUBLIC_KEY);
 			final String webAppUrl = epf.util.config.ConfigUtil.getString(Naming.WebApp.WEB_APP_URL);
-			final PublicKey verifyKey = KeyUtil.generatePublic("RSA", verifyKeyText, Base64.getDecoder(), "UTF-8");
+			final PublicKey verifyKey = KeyUtil.decodePublicKey("RSA", verifyKeyText.getBytes("UTF-8"));
 			jwtUtil.initialize(Naming.EPF, webAppUrl, verifyKey);
 		}
 		catch(Exception ex) {

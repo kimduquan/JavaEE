@@ -11,6 +11,8 @@ COPY --chown=1001:0 target/servers/test/bootstrap.properties /config/
 COPY --chown=1001:0 target/shared /liberty/usr/shared
 
 COPY --chown=1001:0 dev.p12 /
+COPY --chown=1001:0 private.pem /
+COPY --chown=1001:0 public.pem /
 
 COPY --chown=1001:0 EPF-security.trace.db /liberty/usr/
 COPY --chown=1001:0 EPF-query.mv.db /liberty/usr/

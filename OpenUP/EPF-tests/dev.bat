@@ -10,6 +10,8 @@ copy %USER_DIR%\EPF-security.mv.db .\
 copy %USER_DIR%\EPF-security.trace.db .\
 copy %USER_DIR%\EPF-query.mv.db .\
 copy %SOURCE_DIR%\dev.p12 .\
+copy %SOURCE_DIR%\private.pem .\
+copy %SOURCE_DIR%\public.pem .\
 call mvn package -U -P Container
 call docker build -t openup:1.0.0 ./
 call stop.bat

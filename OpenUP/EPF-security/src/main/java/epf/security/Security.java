@@ -5,10 +5,8 @@ import java.net.URI;
 import java.net.URL;
 import java.security.KeyStore;
 import java.security.PrivateKey;
-import java.security.PublicKey;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -52,6 +50,7 @@ import epf.security.schema.Token;
 import epf.security.util.Credential;
 import epf.security.util.CredentialUtil;
 import epf.util.config.ConfigUtil;
+import epf.util.io.FileUtil;
 import epf.util.logging.LogManager;
 import epf.util.security.KeyStoreUtil;
 import epf.util.security.KeyUtil;
@@ -72,17 +71,12 @@ public class Security implements epf.security.client.Security, epf.security.clie
     /**
      * 
      */
-    private static final Logger LOGGER = LogManager.getLogger(Security.class.getName());
+    private static transient final Logger LOGGER = LogManager.getLogger(Security.class.getName());
     
     /**
      * 
      */
     private transient PrivateKey privateKey;
-    
-    /**
-     * 
-     */
-    private transient PublicKey publicKey;
     
 	/**
 	 *
@@ -109,8 +103,8 @@ public class Security implements epf.security.client.Security, epf.security.clie
      * 
      */
     @Inject
-    @ConfigProperty(name = Naming.Security.JWT.ISSUE_KEY)
-    transient String privateKeyText;
+    @ConfigProperty(name = Naming.Security.JWT.DECRYPTOR_KEY_LOCATION)
+    transient String privateKeyLocation;
     
     /**
      * 
@@ -125,13 +119,6 @@ public class Security implements epf.security.client.Security, epf.security.clie
     @Inject
     @ConfigProperty(name = Naming.Security.JWT.EXPIRE_DURATION)
     transient String expireDuration;
-    
-    /**
-     * 
-     */
-    @Inject
-    @ConfigProperty(name = Naming.Security.JWT.VERIFY_KEY)
-    transient String publicKeyText;
     
     /**
      * 
@@ -204,9 +191,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
         	final char[] trustStorePassword = ConfigUtil.getChars(Naming.Client.SSL_TRUST_STORE_PASSWORD);
         	trustStore = KeyStoreUtil.loadKeyStore(trustStoreType, trustStoreFile, trustStorePassword);
         	builder = ClientBuilder.newBuilder().trustStore(trustStore);
-            
-        	privateKey = KeyUtil.generatePrivate("RSA", privateKeyText, Base64.getDecoder(), "UTF-8");
-            publicKey = KeyUtil.generatePublic("RSA", publicKeyText, Base64.getDecoder(), "UTF-8");
+        	privateKey = KeyUtil.decodePrivateKey("RSA", FileUtil.readAllBytes(privateKeyLocation));
             authProviders.put(Naming.Security.Auth.GOOGLE, new StandardProvider(new URI(googleDiscoveryUrl), googleClientSecret.toCharArray(), googleClientId, builder));
             authProviders.put(Naming.Security.Auth.FACEBOOK, new StandardProvider(new URI(facebookDiscoveryUrl), facebookClientSecret.toCharArray(), facebookClientId, builder));
         } 
@@ -274,7 +259,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 									final Set<String> audience = TokenBuilder.buildAudience(url, forwardedHost, credential.getTenant());
 									final Map<String, Object> newClaims = TokenBuilder.buildClaims(claims, credential.getTenant());
 									final Token token = newToken(principal.getName(), groups, audience, newClaims, expireDuration);
-									final TokenBuilder builder = new TokenBuilder(token, privateKey, publicKey);
+									final TokenBuilder builder = new TokenBuilder(token, privateKey);
 									final Token newToken = builder.build();
 									sessionStore.putSession(newToken, credential);
 									return newToken;
@@ -322,7 +307,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 		audience.addAll(jwt.getAudience());
 		return identityStore.getCallerGroups(session.getCredential())
 				.thenCombine(principalStore.getCallerClaims(session.getCredential()), (groups, claims) -> newToken(jwt, groups, audience, claims, tokenDuration))
-						.thenApply(token -> new TokenBuilder(token, privateKey, publicKey))
+						.thenApply(token -> new TokenBuilder(token, privateKey))
 						.thenApply(builder -> builder.build())
 						.thenApply(newToken -> {
 							sessionStore.putSession(newToken, session.getCredential());
@@ -358,7 +343,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 		final Set<String> audience = TokenBuilder.buildAudience(url, forwardedHost, Optional.ofNullable(tenant));
 		return identityStore.getCallerGroups(session.getCredential())
 		.thenCombine(principalStore.getCallerClaims(session.getCredential()), (groups, claims) -> newToken(session.getCredential().getCaller(), groups, audience, claims, expireDuration))
-		.thenApply(token -> new TokenBuilder(token, privateKey, publicKey))
+		.thenApply(token -> new TokenBuilder(token, privateKey))
 		.thenApply(builder -> builder.build())
 		.thenApply(newToken -> {
 			sessionStore.putSession(newToken, session.getCredential());
@@ -400,7 +385,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
 		newToken.setIssuer(issuer);
 		newToken.setName(claims.getStringClaimValue(Naming.Security.Claims.EMAIL));
 		newToken.setSubject(claims.getSubject());
-		final TokenBuilder builder = new TokenBuilder(newToken, privateKey, publicKey);
+		final TokenBuilder builder = new TokenBuilder(newToken, privateKey);
 		return Response.ok(builder.build()).build();
 	}
 	

@@ -2,7 +2,6 @@ package epf.security.internal.token;
 
 import java.net.URL;
 import java.security.PrivateKey;
-import java.security.PublicKey;
 import java.util.Map.Entry;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,22 +37,14 @@ public class TokenBuilder {
 	private transient final PrivateKey privateKey;
 	
 	/**
-	 * 
-	 */
-	private transient final PublicKey publicKey;
-	
-	/**
 	 * @param token
 	 * @param privateKey
-	 * @param encryptKey
 	 */
-	public TokenBuilder(final Token token, final PrivateKey privateKey, final PublicKey publicKey) {
+	public TokenBuilder(final Token token, final PrivateKey privateKey) {
 		Objects.requireNonNull(token, "Token");
 		Objects.requireNonNull(privateKey, "PrivateKey");
-		Objects.requireNonNull(publicKey, "PublicKey");
 		this.token = token;
 		this.privateKey = privateKey;
-		this.publicKey = publicKey;
 	}
 
 	/**
@@ -79,7 +70,7 @@ public class TokenBuilder {
 	    jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.RSA_USING_SHA256);
 		jws.setPayload(claims.toJson());
 	    jws.setKey(privateKey);
-	    publicKey.getAlgorithm();
+	    privateKey.getAlgorithm();
 	    try {
 			final String jwt = jws.getCompactSerialization();
 		    token.setRawToken(jwt);

@@ -738,15 +738,20 @@ public interface Naming {
 	     */
 	    interface JWT {
 	    	
-	        /**
-	         * 
-	         */
-	        String ISSUE_KEY = "epf.security.jwt.issue.key";
-	        
-	        /**
-	         * 
-	         */
-	        String VERIFY_KEY = "epf.security.jwt.verify.publickey";
+	    	/**
+	    	 * 
+	    	 */
+	    	String VERIFIER_PUBLIC_KEY_LOCATION = "epf.security.jwt.verify.publickey.location";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String VERIFIER_PUBLIC_KEY = "epf.security.jwt.verify.publickey";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String DECRYPTOR_KEY_LOCATION = "epf.security.jwt.decrypt.key.location";
 	        
 	        /**
 	         * 

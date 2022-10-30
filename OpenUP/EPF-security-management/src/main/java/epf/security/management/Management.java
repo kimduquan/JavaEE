@@ -1,10 +1,8 @@
 package epf.security.management;
 
 import java.security.PrivateKey;
-import java.security.PublicKey;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -33,6 +31,7 @@ import epf.security.management.internal.ManagementIdentityStore;
 import epf.security.schema.Token;
 import epf.security.util.Credential;
 import epf.security.util.CredentialUtil;
+import epf.util.io.FileUtil;
 import epf.util.logging.LogManager;
 import epf.util.security.KeyUtil;
 
@@ -53,25 +52,13 @@ public class Management implements epf.security.client.Management {
      * 
      */
     private transient PrivateKey privateKey;
-    
-    /**
-     * 
-     */
-    private transient PublicKey publicKey;
 	
 	/**
      * 
      */
     @Inject
-    @ConfigProperty(name = Naming.Security.JWT.ISSUE_KEY)
-    transient String privateKeyText;
-    
-    /**
-     * 
-     */
-    @Inject
-    @ConfigProperty(name = Naming.Security.JWT.VERIFY_KEY)
-    transient String publicKeyText;
+    @ConfigProperty(name = Naming.Security.JWT.DECRYPTOR_KEY_LOCATION)
+    transient String privateKeyLocation;
 	
 	/**
      * 
@@ -85,8 +72,7 @@ public class Management implements epf.security.client.Management {
     @PostConstruct
     protected void postConstruct() {
     	try {
-			privateKey = KeyUtil.generatePrivate("RSA", privateKeyText, Base64.getDecoder(), "UTF-8");
-	        publicKey = KeyUtil.generatePublic("RSA", publicKeyText, Base64.getDecoder(), "UTF-8");
+			privateKey = KeyUtil.decodePrivateKey("RSA", FileUtil.readAllBytes(privateKeyLocation));
 		}
     	catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "[Management.postConstruct]", e);
@@ -100,15 +86,13 @@ public class Management implements epf.security.client.Management {
 			final String password, 
 			final String firstName, 
 			final String lastName,
-			final List<String> forwardedHost,
-            final List<String> forwardedPort,
-            final List<String> forwardedProto) throws Exception {
+			final List<String> forwardedHost) throws Exception {
 		final Credential credential = new Credential(null, email, new Password(password));
 		if(identityStore.isCaller(credential).toCompletableFuture().get()) {
 			throw new BadRequestException();
 		}
 		identityStore.putCredential(credential).toCompletableFuture().get();
-		final Set<String> audience = TokenBuilder.buildAudience(null, forwardedHost, forwardedPort, forwardedProto, Optional.empty());
+		final Set<String> audience = TokenBuilder.buildAudience(null, forwardedHost, Optional.empty());
 		final Set<String> groups = new HashSet<>();
 		groups.add(Naming.EPF);
 		final Map<String, Object> claims = new HashMap<>();
@@ -127,7 +111,7 @@ public class Management implements epf.security.client.Management {
 		newToken.setName(email);
 		newToken.setSubject(email);
 		
-		final TokenBuilder builder = new TokenBuilder(newToken, privateKey, publicKey);
+		final TokenBuilder builder = new TokenBuilder(newToken, privateKey);
 		return Response.ok(builder.build().getRawToken()).build();
 	}
 
@@ -135,13 +119,11 @@ public class Management implements epf.security.client.Management {
 	@Override
 	public Response resetPassword(
 			final String email,
-			final List<String> forwardedHost,
-            final List<String> forwardedPort,
-            final List<String> forwardedProto) throws Exception {
+			final List<String> forwardedHost) throws Exception {
 		final Credential credential = new Credential(null, email, new Password(new char[0]));
 		final Boolean exist = identityStore.isCaller(credential).toCompletableFuture().get();
 		if(exist) {
-			final Set<String> audience = TokenBuilder.buildAudience(null, forwardedHost, forwardedPort, forwardedProto, Optional.empty());
+			final Set<String> audience = TokenBuilder.buildAudience(null, forwardedHost, Optional.empty());
 			final Set<String> groups = new HashSet<>();
 			groups.add(Naming.EPF);
 			final Map<String, Object> claims = new HashMap<>();
@@ -157,7 +139,7 @@ public class Management implements epf.security.client.Management {
 			newToken.setName(email);
 			newToken.setSubject(email);
 			
-			final TokenBuilder builder = new TokenBuilder(newToken, privateKey, publicKey);
+			final TokenBuilder builder = new TokenBuilder(newToken, privateKey);
 			return Response.ok(builder.build().getRawToken()).build();
 		}
 		throw new BadRequestException();

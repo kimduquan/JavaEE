@@ -62,6 +62,7 @@
 		<liberty.env.epf_client_net_ssl_keyStoreType>PKCS12</liberty.env.epf_client_net_ssl_keyStoreType>
 		<liberty.env.epf_client_net_ssl_trustStorePassword>changeit</liberty.env.epf_client_net_ssl_trustStorePassword>
 		<liberty.env.epf_client_net_ssl_trustStoreType>PKCS12</liberty.env.epf_client_net_ssl_trustStoreType>
+		<liberty.env.mp_jwt_verify_issuer>EPF</liberty.env.mp_jwt_verify_issuer>
     </properties>
     <dependencies>
     	<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-queryparser -->
@@ -546,6 +547,10 @@
 				<httpHost>localhost</httpHost>
 				<liberty.env.epf_client_net_ssl_keyStore>~/git/JavaEE/OpenUP/dev.p12</liberty.env.epf_client_net_ssl_keyStore>
 				<liberty.env.epf_client_net_ssl_trustStore>~/git/JavaEE/OpenUP/dev.p12</liberty.env.epf_client_net_ssl_trustStore>
+				<liberty.env.mp_jwt_decrypt_key_location>~/git/JavaEE/OpenUP/private.pem</liberty.env.mp_jwt_decrypt_key_location>
+				<liberty.env.epf_security_jwt_decrypt_key_location>~/git/JavaEE/OpenUP/private.pem</liberty.env.epf_security_jwt_decrypt_key_location>
+				<liberty.env.mp_jwt_verify_publickey_location>~/git/JavaEE/OpenUP/public.pem</liberty.env.mp_jwt_verify_publickey_location>
+				<liberty.env.epf_security_jwt_verify_publickey_location>~/git/JavaEE/OpenUP/public.pem</liberty.env.epf_security_jwt_verify_publickey_location>
         		<geckodriver>./geckodriver</geckodriver>
         		<shell_runner>./target/EPF-shell-${project.version}-runner</shell_runner>
         		<opencv_java>/usr/share/java/opencv-420.jar</opencv_java>
@@ -563,6 +568,10 @@
 				<httpHost>localhost</httpHost>
 				<liberty.env.epf_client_net_ssl_keyStore>C://GIT/JavaEE/OpenUP/dev.p12</liberty.env.epf_client_net_ssl_keyStore>
 				<liberty.env.epf_client_net_ssl_trustStore>C://GIT/JavaEE/OpenUP/dev.p12</liberty.env.epf_client_net_ssl_trustStore>
+				<liberty.env.mp_jwt_decrypt_key_location>C://GIT/JavaEE/OpenUP/private.pem</liberty.env.mp_jwt_decrypt_key_location>
+				<liberty.env.epf_security_jwt_decrypt_key_location>C://GIT/JavaEE/OpenUP/private.pem</liberty.env.epf_security_jwt_decrypt_key_location>
+				<liberty.env.mp_jwt_verify_publickey_location>C://GIT/JavaEE/OpenUP/public.pem</liberty.env.mp_jwt_verify_publickey_location>
+				<liberty.env.epf_security_jwt_verify_publickey_location>C://GIT/JavaEE/OpenUP/public.pem</liberty.env.epf_security_jwt_verify_publickey_location>
         		<geckodriver>./geckodriver.exe</geckodriver>
         		<shell_runner>C://GIT/JavaEE/OpenUP/EPF-shell/target/EPF-shell-${project.version}-runner.exe</shell_runner>
         		<opencv_java>C://Program Files/opencv/build/java/opencv-452.jar</opencv_java>
@@ -581,6 +590,10 @@
 				<liberty.env.epf_transaction_url>http://epf-transaction.default.svc.cluster.local:9182/transaction/transaction/</liberty.env.epf_transaction_url>
 				<liberty.env.epf_client_net_ssl_keyStore>/dev.p12</liberty.env.epf_client_net_ssl_keyStore>
 				<liberty.env.epf_client_net_ssl_trustStore>/dev.p12</liberty.env.epf_client_net_ssl_trustStore>
+				<liberty.env.mp_jwt_decrypt_key_location>/private.pem</liberty.env.mp_jwt_decrypt_key_location>
+				<liberty.env.epf_security_jwt_decrypt_key_location>/private.pem</liberty.env.epf_security_jwt_decrypt_key_location>
+				<liberty.env.mp_jwt_verify_publickey_location>/public.pem</liberty.env.mp_jwt_verify_publickey_location>
+				<liberty.env.epf_security_jwt_verify_publickey_location>/public.pem</liberty.env.epf_security_jwt_verify_publickey_location>
         		<geckodriver>./geckodriver.exe</geckodriver>
         		<shell_runner>C://GIT/JavaEE/OpenUP/EPF-shell/target/EPF-shell-${project.version}-runner.exe</shell_runner>
         		<opencv_java>/usr/share/java/opencv-420.jar</opencv_java>

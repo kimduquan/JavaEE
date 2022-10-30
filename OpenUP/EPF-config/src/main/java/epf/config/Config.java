@@ -2,6 +2,8 @@ package epf.config;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.security.PermitAll;
 import javax.enterprise.context.ApplicationScoped;
@@ -9,6 +11,8 @@ import javax.inject.Inject;
 import javax.ws.rs.Path;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import epf.naming.Naming;
+import epf.util.io.FileUtil;
+import epf.util.logging.LogManager;
 
 /**
  *
@@ -17,6 +21,11 @@ import epf.naming.Naming;
 @ApplicationScoped
 @Path(Naming.CONFIG)
 public class Config implements epf.client.config.Config {
+	
+	/**
+	 * 
+	 */
+	private transient static final Logger LOGGER = LogManager.getLogger(Config.class.getName());
     
     /**
      * 
@@ -96,9 +105,9 @@ public class Config implements epf.client.config.Config {
     /**
      * 
      */
-    @ConfigProperty(name = Naming.Security.JWT.VERIFY_KEY)
+    @ConfigProperty(name = Naming.Security.JWT.VERIFIER_PUBLIC_KEY_LOCATION)
     @Inject
-    private transient String verifyKey;
+    private transient String publicKeyLocation;
     
     /**
      * 
@@ -114,7 +123,12 @@ public class Config implements epf.client.config.Config {
     	configs.put(Naming.Security.Auth.FACEBOOK_CLIENT_ID, facebookClientId);
     	configs.put(Naming.Security.Auth.FACEBOOK_CLIENT_SECRET, facebookClientSecret);
     	configs.put(Naming.Security.Auth.AUTH_URL, authUrl);
-    	configs.put(Naming.Security.JWT.VERIFY_KEY, verifyKey);
+    	try {
+        	configs.put(Naming.Security.JWT.VERIFIER_PUBLIC_KEY, FileUtil.readString(publicKeyLocation, "UTF-8"));
+    	}
+    	catch(Exception ex) {
+    		LOGGER.log(Level.SEVERE, Naming.Security.JWT.VERIFIER_PUBLIC_KEY, ex);
+    	}
     	configs.put(Naming.WebApp.Messaging.MESSAGES_LIMIT, String.valueOf(messagesLimit));
     }
     
