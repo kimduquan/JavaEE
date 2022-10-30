@@ -1,9 +1,6 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:a="http://xmlns.jcp.org/jsf/passthrough" xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <ui:composition template="blank.xhtml">
-<h:head>
-	<ui:define name="title"><h:outputText value="#{i18n['epf.webapp.index']}" /></ui:define>
-</h:head>
-<h:body>
+<ui:define name="title"><h:outputText value="#{i18n['epf.webapp.index']}" /></ui:define>
                         <ui:define name="alertsDropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -416,5 +413,5 @@
   	<script src="https://unpkg.com/redux@4.1.2/dist/redux.js" />
   	<h:outputScript library="messaging" name="messaging.js" />
 	</ui:define>
-</h:body>
+</ui:composition>
 </html>
