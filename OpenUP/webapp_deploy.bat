@@ -1,3 +1,4 @@
+start kubectl port-forward svc/epf-webapp-internal 9990:9990
 cd EPF-webapp
 call dev.bat
 cd ../

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+<html lang="en" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:a="http://xmlns.jcp.org/jsf/passthrough" xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
 
@@ -9,26 +9,26 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <title>SB Admin 2 - Blank</title>
+    <title><h:outputText value="#{i18n['epf.webapp']}" /> - <ui:insert name="title" /></title>
 
     <!-- Custom fonts for this template-->
-    <link href="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
+    <link type="text/css" rel="stylesheet" href="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/vendor/fontawesome-free/css/all.min.css" />
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet" />
 
     <!-- Custom styles for this template-->
-    <link href="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/css/sb-admin-2.min.css" rel="stylesheet" />
+	<link type="text/css" rel="stylesheet" href="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/css/sb-admin-2.min.css" />
 	<ui:insert name="head" />
 </h:head>
 
-<h:body a:id="page-top"><ui:insert name="page-top">
-
+<h:body a:id="page-top">
+	<ui:insert name="page-top">
     <!-- Page Wrapper -->
-    <ui:insert name="wrapper"><div id="wrapper">
+    <div id="wrapper"><ui:insert name="wrapper">
 
         <!-- Sidebar -->
-        <ui:insert name="accordionSidebar"><ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar"><ui:insert name="accordionSidebar">
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/webapp">
@@ -43,9 +43,9 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <h:link styleClass="nav-link" outcome="index">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span></a>
+                    <span>Dashboard</span></h:link>
             </li>
 
             <!-- Divider -->
@@ -63,13 +63,13 @@
                     <i class="fas fa-fw fa-cog"></i>
                     <span>Components</span>
                 </a>
-                <ui:insert name="collapseTwo"><div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar"><ui:insert name="collapseTwo">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Custom Components:</h6>
                         <a class="collapse-item" href="buttons.html">Buttons</a>
                         <a class="collapse-item" href="cards.html">Cards</a>
                     </div>
-                </div></ui:insert>
+                </ui:insert></div>
             </li>
 
             <!-- Nav Item - Utilities Collapse Menu -->
@@ -79,8 +79,8 @@
                     <i class="fas fa-fw fa-wrench"></i>
                     <span>Utilities</span>
                 </a>
-                <ui:insert name="collapseUtilities"><div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-                    data-parent="#accordionSidebar">
+                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar"><ui:insert name="collapseUtilities">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Custom Utilities:</h6>
                         <a class="collapse-item" href="utilities-color.html">Colors</a>
@@ -88,7 +88,7 @@
                         <a class="collapse-item" href="utilities-animation.html">Animations</a>
                         <a class="collapse-item" href="utilities-other.html">Other</a>
                     </div>
-                </div></ui:insert>
+                </ui:insert></div>
             </li>
 
             <!-- Divider -->
@@ -106,8 +106,8 @@
                     <i class="fas fa-fw fa-folder"></i>
                     <span>Pages</span>
                 </a>
-                <ui:insert name="collapsePages"><div id="collapsePages" class="collapse show" aria-labelledby="headingPages"
-                    data-parent="#accordionSidebar">
+                <div id="collapsePages" class="collapse show" aria-labelledby="headingPages"
+                    data-parent="#accordionSidebar"><ui:insert name="collapsePages">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Login Screens:</h6>
                         <a class="collapse-item" href="/security-auth">Login</a>
@@ -115,10 +115,10 @@
                         <a class="collapse-item" href="/security/webapp/forgot-password.html">Forgot Password</a>
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Other Pages:</h6>
-                        <a class="collapse-item" href="404.html">404 Page</a>
-                        <a class="collapse-item active" href="blank.html">Blank Page</a>
+                        <h:link styleClass="collapse-item" outcome="404">404 Page</h:link>
+                        <h:link styleClass="collapse-item active" outcome="blank">Blank Page</h:link>
                     </div>
-                </div></ui:insert>
+                </ui:insert></div>
             </li>
 
             <!-- Nav Item - Charts -->
@@ -130,7 +130,7 @@
 
             <!-- Nav Item - Tables -->
             <li class="nav-item">
-                <a class="nav-link" href="tables.html">
+                <a class="nav-link" href="/persistence/query/tables.html?schema=EPF_Work_Products&entity=EPF_Artifact">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Tables</span></a>
             </li>
@@ -143,15 +143,15 @@
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
 
-        </ul></ui:insert>
+        </ui:insert></ul>
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
-        <ui:insert name="content-wrapper"><div id="content-wrapper" class="d-flex flex-column">
-
+        <div id="content-wrapper" class="d-flex flex-column">
+			<ui:insert name="content-wrapper">
             <!-- Main Content -->
-            <ui:insert name="content"><div id="content">
-
+            <div id="content">
+				<ui:insert name="content">
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
@@ -161,8 +161,8 @@
                     </button>
 
                     <!-- Topbar Search -->
-                    <ui:insert name="navbar-search"><h:form
-                        styleClass="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                    <h:form
+                        styleClass="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"><ui:insert name="navbar-search">
                         <div class="input-group">
                             <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
                                 aria-label="Search" aria-describedby="basic-addon2" />
@@ -172,7 +172,7 @@
                                 </button>
                             </div>
                         </div>
-                    </h:form></ui:insert>
+                    </ui:insert></h:form>
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -210,7 +210,7 @@
                                 <span class="badge badge-danger badge-counter">3+</span>
                             </a>
                             <!-- Dropdown - Alerts -->
-                            <ui:insert name="alertsDropdown"><div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="alertsDropdown">
                                 <h6 class="dropdown-header">
                                     Alerts Center
@@ -261,7 +261,7 @@
                                 <span class="badge badge-danger badge-counter">7</span>
                             </a>
                             <!-- Dropdown - Messages -->
-                            <ui:insert name="messagesDropdown"><div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="messagesDropdown">
                                 <h6 class="dropdown-header">
                                     Message Center
@@ -315,7 +315,7 @@
                                     </div>
                                 </a>
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
-                            </div></ui:insert>
+                            </div>
                         </li>
 
                         <div class="topbar-divider d-none d-sm-block"></div>
@@ -324,12 +324,12 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-                                <img class="img-profile rounded-circle"
-                                    src="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/img/undraw_profile.svg" />
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><h:outputText value="#{security_principal.name}" /></span>
+                                <img jsf:rendered="#{security_principal.getClaim('picture') == null}" class="img-profile rounded-circle" src="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/img/undraw_profile.svg"
+                                    /><img jsf:rendered="#{security_principal.getClaim('picture') != null}" src="#{security_principal.getClaim('picture')}" class="img-profile rounded-circle" />
                             </a>
                             <!-- Dropdown - User Information -->
-                            <ui:insert name="userDropdown"><div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
                                 <a class="dropdown-item" href="#">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -348,7 +348,7 @@
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
-                            </div></ui:insert>
+                            </div>
                         </li>
 
                     </ul>
@@ -358,30 +358,30 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-
-                    <!-- Page Heading -->
-                    <h1 class="h3 mb-4 text-gray-800">Blank Page</h1>
-
+					<ui:insert name="page-content">
+	                    <!-- Page Heading -->
+	                    <h1 class="h3 mb-4 text-gray-800">Blank Page</h1>
+					</ui:insert>
                 </div>
                 <!-- /.container-fluid -->
-
-            </div></ui:insert>
+				</ui:insert>
+            </div>
             <!-- End of Main Content -->
 
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright  Your Website 2020</span>
+                        <span><h:outputText value="Copyright &amp;copy; Your Website 2020" /></span>
                     </div>
                 </div>
             </footer>
             <!-- End of Footer -->
-
-        </div></ui:insert>
+			</ui:insert>
+        </div>
         <!-- End of Content Wrapper -->
 
-    </div></ui:insert>
+    </ui:insert></div>
     <!-- End of Page Wrapper -->
 
     <!-- Scroll to Top Button-->
@@ -390,8 +390,8 @@
     </a>
 
     <!-- Logout Modal-->
-    <ui:insert name="logoutModal"><div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true"><ui:insert name="logoutModal"><h:form>
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -407,18 +407,18 @@
                 </div>
             </div>
         </div>
-    </div></ui:insert>
-	
+    </h:form></ui:insert></div>
+
     <!-- Bootstrap core JavaScript-->
-    <script src="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/vendor/jquery/jquery.min.js"></script>
-    <script src="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/vendor/jquery/jquery.min.js" />
+    <script type="text/javascript" src="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/vendor/bootstrap/js/bootstrap.bundle.min.js" />
 
     <!-- Core plugin JavaScript-->
-    <script src="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script type="text/javascript" src="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/vendor/jquery-easing/jquery.easing.min.js" />
 
     <!-- Custom scripts for all pages-->
-    <script src="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/js/sb-admin-2.min.js"></script>
-	<ui:insert name="script" />
+    <script type="text/javascript" src="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/js/sb-admin-2.min.js" />
+	<ui:insert name="script"></ui:insert>
 </ui:insert></h:body>
 
 </html>
