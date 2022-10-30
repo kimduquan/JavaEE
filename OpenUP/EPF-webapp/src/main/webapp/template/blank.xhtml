@@ -9,7 +9,7 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <title><h:outputText value="#{i18n['epf.webapp']}" /> - <ui:insert name="title"></ui:insert></title>
+    <title><h:outputText value="#{i18n['epf.webapp']}" /> - <ui:insert name="title" /></title>
 
     <!-- Custom fonts for this template-->
     <link type="text/css" rel="stylesheet" href="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/vendor/fontawesome-free/css/all.min.css" />
@@ -18,8 +18,8 @@
         rel="stylesheet" />
 
     <!-- Custom styles for this template-->
-     <link type="text/css" rel="stylesheet" href="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/css/sb-admin-2.min.css" />
-	<ui:insert name="head"></ui:insert>
+	<link type="text/css" rel="stylesheet" href="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/css/sb-admin-2.min.css" />
+	<ui:insert name="head" />
 </h:head>
 
 <h:body a:id="page-top">
@@ -31,12 +31,12 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar"><ui:insert name="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <h:link styleClass="sidebar-brand d-flex align-items-center justify-content-center" outcome="index">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/webapp">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
                 <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
-            </h:link>
+            </a>
 
             <!-- Divider -->
             <hr class="sidebar-divider my-0" />
@@ -66,8 +66,8 @@
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar"><ui:insert name="collapseTwo">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Custom Components:</h6>
-                        <h:link styleClass="collapse-item" outcome="buttons">Buttons</h:link>
-                        <h:link styleClass="collapse-item" outcome="cards">Cards</h:link>
+                        <a class="collapse-item" href="buttons.html">Buttons</a>
+                        <a class="collapse-item" href="cards.html">Cards</a>
                     </div>
                 </ui:insert></div>
             </li>
@@ -83,10 +83,10 @@
                     data-parent="#accordionSidebar"><ui:insert name="collapseUtilities">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Custom Utilities:</h6>
-                        <h:link styleClass="collapse-item" outcome="utilities-color">Colors</h:link>
-                        <h:link styleClass="collapse-item" outcome="utilities-border">Borders</h:link>
-                        <h:link styleClass="collapse-item" outcome="utilities-animation">Animations</h:link>
-                        <h:link styleClass="collapse-item" outcome="utilities-other">Other</h:link>
+                        <a class="collapse-item" href="utilities-color.html">Colors</a>
+                        <a class="collapse-item" href="utilities-border.html">Borders</a>
+                        <a class="collapse-item" href="utilities-animation.html">Animations</a>
+                        <a class="collapse-item" href="utilities-other.html">Other</a>
                     </div>
                 </ui:insert></div>
             </li>
@@ -110,9 +110,9 @@
                     data-parent="#accordionSidebar"><ui:insert name="collapsePages">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Login Screens:</h6>
-                        <h:link styleClass="collapse-item" outcome="login">Login</h:link>
-                        <h:link styleClass="collapse-item" outcome="register">Register</h:link>
-                        <h:link styleClass="collapse-item" outcome="forgot-password">Forgot Password</h:link>
+                        <a class="collapse-item" href="/security-auth">Login</a>
+                        <a class="collapse-item" href="/security/webapp/register.html">Register</a>
+                        <a class="collapse-item" href="/security/webapp/forgot-password.html">Forgot Password</a>
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Other Pages:</h6>
                         <h:link styleClass="collapse-item" outcome="404">404 Page</h:link>
@@ -123,16 +123,16 @@
 
             <!-- Nav Item - Charts -->
             <li class="nav-item">
-                <h:link styleClass="nav-link" outcome="charts">
+                <a class="nav-link" href="charts.html">
                     <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Charts</span></h:link>
+                    <span>Charts</span></a>
             </li>
 
             <!-- Nav Item - Tables -->
             <li class="nav-item">
-                <h:link styleClass="nav-link" outcome="/query/tables"><f:param name="schema" value="EPF_Work_Products" /><f:param name="entity" value="EPF_Artifact" />
+                <a class="nav-link" href="/persistence/query/tables.html?schema=EPF_Work_Products&amp;entity=EPF_Artifact">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Tables</span></h:link>
+                    <span>Tables</span></a>
             </li>
 
             <!-- Divider -->
@@ -164,12 +164,12 @@
                     <h:form
                         styleClass="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
-                            <h:inputText styleClass="form-control bg-light border-0 small" a:placeholder="Search for..."
-                                a:aria-label="Search" a:aria-describedby="basic-addon2" value="#{epf_search_view.text}" />
+                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                                aria-label="Search" aria-describedby="basic-addon2" />
                             <div class="input-group-append">
-                                <h:commandLink styleClass="btn btn-primary" a:type="button" action="#{epf_search_view.search}">
+                                <button class="btn btn-primary" type="button">
                                     <i class="fas fa-search fa-sm"></i>
-                                </h:commandLink>
+                                </button>
                             </div>
                         </div>
                     </h:form>
@@ -178,7 +178,7 @@
                     <ul class="navbar-nav ml-auto">
 
                         <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                        <li class="nav-item dropdown no-arrow d-sm-none">
+                        <li class="nav-item dropdown no-arrow d-sm-none"><ui:insert name="searchDropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-search fa-fw"></i>
@@ -188,21 +188,21 @@
                                 aria-labelledby="searchDropdown">
                                 <h:form styleClass="form-inline mr-auto w-100 navbar-search">
                                     <div class="input-group">
-                                        <h:inputText styleClass="form-control bg-light border-0 small"
-                                            a:placeholder="Search for..." a:aria-label="Search"
-                                            a:aria-describedby="basic-addon2" value="#{epf_search_view.text}" />
+                                        <input type="text" class="form-control bg-light border-0 small"
+                                            placeholder="Search for..." aria-label="Search"
+                                            aria-describedby="basic-addon2" />
                                         <div class="input-group-append">
-                                            <h:commandLink styleClass="btn btn-primary" a:type="button" action="#{epf_search_view.search}">
-			                                    <i class="fas fa-search fa-sm"></i>
-			                                </h:commandLink>
+                                            <button class="btn btn-primary" type="button">
+                                                <i class="fas fa-search fa-sm"></i>
+                                            </button>
                                         </div>
                                     </div>
                                 </h:form>
                             </div>
-                        </li>
+                        </ui:insert></li>
 
                         <!-- Nav Item - Alerts -->
-                        <li class="nav-item dropdown no-arrow mx-1">
+                        <li class="nav-item dropdown no-arrow mx-1"><ui:insert name="alertsDropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-bell fa-fw"></i>
@@ -250,10 +250,10 @@
                                 </a>
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
                             </div>
-                        </li>
+                        </ui:insert></li>
 
                         <!-- Nav Item - Messages -->
-                        <li class="nav-item dropdown no-arrow mx-1">
+                        <li class="nav-item dropdown no-arrow mx-1"><ui:insert name="messagesDropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-envelope fa-fw"></i>
@@ -316,12 +316,12 @@
                                 </a>
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
                             </div>
-                        </li>
+                        </ui:insert></li>
 
                         <div class="topbar-divider d-none d-sm-block"></div>
 
                         <!-- Nav Item - User Information -->
-                        <li class="nav-item dropdown no-arrow">
+                        <li class="nav-item dropdown no-arrow"><ui:insert name="userDropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><h:outputText value="#{security_principal.name}" /></span>
@@ -349,7 +349,7 @@
                                     Logout
                                 </a>
                             </div>
-                        </li>
+                        </ui:insert></li>
 
                     </ul>
 
@@ -372,7 +372,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span><h:outputText value="Copyright &amp;copy; Your Website 2020" /></span>
+                        <span><h:outputText value="Copyright &amp;copy; Your Website 2022" /></span>
                     </div>
                 </div>
             </footer>
@@ -395,7 +395,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel"><ui:insert name="exampleModalLabel">Ready to Leave?</ui:insert></h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -403,7 +403,7 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <h:commandLink styleClass="btn btn-primary" action="#{security_principal.logout}" value="#{i18n['epf.security.logout']}" />
+                    <a class="btn btn-primary" href="/security-auth/security/logout.html">Logout</a>
                 </div>
             </div>
         </div>
@@ -418,7 +418,7 @@
 
     <!-- Custom scripts for all pages-->
     <script type="text/javascript" src="/webapp/resources/startbootstrap-sb-admin-2-gh-pages/js/sb-admin-2.min.js" />
-	<ui:insert name="script"></ui:insert></ui:insert>
-</h:body>
+	<ui:insert name="script"></ui:insert>
+</ui:insert></h:body>
 
 </html>
