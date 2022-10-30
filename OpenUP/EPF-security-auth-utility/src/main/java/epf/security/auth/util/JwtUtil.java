@@ -1,5 +1,6 @@
 package epf.security.auth.util;
 
+import java.net.URL;
 import java.security.PublicKey;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.jwt.consumer.JwtConsumer;
@@ -19,7 +20,8 @@ public class JwtUtil {
 	/**
 	 * 
 	 */
-	public void initialize(final String issuer, final String audience, final PublicKey verifyKey) {
+	public void initialize(final String issuer, final URL url, final PublicKey verifyKey) {
+		final String audience = String.format("%s://%s/", url.getProtocol(), url.getAuthority());
 		jwtConsumer = new JwtConsumerBuilder()
 				.setEnableRequireIntegrity()
 				.setExpectedAudience(audience)

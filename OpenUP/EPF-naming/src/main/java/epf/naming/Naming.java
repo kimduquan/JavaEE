@@ -752,6 +752,11 @@ public interface Naming {
 	    	 * 
 	    	 */
 	    	String DECRYPTOR_KEY_LOCATION = "epf.security.jwt.decrypt.key.location";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String AUDIENCES = "epf.security.jwt.verify.audiences";
 	        
 	        /**
 	         * 

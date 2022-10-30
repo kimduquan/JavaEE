@@ -415,7 +415,7 @@
 						<epf.client.net.ssl.trustStore>${project.basedir}/dev.p12</epf.client.net.ssl.trustStore>
 						<epf.client.net.ssl.trustStorePassword>changeit</epf.client.net.ssl.trustStorePassword>
 						<epf.client.net.ssl.trustStoreType>PKCS12</epf.client.net.ssl.trustStoreType>
-						<org.eclipse.jetty.websocket.jsr356.ssl-trust-all>true</org.eclipse.jetty.websocket.jsr356.ssl-trust-all>
+						<webdriver.firefox.binary>C:\Program Files\Mozilla Firefox\firefox.exe</webdriver.firefox.binary>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>

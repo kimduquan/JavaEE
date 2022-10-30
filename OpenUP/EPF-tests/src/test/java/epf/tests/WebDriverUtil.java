@@ -31,6 +31,9 @@ public class WebDriverUtil {
 		if(webdriverDriver == null) {
 			System.setProperty("webdriver.gecko.driver", "./geckodriver.exe");
 		}
+		
+		options.setBinary(System.getProperty("webdriver.firefox.binary"));
+		
 		final RemoteWebDriver driver = new FirefoxDriver(options);
 		
 		final String implicit = System.getProperty("webdriver.timeouts.implicit");

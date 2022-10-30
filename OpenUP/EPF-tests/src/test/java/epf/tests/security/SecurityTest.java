@@ -187,16 +187,15 @@ public class SecurityTest {
         Token jwt = authenticate(token);
         Assert.assertNotNull("Token", jwt);
         Assert.assertNotNull("Token.audience", jwt.getAudience());
-        Assert.assertEquals("Token.audience.size", 2, jwt.getAudience().size());
+        Assert.assertEquals("Token.audience.size", 1, jwt.getAudience().size());
         Assert.assertArrayEquals(
                 "Token.audience", 
                 new String[]{
                     String.format(
                     		"%s://%s/", 
                             securityUrl.getScheme(), 
-                            securityUrl.getHost() + ":" + securityUrl.getPort()
-                    ),
-                    url.toString()
+                            securityUrl.getAuthority()
+                    )
                 }, 
                 jwt.getAudience().toArray()
         );

@@ -14,7 +14,7 @@ cd ../
 cd EPF-gateway
 call ./dev.bat
 cd ../
-:: call ./install.bat &
+call ./webapp_deploy.bat
 cd EPF-shell
 call ./dev.bat
 cd ../
