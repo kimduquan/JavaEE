@@ -91,11 +91,8 @@ public class TokenBuilder {
             final Optional<String> tenant){
     	final Set<String> audience = new HashSet<>();
     	if(url != null) {
-    		audience.add(url.toString());
+    		audience.add(String.format("%s://%s/", url.getProtocol(), url.getAuthority()));
     	}
-		if(forwardedHost != null) {
-			forwardedHost.forEach(audience::add);
-		}
 		tenant.ifPresent(audience::add);
 		return audience;
     }

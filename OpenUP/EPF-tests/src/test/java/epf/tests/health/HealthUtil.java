@@ -20,16 +20,7 @@ public interface HealthUtil {
 	static boolean isReady() throws Exception {
 		try(Client client = ClientUtil.newClient(ConfigUtil.getURI(Naming.Health.HEALTH_URL))){
 			try(Response response = Health.ready(client)){
-				if(response.getStatus() == Response.Status.OK.getStatusCode()) {
-					try(Client client2 = ClientUtil.newClient(ConfigUtil.getURI(Naming.Gateway.HEALTH_URL))){
-						try(Response response2 = Health.ready(client2)){
-							return response2.getStatus() == Response.Status.OK.getStatusCode();
-						}
-					}
-				}
-				else {
-					return false;
-				}
+				return response.getStatus() == Response.Status.OK.getStatusCode();
 			}
 		}
 	}
