@@ -24,6 +24,11 @@ public interface QueryClient {
 	/**
 	 *
 	 */
+	String SCHEMA = "schema";
+	
+	/**
+	 *
+	 */
 	String ENTITY = "entity";
 	
 	/**
@@ -41,6 +46,7 @@ public interface QueryClient {
 	String SORT = "sort";
 	
 	/**
+	 * @param token
 	 * @param schema
 	 * @param entity
 	 * @param entityId
@@ -52,15 +58,16 @@ public interface QueryClient {
     Response getEntity(
     		@HeaderParam(HttpHeaders.AUTHORIZATION)
     		final String token,
-    		@PathParam("schema")
+    		@PathParam(SCHEMA)
             final String schema,
-            @PathParam("entity")
+            @PathParam(ENTITY)
             final String entity,
             @PathParam("id")
             final String entityId
             );
 	
 	/**
+	 * @param token
 	 * @param schema
 	 * @param entity
 	 * @return
@@ -70,13 +77,14 @@ public interface QueryClient {
     Response countEntity(
     		@HeaderParam(HttpHeaders.AUTHORIZATION)
     		final String token,
-    		@PathParam("schema")
+    		@PathParam(SCHEMA)
             final String schema,
-            @PathParam("entity")
+            @PathParam(ENTITY)
             final String entity
             );
 	
 	/**
+	 * @param token
 	 * @param entityIds
 	 * @return
 	 */

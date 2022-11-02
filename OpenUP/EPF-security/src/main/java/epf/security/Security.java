@@ -31,6 +31,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.jwt.config.Names;
 import org.jose4j.jwt.JwtClaims;
@@ -41,10 +42,10 @@ import epf.security.auth.util.JwtUtil;
 import epf.security.client.jwt.TokenUtil;
 import epf.security.internal.JPAPrincipal;
 import epf.security.internal.Session;
+import epf.security.internal.TokenCache;
 import epf.security.internal.store.JPAIdentityStore;
 import epf.security.internal.store.JPAPrincipalStore;
 import epf.security.internal.store.OTPSessionStore;
-import epf.security.internal.store.SessionStore;
 import epf.security.internal.token.TokenBuilder;
 import epf.security.schema.Token;
 import epf.security.util.Credential;
@@ -178,7 +179,8 @@ public class Security implements epf.security.client.Security, epf.security.clie
      * 
      */
     @Inject
-    transient SessionStore sessionStore;
+    @Readiness
+    transient TokenCache tokenCache;
     
     /**
      * 
@@ -261,7 +263,6 @@ public class Security implements epf.security.client.Security, epf.security.clie
 									final Token token = newToken(principal.getName(), groups, audience, newClaims, expireDuration);
 									final TokenBuilder builder = new TokenBuilder(token, privateKey);
 									final Token newToken = builder.build();
-									sessionStore.putSession(newToken, credential);
 									return newToken;
 									}
 								)
@@ -272,15 +273,18 @@ public class Security implements epf.security.client.Security, epf.security.clie
     @RolesAllowed(Naming.Security.DEFAULT_ROLE)
     @Override
     public String logOut(final SecurityContext context) throws Exception {
-    	final Session session = sessionStore.removeSession(context).orElseThrow(ForbiddenException::new);
-    	return session.getToken().getName();
+    	final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
+    	tokenCache.expireToken(jwt.getTokenID());
+    	return jwt.getName();
     }
     
     @RolesAllowed(Naming.Security.DEFAULT_ROLE)
     @Override
     public Token authenticate(final SecurityContext context) {
-    	sessionStore.getSession(context).orElseThrow(() -> new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build()));
-    	final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
+    	final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
+    	if(tokenCache.isExpired(jwt.getTokenID())) {
+    		throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED));
+    	}
     	final Token token = TokenUtil.from(jwt);
 		token.setClaims(TokenUtil.getClaims(jwt));
 		token.setRawToken(null);
@@ -290,8 +294,11 @@ public class Security implements epf.security.client.Security, epf.security.clie
     @RolesAllowed(Naming.Security.DEFAULT_ROLE)
     @Override
 	public CompletionStage<Response> update(final String password, final SecurityContext context) throws Exception {
-    	final Session session = sessionStore.getSession(context).orElseThrow(ForbiddenException::new);
-    	return principalStore.setCallerPassword(session.getCredential(), new Password(password)).thenApply((v) -> Response.ok().build());
+    	final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
+    	if(tokenCache.isExpired(jwt.getTokenID())) {
+    		throw new ForbiddenException();
+    	}
+    	return principalStore.setCallerPassword(jwt, new Password(password)).thenApply((v) -> Response.ok().build());
 	}
 
     @RolesAllowed(Naming.Security.DEFAULT_ROLE)
@@ -300,19 +307,18 @@ public class Security implements epf.security.client.Security, epf.security.clie
             final SecurityContext context,
 			final List<String> forwardedHost,
             final String duration) throws Exception {
+    	final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
+    	if(tokenCache.isExpired(jwt.getTokenID())) {
+    		throw new ForbiddenException();
+    	}
+		tokenCache.expireToken(jwt.getTokenID());
 		final String tokenDuration = duration != null && !duration.isEmpty() ? duration : expireDuration;
-		final Session session = sessionStore.removeSession(context).orElseThrow(ForbiddenException::new);
-		final JsonWebToken jwt = (JsonWebToken)context.getUserPrincipal();
 		final Set<String> audience = TokenBuilder.buildAudience(null, forwardedHost, Optional.ofNullable(jwt.getClaim(Naming.Management.TENANT)));
 		audience.addAll(jwt.getAudience());
-		return identityStore.getCallerGroups(session.getCredential())
-				.thenCombine(principalStore.getCallerClaims(session.getCredential()), (groups, claims) -> newToken(jwt, groups, audience, claims, tokenDuration))
+		return identityStore.getCallerGroups(jwt)
+				.thenCombine(principalStore.getCallerClaims(jwt), (groups, claims) -> newToken(jwt, groups, audience, claims, tokenDuration))
 						.thenApply(token -> new TokenBuilder(token, privateKey))
 						.thenApply(builder -> builder.build())
-						.thenApply(newToken -> {
-							sessionStore.putSession(newToken, session.getCredential());
-							return newToken;
-						})
 						.thenApply(token -> token.getRawToken());
 	}
 
@@ -341,14 +347,11 @@ public class Security implements epf.security.client.Security, epf.security.clie
             final String tenant) {
 		final Session session = otpSessionStore.removeSession(oneTimePassword).orElseThrow(() -> new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build()));
 		final Set<String> audience = TokenBuilder.buildAudience(url, forwardedHost, Optional.ofNullable(tenant));
-		return identityStore.getCallerGroups(session.getCredential())
+		final Credential credential = session.getCredential();
+		return identityStore.getCallerGroups(credential)
 		.thenCombine(principalStore.getCallerClaims(session.getCredential()), (groups, claims) -> newToken(session.getCredential().getCaller(), groups, audience, claims, expireDuration))
 		.thenApply(token -> new TokenBuilder(token, privateKey))
 		.thenApply(builder -> builder.build())
-		.thenApply(newToken -> {
-			sessionStore.putSession(newToken, session.getCredential());
-			return newToken;
-		})
 		.thenApply(token -> token.getRawToken());
 	}
 

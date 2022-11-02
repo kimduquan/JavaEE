@@ -11,8 +11,6 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
-import epf.messaging.client.MessageDecoder;
-import epf.messaging.client.MessageEncoder;
 import epf.naming.Naming;
 import epf.util.logging.LogManager;
 
@@ -20,7 +18,7 @@ import epf.util.logging.LogManager;
  * @author PC
  *
  */
-@ServerEndpoint(value = "/messaging/{tenant}/{service}/{path}", encoders = {MessageEncoder.class}, decoders = {MessageDecoder.class})
+@ServerEndpoint(value = "/messaging/{tenant}/{service}/{path}")
 @ApplicationScoped
 public class Messaging {
 	

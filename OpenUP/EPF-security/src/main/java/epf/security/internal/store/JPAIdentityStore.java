@@ -14,6 +14,7 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import org.eclipse.microprofile.context.ManagedExecutor;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.naming.Naming;
 import epf.schema.utility.TenantUtil;
 import epf.security.internal.JPAPrincipal;
@@ -40,17 +41,30 @@ public class JPAIdentityStore {
 	 */
 	@PersistenceContext(unitName = Naming.Security.Internal.SECURITY_UNIT_NAME)
 	private transient EntityManager manager;
-
+	
 	/**
-	 * @param callerPrincipal
+	 * @param credential
 	 * @return
 	 */
 	public CompletionStage<Set<String>> getCallerGroups(final Credential credential) {
 		Objects.requireNonNull(credential, "Credential");
-		final String tenant = TenantUtil.getTenantId(Security.SCHEMA, credential.getTenant().orElse(null));
-		manager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenant);
+		return getCallerGroups(credential.getCaller(), credential.getTenant().orElse(null));
+	}
+
+	/**
+	 * @param jwt
+	 * @return
+	 */
+	public CompletionStage<Set<String>> getCallerGroups(final JsonWebToken jwt) {
+		Objects.requireNonNull(jwt, "JsonWebToken");
+		return getCallerGroups(jwt.getName(), jwt.getClaim(Naming.Management.TENANT));
+	}
+	
+	private CompletionStage<Set<String>> getCallerGroups(final String name, final String tenant){
+		final String tenantId = TenantUtil.getTenantId(Security.SCHEMA, tenant);
+		manager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenantId);
 		final Query query = manager.createNativeQuery(NativeQueries.GET_CURRENT_ROLES);
-		final Stream<?> stream = query.setParameter(1, credential.getCaller()).getResultStream();
+		final Stream<?> stream = query.setParameter(1, name).getResultStream();
 		final Set<String> groups = stream.map(role -> StringUtil.toPascalSnakeCase(role.toString().split("_"))).collect(Collectors.toSet());
 		return executor.completedStage(groups);
 	}

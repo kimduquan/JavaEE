@@ -15,6 +15,7 @@ import javax.security.enterprise.credential.Password;
 import javax.transaction.Transactional;
 import javax.ws.rs.BadRequestException;
 import org.eclipse.microprofile.context.ManagedExecutor;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.naming.Naming;
 import epf.schema.utility.TenantUtil;
 import epf.security.internal.JPAPrincipal;
@@ -43,17 +44,21 @@ public class JPAPrincipalStore {
 	private transient EntityManager manager;
 
 	/**
-	 * @param credential
+	 * @param jwt
 	 * @param password
 	 * @return
 	 * @throws Exception
 	 */
 	@Transactional
-	public CompletionStage<Void> setCallerPassword(final Credential credential, final Password password) throws Exception{
-		Objects.requireNonNull(credential, "Credential");
-		final String tenant = TenantUtil.getTenantId(Security.SCHEMA, credential.getTenant().orElse(null));
-		manager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenant);
-		final Query query = manager.createNativeQuery(String.format(NativeQueries.SET_PASSWORD, credential.getCaller()));
+	public CompletionStage<Void> setCallerPassword(final JsonWebToken jwt, final Password password) throws Exception{
+		Objects.requireNonNull(jwt, "JsonWebToken");
+		return setCallerPassword(jwt.getName(), jwt.getClaim(Naming.Management.TENANT), password);
+	}
+	
+	private CompletionStage<Void> setCallerPassword(final String name, final String tenant, final Password password) throws Exception {
+		final String tenantId = TenantUtil.getTenantId(Security.SCHEMA, tenant);
+		manager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenantId);
+		final Query query = manager.createNativeQuery(String.format(NativeQueries.SET_PASSWORD, name));
 		query.setParameter(1, new String(password.getValue()));
 		query.executeUpdate();
 		manager.flush();
@@ -61,14 +66,27 @@ public class JPAPrincipalStore {
 	}
 
 	/**
+	 * @param jwt
+	 * @return
+	 */
+	public CompletionStage<Map<String, Object>> getCallerClaims(final JsonWebToken jwt) {
+		Objects.requireNonNull(jwt, "JsonWebToken");
+		return getCallerClaims(jwt.getName(), jwt.getClaim(Naming.Management.TENANT));
+	}
+	
+	/**
 	 * @param credential
 	 * @return
 	 */
 	public CompletionStage<Map<String, Object>> getCallerClaims(final Credential credential) {
 		Objects.requireNonNull(credential, "Credential");
-		final String tenant = TenantUtil.getTenantId(Security.SCHEMA, credential.getTenant().orElse(null));
-		manager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenant);
-		final Principal principal = manager.find(Principal.class, credential.getCaller());
+		return getCallerClaims(credential.getCaller(), credential.getTenant().orElse(null));
+	}
+	
+	private CompletionStage<Map<String, Object>> getCallerClaims(final String name, final String tenant){
+		final String tenantId = TenantUtil.getTenantId(Security.SCHEMA, tenant);
+		manager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenantId);
+		final Principal principal = manager.find(Principal.class, name);
 		final Map<String, Object> claims = new HashMap<>();
 		if(principal != null && principal.getClaims() != null) {
 			claims.putAll(principal.getClaims());
