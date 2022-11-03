@@ -21,6 +21,9 @@ cd ../
 cd EPF-transaction
 call stop.bat
 cd ../
+cd EPF-messaging
+call stop.bat
+cd ../
 cd EPF-transaction-internal
 call stop.bat
 cd ../

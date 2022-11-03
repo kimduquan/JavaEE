@@ -5,6 +5,9 @@ call ./compile.bat
 cd EPF-transaction-internal
 call ./dev.bat
 cd ../
+cd EPF-messaging
+call ./dev.bat
+cd ../
 cd EPF-transaction
 call ./dev.bat
 cd ../

@@ -24,10 +24,10 @@
                   host="*"
                   httpPort="${httpPort}"
                   httpsPort="-1" />
-	<application id="EPF-schedule" name="EPF-schedule" context-root="schedule" location="EPF-schedule-1.0.0.war" startAfterRef="EPF-messaging" >
+	<application id="EPF-schedule" name="EPF-schedule" context-root="schedule" location="EPF-schedule-1.0.0.war">
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-    <application id="EPF-shell-schedule" name="EPF-shell-schedule" context-root="shell-schedule" location="EPF-shell-schedule-1.0.0.war" startAfterRef="EPF-messaging" >
+    <application id="EPF-shell-schedule" name="EPF-shell-schedule" context-root="shell-schedule" location="EPF-shell-schedule-1.0.0.war">
         <classloader apiTypeVisibility="+third-party"/>
     </application>
 	<application id="EPF-batch" name="EPF-batch" context-root="batch" location="EPF-batch-1.0.0.war" >
@@ -45,10 +45,7 @@
 	<application id="EPF-management" name="EPF-management" context-root="management" location="EPF-management-1.0.0.war" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-	<application id="EPF-messaging" name="EPF-messaging" context-root="messaging" location="EPF-messaging-1.0.0.war" >
-        <classloader apiTypeVisibility="+third-party"/>
-    </application>
-	<application id="EPF-logging" name="EPF-logging" context-root="logging" location="EPF-logging-1.0.0.war" startAfterRef="EPF-messaging" >
+	<application id="EPF-logging" name="EPF-logging" context-root="logging" location="EPF-logging-1.0.0.war">
         <classloader apiTypeVisibility="+third-party"/>
     </application>
     <application id="EPF-lang" name="EPF-lang" context-root="lang" location="EPF-lang-1.0.0.war" >
@@ -57,10 +54,10 @@
     <application id="EPF-cache" name="EPF-cache" context-root="cache" location="EPF-cache-1.0.0.war">
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-    <application id="EPF-query" name="EPF-query" context-root="query" location="EPF-query-1.0.0.war" startAfterRef="EPF-messaging">
+    <application id="EPF-query" name="EPF-query" context-root="query" location="EPF-query-1.0.0.war">
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-	<application id="EPF-file" name="EPF-file" context-root="file" location="EPF-file-1.0.0.war" startAfterRef="EPF-messaging" >
+	<application id="EPF-file" name="EPF-file" context-root="file" location="EPF-file-1.0.0.war">
         <classloader apiTypeVisibility="+third-party"/>
     </application>
     <application id="EPF-mail" name="EPF-mail" context-root="mail" location="EPF-mail-1.0.0.war">
@@ -75,7 +72,7 @@
 	<application id="EPF-planning" name="EPF-planning" context-root="planning" location="EPF-planning-1.0.0.war" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-    <application id="EPF-net" name="EPF-net" context-root="net" location="EPF-net-1.0.0.war" startAfterRef="EPF-messaging" >
+    <application id="EPF-net" name="EPF-net" context-root="net" location="EPF-net-1.0.0.war">
         <classloader apiTypeVisibility="+third-party"/>
     </application>
     <application id="EPF-schema" name="EPF-schema" context-root="schema" location="EPF-schema-1.0.0.war">
