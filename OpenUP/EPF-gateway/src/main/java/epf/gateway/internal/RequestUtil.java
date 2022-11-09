@@ -17,6 +17,7 @@ import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
@@ -133,32 +134,29 @@ public interface RequestUtil {
     /**
      * @param input
      * @param headers
-     * @param baseUri
      * @param targetUrl
      * @return
      */
-    static Builder buildHeaders(final Builder input, final HttpHeaders headers, final URI baseUri, final URI targetUrl){
+    static Builder buildHeaders(final Builder input, final HttpHeaders headers, final URI targetUrl){
     	Builder builder = input;
-        if(headers != null){
-            final MultivaluedMap<String, String> requestHeaders = headers.getRequestHeaders();
-            final MultivaluedHashMap<String, Object> forwardHeaders = new MultivaluedHashMap<String, Object>(requestHeaders);
-            forwardHeaders.remove(HttpHeaders.CONTENT_LENGTH);
-            forwardHeaders.remove(HttpHeaders.CONTENT_LENGTH.toLowerCase());
-            final String host = forwardHeaders.getFirst(HttpHeaders.HOST).toString();
-        	forwardHeaders.remove(HttpHeaders.HOST);
-        	forwardHeaders.remove(HttpHeaders.HOST.toLowerCase());
-            builder = builder.headers(forwardHeaders);
-            List<Locale> languages = headers.getAcceptableLanguages();
-            if(languages == null || languages.isEmpty() || languages.get(0).getLanguage().isEmpty()) {
-            	languages = Arrays.asList(Locale.getDefault());
-                builder = builder.acceptLanguage(languages.toArray(new Locale[0]));
-            }
-            builder = builder.header(HttpHeaders.HOST, targetUrl.getAuthority());
-            final List<String> forwardedHost = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_HOST);
-            final List<String> newForwardedHost = new ArrayList<>(forwardedHost);
-            newForwardedHost.add(host);
-            builder = builder.header(Naming.Gateway.Headers.X_FORWARDED_HOST, StringUtil.valueOf(newForwardedHost, ","));
+    	final MultivaluedMap<String, String> requestHeaders = headers.getRequestHeaders();
+        final MultivaluedHashMap<String, Object> forwardHeaders = new MultivaluedHashMap<String, Object>(requestHeaders);
+        forwardHeaders.remove(HttpHeaders.CONTENT_LENGTH);
+        forwardHeaders.remove(HttpHeaders.CONTENT_LENGTH.toLowerCase());
+        final String host = forwardHeaders.getFirst(HttpHeaders.HOST).toString();
+    	forwardHeaders.remove(HttpHeaders.HOST);
+    	forwardHeaders.remove(HttpHeaders.HOST.toLowerCase());
+        builder = builder.headers(forwardHeaders);
+        List<Locale> languages = headers.getAcceptableLanguages();
+        if(languages == null || languages.isEmpty() || languages.get(0).getLanguage().isEmpty()) {
+        	languages = Arrays.asList(Locale.getDefault());
+            builder = builder.acceptLanguage(languages.toArray(new Locale[0]));
         }
+        builder = builder.header(HttpHeaders.HOST, targetUrl.getAuthority());
+        final List<String> forwardedHost = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_HOST);
+        final List<String> newForwardedHost = new ArrayList<>(forwardedHost);
+        newForwardedHost.add(host);
+        builder = builder.header(Naming.Gateway.Headers.X_FORWARDED_HOST, StringUtil.valueOf(newForwardedHost, ","));
         return builder;
     }
     
@@ -200,9 +198,31 @@ public interface RequestUtil {
 		WebTarget target = client.target(serviceUri);
 		target = RequestUtil.buildTarget(target, uriInfo, jwt);
 		Invocation.Builder invoke = target.request();
-		final URI baseUri = uriInfo.getBaseUri();
-		invoke = RequestUtil.buildHeaders(invoke, headers, baseUri, serviceUri);
+		invoke = RequestUtil.buildHeaders(invoke, headers, serviceUri);
 		return RequestUtil.buildInvoke(invoke, req.getMethod(), headers.getMediaType(), body);
+    }
+    
+    /**
+     * @param client
+     * @param serviceUrl
+     * @param headers
+     * @param response
+     * @param link
+     * @return
+     */
+    static CompletionStage<Response> fromResponse(
+    		final Client client,
+    		final URI serviceUrl,
+    		final HttpHeaders headers,
+    		final Response response,
+    		final Link link
+    		) {
+    	final URI targetUrl = serviceUrl.resolve(link.getUri());
+		final WebTarget target = client.target(targetUrl);
+		Invocation.Builder builder = target.request();
+		builder = RequestUtil.buildHeaders(builder, headers, targetUrl);
+		final Entity<InputStream> entity = response.hasEntity() ? Entity.entity(response.readEntity(InputStream.class), response.getMediaType()) : null;
+		return builder.rx().method(link.getType(), entity);
     }
     
     /**
