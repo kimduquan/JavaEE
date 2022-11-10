@@ -5,6 +5,7 @@ import java.net.URI;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
@@ -18,6 +19,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.client.util.ClientQueue;
 import epf.gateway.internal.RequestBuilder;
 import epf.gateway.internal.RequestUtil;
+import epf.util.logging.LogManager;
 
 /**
  *
@@ -25,6 +27,11 @@ import epf.gateway.internal.RequestUtil;
  */
 @ApplicationScoped
 public class Application {
+	
+	/**
+	 * 
+	 */
+	private transient static final Logger LOGGER = LogManager.getLogger(Application.class.getName());
 	
 	/**
 	 * 
@@ -58,7 +65,7 @@ public class Application {
     	final RequestBuilder builder = new RequestBuilder(client, serviceUrl, jwt, req, headers, uriInfo, body);
     	return builder.build()
     			.thenApply(response -> closeResponse(response, serviceUrl, client))
-    			.thenCompose(response -> buildResponse(response, headers));
+    			.thenCompose(response -> buildLinkRequest(response, headers));
     }
     
     /**
@@ -78,21 +85,23 @@ public class Application {
      * @param headers
      * @return
      */
-    private CompletionStage<Response> buildResponse(final Response response, final HttpHeaders headers) {
+    private CompletionStage<Response> buildLinkRequest(final Response response, final HttpHeaders headers) {
     	final Optional<Link> firstLink = response.getLinks().stream().findFirst();
     	if(firstLink.isPresent()) {
     		final Link link = firstLink.get();
     		switch(link.getType()) {
-    			case "GET":
-    			case "POST":
-    			case "PUT":
-    			case "DELETE":
-    			case "HEAD":
-    			case "OPTIONS":
-    			case "TRACE":
+    			case RequestUtil.GET:
+    			case RequestUtil.POST:
+    			case RequestUtil.PUT:
+    			case RequestUtil.DELETE:
+    			case RequestUtil.HEAD:
+    			case RequestUtil.OPTIONS:
+    			case RequestUtil.TRACE:
     				final String service = link.getRel();
     				final URI serviceUrl = registry.lookup(service).orElseThrow(NotFoundException::new);
     				final Client client = clients.poll(serviceUrl, null);
+    				LOGGER.info(String.format("link=%s", link.toString()));
+    				LOGGER.info(String.format("link.uri=%s", serviceUrl.resolve(link.getUri())));
     				return RequestUtil.fromResponse(client, serviceUrl, headers, response, link)
     						.whenComplete((res, error) -> closeResponse(response, serviceUrl, client));
     			default:

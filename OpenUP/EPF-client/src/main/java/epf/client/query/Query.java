@@ -46,6 +46,16 @@ public interface Query {
 	/**
 	 * 
 	 */
+	String ID = "id";
+	
+	/**
+	 * 
+	 */
+	String ENTITY_PATH = "entity/{schema}/{entity}/{id}";
+	
+	/**
+	 * 
+	 */
 	String FIRST = "first";
 	/**
 	 * 
@@ -65,7 +75,7 @@ public interface Query {
 	 * @return
 	 */
 	@GET
-    @Path("entity/{schema}/{entity}/{id}")
+    @Path(ENTITY_PATH)
 	@Produces(MediaType.APPLICATION_JSON)
     Response getEntity(
     		@MatrixParam(Naming.Management.TENANT)
@@ -78,7 +88,7 @@ public interface Query {
             @NotNull
             @NotBlank
             final String entity,
-            @PathParam("id")
+            @PathParam(ID)
             @NotNull
             @NotBlank
             final String entityId

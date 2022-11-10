@@ -61,6 +61,7 @@ public interface ResponseUtil {
     		if(links != null){
     			links = links
     					.stream()
+    					.filter(link -> link.getType() == null)
     					.map(link -> mapLink(link, baseUri))
     					.collect(Collectors.toSet());
     			builder = builder.links().links(links.toArray(new Link[0]));

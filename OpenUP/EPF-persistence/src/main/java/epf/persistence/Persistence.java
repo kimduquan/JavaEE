@@ -23,11 +23,14 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Link;
+import javax.ws.rs.core.Link.Builder;
 import javax.ws.rs.core.Response;
 import org.eclipse.microprofile.lra.annotation.Compensate;
 import org.eclipse.microprofile.lra.annotation.Forget;
 import org.eclipse.microprofile.lra.annotation.ParticipantStatus;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
+import epf.client.query.Query;
 import epf.naming.Naming;
 import epf.persistence.internal.EntityTransaction;
 import epf.persistence.util.EntityTypeUtil;
@@ -144,7 +147,10 @@ public class Persistence implements epf.persistence.client.Entities {
         transactionStore.put(transaction.getId(), transaction);
         LOGGER.info(String.format("put[%s]id=%s", headers.getHeaderString(HttpHeaders.HOST), transaction.getId()));
         
-    	return Response.ok(JsonUtil.toString(entity)).build();
+        Builder builder = Link.fromPath(Query.ENTITY_PATH);
+    	builder = builder.type("GET");
+    	builder = builder.rel(Naming.QUERY);
+        return Response.ok().links(builder.build(schema, name, entityId.toString())).build();
     }
     
     @Override
@@ -199,8 +205,10 @@ public class Persistence implements epf.persistence.client.Entities {
         transactionStore.put(transaction.getId(), transaction);
         LOGGER.info(String.format("put[%s]id=%s", headers.getHeaderString(HttpHeaders.HOST), transaction.getId()));
         
-        
-    	return Response.ok(JsonUtil.toString(mergedEntity)).build();
+        Builder builder = Link.fromPath(Query.ENTITY_PATH);
+    	builder = builder.type("GET");
+    	builder = builder.rel(Naming.QUERY);
+        return Response.ok().links(builder.build(schema, name, entityId.toString())).build();
 	}
     
     @Override

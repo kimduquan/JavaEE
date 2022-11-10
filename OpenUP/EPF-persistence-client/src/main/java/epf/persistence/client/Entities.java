@@ -35,6 +35,11 @@ public interface Entities {
 	 * 
 	 */
 	String ENTITY = "entity";
+	
+	/**
+	 * 
+	 */
+	String ID = "id";
     
     /**
      * @param schema
@@ -121,7 +126,7 @@ public interface Entities {
             @PathParam(ENTITY)
             @NotBlank
             final String entity,
-            @PathParam("id")
+            @PathParam(ID)
             @NotBlank
             final String entityId,
             @Context
@@ -188,7 +193,7 @@ public interface Entities {
             @PathParam(ENTITY)
             @NotBlank
             final String entity,
-            @PathParam("id")
+            @PathParam(ID)
             @NotBlank
             final String entityId,
             @Context

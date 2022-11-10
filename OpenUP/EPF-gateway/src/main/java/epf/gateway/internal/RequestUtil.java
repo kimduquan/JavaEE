@@ -36,6 +36,35 @@ import epf.util.StringUtil;
 public interface RequestUtil {
 	
 	/**
+	 * 
+	 */
+	String GET = "GET";
+	/**
+	 * 
+	 */
+	String POST = "POST";
+	/**
+	 * 
+	 */
+	String PUT = "PUT";
+	/**
+	 * 
+	 */
+	String DELETE = "DELETE";
+	/**
+	 * 
+	 */
+	String HEAD = "HEAD";
+	/**
+	 * 
+	 */
+	String OPTIONS = "OPTIONS";
+	/**
+	 * 
+	 */
+	String TRACE = "TRACE";
+	
+	/**
 	 * @param webTarget
 	 * @param segment
 	 * @return
@@ -221,6 +250,24 @@ public interface RequestUtil {
 		final WebTarget target = client.target(targetUrl);
 		Invocation.Builder builder = target.request();
 		builder = RequestUtil.buildHeaders(builder, headers, targetUrl);
+		switch(link.getType()) {
+			case GET:
+				return builder.rx().get();
+			case POST:
+				return builder.rx().post(Entity.entity(response.readEntity(InputStream.class), response.getMediaType()));
+			case PUT:
+				return builder.rx().put(Entity.entity(response.readEntity(InputStream.class), response.getMediaType()));
+			case DELETE:
+				return builder.rx().delete();
+			case HEAD:
+				return builder.rx().head();
+			case OPTIONS:
+				return builder.rx().options();
+			case TRACE:
+				return builder.rx().trace();
+			default:
+				break;
+		}
 		final Entity<InputStream> entity = response.hasEntity() ? Entity.entity(response.readEntity(InputStream.class), response.getMediaType()) : null;
 		return builder.rx().method(link.getType(), entity);
     }
