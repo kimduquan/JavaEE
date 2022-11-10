@@ -58,7 +58,7 @@ public class Persistence {
 	 * @param data
 	 */
 	@Command(name = "merge")
-	public void merge(
+	public String merge(
 			@ArgGroup(exclusive = true, multiplicity = "1")
 			@CallerPrincipal
 			final Credential credential,
@@ -70,7 +70,9 @@ public class Persistence {
 			final String entityId,
 			@Option(names = {"-d", "--data"}, description = "Entity", interactive = true, echo = true)
 			final String data) throws Exception {
-		persistence.merge(credential.getAuthHeader(), schema, entity, entityId, data);
+		try(Response response = persistence.merge(credential.getAuthHeader(), schema, entity, entityId, data)){
+			return response.readEntity(String.class);
+		}
 	}
 	
 	/**

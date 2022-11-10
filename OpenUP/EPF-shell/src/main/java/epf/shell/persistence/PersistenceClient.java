@@ -55,7 +55,7 @@ public interface PersistenceClient {
 	@PUT
     @Path("{schema}/{entity}/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    void merge(
+    Response merge(
     		@HeaderParam(HttpHeaders.AUTHORIZATION)
     		final String token,
     		@PathParam("schema")

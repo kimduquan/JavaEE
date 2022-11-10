@@ -63,6 +63,7 @@
 		<liberty.env.epf_client_net_ssl_trustStorePassword>changeit</liberty.env.epf_client_net_ssl_trustStorePassword>
 		<liberty.env.epf_client_net_ssl_trustStoreType>PKCS12</liberty.env.epf_client_net_ssl_trustStoreType>
 		<liberty.env.mp_jwt_verify_issuer>EPF</liberty.env.mp_jwt_verify_issuer>
+		<liberty.env.mp_messaging_connector_liberty_kafka_bootstrap_servers>localhost:9092</liberty.env.mp_messaging_connector_liberty_kafka_bootstrap_servers>
     </properties>
     <dependencies>
     	<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-queryparser -->
@@ -579,6 +580,7 @@
 				<gatewayHost>epf-gateway.default.svc.cluster.local</gatewayHost>
 				<internalHost>epf-gateway-internal.default.svc.cluster.local</internalHost>
 				<userHome>/liberty/usr/</userHome>
+				<liberty.env.mp_messaging_connector_liberty_kafka_bootstrap_servers>kafka.default.svc.cluster.local:9092</liberty.env.mp_messaging_connector_liberty_kafka_bootstrap_servers>
 				<liberty.env.epf_persistence_url>http://epf-persistence.default.svc.cluster.local:9181/persistence/persistence/</liberty.env.epf_persistence_url>
 				<liberty.env.epf_schema_url>http://epf-persistence.default.svc.cluster.local:9181/persistence/schema/</liberty.env.epf_schema_url>
 				<liberty.env.epf_transaction_url>http://epf-transaction.default.svc.cluster.local:9182/transaction/transaction/</liberty.env.epf_transaction_url>

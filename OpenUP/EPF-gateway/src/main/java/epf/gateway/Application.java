@@ -102,7 +102,7 @@ public class Application {
     				final Client client = clients.poll(serviceUrl, null);
     				LOGGER.info(String.format("link=%s", link.toString()));
     				LOGGER.info(String.format("link.uri=%s", serviceUrl.resolve(link.getUri())));
-    				return RequestUtil.fromResponse(client, serviceUrl, headers, response, link)
+    				return RequestUtil.buildLinkRequest(client, serviceUrl, headers, response, link)
     						.whenComplete((res, error) -> closeResponse(response, serviceUrl, client));
     			default:
     				break;

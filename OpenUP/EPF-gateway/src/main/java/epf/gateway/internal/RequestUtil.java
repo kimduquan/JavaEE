@@ -239,7 +239,7 @@ public interface RequestUtil {
      * @param link
      * @return
      */
-    static CompletionStage<Response> fromResponse(
+    static CompletionStage<Response> buildLinkRequest(
     		final Client client,
     		final URI serviceUrl,
     		final HttpHeaders headers,
