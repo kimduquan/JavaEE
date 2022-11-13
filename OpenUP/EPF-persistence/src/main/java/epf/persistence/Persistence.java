@@ -19,6 +19,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.metamodel.EntityType;
 import javax.transaction.Transactional;
 import javax.validation.Validator;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
@@ -148,7 +149,7 @@ public class Persistence implements epf.persistence.client.Entities {
         LOGGER.info(String.format("put[%s]id=%s", headers.getHeaderString(HttpHeaders.HOST), transaction.getId()));
         
         Builder builder = Link.fromPath(Query.ENTITY_PATH);
-    	builder = builder.type("GET");
+    	builder = builder.type(HttpMethod.GET);
     	builder = builder.rel(Naming.QUERY);
         return Response.ok().links(builder.build(schema, name, entityId.toString())).build();
     }
@@ -206,7 +207,7 @@ public class Persistence implements epf.persistence.client.Entities {
         LOGGER.info(String.format("put[%s]id=%s", headers.getHeaderString(HttpHeaders.HOST), transaction.getId()));
         
         Builder builder = Link.fromPath(Query.ENTITY_PATH);
-    	builder = builder.type("GET");
+    	builder = builder.type(HttpMethod.GET);
     	builder = builder.rel(Naming.QUERY);
         return Response.ok().links(builder.build(schema, name, entityId.toString())).build();
 	}

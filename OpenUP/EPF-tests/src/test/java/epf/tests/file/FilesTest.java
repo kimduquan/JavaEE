@@ -63,7 +63,7 @@ public class FilesTest {
 		rootDir = Paths.get(System.getProperty("epf.tests.file.root", "")).toAbsolutePath();
 		if(Files.exists(rootDir)) {
 			try {
-				epf.file.util.FileUtil.deleteDirectories(rootDir);
+				epf.file.util.FileUtil.deleteDirectory(rootDir);
 				rootDir.toFile().mkdirs();
 			}
 			catch(Exception ex) {

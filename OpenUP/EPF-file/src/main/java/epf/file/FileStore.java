@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -19,6 +20,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.Link;
+import javax.ws.rs.core.Link.Builder;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
@@ -28,7 +30,7 @@ import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import epf.client.util.EntityOutput;
 import epf.file.internal.FileWatchService;
-import epf.file.util.FileUtil;
+import epf.file.util.PathUtil;
 import epf.file.validation.PathValidator;
 import epf.naming.Naming;
 import epf.naming.Naming.Security;
@@ -145,7 +147,20 @@ public class FileStore implements epf.client.file.Files {
 				.paths(paths)
 				.build();
 		if(Files.isDirectory(targetFile)) {
-			FileUtil.deleteDirectories(targetFile);
+			if(PathUtil.isEmpty(targetFile)) {
+				Files.delete(targetFile);
+			}
+			else {
+				final String relativePath = builder.buildRelative();
+				final Builder linkBuilder = Link.fromPath(relativePath + "/{fileName}").type(HttpMethod.DELETE).rel(Naming.FILE);
+				final List<Link> links = new ArrayList<>();
+				final AtomicInteger index = new AtomicInteger(0);
+				Files.list(targetFile).forEach(fileName -> {
+					links.add(linkBuilder.title("" + index.getAndIncrement()).build(fileName.getFileName().toString()));
+				});
+				links.add(linkBuilder.title("" + index.getAndIncrement()).build(""));
+				return Response.ok(targetFile.toString()).links(links.toArray(new Link[] {})).build();
+			}
 		}
 		else {
 			Files.delete(targetFile);

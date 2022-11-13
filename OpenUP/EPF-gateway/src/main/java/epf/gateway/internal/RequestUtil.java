@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import java.util.Map.Entry;
 import javax.ws.rs.ForbiddenException;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
@@ -34,35 +35,6 @@ import epf.util.StringUtil;
  *
  */
 public interface RequestUtil {
-	
-	/**
-	 * 
-	 */
-	String GET = "GET";
-	/**
-	 * 
-	 */
-	String POST = "POST";
-	/**
-	 * 
-	 */
-	String PUT = "PUT";
-	/**
-	 * 
-	 */
-	String DELETE = "DELETE";
-	/**
-	 * 
-	 */
-	String HEAD = "HEAD";
-	/**
-	 * 
-	 */
-	String OPTIONS = "OPTIONS";
-	/**
-	 * 
-	 */
-	String TRACE = "TRACE";
 	
 	/**
 	 * @param webTarget
@@ -251,20 +223,20 @@ public interface RequestUtil {
 		Invocation.Builder builder = target.request();
 		builder = RequestUtil.buildHeaders(builder, headers, targetUrl);
 		switch(link.getType()) {
-			case GET:
+			case HttpMethod.GET:
 				return builder.rx().get();
-			case POST:
+			case HttpMethod.POST:
 				return builder.rx().post(Entity.entity(response.readEntity(InputStream.class), response.getMediaType()));
-			case PUT:
+			case HttpMethod.PUT:
 				return builder.rx().put(Entity.entity(response.readEntity(InputStream.class), response.getMediaType()));
-			case DELETE:
+			case HttpMethod.DELETE:
 				return builder.rx().delete();
-			case HEAD:
+			case HttpMethod.HEAD:
 				return builder.rx().head();
-			case OPTIONS:
+			case HttpMethod.OPTIONS:
 				return builder.rx().options();
-			case TRACE:
-				return builder.rx().trace();
+			case HttpMethod.PATCH:
+				return builder.rx().method(HttpMethod.PATCH, Entity.entity(response.readEntity(InputStream.class), response.getMediaType()));
 			default:
 				break;
 		}
