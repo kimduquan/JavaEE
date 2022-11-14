@@ -2,6 +2,7 @@ package epf.gateway;
 
 import java.io.InputStream;
 import java.net.URI;
+import java.time.Duration;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -23,6 +24,7 @@ import epf.client.util.ClientQueue;
 import epf.gateway.internal.LinkComparator;
 import epf.gateway.internal.RequestBuilder;
 import epf.gateway.internal.RequestUtil;
+import epf.naming.Naming;
 import epf.util.logging.LogManager;
 
 /**
@@ -95,6 +97,16 @@ public class Application {
 		final URI serviceUrl = registry.lookup(service).orElseThrow(NotFoundException::new);
 		final Client client = clients.poll(serviceUrl, null);
 		LOGGER.info(String.format("link=%s", link.toString()));
+		final String wait = link.getParams().get(Naming.Client.Internal.LINK_PARAM_WAIT);
+		if(wait != null) {
+			response.bufferEntity();
+			try {
+				Thread.sleep(Duration.parse(wait).toMillis());
+			}
+			catch(Exception ex) {
+				
+			}
+		}
 		return RequestUtil.buildLinkRequest(client, serviceUrl, headers, response, link)
 				.whenComplete((res, error) -> closeResponse(response, serviceUrl, client));
     }

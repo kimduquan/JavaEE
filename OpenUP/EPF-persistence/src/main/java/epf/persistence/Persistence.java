@@ -2,6 +2,7 @@ package epf.persistence;
 
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -151,6 +152,7 @@ public class Persistence implements epf.persistence.client.Entities {
         Builder builder = Link.fromPath(Query.ENTITY_PATH);
     	builder = builder.type(HttpMethod.GET);
     	builder = builder.rel(Naming.QUERY);
+    	builder = builder.param(Naming.Client.Internal.LINK_PARAM_WAIT, Duration.ofMillis(800).toString());
         return Response.ok().links(builder.build(schema, name, entityId.toString())).build();
     }
     
@@ -209,6 +211,7 @@ public class Persistence implements epf.persistence.client.Entities {
         Builder builder = Link.fromPath(Query.ENTITY_PATH);
     	builder = builder.type(HttpMethod.GET);
     	builder = builder.rel(Naming.QUERY);
+    	builder = builder.param(Naming.Client.Internal.LINK_PARAM_WAIT, Duration.ofMillis(500).toString());
         return Response.ok().links(builder.build(schema, name, entityId.toString())).build();
 	}
     

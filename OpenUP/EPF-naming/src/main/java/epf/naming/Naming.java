@@ -105,6 +105,18 @@ public interface Naming {
 		 * 
 		 */
 		String SSL_TRUST_STORE_PASSWORD = "epf.client.net.ssl.trustStorePassword";
+		
+		/**
+		 * @author PC
+		 *
+		 */
+		interface Internal {
+			
+			/**
+			 * 
+			 */
+			String LINK_PARAM_WAIT = "wait";
+		}
 	}
 	
 	/**
