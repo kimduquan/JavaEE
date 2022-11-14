@@ -20,13 +20,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.metamodel.EntityType;
 import javax.transaction.Transactional;
 import javax.validation.Validator;
-import javax.ws.rs.HttpMethod;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Link;
-import javax.ws.rs.core.Link.Builder;
 import javax.ws.rs.core.Response;
 import org.eclipse.microprofile.lra.annotation.Compensate;
 import org.eclipse.microprofile.lra.annotation.Forget;
@@ -149,11 +146,7 @@ public class Persistence implements epf.persistence.client.Entities {
         transactionStore.put(transaction.getId(), transaction);
         LOGGER.info(String.format("put[%s]id=%s", headers.getHeaderString(HttpHeaders.HOST), transaction.getId()));
         
-        Builder builder = Link.fromPath(Query.ENTITY_PATH);
-    	builder = builder.type(HttpMethod.GET);
-    	builder = builder.rel(Naming.QUERY);
-    	builder = builder.param(Naming.Client.Internal.LINK_PARAM_WAIT, Duration.ofMillis(800).toString());
-        return Response.ok().links(builder.build(schema, name, entityId.toString())).build();
+        return Response.ok().links(Query.getEntityLink(Duration.ofMillis(800), schema, name, entityId.toString())).build();
     }
     
     @Override
@@ -208,11 +201,7 @@ public class Persistence implements epf.persistence.client.Entities {
         transactionStore.put(transaction.getId(), transaction);
         LOGGER.info(String.format("put[%s]id=%s", headers.getHeaderString(HttpHeaders.HOST), transaction.getId()));
         
-        Builder builder = Link.fromPath(Query.ENTITY_PATH);
-    	builder = builder.type(HttpMethod.GET);
-    	builder = builder.rel(Naming.QUERY);
-    	builder = builder.param(Naming.Client.Internal.LINK_PARAM_WAIT, Duration.ofMillis(500).toString());
-        return Response.ok().links(builder.build(schema, name, entityId.toString())).build();
+        return Response.ok().links(Query.getEntityLink(Duration.ofMillis(500), schema, name, entityId.toString())).build();
 	}
     
     @Override

@@ -2,7 +2,6 @@ package epf.portlet.persistence;
 
 import java.io.Serializable;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -10,13 +9,8 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import epf.client.portlet.persistence.SearchView;
-import epf.client.query.QueryUtil;
-import epf.client.schema.EntityId;
-import epf.client.util.Client;
 import epf.portlet.internal.config.ConfigUtil;
-import epf.portlet.internal.gateway.GatewayUtil;
 import epf.portlet.naming.Naming;
-import epf.portlet.internal.security.SecurityUtil;
 import epf.util.logging.LogManager;
 
 /**
@@ -61,19 +55,7 @@ public class Search implements SearchView, Serializable {
 	 * 
 	 */
 	@Inject
-	private transient GatewayUtil gatewayUtil;
-	
-	/**
-	 * 
-	 */
-	@Inject
 	private transient ConfigUtil configUtil;
-	
-	/**
-	 * 
-	 */
-	@Inject
-	private transient SecurityUtil clientUtil;
 	
 	/**
 	 * 
@@ -91,14 +73,7 @@ public class Search implements SearchView, Serializable {
 	
 	@Override
 	public void search() throws Exception{
-		try(Client client = clientUtil.newClient(gatewayUtil.get(epf.naming.Naming.SEARCH))){
-			final List<EntityId> entityIds = epf.client.search.Search.search(client, text, firstResult, maxResults);
-			resultList = new ArrayList<>();
-			final URI baseUrl = gatewayUtil.get(epf.naming.Naming.QUERY);
-			for(EntityId entityId : entityIds) {
-				resultList.add(QueryUtil.fromEntityId(baseUrl, entityId).build());
-			}
-		}
+		
 	}
 	
 	/**

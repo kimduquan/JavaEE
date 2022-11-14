@@ -12,8 +12,6 @@ import javax.ws.rs.core.Response;
 import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortMeta;
-import epf.client.query.Query;
-import epf.client.schema.EntityId;
 import epf.client.search.Search;
 import epf.client.util.Client;
 import epf.naming.Naming;
@@ -73,10 +71,8 @@ public class SearchCollector extends LazyDataModel<JsonObject> {
 			client.authorization(token);
 			final Integer count = Search.count(client, text);
 			setRowCount(count);
-			final List<EntityId> entityIds = Search.search(client, text, first, pageSize);
-			try(Client client2 = gateway.newClient(Naming.QUERY)){
-				client2.authorization(token);
-				try(Response response = Query.fetchEntities(client2, entityIds)){
+			if(count > 0) {
+				try(Response response = Search.search(client, text, first, pageSize)){
 					try(InputStream stream = response.readEntity(InputStream.class)){
 						entities = JsonUtil.readArray(stream)
 								.stream()

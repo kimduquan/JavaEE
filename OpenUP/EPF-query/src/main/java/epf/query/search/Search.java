@@ -54,7 +54,7 @@ public class Search implements epf.client.search.Search {
 		final Query query = createSearchQuery(FULLTEXT_SEARCH, tenant, text, maxResults != null ? maxResults : 0, firstResult != null ? firstResult : 0);
 		final List<?> resultList = query.getResultList();
 		final List<EntityId> entities = resultList.stream().map(this::toEntityId).filter(entityId -> entityId != null).collect(Collectors.toList());
-		return Response.ok(entities).header(ENTITY_COUNT, resultList.size()).build();
+		return Response.ok(entities).links(epf.client.query.Query.fetchEntitiesLink()).build();
 	}
 
 	@Override
