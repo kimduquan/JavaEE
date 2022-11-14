@@ -213,4 +213,17 @@ public interface JsonUtil {
 	static JsonPatch createDiff(final Object source, final Object target) throws Exception {
 		return Json.createDiff(toJson(source), toJson(target));
 	}
+	
+	/**
+	 * @param <T>
+	 * @param cls
+	 * @param input
+	 * @return
+	 * @throws Exception
+	 */
+	static <T> T fromJson(final Class<T> cls, final InputStream input) throws Exception {
+		try(Jsonb jsonb = JsonbBuilder.create()){
+			return jsonb.fromJson(input, cls);
+		}
+	}
 }

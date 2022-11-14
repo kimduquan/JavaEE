@@ -1,17 +1,13 @@
 package epf.net;
 
+import java.io.InputStream;
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Path;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.SecurityContext;
-import epf.client.util.Client;
-import epf.client.util.ClientUtil;
+import javax.ws.rs.core.Response;
 import epf.net.schema.URL;
 import epf.persistence.client.Entities;
 import epf.util.StringUtil;
-import epf.util.config.ConfigUtil;
+import epf.util.json.JsonUtil;
 import epf.naming.Naming;
 
 /**
@@ -21,15 +17,9 @@ import epf.naming.Naming;
 @Path(Naming.NET)
 @ApplicationScoped
 public class Net implements epf.client.net.Net {
-	
-	/**
-	 * 
-	 */
-	@Inject
-	private transient ClientUtil clientUtil;
 
 	@Override
-	public String rewriteUrl(final java.net.URL rawUrl, final HttpServletRequest request, final SecurityContext security) throws Exception {
+	public Response rewriteUrl(final java.net.URL rawUrl) throws Exception {
 		final URL url = new URL();
 		url.setAuthority(rawUrl.getAuthority());
 		url.setDefaultPort(rawUrl.getDefaultPort());
@@ -42,11 +32,12 @@ public class Net implements epf.client.net.Net {
 		url.setRef(rawUrl.getRef());
 		url.setString(rawUrl.toString());
 		url.setUserInfo(rawUrl.getUserInfo());
-		try(Client client = clientUtil.newClient(ConfigUtil.getURI(Naming.Persistence.PERSISTENCE_URL))){
-			client.authorizationHeader(request.getHeader(HttpHeaders.AUTHORIZATION));
-			final URL resultUrl = Entities.persist(client, URL.class, epf.net.schema.Net.SCHEMA, epf.net.schema.Net.URL, url);
-			final String shortString = StringUtil.toShortString(resultUrl.getId());
-			return shortString;
-		}
+		return Response.ok(url).links(Entities.persistLink(0, epf.net.schema.Net.SCHEMA, epf.net.schema.Net.URL), epf.client.net.Net.shortenUrlLink(1)).build();
+	}
+
+	@Override
+	public String shortenUrl(final InputStream body) throws Exception {
+		final URL url = JsonUtil.fromJson(URL.class, body);
+		return StringUtil.toShortString(url.getId());
 	}
 }

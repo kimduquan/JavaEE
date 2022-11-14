@@ -135,7 +135,7 @@ public interface Query {
 	 * @return
 	 */
 	static Link getEntityLink(final Duration wait, final String schema, final String entity, final String entityId) {
-		return LinkUtil.link(Naming.QUERY, Query.ENTITY_PATH, HttpMethod.GET, wait, schema, entity, entityId);
+		return LinkUtil.link(Naming.QUERY, Query.ENTITY_PATH, HttpMethod.GET, (Integer)null, wait, schema, entity, entityId);
 	}
 	
 	/**
@@ -203,7 +203,7 @@ public interface Query {
      * @return
      */
     static Link fetchEntitiesLink() {
-    	return LinkUtil.link(Naming.QUERY, ENTITY, HttpMethod.PATCH, null);
+    	return LinkUtil.link(Naming.QUERY, ENTITY, HttpMethod.PATCH, null, null);
     }
 	
 	/**
