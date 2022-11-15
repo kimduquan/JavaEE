@@ -24,6 +24,7 @@ import epf.client.util.ClientQueue;
 import epf.gateway.internal.LinkComparator;
 import epf.gateway.internal.RequestBuilder;
 import epf.gateway.internal.RequestUtil;
+import epf.gateway.internal.ResponseUtil;
 import epf.naming.Naming;
 import epf.util.logging.LogManager;
 
@@ -71,7 +72,8 @@ public class Application {
     	final RequestBuilder builder = new RequestBuilder(client, serviceUrl, jwt, req, headers, uriInfo, body);
     	return builder.build()
     			.thenApply(response -> closeResponse(response, serviceUrl, client))
-    			.thenCompose(response -> buildLinkRequests(response, headers));
+    			.thenCompose(response -> buildLinkRequests(response, headers))
+    			.thenApply(response -> ResponseUtil.buildResponse(response, uriInfo.getBaseUri()));
     }
     
     /**
@@ -129,11 +131,7 @@ public class Application {
 				case HttpMethod.HEAD:
 				case HttpMethod.OPTIONS:
 				case HttpMethod.PATCH:
-					final CompletionStage<Response> linkRequest = buildLinkRequest(response, headers, link).thenCompose(newResponse -> buildLinkRequests(newResponse, headers));
-					linkResponse = linkResponse.thenCombine(linkRequest, (currentResponse, newResponse) -> {
-						newResponse.bufferEntity();
-						return newResponse;
-					});
+					linkResponse = linkResponse.thenCompose(r -> buildLinkRequest(r, headers, link)).thenCompose(r -> buildLinkRequests(r, headers));
 					break;
 				default:
 					break;

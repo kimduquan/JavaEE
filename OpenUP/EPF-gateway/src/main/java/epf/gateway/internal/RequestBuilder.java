@@ -69,7 +69,6 @@ public class RequestBuilder {
 	 * @return
 	 */
 	public CompletionStage<Response> build(){
-		final CompletionStage<Response> builtRequest = RequestUtil.buildRequest(client, serviceUrl, jwt, headers, uriInfo, request, body);
-		return ResponseUtil.buildResponse(builtRequest, uriInfo.getBaseUri());
+		return RequestUtil.buildRequest(client, serviceUrl, jwt, headers, uriInfo, request, body);
 	}
 }
