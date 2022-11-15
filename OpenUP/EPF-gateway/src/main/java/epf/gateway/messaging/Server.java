@@ -94,18 +94,23 @@ public class Server implements HealthCheck {
 		});
 	}
 	
+	private void connectToServer(final URI uri, final String path) {
+		final Remote remote = new Remote(uri, path);
+		try {
+			remote.connectToServer();
+			remotes.put(remote.getPath(), remote);
+		} 
+		catch (Exception e) {
+			LOGGER.log(Level.SEVERE, "[Server.remotes]", e);
+		}
+	}
+	
 	private void initialize() {
 		if(remotes.isEmpty()) {
 			messagingUrl = registry.lookup(Naming.MESSAGING).orElseThrow(() -> new NoSuchElementException(Naming.MESSAGING));
 			securityUrl = registry.lookup(Naming.SECURITY).orElseThrow(() -> new NoSuchElementException(Naming.SECURITY));
-			final Remote remote = new Remote(messagingUrl.resolve(Remote.urlOf(Optional.empty(), Naming.QUERY)), Remote.pathOf(Optional.empty(), Naming.QUERY));
-			try {
-				remote.connectToServer();
-				remotes.put(remote.getPath(), remote);
-			} 
-			catch (Exception e) {
-				LOGGER.log(Level.SEVERE, "[Server.remotes]", e);
-			}
+			connectToServer(messagingUrl.resolve(Remote.urlOf(Optional.empty(), Naming.QUERY)), Remote.pathOf(Optional.empty(), Naming.QUERY));
+			connectToServer(messagingUrl.resolve(Remote.urlOf(Optional.empty(), Naming.SCHEDULE, Naming.SHELL)), Remote.pathOf(Optional.empty(), Naming.QUERY, Naming.SHELL));
 		}
 	}
 
