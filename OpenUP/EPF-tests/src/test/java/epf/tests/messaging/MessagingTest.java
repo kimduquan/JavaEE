@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import javax.websocket.ContainerProvider;
-import org.eclipse.jetty.websocket.jsr356.ClientContainer;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;

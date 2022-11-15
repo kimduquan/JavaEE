@@ -51,6 +51,7 @@ public class LogManager implements HealthCheck {
 		try {
 			final URI messagingUrl = ConfigUtil.getURI(Naming.Messaging.MESSAGING_URL);
 			newLogger("EPF-query", messagingUrl.resolve("_/query/_"));
+			newLogger("EPF-schedule", messagingUrl.resolve("_/schedule/shell"));
 		}
 		catch(Exception ex) {
 			LOGGER.throwing(LOGGER.getName(), "[LogManager.loggers]", ex);

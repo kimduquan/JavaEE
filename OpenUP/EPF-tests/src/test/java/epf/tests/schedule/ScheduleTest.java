@@ -2,6 +2,7 @@ package epf.tests.schedule;
 
 import java.net.URI;
 import java.time.Duration;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
@@ -15,6 +16,7 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 import epf.client.schedule.Schedule;
 import epf.client.util.Client;
+import epf.messaging.client.Messaging;
 import epf.naming.Naming;
 import epf.tests.TestUtil;
 import epf.tests.client.ClientUtil;
@@ -47,8 +49,8 @@ public class ScheduleTest {
 		client = ClientUtil.newClient(scheduleUrl);
 		token = SecurityUtil.login();
 		client.authorization(token.toCharArray());
-		URI messagingUrl = ConfigUtil.getURI(Naming.Messaging.MESSAGING_URL);
-		shell = epf.util.websocket.Client.connectToServer(messagingUrl.resolve("schedule/shell"));
+		URI messagingUrl = ConfigUtil.getURI(Naming.Gateway.MESSAGING_URL);
+		shell = epf.util.websocket.Client.connectToServer(Messaging.getUrl(messagingUrl, Optional.empty(), Naming.SCHEDULE, Optional.of(token), Naming.SHELL));
 		messages = new ConcurrentLinkedQueue<>();
 		shell.onMessage((message, session) -> messages.add(message));
 	}

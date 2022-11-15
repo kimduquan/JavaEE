@@ -73,7 +73,7 @@ public class Schedule implements epf.client.schedule.Schedule {
 	protected void postConstruct() {
 		try {
 			final URI messagingUrl = ConfigUtil.getURI(Naming.Messaging.MESSAGING_URL);
-			shell = Client.connectToServer(messagingUrl.resolve("schedule/shell"));
+			shell = Client.connectToServer(messagingUrl.resolve("_/schedule/shell"));
 			shellMessages = new MessageQueue(shell.getSession());
 			executor.submit(shellMessages);
 		}
