@@ -71,7 +71,7 @@ public interface Net {
 	static String rewriteUrl(final Client client, final String url) {
 		return client.request(
     			target -> target.path(URL), 
-    			req -> req.accept(MediaType.TEXT_PLAIN)
+    			req -> req
     			)
     			.post(Entity.form(new Form().param(URL, url)), String.class);
 	}
