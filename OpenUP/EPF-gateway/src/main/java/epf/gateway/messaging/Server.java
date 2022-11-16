@@ -110,7 +110,7 @@ public class Server implements HealthCheck {
 			messagingUrl = registry.lookup(Naming.MESSAGING).orElseThrow(() -> new NoSuchElementException(Naming.MESSAGING));
 			securityUrl = registry.lookup(Naming.SECURITY).orElseThrow(() -> new NoSuchElementException(Naming.SECURITY));
 			connectToServer(messagingUrl.resolve(Remote.urlOf(Optional.empty(), Naming.QUERY)), Remote.pathOf(Optional.empty(), Naming.QUERY));
-			connectToServer(messagingUrl.resolve(Remote.urlOf(Optional.empty(), Naming.SCHEDULE, Naming.SHELL)), Remote.pathOf(Optional.empty(), Naming.QUERY, Naming.SHELL));
+			connectToServer(messagingUrl.resolve(Remote.urlOf(Optional.empty(), Naming.SCHEDULE, Naming.SHELL)), Remote.pathOf(Optional.empty(), Naming.SCHEDULE, Naming.SHELL));
 		}
 	}
 
@@ -228,7 +228,7 @@ public class Server implements HealthCheck {
 	@Override
 	public HealthCheckResponse call() {
 		initialize();
-		if(remotes.isEmpty()) {
+		if(remotes.size() < 2) {
 			return HealthCheckResponse.down("EPF-gateway-messaging");
 		}
 		return HealthCheckResponse.up("EPF-gateway-messaging");
