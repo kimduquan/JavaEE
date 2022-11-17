@@ -68,6 +68,11 @@
             <artifactId>EPF-client</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-function</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 		<!-- https://mvnrepository.com/artifact/org.drools/drools-jsr94 -->
 		<dependency>
 		    <groupId>org.drools</groupId>
