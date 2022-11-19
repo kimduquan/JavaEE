@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.tests.shell;
 
 import java.io.IOException;

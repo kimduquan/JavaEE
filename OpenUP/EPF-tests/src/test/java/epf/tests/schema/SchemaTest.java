@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.tests.schema;
 
 import java.net.URI;

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.tests.portlet.security;
 
 import java.util.Map.Entry;

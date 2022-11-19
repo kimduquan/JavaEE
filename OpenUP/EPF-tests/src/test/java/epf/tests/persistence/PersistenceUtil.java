@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.tests.persistence;
 
 import epf.client.gateway.GatewayUtil;
