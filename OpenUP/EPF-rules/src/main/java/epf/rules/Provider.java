@@ -1,8 +1,6 @@
-/**
- * 
- */
 package epf.rules;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -65,21 +63,21 @@ public class Provider implements HealthCheck {
 			cls = Class.forName(providerClass);
 		} 
 		catch (ClassNotFoundException e) {
-			LOGGER.throwing("Class", "forName", e);
+			LOGGER.log(Level.SEVERE, "Class.name", e);
 		}
 		if(cls != null) {
 			try {
 				ruleProvider = RuleServiceProviderManager.getRuleServiceProvider(providerUri);
 			} 
 			catch (ConfigurationException e) {
-				LOGGER.throwing("RuleServiceProviderManager", "getRuleServiceProvider", e);
+				LOGGER.log(Level.SEVERE, "RuleServiceProviderManager.ruleServiceProvider", e);
 			}
 		}
 		try {
 			ruleRuntime = ruleProvider.getRuleRuntime();
 		} 
 		catch (ConfigurationException e) {
-			LOGGER.throwing("RuleServiceProvider", "getRuleRuntime", e);
+			LOGGER.log(Level.SEVERE, "RuleServiceProvider.ruleRuntime", e);
 		}
 	}
 	
@@ -93,6 +91,13 @@ public class Provider implements HealthCheck {
 
 	@Override
 	public HealthCheckResponse call() {
-		return HealthCheckResponse.up("EPF-rules");
+		HealthCheckResponse response = HealthCheckResponse.up("EPF-rules");
+		if(ruleRuntime == null) {
+			response = HealthCheckResponse.down("EPF-rules-runtime");
+		}
+		if(ruleProvider == null) {
+			response = HealthCheckResponse.down("EPF-rules-provider");
+		}
+		return response;
 	}
 }

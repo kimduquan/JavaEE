@@ -392,7 +392,7 @@ public class ShellTest {
 				);
 		List<Object> input = new ArrayList<>();
 		Artifact artifact = new Artifact();
-		artifact.setName(StringUtil.randomString("Artifact"));
+		artifact.setName(StringUtil.randomString("testRules_Execute"));
 		input.add(artifact);
 		String json = RulesUtil.encode(input);
 		process = ShellUtil.waitFor(builder, in, json);
