@@ -7,10 +7,10 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.json.JsonObject;
 import javax.ws.rs.core.Response;
-import epf.client.query.Query;
 import epf.client.util.Client;
 import epf.portlet.internal.gateway.GatewayUtil;
 import epf.portlet.internal.security.SecurityUtil;
+import epf.query.client.Query;
 import epf.util.json.JsonUtil;
 
 /**

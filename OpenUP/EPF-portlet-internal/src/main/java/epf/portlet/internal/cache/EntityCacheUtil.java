@@ -49,7 +49,7 @@ public class EntityCacheUtil {
 	public List<JsonObject> getEntities(final String schema, final String entity, final Integer firstResult, final Integer maxResults) {
 		List<JsonObject> objects = null;
 		try(Client client = securityUtil.newClient(gatewayUtil.get(Naming.QUERY))){
-			try(Response response = epf.client.query.Query.executeQuery(client, schema, t -> t.path(entity), firstResult, maxResults)){
+			try(Response response = epf.query.client.Query.executeQuery(client, schema, t -> t.path(entity), firstResult, maxResults)){
 				try(InputStream stream = response.readEntity(InputStream.class)){
 					objects = JsonUtil.readArray(stream)
 							.stream()
@@ -73,7 +73,7 @@ public class EntityCacheUtil {
 	public JsonObject getEntity(final String schema, final String entity, final String id) {
 		JsonObject object = null;
 		try(Client client = securityUtil.newClient(gatewayUtil.get(Naming.QUERY))){
-			try(Response response = epf.client.query.Query.getEntity(client, schema, entity, id)){
+			try(Response response = epf.query.client.Query.getEntity(client, schema, entity, id)){
 				try(InputStream stream = response.readEntity(InputStream.class)){
 					object = JsonUtil.readObject(stream);
 				}

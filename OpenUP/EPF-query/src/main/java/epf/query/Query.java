@@ -11,10 +11,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.health.Readiness;
-
-import epf.client.query.EntityId;
 import epf.naming.Naming;
 import epf.naming.Naming.Query.Client;
+import epf.query.client.EntityId;
 import epf.query.internal.EntityCache;
 import epf.query.internal.QueryCache;
 import epf.query.internal.persistence.PersistenceQuery;
@@ -26,7 +25,7 @@ import epf.query.util.LinkUtil;
  */
 @RequestScoped
 @Path(Naming.QUERY)
-public class Query implements epf.client.query.Query {
+public class Query implements epf.query.client.Query {
 
 	/**
 	 * 

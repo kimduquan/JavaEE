@@ -12,8 +12,7 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import epf.client.query.EntityId;
+import epf.query.client.EntityId;
 import epf.schema.utility.SchemaUtil;
 import epf.util.logging.LogManager;
 

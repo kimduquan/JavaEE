@@ -12,9 +12,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
-
-import epf.client.query.EntityId;
 import epf.naming.Naming;
+import epf.query.client.EntityId;
 import epf.query.internal.SchemaCache;
 
 /**
@@ -22,7 +21,7 @@ import epf.query.internal.SchemaCache;
  */
 @ApplicationScoped
 @Path(epf.naming.Naming.Query.SEARCH)
-public class Search implements epf.client.query.Search {
+public class Search implements epf.query.client.Search {
 	
 	/**
 	 *
@@ -55,7 +54,7 @@ public class Search implements epf.client.query.Search {
 		final Query query = createSearchQuery(FULLTEXT_SEARCH, tenant, text, maxResults != null ? maxResults : 0, firstResult != null ? firstResult : 0);
 		final List<?> resultList = query.getResultList();
 		final List<EntityId> entities = resultList.stream().map(this::toEntityId).filter(entityId -> entityId != null).collect(Collectors.toList());
-		return Response.ok(entities).links(epf.client.query.Query.fetchEntitiesLink()).build();
+		return Response.ok(entities).links(epf.query.client.Query.fetchEntitiesLink()).build();
 	}
 
 	@Override

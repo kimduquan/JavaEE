@@ -1,4 +1,4 @@
-package epf.client.query;
+package epf.query.client;
 
 import java.time.Duration;
 import java.util.List;
@@ -24,7 +24,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-
 import epf.client.util.Client;
 import epf.client.util.LinkUtil;
 import epf.naming.Naming;

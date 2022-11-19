@@ -24,9 +24,9 @@ import epf.work_products.schema.section.MoreInformation;
 import epf.work_products.schema.section.Relationships;
 import epf.work_products.schema.section.Tailoring;
 import epf.client.gateway.GatewayUtil;
-import epf.client.query.Query;
 import epf.client.util.Client;
 import epf.naming.Naming;
+import epf.query.client.Query;
 
 /**
  * @author PC

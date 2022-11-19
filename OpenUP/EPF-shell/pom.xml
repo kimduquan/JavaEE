@@ -80,6 +80,11 @@
         <artifactId>EPF-messaging-client</artifactId>
         <version>${project.version}</version>
     </dependency>
+    <dependency>
+        <groupId>openup</groupId>
+        <artifactId>EPF-query-client</artifactId>
+        <version>${project.version}</version>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
