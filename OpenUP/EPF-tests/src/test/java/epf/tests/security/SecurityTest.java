@@ -23,7 +23,6 @@ import epf.naming.Naming;
 import epf.security.client.Security;
 import epf.security.schema.Token;
 import epf.tests.client.ClientUtil;
-import epf.tests.health.HealthUtil;
 import epf.client.gateway.GatewayUtil;
 
 /**
@@ -39,7 +38,6 @@ public class SecurityTest {
     
     @BeforeClass
     public static void beforeClass() throws Exception{
-    	HealthUtil.isReady();
     	securityUrl = GatewayUtil.get(Naming.SECURITY);
     }
     

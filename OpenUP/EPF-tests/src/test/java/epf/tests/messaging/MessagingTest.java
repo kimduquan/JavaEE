@@ -19,7 +19,6 @@ import epf.schema.utility.PostPersist;
 import epf.schema.utility.PostRemove;
 import epf.tests.TestUtil;
 import epf.tests.client.ClientUtil;
-import epf.tests.health.HealthUtil;
 import epf.tests.persistence.PersistenceUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
@@ -47,7 +46,6 @@ public class MessagingTest {
     
     @BeforeClass
     public static void beforeClass() throws Exception{
-    	HealthUtil.isReady();
     	messagingUrl = ConfigUtil.getURI(Naming.Gateway.MESSAGING_URL);
     	token = SecurityUtil.login();
 		ClientUtil.getSSLContext();

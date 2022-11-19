@@ -30,7 +30,6 @@ import epf.client.util.Client;
 import epf.file.util.PathUtil;
 import epf.naming.Naming;
 import epf.tests.client.ClientUtil;
-import epf.tests.health.HealthUtil;
 import epf.tests.security.SecurityUtil;
 
 /**
@@ -55,7 +54,6 @@ public class FilesTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		HealthUtil.isReady();
 		credential = SecurityUtil.peekCredential();
 		token = SecurityUtil.login(credential.getKey(), credential.getValue());
 		filesUrl = GatewayUtil.get(Naming.FILE);

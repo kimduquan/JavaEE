@@ -6,7 +6,6 @@ import epf.naming.Naming;
 import epf.security.client.Security;
 import epf.security.schema.Token;
 import epf.tests.client.ClientUtil;
-import epf.tests.health.HealthUtil;
 import java.util.Map.Entry;
 import java.net.URL;
 import java.time.Duration;
@@ -81,8 +80,6 @@ public class SecurityUtil {
     		credentials.add(new AbstractMap.SimpleImmutableEntry<>("process_engineer1@openup.org", "Process_Engineer1*"));
     		credentials.add(new AbstractMap.SimpleImmutableEntry<>("tool_specialist1@openup.org", "Tool_Specialist1*"));
     		/*Environment END*/
-    		
-    		HealthUtil.isReady();
     	}
     	Entry<String, String> credential = credentials.poll();
     	credentials.add(credential);

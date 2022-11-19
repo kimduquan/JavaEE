@@ -13,7 +13,6 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 import epf.tests.TestUtil;
 import epf.tests.client.ClientUtil;
-import epf.tests.health.HealthUtil;
 import epf.tests.persistence.PersistenceUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
@@ -47,7 +46,6 @@ public class QueryTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		HealthUtil.isReady();
 		queryUrl = GatewayUtil.get(Naming.QUERY);
 		token = SecurityUtil.login();
 	}

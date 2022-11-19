@@ -18,7 +18,6 @@ import epf.naming.Naming;
 import epf.persistence.client.Entities;
 import epf.tests.TestUtil;
 import epf.tests.client.ClientUtil;
-import epf.tests.health.HealthUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.StringUtil;
 
@@ -35,7 +34,6 @@ public class NetTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		HealthUtil.isReady();
 		token = SecurityUtil.login();
 		netUrl = GatewayUtil.get(Naming.NET);
 		persistenceUrl = GatewayUtil.get(Naming.PERSISTENCE);

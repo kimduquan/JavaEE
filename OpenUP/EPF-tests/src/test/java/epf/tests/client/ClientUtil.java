@@ -5,14 +5,9 @@ import java.nio.file.Path;
 import java.security.KeyStore;
 import javax.json.JsonObject;
 import javax.net.ssl.SSLContext;
-import javax.websocket.ContainerProvider;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
-
-import org.eclipse.jetty.websocket.jsr356.ClientContainer;
-
 import epf.client.util.Client;
 import epf.client.util.ClientQueue;
 import epf.naming.Naming;

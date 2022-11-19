@@ -20,7 +20,6 @@ import epf.messaging.client.Messaging;
 import epf.naming.Naming;
 import epf.tests.TestUtil;
 import epf.tests.client.ClientUtil;
-import epf.tests.health.HealthUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.config.ConfigUtil;
 
@@ -44,7 +43,6 @@ public class ScheduleTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		HealthUtil.isReady();
 		scheduleUrl = ConfigUtil.getURI(Naming.Schedule.SCHEDULE_URL);
 		client = ClientUtil.newClient(scheduleUrl);
 		token = SecurityUtil.login();

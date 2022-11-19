@@ -13,7 +13,6 @@ import org.junit.rules.MethodRule;
 import epf.naming.Naming;
 import epf.tests.TestUtil;
 import epf.tests.WebDriverUtil;
-import epf.tests.health.HealthUtil;
 import epf.tests.security.SecurityUtil;
 import epf.tests.webapp.DefaultPage;
 import epf.tests.webapp.WebAppUtil;
@@ -55,7 +54,6 @@ public class LoginPageTest {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		HealthUtil.isReady();
 	}
 
 	@Test
