@@ -2,10 +2,10 @@ call ./shutdownc.bat
 call ./clean.bat
 call ./startupc.bat
 call ./compile.bat
-cd EPF-transaction-internal
+cd EPF-messaging
 call ./dev.bat
 cd ../
-cd EPF-messaging
+cd EPF-transaction-internal
 call ./dev.bat
 cd ../
 cd EPF-transaction
