@@ -22,30 +22,6 @@ import epf.naming.Naming;
 public interface QueryClient {
 	
 	/**
-	 *
-	 */
-	String SCHEMA = "schema";
-	
-	/**
-	 *
-	 */
-	String ENTITY = "entity";
-	
-	/**
-	 * 
-	 */
-	String FIRST = "first";
-	/**
-	 * 
-	 */
-	String MAX = "max";
-	
-	/**
-	 *
-	 */
-	String SORT = "sort";
-	
-	/**
 	 * @param token
 	 * @param schema
 	 * @param entity
@@ -58,11 +34,11 @@ public interface QueryClient {
     Response getEntity(
     		@HeaderParam(HttpHeaders.AUTHORIZATION)
     		final String token,
-    		@PathParam(SCHEMA)
+    		@PathParam(Naming.Query.Client.SCHEMA)
             final String schema,
-            @PathParam(ENTITY)
+            @PathParam(Naming.Query.Client.ENTITY)
             final String entity,
-            @PathParam("id")
+            @PathParam(Naming.Query.Client.ID)
             final String entityId
             );
 	
@@ -77,9 +53,9 @@ public interface QueryClient {
     Response countEntity(
     		@HeaderParam(HttpHeaders.AUTHORIZATION)
     		final String token,
-    		@PathParam(SCHEMA)
+    		@PathParam(Naming.Query.Client.SCHEMA)
             final String schema,
-            @PathParam(ENTITY)
+            @PathParam(Naming.Query.Client.ENTITY)
             final String entity
             );
 	
@@ -89,7 +65,7 @@ public interface QueryClient {
 	 * @return
 	 */
 	@PATCH
-    @Path(ENTITY)
+    @Path(Naming.Query.Client.ENTITY)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response fetchEntities(

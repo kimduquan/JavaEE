@@ -69,6 +69,7 @@ public class MessagingTest {
     	messages = new ConcurrentLinkedQueue<>();
     	client.onMessage(messages::add);
     	TestUtil.waitUntil(t -> client.getSession().isOpen(), Duration.ofSeconds(20));
+    	System.out.println("client.session.id=" + client.getSession().getId());
     }
 
     @Test

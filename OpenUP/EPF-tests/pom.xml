@@ -46,7 +46,6 @@
         <liberty.env.epf_lang_url>ws://${httpHost}:${httpPort}/lang/lang/</liberty.env.epf_lang_url>
         <liberty.env.epf_cache_url>http://${httpHost}:${httpPort}/cache/cache/</liberty.env.epf_cache_url>
         <liberty.env.epf_query_url>http://${httpHost}:${httpPort}/query/query/</liberty.env.epf_query_url>
-        <liberty.env.epf_search_url>http://${httpHost}:${httpPort}/query/search/</liberty.env.epf_search_url>
         <liberty.env.epf_registry_url>http://${httpHost}:${httpPort}/registry/registry/</liberty.env.epf_registry_url>
 		<liberty.env.epf_management_url>http://${httpHost}:${httpPort}/management/management/</liberty.env.epf_management_url>
 		<liberty.env.epf_portlet_url>http://localhost:${portalPort}/pluto/portal</liberty.env.epf_portlet_url>
@@ -387,7 +386,6 @@
                         <epf.lang.url>ws://localhost:${httpPort}/lang/lang/</epf.lang.url>
                         <epf.cache.url>http://localhost:${httpPort}/cache/cache/</epf.cache.url>
                         <epf.query.url>http://localhost:${httpPort}/query/query/</epf.query.url>
-                        <epf.search.url>http://localhost:${httpPort}/query/search/</epf.search.url>
                         <epf.portlet.url>http://localhost:${portalPort}/pluto/portal</epf.portlet.url>
                         <epf.webapp.url>https://localhost/webapp/</epf.webapp.url>
                         <epf.health.url>http://localhost:${httpPort}/health/</epf.health.url>

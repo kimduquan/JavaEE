@@ -49,6 +49,7 @@ public class ScheduleTest {
 		client.authorization(token.toCharArray());
 		URI messagingUrl = ConfigUtil.getURI(Naming.Gateway.MESSAGING_URL);
 		shell = epf.util.websocket.Client.connectToServer(Messaging.getUrl(messagingUrl, Optional.empty(), Naming.SCHEDULE, Optional.of(token), Naming.SHELL));
+    	System.out.println("client.session.id=" + shell.getSession().getId());
 		messages = new ConcurrentLinkedQueue<>();
 		shell.onMessage((message, session) -> messages.add(message));
 	}

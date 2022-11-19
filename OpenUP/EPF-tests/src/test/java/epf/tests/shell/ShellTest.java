@@ -288,6 +288,28 @@ public class ShellTest {
 	}
 	
 	@Test
+	public void testSearch_Count() throws Exception {
+		builder = ShellUtil.command(builder, Naming.Query.SEARCH, "count", "-tid", tokenID, "-txt", "Artifact");
+		process = ShellUtil.waitFor(builder);
+		List<String> lines = ShellUtil.getOutput(out);
+		Assert.assertFalse(lines.isEmpty());
+		Assert.assertTrue(Integer.parseInt(lines.get(lines.size() - 1)) > 0);
+	}
+	
+	@Test
+	public void testSearch_Fetch() throws Exception {
+		builder = ShellUtil.command(builder, Naming.Query.SEARCH, "fetch", "-tid", tokenID, "-txt", "Artifact");
+		process = ShellUtil.waitFor(builder);
+		List<String> lines = ShellUtil.getOutput(out);
+		Assert.assertFalse(lines.isEmpty());
+		List<Artifact> artifacts;
+		try(Jsonb jsonb = JsonbBuilder.create()){
+			artifacts = jsonb.fromJson(lines.get(lines.size() - 1), (new GenericType<List<Artifact>>() {}).getType());
+		}
+		Assert.assertFalse(artifacts.isEmpty());
+	}
+	
+	@Test
 	public void testFile_Create() throws Exception {
 		Path file = Files.createTempFile("file", ".in");
 		Files.write(file, Arrays.asList("this is a test"));

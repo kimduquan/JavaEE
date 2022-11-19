@@ -1,4 +1,4 @@
-package epf.shell.search;
+package epf.shell.query;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.HEAD;
@@ -11,11 +11,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import epf.naming.Naming;
+import epf.naming.Naming.Query;
 
 /**
  * 
  */
-@Path(Naming.SEARCH)
+@Path(Query.SEARCH)
 @RegisterRestClient(configKey = Naming.Client.CLIENT_CONFIG)
 public interface SearchClient {
 	
@@ -30,11 +31,11 @@ public interface SearchClient {
     Response search(
     		@HeaderParam(HttpHeaders.AUTHORIZATION)
     		final String token,
-    		@QueryParam("text")
+    		@QueryParam(Naming.Query.Client.TEXT)
     		final String text, 
-    		@QueryParam("first")
+    		@QueryParam(Naming.Query.Client.FIRST)
     		final Integer firstResult,
-            @QueryParam("max")
+            @QueryParam(Naming.Query.Client.MAX)
     		final Integer maxResults);
 	
 	/**
@@ -45,6 +46,6 @@ public interface SearchClient {
 	Response count(
     		@HeaderParam(HttpHeaders.AUTHORIZATION)
     		final String token,
-			@QueryParam("text")
+			@QueryParam(Naming.Query.Client.TEXT)
 			final String text);
 }

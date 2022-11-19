@@ -56,7 +56,7 @@ public class Shell implements QuarkusApplication {
 	@ActivateRequestContext
 	@Override
 	public int run(String... args) throws Exception {
-		commandLine = new CommandLine(EPFCommand.class, factory);
+		commandLine = new CommandLine(EPFFunction.class, factory);
 		commandLine.registerConverter(Path.class, pathConverter);
 		commandLine.setTrimQuotes(true);
 		return commandLine.execute(args);

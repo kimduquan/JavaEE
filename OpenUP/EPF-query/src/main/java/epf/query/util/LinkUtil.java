@@ -6,7 +6,7 @@ import javax.ws.rs.core.Link;
 import javax.ws.rs.core.Link.Builder;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
-import epf.client.schema.EntityId;
+import epf.client.query.EntityId;
 
 /**
  * 

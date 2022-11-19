@@ -1,4 +1,4 @@
-package epf.query.search;
+package epf.query;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +12,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
-import epf.client.schema.EntityId;
+
+import epf.client.query.EntityId;
 import epf.naming.Naming;
 import epf.query.internal.SchemaCache;
 
@@ -20,8 +21,8 @@ import epf.query.internal.SchemaCache;
  * 
  */
 @ApplicationScoped
-@Path(Naming.SEARCH)
-public class Search implements epf.client.search.Search {
+@Path(epf.naming.Naming.Query.SEARCH)
+public class Search implements epf.client.query.Search {
 	
 	/**
 	 *
@@ -63,7 +64,7 @@ public class Search implements epf.client.search.Search {
     		final String text) {
 		final Query query = createSearchQuery(FULLTEXT_SEARCH_COUNT, tenant, text, 0, 0);
 		final Long count = (Long) query.getSingleResult();
-		return Response.ok().header(ENTITY_COUNT, count).build();
+		return Response.ok().header(epf.naming.Naming.Query.Client.ENTITY_COUNT, count).build();
 	}
 	
 	/**

@@ -18,11 +18,12 @@ import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
 import epf.naming.Naming;
+import epf.naming.Naming.Query;
 
 /**
  * 
  */
-@Path(Naming.SEARCH)
+@Path(Query.SEARCH)
 @ApplicationScoped
 @RolesAllowed(Naming.Security.DEFAULT_ROLE)
 public class Search {
@@ -54,7 +55,7 @@ public class Search {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final Request req) throws Exception {
-		return request.buildRequest(Naming.SEARCH, jwt, headers, uriInfo, req, null);
+		return request.buildRequest(Query.SEARCH, jwt, headers, uriInfo, req, null);
     }
 	
 	/**
@@ -71,6 +72,6 @@ public class Search {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final Request req) throws Exception {
-		return request.buildRequest(Naming.SEARCH, jwt, headers, uriInfo, req, null);
+		return request.buildRequest(Query.SEARCH, jwt, headers, uriInfo, req, null);
     }
 }

@@ -1,10 +1,11 @@
-package epf.shell.search;
+package epf.shell.query;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import epf.naming.Naming;
+import epf.naming.Naming.Query;
 import epf.shell.Function;
 import epf.shell.security.CallerPrincipal;
 import epf.shell.security.Credential;
@@ -15,7 +16,7 @@ import picocli.CommandLine.Option;
 /**
  * 
  */
-@Command(name = Naming.SEARCH)
+@Command(name = Query.SEARCH)
 @RequestScoped
 @Function
 public class Search {
@@ -40,7 +41,7 @@ public class Search {
 			@Option(names = {"-txt", "--text"}, description = "Text")
 			final String text) {
 		try(Response response = search.count(credential.getAuthHeader(), text)){
-			return Integer.parseInt(response.getHeaderString(Naming.Query.ENTITY_COUNT));
+			return Integer.parseInt(response.getHeaderString(Naming.Query.Client.ENTITY_COUNT));
 		}
 	}
 	

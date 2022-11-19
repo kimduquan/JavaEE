@@ -1,4 +1,4 @@
-package epf.client.search;
+package epf.client.query;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.HEAD;
@@ -15,15 +15,10 @@ import epf.naming.Naming;
  * @author PC
  *
  */
-@Path(Naming.SEARCH)
+@Path(Naming.Query.SEARCH)
 public interface Search {
-
+	
 	/**
-	 *
-	 */
-	String ENTITY_COUNT = "entity-count";
-    
-    /**
      * @param tenant
      * @param text
      * @param firstResult
@@ -35,11 +30,11 @@ public interface Search {
     Response search(
     		@MatrixParam(Naming.Management.TENANT)
     		final String tenant,
-    		@QueryParam("text")
+    		@QueryParam(Naming.Query.Client.TEXT)
     		final String text, 
-    		@QueryParam("first")
+    		@QueryParam(Naming.Query.Client.FIRST)
     		final Integer firstResult,
-            @QueryParam("max")
+            @QueryParam(Naming.Query.Client.MAX)
     		final Integer maxResults);
     
     /**
@@ -55,7 +50,7 @@ public interface Search {
     		final Integer firstResult,
     		final Integer maxResults) {
     	return client.request(
-    			target -> target.queryParam("text", text).queryParam("first", firstResult).queryParam("max", maxResults), 
+    			target -> target.queryParam(Naming.Query.Client.TEXT, text).queryParam(Naming.Query.Client.FIRST, firstResult).queryParam(Naming.Query.Client.MAX, maxResults), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.get();
@@ -70,7 +65,7 @@ public interface Search {
 	Response count(
     		@MatrixParam(Naming.Management.TENANT)
     		final String tenant,
-			@QueryParam("text")
+			@QueryParam(Naming.Query.Client.TEXT)
 			final String text);
     
     /**
@@ -79,6 +74,6 @@ public interface Search {
      * @return
      */
     static Integer count(final Client client, final String text) {
-    	return Integer.parseInt(client.request(target -> target.queryParam("text", text), req -> req).head().getHeaderString(ENTITY_COUNT));
+    	return Integer.parseInt(client.request(target -> target.queryParam(Naming.Query.Client.TEXT, text), req -> req).head().getHeaderString(Naming.Query.Client.ENTITY_COUNT));
     }
 }

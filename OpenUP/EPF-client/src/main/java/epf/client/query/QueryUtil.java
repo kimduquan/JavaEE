@@ -2,7 +2,6 @@ package epf.client.query;
 
 import java.net.URI;
 import javax.ws.rs.core.UriBuilder;
-import epf.client.schema.EntityId;
 
 /**
  * 

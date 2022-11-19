@@ -24,7 +24,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-import epf.client.schema.EntityId;
+
 import epf.client.util.Client;
 import epf.client.util.LinkUtil;
 import epf.naming.Naming;
@@ -37,40 +37,6 @@ import epf.naming.Naming;
 public interface Query {
 	
 	/**
-	 *
-	 */
-	String SCHEMA = "schema";
-	
-	/**
-	 *
-	 */
-	String ENTITY = "entity";
-	
-	/**
-	 * 
-	 */
-	String ID = "id";
-	
-	/**
-	 * 
-	 */
-	String ENTITY_PATH = "entity/{schema}/{entity}/{id}";
-	
-	/**
-	 * 
-	 */
-	String FIRST = "first";
-	/**
-	 * 
-	 */
-	String MAX = "max";
-	
-	/**
-	 *
-	 */
-	String SORT = "sort";
-	
-	/**
 	 * @param tenant
 	 * @param schema
 	 * @param entity
@@ -78,20 +44,20 @@ public interface Query {
 	 * @return
 	 */
 	@GET
-    @Path(ENTITY_PATH)
+    @Path(Naming.Query.Client.ENTITY_PATH)
 	@Produces(MediaType.APPLICATION_JSON)
     Response getEntity(
     		@MatrixParam(Naming.Management.TENANT)
     		final String tenant,
-    		@PathParam(SCHEMA)
+    		@PathParam(Naming.Query.Client.SCHEMA)
             @NotNull
             @NotBlank
             final String schema,
-            @PathParam(ENTITY)
+            @PathParam(Naming.Query.Client.ENTITY)
             @NotNull
             @NotBlank
             final String entity,
-            @PathParam(ID)
+            @PathParam(Naming.Query.Client.ID)
             @NotNull
             @NotBlank
             final String entityId
@@ -106,7 +72,7 @@ public interface Query {
 	 */
 	static <T> T getEntity(final Client client, final Class<T> cls, final String schema, final String entity, final String entityId) {
 		return client.request(
-    			target -> target.path(ENTITY).path(schema).path(entity).path(entityId), 
+    			target -> target.path(Naming.Query.Client.ENTITY).path(schema).path(entity).path(entityId), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.get(cls);
@@ -121,7 +87,7 @@ public interface Query {
 	 */
 	static Response getEntity(final Client client, final String schema, final String entity, final String entityId) {
 		return client.request(
-    			target -> target.path(ENTITY).path(schema).path(entity).path(entityId), 
+    			target -> target.path(Naming.Query.Client.ENTITY).path(schema).path(entity).path(entityId), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
 				.get();
@@ -135,7 +101,7 @@ public interface Query {
 	 * @return
 	 */
 	static Link getEntityLink(final Duration wait, final String schema, final String entity, final String entityId) {
-		return LinkUtil.link(Naming.QUERY, Query.ENTITY_PATH, HttpMethod.GET, (Integer)null, wait, schema, entity, entityId);
+		return LinkUtil.link(Naming.QUERY, Naming.Query.Client.ENTITY_PATH, HttpMethod.GET, (Integer)null, wait, schema, entity, entityId);
 	}
 	
 	/**
@@ -149,11 +115,11 @@ public interface Query {
     Response countEntity(
     		@MatrixParam(Naming.Management.TENANT)
     		final String tenant,
-    		@PathParam(SCHEMA)
+    		@PathParam(Naming.Query.Client.SCHEMA)
             @NotNull
             @NotBlank
             final String schema,
-            @PathParam(ENTITY)
+            @PathParam(Naming.Query.Client.ENTITY)
             @NotNull
             @NotBlank
             final String entity
@@ -167,11 +133,11 @@ public interface Query {
 	 */
 	static Integer countEntity(final Client client, final String schema, final String entity) {
 		final String count = client.request(
-    			target -> target.path(ENTITY).path(schema).path(entity), 
+    			target -> target.path(Naming.Query.Client.ENTITY).path(schema).path(entity), 
     			req -> req
     			)
 				.head()
-				.getHeaderString(Naming.Query.ENTITY_COUNT);
+				.getHeaderString(Naming.Query.Client.ENTITY_COUNT);
 		return Integer.parseInt(count);
 	}
 	
@@ -181,7 +147,7 @@ public interface Query {
 	 * @return
 	 */
 	@PATCH
-    @Path(ENTITY)
+    @Path(Naming.Query.Client.ENTITY)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response fetchEntities(
@@ -195,7 +161,7 @@ public interface Query {
      * @return
      */
     static Response fetchEntities(final Client client, final List<EntityId> entityIds) {
-    	return client.request(target -> target.path(ENTITY), req -> req.accept(MediaType.APPLICATION_JSON))
+    	return client.request(target -> target.path(Naming.Query.Client.ENTITY), req -> req.accept(MediaType.APPLICATION_JSON))
     			.method(HttpMethod.PATCH, Entity.json(entityIds));
     }
     
@@ -203,7 +169,7 @@ public interface Query {
      * @return
      */
     static Link fetchEntitiesLink() {
-    	return LinkUtil.link(Naming.QUERY, ENTITY, HttpMethod.PATCH, null, null);
+    	return LinkUtil.link(Naming.QUERY, Naming.Query.Client.ENTITY, HttpMethod.PATCH, null, null);
     }
 	
 	/**
@@ -221,18 +187,18 @@ public interface Query {
 	Response executeQuery(
     		@MatrixParam(Naming.Management.TENANT)
     		final String tenant,
-    		@PathParam(SCHEMA)
+    		@PathParam(Naming.Query.Client.SCHEMA)
             @NotBlank
             final String schema,
             @PathParam("criteria")
             final List<PathSegment> paths,
-            @QueryParam(FIRST)
+            @QueryParam(Naming.Query.Client.FIRST)
             final Integer firstResult,
-            @QueryParam(MAX)
+            @QueryParam(Naming.Query.Client.MAX)
             final Integer maxResults,
             @Context
             final SecurityContext context,
-            @QueryParam(SORT)
+            @QueryParam(Naming.Query.Client.SORT)
     		final List<String> sort
             ) throws Exception;
     
@@ -256,7 +222,7 @@ public interface Query {
             ) {
     	return client.request(
     			target -> paths.apply(
-    					target.path(Naming.QUERY).path(schema).queryParam(FIRST, firstResult).queryParam(MAX, maxResults).queryParam(SORT, (Object[])sort)
+    					target.path(Naming.QUERY).path(schema).queryParam(Naming.Query.Client.FIRST, firstResult).queryParam(Naming.Query.Client.MAX, maxResults).queryParam(Naming.Query.Client.SORT, (Object[])sort)
     					), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
@@ -280,7 +246,7 @@ public interface Query {
     		final String... sort){
     	return client.request(
     			target -> paths.apply(
-    					target.path(Naming.QUERY).path(schema).queryParam(FIRST, firstResult).queryParam(MAX, maxResults).queryParam(SORT, (Object[])sort)
+    					target.path(Naming.QUERY).path(schema).queryParam(Naming.Query.Client.FIRST, firstResult).queryParam(Naming.Query.Client.MAX, maxResults).queryParam(Naming.Query.Client.SORT, (Object[])sort)
     					), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
@@ -299,7 +265,7 @@ public interface Query {
 	Response executeCountQuery(
     		@MatrixParam(Naming.Management.TENANT)
     		final String tenant,
-    		@PathParam(SCHEMA)
+    		@PathParam(Naming.Query.Client.SCHEMA)
             @NotBlank
             final String schema,
             @PathParam("criteria")
@@ -325,7 +291,7 @@ public interface Query {
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.head()
-    			.getHeaderString(Naming.Query.ENTITY_COUNT);
+    			.getHeaderString(Naming.Query.Client.ENTITY_COUNT);
     	return Integer.parseInt(count);
     }
 }

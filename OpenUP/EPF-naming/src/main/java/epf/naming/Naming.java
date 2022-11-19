@@ -461,9 +461,53 @@ public interface Naming {
 		String MAX_RESULTS_DEFAULT = "epf.query.maxResults.default";
 		
 		/**
+		 * 
+		 */
+		String SEARCH = "search";
+
+		/**
+		 * @author PC
 		 *
 		 */
-		String ENTITY_COUNT = "entity-count";
+		interface Client {
+			/**
+			 *
+			 */
+			String SCHEMA = "schema";
+			/**
+			 *
+			 */
+			String ENTITY = "entity";
+			/**
+			 * 
+			 */
+			String ID = "id";
+			/**
+			 * 
+			 */
+			String ENTITY_PATH = "entity/{schema}/{entity}/{id}";
+			/**
+			 * 
+			 */
+			String FIRST = "first";
+			/**
+			 * 
+			 */
+			String MAX = "max";
+			/**
+			 *
+			 */
+			String SORT = "sort";
+			/**
+			 *
+			 */
+			String ENTITY_COUNT = "entity-count";
+			/**
+			 * 
+			 */
+			String TEXT = "text";
+			
+		}
 	}
 	
 	/**
@@ -619,23 +663,6 @@ public interface Naming {
 		 */
 		String SCRIPT_URL = "epf.script.url";
 		
-	}
-	
-	/**
-	 * 
-	 */
-	String SEARCH = "search";
-	
-	/**
-	 * @author PC
-	 *
-	 */
-	interface Search {
-		
-		/**
-	     * 
-	     */
-	    String SEARCH_URL = "epf.search.url";
 	}
 	
 	/**

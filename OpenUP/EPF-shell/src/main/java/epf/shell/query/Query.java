@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import epf.naming.Naming;
+import epf.naming.Naming.Query.Client;
 import epf.shell.Function;
 import epf.shell.security.CallerPrincipal;
 import epf.shell.security.Credential;
@@ -66,7 +67,7 @@ public class Query {
 			@Option(names = {"-e", "--entity"}, description = "Entity")
 			final String entity) {
 		try(Response response = query.countEntity(credential.getAuthHeader(), schema, entity)){
-			return Integer.parseInt(response.getHeaderString(Naming.Query.ENTITY_COUNT));
+			return Integer.parseInt(response.getHeaderString(Client.ENTITY_COUNT));
 		}
 	}
 	

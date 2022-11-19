@@ -1,4 +1,4 @@
-package epf.client.schema;
+package epf.client.query;
 
 import java.util.Map;
 

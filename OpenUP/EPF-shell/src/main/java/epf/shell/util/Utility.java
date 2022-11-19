@@ -7,14 +7,6 @@ import java.io.StringReader;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.util.Base64;
-import java.util.Base64.Encoder;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,8 +26,8 @@ import epf.shell.Function;
 import epf.shell.SYSTEM;
 import epf.shell.client.ClientUtil;
 import epf.shell.util.client.Entity;
-import epf.util.StringUtil;
 import epf.util.logging.LogManager;
+import epf.util.security.KeyUtil;
 import epf.util.zip.ZipUtil;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -278,7 +270,7 @@ public class Utility {
 			try(Scanner scanner = new Scanner(System.in)){
 				while(scanner.hasNext()) {
 					final String line = scanner.next();
-					if("close".equals(line)) {
+					if("\\q".equals(line)) {
 						break;
 					}
 					else {
@@ -355,49 +347,7 @@ public class Utility {
 			@Option(names = {"-pr", "--private"}, description = "Private Key")
 			final Path privateFile, 
 			@Option(names = {"-pu", "--public"}, description = "Public Key")
-			final Path publicFile,
-			@Option(names = {"-e", "--encode"}, description = "Encoder", defaultValue = "")
-			final String encode) throws Exception {
-		final KeyPairGenerator generator = KeyPairGenerator.getInstance(algorithm);
-		generator.initialize(keySize);
-		final KeyPair keyPair = generator.generateKeyPair();
-		final PrivateKey privateKey = keyPair.getPrivate();
-		final PublicKey publicKey = keyPair.getPublic();
-		Encoder encoder;
-		switch(encode) {
-		case "url":
-			encoder = Base64.getUrlEncoder();
-			break;
-		case "mime":
-			encoder = Base64.getMimeEncoder();
-			break;
-			default:
-				encoder = Base64.getEncoder();
-				break;
-		}
-		final String privateText = encoder.encodeToString(privateKey.getEncoded());
-		final List<String> privateLines = StringUtil.split(privateText, 64);
-		privateLines.add(0, "-----BEGIN PRIVATE KEY-----");
-		privateLines.add("-----END PRIVATE KEY-----");
-		out.println("Private Key");
-		out.println(privateText);
-		Files.write(
-				privateFile, 
-				privateLines,
-				StandardOpenOption.TRUNCATE_EXISTING,
-				StandardOpenOption.CREATE
-				);
-		out.println("Public Key");
-		final String publicText = encoder.encodeToString(publicKey.getEncoded());
-		final List<String> publicLines = StringUtil.split(publicText, 64);
-		publicLines.add(0, "-----BEGIN PUBLIC KEY-----");
-		publicLines.add("-----END PUBLIC KEY-----");
-		out.println(publicText);
-		Files.write(
-				publicFile, 
-				publicLines,
-				StandardOpenOption.TRUNCATE_EXISTING,
-				StandardOpenOption.CREATE
-				);
+			final Path publicFile) throws Exception {
+		KeyUtil.generateKeyPair(algorithm, keySize, privateFile, publicFile);
 	}
 }

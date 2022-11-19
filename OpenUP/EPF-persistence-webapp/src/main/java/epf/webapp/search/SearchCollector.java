@@ -12,9 +12,9 @@ import javax.ws.rs.core.Response;
 import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortMeta;
-import epf.client.search.Search;
+import epf.client.query.Search;
 import epf.client.util.Client;
-import epf.naming.Naming;
+import epf.naming.Naming.Query;
 import epf.util.json.JsonUtil;
 import epf.util.logging.LogManager;
 import epf.webapp.internal.GatewayUtil;
@@ -67,7 +67,7 @@ public class SearchCollector extends LazyDataModel<JsonObject> {
 
 	@Override
 	public List<JsonObject> load(final int first, final int pageSize, final Map<String, SortMeta> sortBy, final Map<String, FilterMeta> filterBy) {
-        try(Client client = gateway.newClient(Naming.SEARCH)) {
+        try(Client client = gateway.newClient(Query.SEARCH)) {
 			client.authorization(token);
 			final Integer count = Search.count(client, text);
 			setRowCount(count);

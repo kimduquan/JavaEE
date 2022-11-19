@@ -11,8 +11,10 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.health.Readiness;
-import epf.client.schema.EntityId;
+
+import epf.client.query.EntityId;
 import epf.naming.Naming;
+import epf.naming.Naming.Query.Client;
 import epf.query.internal.EntityCache;
 import epf.query.internal.QueryCache;
 import epf.query.internal.persistence.PersistenceQuery;
@@ -62,7 +64,7 @@ public class Query implements epf.client.query.Query {
     		final String entity) {
 		final Optional<Integer> count = queryCache.countEntity(tenant, schema, entity);
 		if(count.isPresent()) {
-			return Response.ok().header(Naming.Query.ENTITY_COUNT, count.get()).build();
+			return Response.ok().header(Client.ENTITY_COUNT, count.get()).build();
 		}
 		throw new NotFoundException();
 	}
@@ -78,7 +80,7 @@ public class Query implements epf.client.query.Query {
 			final List<String> sort) throws Exception {
 		if(!paths.isEmpty()) {
 			final List<?> resultList = persistence.executeQuery(tenant, schema, paths, firstResult, maxResults, context, sort);
-			return Response.ok(resultList).header(Naming.Query.ENTITY_COUNT, resultList.size()).build();
+			return Response.ok(resultList).header(Client.ENTITY_COUNT, resultList.size()).build();
 		}
 		throw new NotFoundException();
 	}
@@ -92,7 +94,7 @@ public class Query implements epf.client.query.Query {
 			throws Exception {
 		if(!paths.isEmpty()) {
 			final Object count = persistence.executeCountQuery(tenant, schema, paths, context);
-	    	return Response.ok().header(Naming.Query.ENTITY_COUNT, count).build();
+	    	return Response.ok().header(Client.ENTITY_COUNT, count).build();
 		}
 		throw new NotFoundException();
 	}
@@ -102,7 +104,7 @@ public class Query implements epf.client.query.Query {
     		final String tenant,
     		final List<EntityId> entityIds) {
 		final List<Object> entities = entityCache.getEntities(tenant, entityIds);
-		ResponseBuilder response = Response.ok(entities).header(Naming.Query.ENTITY_COUNT, entities.size());
+		ResponseBuilder response = Response.ok(entities).header(Client.ENTITY_COUNT, entities.size());
 		response = LinkUtil.links(response, "", entityIds);
 		return response.build();
 	}
