@@ -115,9 +115,11 @@ public class Server implements HealthCheck {
 	}
 
 	/**
+	 * @param tenant
+	 * @param service
 	 * @param path
 	 * @param session
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public void openSession(
     		final String tenant,
@@ -128,7 +130,12 @@ public class Server implements HealthCheck {
 		if(remotes.containsKey(remotePath)) {
 			final Optional<String> token = SecurityUtil.getToken(session);
 			if(token.isPresent()) {
-				authenticate(token.get(), remotePath, session);
+				authenticate(
+						Naming.Messaging.DEFAULT_PATH.equals(tenant) ? Optional.empty() : Optional.ofNullable(tenant), 
+								token.get(), 
+								remotePath, 
+								session
+								);
 			}
 			else {
 				closeSession(session, new CloseReason(CloseReason.CloseCodes.VIOLATED_POLICY, ""));
@@ -153,14 +160,9 @@ public class Server implements HealthCheck {
 		return Remote.pathOf(Optional.of(tenant), service, decodedPath.split("/"));
 	}
 	
-	/**
-	 * @param token
-	 * @param remotePath
-	 * @param session
-	 */
-	private void authenticate(final String token, final String remotePath, final Session session) {
+	private void authenticate(final Optional<String> tenant, final String token, final String remotePath, final Session session) {
 		final Client client = clients.poll(securityUrl, null);
-		final CompletionStage<Response> response = SecurityUtil.authenticate(client, securityUrl, token);
+		final CompletionStage<Response> response = SecurityUtil.authenticate(client, securityUrl, tenant, token);
 		response.thenApply(res -> res.getStatus() == Status.OK.getStatusCode()).whenComplete((isOk, err) -> {
 			if(err != null || !isOk) {
 				closeSession(session, new CloseReason(CloseReason.CloseCodes.VIOLATED_POLICY, ""));

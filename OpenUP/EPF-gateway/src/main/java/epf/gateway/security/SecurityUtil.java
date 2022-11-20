@@ -7,9 +7,11 @@ import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import javax.websocket.Session;
 import javax.ws.rs.client.Client;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import epf.naming.Naming;
 
 /**
  * @author PC
@@ -36,12 +38,20 @@ public interface SecurityUtil {
 	/**
 	 * @param client
 	 * @param securityUrl
+	 * @param tenant
 	 * @param token
 	 * @return
 	 */
-	static CompletionStage<Response> authenticate(final Client client, final URI securityUrl, final String token) {
+	static CompletionStage<Response> authenticate(final Client client, final URI securityUrl, final Optional<String> tenant, final String token) {
 		final StringBuilder builder = new StringBuilder();
 		builder.append("Bearer ").append(token);
-		return client.target(securityUrl).request(MediaType.APPLICATION_JSON_TYPE).header(HttpHeaders.AUTHORIZATION, builder.toString()).rx().get();
+		WebTarget target = client.target(securityUrl);
+		if(tenant.isPresent()) {
+			target = target.matrixParam(Naming.Management.TENANT, tenant);
+		}
+		return target.request(MediaType.APPLICATION_JSON_TYPE)
+				.header(HttpHeaders.AUTHORIZATION, builder.toString())
+				.rx()
+				.get();
 	}
 }

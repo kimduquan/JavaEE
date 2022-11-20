@@ -58,8 +58,7 @@ public class Security {
 	 * @param user
 	 * @param password
 	 * @return
-	 * @throws Exception 
-	 * @throws ShellException
+	 * @throws Exception
 	 */
 	@Command(name = "login")
 	public String login(
@@ -75,7 +74,7 @@ public class Security {
 	}
 	
 	/**
-	 * @param token
+	 * @param credential
 	 * @return
 	 * @throws Exception
 	 */
@@ -99,15 +98,15 @@ public class Security {
 			@Option(names = {"-t", TOKEN_ARG}, description = TOKEN_DESC) 
 			final String token) throws Exception {
 		final Credential credential = new Credential();
-		credential.token = token;
+		credential.setRawToken(token);
 		final Token authToken = security.authenticate(credential.getAuthHeader());
-		credential.tokenID = authToken.getTokenID();
+		credential.setTokenID(authToken.getTokenID());
 		identityStore.put(credential);
 		return authToken;
 	}
 	
 	/**
-	 * @param token
+	 * @param credential
 	 * @param password
 	 * @throws Exception
 	 */
@@ -123,7 +122,7 @@ public class Security {
 	}
 	
 	/**
-	 * @param token
+	 * @param credential
 	 * @return
 	 * @throws Exception
 	 */

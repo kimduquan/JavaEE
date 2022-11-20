@@ -38,8 +38,8 @@ public class IdentityStore implements ConstraintValidator<CallerPrincipal, Crede
 	protected void put(final Credential credential) throws Exception {
 		final Path tokenFolder = PathUtil.of("", TOKEN_FOLDER);
     	tokenFolder.toFile().mkdirs();
-    	final Path tokenFile = PathUtil.of("", TOKEN_FOLDER, credential.tokenID);
-		Files.write(tokenFile, Arrays.asList(credential.token));
+    	final Path tokenFile = PathUtil.of("", TOKEN_FOLDER, credential.getTokenID());
+		Files.write(tokenFile, Arrays.asList(credential.getRawToken()));
 	}
 	
 	/**
@@ -47,8 +47,8 @@ public class IdentityStore implements ConstraintValidator<CallerPrincipal, Crede
 	 * @throws Exception
 	 */
 	protected void remove(final Credential credential) throws Exception {
-		if(credential.tokenID != null && !credential.tokenID.isEmpty()) {
-			final Path tokenFile = PathUtil.of("", TOKEN_FOLDER, credential.tokenID);
+		if(credential.getTokenID() != null && !credential.getTokenID().isEmpty()) {
+			final Path tokenFile = PathUtil.of("", TOKEN_FOLDER, credential.getTokenID());
 			Files.delete(tokenFile);
 		}
 	}
@@ -60,14 +60,14 @@ public class IdentityStore implements ConstraintValidator<CallerPrincipal, Crede
 	 */
 	protected boolean validate(final Credential credential) throws Exception {
 		boolean result = true;
-		if(credential.tokenID != null && !credential.tokenID.isEmpty()) {
-    		final Path tokenFile = PathUtil.of("", TOKEN_FOLDER, credential.tokenID);
+		if(credential.getTokenID() != null && !credential.getTokenID().isEmpty()) {
+    		final Path tokenFile = PathUtil.of("", TOKEN_FOLDER, credential.getTokenID());
     		result = Files.exists(tokenFile);
     		if(result) {
         		final List<String> lines = Files.readAllLines(tokenFile);
         		result = !lines.isEmpty();
         		if(result) {
-        			credential.token = lines.get(0);
+        			credential.setRawToken(lines.get(0));
         		}
     		}
     	}

@@ -90,10 +90,10 @@ public class Messaging {
 		URI url;
 		if(path != null) {
 			final String[] paths = path.split("/");
-			url = epf.messaging.client.Messaging.getUrl(messagingUrl, Optional.ofNullable(tenant), service, Optional.of(credential.getToken()), paths);
+			url = epf.messaging.client.Messaging.getUrl(messagingUrl, Optional.ofNullable(tenant), service, Optional.of(credential.getRawToken()), paths);
 		}
 		else {
-			url = epf.messaging.client.Messaging.getUrl(messagingUrl, Optional.ofNullable(tenant), service, Optional.of(credential.getToken()));
+			url = epf.messaging.client.Messaging.getUrl(messagingUrl, Optional.ofNullable(tenant), service, Optional.of(credential.getRawToken()));
 		}
 		final Client client = epf.messaging.client.Messaging.connectToServer(url, MessagingClient.class);
 		out.println(client.getSession().getId());

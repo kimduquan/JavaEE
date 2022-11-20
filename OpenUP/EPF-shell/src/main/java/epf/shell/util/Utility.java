@@ -266,7 +266,7 @@ public class Utility {
 			final URI uri) throws Exception {
 		try(epf.util.websocket.Client client = epf.util.websocket.Client.connectToServer(uri)){
 			client.onError((error, session) -> error.printStackTrace());
-			client.onMessage((msg, session) -> System.out.println(msg));
+			client.onMessage((msg, session) -> out.println(msg));
 			try(Scanner scanner = new Scanner(System.in)){
 				while(scanner.hasNext()) {
 					final String line = scanner.next();
@@ -293,7 +293,7 @@ public class Utility {
 			try(SseEventSource stream = client.stream(target -> target, req -> req)){
 				stream.register(
 						event -> {
-							System.out.println(event.readData());
+							out.println(event.readData());
 						},
 						error -> {
 							error.printStackTrace();

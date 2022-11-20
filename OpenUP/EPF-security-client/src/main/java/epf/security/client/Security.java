@@ -53,9 +53,12 @@ public interface Security {
     
     /**
      * @param username
-     * @param passwordHash
+     * @param password
      * @param url
+     * @param tenant
+     * @param forwardedHost
      * @return
+     * @throws Exception
      */
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -99,8 +102,9 @@ public interface Security {
     }
     
     /**
+     * @param context
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
     @DELETE
     @Produces(MediaType.TEXT_PLAIN)
@@ -121,12 +125,16 @@ public interface Security {
     }
     
     /**
+     * @param tenant
+     * @param context
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     Token authenticate(
+    		@MatrixParam(Naming.Management.TENANT)
+    		final String tenant,
             @Context
             final SecurityContext context) throws Exception;
     
@@ -143,8 +151,10 @@ public interface Security {
     }
     
     /**
-     * @param info
-     * @throws Exception 
+     * @param password
+     * @param context
+     * @return
+     * @throws Exception
      */
     @PATCH
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -159,7 +169,7 @@ public interface Security {
     
     /**
      * @param client
-     * @param fields
+     * @param password
      * @return
      */
     static Response update(final Client client, final String password) {
@@ -173,8 +183,11 @@ public interface Security {
     }
     
     /**
+     * @param context
+     * @param forwardedHost
+     * @param duration
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -189,6 +202,7 @@ public interface Security {
     
     /**
      * @param client
+     * @param duration
      * @return
      */
     static String revoke(final Client client, final Duration duration) {
@@ -203,8 +217,12 @@ public interface Security {
     }
 
     /**
+     * @param provider
+     * @param session
      * @param token
-     * @return
+     * @param url
+     * @param tenant
+     * @param forwardedHost
      * @throws Exception
      */
     @Path(Naming.Security.AUTH)

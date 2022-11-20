@@ -280,10 +280,16 @@ public class Security implements epf.security.client.Security, epf.security.clie
     
     @RolesAllowed(Naming.Security.DEFAULT_ROLE)
     @Override
-    public Token authenticate(final SecurityContext context) {
+    public Token authenticate(final String tenant, final SecurityContext context) {
     	final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
     	if(tokenCache.isExpired(jwt.getTokenID())) {
     		throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED));
+    	}
+    	if(tenant != null) {
+    		final Optional<String> tenantClaim = jwt.claim(Naming.Management.TENANT);
+    		if(!tenantClaim.isPresent() || !tenant.equals(tenantClaim.get())) {
+    			throw new ForbiddenException();
+    		}
     	}
     	final Token token = TokenUtil.from(jwt);
 		token.setClaims(TokenUtil.getClaims(jwt));
