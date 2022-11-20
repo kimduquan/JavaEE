@@ -20,7 +20,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.Link;
-import javax.ws.rs.core.Link.Builder;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
@@ -32,6 +31,8 @@ import epf.client.util.EntityOutput;
 import epf.file.internal.FileWatchService;
 import epf.file.util.PathUtil;
 import epf.file.validation.PathValidator;
+import epf.function.SelfFunction;
+import epf.function.file.DeleteFunction;
 import epf.naming.Naming;
 import epf.naming.Naming.Security;
 import epf.util.logging.LogManager;
@@ -152,13 +153,15 @@ public class FileStore implements epf.client.file.Files {
 			}
 			else {
 				final String relativePath = builder.buildRelative();
-				final Builder linkBuilder = Link.fromPath(relativePath + "/{fileName}").type(HttpMethod.DELETE).rel(Naming.FILE);
+				final DeleteFunction deleteFunc = new DeleteFunction(relativePath);
 				final List<Link> links = new ArrayList<>();
 				final AtomicInteger index = new AtomicInteger(0);
 				Files.list(targetFile).forEach(fileName -> {
-					links.add(linkBuilder.title("" + index.getAndIncrement()).build(fileName.getFileName().toString()));
+					deleteFunc.setFileName(fileName.getFileName().toString());
+					links.add(deleteFunc.toLink(index.getAndIncrement()));
 				});
-				links.add(linkBuilder.title("" + index.getAndIncrement()).build(""));
+				final SelfFunction selfFunc = new SelfFunction(HttpMethod.DELETE);
+				links.add(selfFunc.toLink(index.getAndIncrement()));
 				return Response.ok(targetFile.toString()).links(links.toArray(new Link[] {})).build();
 			}
 		}

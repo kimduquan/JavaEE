@@ -29,11 +29,11 @@ import org.eclipse.microprofile.lra.annotation.Compensate;
 import org.eclipse.microprofile.lra.annotation.Forget;
 import org.eclipse.microprofile.lra.annotation.ParticipantStatus;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
+import epf.function.query.GetEntityFunction;
 import epf.naming.Naming;
 import epf.persistence.internal.EntityTransaction;
 import epf.persistence.util.EntityTypeUtil;
 import epf.persistence.util.EntityUtil;
-import epf.query.client.Query;
 import epf.schema.utility.EntityEvent;
 import epf.schema.utility.PostPersist;
 import epf.schema.utility.PostRemove;
@@ -146,7 +146,12 @@ public class Persistence implements epf.persistence.client.Entities {
         transactionStore.put(transaction.getId(), transaction);
         LOGGER.info(String.format("put[%s]id=%s", headers.getHeaderString(HttpHeaders.HOST), transaction.getId()));
         
-        return Response.ok().links(Query.getEntityLink(Duration.ofMillis(800), schema, name, entityId.toString())).build();
+        final GetEntityFunction getEntityFunc = new GetEntityFunction();
+        getEntityFunc.setSchema(schema);
+        getEntityFunc.setEntity(name);
+        getEntityFunc.setId(entityId.toString());
+        getEntityFunc.setWait(Duration.ofMillis(800));
+        return Response.ok().links(getEntityFunc.toLink(null)).build();
     }
     
     @Override
@@ -201,7 +206,12 @@ public class Persistence implements epf.persistence.client.Entities {
         transactionStore.put(transaction.getId(), transaction);
         LOGGER.info(String.format("put[%s]id=%s", headers.getHeaderString(HttpHeaders.HOST), transaction.getId()));
         
-        return Response.ok().links(Query.getEntityLink(Duration.ofMillis(500), schema, name, entityId.toString())).build();
+        final GetEntityFunction getEntityFunc = new GetEntityFunction();
+        getEntityFunc.setSchema(schema);
+        getEntityFunc.setEntity(name);
+        getEntityFunc.setId(entityId.toString());
+        getEntityFunc.setWait(Duration.ofMillis(500));
+        return Response.ok().links(getEntityFunc.toLink(null)).build();
 	}
     
     @Override

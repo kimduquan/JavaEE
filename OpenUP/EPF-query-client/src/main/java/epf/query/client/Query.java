@@ -1,6 +1,5 @@
 package epf.query.client;
 
-import java.time.Duration;
 import java.util.List;
 import java.util.function.Function;
 import javax.validation.constraints.NotBlank;
@@ -19,13 +18,11 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import epf.client.util.Client;
-import epf.client.util.LinkUtil;
 import epf.naming.Naming;
 
 /**
@@ -93,17 +90,6 @@ public interface Query {
 	}
 	
 	/**
-	 * @param wait
-	 * @param schema
-	 * @param entity
-	 * @param entityId
-	 * @return
-	 */
-	static Link getEntityLink(final Duration wait, final String schema, final String entity, final String entityId) {
-		return LinkUtil.link(Naming.QUERY, Naming.Query.Client.ENTITY_PATH, HttpMethod.GET, (Integer)null, wait, schema, entity, entityId);
-	}
-	
-	/**
 	 * @param tenant
 	 * @param schema
 	 * @param entity
@@ -162,13 +148,6 @@ public interface Query {
     static Response fetchEntities(final Client client, final List<EntityId> entityIds) {
     	return client.request(target -> target.path(Naming.Query.Client.ENTITY), req -> req.accept(MediaType.APPLICATION_JSON))
     			.method(HttpMethod.PATCH, Entity.json(entityIds));
-    }
-    
-    /**
-     * @return
-     */
-    static Link fetchEntitiesLink() {
-    	return LinkUtil.link(Naming.QUERY, Naming.Query.Client.ENTITY, HttpMethod.PATCH, null, null);
     }
 	
 	/**

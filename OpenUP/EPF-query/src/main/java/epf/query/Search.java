@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.ws.rs.core.Response;
+import epf.function.query.FetchEntitiesFunction;
 import epf.naming.Naming;
 import epf.query.client.EntityId;
 import epf.query.internal.SchemaCache;
@@ -52,7 +53,8 @@ public class Search implements epf.query.client.Search {
 		final Query query = createSearchQuery(FULLTEXT_SEARCH, tenant, text, maxResults != null ? maxResults : 0, firstResult != null ? firstResult : 0);
 		final List<?> resultList = query.getResultList();
 		final List<EntityId> entities = resultList.stream().map(this::toEntityId).filter(entityId -> entityId != null).collect(Collectors.toList());
-		return Response.ok(entities).links(epf.query.client.Query.fetchEntitiesLink()).build();
+		final FetchEntitiesFunction fetchFunc = new FetchEntitiesFunction();
+		return Response.ok(entities).links(fetchFunc.toLink(null)).build();
 	}
 
 	@Override

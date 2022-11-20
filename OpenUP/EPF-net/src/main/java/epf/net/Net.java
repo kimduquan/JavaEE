@@ -5,9 +5,11 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 import epf.net.schema.URL;
-import epf.persistence.client.Entities;
 import epf.util.StringUtil;
 import epf.util.json.JsonUtil;
+import epf.function.LinkFunction;
+import epf.function.net.ShortenUrlFunction;
+import epf.function.persistence.PersistFunction;
 import epf.naming.Naming;
 
 /**
@@ -32,7 +34,12 @@ public class Net implements epf.client.net.Net {
 		url.setRef(rawUrl.getRef());
 		url.setString(rawUrl.toString());
 		url.setUserInfo(rawUrl.getUserInfo());
-		return Response.ok(url).links(Entities.persistLink(0, epf.net.schema.Net.SCHEMA, epf.net.schema.Net.URL), epf.client.net.Net.shortenUrlLink(1)).build();
+		
+		final PersistFunction persistFunc = new PersistFunction();
+		persistFunc.setSchema(epf.net.schema.Net.SCHEMA);
+		persistFunc.setEntity(epf.net.schema.Net.URL);
+		final ShortenUrlFunction shortenFunc = new ShortenUrlFunction();
+		return Response.ok(url).links(LinkFunction.toLinks(persistFunc, shortenFunc)).build();
 	}
 
 	@Override

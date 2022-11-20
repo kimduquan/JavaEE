@@ -1,6 +1,5 @@
 package epf.function;
 
-import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.Link;
 import epf.naming.Naming;
 
@@ -11,10 +10,10 @@ import epf.naming.Naming;
 public class SelfFunction extends Function {
 
 	/**
-	 * 
+	 * @param method
 	 */
-	public SelfFunction() {
-		super(Naming.Client.Link.SELF, HttpMethod.POST, "");
+	public SelfFunction(final String method) {
+		super(Naming.Client.Link.SELF, method, "");
 	}
 
 	@Override

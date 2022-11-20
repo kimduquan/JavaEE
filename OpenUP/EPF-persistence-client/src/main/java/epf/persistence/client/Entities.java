@@ -4,7 +4,6 @@ import java.io.InputStream;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.HttpMethod;
 import javax.ws.rs.MatrixParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -15,11 +14,9 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import epf.client.util.Client;
-import epf.client.util.LinkUtil;
 import epf.naming.Naming;
 
 /**
@@ -108,16 +105,6 @@ public interface Entities {
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.post(Entity.entity(body, MediaType.APPLICATION_JSON));
-    }
-    
-    /**
-     * @param index
-     * @param schema
-     * @param entity
-     * @return
-     */
-    static Link persistLink(final Integer index, final String schema, final String entity) {
-    	return LinkUtil.link(Naming.PERSISTENCE, "{schema}/{entity}", HttpMethod.POST, index, null, schema, entity);
     }
     
     /**
