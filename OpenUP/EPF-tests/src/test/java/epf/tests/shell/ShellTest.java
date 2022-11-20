@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 import epf.file.util.PathUtil;
 import epf.naming.Naming;
+import epf.net.schema.URL;
 import epf.persistence.schema.client.Entity;
 import epf.security.schema.Token;
 import epf.tests.TestUtil;
@@ -427,6 +428,40 @@ public class ShellTest {
 		Assert.assertNotNull("Artifact", resultArtifact);
 		Assert.assertEquals("Artifact.summary", artifact.getName() + " Summary", resultArtifact.getSummary());
 		RulesUtil.deregisterRuleExecutionSet(token, "Artifact1");
+	}
+	
+	@Test
+	public void testRules_Execute2() throws Exception {
+		RulesUtil.registerRuleExecutionSet(token, PathUtil.of("", "Url.drl"), "Url1");
+		builder = ShellUtil.command(builder,
+				Naming.RULES, "execute",
+				"-tid", tokenID,
+				"-r", "Url1",
+				"-i"
+				);
+		List<Object> input = new ArrayList<>();
+		final java.net.URL rawUrl = new java.net.URL("https://www.google.com/");
+		URL url = new URL();
+		url.setAuthority(rawUrl.getAuthority());
+		url.setDefaultPort(rawUrl.getDefaultPort());
+		url.setFile(rawUrl.getFile());
+		url.setHost(rawUrl.getHost());
+		url.setPath(rawUrl.getPath());
+		url.setPort(rawUrl.getPort());
+		url.setProtocol(rawUrl.getProtocol());
+		url.setQuery(rawUrl.getQuery());
+		url.setRef(rawUrl.getRef());
+		url.setUserInfo(rawUrl.getUserInfo());
+		url.setString(rawUrl.toString());
+		input.add(url);
+		String json = RulesUtil.encodeArray(input);
+		process = ShellUtil.waitFor(builder, in, json);
+		List<String> lines = ShellUtil.getOutput(out);
+		List<String> errors = Files.readAllLines(err);
+		Object result = RulesUtil.decode(lines.get(lines.size() - 1));
+		System.out.println(result);
+		Assert.assertTrue(errors.isEmpty());
+		RulesUtil.deregisterRuleExecutionSet(token, "Url1");
 	}
 	
 	@Test
