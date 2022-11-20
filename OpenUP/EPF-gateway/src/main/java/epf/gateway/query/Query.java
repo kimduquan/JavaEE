@@ -55,16 +55,16 @@ public class Query {
 	 * @param entityId
 	 */
 	@GET
-    @Path("entity/{schema}/{entity}/{id}")
+    @Path(Naming.Query.Client.ENTITY_PATH)
 	@Produces(MediaType.APPLICATION_JSON)
     public CompletionStage<Response> getEntity(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final Request req,
-            @PathParam("schema") final String schema,
-            @PathParam("entity") final String entity,
-            @PathParam("id") final String entityId) throws Exception {
+            @PathParam(Naming.Query.Client.SCHEMA) final String schema,
+            @PathParam(Naming.Query.Client.ENTITY) final String entity,
+            @PathParam(Naming.Query.Client.ID) final String entityId) throws Exception {
     	return request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, null);
     }
 	
@@ -83,8 +83,8 @@ public class Query {
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final Request req,
-            @PathParam("schema") final String schema,
-            @PathParam("entity") final String entity
+            @PathParam(Naming.Query.Client.SCHEMA) final String schema,
+            @PathParam(Naming.Query.Client.ENTITY) final String entity
             ) throws Exception {
     	return request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, null);
     }
@@ -98,7 +98,7 @@ public class Query {
 	 * @throws Exception
 	 */
 	@PATCH
-    @Path("entity")
+    @Path(Naming.Query.Client.ENTITY)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
 	public CompletionStage<Response> fetchEntities(
@@ -130,7 +130,7 @@ public class Query {
             final UriInfo uriInfo,
             @Context 
             final Request req,
-    		@PathParam("schema")
+    		@PathParam(Naming.Query.Client.SCHEMA)
             final String schema,
             @PathParam("criteria")
             final List<PathSegment> paths) throws Exception {
@@ -156,10 +156,47 @@ public class Query {
             final UriInfo uriInfo,
             @Context 
             final Request req,
-    		@PathParam("schema")
+    		@PathParam(Naming.Query.Client.SCHEMA)
             final String schema,
             @PathParam("criteria")
             final List<PathSegment> paths) throws Exception {
 		return request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, null);
     	}
+	
+	/**
+	 * @param context
+	 * @param headers
+	 * @param uriInfo
+	 * @param req
+	 * @return
+	 * @throws Exception
+	 */
+	@GET
+	@Path(Naming.Query.SEARCH)
+	@Produces(MediaType.APPLICATION_JSON)
+    public CompletionStage<Response> search(
+    		@Context final SecurityContext context,
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final Request req) throws Exception {
+		return request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, null);
+    }
+	
+	/**
+	 * @param context
+	 * @param headers
+	 * @param uriInfo
+	 * @param req
+	 * @return
+	 * @throws Exception
+	 */
+	@HEAD
+	@Path(Naming.Query.SEARCH)
+	public CompletionStage<Response> count(
+    		@Context final SecurityContext context,
+            @Context final HttpHeaders headers, 
+            @Context final UriInfo uriInfo,
+            @Context final Request req) throws Exception {
+		return request.buildRequest(Naming.QUERY, jwt, headers, uriInfo, req, null);
+    }
 }

@@ -10,7 +10,6 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 import epf.naming.Naming;
 import epf.query.client.EntityId;
@@ -20,7 +19,6 @@ import epf.query.internal.SchemaCache;
  * 
  */
 @ApplicationScoped
-@Path(epf.naming.Naming.Query.SEARCH)
 public class Search implements epf.query.client.Search {
 	
 	/**

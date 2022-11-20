@@ -45,6 +45,12 @@ public class Query implements epf.query.client.Query {
 	@Inject
 	private transient PersistenceQuery persistence;
 	
+	/**
+	 * 
+	 */
+	@Inject
+	private transient Search search;
+	
 	@Override
     public Response getEntity(
     		final String tenant,
@@ -106,5 +112,13 @@ public class Query implements epf.query.client.Query {
 		ResponseBuilder response = Response.ok(entities).header(Client.ENTITY_COUNT, entities.size());
 		response = LinkUtil.links(response, "", entityIds);
 		return response.build();
+	}
+	
+	/**
+	 * @return
+	 */
+	@Path(Naming.Query.SEARCH)
+	public Search getSearch() {
+		return search;
 	}
 }

@@ -11,12 +11,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import epf.naming.Naming;
-import epf.naming.Naming.Query;
 
 /**
  * 
  */
-@Path(Query.SEARCH)
+@Path(Naming.QUERY)
 @RegisterRestClient(configKey = Naming.Client.CLIENT_CONFIG)
 public interface SearchClient {
 	
@@ -27,6 +26,7 @@ public interface SearchClient {
 	 * @return
 	 */
 	@GET
+	@Path(Naming.Query.SEARCH)
     @Produces(MediaType.APPLICATION_JSON)
     Response search(
     		@HeaderParam(HttpHeaders.AUTHORIZATION)
@@ -43,6 +43,7 @@ public interface SearchClient {
 	 * @return
 	 */
 	@HEAD
+	@Path(Naming.Query.SEARCH)
 	Response count(
     		@HeaderParam(HttpHeaders.AUTHORIZATION)
     		final String token,

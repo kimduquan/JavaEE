@@ -50,7 +50,7 @@ public interface Search {
     		final Integer firstResult,
     		final Integer maxResults) {
     	return client.request(
-    			target -> target.queryParam(Naming.Query.Client.TEXT, text).queryParam(Naming.Query.Client.FIRST, firstResult).queryParam(Naming.Query.Client.MAX, maxResults), 
+    			target -> target.path(Naming.Query.SEARCH).queryParam(Naming.Query.Client.TEXT, text).queryParam(Naming.Query.Client.FIRST, firstResult).queryParam(Naming.Query.Client.MAX, maxResults), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
     			.get();
@@ -74,6 +74,6 @@ public interface Search {
      * @return
      */
     static Integer count(final Client client, final String text) {
-    	return Integer.parseInt(client.request(target -> target.queryParam(Naming.Query.Client.TEXT, text), req -> req).head().getHeaderString(Naming.Query.Client.ENTITY_COUNT));
+    	return Integer.parseInt(client.request(target -> target.path(Naming.Query.SEARCH).queryParam(Naming.Query.Client.TEXT, text), req -> req).head().getHeaderString(Naming.Query.Client.ENTITY_COUNT));
     }
 }
