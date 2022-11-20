@@ -13,11 +13,12 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimePart;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
-import epf.client.mail.AttachFile;
-import epf.client.mail.Message;
-import epf.client.mail.MessageBodyPart;
-import epf.client.mail.MessageMultipart;
-import epf.client.mail.MessagePart;
+
+import epf.mail.client.AttachFile;
+import epf.mail.client.Message;
+import epf.mail.client.MessageBodyPart;
+import epf.mail.client.MessageMultipart;
+import epf.mail.client.MessagePart;
 import epf.naming.Naming;
 import epf.naming.Naming.Security;
 
@@ -27,7 +28,7 @@ import epf.naming.Naming.Security;
 @Path(Naming.MAIL)
 @RolesAllowed({Security.DEFAULT_ROLE, Naming.EPF})
 @ApplicationScoped
-public class Mail implements epf.client.mail.Mail {
+public class Mail implements epf.mail.client.Mail {
 	
 	/**
 	 *

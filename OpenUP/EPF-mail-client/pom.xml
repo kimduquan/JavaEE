@@ -6,8 +6,8 @@
         <artifactId>OpenUP-parent</artifactId>
         <version>1.0.0</version>
     </parent>
-    <artifactId>EPF-query-client</artifactId>
-    <name>Eclipse Process Framework Query Client</name>
+    <artifactId>EPF-mail-client</artifactId>
+    <name>Eclipse Process Framework Mail Client</name>
     <packaging>jar</packaging>
     <dependencies>
     	<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->

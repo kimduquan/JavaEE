@@ -810,6 +810,7 @@
 		<module>EPF-messaging-client</module>
 		<module>EPF-net</module>
 		<module>EPF-file</module>
+		<module>EPF-mail-client</module>
 		<module>EPF-mail</module>
 		<module>EPF-image</module>
 		<module>EPF-rules</module>

@@ -1,4 +1,4 @@
-package epf.client.mail;
+package epf.mail.client;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;

@@ -1,4 +1,4 @@
-package epf.client.mail;
+package epf.mail.client;
 
 import java.util.Map;
 

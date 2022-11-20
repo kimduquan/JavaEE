@@ -4,9 +4,10 @@ import java.io.Serializable;
 import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.logging.Logger;
-import epf.client.mail.Mail;
-import epf.client.mail.Message;
+
 import epf.client.util.Client;
+import epf.mail.client.Mail;
+import epf.mail.client.Message;
 import epf.security.client.Management;
 import epf.security.view.RegisterView;
 import epf.util.StringUtil;

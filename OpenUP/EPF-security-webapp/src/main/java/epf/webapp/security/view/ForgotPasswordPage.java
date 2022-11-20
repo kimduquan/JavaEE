@@ -10,9 +10,10 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import epf.client.mail.Mail;
-import epf.client.mail.Message;
+
 import epf.client.util.Client;
+import epf.mail.client.Mail;
+import epf.mail.client.Message;
 import epf.security.client.Management;
 import epf.security.view.ForgotPasswordView;
 import epf.util.StringUtil;
