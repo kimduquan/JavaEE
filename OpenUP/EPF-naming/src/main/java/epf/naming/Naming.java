@@ -110,12 +110,17 @@ public interface Naming {
 		 * @author PC
 		 *
 		 */
-		interface Internal {
+		interface Link {
 			
 			/**
 			 * 
 			 */
-			String LINK_PARAM_WAIT = "wait";
+			String WAIT = "wait";
+			
+			/**
+			 * 
+			 */
+			String SELF = "self";
 		}
 	}
 	

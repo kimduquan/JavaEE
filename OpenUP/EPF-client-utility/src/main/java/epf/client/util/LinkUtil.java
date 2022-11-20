@@ -27,7 +27,7 @@ public interface LinkUtil {
     		builder = builder.title("" + index);
     	}
     	if(wait != null) {
-        	builder = builder.param(Naming.Client.Internal.LINK_PARAM_WAIT, wait.toString());
+        	builder = builder.param(Naming.Client.Link.WAIT, wait.toString());
     	}
     	return builder.build(values);
     }

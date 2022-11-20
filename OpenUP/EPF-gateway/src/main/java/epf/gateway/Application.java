@@ -70,9 +70,10 @@ public class Application {
     	final URI serviceUrl = registry.lookup(service).orElseThrow(NotFoundException::new);
     	final Client client = clients.poll(serviceUrl, null);
     	final RequestBuilder builder = new RequestBuilder(client, serviceUrl, jwt, req, headers, uriInfo, body);
+    	final Link self = Link.fromPath(uriInfo.getPath()).type(req.getMethod()).rel(service).build();
     	return builder.build()
     			.thenApply(response -> closeResponse(response, serviceUrl, client))
-    			.thenCompose(response -> buildLinkRequests(response, headers))
+    			.thenCompose(response -> buildLinkRequests(response, headers, self))
     			.thenApply(response -> ResponseUtil.buildResponse(response, uriInfo.getBaseUri()));
     }
     
@@ -99,7 +100,7 @@ public class Application {
 		final URI serviceUrl = registry.lookup(service).orElseThrow(NotFoundException::new);
 		final Client client = clients.poll(serviceUrl, null);
 		LOGGER.info(String.format("link=%s", link.toString()));
-		final String wait = link.getParams().get(Naming.Client.Internal.LINK_PARAM_WAIT);
+		final String wait = link.getParams().get(Naming.Client.Link.WAIT);
 		if(wait != null) {
 			response.bufferEntity();
 			try {
@@ -118,7 +119,7 @@ public class Application {
      * @param headers
      * @return
      */
-    private CompletionStage<Response> buildLinkRequests(final Response response, final HttpHeaders headers) {
+    private CompletionStage<Response> buildLinkRequests(final Response response, final HttpHeaders headers, final Link self) {
     	CompletionStage<Response> linkResponse = CompletableFuture.completedStage(response);
     	final Comparator<Link> comparator = new LinkComparator();
     	final List<Link> links = response.getLinks().stream().filter(link -> link.getType() != null).sorted(comparator).collect(Collectors.toList());
@@ -131,7 +132,9 @@ public class Application {
 				case HttpMethod.HEAD:
 				case HttpMethod.OPTIONS:
 				case HttpMethod.PATCH:
-					linkResponse = linkResponse.thenCompose(r -> buildLinkRequest(r, headers, link)).thenCompose(r -> buildLinkRequests(r, headers));
+					final String linkRel = link.getRel();
+					final Link targetLink = Naming.Client.Link.SELF.equals(linkRel) ? self : link;
+					linkResponse = linkResponse.thenCompose(r -> buildLinkRequest(r, headers, targetLink)).thenCompose(r -> buildLinkRequests(r, headers, targetLink));
 					break;
 				default:
 					break;

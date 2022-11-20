@@ -9,4 +9,18 @@
     <artifactId>EPF-function</artifactId>
     <name>Eclipse Process Framework Function</name>
     <packaging>jar</packaging>
+    <dependencies>
+    	<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
+		<dependency>
+		    <groupId>javax.ws.rs</groupId>
+		    <artifactId>javax.ws.rs-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-naming</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 </project>

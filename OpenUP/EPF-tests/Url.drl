@@ -1,0 +1,16 @@
+package epf.rules.net
+
+import epf.net.schema.URL
+import epf.function.persistence.PersistFunction
+import epf.function.net.ShortenUrlFunction
+
+rule "Rule 1"
+	when url : URL(id == null)
+	then
+		PersistFunction persist = new PersistFunction();
+		persist.setSchema("EPF_Net");
+		persist.setEntity("URL");
+		ShortenUrlFunction shortenUrl = new ShortenUrlFunction();
+		insert( persist );
+		insert( shortenUrl );
+end
