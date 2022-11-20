@@ -416,14 +416,14 @@ public class ShellTest {
 		Artifact artifact = new Artifact();
 		artifact.setName(StringUtil.randomString("testRules_Execute"));
 		input.add(artifact);
-		String json = RulesUtil.encode(input);
+		String json = RulesUtil.encodeArray(input);
 		process = ShellUtil.waitFor(builder, in, json);
 		List<String> lines = ShellUtil.getOutput(out);
 		List<String> errors = Files.readAllLines(err);
-		List<Object> resultList = RulesUtil.decode(lines.get(lines.size() - 1));
+		Object result = RulesUtil.decode(lines.get(lines.size() - 1));
+		Assert.assertTrue(result instanceof Artifact);
 		Assert.assertTrue(errors.isEmpty());
-		Assert.assertFalse(resultList.isEmpty());
-		Artifact resultArtifact = (Artifact) resultList.get(0);
+		Artifact resultArtifact = (Artifact) result;
 		Assert.assertNotNull("Artifact", resultArtifact);
 		Assert.assertEquals("Artifact.summary", artifact.getName() + " Summary", resultArtifact.getSummary());
 		RulesUtil.deregisterRuleExecutionSet(token, "Artifact1");
@@ -440,7 +440,7 @@ public class ShellTest {
 		process = ShellUtil.waitFor(builder);
 		List<String> lines = ShellUtil.getOutput(out);
 		List<String> errors = Files.readAllLines(err);
-		List<Object> resultList = RulesUtil.decode(lines.get(lines.size() - 1));
+		List<Object> resultList = RulesUtil.decodeArray(lines.get(lines.size() - 1));
 		Assert.assertTrue(errors.isEmpty());
 		Assert.assertFalse(resultList.isEmpty());
 		RulesUtil.deregisterRuleExecutionSet(token, "Artifact1");
