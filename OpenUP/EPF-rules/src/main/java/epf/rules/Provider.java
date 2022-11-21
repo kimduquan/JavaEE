@@ -13,7 +13,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
-import epf.client.rules.Rules;
+import epf.naming.Naming;
 import epf.util.logging.LogManager;
 
 /**
@@ -27,7 +27,7 @@ public class Provider implements HealthCheck {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = LogManager.getLogger(Provider.class.getName());
+	private transient static final Logger LOGGER = LogManager.getLogger(Provider.class.getName());
 	
 	/**
 	 * 
@@ -43,14 +43,14 @@ public class Provider implements HealthCheck {
 	 * 
 	 */
 	@Inject
-	@ConfigProperty(name = Rules.PROVIDER_CLASS)
+	@ConfigProperty(name = Naming.Rules.PROVIDER_CLASS)
 	private transient String providerClass;
 	
 	/**
 	 * 
 	 */
 	@Inject
-	@ConfigProperty(name = Rules.PROVIDER_URI)
+	@ConfigProperty(name = Naming.Rules.PROVIDER_URI)
 	private transient String providerUri;
 	
 	/**

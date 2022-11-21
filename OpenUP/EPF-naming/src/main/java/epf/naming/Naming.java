@@ -351,6 +351,11 @@ public interface Naming {
 		 * 
 		 */
 		String HTTP_PORT = "epf.net.http.port";
+
+		/**
+		 * 
+		 */
+		String URL = "url";
 	}
 	
 	/**
@@ -609,6 +614,16 @@ public interface Naming {
 		 * 
 		 */
 		String RULES_ADMIN = "rules/admin";
+
+		/**
+		 * 
+		 */
+		String PROVIDER_CLASS = "epf.rules.provider.class";
+
+		/**
+		 * 
+		 */
+		String PROVIDER_URI = "epf.rules.provider.uri";
 		
 	}
 	
@@ -667,6 +682,10 @@ public interface Naming {
 		 * 
 		 */
 		String SCRIPT_URL = "epf.script.url";
+		/**
+		 * 
+		 */
+		String ROOT = "epf.script.root";
 		
 	}
 	

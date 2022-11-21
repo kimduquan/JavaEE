@@ -24,20 +24,15 @@ import epf.naming.Naming;
 public interface Net {
 	
 	/**
-	 * 
-	 */
-	String URL = "url";
-
-	/**
 	 * @param url
 	 * @return
 	 */
-	@Path(URL)
+	@Path(Naming.Net.URL)
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)
 	Response rewriteUrl(
-			@FormParam(URL) 
+			@FormParam(Naming.Net.URL) 
 			@NotNull
 			final URL url) throws Exception;
 	
@@ -46,7 +41,7 @@ public interface Net {
 	 * @return
 	 * @throws Exception
 	 */
-	@Path(URL)
+	@Path(Naming.Net.URL)
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
@@ -59,9 +54,9 @@ public interface Net {
 	 */
 	static String rewriteUrl(final Client client, final String url) {
 		return client.request(
-    			target -> target.path(URL), 
+    			target -> target.path(Naming.Net.URL), 
     			req -> req
     			)
-    			.post(Entity.form(new Form().param(URL, url)), String.class);
+    			.post(Entity.form(new Form().param(Naming.Net.URL, url)), String.class);
 	}
 }

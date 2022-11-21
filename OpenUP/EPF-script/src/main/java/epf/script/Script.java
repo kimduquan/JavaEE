@@ -20,7 +20,6 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jppf.client.JPPFJob;
 import org.jppf.node.protocol.ScriptedTask;
 import org.jppf.node.protocol.Task;
-
 import epf.naming.Naming;
 import epf.util.EPFException;
 
@@ -41,7 +40,7 @@ public class Script implements epf.client.script.Script {
 	/**
 	 * 
 	 */
-	@ConfigProperty(name = ROOT)
+	@ConfigProperty(name = Naming.Script.ROOT)
 	@Inject
 	private transient String rootFolder;
 

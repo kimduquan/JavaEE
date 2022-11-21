@@ -24,16 +24,6 @@ import epf.naming.Naming;
 public interface Rules {
 
 	/**
-	 * 
-	 */
-	String PROVIDER_CLASS = "epf.rules.provider.class";
-	
-	/**
-	 * 
-	 */
-	String PROVIDER_URI = "epf.rules.provider.uri";
-	
-	/**
 	 * @param ruleSet
 	 * @param input
 	 * @return

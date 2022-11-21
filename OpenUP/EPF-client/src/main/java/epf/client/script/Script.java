@@ -12,7 +12,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-
 import epf.client.util.Client;
 import epf.naming.Naming;
 
@@ -23,11 +22,6 @@ import epf.naming.Naming;
 @Path(Naming.SCRIPT)
 public interface Script {
 	
-	/**
-	 * 
-	 */
-	String ROOT = "epf.script.root";
-
 	/**
 	 * @param lang
 	 * @param input

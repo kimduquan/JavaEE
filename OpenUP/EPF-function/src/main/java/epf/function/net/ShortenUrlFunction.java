@@ -15,7 +15,7 @@ public class ShortenUrlFunction extends Function {
 	 * 
 	 */
 	public ShortenUrlFunction() {
-		super(Naming.NET, HttpMethod.PUT, "url");
+		super(Naming.NET, HttpMethod.PUT, Naming.Net.URL);
 	}
 
 	@Override

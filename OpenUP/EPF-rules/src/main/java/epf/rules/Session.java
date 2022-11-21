@@ -28,7 +28,7 @@ public class Session implements Serializable {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = LogManager.getLogger(Session.class.getName());
+	private transient static final Logger LOGGER = LogManager.getLogger(Session.class.getName());
 
 	/**
 	 * 

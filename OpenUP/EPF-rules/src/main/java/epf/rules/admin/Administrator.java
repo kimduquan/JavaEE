@@ -26,7 +26,7 @@ public class Administrator implements HealthCheck {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = LogManager.getLogger(Administrator.class.getName());
+	private transient static final Logger LOGGER = LogManager.getLogger(Administrator.class.getName());
 	
 	/**
 	 * 
