@@ -10,7 +10,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -29,10 +28,9 @@ import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import epf.client.util.EntityOutput;
 import epf.file.internal.FileWatchService;
+import epf.file.util.FileUtil;
 import epf.file.util.PathUtil;
 import epf.file.validation.PathValidator;
-import epf.function.SelfFunction;
-import epf.function.file.DeleteFunction;
 import epf.naming.Naming;
 import epf.naming.Naming.Security;
 import epf.util.logging.LogManager;
@@ -152,17 +150,7 @@ public class FileStore implements epf.client.file.Files {
 				Files.delete(targetFile);
 			}
 			else {
-				final String relativePath = builder.buildRelative();
-				final DeleteFunction deleteFunc = new DeleteFunction(relativePath);
-				final List<Link> links = new ArrayList<>();
-				final AtomicInteger index = new AtomicInteger(0);
-				Files.list(targetFile).forEach(fileName -> {
-					deleteFunc.setFileName(fileName.getFileName().toString());
-					links.add(deleteFunc.toLink(index.getAndIncrement()));
-				});
-				final SelfFunction selfFunc = new SelfFunction(HttpMethod.DELETE);
-				links.add(selfFunc.toLink(index.getAndIncrement()));
-				return Response.ok(targetFile.toString()).links(links.toArray(new Link[] {})).build();
+				FileUtil.deleteDirectory(targetFile);
 			}
 		}
 		else {

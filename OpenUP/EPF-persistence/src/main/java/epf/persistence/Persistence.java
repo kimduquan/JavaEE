@@ -2,7 +2,6 @@ package epf.persistence;
 
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -29,7 +28,6 @@ import org.eclipse.microprofile.lra.annotation.Compensate;
 import org.eclipse.microprofile.lra.annotation.Forget;
 import org.eclipse.microprofile.lra.annotation.ParticipantStatus;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
-import epf.function.query.GetEntityFunction;
 import epf.naming.Naming;
 import epf.persistence.internal.EntityTransaction;
 import epf.persistence.util.EntityTypeUtil;
@@ -146,12 +144,7 @@ public class Persistence implements epf.persistence.client.Entities {
         transactionStore.put(transaction.getId(), transaction);
         LOGGER.info(String.format("put[%s]id=%s", headers.getHeaderString(HttpHeaders.HOST), transaction.getId()));
         
-        final GetEntityFunction getEntityFunc = new GetEntityFunction();
-        getEntityFunc.setSchema(schema);
-        getEntityFunc.setEntity(name);
-        getEntityFunc.setId(entityId.toString());
-        getEntityFunc.setWait(Duration.ofMillis(800));
-        return Response.ok().links(getEntityFunc.toLink(null)).build();
+        return Response.ok(JsonUtil.toString(entity)).build();
     }
     
     @Override
@@ -206,12 +199,7 @@ public class Persistence implements epf.persistence.client.Entities {
         transactionStore.put(transaction.getId(), transaction);
         LOGGER.info(String.format("put[%s]id=%s", headers.getHeaderString(HttpHeaders.HOST), transaction.getId()));
         
-        final GetEntityFunction getEntityFunc = new GetEntityFunction();
-        getEntityFunc.setSchema(schema);
-        getEntityFunc.setEntity(name);
-        getEntityFunc.setId(entityId.toString());
-        getEntityFunc.setWait(Duration.ofMillis(500));
-        return Response.ok().links(getEntityFunc.toLink(null)).build();
+        return Response.ok(JsonUtil.toString(mergedEntity)).build();
 	}
     
     @Override
