@@ -9,6 +9,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import epf.client.config.Config;
 import epf.client.util.Client;
+import epf.client.util.ClientUtil;
 import epf.naming.Naming;
 import epf.util.MapUtil;
 import epf.util.logging.LogManager;
@@ -34,14 +35,14 @@ public class ConfigUtil {
 	 * 
 	 */
 	@Inject
-	private transient GatewayUtil gatewayUtil;
+	private transient ClientUtil clientUtil;
 
 	/**
 	 * 
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		try(Client client = gatewayUtil.newClient(Naming.CONFIG)){
+		try(Client client = clientUtil.newClient(epf.util.config.ConfigUtil.getURI(Naming.Config.CONFIG_URL))){
 			final Map<String, String> props = Config.getProperties(client, "");
 			props.forEach(properties::put);
 		} 

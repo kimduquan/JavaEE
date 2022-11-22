@@ -1,6 +1,5 @@
 package epf.webapp.internal;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import epf.client.util.Client;
@@ -17,21 +16,6 @@ public class GatewayUtil {
 	 */
 	@Inject
 	private transient ClientUtil clientUtil;
-	
-	/**
-	 *
-	 */
-	@Inject
-	private transient SecurityUtil securityUtil;
-	
-	/**
-	 * 
-	 */
-	@PostConstruct
-	protected void postConstruct() {
-		clientUtil.setKeyStore(securityUtil.getKeyStore(), securityUtil.getKeyPassword());
-		clientUtil.setTrustStore(securityUtil.getTrustStore());
-	}
 	
 	/**
 	 * @param service

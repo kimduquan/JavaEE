@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import epf.client.util.Client;
+import epf.naming.Naming;
 import epf.persistence.schema.client.Entity;
 import epf.persistence.schema.client.Schema;
 import epf.util.logging.LogManager;
@@ -49,7 +50,7 @@ public class SchemaCache {
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		try(Client client = gateway.newClient(epf.naming.Naming.SCHEMA)){
+		try(Client client = gateway.newClient(Naming.SCHEMA)){
 			client.authorization(session.getToken());
 			try(Response response = Schema.getEntities(client)){
 				entities = response.readEntity(new GenericType<List<Entity>>() {});
