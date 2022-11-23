@@ -2,7 +2,15 @@ cd EPF-transaction-internal
 call start.bat
 cd ../
 
+cd EPF-config
+call start.bat
+cd ../
+
 cd EPF-messaging
+call start.bat
+cd ../
+
+cd EPF-logging
 call start.bat
 cd ../
 

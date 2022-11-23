@@ -2,7 +2,13 @@ call ./shutdownc.bat
 call ./clean.bat
 call ./startupc.bat
 call ./compile.bat
+cd EPF-config
+call ./dev.bat
+cd ../
 cd EPF-messaging
+call ./dev.bat
+cd ../
+cd EPF-logging
 call ./dev.bat
 cd ../
 cd EPF-transaction-internal

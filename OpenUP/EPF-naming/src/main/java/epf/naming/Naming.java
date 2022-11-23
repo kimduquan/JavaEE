@@ -250,18 +250,6 @@ public interface Naming {
 	}
 	
 	/**
-	 * @author PC
-	 *
-	 */
-	interface Lang {
-
-		/**
-		 * 
-		 */
-		String LANG_URL = "epf.lang.url";
-	}
-	
-	/**
 	 *
 	 */
 	String MAIL = "mail";

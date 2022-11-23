@@ -36,19 +36,10 @@
 	<application id="EPF-script" name="EPF-script" context-root="script" location="EPF-script-1.0.0.war" >
         <classloader classProviderRef="jppf" apiTypeVisibility="spec,ibm-api,api,stable,third-party"/>
     </application>
-	<application id="EPF-config" name="EPF-config" context-root="config" location="EPF-config-1.0.0.war" >
-        <classloader apiTypeVisibility="+third-party"/>
-    </application>
 	<application id="EPF-registry" name="EPF-registry" context-root="registry" location="EPF-registry-1.0.0.war" startAfterRef="EPF-config" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
 	<application id="EPF-management" name="EPF-management" context-root="management" location="EPF-management-1.0.0.war" >
-        <classloader apiTypeVisibility="+third-party"/>
-    </application>
-	<application id="EPF-logging" name="EPF-logging" context-root="logging" location="EPF-logging-1.0.0.war">
-        <classloader apiTypeVisibility="+third-party"/>
-    </application>
-    <application id="EPF-lang" name="EPF-lang" context-root="lang" location="EPF-lang-1.0.0.war" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
     <application id="EPF-cache" name="EPF-cache" context-root="cache" location="EPF-cache-1.0.0.war">

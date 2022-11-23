@@ -43,7 +43,6 @@
         <liberty.env.epf_gateway_url>https://${gatewayHost}:${gatewayPort}/gateway/</liberty.env.epf_gateway_url>
         <liberty.env.epf_gateway_messaging_url>ws://${gatewayHost}:${internalPort}/messaging/</liberty.env.epf_gateway_messaging_url>
         <liberty.env.epf_messaging_url>ws://${httpHost}:${httpPort}/messaging/messaging/</liberty.env.epf_messaging_url>
-        <liberty.env.epf_lang_url>ws://${httpHost}:${httpPort}/lang/lang/</liberty.env.epf_lang_url>
         <liberty.env.epf_cache_url>http://${httpHost}:${httpPort}/cache/cache/</liberty.env.epf_cache_url>
         <liberty.env.epf_query_url>http://${httpHost}:${httpPort}/query/query/</liberty.env.epf_query_url>
         <liberty.env.epf_registry_url>http://${httpHost}:${httpPort}/registry/registry/</liberty.env.epf_registry_url>
@@ -235,24 +234,6 @@
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
-		<dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-config</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
-		<dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-logging</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
-		<dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-lang</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-cache</artifactId>
@@ -388,7 +369,6 @@
                         <epf.registry.url>http://localhost:${httpPort}/registry/registry/</epf.registry.url>
 						<epf.management.url>http://localhost:${httpPort}/management/management/</epf.management.url>
                         <epf.messaging.url>ws://localhost:${httpPort}/messaging/messaging/</epf.messaging.url>
-                        <epf.lang.url>ws://localhost:${httpPort}/lang/lang/</epf.lang.url>
                         <epf.cache.url>http://localhost:${httpPort}/cache/cache/</epf.cache.url>
                         <epf.query.url>http://localhost:${httpPort}/query/query/</epf.query.url>
                         <epf.portlet.url>http://localhost:${portalPort}/pluto/portal</epf.portlet.url>
@@ -479,7 +459,7 @@
                         <configuration>
                             <verifyTimeout>600</verifyTimeout>
                             <serverStartTimeout>600</serverStartTimeout>
-                            <applications>EPF-schedule,EPF-script,EPF-config,EPF-logging,EPF-batch,EPF-cache,EPF-query,EPF-file,EPF-mail,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-registry,EPF-management,EPF-security,EPF-security-management</applications>
+                            <applications>EPF-schedule,EPF-script,EPF-batch,EPF-cache,EPF-query,EPF-file,EPF-mail,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-registry,EPF-management,EPF-security,EPF-security-management</applications>
                         </configuration>
                     </execution>
                     <!-- Stop the server -->
@@ -498,7 +478,7 @@
                     <deployPackages>dependencies</deployPackages>
 					<verifyTimeout>600</verifyTimeout>
 					<serverStartTimeout>600</serverStartTimeout>
-					<applications>EPF-schedule,EPF-script,EPF-config,EPF-logging,EPF-batch,EPF-cache,EPF-query,EPF-file,EPF-mail,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-registry,EPF-management,EPF-security,EPF-security-management</applications>
+					<applications>EPF-schedule,EPF-script,EPF-batch,EPF-cache,EPF-query,EPF-file,EPF-mail,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-registry,EPF-management,EPF-security,EPF-security-management</applications>
 					<dockerRunOpts>-p 7286:7286</dockerRunOpts>
 				</configuration>
             </plugin>
@@ -585,6 +565,7 @@
 				<liberty.env.epf_schema_url>http://epf-persistence.default.svc.cluster.local:9181/persistence/schema/</liberty.env.epf_schema_url>
 				<liberty.env.epf_transaction_url>http://epf-transaction.default.svc.cluster.local:9182/transaction/transaction/</liberty.env.epf_transaction_url>
 				<liberty.env.epf_messaging_url>ws://epf-messaging.default.svc.cluster.local:8080/messaging/</liberty.env.epf_messaging_url>
+				<liberty.env.epf_config_url>http://epf-config.default.svc.cluster.local:8080/config/</liberty.env.epf_config_url>
 				<liberty.env.epf_client_net_ssl_keyStore>/dev.p12</liberty.env.epf_client_net_ssl_keyStore>
 				<liberty.env.epf_client_net_ssl_trustStore>/dev.p12</liberty.env.epf_client_net_ssl_trustStore>
 				<liberty.env.mp_jwt_decrypt_key_location>/private.pem</liberty.env.mp_jwt_decrypt_key_location>

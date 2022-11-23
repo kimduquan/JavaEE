@@ -37,77 +37,77 @@ public class Config implements epf.client.config.Config {
      */
     @ConfigProperty(name = Naming.WebApp.Messaging.MESSAGES_LIMIT)
 	@Inject
-	private transient long messagesLimit;
+	transient long messagesLimit;
     
     /**
      * 
      */
     @ConfigProperty(name = Naming.Query.FIRST_RESULT_DEFAULT)
 	@Inject
-	private transient int firstResultDefault;
+	transient int firstResultDefault;
     
     /**
      * 
      */
     @ConfigProperty(name = Naming.Query.MAX_RESULTS_DEFAULT)
 	@Inject
-	private transient int maxResultsDefault;
+	transient int maxResultsDefault;
     
     /**
      * 
      */
     @ConfigProperty(name = Naming.Security.Auth.GOOGLE_PROVIDER)
 	@Inject
-	private transient String googleOpenIDDiscoveryUrl;
+	transient String googleOpenIDDiscoveryUrl;
     
     /**
      * 
      */
     @ConfigProperty(name = Naming.Security.Auth.GOOGLE_CLIENT_ID)
 	@Inject
-	private transient String googleClientId;
+	transient String googleClientId;
     
     /**
      * 
      */
     @ConfigProperty(name = Naming.Security.Auth.GOOGLE_CLIENT_SECRET)
 	@Inject
-	private transient String googleClientSecret;
+	transient String googleClientSecret;
     
     /**
      * 
      */
     @ConfigProperty(name = Naming.Security.Auth.AUTH_URL)
     @Inject
-    private transient String authUrl;
+    transient String authUrl;
     
     /**
      * 
      */
     @ConfigProperty(name = Naming.Security.Auth.FACEBOOK_PROVIDER)
 	@Inject
-	private transient String facebookOpenIDDiscoveryUrl;
+	transient String facebookOpenIDDiscoveryUrl;
     
     /**
      * 
      */
     @ConfigProperty(name = Naming.Security.Auth.FACEBOOK_CLIENT_ID)
 	@Inject
-	private transient String facebookClientId;
+	transient String facebookClientId;
     
     /**
      * 
      */
     @ConfigProperty(name = Naming.Security.Auth.FACEBOOK_CLIENT_SECRET)
 	@Inject
-	private transient String facebookClientSecret;
+	transient String facebookClientSecret;
     
     /**
      * 
      */
     @ConfigProperty(name = Naming.Security.JWT.VERIFIER_PUBLIC_KEY_LOCATION)
     @Inject
-    private transient String publicKeyLocation;
+    transient String publicKeyLocation;
     
     /**
      * 

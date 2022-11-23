@@ -170,13 +170,6 @@ public class Registry implements epf.client.registry.Registry {
 	@Inject
 	@ConfigProperty(name = Naming.Image.IMAGE_URL)
 	private transient URI imageUrl;
-
-	/**
-	 * 
-	 */
-	@Inject
-	@ConfigProperty(name = Naming.Lang.LANG_URL)
-	private transient URI langUrl;
 	
 	/**
 	 * 
