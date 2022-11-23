@@ -63,9 +63,6 @@
 	<application id="EPF-planning" name="EPF-planning" context-root="planning" location="EPF-planning-1.0.0.war" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-    <application id="EPF-net" name="EPF-net" context-root="net" location="EPF-net-1.0.0.war">
-        <classloader apiTypeVisibility="+third-party"/>
-    </application>
     <application id="EPF-schema" name="EPF-schema" context-root="schema" location="EPF-schema-1.0.0.war">
         <classloader apiTypeVisibility="+third-party"/>
     </application>

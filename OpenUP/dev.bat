@@ -20,6 +20,9 @@ cd ../
 cd EPF-persistence
 call ./dev.bat
 cd ../
+cd EPF-net
+call ./dev.bat
+cd ../
 cd EPF-gateway
 call ./dev.bat
 cd ../

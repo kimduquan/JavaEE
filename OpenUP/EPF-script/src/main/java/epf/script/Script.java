@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.script;
 
 import java.io.InputStream;

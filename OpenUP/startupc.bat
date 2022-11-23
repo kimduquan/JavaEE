@@ -26,6 +26,10 @@ cd EPF-tests
 call start.bat
 cd ../
 
+cd EPF-net
+call start.bat
+cd ../
+
 cd EPF-gateway
 call start.bat
 cd ../

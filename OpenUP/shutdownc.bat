@@ -12,6 +12,9 @@ cd ../
 cd EPF-gateway
 call stop.bat
 cd ../
+cd EPF-net
+call stop.bat
+cd ../
 cd EPF-tests
 call stop.bat
 cd ../
