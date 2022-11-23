@@ -202,7 +202,6 @@ public class Registry implements epf.client.registry.Registry {
 			remotes.put(Naming.SCHEMA, schemaUrl);
 			remotes.put(Naming.PLANNING, planningUrl);
 			remotes.put(Naming.IMAGE, imageUrl);
-			remotes.put("lang", langUrl);
 			remotes.forEach((name, url) -> {
 				LOGGER.info(String.format("%s=%s", name, url));
 			});
