@@ -123,13 +123,13 @@ public class Config implements epf.client.config.Config {
     	configs.put(Naming.Security.Auth.FACEBOOK_CLIENT_ID, facebookClientId);
     	configs.put(Naming.Security.Auth.FACEBOOK_CLIENT_SECRET, facebookClientSecret);
     	configs.put(Naming.Security.Auth.AUTH_URL, authUrl);
+    	configs.put(Naming.WebApp.Messaging.MESSAGES_LIMIT, String.valueOf(messagesLimit));
     	try {
         	configs.put(Naming.Security.JWT.VERIFIER_PUBLIC_KEY, FileUtil.readString(publicKeyLocation, "UTF-8"));
     	}
     	catch(Exception ex) {
     		LOGGER.log(Level.SEVERE, Naming.Security.JWT.VERIFIER_PUBLIC_KEY, ex);
     	}
-    	configs.put(Naming.WebApp.Messaging.MESSAGES_LIMIT, String.valueOf(messagesLimit));
     }
     
     @Override
