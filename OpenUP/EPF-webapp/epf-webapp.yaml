@@ -61,7 +61,7 @@ spec:
             - name: epf_gateway_url
               value: "http://epf-gateway-internal.default.svc.cluster.local:8080/gateway/"
             - name: epf_config_url
-              value: "http://openup.default.svc.cluster.local:9080/config/config/"
+              value: "http://epf-config.default.svc.cluster.local:8080/config/"
             - name: epf_webapp_url
               value: "https://localhost/webapp/"
             - name: epf_security_webapp_url
