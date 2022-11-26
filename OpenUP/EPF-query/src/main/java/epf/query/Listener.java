@@ -87,9 +87,9 @@ public class Listener implements HealthCheck {
 	}
 	
 	private void accept(final EntityEvent event) {
+		cache.accept(event);
 		entityCache.accept(event);
 		queryCache.accept(event);
-		cache.accept(event);
 		messaging.accept(event);
 	}
 }
