@@ -79,7 +79,7 @@ public class QueryTest {
 	@Test
 	public void testGetEntityOk() throws Exception {
 		final Artifact artifact = new Artifact();
-        artifact.setName(StringUtil.randomString("Artifact Query"));
+        artifact.setName(StringUtil.randomString("Artifact testGetEntityOk"));
         artifact.setSummary("Artifact Query testGetEntityOk");
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
@@ -87,6 +87,7 @@ public class QueryTest {
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
         PersistenceUtil.persist(token, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
+		Thread.sleep(1000);
         TestUtil.waitUntil(
         		(t) -> {
 				        	Artifact art = null;
@@ -110,7 +111,7 @@ public class QueryTest {
 	@Test(expected = NotFoundException.class)
 	public void testGetEntity_AfterRemoveEntity_NotFound() throws Exception {
 		final Artifact artifact = new Artifact();
-        artifact.setName(StringUtil.randomString("Artifact Query"));
+        artifact.setName(StringUtil.randomString("Artifact testGetEntity_AfterRemoveEntity_NotFound"));
         artifact.setSummary("Artifact Query testGetEntity_AfterRemoveEntity_NotFound");
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
@@ -118,6 +119,7 @@ public class QueryTest {
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
         PersistenceUtil.persist(token, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
+		Thread.sleep(1000);
         TestUtil.waitUntil(
         		(t) -> {
 				        	Artifact art = null;
@@ -132,6 +134,7 @@ public class QueryTest {
         		Duration.ofSeconds(10)
         		);
         PersistenceUtil.remove(token, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
+		Thread.sleep(1000);
         TestUtil.waitUntil(
         		(t) -> {
 				        	Artifact art = null;
@@ -151,7 +154,7 @@ public class QueryTest {
 	@Test
 	public void testGetEntity_AfterUpdateEntity_TheEntityFieldUpdated() throws Exception {
 		final Artifact artifact = new Artifact();
-        artifact.setName(StringUtil.randomString("Artifact Query"));
+        artifact.setName(StringUtil.randomString("Artifact testGetEntity_AfterUpdateEntity_TheEntityFieldUpdated"));
         artifact.setSummary("Artifact Query testGetEntity_AfterUpdateEntity_TheEntityFieldUpdated");
         artifact.setDescription(new Description());
         artifact.setIllustrations(new Illustrations());
@@ -159,6 +162,7 @@ public class QueryTest {
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
         PersistenceUtil.persist(token, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
+		Thread.sleep(1000);
         TestUtil.waitUntil(
         		(t) -> {
 				        	Artifact art = null;
@@ -183,6 +187,6 @@ public class QueryTest {
 	@Test(expected = NotFoundException.class)
 	public void testGetEntity_NotFound() throws Exception {
 		Thread.sleep(20);
-		Query.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, StringUtil.randomString("Artifact Query"));
+		Query.getEntity(client, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, StringUtil.randomString("Artifact testGetEntity_NotFound"));
 	}
 }

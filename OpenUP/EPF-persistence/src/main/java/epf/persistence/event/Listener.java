@@ -35,7 +35,7 @@ public class Listener {
 	public void postPersist(@Observes final PostPersist event) throws Exception {
 		event.setSchema(request.getSchema());
 		event.setTenant(request.getTenant());
-		emitter.fireAsync(new AsyncEvent(event)).toCompletableFuture().get();
+		emitter.fireAsync(new AsyncEvent(event));
 	}
 	
 	/**
@@ -44,7 +44,7 @@ public class Listener {
 	public void postRemove(@Observes final PostRemove event) throws Exception {
 		event.setSchema(request.getSchema());
 		event.setTenant(request.getTenant());
-		emitter.fireAsync(new AsyncEvent(event)).toCompletableFuture().get();
+		emitter.fireAsync(new AsyncEvent(event));
 	}
 	
 	/**
@@ -53,6 +53,6 @@ public class Listener {
 	public void postUpdate(@Observes final PostUpdate event) throws Exception {
 		event.setSchema(request.getSchema());
 		event.setTenant(request.getTenant());
-		emitter.fireAsync(new AsyncEvent(event)).toCompletableFuture().get();
+		emitter.fireAsync(new AsyncEvent(event));
 	}
 }

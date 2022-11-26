@@ -1,5 +1,6 @@
 package epf.query;
 
+import java.time.Instant;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
@@ -65,6 +66,7 @@ public class Listener implements HealthCheck {
 	public void postEvent(final EntityEvent event) {
 		if(event != null) {
 			try {
+				LOGGER.info("[Listener.postEvent][" + (Instant.now().toEpochMilli() - event.getTime()) + "ms]" + event.toString());
 				cache.accept(event);
 				entityCache.accept(event);
 				queryCache.accept(event);

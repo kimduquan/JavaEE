@@ -142,7 +142,6 @@ public class Persistence implements epf.persistence.client.Entities {
     	transaction.setEntityId(entityId);
     	
         transactionStore.put(transaction.getId(), transaction);
-        LOGGER.info(String.format("put[%s]id=%s", headers.getHeaderString(HttpHeaders.HOST), transaction.getId()));
         
         return Response.ok(JsonUtil.toString(entity)).build();
     }
@@ -197,7 +196,6 @@ public class Persistence implements epf.persistence.client.Entities {
         transaction.setDiff(JsonUtil.toString(diff.toJsonArray()));
         
         transactionStore.put(transaction.getId(), transaction);
-        LOGGER.info(String.format("put[%s]id=%s", headers.getHeaderString(HttpHeaders.HOST), transaction.getId()));
         
         return Response.ok(JsonUtil.toString(mergedEntity)).build();
 	}
@@ -244,7 +242,6 @@ public class Persistence implements epf.persistence.client.Entities {
         transaction.setDiff(JsonUtil.toString(diff.toJsonArray()));
         
         transactionStore.put(transaction.getId(), transaction);
-        LOGGER.info(String.format("put[%s]id=%s", headers.getHeaderString(HttpHeaders.HOST), transaction.getId()));
         
     	return Response.ok().build();
     }
