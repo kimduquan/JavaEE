@@ -59,6 +59,7 @@ public class NetTest {
 	@Test
 	public void testRewriteUrlOk() throws Exception {
 		String shortUrl = Net.rewriteUrl(client, "https://google.com");
+		Thread.sleep(1000);
 		try(Client gateway = ClientUtil.newClient(netUrl)){
 			TestUtil.doWhile(() -> {
 				try(Response response = gateway.request(target -> target.path("url").queryParam("url", shortUrl), req -> req).get()){

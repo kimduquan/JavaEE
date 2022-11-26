@@ -127,6 +127,6 @@ public class EntityCache implements HealthCheck {
 
 	@Override
 	public HealthCheckResponse call() {
-		return HealthCheckResponse.up("EPF-entity-cache");
+		return HealthCheckResponse.up("EPF-query-entity-cache");
 	}
 }

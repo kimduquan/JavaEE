@@ -110,6 +110,6 @@ public class QueryCache implements HealthCheck {
 
 	@Override
 	public HealthCheckResponse call() {
-		return HealthCheckResponse.up("EPF-query-cache");
+		return HealthCheckResponse.up("EPF-query-query-cache");
 	}
 }

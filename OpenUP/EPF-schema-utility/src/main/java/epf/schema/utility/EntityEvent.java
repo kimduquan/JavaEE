@@ -1,6 +1,8 @@
 package epf.schema.utility;
 
 import java.io.Serializable;
+import java.time.Instant;
+
 import javax.json.bind.annotation.JsonbTypeAdapter;
 import epf.util.json.Adapter;
 
@@ -38,7 +40,7 @@ public class EntityEvent implements Serializable {
 	
 	@Override
 	public String toString() {
-		return String.format("[%d]%s/%s", time, getClass().getName(), entity);
+		return String.format("[%dms]%s/%s", Instant.now().toEpochMilli() - time, getClass().getName(), entity);
 	}
 
 	public Object getEntity() {

@@ -1,10 +1,10 @@
 package epf.query;
 
-import java.time.Instant;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
@@ -45,7 +45,7 @@ public class Listener implements HealthCheck {
 	/**
 	 * 
 	 */
-	@Inject
+	@Inject @Readiness
 	private transient PersistenceCache cache;
 	
 	/**
@@ -53,6 +53,12 @@ public class Listener implements HealthCheck {
 	 */
 	@Inject @Readiness
 	private transient Messaging messaging;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	private transient ManagedExecutor executor;
 
 	@Override
 	public HealthCheckResponse call() {
@@ -65,16 +71,25 @@ public class Listener implements HealthCheck {
 	@Incoming(Naming.Persistence.PERSISTENCE_ENTITY_LISTENERS)
 	public void postEvent(final EntityEvent event) {
 		if(event != null) {
-			try {
-				LOGGER.info("[Listener.postEvent][" + (Instant.now().toEpochMilli() - event.getTime()) + "ms]" + event.toString());
-				cache.accept(event);
-				entityCache.accept(event);
-				queryCache.accept(event);
-				messaging.accept(event);
-			}
-			catch(Exception ex) {
-				LOGGER.log(Level.SEVERE, "[Listener.postEvent]", ex);
-			}
+			LOGGER.info("[Listener.postEvent]" + event.toString());
+			executor.supplyAsync(() -> {
+				accept(event);
+				return null;
+			}).whenComplete((res, ex) -> {
+				if(ex != null) {
+					LOGGER.log(Level.SEVERE, "[Listener.accept]", ex);
+				}
+				else {
+					LOGGER.info("[Listener.accept]" + event.toString());
+				}
+			});
 		}
+	}
+	
+	private void accept(final EntityEvent event) {
+		entityCache.accept(event);
+		queryCache.accept(event);
+		cache.accept(event);
+		messaging.accept(event);
 	}
 }

@@ -1,6 +1,5 @@
 package epf.persistence.event;
 
-import java.time.Instant;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
@@ -40,10 +39,10 @@ public class EventEmitter implements HealthCheck {
 	public void send(@ObservesAsync final AsyncEvent event) throws Exception {
 		emitter.send(event.getEvent()).whenComplete((v, e) -> {
 			if(e != null) {
-				LOGGER.log(Level.SEVERE, "[EventEmitter.send][" + (Instant.now().toEpochMilli() - event.getEvent().getTime()) + "ms]", e);
+				LOGGER.log(Level.SEVERE, "[EventEmitter.send]" + event.getEvent().toString(), e);
 			}
 			else {
-				LOGGER.info("[EventEmitter.send][" + (Instant.now().toEpochMilli() - event.getEvent().getTime()) + "ms]" + event.getEvent().toString());
+				LOGGER.info("[EventEmitter.send]" + event.getEvent().toString());
 			}
 		});
 	}

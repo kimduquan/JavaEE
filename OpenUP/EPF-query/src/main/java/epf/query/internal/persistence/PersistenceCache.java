@@ -8,6 +8,9 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import org.eclipse.microprofile.health.HealthCheck;
+import org.eclipse.microprofile.health.HealthCheckResponse;
+import org.eclipse.microprofile.health.Readiness;
 import epf.naming.Naming;
 import epf.query.internal.SchemaCache;
 import epf.schema.utility.EntityEvent;
@@ -22,7 +25,8 @@ import epf.util.logging.LogManager;
  *
  */
 @ApplicationScoped
-public class PersistenceCache {
+@Readiness
+public class PersistenceCache implements HealthCheck {
 	
 	/**
 	 *
@@ -68,5 +72,10 @@ public class PersistenceCache {
 		catch(Exception ex) {
 			LOGGER.log(Level.SEVERE, "[PersistenceCache.accept]", ex);
 		}
+	}
+
+	@Override
+	public HealthCheckResponse call() {
+		return HealthCheckResponse.up("EPF-query-cache");
 	}
 }

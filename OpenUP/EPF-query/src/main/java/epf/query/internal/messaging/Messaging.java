@@ -59,9 +59,14 @@ public class Messaging implements HealthCheck {
 
 	/**
 	 * @param event
-	 * @throws Exception 
 	 */
-	public void accept(final EntityEvent event) throws Exception {
-		client.getSession().getAsyncRemote().sendText(encoder.encode(event));
+	public void accept(final EntityEvent event) {
+		try {
+			final String encodedEvent = encoder.encode(event);
+			client.getSession().getAsyncRemote().sendText(encodedEvent);
+		}
+		catch(Exception ex) {
+			LOGGER.log(Level.SEVERE, "[Messaging.accept]", ex);
+		}
 	}
 }
