@@ -87,7 +87,7 @@ public class QueryTest {
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
         PersistenceUtil.persist(token, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
-		Thread.sleep(1000);
+		Thread.sleep(2000);
         TestUtil.waitUntil(
         		(t) -> {
 				        	Artifact art = null;
@@ -119,7 +119,7 @@ public class QueryTest {
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
         PersistenceUtil.persist(token, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
-		Thread.sleep(1000);
+		Thread.sleep(2000);
         TestUtil.waitUntil(
         		(t) -> {
 				        	Artifact art = null;
@@ -134,7 +134,7 @@ public class QueryTest {
         		Duration.ofSeconds(10)
         		);
         PersistenceUtil.remove(token, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact.getName());
-		Thread.sleep(1000);
+		Thread.sleep(2000);
         TestUtil.waitUntil(
         		(t) -> {
 				        	Artifact art = null;
@@ -162,7 +162,7 @@ public class QueryTest {
         artifact.setRelationships(new Relationships());
         artifact.setTailoring(new Tailoring());
         PersistenceUtil.persist(token, Artifact.class, WorkProducts.SCHEMA, WorkProducts.ARTIFACT, artifact);
-		Thread.sleep(1000);
+		Thread.sleep(2000);
         TestUtil.waitUntil(
         		(t) -> {
 				        	Artifact art = null;
