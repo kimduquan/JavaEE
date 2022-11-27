@@ -81,8 +81,8 @@ public class QueryCache implements HealthCheck {
 		if(queryKey.isPresent()) {
 			final String key = queryKey.get().toString();
 			final boolean hasLoaded = queryCache.containsKey(key);
-			final Integer count = queryCache.get(key);
 			if(hasLoaded) {
+				final Integer count = queryCache.get(key);
 				if(event instanceof PostPersist) {
 					queryCache.replace(key, count, count + 1);
 				}

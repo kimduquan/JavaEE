@@ -82,7 +82,7 @@ public class EntityCache implements HealthCheck {
 	 */
 	public void accept(final EntityEvent event) {
 		final Optional<EntityKey> key = schemaCache.getKey(event.getTenant(), event.getEntity());
-		if(key.isPresent()) {
+		if(key.isPresent() && entityCache.containsKey(key.get().toString())) {
 			if(event instanceof PostUpdate) {
 				entityCache.replace(key.get().toString(), event.getEntity());
 			}

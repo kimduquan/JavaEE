@@ -1,4 +1,4 @@
-package epf.client.cache;
+package epf.client.file;
 
 import java.io.InputStream;
 import java.util.Iterator;
