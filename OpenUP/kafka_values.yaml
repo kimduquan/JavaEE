@@ -1,0 +1,10 @@
+persistence:
+  size: 1Gi
+logPersistence:
+  size: 1Gi
+zookeeper:
+  persistence:
+    size: 1Gi
+extraEnvVars:
+  - name: KAFKA_CFG_MAX_POLL_INTERVAL_MS
+    value: "2000000"
