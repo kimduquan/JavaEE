@@ -1,4 +1,4 @@
-package epf.file;
+package epf.file.internal;
 
 import java.nio.file.FileSystem;
 import java.nio.file.Path;

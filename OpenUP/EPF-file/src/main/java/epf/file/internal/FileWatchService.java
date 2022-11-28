@@ -17,6 +17,9 @@ import javax.enterprise.concurrent.ManagedScheduledExecutorService;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.eclipse.microprofile.context.ManagedExecutor;
+import org.eclipse.microprofile.health.HealthCheck;
+import org.eclipse.microprofile.health.HealthCheckResponse;
+import org.eclipse.microprofile.health.Readiness;
 import epf.client.file.FileEvent;
 import epf.util.event.Emitter;
 import epf.util.event.EventEmitter;
@@ -28,7 +31,8 @@ import epf.util.logging.LogManager;
  *
  */
 @ApplicationScoped
-public class FileWatchService {
+@Readiness
+public class FileWatchService implements HealthCheck {
 	
 	/**
 	 * 
@@ -112,5 +116,13 @@ public class FileWatchService {
 				return null;
 			}
 		});
+	}
+
+	@Override
+	public HealthCheckResponse call() {
+		if(executor.isShutdown() || executor.isTerminated()) {
+			return HealthCheckResponse.down("epf-file-file-watch");
+		}
+		return HealthCheckResponse.up("epf-file-file-watch");
 	}
 }

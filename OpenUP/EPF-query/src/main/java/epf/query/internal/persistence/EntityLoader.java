@@ -6,6 +6,7 @@ import javax.enterprise.event.ObservesAsync;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import org.eclipse.microprofile.health.Readiness;
 import epf.naming.Naming;
 import epf.query.internal.EntityKey;
 import epf.query.internal.SchemaCache;
@@ -29,7 +30,7 @@ public class EntityLoader implements CacheLoader<String, Object> {
 	/**
 	 *
 	 */
-	@Inject
+	@Inject @Readiness
 	private transient SchemaCache schemaCache;
 
 	/**

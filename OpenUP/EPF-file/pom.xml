@@ -64,6 +64,12 @@
 		    <artifactId>microprofile-context-propagation-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.health/microprofile-health-api -->
+		<dependency>
+		    <groupId>org.eclipse.microprofile.health</groupId>
+		    <artifactId>microprofile-health-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.jaegertracing/jaeger-client -->
         <dependency>
             <groupId>io.jaegertracing</groupId>

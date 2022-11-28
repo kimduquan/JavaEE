@@ -5,6 +5,7 @@ CMD ["/opt/ol/wlp/bin/server", "stop", "defaultServer"]
 COPY --chown=1001:0 target/servers/test/jppf_ra_OpenLiberty.rar /config/
 COPY --chown=1001:0 target/servers/test/server.env /config/
 COPY --chown=1001:0 target/servers/test/bootstrap.properties /config/
+COPY --chown=1001:0 target/servers/test/jvm.options /config/
 
 # COPY --chown=1001:0 target/servers/test/resources/security /config/resources/security
 

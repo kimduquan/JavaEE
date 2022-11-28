@@ -14,6 +14,9 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import org.eclipse.microprofile.context.ManagedExecutor;
+import org.eclipse.microprofile.health.HealthCheck;
+import org.eclipse.microprofile.health.HealthCheckResponse;
+import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.naming.Naming;
 import epf.schema.utility.TenantUtil;
@@ -28,7 +31,8 @@ import epf.util.StringUtil;
  *
  */
 @ApplicationScoped
-public class JPAIdentityStore {
+@Readiness
+public class JPAIdentityStore implements HealthCheck {
 	
 	/**
 	 * 
@@ -93,5 +97,13 @@ public class JPAIdentityStore {
 		        		return null;
 		        	}
         		});
+	}
+
+	@Override
+	public HealthCheckResponse call() {
+		if(executor.isShutdown() || executor.isTerminated() || !manager.isOpen()) {
+			return HealthCheckResponse.down("epf-security-identity-store");
+		}
+		return HealthCheckResponse.up("epf-security-identity-store");
 	}
 }

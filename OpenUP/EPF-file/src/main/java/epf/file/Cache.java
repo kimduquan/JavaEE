@@ -18,6 +18,7 @@ import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import epf.file.cache.FileCache;
+import epf.file.internal.PathBuilder;
 import epf.file.validation.PathValidator;
 import epf.naming.Naming;
 import epf.naming.Naming.Security;

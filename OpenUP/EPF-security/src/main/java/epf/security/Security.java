@@ -167,12 +167,14 @@ public class Security implements epf.security.client.Security, epf.security.clie
      * 
      */
     @Inject
+    @Readiness
     transient JPAIdentityStore identityStore;
     
     /**
      * 
      */
     @Inject
+    @Readiness
     transient JPAPrincipalStore principalStore;
     
     /**

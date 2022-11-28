@@ -15,6 +15,9 @@ import javax.security.enterprise.credential.Password;
 import javax.transaction.Transactional;
 import javax.ws.rs.BadRequestException;
 import org.eclipse.microprofile.context.ManagedExecutor;
+import org.eclipse.microprofile.health.HealthCheck;
+import org.eclipse.microprofile.health.HealthCheckResponse;
+import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.naming.Naming;
 import epf.schema.utility.TenantUtil;
@@ -29,7 +32,8 @@ import epf.security.util.Credential;
  *
  */
 @ApplicationScoped
-public class JPAPrincipalStore {
+@Readiness
+public class JPAPrincipalStore implements HealthCheck {
 	
 	/**
 	 * 
@@ -140,5 +144,13 @@ public class JPAPrincipalStore {
 		manager.persist(newPrincipal);
 		manager.flush();
 		return executor.completedStage(null);
+	}
+
+	@Override
+	public HealthCheckResponse call() {
+		if(executor.isShutdown() || executor.isTerminated() || !manager.isOpen()) {
+			return HealthCheckResponse.down("epf-security-principal-store");
+		}
+		return HealthCheckResponse.up("epf-security-principal-store");
 	}
 }

@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.ws.rs.core.Response;
+import org.eclipse.microprofile.health.Readiness;
 import epf.function.query.FetchEntitiesFunction;
 import epf.naming.Naming;
 import epf.query.client.EntityId;
@@ -41,7 +42,7 @@ public class Search implements epf.query.client.Search {
 	/**
 	 *
 	 */
-	@Inject
+	@Inject @Readiness
 	private transient SchemaCache schemaCache;
 
 	@Override

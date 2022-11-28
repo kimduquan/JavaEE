@@ -26,8 +26,10 @@ import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.health.Readiness;
 import epf.client.util.EntityOutput;
 import epf.file.internal.FileWatchService;
+import epf.file.internal.PathBuilder;
 import epf.file.util.FileUtil;
 import epf.file.util.PathUtil;
 import epf.file.validation.PathValidator;
@@ -66,6 +68,7 @@ public class FileStore implements epf.client.file.Files {
 	 * 
 	 */
 	@Inject
+	@Readiness
 	private transient FileWatchService watchService;
 	
 	/**

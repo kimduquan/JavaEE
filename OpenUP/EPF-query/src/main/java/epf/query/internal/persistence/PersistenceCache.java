@@ -42,7 +42,7 @@ public class PersistenceCache implements HealthCheck {
 	/**
 	 * 
 	 */
-	@Inject
+	@Inject @Readiness
 	private transient SchemaCache schemaCache;
 	
 	/**
@@ -76,6 +76,9 @@ public class PersistenceCache implements HealthCheck {
 
 	@Override
 	public HealthCheckResponse call() {
+		if(!entityManager.isOpen()) {
+			return HealthCheckResponse.down("EPF-query-cache");
+		}
 		return HealthCheckResponse.up("EPF-query-cache");
 	}
 }

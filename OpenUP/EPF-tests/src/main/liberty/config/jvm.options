@@ -1,0 +1,1 @@
+-DJAEGER_AGENT_HOST=jaeger-agent.default.svc.cluster.local

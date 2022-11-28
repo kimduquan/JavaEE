@@ -62,6 +62,9 @@ public class Listener implements HealthCheck {
 
 	@Override
 	public HealthCheckResponse call() {
+		if(executor.isShutdown() || executor.isTerminated()) {
+			return HealthCheckResponse.down("EPF-persistence-listener");
+		}
 		return HealthCheckResponse.up("EPF-persistence-listener");
 	}
 	

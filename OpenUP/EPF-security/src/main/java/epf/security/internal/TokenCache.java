@@ -63,7 +63,7 @@ public class TokenCache implements HealthCheck {
 
 	@Override
 	public HealthCheckResponse call() {
-		return HealthCheckResponse.up(epf.security.Naming.TOKEN_CACHE);
+		return HealthCheckResponse.up("epf-security-token-cache");
 	}
 
 	/**

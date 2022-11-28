@@ -12,6 +12,11 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
+import org.eclipse.microprofile.health.HealthCheck;
+import org.eclipse.microprofile.health.HealthCheckResponse;
+import org.eclipse.microprofile.health.Readiness;
+
 import epf.query.client.EntityId;
 import epf.schema.utility.SchemaUtil;
 import epf.util.logging.LogManager;
@@ -21,7 +26,8 @@ import epf.util.logging.LogManager;
  *
  */
 @ApplicationScoped
-public class SchemaCache {
+@Readiness
+public class SchemaCache implements HealthCheck {
 	
 	/**
 	 * 
@@ -205,5 +211,13 @@ public class SchemaCache {
 			}
 		}
 		return entityIdFieldType;
+	}
+
+	@Override
+	public HealthCheckResponse call() {
+		if(!entityManager.isOpen()) {
+			return HealthCheckResponse.down("epf-query-schema-cache");
+		}
+		return HealthCheckResponse.up("epf-query-schema-cache");
 	}
 }

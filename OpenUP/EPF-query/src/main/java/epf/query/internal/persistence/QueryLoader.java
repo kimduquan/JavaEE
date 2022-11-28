@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import org.eclipse.microprofile.health.Readiness;
 import epf.naming.Naming;
 import epf.query.internal.QueryKey;
 import epf.query.internal.SchemaCache;
@@ -31,7 +32,7 @@ public class QueryLoader implements CacheLoader<String, Integer> {
 	/**
 	 *
 	 */
-	@Inject
+	@Inject @Readiness
 	private transient SchemaCache schemaCache;
 
 	@Override

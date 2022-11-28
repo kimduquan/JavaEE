@@ -54,6 +54,9 @@ public class Messaging implements HealthCheck {
 
 	@Override
 	public HealthCheckResponse call() {
+		if(client == null || !client.getSession().isOpen()) {
+			return HealthCheckResponse.down("EPF-query-messaging");
+		}
 		return HealthCheckResponse.up("EPF-query-messaging");
 	}
 
