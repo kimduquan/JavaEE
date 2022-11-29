@@ -2,7 +2,7 @@ package epf.query;
 
 import java.util.List;
 import java.util.Optional;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
@@ -23,7 +23,7 @@ import epf.query.util.LinkUtil;
  * @author PC
  *
  */
-@RequestScoped
+@ApplicationScoped
 @Path(Naming.QUERY)
 public class Query implements epf.query.client.Query {
 
@@ -42,7 +42,7 @@ public class Query implements epf.query.client.Query {
 	/**
 	 * 
 	 */
-	@Inject
+	@Inject @Readiness
 	private transient PersistenceQuery persistence;
 	
 	/**

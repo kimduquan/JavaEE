@@ -2,7 +2,7 @@ package epf.query.internal.persistence;
 
 import java.util.List;
 import java.util.logging.Logger;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -11,6 +11,9 @@ import javax.persistence.metamodel.EntityType;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.SecurityContext;
+import org.eclipse.microprofile.health.HealthCheck;
+import org.eclipse.microprofile.health.HealthCheckResponse;
+import org.eclipse.microprofile.health.Readiness;
 import epf.naming.Naming;
 import epf.persistence.internal.Entity;
 import epf.persistence.internal.QueryBuilder;
@@ -22,8 +25,9 @@ import epf.util.logging.LogManager;
 /**
  * 
  */
-@RequestScoped
-public class PersistenceQuery {
+@ApplicationScoped
+@Readiness
+public class PersistenceQuery implements HealthCheck {
 	
 	/**
 	 *
@@ -148,4 +152,12 @@ public class PersistenceQuery {
         });
         return resultList;
     }
+
+	@Override
+	public HealthCheckResponse call() {
+		if(!entityManager.isOpen()) {
+			return HealthCheckResponse.down("epf-query-persistence");
+		}
+		return HealthCheckResponse.up("epf-query-persistence");
+	}
 }

@@ -1,10 +1,8 @@
 package epf.query;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
@@ -28,7 +26,7 @@ public class Listener implements HealthCheck {
 	/**
 	 * 
 	 */
-	private static final Logger LOGGER = LogManager.getLogger(Listener.class.getName());
+	private transient static final Logger LOGGER = LogManager.getLogger(Listener.class.getName());
 	
 	/**
 	 * 
@@ -53,18 +51,9 @@ public class Listener implements HealthCheck {
 	 */
 	@Inject @Readiness
 	private transient Messaging messaging;
-	
-	/**
-	 * 
-	 */
-	@Inject
-	private transient ManagedExecutor executor;
 
 	@Override
 	public HealthCheckResponse call() {
-		if(executor.isShutdown() || executor.isTerminated()) {
-			return HealthCheckResponse.down("EPF-persistence-listener");
-		}
 		return HealthCheckResponse.up("EPF-persistence-listener");
 	}
 	
@@ -75,17 +64,8 @@ public class Listener implements HealthCheck {
 	public void postEvent(final EntityEvent event) {
 		if(event != null) {
 			LOGGER.info("[Listener.postEvent]" + event.toString());
-			executor.supplyAsync(() -> {
-				accept(event);
-				return null;
-			}).whenComplete((res, ex) -> {
-				if(ex != null) {
-					LOGGER.log(Level.SEVERE, "[Listener.accept]", ex);
-				}
-				else {
-					LOGGER.info("[Listener.accept]" + event.toString());
-				}
-			});
+			accept(event);
+			LOGGER.info("[Listener.accept]" + event.toString());
 		}
 	}
 	
