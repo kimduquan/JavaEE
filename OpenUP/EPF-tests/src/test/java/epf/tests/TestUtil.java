@@ -14,7 +14,7 @@ public class TestUtil {
 		long currentTime = System.currentTimeMillis();
 		long targetTime = currentTime + duration.toMillis();
 		while(!predicate.test(null) && (System.currentTimeMillis() < targetTime)) {
-			Thread.sleep(40);
+			Thread.sleep(80);
 		}
 	}
 	
@@ -24,7 +24,7 @@ public class TestUtil {
 		T object = null;
 		do {
 			object = callable.call();
-			Thread.sleep(40);
+			Thread.sleep(80);
 		}
 		while(predicate.test(object) && (System.currentTimeMillis() < targetTime));
 		return object;
