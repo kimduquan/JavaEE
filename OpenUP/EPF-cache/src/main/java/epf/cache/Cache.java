@@ -33,7 +33,7 @@ public class Cache implements epf.client.cache.Cache {
 	 * 
 	 */
 	@Inject @Readiness
-	private transient Provider provider;
+	transient Provider provider;
 	
 	private String getKey(final List<PathSegment> paths) {
 		final String[] key = paths.stream().map(path -> path.getPath()).collect(Collectors.toList()).toArray(new String[0]);
