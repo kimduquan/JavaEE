@@ -42,9 +42,6 @@
 	<application id="EPF-management" name="EPF-management" context-root="management" location="EPF-management-1.0.0.war" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-    <application id="EPF-cache" name="EPF-cache" context-root="cache" location="EPF-cache-1.0.0.war">
-        <classloader apiTypeVisibility="+third-party"/>
-    </application>
     <application id="EPF-query" name="EPF-query" context-root="query" location="EPF-query-1.0.0.war">
         <classloader apiTypeVisibility="+third-party"/>
     </application>

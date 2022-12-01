@@ -24,6 +24,7 @@
         <!-- Jaeger configuration -->
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
+		<liberty.bootstrap.hazelcast.jcache.provider.type>member</liberty.bootstrap.hazelcast.jcache.provider.type>
     	<!--<liberty.env.WLP_LOGGING_MESSAGE_FORMAT>json</liberty.env.WLP_LOGGING_MESSAGE_FORMAT>
     	<liberty.env.WLP_LOGGING_MESSAGE_SOURCE>message,trace,accessLog,ffdc,audit</liberty.env.WLP_LOGGING_MESSAGE_SOURCE>-->
 		<liberty.env.epf_schedule_url>http://${httpHost}:${httpPort}/schedule/schedule/</liberty.env.epf_schedule_url>
@@ -225,12 +226,6 @@
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-script</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-cache</artifactId>
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
@@ -453,7 +448,7 @@
                         <configuration>
                             <verifyTimeout>600</verifyTimeout>
                             <serverStartTimeout>600</serverStartTimeout>
-                            <applications>EPF-schedule,EPF-script,EPF-batch,EPF-cache,EPF-query,EPF-file,EPF-mail,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-registry,EPF-management,EPF-security,EPF-security-management</applications>
+                            <applications>EPF-schedule,EPF-script,EPF-batch,EPF-query,EPF-file,EPF-mail,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-registry,EPF-management,EPF-security,EPF-security-management</applications>
                         </configuration>
                     </execution>
                     <!-- Stop the server -->
@@ -472,7 +467,7 @@
                     <deployPackages>dependencies</deployPackages>
 					<verifyTimeout>600</verifyTimeout>
 					<serverStartTimeout>600</serverStartTimeout>
-					<applications>EPF-schedule,EPF-script,EPF-batch,EPF-cache,EPF-query,EPF-file,EPF-mail,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-registry,EPF-management,EPF-security,EPF-security-management</applications>
+					<applications>EPF-schedule,EPF-script,EPF-batch,EPF-query,EPF-file,EPF-mail,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-registry,EPF-management,EPF-security,EPF-security-management</applications>
 					<dockerRunOpts>-p 7286:7286</dockerRunOpts>
 				</configuration>
             </plugin>
@@ -555,6 +550,11 @@
 				<gatewayHost>epf-gateway.default.svc.cluster.local</gatewayHost>
 				<internalHost>epf-gateway-internal.default.svc.cluster.local</internalHost>
 				<userHome>/liberty/usr/</userHome>
+				<liberty.jvm.JAEGER_AGENT_HOST>-DJAEGER_AGENT_HOST=jaeger-agent.default.svc.cluster.local</liberty.jvm.JAEGER_AGENT_HOST>
+				<!--<liberty.bootstrap.hazelcast.jcache.provider.type>client</liberty.bootstrap.hazelcast.jcache.provider.type>-->
+				<liberty.env.HZCLIENT_NETWORK_JOIN_MULTICAST_ENABLED>false</liberty.env.HZCLIENT_NETWORK_JOIN_MULTICAST_ENABLED>
+				<liberty.env.HZCLIENT_NETWORK_JOIN_KUBERNETES_ENABLED>true</liberty.env.HZCLIENT_NETWORK_JOIN_KUBERNETES_ENABLED>
+				<liberty.env.HZCLIENT_NETWORK_JOIN_KUBERNETES_SERVICEDNS>hazelcast.default.svc.cluster.local</liberty.env.HZCLIENT_NETWORK_JOIN_KUBERNETES_SERVICEDNS>
 				<liberty.env.epf_persistence_url>http://epf-persistence.default.svc.cluster.local:9181/persistence/persistence/</liberty.env.epf_persistence_url>
 				<liberty.env.epf_schema_url>http://epf-persistence.default.svc.cluster.local:9181/persistence/schema/</liberty.env.epf_schema_url>
 				<liberty.env.epf_transaction_url>http://epf-transaction.default.svc.cluster.local:9182/transaction/transaction/</liberty.env.epf_transaction_url>
