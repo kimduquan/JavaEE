@@ -24,6 +24,9 @@ cd ../
 cd EPF-transaction
 call stop.bat
 cd ../
+cd EPF-cache
+call stop.bat
+cd ../
 cd EPF-logging
 call stop.bat
 cd ../

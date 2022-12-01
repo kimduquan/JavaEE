@@ -11,6 +11,9 @@ cd ../
 cd EPF-logging
 call ./dev.bat
 cd ../
+cd EPF-cache
+call ./dev.bat
+cd ../
 cd EPF-transaction-internal
 call ./dev.bat
 cd ../

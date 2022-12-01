@@ -14,6 +14,10 @@ cd EPF-logging
 call start.bat
 cd ../
 
+cd EPF-cache
+call start.bat
+cd ../
+
 cd EPF-transaction
 call start.bat
 cd ../
