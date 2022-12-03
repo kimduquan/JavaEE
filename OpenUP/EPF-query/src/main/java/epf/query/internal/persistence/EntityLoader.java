@@ -43,6 +43,7 @@ public class EntityLoader implements CacheLoader<String, Object> {
 		final Optional<EntityKey> entityKey = EntityKey.parseString(key);
 		if(entityKey.isPresent()) {
 			final String tenant = TenantUtil.getTenantId(entityKey.get().getSchema(), entityKey.get().getTenant());
+			final EntityManager manager = this.manager.getEntityManagerFactory().createEntityManager();
 			manager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenant);
 			final Optional<Class<?>> entityClass = schemaCache.getEntityClass(entityKey.get().getEntity());
 			if(entityClass.isPresent()) {
@@ -64,9 +65,11 @@ public class EntityLoader implements CacheLoader<String, Object> {
 						JsonUtil.toString(entity);
 						manager.detach(entity);
 					}
+					manager.close();
 					return entity;
 				}
 			}
+			manager.close();
 		}
 		return null;
 	}

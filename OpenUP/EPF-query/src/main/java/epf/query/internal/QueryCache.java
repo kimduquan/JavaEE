@@ -7,7 +7,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.cache.Cache;
 import javax.cache.CacheManager;
-import javax.cache.Caching;
 import javax.cache.configuration.MutableConfiguration;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -45,6 +44,12 @@ public class QueryCache implements HealthCheck {
 	private transient SchemaCache schemaCache;
 	
 	/**
+	 * 
+	 */
+	@Inject @Readiness
+	private transient Provider provider;
+	
+	/**
 	 *
 	 */
 	@Inject
@@ -67,8 +72,8 @@ public class QueryCache implements HealthCheck {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
+			final CacheManager manager = provider.getManager();
 			executor.submit(eventQueue);
-			final CacheManager manager = Caching.getCachingProvider().getCacheManager();
 			final MutableConfiguration<String, Integer> config = new MutableConfiguration<>();
 			config.setCacheLoaderFactory(new LoaderFactory<>(new Loader<String, Integer, QueryLoad>(new EventEmitter<QueryLoad>(eventQueue), QueryLoad::new)));
 			config.setReadThrough(true);

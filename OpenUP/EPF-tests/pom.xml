@@ -24,7 +24,6 @@
         <!-- Jaeger configuration -->
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
-		<liberty.bootstrap.hazelcast.jcache.provider.type>member</liberty.bootstrap.hazelcast.jcache.provider.type>
     	<!--<liberty.env.WLP_LOGGING_MESSAGE_FORMAT>json</liberty.env.WLP_LOGGING_MESSAGE_FORMAT>
     	<liberty.env.WLP_LOGGING_MESSAGE_SOURCE>message,trace,accessLog,ffdc,audit</liberty.env.WLP_LOGGING_MESSAGE_SOURCE>-->
 		<liberty.env.epf_schedule_url>http://${httpHost}:${httpPort}/schedule/schedule/</liberty.env.epf_schedule_url>
@@ -77,11 +76,6 @@
 		<dependency>
 		    <groupId>com.h2database</groupId>
 		    <artifactId>h2</artifactId>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast -->
-		<dependency>
-			<groupId>com.hazelcast</groupId>
-			<artifactId>hazelcast</artifactId>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.eclipse.jetty.websocket/javax-websocket-client-impl -->
 		<dependency>
@@ -440,14 +434,6 @@
 									    <artifactId>lucene-queryparser</artifactId>
 									</dependency>
 								</dependencyGroup>
-								<dependencyGroup>
-									<location>${project.build.directory}/shared/resources/epf/cache</location>
-									<!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast -->
-									<dependency>
-										<groupId>com.hazelcast</groupId>
-										<artifactId>hazelcast</artifactId>
-									</dependency>
-								</dependencyGroup>
                             </copyDependencies>
                         </configuration>
                     </execution>
@@ -565,7 +551,6 @@
 				<userHome>/liberty/usr/</userHome>
 				<liberty.jvm.JAEGER_AGENT_HOST>-DJAEGER_AGENT_HOST=jaeger-agent.default.svc.cluster.local</liberty.jvm.JAEGER_AGENT_HOST>
 				<liberty.jvm.HAZELCAST_KUBERNETES_SERVICE_DNS>-Dhazelcast.kubernetes.service-dns=hazelcast.default.svc.cluster.local</liberty.jvm.HAZELCAST_KUBERNETES_SERVICE_DNS>
-				<liberty.bootstrap.hazelcast.jcache.provider.type>client</liberty.bootstrap.hazelcast.jcache.provider.type>
 				<liberty.bootstrap.hazelcast.kubernetes.service-dns>hazelcast.default.svc.cluster.local</liberty.bootstrap.hazelcast.kubernetes.service-dns>
 				<liberty.env.epf_persistence_url>http://epf-persistence.default.svc.cluster.local:9181/persistence/persistence/</liberty.env.epf_persistence_url>
 				<liberty.env.epf_schema_url>http://epf-persistence.default.svc.cluster.local:9181/persistence/schema/</liberty.env.epf_schema_url>

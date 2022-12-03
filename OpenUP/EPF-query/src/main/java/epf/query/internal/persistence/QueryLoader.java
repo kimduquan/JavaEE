@@ -40,6 +40,7 @@ public class QueryLoader implements CacheLoader<String, Integer> {
 		final Optional<QueryKey> queryKey = QueryKey.parseString(key);
 		if(queryKey.isPresent()) {
 			final String tenantId = TenantUtil.getTenantId(queryKey.get().getSchema(), queryKey.get().getTenant());
+			final EntityManager manager = this.manager.getEntityManagerFactory().createEntityManager();
 			manager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenantId);
 			final Optional<Class<?>> entityClass = schemaCache.getEntityClass(queryKey.get().getEntity());
 			if(entityClass.isPresent()) {
@@ -47,8 +48,11 @@ public class QueryLoader implements CacheLoader<String, Integer> {
 				final CriteriaQuery<Long> query = builder.createQuery(Long.class);
 				final Root<?> from = query.from(entityClass.get());
 				query.select(builder.count(from));
-				return manager.createQuery(query).getSingleResult().intValue();
+				final Integer value = manager.createQuery(query).getSingleResult().intValue();
+				manager.close();
+				return value;
 			}
+			manager.close();
 		}
 		return null;
 	}
