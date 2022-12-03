@@ -82,6 +82,19 @@
 		<artifactId>quarkus-container-image-jib</artifactId>
 	</dependency>
 	
+	<!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast -->
+	<dependency>
+		<groupId>com.hazelcast</groupId>
+		<artifactId>hazelcast</artifactId>
+		<version>5.2.1</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/javax.cache/cache-api -->
+	<dependency>
+		<groupId>javax.cache</groupId>
+		<artifactId>cache-api</artifactId>
+		<version>1.1.1</version>
+	</dependency>
+	
 	<dependency>
 		<groupId>openup</groupId>
 		<artifactId>EPF-naming</artifactId>

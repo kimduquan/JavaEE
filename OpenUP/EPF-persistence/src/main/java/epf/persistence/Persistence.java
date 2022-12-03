@@ -3,9 +3,7 @@ package epf.persistence;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
@@ -24,12 +22,14 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
+import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.lra.annotation.Compensate;
 import org.eclipse.microprofile.lra.annotation.Forget;
 import org.eclipse.microprofile.lra.annotation.ParticipantStatus;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
 import epf.naming.Naming;
 import epf.persistence.internal.EntityTransaction;
+import epf.persistence.internal.TransactionCache;
 import epf.persistence.util.EntityTypeUtil;
 import epf.persistence.util.EntityUtil;
 import epf.schema.utility.EntityEvent;
@@ -55,14 +55,15 @@ public class Persistence implements epf.persistence.client.Entities {
 	private transient final static Logger LOGGER = LogManager.getLogger(Persistence.class.getName());
 	
 	/**
-	 *
+	 * 
 	 */
-	private final transient Map<String, EntityTransaction> transactionStore = new ConcurrentHashMap<>();
+	private transient SchemaUtil schemaUtil;
 	
 	/**
 	 * 
 	 */
-	private transient SchemaUtil schemaUtil;
+	@Inject @Readiness
+	transient TransactionCache cache;
     
     /**
      * 
@@ -141,7 +142,7 @@ public class Persistence implements epf.persistence.client.Entities {
         final Object entityId = entityIdField.get().get(transactionEntity);
     	transaction.setEntityId(entityId);
     	
-        transactionStore.put(transaction.getId(), transaction);
+        cache.put(transaction);
         
         return Response.ok(JsonUtil.toString(entity)).build();
     }
@@ -195,7 +196,7 @@ public class Persistence implements epf.persistence.client.Entities {
         final JsonPatch diff = Json.createDiff(preEntity, postEntity);
         transaction.setDiff(JsonUtil.toString(diff.toJsonArray()));
         
-        transactionStore.put(transaction.getId(), transaction);
+        cache.put(transaction);
         
         return Response.ok(JsonUtil.toString(mergedEntity)).build();
 	}
@@ -241,7 +242,7 @@ public class Persistence implements epf.persistence.client.Entities {
         transaction.setEntityId(entityId);
         transaction.setDiff(JsonUtil.toString(diff.toJsonArray()));
         
-        transactionStore.put(transaction.getId(), transaction);
+        cache.put(transaction);
         
     	return Response.ok().build();
     }
@@ -258,7 +259,7 @@ public class Persistence implements epf.persistence.client.Entities {
     		@Context
     		final HttpHeaders headers) throws Exception {
     	final String transactionId = headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER);
-    	final EntityTransaction transaction = transactionStore.remove(transactionId);
+    	final EntityTransaction transaction = cache.remove(transactionId);
 		if(transaction != null) {
     		final EntityEvent transactionEvent = transaction.getEvent();
 			request.setTenant(transactionEvent.getTenant());
@@ -297,7 +298,7 @@ public class Persistence implements epf.persistence.client.Entities {
     		@Context
     		final HttpHeaders headers) {
     	final String transactionId = headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER);
-    	transactionStore.remove(transactionId);
+    	cache.remove(transactionId);
         LOGGER.info(String.format("commit[%s]id=%s", headers.getHeaderString(HttpHeaders.HOST), transactionId));
     	return Response.ok(ParticipantStatus.Completed.name()).build();
     }
