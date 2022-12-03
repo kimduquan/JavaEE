@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -27,6 +29,7 @@ import epf.schema.utility.PostRemove;
 import epf.schema.utility.PostUpdate;
 import epf.util.event.EventEmitter;
 import epf.util.event.EventQueue;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
@@ -35,6 +38,11 @@ import epf.util.event.EventQueue;
 @ApplicationScoped
 @Readiness
 public class EntityCache implements HealthCheck {
+	
+	/**
+	 * 
+	 */
+	private transient static final Logger LOGGER = LogManager.getLogger(EntityCache.class.getName());
 	
 	/**
 	 * 
@@ -64,12 +72,20 @@ public class EntityCache implements HealthCheck {
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		executor.submit(eventQueue);
-		final CacheManager manager = Caching.getCachingProvider().getCacheManager();
-		final MutableConfiguration<String, Object> config = new MutableConfiguration<>();
-		config.setCacheLoaderFactory(new LoaderFactory<>(new Loader<String, Object, EntityLoad>(new EventEmitter<EntityLoad>(eventQueue), EntityLoad::new)));
-		config.setReadThrough(true);
-		entityCache = manager.createCache(epf.query.Naming.ENTITY_CACHE, config);
+		try {
+			executor.submit(eventQueue);
+			final CacheManager manager = Caching.getCachingProvider().getCacheManager();
+			final MutableConfiguration<String, Object> config = new MutableConfiguration<>();
+			config.setCacheLoaderFactory(new LoaderFactory<>(new Loader<String, Object, EntityLoad>(new EventEmitter<EntityLoad>(eventQueue), EntityLoad::new)));
+			config.setReadThrough(true);
+			entityCache = manager.getCache(epf.query.Naming.ENTITY_CACHE);
+			if(entityCache == null) {
+				entityCache = manager.createCache(epf.query.Naming.ENTITY_CACHE, config);	
+			}
+		}
+		catch(Exception ex) {
+			LOGGER.log(Level.SEVERE, "[EntityCache.entityCache]", ex);
+		}
 	}
 	
 	@PreDestroy
@@ -127,7 +143,7 @@ public class EntityCache implements HealthCheck {
 
 	@Override
 	public HealthCheckResponse call() {
-		if(executor.isShutdown() || executor.isTerminated()) {
+		if(executor.isShutdown() || executor.isTerminated() || entityCache == null || entityCache.isClosed()) {
 			return HealthCheckResponse.down("EPF-query-entity-cache");
 		}
 		return HealthCheckResponse.up("EPF-query-entity-cache");

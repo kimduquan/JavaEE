@@ -564,10 +564,9 @@
 				<internalHost>epf-gateway-internal.default.svc.cluster.local</internalHost>
 				<userHome>/liberty/usr/</userHome>
 				<liberty.jvm.JAEGER_AGENT_HOST>-DJAEGER_AGENT_HOST=jaeger-agent.default.svc.cluster.local</liberty.jvm.JAEGER_AGENT_HOST>
-				<!--<liberty.bootstrap.hazelcast.jcache.provider.type>client</liberty.bootstrap.hazelcast.jcache.provider.type>-->
-				<liberty.env.HZCLIENT_NETWORK_JOIN_MULTICAST_ENABLED>false</liberty.env.HZCLIENT_NETWORK_JOIN_MULTICAST_ENABLED>
-				<liberty.env.HZCLIENT_NETWORK_JOIN_KUBERNETES_ENABLED>true</liberty.env.HZCLIENT_NETWORK_JOIN_KUBERNETES_ENABLED>
-				<liberty.env.HZCLIENT_NETWORK_JOIN_KUBERNETES_SERVICEDNS>hazelcast.default.svc.cluster.local</liberty.env.HZCLIENT_NETWORK_JOIN_KUBERNETES_SERVICEDNS>
+				<liberty.jvm.HAZELCAST_KUBERNETES_SERVICE_DNS>-Dhazelcast.kubernetes.service-dns=hazelcast.default.svc.cluster.local</liberty.jvm.HAZELCAST_KUBERNETES_SERVICE_DNS>
+				<liberty.bootstrap.hazelcast.jcache.provider.type>client</liberty.bootstrap.hazelcast.jcache.provider.type>
+				<liberty.bootstrap.hazelcast.kubernetes.service-dns>hazelcast.default.svc.cluster.local</liberty.bootstrap.hazelcast.kubernetes.service-dns>
 				<liberty.env.epf_persistence_url>http://epf-persistence.default.svc.cluster.local:9181/persistence/persistence/</liberty.env.epf_persistence_url>
 				<liberty.env.epf_schema_url>http://epf-persistence.default.svc.cluster.local:9181/persistence/schema/</liberty.env.epf_schema_url>
 				<liberty.env.epf_transaction_url>http://epf-transaction.default.svc.cluster.local:9182/transaction/transaction/</liberty.env.epf_transaction_url>

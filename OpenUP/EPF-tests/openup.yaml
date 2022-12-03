@@ -17,12 +17,6 @@ spec:
       value: "simple"
     - name: WLP_LOGGING_CONSOLE_SOURCE
       value: "message,trace,accessLog,ffdc,audit"
-    - name: HZCLIENT_NETWORK_JOIN_MULTICAST_ENABLED
-      value: "false"
-    - name: HZCLIENT_NETWORK_JOIN_KUBERNETES_ENABLED
-      value: "true"
-    - name: HZCLIENT_NETWORK_JOIN_KUBERNETES_SERVICEDNS
-      value: "hazelcast.default.svc.cluster.local"
   probes:
     liveness:
       failureThreshold: 12

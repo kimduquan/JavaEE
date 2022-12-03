@@ -2,6 +2,8 @@ package epf.security.internal;
 
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.cache.Cache;
@@ -18,6 +20,7 @@ import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
 import epf.naming.Naming;
+import epf.util.logging.LogManager;
 
 /**
  * @author PC
@@ -26,6 +29,11 @@ import epf.naming.Naming;
 @ApplicationScoped
 @Readiness
 public class TokenCache implements HealthCheck {
+	
+	/**
+	 * 
+	 */
+	private transient static final Logger LOGGER = LogManager.getLogger(TokenCache.class.getName());
 	
 	/**
 	 * 
@@ -44,13 +52,21 @@ public class TokenCache implements HealthCheck {
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		final CacheManager manager = Caching.getCachingProvider().getCacheManager();
-		final MutableConfiguration<String, String> config = new MutableConfiguration<>();
-		final Duration expire = Duration.parse(expireDuration);
-		final javax.cache.expiry.Duration expiryDuration = new javax.cache.expiry.Duration(TimeUnit.MINUTES, expire.toMinutes());
-		final Factory<ExpiryPolicy> factory = CreatedExpiryPolicy.factoryOf(expiryDuration);
-		config.setExpiryPolicyFactory(factory);
-		tokenCache = manager.createCache(epf.security.Naming.TOKEN_CACHE, config);
+		try {
+			final CacheManager manager = Caching.getCachingProvider().getCacheManager();
+			final MutableConfiguration<String, String> config = new MutableConfiguration<>();
+			final Duration expire = Duration.parse(expireDuration);
+			final javax.cache.expiry.Duration expiryDuration = new javax.cache.expiry.Duration(TimeUnit.MINUTES, expire.toMinutes());
+			final Factory<ExpiryPolicy> factory = CreatedExpiryPolicy.factoryOf(expiryDuration);
+			config.setExpiryPolicyFactory(factory);
+			tokenCache = manager.getCache(epf.security.Naming.TOKEN_CACHE);
+			if(tokenCache == null) {
+				tokenCache = manager.createCache(epf.security.Naming.TOKEN_CACHE, config);
+			}
+		}
+		catch(Exception ex) {
+			LOGGER.log(Level.SEVERE, "[TokenCache.tokenCache]", ex);
+		}
 	}
 	
 	/**
@@ -63,6 +79,9 @@ public class TokenCache implements HealthCheck {
 
 	@Override
 	public HealthCheckResponse call() {
+		if(tokenCache == null || tokenCache.isClosed()) {
+			return HealthCheckResponse.down("epf-security-token-cache");
+		}
 		return HealthCheckResponse.up("epf-security-token-cache");
 	}
 

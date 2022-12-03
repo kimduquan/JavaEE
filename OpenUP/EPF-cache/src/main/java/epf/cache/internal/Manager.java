@@ -3,6 +3,7 @@ package epf.cache.internal;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.cache.Cache;
+import javax.cache.CacheManager;
 import javax.cache.Caching;
 import javax.cache.configuration.MutableConfiguration;
 
@@ -41,7 +42,12 @@ public class Manager {
 	public Cache<String, Object> createCache(final String name) {
 		return caches.computeIfAbsent(name, key -> {
 			final MutableConfiguration<String, Object> config = new MutableConfiguration<>();
-			return Caching.getCachingProvider().getCacheManager().createCache(name, config);
+			final CacheManager manager = Caching.getCachingProvider().getCacheManager();
+			Cache<String, Object> cache = manager.getCache(name);
+			if(cache == null) {
+				cache = manager.createCache(name, config);
+			}
+			return cache;
 		});
 	}
 }
