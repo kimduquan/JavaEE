@@ -134,7 +134,8 @@ public class Persistence implements epf.persistence.client.Entities {
         transactionEvent.setTenant(request.getTenant());
         transactionEvent.setSchema(request.getSchema());
         transactionEvent.setEntity(transactionEntity);
-        final EntityTransaction transaction = new EntityTransaction(headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER));
+        final EntityTransaction transaction = new EntityTransaction();
+        transaction.setId(headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER));
         transaction.setEvent(transactionEvent);
         transaction.setDiff(JsonUtil.toString(diff.toJsonArray()));
         
@@ -185,7 +186,8 @@ public class Persistence implements epf.persistence.client.Entities {
         transactionEvent.setTenant(request.getTenant());
         transactionEvent.setSchema(request.getSchema());
         transactionEvent.setEntity(transactionEntity);
-        final EntityTransaction transaction = new EntityTransaction(headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER));
+        final EntityTransaction transaction = new EntityTransaction();
+        transaction.setId(headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER));
         transaction.setEvent(transactionEvent);
         transaction.setEntityId(entityId);
         
@@ -237,7 +239,8 @@ public class Persistence implements epf.persistence.client.Entities {
         transactionEvent.setTenant(request.getTenant());
         transactionEvent.setSchema(request.getSchema());
         transactionEvent.setEntity(transactionEntity);
-        final EntityTransaction transaction = new EntityTransaction(headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER));
+        final EntityTransaction transaction = new EntityTransaction();
+        transaction.setId(headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER));
         transaction.setEvent(transactionEvent);
         transaction.setEntityId(entityId);
         transaction.setDiff(JsonUtil.toString(diff.toJsonArray()));
@@ -290,13 +293,14 @@ public class Persistence implements epf.persistence.client.Entities {
     /**
      * @param headers
      * @return
+     * @throws Exception 
      */
     @Forget
     @Path(Naming.Transaction.TRANSACTION_ACTIVE)
     @PUT
     public Response commit(
     		@Context
-    		final HttpHeaders headers) {
+    		final HttpHeaders headers) throws Exception {
     	final String transactionId = headers.getHeaderString(LRA.LRA_HTTP_CONTEXT_HEADER);
     	cache.remove(transactionId);
         LOGGER.info(String.format("commit[%s]id=%s", headers.getHeaderString(HttpHeaders.HOST), transactionId));

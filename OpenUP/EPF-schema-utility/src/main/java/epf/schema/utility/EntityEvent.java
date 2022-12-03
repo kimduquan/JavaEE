@@ -2,7 +2,6 @@ package epf.schema.utility;
 
 import java.io.Serializable;
 import java.time.Instant;
-
 import javax.json.bind.annotation.JsonbTypeAdapter;
 import epf.util.json.Adapter;
 

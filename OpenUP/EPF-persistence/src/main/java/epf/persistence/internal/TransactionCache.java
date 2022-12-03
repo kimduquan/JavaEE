@@ -10,6 +10,8 @@ import javax.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
+import epf.util.json.Decoder;
+import epf.util.json.Encoder;
 
 /**
  * @author PC
@@ -23,6 +25,16 @@ public class TransactionCache implements HealthCheck {
 	 * 
 	 */
 	private transient Cache<String, Object> cache;
+	
+	/**
+	 * 
+	 */
+	private transient final Encoder encoder = new Encoder();
+	
+	/**
+	 * 
+	 */
+	private transient final Decoder decoder = new Decoder();
 	
 	@PostConstruct
 	protected void postConstruct() {
@@ -45,18 +57,20 @@ public class TransactionCache implements HealthCheck {
 
 	/**
 	 * @param transaction
+	 * @throws Exception 
 	 */
-	public void put(final EntityTransaction transaction) {
+	public void put(final EntityTransaction transaction) throws Exception {
 		Objects.requireNonNull(transaction, "EntityTransaction");
-		cache.put(transaction.getId(), transaction);
+		cache.put(transaction.getId(), encoder.encode(transaction));
 	}
 	
 	/**
 	 * @param id
 	 * @return
+	 * @throws Exception 
 	 */
-	public EntityTransaction remove(final String id) {
+	public EntityTransaction remove(final String id) throws Exception {
 		Objects.requireNonNull(id, "String");
-		return (EntityTransaction) cache.get(id);
+		return (EntityTransaction) decoder.decode(cache.get(id).toString());
 	}
 }

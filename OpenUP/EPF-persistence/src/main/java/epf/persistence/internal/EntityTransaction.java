@@ -1,20 +1,29 @@
 package epf.persistence.internal;
 
+import java.io.Serializable;
+import javax.json.bind.annotation.JsonbTypeAdapter;
 import epf.schema.utility.EntityEvent;
+import epf.util.json.Adapter;
 
 /**
  * 
  */
-public class EntityTransaction {
+public class EntityTransaction implements Serializable {
 	
 	/**
-	 *
+	 * 
 	 */
-	private final String id;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 *
 	 */
+	private String id;
+
+	/**
+	 *
+	 */
+	@JsonbTypeAdapter(Adapter.class)
 	private EntityEvent event;
 	
 	/**
@@ -26,13 +35,6 @@ public class EntityTransaction {
 	 *
 	 */
 	private String diff;
-	
-	/**
-	 * @param id
-	 */
-	public EntityTransaction(final String id) {
-		this.id = id;
-	}
 
 	public String getId() {
 		return id;
@@ -60,5 +62,9 @@ public class EntityTransaction {
 
 	public void setDiff(final String diff) {
 		this.diff = diff;
+	}
+
+	public void setId(final String id) {
+		this.id = id;
 	}
 }
