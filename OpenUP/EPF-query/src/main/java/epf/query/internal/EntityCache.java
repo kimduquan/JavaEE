@@ -18,6 +18,7 @@ import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
+import epf.cache.util.DefaultCacheProvider;
 import epf.cache.util.Loader;
 import epf.cache.util.LoaderFactory;
 import epf.query.client.EntityId;
@@ -52,8 +53,12 @@ public class EntityCache implements HealthCheck {
 	/**
 	 * 
 	 */
-	@Inject @Readiness
-	private transient Provider provider;
+	private transient final DefaultCacheProvider provider = new DefaultCacheProvider();
+	
+	/**
+	 * 
+	 */
+	private transient Cache<String, Object> entityCache;
 	
 	/**
 	 *
@@ -66,11 +71,6 @@ public class EntityCache implements HealthCheck {
 	 */
 	@Inject
 	private transient ManagedExecutor executor;
-	
-	/**
-	 * 
-	 */
-	private transient Cache<String, Object> entityCache;
 	
 	/**
 	 * 

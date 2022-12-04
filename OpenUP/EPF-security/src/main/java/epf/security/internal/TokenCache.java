@@ -8,7 +8,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.cache.Cache;
 import javax.cache.CacheManager;
-import javax.cache.Caching;
 import javax.cache.configuration.Factory;
 import javax.cache.configuration.MutableConfiguration;
 import javax.cache.expiry.CreatedExpiryPolicy;
@@ -19,6 +18,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
+import epf.cache.util.CacheClientProvider;
 import epf.naming.Naming;
 import epf.util.logging.LogManager;
 
@@ -53,7 +53,8 @@ public class TokenCache implements HealthCheck {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final CacheManager manager = Caching.getCachingProvider().getCacheManager();
+			final CacheClientProvider provider = new CacheClientProvider();
+			final CacheManager manager = provider.getManager();
 			final MutableConfiguration<String, String> config = new MutableConfiguration<>();
 			final Duration expire = Duration.parse(expireDuration);
 			final javax.cache.expiry.Duration expiryDuration = new javax.cache.expiry.Duration(TimeUnit.MINUTES, expire.toMinutes());
