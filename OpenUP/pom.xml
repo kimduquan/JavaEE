@@ -345,25 +345,25 @@
 			<dependency>
 			    <groupId>org.jboss</groupId>
 			    <artifactId>jandex</artifactId>
-			    <version>3.0.3</version>
+			    <version>3.0.5</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.optaplanner/optaplanner-core -->
 			<dependency>
 			    <groupId>org.optaplanner</groupId>
 			    <artifactId>optaplanner-core</artifactId>
-			    <version>8.30.0.Final</version>
+			    <version>8.31.0.Final</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.lsp4j/org.eclipse.lsp4j.websocket -->
 			<dependency>
 			    <groupId>org.eclipse.lsp4j</groupId>
 			    <artifactId>org.eclipse.lsp4j.websocket</artifactId>
-			    <version>0.18.0</version>
+			    <version>0.19.0</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.lsp4j/org.eclipse.lsp4j -->
 			<dependency>
 			    <groupId>org.eclipse.lsp4j</groupId>
 			    <artifactId>org.eclipse.lsp4j</artifactId>
-			    <version>0.18.0</version>
+			    <version>0.19.0</version>
 			</dependency>
 			
 			
@@ -389,7 +389,7 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.jaxrs</groupId>
                 <artifactId>jackson-jaxrs-json-provider</artifactId>
-                <version>2.14.0</version>
+                <version>2.14.1</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 			<dependency>
@@ -401,7 +401,7 @@
 			<dependency>
 			    <groupId>org.postgresql</groupId>
 			    <artifactId>postgresql</artifactId>
-			    <version>42.5.0</version>
+			    <version>42.5.1</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.bitbucket.b_c/jose4j -->
 			<dependency>
@@ -419,7 +419,7 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-jdk14</artifactId>
-                <version>2.0.3</version>
+                <version>2.0.5</version>
             </dependency>
             
             <!-- https://mvnrepository.com/artifact/org.jboss.weld/weld-junit4 -->
@@ -440,7 +440,7 @@
 			<dependency>
 			    <groupId>org.seleniumhq.selenium</groupId>
 			    <artifactId>selenium-java</artifactId>
-			    <version>4.6.0</version>
+			    <version>4.7.0</version>
 			    <scope>test</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.jetty.websocket/javax-websocket-client-impl -->
@@ -582,7 +582,7 @@
 				<plugin>
 				    <groupId>org.apache.maven.plugins</groupId>
 				    <artifactId>maven-dependency-plugin</artifactId>
-				    <version>3.3.0</version>
+				    <version>3.4.0</version>
 				</plugin>
 				<!-- https://mvnrepository.com/artifact/org.codehaus.mojo/exec-maven-plugin -->
 				<plugin>
@@ -593,7 +593,7 @@
 				<plugin>
 					<groupId>org.owasp</groupId>
 					<artifactId>dependency-check-maven</artifactId>
-					<version>7.3.1</version>
+					<version>7.4.0</version>
 		        </plugin>
 		        <plugin>
 		        	<groupId>org.wildfly.plugins</groupId>
