@@ -18,7 +18,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
-import epf.cache.util.CacheClientProvider;
+import epf.cache.util.CacheProvider;
 import epf.naming.Naming;
 import epf.util.logging.LogManager;
 
@@ -53,8 +53,8 @@ public class TokenCache implements HealthCheck {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final CacheClientProvider provider = new CacheClientProvider();
-			final CacheManager manager = provider.getManager();
+			final CacheProvider provider = new CacheProvider();
+			final CacheManager manager = provider.getManager(CreatedExpiryPolicy.class.getClassLoader());
 			final MutableConfiguration<String, String> config = new MutableConfiguration<>();
 			final Duration expire = Duration.parse(expireDuration);
 			final javax.cache.expiry.Duration expiryDuration = new javax.cache.expiry.Duration(TimeUnit.MINUTES, expire.toMinutes());

@@ -7,6 +7,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.cache.Cache;
 import javax.cache.CacheManager;
+import javax.cache.configuration.FactoryBuilder;
 import javax.cache.configuration.MutableConfiguration;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -14,14 +15,13 @@ import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
-import epf.cache.util.DefaultCacheProvider;
-import epf.cache.util.Loader;
+import epf.cache.util.CacheProvider;
 import epf.cache.util.LoaderFactory;
 import epf.query.internal.event.QueryLoad;
+import epf.query.internal.persistence.QueryCacheLoader;
 import epf.schema.utility.EntityEvent;
 import epf.schema.utility.PostPersist;
 import epf.schema.utility.PostRemove;
-import epf.util.event.EventEmitter;
 import epf.util.event.EventQueue;
 import epf.util.logging.LogManager;
 
@@ -41,7 +41,7 @@ public class QueryCache implements HealthCheck {
 	/**
 	 * 
 	 */
-	private transient final DefaultCacheProvider provider = new DefaultCacheProvider();
+	private transient final CacheProvider provider = new CacheProvider();
 	
 	/**
 	 * 
@@ -72,10 +72,11 @@ public class QueryCache implements HealthCheck {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final CacheManager manager = provider.getManager();
 			executor.submit(eventQueue);
+			final CacheManager manager = provider.getManager(LoaderFactory.class.getClassLoader());
 			final MutableConfiguration<String, Integer> config = new MutableConfiguration<>();
-			config.setCacheLoaderFactory(new LoaderFactory<>(new Loader<String, Integer, QueryLoad>(new EventEmitter<QueryLoad>(eventQueue), QueryLoad::new)));
+			QueryCacheLoader.setEventQueue(eventQueue);
+			config.setCacheLoaderFactory(FactoryBuilder.factoryOf(QueryCacheLoader.class));
 			config.setReadThrough(true);
 			queryCache = manager.createCache(epf.query.Naming.QUERY_CACHE, config);
 		}

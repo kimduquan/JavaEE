@@ -1,22 +1,28 @@
 package epf.cache.util;
 
 import javax.cache.CacheManager;
+import javax.cache.Caching;
+import javax.cache.spi.CachingProvider;
 
 /**
  * @author PC
  *
  */
-public interface CacheProvider {
+public class CacheProvider {
 	
 	/**
 	 * 
 	 */
-	String CLIENT_PROVIDER = "com.hazelcast.client.cache.HazelcastClientCachingProvider";
-	
+	private transient CachingProvider provider;
+
 	/**
-	 * 
+	 * @param classLoader
+	 * @return
 	 */
-	String MEMBER_PROVIDER = "com.hazelcast.client.cache.HazelcastClientCachingProvider";
-	
-	CacheManager getManager();
+	public CacheManager getManager(final ClassLoader classLoader) {
+		if(provider == null) {
+			provider = Caching.getCachingProvider(classLoader);
+		}
+		return provider.getCacheManager(provider.getDefaultURI(), classLoader);
+	}
 }

@@ -11,6 +11,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.cache.Cache;
 import javax.cache.CacheManager;
+import javax.cache.configuration.FactoryBuilder;
 import javax.cache.configuration.MutableConfiguration;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -18,16 +19,15 @@ import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
-import epf.cache.util.DefaultCacheProvider;
-import epf.cache.util.Loader;
+import epf.cache.util.CacheProvider;
 import epf.cache.util.LoaderFactory;
 import epf.query.client.EntityId;
 import epf.query.internal.event.EntityLoad;
+import epf.query.internal.persistence.EntityCacheLoader;
 import epf.schema.utility.EntityEvent;
 import epf.schema.utility.PostPersist;
 import epf.schema.utility.PostRemove;
 import epf.schema.utility.PostUpdate;
-import epf.util.event.EventEmitter;
 import epf.util.event.EventQueue;
 import epf.util.logging.LogManager;
 
@@ -53,7 +53,7 @@ public class EntityCache implements HealthCheck {
 	/**
 	 * 
 	 */
-	private transient final DefaultCacheProvider provider = new DefaultCacheProvider();
+	private transient final CacheProvider provider = new CacheProvider();
 	
 	/**
 	 * 
@@ -78,10 +78,11 @@ public class EntityCache implements HealthCheck {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final CacheManager manager = provider.getManager();
 			executor.submit(eventQueue);
+			final CacheManager manager = provider.getManager(LoaderFactory.class.getClassLoader());
 			final MutableConfiguration<String, Object> config = new MutableConfiguration<>();
-			config.setCacheLoaderFactory(new LoaderFactory<>(new Loader<String, Object, EntityLoad>(new EventEmitter<EntityLoad>(eventQueue), EntityLoad::new)));
+			EntityCacheLoader.setEventQueue(eventQueue);
+			config.setCacheLoaderFactory(FactoryBuilder.factoryOf(EntityCacheLoader.class));
 			config.setReadThrough(true);
 			entityCache = manager.getCache(epf.query.Naming.ENTITY_CACHE);
 			if(entityCache == null) {

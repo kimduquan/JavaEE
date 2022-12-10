@@ -552,6 +552,7 @@
 				<liberty.jvm.JAEGER_AGENT_HOST>-DJAEGER_AGENT_HOST=jaeger-agent.default.svc.cluster.local</liberty.jvm.JAEGER_AGENT_HOST>
 				<liberty.jvm.HAZELCAST_KUBERNETES_SERVICE_DNS>-Dhazelcast.kubernetes.service-dns=hazelcast.default.svc.cluster.local</liberty.jvm.HAZELCAST_KUBERNETES_SERVICE_DNS>
 				<liberty.bootstrap.hazelcast.kubernetes.service-dns>hazelcast.default.svc.cluster.local</liberty.bootstrap.hazelcast.kubernetes.service-dns>
+				<!--<liberty.bootstrap.hazelcast.jcache.provider.type>member</liberty.bootstrap.hazelcast.jcache.provider.type>-->
 				<liberty.env.epf_persistence_url>http://epf-persistence.default.svc.cluster.local:9181/persistence/persistence/</liberty.env.epf_persistence_url>
 				<liberty.env.epf_schema_url>http://epf-persistence.default.svc.cluster.local:9181/persistence/schema/</liberty.env.epf_schema_url>
 				<liberty.env.epf_transaction_url>http://epf-transaction.default.svc.cluster.local:9182/transaction/transaction/</liberty.env.epf_transaction_url>
