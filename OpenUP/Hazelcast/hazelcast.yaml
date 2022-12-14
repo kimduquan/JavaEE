@@ -12,7 +12,7 @@ hazelcast:
 rbac:
   create: false
 cluster:
-  memberCount: 2
+  memberCount: 1
 mancenter:
   enabled: false
 resources:
