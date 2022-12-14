@@ -37,7 +37,7 @@ public class Encoder {
 	 */
 	public String encode(final Object object) throws Exception {
 		try(Jsonb jsonb = JsonbBuilder.create()){
-			return encode(object);
+			return encode(jsonb, object);
 		}
 	}
 	
@@ -66,7 +66,7 @@ public class Encoder {
 	 */
 	public String encodeArray(final List<Object> array) throws Exception {
 		try(Jsonb jsonb = JsonbBuilder.create()){
-			return encodeArray(array);
+			return encodeArray(jsonb, array);
 		}
 	}
 }
