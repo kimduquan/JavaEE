@@ -20,7 +20,6 @@ import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
 import epf.cache.util.CacheProvider;
-import epf.cache.util.LoaderFactory;
 import epf.query.client.EntityId;
 import epf.query.internal.event.EntityLoad;
 import epf.query.internal.persistence.EntityCacheLoader;
@@ -79,7 +78,8 @@ public class EntityCache implements HealthCheck {
 	protected void postConstruct() {
 		try {
 			executor.submit(eventQueue);
-			final CacheManager manager = provider.getManager(LoaderFactory.class.getClassLoader());
+			provider.setDefaultClassLoader(EntityCacheLoader.class.getClassLoader());
+			final CacheManager manager = provider.getManager(EntityCacheLoader.class.getClassLoader());
 			final MutableConfiguration<String, Object> config = new MutableConfiguration<>();
 			EntityCacheLoader.setEventQueue(eventQueue);
 			config.setCacheLoaderFactory(FactoryBuilder.factoryOf(EntityCacheLoader.class));

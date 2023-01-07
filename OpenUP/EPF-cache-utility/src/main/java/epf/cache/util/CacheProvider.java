@@ -25,4 +25,11 @@ public class CacheProvider {
 		}
 		return provider.getCacheManager(provider.getDefaultURI(), classLoader);
 	}
+	
+	/**
+	 * @param classLoader
+	 */
+	public void setDefaultClassLoader(final ClassLoader classLoader) {
+		Caching.setDefaultClassLoader(classLoader);
+	}
 }
