@@ -315,13 +315,13 @@
 			<dependency>
 			    <groupId>org.jboss.resteasy</groupId>
 			    <artifactId>resteasy-client</artifactId>
-			    <version>6.2.1.Final</version>
+			    <version>6.2.2.Final</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.jboss.resteasy/resteasy-jackson2-provider -->
 			<dependency>
 			    <groupId>org.jboss.resteasy</groupId>
 			    <artifactId>resteasy-jackson2-provider</artifactId>
-			    <version>6.2.1.Final</version>
+			    <version>6.2.2.Final</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.jppf/jppf-client -->
 			<dependency>
@@ -333,7 +333,7 @@
 			<dependency>
 				<groupId>org.apache.groovy</groupId>
 				<artifactId>groovy-jsr223</artifactId>
-				<version>4.0.6</version>
+				<version>4.0.7</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.python/jython-standalone -->
 			<dependency>
@@ -351,7 +351,7 @@
 			<dependency>
 			    <groupId>org.optaplanner</groupId>
 			    <artifactId>optaplanner-core</artifactId>
-			    <version>8.31.0.Final</version>
+			    <version>8.32.0.Final</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.lsp4j/org.eclipse.lsp4j.websocket -->
 			<dependency>
@@ -377,13 +377,13 @@
             <dependency>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-rt-rs-mp-client</artifactId>
-                <version>3.5.4</version>
+                <version>4.0.0</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-rs-sse -->
 			<dependency>
 			    <groupId>org.apache.cxf</groupId>
 			    <artifactId>cxf-rt-rs-sse</artifactId>
-			    <version>3.5.4</version>
+			    <version>4.0.0</version>
 			</dependency>
             <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.jaxrs/jackson-jaxrs-json-provider -->
             <dependency>
@@ -419,7 +419,7 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-jdk14</artifactId>
-                <version>2.0.5</version>
+                <version>2.0.6</version>
             </dependency>
             
             <!-- https://mvnrepository.com/artifact/org.jboss.weld/weld-junit4 -->
@@ -433,21 +433,21 @@
 			<dependency>
 			    <groupId>org.mockito</groupId>
 			    <artifactId>mockito-core</artifactId>
-			    <version>4.9.0</version>
+			    <version>4.11.0</version>
 			    <scope>test</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
 			<dependency>
 			    <groupId>org.seleniumhq.selenium</groupId>
 			    <artifactId>selenium-java</artifactId>
-			    <version>4.7.0</version>
+			    <version>4.7.2</version>
 			    <scope>test</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.jetty.websocket/javax-websocket-client-impl -->
 			<dependency>
 			    <groupId>org.eclipse.jetty.websocket</groupId>
 			    <artifactId>javax-websocket-client-impl</artifactId>
-			    <version>9.4.49.v20220914</version>
+			    <version>9.4.50.v20221201</version>
 		    	<scope>test</scope>
 			</dependency>
         </dependencies>
@@ -576,7 +576,7 @@
 				<plugin>
 					<groupId>com.lazerycode.jmeter</groupId>
 					<artifactId>jmeter-maven-plugin</artifactId>
-					<version>3.6.1</version>
+					<version>3.7.0</version>
 				</plugin>
 				<!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-dependency-plugin -->
 				<plugin>
@@ -593,7 +593,7 @@
 				<plugin>
 					<groupId>org.owasp</groupId>
 					<artifactId>dependency-check-maven</artifactId>
-					<version>7.4.0</version>
+					<version>7.4.4</version>
 		        </plugin>
 		        <plugin>
 		        	<groupId>org.wildfly.plugins</groupId>
@@ -707,7 +707,7 @@
 							</execution>
 						</executions>
 					</plugin>
-					<!--
+					
 					<plugin>
 						<groupId>org.owasp</groupId>
 						<artifactId>dependency-check-maven</artifactId>
@@ -719,7 +719,7 @@
 							</execution>
 					   </executions>
 			        </plugin>
-					-->
+					
                 </plugins>
             </build>
        </profile>
