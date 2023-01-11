@@ -7,5 +7,5 @@ set PLUTO_HOME="C:\pluto-3.1.1"
 set KAFKA_HOME="C:\kafka_2.13-3.3.1\bin\windows"
 set WILDFLY_HOME="C:\wildfly-24.0.1.Final\bin"
 set JAEGER_HOME="C:\jaeger-1.38.1-windows-amd64"
-set MAVEN_HOME=C:\apache-maven-3.8.6\bin
+set MAVEN_HOME=C:\apache-maven-3.8.7\bin
 set PATH=%MAVEN_HOME%;%PATH%
