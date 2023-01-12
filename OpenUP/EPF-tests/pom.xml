@@ -44,7 +44,7 @@
         <liberty.env.epf_gateway_messaging_url>ws://${gatewayHost}:${internalPort}/messaging/</liberty.env.epf_gateway_messaging_url>
         <liberty.env.epf_messaging_url>ws://${httpHost}:9183/messaging/messaging/</liberty.env.epf_messaging_url>
         <liberty.env.epf_cache_url>http://${httpHost}:9187/cache/cache/</liberty.env.epf_cache_url>
-        <liberty.env.epf_query_url>http://${httpHost}:${httpPort}/query/query/</liberty.env.epf_query_url>
+        <liberty.env.epf_query_url>http://${httpHost}:9188/query/query/</liberty.env.epf_query_url>
         <liberty.env.epf_registry_url>http://${httpHost}:${httpPort}/registry/registry/</liberty.env.epf_registry_url>
 		<liberty.env.epf_management_url>http://${httpHost}:${httpPort}/management/management/</liberty.env.epf_management_url>
 		<liberty.env.epf_portlet_url>http://localhost:${portalPort}/pluto/portal</liberty.env.epf_portlet_url>
