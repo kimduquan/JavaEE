@@ -31,25 +31,25 @@ public class Query implements epf.query.client.Query {
 	 * 
 	 */
 	@Inject @Readiness
-	private transient EntityCache entityCache;
+	transient EntityCache entityCache;
 	
 	/**
 	 * 
 	 */
 	@Inject @Readiness
-	private transient QueryCache queryCache;
+	transient QueryCache queryCache;
 	
 	/**
 	 * 
 	 */
 	@Inject @Readiness
-	private transient PersistenceQuery persistence;
+	transient PersistenceQuery persistence;
 	
 	/**
 	 * 
 	 */
 	@Inject
-	private transient Search search;
+	transient Search search;
 	
 	@Override
     public Response getEntity(

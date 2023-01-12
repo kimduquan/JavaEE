@@ -43,7 +43,7 @@ public class SchemaCache implements HealthCheck {
 	 *
 	 */
 	@PersistenceContext(unitName = epf.query.Naming.QUERY_UNIT_NAME)
-	private transient EntityManager entityManager;
+	transient EntityManager entityManager;
 	
 	/**
 	 * 

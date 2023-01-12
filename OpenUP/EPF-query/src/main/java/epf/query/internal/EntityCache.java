@@ -47,29 +47,29 @@ public class EntityCache implements HealthCheck {
 	 * 
 	 */
 	@Inject @Readiness
-	private transient SchemaCache schemaCache;
+	transient SchemaCache schemaCache;
 	
 	/**
 	 * 
 	 */
-	private transient final CacheProvider provider = new CacheProvider();
+	transient final CacheProvider provider = new CacheProvider();
 	
 	/**
 	 * 
 	 */
-	private transient Cache<String, Object> entityCache;
+	transient Cache<String, Object> entityCache;
 	
 	/**
 	 *
 	 */
 	@Inject
-	private transient EventQueue<EntityLoad> eventQueue;
+	transient EventQueue<EntityLoad> eventQueue;
 	
 	/**
 	 *
 	 */
 	@Inject
-	private transient ManagedExecutor executor;
+	transient ManagedExecutor executor;
 	
 	/**
 	 * 

@@ -27,13 +27,13 @@ public class QueryLoader implements CacheLoader<String, Integer> {
 	 *
 	 */
 	@PersistenceContext(unitName = epf.query.Naming.QUERY_UNIT_NAME)
-	private transient EntityManager manager;
+	transient EntityManager manager;
 
 	/**
 	 *
 	 */
 	@Inject @Readiness
-	private transient SchemaCache schemaCache;
+	transient SchemaCache schemaCache;
 
 	@Override
 	public Integer load(final String key) throws Exception {

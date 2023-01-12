@@ -51,19 +51,19 @@ public class QueryCache implements HealthCheck {
 	 * 
 	 */
 	@Inject  @Readiness
-	private transient SchemaCache schemaCache;
+	transient SchemaCache schemaCache;
 	
 	/**
 	 *
 	 */
 	@Inject
-	private transient EventQueue<QueryLoad> eventQueue;
+	transient EventQueue<QueryLoad> eventQueue;
 	
 	/**
 	 *
 	 */
 	@Inject
-	private transient ManagedExecutor executor;
+	transient ManagedExecutor executor;
 	
 	/**
 	 * 

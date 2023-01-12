@@ -32,25 +32,25 @@ public class Listener implements HealthCheck {
 	 * 
 	 */
 	@Inject @Readiness
-	private transient EntityCache entityCache;
+	transient EntityCache entityCache;
 	
 	/**
 	 * 
 	 */
 	@Inject @Readiness
-	private transient QueryCache queryCache;
+	transient QueryCache queryCache;
 	
 	/**
 	 * 
 	 */
 	@Inject @Readiness
-	private transient PersistenceCache cache;
+	transient PersistenceCache cache;
 	
 	/**
 	 * 
 	 */
 	@Inject @Readiness
-	private transient Messaging messaging;
+	transient Messaging messaging;
 
 	@Override
 	public HealthCheckResponse call() {

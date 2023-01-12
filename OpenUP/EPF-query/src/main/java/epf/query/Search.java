@@ -37,13 +37,13 @@ public class Search implements epf.query.client.Search {
 	 *
 	 */
 	@PersistenceContext(unitName = "EPF-query")
-	private transient EntityManager manager;
+	transient EntityManager manager;
 	
 	/**
 	 *
 	 */
 	@Inject @Readiness
-	private transient SchemaCache schemaCache;
+	transient SchemaCache schemaCache;
 
 	@Override
 	public Response search(

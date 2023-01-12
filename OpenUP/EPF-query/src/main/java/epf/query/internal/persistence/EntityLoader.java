@@ -25,13 +25,13 @@ public class EntityLoader implements CacheLoader<String, Object> {
 	 *
 	 */
 	@PersistenceContext(unitName = epf.query.Naming.QUERY_UNIT_NAME)
-	private transient EntityManager manager;
+	transient EntityManager manager;
 
 	/**
 	 *
 	 */
 	@Inject @Readiness
-	private transient SchemaCache schemaCache;
+	transient SchemaCache schemaCache;
 
 	/**
 	 * @param key
