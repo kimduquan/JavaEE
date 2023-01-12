@@ -18,6 +18,9 @@ cd ../
 cd EPF-tests
 call stop.bat
 cd ../
+cd EPF-query
+call stop.bat
+cd ../
 cd EPF-persistence
 call stop.bat
 cd ../

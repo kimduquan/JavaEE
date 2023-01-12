@@ -26,6 +26,10 @@ cd EPF-persistence
 call start.bat
 cd ../
 
+cd EPF-query
+call start.bat
+cd ../
+
 cd EPF-tests
 call start.bat
 cd ../
