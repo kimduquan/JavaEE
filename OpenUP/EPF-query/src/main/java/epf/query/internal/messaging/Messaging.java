@@ -6,6 +6,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
@@ -13,7 +15,6 @@ import epf.messaging.client.Client;
 import epf.messaging.client.MessageEncoder;
 import epf.naming.Naming;
 import epf.schema.utility.EntityEvent;
-import epf.util.config.ConfigUtil;
 import epf.util.logging.LogManager;
 
 /**
@@ -41,10 +42,16 @@ public class Messaging implements HealthCheck {
 	/**
 	 * 
 	 */
+	@Inject
+	@ConfigProperty(name = Naming.Messaging.MESSAGING_URL)
+	URI messagingUrl;
+	
+	/**
+	 * 
+	 */
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final URI messagingUrl = ConfigUtil.getURI(Naming.Messaging.MESSAGING_URL);
 			client = epf.messaging.client.Messaging.connectToServer(messagingUrl, Optional.empty(), Naming.QUERY, Optional.empty());
 		} 
 		catch (Exception e) {

@@ -66,18 +66,11 @@ public class EntityCache implements HealthCheck {
 	transient EventQueue<EntityLoad> eventQueue;
 	
 	/**
-	 *
-	 */
-	@Inject
-	transient ManagedExecutor executor;
-	
-	/**
 	 * 
 	 */
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			executor.submit(eventQueue);
 			provider.setDefaultClassLoader(EntityCacheLoader.class.getClassLoader());
 			final CacheManager manager = provider.getManager(EntityCacheLoader.class.getClassLoader());
 			final MutableConfiguration<String, Object> config = new MutableConfiguration<>();
@@ -96,6 +89,7 @@ public class EntityCache implements HealthCheck {
 	
 	@PreDestroy
 	protected void preDestroy() {
+		eventQueue.close();
 		entityCache.close();
 	}
 
@@ -149,9 +143,16 @@ public class EntityCache implements HealthCheck {
 
 	@Override
 	public HealthCheckResponse call() {
-		if(executor.isShutdown() || executor.isTerminated() || entityCache == null || entityCache.isClosed()) {
+		if(entityCache == null || entityCache.isClosed()) {
 			return HealthCheckResponse.down("EPF-query-entity-cache");
 		}
 		return HealthCheckResponse.up("EPF-query-entity-cache");
+	}
+	
+	/**
+	 * 
+	 */
+	public void submit(final ManagedExecutor executor) {
+		executor.submit(eventQueue);
 	}
 }

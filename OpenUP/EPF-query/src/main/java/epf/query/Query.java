@@ -2,6 +2,7 @@ package epf.query;
 
 import java.util.List;
 import java.util.Optional;
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
@@ -10,6 +11,7 @@ import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.SecurityContext;
+import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.Readiness;
 import epf.naming.Naming;
 import epf.naming.Naming.Query.Client;
@@ -50,6 +52,21 @@ public class Query implements epf.query.client.Query {
 	 */
 	@Inject
 	transient Search search;
+	
+	/**
+	 *
+	 */
+	@Inject
+	transient ManagedExecutor executor;
+	
+	/**
+	 * 
+	 */
+	@PostConstruct
+	protected void postConstruct() {
+		entityCache.submit(executor);
+		queryCache.submit(executor);
+	}
 	
 	@Override
     public Response getEntity(

@@ -58,10 +58,6 @@
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-smallrye-jwt</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
       <artifactId>quarkus-smallrye-health</artifactId>
     </dependency>
     <dependency>
@@ -127,6 +123,11 @@
 	<dependency>
 		<groupId>openup</groupId>
 		<artifactId>EPF-messaging-utility</artifactId>
+		<version>${project.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>openup</groupId>
+		<artifactId>EPF-utility</artifactId>
 		<version>${project.version}</version>
 	</dependency>
 	<dependency>
@@ -230,6 +231,19 @@
           </execution>
         </executions>
       </plugin>
+	  <plugin>
+		  <groupId>org.jboss.jandex</groupId>
+		  <artifactId>jandex-maven-plugin</artifactId>
+		  <version>1.2.3</version>
+		  <executions>
+			<execution>
+			  <id>make-index</id>
+			  <goals>
+				<goal>jandex</goal>
+			  </goals>
+			</execution>
+		  </executions>
+		</plugin>
     </plugins>
   </build>
   <profiles>
