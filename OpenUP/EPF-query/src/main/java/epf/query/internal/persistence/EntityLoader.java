@@ -8,9 +8,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.eclipse.microprofile.health.Readiness;
 import epf.naming.Naming;
+import epf.query.internal.CacheLoader;
 import epf.query.internal.EntityKey;
+import epf.query.internal.EntityLoad;
 import epf.query.internal.SchemaCache;
-import epf.query.internal.event.EntityLoad;
 import epf.schema.utility.TenantUtil;
 import epf.util.json.JsonUtil;
 

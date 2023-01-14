@@ -95,6 +95,11 @@
 		<artifactId>lucene-queryparser</artifactId>
 		<version>8.5.2</version>
 	</dependency>
+	<!-- https://mvnrepository.com/artifact/net.openhft/affinity -->
+	<dependency>
+		<groupId>net.openhft</groupId>
+		<artifactId>affinity</artifactId>
+	</dependency>
 
 	<dependency>
 		<groupId>openup</groupId>
@@ -114,6 +119,11 @@
 	<dependency>
 		<groupId>openup</groupId>
 		<artifactId>EPF-messaging-client</artifactId>
+		<version>${project.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>openup</groupId>
+		<artifactId>EPF-query-internal</artifactId>
 		<version>${project.version}</version>
 	</dependency>
 	<dependency>
