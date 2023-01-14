@@ -1,4 +1,4 @@
-package epf.query.internal.persistence;
+package epf.query.persistence.internal;
 
 import java.util.Optional;
 import javax.enterprise.context.Dependent;
@@ -11,9 +11,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.eclipse.microprofile.health.Readiness;
 import epf.naming.Naming;
-import epf.query.internal.CacheLoader;
+import epf.query.cache.internal.CacheLoader;
+import epf.query.cache.internal.QueryLoad;
 import epf.query.internal.QueryKey;
-import epf.query.internal.QueryLoad;
 import epf.query.internal.SchemaCache;
 import epf.schema.utility.TenantUtil;
 

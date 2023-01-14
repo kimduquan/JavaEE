@@ -1,4 +1,4 @@
-package epf.query.internal.persistence;
+package epf.query.persistence.internal;
 
 import java.util.Optional;
 import java.util.logging.Level;

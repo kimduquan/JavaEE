@@ -1,4 +1,4 @@
-package epf.query.internal;
+package epf.query.cache.internal;
 
 import java.util.Iterator;
 import java.util.Map;

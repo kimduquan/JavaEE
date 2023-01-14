@@ -10,8 +10,8 @@ import org.eclipse.microprofile.reactive.messaging.Incoming;
 import epf.naming.Naming;
 import epf.query.internal.EntityCache;
 import epf.query.internal.QueryCache;
-import epf.query.internal.messaging.Messaging;
-import epf.query.internal.persistence.PersistenceCache;
+import epf.query.messaging.internal.Messaging;
+import epf.query.persistence.internal.PersistenceCache;
 import epf.schema.utility.EntityEvent;
 import epf.util.logging.LogManager;
 

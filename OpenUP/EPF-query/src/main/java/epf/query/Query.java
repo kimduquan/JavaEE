@@ -20,7 +20,7 @@ import epf.naming.Naming.Query.Client;
 import epf.query.client.EntityId;
 import epf.query.internal.EntityCache;
 import epf.query.internal.QueryCache;
-import epf.query.internal.persistence.PersistenceQuery;
+import epf.query.persistence.internal.PersistenceQuery;
 import epf.query.util.LinkUtil;
 import epf.util.concurrent.Executor;
 

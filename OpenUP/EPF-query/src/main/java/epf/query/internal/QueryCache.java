@@ -16,6 +16,8 @@ import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
 import epf.cache.util.CacheProvider;
+import epf.query.cache.internal.QueryCacheLoader;
+import epf.query.cache.internal.QueryLoad;
 import epf.schema.utility.EntityEvent;
 import epf.schema.utility.PostPersist;
 import epf.schema.utility.PostRemove;

@@ -1,4 +1,4 @@
-package epf.query.internal.persistence;
+package epf.query.persistence.internal;
 
 import java.util.List;
 import java.util.logging.Logger;

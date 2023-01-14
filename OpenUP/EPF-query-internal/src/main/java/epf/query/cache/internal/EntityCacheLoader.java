@@ -1,4 +1,4 @@
-package epf.query.internal;
+package epf.query.cache.internal;
 
 import epf.cache.util.Loader;
 import epf.util.event.EventEmitter;
@@ -27,6 +27,9 @@ public class EntityCacheLoader extends Loader<String, Object, EntityLoad> {
 		super(new EventEmitter<EntityLoad>(eventQueue), EntityLoad::new);
 	}
 
+	/**
+	 * @param eventQueue
+	 */
 	public static void setEventQueue(final EventQueue<EntityLoad> eventQueue) {
 		EntityCacheLoader.eventQueue = eventQueue;
 	}
