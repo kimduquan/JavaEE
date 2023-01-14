@@ -65,10 +65,6 @@
       <artifactId>quarkus-smallrye-context-propagation</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-smallrye-opentracing</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.hazelcast</groupId>
       <artifactId>quarkus-hazelcast-client</artifactId>
     </dependency>

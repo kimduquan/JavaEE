@@ -3,6 +3,7 @@ package epf.query;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
@@ -12,6 +13,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.context.ManagedExecutor;
+import org.eclipse.microprofile.context.ThreadContext;
 import org.eclipse.microprofile.health.Readiness;
 import epf.naming.Naming;
 import epf.naming.Naming.Query.Client;
@@ -20,6 +22,7 @@ import epf.query.internal.EntityCache;
 import epf.query.internal.QueryCache;
 import epf.query.internal.persistence.PersistenceQuery;
 import epf.query.util.LinkUtil;
+import epf.util.concurrent.Executor;
 
 /**
  * @author PC
@@ -57,15 +60,32 @@ public class Query implements epf.query.client.Query {
 	 *
 	 */
 	@Inject
-	transient ManagedExecutor executor;
+	transient Executor executor;
+	
+	/**
+	 * 
+	 */
+	transient ManagedExecutor managedExecutor;
 	
 	/**
 	 * 
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		entityCache.submit(executor);
-		queryCache.submit(executor);
+		managedExecutor = ManagedExecutor
+                .builder()
+                .propagated(ThreadContext.ALL_REMAINING)
+                .build();
+		entityCache.submit(managedExecutor);
+		queryCache.submit(managedExecutor);
+	}
+	
+	/**
+	 * 
+	 */
+	@PreDestroy
+	protected void preDestroy() {
+		managedExecutor.shutdown();
 	}
 	
 	@Override

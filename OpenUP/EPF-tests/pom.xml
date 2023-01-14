@@ -553,14 +553,14 @@
 				<liberty.jvm.HAZELCAST_KUBERNETES_SERVICE_DNS>-Dhazelcast.kubernetes.service-dns=hazelcast.default.svc.cluster.local</liberty.jvm.HAZELCAST_KUBERNETES_SERVICE_DNS>
 				<liberty.bootstrap.hazelcast.kubernetes.service-dns>hazelcast.default.svc.cluster.local</liberty.bootstrap.hazelcast.kubernetes.service-dns>
 				<!--<liberty.bootstrap.hazelcast.jcache.provider.type>member</liberty.bootstrap.hazelcast.jcache.provider.type>-->
-				<liberty.env.epf_persistence_url>http://epf-persistence.default.svc.cluster.local:9181/persistence/persistence/</liberty.env.epf_persistence_url>
-				<liberty.env.epf_schema_url>http://epf-persistence.default.svc.cluster.local:9181/persistence/schema/</liberty.env.epf_schema_url>
-				<liberty.env.epf_transaction_url>http://epf-transaction.default.svc.cluster.local:9182/transaction/transaction/</liberty.env.epf_transaction_url>
+				<liberty.env.epf_persistence_url>http://epf-persistence.default.svc.cluster.local:9181/persistence/</liberty.env.epf_persistence_url>
+				<liberty.env.epf_schema_url>http://epf-persistence.default.svc.cluster.local:9181/schema/</liberty.env.epf_schema_url>
+				<liberty.env.epf_transaction_url>http://epf-transaction.default.svc.cluster.local:9182/transaction/</liberty.env.epf_transaction_url>
 				<liberty.env.epf_messaging_url>ws://epf-messaging.default.svc.cluster.local:9183/messaging/</liberty.env.epf_messaging_url>
 				<liberty.env.epf_config_url>http://epf-config.default.svc.cluster.local:9184/config/</liberty.env.epf_config_url>
 				<liberty.env.epf_net_url>http://epf-net.default.svc.cluster.local:9186/net/</liberty.env.epf_net_url>
-				<liberty.env.epf_cache_url>http://epf-cache.default.svc.cluster.local:9187/cache/cache/</liberty.env.epf_cache_url>
-				<liberty.env.epf_query_url>http://epf-query.default.svc.cluster.local:9188/query/query/</liberty.env.epf_query_url>
+				<liberty.env.epf_cache_url>http://epf-cache.default.svc.cluster.local:9187/cache/</liberty.env.epf_cache_url>
+				<liberty.env.epf_query_url>http://epf-query.default.svc.cluster.local:9188/query/</liberty.env.epf_query_url>
 				<liberty.env.epf_client_net_ssl_keyStore>/dev.p12</liberty.env.epf_client_net_ssl_keyStore>
 				<liberty.env.epf_client_net_ssl_trustStore>/dev.p12</liberty.env.epf_client_net_ssl_trustStore>
 				<liberty.env.mp_jwt_decrypt_key_location>/private.pem</liberty.env.mp_jwt_decrypt_key_location>
