@@ -1,7 +1,6 @@
-package epf.query.internal.persistence;
+package epf.query.internal;
 
 import epf.cache.util.Loader;
-import epf.query.internal.event.EntityLoad;
 import epf.util.event.EventEmitter;
 import epf.util.event.EventQueue;
 

@@ -1,4 +1,4 @@
-package epf.query.internal.event;
+package epf.query.internal;
 
 import epf.cache.util.CacheLoad;
 
