@@ -156,7 +156,7 @@ public class QueryBuilder {
                 		criteria
                 		)
         		);
-        if(parentJoin.get().isEmpty()){
+        if(!parentJoin.get().isPresent()){
         	if(countOnly) {
             	rootQuery.select(criteria.count(rootFrom));
         	}
@@ -230,7 +230,7 @@ public class QueryBuilder {
             }
             
             Join<?,?> subJoin;
-            if(parentJoin.get().isEmpty()){
+            if(!parentJoin.get().isPresent()){
                 subJoin = parentFrom.join(segment.getPath());
             }
             else{

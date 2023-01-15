@@ -66,7 +66,7 @@ public abstract class EntryListener implements CacheEntryListener<String, Object
 	 * @param cache
 	 */
 	public void register(final Cache<String, Object> cache) {
-		if(config.isEmpty()) {
+		if(!config.isPresent()) {
 			final SingletonFactory<CacheEntryListener<String, Object>> factory = new SingletonFactory<CacheEntryListener<String, Object>>(this);
 			final SingletonFactory<CacheEntryEventFilter<String, Object>> factory2 = new SingletonFactory<CacheEntryEventFilter<String, Object>>(filter);
 			config = Optional.of(new MutableCacheEntryListenerConfiguration<String, Object>(factory, factory2, false, false));

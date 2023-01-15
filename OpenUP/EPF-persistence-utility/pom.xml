@@ -10,22 +10,10 @@
     <name>Eclipse Process Framework Persistence Utility</name>
     <packaging>jar</packaging>
     <dependencies>
-    	<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
-		<dependency>
-		    <groupId>javax.ws.rs</groupId>
-		    <artifactId>javax.ws.rs-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
         <!-- https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api -->
 		<dependency>
 		    <groupId>javax.persistence</groupId>
 		    <artifactId>javax.persistence-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.json.bind/javax.json.bind-api -->
-		<dependency>
-			<groupId>javax.json.bind</groupId>
-			<artifactId>javax.json.bind-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
     </dependencies>

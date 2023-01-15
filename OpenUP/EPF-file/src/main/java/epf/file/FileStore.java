@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,7 +22,6 @@ import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.StreamingOutput;
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.health.Readiness;
@@ -110,13 +108,8 @@ public class FileStore implements epf.client.file.Files {
 		final Link[] links = files
 				.stream()
 				.map(path -> {
-					UriBuilder uriBuilder = uriInfo.getBaseUriBuilder().path(getClass());
 					final String title = targetFilePaths.get(path.getFileName().toString());
-					final Iterator<Path> pathIt = root.relativize(path).iterator();
-					while(pathIt.hasNext()) {
-						uriBuilder = uriBuilder.path(pathIt.next().toString());
-					}
-					return Link.fromUri(uriBuilder.build()).rel("self").title(title).build();
+					return Link.fromPath(root.relativize(path).toString()).rel("self").title(title).build();
 				})
 				.collect(Collectors.toList())
 				.toArray(new Link[0]);

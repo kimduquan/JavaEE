@@ -113,14 +113,20 @@ public class Persistence implements epf.persistence.client.Entities {
     	request.setTenant(tenant);
     	request.setSchema(schema);
     	final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), name);
-    	if(entityType.isEmpty()) {
+    	if(!entityType.isPresent()) {
     		return Response.status(Response.Status.NOT_FOUND).build();
     	}
     	final Optional<String> entitySchema = EntityTypeUtil.getSchema(entityType.get());
     	if(entitySchema.isPresent() && !entitySchema.get().equals(schema)) {
     		return Response.status(Response.Status.NOT_FOUND).build();
     	}
-    	final Object entity = EntityUtil.toObject(entityType.get(), body);
+    	Object entity = null;
+    	try {
+        	entity = JsonUtil.fromJson(entityType.get().getJavaType(), body);
+    	}
+    	catch(Exception ex) {
+    		return Response.status(Response.Status.BAD_REQUEST).build();
+    	}
     	if(!validator.validate(entity).isEmpty()) {
     		return Response.status(Response.Status.BAD_REQUEST).build();
         }
@@ -162,19 +168,31 @@ public class Persistence implements epf.persistence.client.Entities {
     	request.setTenant(tenant);
     	request.setSchema(schema);
     	final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), name);
-    	if(entityType.isEmpty()) {
+    	if(!entityType.isPresent()) {
     		return Response.status(Response.Status.NOT_FOUND).build();
     	}
     	final Optional<String> entitySchema = EntityTypeUtil.getSchema(entityType.get());
     	if(entitySchema.isPresent() && !entitySchema.get().equals(schema)) {
     		return Response.status(Response.Status.NOT_FOUND).build();
     	}
-    	final Object entityId = EntityUtil.getEntityId(entityType.get(), id);
+    	Object entityId = null;
+    	try {
+    		entityId = EntityUtil.getEntityId(entityType.get().getIdType().getJavaType().getName(), id);
+    	}
+    	catch(NumberFormatException ex) {
+    		return Response.status(Response.Status.BAD_REQUEST).build();
+    	}
     	final Object entityObject = manager.find(entityType.get().getJavaType(), entityId);
     	if(entityObject == null) {
     		return Response.status(Response.Status.NOT_FOUND).build();
     	}
-    	final Object entity = EntityUtil.toObject(entityType.get(), body);
+    	Object entity = null;
+    	try {
+        	entity = JsonUtil.fromJson(entityType.get().getJavaType(), body);
+    	}
+    	catch(Exception ex) {
+    		return Response.status(Response.Status.BAD_REQUEST).build();
+    	}
     	if(!validator.validate(entity).isEmpty()) {
     		return Response.status(Response.Status.BAD_REQUEST).build();
         }
@@ -216,14 +234,20 @@ public class Persistence implements epf.persistence.client.Entities {
     	request.setTenant(tenant);
     	request.setSchema(schema);
     	final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), name);
-    	if(entityType.isEmpty()) {
+    	if(!entityType.isPresent()) {
     		return Response.status(Response.Status.NOT_FOUND).build();
     	}
     	final Optional<String> entitySchema = EntityTypeUtil.getSchema(entityType.get());
     	if(entitySchema.isPresent() && !entitySchema.get().equals(schema)) {
     		return Response.status(Response.Status.NOT_FOUND).build();
     	}
-    	final Object entityId = EntityUtil.getEntityId(entityType.get(), id);
+    	Object entityId = null;
+    	try {
+    		entityId = EntityUtil.getEntityId(entityType.get().getIdType().getJavaType().getName(), id);
+    	}
+    	catch(NumberFormatException ex) {
+    		return Response.status(Response.Status.BAD_REQUEST).build();
+    	}
     	final Object entityObject = manager.find(entityType.get().getJavaType(), entityId);
     	if(entityObject == null) {
     		return Response.status(Response.Status.NOT_FOUND).build();
