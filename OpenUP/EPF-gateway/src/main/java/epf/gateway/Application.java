@@ -19,7 +19,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.jwt.JsonWebToken;
-
 import epf.client.internal.ClientQueue;
 import epf.client.util.ResponseUtil;
 import epf.gateway.internal.RequestBuilder;
@@ -114,7 +113,7 @@ public class Application {
      * @return
      */
     private CompletionStage<Response> buildLinkRequests(final Response response, final HttpHeaders headers, final Link self) {
-    	CompletionStage<Response> linkResponse = CompletableFuture.completedStage(response);
+    	CompletionStage<Response> linkResponse = CompletableFuture.completedFuture(response);
     	final List<Link> links = HATEOAS.getRequestLinks(response).collect(Collectors.toList());
     	for(Link link : links) {
     		if(HATEOAS.isRequestLink(link)) {
