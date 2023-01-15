@@ -3,11 +3,11 @@ package epf.client.util;
 import java.net.URI;
 import java.security.KeyStore;
 import javax.ws.rs.client.ClientBuilder;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import javax.ws.rs.client.Client;
 
 public class ClientUtilTest {
 	
@@ -19,6 +19,8 @@ public class ClientUtilTest {
 	@Before
 	public void setUp() throws Exception {
 		clients = Mockito.mock(ClientQueue.class);
+		Client client = Mockito.mock(Client.class);
+		Mockito.when(clients.poll(Mockito.any(), Mockito.any())).thenReturn(client);
 		clientUtil = new ClientUtil();
 		clientUtil.clients = clients;
 		keyStore = Mockito.mock(KeyStore.class);

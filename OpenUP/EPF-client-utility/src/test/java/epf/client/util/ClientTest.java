@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.client.util;
 
 import java.net.URI;
@@ -19,23 +16,24 @@ import org.mockito.Mockito;
  */
 public class ClientTest {
 	
-	ClientQueue mockClientQueue;
 	URI uri;
 	ClientBuilder mockClientBuilder;
 	javax.ws.rs.client.Client mockClient;
 	Client client;
+	
+	void add(URI uri, javax.ws.rs.client.Client rsClient) {
+		
+	}
 
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
-		mockClientQueue = Mockito.mock(ClientQueue.class);
 		uri = new URI("https://locahost:9443");
 		mockClientBuilder = Mockito.mock(ClientBuilder.class);
 		mockClient = Mockito.mock(javax.ws.rs.client.Client.class);
-		Mockito.when(mockClientQueue.poll(Mockito.same(uri), Mockito.any())).thenReturn(mockClient);
-		client = new Client(mockClientQueue, uri, b -> mockClientBuilder);
+		client = new Client(mockClient, uri, this::add);
 	}
 
 	/**
@@ -50,9 +48,7 @@ public class ClientTest {
 	 */
 	@Test
 	public void testClient() {
-		Mockito.verify(mockClientQueue, Mockito.times(1)).poll(Mockito.same(uri), Mockito.any());
 		Assert.assertSame("Client.client", mockClient, client.getClient());
-		Assert.assertSame("Client.clients", mockClientQueue, client.getClients());
 		Assert.assertSame("Client.uri", uri, client.getUri());
 	}
 
@@ -61,7 +57,7 @@ public class ClientTest {
 	 */
 	@Test
 	public void testAuthorization() {
-		Client client = new Client(mockClientQueue, uri, b -> mockClientBuilder);
+		Client client = new Client(mockClient, uri, this::add);
 		Client returnClient = client.authorization("authorization".toCharArray());
 		Assert.assertSame(client, returnClient);
 		Assert.assertArrayEquals("Client.authToken", "authorization".toCharArray(), returnClient.getAuthToken());
@@ -85,7 +81,6 @@ public class ClientTest {
 	@Test
 	public void testClose() throws Exception {
 		client.close();
-		Mockito.verify(mockClientQueue, Mockito.times(1)).add(Mockito.same(uri), Mockito.same(mockClient));
 	}
 
 	/**

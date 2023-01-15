@@ -3,8 +3,8 @@ package epf.client.util;
 import java.net.URI;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.HttpHeaders;
@@ -25,10 +25,11 @@ public class Client implements AutoCloseable {
      * 
      */
     private transient final javax.ws.rs.client.Client rsClient;
+    
     /**
      * 
      */
-    private transient final ClientQueue clients;
+    private transient final BiConsumer<URI, javax.ws.rs.client.Client> collector;
     
     /**
      * 
@@ -41,16 +42,17 @@ public class Client implements AutoCloseable {
     private transient char[] authToken;
     
     /**
-     * @param clients
+     * @param client
      * @param uri
-     * @param buildClient
+     * @param consumer
      */
-    public Client(final ClientQueue clients, final URI uri, final Function<ClientBuilder, ClientBuilder> buildClient) {
-    	Objects.requireNonNull(clients);
-    	Objects.requireNonNull(uri);
-    	rsClient = clients.poll(uri, buildClient);
+    public Client(final javax.ws.rs.client.Client client, final URI uri, final BiConsumer<URI, javax.ws.rs.client.Client> consumer) {
+    	Objects.requireNonNull(client, "Client");
+    	Objects.requireNonNull(uri, "URI");
+    	Objects.requireNonNull(consumer);
+    	rsClient = client;
         this.uri = uri;
-        this.clients = clients;
+        this.collector = consumer;
     }
 
 	/**
@@ -72,13 +74,6 @@ public class Client implements AutoCloseable {
 	 */
 	protected javax.ws.rs.client.Client getClient() {
 		return rsClient;
-	}
-
-	/**
-	 * @return the clients
-	 */
-	protected ClientQueue getClients() {
-		return clients;
 	}
 	
 	/**
@@ -115,7 +110,7 @@ public class Client implements AutoCloseable {
     public void close() throws Exception {
     	authToken = null;
     	tenant = Optional.empty();
-        clients.add(uri, rsClient);
+        collector.accept(uri, rsClient);
     }
     
     /**

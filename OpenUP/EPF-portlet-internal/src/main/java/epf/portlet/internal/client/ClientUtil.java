@@ -1,6 +1,7 @@
 package epf.portlet.internal.client;
 
 import java.net.URI;
+import java.util.Objects;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import epf.client.util.Client;
@@ -23,7 +24,8 @@ public class ClientUtil {
 	 * @return
 	 */
 	public Client newClient(final URI url) {
-		return new Client(application.getClients(), url, b -> b);
+		Objects.requireNonNull(url, "URI");
+		return new Client(application.getClients().poll(url, b -> b), url, application.getClients()::add);
 	}
 	
 }

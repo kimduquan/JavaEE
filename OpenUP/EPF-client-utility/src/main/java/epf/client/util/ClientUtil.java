@@ -2,6 +2,7 @@ package epf.client.util;
 
 import java.net.URI;
 import java.security.KeyStore;
+import java.util.Objects;
 import java.util.Optional;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -69,6 +70,8 @@ public class ClientUtil {
 	 * @return
 	 */
 	public Client newClient(final URI url) {
-		return new Client(clients, url, this::buildClient);
+		Objects.requireNonNull(url, "URI");
+		final javax.ws.rs.client.Client rsClient = clients.poll(url, this::buildClient);
+		return new Client(rsClient, url, clients::add);
 	}
 }
