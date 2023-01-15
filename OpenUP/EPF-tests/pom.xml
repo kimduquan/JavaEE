@@ -210,6 +210,12 @@
             <artifactId>EPF-security-view</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+	        <groupId>openup</groupId>
+	        <artifactId>EPF-client-internal</artifactId>
+	        <version>${project.version}</version>
+	    </dependency>
+	    
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-schedule</artifactId>

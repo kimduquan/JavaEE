@@ -740,6 +740,7 @@
 		<module>EPF-utility</module>
 		<module>EPF-json-utility</module>
 		<module>EPF-client-utility</module>
+		<module>EPF-client-internal</module>
 		<module>EPF-file-utility</module>
 		<module>EPF-cache-utility</module>
 		<module>EPF-messaging-utility</module>

@@ -1,10 +1,12 @@
 package epf.shell.client;
 
+import epf.client.internal.ClientQueue;
 import epf.client.util.Client;
-import epf.client.util.ClientQueue;
 import epf.naming.Naming;
 import epf.shell.security.SecurityUtil;
 import java.net.URI;
+import java.util.Objects;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
@@ -67,7 +69,8 @@ public class ClientUtil {
 	 * @return
 	 */
 	public Client newClient(final URI uri) {
-		return new Client(clients, uri, this::build);
+		Objects.requireNonNull(uri, "URI");
+		return new Client(clients.poll(uri, this::build), uri, clients::add);
 	}
 	
 	/**
@@ -76,7 +79,7 @@ public class ClientUtil {
 	 * @throws Exception
 	 */
 	public Client newClient(final String name) throws Exception {
-		return new Client(clients, gatewayUrl.resolve(name), this::build);
+		return new Client(clients.poll(gatewayUrl.resolve(name), this::build), gatewayUrl.resolve(name), clients::add);
 	}
 	
 	/**

@@ -6,8 +6,9 @@ import java.util.Objects;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
+
+import epf.client.internal.ClientQueue;
 import epf.client.util.Client;
-import epf.client.util.ClientQueue;
 
 /**
  * @author PC

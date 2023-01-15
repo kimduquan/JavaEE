@@ -2,8 +2,9 @@ package epf.webapp.internal;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+
+import epf.client.internal.ClientUtil;
 import epf.client.util.Client;
-import epf.client.util.ClientUtil;
 
 /**
  * 

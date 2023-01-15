@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.client.util;
+package epf.client.internal;
 
 import java.net.URI;
 import javax.ws.rs.client.ClientBuilder;
@@ -11,6 +11,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import epf.client.internal.ClientQueue;
 
 /**
  * @author PC
@@ -41,7 +43,7 @@ public class ClientQueueTest {
 	}
 
 	/**
-	 * Test method for {@link epf.client.util.ClientQueue#ClientQueue()}.
+	 * Test method for {@link epf.client.internal.ClientQueue#ClientQueue()}.
 	 */
 	@Test
 	public void testClientQueue() {
@@ -49,7 +51,7 @@ public class ClientQueueTest {
 	}
 
 	/**
-	 * Test method for {@link epf.client.util.ClientQueue#close()}.
+	 * Test method for {@link epf.client.internal.ClientQueue#close()}.
 	 * @throws Exception 
 	 */
 	@Test
@@ -63,7 +65,7 @@ public class ClientQueueTest {
 	}
 
 	/**
-	 * Test method for {@link epf.client.util.ClientQueue#poll(java.net.URI, java.util.function.Function)}.
+	 * Test method for {@link epf.client.internal.ClientQueue#poll(java.net.URI, java.util.function.Function)}.
 	 * @throws Exception 
 	 */
 	@Test
@@ -79,7 +81,7 @@ public class ClientQueueTest {
 	}
 	
 	/**
-	 * Test method for {@link epf.client.util.ClientQueue#poll(java.net.URI, java.util.function.Function)}. 
+	 * Test method for {@link epf.client.internal.ClientQueue#poll(java.net.URI, java.util.function.Function)}. 
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testPoll_NullURI() {
@@ -87,7 +89,7 @@ public class ClientQueueTest {
 	}
 	
 	/**
-	 * Test method for {@link epf.client.util.ClientQueue#poll(java.net.URI, java.util.function.Function)}. 
+	 * Test method for {@link epf.client.internal.ClientQueue#poll(java.net.URI, java.util.function.Function)}. 
 	 * @throws Exception 
 	 */
 	@Test
@@ -97,7 +99,7 @@ public class ClientQueueTest {
 	}
 
 	/**
-	 * Test method for {@link epf.client.util.ClientQueue#add(java.net.URI, javax.ws.rs.client.Client)}.
+	 * Test method for {@link epf.client.internal.ClientQueue#add(java.net.URI, javax.ws.rs.client.Client)}.
 	 * @throws Exception 
 	 */
 	@Test
@@ -112,7 +114,7 @@ public class ClientQueueTest {
 	}
 
 	/**
-	 * Test method for {@link epf.client.util.ClientQueue#add(java.net.URI, javax.ws.rs.client.Client)}.
+	 * Test method for {@link epf.client.internal.ClientQueue#add(java.net.URI, javax.ws.rs.client.Client)}.
 	 * @throws Exception 
 	 */
 	@Test(expected = NullPointerException.class)
@@ -121,7 +123,7 @@ public class ClientQueueTest {
 	}
 	
 	/**
-	 * Test method for {@link epf.client.util.ClientQueue#add(java.net.URI, javax.ws.rs.client.Client)}.
+	 * Test method for {@link epf.client.internal.ClientQueue#add(java.net.URI, javax.ws.rs.client.Client)}.
 	 * @throws Exception 
 	 */
 	@Test(expected = NullPointerException.class)

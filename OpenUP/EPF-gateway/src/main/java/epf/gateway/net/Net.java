@@ -25,7 +25,7 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.health.Readiness;
 import epf.gateway.Registry;
-import epf.client.util.ClientQueue;
+import epf.client.internal.ClientQueue;
 import epf.gateway.Application;
 import epf.naming.Naming;
 import epf.util.StringUtil;

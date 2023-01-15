@@ -8,8 +8,9 @@ import javax.net.ssl.SSLContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
+
+import epf.client.internal.ClientQueue;
 import epf.client.util.Client;
-import epf.client.util.ClientQueue;
 import epf.naming.Naming;
 import epf.util.config.ConfigUtil;
 import epf.util.security.KeyStoreUtil;

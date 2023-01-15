@@ -1,4 +1,4 @@
-package epf.client.util;
+package epf.client.internal;
 
 import java.net.URI;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package epf.client.util;
+package epf.client.internal;
 
 import java.net.URI;
 import java.security.KeyStore;
@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.ws.rs.client.ClientBuilder;
+import epf.client.util.Client;
 
 /**
  * @author PC

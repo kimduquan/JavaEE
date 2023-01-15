@@ -19,7 +19,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.jwt.JsonWebToken;
-import epf.client.util.ClientQueue;
+
+import epf.client.internal.ClientQueue;
 import epf.client.util.ResponseUtil;
 import epf.gateway.internal.RequestBuilder;
 import epf.hateoas.utility.HATEOAS;

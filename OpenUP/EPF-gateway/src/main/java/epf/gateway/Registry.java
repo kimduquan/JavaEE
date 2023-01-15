@@ -14,7 +14,8 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
-import epf.client.util.ClientQueue;
+
+import epf.client.internal.ClientQueue;
 import epf.naming.Naming;
 import epf.util.MapUtil;
 import epf.util.logging.LogManager;

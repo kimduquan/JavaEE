@@ -23,7 +23,8 @@ import javax.ws.rs.core.Response.Status;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
-import epf.client.util.ClientQueue;
+
+import epf.client.internal.ClientQueue;
 import epf.gateway.Registry;
 import epf.gateway.security.SecurityUtil;
 import epf.naming.Naming;

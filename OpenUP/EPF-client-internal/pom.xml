@@ -6,8 +6,8 @@
         <artifactId>OpenUP-parent</artifactId>
         <version>1.0.0</version>
     </parent>
-    <artifactId>EPF-client-utility</artifactId>
-    <name>Eclipse Process Framework Client Utility</name>
+    <artifactId>EPF-client-internal</artifactId>
+    <name>Eclipse Process Framework Client Internal</name>
     <packaging>jar</packaging>
     <dependencies>
     	<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
@@ -16,19 +16,26 @@
 		    <artifactId>javax.ws.rs-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.enterprise/cdi-api -->
+		<dependency>
+		    <groupId>javax.enterprise</groupId>
+		    <artifactId>cdi-api</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
+		<dependency>
+		    <groupId>javax.annotation</groupId>
+		    <artifactId>javax.annotation-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
         <dependency>
 		    <groupId>org.mockito</groupId>
 		    <artifactId>mockito-core</artifactId>
 		    <scope>test</scope>
 		</dependency>
-		<dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-naming</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>openup</groupId>
-            <artifactId>EPF-utility</artifactId>
+            <artifactId>EPF-client-utility</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
