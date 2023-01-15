@@ -8,7 +8,6 @@ import javax.net.ssl.SSLContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
-
 import epf.client.internal.ClientQueue;
 import epf.client.util.Client;
 import epf.naming.Naming;
@@ -90,9 +89,9 @@ public class ClientUtil {
     
     public static Client newClient(URI uri) {
     	return new Client(
-    			clients(), 
+    			clients().poll(uri, builder -> builder.register(buildJsonProvider()).trustStore(trustStore).keyStore(keyStore, keyPassword)), 
     			uri, 
-    			builder -> builder.register(buildJsonProvider()).trustStore(trustStore).keyStore(keyStore, keyPassword)
+    			clients()::add
     			);
     }
     
