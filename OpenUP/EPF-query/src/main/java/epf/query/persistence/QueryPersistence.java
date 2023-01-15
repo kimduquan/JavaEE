@@ -1,4 +1,4 @@
-package epf.query.persistence.internal;
+package epf.query.persistence;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -27,12 +27,12 @@ import epf.util.logging.LogManager;
  */
 @ApplicationScoped
 @Readiness
-public class PersistenceQuery implements HealthCheck {
+public class QueryPersistence implements HealthCheck {
 	
 	/**
 	 *
 	 */
-	private transient static final Logger LOGGER = LogManager.getLogger(PersistenceQuery.class.getName());
+	private transient static final Logger LOGGER = LogManager.getLogger(QueryPersistence.class.getName());
 	
 	/**
 	 *
@@ -156,8 +156,8 @@ public class PersistenceQuery implements HealthCheck {
 	@Override
 	public HealthCheckResponse call() {
 		if(!entityManager.isOpen()) {
-			return HealthCheckResponse.down("epf-query-persistence");
+			return HealthCheckResponse.down("EPF-query-persistence");
 		}
-		return HealthCheckResponse.up("epf-query-persistence");
+		return HealthCheckResponse.up("EPF-query-query-persistence");
 	}
 }

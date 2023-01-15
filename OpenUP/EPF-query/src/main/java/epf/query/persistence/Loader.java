@@ -1,4 +1,4 @@
-package epf.query.cache.internal;
+package epf.query.persistence;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @param <K>
  * @param <V>
  */
-public interface CacheLoader<K, V> {
+public interface Loader<K, V> {
 
 	/**
 	 * @param key

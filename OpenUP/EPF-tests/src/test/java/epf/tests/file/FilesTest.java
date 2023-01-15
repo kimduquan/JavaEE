@@ -114,7 +114,7 @@ public class FilesTest {
 			Link link = response.getLink("self");
 			Assert.assertNotNull("Response.link", link);
 			System.out.println("Response.self.uri=" + link.getUri());
-			try(Client newclient = ClientUtil.newClient(link.getUri())){
+			try(Client newclient = ClientUtil.newClient(filesUrl.resolve(link.getUri()))){
 				newclient.authorization(token.toCharArray());
 				InputStream input2 = newclient
 						.request(
@@ -141,7 +141,7 @@ public class FilesTest {
 			Link link = response.getLink("self");
 			Assert.assertNotNull("Response.link", link);
 			System.out.println("Response.self.uri=" + link.getUri());
-			try(Client newclient = ClientUtil.newClient(link.getUri())){
+			try(Client newclient = ClientUtil.newClient(filesUrl.resolve(link.getUri()))){
 				newclient.authorization(token.toCharArray());
 				InputStream input2 = newclient
 						.request(
@@ -198,7 +198,7 @@ public class FilesTest {
 			Response response = epf.client.file.Files.createFile(client, input, PathUtil.of(credential.getKey()));
 			Link link = response.getLink("self");
 			System.out.println("Response.self.uri=" + link.getUri());
-			try(Client newclient = ClientUtil.newClient(link.getUri())){
+			try(Client newclient = ClientUtil.newClient(filesUrl.resolve(link.getUri()))){
 				newclient.authorization(token.toCharArray());
 				response = newclient.request(target -> target, req -> req).delete();
 				Assert.assertEquals("Response.status", Response.Status.OK.getStatusCode(), response.getStatusInfo().getStatusCode());
@@ -212,7 +212,7 @@ public class FilesTest {
 			Response response = epf.client.file.Files.createFile(client, input, PathUtil.of("Any_Role", credential.getKey()));
 			Link link = response.getLink("self");
 			System.out.println("Response.self.uri=" + link.getUri());
-			try(Client newclient = ClientUtil.newClient(link.getUri())){
+			try(Client newclient = ClientUtil.newClient(filesUrl.resolve(link.getUri()))){
 				response = newclient.request(target -> target, req -> req).delete();
 				Assert.assertEquals("Response.status", Response.Status.OK.getStatusCode(), response.getStatusInfo().getStatusCode());
 			}
@@ -228,7 +228,7 @@ public class FilesTest {
 			System.out.println("Response.self.uri=" + link.getUri());
 		}
 		Thread.sleep(100);
-		try(Client newclient = ClientUtil.newClient(link.getUri())){
+		try(Client newclient = ClientUtil.newClient(filesUrl.resolve(link.getUri()))){
 			newclient.authorization(token.toCharArray());
 			InputStream input2 = newclient
 					.request(
@@ -243,7 +243,7 @@ public class FilesTest {
 				}
 			}
 		}
-		try(Client newclient = ClientUtil.newClient(link.getUri())){
+		try(Client newclient = ClientUtil.newClient(filesUrl.resolve(link.getUri()))){
 			newclient.authorization(token.toCharArray());
 			Response response = newclient.request(target -> target, req -> req).delete();
 			Assert.assertEquals("Response.status", Response.Status.OK.getStatusCode(), response.getStatusInfo().getStatusCode());
@@ -299,7 +299,7 @@ public class FilesTest {
 			}
 		}
 		System.out.println("Response.self.uri=" + link.getUri());
-		try(Client newclient = ClientUtil.newClient(link.getUri())){
+		try(Client newclient = ClientUtil.newClient(filesUrl.resolve(link.getUri()))){
 			newclient.authorization(token.toCharArray());
 			InputStream input = newclient
 					.request(

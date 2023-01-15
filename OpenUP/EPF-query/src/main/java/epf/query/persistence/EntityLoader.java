@@ -1,4 +1,4 @@
-package epf.query.persistence.internal;
+package epf.query.persistence;
 
 import java.util.Optional;
 import javax.enterprise.context.Dependent;
@@ -10,8 +10,7 @@ import javax.ws.rs.BadRequestException;
 import org.eclipse.microprofile.health.Readiness;
 import epf.naming.Naming;
 import epf.persistence.util.EntityUtil;
-import epf.query.cache.internal.CacheLoader;
-import epf.query.cache.internal.EntityLoad;
+import epf.query.cache.EntityLoad;
 import epf.query.internal.EntityKey;
 import epf.query.internal.SchemaCache;
 import epf.schema.utility.TenantUtil;
@@ -22,7 +21,7 @@ import epf.util.json.JsonUtil;
  *
  */
 @Dependent
-public class EntityLoader implements CacheLoader<String, Object> {
+public class EntityLoader implements Loader<String, Object> {
 	
 	/**
 	 *

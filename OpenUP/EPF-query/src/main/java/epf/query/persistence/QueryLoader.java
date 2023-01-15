@@ -1,4 +1,4 @@
-package epf.query.persistence.internal;
+package epf.query.persistence;
 
 import java.util.Optional;
 import javax.enterprise.context.Dependent;
@@ -11,8 +11,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.eclipse.microprofile.health.Readiness;
 import epf.naming.Naming;
-import epf.query.cache.internal.CacheLoader;
-import epf.query.cache.internal.QueryLoad;
+import epf.query.cache.QueryLoad;
 import epf.query.internal.QueryKey;
 import epf.query.internal.SchemaCache;
 import epf.schema.utility.TenantUtil;
@@ -22,7 +21,7 @@ import epf.schema.utility.TenantUtil;
  *
  */
 @Dependent
-public class QueryLoader implements CacheLoader<String, Integer> {
+public class QueryLoader implements Loader<String, Integer> {
 	
 	/**
 	 *

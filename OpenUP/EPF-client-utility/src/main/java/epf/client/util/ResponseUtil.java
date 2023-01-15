@@ -1,4 +1,4 @@
-package epf.gateway.internal;
+package epf.client.util;
 
 import java.io.InputStream;
 import java.net.URI;

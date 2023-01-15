@@ -26,13 +26,6 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
-      <dependency>
-        <groupId>${quarkus.platform.group-id}</groupId>
-        <artifactId>quarkus-hazelcast-client</artifactId>
-        <version>${quarkus.platform.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
     </dependencies>
   </dependencyManagement>
   <dependencies>
@@ -64,10 +57,6 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-smallrye-context-propagation</artifactId>
     </dependency>
-    <dependency>
-      <groupId>com.hazelcast</groupId>
-      <artifactId>quarkus-hazelcast-client</artifactId>
-    </dependency>
 	<dependency>
 	   <groupId>io.quarkus</groupId>
 	   <artifactId>quarkus-kubernetes</artifactId>
@@ -95,10 +84,11 @@
 		<artifactId>lucene-queryparser</artifactId>
 		<version>8.5.2</version>
 	</dependency>
-	<!-- https://mvnrepository.com/artifact/net.openhft/affinity -->
+	<!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast -->
 	<dependency>
-		<groupId>net.openhft</groupId>
-		<artifactId>affinity</artifactId>
+		<groupId>com.hazelcast</groupId>
+		<artifactId>hazelcast</artifactId>
+		<version>5.2.1</version>
 	</dependency>
 
 	<dependency>
@@ -119,11 +109,6 @@
 	<dependency>
 		<groupId>openup</groupId>
 		<artifactId>EPF-messaging-client</artifactId>
-		<version>${project.version}</version>
-	</dependency>
-	<dependency>
-		<groupId>openup</groupId>
-		<artifactId>EPF-query-internal</artifactId>
 		<version>${project.version}</version>
 	</dependency>
 	<dependency>

@@ -7,6 +7,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.cache.Cache;
 import javax.cache.CacheManager;
+import javax.cache.Caching;
 import javax.cache.configuration.FactoryBuilder;
 import javax.cache.configuration.MutableConfiguration;
 import javax.enterprise.context.ApplicationScoped;
@@ -15,12 +16,12 @@ import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
-import epf.cache.util.CacheProvider;
-import epf.query.cache.internal.QueryCacheLoader;
-import epf.query.cache.internal.QueryLoad;
+import epf.cache.util.Loader;
+import epf.query.cache.QueryLoad;
 import epf.schema.utility.EntityEvent;
 import epf.schema.utility.PostPersist;
 import epf.schema.utility.PostRemove;
+import epf.util.event.EventEmitter;
 import epf.util.event.EventQueue;
 import epf.util.logging.LogManager;
 
@@ -36,11 +37,6 @@ public class QueryCache implements HealthCheck {
 	 * 
 	 */
 	private transient static final Logger LOGGER = LogManager.getLogger(QueryCache.class.getName());
-	
-	/**
-	 * 
-	 */
-	private transient final CacheProvider provider = new CacheProvider();
 	
 	/**
 	 * 
@@ -65,13 +61,14 @@ public class QueryCache implements HealthCheck {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			provider.setDefaultClassLoader(QueryCacheLoader.class.getClassLoader());
-			final CacheManager manager = provider.getManager(QueryCacheLoader.class.getClassLoader());
+			final CacheManager manager = Caching.getCachingProvider().getCacheManager();
 			final MutableConfiguration<String, Integer> config = new MutableConfiguration<>();
-			QueryCacheLoader.setEventQueue(eventQueue);
-			config.setCacheLoaderFactory(FactoryBuilder.factoryOf(QueryCacheLoader.class));
+			config.setCacheLoaderFactory(FactoryBuilder.factoryOf(new Loader<>(new EventEmitter<QueryLoad>(eventQueue), QueryLoad::new)));
 			config.setReadThrough(true);
-			queryCache = manager.createCache(epf.query.Naming.QUERY_CACHE, config);
+			queryCache = manager.getCache(epf.query.Naming.QUERY_CACHE);
+			if(queryCache == null) {
+				queryCache = manager.createCache(epf.query.Naming.QUERY_CACHE, config);
+			}
 		}
 		catch(Exception ex) {
 			LOGGER.log(Level.SEVERE, "[QueryCache.queryCache]", ex);

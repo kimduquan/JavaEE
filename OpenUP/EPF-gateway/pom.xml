@@ -92,6 +92,11 @@
         <artifactId>EPF-client-utility</artifactId>
         <version>${project.version}</version>
     </dependency>
+    <dependency>
+        <groupId>openup</groupId>
+        <artifactId>EPF-HATEOAS-utility</artifactId>
+        <version>${project.version}</version>
+    </dependency>
   </dependencies>
   <build>
     <plugins>

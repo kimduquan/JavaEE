@@ -1,4 +1,4 @@
-package epf.query.messaging.internal;
+package epf.query.messaging;
 
 import java.net.URI;
 import java.util.Optional;

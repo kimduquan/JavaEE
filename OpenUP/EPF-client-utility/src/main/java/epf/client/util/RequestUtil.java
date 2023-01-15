@@ -1,4 +1,4 @@
-package epf.gateway.internal;
+package epf.client.util;
 
 import java.io.InputStream;
 import java.net.URI;
@@ -7,18 +7,14 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import java.util.Map.Entry;
-import javax.ws.rs.ForbiddenException;
-import javax.ws.rs.HttpMethod;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
@@ -26,7 +22,6 @@ import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.sse.SseEventSource;
-import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.naming.Naming;
 import epf.util.StringUtil;
 
@@ -90,46 +85,24 @@ public interface RequestUtil {
      */
     static WebTarget buildTarget(
     		WebTarget webTarget,
-    		final UriInfo uriInfo,
-    		final JsonWebToken jwt){
+    		final UriInfo uriInfo){
         if(uriInfo != null){
         	final List<PathSegment> segments = uriInfo.getPathSegments();
             if(segments != null){
             	final Iterator<PathSegment> segmentIt = segments.iterator();
-            	final PathSegment firstSegemnt = segmentIt.next();
-            	getTenantParameter(jwt, firstSegemnt);
-            	webTarget = buildMatrixParameters(webTarget, firstSegemnt);
-            	while(segmentIt.hasNext()) {
-            		final PathSegment segment = segmentIt.next();
-            		webTarget = webTarget.path(segment.getPath());
-            		webTarget = buildMatrixParameters(webTarget, segment);
+            	if(segmentIt.hasNext()) {
+                	final PathSegment firstSegemnt = segmentIt.next();
+                	webTarget = buildMatrixParameters(webTarget, firstSegemnt);
+                	while(segmentIt.hasNext()) {
+                		final PathSegment segment = segmentIt.next();
+                		webTarget = webTarget.path(segment.getPath());
+                		webTarget = buildMatrixParameters(webTarget, segment);
+                	}
             	}
             }
             webTarget = buildQueryParameters(webTarget, uriInfo);
         }
         return webTarget;
-    }
-    
-    /**
-     * @param jwt
-     * @param firstSegemnt
-     * @return
-     */
-    static Optional<String> getTenantParameter(final JsonWebToken jwt, final PathSegment firstSegemnt) {
-    	Optional<String> tenantClaim = Optional.empty();
-    	final Optional<String> tenantParam = firstSegemnt.getMatrixParameters() != null ? Optional.ofNullable(firstSegemnt.getMatrixParameters().getFirst(Naming.Management.TENANT)) : Optional.empty();
-		if(jwt != null) {
-    		tenantClaim = Optional.ofNullable(jwt.getClaim(Naming.Management.TENANT));
-		}
-		if(tenantClaim.isPresent()) {
-			if(!tenantParam.isPresent()) {
-				return tenantClaim;
-			}
-			else if(!tenantClaim.get().equals(tenantParam.get())) {
-				throw new ForbiddenException();
-			}
-		}
-		return tenantParam;
     }
     
     /**
@@ -182,66 +155,24 @@ public interface RequestUtil {
     /**
      * @param client
      * @param serviceUri
-     * @param jwt
      * @param headers
      * @param uriInfo
      * @param req
      * @param body
+     * @return
      */
     static CompletionStage<Response> buildRequest(
     		final Client client,
     		final URI serviceUri,
-    		final JsonWebToken jwt,
     		final HttpHeaders headers, 
             final UriInfo uriInfo,
             final javax.ws.rs.core.Request req,
             final InputStream body) {
 		WebTarget target = client.target(serviceUri);
-		target = RequestUtil.buildTarget(target, uriInfo, jwt);
+		target = RequestUtil.buildTarget(target, uriInfo);
 		Invocation.Builder invoke = target.request();
 		invoke = RequestUtil.buildHeaders(invoke, headers, serviceUri);
 		return RequestUtil.buildInvoke(invoke, req.getMethod(), headers.getMediaType(), body);
-    }
-    
-    /**
-     * @param client
-     * @param serviceUrl
-     * @param headers
-     * @param response
-     * @param link
-     * @return
-     */
-    static CompletionStage<Response> buildLinkRequest(
-    		final Client client,
-    		final URI serviceUrl,
-    		final HttpHeaders headers,
-    		final Response response,
-    		final Link link
-    		) {
-    	final URI targetUrl = serviceUrl.resolve(link.getUri());
-		final WebTarget target = client.target(targetUrl);
-		Invocation.Builder builder = target.request();
-		builder = RequestUtil.buildHeaders(builder, headers, targetUrl);
-		switch(link.getType()) {
-			case HttpMethod.GET:
-				return builder.rx().get();
-			case HttpMethod.POST:
-				return builder.rx().post(Entity.entity(response.readEntity(InputStream.class), response.getMediaType()));
-			case HttpMethod.PUT:
-				return builder.rx().put(Entity.entity(response.readEntity(InputStream.class), response.getMediaType()));
-			case HttpMethod.DELETE:
-				return builder.rx().delete();
-			case HttpMethod.HEAD:
-				return builder.rx().head();
-			case HttpMethod.OPTIONS:
-				return builder.rx().options();
-			case HttpMethod.PATCH:
-				return builder.rx().method(HttpMethod.PATCH, Entity.entity(response.readEntity(InputStream.class), response.getMediaType()));
-			default:
-				break;
-		}
-		final Entity<InputStream> entity = response.hasEntity() ? Entity.entity(response.readEntity(InputStream.class), response.getMediaType()) : null;
-		return builder.rx().method(link.getType(), entity);
     }
     
     /**

@@ -7,9 +7,9 @@ import javax.ws.rs.core.Response;
 import epf.net.schema.URL;
 import epf.util.StringUtil;
 import epf.util.json.JsonUtil;
-import epf.function.LinkFunction;
 import epf.function.net.ShortenUrlFunction;
 import epf.function.persistence.PersistFunction;
+import epf.hateoas.function.LinkFunction;
 import epf.naming.Naming;
 
 /**

@@ -15,7 +15,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import org.eclipse.microprofile.health.Readiness;
-import epf.function.LinkFunction;
+
+import epf.hateoas.function.LinkFunction;
 import epf.naming.Naming;
 import epf.util.json.Adapter;
 import epf.util.json.Decoder;
