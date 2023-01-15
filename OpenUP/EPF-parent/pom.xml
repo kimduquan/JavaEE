@@ -29,6 +29,22 @@
     </dependencies>
   </dependencyManagement>
   <build>
+    <pluginManagement>
+	  <plugins>
+		<!-- https://mvnrepository.com/artifact/org.jboss.jandex/jandex-maven-plugin -->
+		<plugin>
+		    <groupId>org.jboss.jandex</groupId>
+		    <artifactId>jandex-maven-plugin</artifactId>
+		    <version>1.2.3</version>
+		</plugin>
+		<!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-pmd-plugin -->
+		<plugin>
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-pmd-plugin</artifactId>
+		    <version>3.20.0</version>
+		</plugin>
+	  </plugins>
+    </pluginManagement>
     <plugins>
       <plugin>
         <groupId>${quarkus.platform.group-id}</groupId>
@@ -83,6 +99,34 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-pmd-plugin</artifactId>
+		<configuration>
+			<printFailingErrors>true</printFailingErrors>
+		</configuration>
+		<executions>
+			<execution>
+				<id>pmd-check</id>
+				<goals>
+					<goal>check</goal>
+				</goals>
+			</execution>
+		</executions>
+	  </plugin>
+	  <plugin>
+		  <groupId>org.jboss.jandex</groupId>
+		  <artifactId>jandex-maven-plugin</artifactId>
+		  <version>1.2.3</version>
+		  <executions>
+			<execution>
+			  <id>make-index</id>
+			  <goals>
+				<goal>jandex</goal>
+			  </goals>
+			</execution>
+		  </executions>
+		</plugin>
     </plugins>
   </build>
   <profiles>
