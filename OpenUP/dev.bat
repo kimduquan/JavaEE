@@ -1,6 +1,5 @@
 call ./shutdownc.bat
 call ./clean.bat
-call ./startupc.bat
 call ./compile.bat
 cd EPF-config
 call ./dev.bat
@@ -32,9 +31,10 @@ cd ../
 cd EPF-gateway
 call ./dev.bat
 cd ../
-call ./webapp_deploy.bat
 cd EPF-shell
 call ./dev.bat
 cd ../
+call ./webapp_startupc.bat
+call ./webapp_deploy.bat
 cd EPF-tests
 call ./test.bat
