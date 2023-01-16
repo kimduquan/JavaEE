@@ -10,7 +10,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.release>8</maven.compiler.release>
     </properties>
     <!-- Define dependency version information -->
@@ -264,9 +263,9 @@
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.primefaces/primefaces -->
 			<dependency>
-			    <groupId>org.primefaces</groupId>
-			    <artifactId>primefaces</artifactId>
-			    <version>8.0</version>
+				<groupId>org.primefaces</groupId>
+				<artifactId>primefaces</artifactId>
+				<version>12.0.0</version>
 			</dependency>
             <!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast -->
 			<dependency>
@@ -556,7 +555,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-pmd-plugin</artifactId>
-					<version>3.19.0</version>
+					<version>3.20.0</version>
 				</plugin>
 				<!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
 				<plugin>

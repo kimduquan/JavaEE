@@ -34,6 +34,6 @@ public class EventEmitter<T> implements Emitter<T> {
 			asyncEvent.waitAccept();
 			return asyncEvent.getStage();
 		}
-		return CompletableFuture.completedStage(object);
+		return CompletableFuture.completedFuture(object);
 	}
 }
