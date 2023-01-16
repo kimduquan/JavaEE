@@ -1,4 +1,4 @@
-./ ../env.sh
+. ../env.sh
 mvn liberty:stop
 kubectl delete -f ./openup.yaml
 kubectl get pod -l app.kubernetes.io/name=openup
