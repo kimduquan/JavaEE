@@ -6,9 +6,7 @@ Taskkill /IM firefox.exe /F
 Taskkill /IM java.exe /F
 
 Taskkill /IM kubectl.exe /F
-cd EPF-webapp
-call stop.bat
-cd ../
+call webapp_shutdownc.bat
 cd EPF-gateway
 call stop.bat
 cd ../

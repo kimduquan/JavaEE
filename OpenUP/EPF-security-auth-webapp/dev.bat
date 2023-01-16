@@ -1,5 +1,5 @@
 setlocal
 call ../env.bat
-call ../config.bat
 call mvn clean install -U
+call mvn wildfly:redeploy
 endlocal

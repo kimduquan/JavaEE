@@ -118,14 +118,6 @@
 			<plugin>
 	        	<groupId>org.wildfly.plugins</groupId>
 			    <artifactId>wildfly-maven-plugin</artifactId>
-			    <executions>
-                    <execution>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>deploy</goal>
-                        </goals>
-                    </execution>
-                </executions>
 	        </plugin>
     	</plugins>
     </build>
