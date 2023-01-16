@@ -6,34 +6,34 @@ killall Xvfb
 killall java
 
 killall kubectl
-webapp_shutdownc.sh
+./webapp_shutdownc.sh
 cd EPF-gateway
-stop.sh
+./stop.sh
 cd ../
 cd EPF-net
-stop.sh
+./stop.sh
 cd ../
 cd EPF-tests
-stop.sh
+./stop.sh
 cd ../
 cd EPF-query
-stop.sh
+./stop.sh
 cd ../
 cd EPF-persistence
-stop.sh
+./stop.sh
 cd ../
 cd EPF-cache
-stop.sh
+./stop.sh
 cd ../
 cd EPF-logging
-stop.sh
+./stop.sh
 cd ../
 cd EPF-messaging
-stop.sh
+./stop.sh
 cd ../
 cd EPF-config
-stop.sh
+./stop.sh
 cd ../
 cd EPF-transaction
-stop.sh
+./stop.sh
 cd ../
