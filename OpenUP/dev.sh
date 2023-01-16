@@ -1,4 +1,3 @@
-sudo service mysql start
 sudo service postgresql start
 ./shutdown.sh
 ./clean.sh
