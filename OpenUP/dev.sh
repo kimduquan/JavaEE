@@ -34,4 +34,5 @@ cd ../
 ./webapp_startupc.sh
 ./webapp_deploy.sh
 cd EPF-tests
+./dev.sh
 ./test.sh
