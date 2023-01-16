@@ -927,6 +927,16 @@ public interface Naming {
 	}
 	
 	/**
+	 *
+	 */
+	String TRANSACTION = "transaction";
+	
+	/**
+	 *
+	 */
+	String TRANSACTION_ACTIVE = "transaction/active";
+	
+	/**
 	 * 
 	 */
 	String UTILITY = "utility";

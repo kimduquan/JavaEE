@@ -320,7 +320,7 @@ public class Persistence implements epf.persistence.client.Entities {
      * @throws Exception 
      */
     @Forget
-    @Path(Naming.Transaction.TRANSACTION_ACTIVE)
+    @Path(Naming.TRANSACTION_ACTIVE)
     @PUT
     public Response commit(
     		@Context

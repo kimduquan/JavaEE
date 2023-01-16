@@ -1,3 +1,3 @@
 cd WildFly
-stop.sh
+./stop.sh
 cd ../
