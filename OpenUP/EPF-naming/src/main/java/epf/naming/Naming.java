@@ -927,27 +927,6 @@ public interface Naming {
 	}
 	
 	/**
-	 *
-	 */
-	String TRANSACTION = "transaction";
-	
-	/**
-	 * 
-	 */
-	interface Transaction {
-		
-		/**
-	     * 
-	     */
-	    String TRANSACTION_URL = "epf.transaction.url";
-	    
-	    /**
-	     *
-	     */
-	    String TRANSACTION_ACTIVE = "transaction/active";
-	}
-	
-	/**
 	 * 
 	 */
 	String UTILITY = "utility";

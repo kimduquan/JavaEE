@@ -38,7 +38,6 @@
 		<liberty.env.epf_schema_url>http://${httpHost}:9181/persistence/schema/</liberty.env.epf_schema_url>
 		<liberty.env.epf_security_url>http://${httpHost}:${httpPort}/security/security/</liberty.env.epf_security_url>
 		<liberty.env.epf_security_management_url>http://${httpHost}:${httpPort}/security-management/security/</liberty.env.epf_security_management_url>
-		<liberty.env.epf_transaction_url>http://${httpHost}:9182/transaction/transaction/</liberty.env.epf_transaction_url>
         <liberty.env.epf_security_webapp_url>https://localhost/security/</liberty.env.epf_security_webapp_url>
         <liberty.env.epf_gateway_url>https://${gatewayHost}:${gatewayPort}/gateway/</liberty.env.epf_gateway_url>
         <liberty.env.epf_gateway_messaging_url>ws://${gatewayHost}:${internalPort}/messaging/</liberty.env.epf_gateway_messaging_url>
@@ -152,11 +151,6 @@
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-security-schema</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-transaction-schema</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -356,7 +350,6 @@
 						<epf.security.url>http://localhost:${httpPort}/security/security/</epf.security.url>
 						<epf.security.management.url>http://localhost:${httpPort}/security-management/security/</epf.security.management.url>
                         <epf.security.webapp.url>https://localhost/security/</epf.security.webapp.url>
-                        <epf.transaction.url>http://localhost:9182/transaction/transaction/</epf.transaction.url>
                         <epf.gateway.url>https://localhost:${gatewayPort}/gateway/</epf.gateway.url>
                         <epf.gateway.health.url>https://localhost:${gatewayPort}/q/health/</epf.gateway.health.url>
                         <epf.gateway.messaging.url>ws://localhost:${internalPort}/messaging/</epf.gateway.messaging.url>
@@ -561,7 +554,6 @@
 				<!--<liberty.bootstrap.hazelcast.jcache.provider.type>member</liberty.bootstrap.hazelcast.jcache.provider.type>-->
 				<liberty.env.epf_persistence_url>http://epf-persistence.default.svc.cluster.local:9181/persistence/</liberty.env.epf_persistence_url>
 				<liberty.env.epf_schema_url>http://epf-persistence.default.svc.cluster.local:9181/schema/</liberty.env.epf_schema_url>
-				<liberty.env.epf_transaction_url>http://epf-transaction.default.svc.cluster.local:9182/transaction/</liberty.env.epf_transaction_url>
 				<liberty.env.epf_messaging_url>ws://epf-messaging.default.svc.cluster.local:9183/messaging/</liberty.env.epf_messaging_url>
 				<liberty.env.epf_config_url>http://epf-config.default.svc.cluster.local:9184/config/</liberty.env.epf_config_url>
 				<liberty.env.epf_net_url>http://epf-net.default.svc.cluster.local:9186/net/</liberty.env.epf_net_url>

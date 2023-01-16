@@ -22,9 +22,6 @@ cd ../
 cd EPF-persistence
 call stop.bat
 cd ../
-cd EPF-transaction
-call stop.bat
-cd ../
 cd EPF-cache
 call stop.bat
 cd ../

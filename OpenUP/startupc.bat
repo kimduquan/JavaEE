@@ -18,10 +18,6 @@ cd EPF-cache
 call start.bat
 cd ../
 
-cd EPF-transaction
-call start.bat
-cd ../
-
 cd EPF-persistence
 call start.bat
 cd ../

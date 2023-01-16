@@ -1,6 +1,0 @@
-export QUARKUS_HTTP_PORT=9182
-export QUARKUS_LOG_FILE_ENABLE=true
-export QUARKUS_LOG_FILE_PATH=EPF-transaction.log
-export JAEGER_SAMPLER_TYPE=const
-export JAEGER_SAMPLER_PARAM=1
-export JAEGER_SERVICE_NAME=EPF-transaction

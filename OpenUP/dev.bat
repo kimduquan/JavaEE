@@ -16,9 +16,6 @@ cd ../
 cd EPF-transaction-internal
 call ./dev.bat
 cd ../
-cd EPF-transaction
-call ./dev.bat
-cd ../
 cd EPF-persistence
 call ./dev.bat
 cd ../

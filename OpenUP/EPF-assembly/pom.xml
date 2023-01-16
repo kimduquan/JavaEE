@@ -34,7 +34,6 @@
 		<liberty.env.epf_schema_url>http://localhost/persistence/schema/</liberty.env.epf_schema_url>
 		<liberty.env.epf_security_url>http://localhost/security/security/</liberty.env.epf_security_url>
 		<liberty.env.epf_security_management_url>http://localhost/security-management/security/</liberty.env.epf_security_management_url>
-		<liberty.env.epf_transaction_url>http://localhost/transaction/transaction/</liberty.env.epf_transaction_url>
         <liberty.env.epf_security_webapp_url>https://localhost/security/</liberty.env.epf_security_webapp_url>
         <liberty.env.epf_gateway_url>https://localhost:${gatewayPort}/gateway/</liberty.env.epf_gateway_url>
         <liberty.env.epf_gateway_messaging_url>https://localhost:${gatewayPort}/messaging/</liberty.env.epf_gateway_messaging_url>
@@ -106,11 +105,6 @@
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-security-schema</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-transaction-schema</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

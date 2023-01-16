@@ -1,6 +1,5 @@
 . ./env.sh
 killall EPF-gateway-
-killall EPF-transaction-
 killall EPF-persistence-
 killall EPF-shell-
 cd EPF-tests

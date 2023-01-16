@@ -7,9 +7,6 @@ sudo service postgresql start
 cd EPF-transaction-internal
 ./dev.sh &>/dev/null &
 cd ../
-cd EPF-transaction
-./dev.sh &>/dev/null &
-cd ../
 cd EPF-persistence
 ./dev.sh &>/dev/null &
 cd ../
