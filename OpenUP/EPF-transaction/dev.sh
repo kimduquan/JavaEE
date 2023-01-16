@@ -1,5 +1,6 @@
 rm EPF-transaction.log.*
 rm -R -d ObjectStore
 . ../env.sh
-. ./config.sh
-java -jar ./target/quarkus-app/quarkus-run.jar
+mvn clean install -U -Dquarkus.container-image.build=true
+./stop.sh
+./start.sh

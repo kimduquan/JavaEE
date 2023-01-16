@@ -1,4 +1,7 @@
 rm EPF-persistence.log.*
 . ../env.sh
 . ./config.sh
-mvn quarkus:dev -Ddebug=5007
+cp $SOURCE_DIR/public.pem ./src/main/jib/
+mvn clean install -U -Dquarkus.container-image.build=true
+./stop.sh
+./start.sh
