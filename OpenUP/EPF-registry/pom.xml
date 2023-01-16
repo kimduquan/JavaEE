@@ -1,43 +1,49 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+	<groupId>epf</groupId>
+	<artifactId>EPF-parent</artifactId>
+	<version>1.0.0</version>
+	<relativePath>../EPF-parent/pom.xml</relativePath>
+  </parent>
+  <groupId>openup</groupId>
+  <artifactId>EPF-registry</artifactId>
+  <name>Eclipse Process Framework Registry</name>
+  <dependencies>
+  	<dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-resteasy-reactive-jsonb</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-resteasy-reactive</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-arc</artifactId>
+    </dependency>
+    <dependency>
+	   <groupId>io.quarkus</groupId>
+	   <artifactId>quarkus-kubernetes</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>io.quarkus</groupId>
+		<artifactId>quarkus-container-image-jib</artifactId>
+	</dependency>
+
+	<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.config/microprofile-config-api -->
+	<dependency>
+		<groupId>org.eclipse.microprofile.config</groupId>
+		<artifactId>microprofile-config-api</artifactId>
+		<scope>provided</scope>
+	</dependency>
+	
+    <dependency>
         <groupId>openup</groupId>
-        <artifactId>OpenUP-parent</artifactId>
-        <version>1.0.0</version>
-    </parent>
-    <artifactId>EPF-registry</artifactId>
-    <name>Eclipse Process Framework Registry</name>
-    <packaging>war</packaging>
-    <dependencies>
-    	<!-- https://mvnrepository.com/artifact/javax.enterprise/cdi-api -->
-		<dependency>
-		    <groupId>javax.enterprise</groupId>
-		    <artifactId>cdi-api</artifactId>
-		    <scope>provided</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
-		<dependency>
-			<groupId>javax.ws.rs</groupId>
-			<artifactId>javax.ws.rs-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
-		<dependency>
-		    <groupId>javax.annotation</groupId>
-		    <artifactId>javax.annotation-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.config/microprofile-config-api -->
-		<dependency>
-		    <groupId>org.eclipse.microprofile.config</groupId>
-		    <artifactId>microprofile-config-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-client</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
+        <artifactId>EPF-client</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+  </dependencies>
 </project>

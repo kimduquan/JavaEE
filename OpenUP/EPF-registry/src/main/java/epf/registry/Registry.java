@@ -50,126 +50,126 @@ public class Registry implements epf.client.registry.Registry {
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Net.NET_URL)
-	private transient URI netUrl;
+	transient URI netUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.File.FILE_URL)
-	private transient URI fileUrl;
+	transient URI fileUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Mail.MAIL_URL)
-	private transient URI mailUrl;
+	transient URI mailUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Persistence.PERSISTENCE_URL)
-	private transient URI persistenceUrl;
+	transient URI persistenceUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Security.SECURITY_URL)
-	private transient URI securityUrl;
+	transient URI securityUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Security.Management.SECURITY_MANAGEMENT_URL)
-	private transient URI securityManagementUrl;
+	transient URI securityManagementUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Registry.REGISTRY_URL)
-	private transient URI registryUrl;
+	transient URI registryUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Messaging.MESSAGING_URL)
-	private transient URI messagingUrl;
+	transient URI messagingUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Cache.CACHE_URL)
-	private transient URI cacheUrl;
+	transient URI cacheUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Query.QUERY_URL)
-	private transient URI queryUrl;
+	transient URI queryUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Config.CONFIG_URL)
-	private transient URI configUrl;
+	transient URI configUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Script.SCRIPT_URL)
-	private transient URI scriptUrl;
+	transient URI scriptUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Management.MANAGEMENT_URL)
-	private transient URI managementUrl;
+	transient URI managementUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Rules.RULES_URL)
-	private transient URI rulesUrl;
+	transient URI rulesUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Schema.SCHEMA_URL)
-	private transient URI schemaUrl;
+	transient URI schemaUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Planning.PLANNING_URL)
-	private transient URI planningUrl;
+	transient URI planningUrl;
 
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Image.IMAGE_URL)
-	private transient URI imageUrl;
+	transient URI imageUrl;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	@ConfigProperty(name = Naming.Net.HTTP_PORT)
-	private transient int httpPort;
+	transient int httpPort;
 	
 	/**
 	 * 

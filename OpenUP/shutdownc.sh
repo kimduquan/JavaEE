@@ -10,6 +10,9 @@ killall kubectl
 cd EPF-gateway
 ./stop.sh
 cd ../
+cd EPF-registry
+./stop.sh
+cd ../
 cd EPF-net
 ./stop.sh
 cd ../

@@ -25,6 +25,9 @@ cd ../
 cd EPF-net
 ./dev.sh
 cd ../
+cd EPF-registry
+./dev.sh
+cd ../
 cd EPF-gateway
 ./dev.sh
 cd ../

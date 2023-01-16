@@ -10,6 +10,9 @@ call webapp_shutdownc.bat
 cd EPF-gateway
 call stop.bat
 cd ../
+cd EPF-registry
+call stop.bat
+cd ../
 cd EPF-net
 call stop.bat
 cd ../

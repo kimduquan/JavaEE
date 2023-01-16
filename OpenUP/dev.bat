@@ -25,6 +25,9 @@ cd ../
 cd EPF-net
 call ./dev.bat
 cd ../
+cd EPF-registry
+call ./dev.bat
+cd ../
 cd EPF-gateway
 call ./dev.bat
 cd ../

@@ -44,7 +44,7 @@
         <liberty.env.epf_messaging_url>ws://${httpHost}:9183/messaging/messaging/</liberty.env.epf_messaging_url>
         <liberty.env.epf_cache_url>http://${httpHost}:9187/cache/cache/</liberty.env.epf_cache_url>
         <liberty.env.epf_query_url>http://${httpHost}:9188/query/query/</liberty.env.epf_query_url>
-        <liberty.env.epf_registry_url>http://${httpHost}:${httpPort}/registry/registry/</liberty.env.epf_registry_url>
+        <liberty.env.epf_registry_url>http://${httpHost}:9182/registry/registry/</liberty.env.epf_registry_url>
 		<liberty.env.epf_management_url>http://${httpHost}:${httpPort}/management/management/</liberty.env.epf_management_url>
 		<liberty.env.epf_portlet_url>http://localhost:${portalPort}/pluto/portal</liberty.env.epf_portlet_url>
 		<liberty.env.epf_webapp_url>http://localhost/webapp/</liberty.env.epf_webapp_url>
@@ -278,12 +278,6 @@
         </dependency>
 		<dependency>
             <groupId>openup</groupId>
-            <artifactId>EPF-registry</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
-		<dependency>
-            <groupId>openup</groupId>
             <artifactId>EPF-management</artifactId>
             <version>${project.version}</version>
             <type>war</type>
@@ -446,7 +440,7 @@
                         <configuration>
                             <verifyTimeout>600</verifyTimeout>
                             <serverStartTimeout>600</serverStartTimeout>
-                            <applications>EPF-schedule,EPF-script,EPF-batch,EPF-file,EPF-mail,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-registry,EPF-management,EPF-security,EPF-security-management</applications>
+                            <applications>EPF-schedule,EPF-script,EPF-batch,EPF-file,EPF-mail,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-management,EPF-security,EPF-security-management</applications>
                         </configuration>
                     </execution>
                     <!-- Stop the server -->
@@ -465,7 +459,7 @@
                     <deployPackages>dependencies</deployPackages>
 					<verifyTimeout>600</verifyTimeout>
 					<serverStartTimeout>600</serverStartTimeout>
-					<applications>EPF-schedule,EPF-script,EPF-batch,EPF-file,EPF-mail,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-registry,EPF-management,EPF-security,EPF-security-management</applications>
+					<applications>EPF-schedule,EPF-script,EPF-batch,EPF-file,EPF-mail,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-management,EPF-security,EPF-security-management</applications>
 					<dockerRunOpts>-p 7286:7286</dockerRunOpts>
 				</configuration>
             </plugin>
@@ -559,14 +553,15 @@
 				<liberty.env.epf_net_url>http://epf-net.default.svc.cluster.local:9186/net/</liberty.env.epf_net_url>
 				<liberty.env.epf_cache_url>http://epf-cache.default.svc.cluster.local:9187/cache/</liberty.env.epf_cache_url>
 				<liberty.env.epf_query_url>http://epf-query.default.svc.cluster.local:9188/query/</liberty.env.epf_query_url>
+				<liberty.env.epf_registry_url>http://epf-registry.default.svc.cluster.local:9182/registry/</liberty.env.epf_registry_url>
 				<liberty.env.epf_client_net_ssl_keyStore>/dev.p12</liberty.env.epf_client_net_ssl_keyStore>
 				<liberty.env.epf_client_net_ssl_trustStore>/dev.p12</liberty.env.epf_client_net_ssl_trustStore>
 				<liberty.env.mp_jwt_decrypt_key_location>/private.pem</liberty.env.mp_jwt_decrypt_key_location>
 				<liberty.env.epf_security_jwt_decrypt_key_location>/private.pem</liberty.env.epf_security_jwt_decrypt_key_location>
 				<liberty.env.mp_jwt_verify_publickey_location>/public.pem</liberty.env.mp_jwt_verify_publickey_location>
 				<liberty.env.epf_security_jwt_verify_publickey_location>/public.pem</liberty.env.epf_security_jwt_verify_publickey_location>
-        		<geckodriver>./geckodriver.exe</geckodriver>
-        		<shell_runner>C://GIT/JavaEE/OpenUP/EPF-shell/target/EPF-shell-${project.version}-runner.exe</shell_runner>
+        		<geckodriver>./geckodriver</geckodriver>
+        		<shell_runner>./target/EPF-shell-${project.version}-runner</shell_runner>
         		<opencv_java>/usr/share/java/opencv-420.jar</opencv_java>
         		<opencv_core>/usr/lib/x86_64-linux-gnu/libopencv_core.so</opencv_core>
 			</properties>
