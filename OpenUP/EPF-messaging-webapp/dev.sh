@@ -1,3 +1,3 @@
 . ../env.sh
 mvn clean install -U
-mvn wildfly:redeploy
+mvn wildfly:deploy
