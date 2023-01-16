@@ -762,7 +762,7 @@
 		<module>EPF-script</module>
 		<module>EPF-config</module>
         <module>EPF-gateway</module>
-		<module>EPF-transaction-internal</module>
+		<module>EPF-transaction</module>
 		<module>EPF-messaging</module>
 		<module>EPF-logging</module>
 		<module>EPF-cache</module>

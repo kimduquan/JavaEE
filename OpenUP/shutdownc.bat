@@ -34,7 +34,7 @@ cd ../
 cd EPF-config
 call stop.bat
 cd ../
-cd EPF-transaction-internal
+cd EPF-transaction
 call stop.bat
 cd ../
 endlocal

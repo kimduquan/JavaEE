@@ -9,8 +9,8 @@
 	<relativePath>../EPF-parent/pom.xml</relativePath>
   </parent>
   <groupId>openup</groupId>
-  <artifactId>EPF-transaction-internal</artifactId>
-  <name>Eclipse Process Framework Transaction Internal</name>
+  <artifactId>EPF-transaction</artifactId>
+  <name>Eclipse Process Framework Transaction</name>
   <version>1.0.0</version>
   <dependencies>
     <dependency>

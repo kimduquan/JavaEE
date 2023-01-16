@@ -1,4 +1,4 @@
-rm EPF-transaction-internal.log.*
+rm EPF-transaction.log.*
 rm -R -d ObjectStore
 . ../env.sh
 . ./config.sh

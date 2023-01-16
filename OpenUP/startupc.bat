@@ -1,4 +1,4 @@
-cd EPF-transaction-internal
+cd EPF-transaction
 call start.bat
 cd ../
 

@@ -13,7 +13,7 @@ cd ../
 cd EPF-cache
 call ./dev.bat
 cd ../
-cd EPF-transaction-internal
+cd EPF-transaction
 call ./dev.bat
 cd ../
 cd EPF-persistence

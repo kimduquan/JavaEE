@@ -4,7 +4,7 @@ sudo service postgresql start
 ./clean.sh
 ./startup.sh
 ./compile.sh
-cd EPF-transaction-internal
+cd EPF-transaction
 ./dev.sh &>/dev/null &
 cd ../
 cd EPF-persistence
