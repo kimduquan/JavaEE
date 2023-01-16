@@ -89,7 +89,7 @@ public class QueryCollector extends LazyDataModel<JsonObject> {
 	private WebTarget buildFilters(final WebTarget target, final Collection<FilterMeta> filters) {
 		WebTarget newTarget = target;
 		for(FilterMeta filter : filters) {
-			newTarget = newTarget.matrixParam(filter.getFilterField(), filter.getFilterValue());
+			newTarget = newTarget.matrixParam(filter.getField(), filter.getFilterValue());
 		}
 		return newTarget;
 	}
@@ -128,7 +128,12 @@ public class QueryCollector extends LazyDataModel<JsonObject> {
     }
 
     @Override
-    public Object getRowKey(final JsonObject object) {
+    public String getRowKey(final JsonObject object) {
         return object.get(entity.getId().getName()).toString();
     }
+
+	@Override
+	public int count(final Map<String, FilterMeta> filterBy) {
+		return 0;
+	}
 }

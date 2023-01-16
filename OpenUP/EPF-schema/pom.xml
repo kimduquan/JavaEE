@@ -57,26 +57,4 @@
             <version>${project.version}</version>
         </dependency>
     </dependencies>
-    <build>
-    	<plugins>
-    		<!-- https://mvnrepository.com/artifact/org.codehaus.mojo/exec-maven-plugin -->
-			<plugin>
-		        <groupId>org.codehaus.mojo</groupId>
-		        <artifactId>exec-maven-plugin</artifactId>
-		        <executions>
-		        	<execution>
-		        		<id>sql</id>
-		        		<goals>
-		        			<goal>exec</goal>
-		        		</goals>
-		        		<phase>generate-resources</phase>
-				        <configuration>
-				        	<executable>jshell</executable>
-				        	<arguments>sql.jsh</arguments>
-				        </configuration>
-		        	</execution>
-		        </executions>
-		    </plugin>
-    	</plugins>
-    </build>
 </project>

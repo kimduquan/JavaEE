@@ -8,9 +8,7 @@
 	<version>1.0.0</version>
 	<relativePath>../EPF-parent/pom.xml</relativePath>
   </parent>
-  <groupId>openup</groupId>
   <artifactId>EPF-query</artifactId>
-  <version>1.0.0</version>
   <name>Eclipse Process Framework Query</name>
   <dependencies>
     <dependency>

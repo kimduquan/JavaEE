@@ -94,7 +94,12 @@ public class SearchCollector extends LazyDataModel<JsonObject> {
     }
 
     @Override
-    public Object getRowKey(final JsonObject object) {
-        return entities.indexOf(object);
+    public String getRowKey(final JsonObject object) {
+        return String.valueOf(entities.indexOf(object));
     }
+
+	@Override
+	public int count(final Map<String, FilterMeta> filterBy) {
+		return 0;
+	}
 }

@@ -8,10 +8,8 @@
 	<version>1.0.0</version>
 	<relativePath>../EPF-parent/pom.xml</relativePath>
   </parent>
-  <groupId>openup</groupId>
   <artifactId>EPF-transaction</artifactId>
   <name>Eclipse Process Framework Transaction</name>
-  <version>1.0.0</version>
   <dependencies>
     <dependency>
 		<groupId>org.jboss.narayana.rts</groupId>
