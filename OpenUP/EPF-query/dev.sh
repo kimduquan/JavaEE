@@ -1,4 +1,3 @@
-rm EPF-query.log.*
 . ../env.sh
 . ../config.sh
 . ./config.sh

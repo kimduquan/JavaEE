@@ -1,4 +1,3 @@
-del .\EPF-cache.log.*
 setlocal
 call ../env.bat
 call mvn clean install -U -Dquarkus.container-image.build=true

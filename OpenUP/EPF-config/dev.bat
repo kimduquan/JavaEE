@@ -1,4 +1,3 @@
-del .\EPF-config.log.*
 setlocal
 call ../env.bat
 copy %SOURCE_DIR%\public.pem .\src\main\jib\

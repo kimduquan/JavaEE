@@ -34,11 +34,11 @@ cd EPF-net
 ./start.sh
 cd ../
 
-cd EPF-gateway
+cd EPF-registry
 ./start.sh
 cd ../
 
-cd EPF-registry
+cd EPF-gateway
 ./start.sh
 cd ../
 

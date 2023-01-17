@@ -1,4 +1,3 @@
-rm EPF-gateway.log.*
 . ../env.sh
 cp $SOURCE_DIR/dev.p12 ./src/main/jib/
 cp $SOURCE_DIR/public.pem ./src/main/jib/

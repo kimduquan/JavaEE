@@ -1,4 +1,3 @@
-rm EPF-persistence.log.*
 . ../env.sh
 . ./config.sh
 cp $SOURCE_DIR/public.pem ./src/main/jib/

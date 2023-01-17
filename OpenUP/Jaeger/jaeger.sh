@@ -1,5 +1,4 @@
 kubectl delete -f ./jaeger.yaml
-kubectl get pod -l app.kubernetes.io/name=jaeger
 kubectl wait pod --for condition=ready=false -l app.kubernetes.io/name=jaeger
 kubectl wait --for=delete -f ./jaeger.yaml
 

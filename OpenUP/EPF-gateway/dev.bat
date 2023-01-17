@@ -1,4 +1,3 @@
-del .\EPF-gateway.log.*
 setlocal
 call ../env.bat
 copy %SOURCE_DIR%\dev.p12 .\src\main\jib\

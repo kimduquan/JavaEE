@@ -34,6 +34,10 @@ cd EPF-net
 call start.bat
 cd ../
 
+cd EPF-registry
+call start.bat
+cd ../
+
 cd EPF-gateway
 call start.bat
 cd ../

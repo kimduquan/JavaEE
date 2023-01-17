@@ -1,4 +1,3 @@
-del .\EPF-transaction.log.*
 rmdir "ObjectStore" /s /q
 setlocal
 call ../env.bat
