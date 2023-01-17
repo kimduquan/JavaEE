@@ -14,6 +14,7 @@ import epf.query.messaging.Messaging;
 import epf.query.persistence.EntityPersistence;
 import epf.schema.utility.EntityEvent;
 import epf.util.logging.LogManager;
+import io.smallrye.reactive.messaging.annotations.Blocking;
 
 /**
  * @author PC
@@ -61,6 +62,7 @@ public class Listener implements HealthCheck {
 	 * @param event
 	 */
 	@Incoming(Naming.Persistence.PERSISTENCE_ENTITY_LISTENERS)
+	@Blocking
 	public void postEvent(final EntityEvent event) {
 		if(event != null) {
 			LOGGER.info("[Listener.postEvent]" + event.toString());
