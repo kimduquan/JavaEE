@@ -61,6 +61,7 @@ public class TransactionCache implements HealthCheck {
 	 */
 	public void put(final EntityTransaction transaction) throws Exception {
 		Objects.requireNonNull(transaction, "EntityTransaction");
+		Objects.requireNonNull(transaction.getId(), "EntityTransaction.Id");
 		cache.put(transaction.getId(), encoder.encode(transaction));
 	}
 	
@@ -71,6 +72,11 @@ public class TransactionCache implements HealthCheck {
 	 */
 	public EntityTransaction remove(final String id) throws Exception {
 		Objects.requireNonNull(id, "String");
-		return (EntityTransaction) decoder.decode(cache.get(id).toString());
+		EntityTransaction transaction = null;
+		final Object object = cache.get(id);
+		if(object != null) {
+			transaction = (EntityTransaction) decoder.decode(object.toString());
+		}
+		return transaction;
 	}
 }
