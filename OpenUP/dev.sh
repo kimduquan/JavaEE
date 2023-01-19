@@ -11,7 +11,7 @@ cd EPF-logging
 ./start.sh
 cd ../
 cd EPF-cache
-./start.sh
+./dev.sh
 cd ../
 cd EPF-transaction
 ./start.sh
