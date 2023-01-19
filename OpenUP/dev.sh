@@ -23,7 +23,7 @@ cd EPF-query
 ./dev.sh
 cd ../
 cd EPF-net
-./dev.sh
+./start.sh
 cd ../
 cd EPF-registry
 ./start.sh
