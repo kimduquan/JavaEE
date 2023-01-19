@@ -27,12 +27,10 @@ public class WebDriverUtil {
 			options.setHeadless(Boolean.valueOf(headless));
 		}
 		
-		final String webdriverDriver = System.getProperty("webdriver.gecko.driver");
-		if(webdriverDriver == null) {
-			System.setProperty("webdriver.gecko.driver", "./geckodriver.exe");
+		final String binary = System.getProperty("webdriver.firefox.binary");
+		if(binary != null) {
+			options.setBinary(binary);
 		}
-		
-		options.setBinary(System.getProperty("webdriver.firefox.binary"));
 		
 		final RemoteWebDriver driver = new FirefoxDriver(options);
 		

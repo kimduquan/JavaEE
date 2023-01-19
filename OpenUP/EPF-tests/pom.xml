@@ -372,7 +372,7 @@
 						<epf.client.net.ssl.trustStore>${project.basedir}/dev.p12</epf.client.net.ssl.trustStore>
 						<epf.client.net.ssl.trustStorePassword>changeit</epf.client.net.ssl.trustStorePassword>
 						<epf.client.net.ssl.trustStoreType>PKCS12</epf.client.net.ssl.trustStoreType>
-						<webdriver.firefox.binary>C:\Program Files\Mozilla Firefox\firefox.exe</webdriver.firefox.binary>
+						<webdriver.firefox.binary>${webdriver_binary}</webdriver.firefox.binary>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
@@ -506,6 +506,7 @@
 				<liberty.env.mp_jwt_verify_publickey_location>~/git/JavaEE/OpenUP/public.pem</liberty.env.mp_jwt_verify_publickey_location>
 				<liberty.env.epf_security_jwt_verify_publickey_location>~/git/JavaEE/OpenUP/public.pem</liberty.env.epf_security_jwt_verify_publickey_location>
         		<geckodriver>./geckodriver</geckodriver>
+        		<webdriver_binary>/usr/bin/firefox</webdriver_binary>
         		<shell_runner>./target/EPF-shell-${project.version}-runner</shell_runner>
         		<opencv_java>/usr/share/java/opencv-420.jar</opencv_java>
         		<opencv_core>/usr/lib/x86_64-linux-gnu/libopencv_core.so</opencv_core>
@@ -527,6 +528,7 @@
 				<liberty.env.mp_jwt_verify_publickey_location>C://GIT/JavaEE/OpenUP/public.pem</liberty.env.mp_jwt_verify_publickey_location>
 				<liberty.env.epf_security_jwt_verify_publickey_location>C://GIT/JavaEE/OpenUP/public.pem</liberty.env.epf_security_jwt_verify_publickey_location>
         		<geckodriver>./geckodriver.exe</geckodriver>
+        		<webdriver_binary>C:\Program Files\Mozilla Firefox\firefox.exe</webdriver_binary>
         		<shell_runner>C://GIT/JavaEE/OpenUP/EPF-shell/target/EPF-shell-${project.version}-runner.exe</shell_runner>
         		<opencv_java>C://Program Files/opencv/build/java/opencv-452.jar</opencv_java>
         		<opencv_core>C://Program Files/opencv/build/java/x64/opencv_java452.dll</opencv_core>
