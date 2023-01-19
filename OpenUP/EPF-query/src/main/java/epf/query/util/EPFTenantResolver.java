@@ -1,6 +1,6 @@
 package epf.query.util;
 
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import epf.schema.utility.Request;
 import epf.schema.utility.TenantUtil;
@@ -12,7 +12,7 @@ import io.quarkus.hibernate.orm.runtime.tenant.TenantResolver;
  *
  */
 @PersistenceUnitExtension(epf.query.Naming.QUERY_UNIT_NAME)
-@RequestScoped
+@ApplicationScoped
 public class EPFTenantResolver implements TenantResolver {
 	
 	/**
