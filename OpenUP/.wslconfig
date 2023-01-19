@@ -1,0 +1,4 @@
+[wsl2]
+memory=10GB
+processors=2
+swapFile=D:\\WSL

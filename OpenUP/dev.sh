@@ -2,19 +2,19 @@
 ./clean.sh
 ./compile.sh
 cd EPF-config
-./dev.sh
+./start.sh
 cd ../
 cd EPF-messaging
-./dev.sh
+./start.sh
 cd ../
 cd EPF-logging
-./dev.sh
+./start.sh
 cd ../
 cd EPF-cache
-./dev.sh
+./start.sh
 cd ../
 cd EPF-transaction
-./dev.sh
+./start.sh
 cd ../
 cd EPF-persistence
 ./dev.sh
@@ -26,10 +26,10 @@ cd EPF-net
 ./dev.sh
 cd ../
 cd EPF-registry
-./dev.sh
+./start.sh
 cd ../
 cd EPF-gateway
-./dev.sh
+./start.sh
 cd ../
 cd EPF-shell
 ./dev.sh
