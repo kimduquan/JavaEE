@@ -1,7 +1,7 @@
 . ./env.sh
 killall EPF-shell-
 killall geckodriver
-killall /usr/lib/firefox/firefox
+killall /usr/bin/firefox
 killall Xvfb
 killall java
 

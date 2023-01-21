@@ -32,7 +32,7 @@ cd EPF-gateway
 ./start.sh
 cd ../
 cd EPF-shell
-./dev.sh
+#./dev.sh
 cd ../
 ./webapp_startupc.sh
 ./webapp_deploy.sh
