@@ -17,7 +17,6 @@ import epf.schema.utility.EntityEvent;
 import epf.schema.utility.PostPersist;
 import epf.schema.utility.PostRemove;
 import epf.schema.utility.PostUpdate;
-import epf.schema.utility.Request;
 import epf.util.logging.LogManager;
 
 /**
@@ -49,7 +48,7 @@ public class EntityPersistence implements HealthCheck {
 	 * 
 	 */
 	@Inject
-	Request request;
+	Message message;
 	
 	
 	/**
@@ -59,8 +58,7 @@ public class EntityPersistence implements HealthCheck {
 	@ActivateRequestContext
 	public void accept(final EntityEvent event) {
 		try {
-			request.setSchema(event.getSchema());
-			request.setTenant(event.getTenant());
+			message.setEvent(event);
 			if(event instanceof PostUpdate) {
 				entityManager.merge(event.getEntity());
 				entityManager.flush();
