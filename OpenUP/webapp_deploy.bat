@@ -1,17 +1,17 @@
 setlocal
 cd EPF-webapp
-call dev.bat
+call mvn wildfly:deploy
 cd ../
 cd EPF-messaging-webapp
-call dev.bat
+call mvn wildfly:deploy
 cd ../
 cd EPF-persistence-webapp
-call dev.bat
+call mvn wildfly:deploy
 cd ../
 cd EPF-security-auth-webapp
-call dev.bat
+call mvn wildfly:deploy
 cd ../
 cd EPF-security-webapp
-call dev.bat
+call mvn wildfly:deploy
 cd ../
 endlocal
