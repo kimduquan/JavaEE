@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.control.ActivateRequestContext;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -55,6 +56,7 @@ public class EntityPersistence implements HealthCheck {
 	 * @param event
 	 */
 	@Transactional
+	@ActivateRequestContext
 	public void accept(final EntityEvent event) {
 		try {
 			request.setSchema(event.getSchema());
