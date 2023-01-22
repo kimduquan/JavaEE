@@ -13,6 +13,7 @@ import epf.persistence.util.EntityUtil;
 import epf.query.cache.EntityLoad;
 import epf.query.internal.EntityKey;
 import epf.query.internal.SchemaCache;
+import epf.schema.utility.Request;
 import epf.schema.utility.TenantUtil;
 import epf.util.json.JsonUtil;
 
@@ -34,6 +35,12 @@ public class EntityLoader implements Loader<String, Object> {
 	 */
 	@Inject @Readiness
 	transient SchemaCache schemaCache;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	Request request;
 
 	/**
 	 * @param key
@@ -57,6 +64,8 @@ public class EntityLoader implements Loader<String, Object> {
 			    		throw new BadRequestException(ex);
 			    	}
 					if(entityId != null) {
+						request.setSchema(entityKey.get().getSchema());
+						request.setTenant(entityKey.get().getTenant());
 						final EntityManager manager = this.manager.getEntityManagerFactory().createEntityManager();
 						try {
 							manager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenant);

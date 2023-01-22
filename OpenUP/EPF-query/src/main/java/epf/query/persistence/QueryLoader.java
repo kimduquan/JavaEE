@@ -14,6 +14,7 @@ import epf.naming.Naming;
 import epf.query.cache.QueryLoad;
 import epf.query.internal.QueryKey;
 import epf.query.internal.SchemaCache;
+import epf.schema.utility.Request;
 import epf.schema.utility.TenantUtil;
 
 /**
@@ -34,11 +35,19 @@ public class QueryLoader implements Loader<String, Integer> {
 	 */
 	@Inject @Readiness
 	transient SchemaCache schemaCache;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	Request request;
 
 	@Override
 	public Integer load(final String key) throws Exception {
 		final Optional<QueryKey> queryKey = QueryKey.parseString(key);
 		if(queryKey.isPresent()) {
+			request.setSchema(queryKey.get().getSchema());
+			request.setTenant(queryKey.get().getTenant());
 			final String tenantId = TenantUtil.getTenantId(queryKey.get().getSchema(), queryKey.get().getTenant());
 			final EntityManager manager = this.manager.getEntityManagerFactory().createEntityManager();
 			manager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenantId);

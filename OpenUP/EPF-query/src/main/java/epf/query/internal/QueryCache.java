@@ -19,8 +19,6 @@ import org.eclipse.microprofile.health.Readiness;
 import epf.cache.util.Loader;
 import epf.query.cache.QueryLoad;
 import epf.schema.utility.EntityEvent;
-import epf.schema.utility.PostPersist;
-import epf.schema.utility.PostRemove;
 import epf.util.event.EventEmitter;
 import epf.util.event.EventQueue;
 import epf.util.logging.LogManager;
@@ -88,16 +86,7 @@ public class QueryCache implements HealthCheck {
 		final Optional<QueryKey> queryKey = schemaCache.getQueryKey(event.getTenant(), event.getEntity().getClass());
 		if(queryKey.isPresent()) {
 			final String key = queryKey.get().toString();
-			final boolean hasLoaded = queryCache.containsKey(key);
-			if(hasLoaded) {
-				final Integer count = queryCache.get(key);
-				if(event instanceof PostPersist) {
-					queryCache.replace(key, count, count + 1);
-				}
-				else if(event instanceof PostRemove) {
-					queryCache.replace(key, count, count - 1);
-				}
-			}
+			queryCache.remove(key);
 		}
 	}
 	

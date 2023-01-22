@@ -12,11 +12,14 @@ import javax.transaction.Transactional;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
+import epf.naming.Naming;
 import epf.query.internal.SchemaCache;
 import epf.schema.utility.EntityEvent;
 import epf.schema.utility.PostPersist;
 import epf.schema.utility.PostRemove;
 import epf.schema.utility.PostUpdate;
+import epf.schema.utility.Request;
+import epf.schema.utility.TenantUtil;
 import epf.util.logging.LogManager;
 
 /**
@@ -48,7 +51,7 @@ public class EntityPersistence implements HealthCheck {
 	 * 
 	 */
 	@Inject
-	Message message;
+	Request request;
 	
 	
 	/**
@@ -58,7 +61,10 @@ public class EntityPersistence implements HealthCheck {
 	@ActivateRequestContext
 	public void accept(final EntityEvent event) {
 		try {
-			message.setEvent(event);
+			request.setSchema(event.getSchema());
+			request.setTenant(event.getTenant());
+			final String tenant = TenantUtil.getTenantId(event.getSchema(), event.getTenant());
+			entityManager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenant);
 			if(event instanceof PostUpdate) {
 				entityManager.merge(event.getEntity());
 				entityManager.flush();

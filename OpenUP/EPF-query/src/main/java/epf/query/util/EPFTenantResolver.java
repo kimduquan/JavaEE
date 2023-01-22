@@ -2,7 +2,7 @@ package epf.query.util;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import epf.query.persistence.Message;
+import epf.schema.utility.Request;
 import epf.schema.utility.TenantUtil;
 import io.quarkus.hibernate.orm.PersistenceUnitExtension;
 import io.quarkus.hibernate.orm.runtime.tenant.TenantResolver;
@@ -19,7 +19,7 @@ public class EPFTenantResolver implements TenantResolver {
 	 * 
 	 */
 	@Inject
-    Message message;
+    Request request;
 
 	@Override
 	public String getDefaultTenantId() {
@@ -28,11 +28,11 @@ public class EPFTenantResolver implements TenantResolver {
 
 	@Override
 	public String resolveTenantId() {
-		final String tenantId = message.getEvent() != null ? TenantUtil.getTenantId(message.getEvent().getSchema(), message.getEvent().getTenant()) : null;
-		if(tenantId != null) {
-			return tenantId.toUpperCase();
+		String tenantId = TenantUtil.getTenantId(request.getSchema(), request.getTenant());
+		if(tenantId == null) {
+			tenantId = getDefaultTenantId();
 		}
-		return getDefaultTenantId();
+		return tenantId.toUpperCase();
 	}
 
 }

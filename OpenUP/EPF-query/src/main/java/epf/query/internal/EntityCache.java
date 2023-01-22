@@ -24,9 +24,6 @@ import epf.cache.util.Loader;
 import epf.query.cache.EntityLoad;
 import epf.query.client.EntityId;
 import epf.schema.utility.EntityEvent;
-import epf.schema.utility.PostPersist;
-import epf.schema.utility.PostRemove;
-import epf.schema.utility.PostUpdate;
 import epf.util.event.EventEmitter;
 import epf.util.event.EventQueue;
 import epf.util.logging.LogManager;
@@ -92,16 +89,8 @@ public class EntityCache implements HealthCheck {
 	 */
 	public void accept(final EntityEvent event) {
 		final Optional<EntityKey> key = schemaCache.getKey(event.getTenant(), event.getEntity());
-		if(key.isPresent() && entityCache.containsKey(key.get().toString())) {
-			if(event instanceof PostUpdate) {
-				entityCache.replace(key.get().toString(), event.getEntity());
-			}
-			else if(event instanceof PostPersist) {
-				entityCache.put(key.get().toString(), event.getEntity());
-			}
-			else if(event instanceof PostRemove) {
-				entityCache.remove(key.get().toString());
-			}
+		if(key.isPresent()) {
+			entityCache.remove(key.get().toString());
 		}
 	}
 	
