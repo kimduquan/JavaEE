@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonPatch;
+import javax.json.JsonValue;
 import javax.persistence.EntityManager;
 import javax.persistence.metamodel.EntityType;
 import javax.transaction.Transactional;
@@ -253,7 +254,9 @@ public class Persistence implements epf.persistence.client.Entities {
     		return Response.status(Response.Status.NOT_FOUND).build();
     	}
     	
-    	final JsonPatch diff = JsonUtil.createDiff(entityObject, new Object());
+    	final JsonObject preEntity = JsonUtil.toJson(entityObject);
+    	final JsonObject postEntity = JsonValue.EMPTY_JSON_OBJECT;
+    	final JsonPatch diff = Json.createDiff(preEntity, postEntity);
     	
     	manager.remove(entityObject);
     	manager.flush();
