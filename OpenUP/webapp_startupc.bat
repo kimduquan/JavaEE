@@ -1,3 +1,3 @@
 cd WildFly
-call wildfly.bat
+call start.bat
 cd ../

@@ -1,3 +1,3 @@
 cd WildFly
-./wildfly.sh
+./start.sh
 cd ../
