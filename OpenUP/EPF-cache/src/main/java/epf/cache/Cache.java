@@ -44,11 +44,11 @@ public class Cache implements epf.client.cache.Cache {
 	public Response put(final String tenant, final String name, final List<PathSegment> paths, final InputStream value) throws Exception {
 		final Manager manager = provider.getManager(tenant);
 		if(manager != null) {
-			final javax.cache.Cache<String, Object> cache = manager.getCache(name);
+			final javax.cache.Cache<String, JsonValue> cache = manager.getCache(name);
 			if(cache != null) {
 				final String key = getKey(paths);
 				try {
-					final Object object = JsonUtil.readObject(value);
+					final JsonValue object = JsonUtil.readValue(value);
 					cache.put(key, object);
 					return Response.ok().build();
 				}
@@ -64,11 +64,11 @@ public class Cache implements epf.client.cache.Cache {
 	public Response replace(final String tenant, final String name, final List<PathSegment> paths, final InputStream value) throws Exception {
 		final Manager manager = provider.getManager(tenant);
 		if(manager != null) {
-			final javax.cache.Cache<String, Object> cache = manager.getCache(name);
+			final javax.cache.Cache<String, JsonValue> cache = manager.getCache(name);
 			if(cache != null) {
 				final String key = getKey(paths);
 				try {
-					final Object object = JsonUtil.readObject(value);
+					final JsonValue object = JsonUtil.readValue(value);
 					cache.replace(key, object);
 					return Response.ok().build();
 				}
@@ -84,7 +84,7 @@ public class Cache implements epf.client.cache.Cache {
 	public Response remove(final String tenant, final String name, final List<PathSegment> paths) throws Exception {
 		final Manager manager = provider.getManager(tenant);
 		if(manager != null) {
-			final javax.cache.Cache<String, Object> cache = manager.getCache(name);
+			final javax.cache.Cache<String, JsonValue> cache = manager.getCache(name);
 			if(cache != null) {
 				final String key = getKey(paths);
 				cache.remove(key);
@@ -98,12 +98,12 @@ public class Cache implements epf.client.cache.Cache {
 	public Response get(final String tenant, final String name, final List<PathSegment> paths) throws Exception {
 		final Manager manager = provider.getManager(tenant);
 		if(manager != null) {
-			final javax.cache.Cache<String, Object> cache = manager.getCache(name);
+			final javax.cache.Cache<String, JsonValue> cache = manager.getCache(name);
 			if(cache != null) {
 				final String key = getKey(paths);
 				final Object value = cache.get(key);
 				if(value != null) {
-					return Response.ok(value).build();	
+					return Response.ok(value).build();
 				}
 			}
 		}
@@ -114,7 +114,7 @@ public class Cache implements epf.client.cache.Cache {
 	public Response containsKey(final String tenant, final String name, final List<PathSegment> paths) throws Exception {
 		final Manager manager = provider.getManager(tenant);
 		if(manager != null) {
-			final javax.cache.Cache<String, Object> cache = manager.getCache(name);
+			final javax.cache.Cache<String, JsonValue> cache = manager.getCache(name);
 			if(cache != null) {
 				final String key = getKey(paths);
 				if(cache.containsKey(key)) {
@@ -132,11 +132,11 @@ public class Cache implements epf.client.cache.Cache {
 	public Response getAll(final String tenant, final String name, final InputStream map) {
 		final Manager manager = provider.getManager(tenant);
 		if(manager != null) {
-			final javax.cache.Cache<String, Object> cache = manager.getCache(name);
+			final javax.cache.Cache<String, JsonValue> cache = manager.getCache(name);
 			if(cache != null) {
 				try {
 					final JsonArray keys = JsonUtil.readArray(map);
-					final Map<String, Object> values = cache.getAll(keys.stream().map(JsonValue::toString).collect(Collectors.toSet()));
+					final Map<String, JsonValue> values = cache.getAll(keys.stream().map(JsonValue::toString).collect(Collectors.toSet()));
 					return Response.ok(values).build();
 				}
 				catch(JsonException ex) {
