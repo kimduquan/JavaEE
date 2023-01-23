@@ -62,7 +62,7 @@ public class FileWatch implements Runnable, Closeable {
 			for (WatchEvent<?> event : watchKey.pollEvents()) {
 		        final FileEvent fileEvent = new FileEvent(path, event.context(), event.count(), EventKind.valueOf(event.kind().name()));
 		        try {
-					emitter.send(fileEvent);
+					emitter.sendAsync(fileEvent);
 				} 
 		        catch (Exception e) {
 					LOGGER.log(Level.SEVERE, "[FileWatch.run]", e);

@@ -13,7 +13,6 @@ import javax.persistence.Query;
 import javax.ws.rs.core.Response;
 import org.eclipse.microprofile.health.Readiness;
 import epf.function.query.FetchEntitiesFunction;
-import epf.naming.Naming;
 import epf.query.client.EntityId;
 import epf.query.internal.SchemaCache;
 
@@ -113,7 +112,6 @@ public class Search implements epf.query.client.Search {
 	 * @return
 	 */
 	private Query createSearchQuery(final String query, final String tenant, final String text, final int maxResults, final int firstResult) {
-		manager.setProperty(Naming.Management.MANAGEMENT_TENANT, "");
 		final String filter = tenant == null ? "%" : "%_" + tenant;
 		return manager.createNativeQuery(query)
 				.setParameter(1, text)

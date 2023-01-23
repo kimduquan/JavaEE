@@ -3,6 +3,7 @@ package epf.query.persistence;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -14,11 +15,10 @@ import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
-import epf.naming.Naming;
 import epf.persistence.internal.Entity;
 import epf.persistence.internal.QueryBuilder;
 import epf.persistence.util.EntityTypeUtil;
-import epf.schema.utility.TenantUtil;
+import epf.schema.utility.Request;
 import epf.util.json.JsonUtil;
 import epf.util.logging.LogManager;
 
@@ -41,8 +41,12 @@ public class QueryPersistence implements HealthCheck {
 	transient EntityManager entityManager;
 	
 	/**
-	 * @param tenant
-	 * @param schema
+	 * 
+	 */
+	@Inject
+	Request request;
+	
+	/**
 	 * @param paths
 	 * @param firstResult
 	 * @param maxResults
@@ -52,22 +56,18 @@ public class QueryPersistence implements HealthCheck {
 	 * @throws Exception
 	 */
 	public List<?> executeQuery(
-    		final String tenant,
-			final String schema, 
 			final List<PathSegment> paths, 
 			final Integer firstResult, 
 			final Integer maxResults,
 			final SecurityContext context,
 			final List<String> sort) throws Exception {
-		final String tenantId = TenantUtil.getTenantId(schema, tenant);
-		entityManager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenantId);
 		final Entity<Object> entity = new Entity<>();
 		final PathSegment rootSegment = paths.get(0);
     	final String entityName = rootSegment.getPath();
     	@SuppressWarnings("unchecked")
 		final EntityType<Object> entityType = (EntityType<Object>) EntityTypeUtil.findEntityType(entityManager.getMetamodel(), entityName).orElseThrow(NotFoundException::new);
     	EntityTypeUtil.getSchema(entityType).ifPresent(entitySchema -> {
-    		if(!entitySchema.equals(schema)) {
+    		if(!entitySchema.equals(request.getSchema())) {
     			throw new NotFoundException();
     		}
     	});
@@ -84,27 +84,21 @@ public class QueryPersistence implements HealthCheck {
 	}
 	
 	/**
-	 * @param tenant
-	 * @param schema
 	 * @param paths
 	 * @param context
 	 * @return
 	 * @throws Exception
 	 */
 	public Object executeCountQuery(
-    		final String tenant,
-			final String schema, 
 			final List<PathSegment> paths,
 			final SecurityContext context) throws Exception {
-		final String tenantId = TenantUtil.getTenantId(schema, tenant);
-		entityManager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenantId);
 		final Entity<Object> entity = new Entity<>();
 		final PathSegment rootSegment = paths.get(0);
     	final String entityName = rootSegment.getPath();
     	@SuppressWarnings("unchecked")
 		final EntityType<Object> entityType = (EntityType<Object>) EntityTypeUtil.findEntityType(entityManager.getMetamodel(), entityName).orElseThrow(NotFoundException::new);
     	EntityTypeUtil.getSchema(entityType).ifPresent(entitySchema -> {
-    		if(!entitySchema.equals(schema)) {
+    		if(!entitySchema.equals(request.getSchema())) {
     			throw new NotFoundException();
     		}
     	});

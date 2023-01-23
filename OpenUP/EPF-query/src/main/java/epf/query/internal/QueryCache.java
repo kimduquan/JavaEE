@@ -6,21 +6,16 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.cache.Cache;
-import javax.cache.CacheManager;
-import javax.cache.Caching;
-import javax.cache.configuration.FactoryBuilder;
-import javax.cache.configuration.MutableConfiguration;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
-import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
-import epf.cache.util.Loader;
+import epf.query.cache.CachingManager;
 import epf.query.cache.QueryLoad;
 import epf.schema.utility.EntityEvent;
-import epf.util.event.EventEmitter;
-import epf.util.event.EventQueue;
+import epf.schema.utility.Request;
 import epf.util.logging.LogManager;
 
 /**
@@ -39,7 +34,8 @@ public class QueryCache implements HealthCheck {
 	/**
 	 * 
 	 */
-	private transient Cache<String, Integer> queryCache;
+	@Inject
+	transient CachingManager manager;
 	
 	/**
 	 * 
@@ -51,7 +47,18 @@ public class QueryCache implements HealthCheck {
 	 *
 	 */
 	@Inject
-	transient EventQueue<QueryLoad> eventQueue;
+	transient Event<QueryLoad> event;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	Request request;
+	
+	/**
+	 * 
+	 */
+	private transient Cache<String, Integer> queryCache;
 	
 	/**
 	 * 
@@ -59,14 +66,7 @@ public class QueryCache implements HealthCheck {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final CacheManager manager = Caching.getCachingProvider().getCacheManager();
-			final MutableConfiguration<String, Integer> config = new MutableConfiguration<>();
-			config.setCacheLoaderFactory(FactoryBuilder.factoryOf(new Loader<>(new EventEmitter<QueryLoad>(eventQueue), QueryLoad::new)));
-			config.setReadThrough(true);
-			queryCache = manager.getCache(epf.query.Naming.QUERY_CACHE);
-			if(queryCache == null) {
-				queryCache = manager.createCache(epf.query.Naming.QUERY_CACHE, config);
-			}
+			queryCache = manager.getQueryCache(null);
 		}
 		catch(Exception ex) {
 			LOGGER.log(Level.SEVERE, "[QueryCache.queryCache]", ex);
@@ -75,7 +75,6 @@ public class QueryCache implements HealthCheck {
 	
 	@PreDestroy
 	protected void preDestroy() {
-		eventQueue.close();
 		queryCache.close();
 	}
 
@@ -83,26 +82,22 @@ public class QueryCache implements HealthCheck {
 	 * @param event
 	 */
 	public void accept(final EntityEvent event) {
-		final Optional<QueryKey> queryKey = schemaCache.getQueryKey(event.getTenant(), event.getEntity().getClass());
+		final Optional<QueryKey> queryKey = schemaCache.getQueryKey(event.getEntity().getClass());
 		if(queryKey.isPresent()) {
 			final String key = queryKey.get().toString();
-			queryCache.remove(key);
+			manager.getQueryCache(event.getTenant()).remove(key);
 		}
 	}
 	
 	/**
-	 * @param tenant
-	 * @param schema
 	 * @param entity
 	 * @return
 	 */
 	public Optional<Integer> countEntity(
-    		final String tenant,
-			final String schema,
             final String entity
             ) {
-		final QueryKey queryKey = schemaCache.getQueryKey(tenant, schema, entity);
-		return Optional.ofNullable(queryCache.get(queryKey.toString()));
+		final QueryKey queryKey = schemaCache.getQueryKey(request.getSchema(), entity);
+		return Optional.ofNullable(manager.getQueryCache(request.getTenant()).get(queryKey.toString()));
 	}
 
 	@Override
@@ -111,12 +106,5 @@ public class QueryCache implements HealthCheck {
 			return HealthCheckResponse.down("EPF-query-query-cache");
 		}
 		return HealthCheckResponse.up("EPF-query-query-cache");
-	}
-	
-	/**
-	 * 
-	 */
-	public void submit(final ManagedExecutor executor) {
-		executor.submit(eventQueue);
 	}
 }

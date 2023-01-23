@@ -12,5 +12,11 @@ public interface Emitter<T> {
 	 * @return
 	 * @throws Exception
 	 */
-	CompletionStage<T> send(final T object) throws Exception;
+	CompletionStage<T> sendAsync(final T object) throws Exception;
+	
+	/**
+	 * @param object
+	 * @throws Exception
+	 */
+	void send(final T object) throws Exception;
 }

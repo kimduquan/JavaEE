@@ -12,11 +12,9 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
-
 import epf.query.client.EntityId;
 import epf.schema.utility.SchemaUtil;
 import epf.util.logging.LogManager;
@@ -63,11 +61,10 @@ public class SchemaCache implements HealthCheck {
 	}
 	
 	/**
-	 * @param tenant
 	 * @param entity
 	 * @return
 	 */
-	public Optional<EntityKey> getKey(final String tenant, final Object entity) {
+	public Optional<EntityKey> getKey(final Object entity) {
 		final Class<?> cls = entity.getClass();
 		final Optional<String> entitySchema = schemaUtil.getEntitySchema(cls);
 		final Optional<String> entityName = schemaUtil.getEntityName(cls);
@@ -83,21 +80,20 @@ public class SchemaCache implements HealthCheck {
 		}
 		Optional<EntityKey> key = Optional.empty();
 		if(entitySchema.isPresent() && entityName.isPresent() && entityId.isPresent()) {
-			key = Optional.of(new EntityKey(tenant, entitySchema.get(), entityName.get(), entityId.get()));
+			key = Optional.of(new EntityKey(entitySchema.get(), entityName.get(), entityId.get()));
 		}
 		return key;
 	}
 	
 	/**
-	 * @param tenant
 	 * @param entityCls
 	 * @return
 	 */
-	public Optional<QueryKey> getQueryKey(final String tenant, final Class<?> entityCls) {
+	public Optional<QueryKey> getQueryKey(final Class<?> entityCls) {
 		final Optional<String> entitySchema = schemaUtil.getEntitySchema(entityCls);
 		final Optional<String> entityName = schemaUtil.getEntityName(entityCls);
 		if(entitySchema.isPresent() && entityName.isPresent()) {
-			return Optional.of(new QueryKey(tenant, entitySchema.get(), entityName.get()));
+			return Optional.of(new QueryKey(entitySchema.get(), entityName.get()));
 		}
 		return Optional.empty();
 	}
@@ -108,30 +104,27 @@ public class SchemaCache implements HealthCheck {
 	 * @param entityId
 	 * @return
 	 */
-	public EntityKey getKey(final String tenant, final String schema, final String entityName, final Object entityId) {
-		return new EntityKey(tenant, schema, entityName, entityId);
+	public EntityKey getKey(final String schema, final String entityName, final Object entityId) {
+		return new EntityKey(schema, entityName, entityId);
 	}
 	
 	/**
-	 * @param tenant
 	 * @param entityId
 	 * @return
 	 */
-	public EntityKey getSearchKey(final String tenant, final EntityId entityId) {
-		return new EntityKey(tenant, entityId.getSchema(), entityId.getName(), entityId.getAttributes().values().iterator().next());
+	public EntityKey getSearchKey(final EntityId entityId) {
+		return new EntityKey(entityId.getSchema(), entityId.getName(), entityId.getAttributes().values().iterator().next());
 	}
 	
 	/**
-	 * @param tenant
 	 * @param schema
 	 * @param entityName
 	 * @return
 	 */
 	public QueryKey getQueryKey(
-    		final String tenant,
     		final String schema, 
     		final String entityName) {
-		return new QueryKey(tenant, schema, entityName);
+		return new QueryKey(schema, entityName);
 	}
 	
 	/**

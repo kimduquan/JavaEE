@@ -7,11 +7,17 @@ import java.util.Map;
  * 
  */
 public class CacheLoad<K, V> {
+	
+	/**
+	 * 
+	 */
+	private String tenant;
 
 	/**
 	 *
 	 */
 	private List<K> keys;
+	
 	/**
 	 *
 	 */
@@ -28,5 +34,11 @@ public class CacheLoad<K, V> {
 	}
 	public void setEntries(final Map<K, V> entries) {
 		this.entries = entries;
+	}
+	public String getTenant() {
+		return tenant;
+	}
+	public void setTenant(final String tenant) {
+		this.tenant = tenant;
 	}
 }

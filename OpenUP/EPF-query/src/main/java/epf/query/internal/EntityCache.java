@@ -10,22 +10,15 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.cache.Cache;
-import javax.cache.CacheManager;
-import javax.cache.Caching;
-import javax.cache.configuration.FactoryBuilder;
-import javax.cache.configuration.MutableConfiguration;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
-import epf.cache.util.Loader;
-import epf.query.cache.EntityLoad;
+import epf.query.cache.CachingManager;
 import epf.query.client.EntityId;
 import epf.schema.utility.EntityEvent;
-import epf.util.event.EventEmitter;
-import epf.util.event.EventQueue;
+import epf.schema.utility.Request;
 import epf.util.logging.LogManager;
 
 /**
@@ -44,14 +37,20 @@ public class EntityCache implements HealthCheck {
 	/**
 	 * 
 	 */
+	@Inject
+	transient CachingManager manager;
+	
+	/**
+	 * 
+	 */
 	@Inject @Readiness
 	transient SchemaCache schemaCache;
 	
 	/**
-	 *
+	 * 
 	 */
 	@Inject
-	transient EventQueue<EntityLoad> eventQueue;
+	Request request;
 	
 	/**
 	 * 
@@ -64,14 +63,7 @@ public class EntityCache implements HealthCheck {
 	@PostConstruct
 	protected void postConstruct() {
 		try {
-			final CacheManager manager = Caching.getCachingProvider().getCacheManager();
-			final MutableConfiguration<String, Object> config = new MutableConfiguration<>();
-			config.setCacheLoaderFactory(FactoryBuilder.factoryOf(new Loader<>(new EventEmitter<EntityLoad>(eventQueue), EntityLoad::new)));
-			config.setReadThrough(true);
-			entityCache = manager.getCache(epf.query.Naming.ENTITY_CACHE);
-			if(entityCache == null) {
-				entityCache = manager.createCache(epf.query.Naming.ENTITY_CACHE, config);	
-			}
+			entityCache = manager.getEntityCache(null);
 		}
 		catch(Exception ex) {
 			LOGGER.log(Level.SEVERE, "[EntityCache.entityCache]", ex);
@@ -80,7 +72,6 @@ public class EntityCache implements HealthCheck {
 	
 	@PreDestroy
 	protected void preDestroy() {
-		eventQueue.close();
 		entityCache.close();
 	}
 
@@ -88,35 +79,33 @@ public class EntityCache implements HealthCheck {
 	 * @param event
 	 */
 	public void accept(final EntityEvent event) {
-		final Optional<EntityKey> key = schemaCache.getKey(event.getTenant(), event.getEntity());
+		final Optional<EntityKey> key = schemaCache.getKey(event.getEntity());
 		if(key.isPresent()) {
-			entityCache.remove(key.get().toString());
+			manager.getEntityCache(event.getTenant()).remove(key.get().toString());
 		}
 	}
 	
 	/**
-	 * @param name
+	 * @param entity
 	 * @param entityId
 	 * @return
 	 */
 	public Optional<Object> getEntity(
-			final String tenant,
-			final String schema,
-            final String name,
+            final String entity,
             final String entityId
             ) {
-		final EntityKey key = schemaCache.getKey(tenant, schema, name, entityId);
-		return Optional.ofNullable(entityCache.get(key.toString()));
+		final EntityKey key = schemaCache.getKey(request.getSchema(), entity, entityId);
+		return Optional.ofNullable(manager.getEntityCache(request.getTenant()).get(key.toString()));
 	}
 	
 	/**
-	 * @param entities
+	 * @param entityIds
 	 * @return
 	 */
-	public List<Object> getEntities(final String tenant, final List<EntityId> entityIds){
-		final List<EntityKey> entityKeys = entityIds.stream().map(key -> schemaCache.getSearchKey(tenant, key)).collect(Collectors.toList());
+	public List<Object> getEntities(final List<EntityId> entityIds){
+		final List<EntityKey> entityKeys = entityIds.stream().map(key -> schemaCache.getSearchKey(key)).collect(Collectors.toList());
 		final List<String> keys = entityKeys.stream().map(EntityKey::toString).collect(Collectors.toList());
-		final Map<String, Object> values = entityCache.getAll(keys.stream().collect(Collectors.toSet()));
+		final Map<String, Object> values = manager.getEntityCache(request.getTenant()).getAll(keys.stream().collect(Collectors.toSet()));
 		final List<Object> result = new ArrayList<>();
 		keys.forEach(key -> {
 			result.add(values.get(key));
@@ -130,12 +119,5 @@ public class EntityCache implements HealthCheck {
 			return HealthCheckResponse.down("EPF-query-entity-cache");
 		}
 		return HealthCheckResponse.up("EPF-query-entity-cache");
-	}
-	
-	/**
-	 * 
-	 */
-	public void submit(final ManagedExecutor executor) {
-		executor.submit(eventQueue);
 	}
 }

@@ -2,8 +2,6 @@ package epf.query;
 
 import java.util.List;
 import java.util.Optional;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
@@ -12,8 +10,6 @@ import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.SecurityContext;
-import org.eclipse.microprofile.context.ManagedExecutor;
-import org.eclipse.microprofile.context.ThreadContext;
 import org.eclipse.microprofile.health.Readiness;
 import epf.naming.Naming;
 import epf.naming.Naming.Query.Client;
@@ -22,6 +18,7 @@ import epf.query.internal.EntityCache;
 import epf.query.internal.QueryCache;
 import epf.query.persistence.QueryPersistence;
 import epf.query.util.LinkUtil;
+import epf.schema.utility.Request;
 import epf.util.concurrent.Executor;
 
 /**
@@ -65,28 +62,8 @@ public class Query implements epf.query.client.Query {
 	/**
 	 * 
 	 */
-	transient ManagedExecutor managedExecutor;
-	
-	/**
-	 * 
-	 */
-	@PostConstruct
-	protected void postConstruct() {
-		managedExecutor = ManagedExecutor
-                .builder()
-                .propagated(ThreadContext.ALL_REMAINING)
-                .build();
-		entityCache.submit(managedExecutor);
-		queryCache.submit(managedExecutor);
-	}
-	
-	/**
-	 * 
-	 */
-	@PreDestroy
-	protected void preDestroy() {
-		managedExecutor.shutdown();
-	}
+	@Inject
+	Request request;
 	
 	@Override
     public Response getEntity(
@@ -95,7 +72,9 @@ public class Query implements epf.query.client.Query {
             final String name,
             final String entityId
             ) {
-		final Optional<Object> entity = entityCache.getEntity(tenant, schema, name, entityId);
+		request.setSchema(schema);
+		request.setTenant(tenant);
+		final Optional<Object> entity = entityCache.getEntity(name, entityId);
 		return Response.ok(entity.orElseThrow(NotFoundException::new)).build();
 	}
 
@@ -104,7 +83,9 @@ public class Query implements epf.query.client.Query {
     		final String tenant,
     		final String schema, 
     		final String entity) {
-		final Optional<Integer> count = queryCache.countEntity(tenant, schema, entity);
+		request.setSchema(schema);
+		request.setTenant(tenant);
+		final Optional<Integer> count = queryCache.countEntity(entity);
 		if(count.isPresent()) {
 			return Response.ok().header(Client.ENTITY_COUNT, count.get()).build();
 		}
@@ -120,8 +101,10 @@ public class Query implements epf.query.client.Query {
 			final Integer maxResults,
 			final SecurityContext context,
 			final List<String> sort) throws Exception {
+		request.setSchema(schema);
+		request.setTenant(tenant);
 		if(!paths.isEmpty()) {
-			final List<?> resultList = persistence.executeQuery(tenant, schema, paths, firstResult, maxResults, context, sort);
+			final List<?> resultList = persistence.executeQuery(paths, firstResult, maxResults, context, sort);
 			return Response.ok(resultList).header(Client.ENTITY_COUNT, resultList.size()).build();
 		}
 		throw new NotFoundException();
@@ -134,8 +117,10 @@ public class Query implements epf.query.client.Query {
 			final List<PathSegment> paths, 
 			final SecurityContext context)
 			throws Exception {
+		request.setSchema(schema);
+		request.setTenant(tenant);
 		if(!paths.isEmpty()) {
-			final Object count = persistence.executeCountQuery(tenant, schema, paths, context);
+			final Object count = persistence.executeCountQuery(paths, context);
 	    	return Response.ok().header(Client.ENTITY_COUNT, count).build();
 		}
 		throw new NotFoundException();
@@ -145,7 +130,8 @@ public class Query implements epf.query.client.Query {
 	public Response fetchEntities(
     		final String tenant,
     		final List<EntityId> entityIds) {
-		final List<Object> entities = entityCache.getEntities(tenant, entityIds);
+		request.setTenant(tenant);
+		final List<Object> entities = entityCache.getEntities(entityIds);
 		ResponseBuilder response = Response.ok(entities).header(Client.ENTITY_COUNT, entities.size());
 		response = LinkUtil.links(response, "", entityIds);
 		return response.build();

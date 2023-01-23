@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public interface Loader<K, V> {
 
 	/**
+	 * @param tenant
 	 * @param key
 	 * @return
 	 * @throws Exception
@@ -18,6 +19,7 @@ public interface Loader<K, V> {
 	V load(final K key) throws Exception;
 	
 	/**
+	 * @param tenant
 	 * @param keys
 	 * @return
 	 * @throws Exception

@@ -14,11 +14,12 @@ public class ObjectLoader extends Loader<String, Object, ObjectLoad> {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * @param tenant
 	 * @param emitter
 	 * @param factory
 	 */
-	public ObjectLoader(final Emitter<ObjectLoad> emitter, final Supplier<ObjectLoad> factory) {
-		super(emitter, factory);
+	public ObjectLoader(final String tenant, final Emitter<ObjectLoad> emitter, final Supplier<ObjectLoad> factory) {
+		super(tenant, emitter, factory);
 	}
 
 }

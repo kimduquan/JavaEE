@@ -1,8 +1,8 @@
 package epf.util.event;
 
-import java.util.concurrent.CompletableFuture;
+import java.util.Objects;
 import java.util.concurrent.CompletionStage;
-import epf.util.concurrent.ObjectQueue;
+import javax.enterprise.event.Event;
 
 /**
  * @param <T>
@@ -12,13 +12,14 @@ public class EventEmitter<T> implements Emitter<T> {
 	/**
 	 *
 	 */
-	private transient final ObjectQueue<AsyncEvent<T>> eventQueue;
+	private transient final Event<T> event;
 	
 	/**
-	 * @param eventQueue
+	 * @param event
 	 */
-	public EventEmitter(final ObjectQueue<AsyncEvent<T>> eventQueue){
-		this.eventQueue = eventQueue;
+	public EventEmitter(final Event<T> event){
+		Objects.requireNonNull(event, "Event");
+		this.event = event;
 	}
 	
 	/**
@@ -27,13 +28,14 @@ public class EventEmitter<T> implements Emitter<T> {
 	 * @throws Exception 
 	 */
 	@Override
-	public CompletionStage<T> send(final T object) throws Exception {
-		if(eventQueue != null) {
-			final AsyncEvent<T> asyncEvent = new AsyncEvent<>(object);
-			eventQueue.add(asyncEvent);
-			asyncEvent.waitAccept();
-			return asyncEvent.getStage();
-		}
-		return CompletableFuture.completedFuture(object);
+	public CompletionStage<T> sendAsync(final T object) throws Exception {
+		Objects.requireNonNull(object, "Object");
+		return event.fireAsync(object);
+	}
+
+	@Override
+	public void send(final T object) throws Exception {
+		Objects.requireNonNull(object, "Object");
+		event.fire(object);
 	}
 }

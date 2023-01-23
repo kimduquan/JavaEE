@@ -15,6 +15,7 @@ import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import javax.enterprise.concurrent.ManagedScheduledExecutorService;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.HealthCheck;
@@ -23,7 +24,6 @@ import org.eclipse.microprofile.health.Readiness;
 import epf.client.file.FileEvent;
 import epf.util.event.Emitter;
 import epf.util.event.EventEmitter;
-import epf.util.event.EventQueue;
 import epf.util.logging.LogManager;
 
 /**
@@ -53,7 +53,7 @@ public class FileWatchService implements HealthCheck {
 	 * 
 	 */
 	@Inject
-	private transient EventQueue<FileEvent> events;
+	private transient Event<FileEvent> events;
 	
 	/**
 	 * 
@@ -78,7 +78,6 @@ public class FileWatchService implements HealthCheck {
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		executor.submit(events);
 		emitter = new EventEmitter<>(events);
 	}
 	
@@ -95,7 +94,6 @@ public class FileWatchService implements HealthCheck {
 				LOGGER.log(Level.SEVERE, "[FileWatchService.preDestroy]", e);
 			}
 		});
-		events.close();
 	}
 	
 	/**
