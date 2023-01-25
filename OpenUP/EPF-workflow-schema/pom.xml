@@ -10,6 +10,16 @@
     <name>Eclipse Process Framework Workflow Schema</name>
     <packaging>jar</packaging>
     <dependencies>
+		<dependency>
+		    <groupId>javax.validation</groupId>
+		    <artifactId>validation-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+		    <groupId>javax.json.bind</groupId>
+		    <artifactId>javax.json.bind-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.serverlessworkflow/serverlessworkflow-api -->
 		<dependency>
 			<groupId>io.serverlessworkflow</groupId>
