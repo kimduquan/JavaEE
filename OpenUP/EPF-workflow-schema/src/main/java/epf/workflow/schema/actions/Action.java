@@ -7,6 +7,11 @@ import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
+import epf.workflow.schema.events.EventRef;
+import epf.workflow.schema.filters.ActionDataFilter;
+import epf.workflow.schema.functions.FunctionRef;
+import epf.workflow.schema.functions.SubFlowRef;
+import epf.workflow.schema.sleep.Sleep;
 
 /**
  * @author PC
@@ -44,6 +49,9 @@ public class Action implements Serializable
      */
     @JsonbProperty("name")
     private String name;
+    /**
+     * 
+     */
     @JsonbProperty("functionRef")
     @Valid
     private FunctionRef functionRef;
@@ -107,13 +115,8 @@ public class Action implements Serializable
      * 
      */
     @JsonbProperty("id")
-    public void setId(String id) {
+    public void setId(final String id) {
         this.id = id;
-    }
-
-    public Action withId(String id) {
-        this.id = id;
-        return this;
     }
 
     /**
@@ -130,13 +133,8 @@ public class Action implements Serializable
      * 
      */
     @JsonbProperty("name")
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
-    }
-
-    public Action withName(String name) {
-        this.name = name;
-        return this;
     }
 
     @JsonbProperty("functionRef")
@@ -145,13 +143,8 @@ public class Action implements Serializable
     }
 
     @JsonbProperty("functionRef")
-    public void setFunctionRef(FunctionRef functionRef) {
+    public void setFunctionRef(final FunctionRef functionRef) {
         this.functionRef = functionRef;
-    }
-
-    public Action withFunctionRef(FunctionRef functionRef) {
-        this.functionRef = functionRef;
-        return this;
     }
 
     /**
@@ -168,13 +161,8 @@ public class Action implements Serializable
      * 
      */
     @JsonbProperty("eventRef")
-    public void setEventRef(EventRef eventRef) {
+    public void setEventRef(final EventRef eventRef) {
         this.eventRef = eventRef;
-    }
-
-    public Action withEventRef(EventRef eventRef) {
-        this.eventRef = eventRef;
-        return this;
     }
 
     @JsonbProperty("subFlowRef")
@@ -183,13 +171,8 @@ public class Action implements Serializable
     }
 
     @JsonbProperty("subFlowRef")
-    public void setSubFlowRef(SubFlowRef subFlowRef) {
+    public void setSubFlowRef(final SubFlowRef subFlowRef) {
         this.subFlowRef = subFlowRef;
-    }
-
-    public Action withSubFlowRef(SubFlowRef subFlowRef) {
-        this.subFlowRef = subFlowRef;
-        return this;
     }
 
     @JsonbProperty("sleep")
@@ -198,13 +181,8 @@ public class Action implements Serializable
     }
 
     @JsonbProperty("sleep")
-    public void setSleep(Sleep sleep) {
+    public void setSleep(final Sleep sleep) {
         this.sleep = sleep;
-    }
-
-    public Action withSleep(Sleep sleep) {
-        this.sleep = sleep;
-        return this;
     }
 
     /**
@@ -221,13 +199,8 @@ public class Action implements Serializable
      * 
      */
     @JsonbProperty("retryRef")
-    public void setRetryRef(String retryRef) {
+    public void setRetryRef(final String retryRef) {
         this.retryRef = retryRef;
-    }
-
-    public Action withRetryRef(String retryRef) {
-        this.retryRef = retryRef;
-        return this;
     }
 
     /**
@@ -244,13 +217,8 @@ public class Action implements Serializable
      * 
      */
     @JsonbProperty("nonRetryableErrors")
-    public void setNonRetryableErrors(List<String> nonRetryableErrors) {
+    public void setNonRetryableErrors(final List<String> nonRetryableErrors) {
         this.nonRetryableErrors = nonRetryableErrors;
-    }
-
-    public Action withNonRetryableErrors(List<String> nonRetryableErrors) {
-        this.nonRetryableErrors = nonRetryableErrors;
-        return this;
     }
 
     /**
@@ -267,13 +235,8 @@ public class Action implements Serializable
      * 
      */
     @JsonbProperty("retryableErrors")
-    public void setRetryableErrors(List<String> retryableErrors) {
+    public void setRetryableErrors(final List<String> retryableErrors) {
         this.retryableErrors = retryableErrors;
-    }
-
-    public Action withRetryableErrors(List<String> retryableErrors) {
-        this.retryableErrors = retryableErrors;
-        return this;
     }
 
     @JsonbProperty("actionDataFilter")
@@ -282,13 +245,8 @@ public class Action implements Serializable
     }
 
     @JsonbProperty("actionDataFilter")
-    public void setActionDataFilter(ActionDataFilter actionDataFilter) {
+    public void setActionDataFilter(final ActionDataFilter actionDataFilter) {
         this.actionDataFilter = actionDataFilter;
-    }
-
-    public Action withActionDataFilter(ActionDataFilter actionDataFilter) {
-        this.actionDataFilter = actionDataFilter;
-        return this;
     }
 
     /**
@@ -305,12 +263,7 @@ public class Action implements Serializable
      * 
      */
     @JsonbProperty("condition")
-    public void setCondition(String condition) {
+    public void setCondition(final String condition) {
         this.condition = condition;
-    }
-
-    public Action withCondition(String condition) {
-        this.condition = condition;
-        return this;
     }
 }

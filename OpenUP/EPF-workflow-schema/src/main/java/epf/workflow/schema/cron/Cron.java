@@ -36,22 +36,6 @@ public class Cron implements Serializable
     private String validUntil;
 
     /**
-     * No args constructor for use in serialization
-     * 
-     */
-    public Cron() {
-    }
-
-    /**
-     * 
-     * @param expression
-     */
-    public Cron(String expression) {
-        super();
-        this.expression = expression;
-    }
-
-    /**
      * Repeating interval (cron expression) describing when the workflow instance should be created
      * (Required)
      * 
@@ -67,13 +51,8 @@ public class Cron implements Serializable
      * 
      */
     @JsonbProperty("expression")
-    public void setExpression(String expression) {
+    public void setExpression(final String expression) {
         this.expression = expression;
-    }
-
-    public Cron withExpression(String expression) {
-        this.expression = expression;
-        return this;
     }
 
     /**
@@ -90,13 +69,7 @@ public class Cron implements Serializable
      * 
      */
     @JsonbProperty("validUntil")
-    public void setValidUntil(String validUntil) {
+    public void setValidUntil(final String validUntil) {
         this.validUntil = validUntil;
     }
-
-    public Cron withValidUntil(String validUntil) {
-        this.validUntil = validUntil;
-        return this;
-    }
-
 }

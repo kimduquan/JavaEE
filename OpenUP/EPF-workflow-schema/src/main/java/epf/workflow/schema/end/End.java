@@ -6,6 +6,7 @@ import java.util.List;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.validation.Valid;
+import epf.workflow.schema.produce.ProduceEvent;
 
 /**
  * @author PC
@@ -65,13 +66,8 @@ public class End implements Serializable
      * 
      */
     @JsonbProperty("terminate")
-    public void setTerminate(boolean terminate) {
+    public void setTerminate(final boolean terminate) {
         this.terminate = terminate;
-    }
-
-    public End withTerminate(boolean terminate) {
-        this.terminate = terminate;
-        return this;
     }
 
     /**
@@ -88,13 +84,8 @@ public class End implements Serializable
      * 
      */
     @JsonbProperty("produceEvents")
-    public void setProduceEvents(List<ProduceEvent> produceEvents) {
+    public void setProduceEvents(final List<ProduceEvent> produceEvents) {
         this.produceEvents = produceEvents;
-    }
-
-    public End withProduceEvents(List<ProduceEvent> produceEvents) {
-        this.produceEvents = produceEvents;
-        return this;
     }
 
     /**
@@ -111,13 +102,8 @@ public class End implements Serializable
      * 
      */
     @JsonbProperty("compensate")
-    public void setCompensate(boolean compensate) {
+    public void setCompensate(final boolean compensate) {
         this.compensate = compensate;
-    }
-
-    public End withCompensate(boolean compensate) {
-        this.compensate = compensate;
-        return this;
     }
 
     /**
@@ -134,13 +120,7 @@ public class End implements Serializable
      * 
      */
     @JsonbProperty("continueAs")
-    public void setContinueAs(ContinueAs continueAs) {
+    public void setContinueAs(final ContinueAs continueAs) {
         this.continueAs = continueAs;
     }
-
-    public End withContinueAs(ContinueAs continueAs) {
-        this.continueAs = continueAs;
-        return this;
-    }
-
 }

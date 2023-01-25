@@ -51,24 +51,6 @@ public class BasicAuthDefinition implements Serializable
     private Map<String, String> metadata;
 
     /**
-     * No args constructor for use in serialization
-     * 
-     */
-    public BasicAuthDefinition() {
-    }
-
-    /**
-     * 
-     * @param password
-     * @param username
-     */
-    public BasicAuthDefinition(String username, String password) {
-        super();
-        this.username = username;
-        this.password = password;
-    }
-
-    /**
      * String or a workflow expression. Contains the user name
      * (Required)
      * 
@@ -84,13 +66,8 @@ public class BasicAuthDefinition implements Serializable
      * 
      */
     @JsonbProperty("username")
-    public void setUsername(String username) {
+    public void setUsername(final String username) {
         this.username = username;
-    }
-
-    public BasicAuthDefinition withUsername(String username) {
-        this.username = username;
-        return this;
     }
 
     /**
@@ -109,13 +86,8 @@ public class BasicAuthDefinition implements Serializable
      * 
      */
     @JsonbProperty("password")
-    public void setPassword(String password) {
+    public void setPassword(final String password) {
         this.password = password;
-    }
-
-    public BasicAuthDefinition withPassword(String password) {
-        this.password = password;
-        return this;
     }
 
     /**
@@ -132,12 +104,7 @@ public class BasicAuthDefinition implements Serializable
      * 
      */
     @JsonbProperty("metadata")
-    public void setMetadata(Map<String, String> metadata) {
+    public void setMetadata(final Map<String, String> metadata) {
         this.metadata = metadata;
-    }
-
-    public BasicAuthDefinition withMetadata(Map<String, String> metadata) {
-        this.metadata = metadata;
-        return this;
     }
 }

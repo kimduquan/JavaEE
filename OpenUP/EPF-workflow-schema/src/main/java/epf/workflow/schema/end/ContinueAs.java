@@ -5,6 +5,7 @@ import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
+import epf.workflow.schema.timeouts.WorkflowExecTimeout;
 
 /**
  * @author PC
@@ -60,13 +61,8 @@ public class ContinueAs implements Serializable
      * 
      */
     @JsonbProperty("workflowId")
-    public void setWorkflowId(String workflowId) {
+    public void setWorkflowId(final String workflowId) {
         this.workflowId = workflowId;
-    }
-
-    public ContinueAs withWorkflowId(String workflowId) {
-        this.workflowId = workflowId;
-        return this;
     }
 
     /**
@@ -83,13 +79,8 @@ public class ContinueAs implements Serializable
      * 
      */
     @JsonbProperty("version")
-    public void setVersion(String version) {
+    public void setVersion(final String version) {
         this.version = version;
-    }
-
-    public ContinueAs withVersion(String version) {
-        this.version = version;
-        return this;
     }
 
     /**
@@ -106,13 +97,8 @@ public class ContinueAs implements Serializable
      * 
      */
     @JsonbProperty("data")
-    public void setData(String data) {
+    public void setData(final String data) {
         this.data = data;
-    }
-
-    public ContinueAs withData(String data) {
-        this.data = data;
-        return this;
     }
 
     @JsonbProperty("workflowExecTimeout")
@@ -121,13 +107,7 @@ public class ContinueAs implements Serializable
     }
 
     @JsonbProperty("workflowExecTimeout")
-    public void setWorkflowExecTimeout(WorkflowExecTimeout workflowExecTimeout) {
+    public void setWorkflowExecTimeout(final WorkflowExecTimeout workflowExecTimeout) {
         this.workflowExecTimeout = workflowExecTimeout;
     }
-
-    public ContinueAs withWorkflowExecTimeout(WorkflowExecTimeout workflowExecTimeout) {
-        this.workflowExecTimeout = workflowExecTimeout;
-        return this;
-    }
-
 }

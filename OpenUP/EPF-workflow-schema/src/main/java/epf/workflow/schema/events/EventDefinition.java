@@ -10,6 +10,7 @@ import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
+import epf.workflow.schema.correlation.CorrelationDef;
 
 /**
  * @author PC
@@ -63,7 +64,6 @@ public class EventDefinition implements Serializable
      * 
      */
     @JsonbProperty("dataOnly")
-    @JsonbPropertyDescription("If `true`, only the Event payload is accessible to consuming Workflow states. If `false`, both event payload and context attributes should be accessible ")
     private boolean dataOnly = true;
     /**
      * Defines the events as either being consumed or produced by the workflow. Default is consumed
@@ -93,13 +93,8 @@ public class EventDefinition implements Serializable
      * 
      */
     @JsonbProperty("name")
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
-    }
-
-    public EventDefinition withName(String name) {
-        this.name = name;
-        return this;
     }
 
     /**
@@ -116,13 +111,8 @@ public class EventDefinition implements Serializable
      * 
      */
     @JsonbProperty("source")
-    public void setSource(String source) {
+    public void setSource(final String source) {
         this.source = source;
-    }
-
-    public EventDefinition withSource(String source) {
-        this.source = source;
-        return this;
     }
 
     /**
@@ -139,13 +129,8 @@ public class EventDefinition implements Serializable
      * 
      */
     @JsonbProperty("type")
-    public void setType(String type) {
+    public void setType(final String type) {
         this.type = type;
-    }
-
-    public EventDefinition withType(String type) {
-        this.type = type;
-        return this;
     }
 
     /**
@@ -162,13 +147,8 @@ public class EventDefinition implements Serializable
      * 
      */
     @JsonbProperty("correlation")
-    public void setCorrelation(List<CorrelationDef> correlation) {
+    public void setCorrelation(final List<CorrelationDef> correlation) {
         this.correlation = correlation;
-    }
-
-    public EventDefinition withCorrelation(List<CorrelationDef> correlation) {
-        this.correlation = correlation;
-        return this;
     }
 
     /**
@@ -185,13 +165,8 @@ public class EventDefinition implements Serializable
      * 
      */
     @JsonbProperty("dataOnly")
-    public void setDataOnly(boolean dataOnly) {
+    public void setDataOnly(final boolean dataOnly) {
         this.dataOnly = dataOnly;
-    }
-
-    public EventDefinition withDataOnly(boolean dataOnly) {
-        this.dataOnly = dataOnly;
-        return this;
     }
 
     /**
@@ -208,13 +183,8 @@ public class EventDefinition implements Serializable
      * 
      */
     @JsonbProperty("kind")
-    public void setKind(EventDefinition.Kind kind) {
+    public void setKind(final EventDefinition.Kind kind) {
         this.kind = kind;
-    }
-
-    public EventDefinition withKind(EventDefinition.Kind kind) {
-        this.kind = kind;
-        return this;
     }
 
     /**
@@ -231,20 +201,25 @@ public class EventDefinition implements Serializable
      * 
      */
     @JsonbProperty("metadata")
-    public void setMetadata(Map<String, String> metadata) {
+    public void setMetadata(final Map<String, String> metadata) {
         this.metadata = metadata;
     }
 
-    public EventDefinition withMetadata(Map<String, String> metadata) {
-        this.metadata = metadata;
-        return this;
-    }
-
+    /**
+     * @author PC
+     *
+     */
     public enum Kind {
 
         CONSUMED("consumed"),
         PRODUCED("produced");
+        /**
+         * 
+         */
         private final String value;
+        /**
+         * 
+         */
         private final static Map<String, EventDefinition.Kind> CONSTANTS = new HashMap<String, EventDefinition.Kind>();
 
         static {
@@ -253,7 +228,10 @@ public class EventDefinition implements Serializable
             }
         }
 
-        private Kind(String value) {
+        /**
+         * @param value
+         */
+        Kind(final String value) {
             this.value = value;
         }
 
@@ -267,15 +245,13 @@ public class EventDefinition implements Serializable
         }
 
         @JsonbCreator
-        public static EventDefinition.Kind fromValue(String value) {
-            EventDefinition.Kind constant = CONSTANTS.get(value);
+        public static EventDefinition.Kind fromValue(final String value) {
+        	final EventDefinition.Kind constant = CONSTANTS.get(value);
             if (constant == null) {
                 throw new IllegalArgumentException(value);
             } else {
                 return constant;
             }
         }
-
     }
-
 }

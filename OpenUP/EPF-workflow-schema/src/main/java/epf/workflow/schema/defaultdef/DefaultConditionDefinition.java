@@ -4,6 +4,8 @@ import java.io.Serializable;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.validation.Valid;
+import epf.workflow.schema.end.End;
+import epf.workflow.schema.transitions.Transition;
 
 /**
  * @author PC
@@ -37,13 +39,8 @@ public class DefaultConditionDefinition implements Serializable
     }
 
     @JsonbProperty("transition")
-    public void setTransition(Transition transition) {
+    public void setTransition(final Transition transition) {
         this.transition = transition;
-    }
-
-    public DefaultConditionDefinition withTransition(Transition transition) {
-        this.transition = transition;
-        return this;
     }
 
     /**
@@ -60,13 +57,7 @@ public class DefaultConditionDefinition implements Serializable
      * 
      */
     @JsonbProperty("end")
-    public void setEnd(End end) {
+    public void setEnd(final End end) {
         this.end = end;
     }
-
-    public DefaultConditionDefinition withEnd(End end) {
-        this.end = end;
-        return this;
-    }
-
 }

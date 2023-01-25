@@ -8,6 +8,8 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import epf.workflow.schema.end.End;
+import epf.workflow.schema.transitions.Transition;
 
 /**
  * @author PC
@@ -59,22 +61,6 @@ public class Error implements Serializable
     private End end;
 
     /**
-     * No args constructor for use in serialization
-     * 
-     */
-    public Error() {
-    }
-
-    /**
-     * 
-     * @param transition
-     */
-    public Error(Transition transition) {
-        super();
-        this.transition = transition;
-    }
-
-    /**
      * Reference to a unique workflow error definition. Used of errorRefs is not used
      * 
      */
@@ -88,13 +74,8 @@ public class Error implements Serializable
      * 
      */
     @JsonbProperty("errorRef")
-    public void setErrorRef(String errorRef) {
+    public void setErrorRef(final String errorRef) {
         this.errorRef = errorRef;
-    }
-
-    public Error withErrorRef(String errorRef) {
-        this.errorRef = errorRef;
-        return this;
     }
 
     /**
@@ -111,13 +92,8 @@ public class Error implements Serializable
      * 
      */
     @JsonbProperty("errorRefs")
-    public void setErrorRefs(List<String> errorRefs) {
+    public void setErrorRefs(final List<String> errorRefs) {
         this.errorRefs = errorRefs;
-    }
-
-    public Error withErrorRefs(List<String> errorRefs) {
-        this.errorRefs = errorRefs;
-        return this;
     }
 
     /**
@@ -136,13 +112,8 @@ public class Error implements Serializable
      * 
      */
     @JsonbProperty("transition")
-    public void setTransition(Transition transition) {
+    public void setTransition(final Transition transition) {
         this.transition = transition;
-    }
-
-    public Error withTransition(Transition transition) {
-        this.transition = transition;
-        return this;
     }
 
     /**
@@ -159,13 +130,7 @@ public class Error implements Serializable
      * 
      */
     @JsonbProperty("end")
-    public void setEnd(End end) {
+    public void setEnd(final End end) {
         this.end = end;
     }
-
-    public Error withEnd(End end) {
-        this.end = end;
-        return this;
-    }
-
 }

@@ -41,22 +41,6 @@ public class BearerAuthDefinition implements Serializable
     private Map<String, String> metadata;
 
     /**
-     * No args constructor for use in serialization
-     * 
-     */
-    public BearerAuthDefinition() {
-    }
-
-    /**
-     * 
-     * @param token
-     */
-    public BearerAuthDefinition(String token) {
-        super();
-        this.token = token;
-    }
-
-    /**
      * String or a workflow expression. Contains the token
      * (Required)
      * 
@@ -72,13 +56,8 @@ public class BearerAuthDefinition implements Serializable
      * 
      */
     @JsonbProperty("token")
-    public void setToken(String token) {
+    public void setToken(final String token) {
         this.token = token;
-    }
-
-    public BearerAuthDefinition withToken(String token) {
-        this.token = token;
-        return this;
     }
 
     /**
@@ -95,13 +74,7 @@ public class BearerAuthDefinition implements Serializable
      * 
      */
     @JsonbProperty("metadata")
-    public void setMetadata(Map<String, String> metadata) {
+    public void setMetadata(final Map<String, String> metadata) {
         this.metadata = metadata;
     }
-
-    public BearerAuthDefinition withMetadata(Map<String, String> metadata) {
-        this.metadata = metadata;
-        return this;
-    }
-
 }

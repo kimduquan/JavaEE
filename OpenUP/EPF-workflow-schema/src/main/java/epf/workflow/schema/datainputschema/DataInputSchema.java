@@ -40,24 +40,6 @@ public class DataInputSchema implements Serializable
     private boolean failOnValidationErrors = true;
 
     /**
-     * No args constructor for use in serialization
-     * 
-     */
-    public DataInputSchema() {
-    }
-
-    /**
-     * 
-     * @param schema
-     * @param failOnValidationErrors
-     */
-    public DataInputSchema(String schema, boolean failOnValidationErrors) {
-        super();
-        this.schema = schema;
-        this.failOnValidationErrors = failOnValidationErrors;
-    }
-
-    /**
      * URI of the JSON Schema used to validate the workflow data input
      * (Required)
      * 
@@ -73,13 +55,8 @@ public class DataInputSchema implements Serializable
      * 
      */
     @JsonbProperty("schema")
-    public void setSchema(String schema) {
+    public void setSchema(final String schema) {
         this.schema = schema;
-    }
-
-    public DataInputSchema withSchema(String schema) {
-        this.schema = schema;
-        return this;
     }
 
     /**
@@ -98,13 +75,7 @@ public class DataInputSchema implements Serializable
      * 
      */
     @JsonbProperty("failOnValidationErrors")
-    public void setFailOnValidationErrors(boolean failOnValidationErrors) {
+    public void setFailOnValidationErrors(final boolean failOnValidationErrors) {
         this.failOnValidationErrors = failOnValidationErrors;
     }
-
-    public DataInputSchema withFailOnValidationErrors(boolean failOnValidationErrors) {
-        this.failOnValidationErrors = failOnValidationErrors;
-        return this;
-    }
-
 }

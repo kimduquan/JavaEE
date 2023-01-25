@@ -46,22 +46,6 @@ public class ErrorDefinition implements Serializable
     private String description;
 
     /**
-     * No args constructor for use in serialization
-     * 
-     */
-    public ErrorDefinition() {
-    }
-
-    /**
-     * 
-     * @param name
-     */
-    public ErrorDefinition(String name) {
-        super();
-        this.name = name;
-    }
-
-    /**
      * Domain-specific error name
      * (Required)
      * 
@@ -77,13 +61,8 @@ public class ErrorDefinition implements Serializable
      * 
      */
     @JsonbProperty("name")
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
-    }
-
-    public ErrorDefinition withName(String name) {
-        this.name = name;
-        return this;
     }
 
     /**
@@ -100,13 +79,8 @@ public class ErrorDefinition implements Serializable
      * 
      */
     @JsonbProperty("code")
-    public void setCode(String code) {
+    public void setCode(final String code) {
         this.code = code;
-    }
-
-    public ErrorDefinition withCode(String code) {
-        this.code = code;
-        return this;
     }
 
     /**
@@ -123,13 +97,7 @@ public class ErrorDefinition implements Serializable
      * 
      */
     @JsonbProperty("description")
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
-
-    public ErrorDefinition withDescription(String description) {
-        this.description = description;
-        return this;
-    }
-
 }

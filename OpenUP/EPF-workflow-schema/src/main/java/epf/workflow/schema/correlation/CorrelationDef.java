@@ -39,22 +39,6 @@ public class CorrelationDef implements Serializable
     private String contextAttributeValue;
 
     /**
-     * No args constructor for use in serialization
-     * 
-     */
-    public CorrelationDef() {
-    }
-
-    /**
-     * 
-     * @param contextAttributeName
-     */
-    public CorrelationDef(String contextAttributeName) {
-        super();
-        this.contextAttributeName = contextAttributeName;
-    }
-
-    /**
      * CloudEvent Extension Context Attribute name
      * (Required)
      * 
@@ -70,13 +54,8 @@ public class CorrelationDef implements Serializable
      * 
      */
     @JsonbProperty("contextAttributeName")
-    public void setContextAttributeName(String contextAttributeName) {
+    public void setContextAttributeName(final String contextAttributeName) {
         this.contextAttributeName = contextAttributeName;
-    }
-
-    public CorrelationDef withContextAttributeName(String contextAttributeName) {
-        this.contextAttributeName = contextAttributeName;
-        return this;
     }
 
     /**
@@ -93,12 +72,7 @@ public class CorrelationDef implements Serializable
      * 
      */
     @JsonbProperty("contextAttributeValue")
-    public void setContextAttributeValue(String contextAttributeValue) {
+    public void setContextAttributeValue(final String contextAttributeValue) {
         this.contextAttributeValue = contextAttributeValue;
-    }
-
-    public CorrelationDef withContextAttributeValue(String contextAttributeValue) {
-        this.contextAttributeValue = contextAttributeValue;
-        return this;
     }
 }

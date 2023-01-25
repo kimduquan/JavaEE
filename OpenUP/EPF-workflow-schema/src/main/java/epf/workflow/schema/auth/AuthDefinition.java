@@ -40,12 +40,21 @@ public class AuthDefinition implements Serializable
      */
     @JsonbProperty("scheme")
     private AuthDefinition.Scheme scheme = AuthDefinition.Scheme.fromValue("basic");
+    /**
+     * 
+     */
     @JsonbProperty("basicauth")
     @Valid
     private BasicAuthDefinition basicauth;
+    /**
+     * 
+     */
     @JsonbProperty("bearerauth")
     @Valid
     private BearerAuthDefinition bearerauth;
+    /**
+     * 
+     */
     @JsonbProperty("oauth")
     @Valid
     private OauthDefinition oauth;
@@ -64,13 +73,8 @@ public class AuthDefinition implements Serializable
      * 
      */
     @JsonbProperty("name")
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
-    }
-
-    public AuthDefinition withName(String name) {
-        this.name = name;
-        return this;
     }
 
     /**
@@ -87,13 +91,8 @@ public class AuthDefinition implements Serializable
      * 
      */
     @JsonbProperty("scheme")
-    public void setScheme(AuthDefinition.Scheme scheme) {
+    public void setScheme(final AuthDefinition.Scheme scheme) {
         this.scheme = scheme;
-    }
-
-    public AuthDefinition withScheme(AuthDefinition.Scheme scheme) {
-        this.scheme = scheme;
-        return this;
     }
 
     @JsonbProperty("basicauth")
@@ -102,13 +101,8 @@ public class AuthDefinition implements Serializable
     }
 
     @JsonbProperty("basicauth")
-    public void setBasicauth(BasicAuthDefinition basicauth) {
+    public void setBasicauth(final BasicAuthDefinition basicauth) {
         this.basicauth = basicauth;
-    }
-
-    public AuthDefinition withBasicauth(BasicAuthDefinition basicauth) {
-        this.basicauth = basicauth;
-        return this;
     }
 
     @JsonbProperty("bearerauth")
@@ -117,13 +111,8 @@ public class AuthDefinition implements Serializable
     }
 
     @JsonbProperty("bearerauth")
-    public void setBearerauth(BearerAuthDefinition bearerauth) {
+    public void setBearerauth(final BearerAuthDefinition bearerauth) {
         this.bearerauth = bearerauth;
-    }
-
-    public AuthDefinition withBearerauth(BearerAuthDefinition bearerauth) {
-        this.bearerauth = bearerauth;
-        return this;
     }
 
     @JsonbProperty("oauth")
@@ -132,21 +121,26 @@ public class AuthDefinition implements Serializable
     }
 
     @JsonbProperty("oauth")
-    public void setOauth(OauthDefinition oauth) {
+    public void setOauth(final OauthDefinition oauth) {
         this.oauth = oauth;
     }
 
-    public AuthDefinition withOauth(OauthDefinition oauth) {
-        this.oauth = oauth;
-        return this;
-    }
-
+    /**
+     * @author PC
+     *
+     */
     public enum Scheme {
 
         BASIC("basic"),
         BEARER("bearer"),
         OAUTH_2("oauth2");
+        /**
+         * 
+         */
         private final String value;
+        /**
+         * 
+         */
         private final static Map<String, AuthDefinition.Scheme> CONSTANTS = new HashMap<String, AuthDefinition.Scheme>();
 
         static {
@@ -155,7 +149,10 @@ public class AuthDefinition implements Serializable
             }
         }
 
-        Scheme(String value) {
+        /**
+         * @param value
+         */
+        Scheme(final String value) {
             this.value = value;
         }
 
@@ -169,14 +166,13 @@ public class AuthDefinition implements Serializable
         }
 
         @JsonbCreator
-        public static AuthDefinition.Scheme fromValue(String value) {
-            AuthDefinition.Scheme constant = CONSTANTS.get(value);
+        public static AuthDefinition.Scheme fromValue(final String value) {
+        	final AuthDefinition.Scheme constant = CONSTANTS.get(value);
             if (constant == null) {
                 throw new IllegalArgumentException(value);
             } else {
                 return constant;
             }
         }
-
     }
 }

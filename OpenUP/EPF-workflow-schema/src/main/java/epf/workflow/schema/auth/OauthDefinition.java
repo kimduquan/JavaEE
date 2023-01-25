@@ -128,24 +128,6 @@ public class OauthDefinition implements Serializable
     private Map<String, String> metadata;
 
     /**
-     * No args constructor for use in serialization
-     * 
-     */
-    public OauthDefinition() {
-    }
-
-    /**
-     * 
-     * @param clientId
-     * @param grantType
-     */
-    public OauthDefinition(OauthDefinition.GrantType grantType, String clientId) {
-        super();
-        this.grantType = grantType;
-        this.clientId = clientId;
-    }
-
-    /**
      * String or a workflow expression. Contains the authority information
      * 
      */
@@ -159,13 +141,8 @@ public class OauthDefinition implements Serializable
      * 
      */
     @JsonbProperty("authority")
-    public void setAuthority(String authority) {
+    public void setAuthority(final String authority) {
         this.authority = authority;
-    }
-
-    public OauthDefinition withAuthority(String authority) {
-        this.authority = authority;
-        return this;
     }
 
     /**
@@ -184,13 +161,8 @@ public class OauthDefinition implements Serializable
      * 
      */
     @JsonbProperty("grantType")
-    public void setGrantType(OauthDefinition.GrantType grantType) {
+    public void setGrantType(final OauthDefinition.GrantType grantType) {
         this.grantType = grantType;
-    }
-
-    public OauthDefinition withGrantType(OauthDefinition.GrantType grantType) {
-        this.grantType = grantType;
-        return this;
     }
 
     /**
@@ -209,13 +181,8 @@ public class OauthDefinition implements Serializable
      * 
      */
     @JsonbProperty("clientId")
-    public void setClientId(String clientId) {
+    public void setClientId(final String clientId) {
         this.clientId = clientId;
-    }
-
-    public OauthDefinition withClientId(String clientId) {
-        this.clientId = clientId;
-        return this;
     }
 
     /**
@@ -232,13 +199,8 @@ public class OauthDefinition implements Serializable
      * 
      */
     @JsonbProperty("clientSecret")
-    public void setClientSecret(String clientSecret) {
+    public void setClientSecret(final String clientSecret) {
         this.clientSecret = clientSecret;
-    }
-
-    public OauthDefinition withClientSecret(String clientSecret) {
-        this.clientSecret = clientSecret;
-        return this;
     }
 
     /**
@@ -255,13 +217,8 @@ public class OauthDefinition implements Serializable
      * 
      */
     @JsonbProperty("scopes")
-    public void setScopes(List<String> scopes) {
+    public void setScopes(final List<String> scopes) {
         this.scopes = scopes;
-    }
-
-    public OauthDefinition withScopes(List<String> scopes) {
-        this.scopes = scopes;
-        return this;
     }
 
     /**
@@ -278,13 +235,8 @@ public class OauthDefinition implements Serializable
      * 
      */
     @JsonbProperty("username")
-    public void setUsername(String username) {
+    public void setUsername(final String username) {
         this.username = username;
-    }
-
-    public OauthDefinition withUsername(String username) {
-        this.username = username;
-        return this;
     }
 
     /**
@@ -301,13 +253,8 @@ public class OauthDefinition implements Serializable
      * 
      */
     @JsonbProperty("password")
-    public void setPassword(String password) {
+    public void setPassword(final String password) {
         this.password = password;
-    }
-
-    public OauthDefinition withPassword(String password) {
-        this.password = password;
-        return this;
     }
 
     /**
@@ -324,13 +271,8 @@ public class OauthDefinition implements Serializable
      * 
      */
     @JsonbProperty("audiences")
-    public void setAudiences(List<String> audiences) {
+    public void setAudiences(final List<String> audiences) {
         this.audiences = audiences;
-    }
-
-    public OauthDefinition withAudiences(List<String> audiences) {
-        this.audiences = audiences;
-        return this;
     }
 
     /**
@@ -347,13 +289,8 @@ public class OauthDefinition implements Serializable
      * 
      */
     @JsonbProperty("subjectToken")
-    public void setSubjectToken(String subjectToken) {
+    public void setSubjectToken(final String subjectToken) {
         this.subjectToken = subjectToken;
-    }
-
-    public OauthDefinition withSubjectToken(String subjectToken) {
-        this.subjectToken = subjectToken;
-        return this;
     }
 
     /**
@@ -370,13 +307,8 @@ public class OauthDefinition implements Serializable
      * 
      */
     @JsonbProperty("requestedSubject")
-    public void setRequestedSubject(String requestedSubject) {
+    public void setRequestedSubject(final String requestedSubject) {
         this.requestedSubject = requestedSubject;
-    }
-
-    public OauthDefinition withRequestedSubject(String requestedSubject) {
-        this.requestedSubject = requestedSubject;
-        return this;
     }
 
     /**
@@ -393,13 +325,8 @@ public class OauthDefinition implements Serializable
      * 
      */
     @JsonbProperty("requestedIssuer")
-    public void setRequestedIssuer(String requestedIssuer) {
+    public void setRequestedIssuer(final String requestedIssuer) {
         this.requestedIssuer = requestedIssuer;
-    }
-
-    public OauthDefinition withRequestedIssuer(String requestedIssuer) {
-        this.requestedIssuer = requestedIssuer;
-        return this;
     }
 
     /**
@@ -416,21 +343,26 @@ public class OauthDefinition implements Serializable
      * 
      */
     @JsonbProperty("metadata")
-    public void setMetadata(Map<String, String> metadata) {
+    public void setMetadata(final Map<String, String> metadata) {
         this.metadata = metadata;
     }
 
-    public OauthDefinition withMetadata(Map<String, String> metadata) {
-        this.metadata = metadata;
-        return this;
-    }
-
+    /**
+     * @author PC
+     *
+     */
     public enum GrantType {
 
         PASSWORD("password"),
         CLIENT_CREDENTIALS("clientCredentials"),
         TOKEN_EXCHANGE("tokenExchange");
+        /**
+         * 
+         */
         private final String value;
+        /**
+         * 
+         */
         private final static Map<String, OauthDefinition.GrantType> CONSTANTS = new HashMap<String, OauthDefinition.GrantType>();
 
         static {
@@ -439,7 +371,10 @@ public class OauthDefinition implements Serializable
             }
         }
 
-        GrantType(String value) {
+        /**
+         * @param value
+         */
+        GrantType(final String value) {
             this.value = value;
         }
 
@@ -453,14 +388,13 @@ public class OauthDefinition implements Serializable
         }
 
         @JsonbCreator
-        public static OauthDefinition.GrantType fromValue(String value) {
-            OauthDefinition.GrantType constant = CONSTANTS.get(value);
+        public static OauthDefinition.GrantType fromValue(final String value) {
+        	final OauthDefinition.GrantType constant = CONSTANTS.get(value);
             if (constant == null) {
                 throw new IllegalArgumentException(value);
             } else {
                 return constant;
             }
         }
-
     }
 }

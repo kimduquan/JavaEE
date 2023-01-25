@@ -9,6 +9,12 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import epf.workflow.schema.auth.AuthDefinition;
+import epf.workflow.schema.datainputschema.DataInputSchema;
+import epf.workflow.schema.interfaces.Extension;
+import epf.workflow.schema.interfaces.State;
+import epf.workflow.schema.start.Start;
+import epf.workflow.schema.timeouts.TimeoutsDefinition;
 
 /**
  * @author PC
@@ -205,28 +211,6 @@ public class Workflow implements Serializable
     private List<Extension> extensions = new ArrayList<Extension>();
 
     /**
-     * No args constructor for use in serialization
-     * 
-     */
-    public Workflow() {
-    }
-
-    /**
-     * 
-     * @param name
-     * @param id
-     * @param version
-     * @param states
-     */
-    public Workflow(String id, String name, String version, List<State> states) {
-        super();
-        this.id = id;
-        this.name = name;
-        this.version = version;
-        this.states = states;
-    }
-
-    /**
      * Workflow unique identifier
      * (Required)
      * 
@@ -242,13 +226,8 @@ public class Workflow implements Serializable
      * 
      */
     @JsonbProperty("id")
-    public void setId(String id) {
+    public void setId(final String id) {
         this.id = id;
-    }
-
-    public Workflow withId(String id) {
-        this.id = id;
-        return this;
     }
 
     /**
@@ -267,13 +246,8 @@ public class Workflow implements Serializable
      * 
      */
     @JsonbProperty("name")
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
-    }
-
-    public Workflow withName(String name) {
-        this.name = name;
-        return this;
     }
 
     /**
@@ -290,13 +264,8 @@ public class Workflow implements Serializable
      * 
      */
     @JsonbProperty("description")
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
-    }
-
-    public Workflow withDescription(String description) {
-        this.description = description;
-        return this;
     }
 
     /**
@@ -315,13 +284,8 @@ public class Workflow implements Serializable
      * 
      */
     @JsonbProperty("version")
-    public void setVersion(String version) {
+    public void setVersion(final String version) {
         this.version = version;
-    }
-
-    public Workflow withVersion(String version) {
-        this.version = version;
-        return this;
     }
 
     /**
@@ -338,13 +302,8 @@ public class Workflow implements Serializable
      * 
      */
     @JsonbProperty("annotations")
-    public void setAnnotations(List<String> annotations) {
+    public void setAnnotations(final List<String> annotations) {
         this.annotations = annotations;
-    }
-
-    public Workflow withAnnotations(List<String> annotations) {
-        this.annotations = annotations;
-        return this;
     }
 
     /**
@@ -361,13 +320,8 @@ public class Workflow implements Serializable
      * 
      */
     @JsonbProperty("dataInputSchema")
-    public void setDataInputSchema(DataInputSchema dataInputSchema) {
+    public void setDataInputSchema(final DataInputSchema dataInputSchema) {
         this.dataInputSchema = dataInputSchema;
-    }
-
-    public Workflow withDataInputSchema(DataInputSchema dataInputSchema) {
-        this.dataInputSchema = dataInputSchema;
-        return this;
     }
 
     /**
@@ -384,13 +338,8 @@ public class Workflow implements Serializable
      * 
      */
     @JsonbProperty("start")
-    public void setStart(Start start) {
+    public void setStart(final Start start) {
         this.start = start;
-    }
-
-    public Workflow withStart(Start start) {
-        this.start = start;
-        return this;
     }
 
     /**
@@ -407,13 +356,8 @@ public class Workflow implements Serializable
      * 
      */
     @JsonbProperty("specVersion")
-    public void setSpecVersion(String specVersion) {
+    public void setSpecVersion(final String specVersion) {
         this.specVersion = specVersion;
-    }
-
-    public Workflow withSpecVersion(String specVersion) {
-        this.specVersion = specVersion;
-        return this;
     }
 
     /**
@@ -430,13 +374,8 @@ public class Workflow implements Serializable
      * 
      */
     @JsonbProperty("expressionLang")
-    public void setExpressionLang(String expressionLang) {
+    public void setExpressionLang(final String expressionLang) {
         this.expressionLang = expressionLang;
-    }
-
-    public Workflow withExpressionLang(String expressionLang) {
-        this.expressionLang = expressionLang;
-        return this;
     }
 
     /**
@@ -453,13 +392,8 @@ public class Workflow implements Serializable
      * 
      */
     @JsonbProperty("keepActive")
-    public void setKeepActive(boolean keepActive) {
+    public void setKeepActive(final boolean keepActive) {
         this.keepActive = keepActive;
-    }
-
-    public Workflow withKeepActive(boolean keepActive) {
-        this.keepActive = keepActive;
-        return this;
     }
 
     /**
@@ -476,13 +410,8 @@ public class Workflow implements Serializable
      * 
      */
     @JsonbProperty("autoRetries")
-    public void setAutoRetries(boolean autoRetries) {
+    public void setAutoRetries(final boolean autoRetries) {
         this.autoRetries = autoRetries;
-    }
-
-    public Workflow withAutoRetries(boolean autoRetries) {
-        this.autoRetries = autoRetries;
-        return this;
     }
 
     /**
@@ -499,13 +428,8 @@ public class Workflow implements Serializable
      * 
      */
     @JsonbProperty("metadata")
-    public void setMetadata(Map<String, String> metadata) {
+    public void setMetadata(final Map<String, String> metadata) {
         this.metadata = metadata;
-    }
-
-    public Workflow withMetadata(Map<String, String> metadata) {
-        this.metadata = metadata;
-        return this;
     }
 
     /**
@@ -522,13 +446,8 @@ public class Workflow implements Serializable
      * 
      */
     @JsonbProperty("events")
-    public void setEvents(Events events) {
+    public void setEvents(final Events events) {
         this.events = events;
-    }
-
-    public Workflow withEvents(Events events) {
-        this.events = events;
-        return this;
     }
 
     /**
@@ -545,13 +464,8 @@ public class Workflow implements Serializable
      * 
      */
     @JsonbProperty("functions")
-    public void setFunctions(Functions functions) {
+    public void setFunctions(final Functions functions) {
         this.functions = functions;
-    }
-
-    public Workflow withFunctions(Functions functions) {
-        this.functions = functions;
-        return this;
     }
 
     /**
@@ -568,13 +482,8 @@ public class Workflow implements Serializable
      * 
      */
     @JsonbProperty("errors")
-    public void setErrors(Errors errors) {
+    public void setErrors(final Errors errors) {
         this.errors = errors;
-    }
-
-    public Workflow withErrors(Errors errors) {
-        this.errors = errors;
-        return this;
     }
 
     /**
@@ -591,13 +500,8 @@ public class Workflow implements Serializable
      * 
      */
     @JsonbProperty("retries")
-    public void setRetries(Retries retries) {
+    public void setRetries(final Retries retries) {
         this.retries = retries;
-    }
-
-    public Workflow withRetries(Retries retries) {
-        this.retries = retries;
-        return this;
     }
 
     /**
@@ -614,13 +518,8 @@ public class Workflow implements Serializable
      * 
      */
     @JsonbProperty("secrets")
-    public void setSecrets(Secrets secrets) {
+    public void setSecrets(final Secrets secrets) {
         this.secrets = secrets;
-    }
-
-    public Workflow withSecrets(Secrets secrets) {
-        this.secrets = secrets;
-        return this;
     }
 
     /**
@@ -641,11 +540,6 @@ public class Workflow implements Serializable
         this.constants = constants;
     }
 
-    public Workflow withConstants(Constants constants) {
-        this.constants = constants;
-        return this;
-    }
-
     /**
      * Timeouts Definition
      * 
@@ -664,11 +558,6 @@ public class Workflow implements Serializable
         this.timeouts = timeouts;
     }
 
-    public Workflow withTimeouts(TimeoutsDefinition timeouts) {
-        this.timeouts = timeouts;
-        return this;
-    }
-
     /**
      * Auth Definition
      * 
@@ -685,11 +574,6 @@ public class Workflow implements Serializable
     @JsonbProperty("auth")
     public void setAuth(AuthDefinition auth) {
         this.auth = auth;
-    }
-
-    public Workflow withAuth(AuthDefinition auth) {
-        this.auth = auth;
-        return this;
     }
 
     /**
@@ -712,11 +596,6 @@ public class Workflow implements Serializable
         this.states = states;
     }
 
-    public Workflow withStates(List<State> states) {
-        this.states = states;
-        return this;
-    }
-
     /**
      * Workflow Extensions
      * 
@@ -734,10 +613,4 @@ public class Workflow implements Serializable
     public void setExtensions(List<Extension> extensions) {
         this.extensions = extensions;
     }
-
-    public Workflow withExtensions(List<Extension> extensions) {
-        this.extensions = extensions;
-        return this;
-    }
-
 }

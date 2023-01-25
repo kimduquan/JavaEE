@@ -6,6 +6,8 @@ import java.util.List;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.validation.Valid;
+import epf.workflow.schema.actions.Action;
+import epf.workflow.schema.timeouts.TimeoutsDefinition;
 
 /**
  * @author PC
@@ -58,13 +60,8 @@ public class Branch implements Serializable
      * 
      */
     @JsonbProperty("name")
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
-    }
-
-    public Branch withName(String name) {
-        this.name = name;
-        return this;
     }
 
     /**
@@ -81,13 +78,8 @@ public class Branch implements Serializable
      * 
      */
     @JsonbProperty("actions")
-    public void setActions(List<Action> actions) {
+    public void setActions(final List<Action> actions) {
         this.actions = actions;
-    }
-
-    public Branch withActions(List<Action> actions) {
-        this.actions = actions;
-        return this;
     }
 
     /**
@@ -104,12 +96,7 @@ public class Branch implements Serializable
      * 
      */
     @JsonbProperty("timeouts")
-    public void setTimeouts(TimeoutsDefinition timeouts) {
+    public void setTimeouts(final TimeoutsDefinition timeouts) {
         this.timeouts = timeouts;
-    }
-
-    public Branch withTimeouts(TimeoutsDefinition timeouts) {
-        this.timeouts = timeouts;
-        return this;
     }
 }
