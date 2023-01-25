@@ -782,6 +782,7 @@
 		<module>EPF-work-products-schema</module>
 		
 		<module>EPF-schema</module>
+		<module>EPF-workflow-schema</module>
 		
 		<module>OpenUP-architecture-schema</module>
 		<module>OpenUP-deployment-schema</module>

@@ -61,12 +61,7 @@ public class QueryCollector extends LazyDataModel<JsonObject> {
 	/**
 	 *
 	 */
-	private List<JsonObject> entities = Arrays.asList();
-	
-	/**
-	 *
-	 */
-	private Map<String, JsonObject> entityMap = new HashMap<>();
+	private final Map<String, JsonObject> entityMap = new HashMap<>();
 	
 	/**
 	 * @param gateway
@@ -83,11 +78,12 @@ public class QueryCollector extends LazyDataModel<JsonObject> {
 	
 	/**
 	 * @param target
+	 * @param entity
 	 * @param filters
 	 * @return
 	 */
-	private WebTarget buildFilters(final WebTarget target, final Collection<FilterMeta> filters) {
-		WebTarget newTarget = target;
+	private WebTarget buildFilters(final WebTarget target, final String entity, final Collection<FilterMeta> filters) {
+		WebTarget newTarget = target.path(entity);
 		for(FilterMeta filter : filters) {
 			newTarget = newTarget.matrixParam(filter.getField(), filter.getFilterValue());
 		}
@@ -101,25 +97,20 @@ public class QueryCollector extends LazyDataModel<JsonObject> {
         final Integer maxResults = pageSize;
 		try(Client client = gateway.newClient(Naming.QUERY)){
 			client.authorization(token);
-			final Integer count = Query.executeCountQuery(client, schema, target -> buildFilters(target.path(entity.getName()), filterBy.values()));
-			setRowCount(count);
-        	try(Response response = Query.executeQuery(client, schema, target -> buildFilters(target.path(entity.getName()), filterBy.values()), firstResult, maxResults, sort)){
+        	try(Response response = Query.executeQuery(client, schema, target -> buildFilters(target, entity.getName(), filterBy.values()), firstResult, maxResults, sort)){
         		try(InputStream stream = response.readEntity(InputStream.class)){
-        			entities = JsonUtil.readArray(stream)
+        			entityMap.clear();
+        			return JsonUtil.readArray(stream)
 							.stream()
 							.map(value -> value.asJsonObject())
 							.collect(Collectors.toList());
 				}
-    			entityMap = new HashMap<>();
-    			entities.forEach(object -> {
-    				entityMap.put(object.get(entity.getId().getName()).toString(), object);
-    			});
         	}
         } 
 		catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "[QueryCollector.entities]", e);
+			LOGGER.log(Level.SEVERE, "[QueryCollector.load]", e);
 		}
-		return entities;
+		return Arrays.asList();
     }
 
     @Override
@@ -129,11 +120,19 @@ public class QueryCollector extends LazyDataModel<JsonObject> {
 
     @Override
     public String getRowKey(final JsonObject object) {
-        return object.get(entity.getId().getName()).toString();
+    	final String rowKey = object.get(entity.getId().getName()).toString();
+    	entityMap.put(rowKey, object);
+        return rowKey;
     }
 
 	@Override
 	public int count(final Map<String, FilterMeta> filterBy) {
-		return 0;
+		try(Client client = gateway.newClient(Naming.QUERY)) {
+			return Query.executeCountQuery(client, schema, target -> buildFilters(target, entity.getName(), filterBy.values()));
+		} 
+		catch (Exception e) {
+			LOGGER.log(Level.SEVERE, "[QueryCollector.count]", e);
+			return 0;
+		}
 	}
 }

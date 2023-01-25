@@ -1,6 +1,7 @@
 package epf.webapp.query.view;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -51,6 +52,11 @@ public class QueryView implements Serializable {
 	 *
 	 */
 	private QueryCollector collector;
+	
+	/**
+	 * 
+	 */
+	private final List<JsonObject> entities = new ArrayList<>();
 	
 	/**
 	 *
@@ -123,5 +129,16 @@ public class QueryView implements Serializable {
 	 */
 	public String getAttribute(final JsonObject object, final String attribute) {
 		return JsonUtil.getString(object, attribute, "");
+	}
+
+	public List<JsonObject> getEntities() {
+		return entities;
+	}
+	
+	/**
+	 * 
+	 */
+	public void remove() {
+		
 	}
 }

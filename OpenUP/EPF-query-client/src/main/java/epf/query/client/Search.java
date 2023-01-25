@@ -1,11 +1,13 @@
 package epf.query.client;
 
+import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.HEAD;
 import javax.ws.rs.MatrixParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import epf.client.util.Client;
@@ -44,7 +46,7 @@ public interface Search {
      * @param maxResults
      * @return
      */
-    static Response search(
+    static List<EntityId> search(
     		final Client client,
     		final String text, 
     		final Integer firstResult,
@@ -53,7 +55,7 @@ public interface Search {
     			target -> target.path(Naming.Query.SEARCH).queryParam(Naming.Query.Client.TEXT, text).queryParam(Naming.Query.Client.FIRST, firstResult).queryParam(Naming.Query.Client.MAX, maxResults), 
     			req -> req.accept(MediaType.APPLICATION_JSON)
     			)
-    			.get();
+    			.get(new GenericType<List<EntityId>>() {});
     }
 	
 	/**

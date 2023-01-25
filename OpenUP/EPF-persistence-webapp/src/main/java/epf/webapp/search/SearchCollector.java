@@ -50,11 +50,6 @@ public class SearchCollector extends LazyDataModel<JsonObject> {
 	private final String text;
 	
 	/**
-	 *
-	 */
-	private List<JsonObject> entities = Arrays.asList();
-	
-	/**
 	 * @param gateway
 	 * @param token
 	 * @param text
@@ -69,23 +64,19 @@ public class SearchCollector extends LazyDataModel<JsonObject> {
 	public List<JsonObject> load(final int first, final int pageSize, final Map<String, SortMeta> sortBy, final Map<String, FilterMeta> filterBy) {
         try(Client client = gateway.newClient(Query.SEARCH)) {
 			client.authorization(token);
-			final Integer count = Search.count(client, text);
-			setRowCount(count);
-			if(count > 0) {
-				try(Response response = Search.search(client, text, first, pageSize)){
-					try(InputStream stream = response.readEntity(InputStream.class)){
-						entities = JsonUtil.readArray(stream)
-								.stream()
-								.map(value -> value.asJsonObject())
-								.collect(Collectors.toList());
-					}
+			try(Response response = Search.search(client, text, first, pageSize)){
+				try(InputStream stream = response.readEntity(InputStream.class)){
+					return JsonUtil.readArray(stream)
+							.stream()
+							.map(value -> value.asJsonObject())
+							.collect(Collectors.toList());
 				}
 			}
         } 
 		catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "[SearchCollector.entities]", e);
 		}
-		return entities;
+		return Arrays.asList();
     }
 
     @Override

@@ -148,6 +148,10 @@ public interface Naming {
 	 */
 	interface Persistence {
 		
+		/**
+		 * 
+		 */
+		String VIEW = "epf_persistence_view";
 	}
 	
 	/**
