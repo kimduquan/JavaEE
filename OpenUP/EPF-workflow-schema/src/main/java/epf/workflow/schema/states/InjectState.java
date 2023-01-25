@@ -1,6 +1,8 @@
 package epf.workflow.schema.states;
 
 import javax.validation.Valid;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 import javax.json.JsonValue;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
@@ -13,6 +15,7 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
     "data",
     "usedForCompensation"
 })
+@Embeddable
 public class InjectState extends DefaultState
 {
 
@@ -26,12 +29,14 @@ public class InjectState extends DefaultState
      */
     @JsonbProperty("data")
     @Valid
+    @Column
     private JsonValue data;
     /**
      * If true, this state is used to compensate another state. Default is false
      * 
      */
     @JsonbProperty("usedForCompensation")
+    @Column
     private boolean usedForCompensation = false;
 
     /**

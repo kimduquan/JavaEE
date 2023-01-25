@@ -3,6 +3,8 @@ package epf.workflow.schema.produce;
 import java.io.Serializable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 
@@ -14,6 +16,7 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
     "eventRef",
     "data"
 })
+@Embeddable
 public class ProduceEvent implements Serializable
 {
 
@@ -29,12 +32,14 @@ public class ProduceEvent implements Serializable
     @JsonbProperty("eventRef")
     @Size(min = 1)
     @NotNull
+    @Column
     private String eventRef;
     /**
      * Workflow expression which selects parts of the states data output to become the data of the produced event
      * 
      */
     @JsonbProperty("data")
+    @Column
     private String data;
 
     /**

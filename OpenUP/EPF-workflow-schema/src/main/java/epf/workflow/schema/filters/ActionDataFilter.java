@@ -3,6 +3,8 @@ package epf.workflow.schema.filters;
 import java.io.Serializable;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
@@ -14,6 +16,7 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
     "toStateData",
     "useResults"
 })
+@Embeddable
 public class ActionDataFilter implements Serializable
 {
 
@@ -26,24 +29,28 @@ public class ActionDataFilter implements Serializable
      * 
      */
     @JsonbProperty("fromStateData")
+    @Column
     private String fromStateData;
     /**
      * Workflow expression that filters the actions data results
      * 
      */
     @JsonbProperty("results")
+    @Column
     private String results;
     /**
      * Workflow expression that selects a state data element to which the action results should be added/merged into. If not specified, denote, the top-level state data element
      * 
      */
     @JsonbProperty("toStateData")
+    @Column
     private String toStateData;
     /**
      * If set to false, action data results are not added/merged to state data. In this case 'results' and 'toStateData' should be ignored. Default is true.
      * 
      */
     @JsonbProperty("useResults")
+    @Column
     private boolean useResults = true;
 
     /**

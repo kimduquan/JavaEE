@@ -15,6 +15,9 @@ import epf.workflow.schema.interfaces.Extension;
 import epf.workflow.schema.interfaces.State;
 import epf.workflow.schema.start.Start;
 import epf.workflow.schema.timeouts.TimeoutsDefinition;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Entity;
+import jakarta.nosql.mapping.Id;
 
 /**
  * @author PC
@@ -44,6 +47,7 @@ import epf.workflow.schema.timeouts.TimeoutsDefinition;
     "states",
     "extensions"
 })
+@Entity
 public class Workflow implements Serializable
 {
 
@@ -59,6 +63,8 @@ public class Workflow implements Serializable
     @JsonbProperty("id")
     @Size(min = 1)
     @NotNull
+    @Column
+    @Id
     private String id;
     /**
      * Workflow name
@@ -68,12 +74,14 @@ public class Workflow implements Serializable
     @JsonbProperty("name")
     @Size(min = 1)
     @NotNull
+    @Column
     private String name;
     /**
      * Workflow description
      * 
      */
     @JsonbProperty("description")
+    @Column
     private String description;
     /**
      * Workflow version
@@ -82,6 +90,7 @@ public class Workflow implements Serializable
      */
     @JsonbProperty("version")
     @NotNull
+    @Column
     private String version;
     /**
      * List of helpful terms describing the workflows intended purpose, subject areas, or other important qualities
@@ -90,6 +99,7 @@ public class Workflow implements Serializable
     @JsonbProperty("annotations")
     @Size(min = 1)
     @Valid
+    @Column
     private List<String> annotations = new ArrayList<String>();
     /**
      * Workflow data input schema
@@ -97,6 +107,7 @@ public class Workflow implements Serializable
      */
     @JsonbProperty("dataInputSchema")
     @Valid
+    @Column
     private DataInputSchema dataInputSchema;
     /**
      * State start definition
@@ -104,12 +115,14 @@ public class Workflow implements Serializable
      */
     @JsonbProperty("start")
     @Valid
+    @Column
     private Start start;
     /**
      * Serverless Workflow schema version
      * 
      */
     @JsonbProperty("specVersion")
+    @Column
     private String specVersion;
     /**
      * Identifies the expression language used for workflow expressions. Default is 'jq'
@@ -117,18 +130,21 @@ public class Workflow implements Serializable
      */
     @JsonbProperty("expressionLang")
     @Size(min = 1)
+    @Column
     private String expressionLang = "jq";
     /**
      * If 'true', workflow instances is not terminated when there are no active execution paths. Instance can be terminated via 'terminate end definition' or reaching defined 'execTimeout'
      * 
      */
     @JsonbProperty("keepActive")
+    @Column
     private boolean keepActive = false;
     /**
      * If set to true, actions should automatically be retried on unchecked errors. Default is false
      * 
      */
     @JsonbProperty("autoRetries")
+    @Column
     private boolean autoRetries = false;
     /**
      * Metadata
@@ -136,6 +152,7 @@ public class Workflow implements Serializable
      */
     @JsonbProperty("metadata")
     @Valid
+    @Column
     private Map<String, String> metadata;
     /**
      * Workflow event definitions
@@ -143,6 +160,7 @@ public class Workflow implements Serializable
      */
     @JsonbProperty("events")
     @Valid
+    @Column
     private Events events;
     /**
      * Workflow function definitions
@@ -150,6 +168,7 @@ public class Workflow implements Serializable
      */
     @JsonbProperty("functions")
     @Valid
+    @Column
     private Functions functions;
     /**
      * Workflow error definitions
@@ -157,6 +176,7 @@ public class Workflow implements Serializable
      */
     @JsonbProperty("errors")
     @Valid
+    @Column
     private Errors errors;
     /**
      * Workflow retry definitions
@@ -164,6 +184,7 @@ public class Workflow implements Serializable
      */
     @JsonbProperty("retries")
     @Valid
+    @Column
     private Retries retries;
     /**
      * Workflow secrets definitions
@@ -171,6 +192,7 @@ public class Workflow implements Serializable
      */
     @JsonbProperty("secrets")
     @Valid
+    @Column
     private Secrets secrets;
     /**
      * Workflow constants definitions
@@ -178,6 +200,7 @@ public class Workflow implements Serializable
      */
     @JsonbProperty("constants")
     @Valid
+    @Column
     private Constants constants;
     /**
      * Timeouts Definition
@@ -185,6 +208,7 @@ public class Workflow implements Serializable
      */
     @JsonbProperty("timeouts")
     @Valid
+    @Column
     private TimeoutsDefinition timeouts;
     /**
      * Auth Definition
@@ -192,6 +216,7 @@ public class Workflow implements Serializable
      */
     @JsonbProperty("auth")
     @Valid
+    @Column
     private AuthDefinition auth;
     /**
      * State Definitions
@@ -201,6 +226,7 @@ public class Workflow implements Serializable
     @JsonbProperty("states")
     @Valid
     @NotNull
+    @Column
     private List<State> states = new ArrayList<State>();
     /**
      * Workflow Extensions
@@ -208,6 +234,7 @@ public class Workflow implements Serializable
      */
     @JsonbProperty("extensions")
     @Valid
+    @Column
     private List<Extension> extensions = new ArrayList<Extension>();
 
     /**

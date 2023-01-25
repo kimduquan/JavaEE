@@ -4,6 +4,8 @@ import java.io.Serializable;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.validation.constraints.NotNull;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
@@ -13,6 +15,7 @@ import javax.validation.constraints.NotNull;
     "expression",
     "validUntil"
 })
+@Embeddable
 public class Cron implements Serializable
 {
 
@@ -27,12 +30,14 @@ public class Cron implements Serializable
      */
     @JsonbProperty("expression")
     @NotNull
+    @Column
     private String expression;
     /**
      * Specific date and time (ISO 8601 format) when the cron expression invocation is no longer valid
      * 
      */
     @JsonbProperty("validUntil")
+    @Column
     private String validUntil;
 
     /**

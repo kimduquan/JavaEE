@@ -7,6 +7,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import epf.workflow.schema.produce.ProduceEvent;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
+
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 
@@ -19,6 +22,7 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
     "nextState",
     "compensate"
 })
+@Embeddable
 public class Transition implements Serializable
 {
 
@@ -32,6 +36,7 @@ public class Transition implements Serializable
      */
     @JsonbProperty("produceEvents")
     @Valid
+    @Column
     private List<ProduceEvent> produceEvents = new ArrayList<ProduceEvent>();
     /**
      * State to transition to next
@@ -41,12 +46,14 @@ public class Transition implements Serializable
     @JsonbProperty("nextState")
     @Size(min = 1)
     @NotNull
+    @Column
     private String nextState;
     /**
      * If set to true, triggers workflow compensation before this transition is taken. Default is false
      * 
      */
     @JsonbProperty("compensate")
+    @Column
     private boolean compensate = false;
 
     /**

@@ -5,6 +5,8 @@ import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
@@ -14,6 +16,7 @@ import javax.validation.constraints.Size;
     "schema",
     "failOnValidationErrors"
 })
+@Embeddable
 public class DataInputSchema implements Serializable
 {
 
@@ -29,6 +32,7 @@ public class DataInputSchema implements Serializable
     @JsonbProperty("schema")
     @Size(min = 1)
     @NotNull
+    @Column
     private String schema;
     /**
      * Determines if workfow execution should continue if there are validation errors
@@ -37,6 +41,7 @@ public class DataInputSchema implements Serializable
      */
     @JsonbProperty("failOnValidationErrors")
     @NotNull
+    @Column
     private boolean failOnValidationErrors = true;
 
     /**

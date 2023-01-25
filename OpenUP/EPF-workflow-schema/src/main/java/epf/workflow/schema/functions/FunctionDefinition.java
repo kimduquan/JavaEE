@@ -6,6 +6,10 @@ import java.util.Map;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
+import jakarta.nosql.mapping.Entity;
+import jakarta.nosql.mapping.Id;
 import javax.json.bind.annotation.JsonbCreator;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
@@ -21,6 +25,7 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
     "authRef",
     "metadata"
 })
+@Entity
 public class FunctionDefinition implements Serializable
 {
 
@@ -36,6 +41,8 @@ public class FunctionDefinition implements Serializable
     @JsonbProperty("name")
     @Size(min = 1)
     @NotNull
+    @Column
+    @Id
     private String name;
     /**
      * If type is `rest`, <path_to_openapi_definition>#<operation_id>. If type is `rpc`, <path_to_grpc_proto_file>#<service_name>#<service_method>. If type is `expression`, defines the workflow expression.
@@ -43,12 +50,14 @@ public class FunctionDefinition implements Serializable
      */
     @JsonbProperty("operation")
     @Size(min = 1)
+    @Column
     private String operation;
     /**
      * Defines the function type. Is either `rest`, `asyncapi, `rpc`, `graphql`, `odata`, `expression`, or `custom`. Default is `rest`
      * 
      */
     @JsonbProperty("type")
+    @Column
     private FunctionDefinition.Type type = FunctionDefinition.Type.fromValue("rest");
     /**
      * References an auth definition name to be used to access to resource defined in the operation parameter
@@ -56,6 +65,7 @@ public class FunctionDefinition implements Serializable
      */
     @JsonbProperty("authRef")
     @Size(min = 1)
+    @Column
     private String authRef;
     /**
      * Metadata
@@ -63,6 +73,7 @@ public class FunctionDefinition implements Serializable
      */
     @JsonbProperty("metadata")
     @Valid
+    @Column
     private Map<String, String> metadata;
 
     /**
@@ -161,6 +172,7 @@ public class FunctionDefinition implements Serializable
      * @author PC
      *
      */
+    @Embeddable
     public enum Type {
 
         REST("rest"),

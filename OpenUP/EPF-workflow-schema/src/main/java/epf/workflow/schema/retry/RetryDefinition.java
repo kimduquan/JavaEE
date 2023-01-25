@@ -5,6 +5,9 @@ import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Entity;
+import jakarta.nosql.mapping.Id;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 
@@ -21,6 +24,7 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
     "maxAttempts",
     "jitter"
 })
+@Entity
 public class RetryDefinition implements Serializable
 {
 
@@ -36,30 +40,36 @@ public class RetryDefinition implements Serializable
     @JsonbProperty("name")
     @Size(min = 1)
     @NotNull
+    @Column
+    @Id
     private String name;
     /**
      * Time delay between retry attempts (ISO 8601 duration format)
      * 
      */
     @JsonbProperty("delay")
+    @Column
     private String delay;
     /**
      * Maximum time delay between retry attempts (ISO 8601 duration format)
      * 
      */
     @JsonbProperty("maxDelay")
+    @Column
     private String maxDelay;
     /**
      * Static value by which the delay increases during each attempt (ISO 8601 time format)
      * 
      */
     @JsonbProperty("increment")
+    @Column
     private String increment;
     /**
      * Multiplier value by which interval increases during each attempt (ISO 8601 time format)
      * 
      */
     @JsonbProperty("multiplier")
+    @Column
     private String multiplier;
     /**
      * Maximum number of retry attempts. Value of 0 means no retries are performed
@@ -68,6 +78,7 @@ public class RetryDefinition implements Serializable
      */
     @JsonbProperty("maxAttempts")
     @NotNull
+    @Column
     private String maxAttempts = "0";
     /**
      * Absolute maximum amount of random time added or subtracted from the delay between each retry (ISO 8601 duration format)
@@ -76,6 +87,7 @@ public class RetryDefinition implements Serializable
     @JsonbProperty("jitter")
     @DecimalMin("0")
     @DecimalMax("1")
+    @Column
     private String jitter;
 
     /**

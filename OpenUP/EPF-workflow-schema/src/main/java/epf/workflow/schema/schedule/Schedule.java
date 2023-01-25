@@ -2,9 +2,11 @@ package epf.workflow.schema.schedule;
 
 import java.io.Serializable;
 import javax.validation.Valid;
+import epf.workflow.schema.cron.Cron;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
-import io.serverlessworkflow.api.cron.Cron;
 
 /**
  * @author PC
@@ -15,6 +17,7 @@ import io.serverlessworkflow.api.cron.Cron;
     "cron",
     "timezone"
 })
+@Embeddable
 public class Schedule implements Serializable
 {
 
@@ -27,6 +30,7 @@ public class Schedule implements Serializable
      * 
      */
     @JsonbProperty("interval")
+    @Column
     private String interval;
     /**
      * Schedule cron definition
@@ -34,12 +38,14 @@ public class Schedule implements Serializable
      */
     @JsonbProperty("cron")
     @Valid
+    @Column
     private Cron cron;
     /**
      * Timezone name used to evaluate the cron expression. Not used for interval as timezone can be specified there directly. If not specified, should default to local machine timezone.
      * 
      */
     @JsonbProperty("timezone")
+    @Column
     private String timezone;
 
     /**

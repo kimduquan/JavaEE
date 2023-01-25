@@ -7,6 +7,8 @@ import java.util.Map;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import epf.workflow.schema.branches.Branch;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 import javax.json.bind.annotation.JsonbCreator;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
@@ -21,6 +23,7 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
     "numCompleted",
     "usedForCompensation"
 })
+@Embeddable
 public class ParallelState extends DefaultState
 {
 
@@ -36,24 +39,28 @@ public class ParallelState extends DefaultState
     @JsonbProperty("branches")
     @Valid
     @NotNull
+    @Column
     private List<Branch> branches = new ArrayList<Branch>();
     /**
      * Option types on how to complete branch execution.
      * 
      */
     @JsonbProperty("completionType")
+    @Column
     private ParallelState.CompletionType completionType = ParallelState.CompletionType.fromValue("allOf");
     /**
      * Used when completionType is set to 'atLeast' to specify the minimum number of branches that must complete before the state will transition.
      * 
      */
     @JsonbProperty("numCompleted")
+    @Column
     private String numCompleted = "0";
     /**
      * If true, this state is used to compensate another state. Default is false
      * 
      */
     @JsonbProperty("usedForCompensation")
+    @Column
     private boolean usedForCompensation = false;
 
     /**
@@ -134,6 +141,7 @@ public class ParallelState extends DefaultState
      * @author PC
      *
      */
+    @Embeddable
     public enum CompletionType {
 
         ALL_OF("allOf"),

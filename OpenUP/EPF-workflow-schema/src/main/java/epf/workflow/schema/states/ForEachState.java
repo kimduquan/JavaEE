@@ -10,6 +10,8 @@ import javax.json.bind.annotation.JsonbCreator;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 import epf.workflow.schema.actions.Action;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
@@ -24,6 +26,7 @@ import epf.workflow.schema.actions.Action;
     "usedForCompensation",
     "mode"
 })
+@Embeddable
 public class ForEachState extends DefaultState
 {
 
@@ -36,18 +39,21 @@ public class ForEachState extends DefaultState
      * 
      */
     @JsonbProperty("inputCollection")
+    @Column
     private String inputCollection;
     /**
      * Workflow expression specifying an array element of the states data to add the results of each iteration
      * 
      */
     @JsonbProperty("outputCollection")
+    @Column
     private String outputCollection;
     /**
      * Name of the iteration parameter that can be referenced in actions/workflow. For each parallel iteration, this param should contain an unique element of the inputCollection array
      * 
      */
     @JsonbProperty("iterationParam")
+    @Column
     private String iterationParam;
     /**
      * Specifies how many iterations may run in parallel at the same time. Used if 'mode' property is set to 'parallel' (default)
@@ -55,6 +61,7 @@ public class ForEachState extends DefaultState
      */
     @JsonbProperty("batchSize")
     @DecimalMin("0")
+    @Column
     private int batchSize = 0;
     /**
      * Actions to be executed for each of the elements of inputCollection
@@ -62,18 +69,21 @@ public class ForEachState extends DefaultState
      */
     @JsonbProperty("actions")
     @Valid
+    @Column
     private List<Action> actions = new ArrayList<Action>();
     /**
      * If true, this state is used to compensate another state. Default is false
      * 
      */
     @JsonbProperty("usedForCompensation")
+    @Column
     private boolean usedForCompensation = false;
     /**
      * Specifies how iterations are to be performed (sequentially or in parallel)
      * 
      */
     @JsonbProperty("mode")
+    @Column
     private ForEachState.Mode mode = ForEachState.Mode.fromValue("parallel");
 
     /**
@@ -206,6 +216,7 @@ public class ForEachState extends DefaultState
      * @author PC
      *
      */
+    @Embeddable
     public enum Mode {
 
         SEQUENTIAL("sequential"),

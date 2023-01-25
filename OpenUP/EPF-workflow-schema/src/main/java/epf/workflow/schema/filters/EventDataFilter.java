@@ -3,6 +3,8 @@ package epf.workflow.schema.filters;
 import java.io.Serializable;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
@@ -13,6 +15,7 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
     "toStateData",
     "useData"
 })
+@Embeddable
 public class EventDataFilter implements Serializable
 {
 
@@ -25,18 +28,21 @@ public class EventDataFilter implements Serializable
      * 
      */
     @JsonbProperty("data")
+    @Column
     private String data;
     /**
      *  Workflow expression that selects a state data element to which the event payload should be added/merged into. If not specified, denotes, the top-level state data element.
      * 
      */
     @JsonbProperty("toStateData")
+    @Column
     private String toStateData;
     /**
      * If set to false, event payload is not added/merged to state data. In this case 'data' and 'toStateData' should be ignored. Default is true.
      * 
      */
     @JsonbProperty("useData")
+    @Column
     private boolean useData = true;
 
     /**

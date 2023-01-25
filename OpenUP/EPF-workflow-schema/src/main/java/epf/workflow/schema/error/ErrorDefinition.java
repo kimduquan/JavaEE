@@ -5,6 +5,9 @@ import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Entity;
+import jakarta.nosql.mapping.Id;
 
 /**
  * @author PC
@@ -15,6 +18,7 @@ import javax.validation.constraints.Size;
     "code",
     "description"
 })
+@Entity
 public class ErrorDefinition implements Serializable
 {
 
@@ -30,6 +34,8 @@ public class ErrorDefinition implements Serializable
     @JsonbProperty("name")
     @Size(min = 1)
     @NotNull
+    @Column
+    @Id
     private String name;
     /**
      * Error code. Can be used in addition to the name to help runtimes resolve to technical errors/exceptions. Should not be defined if error is set to '*'
@@ -37,12 +43,14 @@ public class ErrorDefinition implements Serializable
      */
     @JsonbProperty("code")
     @Size(min = 1)
+    @Column
     private String code;
     /**
      * Error description
      * 
      */
     @JsonbProperty("description")
+    @Column
     private String description;
 
     /**

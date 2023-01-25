@@ -10,6 +10,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import epf.workflow.schema.end.End;
 import epf.workflow.schema.transitions.Transition;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
@@ -21,6 +23,7 @@ import epf.workflow.schema.transitions.Transition;
     "transition",
     "end"
 })
+@Embeddable
 public class Error implements Serializable
 {
 
@@ -34,6 +37,7 @@ public class Error implements Serializable
      */
     @JsonbProperty("errorRef")
     @Size(min = 1)
+    @Column
     private String errorRef;
     /**
      * References one or more workflow error definitions. Used if errorRef is not used
@@ -42,6 +46,7 @@ public class Error implements Serializable
     @JsonbProperty("errorRefs")
     @Size(min = 1)
     @Valid
+    @Column
     private List<String> errorRefs = new ArrayList<String>();
     /**
      * 
@@ -51,6 +56,7 @@ public class Error implements Serializable
     @JsonbProperty("transition")
     @Valid
     @NotNull
+    @Column
     private Transition transition;
     /**
      * State end definition
@@ -58,6 +64,7 @@ public class Error implements Serializable
      */
     @JsonbProperty("end")
     @Valid
+    @Column
     private End end;
 
     /**

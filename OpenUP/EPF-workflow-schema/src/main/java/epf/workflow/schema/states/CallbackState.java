@@ -3,6 +3,8 @@ package epf.workflow.schema.states;
 import javax.validation.Valid;
 import epf.workflow.schema.actions.Action;
 import epf.workflow.schema.filters.EventDataFilter;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 
@@ -16,6 +18,7 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
     "eventDataFilter",
     "usedForCompensation"
 })
+@Embeddable
 public class CallbackState extends DefaultState
 {
 
@@ -29,6 +32,7 @@ public class CallbackState extends DefaultState
      */
     @JsonbProperty("action")
     @Valid
+    @Column
     private Action action;
     /**
      * References an unique callback event name in the defined workflow events
@@ -38,12 +42,14 @@ public class CallbackState extends DefaultState
     private String eventRef;
     @JsonbProperty("eventDataFilter")
     @Valid
+    @Column
     private EventDataFilter eventDataFilter;
     /**
      * If true, this state is used to compensate another state. Default is false
      * 
      */
     @JsonbProperty("usedForCompensation")
+    @Column
     private boolean usedForCompensation = false;
 
     /**

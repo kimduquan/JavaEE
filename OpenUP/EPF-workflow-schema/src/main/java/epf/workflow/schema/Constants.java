@@ -1,20 +1,25 @@
 package epf.workflow.schema;
 
 import javax.json.JsonValue;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
  *
  */
+@Embeddable
 public class Constants 
 {
 	/**
 	 * 
 	 */
+	@Column
 	private String refValue;
 	/**
 	 * 
 	 */
+	@Column
 	private JsonValue constantsDef;
 	
 	public String getRefValue() {

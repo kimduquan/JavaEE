@@ -11,6 +11,9 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
+import jakarta.nosql.mapping.Entity;
 
 /**
  * @author PC
@@ -30,6 +33,7 @@ import javax.validation.constraints.Size;
     "requestedIssuer",
     "metadata"
 })
+@Entity
 public class OauthDefinition implements Serializable
 {
 
@@ -43,6 +47,7 @@ public class OauthDefinition implements Serializable
      */
     @JsonbProperty("authority")
     @Size(min = 1)
+    @Column
     private String authority;
     /**
      * Defines the grant type
@@ -51,6 +56,7 @@ public class OauthDefinition implements Serializable
      */
     @JsonbProperty("grantType")
     @NotNull
+    @Column
     private OauthDefinition.GrantType grantType;
     /**
      * String or a workflow expression. Contains the client identifier
@@ -60,6 +66,7 @@ public class OauthDefinition implements Serializable
     @JsonbProperty("clientId")
     @Size(min = 1)
     @NotNull
+    @Column
     private String clientId;
     /**
      * Workflow secret or a workflow expression. Contains the client secret
@@ -67,6 +74,7 @@ public class OauthDefinition implements Serializable
      */
     @JsonbProperty("clientSecret")
     @Size(min = 1)
+    @Column
     private String clientSecret;
     /**
      * Array containing strings or workflow expressions. Contains the OAuth2 scopes
@@ -75,6 +83,7 @@ public class OauthDefinition implements Serializable
     @JsonbProperty("scopes")
     @Size(min = 1)
     @Valid
+    @Column
     private List<String> scopes = new ArrayList<String>();
     /**
      * String or a workflow expression. Contains the user name. Used only if grantType is 'resourceOwner'
@@ -82,6 +91,7 @@ public class OauthDefinition implements Serializable
      */
     @JsonbProperty("username")
     @Size(min = 1)
+    @Column
     private String username;
     /**
      * String or a workflow expression. Contains the user password. Used only if grantType is 'resourceOwner'
@@ -89,6 +99,7 @@ public class OauthDefinition implements Serializable
      */
     @JsonbProperty("password")
     @Size(min = 1)
+    @Column
     private String password;
     /**
      * Array containing strings or workflow expressions. Contains the OAuth2 audiences
@@ -97,6 +108,7 @@ public class OauthDefinition implements Serializable
     @JsonbProperty("audiences")
     @Size(min = 1)
     @Valid
+    @Column
     private List<String> audiences = new ArrayList<String>();
     /**
      * String or a workflow expression. Contains the subject token
@@ -104,6 +116,7 @@ public class OauthDefinition implements Serializable
      */
     @JsonbProperty("subjectToken")
     @Size(min = 1)
+    @Column
     private String subjectToken;
     /**
      * String or a workflow expression. Contains the requested subject
@@ -111,6 +124,7 @@ public class OauthDefinition implements Serializable
      */
     @JsonbProperty("requestedSubject")
     @Size(min = 1)
+    @Column
     private String requestedSubject;
     /**
      * String or a workflow expression. Contains the requested issuer
@@ -118,6 +132,7 @@ public class OauthDefinition implements Serializable
      */
     @JsonbProperty("requestedIssuer")
     @Size(min = 1)
+    @Column
     private String requestedIssuer;
     /**
      * Metadata
@@ -125,6 +140,7 @@ public class OauthDefinition implements Serializable
      */
     @JsonbProperty("metadata")
     @Valid
+    @Column
     private Map<String, String> metadata;
 
     /**
@@ -351,6 +367,7 @@ public class OauthDefinition implements Serializable
      * @author PC
      *
      */
+    @Embeddable
     public enum GrantType {
 
         PASSWORD("password"),

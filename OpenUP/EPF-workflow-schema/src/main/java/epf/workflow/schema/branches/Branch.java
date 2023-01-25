@@ -8,6 +8,8 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.validation.Valid;
 import epf.workflow.schema.actions.Action;
 import epf.workflow.schema.timeouts.TimeoutsDefinition;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
@@ -18,6 +20,7 @@ import epf.workflow.schema.timeouts.TimeoutsDefinition;
     "actions",
     "timeouts"
 })
+@Embeddable
 public class Branch implements Serializable
 {
 
@@ -30,6 +33,7 @@ public class Branch implements Serializable
      * 
      */
     @JsonbProperty("name")
+    @Column
     private String name;
     /**
      * Actions to be executed in this branch
@@ -37,6 +41,7 @@ public class Branch implements Serializable
      */
     @JsonbProperty("actions")
     @Valid
+    @Column
     private List<Action> actions = new ArrayList<Action>();
     /**
      * Timeouts Definition
@@ -44,6 +49,7 @@ public class Branch implements Serializable
      */
     @JsonbProperty("timeouts")
     @Valid
+    @Column
     private TimeoutsDefinition timeouts;
 
     /**

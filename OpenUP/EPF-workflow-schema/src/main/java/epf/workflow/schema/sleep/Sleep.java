@@ -2,6 +2,8 @@ package epf.workflow.schema.sleep;
 
 import java.io.Serializable;
 import javax.validation.constraints.NotNull;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 
@@ -13,6 +15,7 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
     "before",
     "after"
 })
+@Embeddable
 public class Sleep implements Serializable
 {
 
@@ -27,6 +30,7 @@ public class Sleep implements Serializable
      */
     @JsonbProperty("before")
     @NotNull
+    @Column
     private String before;
     /**
      * Amount of time (ISO 8601 duration format) to sleep after function/subflow invocation. Does not apply if 'eventRef' is defined.
@@ -35,6 +39,7 @@ public class Sleep implements Serializable
      */
     @JsonbProperty("after")
     @NotNull
+    @Column
     private String after;
 
     /**

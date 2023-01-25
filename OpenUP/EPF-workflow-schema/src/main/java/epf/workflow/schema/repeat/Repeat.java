@@ -6,6 +6,8 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Size;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 
@@ -20,6 +22,7 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
     "continueOnError",
     "stopOnEvents"
 })
+@Embeddable
 public class Repeat implements Serializable
 {
 
@@ -33,12 +36,14 @@ public class Repeat implements Serializable
      */
     @JsonbProperty("expression")
     @Size(min = 1)
+    @Column
     private String expression;
     /**
      * If true, the expression is evaluated before each repeat execution, if false the expression is evaluated after each repeat execution
      * 
      */
     @JsonbProperty("checkBefore")
+    @Column
     private boolean checkBefore = true;
     /**
      * Sets the maximum amount of repeat executions
@@ -46,12 +51,14 @@ public class Repeat implements Serializable
      */
     @JsonbProperty("max")
     @DecimalMin("0")
+    @Column
     private int max;
     /**
      * If true, repeats executions in a case unhandled errors propagate from the sub-workflow to this state
      * 
      */
     @JsonbProperty("continueOnError")
+    @Column
     private boolean continueOnError = false;
     /**
      * List referencing defined consumed workflow events. SubFlow will repeat execution until one of the defined events is consumed, or until the max property count is reached
@@ -59,6 +66,7 @@ public class Repeat implements Serializable
      */
     @JsonbProperty("stopOnEvents")
     @Valid
+    @Column
     private List<String> stopOnEvents = new ArrayList<String>();
 
     /**

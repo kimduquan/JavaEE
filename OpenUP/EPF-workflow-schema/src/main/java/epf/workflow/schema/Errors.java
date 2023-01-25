@@ -1,21 +1,26 @@
 package epf.workflow.schema;
 
 import java.util.List;
-import io.serverlessworkflow.api.error.ErrorDefinition;
+import epf.workflow.schema.error.ErrorDefinition;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
  *
  */
+@Embeddable
 public class Errors 
 {
 	/**
 	 * 
 	 */
+	@Column
 	private String refValue;
 	/**
 	 * 
 	 */
+	@Column
 	private List<ErrorDefinition> errorDefs;
 
 	public String getRefValue() {

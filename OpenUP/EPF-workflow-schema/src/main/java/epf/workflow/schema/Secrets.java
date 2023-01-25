@@ -1,20 +1,25 @@
 package epf.workflow.schema;
 
 import java.util.List;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
  *
  */
+@Embeddable
 public class Secrets 
 {
 	/**
 	 * 
 	 */
+	@Column
 	private String refValue;
 	/**
 	 * 
 	 */
+	@Column
 	private List<String> secretDefs;
 	
 	public String getRefValue() {

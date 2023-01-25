@@ -3,6 +3,10 @@ package epf.workflow.schema.timeouts;
 import java.io.Serializable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
+
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 
@@ -15,6 +19,7 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
     "interrupt",
     "runBefore"
 })
+@Embeddable
 public class WorkflowExecTimeout implements Serializable
 {
 
@@ -30,12 +35,14 @@ public class WorkflowExecTimeout implements Serializable
     @JsonbProperty("duration")
     @Size(min = 1)
     @NotNull
+    @Column
     private String duration;
     /**
      * If `false`, workflow instance is allowed to finish current execution. If `true`, current workflow execution is abrupted.
      * 
      */
     @JsonbProperty("interrupt")
+    @Column
     private boolean interrupt = true;
     /**
      * Name of a workflow state to be executed before workflow instance is terminated
@@ -43,6 +50,7 @@ public class WorkflowExecTimeout implements Serializable
      */
     @JsonbProperty("runBefore")
     @Size(min = 1)
+    @Column
     private String runBefore;
 
     /**

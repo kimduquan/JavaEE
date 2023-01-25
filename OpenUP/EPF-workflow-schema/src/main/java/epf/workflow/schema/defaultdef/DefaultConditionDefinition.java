@@ -6,6 +6,8 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.validation.Valid;
 import epf.workflow.schema.end.End;
 import epf.workflow.schema.transitions.Transition;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
@@ -15,6 +17,7 @@ import epf.workflow.schema.transitions.Transition;
     "transition",
     "end"
 })
+@Embeddable
 public class DefaultConditionDefinition implements Serializable
 {
 
@@ -24,6 +27,7 @@ public class DefaultConditionDefinition implements Serializable
 	private static final long serialVersionUID = 1L;
 	@JsonbProperty("transition")
     @Valid
+    @Column
     private Transition transition;
     /**
      * State end definition
@@ -31,6 +35,7 @@ public class DefaultConditionDefinition implements Serializable
      */
     @JsonbProperty("end")
     @Valid
+    @Column
     private End end;
 
     @JsonbProperty("transition")

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
 import epf.workflow.schema.events.OnEvents;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
+
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 
@@ -15,6 +18,7 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
     "exclusive",
     "onEvents"
 })
+@Embeddable
 public class EventState extends DefaultState
 {
 
@@ -27,6 +31,7 @@ public class EventState extends DefaultState
      * 
      */
     @JsonbProperty("exclusive")
+    @Column
     private boolean exclusive = true;
     /**
      * Define what events trigger one or more actions to be performed
@@ -34,6 +39,7 @@ public class EventState extends DefaultState
      */
     @JsonbProperty("onEvents")
     @Valid
+    @Column
     private List<OnEvents> onEvents = new ArrayList<OnEvents>();
 
     /**

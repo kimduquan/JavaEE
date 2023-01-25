@@ -11,6 +11,9 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 import epf.workflow.schema.correlation.CorrelationDef;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Entity;
+import jakarta.nosql.mapping.Id;
 
 /**
  * @author PC
@@ -25,6 +28,7 @@ import epf.workflow.schema.correlation.CorrelationDef;
     "kind",
     "metadata"
 })
+@Entity
 public class EventDefinition implements Serializable
 {
 
@@ -38,18 +42,22 @@ public class EventDefinition implements Serializable
      */
     @JsonbProperty("name")
     @Size(min = 1)
+    @Column
+    @Id
     private String name;
     /**
      * CloudEvent source UUID
      * 
      */
     @JsonbProperty("source")
+    @Column
     private String source;
     /**
      * CloudEvent type
      * 
      */
     @JsonbProperty("type")
+    @Column
     private String type;
     /**
      * CloudEvent correlation definitions
@@ -58,18 +66,21 @@ public class EventDefinition implements Serializable
     @JsonbProperty("correlation")
     @Size(min = 1)
     @Valid
+    @Column
     private List<CorrelationDef> correlation = new ArrayList<CorrelationDef>();
     /**
      * If `true`, only the Event payload is accessible to consuming Workflow states. If `false`, both event payload and context attributes should be accessible 
      * 
      */
     @JsonbProperty("dataOnly")
+    @Column
     private boolean dataOnly = true;
     /**
      * Defines the events as either being consumed or produced by the workflow. Default is consumed
      * 
      */
     @JsonbProperty("kind")
+    @Column
     private EventDefinition.Kind kind = EventDefinition.Kind.fromValue("consumed");
     /**
      * Metadata
@@ -77,6 +88,7 @@ public class EventDefinition implements Serializable
      */
     @JsonbProperty("metadata")
     @Valid
+    @Column
     private Map<String, String> metadata;
 
     /**

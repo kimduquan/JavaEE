@@ -9,6 +9,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import epf.workflow.schema.actions.Action;
 import epf.workflow.schema.filters.EventDataFilter;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 import javax.json.bind.annotation.JsonbCreator;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
@@ -23,6 +25,7 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
     "actions",
     "eventDataFilter"
 })
+@Embeddable
 public class OnEvents implements Serializable
 {
     /**
@@ -37,12 +40,14 @@ public class OnEvents implements Serializable
     @JsonbProperty("eventRefs")
     @Valid
     @NotNull
+    @Column
     private List<String> eventRefs = new ArrayList<String>();
     /**
      * Specifies how actions are to be performed (in sequence of parallel)
      * 
      */
     @JsonbProperty("actionMode")
+    @Column
     private OnEvents.ActionMode actionMode = OnEvents.ActionMode.fromValue("sequential");
     /**
      * Actions to be performed.
@@ -52,12 +57,14 @@ public class OnEvents implements Serializable
     @JsonbProperty("actions")
     @Valid
     @NotNull
+    @Column
     private List<Action> actions = new ArrayList<Action>();
     /**
      * 
      */
     @JsonbProperty("eventDataFilter")
     @Valid
+    @Column
     private EventDataFilter eventDataFilter;
 
     /**

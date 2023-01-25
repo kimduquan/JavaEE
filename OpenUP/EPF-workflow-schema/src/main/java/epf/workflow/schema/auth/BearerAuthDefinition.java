@@ -7,6 +7,8 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Entity;
 
 /**
  * @author PC
@@ -16,6 +18,7 @@ import javax.validation.constraints.Size;
     "token",
     "metadata"
 })
+@Entity
 public class BearerAuthDefinition implements Serializable
 {
 
@@ -31,6 +34,7 @@ public class BearerAuthDefinition implements Serializable
     @JsonbProperty("token")
     @Size(min = 1)
     @NotNull
+    @Column
     private String token;
     /**
      * Metadata
@@ -38,6 +42,7 @@ public class BearerAuthDefinition implements Serializable
      */
     @JsonbProperty("metadata")
     @Valid
+    @Column
     private Map<String, String> metadata;
 
     /**

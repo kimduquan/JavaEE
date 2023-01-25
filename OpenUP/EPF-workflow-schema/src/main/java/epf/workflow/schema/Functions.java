@@ -2,20 +2,25 @@ package epf.workflow.schema;
 
 import java.util.List;
 import epf.workflow.schema.functions.FunctionDefinition;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
  *
  */
+@Embeddable
 public class Functions 
 {
 	/**
 	 * 
 	 */
+	@Column
 	private String refValue;
 	/**
 	 * 
 	 */
+	@Column
 	private List<FunctionDefinition> functionDefs;
 	
 	public String getRefValue() {

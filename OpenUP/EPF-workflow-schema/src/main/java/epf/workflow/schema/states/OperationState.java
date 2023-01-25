@@ -7,6 +7,8 @@ import java.util.Map;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import epf.workflow.schema.actions.Action;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 import javax.json.bind.annotation.JsonbCreator;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
@@ -20,6 +22,7 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
     "actions",
     "usedForCompensation"
 })
+@Embeddable
 public class OperationState extends DefaultState
 {
 
@@ -34,6 +37,7 @@ public class OperationState extends DefaultState
      */
     @JsonbProperty("actionMode")
     @NotNull
+    @Column
     private OperationState.ActionMode actionMode;
     /**
      * Actions Definitions
@@ -43,12 +47,14 @@ public class OperationState extends DefaultState
     @JsonbProperty("actions")
     @Valid
     @NotNull
+    @Column
     private List<Action> actions = new ArrayList<Action>();
     /**
      * If true, this state is used to compensate another state. Default is false
      * 
      */
     @JsonbProperty("usedForCompensation")
+    @Column
     private boolean usedForCompensation = false;
 
     /**
@@ -113,6 +119,7 @@ public class OperationState extends DefaultState
      * @author PC
      *
      */
+    @Embeddable
     public enum ActionMode {
 
         SEQUENTIAL("sequential"),

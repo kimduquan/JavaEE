@@ -6,6 +6,9 @@ import javax.validation.Valid;
 import epf.workflow.schema.defaultdef.DefaultConditionDefinition;
 import epf.workflow.schema.switchconditions.DataCondition;
 import epf.workflow.schema.switchconditions.EventCondition;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
+
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 
@@ -19,6 +22,7 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
     "defaultCondition",
     "usedForCompensation"
 })
+@Embeddable
 public class SwitchState extends DefaultState
 {
 
@@ -32,6 +36,7 @@ public class SwitchState extends DefaultState
      */
     @JsonbProperty("eventConditions")
     @Valid
+    @Column
     private List<EventCondition> eventConditions = new ArrayList<EventCondition>();
     /**
      * Defines conditions evaluated against state data
@@ -39,6 +44,7 @@ public class SwitchState extends DefaultState
      */
     @JsonbProperty("dataConditions")
     @Valid
+    @Column
     private List<DataCondition> dataConditions = new ArrayList<DataCondition>();
     /**
      * Switch state default condition definition
@@ -46,12 +52,14 @@ public class SwitchState extends DefaultState
      */
     @JsonbProperty("defaultCondition")
     @Valid
+    @Column
     private DefaultConditionDefinition defaultCondition;
     /**
      * If true, this state is used to compensate another state. Default is false
      * 
      */
     @JsonbProperty("usedForCompensation")
+    @Column
     private boolean usedForCompensation = false;
 
     /**

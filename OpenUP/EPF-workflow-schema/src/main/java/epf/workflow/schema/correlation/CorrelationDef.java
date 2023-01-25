@@ -5,6 +5,8 @@ import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
@@ -14,6 +16,7 @@ import javax.validation.constraints.Size;
     "contextAttributeName",
     "contextAttributeValue"
 })
+@Embeddable
 public class CorrelationDef implements Serializable
 {
 
@@ -29,6 +32,7 @@ public class CorrelationDef implements Serializable
     @JsonbProperty("contextAttributeName")
     @Size(min = 1)
     @NotNull
+    @Column
     private String contextAttributeName;
     /**
      * CloudEvent Extension Context Attribute value
@@ -36,6 +40,7 @@ public class CorrelationDef implements Serializable
      */
     @JsonbProperty("contextAttributeValue")
     @Size(min = 1)
+    @Column
     private String contextAttributeValue;
 
     /**

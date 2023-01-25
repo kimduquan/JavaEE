@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 import javax.json.bind.annotation.JsonbCreator;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
@@ -21,6 +23,7 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
     "contextAttributes",
     "invoke"
 })
+@Embeddable
 public class EventRef implements Serializable
 {
     /**
@@ -34,6 +37,7 @@ public class EventRef implements Serializable
      */
     @JsonbProperty("triggerEventRef")
     @NotNull
+    @Column
     private String triggerEventRef;
     /**
      * Reference to the unique name of a 'consumed' event definition
@@ -42,18 +46,21 @@ public class EventRef implements Serializable
      */
     @JsonbProperty("resultEventRef")
     @NotNull
+    @Column
     private String resultEventRef;
     /**
      * Maximum amount of time (ISO 8601 format) to wait for the result event. If not defined it should default to the actionExecutionTimeout
      * 
      */
     @JsonbProperty("resultEventTimeout")
+    @Column
     private String resultEventTimeout;
     /**
      * Expression which selects parts of the states data output to become the data of the produced event.
      * 
      */
     @JsonbProperty("data")
+    @Column
     private String data;
     /**
      * Add additional extension context attributes to the produced event
@@ -61,12 +68,14 @@ public class EventRef implements Serializable
      */
     @JsonbProperty("contextAttributes")
     @Valid
+    @Column
     private Map<String, String> contextAttributes;
     /**
      * Specifies if the function should be invoked sync or async. Default is sync.
      * 
      */
     @JsonbProperty("invoke")
+    @Column
     private EventRef.Invoke invoke = EventRef.Invoke.fromValue("sync");
 
     /**

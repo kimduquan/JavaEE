@@ -8,6 +8,8 @@ import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
@@ -20,6 +22,7 @@ import javax.validation.constraints.Size;
     "bearerauth",
     "oauth"
 })
+@Embeddable
 public class AuthDefinition implements Serializable
 {
 
@@ -33,30 +36,35 @@ public class AuthDefinition implements Serializable
      */
 	@JsonbProperty("name")
     @Size(min = 1)
+	@Column
     private String name;
     /**
      * Defines the auth type
      * 
      */
     @JsonbProperty("scheme")
+	@Column
     private AuthDefinition.Scheme scheme = AuthDefinition.Scheme.fromValue("basic");
     /**
      * 
      */
     @JsonbProperty("basicauth")
     @Valid
+	@Column
     private BasicAuthDefinition basicauth;
     /**
      * 
      */
     @JsonbProperty("bearerauth")
     @Valid
+	@Column
     private BearerAuthDefinition bearerauth;
     /**
      * 
      */
     @JsonbProperty("oauth")
     @Valid
+	@Column
     private OauthDefinition oauth;
 
     /**
@@ -129,6 +137,7 @@ public class AuthDefinition implements Serializable
      * @author PC
      *
      */
+    @Embeddable
     public enum Scheme {
 
         BASIC("basic"),

@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 import javax.json.bind.annotation.JsonbCreator;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
@@ -19,6 +21,7 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
     "onParentComplete",
     "invoke"
 })
+@Embeddable
 public class SubFlowRef implements Serializable
 {
 
@@ -33,6 +36,7 @@ public class SubFlowRef implements Serializable
      */
     @JsonbProperty("workflowId")
     @NotNull
+    @Column
     private String workflowId;
     /**
      * Version of the sub-workflow to be invoked
@@ -40,18 +44,21 @@ public class SubFlowRef implements Serializable
      */
     @JsonbProperty("version")
     @Size(min = 1)
+    @Column
     private String version;
     /**
      * If invoke is 'async', specifies how subflow execution should behave when parent workflow completes. Default is 'terminate'
      * 
      */
     @JsonbProperty("onParentComplete")
+    @Column
     private SubFlowRef.OnParentComplete onParentComplete = SubFlowRef.OnParentComplete.fromValue("terminate");
     /**
      * Specifies if the function should be invoked sync or async. Default is sync.
      * 
      */
     @JsonbProperty("invoke")
+    @Column
     private SubFlowRef.Invoke invoke = SubFlowRef.Invoke.fromValue("sync");
 
     /**
@@ -132,6 +139,7 @@ public class SubFlowRef implements Serializable
      * @author PC
      *
      */
+    @Embeddable
     public enum Invoke {
 
         SYNC("sync"),
@@ -183,6 +191,7 @@ public class SubFlowRef implements Serializable
      * @author PC
      *
      */
+    @Embeddable
     public enum OnParentComplete {
 
         CONTINUE("continue"),

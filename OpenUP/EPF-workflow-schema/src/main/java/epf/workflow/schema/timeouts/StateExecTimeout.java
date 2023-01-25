@@ -3,6 +3,8 @@ package epf.workflow.schema.timeouts;
 import java.io.Serializable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 
@@ -14,6 +16,7 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
     "single",
     "total"
 })
+@Embeddable
 public class StateExecTimeout implements Serializable
 {
 
@@ -27,6 +30,7 @@ public class StateExecTimeout implements Serializable
      */
     @JsonbProperty("single")
     @Size(min = 1)
+    @Column
     private String single;
     /**
      * Total state execution timeout, including retries (ISO 8601 duration format)
@@ -36,6 +40,7 @@ public class StateExecTimeout implements Serializable
     @JsonbProperty("total")
     @Size(min = 1)
     @NotNull
+    @Column
     private String total;
 
     /**

@@ -3,6 +3,8 @@ package epf.workflow.schema.timeouts;
 import java.io.Serializable;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 
@@ -17,6 +19,7 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
     "branchExecTimeout",
     "eventTimeout"
 })
+@Embeddable
 public class TimeoutsDefinition implements Serializable
 {
 
@@ -29,12 +32,14 @@ public class TimeoutsDefinition implements Serializable
      */
     @JsonbProperty("workflowExecTimeout")
     @Valid
+    @Column
     private WorkflowExecTimeout workflowExecTimeout;
     /**
      * 
      */
     @JsonbProperty("stateExecTimeout")
     @Valid
+    @Column
     private StateExecTimeout stateExecTimeout;
     /**
      * Single actions definition execution timeout duration (ISO 8601 duration format)
@@ -42,6 +47,7 @@ public class TimeoutsDefinition implements Serializable
      */
     @JsonbProperty("actionExecTimeout")
     @Size(min = 1)
+    @Column
     private String actionExecTimeout;
     /**
      * Single branch execution timeout duration (ISO 8601 duration format)
@@ -49,6 +55,7 @@ public class TimeoutsDefinition implements Serializable
      */
     @JsonbProperty("branchExecTimeout")
     @Size(min = 1)
+    @Column
     private String branchExecTimeout;
     /**
      * Timeout duration to wait for consuming defined events (ISO 8601 duration format)
@@ -56,6 +63,7 @@ public class TimeoutsDefinition implements Serializable
      */
     @JsonbProperty("eventTimeout")
     @Size(min = 1)
+    @Column
     private String eventTimeout;
 
     @JsonbProperty("workflowExecTimeout")

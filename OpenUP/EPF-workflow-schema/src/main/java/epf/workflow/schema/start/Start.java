@@ -4,6 +4,8 @@ import java.io.Serializable;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 import epf.workflow.schema.schedule.Schedule;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 
@@ -15,6 +17,7 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
     "stateName",
     "schedule"
 })
+@Embeddable
 public class Start implements Serializable
 {
 
@@ -28,6 +31,7 @@ public class Start implements Serializable
      */
     @JsonbProperty("stateName")
     @Size(min = 1)
+    @Column
     private String stateName;
     /**
      * Start state schedule definition
@@ -35,6 +39,7 @@ public class Start implements Serializable
      */
     @JsonbProperty("schedule")
     @Valid
+    @Column
     private Schedule schedule;
 
     /**

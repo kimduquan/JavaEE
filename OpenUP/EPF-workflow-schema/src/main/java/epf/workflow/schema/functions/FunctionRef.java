@@ -6,6 +6,8 @@ import java.util.Map;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 import javax.json.JsonValue;
 import javax.json.bind.annotation.JsonbCreator;
 import javax.json.bind.annotation.JsonbProperty;
@@ -21,6 +23,7 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
     "selectionSet",
     "invoke"
 })
+@Embeddable
 public class FunctionRef implements Serializable
 {
 
@@ -36,6 +39,7 @@ public class FunctionRef implements Serializable
     @JsonbProperty("refName")
     @Size(min = 1)
     @NotNull
+    @Column
     private String refName;
     /**
      * Function arguments
@@ -43,18 +47,21 @@ public class FunctionRef implements Serializable
      */
     @JsonbProperty("arguments")
     @Valid
+    @Column
     private JsonValue arguments;
     /**
      * Only used if function type is 'graphql'. A string containing a valid GraphQL selection set
      * 
      */
     @JsonbProperty("selectionSet")
+    @Column
     private String selectionSet;
     /**
      * Specifies if the function should be invoked sync or async. Default is sync.
      * 
      */
     @JsonbProperty("invoke")
+    @Column
     private FunctionRef.Invoke invoke = FunctionRef.Invoke.fromValue("sync");
 
     /**

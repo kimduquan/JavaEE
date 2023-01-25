@@ -7,6 +7,8 @@ import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.validation.Valid;
 import epf.workflow.schema.produce.ProduceEvent;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
@@ -18,6 +20,7 @@ import epf.workflow.schema.produce.ProduceEvent;
     "compensate",
     "continueAs"
 })
+@Embeddable
 public class End implements Serializable
 {
 
@@ -30,6 +33,7 @@ public class End implements Serializable
      * 
      */
     @JsonbProperty("terminate")
+    @Column
     private boolean terminate = false;
     /**
      * Array of events to be produced
@@ -37,12 +41,14 @@ public class End implements Serializable
      */
     @JsonbProperty("produceEvents")
     @Valid
+    @Column
     private List<ProduceEvent> produceEvents = new ArrayList<ProduceEvent>();
     /**
      * If set to true, triggers workflow compensation when before workflow executin completes. Default is false
      * 
      */
     @JsonbProperty("compensate")
+    @Column
     private boolean compensate = false;
     /**
      * End definition continue as
@@ -50,6 +56,7 @@ public class End implements Serializable
      */
     @JsonbProperty("continueAs")
     @Valid
+    @Column
     private ContinueAs continueAs;
 
     /**

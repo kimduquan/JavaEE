@@ -6,6 +6,9 @@ import epf.workflow.schema.end.End;
 import epf.workflow.schema.filters.EventDataFilter;
 import epf.workflow.schema.interfaces.SwitchCondition;
 import epf.workflow.schema.transitions.Transition;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
+
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 
@@ -20,6 +23,7 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
     "transition",
     "end"
 })
+@Embeddable
 public class EventCondition extends SwitchCondition
 {
 
@@ -28,6 +32,7 @@ public class EventCondition extends SwitchCondition
      * 
      */
     @JsonbProperty("name")
+    @Column
     private String name;
     /**
      * References an unique event name in the defined workflow events
@@ -36,12 +41,14 @@ public class EventCondition extends SwitchCondition
      */
     @JsonbProperty("eventRef")
     @NotNull
+    @Column
     private String eventRef;
     /**
      * 
      */
     @JsonbProperty("eventDataFilter")
     @Valid
+    @Column
     private EventDataFilter eventDataFilter;
     /**
      * 
@@ -51,6 +58,7 @@ public class EventCondition extends SwitchCondition
     @JsonbProperty("transition")
     @Valid
     @NotNull
+    @Column
     private Transition transition;
     /**
      * State end definition
@@ -58,6 +66,7 @@ public class EventCondition extends SwitchCondition
      */
     @JsonbProperty("end")
     @Valid
+    @Column
     private End end;
 
     /**

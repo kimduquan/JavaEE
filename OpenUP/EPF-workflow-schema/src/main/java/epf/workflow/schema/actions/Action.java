@@ -12,6 +12,9 @@ import epf.workflow.schema.filters.ActionDataFilter;
 import epf.workflow.schema.functions.FunctionRef;
 import epf.workflow.schema.functions.SubFlowRef;
 import epf.workflow.schema.sleep.Sleep;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Entity;
+import jakarta.nosql.mapping.Id;
 
 /**
  * @author PC
@@ -30,6 +33,7 @@ import epf.workflow.schema.sleep.Sleep;
     "actionDataFilter",
     "condition"
 })
+@Entity
 public class Action implements Serializable
 {
 
@@ -42,18 +46,22 @@ public class Action implements Serializable
      * 
      */
     @JsonbProperty("id")
+    @Column
+    @Id
     private String id;
     /**
      * Unique action definition name
      * 
      */
     @JsonbProperty("name")
+    @Column
     private String name;
     /**
      * 
      */
     @JsonbProperty("functionRef")
     @Valid
+    @Column
     private FunctionRef functionRef;
     /**
      * Event References
@@ -61,18 +69,28 @@ public class Action implements Serializable
      */
     @JsonbProperty("eventRef")
     @Valid
+    @Column
     private EventRef eventRef;
+    /**
+     * 
+     */
     @JsonbProperty("subFlowRef")
     @Valid
+    @Column
     private SubFlowRef subFlowRef;
+    /**
+     * 
+     */
     @JsonbProperty("sleep")
     @Valid
+    @Column
     private Sleep sleep;
     /**
      * References a defined workflow retry definition. If not defined the default retry policy is assumed
      * 
      */
     @JsonbProperty("retryRef")
+    @Column
     private String retryRef;
     /**
      * List of unique references to defined workflow errors for which the action should not be retried. Used only when `autoRetries` is set to `true`
@@ -81,6 +99,7 @@ public class Action implements Serializable
     @JsonbProperty("nonRetryableErrors")
     @Size(min = 1)
     @Valid
+    @Column
     private List<String> nonRetryableErrors = new ArrayList<String>();
     /**
      * List of unique references to defined workflow errors for which the action should be retried. Used only when `autoRetries` is set to `false`
@@ -89,9 +108,14 @@ public class Action implements Serializable
     @JsonbProperty("retryableErrors")
     @Size(min = 1)
     @Valid
+    @Column
     private List<String> retryableErrors = new ArrayList<String>();
+    /**
+     * 
+     */
     @JsonbProperty("actionDataFilter")
     @Valid
+    @Column
     private ActionDataFilter actionDataFilter;
     /**
      * Expression, if defined, must evaluate to true for this action to be performed. If false, action is disregarded
@@ -99,6 +123,7 @@ public class Action implements Serializable
      */
     @JsonbProperty("condition")
     @Size(min = 1)
+    @Column
     private String condition;
 
     /**

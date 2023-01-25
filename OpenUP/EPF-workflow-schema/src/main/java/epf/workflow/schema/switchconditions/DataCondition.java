@@ -5,6 +5,9 @@ import javax.validation.constraints.NotNull;
 import epf.workflow.schema.end.End;
 import epf.workflow.schema.interfaces.SwitchCondition;
 import epf.workflow.schema.transitions.Transition;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
+
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
 
@@ -18,6 +21,7 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
     "transition",
     "end"
 })
+@Embeddable
 public class DataCondition extends SwitchCondition
 {
 
@@ -26,6 +30,7 @@ public class DataCondition extends SwitchCondition
      * 
      */
     @JsonbProperty("name")
+    @Column
     private String name;
     /**
      * Workflow expression evaluated against state data. True if results are not empty
@@ -34,6 +39,7 @@ public class DataCondition extends SwitchCondition
      */
     @JsonbProperty("condition")
     @NotNull
+    @Column
     private String condition;
     /**
      * 
@@ -43,6 +49,7 @@ public class DataCondition extends SwitchCondition
     @JsonbProperty("transition")
     @Valid
     @NotNull
+    @Column
     private Transition transition;
     /**
      * State end definition
@@ -50,6 +57,7 @@ public class DataCondition extends SwitchCondition
      */
     @JsonbProperty("end")
     @Valid
+    @Column
     private End end;
 
     /**

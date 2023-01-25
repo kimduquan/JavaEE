@@ -6,6 +6,8 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 import epf.workflow.schema.timeouts.WorkflowExecTimeout;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
@@ -17,6 +19,7 @@ import epf.workflow.schema.timeouts.WorkflowExecTimeout;
     "data",
     "workflowExecTimeout"
 })
+@Embeddable
 public class ContinueAs implements Serializable
 {
 
@@ -29,6 +32,7 @@ public class ContinueAs implements Serializable
      * 
      */
     @JsonbProperty("workflowId")
+    @Column
     private String workflowId;
     /**
      * Version of the workflow to continue execution as
@@ -36,6 +40,7 @@ public class ContinueAs implements Serializable
      */
     @JsonbProperty("version")
     @Size(min = 1)
+    @Column
     private String version;
     /**
      * Expression which selects parts of the states data output to become the workflow data input of continued execution
@@ -45,6 +50,7 @@ public class ContinueAs implements Serializable
     private String data;
     @JsonbProperty("workflowExecTimeout")
     @Valid
+    @Column
     private WorkflowExecTimeout workflowExecTimeout;
 
     /**

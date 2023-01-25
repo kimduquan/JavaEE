@@ -3,6 +3,8 @@ package epf.workflow.schema.filters;
 import java.io.Serializable;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbPropertyOrder;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
@@ -12,6 +14,7 @@ import javax.json.bind.annotation.JsonbPropertyOrder;
     "input",
     "output"
 })
+@Embeddable
 public class StateDataFilter implements Serializable
 {
 
@@ -24,12 +27,14 @@ public class StateDataFilter implements Serializable
      * 
      */
     @JsonbProperty("input")
+    @Column
     private String input;
     /**
      * Workflow expression that filters the state data output
      * 
      */
     @JsonbProperty("output")
+    @Column
     private String output;
 
     /**

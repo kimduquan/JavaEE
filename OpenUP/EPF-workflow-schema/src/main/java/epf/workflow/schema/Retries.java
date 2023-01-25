@@ -2,20 +2,25 @@ package epf.workflow.schema;
 
 import java.util.List;
 import epf.workflow.schema.retry.RetryDefinition;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
  *
  */
+@Embeddable
 public class Retries 
 {
 	/**
 	 * 
 	 */
+	@Column
 	private String refValue;
 	/**
 	 * 
 	 */
+	@Column
 	private List<RetryDefinition> retryDefs;
 	
 	public String getRefValue() {
