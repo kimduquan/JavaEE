@@ -1,28 +1,26 @@
 package epf.webapp.search;
 
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import javax.json.JsonObject;
-import javax.ws.rs.core.Response;
 import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortMeta;
 import epf.client.util.Client;
 import epf.naming.Naming.Query;
+import epf.query.client.EntityId;
 import epf.query.client.Search;
-import epf.util.json.JsonUtil;
+import epf.util.StringUtil;
 import epf.util.logging.LogManager;
 import epf.webapp.internal.GatewayUtil;
 
 /**
  * 
  */
-public class SearchCollector extends LazyDataModel<JsonObject> {
+public class SearchCollector extends LazyDataModel<EntityId> {
 
 	/**
 	 *
@@ -50,6 +48,11 @@ public class SearchCollector extends LazyDataModel<JsonObject> {
 	private final String text;
 	
 	/**
+	 * 
+	 */
+	private final Map<String, EntityId> entityIds = new ConcurrentHashMap<>();
+	
+	/**
 	 * @param gateway
 	 * @param token
 	 * @param text
@@ -61,17 +64,11 @@ public class SearchCollector extends LazyDataModel<JsonObject> {
 	}
 
 	@Override
-	public List<JsonObject> load(final int first, final int pageSize, final Map<String, SortMeta> sortBy, final Map<String, FilterMeta> filterBy) {
+	public List<EntityId> load(final int first, final int pageSize, final Map<String, SortMeta> sortBy, final Map<String, FilterMeta> filterBy) {
         try(Client client = gateway.newClient(Query.SEARCH)) {
 			client.authorization(token);
-			try(Response response = Search.search(client, text, first, pageSize)){
-				try(InputStream stream = response.readEntity(InputStream.class)){
-					return JsonUtil.readArray(stream)
-							.stream()
-							.map(value -> value.asJsonObject())
-							.collect(Collectors.toList());
-				}
-			}
+			entityIds.clear();
+			return Search.search(client, text, first, pageSize);
         } 
 		catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "[SearchCollector.entities]", e);
@@ -80,17 +77,26 @@ public class SearchCollector extends LazyDataModel<JsonObject> {
     }
 
     @Override
-    public JsonObject getRowData(final String rowKey) {
-        return entities.get(Integer.parseInt(rowKey));
+    public EntityId getRowData(final String rowKey) {
+    	return entityIds.get(rowKey);
     }
 
     @Override
-    public String getRowKey(final JsonObject object) {
-        return String.valueOf(entities.indexOf(object));
+    public String getRowKey(final EntityId object) {
+        final String key = StringUtil.join(object.getSchema(), object.getName(), object.getAttributes().values().iterator().next().toString());
+        entityIds.put(key, object);
+        return key;
     }
 
 	@Override
 	public int count(final Map<String, FilterMeta> filterBy) {
+		try(Client client = gateway.newClient(Query.SEARCH)) {
+			client.authorization(token);
+			return Search.count(client, text);
+        } 
+		catch (Exception e) {
+			LOGGER.log(Level.SEVERE, "[SearchCollector.count]", e);
+		}
 		return 0;
 	}
 }

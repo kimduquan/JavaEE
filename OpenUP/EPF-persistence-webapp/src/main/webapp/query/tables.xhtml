@@ -23,16 +23,15 @@
                                 <h:form id="query">
                                 	<p:toolbar>
 							            <p:toolbarGroup>
-							                <p:commandButton value="#{i18n['epf.persistence.query.empty']}" actionListener="#{epf_persistence_view.prePersist}" update=":persistence:attributes" oncomplete="PF('persistenceDialog').show()">
+							                <p:commandButton value="#{i18n['epf.persistence.persist']}" actionListener="#{epf_persistence_view.prePersist}" update=":persistence:attributes" oncomplete="PF('persistenceDialog').show()">
 							                    <p:resetInput target=":persistence:attributes" />
 							                </p:commandButton>
-							                <p:commandButton id="remove-entity" value="#{i18n['epf.persistence.remove']}" actionListener="#{epf_query_view.remove}"
-							                    disabled="#{!epf_query_view.entities.empty}" update="@this">
+							                <p:commandButton id="remove-entity" value="#{i18n['epf.persistence.remove']}" actionListener="#{epf_query_view.remove}" update="@this">
 							                    <p:confirm header="Confirmation" message="Delete the selected rows?" />
 							                </p:commandButton>
 							            </p:toolbarGroup>
 							        </p:toolbar>
-	                                <p:dataTable value="#{epf_query_view.collector}" lazy="true" var="entityValue" tableStyleClass="table table-bordered" a:id="dataTable" tableStyle="width: 100%;" paginator="true" rows="10" editable="true" selection="#{epf_query_view.entities}" rowSelectMode="add">
+	                                <p:dataTable value="#{epf_query_view.collector}" lazy="true" var="entityValue" tableStyleClass="table table-bordered" a:id="dataTable" tableStyle="width: 100%;" paginator="true" rows="10" editable="true" selection="#{epf_persistence_view.entities}" rowSelectMode="add">
 	                                    <p:columns value="#{epf_query_view.attributes}" var="attribute" columnIndexVar="attributeIndex">
 								            <f:facet name="header">
 								                <h:outputText value="#{attribute.name}" />
@@ -50,24 +49,18 @@
 								            </p:cellEditor>
 								        </p:columns>
 								        <p:column exportable="false">
-							                <p:commandButton update=":persistence:attributes"
-							                    oncomplete="PF('persistenceDialog').show()" process="@this">
-							                    <f:setPropertyActionListener value="#{entityValue}" target="#{epf_persistence_view.entity}" />
+							                <p:commandButton value="#{i18n['epf.persistence.merge']}" update=":persistence:attributes" oncomplete="PF('persistenceDialog').show()" process="@this">
+							                	<f:setPropertyActionListener value="#{entityValue}" target="#{epf_persistence_view.entity}" />
 							                    <p:resetInput target=":persistence:attributes" />
 							                </p:commandButton>
-							                <p:commandButton process="@this"
-							                                 oncomplete="PF('removeDialog').show()">
-							                    <f:setPropertyActionListener value="#{entityValue}" target="#{epf_persistence_view.entity}" />
+							                <p:commandButton value="#{i18n['epf.persistence.remove']}" process="@this" oncomplete="PF('removeDialog').show()">
+							                	<f:setPropertyActionListener value="#{entityValue}" target="#{epf_persistence_view.entity}" />
 							                </p:commandButton>
 							            </p:column>
 								        <f:facet name="header">
-								            <p:commandButton id="toggler" type="button" value="Columns"/>
-						                    <p:columnToggler datasource="dataTable" trigger="toggler">
-						                        <p:ajax />
-						                    </p:columnToggler>
 								        </f:facet>
 								        <f:facet name="emptyMessage">
-								        	<h:outputText value="#{i18n['epf.persistence.query.empty']}"></h:outputText>
+								        	<h:outputText value="#{i18n['epf.persistence.query.resultList.empty']}" />
 								        </f:facet>
 								        <p:ajax event="rowSelect" update=":query:remove-entity" />
 							            <p:ajax event="rowUnselect" update=":query:remove-entity" />
@@ -83,16 +76,12 @@
                             				</p:outputPanel>
                             			</p:outputPanel>
                             			<f:facet name="footer">
-							                <p:commandButton value="Save" actionListener="#{epf_persistence_view.merge}"
-							                    update="attributes" process="attributes @this" />
+							                <p:commandButton value="Save" actionListener="#{epf_persistence_view.merge}" update="attributes" process="attributes @this" />
 							                <p:commandButton value="Cancel" onclick="PF('persistenceDialog').hide()" type="button" />
 							            </f:facet>
             						</p:dialog>
-            						<p:confirmDialog widgetVar="removeDialog" showEffect="fade" width="300"
-							            message="Delete the row?" header="Confirm" severity="warn">
-							            <p:commandButton value="Yes" actionListener="#{epf_persistence_view.remove}"
-							                process="@this" update=":query:remove-entity"
-							                oncomplete="PF('removeDialog').hide()" />
+            						<p:confirmDialog widgetVar="removeDialog" showEffect="fade" message="Delete the row?" header="Confirm" severity="warn">
+							            <p:commandButton value="Yes" actionListener="#{epf_persistence_view.remove}" process="@this" update=":query:remove-entity" oncomplete="PF('removeDialog').hide()" />
 							            <p:commandButton value="No" type="button" onclick="PF('removeDialog').hide()" />
 							        </p:confirmDialog>
                             	</h:form>

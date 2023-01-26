@@ -1,6 +1,8 @@
 package epf.webapp.persistence.view;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.json.JsonObject;
@@ -23,6 +25,11 @@ public class PersistenceView implements Serializable {
 	 * 
 	 */
 	private JsonObject entity;
+	
+	/**
+	 * 
+	 */
+	private final List<JsonObject> entities = new ArrayList<>();
 
 	/**
 	 * 
@@ -44,5 +51,9 @@ public class PersistenceView implements Serializable {
 
 	public void setEntity(final JsonObject entity) {
 		this.entity = entity;
+	}
+
+	public List<JsonObject> getEntities() {
+		return entities;
 	}
 }
