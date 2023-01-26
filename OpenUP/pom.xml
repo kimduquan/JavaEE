@@ -309,7 +309,7 @@
 			<dependency>
 			    <groupId>org.apache.kafka</groupId>
 			    <artifactId>kafka-clients</artifactId>
-			    <version>3.3.1</version>
+			    <version>3.3.2</version>
 			</dependency>
 			
 			
@@ -335,7 +335,7 @@
 			<dependency>
 				<groupId>org.apache.groovy</groupId>
 				<artifactId>groovy-jsr223</artifactId>
-				<version>4.0.7</version>
+				<version>4.0.8</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.python/jython-standalone -->
 			<dependency>
@@ -353,7 +353,7 @@
 			<dependency>
 			    <groupId>org.optaplanner</groupId>
 			    <artifactId>optaplanner-core</artifactId>
-			    <version>8.32.0.Final</version>
+			    <version>8.33.0.Final</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.lsp4j/org.eclipse.lsp4j.websocket -->
 			<dependency>
@@ -397,7 +397,7 @@
 			<dependency>
 			    <groupId>mysql</groupId>
 			    <artifactId>mysql-connector-java</artifactId>
-			    <version>8.0.31</version>
+			    <version>8.0.32</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
 			<dependency>
@@ -435,14 +435,14 @@
 			<dependency>
 			    <groupId>org.mockito</groupId>
 			    <artifactId>mockito-core</artifactId>
-			    <version>4.11.0</version>
+			    <version>5.0.0</version>
 			    <scope>test</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
 			<dependency>
 			    <groupId>org.seleniumhq.selenium</groupId>
 			    <artifactId>selenium-java</artifactId>
-			    <version>4.7.2</version>
+			    <version>4.8.0</version>
 			    <scope>test</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.jetty.websocket/javax-websocket-client-impl -->
@@ -496,12 +496,12 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.0.0-M7</version>
+                    <version>3.0.0-M8</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>3.0.0-M7</version>
+                    <version>3.0.0-M8</version>
                     <configuration>
                         <forkMode>once</forkMode>
                         <forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds>
@@ -584,7 +584,7 @@
 				<plugin>
 				    <groupId>org.apache.maven.plugins</groupId>
 				    <artifactId>maven-dependency-plugin</artifactId>
-				    <version>3.4.0</version>
+				    <version>3.5.0</version>
 				</plugin>
 				<!-- https://mvnrepository.com/artifact/org.codehaus.mojo/exec-maven-plugin -->
 				<plugin>
@@ -595,7 +595,7 @@
 				<plugin>
 					<groupId>org.owasp</groupId>
 					<artifactId>dependency-check-maven</artifactId>
-					<version>7.4.4</version>
+					<version>8.0.1</version>
 		        </plugin>
 		        <plugin>
 		        	<groupId>org.wildfly.plugins</groupId>
