@@ -31,22 +31,16 @@
 							                </p:commandButton>
 							            </p:toolbarGroup>
 							        </p:toolbar>
-	                                <p:dataTable value="#{epf_query_view.collector}" lazy="true" var="entityValue" tableStyleClass="table table-bordered" a:id="dataTable" tableStyle="width: 100%;" paginator="true" rows="10" editable="true" selection="#{epf_persistence_view.entities}" rowSelectMode="add">
-	                                    <p:columns value="#{epf_query_view.attributes}" var="attribute" columnIndexVar="attributeIndex">
+							        <p:contextMenu for="dataTable">
+							        </p:contextMenu>
+							        <p:dataTable value="#{epf_query_view.collector}" lazy="true" var="entityValue" tableStyleClass="table table-bordered" id="dataTable" widgetVar="dataTable" tableStyle="width: 100%;" paginator="true" rows="10" editable="true" selection="#{epf_persistence_view.entities}" rowSelectMode="add" showGridlines="true" draggableColumns="true" draggableRows="true" resizableColumns="true" scrollable="true" selectionMode="multiple" allowUnsorting="true" sortMode="multiple">
+	                                    <p:columns value="#{epf_query_view.attributes}" var="attribute" columnIndexVar="attributeIndex" field="#{attribute.name}" filterMatchMode="exact">
 								            <f:facet name="header">
 								                <h:outputText value="#{attribute.name}" />
 								            </f:facet>
 								            <f:facet name="footer">
-								                <h:outputText value="#{attribute.name}" />
 								            </f:facet>
-								            <p:cellEditor>
-									            <f:facet name="output">
-									            	<h:outputText value="#{epf_query_view.getAttribute(entityValue, attribute.name)}" />
-									            </f:facet>
-									            <f:facet name="input">
-									            	<p:inputText style="width:100%" />
-									            </f:facet>
-								            </p:cellEditor>
+								            <h:outputText value="#{epf_query_view.getAttribute(entityValue, attribute.name)}" />
 								        </p:columns>
 								        <p:column exportable="false">
 							                <p:commandButton value="#{i18n['epf.persistence.merge']}" update=":persistence:attributes" oncomplete="PF('persistenceDialog').show()" process="@this">
@@ -57,8 +51,6 @@
 							                	<f:setPropertyActionListener value="#{entityValue}" target="#{epf_persistence_view.entity}" />
 							                </p:commandButton>
 							            </p:column>
-								        <f:facet name="header">
-								        </f:facet>
 								        <f:facet name="emptyMessage">
 								        	<h:outputText value="#{i18n['epf.persistence.query.resultList.empty']}" />
 								        </f:facet>

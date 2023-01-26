@@ -29,7 +29,7 @@ public class PersistenceView implements Serializable {
 	/**
 	 * 
 	 */
-	private final List<JsonObject> entities = new ArrayList<>();
+	private List<JsonObject> entities = new ArrayList<>();
 
 	/**
 	 * 
@@ -55,5 +55,9 @@ public class PersistenceView implements Serializable {
 
 	public List<JsonObject> getEntities() {
 		return entities;
+	}
+
+	public void setEntities(final List<JsonObject> entities) {
+		this.entities = entities;
 	}
 }

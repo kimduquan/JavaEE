@@ -3,9 +3,11 @@ package epf.webapp.query;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -19,6 +21,7 @@ import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.persistence.schema.client.Entity;
 import epf.query.client.Query;
+import epf.query.client.QueryUtil;
 import epf.util.json.JsonUtil;
 import epf.util.logging.LogManager;
 import epf.webapp.internal.GatewayUtil;
@@ -89,17 +92,37 @@ public class QueryCollector extends LazyDataModel<JsonObject> {
 		}
 		return newTarget;
 	}
+	
+	/**
+	 * @param sortBy
+	 * @return
+	 */
+	private String[] buildSorts(final Map<String, SortMeta> sortBy) {
+		return sortBy
+		.entrySet()
+		.stream()
+		.filter(sortEntry -> !sortEntry.getValue().getOrder().isUnsorted())
+		.sorted(new Comparator<Map.Entry<String, SortMeta>>(){
+				@Override
+				public int compare(final Entry<String, SortMeta> o1, final Entry<String, SortMeta> o2) {
+					return Integer.compare(o1.getValue().getPriority(), o2.getValue().getPriority());
+				}
+			}
+		)
+		.map(sortEntry -> QueryUtil.sort(sortEntry.getValue().getField(), sortEntry.getValue().getOrder().isAscending()))
+		.collect(Collectors.toList())
+		.toArray(new String[] {});
+	}
 
 	@Override
-	public List<JsonObject> load(int first, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy) {
-        final String[] sort = sortBy.keySet().toArray(new String[0]);
+	public List<JsonObject> load(final int first, final int pageSize, final Map<String, SortMeta> sortBy, final Map<String, FilterMeta> filterBy) {
+        final String[] sort = buildSorts(sortBy);
         final Integer firstResult = first;
         final Integer maxResults = pageSize;
 		try(Client client = gateway.newClient(Naming.QUERY)){
 			client.authorization(token);
         	try(Response response = Query.executeQuery(client, schema, target -> buildFilters(target, entity.getName(), filterBy.values()), firstResult, maxResults, sort)){
         		try(InputStream stream = response.readEntity(InputStream.class)){
-        			entityMap.clear();
         			return JsonUtil.readArray(stream)
 							.stream()
 							.map(value -> value.asJsonObject())
@@ -128,6 +151,7 @@ public class QueryCollector extends LazyDataModel<JsonObject> {
 	@Override
 	public int count(final Map<String, FilterMeta> filterBy) {
 		try(Client client = gateway.newClient(Naming.QUERY)) {
+			client.authorization(token);
 			return Query.executeCountQuery(client, schema, target -> buildFilters(target, entity.getName(), filterBy.values()));
 		} 
 		catch (Exception e) {

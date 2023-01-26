@@ -19,6 +19,7 @@ import javax.persistence.metamodel.Metamodel;
 import javax.persistence.metamodel.Attribute.PersistentAttributeType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.PathSegment;
+import epf.naming.Naming;
 import epf.util.Var;
 
 /**
@@ -182,7 +183,20 @@ public class QueryBuilder {
         	}
         	final List<Order> orders = new ArrayList<>();
         	for(String order : sort) {
-        		orders.add(criteria.asc(path.get(order)));
+        		final int sepIndex = order.indexOf(Naming.Query.Client.PARAM_SEPARATOR);
+        		if(sepIndex > 0) {
+        			final String sortAttr = order.substring(0, sepIndex);
+        			final String sortOrder = order.substring(sepIndex + 1);
+        			if(Naming.Query.Client.SORT_ASC.equals(sortOrder)) {
+                		orders.add(criteria.asc(path.get(sortAttr)));
+        			}
+        			else if(Naming.Query.Client.SORT_DESC.equals(sortOrder)) {
+        				orders.add(criteria.desc(path.get(sortAttr)));
+        			}
+        		}
+        		else {
+        			orders.add(criteria.asc(path.get(order)));
+        		}
         	}
         	rootQuery.orderBy(orders);
         }
@@ -238,12 +252,44 @@ public class QueryBuilder {
             }
 
             segment.getMatrixParameters().forEach((name, values) -> {
-            	allParams.add(
-            			criteria.isMember(
-                                values,
-                                subJoin.get(name)
-                        )
-                );
+            	final int sepIndex = name.indexOf(Naming.Query.Client.PARAM_SEPARATOR);
+            	if(sepIndex > 0) {
+            		final String filterAttr = name.substring(sepIndex + 1);
+            		final String filterCriteria = name.substring(0, sepIndex);
+            		switch(filterCriteria) {
+            			case "ge":
+            				allParams.add(criteria.ge(subJoin.get(filterAttr), Double.valueOf(values.get(0))));
+            				break;
+            			case "gt":
+            				allParams.add(criteria.gt(subJoin.get(filterAttr), Double.valueOf(values.get(0))));
+            				break;
+            			case "le":
+            				allParams.add(criteria.le(subJoin.get(filterAttr), Double.valueOf(values.get(0))));
+            				break;
+            			case "lt":
+            				allParams.add(criteria.lt(subJoin.get(filterAttr), Double.valueOf(values.get(0))));
+            				break;
+            			case "not":
+            				allParams.add(criteria.isNotMember(values, subJoin.get(filterAttr)));
+            				break;
+            			case Naming.Query.Client.LIKE:
+            				allParams.add(criteria.like(subJoin.get(filterAttr), values.get(0)));
+            				break;
+            			case "notlike":
+            				allParams.add(criteria.notLike(subJoin.get(filterAttr), values.get(0)));
+            				break;
+            			default:
+            				break;
+            		}
+            	}
+            	else {
+                	allParams.add(
+                			criteria.isMember(
+                                    values,
+                                    subJoin.get(name)
+                            )
+                    );
+            	}
             });
             
             final ManagedType<?> subType = metamodel.managedType(subClass);

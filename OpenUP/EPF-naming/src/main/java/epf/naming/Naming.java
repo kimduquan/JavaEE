@@ -497,6 +497,22 @@ public interface Naming {
 			 */
 			String SORT = "sort";
 			/**
+			 * 
+			 */
+			String PARAM_SEPARATOR = ".";
+			/**
+			 * 
+			 */
+			String SORT_ASC = "asc";
+			/**
+			 * 
+			 */
+			String SORT_DESC = "desc";
+			/**
+			 * 
+			 */
+			String LIKE = "like";
+			/**
 			 *
 			 */
 			String ENTITY_COUNT = "entity-count";
