@@ -23,31 +23,36 @@
                                 <h:form id="query">
                                 	<p:toolbar>
 							            <p:toolbarGroup>
-							                <p:commandButton value="#{i18n['epf.persistence.persist']}" actionListener="#{epf_persistence_view.prePersist}" update=":persistence:attributes" oncomplete="PF('persistenceDialog').show()">
+							                <p:commandButton value="#{i18n['epf.persistence.persist']}" actionListener="#{epf_persistence_view.prePersist}" update=":persistence:attributes" oncomplete="PF('persistenceDialog').show()" styleClass="ui-button-info" icon="pi pi-plus">
 							                    <p:resetInput target=":persistence:attributes" />
 							                </p:commandButton>
-							                <p:commandButton id="remove-entity" value="#{i18n['epf.persistence.remove']}" actionListener="#{epf_query_view.remove}" update="@this">
+							                <p:commandButton id="remove-entity" value="#{i18n['epf.persistence.remove']}" actionListener="#{epf_query_view.remove}" update="@this" styleClass="ui-button-danger" icon="pi pi-trash">
 							                    <p:confirm header="Confirmation" message="Delete the selected rows?" />
 							                </p:commandButton>
 							            </p:toolbarGroup>
 							        </p:toolbar>
 							        <p:contextMenu for="dataTable">
 							        </p:contextMenu>
-							        <p:dataTable value="#{epf_query_view.collector}" lazy="true" var="entityValue" tableStyleClass="table table-bordered" id="dataTable" widgetVar="dataTable" tableStyle="width: 100%;" paginator="true" rows="10" editable="true" selection="#{epf_persistence_view.entities}" rowSelectMode="add" showGridlines="true" draggableColumns="true" draggableRows="true" resizableColumns="true" scrollable="true" selectionMode="multiple" allowUnsorting="true" sortMode="multiple">
-	                                    <p:columns value="#{epf_query_view.attributes}" var="attribute" columnIndexVar="attributeIndex" field="#{attribute.name}" filterMatchMode="exact">
+							        <p:dataTable value="#{epf_query_view.collector}" lazy="true" var="entityValue" tableStyleClass="table table-bordered" id="dataTable" widgetVar="dataTable" tableStyle="width: 100%;" paginator="true" rows="10" editable="true" selection="#{epf_persistence_view.entities}" rowSelectMode="add" showGridlines="true" draggableColumns="true" draggableRows="true" resizableColumns="true" scrollable="true" selectionMode="multiple" allowUnsorting="true" sortMode="multiple" currentPageReportTemplate="Showing {startRecord} to {endRecord} of {totalRecords} entries" rowsPerPageTemplate="10,25,50,100" paginatorTemplate="{CurrentPageReport} {PreviousPageLink} {PageLinks} {NextPageLink} Show {RowsPerPageDropdown} entries">
+	                                    <f:facet name="header">
+	                                    	<h:outputText value="#{i18n['epf.persistence.query.search']}" />:
+							                <p:inputText id="globalFilter" onkeyup="PF('dataTable').filter()" />
+							            </f:facet>
+	                                    <p:columns value="#{epf_query_view.attributes}" var="attribute" columnIndexVar="attributeIndex" field="#{attribute.name}" sortPriority="#{attributeIndex}">
 								            <f:facet name="header">
 								                <h:outputText value="#{attribute.name}" />
 								            </f:facet>
 								            <f:facet name="footer">
+								                <h:outputText value="#{attribute.name}" />
 								            </f:facet>
 								            <h:outputText value="#{epf_query_view.getAttribute(entityValue, attribute.name)}" />
 								        </p:columns>
 								        <p:column exportable="false">
-							                <p:commandButton value="#{i18n['epf.persistence.merge']}" update=":persistence:attributes" oncomplete="PF('persistenceDialog').show()" process="@this">
+							                <p:commandButton update=":persistence:attributes" oncomplete="PF('persistenceDialog').show()" process="@this" styleClass="ui-button-info" icon="pi pi-pencil">
 							                	<f:setPropertyActionListener value="#{entityValue}" target="#{epf_persistence_view.entity}" />
 							                    <p:resetInput target=":persistence:attributes" />
 							                </p:commandButton>
-							                <p:commandButton value="#{i18n['epf.persistence.remove']}" process="@this" oncomplete="PF('removeDialog').show()">
+							                <p:commandButton process="@this" oncomplete="PF('removeDialog').show()" styleClass="ui-button-danger" icon="pi pi-trash">
 							                	<f:setPropertyActionListener value="#{entityValue}" target="#{epf_persistence_view.entity}" />
 							                </p:commandButton>
 							            </p:column>
