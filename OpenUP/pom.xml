@@ -503,7 +503,6 @@
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <version>3.0.0-M8</version>
                     <configuration>
-                        <forkMode>once</forkMode>
                         <forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds>
                         <!-- Specify which test classes are integration tests -->
                         <includes>
