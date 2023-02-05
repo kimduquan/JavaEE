@@ -807,6 +807,7 @@
 		<module>EPF-persistence-client</module>
 		<module>EPF-query-client</module>
 		<module>EPF-persistence</module>
+		<module>EPF-persistence-view</module>
 		<module>EPF-persistence-webapp</module>
 		<module>EPF-messaging-client</module>
 		<module>EPF-net</module>

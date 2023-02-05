@@ -88,6 +88,11 @@
             <artifactId>EPF-security-view</artifactId>
             <version>${project.version}</version>
         </dependency>
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-persistence-view</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-security-auth</artifactId>
