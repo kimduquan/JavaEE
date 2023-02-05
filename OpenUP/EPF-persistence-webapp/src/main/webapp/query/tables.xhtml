@@ -81,6 +81,7 @@
 							            <p:commandButton value="Yes" actionListener="#{epf_persistence_view.remove}" process="@this" update=":query:remove-entity" oncomplete="PF('removeDialog').hide()" />
 							            <p:commandButton value="No" type="button" onclick="PF('removeDialog').hide()" />
 							        </p:confirmDialog>
+							        <epf:persist />
                             	</h:form>
                             </div>
                         </div>
