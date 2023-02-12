@@ -12,22 +12,66 @@ import epf.api.media.Schema;
  */
 public class Parameter extends Extensible {
 
+	/**
+	 * 
+	 */
 	private String ref;
 	
-	enum Style {
+	/**
+	 * @author PC
+	 *
+	 */
+	public enum Style {
+		/**
+		 * 
+		 */
 		matrix,
+		/**
+		 * 
+		 */
 		label,
+		/**
+		 * 
+		 */
 		form,
+		/**
+		 * 
+		 */
 		simple,
+		/**
+		 * 
+		 */
 		spaceDelimited,
+		/**
+		 * 
+		 */
 		pipeDelimited,
+		/**
+		 * 
+		 */
 		deepObject
 	}
 	
-	enum In {
+	/**
+	 * @author PC
+	 *
+	 */
+	public enum In {
+		/**
+		 * 
+		 */
 		path,
+		/**
+		 * 
+		 */
 		query,
+		/**
+		 * 
+		 */
 		header,
+		/**
+		 * 
+		 */
 		cookie
 	}
 	

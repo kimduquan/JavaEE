@@ -53,6 +53,16 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-arc</artifactId>
     </dependency>
+    <dependency>
+    	<groupId>openup</groupId>
+    	<artifactId>EPF-api</artifactId>
+    	<version>1.0.0</version>
+    </dependency>
+    <dependency>
+    	<groupId>openup</groupId>
+    	<artifactId>EPF-utility</artifactId>
+    	<version>1.0.0</version>
+    </dependency>
   </dependencies>
   <build>
     <plugins>

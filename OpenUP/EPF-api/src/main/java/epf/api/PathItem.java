@@ -16,14 +16,42 @@ public class PathItem extends Extensible {
 	 */
 	private String ref;
 	
-	enum HttpMethod {
+	/**
+	 * @author PC
+	 *
+	 */
+	public enum HttpMethod {
+        /**
+         * 
+         */
         POST, 
+        /**
+         * 
+         */
         GET, 
+        /**
+         * 
+         */
         PUT, 
+        /**
+         * 
+         */
         PATCH, 
+        /**
+         * 
+         */
         DELETE, 
+        /**
+         * 
+         */
         HEAD, 
+        /**
+         * 
+         */
         OPTIONS, 
+        /**
+         * 
+         */
         TRACE
     }
     

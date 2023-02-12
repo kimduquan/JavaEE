@@ -1,10 +1,14 @@
 package epf.util;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * @author PC
@@ -86,5 +90,35 @@ public interface MapUtil {
 	static <K, V> Optional<V> put(final Map<K, V> map, final K key, final V value){
 		Objects.requireNonNull(map, "Map");
 		return Optional.ofNullable(map.put(key, value));
+	}
+	
+	/**
+	 * @param <K>
+	 * @param <V>
+	 * @param map
+	 * @param keys
+	 * @return
+	 */
+	static <K, V> List<V> getAll(final Map<K, V> map, final K[] keys){
+		Objects.requireNonNull(map, "Map");
+		return Arrays.asList(keys).stream().map(map::get).collect(Collectors.toList());
+	}
+	
+	/**
+	 * @param <K>
+	 * @param <V>
+	 * @param map
+	 * @param values
+	 * @param func
+	 * @return
+	 */
+	static <K, V> Map<K, V> putAll(final Map<K, V> map, final V[] values, final Function<? super V, ? super K> func){
+		Objects.requireNonNull(map, "Map");
+		for(V value : values) {
+			@SuppressWarnings("unchecked")
+			final K key = (K) func.apply(value);
+			map.put(key, value);
+		}
+		return map;
 	}
 }
