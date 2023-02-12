@@ -125,10 +125,7 @@ public class RestFunction extends Function {
 			}
 		}
 		if(this.getFunctionDefinition().getAuthRef() != null) {
-			if(workflowInstance.getWorkflowDefinition().getAuth() instanceof String) {
-				
-			}
-			else {
+			if(workflowInstance.getWorkflowDefinition().getAuth() instanceof AuthDefinition[]) {
 				final AuthDefinition[] authDefs = (AuthDefinition[]) workflowInstance.getWorkflowDefinition().getAuth();
 				for(AuthDefinition authDef : authDefs) {
 					if(authDef.getName().equals(this.getFunctionDefinition().getAuthRef())) {

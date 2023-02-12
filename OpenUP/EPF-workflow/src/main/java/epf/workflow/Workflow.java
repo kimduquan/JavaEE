@@ -138,10 +138,7 @@ public class Workflow {
 	}
 	
 	private void startEventState(final WorkflowDefinition workflowDefinition, final EventState eventState) {
-		if(workflowDefinition.getEvents() instanceof String) {
-			
-		}
-		else {
+		if(!(workflowDefinition.getEvents() instanceof String)) {
 			onEvents.add(new OnEvents(workflowDefinition, eventState));
 		}
 	}
@@ -245,37 +242,30 @@ public class Workflow {
 	}
 	
 	private boolean evaluateCondition(final SwitchStateDataConditions dataConditions) {
-		return true;
+		return dataConditions.getCondition() != null;
 	}
 	
 	private boolean evaluateCondition(final SwitchStateEventConditions eventConditions) {
-		return true;
+		return eventConditions.getEventRef() != null;
 	}
 	
 	/**
 	 * @param event
+	 * @throws Exception 
 	 */
-	public void onEvent(@Observes final Event event) {
-		onEvents.forEach(onEvents -> {
-			final WorkflowDefinition workflowDefinition = onEvents.getWorkflowDefinition();
-			if(workflowDefinition.getEvents() instanceof String) {
-				
-			}
-			else {
-				try {
-					onEvents(onEvents, event);
-					if(onEvents.getEventState().getEnd() != null) {
-						end(workflowDefinition, onEvents.getEventState().getEnd());
-					}
-					else {
-						transition(workflowDefinition, onEvents.getEventState().getTransition());
-					}
-				} 
-				catch (Exception e) {
-					
+	public void onEvent(@Observes final Event event) throws Exception {
+		for(OnEvents onEventsItem : this.onEvents) {
+			final WorkflowDefinition workflowDefinition = onEventsItem.getWorkflowDefinition();
+			if(!(workflowDefinition.getEvents() instanceof String)) {
+				onEvents(onEventsItem, event);
+				if(onEventsItem.getEventState().getEnd() != null) {
+					end(workflowDefinition, onEventsItem.getEventState().getEnd());
+				}
+				else {
+					transition(workflowDefinition, onEventsItem.getEventState().getTransition());
 				}
 			}
-		});
+		}
 	}
 	
 	private void onEvents(final OnEvents onEvents, final Event event) throws Exception {
@@ -312,9 +302,7 @@ public class Workflow {
 	}
 	
 	private void end(final WorkflowDefinition workflowDefinition, final Object end) throws Exception {
-		if(end instanceof Boolean) {
-		}
-		else if(end instanceof EndDefinition) {
+		if(end instanceof EndDefinition) {
 			final EndDefinition endDefinition = (EndDefinition) end;
 			if(endDefinition.isTerminate()) {
 				return;
@@ -347,10 +335,7 @@ public class Workflow {
 	}
 	
 	private void produceEvents(final WorkflowDefinition workflowDefinition, final ProducedEventDefinition[] produceEvents) throws Exception {
-		if(workflowDefinition.getEvents() instanceof String) {
-			
-		}
-		else {
+		if(!(workflowDefinition.getEvents() instanceof String)) {
 			final Map<String, EventDefinition> eventDefs = new HashMap<>();
 			MapUtil.putAll(eventDefs, (EventDefinition[])workflowDefinition.getEvents(), EventDefinition::getName);
 			for(ProducedEventDefinition produceEventDef : produceEvents) {
@@ -397,9 +382,7 @@ public class Workflow {
 	}
 	
 	private Optional<FunctionDefinition> getFunctionDefinition(final WorkflowDefinition workflowDefinition, final String functionRef) {
-		if(workflowDefinition.getFunctions() instanceof String) {
-		}
-		else {
+		if(!(workflowDefinition.getFunctions() instanceof String)) {
 			final FunctionDefinition[] functionDefs = (FunctionDefinition[]) workflowDefinition.getFunctions();
 			return ListUtil.findFirst(functionDefs, f -> f.getName().equals(functionRef));
 		}
