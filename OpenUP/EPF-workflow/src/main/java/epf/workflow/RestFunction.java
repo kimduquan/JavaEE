@@ -124,17 +124,15 @@ public class RestFunction extends Function {
 				}
 			}
 		}
-		if(this.getFunctionDefinition().getAuthRef() != null) {
-			if(workflowInstance.getWorkflowDefinition().getAuth() instanceof AuthDefinition[]) {
-				final AuthDefinition[] authDefs = (AuthDefinition[]) workflowInstance.getWorkflowDefinition().getAuth();
-				for(AuthDefinition authDef : authDefs) {
-					if(authDef.getName().equals(this.getFunctionDefinition().getAuthRef())) {
-						if(authDef.getScheme() == Scheme.bearer) {
-							final BearerPropertiesDefinition bearerDefinition = (BearerPropertiesDefinition) authDef.getProperties();
-							builder = builder.header(HttpHeaders.AUTHORIZATION, "Bearer " + bearerDefinition.getToken());
-						}
-						break;
+		if(this.getFunctionDefinition().getAuthRef() != null && workflowInstance.getWorkflowDefinition().getAuth() instanceof AuthDefinition[]) {
+			final AuthDefinition[] authDefs = (AuthDefinition[]) workflowInstance.getWorkflowDefinition().getAuth();
+			for(AuthDefinition authDef : authDefs) {
+				if(authDef.getName().equals(this.getFunctionDefinition().getAuthRef())) {
+					if(authDef.getScheme() == Scheme.bearer) {
+						final BearerPropertiesDefinition bearerDefinition = (BearerPropertiesDefinition) authDef.getProperties();
+						builder = builder.header(HttpHeaders.AUTHORIZATION, "Bearer " + bearerDefinition.getToken());
 					}
+					break;
 				}
 			}
 		}

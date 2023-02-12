@@ -289,14 +289,12 @@ public class Workflow {
 	
 	private void onEvents(final OnEvents onEvents, final OnEventsDefinition onEvent, List<EventDefinition> eventRefs, final EventState eventState, final Event event) throws Exception {
 		for(EventDefinition eventRef : eventRefs) {
-			if(eventRef.getSource().equals(event.getSource().toString()) && eventRef.getType().equals(event.getType())) {
-				if(eventState.isExclusive()) {
-					if(onEvents.getWorkflowInstance() == null) {
-						onEvents.setWorkflowInstance(newWorkflowInstance(onEvents.getWorkflowDefinition()));
-					}
-					performActions(onEvent.getActionMode(), onEvent.getActions(), onEvents.getWorkflowInstance());
-					break;
+			if(eventRef.getSource().equals(event.getSource().toString()) && eventRef.getType().equals(event.getType()) && eventState.isExclusive()) {
+				if(onEvents.getWorkflowInstance() == null) {
+					onEvents.setWorkflowInstance(newWorkflowInstance(onEvents.getWorkflowDefinition()));
 				}
+				performActions(onEvent.getActionMode(), onEvent.getActions(), onEvents.getWorkflowInstance());
+				break;
 			}
 		}
 	}
@@ -343,10 +341,7 @@ public class Workflow {
 				final Event event = new Event();
 				event.setSource(new URI(eventDef.getSource()));
 				event.setType(eventDef.getType());
-				if(produceEventDef.getData() instanceof String) {
-					
-				}
-				else {
+				if(!(produceEventDef.getData() instanceof String)) {
 					event.setData(produceEventDef.getData());
 				}
 				producedEvent.fire(event);
