@@ -2,9 +2,14 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>epf</groupId>
+  <parent>
+	<groupId>epf</groupId>
+	<artifactId>EPF-parent</artifactId>
+	<version>1.0.0</version>
+	<relativePath>../EPF-parent/pom.xml</relativePath>
+  </parent>
   <artifactId>EPF-workflow</artifactId>
-  <version>1.0.0</version>
+  <name>Eclipse Process Framework Workflow</name>
   <properties>
     <compiler-plugin.version>3.10.1</compiler-plugin.version>
     <maven.compiler.release>8</maven.compiler.release>
