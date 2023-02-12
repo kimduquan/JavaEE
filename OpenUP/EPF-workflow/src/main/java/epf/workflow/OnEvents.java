@@ -22,7 +22,7 @@ public class OnEvents {
 	/**
 	 * 
 	 */
-	private WorkflowInstance workflowInstance;
+	private Instance workflowInstance;
 	
 	/**
 	 * 
@@ -46,11 +46,11 @@ public class OnEvents {
 		return eventState;
 	}
 
-	public WorkflowInstance getWorkflowInstance() {
+	public Instance getWorkflowInstance() {
 		return workflowInstance;
 	}
 
-	public void setWorkflowInstance(WorkflowInstance workflowInstance) {
+	public void setWorkflowInstance(Instance workflowInstance) {
 		this.workflowInstance = workflowInstance;
 	}
 

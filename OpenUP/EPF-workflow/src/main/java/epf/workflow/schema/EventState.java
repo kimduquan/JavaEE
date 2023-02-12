@@ -4,7 +4,7 @@ package epf.workflow.schema;
  * @author PC
  *
  */
-public class EventState extends WorkflowState {
+public class EventState extends State {
 
 	/**
 	 * 

@@ -6,7 +6,7 @@ import epf.workflow.schema.WorkflowDefinition;
  * @author PC
  *
  */
-public class WorkflowInstance {
+public class Instance {
 
 	/**
 	 * 
@@ -21,7 +21,7 @@ public class WorkflowInstance {
 	/**
 	 * @param workflowDefinition
 	 */
-	public WorkflowInstance(WorkflowDefinition workflowDefinition) {
+	public Instance(WorkflowDefinition workflowDefinition) {
 		this.workflowDefinition = workflowDefinition;
 	}
 

@@ -4,7 +4,7 @@ package epf.workflow.schema;
  * @author PC
  *
  */
-public class WorkflowState {
+public class State {
 	
 	/**
 	 * 

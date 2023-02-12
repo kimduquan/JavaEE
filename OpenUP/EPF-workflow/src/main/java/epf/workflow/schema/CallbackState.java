@@ -4,16 +4,24 @@ package epf.workflow.schema;
  * @author PC
  *
  */
-public class SwitchState extends State {
+public class CallbackState extends State {
 
 	/**
 	 * 
 	 */
-	private SwitchStateDataConditions[] dataConditions;
+	private ActionDefinition action;
 	/**
 	 * 
 	 */
-	private SwitchStateEventConditions[] eventConditions;
+	private String eventRef;
+	/**
+	 * 
+	 */
+	private Object timeouts;
+	/**
+	 * 
+	 */
+	private Object eventDataFilter;
 	/**
 	 * 
 	 */
@@ -25,11 +33,11 @@ public class SwitchState extends State {
 	/**
 	 * 
 	 */
-	private Object timeouts;
+	private Object transition;
 	/**
 	 * 
 	 */
-	private Object defaultCondition;
+	private Object end;
 	/**
 	 * 
 	 */
@@ -43,17 +51,29 @@ public class SwitchState extends State {
 	 */
 	private Object metadata;
 	
-	public SwitchStateDataConditions[] getDataConditions() {
-		return dataConditions;
+	public ActionDefinition getAction() {
+		return action;
 	}
-	public void setDataConditions(SwitchStateDataConditions[] dataConditions) {
-		this.dataConditions = dataConditions;
+	public void setAction(ActionDefinition action) {
+		this.action = action;
 	}
-	public SwitchStateEventConditions[] getEventConditions() {
-		return eventConditions;
+	public String getEventRef() {
+		return eventRef;
 	}
-	public void setEventConditions(SwitchStateEventConditions[] eventConditions) {
-		this.eventConditions = eventConditions;
+	public void setEventRef(String eventRef) {
+		this.eventRef = eventRef;
+	}
+	public Object getTimeouts() {
+		return timeouts;
+	}
+	public void setTimeouts(Object timeouts) {
+		this.timeouts = timeouts;
+	}
+	public Object getEventDataFilter() {
+		return eventDataFilter;
+	}
+	public void setEventDataFilter(Object eventDataFilter) {
+		this.eventDataFilter = eventDataFilter;
 	}
 	public Object getStateDataFilter() {
 		return stateDataFilter;
@@ -67,17 +87,17 @@ public class SwitchState extends State {
 	public void setOnErrors(Object[] onErrors) {
 		this.onErrors = onErrors;
 	}
-	public Object getTimeouts() {
-		return timeouts;
+	public Object getTransition() {
+		return transition;
 	}
-	public void setTimeouts(Object timeouts) {
-		this.timeouts = timeouts;
+	public void setTransition(Object transition) {
+		this.transition = transition;
 	}
-	public Object getDefaultCondition() {
-		return defaultCondition;
+	public Object getEnd() {
+		return end;
 	}
-	public void setDefaultCondition(Object defaultCondition) {
-		this.defaultCondition = defaultCondition;
+	public void setEnd(Object end) {
+		this.end = end;
 	}
 	public String getCompensatedBy() {
 		return compensatedBy;

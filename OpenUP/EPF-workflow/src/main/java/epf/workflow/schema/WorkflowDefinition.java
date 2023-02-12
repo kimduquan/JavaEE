@@ -109,7 +109,7 @@ public class WorkflowDefinition {
 	/**
 	 * 
 	 */
-	private WorkflowState[] states;
+	private State[] states;
 	
 	/**
 	 * 
@@ -281,11 +281,11 @@ public class WorkflowDefinition {
 		this.retries = retries;
 	}
 
-	public WorkflowState[] getStates() {
+	public State[] getStates() {
 		return states;
 	}
 
-	public void setStates(WorkflowState[] states) {
+	public void setStates(State[] states) {
 		this.states = states;
 	}
 

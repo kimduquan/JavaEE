@@ -40,5 +40,5 @@ public abstract class Function {
 	 * @param workflowInstance
 	 * @throws Exception
 	 */
-	public abstract void invoke(final WorkflowInstance workflowInstance) throws Exception;
+	public abstract void invoke(final Instance workflowInstance) throws Exception;
 }

@@ -74,7 +74,7 @@ public class RestFunction extends Function {
 	}
 
 	@Override
-	public void invoke(final WorkflowInstance workflowInstance) throws Exception {
+	public void invoke(final Instance workflowInstance) throws Exception {
 		Server server = this.getApi().getServers().iterator().next();
 		if(this.getOperation().getServers() != null && !this.getOperation().getServers().isEmpty()) {
 			server = this.getOperation().getServers().iterator().next();
