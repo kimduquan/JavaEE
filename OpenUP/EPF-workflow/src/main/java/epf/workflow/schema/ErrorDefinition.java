@@ -13,7 +13,7 @@ public class ErrorDefinition {
 	/**
 	 * 
 	 */
-	private Object[] errorRefs;
+	private String[] errorRefs;
 	
 	/**
 	 * 
@@ -33,11 +33,11 @@ public class ErrorDefinition {
 		this.errorRef = errorRef;
 	}
 
-	public Object[] getErrorRefs() {
+	public String[] getErrorRefs() {
 		return errorRefs;
 	}
 
-	public void setErrorRefs(Object[] errorRefs) {
+	public void setErrorRefs(String[] errorRefs) {
 		this.errorRefs = errorRefs;
 	}
 

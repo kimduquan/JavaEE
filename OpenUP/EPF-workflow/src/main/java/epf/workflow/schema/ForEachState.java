@@ -41,7 +41,7 @@ public class ForEachState extends State {
 	/**
 	 * 
 	 */
-	private Object[] onErrors;
+	private ErrorDefinition[] onErrors;
 	/**
 	 * 
 	 */
@@ -111,10 +111,10 @@ public class ForEachState extends State {
 	public void setStateDataFilter(Object stateDataFilter) {
 		this.stateDataFilter = stateDataFilter;
 	}
-	public Object[] getOnErrors() {
+	public ErrorDefinition[] getOnErrors() {
 		return onErrors;
 	}
-	public void setOnErrors(Object[] onErrors) {
+	public void setOnErrors(ErrorDefinition[] onErrors) {
 		this.onErrors = onErrors;
 	}
 	public Object getTransition() {

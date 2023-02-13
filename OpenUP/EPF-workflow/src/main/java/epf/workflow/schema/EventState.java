@@ -34,7 +34,7 @@ public class EventState extends State {
 	/**
 	 * 
 	 */
-	private Object[] onErrors;
+	private ErrorDefinition[] onErrors;
 	
 	/**
 	 * 
@@ -91,11 +91,11 @@ public class EventState extends State {
 		this.transition = transition;
 	}
 
-	public Object[] getOnErrors() {
+	public ErrorDefinition[] getOnErrors() {
 		return onErrors;
 	}
 
-	public void setOnErrors(Object[] onErrors) {
+	public void setOnErrors(ErrorDefinition[] onErrors) {
 		this.onErrors = onErrors;
 	}
 

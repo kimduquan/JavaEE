@@ -29,7 +29,7 @@ public class OperationState extends State {
 	/**
 	 * 
 	 */
-	private Object[] onErrors;
+	private ErrorDefinition[] onErrors;
 	
 	/**
 	 * 
@@ -88,11 +88,11 @@ public class OperationState extends State {
 		this.stateDataFilter = stateDataFilter;
 	}
 
-	public Object[] getOnErrors() {
+	public ErrorDefinition[] getOnErrors() {
 		return onErrors;
 	}
 
-	public void setOnErrors(Object[] onErrors) {
+	public void setOnErrors(ErrorDefinition[] onErrors) {
 		this.onErrors = onErrors;
 	}
 

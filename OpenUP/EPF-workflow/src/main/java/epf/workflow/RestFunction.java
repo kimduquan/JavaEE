@@ -8,7 +8,6 @@ import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.HttpHeaders;
-
 import epf.api.API;
 import epf.api.Operation;
 import epf.api.PathItem;
@@ -21,6 +20,7 @@ import epf.workflow.schema.FunctionDefinition;
 import epf.workflow.schema.FunctionRefDefinition;
 import epf.workflow.schema.Invoke;
 import epf.workflow.schema.Scheme;
+import epf.workflow.schema.WorkflowDefinition;
 
 /**
  * @author PC
@@ -46,6 +46,7 @@ public class RestFunction extends Function {
 	private final Operation operation;
 
 	/**
+	 * @param workflowDefinition
 	 * @param functionDefinition
 	 * @param api
 	 * @param path
@@ -53,8 +54,8 @@ public class RestFunction extends Function {
 	 * @param operation
 	 * @param functionRefDefinition
 	 */
-	public RestFunction(FunctionDefinition functionDefinition, API api, String path, PathItem pathItem, Operation operation, FunctionRefDefinition functionRefDefinition) {
-		super(functionDefinition, functionRefDefinition);
+	public RestFunction(WorkflowDefinition workflowDefinition, FunctionDefinition functionDefinition, API api, String path, PathItem pathItem, Operation operation, FunctionRefDefinition functionRefDefinition) {
+		super(workflowDefinition, functionDefinition, functionRefDefinition);
 		this.api = api;
 		this.path = path;
 		this.pathItem = pathItem;
@@ -74,7 +75,7 @@ public class RestFunction extends Function {
 	}
 
 	@Override
-	public void invoke(final Instance workflowInstance) throws Exception {
+	public void invoke() throws Exception {
 		Server server = this.getApi().getServers().iterator().next();
 		if(this.getOperation().getServers() != null && !this.getOperation().getServers().isEmpty()) {
 			server = this.getOperation().getServers().iterator().next();
@@ -124,8 +125,8 @@ public class RestFunction extends Function {
 				}
 			}
 		}
-		if(this.getFunctionDefinition().getAuthRef() != null && workflowInstance.getWorkflowDefinition().getAuth() instanceof AuthDefinition[]) {
-			final AuthDefinition[] authDefs = (AuthDefinition[]) workflowInstance.getWorkflowDefinition().getAuth();
+		if(this.getFunctionDefinition().getAuthRef() != null && getWorkflowDefinition().getAuth() instanceof AuthDefinition[]) {
+			final AuthDefinition[] authDefs = (AuthDefinition[]) getWorkflowDefinition().getAuth();
 			for(AuthDefinition authDef : authDefs) {
 				if(authDef.getName().equals(this.getFunctionDefinition().getAuthRef())) {
 					if(authDef.getScheme() == Scheme.bearer) {

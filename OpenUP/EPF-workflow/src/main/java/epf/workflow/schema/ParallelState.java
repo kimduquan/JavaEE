@@ -9,7 +9,7 @@ public class ParallelState extends State {
 	/**
 	 * 
 	 */
-	private Object[] branches;
+	private ParallelStateBranch[] branches;
 	/**
 	 * 
 	 */
@@ -29,7 +29,7 @@ public class ParallelState extends State {
 	/**
 	 * 
 	 */
-	private Object[] onErrors;
+	private ErrorDefinition[] onErrors;
 	/**
 	 * 
 	 */
@@ -51,10 +51,10 @@ public class ParallelState extends State {
 	 */
 	private Object end;
 	
-	public Object[] getBranches() {
+	public ParallelStateBranch[] getBranches() {
 		return branches;
 	}
-	public void setBranches(Object[] branches) {
+	public void setBranches(ParallelStateBranch[] branches) {
 		this.branches = branches;
 	}
 	public CompletionType getCompletionType() {
@@ -81,10 +81,10 @@ public class ParallelState extends State {
 	public void setStateDataFilter(Object stateDataFilter) {
 		this.stateDataFilter = stateDataFilter;
 	}
-	public Object[] getOnErrors() {
+	public ErrorDefinition[] getOnErrors() {
 		return onErrors;
 	}
-	public void setOnErrors(Object[] onErrors) {
+	public void setOnErrors(ErrorDefinition[] onErrors) {
 		this.onErrors = onErrors;
 	}
 	public Object getTransition() {
