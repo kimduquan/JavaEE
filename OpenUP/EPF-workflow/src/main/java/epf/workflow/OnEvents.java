@@ -30,12 +30,19 @@ public class OnEvents {
 	private boolean end;
 	
 	/**
+	 * 
+	 */
+	private final WorkflowData workflowData;
+	
+	/**
 	 * @param workflowDefinition
 	 * @param eventState
+	 * @param workflowData
 	 */
-	public OnEvents(WorkflowDefinition workflowDefinition, EventState eventState) {
+	public OnEvents(WorkflowDefinition workflowDefinition, EventState eventState, WorkflowData workflowData) {
 		this.workflowDefinition = workflowDefinition;
 		this.eventState = eventState;
+		this.workflowData = workflowData;
 	}
 
 	public WorkflowDefinition getWorkflowDefinition() {
@@ -60,5 +67,9 @@ public class OnEvents {
 
 	public void setEnd(boolean end) {
 		this.end = end;
+	}
+
+	public WorkflowData getWorkflowData() {
+		return workflowData;
 	}
 }
