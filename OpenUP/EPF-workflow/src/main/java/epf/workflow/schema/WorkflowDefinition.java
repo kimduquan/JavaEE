@@ -104,7 +104,7 @@ public class WorkflowDefinition {
 	/**
 	 * 
 	 */
-	private Object[] retries;
+	private Object retries;
 	
 	/**
 	 * 
@@ -273,11 +273,11 @@ public class WorkflowDefinition {
 		this.autoRetries = autoRetries;
 	}
 
-	public Object[] getRetries() {
+	public Object getRetries() {
 		return retries;
 	}
 
-	public void setRetries(Object[] retries) {
+	public void setRetries(Object retries) {
 		this.retries = retries;
 	}
 

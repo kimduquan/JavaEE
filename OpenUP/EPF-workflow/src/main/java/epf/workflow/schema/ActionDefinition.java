@@ -34,12 +34,12 @@ public class ActionDefinition {
 	/**
 	 * 
 	 */
-	private Object[] nonRetryableErrors;
+	private WorkflowError[] nonRetryableErrors;
 	
 	/**
 	 * 
 	 */
-	private Object[] retryableErrors;
+	private WorkflowError[] retryableErrors;
 	
 	/**
 	 * 
@@ -96,19 +96,19 @@ public class ActionDefinition {
 		this.retryRef = retryRef;
 	}
 
-	public Object[] getNonRetryableErrors() {
+	public WorkflowError[] getNonRetryableErrors() {
 		return nonRetryableErrors;
 	}
 
-	public void setNonRetryableErrors(Object[] nonRetryableErrors) {
+	public void setNonRetryableErrors(WorkflowError[] nonRetryableErrors) {
 		this.nonRetryableErrors = nonRetryableErrors;
 	}
 
-	public Object[] getRetryableErrors() {
+	public WorkflowError[] getRetryableErrors() {
 		return retryableErrors;
 	}
 
-	public void setRetryableErrors(Object[] retryableErrors) {
+	public void setRetryableErrors(WorkflowError[] retryableErrors) {
 		this.retryableErrors = retryableErrors;
 	}
 

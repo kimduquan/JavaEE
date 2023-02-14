@@ -22,11 +22,6 @@ public class OnEvents {
 	/**
 	 * 
 	 */
-	private Instance workflowInstance;
-	
-	/**
-	 * 
-	 */
 	private boolean end;
 	
 	/**
@@ -51,14 +46,6 @@ public class OnEvents {
 
 	public EventState getEventState() {
 		return eventState;
-	}
-
-	public Instance getWorkflowInstance() {
-		return workflowInstance;
-	}
-
-	public void setWorkflowInstance(Instance workflowInstance) {
-		this.workflowInstance = workflowInstance;
 	}
 
 	public boolean isEnd() {

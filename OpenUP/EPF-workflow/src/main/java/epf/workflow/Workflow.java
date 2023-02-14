@@ -40,6 +40,7 @@ import epf.workflow.schema.OperationState;
 import epf.workflow.schema.ParallelState;
 import epf.workflow.schema.ParallelStateBranch;
 import epf.workflow.schema.ProducedEventDefinition;
+import epf.workflow.schema.RetryDefinition;
 import epf.workflow.schema.SleepState;
 import epf.workflow.schema.StartDefinition;
 import epf.workflow.schema.SwitchState;
@@ -169,7 +170,7 @@ public class Workflow {
 		}
 		catch(WorkflowException ex) {
 			if(operationState.getOnErrors() != null) {
-				onErrors(workflowDefinition, operationState.getOnErrors(), ex);
+				onErrors(workflowDefinition, operationState.getOnErrors(), ex, workflowData);
 			}
 		}
 	}
@@ -188,7 +189,7 @@ public class Workflow {
 			}
 			catch(WorkflowException ex) {
 				if(switchState.getOnErrors() != null) {
-					onErrors(workflowDefinition, switchState.getOnErrors(), ex);
+					onErrors(workflowDefinition, switchState.getOnErrors(), ex, workflowData);
 				}
 			}
 		}
@@ -204,7 +205,7 @@ public class Workflow {
 			}
 			catch(WorkflowException ex) {
 				if(switchState.getOnErrors() != null) {
-					onErrors(workflowDefinition, switchState.getOnErrors(), ex);
+					onErrors(workflowDefinition, switchState.getOnErrors(), ex, workflowData);
 				}
 			}
 		}
@@ -255,7 +256,7 @@ public class Workflow {
 		}
 		catch(ExecutionException ex) {
 			if(parallelState.getOnErrors() != null && ex.getCause() instanceof WorkflowException) {
-				onErrors(workflowDefinition, parallelState.getOnErrors(), (WorkflowException)ex.getCause());
+				onErrors(workflowDefinition, parallelState.getOnErrors(), (WorkflowException)ex.getCause(), workflowData);
 			}
 		}
 	}
@@ -290,7 +291,7 @@ public class Workflow {
 		}
 		catch(WorkflowException ex) {
 			if(forEachState.getOnErrors() != null) {
-				onErrors(workflowDefinition, forEachState.getOnErrors(), ex);
+				onErrors(workflowDefinition, forEachState.getOnErrors(), ex, workflowData);
 			}
 		}
 	}
@@ -302,7 +303,7 @@ public class Workflow {
 		}
 		catch(WorkflowException ex) {
 			if(callbackState.getOnErrors() != null) {
-				onErrors(workflowDefinition, callbackState.getOnErrors(), ex);
+				onErrors(workflowDefinition, callbackState.getOnErrors(), ex, workflowData);
 			}
 		}
 	}
@@ -344,14 +345,23 @@ public class Workflow {
 				onEvents(onEventsItem, event);
 			}
 		}
+		callback(event);
+	}
+	
+	private void callback(final Event event) throws Exception {
+		final List<Callback> calls = new ArrayList<>();
 		for(Callback callback : callbacks) {
 			if(callback.getWorkflowDefinition().getEvents() instanceof EventDefinition[]) {
 				final EventDefinition[] events = (EventDefinition[]) callback.getWorkflowDefinition().getEvents();
 				final Optional<EventDefinition> eventDefinition = Arrays.asList(events).stream().filter(e -> e.getName().equals(callback.getCallbackState().getEventRef())).findFirst();
 				if(eventDefinition.isPresent() && isEvent(eventDefinition.get(), event)) {
-					callback(callback.getWorkflowDefinition(), callback.getCallbackState(), callback.getWorkflowData());
+					calls.add(callback);
 				}
 			}
+		}
+		callbacks.removeAll(calls);
+		for(Callback callback : calls) {
+			callback(callback.getWorkflowDefinition(), callback.getCallbackState(), callback.getWorkflowData());
 		}
 	}
 	
@@ -385,7 +395,7 @@ public class Workflow {
 				}
 				catch(WorkflowException ex) {
 					if(onEvents.getEventState().getOnErrors() != null) {
-						onErrors(onEvents.getWorkflowDefinition(), onEvents.getEventState().getOnErrors(), ex);
+						onErrors(onEvents.getWorkflowDefinition(), onEvents.getEventState().getOnErrors(), ex, onEvents.getWorkflowData());
 					}
 				}
 				break;
@@ -393,15 +403,18 @@ public class Workflow {
 		}
 	}
 	
-	private void onErrors(final WorkflowDefinition workflowDefinition, final ErrorDefinition[] onErrors, final WorkflowException exception) throws Exception {
+	private void onErrors(final WorkflowDefinition workflowDefinition, final ErrorDefinition[] onErrors, final WorkflowException exception, final WorkflowData workflowData) throws Exception {
 		for(ErrorDefinition errorDefinition : onErrors) {
 			final List<WorkflowError> errors = getErrors(workflowDefinition, errorDefinition);
 			final Optional<WorkflowError> error = errors.stream().filter(err -> err.equals(exception.getWorkflowError())).findFirst();
 			if(error.isPresent()) {
 				if(errorDefinition.getEnd() != null) {
 					end(workflowDefinition, errorDefinition.getEnd());
-					return;
 				}
+				else if(errorDefinition.getTransition() != null) {
+					transition(workflowDefinition, errorDefinition.getTransition(), workflowData);
+				}
+				return;
 			}
 		}
 	}
@@ -457,10 +470,17 @@ public class Workflow {
 	}
 	
 	private void performActions(final WorkflowDefinition workflowDefinition, final ActionMode mode, final ActionDefinition[] actions, final WorkflowData workflowData) throws Exception {
-		if(mode == ActionMode.sequential) {
-			for(ActionDefinition actionDef : actions) {
-				performAction(workflowDefinition, actionDef, workflowData);
-			}
+		switch(mode) {
+			case parallel:
+				break;
+			case sequential:
+				for(ActionDefinition actionDef : actions) {
+					performAction(workflowDefinition, actionDef, workflowData);
+				}
+				break;
+			default:
+				break;
+			
 		}
 	}
 	
@@ -470,14 +490,40 @@ public class Workflow {
 				final String functionRef = (String) actionDef.getFunctionRef();
 				final Optional<FunctionDefinition> functionDef = getFunctionDefinition(workflowDefinition, functionRef);
 				if(functionDef.isPresent()) {
-					invokeFunction(workflowDefinition, functionDef.get(), workflowData, null);
+					if(workflowDefinition.isAutoRetries()) {
+						Optional<RetryDefinition> retryDefinition = Optional.empty();
+						try {
+							invokeFunction(workflowDefinition, functionDef.get(), null);
+						}
+						catch(WorkflowException ex) {
+							if(actionDef.getNonRetryableErrors() != null) {
+								final Optional<WorkflowError> nonRetryableError = Arrays.asList(actionDef.getNonRetryableErrors()).stream().filter(err -> err.equals(ex.getWorkflowError())).findFirst();
+								if(!nonRetryableError.isPresent() && actionDef.getRetryRef() != null) {
+									retryDefinition = getRetryDefinition(workflowDefinition, actionDef.getRetryRef());
+								}
+							}
+						}
+					}
+					else {
+						invokeFunction(workflowDefinition, functionDef.get(), null);
+					}
 				}
 			}
 			else if(actionDef.getFunctionRef() instanceof FunctionRefDefinition) {
 				final FunctionRefDefinition functionRef = (FunctionRefDefinition) actionDef.getFunctionRef();
 				final Optional<FunctionDefinition> functionDef = getFunctionDefinition(workflowDefinition, functionRef.getRefName());
 				if(functionDef.isPresent()) {
-					invokeFunction(workflowDefinition, functionDef.get(), workflowData, functionRef);
+					if(workflowDefinition.isAutoRetries()) {
+						try {
+							invokeFunction(workflowDefinition, functionDef.get(), functionRef);
+						}
+						catch(Exception ex) {
+							
+						}
+					}
+					else {
+						invokeFunction(workflowDefinition, functionDef.get(), null);
+					}
 				}
 			}
 		}
@@ -510,7 +556,14 @@ public class Workflow {
 		return Arrays.asList();
 	}
 	
-	private void invokeFunction(final WorkflowDefinition workflowDefinition, final FunctionDefinition functionDef, final WorkflowData workflowData, final FunctionRefDefinition functionRef) throws Exception {
+	private Optional<RetryDefinition> getRetryDefinition(final WorkflowDefinition workflowDefinition, final String retryRef) {
+		if(workflowDefinition.getRetries() instanceof RetryDefinition[]) {
+			return Arrays.asList((RetryDefinition[])workflowDefinition.getRetries()).stream().filter(retry -> retry.getName().equals(retryRef)).findFirst();
+		}
+		return Optional.empty();
+	}
+	
+	private void invokeFunction(final WorkflowDefinition workflowDefinition, final FunctionDefinition functionDef, final FunctionRefDefinition functionRef) throws Exception {
 		if(functionDef.getType() == Type.rest) {
 			final int index = functionDef.getOperation().lastIndexOf("#");
 			final String uri = functionDef.getOperation().substring(0, index);
