@@ -151,7 +151,7 @@ public class Workflow {
 	
 	private void startOperationState(final WorkflowDefinition workflowDefinition, final OperationState operationState, final WorkflowData workflowData) throws Exception {
 		try {
-			Duration actionExecTimeout = null;
+			final Duration actionExecTimeout = Timeouts.getActionExecTimeout(workflowDefinition, operationState);
 			performActions(workflowDefinition, operationState.getActionMode(), operationState.getActions(), actionExecTimeout);
 			if(operationState.getEnd() != null) {
 				end(workflowDefinition, operationState.getEnd());
@@ -400,7 +400,7 @@ public class Workflow {
 		}
 		if(isEvent) {
 			try {
-				Duration actionExecTimeout = null;
+				final Duration actionExecTimeout = Timeouts.getActionExecTimeout(onEvents.getWorkflowDefinition(), onEvents.getEventState());
 				performActions(onEvents.getWorkflowDefinition(), onEvent.getActionMode(), onEvent.getActions(), actionExecTimeout);
 				if(onEvents.getEventState().getEnd() != null) {
 					end(onEvents.getWorkflowDefinition(), onEvents.getEventState().getEnd());
