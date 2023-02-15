@@ -10,7 +10,7 @@ public class FunctionDefinition {
 	
 	private String operation;
 	
-	private Type type = Type.rest;
+	private FunctionType type = FunctionType.rest;
 	
 	private String authRef;
 	
@@ -32,11 +32,11 @@ public class FunctionDefinition {
 		this.operation = operation;
 	}
 
-	public Type getType() {
+	public FunctionType getType() {
 		return type;
 	}
 
-	public void setType(Type type) {
+	public void setType(FunctionType type) {
 		this.type = type;
 	}
 

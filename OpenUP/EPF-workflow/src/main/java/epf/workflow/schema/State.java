@@ -5,39 +5,6 @@ package epf.workflow.schema;
  *
  */
 public class State {
-	
-	/**
-	 * 
-	 */
-	public static final String Event = "Event";
-	/**
-	 * 
-	 */
-	public static final String Operation = "Operation";
-	/**
-	 * 
-	 */
-	public static final String Switch = "Switch";
-	/**
-	 * 
-	 */
-	public static final String Sleep = "Sleep";
-	/**
-	 * 
-	 */
-	public static final String Parallel = "Parallel";
-	/**
-	 * 
-	 */
-	public static final String Inject = "Inject";
-	/**
-	 * 
-	 */
-	public static final String ForEach = "ForEach";
-	/**
-	 * 
-	 */
-	public static final String Callback = "Callback";
 
 	/**
 	 * 
@@ -47,7 +14,7 @@ public class State {
 	/**
 	 * 
 	 */
-	private String type;
+	private Type type;
 
 	public String getName() {
 		return name;
@@ -57,11 +24,11 @@ public class State {
 		this.name = name;
 	}
 
-	public String getType() {
+	public Type getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(Type type) {
 		this.type = type;
 	}
 }

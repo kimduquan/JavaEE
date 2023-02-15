@@ -106,35 +106,35 @@ public class Workflow {
 	
 	private void startState(final WorkflowDefinition workflowDefinition, final State state, final WorkflowData workflowData) throws Exception {
 		switch(state.getType()) {
-			case State.Event:
+			case Event:
 				final EventState eventState = (EventState)state;
 				startEventState(workflowDefinition, eventState, Instant.now(), workflowData);
 				break;
-			case State.Operation:
+			case Operation:
 				final OperationState operationState = (OperationState) state;
 				startOperationState(workflowDefinition, operationState, workflowData);
 				break;
-			case State.Switch:
+			case Switch:
 				final SwitchState switchState = (SwitchState) state;
 				startSwitchState(workflowDefinition, switchState, workflowData);
 				break;
-			case State.Sleep:
+			case Sleep:
 				final SleepState sleepState = (SleepState) state;
 				startSleepState(workflowDefinition, sleepState, workflowData);
 				break;
-			case State.Parallel:
+			case Parallel:
 				final ParallelState parallelState = (ParallelState) state;
 				startParallelState(workflowDefinition, parallelState, workflowData);
 				break;
-			case State.Inject:
+			case Inject:
 				final InjectState injectState = (InjectState) state;
 				startInjectState(workflowDefinition, injectState, workflowData);
 				break;
-			case State.ForEach:
+			case ForEach:
 				final ForEachState forEachState = (ForEachState) state;
 				startForEachState(workflowDefinition, forEachState, workflowData);
 				break;
-			case State.Callback:
+			case Callback:
 				final CallbackState callbackState = (CallbackState) state;
 				startCallbackState(workflowDefinition, callbackState, workflowData);
 				break;
@@ -154,15 +154,15 @@ public class Workflow {
 			final Duration actionExecTimeout = Timeouts.getActionExecTimeout(workflowDefinition, operationState);
 			performActions(workflowDefinition, operationState.getActionMode(), operationState.getActions(), actionExecTimeout);
 			if(operationState.getEnd() != null) {
-				end(workflowDefinition, operationState.getEnd());
+				end(workflowDefinition, operationState, operationState.getEnd(), workflowData);
 			}
 			else {
-				transition(workflowDefinition, operationState.getTransition(), workflowData);
+				transition(workflowDefinition, operationState, operationState.getTransition(), workflowData);
 			}
 		}
 		catch(WorkflowException ex) {
 			if(operationState.getOnErrors() != null) {
-				onErrors(workflowDefinition, operationState.getOnErrors(), ex, workflowData);
+				onErrors(workflowDefinition, operationState, operationState.getOnErrors(), ex, workflowData);
 			}
 		}
 	}
@@ -173,7 +173,7 @@ public class Workflow {
 			try {
 				for(SwitchStateDataConditions condition : switchState.getDataConditions()) {
 					if(evaluateCondition(condition)) {
-						endCondition(workflowDefinition, condition, workflowData);
+						endCondition(workflowDefinition, switchState, condition, workflowData);
 						evaluate = true;
 						break;
 					}
@@ -181,7 +181,7 @@ public class Workflow {
 			}
 			catch(WorkflowException ex) {
 				if(switchState.getOnErrors() != null) {
-					onErrors(workflowDefinition, switchState.getOnErrors(), ex, workflowData);
+					onErrors(workflowDefinition, switchState, switchState.getOnErrors(), ex, workflowData);
 				}
 			}
 		}
@@ -189,7 +189,7 @@ public class Workflow {
 			try {
 				for(SwitchStateEventConditions condition : switchState.getEventConditions()) {
 					if(evaluateCondition(condition)) {
-						endCondition(workflowDefinition, condition, workflowData);
+						endCondition(workflowDefinition, switchState, condition, workflowData);
 						evaluate = true;
 						break;
 					}
@@ -197,16 +197,16 @@ public class Workflow {
 			}
 			catch(WorkflowException ex) {
 				if(switchState.getOnErrors() != null) {
-					onErrors(workflowDefinition, switchState.getOnErrors(), ex, workflowData);
+					onErrors(workflowDefinition, switchState, switchState.getOnErrors(), ex, workflowData);
 				}
 			}
 		}
 		if(!evaluate) {
 			if(switchState.getDefaultCondition() instanceof TransitionDefinition) {
-				transition(workflowDefinition, switchState.getDefaultCondition(), workflowData);
+				transition(workflowDefinition, switchState, switchState.getDefaultCondition(), workflowData);
 			}
 			else if(switchState.getDefaultCondition() instanceof EndDefinition) {
-				end(workflowDefinition, switchState.getDefaultCondition());
+				end(workflowDefinition, switchState, switchState.getDefaultCondition(), workflowData);
 			}
 		}
 	}
@@ -216,10 +216,10 @@ public class Workflow {
 		Thread.currentThread();
 		Thread.sleep(duration.getSeconds() * 1000);
 		if(sleepState.getEnd() != null) {
-			end(workflowDefinition, sleepState.getEnd());
+			end(workflowDefinition, sleepState, sleepState.getEnd(), workflowData);
 		}
 		else if(sleepState.getTransition() != null) {
-			transition(workflowDefinition, sleepState.getTransition(), workflowData);
+			transition(workflowDefinition, sleepState, sleepState.getTransition(), workflowData);
 		}
 	}
 	
@@ -240,25 +240,25 @@ public class Workflow {
 					break;
 			}
 			if(parallelState.getEnd() != null) {
-				end(workflowDefinition, parallelState.getEnd());
+				end(workflowDefinition, parallelState, parallelState.getEnd(), workflowData);
 			}
 			else if(parallelState.getTransition() != null) {
-				transition(workflowDefinition, parallelState.getTransition(), workflowData);
+				transition(workflowDefinition, parallelState, parallelState.getTransition(), workflowData);
 			}
 		}
 		catch(ExecutionException ex) {
 			if(parallelState.getOnErrors() != null && ex.getCause() instanceof WorkflowException) {
-				onErrors(workflowDefinition, parallelState.getOnErrors(), (WorkflowException)ex.getCause(), workflowData);
+				onErrors(workflowDefinition, parallelState, parallelState.getOnErrors(), (WorkflowException)ex.getCause(), workflowData);
 			}
 		}
 	}
 	
 	private void startInjectState(final WorkflowDefinition workflowDefinition, final InjectState injectState, final WorkflowData workflowData) throws Exception {
 		if(injectState.getEnd() != null) {
-			end(workflowDefinition, injectState.getEnd());
+			end(workflowDefinition, injectState, injectState.getEnd(), workflowData);
 		}
 		else if(injectState.getTransition() != null) {
-			transition(workflowDefinition, injectState.getTransition(), workflowData);
+			transition(workflowDefinition, injectState, injectState.getTransition(), workflowData);
 		}
 	}
 	
@@ -275,15 +275,15 @@ public class Workflow {
 					break;
 			}
 			if(forEachState.getEnd() != null) {
-				end(workflowDefinition, forEachState.getEnd());
+				end(workflowDefinition, forEachState, forEachState.getEnd(), workflowData);
 			}
 			else if(forEachState.getTransition() != null) {
-				transition(workflowDefinition, forEachState.getTransition(), workflowData);
+				transition(workflowDefinition, forEachState, forEachState.getTransition(), workflowData);
 			}
 		}
 		catch(WorkflowException ex) {
 			if(forEachState.getOnErrors() != null) {
-				onErrors(workflowDefinition, forEachState.getOnErrors(), ex, workflowData);
+				onErrors(workflowDefinition, forEachState, forEachState.getOnErrors(), ex, workflowData);
 			}
 		}
 	}
@@ -296,26 +296,26 @@ public class Workflow {
 		}
 		catch(WorkflowException ex) {
 			if(callbackState.getOnErrors() != null) {
-				onErrors(workflowDefinition, callbackState.getOnErrors(), ex, workflowData);
+				onErrors(workflowDefinition, callbackState, callbackState.getOnErrors(), ex, workflowData);
 			}
 		}
 	}
 	
 	private void callback(final WorkflowDefinition workflowDefinition, final CallbackState callbackState, final WorkflowData workflowData) throws Exception {
 		if(callbackState.getEnd() != null) {
-			end(workflowDefinition, callbackState.getEnd());
+			end(workflowDefinition, callbackState, callbackState.getEnd(), workflowData);
 		}
 		else if(callbackState.getTransition() != null) {
-			transition(workflowDefinition, callbackState.getTransition(), workflowData);
+			transition(workflowDefinition, callbackState, callbackState.getTransition(), workflowData);
 		}
 	}
 	
-	private void endCondition(final WorkflowDefinition workflowDefinition, final SwitchStateConditions condition, final WorkflowData workflowData) throws Exception {
+	private void endCondition(final WorkflowDefinition workflowDefinition, final SwitchState switchState, final SwitchStateConditions condition, final WorkflowData workflowData) throws Exception {
 		if(condition.getEnd() != null) {
-			end(workflowDefinition, condition.getEnd());
+			end(workflowDefinition, switchState, condition.getEnd(), workflowData);
 		}
 		else if(condition.getTransition() != null) {
-			transition(workflowDefinition, condition.getTransition(), workflowData);
+			transition(workflowDefinition, switchState, condition.getTransition(), workflowData);
 		}
 	}
 	
@@ -403,30 +403,30 @@ public class Workflow {
 				final Duration actionExecTimeout = Timeouts.getActionExecTimeout(onEvents.getWorkflowDefinition(), onEvents.getEventState());
 				performActions(onEvents.getWorkflowDefinition(), onEvent.getActionMode(), onEvent.getActions(), actionExecTimeout);
 				if(onEvents.getEventState().getEnd() != null) {
-					end(onEvents.getWorkflowDefinition(), onEvents.getEventState().getEnd());
+					end(onEvents.getWorkflowDefinition(), onEvents.getEventState(), onEvents.getEventState().getEnd(), onEvents.getWorkflowData());
 				}
 				else {
-					transition(onEvents.getWorkflowDefinition(), onEvents.getEventState().getTransition(), onEvents.getWorkflowData());
+					transition(onEvents.getWorkflowDefinition(), onEvents.getEventState(), onEvents.getEventState().getTransition(), onEvents.getWorkflowData());
 				}
 			}
 			catch(WorkflowException ex) {
 				if(onEvents.getEventState().getOnErrors() != null) {
-					onErrors(onEvents.getWorkflowDefinition(), onEvents.getEventState().getOnErrors(), ex, onEvents.getWorkflowData());
+					onErrors(onEvents.getWorkflowDefinition(), onEvents.getEventState(), onEvents.getEventState().getOnErrors(), ex, onEvents.getWorkflowData());
 				}
 			}
 		}
 	}
 	
-	private void onErrors(final WorkflowDefinition workflowDefinition, final ErrorDefinition[] onErrors, final WorkflowException exception, final WorkflowData workflowData) throws Exception {
+	private void onErrors(final WorkflowDefinition workflowDefinition, final State state, final ErrorDefinition[] onErrors, final WorkflowException exception, final WorkflowData workflowData) throws Exception {
 		for(ErrorDefinition errorDefinition : onErrors) {
 			final List<WorkflowError> errors = getErrors(workflowDefinition, errorDefinition);
 			final Optional<WorkflowError> error = errors.stream().filter(err -> err.equals(exception.getWorkflowError())).findFirst();
 			if(error.isPresent()) {
 				if(errorDefinition.getEnd() != null) {
-					end(workflowDefinition, errorDefinition.getEnd());
+					end(workflowDefinition, state, errorDefinition.getEnd(), workflowData);
 				}
 				else if(errorDefinition.getTransition() != null) {
-					transition(workflowDefinition, errorDefinition.getTransition(), workflowData);
+					transition(workflowDefinition, state, errorDefinition.getTransition(), workflowData);
 				}
 				return;
 			}
@@ -434,9 +434,93 @@ public class Workflow {
 		throw exception;
 	}
 	
-	private void end(final WorkflowDefinition workflowDefinition, final Object end) throws Exception {
+	private void compensate(final WorkflowDefinition workflowDefinition, final State state, final WorkflowData workflowData) throws Exception {
+		String compensatedBy = null;
+		switch(state.getType()) {
+			case Event:
+				final EventState eventState = (EventState)state;
+				compensatedBy = eventState.getCompensatedBy();
+				break;
+			case Operation:
+				final OperationState operationState = (OperationState) state;
+				compensatedBy = operationState.getCompensatedBy();
+				break;
+			case Switch:
+				final SwitchState switchState = (SwitchState) state;
+				compensatedBy = switchState.getCompensatedBy();
+				break;
+			case Sleep:
+				break;
+			case Parallel:
+				final ParallelState parallelState = (ParallelState) state;
+				compensatedBy = parallelState.getCompensatedBy();
+				break;
+			case Inject:
+				final InjectState injectState = (InjectState) state;
+				compensatedBy = injectState.getCompensatedBy();
+				break;
+			case ForEach:
+				final ForEachState forEachState = (ForEachState) state;
+				compensatedBy = forEachState.getCompensatedBy();
+				break;
+			case Callback:
+				final CallbackState callbackState = (CallbackState) state;
+				compensatedBy = callbackState.getCompensatedBy();
+				break;
+			default:
+				break;
+		}
+		if(compensatedBy != null) {
+			for(State compensatedByState : workflowDefinition.getStates()) {
+				if(compensatedByState.getName().equals(state.getName())) {
+					boolean usedForCompensation = false;
+					switch(compensatedByState.getType()) {
+						case Event:
+							break;
+						case Operation:
+							final OperationState operationState = (OperationState) state;
+							usedForCompensation = operationState.isUsedForCompensation();
+							break;
+						case Switch:
+							final SwitchState switchState = (SwitchState) state;
+							usedForCompensation = switchState.isUsedForCompensation();
+							break;
+						case Sleep:
+							break;
+						case Parallel:
+							final ParallelState parallelState = (ParallelState) state;
+							usedForCompensation = parallelState.isUsedForCompensation();
+							break;
+						case Inject:
+							final InjectState injectState = (InjectState) state;
+							usedForCompensation = injectState.isUsedForCompensation();
+							break;
+						case ForEach:
+							final ForEachState forEachState = (ForEachState) state;
+							usedForCompensation = forEachState.isUsedForCompensation();
+							break;
+						case Callback:
+							final CallbackState callbackState = (CallbackState) state;
+							usedForCompensation = callbackState.isUsedForCompensation();
+							break;
+						default:
+							break;
+					}
+					if(usedForCompensation) {
+						startState(workflowDefinition, state, workflowData);
+					}
+					break;
+				}
+			}
+		}
+	}
+	
+	private void end(final WorkflowDefinition workflowDefinition, final State state, final Object end, final WorkflowData workflowData) throws Exception {
 		if(end instanceof EndDefinition) {
 			final EndDefinition endDefinition = (EndDefinition) end;
+			if(endDefinition.isCompensate()) {
+				compensate(workflowDefinition, state, workflowData);
+			}
 			if(endDefinition.isTerminate()) {
 				return;
 			}
@@ -446,21 +530,24 @@ public class Workflow {
 		}
 	}
 	
-	private void transition(final WorkflowDefinition workflowDefinition, final Object transition, final WorkflowData workflowData) throws Exception {
+	private void transition(final WorkflowDefinition workflowDefinition, final State state, final Object transition, final WorkflowData workflowData) throws Exception {
 		if(transition instanceof String) {
-			for(State state : workflowDefinition.getStates()) {
-				if(state.getName().equals((String)transition)) {
-					startState(workflowDefinition, state, workflowData);
+			for(State nextState : workflowDefinition.getStates()) {
+				if(nextState.getName().equals((String)transition)) {
+					startState(workflowDefinition, nextState, workflowData);
 					return;
 				}
 			}
 		}
 		else if(transition instanceof TransitionDefinition) {
 			final TransitionDefinition transitionDef = (TransitionDefinition) transition;
+			if(transitionDef.isCompensate()) {
+				compensate(workflowDefinition, state, workflowData);
+			}
 			produceEvents(workflowDefinition, transitionDef.getProduceEvents());
-			for(State state : workflowDefinition.getStates()) {
-				if(state.getName().equals(transitionDef.getNextState())) {
-					startState(workflowDefinition, state, workflowData);
+			for(State nextState : workflowDefinition.getStates()) {
+				if(nextState.getName().equals(transitionDef.getNextState())) {
+					startState(workflowDefinition, nextState, workflowData);
 					return;
 				}
 			}

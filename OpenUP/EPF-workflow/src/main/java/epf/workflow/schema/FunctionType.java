@@ -4,37 +4,33 @@ package epf.workflow.schema;
  * @author PC
  *
  */
-public enum Type {
+public enum FunctionType {
 	/**
 	 * 
 	 */
-	Event,
+	rest,
 	/**
 	 * 
 	 */
-	Operation,
+	asyncapi,
 	/**
 	 * 
 	 */
-	Switch,
+	rpc,
 	/**
 	 * 
 	 */
-	Sleep,
+	graphql,
 	/**
 	 * 
 	 */
-	Parallel,
+	odata,
 	/**
 	 * 
 	 */
-	Inject,
+	expression,
 	/**
 	 * 
 	 */
-	ForEach,
-	/**
-	 * 
-	 */
-	Callback,
+	custom
 }

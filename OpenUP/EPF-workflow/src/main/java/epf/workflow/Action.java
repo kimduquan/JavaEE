@@ -14,7 +14,7 @@ import epf.util.ListUtil;
 import epf.workflow.schema.ActionDefinition;
 import epf.workflow.schema.FunctionDefinition;
 import epf.workflow.schema.FunctionRefDefinition;
-import epf.workflow.schema.Type;
+import epf.workflow.schema.FunctionType;
 import epf.workflow.schema.WorkflowDefinition;
 
 /**
@@ -51,7 +51,7 @@ public class Action implements Callable<Void> {
 	}
 	
 	private void invokeFunction(final WorkflowDefinition workflowDefinition, final FunctionDefinition functionDef, final FunctionRefDefinition functionRef) throws Exception {
-		if(functionDef.getType() == Type.rest) {
+		if(functionDef.getType() == FunctionType.rest) {
 			final int index = functionDef.getOperation().lastIndexOf("#");
 			final String uri = functionDef.getOperation().substring(0, index);
 			final String operationId = functionDef.getOperation().substring(index + 1);
