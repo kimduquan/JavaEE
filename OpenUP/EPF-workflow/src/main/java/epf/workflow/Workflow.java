@@ -79,12 +79,13 @@ public class Workflow {
 	 * @throws Exception
 	 */
 	public void start(final WorkflowDefinition workflowDefinition, final WorkflowData workflowData) throws Exception {
+		State startState = null;
 		if(workflowDefinition.getStart() != null) {
 			if(workflowDefinition.getStart() instanceof String) {
 				final String start = (String)workflowDefinition.getStart();
 				for(State state : workflowDefinition.getStates()) {
 					if(start.equals(state.getName())) {
-						startState(workflowDefinition, state, workflowData);
+						startState = state;
 						break;
 					}
 				}
@@ -93,14 +94,17 @@ public class Workflow {
 				final StartDefinition startDef = (StartDefinition) workflowDefinition.getStart();
 				for(State state : workflowDefinition.getStates()) {
 					if(startDef.getStateName().equals(state.getName())) {
-						startState(workflowDefinition, state, workflowData);
+						startState = state;
 						break;
 					}
 				}
 			}
 		}
 		else {
-			startState(workflowDefinition, workflowDefinition.getStates()[0], workflowData);
+			startState = workflowDefinition.getStates()[0];
+		}
+		if(startState != null) {
+			startState(workflowDefinition, startState, workflowData);
 		}
 	}
 	
