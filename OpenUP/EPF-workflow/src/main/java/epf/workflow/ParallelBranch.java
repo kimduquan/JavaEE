@@ -7,7 +7,7 @@ import epf.workflow.schema.ParallelStateBranch;
  * @author PC
  *
  */
-public class Branch implements Callable<Void> {
+public class ParallelBranch implements Callable<Void> {
 	
 	/**
 	 * 
@@ -17,7 +17,7 @@ public class Branch implements Callable<Void> {
 	/**
 	 * @param branch
 	 */
-	public Branch(final ParallelStateBranch branch) {
+	public ParallelBranch(final ParallelStateBranch branch) {
 		this.branch = branch;
 	}
 	

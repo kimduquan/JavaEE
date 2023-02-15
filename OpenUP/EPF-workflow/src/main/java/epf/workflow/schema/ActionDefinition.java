@@ -1,5 +1,7 @@
 package epf.workflow.schema;
 
+import epf.workflow.Sleep;
+
 /**
  * @author PC
  *
@@ -49,7 +51,7 @@ public class ActionDefinition {
 	/**
 	 * 
 	 */
-	private Object sleep;
+	private Sleep sleep;
 	
 	/**
 	 * 
@@ -120,11 +122,11 @@ public class ActionDefinition {
 		this.actionDataFilter = actionDataFilter;
 	}
 
-	public Object getSleep() {
+	public Sleep getSleep() {
 		return sleep;
 	}
 
-	public void setSleep(Object sleep) {
+	public void setSleep(Sleep sleep) {
 		this.sleep = sleep;
 	}
 

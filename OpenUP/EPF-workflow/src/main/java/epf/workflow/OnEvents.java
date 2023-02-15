@@ -1,5 +1,8 @@
 package epf.workflow;
 
+import java.time.Instant;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import epf.workflow.schema.EventState;
 import epf.workflow.schema.WorkflowDefinition;
 
@@ -22,7 +25,7 @@ public class OnEvents {
 	/**
 	 * 
 	 */
-	private boolean end;
+	private final Instant time;
 	
 	/**
 	 * 
@@ -30,13 +33,20 @@ public class OnEvents {
 	private final WorkflowData workflowData;
 	
 	/**
+	 * 
+	 */
+	private final List<Event> events = new CopyOnWriteArrayList<>();
+	
+	/**
 	 * @param workflowDefinition
 	 * @param eventState
+	 * @param time
 	 * @param workflowData
 	 */
-	public OnEvents(WorkflowDefinition workflowDefinition, EventState eventState, WorkflowData workflowData) {
+	public OnEvents(WorkflowDefinition workflowDefinition, EventState eventState, Instant time, WorkflowData workflowData) {
 		this.workflowDefinition = workflowDefinition;
 		this.eventState = eventState;
+		this.time = time;
 		this.workflowData = workflowData;
 	}
 
@@ -48,15 +58,19 @@ public class OnEvents {
 		return eventState;
 	}
 
-	public boolean isEnd() {
-		return end;
-	}
-
-	public void setEnd(boolean end) {
-		this.end = end;
-	}
-
 	public WorkflowData getWorkflowData() {
 		return workflowData;
+	}
+
+	public Instant getTime() {
+		return time;
+	}
+	
+	public Event[] getEvents() {
+		return events.toArray(new Event[0]);
+	}
+	
+	public void addEvent(final Event event) {
+		events.add(event);
 	}
 }
