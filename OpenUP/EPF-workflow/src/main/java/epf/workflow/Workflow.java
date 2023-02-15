@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
@@ -40,7 +41,6 @@ import epf.workflow.schema.OperationState;
 import epf.workflow.schema.ParallelState;
 import epf.workflow.schema.ParallelStateBranch;
 import epf.workflow.schema.ProducedEventDefinition;
-import epf.workflow.schema.RetryDefinition;
 import epf.workflow.schema.SleepState;
 import epf.workflow.schema.StartDefinition;
 import epf.workflow.schema.SwitchState;
@@ -160,7 +160,7 @@ public class Workflow {
 	
 	private void startOperationState(final WorkflowDefinition workflowDefinition, final OperationState operationState, final WorkflowData workflowData) throws Exception {
 		try {
-			performActions(workflowDefinition, operationState.getActionMode(), operationState.getActions(), workflowData);
+			performActions(workflowDefinition, operationState.getActionMode(), operationState.getActions());
 			if(operationState.getEnd() != null) {
 				end(workflowDefinition, operationState.getEnd());
 			}
@@ -298,7 +298,7 @@ public class Workflow {
 	
 	private void startCallbackState(final WorkflowDefinition workflowDefinition, final CallbackState callbackState, final WorkflowData workflowData) throws Exception {
 		try {
-			performAction(workflowDefinition, callbackState.getAction(), workflowData);
+			performAction(workflowDefinition, callbackState.getAction());
 			callbacks.add(new Callback(workflowDefinition, callbackState, workflowData));
 		}
 		catch(WorkflowException ex) {
@@ -385,7 +385,7 @@ public class Workflow {
 		for(EventDefinition eventRef : eventRefs) {
 			if(isEvent(eventRef, event) && eventState.isExclusive()) {
 				try {
-					performActions(onEvents.getWorkflowDefinition(), onEvent.getActionMode(), onEvent.getActions(), onEvents.getWorkflowData());
+					performActions(onEvents.getWorkflowDefinition(), onEvent.getActionMode(), onEvent.getActions());
 					if(onEvents.getEventState().getEnd() != null) {
 						end(onEvents.getWorkflowDefinition(), onEvents.getEventState().getEnd());
 					}
@@ -417,6 +417,7 @@ public class Workflow {
 				return;
 			}
 		}
+		throw exception;
 	}
 	
 	private void end(final WorkflowDefinition workflowDefinition, final Object end) throws Exception {
@@ -469,13 +470,13 @@ public class Workflow {
 		}
 	}
 	
-	private void performActions(final WorkflowDefinition workflowDefinition, final ActionMode mode, final ActionDefinition[] actions, final WorkflowData workflowData) throws Exception {
+	private void performActions(final WorkflowDefinition workflowDefinition, final ActionMode mode, final ActionDefinition[] actions) throws Exception {
 		switch(mode) {
 			case parallel:
 				break;
 			case sequential:
 				for(ActionDefinition actionDef : actions) {
-					performAction(workflowDefinition, actionDef, workflowData);
+					performAction(workflowDefinition, actionDef);
 				}
 				break;
 			default:
@@ -484,57 +485,51 @@ public class Workflow {
 		}
 	}
 	
-	private void performAction(final WorkflowDefinition workflowDefinition, final ActionDefinition actionDef, final WorkflowData workflowData) throws Exception {
+	private void performAction(final WorkflowDefinition workflowDefinition, final ActionDefinition actionDef) throws Exception {
 		if(actionDef.getCondition() == null && actionDef.getFunctionRef() != null) {
 			if(actionDef.getFunctionRef() instanceof String) {
 				final String functionRef = (String) actionDef.getFunctionRef();
-				final Optional<FunctionDefinition> functionDef = getFunctionDefinition(workflowDefinition, functionRef);
-				if(functionDef.isPresent()) {
-					if(workflowDefinition.isAutoRetries()) {
-						Optional<RetryDefinition> retryDefinition = Optional.empty();
-						try {
-							invokeFunction(workflowDefinition, functionDef.get(), null);
-						}
-						catch(WorkflowException ex) {
-							if(actionDef.getNonRetryableErrors() != null) {
-								final Optional<WorkflowError> nonRetryableError = Arrays.asList(actionDef.getNonRetryableErrors()).stream().filter(err -> err.equals(ex.getWorkflowError())).findFirst();
-								if(!nonRetryableError.isPresent() && actionDef.getRetryRef() != null) {
-									retryDefinition = getRetryDefinition(workflowDefinition, actionDef.getRetryRef());
-								}
-							}
-						}
-					}
-					else {
-						invokeFunction(workflowDefinition, functionDef.get(), null);
-					}
+				final FunctionDefinition functionDef = getFunctionDefinition(workflowDefinition, functionRef);
+				if(actionDef.getRetryRef() != null) {
+					final Callable<Void> callable = new Callable<Void>() {
+						@Override
+						public Void call() throws Exception {
+							invokeFunction(workflowDefinition, functionDef, null);
+							return null;
+						}};
+					final Retry<Void> retry = new Retry<>(callable, workflowDefinition, actionDef);
+					retry.call();
+				}
+				else {
+					invokeFunction(workflowDefinition, functionDef, null);
 				}
 			}
 			else if(actionDef.getFunctionRef() instanceof FunctionRefDefinition) {
 				final FunctionRefDefinition functionRef = (FunctionRefDefinition) actionDef.getFunctionRef();
-				final Optional<FunctionDefinition> functionDef = getFunctionDefinition(workflowDefinition, functionRef.getRefName());
-				if(functionDef.isPresent()) {
-					if(workflowDefinition.isAutoRetries()) {
-						try {
-							invokeFunction(workflowDefinition, functionDef.get(), functionRef);
-						}
-						catch(Exception ex) {
-							
-						}
-					}
-					else {
-						invokeFunction(workflowDefinition, functionDef.get(), null);
-					}
+				final FunctionDefinition functionDef = getFunctionDefinition(workflowDefinition, functionRef.getRefName());
+				if(actionDef.getRetryRef() != null) {
+					final Callable<Void> callable = new Callable<Void>() {
+						@Override
+						public Void call() throws Exception {
+							invokeFunction(workflowDefinition, functionDef, functionRef);
+							return null;
+						}};
+					final Retry<Void> retry = new Retry<>(callable, workflowDefinition, actionDef);
+					retry.call();
+				}
+				else {
+					invokeFunction(workflowDefinition, functionDef, functionRef);
 				}
 			}
 		}
 	}
 	
-	private Optional<FunctionDefinition> getFunctionDefinition(final WorkflowDefinition workflowDefinition, final String functionRef) {
-		if(!(workflowDefinition.getFunctions() instanceof String)) {
+	private FunctionDefinition getFunctionDefinition(final WorkflowDefinition workflowDefinition, final String functionRef) {
+		if(workflowDefinition.getFunctions() instanceof FunctionDefinition[]) {
 			final FunctionDefinition[] functionDefs = (FunctionDefinition[]) workflowDefinition.getFunctions();
-			return ListUtil.findFirst(functionDefs, f -> f.getName().equals(functionRef));
+			return ListUtil.findFirst(functionDefs, f -> f.getName().equals(functionRef)).get();
 		}
-		return Optional.empty();
+		return null;
 	}
 	
 	private List<WorkflowError> getErrors(final WorkflowDefinition workflowDefinition, final ErrorDefinition errorDefinition) {
@@ -554,13 +549,6 @@ public class Workflow {
 			}
 		}
 		return Arrays.asList();
-	}
-	
-	private Optional<RetryDefinition> getRetryDefinition(final WorkflowDefinition workflowDefinition, final String retryRef) {
-		if(workflowDefinition.getRetries() instanceof RetryDefinition[]) {
-			return Arrays.asList((RetryDefinition[])workflowDefinition.getRetries()).stream().filter(retry -> retry.getName().equals(retryRef)).findFirst();
-		}
-		return Optional.empty();
 	}
 	
 	private void invokeFunction(final WorkflowDefinition workflowDefinition, final FunctionDefinition functionDef, final FunctionRefDefinition functionRef) throws Exception {
