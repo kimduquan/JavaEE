@@ -21,6 +21,11 @@ public class WorkflowInstance {
 	/**
 	 * 
 	 */
+	private final String id;
+	
+	/**
+	 * 
+	 */
 	private final List<State> states = new CopyOnWriteArrayList<>();
 	
 	/**
@@ -36,15 +41,22 @@ public class WorkflowInstance {
 	/**
 	 * 
 	 */
+	private boolean terminate = false;
+	
+	/**
+	 * 
+	 */
 	private final WorkflowData workflowData;
 	
 	/**
 	 * @param workflowDefinition
+	 * @param id
 	 * @param workflowData
 	 * @param events
 	 */
-	public WorkflowInstance(WorkflowDefinition workflowDefinition, WorkflowData workflowData, Event[] events) {
+	public WorkflowInstance(WorkflowDefinition workflowDefinition, String id, WorkflowData workflowData, Event[] events) {
 		this.workflowDefinition = workflowDefinition;
+		this.id = id;
 		this.workflowData = workflowData;
 		Arrays.asList(events).forEach(this.events::add);
 	}
@@ -97,5 +109,20 @@ public class WorkflowInstance {
 	 */
 	public Future<?>[] getSubFlows() {
 		return subFlows.toArray(new Future<?>[0]);
+	}
+
+	public boolean isTerminate() {
+		return terminate;
+	}
+
+	/**
+	 * 
+	 */
+	public void terminate() {
+		this.terminate = true;
+	}
+
+	public String getId() {
+		return id;
 	}
 }

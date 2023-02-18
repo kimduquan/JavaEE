@@ -21,7 +21,7 @@ public class ActionDefinition {
 	/**
 	 * 
 	 */
-	private Object eventRef;
+	private EventRefDefinition eventRef;
 	
 	/**
 	 * 
@@ -74,11 +74,11 @@ public class ActionDefinition {
 		this.functionRef = functionRef;
 	}
 
-	public Object getEventRef() {
+	public EventRefDefinition getEventRef() {
 		return eventRef;
 	}
 
-	public void setEventRef(Object eventRef) {
+	public void setEventRef(EventRefDefinition eventRef) {
 		this.eventRef = eventRef;
 	}
 

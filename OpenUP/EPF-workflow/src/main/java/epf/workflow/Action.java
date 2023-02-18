@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.concurrent.Callable;
 import epf.workflow.schema.ActionDefinition;
 import epf.workflow.schema.WorkflowDefinition;
+import epf.workflow.util.WorkflowUtil;
 
 /**
  * @author PC
@@ -65,21 +66,27 @@ public abstract class Action implements Callable<Void> {
 
 	@Override
 	public Void call() throws Exception {
-		sleepBefore();
-		if(getActionDefinition().getRetryRef() != null) {
-			final Callable<Void> callable = new Callable<Void>() {
-				@Override
-				public Void call() throws Exception {
-					perform();
-					return null;
-				}};
-			final Retry<Void> retry = new Retry<>(callable, getWorkflowDefinition(), getActionDefinition());
-			retry.call();
+		boolean perform = true;
+		if(actionDefinition.getCondition() != null) {
+			perform = WorkflowUtil.evaluateCondition(workflowData.getInput(), actionDefinition.getCondition());
 		}
-		else {
-			perform();
+		if(perform) {
+			sleepBefore();
+			if(getActionDefinition().getRetryRef() != null) {
+				final Callable<Void> callable = new Callable<Void>() {
+					@Override
+					public Void call() throws Exception {
+						perform();
+						return null;
+					}};
+				final Retry<Void> retry = new Retry<>(callable, getWorkflowDefinition(), getActionDefinition());
+				retry.call();
+			}
+			else {
+				perform();
+			}
+			sleepAfter();
 		}
-		sleepAfter();
 		return null;
 	}
 	

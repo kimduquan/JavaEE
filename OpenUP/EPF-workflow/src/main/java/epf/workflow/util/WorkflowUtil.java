@@ -1,6 +1,8 @@
 package epf.workflow.util;
 
 import java.time.Duration;
+import java.util.Arrays;
+
 import javax.el.ELProcessor;
 import javax.json.Json;
 import javax.json.JsonValue;
@@ -8,6 +10,7 @@ import epf.workflow.WorkflowData;
 import epf.workflow.el.JsonArrayELResolver;
 import epf.workflow.el.JsonObjectELResolver;
 import epf.workflow.schema.CallbackState;
+import epf.workflow.schema.EventDefinition;
 import epf.workflow.schema.EventState;
 import epf.workflow.schema.ForEachState;
 import epf.workflow.schema.OperationState;
@@ -109,6 +112,18 @@ public interface WorkflowUtil {
 				break;
 		}
 		return workflowTimeoutDefinition;
+	}
+	
+	/**
+	 * @param workflowDefinition
+	 * @param eventRef
+	 * @return
+	 */
+	static EventDefinition getEventDefinition(final WorkflowDefinition workflowDefinition, final String eventRef) {
+		if(workflowDefinition.getEvents() instanceof EventDefinition[]) {
+			return Arrays.asList((EventDefinition[])workflowDefinition.getEvents()).stream().filter(eventDef -> eventDef.getName().equals(eventRef)).findFirst().get();
+		}
+		return null;
 	}
 	
 	/**
