@@ -3,6 +3,7 @@ package epf.workflow;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.Future;
 import epf.workflow.schema.State;
 import epf.workflow.schema.WorkflowDefinition;
 
@@ -26,6 +27,11 @@ public class WorkflowInstance {
 	 * 
 	 */
 	private final List<Event> events = new CopyOnWriteArrayList<>();
+	
+	/**
+	 * 
+	 */
+	private final List<Future<?>> subFlows = new CopyOnWriteArrayList<>();
 	
 	/**
 	 * 
@@ -60,27 +66,6 @@ public class WorkflowInstance {
 	public void transition(final State state) {
 		states.add(state);
 	}
-	
-	/**
-	 * @param state
-	 */
-	public void start(final State state) {
-		
-	}
-	
-	/**
-	 * @param state
-	 */
-	public void end(final State state) {
-		
-	}
-	
-	/**
-	 * @param state
-	 */
-	public void compensate(final State state) {
-		
-	}
 
 	public WorkflowData getWorkflowData() {
 		return workflowData;
@@ -98,5 +83,19 @@ public class WorkflowInstance {
 	 */
 	public Event[] getEvents() {
 		return events.toArray(new Event[0]);
+	}
+	
+	/**
+	 * @param subFlow
+	 */
+	public void addSubFlow(final Future<?> subFlow) {
+		subFlows.add(subFlow);
+	}
+	
+	/**
+	 * @return
+	 */
+	public Future<?>[] getSubFlows() {
+		return subFlows.toArray(new Future<?>[0]);
 	}
 }
