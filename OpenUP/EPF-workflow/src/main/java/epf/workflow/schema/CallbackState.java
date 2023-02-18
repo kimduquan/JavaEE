@@ -21,11 +21,11 @@ public class CallbackState extends State {
 	/**
 	 * 
 	 */
-	private Object eventDataFilter;
+	private EventDataFilters eventDataFilter;
 	/**
 	 * 
 	 */
-	private Object stateDataFilter;
+	private StateDataFilters stateDataFilter;
 	/**
 	 * 
 	 */
@@ -69,16 +69,16 @@ public class CallbackState extends State {
 	public void setTimeouts(Object timeouts) {
 		this.timeouts = timeouts;
 	}
-	public Object getEventDataFilter() {
+	public EventDataFilters getEventDataFilter() {
 		return eventDataFilter;
 	}
-	public void setEventDataFilter(Object eventDataFilter) {
+	public void setEventDataFilter(EventDataFilters eventDataFilter) {
 		this.eventDataFilter = eventDataFilter;
 	}
-	public Object getStateDataFilter() {
+	public StateDataFilters getStateDataFilter() {
 		return stateDataFilter;
 	}
-	public void setStateDataFilter(Object stateDataFilter) {
+	public void setStateDataFilter(StateDataFilters stateDataFilter) {
 		this.stateDataFilter = stateDataFilter;
 	}
 	public ErrorDefinition[] getOnErrors() {

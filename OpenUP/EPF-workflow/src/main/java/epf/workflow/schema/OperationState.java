@@ -24,7 +24,7 @@ public class OperationState extends State {
 	/**
 	 * 
 	 */
-	private Object stateDataFilter;
+	private StateDataFilters stateDataFilter;
 	
 	/**
 	 * 
@@ -80,11 +80,11 @@ public class OperationState extends State {
 		this.timeouts = timeouts;
 	}
 
-	public Object getStateDataFilter() {
+	public StateDataFilters getStateDataFilter() {
 		return stateDataFilter;
 	}
 
-	public void setStateDataFilter(Object stateDataFilter) {
+	public void setStateDataFilter(StateDataFilters stateDataFilter) {
 		this.stateDataFilter = stateDataFilter;
 	}
 

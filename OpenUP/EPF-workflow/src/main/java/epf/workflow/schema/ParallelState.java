@@ -25,7 +25,7 @@ public class ParallelState extends State {
 	/**
 	 * 
 	 */
-	private Object stateDataFilter;
+	private StateDataFilters stateDataFilter;
 	/**
 	 * 
 	 */
@@ -75,10 +75,10 @@ public class ParallelState extends State {
 	public void setTimeouts(Object timeouts) {
 		this.timeouts = timeouts;
 	}
-	public Object getStateDataFilter() {
+	public StateDataFilters getStateDataFilter() {
 		return stateDataFilter;
 	}
-	public void setStateDataFilter(Object stateDataFilter) {
+	public void setStateDataFilter(StateDataFilters stateDataFilter) {
 		this.stateDataFilter = stateDataFilter;
 	}
 	public ErrorDefinition[] getOnErrors() {

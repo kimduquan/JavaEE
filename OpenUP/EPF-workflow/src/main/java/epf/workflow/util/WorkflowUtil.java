@@ -157,10 +157,18 @@ public interface WorkflowUtil {
 	 */
 	static void mergeStateDataOutput(final String data, final WorkflowData to, final JsonValue fromOutput) {
 		JsonValue output = to.getOutput();
-		if(data != null) {
-			output = filterValue(data, to.getOutput());
-		}
+		output = filterValue(data, to.getOutput());
 		final JsonValue newOutput = Json.createMergeDiff(fromOutput, output).apply(output);
 		mergeValue(data, to.getOutput(), newOutput);
+	}
+	
+	/**
+	 * @param to
+	 * @param fromOutput
+	 */
+	static void mergeStateDataOutput(final WorkflowData to, final JsonValue fromOutput) {
+		JsonValue output = to.getOutput();
+		final JsonValue newOutput = Json.createMergeDiff(fromOutput, output).apply(output);
+		to.setOutput(newOutput);
 	}
 }

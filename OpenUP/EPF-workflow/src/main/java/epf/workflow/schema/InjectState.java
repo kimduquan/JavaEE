@@ -1,5 +1,7 @@
 package epf.workflow.schema;
 
+import javax.json.JsonValue;
+
 /**
  * @author PC
  *
@@ -9,11 +11,11 @@ public class InjectState extends State {
 	/**
 	 * 
 	 */
-	private Object data;
+	private JsonValue data;
 	/**
 	 * 
 	 */
-	private Object stateDataFilter;
+	private StateDataFilters stateDataFilter;
 	/**
 	 * 
 	 */
@@ -35,16 +37,16 @@ public class InjectState extends State {
 	 */
 	private Object end;
 	
-	public Object getData() {
+	public JsonValue getData() {
 		return data;
 	}
-	public void setData(Object data) {
+	public void setData(JsonValue data) {
 		this.data = data;
 	}
-	public Object getStateDataFilter() {
+	public StateDataFilters getStateDataFilter() {
 		return stateDataFilter;
 	}
-	public void setStateDataFilter(Object stateDataFilter) {
+	public void setStateDataFilter(StateDataFilters stateDataFilter) {
 		this.stateDataFilter = stateDataFilter;
 	}
 	public Object getTransition() {

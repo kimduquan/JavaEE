@@ -17,7 +17,7 @@ public class SwitchState extends State {
 	/**
 	 * 
 	 */
-	private Object stateDataFilter;
+	private StateDataFilters stateDataFilter;
 	/**
 	 * 
 	 */
@@ -55,10 +55,10 @@ public class SwitchState extends State {
 	public void setEventConditions(SwitchStateEventConditions[] eventConditions) {
 		this.eventConditions = eventConditions;
 	}
-	public Object getStateDataFilter() {
+	public StateDataFilters getStateDataFilter() {
 		return stateDataFilter;
 	}
-	public void setStateDataFilter(Object stateDataFilter) {
+	public void setStateDataFilter(StateDataFilters stateDataFilter) {
 		this.stateDataFilter = stateDataFilter;
 	}
 	public ErrorDefinition[] getOnErrors() {
