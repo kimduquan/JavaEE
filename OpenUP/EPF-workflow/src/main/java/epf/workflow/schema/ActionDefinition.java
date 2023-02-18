@@ -46,7 +46,7 @@ public class ActionDefinition {
 	/**
 	 * 
 	 */
-	private Object actionDataFilter;
+	private ActionDataFilters actionDataFilter;
 	
 	/**
 	 * 
@@ -114,11 +114,11 @@ public class ActionDefinition {
 		this.retryableErrors = retryableErrors;
 	}
 
-	public Object getActionDataFilter() {
+	public ActionDataFilters getActionDataFilter() {
 		return actionDataFilter;
 	}
 
-	public void setActionDataFilter(Object actionDataFilter) {
+	public void setActionDataFilter(ActionDataFilters actionDataFilter) {
 		this.actionDataFilter = actionDataFilter;
 	}
 

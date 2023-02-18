@@ -17,13 +17,16 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+import javax.json.JsonValue;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.util.MapUtil;
+import epf.util.json.JsonUtil;
 import epf.workflow.schema.ActionDefinition;
 import epf.workflow.schema.ActionMode;
 import epf.workflow.schema.CallbackState;
 import epf.workflow.schema.EndDefinition;
 import epf.workflow.schema.ErrorDefinition;
+import epf.workflow.schema.EventDataFilters;
 import epf.workflow.schema.EventDefinition;
 import epf.workflow.schema.EventState;
 import epf.workflow.schema.ForEachState;
@@ -42,7 +45,9 @@ import epf.workflow.schema.SwitchStateEventConditions;
 import epf.workflow.schema.TransitionDefinition;
 import epf.workflow.schema.WorkflowDefinition;
 import epf.workflow.schema.WorkflowError;
+import epf.workflow.util.WorkflowUtil;
 import epf.workflow.schema.State;
+import epf.workflow.schema.StateDataFilters;
 
 /**
  * @author PC
@@ -148,6 +153,9 @@ public class Workflow {
 	}
 	
 	private void startEventState(final WorkflowDefinition workflowDefinition, final EventState eventState, final Instant time, final WorkflowData workflowData) {
+		if(eventState.getStateDataFilter() != null) {
+			filterStateDataInput(eventState.getStateDataFilter(), workflowData);
+		}
 		if(workflowDefinition.getEvents() instanceof EventDefinition[]) {
 			onEvents.add(new OnEvents(workflowDefinition, eventState, time, workflowData));
 		}
@@ -155,8 +163,8 @@ public class Workflow {
 	
 	private void startOperationState(final WorkflowDefinition workflowDefinition, final OperationState operationState, final WorkflowData workflowData) throws Exception {
 		try {
-			final Duration actionExecTimeout = Timeouts.getActionExecTimeout(workflowDefinition, operationState);
-			performActions(workflowDefinition, operationState.getActionMode(), operationState.getActions(), actionExecTimeout);
+			final Duration actionExecTimeout = WorkflowUtil.getActionExecTimeout(workflowDefinition, operationState);
+			performActions(workflowDefinition, operationState.getActionMode(), operationState.getActions(), workflowData, actionExecTimeout);
 			if(operationState.getEnd() != null) {
 				end(workflowDefinition, operationState, operationState.getEnd(), workflowData);
 			}
@@ -294,7 +302,7 @@ public class Workflow {
 	
 	private void startCallbackState(final WorkflowDefinition workflowDefinition, final CallbackState callbackState, final WorkflowData workflowData) throws Exception {
 		try {
-			final Action action = new Action(workflowDefinition, callbackState.getAction());
+			final Action action = newAction(workflowDefinition, callbackState.getAction(), workflowData);
 			action.call();
 			callbacks.add(new Callback(workflowDefinition, callbackState, workflowData));
 		}
@@ -380,13 +388,17 @@ public class Workflow {
 	private void onEvents(final EventState eventState, final OnEvents onEvents, final OnEventsDefinition onEvent, final Map<String, EventDefinition> eventDefs, final Event event) throws Exception {
 		final List<EventDefinition> eventRefs = MapUtil.getAll(eventDefs, onEvent.getEventRefs());
 		boolean isEvent = false;
+		EventDefinition eventDefinition = null;
 		for(EventDefinition eventRef : eventRefs) {
 			if(isEvent(eventRef, event)) {
+				eventDefinition = eventRef;
 				if(eventState.isExclusive()) {
 					isEvent = true;
 					break;
 				}
-				onEvents.addEvent(event);
+				else {
+					onEvents.addEvent(event);
+				}
 			}
 		}
 		if(!isEvent) {
@@ -394,7 +406,10 @@ public class Workflow {
 			for(EventDefinition eventRef : eventRefs) {
 				if(isEvent) {
 					for(Event ev : onEvents.getEvents()) {
-						if(!isEvent(eventRef, ev)) {
+						if(isEvent(eventRef, ev)) {
+							eventDefinition = eventRef;
+						}
+						else {
 							isEvent = false;
 							break;
 						}
@@ -404,12 +419,15 @@ public class Workflow {
 		}
 		if(isEvent) {
 			try {
-				final Duration actionExecTimeout = Timeouts.getActionExecTimeout(onEvents.getWorkflowDefinition(), onEvents.getEventState());
-				performActions(onEvents.getWorkflowDefinition(), onEvent.getActionMode(), onEvent.getActions(), actionExecTimeout);
+				filterEventData(eventDefinition, onEvent.getEventDataFilter(), onEvents.getWorkflowData(), event);
+				final Duration actionExecTimeout = WorkflowUtil.getActionExecTimeout(onEvents.getWorkflowDefinition(), onEvents.getEventState());
+				performActions(onEvents.getWorkflowDefinition(), onEvent.getActionMode(), onEvent.getActions(), onEvents.getWorkflowData(), actionExecTimeout);
 				if(onEvents.getEventState().getEnd() != null) {
+					filterStateDataOutput(eventState.getStateDataFilter(), onEvents.getWorkflowData());
 					end(onEvents.getWorkflowDefinition(), onEvents.getEventState(), onEvents.getEventState().getEnd(), onEvents.getWorkflowData());
 				}
 				else {
+					filterStateDataOutput(eventState.getStateDataFilter(), onEvents.getWorkflowData());
 					transition(onEvents.getWorkflowDefinition(), onEvents.getEventState(), onEvents.getEventState().getTransition(), onEvents.getWorkflowData());
 				}
 			}
@@ -418,6 +436,45 @@ public class Workflow {
 					onErrors(onEvents.getWorkflowDefinition(), onEvents.getEventState(), onEvents.getEventState().getOnErrors(), ex, onEvents.getWorkflowData());
 				}
 			}
+		}
+	}
+	
+	private void filterStateDataInput(final StateDataFilters stateDataFilters, final WorkflowData workflowData) {
+		if(stateDataFilters != null && stateDataFilters.getInput() != null) {
+			final JsonValue newInput = WorkflowUtil.filterValue(stateDataFilters.getInput(), workflowData.getInput());
+			workflowData.setInput(newInput);
+		}
+	}
+	
+	private void filterStateDataOutput(final StateDataFilters stateDataFilters, final WorkflowData workflowData) {
+		if(stateDataFilters != null && stateDataFilters.getOutput() != null) {
+			final JsonValue newOutput = WorkflowUtil.filterValue(stateDataFilters.getOutput(), workflowData.getOutput());
+			workflowData.setOutput(newOutput);
+		}
+	}
+	
+	private void filterEventData(final EventDefinition eventDefinition, final EventDataFilters eventDataFilters, final WorkflowData WorkflowData, final Event event) throws Exception {
+		if(eventDataFilters != null && eventDataFilters.isUseData()) {
+			JsonValue eventData = null;
+			if(eventDefinition.isDataOnly()) {
+				if(event.getData() instanceof JsonValue) {
+					eventData = (JsonValue) event.getData();
+				}
+				else if(event.getData() instanceof String) {
+					eventData = JsonUtil.readValue((String)event.getData());
+				}
+				else {
+					eventData = JsonUtil.toJson(event.getData());
+				}
+			}
+			else {
+				eventData = JsonUtil.toJson(event);
+			}
+			JsonValue data = eventData;
+			if(eventDataFilters.getData() != null) {
+				data = WorkflowUtil.filterValue(eventDataFilters.getData(), eventData);
+			}
+			WorkflowUtil.mergeStateDataOutput(eventDataFilters.getToStateData(), WorkflowData, data);
 		}
 	}
 	
@@ -575,8 +632,27 @@ public class Workflow {
 		}
 	}
 	
-	private void performActions(final WorkflowDefinition workflowDefinition, final ActionMode mode, final ActionDefinition[] actionDefs, final Duration actionExecTimeout) throws Exception {
-		final List<Action> actions = Arrays.asList(actionDefs).stream().map(actionDef -> new Action(workflowDefinition, actionDef)).collect(Collectors.toList());
+	private void filterActionDataInput(final ActionDefinition actionDefinition, final WorkflowData workflowData, final WorkflowData actionData) {
+		if(actionDefinition.getActionDataFilter() != null && actionDefinition.getActionDataFilter().getFromStateData() != null) {
+			final JsonValue input = WorkflowUtil.filterValue(actionDefinition.getActionDataFilter().getFromStateData(), workflowData.getInput());
+			actionData.setInput(input);
+		}
+	}
+	
+	private void filterActionDataOutput(final ActionDefinition actionDefinition, final WorkflowData workflowData, final WorkflowData actionData) {
+		if(actionDefinition.getActionDataFilter() != null && actionDefinition.getActionDataFilter().isUseResults() && actionDefinition.getActionDataFilter().getResults() != null) {
+			WorkflowUtil.mergeStateDataOutput(actionDefinition.getActionDataFilter().getToStateData(), workflowData, actionData.getOutput());
+		}
+	}
+	
+	private Action newAction(final WorkflowDefinition workflowDefinition, final ActionDefinition actionDefinition, final WorkflowData workflowData) {
+		final WorkflowData actionData = new WorkflowData();
+		filterActionDataInput(actionDefinition, workflowData, actionData);
+		return new Action(workflowDefinition, actionDefinition, actionData);
+	}
+	
+	private void performActions(final WorkflowDefinition workflowDefinition, final ActionMode mode, final ActionDefinition[] actionDefs, final WorkflowData workflowData, final Duration actionExecTimeout) throws Exception {
+		final List<Action> actions = Arrays.asList(actionDefs).stream().map(actionDef -> newAction(workflowDefinition, actionDef, workflowData)).collect(Collectors.toList());
 		switch(mode) {
 			case parallel:
 				if(actionExecTimeout != null) {
@@ -598,6 +674,9 @@ public class Workflow {
 				break;
 			default:
 				break;
+		}
+		for(Action action : actions) {
+			filterActionDataOutput(action.getActionDefinition(), workflowData, action.getWorkflowData());
 		}
 	}
 	

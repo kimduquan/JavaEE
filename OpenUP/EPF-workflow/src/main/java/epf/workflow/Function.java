@@ -26,14 +26,21 @@ public abstract class Function {
 	private final WorkflowDefinition workflowDefinition;
 	
 	/**
+	 * 
+	 */
+	private final WorkflowData workflowData;
+	
+	/**
 	 * @param workflowDefinition
 	 * @param functionDefinition
 	 * @param functionRefDefinition
+	 * @param workflowData
 	 */
-	public Function(WorkflowDefinition workflowDefinition, FunctionDefinition functionDefinition, FunctionRefDefinition functionRefDefinition) {
+	public Function(WorkflowDefinition workflowDefinition, FunctionDefinition functionDefinition, FunctionRefDefinition functionRefDefinition, WorkflowData workflowData) {
 		this.functionDefinition = functionDefinition;
 		this.functionRefDefinition = functionRefDefinition;
 		this.workflowDefinition = workflowDefinition;
+		this.workflowData = workflowData;
 	}
 
 	public FunctionDefinition getFunctionDefinition() {
@@ -49,4 +56,8 @@ public abstract class Function {
 	}
 	
 	public abstract void invoke() throws Exception;
+
+	public WorkflowData getWorkflowData() {
+		return workflowData;
+	}
 }

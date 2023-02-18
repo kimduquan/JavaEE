@@ -63,6 +63,17 @@
     	<artifactId>EPF-utility</artifactId>
     	<version>1.0.0</version>
     </dependency>
+    <dependency>
+    	<groupId>openup</groupId>
+    	<artifactId>EPF-json-utility</artifactId>
+    	<version>1.0.0</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/javax.el/javax.el-api -->
+	<dependency>
+	    <groupId>javax.el</groupId>
+	    <artifactId>javax.el-api</artifactId>
+	    <version>3.0.0</version>
+	</dependency>
   </dependencies>
   <build>
     <plugins>

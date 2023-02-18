@@ -24,7 +24,7 @@ public class OnEventsDefinition {
 	/**
 	 * 
 	 */
-	private Object eventDataFilter;
+	private EventDataFilters eventDataFilter;
 
 	public String[] getEventRefs() {
 		return eventRefs;
@@ -50,11 +50,11 @@ public class OnEventsDefinition {
 		this.actions = actions;
 	}
 
-	public Object getEventDataFilter() {
+	public EventDataFilters getEventDataFilter() {
 		return eventDataFilter;
 	}
 
-	public void setEventDataFilter(Object eventDataFilter) {
+	public void setEventDataFilter(EventDataFilters eventDataFilter) {
 		this.eventDataFilter = eventDataFilter;
 	}
 }

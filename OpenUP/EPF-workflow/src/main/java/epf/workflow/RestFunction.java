@@ -1,9 +1,12 @@
 package epf.workflow;
 
+import java.io.InputStream;
 import java.util.Map;
 import java.util.Map.Entry;
+import javax.json.JsonValue;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
@@ -14,6 +17,7 @@ import epf.api.PathItem;
 import epf.api.PathItem.HttpMethod;
 import epf.api.parameter.Parameter;
 import epf.api.server.Server;
+import epf.util.json.JsonUtil;
 import epf.workflow.schema.AuthDefinition;
 import epf.workflow.schema.BearerPropertiesDefinition;
 import epf.workflow.schema.FunctionDefinition;
@@ -53,9 +57,10 @@ public class RestFunction extends Function {
 	 * @param pathItem
 	 * @param operation
 	 * @param functionRefDefinition
+	 * @param workflowData
 	 */
-	public RestFunction(WorkflowDefinition workflowDefinition, FunctionDefinition functionDefinition, API api, String path, PathItem pathItem, Operation operation, FunctionRefDefinition functionRefDefinition) {
-		super(workflowDefinition, functionDefinition, functionRefDefinition);
+	public RestFunction(WorkflowDefinition workflowDefinition, FunctionDefinition functionDefinition, API api, String path, PathItem pathItem, Operation operation, FunctionRefDefinition functionRefDefinition, WorkflowData workflowData) {
+		super(workflowDefinition, functionDefinition, functionRefDefinition, workflowData);
 		this.api = api;
 		this.path = path;
 		this.pathItem = pathItem;
@@ -137,16 +142,36 @@ public class RestFunction extends Function {
 				}
 			}
 		}
+		Entity<?> entity = null;
 		if(this.getOperation().getRequestBody() != null) {
-			builder = builder.accept(this.getOperation().getRequestBody().getContent().getMediaTypes().keySet().toArray(new String[0]));
+			final String[] mediaTypes = getOperation().getRequestBody().getContent().getMediaTypes().keySet().toArray(new String[0]);
+			builder = builder.accept(mediaTypes);
+			if(getWorkflowData().getInput() != null) {
+				entity = Entity.entity(getWorkflowData().getInput(), mediaTypes[0]);
+			}
 		}
 		if(this.getFunctionRefDefinition() != null && this.getFunctionRefDefinition().getInvoke() == Invoke.async) {
-			builder.async().method(method.name());
+			if(entity != null) {
+				builder.async().method(method.name(), entity);
+			}
+			else {
+				builder.async().method(method.name());
+			}
 		}
 		else {
-			final Invocation invoke = builder.build(method.name());
-			final javax.ws.rs.core.Response response = invoke.invoke();
-			response.close();
+			Invocation invoke;
+			if(entity != null) {
+				invoke = builder.build(method.name(), entity);
+			}
+			else {
+				invoke = builder.build(method.name());
+			}
+			try(javax.ws.rs.core.Response response = invoke.invoke()){
+				try(InputStream result = response.readEntity(InputStream.class)){
+					final JsonValue output = JsonUtil.readValue(result);
+					getWorkflowData().setOutput(output);
+				}
+			}
 		}
 		client.close();
 	}

@@ -4,6 +4,8 @@ import java.time.Duration;
 import java.util.Optional;
 import java.util.Map.Entry;
 import java.util.concurrent.Callable;
+
+import javax.json.JsonValue;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
@@ -16,6 +18,7 @@ import epf.workflow.schema.FunctionDefinition;
 import epf.workflow.schema.FunctionRefDefinition;
 import epf.workflow.schema.FunctionType;
 import epf.workflow.schema.WorkflowDefinition;
+import epf.workflow.util.WorkflowUtil;
 
 /**
  * @author PC
@@ -34,12 +37,19 @@ public class Action implements Callable<Void> {
 	private final ActionDefinition actionDefinition;
 	
 	/**
+	 * 
+	 */
+	private final WorkflowData workflowData;
+	
+	/**
 	 * @param workflowDefinition
 	 * @param actionDefinition
+	 * @param workflowData
 	 */
-	public Action(WorkflowDefinition workflowDefinition, ActionDefinition actionDefinition) {
+	public Action(WorkflowDefinition workflowDefinition, ActionDefinition actionDefinition, WorkflowData workflowData) {
 		this.workflowDefinition = workflowDefinition;
 		this.actionDefinition = actionDefinition;
+		this.workflowData = workflowData;
 	}
 	
 	private FunctionDefinition getFunctionDefinition(final WorkflowDefinition workflowDefinition, final String functionRef) {
@@ -50,7 +60,7 @@ public class Action implements Callable<Void> {
 		return null;
 	}
 	
-	private void invokeFunction(final WorkflowDefinition workflowDefinition, final FunctionDefinition functionDef, final FunctionRefDefinition functionRef) throws Exception {
+	private void invokeFunction(final WorkflowDefinition workflowDefinition, final FunctionDefinition functionDef, final FunctionRefDefinition functionRef, final WorkflowData workflowData) throws Exception {
 		if(functionDef.getType() == FunctionType.rest) {
 			final int index = functionDef.getOperation().lastIndexOf("#");
 			final String uri = functionDef.getOperation().substring(0, index);
@@ -61,7 +71,7 @@ public class Action implements Callable<Void> {
 				final PathItem pathItem = entry.getValue();
 				final Optional<Operation> operation = pathItem.getOperations().values().stream().filter(o -> o.getOperationId().equals(operationId)).findFirst();
 				if(operation.isPresent()) {
-					final RestFunction restFunction = new RestFunction(workflowDefinition, functionDef, api, entry.getKey(), pathItem, operation.get(), functionRef);
+					final RestFunction restFunction = new RestFunction(workflowDefinition, functionDef, api, entry.getKey(), pathItem, operation.get(), functionRef, workflowData);
 					restFunction.invoke();
 					break;
 				}
@@ -72,6 +82,10 @@ public class Action implements Callable<Void> {
 
 	@Override
 	public Void call() throws Exception {
+		JsonValue input = workflowData.getInput();
+		if(actionDefinition.getActionDataFilter() != null && actionDefinition.getActionDataFilter().getFromStateData() != null) {
+			input = WorkflowUtil.filterValue(actionDefinition.getActionDataFilter().getFromStateData(), input);
+		}
 		if(actionDefinition.getCondition() == null && actionDefinition.getFunctionRef() != null) {
 			FunctionDefinition functionDefinition = null;
 			FunctionRefDefinition functionRefDefinition = null;
@@ -94,14 +108,14 @@ public class Action implements Callable<Void> {
 					final Callable<Void> callable = new Callable<Void>() {
 						@Override
 						public Void call() throws Exception {
-							invokeFunction(workflowDefinition, functionDef, functionRefDef);
+							invokeFunction(workflowDefinition, functionDef, functionRefDef, getWorkflowData());
 							return null;
 						}};
 					final Retry<Void> retry = new Retry<>(callable, workflowDefinition, actionDefinition);
 					retry.call();
 				}
 				else {
-					invokeFunction(workflowDefinition, functionDefinition, functionRefDefinition);
+					invokeFunction(workflowDefinition, functionDefinition, functionRefDefinition, getWorkflowData());
 				}
 				if(actionDefinition.getSleep() != null && actionDefinition.getSleep().getAfter() != null) {
 					final Duration after = Duration.parse(actionDefinition.getSleep().getAfter());
@@ -110,5 +124,13 @@ public class Action implements Callable<Void> {
 			}
 		}
 		return null;
+	}
+
+	public ActionDefinition getActionDefinition() {
+		return actionDefinition;
+	}
+
+	public WorkflowData getWorkflowData() {
+		return workflowData;
 	}
 }

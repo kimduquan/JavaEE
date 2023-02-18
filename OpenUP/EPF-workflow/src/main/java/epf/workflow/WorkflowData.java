@@ -1,6 +1,6 @@
 package epf.workflow;
 
-import javax.json.JsonObject;
+import javax.json.JsonValue;
 
 /**
  * @author PC
@@ -11,22 +11,22 @@ public class WorkflowData {
 	/**
 	 * 
 	 */
-	private JsonObject input;
+	private JsonValue input;
 	/**
 	 * 
 	 */
-	private JsonObject output;
+	private JsonValue output;
 	
-	public JsonObject getInput() {
+	public JsonValue getInput() {
 		return input;
 	}
-	public void setInput(JsonObject input) {
+	public void setInput(JsonValue input) {
 		this.input = input;
 	}
-	public JsonObject getOutput() {
+	public JsonValue getOutput() {
 		return output;
 	}
-	public void setOutput(JsonObject output) {
+	public void setOutput(JsonValue output) {
 		this.output = output;
 	}
 }

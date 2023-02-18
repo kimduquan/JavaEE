@@ -24,7 +24,7 @@ public class EventState extends State {
 	/**
 	 * 
 	 */
-	private Object stateDataFilter;
+	private StateDataFilters stateDataFilter;
 	
 	/**
 	 * 
@@ -75,11 +75,11 @@ public class EventState extends State {
 		this.timeouts = timeouts;
 	}
 
-	public Object getStateDataFilter() {
+	public StateDataFilters getStateDataFilter() {
 		return stateDataFilter;
 	}
 
-	public void setStateDataFilter(Object stateDataFilter) {
+	public void setStateDataFilter(StateDataFilters stateDataFilter) {
 		this.stateDataFilter = stateDataFilter;
 	}
 
