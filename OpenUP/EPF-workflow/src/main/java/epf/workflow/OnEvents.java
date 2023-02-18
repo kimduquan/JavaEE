@@ -67,12 +67,26 @@ public class OnEvents {
 		return eventState;
 	}
 	
+	/**
+	 * @return
+	 */
 	public Event[] getEvents() {
+		if(workflowInstance != null) {
+			return workflowInstance.getEvents();
+		}
 		return events.toArray(new Event[0]);
 	}
 	
+	/**
+	 * @param event
+	 */
 	public void addEvent(final Event event) {
-		events.add(event);
+		if(workflowInstance != null) {
+			workflowInstance.addEvent(event);
+		}
+		else {
+			events.add(event);
+		}
 	}
 
 	public WorkflowData getWorkflowData() {

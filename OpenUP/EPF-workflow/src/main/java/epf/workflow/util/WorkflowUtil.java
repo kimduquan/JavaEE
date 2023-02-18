@@ -139,6 +139,19 @@ public interface WorkflowUtil {
 	
 	/**
 	 * @param data
+	 * @param expression
+	 * @return
+	 */
+	static Boolean evaluateCondition(final JsonValue data, final String expression) {
+		final ELProcessor elProcessor = new ELProcessor();
+		elProcessor.getELManager().addELResolver(new JsonArrayELResolver());
+		elProcessor.getELManager().addELResolver(new JsonObjectELResolver());
+		elProcessor.defineBean("", data);
+		return (Boolean)elProcessor.eval(expression);
+	}
+	
+	/**
+	 * @param data
 	 * @param to
 	 * @param fromOutput
 	 */

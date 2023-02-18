@@ -114,14 +114,14 @@ public class Workflow {
 				startEventState(workflowDefinition, eventState, workflowData);
 			}
 			else {
-				final WorkflowInstance workflowInstance = new WorkflowInstance(workflowDefinition, workflowData);
+				final WorkflowInstance workflowInstance = new WorkflowInstance(workflowDefinition, workflowData, new Event[0]);
+				workflowInstance.start(startState);
 				startState(startState, workflowInstance);
 			}
 		}
 	}
 	
 	private void startState(final State state, final WorkflowInstance workflowInstance) throws Exception {
-		workflowInstance.start(state);
 		switch(state.getType()) {
 			case Event:
 				final EventState eventState = (EventState)state;
@@ -201,10 +201,9 @@ public class Workflow {
 		if(switchState.getDataConditions() != null) {
 			try {
 				for(SwitchStateDataConditions condition : switchState.getDataConditions()) {
-					if(evaluateCondition(condition)) {
+					if(WorkflowUtil.evaluateCondition(workflowInstance.getWorkflowData().getInput(), condition.getCondition())) {
 						endCondition(switchState, condition, workflowInstance);
 						evaluate = true;
-						break;
 					}
 				}
 			}
@@ -215,12 +214,21 @@ public class Workflow {
 			}
 		}
 		else if(switchState.getEventConditions() != null) {
+			final Map<String, EventDefinition> eventDefs = new HashMap<>();
+			MapUtil.putAll(eventDefs, (EventDefinition[])workflowInstance.getWorkflowDefinition().getEvents(), EventDefinition::getName);
 			try {
 				for(SwitchStateEventConditions condition : switchState.getEventConditions()) {
-					if(evaluateCondition(condition)) {
-						endCondition(switchState, condition, workflowInstance);
+					final EventDefinition eventDefinition = eventDefs.get(condition.getEventRef());
+					boolean isEvent = false;
+					for(Event event : workflowInstance.getEvents()) {
+						if(isEvent(eventDefinition, event)) {
+							isEvent = true;
+							break;
+						}
+					}
+					if(isEvent) {
 						evaluate = true;
-						break;
+						endCondition(switchState, condition, workflowInstance);
 					}
 				}
 			}
@@ -348,14 +356,6 @@ public class Workflow {
 		}
 	}
 	
-	private boolean evaluateCondition(final SwitchStateDataConditions dataConditions) {
-		return dataConditions.getCondition() != null;
-	}
-	
-	private boolean evaluateCondition(final SwitchStateEventConditions eventConditions) {
-		return eventConditions.getEventRef() != null;
-	}
-	
 	/**
 	 * @param event
 	 * @throws Exception 
@@ -437,11 +437,8 @@ public class Workflow {
 		if(isEvent) {
 			WorkflowInstance workflowInstance = onEvents.getWorkflowInstance();
 			if(workflowInstance == null) {
-				workflowInstance = new WorkflowInstance(onEvents.getWorkflowDefinition(), onEvents.getWorkflowData());
+				workflowInstance = new WorkflowInstance(onEvents.getWorkflowDefinition(), onEvents.getWorkflowData(), onEvents.getEvents());
 				workflowInstance.start(eventState);
-			}
-			else {
-				workflowInstance.transition(eventState);
 			}
 			try {
 				filterEventData(eventDefinition, onEvent.getEventDataFilter(), workflowInstance.getWorkflowData(), event);
@@ -593,6 +590,7 @@ public class Workflow {
 							break;
 					}
 					if(usedForCompensation) {
+						workflowInstance.compensate(state);
 						startState(state, workflowInstance);
 					}
 					break;
@@ -602,6 +600,7 @@ public class Workflow {
 	}
 	
 	private void end(final State state, final Object end, final WorkflowInstance workflowInstance) throws Exception {
+		workflowInstance.end(state);
 		if(end instanceof EndDefinition) {
 			final EndDefinition endDefinition = (EndDefinition) end;
 			if(endDefinition.isCompensate()) {
@@ -629,7 +628,6 @@ public class Workflow {
 		else if(transition instanceof TransitionDefinition) {
 			final TransitionDefinition transitionDef = (TransitionDefinition) transition;
 			if(transitionDef.isCompensate()) {
-				workflowInstance.compensate(state);
 				compensate(state, workflowInstance);
 			}
 			produceEvents(workflowInstance.getWorkflowDefinition(), transitionDef.getProduceEvents());

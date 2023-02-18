@@ -1,5 +1,6 @@
 package epf.workflow;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import epf.workflow.schema.State;
@@ -24,15 +25,22 @@ public class WorkflowInstance {
 	/**
 	 * 
 	 */
+	private final List<Event> events = new CopyOnWriteArrayList<>();
+	
+	/**
+	 * 
+	 */
 	private final WorkflowData workflowData;
 	
 	/**
 	 * @param workflowDefinition
 	 * @param workflowData
+	 * @param events
 	 */
-	public WorkflowInstance(WorkflowDefinition workflowDefinition, WorkflowData workflowData) {
+	public WorkflowInstance(WorkflowDefinition workflowDefinition, WorkflowData workflowData, Event[] events) {
 		this.workflowDefinition = workflowDefinition;
 		this.workflowData = workflowData;
+		Arrays.asList(events).forEach(this.events::add);
 	}
 
 	public WorkflowDefinition getWorkflowDefinition() {
@@ -76,5 +84,19 @@ public class WorkflowInstance {
 
 	public WorkflowData getWorkflowData() {
 		return workflowData;
+	}
+	
+	/**
+	 * @param event
+	 */
+	public void addEvent(final Event event) {
+		events.add(event);
+	}
+	
+	/**
+	 * @return
+	 */
+	public Event[] getEvents() {
+		return events.toArray(new Event[0]);
 	}
 }
