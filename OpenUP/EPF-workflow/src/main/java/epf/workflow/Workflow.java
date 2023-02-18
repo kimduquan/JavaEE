@@ -2,7 +2,6 @@ package epf.workflow;
 
 import java.net.URI;
 import java.time.Duration;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -117,7 +116,7 @@ public class Workflow {
 		switch(state.getType()) {
 			case Event:
 				final EventState eventState = (EventState)state;
-				startEventState(workflowDefinition, eventState, Instant.now(), workflowData);
+				startEventState(workflowDefinition, eventState, workflowData);
 				break;
 			case Operation:
 				final OperationState operationState = (OperationState) state;
@@ -152,12 +151,12 @@ public class Workflow {
 		}
 	}
 	
-	private void startEventState(final WorkflowDefinition workflowDefinition, final EventState eventState, final Instant time, final WorkflowData workflowData) {
+	private void startEventState(final WorkflowDefinition workflowDefinition, final EventState eventState, final WorkflowData workflowData) {
 		if(eventState.getStateDataFilter() != null) {
 			filterStateDataInput(eventState.getStateDataFilter(), workflowData);
 		}
 		if(workflowDefinition.getEvents() instanceof EventDefinition[]) {
-			onEvents.add(new OnEvents(workflowDefinition, eventState, time, workflowData));
+			onEvents.add(new OnEvents(workflowDefinition, eventState, workflowData));
 		}
 	}
 	
@@ -418,22 +417,24 @@ public class Workflow {
 			}
 		}
 		if(isEvent) {
+			final WorkflowInstance workflowInstance = new WorkflowInstance(onEvents.getWorkflowDefinition(), onEvents.getWorkflowData());
+			workflowInstance.transition(eventState);
 			try {
-				filterEventData(eventDefinition, onEvent.getEventDataFilter(), onEvents.getWorkflowData(), event);
-				final Duration actionExecTimeout = WorkflowUtil.getActionExecTimeout(onEvents.getWorkflowDefinition(), onEvents.getEventState());
-				performActions(onEvents.getWorkflowDefinition(), onEvent.getActionMode(), onEvent.getActions(), onEvents.getWorkflowData(), actionExecTimeout);
+				filterEventData(eventDefinition, onEvent.getEventDataFilter(), workflowInstance.getWorkflowData(), event);
+				final Duration actionExecTimeout = WorkflowUtil.getActionExecTimeout(workflowInstance.getWorkflowDefinition(), onEvents.getEventState());
+				performActions(workflowInstance.getWorkflowDefinition(), onEvent.getActionMode(), onEvent.getActions(), workflowInstance.getWorkflowData(), actionExecTimeout);
 				if(onEvents.getEventState().getEnd() != null) {
-					filterStateDataOutput(eventState.getStateDataFilter(), onEvents.getWorkflowData());
-					end(onEvents.getWorkflowDefinition(), onEvents.getEventState(), onEvents.getEventState().getEnd(), onEvents.getWorkflowData());
+					filterStateDataOutput(eventState.getStateDataFilter(), workflowInstance.getWorkflowData());
+					end(workflowInstance.getWorkflowDefinition(), onEvents.getEventState(), onEvents.getEventState().getEnd(), workflowInstance.getWorkflowData());
 				}
 				else {
-					filterStateDataOutput(eventState.getStateDataFilter(), onEvents.getWorkflowData());
-					transition(onEvents.getWorkflowDefinition(), onEvents.getEventState(), onEvents.getEventState().getTransition(), onEvents.getWorkflowData());
+					filterStateDataOutput(eventState.getStateDataFilter(), workflowInstance.getWorkflowData());
+					transition(workflowInstance.getWorkflowDefinition(), onEvents.getEventState(), onEvents.getEventState().getTransition(), workflowInstance.getWorkflowData());
 				}
 			}
 			catch(WorkflowException ex) {
 				if(onEvents.getEventState().getOnErrors() != null) {
-					onErrors(onEvents.getWorkflowDefinition(), onEvents.getEventState(), onEvents.getEventState().getOnErrors(), ex, onEvents.getWorkflowData());
+					onErrors(workflowInstance.getWorkflowDefinition(), onEvents.getEventState(), onEvents.getEventState().getOnErrors(), ex, workflowInstance.getWorkflowData());
 				}
 			}
 		}
