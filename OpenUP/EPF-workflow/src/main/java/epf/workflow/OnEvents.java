@@ -29,6 +29,11 @@ public class OnEvents {
 	/**
 	 * 
 	 */
+	private final WorkflowInstance workflowInstance;
+	
+	/**
+	 * 
+	 */
 	private final List<Event> events = new CopyOnWriteArrayList<>();
 	
 	/**
@@ -40,6 +45,18 @@ public class OnEvents {
 		this.workflowDefinition = workflowDefinition;
 		this.eventState = eventState;
 		this.workflowData = workflowData;
+		workflowInstance = null;
+	}
+	
+	/**
+	 * @param eventState
+	 * @param workflowInstance
+	 */
+	public OnEvents(EventState eventState, final WorkflowInstance workflowInstance) {
+		this.workflowDefinition = workflowInstance.getWorkflowDefinition();
+		this.eventState = eventState;
+		this.workflowData = workflowInstance.getWorkflowData();
+		this.workflowInstance = workflowInstance;
 	}
 
 	public WorkflowDefinition getWorkflowDefinition() {
@@ -60,5 +77,9 @@ public class OnEvents {
 
 	public WorkflowData getWorkflowData() {
 		return workflowData;
+	}
+
+	public WorkflowInstance getWorkflowInstance() {
+		return workflowInstance;
 	}
 }

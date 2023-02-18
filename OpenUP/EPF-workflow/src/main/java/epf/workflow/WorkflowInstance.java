@@ -52,6 +52,27 @@ public class WorkflowInstance {
 	public void transition(final State state) {
 		states.add(state);
 	}
+	
+	/**
+	 * @param state
+	 */
+	public void start(final State state) {
+		
+	}
+	
+	/**
+	 * @param state
+	 */
+	public void end(final State state) {
+		
+	}
+	
+	/**
+	 * @param state
+	 */
+	public void compensate(final State state) {
+		
+	}
 
 	public WorkflowData getWorkflowData() {
 		return workflowData;
