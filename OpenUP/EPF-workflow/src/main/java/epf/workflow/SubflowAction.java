@@ -23,7 +23,7 @@ public class SubflowAction extends Action {
 	/**
 	 * 
 	 */
-	private final Workflow workflow;
+	private final WorkflowRuntime workflow;
 
 	/**
 	 * @param workflowDefinition
@@ -36,7 +36,7 @@ public class SubflowAction extends Action {
 	public SubflowAction(
 			WorkflowDefinition workflowDefinition, 
 			ActionDefinition actionDefinition,
-			Workflow workflow,
+			WorkflowRuntime workflow,
 			SubFlowRefDefinition subFlowRefDefinition,
 			WorkflowDefinition subWorkflowDefinition,
 			WorkflowData workflowData) {
