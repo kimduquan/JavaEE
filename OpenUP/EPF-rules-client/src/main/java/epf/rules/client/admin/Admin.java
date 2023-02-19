@@ -1,4 +1,4 @@
-package epf.client.rules.admin;
+package epf.rules.client.admin;
 
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;

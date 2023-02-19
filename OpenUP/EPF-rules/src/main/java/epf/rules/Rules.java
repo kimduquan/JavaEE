@@ -27,7 +27,7 @@ import epf.util.json.Encoder;
  */
 @Path(Naming.RULES)
 @RequestScoped
-public class Rules implements epf.client.rules.Rules {
+public class Rules implements epf.rules.client.Rules {
 	
 	/**
 	 * 

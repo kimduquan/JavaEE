@@ -26,7 +26,7 @@ public class RulesUtil {
 		try(Client client = ClientUtil.newClient(GatewayUtil.get(Naming.RULES))){
 			client.authorization(token.toCharArray());
 			try(InputStream input = Files.newInputStream(ruleFile)){
-				try(Response response = epf.client.rules.admin.Admin.registerRuleExecutionSet(client, ruleSet, input)){
+				try(Response response = epf.rules.client.admin.Admin.registerRuleExecutionSet(client, ruleSet, input)){
 					response.getStatus();
 				}
 			}
@@ -36,7 +36,7 @@ public class RulesUtil {
 	public static void deregisterRuleExecutionSet(String token, String ruleSet) throws Exception {
 		try(Client client = ClientUtil.newClient(GatewayUtil.get("rules"))){
 			client.authorization(token.toCharArray());
-			try(Response response = epf.client.rules.admin.Admin.deregisterRuleExecutionSet(client, ruleSet)){
+			try(Response response = epf.rules.client.admin.Admin.deregisterRuleExecutionSet(client, ruleSet)){
 				response.getStatus();
 			}
 		}

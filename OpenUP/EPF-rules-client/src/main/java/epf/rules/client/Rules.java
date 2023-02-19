@@ -1,4 +1,4 @@
-package epf.client.rules;
+package epf.rules.client;
 
 import java.io.InputStream;
 import javax.ws.rs.Consumes;
