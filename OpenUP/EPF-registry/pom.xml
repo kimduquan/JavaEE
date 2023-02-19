@@ -42,7 +42,7 @@
 	
     <dependency>
         <groupId>openup</groupId>
-        <artifactId>EPF-client</artifactId>
+        <artifactId>EPF-registry-client</artifactId>
         <version>${project.version}</version>
     </dependency>
   </dependencies>

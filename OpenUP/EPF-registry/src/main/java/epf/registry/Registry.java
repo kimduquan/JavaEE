@@ -28,7 +28,7 @@ import epf.util.logging.LogManager;
  */
 @Path(Naming.REGISTRY)
 @ApplicationScoped
-public class Registry implements epf.client.registry.Registry {
+public class Registry implements epf.registry.client.Registry {
 	
 	/**
 	 * 

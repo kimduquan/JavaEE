@@ -1,4 +1,4 @@
-package epf.client.registry;
+package epf.registry.client;
 
 import java.net.URI;
 import java.util.Set;
