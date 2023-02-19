@@ -227,7 +227,7 @@ public class WorkflowDefinition {
 		return start;
 	}
 
-	public void setStart(StartDefinition start) {
+	public void setStart(Object start) {
 		this.start = start;
 	}
 
