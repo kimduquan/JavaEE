@@ -21,7 +21,7 @@ public class FileUtil {
 		try(Client client = ClientUtil.newClient(fileUrl)){
 			client.authorization(token.toCharArray());
 			try(InputStream input = Files.newInputStream(file)){
-				try(Response response = epf.client.file.Files.createFile(client, input, path)){
+				try(Response response = epf.file.client.Files.createFile(client, input, path)){
 					response.getStatus();
 					return response.getLink("self").getTitle();
 				}
@@ -33,7 +33,7 @@ public class FileUtil {
 		URI fileUrl = GatewayUtil.get(Naming.FILE);
 		try(Client client = ClientUtil.newClient(fileUrl)){
 			client.authorization(token.toCharArray());
-			epf.client.file.Files.delete(client, path).getStatus();
+			epf.file.client.Files.delete(client, path).getStatus();
 		}
 	}
 }

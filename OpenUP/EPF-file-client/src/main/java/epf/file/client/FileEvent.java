@@ -1,4 +1,4 @@
-package epf.client.file;
+package epf.file.client;
 
 import java.io.Serializable;
 import java.nio.file.Path;

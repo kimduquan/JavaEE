@@ -9,8 +9,9 @@ import java.nio.file.WatchService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import epf.client.file.EventKind;
-import epf.client.file.FileEvent;
+
+import epf.file.client.EventKind;
+import epf.file.client.FileEvent;
 import epf.util.event.Emitter;
 import epf.util.logging.LogManager;
 

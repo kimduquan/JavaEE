@@ -15,7 +15,8 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.ObservesAsync;
 import javax.inject.Inject;
-import epf.client.file.FileEvent;
+
+import epf.file.client.FileEvent;
 import epf.util.io.ByteBufferUtil;
 import epf.util.logging.LogManager;
 

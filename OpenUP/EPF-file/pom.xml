@@ -77,7 +77,7 @@
         </dependency>
         <dependency>
             <groupId>openup</groupId>
-            <artifactId>EPF-client</artifactId>
+            <artifactId>EPF-file-client</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

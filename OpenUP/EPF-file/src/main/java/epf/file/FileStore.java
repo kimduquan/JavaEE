@@ -42,7 +42,7 @@ import epf.util.logging.LogManager;
 @javax.ws.rs.Path(Naming.FILE)
 @RolesAllowed(Security.DEFAULT_ROLE)
 @ApplicationScoped
-public class FileStore implements epf.client.file.Files {
+public class FileStore implements epf.file.client.Files {
 	
 	/**
 	 * 

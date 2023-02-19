@@ -27,7 +27,7 @@ import epf.util.json.JsonUtil;
  */
 @ApplicationScoped
 @Path(Naming.CACHE)
-public class Cache implements epf.client.cache.Cache {
+public class Cache implements epf.cache.client.Cache {
 	
 	/**
 	 * 

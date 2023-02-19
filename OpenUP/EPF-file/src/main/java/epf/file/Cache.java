@@ -29,7 +29,7 @@ import epf.naming.Naming.Security;
 @javax.ws.rs.Path(Naming.CACHE)
 @RolesAllowed(Security.DEFAULT_ROLE)
 @ApplicationScoped
-public class Cache implements epf.client.file.FileCache {
+public class Cache implements epf.file.client.FileCache {
 	
 	/**
 	 * 

@@ -21,7 +21,8 @@ import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
-import epf.client.file.FileEvent;
+
+import epf.file.client.FileEvent;
 import epf.util.event.Emitter;
 import epf.util.event.EventEmitter;
 import epf.util.logging.LogManager;
