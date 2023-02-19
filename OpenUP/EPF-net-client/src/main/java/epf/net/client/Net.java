@@ -1,4 +1,4 @@
-package epf.client.net;
+package epf.net.client;
 
 import java.io.InputStream;
 import java.net.URL;

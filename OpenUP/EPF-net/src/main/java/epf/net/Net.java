@@ -18,7 +18,7 @@ import epf.naming.Naming;
  */
 @Path(Naming.NET)
 @ApplicationScoped
-public class Net implements epf.client.net.Net {
+public class Net implements epf.net.client.Net {
 
 	@Override
 	public Response rewriteUrl(final java.net.URL rawUrl) throws Exception {
