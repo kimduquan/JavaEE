@@ -6,7 +6,7 @@ import java.util.concurrent.Callable;
  * @author PC
  *
  */
-public class ForEach implements Callable<Void> {
+public class Branch implements Callable<Void> {
 	
 	/**
 	 * 
@@ -28,10 +28,22 @@ public class ForEach implements Callable<Void> {
 	 * @param workflowData
 	 * @param workflowInstance
 	 */
-	public ForEach(Action[] actions, WorkflowData workflowData, WorkflowInstance workflowInstance) {
+	public Branch(Action[] actions, WorkflowData workflowData, WorkflowInstance workflowInstance) {
 		this.actions = actions;
 		this.workflowData = workflowData;
 		this.workflowInstance = workflowInstance;
+	}
+
+	public Action[] getActions() {
+		return actions;
+	}
+
+	public WorkflowData getWorkflowData() {
+		return workflowData;
+	}
+
+	public WorkflowInstance getWorkflowInstance() {
+		return workflowInstance;
 	}
 
 	@Override
@@ -43,13 +55,5 @@ public class ForEach implements Callable<Void> {
 			action.call();
 		}
 		return null;
-	}
-
-	public Action[] getActions() {
-		return actions;
-	}
-
-	public WorkflowData getWorkflowData() {
-		return workflowData;
 	}
 }

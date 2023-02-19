@@ -277,6 +277,9 @@ public class Workflow {
 				}
 			}
 		}
+		if(workflowInstance.isTerminate()) {
+			return;
+		}
 		if(!evaluate) {
 			if(switchState.getDefaultCondition() instanceof TransitionDefinition) {
 				filterStateDataOutput(switchState.getStateDataFilter(), workflowInstance.getWorkflowData());
@@ -302,9 +305,9 @@ public class Workflow {
 	
 	private void startParallelState(final ParallelState parallelState, final WorkflowInstance workflowInstance) throws Exception {
 		filterStateDataInput(parallelState.getStateDataFilter(), workflowInstance.getWorkflowData());
-		final List<ParallelBranch> branches = new ArrayList<>();
+		final List<Branch> branches = new ArrayList<>();
 		for(ParallelStateBranch branch : parallelState.getBranches()) {
-			branches.add(new ParallelBranch(branch));
+			branches.add(newParallelBranch(branch, workflowInstance));
 		}
 		try {
 			switch(parallelState.getCompletionType()) {
@@ -347,18 +350,28 @@ public class Workflow {
 		}
 	}
 	
-	private ForEach newForEach(final ForEachState forEachState, final WorkflowInstance workflowInstance, final JsonValue value) {
-		final WorkflowData newWorkflowData = new WorkflowData();
-		newWorkflowData.setInput(workflowInstance.getWorkflowData().getInput());
-		WorkflowUtil.setValue(forEachState.getIterationParam(), newWorkflowData.getInput(), value);
+	private Branch newBranch(final ActionDefinition[] actionDefinitions, final WorkflowData workflowData, final WorkflowInstance workflowInstance) {
 		final List<Action> actions = new ArrayList<>();
-		for(ActionDefinition actionDefinition : forEachState.getActions()) {
-			final Optional<Action> action = newAction(workflowInstance.getWorkflowDefinition(), actionDefinition, newWorkflowData);
+		for(ActionDefinition actionDefinition : actionDefinitions) {
+			final Optional<Action> action = newAction(workflowInstance.getWorkflowDefinition(), actionDefinition, workflowData);
 			if(action.isPresent()) {
 				actions.add(action.get());
 			}
 		}
-		return new ForEach(actions.toArray(new Action[0]), newWorkflowData, workflowInstance);
+		return new Branch(actions.toArray(new Action[0]), workflowData, workflowInstance);
+	}
+	
+	private Branch newForEachBranch(final ForEachState forEachState, final WorkflowInstance workflowInstance, final JsonValue value) {
+		final WorkflowData newWorkflowData = new WorkflowData();
+		newWorkflowData.setInput(workflowInstance.getWorkflowData().getOutput());
+		WorkflowUtil.setValue(forEachState.getIterationParam(), newWorkflowData.getInput(), value);
+		return newBranch(forEachState.getActions(), newWorkflowData, workflowInstance);
+	}
+	
+	private Branch newParallelBranch(final ParallelStateBranch branch, final WorkflowInstance workflowInstance) {
+		final WorkflowData newWorkflowData = new WorkflowData();
+		newWorkflowData.setInput(workflowInstance.getWorkflowData().getOutput());
+		return newBranch(branch.getActions(), newWorkflowData, workflowInstance);
 	}
 	
 	private void startForEachState(final ForEachState forEachState, final WorkflowInstance workflowInstance) throws Exception {
@@ -371,7 +384,7 @@ public class Workflow {
 		else if(forEachState.getBatchSize() instanceof Integer) {
 			batchSize = (int) forEachState.getBatchSize();
 		}
-		List<ForEach> iterations = null;
+		List<Branch> iterations = null;
 		try {
 			switch(forEachState.getMode()) {
 				case parallel:
@@ -381,14 +394,14 @@ public class Workflow {
 						if(batchInputs.isEmpty()) {
 							break;
 						}
-						final List<ForEach> batch = batchInputs.stream().map(value -> newForEach(forEachState, workflowInstance, value)).collect(Collectors.toList());
+						final List<Branch> batch = batchInputs.stream().map(value -> newForEachBranch(forEachState, workflowInstance, value)).collect(Collectors.toList());
 						executor.invokeAll(batch);
 						index += batchInputs.size();
 					}
 					break;
 				case sequential:
-					iterations = inputCollection.stream().map(value -> newForEach(forEachState, workflowInstance, value)).collect(Collectors.toList());
-					for(ForEach forEach : iterations) {
+					iterations = inputCollection.stream().map(value -> newForEachBranch(forEachState, workflowInstance, value)).collect(Collectors.toList());
+					for(Branch forEach : iterations) {
 						if(workflowInstance.isTerminate()) {
 							return;
 						}
@@ -401,12 +414,12 @@ public class Workflow {
 			if(workflowInstance.isTerminate()) {
 				return;
 			}
-			for(ForEach forEach : iterations) {
+			for(Branch forEach : iterations) {
 				for(Action action : forEach.getActions()) {
 					filterActionDataOutput(action.getActionDefinition(), forEach.getWorkflowData(), action.getWorkflowData());
 				}
 			}
-			for(ForEach forEach : iterations) {
+			for(Branch forEach : iterations) {
 				WorkflowUtil.setValue(forEachState.getOutputCollection(), workflowInstance.getWorkflowData().getOutput(), forEach.getWorkflowData().getOutput());
 			}
 			if(forEachState.getTransition() != null) {
