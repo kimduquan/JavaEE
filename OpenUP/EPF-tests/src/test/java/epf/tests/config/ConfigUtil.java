@@ -1,9 +1,10 @@
 package epf.tests.config;
 
 import java.util.Map;
-import epf.client.config.Config;
+
 import epf.client.gateway.GatewayUtil;
 import epf.client.util.Client;
+import epf.config.client.Config;
 import epf.naming.Naming;
 import epf.tests.client.ClientUtil;
 

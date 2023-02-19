@@ -20,7 +20,7 @@ import epf.util.logging.LogManager;
  */
 @ApplicationScoped
 @Path(Naming.CONFIG)
-public class Config implements epf.client.config.Config {
+public class Config implements epf.config.client.Config {
 	
 	/**
 	 * 

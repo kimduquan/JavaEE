@@ -22,7 +22,7 @@ public class ConfigSource {
 	 * @param client
 	 */
 	protected void getProperties(final Client client, final String name) {
-		epf.client.config.Config.getProperties(client, name).forEach(properties::put);
+		epf.config.client.Config.getProperties(client, name).forEach(properties::put);
 	}
 	
 	/**

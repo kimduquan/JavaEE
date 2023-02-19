@@ -1,4 +1,4 @@
-package epf.client.config;
+package epf.config.client;
 
 import java.util.Map;
 import javax.ws.rs.DefaultValue;

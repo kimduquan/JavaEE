@@ -7,9 +7,10 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import epf.client.config.Config;
+
 import epf.client.internal.ClientUtil;
 import epf.client.util.Client;
+import epf.config.client.Config;
 import epf.naming.Naming;
 import epf.util.MapUtil;
 import epf.util.logging.LogManager;

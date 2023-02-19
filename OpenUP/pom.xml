@@ -836,6 +836,7 @@
 		<module>EPF-mail-client</module>
 		<module>EPF-file-client</module>
 		<module>EPF-cache-client</module>
+		<module>EPF-config-client</module>
 		<module>EPF-mail</module>
 		<module>EPF-image</module>
 		<module>EPF-rules</module>
