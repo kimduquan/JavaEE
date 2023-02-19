@@ -1007,4 +1007,9 @@ public interface Naming {
 	    	String LOGIN = "/login";
 	    }
 	}
+	
+	/**
+	 * 
+	 */
+	String WORKFLOW = "workflow";
 }

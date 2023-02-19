@@ -42,6 +42,11 @@
     
     <dependency>
     	<groupId>openup</groupId>
+    	<artifactId>EPF-naming</artifactId>
+    	<version>1.0.0</version>
+    </dependency>
+    <dependency>
+    	<groupId>openup</groupId>
     	<artifactId>EPF-api</artifactId>
     	<version>1.0.0</version>
     </dependency>

@@ -105,7 +105,7 @@ public class Workflow {
 	 * @param workflowDataInput
 	 * @throws Exception
 	 */
-	public void start(@Valid final WorkflowDefinition workflowDefinition, final WorkflowData workflowData) throws Exception {
+	public void start(final WorkflowDefinition workflowDefinition, final WorkflowData workflowData) throws Exception {
 		State startState = null;
 		if(workflowDefinition.getStart() != null) {
 			if(workflowDefinition.getStart() instanceof String) {
