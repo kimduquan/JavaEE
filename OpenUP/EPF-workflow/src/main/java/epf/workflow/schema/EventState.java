@@ -1,5 +1,7 @@
 package epf.workflow.schema;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * @author PC
  *
@@ -14,6 +16,7 @@ public class EventState extends State {
 	/**
 	 * 
 	 */
+	@NotNull
 	private OnEventsDefinition[] onEvents;
 	
 	/**

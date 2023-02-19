@@ -1,5 +1,7 @@
 package epf.workflow.schema;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * @author PC
  *
@@ -9,10 +11,12 @@ public class CallbackState extends State {
 	/**
 	 * 
 	 */
+	@NotNull
 	private ActionDefinition action;
 	/**
 	 * 
 	 */
+	@NotNull
 	private String eventRef;
 	/**
 	 * 

@@ -1,5 +1,7 @@
 package epf.workflow.schema;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * @author PC
  *
@@ -9,6 +11,7 @@ public class ParallelState extends State {
 	/**
 	 * 
 	 */
+	@NotNull
 	private ParallelStateBranch[] branches;
 	/**
 	 * 

@@ -1,5 +1,7 @@
 package epf.workflow.schema;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * @author PC
  *
@@ -29,6 +31,7 @@ public class SwitchState extends State {
 	/**
 	 * 
 	 */
+	@NotNull
 	private Object defaultCondition;
 	/**
 	 * 

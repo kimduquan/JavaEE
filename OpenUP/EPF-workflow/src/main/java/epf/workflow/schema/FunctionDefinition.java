@@ -1,19 +1,38 @@
 package epf.workflow.schema;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * @author PC
  *
  */
 public class FunctionDefinition {
 
+	/**
+	 * 
+	 */
+	@NotNull
 	private String name;
 	
+	/**
+	 * 
+	 */
+	@NotNull
 	private String operation;
 	
+	/**
+	 * 
+	 */
 	private FunctionType type = FunctionType.rest;
 	
+	/**
+	 * 
+	 */
 	private String authRef;
 	
+	/**
+	 * 
+	 */
 	private Object metadata;
 
 	public String getName() {

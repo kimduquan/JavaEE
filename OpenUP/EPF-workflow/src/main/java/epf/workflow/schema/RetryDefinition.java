@@ -1,5 +1,7 @@
 package epf.workflow.schema;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * @author PC
  *
@@ -9,6 +11,7 @@ public class RetryDefinition {
 	/**
 	 * 
 	 */
+	@NotNull
 	private String name;
 	/**
 	 * 
@@ -17,6 +20,7 @@ public class RetryDefinition {
 	/**
 	 * 
 	 */
+	@NotNull
 	private Object maxAttempts;
 	/**
 	 * 

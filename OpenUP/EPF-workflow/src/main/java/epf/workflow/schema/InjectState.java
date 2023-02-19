@@ -1,6 +1,7 @@
 package epf.workflow.schema;
 
 import javax.json.JsonValue;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author PC
@@ -11,6 +12,7 @@ public class InjectState extends State {
 	/**
 	 * 
 	 */
+	@NotNull
 	private JsonValue data;
 	/**
 	 * 

@@ -1,5 +1,7 @@
 package epf.workflow.schema;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * @author PC
  *
@@ -9,11 +11,13 @@ public class State {
 	/**
 	 * 
 	 */
+	@NotNull
 	private String name;
 	
 	/**
 	 * 
 	 */
+	@NotNull
 	private Type type;
 
 	public String getName() {

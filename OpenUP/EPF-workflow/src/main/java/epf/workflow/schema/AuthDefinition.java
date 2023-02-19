@@ -1,5 +1,7 @@
 package epf.workflow.schema;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * @author PC
  *
@@ -9,6 +11,7 @@ public class AuthDefinition {
 	/**
 	 * 
 	 */
+	@NotNull
 	private String name;
 	
 	/**
@@ -19,6 +22,7 @@ public class AuthDefinition {
 	/**
 	 * 
 	 */
+	@NotNull
 	private PropertiesDefinition properties;
 
 	public String getName() {

@@ -1,5 +1,7 @@
 package epf.workflow.schema;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * @author PC
  *
@@ -59,6 +61,7 @@ public class WorkflowDefinition {
 	/**
 	 * 
 	 */
+	@NotNull
 	private String specVersion;
 	
 	/**
