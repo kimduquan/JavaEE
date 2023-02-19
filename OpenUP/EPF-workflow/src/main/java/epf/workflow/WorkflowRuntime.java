@@ -824,12 +824,10 @@ public class WorkflowRuntime {
 	}
 	
 	private void produceEvents(final WorkflowDefinition workflowDefinition, final ProducedEventDefinition[] produceEvents) throws Exception {
-		if(!(workflowDefinition.getEvents() instanceof String)) {
-			final Map<String, EventDefinition> eventDefinitions = new HashMap<>();
-			MapUtil.putAll(eventDefinitions, (EventDefinition[])workflowDefinition.getEvents(), EventDefinition::getName);
-			for(ProducedEventDefinition producedEventDefinition : produceEvents) {
-				produceEvent(eventDefinitions, producedEventDefinition);
-			}
+		final Map<String, EventDefinition> eventDefinitions = new HashMap<>();
+		MapUtil.putAll(eventDefinitions, workflowDefinition.getEvents(), EventDefinition::getName);
+		for(ProducedEventDefinition producedEventDefinition : produceEvents) {
+			produceEvent(eventDefinitions, producedEventDefinition);
 		}
 	}
 	
@@ -916,18 +914,16 @@ public class WorkflowRuntime {
 	}
 	
 	private List<WorkflowError> getErrors(final WorkflowDefinition workflowDefinition, final ErrorDefinition errorDefinition) {
-		if(!(workflowDefinition.getErrors() instanceof String)) {
-			final WorkflowError[] errors = (WorkflowError[]) workflowDefinition.getErrors();
-			if(errorDefinition.getErrorRefs() != null) {
-				final Map<String, WorkflowError> map = new HashMap<>();
-				MapUtil.putAll(map, errors, WorkflowError::getName);
-				return MapUtil.getAll(map, errorDefinition.getErrorRefs());
-			}
-			else if(errorDefinition.getErrorRef() != null) {
-				for(WorkflowError error : errors) {
-					if(error.getName().equals(errorDefinition.getErrorRef())) {
-						return Arrays.asList(error);
-					}
+		final WorkflowError[] errors = workflowDefinition.getErrors();
+		if(errorDefinition.getErrorRefs() != null) {
+			final Map<String, WorkflowError> map = new HashMap<>();
+			MapUtil.putAll(map, errors, WorkflowError::getName);
+			return MapUtil.getAll(map, errorDefinition.getErrorRefs());
+		}
+		else if(errorDefinition.getErrorRef() != null) {
+			for(WorkflowError error : errors) {
+				if(error.getName().equals(errorDefinition.getErrorRef())) {
+					return Arrays.asList(error);
 				}
 			}
 		}

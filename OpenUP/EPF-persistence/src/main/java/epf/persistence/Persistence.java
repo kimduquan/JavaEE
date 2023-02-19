@@ -123,7 +123,7 @@ public class Persistence implements epf.persistence.client.Entities {
     	}
     	Object entity = null;
     	try {
-        	entity = JsonUtil.fromJson(entityType.get().getJavaType(), body);
+        	entity = JsonUtil.fromJson(body, entityType.get().getJavaType());
     	}
     	catch(Exception ex) {
     		return Response.status(Response.Status.BAD_REQUEST).build();
@@ -189,7 +189,7 @@ public class Persistence implements epf.persistence.client.Entities {
     	}
     	Object entity = null;
     	try {
-        	entity = JsonUtil.fromJson(entityType.get().getJavaType(), body);
+        	entity = JsonUtil.fromJson(body, entityType.get().getJavaType());
     	}
     	catch(Exception ex) {
     		return Response.status(Response.Status.BAD_REQUEST).build();

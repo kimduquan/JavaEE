@@ -1,6 +1,8 @@
 package epf.workflow.schema;
 
+import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.validation.constraints.NotNull;
+import epf.workflow.schema.adapter.StartDefinitionAdapter;
 import jakarta.nosql.mapping.Column;
 import jakarta.nosql.mapping.Entity;
 import jakarta.nosql.mapping.Id;
@@ -70,6 +72,7 @@ public class WorkflowDefinition {
 	 * 
 	 */
 	@Column
+	@JsonbTypeAdapter(value = StartDefinitionAdapter.class)
 	private Object start;
 	
 	/**
@@ -89,13 +92,13 @@ public class WorkflowDefinition {
 	 * 
 	 */
 	@Column
-	private Object timeouts;
+	private WorkflowTimeoutDefinition timeouts;
 	
 	/**
 	 * 
 	 */
 	@Column
-	private Object errors;
+	private WorkflowError[] errors;
 	
 	/**
 	 * 
@@ -107,19 +110,19 @@ public class WorkflowDefinition {
 	 * 
 	 */
 	@Column
-	private Object auth;
+	private AuthDefinition[] auth;
 	
 	/**
 	 * 
 	 */
 	@Column
-	private Object events;
+	private EventDefinition[] events;
 	
 	/**
 	 * 
 	 */
 	@Column
-	private Object functions;
+	private FunctionDefinition[] functions;
 	
 	/**
 	 * 
@@ -131,7 +134,7 @@ public class WorkflowDefinition {
 	 * 
 	 */
 	@Column
-	private Object retries;
+	private RetryDefinition[] retries;
 	
 	/**
 	 * 
@@ -247,19 +250,19 @@ public class WorkflowDefinition {
 		this.expressionLang = expressionLang;
 	}
 
-	public Object getTimeouts() {
+	public WorkflowTimeoutDefinition getTimeouts() {
 		return timeouts;
 	}
 
-	public void setTimeouts(Object timeouts) {
+	public void setTimeouts(WorkflowTimeoutDefinition timeouts) {
 		this.timeouts = timeouts;
 	}
 
-	public Object getErrors() {
+	public WorkflowError[] getErrors() {
 		return errors;
 	}
 
-	public void setErrors(Object errors) {
+	public void setErrors(WorkflowError[] errors) {
 		this.errors = errors;
 	}
 
@@ -271,27 +274,27 @@ public class WorkflowDefinition {
 		this.keepActive = keepActive;
 	}
 
-	public Object getAuth() {
+	public AuthDefinition[] getAuth() {
 		return auth;
 	}
 
-	public void setAuth(Object auth) {
+	public void setAuth(AuthDefinition[] auth) {
 		this.auth = auth;
 	}
 
-	public Object getEvents() {
+	public EventDefinition[] getEvents() {
 		return events;
 	}
 
-	public void setEvents(Object events) {
+	public void setEvents(EventDefinition[] events) {
 		this.events = events;
 	}
 
-	public Object getFunctions() {
+	public FunctionDefinition[] getFunctions() {
 		return functions;
 	}
 
-	public void setFunctions(Object functions) {
+	public void setFunctions(FunctionDefinition[] functions) {
 		this.functions = functions;
 	}
 
@@ -303,11 +306,11 @@ public class WorkflowDefinition {
 		this.autoRetries = autoRetries;
 	}
 
-	public Object getRetries() {
+	public RetryDefinition[] getRetries() {
 		return retries;
 	}
 
-	public void setRetries(Object retries) {
+	public void setRetries(RetryDefinition[] retries) {
 		this.retries = retries;
 	}
 

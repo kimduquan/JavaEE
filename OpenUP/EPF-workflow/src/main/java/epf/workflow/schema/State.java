@@ -1,6 +1,8 @@
 package epf.workflow.schema;
 
+import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.validation.constraints.NotNull;
+import epf.workflow.schema.adapter.StateAdapter;
 import jakarta.nosql.mapping.Column;
 import jakarta.nosql.mapping.MappedSuperclass;
 
@@ -9,6 +11,7 @@ import jakarta.nosql.mapping.MappedSuperclass;
  *
  */
 @MappedSuperclass
+@JsonbTypeAdapter(value = StateAdapter.class)
 public class State {
 
 	/**

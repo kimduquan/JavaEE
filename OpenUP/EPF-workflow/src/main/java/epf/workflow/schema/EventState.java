@@ -1,6 +1,9 @@
 package epf.workflow.schema;
 
+import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.validation.constraints.NotNull;
+import epf.workflow.schema.adapter.EndDefinitionAdapter;
+import epf.workflow.schema.adapter.TransitionDefinitionAdapter;
 import jakarta.nosql.mapping.Column;
 import jakarta.nosql.mapping.Embeddable;
 
@@ -28,7 +31,7 @@ public class EventState extends State {
 	 * 
 	 */
 	@Column
-	private Object timeouts;
+	private WorkflowTimeoutDefinition timeouts;
 	
 	/**
 	 * 
@@ -40,6 +43,7 @@ public class EventState extends State {
 	 * 
 	 */
 	@Column
+	@JsonbTypeAdapter(value = TransitionDefinitionAdapter.class)
 	private Object transition;
 	
 	/**
@@ -52,6 +56,7 @@ public class EventState extends State {
 	 * 
 	 */
 	@Column
+	@JsonbTypeAdapter(value = EndDefinitionAdapter.class)
 	private Object end;
 	
 	/**
@@ -82,11 +87,11 @@ public class EventState extends State {
 		this.onEvents = onEvents;
 	}
 
-	public Object getTimeouts() {
+	public WorkflowTimeoutDefinition getTimeouts() {
 		return timeouts;
 	}
 
-	public void setTimeouts(Object timeouts) {
+	public void setTimeouts(WorkflowTimeoutDefinition timeouts) {
 		this.timeouts = timeouts;
 	}
 

@@ -1,7 +1,11 @@
 package epf.workflow.schema;
 
-import javax.json.JsonValue;
+import javax.json.JsonObject;
+import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.validation.constraints.NotNull;
+
+import epf.workflow.schema.adapter.EndDefinitionAdapter;
+import epf.workflow.schema.adapter.TransitionDefinitionAdapter;
 import jakarta.nosql.mapping.Column;
 import jakarta.nosql.mapping.Embeddable;
 
@@ -17,7 +21,7 @@ public class InjectState extends State {
 	 */
 	@NotNull
 	@Column
-	private JsonValue data;
+	private JsonObject data;
 	/**
 	 * 
 	 */
@@ -27,6 +31,7 @@ public class InjectState extends State {
 	 * 
 	 */
 	@Column
+	@JsonbTypeAdapter(value = TransitionDefinitionAdapter.class)
 	private Object transition;
 	/**
 	 * 
@@ -47,12 +52,13 @@ public class InjectState extends State {
 	 * 
 	 */
 	@Column
+	@JsonbTypeAdapter(value = EndDefinitionAdapter.class)
 	private Object end;
 	
-	public JsonValue getData() {
+	public JsonObject getData() {
 		return data;
 	}
-	public void setData(JsonValue data) {
+	public void setData(JsonObject data) {
 		this.data = data;
 	}
 	public StateDataFilters getStateDataFilter() {

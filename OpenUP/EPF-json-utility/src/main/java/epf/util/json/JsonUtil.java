@@ -216,12 +216,25 @@ public interface JsonUtil {
 	
 	/**
 	 * @param <T>
-	 * @param cls
 	 * @param input
+	 * @param cls
 	 * @return
 	 * @throws Exception
 	 */
-	static <T> T fromJson(final Class<T> cls, final InputStream input) throws Exception {
+	static <T> T fromJson(final InputStream input, final Class<T> cls) throws Exception {
+		try(Jsonb jsonb = JsonbBuilder.create()){
+			return jsonb.fromJson(input, cls);
+		}
+	}
+	
+	/**
+	 * @param <T>
+	 * @param input
+	 * @param cls
+	 * @return
+	 * @throws Exception
+	 */
+	static <T> T fromJson(final String input, final Class<T> cls) throws Exception {
 		try(Jsonb jsonb = JsonbBuilder.create()){
 			return jsonb.fromJson(input, cls);
 		}

@@ -1,7 +1,8 @@
 package epf.workflow.schema;
 
+import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.validation.constraints.NotNull;
-
+import epf.workflow.schema.adapter.TransitionOrEndAdapter;
 import jakarta.nosql.mapping.Column;
 import jakarta.nosql.mapping.Embeddable;
 
@@ -36,12 +37,13 @@ public class SwitchState extends State {
 	 * 
 	 */
 	@Column
-	private Object timeouts;
+	private WorkflowTimeoutDefinition timeouts;
 	/**
 	 * 
 	 */
 	@NotNull
 	@Column
+	@JsonbTypeAdapter(value = TransitionOrEndAdapter.class)
 	private Object defaultCondition;
 	/**
 	 * 
@@ -83,10 +85,10 @@ public class SwitchState extends State {
 	public void setOnErrors(ErrorDefinition[] onErrors) {
 		this.onErrors = onErrors;
 	}
-	public Object getTimeouts() {
+	public WorkflowTimeoutDefinition getTimeouts() {
 		return timeouts;
 	}
-	public void setTimeouts(Object timeouts) {
+	public void setTimeouts(WorkflowTimeoutDefinition timeouts) {
 		this.timeouts = timeouts;
 	}
 	public Object getDefaultCondition() {

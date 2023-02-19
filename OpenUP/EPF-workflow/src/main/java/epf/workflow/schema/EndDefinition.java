@@ -1,5 +1,7 @@
 package epf.workflow.schema;
 
+import javax.json.bind.annotation.JsonbTypeAdapter;
+import epf.workflow.schema.adapter.ContinueAsAdapter;
 import jakarta.nosql.mapping.Column;
 import jakarta.nosql.mapping.Embeddable;
 
@@ -28,6 +30,8 @@ public class EndDefinition {
 	/**
 	 * 
 	 */
+	@Column
+	@JsonbTypeAdapter(value = ContinueAsAdapter.class)
 	private Object continueAs;
 	
 	public boolean isTerminate() {

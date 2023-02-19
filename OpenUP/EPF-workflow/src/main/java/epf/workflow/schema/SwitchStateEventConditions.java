@@ -21,7 +21,7 @@ public class SwitchStateEventConditions extends SwitchStateConditions {
 	 * 
 	 */
 	@Column
-	private Object eventDataFilter;
+	private EventDataFilters eventDataFilter;
 	
 	public String getEventRef() {
 		return eventRef;
@@ -29,10 +29,10 @@ public class SwitchStateEventConditions extends SwitchStateConditions {
 	public void setEventRef(String eventRef) {
 		this.eventRef = eventRef;
 	}
-	public Object getEventDataFilter() {
+	public EventDataFilters getEventDataFilter() {
 		return eventDataFilter;
 	}
-	public void setEventDataFilter(Object eventDataFilter) {
+	public void setEventDataFilter(EventDataFilters eventDataFilter) {
 		this.eventDataFilter = eventDataFilter;
 	}
 }

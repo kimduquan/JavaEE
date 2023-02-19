@@ -1,6 +1,9 @@
 package epf.workflow.schema;
 
+import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.validation.constraints.NotNull;
+import epf.workflow.schema.adapter.EndDefinitionAdapter;
+import epf.workflow.schema.adapter.TransitionDefinitionAdapter;
 import jakarta.nosql.mapping.Column;
 import jakarta.nosql.mapping.Embeddable;
 
@@ -21,11 +24,13 @@ public class SleepState extends State {
 	 * 
 	 */
 	@Column
+	@JsonbTypeAdapter(value = TransitionDefinitionAdapter.class)
 	private Object transition;
 	/**
 	 * 
 	 */
 	@Column
+	@JsonbTypeAdapter(value = EndDefinitionAdapter.class)
 	private Object end;
 	
 	public String getDuration() {

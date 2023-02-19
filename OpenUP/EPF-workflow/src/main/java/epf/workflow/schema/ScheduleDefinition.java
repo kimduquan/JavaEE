@@ -20,7 +20,7 @@ public class ScheduleDefinition {
 	 * 
 	 */
 	@Column
-	private Object cron;
+	private CronDefinition cron;
 	
 	/**
 	 * 
@@ -36,11 +36,11 @@ public class ScheduleDefinition {
 		this.interval = interval;
 	}
 
-	public Object getCron() {
+	public CronDefinition getCron() {
 		return cron;
 	}
 
-	public void setCron(Object cron) {
+	public void setCron(CronDefinition cron) {
 		this.cron = cron;
 	}
 

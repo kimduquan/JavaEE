@@ -1,6 +1,8 @@
 package epf.workflow.schema;
 
+import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.validation.constraints.NotNull;
+import epf.workflow.schema.adapter.ScheduleDefinitionAdapter;
 import jakarta.nosql.mapping.Column;
 import jakarta.nosql.mapping.Embeddable;
 
@@ -22,6 +24,7 @@ public class StartDefinition {
 	 */
 	@NotNull
 	@Column
+	@JsonbTypeAdapter(value = ScheduleDefinitionAdapter.class)
 	private Object schedule;
 
 	public String getStateName() {

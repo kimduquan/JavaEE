@@ -1,5 +1,8 @@
 package epf.workflow.schema;
 
+import javax.json.bind.annotation.JsonbTypeAdapter;
+import epf.workflow.schema.adapter.FunctionRefDefinitionAdapter;
+import epf.workflow.schema.adapter.SubFlowRefDefinitionAdapter;
 import jakarta.nosql.mapping.Column;
 import jakarta.nosql.mapping.Embeddable;
 
@@ -20,6 +23,7 @@ public class ActionDefinition {
 	 * 
 	 */
 	@Column
+	@JsonbTypeAdapter(value = FunctionRefDefinitionAdapter.class)
 	private Object functionRef;
 	
 	/**
@@ -32,6 +36,7 @@ public class ActionDefinition {
 	 * 
 	 */
 	@Column
+	@JsonbTypeAdapter(value = SubFlowRefDefinitionAdapter.class)
 	private Object subFlowRef;
 	
 	/**

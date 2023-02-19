@@ -44,7 +44,7 @@ public class Net implements epf.net.client.Net {
 
 	@Override
 	public String shortenUrl(final InputStream body) throws Exception {
-		final URL url = JsonUtil.fromJson(URL.class, body);
+		final URL url = JsonUtil.fromJson(body, URL.class);
 		return StringUtil.toShortString(url.getId());
 	}
 }

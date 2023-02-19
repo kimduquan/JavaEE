@@ -40,7 +40,7 @@ public class EventDefinition {
 	 * 
 	 */
 	@Column
-	private Object[] correlation;
+	private CorrelationDefinition[] correlation;
 	
 	/**
 	 * 
@@ -86,11 +86,11 @@ public class EventDefinition {
 		this.kind = kind;
 	}
 
-	public Object[] getCorrelation() {
+	public CorrelationDefinition[] getCorrelation() {
 		return correlation;
 	}
 
-	public void setCorrelation(Object[] correlation) {
+	public void setCorrelation(CorrelationDefinition[] correlation) {
 		this.correlation = correlation;
 	}
 
