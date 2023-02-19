@@ -777,7 +777,6 @@
 		<module>EPF-webapp-internal</module>
 		<module>EPF-function</module>
 		<module>EPF-schedule</module>
-		<module>EPF-shell-schedule</module>
 		<module>EPF-batch</module>
 		<module>EPF-script</module>
 		<module>EPF-config</module>
