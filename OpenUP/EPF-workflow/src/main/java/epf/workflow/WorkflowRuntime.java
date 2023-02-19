@@ -51,8 +51,6 @@ import epf.workflow.schema.Type;
 import epf.workflow.schema.WorkflowDefinition;
 import epf.workflow.schema.WorkflowError;
 import epf.workflow.util.WorkflowUtil;
-import jakarta.nosql.mapping.Database;
-import jakarta.nosql.mapping.DatabaseType;
 import jakarta.nosql.mapping.document.DocumentTemplate;
 import epf.workflow.schema.State;
 import epf.workflow.schema.StateDataFilters;
@@ -106,7 +104,6 @@ public class WorkflowRuntime {
 	 * 
 	 */
 	@Inject
-	@Database(DatabaseType.DOCUMENT)
 	DocumentTemplate document;
 
 	/**

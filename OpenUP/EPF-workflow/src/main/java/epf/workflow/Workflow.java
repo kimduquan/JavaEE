@@ -10,8 +10,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import epf.naming.Naming;
 import epf.workflow.schema.WorkflowDefinition;
-import jakarta.nosql.mapping.Database;
-import jakarta.nosql.mapping.DatabaseType;
 import jakarta.nosql.mapping.document.DocumentTemplate;
 
 /**
@@ -28,7 +26,6 @@ public class Workflow {
 	 * 
 	 */
 	@Inject
-	@Database(DatabaseType.DOCUMENT)
 	DocumentTemplate document;
 
 	/**

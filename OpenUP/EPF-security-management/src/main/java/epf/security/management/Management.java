@@ -105,7 +105,7 @@ public class Management implements epf.security.client.Management {
 		newToken.setAudience(audience);
 		newToken.setClaims(claims);
 		newToken.setIssuedAtTime(Instant.now().getEpochSecond());
-		newToken.setExpirationTime(newToken.getIssuedAtTime() + Duration.ofDays(3).toSeconds());
+		newToken.setExpirationTime(newToken.getIssuedAtTime() + Duration.ofDays(3).getSeconds());
 		newToken.setGroups(groups);
 		newToken.setIssuer(Naming.EPF);
 		newToken.setName(email);
@@ -133,7 +133,7 @@ public class Management implements epf.security.client.Management {
 			newToken.setAudience(audience);
 			newToken.setClaims(claims);
 			newToken.setIssuedAtTime(Instant.now().getEpochSecond());
-			newToken.setExpirationTime(newToken.getIssuedAtTime() + Duration.ofDays(3).toSeconds());
+			newToken.setExpirationTime(newToken.getIssuedAtTime() + Duration.ofDays(3).getSeconds());
 			newToken.setGroups(groups);
 			newToken.setIssuer(Naming.EPF);
 			newToken.setName(email);
