@@ -10,6 +10,9 @@
   </parent>
   <artifactId>EPF-workflow</artifactId>
   <name>Eclipse Process Framework Workflow</name>
+  <properties>
+    <maven.compiler.release>11</maven.compiler.release>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -39,6 +42,19 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-smallrye-context-propagation</artifactId>
     </dependency>
+    
+    <!-- https://mvnrepository.com/artifact/jakarta.nosql.mapping/mapping-document -->
+	<dependency>
+	    <groupId>org.eclipse.jnosql.mapping</groupId>
+        <artifactId>jnosql-mapping-document</artifactId>
+	    <version>1.0.0-b5</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.communication/jnosql-mongodb-driver -->
+	<dependency>
+	    <groupId>org.eclipse.jnosql.communication</groupId>
+        <artifactId>jnosql-mongodb-driver</artifactId>
+	    <version>1.0.0-b5</version>
+	</dependency>
     
     <dependency>
     	<groupId>openup</groupId>

@@ -1,56 +1,69 @@
 package epf.workflow;
 
 import java.net.URI;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Entity;
+import jakarta.nosql.mapping.Id;
 
 /**
  * @author PC
  *
  */
+@Entity
 public class Event {
 
 	/**
 	 * 
 	 */
+	@Id
 	private String id;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private URI source;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private String specVersion;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private String type;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private String dataContentType;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private URI dataSchema;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private String subject;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private String time;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Object data;
 
 	public String getId() {

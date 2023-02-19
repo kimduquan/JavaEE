@@ -1,18 +1,24 @@
 package epf.workflow.schema;
 
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
+
 /**
  * @author PC
  *
  */
+@Embeddable
 public class Sleep {
 
 	/**
 	 * 
 	 */
+	@Column
 	private String before;
 	/**
 	 * 
 	 */
+	@Column
 	private String after;
 	
 	public String getBefore() {

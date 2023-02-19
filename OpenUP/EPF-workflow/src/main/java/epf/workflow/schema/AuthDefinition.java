@@ -1,28 +1,34 @@
 package epf.workflow.schema;
 
 import javax.validation.constraints.NotNull;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
  *
  */
+@Embeddable
 public class AuthDefinition {
 
 	/**
 	 * 
 	 */
 	@NotNull
+	@Column
 	private String name;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Scheme scheme = Scheme.basic;
 	
 	/**
 	 * 
 	 */
 	@NotNull
+	@Column
 	private PropertiesDefinition properties;
 
 	public String getName() {

@@ -1,28 +1,36 @@
 package epf.workflow.schema;
 
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
+
 /**
  * @author PC
  *
  */
+@Embeddable
 public class ErrorDefinition {
 
 	/**
 	 * 
 	 */
+	@Column
 	private String errorRef;
 	/**
 	 * 
 	 */
+	@Column
 	private String[] errorRefs;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Object transition;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Object end;
 
 	public String getErrorRef() {

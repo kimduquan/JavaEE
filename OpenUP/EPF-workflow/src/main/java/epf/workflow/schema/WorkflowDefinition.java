@@ -1,127 +1,154 @@
 package epf.workflow.schema;
 
 import javax.validation.constraints.NotNull;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Entity;
+import jakarta.nosql.mapping.Id;
 
 /**
  * @author PC
  *
  */
+@Entity
 public class WorkflowDefinition {
 
 	/**
 	 * 
 	 */
+	@Id
 	private String id;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private String key;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private String name;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private String description;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private String version;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Object[] annotations;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Object dataInputSchema;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Object constants;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Object[] secrets;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Object start;
 	
 	/**
 	 * 
 	 */
 	@NotNull
+	@Column
 	private String specVersion;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private String expressionLang = "jq";
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Object timeouts;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Object errors;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private boolean keepActive;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Object auth;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Object events;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Object functions;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private boolean autoRetries = false;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Object retries;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private State[] states;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Object[] extensions;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Object metadata;
 
 	public String getId() {

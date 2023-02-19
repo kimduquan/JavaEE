@@ -1,57 +1,71 @@
 package epf.workflow.schema;
 
 import javax.validation.constraints.NotNull;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
  *
  */
+@Embeddable
 public class ParallelState extends State {
 
 	/**
 	 * 
 	 */
 	@NotNull
+	@Column
 	private ParallelStateBranch[] branches;
 	/**
 	 * 
 	 */
+	@Column
 	private CompletionType completionType = CompletionType.allOf;
 	/**
 	 * 
 	 */
+	@Column
 	private Object numCompleted;
 	/**
 	 * 
 	 */
+	@Column
 	private Object timeouts;
 	/**
 	 * 
 	 */
+	@Column
 	private StateDataFilters stateDataFilter;
 	/**
 	 * 
 	 */
+	@Column
 	private ErrorDefinition[] onErrors;
 	/**
 	 * 
 	 */
+	@Column
 	private Object transition;
 	/**
 	 * 
 	 */
+	@Column
 	private String compensatedBy;
 	/**
 	 * 
 	 */
+	@Column
 	private boolean usedForCompensation;
 	/**
 	 * 
 	 */
+	@Column
 	private Object metadata;
 	/**
 	 * 
 	 */
+	@Column
 	private Object end;
 	
 	public ParallelStateBranch[] getBranches() {

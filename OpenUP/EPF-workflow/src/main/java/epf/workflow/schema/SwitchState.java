@@ -2,48 +2,61 @@ package epf.workflow.schema;
 
 import javax.validation.constraints.NotNull;
 
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
+
 /**
  * @author PC
  *
  */
+@Embeddable
 public class SwitchState extends State {
 
 	/**
 	 * 
 	 */
+	@Column
 	private SwitchStateDataConditions[] dataConditions;
 	/**
 	 * 
 	 */
+	@Column
 	private SwitchStateEventConditions[] eventConditions;
 	/**
 	 * 
 	 */
+	@Column
 	private StateDataFilters stateDataFilter;
 	/**
 	 * 
 	 */
+	@Column
 	private ErrorDefinition[] onErrors;
 	/**
 	 * 
 	 */
+	@Column
 	private Object timeouts;
 	/**
 	 * 
 	 */
 	@NotNull
+	@Column
 	private Object defaultCondition;
 	/**
 	 * 
 	 */
+	@Column
 	private String compensatedBy;
 	/**
 	 * 
 	 */
+	@Column
 	private boolean usedForCompensation = false;
 	/**
 	 * 
 	 */
+	@Column
 	private Object metadata;
 	
 	public SwitchStateDataConditions[] getDataConditions() {

@@ -1,25 +1,31 @@
 package epf.workflow.schema;
 
 import javax.validation.constraints.NotNull;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
  *
  */
+@Embeddable
 public class TransitionDefinition {
 
 	/**
 	 * 
 	 */
 	@NotNull
+	@Column
 	private String nextState;
 	/**
 	 * 
 	 */
+	@Column
 	private boolean compensate = false;
 	/**
 	 * 
 	 */
+	@Column
 	private ProducedEventDefinition[] produceEvents;
 	
 	public String getNextState() {

@@ -1,57 +1,69 @@
 package epf.workflow.schema;
 
 import javax.validation.constraints.NotNull;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
  *
  */
+@Embeddable
 public class EventState extends State {
 
 	/**
 	 * 
 	 */
+	@Column
 	private boolean exclusive = true;
 	
 	/**
 	 * 
 	 */
 	@NotNull
+	@Column
 	private OnEventsDefinition[] onEvents;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Object timeouts;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private StateDataFilters stateDataFilter;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Object transition;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private ErrorDefinition[] onErrors;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Object end;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private String compensatedBy;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Object metadata;
 
 	public boolean isExclusive() {

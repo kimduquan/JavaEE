@@ -1,22 +1,29 @@
 package epf.workflow.schema;
 
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
+
 /**
  * @author PC
  *
  */
+@Embeddable
 public class EventDataFilters {
 
 	/**
 	 * 
 	 */
+	@Column
 	private boolean useData = true;
 	/**
 	 * 
 	 */
+	@Column
 	private String data;
 	/**
 	 * 
 	 */
+	@Column
 	private String toStateData;
 	
 	public boolean isUseData() {

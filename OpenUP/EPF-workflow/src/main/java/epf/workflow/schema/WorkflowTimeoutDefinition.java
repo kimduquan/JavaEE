@@ -1,34 +1,43 @@
 package epf.workflow.schema;
 
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
+
 /**
  * @author PC
  *
  */
+@Embeddable
 public class WorkflowTimeoutDefinition {
 
 	/**
 	 * 
 	 */
+	@Column
 	private Object workflowExecTimeout;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private String stateExecTimeout;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private String actionExecTimeout;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private String branchExecTimeout;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private String eventTimeout;
 
 	public Object getWorkflowExecTimeout() {

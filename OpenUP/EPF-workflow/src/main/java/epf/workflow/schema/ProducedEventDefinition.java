@@ -1,25 +1,31 @@
 package epf.workflow.schema;
 
 import javax.validation.constraints.NotNull;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
  *
  */
+@Embeddable
 public class ProducedEventDefinition {
 
 	/**
 	 * 
 	 */
 	@NotNull
+	@Column
 	private String eventRef;
 	/**
 	 * 
 	 */
+	@Column
 	private Object data;
 	/**
 	 * 
 	 */
+	@Column
 	private Object contextAttributes;
 	
 	public String getEventRef() {

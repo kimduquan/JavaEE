@@ -2,57 +2,72 @@ package epf.workflow.schema;
 
 import javax.validation.constraints.NotNull;
 
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
+
 /**
  * @author PC
  *
  */
+@Embeddable
 public class CallbackState extends State {
 
 	/**
 	 * 
 	 */
 	@NotNull
+	@Column
 	private ActionDefinition action;
 	/**
 	 * 
 	 */
 	@NotNull
+	@Column
 	private String eventRef;
 	/**
 	 * 
 	 */
+	@Column
 	private Object timeouts;
 	/**
 	 * 
 	 */
+	@Column
 	private EventDataFilters eventDataFilter;
 	/**
 	 * 
 	 */
+	@Column
 	private StateDataFilters stateDataFilter;
 	/**
 	 * 
 	 */
+	@Column
 	private ErrorDefinition[] onErrors;
 	/**
 	 * 
 	 */
+	@Column
 	private Object transition;
 	/**
 	 * 
 	 */
+	@Column
 	private Object end;
 	/**
 	 * 
 	 */
+	@Column
 	private String compensatedBy;
 	/**
 	 * 
 	 */
+	@Column
 	private boolean usedForCompensation = false;
 	/**
 	 * 
 	 */
+	@Column
 	private Object metadata;
 	
 	public ActionDefinition getAction() {

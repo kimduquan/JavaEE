@@ -1,42 +1,52 @@
 package epf.workflow.schema;
 
 import javax.validation.constraints.NotNull;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
  *
  */
+@Embeddable
 public class RetryDefinition {
 
 	/**
 	 * 
 	 */
 	@NotNull
+	@Column
 	private String name;
 	/**
 	 * 
 	 */
+	@Column
 	private String delay;
 	/**
 	 * 
 	 */
 	@NotNull
+	@Column
 	private Object maxAttempts;
 	/**
 	 * 
 	 */
+	@Column
 	private String maxDelay;
 	/**
 	 * 
 	 */
+	@Column
 	private String increment;
 	/**
 	 * 
 	 */
+	@Column
 	private Object multiplier;
 	/**
 	 * 
 	 */
+	@Column
 	private Object jitter;
 	
 	public String getName() {

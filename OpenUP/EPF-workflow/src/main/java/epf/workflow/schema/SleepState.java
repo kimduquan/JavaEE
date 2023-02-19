@@ -1,25 +1,31 @@
 package epf.workflow.schema;
 
 import javax.validation.constraints.NotNull;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
  *
  */
+@Embeddable
 public class SleepState extends State {
 
 	/**
 	 * 
 	 */
 	@NotNull
+	@Column
 	private String duration;
 	/**
 	 * 
 	 */
+	@Column
 	private Object transition;
 	/**
 	 * 
 	 */
+	@Column
 	private Object end;
 	
 	public String getDuration() {

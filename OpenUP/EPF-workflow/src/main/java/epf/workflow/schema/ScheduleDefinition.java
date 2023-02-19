@@ -1,24 +1,31 @@
 package epf.workflow.schema;
 
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
+
 /**
  * @author PC
  *
  */
+@Embeddable
 public class ScheduleDefinition {
 
 	/**
 	 * 
 	 */
+	@Column
 	private String interval;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Object cron;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private String timezone;
 
 	public String getInterval() {

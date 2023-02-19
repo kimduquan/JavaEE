@@ -1,29 +1,37 @@
 package epf.workflow.schema;
 
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
+
 /**
  * @author PC
  *
  */
+@Embeddable
 public class ContinueAs {
 
 	/**
 	 * 
 	 */
+	@Column
 	private String workflowId;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private String version;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Object data;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Object workflowExecTimeout;
 
 	public String getWorkflowId() {

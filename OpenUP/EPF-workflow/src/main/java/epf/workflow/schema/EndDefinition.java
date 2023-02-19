@@ -1,22 +1,29 @@
 package epf.workflow.schema;
 
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
+
 /**
  * @author PC
  *
  */
+@Embeddable
 public class EndDefinition {
 
 	/**
 	 * 
 	 */
+	@Column
 	private boolean terminate;
 	/**
 	 * 
 	 */
+	@Column
 	private ProducedEventDefinition[] produceEvents;
 	/**
 	 * 
 	 */
+	@Column
 	private boolean compensate = false;
 	/**
 	 * 

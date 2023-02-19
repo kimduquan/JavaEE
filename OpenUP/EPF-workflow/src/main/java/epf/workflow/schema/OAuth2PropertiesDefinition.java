@@ -1,55 +1,71 @@
 package epf.workflow.schema;
 
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
+
 /**
  * @author PC
  *
  */
+@Embeddable
 public class OAuth2PropertiesDefinition extends PropertiesDefinition {
 
 	/**
 	 * 
 	 */
+	@Column
 	private String authority;
 	/**
 	 * 
 	 */
+	@Column
 	private GrantType grantType;
 	/**
 	 * 
 	 */
+	@Column
 	private String clientId;
 	/**
 	 * 
 	 */
+	@Column
 	private String clientSecret;
 	/**
 	 * 
 	 */
+	@Column
 	private String[] scopes;
 	/**
 	 * 
 	 */
+	@Column
 	private String username;
 	/**
 	 * 
 	 */
+	@Column
 	private String password;
 	/**
 	 * 
 	 */
+	@Column
 	private String[] audiences;
 	/**
 	 * 
 	 */
+	@Column
 	private String subjectToken;
 	/**
 	 * 
 	 */
+	@Column
 	private String requestedSubject;
 	/**
 	 * 
 	 */
+	@Column
 	private String requestedIssuer;
+	
 	public String getAuthority() {
 		return authority;
 	}

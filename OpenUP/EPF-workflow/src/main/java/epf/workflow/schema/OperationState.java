@@ -1,62 +1,75 @@
 package epf.workflow.schema;
 
 import javax.validation.constraints.NotNull;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
  *
  */
+@Embeddable
 public class OperationState extends State {
 
 	/**
 	 * 
 	 */
+	@Column
 	private Mode actionMode = Mode.sequential;
 	
 	/**
 	 * 
 	 */
 	@NotNull
+	@Column
 	private ActionDefinition[] actions;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Object timeouts;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private StateDataFilters stateDataFilter;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private ErrorDefinition[] onErrors;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Object transition;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private String compensatedBy;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private boolean usedForCompensation = false;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Object metadata;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Object end;
 
 	public Mode getActionMode() {

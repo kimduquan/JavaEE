@@ -1,59 +1,73 @@
 package epf.workflow.schema;
 
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
+
 /**
  * @author PC
  *
  */
+@Embeddable
 public class ActionDefinition {
 
 	/**
 	 * 
 	 */
+	@Column
 	private String name;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Object functionRef;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private EventRefDefinition eventRef;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Object subFlowRef;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private String retryRef;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private WorkflowError[] nonRetryableErrors;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private WorkflowError[] retryableErrors;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private ActionDataFilters actionDataFilter;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Sleep sleep;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private String condition;
 
 	public String getName() {

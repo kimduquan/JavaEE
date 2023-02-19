@@ -1,26 +1,32 @@
 package epf.workflow.schema;
 
 import javax.validation.constraints.NotNull;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
  *
  */
+@Embeddable
 public class ParallelStateBranch {
 
 	/**
 	 * 
 	 */
 	@NotNull
+	@Column
 	private String name;
 	/**
 	 * 
 	 */
 	@NotNull
+	@Column
 	private ActionDefinition[] actions;
 	/**
 	 * 
 	 */
+	@Column
 	private WorkflowTimeoutDefinition timeouts;
 	
 	public String getName() {

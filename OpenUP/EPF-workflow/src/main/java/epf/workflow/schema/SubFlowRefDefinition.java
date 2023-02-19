@@ -1,32 +1,39 @@
 package epf.workflow.schema;
 
 import javax.validation.constraints.NotNull;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
  *
  */
+@Embeddable
 public class SubFlowRefDefinition {
 
 	/**
 	 * 
 	 */
 	@NotNull
+	@Column
 	private String workflowId;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private String version;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Invoke invoke = Invoke.sync;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private OnParentComplete onParentComplete = OnParentComplete.Terminate;
 
 	public String getWorkflowId() {

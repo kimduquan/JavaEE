@@ -1,38 +1,46 @@
 package epf.workflow.schema;
 
 import javax.validation.constraints.NotNull;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
  *
  */
+@Embeddable
 public class FunctionDefinition {
 
 	/**
 	 * 
 	 */
 	@NotNull
+	@Column
 	private String name;
 	
 	/**
 	 * 
 	 */
 	@NotNull
+	@Column
 	private String operation;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private FunctionType type = FunctionType.rest;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private String authRef;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Object metadata;
 
 	public String getName() {

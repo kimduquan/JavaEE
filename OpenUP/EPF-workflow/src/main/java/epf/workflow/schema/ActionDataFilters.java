@@ -1,26 +1,34 @@
 package epf.workflow.schema;
 
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
+
 /**
  * @author PC
  *
  */
+@Embeddable
 public class ActionDataFilters {
 
 	/**
 	 * 
 	 */
+	@Column
 	private String fromStateData;
 	/**
 	 * 
 	 */
+	@Column
 	private boolean useResults = true;
 	/**
 	 * 
 	 */
+	@Column
 	private String results;
 	/**
 	 * 
 	 */
+	@Column
 	private String toStateData;
 	
 	public String getFromStateData() {

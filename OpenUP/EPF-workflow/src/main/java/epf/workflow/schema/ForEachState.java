@@ -1,69 +1,86 @@
 package epf.workflow.schema;
 
 import javax.validation.constraints.NotNull;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
  *
  */
+@Embeddable
 public class ForEachState extends State {
 
 	/**
 	 * 
 	 */
 	@NotNull
+	@Column
 	private String inputCollection;
 	/**
 	 * 
 	 */
+	@Column
 	private String outputCollection;
 	/**
 	 * 
 	 */
+	@Column
 	private String iterationParam;
 	/**
 	 * 
 	 */
+	@Column
 	private Object batchSize;
 	/**
 	 * 
 	 */
+	@Column
 	private Mode mode = Mode.parallel;
 	/**
 	 * 
 	 */
+	@Column
 	private ActionDefinition[] actions;
 	/**
 	 * 
 	 */
+	@Column
 	private Object timeouts;
 	/**
 	 * 
 	 */
+	@Column
 	private StateDataFilters stateDataFilter;
 	/**
 	 * 
 	 */
+	@Column
 	private ErrorDefinition[] onErrors;
 	/**
 	 * 
 	 */
+	@Column
 	private Object transition;
 	/**
 	 * 
 	 */
+	@Column
 	private String compensatedBy;
 	/**
 	 * 
 	 */
+	@Column
 	private boolean usedForCompensation	= false;
 	/**
 	 * 
 	 */
+	@Column
 	private Object metadata;
 	/**
 	 * 
 	 */
+	@Column
 	private Object end;
 	
 	public String getInputCollection() {

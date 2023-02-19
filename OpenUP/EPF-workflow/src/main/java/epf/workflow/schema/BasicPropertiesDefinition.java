@@ -1,18 +1,24 @@
 package epf.workflow.schema;
 
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
+
 /**
  * @author PC
  *
  */
+@Embeddable
 public class BasicPropertiesDefinition extends PropertiesDefinition {
 
 	/**
 	 * 
 	 */
+	@Column
 	private String username;
 	/**
 	 * 
 	 */
+	@Column
 	private String password;
 	
 	public String getUsername() {

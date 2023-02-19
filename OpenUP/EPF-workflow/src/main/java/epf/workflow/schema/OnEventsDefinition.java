@@ -1,32 +1,39 @@
 package epf.workflow.schema;
 
 import javax.validation.constraints.NotNull;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
  *
  */
+@Embeddable
 public class OnEventsDefinition {
 
 	/**
 	 * 
 	 */
 	@NotNull
+	@Column
 	private String[] eventRefs;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private Mode actionMode = Mode.sequential;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private ActionDefinition[] actions;
 	
 	/**
 	 * 
 	 */
+	@Column
 	private EventDataFilters eventDataFilter;
 
 	public String[] getEventRefs() {

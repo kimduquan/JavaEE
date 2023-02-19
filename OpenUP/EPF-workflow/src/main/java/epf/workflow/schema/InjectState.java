@@ -2,41 +2,51 @@ package epf.workflow.schema;
 
 import javax.json.JsonValue;
 import javax.validation.constraints.NotNull;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC
  *
  */
+@Embeddable
 public class InjectState extends State {
 
 	/**
 	 * 
 	 */
 	@NotNull
+	@Column
 	private JsonValue data;
 	/**
 	 * 
 	 */
+	@Column
 	private StateDataFilters stateDataFilter;
 	/**
 	 * 
 	 */
+	@Column
 	private Object transition;
 	/**
 	 * 
 	 */
+	@Column
 	private String compensatedBy;
 	/**
 	 * 
 	 */
+	@Column
 	private boolean usedForCompensation;
 	/**
 	 * 
 	 */
+	@Column
 	private Object metadata;
 	/**
 	 * 
 	 */
+	@Column
 	private Object end;
 	
 	public JsonValue getData() {
