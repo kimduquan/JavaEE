@@ -1,7 +1,7 @@
 /**
  * 
  */
-package epf.client.batch.api;
+package epf.batch.client;
 
 import java.time.LocalDate;
 import javax.ws.rs.Consumes;
