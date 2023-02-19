@@ -15,15 +15,17 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+import javax.json.JsonArray;
 import javax.json.JsonValue;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.util.MapUtil;
 import epf.util.json.JsonUtil;
 import epf.workflow.schema.ActionDefinition;
-import epf.workflow.schema.ActionMode;
+import epf.workflow.schema.Mode;
 import epf.workflow.schema.CallbackState;
 import epf.workflow.schema.ContinueAs;
 import epf.workflow.schema.EndDefinition;
@@ -345,16 +347,48 @@ public class Workflow {
 		}
 	}
 	
+	private ForEach newForEach(final ForEachState forEachState, final WorkflowInstance workflowInstance, final JsonValue value) {
+		final WorkflowData newWorkflowData = new WorkflowData();
+		newWorkflowData.setInput(workflowInstance.getWorkflowData().getInput());
+		WorkflowUtil.setValue(forEachState.getIterationParam(), newWorkflowData.getInput(), value);
+		final List<Action> actions = new ArrayList<>();
+		for(ActionDefinition actionDefinition : forEachState.getActions()) {
+			final Optional<Action> action = newAction(workflowInstance.getWorkflowDefinition(), actionDefinition, newWorkflowData);
+			if(action.isPresent()) {
+				actions.add(action.get());
+			}
+		}
+		return new ForEach(actions.toArray(new Action[0]), newWorkflowData, workflowInstance);
+	}
+	
 	private void startForEachState(final ForEachState forEachState, final WorkflowInstance workflowInstance) throws Exception {
 		filterStateDataInput(forEachState.getStateDataFilter(), workflowInstance.getWorkflowData());
+		final JsonArray inputCollection = WorkflowUtil.getValue(forEachState.getInputCollection(), workflowInstance.getWorkflowData().getInput()).asJsonArray();
+		int batchSize = inputCollection.size();
+		if(forEachState.getBatchSize() instanceof String) {
+			batchSize = Integer.valueOf((String)forEachState.getBatchSize());
+		}
+		else if(forEachState.getBatchSize() instanceof Integer) {
+			batchSize = (int) forEachState.getBatchSize();
+		}
+		List<ForEach> iterations = null;
 		try {
-			final List<ForEach> batch = new ArrayList<>();
 			switch(forEachState.getMode()) {
 				case parallel:
-					executor.invokeAll(batch);
+					int index = 0;
+					while(!workflowInstance.isTerminate()) {
+						final List<JsonValue> batchInputs = inputCollection.subList(index, Math.min(index + batchSize, inputCollection.size()));
+						if(batchInputs.isEmpty()) {
+							break;
+						}
+						final List<ForEach> batch = batchInputs.stream().map(value -> newForEach(forEachState, workflowInstance, value)).collect(Collectors.toList());
+						executor.invokeAll(batch);
+						index += batchInputs.size();
+					}
 					break;
 				case sequential:
-					for(ForEach forEach : batch) {
+					iterations = inputCollection.stream().map(value -> newForEach(forEachState, workflowInstance, value)).collect(Collectors.toList());
+					for(ForEach forEach : iterations) {
 						if(workflowInstance.isTerminate()) {
 							return;
 						}
@@ -363,6 +397,17 @@ public class Workflow {
 					break;
 				default:
 					break;
+			}
+			if(workflowInstance.isTerminate()) {
+				return;
+			}
+			for(ForEach forEach : iterations) {
+				for(Action action : forEach.getActions()) {
+					filterActionDataOutput(action.getActionDefinition(), forEach.getWorkflowData(), action.getWorkflowData());
+				}
+			}
+			for(ForEach forEach : iterations) {
+				WorkflowUtil.setValue(forEachState.getOutputCollection(), workflowInstance.getWorkflowData().getOutput(), forEach.getWorkflowData().getOutput());
 			}
 			if(forEachState.getTransition() != null) {
 				filterStateDataOutput(forEachState.getStateDataFilter(), workflowInstance.getWorkflowData());
@@ -537,14 +582,14 @@ public class Workflow {
 	
 	private void filterStateDataInput(final StateDataFilters stateDataFilters, final WorkflowData workflowData) {
 		if(stateDataFilters != null && stateDataFilters.getInput() != null) {
-			final JsonValue newInput = WorkflowUtil.filterValue(stateDataFilters.getInput(), workflowData.getInput());
+			final JsonValue newInput = WorkflowUtil.getValue(stateDataFilters.getInput(), workflowData.getInput());
 			workflowData.setInput(newInput);
 		}
 	}
 	
 	private void filterStateDataOutput(final StateDataFilters stateDataFilters, final WorkflowData workflowData) {
 		if(stateDataFilters != null && stateDataFilters.getOutput() != null) {
-			final JsonValue newOutput = WorkflowUtil.filterValue(stateDataFilters.getOutput(), workflowData.getOutput());
+			final JsonValue newOutput = WorkflowUtil.getValue(stateDataFilters.getOutput(), workflowData.getOutput());
 			workflowData.setOutput(newOutput);
 		}
 	}
@@ -568,7 +613,7 @@ public class Workflow {
 			}
 			JsonValue data = eventData;
 			if(eventDataFilters.getData() != null) {
-				data = WorkflowUtil.filterValue(eventDataFilters.getData(), eventData);
+				data = WorkflowUtil.getValue(eventDataFilters.getData(), eventData);
 			}
 			if(eventDataFilters.getToStateData() != null) {
 				WorkflowUtil.mergeStateDataOutput(eventDataFilters.getToStateData(), WorkflowData, data);
@@ -669,7 +714,7 @@ public class Workflow {
 				JsonValue input = null;
 				if(continueAsDef.getData() instanceof String) {
 					final String data = (String)continueAsDef.getData();
-					input = WorkflowUtil.filterValue(data, workflowData.getOutput());
+					input = WorkflowUtil.getValue(data, workflowData.getOutput());
 				}
 				else if(continueAsDef.getData() instanceof JsonValue) {
 					input = (JsonValue) continueAsDef.getData();
@@ -770,7 +815,7 @@ public class Workflow {
 	
 	private void filterActionDataInput(final ActionDefinition actionDefinition, final WorkflowData workflowData, final WorkflowData actionData) {
 		if(actionDefinition.getActionDataFilter() != null && actionDefinition.getActionDataFilter().getFromStateData() != null) {
-			final JsonValue input = WorkflowUtil.filterValue(actionDefinition.getActionDataFilter().getFromStateData(), workflowData.getInput());
+			final JsonValue input = WorkflowUtil.getValue(actionDefinition.getActionDataFilter().getFromStateData(), workflowData.getInput());
 			actionData.setInput(input);
 		}
 	}
@@ -812,7 +857,7 @@ public class Workflow {
 		return action;
 	}
 	
-	private void performActions(final ActionMode mode, final ActionDefinition[] actionDefinitions, final Duration actionExecTimeout, final WorkflowInstance workflowInstance) throws Exception {
+	private void performActions(final Mode mode, final ActionDefinition[] actionDefinitions, final Duration actionExecTimeout, final WorkflowInstance workflowInstance) throws Exception {
 		final List<Action> actions = new CopyOnWriteArrayList<>();
 		for(ActionDefinition actionDefinition : actionDefinitions) {
 			final Optional<Action> action = newAction(workflowInstance.getWorkflowDefinition(), actionDefinition, workflowInstance.getWorkflowData());

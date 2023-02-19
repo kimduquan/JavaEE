@@ -14,7 +14,7 @@ public class OnEventsDefinition {
 	/**
 	 * 
 	 */
-	private ActionMode actionMode = ActionMode.sequential;
+	private Mode actionMode = Mode.sequential;
 	
 	/**
 	 * 
@@ -34,11 +34,11 @@ public class OnEventsDefinition {
 		this.eventRefs = eventRefs;
 	}
 
-	public ActionMode getActionMode() {
+	public Mode getActionMode() {
 		return actionMode;
 	}
 
-	public void setActionMode(ActionMode actionMode) {
+	public void setActionMode(Mode actionMode) {
 		this.actionMode = actionMode;
 	}
 

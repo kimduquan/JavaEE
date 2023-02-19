@@ -29,7 +29,7 @@ public class ForEachState extends State {
 	/**
 	 * 
 	 */
-	private Object[] actions;
+	private ActionDefinition[] actions;
 	/**
 	 * 
 	 */
@@ -93,10 +93,10 @@ public class ForEachState extends State {
 	public void setMode(Mode mode) {
 		this.mode = mode;
 	}
-	public Object[] getActions() {
+	public ActionDefinition[] getActions() {
 		return actions;
 	}
-	public void setActions(Object[] actions) {
+	public void setActions(ActionDefinition[] actions) {
 		this.actions = actions;
 	}
 	public Object getTimeouts() {

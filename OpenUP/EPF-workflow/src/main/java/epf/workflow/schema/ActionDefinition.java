@@ -1,7 +1,5 @@
 package epf.workflow.schema;
 
-import epf.workflow.Sleep;
-
 /**
  * @author PC
  *

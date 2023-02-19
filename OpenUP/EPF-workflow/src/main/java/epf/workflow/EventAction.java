@@ -38,7 +38,7 @@ public class EventAction extends Action {
 		Object data = null;
 		if(getActionDefinition().getEventRef().getData() != null) {
 			if(getActionDefinition().getEventRef().getData() instanceof String) {
-				data = WorkflowUtil.filterValue((String)getActionDefinition().getEventRef().getData(), getWorkflowData().getOutput());
+				data = WorkflowUtil.getValue((String)getActionDefinition().getEventRef().getData(), getWorkflowData().getOutput());
 			}
 			else {
 				data = getWorkflowData().getOutput();

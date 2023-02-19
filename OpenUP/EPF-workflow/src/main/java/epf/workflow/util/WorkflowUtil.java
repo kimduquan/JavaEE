@@ -131,7 +131,7 @@ public interface WorkflowUtil {
 	 * @param value
 	 * @return
 	 */
-	static JsonValue filterValue(final String filter, final JsonValue value) {
+	static JsonValue getValue(final String filter, final JsonValue value) {
 		final ELProcessor elProcessor = new ELProcessor();
 		elProcessor.getELManager().addELResolver(new JsonArrayELResolver());
 		elProcessor.getELManager().addELResolver(new JsonObjectELResolver());
@@ -144,7 +144,7 @@ public interface WorkflowUtil {
 	 * @param to
 	 * @param from
 	 */
-	static void mergeValue(final String data, final JsonValue to, final JsonValue from) {
+	static void setValue(final String data, final JsonValue to, final JsonValue from) {
 		final ELProcessor elProcessor = new ELProcessor();
 		elProcessor.getELManager().addELResolver(new JsonArrayELResolver());
 		elProcessor.getELManager().addELResolver(new JsonObjectELResolver());
@@ -172,9 +172,9 @@ public interface WorkflowUtil {
 	 */
 	static void mergeStateDataOutput(final String data, final WorkflowData to, final JsonValue fromOutput) {
 		JsonValue output = to.getOutput();
-		output = filterValue(data, to.getOutput());
+		output = getValue(data, to.getOutput());
 		final JsonValue newOutput = Json.createMergeDiff(fromOutput, output).apply(output);
-		mergeValue(data, to.getOutput(), newOutput);
+		setValue(data, to.getOutput(), newOutput);
 	}
 	
 	/**
@@ -185,5 +185,27 @@ public interface WorkflowUtil {
 		JsonValue output = to.getOutput();
 		final JsonValue newOutput = Json.createMergeDiff(fromOutput, output).apply(output);
 		to.setOutput(newOutput);
+	}
+	
+	/**
+	 * @param data
+	 * @param to
+	 * @param fromInput
+	 */
+	static void mergeStateDataInput(final String data, final WorkflowData to, final JsonValue fromInput) {
+		JsonValue input = to.getInput();
+		input = getValue(data, to.getInput());
+		final JsonValue newInput = Json.createMergeDiff(fromInput, input).apply(input);
+		setValue(data, to.getInput(), newInput);
+	}
+	
+	/**
+	 * @param to
+	 * @param fromInput
+	 */
+	static void mergeStateDataInput(final WorkflowData to, final JsonValue fromInput) {
+		JsonValue input = to.getInput();
+		final JsonValue newInput = Json.createMergeDiff(fromInput, input).apply(input);
+		to.setInput(newInput);
 	}
 }

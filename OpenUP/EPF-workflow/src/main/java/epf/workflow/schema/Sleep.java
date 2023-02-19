@@ -1,4 +1,4 @@
-package epf.workflow;
+package epf.workflow.schema;
 
 /**
  * @author PC
