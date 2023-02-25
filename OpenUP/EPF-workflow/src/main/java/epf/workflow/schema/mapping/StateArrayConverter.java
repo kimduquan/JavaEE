@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import javax.json.JsonArray;
 import epf.util.json.JsonUtil;
 import epf.util.logging.LogManager;
+import epf.workflow.mapping.ArrayAttributeConverter;
 import epf.workflow.schema.CallbackState;
 import epf.workflow.schema.EventState;
 import epf.workflow.schema.ForEachState;
@@ -45,7 +46,8 @@ public class StateArrayConverter implements AttributeConverter<State[], List<Obj
 	@Override
 	public State[] convertToEntityAttribute(final List<Object> dbData) {
 		try {
-			return JsonUtil.fromLisṭ̣(dbData, this::newState).toArray(new State[0]);
+			final List<Object> list = ArrayAttributeConverter.convertToList(dbData);
+			return JsonUtil.fromLisṭ̣(list, this::newState).toArray(new State[0]);
 		} 
 		catch (Exception ex) {
 			LOGGER.log(Level.SEVERE, "convertToEntityAttribute", ex);
