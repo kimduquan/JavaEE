@@ -18,7 +18,7 @@ public class WorkflowPersistence {
 	 * 
 	 */
 	@Inject
-	DocumentTemplate document;
+	transient DocumentTemplate document;
 	
 	/**
 	 * @param id

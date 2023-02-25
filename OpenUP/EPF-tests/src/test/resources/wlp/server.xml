@@ -27,9 +27,6 @@
 	<application id="EPF-schedule" name="EPF-schedule" context-root="schedule" location="EPF-schedule-1.0.0.war">
         <classloader apiTypeVisibility="+third-party"/>
     </application>
-    <application id="EPF-shell-schedule" name="EPF-shell-schedule" context-root="shell-schedule" location="EPF-shell-schedule-1.0.0.war">
-        <classloader apiTypeVisibility="+third-party"/>
-    </application>
 	<application id="EPF-batch" name="EPF-batch" context-root="batch" location="EPF-batch-1.0.0.war" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
@@ -37,6 +34,9 @@
         <classloader classProviderRef="jppf" apiTypeVisibility="spec,ibm-api,api,stable,third-party"/>
     </application>
 	<application id="EPF-management" name="EPF-management" context-root="management" location="EPF-management-1.0.0.war" >
+        <classloader apiTypeVisibility="+third-party"/>
+    </application>
+    <application id="EPF-workflow" name="EPF-workflow" context-root="workflow" location="EPF-workflow-1.0.0.war" >
         <classloader apiTypeVisibility="+third-party"/>
     </application>
 	<application id="EPF-file" name="EPF-file" context-root="file" location="EPF-file-1.0.0.war">

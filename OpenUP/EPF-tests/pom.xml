@@ -166,6 +166,26 @@
         </dependency>
         <dependency>
             <groupId>openup</groupId>
+            <artifactId>EPF-config-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-file-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-rules-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-net-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
             <artifactId>EPF-messaging-client</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -213,12 +233,6 @@
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-schedule</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-shell-schedule</artifactId>
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
@@ -279,6 +293,12 @@
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-management</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-workflow</artifactId>
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
@@ -440,7 +460,7 @@
                         <configuration>
                             <verifyTimeout>600</verifyTimeout>
                             <serverStartTimeout>600</serverStartTimeout>
-                            <applications>EPF-schedule,EPF-script,EPF-batch,EPF-file,EPF-mail,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-management,EPF-security,EPF-security-management</applications>
+                            <applications>EPF-schedule,EPF-script,EPF-batch,EPF-file,EPF-mail,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-management,EPF-workflow,EPF-security,EPF-security-management</applications>
                         </configuration>
                     </execution>
                     <!-- Stop the server -->
@@ -459,7 +479,7 @@
                     <deployPackages>dependencies</deployPackages>
 					<verifyTimeout>600</verifyTimeout>
 					<serverStartTimeout>600</serverStartTimeout>
-					<applications>EPF-schedule,EPF-script,EPF-batch,EPF-file,EPF-mail,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-management,EPF-security,EPF-security-management</applications>
+					<applications>EPF-schedule,EPF-script,EPF-batch,EPF-file,EPF-mail,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-management,EPF-workflow,EPF-security,EPF-security-management</applications>
 					<dockerRunOpts>-p 7286:7286</dockerRunOpts>
 				</configuration>
             </plugin>

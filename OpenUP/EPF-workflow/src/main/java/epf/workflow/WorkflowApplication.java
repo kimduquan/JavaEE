@@ -4,6 +4,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.json.JsonValue;
 import javax.validation.Valid;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.MatrixParam;
 import javax.ws.rs.NotFoundException;
@@ -14,6 +15,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import epf.naming.Naming;
 import epf.util.json.JsonUtil;
+import epf.workflow.schema.StartDefinition;
 import epf.workflow.schema.WorkflowDefinition;
 
 /**
@@ -30,13 +32,19 @@ public class WorkflowApplication {
 	 * 
 	 */
 	@Inject
-	WorkflowRuntime workflowRuntime;
+	transient WorkflowRuntime runtime;
 	
 	/**
 	 * 
 	 */
 	@Inject
-	WorkflowPersistence workflowRepository;
+	transient WorkflowPersistence persistence;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	transient WorkflowSchedule schedule;
 
 	/**
 	 * @param workflowDefinition
@@ -44,8 +52,11 @@ public class WorkflowApplication {
 	 */
 	@POST
 	public WorkflowDefinition newWorkflowDefinition(@Valid final WorkflowDefinition workflowDefinition) {
-		WorkflowDefinition newWorkflowDefinition = workflowRepository.persist(workflowDefinition);
-		return workflowRepository.get(newWorkflowDefinition.getId());
+		WorkflowDefinition newWorkflowDefinition = persistence.persist(workflowDefinition);
+		if(newWorkflowDefinition.getStart() instanceof StartDefinition) {
+			schedule.schedule(newWorkflowDefinition);
+		}
+		return persistence.get(newWorkflowDefinition.getId());
 	}
 	
 	/**
@@ -67,14 +78,19 @@ public class WorkflowApplication {
 		workflowData.setOutput(JsonUtil.empty());
 		WorkflowDefinition workflowDefinition = null;
 		if(version != null) {
-			workflowDefinition = workflowRepository.find(workflowId, version);
+			workflowDefinition = persistence.find(workflowId, version);
 		}
 		else {
-			workflowDefinition = workflowRepository.get(workflowId);
+			workflowDefinition = persistence.get(workflowId);
 		}
 		if(workflowDefinition != null) {
-			workflowRuntime.start(workflowDefinition, workflowData);
-			return workflowData.getOutput();
+			if(workflowDefinition.getStart() instanceof StartDefinition) {
+				throw new BadRequestException();
+			}
+			else {
+				runtime.start(workflowDefinition, workflowData);
+				return workflowData.getOutput();
+			}
 		}
 		throw new NotFoundException();
 	}

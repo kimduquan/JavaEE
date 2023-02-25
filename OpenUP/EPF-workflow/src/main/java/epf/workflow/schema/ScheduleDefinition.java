@@ -1,5 +1,7 @@
 package epf.workflow.schema;
 
+import javax.json.bind.annotation.JsonbTypeAdapter;
+import epf.workflow.schema.adapter.CronDefinitionAdapter;
 import jakarta.nosql.mapping.Column;
 import jakarta.nosql.mapping.Embeddable;
 
@@ -20,13 +22,14 @@ public class ScheduleDefinition {
 	 * 
 	 */
 	@Column
-	private CronDefinition cron;
+	@JsonbTypeAdapter(value = CronDefinitionAdapter.class)
+	private Object cron;
 	
 	/**
 	 * 
 	 */
 	@Column
-	private String timezone;
+	private String timezone = "UTC";
 
 	public String getInterval() {
 		return interval;
@@ -36,11 +39,11 @@ public class ScheduleDefinition {
 		this.interval = interval;
 	}
 
-	public CronDefinition getCron() {
+	public Object getCron() {
 		return cron;
 	}
 
-	public void setCron(CronDefinition cron) {
+	public void setCron(Object cron) {
 		this.cron = cron;
 	}
 

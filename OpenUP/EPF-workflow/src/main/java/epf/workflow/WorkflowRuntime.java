@@ -86,19 +86,19 @@ public class WorkflowRuntime {
 	 * 
 	 */
 	@Inject
-	javax.enterprise.event.Event<Event> producedEvent;
+	transient javax.enterprise.event.Event<Event> producedEvent;
 	
 	/**
 	 * 
 	 */
 	@Inject
-	ManagedExecutor executor;
+	transient ManagedExecutor executor;
 	
 	/**
 	 * 
 	 */
 	@Inject
-	WorkflowPersistence workflowRepository;
+	transient WorkflowPersistence workflowRepository;
 
 	/**
 	 * @param workflowDefinition
