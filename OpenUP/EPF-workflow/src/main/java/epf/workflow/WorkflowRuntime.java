@@ -144,7 +144,7 @@ public class WorkflowRuntime {
 	
 	private WorkflowInstance newWorkflowInstance(WorkflowDefinition workflowDefinition, WorkflowData workflowData, Event[] events) {
 		final WorkflowInstance workflowInstance = new WorkflowInstance(workflowDefinition, UUID.randomUUID().toString(), workflowData, events);
-		if(workflowInstance.getWorkflowDefinition().isKeepActive()) {
+		if(Boolean.TRUE.equals(workflowInstance.getWorkflowDefinition().isKeepActive())) {
 			workflowInstances.put(workflowInstance.getId(), workflowInstance);
 		}
 		return workflowInstance;
@@ -763,7 +763,7 @@ public class WorkflowRuntime {
 			if(endDefinition.isCompensate()) {
 				compensate(workflowInstance);
 			}
-			if(endDefinition.isTerminate()) {
+			if(Boolean.TRUE.equals(endDefinition.isTerminate())) {
 				termiate(workflowInstance);
 				return;
 			}

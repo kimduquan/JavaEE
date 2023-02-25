@@ -60,7 +60,7 @@ public class ParallelState extends State {
 	 * 
 	 */
 	@Column
-	private Boolean usedForCompensation;
+	private Boolean usedForCompensation = false;
 	/**
 	 * 
 	 */

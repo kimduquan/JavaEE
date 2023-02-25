@@ -41,7 +41,7 @@ public class InjectState extends State {
 	 * 
 	 */
 	@Column
-	private Boolean usedForCompensation;
+	private Boolean usedForCompensation = false;
 	/**
 	 * 
 	 */
