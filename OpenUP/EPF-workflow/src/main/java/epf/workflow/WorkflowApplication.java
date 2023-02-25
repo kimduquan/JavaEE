@@ -24,7 +24,7 @@ import epf.workflow.schema.WorkflowDefinition;
 @Path(Naming.WORKFLOW)
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class Workflow {
+public class WorkflowApplication {
 	
 	/**
 	 * 
@@ -36,7 +36,7 @@ public class Workflow {
 	 * 
 	 */
 	@Inject
-	WorkflowRepository workflowRepository;
+	WorkflowPersistence workflowRepository;
 
 	/**
 	 * @param workflowDefinition
@@ -44,8 +44,8 @@ public class Workflow {
 	 */
 	@POST
 	public WorkflowDefinition newWorkflowDefinition(@Valid final WorkflowDefinition workflowDefinition) {
-		WorkflowDefinition newWorkflowDefinition = workflowRepository.persistWorkflowDefinition(workflowDefinition);
-		return workflowRepository.getWorkflowDefinition(newWorkflowDefinition.getId());
+		WorkflowDefinition newWorkflowDefinition = workflowRepository.persist(workflowDefinition);
+		return workflowRepository.get(newWorkflowDefinition.getId());
 	}
 	
 	/**
@@ -67,10 +67,10 @@ public class Workflow {
 		workflowData.setOutput(JsonUtil.empty());
 		WorkflowDefinition workflowDefinition = null;
 		if(version != null) {
-			workflowDefinition = workflowRepository.findWorkflowDefinition(workflowId, version);
+			workflowDefinition = workflowRepository.find(workflowId, version);
 		}
 		else {
-			workflowDefinition = workflowRepository.getWorkflowDefinition(workflowId);
+			workflowDefinition = workflowRepository.get(workflowId);
 		}
 		if(workflowDefinition != null) {
 			workflowRuntime.start(workflowDefinition, workflowData);

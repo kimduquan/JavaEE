@@ -98,7 +98,7 @@ public class WorkflowRuntime {
 	 * 
 	 */
 	@Inject
-	WorkflowRepository workflowRepository;
+	WorkflowPersistence workflowRepository;
 
 	/**
 	 * @param workflowDefinition
@@ -715,14 +715,14 @@ public class WorkflowRuntime {
 	
 	private void continueAs(final Object continueAs, final WorkflowData workflowData) throws Exception {
 		if(continueAs instanceof String) {
-			final WorkflowDefinition workflowDefinition = workflowRepository.getWorkflowDefinition((String)continueAs);
+			final WorkflowDefinition workflowDefinition = workflowRepository.get((String)continueAs);
 			final WorkflowData newWorkflowData = new WorkflowData();
 			newWorkflowData.setInput(workflowData.getOutput());
 			start(workflowDefinition, newWorkflowData);
 		}
 		else if(continueAs instanceof ContinueAs) {
 			final ContinueAs continueAsDef = (ContinueAs) continueAs;
-			final WorkflowDefinition workflowDefinition = workflowRepository.findWorkflowDefinition(continueAsDef.getWorkflowId(), continueAsDef.getVersion());
+			final WorkflowDefinition workflowDefinition = workflowRepository.find(continueAsDef.getWorkflowId(), continueAsDef.getVersion());
 			final WorkflowData newWorkflowData = new WorkflowData();
 			if(continueAsDef.getData() != null) {
 				JsonValue input = null;
@@ -926,11 +926,11 @@ public class WorkflowRuntime {
 	
 	private WorkflowDefinition getSubWorkflowDefinition(final Object subFlowRef) {
 		if(subFlowRef instanceof String) {
-			return workflowRepository.getWorkflowDefinition((String)subFlowRef);
+			return workflowRepository.get((String)subFlowRef);
 		}
 		else {
 			final SubFlowRefDefinition subFlowRefDefinition = (SubFlowRefDefinition) subFlowRef;
-			return workflowRepository.findWorkflowDefinition(subFlowRefDefinition.getWorkflowId(), subFlowRefDefinition.getVersion());
+			return workflowRepository.find(subFlowRefDefinition.getWorkflowId(), subFlowRefDefinition.getVersion());
 		}
 	}
 }

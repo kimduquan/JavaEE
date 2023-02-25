@@ -12,7 +12,7 @@ import jakarta.nosql.mapping.document.DocumentTemplate;
  *
  */
 @ApplicationScoped
-public class WorkflowRepository {
+public class WorkflowPersistence {
 	
 	/**
 	 * 
@@ -25,7 +25,7 @@ public class WorkflowRepository {
 	 * @param version
 	 * @return
 	 */
-	public WorkflowDefinition findWorkflowDefinition(final String id, final String version) {
+	public WorkflowDefinition find(final String id, final String version) {
 		final DocumentQuery query = DocumentQuery.select().from("WorkflowDefinition").where("id").eq(id).and("version").eq(version).build();
 		final Optional<WorkflowDefinition> workflowDefinition = document.singleResult(query);
 		return workflowDefinition.get();
@@ -35,7 +35,7 @@ public class WorkflowRepository {
 	 * @param id
 	 * @return
 	 */
-	public WorkflowDefinition getWorkflowDefinition(final String id) {
+	public WorkflowDefinition get(final String id) {
 		return document.find(WorkflowDefinition.class, id).get();
 	}
 	
@@ -43,7 +43,7 @@ public class WorkflowRepository {
 	 * @param workflowDefinition
 	 * @return
 	 */
-	public WorkflowDefinition persistWorkflowDefinition(final WorkflowDefinition workflowDefinition) {
+	public WorkflowDefinition persist(final WorkflowDefinition workflowDefinition) {
 		return document.insert(workflowDefinition);
 	}
 }
