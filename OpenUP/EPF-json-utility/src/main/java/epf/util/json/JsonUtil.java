@@ -283,7 +283,7 @@ public interface JsonUtil {
 	 */
 	static void asMap(final Map<String, Object> map, final JsonObject jsonObject) {
 		for(Entry<String, JsonValue> entry : jsonObject.entrySet()) {
-			map.put(entry.getKey(), asObject(entry.getValue()));
+			map.put(entry.getKey(), asValue(entry.getValue()));
 		}
 	}
 	
@@ -291,7 +291,7 @@ public interface JsonUtil {
 	 * @param jsonValue
 	 * @return
 	 */
-	static Object asObject(final JsonValue jsonValue) {
+	static Object asValue(final JsonValue jsonValue) {
 		if(jsonValue != null) {
 			switch(jsonValue.getValueType()) {
 				case ARRAY:
@@ -325,7 +325,7 @@ public interface JsonUtil {
 	 */
 	static List<Object> asList(final JsonArray jsonArray) {
 		final List<Object> list = new ArrayList<>();
-		jsonArray.forEach(jsonValue -> list.add(asObject(jsonValue)));
+		jsonArray.forEach(jsonValue -> list.add(asValue(jsonValue)));
 		return list;
 	}
 	
