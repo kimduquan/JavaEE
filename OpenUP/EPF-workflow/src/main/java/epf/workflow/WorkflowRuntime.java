@@ -51,8 +51,6 @@ import epf.workflow.schema.Type;
 import epf.workflow.schema.WorkflowDefinition;
 import epf.workflow.schema.WorkflowError;
 import epf.workflow.util.WorkflowUtil;
-import jakarta.nosql.document.DocumentQuery;
-import jakarta.nosql.mapping.document.DocumentTemplate;
 import epf.workflow.schema.State;
 import epf.workflow.schema.StateDataFilters;
 import epf.workflow.schema.SubFlowRefDefinition;
@@ -100,7 +98,7 @@ public class WorkflowRuntime {
 	 * 
 	 */
 	@Inject
-	DocumentTemplate document;
+	WorkflowRepository workflowRepository;
 
 	/**
 	 * @param workflowDefinition
@@ -142,16 +140,6 @@ public class WorkflowRuntime {
 				startState(startState, workflowInstance);
 			}
 		}
-	}
-	
-	private WorkflowDefinition getWorkflowDefinition(final String id, final String version) {
-		final DocumentQuery query = DocumentQuery.select().from("WorkflowDefinition").where("id").eq(id).and("version").eq(version).build();
-		final Optional<WorkflowDefinition> workflowDefinition = document.singleResult(query);
-		return workflowDefinition.get();
-	}
-	
-	private WorkflowDefinition getWorkflowDefinition(final String id) {
-		return document.find(WorkflowDefinition.class, id).get();
 	}
 	
 	private WorkflowInstance newWorkflowInstance(WorkflowDefinition workflowDefinition, WorkflowData workflowData, Event[] events) {
@@ -727,14 +715,14 @@ public class WorkflowRuntime {
 	
 	private void continueAs(final Object continueAs, final WorkflowData workflowData) throws Exception {
 		if(continueAs instanceof String) {
-			final WorkflowDefinition workflowDefinition = getWorkflowDefinition((String)continueAs);
+			final WorkflowDefinition workflowDefinition = workflowRepository.getWorkflowDefinition((String)continueAs);
 			final WorkflowData newWorkflowData = new WorkflowData();
 			newWorkflowData.setInput(workflowData.getOutput());
 			start(workflowDefinition, newWorkflowData);
 		}
 		else if(continueAs instanceof ContinueAs) {
 			final ContinueAs continueAsDef = (ContinueAs) continueAs;
-			final WorkflowDefinition workflowDefinition = getWorkflowDefinition(continueAsDef.getWorkflowId(), continueAsDef.getVersion());
+			final WorkflowDefinition workflowDefinition = workflowRepository.findWorkflowDefinition(continueAsDef.getWorkflowId(), continueAsDef.getVersion());
 			final WorkflowData newWorkflowData = new WorkflowData();
 			if(continueAsDef.getData() != null) {
 				JsonValue input = null;
@@ -938,11 +926,11 @@ public class WorkflowRuntime {
 	
 	private WorkflowDefinition getSubWorkflowDefinition(final Object subFlowRef) {
 		if(subFlowRef instanceof String) {
-			return getWorkflowDefinition((String)subFlowRef);
+			return workflowRepository.getWorkflowDefinition((String)subFlowRef);
 		}
 		else {
 			final SubFlowRefDefinition subFlowRefDefinition = (SubFlowRefDefinition) subFlowRef;
-			return getWorkflowDefinition(subFlowRefDefinition.getWorkflowId(), subFlowRefDefinition.getVersion());
+			return workflowRepository.findWorkflowDefinition(subFlowRefDefinition.getWorkflowId(), subFlowRefDefinition.getVersion());
 		}
 	}
 }

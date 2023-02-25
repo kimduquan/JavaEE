@@ -1,11 +1,11 @@
 package epf.workflow;
 
-import java.util.Optional;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.json.JsonValue;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.MatrixParam;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -13,8 +13,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import epf.naming.Naming;
+import epf.util.json.JsonUtil;
 import epf.workflow.schema.WorkflowDefinition;
-import jakarta.nosql.mapping.document.DocumentTemplate;
 
 /**
  * @author PC
@@ -36,7 +36,7 @@ public class Workflow {
 	 * 
 	 */
 	@Inject
-	DocumentTemplate document;
+	WorkflowRepository workflowRepository;
 
 	/**
 	 * @param workflowDefinition
@@ -44,7 +44,8 @@ public class Workflow {
 	 */
 	@POST
 	public WorkflowDefinition newWorkflowDefinition(@Valid final WorkflowDefinition workflowDefinition) {
-		return document.insert(workflowDefinition);
+		WorkflowDefinition newWorkflowDefinition = workflowRepository.persistWorkflowDefinition(workflowDefinition);
+		return workflowRepository.getWorkflowDefinition(newWorkflowDefinition.getId());
 	}
 	
 	/**
@@ -58,11 +59,21 @@ public class Workflow {
 	public JsonValue start(
 			@PathParam("workflowId") 
 			final String workflowId, 
+			@MatrixParam("version")
+			final String version,
 			final JsonValue input) throws Exception {
 		final WorkflowData workflowData = new WorkflowData();
-		final Optional<WorkflowDefinition> workflowDefinition = document.find(WorkflowDefinition.class, workflowId);
-		if(workflowDefinition.isPresent()) {
-			workflowRuntime.start(workflowDefinition.get(), workflowData);
+		workflowData.setInput(input);
+		workflowData.setOutput(JsonUtil.empty());
+		WorkflowDefinition workflowDefinition = null;
+		if(version != null) {
+			workflowDefinition = workflowRepository.findWorkflowDefinition(workflowId, version);
+		}
+		else {
+			workflowDefinition = workflowRepository.getWorkflowDefinition(workflowId);
+		}
+		if(workflowDefinition != null) {
+			workflowRuntime.start(workflowDefinition, workflowData);
 			return workflowData.getOutput();
 		}
 		throw new NotFoundException();
