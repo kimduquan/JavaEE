@@ -1,9 +1,8 @@
 package epf.workflow.schema;
 
-import javax.json.JsonObject;
+import javax.json.JsonValue;
 import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.validation.constraints.NotNull;
-
 import epf.workflow.schema.adapter.EndDefinitionAdapter;
 import epf.workflow.schema.adapter.TransitionDefinitionAdapter;
 import jakarta.nosql.mapping.Column;
@@ -21,7 +20,7 @@ public class InjectState extends State {
 	 */
 	@NotNull
 	@Column
-	private JsonObject data;
+	private JsonValue data;
 	/**
 	 * 
 	 */
@@ -42,7 +41,7 @@ public class InjectState extends State {
 	 * 
 	 */
 	@Column
-	private boolean usedForCompensation;
+	private Boolean usedForCompensation;
 	/**
 	 * 
 	 */
@@ -55,10 +54,10 @@ public class InjectState extends State {
 	@JsonbTypeAdapter(value = EndDefinitionAdapter.class)
 	private Object end;
 	
-	public JsonObject getData() {
+	public JsonValue getData() {
 		return data;
 	}
-	public void setData(JsonObject data) {
+	public void setData(JsonValue data) {
 		this.data = data;
 	}
 	public StateDataFilters getStateDataFilter() {
@@ -79,10 +78,10 @@ public class InjectState extends State {
 	public void setCompensatedBy(String compensatedBy) {
 		this.compensatedBy = compensatedBy;
 	}
-	public boolean isUsedForCompensation() {
+	public Boolean isUsedForCompensation() {
 		return usedForCompensation;
 	}
-	public void setUsedForCompensation(boolean usedForCompensation) {
+	public void setUsedForCompensation(Boolean usedForCompensation) {
 		this.usedForCompensation = usedForCompensation;
 	}
 	public Object getMetadata() {

@@ -107,7 +107,7 @@ public class WorkflowDefinition {
 	 * 
 	 */
 	@Column
-	private boolean keepActive;
+	private Boolean keepActive;
 	
 	/**
 	 * 
@@ -132,7 +132,7 @@ public class WorkflowDefinition {
 	 * 
 	 */
 	@Column
-	private boolean autoRetries = false;
+	private Boolean autoRetries = false;
 	
 	/**
 	 * 
@@ -271,11 +271,11 @@ public class WorkflowDefinition {
 		this.errors = errors;
 	}
 
-	public boolean isKeepActive() {
+	public Boolean isKeepActive() {
 		return keepActive;
 	}
 
-	public void setKeepActive(boolean keepActive) {
+	public void setKeepActive(Boolean keepActive) {
 		this.keepActive = keepActive;
 	}
 
@@ -303,11 +303,11 @@ public class WorkflowDefinition {
 		this.functions = functions;
 	}
 
-	public boolean isAutoRetries() {
+	public Boolean isAutoRetries() {
 		return autoRetries;
 	}
 
-	public void setAutoRetries(boolean autoRetries) {
+	public void setAutoRetries(Boolean autoRetries) {
 		this.autoRetries = autoRetries;
 	}
 

@@ -60,7 +60,7 @@ public class ParallelState extends State {
 	 * 
 	 */
 	@Column
-	private boolean usedForCompensation;
+	private Boolean usedForCompensation;
 	/**
 	 * 
 	 */
@@ -121,10 +121,10 @@ public class ParallelState extends State {
 	public void setCompensatedBy(String compensatedBy) {
 		this.compensatedBy = compensatedBy;
 	}
-	public boolean isUsedForCompensation() {
+	public Boolean isUsedForCompensation() {
 		return usedForCompensation;
 	}
-	public void setUsedForCompensation(boolean usedForCompensation) {
+	public void setUsedForCompensation(Boolean usedForCompensation) {
 		this.usedForCompensation = usedForCompensation;
 	}
 	public Object getMetadata() {

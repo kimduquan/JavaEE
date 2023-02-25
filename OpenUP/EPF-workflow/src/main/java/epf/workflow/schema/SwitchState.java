@@ -54,7 +54,7 @@ public class SwitchState extends State {
 	 * 
 	 */
 	@Column
-	private boolean usedForCompensation = false;
+	private Boolean usedForCompensation = false;
 	/**
 	 * 
 	 */
@@ -103,10 +103,10 @@ public class SwitchState extends State {
 	public void setCompensatedBy(String compensatedBy) {
 		this.compensatedBy = compensatedBy;
 	}
-	public boolean isUsedForCompensation() {
+	public Boolean isUsedForCompensation() {
 		return usedForCompensation;
 	}
-	public void setUsedForCompensation(boolean usedForCompensation) {
+	public void setUsedForCompensation(Boolean usedForCompensation) {
 		this.usedForCompensation = usedForCompensation;
 	}
 	public Object getMetadata() {

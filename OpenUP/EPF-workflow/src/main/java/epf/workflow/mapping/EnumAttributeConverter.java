@@ -27,6 +27,9 @@ public class EnumAttributeConverter<T extends Enum<T>> implements AttributeConve
 
 	@Override
 	public Enum<T> convertToEntityAttribute(final String dbData) {
+		if(dbData == null) {
+			return null;
+		}
 		return Enum.valueOf(cls, dbData);
 	}
 }

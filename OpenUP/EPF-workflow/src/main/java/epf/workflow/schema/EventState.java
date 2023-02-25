@@ -18,7 +18,7 @@ public class EventState extends State {
 	 * 
 	 */
 	@Column
-	private boolean exclusive = true;
+	private Boolean exclusive = true;
 	
 	/**
 	 * 
@@ -71,11 +71,11 @@ public class EventState extends State {
 	@Column
 	private Object metadata;
 
-	public boolean isExclusive() {
+	public Boolean isExclusive() {
 		return exclusive;
 	}
 
-	public void setExclusive(boolean exclusive) {
+	public void setExclusive(Boolean exclusive) {
 		this.exclusive = exclusive;
 	}
 

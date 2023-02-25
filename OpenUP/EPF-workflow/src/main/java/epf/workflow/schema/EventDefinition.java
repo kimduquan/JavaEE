@@ -46,7 +46,7 @@ public class EventDefinition {
 	 * 
 	 */
 	@Column
-	private boolean dataOnly = true;
+	private Boolean dataOnly = true;
 	
 	/**
 	 * 
@@ -94,11 +94,11 @@ public class EventDefinition {
 		this.correlation = correlation;
 	}
 
-	public boolean isDataOnly() {
+	public Boolean isDataOnly() {
 		return dataOnly;
 	}
 
-	public void setDataOnly(boolean dataOnly) {
+	public void setDataOnly(Boolean dataOnly) {
 		this.dataOnly = dataOnly;
 	}
 

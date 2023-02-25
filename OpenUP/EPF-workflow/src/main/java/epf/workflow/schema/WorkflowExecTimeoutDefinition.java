@@ -19,7 +19,7 @@ public class WorkflowExecTimeoutDefinition {
 	 * 
 	 */
 	@Column
-	private boolean interrupt = false;
+	private Boolean interrupt = false;
 	/**
 	 * 
 	 */
@@ -32,10 +32,10 @@ public class WorkflowExecTimeoutDefinition {
 	public void setDuration(String duration) {
 		this.duration = duration;
 	}
-	public boolean isInterrupt() {
+	public Boolean isInterrupt() {
 		return interrupt;
 	}
-	public void setInterrupt(boolean interrupt) {
+	public void setInterrupt(Boolean interrupt) {
 		this.interrupt = interrupt;
 	}
 	public String getRunBefore() {

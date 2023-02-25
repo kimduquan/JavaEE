@@ -16,7 +16,7 @@ public class EndDefinition {
 	 * 
 	 */
 	@Column
-	private boolean terminate;
+	private Boolean terminate;
 	/**
 	 * 
 	 */
@@ -26,7 +26,7 @@ public class EndDefinition {
 	 * 
 	 */
 	@Column
-	private boolean compensate = false;
+	private Boolean compensate = false;
 	/**
 	 * 
 	 */
@@ -34,10 +34,10 @@ public class EndDefinition {
 	@JsonbTypeAdapter(value = ContinueAsAdapter.class)
 	private Object continueAs;
 	
-	public boolean isTerminate() {
+	public Boolean isTerminate() {
 		return terminate;
 	}
-	public void setTerminate(boolean terminate) {
+	public void setTerminate(Boolean terminate) {
 		this.terminate = terminate;
 	}
 	public ProducedEventDefinition[] getProduceEvents() {
@@ -46,10 +46,10 @@ public class EndDefinition {
 	public void setProduceEvents(ProducedEventDefinition[] produceEvents) {
 		this.produceEvents = produceEvents;
 	}
-	public boolean isCompensate() {
+	public Boolean isCompensate() {
 		return compensate;
 	}
-	public void setCompensate(boolean compensate) {
+	public void setCompensate(Boolean compensate) {
 		this.compensate = compensate;
 	}
 	public Object getContinueAs() {

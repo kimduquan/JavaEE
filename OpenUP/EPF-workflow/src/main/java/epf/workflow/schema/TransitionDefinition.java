@@ -21,7 +21,7 @@ public class TransitionDefinition {
 	 * 
 	 */
 	@Column
-	private boolean compensate = false;
+	private Boolean compensate = false;
 	/**
 	 * 
 	 */
@@ -34,10 +34,10 @@ public class TransitionDefinition {
 	public void setNextState(String nextState) {
 		this.nextState = nextState;
 	}
-	public boolean isCompensate() {
+	public Boolean isCompensate() {
 		return compensate;
 	}
-	public void setCompensate(boolean compensate) {
+	public void setCompensate(Boolean compensate) {
 		this.compensate = compensate;
 	}
 	public ProducedEventDefinition[] getProduceEvents() {

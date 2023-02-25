@@ -14,7 +14,7 @@ public class EventDataFilters {
 	 * 
 	 */
 	@Column
-	private boolean useData = true;
+	private Boolean useData = true;
 	/**
 	 * 
 	 */
@@ -26,10 +26,10 @@ public class EventDataFilters {
 	@Column
 	private String toStateData;
 	
-	public boolean isUseData() {
+	public Boolean isUseData() {
 		return useData;
 	}
-	public void setUseData(boolean useData) {
+	public void setUseData(Boolean useData) {
 		this.useData = useData;
 	}
 	public String getData() {

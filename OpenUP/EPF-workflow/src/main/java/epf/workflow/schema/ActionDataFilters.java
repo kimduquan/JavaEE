@@ -19,7 +19,7 @@ public class ActionDataFilters {
 	 * 
 	 */
 	@Column
-	private boolean useResults = true;
+	private Boolean useResults = true;
 	/**
 	 * 
 	 */
@@ -37,10 +37,10 @@ public class ActionDataFilters {
 	public void setFromStateData(String fromStateData) {
 		this.fromStateData = fromStateData;
 	}
-	public boolean isUseResults() {
+	public Boolean isUseResults() {
 		return useResults;
 	}
-	public void setUseResults(boolean useResults) {
+	public void setUseResults(Boolean useResults) {
 		this.useResults = useResults;
 	}
 	public String getResults() {
