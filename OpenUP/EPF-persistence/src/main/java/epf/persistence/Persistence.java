@@ -198,7 +198,7 @@ public class Persistence implements epf.persistence.client.Entities {
     		return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
-        final JsonObject preEntity = JsonUtil.toJson(entityObject);
+        final JsonObject preEntity = JsonUtil.toJsonObject(entityObject);
         
     	final Object transactionEntity = entityObject;
         final PostUpdate transactionEvent = new PostUpdate();
@@ -213,7 +213,7 @@ public class Persistence implements epf.persistence.client.Entities {
         final Object mergedEntity = manager.merge(entity);
         manager.flush();
         
-        final JsonObject postEntity = JsonUtil.toJson(mergedEntity);
+        final JsonObject postEntity = JsonUtil.toJsonObject(mergedEntity);
         final JsonPatch diff = Json.createDiff(preEntity, postEntity);
         transaction.setDiff(JsonUtil.toString(diff.toJsonArray()));
         
@@ -254,7 +254,7 @@ public class Persistence implements epf.persistence.client.Entities {
     		return Response.status(Response.Status.NOT_FOUND).build();
     	}
     	
-    	final JsonObject preEntity = JsonUtil.toJson(entityObject);
+    	final JsonObject preEntity = JsonUtil.toJsonObject(entityObject);
     	final JsonObject postEntity = JsonValue.EMPTY_JSON_OBJECT;
     	final JsonPatch diff = Json.createDiff(preEntity, postEntity);
     	

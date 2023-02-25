@@ -1,4 +1,4 @@
-package epf.workflow.schema.adapter;
+package epf.workflow.adapter;
 
 import javax.json.JsonValue;
 import javax.json.bind.Jsonb;
@@ -26,7 +26,7 @@ public class BoolOrObjectAdapter implements JsonbAdapter<Object, JsonValue> {
 
 	@Override
 	public JsonValue adaptToJson(final Object obj) throws Exception {
-		return JsonUtil.toJson(obj);
+		return JsonUtil.toJsonValue(obj);
 	}
 
 	@Override

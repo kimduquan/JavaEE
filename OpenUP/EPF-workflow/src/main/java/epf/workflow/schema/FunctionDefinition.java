@@ -1,7 +1,9 @@
 package epf.workflow.schema;
 
 import javax.validation.constraints.NotNull;
+import epf.workflow.schema.mapping.FunctionTypeConverter;
 import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Convert;
 import jakarta.nosql.mapping.Embeddable;
 
 /**
@@ -29,6 +31,7 @@ public class FunctionDefinition {
 	 * 
 	 */
 	@Column
+	@Convert(value = FunctionTypeConverter.class)
 	private FunctionType type = FunctionType.rest;
 	
 	/**
@@ -40,7 +43,6 @@ public class FunctionDefinition {
 	/**
 	 * 
 	 */
-	@Column
 	private Object metadata;
 
 	public String getName() {

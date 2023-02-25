@@ -4,10 +4,19 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.function.Function;
+
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
+import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonPatch;
 import javax.json.JsonReader;
@@ -27,12 +36,26 @@ public interface JsonUtil {
 	 * @return
 	 * @throws Exception 
 	 */
-	static JsonObject toJson(final Object object) throws Exception {
+	static JsonObject toJsonObject(final Object object) throws Exception {
 		try(StringWriter writer = new StringWriter()){
 			try(Jsonb jsonb = JsonbBuilder.create()){
 				jsonb.toJson(object, writer);
     		}
 			return readObject(writer.toString());
+		}
+	}
+	
+	/**
+	 * @param object
+	 * @return
+	 * @throws Exception
+	 */
+	static JsonValue toJsonValue(final Object object) throws Exception {
+		try(StringWriter writer = new StringWriter()){
+			try(Jsonb jsonb = JsonbBuilder.create()){
+				jsonb.toJson(object, writer);
+    		}
+			return readValue(writer.toString());
 		}
 	}
 	
@@ -44,7 +67,21 @@ public interface JsonUtil {
 	static JsonArray toJsonArray(final Collection<?> collection) throws Exception {
 		final JsonArrayBuilder builder = Json.createArrayBuilder();
 		for(Object object : collection) {
-			builder.add(toJson(object));
+			builder.add(toJsonValue(object));
+		}
+		return builder.build();
+	}
+	
+	/**
+	 * @param <T>
+	 * @param array
+	 * @return
+	 * @throws Exception
+	 */
+	static <T> JsonArray toJsonArray(final T[] array) throws Exception {
+		final JsonArrayBuilder builder = Json.createArrayBuilder();
+		for(T object : array) {
+			builder.add(toJsonValue(object));
 		}
 		return builder.build();
 	}
@@ -211,7 +248,7 @@ public interface JsonUtil {
 	 * @throws Exception
 	 */
 	static JsonPatch createDiff(final Object source, final Object target) throws Exception {
-		return Json.createDiff(toJson(source), toJson(target));
+		return Json.createDiff(toJsonObject(source), toJsonObject(target));
 	}
 	
 	/**
@@ -238,5 +275,127 @@ public interface JsonUtil {
 		try(Jsonb jsonb = JsonbBuilder.create()){
 			return jsonb.fromJson(input, cls);
 		}
+	}
+	
+	/**
+	 * @param map
+	 * @param jsonObject
+	 */
+	static void asMap(final Map<String, Object> map, final JsonObject jsonObject) {
+		for(Entry<String, JsonValue> entry : jsonObject.entrySet()) {
+			map.put(entry.getKey(), asObject(entry.getValue()));
+		}
+	}
+	
+	/**
+	 * @param jsonValue
+	 * @return
+	 */
+	static Object asObject(final JsonValue jsonValue) {
+		if(jsonValue != null) {
+			switch(jsonValue.getValueType()) {
+				case ARRAY:
+					final List<Object> list = asList(jsonValue.asJsonArray());
+					return list;
+				case FALSE:
+					return false;
+				case NULL:
+					return null;
+				case NUMBER:
+					final JsonNumber number = (JsonNumber) jsonValue;
+					return number.numberValue();
+				case OBJECT:
+					final Map<String, Object> map = new HashMap<String, Object>();
+					asMap(map, jsonValue.asJsonObject());
+					return map;
+				case STRING:
+					return ((JsonString)jsonValue).getString();
+				case TRUE:
+					return true;
+				default:
+					break;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * @param jsonArray
+	 * @return
+	 */
+	static List<Object> asList(final JsonArray jsonArray) {
+		final List<Object> list = new ArrayList<>();
+		jsonArray.forEach(jsonValue -> list.add(asObject(jsonValue)));
+		return list;
+	}
+	
+	/**
+	 * @param <T>
+	 * @param map
+	 * @param cls
+	 * @return
+	 * @throws Exception
+	 */
+	static <T> T fromMap(final Map<String, Object> map, final Class<T> cls) throws Exception {
+		Objects.requireNonNull(map, "Map");
+		Objects.requireNonNull(cls, "Class");
+		try(Jsonb jsonb = JsonbBuilder.create()){
+			final String json = jsonb.toJson(map);
+			return jsonb.fromJson(json, cls);
+		}
+	}
+	
+	/**
+	 * @param <T>
+	 * @param list
+	 * @param cls
+	 * @return
+	 * @throws Exception
+	 */
+	static <T> List<T> fromLisṭ̣(final List<Object> list, final Class<T> cls) throws Exception{
+		Objects.requireNonNull(list, "List");
+		Objects.requireNonNull(cls, "Class");
+		final List<T> result = new ArrayList<>();
+		try(Jsonb jsonb = JsonbBuilder.create()){
+			for(Object object : list) {
+				if(object instanceof Map) {
+					@SuppressWarnings("unchecked")
+					final Map<String, Object> map = (Map<String, Object>) object;
+					final T t = fromMap(map, cls);
+					result.add(t);
+				}
+				else {
+					result.add(null);
+				}
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * @param <T>
+	 * @param list
+	 * @param convert
+	 * @return
+	 * @throws Exception
+	 */
+	static <T> List<T> fromLisṭ̣(final List<Object> list, final Function<Map<String, Object>, T> convert) throws Exception{
+		Objects.requireNonNull(list, "List");
+		Objects.requireNonNull(convert, "Function");
+		final List<T> result = new ArrayList<>();
+		try(Jsonb jsonb = JsonbBuilder.create()){
+			for(Object object : list) {
+				if(object instanceof Map) {
+					@SuppressWarnings("unchecked")
+					final Map<String, Object> map = (Map<String, Object>) object;
+					final T t = convert.apply(map);
+					result.add(t);
+				}
+				else {
+					result.add(null);
+				}
+			}
+		}
+		return result;
 	}
 }

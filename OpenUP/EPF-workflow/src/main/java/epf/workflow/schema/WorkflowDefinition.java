@@ -3,7 +3,10 @@ package epf.workflow.schema;
 import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.validation.constraints.NotNull;
 import epf.workflow.schema.adapter.StartDefinitionAdapter;
+import epf.workflow.schema.mapping.FunctionDefinitionArrayConverter;
+import epf.workflow.schema.mapping.StateArrayConverter;
 import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Convert;
 import jakarta.nosql.mapping.Entity;
 import jakarta.nosql.mapping.Id;
 
@@ -122,6 +125,7 @@ public class WorkflowDefinition {
 	 * 
 	 */
 	@Column
+	@Convert(FunctionDefinitionArrayConverter.class)
 	private FunctionDefinition[] functions;
 	
 	/**
@@ -140,6 +144,7 @@ public class WorkflowDefinition {
 	 * 
 	 */
 	@Column
+	@Convert(StateArrayConverter.class)
 	private State[] states;
 	
 	/**

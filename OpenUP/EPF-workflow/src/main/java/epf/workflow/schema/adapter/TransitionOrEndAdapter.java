@@ -22,7 +22,7 @@ public class TransitionOrEndAdapter implements JsonbAdapter<Object, JsonValue> {
 
 	@Override
 	public JsonValue adaptToJson(final Object obj) throws Exception {
-		return JsonUtil.toJson(obj);
+		return JsonUtil.toJsonValue(obj);
 	}
 
 	@Override

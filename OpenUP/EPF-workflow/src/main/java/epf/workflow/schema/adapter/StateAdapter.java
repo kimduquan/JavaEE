@@ -22,7 +22,7 @@ public class StateAdapter implements JsonbAdapter<State, JsonObject> {
 
 	@Override
 	public JsonObject adaptToJson(final State obj) throws Exception {
-		return JsonUtil.toJson(obj);
+		return JsonUtil.toJsonObject(obj);
 	}
 
 	@Override

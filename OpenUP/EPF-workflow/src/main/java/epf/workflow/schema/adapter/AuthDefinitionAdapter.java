@@ -18,7 +18,7 @@ public class AuthDefinitionAdapter implements JsonbAdapter<AuthDefinition, JsonO
 
 	@Override
 	public JsonObject adaptToJson(final AuthDefinition obj) throws Exception {
-		return JsonUtil.toJson(obj);
+		return JsonUtil.toJsonObject(obj);
 	}
 
 	@Override

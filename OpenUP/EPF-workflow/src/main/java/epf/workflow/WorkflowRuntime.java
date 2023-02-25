@@ -625,11 +625,11 @@ public class WorkflowRuntime {
 					eventData = JsonUtil.readValue((String)event.getData());
 				}
 				else {
-					eventData = JsonUtil.toJson(event.getData());
+					eventData = JsonUtil.toJsonValue(event.getData());
 				}
 			}
 			else {
-				eventData = JsonUtil.toJson(event);
+				eventData = JsonUtil.toJsonValue(event);
 			}
 			JsonValue data = eventData;
 			if(eventDataFilters.getData() != null) {
@@ -740,7 +740,7 @@ public class WorkflowRuntime {
 					input = (JsonValue) continueAsDef.getData();
 				}
 				else {
-					input = JsonUtil.toJson(continueAsDef.getData());
+					input = JsonUtil.toJsonValue(continueAsDef.getData());
 				}
 				newWorkflowData.setInput(input);
 			}
