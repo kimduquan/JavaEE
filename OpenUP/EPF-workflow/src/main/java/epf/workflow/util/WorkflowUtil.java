@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Objects;
 import javax.el.ELProcessor;
 import javax.json.Json;
+import javax.json.JsonMergePatch;
 import javax.json.JsonValue;
 import epf.workflow.ScheduleTrigger;
 import epf.workflow.WorkflowData;
@@ -179,7 +180,7 @@ public interface WorkflowUtil {
 	static void mergeStateDataOutput(final String data, final WorkflowData to, final JsonValue fromOutput) {
 		JsonValue output = to.getOutput();
 		output = getValue(data, to.getOutput());
-		final JsonValue newOutput = Json.createMergeDiff(fromOutput, output).apply(output);
+		final JsonValue newOutput = Json.createMergeDiff(output, fromOutput).apply(output);
 		setValue(data, to.getOutput(), newOutput);
 	}
 	
@@ -189,7 +190,7 @@ public interface WorkflowUtil {
 	 */
 	static void mergeStateDataOutput(final WorkflowData to, final JsonValue fromOutput) {
 		JsonValue output = to.getOutput();
-		final JsonValue newOutput = Json.createMergeDiff(fromOutput, output).apply(output);
+		final JsonValue newOutput = Json.createMergeDiff(output, fromOutput).apply(output);
 		to.setOutput(newOutput);
 	}
 	
@@ -201,7 +202,7 @@ public interface WorkflowUtil {
 	static void mergeStateDataInput(final String data, final WorkflowData to, final JsonValue fromInput) {
 		JsonValue input = to.getInput();
 		input = getValue(data, to.getInput());
-		final JsonValue newInput = Json.createMergeDiff(fromInput, input).apply(input);
+		final JsonValue newInput = Json.createMergeDiff(input, fromInput).apply(input);
 		setValue(data, to.getInput(), newInput);
 	}
 	
@@ -211,7 +212,7 @@ public interface WorkflowUtil {
 	 */
 	static void mergeStateDataInput(final WorkflowData to, final JsonValue fromInput) {
 		JsonValue input = to.getInput();
-		final JsonValue newInput = Json.createMergeDiff(fromInput, input).apply(input);
+		final JsonValue newInput = Json.createMergeDiff(input, fromInput).apply(input);
 		to.setInput(newInput);
 	}
 	
