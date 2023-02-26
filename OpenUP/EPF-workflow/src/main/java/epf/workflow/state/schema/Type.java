@@ -8,11 +8,11 @@ public enum Type {
 	/**
 	 * 
 	 */
-	Event,
+	event,
 	/**
 	 * 
 	 */
-	Operation,
+	operation,
 	/**
 	 * 
 	 */
@@ -20,21 +20,21 @@ public enum Type {
 	/**
 	 * 
 	 */
-	Sleep,
+	sleep,
 	/**
 	 * 
 	 */
-	Parallel,
+	parallel,
 	/**
 	 * 
 	 */
-	Inject,
+	inject,
 	/**
 	 * 
 	 */
-	ForEach,
+	foreach,
 	/**
 	 * 
 	 */
-	Callback,
+	callback,
 }

@@ -142,7 +142,7 @@ public class WorkflowRuntime {
 			startState = workflowDefinition.getStates()[0];
 		}
 		if(startState != null) {
-			if(startState.getType() == Type.Event) {
+			if(startState.getType() == Type.event) {
 				final EventState eventState = (EventState)startState;
 				startEventState(workflowDefinition, eventState, workflowData);
 			}
@@ -166,11 +166,11 @@ public class WorkflowRuntime {
 			return;
 		}
 		switch(state.getType()) {
-			case Event:
+			case event:
 				final EventState eventState = (EventState)state;
 				startEventState(eventState, workflowInstance);
 				break;
-			case Operation:
+			case operation:
 				final OperationState operationState = (OperationState) state;
 				startOperationState(operationState, workflowInstance);
 				break;
@@ -178,23 +178,23 @@ public class WorkflowRuntime {
 				final SwitchState switchState = (SwitchState) state;
 				startSwitchState(switchState, workflowInstance);
 				break;
-			case Sleep:
+			case sleep:
 				final SleepState sleepState = (SleepState) state;
 				startSleepState(sleepState, workflowInstance);
 				break;
-			case Parallel:
+			case parallel:
 				final ParallelState parallelState = (ParallelState) state;
 				startParallelState(parallelState, workflowInstance);
 				break;
-			case Inject:
+			case inject:
 				final InjectState injectState = (InjectState) state;
 				startInjectState(injectState, workflowInstance);
 				break;
-			case ForEach:
+			case foreach:
 				final ForEachState forEachState = (ForEachState) state;
 				startForEachState(forEachState, workflowInstance);
 				break;
-			case Callback:
+			case callback:
 				final CallbackState callbackState = (CallbackState) state;
 				startCallbackState(callbackState, workflowInstance);
 				break;
@@ -672,11 +672,11 @@ public class WorkflowRuntime {
 	private void compensateState(final State state, final Map<String, State> states, final WorkflowInstance workflowInstance) throws Exception {
 		String compensatedBy = null;
 		switch(state.getType()) {
-			case Event:
+			case event:
 				final EventState eventState = (EventState)state;
 				compensatedBy = eventState.getCompensatedBy();
 				break;
-			case Operation:
+			case operation:
 				final OperationState operationState = (OperationState) state;
 				compensatedBy = operationState.getCompensatedBy();
 				break;
@@ -684,21 +684,21 @@ public class WorkflowRuntime {
 				final SwitchState switchState = (SwitchState) state;
 				compensatedBy = switchState.getCompensatedBy();
 				break;
-			case Sleep:
+			case sleep:
 				break;
-			case Parallel:
+			case parallel:
 				final ParallelState parallelState = (ParallelState) state;
 				compensatedBy = parallelState.getCompensatedBy();
 				break;
-			case Inject:
+			case inject:
 				final InjectState injectState = (InjectState) state;
 				compensatedBy = injectState.getCompensatedBy();
 				break;
-			case ForEach:
+			case foreach:
 				final ForEachState forEachState = (ForEachState) state;
 				compensatedBy = forEachState.getCompensatedBy();
 				break;
-			case Callback:
+			case callback:
 				final CallbackState callbackState = (CallbackState) state;
 				compensatedBy = callbackState.getCompensatedBy();
 				break;

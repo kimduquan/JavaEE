@@ -71,11 +71,11 @@ public interface TimeoutUtil {
 	static WorkflowTimeoutDefinition getTimeouts(final WorkflowDefinition workflowDefinition, final State state) {
 		WorkflowTimeoutDefinition workflowTimeoutDefinition = getTimeouts(null, workflowDefinition.getTimeouts());
 		switch(state.getType()) {
-			case Event:
+			case event:
 				final EventState eventState = (EventState)state;
 				workflowTimeoutDefinition = getTimeouts(workflowTimeoutDefinition, eventState.getTimeouts());
 				break;
-			case Operation:
+			case operation:
 				final OperationState operationState = (OperationState) state;
 				workflowTimeoutDefinition = getTimeouts(workflowTimeoutDefinition, operationState.getTimeouts());
 				break;
@@ -83,19 +83,19 @@ public interface TimeoutUtil {
 				final SwitchState switchState = (SwitchState) state;
 				workflowTimeoutDefinition = getTimeouts(workflowTimeoutDefinition, switchState.getTimeouts());
 				break;
-			case Sleep:
+			case sleep:
 				break;
-			case Parallel:
+			case parallel:
 				final ParallelState parallelState = (ParallelState) state;
 				workflowTimeoutDefinition = getTimeouts(workflowTimeoutDefinition, parallelState.getTimeouts());
 				break;
-			case Inject:
+			case inject:
 				break;
-			case ForEach:
+			case foreach:
 				final ForEachState forEachState = (ForEachState) state;
 				workflowTimeoutDefinition = getTimeouts(workflowTimeoutDefinition, forEachState.getTimeouts());
 				break;
-			case Callback:
+			case callback:
 				final CallbackState callbackState = (CallbackState) state;
 				workflowTimeoutDefinition = getTimeouts(workflowTimeoutDefinition, callbackState.getTimeouts());
 				break;

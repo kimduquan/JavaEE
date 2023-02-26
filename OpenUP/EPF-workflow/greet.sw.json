@@ -32,7 +32,7 @@
     },
     {
       "name": "GreetInEnglish",
-      "type": "Inject",
+      "type": "inject",
       "data": {
         "greeting": "Hello from JSON Workflow, "
       },
@@ -40,7 +40,7 @@
     },
     {
       "name": "GreetInSpanish",
-      "type": "Inject",
+      "type": "inject",
       "data": {
         "greeting": "Saludos desde JSON Workflow, "
       },
@@ -48,7 +48,7 @@
     },
     {
       "name": "GreetPerson",
-      "type": "Operation",
+      "type": "operation",
       "actions": [
         {
           "name": "greetAction",
@@ -61,7 +61,7 @@
         }
       ],
       "end": {
-        "terminate": "true"
+        "terminate": true
       }
     }
   ]

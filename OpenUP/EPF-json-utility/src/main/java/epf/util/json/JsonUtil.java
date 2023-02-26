@@ -60,6 +60,37 @@ public interface JsonUtil {
 	}
 	
 	/**
+	 * @param <T>
+	 * @param e
+	 * @return
+	 * @throws Exception
+	 */
+	static <T extends Enum<T>> JsonValue toJsonEnum(final Enum<T> e) throws Exception {
+		try(StringWriter writer = new StringWriter()){
+			try(Jsonb jsonb = JsonbBuilder.create()){
+				jsonb.toJson(e.name().toLowerCase(), writer);
+    		}
+			return readValue(writer.toString());
+		}
+	}
+	
+	/**
+	 * @param <T>
+	 * @param cls
+	 * @param value
+	 * @return
+	 */
+	static <T extends Enum<T>> T asEnum(final Class<T> cls, final JsonValue value) {
+		final String name = ((JsonString)value).getString();
+		for(T e : cls.getEnumConstants()) {
+			if(e.name().toLowerCase().equals(name)) {
+				return e;
+			}
+		}
+		return null;
+	}
+	
+	/**
 	 * @param collection
 	 * @return
 	 * @throws Exception 

@@ -60,19 +60,19 @@ public class StateArrayConverter implements AttributeConverter<State[], List<Obj
 			final Type type = Enum.valueOf(Type.class, (String)map.get("type"));
 			try {
 				switch(type) {
-					case Callback:
+					case callback:
 						return JsonUtil.fromMap(map, CallbackState.class);
-					case Event:
+					case event:
 						return JsonUtil.fromMap(map, EventState.class);
-					case ForEach:
+					case foreach:
 						return JsonUtil.fromMap(map, ForEachState.class);
-					case Inject:
+					case inject:
 						return JsonUtil.fromMap(map, InjectState.class);
-					case Operation:
+					case operation:
 						return JsonUtil.fromMap(map, OperationState.class);
-					case Parallel:
+					case parallel:
 						return JsonUtil.fromMap(map, ParallelState.class);
-					case Sleep:
+					case sleep:
 						return JsonUtil.fromMap(map, SleepState.class);
 					case Switch:
 						return JsonUtil.fromMap(map, SwitchState.class);

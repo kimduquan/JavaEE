@@ -30,25 +30,25 @@ public class StateAdapter implements JsonbAdapter<State, JsonObject> {
 		final Type type = Type.valueOf(obj.getString("type"));
 		State state = null;
 		switch(type) {
-			case Callback:
+			case callback:
 				state = JsonUtil.fromJson(obj.toString(), CallbackState.class);
 				break;
-			case Event:
+			case event:
 				state = JsonUtil.fromJson(obj.toString(), EventState.class);
 				break;
-			case ForEach:
+			case foreach:
 				state = JsonUtil.fromJson(obj.toString(), ForEachState.class);
 				break;
-			case Inject:
+			case inject:
 				state = JsonUtil.fromJson(obj.toString(), InjectState.class);
 				break;
-			case Operation:
+			case operation:
 				state = JsonUtil.fromJson(obj.toString(), OperationState.class);
 				break;
-			case Parallel:
+			case parallel:
 				state = JsonUtil.fromJson(obj.toString(), ParallelState.class);
 				break;
-			case Sleep:
+			case sleep:
 				state = JsonUtil.fromJson(obj.toString(), SleepState.class);
 				break;
 			case Switch:
