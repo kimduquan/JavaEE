@@ -3,15 +3,13 @@ package epf.workflow.util;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
-
+import java.util.Objects;
 import javax.el.ELProcessor;
 import javax.json.Json;
 import javax.json.JsonValue;
-
 import epf.workflow.ScheduleTrigger;
 import epf.workflow.WorkflowData;
-import epf.workflow.el.JsonArrayELResolver;
-import epf.workflow.el.JsonObjectELResolver;
+import epf.workflow.el.JsonELResolver;
 import epf.workflow.schema.CallbackState;
 import epf.workflow.schema.EventDefinition;
 import epf.workflow.schema.EventState;
@@ -131,41 +129,46 @@ public interface WorkflowUtil {
 	
 	/**
 	 * @param filter
-	 * @param value
+	 * @param object
 	 * @return
 	 */
-	static JsonValue getValue(final String filter, final JsonValue value) {
-		final ELProcessor elProcessor = new ELProcessor();
-		elProcessor.getELManager().addELResolver(new JsonArrayELResolver());
-		elProcessor.getELManager().addELResolver(new JsonObjectELResolver());
-		elProcessor.defineBean("", value);
+	static JsonValue getValue(final String filter, final JsonValue object) {
+		final ELProcessor elProcessor = newELProcessor(object);
 		return (JsonValue) elProcessor.getValue(filter, JsonValue.class);
 	}
 	
 	/**
 	 * @param data
-	 * @param to
-	 * @param from
+	 * @param object
+	 * @param value
 	 */
-	static void setValue(final String data, final JsonValue to, final JsonValue from) {
-		final ELProcessor elProcessor = new ELProcessor();
-		elProcessor.getELManager().addELResolver(new JsonArrayELResolver());
-		elProcessor.getELManager().addELResolver(new JsonObjectELResolver());
-		elProcessor.defineBean("", to);
-		elProcessor.setValue(data, from);
+	static void setValue(final String data, final JsonValue object, final JsonValue value) {
+		final ELProcessor elProcessor = newELProcessor(object);
+		elProcessor.setValue(data, value);
 	}
 	
 	/**
 	 * @param data
-	 * @param expression
 	 * @return
 	 */
-	static Boolean evaluateCondition(final JsonValue data, final String expression) {
+	static ELProcessor newELProcessor(final JsonValue data) {
 		final ELProcessor elProcessor = new ELProcessor();
-		elProcessor.getELManager().addELResolver(new JsonArrayELResolver());
-		elProcessor.getELManager().addELResolver(new JsonObjectELResolver());
-		elProcessor.defineBean("", data);
-		return (Boolean)elProcessor.eval(expression);
+		final JsonELResolver elResolver = new JsonELResolver(data);
+		elResolver.defineBean(elProcessor);
+		elProcessor.getELManager().addELResolver(elResolver);
+		return elProcessor;
+	}
+	
+	/**
+	 * @param data
+	 * @param condition
+	 * @return
+	 */
+	static Boolean evaluateCondition(final JsonValue data, final String condition) {
+		Objects.requireNonNull(data, "JsonValue");
+		Objects.requireNonNull(condition, "String");
+		final ELProcessor elProcessor = newELProcessor(data);
+		return (Boolean) elProcessor.eval(condition);
 	}
 	
 	/**

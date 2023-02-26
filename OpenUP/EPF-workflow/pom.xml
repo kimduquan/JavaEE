@@ -49,7 +49,6 @@
 	<dependency>
 	    <groupId>javax.el</groupId>
 	    <artifactId>javax.el-api</artifactId>
-	    <scope>provided</scope>
 	</dependency>
 	<!-- https://mvnrepository.com/artifact/javax.json/javax.json-api -->
 	<dependency>
