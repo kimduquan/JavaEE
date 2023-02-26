@@ -1,0 +1,69 @@
+{
+	"id": "OpenUP Lifecycle",
+	"key": "OpenUP Lifecycle",
+	"name": "OpenUP Lifecycle",
+	"description": "This delivery process defines an end-to-end software development lifecycle that supports the core principles of OpenUP. It is designed to support small, co-located teams in their daily activities.",
+	"version": "1.0",
+	"start": "Inception Phase",
+	"specVersion": "0.8",
+	"expressionLang": "el",
+	"keepActive": true,
+	"autoRetries": false,
+	"states": [
+		{
+			"name": "Inception Phase",
+			"type": "operation",
+			"actionMode": "sequential",
+			"actions": [
+				{
+					"name": "Inception Phase",
+					"subFlowRef": "Inception Phase"
+				}
+			],
+			"transition": "Elaboration Phase",
+			"usedForCompensation": false,
+			"end": false
+		},
+		{
+			"name": "Elaboration Phase",
+			"type": "operation",
+			"actionMode": "sequential",
+			"actions": [
+				{
+					"name": "Elaboration Phase",
+					"subFlowRef": "Elaboration Phase"
+				}
+			],
+			"transition": "Construction Phase",
+			"usedForCompensation": false,
+			"end": false
+		},
+		{
+			"name": "Construction Phase",
+			"type": "operation",
+			"actionMode": "sequential",
+			"actions": [
+				{
+					"name": "Construction Phase",
+					"subFlowRef": "Construction Phase"
+				}
+			],
+			"transition": "Transition Phase",
+			"usedForCompensation": false,
+			"end": false
+		},
+		{
+			"name": "Transition Phase",
+			"type": "operation",
+			"actionMode": "sequential",
+			"actions": [
+				{
+					"name": "Transition Phase",
+					"subFlowRef": "Transition Phase"
+				}
+			],
+			"usedForCompensation": false,
+			"end": true
+		}
+	]
+}
