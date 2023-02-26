@@ -2,7 +2,6 @@ package epf.workflow.state.schema;
 
 import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.validation.constraints.NotNull;
-
 import epf.workflow.state.schema.adapter.StateAdapter;
 import jakarta.nosql.mapping.Column;
 import jakarta.nosql.mapping.MappedSuperclass;

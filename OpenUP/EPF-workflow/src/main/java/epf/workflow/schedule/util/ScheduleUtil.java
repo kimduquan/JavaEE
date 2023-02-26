@@ -2,7 +2,6 @@ package epf.workflow.schedule.util;
 
 import java.time.Duration;
 import java.time.Instant;
-
 import epf.workflow.schedule.ScheduleTrigger;
 
 /**

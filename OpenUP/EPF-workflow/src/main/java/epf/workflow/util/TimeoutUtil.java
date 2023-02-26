@@ -1,7 +1,6 @@
 package epf.workflow.util;
 
 import java.time.Duration;
-
 import epf.workflow.schema.WorkflowDefinition;
 import epf.workflow.schema.WorkflowTimeoutDefinition;
 import epf.workflow.state.schema.CallbackState;

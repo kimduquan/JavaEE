@@ -1,7 +1,6 @@
 package epf.workflow.action.schema;
 
 import javax.json.bind.annotation.JsonbTypeAdapter;
-
 import epf.workflow.event.schema.EventRefDefinition;
 import epf.workflow.function.schema.adapter.FunctionRefDefinitionAdapter;
 import epf.workflow.schema.WorkflowError;

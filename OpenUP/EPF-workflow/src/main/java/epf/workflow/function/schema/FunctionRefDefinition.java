@@ -1,7 +1,6 @@
 package epf.workflow.function.schema;
 
 import javax.validation.constraints.NotNull;
-
 import jakarta.nosql.mapping.Column;
 import jakarta.nosql.mapping.Embeddable;
 

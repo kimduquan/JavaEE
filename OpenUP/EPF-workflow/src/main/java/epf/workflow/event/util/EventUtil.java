@@ -1,7 +1,6 @@
 package epf.workflow.event.util;
 
 import java.util.Arrays;
-
 import epf.workflow.event.schema.EventDefinition;
 import epf.workflow.schema.WorkflowDefinition;
 

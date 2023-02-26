@@ -25,6 +25,7 @@ import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.util.MapUtil;
 import epf.util.json.JsonUtil;
 import epf.workflow.action.Action;
+import epf.workflow.action.SubflowAction;
 import epf.workflow.action.schema.ActionDefinition;
 import epf.workflow.action.schema.Mode;
 import epf.workflow.event.Event;

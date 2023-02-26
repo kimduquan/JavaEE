@@ -2,7 +2,6 @@ package epf.workflow.schema;
 
 import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.validation.constraints.NotNull;
-
 import epf.workflow.auth.schema.AuthDefinition;
 import epf.workflow.event.schema.EventDefinition;
 import epf.workflow.function.schema.FunctionDefinition;

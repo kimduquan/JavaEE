@@ -2,7 +2,6 @@ package epf.workflow.event;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import epf.workflow.WorkflowData;
 import epf.workflow.WorkflowInstance;
 import epf.workflow.schema.WorkflowDefinition;

@@ -1,7 +1,6 @@
 package epf.workflow.schedule.schema;
 
 import javax.json.bind.annotation.JsonbTypeAdapter;
-
 import epf.workflow.schedule.schema.adapter.CronDefinitionAdapter;
 import jakarta.nosql.mapping.Column;
 import jakarta.nosql.mapping.Embeddable;

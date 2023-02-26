@@ -1,7 +1,6 @@
 package epf.workflow.state.schema;
 
 import javax.validation.constraints.NotNull;
-
 import epf.workflow.action.schema.ActionDefinition;
 import epf.workflow.schema.WorkflowTimeoutDefinition;
 import jakarta.nosql.mapping.Column;

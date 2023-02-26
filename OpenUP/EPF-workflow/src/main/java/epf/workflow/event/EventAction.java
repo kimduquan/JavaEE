@@ -1,7 +1,6 @@
 package epf.workflow.event;
 
 import java.net.URI;
-
 import epf.workflow.WorkflowData;
 import epf.workflow.action.Action;
 import epf.workflow.action.schema.ActionDefinition;

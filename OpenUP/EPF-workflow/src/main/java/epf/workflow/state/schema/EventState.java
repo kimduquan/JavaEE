@@ -2,7 +2,6 @@ package epf.workflow.state.schema;
 
 import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.validation.constraints.NotNull;
-
 import epf.workflow.event.schema.OnEventsDefinition;
 import epf.workflow.schema.ErrorDefinition;
 import epf.workflow.schema.WorkflowTimeoutDefinition;
