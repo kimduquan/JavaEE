@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.Objects;
 import javax.el.ELProcessor;
 import javax.json.Json;
-import javax.json.JsonMergePatch;
 import javax.json.JsonValue;
 import epf.workflow.ScheduleTrigger;
 import epf.workflow.WorkflowData;
