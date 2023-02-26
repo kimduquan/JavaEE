@@ -1,6 +1,7 @@
 package epf.workflow;
 
-import epf.workflow.schema.ActionDefinition;
+import epf.workflow.action.Action;
+import epf.workflow.action.schema.ActionDefinition;
 import epf.workflow.schema.SubFlowRefDefinition;
 import epf.workflow.schema.WorkflowDefinition;
 

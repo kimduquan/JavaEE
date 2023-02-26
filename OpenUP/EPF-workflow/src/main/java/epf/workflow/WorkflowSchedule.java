@@ -5,10 +5,12 @@ import javax.enterprise.concurrent.ManagedScheduledExecutorService;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import epf.naming.Naming;
-import epf.workflow.schema.ScheduleDefinition;
+import epf.workflow.schedule.Schedule;
+import epf.workflow.schedule.ScheduleTrigger;
+import epf.workflow.schedule.schema.ScheduleDefinition;
+import epf.workflow.schedule.util.ScheduleUtil;
 import epf.workflow.schema.StartDefinition;
 import epf.workflow.schema.WorkflowDefinition;
-import epf.workflow.util.ScheduleUtil;
 
 /**
  * @author PC

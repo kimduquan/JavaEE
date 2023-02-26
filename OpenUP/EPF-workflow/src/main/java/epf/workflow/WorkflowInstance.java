@@ -4,8 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
-import epf.workflow.schema.State;
+
+import epf.workflow.event.Event;
 import epf.workflow.schema.WorkflowDefinition;
+import epf.workflow.state.schema.State;
 
 /**
  * @author PC
