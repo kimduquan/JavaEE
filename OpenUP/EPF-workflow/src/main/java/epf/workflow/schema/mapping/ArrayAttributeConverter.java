@@ -1,4 +1,4 @@
-package epf.workflow.mapping;
+package epf.workflow.schema.mapping;
 
 import java.util.ArrayList;
 import java.util.HashMap;

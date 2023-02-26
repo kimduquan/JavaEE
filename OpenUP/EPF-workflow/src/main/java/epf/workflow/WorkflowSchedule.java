@@ -8,7 +8,7 @@ import epf.naming.Naming;
 import epf.workflow.schema.ScheduleDefinition;
 import epf.workflow.schema.StartDefinition;
 import epf.workflow.schema.WorkflowDefinition;
-import epf.workflow.util.WorkflowUtil;
+import epf.workflow.util.ScheduleUtil;
 
 /**
  * @author PC
@@ -47,7 +47,7 @@ public class WorkflowSchedule {
 		}
 		if(interval != null) {
 			final Schedule schedule = new Schedule(workflowRuntime, workflowDefinition);
-			final ScheduleTrigger trigger = WorkflowUtil.parseInterval(interval);
+			final ScheduleTrigger trigger = ScheduleUtil.parseInterval(interval);
 			scheduleService.schedule(schedule, trigger);
 		}
 	}

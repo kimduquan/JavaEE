@@ -4,7 +4,7 @@ import java.time.Duration;
 import java.util.concurrent.Callable;
 import epf.workflow.schema.ActionDefinition;
 import epf.workflow.schema.WorkflowDefinition;
-import epf.workflow.util.WorkflowUtil;
+import epf.workflow.util.ELUtil;
 
 /**
  * @author PC
@@ -68,7 +68,7 @@ public abstract class Action implements Callable<Void> {
 	public Void call() throws Exception {
 		boolean perform = true;
 		if(actionDefinition.getCondition() != null) {
-			perform = WorkflowUtil.evaluateCondition(workflowData.getInput(), actionDefinition.getCondition());
+			perform = ELUtil.evaluateCondition(workflowData.getInput(), actionDefinition.getCondition());
 		}
 		if(perform) {
 			sleepBefore();

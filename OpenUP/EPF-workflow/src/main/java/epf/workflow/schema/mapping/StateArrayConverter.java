@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 import javax.json.JsonArray;
 import epf.util.json.JsonUtil;
 import epf.util.logging.LogManager;
-import epf.workflow.mapping.ArrayAttributeConverter;
 import epf.workflow.schema.CallbackState;
 import epf.workflow.schema.EventState;
 import epf.workflow.schema.ForEachState;

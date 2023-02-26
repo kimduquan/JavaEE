@@ -35,7 +35,7 @@ public class WorkflowPersistence {
 	 * @param id
 	 * @return
 	 */
-	public WorkflowDefinition get(final String id) {
+	public WorkflowDefinition find(final String id) {
 		return document.find(WorkflowDefinition.class, id).get();
 	}
 	

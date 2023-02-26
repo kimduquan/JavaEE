@@ -1,6 +1,5 @@
-package epf.workflow.adapter;
+package epf.workflow.schema.adapter;
 
-import javax.json.JsonString;
 import javax.json.JsonValue;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
@@ -11,7 +10,7 @@ import epf.util.json.JsonUtil;
  * @author PC
  *
  */
-public class StringOrObjectAdapter implements JsonbAdapter<Object, JsonValue> {
+public class BoolOrObjectAdapter implements JsonbAdapter<Object, JsonValue> {
 	
 	/**
 	 * 
@@ -21,7 +20,7 @@ public class StringOrObjectAdapter implements JsonbAdapter<Object, JsonValue> {
 	/**
 	 * @param cls
 	 */
-	public StringOrObjectAdapter(final Class<?> cls) {
+	public BoolOrObjectAdapter(final Class<?> cls) {
 		this.cls = cls;
 	}
 
@@ -34,7 +33,9 @@ public class StringOrObjectAdapter implements JsonbAdapter<Object, JsonValue> {
 	public Object adaptFromJson(final JsonValue obj) throws Exception {
 		switch(obj.getValueType()) {
 			case ARRAY:
+				break;
 			case FALSE:
+				return false;
 			case NULL:
 			case NUMBER:
 				break;
@@ -43,9 +44,9 @@ public class StringOrObjectAdapter implements JsonbAdapter<Object, JsonValue> {
 					return jsonb.fromJson(obj.toString(), cls);
 				}
 			case STRING:
-				return ((JsonString)obj).getString();
-			case TRUE:
 				break;
+			case TRUE:
+				return true;
 			default:
 				break;
 		}

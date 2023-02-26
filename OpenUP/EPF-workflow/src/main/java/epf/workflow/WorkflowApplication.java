@@ -56,7 +56,7 @@ public class WorkflowApplication {
 		if(newWorkflowDefinition.getStart() instanceof StartDefinition) {
 			schedule.schedule(newWorkflowDefinition);
 		}
-		return persistence.get(newWorkflowDefinition.getId());
+		return persistence.find(newWorkflowDefinition.getId());
 	}
 	
 	/**
@@ -81,7 +81,7 @@ public class WorkflowApplication {
 			workflowDefinition = persistence.find(workflowId, version);
 		}
 		else {
-			workflowDefinition = persistence.get(workflowId);
+			workflowDefinition = persistence.find(workflowId);
 		}
 		if(workflowDefinition != null) {
 			if(workflowDefinition.getStart() instanceof StartDefinition) {

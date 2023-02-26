@@ -1,6 +1,5 @@
 package epf.workflow.schema.adapter;
 
-import epf.workflow.adapter.BoolOrObjectAdapter;
 import epf.workflow.schema.EndDefinition;
 
 /**

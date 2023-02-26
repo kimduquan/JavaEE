@@ -4,7 +4,8 @@ import java.net.URI;
 import epf.workflow.schema.ActionDefinition;
 import epf.workflow.schema.EventDefinition;
 import epf.workflow.schema.WorkflowDefinition;
-import epf.workflow.util.WorkflowUtil;
+import epf.workflow.util.ELUtil;
+import epf.workflow.util.EventUtil;
 
 /**
  * @author PC
@@ -34,11 +35,11 @@ public class EventAction extends Action {
 
 	@Override
 	protected void perform() throws Exception {
-		final EventDefinition produceEventDefinition = WorkflowUtil.getEventDefinition(getWorkflowDefinition(), getActionDefinition().getEventRef().getProduceEventRef());
+		final EventDefinition produceEventDefinition = EventUtil.getEventDefinition(getWorkflowDefinition(), getActionDefinition().getEventRef().getProduceEventRef());
 		Object data = null;
 		if(getActionDefinition().getEventRef().getData() != null) {
 			if(getActionDefinition().getEventRef().getData() instanceof String) {
-				data = WorkflowUtil.getValue((String)getActionDefinition().getEventRef().getData(), getWorkflowData().getOutput());
+				data = ELUtil.getValue((String)getActionDefinition().getEventRef().getData(), getWorkflowData().getOutput());
 			}
 			else {
 				data = getWorkflowData().getOutput();

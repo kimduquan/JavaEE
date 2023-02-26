@@ -1,17 +1,7 @@
 package epf.workflow.util;
 
 import java.time.Duration;
-import java.time.Instant;
-import java.util.Arrays;
-import java.util.Objects;
-import javax.el.ELProcessor;
-import javax.json.Json;
-import javax.json.JsonValue;
-import epf.workflow.ScheduleTrigger;
-import epf.workflow.WorkflowData;
-import epf.workflow.el.JsonELResolver;
 import epf.workflow.schema.CallbackState;
-import epf.workflow.schema.EventDefinition;
 import epf.workflow.schema.EventState;
 import epf.workflow.schema.ForEachState;
 import epf.workflow.schema.OperationState;
@@ -25,7 +15,7 @@ import epf.workflow.schema.WorkflowTimeoutDefinition;
  * @author PC
  *
  */
-public interface WorkflowUtil {
+public interface TimeoutUtil {
 	
 	/**
 	 * @param workflowTimeoutDefinition
@@ -113,130 +103,5 @@ public interface WorkflowUtil {
 				break;
 		}
 		return workflowTimeoutDefinition;
-	}
-	
-	/**
-	 * @param workflowDefinition
-	 * @param eventRef
-	 * @return
-	 */
-	static EventDefinition getEventDefinition(final WorkflowDefinition workflowDefinition, final String eventRef) {
-		if(workflowDefinition.getEvents() instanceof EventDefinition[]) {
-			return Arrays.asList((EventDefinition[])workflowDefinition.getEvents()).stream().filter(eventDef -> eventDef.getName().equals(eventRef)).findFirst().get();
-		}
-		return null;
-	}
-	
-	/**
-	 * @param filter
-	 * @param object
-	 * @return
-	 */
-	static JsonValue getValue(final String filter, final JsonValue object) {
-		final ELProcessor elProcessor = newELProcessor(object);
-		return (JsonValue) elProcessor.getValue(filter, JsonValue.class);
-	}
-	
-	/**
-	 * @param data
-	 * @param object
-	 * @param value
-	 */
-	static void setValue(final String data, final JsonValue object, final JsonValue value) {
-		final ELProcessor elProcessor = newELProcessor(object);
-		elProcessor.setValue(data, value);
-	}
-	
-	/**
-	 * @param data
-	 * @return
-	 */
-	static ELProcessor newELProcessor(final JsonValue data) {
-		final ELProcessor elProcessor = new ELProcessor();
-		final JsonELResolver elResolver = new JsonELResolver(data);
-		elResolver.defineBean(elProcessor);
-		elProcessor.getELManager().addELResolver(elResolver);
-		return elProcessor;
-	}
-	
-	/**
-	 * @param data
-	 * @param condition
-	 * @return
-	 */
-	static Boolean evaluateCondition(final JsonValue data, final String condition) {
-		Objects.requireNonNull(data, "JsonValue");
-		Objects.requireNonNull(condition, "String");
-		final ELProcessor elProcessor = newELProcessor(data);
-		return (Boolean) elProcessor.eval(condition);
-	}
-	
-	/**
-	 * @param data
-	 * @param to
-	 * @param fromOutput
-	 */
-	static void mergeStateDataOutput(final String data, final WorkflowData to, final JsonValue fromOutput) {
-		JsonValue output = to.getOutput();
-		output = getValue(data, to.getOutput());
-		final JsonValue newOutput = Json.createMergeDiff(output, fromOutput).apply(output);
-		setValue(data, to.getOutput(), newOutput);
-	}
-	
-	/**
-	 * @param to
-	 * @param fromOutput
-	 */
-	static void mergeStateDataOutput(final WorkflowData to, final JsonValue fromOutput) {
-		JsonValue output = to.getOutput();
-		final JsonValue newOutput = Json.createMergeDiff(output, fromOutput).apply(output);
-		to.setOutput(newOutput);
-	}
-	
-	/**
-	 * @param data
-	 * @param to
-	 * @param fromInput
-	 */
-	static void mergeStateDataInput(final String data, final WorkflowData to, final JsonValue fromInput) {
-		JsonValue input = to.getInput();
-		input = getValue(data, to.getInput());
-		final JsonValue newInput = Json.createMergeDiff(input, fromInput).apply(input);
-		setValue(data, to.getInput(), newInput);
-	}
-	
-	/**
-	 * @param to
-	 * @param fromInput
-	 */
-	static void mergeStateDataInput(final WorkflowData to, final JsonValue fromInput) {
-		JsonValue input = to.getInput();
-		final JsonValue newInput = Json.createMergeDiff(input, fromInput).apply(input);
-		to.setInput(newInput);
-	}
-	
-	/**
-	 * @param interval
-	 * @return
-	 */
-	static ScheduleTrigger parseInterval(final String interval) {
-		final String[] values = interval.split("/");
-		Instant start = null;
-		Duration duration = null;
-		Instant end = null;
-		if(values.length > 0 && values[0].equals("R")) {
-			if(values.length > 1) {
-				try {
-					duration = Duration.parse(values[1]);
-				}
-				catch(Exception ex) {
-					start = Instant.parse(values[1]);
-				}
-			}
-			if(values.length > 2) {
-				end = Instant.parse(values[2]);
-			}
-		}
-		return new ScheduleTrigger(start, duration, end);
 	}
 }

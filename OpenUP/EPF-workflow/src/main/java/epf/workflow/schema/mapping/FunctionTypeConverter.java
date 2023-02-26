@@ -1,6 +1,5 @@
 package epf.workflow.schema.mapping;
 
-import epf.workflow.mapping.EnumAttributeConverter;
 import epf.workflow.schema.FunctionType;
 
 /**
