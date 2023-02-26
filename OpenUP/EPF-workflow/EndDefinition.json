@@ -1,0 +1,6 @@
+{
+	"terminate": true,
+	"produceEvents": [],
+	"compensate": false,
+	"continueAs": {}
+}

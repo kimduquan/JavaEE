@@ -1,0 +1,8 @@
+{
+	"produceEventRef": "",
+	"consumeEventRef": "",
+	"consumeEventTimeout": "", 
+	"data": {},
+	"contextAttributes": {},
+	"invoke": ""
+}

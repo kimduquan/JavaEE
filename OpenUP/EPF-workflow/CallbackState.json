@@ -1,0 +1,15 @@
+{
+	"name": "",
+	"type": "",
+	"action": {},
+	"eventRef": "",
+	"timeouts": {},
+	"eventDataFilter": {},
+	"stateDataFilter": {},
+	"onErrors": [],
+	"transition": {},
+	"end": {},
+	"compensatedBy": "",
+	"usedForCompensation": false,
+	"metadata": {}
+}
