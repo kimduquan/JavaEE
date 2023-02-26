@@ -1,11 +1,11 @@
 {
 	"name": "",
-	"type": "",
+	"type": "foreach",
 	"inputCollection": "",
 	"outputCollection": "",
 	"iterationParam": "",
 	"batchSize": 1,
-	"mode": "",
+	"mode": "parallel",
 	"actions": [],
 	"timeouts": {},
 	"stateDataFilter": {},

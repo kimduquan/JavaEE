@@ -1,8 +1,8 @@
 {
 	"name": "",
-	"type": "",
+	"type": "parallel",
 	"branches": [],
-	"completionType": "",
+	"completionType": "allOf",
 	"numCompleted": 1,
 	"timeouts": {},
 	"stateDataFilter": {},

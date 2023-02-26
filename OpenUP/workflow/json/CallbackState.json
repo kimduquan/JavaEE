@@ -1,6 +1,6 @@
 {
 	"name": "",
-	"type": "",
+	"type": "callback",
 	"action": {},
 	"eventRef": "",
 	"timeouts": {},
