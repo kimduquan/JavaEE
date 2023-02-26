@@ -19,6 +19,7 @@ import epf.workflow.state.schema.SleepState;
 import epf.workflow.state.schema.State;
 import epf.workflow.state.schema.SwitchState;
 import epf.workflow.state.schema.Type;
+import epf.workflow.util.EnumUtil;
 
 /**
  * @author PC
@@ -57,7 +58,7 @@ public class StateArrayConverter implements AttributeConverter<State[], List<Obj
 	
 	private State newState(final Map<String, Object> map) {
 		if(map != null) {
-			final Type type = Enum.valueOf(Type.class, (String)map.get("type"));
+			final Type type = EnumUtil.valueOf(Type.class, (String)map.get("type"));
 			try {
 				switch(type) {
 					case callback:

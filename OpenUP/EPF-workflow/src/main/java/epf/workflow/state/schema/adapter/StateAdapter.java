@@ -13,6 +13,7 @@ import epf.workflow.state.schema.SleepState;
 import epf.workflow.state.schema.State;
 import epf.workflow.state.schema.SwitchState;
 import epf.workflow.state.schema.Type;
+import epf.workflow.util.EnumUtil;
 
 /**
  * @author PC
@@ -27,7 +28,7 @@ public class StateAdapter implements JsonbAdapter<State, JsonObject> {
 
 	@Override
 	public State adaptFromJson(final JsonObject obj) throws Exception {
-		final Type type = Type.valueOf(obj.getString("type"));
+		final Type type = EnumUtil.valueOf(Type.class, obj.getString("type"));
 		State state = null;
 		switch(type) {
 			case callback:

@@ -1,5 +1,6 @@
 package epf.workflow.schema.mapping;
 
+import epf.workflow.util.EnumUtil;
 import jakarta.nosql.mapping.AttributeConverter;
 
 /**
@@ -30,6 +31,6 @@ public class EnumAttributeConverter<T extends Enum<T>> implements AttributeConve
 		if(dbData == null) {
 			return null;
 		}
-		return Enum.valueOf(cls, dbData);
+		return EnumUtil.valueOf(cls, dbData);
 	}
 }

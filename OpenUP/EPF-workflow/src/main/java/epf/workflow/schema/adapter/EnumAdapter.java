@@ -1,14 +1,13 @@
 package epf.workflow.schema.adapter;
 
-import javax.json.JsonValue;
 import javax.json.bind.adapter.JsonbAdapter;
-import epf.util.json.JsonUtil;
+import epf.workflow.util.EnumUtil;
 
 /**
  * @author PC
  *
  */
-public class EnumAdapter<T extends Enum<T>> implements JsonbAdapter<Enum<T>, JsonValue> {
+public class EnumAdapter<T extends Enum<T>> implements JsonbAdapter<Enum<T>, String> {
 	
 	/**
 	 * 
@@ -23,13 +22,13 @@ public class EnumAdapter<T extends Enum<T>> implements JsonbAdapter<Enum<T>, Jso
 	}
 
 	@Override
-	public JsonValue adaptToJson(final Enum<T> obj) throws Exception {
-		return JsonUtil.toJsonEnum(obj);
+	public String adaptToJson(final Enum<T> obj) throws Exception {
+		return obj.name();
 	}
 
 	@Override
-	public Enum<T> adaptFromJson(final JsonValue obj) throws Exception {
-		return JsonUtil.asEnum(cls, obj);
+	public Enum<T> adaptFromJson(final String obj) throws Exception {
+		return EnumUtil.valueOf(cls, obj);
 	}
 
 }

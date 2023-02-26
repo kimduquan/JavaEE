@@ -68,7 +68,7 @@ public interface JsonUtil {
 	static <T extends Enum<T>> JsonValue toJsonEnum(final Enum<T> e) throws Exception {
 		try(StringWriter writer = new StringWriter()){
 			try(Jsonb jsonb = JsonbBuilder.create()){
-				jsonb.toJson(e.name().toLowerCase(), writer);
+				jsonb.toJson(e.name(), writer);
     		}
 			return readValue(writer.toString());
 		}
@@ -83,7 +83,7 @@ public interface JsonUtil {
 	static <T extends Enum<T>> T asEnum(final Class<T> cls, final JsonValue value) {
 		final String name = ((JsonString)value).getString();
 		for(T e : cls.getEnumConstants()) {
-			if(e.name().toLowerCase().equals(name)) {
+			if(e.name().equals(name) || e.name().toLowerCase().equals(name)) {
 				return e;
 			}
 		}

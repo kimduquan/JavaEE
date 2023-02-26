@@ -15,7 +15,7 @@ public interface EnumUtil {
 	static <T extends Enum<T>> T valueOf(final Class<T> cls, final String name) {
 		final T[] enums = cls.getEnumConstants();
 		for(T e : enums) {
-			if(e.name().toLowerCase().equals(name)) {
+			if(e.name().equals(name) || e.name().toLowerCase().equals(name)) {
 				return e;
 			}
 		}
