@@ -4,7 +4,7 @@
 	"name": "Inception Iteration",
 	"description": "This iteration template defines the activities (and associated roles and work products) performed in a typical iteration in the Inception phase.",
 	"version": "1.0",
-	"start": "Inception Iteration",
+	"start": "Initiate Project",
 	"specVersion": "0.8",
 	"expressionLang": "el",
 	"keepActive": true,
@@ -111,7 +111,7 @@
 	"autoRetries": false,
 	"states": [
 		{
-			"name": "Inception Iteration",
+			"name": "Initiate Project",
 			"type": "parallel",
 			"branches": [
 				{
@@ -163,7 +163,16 @@
 							}
 						}
 					]
-				},
+				}
+			],
+			"completionType": "allOf",
+			"transition": "Agree on Technical Approach",
+			"end": false
+		},
+		{
+			"name": "Agree on Technical Approach",
+			"type": "parallel",
+			"branches": [
 				{
 					"name": "Prepare Environment",
 					"actions": [
