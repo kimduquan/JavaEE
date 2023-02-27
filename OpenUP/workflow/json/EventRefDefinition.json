@@ -4,5 +4,5 @@
 	"consumeEventTimeout": "", 
 	"data": {},
 	"contextAttributes": {},
-	"invoke": ""
+	"invoke": "sync"
 }
