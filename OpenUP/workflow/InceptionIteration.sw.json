@@ -121,6 +121,7 @@
 							"name": "Develop Technical Vision",
 							"eventRef": {
 								"produceEventRef": "Develop Technical Vision",
+								"consumeEventRef": "Develop Technical Vision",
 								"invoke": "sync"
 							}
 						},
@@ -128,6 +129,7 @@
 							"name": "Plan Project",
 							"eventRef": {
 								"produceEventRef": "Plan Project",
+								"consumeEventRef": "Plan Project",
 								"invoke": "sync"
 							}
 						}
@@ -140,6 +142,7 @@
 							"name": "Plan Iteration",
 							"eventRef": {
 								"produceEventRef": "Plan Iteration",
+								"consumeEventRef": "Plan Iteration",
 								"invoke": "sync"
 							}
 						},
@@ -147,6 +150,7 @@
 							"name": "Manage Iteration",
 							"eventRef": {
 								"produceEventRef": "Manage Iteration",
+								"consumeEventRef": "Manage Iteration",
 								"invoke": "sync"
 							}
 						},
@@ -154,6 +158,7 @@
 							"name": "Assess Results",
 							"eventRef": {
 								"produceEventRef": "Assess Results",
+								"consumeEventRef": "Assess Results",
 								"invoke": "sync"
 							}
 						}
@@ -166,6 +171,7 @@
 							"name": "Tailor the Process",
 							"eventRef": {
 								"produceEventRef": "Tailor the Process",
+								"consumeEventRef": "Tailor the Process",
 								"invoke": "sync"
 							}
 						},
@@ -173,6 +179,7 @@
 							"name": "Set Up Tools",
 							"eventRef": {
 								"produceEventRef": "Set Up Tools",
+								"consumeEventRef": "Set Up Tools",
 								"invoke": "sync"
 							}
 						},
@@ -180,6 +187,7 @@
 							"name": "Verify Tool Configuration and Installation",
 							"eventRef": {
 								"produceEventRef": "Verify Tool Configuration and Installation",
+								"consumeEventRef": "Verify Tool Configuration and Installation",
 								"invoke": "sync"
 							}
 						},
@@ -187,6 +195,7 @@
 							"name": "Deploy the Process",
 							"eventRef": {
 								"produceEventRef": "Deploy the Process",
+								"consumeEventRef": "Deploy the Process",
 								"invoke": "sync"
 							}
 						}
@@ -199,6 +208,7 @@
 							"name": "Identify and Outline Requirements",
 							"eventRef": {
 								"produceEventRef": "Identify and Outline Requirements",
+								"consumeEventRef": "Identify and Outline Requirements",
 								"invoke": "sync"
 							}
 						},
@@ -206,6 +216,7 @@
 							"name": "Detail Use-Case Scenarios",
 							"eventRef": {
 								"produceEventRef": "Detail Use-Case Scenarios",
+								"consumeEventRef": "Detail Use-Case Scenarios",
 								"invoke": "sync"
 							}
 						},
@@ -213,6 +224,7 @@
 							"name": "Detail System-Wide Requirements",
 							"eventRef": {
 								"produceEventRef": "Detail System-Wide Requirements",
+								"consumeEventRef": "Detail System-Wide Requirements",
 								"invoke": "sync"
 							}
 						},
@@ -220,6 +232,7 @@
 							"name": "Create Test Cases",
 							"eventRef": {
 								"produceEventRef": "Create Test Cases",
+								"consumeEventRef": "Create Test Cases",
 								"invoke": "sync"
 							}
 						}
@@ -232,6 +245,7 @@
 							"name": "Envision the Architecture",
 							"eventRef": {
 								"produceEventRef": "Envision the Architecture",
+								"consumeEventRef": "Envision the Architecture",
 								"invoke": "sync"
 							}
 						}
