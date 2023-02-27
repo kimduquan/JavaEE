@@ -1,6 +1,6 @@
 {
 	"eventRefs": [],
-	"actionMode": "",
+	"actionMode": "sequential",
 	"actions": [],
 	"eventDataFilter": {}
 }

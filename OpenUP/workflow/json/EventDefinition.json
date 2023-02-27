@@ -2,7 +2,7 @@
 	"name": "",
 	"source": "",
 	"type": "",
-	"kind": "",
+	"kind": "consumed",
 	"correlation": [],
 	"dataOnly": true,
 	"metadata": {}
