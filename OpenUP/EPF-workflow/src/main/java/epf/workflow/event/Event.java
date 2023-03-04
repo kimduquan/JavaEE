@@ -1,5 +1,8 @@
 package epf.workflow.event;
 
+import javax.json.bind.annotation.JsonbProperty;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import epf.workflow.event.mapping.UUIDAttributeConverter;
 import jakarta.nosql.mapping.Column;
 import jakarta.nosql.mapping.Convert;
@@ -18,31 +21,48 @@ public class Event {
 	 */
 	@Id("id")
 	@Convert(UUIDAttributeConverter.class)
+	@NotNull
+	@NotBlank
 	private String id;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@NotNull
+	@NotBlank
 	private String source;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@NotNull
+	@NotBlank
+	@JsonbProperty("specversion")
 	private String specVersion;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@NotNull
+	@NotBlank
 	private String type;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@JsonbProperty("datacontenttype")
 	private String dataContentType;
+	
+	/**
+	 * 
+	 */
+	@Column
+	@JsonbProperty("dataschema")
+	private String dataSchema;
 	
 	/**
 	 * 
@@ -100,6 +120,14 @@ public class Event {
 
 	public void setDataContentType(String dataContentType) {
 		this.dataContentType = dataContentType;
+	}
+
+	public String getDataSchema() {
+		return dataSchema;
+	}
+
+	public void setDataSchema(String dataSchema) {
+		this.dataSchema = dataSchema;
 	}
 
 	public String getSubject() {

@@ -15,6 +15,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import epf.naming.Naming;
 import epf.util.json.JsonUtil;
+import epf.workflow.event.Event;
 import epf.workflow.schema.StartDefinition;
 import epf.workflow.schema.WorkflowDefinition;
 
@@ -90,6 +91,25 @@ public class WorkflowApplication {
 			else {
 				runtime.start(workflowDefinition, workflowData);
 				return workflowData.getOutput();
+			}
+		}
+		throw new NotFoundException();
+	}
+	
+	@POST
+	@Path("{workflowId}/event")
+	public JsonValue consume(
+			@PathParam("workflowId") 
+			final String workflowId, 
+			@Valid
+			final Event event) throws Exception {
+		final WorkflowDefinition workflowDefinition = persistence.find(workflowId);
+		if(workflowDefinition != null) {
+			if(workflowDefinition.getStart() instanceof StartDefinition) {
+				throw new BadRequestException();
+			}
+			else {
+				runtime.consume(event);
 			}
 		}
 		throw new NotFoundException();
