@@ -17,6 +17,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
@@ -521,7 +523,8 @@ public class WorkflowRuntime {
 	 * @throws Exception 
 	 */
 	public void consumeEvent(@Observes final Event event) throws Exception {
-		workflowEventStore.find(EventStateEvent.class, event).forEach(eventStateEvent -> {
+		final Stream<EventStateEvent> eventStateEventStream = workflowEventStore.find(event);
+		eventStateEventStream.forEach(eventStateEvent -> {
 			final WorkflowDefinition workflowDefinition = workflowRepository.find(eventStateEvent.getWorkflowDefinition());
 			final Map<String, EventDefinition> events = new HashMap<>();
 			MapUtil.putAll(events, workflowDefinition.getEvents(), EventDefinition::getName);
@@ -546,7 +549,8 @@ public class WorkflowRuntime {
 				}
 			}
 		});
-		workflowEventStore.find(EventStateActionEvent.class, event).forEach(eventStateActionEvent -> {
+		final Stream<EventStateActionEvent> eventStateActionEventStream = workflowEventStore.find(event);
+		eventStateActionEventStream.forEach(eventStateActionEvent -> {
 			final WorkflowDefinition workflowDefinition = workflowRepository.find(eventStateActionEvent.getWorkflowDefinition());
 			final Map<String, EventDefinition> events = new HashMap<>();
 			MapUtil.putAll(events, workflowDefinition.getEvents(), EventDefinition::getName);

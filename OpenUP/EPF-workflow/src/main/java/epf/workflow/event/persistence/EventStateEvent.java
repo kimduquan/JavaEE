@@ -7,7 +7,7 @@ import jakarta.nosql.mapping.Entity;
  * @author PC
  *
  */
-@Entity
+@Entity("Event")
 public class EventStateEvent extends WorkflowEvent {
 	
 	/**
@@ -21,12 +21,6 @@ public class EventStateEvent extends WorkflowEvent {
 	 */
 	@Column
 	private String eventDefinition;
-	
-	/**
-	 * 
-	 */
-	@Column
-	private Object data;
 
 	public String getEventState() {
 		return eventState;
@@ -42,13 +36,5 @@ public class EventStateEvent extends WorkflowEvent {
 
 	public void setEventDefinition(String eventDefinition) {
 		this.eventDefinition = eventDefinition;
-	}
-
-	public Object getData() {
-		return data;
-	}
-
-	public void setData(Object data) {
-		this.data = data;
 	}
 }

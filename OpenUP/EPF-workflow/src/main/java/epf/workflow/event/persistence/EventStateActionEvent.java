@@ -7,7 +7,7 @@ import jakarta.nosql.mapping.Entity;
  * @author PC
  *
  */
-@Entity
+@Entity("Event")
 public class EventStateActionEvent extends WorkflowEvent {
 	
 	/**

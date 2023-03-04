@@ -1,21 +1,23 @@
 package epf.workflow.event;
 
-import java.net.URI;
+import epf.workflow.event.mapping.UUIDAttributeConverter;
 import jakarta.nosql.mapping.Column;
-import jakarta.nosql.mapping.Entity;
+import jakarta.nosql.mapping.Convert;
 import jakarta.nosql.mapping.Id;
+import jakarta.nosql.mapping.MappedSuperclass;
 
 /**
  * @author PC
  *
  */
-@Entity
+@MappedSuperclass
 public class Event {
 
 	/**
 	 * 
 	 */
-	@Id
+	@Id("id")
+	@Convert(UUIDAttributeConverter.class)
 	private String id;
 	
 	/**
@@ -41,12 +43,6 @@ public class Event {
 	 */
 	@Column
 	private String dataContentType;
-	
-	/**
-	 * 
-	 */
-	@Column
-	private URI dataSchema;
 	
 	/**
 	 * 
@@ -104,14 +100,6 @@ public class Event {
 
 	public void setDataContentType(String dataContentType) {
 		this.dataContentType = dataContentType;
-	}
-
-	public URI getDataSchema() {
-		return dataSchema;
-	}
-
-	public void setDataSchema(URI dataSchema) {
-		this.dataSchema = dataSchema;
 	}
 
 	public String getSubject() {

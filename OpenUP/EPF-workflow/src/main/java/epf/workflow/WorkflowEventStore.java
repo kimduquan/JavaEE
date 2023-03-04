@@ -1,5 +1,6 @@
 package epf.workflow;
 
+import java.util.UUID;
 import java.util.stream.Stream;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -25,6 +26,7 @@ public class WorkflowEventStore {
 	 * @param event
 	 */
 	public void persist(final WorkflowEvent event) {
+		event.setId(UUID.randomUUID().toString());
 		template.insert(event);
 	}
 	
@@ -34,8 +36,8 @@ public class WorkflowEventStore {
 	 * @param event
 	 * @return
 	 */
-	public <T extends WorkflowEvent> Stream<T> find(final Class<T> cls, final Event event){
-		final ColumnQuery columnQuery = ColumnQuery.select().from(cls.getSimpleName()).where("workflowDefinition").eq(event.getSubject()).and("source").eq(event.getSource()).and("type").eq(event.getType()).build();
+	public <T extends WorkflowEvent> Stream<T> find(final Event event){
+		final ColumnQuery columnQuery = ColumnQuery.select().from("Event").where("workflowDefinition").eq(event.getSubject()).and("source").eq(event.getSource()).and("type").eq(event.getType()).build();
 		return template.select(columnQuery);
 	}
 	
