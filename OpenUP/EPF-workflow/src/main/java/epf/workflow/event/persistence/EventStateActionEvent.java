@@ -1,5 +1,6 @@
 package epf.workflow.event.persistence;
 
+import epf.naming.Naming;
 import jakarta.nosql.mapping.Column;
 import jakarta.nosql.mapping.Entity;
 
@@ -7,7 +8,7 @@ import jakarta.nosql.mapping.Entity;
  * @author PC
  *
  */
-@Entity("Event")
+@Entity(Naming.Workflow.EVENT)
 public class EventStateActionEvent extends WorkflowEvent {
 	
 	/**

@@ -522,7 +522,7 @@ public class WorkflowRuntime {
 	 * @param event
 	 * @throws Exception 
 	 */
-	public void consumeEvent(@Observes final Event event) throws Exception {
+	public void consume(@Observes final Event event) throws Exception {
 		final Stream<EventStateEvent> eventStateEventStream = workflowEventStore.find(event);
 		eventStateEventStream.forEach(eventStateEvent -> {
 			final WorkflowDefinition workflowDefinition = workflowRepository.find(eventStateEvent.getWorkflowDefinition());

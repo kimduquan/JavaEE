@@ -4,6 +4,7 @@ import java.util.UUID;
 import java.util.stream.Stream;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import epf.naming.Naming;
 import epf.workflow.event.Event;
 import epf.workflow.event.persistence.WorkflowEvent;
 import jakarta.nosql.column.ColumnQuery;
@@ -37,7 +38,7 @@ public class WorkflowEventStore {
 	 * @return
 	 */
 	public <T extends WorkflowEvent> Stream<T> find(final Event event){
-		final ColumnQuery columnQuery = ColumnQuery.select().from("Event").where("workflowDefinition").eq(event.getSubject()).and("source").eq(event.getSource()).and("type").eq(event.getType()).build();
+		final ColumnQuery columnQuery = ColumnQuery.select().from(Naming.Workflow.EVENT).where("source").eq(event.getSource()).and("type").eq(event.getType()).build();
 		return template.select(columnQuery);
 	}
 	

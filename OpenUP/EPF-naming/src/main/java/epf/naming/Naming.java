@@ -1012,4 +1012,16 @@ public interface Naming {
 	 * 
 	 */
 	String WORKFLOW = "workflow";
+	
+	/**
+	 * @author PC
+	 *
+	 */
+	interface Workflow {
+		
+		/**
+		 * 
+		 */
+		String EVENT = "Event";
+	}
 }
