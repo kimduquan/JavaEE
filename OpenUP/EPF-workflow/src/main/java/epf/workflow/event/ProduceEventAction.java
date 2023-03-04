@@ -1,6 +1,5 @@
 package epf.workflow.event;
 
-import java.net.URI;
 import epf.workflow.WorkflowData;
 import epf.workflow.action.Action;
 import epf.workflow.action.schema.ActionDefinition;
@@ -13,7 +12,7 @@ import epf.workflow.util.ELUtil;
  * @author PC
  *
  */
-public class EventAction extends Action {
+public class ProduceEventAction extends Action {
 	
 	/**
 	 * 
@@ -26,7 +25,7 @@ public class EventAction extends Action {
 	 * @param event
 	 * @param workflowData
 	 */
-	public EventAction(
+	public ProduceEventAction(
 			WorkflowDefinition workflowDefinition, 
 			ActionDefinition actionDefinition, 
 			javax.enterprise.event.Event<Event> event,
@@ -48,7 +47,7 @@ public class EventAction extends Action {
 			}
 		}
 		final Event event = new Event();
-		event.setSource(new URI(produceEventDefinition.getSource()));
+		event.setSource(produceEventDefinition.getSource());
 		event.setType(produceEventDefinition.getType());
 		event.setData(data);
 		this.event.fire(event);

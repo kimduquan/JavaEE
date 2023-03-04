@@ -4,6 +4,7 @@ import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.validation.constraints.NotNull;
 import epf.workflow.auth.schema.AuthDefinition;
 import epf.workflow.event.schema.EventDefinition;
+import epf.workflow.event.schema.mapping.EventDefinitionArrayConverter;
 import epf.workflow.function.schema.FunctionDefinition;
 import epf.workflow.function.schema.mapping.FunctionDefinitionArrayConverter;
 import epf.workflow.schema.adapter.StartDefinitionAdapter;
@@ -123,6 +124,7 @@ public class WorkflowDefinition {
 	 * 
 	 */
 	@Column
+	@Convert(EventDefinitionArrayConverter.class)
 	private EventDefinition[] events;
 	
 	/**

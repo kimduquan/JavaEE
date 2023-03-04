@@ -304,8 +304,21 @@
 				<groupId>org.eclipse.jnosql.communication</groupId>
 				<artifactId>jnosql-mongodb-driver</artifactId>
 				<version>1.0.0-b5</version>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.mapping/jnosql-mapping-key-value -->
+			<dependency>
+			    <groupId>org.eclipse.jnosql.mapping</groupId>
+			    <artifactId>jnosql-mapping-column</artifactId>
+			    <version>1.0.0-b5</version>
 				<!--<scope>provided</scope>-->
 			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.communication/jnosql-cassandra-driver -->
+			<dependency>
+			    <groupId>org.eclipse.jnosql.communication</groupId>
+			    <artifactId>jnosql-cassandra-driver</artifactId>
+			    <version>1.0.0-b5</version>
+			</dependency>
+
 			<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
 			<dependency>
 			    <groupId>com.h2database</groupId>

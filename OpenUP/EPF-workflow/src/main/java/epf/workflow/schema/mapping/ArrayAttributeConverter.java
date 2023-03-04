@@ -125,6 +125,9 @@ public class ArrayAttributeConverter<T extends Object> implements AttributeConve
 					}
 				}
 			}
+			else if(object instanceof String || object instanceof Number || object instanceof Boolean) {
+				list.add(object);
+			}
 		}
 		return list;
 	}
