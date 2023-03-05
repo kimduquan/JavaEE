@@ -36,11 +36,11 @@ public class Event {
 	/**
 	 * 
 	 */
-	@Column
+	@Column("specversion")
 	@NotNull
 	@NotBlank
 	@JsonbProperty("specversion")
-	private String specVersion;
+	private String specVersion = "1.0";
 	
 	/**
 	 * 
@@ -53,14 +53,14 @@ public class Event {
 	/**
 	 * 
 	 */
-	@Column
+	@Column("datacontenttype")
 	@JsonbProperty("datacontenttype")
 	private String dataContentType;
 	
 	/**
 	 * 
 	 */
-	@Column
+	@Column("dataschema")
 	@JsonbProperty("dataschema")
 	private String dataSchema;
 	

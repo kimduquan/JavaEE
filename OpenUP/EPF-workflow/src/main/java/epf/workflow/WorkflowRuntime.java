@@ -498,7 +498,7 @@ public class WorkflowRuntime {
 	 * @throws Exception 
 	 */
 	public void consume(@Observes final Event event) throws Exception {
-		final Stream<EventStateEvent> eventStateEvents = workflowEventStore.find(event);
+		final Stream<EventStateEvent> eventStateEvents = workflowEventStore.findEventStateEvent(event);
 		eventStateEvents.forEach(eventStateEvent -> {
 			boolean isEventConsumed = false;
 			final WorkflowDefinition workflowDefinition = workflowRepository.find(eventStateEvent.getWorkflowDefinition());
@@ -518,7 +518,7 @@ public class WorkflowRuntime {
 				workflowEventStore.remove(eventStateEvent);
 			}
 		});
-		final Stream<EventStateActionEvent> eventStateActionEventStream = workflowEventStore.find(event);
+		final Stream<EventStateActionEvent> eventStateActionEventStream = workflowEventStore.findEventStateActionEvent(event);
 		eventStateActionEventStream.forEach(eventStateActionEvent -> {
 			final WorkflowDefinition workflowDefinition = workflowRepository.find(eventStateActionEvent.getWorkflowDefinition());
 			final Map<String, EventDefinition> events = new HashMap<>();

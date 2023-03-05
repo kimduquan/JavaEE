@@ -8,8 +8,11 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import epf.naming.Naming;
 import epf.workflow.event.Event;
+import epf.workflow.event.persistence.EventStateActionEvent;
+import epf.workflow.event.persistence.EventStateEvent;
 import epf.workflow.event.persistence.WorkflowEvent;
 import epf.workflow.event.schema.EventDefinition;
+import jakarta.nosql.column.ColumnDeleteQuery;
 import jakarta.nosql.column.ColumnQuery;
 import jakarta.nosql.mapping.column.ColumnTemplate;
 
@@ -36,11 +39,19 @@ public class WorkflowEventStore {
 	}
 	
 	/**
-	 * @param <T>
 	 * @param event
 	 * @return
 	 */
-	public <T extends WorkflowEvent> Stream<T> find(final Event event) {
+	public Stream<EventStateEvent> findEventStateEvent(final Event event) {
+		final ColumnQuery columnQuery = ColumnQuery.select().from(Naming.Workflow.EVENT).where("source").eq(event.getSource()).and("type").eq(event.getType()).build();
+		return template.select(columnQuery);
+	}
+	
+	/**
+	 * @param event
+	 * @return
+	 */
+	public Stream<EventStateActionEvent> findEventStateActionEvent(final Event event) {
 		final ColumnQuery columnQuery = ColumnQuery.select().from(Naming.Workflow.EVENT).where("source").eq(event.getSource()).and("type").eq(event.getType()).build();
 		return template.select(columnQuery);
 	}
@@ -53,7 +64,8 @@ public class WorkflowEventStore {
 	}
 	
 	public void remove(final WorkflowEvent event) {
-		template.delete(event.getClass(), event.getId());
+		final ColumnDeleteQuery deleteQuery = ColumnDeleteQuery.delete().from(Naming.Workflow.EVENT).where("id").eq(UUID.fromString(event.getId())).and("source").eq(event.getSource()).and("type").eq(event.getType()).build();
+		template.delete(deleteQuery);
 	}
 	
 	/**

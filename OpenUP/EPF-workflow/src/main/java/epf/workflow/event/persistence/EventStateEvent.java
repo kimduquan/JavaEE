@@ -14,13 +14,13 @@ public class EventStateEvent extends WorkflowEvent {
 	/**
 	 * 
 	 */
-	@Column
+	@Column("eventstate")
 	private String eventState;
 	
 	/**
 	 * 
 	 */
-	@Column
+	@Column("eventdefinition")
 	private String eventDefinition;
 
 	public String getEventState() {

@@ -16,13 +16,13 @@ public class WorkflowEvent extends Event {
 	/**
 	 * 
 	 */
-	@Column
+	@Column("workflowdefinition")
 	private String workflowDefinition;
 	
 	/**
 	 * 
 	 */
-	@Column
+	@Column("workflowinstance")
 	@Convert(UUIDAttributeConverter.class)
 	private String workflowInstance;
 
