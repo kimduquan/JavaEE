@@ -98,7 +98,7 @@ public class WorkflowApplication {
 	
 	@POST
 	@Path("{workflowId}/event")
-	public JsonValue consume(
+	public void consume(
 			@PathParam("workflowId") 
 			final String workflowId, 
 			@Valid
@@ -110,6 +110,7 @@ public class WorkflowApplication {
 			}
 			else {
 				runtime.consume(event);
+				return;
 			}
 		}
 		throw new NotFoundException();
