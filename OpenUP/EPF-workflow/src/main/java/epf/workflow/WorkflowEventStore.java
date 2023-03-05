@@ -8,6 +8,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import epf.naming.Naming;
 import epf.workflow.event.Event;
+import epf.workflow.event.persistence.CallbackStateEvent;
 import epf.workflow.event.persistence.EventStateActionEvent;
 import epf.workflow.event.persistence.EventStateEvent;
 import epf.workflow.event.persistence.WorkflowEvent;
@@ -52,6 +53,15 @@ public class WorkflowEventStore {
 	 * @return
 	 */
 	public Stream<EventStateActionEvent> findEventStateActionEvent(final Event event) {
+		final ColumnQuery columnQuery = ColumnQuery.select().from(Naming.Workflow.EVENT).where("source").eq(event.getSource()).and("type").eq(event.getType()).build();
+		return template.select(columnQuery);
+	}
+	
+	/**
+	 * @param event
+	 * @return
+	 */
+	public Stream<CallbackStateEvent> findCallbackStateEvent(final Event event){
 		final ColumnQuery columnQuery = ColumnQuery.select().from(Naming.Workflow.EVENT).where("source").eq(event.getSource()).and("type").eq(event.getType()).build();
 		return template.select(columnQuery);
 	}
