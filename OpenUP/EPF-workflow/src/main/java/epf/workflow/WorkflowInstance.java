@@ -4,9 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
-
 import epf.workflow.event.Event;
-import epf.workflow.schema.WorkflowDefinition;
 import epf.workflow.state.schema.State;
 
 /**
@@ -14,11 +12,6 @@ import epf.workflow.state.schema.State;
  *
  */
 public class WorkflowInstance {
-
-	/**
-	 * 
-	 */
-	private final WorkflowDefinition workflowDefinition;
 	
 	/**
 	 * 
@@ -51,20 +44,14 @@ public class WorkflowInstance {
 	private final WorkflowData workflowData;
 	
 	/**
-	 * @param workflowDefinition
 	 * @param id
 	 * @param workflowData
 	 * @param events
 	 */
-	public WorkflowInstance(WorkflowDefinition workflowDefinition, String id, WorkflowData workflowData, Event[] events) {
-		this.workflowDefinition = workflowDefinition;
+	public WorkflowInstance(String id, WorkflowData workflowData, Event[] events) {
 		this.id = id;
 		this.workflowData = workflowData;
 		Arrays.asList(events).forEach(this.events::add);
-	}
-
-	public WorkflowDefinition getWorkflowDefinition() {
-		return workflowDefinition;
 	}
 	
 	/**
@@ -86,24 +73,10 @@ public class WorkflowInstance {
 	}
 	
 	/**
-	 * @param event
-	 */
-	public void addEvent(final Event event) {
-		events.add(event);
-	}
-	
-	/**
 	 * @return
 	 */
 	public Event[] getEvents() {
 		return events.toArray(new Event[0]);
-	}
-	
-	/**
-	 * @param subFlow
-	 */
-	public void addSubFlow(final Future<?> subFlow) {
-		subFlows.add(subFlow);
 	}
 	
 	/**
