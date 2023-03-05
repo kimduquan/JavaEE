@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -84,11 +82,6 @@ public class WorkflowRuntime {
 	/**
 	 * 
 	 */
-	private final Map<String, WorkflowInstance> workflowInstances = new ConcurrentHashMap<>();
-	
-	/**
-	 * 
-	 */
 	@Inject
 	transient javax.enterprise.event.Event<Event> producedEvent;
 	
@@ -131,17 +124,16 @@ public class WorkflowRuntime {
 			startState = workflowDefinition.getStates()[0];
 		}
 		if(startState != null) {
-			final WorkflowInstance workflowInstance = newWorkflowInstance(workflowDefinition, workflowData, new Event[0]);
+			final WorkflowInstance workflowInstance = newWorkflowInstance(workflowDefinition, workflowData);
 			startState(workflowDefinition, startState, workflowInstance);
 		}
 	}
 	
-	private WorkflowInstance newWorkflowInstance(final WorkflowDefinition workflowDefinition, WorkflowData workflowData, Event[] events) {
-		final WorkflowInstance workflowInstance = new WorkflowInstance(UUID.randomUUID().toString(), workflowData, events);
-		if(Boolean.TRUE.equals(workflowDefinition.isKeepActive())) {
-			workflowInstances.put(workflowInstance.getId(), workflowInstance);
-		}
-		return workflowInstance;
+	private WorkflowInstance newWorkflowInstance(final WorkflowDefinition workflowDefinition, final WorkflowData workflowData) {
+		final WorkflowInstance workflowInstance = new WorkflowInstance();
+		workflowInstance.setWorkflowDefinition(workflowDefinition.getId());
+		workflowInstance.setWorkflowData(workflowData);
+		return workflowPersistence.persist(workflowInstance);
 	}
 	
 	private void startState(final WorkflowDefinition workflowDefinition, final State state, final WorkflowInstance workflowInstance) throws Exception {
@@ -263,12 +255,7 @@ public class WorkflowRuntime {
 					}
 					final EventDefinition eventDefinition = eventDefinitions.get(condition.getEventRef());
 					boolean isEvent = false;
-					for(Event event : workflowInstance.getEvents()) {
-						if(isEvent(eventDefinition, event)) {
-							isEvent = true;
-							break;
-						}
-					}
+					isEvent = eventDefinition != null;
 					if(isEvent) {
 						evaluate = true;
 						endCondition(workflowDefinition, switchState, condition, workflowInstance);
@@ -528,7 +515,7 @@ public class WorkflowRuntime {
 						if(actionDefinition.getName().equals(eventStateActionEvent.getActionDefinition()) && actionDefinition.getEventRef() != null && actionDefinition.getEventRef().getConsumeEventRef() != null) {
 							try {
 								final EventDefinition eventDefinition = getEventDefinition(workflowDefinition, actionDefinition.getEventRef().getConsumeEventRef());
-								final WorkflowInstance workflowInstance = workflowInstances.get(eventStateActionEvent.getWorkflowInstance());
+								final WorkflowInstance workflowInstance = workflowPersistence.getInstance(eventStateActionEvent.getWorkflowInstance());
 								consumeActionEvent(workflowDefinition, actionDefinition, eventDefinition, workflowInstance);
 								isEventConsumed = true;
 							} 
@@ -552,7 +539,7 @@ public class WorkflowRuntime {
 			if(state.getType() == Type.callback) {
 				final CallbackState callbackState = (CallbackState)state;
 				final EventDefinition eventDefinition = getEventDefinition(workflowDefinition, callbackState.getEventRef());
-				final WorkflowInstance workflowInstance = workflowInstances.get(callbackStateEvent.getWorkflowInstance());
+				final WorkflowInstance workflowInstance = workflowPersistence.getInstance(callbackStateEvent.getWorkflowInstance());
 				try {
 					callback(workflowDefinition, callbackState, workflowInstance, eventDefinition, event);
 				} 
@@ -588,7 +575,7 @@ public class WorkflowRuntime {
 				}
 				if(isEventConsumed) {
 					final EventDefinition eventDefinition = events.get(eventStateEvent.getEventDefinition());
-					final WorkflowInstance workflowInstance = this.workflowInstances.get(eventStateEvent.getWorkflowInstance());
+					final WorkflowInstance workflowInstance = workflowPersistence.getInstance(eventStateEvent.getWorkflowInstance());
 					executor.submit(() -> {
 						try {
 							onEvents(workflowDefinition, eventState, onEventsDefinition, eventDefinition, workflowInstance, event);
@@ -635,10 +622,6 @@ public class WorkflowRuntime {
 		filterActionDataInput(actionDefinition, workflowInstance.getWorkflowData(), actionData);
 		final ProduceEventAction eventAction = new ProduceEventAction(workflowDefinition, actionDefinition, eventDefinition, producedEvent, actionData);
 		eventAction.call();
-	}
-	
-	private static boolean isEvent(final EventDefinition eventDefinition, final Event event) {
-		return eventDefinition.getSource().equals(event.getSource().toString()) && eventDefinition.getType().equals(event.getType());
 	}
 	
 	private void filterStateDataInput(final StateDataFilters stateDataFilters, final WorkflowData workflowData) {
@@ -748,15 +731,15 @@ public class WorkflowRuntime {
 	}
 	
 	private void compensate(final WorkflowDefinition workflowDefinition, final WorkflowInstance workflowInstance) throws Exception {
-		final List<State> compensateStates = new ArrayList<>(Arrays.asList(workflowInstance.getStates()));
+		final List<String> compensateStates = new ArrayList<>(Arrays.asList(workflowInstance.getStates()));
 		Collections.reverse(compensateStates);
 		final Map<String, State> states = new HashMap<>();
 		MapUtil.putAll(states, workflowDefinition.getStates(), State::getName);
-		for(State compensateState : compensateStates) {
+		for(String compensateState : compensateStates) {
 			if(workflowInstance.isTerminate()) {
 				return;
 			}
-			compensateState(workflowDefinition, compensateState, states, workflowInstance);
+			compensateState(workflowDefinition, states.get(compensateState), states, workflowInstance);
 		}
 	}
 	
@@ -800,7 +783,7 @@ public class WorkflowRuntime {
 	
 	private void termiate(final WorkflowInstance workflowInstance) {
 		workflowInstance.terminate();
-		workflowInstances.remove(workflowInstance.getId());
+		workflowPersistence.remove(workflowInstance);
 		termiateSubFlows(workflowInstance);
 	}
 	

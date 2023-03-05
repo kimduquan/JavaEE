@@ -1,6 +1,8 @@
 package epf.workflow;
 
 import java.util.Optional;
+import java.util.UUID;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import epf.workflow.schema.WorkflowDefinition;
@@ -45,5 +47,29 @@ public class WorkflowPersistence {
 	 */
 	public WorkflowDefinition persist(final WorkflowDefinition workflowDefinition) {
 		return document.insert(workflowDefinition);
+	}
+	
+	/**
+	 * @param workflowInstance
+	 * @return
+	 */
+	public WorkflowInstance persist(final WorkflowInstance workflowInstance) {
+		workflowInstance.setId(UUID.randomUUID().toString());
+		return document.insert(workflowInstance);
+	}
+	
+	/**
+	 * @param id
+	 * @return
+	 */
+	public WorkflowInstance getInstance(final String id) {
+		return document.find(WorkflowInstance.class, id).get();
+	}
+	
+	/**
+	 * @param workflowInstance
+	 */
+	public void remove(final WorkflowInstance workflowInstance) {
+		document.delete(WorkflowInstance.class, workflowInstance.getId());
 	}
 }

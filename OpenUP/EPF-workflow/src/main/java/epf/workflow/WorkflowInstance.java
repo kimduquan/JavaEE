@@ -1,32 +1,45 @@
 package epf.workflow;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
-import epf.workflow.event.Event;
 import epf.workflow.state.schema.State;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Entity;
+import jakarta.nosql.mapping.Id;
 
 /**
  * @author PC
  *
  */
+@Entity
 public class WorkflowInstance {
 	
 	/**
 	 * 
 	 */
-	private final String id;
+	@Column
+	private String workflowDefinition;
 	
 	/**
 	 * 
 	 */
-	private final List<State> states = new CopyOnWriteArrayList<>();
+	@Id
+	private String id;
 	
 	/**
 	 * 
 	 */
-	private final List<Event> events = new CopyOnWriteArrayList<>();
+	@Column
+	private String[] states;
+	
+	/**
+	 * 
+	 */
+	@Column
+	private WorkflowData workflowData;
 	
 	/**
 	 * 
@@ -39,44 +52,11 @@ public class WorkflowInstance {
 	private boolean terminate = false;
 	
 	/**
-	 * 
-	 */
-	private final WorkflowData workflowData;
-	
-	/**
-	 * @param id
-	 * @param workflowData
-	 * @param events
-	 */
-	public WorkflowInstance(String id, WorkflowData workflowData, Event[] events) {
-		this.id = id;
-		this.workflowData = workflowData;
-		Arrays.asList(events).forEach(this.events::add);
-	}
-	
-	/**
-	 * @return
-	 */
-	public State[] getStates() {
-		return states.toArray(new State[0]);
-	}
-	
-	/**
 	 * @param state
 	 */
 	public void transition(final State state) {
-		states.add(state);
-	}
-
-	public WorkflowData getWorkflowData() {
-		return workflowData;
-	}
-	
-	/**
-	 * @return
-	 */
-	public Event[] getEvents() {
-		return events.toArray(new Event[0]);
+		final List<String> newStates = new ArrayList<>(Arrays.asList(states));
+		states = newStates.toArray(new String[0]);
 	}
 	
 	/**
@@ -99,5 +79,33 @@ public class WorkflowInstance {
 
 	public String getId() {
 		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String[] getStates() {
+		return states;
+	}
+
+	public void setStates(String[] states) {
+		this.states = states;
+	}
+
+	public WorkflowData getWorkflowData() {
+		return workflowData;
+	}
+
+	public void setWorkflowData(WorkflowData workflowData) {
+		this.workflowData = workflowData;
+	}
+
+	public String getWorkflowDefinition() {
+		return workflowDefinition;
+	}
+
+	public void setWorkflowDefinition(String workflowDefinition) {
+		this.workflowDefinition = workflowDefinition;
 	}
 }
