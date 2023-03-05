@@ -23,6 +23,7 @@ public class EventRefDefinition {
 	 * 
 	 */
 	@Column
+	@NotNull
 	private String consumeEventRef;
 	
 	/**
@@ -47,7 +48,7 @@ public class EventRefDefinition {
 	 * 
 	 */
 	@Column
-	private Invoke invoke;
+	private Invoke invoke = Invoke.sync;
 
 	public String getProduceEventRef() {
 		return produceEventRef;

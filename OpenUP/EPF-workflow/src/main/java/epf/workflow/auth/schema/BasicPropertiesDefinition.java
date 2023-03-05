@@ -1,5 +1,6 @@
 package epf.workflow.auth.schema;
 
+import javax.validation.constraints.NotNull;
 import jakarta.nosql.mapping.Column;
 import jakarta.nosql.mapping.Embeddable;
 
@@ -14,11 +15,13 @@ public class BasicPropertiesDefinition extends PropertiesDefinition {
 	 * 
 	 */
 	@Column
+	@NotNull
 	private String username;
 	/**
 	 * 
 	 */
 	@Column
+	@NotNull
 	private String password;
 	
 	public String getUsername() {

@@ -48,6 +48,7 @@ public class ForEachState extends State {
 	 * 
 	 */
 	@Column
+	@NotNull
 	private ActionDefinition[] actions;
 	/**
 	 * 

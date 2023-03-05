@@ -25,6 +25,7 @@ public class AuthDefinition {
 	 * 
 	 */
 	@Column
+	@NotNull
 	private Scheme scheme = Scheme.basic;
 	
 	/**

@@ -29,6 +29,7 @@ public class EventDefinition {
 	 * 
 	 */
 	@Column
+	@NotNull
 	private String type;
 	
 	/**

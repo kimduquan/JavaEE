@@ -1,5 +1,6 @@
 package epf.workflow.auth.schema;
 
+import javax.validation.constraints.NotNull;
 import jakarta.nosql.mapping.Column;
 import jakarta.nosql.mapping.Embeddable;
 
@@ -19,11 +20,13 @@ public class OAuth2PropertiesDefinition extends PropertiesDefinition {
 	 * 
 	 */
 	@Column
+	@NotNull
 	private GrantType grantType;
 	/**
 	 * 
 	 */
 	@Column
+	@NotNull
 	private String clientId;
 	/**
 	 * 

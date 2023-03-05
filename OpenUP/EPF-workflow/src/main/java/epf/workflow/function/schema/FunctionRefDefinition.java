@@ -34,7 +34,7 @@ public class FunctionRefDefinition {
 	 * 
 	 */
 	@Column
-	private Invoke invoke;
+	private Invoke invoke = Invoke.sync;
 
 	public String getRefName() {
 		return refName;
