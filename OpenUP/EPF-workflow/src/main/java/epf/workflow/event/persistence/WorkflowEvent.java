@@ -16,8 +16,20 @@ public class WorkflowEvent extends Event {
 	/**
 	 * 
 	 */
+	@Column
+	private String name = getClass().getSimpleName();
+	
+	/**
+	 * 
+	 */
 	@Column("workflowdefinition")
 	private String workflowDefinition;
+	
+	/**
+	 * 
+	 */
+	@Column("eventdefinition")
+	private String eventDefinition;
 	
 	/**
 	 * 
@@ -40,5 +52,21 @@ public class WorkflowEvent extends Event {
 
 	public void setWorkflowInstance(String workflowInstance) {
 		this.workflowInstance = workflowInstance;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getEventDefinition() {
+		return eventDefinition;
+	}
+
+	public void setEventDefinition(String eventDefinition) {
+		this.eventDefinition = eventDefinition;
 	}
 }

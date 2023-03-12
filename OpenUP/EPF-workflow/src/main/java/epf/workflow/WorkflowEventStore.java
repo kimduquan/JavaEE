@@ -44,7 +44,7 @@ public class WorkflowEventStore {
 	 * @return
 	 */
 	public Stream<EventStateEvent> findEventStateEvent(final Event event) {
-		final ColumnQuery columnQuery = ColumnQuery.select().from(Naming.Workflow.EVENT).where("source").eq(event.getSource()).and("type").eq(event.getType()).build();
+		final ColumnQuery columnQuery = ColumnQuery.select().from(Naming.Workflow.EVENT).where("source").eq(event.getSource()).and("type").eq(event.getType()).and("name").eq(EventStateEvent.class.getSimpleName()).build();
 		return template.select(columnQuery);
 	}
 	
@@ -53,7 +53,7 @@ public class WorkflowEventStore {
 	 * @return
 	 */
 	public Stream<EventStateActionEvent> findEventStateActionEvent(final Event event) {
-		final ColumnQuery columnQuery = ColumnQuery.select().from(Naming.Workflow.EVENT).where("source").eq(event.getSource()).and("type").eq(event.getType()).build();
+		final ColumnQuery columnQuery = ColumnQuery.select().from(Naming.Workflow.EVENT).where("source").eq(event.getSource()).and("type").eq(event.getType()).and("name").eq(EventStateActionEvent.class.getSimpleName()).build();
 		return template.select(columnQuery);
 	}
 	
@@ -62,7 +62,7 @@ public class WorkflowEventStore {
 	 * @return
 	 */
 	public Stream<CallbackStateEvent> findCallbackStateEvent(final Event event){
-		final ColumnQuery columnQuery = ColumnQuery.select().from(Naming.Workflow.EVENT).where("source").eq(event.getSource()).and("type").eq(event.getType()).build();
+		final ColumnQuery columnQuery = ColumnQuery.select().from(Naming.Workflow.EVENT).where("source").eq(event.getSource()).and("type").eq(event.getType()).and("name").eq(CallbackStateEvent.class.getSimpleName()).build();
 		return template.select(columnQuery);
 	}
 	

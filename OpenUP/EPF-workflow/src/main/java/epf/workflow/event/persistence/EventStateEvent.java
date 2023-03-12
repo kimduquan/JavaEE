@@ -20,8 +20,8 @@ public class EventStateEvent extends WorkflowEvent {
 	/**
 	 * 
 	 */
-	@Column("eventdefinition")
-	private String eventDefinition;
+	@Column("oneventsdefinition")
+	private Integer onEventsDefinition;
 
 	public String getEventState() {
 		return eventState;
@@ -31,11 +31,11 @@ public class EventStateEvent extends WorkflowEvent {
 		this.eventState = eventState;
 	}
 
-	public String getEventDefinition() {
-		return eventDefinition;
+	public Integer getOnEventsDefinition() {
+		return onEventsDefinition;
 	}
 
-	public void setEventDefinition(String eventDefinition) {
-		this.eventDefinition = eventDefinition;
+	public void setOnEventsDefinition(Integer onEventsDefinition) {
+		this.onEventsDefinition = onEventsDefinition;
 	}
 }

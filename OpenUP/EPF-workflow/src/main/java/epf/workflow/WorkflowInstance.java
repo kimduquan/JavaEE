@@ -54,8 +54,16 @@ public class WorkflowInstance {
 	/**
 	 * @param state
 	 */
+	public void start(final State state) {
+		states = new String[] { state.getName() };
+	}
+	
+	/**
+	 * @param state
+	 */
 	public void transition(final State state) {
 		final List<String> newStates = new ArrayList<>(Arrays.asList(states));
+		newStates.add(state.getName());
 		states = newStates.toArray(new String[0]);
 	}
 	

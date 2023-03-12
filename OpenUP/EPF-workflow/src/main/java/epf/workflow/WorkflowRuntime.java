@@ -125,6 +125,7 @@ public class WorkflowRuntime {
 		}
 		if(startState != null) {
 			final WorkflowInstance workflowInstance = newWorkflowInstance(workflowDefinition, workflowData);
+			workflowInstance.start(startState);
 			startState(workflowDefinition, startState, workflowInstance);
 		}
 	}
@@ -181,6 +182,7 @@ public class WorkflowRuntime {
 	private void startEventState(final WorkflowDefinition workflowDefinition, final EventState eventState, final WorkflowInstance workflowInstance) {
 		Map<String, EventDefinition> eventDefs = new HashMap<>();
 		MapUtil.putAll(eventDefs, workflowDefinition.getEvents(), EventDefinition::getName);
+		int index = 0;
 		for(OnEventsDefinition onEventsDef : eventState.getOnEvents()) {
 			for(String eventRef : onEventsDef.getEventRefs()) {
 				final EventDefinition eventDef = eventDefs.get(eventRef);
@@ -188,8 +190,9 @@ public class WorkflowRuntime {
 				final EventStateEvent event = new EventStateEvent();
 				event.setWorkflowDefinition(workflowDefinition.getId());
 				event.setWorkflowInstance(workflowInstance.getId());
-				event.setEventState(eventState.getName());
 				event.setEventDefinition(eventRef);
+				event.setEventState(eventState.getName());
+				event.setOnEventsDefinition(index);
 				
 				event.setSource(eventDef.getSource());
 				event.setType(eventDef.getType());
@@ -197,6 +200,7 @@ public class WorkflowRuntime {
 				
 				workflowEventStore.persist(event);
 			}
+			index++;
 		}
 	}
 	
@@ -440,6 +444,7 @@ public class WorkflowRuntime {
 			final CallbackStateEvent event = new CallbackStateEvent();
 			event.setWorkflowDefinition(workflowDefinition.getId());
 			event.setWorkflowInstance(workflowInstance.getId());
+			event.setEventDefinition(callbackState.getEventRef());
 			event.setCallbackState(callbackState.getName());
 			
 			event.setSource(eventDefinition.getSource());
@@ -455,7 +460,7 @@ public class WorkflowRuntime {
 		}
 	}
 	
-	private void callback(final WorkflowDefinition workflowDefinition, final CallbackState callbackState, final WorkflowInstance workflowInstance, final EventDefinition eventDefinition, final Event event) throws Exception {
+	private void callback(final WorkflowDefinition workflowDefinition, final CallbackState callbackState, final EventDefinition eventDefinition, final WorkflowInstance workflowInstance, final Event event) throws Exception {
 		filterEventData(eventDefinition, callbackState.getEventDataFilter(), workflowInstance.getWorkflowData(), event);
 		if(callbackState.getTransition() != null) {
 			filterStateDataOutput(callbackState.getStateDataFilter(), workflowInstance.getWorkflowData());
@@ -482,27 +487,21 @@ public class WorkflowRuntime {
 	 */
 	public void consume(@Observes final Event event) throws Exception {
 		final Stream<EventStateEvent> eventStateEvents = workflowEventStore.findEventStateEvent(event);
-		eventStateEvents
-		.filter(e -> e.getEventState() != null)
-		.forEach(eventStateEvent -> {
+		eventStateEvents.forEach(eventStateEvent -> {
 			final WorkflowDefinition workflowDefinition = workflowPersistence.find(eventStateEvent.getWorkflowDefinition());
 			final State state = getState(workflowDefinition, eventStateEvent.getEventState());
 			if(state.getType() == Type.event) {
-				boolean isEventConsumed = false;
 				final EventState eventState = (EventState) state;
-				for(OnEventsDefinition onEvent : eventState.getOnEvents()) {
-					if(consumeEventStateEvent(workflowDefinition, eventState, onEvent, eventStateEvent, event)) {
-						isEventConsumed = true;
-					}
-				}
-				if(isEventConsumed) {
-					workflowEventStore.remove(eventStateEvent);
+				if(eventStateEvent.getOnEventsDefinition() >= 0 && eventStateEvent.getOnEventsDefinition() < eventState.getOnEvents().length) {
+					final OnEventsDefinition onEventsDefinition = eventState.getOnEvents()[eventStateEvent.getOnEventsDefinition()];
+					final EventDefinition eventDefinition = getEventDefinition(workflowDefinition, eventStateEvent.getEventDefinition());
+					consumeEventStateEvent(workflowDefinition, eventState, onEventsDefinition, eventDefinition, eventStateEvent, event);
 				}
 			}
 		});
 		final Stream<EventStateActionEvent> eventStateActionEventStream = workflowEventStore.findEventStateActionEvent(event);
 		eventStateActionEventStream
-		.filter(e -> e.getEventState() != null && e.getActionDefinition() != null)
+		.filter(e -> e.getEventState() != null && e.getOnEventsDefinition() != null && e.getActionDefinition() != null)
 		.forEach(eventStateActionEvent -> {
 			final WorkflowDefinition workflowDefinition = workflowPersistence.find(eventStateActionEvent.getWorkflowDefinition());
 			final State state = getState(workflowDefinition, eventStateActionEvent.getEventState());
@@ -511,11 +510,12 @@ public class WorkflowRuntime {
 				final EventState eventState = (EventState) state;
 				if(eventStateActionEvent.getOnEventsDefinition() >= 0 && eventStateActionEvent.getOnEventsDefinition() < eventState.getOnEvents().length) {
 					final OnEventsDefinition onEventsDefinition = eventState.getOnEvents()[eventStateActionEvent.getOnEventsDefinition()];
-					for(ActionDefinition actionDefinition : onEventsDefinition.getActions()) {
-						if(actionDefinition.getName().equals(eventStateActionEvent.getActionDefinition()) && actionDefinition.getEventRef() != null && actionDefinition.getEventRef().getConsumeEventRef() != null) {
+					if(eventStateActionEvent.getActionDefinition() >= 0 && eventStateActionEvent.getActionDefinition() < onEventsDefinition.getActions().length) {
+						final ActionDefinition actionDefinition = onEventsDefinition.getActions()[eventStateActionEvent.getActionDefinition()];
+						if(actionDefinition.getEventRef() != null && actionDefinition.getEventRef().getConsumeEventRef() != null) {
+							final EventDefinition eventDefinition = getEventDefinition(workflowDefinition, actionDefinition.getEventRef().getConsumeEventRef());
+							final WorkflowInstance workflowInstance = workflowPersistence.getInstance(eventStateActionEvent.getWorkflowInstance());
 							try {
-								final EventDefinition eventDefinition = getEventDefinition(workflowDefinition, actionDefinition.getEventRef().getConsumeEventRef());
-								final WorkflowInstance workflowInstance = workflowPersistence.getInstance(eventStateActionEvent.getWorkflowInstance());
 								consumeActionEvent(workflowDefinition, actionDefinition, eventDefinition, workflowInstance);
 								isEventConsumed = true;
 							} 
@@ -541,7 +541,7 @@ public class WorkflowRuntime {
 				final EventDefinition eventDefinition = getEventDefinition(workflowDefinition, callbackState.getEventRef());
 				final WorkflowInstance workflowInstance = workflowPersistence.getInstance(callbackStateEvent.getWorkflowInstance());
 				try {
-					callback(workflowDefinition, callbackState, workflowInstance, eventDefinition, event);
+					callback(workflowDefinition, callbackState, eventDefinition, workflowInstance, event);
 				} 
 				catch (Exception e) {
 					LOGGER.log(Level.SEVERE, "consume", e);
@@ -551,43 +551,44 @@ public class WorkflowRuntime {
 		});
 	}
 	
-	private boolean consumeEventStateEvent(final WorkflowDefinition workflowDefinition, final EventState eventState, final OnEventsDefinition onEventsDefinition, final EventStateEvent eventStateEvent, final Event event) {
+	private void consumeEventStateEvent(final WorkflowDefinition workflowDefinition, final EventState eventState, final OnEventsDefinition onEventsDefinition, final EventDefinition eventDefinition, final EventStateEvent eventStateEvent, final Event event) {
 		boolean isEventConsumed = false;
 		final Map<String, EventDefinition> events = new HashMap<>();
 		MapUtil.putAll(events, workflowDefinition.getEvents(), EventDefinition::getName);
 		for(String eventRef : onEventsDefinition.getEventRefs()) {
-			if(eventRef.equals(eventStateEvent.getEventDefinition())) {
+			if(eventRef.equals(eventDefinition.getName())) {
 				if(eventState.isExclusive()) {
 					isEventConsumed = true;
+					break;
 				}
 				else {
 					boolean isEventsConsumed = true;
 					for(String consumeEventRef : onEventsDefinition.getEventRefs()) {
-						final EventDefinition consumeEventDefinition = events.get(consumeEventRef);
-						if(workflowEventStore.count(consumeEventDefinition) == 0) {
-							isEventsConsumed = false;
-							break;
+						if(!consumeEventRef.equals(eventDefinition.getName())){
+							final EventDefinition consumeEventDefinition = events.get(consumeEventRef);
+							if(workflowEventStore.count(consumeEventDefinition) == 0) {
+								isEventsConsumed = false;
+								break;
+							}
 						}
 					}
 					if(isEventsConsumed) {
 						isEventConsumed = true;
 					}
 				}
-				if(isEventConsumed) {
-					final EventDefinition eventDefinition = events.get(eventStateEvent.getEventDefinition());
-					final WorkflowInstance workflowInstance = workflowPersistence.getInstance(eventStateEvent.getWorkflowInstance());
-					executor.submit(() -> {
-						try {
-							onEvents(workflowDefinition, eventState, onEventsDefinition, eventDefinition, workflowInstance, event);
-						} 
-						catch (Exception e) {
-							LOGGER.log(Level.SEVERE, "consume", e);
-						}
-					});
-				}
 			}
 		}
-		return isEventConsumed;
+		if(isEventConsumed) {
+			final WorkflowInstance workflowInstance = workflowPersistence.getInstance(eventStateEvent.getWorkflowInstance());
+			executor.submit(() -> {
+				try {
+					onEvents(workflowDefinition, eventState, onEventsDefinition, eventDefinition, workflowInstance, event);
+				} 
+				catch (Exception e) {
+					LOGGER.log(Level.SEVERE, "consume", e);
+				}
+			});
+		}
 	}
 	
 	private void onEvents(final WorkflowDefinition workflowDefinition, final EventState eventState, final OnEventsDefinition onEventsDefinition, final EventDefinition eventDefinition, final WorkflowInstance workflowInstance, final Event event) throws Exception {
@@ -688,7 +689,7 @@ public class WorkflowRuntime {
 		throw exception;
 	}
 	
-	private void compensateState(final WorkflowDefinition workflowDefinition, final State state, final Map<String, State> states, final WorkflowInstance workflowInstance) throws Exception {
+	private void compensateState(final WorkflowDefinition workflowDefinition, final State state, final WorkflowInstance workflowInstance) throws Exception {
 		String compensatedBy = null;
 		switch(state.getType()) {
 			case event:
@@ -725,7 +726,7 @@ public class WorkflowRuntime {
 				break;
 		}
 		if(compensatedBy != null) {
-			final State compensatedState = states.get(compensatedBy);
+			final State compensatedState = getState(workflowDefinition, compensatedBy);
 			startState(workflowDefinition, compensatedState, workflowInstance);
 		}
 	}
@@ -739,7 +740,7 @@ public class WorkflowRuntime {
 			if(workflowInstance.isTerminate()) {
 				return;
 			}
-			compensateState(workflowDefinition, states.get(compensateState), states, workflowInstance);
+			compensateState(workflowDefinition, states.get(compensateState), workflowInstance);
 		}
 	}
 	
@@ -828,8 +829,7 @@ public class WorkflowRuntime {
 		}
 	}
 	
-	private void produceEvent(final Map<String, EventDefinition> EventDefinitions, final ProducedEventDefinition producedEventDefinition) throws Exception {
-		final EventDefinition eventDefinition = EventDefinitions.get(producedEventDefinition.getEventRef());
+	private void produceEvent(final EventDefinition eventDefinition, final ProducedEventDefinition producedEventDefinition) throws Exception {
 		final Event event = new Event();
 		event.setSource(eventDefinition.getSource());
 		event.setType(eventDefinition.getType());
@@ -843,7 +843,8 @@ public class WorkflowRuntime {
 		final Map<String, EventDefinition> eventDefinitions = new HashMap<>();
 		MapUtil.putAll(eventDefinitions, workflowDefinition.getEvents(), EventDefinition::getName);
 		for(ProducedEventDefinition producedEventDefinition : produceEvents) {
-			produceEvent(eventDefinitions, producedEventDefinition);
+			final EventDefinition eventDefinition = eventDefinitions.get(producedEventDefinition.getEventRef());
+			produceEvent(eventDefinition, producedEventDefinition);
 		}
 	}
 	

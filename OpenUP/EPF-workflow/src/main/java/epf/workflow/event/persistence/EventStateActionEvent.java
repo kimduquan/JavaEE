@@ -26,8 +26,8 @@ public class EventStateActionEvent extends WorkflowEvent {
 	/**
 	 * 
 	 */
-	@Column
-	private String actionDefinition;
+	@Column("actiondefinition")
+	private Integer actionDefinition;
 
 	public String getEventState() {
 		return eventState;
@@ -45,11 +45,11 @@ public class EventStateActionEvent extends WorkflowEvent {
 		this.onEventsDefinition = onEventsDefinition;
 	}
 
-	public String getActionDefinition() {
+	public Integer getActionDefinition() {
 		return actionDefinition;
 	}
 
-	public void setActionDefinition(String actionDefinition) {
+	public void setActionDefinition(Integer actionDefinition) {
 		this.actionDefinition = actionDefinition;
 	}
 }
