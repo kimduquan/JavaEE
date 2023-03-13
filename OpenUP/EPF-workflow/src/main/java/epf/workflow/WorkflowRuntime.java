@@ -189,7 +189,6 @@ public class WorkflowRuntime {
 				
 				final EventStateEvent event = new EventStateEvent();
 				event.setWorkflowDefinition(workflowDefinition.getId());
-				event.setWorkflowInstance(workflowInstance.getId());
 				event.setEventDefinition(eventRef);
 				event.setEventState(eventState.getName());
 				event.setOnEventsDefinition(index);
@@ -443,7 +442,6 @@ public class WorkflowRuntime {
 			
 			final CallbackStateEvent event = new CallbackStateEvent();
 			event.setWorkflowDefinition(workflowDefinition.getId());
-			event.setWorkflowInstance(workflowInstance.getId());
 			event.setEventDefinition(callbackState.getEventRef());
 			event.setCallbackState(callbackState.getName());
 			
@@ -514,7 +512,7 @@ public class WorkflowRuntime {
 						final ActionDefinition actionDefinition = onEventsDefinition.getActions()[eventStateActionEvent.getActionDefinition()];
 						if(actionDefinition.getEventRef() != null && actionDefinition.getEventRef().getConsumeEventRef() != null) {
 							final EventDefinition eventDefinition = getEventDefinition(workflowDefinition, actionDefinition.getEventRef().getConsumeEventRef());
-							final WorkflowInstance workflowInstance = workflowPersistence.getInstance(eventStateActionEvent.getWorkflowInstance());
+							final WorkflowInstance workflowInstance = workflowPersistence.getInstance(eventStateActionEvent.getSubject());
 							try {
 								consumeActionEvent(workflowDefinition, actionDefinition, eventDefinition, workflowInstance);
 								isEventConsumed = true;
@@ -539,7 +537,7 @@ public class WorkflowRuntime {
 			if(state.getType() == Type.callback) {
 				final CallbackState callbackState = (CallbackState)state;
 				final EventDefinition eventDefinition = getEventDefinition(workflowDefinition, callbackState.getEventRef());
-				final WorkflowInstance workflowInstance = workflowPersistence.getInstance(callbackStateEvent.getWorkflowInstance());
+				final WorkflowInstance workflowInstance = workflowPersistence.getInstance(callbackStateEvent.getSubject());
 				try {
 					callback(workflowDefinition, callbackState, eventDefinition, workflowInstance, event);
 				} 
@@ -579,7 +577,7 @@ public class WorkflowRuntime {
 			}
 		}
 		if(isEventConsumed) {
-			final WorkflowInstance workflowInstance = workflowPersistence.getInstance(eventStateEvent.getWorkflowInstance());
+			final WorkflowInstance workflowInstance = workflowPersistence.getInstance(eventStateEvent.getSubject());
 			executor.submit(() -> {
 				try {
 					onEvents(workflowDefinition, eventState, onEventsDefinition, eventDefinition, workflowInstance, event);
