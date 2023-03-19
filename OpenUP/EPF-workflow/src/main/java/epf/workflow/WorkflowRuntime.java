@@ -126,6 +126,7 @@ public class WorkflowRuntime {
 		if(startState != null) {
 			final WorkflowInstance workflowInstance = newWorkflowInstance(workflowDefinition, workflowData);
 			workflowInstance.start(startState);
+			workflowPersistence.merge(workflowInstance);
 			startState(workflowDefinition, startState, workflowInstance);
 		}
 	}
@@ -730,7 +731,7 @@ public class WorkflowRuntime {
 	}
 	
 	private void compensate(final WorkflowDefinition workflowDefinition, final WorkflowInstance workflowInstance) throws Exception {
-		final List<String> compensateStates = new ArrayList<>(Arrays.asList(workflowInstance.getStates()));
+		final List<String> compensateStates = new ArrayList<>(workflowInstance.getStates());
 		Collections.reverse(compensateStates);
 		final Map<String, State> states = new HashMap<>();
 		MapUtil.putAll(states, workflowDefinition.getStates(), State::getName);

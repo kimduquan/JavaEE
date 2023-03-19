@@ -67,7 +67,7 @@ public class ArrayAttributeConverter<T extends Object> implements AttributeConve
 		}
 	}
 	
-	private static Map<String, Object> convertToMap(final List<?> list){
+	public static Map<String, Object> convertToMap(final List<?> list){
 		final Map<String, Object> map = new HashMap<>();
 		boolean isMap = true;
 		for(Object object : list) {
@@ -106,28 +106,42 @@ public class ArrayAttributeConverter<T extends Object> implements AttributeConve
 	 * @param dbData
 	 * @return
 	 */
+	public static final Object convertToValue(final Object dbData) {
+		Object object = null;
+		if(dbData instanceof List) {
+			final List<?> asList = (List<?>) dbData;
+			if(asList.isEmpty()) {
+				object = new HashMap<String, Object>();
+			}
+			else {
+				final Map<String, Object> map = convertToMap((List<?>)dbData);
+				if(map != null) {
+					object = map;
+				}
+				else {
+					final List<Object> newList = convertToList(asList);
+					object = newList;
+				}
+			}
+		}
+		else if(dbData instanceof String || dbData instanceof Number || dbData instanceof Boolean) {
+			object = dbData;
+		}
+		else {
+			object= dbData;
+		}
+		return object;
+	}
+	
+	/**
+	 * @param dbData
+	 * @return
+	 */
 	public static final List<Object> convertToList(final List<?> dbData) {
 		final List<Object> list = new ArrayList<>();
 		for(Object object : dbData) {
-			if(object instanceof List) {
-				final List<?> asList = (List<?>) object;
-				if(asList.isEmpty()) {
-					list.add(new HashMap<String, Object>());
-				}
-				else {
-					final Map<String, Object> map = convertToMap((List<?>)object);
-					if(map != null) {
-						list.add(map);
-					}
-					else {
-						final List<Object> newList = convertToList(asList);
-						list.add(newList);
-					}
-				}
-			}
-			else if(object instanceof String || object instanceof Number || object instanceof Boolean) {
-				list.add(object);
-			}
+			final Object value = convertToValue(object);
+			list.add(value);
 		}
 		return list;
 	}

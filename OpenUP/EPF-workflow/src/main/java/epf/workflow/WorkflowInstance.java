@@ -1,7 +1,6 @@
 package epf.workflow;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
@@ -33,7 +32,7 @@ public class WorkflowInstance {
 	 * 
 	 */
 	@Column
-	private String[] states;
+	private List<String> states;
 	
 	/**
 	 * 
@@ -55,16 +54,15 @@ public class WorkflowInstance {
 	 * @param state
 	 */
 	public void start(final State state) {
-		states = new String[] { state.getName() };
+		states = new ArrayList<>();
+		states.add(state.getName());
 	}
 	
 	/**
 	 * @param state
 	 */
 	public void transition(final State state) {
-		final List<String> newStates = new ArrayList<>(Arrays.asList(states));
-		newStates.add(state.getName());
-		states = newStates.toArray(new String[0]);
+		states.add(state.getName());
 	}
 	
 	/**
@@ -93,11 +91,11 @@ public class WorkflowInstance {
 		this.id = id;
 	}
 
-	public String[] getStates() {
+	public List<String> getStates() {
 		return states;
 	}
 
-	public void setStates(String[] states) {
+	public void setStates(List<String> states) {
 		this.states = states;
 	}
 

@@ -59,6 +59,13 @@ public class WorkflowPersistence {
 	}
 	
 	/**
+	 * @param workflowInstance
+	 */
+	public void merge(final WorkflowInstance workflowInstance) {
+		document.update(workflowInstance);
+	}
+	
+	/**
 	 * @param id
 	 * @return
 	 */

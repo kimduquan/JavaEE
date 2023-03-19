@@ -18,13 +18,13 @@ public class WorkflowData {
 	 */
 	@Column
 	@Convert(JsonValueAttributeConverter.class)
-	private JsonValue input;
+	private JsonValue input = JsonValue.EMPTY_JSON_OBJECT;
 	/**
 	 * 
 	 */
 	@Column
 	@Convert(JsonValueAttributeConverter.class)
-	private JsonValue output;
+	private JsonValue output = JsonValue.EMPTY_JSON_OBJECT;
 	
 	public JsonValue getInput() {
 		return input;

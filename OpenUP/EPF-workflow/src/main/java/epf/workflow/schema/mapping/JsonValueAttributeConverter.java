@@ -26,12 +26,12 @@ public class JsonValueAttributeConverter implements AttributeConverter<JsonValue
 	@Override
 	public JsonValue convertToEntityAttribute(final Object dbData) {
 		try {
-			return JsonUtil.toJsonValue(dbData);
+			final Object value = ArrayAttributeConverter.convertToValue(dbData);
+			return JsonUtil.toJsonValue(value);
 		} 
 		catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "convertToEntityAttribute", e);
 			return null;
 		}
 	}
-
 }

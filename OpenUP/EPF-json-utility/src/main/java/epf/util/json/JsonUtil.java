@@ -51,12 +51,15 @@ public interface JsonUtil {
 	 * @throws Exception
 	 */
 	static JsonValue toJsonValue(final Object object) throws Exception {
-		try(StringWriter writer = new StringWriter()){
-			try(Jsonb jsonb = JsonbBuilder.create()){
-				jsonb.toJson(object, writer);
-    		}
-			return readValue(writer.toString());
+		if(object != null) {
+			try(StringWriter writer = new StringWriter()){
+				try(Jsonb jsonb = JsonbBuilder.create()){
+					jsonb.toJson(object, writer);
+	    		}
+				return readValue(writer.toString());
+			}
 		}
+		return JsonValue.NULL;
 	}
 	
 	/**
