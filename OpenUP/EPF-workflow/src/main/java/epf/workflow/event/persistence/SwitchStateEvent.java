@@ -14,21 +14,7 @@ public class SwitchStateEvent extends WorkflowEvent {
 	 * 
 	 */
 	@Column
-	private String switchState;
-	
-	/**
-	 * 
-	 */
-	@Column
 	private String eventConditions;
-
-	public String getSwitchState() {
-		return switchState;
-	}
-
-	public void setSwitchState(String switchState) {
-		this.switchState = switchState;
-	}
 
 	public String getEventConditions() {
 		return eventConditions;

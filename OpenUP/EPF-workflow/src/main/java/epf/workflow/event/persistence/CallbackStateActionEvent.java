@@ -9,26 +9,12 @@ import jakarta.nosql.mapping.Entity;
  */
 @Entity
 public class CallbackStateActionEvent extends WorkflowEvent {
-
-	/**
-	 * 
-	 */
-	@Column
-	private String callbackState;
 	
 	/**
 	 * 
 	 */
 	@Column
 	private String actionDefinition;
-
-	public String getCallbackState() {
-		return callbackState;
-	}
-
-	public void setCallbackState(String callbackState) {
-		this.callbackState = callbackState;
-	}
 
 	public String getActionDefinition() {
 		return actionDefinition;

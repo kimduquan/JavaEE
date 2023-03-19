@@ -9,12 +9,6 @@ import jakarta.nosql.mapping.Entity;
  */
 @Entity
 public class ParallelStateActionEvent extends WorkflowEvent {
-
-	/**
-	 * 
-	 */
-	@Column
-	private String parallelState;
 	
 	/**
 	 * 
@@ -27,14 +21,6 @@ public class ParallelStateActionEvent extends WorkflowEvent {
 	 */
 	@Column
 	private String actionDefinition;
-
-	public String getParallelState() {
-		return parallelState;
-	}
-
-	public void setParallelState(String parallelState) {
-		this.parallelState = parallelState;
-	}
 
 	public String getBranch() {
 		return branch;

@@ -1,6 +1,5 @@
 package epf.workflow.event.persistence;
 
-import jakarta.nosql.mapping.Column;
 import jakarta.nosql.mapping.Entity;
 
 /**
@@ -9,15 +8,5 @@ import jakarta.nosql.mapping.Entity;
  */
 @Entity
 public class CallbackStateEvent extends WorkflowEvent {
-
-	@Column
-	private String callbackState;
-
-	public String getCallbackState() {
-		return callbackState;
-	}
-
-	public void setCallbackState(String callbackState) {
-		this.callbackState = callbackState;
-	}
+	
 }

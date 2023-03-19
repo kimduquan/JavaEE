@@ -191,7 +191,7 @@ public class WorkflowRuntime {
 				final EventStateEvent event = new EventStateEvent();
 				event.setWorkflowDefinition(workflowDefinition.getId());
 				event.setEventDefinition(eventRef);
-				event.setEventState(eventState.getName());
+				event.setState(eventState.getName());
 				event.setOnEventsDefinition(index);
 				
 				event.setSource(eventDef.getSource());
@@ -444,7 +444,7 @@ public class WorkflowRuntime {
 			final CallbackStateEvent event = new CallbackStateEvent();
 			event.setWorkflowDefinition(workflowDefinition.getId());
 			event.setEventDefinition(callbackState.getEventRef());
-			event.setCallbackState(callbackState.getName());
+			event.setState(callbackState.getName());
 			
 			event.setSource(eventDefinition.getSource());
 			event.setType(eventDefinition.getType());
@@ -488,7 +488,7 @@ public class WorkflowRuntime {
 		final Stream<EventStateEvent> eventStateEvents = workflowEventStore.findEventStateEvent(event);
 		eventStateEvents.forEach(eventStateEvent -> {
 			final WorkflowDefinition workflowDefinition = workflowPersistence.find(eventStateEvent.getWorkflowDefinition());
-			final State state = getState(workflowDefinition, eventStateEvent.getEventState());
+			final State state = getState(workflowDefinition, eventStateEvent.getState());
 			if(state.getType() == Type.event) {
 				final EventState eventState = (EventState) state;
 				if(eventStateEvent.getOnEventsDefinition() >= 0 && eventStateEvent.getOnEventsDefinition() < eventState.getOnEvents().length) {
@@ -500,10 +500,10 @@ public class WorkflowRuntime {
 		});
 		final Stream<EventStateActionEvent> eventStateActionEventStream = workflowEventStore.findEventStateActionEvent(event);
 		eventStateActionEventStream
-		.filter(e -> e.getEventState() != null && e.getOnEventsDefinition() != null && e.getActionDefinition() != null)
+		.filter(e -> e.getState() != null && e.getOnEventsDefinition() != null && e.getActionDefinition() != null)
 		.forEach(eventStateActionEvent -> {
 			final WorkflowDefinition workflowDefinition = workflowPersistence.find(eventStateActionEvent.getWorkflowDefinition());
-			final State state = getState(workflowDefinition, eventStateActionEvent.getEventState());
+			final State state = getState(workflowDefinition, eventStateActionEvent.getState());
 			if(state.getType() == Type.event) {
 				boolean isEventConsumed = false;
 				final EventState eventState = (EventState) state;
@@ -531,10 +531,10 @@ public class WorkflowRuntime {
 		});
 		final Stream<CallbackStateEvent> callbackStateEvents = workflowEventStore.findCallbackStateEvent(event);
 		callbackStateEvents
-		.filter(e -> e.getCallbackState() != null)
+		.filter(e -> e.getState() != null)
 		.forEach(callbackStateEvent -> {
 			final WorkflowDefinition workflowDefinition = workflowPersistence.find(callbackStateEvent.getWorkflowDefinition());
-			final State state = getState(workflowDefinition, callbackStateEvent.getCallbackState());
+			final State state = getState(workflowDefinition, callbackStateEvent.getState());
 			if(state.getType() == Type.callback) {
 				final CallbackState callbackState = (CallbackState)state;
 				final EventDefinition eventDefinition = getEventDefinition(workflowDefinition, callbackState.getEventRef());

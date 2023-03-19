@@ -14,12 +14,6 @@ public class EventStateActionEvent extends WorkflowEvent {
 	/**
 	 * 
 	 */
-	@Column("eventstate")
-	private String eventState;
-	
-	/**
-	 * 
-	 */
 	@Column("oneventsdefinition")
 	private Integer onEventsDefinition;
 	
@@ -28,14 +22,6 @@ public class EventStateActionEvent extends WorkflowEvent {
 	 */
 	@Column("actiondefinition")
 	private Integer actionDefinition;
-
-	public String getEventState() {
-		return eventState;
-	}
-
-	public void setEventState(String eventState) {
-		this.eventState = eventState;
-	}
 
 	public Integer getOnEventsDefinition() {
 		return onEventsDefinition;

@@ -9,12 +9,6 @@ import jakarta.nosql.mapping.Entity;
  */
 @Entity
 public class ForEachStateActionEvent extends WorkflowEvent {
-
-	/**
-	 * 
-	 */
-	@Column
-	private String forEachState;
 	
 	/**
 	 * 
@@ -27,14 +21,6 @@ public class ForEachStateActionEvent extends WorkflowEvent {
 	 */
 	@Column
 	private String actionDefinition;
-
-	public String getForEachState() {
-		return forEachState;
-	}
-
-	public void setForEachState(String forEachState) {
-		this.forEachState = forEachState;
-	}
 
 	public Integer getIteration() {
 		return iteration;

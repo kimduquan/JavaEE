@@ -28,6 +28,12 @@ public class WorkflowEvent extends Event {
 	 */
 	@Column("eventdefinition")
 	private String eventDefinition;
+	
+	/**
+	 * 
+	 */
+	@Column
+	private String state;
 
 	public String getWorkflowDefinition() {
 		return workflowDefinition;
@@ -51,5 +57,13 @@ public class WorkflowEvent extends Event {
 
 	public void setEventDefinition(String eventDefinition) {
 		this.eventDefinition = eventDefinition;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
 	}
 }
