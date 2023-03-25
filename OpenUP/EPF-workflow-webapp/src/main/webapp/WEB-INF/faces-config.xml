@@ -6,6 +6,19 @@
     version="2.3">
     <factory>
 		<exception-handler-factory>epf.webapp.util.ExceptionUtil</exception-handler-factory>
-		<flow-handler-factory>epf.webapp.workflow.WorkflowFactory</flow-handler-factory>
+		<!-- <flow-handler-factory>epf.webapp.workflow.WorkflowFactory</flow-handler-factory> -->
 	</factory>
+	<flow-definition id="workflow">
+		<flow-return id="end">
+			<from-outcome>end</from-outcome>
+		</flow-return>
+		<method-call>
+			<method>#{workflow.start}</method>
+			<default-outcome>end</default-outcome>
+		</method-call>
+		<inbound-parameter>
+			<name>name</name>
+			<value>#{workflow.workflow}</value>
+		</inbound-parameter>
+	</flow-definition>
 </faces-config>

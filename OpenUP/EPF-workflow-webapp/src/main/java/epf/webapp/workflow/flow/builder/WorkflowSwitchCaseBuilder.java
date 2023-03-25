@@ -3,7 +3,6 @@ package epf.webapp.workflow.flow.builder;
 import javax.el.ValueExpression;
 import javax.faces.flow.SwitchCase;
 import javax.faces.flow.builder.SwitchCaseBuilder;
-
 import epf.webapp.workflow.flow.WorkflowSwitchCase;
 
 /**

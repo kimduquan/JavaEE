@@ -4,7 +4,6 @@ import javax.el.ValueExpression;
 import javax.faces.flow.SwitchNode;
 import javax.faces.flow.builder.SwitchBuilder;
 import javax.faces.flow.builder.SwitchCaseBuilder;
-
 import epf.webapp.workflow.flow.WorkflowSwitchNode;
 
 /**

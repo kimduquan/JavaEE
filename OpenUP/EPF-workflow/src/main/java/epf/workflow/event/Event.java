@@ -86,7 +86,7 @@ public class Event {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 
@@ -94,7 +94,7 @@ public class Event {
 		return source;
 	}
 
-	public void setSource(String source) {
+	public void setSource(final String source) {
 		this.source = source;
 	}
 
@@ -102,7 +102,7 @@ public class Event {
 		return specVersion;
 	}
 
-	public void setSpecVersion(String specVersion) {
+	public void setSpecVersion(final String specVersion) {
 		this.specVersion = specVersion;
 	}
 
@@ -110,7 +110,7 @@ public class Event {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(final String type) {
 		this.type = type;
 	}
 
@@ -118,7 +118,7 @@ public class Event {
 		return dataContentType;
 	}
 
-	public void setDataContentType(String dataContentType) {
+	public void setDataContentType(final String dataContentType) {
 		this.dataContentType = dataContentType;
 	}
 
@@ -126,7 +126,7 @@ public class Event {
 		return dataSchema;
 	}
 
-	public void setDataSchema(String dataSchema) {
+	public void setDataSchema(final String dataSchema) {
 		this.dataSchema = dataSchema;
 	}
 
@@ -134,7 +134,7 @@ public class Event {
 		return subject;
 	}
 
-	public void setSubject(String subject) {
+	public void setSubject(final String subject) {
 		this.subject = subject;
 	}
 
@@ -142,7 +142,7 @@ public class Event {
 		return time;
 	}
 
-	public void setTime(String time) {
+	public void setTime(final String time) {
 		this.time = time;
 	}
 
@@ -150,7 +150,7 @@ public class Event {
 		return data;
 	}
 
-	public void setData(Object data) {
+	public void setData(final Object data) {
 		this.data = data;
 	}
 }
