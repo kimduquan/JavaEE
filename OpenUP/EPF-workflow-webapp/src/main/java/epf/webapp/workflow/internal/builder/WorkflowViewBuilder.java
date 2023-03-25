@@ -2,7 +2,6 @@ package epf.webapp.workflow.internal.builder;
 
 import javax.faces.flow.ViewNode;
 import javax.faces.flow.builder.ViewBuilder;
-
 import epf.webapp.workflow.internal.WorkflowViewNode;
 
 /**

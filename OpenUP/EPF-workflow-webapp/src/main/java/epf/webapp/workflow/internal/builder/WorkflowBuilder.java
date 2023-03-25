@@ -10,7 +10,6 @@ import javax.faces.flow.builder.NavigationCaseBuilder;
 import javax.faces.flow.builder.ReturnBuilder;
 import javax.faces.flow.builder.SwitchBuilder;
 import javax.faces.flow.builder.ViewBuilder;
-
 import epf.webapp.workflow.internal.Workflow;
 
 /**
