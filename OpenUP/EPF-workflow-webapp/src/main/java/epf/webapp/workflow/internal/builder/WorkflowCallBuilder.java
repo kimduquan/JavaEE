@@ -1,13 +1,21 @@
-package epf.webapp.workflow.internal;
+package epf.webapp.workflow.internal.builder;
 
 import javax.el.ValueExpression;
+import javax.faces.flow.FlowCallNode;
 import javax.faces.flow.builder.FlowCallBuilder;
+
+import epf.webapp.workflow.internal.WorkflowCallNode;
 
 /**
  * @author PC
  *
  */
 public class WorkflowCallBuilder extends FlowCallBuilder {
+	
+	/**
+	 * 
+	 */
+	private WorkflowCallNode flowCall;
 
 	@Override
 	public FlowCallBuilder flowReference(final String flowDocumentId, final String flowId) {
@@ -27,5 +35,12 @@ public class WorkflowCallBuilder extends FlowCallBuilder {
 	@Override
 	public FlowCallBuilder markAsStartNode() {
 		return this;
+	}
+	
+	/**
+	 * @return
+	 */
+	public FlowCallNode build() {
+		return flowCall;
 	}
 }

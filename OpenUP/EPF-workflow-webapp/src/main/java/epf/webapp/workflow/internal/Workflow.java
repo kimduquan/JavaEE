@@ -69,6 +69,10 @@ public class Workflow extends Flow {
 	 * 
 	 */
 	private Map<String, Set<NavigationCase>> navigationCases;
+	/**
+	 * 
+	 */
+	private Map<String, FlowNode> nodes;
 
 	@Override
 	public String getId() {
@@ -133,8 +137,15 @@ public class Workflow extends Flow {
 
 	@Override
 	public FlowNode getNode(final String nodeId) {
-		// TODO Auto-generated method stub
-		return null;
+		return nodes.get(nodeId);
+	}
+	
+	/**
+	 * @param nodeId
+	 * @param node
+	 */
+	public void setNode(final String nodeId, final FlowNode node) {
+		nodes.put(nodeId, node);
 	}
 
 	@Override
@@ -143,7 +154,7 @@ public class Workflow extends Flow {
 	}
 
 	@Override
-	public String getClientWindowFlowId(ClientWindow curWindow) {
+	public String getClientWindowFlowId(final ClientWindow curWindow) {
 		return null;
 	}
 

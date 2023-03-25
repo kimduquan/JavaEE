@@ -1,4 +1,4 @@
-package epf.webapp.workflow.internal;
+package epf.webapp.workflow;
 
 import javax.faces.context.FacesContext;
 import javax.faces.flow.FlowHandler;
@@ -19,7 +19,7 @@ public class WorkflowFactory extends FlowHandlerFactoryWrapper {
 	}
 	
 	@Override
-	public FlowHandler createFlowHandler(FacesContext context) {
+	public FlowHandler createFlowHandler(final FacesContext context) {
 		final FlowHandler handler = super.createFlowHandler(context);
 		return handler;
 	}

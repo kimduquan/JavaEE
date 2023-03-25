@@ -1,6 +1,7 @@
-package epf.webapp.workflow.internal;
+package epf.webapp.workflow.internal.builder;
 
 import javax.el.ValueExpression;
+import javax.faces.application.NavigationCase;
 import javax.faces.flow.builder.NavigationCaseBuilder;
 
 /**
@@ -13,6 +14,11 @@ public class WorkflowNavigationCaseBuilder extends NavigationCaseBuilder {
 	 * 
 	 */
 	private WorkflowRedirectBuilder redirect;
+	
+	/**
+	 * 
+	 */
+	private NavigationCase navigationCase;
 
 	@Override
 	public NavigationCaseBuilder fromViewId(final String fromViewId) {
@@ -52,6 +58,13 @@ public class WorkflowNavigationCaseBuilder extends NavigationCaseBuilder {
 	@Override
 	public RedirectBuilder redirect() {
 		return redirect;
+	}
+	
+	/**
+	 * @return
+	 */
+	public NavigationCase build() {
+		return navigationCase;
 	}
 
 	/**

@@ -1,8 +1,11 @@
-package epf.webapp.workflow.internal;
+package epf.webapp.workflow.internal.builder;
 
 import javax.el.ValueExpression;
+import javax.faces.flow.SwitchNode;
 import javax.faces.flow.builder.SwitchBuilder;
 import javax.faces.flow.builder.SwitchCaseBuilder;
+
+import epf.webapp.workflow.internal.WorkflowSwitchNode;
 
 /**
  * @author PC
@@ -14,6 +17,11 @@ public class WorkflowSwitchBuilder extends SwitchBuilder {
 	 * 
 	 */
 	private WorkflowSwitchCaseBuilder switchCase;
+	
+	/**
+	 * 
+	 */
+	private WorkflowSwitchNode _switch;
 
 	@Override
 	public SwitchCaseBuilder switchCase() {
@@ -35,4 +43,10 @@ public class WorkflowSwitchBuilder extends SwitchBuilder {
 		return this;
 	}
 
+	/**
+	 * @return
+	 */
+	public SwitchNode build() {
+		return _switch;
+	}
 }
