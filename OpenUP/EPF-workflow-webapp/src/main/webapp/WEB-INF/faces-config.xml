@@ -6,5 +6,6 @@
     version="2.3">
     <factory>
 		<exception-handler-factory>epf.webapp.util.ExceptionUtil</exception-handler-factory>
+		<flow-handler-factory>epf.webapp.workflow.internal.WorkflowFactory</flow-handler-factory>
 	</factory>
 </faces-config>
