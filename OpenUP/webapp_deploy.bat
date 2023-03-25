@@ -14,4 +14,7 @@ cd ../
 cd EPF-security-webapp
 call mvn wildfly:deploy
 cd ../
+cd EPF-workflow-webapp
+call mvn wildfly:deploy
+cd ../
 endlocal

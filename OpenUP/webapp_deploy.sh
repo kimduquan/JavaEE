@@ -13,3 +13,6 @@ cd ../
 cd EPF-security-webapp
 mvn wildfly:deploy
 cd ../
+cd EPF-workflow-webapp
+mvn wildfly:deploy
+cd ../

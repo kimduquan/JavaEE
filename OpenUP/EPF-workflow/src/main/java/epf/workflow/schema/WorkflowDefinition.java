@@ -62,7 +62,7 @@ public class WorkflowDefinition {
 	 * 
 	 */
 	@Column
-	private Object dataInputSchema;
+	private InputSchema dataInputSchema;
 	
 	/**
 	 * 
@@ -213,11 +213,11 @@ public class WorkflowDefinition {
 		this.annotations = annotations;
 	}
 
-	public Object getDataInputSchema() {
+	public InputSchema getDataInputSchema() {
 		return dataInputSchema;
 	}
 
-	public void setDataInputSchema(Object dataInputSchema) {
+	public void setDataInputSchema(InputSchema dataInputSchema) {
 		this.dataInputSchema = dataInputSchema;
 	}
 
