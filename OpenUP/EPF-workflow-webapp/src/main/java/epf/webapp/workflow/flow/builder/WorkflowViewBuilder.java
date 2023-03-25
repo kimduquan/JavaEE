@@ -1,8 +1,9 @@
-package epf.webapp.workflow.internal.builder;
+package epf.webapp.workflow.flow.builder;
 
 import javax.faces.flow.ViewNode;
 import javax.faces.flow.builder.ViewBuilder;
-import epf.webapp.workflow.internal.WorkflowViewNode;
+
+import epf.webapp.workflow.flow.WorkflowViewNode;
 
 /**
  * @author PC

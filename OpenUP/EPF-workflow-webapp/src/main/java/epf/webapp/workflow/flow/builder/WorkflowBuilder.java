@@ -1,4 +1,4 @@
-package epf.webapp.workflow.internal.builder;
+package epf.webapp.workflow.flow.builder;
 
 import javax.el.MethodExpression;
 import javax.el.ValueExpression;
@@ -10,7 +10,8 @@ import javax.faces.flow.builder.NavigationCaseBuilder;
 import javax.faces.flow.builder.ReturnBuilder;
 import javax.faces.flow.builder.SwitchBuilder;
 import javax.faces.flow.builder.ViewBuilder;
-import epf.webapp.workflow.internal.Workflow;
+
+import epf.webapp.workflow.flow.Workflow;
 
 /**
  * @author PC

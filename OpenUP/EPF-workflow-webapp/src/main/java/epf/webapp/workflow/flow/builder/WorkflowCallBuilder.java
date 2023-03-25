@@ -1,9 +1,10 @@
-package epf.webapp.workflow.internal.builder;
+package epf.webapp.workflow.flow.builder;
 
 import javax.el.ValueExpression;
 import javax.faces.flow.FlowCallNode;
 import javax.faces.flow.builder.FlowCallBuilder;
-import epf.webapp.workflow.internal.WorkflowCallNode;
+
+import epf.webapp.workflow.flow.WorkflowCallNode;
 
 /**
  * @author PC

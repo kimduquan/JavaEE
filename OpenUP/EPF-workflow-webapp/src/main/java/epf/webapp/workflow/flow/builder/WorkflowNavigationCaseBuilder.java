@@ -1,4 +1,4 @@
-package epf.webapp.workflow.internal.builder;
+package epf.webapp.workflow.flow.builder;
 
 import javax.el.ValueExpression;
 import javax.faces.application.NavigationCase;

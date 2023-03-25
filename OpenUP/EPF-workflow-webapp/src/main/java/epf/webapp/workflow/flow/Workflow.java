@@ -1,4 +1,4 @@
-package epf.webapp.workflow.internal;
+package epf.webapp.workflow.flow;
 
 import java.util.List;
 import java.util.Map;

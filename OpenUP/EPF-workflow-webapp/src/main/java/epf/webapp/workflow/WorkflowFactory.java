@@ -4,7 +4,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.flow.FlowHandler;
 import javax.faces.flow.FlowHandlerFactory;
 import javax.faces.flow.FlowHandlerFactoryWrapper;
-import epf.webapp.workflow.internal.builder.WorkflowBuilder;
+import epf.webapp.workflow.flow.builder.WorkflowBuilder;
 import epf.workflow.schema.Workflow;
 import epf.workflow.schema.end.End;
 import epf.workflow.schema.interfaces.State;

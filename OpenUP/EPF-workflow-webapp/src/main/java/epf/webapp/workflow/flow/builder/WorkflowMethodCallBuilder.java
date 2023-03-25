@@ -1,4 +1,4 @@
-package epf.webapp.workflow.internal.builder;
+package epf.webapp.workflow.flow.builder;
 
 import java.util.List;
 import javax.el.MethodExpression;
@@ -6,7 +6,8 @@ import javax.el.ValueExpression;
 import javax.faces.flow.MethodCallNode;
 import javax.faces.flow.Parameter;
 import javax.faces.flow.builder.MethodCallBuilder;
-import epf.webapp.workflow.internal.WorkflowMethodCallNode;
+
+import epf.webapp.workflow.flow.WorkflowMethodCallNode;
 
 /**
  * @author PC

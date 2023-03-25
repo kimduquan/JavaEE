@@ -1,4 +1,4 @@
-package epf.webapp.workflow.internal;
+package epf.webapp.workflow.flow;
 
 import java.util.Map;
 import javax.faces.context.FacesContext;
@@ -9,7 +9,7 @@ import javax.faces.flow.Parameter;
  * @author PC
  *
  */
-public class WorkflowFlowCallNode extends FlowCallNode {
+public class WorkflowCallNode extends FlowCallNode {
 	
 	/**
 	 * 
@@ -50,4 +50,5 @@ public class WorkflowFlowCallNode extends FlowCallNode {
 	public void setId(final String id) {
 		this.id = id;
 	}
+
 }

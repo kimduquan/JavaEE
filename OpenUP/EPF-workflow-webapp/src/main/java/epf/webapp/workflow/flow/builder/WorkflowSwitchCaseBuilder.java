@@ -1,9 +1,10 @@
-package epf.webapp.workflow.internal.builder;
+package epf.webapp.workflow.flow.builder;
 
 import javax.el.ValueExpression;
 import javax.faces.flow.SwitchCase;
 import javax.faces.flow.builder.SwitchCaseBuilder;
-import epf.webapp.workflow.internal.WorkflowSwitchCase;
+
+import epf.webapp.workflow.flow.WorkflowSwitchCase;
 
 /**
  * @author PC

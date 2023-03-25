@@ -1,4 +1,4 @@
-package epf.webapp.workflow.internal;
+package epf.webapp.workflow.flow;
 
 import javax.el.ValueExpression;
 import javax.faces.flow.Parameter;

@@ -1,4 +1,4 @@
-package epf.webapp.workflow.internal;
+package epf.webapp.workflow.flow;
 
 import javax.faces.context.FacesContext;
 import javax.faces.flow.ReturnNode;
