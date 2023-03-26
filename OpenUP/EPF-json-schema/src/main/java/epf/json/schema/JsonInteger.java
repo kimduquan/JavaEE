@@ -1,4 +1,4 @@
-package epf.util.json.schema;
+package epf.json.schema;
 
 /**
  * @author PC

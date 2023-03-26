@@ -774,6 +774,7 @@
         <module>EPF-shell</module>
 		<module>EPF-utility</module>
 		<module>EPF-json-utility</module>
+		<module>EPF-json-schema</module>
 		<module>EPF-client-utility</module>
 		<module>EPF-client-internal</module>
 		<module>EPF-file-utility</module>
