@@ -1,0 +1,30 @@
+<html xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:a="http://xmlns.jcp.org/jsf/passthrough" xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:epf="http://xmlns.jcp.org/jsf/composite/persistence">
+	<ui:composition template="../template/blank.xhtml">
+		<ui:define name="title"><h:outputText value="#{workflow_start.schema.title}" /></ui:define>
+		<ui:define name="head">
+		    <f:metadata><f:viewParam name="workflow" value="#{workflow_start.workflow}" /></f:metadata>
+		</ui:define>
+		<ui:define name="page-content">
+		    <!-- Page Heading -->
+		    <h1 class="h3 mb-2 text-gray-800"><h:outputText value="#{workflow_start.schema.title}" /></h1>
+		    <p class="mb-4"><h:outputText value="#{workflow_start.schema.description}" />.
+		        For more information, please visit the <a target="_blank"
+		            jsf:href="#{workflow_start.schema.schema}"><h:outputText value="#{workflow_start.schema.id}" /></a>.</p>
+		
+		    
+		    <div class="card shadow mb-4">
+		        <div class="card-header py-3">
+		            <h6 class="m-0 font-weight-bold text-primary"></h6>
+		        </div>
+		        <div class="card-body">
+		            <div class="table-responsive">
+		            	<h:form>
+		            	</h:form>
+		            </div>
+		        </div>
+		    </div>
+		</ui:define>
+		<ui:define name="script">
+		</ui:define>
+	</ui:composition>
+</html>

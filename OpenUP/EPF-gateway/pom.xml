@@ -84,5 +84,15 @@
         <artifactId>EPF-HATEOAS-utility</artifactId>
         <version>${project.version}</version>
     </dependency>
+    <dependency>
+        <groupId>openup</groupId>
+        <artifactId>EPF-logging-utility</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>openup</groupId>
+        <artifactId>EPF-websocket-utility</artifactId>
+        <version>${project.version}</version>
+    </dependency>
   </dependencies>
 </project>

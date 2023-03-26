@@ -23,8 +23,8 @@ import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
 
 import epf.file.client.FileEvent;
-import epf.util.event.Emitter;
-import epf.util.event.EventEmitter;
+import epf.util.concurrent.Emitter;
+import epf.util.concurrent.EventEmitter;
 import epf.util.logging.LogManager;
 
 /**

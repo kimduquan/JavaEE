@@ -9,7 +9,8 @@ import java.util.Objects;
 import java.util.function.Supplier;
 import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheLoaderException;
-import epf.util.event.Emitter;
+
+import epf.util.concurrent.Emitter;
 
 /**
  * @param <K>

@@ -11,7 +11,7 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import epf.cache.util.Loader;
 import epf.query.Naming;
-import epf.util.event.EventEmitter;
+import epf.util.concurrent.EventEmitter;
 
 /**
  * @author PC

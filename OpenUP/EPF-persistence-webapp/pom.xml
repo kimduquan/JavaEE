@@ -108,6 +108,11 @@
             <artifactId>EPF-json-utility</artifactId>
             <version>${project.version}</version>
         </dependency>
+	    <dependency>
+	        <groupId>openup</groupId>
+	        <artifactId>EPF-logging-utility</artifactId>
+	        <version>${project.version}</version>
+	    </dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-webapp-utility</artifactId>

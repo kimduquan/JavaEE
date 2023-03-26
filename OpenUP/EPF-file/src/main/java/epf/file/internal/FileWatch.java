@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 import epf.file.client.EventKind;
 import epf.file.client.FileEvent;
-import epf.util.event.Emitter;
+import epf.util.concurrent.Emitter;
 import epf.util.logging.LogManager;
 
 /**

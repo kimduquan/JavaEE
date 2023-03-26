@@ -1,4 +1,4 @@
-package epf.util.event;
+package epf.util.concurrent;
 
 import java.util.concurrent.CompletionStage;
 

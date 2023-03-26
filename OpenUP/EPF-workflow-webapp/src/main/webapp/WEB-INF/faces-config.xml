@@ -6,7 +6,7 @@
     version="2.3">
     <factory>
 		<exception-handler-factory>epf.webapp.util.ExceptionUtil</exception-handler-factory>
-		<!-- <flow-handler-factory>epf.webapp.workflow.WorkflowFactory</flow-handler-factory> -->
+		<flow-handler-factory>epf.webapp.workflow.WorkflowFactory</flow-handler-factory>
 	</factory>
 	<flow-definition id="workflow">
 		<flow-return id="end">

@@ -1,9 +1,11 @@
 package epf.util;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
@@ -120,5 +122,22 @@ public interface MapUtil {
 			map.put(key, value);
 		}
 		return map;
+	}
+	
+	/**
+	 * @param <K>
+	 * @param <V>
+	 * @param map
+	 * @param keyComparator
+	 * @return
+	 */
+	static <K, V> List<Map.Entry<K, V>> entrySet(final Map<K, V> map, final Comparator<? super K> keyComparator) {
+		Objects.requireNonNull(map, "Map");
+		final Comparator<? super Entry<K, V>> entryComparator = new Comparator<Entry<K, V>>(){
+			@Override
+			public int compare(final Entry<K, V> o1, final Entry<K, V> o2) {
+				return keyComparator.compare(o1.getKey(), o2.getKey());
+			}};
+		return map.entrySet().stream().sorted(entryComparator).collect(Collectors.toList());
 	}
 }

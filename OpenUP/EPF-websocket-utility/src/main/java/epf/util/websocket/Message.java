@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.util.websocket;
 
 import java.io.IOException;

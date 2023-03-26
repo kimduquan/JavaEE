@@ -1,23 +1,21 @@
-/**
- * 
- */
 package epf.util.websocket;
 
-import java.util.function.Consumer;
+import java.util.Objects;
 import java.util.logging.Logger;
 import javax.websocket.Session;
+import epf.util.concurrent.ObjectQueue;
 import epf.util.logging.LogManager;
 
 /**
  * @author PC
  *
  */
-public class MessageHandler implements Consumer<Message> {
+public class MessageQueue extends ObjectQueue<Message> {
 	
 	/**
 	 * 
 	 */
-	private transient final Logger LOGGER = LogManager.getLogger(MessageHandler.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(MessageQueue.class.getName());
 	
 	/**
 	 * 
@@ -27,7 +25,9 @@ public class MessageHandler implements Consumer<Message> {
 	/**
 	 * @param session
 	 */
-	public MessageHandler(final Session session) {
+	public MessageQueue(final Session session) {
+		super();
+		Objects.requireNonNull(session, "Session");
 		this.session = session;
 	}
 
@@ -40,5 +40,4 @@ public class MessageHandler implements Consumer<Message> {
 			LOGGER.throwing(getClass().getName(), "accept", e);
 		}
 	}
-
 }

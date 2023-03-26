@@ -191,4 +191,15 @@ public interface Naming {
 		 */
 		String SECURITY_AUTH_PAGE = "/security/auth/auth.html";
 	}
+	
+	/**
+	 *
+	 */
+	interface Workflow {
+		
+		/**
+		 * 
+		 */
+		String WORKFLOW_START = "workflow_start";
+	}
 }

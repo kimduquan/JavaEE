@@ -773,6 +773,9 @@
     <modules>
         <module>EPF-shell</module>
 		<module>EPF-utility</module>
+		<module>EPF-logging-utility</module>
+		<module>EPF-websocket-utility</module>
+		<module>EPF-concurrent-utility</module>
 		<module>EPF-json-utility</module>
 		<module>EPF-json-schema</module>
 		<module>EPF-client-utility</module>
