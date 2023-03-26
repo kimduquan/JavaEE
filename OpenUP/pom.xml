@@ -776,6 +776,7 @@
 		<module>EPF-logging-utility</module>
 		<module>EPF-websocket-utility</module>
 		<module>EPF-concurrent-utility</module>
+		<module>EPF-xml-utility</module>
 		<module>EPF-json-utility</module>
 		<module>EPF-json-schema</module>
 		<module>EPF-client-utility</module>
