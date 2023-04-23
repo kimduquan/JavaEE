@@ -12,7 +12,7 @@
 		<flow-return id="end">
 			<from-outcome>end</from-outcome>
 		</flow-return>
-		<method-call>
+		<method-call id="start">
 			<method>#{workflow.start}</method>
 			<default-outcome>end</default-outcome>
 		</method-call>

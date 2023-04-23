@@ -43,12 +43,17 @@
         </dependency>
         <dependency>
             <groupId>openup</groupId>
-            <artifactId>EPF-webapp-internal</artifactId>
+            <artifactId>EPF-utility</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>openup</groupId>
-            <artifactId>EPF-utility</artifactId>
+            <artifactId>EPF-naming</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-webapp-naming</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

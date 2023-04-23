@@ -21,7 +21,7 @@
     <url-pattern>/webapp/*</url-pattern>
   </servlet-mapping>
   <context-param>
-	<param-name>javax.faces.ENABLE_WEBSOCKET_ENDPOINT</param-name>
-	<param-value>true</param-value>
+    <param-name>javax.faces.CLIENT_WINDOW_MODE</param-name>
+    <param-value>url</param-value>
   </context-param>
 </web-app>
