@@ -12,6 +12,7 @@ cd EPF-gateway
 ./start.sh
 cd ../
 ./webapp_startupc.sh
+kubectl port-forward svc/wildfly-internal 9990:9990 &
 cd EPF-webapp
 mvn wildfly:deploy
 cd ../
