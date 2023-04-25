@@ -1,4 +1,10 @@
 ./shutdownc.sh
+cd EPF-config
+./start.sh
+cd ../
+cd EPF-messaging
+./start.sh
+cd ../
 cd EPF-registry
 ./start.sh
 cd ../
