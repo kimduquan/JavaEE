@@ -1,3 +1,4 @@
+. ./env.sh
 ./shutdownc.sh
 cd EPF-config
 ./start.sh
@@ -14,16 +15,16 @@ cd ../
 ./webapp_startupc.sh
 kubectl port-forward svc/wildfly-internal 9990:9990 &
 cd EPF-webapp
-mvn wildfly:deploy
+mvn clean install -U
 cd ../
 cd EPF-security-auth-webapp
-mvn wildfly:deploy
+mvn clean install -U
 cd ../
 cd EPF-security-webapp
-mvn wildfly:deploy
+mvn clean install -U
 cd ../
 cd EPF-workflow-webapp
-mvn wildfly:deploy
+mvn clean install -U
 cd ../
 cd EPF-tests
 ./dev.sh
