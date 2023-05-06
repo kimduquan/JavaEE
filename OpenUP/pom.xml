@@ -637,6 +637,7 @@
 					<configuration>
 						<username>admin</username>
 						<password>admin</password>
+						<hostname>127.0.0.1</hostname>
 					</configuration>
 		        </plugin>
             </plugins>

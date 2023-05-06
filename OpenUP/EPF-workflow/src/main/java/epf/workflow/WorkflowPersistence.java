@@ -2,7 +2,6 @@ package epf.workflow;
 
 import java.util.Optional;
 import java.util.UUID;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import epf.workflow.schema.WorkflowDefinition;
