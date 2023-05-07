@@ -1,0 +1,29 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>openup</groupId>
+    <artifactId>OpenUP-parent</artifactId>
+    <version>1.0.0</version>
+  </parent>
+  <artifactId>EPF-shell-installer</artifactId>
+  <name>Eclipse Process Framework Shell Installer</name>
+  <packaging>izpack-jar</packaging>
+  <build>
+	  <plugins>
+		<plugin>
+			<groupId>org.codehaus.izpack</groupId>
+			<artifactId>izpack-maven-plugin</artifactId>
+			<extensions>true</extensions>
+		    <configuration>
+			  <baseDir>src/main/izpack/base</baseDir>
+		      <installFile>src/main/izpack/install.xml</installFile>
+		      <outputDirectory>${project.build.directory}</outputDirectory>
+		      <finalName>${project.build.finalName}</finalName>
+		      <mkdirs>true</mkdirs>
+		      <autoIncludeUrl>false</autoIncludeUrl>
+		      <autoIncludeDevelopers>false</autoIncludeDevelopers>
+		    </configuration>
+		</plugin>
+	  </plugins>
+  </build>
+</project>

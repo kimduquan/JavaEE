@@ -640,6 +640,12 @@
 						<hostname>127.0.0.1</hostname>
 					</configuration>
 		        </plugin>
+				<!-- https://mvnrepository.com/artifact/org.codehaus.izpack/izpack-maven-plugin -->
+				<plugin>
+					<groupId>org.codehaus.izpack</groupId>
+					<artifactId>izpack-maven-plugin</artifactId>
+					<version>5.1.3</version>
+				</plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -881,5 +887,6 @@
 		
         <module>EPF-tests</module>
         <module>EPF-assembly</module>
+        <module>EPF-shell-installer</module>
     </modules>
 </project>
