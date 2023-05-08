@@ -8,6 +8,12 @@
   <artifactId>EPF-shell-installer</artifactId>
   <name>Eclipse Process Framework Shell Installer</name>
   <packaging>izpack-jar</packaging>
+  <dependencies>
+	  <dependency>
+		<groupId>org.codehaus.izpack</groupId>
+		<artifactId>izpack-panel</artifactId>
+	</dependency>
+  </dependencies>
   <build>
 	  <plugins>
 		<plugin>
@@ -15,15 +21,65 @@
 			<artifactId>izpack-maven-plugin</artifactId>
 			<extensions>true</extensions>
 		    <configuration>
-			  <baseDir>src/main/izpack/base</baseDir>
-		      <installFile>src/main/izpack/install.xml</installFile>
+			  <baseDir>${project.build.directory}/staging</baseDir>
+		      <installFile>${project.build.directory}/staging/install.xml</installFile>
 		      <outputDirectory>${project.build.directory}</outputDirectory>
 		      <finalName>${project.build.finalName}</finalName>
 		      <mkdirs>true</mkdirs>
 		      <autoIncludeUrl>false</autoIncludeUrl>
 		      <autoIncludeDevelopers>false</autoIncludeDevelopers>
 		    </configuration>
+			<dependencies>
+				<dependency>
+					<groupId>org.codehaus.izpack</groupId>
+					<artifactId>izpack-panel</artifactId>
+					<version>5.1.3</version>
+				</dependency>
+			</dependencies>
 		</plugin>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-resources-plugin</artifactId>
+			<executions>
+				<execution>
+					<id>copy-resources</id>
+					<!-- here the phase you need -->
+					<phase>validate</phase>
+					<goals>
+						<goal>copy-resources</goal>
+					</goals>
+					<configuration>
+						<outputDirectory>${project.build.directory}/staging</outputDirectory>
+						<resources>
+							<resource>
+								<directory>src/main/izpack</directory>
+								<includes>
+									<include>**/*</include>
+								</includes>
+								<filtering>false</filtering>
+							</resource>
+						</resources>
+					</configuration>
+				</execution>
+			</executions>
+		</plugin>
+		<plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+                <execution>
+                    <id>copy-izpack-dependencies</id>
+                    <phase>prepare-package</phase>
+                    <goals>
+                        <goal>copy-dependencies</goal>
+                    </goals>
+                    <configuration>
+						<outputDirectory>${project.build.directory}/staging/lib</outputDirectory>
+                        <overWriteIfNewer>true</overWriteIfNewer>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
 	  </plugins>
   </build>
 </project>
