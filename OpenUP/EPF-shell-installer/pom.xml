@@ -22,7 +22,7 @@
 			<extensions>true</extensions>
 		    <configuration>
 			  <baseDir>${project.build.directory}/staging</baseDir>
-		      <installFile>${project.build.directory}/staging/install.xml</installFile>
+		      <installFile>${basedir}/src/main/izpack/install.xml</installFile>
 		      <outputDirectory>${project.build.directory}</outputDirectory>
 		      <finalName>${project.build.finalName}</finalName>
 		      <mkdirs>true</mkdirs>
