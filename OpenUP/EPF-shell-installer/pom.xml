@@ -8,6 +8,7 @@
   </parent>
   <artifactId>EPF-shell-installer</artifactId>
   <name>Eclipse Process Framework Shell Installer</name>
+  <packaging>izpack-jar</packaging>
   <properties>
 	<staging.dir>${project.build.directory}/staging</staging.dir>
   </properties>
@@ -29,28 +30,16 @@
 	</dependency>
   </dependencies>
   <build>
-	  <defaultGoal>package</defaultGoal>
 	  <plugins>
 		<plugin>
 			<groupId>org.codehaus.izpack</groupId>
 			<artifactId>izpack-maven-plugin</artifactId>
+			<extensions>true</extensions>
 			<configuration>
-			  <mkdirs>true</mkdirs>
+				<mkdirs>true</mkdirs>
+				<baseDir>${staging.dir}</baseDir>
+				<installFile>${staging.dir}/install.xml</installFile>
 			</configuration>
-			<executions>
-				<execution>
-					<phase>package</phase>
-					<goals>
-						<goal>izpack</goal>
-					</goals>
-					<configuration>
-						<!-- base for relative paths in izpack descriptor -->
-						<baseDir>${staging.dir}</baseDir>
-						<installFile>${staging.dir}/install.xml</installFile>
-						<classifier>installer</classifier>
-					</configuration>
-				</execution>
-			</executions>
 			<dependencies>
 				<dependency>
 					<groupId>org.codehaus.izpack</groupId>
