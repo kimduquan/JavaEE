@@ -16,6 +16,7 @@
 		<groupId>io.quarkus</groupId>
 		<artifactId>quarkus-arc</artifactId>
 	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.codehaus.izpack/izpack-panel -->
 	<dependency>
 		<groupId>org.codehaus.izpack</groupId>
 		<artifactId>izpack-panel</artifactId>
