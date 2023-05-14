@@ -56,18 +56,18 @@
 	    <groupId>org.bouncycastle</groupId>
 	    <artifactId>bcprov-jdk15on</artifactId>
 	</dependency>
-	<!-- https://mvnrepository.com/artifact/javax.media/jai_imageio 
+	<!-- https://mvnrepository.com/artifact/javax.media/jai_imageio -->
 	<dependency>
 	    <groupId>javax.media</groupId>
 	    <artifactId>jai_imageio</artifactId>
 	    <version>1.1</version>
-	</dependency>-->
-	<!-- https://mvnrepository.com/artifact/javax.media/jai_core 
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/javax.media/jai_core -->
 	<dependency>
 	    <groupId>javax.media</groupId>
 	    <artifactId>jai_core</artifactId>
 	    <version>1.1.3</version>
-	</dependency>-->
+	</dependency>
 	<!-- https://mvnrepository.com/artifact/org.fusesource.jansi/jansi -->
 	<dependency>
 	    <groupId>org.fusesource.jansi</groupId>
@@ -154,6 +154,12 @@
 			</dependency>
 	  </dependencies>
   </dependencyManagement>
+  <repositories>
+	  <repository>
+		  <id>CubaWork</id>
+		  <url>https://repo.cuba-platform.com/content/groups/work/</url>
+	  </repository>
+  </repositories>
   <build>
 	  <plugins>
 		<plugin>
