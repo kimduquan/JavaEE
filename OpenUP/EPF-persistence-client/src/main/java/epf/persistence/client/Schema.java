@@ -1,4 +1,4 @@
-package epf.persistence.schema;
+package epf.persistence.client;
 
 import java.util.List;
 import javax.ws.rs.GET;
@@ -8,6 +8,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import epf.client.util.Client;
 import epf.naming.Naming;
+import epf.persistence.schema.Embeddable;
+import epf.persistence.schema.Entity;
 
 /**
  * @author PC
