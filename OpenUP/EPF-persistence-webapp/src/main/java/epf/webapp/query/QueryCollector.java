@@ -19,7 +19,7 @@ import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortMeta;
 import epf.client.util.Client;
 import epf.naming.Naming;
-import epf.persistence.schema.client.Entity;
+import epf.persistence.schema.Entity;
 import epf.query.client.Query;
 import epf.query.client.QueryUtil;
 import epf.util.json.JsonUtil;

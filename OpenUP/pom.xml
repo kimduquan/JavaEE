@@ -858,6 +858,7 @@
 		<module>EPF-security-auth-webapp</module>
 		<module>EPF-persistence-client</module>
 		<module>EPF-query-client</module>
+		<module>EPF-persistence-schema</module>
 		<module>EPF-persistence</module>
 		<module>EPF-persistence-view</module>
 		<module>EPF-persistence-webapp</module>

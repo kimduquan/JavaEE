@@ -1,4 +1,4 @@
-package epf.persistence.schema.client;
+package epf.persistence.schema;
 
 import java.util.List;
 import javax.ws.rs.GET;
