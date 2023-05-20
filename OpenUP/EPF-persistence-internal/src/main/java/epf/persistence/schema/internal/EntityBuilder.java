@@ -6,8 +6,8 @@ import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Type;
 import javax.persistence.metamodel.Type.PersistenceType;
 import epf.persistence.internal.Entity;
-import epf.persistence.schema.client.Attribute;
-import epf.persistence.schema.client.Table;
+import epf.persistence.schema.Attribute;
+import epf.persistence.schema.Table;
 import epf.util.logging.LogManager;
 
 /**
@@ -25,9 +25,9 @@ public class EntityBuilder {
 	 * @param entity
 	 * @return
 	 */
-	public epf.persistence.schema.client.Entity build(final Entity<?> entity){
+	public epf.persistence.schema.Entity build(final Entity<?> entity){
 		final EntityType<?> type = entity.getType();
-		final epf.persistence.schema.client.Entity entityType = new epf.persistence.schema.client.Entity();
+		final epf.persistence.schema.Entity entityType = new epf.persistence.schema.Entity();
 		final AttributeBuilder builder = new AttributeBuilder();
 		final AttributeComparator comparator = new AttributeComparator();
 		entityType.setAttributes(
@@ -61,20 +61,20 @@ public class EntityBuilder {
 	 * @param type
 	 * @return
 	 */
-	protected static epf.persistence.schema.client.EntityType buildEntityType(final PersistenceType type) {
-		epf.persistence.schema.client.EntityType entityType = null;
+	protected static epf.persistence.schema.EntityType buildEntityType(final PersistenceType type) {
+		epf.persistence.schema.EntityType entityType = null;
 		switch(type) {
 		case BASIC:
-			entityType = epf.persistence.schema.client.EntityType.BASIC;
+			entityType = epf.persistence.schema.EntityType.BASIC;
 			break;
 		case EMBEDDABLE:
-			entityType = epf.persistence.schema.client.EntityType.EMBEDDABLE;
+			entityType = epf.persistence.schema.EntityType.EMBEDDABLE;
 			break;
 		case ENTITY:
-			entityType = epf.persistence.schema.client.EntityType.ENTITY;
+			entityType = epf.persistence.schema.EntityType.ENTITY;
 			break;
 		case MAPPED_SUPERCLASS:
-			entityType = epf.persistence.schema.client.EntityType.MAPPED_SUPER_CLASS;
+			entityType = epf.persistence.schema.EntityType.MAPPED_SUPER_CLASS;
 			break;
 		default:
 			break;

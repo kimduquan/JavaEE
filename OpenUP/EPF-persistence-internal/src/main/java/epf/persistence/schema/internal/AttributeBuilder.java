@@ -3,9 +3,8 @@ package epf.persistence.schema.internal;
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.Attribute.PersistentAttributeType;
 import javax.persistence.metamodel.Bindable;
-
-import epf.persistence.schema.client.AttributeType;
-import epf.persistence.schema.client.Column;
+import epf.persistence.schema.AttributeType;
+import epf.persistence.schema.Column;
 
 /**
  * @author PC
@@ -17,8 +16,8 @@ public class AttributeBuilder {
 	 * @param attr
 	 * @return
 	 */
-	public epf.persistence.schema.client.Attribute build(final Attribute<?, ?> attr){
-		final epf.persistence.schema.client.Attribute attribute = new epf.persistence.schema.client.Attribute();
+	public epf.persistence.schema.Attribute build(final Attribute<?, ?> attr){
+		final epf.persistence.schema.Attribute attribute = new epf.persistence.schema.Attribute();
 		attribute.setType(attr.getJavaType().getName());
 		attribute.setName(attr.getName());
 		attribute.setAttributeType(buildAttrbuteType(attr.getPersistentAttributeType()));
@@ -74,16 +73,16 @@ public class AttributeBuilder {
 	 * @param bindable
 	 * @return
 	 */
-	protected static epf.persistence.schema.client.BindableType buildBindableType(final Bindable<?> bindable){
-		epf.persistence.schema.client.BindableType type = epf.persistence.schema.client.BindableType.ENTITY_TYPE;
+	protected static epf.persistence.schema.BindableType buildBindableType(final Bindable<?> bindable){
+		epf.persistence.schema.BindableType type = epf.persistence.schema.BindableType.ENTITY_TYPE;
 		switch(bindable.getBindableType()) {
 		case ENTITY_TYPE:
 			break;
 		case PLURAL_ATTRIBUTE:
-			type = epf.persistence.schema.client.BindableType.PLURAL_ATTRIBUTE;
+			type = epf.persistence.schema.BindableType.PLURAL_ATTRIBUTE;
 			break;
 		case SINGULAR_ATTRIBUTE:
-			type = epf.persistence.schema.client.BindableType.SINGULAR_ATTRIBUTE;
+			type = epf.persistence.schema.BindableType.SINGULAR_ATTRIBUTE;
 			break;
 		default:
 			break;
