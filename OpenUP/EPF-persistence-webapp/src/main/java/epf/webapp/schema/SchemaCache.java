@@ -12,7 +12,7 @@ import javax.ws.rs.core.Response;
 import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.persistence.schema.Entity;
-import epf.persistence.schema.Schema;
+import epf.persistence.client.Schema;
 import epf.util.logging.LogManager;
 import epf.webapp.internal.GatewayUtil;
 import epf.webapp.internal.Session;
