@@ -25,7 +25,7 @@ import org.junit.rules.TestName;
 import epf.file.util.PathUtil;
 import epf.naming.Naming;
 import epf.net.schema.URL;
-import epf.persistence.schema.client.Entity;
+import epf.persistence.schema.Entity;
 import epf.security.schema.Token;
 import epf.tests.TestUtil;
 import epf.tests.client.ClientUtil;
