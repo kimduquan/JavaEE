@@ -894,6 +894,6 @@
 		
         <module>EPF-tests</module>
         <module>EPF-assembly</module>
-        <!--<module>EPF-shell-installer</module>-->
+        <module>EPF-installer</module>
     </modules>
 </project>
