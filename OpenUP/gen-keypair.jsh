@@ -2,7 +2,7 @@ import java.security.*;
 import java.util.*;
 import java.util.Base64.Encoder;
 
-interface StringUtil {
+interface KeyUtil {
 	
 	static void generateKeyPair(final String algorithm, final int keySize, final StringBuilder privateKeyText, final StringBuilder publicKeyText) throws Exception {
 		final KeyPairGenerator generator = KeyPairGenerator.getInstance(algorithm);
@@ -38,5 +38,5 @@ String algorithm = System.getProperty("algorithm", "RSA");
 int keySize = Integer.valueOf(System.getProperty("keysize", "2048"));
 Path privateFile = Paths.get(System.getProperty("private", "private.pem"));
 Path publicFile = Paths.get(System.getProperty("public", "public.pem"));
-StringUtil.generateKeyPair(algorithm, keySize, privateFile, publicFile);
+KeyUtil.generateKeyPair(algorithm, keySize, privateFile, publicFile);
 /exit
