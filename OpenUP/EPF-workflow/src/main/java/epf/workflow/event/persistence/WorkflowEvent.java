@@ -1,8 +1,8 @@
 package epf.workflow.event.persistence;
 
 import epf.workflow.event.Event;
-import jakarta.nosql.mapping.Column;
-import jakarta.nosql.mapping.MappedSuperclass;
+import jakarta.nosql.Column;
+import org.eclipse.jnosql.mapping.MappedSuperclass;
 
 /**
  * @author PC

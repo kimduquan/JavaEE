@@ -1,7 +1,7 @@
 package epf.workflow.event.mapping;
 
 import java.util.UUID;
-import jakarta.nosql.mapping.AttributeConverter;
+import org.eclipse.jnosql.mapping.AttributeConverter;
 
 /**
  * @author PC

@@ -240,19 +240,6 @@
 				<!--<scope>provided</scope>-->
 			</dependency>
 			
-			<!-- https://mvnrepository.com/artifact/jakarta.nosql.mapping/mapping-document -->
-			<dependency>
-			    <groupId>jakarta.nosql.mapping</groupId>
-			    <artifactId>mapping-document</artifactId>
-			    <version>1.0.0-b5</version>
-			</dependency>
-			<!-- https://mvnrepository.com/artifact/jakarta.nosql.mapping/mapping-column -->
-			<dependency>
-			    <groupId>jakarta.nosql.mapping</groupId>
-			    <artifactId>mapping-column</artifactId>
-			    <version>1.0.0-b5</version>
-			</dependency>
-			
 			
 			<!-- https://mvnrepository.com/artifact/com.liferay.faces/com.liferay.faces.bridge.api -->
 			<dependency>
@@ -304,6 +291,18 @@
 			    <groupId>org.drools</groupId>
 			    <artifactId>drools-jsr94</artifactId>
 			    <version>7.2.0.Final</version>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.mapping/jnosql-mapping-document -->
+			<dependency>
+			    <groupId>org.eclipse.jnosql.mapping</groupId>
+			    <artifactId>jnosql-mapping-document</artifactId>
+			    <version>1.0.0-b6</version>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.mapping/jnosql-mapping-column -->
+			<dependency>
+			    <groupId>org.eclipse.jnosql.mapping</groupId>
+			    <artifactId>jnosql-mapping-column</artifactId>
+			    <version>1.0.0-b6</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.communication/jnosql-mongodb-driver -->
 			<dependency>

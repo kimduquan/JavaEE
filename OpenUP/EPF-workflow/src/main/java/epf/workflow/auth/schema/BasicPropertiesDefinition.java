@@ -1,8 +1,8 @@
 package epf.workflow.auth.schema;
 
 import javax.validation.constraints.NotNull;
-import jakarta.nosql.mapping.Column;
-import jakarta.nosql.mapping.Embeddable;
+import jakarta.nosql.Column;
+import org.eclipse.jnosql.mapping.Embeddable;
 
 /**
  * @author PC

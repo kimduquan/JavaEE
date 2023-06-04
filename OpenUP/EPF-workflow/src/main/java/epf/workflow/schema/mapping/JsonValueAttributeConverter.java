@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 import javax.json.JsonValue;
 import epf.util.json.JsonUtil;
 import epf.util.logging.LogManager;
-import jakarta.nosql.mapping.AttributeConverter;
+import org.eclipse.jnosql.mapping.AttributeConverter;
 
 /**
  * @author PC

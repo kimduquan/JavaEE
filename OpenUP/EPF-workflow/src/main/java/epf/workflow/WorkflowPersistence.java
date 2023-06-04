@@ -5,8 +5,7 @@ import java.util.UUID;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import epf.workflow.schema.WorkflowDefinition;
-import jakarta.nosql.document.DocumentQuery;
-import jakarta.nosql.mapping.document.DocumentTemplate;
+import jakarta.nosql.document.DocumentTemplate;
 
 /**
  * @author PC
@@ -27,8 +26,7 @@ public class WorkflowPersistence {
 	 * @return
 	 */
 	public WorkflowDefinition find(final String id, final String version) {
-		final DocumentQuery query = DocumentQuery.select().from("WorkflowDefinition").where("id").eq(id).and("version").eq(version).build();
-		final Optional<WorkflowDefinition> workflowDefinition = document.singleResult(query);
+		final Optional<WorkflowDefinition> workflowDefinition = document.select(WorkflowDefinition.class).where("id").eq(id).and("version").eq(version).singleResult();
 		return workflowDefinition.get();
 	}
 	
