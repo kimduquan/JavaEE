@@ -19,13 +19,13 @@ import epf.api.parameter.Parameter;
 import epf.api.server.Server;
 import epf.util.json.JsonUtil;
 import epf.workflow.WorkflowData;
-import epf.workflow.auth.schema.AuthDefinition;
-import epf.workflow.auth.schema.BearerPropertiesDefinition;
-import epf.workflow.auth.schema.Scheme;
-import epf.workflow.function.schema.FunctionDefinition;
-import epf.workflow.function.schema.FunctionRefDefinition;
-import epf.workflow.function.schema.Invoke;
 import epf.workflow.schema.WorkflowDefinition;
+import epf.workflow.schema.auth.AuthDefinition;
+import epf.workflow.schema.auth.BearerPropertiesDefinition;
+import epf.workflow.schema.auth.Scheme;
+import epf.workflow.schema.function.FunctionDefinition;
+import epf.workflow.schema.function.FunctionRefDefinition;
+import epf.workflow.schema.function.Invoke;
 
 /**
  * @author PC

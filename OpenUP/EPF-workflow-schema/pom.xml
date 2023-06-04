@@ -26,11 +26,26 @@
 			<scope>provided</scope>
 		</dependency>
 		
-		<!-- https://mvnrepository.com/artifact/jakarta.nosql.mapping/mapping-core -->
+		<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.mapping/jnosql-mapping-document -->
 		<dependency>
-		    <groupId>jakarta.nosql.mapping</groupId>
-		    <artifactId>mapping-core</artifactId>
-		    <version>1.0.0-b4</version>
+		    <groupId>org.eclipse.jnosql.mapping</groupId>
+		    <artifactId>jnosql-mapping-document</artifactId>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.mapping/jnosql-mapping-column -->
+		<dependency>
+		    <groupId>org.eclipse.jnosql.mapping</groupId>
+		    <artifactId>jnosql-mapping-column</artifactId>
+		</dependency>
+		
+		<dependency>
+	        <groupId>openup</groupId>
+	        <artifactId>EPF-logging-utility</artifactId>
+	        <version>${project.version}</version>
+	    </dependency>
+		<dependency>
+	    	<groupId>openup</groupId>
+	    	<artifactId>EPF-json-utility</artifactId>
+	    	<version>${project.version}</version>
+	    </dependency>
     </dependencies>
 </project>

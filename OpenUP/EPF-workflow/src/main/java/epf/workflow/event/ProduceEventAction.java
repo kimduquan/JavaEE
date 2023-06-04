@@ -2,9 +2,9 @@ package epf.workflow.event;
 
 import epf.workflow.WorkflowData;
 import epf.workflow.action.Action;
-import epf.workflow.action.schema.ActionDefinition;
-import epf.workflow.event.schema.EventDefinition;
 import epf.workflow.schema.WorkflowDefinition;
+import epf.workflow.schema.action.ActionDefinition;
+import epf.workflow.schema.event.EventDefinition;
 import epf.workflow.util.ELUtil;
 
 /**

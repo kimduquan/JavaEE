@@ -7,10 +7,10 @@ import javax.inject.Inject;
 import epf.naming.Naming;
 import epf.workflow.schedule.Schedule;
 import epf.workflow.schedule.ScheduleTrigger;
-import epf.workflow.schedule.schema.ScheduleDefinition;
 import epf.workflow.schedule.util.ScheduleUtil;
 import epf.workflow.schema.StartDefinition;
 import epf.workflow.schema.WorkflowDefinition;
+import epf.workflow.schema.schedule.ScheduleDefinition;
 
 /**
  * @author PC

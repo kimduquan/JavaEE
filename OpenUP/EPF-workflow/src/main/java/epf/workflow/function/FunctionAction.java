@@ -11,11 +11,11 @@ import epf.api.PathItem;
 import epf.util.ListUtil;
 import epf.workflow.WorkflowData;
 import epf.workflow.action.Action;
-import epf.workflow.action.schema.ActionDefinition;
-import epf.workflow.function.schema.FunctionDefinition;
-import epf.workflow.function.schema.FunctionRefDefinition;
-import epf.workflow.function.schema.FunctionType;
 import epf.workflow.schema.WorkflowDefinition;
+import epf.workflow.schema.action.ActionDefinition;
+import epf.workflow.schema.function.FunctionDefinition;
+import epf.workflow.schema.function.FunctionRefDefinition;
+import epf.workflow.schema.function.FunctionType;
 
 /**
  * @author PC

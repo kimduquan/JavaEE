@@ -4,10 +4,11 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.Callable;
-import epf.workflow.action.schema.ActionDefinition;
+
 import epf.workflow.schema.RetryDefinition;
 import epf.workflow.schema.WorkflowDefinition;
 import epf.workflow.schema.WorkflowError;
+import epf.workflow.schema.action.ActionDefinition;
 
 /**
  * @author PC

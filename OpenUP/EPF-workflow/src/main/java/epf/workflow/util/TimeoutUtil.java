@@ -3,13 +3,13 @@ package epf.workflow.util;
 import java.time.Duration;
 import epf.workflow.schema.WorkflowDefinition;
 import epf.workflow.schema.WorkflowTimeoutDefinition;
-import epf.workflow.state.schema.CallbackState;
-import epf.workflow.state.schema.EventState;
-import epf.workflow.state.schema.ForEachState;
-import epf.workflow.state.schema.OperationState;
-import epf.workflow.state.schema.ParallelState;
-import epf.workflow.state.schema.State;
-import epf.workflow.state.schema.SwitchState;
+import epf.workflow.schema.state.CallbackState;
+import epf.workflow.schema.state.EventState;
+import epf.workflow.schema.state.ForEachState;
+import epf.workflow.schema.state.OperationState;
+import epf.workflow.schema.state.ParallelState;
+import epf.workflow.schema.state.State;
+import epf.workflow.schema.state.SwitchState;
 
 /**
  * @author PC

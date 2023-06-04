@@ -10,7 +10,7 @@ import epf.workflow.event.persistence.CallbackStateEvent;
 import epf.workflow.event.persistence.EventStateActionEvent;
 import epf.workflow.event.persistence.EventStateEvent;
 import epf.workflow.event.persistence.WorkflowEvent;
-import epf.workflow.event.schema.EventDefinition;
+import epf.workflow.schema.event.EventDefinition;
 import jakarta.nosql.column.ColumnTemplate;
 
 /**

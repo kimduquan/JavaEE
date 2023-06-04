@@ -1,9 +1,9 @@
 package epf.workflow.function;
 
 import epf.workflow.WorkflowData;
-import epf.workflow.function.schema.FunctionDefinition;
-import epf.workflow.function.schema.FunctionRefDefinition;
 import epf.workflow.schema.WorkflowDefinition;
+import epf.workflow.schema.function.FunctionDefinition;
+import epf.workflow.schema.function.FunctionRefDefinition;
 
 /**
  * @author PC

@@ -89,6 +89,12 @@
 	    <groupId>org.eclipse.jnosql.communication</groupId>
 	    <artifactId>jnosql-cassandra-driver</artifactId>
 	</dependency>
+	
+	<dependency>
+        <groupId>openup</groupId>
+        <artifactId>EPF-workflow-schema</artifactId>
+        <version>${project.version}</version>
+    </dependency>
     
     <dependency>
     	<groupId>openup</groupId>

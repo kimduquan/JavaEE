@@ -1,7 +1,7 @@
 package epf.workflow.state;
 
 import epf.workflow.WorkflowInstance;
-import epf.workflow.state.schema.CallbackState;
+import epf.workflow.schema.state.CallbackState;
 
 /**
  * @author PC
