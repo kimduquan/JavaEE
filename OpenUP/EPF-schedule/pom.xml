@@ -68,6 +68,11 @@
             <artifactId>EPF-messaging-client</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-schedule-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 	    <dependency>
 	        <groupId>openup</groupId>
 	        <artifactId>EPF-logging-utility</artifactId>

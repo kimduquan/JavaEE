@@ -21,7 +21,7 @@ import epf.schedule.internal.Messaging;
  */
 @ApplicationScoped
 @Path(Naming.SCHEDULE)
-public class Schedule implements epf.client.schedule.Schedule {
+public class Schedule implements epf.schedule.client.Schedule {
 	
 	/**
 	 * 

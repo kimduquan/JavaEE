@@ -871,6 +871,7 @@
 		<module>EPF-registry-client</module>
 		<module>EPF-batch-client</module>
 		<module>EPF-net-client</module>
+		<module>EPF-schedule-client</module>
 		<module>EPF-mail</module>
 		<module>EPF-image</module>
 		<module>EPF-rules</module>

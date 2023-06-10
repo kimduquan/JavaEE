@@ -1,4 +1,4 @@
-package epf.client.schedule;
+package epf.schedule.client;
 
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotBlank;
