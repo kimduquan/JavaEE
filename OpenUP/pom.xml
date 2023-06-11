@@ -789,6 +789,7 @@
 		<module>EPF-concurrent-utility</module>
 		<module>EPF-xml-utility</module>
 		<module>EPF-json-utility</module>
+		<module>EPF-json-utility-ext</module>
 		<module>EPF-json-schema</module>
 		<module>EPF-client-utility</module>
 		<module>EPF-client-internal</module>
