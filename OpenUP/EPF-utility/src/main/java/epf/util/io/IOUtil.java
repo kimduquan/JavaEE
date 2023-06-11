@@ -1,5 +1,6 @@
 package epf.util.io;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -31,4 +32,12 @@ public interface IOUtil {
         }
         return transferred;
     }
+	
+	/**
+	 * @param in
+	 * @return
+	 */
+	static InputStream clone(final InputStream in) {
+		return new BufferedInputStream(in);
+	}
 }

@@ -36,6 +36,7 @@ public class RecurringTimeIntervalTrigger implements Trigger {
 			recurringTimeInterval.getTimeInterval().getDuration().addTo(now);
 			nextRunTime = Date.from(now);
 		}
+		numberOfRepetitions.incrementAndGet();
 		return nextRunTime;
 	}
 

@@ -4,7 +4,6 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.UriInfo;
-
 import org.junit.Test;
 import org.mockito.Mockito;
 

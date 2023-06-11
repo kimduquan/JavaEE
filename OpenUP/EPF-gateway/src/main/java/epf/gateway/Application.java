@@ -20,8 +20,8 @@ import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.client.internal.ClientQueue;
+import epf.client.util.RequestBuilder;
 import epf.client.util.ResponseUtil;
-import epf.gateway.internal.RequestBuilder;
 import epf.hateoas.utility.HATEOAS;
 import epf.util.ThreadUtil;
 import epf.util.logging.LogManager;
@@ -66,8 +66,8 @@ public class Application {
             final javax.ws.rs.core.Request req,
             final InputStream body) {
     	final URI serviceUrl = registry.lookup(service).orElseThrow(NotFoundException::new);
-    	final Client client = clients.poll(serviceUrl, null);
-    	final RequestBuilder builder = new RequestBuilder(client, serviceUrl, req, headers, uriInfo, body);
+    	final Client client = clients.poll(serviceUrl, b -> b);
+    	final RequestBuilder builder = new RequestBuilder(client, serviceUrl, req.getMethod(), headers, uriInfo, body, true);
     	final Link self = HATEOAS.selfLink(uriInfo, req, service);
     	return builder.build()
     			.thenApply(response -> closeResponse(response, serviceUrl, client))

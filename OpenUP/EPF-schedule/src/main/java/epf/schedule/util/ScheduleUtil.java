@@ -12,16 +12,27 @@ import epf.util.time.TimeUtil;
  */
 public interface ScheduleUtil {
 
+	/**
+	 * @param intervalExpression
+	 * @return
+	 */
 	static RecurringTimeInterval parse(final String intervalExpression) {
 		RecurringTimeInterval recurringTimeInterval = null;
 		if(intervalExpression.startsWith("R")) {
-			recurringTimeInterval = new RecurringTimeInterval();
-			String numberOfRepetitions = intervalExpression.substring(1, intervalExpression.indexOf("/"));
-			if(!numberOfRepetitions.isEmpty()) {
-				recurringTimeInterval.setNumberOfRepetitions(Integer.parseInt(numberOfRepetitions));
+			final int intervalExpressionIndex = intervalExpression.indexOf("/");
+			if(intervalExpressionIndex != -1) {
+				final String numberOfRepetitions = intervalExpression.substring(1, intervalExpressionIndex);
+				final String timeInterval = intervalExpression.substring(intervalExpressionIndex + 1);
+				if(!numberOfRepetitions.isEmpty() || !timeInterval.isEmpty()) {
+					recurringTimeInterval = new RecurringTimeInterval();
+					if(!numberOfRepetitions.isEmpty()) {
+						recurringTimeInterval.setNumberOfRepetitions(Integer.parseInt(numberOfRepetitions));
+					}
+					if(!timeInterval.isEmpty()) {
+						recurringTimeInterval.setTimeInterval(parseTimeInterval(timeInterval));
+					}
+				}
 			}
-			String timeInterval = intervalExpression.substring(intervalExpression.indexOf("/") + 1);
-			recurringTimeInterval.setTimeInterval(parseTimeInterval(timeInterval));
 		}
 		return recurringTimeInterval;
 	}
@@ -29,29 +40,34 @@ public interface ScheduleUtil {
 	static TimeInterval parseTimeInterval(final String intervalExpression) {
 		TimeInterval timeInterval = null;
 		String[] fragments = intervalExpression.split("/");
+		Instant start = null;
+		Duration duration = null;
+		Instant end = null;
 		if(fragments.length == 1) {
-			timeInterval = new TimeInterval();
-			timeInterval.setDuration(TimeUtil.parse(fragments[0], (Duration)null));
+			duration = TimeUtil.parse(fragments[0], (Duration)null);
 		}
 		else if(fragments.length == 2) {
-			final Instant start = TimeUtil.parse(fragments[0], (Instant)null);
-			final Instant end = TimeUtil.parse(fragments[1], (Instant)null);
-			Duration duration = null;
+			start = TimeUtil.parse(fragments[0], (Instant)null);
+			end = TimeUtil.parse(fragments[1], (Instant)null);
+			
 			if(start == null) {
 				duration = TimeUtil.parse(fragments[0], (Duration)null);
 			}
 			else if(end == null) {
 				duration = TimeUtil.parse(fragments[1], (Duration)null);
 			}
-			timeInterval = new TimeInterval();
-			timeInterval.setDuration(duration);
-			timeInterval.setEnd(end);
-			timeInterval.setStart(start);
 		}
 		else if(fragments.length == 3) {
-			final Instant start = TimeUtil.parse(fragments[0], (Instant)null);
-			final Duration duration = TimeUtil.parse(fragments[1], (Duration)null);
-			final Instant end = TimeUtil.parse(fragments[2], (Instant)null);
+			start = TimeUtil.parse(fragments[0], (Instant)null);
+			duration = TimeUtil.parse(fragments[1], (Duration)null);
+			end = TimeUtil.parse(fragments[2], (Instant)null);
+		}
+		if(
+				start != null && duration == null && end != null
+				|| start != null && duration != null && end == null
+				|| start == null && duration != null && end != null
+				|| duration != null
+				) {
 			timeInterval = new TimeInterval();
 			timeInterval.setDuration(duration);
 			timeInterval.setEnd(end);

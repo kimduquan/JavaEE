@@ -238,4 +238,12 @@ public interface StringUtil {
 	static String decodeURL(final String string) throws Exception {
 		return URLDecoder.decode(string, "UTF-8");
 	}
+	
+	/**
+	 * @param string
+	 * @return
+	 */
+	static boolean isEmpty(final String string) {
+		return string == null || string.isEmpty();
+	}
 }

@@ -89,20 +89,32 @@ public interface RequestUtil {
         if(uriInfo != null){
         	final List<PathSegment> segments = uriInfo.getPathSegments();
             if(segments != null){
-            	final Iterator<PathSegment> segmentIt = segments.iterator();
-            	if(segmentIt.hasNext()) {
-                	final PathSegment firstSegemnt = segmentIt.next();
-                	webTarget = buildMatrixParameters(webTarget, firstSegemnt);
-                	while(segmentIt.hasNext()) {
-                		final PathSegment segment = segmentIt.next();
-                		webTarget = webTarget.path(segment.getPath());
-                		webTarget = buildMatrixParameters(webTarget, segment);
-                	}
-            	}
+            	webTarget = buildTarget(webTarget, segments);
             }
             webTarget = buildQueryParameters(webTarget, uriInfo);
         }
         return webTarget;
+    }
+    
+    /**
+     * @param webTarget
+     * @param segments
+     * @return
+     */
+    static WebTarget buildTarget(
+    		WebTarget webTarget,
+    		final List<PathSegment> segments) {
+    	final Iterator<PathSegment> segmentIt = segments.iterator();
+    	if(segmentIt.hasNext()) {
+        	final PathSegment firstSegemnt = segmentIt.next();
+        	webTarget = buildMatrixParameters(webTarget, firstSegemnt);
+        	while(segmentIt.hasNext()) {
+        		final PathSegment segment = segmentIt.next();
+        		webTarget = webTarget.path(segment.getPath());
+        		webTarget = buildMatrixParameters(webTarget, segment);
+        	}
+    	}
+    	return webTarget;
     }
     
     /**
@@ -111,7 +123,7 @@ public interface RequestUtil {
      * @param targetUrl
      * @return
      */
-    static Builder buildHeaders(final Builder input, final HttpHeaders headers, final URI targetUrl){
+    static Builder buildHeaders(final Builder input, final HttpHeaders headers, final URI targetUrl, final boolean buildForwardedHeaders){
     	Builder builder = input;
     	final MultivaluedMap<String, String> requestHeaders = headers.getRequestHeaders();
         final MultivaluedHashMap<String, Object> forwardHeaders = new MultivaluedHashMap<String, Object>(requestHeaders);
@@ -126,7 +138,21 @@ public interface RequestUtil {
         	languages = Arrays.asList(Locale.getDefault());
             builder = builder.acceptLanguage(languages.toArray(new Locale[0]));
         }
-        builder = builder.header(HttpHeaders.HOST, targetUrl.getAuthority());
+        if(buildForwardedHeaders) {
+            builder = buildForwardedHeaders(builder, host, headers, targetUrl);
+        }
+        return builder;
+    }
+    
+    /**
+     * @param builder
+     * @param host
+     * @param headers
+     * @param targetUrl
+     * @return
+     */
+    static Builder buildForwardedHeaders(Builder builder, final String host, final HttpHeaders headers, final URI targetUrl) {
+    	builder = builder.header(HttpHeaders.HOST, targetUrl.getAuthority());
         final List<String> forwardedHost = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_HOST);
         final List<String> newForwardedHost = new ArrayList<>(forwardedHost);
         newForwardedHost.add(host);
@@ -157,8 +183,9 @@ public interface RequestUtil {
      * @param serviceUri
      * @param headers
      * @param uriInfo
-     * @param req
+     * @param method
      * @param body
+     * @param buildForwaredHeaders
      * @return
      */
     static CompletionStage<Response> buildRequest(
@@ -166,13 +193,14 @@ public interface RequestUtil {
     		final URI serviceUri,
     		final HttpHeaders headers, 
             final UriInfo uriInfo,
-            final javax.ws.rs.core.Request req,
-            final InputStream body) {
+            final String method,
+            final InputStream body,
+            final boolean buildForwaredHeaders) {
 		WebTarget target = client.target(serviceUri);
 		target = RequestUtil.buildTarget(target, uriInfo);
 		Invocation.Builder invoke = target.request();
-		invoke = RequestUtil.buildHeaders(invoke, headers, serviceUri);
-		return RequestUtil.buildInvoke(invoke, req.getMethod(), headers.getMediaType(), body);
+		invoke = RequestUtil.buildHeaders(invoke, headers, serviceUri, buildForwaredHeaders);
+		return RequestUtil.buildInvoke(invoke, method, headers.getMediaType(), body);
     }
     
     /**

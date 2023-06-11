@@ -1,21 +1,19 @@
 package epf.schedule.client;
 
-import java.util.concurrent.TimeUnit;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import java.io.InputStream;
+import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Form;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
-
+import javax.ws.rs.core.UriInfo;
 import epf.client.util.Client;
 import epf.naming.Naming;
 
@@ -25,179 +23,71 @@ import epf.naming.Naming;
  */
 @Path(Naming.SCHEDULE)
 public interface Schedule {
-	
-	/**
-	 * 
-	 */
-	String PATH = "path";
-	
-	/**
-	 * 
-	 */
-	String SHELL = "shell";
 
 	/**
-	 * @param path
-	 * @param delay
-	 * @param unit
+	 * @param uriInfo
+	 * @param headers
+	 * @param paths
+	 * @param body
 	 * @return
 	 */
-	@Path("{path}")
+	@Path("REST/{paths: .+}")
 	@POST
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@Produces(MediaType.APPLICATION_JSON)
-	long schedule(
-			@PathParam(PATH)
-			@NotBlank
-			final String path,
-			@FormParam("delay") 
-			final long delay, 
-			@FormParam("unit") 
-			final TimeUnit unit);
+	@Consumes(MediaType.APPLICATION_JSON)
+	Response schedule(
+			@Context 
+			final UriInfo uriInfo,
+			@Context 
+			final HttpHeaders headers,
+			@PathParam("paths")
+			final List<PathSegment> paths,
+			final InputStream body);
 	
 	/**
 	 * @param client
+	 * @param method
 	 * @param path
-	 * @param delay
-	 * @param unit
+	 * @param recurringTimeInterval
+	 * @param body
 	 * @return
 	 */
 	static Response schedule(
 			final Client client, 
+			final String service,
+			final String method,
 			final String path,
-			final long delay, 
-			final TimeUnit unit) {
-		final Form form = new Form()
-				.param("delay", String.valueOf(delay))
-				.param("unit", unit.name());
+			final String recurringTimeInterval,
+			final InputStream body) {
 		return client.request(
-				target -> target.path(path), 
-				req -> req.accept(MediaType.APPLICATION_JSON)
-				)
-				.post(Entity.form(form));
+				target -> target.path("REST").matrixParam("service", service).matrixParam("method", method).matrixParam("recurringTimeInterval", recurringTimeInterval).path(path), 
+				req -> req
+				).post(Entity.entity(body, MediaType.APPLICATION_JSON));
 	}
 	
 	/**
-	 * @param path
-	 * @param id
+	 * @param uriInfo
+	 * @param paths
+	 * @return
 	 */
-	@Path("{path}")
+	@Path("REST")
 	@DELETE
-	void cancel(
-			@PathParam(PATH)
-			@NotBlank
-			final String path,
-			@QueryParam("id") 
-			@NotNull 
-			final long id);
+	Response cancel(
+			@Context 
+			final UriInfo uriInfo,
+			@PathParam("paths")
+			final List<PathSegment> paths);
 	
 	/**
 	 * @param client
-	 * @param id
+	 * @param identityName
 	 * @return
 	 */
 	static Response cancel(
-			final Client client,
-			final String path, 
-			final long id) {
+			final Client client, 
+			final String identityName) {
 		return client.request(
-				target -> target.path(path).queryParam("id", id), 
+				target -> target.path("REST").matrixParam("identityName", identityName), 
 				req -> req
-				)
-				.delete();
-	}
-	
-	/**
-	 * @param path
-	 * @param initialDelay
-	 * @param period
-	 * @param unit
-	 * @return
-	 */
-	@Path("{path}/rate")
-	@POST
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@Produces(MediaType.APPLICATION_JSON)
-	long scheduleAtFixedRate(
-			@PathParam(PATH)
-			@NotBlank
-			final String path,
-			@FormParam("init") 
-			final long initialDelay, 
-			@FormParam("period") 
-			final long period, 
-			@FormParam("unit") 
-			final TimeUnit unit);
-	
-	/**
-	 * @param client
-	 * @param path
-	 * @param initialDelay
-	 * @param period
-	 * @param unit
-	 * @return
-	 */
-	static Response scheduleAtFixedRate(
-			final Client client,
-			final String path,
-			final long initialDelay,
-			final long period,
-			final TimeUnit unit) {
-		final Form form = new Form()
-				.param("init", String.valueOf(initialDelay))
-				.param("period", String.valueOf(period))
-				.param("unit", unit.name());
-		return client.request(
-				target -> target.path(path), 
-				req -> req.accept(MediaType.APPLICATION_JSON)
-				)
-				.post(Entity.form(form));
-	}
-	
-	/**
-	 * @param path
-	 * @param initialDelay
-	 * @param delay
-	 * @param unit
-	 * @return
-	 */
-	@Path("{path}/delay")
-	@POST
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@Produces(MediaType.APPLICATION_JSON)
-	long scheduleWithFixedDelay(
-			@PathParam(PATH)
-			@NotBlank
-			final String path,
-			@FormParam("init")
-			final long initialDelay,
-			@FormParam("delay")
-			final long delay,
-			@FormParam("unit")
-			final TimeUnit unit);
-	
-	/**
-	 * @param client
-	 * @param path
-	 * @param initialDelay
-	 * @param delay
-	 * @param unit
-	 * @return
-	 */
-	static Response scheduleWithFixedDelay(
-			final Client client,
-			final String path,
-			final long initialDelay,
-			final long delay,
-			final TimeUnit unit) {
-		final Form form = new Form()
-				.param("init", String.valueOf(initialDelay))
-				.param("delay", String.valueOf(delay))
-				.param("unit", unit.name());
-		return client.request(
-				target -> target.path(path), 
-				req -> req.accept(MediaType.APPLICATION_JSON)
-				)
-				.post(Entity.form(form));
+				).delete();
 	}
 }

@@ -1,4 +1,4 @@
-package epf.gateway;
+package epf.schedule;
 
 import java.net.URI;
 import java.util.Map;

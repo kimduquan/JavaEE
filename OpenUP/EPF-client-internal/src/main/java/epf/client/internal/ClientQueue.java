@@ -11,13 +11,14 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import epf.client.util.ClientBuilderUtil;
 
 /**
  *
  * @author FOXCONN
  */
 @ApplicationScoped
-public class ClientQueue {
+public class ClientQueue implements ClientBuilderUtil {
 
 	/**
 	 * 
@@ -96,4 +97,14 @@ public class ClientQueue {
                 }
         );
     }
+
+	@Override
+	public Client newClient(final URI uri, final Function<ClientBuilder, ClientBuilder> buildClient) {
+		return poll(uri, buildClient);
+	}
+
+	@Override
+	public void close(final URI uri, final Client client) {
+		add(uri, client);
+	}
 }
