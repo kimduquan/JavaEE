@@ -1,7 +1,7 @@
 package epf.workflow.event.persistence;
 
 import epf.naming.Naming;
-import jakarta.nosql.Column;
+import jakarta.nosql.mapping.Column;
 import jakarta.nosql.Entity;
 
 /**

@@ -4,7 +4,7 @@ import javax.json.bind.annotation.JsonbProperty;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import epf.workflow.event.mapping.UUIDAttributeConverter;
-import jakarta.nosql.Column;
+import jakarta.nosql.mapping.Column;
 import org.eclipse.jnosql.mapping.Convert;
 import jakarta.nosql.Id;
 import org.eclipse.jnosql.mapping.MappedSuperclass;
