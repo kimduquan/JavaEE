@@ -51,7 +51,7 @@ public interface HATEOAS {
     	final URI targetUrl = serviceUrl.resolve(link.getUri());
 		final WebTarget target = client.target(targetUrl);
 		Invocation.Builder builder = target.request();
-		builder = RequestUtil.buildHeaders(builder, headers, targetUrl);
+		builder = RequestUtil.buildHeaders(builder, headers, targetUrl, true);
 		switch(link.getType()) {
 			case HttpMethod.GET:
 				return builder.rx().get();
