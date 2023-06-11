@@ -1,7 +1,7 @@
 package epf.workflow.schema.state;
 
-import jakarta.nosql.Column;
-import org.eclipse.jnosql.mapping.Embeddable;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC

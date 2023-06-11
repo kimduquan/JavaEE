@@ -1,7 +1,7 @@
 package epf.workflow.schema.auth;
 
-import jakarta.nosql.Column;
-import org.eclipse.jnosql.mapping.MappedSuperclass;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.MappedSuperclass;
 
 /**
  * @author PC

@@ -4,8 +4,8 @@ import javax.validation.constraints.NotNull;
 
 import epf.workflow.schema.WorkflowTimeoutDefinition;
 import epf.workflow.schema.action.ActionDefinition;
-import jakarta.nosql.Column;
-import org.eclipse.jnosql.mapping.Embeddable;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC

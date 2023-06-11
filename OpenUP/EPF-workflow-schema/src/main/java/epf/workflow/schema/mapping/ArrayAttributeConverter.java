@@ -7,10 +7,10 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.JsonArray;
-import org.eclipse.jnosql.communication.document.Document;
-import org.eclipse.jnosql.mapping.AttributeConverter;
 import epf.util.json.JsonUtil;
 import epf.util.logging.LogManager;
+import jakarta.nosql.document.Document;
+import jakarta.nosql.mapping.AttributeConverter;
 
 /**
  * @author PC
@@ -77,21 +77,21 @@ public class ArrayAttributeConverter<T extends Object> implements AttributeConve
 				if(value instanceof List) {
 					final List<?> asList = (List<?>)value;
 					if(asList.isEmpty()) {
-						map.put(document.name(), value);
+						map.put(document.getName(), value);
 					}
 					else {
 						final Map<String, Object> newMap = convertToMap(asList);
 						if(newMap != null) {
-							map.put(document.name(), newMap);
+							map.put(document.getName(), newMap);
 						}
 						else {
 							final List<Object> newList = convertToList(asList);
-							map.put(document.name(), newList);
+							map.put(document.getName(), newList);
 						}
 					}
 				}
 				else if(value != null) {
-					map.put(document.name(), value);
+					map.put(document.getName(), value);
 				}
 			}
 			else {

@@ -10,10 +10,10 @@ import epf.workflow.schema.function.FunctionDefinition;
 import epf.workflow.schema.function.mapping.FunctionDefinitionArrayConverter;
 import epf.workflow.schema.state.State;
 import epf.workflow.schema.state.mapping.StateArrayConverter;
-import jakarta.nosql.Column;
-import org.eclipse.jnosql.mapping.Convert;
-import jakarta.nosql.Entity;
-import jakarta.nosql.Id;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Convert;
+import jakarta.nosql.mapping.Entity;
+import jakarta.nosql.mapping.Id;
 
 /**
  * @author PC

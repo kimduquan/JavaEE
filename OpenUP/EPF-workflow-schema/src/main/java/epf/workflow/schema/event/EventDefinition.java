@@ -2,8 +2,8 @@ package epf.workflow.schema.event;
 
 import javax.validation.constraints.NotNull;
 import epf.workflow.schema.CorrelationDefinition;
-import jakarta.nosql.Column;
-import org.eclipse.jnosql.mapping.Embeddable;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC

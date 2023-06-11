@@ -2,8 +2,8 @@ package epf.workflow.schema;
 
 import javax.json.bind.annotation.JsonbTypeAdapter;
 import epf.workflow.schema.adapter.WorkflowExecTimeoutDefinitionAdapter;
-import jakarta.nosql.Column;
-import org.eclipse.jnosql.mapping.Embeddable;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC

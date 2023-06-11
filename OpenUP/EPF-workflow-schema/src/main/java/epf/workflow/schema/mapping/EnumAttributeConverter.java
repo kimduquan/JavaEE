@@ -1,7 +1,7 @@
 package epf.workflow.schema.mapping;
 
 import epf.workflow.schema.util.EnumUtil;
-import org.eclipse.jnosql.mapping.AttributeConverter;
+import jakarta.nosql.mapping.AttributeConverter;
 
 /**
  * @author PC

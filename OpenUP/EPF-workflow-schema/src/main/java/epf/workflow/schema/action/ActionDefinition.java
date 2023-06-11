@@ -5,8 +5,8 @@ import epf.workflow.schema.event.EventRefDefinition;
 import epf.workflow.schema.function.adapter.FunctionRefDefinitionAdapter;
 import epf.workflow.schema.WorkflowError;
 import epf.workflow.schema.adapter.SubFlowRefDefinitionAdapter;
-import jakarta.nosql.Column;
-import org.eclipse.jnosql.mapping.Embeddable;
+import jakarta.nosql.mapping.Column;
+import jakarta.nosql.mapping.Embeddable;
 
 /**
  * @author PC

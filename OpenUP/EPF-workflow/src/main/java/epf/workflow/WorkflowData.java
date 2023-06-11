@@ -1,7 +1,7 @@
 package epf.workflow;
 
 import javax.json.JsonValue;
-import org.eclipse.jnosql.mapping.Convert;
+import jakarta.nosql.mapping.Convert;
 import jakarta.nosql.mapping.Embeddable;
 import epf.workflow.schema.mapping.JsonValueAttributeConverter;
 import jakarta.nosql.mapping.Column;
