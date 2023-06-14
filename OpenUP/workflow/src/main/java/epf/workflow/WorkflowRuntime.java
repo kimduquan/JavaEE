@@ -43,18 +43,19 @@ public class WorkflowRuntime {
 	public CompletionStage<Response> start(
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER) 
 			final String instanceId) {
-		return executor.completedStage(Response.ok().build());
+		return executor.completedStage(Response.ok().header(LRA.LRA_HTTP_CONTEXT_HEADER, instanceId).build());
 	}
 	
 	@PUT
 	@Path("state/transition")
 	@LRA(value = Type.MANDATORY, end = false)
 	@Asynchronous
-	@Retry(maxRetries = -1, maxDuration = 0, jitter = 0, retryOn = RetryException.class)
+	@Retry(maxRetries = -1, maxDuration = 0, jitter = 0, retryOn = WorkflowRetryException.class)
+	@Fallback(fallbackMethod= "onError", applyOn=WorkflowException.class)
 	public CompletionStage<Response> transition(
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER) 
 			final String instanceId) {
-		return executor.completedStage(Response.ok().build());
+		return executor.completedStage(Response.ok().header(LRA.LRA_HTTP_CONTEXT_HEADER, instanceId).build());
 	}
 	
 	@PUT
@@ -77,16 +78,15 @@ public class WorkflowRuntime {
 		return executor.completedStage(Response.ok().build());
 	}
 	
-	@Fallback(fallbackMethod= "onError", applyOn=WorkflowException.class)
 	@Asynchronous
 	public CompletionStage<Response> onError(
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER) 
 			final String instanceId) {
-		return executor.completedStage(Response.ok().build());
+		return executor.completedStage(Response.ok().header(LRA.LRA_HTTP_CONTEXT_HEADER, instanceId).build());
 	}
 	
 	@Incoming("workflow/event")
-	public void onEvent() {
+	public void onEvent(final WorkflowEvent event) {
 		
 	}
 }

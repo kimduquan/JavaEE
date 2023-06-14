@@ -3,7 +3,7 @@ package epf.workflow;
 /**
  * 
  */
-public class TimeoutException extends WorkflowException {
+public class WorkflowRetryException extends Exception {
 
 	/**
 	 * 
