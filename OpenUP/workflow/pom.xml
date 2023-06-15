@@ -120,6 +120,13 @@
       <artifactId>quarkus-junit5</artifactId>
       <scope>test</scope>
     </dependency>
+    
+    <dependency>
+        <groupId>openup</groupId>
+        <artifactId>EPF-json-utility</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+    
   </dependencies>
   <build>
     <plugins>

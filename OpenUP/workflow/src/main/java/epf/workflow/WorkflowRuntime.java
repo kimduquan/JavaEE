@@ -1,13 +1,19 @@
 package epf.workflow;
 
+import java.io.InputStream;
 import java.util.concurrent.CompletionStage;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import javax.json.JsonValue;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.eclipse.microprofile.context.ManagedExecutor;
@@ -19,6 +25,7 @@ import org.eclipse.microprofile.lra.annotation.Complete;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA.Type;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
+import epf.util.json.JsonUtil;
 
 /**
  * 
@@ -36,53 +43,84 @@ public class WorkflowRuntime {
 		executor = ManagedExecutor.builder().build();
 	}
 	
+	private Link getTransitionLink(final String workflow, final String state) {
+		return Link.fromUri(String.format("/%s/state/transition?state=%s", workflow, state)).rel("workflow").type(HttpMethod.PUT).build();
+	}
+	
 	@PUT
-	@Path("state")
+	@Path("{workflow}/state")
 	@LRA(value = Type.NESTED, end = false)
 	@Asynchronous
 	public CompletionStage<Response> start(
+			@PathParam("workflow")
+			final String workflow,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER) 
-			final String instanceId) {
-		return executor.completedStage(Response.ok().header(LRA.LRA_HTTP_CONTEXT_HEADER, instanceId).build());
+			final String instanceId,
+			final InputStream input) {
+		final JsonValue json = JsonUtil.readValue(input);
+		final WorkflowData workflowData = new WorkflowData();
+		workflowData.setInput(JsonUtil.asValue(json));
+		final Link transitionLink = getTransitionLink(workflow, "");
+		return executor.completedStage(
+				Response.ok(workflowData)
+				.header(LRA.LRA_HTTP_CONTEXT_HEADER, instanceId)
+				.links(transitionLink).build());
 	}
 	
 	@PUT
-	@Path("state/transition")
+	@Path("{workflow}/state/transition")
 	@LRA(value = Type.MANDATORY, end = false)
 	@Asynchronous
-	@Retry(maxRetries = -1, maxDuration = 0, jitter = 0, retryOn = WorkflowRetryException.class)
-	@Fallback(fallbackMethod= "onError", applyOn=WorkflowException.class)
+	@Retry(maxRetries = -1, maxDuration = 0, jitter = 0, retryOn = WorkflowRetry.class)
+	@Fallback(fallbackMethod = "onError", applyOn = WorkflowException.class)
 	public CompletionStage<Response> transition(
+			@PathParam("workflow")
+			final String workflow,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER) 
-			final String instanceId) {
-		return executor.completedStage(Response.ok().header(LRA.LRA_HTTP_CONTEXT_HEADER, instanceId).build());
+			final String instanceId,
+			@QueryParam("state")
+			final String state,
+			final WorkflowData data) {
+		final Link transitionLink = getTransitionLink(workflow, state);
+		return executor.completedStage(Response.ok(data).header(LRA.LRA_HTTP_CONTEXT_HEADER, instanceId).links(transitionLink).build());
 	}
 	
 	@PUT
-	@Path("state/end")
+	@Path("{workflow}/state/end")
 	@Complete
 	@Asynchronous
 	public CompletionStage<Response> end(
+			@PathParam("workflow")
+			final String workflow,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER) 
-			final String instanceId) {
-		return executor.completedStage(Response.ok().build());
+			final String instanceId,
+			final WorkflowData data) {
+		return executor.completedStage(Response.ok(data.getOutput()).build());
 	}
 	
 	@PUT
-	@Path("state/compensate")
+	@Path("{workflow}/state/compensate")
 	@Compensate
 	@Asynchronous
 	public CompletionStage<Response> compensate(
+			@PathParam("workflow")
+			final String workflow,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER) 
-			final String instanceId) {
-		return executor.completedStage(Response.ok().build());
+			final String instanceId,
+			@QueryParam("state")
+			final String state,
+			final WorkflowData data) {
+		return executor.completedStage(Response.ok(data.getOutput()).build());
 	}
 	
 	@Asynchronous
 	public CompletionStage<Response> onError(
-			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER) 
-			final String instanceId) {
-		return executor.completedStage(Response.ok().header(LRA.LRA_HTTP_CONTEXT_HEADER, instanceId).build());
+			final String workflow,
+			final String instanceId,
+			final String state,
+			final WorkflowData data) {
+		final Link transitionLink = Link.fromUri(String.format("/%s/state/transition", workflow)).rel("workflow").type(HttpMethod.PUT).build();
+		return executor.completedStage(Response.ok(data).header(LRA.LRA_HTTP_CONTEXT_HEADER, instanceId).links(transitionLink).build());
 	}
 	
 	@Incoming("workflow/event")
