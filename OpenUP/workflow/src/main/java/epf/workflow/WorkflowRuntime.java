@@ -119,7 +119,7 @@ public class WorkflowRuntime {
 			final String instanceId,
 			final String state,
 			final WorkflowData data) {
-		final Link transitionLink = Link.fromUri(String.format("/%s/state/transition", workflow)).rel("workflow").type(HttpMethod.PUT).build();
+		final Link transitionLink = getTransitionLink(workflow, state);
 		return executor.completedStage(Response.ok(data).header(LRA.LRA_HTTP_CONTEXT_HEADER, instanceId).links(transitionLink).build());
 	}
 	
