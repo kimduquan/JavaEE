@@ -123,7 +123,7 @@ public class WorkflowRuntime {
 		return executor.completedStage(Response.ok(data).header(LRA.LRA_HTTP_CONTEXT_HEADER, instanceId).links(transitionLink).build());
 	}
 	
-	@Incoming("workflow/event")
+	@Incoming("epf-workflow-event")
 	public void onEvent(final WorkflowEvent event) {
 		
 	}

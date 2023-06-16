@@ -11,11 +11,11 @@
   <artifactId>EPF-transaction</artifactId>
   <name>Eclipse Process Framework Transaction</name>
   <dependencies>
-    <dependency>
-      <groupId>org.jboss.narayana.rts</groupId>
-      <artifactId>lra-coordinator-jar</artifactId>
-      <version>5.13.1.Final</version>
-    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.jboss.narayana.rts/lra-coordinator-jar -->
+	<dependency>
+		<groupId>org.jboss.narayana.rts</groupId>
+		<artifactId>lra-coordinator-jar</artifactId>
+	</dependency>
 	<dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-arc</artifactId>

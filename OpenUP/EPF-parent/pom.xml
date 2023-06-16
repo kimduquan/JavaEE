@@ -26,6 +26,12 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+		<!-- https://mvnrepository.com/artifact/org.jboss.narayana.rts/lra-coordinator-jar -->
+		<dependency>
+			<groupId>org.jboss.narayana.rts</groupId>
+			<artifactId>lra-coordinator-jar</artifactId>
+			<version>6.0.1.Final</version>
+		</dependency>
     </dependencies>
   </dependencyManagement>
   <build>
