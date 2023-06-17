@@ -1,6 +1,7 @@
 package epf.workflow;
 
 import java.io.InputStream;
+import java.net.URI;
 import java.util.concurrent.CompletionStage;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -21,7 +22,6 @@ import org.eclipse.microprofile.faulttolerance.Asynchronous;
 import org.eclipse.microprofile.faulttolerance.Fallback;
 import org.eclipse.microprofile.faulttolerance.Retry;
 import org.eclipse.microprofile.lra.annotation.Compensate;
-import org.eclipse.microprofile.lra.annotation.Complete;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA.Type;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
@@ -55,7 +55,7 @@ public class WorkflowRuntime {
 			@PathParam("workflow")
 			final String workflow,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER) 
-			final String instanceId,
+			final URI instance,
 			final InputStream input) {
 		final JsonValue json = JsonUtil.readValue(input);
 		final WorkflowData workflowData = new WorkflowData();
@@ -63,7 +63,7 @@ public class WorkflowRuntime {
 		final Link transitionLink = getTransitionLink(workflow, "");
 		return executor.completedStage(
 				Response.ok(workflowData)
-				.header(LRA.LRA_HTTP_CONTEXT_HEADER, instanceId)
+				.header(LRA.LRA_HTTP_CONTEXT_HEADER, instance)
 				.links(transitionLink).build());
 	}
 	
@@ -77,23 +77,23 @@ public class WorkflowRuntime {
 			@PathParam("workflow")
 			final String workflow,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER) 
-			final String instanceId,
+			final URI instance,
 			@QueryParam("state")
 			final String state,
 			final WorkflowData data) {
 		final Link transitionLink = getTransitionLink(workflow, state);
-		return executor.completedStage(Response.ok(data).header(LRA.LRA_HTTP_CONTEXT_HEADER, instanceId).links(transitionLink).build());
+		return executor.completedStage(Response.ok(data).header(LRA.LRA_HTTP_CONTEXT_HEADER, instance).links(transitionLink).build());
 	}
 	
 	@PUT
 	@Path("{workflow}/state/end")
-	@Complete
+	@LRA(value = Type.MANDATORY, end = true)
 	@Asynchronous
 	public CompletionStage<Response> end(
 			@PathParam("workflow")
 			final String workflow,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER) 
-			final String instanceId,
+			final URI instance,
 			final WorkflowData data) {
 		return executor.completedStage(Response.ok(data.getOutput()).build());
 	}
@@ -106,7 +106,7 @@ public class WorkflowRuntime {
 			@PathParam("workflow")
 			final String workflow,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER) 
-			final String instanceId,
+			final URI instance,
 			@QueryParam("state")
 			final String state,
 			final WorkflowData data) {
@@ -116,11 +116,11 @@ public class WorkflowRuntime {
 	@Asynchronous
 	public CompletionStage<Response> onError(
 			final String workflow,
-			final String instanceId,
+			final URI instance,
 			final String state,
 			final WorkflowData data) {
 		final Link transitionLink = getTransitionLink(workflow, state);
-		return executor.completedStage(Response.ok(data).header(LRA.LRA_HTTP_CONTEXT_HEADER, instanceId).links(transitionLink).build());
+		return executor.completedStage(Response.ok(data).header(LRA.LRA_HTTP_CONTEXT_HEADER, instance).links(transitionLink).build());
 	}
 	
 	@Incoming("epf-workflow-event")

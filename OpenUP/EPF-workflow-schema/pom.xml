@@ -28,13 +28,13 @@
 		
 		<!-- https://mvnrepository.com/artifact/jakarta.nosql.mapping/mapping-document -->
 		<dependency>
-		    <groupId>org.eclipse.jnosql.mapping</groupId>
-	        <artifactId>jnosql-mapping-document</artifactId>
+		    <groupId>jakarta.nosql.mapping</groupId>
+		    <artifactId>mapping-document</artifactId>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.mapping/jnosql-mapping-key-value -->
+		<!-- https://mvnrepository.com/artifact/jakarta.nosql.mapping/mapping-column -->
 		<dependency>
-		    <groupId>org.eclipse.jnosql.mapping</groupId>
-		    <artifactId>jnosql-mapping-column</artifactId>
+		    <groupId>jakarta.nosql.mapping</groupId>
+		    <artifactId>mapping-column</artifactId>
 		</dependency>
 		
 		<dependency>

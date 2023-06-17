@@ -126,6 +126,11 @@
         <artifactId>EPF-json-utility</artifactId>
         <version>${project.version}</version>
     </dependency>
+    <dependency>
+        <groupId>openup</groupId>
+        <artifactId>EPF-workflow-schema</artifactId>
+        <version>${project.version}</version>
+    </dependency>
     
   </dependencies>
   <build>

@@ -263,6 +263,18 @@
 				<!--<scope>provided</scope>-->
 			</dependency>
 			
+			<!-- https://mvnrepository.com/artifact/jakarta.nosql.mapping/mapping-document -->
+			<dependency>
+			    <groupId>jakarta.nosql.mapping</groupId>
+			    <artifactId>mapping-document</artifactId>
+			    <version>1.0.0-b5</version>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/jakarta.nosql.mapping/mapping-column -->
+			<dependency>
+			    <groupId>jakarta.nosql.mapping</groupId>
+			    <artifactId>mapping-column</artifactId>
+			    <version>1.0.0-b5</version>
+			</dependency>
 			
             <!-- https://mvnrepository.com/artifact/org.glassfish/javax.json -->
 			<dependency>
