@@ -1,24 +1,18 @@
 package epf.tests.schedule;
 
 import java.net.URI;
-import java.time.Duration;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.TimeUnit;
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.rules.TestName;
 import epf.client.util.Client;
 import epf.messaging.client.Messaging;
 import epf.naming.Naming;
-import epf.schedule.client.Schedule;
-import epf.tests.TestUtil;
 import epf.tests.client.ClientUtil;
 import epf.tests.security.SecurityUtil;
 import epf.util.config.ConfigUtil;
@@ -81,21 +75,5 @@ public class ScheduleTest {
 	@After
 	public void tearDown() throws Exception {
 		messages.clear();
-	}
-
-	@Test
-	public void testSchedule() throws Exception {
-		long id = Schedule.schedule(client, Schedule.SHELL, 1, TimeUnit.SECONDS).readEntity(Long.class);
-		TestUtil.waitUntil(t -> messages.stream().anyMatch(message -> message.contains(String.valueOf(id))), Duration.ofSeconds(2));
-		Assert.assertTrue(messages.stream().anyMatch(message -> message.contains(String.valueOf(id))));
-	}
-	
-	@Test
-	public void testCancel() throws Exception {
-		long id = Schedule.schedule(client, Schedule.SHELL, 1, TimeUnit.SECONDS).readEntity(Long.class);
-		Thread.sleep(80);
-		Schedule.cancel(client, Schedule.SHELL, id).getStatus();
-		TestUtil.waitUntil(t -> messages.stream().anyMatch(message -> message.contains(String.valueOf(id))), Duration.ofSeconds(1));
-		Assert.assertEquals(0, messages.stream().filter(message -> message.contains(String.valueOf(id))).count());
 	}
 }

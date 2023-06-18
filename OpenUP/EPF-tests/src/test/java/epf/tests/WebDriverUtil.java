@@ -23,8 +23,8 @@ public class WebDriverUtil {
 		final FirefoxOptions options = new FirefoxOptions();
 		
 		final String headless = System.getProperty("webdriver.firefox.headless");
-		if(headless != null) {
-			options.setHeadless(Boolean.valueOf(headless));
+		if("true".equals(headless)) {
+			options.addArguments("-headless");
 		}
 		
 		final String binary = System.getProperty("webdriver.firefox.binary");
