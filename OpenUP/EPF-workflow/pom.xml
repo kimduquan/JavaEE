@@ -68,7 +68,12 @@
 	    <scope>provided</scope>
 	</dependency>
     
-    <!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.mapping/jnosql-mapping-document -->
+    <!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.communication/jnosql-mongodb-driver -->
+	<dependency>
+	    <groupId>org.eclipse.jnosql.communication</groupId>
+	    <artifactId>jnosql-mongodb-driver</artifactId>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.mapping/jnosql-mapping-document -->
 	<dependency>
 	    <groupId>org.eclipse.jnosql.mapping</groupId>
 	    <artifactId>jnosql-mapping-document</artifactId>
@@ -77,12 +82,6 @@
 	<dependency>
 	    <groupId>org.eclipse.jnosql.mapping</groupId>
 	    <artifactId>jnosql-mapping-column</artifactId>
-	</dependency>
-	
-	<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.communication/jnosql-mongodb-driver -->
-	<dependency>
-	    <groupId>org.eclipse.jnosql.communication</groupId>
-        <artifactId>jnosql-mongodb-driver</artifactId>
 	</dependency>
 	<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.communication/jnosql-cassandra-driver -->
 	<dependency>
