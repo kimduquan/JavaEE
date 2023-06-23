@@ -11,31 +11,22 @@
   <artifactId>EPF-transaction</artifactId>
   <name>Eclipse Process Framework Transaction</name>
   <dependencies>
-    <!-- https://mvnrepository.com/artifact/org.jboss.narayana.rts/lra-coordinator-jar -->
-	<dependency>
-		<groupId>org.jboss.narayana.rts</groupId>
-		<artifactId>lra-coordinator-jar</artifactId>
-	</dependency>
 	<dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-arc</artifactId>
     </dependency>
 	<dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy-reactive-jsonb</artifactId>
+      <artifactId>quarkus-resteasy-reactive-jackson</artifactId>
     </dependency>
-    <dependency>
+	<dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-rest-client-reactive</artifactId>
     </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-smallrye-openapi</artifactId>
-    </dependency>
 	<dependency>
-		<groupId>io.quarkus</groupId>
-		<artifactId>quarkus-smallrye-fault-tolerance</artifactId>
-	</dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-narayana-lra</artifactId>
+    </dependency>
 	<dependency>
 	   <groupId>io.quarkus</groupId>
 	   <artifactId>quarkus-kubernetes</artifactId>
