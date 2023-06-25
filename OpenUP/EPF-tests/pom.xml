@@ -46,6 +46,7 @@
         <liberty.env.epf_query_url>http://${httpHost}:9188/query/query/</liberty.env.epf_query_url>
         <liberty.env.epf_registry_url>http://${httpHost}:9182/registry/registry/</liberty.env.epf_registry_url>
 		<liberty.env.epf_management_url>http://${httpHost}:${httpPort}/management/management/</liberty.env.epf_management_url>
+		<liberty.env.epf_workflow_url>http://${httpHost}:${httpPort}/workflow/workflow/</liberty.env.epf_workflow_url>
 		<liberty.env.epf_portlet_url>http://localhost:${portalPort}/pluto/portal</liberty.env.epf_portlet_url>
 		<liberty.env.epf_webapp_url>http://localhost/webapp/</liberty.env.epf_webapp_url>
 		<liberty.env.epf_health_url>http://${httpHost}:${httpPort}/health/</liberty.env.epf_health_url>
@@ -306,6 +307,12 @@
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-workflow</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-rs-mp-client</artifactId>
@@ -373,6 +380,7 @@
                         <epf.gateway.messaging.url>ws://localhost:${internalPort}/messaging/</epf.gateway.messaging.url>
                         <epf.registry.url>http://localhost:${httpPort}/registry/registry/</epf.registry.url>
 						<epf.management.url>http://localhost:${httpPort}/management/management/</epf.management.url>
+						<epf.workflow.url>http://localhost:${httpPort}/workflow/workflow/</epf.workflow.url>
                         <epf.messaging.url>ws://localhost:${httpPort}/messaging/messaging/</epf.messaging.url>
                         <epf.cache.url>http://localhost:${httpPort}/cache/cache/</epf.cache.url>
                         <epf.query.url>http://localhost:${httpPort}/query/query/</epf.query.url>
@@ -464,7 +472,7 @@
                         <configuration>
                             <verifyTimeout>600</verifyTimeout>
                             <serverStartTimeout>600</serverStartTimeout>
-                            <applications>EPF-schedule,EPF-script,EPF-batch,EPF-file,EPF-mail,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-management,EPF-security,EPF-security-management</applications>
+                            <applications>EPF-schedule,EPF-script,EPF-batch,EPF-file,EPF-mail,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-management,EPF-workflow,EPF-security,EPF-security-management</applications>
                         </configuration>
                     </execution>
                     <!-- Stop the server -->
@@ -483,7 +491,7 @@
                     <deployPackages>dependencies</deployPackages>
 					<verifyTimeout>600</verifyTimeout>
 					<serverStartTimeout>600</serverStartTimeout>
-					<applications>EPF-schedule,EPF-script,EPF-batch,EPF-file,EPF-mail,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-management,EPF-security,EPF-security-management</applications>
+					<applications>EPF-schedule,EPF-script,EPF-batch,EPF-file,EPF-mail,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-management,EPF-workflow,EPF-security,EPF-security-management</applications>
 					<dockerRunOpts>-p 7286:7286</dockerRunOpts>
 				</configuration>
             </plugin>
