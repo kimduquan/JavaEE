@@ -1,6 +1,6 @@
 . ./env.sh
 . ./config.sh
-$CUR_DIR=$PWD
+export CUR_DIR=$PWD
 cd $KAFKA_DIR
 rm -rf /tmp/kafka-logs /tmp/zookeeper /tmp/kraft-combined-logs
 bin/zookeeper-server-start.sh config/zookeeper.properties &
