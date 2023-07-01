@@ -98,6 +98,11 @@
 	    <groupId>org.jboss.narayana.rts</groupId>
 	    <artifactId>narayana-lra</artifactId>
 	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.jboss/jandex -->
+	<dependency>
+		<groupId>org.jboss</groupId>
+		<artifactId>jandex</artifactId>
+	</dependency>
 	
 	<dependency>
         <groupId>openup</groupId>
