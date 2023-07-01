@@ -67,6 +67,12 @@
 	    <artifactId>microprofile-openapi-api</artifactId>
 	    <scope>provided</scope>
 	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.lra/microprofile-lra-api -->
+	<dependency>
+	    <groupId>org.eclipse.microprofile.lra</groupId>
+	    <artifactId>microprofile-lra-api</artifactId>
+		<scope>provided</scope>
+	</dependency>
     
     <!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.communication/jnosql-mongodb-driver -->
 	<dependency>
@@ -88,13 +94,17 @@
 	    <groupId>org.eclipse.jnosql.communication</groupId>
 	    <artifactId>jnosql-cassandra-driver</artifactId>
 	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.jboss.narayana.rts/narayana-lra -->
+	<dependency>
+	    <groupId>org.jboss.narayana.rts</groupId>
+	    <artifactId>narayana-lra</artifactId>
+	</dependency>
 	
 	<dependency>
         <groupId>openup</groupId>
         <artifactId>EPF-workflow-schema</artifactId>
         <version>${project.version}</version>
     </dependency>
-    
     <dependency>
     	<groupId>openup</groupId>
     	<artifactId>EPF-naming</artifactId>
