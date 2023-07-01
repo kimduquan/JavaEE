@@ -67,67 +67,10 @@
 		    <groupId>com.h2database</groupId>
 		    <artifactId>h2</artifactId>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast -->
+		
         <dependency>
-            <groupId>com.hazelcast</groupId>
-            <artifactId>hazelcast</artifactId>
-        </dependency>
-		<dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-schema-utility</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-delivery-processes-schema</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-roles-schema</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-tasks-schema</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-work-products-schema</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-		<dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-net-schema</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-		<dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-security-schema</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-schema</artifactId>
-            <version>${project.version}</version>
-			<type>war</type>
-        </dependency>
-		<dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-net</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
-		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-schedule</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-shell-schedule</artifactId>
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
@@ -143,49 +86,13 @@
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
-		<dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-config</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-messaging</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
-		<dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-logging</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
-		<dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-lang</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-cache</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-query</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-        </dependency>
         <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-security</artifactId>
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
-		<dependency>
+        <dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-security-management</artifactId>
             <version>${project.version}</version>
@@ -227,6 +134,12 @@
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-workflow</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -259,13 +172,6 @@
 										<groupId>com.h2database</groupId>
 										<artifactId>h2</artifactId>
 									</dependency>
-								</dependencyGroup>
-								<dependencyGroup>
-									<location>${project.build.directory}/shared/resources/epf/cache</location>
-									<dependency>
-	                                    <groupId>com.hazelcast</groupId>
-	                                    <artifactId>hazelcast</artifactId>
-	                                </dependency>
 								</dependencyGroup>
 								<dependencyGroup>
 									<location>${project.build.directory}/shared/resources/epf/search</location>
