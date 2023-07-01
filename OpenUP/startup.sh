@@ -1,14 +1,20 @@
 . ./env.sh
 . ./config.sh
-$KAFKA_HOME/zookeeper-server-start.sh $KAFKA_DIR/config/zookeeper.properties &
-$JAEGER_HOME/jaeger-all-in-one &
+$CUR_DIR=$PWD
+cd $KAFKA_DIR
+rm -rf /tmp/kafka-logs /tmp/zookeeper /tmp/kraft-combined-logs
+bin/zookeeper-server-start.sh config/zookeeper.properties &
+cd $CASSANDRA_HOME
+bin/cassandra &
+cd $JAEGER_HOME
+./jaeger-all-in-one --collector.zipkin.host-port=:9411 &
 export JAVA_HOME=$JAVA8_HOME
 $PLUTO_HOME/bin/startup.sh &
-$CUR_DIR=$PWD
 cd $WILDFLY_HOME
 sudo -E ./standalone.sh "-Djboss.http.port=80" "-Djboss.https.port=443" --debug &
-cd $CUR_DIR
 Xvfb :10 -ac &
 export DISPLAY=:10
-$KAFKA_HOME/kafka-server-start.sh $KAFKA_DIR/config/server.properties &
 export JAVA_HOME=$JAVA11_HOME
+cd $KAFKA_DIR
+bin/kafka-server-start.sh config/server.properties &
+cd $CUR_DIR
