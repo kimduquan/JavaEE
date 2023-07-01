@@ -19,7 +19,7 @@ import javax.json.JsonValue;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import epf.client.util.Client;
-import epf.persistence.schema.client.Embeddable;
+import epf.persistence.schema.Embeddable;
 import epf.portlet.internal.gateway.GatewayUtil;
 import epf.portlet.internal.persistence.EntityUtil;
 import epf.portlet.internal.security.SecurityUtil;

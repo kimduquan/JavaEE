@@ -5,9 +5,9 @@ import java.math.BigInteger;
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
-import epf.persistence.schema.client.Attribute;
-import epf.persistence.schema.client.AttributeType;
-import epf.persistence.schema.client.Entity;
+import epf.persistence.schema.Attribute;
+import epf.persistence.schema.AttributeType;
+import epf.persistence.schema.Entity;
 import epf.util.json.JsonUtil;
 
 /**

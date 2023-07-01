@@ -6,7 +6,7 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
-import epf.persistence.schema.client.Attribute;
+import epf.persistence.schema.Attribute;
 import epf.util.json.JsonUtil;
 
 /**

@@ -1,8 +1,8 @@
 package epf.portlet.persistence;
 
 import java.util.List;
-import epf.persistence.schema.client.Attribute;
-import epf.persistence.schema.client.Embeddable;
+import epf.persistence.schema.Attribute;
+import epf.persistence.schema.Embeddable;
 import epf.util.json.JsonUtil;
 
 /**

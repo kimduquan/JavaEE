@@ -14,7 +14,7 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import epf.client.portlet.persistence.SchemaView;
 import epf.client.util.Client;
-import epf.persistence.schema.client.Entity;
+import epf.persistence.schema.Entity;
 import epf.portlet.internal.gateway.GatewayUtil;
 import epf.portlet.naming.Naming;
 import epf.portlet.internal.security.SecurityUtil;
