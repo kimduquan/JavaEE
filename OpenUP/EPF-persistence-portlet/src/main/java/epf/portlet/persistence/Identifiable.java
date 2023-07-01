@@ -34,7 +34,7 @@ public class Identifiable implements Serializable {
 	 * @param object
 	 * @param entity
 	 */
-	public Identifiable(final JsonObject object, final epf.persistence.schema.client.Entity entity) {
+	public Identifiable(final JsonObject object, final epf.persistence.schema.Entity entity) {
 		if(entity.isSingleId() && entity.getId() != null) {
 			final JsonObjectBuilder builder = Json.createObjectBuilder();
 			final JsonValue idValue = object.get(entity.getId().getName());
