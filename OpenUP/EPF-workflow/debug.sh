@@ -1,4 +1,4 @@
-. ./env.sh
+. ../env.sh
 cd $CASSANDRA_HOME
 bin/cassandra &
 cd $KAFKA_DIR
