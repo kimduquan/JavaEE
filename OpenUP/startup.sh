@@ -14,6 +14,8 @@ Xvfb :10 -ac &
 export DISPLAY=:10
 cd $KAFKA_DIR
 bin/kafka-server-start.sh config/server.properties &
+cd $HAZELCAST_HOME
+bin/hz start
 export JAVA_HOME=$JAVA8_HOME
 $PLUTO_HOME/bin/startup.sh &
 cd $WILDFLY_HOME
