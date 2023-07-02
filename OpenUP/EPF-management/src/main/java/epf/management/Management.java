@@ -10,6 +10,6 @@ import epf.naming.Naming;
  */
 @Path(Naming.MANAGEMENT)
 @ApplicationScoped
-public class Management implements epf.client.management.Management {
+public class Management {
 	
 }

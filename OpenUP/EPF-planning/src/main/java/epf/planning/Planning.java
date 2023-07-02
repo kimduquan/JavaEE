@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.planning;
 
 import javax.enterprise.context.RequestScoped;
@@ -13,6 +10,6 @@ import epf.naming.Naming;
  */
 @Path(Naming.PLANNING)
 @RequestScoped
-public class Planning implements epf.client.planning.Planning {
+public class Planning {
 
 }
