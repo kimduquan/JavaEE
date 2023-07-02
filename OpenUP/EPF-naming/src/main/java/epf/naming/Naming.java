@@ -1020,6 +1020,11 @@ public interface Naming {
 	interface Workflow {
 		
 		/**
+	     * 
+	     */
+	    String WORKFLOW_URL = "epf.workflow.url";
+		
+		/**
 		 * 
 		 */
 		String EVENT = "Event";
