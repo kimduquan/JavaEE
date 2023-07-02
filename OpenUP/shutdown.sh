@@ -10,7 +10,7 @@ killall jaeger-all-in-one
 killall geckodriver
 killall /usr/lib/firefox/firefox
 killall Xvfb
-$HAZELCAST_HOME/bin/hz stop
+$HAZELCAST_HOME/bin/hz-stop
 export JAVA_HOME=$JAVA8_HOME
 $PLUTO_HOME/bin/shutdown.sh &
 export JAVA_HOME=$JAVA11_HOME
