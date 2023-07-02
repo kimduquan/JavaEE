@@ -1,5 +1,7 @@
 package epf.workflow.action;
 
+import java.net.URI;
+
 import epf.workflow.WorkflowData;
 import epf.workflow.WorkflowRuntime;
 import epf.workflow.schema.SubFlowRefDefinition;
@@ -26,6 +28,11 @@ public class SubflowAction extends Action {
 	 * 
 	 */
 	private final WorkflowRuntime workflow;
+	
+	/**
+	 * 
+	 */
+	private final URI uri;
 
 	/**
 	 * @param workflowDefinition
@@ -41,11 +48,13 @@ public class SubflowAction extends Action {
 			WorkflowRuntime workflow,
 			SubFlowRefDefinition subFlowRefDefinition,
 			WorkflowDefinition subWorkflowDefinition,
-			WorkflowData workflowData) {
+			WorkflowData workflowData, 
+			URI uri) {
 		super(workflowDefinition, actionDefinition, workflowData);
 		this.subWorkflowDefinition = subWorkflowDefinition;
 		this.workflow = workflow;
 		this.subFlowRefDefinition = subFlowRefDefinition;
+		this.uri = uri;
 	}
 
 	public WorkflowDefinition getSubWorkflowDefinition() {
@@ -54,7 +63,7 @@ public class SubflowAction extends Action {
 
 	@Override
 	protected void perform() throws Exception {
-		workflow.start(subWorkflowDefinition, getWorkflowData());
+		workflow.start(subWorkflowDefinition, getWorkflowData(), uri);
 	}
 
 	public SubFlowRefDefinition getSubFlowRefDefinition() {

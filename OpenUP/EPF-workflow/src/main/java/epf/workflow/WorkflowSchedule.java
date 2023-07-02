@@ -1,5 +1,6 @@
 package epf.workflow;
 
+import java.net.URI;
 import javax.annotation.Resource;
 import javax.enterprise.concurrent.ManagedScheduledExecutorService;
 import javax.enterprise.context.ApplicationScoped;
@@ -33,8 +34,9 @@ public class WorkflowSchedule {
 
 	/**
 	 * @param workflowDefinition
+	 * @param uri
 	 */
-	public void schedule(final WorkflowDefinition workflowDefinition) {
+	public void schedule(final WorkflowDefinition workflowDefinition, final URI uri) {
 		final StartDefinition startDefinition = (StartDefinition) workflowDefinition.getStart();
 		String interval = null;
 		ScheduleDefinition scheduleDefinition = null;
@@ -48,7 +50,7 @@ public class WorkflowSchedule {
 			interval = scheduleDefinition.getInterval();
 		}
 		if(interval != null) {
-			final Schedule schedule = new Schedule(workflowRuntime, workflowDefinition);
+			final Schedule schedule = new Schedule(workflowRuntime, workflowDefinition, uri);
 			final ScheduleTrigger trigger = ScheduleUtil.parseInterval(interval);
 			scheduleService.schedule(schedule, trigger);
 		}

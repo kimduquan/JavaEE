@@ -1,8 +1,10 @@
 package epf.workflow.client;
 
+import java.net.URI;
 import javax.json.JsonValue;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.MatrixParam;
 import javax.ws.rs.POST;
@@ -14,6 +16,9 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.eclipse.microprofile.lra.annotation.Compensate;
+import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
+import org.eclipse.microprofile.lra.annotation.ws.rs.LRA.Type;
 import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.workflow.schema.WorkflowDefinition;
@@ -59,11 +64,14 @@ public interface Workflow {
 	/**
 	 * @param workflow
 	 * @param version
+	 * @param instance
 	 * @param input
 	 * @return
+	 * @throws Exception
 	 */
 	@PUT
 	@Path("{workflow}")
+	@LRA(value = Type.NESTED, end = false)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	Response start(
@@ -71,6 +79,8 @@ public interface Workflow {
 			final String workflow, 
 			@MatrixParam(VERSION)
 			final String version,
+			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER) 
+			final URI instance,
 			final JsonValue input
 			) throws Exception;
 	
@@ -147,11 +157,14 @@ public interface Workflow {
 	 */
 	@PUT
 	@Path("{workflow}/{state}")
+	@LRA(value = Type.MANDATORY, end = false)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	Response transition(
 			@PathParam(STATE)
 			final String state, 
+			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER) 
+			final URI instance,
 			final JsonValue input) throws Exception;
 	
 	/**
@@ -161,5 +174,66 @@ public interface Workflow {
 	 */
 	static Link transitionLink(final String workflow, final String state) {
 		return Link.fromUri(String.format("/%s/%s/", workflow, state)).rel(Naming.WORKFLOW).type(HttpMethod.PUT).build();
+	}
+	
+	/**
+	 * @param workflow
+	 * @param state
+	 * @param instance
+	 * @param data
+	 * @return
+	 * @throws Exception
+	 */
+	@PUT
+	@Path("{workflow}/{state}/end")
+	@LRA(value = Type.MANDATORY, end = true)
+	@Consumes(MediaType.APPLICATION_JSON)
+	Response end(
+			@PathParam(Naming.WORKFLOW)
+			final String workflow,
+			@PathParam(STATE)
+			final String state,
+			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER) 
+			final URI instance,
+			final JsonValue data) throws Exception;
+	
+	/**
+	 * @param workflow
+	 * @param state
+	 * @return
+	 */
+	static Link endLink(final String workflow, final String state) {
+		return Link.fromUri(String.format("/%s/%s/end/", workflow, state)).rel(Naming.WORKFLOW).type(HttpMethod.PUT).build();
+	}
+	
+	/**
+	 * @param workflow
+	 * @param state
+	 * @param instance
+	 * @param data
+	 * @return
+	 * @throws Exception
+	 */
+	@PUT
+	@Path("{workflow}/{state}/compensate")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Compensate
+	Response compensate(
+			@PathParam(Naming.WORKFLOW)
+			final String workflow,
+			@PathParam(STATE)
+			final String state,
+			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER) 
+			final URI instance,
+			final JsonValue data
+			) throws Exception;
+	
+	/**
+	 * @param workflow
+	 * @param state
+	 * @return
+	 */
+	static Link compensateLink(final String workflow, final String state) {
+		return Link.fromUri(String.format("/%s/%s/compensate/", workflow, state)).rel(Naming.WORKFLOW).type(HttpMethod.PUT).build();
 	}
 }

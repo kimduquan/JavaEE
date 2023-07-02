@@ -53,7 +53,12 @@ public class WorkflowPersistence {
 	 * @return
 	 */
 	public WorkflowInstance persist(final WorkflowInstance workflowInstance) {
-		workflowInstance.setId(UUID.randomUUID().toString());
+		if(workflowInstance.getUri() != null) {
+			workflowInstance.setId(workflowInstance.getUri().toString());
+		}
+		else {
+			workflowInstance.setId(UUID.randomUUID().toString());
+		}
 		return document.insert(workflowInstance);
 	}
 	

@@ -1,5 +1,6 @@
 package epf.workflow;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -39,6 +40,11 @@ public class WorkflowInstance {
 	 */
 	@Column
 	private WorkflowData workflowData;
+	
+	/**
+	 * 
+	 */
+	private URI uri;
 	
 	/**
 	 * 
@@ -113,5 +119,13 @@ public class WorkflowInstance {
 
 	public void setWorkflowDefinition(String workflowDefinition) {
 		this.workflowDefinition = workflowDefinition;
+	}
+
+	public URI getUri() {
+		return uri;
+	}
+
+	public void setUri(URI uri) {
+		this.uri = uri;
 	}
 }

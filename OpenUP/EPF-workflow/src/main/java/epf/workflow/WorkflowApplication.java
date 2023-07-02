@@ -1,5 +1,6 @@
 package epf.workflow;
 
+import java.net.URI;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.json.JsonValue;
@@ -47,14 +48,14 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 	public Response newWorkflowDefinition(final WorkflowDefinition workflowDefinition) throws Exception {
 		WorkflowDefinition newWorkflowDefinition = persistence.persist(workflowDefinition);
 		if(newWorkflowDefinition.getStart() instanceof StartDefinition) {
-			schedule.schedule(newWorkflowDefinition);
+			schedule.schedule(newWorkflowDefinition, null);
 		}
 		newWorkflowDefinition = persistence.find(newWorkflowDefinition.getId());
 		return Response.ok(newWorkflowDefinition).build();
 	}
 
 	@Override
-	public Response start(final String workflow, final String version, final JsonValue input) throws Exception {
+	public Response start(final String workflow, final String version, final URI instance, final JsonValue input) throws Exception {
 		final WorkflowData workflowData = new WorkflowData();
 		workflowData.setInput(input);
 		workflowData.setOutput(JsonUtil.empty());
@@ -70,7 +71,7 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 				throw new BadRequestException();
 			}
 			else {
-				runtime.start(workflowDefinition, workflowData);
+				runtime.start(workflowDefinition, workflowData, instance);
 				final JsonValue output = workflowData.getOutput();
 				return Response.ok(output).build();
 			}
@@ -94,7 +95,19 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 	}
 
 	@Override
-	public Response transition(final String state, final JsonValue input) throws Exception {
+	public Response transition(final String state, final URI instance, final JsonValue input) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response end(final String workflow, final String state, final URI instance, final JsonValue data) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response compensate(final String workflow, final String state, final URI instance, final JsonValue data) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}

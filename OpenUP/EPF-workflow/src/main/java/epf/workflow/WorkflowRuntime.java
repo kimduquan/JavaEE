@@ -1,5 +1,6 @@
 package epf.workflow;
 
+import java.net.URI;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -108,79 +109,86 @@ public class WorkflowRuntime {
 	 * @param workflowDataInput
 	 * @throws Exception
 	 */
-	public void start(final WorkflowDefinition workflowDefinition, final WorkflowData workflowData) throws Exception {
-		State startState = null;
+	public void start(final WorkflowDefinition workflowDefinition, final WorkflowData workflowData, final URI uri) throws Exception {
+		String startState = null;
 		if(workflowDefinition.getStart() != null) {
 			if(workflowDefinition.getStart() instanceof String) {
-				final String start = (String)workflowDefinition.getStart();
-				startState = getState(workflowDefinition, start);
+				startState = (String)workflowDefinition.getStart();
 			}
 			else if(workflowDefinition.getStart() instanceof StartDefinition) {
 				final StartDefinition startDef = (StartDefinition) workflowDefinition.getStart();
-				startState = getState(workflowDefinition, startDef.getStateName());
+				startState = startDef.getStateName();
 			}
 		}
 		else {
-			startState = workflowDefinition.getStates()[0];
+			startState = workflowDefinition.getStates()[0].getName();
 		}
 		if(startState != null) {
-			final WorkflowInstance workflowInstance = newWorkflowInstance(workflowDefinition, workflowData);
-			workflowInstance.start(startState);
-			workflowPersistence.merge(workflowInstance);
-			startState(workflowDefinition, startState, workflowInstance);
+			transitionState(workflowDefinition, workflowData, uri, startState);
 		}
 	}
 	
-	private WorkflowInstance newWorkflowInstance(final WorkflowDefinition workflowDefinition, final WorkflowData workflowData) {
+	public void transitionState(final WorkflowDefinition workflowDefinition, final WorkflowData workflowData, final URI uri, final String stateName) throws Exception {
+		State state = getState(workflowDefinition, stateName);
+		if(state != null) {
+			final WorkflowInstance workflowInstance = newWorkflowInstance(workflowDefinition, workflowData, uri);
+			workflowInstance.start(state);
+			workflowPersistence.merge(workflowInstance);
+			transitionState(workflowDefinition, state, workflowInstance);
+		}
+	}
+	
+	private WorkflowInstance newWorkflowInstance(final WorkflowDefinition workflowDefinition, final WorkflowData workflowData, final URI uri) {
 		final WorkflowInstance workflowInstance = new WorkflowInstance();
 		workflowInstance.setWorkflowDefinition(workflowDefinition.getId());
 		workflowInstance.setWorkflowData(workflowData);
+		workflowInstance.setUri(uri);
 		return workflowPersistence.persist(workflowInstance);
 	}
 	
-	private void startState(final WorkflowDefinition workflowDefinition, final State state, final WorkflowInstance workflowInstance) throws Exception {
+	private void transitionState(final WorkflowDefinition workflowDefinition, final State state, final WorkflowInstance workflowInstance) throws Exception {
 		if(workflowInstance.isTerminate()) {
 			return;
 		}
 		switch(state.getType()) {
 			case event:
 				final EventState eventState = (EventState)state;
-				startEventState(workflowDefinition, eventState, workflowInstance);
+				transitionEventState(workflowDefinition, eventState, workflowInstance);
 				break;
 			case operation:
 				final OperationState operationState = (OperationState) state;
-				startOperationState(workflowDefinition, operationState, workflowInstance);
+				transitionOperationState(workflowDefinition, operationState, workflowInstance);
 				break;
 			case Switch:
 				final SwitchState switchState = (SwitchState) state;
-				startSwitchState(workflowDefinition, switchState, workflowInstance);
+				transitionSwitchState(workflowDefinition, switchState, workflowInstance);
 				break;
 			case sleep:
 				final SleepState sleepState = (SleepState) state;
-				startSleepState(workflowDefinition, sleepState, workflowInstance);
+				transitionSleepState(workflowDefinition, sleepState, workflowInstance);
 				break;
 			case parallel:
 				final ParallelState parallelState = (ParallelState) state;
-				startParallelState(workflowDefinition, parallelState, workflowInstance);
+				transitionParallelState(workflowDefinition, parallelState, workflowInstance);
 				break;
 			case inject:
 				final InjectState injectState = (InjectState) state;
-				startInjectState(workflowDefinition, injectState, workflowInstance);
+				transitionInjectState(workflowDefinition, injectState, workflowInstance);
 				break;
 			case foreach:
 				final ForEachState forEachState = (ForEachState) state;
-				startForEachState(workflowDefinition, forEachState, workflowInstance);
+				transitionForEachState(workflowDefinition, forEachState, workflowInstance);
 				break;
 			case callback:
 				final CallbackState callbackState = (CallbackState) state;
-				startCallbackState(workflowDefinition, callbackState, workflowInstance);
+				transitionCallbackState(workflowDefinition, callbackState, workflowInstance);
 				break;
 			default:
 				break;
 		}
 	}
 	
-	private void startEventState(final WorkflowDefinition workflowDefinition, final EventState eventState, final WorkflowInstance workflowInstance) {
+	private void transitionEventState(final WorkflowDefinition workflowDefinition, final EventState eventState, final WorkflowInstance workflowInstance) {
 		Map<String, EventDefinition> eventDefs = new HashMap<>();
 		MapUtil.putAll(eventDefs, workflowDefinition.getEvents(), EventDefinition::getName);
 		int index = 0;
@@ -204,7 +212,7 @@ public class WorkflowRuntime {
 		}
 	}
 	
-	private void startOperationState(final WorkflowDefinition workflowDefinition, final OperationState operationState, final WorkflowInstance workflowInstance) throws Exception {
+	private void transitionOperationState(final WorkflowDefinition workflowDefinition, final OperationState operationState, final WorkflowInstance workflowInstance) throws Exception {
 		try {
 			filterStateDataInput(operationState.getStateDataFilter(), workflowInstance.getWorkflowData());
 			final Duration actionExecTimeout = TimeoutUtil.getActionExecTimeout(workflowDefinition, operationState);
@@ -227,7 +235,7 @@ public class WorkflowRuntime {
 		}
 	}
 	
-	private void startSwitchState(final WorkflowDefinition workflowDefinition, final SwitchState switchState, final WorkflowInstance workflowInstance) throws Exception {
+	private void transitionSwitchState(final WorkflowDefinition workflowDefinition, final SwitchState switchState, final WorkflowInstance workflowInstance) throws Exception {
 		filterStateDataInput(switchState.getStateDataFilter(), workflowInstance.getWorkflowData());
 		boolean evaluate = false;
 		if(switchState.getDataConditions() != null) {
@@ -287,7 +295,7 @@ public class WorkflowRuntime {
 		}
 	}
 	
-	private void startSleepState(final WorkflowDefinition workflowDefinition, final SleepState sleepState, final WorkflowInstance workflowInstance) throws Exception {
+	private void transitionSleepState(final WorkflowDefinition workflowDefinition, final SleepState sleepState, final WorkflowInstance workflowInstance) throws Exception {
 		final Duration duration = Duration.parse(sleepState.getDuration());
 		Thread.currentThread();
 		Thread.sleep(duration.getSeconds() * 1000);
@@ -299,7 +307,7 @@ public class WorkflowRuntime {
 		}
 	}
 	
-	private void startParallelState(final WorkflowDefinition workflowDefinition, final ParallelState parallelState, final WorkflowInstance workflowInstance) throws Exception {
+	private void transitionParallelState(final WorkflowDefinition workflowDefinition, final ParallelState parallelState, final WorkflowInstance workflowInstance) throws Exception {
 		filterStateDataInput(parallelState.getStateDataFilter(), workflowInstance.getWorkflowData());
 		final List<Branch> branches = new ArrayList<>();
 		for(ParallelStateBranch branch : parallelState.getBranches()) {
@@ -334,7 +342,7 @@ public class WorkflowRuntime {
 		}
 	}
 	
-	private void startInjectState(final WorkflowDefinition workflowDefinition, final InjectState injectState, final WorkflowInstance workflowInstance) throws Exception {
+	private void transitionInjectState(final WorkflowDefinition workflowDefinition, final InjectState injectState, final WorkflowInstance workflowInstance) throws Exception {
 		filterStateDataInput(injectState.getStateDataFilter(), workflowInstance.getWorkflowData());
 		StateUtil.mergeStateDataOutput(workflowInstance.getWorkflowData(), injectState.getData());
 		if(injectState.getTransition() != null) {
@@ -349,7 +357,7 @@ public class WorkflowRuntime {
 	private Branch newBranch(final WorkflowDefinition workflowDefinition, final ActionDefinition[] actionDefinitions, final WorkflowData workflowData, final WorkflowInstance workflowInstance) {
 		final List<Action> actions = new ArrayList<>();
 		for(ActionDefinition actionDefinition : actionDefinitions) {
-			final Action action = newAction(workflowDefinition, actionDefinition, workflowData);
+			final Action action = newAction(workflowDefinition, actionDefinition, workflowData, workflowInstance.getUri());
 			actions.add(action);
 		}
 		return new Branch(actions.toArray(new Action[0]), workflowData, workflowInstance);
@@ -368,7 +376,7 @@ public class WorkflowRuntime {
 		return newBranch(workflowDefinition, branch.getActions(), newWorkflowData, workflowInstance);
 	}
 	
-	private void startForEachState(final WorkflowDefinition workflowDefinition, final ForEachState forEachState, final WorkflowInstance workflowInstance) throws Exception {
+	private void transitionForEachState(final WorkflowDefinition workflowDefinition, final ForEachState forEachState, final WorkflowInstance workflowInstance) throws Exception {
 		filterStateDataInput(forEachState.getStateDataFilter(), workflowInstance.getWorkflowData());
 		final JsonArray inputCollection = ELUtil.getValue(forEachState.getInputCollection(), workflowInstance.getWorkflowData().getInput()).asJsonArray();
 		int batchSize = inputCollection.size();
@@ -431,10 +439,10 @@ public class WorkflowRuntime {
 		}
 	}
 	
-	private void startCallbackState(final WorkflowDefinition workflowDefinition, final CallbackState callbackState, final WorkflowInstance workflowInstance) throws Exception {
+	private void transitionCallbackState(final WorkflowDefinition workflowDefinition, final CallbackState callbackState, final WorkflowInstance workflowInstance) throws Exception {
 		filterStateDataInput(callbackState.getStateDataFilter(), workflowInstance.getWorkflowData());
 		try {
-			final Action action = newAction(workflowDefinition, callbackState.getAction(), workflowInstance.getWorkflowData());
+			final Action action = newAction(workflowDefinition, callbackState.getAction(), workflowInstance.getWorkflowData(), workflowInstance.getUri());
 			action.call();
 			if(workflowInstance.isTerminate()) {
 				return;
@@ -725,7 +733,7 @@ public class WorkflowRuntime {
 		}
 		if(compensatedBy != null) {
 			final State compensatedState = getState(workflowDefinition, compensatedBy);
-			startState(workflowDefinition, compensatedState, workflowInstance);
+			transitionState(workflowDefinition, compensatedState, workflowInstance);
 		}
 	}
 	
@@ -742,12 +750,12 @@ public class WorkflowRuntime {
 		}
 	}
 	
-	private void continueAs(final Object continueAs, final WorkflowData workflowData) throws Exception {
+	private void continueAs(final Object continueAs, final WorkflowData workflowData, final URI uri) throws Exception {
 		if(continueAs instanceof String) {
 			final WorkflowDefinition workflowDefinition = workflowPersistence.find((String)continueAs);
 			final WorkflowData newWorkflowData = new WorkflowData();
 			newWorkflowData.setInput(workflowData.getOutput());
-			start(workflowDefinition, newWorkflowData);
+			start(workflowDefinition, newWorkflowData, uri);
 		}
 		else if(continueAs instanceof ContinueAs) {
 			final ContinueAs continueAsDef = (ContinueAs) continueAs;
@@ -770,7 +778,7 @@ public class WorkflowRuntime {
 			else {
 				newWorkflowData.setInput(workflowData.getOutput());
 			}
-			start(workflowDefinition, newWorkflowData);
+			start(workflowDefinition, newWorkflowData, uri);
 		}
 	}
 	
@@ -801,7 +809,7 @@ public class WorkflowRuntime {
 			}
 			termiateSubFlows(workflowInstance);
 			if(endDefinition.getContinueAs() != null) {
-				continueAs(endDefinition.getContinueAs(), workflowInstance.getWorkflowData());
+				continueAs(endDefinition.getContinueAs(), workflowInstance.getWorkflowData(), workflowInstance.getUri());
 			}
 		}
 		else {
@@ -813,7 +821,7 @@ public class WorkflowRuntime {
 		if(transition instanceof String) {
 			final State nextState = getState(workflowDefinition, (String)transition);
 			workflowInstance.transition(nextState);
-			startState(workflowDefinition, nextState, workflowInstance);
+			transitionState(workflowDefinition, nextState, workflowInstance);
 		}
 		else if(transition instanceof TransitionDefinition) {
 			final TransitionDefinition transitionDef = (TransitionDefinition) transition;
@@ -823,7 +831,7 @@ public class WorkflowRuntime {
 			produceEvents(workflowDefinition, transitionDef.getProduceEvents());
 			final State nextState = getState(workflowDefinition, transitionDef.getNextState());
 			workflowInstance.transition(nextState);
-			startState(workflowDefinition, nextState, workflowInstance);
+			transitionState(workflowDefinition, nextState, workflowInstance);
 		}
 	}
 	
@@ -864,7 +872,7 @@ public class WorkflowRuntime {
 		}
 	}
 	
-	private Action newAction(final WorkflowDefinition workflowDefinition, final ActionDefinition actionDefinition, final WorkflowData workflowData) {
+	private Action newAction(final WorkflowDefinition workflowDefinition, final ActionDefinition actionDefinition, final WorkflowData workflowData, final URI uri) {
 		Action action = null;
 		final WorkflowData actionData = new WorkflowData();
 		filterActionDataInput(actionDefinition, workflowData, actionData);
@@ -883,7 +891,7 @@ public class WorkflowRuntime {
 			if(actionDefinition.getSubFlowRef() instanceof SubFlowRefDefinition) {
 				subFlowRefDefinition = (SubFlowRefDefinition)actionDefinition.getSubFlowRef();
 			}
-			action = new SubflowAction(workflowDefinition, actionDefinition, this, subFlowRefDefinition, subWorkflowDefinition, actionData);
+			action = new SubflowAction(workflowDefinition, actionDefinition, this, subFlowRefDefinition, subWorkflowDefinition, actionData, uri);
 		}
 		return action;
 	}
@@ -891,7 +899,7 @@ public class WorkflowRuntime {
 	private void performActions(final WorkflowDefinition workflowDefinition, final Mode mode, final ActionDefinition[] actionDefinitions, final Duration actionExecTimeout, final WorkflowInstance workflowInstance) throws Exception {
 		final List<Action> actions = new CopyOnWriteArrayList<>();
 		for(ActionDefinition actionDefinition : actionDefinitions) {
-			final Action action = newAction(workflowDefinition, actionDefinition, workflowInstance.getWorkflowData());
+			final Action action = newAction(workflowDefinition, actionDefinition, workflowInstance.getWorkflowData(), workflowInstance.getUri());
 			actions.add(action);
 		}
 		switch(mode) {
