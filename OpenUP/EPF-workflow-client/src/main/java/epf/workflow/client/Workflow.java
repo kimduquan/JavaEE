@@ -161,18 +161,26 @@ public interface Workflow {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	Response transition(
+			@PathParam(Naming.WORKFLOW) 
+			final String workflow,
+			@MatrixParam(VERSION)
+			final String version,
 			@PathParam(STATE)
-			final String state, 
+			final String state,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER) 
 			final URI instance,
 			final JsonValue input) throws Exception;
 	
 	/**
 	 * @param workflow
+	 * @param version
 	 * @param state
 	 * @return
 	 */
-	static Link transitionLink(final String workflow, final String state) {
+	static Link transitionLink(final String workflow, final String version, final String state) {
+		if(version != null) {
+			return Link.fromUri(String.format("/%s;version=%s/%s/", workflow, version, state)).rel(Naming.WORKFLOW).type(HttpMethod.PUT).build();
+		}
 		return Link.fromUri(String.format("/%s/%s/", workflow, state)).rel(Naming.WORKFLOW).type(HttpMethod.PUT).build();
 	}
 	
@@ -189,8 +197,10 @@ public interface Workflow {
 	@LRA(value = Type.MANDATORY, end = true)
 	@Consumes(MediaType.APPLICATION_JSON)
 	Response end(
-			@PathParam(Naming.WORKFLOW)
+			@PathParam(Naming.WORKFLOW) 
 			final String workflow,
+			@MatrixParam(VERSION)
+			final String version,
 			@PathParam(STATE)
 			final String state,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER) 
@@ -199,10 +209,14 @@ public interface Workflow {
 	
 	/**
 	 * @param workflow
+	 * @param version
 	 * @param state
 	 * @return
 	 */
-	static Link endLink(final String workflow, final String state) {
+	static Link endLink(final String workflow, final String version, final String state) {
+		if(version != null) {
+			return Link.fromUri(String.format("/%s;version=%s/%s/end/", workflow, version, state)).rel(Naming.WORKFLOW).type(HttpMethod.PUT).build();
+		}
 		return Link.fromUri(String.format("/%s/%s/end/", workflow, state)).rel(Naming.WORKFLOW).type(HttpMethod.PUT).build();
 	}
 	
@@ -219,8 +233,10 @@ public interface Workflow {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Compensate
 	Response compensate(
-			@PathParam(Naming.WORKFLOW)
+			@PathParam(Naming.WORKFLOW) 
 			final String workflow,
+			@MatrixParam(VERSION)
+			final String version,
 			@PathParam(STATE)
 			final String state,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER) 
@@ -230,10 +246,14 @@ public interface Workflow {
 	
 	/**
 	 * @param workflow
+	 * @param version
 	 * @param state
 	 * @return
 	 */
-	static Link compensateLink(final String workflow, final String state) {
+	static Link compensateLink(final String workflow, final String version, final String state) {
+		if(version != null) {
+			return Link.fromUri(String.format("/%s;version=%s/%s/compensate/", workflow, version, state)).rel(Naming.WORKFLOW).type(HttpMethod.PUT).build();
+		}
 		return Link.fromUri(String.format("/%s/%s/compensate/", workflow, state)).rel(Naming.WORKFLOW).type(HttpMethod.PUT).build();
 	}
 }

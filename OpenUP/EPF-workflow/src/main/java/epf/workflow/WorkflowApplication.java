@@ -11,6 +11,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
 import epf.naming.Naming;
 import epf.util.json.JsonUtil;
 import epf.workflow.schema.StartDefinition;
@@ -43,6 +44,13 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 	 */
 	@Inject
 	transient WorkflowSchedule schedule;
+	
+	private Response transitionLink(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) {
+		return Response.ok(workflowData)
+				.links(epf.workflow.client.Workflow.transitionLink(workflow, version, state))
+				.header(LRA.LRA_HTTP_CONTEXT_HEADER, instance)
+				.build();
+	}
 
 	@Override
 	public Response newWorkflowDefinition(final WorkflowDefinition workflowDefinition) throws Exception {
@@ -56,9 +64,6 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 
 	@Override
 	public Response start(final String workflow, final String version, final URI instance, final JsonValue input) throws Exception {
-		final WorkflowData workflowData = new WorkflowData();
-		workflowData.setInput(input);
-		workflowData.setOutput(JsonUtil.empty());
 		WorkflowDefinition workflowDefinition = null;
 		if(version != null) {
 			workflowDefinition = persistence.find(workflow, version);
@@ -71,9 +76,23 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 				throw new BadRequestException();
 			}
 			else {
-				runtime.start(workflowDefinition, workflowData, instance);
-				final JsonValue output = workflowData.getOutput();
-				return Response.ok(output).build();
+				String startState = null;
+				if(workflowDefinition.getStart() != null) {
+					if(workflowDefinition.getStart() instanceof String) {
+						startState = (String)workflowDefinition.getStart();
+					}
+					else if(workflowDefinition.getStart() instanceof StartDefinition) {
+						final StartDefinition startDef = (StartDefinition) workflowDefinition.getStart();
+						startState = startDef.getStateName();
+					}
+				}
+				else {
+					startState = workflowDefinition.getStates()[0].getName();
+				}
+				final WorkflowData workflowData = new WorkflowData();
+				workflowData.setInput(input);
+				workflowData.setOutput(JsonUtil.empty());
+				return transitionLink(workflow, version, startState, instance, workflowData);
 			}
 		}
 		throw new NotFoundException();
@@ -95,19 +114,19 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 	}
 
 	@Override
-	public Response transition(final String state, final URI instance, final JsonValue input) throws Exception {
+	public Response transition(final String workflow, final String version, final String state, final URI instance, final JsonValue input) throws Exception {
+		WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
+		return null;
+	}
+
+	@Override
+	public Response end(final String workflow, final String version, final String state, final URI instance, final JsonValue data) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Response end(final String workflow, final String state, final URI instance, final JsonValue data) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Response compensate(final String workflow, final String state, final URI instance, final JsonValue data) throws Exception {
+	public Response compensate(final String workflow, final String version, final String state, final URI instance, final JsonValue data) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
