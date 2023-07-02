@@ -5,6 +5,8 @@ cd $KAFKA_DIR
 rm -rf /tmp/kafka-logs /tmp/zookeeper /tmp/kraft-combined-logs
 bin/zookeeper-server-start.sh config/zookeeper.properties &
 cd $CASSANDRA_HOME
+export MAX_HEAP_SIZE=1G
+export HEAP_NEWSIZE=200M
 bin/cassandra &
 cd $JAEGER_HOME
 ./jaeger-all-in-one --collector.zipkin.host-port=:9411 &
