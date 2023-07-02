@@ -115,7 +115,6 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 
 	@Override
 	public Response transition(final String workflow, final String version, final String state, final URI instance, final JsonValue input) throws Exception {
-		WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
 		return null;
 	}
 
