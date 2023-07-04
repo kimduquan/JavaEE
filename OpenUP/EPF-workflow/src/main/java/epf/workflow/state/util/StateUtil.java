@@ -2,7 +2,7 @@ package epf.workflow.state.util;
 
 import javax.json.Json;
 import javax.json.JsonValue;
-import epf.workflow.WorkflowData;
+import epf.workflow.schema.WorkflowData;
 import epf.workflow.util.ELUtil;
 
 /**

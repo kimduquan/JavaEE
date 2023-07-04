@@ -1,5 +1,6 @@
 package epf.workflow.schema;
 
+import java.io.Serializable;
 import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.validation.constraints.NotNull;
 import epf.workflow.schema.event.EventDefinition;
@@ -20,7 +21,12 @@ import jakarta.nosql.mapping.Id;
  *
  */
 @Entity
-public class WorkflowDefinition {
+public class WorkflowDefinition implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 

@@ -18,7 +18,7 @@ import epf.api.PathItem.HttpMethod;
 import epf.api.parameter.Parameter;
 import epf.api.server.Server;
 import epf.util.json.JsonUtil;
-import epf.workflow.WorkflowData;
+import epf.workflow.schema.WorkflowData;
 import epf.workflow.schema.WorkflowDefinition;
 import epf.workflow.schema.auth.AuthDefinition;
 import epf.workflow.schema.auth.BearerPropertiesDefinition;

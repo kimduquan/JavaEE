@@ -2,9 +2,9 @@ package epf.workflow.action;
 
 import java.net.URI;
 
-import epf.workflow.WorkflowData;
 import epf.workflow.WorkflowRuntime;
 import epf.workflow.schema.SubFlowRefDefinition;
+import epf.workflow.schema.WorkflowData;
 import epf.workflow.schema.WorkflowDefinition;
 import epf.workflow.schema.action.ActionDefinition;
 

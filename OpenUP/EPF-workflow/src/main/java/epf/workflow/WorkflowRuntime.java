@@ -41,6 +41,7 @@ import epf.workflow.schema.EndDefinition;
 import epf.workflow.schema.ErrorDefinition;
 import epf.workflow.schema.StartDefinition;
 import epf.workflow.schema.TransitionDefinition;
+import epf.workflow.schema.WorkflowData;
 import epf.workflow.schema.WorkflowDefinition;
 import epf.workflow.schema.WorkflowError;
 import epf.workflow.schema.action.ActionDefinition;

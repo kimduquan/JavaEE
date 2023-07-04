@@ -1,4 +1,4 @@
-package epf.workflow;
+package epf.workflow.schema;
 
 import javax.json.JsonValue;
 import jakarta.nosql.mapping.Convert;

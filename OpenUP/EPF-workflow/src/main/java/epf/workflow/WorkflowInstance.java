@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
+import epf.workflow.schema.WorkflowData;
 import epf.workflow.schema.state.State;
 import jakarta.nosql.mapping.Column;
 import jakarta.nosql.mapping.Entity;

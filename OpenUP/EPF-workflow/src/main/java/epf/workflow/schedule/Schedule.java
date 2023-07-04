@@ -3,8 +3,8 @@ package epf.workflow.schedule;
 import java.net.URI;
 import java.util.concurrent.Callable;
 import epf.util.json.JsonUtil;
-import epf.workflow.WorkflowData;
 import epf.workflow.WorkflowRuntime;
+import epf.workflow.schema.WorkflowData;
 import epf.workflow.schema.WorkflowDefinition;
 
 /**

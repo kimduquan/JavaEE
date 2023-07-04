@@ -11,10 +11,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
 import epf.naming.Naming;
 import epf.util.json.JsonUtil;
 import epf.workflow.schema.StartDefinition;
+import epf.workflow.schema.WorkflowData;
 import epf.workflow.schema.WorkflowDefinition;
 
 /**
@@ -45,20 +47,41 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 	@Inject
 	transient WorkflowSchedule schedule;
 	
+	/**
+	 * 
+	 */
+	@Inject
+	@Readiness
+	transient WorkflowCache cache;
+	
 	private Response transitionLink(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) {
 		return Response.ok(workflowData)
 				.links(epf.workflow.client.Workflow.transitionLink(workflow, version, state))
 				.header(LRA.LRA_HTTP_CONTEXT_HEADER, instance)
 				.build();
 	}
+	
+	private void cacheState(final String state, final URI instance, final WorkflowData workflowData) {
+		final WorkflowState workflowState = cache.getState(instance);
+		final WorkflowState newWorkflowState = new WorkflowState();
+		newWorkflowState.setPreviousState(workflowState);
+		newWorkflowState.setName(state);
+		newWorkflowState.setWorkflowData(workflowData);
+		cache.putState(instance, newWorkflowState);
+	}
 
 	@Override
 	public Response newWorkflowDefinition(final WorkflowDefinition workflowDefinition) throws Exception {
-		WorkflowDefinition newWorkflowDefinition = persistence.persist(workflowDefinition);
+		final WorkflowDefinition newWorkflowDefinition = persistence.persist(workflowDefinition);
+		if(newWorkflowDefinition.getVersion() != null) {
+			cache.put(newWorkflowDefinition.getId(), newWorkflowDefinition.getVersion(), newWorkflowDefinition);
+		}
+		else {
+			cache.put(newWorkflowDefinition.getId(), newWorkflowDefinition);
+		}
 		if(newWorkflowDefinition.getStart() instanceof StartDefinition) {
 			schedule.schedule(newWorkflowDefinition, null);
 		}
-		newWorkflowDefinition = persistence.find(newWorkflowDefinition.getId());
 		return Response.ok(newWorkflowDefinition).build();
 	}
 
@@ -102,10 +125,10 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 	public WorkflowDefinition getWorkflowDefinition(final String workflow, final String version) throws Exception {
 		WorkflowDefinition workflowDefinition = null;
 		if(version != null) {
-			workflowDefinition = persistence.find(workflow, version);
+			workflowDefinition = cache.get(workflow, version);
 		}
 		else {
-			workflowDefinition = persistence.find(workflow);
+			workflowDefinition = cache.get(workflow);
 		}
 		if(workflowDefinition != null) {
 			return workflowDefinition;
@@ -114,19 +137,23 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 	}
 
 	@Override
-	public Response transition(final String workflow, final String version, final String state, final URI instance, final JsonValue input) throws Exception {
+	public Response transition(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) throws Exception {
+		cacheState(state, instance, workflowData);
 		return null;
 	}
 
 	@Override
-	public Response end(final String workflow, final String version, final String state, final URI instance, final JsonValue data) throws Exception {
-		// TODO Auto-generated method stub
+	public Response end(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) throws Exception {
+		cacheState(state, instance, workflowData);
 		return null;
 	}
 
 	@Override
-	public Response compensate(final String workflow, final String version, final String state, final URI instance, final JsonValue data) throws Exception {
-		// TODO Auto-generated method stub
+	public Response compensate(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) throws Exception {
+		WorkflowState workflowState = cache.getState(instance);
+		while(workflowState != null) {
+			workflowState = workflowState.getPreviousState();
+		}
 		return null;
 	}
 }

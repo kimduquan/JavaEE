@@ -3,7 +3,7 @@ package epf.workflow.action;
 import java.time.Duration;
 import java.util.concurrent.Callable;
 import epf.workflow.Retry;
-import epf.workflow.WorkflowData;
+import epf.workflow.schema.WorkflowData;
 import epf.workflow.schema.WorkflowDefinition;
 import epf.workflow.schema.action.ActionDefinition;
 import epf.workflow.util.ELUtil;

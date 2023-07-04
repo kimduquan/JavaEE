@@ -21,6 +21,7 @@ import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA.Type;
 import epf.client.util.Client;
 import epf.naming.Naming;
+import epf.workflow.schema.WorkflowData;
 import epf.workflow.schema.WorkflowDefinition;
 
 /**
@@ -169,7 +170,7 @@ public interface Workflow {
 			final String state,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER) 
 			final URI instance,
-			final JsonValue input) throws Exception;
+			final WorkflowData workflowData) throws Exception;
 	
 	/**
 	 * @param workflow
@@ -205,7 +206,7 @@ public interface Workflow {
 			final String state,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER) 
 			final URI instance,
-			final JsonValue data) throws Exception;
+			final WorkflowData workflowData) throws Exception;
 	
 	/**
 	 * @param workflow
@@ -241,7 +242,7 @@ public interface Workflow {
 			final String state,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER) 
 			final URI instance,
-			final JsonValue data
+			final WorkflowData workflowData
 			) throws Exception;
 	
 	/**
