@@ -79,6 +79,16 @@
 	    <scope>provided</scope>
 	</dependency>
     
+    <!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients -->
+	<dependency>
+	    <groupId>org.apache.kafka</groupId>
+	    <artifactId>kafka-clients</artifactId>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/io.jaegertracing/jaeger-client -->
+	<dependency>
+	    <groupId>io.jaegertracing</groupId>
+	    <artifactId>jaeger-client</artifactId>
+	</dependency>
     <!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.communication/jnosql-mongodb-driver -->
 	<dependency>
 	    <groupId>org.eclipse.jnosql.communication</groupId>
