@@ -43,7 +43,6 @@
 	<dependency>
 	    <groupId>javax.cache</groupId>
 	    <artifactId>cache-api</artifactId>
-		<scope>provided</scope>
 	</dependency>
     <!-- https://mvnrepository.com/artifact/javax.el/javax.el-api -->
 	<dependency>
@@ -77,7 +76,6 @@
 	<dependency>
 	    <groupId>org.eclipse.microprofile.lra</groupId>
 	    <artifactId>microprofile-lra-api</artifactId>
-		<scope>provided</scope>
 	</dependency>
 	<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.reactive.messaging/microprofile-reactive-messaging-api -->
 	<dependency>
