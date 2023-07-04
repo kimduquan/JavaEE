@@ -165,5 +165,10 @@
         <artifactId>EPF-concurrent-utility</artifactId>
         <version>${project.version}</version>
     </dependency>
+    <dependency>
+        <groupId>openup</groupId>
+        <artifactId>EPF-messaging-utility</artifactId>
+        <version>${project.version}</version>
+    </dependency>
   </dependencies>
 </project>
