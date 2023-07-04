@@ -23,6 +23,8 @@ import javax.inject.Inject;
 import javax.json.JsonArray;
 import javax.json.JsonValue;
 import org.eclipse.microprofile.context.ManagedExecutor;
+import org.eclipse.microprofile.reactive.messaging.Incoming;
+import epf.naming.Naming;
 import epf.util.MapUtil;
 import epf.util.json.JsonUtil;
 import epf.util.logging.LogManager;
@@ -485,6 +487,16 @@ public class WorkflowRuntime {
 		}
 		else if(condition.getEnd() != null) {
 			end(workflowDefinition, condition.getEnd(), workflowInstance);
+		}
+	}
+	
+	@Incoming(Naming.WORKFLOW)
+	public void onEvent(final Event event) {
+		try {
+			consume(event);
+		}
+		catch(Exception ex) {
+			LOGGER.log(Level.SEVERE, "onEvent", ex);
 		}
 	}
 	
