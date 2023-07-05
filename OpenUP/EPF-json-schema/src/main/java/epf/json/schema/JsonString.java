@@ -9,6 +9,10 @@ public class JsonString extends TypeValue {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
 	private int minLength;
 	/**
 	 * 

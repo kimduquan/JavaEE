@@ -11,6 +11,10 @@ public class JsonObject extends TypeValue {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
 	private Map<String, Value> properties;
 	/**
 	 * 

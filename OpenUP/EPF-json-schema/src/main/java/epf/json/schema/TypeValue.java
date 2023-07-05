@@ -9,6 +9,10 @@ public class TypeValue extends Value {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
 	private Type type;
 
 	public Type getType() {

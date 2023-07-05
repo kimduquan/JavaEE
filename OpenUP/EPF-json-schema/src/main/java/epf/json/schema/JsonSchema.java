@@ -9,6 +9,10 @@ public class JsonSchema extends JsonObject {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
 	private String schema;
 	/**
 	 * 

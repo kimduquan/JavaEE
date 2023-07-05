@@ -1,7 +1,7 @@
 package epf.workflow.schema;
 
-import javax.json.JsonValue;
-import epf.workflow.schema.mapping.JsonValueAttributeConverter;
+import epf.json.schema.JsonSchema;
+import epf.workflow.schema.mapping.JsonSchemaAttributeConverter;
 import jakarta.nosql.mapping.Column;
 import jakarta.nosql.mapping.Convert;
 import jakarta.nosql.mapping.Embeddable;
@@ -11,14 +11,14 @@ import jakarta.nosql.mapping.Embeddable;
  *
  */
 @Embeddable
-public class InputSchema {
+public class DataSchema {
 
 	/**
 	 * 
 	 */
 	@Column
-	@Convert(JsonValueAttributeConverter.class)
-	private JsonValue schema;
+	@Convert(value = JsonSchemaAttributeConverter.class)
+	private JsonSchema schema;
 	
 	/**
 	 * 
@@ -26,10 +26,10 @@ public class InputSchema {
 	@Column
 	private boolean failOnValidationErrors = false;
 	
-	public JsonValue getSchema() {
+	public JsonSchema getSchema() {
 		return schema;
 	}
-	public void setSchema(JsonValue schema) {
+	public void setSchema(JsonSchema schema) {
 		this.schema = schema;
 	}
 	public boolean isFailOnValidationErrors() {

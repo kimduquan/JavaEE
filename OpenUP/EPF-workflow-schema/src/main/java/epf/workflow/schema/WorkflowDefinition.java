@@ -68,7 +68,7 @@ public class WorkflowDefinition implements Serializable {
 	 * 
 	 */
 	@Column
-	private InputSchema dataInputSchema;
+	private DataSchema dataInputSchema;
 	
 	/**
 	 * 
@@ -219,11 +219,11 @@ public class WorkflowDefinition implements Serializable {
 		this.annotations = annotations;
 	}
 
-	public InputSchema getDataInputSchema() {
+	public DataSchema getDataInputSchema() {
 		return dataInputSchema;
 	}
 
-	public void setDataInputSchema(InputSchema dataInputSchema) {
+	public void setDataInputSchema(DataSchema dataInputSchema) {
 		this.dataInputSchema = dataInputSchema;
 	}
 
