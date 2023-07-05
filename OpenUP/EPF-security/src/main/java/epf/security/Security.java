@@ -31,6 +31,8 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.health.HealthCheck;
+import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.jwt.config.Names;
@@ -62,7 +64,8 @@ import epf.util.security.KeyUtil;
  */
 @Path(Naming.SECURITY)
 @ApplicationScoped
-public class Security implements epf.security.client.Security, epf.security.client.otp.OTPSecurity, Serializable {
+@Readiness
+public class Security implements epf.security.client.Security, epf.security.client.otp.OTPSecurity, Serializable, HealthCheck {
     
     /**
     * 
@@ -421,5 +424,16 @@ public class Security implements epf.security.client.Security, epf.security.clie
 			return Response.ok().build();
 		}
 		throw new BadRequestException();
+	}
+
+	@Override
+	public HealthCheckResponse call() {
+		if(this.privateKey == null) {
+			return HealthCheckResponse.down("epf-security-private-key");
+		}
+		if(this.trustStore == null) {
+			return HealthCheckResponse.down("epf-security-trust-store");
+		}
+		return HealthCheckResponse.up("epf-security");
 	}
 }
