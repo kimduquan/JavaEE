@@ -1,14 +1,9 @@
 package epf.webapp.workflow.view;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.Map.Entry;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import epf.json.schema.JsonSchema;
-import epf.json.schema.Value;
-import epf.util.MapUtil;
-import epf.util.StringComparator;
 import epf.webapp.naming.Naming;
 
 /**
@@ -32,12 +27,12 @@ public class StartView implements Serializable {
 	/**
 	 * 
 	 */
-	private JsonSchema schema;
+	private String version;
 	
 	/**
 	 * 
 	 */
-	private List<Entry<String, Value>> properties;
+	private JsonSchema schema;
 
 	public JsonSchema getSchema() {
 		return schema;
@@ -55,14 +50,11 @@ public class StartView implements Serializable {
 		this.workflow = workflow;
 	}
 
-	public List<Entry<String, Value>> getProperties() {
-		if(properties == null) {
-			properties = MapUtil.entrySet(schema.getProperties(), new StringComparator());
-		}
-		return properties;
+	public String getVersion() {
+		return version;
 	}
 
-	public void setProperties(List<Entry<String, Value>> properties) {
-		this.properties = properties;
+	public void setVersion(final String version) {
+		this.version = version;
 	}
 }

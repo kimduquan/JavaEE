@@ -2,7 +2,7 @@
 	<ui:composition template="../template/blank.xhtml">
 		<ui:define name="title"><h:outputText value="#{workflow_start.schema.title}" /></ui:define>
 		<ui:define name="head">
-		    <f:metadata><f:viewParam name="workflow" value="#{workflow_start.workflow}" /></f:metadata>
+		    <f:metadata><f:viewParam name="workflow" value="#{workflow_start.workflow}" /><f:viewParam name="version" value="#{workflow_start.version}" /></f:metadata>
 		</ui:define>
 		<ui:define name="page-content">
 		    <!-- Page Heading -->
@@ -19,6 +19,12 @@
 		        <div class="card-body">
 		            <div class="table-responsive">
 		            	<h:form>
+		            		<ui:repeat var="property" value="#{workflow_start.schema.properties.entrySet()}">
+		            			<h:outputLabel value="#{property.key}" />
+		            			<h:selectBooleanCheckbox rendered="#{property.value.type == 'BOOLEAN'}" value="#{property.value}" />
+		            			<h:inputText rendered="#{property.value.type == 'NUMBER'}" value="#{property.value}" />
+		            			<h:inputTextarea rendered="#{property.value.type == 'STRING'}" value="#{property.value}" />
+		            		</ui:repeat>
 		            	</h:form>
 		            </div>
 		        </div>
