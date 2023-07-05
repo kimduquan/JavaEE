@@ -91,4 +91,12 @@ public class WorkflowCache implements HealthCheck {
 	public WorkflowState getState(final URI instance) {
 		return workflowStateCache.get(instance.toString());
 	}
+	
+	/**
+	 * @param instance
+	 * @return
+	 */
+	public WorkflowState removeState(final URI instance) {
+		return workflowStateCache.getAndRemove(instance.toString());
+	}
 }

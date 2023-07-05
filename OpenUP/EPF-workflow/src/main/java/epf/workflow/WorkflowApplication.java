@@ -1,8 +1,18 @@
 package epf.workflow;
 
 import java.net.URI;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.json.JsonArray;
 import javax.json.JsonValue;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
@@ -11,13 +21,50 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
 import epf.naming.Naming;
+import epf.util.MapUtil;
 import epf.util.json.JsonUtil;
+import epf.workflow.action.Action;
+import epf.workflow.action.SubflowAction;
+import epf.workflow.event.Event;
+import epf.workflow.event.ProduceEventAction;
+import epf.workflow.event.persistence.CallbackStateEvent;
+import epf.workflow.event.persistence.EventStateEvent;
+import epf.workflow.function.FunctionAction;
+import epf.workflow.schema.ContinueAs;
+import epf.workflow.schema.EndDefinition;
 import epf.workflow.schema.StartDefinition;
+import epf.workflow.schema.SubFlowRefDefinition;
+import epf.workflow.schema.TransitionDefinition;
 import epf.workflow.schema.WorkflowData;
 import epf.workflow.schema.WorkflowDefinition;
+import epf.workflow.schema.action.ActionDefinition;
+import epf.workflow.schema.action.Mode;
+import epf.workflow.schema.event.EventDefinition;
+import epf.workflow.schema.event.OnEventsDefinition;
+import epf.workflow.schema.event.ProducedEventDefinition;
+import epf.workflow.schema.state.CallbackState;
+import epf.workflow.schema.state.EventState;
+import epf.workflow.schema.state.ForEachState;
+import epf.workflow.schema.state.InjectState;
+import epf.workflow.schema.state.OperationState;
+import epf.workflow.schema.state.ParallelState;
+import epf.workflow.schema.state.ParallelStateBranch;
+import epf.workflow.schema.state.SleepState;
+import epf.workflow.schema.state.State;
+import epf.workflow.schema.state.StateDataFilters;
+import epf.workflow.state.Branch;
+import epf.workflow.state.util.StateUtil;
+import epf.workflow.util.ELUtil;
+import epf.workflow.util.TimeoutUtil;
+import epf.workflow.schema.state.SwitchState;
+import epf.workflow.schema.state.SwitchStateConditions;
+import epf.workflow.schema.state.SwitchStateDataConditions;
+import epf.workflow.schema.state.SwitchStateEventConditions;
 
 /**
  * @author PC
@@ -54,9 +101,34 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 	@Readiness
 	transient WorkflowCache cache;
 	
+	/**
+	 * 
+	 */
+	@Inject
+	transient WorkflowEventStore eventStore;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	transient javax.enterprise.event.Event<Event> producedEvent;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	transient ManagedExecutor executor;
+	
 	private Response transitionLink(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) {
 		return Response.ok(workflowData)
 				.links(epf.workflow.client.Workflow.transitionLink(workflow, version, state))
+				.header(LRA.LRA_HTTP_CONTEXT_HEADER, instance)
+				.build();
+	}
+	
+	private Response endLink(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) {
+		return Response.ok(workflowData)
+				.links(epf.workflow.client.Workflow.endLink(workflow, version, state))
 				.header(LRA.LRA_HTTP_CONTEXT_HEADER, instance)
 				.build();
 	}
@@ -69,6 +141,486 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 		newWorkflowState.setWorkflowData(workflowData);
 		cache.putState(instance, newWorkflowState);
 	}
+	
+	private State getState(final WorkflowDefinition workflowDefinition, final String name) {
+		return Arrays.asList(workflowDefinition.getStates()).stream().filter(state -> state.getName().equals(name)).findFirst().orElseThrow(BadRequestException::new);
+	}
+	
+	private void filterStateDataInput(final StateDataFilters stateDataFilters, final WorkflowData workflowData) {
+		if(stateDataFilters != null && stateDataFilters.getInput() != null) {
+			final JsonValue newInput = ELUtil.getValue(stateDataFilters.getInput(), workflowData.getInput());
+			workflowData.setInput(newInput);
+		}
+	}
+	
+	private void filterActionDataInput(final ActionDefinition actionDefinition, final WorkflowData workflowData, final WorkflowData actionData) {
+		if(actionDefinition.getActionDataFilter() != null && actionDefinition.getActionDataFilter().getFromStateData() != null) {
+			final JsonValue input = ELUtil.getValue(actionDefinition.getActionDataFilter().getFromStateData(), workflowData.getInput());
+			actionData.setInput(input);
+		}
+	}
+	
+	private EventDefinition getEventDefinition(final WorkflowDefinition workflowDefinition, final String event) {
+		return Arrays.asList(workflowDefinition.getEvents()).stream().filter(eventDef -> eventDef.getName().equals(event)).findFirst().get();
+	}
+	
+	private WorkflowDefinition getSubWorkflowDefinition(final Object subFlowRef) {
+		if(subFlowRef instanceof String) {
+			return cache.get((String)subFlowRef);
+		}
+		else {
+			final SubFlowRefDefinition subFlowRefDefinition = (SubFlowRefDefinition) subFlowRef;
+			return cache.get(subFlowRefDefinition.getWorkflowId(), subFlowRefDefinition.getVersion());
+		}
+	}
+	
+	private Action newAction(final WorkflowDefinition workflowDefinition, final ActionDefinition actionDefinition, final URI instance, final WorkflowData workflowData) {
+		Action action = null;
+		final WorkflowData actionData = new WorkflowData();
+		filterActionDataInput(actionDefinition, workflowData, actionData);
+		if(actionDefinition.getFunctionRef() != null) {
+			action = new FunctionAction(workflowDefinition, actionDefinition, actionData);
+		}
+		else if(actionDefinition.getEventRef() != null) {
+			final EventDefinition eventDefinition = getEventDefinition(workflowDefinition, actionDefinition.getEventRef().getProduceEventRef());
+			action = new ProduceEventAction(workflowDefinition, actionDefinition, eventDefinition, producedEvent, actionData);
+		}
+		else if(actionDefinition.getSubFlowRef() != null) {
+			final WorkflowDefinition subWorkflowDefinition = getSubWorkflowDefinition(actionDefinition.getSubFlowRef());
+			SubFlowRefDefinition subFlowRefDefinition = null;
+			if(actionDefinition.getSubFlowRef() instanceof SubFlowRefDefinition) {
+				subFlowRefDefinition = (SubFlowRefDefinition)actionDefinition.getSubFlowRef();
+			}
+			action = new SubflowAction(workflowDefinition, actionDefinition, null, subFlowRefDefinition, subWorkflowDefinition, actionData, instance);
+		}
+		return action;
+	}
+	
+	private void filterActionDataOutput(final ActionDefinition actionDefinition, final WorkflowData workflowData, final WorkflowData actionData) {
+		if(actionDefinition.getActionDataFilter() != null && actionDefinition.getActionDataFilter().isUseResults() && actionDefinition.getActionDataFilter().getResults() != null) {
+			if(actionDefinition.getActionDataFilter().getToStateData() != null) {
+				StateUtil.mergeStateDataOutput(actionDefinition.getActionDataFilter().getToStateData(), workflowData, actionData.getOutput());
+			}
+			else {
+				StateUtil.mergeStateDataOutput(workflowData, actionData.getOutput());
+			}
+		}
+	}
+	
+	private void filterStateDataOutput(final StateDataFilters stateDataFilters, final WorkflowData workflowData) {
+		if(stateDataFilters != null && stateDataFilters.getOutput() != null) {
+			final JsonValue newOutput = ELUtil.getValue(stateDataFilters.getOutput(), workflowData.getOutput());
+			workflowData.setOutput(newOutput);
+		}
+	}
+	
+	private void performActions(final WorkflowDefinition workflowDefinition, final Mode mode, final ActionDefinition[] actionDefinitions, final Duration actionExecTimeout, final URI instance, final WorkflowData workflowData) throws Exception {
+		final List<Action> actions = new CopyOnWriteArrayList<>();
+		for(ActionDefinition actionDefinition : actionDefinitions) {
+			final Action action = newAction(workflowDefinition, actionDefinition, instance, workflowData);
+			actions.add(action);
+		}
+		switch(mode) {
+			case parallel:
+				if(actionExecTimeout != null) {
+					executor.invokeAll(actions, actionExecTimeout.toMillis(), TimeUnit.MICROSECONDS);
+				}
+				else {
+					executor.invokeAll(actions);
+				}
+				break;
+			case sequential:
+				for(Action action : actions) {
+					if(actionExecTimeout != null) {
+						executor.invokeAll(Arrays.asList(action), actionExecTimeout.toMillis(), TimeUnit.MICROSECONDS);
+					}
+					else {
+						action.call();
+					}
+				}
+				break;
+			default:
+				break;
+		}
+		for(Action action : actions) {
+			filterActionDataOutput(action.getActionDefinition(), workflowData, action.getWorkflowData());
+		}
+	}
+	
+	private void produceEvent(final EventDefinition eventDefinition, final ProducedEventDefinition producedEventDefinition, final URI instance) throws Exception {
+		final Event event = new Event();
+		event.setSource(eventDefinition.getSource());
+		event.setType(eventDefinition.getType());
+		event.setSubject(instance.toString());
+		if(!(producedEventDefinition.getData() instanceof String)) {
+			event.setData(producedEventDefinition.getData());
+		}
+		producedEvent.fire(event);
+	}
+	
+	private void produceEvents(final WorkflowDefinition workflowDefinition, final ProducedEventDefinition[] produceEvents, final URI instance) throws Exception {
+		final Map<String, EventDefinition> eventDefinitions = new HashMap<>();
+		MapUtil.putAll(eventDefinitions, workflowDefinition.getEvents(), EventDefinition::getName);
+		for(ProducedEventDefinition producedEventDefinition : produceEvents) {
+			final EventDefinition eventDefinition = eventDefinitions.get(producedEventDefinition.getEventRef());
+			produceEvent(eventDefinition, producedEventDefinition, instance);
+		}
+	}
+	
+	private Response end(final WorkflowDefinition workflowDefinition, final Object end, final URI instance, final WorkflowData workflowData) throws Exception {
+		if(end instanceof EndDefinition) {
+			final EndDefinition endDefinition = (EndDefinition) end;
+			if(endDefinition.isCompensate()) {
+				return compensateLink(workflowDefinition.getId(), workflowDefinition.getVersion(), "", instance, workflowData);
+			}
+			if(Boolean.TRUE.equals(endDefinition.isTerminate())) {
+				return endLink(workflowDefinition.getId(), workflowDefinition.getVersion(), "", instance, workflowData);
+			}
+			if(endDefinition.getProduceEvents() != null) {
+				produceEvents(workflowDefinition, endDefinition.getProduceEvents(), instance);
+			}
+			if(endDefinition.getContinueAs() != null) {
+				return continueAs(endDefinition.getContinueAs(), instance, workflowData);
+			}
+		}
+		return Response.ok(workflowData.getOutput()).build();
+	}
+	
+	private Response startLink(final String workflow, final String version, final URI parentInstance, final WorkflowData workflowData) {
+		ResponseBuilder builder = Response.ok(workflowData).links(epf.workflow.client.Workflow.startLink(workflow, version));
+		if(parentInstance != null) {
+			builder = builder.header(LRA.LRA_HTTP_PARENT_CONTEXT_HEADER, parentInstance);
+		}
+		return builder.build();
+	}
+	
+	private Response compensateLink(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) {
+		return Response.ok(workflowData)
+				.links(epf.workflow.client.Workflow.compensateLink(workflow, version, state))
+				.header(LRA.LRA_HTTP_CONTEXT_HEADER, instance)
+				.build();
+	}
+	
+	private Response endCondition(final WorkflowDefinition workflowDefinition, final SwitchState switchState, final SwitchStateConditions condition, final URI instance, final WorkflowData workflowData) throws Exception {
+		if(condition.getTransition() != null) {
+			filterStateDataOutput(switchState.getStateDataFilter(), workflowData);
+			return transitionState(workflowDefinition, condition.getTransition(), instance, workflowData);
+		}
+		else if(condition.getEnd() != null) {
+			return end(workflowDefinition, condition.getEnd(), instance, workflowData);
+		}
+		throw new BadRequestException();
+	}
+	
+	private Response continueAs(final Object continueAs, final URI instance, final WorkflowData workflowData) throws Exception {
+		if(continueAs instanceof String) {
+			final WorkflowDefinition workflowDefinition = cache.get((String)continueAs);
+			final WorkflowData newWorkflowData = new WorkflowData();
+			newWorkflowData.setInput(workflowData.getOutput());
+			return startLink(workflowDefinition.getId(), workflowDefinition.getVersion(), instance, newWorkflowData);
+		}
+		else if(continueAs instanceof ContinueAs) {
+			final ContinueAs continueAsDef = (ContinueAs) continueAs;
+			final WorkflowDefinition workflowDefinition = cache.get(continueAsDef.getWorkflowId(), continueAsDef.getVersion());
+			final WorkflowData newWorkflowData = new WorkflowData();
+			if(continueAsDef.getData() != null) {
+				JsonValue input = null;
+				if(continueAsDef.getData() instanceof String) {
+					final String data = (String)continueAsDef.getData();
+					input = ELUtil.getValue(data, workflowData.getOutput());
+				}
+				else if(continueAsDef.getData() instanceof JsonValue) {
+					input = (JsonValue) continueAsDef.getData();
+				}
+				else {
+					input = JsonUtil.toJsonValue(continueAsDef.getData());
+				}
+				newWorkflowData.setInput(input);
+			}
+			else {
+				newWorkflowData.setInput(workflowData.getOutput());
+			}
+			return startLink(workflowDefinition.getId(), workflowDefinition.getVersion(), instance, newWorkflowData);
+		}
+		throw new BadRequestException();
+	}
+	
+	private Branch newBranch(final WorkflowDefinition workflowDefinition, final ActionDefinition[] actionDefinitions, final URI instance, final WorkflowData workflowData) {
+		final List<Action> actions = new ArrayList<>();
+		for(ActionDefinition actionDefinition : actionDefinitions) {
+			final Action action = newAction(workflowDefinition, actionDefinition, instance, workflowData);
+			actions.add(action);
+		}
+		return new Branch(actions.toArray(new Action[0]), workflowData, null);
+	}
+	
+	private Branch newForEachBranch(final WorkflowDefinition workflowDefinition, final ForEachState forEachState, final URI instance, final WorkflowData workflowData, final JsonValue value) {
+		final WorkflowData newWorkflowData = new WorkflowData();
+		newWorkflowData.setInput(workflowData.getOutput());
+		ELUtil.setValue(forEachState.getIterationParam(), newWorkflowData.getInput(), value);
+		return newBranch(workflowDefinition, forEachState.getActions(), instance, newWorkflowData);
+	}
+	
+	private Branch newParallelBranch(final WorkflowDefinition workflowDefinition, final ParallelStateBranch branch, final URI instance, final WorkflowData workflowData) {
+		final WorkflowData newWorkflowData = new WorkflowData();
+		newWorkflowData.setInput(workflowData.getOutput());
+		return newBranch(workflowDefinition, branch.getActions(), instance, newWorkflowData);
+	}
+	
+	private String getCompensatedBy(final State state) {
+		String compensatedBy = null;
+		switch(state.getType()) {
+			case event:
+				final EventState eventState = (EventState)state;
+				compensatedBy = eventState.getCompensatedBy();
+				break;
+			case operation:
+				final OperationState operationState = (OperationState) state;
+				compensatedBy = operationState.getCompensatedBy();
+				break;
+			case Switch:
+				final SwitchState switchState = (SwitchState) state;
+				compensatedBy = switchState.getCompensatedBy();
+				break;
+			case sleep:
+				break;
+			case parallel:
+				final ParallelState parallelState = (ParallelState) state;
+				compensatedBy = parallelState.getCompensatedBy();
+				break;
+			case inject:
+				final InjectState injectState = (InjectState) state;
+				compensatedBy = injectState.getCompensatedBy();
+				break;
+			case foreach:
+				final ForEachState forEachState = (ForEachState) state;
+				compensatedBy = forEachState.getCompensatedBy();
+				break;
+			case callback:
+				final CallbackState callbackState = (CallbackState) state;
+				compensatedBy = callbackState.getCompensatedBy();
+				break;
+			default:
+				break;
+		}
+		if(compensatedBy != null) {
+			return compensatedBy;
+		}
+		throw new BadRequestException();
+	}
+	
+	private Response transitionState(final WorkflowDefinition workflowDefinition, final Object transition, final URI instance, final WorkflowData workflowData) throws Exception {
+		if(transition instanceof String) {
+			final String state = (String)transition;
+			return transitionLink(workflowDefinition.getId(), workflowDefinition.getVersion(), state, instance, workflowData);
+		}
+		else if(transition instanceof TransitionDefinition) {
+			final TransitionDefinition transitionDef = (TransitionDefinition) transition;
+			if(transitionDef.isCompensate()) {
+				return compensateLink(workflowDefinition.getId(), workflowDefinition.getVersion(), transitionDef.getNextState(), instance, workflowData);
+			}
+			produceEvents(workflowDefinition, transitionDef.getProduceEvents(), instance);
+			return transitionLink(workflowDefinition.getId(), workflowDefinition.getVersion(), transitionDef.getNextState(), instance, workflowData);
+		}
+		throw new BadRequestException();
+	}
+	
+	private Response transitionCallbackState(final WorkflowDefinition workflowDefinition, final CallbackState callbackState, final URI instance, final WorkflowData workflowData) throws Exception {
+		filterStateDataInput(callbackState.getStateDataFilter(), workflowData);
+		final EventDefinition eventDefinition = getEventDefinition(workflowDefinition, callbackState.getEventRef());
+		
+		final CallbackStateEvent event = new CallbackStateEvent();
+		event.setWorkflowDefinition(workflowDefinition.getId());
+		event.setEventDefinition(callbackState.getEventRef());
+		event.setState(callbackState.getName());
+		
+		event.setSource(eventDefinition.getSource());
+		event.setType(eventDefinition.getType());
+		event.setSubject(instance.toString());
+		
+		eventStore.persist(event);
+		
+		final Action action = newAction(workflowDefinition, callbackState.getAction(), instance, workflowData);
+		action.call();
+		return Response.ok().build();
+	}
+	
+	private Response transitionEventState(final WorkflowDefinition workflowDefinition, final EventState eventState, final URI instance) {
+		Map<String, EventDefinition> eventDefs = new HashMap<>();
+		MapUtil.putAll(eventDefs, workflowDefinition.getEvents(), EventDefinition::getName);
+		int index = 0;
+		for(OnEventsDefinition onEventsDef : eventState.getOnEvents()) {
+			for(String eventRef : onEventsDef.getEventRefs()) {
+				final EventDefinition eventDef = eventDefs.get(eventRef);
+				
+				final EventStateEvent event = new EventStateEvent();
+				event.setWorkflowDefinition(workflowDefinition.getId());
+				event.setEventDefinition(eventRef);
+				event.setState(eventState.getName());
+				event.setOnEventsDefinition(index);
+				
+				event.setSource(eventDef.getSource());
+				event.setType(eventDef.getType());
+				event.setSubject(instance.toString());
+				
+				eventStore.persist(event);
+			}
+			index++;
+		}
+		return Response.ok().build();
+	}
+	
+	private Response transitionOperationState(final WorkflowDefinition workflowDefinition, final OperationState operationState, final URI instance, final WorkflowData workflowData) throws Exception {
+		filterStateDataInput(operationState.getStateDataFilter(), workflowData);
+		final Duration actionExecTimeout = TimeoutUtil.getActionExecTimeout(workflowDefinition, operationState);
+		performActions(workflowDefinition, operationState.getActionMode(), operationState.getActions(), actionExecTimeout, instance, workflowData);
+		if(operationState.getTransition() != null) {
+			filterStateDataOutput(operationState.getStateDataFilter(), workflowData);
+			return transitionState(workflowDefinition, operationState.getTransition(), instance, workflowData);
+		}
+		else if(operationState.getEnd() != null) {
+			return end(workflowDefinition, operationState.getEnd(), instance, workflowData);
+		}
+		throw new BadRequestException();
+	}
+	
+	private Response transitionSwitchState(final WorkflowDefinition workflowDefinition, final SwitchState switchState, final URI instance, final WorkflowData workflowData) throws Exception {
+		filterStateDataInput(switchState.getStateDataFilter(), workflowData);
+		if(switchState.getDataConditions() != null) {
+			for(SwitchStateDataConditions condition : switchState.getDataConditions()) {
+				if(ELUtil.evaluateCondition(workflowData.getInput(), condition.getCondition())) {
+					return endCondition(workflowDefinition, switchState, condition, instance, workflowData);
+				}
+			}
+		}
+		else if(switchState.getEventConditions() != null) {
+			final Map<String, EventDefinition> eventDefinitions = new HashMap<>();
+			MapUtil.putAll(eventDefinitions, workflowDefinition.getEvents(), EventDefinition::getName);
+			for(SwitchStateEventConditions condition : switchState.getEventConditions()) {
+				final EventDefinition eventDefinition = eventDefinitions.get(condition.getEventRef());
+				boolean isEvent = false;
+				isEvent = eventDefinition != null;
+				if(isEvent) {
+					return endCondition(workflowDefinition, switchState, condition, instance, workflowData);
+				}
+			}
+		}
+		if(switchState.getDefaultCondition() instanceof TransitionDefinition) {
+			filterStateDataOutput(switchState.getStateDataFilter(), workflowData);
+			return transitionState(workflowDefinition, switchState.getDefaultCondition(), instance, workflowData);
+		}
+		else if(switchState.getDefaultCondition() instanceof EndDefinition) {
+			return end(workflowDefinition, switchState.getDefaultCondition(), instance, workflowData);
+		}
+		throw new BadRequestException();
+	}
+	
+	private Response transitionSleepState(final WorkflowDefinition workflowDefinition, final SleepState sleepState, final URI instance, final WorkflowData workflowData) throws Exception {
+		final Duration duration = Duration.parse(sleepState.getDuration());
+		Thread.currentThread();
+		Thread.sleep(duration.getSeconds() * 1000);
+		if(sleepState.getTransition() != null) {
+			return transitionState(workflowDefinition, sleepState.getTransition(), instance, workflowData);
+		}
+		else if(sleepState.getEnd() != null) {
+			return end(workflowDefinition, sleepState.getEnd(), instance, workflowData);
+		}
+		throw new BadRequestException();
+	}
+	
+	private Response transitionParallelState(final WorkflowDefinition workflowDefinition, final ParallelState parallelState, final URI instance, final WorkflowData workflowData) throws Exception {
+		filterStateDataInput(parallelState.getStateDataFilter(), workflowData);
+		final List<Branch> branches = new ArrayList<>();
+		for(ParallelStateBranch branch : parallelState.getBranches()) {
+			branches.add(newParallelBranch(workflowDefinition, branch, instance, workflowData));
+		}
+		switch(parallelState.getCompletionType()) {
+			case allOf:
+				executor.invokeAll(branches);
+				break;
+			case atLeast:
+				executor.invokeAny(branches);
+				break;
+			default:
+				break;
+		}
+		if(parallelState.getTransition() != null) {
+			filterStateDataOutput(parallelState.getStateDataFilter(), workflowData);
+			return transitionState(workflowDefinition, parallelState.getTransition(), instance, workflowData);
+		}
+		else if(parallelState.getEnd() != null) {
+			return end(workflowDefinition, parallelState.getEnd(), instance, workflowData);
+		}
+		throw new BadRequestException();
+	}
+	
+	private Response transitionInjectState(final WorkflowDefinition workflowDefinition, final InjectState injectState, final URI instance, final WorkflowData workflowData) throws Exception {
+		filterStateDataInput(injectState.getStateDataFilter(), workflowData);
+		StateUtil.mergeStateDataOutput(workflowData, injectState.getData());
+		if(injectState.getTransition() != null) {
+			filterStateDataOutput(injectState.getStateDataFilter(), workflowData);
+			return transitionState(workflowDefinition, injectState.getTransition(), instance, workflowData);
+		}
+		else if(injectState.getEnd() != null) {
+			return end(workflowDefinition, injectState.getEnd(), instance, workflowData);
+		}
+		throw new BadRequestException();
+	}
+	
+	private Response transitionForEachState(final WorkflowDefinition workflowDefinition, final ForEachState forEachState, final URI instance, final WorkflowData workflowData) throws Exception {
+		filterStateDataInput(forEachState.getStateDataFilter(), workflowData);
+		final JsonArray inputCollection = ELUtil.getValue(forEachState.getInputCollection(), workflowData.getInput()).asJsonArray();
+		int batchSize = inputCollection.size();
+		if(forEachState.getBatchSize() instanceof String) {
+			batchSize = Integer.valueOf((String)forEachState.getBatchSize());
+		}
+		else if(forEachState.getBatchSize() instanceof Integer) {
+			batchSize = (int) forEachState.getBatchSize();
+		}
+		List<Branch> iterations = null;
+		switch(forEachState.getMode()) {
+			case parallel:
+				int index = 0;
+				while(true) {
+					final List<JsonValue> batchInputs = inputCollection.subList(index, Math.min(index + batchSize, inputCollection.size()));
+					if(batchInputs.isEmpty()) {
+						break;
+					}
+					final List<Branch> batch = batchInputs.stream().map(value -> newForEachBranch(workflowDefinition, forEachState, instance, workflowData, value)).collect(Collectors.toList());
+					executor.invokeAll(batch);
+					index += batchInputs.size();
+				}
+				break;
+			case sequential:
+				iterations = inputCollection.stream().map(value -> newForEachBranch(workflowDefinition, forEachState, instance, workflowData, value)).collect(Collectors.toList());
+				for(Branch forEach : iterations) {
+					forEach.call();
+				}
+				break;
+			default:
+				break;
+		}
+		for(Branch forEach : iterations) {
+			for(Action action : forEach.getActions()) {
+				filterActionDataOutput(action.getActionDefinition(), forEach.getWorkflowData(), action.getWorkflowData());
+			}
+		}
+		for(Branch forEach : iterations) {
+			ELUtil.setValue(forEachState.getOutputCollection(), workflowData.getOutput(), forEach.getWorkflowData().getOutput());
+		}
+		if(forEachState.getTransition() != null) {
+			filterStateDataOutput(forEachState.getStateDataFilter(), workflowData);
+			return transitionState(workflowDefinition, forEachState.getTransition(), instance, workflowData);
+		}
+		else if(forEachState.getEnd() != null) {
+			return end(workflowDefinition, forEachState.getEnd(), instance, workflowData);
+		}
+		throw new BadRequestException();
+	}
+	
+	private void scheduleStart(final WorkflowDefinition workflowDefinition, final StartDefinition startDefinition) {
+		schedule.schedule(workflowDefinition, startDefinition, null);
+	}
 
 	@Override
 	public Response newWorkflowDefinition(final WorkflowDefinition workflowDefinition) throws Exception {
@@ -80,45 +632,36 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 			cache.put(newWorkflowDefinition.getId(), newWorkflowDefinition);
 		}
 		if(newWorkflowDefinition.getStart() instanceof StartDefinition) {
-			schedule.schedule(newWorkflowDefinition, null);
+			scheduleStart(newWorkflowDefinition, (StartDefinition)newWorkflowDefinition.getStart());
 		}
 		return Response.ok(newWorkflowDefinition).build();
 	}
 
 	@Override
 	public Response start(final String workflow, final String version, final URI instance, final JsonValue input) throws Exception {
-		WorkflowDefinition workflowDefinition = null;
-		if(version != null) {
-			workflowDefinition = persistence.find(workflow, version);
+		WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
+		if(workflowDefinition.getStart() instanceof StartDefinition) {
+			throw new BadRequestException();
 		}
 		else {
-			workflowDefinition = persistence.find(workflow);
-		}
-		if(workflowDefinition != null) {
-			if(workflowDefinition.getStart() instanceof StartDefinition) {
-				throw new BadRequestException();
+			String startState = null;
+			if(workflowDefinition.getStart() != null) {
+				if(workflowDefinition.getStart() instanceof String) {
+					startState = (String)workflowDefinition.getStart();
+				}
+				else if(workflowDefinition.getStart() instanceof StartDefinition) {
+					final StartDefinition startDef = (StartDefinition) workflowDefinition.getStart();
+					startState = startDef.getStateName();
+				}
 			}
 			else {
-				String startState = null;
-				if(workflowDefinition.getStart() != null) {
-					if(workflowDefinition.getStart() instanceof String) {
-						startState = (String)workflowDefinition.getStart();
-					}
-					else if(workflowDefinition.getStart() instanceof StartDefinition) {
-						final StartDefinition startDef = (StartDefinition) workflowDefinition.getStart();
-						startState = startDef.getStateName();
-					}
-				}
-				else {
-					startState = workflowDefinition.getStates()[0].getName();
-				}
-				final WorkflowData workflowData = new WorkflowData();
-				workflowData.setInput(input);
-				workflowData.setOutput(JsonUtil.empty());
-				return transitionLink(workflow, version, startState, instance, workflowData);
+				startState = workflowDefinition.getStates()[0].getName();
 			}
+			final WorkflowData workflowData = new WorkflowData();
+			workflowData.setInput(input);
+			workflowData.setOutput(JsonUtil.empty());
+			return transitionLink(workflow, version, startState, instance, workflowData);
 		}
-		throw new NotFoundException();
 	}
 
 	@Override
@@ -138,18 +681,51 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 
 	@Override
 	public Response transition(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) throws Exception {
+		final WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
+		final State nextState = getState(workflowDefinition, state);
 		cacheState(state, instance, workflowData);
-		return null;
+		switch(nextState.getType()) {
+			case event:
+				final EventState eventState = (EventState)nextState;
+				return transitionEventState(workflowDefinition, eventState, instance);
+			case operation:
+				final OperationState operationState = (OperationState) nextState;
+				return transitionOperationState(workflowDefinition, operationState, instance, workflowData);
+			case Switch:
+				final SwitchState switchState = (SwitchState) nextState;
+				return transitionSwitchState(workflowDefinition, switchState, instance, workflowData);
+			case sleep:
+				final SleepState sleepState = (SleepState) nextState;
+				return transitionSleepState(workflowDefinition, sleepState, instance, workflowData);
+			case parallel:
+				final ParallelState parallelState = (ParallelState) nextState;
+				return transitionParallelState(workflowDefinition, parallelState, instance, workflowData);
+			case inject:
+				final InjectState injectState = (InjectState) nextState;
+				return transitionInjectState(workflowDefinition, injectState, instance, workflowData);
+			case foreach:
+				final ForEachState forEachState = (ForEachState) nextState;
+				return transitionForEachState(workflowDefinition, forEachState, instance, workflowData);
+			case callback:
+				final CallbackState callbackState = (CallbackState) nextState;
+				return transitionCallbackState(workflowDefinition, callbackState, instance, workflowData);
+			default:
+				throw new BadRequestException();
+		}
 	}
 
 	@Override
 	public Response end(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) throws Exception {
-		cacheState(state, instance, workflowData);
+		cache.removeState(instance);
 		return null;
 	}
 
 	@Override
 	public Response compensate(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) throws Exception {
+		final WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
+		final State currentState = getState(workflowDefinition, state);
+		final String compensatedBy = getCompensatedBy(currentState);
+		getState(workflowDefinition, compensatedBy);
 		WorkflowState workflowState = cache.getState(instance);
 		while(workflowState != null) {
 			workflowState = workflowState.getPreviousState();

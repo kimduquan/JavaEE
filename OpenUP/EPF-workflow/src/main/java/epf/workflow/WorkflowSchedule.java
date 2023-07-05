@@ -34,10 +34,10 @@ public class WorkflowSchedule {
 
 	/**
 	 * @param workflowDefinition
-	 * @param uri
+	 * @param startDefinition
+	 * @param instance
 	 */
-	public void schedule(final WorkflowDefinition workflowDefinition, final URI uri) {
-		final StartDefinition startDefinition = (StartDefinition) workflowDefinition.getStart();
+	public void schedule(final WorkflowDefinition workflowDefinition, final StartDefinition startDefinition, final URI instance) {
 		String interval = null;
 		ScheduleDefinition scheduleDefinition = null;
 		if(startDefinition.getSchedule() instanceof String) {
@@ -50,7 +50,7 @@ public class WorkflowSchedule {
 			interval = scheduleDefinition.getInterval();
 		}
 		if(interval != null) {
-			final Schedule schedule = new Schedule(workflowRuntime, workflowDefinition, uri);
+			final Schedule schedule = new Schedule(workflowRuntime, workflowDefinition, instance);
 			final ScheduleTrigger trigger = ScheduleUtil.parseInterval(interval);
 			scheduleService.schedule(schedule, trigger);
 		}
