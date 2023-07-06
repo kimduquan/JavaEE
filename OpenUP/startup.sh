@@ -4,6 +4,11 @@ export CUR_DIR=$PWD
 cd $KAFKA_DIR
 rm -rf /tmp/kafka-logs /tmp/zookeeper /tmp/kraft-combined-logs
 bin/zookeeper-server-start.sh config/zookeeper.properties &
+export JAVA_HOME=$JAVA8_HOME
+$PLUTO_HOME/bin/startup.sh &
+cd $WILDFLY_HOME
+sudo -E ./standalone.sh "-Djboss.http.port=80" "-Djboss.https.port=443" --debug &
+export JAVA_HOME=$JAVA11_HOME
 cd $CASSANDRA_HOME
 export MAX_HEAP_SIZE=1G
 export HEAP_NEWSIZE=200M
@@ -16,9 +21,4 @@ cd $KAFKA_DIR
 bin/kafka-server-start.sh config/server.properties &
 cd $HAZELCAST_HOME
 bin/hz start
-export JAVA_HOME=$JAVA8_HOME
-$PLUTO_HOME/bin/startup.sh &
-cd $WILDFLY_HOME
-sudo -E ./standalone.sh "-Djboss.http.port=80" "-Djboss.https.port=443" --debug &
-export JAVA_HOME=$JAVA11_HOME
 cd $CUR_DIR
