@@ -1,4 +1,5 @@
 . ../env.sh
+. ../config.sh
 mvn clean install -U
 cp target/EPF-workflow-1.0.0.war ../EPF-tests/target/servers/test/apps
 cd ../
