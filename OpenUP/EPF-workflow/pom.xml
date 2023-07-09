@@ -134,6 +134,16 @@
 		<groupId>org.jboss</groupId>
 		<artifactId>jandex</artifactId>
 	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.communication/jnosql-communication-document -->
+	<dependency>
+	    <groupId>org.eclipse.jnosql.communication</groupId>
+	    <artifactId>jnosql-communication-document</artifactId>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.communication/jnosql-communication-column -->
+	<dependency>
+	    <groupId>org.eclipse.jnosql.communication</groupId>
+	    <artifactId>jnosql-communication-column</artifactId>
+	</dependency>
 	
 	<dependency>
         <groupId>openup</groupId>
