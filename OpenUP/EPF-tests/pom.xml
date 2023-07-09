@@ -61,7 +61,6 @@
 		<liberty.env.epf_client_net_ssl_trustStoreType>PKCS12</liberty.env.epf_client_net_ssl_trustStoreType>
 		<liberty.env.mp_jwt_verify_issuer>EPF</liberty.env.mp_jwt_verify_issuer>
 		<liberty.env.jnosql_mongodb_host>localhost:27017</liberty.env.jnosql_mongodb_host>
-		<liberty.env.mp_messaging_connector_liberty_kafka_bootstrap_servers>localhost:9092</liberty.env.mp_messaging_connector_liberty_kafka_bootstrap_servers>
     </properties>
     <dependencies>
     	<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-queryparser -->
@@ -593,6 +592,7 @@
 				<liberty.env.epf_security_jwt_decrypt_key_location>/private.pem</liberty.env.epf_security_jwt_decrypt_key_location>
 				<liberty.env.mp_jwt_verify_publickey_location>/public.pem</liberty.env.mp_jwt_verify_publickey_location>
 				<liberty.env.epf_security_jwt_verify_publickey_location>/public.pem</liberty.env.epf_security_jwt_verify_publickey_location>
+				<liberty.env.jnosql_mongodb_host>mongodb.default.svc.cluster.local:27017</liberty.env.jnosql_mongodb_host>
         		<geckodriver>./geckodriver</geckodriver>
         		<shell_runner>./target/EPF-shell-${project.version}-runner</shell_runner>
         		<opencv_java>/usr/share/java/opencv-420.jar</opencv_java>

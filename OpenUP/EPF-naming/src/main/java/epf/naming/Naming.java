@@ -773,11 +773,6 @@ public interface Naming {
 	    interface Internal {
 	    	
 	    	/**
-	    	 *
-	    	 */
-	    	String JDBC_URL_FORMAT = "jdbc:h2:~/%s.%s;AUTO_SERVER=TRUE;AUTO_RECONNECT=TRUE;PASSWORD_HASH=TRUE";
-	    	
-	    	/**
 	    	 * 
 	    	 */
 	    	String SECURITY_UNIT_NAME = "EPF-security";
@@ -786,6 +781,11 @@ public interface Naming {
 	    	 * 
 	    	 */
 	    	String SECURITY_MANAGEMENT_UNIT_NAME = "EPF-security-management";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String SECURITY_CACHE = "EPF-security-cache";
 	    }
 	    
 	    /**
