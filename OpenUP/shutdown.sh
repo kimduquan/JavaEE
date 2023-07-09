@@ -14,4 +14,4 @@ export JAVA_HOME=$JAVA11_HOME
 $WILDFLY_HOME/jboss-cli.sh --connect command=:shutdown &
 $KAFKA_HOME/zookeeper-server-stop.sh &
 pgrep -f cassandra | xargs kill -9
-sudo mongod --shutdown
+sudo mongod --shutdown &
