@@ -314,7 +314,7 @@
 			<dependency>
 			    <groupId>com.hazelcast</groupId>
 			    <artifactId>hazelcast</artifactId>
-			    <version>5.3.0</version>
+			    <version>5.3.1</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.glassfish/jakarta.el -->
 			<dependency>
@@ -395,7 +395,7 @@
 			<dependency>
 			    <groupId>org.apache.kafka</groupId>
 			    <artifactId>kafka-clients</artifactId>
-			    <version>3.4.0</version>
+			    <version>3.5.0</version>
 			</dependency>
 			
 			
@@ -421,7 +421,7 @@
 			<dependency>
 				<groupId>org.apache.groovy</groupId>
 				<artifactId>groovy-jsr223</artifactId>
-				<version>4.0.12</version>
+				<version>4.0.13</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.python/jython-standalone -->
 			<dependency>
@@ -433,13 +433,13 @@
 			<dependency>
 			    <groupId>org.jboss</groupId>
 			    <artifactId>jandex</artifactId>
-			    <version>3.1.1</version>
+			    <version>3.1.2</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.optaplanner/optaplanner-core -->
 			<dependency>
 			    <groupId>org.optaplanner</groupId>
 			    <artifactId>optaplanner-core</artifactId>
-			    <version>9.38.0.Final</version>
+			    <version>9.41.0.Final</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.lsp4j/org.eclipse.lsp4j.websocket -->
 			<dependency>
@@ -465,13 +465,13 @@
             <dependency>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-rt-rs-mp-client</artifactId>
-                <version>3.5.5</version>
+                <version>3.6.1</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-rs-sse -->
 			<dependency>
 			    <groupId>org.apache.cxf</groupId>
 			    <artifactId>cxf-rt-rs-sse</artifactId>
-			    <version>3.5.5</version>
+			    <version>3.6.1</version>
 			</dependency>
             <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.jaxrs/jackson-jaxrs-json-provider -->
             <dependency>
@@ -501,7 +501,7 @@
 			<dependency>
 			    <groupId>org.eclipse.persistence</groupId>
 			    <artifactId>org.eclipse.persistence.core</artifactId>
-			    <version>2.7.11</version>
+			    <version>2.7.12</version>
 			</dependency>
             <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-jdk14 -->
             <dependency>
@@ -527,14 +527,14 @@
 			<dependency>
 			    <groupId>org.mockito</groupId>
 			    <artifactId>mockito-core</artifactId>
-			    <version>5.3.1</version>
+			    <version>5.4.0</version>
 			    <scope>test</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
 			<dependency>
 			    <groupId>org.seleniumhq.selenium</groupId>
 			    <artifactId>selenium-java</artifactId>
-			    <version>4.9.1</version>
+			    <version>4.10.0</version>
 			    <scope>test</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.jetty.websocket/javax-websocket-client-impl -->
@@ -575,7 +575,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-war-plugin</artifactId>
-                    <version>3.3.2</version>
+                    <version>3.4.0</version>
                     <configuration>
                         <!-- Ignore error about missing web.xml -->
                         <failOnMissingWebXml>false</failOnMissingWebXml>
@@ -588,12 +588,12 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.1.2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.1.2</version>
                     <configuration>
                         <forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds>
                         <!-- Specify which test classes are integration tests -->
@@ -614,7 +614,7 @@
                 <plugin>
                     <groupId>io.openliberty.tools</groupId>
                     <artifactId>liberty-maven-plugin</artifactId>
-                    <version>3.8</version>
+                    <version>3.8.2</version>
                 </plugin>
                 <plugin>
                 	<groupId>org.apache.maven.plugins</groupId>
@@ -629,7 +629,7 @@
                 <plugin>
                 	<groupId>org.apache.maven.plugins</groupId>
 				    <artifactId>maven-clean-plugin</artifactId>
-				    <version>3.2.0</version>
+				    <version>3.3.1</version>
                 </plugin>
             	<plugin>
             		<groupId>org.apache.maven.plugins</groupId>
@@ -686,12 +686,12 @@
 				<plugin>
 					<groupId>org.owasp</groupId>
 					<artifactId>dependency-check-maven</artifactId>
-					<version>8.2.1</version>
+					<version>8.3.1</version>
 		        </plugin>
 		        <plugin>
 		        	<groupId>org.wildfly.plugins</groupId>
 				    <artifactId>wildfly-maven-plugin</artifactId>
-				    <version>4.1.0.Final</version>
+				    <version>4.1.1.Final</version>
 					<configuration>
 						<username>admin</username>
 						<password>admin</password>
