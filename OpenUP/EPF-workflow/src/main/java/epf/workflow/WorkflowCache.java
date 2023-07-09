@@ -1,14 +1,15 @@
 package epf.workflow;
 
 import java.net.URI;
-
 import javax.cache.Cache;
+import javax.cache.CacheManager;
 import javax.cache.Caching;
 import javax.cache.configuration.MutableConfiguration;
 import javax.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
+import epf.naming.Naming;
 import epf.workflow.schema.WorkflowDefinition;
 
 /**
@@ -31,14 +32,21 @@ public class WorkflowCache implements HealthCheck {
 	/**
 	 * 
 	 */
-	private transient Cache<String, WorkflowState> workflowStateCache;
+	private transient Cache<String, WorkflowState> workflowCache;
 
 	@Override
 	public HealthCheckResponse call() {
-		final MutableConfiguration<String, WorkflowDefinition> config = new MutableConfiguration<>();
-		workflowDefinitionCache = Caching.getCachingProvider().getCacheManager().createCache("epf_workflow_definition", config);
-		final MutableConfiguration<String, WorkflowState> stateConfog = new MutableConfiguration<>();
-		workflowStateCache = Caching.getCachingProvider().getCacheManager().createCache("epf_workflow_state", stateConfog);
+		final CacheManager cacheManager = Caching.getCachingProvider().getCacheManager();
+		workflowDefinitionCache = cacheManager.getCache(Naming.Workflow.Internal.WORKFLOW_DEFINITION_CACHE);
+		if(workflowDefinitionCache == null) {
+			final MutableConfiguration<String, WorkflowDefinition> config = new MutableConfiguration<>();
+			workflowDefinitionCache = cacheManager.createCache(Naming.Workflow.Internal.WORKFLOW_DEFINITION_CACHE, config);
+		}
+		workflowCache = cacheManager.getCache(Naming.Workflow.Internal.WORKFLOW_CACHE);
+		if(workflowCache == null) {
+			final MutableConfiguration<String, WorkflowState> config = new MutableConfiguration<>();
+			workflowCache = cacheManager.createCache(Naming.Workflow.Internal.WORKFLOW_CACHE, config);
+		}
 		return HealthCheckResponse.up("epf-workflow-cache");
 	}
 	
@@ -81,7 +89,7 @@ public class WorkflowCache implements HealthCheck {
 	 * @param state
 	 */
 	public void putState(final URI instance, final WorkflowState state) {
-		workflowStateCache.put(instance.toString(), state);
+		workflowCache.put(instance.toString(), state);
 	}
 	
 	/**
@@ -89,7 +97,7 @@ public class WorkflowCache implements HealthCheck {
 	 * @return
 	 */
 	public WorkflowState getState(final URI instance) {
-		return workflowStateCache.get(instance.toString());
+		return workflowCache.get(instance.toString());
 	}
 	
 	/**
@@ -97,6 +105,6 @@ public class WorkflowCache implements HealthCheck {
 	 * @return
 	 */
 	public WorkflowState removeState(final URI instance) {
-		return workflowStateCache.getAndRemove(instance.toString());
+		return workflowCache.getAndRemove(instance.toString());
 	}
 }

@@ -1028,5 +1028,21 @@ public interface Naming {
 		 * 
 		 */
 		String EVENT = "Event";
+		
+		/**
+		 * 
+		 */
+		interface Internal {
+			
+			/**
+			 * 
+			 */
+			String WORKFLOW_CACHE = "EPF-workflow-cache";
+			
+			/**
+			 * 
+			 */
+			String WORKFLOW_DEFINITION_CACHE = "EPF-workflow-definition-cache";
+		}
 	}
 }
