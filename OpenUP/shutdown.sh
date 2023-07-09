@@ -1,7 +1,4 @@
 . ./env.sh
-killall EPF-gateway-
-killall EPF-persistence-
-killall EPF-shell-
 cd EPF-tests
 mvn liberty:stop
 cd ../
@@ -17,3 +14,4 @@ export JAVA_HOME=$JAVA11_HOME
 $WILDFLY_HOME/jboss-cli.sh --connect command=:shutdown &
 $KAFKA_HOME/zookeeper-server-stop.sh &
 pgrep -f cassandra | xargs kill -9
+sudo mongod --shutdown

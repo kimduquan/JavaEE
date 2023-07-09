@@ -1,5 +1,6 @@
 . ./env.sh
 . ./config.sh
+sudo mongod
 export CUR_DIR=$PWD
 cd $KAFKA_DIR
 rm -rf /tmp/kafka-logs /tmp/zookeeper /tmp/kraft-combined-logs
