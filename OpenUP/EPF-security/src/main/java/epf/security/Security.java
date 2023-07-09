@@ -279,7 +279,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
     @Override
     public String logOut(final SecurityContext context) throws Exception {
     	final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
-    	tokenCache.expireToken(jwt.getTokenID());
+    	tokenCache.expireToken(jwt);
     	return jwt.getName();
     }
     
@@ -287,7 +287,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
     @Override
     public Token authenticate(final String tenant, final SecurityContext context) {
     	final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
-    	if(tokenCache.isExpired(jwt.getTokenID())) {
+    	if(tokenCache.isExpired(jwt)) {
     		throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED));
     	}
     	if(tenant != null) {
@@ -306,7 +306,7 @@ public class Security implements epf.security.client.Security, epf.security.clie
     @Override
 	public CompletionStage<Response> update(final String password, final SecurityContext context) throws Exception {
     	final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
-    	if(tokenCache.isExpired(jwt.getTokenID())) {
+    	if(tokenCache.isExpired(jwt)) {
     		throw new ForbiddenException();
     	}
     	return principalStore.setCallerPassword(jwt, new Password(password)).thenApply((v) -> Response.ok().build());
@@ -319,10 +319,10 @@ public class Security implements epf.security.client.Security, epf.security.clie
 			final List<String> forwardedHost,
             final String duration) throws Exception {
     	final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
-    	if(tokenCache.isExpired(jwt.getTokenID())) {
+    	if(tokenCache.isExpired(jwt)) {
     		throw new ForbiddenException();
     	}
-		tokenCache.expireToken(jwt.getTokenID());
+		tokenCache.expireToken(jwt);
 		final String tokenDuration = duration != null && !duration.isEmpty() ? duration : expireDuration;
 		final Set<String> audience = TokenBuilder.buildAudience(null, forwardedHost, Optional.ofNullable(jwt.getClaim(Naming.Management.TENANT)));
 		audience.addAll(jwt.getAudience());

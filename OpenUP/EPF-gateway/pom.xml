@@ -59,6 +59,12 @@
 		<groupId>io.quarkus</groupId>
 		<artifactId>quarkus-smallrye-opentracing</artifactId>
 	</dependency>
+	<!-- https://mvnrepository.com/artifact/com.hazelcast/quarkus-hazelcast-client -->
+	<dependency>
+	    <groupId>com.hazelcast</groupId>
+	    <artifactId>quarkus-hazelcast-client</artifactId>
+	</dependency>
+
     <dependency>
         <groupId>openup</groupId>
         <artifactId>EPF-naming</artifactId>

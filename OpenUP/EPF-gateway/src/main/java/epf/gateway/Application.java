@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.HttpHeaders;
@@ -47,8 +48,16 @@ public class Application {
     /**
      * 
      */
-    @Inject @Readiness
+    @Inject 
+    @Readiness
     transient Registry registry;
+    
+    /**
+     * 
+     */
+    @Inject
+    @Readiness
+    transient Security security;
     
     /**
      * @param service
@@ -65,6 +74,9 @@ public class Application {
             final UriInfo uriInfo,
             final javax.ws.rs.core.Request req,
             final InputStream body) {
+    	if(jwt != null && !security.authenticate(jwt)) {
+    		throw new ForbiddenException();
+    	}
     	final URI serviceUrl = registry.lookup(service).orElseThrow(NotFoundException::new);
     	final Client client = clients.poll(serviceUrl, b -> b);
     	final RequestBuilder builder = new RequestBuilder(client, serviceUrl, req.getMethod(), headers, uriInfo, body, true);

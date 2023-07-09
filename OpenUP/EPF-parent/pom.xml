@@ -32,6 +32,12 @@
 			<artifactId>lra-coordinator-jar</artifactId>
 			<version>6.0.1.Final</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.hazelcast/quarkus-hazelcast-client -->
+		<dependency>
+		    <groupId>com.hazelcast</groupId>
+		    <artifactId>quarkus-hazelcast-client</artifactId>
+		    <version>3.0.0</version>
+		</dependency>
     </dependencies>
   </dependencyManagement>
   <build>

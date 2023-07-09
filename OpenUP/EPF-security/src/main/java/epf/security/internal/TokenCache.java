@@ -18,6 +18,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.cache.util.CacheProvider;
 import epf.naming.Naming;
 import epf.util.logging.LogManager;
@@ -60,9 +61,9 @@ public class TokenCache implements HealthCheck {
 			final javax.cache.expiry.Duration expiryDuration = new javax.cache.expiry.Duration(TimeUnit.MINUTES, expire.toMinutes());
 			final Factory<ExpiryPolicy> factory = CreatedExpiryPolicy.factoryOf(expiryDuration);
 			config.setExpiryPolicyFactory(factory);
-			tokenCache = manager.getCache(epf.security.Naming.TOKEN_CACHE);
+			tokenCache = manager.getCache(Naming.Security.Internal.SECURITY_CACHE);
 			if(tokenCache == null) {
-				tokenCache = manager.createCache(epf.security.Naming.TOKEN_CACHE, config);
+				tokenCache = manager.createCache(Naming.Security.Internal.SECURITY_CACHE, config);
 			}
 		}
 		catch(Exception ex) {
@@ -81,23 +82,23 @@ public class TokenCache implements HealthCheck {
 	@Override
 	public HealthCheckResponse call() {
 		if(tokenCache == null || tokenCache.isClosed()) {
-			return HealthCheckResponse.down("epf-security-token-cache");
+			return HealthCheckResponse.down("epf-security-cache");
 		}
-		return HealthCheckResponse.up("epf-security-token-cache");
+		return HealthCheckResponse.up("epf-security-cache");
 	}
 
 	/**
-	 * @param token
+	 * @param jwt
 	 */
-	public void expireToken(final String tokenId) {
-		tokenCache.put(tokenId, tokenId);
+	public void expireToken(final JsonWebToken jwt) {
+		tokenCache.put(jwt.getTokenID(), jwt.getRawToken());
 	}
 	
 	/**
-	 * @param tokenId
+	 * @param jwt
 	 * @return
 	 */
-	public boolean isExpired(final String tokenId) {
-		return tokenCache.containsKey(tokenId);
+	public boolean isExpired(final JsonWebToken jwt) {
+		return tokenCache.containsKey(jwt.getTokenID());
 	}
 }
