@@ -2,6 +2,7 @@
 cd EPF-tests
 mvn liberty:stop
 cd ../
+pkill -f target/quarkus-app/quarkus-run.jar
 $KAFKA_HOME/kafka-server-stop.sh
 killall jaeger-all-in-one
 killall geckodriver
