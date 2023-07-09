@@ -58,8 +58,8 @@ public class Security implements HealthCheck {
 	@Override
 	public HealthCheckResponse call() {
 		if(client != null && cache != null && !cache.isClosed()) {
-			return HealthCheckResponse.down("EPF-gateway-security");
+			return HealthCheckResponse.up("EPF-gateway-security");
 		}
-		return HealthCheckResponse.up("EPF-gateway-security");
+		return HealthCheckResponse.down("EPF-gateway-security");
 	}
 }
