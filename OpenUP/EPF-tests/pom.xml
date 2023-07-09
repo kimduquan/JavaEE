@@ -59,7 +59,7 @@
 		<liberty.env.epf_client_net_ssl_keyStoreType>PKCS12</liberty.env.epf_client_net_ssl_keyStoreType>
 		<liberty.env.epf_client_net_ssl_trustStorePassword>changeit</liberty.env.epf_client_net_ssl_trustStorePassword>
 		<liberty.env.epf_client_net_ssl_trustStoreType>PKCS12</liberty.env.epf_client_net_ssl_trustStoreType>
-		<liberty.env.mp_jwt_verify_issuer>EPF</liberty.env.mp_jwt_verify_issuer>\
+		<liberty.env.mp_jwt_verify_issuer>EPF</liberty.env.mp_jwt_verify_issuer>
 		<liberty.env.jnosql_mongodb_host>localhost:27017</liberty.env.jnosql_mongodb_host>
 		<liberty.env.mp_messaging_connector_liberty_kafka_bootstrap_servers>localhost:9092</liberty.env.mp_messaging_connector_liberty_kafka_bootstrap_servers>
     </properties>
