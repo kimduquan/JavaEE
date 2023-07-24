@@ -532,12 +532,12 @@
 			</activation>
 			<properties>
 				<httpHost>localhost</httpHost>
-				<liberty.env.epf_client_net_ssl_keyStore>~/git/JavaEE/OpenUP/dev.p12</liberty.env.epf_client_net_ssl_keyStore>
-				<liberty.env.epf_client_net_ssl_trustStore>~/git/JavaEE/OpenUP/dev.p12</liberty.env.epf_client_net_ssl_trustStore>
-				<liberty.env.mp_jwt_decrypt_key_location>~/git/JavaEE/OpenUP/private.pem</liberty.env.mp_jwt_decrypt_key_location>
-				<liberty.env.epf_security_jwt_decrypt_key_location>~/git/JavaEE/OpenUP/private.pem</liberty.env.epf_security_jwt_decrypt_key_location>
-				<liberty.env.mp_jwt_verify_publickey_location>~/git/JavaEE/OpenUP/public.pem</liberty.env.mp_jwt_verify_publickey_location>
-				<liberty.env.epf_security_jwt_verify_publickey_location>~/git/JavaEE/OpenUP/public.pem</liberty.env.epf_security_jwt_verify_publickey_location>
+				<liberty.env.epf_client_net_ssl_keyStore>${project.basedir}/dev.p12</liberty.env.epf_client_net_ssl_keyStore>
+				<liberty.env.epf_client_net_ssl_trustStore>${project.basedir}/dev.p12</liberty.env.epf_client_net_ssl_trustStore>
+				<liberty.env.mp_jwt_decrypt_key_location>${project.basedir}/private.pem</liberty.env.mp_jwt_decrypt_key_location>
+				<liberty.env.epf_security_jwt_decrypt_key_location>${project.basedir}/private.pem</liberty.env.epf_security_jwt_decrypt_key_location>
+				<liberty.env.mp_jwt_verify_publickey_location>${project.basedir}/public.pem</liberty.env.mp_jwt_verify_publickey_location>
+				<liberty.env.epf_security_jwt_verify_publickey_location>${project.basedir}/public.pem</liberty.env.epf_security_jwt_verify_publickey_location>
         		<geckodriver>./geckodriver</geckodriver>
         		<webdriver_binary>/usr/bin/firefox</webdriver_binary>
         		<shell_runner>./target/EPF-shell-${project.version}-runner</shell_runner>

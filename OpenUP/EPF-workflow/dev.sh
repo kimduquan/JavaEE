@@ -22,4 +22,7 @@ cp ../public.pem ./
 java -Dquarkus.http.port=8081 -jar target/quarkus-app/quarkus-run.jar &
 cd ../
 cd EPF-tests
+cp ../dev.p12 ./
+cp ../private.pem ./
+cp ../public.pem ./
 mvn liberty:dev
