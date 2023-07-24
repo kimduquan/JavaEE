@@ -17,6 +17,8 @@ java -jar target/quarkus-app/quarkus-run.jar &
 cd ../
 cd EPF-gateway
 mvn clean install -U
+cp ../dev.p12 ./
+cp ../public.pem ./
 java -Dquarkus.http.port=8081 -jar target/quarkus-app/quarkus-run.jar &
 cd ../
 cd EPF-tests
