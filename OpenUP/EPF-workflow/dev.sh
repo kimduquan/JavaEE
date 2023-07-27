@@ -3,6 +3,10 @@
 mvn clean install -U
 cp target/EPF-workflow-1.0.0.war ../EPF-tests/target/servers/test/apps
 cd ../
+cd EPF-config
+mvn clean install -U
+java -jar target/quarkus-app/quarkus-run.jar &
+cd ../
 cd EPF-messaging
 mvn clean install -U
 java -jar target/quarkus-app/quarkus-run.jar &
