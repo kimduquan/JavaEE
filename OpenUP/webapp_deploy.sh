@@ -1,3 +1,4 @@
+. ./env.sh
 kubectl port-forward svc/wildfly-internal 9990:9990 &
 cd EPF-webapp
 mvn wildfly:deploy
