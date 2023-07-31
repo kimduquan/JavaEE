@@ -1,5 +1,6 @@
 . ./env.sh
 . ./config.sh
+. ./webapp_config.sh
 sudo mongod &
 export CUR_DIR=$PWD
 cd $KAFKA_DIR
