@@ -308,7 +308,7 @@
 			<dependency>
 				<groupId>org.primefaces</groupId>
 				<artifactId>primefaces</artifactId>
-				<version>12.0.0</version>
+				<version>13.0.0</version>
 			</dependency>
             <!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast -->
 			<dependency>
@@ -368,7 +368,7 @@
 			<dependency>
 			    <groupId>org.jboss.narayana.rts</groupId>
 			    <artifactId>narayana-lra</artifactId>
-			    <version>5.13.1.Final</version>
+			    <version>7.0.0.Final</version>
 			</dependency>
 
 			<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
@@ -395,7 +395,7 @@
 			<dependency>
 			    <groupId>org.apache.kafka</groupId>
 			    <artifactId>kafka-clients</artifactId>
-			    <version>3.5.0</version>
+			    <version>3.5.1</version>
 			</dependency>
 			
 			
@@ -439,7 +439,7 @@
 			<dependency>
 			    <groupId>org.optaplanner</groupId>
 			    <artifactId>optaplanner-core</artifactId>
-			    <version>9.41.0.Final</version>
+			    <version>9.42.0.Final</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.lsp4j/org.eclipse.lsp4j.websocket -->
 			<dependency>
@@ -534,7 +534,7 @@
 			<dependency>
 			    <groupId>org.seleniumhq.selenium</groupId>
 			    <artifactId>selenium-java</artifactId>
-			    <version>4.10.0</version>
+			    <version>4.11.0</version>
 			    <scope>test</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.jetty.websocket/javax-websocket-client-impl -->
@@ -669,7 +669,7 @@
 				<plugin>
 					<groupId>com.lazerycode.jmeter</groupId>
 					<artifactId>jmeter-maven-plugin</artifactId>
-					<version>3.7.0</version>
+					<version>3.8.0</version>
 				</plugin>
 				<!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-dependency-plugin -->
 				<plugin>
@@ -691,7 +691,7 @@
 		        <plugin>
 		        	<groupId>org.wildfly.plugins</groupId>
 				    <artifactId>wildfly-maven-plugin</artifactId>
-				    <version>4.1.1.Final</version>
+				    <version>4.2.0.Final</version>
 					<configuration>
 						<username>admin</username>
 						<password>admin</password>
