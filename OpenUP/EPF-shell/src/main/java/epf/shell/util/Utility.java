@@ -380,7 +380,6 @@ public class Utility {
 		    @NotEmpty
 			final char[] password,
 			@Option(names = {"-f", "--file"}, required = true, description = "File")
-			@NotBlank
 			final Path file) throws Exception {
 		try(Connection connection = DriverManager.getConnection(url, user, new String(password))){
 			try(Statement statement = connection.createStatement()){
