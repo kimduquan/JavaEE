@@ -19,13 +19,18 @@
 		<jar-file>lib/OpenUP-schema-1.0.0.jar</jar-file>
 		<jar-file>lib/EPF-net-schema-1.0.0.jar</jar-file>
 		<jar-file>lib/EPF-security-schema-1.0.0.jar</jar-file>
+    </persistence-unit>
+	<persistence-unit name="EPF-security" transaction-type="JTA">
+    	<jta-data-source>jdbc/epf_security</jta-data-source>
+		<jar-file>../../lib/EPF-schema-utility-1.0.0.jar</jar-file>
+		<jar-file>../../lib/EPF-security-schema-1.0.0.jar</jar-file>
+		
+		<jar-file>lib/EPF-schema-utility-1.0.0.jar</jar-file>
+		<jar-file>lib/EPF-security-schema-1.0.0.jar</jar-file>
         <properties>
             <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
             <property name="javax.persistence.schema-generation.create-source" value="metadata"/>
             <property name="javax.persistence.schema-generation.drop-source" value="metadata"/>
-			<!--<property name="javax.persistence.schema-generation.drop-script-source" value="META-INF/persistence/drop.sql" />
-            <property name="javax.persistence.schema-generation.create-script-source" value="META-INF/mysql.sql" />
-            <property name="javax.persistence.sql-load-script-source" value="META-INF/persistence/data.sql"/>-->
         </properties>
     </persistence-unit>
 </persistence>
