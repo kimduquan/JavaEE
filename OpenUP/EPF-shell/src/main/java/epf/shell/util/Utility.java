@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.net.URI;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.DriverManager;
@@ -373,7 +372,7 @@ public class Utility {
 	public void getConnection(
 			@Option(names = {"-url", "--url"}, required = true, description = "URL")
 			@NotBlank
-			final URL url,
+			final String url,
 			@Option(names = {"-u", "--user"}, required = true, description = "User name")
 			@NotBlank
 			final String user,
@@ -383,7 +382,7 @@ public class Utility {
 			@Option(names = {"-f", "--file"}, required = true, description = "File")
 			@NotBlank
 			final Path file) throws Exception {
-		try(Connection connection = DriverManager.getConnection(url.toString(), user, new String(password))){
+		try(Connection connection = DriverManager.getConnection(url, user, new String(password))){
 			try(Statement statement = connection.createStatement()){
 				Files.lines(file).forEachOrdered(sql -> {
 					try {
