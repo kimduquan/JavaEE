@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.net.URI;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.sql.DriverManager;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,6 +17,8 @@ import java.util.stream.Stream;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
@@ -36,6 +40,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
+import java.sql.Connection;
+import java.sql.Statement;
 
 /**
  * @author PC
@@ -67,6 +73,12 @@ public class Utility {
 	 */
 	@Inject @Named(SYSTEM.OUT)
 	transient PrintWriter out;
+	
+	/**
+	 * 
+	 */
+	@Inject @Named(SYSTEM.ERR)
+	transient PrintWriter err;
 	
 	/**
 	 * 
@@ -349,5 +361,42 @@ public class Utility {
 			@Option(names = {"-pu", "--public"}, description = "Public Key")
 			final Path publicFile) throws Exception {
 		KeyUtil.generateKeyPair(algorithm, keySize, privateFile, publicFile);
+	}
+	
+	/**
+	 * @param url
+	 * @param user
+	 * @param password
+	 * @throws Exception
+	 */
+	@Command(name = "sql")
+	public void getConnection(
+			@Option(names = {"-url", "--url"}, required = true, description = "URL")
+			@NotBlank
+			final URL url,
+			@Option(names = {"-u", "--user"}, required = true, description = "User name")
+			@NotBlank
+			final String user,
+			@Option(names = {"-p", "--password"}, required = true, description = "Password", interactive = true)
+		    @NotEmpty
+			final char[] password,
+			@Option(names = {"-f", "--file"}, required = true, description = "File")
+			@NotBlank
+			final Path file) throws Exception {
+		try(Connection connection = DriverManager.getConnection(url.toString(), user, new String(password))){
+			try(Statement statement = connection.createStatement()){
+				Files.lines(file).forEachOrdered(sql -> {
+					try {
+						statement.addBatch(sql);
+					} 
+					catch (Exception e) {
+						e.printStackTrace(err);
+					}
+				});
+				for(final int result : statement.executeBatch()) {
+					out.println(result);
+				}
+			}
+		}
 	}
 }
