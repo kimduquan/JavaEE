@@ -31,7 +31,7 @@ public interface CredentialUtil {
 	 * @throws Exception
 	 */
 	static String encryptPassword(final String username, final String passwordText) throws Exception {
-		final byte[] passwordBytes = PasswordUtil.getPasswordHash(username.toUpperCase(), passwordText.toCharArray(), "SHA-256");
+		final byte[] passwordBytes = PasswordUtil.getPasswordHash(username, passwordText.toCharArray(), "SHA-256");
     	final String passwordHash = StringUtil.toHex(passwordBytes, StandardCharsets.ISO_8859_1);
     	return CryptoUtil.encrypt(passwordHash);
 	}

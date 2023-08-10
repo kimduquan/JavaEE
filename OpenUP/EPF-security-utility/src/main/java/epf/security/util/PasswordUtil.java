@@ -10,29 +10,33 @@ import java.util.Arrays;
 public interface PasswordUtil {
 
 	/**
-	 * @param password
+	 * @param data
+	 * @param nullData
 	 * @param algorithm
 	 * @return
 	 * @throws Exception
 	 */
-	static byte[] getHash(final byte[] password, final String algorithm) throws Exception {
-		final byte[] hash = MessageDigest.getInstance(algorithm).digest(password);
-		Arrays.fill(password, (byte) 0);
-		return hash;
+	static byte[] getHash(final byte[] data, final boolean nullData, final String algorithm) throws Exception {
+		final byte[] result = MessageDigest.getInstance(algorithm).digest(data);
+        if (nullData) {
+            Arrays.fill(data, (byte) 0);
+        }
+        return result;
 	}
 	
 	/**
 	 * @param userName
 	 * @param password
+	 * @param algorithm
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	static byte[] getPasswordHash(final String userName, final char[] password, final String algorithm) throws Exception {
         final String user = userName + "@";
         final byte[] buff = new byte[2 * (user.length() + password.length)];
         int n = 0;
         for (int i = 0, length = user.length(); i < length; i++) {
-        	final char c = user.charAt(i);
+            final char c = user.charAt(i);
             buff[n++] = (byte) (c >> 8);
             buff[n++] = (byte) c;
         }
@@ -41,6 +45,6 @@ public interface PasswordUtil {
             buff[n++] = (byte) c;
         }
         Arrays.fill(password, (char) 0);
-        return getHash(buff, algorithm);
+        return getHash(buff, true, algorithm);
     }
 }
