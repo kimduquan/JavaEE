@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CompletionStage;
 import java.util.Map.Entry;
+import java.util.Optional;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
@@ -129,7 +130,10 @@ public interface RequestUtil {
         final MultivaluedHashMap<String, Object> forwardHeaders = new MultivaluedHashMap<String, Object>(requestHeaders);
         forwardHeaders.remove(HttpHeaders.CONTENT_LENGTH);
         forwardHeaders.remove(HttpHeaders.CONTENT_LENGTH.toLowerCase());
-        final String host = forwardHeaders.getFirst(HttpHeaders.HOST).toString();
+        Optional<Object> host = Optional.ofNullable(forwardHeaders.getFirst(HttpHeaders.HOST));
+        if(!host.isPresent()) {
+        	host = Optional.ofNullable(forwardHeaders.getFirst(HttpHeaders.HOST.toLowerCase()));
+        }
     	forwardHeaders.remove(HttpHeaders.HOST);
     	forwardHeaders.remove(HttpHeaders.HOST.toLowerCase());
         builder = builder.headers(forwardHeaders);
@@ -151,11 +155,13 @@ public interface RequestUtil {
      * @param targetUrl
      * @return
      */
-    static Builder buildForwardedHeaders(Builder builder, final String host, final HttpHeaders headers, final URI targetUrl) {
+    static Builder buildForwardedHeaders(Builder builder, final Optional<Object> host, final HttpHeaders headers, final URI targetUrl) {
     	builder = builder.header(HttpHeaders.HOST, targetUrl.getAuthority());
         final List<String> forwardedHost = headers.getRequestHeader(Naming.Gateway.Headers.X_FORWARDED_HOST);
         final List<String> newForwardedHost = new ArrayList<>(forwardedHost);
-        newForwardedHost.add(host);
+        if(host.isPresent()) {
+            newForwardedHost.add(host.get().toString());
+        }
         builder = builder.header(Naming.Gateway.Headers.X_FORWARDED_HOST, StringUtil.valueOf(newForwardedHost, ","));
         return builder;
     }
