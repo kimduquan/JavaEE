@@ -45,7 +45,7 @@ public class JPAIdentityStore implements HealthCheck {
 	 */
 	public CompletionStage<Set<String>> getCallerGroups(final EntityManager manager, final Credential credential) {
 		Objects.requireNonNull(credential, "Credential");
-		return getCallerGroups(manager, credential.getCaller(), credential.getTenant().orElse(null));
+		return getCallerGroups(manager, credential.getTenant().orElse(null));
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class JPAIdentityStore implements HealthCheck {
 		return executor.completedStage(jwt.getGroups());
 	}
 	
-	private CompletionStage<Set<String>> getCallerGroups(final EntityManager manager, final String name, final String tenant){
+	private CompletionStage<Set<String>> getCallerGroups(final EntityManager manager, final String tenant){
 		final String tenantId = TenantUtil.getTenantId(Security.SCHEMA, tenant);
 		manager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenantId);
 		final Query query = manager.createNativeQuery(NativeQueries.GET_CURRENT_ROLES);
