@@ -1,7 +1,7 @@
 package epf.security.internal;
 
-import epf.security.schema.Token;
-import epf.security.util.Credential;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -12,27 +12,38 @@ public class Session {
     /**
      * 
      */
-    private final Token token;
+    private final String name;
     
     /**
      * 
      */
-    private transient final Credential credential;
+    private final Set<String> groups;
+    
+    /**
+     * 
+     */
+    private final Map<String, Object> claims;
 
     /**
-     * @param token
-     * @param credential
+     * @param name
+     * @param groups
+     * @param claims
      */
-    public Session(final Token token, final Credential credential) {
-		this.token = token;
-		this.credential = credential;
+    public Session(final String name, final Set<String> groups, final Map<String, Object> claims) {
+		this.name = name;
+		this.groups = groups;
+		this.claims = claims;
     }
 
-	public Token getToken() {
-		return token;
+	public Set<String> getGroups() {
+		return groups;
 	}
-   
-    public Credential getCredential() {
-		return credential;
+
+	public Map<String, Object> getClaims() {
+		return claims;
+	}
+
+	public String getName() {
+		return name;
 	}
 }

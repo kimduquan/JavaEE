@@ -4,7 +4,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.HeaderParam;
@@ -13,7 +12,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
@@ -44,10 +42,7 @@ public interface OTPSecurity {
             final String username,
             @FormParam("password")
             @NotBlank
-            final String password, 
-            @QueryParam("url")
-            @NotNull
-            final URL url,
+            final String password,
             @MatrixParam(Naming.Management.TENANT)
             final String tenant
     ) throws Exception;
@@ -81,7 +76,7 @@ public interface OTPSecurity {
     @Path("otp")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
-    CompletionStage<String> authenticateOneTime(
+    String authenticateOneTime(
             @FormParam("password")
             @NotBlank
             final String oneTimePassword,

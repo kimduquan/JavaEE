@@ -11,7 +11,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.HealthCheck;
@@ -41,18 +40,12 @@ public class JPAIdentityStore implements HealthCheck {
 	private transient ManagedExecutor executor;
 	
 	/**
-	 *
-	 */
-	@PersistenceContext(unitName = Naming.Security.Internal.SECURITY_UNIT_NAME)
-	private transient EntityManager manager;
-	
-	/**
 	 * @param credential
 	 * @return
 	 */
-	public CompletionStage<Set<String>> getCallerGroups(final Credential credential) {
+	public CompletionStage<Set<String>> getCallerGroups(final EntityManager manager, final Credential credential) {
 		Objects.requireNonNull(credential, "Credential");
-		return getCallerGroups(credential.getCaller(), credential.getTenant().orElse(null));
+		return getCallerGroups(manager, credential.getCaller(), credential.getTenant().orElse(null));
 	}
 
 	/**
@@ -61,14 +54,14 @@ public class JPAIdentityStore implements HealthCheck {
 	 */
 	public CompletionStage<Set<String>> getCallerGroups(final JsonWebToken jwt) {
 		Objects.requireNonNull(jwt, "JsonWebToken");
-		return getCallerGroups(jwt.getName(), jwt.getClaim(Naming.Management.TENANT));
+		return executor.completedStage(jwt.getGroups());
 	}
 	
-	private CompletionStage<Set<String>> getCallerGroups(final String name, final String tenant){
+	private CompletionStage<Set<String>> getCallerGroups(final EntityManager manager, final String name, final String tenant){
 		final String tenantId = TenantUtil.getTenantId(Security.SCHEMA, tenant);
 		manager.setProperty(Naming.Management.MANAGEMENT_TENANT, tenantId);
 		final Query query = manager.createNativeQuery(NativeQueries.GET_CURRENT_ROLES);
-		final Stream<?> stream = query.setParameter(1, name).getResultStream();
+		final Stream<?> stream = query.getResultStream();
 		final Set<String> groups = stream.map(role -> StringUtil.toPascalSnakeCase(role.toString().split("_"))).collect(Collectors.toSet());
 		return executor.completedStage(groups);
 	}
@@ -101,7 +94,7 @@ public class JPAIdentityStore implements HealthCheck {
 
 	@Override
 	public HealthCheckResponse call() {
-		if(executor.isShutdown() || executor.isTerminated() || !manager.isOpen()) {
+		if(executor.isShutdown() || executor.isTerminated()) {
 			return HealthCheckResponse.down("epf-security-identity-store");
 		}
 		return HealthCheckResponse.up("epf-security-identity-store");

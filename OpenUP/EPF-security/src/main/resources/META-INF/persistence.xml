@@ -10,4 +10,9 @@
 			<!--<property name="javax.persistence.sql-load-script-source" value="META-INF/security/h2/data.sql" />-->
         </properties>
     </persistence-unit>
+    <persistence-unit name="EPF-security-principal" transaction-type="JTA">
+    	<jta-data-source>jdbc/epf_security_principal</jta-data-source>
+		<jar-file>../lib/EPF-schema-utility-1.0.0.jar</jar-file>
+		<jar-file>../lib/EPF-security-schema-1.0.0.jar</jar-file>
+    </persistence-unit>
 </persistence>

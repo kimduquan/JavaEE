@@ -785,6 +785,11 @@ public interface Naming {
 	    	/**
 	    	 * 
 	    	 */
+	    	String SECURITY_PRINCIPAL_UNIT_NAME = "EPF-security-principal";
+	    	
+	    	/**
+	    	 * 
+	    	 */
 	    	String SECURITY_CACHE = "EPF-security-cache";
 	    }
 	    

@@ -44,7 +44,7 @@ public class JPAPrincipalStore implements HealthCheck {
 	/**
 	 *
 	 */
-	@PersistenceContext(unitName = Naming.Security.Internal.SECURITY_UNIT_NAME)
+	@PersistenceContext(unitName = Naming.Security.Internal.SECURITY_PRINCIPAL_UNIT_NAME)
 	private transient EntityManager manager;
 
 	/**

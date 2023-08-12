@@ -128,6 +128,14 @@
             javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
             javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
             libraryRef="H2JDBCLib" />
+        <properties URL="jdbc:h2:${userHome}EPF-security;AUTO_SERVER=TRUE;AUTO_RECONNECT=TRUE;PASSWORD_HASH=TRUE" />
+    </dataSource>
+    <dataSource id="epf_security_principal" jndiName="jdbc/epf_security_principal">
+        <jdbcDriver 
+            javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
+            javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
+            javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource" 
+            libraryRef="H2JDBCLib" />
         <properties URL="jdbc:h2:${userHome}EPF-security;AUTO_SERVER=TRUE;AUTO_RECONNECT=TRUE;PASSWORD_HASH=TRUE" user="test" password="22ddf5abe1672b3d6c12fe7387ecc15e2ff0f405595dd756111b17d29b5f4486" />
     </dataSource>
 

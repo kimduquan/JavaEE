@@ -256,10 +256,14 @@ public class Security implements epf.security.client.Security, epf.security.clie
     						if(principal == null){ 
     							throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build()); 
     							}
-    						principal.close();
     						return principal;
     				})
-    			.thenCompose(principal -> identityStore.getCallerGroups(credential)
+    			.thenCompose(principal -> identityStore.getCallerGroups(principal.getManager(), credential)
+    					.thenApply(groups -> {
+    						principal.close();
+    						return groups;
+    						}
+    					)
     					.thenCombine(
 								principalStore.getCallerClaims(credential), 
 								(groups, claims) -> {
@@ -337,33 +341,42 @@ public class Security implements epf.security.client.Security, epf.security.clie
 	@Override
 	public CompletionStage<String> loginOneTime(
 			final String username, 
-			final String passwordText, 
-			final  URL url,
+			final String passwordText,
 			final String tenant) throws Exception {
 		final Credential credential = CredentialUtil.newCredential(tenant, username, passwordText);
-    	return identityStore.authenticate(credential)
-    			.thenApply(principal -> {
-    				principal.close();
-    				return otpSessionStore.putSession(credential);
-    				}
+		return identityStore.authenticate(credential)
+    			.thenApply(
+    					principal -> {
+    						if(principal == null){ 
+    							throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build()); 
+    							}
+    						return principal;
+    				})
+    			.thenCompose(principal -> identityStore.getCallerGroups(principal.getManager(), credential)
+    					.thenApply(groups -> {
+    						principal.close();
+    						return groups;
+    						}
+    					)
+    					.thenCombine(
+								principalStore.getCallerClaims(credential), 
+								(groups, claims) -> otpSessionStore.putSession(credential.getCaller(), groups, claims)
+								)
     			);
 	}
 
 	@PermitAll
 	@Override
-	public CompletionStage<String> authenticateOneTime(
+	public String authenticateOneTime(
 			final String oneTimePassword,
 			final URL url,
 			final List<String> forwardedHost,
             final String tenant) {
 		final Session session = otpSessionStore.removeSession(oneTimePassword).orElseThrow(() -> new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED).build()));
 		final Set<String> audience = TokenBuilder.buildAudience(url, forwardedHost, Optional.ofNullable(tenant));
-		final Credential credential = session.getCredential();
-		return identityStore.getCallerGroups(credential)
-		.thenCombine(principalStore.getCallerClaims(session.getCredential()), (groups, claims) -> newToken(session.getCredential().getCaller(), groups, audience, claims, expireDuration))
-		.thenApply(token -> new TokenBuilder(token, privateKey))
-		.thenApply(builder -> builder.build())
-		.thenApply(token -> token.getRawToken());
+		final Token token = newToken(session.getName(), session.getGroups(), audience, session.getClaims(), expireDuration);
+		final TokenBuilder builder = new TokenBuilder(token, privateKey);
+		return builder.build().getRawToken();
 	}
 
 	@PermitAll
