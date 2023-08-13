@@ -846,6 +846,7 @@
 		<module>EPF-json-utility-ext</module>
 		<module>EPF-json-schema</module>
 		<module>EPF-client-utility</module>
+		<module>EPF-cache-client-utility</module>
 		<module>EPF-client-internal</module>
 		<module>EPF-file-utility</module>
 		<module>EPF-cache-utility</module>
