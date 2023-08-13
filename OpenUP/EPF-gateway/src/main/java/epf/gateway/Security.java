@@ -4,14 +4,14 @@ import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.cache.Cache;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.jwt.JsonWebToken;
-import com.hazelcast.cache.ICache;
-import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.core.HazelcastInstance;
 import epf.client.util.RequestUtil;
 import epf.naming.Naming;
@@ -26,19 +26,19 @@ public class Security implements HealthCheck {
 	/**
 	 * 
 	 */
-	private transient HazelcastInstance client;
+	private transient Cache<String, String> cache;
 	
 	/**
 	 * 
 	 */
-	private transient ICache<String, String> cache;
+	@Inject
+	transient HazelcastInstance client;
 
 	/**
 	 * 
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		client = HazelcastClient.newHazelcastClient();
 		cache = client.getCacheManager().getCache(Naming.Security.Internal.SECURITY_CACHE);
 	}
 	
