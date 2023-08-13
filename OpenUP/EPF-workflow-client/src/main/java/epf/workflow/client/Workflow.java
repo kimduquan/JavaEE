@@ -20,6 +20,7 @@ import org.eclipse.microprofile.lra.annotation.Compensate;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA.Type;
 import epf.client.util.Client;
+import epf.client.util.LinkUtil;
 import epf.naming.Naming;
 import epf.workflow.schema.WorkflowData;
 import epf.workflow.schema.WorkflowDefinition;
@@ -106,9 +107,9 @@ public interface Workflow {
 	 */
 	static Link startLink(final String workflow, final String version) {
 		if(version != null) {
-			return Link.fromUri(String.format("/%s;version=%s/", workflow, version)).rel(Naming.WORKFLOW).type(HttpMethod.PUT).build();
+			return LinkUtil.build(Naming.WORKFLOW, HttpMethod.PUT, "{workflow}?version=" + version, workflow);
 		}
-		return Link.fromUri(String.format("/%s/", workflow)).rel(Naming.WORKFLOW).type(HttpMethod.PUT).build();
+		return LinkUtil.build(Naming.WORKFLOW, HttpMethod.PUT, "{workflow}", workflow);
 	}
 	
 	/**
@@ -147,9 +148,9 @@ public interface Workflow {
 	 */
 	static Link getWorkflowDefinitionLink(final String workflow, final String version) {
 		if(version != null) {
-			return Link.fromUri(String.format("/%s;version=%s/", workflow, version)).rel(Naming.WORKFLOW).type(HttpMethod.GET).build();
+			return LinkUtil.build(Naming.WORKFLOW, HttpMethod.GET, "{workflow}?version=" + version, workflow);
 		}
-		return Link.fromUri(String.format("/%s/", workflow)).rel(Naming.WORKFLOW).type(HttpMethod.GET).build();
+		return LinkUtil.build(Naming.WORKFLOW, HttpMethod.GET, "{workflow}", workflow);
 	}
 	
 	/**
@@ -180,9 +181,9 @@ public interface Workflow {
 	 */
 	static Link transitionLink(final String workflow, final String version, final String state) {
 		if(version != null) {
-			return Link.fromUri(String.format("/%s;version=%s/%s/", workflow, version, state)).rel(Naming.WORKFLOW).type(HttpMethod.PUT).build();
+			return LinkUtil.build(Naming.WORKFLOW, HttpMethod.PUT, "{workflow}/{state}?version=" + version, workflow, state);
 		}
-		return Link.fromUri(String.format("/%s/%s/", workflow, state)).rel(Naming.WORKFLOW).type(HttpMethod.PUT).build();
+		return LinkUtil.build(Naming.WORKFLOW, HttpMethod.PUT, "{workflow}/{state}", workflow, state);
 	}
 	
 	/**
@@ -216,9 +217,9 @@ public interface Workflow {
 	 */
 	static Link endLink(final String workflow, final String version, final String state) {
 		if(version != null) {
-			return Link.fromUri(String.format("/%s;version=%s/%s/end/", workflow, version, state)).rel(Naming.WORKFLOW).type(HttpMethod.PUT).build();
+			return LinkUtil.build(Naming.WORKFLOW, HttpMethod.PUT, "{workflow}/{state}/end?version=" + version, workflow, state);
 		}
-		return Link.fromUri(String.format("/%s/%s/end/", workflow, state)).rel(Naming.WORKFLOW).type(HttpMethod.PUT).build();
+		return LinkUtil.build(Naming.WORKFLOW, HttpMethod.PUT, "{workflow}/{state}/end", workflow, state);
 	}
 	
 	/**
@@ -253,8 +254,8 @@ public interface Workflow {
 	 */
 	static Link compensateLink(final String workflow, final String version, final String state) {
 		if(version != null) {
-			return Link.fromUri(String.format("/%s;version=%s/%s/compensate/", workflow, version, state)).rel(Naming.WORKFLOW).type(HttpMethod.PUT).build();
+			return LinkUtil.build(Naming.WORKFLOW, HttpMethod.PUT, "{workflow}/{state}/compensate?version=" + version, workflow, state);
 		}
-		return Link.fromUri(String.format("/%s/%s/compensate/", workflow, state)).rel(Naming.WORKFLOW).type(HttpMethod.PUT).build();
+		return LinkUtil.build(Naming.WORKFLOW, HttpMethod.PUT, "{workflow}/{state}/compensate", workflow, state);
 	}
 }
