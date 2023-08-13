@@ -33,6 +33,11 @@ import epf.util.StringUtil;
 public interface RequestUtil {
 	
 	/**
+	 * 
+	 */
+	String LRA_HTTP_HEADER_PREFIX = "Long-Running-Action";
+	
+	/**
 	 * @param webTarget
 	 * @param segment
 	 * @return
@@ -162,6 +167,20 @@ public interface RequestUtil {
         }
         builder = builder.header(Naming.Gateway.Headers.X_FORWARDED_HOST, StringUtil.valueOf(newForwardedHost, ","));
         return builder;
+    }
+    
+    /**
+     * @param builder
+     * @param response
+     * @return
+     */
+    static Builder buildLRAHeaders(Builder builder, final Response response) {
+    	for(final Entry<String, List<Object>> entry : response.getHeaders().entrySet()) {
+			if(entry.getKey().startsWith(LRA_HTTP_HEADER_PREFIX)) {
+				builder = builder.header(entry.getKey(), entry.getValue());
+			}
+		}
+    	return builder;
     }
     
     /**

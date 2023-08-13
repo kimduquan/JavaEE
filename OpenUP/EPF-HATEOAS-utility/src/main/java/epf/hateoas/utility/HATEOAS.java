@@ -4,8 +4,6 @@ import java.io.InputStream;
 import java.net.URI;
 import java.time.Duration;
 import java.util.Comparator;
-import java.util.List;
-import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
@@ -29,11 +27,6 @@ import epf.naming.Naming;
  *
  */
 public interface HATEOAS {
-	
-	/**
-	 * 
-	 */
-	String LRA_HTTP_HEADER_PREFIX = "Long-Running-Action";
     
     /**
      * @param client
@@ -59,11 +52,7 @@ public interface HATEOAS {
 		final WebTarget target = client.target(targetUrl);
 		Invocation.Builder builder = target.request();
 		builder = RequestUtil.buildHeaders(builder, headers, targetUrl, true);
-		for(final Entry<String, List<Object>> entry : response.getHeaders().entrySet()) {
-			if(entry.getKey().startsWith(LRA_HTTP_HEADER_PREFIX)) {
-				builder = builder.header(entry.getKey(), entry.getValue());
-			}
-		}
+		builder = RequestUtil.buildLRAHeaders(builder, response);
 		switch(link.getType()) {
 			case HttpMethod.GET:
 				return builder.rx().get();
