@@ -11,12 +11,13 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.ForbiddenException;
+import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.jwt.JsonWebToken;
@@ -74,8 +75,8 @@ public class Application {
             final UriInfo uriInfo,
             final javax.ws.rs.core.Request req,
             final InputStream body) {
-    	if(jwt != null && !security.authenticate(jwt)) {
-    		throw new ForbiddenException();
+    	if(jwt != null && !security.authenticate(jwt, uriInfo)) {
+    		throw new NotAuthorizedException(Response.status(Status.UNAUTHORIZED));
     	}
     	final URI serviceUrl = registry.lookup(service).orElseThrow(NotFoundException::new);
     	final Client client = clients.poll(serviceUrl, b -> b);

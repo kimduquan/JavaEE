@@ -42,15 +42,13 @@ public interface RequestUtil {
         if(matrixParams != null){
         	for(Entry<String, List<String>> entry : matrixParams.entrySet()) {
         		final String key = entry.getKey();
-        		if(!Naming.Management.TENANT.equals(key)) {
-            		final List<String> value = entry.getValue();
-            		if(value == null) {
-                		webTarget = webTarget.matrixParam(key);
-                	}
-                	else {
-                    	webTarget = webTarget.matrixParam(key, value.toArray(new Object[0]));
-                	}
-        		}
+        		final List<String> value = entry.getValue();
+        		if(value == null) {
+            		webTarget = webTarget.matrixParam(key);
+            	}
+            	else {
+                	webTarget = webTarget.matrixParam(key, value.toArray(new Object[0]));
+            	}
         	}
         }
 		return webTarget;
@@ -215,5 +213,13 @@ public interface RequestUtil {
      */
     static SseEventSource.Builder buildSource(final SseEventSource.Builder builder){
     	return builder;
+    }
+    
+    /**
+     * @param uriInfo
+     * @return
+     */
+    static Optional<String> getTenant(final UriInfo uriInfo){
+    	return Optional.ofNullable(uriInfo.getPathSegments().get(0).getMatrixParameters().getFirst(Naming.Management.TENANT));
     }
 }

@@ -6,12 +6,12 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.HttpMethod;
-import javax.ws.rs.MatrixParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
@@ -78,7 +78,7 @@ public interface Workflow {
 	Response start(
 			@PathParam(Naming.WORKFLOW) 
 			final String workflow, 
-			@MatrixParam(VERSION)
+			@QueryParam(VERSION)
 			final String version,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER) 
 			final URI instance,
@@ -123,7 +123,7 @@ public interface Workflow {
 	WorkflowDefinition getWorkflowDefinition(
 			@PathParam(Naming.WORKFLOW) 
 			final String workflow, 
-			@MatrixParam(VERSION)
+			@QueryParam(VERSION)
 			final String version
 			) throws Exception;
 	
@@ -164,7 +164,7 @@ public interface Workflow {
 	Response transition(
 			@PathParam(Naming.WORKFLOW) 
 			final String workflow,
-			@MatrixParam(VERSION)
+			@QueryParam(VERSION)
 			final String version,
 			@PathParam(STATE)
 			final String state,
@@ -200,7 +200,7 @@ public interface Workflow {
 	Response end(
 			@PathParam(Naming.WORKFLOW) 
 			final String workflow,
-			@MatrixParam(VERSION)
+			@QueryParam(VERSION)
 			final String version,
 			@PathParam(STATE)
 			final String state,
@@ -236,7 +236,7 @@ public interface Workflow {
 	Response compensate(
 			@PathParam(Naming.WORKFLOW) 
 			final String workflow,
-			@MatrixParam(VERSION)
+			@QueryParam(VERSION)
 			final String version,
 			@PathParam(STATE)
 			final String state,

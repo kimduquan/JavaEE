@@ -93,12 +93,4 @@ public class TokenCache implements HealthCheck {
 	public void expireToken(final JsonWebToken jwt) {
 		tokenCache.put(jwt.getTokenID(), jwt.getRawToken());
 	}
-	
-	/**
-	 * @param jwt
-	 * @return
-	 */
-	public boolean isExpired(final JsonWebToken jwt) {
-		return tokenCache.containsKey(jwt.getTokenID());
-	}
 }

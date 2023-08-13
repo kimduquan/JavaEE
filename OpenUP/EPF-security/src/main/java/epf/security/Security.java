@@ -24,7 +24,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.security.enterprise.credential.Password;
 import javax.ws.rs.BadRequestException;
-import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Path;
 import javax.ws.rs.client.ClientBuilder;
@@ -291,15 +290,6 @@ public class Security implements epf.security.client.Security, epf.security.clie
     @Override
     public Token authenticate(final String tenant, final SecurityContext context) {
     	final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
-    	if(tokenCache.isExpired(jwt)) {
-    		throw new NotAuthorizedException(Response.status(Response.Status.UNAUTHORIZED));
-    	}
-    	if(tenant != null) {
-    		final Optional<String> tenantClaim = jwt.claim(Naming.Management.TENANT);
-    		if(!tenantClaim.isPresent() || !tenant.equals(tenantClaim.get())) {
-    			throw new ForbiddenException();
-    		}
-    	}
     	final Token token = TokenUtil.from(jwt);
 		token.setClaims(TokenUtil.getClaims(jwt));
 		token.setRawToken(null);
@@ -310,9 +300,6 @@ public class Security implements epf.security.client.Security, epf.security.clie
     @Override
 	public CompletionStage<Response> update(final String password, final SecurityContext context) throws Exception {
     	final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
-    	if(tokenCache.isExpired(jwt)) {
-    		throw new ForbiddenException();
-    	}
     	return principalStore.setCallerPassword(jwt, new Password(password)).thenApply((v) -> Response.ok().build());
 	}
 
@@ -323,9 +310,6 @@ public class Security implements epf.security.client.Security, epf.security.clie
 			final List<String> forwardedHost,
             final String duration) throws Exception {
     	final JsonWebToken jwt = (JsonWebToken) context.getUserPrincipal();
-    	if(tokenCache.isExpired(jwt)) {
-    		throw new ForbiddenException();
-    	}
 		tokenCache.expireToken(jwt);
 		final String tokenDuration = duration != null && !duration.isEmpty() ? duration : expireDuration;
 		final Set<String> audience = TokenBuilder.buildAudience(null, forwardedHost, Optional.ofNullable(jwt.getClaim(Naming.Management.TENANT)));
