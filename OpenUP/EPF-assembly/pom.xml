@@ -11,12 +11,15 @@
     <packaging>liberty-assembly</packaging>
 
     <properties>
+        <httpHost>localhost</httpHost>
         <httpPort>81</httpPort>
         <httpsPort>453</httpsPort>
         <httpWebPort>80</httpWebPort>
         <httpsWebPort>443</httpsWebPort>
         <portalPort>8080</portalPort>
+		<gatewayHost>localhost</gatewayHost>
         <gatewayPort>8443</gatewayPort>
+		<userHome>~/</userHome>
         <!-- Jaeger configuration -->
         <liberty.env.JAEGER_SAMPLER_TYPE>const</liberty.env.JAEGER_SAMPLER_TYPE>
         <liberty.env.JAEGER_SAMPLER_PARAM>1</liberty.env.JAEGER_SAMPLER_PARAM>
@@ -35,21 +38,22 @@
 		<liberty.env.epf_security_url>http://localhost/security/security/</liberty.env.epf_security_url>
 		<liberty.env.epf_security_management_url>http://localhost/security-management/security/</liberty.env.epf_security_management_url>
         <liberty.env.epf_security_webapp_url>https://localhost/security/</liberty.env.epf_security_webapp_url>
-        <liberty.env.epf_gateway_url>https://localhost:${gatewayPort}/gateway/</liberty.env.epf_gateway_url>
-        <liberty.env.epf_gateway_messaging_url>https://localhost:${gatewayPort}/messaging/</liberty.env.epf_gateway_messaging_url>
+        <liberty.env.epf_gateway_url>https://${gatewayHost}:${gatewayPort}/gateway/</liberty.env.epf_gateway_url>
+        <liberty.env.epf_gateway_messaging_url>ws://${gatewayHost}:${gatewayPort}/messaging/</liberty.env.epf_gateway_messaging_url>
         <liberty.env.epf_messaging_url>ws://localhost/messaging/messaging/</liberty.env.epf_messaging_url>
-        <liberty.env.epf_lang_url>ws://localhost/lang/lang/</liberty.env.epf_lang_url>
         <liberty.env.epf_cache_url>http://localhost/cache/cache/</liberty.env.epf_cache_url>
         <liberty.env.epf_query_url>http://localhost/query/query/</liberty.env.epf_query_url>
-        <liberty.env.epf_search_url>http://localhost/query/search/</liberty.env.epf_search_url>
         <liberty.env.epf_registry_url>http://localhost/registry/registry/</liberty.env.epf_registry_url>
 		<liberty.env.epf_management_url>http://localhost/management/management/</liberty.env.epf_management_url>
-		<liberty.env.epf_portlet_url>http://localhost:8080/pluto/portal</liberty.env.epf_portlet_url>
-		<liberty.env.epf_webapp_url>https://localhost/webapp/</liberty.env.epf_webapp_url>
+		<liberty.env.epf_workflow_url>http://localhost/workflow/workflow/</liberty.env.epf_workflow_url>
+		<liberty.env.epf_portlet_url>http://localhost:${portalPort}/pluto/portal</liberty.env.epf_portlet_url>
+		<liberty.env.epf_webapp_url>http://localhost/webapp/</liberty.env.epf_webapp_url>
 		<liberty.env.epf_health_url>http://localhost/health/</liberty.env.epf_health_url>
 		<liberty.env.epf_batch_api_url>http://localhost/ibm/</liberty.env.epf_batch_api_url>
 		<liberty.env.epf_net_url>http://localhost/net/net/</liberty.env.epf_net_url>
 		<liberty.env.epf_net_http_port>80</liberty.env.epf_net_http_port>
+		<liberty.env.mp_jwt_verify_issuer>EPF</liberty.env.mp_jwt_verify_issuer>
+		<liberty.env.jnosql_mongodb_host>localhost:27017</liberty.env.jnosql_mongodb_host>
     </properties>
     <dependencies>
     	<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-queryparser -->

@@ -368,7 +368,7 @@ public class Utility {
 	 * @param password
 	 * @throws Exception
 	 */
-	@Command(name = "sql")
+	@Command(name = "jdbc")
 	public void getConnection(
 			@Option(names = {"-url", "--url"}, required = true, description = "URL")
 			@NotBlank

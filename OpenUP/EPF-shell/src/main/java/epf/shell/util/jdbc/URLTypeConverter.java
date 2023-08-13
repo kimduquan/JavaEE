@@ -1,4 +1,4 @@
-package epf.shell.util.sql;
+package epf.shell.util.jdbc;
 
 import java.net.URL;
 import picocli.CommandLine.ITypeConverter;

@@ -10,7 +10,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
 import epf.client.util.Client;
 import epf.mail.client.Mail;
 import epf.mail.client.Message;

@@ -11,7 +11,7 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Named;
 import epf.shell.util.file.PathTypeConverter;
-import epf.shell.util.sql.URLTypeConverter;
+import epf.shell.util.jdbc.URLTypeConverter;
 import picocli.CommandLine;
 import picocli.CommandLine.IFactory;
 
