@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -666,17 +667,20 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 
 	@Override
 	public WorkflowDefinition getWorkflowDefinition(final String workflow, final String version) throws Exception {
-		WorkflowDefinition workflowDefinition = null;
+		Optional<WorkflowDefinition> workflowDefinition = Optional.empty();
 		if(version != null) {
-			workflowDefinition = cache.get(workflow, version);
+			workflowDefinition = Optional.ofNullable(cache.get(workflow, version));
+			if(!workflowDefinition.isPresent()) {
+				workflowDefinition = persistence.find(workflow, version);
+			}
 		}
 		else {
-			workflowDefinition = cache.get(workflow);
+			workflowDefinition = Optional.ofNullable(cache.get(workflow));
+			if(!workflowDefinition.isPresent()) {
+				workflowDefinition = persistence.find(workflow);
+			}
 		}
-		if(workflowDefinition != null) {
-			return workflowDefinition;
-		}
-		throw new NotFoundException();
+		return workflowDefinition.orElseThrow(NotFoundException::new);
 	}
 
 	@Override

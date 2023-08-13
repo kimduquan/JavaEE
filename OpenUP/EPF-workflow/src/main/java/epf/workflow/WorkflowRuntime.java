@@ -508,7 +508,7 @@ public class WorkflowRuntime {
 	public void consume(@Observes final Event event) throws Exception {
 		final Stream<EventStateEvent> eventStateEvents = workflowEventStore.findEventStateEvent(event);
 		eventStateEvents.forEach(eventStateEvent -> {
-			final WorkflowDefinition workflowDefinition = workflowPersistence.find(eventStateEvent.getWorkflowDefinition());
+			final WorkflowDefinition workflowDefinition = workflowPersistence.find(eventStateEvent.getWorkflowDefinition()).get();
 			final State state = getState(workflowDefinition, eventStateEvent.getState());
 			if(state.getType() == Type.event) {
 				final EventState eventState = (EventState) state;
@@ -523,7 +523,7 @@ public class WorkflowRuntime {
 		});
 		final Stream<EventStateActionEvent> eventStateActionEventStream = workflowEventStore.findEventStateActionEvent(event);
 		eventStateActionEventStream.forEach(eventStateActionEvent -> {
-			final WorkflowDefinition workflowDefinition = workflowPersistence.find(eventStateActionEvent.getWorkflowDefinition());
+			final WorkflowDefinition workflowDefinition = workflowPersistence.find(eventStateActionEvent.getWorkflowDefinition()).get();
 			final State state = getState(workflowDefinition, eventStateActionEvent.getState());
 			if(state.getType() == Type.event) {
 				boolean isEventConsumed = false;
@@ -552,7 +552,7 @@ public class WorkflowRuntime {
 		});
 		final Stream<CallbackStateEvent> callbackStateEvents = workflowEventStore.findCallbackStateEvent(event);
 		callbackStateEvents.forEach(callbackStateEvent -> {
-			final WorkflowDefinition workflowDefinition = workflowPersistence.find(callbackStateEvent.getWorkflowDefinition());
+			final WorkflowDefinition workflowDefinition = workflowPersistence.find(callbackStateEvent.getWorkflowDefinition()).get();
 			final State state = getState(workflowDefinition, callbackStateEvent.getState());
 			if(state.getType() == Type.callback) {
 				final CallbackState callbackState = (CallbackState)state;
@@ -765,14 +765,14 @@ public class WorkflowRuntime {
 	
 	private void continueAs(final Object continueAs, final WorkflowData workflowData, final URI uri) throws Exception {
 		if(continueAs instanceof String) {
-			final WorkflowDefinition workflowDefinition = workflowPersistence.find((String)continueAs);
+			final WorkflowDefinition workflowDefinition = workflowPersistence.find((String)continueAs).get();
 			final WorkflowData newWorkflowData = new WorkflowData();
 			newWorkflowData.setInput(workflowData.getOutput());
 			start(workflowDefinition, newWorkflowData, uri);
 		}
 		else if(continueAs instanceof ContinueAs) {
 			final ContinueAs continueAsDef = (ContinueAs) continueAs;
-			final WorkflowDefinition workflowDefinition = workflowPersistence.find(continueAsDef.getWorkflowId(), continueAsDef.getVersion());
+			final WorkflowDefinition workflowDefinition = workflowPersistence.find(continueAsDef.getWorkflowId(), continueAsDef.getVersion()).get();
 			final WorkflowData newWorkflowData = new WorkflowData();
 			if(continueAsDef.getData() != null) {
 				JsonValue input = null;
@@ -972,11 +972,11 @@ public class WorkflowRuntime {
 	
 	private WorkflowDefinition getSubWorkflowDefinition(final Object subFlowRef) {
 		if(subFlowRef instanceof String) {
-			return workflowPersistence.find((String)subFlowRef);
+			return workflowPersistence.find((String)subFlowRef).get();
 		}
 		else {
 			final SubFlowRefDefinition subFlowRefDefinition = (SubFlowRefDefinition) subFlowRef;
-			return workflowPersistence.find(subFlowRefDefinition.getWorkflowId(), subFlowRefDefinition.getVersion());
+			return workflowPersistence.find(subFlowRefDefinition.getWorkflowId(), subFlowRefDefinition.getVersion()).get();
 		}
 	}
 }

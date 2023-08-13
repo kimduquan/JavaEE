@@ -26,18 +26,18 @@ public class WorkflowPersistence {
 	 * @param version
 	 * @return
 	 */
-	public WorkflowDefinition find(final String id, final String version) {
+	public Optional<WorkflowDefinition> find(final String id, final String version) {
 		final DocumentQuery query = DocumentQuery.select().from("WorkflowDefinition").where("id").eq(id).and("version").eq(version).build();
 		final Optional<WorkflowDefinition> workflowDefinition = document.singleResult(query);
-		return workflowDefinition.get();
+		return workflowDefinition;
 	}
 	
 	/**
 	 * @param id
 	 * @return
 	 */
-	public WorkflowDefinition find(final String id) {
-		return document.find(WorkflowDefinition.class, id).get();
+	public Optional<WorkflowDefinition> find(final String id) {
+		return document.find(WorkflowDefinition.class, id);
 	}
 	
 	/**
