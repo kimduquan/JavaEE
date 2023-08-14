@@ -467,7 +467,7 @@
                         <configuration>
                             <verifyTimeout>600</verifyTimeout>
                             <serverStartTimeout>600</serverStartTimeout>
-                            <applications>EPF-schedule,EPF-script,EPF-batch,EPF-file,EPF-mail,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-management,EPF-workflow,EPF-security,EPF-security-management</applications>
+                            <applications>EPF-schedule,EPF-script,EPF-batch,EPF-file,EPF-mail,EPF-image,EPF-rules,EPF-planning,EPF-management,EPF-workflow,EPF-security,EPF-security-management</applications>
                         </configuration>
                     </execution>
                     <!-- Stop the server -->
@@ -486,7 +486,7 @@
                     <deployPackages>dependencies</deployPackages>
 					<verifyTimeout>600</verifyTimeout>
 					<serverStartTimeout>600</serverStartTimeout>
-					<applications>EPF-schedule,EPF-script,EPF-batch,EPF-file,EPF-mail,EPF-image,EPF-rules,EPF-planning,EPF-schema,EPF-management,EPF-workflow,EPF-security,EPF-security-management</applications>
+					<applications>EPF-schedule,EPF-script,EPF-batch,EPF-file,EPF-mail,EPF-image,EPF-rules,EPF-planning,EPF-management,EPF-workflow,EPF-security,EPF-security-management</applications>
 					<dockerRunOpts>-p 7286:7286</dockerRunOpts>
 				</configuration>
             </plugin>
