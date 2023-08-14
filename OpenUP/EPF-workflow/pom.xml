@@ -196,4 +196,31 @@
         <version>${project.version}</version>
     </dependency>
   </dependencies>
+  <build>
+	  <plugins>
+		  <plugin>
+		      <groupId>org.wildfly.plugins</groupId>
+		      <artifactId>wildfly-jar-maven-plugin</artifactId>
+		      <version>10.0.0.Final</version>
+		      <configuration>
+				  <feature-pack-location>wildfly@maven(org.jboss.universe:community-universe)</feature-pack-location>
+				  <layers>
+					  	<layer>microprofile-config</layer>
+			      		<layer>microprofile-fault-tolerance</layer>
+			      		<layer>microprofile-health</layer>
+			      		<layer>jaxrs</layer>
+			      		<layer>transactions</layer>
+			      		<layer>microprofile-lra-participant</layer>
+			      </layers>
+		      </configuration>
+		      <executions>
+		        <execution>
+		          <goals>
+		            <goal>package</goal>
+		          </goals>
+		        </execution>
+		      </executions>
+		    </plugin>
+	  </plugins>
+  </build>
 </project>
