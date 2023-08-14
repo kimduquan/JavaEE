@@ -83,6 +83,12 @@
 	    <artifactId>microprofile-health-api</artifactId>
 	    <scope>provided</scope>
 	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.lra/microprofile-lra-api -->
+	<dependency>
+	    <groupId>org.eclipse.microprofile.lra</groupId>
+	    <artifactId>microprofile-lra-api</artifactId>
+	    <scope>provided</scope>
+	</dependency>
     
 	<!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast -->
 	<dependency>
