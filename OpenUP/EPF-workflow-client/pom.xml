@@ -26,7 +26,7 @@
 		<dependency>
 		    <groupId>org.eclipse.microprofile.lra</groupId>
 		    <artifactId>microprofile-lra-api</artifactId>
-			<scope>provided</scope>
+		    <scope>provided</scope>
 		</dependency>
 		
 		<dependency>
