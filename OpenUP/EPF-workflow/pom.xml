@@ -37,7 +37,6 @@
 	<dependency>
 		<groupId>javax.json.bind</groupId>
 		<artifactId>javax.json.bind-api</artifactId>
-		<scope>provided</scope>
 	</dependency>
 	<!-- https://mvnrepository.com/artifact/javax.cache/cache-api -->
 	<dependency>
