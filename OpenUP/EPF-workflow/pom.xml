@@ -205,11 +205,15 @@
 		      <configuration>
 				  <feature-pack-location>wildfly@maven(org.jboss.universe:community-universe)</feature-pack-location>
 				  <layers>
+					  	<layer>cdi</layer>
+			      		<layer>jaxrs</layer>
+			      		<layer>jsonb</layer>
+			      		<layer>jsonp</layer>
+			      		<layer>transactions</layer>
 					  	<layer>microprofile-config</layer>
 			      		<layer>microprofile-fault-tolerance</layer>
 			      		<layer>microprofile-health</layer>
-			      		<layer>jaxrs</layer>
-			      		<layer>transactions</layer>
+			      		<layer>microprofile-reactive-messaging-kafka</layer>
 			      		<layer>microprofile-lra-participant</layer>
 			      </layers>
 		      </configuration>
