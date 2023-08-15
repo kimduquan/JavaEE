@@ -2,6 +2,7 @@
 . ../config.sh
 mvn clean install -U
 java -Djboss.http.port=9189 -Djboss.management.http.port=9190 -jar target/EPF-workflow-1.0.0-bootable.jar
+$WILDFLY_HOME/jboss-cli.sh --file=lra.cli
 cd ../
 cd EPF-config
 mvn clean install -U
