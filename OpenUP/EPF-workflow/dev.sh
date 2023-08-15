@@ -1,7 +1,7 @@
 . ../env.sh
 . ../config.sh
 mvn clean install -U
-java -Dlra.coordinator.url=http://localhost:50000 -jar /target/EPF-workflow-1.0.0-bootable.jar
+java -Djboss.http.port=9189 -Djboss.management.http.port=9190 -jar target/EPF-workflow-1.0.0-bootable.jar
 cd ../
 cd EPF-config
 mvn clean install -U
