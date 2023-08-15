@@ -1,7 +1,7 @@
 . ../env.sh
 . ../config.sh
 mvn clean install -U
-cp target/EPF-workflow-1.0.0.war ../EPF-tests/target/servers/test/apps
+java -Dlra.coordinator.url=http://localhost:50000 -jar /target/EPF-workflow-1.0.0-bootable.jar
 cd ../
 cd EPF-config
 mvn clean install -U

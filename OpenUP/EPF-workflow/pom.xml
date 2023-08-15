@@ -89,11 +89,6 @@
 	    <scope>provided</scope>
 	</dependency>
     
-	<!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients -->
-	<dependency>
-	    <groupId>org.apache.kafka</groupId>
-	    <artifactId>kafka-clients</artifactId>
-	</dependency>
 	<!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast -->
 	<dependency>
 	    <groupId>com.hazelcast</groupId>
@@ -133,6 +128,16 @@
 	<dependency>
 	    <groupId>org.eclipse.jnosql.communication</groupId>
 	    <artifactId>jnosql-communication-column</artifactId>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.eclipse/yasson -->
+	<dependency>
+		<groupId>org.eclipse</groupId>
+		<artifactId>yasson</artifactId>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.glassfish/javax.json -->
+	<dependency>
+		<groupId>org.glassfish</groupId>
+		<artifactId>javax.json</artifactId>
 	</dependency>
 	
 	<dependency>
@@ -195,15 +200,19 @@
 		      <configuration>
 				  <feature-pack-location>wildfly@maven(org.jboss.universe:community-universe)</feature-pack-location>
 				  <layers>
+						<layer>base-server</layer>
+						<layer>bean-validation</layer>
 					  	<layer>cdi</layer>
+						<layer>ee-concurrency</layer>
 			      		<layer>jaxrs</layer>
 			      		<layer>jsonb</layer>
 			      		<layer>jsonp</layer>
+						<layer>naming</layer>
 			      		<layer>transactions</layer>
 					  	<layer>microprofile-config</layer>
 			      		<layer>microprofile-fault-tolerance</layer>
 			      		<layer>microprofile-health</layer>
-			      		<layer>microprofile-reactive-messaging-kafka</layer>
+						<layer>microprofile-telemetry</layer>
 			      		<layer>microprofile-lra-participant</layer>
 			      </layers>
 		      </configuration>
