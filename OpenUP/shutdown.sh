@@ -3,6 +3,7 @@ cd EPF-tests
 mvn liberty:stop
 cd ../
 pkill -f target/quarkus-app/quarkus-run.jar
+$WILDFLY_HOME/jboss-cli.sh --connect --controller=localhost:9190 command=:shutdown &
 $KAFKA_HOME/kafka-server-stop.sh
 killall jaeger-all-in-one
 killall geckodriver
