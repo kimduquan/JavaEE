@@ -204,6 +204,7 @@
 						<layer>bean-validation</layer>
 					  	<layer>cdi</layer>
 						<layer>ee-concurrency</layer>
+						<layer>jaxrs-core</layer>
 			      		<layer>jaxrs</layer>
 			      		<layer>jsonb</layer>
 			      		<layer>jsonp</layer>
@@ -214,6 +215,7 @@
 			      		<layer>microprofile-health</layer>
 						<layer>microprofile-telemetry</layer>
 			      		<layer>microprofile-lra-participant</layer>
+						<layer>microprofile-rest-client</layer>
 			      </layers>
 		      </configuration>
 		      <executions>
