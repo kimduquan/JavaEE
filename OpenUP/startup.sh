@@ -9,12 +9,13 @@ bin/zookeeper-server-start.sh config/zookeeper.properties &
 export JAVA_HOME=$JAVA8_HOME
 $PLUTO_HOME/bin/startup.sh &
 cd $WILDFLY_HOME
-export JAVA_HOME=$JAVA17_HOME
+export JAVA_HOME=$JAVA11_HOME
 sudo -E ./standalone.sh "-Djboss.http.port=80" "-Djboss.https.port=443" --debug &
 cd $CASSANDRA_HOME
 export MAX_HEAP_SIZE=1G
 export HEAP_NEWSIZE=200M
 bin/cassandra &
+export JAVA_HOME=$JAVA17_HOME
 cd $JAEGER_HOME
 ./jaeger-all-in-one --collector.zipkin.host-port=:9411 &
 Xvfb :10 -ac &
