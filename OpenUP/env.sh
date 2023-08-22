@@ -11,5 +11,5 @@ export WILDFLY_HOME=~/wildfly-24.0.1.Final/bin
 export JAEGER_HOME=~/jaeger-1.48.0-linux-amd64
 export MAVEN_HOME=~/apache-maven-3.9.4/bin
 export CASSANDRA_HOME=~/apache-cassandra-4.0.11
-export HAZELCAST_HOME=~/hazelcast-5.0.5
+export HAZELCAST_HOME=~/hazelcast-5.3.2
 export PATH=$MAVEN_HOME:$PATH
