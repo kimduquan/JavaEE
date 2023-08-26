@@ -1,4 +1,4 @@
-package epf.tests.util;
+package epf.tests;
 
 import java.io.File;
 import java.util.logging.Level;

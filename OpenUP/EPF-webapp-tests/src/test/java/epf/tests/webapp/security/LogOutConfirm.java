@@ -1,6 +1,7 @@
 package epf.tests.webapp.security;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import epf.tests.webapp.DefaultPage;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.RequestScoped;
@@ -8,24 +9,27 @@ import jakarta.inject.Inject;
 
 @RequestScoped
 public class LogOutConfirm {
-
+	
 	@Inject
-	DefaultPage page;
+	RemoteWebDriver driver;
+	
+	@Inject
+	DefaultPage defaultPage;
 	
 	@PostConstruct
 	void showProfileMenu() {
-		page.clickProfile();
+		defaultPage.clickProfile();
 	}
 	
 	public void showConfirm() {
-		page.getDriver().findElement(By.linkText("Logout")).click();
+		driver.findElement(By.linkText("Logout")).click();
 	}
 	
 	public void logout() {
-		page.getDriver().findElement(By.className("modal-footer")).findElement(By.linkText("Logout")).click();
+		driver.findElement(By.className("modal-footer")).findElement(By.linkText("Logout")).click();
 	}
 	
 	public void cancel() {
-		page.getDriver().findElement(By.className("modal-footer")).findElement(By.cssSelector("button.btn-secondary")).click();
+		driver.findElement(By.className("modal-footer")).findElement(By.cssSelector("button.btn-secondary")).click();
 	}
 }

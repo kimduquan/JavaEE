@@ -1,31 +1,24 @@
 package epf.tests.webapp.security;
 
-import java.net.URL;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import epf.naming.Naming;
 import epf.security.view.LoginView;
+import epf.tests.webapp.DefaultPage;
 import epf.tests.webapp.Page;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 
 @RequestScoped
 public class LoginPage extends Page implements LoginView {
 	
-	final URL url;
+	@Inject
+	DefaultPage defaultPage;
 	
 	@Inject
-	public LoginPage(RemoteWebDriver driver, @Named(Naming.WebApp.WEB_APP_URL) URL url) {
+	public LoginPage(RemoteWebDriver driver) throws Exception {
 		super(driver);
-		this.url = url;
-	}
-	
-	@PostConstruct
-	void navigateTo() {
-		driver.navigate().to(url);
 	}
 
 	@Override
@@ -74,5 +67,10 @@ public class LoginPage extends Page implements LoginView {
 	public void createCredential() {
 		WebElement createCredential = driver.findElement(By.linkText("Create an Account!"));
 		createCredential.click();
+	}
+
+	@PostConstruct
+	public void navigateTo() {
+		defaultPage.navigateTo();
 	}
 }

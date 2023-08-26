@@ -1,4 +1,4 @@
-package epf.tests.util;
+package epf.tests;
 
 import java.io.IOException;
 import java.nio.charset.Charset;

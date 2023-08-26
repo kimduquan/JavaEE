@@ -1,4 +1,4 @@
-package epf.tests.util;
+package epf.tests;
 
 import java.time.Duration;
 import java.util.concurrent.Callable;

@@ -1,24 +1,19 @@
 package epf.tests.webapp.security;
 
-import java.net.URL;
 import java.time.Duration;
 import java.util.Map.Entry;
 import org.jboss.weld.junit4.WeldInitiator;
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.MethodRule;
-import epf.naming.Naming;
-import epf.tests.util.TestUtil;
-import epf.tests.util.WebDriverUtil;
-import epf.tests.util.SecurityUtil;
-import epf.tests.util.WebAppUtil;
+import epf.tests.SecurityUtil;
+import epf.tests.TestUtil;
 import epf.tests.webapp.DefaultPage;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 
 /**
  * @author PC
@@ -28,70 +23,59 @@ import jakarta.inject.Named;
 public class LoginPageTest {
 	
 	@ClassRule
-	public static WeldInitiator weld = WeldInitiator.from(
-			WebDriverUtil.class, 
-			WebAppUtil.class, 
-			DefaultPage.class,
-			LogOutConfirm.class,
-			LoginPage.class, 
-			LoginPageTest.class)
-			.activate(RequestScoped.class).build();
+	public static WeldInitiator weld = WeldInitiator.from(WeldInitiator.createWeld().enableDiscovery()).activate(RequestScoped.class).build();
 	
 	@Rule
     public MethodRule testClassInjectorRule = weld.getTestClassInjectorRule();
 	
 	@Inject
-	LoginPage page;
+	LoginPage loginPage;
 	
 	@Inject
 	LogOutConfirm confirm;
 	
-	@Inject @Named(Naming.WebApp.WEB_APP_URL)
-	URL webappUrl;
-	
 	@Inject
 	DefaultPage defPage;
 	
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
+	@Before
+	public void navigateTo() {
+		loginPage.navigateTo();
 	}
 
 	@Test
 	public void testLoginCorrectUsernamePassword_LoginOk() throws Exception {
 		Entry<String, String> credential = SecurityUtil.peekCredential();
-		page.setCaller(credential.getKey());
-		page.setPassword(credential.getValue().toCharArray());
-		page.login();
-		TestUtil.waitUntil((t) -> page.getTitle().equals("SB Admin 2 - Dashboard"), Duration.ofSeconds(20));
+		loginPage.setCaller(credential.getKey());
+		loginPage.setPassword(credential.getValue().toCharArray());
+		loginPage.login();
+		TestUtil.waitUntil((t) -> loginPage.getTitle().equals("SB Admin 2 - Dashboard"), Duration.ofSeconds(20));
 		confirm.showConfirm();
 		confirm.logout();
-		TestUtil.waitUntil((t) -> page.isComplete(), Duration.ofSeconds(10));
-		Assert.assertEquals("currentUrl", "https://localhost/security-auth/security/logout.html", page.getCurrentUrl());
+		TestUtil.waitUntil((t) -> loginPage.isComplete(), Duration.ofSeconds(10));
+		Assert.assertEquals("currentUrl", "https://localhost/security-auth/security/logout.html", loginPage.getCurrentUrl());
 	}
 	
 	@Test
 	public void testLoginInvalidPassword_NotLogin() throws Exception {
-		page.getDriver().navigate().to(webappUrl);
 		Entry<String, String> credential = SecurityUtil.peekCredential();
-		page.setCaller(credential.getKey());
-		page.setPassword("invalid".toCharArray());
-		page.login();
-		TestUtil.waitUntil((t) -> page.isComplete(), Duration.ofSeconds(10));
-		Assert.assertNotEquals("title", "SB Admin 2 - Dashboard", page.getTitle());
+		loginPage.setCaller(credential.getKey());
+		loginPage.setPassword("invalid".toCharArray());
+		loginPage.login();
+		TestUtil.waitUntil((t) -> loginPage.isComplete(), Duration.ofSeconds(10));
+		Assert.assertNotEquals("title", "SB Admin 2 - Dashboard", loginPage.getTitle());
 	}
 	
 	@Test
 	public void testLoginCancel() throws Exception {
-		page.getDriver().navigate().to(webappUrl);
 		Entry<String, String> credential = SecurityUtil.peekCredential();
-		page.setCaller(credential.getKey());
-		page.setPassword(credential.getValue().toCharArray());
-		page.login();
-		TestUtil.waitUntil((t) -> page.getTitle().equals("SB Admin 2 - Dashboard"), Duration.ofSeconds(10));
+		loginPage.setCaller(credential.getKey());
+		loginPage.setPassword(credential.getValue().toCharArray());
+		loginPage.login();
+		TestUtil.waitUntil((t) -> loginPage.getTitle().equals("SB Admin 2 - Dashboard"), Duration.ofSeconds(10));
 		defPage.clickProfile();
 		confirm.showConfirm();
 		confirm.cancel();
-		Assert.assertEquals("title", "SB Admin 2 - Dashboard", page.getTitle());
+		Assert.assertEquals("title", "SB Admin 2 - Dashboard", loginPage.getTitle());
 	}
 
 }
