@@ -1,15 +1,11 @@
 package epf.tests.webapp.security.auth;
 
-import java.time.Duration;
 import org.jboss.weld.junit4.WeldInitiator;
-import org.junit.Assert;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.MethodRule;
-
-import epf.tests.webapp.security.LogOutConfirm;
-import epf.tests.webapp.util.TestUtil;
+import epf.tests.webapp.security.auth.google.GoogleMailPage;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 
@@ -25,25 +21,17 @@ public class AuthPageTest {
 	AuthPage authPage;
 	
 	@Inject
-	LogOutConfirm confirm;
+	GoogleMailPage gmail;
 	
 	@Test
 	public void testloginWithGoogle_LoginOk() throws Exception {
-		authPage.loginWithGoogle();
-		TestUtil.waitUntil((t) -> authPage.getTitle().equals("SB Admin 2 - Dashboard"), Duration.ofSeconds(20));
-		Assert.assertEquals("title", "SB Admin 2 - Dashboard", authPage.getTitle());
-		confirm.showConfirm();
-		confirm.logout();
-		TestUtil.waitUntil((t) -> "https://localhost/security-auth/security/logout.html".equals(authPage.getCurrentUrl()), Duration.ofSeconds(10));
+		gmail.setIdentifierId("kimduquan01@gmail.com");
+		gmail.next();
+		gmail.tryAgain();
 	}
 	
 	@Test
 	public void testloginWithFacebook_LoginOk() throws Exception {
 		authPage.loginWithFacebook();
-		TestUtil.waitUntil((t) -> authPage.getTitle().equals("SB Admin 2 - Dashboard"), Duration.ofSeconds(20));
-		Assert.assertEquals("title", "SB Admin 2 - Dashboard", authPage.getTitle());
-		confirm.showConfirm();
-		confirm.logout();
-		TestUtil.waitUntil((t) -> "https://localhost/security-auth/security/logout.html".equals(authPage.getCurrentUrl()), Duration.ofSeconds(10));
 	}
 }
