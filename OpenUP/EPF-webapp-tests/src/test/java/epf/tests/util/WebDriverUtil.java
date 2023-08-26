@@ -1,4 +1,4 @@
-package epf.tests;
+package epf.tests.util;
 
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;

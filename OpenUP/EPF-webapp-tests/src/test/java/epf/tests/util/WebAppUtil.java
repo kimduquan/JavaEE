@@ -1,4 +1,4 @@
-package epf.tests.webapp;
+package epf.tests.util;
 
 import java.net.URL;
 import epf.naming.Naming;

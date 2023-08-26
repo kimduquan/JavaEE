@@ -3,7 +3,7 @@ package epf.tests.portlet.security;
 import java.util.Map.Entry;
 import org.openqa.selenium.WebDriver;
 import epf.tests.portlet.PortletView;
-import epf.tests.security.SecurityUtil;
+import epf.tests.util.SecurityUtil;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
