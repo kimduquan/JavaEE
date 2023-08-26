@@ -17,15 +17,15 @@ public class LogOutConfirm {
 		page.clickProfile();
 	}
 	
-	void showConfirm() {
+	public void showConfirm() {
 		page.getDriver().findElement(By.linkText("Logout")).click();
 	}
 	
-	void logout() {
+	public void logout() {
 		page.getDriver().findElement(By.className("modal-footer")).findElement(By.linkText("Logout")).click();
 	}
 	
-	void cancel() {
+	public void cancel() {
 		page.getDriver().findElement(By.className("modal-footer")).findElement(By.cssSelector("button.btn-secondary")).click();
 	}
 }
