@@ -2,6 +2,7 @@ package epf.tests.webapp.security.auth;
 
 import java.time.Duration;
 import org.jboss.weld.junit4.WeldInitiator;
+import org.junit.Assert;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -36,6 +37,7 @@ public class AuthPageTest {
 	public void testloginWithGoogle_LoginOk() throws Exception {
 		authPage.loginWithGoogle();
 		TestUtil.waitUntil((t) -> authPage.getTitle().equals("SB Admin 2 - Dashboard"), Duration.ofSeconds(20));
+		Assert.assertEquals("title", "SB Admin 2 - Dashboard", authPage.getTitle());
 		confirm.showConfirm();
 		confirm.logout();
 	}
