@@ -1,6 +1,8 @@
 package epf.tests.webapp.security.auth.google;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import epf.tests.webapp.Page;
 import jakarta.annotation.PostConstruct;
@@ -31,7 +33,9 @@ public class GoogleMailPage extends Page {
 	}
 	
 	public String tryAgain() {
-		driver.findElement(By.xpath("//a[@aria-label='Try again']")).click();
+		WebElement link = driver.findElement(By.xpath("//*[text()='Try again']"));
+		Actions actions = new Actions(driver).moveToElement(link).click();
+		actions.build().perform();
 		return "";
 	}
 }
