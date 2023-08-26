@@ -11,10 +11,10 @@ import org.junit.Test;
 import org.junit.rules.MethodRule;
 import org.junit.rules.TestName;
 
-import epf.tests.SecurityUtil;
-import epf.tests.WebDriverUtil;
 import epf.tests.portlet.PortletUtil;
 import epf.tests.portlet.PortletView;
+import epf.tests.webapp.util.SecurityUtil;
+import epf.tests.webapp.util.WebDriverUtil;
 import jakarta.inject.Inject;
 
 /**

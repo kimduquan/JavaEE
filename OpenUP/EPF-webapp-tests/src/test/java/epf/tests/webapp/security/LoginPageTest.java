@@ -9,9 +9,10 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.MethodRule;
-import epf.tests.SecurityUtil;
-import epf.tests.TestUtil;
+
 import epf.tests.webapp.DefaultPage;
+import epf.tests.webapp.util.SecurityUtil;
+import epf.tests.webapp.util.TestUtil;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 

@@ -7,8 +7,9 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.MethodRule;
-import epf.tests.TestUtil;
+
 import epf.tests.webapp.security.LogOutConfirm;
+import epf.tests.webapp.util.TestUtil;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 

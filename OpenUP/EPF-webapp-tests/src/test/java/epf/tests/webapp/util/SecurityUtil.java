@@ -1,4 +1,4 @@
-package epf.tests;
+package epf.tests.webapp.util;
 
 import java.util.Map.Entry;
 import java.util.AbstractMap;
