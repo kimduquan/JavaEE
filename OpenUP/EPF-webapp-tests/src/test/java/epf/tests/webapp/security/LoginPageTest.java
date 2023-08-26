@@ -9,7 +9,6 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.MethodRule;
-
 import epf.tests.webapp.DefaultPage;
 import epf.tests.webapp.util.SecurityUtil;
 import epf.tests.webapp.util.TestUtil;

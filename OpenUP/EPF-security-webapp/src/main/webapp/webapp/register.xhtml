@@ -39,26 +39,26 @@
                             <h:form styleClass="user">
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <h:inputText styleClass="form-control form-control-user" id="exampleFirstName" value="#{security_register.firstName}"
+                                        <h:inputText styleClass="form-control form-control-user" a:id="exampleFirstName" value="#{security_register.firstName}"
                                             a:placeholder="First Name" />
                                     </div>
                                     <div class="col-sm-6">
-                                        <h:inputText styleClass="form-control form-control-user" id="exampleLastName" value="#{security_register.lastName}"
+                                        <h:inputText styleClass="form-control form-control-user" a:id="exampleLastName" value="#{security_register.lastName}"
                                             a:placeholder="Last Name" />
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <h:inputText a:type="email" styleClass="form-control form-control-user" id="exampleInputEmail" value="#{security_register.email}"
+                                    <h:inputText a:type="email" styleClass="form-control form-control-user" a:id="exampleInputEmail" value="#{security_register.email}"
                                         a:placeholder="Email Address" />
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <h:inputSecret styleClass="form-control form-control-user" value="#{security_register.password}"
-                                            id="exampleInputPassword" a:placeholder="Password" />
+                                            a:id="exampleInputPassword" a:placeholder="Password" />
                                     </div>
                                     <div class="col-sm-6">
                                         <h:inputSecret styleClass="form-control form-control-user" value="#{security_register.repeatPassword}"
-                                            id="exampleRepeatPassword" a:placeholder="Repeat Password" />
+                                            a:id="exampleRepeatPassword" a:placeholder="Repeat Password" />
                                     </div>
                                 </div>
                                 <h:commandLink styleClass="btn btn-primary btn-user btn-block" action="#{security_register.register}" >

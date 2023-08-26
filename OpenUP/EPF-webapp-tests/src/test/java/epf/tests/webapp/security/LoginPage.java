@@ -68,6 +68,10 @@ public class LoginPage extends Page implements LoginView {
 		WebElement createCredential = driver.findElement(By.linkText("Create an Account!"));
 		createCredential.click();
 	}
+	
+	public void register() {
+		driver.findElement(By.xpath("//a[@href='/security/webapp/register.html']")).click();
+	}
 
 	@PostConstruct
 	public void navigateTo() {
