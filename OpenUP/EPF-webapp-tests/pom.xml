@@ -84,7 +84,7 @@
                         <epf.webapp.url>https://localhost/webapp/</epf.webapp.url>
                         <webdriver.gecko.driver>${geckodriver}</webdriver.gecko.driver>
                         <webdriver.timeouts.implicit>60</webdriver.timeouts.implicit>
-                        <webdriver.firefox.headless>true</webdriver.firefox.headless>
+                        <webdriver.firefox.headless>${headless}</webdriver.firefox.headless>
 						<webdriver.firefox.binary>${webdriver_binary}</webdriver.firefox.binary>
                     </systemPropertyVariables>
                 </configuration>
@@ -100,6 +100,7 @@
 				</os>
 			</activation>
 			<properties>
+				<headless>true</headless>
 				<geckodriver>./geckodriver</geckodriver>
         		<webdriver_binary>/usr/bin/firefox</webdriver_binary>
 			</properties>
@@ -112,6 +113,7 @@
 				</os>
 			</activation>
 			<properties>
+				<headless>false</headless>
 				<geckodriver>./geckodriver.exe</geckodriver>
         		<webdriver_binary>C:\Program Files\Mozilla Firefox\firefox.exe</webdriver_binary>
 			</properties>

@@ -10,6 +10,7 @@ import org.junit.rules.MethodRule;
 import epf.tests.util.TestUtil;
 import epf.tests.util.WebDriverUtil;
 import epf.tests.util.WebAppUtil;
+import epf.tests.webapp.DefaultPage;
 import epf.tests.webapp.security.LogOutConfirm;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -20,7 +21,9 @@ public class AuthPageTest {
 	public static WeldInitiator weld = WeldInitiator.from(
 			WebDriverUtil.class, 
 			WebAppUtil.class, 
+			DefaultPage.class,
 			AuthPage.class,
+			LogOutConfirm.class,
 			AuthPageTest.class)
 			.activate(RequestScoped.class).build();
 	

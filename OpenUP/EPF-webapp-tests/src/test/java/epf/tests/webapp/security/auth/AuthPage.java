@@ -4,9 +4,11 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import epf.security.auth.view.AuthView;
 import epf.tests.webapp.Page;
+import jakarta.inject.Inject;
 
 public class AuthPage extends Page implements AuthView {
 
+	@Inject
 	public AuthPage(RemoteWebDriver driver) {
 		super(driver);
 	}
