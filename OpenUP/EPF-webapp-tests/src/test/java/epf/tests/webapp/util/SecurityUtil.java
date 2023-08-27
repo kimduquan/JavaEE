@@ -1,9 +1,15 @@
 package epf.tests.webapp.util;
 
 import java.util.Map.Entry;
+import java.nio.file.Path;
 import java.util.AbstractMap;
+import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
+import epf.naming.Naming;
+import epf.security.schema.Token;
 
 /**
  *
@@ -49,4 +55,33 @@ public class SecurityUtil {
     	System.out.println(String.format("SecurityUtil.getAdminCredential()"));
     	return new AbstractMap.SimpleImmutableEntry<>("test", "123456");
     }
+	
+	public static String securityLogin(ProcessBuilder builder, Path in, Path out, String username, String password) throws Exception {
+		builder = ShellUtil.command(builder, Naming.SECURITY, "login", "-u", username, "-p");
+		Process process = ShellUtil.waitFor(builder, in, password);
+		List<String> lines = ShellUtil.getOutput(out);
+		lines.stream().forEach(System.out::println);
+		process.destroyForcibly();
+		return lines.get(lines.size() - 1);
+	}
+	
+	public static Token securityAuth(ProcessBuilder builder, String token, Path out) throws Exception {
+		builder = ShellUtil.command(builder, Naming.SECURITY, "auth", "-t", token);
+		Process process = ShellUtil.waitFor(builder);
+		List<String> lines = ShellUtil.getOutput(out);
+		lines.stream().forEach(System.out::println);
+		process.destroyForcibly();
+		try(Jsonb jsonb = JsonbBuilder.create()){
+			return jsonb.fromJson(lines.get(lines.size() - 1), Token.class);
+		}
+	}
+	
+	public static String securityLogout(ProcessBuilder builder, String tokenID, Path out) throws Exception {
+		builder = ShellUtil.command(builder, Naming.SECURITY, "logout", "-tid", tokenID);
+		Process process = ShellUtil.waitFor(builder);
+		List<String> lines = ShellUtil.getOutput(out);
+		lines.stream().forEach(System.out::println);
+		process.destroyForcibly();
+		return lines.get(lines.size() - 1);
+	}
 }

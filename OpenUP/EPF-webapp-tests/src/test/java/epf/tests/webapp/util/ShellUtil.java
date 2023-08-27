@@ -72,23 +72,6 @@ public class ShellUtil {
 		return process;
 	}
 	
-	public static Token securityAuth(ProcessBuilder builder, String token, Path out) throws Exception {
-		builder = command(builder, Naming.SECURITY, "auth", "-t", token);
-		Process process = ShellUtil.waitFor(builder);
-		List<String> lines = getOutput(out);
-		lines.stream().forEach(System.out::println);
-		process.destroyForcibly();
-		try(Jsonb jsonb = JsonbBuilder.create()){
-			return jsonb.fromJson(lines.get(lines.size() - 1), Token.class);
-		}
-	}
-	
-	public static void securityLogout(ProcessBuilder builder, String tokenID) throws Exception {
-		builder = command(builder, Naming.SECURITY, "logout", "-tid", tokenID);
-		Process process = ShellUtil.waitFor(builder);
-		process.destroyForcibly();
-	}
-	
 	/**
 	 * @param path
 	 * @return
