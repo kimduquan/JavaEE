@@ -1,5 +1,6 @@
 package epf.security.management;
 
+import java.net.URL;
 import java.security.PrivateKey;
 import java.time.Duration;
 import java.time.Instant;
@@ -59,6 +60,13 @@ public class Management implements epf.security.client.Management {
     @Inject
     @ConfigProperty(name = Naming.Security.JWT.DECRYPTOR_KEY_LOCATION)
     transient String privateKeyLocation;
+    
+    /**
+     * 
+     */
+    @Inject
+    @ConfigProperty(name = Naming.WebApp.WEB_APP_URL)
+    transient URL webappUrl;
 	
 	/**
      * 
@@ -92,7 +100,7 @@ public class Management implements epf.security.client.Management {
 			throw new BadRequestException();
 		}
 		identityStore.putCredential(credential).toCompletableFuture().get();
-		final Set<String> audience = TokenBuilder.buildAudience(null, forwardedHost, Optional.empty());
+		final Set<String> audience = TokenBuilder.buildAudience(webappUrl, forwardedHost, Optional.empty());
 		final Set<String> groups = new HashSet<>();
 		groups.add(Naming.EPF);
 		final Map<String, Object> claims = new HashMap<>();
@@ -123,7 +131,7 @@ public class Management implements epf.security.client.Management {
 		final Credential credential = new Credential(null, email, new Password(new char[0]));
 		final Boolean exist = identityStore.isCaller(credential).toCompletableFuture().get();
 		if(exist) {
-			final Set<String> audience = TokenBuilder.buildAudience(null, forwardedHost, Optional.empty());
+			final Set<String> audience = TokenBuilder.buildAudience(webappUrl, forwardedHost, Optional.empty());
 			final Set<String> groups = new HashSet<>();
 			groups.add(Naming.EPF);
 			final Map<String, Object> claims = new HashMap<>();
