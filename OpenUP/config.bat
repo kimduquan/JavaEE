@@ -1,6 +1,3 @@
-set epf_gateway_url=https://localhost:8081/gateway/
-set epf_webapp_url=https://localhost/webapp/
-set epf_security_webapp_url=https://localhost/security/
 set epf_client_net_ssl_keyStore=C://GIT/JavaEE/OpenUP/dev.p12
 set epf_client_net_ssl_keyStoreType=PKCS12
 set epf_client_net_ssl_keyStorePassword=changeit
