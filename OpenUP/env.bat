@@ -10,4 +10,5 @@ set KAFKA_HOME=%KAFKA_DIR%\bin\windows
 set WILDFLY_HOME="C:\wildfly-24.0.1.Final\bin"
 set JAEGER_HOME="C:\jaeger-1.48.0-windows-amd64"
 set MAVEN_HOME=C:\apache-maven-3.9.4\bin
+set HAZELCAST_HOME=C:\hazelcast-5.3.2
 set PATH=%MAVEN_HOME%;%PATH%
