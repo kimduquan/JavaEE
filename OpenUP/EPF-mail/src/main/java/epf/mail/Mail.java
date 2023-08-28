@@ -2,7 +2,6 @@ package epf.mail;
 
 import java.util.Map.Entry;
 import javax.annotation.Resource;
-import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.mail.Message.RecipientType;
 import javax.mail.Session;
@@ -13,20 +12,17 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimePart;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
-
 import epf.mail.client.AttachFile;
 import epf.mail.client.Message;
 import epf.mail.client.MessageBodyPart;
 import epf.mail.client.MessageMultipart;
 import epf.mail.client.MessagePart;
 import epf.naming.Naming;
-import epf.naming.Naming.Security;
 
 /**
  * 
  */
 @Path(Naming.MAIL)
-@RolesAllowed({Security.DEFAULT_ROLE, Naming.EPF})
 @ApplicationScoped
 public class Mail implements epf.mail.client.Mail {
 	

@@ -48,7 +48,7 @@ public class Mail {
 			final Map<String, String> recipients,
 			@Option(names = {"-s", "--subject"}, description = "Subject")
 			final String subject,
-			@Option(names = {"-t", "--text"}, description = "Text", interactive = true, echo = true)
+			@Option(names = {"-text", "--text"}, description = "Text", interactive = true, echo = true)
 			final String text) throws Exception {
 		final Message message = new Message();
 		message.setDescription(description);
