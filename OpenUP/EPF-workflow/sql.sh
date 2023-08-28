@@ -1,2 +1,0 @@
-./target/EPF-shell-1.0.0-runner utility jdbc -url "jdbc:h2:~/EPF-security;AUTO_SERVER=TRUE;AUTO_RECONNECT=TRUE;PASSWORD_HASH=TRUE" -u test -f "/home/kimduquan/git/JavaEE/OpenUP/EPF-schema/src/main/resources/META-INF/security/h2/remove_user.sql" -p
-22ddf5abe1672b3d6c12fe7387ecc15e2ff0f405595dd756111b17d29b5f4486
