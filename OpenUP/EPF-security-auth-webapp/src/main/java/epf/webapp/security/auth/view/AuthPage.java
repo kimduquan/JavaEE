@@ -144,7 +144,7 @@ public class AuthPage implements AuthView, Serializable {
 	 * @throws Exception
 	 */
 	private String buildAuthRequestNonce(final String sessionId) throws Exception {
-		return SecurityUtil.hash(sessionId, Base64.getUrlEncoder());
+		return SecurityUtil.hash(sessionId, Base64.getMimeEncoder());
 	}
 
 	@Override
