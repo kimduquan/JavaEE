@@ -1,6 +1,7 @@
 package epf.webapp.security.auth.view;
 
 import java.io.Serializable;
+import java.util.Base64;
 import javax.enterprise.context.Conversation;
 import javax.faces.context.ExternalContext;
 import javax.faces.view.ViewScoped;
@@ -143,7 +144,7 @@ public class AuthPage implements AuthView, Serializable {
 	 * @throws Exception
 	 */
 	private String buildAuthRequestNonce(final String sessionId) throws Exception {
-		return SecurityUtil.hash(sessionId);
+		return SecurityUtil.hash(sessionId, Base64.getUrlEncoder());
 	}
 
 	@Override

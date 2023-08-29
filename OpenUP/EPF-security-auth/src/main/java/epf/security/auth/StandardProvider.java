@@ -1,6 +1,7 @@
 package epf.security.auth;
 
 import java.net.URI;
+import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.client.Client;
@@ -152,7 +153,7 @@ public class StandardProvider implements Provider {
 			if(isValid) {
 				final String nonce = claims.getClaimValueAsString("nonce");
 				if(nonce != null && !nonce.isEmpty()) {
-					final String hash = SecurityUtil.hash(sessionId);
+					final String hash = SecurityUtil.hash(sessionId, Base64.getUrlEncoder());
 					isValid = nonce.equals(hash);
 				}
 			}

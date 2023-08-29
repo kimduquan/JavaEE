@@ -3,6 +3,7 @@ package epf.util.security;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.util.Base64.Encoder;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import epf.util.StringUtil;
@@ -19,6 +20,16 @@ public interface SecurityUtil {
 	 */
 	static String hash(final String string) throws Exception {
 		return StringUtil.encode(CryptoUtil.hash(string.getBytes("UTF-8")));
+	}
+	
+	/**
+	 * @param string
+	 * @param encoder
+	 * @return
+	 * @throws Exception
+	 */
+	static String hash(final String string, final Encoder encoder) throws Exception {
+		return StringUtil.encode(CryptoUtil.hash(string.getBytes("UTF-8")), encoder);
 	}
 	
 	/**

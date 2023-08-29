@@ -6,6 +6,8 @@ import java.nio.charset.Charset;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Base64.Decoder;
+import java.util.Base64.Encoder;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -209,7 +211,17 @@ public interface StringUtil {
 	 * @throws Exception
 	 */
 	static String encode(final byte[] bytes) throws Exception {
-		return new String(Base64.getEncoder().encode(bytes), "UTF-8");
+		return encode(bytes, Base64.getEncoder());
+	}
+	
+	/**
+	 * @param bytes
+	 * @param encoder
+	 * @return
+	 * @throws Exception
+	 */
+	static String encode(final byte[] bytes, final Encoder encoder) throws Exception {
+		return new String(encoder.encode(bytes), "UTF-8");
 	}
 	
 	/**
@@ -218,7 +230,17 @@ public interface StringUtil {
 	 * @throws Exception
 	 */
 	static byte[] decode(final String string) throws Exception {
-		return Base64.getDecoder().decode(string.getBytes("UTF-8"));
+		return decode(string, Base64.getDecoder());
+	}
+	
+	/**
+	 * @param string
+	 * @param decoder
+	 * @return
+	 * @throws Exception
+	 */
+	static byte[] decode(final String string, final Decoder decoder) throws Exception {
+		return decoder.decode(string.getBytes("UTF-8"));
 	}
 	
 	/**
