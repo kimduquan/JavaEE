@@ -72,6 +72,10 @@ public class LoginPage extends Page implements LoginView {
 	public void register() {
 		driver.findElement(By.xpath("//a[@href='/security/webapp/register.html']")).click();
 	}
+	
+	public void forgotPassword() {
+		driver.findElement(By.linkText("Forgot Password?")).click();
+	}
 
 	@PostConstruct
 	public void navigateTo() {

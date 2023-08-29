@@ -152,7 +152,8 @@ public class StandardProvider implements Provider {
 			if(isValid) {
 				final String nonce = claims.getClaimValueAsString("nonce");
 				if(nonce != null && !nonce.isEmpty()) {
-					isValid = nonce.equals(SecurityUtil.hash(sessionId));
+					final String hash = SecurityUtil.hash(sessionId);
+					isValid = nonce.equals(hash);
 				}
 			}
 		}
