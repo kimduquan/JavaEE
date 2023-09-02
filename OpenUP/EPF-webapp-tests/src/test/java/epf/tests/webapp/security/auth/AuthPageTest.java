@@ -5,6 +5,8 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.MethodRule;
+
+import epf.tests.webapp.security.auth.facebook.FacebookLoginPage;
 import epf.tests.webapp.security.auth.google.GoogleMailPage;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -23,9 +25,12 @@ public class AuthPageTest {
 	@Inject
 	GoogleMailPage gmail;
 	
+	@Inject
+	FacebookLoginPage facebook;
+	
 	@Test
 	public void testloginWithGoogle_LoginOk() throws Exception {
-		gmail.setIdentifierId("kimduquan01@gmail.com");
+		gmail.setIdentifierId("kimduquan10@gmail.com");
 		gmail.next();
 		gmail.tryAgain();
 	}
@@ -33,5 +38,7 @@ public class AuthPageTest {
 	@Test
 	public void testloginWithFacebook_LoginOk() throws Exception {
 		authPage.loginWithFacebook();
+		facebook.setEmail("kimduquan10@gmail.com");
+		facebook.setPassword("Kim.Du.Quan10");
 	}
 }
