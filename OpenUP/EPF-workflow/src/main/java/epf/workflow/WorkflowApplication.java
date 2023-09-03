@@ -17,9 +17,11 @@ import javax.json.JsonArray;
 import javax.json.JsonValue;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
@@ -27,6 +29,7 @@ import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
 import epf.naming.Naming;
+import epf.schedule.client.Schedule;
 import epf.util.MapUtil;
 import epf.util.json.JsonUtil;
 import epf.workflow.action.Action;
@@ -66,6 +69,7 @@ import epf.workflow.schema.state.SwitchState;
 import epf.workflow.schema.state.SwitchStateConditions;
 import epf.workflow.schema.state.SwitchStateDataConditions;
 import epf.workflow.schema.state.SwitchStateEventConditions;
+import epf.workflow.schema.schedule.ScheduleDefinition;
 
 /**
  * @author PC
@@ -88,12 +92,6 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 	 */
 	@Inject
 	transient WorkflowPersistence persistence;
-	
-	/**
-	 * 
-	 */
-	@Inject
-	transient WorkflowSchedule schedule;
 	
 	/**
 	 * 
@@ -131,6 +129,27 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 		return Response.ok(workflowData)
 				.links(epf.workflow.client.Workflow.endLink(workflow, version, state))
 				.header(LRA.LRA_HTTP_CONTEXT_HEADER, instance)
+				.build();
+	}
+	
+	private Response scheduleLink(final StartDefinition startDefinition, final WorkflowDefinition workflowDefinition) {
+		Link scheduleLink = null;
+		String path =  "/" + workflowDefinition.getName();
+		String recurringTimeInterval;
+		if(startDefinition.getSchedule() instanceof String) {
+			recurringTimeInterval = (String) startDefinition.getSchedule();
+		}
+		else {
+			recurringTimeInterval = ((ScheduleDefinition)startDefinition.getSchedule()).getInterval();
+		}
+		if(workflowDefinition.getVersion() != null) {
+			scheduleLink = Schedule.scheduleLink(Naming.WORKFLOW, HttpMethod.PUT, path + "?version=" + workflowDefinition.getVersion(), recurringTimeInterval);
+		}
+		else {
+			scheduleLink = Schedule.scheduleLink(Naming.WORKFLOW, HttpMethod.PUT, path, recurringTimeInterval);
+		}
+		return Response.ok()
+				.links(scheduleLink)
 				.build();
 	}
 	
@@ -618,10 +637,6 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 		}
 		throw new BadRequestException();
 	}
-	
-	private void scheduleStart(final WorkflowDefinition workflowDefinition, final StartDefinition startDefinition) {
-		schedule.schedule(workflowDefinition, startDefinition, null);
-	}
 
 	@Override
 	public Response newWorkflowDefinition(final WorkflowDefinition workflowDefinition) throws Exception {
@@ -633,7 +648,7 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 			cache.put(newWorkflowDefinition.getId(), newWorkflowDefinition);
 		}
 		if(newWorkflowDefinition.getStart() instanceof StartDefinition) {
-			scheduleStart(newWorkflowDefinition, (StartDefinition)newWorkflowDefinition.getStart());
+			return scheduleLink((StartDefinition)newWorkflowDefinition.getStart(), newWorkflowDefinition);
 		}
 		return Response.ok(newWorkflowDefinition).build();
 	}
@@ -641,28 +656,23 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 	@Override
 	public Response start(final String workflow, final String version, final URI instance, final JsonValue input) throws Exception {
 		WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
-		if(workflowDefinition.getStart() instanceof StartDefinition) {
-			throw new BadRequestException();
+		String startState = null;
+		if(workflowDefinition.getStart() != null) {
+			if(workflowDefinition.getStart() instanceof String) {
+				startState = (String)workflowDefinition.getStart();
+			}
+			else if(workflowDefinition.getStart() instanceof StartDefinition) {
+				final StartDefinition startDef = (StartDefinition) workflowDefinition.getStart();
+				startState = startDef.getStateName();
+			}
 		}
 		else {
-			String startState = null;
-			if(workflowDefinition.getStart() != null) {
-				if(workflowDefinition.getStart() instanceof String) {
-					startState = (String)workflowDefinition.getStart();
-				}
-				else if(workflowDefinition.getStart() instanceof StartDefinition) {
-					final StartDefinition startDef = (StartDefinition) workflowDefinition.getStart();
-					startState = startDef.getStateName();
-				}
-			}
-			else {
-				startState = workflowDefinition.getStates()[0].getName();
-			}
-			final WorkflowData workflowData = new WorkflowData();
-			workflowData.setInput(input);
-			workflowData.setOutput(JsonUtil.empty());
-			return transitionLink(workflow, version, startState, instance, workflowData);
+			startState = workflowDefinition.getStates()[0].getName();
 		}
+		final WorkflowData workflowData = new WorkflowData();
+		workflowData.setInput(input);
+		workflowData.setOutput(JsonUtil.empty());
+		return transitionLink(workflow, version, startState, instance, workflowData);
 	}
 
 	@Override

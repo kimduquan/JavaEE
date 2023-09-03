@@ -4,17 +4,20 @@ import java.io.InputStream;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import epf.client.util.Client;
+import epf.client.util.LinkUtil;
 import epf.naming.Naming;
 
 /**
@@ -62,6 +65,21 @@ public interface Schedule {
 				target -> target.path("REST").matrixParam("service", service).matrixParam("method", method).matrixParam("recurringTimeInterval", recurringTimeInterval).path(path), 
 				req -> req
 				).post(Entity.entity(body, MediaType.APPLICATION_JSON));
+	}
+	
+	/**
+	 * @param service
+	 * @param method
+	 * @param path
+	 * @param recurringTimeInterval
+	 * @return
+	 */
+	static Link scheduleLink(
+			final String service, 
+			final String method,
+			final String path,
+			final String recurringTimeInterval) {
+		return LinkUtil.build(Naming.SCHEDULE, HttpMethod.POST, "REST?service=" + service + ";method=" + method + ";recurringTimeInterval=" + recurringTimeInterval + path);
 	}
 	
 	/**
