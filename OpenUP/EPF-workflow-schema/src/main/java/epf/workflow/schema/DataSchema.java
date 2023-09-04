@@ -2,9 +2,9 @@ package epf.workflow.schema;
 
 import epf.json.schema.JsonSchema;
 import epf.workflow.schema.mapping.JsonSchemaAttributeConverter;
-import jakarta.nosql.mapping.Column;
-import jakarta.nosql.mapping.Convert;
-import jakarta.nosql.mapping.Embeddable;
+import jakarta.nosql.Column;
+import org.eclipse.jnosql.mapping.Convert;
+import org.eclipse.jnosql.mapping.Embeddable;
 
 /**
  * @author PC

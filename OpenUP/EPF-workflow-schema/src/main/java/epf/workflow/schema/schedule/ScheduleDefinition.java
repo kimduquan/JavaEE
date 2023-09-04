@@ -1,9 +1,9 @@
 package epf.workflow.schema.schedule;
 
 import javax.json.bind.annotation.JsonbTypeAdapter;
-import jakarta.nosql.mapping.Embeddable;
+import org.eclipse.jnosql.mapping.Embeddable;
 import epf.workflow.schema.schedule.adapter.CronDefinitionAdapter;
-import jakarta.nosql.mapping.Column;
+import jakarta.nosql.Column;
 
 /**
  * @author PC

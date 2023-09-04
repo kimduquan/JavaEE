@@ -26,15 +26,34 @@
 			<scope>provided</scope>
 		</dependency>
 		
-		<!-- https://mvnrepository.com/artifact/jakarta.nosql.mapping/mapping-document -->
+		<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.mapping/jnosql-mapping-column
 		<dependency>
-		    <groupId>jakarta.nosql.mapping</groupId>
-		    <artifactId>mapping-document</artifactId>
+		    <groupId>org.eclipse.jnosql.mapping</groupId>
+		    <artifactId>jnosql-mapping-column</artifactId>
+		</dependency> -->
+		<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.mapping/jnosql-mapping-document
+		<dependency>
+		    <groupId>org.eclipse.jnosql.mapping</groupId>
+		    <artifactId>jnosql-mapping-document</artifactId>
+		</dependency> -->
+		
+		<!-- https://mvnrepository.com/artifact/jakarta.nosql/nosql-core -->
+		<dependency>
+		    <groupId>jakarta.nosql</groupId>
+		    <artifactId>nosql-core</artifactId>
+		    <version>1.0.0-b7</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/jakarta.nosql.mapping/mapping-column -->
+		<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.mapping/jnosql-mapping-api-core -->
 		<dependency>
-		    <groupId>jakarta.nosql.mapping</groupId>
-		    <artifactId>mapping-column</artifactId>
+		    <groupId>org.eclipse.jnosql.mapping</groupId>
+		    <artifactId>jnosql-mapping-api-core</artifactId>
+		    <version>1.0.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.communication/jnosql-communication-document -->
+		<dependency>
+		    <groupId>org.eclipse.jnosql.communication</groupId>
+		    <artifactId>jnosql-communication-document</artifactId>
+		    <version>1.0.1</version>
 		</dependency>
 		
 		<dependency>

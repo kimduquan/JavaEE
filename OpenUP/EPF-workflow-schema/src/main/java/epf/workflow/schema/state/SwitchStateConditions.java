@@ -3,8 +3,8 @@ package epf.workflow.schema.state;
 import javax.json.bind.annotation.JsonbTypeAdapter;
 import epf.workflow.schema.adapter.EndDefinitionAdapter;
 import epf.workflow.schema.adapter.TransitionDefinitionAdapter;
-import jakarta.nosql.mapping.Column;
-import jakarta.nosql.mapping.MappedSuperclass;
+import jakarta.nosql.Column;
+import org.eclipse.jnosql.mapping.MappedSuperclass;
 
 /**
  * @author PC

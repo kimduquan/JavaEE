@@ -2,143 +2,82 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-	<groupId>openup</groupId>
-	<artifactId>OpenUP-parent</artifactId>
+	<groupId>epf</groupId>
+	<artifactId>EPF-parent</artifactId>
 	<version>1.0.0</version>
+	<relativePath>../EPF-parent/pom.xml</relativePath>
   </parent>
   <artifactId>EPF-workflow</artifactId>
   <name>Eclipse Process Framework Workflow</name>
-  <packaging>war</packaging>
   <dependencies>
-    <!-- https://mvnrepository.com/artifact/javax.enterprise.concurrent/javax.enterprise.concurrent-api -->
 	<dependency>
-		<groupId>javax.enterprise.concurrent</groupId>
-		<artifactId>javax.enterprise.concurrent-api</artifactId>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/javax.enterprise/cdi-api -->
-	<dependency>
-		<groupId>javax.enterprise</groupId>
-		<artifactId>cdi-api</artifactId>
-		<scope>provided</scope>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
-	<dependency>
-		<groupId>javax.ws.rs</groupId>
-		<artifactId>javax.ws.rs-api</artifactId>
-		<scope>provided</scope>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
-	<dependency>
-		<groupId>javax.annotation</groupId>
-		<artifactId>javax.annotation-api</artifactId>
-		<scope>provided</scope>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/javax.json.bind/javax.json.bind-api -->
-	<dependency>
-		<groupId>javax.json.bind</groupId>
-		<artifactId>javax.json.bind-api</artifactId>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/javax.cache/cache-api -->
-	<dependency>
-	    <groupId>javax.cache</groupId>
-	    <artifactId>cache-api</artifactId>
-	</dependency>
-    <!-- https://mvnrepository.com/artifact/javax.el/javax.el-api -->
-	<dependency>
-	    <groupId>javax.el</groupId>
-	    <artifactId>javax.el-api</artifactId>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/javax.json/javax.json-api -->
-	<dependency>
-		<groupId>javax.json</groupId>
-		<artifactId>javax.json-api</artifactId>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/javax.validation/validation-api -->
-	<dependency>
-		<groupId>javax.validation</groupId>
-		<artifactId>validation-api</artifactId>
-		<scope>provided</scope>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.context-propagation/microprofile-context-propagation-api -->
-	<dependency>
-		<groupId>org.eclipse.microprofile.context-propagation</groupId>
-		<artifactId>microprofile-context-propagation-api</artifactId>
-		<scope>provided</scope>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.openapi/microprofile-openapi-api -->
-	<dependency>
-	    <groupId>org.eclipse.microprofile.openapi</groupId>
-	    <artifactId>microprofile-openapi-api</artifactId>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.reactive.messaging/microprofile-reactive-messaging-api -->
-	<dependency>
-	    <groupId>org.eclipse.microprofile.reactive.messaging</groupId>
-	    <artifactId>microprofile-reactive-messaging-api</artifactId>
-	    <scope>provided</scope>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.health/microprofile-health-api -->
-	<dependency>
-	    <groupId>org.eclipse.microprofile.health</groupId>
-	    <artifactId>microprofile-health-api</artifactId>
-	    <scope>provided</scope>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.lra/microprofile-lra-api -->
-	<dependency>
-	    <groupId>org.eclipse.microprofile.lra</groupId>
-	    <artifactId>microprofile-lra-api</artifactId>
-	    <scope>provided</scope>
-	</dependency>
-    
-	<!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast -->
-	<dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-jsonp</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-resteasy-reactive-jackson</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-rest-client-reactive</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-jsonb</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-hibernate-validator</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-resteasy-reactive</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-smallrye-reactive-messaging-kafka</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-narayana-lra</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-smallrye-fault-tolerance</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-smallrye-health</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-smallrye-context-propagation</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-rest-client-reactive-jsonb</artifactId>
+    </dependency>
+    <dependency>
 	    <groupId>com.hazelcast</groupId>
-	    <artifactId>hazelcast</artifactId>
+	    <artifactId>quarkus-hazelcast-client</artifactId>
 	</dependency>
-    <!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.communication/jnosql-mongodb-driver -->
+	<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.databases/jnosql-mongodb -->
 	<dependency>
-	    <groupId>org.eclipse.jnosql.communication</groupId>
-	    <artifactId>jnosql-mongodb-driver</artifactId>
+	    <groupId>org.eclipse.jnosql.databases</groupId>
+	    <artifactId>jnosql-mongodb</artifactId>
+	    <version>1.0.1</version>
 	</dependency>
-	<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.mapping/jnosql-mapping-document -->
+	<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.databases/jnosql-cassandra -->
 	<dependency>
-	    <groupId>org.eclipse.jnosql.mapping</groupId>
-	    <artifactId>jnosql-mapping-document</artifactId>
+	    <groupId>org.eclipse.jnosql.databases</groupId>
+	    <artifactId>jnosql-cassandra</artifactId>
+	    <version>1.0.1</version>
 	</dependency>
-	<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.mapping/jnosql-mapping-column -->
-	<dependency>
-	    <groupId>org.eclipse.jnosql.mapping</groupId>
-	    <artifactId>jnosql-mapping-column</artifactId>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.communication/jnosql-cassandra-driver -->
-	<dependency>
-	    <groupId>org.eclipse.jnosql.communication</groupId>
-	    <artifactId>jnosql-cassandra-driver</artifactId>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/org.jboss/jandex -->
-	<dependency>
-		<groupId>org.jboss</groupId>
-		<artifactId>jandex</artifactId>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.communication/jnosql-communication-document -->
-	<dependency>
-	    <groupId>org.eclipse.jnosql.communication</groupId>
-	    <artifactId>jnosql-communication-document</artifactId>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.communication/jnosql-communication-column -->
-	<dependency>
-	    <groupId>org.eclipse.jnosql.communication</groupId>
-	    <artifactId>jnosql-communication-column</artifactId>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/org.eclipse/yasson -->
-	<dependency>
-		<groupId>org.eclipse</groupId>
-		<artifactId>yasson</artifactId>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/org.glassfish/javax.json -->
-	<dependency>
-		<groupId>org.glassfish</groupId>
-		<artifactId>javax.json</artifactId>
-	</dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-arc</artifactId>
+    </dependency>
 	
 	<dependency>
         <groupId>openup</groupId>
@@ -196,41 +135,4 @@
         <version>${project.version}</version>
     </dependency>
   </dependencies>
-  <build>
-	  <plugins>
-		  <plugin>
-		      <groupId>org.wildfly.plugins</groupId>
-		      <artifactId>wildfly-jar-maven-plugin</artifactId>
-		      <version>10.0.0.Final</version>
-		      <configuration>
-				  <feature-pack-location>wildfly@maven(org.jboss.universe:community-universe)</feature-pack-location>
-				  <layers>
-						<layer>base-server</layer>
-						<layer>bean-validation</layer>
-					  	<layer>cdi</layer>
-						<layer>ee-concurrency</layer>
-						<layer>jaxrs-core</layer>
-			      		<layer>jaxrs</layer>
-			      		<layer>jsonb</layer>
-			      		<layer>jsonp</layer>
-						<layer>naming</layer>
-			      		<layer>transactions</layer>
-					  	<layer>microprofile-config</layer>
-			      		<layer>microprofile-fault-tolerance</layer>
-			      		<layer>microprofile-health</layer>
-						<layer>microprofile-telemetry</layer>
-			      		<layer>microprofile-lra-participant</layer>
-						<layer>microprofile-rest-client</layer>
-			      </layers>
-		      </configuration>
-		      <executions>
-		        <execution>
-		          <goals>
-		            <goal>package</goal>
-		          </goals>
-		        </execution>
-		      </executions>
-		    </plugin>
-	  </plugins>
-  </build>
 </project>

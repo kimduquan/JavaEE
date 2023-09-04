@@ -3,7 +3,6 @@ package epf.shell.security;
 import epf.naming.Naming;
 import epf.security.schema.Token;
 import epf.shell.Function;
-import epf.util.logging.Logging;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.validation.constraints.NotBlank;
@@ -22,7 +21,6 @@ import picocli.CommandLine.Option;
 @Command(name = Naming.SECURITY)
 @RequestScoped
 @Function
-@Logging
 public class Security {
 	
 	/**
