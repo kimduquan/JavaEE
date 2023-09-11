@@ -19,7 +19,7 @@ import jakarta.ws.rs.core.Response;
 /**
  * 
  */
-public class NoSQLTemplate {
+public class NoSQLTemplate<T extends Object> {
 
 	/**
 	 * 
@@ -27,19 +27,25 @@ public class NoSQLTemplate {
 	private transient final Template template;
 	
 	/**
+	 * 
+	 */
+	private transient final Class<T> type;
+	
+	/**
+	 * @param type
 	 * @param template
 	 */
-	public NoSQLTemplate(final Template template) {
+	public NoSQLTemplate(final Class<T> type, final Template template) {
+		this.type = type;
 		this.template = template;
 	}
 	
 	/**
-	 * @param type
 	 * @param body
 	 * @return
 	 * @throws Exception
 	 */
-	public Response insert(final Class<?> type, final InputStream body) throws Exception {
+	public Response insert(final InputStream body) throws Exception {
 		try(Jsonb jsonb = JsonbBuilder.create()){
 			final Object object = jsonb.fromJson(body, type);
 			return Response.ok(template.insert(object)).build();
@@ -47,12 +53,11 @@ public class NoSQLTemplate {
 	}
 	
 	/**
-	 * @param type
 	 * @param body
 	 * @return
 	 * @throws Exception
 	 */
-	public Response update(final Class<?> type, final InputStream body) throws Exception {
+	public Response update(final InputStream body) throws Exception {
 		try(Jsonb jsonb = JsonbBuilder.create()){
 			final Object object = jsonb.fromJson(body, type);
 			return Response.ok(template.update(object)).build();
@@ -60,29 +65,26 @@ public class NoSQLTemplate {
 	}
 	
 	/**
-	 * @param type
 	 * @param id
 	 * @return
 	 * @throws Exception
 	 */
-	public Response find(final Class<?> type, final Object id) throws Exception {
-		final Optional<?> object = template.find(type, id);
+	public Response find(final Object id) throws Exception {
+		final Optional<T> object = template.find(type, id);
 		return Response.ok(object.orElseThrow(NotFoundException::new)).build();
 	}
 	
 	/**
-	 * @param type
 	 * @param id
 	 * @return
 	 * @throws Exception
 	 */
-	public Response delete(final Class<?> type, final Object id) throws Exception {
+	public Response delete(final Object id) throws Exception {
 		template.delete(type, id);
 		return Response.ok().build();
 	}
 	
 	/**
-	 * @param type
 	 * @param filters
 	 * @param orderBy
 	 * @param asc
@@ -91,7 +93,7 @@ public class NoSQLTemplate {
 	 * @return
 	 * @throws Exception
 	 */
-	public Response select(final Class<?> type, final MultivaluedMap<String, ?> filters, final String orderBy, final Boolean asc, final Long limit, final Long skip) throws Exception {
+	public Response select(final MultivaluedMap<String, ?> filters, final String orderBy, final Boolean asc, final Long limit, final Long skip) throws Exception {
 		final MapperFrom from = template.select(type);
 		MapperQueryBuild result = null;
 		if(filters != null && !filters.isEmpty()) {

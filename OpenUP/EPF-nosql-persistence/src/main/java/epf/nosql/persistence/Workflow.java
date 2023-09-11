@@ -31,14 +31,14 @@ public class Workflow {
 	/**
 	 * 
 	 */
-	private NoSQLTemplate nosql;
+	private NoSQLTemplate<WorkflowDefinition> nosql;
 	
 	/**
 	 * 
 	 */
 	@PostConstruct
 	void postConstruct() {
-		nosql = new NoSQLTemplate(template);
+		nosql = new NoSQLTemplate<>(WorkflowDefinition.class, template);
 	}
 	
 	/**
@@ -50,7 +50,7 @@ public class Workflow {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response insert(final InputStream body) throws Exception {
-		return nosql.insert(WorkflowDefinition.class, body);
+		return nosql.insert(body);
 	}
 	
 	/**
@@ -62,7 +62,7 @@ public class Workflow {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response update(final InputStream body) throws Exception {
-		return nosql.update(WorkflowDefinition.class, body);
+		return nosql.update(body);
 	}
 	
 	/**
@@ -74,7 +74,7 @@ public class Workflow {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response find(@PathParam("id") final String id) throws Exception {
-		return nosql.find(WorkflowDefinition.class, id);
+		return nosql.find(id);
 	}
 	
 	/**
@@ -85,6 +85,6 @@ public class Workflow {
 	@Path("{id}")
 	@DELETE
 	public Response delete(@PathParam("id") final String id) throws Exception {
-		return nosql.delete(WorkflowDefinition.class, id);
+		return nosql.delete(id);
 	}
 }
