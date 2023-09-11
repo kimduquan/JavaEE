@@ -2,10 +2,14 @@ package epf.workflow;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
+import epf.util.logging.LogManager;
+import epf.workflow.internal.NoSQLDocument;
 import epf.workflow.schema.WorkflowDefinition;
-import jakarta.nosql.document.DocumentTemplate;
 
 /**
  * @author PC
@@ -17,8 +21,14 @@ public class WorkflowPersistence {
 	/**
 	 * 
 	 */
+	private transient static final Logger LOGGER = LogManager.getLogger(WorkflowPersistence.class.getName());
+	
+	/**
+	 * 
+	 */
 	@Inject
-	transient DocumentTemplate document;
+	@RestClient
+	transient NoSQLDocument document;
 	
 	/**
 	 * @param id
@@ -26,10 +36,13 @@ public class WorkflowPersistence {
 	 * @return
 	 */
 	public Optional<WorkflowDefinition> find(final String id, final String version) {
-		//final DocumentQuery query = DocumentQuery.select().from("WorkflowDefinition").where("id").eq(id).and("version").eq(version).build();
-		//final Optional<WorkflowDefinition> workflowDefinition = document.singleResult(query);
-		//return workflowDefinition;
-		final Optional<WorkflowDefinition> workflowDefinition = document.select(WorkflowDefinition.class).where("id").eq(id).and("version").eq(version).singleResult();
+		Optional<WorkflowDefinition> workflowDefinition = Optional.empty();
+		try {
+			workflowDefinition = Optional.ofNullable(document.find(id).readEntity(WorkflowDefinition.class));
+		} 
+		catch (Exception e) {
+			LOGGER.log(Level.WARNING, "find", e);
+		}
 		return workflowDefinition;
 	}
 	
@@ -38,7 +51,14 @@ public class WorkflowPersistence {
 	 * @return
 	 */
 	public Optional<WorkflowDefinition> find(final String id) {
-		return document.find(WorkflowDefinition.class, id);
+		Optional<WorkflowDefinition> workflowDefinition = Optional.empty();
+		try {
+			workflowDefinition = Optional.ofNullable(document.find(id).readEntity(WorkflowDefinition.class));
+		} 
+		catch (Exception e) {
+			LOGGER.log(Level.WARNING, "find", e);
+		}
+		return workflowDefinition;
 	}
 	
 	/**
@@ -46,7 +66,13 @@ public class WorkflowPersistence {
 	 * @return
 	 */
 	public WorkflowDefinition persist(final WorkflowDefinition workflowDefinition) {
-		return document.insert(workflowDefinition);
+		try {
+			return document.insert(workflowDefinition).readEntity(WorkflowDefinition.class);
+		} 
+		catch (Exception e) {
+			LOGGER.log(Level.WARNING, "persist", e);
+			return null;
+		}
 	}
 	
 	/**
@@ -60,14 +86,25 @@ public class WorkflowPersistence {
 		else {
 			workflowInstance.setId(UUID.randomUUID().toString());
 		}
-		return document.insert(workflowInstance);
+		try {
+			return document.insert(workflowInstance).readEntity(WorkflowInstance.class);
+		} 
+		catch (Exception e) {
+			LOGGER.log(Level.WARNING, "persist", e);
+			return null;
+		}
 	}
 	
 	/**
 	 * @param workflowInstance
 	 */
 	public void merge(final WorkflowInstance workflowInstance) {
-		document.update(workflowInstance);
+		try {
+			document.update(workflowInstance);
+		} 
+		catch (Exception e) {
+			LOGGER.log(Level.WARNING, "merge", e);
+		}
 	}
 	
 	/**
@@ -75,13 +112,24 @@ public class WorkflowPersistence {
 	 * @return
 	 */
 	public WorkflowInstance getInstance(final String id) {
-		return document.find(WorkflowInstance.class, id).get();
+		try {
+			return document.find(id).readEntity(WorkflowInstance.class);
+		} 
+		catch (Exception e) {
+			LOGGER.log(Level.WARNING, "getInstance", e);
+			return null;
+		}
 	}
 	
 	/**
 	 * @param workflowInstance
 	 */
 	public void remove(final WorkflowInstance workflowInstance) {
-		document.delete(WorkflowInstance.class, workflowInstance.getId());
+		try {
+			document.delete(workflowInstance.getId());
+		} 
+		catch (Exception e) {
+			LOGGER.log(Level.WARNING, "remove", e);
+		}
 	}
 }

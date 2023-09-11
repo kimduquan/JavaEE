@@ -62,18 +62,6 @@
 	    <groupId>com.hazelcast</groupId>
 	    <artifactId>quarkus-hazelcast-client</artifactId>
 	</dependency>
-	<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.databases/jnosql-mongodb -->
-	<dependency>
-	    <groupId>org.eclipse.jnosql.databases</groupId>
-	    <artifactId>jnosql-mongodb</artifactId>
-	    <version>1.0.1</version>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.databases/jnosql-cassandra -->
-	<dependency>
-	    <groupId>org.eclipse.jnosql.databases</groupId>
-	    <artifactId>jnosql-cassandra</artifactId>
-	    <version>1.0.1</version>
-	</dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-arc</artifactId>
