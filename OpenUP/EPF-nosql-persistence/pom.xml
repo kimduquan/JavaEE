@@ -76,9 +76,8 @@
         <version>${project.version}</version>
     </dependency>
 	<dependency>
-        <groupId>openup</groupId>
-        <artifactId>EPF-json-utility</artifactId>
-        <version>${project.version}</version>
-    </dependency>
+		<groupId>javax.json</groupId>
+		<artifactId>javax.json-api</artifactId>
+	</dependency>
   </dependencies>
 </project>
