@@ -1,6 +1,6 @@
 package epf.workflow.schema;
 
-import javax.json.bind.annotation.JsonbTypeAdapter;
+import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import epf.workflow.schema.event.ProducedEventDefinition;
 import epf.workflow.schema.adapter.ContinueAsAdapter;
 import jakarta.nosql.Column;

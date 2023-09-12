@@ -1,6 +1,6 @@
 package epf.workflow.schema.adapter;
 
-import javax.json.bind.adapter.JsonbAdapter;
+import jakarta.json.bind.adapter.JsonbAdapter;
 import epf.workflow.schema.util.EnumUtil;
 
 /**

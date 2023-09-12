@@ -1,6 +1,6 @@
 package epf.workflow.schema;
 
-import javax.json.bind.annotation.JsonbTypeAdapter;
+import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import javax.validation.constraints.NotNull;
 import jakarta.nosql.Column;
 import org.eclipse.jnosql.mapping.Embeddable;
