@@ -18,7 +18,6 @@
 		<dependency>
 		    <groupId>javax.json</groupId>
 		    <artifactId>javax.json-api</artifactId>
-		    <scope>provided</scope>
 		</dependency>
 		<dependency>
 		    <groupId>javax.json.bind</groupId>
