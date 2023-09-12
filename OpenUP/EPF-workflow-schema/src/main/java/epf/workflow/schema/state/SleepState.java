@@ -1,6 +1,6 @@
 package epf.workflow.schema.state;
 
-import jakarta.json.bind.annotation.JsonbTypeAdapter;
+import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.validation.constraints.NotNull;
 import epf.workflow.schema.adapter.EndDefinitionAdapter;
 import epf.workflow.schema.adapter.TransitionDefinitionAdapter;

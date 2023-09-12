@@ -1,8 +1,8 @@
 package epf.workflow.schema.state.adapter;
 
-import jakarta.json.JsonObject;
-import jakarta.json.bind.adapter.JsonbAdapter;
-import epf.util.json.ext.JsonUtil;
+import javax.json.JsonObject;
+import javax.json.bind.adapter.JsonbAdapter;
+import epf.util.json.JsonUtil;
 import epf.workflow.schema.state.CallbackState;
 import epf.workflow.schema.state.EventState;
 import epf.workflow.schema.state.ForEachState;

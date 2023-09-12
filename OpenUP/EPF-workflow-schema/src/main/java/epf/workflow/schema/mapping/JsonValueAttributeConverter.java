@@ -2,8 +2,8 @@ package epf.workflow.schema.mapping;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.json.JsonValue;
-import epf.util.json.ext.JsonUtil;
+import javax.json.JsonValue;
+import epf.util.json.JsonUtil;
 import epf.util.logging.LogManager;
 import org.eclipse.jnosql.mapping.AttributeConverter;
 

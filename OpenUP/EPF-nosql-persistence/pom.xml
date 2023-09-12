@@ -75,6 +75,7 @@
         <artifactId>EPF-json-schema</artifactId>
         <version>${project.version}</version>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/javax.json/javax.json-api -->
 	<dependency>
 		<groupId>javax.json</groupId>
 		<artifactId>javax.json-api</artifactId>

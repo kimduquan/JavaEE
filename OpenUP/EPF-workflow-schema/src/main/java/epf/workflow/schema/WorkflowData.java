@@ -1,6 +1,6 @@
 package epf.workflow.schema;
 
-import jakarta.json.JsonValue;
+import javax.json.JsonValue;
 import org.eclipse.jnosql.mapping.Convert;
 import org.eclipse.jnosql.mapping.Embeddable;
 import epf.workflow.schema.mapping.JsonValueAttributeConverter;

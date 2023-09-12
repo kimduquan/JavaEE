@@ -1,6 +1,6 @@
 package epf.workflow.schema;
 
-import jakarta.json.bind.annotation.JsonbTypeAdapter;
+import javax.json.bind.annotation.JsonbTypeAdapter;
 import epf.workflow.schema.adapter.EndDefinitionAdapter;
 import epf.workflow.schema.adapter.TransitionDefinitionAdapter;
 import jakarta.nosql.Column;
