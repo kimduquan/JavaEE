@@ -293,13 +293,13 @@
 			<dependency>
 				<groupId>org.primefaces</groupId>
 				<artifactId>primefaces</artifactId>
-				<version>13.0.0</version>
+				<version>13.0.1</version>
 			</dependency>
             <!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast -->
 			<dependency>
 			    <groupId>com.hazelcast</groupId>
 			    <artifactId>hazelcast</artifactId>
-			    <version>5.3.1</version>
+			    <version>5.3.2</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.glassfish/jakarta.el -->
 			<dependency>
@@ -336,7 +336,7 @@
 			<dependency>
 			    <groupId>com.h2database</groupId>
 			    <artifactId>h2</artifactId>
-			    <version>2.2.220</version>
+			    <version>2.2.222</version>
 			</dependency>
 			
 			
@@ -394,25 +394,25 @@
 			<dependency>
 			    <groupId>org.jboss</groupId>
 			    <artifactId>jandex</artifactId>
-			    <version>3.1.2</version>
+			    <version>3.1.3</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.optaplanner/optaplanner-core -->
 			<dependency>
 			    <groupId>org.optaplanner</groupId>
 			    <artifactId>optaplanner-core</artifactId>
-			    <version>9.43.0.Final</version>
+			    <version>9.44.0.Final</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.lsp4j/org.eclipse.lsp4j.websocket -->
 			<dependency>
 			    <groupId>org.eclipse.lsp4j</groupId>
 			    <artifactId>org.eclipse.lsp4j.websocket</artifactId>
-			    <version>0.21.0</version>
+			    <version>0.21.1</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.lsp4j/org.eclipse.lsp4j -->
 			<dependency>
 			    <groupId>org.eclipse.lsp4j</groupId>
 			    <artifactId>org.eclipse.lsp4j</artifactId>
-			    <version>0.21.0</version>
+			    <version>0.21.1</version>
 			</dependency>
 			
 			
@@ -468,7 +468,7 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-jdk14</artifactId>
-                <version>2.0.7</version>
+                <version>2.0.9</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.codehaus.izpack/izpack-panel -->
 			<dependency>
@@ -495,14 +495,14 @@
 			<dependency>
 			    <groupId>org.seleniumhq.selenium</groupId>
 			    <artifactId>selenium-java</artifactId>
-			    <version>4.11.0</version>
+			    <version>4.12.1</version>
 			    <scope>test</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.jetty.websocket/javax-websocket-client-impl -->
 			<dependency>
 			    <groupId>org.eclipse.jetty.websocket</groupId>
 			    <artifactId>javax-websocket-client-impl</artifactId>
-			    <version>9.4.51.v20230217</version>
+			    <version>9.4.52.v20230823</version>
 		    	<scope>test</scope>
 			</dependency>
         </dependencies>
