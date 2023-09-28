@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 import javax.json.JsonArray;
 import epf.util.json.JsonUtil;
 import epf.util.logging.LogManager;
-import org.eclipse.jnosql.communication.document.Document;
+import org.eclipse.jnosql.communication.Entry;
 import org.eclipse.jnosql.mapping.AttributeConverter;
 
 /**
@@ -71,9 +71,9 @@ public class ArrayAttributeConverter<T extends Object> implements AttributeConve
 		final Map<String, Object> map = new HashMap<>();
 		boolean isMap = true;
 		for(Object object : list) {
-			if(object instanceof Document) {
-				final Document document = (Document) object;
-				final Object value = document.get();
+			if(object instanceof Entry) {
+				final Entry document = (Entry) object;
+				final Object value = document.value().get();
 				if(value instanceof List) {
 					final List<?> asList = (List<?>)value;
 					if(asList.isEmpty()) {

@@ -260,6 +260,24 @@
 			    <version>2.0.0</version>
 				<!--<scope>provided</scope>-->
 			</dependency>
+			<!-- https://mvnrepository.com/artifact/jakarta.nosql/nosql-core -->
+			<dependency>
+			    <groupId>jakarta.nosql</groupId>
+			    <artifactId>nosql-core</artifactId>
+			    <version>1.0.0-b7</version>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/jakarta.nosql/nosql-document -->
+			<dependency>
+			    <groupId>jakarta.nosql</groupId>
+			    <artifactId>nosql-document</artifactId>
+			    <version>1.0.0-b7</version>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/jakarta.nosql/nosql-column -->
+			<dependency>
+			    <groupId>jakarta.nosql</groupId>
+			    <artifactId>nosql-column</artifactId>
+			    <version>1.0.0-b7</version>
+			</dependency>
 			
 			
 			<!-- https://mvnrepository.com/artifact/com.liferay.faces/com.liferay.faces.bridge.api -->
@@ -313,17 +331,17 @@
 			    <artifactId>drools-jsr94</artifactId>
 			    <version>7.2.0.Final</version>
 			</dependency>
-			<!-- https://mvnrepository.com/artifact/jakarta.nosql.mapping/mapping-document -->
-			<dependency>
-				<groupId>org.eclipse.jnosql.mapping</groupId>
-				<artifactId>jnosql-mapping-document</artifactId>
-				<version>1.0.1</version>
-			</dependency>
-			<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.mapping/jnosql-mapping-column -->
+			<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.mapping/jnosql-mapping-core -->
 			<dependency>
 			    <groupId>org.eclipse.jnosql.mapping</groupId>
-			    <artifactId>jnosql-mapping-column</artifactId>
-			    <version>1.0.1</version>
+			    <artifactId>jnosql-mapping-core</artifactId>
+			    <version>1.0.0</version>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.communication/jnosql-communication-core -->
+			<dependency>
+			    <groupId>org.eclipse.jnosql.communication</groupId>
+			    <artifactId>jnosql-communication-core</artifactId>
+			    <version>1.0.0</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.jboss.narayana.rts/narayana-lra -->
 			<dependency>
