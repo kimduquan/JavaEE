@@ -1,8 +1,6 @@
 package epf.workflow.schema.adapter;
 
-import javax.json.JsonValue;
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
+import java.util.Map;
 import javax.json.bind.adapter.JsonbAdapter;
 import epf.util.json.JsonUtil;
 
@@ -10,46 +8,40 @@ import epf.util.json.JsonUtil;
  * @author PC
  *
  */
-public class BoolOrObjectAdapter implements JsonbAdapter<Object, JsonValue> {
+public class BoolOrObjectAdapter<T> implements JsonbAdapter<Object, Object> {
 	
 	/**
 	 * 
 	 */
-	private final Class<?> cls;
+	private final Class<T> cls;
 	
 	/**
 	 * @param cls
 	 */
-	public BoolOrObjectAdapter(final Class<?> cls) {
+	public BoolOrObjectAdapter(final Class<T> cls) {
 		this.cls = cls;
 	}
 
 	@Override
-	public JsonValue adaptToJson(final Object obj) throws Exception {
-		return JsonUtil.toJsonValue(obj);
+	public Object adaptToJson(final Object obj) throws Exception {
+		Object object = null;
+		if(obj instanceof Boolean || cls.isInstance(obj)) {
+			object = obj;
+		}
+		return object;
 	}
 
 	@Override
-	public Object adaptFromJson(final JsonValue obj) throws Exception {
-		switch(obj.getValueType()) {
-			case ARRAY:
-				break;
-			case FALSE:
-				return false;
-			case NULL:
-			case NUMBER:
-				break;
-			case OBJECT:
-				try(Jsonb jsonb = JsonbBuilder.create()){
-					return jsonb.fromJson(obj.toString(), cls);
-				}
-			case STRING:
-				break;
-			case TRUE:
-				return true;
-			default:
-				break;
+	public Object adaptFromJson(final Object obj) throws Exception {
+		Object object = null;
+		if(obj instanceof Boolean) {
+			object = obj;
 		}
-		return null;
+		else if(obj instanceof Map) {
+			@SuppressWarnings("unchecked")
+			final Map<String, Object> map = (Map<String, Object>) obj;
+			object = JsonUtil.fromMap(map, cls);
+		}
+		return object;
 	}
 }

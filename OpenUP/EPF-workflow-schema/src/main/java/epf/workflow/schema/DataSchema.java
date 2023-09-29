@@ -1,9 +1,7 @@
 package epf.workflow.schema;
 
 import epf.json.schema.JsonSchema;
-import epf.workflow.schema.mapping.JsonSchemaAttributeConverter;
 import jakarta.nosql.Column;
-import org.eclipse.jnosql.mapping.Convert;
 import org.eclipse.jnosql.mapping.Embeddable;
 
 /**
@@ -17,7 +15,6 @@ public class DataSchema {
 	 * 
 	 */
 	@Column
-	@Convert(value = JsonSchemaAttributeConverter.class)
 	private JsonSchema schema;
 	
 	/**

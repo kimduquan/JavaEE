@@ -6,7 +6,7 @@ import epf.workflow.schema.SubFlowRefDefinition;
  * @author PC
  *
  */
-public class SubFlowRefDefinitionAdapter extends StringOrObjectAdapter {
+public class SubFlowRefDefinitionAdapter extends StringOrObjectAdapter<SubFlowRefDefinition> {
 
 	/**
 	 * 

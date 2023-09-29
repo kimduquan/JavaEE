@@ -6,7 +6,7 @@ import epf.workflow.schema.WorkflowExecTimeoutDefinition;
  * @author PC
  *
  */
-public class WorkflowExecTimeoutDefinitionAdapter extends StringOrObjectAdapter {
+public class WorkflowExecTimeoutDefinitionAdapter extends StringOrObjectAdapter<WorkflowExecTimeoutDefinition> {
 
 	/**
 	 * 

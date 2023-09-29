@@ -7,7 +7,7 @@ import epf.workflow.schema.function.FunctionRefDefinition;
  * @author PC
  *
  */
-public class FunctionRefDefinitionAdapter extends StringOrObjectAdapter {
+public class FunctionRefDefinitionAdapter extends StringOrObjectAdapter<FunctionRefDefinition> {
 
 	/**
 	 * 

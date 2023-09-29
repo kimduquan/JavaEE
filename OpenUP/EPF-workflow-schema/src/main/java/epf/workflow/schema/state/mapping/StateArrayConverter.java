@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.json.JsonArray;
 import epf.util.json.JsonUtil;
 import epf.util.logging.LogManager;
 import org.eclipse.jnosql.mapping.AttributeConverter;
@@ -35,8 +34,7 @@ public class StateArrayConverter implements AttributeConverter<State[], List<Obj
 	@Override
 	public List<Object> convertToDatabaseColumn(final State[] attribute) {
 		try {
-			final JsonArray jsonArray = JsonUtil.toJsonArray(attribute);
-			return JsonUtil.asList(jsonArray);
+			return JsonUtil.toList(attribute);
 		}
 		catch(Exception ex) {
 			LOGGER.log(Level.SEVERE, "convertToDatabaseColumn", ex);

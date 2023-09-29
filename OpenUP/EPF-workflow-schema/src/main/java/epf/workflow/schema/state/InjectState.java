@@ -1,6 +1,6 @@
 package epf.workflow.schema.state;
 
-import javax.json.JsonValue;
+import java.util.Map;
 import javax.json.bind.annotation.JsonbTypeAdapter;
 import javax.validation.constraints.NotNull;
 import epf.workflow.schema.adapter.EndDefinitionAdapter;
@@ -20,7 +20,7 @@ public class InjectState extends State {
 	 */
 	@NotNull
 	@Column
-	private JsonValue data;
+	private Map<String, Object> data;
 	/**
 	 * 
 	 */
@@ -54,10 +54,10 @@ public class InjectState extends State {
 	@JsonbTypeAdapter(value = EndDefinitionAdapter.class)
 	private Object end;
 	
-	public JsonValue getData() {
+	public Map<String, Object> getData() {
 		return data;
 	}
-	public void setData(JsonValue data) {
+	public void setData(Map<String, Object> data) {
 		this.data = data;
 	}
 	public StateDataFilters getStateDataFilter() {

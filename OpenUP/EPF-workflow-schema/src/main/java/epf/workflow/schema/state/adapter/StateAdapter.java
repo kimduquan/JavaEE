@@ -1,6 +1,6 @@
 package epf.workflow.schema.state.adapter;
 
-import javax.json.JsonObject;
+import java.util.Map;
 import javax.json.bind.adapter.JsonbAdapter;
 import epf.util.json.JsonUtil;
 import epf.workflow.schema.state.CallbackState;
@@ -19,41 +19,41 @@ import epf.workflow.schema.util.EnumUtil;
  * @author PC
  *
  */
-public class StateAdapter implements JsonbAdapter<State, JsonObject> {
+public class StateAdapter implements JsonbAdapter<State, Map<String, Object>> {
 
 	@Override
-	public JsonObject adaptToJson(final State obj) throws Exception {
-		return JsonUtil.toJsonObject(obj);
+	public Map<String, Object> adaptToJson(final State obj) throws Exception {
+		return JsonUtil.toMap(obj);
 	}
 
 	@Override
-	public State adaptFromJson(final JsonObject obj) throws Exception {
-		final Type type = EnumUtil.valueOf(Type.class, obj.getString("type"));
+	public State adaptFromJson(final Map<String, Object> obj) throws Exception {
+		final Type type = EnumUtil.valueOf(Type.class, obj.get("type").toString());
 		State state = null;
 		switch(type) {
 			case callback:
-				state = JsonUtil.fromJson(obj.toString(), CallbackState.class);
+				state = JsonUtil.fromMap(obj, CallbackState.class);
 				break;
 			case event:
-				state = JsonUtil.fromJson(obj.toString(), EventState.class);
+				state = JsonUtil.fromMap(obj, EventState.class);
 				break;
 			case foreach:
-				state = JsonUtil.fromJson(obj.toString(), ForEachState.class);
+				state = JsonUtil.fromMap(obj, ForEachState.class);
 				break;
 			case inject:
-				state = JsonUtil.fromJson(obj.toString(), InjectState.class);
+				state = JsonUtil.fromMap(obj, InjectState.class);
 				break;
 			case operation:
-				state = JsonUtil.fromJson(obj.toString(), OperationState.class);
+				state = JsonUtil.fromMap(obj, OperationState.class);
 				break;
 			case parallel:
-				state = JsonUtil.fromJson(obj.toString(), ParallelState.class);
+				state = JsonUtil.fromMap(obj, ParallelState.class);
 				break;
 			case sleep:
-				state = JsonUtil.fromJson(obj.toString(), SleepState.class);
+				state = JsonUtil.fromMap(obj, SleepState.class);
 				break;
 			case Switch:
-				state = JsonUtil.fromJson(obj.toString(), SwitchState.class);
+				state = JsonUtil.fromMap(obj, SwitchState.class);
 				break;
 			default:
 				break;

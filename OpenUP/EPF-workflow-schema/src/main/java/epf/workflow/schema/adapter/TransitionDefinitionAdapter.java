@@ -6,7 +6,7 @@ import epf.workflow.schema.TransitionDefinition;
  * @author PC
  *
  */
-public class TransitionDefinitionAdapter extends StringOrObjectAdapter {
+public class TransitionDefinitionAdapter extends StringOrObjectAdapter<TransitionDefinition> {
 
 	/**
 	 * 

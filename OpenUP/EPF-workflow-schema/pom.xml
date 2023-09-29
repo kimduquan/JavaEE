@@ -15,12 +15,6 @@
 		    <artifactId>validation-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/jakarta.json/jakarta.json-api -->
-		<dependency>
-			<groupId>javax.json</groupId>
-			<artifactId>javax.json-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
 		<!-- https://mvnrepository.com/artifact/jakarta.json.bind/jakarta.json.bind-api -->
 		<dependency>
 			<groupId>javax.json.bind</groupId>

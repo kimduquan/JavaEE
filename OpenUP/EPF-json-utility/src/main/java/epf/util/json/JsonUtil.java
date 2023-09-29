@@ -365,6 +365,17 @@ public interface JsonUtil {
 	
 	/**
 	 * @param <T>
+	 * @param array
+	 * @return
+	 * @throws Exception 
+	 */
+	static <T> List<Object> toList(final T[] array) throws Exception {
+		final JsonArray jsonArray = toJsonArray(array);
+		return asList(jsonArray);
+	}
+	
+	/**
+	 * @param <T>
 	 * @param map
 	 * @param cls
 	 * @return
@@ -431,5 +442,18 @@ public interface JsonUtil {
 			}
 		}
 		return result;
+	}
+	
+	/**
+	 * @param <T>
+	 * @param obj
+	 * @return
+	 * @throws Exception
+	 */
+	static <T> Map<String, Object> toMap(final T obj) throws Exception {
+		Objects.requireNonNull(obj, "Object");
+		final Map<String, Object> map = new HashMap<>();
+		asMap(map, toJsonObject(obj));
+		return map;
 	}
 }

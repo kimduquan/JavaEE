@@ -7,7 +7,7 @@ import epf.workflow.schema.schedule.ScheduleDefinition;
  * @author PC
  *
  */
-public class ScheduleDefinitionAdapter extends StringOrObjectAdapter {
+public class ScheduleDefinitionAdapter extends StringOrObjectAdapter<ScheduleDefinition> {
 
 	/**
 	 * 

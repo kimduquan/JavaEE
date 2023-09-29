@@ -6,7 +6,7 @@ import epf.workflow.schema.ContinueAs;
  * @author PC
  *
  */
-public class ContinueAsAdapter extends StringOrObjectAdapter {
+public class ContinueAsAdapter extends StringOrObjectAdapter<ContinueAs> {
 
 	/**
 	 * 

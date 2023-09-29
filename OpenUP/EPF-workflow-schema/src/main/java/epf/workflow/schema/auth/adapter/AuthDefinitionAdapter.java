@@ -1,7 +1,6 @@
 package epf.workflow.schema.auth.adapter;
 
-import javax.json.JsonObject;
-import javax.json.JsonValue;
+import java.util.Map;
 import javax.json.bind.adapter.JsonbAdapter;
 import epf.util.json.JsonUtil;
 import epf.workflow.schema.auth.AuthDefinition;
@@ -14,31 +13,32 @@ import epf.workflow.schema.auth.Scheme;
  * @author PC
  *
  */
-public class AuthDefinitionAdapter implements JsonbAdapter<AuthDefinition, JsonObject> {
+public class AuthDefinitionAdapter implements JsonbAdapter<AuthDefinition, Map<String, Object>> {
 
 	@Override
-	public JsonObject adaptToJson(final AuthDefinition obj) throws Exception {
-		return JsonUtil.toJsonObject(obj);
+	public Map<String, Object> adaptToJson(final AuthDefinition obj) throws Exception {
+		return JsonUtil.toMap(obj);
 	}
 
 	@Override
-	public AuthDefinition adaptFromJson(final JsonObject obj) throws Exception {
+	public AuthDefinition adaptFromJson(final Map<String, Object> obj) throws Exception {
 		final AuthDefinition authDefinition = new AuthDefinition();
-		final Scheme scheme = Scheme.valueOf(obj.getString("scheme", Scheme.basic.name()));
+		final Scheme scheme = Scheme.valueOf(obj.getOrDefault("scheme", Scheme.basic.name()).toString());
 		authDefinition.setScheme(scheme);
-		final String name = obj.getString("name");
+		final String name = obj.get("name").toString();
 		authDefinition.setName(name);
-		final JsonValue props = obj.get("properties");
+		@SuppressWarnings("unchecked")
+		final Map<String, Object> props = (Map<String, Object>) obj.get("properties");
 		if(props != null) {
 			switch(scheme) {
 				case basic:
-					authDefinition.setProperties(JsonUtil.fromJson(props.toString(), BasicPropertiesDefinition.class));
+					authDefinition.setProperties(JsonUtil.fromMap(props, BasicPropertiesDefinition.class));
 					break;
 				case bearer:
-					authDefinition.setProperties(JsonUtil.fromJson(props.toString(), BearerPropertiesDefinition.class));
+					authDefinition.setProperties(JsonUtil.fromMap(props, BearerPropertiesDefinition.class));
 					break;
 				case oauth2:
-					authDefinition.setProperties(JsonUtil.fromJson(props.toString(), OAuth2PropertiesDefinition.class));
+					authDefinition.setProperties(JsonUtil.fromMap(props, OAuth2PropertiesDefinition.class));
 					break;
 				default:
 					break;

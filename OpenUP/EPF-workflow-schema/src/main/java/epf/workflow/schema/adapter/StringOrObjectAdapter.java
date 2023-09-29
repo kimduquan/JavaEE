@@ -1,9 +1,6 @@
 package epf.workflow.schema.adapter;
 
-import javax.json.JsonString;
-import javax.json.JsonValue;
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
+import java.util.Map;
 import javax.json.bind.adapter.JsonbAdapter;
 import epf.util.json.JsonUtil;
 
@@ -11,44 +8,40 @@ import epf.util.json.JsonUtil;
  * @author PC
  *
  */
-public class StringOrObjectAdapter implements JsonbAdapter<Object, JsonValue> {
+public class StringOrObjectAdapter<T> implements JsonbAdapter<Object, Object> {
 	
 	/**
 	 * 
 	 */
-	private final Class<?> cls;
+	private final Class<T> cls;
 	
 	/**
 	 * @param cls
 	 */
-	public StringOrObjectAdapter(final Class<?> cls) {
+	public StringOrObjectAdapter(final Class<T> cls) {
 		this.cls = cls;
 	}
 
 	@Override
-	public JsonValue adaptToJson(final Object obj) throws Exception {
-		return JsonUtil.toJsonValue(obj);
+	public Object adaptToJson(final Object obj) throws Exception {
+		Object object = null;
+		if(obj instanceof String || cls.isInstance(obj)) {
+			object = obj;
+		}
+		return object;
 	}
 
 	@Override
-	public Object adaptFromJson(final JsonValue obj) throws Exception {
-		switch(obj.getValueType()) {
-			case ARRAY:
-			case FALSE:
-			case NULL:
-			case NUMBER:
-				break;
-			case OBJECT:
-				try(Jsonb jsonb = JsonbBuilder.create()){
-					return jsonb.fromJson(obj.toString(), cls);
-				}
-			case STRING:
-				return ((JsonString)obj).getString();
-			case TRUE:
-				break;
-			default:
-				break;
+	public Object adaptFromJson(final Object obj) throws Exception {
+		Object object = null;
+		if(obj instanceof String) {
+			object = obj;
 		}
-		return null;
+		else if(obj instanceof Map) {
+			@SuppressWarnings("unchecked")
+			final Map<String, Object> map = (Map<String, Object>) obj;
+			object = JsonUtil.fromMap(map, cls);
+		}
+		return object;
 	}
 }

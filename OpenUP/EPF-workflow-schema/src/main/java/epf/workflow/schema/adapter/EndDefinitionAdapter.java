@@ -6,7 +6,7 @@ import epf.workflow.schema.EndDefinition;
  * @author PC
  *
  */
-public class EndDefinitionAdapter extends BoolOrObjectAdapter {
+public class EndDefinitionAdapter extends BoolOrObjectAdapter<EndDefinition> {
 
 	/**
 	 * 

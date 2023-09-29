@@ -6,7 +6,7 @@ import epf.workflow.schema.StartDefinition;
  * @author PC
  *
  */
-public class StartDefinitionAdapter extends StringOrObjectAdapter {
+public class StartDefinitionAdapter extends StringOrObjectAdapter<StartDefinition> {
 
 	/**
 	 * 

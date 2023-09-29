@@ -1,9 +1,8 @@
 package epf.workflow.schema;
 
-import javax.json.JsonValue;
-import org.eclipse.jnosql.mapping.Convert;
+import java.util.HashMap;
+import java.util.Map;
 import org.eclipse.jnosql.mapping.Embeddable;
-import epf.workflow.schema.mapping.JsonValueAttributeConverter;
 import jakarta.nosql.Column;
 
 /**
@@ -17,25 +16,23 @@ public class WorkflowData {
 	 * 
 	 */
 	@Column
-	@Convert(JsonValueAttributeConverter.class)
-	private JsonValue input = JsonValue.EMPTY_JSON_OBJECT;
+	private Map<String, Object> input = new HashMap<>();
 	/**
 	 * 
 	 */
 	@Column
-	@Convert(JsonValueAttributeConverter.class)
-	private JsonValue output = JsonValue.EMPTY_JSON_OBJECT;
+	private Map<String, Object> output = new HashMap<>();
 	
-	public JsonValue getInput() {
+	public Map<String, Object> getInput() {
 		return input;
 	}
-	public void setInput(JsonValue input) {
+	public void setInput(final Map<String, Object> input) {
 		this.input = input;
 	}
-	public JsonValue getOutput() {
+	public Map<String, Object> getOutput() {
 		return output;
 	}
-	public void setOutput(JsonValue output) {
+	public void setOutput(final Map<String, Object> output) {
 		this.output = output;
 	}
 }
