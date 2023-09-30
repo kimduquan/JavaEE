@@ -322,6 +322,16 @@ public interface JsonUtil {
 	}
 	
 	/**
+	 * @param jsonObject
+	 * @return
+	 */
+	static Map<String, Object> asMap(final JsonObject jsonObject) {
+		final Map<String, Object> map = new HashMap<>();
+		asMap(map, jsonObject);
+		return map;
+	}
+	
+	/**
 	 * @param jsonValue
 	 * @return
 	 */
