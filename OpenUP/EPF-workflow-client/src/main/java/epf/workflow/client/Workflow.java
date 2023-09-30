@@ -1,7 +1,6 @@
 package epf.workflow.client;
 
 import java.net.URI;
-import javax.json.JsonValue;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -21,6 +20,7 @@ import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA.Type;
 import epf.client.util.Client;
 import epf.client.util.LinkUtil;
+import java.util.Map;
 import epf.naming.Naming;
 import epf.workflow.schema.WorkflowData;
 import epf.workflow.schema.WorkflowDefinition;
@@ -83,7 +83,7 @@ public interface Workflow {
 			final String version,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER) 
 			final URI instance,
-			final JsonValue input
+			final Map<String, Object> input
 			) throws Exception;
 	
 	/**
@@ -93,7 +93,7 @@ public interface Workflow {
 	 * @param input
 	 * @return
 	 */
-	static Response start(final Client client, final String workflow, final String version, final JsonValue input) {
+	static Response start(final Client client, final String workflow, final String version, final Map<String, Object> input) {
 		return client.request(
 				target -> target.path(workflow).matrixParam(VERSION, version), 
 				req -> req.accept(MediaType.APPLICATION_JSON))

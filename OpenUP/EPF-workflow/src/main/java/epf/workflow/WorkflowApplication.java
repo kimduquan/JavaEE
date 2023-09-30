@@ -10,11 +10,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.json.JsonArray;
-import javax.json.JsonValue;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.HttpMethod;
@@ -31,7 +28,6 @@ import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
 import epf.naming.Naming;
 import epf.schedule.client.Schedule;
 import epf.util.MapUtil;
-import epf.util.json.JsonUtil;
 import epf.workflow.action.Action;
 import epf.workflow.action.SubflowAction;
 import epf.workflow.event.Event;
@@ -166,16 +162,16 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 		return Arrays.asList(workflowDefinition.getStates()).stream().filter(state -> state.getName().equals(name)).findFirst().orElseThrow(BadRequestException::new);
 	}
 	
-	private void filterStateDataInput(final StateDataFilters stateDataFilters, final WorkflowData workflowData) {
+	private void filterStateDataInput(final StateDataFilters stateDataFilters, final WorkflowData workflowData) throws Exception {
 		if(stateDataFilters != null && stateDataFilters.getInput() != null) {
-			final JsonValue newInput = ELUtil.getValue(stateDataFilters.getInput(), workflowData.getInput());
+			final Map<String, Object> newInput = ELUtil.getValue(stateDataFilters.getInput(), workflowData.getInput());
 			workflowData.setInput(newInput);
 		}
 	}
 	
-	private void filterActionDataInput(final ActionDefinition actionDefinition, final WorkflowData workflowData, final WorkflowData actionData) {
+	private void filterActionDataInput(final ActionDefinition actionDefinition, final WorkflowData workflowData, final WorkflowData actionData) throws Exception {
 		if(actionDefinition.getActionDataFilter() != null && actionDefinition.getActionDataFilter().getFromStateData() != null) {
-			final JsonValue input = ELUtil.getValue(actionDefinition.getActionDataFilter().getFromStateData(), workflowData.getInput());
+			final Map<String, Object> input = ELUtil.getValue(actionDefinition.getActionDataFilter().getFromStateData(), workflowData.getInput());
 			actionData.setInput(input);
 		}
 	}
@@ -194,7 +190,7 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 		}
 	}
 	
-	private Action newAction(final WorkflowDefinition workflowDefinition, final ActionDefinition actionDefinition, final URI instance, final WorkflowData workflowData) {
+	private Action newAction(final WorkflowDefinition workflowDefinition, final ActionDefinition actionDefinition, final URI instance, final WorkflowData workflowData) throws Exception {
 		Action action = null;
 		final WorkflowData actionData = new WorkflowData();
 		filterActionDataInput(actionDefinition, workflowData, actionData);
@@ -227,9 +223,9 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 		}
 	}
 	
-	private void filterStateDataOutput(final StateDataFilters stateDataFilters, final WorkflowData workflowData) {
+	private void filterStateDataOutput(final StateDataFilters stateDataFilters, final WorkflowData workflowData) throws Exception {
 		if(stateDataFilters != null && stateDataFilters.getOutput() != null) {
-			final JsonValue newOutput = ELUtil.getValue(stateDataFilters.getOutput(), workflowData.getOutput());
+			final Map<String, Object> newOutput = ELUtil.getValue(stateDataFilters.getOutput(), workflowData.getOutput());
 			workflowData.setOutput(newOutput);
 		}
 	}
@@ -332,6 +328,7 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 		throw new BadRequestException();
 	}
 	
+	@SuppressWarnings("unchecked")
 	private Response continueAs(final Object continueAs, final URI instance, final WorkflowData workflowData) throws Exception {
 		if(continueAs instanceof String) {
 			final WorkflowDefinition workflowDefinition = cache.get((String)continueAs);
@@ -344,16 +341,13 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 			final WorkflowDefinition workflowDefinition = cache.get(continueAsDef.getWorkflowId(), continueAsDef.getVersion());
 			final WorkflowData newWorkflowData = new WorkflowData();
 			if(continueAsDef.getData() != null) {
-				JsonValue input = null;
+				Map<String, Object> input = null;
 				if(continueAsDef.getData() instanceof String) {
 					final String data = (String)continueAsDef.getData();
 					input = ELUtil.getValue(data, workflowData.getOutput());
 				}
-				else if(continueAsDef.getData() instanceof JsonValue) {
-					input = (JsonValue) continueAsDef.getData();
-				}
-				else {
-					input = JsonUtil.toJsonValue(continueAsDef.getData());
+				else if(continueAsDef.getData() instanceof Map) {
+					input = (Map<String, Object>) continueAsDef.getData();
 				}
 				newWorkflowData.setInput(input);
 			}
@@ -365,7 +359,7 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 		throw new BadRequestException();
 	}
 	
-	private Branch newBranch(final WorkflowDefinition workflowDefinition, final ActionDefinition[] actionDefinitions, final URI instance, final WorkflowData workflowData) {
+	private Branch newBranch(final WorkflowDefinition workflowDefinition, final ActionDefinition[] actionDefinitions, final URI instance, final WorkflowData workflowData) throws Exception {
 		final List<Action> actions = new ArrayList<>();
 		for(ActionDefinition actionDefinition : actionDefinitions) {
 			final Action action = newAction(workflowDefinition, actionDefinition, instance, workflowData);
@@ -374,14 +368,14 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 		return new Branch(actions.toArray(new Action[0]), workflowData, null);
 	}
 	
-	private Branch newForEachBranch(final WorkflowDefinition workflowDefinition, final ForEachState forEachState, final URI instance, final WorkflowData workflowData, final JsonValue value) {
+	private Branch newForEachBranch(final WorkflowDefinition workflowDefinition, final ForEachState forEachState, final URI instance, final WorkflowData workflowData, final Object value) throws Exception {
 		final WorkflowData newWorkflowData = new WorkflowData();
 		newWorkflowData.setInput(workflowData.getOutput());
 		ELUtil.setValue(forEachState.getIterationParam(), newWorkflowData.getInput(), value);
 		return newBranch(workflowDefinition, forEachState.getActions(), instance, newWorkflowData);
 	}
 	
-	private Branch newParallelBranch(final WorkflowDefinition workflowDefinition, final ParallelStateBranch branch, final URI instance, final WorkflowData workflowData) {
+	private Branch newParallelBranch(final WorkflowDefinition workflowDefinition, final ParallelStateBranch branch, final URI instance, final WorkflowData workflowData) throws Exception {
 		final WorkflowData newWorkflowData = new WorkflowData();
 		newWorkflowData.setInput(workflowData.getOutput());
 		return newBranch(workflowDefinition, branch.getActions(), instance, newWorkflowData);
@@ -589,7 +583,7 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 	
 	private Response transitionForEachState(final WorkflowDefinition workflowDefinition, final ForEachState forEachState, final URI instance, final WorkflowData workflowData) throws Exception {
 		filterStateDataInput(forEachState.getStateDataFilter(), workflowData);
-		final JsonArray inputCollection = ELUtil.getValue(forEachState.getInputCollection(), workflowData.getInput()).asJsonArray();
+		final List<?> inputCollection = (List<?>) ELUtil.getValue(forEachState.getInputCollection(), workflowData.getInput());
 		int batchSize = inputCollection.size();
 		if(forEachState.getBatchSize() instanceof String) {
 			batchSize = Integer.valueOf((String)forEachState.getBatchSize());
@@ -602,17 +596,23 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 			case parallel:
 				int index = 0;
 				while(true) {
-					final List<JsonValue> batchInputs = inputCollection.subList(index, Math.min(index + batchSize, inputCollection.size()));
+					final List<?> batchInputs = inputCollection.subList(index, Math.min(index + batchSize, inputCollection.size()));
 					if(batchInputs.isEmpty()) {
 						break;
 					}
-					final List<Branch> batch = batchInputs.stream().map(value -> newForEachBranch(workflowDefinition, forEachState, instance, workflowData, value)).collect(Collectors.toList());
+					final List<Branch> batch = new ArrayList<>();
+					for(Object value : batchInputs) {
+						batch.add(newForEachBranch(workflowDefinition, forEachState, instance, workflowData, value));
+					}
 					executor.invokeAll(batch);
 					index += batchInputs.size();
 				}
 				break;
 			case sequential:
-				iterations = inputCollection.stream().map(value -> newForEachBranch(workflowDefinition, forEachState, instance, workflowData, value)).collect(Collectors.toList());
+				iterations = new ArrayList<>();
+				for(Object value : inputCollection) {
+					iterations.add(newForEachBranch(workflowDefinition, forEachState, instance, workflowData, value));
+				}
 				for(Branch forEach : iterations) {
 					forEach.call();
 				}
@@ -654,7 +654,7 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 	}
 
 	@Override
-	public Response start(final String workflow, final String version, final URI instance, final JsonValue input) throws Exception {
+	public Response start(final String workflow, final String version, final URI instance, final Map<String, Object> input) throws Exception {
 		WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
 		String startState = null;
 		if(workflowDefinition.getStart() != null) {
@@ -671,7 +671,7 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 		}
 		final WorkflowData workflowData = new WorkflowData();
 		workflowData.setInput(input);
-		workflowData.setOutput(JsonUtil.empty());
+		workflowData.setOutput(new HashMap<>());
 		return transitionLink(workflow, version, startState, instance, workflowData);
 	}
 

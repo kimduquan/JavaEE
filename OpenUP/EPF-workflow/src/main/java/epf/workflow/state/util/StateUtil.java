@@ -1,5 +1,6 @@
 package epf.workflow.state.util;
 
+import java.util.Map;
 import javax.json.Json;
 import javax.json.JsonValue;
 import epf.workflow.schema.WorkflowData;
@@ -16,10 +17,10 @@ public interface StateUtil {
 	 * @param to
 	 * @param fromOutput
 	 */
-	static void mergeStateDataOutput(final String data, final WorkflowData to, final JsonValue fromOutput) {
-		JsonValue output = to.getOutput();
+	static void mergeStateDataOutput(final String data, final WorkflowData to, final Map<String, Object> fromOutput) {
+		Map<String, Object> output = to.getOutput();
 		output = ELUtil.getValue(data, to.getOutput());
-		final JsonValue newOutput = Json.createMergeDiff(output, fromOutput).apply(output);
+		final Map<String, Object> newOutput = Json.createMergeDiff(output, fromOutput).apply(output);
 		ELUtil.setValue(data, to.getOutput(), newOutput);
 	}
 	
@@ -27,9 +28,9 @@ public interface StateUtil {
 	 * @param to
 	 * @param fromOutput
 	 */
-	static void mergeStateDataOutput(final WorkflowData to, final JsonValue fromOutput) {
-		JsonValue output = to.getOutput();
-		final JsonValue newOutput = Json.createMergeDiff(output, fromOutput).apply(output);
+	static void mergeStateDataOutput(final WorkflowData to, final Map<String, Object> fromOutput) {
+		Map<String, Object> output = to.getOutput();
+		final Map<String, Object> newOutput = Json.createMergeDiff(output, fromOutput).apply(output);
 		to.setOutput(newOutput);
 	}
 	
@@ -38,10 +39,10 @@ public interface StateUtil {
 	 * @param to
 	 * @param fromInput
 	 */
-	static void mergeStateDataInput(final String data, final WorkflowData to, final JsonValue fromInput) {
-		JsonValue input = to.getInput();
+	static void mergeStateDataInput(final String data, final WorkflowData to, final Map<String, Object> fromInput) {
+		Map<String, Object> input = to.getInput();
 		input = ELUtil.getValue(data, to.getInput());
-		final JsonValue newInput = Json.createMergeDiff(input, fromInput).apply(input);
+		final Map<String, Object> newInput = Json.createMergeDiff(input, fromInput).apply(input);
 		ELUtil.setValue(data, to.getInput(), newInput);
 	}
 	
@@ -49,9 +50,9 @@ public interface StateUtil {
 	 * @param to
 	 * @param fromInput
 	 */
-	static void mergeStateDataInput(final WorkflowData to, final JsonValue fromInput) {
-		JsonValue input = to.getInput();
-		final JsonValue newInput = Json.createMergeDiff(input, fromInput).apply(input);
+	static void mergeStateDataInput(final WorkflowData to, final Map<String, Object> fromInput) {
+		Map<String, Object> input = to.getInput();
+		final Map<String, Object> newInput = Json.createMergeDiff(input, fromInput).apply(input);
 		to.setInput(newInput);
 	}
 }
