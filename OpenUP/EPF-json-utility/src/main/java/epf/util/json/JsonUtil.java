@@ -12,10 +12,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Function;
-
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
+import javax.json.JsonMergePatch;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonPatch;
@@ -465,5 +465,15 @@ public interface JsonUtil {
 		final Map<String, Object> map = new HashMap<>();
 		asMap(map, toJsonObject(obj));
 		return map;
+	}
+	
+	/**
+	 * @param source
+	 * @param target
+	 * @return
+	 * @throws Exception
+	 */
+	static JsonMergePatch createMergeDiff(final Map<String, Object> source, final Map<String, Object> target) throws Exception{
+		return Json.createMergeDiff(toJsonValue(source), toJsonValue(target));
 	}
 }
