@@ -3,7 +3,6 @@ package epf.workflow.function;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Map.Entry;
-import javax.json.JsonValue;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -169,7 +168,7 @@ public class RestFunction extends Function {
 			}
 			try(javax.ws.rs.core.Response response = invoke.invoke()){
 				try(InputStream result = response.readEntity(InputStream.class)){
-					final JsonValue output = JsonUtil.readValue(result);
+					final Map<String, Object> output = JsonUtil.asMap(JsonUtil.readValue(result).asJsonObject());
 					getWorkflowData().setOutput(output);
 				}
 			}
