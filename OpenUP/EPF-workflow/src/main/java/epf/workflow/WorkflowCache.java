@@ -5,7 +5,7 @@ import javax.cache.Cache;
 import javax.cache.CacheManager;
 import javax.cache.Caching;
 import javax.cache.configuration.MutableConfiguration;
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;

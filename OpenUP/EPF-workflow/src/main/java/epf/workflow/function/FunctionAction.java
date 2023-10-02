@@ -2,9 +2,9 @@ package epf.workflow.function;
 
 import java.util.Optional;
 import java.util.Map.Entry;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.core.MediaType;
 import epf.api.API;
 import epf.api.Operation;
 import epf.api.PathItem;

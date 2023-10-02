@@ -10,18 +10,18 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.HttpMethod;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Link;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.HttpMethod;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Link;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
@@ -106,7 +106,7 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 	 * 
 	 */
 	@Inject
-	transient javax.enterprise.event.Event<Event> producedEvent;
+	transient jakarta.enterprise.event.Event<Event> producedEvent;
 	
 	/**
 	 * 
