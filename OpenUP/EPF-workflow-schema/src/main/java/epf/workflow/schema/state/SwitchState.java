@@ -1,7 +1,7 @@
 package epf.workflow.schema.state;
 
-import javax.json.bind.annotation.JsonbTypeAdapter;
-import javax.validation.constraints.NotNull;
+import jakarta.json.bind.annotation.JsonbTypeAdapter;
+import jakarta.validation.constraints.NotNull;
 import epf.workflow.schema.ErrorDefinition;
 import epf.workflow.schema.WorkflowTimeoutDefinition;
 import epf.workflow.schema.adapter.TransitionOrEndAdapter;

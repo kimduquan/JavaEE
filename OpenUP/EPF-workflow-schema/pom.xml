@@ -10,15 +10,16 @@
     <name>Eclipse Process Framework Workflow Schema</name>
     <packaging>jar</packaging>
     <dependencies>
+		<!-- https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api -->
 		<dependency>
-		    <groupId>javax.validation</groupId>
-		    <artifactId>validation-api</artifactId>
+		    <groupId>jakarta.validation</groupId>
+		    <artifactId>jakarta.validation-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/jakarta.json.bind/jakarta.json.bind-api -->
 		<dependency>
-			<groupId>javax.json.bind</groupId>
-			<artifactId>javax.json.bind-api</artifactId>
+		    <groupId>jakarta.json.bind</groupId>
+		    <artifactId>jakarta.json.bind-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		
@@ -60,7 +61,7 @@
 	    </dependency>
 		<dependency>
 	    	<groupId>openup</groupId>
-	    	<artifactId>EPF-json-utility</artifactId>
+	    	<artifactId>EPF-json-utility-ext</artifactId>
 	    	<version>${project.version}</version>
 	    </dependency>
     </dependencies>

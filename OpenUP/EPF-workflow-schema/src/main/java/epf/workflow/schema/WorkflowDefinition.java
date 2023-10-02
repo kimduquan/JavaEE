@@ -1,8 +1,8 @@
 package epf.workflow.schema;
 
 import java.io.Serializable;
-import javax.json.bind.annotation.JsonbTypeAdapter;
-import javax.validation.constraints.NotNull;
+import jakarta.json.bind.annotation.JsonbTypeAdapter;
+import jakarta.validation.constraints.NotNull;
 import epf.workflow.schema.event.EventDefinition;
 import epf.workflow.schema.event.mapping.EventDefinitionArrayConverter;
 import epf.workflow.schema.adapter.StartDefinitionAdapter;

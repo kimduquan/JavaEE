@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import epf.util.json.JsonUtil;
+import epf.util.json.ext.JsonUtil;
 import epf.util.logging.LogManager;
 import org.eclipse.jnosql.mapping.AttributeConverter;
 import epf.workflow.schema.mapping.ArrayAttributeConverter;

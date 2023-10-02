@@ -1,6 +1,6 @@
 package epf.workflow.schema.function;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import epf.workflow.schema.function.mapping.FunctionTypeConverter;
 import jakarta.nosql.Column;
 import org.eclipse.jnosql.mapping.Convert;

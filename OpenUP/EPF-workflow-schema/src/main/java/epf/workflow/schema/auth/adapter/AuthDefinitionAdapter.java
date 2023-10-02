@@ -1,8 +1,8 @@
 package epf.workflow.schema.auth.adapter;
 
 import java.util.Map;
-import javax.json.bind.adapter.JsonbAdapter;
-import epf.util.json.JsonUtil;
+import jakarta.json.bind.adapter.JsonbAdapter;
+import epf.util.json.ext.JsonUtil;
 import epf.workflow.schema.auth.AuthDefinition;
 import epf.workflow.schema.auth.BasicPropertiesDefinition;
 import epf.workflow.schema.auth.BearerPropertiesDefinition;

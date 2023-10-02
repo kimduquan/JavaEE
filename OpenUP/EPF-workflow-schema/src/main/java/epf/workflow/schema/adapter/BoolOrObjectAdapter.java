@@ -1,8 +1,8 @@
 package epf.workflow.schema.adapter;
 
 import java.util.Map;
-import javax.json.bind.adapter.JsonbAdapter;
-import epf.util.json.JsonUtil;
+import jakarta.json.bind.adapter.JsonbAdapter;
+import epf.util.json.ext.JsonUtil;
 
 /**
  * @author PC
