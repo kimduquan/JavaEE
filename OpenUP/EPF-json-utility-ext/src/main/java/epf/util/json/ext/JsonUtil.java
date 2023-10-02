@@ -15,6 +15,7 @@ import java.util.function.Function;
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonMergePatch;
 import jakarta.json.JsonNumber;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonPatch;
@@ -321,6 +322,16 @@ public interface JsonUtil {
 	}
 	
 	/**
+	 * @param jsonObject
+	 * @return
+	 */
+	static Map<String, Object> asMap(final JsonObject jsonObject) {
+		final Map<String, Object> map = new HashMap<>();
+		asMap(map, jsonObject);
+		return map;
+	}
+	
+	/**
 	 * @param jsonValue
 	 * @return
 	 */
@@ -360,6 +371,17 @@ public interface JsonUtil {
 		final List<Object> list = new ArrayList<>();
 		jsonArray.forEach(jsonValue -> list.add(asValue(jsonValue)));
 		return list;
+	}
+	
+	/**
+	 * @param <T>
+	 * @param array
+	 * @return
+	 * @throws Exception 
+	 */
+	static <T> List<Object> toList(final T[] array) throws Exception {
+		final JsonArray jsonArray = toJsonArray(array);
+		return asList(jsonArray);
 	}
 	
 	/**
@@ -430,5 +452,28 @@ public interface JsonUtil {
 			}
 		}
 		return result;
+	}
+	
+	/**
+	 * @param <T>
+	 * @param obj
+	 * @return
+	 * @throws Exception
+	 */
+	static <T> Map<String, Object> toMap(final T obj) throws Exception {
+		Objects.requireNonNull(obj, "Object");
+		final Map<String, Object> map = new HashMap<>();
+		asMap(map, toJsonObject(obj));
+		return map;
+	}
+	
+	/**
+	 * @param source
+	 * @param target
+	 * @return
+	 * @throws Exception
+	 */
+	static JsonMergePatch createMergeDiff(final Map<String, Object> source, final Map<String, Object> target) throws Exception{
+		return Json.createMergeDiff(toJsonValue(source), toJsonValue(target));
 	}
 }
