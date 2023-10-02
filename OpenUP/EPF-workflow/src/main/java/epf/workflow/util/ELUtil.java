@@ -2,8 +2,8 @@ package epf.workflow.util;
 
 import java.util.Map;
 import java.util.Objects;
-import javax.el.ELProcessor;
-import javax.json.JsonValue;
+import jakarta.el.ELProcessor;
+import jakarta.json.JsonValue;
 import epf.util.json.JsonUtil;
 
 /**

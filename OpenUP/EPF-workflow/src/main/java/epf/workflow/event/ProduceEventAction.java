@@ -21,7 +21,7 @@ public class ProduceEventAction extends Action {
 	/**
 	 * 
 	 */
-	private final javax.enterprise.event.Event<Event> event;
+	private final jakarta.enterprise.event.Event<Event> event;
 
 	/**
 	 * @param workflowDefinition
@@ -34,7 +34,7 @@ public class ProduceEventAction extends Action {
 			WorkflowDefinition workflowDefinition, 
 			ActionDefinition actionDefinition, 
 			EventDefinition eventDefinition,
-			javax.enterprise.event.Event<Event> event,
+			jakarta.enterprise.event.Event<Event> event,
 			WorkflowData workflowData) {
 		super(workflowDefinition, actionDefinition, workflowData);
 		this.eventDefinition = eventDefinition;

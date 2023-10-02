@@ -1,8 +1,8 @@
 package epf.workflow.event;
 
-import javax.json.bind.annotation.JsonbProperty;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.json.bind.annotation.JsonbProperty;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import epf.workflow.schema.event.mapping.UUIDAttributeConverter;
 import jakarta.nosql.Column;
 import org.eclipse.jnosql.mapping.Convert;

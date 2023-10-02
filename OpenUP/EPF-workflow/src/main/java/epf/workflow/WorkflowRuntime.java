@@ -82,7 +82,7 @@ public class WorkflowRuntime {
 	 * 
 	 */
 	@Inject
-	transient javax.enterprise.event.Event<Event> producedEvent;
+	transient jakarta.enterprise.event.Event<Event> producedEvent;
 	
 	/**
 	 * 
