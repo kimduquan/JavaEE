@@ -10,7 +10,6 @@ import java.util.stream.Stream;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.nosql.column.ColumnTemplate;
-import org.eclipse.microprofile.rest.client.inject.RestClient;
 import epf.util.logging.LogManager;
 import epf.workflow.event.Event;
 import epf.workflow.event.persistence.CallbackStateEvent;
@@ -35,7 +34,6 @@ public class WorkflowEventStore {
 	 * 
 	 */
 	@Inject
-	@RestClient
 	transient ColumnTemplate column;
 
 	/**

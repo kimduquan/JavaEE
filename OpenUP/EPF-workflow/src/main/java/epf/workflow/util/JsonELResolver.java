@@ -12,7 +12,7 @@ import jakarta.json.JsonNumber;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonString;
 import jakarta.json.JsonValue;
-import epf.util.json.JsonUtil;
+import epf.util.json.ext.JsonUtil;
 import epf.util.logging.LogManager;
 
 /**

@@ -10,6 +10,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.POST;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
@@ -24,7 +27,9 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.Readiness;
+import org.eclipse.microprofile.lra.annotation.Compensate;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
+import org.eclipse.microprofile.lra.annotation.ws.rs.LRA.Type;
 import epf.naming.Naming;
 import epf.util.MapUtil;
 import epf.workflow.action.Action;
@@ -637,6 +642,9 @@ public class WorkflowApplication  {
 		throw new BadRequestException();
 	}
 
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response newWorkflowDefinition(final WorkflowDefinition workflowDefinition) throws Exception {
 		final WorkflowDefinition newWorkflowDefinition = persistence.persist(workflowDefinition);
 		if(newWorkflowDefinition.getVersion() != null) {
@@ -651,6 +659,11 @@ public class WorkflowApplication  {
 		return Response.ok(newWorkflowDefinition).build();
 	}
 
+	@PUT
+	@Path("{workflow}")
+	@LRA(value = Type.NESTED, end = false)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response start(final String workflow, final String version, final URI instance, final Map<String, Object> input) throws Exception {
 		WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
 		String startState = null;
@@ -672,6 +685,10 @@ public class WorkflowApplication  {
 		return transitionLink(workflow, version, startState, instance, workflowData);
 	}
 
+	@GET
+	@Path("{workflow}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	public WorkflowDefinition getWorkflowDefinition(final String workflow, final String version) throws Exception {
 		Optional<WorkflowDefinition> workflowDefinition = Optional.empty();
 		if(version != null) {
@@ -689,6 +706,11 @@ public class WorkflowApplication  {
 		return workflowDefinition.orElseThrow(NotFoundException::new);
 	}
 
+	@PUT
+	@Path("{workflow}/{state}")
+	@LRA(value = Type.MANDATORY, end = false)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response transition(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) throws Exception {
 		final WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
 		final State nextState = getState(workflowDefinition, state);
@@ -723,11 +745,19 @@ public class WorkflowApplication  {
 		}
 	}
 
+	@PUT
+	@Path("{workflow}/{state}/end")
+	@LRA(value = Type.MANDATORY, end = true)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response end(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) throws Exception {
 		cache.removeState(instance);
 		return null;
 	}
 
+	@PUT
+	@Path("{workflow}/{state}/compensate")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Compensate
 	public Response compensate(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) throws Exception {
 		final WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
 		final State currentState = getState(workflowDefinition, state);

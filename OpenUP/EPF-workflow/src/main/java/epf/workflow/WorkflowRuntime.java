@@ -21,7 +21,7 @@ import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import epf.util.MapUtil;
-import epf.util.json.JsonUtil;
+import epf.util.json.ext.JsonUtil;
 import epf.util.logging.LogManager;
 import epf.workflow.action.Action;
 import epf.workflow.action.SubflowAction;

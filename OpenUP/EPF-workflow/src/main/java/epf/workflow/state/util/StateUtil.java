@@ -1,7 +1,7 @@
 package epf.workflow.state.util;
 
 import java.util.Map;
-import epf.util.json.JsonUtil;
+import epf.util.json.ext.JsonUtil;
 import epf.workflow.schema.WorkflowData;
 import epf.workflow.util.ELUtil;
 

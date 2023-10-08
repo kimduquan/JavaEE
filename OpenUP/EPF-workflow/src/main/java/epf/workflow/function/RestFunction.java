@@ -16,7 +16,7 @@ import epf.api.PathItem;
 import epf.api.PathItem.HttpMethod;
 import epf.api.parameter.Parameter;
 import epf.api.server.Server;
-import epf.util.json.JsonUtil;
+import epf.util.json.ext.JsonUtil;
 import epf.workflow.schema.WorkflowData;
 import epf.workflow.schema.WorkflowDefinition;
 import epf.workflow.schema.auth.AuthDefinition;
@@ -166,7 +166,7 @@ public class RestFunction extends Function {
 			else {
 				invoke = builder.build(method.name());
 			}
-			try(javax.ws.rs.core.Response response = invoke.invoke()){
+			try(jakarta.ws.rs.core.Response response = invoke.invoke()){
 				try(InputStream result = response.readEntity(InputStream.class)){
 					final Map<String, Object> output = JsonUtil.asMap(JsonUtil.readValue(result).asJsonObject());
 					getWorkflowData().setOutput(output);
