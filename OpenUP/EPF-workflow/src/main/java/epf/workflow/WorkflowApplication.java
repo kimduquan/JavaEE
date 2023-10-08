@@ -26,7 +26,6 @@ import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
 import epf.naming.Naming;
-import epf.schedule.client.Schedule;
 import epf.util.MapUtil;
 import epf.workflow.action.Action;
 import epf.workflow.action.SubflowAction;
@@ -75,7 +74,7 @@ import epf.workflow.schema.schedule.ScheduleDefinition;
 @Path(Naming.WORKFLOW)
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class WorkflowApplication implements epf.workflow.client.Workflow {
+public class WorkflowApplication  {
 	
 	/**
 	 * 
@@ -116,14 +115,14 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 	
 	private Response transitionLink(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) {
 		return Response.ok(workflowData)
-				.links(epf.workflow.client.Workflow.transitionLink(workflow, version, state))
+				.links(WorkflowLink.transitionLink(workflow, version, state))
 				.header(LRA.LRA_HTTP_CONTEXT_HEADER, instance)
 				.build();
 	}
 	
 	private Response endLink(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) {
 		return Response.ok(workflowData)
-				.links(epf.workflow.client.Workflow.endLink(workflow, version, state))
+				.links(WorkflowLink.endLink(workflow, version, state))
 				.header(LRA.LRA_HTTP_CONTEXT_HEADER, instance)
 				.build();
 	}
@@ -139,10 +138,10 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 			recurringTimeInterval = ((ScheduleDefinition)startDefinition.getSchedule()).getInterval();
 		}
 		if(workflowDefinition.getVersion() != null) {
-			scheduleLink = Schedule.scheduleLink(Naming.WORKFLOW, HttpMethod.PUT, path + "?version=" + workflowDefinition.getVersion(), recurringTimeInterval);
+			scheduleLink = WorkflowLink.scheduleLink(Naming.WORKFLOW, HttpMethod.PUT, path + "?version=" + workflowDefinition.getVersion(), recurringTimeInterval);
 		}
 		else {
-			scheduleLink = Schedule.scheduleLink(Naming.WORKFLOW, HttpMethod.PUT, path, recurringTimeInterval);
+			scheduleLink = WorkflowLink.scheduleLink(Naming.WORKFLOW, HttpMethod.PUT, path, recurringTimeInterval);
 		}
 		return Response.ok()
 				.links(scheduleLink)
@@ -303,7 +302,7 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 	}
 	
 	private Response startLink(final String workflow, final String version, final URI parentInstance, final WorkflowData workflowData) {
-		ResponseBuilder builder = Response.ok(workflowData).links(epf.workflow.client.Workflow.startLink(workflow, version));
+		ResponseBuilder builder = Response.ok(workflowData).links(WorkflowLink.startLink(workflow, version));
 		if(parentInstance != null) {
 			builder = builder.header(LRA.LRA_HTTP_PARENT_CONTEXT_HEADER, parentInstance);
 		}
@@ -312,7 +311,7 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 	
 	private Response compensateLink(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) {
 		return Response.ok(workflowData)
-				.links(epf.workflow.client.Workflow.compensateLink(workflow, version, state))
+				.links(WorkflowLink.compensateLink(workflow, version, state))
 				.header(LRA.LRA_HTTP_CONTEXT_HEADER, instance)
 				.build();
 	}
@@ -638,7 +637,6 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 		throw new BadRequestException();
 	}
 
-	@Override
 	public Response newWorkflowDefinition(final WorkflowDefinition workflowDefinition) throws Exception {
 		final WorkflowDefinition newWorkflowDefinition = persistence.persist(workflowDefinition);
 		if(newWorkflowDefinition.getVersion() != null) {
@@ -653,7 +651,6 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 		return Response.ok(newWorkflowDefinition).build();
 	}
 
-	@Override
 	public Response start(final String workflow, final String version, final URI instance, final Map<String, Object> input) throws Exception {
 		WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
 		String startState = null;
@@ -675,7 +672,6 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 		return transitionLink(workflow, version, startState, instance, workflowData);
 	}
 
-	@Override
 	public WorkflowDefinition getWorkflowDefinition(final String workflow, final String version) throws Exception {
 		Optional<WorkflowDefinition> workflowDefinition = Optional.empty();
 		if(version != null) {
@@ -693,7 +689,6 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 		return workflowDefinition.orElseThrow(NotFoundException::new);
 	}
 
-	@Override
 	public Response transition(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) throws Exception {
 		final WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
 		final State nextState = getState(workflowDefinition, state);
@@ -728,13 +723,11 @@ public class WorkflowApplication implements epf.workflow.client.Workflow {
 		}
 	}
 
-	@Override
 	public Response end(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) throws Exception {
 		cache.removeState(instance);
 		return null;
 	}
 
-	@Override
 	public Response compensate(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) throws Exception {
 		final WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
 		final State currentState = getState(workflowDefinition, state);

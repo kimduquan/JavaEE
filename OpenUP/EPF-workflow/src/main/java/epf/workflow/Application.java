@@ -14,6 +14,6 @@ import jakarta.ws.rs.core.MediaType;
 @ApplicationPath("/")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class Application extends javax.ws.rs.core.Application {
+public class Application extends jakarta.ws.rs.core.Application {
 
 }
