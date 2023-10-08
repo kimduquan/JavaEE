@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.nosql.column.ColumnTemplate;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import epf.util.logging.LogManager;
 import epf.workflow.event.Event;
@@ -16,7 +17,6 @@ import epf.workflow.event.persistence.CallbackStateEvent;
 import epf.workflow.event.persistence.EventStateActionEvent;
 import epf.workflow.event.persistence.EventStateEvent;
 import epf.workflow.event.persistence.WorkflowEvent;
-import epf.workflow.internal.NoSQLColumn;
 import epf.workflow.schema.event.EventDefinition;
 
 /**
@@ -36,7 +36,7 @@ public class WorkflowEventStore {
 	 */
 	@Inject
 	@RestClient
-	transient NoSQLColumn column;
+	transient ColumnTemplate column;
 
 	/**
 	 * @param event
@@ -105,7 +105,7 @@ public class WorkflowEventStore {
 		//template.delete(deleteQuery);
 		//template.delete(WorkflowEvent.class).where("id").eq(UUID.fromString(event.getId())).and("source").eq(event.getSource()).and("type").eq(event.getType()).execute();
 		try {
-			column.delete(event.getId());
+			column.delete(event.getClass(), event.getId());
 		} catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "remove", e);
 		}

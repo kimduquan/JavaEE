@@ -6,9 +6,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.eclipse.microprofile.rest.client.inject.RestClient;
+import jakarta.nosql.document.DocumentTemplate;
 import epf.util.logging.LogManager;
-import epf.workflow.internal.NoSQLDocument;
 import epf.workflow.schema.WorkflowDefinition;
 
 /**
@@ -27,8 +26,7 @@ public class WorkflowPersistence {
 	 * 
 	 */
 	@Inject
-	@RestClient
-	transient NoSQLDocument document;
+	transient DocumentTemplate document;
 	
 	/**
 	 * @param id
@@ -38,7 +36,7 @@ public class WorkflowPersistence {
 	public Optional<WorkflowDefinition> find(final String id, final String version) {
 		Optional<WorkflowDefinition> workflowDefinition = Optional.empty();
 		try {
-			workflowDefinition = Optional.ofNullable(document.find(id).readEntity(WorkflowDefinition.class));
+			workflowDefinition = document.find(WorkflowDefinition.class, id);
 		} 
 		catch (Exception e) {
 			LOGGER.log(Level.WARNING, "find", e);
@@ -53,7 +51,7 @@ public class WorkflowPersistence {
 	public Optional<WorkflowDefinition> find(final String id) {
 		Optional<WorkflowDefinition> workflowDefinition = Optional.empty();
 		try {
-			workflowDefinition = Optional.ofNullable(document.find(id).readEntity(WorkflowDefinition.class));
+			workflowDefinition = document.find(WorkflowDefinition.class, id);
 		} 
 		catch (Exception e) {
 			LOGGER.log(Level.WARNING, "find", e);
@@ -67,7 +65,7 @@ public class WorkflowPersistence {
 	 */
 	public WorkflowDefinition persist(final WorkflowDefinition workflowDefinition) {
 		try {
-			return document.insert(workflowDefinition).readEntity(WorkflowDefinition.class);
+			return document.insert(workflowDefinition);
 		} 
 		catch (Exception e) {
 			LOGGER.log(Level.WARNING, "persist", e);
@@ -87,7 +85,7 @@ public class WorkflowPersistence {
 			workflowInstance.setId(UUID.randomUUID().toString());
 		}
 		try {
-			return document.insert(workflowInstance).readEntity(WorkflowInstance.class);
+			return document.insert(workflowInstance);
 		} 
 		catch (Exception e) {
 			LOGGER.log(Level.WARNING, "persist", e);
@@ -113,7 +111,7 @@ public class WorkflowPersistence {
 	 */
 	public WorkflowInstance getInstance(final String id) {
 		try {
-			return document.find(id).readEntity(WorkflowInstance.class);
+			return document.find(WorkflowInstance.class, id).get();
 		} 
 		catch (Exception e) {
 			LOGGER.log(Level.WARNING, "getInstance", e);
@@ -126,7 +124,7 @@ public class WorkflowPersistence {
 	 */
 	public void remove(final WorkflowInstance workflowInstance) {
 		try {
-			document.delete(workflowInstance.getId());
+			document.delete(WorkflowInstance.class, workflowInstance.getId());
 		} 
 		catch (Exception e) {
 			LOGGER.log(Level.WARNING, "remove", e);
