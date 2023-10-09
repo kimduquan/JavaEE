@@ -900,7 +900,6 @@
 		<module>EPF-persistence</module>
 		<module>EPF-persistence-view</module>
 		<module>EPF-persistence-webapp</module>
-		<module>EPF-nosql-persistence</module>
 		<module>EPF-messaging-client</module>
 		<module>EPF-net</module>
 		<module>EPF-file</module>
