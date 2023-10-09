@@ -27,7 +27,8 @@ cp ../public.pem ./
 java -Dquarkus.http.port=8081 -jar target/quarkus-app/quarkus-run.jar &
 cd ../
 cd EPF-workflow
-$WILDFLY_HOME/jboss-cli.sh --file=lra.cli &
+mvn clean install -U
+java -jar target/quarkus-app/quarkus-run.jar &
 cd ../
 cd EPF-tests
 cp ../dev.p12 ./
