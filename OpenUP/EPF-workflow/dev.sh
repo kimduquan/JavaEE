@@ -1,7 +1,7 @@
 . ../env.sh
 . ../config.sh
 mvn clean install -U
-java -Djboss.http.port=9189 -Djboss.management.http.port=9190 -jar target/EPF-workflow-1.0.0-bootable.jar &
+java -jar target/quarkus-app/quarkus-run.jar &
 cd ../
 cd EPF-config
 mvn clean install -U
@@ -25,10 +25,6 @@ mvn clean install -U
 cp ../dev.p12 ./
 cp ../public.pem ./
 java -Dquarkus.http.port=8081 -jar target/quarkus-app/quarkus-run.jar &
-cd ../
-cd EPF-workflow
-mvn clean install -U
-java -jar target/quarkus-app/quarkus-run.jar &
 cd ../
 cd EPF-tests
 cp ../dev.p12 ./
