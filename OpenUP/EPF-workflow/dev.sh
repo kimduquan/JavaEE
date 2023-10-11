@@ -1,7 +1,7 @@
 . ../env.sh
 . ../config.sh
 mvn clean install -U
-java -jar target/quarkus-app/quarkus-run.jar &
+$JAVA17_HOME/bin/java -jar target/quarkus-app/quarkus-run.jar &
 cd ../
 cd EPF-config
 mvn clean install -U
