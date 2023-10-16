@@ -338,6 +338,18 @@
 			    <artifactId>drools-jsr94</artifactId>
 			    <version>7.2.0.Final</version>
 			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.mapping/jnosql-mapping-core -->
+			<dependency>
+			    <groupId>org.eclipse.jnosql.mapping</groupId>
+			    <artifactId>jnosql-mapping-core</artifactId>
+			    <version>1.0.0</version>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.communication/jnosql-communication-core -->
+			<dependency>
+			    <groupId>org.eclipse.jnosql.communication</groupId>
+			    <artifactId>jnosql-communication-core</artifactId>
+			    <version>1.0.0</version>
+			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.jboss.narayana.rts/narayana-lra -->
 			<dependency>
 			    <groupId>org.jboss.narayana.rts</groupId>
