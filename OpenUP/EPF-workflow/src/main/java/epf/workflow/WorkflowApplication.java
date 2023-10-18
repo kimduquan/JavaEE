@@ -77,8 +77,6 @@ import epf.workflow.schema.schedule.ScheduleDefinition;
  */
 @ApplicationScoped
 @Path(Naming.WORKFLOW)
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
 public class WorkflowApplication  {
 	
 	/**
