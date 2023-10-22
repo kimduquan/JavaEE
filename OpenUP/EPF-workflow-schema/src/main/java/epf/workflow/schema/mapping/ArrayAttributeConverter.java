@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import epf.util.json.ext.JsonUtil;
 import epf.util.logging.LogManager;
 import org.eclipse.jnosql.communication.Entry;
 import org.eclipse.jnosql.mapping.AttributeConverter;
@@ -16,7 +15,7 @@ import org.eclipse.jnosql.mapping.AttributeConverter;
  *
  * @param <T>
  */
-public class ArrayAttributeConverter<T extends Object> implements AttributeConverter<T[], List<Object>> {
+public class ArrayAttributeConverter<T extends Object> implements AttributeConverter<T[], Entry> {
 	
 	/**
 	 * 
@@ -43,9 +42,9 @@ public class ArrayAttributeConverter<T extends Object> implements AttributeConve
 	}
 
 	@Override
-	public List<Object> convertToDatabaseColumn(final T[] attribute) {
+	public Entry convertToDatabaseColumn(final T[] attribute) {
 		try {
-			return JsonUtil.toList(attribute);
+			return null;
 		}
 		catch(Exception ex) {
 			LOGGER.log(Level.SEVERE, "convertToDatabaseColumn", ex);
@@ -54,10 +53,9 @@ public class ArrayAttributeConverter<T extends Object> implements AttributeConve
 	}
 
 	@Override
-	public T[] convertToEntityAttribute(final List<Object> dbData) {
+	public T[] convertToEntityAttribute(final Entry dbData) {
 		try {
-			final List<Object> list = convertToList(dbData);
-			return JsonUtil.fromLisṭ̣(list, cls).toArray(array);
+			return null;
 		} 
 		catch (Exception ex) {
 			LOGGER.log(Level.SEVERE, "convertToEntityAttribute", ex);
