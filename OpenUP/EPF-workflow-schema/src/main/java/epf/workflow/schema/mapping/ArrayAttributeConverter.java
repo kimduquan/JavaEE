@@ -1,13 +1,15 @@
 package epf.workflow.schema.mapping;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import epf.util.json.ext.JsonUtil;
 import epf.util.logging.LogManager;
-import org.eclipse.jnosql.communication.Entry;
+import jakarta.json.JsonValue;
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
 import org.eclipse.jnosql.mapping.AttributeConverter;
 
 /**
@@ -15,7 +17,7 @@ import org.eclipse.jnosql.mapping.AttributeConverter;
  *
  * @param <T>
  */
-public class ArrayAttributeConverter<T extends Object> implements AttributeConverter<T[], Entry> {
+public class ArrayAttributeConverter<T extends Object> implements AttributeConverter<T[], JsonValue> {
 	
 	/**
 	 * 
@@ -42,9 +44,9 @@ public class ArrayAttributeConverter<T extends Object> implements AttributeConve
 	}
 
 	@Override
-	public Entry convertToDatabaseColumn(final T[] attribute) {
+	public JsonValue convertToDatabaseColumn(final T[] attribute) {
 		try {
-			return null;
+			return JsonUtil.toJsonArray(attribute);
 		}
 		catch(Exception ex) {
 			LOGGER.log(Level.SEVERE, "convertToDatabaseColumn", ex);
@@ -53,92 +55,23 @@ public class ArrayAttributeConverter<T extends Object> implements AttributeConve
 	}
 
 	@Override
-	public T[] convertToEntityAttribute(final Entry dbData) {
+	public T[] convertToEntityAttribute(final JsonValue dbData) {
 		try {
-			return null;
+			final List<T> list = new ArrayList<>();
+			final Iterator<JsonValue> it = dbData.asJsonArray().iterator();
+			try(Jsonb jsonb = JsonbBuilder.create()){
+				while(it.hasNext()) {
+					final JsonValue value = it.next();
+					final T object = jsonb.fromJson(value.toString(), cls);
+					list.add(object);
+				}
+			}
+			final T[] arr = list.toArray(array);
+			return arr;
 		} 
 		catch (Exception ex) {
 			LOGGER.log(Level.SEVERE, "convertToEntityAttribute", ex);
 			return null;
 		}
-	}
-	
-	public static Map<String, Object> convertToMap(final List<?> list){
-		final Map<String, Object> map = new HashMap<>();
-		boolean isMap = true;
-		for(Object object : list) {
-			if(object instanceof Entry) {
-				final Entry document = (Entry) object;
-				final Object value = document.value().get();
-				if(value instanceof List) {
-					final List<?> asList = (List<?>)value;
-					if(asList.isEmpty()) {
-						map.put(document.name(), value);
-					}
-					else {
-						final Map<String, Object> newMap = convertToMap(asList);
-						if(newMap != null) {
-							map.put(document.name(), newMap);
-						}
-						else {
-							final List<Object> newList = convertToList(asList);
-							map.put(document.name(), newList);
-						}
-					}
-				}
-				else if(value != null) {
-					map.put(document.name(), value);
-				}
-			}
-			else {
-				isMap = false;
-				break;
-			}
-		}
-		return isMap ? map : null;
-	}
-	
-	/**
-	 * @param dbData
-	 * @return
-	 */
-	public static final Object convertToValue(final Object dbData) {
-		Object object = null;
-		if(dbData instanceof List) {
-			final List<?> asList = (List<?>) dbData;
-			if(asList.isEmpty()) {
-				object = new HashMap<String, Object>();
-			}
-			else {
-				final Map<String, Object> map = convertToMap((List<?>)dbData);
-				if(map != null) {
-					object = map;
-				}
-				else {
-					final List<Object> newList = convertToList(asList);
-					object = newList;
-				}
-			}
-		}
-		else if(dbData instanceof String || dbData instanceof Number || dbData instanceof Boolean) {
-			object = dbData;
-		}
-		else {
-			object= dbData;
-		}
-		return object;
-	}
-	
-	/**
-	 * @param dbData
-	 * @return
-	 */
-	public static final List<Object> convertToList(final List<?> dbData) {
-		final List<Object> list = new ArrayList<>();
-		for(Object object : dbData) {
-			final Object value = convertToValue(object);
-			list.add(value);
-		}
-		return list;
 	}
 }
