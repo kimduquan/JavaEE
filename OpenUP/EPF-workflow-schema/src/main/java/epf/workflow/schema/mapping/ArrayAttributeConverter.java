@@ -1,15 +1,11 @@
 package epf.workflow.schema.mapping;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import epf.util.json.ext.JsonUtil;
 import epf.util.logging.LogManager;
-import jakarta.json.JsonValue;
-import jakarta.json.bind.Jsonb;
-import jakarta.json.bind.JsonbBuilder;
 import org.eclipse.jnosql.mapping.AttributeConverter;
 
 /**
@@ -17,7 +13,7 @@ import org.eclipse.jnosql.mapping.AttributeConverter;
  *
  * @param <T>
  */
-public class ArrayAttributeConverter<T extends Object> implements AttributeConverter<T[], JsonValue> {
+public class ArrayAttributeConverter<T extends Object> implements AttributeConverter<T[], Object[]> {
 	
 	/**
 	 * 
@@ -44,9 +40,9 @@ public class ArrayAttributeConverter<T extends Object> implements AttributeConve
 	}
 
 	@Override
-	public JsonValue convertToDatabaseColumn(final T[] attribute) {
+	public Object[] convertToDatabaseColumn(final T[] attribute) {
 		try {
-			return JsonUtil.toJsonArray(attribute);
+			return JsonUtil.toList(attribute).toArray(new Object[0]);
 		}
 		catch(Exception ex) {
 			LOGGER.log(Level.SEVERE, "convertToDatabaseColumn", ex);
@@ -55,19 +51,10 @@ public class ArrayAttributeConverter<T extends Object> implements AttributeConve
 	}
 
 	@Override
-	public T[] convertToEntityAttribute(final JsonValue dbData) {
+	public T[] convertToEntityAttribute(final Object[] dbData) {
 		try {
-			final List<T> list = new ArrayList<>();
-			final Iterator<JsonValue> it = dbData.asJsonArray().iterator();
-			try(Jsonb jsonb = JsonbBuilder.create()){
-				while(it.hasNext()) {
-					final JsonValue value = it.next();
-					final T object = jsonb.fromJson(value.toString(), cls);
-					list.add(object);
-				}
-			}
-			final T[] arr = list.toArray(array);
-			return arr;
+			final List<T> list = JsonUtil.fromLisṭ̣(Arrays.asList(dbData), cls);
+			return list.toArray(array);
 		} 
 		catch (Exception ex) {
 			LOGGER.log(Level.SEVERE, "convertToEntityAttribute", ex);

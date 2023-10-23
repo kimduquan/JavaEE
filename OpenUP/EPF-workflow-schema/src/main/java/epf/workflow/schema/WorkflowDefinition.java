@@ -10,6 +10,7 @@ import epf.workflow.schema.auth.AuthDefinition;
 import epf.workflow.schema.function.FunctionDefinition;
 import epf.workflow.schema.function.mapping.FunctionDefinitionArrayConverter;
 import epf.workflow.schema.state.State;
+import epf.workflow.schema.state.adapter.StateAdapter;
 import epf.workflow.schema.state.mapping.StateArrayConverter;
 import jakarta.nosql.Column;
 import org.eclipse.jnosql.mapping.Convert;
@@ -157,6 +158,7 @@ public class WorkflowDefinition implements Serializable {
 	 */
 	@Column
 	@Convert(StateArrayConverter.class)
+	@JsonbTypeAdapter(value = StateAdapter.class)
 	private State[] states;
 	
 	/**

@@ -1,8 +1,6 @@
 package epf.workflow.schema.state.mapping;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -21,9 +19,6 @@ import epf.workflow.schema.state.State;
 import epf.workflow.schema.state.SwitchState;
 import epf.workflow.schema.state.Type;
 import epf.workflow.schema.util.EnumUtil;
-import jakarta.json.JsonValue;
-import jakarta.json.bind.Jsonb;
-import jakarta.json.bind.JsonbBuilder;
 
 /**
  * @author PC
@@ -44,22 +39,21 @@ public class StateArrayConverter extends ArrayAttributeConverter<State> {
 	private transient static final Logger LOGGER = LogManager.getLogger(StateArrayConverter.class.getName());
 
 	@Override
-	public State[] convertToEntityAttribute(final JsonValue dbData) {
+	public State[] convertToEntityAttribute(final Object[] dbData) {
 		try {
-			final List<State> list = new ArrayList<>();
-			final Iterator<JsonValue> it = dbData.asJsonArray().iterator();
-			try(Jsonb jsonb = JsonbBuilder.create()){
-				while(it.hasNext()) {
-					final Map<String, Object> map = new HashMap<>();
-					it.next().asJsonObject().forEach((name, value) -> {
-						final Object object = JsonUtil.asValue(value);
-						map.put(name, object);
-					});
+			final List<State> states = new ArrayList<>();
+			for(Object object : dbData) {
+				if(object instanceof Map) {
+					@SuppressWarnings("unchecked")
+					final Map<String, Object> map = (Map<String, Object>)object;
 					final State state = newState(map);
-					list.add(state);
+					states.add(state);
+				}
+				else {
+					states.add(null);
 				}
 			}
-			return list.toArray(new State[0]);
+			return states.toArray(new State[0]);
 		} 
 		catch (Exception ex) {
 			LOGGER.log(Level.SEVERE, "convertToEntityAttribute", ex);
