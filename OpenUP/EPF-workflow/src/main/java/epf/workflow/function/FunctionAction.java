@@ -36,11 +36,7 @@ public class FunctionAction extends Action {
 	}
 
 	private FunctionDefinition getFunctionDefinition(final WorkflowDefinition workflowDefinition, final String functionRef) {
-		if(workflowDefinition.getFunctions() instanceof FunctionDefinition[]) {
-			final FunctionDefinition[] functionDefs = (FunctionDefinition[]) workflowDefinition.getFunctions();
-			return ListUtil.findFirst(functionDefs, f -> f.getName().equals(functionRef)).get();
-		}
-		return null;
+		return ListUtil.findFirst(workflowDefinition.getFunctions().iterator(), f -> f.getName().equals(functionRef)).get();
 	}
 	
 	private void performRestFunction(final WorkflowDefinition workflowDefinition, final FunctionDefinition functionDef, final FunctionRefDefinition functionRef, final WorkflowData workflowData) throws Exception {

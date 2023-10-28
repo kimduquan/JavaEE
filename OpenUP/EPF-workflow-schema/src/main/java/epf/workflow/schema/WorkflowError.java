@@ -1,21 +1,31 @@
 package epf.workflow.schema;
 
+import org.eclipse.jnosql.mapping.Embeddable;
+import jakarta.nosql.Column;
+
 /**
  * @author PC
  *
  */
+@Embeddable
 public class WorkflowError {
+	
 	/**
 	 * 
 	 */
+	@Column
 	private String name;
+	
 	/**
 	 * 
 	 */
+	@Column
 	private String code;
+	
 	/**
 	 * 
 	 */
+	@Column
 	private String description;
 	
 	public String getName() {

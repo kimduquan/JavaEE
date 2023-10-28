@@ -119,7 +119,7 @@ public class WorkflowRuntime {
 			}
 		}
 		else {
-			startState = workflowDefinition.getStates()[0].getName();
+			startState = workflowDefinition.getStates().get(0).getName();
 		}
 		if(startState != null) {
 			transitionState(workflowDefinition, workflowData, uri, startState);
@@ -188,7 +188,7 @@ public class WorkflowRuntime {
 	
 	private void transitionEventState(final WorkflowDefinition workflowDefinition, final EventState eventState, final WorkflowInstance workflowInstance) {
 		Map<String, EventDefinition> eventDefs = new HashMap<>();
-		MapUtil.putAll(eventDefs, workflowDefinition.getEvents(), EventDefinition::getName);
+		MapUtil.putAll(eventDefs, workflowDefinition.getEvents().iterator(), EventDefinition::getName);
 		int index = 0;
 		for(OnEventsDefinition onEventsDef : eventState.getOnEvents()) {
 			for(String eventRef : onEventsDef.getEventRefs()) {
@@ -258,7 +258,7 @@ public class WorkflowRuntime {
 		else if(switchState.getEventConditions() != null) {
 			try {
 				final Map<String, EventDefinition> eventDefinitions = new HashMap<>();
-				MapUtil.putAll(eventDefinitions, workflowDefinition.getEvents(), EventDefinition::getName);
+				MapUtil.putAll(eventDefinitions, workflowDefinition.getEvents().iterator(), EventDefinition::getName);
 				for(SwitchStateEventConditions condition : switchState.getEventConditions()) {
 					if(workflowInstance.isTerminate()) {
 						return;
@@ -352,7 +352,7 @@ public class WorkflowRuntime {
 		}
 	}
 	
-	private Branch newBranch(final WorkflowDefinition workflowDefinition, final ActionDefinition[] actionDefinitions, final WorkflowData workflowData, final WorkflowInstance workflowInstance) throws Exception {
+	private Branch newBranch(final WorkflowDefinition workflowDefinition, final List<ActionDefinition> actionDefinitions, final WorkflowData workflowData, final WorkflowInstance workflowInstance) throws Exception {
 		final List<Action> actions = new ArrayList<>();
 		for(ActionDefinition actionDefinition : actionDefinitions) {
 			final Action action = newAction(workflowDefinition, actionDefinition, workflowData, workflowInstance.getUri());
@@ -512,8 +512,8 @@ public class WorkflowRuntime {
 			final State state = getState(workflowDefinition, eventStateEvent.getState());
 			if(state.getType() == Type.event) {
 				final EventState eventState = (EventState) state;
-				if(eventStateEvent.getOnEventsDefinition() >= 0 && eventStateEvent.getOnEventsDefinition() < eventState.getOnEvents().length) {
-					final OnEventsDefinition onEventsDefinition = eventState.getOnEvents()[eventStateEvent.getOnEventsDefinition()];
+				if(eventStateEvent.getOnEventsDefinition() >= 0 && eventStateEvent.getOnEventsDefinition() < eventState.getOnEvents().size()) {
+					final OnEventsDefinition onEventsDefinition = eventState.getOnEvents().get(eventStateEvent.getOnEventsDefinition());
 					final EventDefinition eventDefinition = getEventDefinition(workflowDefinition, eventStateEvent.getEventDefinition());
 					if(consumeEventStateEvent(workflowDefinition, eventState, onEventsDefinition, eventDefinition, eventStateEvent, event)) {
 						workflowEventStore.remove(eventStateEvent);
@@ -528,10 +528,10 @@ public class WorkflowRuntime {
 			if(state.getType() == Type.event) {
 				boolean isEventConsumed = false;
 				final EventState eventState = (EventState) state;
-				if(eventStateActionEvent.getOnEventsDefinition() >= 0 && eventStateActionEvent.getOnEventsDefinition() < eventState.getOnEvents().length) {
-					final OnEventsDefinition onEventsDefinition = eventState.getOnEvents()[eventStateActionEvent.getOnEventsDefinition()];
-					if(eventStateActionEvent.getActionDefinition() >= 0 && eventStateActionEvent.getActionDefinition() < onEventsDefinition.getActions().length) {
-						final ActionDefinition actionDefinition = onEventsDefinition.getActions()[eventStateActionEvent.getActionDefinition()];
+				if(eventStateActionEvent.getOnEventsDefinition() >= 0 && eventStateActionEvent.getOnEventsDefinition() < eventState.getOnEvents().size()) {
+					final OnEventsDefinition onEventsDefinition = eventState.getOnEvents().get(eventStateActionEvent.getOnEventsDefinition());
+					if(eventStateActionEvent.getActionDefinition() >= 0 && eventStateActionEvent.getActionDefinition() < onEventsDefinition.getActions().size()) {
+						final ActionDefinition actionDefinition = onEventsDefinition.getActions().get(eventStateActionEvent.getActionDefinition());
 						if(actionDefinition.getEventRef() != null && actionDefinition.getEventRef().getConsumeEventRef() != null) {
 							final EventDefinition eventDefinition = getEventDefinition(workflowDefinition, actionDefinition.getEventRef().getConsumeEventRef());
 							final WorkflowInstance workflowInstance = workflowPersistence.getInstance(eventStateActionEvent.getSubject());
@@ -572,7 +572,7 @@ public class WorkflowRuntime {
 	private boolean consumeEventStateEvent(final WorkflowDefinition workflowDefinition, final EventState eventState, final OnEventsDefinition onEventsDefinition, final EventDefinition eventDefinition, final EventStateEvent eventStateEvent, final Event event) {
 		boolean isEventConsumed = false;
 		final Map<String, EventDefinition> events = new HashMap<>();
-		MapUtil.putAll(events, workflowDefinition.getEvents(), EventDefinition::getName);
+		MapUtil.putAll(events, workflowDefinition.getEvents().iterator(), EventDefinition::getName);
 		for(String eventRef : onEventsDefinition.getEventRefs()) {
 			if(eventRef.equals(eventDefinition.getName())) {
 				if(eventState.isExclusive()) {
@@ -689,7 +689,7 @@ public class WorkflowRuntime {
 		}
 	}
 	
-	private void onErrors(final WorkflowDefinition workflowDefinition, final ErrorDefinition[] onErrors, final WorkflowException exception, final WorkflowInstance workflowInstance) throws Exception {
+	private void onErrors(final WorkflowDefinition workflowDefinition, final List<ErrorDefinition> onErrors, final WorkflowException exception, final WorkflowInstance workflowInstance) throws Exception {
 		for(ErrorDefinition errorDefinition : onErrors) {
 			final List<WorkflowError> errors = getErrors(workflowDefinition, errorDefinition);
 			final Optional<WorkflowError> error = errors.stream().filter(err -> err.equals(exception.getWorkflowError())).findFirst();
@@ -755,7 +755,7 @@ public class WorkflowRuntime {
 		final List<String> compensateStates = new ArrayList<>(workflowInstance.getStates());
 		Collections.reverse(compensateStates);
 		final Map<String, State> states = new HashMap<>();
-		MapUtil.putAll(states, workflowDefinition.getStates(), State::getName);
+		MapUtil.putAll(states, workflowDefinition.getStates().iterator(), State::getName);
 		for(String compensateState : compensateStates) {
 			if(workflowInstance.isTerminate()) {
 				return;
@@ -860,9 +860,9 @@ public class WorkflowRuntime {
 		producedEvent.fire(event);
 	}
 	
-	private void produceEvents(final WorkflowDefinition workflowDefinition, final ProducedEventDefinition[] produceEvents) throws Exception {
+	private void produceEvents(final WorkflowDefinition workflowDefinition, final List<ProducedEventDefinition> produceEvents) throws Exception {
 		final Map<String, EventDefinition> eventDefinitions = new HashMap<>();
-		MapUtil.putAll(eventDefinitions, workflowDefinition.getEvents(), EventDefinition::getName);
+		MapUtil.putAll(eventDefinitions, workflowDefinition.getEvents().iterator(), EventDefinition::getName);
 		for(ProducedEventDefinition producedEventDefinition : produceEvents) {
 			final EventDefinition eventDefinition = eventDefinitions.get(producedEventDefinition.getEventRef());
 			produceEvent(eventDefinition, producedEventDefinition);
@@ -896,7 +896,7 @@ public class WorkflowRuntime {
 		}
 		else if(actionDefinition.getEventRef() != null) {
 			final Map<String, EventDefinition> events = new HashMap<>();
-			MapUtil.putAll(events, workflowDefinition.getEvents(), EventDefinition::getName);
+			MapUtil.putAll(events, workflowDefinition.getEvents().iterator(), EventDefinition::getName);
 			final EventDefinition eventDefinition = events.get(actionDefinition.getEventRef().getProduceEventRef());
 			action = new ProduceEventAction(workflowDefinition, actionDefinition, eventDefinition, producedEvent, actionData);
 		}
@@ -911,7 +911,7 @@ public class WorkflowRuntime {
 		return action;
 	}
 	
-	private void performActions(final WorkflowDefinition workflowDefinition, final Mode mode, final ActionDefinition[] actionDefinitions, final Duration actionExecTimeout, final WorkflowInstance workflowInstance) throws Exception {
+	private void performActions(final WorkflowDefinition workflowDefinition, final Mode mode, final List<ActionDefinition> actionDefinitions, final Duration actionExecTimeout, final WorkflowInstance workflowInstance) throws Exception {
 		final List<Action> actions = new CopyOnWriteArrayList<>();
 		for(ActionDefinition actionDefinition : actionDefinitions) {
 			final Action action = newAction(workflowDefinition, actionDefinition, workflowInstance.getWorkflowData(), workflowInstance.getUri());
@@ -948,11 +948,11 @@ public class WorkflowRuntime {
 	}
 	
 	private List<WorkflowError> getErrors(final WorkflowDefinition workflowDefinition, final ErrorDefinition errorDefinition) {
-		final WorkflowError[] errors = workflowDefinition.getErrors();
+		final List<WorkflowError> errors = workflowDefinition.getErrors();
 		if(errorDefinition.getErrorRefs() != null) {
 			final Map<String, WorkflowError> map = new HashMap<>();
-			MapUtil.putAll(map, errors, WorkflowError::getName);
-			return MapUtil.getAll(map, errorDefinition.getErrorRefs());
+			MapUtil.putAll(map, errors.iterator(), WorkflowError::getName);
+			return MapUtil.getAll(map, errorDefinition.getErrorRefs().iterator());
 		}
 		else if(errorDefinition.getErrorRef() != null) {
 			for(WorkflowError error : errors) {
@@ -965,11 +965,11 @@ public class WorkflowRuntime {
 	}
 	
 	private EventDefinition getEventDefinition(final WorkflowDefinition workflowDefinition, final String eventRef) {
-		return Arrays.asList(workflowDefinition.getEvents()).stream().filter(eventDef -> eventDef.getName().equals(eventRef)).findFirst().get();
+		return workflowDefinition.getEvents().stream().filter(eventDef -> eventDef.getName().equals(eventRef)).findFirst().get();
 	}
 	
 	private State getState(final WorkflowDefinition workflowDefinition, final String name) {
-		return Arrays.asList(workflowDefinition.getStates()).stream().filter(state -> state.getName().equals(name)).findFirst().get();
+		return workflowDefinition.getStates().stream().filter(state -> state.getName().equals(name)).findFirst().get();
 	}
 	
 	private WorkflowDefinition getSubWorkflowDefinition(final Object subFlowRef) {

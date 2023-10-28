@@ -1,7 +1,6 @@
 package epf.workflow;
 
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 import epf.workflow.schema.RetryDefinition;
@@ -80,11 +79,11 @@ public class Retry<T> implements Callable<T> {
 			catch(WorkflowException ex) {
 				retry = false;
 				if(workflowDefinition.isAutoRetries() && actionDefinition.getNonRetryableErrors() != null) {
-					final Optional<WorkflowError> nonRetryableError = Arrays.asList(actionDefinition.getNonRetryableErrors()).stream().filter(err -> err.equals(ex.getWorkflowError())).findFirst();
+					final Optional<WorkflowError> nonRetryableError = actionDefinition.getNonRetryableErrors().stream().filter(err -> err.equals(ex.getWorkflowError())).findFirst();
 					retry = !nonRetryableError.isPresent();
 				}
 				else if(!workflowDefinition.isAutoRetries() && actionDefinition.getRetryableErrors() != null) {
-					final Optional<WorkflowError> retryableErrors = Arrays.asList(actionDefinition.getRetryableErrors()).stream().filter(err -> err.equals(ex.getWorkflowError())).findFirst();
+					final Optional<WorkflowError> retryableErrors = actionDefinition.getRetryableErrors().stream().filter(err -> err.equals(ex.getWorkflowError())).findFirst();
 					retry = retryableErrors.isPresent();
 				}
 				if(!retry) {
@@ -110,9 +109,6 @@ public class Retry<T> implements Callable<T> {
 	}
 	
 	private RetryDefinition getRetryDefinition(final WorkflowDefinition workflowDefinition, final String retryRef) {
-		if(workflowDefinition.getRetries() instanceof RetryDefinition[]) {
-			return Arrays.asList((RetryDefinition[])workflowDefinition.getRetries()).stream().filter(retry -> retry.getName().equals(retryRef)).findFirst().orElse(null);
-		}
-		return null;
+		return workflowDefinition.getRetries().stream().filter(retry -> retry.getName().equals(retryRef)).findFirst().orElse(null);
 	}
 }

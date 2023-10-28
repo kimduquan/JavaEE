@@ -1,8 +1,10 @@
 package epf.util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -110,6 +112,22 @@ public interface MapUtil {
 	 * @param <K>
 	 * @param <V>
 	 * @param map
+	 * @param keys
+	 * @return
+	 */
+	static <K, V> List<V> getAll(final Map<K, V> map, final Iterator<K> keys){
+		Objects.requireNonNull(map, "Map");
+		final List<V> values = new ArrayList<>();
+		while(keys.hasNext()) {
+			values.add(map.get(keys.next()));
+		}
+		return values;
+	}
+	
+	/**
+	 * @param <K>
+	 * @param <V>
+	 * @param map
 	 * @param values
 	 * @param func
 	 * @return
@@ -117,6 +135,25 @@ public interface MapUtil {
 	static <K, V> Map<K, V> putAll(final Map<K, V> map, final V[] values, final Function<? super V, ? super K> func){
 		Objects.requireNonNull(map, "Map");
 		for(V value : values) {
+			@SuppressWarnings("unchecked")
+			final K key = (K) func.apply(value);
+			map.put(key, value);
+		}
+		return map;
+	}
+	
+	/**
+	 * @param <K>
+	 * @param <V>
+	 * @param map
+	 * @param values
+	 * @param func
+	 * @return
+	 */
+	static <K, V> Map<K, V> putAll(final Map<K, V> map, final Iterator<V> values, final Function<? super V, ? super K> func){
+		Objects.requireNonNull(map, "Map");
+		while(values.hasNext()) {
+			final V value = values.next();
 			@SuppressWarnings("unchecked")
 			final K key = (K) func.apply(value);
 			map.put(key, value);

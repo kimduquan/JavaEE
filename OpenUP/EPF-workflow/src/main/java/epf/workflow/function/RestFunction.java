@@ -1,6 +1,7 @@
 package epf.workflow.function;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import jakarta.ws.rs.client.Client;
@@ -130,8 +131,8 @@ public class RestFunction extends Function {
 				}
 			}
 		}
-		if(this.getFunctionDefinition().getAuthRef() != null && getWorkflowDefinition().getAuth() instanceof AuthDefinition[]) {
-			final AuthDefinition[] authDefs = (AuthDefinition[]) getWorkflowDefinition().getAuth();
+		if(this.getFunctionDefinition().getAuthRef() != null) {
+			final List<AuthDefinition> authDefs = getWorkflowDefinition().getAuth();
 			for(AuthDefinition authDef : authDefs) {
 				if(authDef.getName().equals(this.getFunctionDefinition().getAuthRef())) {
 					if(authDef.getScheme() == Scheme.bearer) {
