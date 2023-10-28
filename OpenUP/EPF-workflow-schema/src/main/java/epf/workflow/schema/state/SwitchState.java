@@ -6,6 +6,7 @@ import epf.workflow.schema.ErrorDefinition;
 import epf.workflow.schema.WorkflowTimeoutDefinition;
 import epf.workflow.schema.adapter.TransitionOrEndAdapter;
 import jakarta.nosql.Column;
+import java.util.List;
 import org.eclipse.jnosql.mapping.DiscriminatorValue;
 import org.eclipse.jnosql.mapping.Embeddable;
 
@@ -21,12 +22,12 @@ public class SwitchState extends State {
 	 * 
 	 */
 	@Column
-	private SwitchStateDataConditions[] dataConditions;
+	private List<SwitchStateDataConditions> dataConditions;
 	/**
 	 * 
 	 */
 	@Column
-	private SwitchStateEventConditions[] eventConditions;
+	private List<SwitchStateEventConditions> eventConditions;
 	/**
 	 * 
 	 */
@@ -36,7 +37,7 @@ public class SwitchState extends State {
 	 * 
 	 */
 	@Column
-	private ErrorDefinition[] onErrors;
+	private List<ErrorDefinition> onErrors;
 	/**
 	 * 
 	 */
@@ -65,16 +66,16 @@ public class SwitchState extends State {
 	@Column
 	private Object metadata;
 	
-	public SwitchStateDataConditions[] getDataConditions() {
+	public List<SwitchStateDataConditions> getDataConditions() {
 		return dataConditions;
 	}
-	public void setDataConditions(SwitchStateDataConditions[] dataConditions) {
+	public void setDataConditions(List<SwitchStateDataConditions> dataConditions) {
 		this.dataConditions = dataConditions;
 	}
-	public SwitchStateEventConditions[] getEventConditions() {
+	public List<SwitchStateEventConditions> getEventConditions() {
 		return eventConditions;
 	}
-	public void setEventConditions(SwitchStateEventConditions[] eventConditions) {
+	public void setEventConditions(List<SwitchStateEventConditions> eventConditions) {
 		this.eventConditions = eventConditions;
 	}
 	public StateDataFilters getStateDataFilter() {
@@ -83,10 +84,10 @@ public class SwitchState extends State {
 	public void setStateDataFilter(StateDataFilters stateDataFilter) {
 		this.stateDataFilter = stateDataFilter;
 	}
-	public ErrorDefinition[] getOnErrors() {
+	public List<ErrorDefinition> getOnErrors() {
 		return onErrors;
 	}
-	public void setOnErrors(ErrorDefinition[] onErrors) {
+	public void setOnErrors(List<ErrorDefinition> onErrors) {
 		this.onErrors = onErrors;
 	}
 	public WorkflowTimeoutDefinition getTimeouts() {

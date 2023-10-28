@@ -3,6 +3,7 @@ package epf.workflow.schema.event;
 import jakarta.validation.constraints.NotNull;
 import epf.workflow.schema.CorrelationDefinition;
 import jakarta.nosql.Column;
+import java.util.List;
 import org.eclipse.jnosql.mapping.Embeddable;
 
 /**
@@ -42,7 +43,7 @@ public class EventDefinition {
 	 * 
 	 */
 	@Column
-	private CorrelationDefinition[] correlation;
+	private List<CorrelationDefinition> correlation;
 	
 	/**
 	 * 
@@ -88,11 +89,11 @@ public class EventDefinition {
 		this.kind = kind;
 	}
 
-	public CorrelationDefinition[] getCorrelation() {
+	public List<CorrelationDefinition> getCorrelation() {
 		return correlation;
 	}
 
-	public void setCorrelation(CorrelationDefinition[] correlation) {
+	public void setCorrelation(List<CorrelationDefinition> correlation) {
 		this.correlation = correlation;
 	}
 

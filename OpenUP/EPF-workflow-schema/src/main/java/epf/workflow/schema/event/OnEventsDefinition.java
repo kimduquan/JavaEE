@@ -1,10 +1,9 @@
 package epf.workflow.schema.event;
 
 import jakarta.validation.constraints.NotNull;
-
 import jakarta.nosql.Column;
+import java.util.List;
 import org.eclipse.jnosql.mapping.Embeddable;
-
 import epf.workflow.schema.action.ActionDefinition;
 import epf.workflow.schema.action.Mode;
 
@@ -20,7 +19,7 @@ public class OnEventsDefinition {
 	 */
 	@NotNull
 	@Column
-	private String[] eventRefs;
+	private List<String> eventRefs;
 	
 	/**
 	 * 
@@ -32,7 +31,7 @@ public class OnEventsDefinition {
 	 * 
 	 */
 	@Column
-	private ActionDefinition[] actions;
+	private List<ActionDefinition> actions;
 	
 	/**
 	 * 
@@ -40,11 +39,11 @@ public class OnEventsDefinition {
 	@Column
 	private EventDataFilters eventDataFilter;
 
-	public String[] getEventRefs() {
+	public List<String> getEventRefs() {
 		return eventRefs;
 	}
 
-	public void setEventRefs(String[] eventRefs) {
+	public void setEventRefs(List<String> eventRefs) {
 		this.eventRefs = eventRefs;
 	}
 
@@ -56,11 +55,11 @@ public class OnEventsDefinition {
 		this.actionMode = actionMode;
 	}
 
-	public ActionDefinition[] getActions() {
+	public List<ActionDefinition> getActions() {
 		return actions;
 	}
 
-	public void setActions(ActionDefinition[] actions) {
+	public void setActions(List<ActionDefinition> actions) {
 		this.actions = actions;
 	}
 

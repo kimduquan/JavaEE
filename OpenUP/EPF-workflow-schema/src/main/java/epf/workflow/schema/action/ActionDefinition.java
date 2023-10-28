@@ -6,6 +6,7 @@ import epf.workflow.schema.function.adapter.FunctionRefDefinitionAdapter;
 import epf.workflow.schema.WorkflowError;
 import epf.workflow.schema.adapter.SubFlowRefDefinitionAdapter;
 import jakarta.nosql.Column;
+import java.util.List;
 import org.eclipse.jnosql.mapping.Embeddable;
 
 /**
@@ -51,13 +52,13 @@ public class ActionDefinition {
 	 * 
 	 */
 	@Column
-	private WorkflowError[] nonRetryableErrors;
+	private List<WorkflowError> nonRetryableErrors;
 	
 	/**
 	 * 
 	 */
 	@Column
-	private WorkflowError[] retryableErrors;
+	private List<WorkflowError> retryableErrors;
 	
 	/**
 	 * 
@@ -117,19 +118,19 @@ public class ActionDefinition {
 		this.retryRef = retryRef;
 	}
 
-	public WorkflowError[] getNonRetryableErrors() {
+	public List<WorkflowError> getNonRetryableErrors() {
 		return nonRetryableErrors;
 	}
 
-	public void setNonRetryableErrors(WorkflowError[] nonRetryableErrors) {
+	public void setNonRetryableErrors(List<WorkflowError> nonRetryableErrors) {
 		this.nonRetryableErrors = nonRetryableErrors;
 	}
 
-	public WorkflowError[] getRetryableErrors() {
+	public List<WorkflowError> getRetryableErrors() {
 		return retryableErrors;
 	}
 
-	public void setRetryableErrors(WorkflowError[] retryableErrors) {
+	public void setRetryableErrors(List<WorkflowError> retryableErrors) {
 		this.retryableErrors = retryableErrors;
 	}
 

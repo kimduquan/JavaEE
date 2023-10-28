@@ -7,6 +7,7 @@ import epf.workflow.schema.WorkflowTimeoutDefinition;
 import epf.workflow.schema.adapter.EndDefinitionAdapter;
 import epf.workflow.schema.adapter.TransitionDefinitionAdapter;
 import jakarta.nosql.Column;
+import java.util.List;
 import org.eclipse.jnosql.mapping.DiscriminatorValue;
 import org.eclipse.jnosql.mapping.Embeddable;
 
@@ -23,7 +24,7 @@ public class ParallelState extends State {
 	 */
 	@NotNull
 	@Column
-	private ParallelStateBranch[] branches;
+	private List<ParallelStateBranch> branches;
 	/**
 	 * 
 	 */
@@ -48,7 +49,7 @@ public class ParallelState extends State {
 	 * 
 	 */
 	@Column
-	private ErrorDefinition[] onErrors;
+	private List<ErrorDefinition> onErrors;
 	/**
 	 * 
 	 */
@@ -77,10 +78,10 @@ public class ParallelState extends State {
 	@JsonbTypeAdapter(value = EndDefinitionAdapter.class)
 	private Object end;
 	
-	public ParallelStateBranch[] getBranches() {
+	public List<ParallelStateBranch> getBranches() {
 		return branches;
 	}
-	public void setBranches(ParallelStateBranch[] branches) {
+	public void setBranches(List<ParallelStateBranch> branches) {
 		this.branches = branches;
 	}
 	public CompletionType getCompletionType() {
@@ -107,10 +108,10 @@ public class ParallelState extends State {
 	public void setStateDataFilter(StateDataFilters stateDataFilter) {
 		this.stateDataFilter = stateDataFilter;
 	}
-	public ErrorDefinition[] getOnErrors() {
+	public List<ErrorDefinition> getOnErrors() {
 		return onErrors;
 	}
-	public void setOnErrors(ErrorDefinition[] onErrors) {
+	public void setOnErrors(List<ErrorDefinition> onErrors) {
 		this.onErrors = onErrors;
 	}
 	public Object getTransition() {

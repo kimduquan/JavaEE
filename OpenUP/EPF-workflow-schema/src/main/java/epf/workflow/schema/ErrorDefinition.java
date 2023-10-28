@@ -4,6 +4,7 @@ import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import epf.workflow.schema.adapter.EndDefinitionAdapter;
 import epf.workflow.schema.adapter.TransitionDefinitionAdapter;
 import jakarta.nosql.Column;
+import java.util.List;
 import org.eclipse.jnosql.mapping.Embeddable;
 
 /**
@@ -22,7 +23,7 @@ public class ErrorDefinition {
 	 * 
 	 */
 	@Column
-	private String[] errorRefs;
+	private List<String> errorRefs;
 	
 	/**
 	 * 
@@ -46,11 +47,11 @@ public class ErrorDefinition {
 		this.errorRef = errorRef;
 	}
 
-	public String[] getErrorRefs() {
+	public List<String> getErrorRefs() {
 		return errorRefs;
 	}
 
-	public void setErrorRefs(String[] errorRefs) {
+	public void setErrorRefs(List<String> errorRefs) {
 		this.errorRefs = errorRefs;
 	}
 

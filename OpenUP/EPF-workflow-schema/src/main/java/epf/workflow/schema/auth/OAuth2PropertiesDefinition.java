@@ -2,6 +2,7 @@ package epf.workflow.schema.auth;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.nosql.Column;
+import java.util.List;
 import org.eclipse.jnosql.mapping.Embeddable;
 
 /**
@@ -37,7 +38,7 @@ public class OAuth2PropertiesDefinition extends PropertiesDefinition {
 	 * 
 	 */
 	@Column
-	private String[] scopes;
+	private List<String> scopes;
 	/**
 	 * 
 	 */
@@ -52,7 +53,7 @@ public class OAuth2PropertiesDefinition extends PropertiesDefinition {
 	 * 
 	 */
 	@Column
-	private String[] audiences;
+	private List<String> audiences;
 	/**
 	 * 
 	 */
@@ -93,10 +94,10 @@ public class OAuth2PropertiesDefinition extends PropertiesDefinition {
 	public void setClientSecret(String clientSecret) {
 		this.clientSecret = clientSecret;
 	}
-	public String[] getScopes() {
+	public List<String> getScopes() {
 		return scopes;
 	}
-	public void setScopes(String[] scopes) {
+	public void setScopes(List<String> scopes) {
 		this.scopes = scopes;
 	}
 	public String getUsername() {
@@ -111,10 +112,10 @@ public class OAuth2PropertiesDefinition extends PropertiesDefinition {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public String[] getAudiences() {
+	public List<String> getAudiences() {
 		return audiences;
 	}
-	public void setAudiences(String[] audiences) {
+	public void setAudiences(List<String> audiences) {
 		this.audiences = audiences;
 	}
 	public String getSubjectToken() {

@@ -1,6 +1,7 @@
 package epf.workflow.schema;
 
 import java.io.Serializable;
+import java.util.List;
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import jakarta.validation.constraints.NotNull;
 import epf.workflow.schema.event.EventDefinition;
@@ -62,7 +63,7 @@ public class WorkflowDefinition implements Serializable {
 	 * 
 	 */
 	@Column
-	private Object[] annotations;
+	private List<Object> annotations;
 	
 	/**
 	 * 
@@ -80,7 +81,7 @@ public class WorkflowDefinition implements Serializable {
 	 * 
 	 */
 	@Column
-	private Object[] secrets;
+	private List<Object> secrets;
 	
 	/**
 	 * 
@@ -112,7 +113,7 @@ public class WorkflowDefinition implements Serializable {
 	 * 
 	 */
 	@Column
-	private WorkflowError[] errors;
+	private List<WorkflowError> errors;
 	
 	/**
 	 * 
@@ -124,21 +125,21 @@ public class WorkflowDefinition implements Serializable {
 	 * 
 	 */
 	@Column
-	private AuthDefinition[] auth;
+	private List<AuthDefinition> auth;
 	
 	/**
 	 * 
 	 */
 	@Column
 	@Convert(EventDefinitionArrayConverter.class)
-	private EventDefinition[] events;
+	private List<EventDefinition> events;
 	
 	/**
 	 * 
 	 */
 	@Column
 	@Convert(FunctionDefinitionArrayConverter.class)
-	private FunctionDefinition[] functions;
+	private List<FunctionDefinition> functions;
 	
 	/**
 	 * 
@@ -150,20 +151,20 @@ public class WorkflowDefinition implements Serializable {
 	 * 
 	 */
 	@Column
-	private RetryDefinition[] retries;
+	private List<RetryDefinition> retries;
 	
 	/**
 	 * 
 	 */
 	@Column
 	@JsonbTypeAdapter(value = StateAdapter.class)
-	private State[] states;
+	private List<State> states;
 	
 	/**
 	 * 
 	 */
 	@Column
-	private Object[] extensions;
+	private List<Object> extensions;
 	
 	/**
 	 * 
@@ -211,11 +212,11 @@ public class WorkflowDefinition implements Serializable {
 		this.version = version;
 	}
 
-	public Object[] getAnnotations() {
+	public List<Object> getAnnotations() {
 		return annotations;
 	}
 
-	public void setAnnotations(Object[] annotations) {
+	public void setAnnotations(List<Object> annotations) {
 		this.annotations = annotations;
 	}
 
@@ -235,11 +236,11 @@ public class WorkflowDefinition implements Serializable {
 		this.constants = constants;
 	}
 
-	public Object[] getSecrets() {
+	public List<Object> getSecrets() {
 		return secrets;
 	}
 
-	public void setSecrets(Object[] secrets) {
+	public void setSecrets(List<Object> secrets) {
 		this.secrets = secrets;
 	}
 
@@ -275,11 +276,11 @@ public class WorkflowDefinition implements Serializable {
 		this.timeouts = timeouts;
 	}
 
-	public WorkflowError[] getErrors() {
+	public List<WorkflowError> getErrors() {
 		return errors;
 	}
 
-	public void setErrors(WorkflowError[] errors) {
+	public void setErrors(List<WorkflowError> errors) {
 		this.errors = errors;
 	}
 
@@ -291,27 +292,27 @@ public class WorkflowDefinition implements Serializable {
 		this.keepActive = keepActive;
 	}
 
-	public AuthDefinition[] getAuth() {
+	public List<AuthDefinition> getAuth() {
 		return auth;
 	}
 
-	public void setAuth(AuthDefinition[] auth) {
+	public void setAuth(List<AuthDefinition> auth) {
 		this.auth = auth;
 	}
 
-	public EventDefinition[] getEvents() {
+	public List<EventDefinition> getEvents() {
 		return events;
 	}
 
-	public void setEvents(EventDefinition[] events) {
+	public void setEvents(List<EventDefinition> events) {
 		this.events = events;
 	}
 
-	public FunctionDefinition[] getFunctions() {
+	public List<FunctionDefinition> getFunctions() {
 		return functions;
 	}
 
-	public void setFunctions(FunctionDefinition[] functions) {
+	public void setFunctions(List<FunctionDefinition> functions) {
 		this.functions = functions;
 	}
 
@@ -323,27 +324,27 @@ public class WorkflowDefinition implements Serializable {
 		this.autoRetries = autoRetries;
 	}
 
-	public RetryDefinition[] getRetries() {
+	public List<RetryDefinition> getRetries() {
 		return retries;
 	}
 
-	public void setRetries(RetryDefinition[] retries) {
+	public void setRetries(List<RetryDefinition> retries) {
 		this.retries = retries;
 	}
 
-	public State[] getStates() {
+	public List<State> getStates() {
 		return states;
 	}
 
-	public void setStates(State[] states) {
+	public void setStates(List<State> states) {
 		this.states = states;
 	}
 
-	public Object[] getExtensions() {
+	public List<Object> getExtensions() {
 		return extensions;
 	}
 
-	public void setExtensions(Object[] extensions) {
+	public void setExtensions(List<Object> extensions) {
 		this.extensions = extensions;
 	}
 

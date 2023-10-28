@@ -3,6 +3,7 @@ package epf.workflow.schema;
 import jakarta.validation.constraints.NotNull;
 import epf.workflow.schema.event.ProducedEventDefinition;
 import jakarta.nosql.Column;
+import java.util.List;
 import org.eclipse.jnosql.mapping.Embeddable;
 
 /**
@@ -27,7 +28,7 @@ public class TransitionDefinition {
 	 * 
 	 */
 	@Column
-	private ProducedEventDefinition[] produceEvents;
+	private List<ProducedEventDefinition> produceEvents;
 	
 	public String getNextState() {
 		return nextState;
@@ -41,10 +42,10 @@ public class TransitionDefinition {
 	public void setCompensate(Boolean compensate) {
 		this.compensate = compensate;
 	}
-	public ProducedEventDefinition[] getProduceEvents() {
+	public List<ProducedEventDefinition> getProduceEvents() {
 		return produceEvents;
 	}
-	public void setProduceEvents(ProducedEventDefinition[] produceEvents) {
+	public void setProduceEvents(List<ProducedEventDefinition> produceEvents) {
 		this.produceEvents = produceEvents;
 	}
 }

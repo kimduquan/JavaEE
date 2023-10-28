@@ -4,6 +4,7 @@ import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import epf.workflow.schema.event.ProducedEventDefinition;
 import epf.workflow.schema.adapter.ContinueAsAdapter;
 import jakarta.nosql.Column;
+import java.util.List;
 import org.eclipse.jnosql.mapping.Embeddable;
 
 /**
@@ -22,7 +23,7 @@ public class EndDefinition {
 	 * 
 	 */
 	@Column
-	private ProducedEventDefinition[] produceEvents;
+	private List<ProducedEventDefinition> produceEvents;
 	/**
 	 * 
 	 */
@@ -41,10 +42,10 @@ public class EndDefinition {
 	public void setTerminate(Boolean terminate) {
 		this.terminate = terminate;
 	}
-	public ProducedEventDefinition[] getProduceEvents() {
+	public List<ProducedEventDefinition> getProduceEvents() {
 		return produceEvents;
 	}
-	public void setProduceEvents(ProducedEventDefinition[] produceEvents) {
+	public void setProduceEvents(List<ProducedEventDefinition> produceEvents) {
 		this.produceEvents = produceEvents;
 	}
 	public Boolean isCompensate() {

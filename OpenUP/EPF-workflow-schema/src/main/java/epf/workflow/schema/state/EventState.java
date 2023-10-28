@@ -8,6 +8,7 @@ import epf.workflow.schema.WorkflowTimeoutDefinition;
 import epf.workflow.schema.adapter.EndDefinitionAdapter;
 import epf.workflow.schema.adapter.TransitionDefinitionAdapter;
 import jakarta.nosql.Column;
+import java.util.List;
 import org.eclipse.jnosql.mapping.DiscriminatorValue;
 import org.eclipse.jnosql.mapping.Embeddable;
 
@@ -30,7 +31,7 @@ public class EventState extends State {
 	 */
 	@NotNull
 	@Column
-	private OnEventsDefinition[] onEvents;
+	private List<OnEventsDefinition> onEvents;
 	
 	/**
 	 * 
@@ -55,7 +56,7 @@ public class EventState extends State {
 	 * 
 	 */
 	@Column
-	private ErrorDefinition[] onErrors;
+	private List<ErrorDefinition> onErrors;
 	
 	/**
 	 * 
@@ -84,11 +85,11 @@ public class EventState extends State {
 		this.exclusive = exclusive;
 	}
 
-	public OnEventsDefinition[] getOnEvents() {
+	public List<OnEventsDefinition> getOnEvents() {
 		return onEvents;
 	}
 
-	public void setOnEvents(OnEventsDefinition[] onEvents) {
+	public void setOnEvents(List<OnEventsDefinition> onEvents) {
 		this.onEvents = onEvents;
 	}
 
@@ -116,11 +117,11 @@ public class EventState extends State {
 		this.transition = transition;
 	}
 
-	public ErrorDefinition[] getOnErrors() {
+	public List<ErrorDefinition> getOnErrors() {
 		return onErrors;
 	}
 
-	public void setOnErrors(ErrorDefinition[] onErrors) {
+	public void setOnErrors(List<ErrorDefinition> onErrors) {
 		this.onErrors = onErrors;
 	}
 

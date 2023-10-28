@@ -1,10 +1,10 @@
 package epf.workflow.schema.state;
 
 import jakarta.validation.constraints.NotNull;
-
 import epf.workflow.schema.WorkflowTimeoutDefinition;
 import epf.workflow.schema.action.ActionDefinition;
 import jakarta.nosql.Column;
+import java.util.List;
 import org.eclipse.jnosql.mapping.Embeddable;
 
 /**
@@ -25,7 +25,7 @@ public class ParallelStateBranch {
 	 */
 	@NotNull
 	@Column
-	private ActionDefinition[] actions;
+	private List<ActionDefinition> actions;
 	/**
 	 * 
 	 */
@@ -38,10 +38,10 @@ public class ParallelStateBranch {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public ActionDefinition[] getActions() {
+	public List<ActionDefinition> getActions() {
 		return actions;
 	}
-	public void setActions(ActionDefinition[] actions) {
+	public void setActions(List<ActionDefinition> actions) {
 		this.actions = actions;
 	}
 	public WorkflowTimeoutDefinition getTimeouts() {

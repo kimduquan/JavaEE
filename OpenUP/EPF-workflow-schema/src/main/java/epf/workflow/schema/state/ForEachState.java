@@ -9,6 +9,7 @@ import epf.workflow.schema.action.Mode;
 import epf.workflow.schema.adapter.EndDefinitionAdapter;
 import epf.workflow.schema.adapter.TransitionDefinitionAdapter;
 import jakarta.nosql.Column;
+import java.util.List;
 import org.eclipse.jnosql.mapping.DiscriminatorValue;
 import org.eclipse.jnosql.mapping.Embeddable;
 
@@ -51,7 +52,7 @@ public class ForEachState extends State {
 	 */
 	@Column
 	@NotNull
-	private ActionDefinition[] actions;
+	private List<ActionDefinition> actions;
 	/**
 	 * 
 	 */
@@ -66,7 +67,7 @@ public class ForEachState extends State {
 	 * 
 	 */
 	@Column
-	private ErrorDefinition[] onErrors;
+	private List<ErrorDefinition> onErrors;
 	/**
 	 * 
 	 */
@@ -125,10 +126,10 @@ public class ForEachState extends State {
 	public void setMode(Mode mode) {
 		this.mode = mode;
 	}
-	public ActionDefinition[] getActions() {
+	public List<ActionDefinition> getActions() {
 		return actions;
 	}
-	public void setActions(ActionDefinition[] actions) {
+	public void setActions(List<ActionDefinition> actions) {
 		this.actions = actions;
 	}
 	public WorkflowTimeoutDefinition getTimeouts() {
@@ -143,10 +144,10 @@ public class ForEachState extends State {
 	public void setStateDataFilter(StateDataFilters stateDataFilter) {
 		this.stateDataFilter = stateDataFilter;
 	}
-	public ErrorDefinition[] getOnErrors() {
+	public List<ErrorDefinition> getOnErrors() {
 		return onErrors;
 	}
-	public void setOnErrors(ErrorDefinition[] onErrors) {
+	public void setOnErrors(List<ErrorDefinition> onErrors) {
 		this.onErrors = onErrors;
 	}
 	public Object getTransition() {

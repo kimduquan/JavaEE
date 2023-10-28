@@ -9,6 +9,7 @@ import epf.workflow.schema.action.ActionDefinition;
 import epf.workflow.schema.adapter.EndDefinitionAdapter;
 import epf.workflow.schema.adapter.TransitionDefinitionAdapter;
 import jakarta.nosql.Column;
+import java.util.List;
 import org.eclipse.jnosql.mapping.DiscriminatorValue;
 import org.eclipse.jnosql.mapping.Embeddable;
 
@@ -51,7 +52,7 @@ public class CallbackState extends State {
 	 * 
 	 */
 	@Column
-	private ErrorDefinition[] onErrors;
+	private List<ErrorDefinition> onErrors;
 	/**
 	 * 
 	 */
@@ -110,10 +111,10 @@ public class CallbackState extends State {
 	public void setStateDataFilter(StateDataFilters stateDataFilter) {
 		this.stateDataFilter = stateDataFilter;
 	}
-	public ErrorDefinition[] getOnErrors() {
+	public List<ErrorDefinition> getOnErrors() {
 		return onErrors;
 	}
-	public void setOnErrors(ErrorDefinition[] onErrors) {
+	public void setOnErrors(List<ErrorDefinition> onErrors) {
 		this.onErrors = onErrors;
 	}
 	public Object getTransition() {
