@@ -2,7 +2,6 @@ package epf.workflow.schema.state;
 
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import jakarta.validation.constraints.NotNull;
-
 import epf.workflow.schema.ErrorDefinition;
 import epf.workflow.schema.WorkflowTimeoutDefinition;
 import epf.workflow.schema.action.ActionDefinition;
@@ -10,6 +9,7 @@ import epf.workflow.schema.action.Mode;
 import epf.workflow.schema.adapter.EndDefinitionAdapter;
 import epf.workflow.schema.adapter.TransitionDefinitionAdapter;
 import jakarta.nosql.Column;
+import org.eclipse.jnosql.mapping.DiscriminatorValue;
 import org.eclipse.jnosql.mapping.Embeddable;
 
 /**
@@ -17,6 +17,7 @@ import org.eclipse.jnosql.mapping.Embeddable;
  *
  */
 @Embeddable
+@DiscriminatorValue("operation")
 public class OperationState extends State {
 
 	/**

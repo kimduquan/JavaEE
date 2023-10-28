@@ -2,6 +2,7 @@ package epf.workflow.schema.state;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.nosql.Column;
+import org.eclipse.jnosql.mapping.DiscriminatorColumn;
 import org.eclipse.jnosql.mapping.MappedSuperclass;
 
 /**
@@ -9,6 +10,7 @@ import org.eclipse.jnosql.mapping.MappedSuperclass;
  *
  */
 @MappedSuperclass
+@DiscriminatorColumn("type")
 public class State {
 
 	/**

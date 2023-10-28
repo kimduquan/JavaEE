@@ -8,6 +8,7 @@ import epf.workflow.schema.WorkflowTimeoutDefinition;
 import epf.workflow.schema.adapter.EndDefinitionAdapter;
 import epf.workflow.schema.adapter.TransitionDefinitionAdapter;
 import jakarta.nosql.Column;
+import org.eclipse.jnosql.mapping.DiscriminatorValue;
 import org.eclipse.jnosql.mapping.Embeddable;
 
 /**
@@ -15,6 +16,7 @@ import org.eclipse.jnosql.mapping.Embeddable;
  *
  */
 @Embeddable
+@DiscriminatorValue("event")
 public class EventState extends State {
 
 	/**
