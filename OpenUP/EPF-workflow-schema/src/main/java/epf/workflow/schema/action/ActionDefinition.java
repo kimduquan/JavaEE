@@ -6,6 +6,7 @@ import epf.workflow.schema.function.adapter.FunctionRefDefinitionAdapter;
 import epf.workflow.schema.WorkflowError;
 import epf.workflow.schema.adapter.SubFlowRefDefinitionAdapter;
 import jakarta.nosql.Column;
+import java.io.Serializable;
 import java.util.List;
 import org.eclipse.jnosql.mapping.Embeddable;
 
@@ -14,7 +15,12 @@ import org.eclipse.jnosql.mapping.Embeddable;
  *
  */
 @Embeddable
-public class ActionDefinition {
+public class ActionDefinition implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 

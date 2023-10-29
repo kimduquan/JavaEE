@@ -1,6 +1,7 @@
 package epf.workflow.schema.schedule;
 
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
+import java.io.Serializable;
 import org.eclipse.jnosql.mapping.Embeddable;
 import epf.workflow.schema.schedule.adapter.CronDefinitionAdapter;
 import jakarta.nosql.Column;
@@ -10,7 +11,12 @@ import jakarta.nosql.Column;
  *
  */
 @Embeddable
-public class ScheduleDefinition {
+public class ScheduleDefinition implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 

@@ -14,6 +14,11 @@ public class BearerPropertiesDefinition extends PropertiesDefinition {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * 
+	 */
 	@Column
 	@NotNull
 	private String token;

@@ -1,6 +1,7 @@
 package epf.workflow.schema.action;
 
 import jakarta.nosql.Column;
+import java.io.Serializable;
 import org.eclipse.jnosql.mapping.Embeddable;
 
 /**
@@ -8,8 +9,13 @@ import org.eclipse.jnosql.mapping.Embeddable;
  *
  */
 @Embeddable
-public class ActionDataFilters {
+public class ActionDataFilters implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * 
 	 */

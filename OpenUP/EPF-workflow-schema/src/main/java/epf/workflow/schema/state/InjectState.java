@@ -20,6 +20,11 @@ public class InjectState extends State {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * 
+	 */
 	@NotNull
 	@Column
 	private Map<String, Object> data;

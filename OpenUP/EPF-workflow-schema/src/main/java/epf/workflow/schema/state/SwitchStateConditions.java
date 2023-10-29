@@ -4,6 +4,7 @@ import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import epf.workflow.schema.adapter.EndDefinitionAdapter;
 import epf.workflow.schema.adapter.TransitionDefinitionAdapter;
 import jakarta.nosql.Column;
+import java.io.Serializable;
 import org.eclipse.jnosql.mapping.MappedSuperclass;
 
 /**
@@ -11,8 +12,13 @@ import org.eclipse.jnosql.mapping.MappedSuperclass;
  *
  */
 @MappedSuperclass
-public class SwitchStateConditions {
+public class SwitchStateConditions implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * 
 	 */

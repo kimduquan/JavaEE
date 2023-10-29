@@ -4,6 +4,7 @@ import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import jakarta.validation.constraints.NotNull;
 import epf.workflow.schema.auth.adapter.AuthDefinitionAdapter;
 import jakarta.nosql.Column;
+import java.io.Serializable;
 import org.eclipse.jnosql.mapping.Embeddable;
 
 /**
@@ -12,7 +13,12 @@ import org.eclipse.jnosql.mapping.Embeddable;
  */
 @Embeddable
 @JsonbTypeAdapter(value = AuthDefinitionAdapter.class)
-public class AuthDefinition {
+public class AuthDefinition implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 

@@ -23,6 +23,11 @@ public class EventState extends State {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
 	@Column
 	private Boolean exclusive = true;
 	

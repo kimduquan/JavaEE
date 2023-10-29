@@ -15,6 +15,11 @@ public class OAuth2PropertiesDefinition extends PropertiesDefinition {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * 
+	 */
 	@Column
 	private String authority;
 	/**

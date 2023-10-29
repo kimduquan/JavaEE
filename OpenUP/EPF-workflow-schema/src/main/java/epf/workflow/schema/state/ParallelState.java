@@ -22,6 +22,11 @@ public class ParallelState extends State {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * 
+	 */
 	@NotNull
 	@Column
 	private List<ParallelStateBranch> branches;

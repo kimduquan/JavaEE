@@ -2,6 +2,7 @@ package epf.workflow.schema.schedule;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.nosql.Column;
+import java.io.Serializable;
 import org.eclipse.jnosql.mapping.Embeddable;
 
 /**
@@ -9,7 +10,12 @@ import org.eclipse.jnosql.mapping.Embeddable;
  *
  */
 @Embeddable
-public class CronDefinition {
+public class CronDefinition implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 

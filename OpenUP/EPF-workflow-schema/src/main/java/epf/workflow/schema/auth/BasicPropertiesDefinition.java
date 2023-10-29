@@ -14,6 +14,11 @@ public class BasicPropertiesDefinition extends PropertiesDefinition {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * 
+	 */
 	@Column
 	@NotNull
 	private String username;

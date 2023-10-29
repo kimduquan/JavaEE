@@ -19,6 +19,11 @@ public class SleepState extends State {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * 
+	 */
 	@NotNull
 	@Column
 	private String duration;

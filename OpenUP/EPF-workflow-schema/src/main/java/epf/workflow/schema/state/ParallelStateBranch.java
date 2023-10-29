@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import epf.workflow.schema.WorkflowTimeoutDefinition;
 import epf.workflow.schema.action.ActionDefinition;
 import jakarta.nosql.Column;
+import java.io.Serializable;
 import java.util.List;
 import org.eclipse.jnosql.mapping.Embeddable;
 
@@ -12,8 +13,13 @@ import org.eclipse.jnosql.mapping.Embeddable;
  *
  */
 @Embeddable
-public class ParallelStateBranch {
+public class ParallelStateBranch implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * 
 	 */

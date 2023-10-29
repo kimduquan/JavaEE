@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.json.bind.annotation.JsonbCreator;
 import jakarta.json.bind.annotation.JsonbProperty;
 import jakarta.nosql.Column;
+import java.io.Serializable;
 import org.eclipse.jnosql.mapping.DiscriminatorColumn;
 import org.eclipse.jnosql.mapping.MappedSuperclass;
 
@@ -13,7 +14,12 @@ import org.eclipse.jnosql.mapping.MappedSuperclass;
  */
 @MappedSuperclass
 @DiscriminatorColumn("type")
-public class State {
+public class State implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 

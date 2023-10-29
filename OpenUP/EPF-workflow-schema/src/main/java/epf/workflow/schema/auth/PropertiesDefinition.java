@@ -1,6 +1,7 @@
 package epf.workflow.schema.auth;
 
 import jakarta.nosql.Column;
+import java.io.Serializable;
 import org.eclipse.jnosql.mapping.MappedSuperclass;
 
 /**
@@ -8,8 +9,13 @@ import org.eclipse.jnosql.mapping.MappedSuperclass;
  *
  */
 @MappedSuperclass
-public class PropertiesDefinition {
+public class PropertiesDefinition implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * 
 	 */

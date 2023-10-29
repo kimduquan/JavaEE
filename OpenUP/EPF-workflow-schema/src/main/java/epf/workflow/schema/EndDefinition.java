@@ -4,6 +4,7 @@ import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import epf.workflow.schema.event.ProducedEventDefinition;
 import epf.workflow.schema.adapter.ContinueAsAdapter;
 import jakarta.nosql.Column;
+import java.io.Serializable;
 import java.util.List;
 import org.eclipse.jnosql.mapping.Embeddable;
 
@@ -12,8 +13,13 @@ import org.eclipse.jnosql.mapping.Embeddable;
  *
  */
 @Embeddable
-public class EndDefinition {
+public class EndDefinition implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * 
 	 */

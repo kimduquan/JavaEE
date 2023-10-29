@@ -3,6 +3,7 @@ package epf.workflow.schema.event;
 import jakarta.validation.constraints.NotNull;
 import epf.workflow.schema.CorrelationDefinition;
 import jakarta.nosql.Column;
+import java.io.Serializable;
 import java.util.List;
 import org.eclipse.jnosql.mapping.Embeddable;
 
@@ -11,7 +12,12 @@ import org.eclipse.jnosql.mapping.Embeddable;
  *
  */
 @Embeddable
-public class EventDefinition {
+public class EventDefinition implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 

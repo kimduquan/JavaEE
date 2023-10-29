@@ -21,6 +21,11 @@ public class SwitchState extends State {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * 
+	 */
 	@Column
 	private List<SwitchStateDataConditions> dataConditions;
 	/**

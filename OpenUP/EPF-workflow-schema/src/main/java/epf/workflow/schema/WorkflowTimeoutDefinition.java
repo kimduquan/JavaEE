@@ -3,6 +3,7 @@ package epf.workflow.schema;
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import epf.workflow.schema.adapter.WorkflowExecTimeoutDefinitionAdapter;
 import jakarta.nosql.Column;
+import java.io.Serializable;
 import org.eclipse.jnosql.mapping.Embeddable;
 
 /**
@@ -10,7 +11,12 @@ import org.eclipse.jnosql.mapping.Embeddable;
  *
  */
 @Embeddable
-public class WorkflowTimeoutDefinition {
+public class WorkflowTimeoutDefinition implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 

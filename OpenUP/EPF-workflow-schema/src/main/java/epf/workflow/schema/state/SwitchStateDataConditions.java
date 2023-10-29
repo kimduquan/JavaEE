@@ -10,6 +10,12 @@ import org.eclipse.jnosql.mapping.Embeddable;
  */
 @Embeddable
 public class SwitchStateDataConditions extends SwitchStateConditions {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * 
 	 */

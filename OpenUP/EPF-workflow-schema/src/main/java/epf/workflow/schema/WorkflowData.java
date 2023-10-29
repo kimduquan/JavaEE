@@ -1,5 +1,6 @@
 package epf.workflow.schema;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import org.eclipse.jnosql.mapping.Embeddable;
@@ -10,8 +11,13 @@ import jakarta.nosql.Column;
  *
  */
 @Embeddable
-public class WorkflowData {
+public class WorkflowData implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * 
 	 */

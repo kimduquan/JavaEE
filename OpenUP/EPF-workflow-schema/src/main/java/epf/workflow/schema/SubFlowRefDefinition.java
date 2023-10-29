@@ -3,6 +3,7 @@ package epf.workflow.schema;
 import jakarta.validation.constraints.NotNull;
 import epf.workflow.schema.function.Invoke;
 import jakarta.nosql.Column;
+import java.io.Serializable;
 import org.eclipse.jnosql.mapping.Embeddable;
 
 /**
@@ -10,7 +11,12 @@ import org.eclipse.jnosql.mapping.Embeddable;
  *
  */
 @Embeddable
-public class SubFlowRefDefinition {
+public class SubFlowRefDefinition implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 

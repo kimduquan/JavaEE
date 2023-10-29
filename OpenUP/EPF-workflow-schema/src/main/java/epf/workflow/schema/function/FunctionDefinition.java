@@ -3,6 +3,7 @@ package epf.workflow.schema.function;
 import jakarta.validation.constraints.NotNull;
 import epf.workflow.schema.function.mapping.FunctionTypeConverter;
 import jakarta.nosql.Column;
+import java.io.Serializable;
 import org.eclipse.jnosql.mapping.Convert;
 import org.eclipse.jnosql.mapping.Embeddable;
 
@@ -11,7 +12,12 @@ import org.eclipse.jnosql.mapping.Embeddable;
  *
  */
 @Embeddable
-public class FunctionDefinition {
+public class FunctionDefinition implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 

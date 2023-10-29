@@ -24,6 +24,11 @@ public class OperationState extends State {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
 	@Column
 	private Mode actionMode = Mode.sequential;
 	
