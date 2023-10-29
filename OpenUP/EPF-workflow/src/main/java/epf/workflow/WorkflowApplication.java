@@ -1,5 +1,6 @@
 package epf.workflow;
 
+import java.io.InputStream;
 import java.net.URI;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -15,6 +16,9 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.POST;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
+import jakarta.validation.Validator;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.HttpMethod;
@@ -25,6 +29,7 @@ import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
+import jakarta.ws.rs.core.Response.Status;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.lra.annotation.Compensate;
@@ -115,6 +120,12 @@ public class WorkflowApplication  {
 	 */
 	@Inject
 	transient ManagedExecutor executor;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	transient Validator validator;
 	
 	private Response transitionLink(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) {
 		return Response.ok(workflowData)
@@ -643,7 +654,14 @@ public class WorkflowApplication  {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response newWorkflowDefinition(final WorkflowDefinition workflowDefinition) throws Exception {
+	public Response newWorkflowDefinition(final InputStream body) throws Exception {
+		WorkflowDefinition workflowDefinition = null;
+		try(Jsonb jsonb = JsonbBuilder.create()){
+			workflowDefinition = jsonb.fromJson(body, WorkflowDefinition.class);
+		}
+		if(!validator.validate(workflowDefinition).isEmpty()) {
+			return Response.status(Status.BAD_REQUEST).build();
+		}
 		final WorkflowDefinition newWorkflowDefinition = persistence.persist(workflowDefinition);
 		if(newWorkflowDefinition.getVersion() != null) {
 			cache.put(newWorkflowDefinition.getId(), newWorkflowDefinition.getVersion(), newWorkflowDefinition);
