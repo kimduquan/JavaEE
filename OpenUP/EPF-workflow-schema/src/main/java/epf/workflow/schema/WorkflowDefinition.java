@@ -9,7 +9,6 @@ import epf.workflow.schema.adapter.StartDefinitionAdapter;
 import epf.workflow.schema.auth.AuthDefinition;
 import epf.workflow.schema.function.FunctionDefinition;
 import epf.workflow.schema.state.State;
-import epf.workflow.schema.state.adapter.StateAdapter;
 import jakarta.nosql.Column;
 import jakarta.nosql.Entity;
 import jakarta.nosql.Id;
@@ -152,7 +151,6 @@ public class WorkflowDefinition implements Serializable {
 	 * 
 	 */
 	@Column
-	@JsonbTypeAdapter(value = StateAdapter.class)
 	private List<State> states;
 	
 	/**
