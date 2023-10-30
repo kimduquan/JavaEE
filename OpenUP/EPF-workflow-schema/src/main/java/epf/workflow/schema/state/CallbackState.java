@@ -18,7 +18,7 @@ import org.eclipse.jnosql.mapping.Embeddable;
  *
  */
 @Embeddable
-@DiscriminatorValue("callback")
+@DiscriminatorValue(Type.CALLBACK)
 public class CallbackState extends State {
 
 	/**

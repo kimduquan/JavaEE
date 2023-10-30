@@ -14,7 +14,7 @@ import org.eclipse.jnosql.mapping.Embeddable;
  *
  */
 @Embeddable
-@DiscriminatorValue("inject")
+@DiscriminatorValue(Type.INJECT)
 public class InjectState extends State {
 
 	/**

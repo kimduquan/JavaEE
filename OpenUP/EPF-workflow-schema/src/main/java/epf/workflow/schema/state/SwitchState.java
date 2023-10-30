@@ -15,7 +15,7 @@ import org.eclipse.jnosql.mapping.Embeddable;
  *
  */
 @Embeddable
-@DiscriminatorValue("switch")
+@DiscriminatorValue(Type.SWITCH)
 public class SwitchState extends State {
 
 	/**

@@ -18,7 +18,7 @@ import org.eclipse.jnosql.mapping.Embeddable;
  *
  */
 @Embeddable
-@DiscriminatorValue("operation")
+@DiscriminatorValue(Type.OPERATION)
 public class OperationState extends State {
 
 	/**

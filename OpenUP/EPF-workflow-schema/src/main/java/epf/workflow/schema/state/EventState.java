@@ -17,7 +17,7 @@ import org.eclipse.jnosql.mapping.Embeddable;
  *
  */
 @Embeddable
-@DiscriminatorValue("event")
+@DiscriminatorValue(Type.EVENT)
 public class EventState extends State {
 
 	/**

@@ -16,7 +16,7 @@ import org.eclipse.jnosql.mapping.Embeddable;
  *
  */
 @Embeddable
-@DiscriminatorValue("parallel")
+@DiscriminatorValue(Type.PARALLEL)
 public class ParallelState extends State {
 
 	/**

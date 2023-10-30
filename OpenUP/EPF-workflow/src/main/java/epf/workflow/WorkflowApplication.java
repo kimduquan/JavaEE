@@ -659,6 +659,9 @@ public class WorkflowApplication  {
 		try(Jsonb jsonb = JsonbBuilder.create()){
 			workflowDefinition = jsonb.fromJson(body, WorkflowDefinition.class);
 		}
+		catch(Exception ex) {
+			return Response.status(Status.BAD_REQUEST).build();
+		}
 		if(!validator.validate(workflowDefinition).isEmpty()) {
 			return Response.status(Status.BAD_REQUEST).build();
 		}

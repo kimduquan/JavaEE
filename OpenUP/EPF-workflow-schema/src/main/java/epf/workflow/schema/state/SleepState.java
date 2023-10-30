@@ -13,7 +13,7 @@ import org.eclipse.jnosql.mapping.Embeddable;
  *
  */
 @Embeddable
-@DiscriminatorValue("sleep")
+@DiscriminatorValue(Type.SLEEP)
 public class SleepState extends State {
 
 	/**

@@ -18,7 +18,7 @@ import org.eclipse.jnosql.mapping.Embeddable;
  *
  */
 @Embeddable
-@DiscriminatorValue("foreach")
+@DiscriminatorValue(Type.FOREACH)
 public class ForEachState extends State {
 
 	/**
