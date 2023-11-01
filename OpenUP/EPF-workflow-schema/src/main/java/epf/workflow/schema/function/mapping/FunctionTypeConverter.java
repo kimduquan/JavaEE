@@ -13,7 +13,7 @@ public class FunctionTypeConverter extends EnumAttributeConverter<FunctionType> 
 	 * 
 	 */
 	public FunctionTypeConverter() {
-		super(FunctionType.class);
+		super(FunctionType.class, true);
 	}
 
 }

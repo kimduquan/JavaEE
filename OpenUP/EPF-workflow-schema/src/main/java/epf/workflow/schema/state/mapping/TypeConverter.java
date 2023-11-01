@@ -13,6 +13,6 @@ public class TypeConverter extends EnumAttributeConverter<Type> {
 	 * 
 	 */
 	public TypeConverter() {
-		super(Type.class);
+		super(Type.class, true);
 	}
 }

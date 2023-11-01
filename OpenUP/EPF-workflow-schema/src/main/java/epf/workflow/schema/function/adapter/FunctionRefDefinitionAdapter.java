@@ -1,6 +1,6 @@
 package epf.workflow.schema.function.adapter;
 
-import epf.workflow.schema.adapter.StringOrObjectAdapter;
+import epf.util.json.ext.adapter.StringOrObjectAdapter;
 import epf.workflow.schema.function.FunctionRefDefinition;
 
 /**

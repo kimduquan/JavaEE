@@ -1,4 +1,4 @@
-package epf.workflow.schema.adapter;
+package epf.util.json.ext.adapter;
 
 import java.util.Map;
 import jakarta.json.bind.adapter.JsonbAdapter;
@@ -8,7 +8,7 @@ import epf.util.json.ext.JsonUtil;
  * @author PC
  *
  */
-public class BoolOrObjectAdapter<T> implements JsonbAdapter<Object, Object> {
+public class StringOrObjectAdapter<T> implements JsonbAdapter<Object, Object> {
 	
 	/**
 	 * 
@@ -18,14 +18,14 @@ public class BoolOrObjectAdapter<T> implements JsonbAdapter<Object, Object> {
 	/**
 	 * @param cls
 	 */
-	public BoolOrObjectAdapter(final Class<T> cls) {
+	public StringOrObjectAdapter(final Class<T> cls) {
 		this.cls = cls;
 	}
 
 	@Override
 	public Object adaptToJson(final Object obj) throws Exception {
 		Object object = null;
-		if(obj instanceof Boolean || cls.isInstance(obj)) {
+		if(obj instanceof String || cls.isInstance(obj)) {
 			object = obj;
 		}
 		return object;
@@ -34,7 +34,7 @@ public class BoolOrObjectAdapter<T> implements JsonbAdapter<Object, Object> {
 	@Override
 	public Object adaptFromJson(final Object obj) throws Exception {
 		Object object = null;
-		if(obj instanceof Boolean) {
+		if(obj instanceof String) {
 			object = obj;
 		}
 		else if(obj instanceof Map) {

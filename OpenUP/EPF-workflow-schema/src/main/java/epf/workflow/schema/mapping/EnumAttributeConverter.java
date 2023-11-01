@@ -1,7 +1,7 @@
 package epf.workflow.schema.mapping;
 
-import epf.workflow.schema.util.EnumUtil;
 import org.eclipse.jnosql.mapping.AttributeConverter;
+import epf.util.EnumUtil;
 
 /**
  * @author PC
@@ -15,15 +15,22 @@ public class EnumAttributeConverter<T extends Enum<T>> implements AttributeConve
 	private final Class<T> cls;
 	
 	/**
-	 * @param cls
+	 * 
 	 */
-	public EnumAttributeConverter(final Class<T> cls) {
+	private final boolean caseSensitive;
+	
+	/**
+	 * @param cls
+	 * @param caseSensitive
+	 */
+	public EnumAttributeConverter(final Class<T> cls, final boolean caseSensitive) {
 		this.cls = cls;
+		this.caseSensitive = caseSensitive;
 	}
 
 	@Override
 	public String convertToDatabaseColumn(final Enum<T> attribute) {
-		return attribute.name();
+		return caseSensitive ? attribute.name() : attribute.name().toLowerCase();
 	}
 
 	@Override
@@ -31,6 +38,6 @@ public class EnumAttributeConverter<T extends Enum<T>> implements AttributeConve
 		if(dbData == null) {
 			return null;
 		}
-		return EnumUtil.valueOf(cls, dbData);
+		return EnumUtil.valueOf(cls, dbData, caseSensitive);
 	}
 }

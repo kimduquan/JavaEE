@@ -60,6 +60,11 @@
 	    	<artifactId>EPF-json-schema</artifactId>
 	    	<version>${project.version}</version>
 	    </dependency>
+	    <dependency>
+	        <groupId>openup</groupId>
+	        <artifactId>EPF-utility</artifactId>
+	        <version>${project.version}</version>
+	    </dependency>
 		<dependency>
 	        <groupId>openup</groupId>
 	        <artifactId>EPF-logging-utility</artifactId>
