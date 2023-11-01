@@ -27,13 +27,11 @@ public class TransitionOrEndAdapter implements JsonbAdapter<Object, Map<String, 
 
 	@Override
 	public Object adaptFromJson(final Map<String, Object> obj) throws Exception {
-		@SuppressWarnings("unchecked")
-		final Map<String, Object> transition = (Map<String, Object>) obj.get("transition");
+		final Object transition = obj.get("transition");
 		if(transition != null) {
 			return transitionAdapter.adaptFromJson(transition);
 		}
-		@SuppressWarnings("unchecked")
-		final Map<String, Object> end = (Map<String, Object>) obj.get("end");
+		final Object end = obj.get("end");
 		if(end != null) {
 			return endAdapter.adaptFromJson(end);
 		}
