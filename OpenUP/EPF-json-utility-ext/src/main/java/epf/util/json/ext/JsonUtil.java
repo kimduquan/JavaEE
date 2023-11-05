@@ -94,6 +94,17 @@ public interface JsonUtil {
 	}
 	
 	/**
+	 * @param <T>
+	 * @param cls
+	 * @param value
+	 * @return
+	 * @throws Exception
+	 */
+	static <T> T asObject(final Class<T> cls, final JsonValue value) throws Exception {
+		return fromJson(value.toString(), cls);
+	}
+	
+	/**
 	 * @param collection
 	 * @return
 	 * @throws Exception 
