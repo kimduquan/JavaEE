@@ -38,8 +38,7 @@ public class BoolOrObjectAdapter<T> implements JsonbAdapter<Object, Object> {
 			object = obj;
 		}
 		else if(obj instanceof Map) {
-			@SuppressWarnings("unchecked")
-			final Map<String, Object> map = (Map<String, Object>) obj;
+			final Map<?, ?> map = (Map<?, ?>) obj;
 			object = JsonUtil.fromMap(map, cls);
 		}
 		return object;

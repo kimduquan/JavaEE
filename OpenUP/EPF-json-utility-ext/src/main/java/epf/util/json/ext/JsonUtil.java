@@ -402,7 +402,7 @@ public interface JsonUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	static <T> T fromMap(final Map<String, Object> map, final Class<T> cls) throws Exception {
+	static <T> T fromMap(final Map<?, ?> map, final Class<T> cls) throws Exception {
 		Objects.requireNonNull(map, "Map");
 		Objects.requireNonNull(cls, "Class");
 		try(Jsonb jsonb = JsonbBuilder.create()){
@@ -418,15 +418,14 @@ public interface JsonUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	static <T> List<T> fromLisṭ̣(final List<Object> list, final Class<T> cls) throws Exception{
+	static <T> List<T> fromLisṭ̣(final List<?> list, final Class<T> cls) throws Exception{
 		Objects.requireNonNull(list, "List");
 		Objects.requireNonNull(cls, "Class");
 		final List<T> result = new ArrayList<>();
 		try(Jsonb jsonb = JsonbBuilder.create()){
 			for(Object object : list) {
 				if(object instanceof Map) {
-					@SuppressWarnings("unchecked")
-					final Map<String, Object> map = (Map<String, Object>) object;
+					final Map<?, ?> map = (Map<?, ?>) object;
 					final T t = fromMap(map, cls);
 					result.add(t);
 				}
@@ -445,15 +444,14 @@ public interface JsonUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	static <T> List<T> fromLisṭ̣(final List<Object> list, final Function<Map<String, Object>, T> convert) throws Exception{
+	static <T> List<T> fromLisṭ̣(final List<?> list, final Function<Map<?, ?>, T> convert) throws Exception{
 		Objects.requireNonNull(list, "List");
 		Objects.requireNonNull(convert, "Function");
 		final List<T> result = new ArrayList<>();
 		try(Jsonb jsonb = JsonbBuilder.create()){
 			for(Object object : list) {
 				if(object instanceof Map) {
-					@SuppressWarnings("unchecked")
-					final Map<String, Object> map = (Map<String, Object>) object;
+					final Map<?, ?> map = (Map<?, ?>) object;
 					final T t = convert.apply(map);
 					result.add(t);
 				}
@@ -484,7 +482,7 @@ public interface JsonUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	static JsonMergePatch createMergeDiff(final Map<String, Object> source, final Map<String, Object> target) throws Exception{
+	static JsonMergePatch createMergeDiff(final Map<?, ?> source, final Map<?, ?> target) throws Exception{
 		return Json.createMergeDiff(toJsonValue(source), toJsonValue(target));
 	}
 }

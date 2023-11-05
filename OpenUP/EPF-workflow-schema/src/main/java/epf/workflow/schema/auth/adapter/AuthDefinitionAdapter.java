@@ -13,22 +13,25 @@ import epf.workflow.schema.auth.Scheme;
  * @author PC
  *
  */
-public class AuthDefinitionAdapter implements JsonbAdapter<AuthDefinition, Map<String, Object>> {
+public class AuthDefinitionAdapter implements JsonbAdapter<AuthDefinition, Map<?, ?>> {
 
 	@Override
-	public Map<String, Object> adaptToJson(final AuthDefinition obj) throws Exception {
+	public Map<?, ?> adaptToJson(final AuthDefinition obj) throws Exception {
 		return JsonUtil.toMap(obj);
 	}
 
 	@Override
-	public AuthDefinition adaptFromJson(final Map<String, Object> obj) throws Exception {
+	public AuthDefinition adaptFromJson(final Map<?, ?> obj) throws Exception {
 		final AuthDefinition authDefinition = new AuthDefinition();
-		final Scheme scheme = Scheme.valueOf(obj.getOrDefault("scheme", Scheme.basic.name()).toString());
+		Scheme scheme = Scheme.basic;
+		Object string = obj.get("scheme");
+		if(string != null) {
+			scheme = Scheme.valueOf(string.toString());
+		}
 		authDefinition.setScheme(scheme);
 		final String name = obj.get("name").toString();
 		authDefinition.setName(name);
-		@SuppressWarnings("unchecked")
-		final Map<String, Object> props = (Map<String, Object>) obj.get("properties");
+		final Map<?, ?> props = (Map<?, ?>) obj.get("properties");
 		if(props != null) {
 			switch(scheme) {
 				case basic:
