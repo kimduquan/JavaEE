@@ -9,7 +9,7 @@ import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
-import org.bson.conversions.Bson;
+import org.bson.codecs.configuration.CodecRegistry;
 import epf.util.json.ext.JsonUtil;
 import epf.util.logging.LogManager;
 
@@ -32,13 +32,26 @@ public class ObjectCodec implements Codec<Object> {
 	/**
 	 * 
 	 */
+	private transient final Codec<Boolean> booleanCodec;
+	
+	/**
+	 * 
+	 */
+	private transient final Codec<String> stringCodec;
+	
+	/**
+	 * 
+	 */
 	private transient final ClassLoader classLoader;
 	
 	/**
 	 * @param classLoader
+	 * @param registry
 	 */
-	public ObjectCodec(final ClassLoader classLoader) {
-		mapCodec = Bson.DEFAULT_CODEC_REGISTRY.get(Map.class);
+	public ObjectCodec(final ClassLoader classLoader, final CodecRegistry registry) {
+		mapCodec = registry.get(Map.class);
+		booleanCodec = registry.get(boolean.class);
+		stringCodec = registry.get(String.class);
 		this.classLoader = classLoader;
 	}
 
@@ -48,10 +61,10 @@ public class ObjectCodec implements Codec<Object> {
 			writer.writeNull();
 		}
 		else if(value instanceof Boolean) {
-			Bson.DEFAULT_CODEC_REGISTRY.get(boolean.class).encode(writer, (boolean)value, encoderContext);
+			booleanCodec.encode(writer, (boolean)value, encoderContext);
 		}
 		else if(value instanceof String) {
-			Bson.DEFAULT_CODEC_REGISTRY.get(String.class).encode(writer, (String)value, encoderContext);
+			stringCodec.encode(writer, (String)value, encoderContext);
 		}
 		else {
 			try {

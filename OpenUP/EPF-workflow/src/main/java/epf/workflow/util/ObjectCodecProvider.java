@@ -13,7 +13,7 @@ public class ObjectCodecProvider implements CodecProvider {
 	public <T> Codec<T> get(final Class<T> clazz, final CodecRegistry registry) {
 		if(clazz.equals(Object.class)) {
 			@SuppressWarnings("unchecked")
-			final Codec<T> codec = (Codec<T>) new ObjectCodec(ObjectCodecProvider.class.getClassLoader());
+			final Codec<T> codec = (Codec<T>) new ObjectCodec(ObjectCodecProvider.class.getClassLoader(), registry);
 			return codec;
 		}
 		return null;
