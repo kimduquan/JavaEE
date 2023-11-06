@@ -8,11 +8,8 @@ import epf.workflow.schema.action.ActionDefinition;
 import epf.workflow.schema.action.Mode;
 import epf.workflow.schema.adapter.EndDefinitionAdapter;
 import epf.workflow.schema.adapter.TransitionDefinitionAdapter;
-import epf.workflow.schema.mapping.EndDefinitionConverter;
-import epf.workflow.schema.mapping.TransitionDefinitionConverter;
 import jakarta.nosql.Column;
 import java.util.List;
-import org.eclipse.jnosql.mapping.Convert;
 import org.eclipse.jnosql.mapping.DiscriminatorValue;
 import org.eclipse.jnosql.mapping.Embeddable;
 
@@ -81,7 +78,6 @@ public class ForEachState extends State {
 	 */
 	@Column
 	@JsonbTypeAdapter(value = TransitionDefinitionAdapter.class)
-	@Convert(TransitionDefinitionConverter.class)
 	private Object transition;
 	/**
 	 * 
@@ -103,7 +99,6 @@ public class ForEachState extends State {
 	 */
 	@Column
 	@JsonbTypeAdapter(value = EndDefinitionAdapter.class)
-	@Convert(EndDefinitionConverter.class)
 	private Object end;
 	
 	public String getInputCollection() {

@@ -3,8 +3,6 @@ package epf.workflow.schema.state;
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import jakarta.validation.constraints.NotNull;
 import epf.workflow.schema.event.EventDataFilters;
-import epf.workflow.schema.mapping.EndDefinitionConverter;
-import epf.workflow.schema.mapping.TransitionDefinitionConverter;
 import epf.workflow.schema.ErrorDefinition;
 import epf.workflow.schema.WorkflowTimeoutDefinition;
 import epf.workflow.schema.action.ActionDefinition;
@@ -12,7 +10,6 @@ import epf.workflow.schema.adapter.EndDefinitionAdapter;
 import epf.workflow.schema.adapter.TransitionDefinitionAdapter;
 import jakarta.nosql.Column;
 import java.util.List;
-import org.eclipse.jnosql.mapping.Convert;
 import org.eclipse.jnosql.mapping.DiscriminatorValue;
 import org.eclipse.jnosql.mapping.Embeddable;
 
@@ -66,14 +63,12 @@ public class CallbackState extends State {
 	 */
 	@Column
 	@JsonbTypeAdapter(value = TransitionDefinitionAdapter.class)
-	@Convert(TransitionDefinitionConverter.class)
 	private Object transition;
 	/**
 	 * 
 	 */
 	@Column
 	@JsonbTypeAdapter(value = EndDefinitionAdapter.class)
-	@Convert(EndDefinitionConverter.class)
 	private Object end;
 	/**
 	 * 

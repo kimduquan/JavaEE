@@ -2,14 +2,12 @@ package epf.workflow.schema;
 
 import java.io.Serializable;
 import java.util.List;
-import org.eclipse.jnosql.mapping.Convert;
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import jakarta.validation.constraints.NotNull;
 import epf.workflow.schema.event.EventDefinition;
 import epf.workflow.schema.adapter.StartDefinitionAdapter;
 import epf.workflow.schema.auth.AuthDefinition;
 import epf.workflow.schema.function.FunctionDefinition;
-import epf.workflow.schema.mapping.StartDefinitionConverter;
 import epf.workflow.schema.state.State;
 import jakarta.nosql.Column;
 import jakarta.nosql.Entity;
@@ -86,7 +84,6 @@ public class WorkflowDefinition implements Serializable {
 	 */
 	@Column
 	@JsonbTypeAdapter(value = StartDefinitionAdapter.class)
-	@Convert(StartDefinitionConverter.class)
 	private Object start;
 	
 	/**

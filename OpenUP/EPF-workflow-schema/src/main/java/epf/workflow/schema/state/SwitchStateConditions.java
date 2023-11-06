@@ -3,11 +3,8 @@ package epf.workflow.schema.state;
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import epf.workflow.schema.adapter.EndDefinitionAdapter;
 import epf.workflow.schema.adapter.TransitionDefinitionAdapter;
-import epf.workflow.schema.mapping.EndDefinitionConverter;
-import epf.workflow.schema.mapping.TransitionDefinitionConverter;
 import jakarta.nosql.Column;
 import java.io.Serializable;
-import org.eclipse.jnosql.mapping.Convert;
 import org.eclipse.jnosql.mapping.MappedSuperclass;
 
 /**
@@ -32,14 +29,12 @@ public class SwitchStateConditions implements Serializable {
 	 */
 	@Column
 	@JsonbTypeAdapter(value = TransitionDefinitionAdapter.class)
-	@Convert(TransitionDefinitionConverter.class)
 	private Object transition;
 	/**
 	 * 
 	 */
 	@Column
 	@JsonbTypeAdapter(value = EndDefinitionAdapter.class)
-	@Convert(EndDefinitionConverter.class)
 	private Object end;
 	/**
 	 * 
