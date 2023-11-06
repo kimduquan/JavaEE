@@ -16,7 +16,7 @@ public class ObjectCodecProvider implements CodecProvider {
 			final Codec<T> codec = (Codec<T>) new ObjectCodec(ObjectCodecProvider.class.getClassLoader(), registry);
 			return codec;
 		}
-		return null;
+		return registry.get(clazz);
 	}
 
 }

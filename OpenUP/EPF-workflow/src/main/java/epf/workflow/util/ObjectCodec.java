@@ -67,14 +67,23 @@ public class ObjectCodec implements Codec<Object> {
 			stringCodec.encode(writer, (String)value, encoderContext);
 		}
 		else {
+			writer.writeStartDocument();
+			writer.writeString("class", value.getClass().getName());
 			try {
 				final Map<String, Object> map = JsonUtil.toMap(value);
-				map.put("class", value.getClass());
-				mapCodec.encode(writer, map, encoderContext);
+		        map.forEach((name, v) -> {
+		        	if(v == null) {
+		        		writer.writeNull(name);
+		        	}
+		        	else {
+		        		encoderContext.encodeWithChildContext(this, writer, v);
+		        	}
+		        });
 			} 
 			catch (Exception e) {
 				LOGGER.log(Level.SEVERE, e.getMessage());
 			}
+	        writer.writeEndDocument();
 		}
 	}
 
@@ -88,7 +97,7 @@ public class ObjectCodec implements Codec<Object> {
 		final BsonType bsonType = reader.readBsonType();
 		switch(bsonType) {
 			case BOOLEAN:
-				return reader.readBoolean();
+				return booleanCodec.decode(reader, decoderContext);
 			case DOCUMENT:
 				final Map<?, ?> map = mapCodec.decode(reader, decoderContext);
 				try {
@@ -100,7 +109,7 @@ public class ObjectCodec implements Codec<Object> {
 					LOGGER.log(Level.SEVERE, e.getMessage());
 				}
 			case STRING:
-				return reader.readString();
+				return stringCodec.decode(reader, decoderContext);
 			case NULL:
 				reader.readNull();
 			default:
