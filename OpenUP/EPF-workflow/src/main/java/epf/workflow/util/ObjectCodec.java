@@ -1,5 +1,6 @@
 package epf.workflow.util;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,12 +27,6 @@ public class ObjectCodec implements Codec<Object> {
 	/**
 	 * 
 	 */
-	@SuppressWarnings("rawtypes")
-	private transient final Codec<Map> mapCodec;
-	
-	/**
-	 * 
-	 */
 	private transient final Codec<Boolean> booleanCodec;
 	
 	/**
@@ -45,14 +40,19 @@ public class ObjectCodec implements Codec<Object> {
 	private transient final ClassLoader classLoader;
 	
 	/**
+	 * 
+	 */
+	private transient final CodecRegistry registry;
+	
+	/**
 	 * @param classLoader
 	 * @param registry
 	 */
 	public ObjectCodec(final ClassLoader classLoader, final CodecRegistry registry) {
-		mapCodec = registry.get(Map.class);
 		booleanCodec = registry.get(boolean.class);
 		stringCodec = registry.get(String.class);
 		this.classLoader = classLoader;
+		this.registry = registry;
 	}
 
 	@Override
@@ -67,23 +67,11 @@ public class ObjectCodec implements Codec<Object> {
 			stringCodec.encode(writer, (String)value, encoderContext);
 		}
 		else {
-			writer.writeStartDocument();
-			writer.writeString("class", value.getClass().getName());
-			try {
-				final Map<String, Object> map = JsonUtil.toMap(value);
-		        map.forEach((name, v) -> {
-		        	if(v == null) {
-		        		writer.writeNull(name);
-		        	}
-		        	else {
-		        		encoderContext.encodeWithChildContext(this, writer, v);
-		        	}
-		        });
-			} 
-			catch (Exception e) {
-				LOGGER.log(Level.SEVERE, e.getMessage());
-			}
-	        writer.writeEndDocument();
+			@SuppressWarnings("rawtypes")
+			final Codec<OBJECT> codec = registry.get(OBJECT.class, Arrays.asList(value.getClass()));
+			final OBJECT<Object> object = new OBJECT<>();
+			object.setObject(value);
+			codec.encode(writer, object, encoderContext);
 		}
 	}
 
@@ -98,21 +86,21 @@ public class ObjectCodec implements Codec<Object> {
 		switch(bsonType) {
 			case BOOLEAN:
 				return booleanCodec.decode(reader, decoderContext);
-			case DOCUMENT:
-				final Map<?, ?> map = mapCodec.decode(reader, decoderContext);
-				try {
-					final String className = map.get("class").toString();
-					final Class<?> clazz = classLoader.loadClass(className);
-					return JsonUtil.fromMap(map, clazz);
-				} 
-				catch (Exception e) {
-					LOGGER.log(Level.SEVERE, e.getMessage());
-				}
 			case STRING:
 				return stringCodec.decode(reader, decoderContext);
 			case NULL:
 				reader.readNull();
 			default:
+				final Codec<OBJECT> codec = registry.get(OBJECT.class, Arrays.asList(Map.class));
+				final OBJECT<?> object = codec.decode(reader, decoderContext);
+				final Map<?, ?> map = (Map<?, ?>) object.getObject();
+				try {
+					final Class<?> clazz = classLoader.loadClass(object.getType());
+					return JsonUtil.fromMap(map, clazz);
+				} 
+				catch (Exception e) {
+					LOGGER.log(Level.SEVERE, "ObjectCodec.decode", e);
+				}
 				break;
 		}
 		return null;
