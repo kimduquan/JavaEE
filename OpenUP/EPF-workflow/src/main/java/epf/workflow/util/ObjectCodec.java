@@ -49,7 +49,7 @@ public class ObjectCodec implements Codec<Object> {
 	 * @param registry
 	 */
 	public ObjectCodec(final ClassLoader classLoader, final CodecRegistry registry) {
-		booleanCodec = registry.get(boolean.class);
+		booleanCodec = registry.get(Boolean.class);
 		stringCodec = registry.get(String.class);
 		this.classLoader = classLoader;
 		this.registry = registry;
@@ -61,7 +61,7 @@ public class ObjectCodec implements Codec<Object> {
 			writer.writeNull();
 		}
 		else if(value instanceof Boolean) {
-			booleanCodec.encode(writer, (boolean)value, encoderContext);
+			booleanCodec.encode(writer, (Boolean)value, encoderContext);
 		}
 		else if(value instanceof String) {
 			stringCodec.encode(writer, (String)value, encoderContext);
