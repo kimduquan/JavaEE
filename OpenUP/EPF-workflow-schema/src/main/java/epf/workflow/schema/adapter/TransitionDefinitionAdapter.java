@@ -1,18 +1,18 @@
 package epf.workflow.schema.adapter;
 
-import epf.util.json.ext.adapter.StringOrObjectAdapter;
 import epf.workflow.schema.TransitionDefinition;
+import epf.workflow.schema.util.EitherAdapter;
 
 /**
  * @author PC
  *
  */
-public class TransitionDefinitionAdapter extends StringOrObjectAdapter<TransitionDefinition> {
+public class TransitionDefinitionAdapter extends EitherAdapter<String, TransitionDefinition> {
 
 	/**
 	 * 
 	 */
 	public TransitionDefinitionAdapter() {
-		super(TransitionDefinition.class);
+		super(String.class, TransitionDefinition.class);
 	}
 }

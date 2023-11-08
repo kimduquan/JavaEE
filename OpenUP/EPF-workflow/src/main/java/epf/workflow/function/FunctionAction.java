@@ -63,12 +63,12 @@ public class FunctionAction extends Action {
 	protected void perform() throws Exception {
 		FunctionDefinition functionDefinition = null;
 		FunctionRefDefinition functionRefDefinition = null;
-		if(getActionDefinition().getFunctionRef() instanceof String) {
-			final String functionRef = (String) getActionDefinition().getFunctionRef();
+		if(getActionDefinition().getFunctionRef().isLeft()) {
+			final String functionRef = getActionDefinition().getFunctionRef().getLeft();
 			functionDefinition = getFunctionDefinition(getWorkflowDefinition(), functionRef);
 		}
-		else if(getActionDefinition().getFunctionRef() instanceof FunctionRefDefinition) {
-			functionRefDefinition = (FunctionRefDefinition) getActionDefinition().getFunctionRef();
+		else if(getActionDefinition().getFunctionRef().isRight()) {
+			functionRefDefinition = getActionDefinition().getFunctionRef().getRight();
 			functionDefinition = getFunctionDefinition(getWorkflowDefinition(), functionRefDefinition.getRefName());
 		}
 		switch(functionDefinition.getType()) {

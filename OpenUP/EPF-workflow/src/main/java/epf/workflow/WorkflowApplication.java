@@ -74,7 +74,7 @@ import epf.workflow.schema.state.SwitchState;
 import epf.workflow.schema.state.SwitchStateConditions;
 import epf.workflow.schema.state.SwitchStateDataConditions;
 import epf.workflow.schema.state.SwitchStateEventConditions;
-import epf.workflow.schema.schedule.ScheduleDefinition;
+import epf.workflow.schema.util.Either;
 
 /**
  * @author PC
@@ -144,12 +144,12 @@ public class WorkflowApplication  {
 	private Response scheduleLink(final StartDefinition startDefinition, final WorkflowDefinition workflowDefinition) {
 		Link scheduleLink = null;
 		String path =  "/" + workflowDefinition.getName();
-		String recurringTimeInterval;
-		if(startDefinition.getSchedule() instanceof String) {
-			recurringTimeInterval = (String) startDefinition.getSchedule();
+		String recurringTimeInterval = null;
+		if(startDefinition.getSchedule().isLeft()) {
+			recurringTimeInterval = startDefinition.getSchedule().getLeft();
 		}
-		else {
-			recurringTimeInterval = ((ScheduleDefinition)startDefinition.getSchedule()).getInterval();
+		else if(startDefinition.getSchedule().isRight()) {
+			recurringTimeInterval = startDefinition.getSchedule().getRight().getInterval();
 		}
 		if(workflowDefinition.getVersion() != null) {
 			scheduleLink = WorkflowLink.scheduleLink(Naming.WORKFLOW, HttpMethod.PUT, path + "?version=" + workflowDefinition.getVersion(), recurringTimeInterval);
@@ -217,8 +217,8 @@ public class WorkflowApplication  {
 		else if(actionDefinition.getSubFlowRef() != null) {
 			final WorkflowDefinition subWorkflowDefinition = getSubWorkflowDefinition(actionDefinition.getSubFlowRef());
 			SubFlowRefDefinition subFlowRefDefinition = null;
-			if(actionDefinition.getSubFlowRef() instanceof SubFlowRefDefinition) {
-				subFlowRefDefinition = (SubFlowRefDefinition)actionDefinition.getSubFlowRef();
+			if(actionDefinition.getSubFlowRef().isRight()) {
+				subFlowRefDefinition = actionDefinition.getSubFlowRef().getRight();
 			}
 			action = new SubflowAction(workflowDefinition, actionDefinition, null, subFlowRefDefinition, subWorkflowDefinition, actionData, instance);
 		}
@@ -296,9 +296,9 @@ public class WorkflowApplication  {
 		}
 	}
 	
-	private Response end(final WorkflowDefinition workflowDefinition, final Object end, final URI instance, final WorkflowData workflowData) throws Exception {
-		if(end instanceof EndDefinition) {
-			final EndDefinition endDefinition = (EndDefinition) end;
+	private Response end(final WorkflowDefinition workflowDefinition, final Either<Boolean, EndDefinition> end, final URI instance, final WorkflowData workflowData) throws Exception {
+		if(end.isRight()) {
+			final EndDefinition endDefinition = end.getRight();
 			if(endDefinition.isCompensate()) {
 				return compensateLink(workflowDefinition.getId(), workflowDefinition.getVersion(), "", instance, workflowData);
 			}
@@ -436,13 +436,13 @@ public class WorkflowApplication  {
 		throw new BadRequestException();
 	}
 	
-	private Response transitionState(final WorkflowDefinition workflowDefinition, final Object transition, final URI instance, final WorkflowData workflowData) throws Exception {
-		if(transition instanceof String) {
-			final String state = (String)transition;
+	private Response transitionState(final WorkflowDefinition workflowDefinition, final Either<String, TransitionDefinition> transition, final URI instance, final WorkflowData workflowData) throws Exception {
+		if(transition.isLeft()) {
+			final String state = transition.getLeft();
 			return transitionLink(workflowDefinition.getId(), workflowDefinition.getVersion(), state, instance, workflowData);
 		}
-		else if(transition instanceof TransitionDefinition) {
-			final TransitionDefinition transitionDef = (TransitionDefinition) transition;
+		else if(transition.isRight()) {
+			final TransitionDefinition transitionDef = transition.getRight();
 			if(transitionDef.isCompensate()) {
 				return compensateLink(workflowDefinition.getId(), workflowDefinition.getVersion(), transitionDef.getNextState(), instance, workflowData);
 			}
@@ -532,12 +532,12 @@ public class WorkflowApplication  {
 				}
 			}
 		}
-		if(switchState.getDefaultCondition() instanceof TransitionDefinition) {
+		if(switchState.getDefaultCondition().isLeft()) {
 			filterStateDataOutput(switchState.getStateDataFilter(), workflowData);
-			return transitionState(workflowDefinition, switchState.getDefaultCondition(), instance, workflowData);
+			return transitionState(workflowDefinition, switchState.getDefaultCondition().getLeft(), instance, workflowData);
 		}
-		else if(switchState.getDefaultCondition() instanceof EndDefinition) {
-			return end(workflowDefinition, switchState.getDefaultCondition(), instance, workflowData);
+		else if(switchState.getDefaultCondition().isRight()) {
+			return end(workflowDefinition, switchState.getDefaultCondition().getRight(), instance, workflowData);
 		}
 		throw new BadRequestException();
 	}
@@ -672,8 +672,8 @@ public class WorkflowApplication  {
 		else {
 			cache.put(newWorkflowDefinition.getId(), newWorkflowDefinition);
 		}
-		if(newWorkflowDefinition.getStart() instanceof StartDefinition) {
-			return scheduleLink((StartDefinition)newWorkflowDefinition.getStart(), newWorkflowDefinition);
+		if(newWorkflowDefinition.getStart().isRight()) {
+			return scheduleLink(newWorkflowDefinition.getStart().getRight(), newWorkflowDefinition);
 		}
 		return Response.ok(newWorkflowDefinition).build();
 	}
@@ -687,11 +687,11 @@ public class WorkflowApplication  {
 		WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
 		String startState = null;
 		if(workflowDefinition.getStart() != null) {
-			if(workflowDefinition.getStart() instanceof String) {
-				startState = (String)workflowDefinition.getStart();
+			if(workflowDefinition.getStart().isLeft()) {
+				startState = workflowDefinition.getStart().getLeft();
 			}
-			else if(workflowDefinition.getStart() instanceof StartDefinition) {
-				final StartDefinition startDef = (StartDefinition) workflowDefinition.getStart();
+			else if(workflowDefinition.getStart().isRight()) {
+				final StartDefinition startDef = workflowDefinition.getStart().getRight();
 				startState = startDef.getStateName();
 			}
 		}

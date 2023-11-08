@@ -1,18 +1,18 @@
 package epf.workflow.schema.schedule.adapter;
 
-import epf.util.json.ext.adapter.StringOrObjectAdapter;
 import epf.workflow.schema.schedule.CronDefinition;
+import epf.workflow.schema.util.EitherAdapter;
 
 /**
  * @author PC
  *
  */
-public class CronDefinitionAdapter extends StringOrObjectAdapter<CronDefinition> {
+public class CronDefinitionAdapter extends EitherAdapter<String, CronDefinition> {
 
 	/**
 	 * 
 	 */
 	public CronDefinitionAdapter() {
-		super(CronDefinition.class);
+		super(String.class ,CronDefinition.class);
 	}
 }

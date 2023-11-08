@@ -1,18 +1,18 @@
 package epf.workflow.schema.adapter;
 
-import epf.util.json.ext.adapter.StringOrObjectAdapter;
 import epf.workflow.schema.ContinueAs;
+import epf.workflow.schema.util.EitherAdapter;
 
 /**
  * @author PC
  *
  */
-public class ContinueAsAdapter extends StringOrObjectAdapter<ContinueAs> {
+public class ContinueAsAdapter extends EitherAdapter<String, ContinueAs> {
 
 	/**
 	 * 
 	 */
 	public ContinueAsAdapter() {
-		super(ContinueAs.class);
+		super(String.class, ContinueAs.class);
 	}
 }

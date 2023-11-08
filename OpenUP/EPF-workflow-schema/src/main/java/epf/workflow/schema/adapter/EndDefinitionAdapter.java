@@ -1,18 +1,18 @@
 package epf.workflow.schema.adapter;
 
-import epf.util.json.ext.adapter.BoolOrObjectAdapter;
 import epf.workflow.schema.EndDefinition;
+import epf.workflow.schema.util.EitherAdapter;
 
 /**
  * @author PC
  *
  */
-public class EndDefinitionAdapter extends BoolOrObjectAdapter<EndDefinition> {
+public class EndDefinitionAdapter extends EitherAdapter<Boolean, EndDefinition> {
 
 	/**
 	 * 
 	 */
 	public EndDefinitionAdapter() {
-		super(EndDefinition.class);
+		super(Boolean.class, EndDefinition.class);
 	}
 }

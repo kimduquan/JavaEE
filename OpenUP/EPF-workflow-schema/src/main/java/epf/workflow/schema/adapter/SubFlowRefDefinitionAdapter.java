@@ -1,19 +1,19 @@
 package epf.workflow.schema.adapter;
 
-import epf.util.json.ext.adapter.StringOrObjectAdapter;
 import epf.workflow.schema.SubFlowRefDefinition;
+import epf.workflow.schema.util.EitherAdapter;
 
 /**
  * @author PC
  *
  */
-public class SubFlowRefDefinitionAdapter extends StringOrObjectAdapter<SubFlowRefDefinition> {
+public class SubFlowRefDefinitionAdapter extends EitherAdapter<String, SubFlowRefDefinition> {
 
 	/**
 	 * 
 	 */
 	public SubFlowRefDefinitionAdapter() {
-		super(SubFlowRefDefinition.class);
+		super(String.class, SubFlowRefDefinition.class);
 	}
 
 }

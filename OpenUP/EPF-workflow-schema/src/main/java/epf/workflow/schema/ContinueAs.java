@@ -2,6 +2,7 @@ package epf.workflow.schema;
 
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import epf.workflow.schema.adapter.WorkflowExecTimeoutDefinitionAdapter;
+import epf.workflow.schema.util.Either;
 import jakarta.nosql.Column;
 import java.io.Serializable;
 import org.eclipse.jnosql.mapping.Embeddable;
@@ -41,7 +42,7 @@ public class ContinueAs implements Serializable {
 	 */
 	@Column
 	@JsonbTypeAdapter(value = WorkflowExecTimeoutDefinitionAdapter.class)
-	private Object workflowExecTimeout;
+	private Either<String, WorkflowExecTimeoutDefinition> workflowExecTimeout;
 
 	public String getWorkflowId() {
 		return workflowId;
@@ -67,11 +68,11 @@ public class ContinueAs implements Serializable {
 		this.data = data;
 	}
 
-	public Object getWorkflowExecTimeout() {
+	public Either<String, WorkflowExecTimeoutDefinition> getWorkflowExecTimeout() {
 		return workflowExecTimeout;
 	}
 
-	public void setWorkflowExecTimeout(Object workflowExecTimeout) {
+	public void setWorkflowExecTimeout(Either<String, WorkflowExecTimeoutDefinition> workflowExecTimeout) {
 		this.workflowExecTimeout = workflowExecTimeout;
 	}
 }

@@ -1,18 +1,18 @@
 package epf.workflow.schema.adapter;
 
-import epf.util.json.ext.adapter.StringOrObjectAdapter;
 import epf.workflow.schema.WorkflowExecTimeoutDefinition;
+import epf.workflow.schema.util.EitherAdapter;
 
 /**
  * @author PC
  *
  */
-public class WorkflowExecTimeoutDefinitionAdapter extends StringOrObjectAdapter<WorkflowExecTimeoutDefinition> {
+public class WorkflowExecTimeoutDefinitionAdapter extends EitherAdapter<String, WorkflowExecTimeoutDefinition> {
 
 	/**
 	 * 
 	 */
 	public WorkflowExecTimeoutDefinitionAdapter() {
-		super(WorkflowExecTimeoutDefinition.class);
+		super(String.class, WorkflowExecTimeoutDefinition.class);
 	}
 }

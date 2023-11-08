@@ -2,9 +2,12 @@ package epf.workflow.schema.state;
 
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import jakarta.validation.constraints.NotNull;
+import epf.workflow.schema.EndDefinition;
 import epf.workflow.schema.ErrorDefinition;
+import epf.workflow.schema.TransitionDefinition;
 import epf.workflow.schema.WorkflowTimeoutDefinition;
 import epf.workflow.schema.adapter.TransitionOrEndAdapter;
+import epf.workflow.schema.util.Either;
 import jakarta.nosql.Column;
 import java.util.List;
 import org.eclipse.jnosql.mapping.DiscriminatorValue;
@@ -54,7 +57,7 @@ public class SwitchState extends State {
 	@NotNull
 	@Column
 	@JsonbTypeAdapter(value = TransitionOrEndAdapter.class)
-	private Object defaultCondition;
+	private Either<Either<String, TransitionDefinition>, Either<Boolean, EndDefinition>> defaultCondition;
 	/**
 	 * 
 	 */
@@ -101,10 +104,10 @@ public class SwitchState extends State {
 	public void setTimeouts(WorkflowTimeoutDefinition timeouts) {
 		this.timeouts = timeouts;
 	}
-	public Object getDefaultCondition() {
+	public Either<Either<String, TransitionDefinition>, Either<Boolean, EndDefinition>> getDefaultCondition() {
 		return defaultCondition;
 	}
-	public void setDefaultCondition(Object defaultCondition) {
+	public void setDefaultCondition(Either<Either<String, TransitionDefinition>, Either<Boolean, EndDefinition>> defaultCondition) {
 		this.defaultCondition = defaultCondition;
 	}
 	public String getCompensatedBy() {

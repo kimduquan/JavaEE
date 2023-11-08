@@ -3,7 +3,10 @@ package epf.workflow.schema.state;
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import jakarta.validation.constraints.NotNull;
 import epf.workflow.schema.event.EventDataFilters;
+import epf.workflow.schema.util.Either;
+import epf.workflow.schema.EndDefinition;
 import epf.workflow.schema.ErrorDefinition;
+import epf.workflow.schema.TransitionDefinition;
 import epf.workflow.schema.WorkflowTimeoutDefinition;
 import epf.workflow.schema.action.ActionDefinition;
 import epf.workflow.schema.adapter.EndDefinitionAdapter;
@@ -63,13 +66,13 @@ public class CallbackState extends State {
 	 */
 	@Column
 	@JsonbTypeAdapter(value = TransitionDefinitionAdapter.class)
-	private Object transition;
+	private Either<String, TransitionDefinition> transition;
 	/**
 	 * 
 	 */
 	@Column
 	@JsonbTypeAdapter(value = EndDefinitionAdapter.class)
-	private Object end;
+	private Either<Boolean, EndDefinition> end;
 	/**
 	 * 
 	 */
@@ -122,16 +125,16 @@ public class CallbackState extends State {
 	public void setOnErrors(List<ErrorDefinition> onErrors) {
 		this.onErrors = onErrors;
 	}
-	public Object getTransition() {
+	public Either<String, TransitionDefinition> getTransition() {
 		return transition;
 	}
-	public void setTransition(Object transition) {
+	public void setTransition(Either<String, TransitionDefinition> transition) {
 		this.transition = transition;
 	}
-	public Object getEnd() {
+	public Either<Boolean, EndDefinition> getEnd() {
 		return end;
 	}
-	public void setEnd(Object end) {
+	public void setEnd(Either<Boolean, EndDefinition> end) {
 		this.end = end;
 	}
 	public String getCompensatedBy() {

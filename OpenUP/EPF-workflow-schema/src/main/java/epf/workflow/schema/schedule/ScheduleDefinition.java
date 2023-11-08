@@ -4,6 +4,7 @@ import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import java.io.Serializable;
 import org.eclipse.jnosql.mapping.Embeddable;
 import epf.workflow.schema.schedule.adapter.CronDefinitionAdapter;
+import epf.workflow.schema.util.Either;
 import jakarta.nosql.Column;
 
 /**
@@ -29,7 +30,7 @@ public class ScheduleDefinition implements Serializable {
 	 */
 	@Column
 	@JsonbTypeAdapter(value = CronDefinitionAdapter.class)
-	private Object cron;
+	private Either<String, CronDefinition> cron;
 	
 	/**
 	 * 
@@ -45,11 +46,11 @@ public class ScheduleDefinition implements Serializable {
 		this.interval = interval;
 	}
 
-	public Object getCron() {
+	public Either<String, CronDefinition> getCron() {
 		return cron;
 	}
 
-	public void setCron(Object cron) {
+	public void setCron(Either<String, CronDefinition> cron) {
 		this.cron = cron;
 	}
 

@@ -2,12 +2,15 @@ package epf.workflow.schema.state;
 
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import jakarta.validation.constraints.NotNull;
+import epf.workflow.schema.EndDefinition;
 import epf.workflow.schema.ErrorDefinition;
+import epf.workflow.schema.TransitionDefinition;
 import epf.workflow.schema.WorkflowTimeoutDefinition;
 import epf.workflow.schema.action.ActionDefinition;
 import epf.workflow.schema.action.Mode;
 import epf.workflow.schema.adapter.EndDefinitionAdapter;
 import epf.workflow.schema.adapter.TransitionDefinitionAdapter;
+import epf.workflow.schema.util.Either;
 import jakarta.nosql.Column;
 import java.util.List;
 import org.eclipse.jnosql.mapping.DiscriminatorValue;
@@ -78,7 +81,7 @@ public class ForEachState extends State {
 	 */
 	@Column
 	@JsonbTypeAdapter(value = TransitionDefinitionAdapter.class)
-	private Object transition;
+	private Either<String, TransitionDefinition> transition;
 	/**
 	 * 
 	 */
@@ -99,7 +102,7 @@ public class ForEachState extends State {
 	 */
 	@Column
 	@JsonbTypeAdapter(value = EndDefinitionAdapter.class)
-	private Object end;
+	private Either<Boolean, EndDefinition> end;
 	
 	public String getInputCollection() {
 		return inputCollection;
@@ -155,10 +158,10 @@ public class ForEachState extends State {
 	public void setOnErrors(List<ErrorDefinition> onErrors) {
 		this.onErrors = onErrors;
 	}
-	public Object getTransition() {
+	public Either<String, TransitionDefinition> getTransition() {
 		return transition;
 	}
-	public void setTransition(Object transition) {
+	public void setTransition(Either<String, TransitionDefinition> transition) {
 		this.transition = transition;
 	}
 	public String getCompensatedBy() {
@@ -179,10 +182,10 @@ public class ForEachState extends State {
 	public void setMetadata(Object metadata) {
 		this.metadata = metadata;
 	}
-	public Object getEnd() {
+	public Either<Boolean, EndDefinition> getEnd() {
 		return end;
 	}
-	public void setEnd(Object end) {
+	public void setEnd(Either<Boolean, EndDefinition> end) {
 		this.end = end;
 	}
 }

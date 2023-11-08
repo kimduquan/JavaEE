@@ -60,6 +60,7 @@ import epf.workflow.schema.state.SwitchStateConditions;
 import epf.workflow.schema.state.SwitchStateDataConditions;
 import epf.workflow.schema.state.SwitchStateEventConditions;
 import epf.workflow.schema.state.Type;
+import epf.workflow.schema.util.Either;
 import epf.workflow.state.Branch;
 import epf.workflow.state.util.StateUtil;
 import epf.workflow.util.ELUtil;
@@ -110,11 +111,11 @@ public class WorkflowRuntime {
 	public void start(final WorkflowDefinition workflowDefinition, final WorkflowData workflowData, final URI uri) throws Exception {
 		String startState = null;
 		if(workflowDefinition.getStart() != null) {
-			if(workflowDefinition.getStart() instanceof String) {
-				startState = (String)workflowDefinition.getStart();
+			if(workflowDefinition.getStart().isLeft()) {
+				startState = workflowDefinition.getStart().getLeft();
 			}
-			else if(workflowDefinition.getStart() instanceof StartDefinition) {
-				final StartDefinition startDef = (StartDefinition) workflowDefinition.getStart();
+			else if(workflowDefinition.getStart().isRight()) {
+				final StartDefinition startDef = workflowDefinition.getStart().getRight();
 				startState = startDef.getStateName();
 			}
 		}
@@ -283,12 +284,12 @@ public class WorkflowRuntime {
 			return;
 		}
 		if(!evaluate) {
-			if(switchState.getDefaultCondition() instanceof TransitionDefinition) {
+			if(switchState.getDefaultCondition().isLeft()) {
 				filterStateDataOutput(switchState.getStateDataFilter(), workflowInstance.getWorkflowData());
-				transition(workflowDefinition, switchState.getDefaultCondition(), workflowInstance);
+				transition(workflowDefinition, switchState.getDefaultCondition().getLeft(), workflowInstance);
 			}
-			else if(switchState.getDefaultCondition() instanceof EndDefinition) {
-				end(workflowDefinition, switchState.getDefaultCondition(), workflowInstance);
+			else if(switchState.getDefaultCondition().isRight()) {
+				end(workflowDefinition, switchState.getDefaultCondition().getRight(), workflowInstance);
 			}
 		}
 	}
@@ -832,14 +833,14 @@ public class WorkflowRuntime {
 		}
 	}
 	
-	private void transition(final WorkflowDefinition workflowDefinition, final Object transition, final WorkflowInstance workflowInstance) throws Exception {
-		if(transition instanceof String) {
-			final State nextState = getState(workflowDefinition, (String)transition);
+	private void transition(final WorkflowDefinition workflowDefinition, final Either<String, TransitionDefinition> transition, final WorkflowInstance workflowInstance) throws Exception {
+		if(transition.isLeft()) {
+			final State nextState = getState(workflowDefinition, transition.getLeft());
 			workflowInstance.transition(nextState);
 			transitionState(workflowDefinition, nextState, workflowInstance);
 		}
-		else if(transition instanceof TransitionDefinition) {
-			final TransitionDefinition transitionDef = (TransitionDefinition) transition;
+		else if(transition.isRight()) {
+			final TransitionDefinition transitionDef = transition.getRight();
 			if(transitionDef.isCompensate()) {
 				compensate(workflowDefinition, workflowInstance);
 			}
@@ -903,8 +904,8 @@ public class WorkflowRuntime {
 		else if(actionDefinition.getSubFlowRef() != null) {
 			final WorkflowDefinition subWorkflowDefinition = getSubWorkflowDefinition(actionDefinition.getSubFlowRef());
 			SubFlowRefDefinition subFlowRefDefinition = null;
-			if(actionDefinition.getSubFlowRef() instanceof SubFlowRefDefinition) {
-				subFlowRefDefinition = (SubFlowRefDefinition)actionDefinition.getSubFlowRef();
+			if(actionDefinition.getSubFlowRef().isRight()) {
+				subFlowRefDefinition = actionDefinition.getSubFlowRef().getRight();
 			}
 			action = new SubflowAction(workflowDefinition, actionDefinition, this, subFlowRefDefinition, subWorkflowDefinition, actionData, uri);
 		}
