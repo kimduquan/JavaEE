@@ -8,7 +8,7 @@ import jakarta.json.bind.adapter.JsonbAdapter;
  * @param <L>
  * @param <R>
  */
-public class EitherAdapter<L, R> implements JsonbAdapter<Either<L, R>, Object> {
+public class EitherJsonAdapter<L, R> implements JsonbAdapter<Either<L, R>, Object> {
 	
 	/**
 	 * 
@@ -23,7 +23,7 @@ public class EitherAdapter<L, R> implements JsonbAdapter<Either<L, R>, Object> {
 	 * @param left
 	 * @param right
 	 */
-	public EitherAdapter(final Class<L> left, final Class<R> right) {
+	public EitherJsonAdapter(final Class<L> left, final Class<R> right) {
 		this.left = left;
 		this.right = right;
 	}
@@ -46,12 +46,12 @@ public class EitherAdapter<L, R> implements JsonbAdapter<Either<L, R>, Object> {
 			either.setRight(right.cast(obj));
 		}
 		else if(obj instanceof Map) {
-			if(!left.isPrimitive()) {
+			if(!JsonUtil.isPrimitive(left)) {
 				final Map<?, ?> map = (Map<?, ?>) obj;
 				final L leftValue = JsonUtil.fromMap(map, left);
 				either.setLeft(leftValue);
 			}
-			else if(!right.isPrimitive()) {
+			else if(!JsonUtil.isPrimitive(right)) {
 				final Map<?, ?> map = (Map<?, ?>) obj;
 				final R rightValue = JsonUtil.fromMap(map, right);
 				either.setRight(rightValue);

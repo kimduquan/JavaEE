@@ -1,13 +1,13 @@
 package epf.workflow.schema.function.adapter;
 
 import epf.workflow.schema.function.FunctionRefDefinition;
-import epf.workflow.schema.util.EitherAdapter;
+import epf.workflow.schema.util.EitherJsonAdapter;
 
 /**
  * @author PC
  *
  */
-public class FunctionRefDefinitionAdapter extends EitherAdapter<String, FunctionRefDefinition> {
+public class FunctionRefDefinitionAdapter extends EitherJsonAdapter<String, FunctionRefDefinition> {
 
 	/**
 	 * 

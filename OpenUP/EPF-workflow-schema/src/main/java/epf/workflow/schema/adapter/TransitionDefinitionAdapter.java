@@ -1,13 +1,13 @@
 package epf.workflow.schema.adapter;
 
 import epf.workflow.schema.TransitionDefinition;
-import epf.workflow.schema.util.EitherAdapter;
+import epf.workflow.schema.util.EitherJsonAdapter;
 
 /**
  * @author PC
  *
  */
-public class TransitionDefinitionAdapter extends EitherAdapter<String, TransitionDefinition> {
+public class TransitionDefinitionAdapter extends EitherJsonAdapter<String, TransitionDefinition> {
 
 	/**
 	 * 

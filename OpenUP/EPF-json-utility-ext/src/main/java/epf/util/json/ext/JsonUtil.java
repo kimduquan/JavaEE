@@ -485,4 +485,12 @@ public interface JsonUtil {
 	static JsonMergePatch createMergeDiff(final Map<?, ?> source, final Map<?, ?> target) throws Exception{
 		return Json.createMergeDiff(toJsonValue(source), toJsonValue(target));
 	}
+	
+	/**
+	 * @param clazz
+	 * @return
+	 */
+	static boolean isPrimitive(final Class<?> clazz) {
+		return clazz.isAssignableFrom(String.class) || clazz.isAssignableFrom(boolean.class) || clazz.isAssignableFrom(Number.class);
+	}
 }

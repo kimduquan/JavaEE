@@ -1,13 +1,13 @@
 package epf.workflow.schema.adapter;
 
 import epf.workflow.schema.ContinueAs;
-import epf.workflow.schema.util.EitherAdapter;
+import epf.workflow.schema.util.EitherJsonAdapter;
 
 /**
  * @author PC
  *
  */
-public class ContinueAsAdapter extends EitherAdapter<String, ContinueAs> {
+public class ContinueAsAdapter extends EitherJsonAdapter<String, ContinueAs> {
 
 	/**
 	 * 

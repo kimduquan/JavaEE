@@ -1,13 +1,13 @@
 package epf.workflow.schema.schedule.adapter;
 
 import epf.workflow.schema.schedule.ScheduleDefinition;
-import epf.workflow.schema.util.EitherAdapter;
+import epf.workflow.schema.util.EitherJsonAdapter;
 
 /**
  * @author PC
  *
  */
-public class ScheduleDefinitionAdapter extends EitherAdapter<String, ScheduleDefinition> {
+public class ScheduleDefinitionAdapter extends EitherJsonAdapter<String, ScheduleDefinition> {
 
 	/**
 	 * 
