@@ -1,5 +1,6 @@
 package epf.workflow.schema.adapter;
 
+import java.util.Arrays;
 import epf.workflow.schema.TransitionDefinition;
 import epf.workflow.schema.util.EitherJsonAdapter;
 
@@ -13,6 +14,6 @@ public class TransitionDefinitionAdapter extends EitherJsonAdapter<String, Trans
 	 * 
 	 */
 	public TransitionDefinitionAdapter() {
-		super(String.class, TransitionDefinition.class);
+		super(String.class, TransitionDefinition.class, Arrays.asList());
 	}
 }

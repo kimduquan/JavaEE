@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.util;
 
 import org.junit.After;

@@ -1,7 +1,10 @@
 package epf.workflow.schema.util;
 
+import java.util.List;
 import java.util.Map;
+import epf.util.ClassUtil;
 import epf.util.json.ext.JsonUtil;
+import jakarta.json.bind.JsonbConfig;
 import jakarta.json.bind.adapter.JsonbAdapter;
 
 /**
@@ -18,14 +21,30 @@ public class EitherJsonAdapter<L, R> implements JsonbAdapter<Either<L, R>, Objec
 	 * 
 	 */
 	private transient final Class<R> right;
+	/**
+	 * 
+	 */
+	private transient final List<Class<? extends JsonbAdapter<?, ?>>> adapterClasses;
+	
+	private static <T> T toObject(final Object object, final Class<T> clazz, final List<? extends JsonbAdapter<?, ?>> adapters) throws Exception{
+		final Map<?, ?> map = (Map<?, ?>) object;
+		if(adapters.isEmpty()) {
+			return JsonUtil.fromMap(map, clazz);
+		}
+		else {
+			return JsonUtil.fromMap(map, clazz, new JsonbConfig().withAdapters(adapters.toArray(new JsonbAdapter<?, ?>[0])));
+		}
+	}
 	
 	/**
 	 * @param left
 	 * @param right
+	 * @param adapterClasses
 	 */
-	public EitherJsonAdapter(final Class<L> left, final Class<R> right) {
+	public EitherJsonAdapter(final Class<L> left, final Class<R> right, final List<Class<? extends JsonbAdapter<?, ?>>> adapterClasses) {
 		this.left = left;
 		this.right = right;
+		this.adapterClasses = adapterClasses;
 	}
 
 	@Override
@@ -48,13 +67,11 @@ public class EitherJsonAdapter<L, R> implements JsonbAdapter<Either<L, R>, Objec
 			}
 			else if(obj instanceof Map) {
 				if(!JsonUtil.isPrimitive(left)) {
-					final Map<?, ?> map = (Map<?, ?>) obj;
-					final L leftValue = JsonUtil.fromMap(map, left);
+					final L leftValue = toObject(obj, left, ClassUtil.newInstances(adapterClasses));
 					either.setLeft(leftValue);
 				}
 				else if(!JsonUtil.isPrimitive(right)) {
-					final Map<?, ?> map = (Map<?, ?>) obj;
-					final R rightValue = JsonUtil.fromMap(map, right);
+					final R rightValue = toObject(obj, right, ClassUtil.newInstances(adapterClasses));
 					either.setRight(rightValue);
 				}
 			}

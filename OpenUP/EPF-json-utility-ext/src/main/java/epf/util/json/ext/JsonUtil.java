@@ -24,6 +24,7 @@ import jakarta.json.JsonString;
 import jakarta.json.JsonValue;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
+import jakarta.json.bind.JsonbConfig;
 
 /**
  * @author PC
@@ -406,6 +407,24 @@ public interface JsonUtil {
 		Objects.requireNonNull(map, "Map");
 		Objects.requireNonNull(cls, "Class");
 		try(Jsonb jsonb = JsonbBuilder.create()){
+			final String json = jsonb.toJson(map);
+			return jsonb.fromJson(json, cls);
+		}
+	}
+	
+	/**
+	 * @param <T>
+	 * @param map
+	 * @param cls
+	 * @param config
+	 * @return
+	 * @throws Exception
+	 */
+	static <T> T fromMap(final Map<?, ?> map, final Class<T> cls, final JsonbConfig config) throws Exception {
+		Objects.requireNonNull(map, "Map");
+		Objects.requireNonNull(cls, "Class");
+		Objects.requireNonNull(config, "JsonbConfig");
+		try(Jsonb jsonb = JsonbBuilder.create(config)){
 			final String json = jsonb.toJson(map);
 			return jsonb.fromJson(json, cls);
 		}
