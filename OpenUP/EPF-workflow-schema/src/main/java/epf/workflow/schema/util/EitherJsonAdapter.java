@@ -39,22 +39,25 @@ public class EitherJsonAdapter<L, R> implements JsonbAdapter<Either<L, R>, Objec
 	@Override
 	public Either<L, R> adaptFromJson(final Object obj) throws Exception {
 		final Either<L, R> either = new Either<>();
-		if(left.isInstance(obj)) {
-			either.setLeft(left.cast(obj));
-		}
-		else if(right.isInstance(obj)) {
-			either.setRight(right.cast(obj));
-		}
-		else if(obj instanceof Map) {
-			if(!JsonUtil.isPrimitive(left)) {
-				final Map<?, ?> map = (Map<?, ?>) obj;
-				final L leftValue = JsonUtil.fromMap(map, left);
-				either.setLeft(leftValue);
+		if(obj != null) {
+			final Class<?> clazz = obj.getClass();
+			if(left.isInstance(obj) || left.isAssignableFrom(clazz)) {
+				either.setLeft(left.cast(obj));
 			}
-			else if(!JsonUtil.isPrimitive(right)) {
-				final Map<?, ?> map = (Map<?, ?>) obj;
-				final R rightValue = JsonUtil.fromMap(map, right);
-				either.setRight(rightValue);
+			else if(right.isInstance(obj) || right.isAssignableFrom(clazz)) {
+				either.setRight(right.cast(obj));
+			}
+			else if(obj instanceof Map) {
+				if(!JsonUtil.isPrimitive(left)) {
+					final Map<?, ?> map = (Map<?, ?>) obj;
+					final L leftValue = JsonUtil.fromMap(map, left);
+					either.setLeft(leftValue);
+				}
+				else if(!JsonUtil.isPrimitive(right)) {
+					final Map<?, ?> map = (Map<?, ?>) obj;
+					final R rightValue = JsonUtil.fromMap(map, right);
+					either.setRight(rightValue);
+				}
 			}
 		}
 		return either;
