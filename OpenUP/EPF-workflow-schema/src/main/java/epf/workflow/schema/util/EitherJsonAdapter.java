@@ -40,11 +40,10 @@ public class EitherJsonAdapter<L, R> implements JsonbAdapter<Either<L, R>, Objec
 	public Either<L, R> adaptFromJson(final Object obj) throws Exception {
 		final Either<L, R> either = new Either<>();
 		if(obj != null) {
-			final Class<?> clazz = obj.getClass();
-			if(left.isInstance(obj) || left.isAssignableFrom(clazz)) {
+			if(left.isInstance(obj)) {
 				either.setLeft(left.cast(obj));
 			}
-			else if(right.isInstance(obj) || right.isAssignableFrom(clazz)) {
+			else if(right.isInstance(obj)) {
 				either.setRight(right.cast(obj));
 			}
 			else if(obj instanceof Map) {
