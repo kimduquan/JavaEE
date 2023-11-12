@@ -666,16 +666,19 @@ public class WorkflowApplication  {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		final WorkflowDefinition newWorkflowDefinition = persistence.persist(workflowDefinition);
-		if(newWorkflowDefinition.getVersion() != null) {
-			cache.put(newWorkflowDefinition.getId(), newWorkflowDefinition.getVersion(), newWorkflowDefinition);
+		if(workflowDefinition.getVersion() != null) {
+			cache.put(newWorkflowDefinition.getId(), workflowDefinition.getVersion(), workflowDefinition);
 		}
 		else {
-			cache.put(newWorkflowDefinition.getId(), newWorkflowDefinition);
+			cache.put(newWorkflowDefinition.getId(), workflowDefinition);
 		}
-		if(newWorkflowDefinition.getStart().isRight()) {
-			return scheduleLink(newWorkflowDefinition.getStart().getRight(), newWorkflowDefinition);
+		if(workflowDefinition.getStart().isRight()) {
+			return scheduleLink(workflowDefinition.getStart().getRight(), workflowDefinition);
 		}
-		return Response.ok(newWorkflowDefinition).build();
+		try(Jsonb jsonb = JsonbBuilder.create()){
+			final String json = jsonb.toJson(newWorkflowDefinition);
+			return Response.ok(json, MediaType.APPLICATION_JSON).build();
+		}
 	}
 
 	@PUT
