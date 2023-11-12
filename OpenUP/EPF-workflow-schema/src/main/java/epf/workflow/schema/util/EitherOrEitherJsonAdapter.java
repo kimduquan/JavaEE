@@ -7,7 +7,7 @@ import jakarta.json.bind.adapter.JsonbAdapter;
 /**
  * 
  */
-public class EitherOrEitherJsonAdapter<L extends Either<?, ?>, R extends Either<?, ?>> implements JsonbAdapter<EitherOrEither<L, R>, Map<?, ?>> {
+public class EitherOrEitherJsonAdapter<T extends EitherOrEither<L, R>, L extends Either<?, ?>, R extends Either<?, ?>> implements JsonbAdapter<T, Map<?, ?>> {
 	
 	/**
 	 * 
@@ -17,19 +17,41 @@ public class EitherOrEitherJsonAdapter<L extends Either<?, ?>, R extends Either<
 	/**
 	 * 
 	 */
+	private transient final EitherJsonAdapter<?, ?, ?> leftAdapter;
+	
+	/**
+	 * 
+	 */
 	private final String rightKey;
 	
 	/**
-	 * @param leftKey
-	 * @param rightKey
+	 * 
 	 */
-	public EitherOrEitherJsonAdapter(String leftKey, String rightKey) {
+	private transient final EitherJsonAdapter<?, ?, ?> rightAdapter;
+	
+	/**
+	 * 
+	 */
+	private transient final Class<T> clazz;
+	
+	/**
+	 * @param leftKey
+	 * @param leftAdapter
+	 * @param rightKey
+	 * @param rightAdapter
+	 * @param clazz
+	 */
+	@SuppressWarnings("unchecked")
+	public EitherOrEitherJsonAdapter(final String leftKey, final EitherJsonAdapter<?, ?, ?> leftAdapter, final String rightKey, final EitherJsonAdapter<?, ?, ?> rightAdapter, final Class<?> clazz) {
 		this.leftKey = leftKey;
+		this.leftAdapter = leftAdapter;
 		this.rightKey = rightKey;
+		this.rightAdapter = rightAdapter;
+		this.clazz = (Class<T>) clazz;
 	}
 
 	@Override
-	public Map<?, ?> adaptToJson(final EitherOrEither<L, R> obj) throws Exception {
+	public Map<?, ?> adaptToJson(final T obj) throws Exception {
 		final Map<Object, Object> map = new HashMap<>();
 		if(obj.isLeft()) {
 			Object left = null;
@@ -55,8 +77,20 @@ public class EitherOrEitherJsonAdapter<L extends Either<?, ?>, R extends Either<
 	}
 
 	@Override
-	public EitherOrEither<L, R> adaptFromJson(final Map<?, ?> obj) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public T adaptFromJson(final Map<?, ?> obj) throws Exception {
+		final T either = clazz.getConstructor().newInstance();
+		if(obj.containsKey(leftKey)) {
+			final Object left = obj.get(leftKey);
+			@SuppressWarnings("unchecked")
+			final L leftEither = (L) leftAdapter.adaptFromJson(left);
+			either.setLeft(leftEither);
+		}
+		else if(obj.containsKey(rightKey)) {
+			final Object right = obj.get(rightKey);
+			@SuppressWarnings("unchecked")
+			final R rightEither = (R) rightAdapter.adaptFromJson(right);
+			either.setRight(rightEither);
+		}
+		return either;
 	}
 }

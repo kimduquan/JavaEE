@@ -6,10 +6,9 @@ import jakarta.json.bind.adapter.JsonbAdapter;
 /**
  * @param <T>
  */
-public class StringOrObjectJsonAdapter<T> extends PrimitiveOrObjectJsonAdapter<StringOrObject<T>, String, T> {
+public class StringOrObjectJsonAdapter<T> extends EitherJsonAdapter<StringOrObject<T>, String, T> {
 	
 	/**
-	 * @param temp
 	 * @param right
 	 * @param adapterClasses
 	 */

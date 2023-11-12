@@ -6,7 +6,7 @@ import jakarta.json.bind.adapter.JsonbAdapter;
 /**
  * @param <T>
  */
-public class BooleanOrObjectJsonAdapter<T> extends PrimitiveOrObjectJsonAdapter<BooleanOrObject<T>, Boolean, T> {
+public class BooleanOrObjectJsonAdapter<T> extends EitherJsonAdapter<BooleanOrObject<T>, Boolean, T> {
 	
 	/**
 	 * @param right

@@ -11,12 +11,12 @@ import epf.workflow.schema.util.StringOrObject;
  * @author PC
  *
  */
-public class TransitionOrEndAdapter extends EitherOrEitherJsonAdapter<StringOrObject<TransitionDefinition>, BooleanOrObject<EndDefinition>> {
+public class TransitionOrEndAdapter extends EitherOrEitherJsonAdapter<TransitionOrEnd, StringOrObject<TransitionDefinition>, BooleanOrObject<EndDefinition>> {
 
 	/**
 	 * 
 	 */
 	public TransitionOrEndAdapter() {
-		super(TransitionOrEnd.TRANSITION, TransitionOrEnd.END);
+		super(TransitionOrEnd.TRANSITION, new TransitionDefinitionAdapter(), TransitionOrEnd.END, new EndDefinitionAdapter(), TransitionOrEnd.class);
 	}
 }

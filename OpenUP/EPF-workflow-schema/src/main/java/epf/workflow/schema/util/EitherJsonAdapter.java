@@ -11,7 +11,7 @@ import jakarta.json.bind.adapter.JsonbAdapter;
  * @param <L>
  * @param <R>
  */
-public class EitherJsonAdapter<L, R> implements JsonbAdapter<Either<L, R>, Object> {
+public class EitherJsonAdapter<T extends Either<L, R>, L, R> implements JsonbAdapter<T, Object> {
 	
 	/**
 	 * 
@@ -26,6 +26,11 @@ public class EitherJsonAdapter<L, R> implements JsonbAdapter<Either<L, R>, Objec
 	 */
 	private transient final List<Class<? extends JsonbAdapter<?, ?>>> adapterClasses;
 	
+	/**
+	 * 
+	 */
+	private transient final Class<T> clazz;
+	
 	private static <T> T toObject(final Object object, final Class<T> clazz, final List<? extends JsonbAdapter<?, ?>> adapters) throws Exception{
 		final Map<?, ?> map = (Map<?, ?>) object;
 		if(adapters.isEmpty()) {
@@ -37,25 +42,28 @@ public class EitherJsonAdapter<L, R> implements JsonbAdapter<Either<L, R>, Objec
 	}
 	
 	/**
+	 * @param clazz
 	 * @param left
 	 * @param right
 	 * @param adapterClasses
 	 */
-	public EitherJsonAdapter(final Class<L> left, final Class<R> right, final List<Class<? extends JsonbAdapter<?, ?>>> adapterClasses) {
+	@SuppressWarnings("unchecked")
+	public EitherJsonAdapter(final Class<?> clazz, final Class<L> left, final Class<R> right, final List<Class<? extends JsonbAdapter<?, ?>>> adapterClasses) {
 		this.left = left;
 		this.right = right;
 		this.adapterClasses = adapterClasses;
+		this.clazz = (Class<T>) clazz;
 	}
 
 	@Override
-	public Object adaptToJson(final Either<L, R> obj) throws Exception {
+	public Object adaptToJson(final T obj) throws Exception {
 		final Object object = obj.isLeft() ? obj.getLeft() : obj.getRight();
 		return object;
 	}
 
 	@Override
-	public Either<L, R> adaptFromJson(final Object obj) throws Exception {
-		final Either<L, R> either = new Either<>();
+	public T adaptFromJson(final Object obj) throws Exception {
+		final T either = clazz.getConstructor().newInstance();
 		if(obj != null) {
 			if(left.isInstance(obj)) {
 				either.setLeft(left.cast(obj));
