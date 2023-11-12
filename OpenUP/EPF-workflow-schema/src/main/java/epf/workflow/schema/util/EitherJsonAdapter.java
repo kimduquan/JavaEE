@@ -50,7 +50,7 @@ public class EitherJsonAdapter<L, R> implements JsonbAdapter<Either<L, R>, Objec
 	@Override
 	public Object adaptToJson(final Either<L, R> obj) throws Exception {
 		final Object object = obj.isLeft() ? obj.getLeft() : obj.getRight();
-		return JsonUtil.toJsonValue(object);
+		return object;
 	}
 
 	@Override
