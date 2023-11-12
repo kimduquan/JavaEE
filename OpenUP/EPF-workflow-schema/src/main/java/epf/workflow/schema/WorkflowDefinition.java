@@ -9,7 +9,7 @@ import epf.workflow.schema.adapter.StartDefinitionAdapter;
 import epf.workflow.schema.auth.AuthDefinition;
 import epf.workflow.schema.function.FunctionDefinition;
 import epf.workflow.schema.state.State;
-import epf.workflow.schema.util.Either;
+import epf.workflow.schema.util.StringOrObject;
 import jakarta.nosql.Column;
 import jakarta.nosql.Entity;
 import jakarta.nosql.Id;
@@ -85,7 +85,7 @@ public class WorkflowDefinition implements Serializable {
 	 */
 	@Column
 	@JsonbTypeAdapter(value = StartDefinitionAdapter.class)
-	private Either<String, StartDefinition> start;
+	private StringOrObject<StartDefinition> start;
 	
 	/**
 	 * 
@@ -238,11 +238,11 @@ public class WorkflowDefinition implements Serializable {
 		this.secrets = secrets;
 	}
 
-	public Either<String, StartDefinition> getStart() {
+	public StringOrObject<StartDefinition> getStart() {
 		return start;
 	}
 
-	public void setStart(Either<String, StartDefinition> start) {
+	public void setStart(StringOrObject<StartDefinition> start) {
 		this.start = start;
 	}
 

@@ -2,18 +2,18 @@ package epf.workflow.schema.adapter;
 
 import java.util.Arrays;
 import epf.workflow.schema.WorkflowExecTimeoutDefinition;
-import epf.workflow.schema.util.EitherJsonAdapter;
+import epf.workflow.schema.util.StringOrObjectJsonAdapter;
 
 /**
  * @author PC
  *
  */
-public class WorkflowExecTimeoutDefinitionAdapter extends EitherJsonAdapter<String, WorkflowExecTimeoutDefinition> {
+public class WorkflowExecTimeoutDefinitionAdapter extends StringOrObjectJsonAdapter<WorkflowExecTimeoutDefinition> {
 
 	/**
 	 * 
 	 */
 	public WorkflowExecTimeoutDefinitionAdapter() {
-		super(String.class, WorkflowExecTimeoutDefinition.class, Arrays.asList());
+		super(WorkflowExecTimeoutDefinition.class, Arrays.asList());
 	}
 }

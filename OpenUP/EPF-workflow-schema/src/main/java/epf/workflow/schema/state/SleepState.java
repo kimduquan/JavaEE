@@ -6,7 +6,8 @@ import epf.workflow.schema.EndDefinition;
 import epf.workflow.schema.TransitionDefinition;
 import epf.workflow.schema.adapter.EndDefinitionAdapter;
 import epf.workflow.schema.adapter.TransitionDefinitionAdapter;
-import epf.workflow.schema.util.Either;
+import epf.workflow.schema.util.BooleanOrObject;
+import epf.workflow.schema.util.StringOrObject;
 import jakarta.nosql.Column;
 import org.eclipse.jnosql.mapping.DiscriminatorValue;
 import org.eclipse.jnosql.mapping.Embeddable;
@@ -35,13 +36,13 @@ public class SleepState extends State {
 	 */
 	@Column
 	@JsonbTypeAdapter(value = TransitionDefinitionAdapter.class)
-	private Either<String, TransitionDefinition> transition;
+	private StringOrObject<TransitionDefinition> transition;
 	/**
 	 * 
 	 */
 	@Column
 	@JsonbTypeAdapter(value = EndDefinitionAdapter.class)
-	private Either<Boolean, EndDefinition> end;
+	private BooleanOrObject<EndDefinition> end;
 	
 	public String getDuration() {
 		return duration;
@@ -49,16 +50,16 @@ public class SleepState extends State {
 	public void setDuration(String duration) {
 		this.duration = duration;
 	}
-	public Either<String, TransitionDefinition> getTransition() {
+	public StringOrObject<TransitionDefinition> getTransition() {
 		return transition;
 	}
-	public void setTransition(Either<String, TransitionDefinition> transition) {
+	public void setTransition(StringOrObject<TransitionDefinition> transition) {
 		this.transition = transition;
 	}
-	public Either<Boolean, EndDefinition> getEnd() {
+	public BooleanOrObject<EndDefinition> getEnd() {
 		return end;
 	}
-	public void setEnd(Either<Boolean, EndDefinition> end) {
+	public void setEnd(BooleanOrObject<EndDefinition> end) {
 		this.end = end;
 	}
 }

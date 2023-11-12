@@ -3,7 +3,8 @@ package epf.workflow.schema.state;
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import jakarta.validation.constraints.NotNull;
 import epf.workflow.schema.event.OnEventsDefinition;
-import epf.workflow.schema.util.Either;
+import epf.workflow.schema.util.BooleanOrObject;
+import epf.workflow.schema.util.StringOrObject;
 import epf.workflow.schema.EndDefinition;
 import epf.workflow.schema.ErrorDefinition;
 import epf.workflow.schema.TransitionDefinition;
@@ -58,7 +59,7 @@ public class EventState extends State {
 	 */
 	@Column
 	@JsonbTypeAdapter(value = TransitionDefinitionAdapter.class)
-	private Either<String, TransitionDefinition> transition;
+	private StringOrObject<TransitionDefinition> transition;
 	
 	/**
 	 * 
@@ -71,7 +72,7 @@ public class EventState extends State {
 	 */
 	@Column
 	@JsonbTypeAdapter(value = EndDefinitionAdapter.class)
-	private Either<Boolean, EndDefinition> end;
+	private BooleanOrObject<EndDefinition> end;
 	
 	/**
 	 * 
@@ -117,11 +118,11 @@ public class EventState extends State {
 		this.stateDataFilter = stateDataFilter;
 	}
 
-	public Either<String, TransitionDefinition> getTransition() {
+	public StringOrObject<TransitionDefinition> getTransition() {
 		return transition;
 	}
 
-	public void setTransition(Either<String, TransitionDefinition> transition) {
+	public void setTransition(StringOrObject<TransitionDefinition> transition) {
 		this.transition = transition;
 	}
 
@@ -133,11 +134,11 @@ public class EventState extends State {
 		this.onErrors = onErrors;
 	}
 
-	public Either<Boolean, EndDefinition> getEnd() {
+	public BooleanOrObject<EndDefinition> getEnd() {
 		return end;
 	}
 
-	public void setEnd(Either<Boolean, EndDefinition> end) {
+	public void setEnd(BooleanOrObject<EndDefinition> end) {
 		this.end = end;
 	}
 

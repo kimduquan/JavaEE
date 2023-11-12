@@ -5,7 +5,8 @@ import epf.workflow.schema.EndDefinition;
 import epf.workflow.schema.TransitionDefinition;
 import epf.workflow.schema.adapter.EndDefinitionAdapter;
 import epf.workflow.schema.adapter.TransitionDefinitionAdapter;
-import epf.workflow.schema.util.Either;
+import epf.workflow.schema.util.BooleanOrObject;
+import epf.workflow.schema.util.StringOrObject;
 import jakarta.nosql.Column;
 import java.io.Serializable;
 import org.eclipse.jnosql.mapping.MappedSuperclass;
@@ -32,13 +33,13 @@ public class SwitchStateConditions implements Serializable {
 	 */
 	@Column
 	@JsonbTypeAdapter(value = TransitionDefinitionAdapter.class)
-	private Either<String, TransitionDefinition> transition;
+	private StringOrObject<TransitionDefinition> transition;
 	/**
 	 * 
 	 */
 	@Column
 	@JsonbTypeAdapter(value = EndDefinitionAdapter.class)
-	private Either<Boolean, EndDefinition> end;
+	private BooleanOrObject<EndDefinition> end;
 	/**
 	 * 
 	 */
@@ -51,16 +52,16 @@ public class SwitchStateConditions implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Either<String, TransitionDefinition> getTransition() {
+	public StringOrObject<TransitionDefinition> getTransition() {
 		return transition;
 	}
-	public void setTransition(Either<String, TransitionDefinition> transition) {
+	public void setTransition(StringOrObject<TransitionDefinition> transition) {
 		this.transition = transition;
 	}
-	public Either<Boolean, EndDefinition> getEnd() {
+	public BooleanOrObject<EndDefinition> getEnd() {
 		return end;
 	}
-	public void setEnd(Either<Boolean, EndDefinition> end) {
+	public void setEnd(BooleanOrObject<EndDefinition> end) {
 		this.end = end;
 	}
 	public Object getMetadata() {

@@ -4,7 +4,7 @@ import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import epf.workflow.schema.event.EventRefDefinition;
 import epf.workflow.schema.function.FunctionRefDefinition;
 import epf.workflow.schema.function.adapter.FunctionRefDefinitionAdapter;
-import epf.workflow.schema.util.Either;
+import epf.workflow.schema.util.StringOrObject;
 import epf.workflow.schema.SubFlowRefDefinition;
 import epf.workflow.schema.WorkflowError;
 import epf.workflow.schema.adapter.SubFlowRefDefinitionAdapter;
@@ -36,7 +36,7 @@ public class ActionDefinition implements Serializable {
 	 */
 	@Column
 	@JsonbTypeAdapter(value = FunctionRefDefinitionAdapter.class)
-	private Either<String, FunctionRefDefinition> functionRef;
+	private StringOrObject<FunctionRefDefinition> functionRef;
 	
 	/**
 	 * 
@@ -49,7 +49,7 @@ public class ActionDefinition implements Serializable {
 	 */
 	@Column
 	@JsonbTypeAdapter(value = SubFlowRefDefinitionAdapter.class)
-	private Either<String, SubFlowRefDefinition> subFlowRef;
+	private StringOrObject<SubFlowRefDefinition> subFlowRef;
 	
 	/**
 	 * 
@@ -95,11 +95,11 @@ public class ActionDefinition implements Serializable {
 		this.name = name;
 	}
 
-	public Either<String, FunctionRefDefinition> getFunctionRef() {
+	public StringOrObject<FunctionRefDefinition> getFunctionRef() {
 		return functionRef;
 	}
 
-	public void setFunctionRef(Either<String, FunctionRefDefinition> functionRef) {
+	public void setFunctionRef(StringOrObject<FunctionRefDefinition> functionRef) {
 		this.functionRef = functionRef;
 	}
 
@@ -111,11 +111,11 @@ public class ActionDefinition implements Serializable {
 		this.eventRef = eventRef;
 	}
 
-	public Either<String, SubFlowRefDefinition> getSubFlowRef() {
+	public StringOrObject<SubFlowRefDefinition> getSubFlowRef() {
 		return subFlowRef;
 	}
 
-	public void setSubFlowRef(Either<String, SubFlowRefDefinition> subFlowRef) {
+	public void setSubFlowRef(StringOrObject<SubFlowRefDefinition> subFlowRef) {
 		this.subFlowRef = subFlowRef;
 	}
 

@@ -2,7 +2,7 @@ package epf.workflow.schema;
 
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import epf.workflow.schema.event.ProducedEventDefinition;
-import epf.workflow.schema.util.Either;
+import epf.workflow.schema.util.StringOrObject;
 import epf.workflow.schema.adapter.ContinueAsAdapter;
 import jakarta.nosql.Column;
 import java.io.Serializable;
@@ -41,7 +41,7 @@ public class EndDefinition implements Serializable {
 	 */
 	@Column
 	@JsonbTypeAdapter(value = ContinueAsAdapter.class)
-	private Either<String, ContinueAs> continueAs;
+	private StringOrObject<ContinueAs> continueAs;
 	
 	public Boolean isTerminate() {
 		return terminate;
@@ -61,10 +61,10 @@ public class EndDefinition implements Serializable {
 	public void setCompensate(Boolean compensate) {
 		this.compensate = compensate;
 	}
-	public Either<String, ContinueAs> getContinueAs() {
+	public StringOrObject<ContinueAs> getContinueAs() {
 		return continueAs;
 	}
-	public void setContinueAs(Either<String, ContinueAs> continueAs) {
+	public void setContinueAs(StringOrObject<ContinueAs> continueAs) {
 		this.continueAs = continueAs;
 	}
 }

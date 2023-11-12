@@ -3,18 +3,18 @@ package epf.workflow.schema.adapter;
 import java.util.Arrays;
 import epf.workflow.schema.StartDefinition;
 import epf.workflow.schema.schedule.adapter.ScheduleDefinitionAdapter;
-import epf.workflow.schema.util.EitherJsonAdapter;
+import epf.workflow.schema.util.StringOrObjectJsonAdapter;
 
 /**
  * @author PC
  *
  */
-public class StartDefinitionAdapter extends EitherJsonAdapter<String, StartDefinition> {
+public class StartDefinitionAdapter extends StringOrObjectJsonAdapter<StartDefinition> {
 
 	/**
 	 * 
 	 */
 	public StartDefinitionAdapter() {
-		super(String.class, StartDefinition.class, Arrays.asList(ScheduleDefinitionAdapter.class));
+		super(StartDefinition.class, Arrays.asList(ScheduleDefinitionAdapter.class));
 	}
 }

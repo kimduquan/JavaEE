@@ -7,7 +7,7 @@ import java.io.Serializable;
 import org.eclipse.jnosql.mapping.Embeddable;
 import epf.workflow.schema.schedule.ScheduleDefinition;
 import epf.workflow.schema.schedule.adapter.ScheduleDefinitionAdapter;
-import epf.workflow.schema.util.Either;
+import epf.workflow.schema.util.StringOrObject;
 
 /**
  * @author PC
@@ -33,7 +33,7 @@ public class StartDefinition implements Serializable {
 	@NotNull
 	@Column
 	@JsonbTypeAdapter(value = ScheduleDefinitionAdapter.class)
-	private Either<String, ScheduleDefinition> schedule;
+	private StringOrObject<ScheduleDefinition> schedule;
 
 	public String getStateName() {
 		return stateName;
@@ -43,11 +43,11 @@ public class StartDefinition implements Serializable {
 		this.stateName = stateName;
 	}
 
-	public Either<String, ScheduleDefinition> getSchedule() {
+	public StringOrObject<ScheduleDefinition> getSchedule() {
 		return schedule;
 	}
 
-	public void setSchedule(Either<String, ScheduleDefinition> schedule) {
+	public void setSchedule(StringOrObject<ScheduleDefinition> schedule) {
 		this.schedule = schedule;
 	}
 }

@@ -2,18 +2,18 @@ package epf.workflow.schema.adapter;
 
 import java.util.Arrays;
 import epf.workflow.schema.EndDefinition;
-import epf.workflow.schema.util.EitherJsonAdapter;
+import epf.workflow.schema.util.BooleanOrObjectJsonAdapter;
 
 /**
  * @author PC
  *
  */
-public class EndDefinitionAdapter extends EitherJsonAdapter<Boolean, EndDefinition> {
+public class EndDefinitionAdapter extends BooleanOrObjectJsonAdapter<EndDefinition> {
 
 	/**
 	 * 
 	 */
 	public EndDefinitionAdapter() {
-		super(Boolean.class, EndDefinition.class, Arrays.asList(ContinueAsAdapter.class));
+		super(EndDefinition.class, Arrays.asList(ContinueAsAdapter.class));
 	}
 }

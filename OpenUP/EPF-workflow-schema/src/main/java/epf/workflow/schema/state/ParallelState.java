@@ -8,7 +8,8 @@ import epf.workflow.schema.TransitionDefinition;
 import epf.workflow.schema.WorkflowTimeoutDefinition;
 import epf.workflow.schema.adapter.EndDefinitionAdapter;
 import epf.workflow.schema.adapter.TransitionDefinitionAdapter;
-import epf.workflow.schema.util.Either;
+import epf.workflow.schema.util.BooleanOrObject;
+import epf.workflow.schema.util.StringOrObject;
 import jakarta.nosql.Column;
 import java.util.List;
 import org.eclipse.jnosql.mapping.DiscriminatorValue;
@@ -63,7 +64,7 @@ public class ParallelState extends State {
 	 */
 	@Column
 	@JsonbTypeAdapter(value = TransitionDefinitionAdapter.class)
-	private Either<String, TransitionDefinition> transition;
+	private StringOrObject<TransitionDefinition> transition;
 	/**
 	 * 
 	 */
@@ -84,7 +85,7 @@ public class ParallelState extends State {
 	 */
 	@Column
 	@JsonbTypeAdapter(value = EndDefinitionAdapter.class)
-	private Either<Boolean, EndDefinition> end;
+	private BooleanOrObject<EndDefinition> end;
 	
 	public List<ParallelStateBranch> getBranches() {
 		return branches;
@@ -122,10 +123,10 @@ public class ParallelState extends State {
 	public void setOnErrors(List<ErrorDefinition> onErrors) {
 		this.onErrors = onErrors;
 	}
-	public Either<String, TransitionDefinition> getTransition() {
+	public StringOrObject<TransitionDefinition> getTransition() {
 		return transition;
 	}
-	public void setTransition(Either<String, TransitionDefinition> transition) {
+	public void setTransition(StringOrObject<TransitionDefinition> transition) {
 		this.transition = transition;
 	}
 	public String getCompensatedBy() {
@@ -146,10 +147,10 @@ public class ParallelState extends State {
 	public void setMetadata(Object metadata) {
 		this.metadata = metadata;
 	}
-	public Either<Boolean, EndDefinition> getEnd() {
+	public BooleanOrObject<EndDefinition> getEnd() {
 		return end;
 	}
-	public void setEnd(Either<Boolean, EndDefinition> end) {
+	public void setEnd(BooleanOrObject<EndDefinition> end) {
 		this.end = end;
 	}
 }

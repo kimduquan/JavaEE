@@ -2,19 +2,19 @@ package epf.workflow.schema.adapter;
 
 import java.util.Arrays;
 import epf.workflow.schema.SubFlowRefDefinition;
-import epf.workflow.schema.util.EitherJsonAdapter;
+import epf.workflow.schema.util.StringOrObjectJsonAdapter;
 
 /**
  * @author PC
  *
  */
-public class SubFlowRefDefinitionAdapter extends EitherJsonAdapter<String, SubFlowRefDefinition> {
+public class SubFlowRefDefinitionAdapter extends StringOrObjectJsonAdapter<SubFlowRefDefinition> {
 
 	/**
 	 * 
 	 */
 	public SubFlowRefDefinitionAdapter() {
-		super(String.class, SubFlowRefDefinition.class, Arrays.asList());
+		super(SubFlowRefDefinition.class, Arrays.asList());
 	}
 
 }

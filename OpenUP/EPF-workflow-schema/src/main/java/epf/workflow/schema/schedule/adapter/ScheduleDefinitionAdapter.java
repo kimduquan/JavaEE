@@ -2,18 +2,18 @@ package epf.workflow.schema.schedule.adapter;
 
 import java.util.Arrays;
 import epf.workflow.schema.schedule.ScheduleDefinition;
-import epf.workflow.schema.util.EitherJsonAdapter;
+import epf.workflow.schema.util.StringOrObjectJsonAdapter;
 
 /**
  * @author PC
  *
  */
-public class ScheduleDefinitionAdapter extends EitherJsonAdapter<String, ScheduleDefinition> {
+public class ScheduleDefinitionAdapter extends StringOrObjectJsonAdapter<ScheduleDefinition> {
 
 	/**
 	 * 
 	 */
 	public ScheduleDefinitionAdapter() {
-		super(String.class, ScheduleDefinition.class, Arrays.asList(CronDefinitionAdapter.class));
+		super(ScheduleDefinition.class, Arrays.asList(CronDefinitionAdapter.class));
 	}
 }

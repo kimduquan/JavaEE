@@ -5,7 +5,8 @@ import java.util.List;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
-import epf.workflow.schema.util.Either;
+import epf.workflow.schema.util.BooleanOrObject;
+import epf.workflow.schema.util.StringOrObject;
 
 /**
  * 
@@ -19,11 +20,14 @@ public class EitherCodecProvider implements CodecProvider {
 
 	@Override
 	public <T> Codec<T> get(Class<T> clazz, List<Type> typeArguments, CodecRegistry registry) {
-		if(clazz.equals(Either.class)) {
-			final Class<?> leftClass = (Class<?>)typeArguments.get(0);
-			final Class<?> rightClass = (Class<?>)typeArguments.get(1);
+		if(clazz.equals(StringOrObject.class)) {
 			@SuppressWarnings("unchecked")
-			final Codec<T> codec = (Codec<T>) new EitherCodec<>(registry, leftClass, rightClass);
+			final Codec<T> codec = (Codec<T>) new StringOrObjectCodec<>(registry);
+			return codec;
+		}
+		else if(clazz.equals(BooleanOrObject.class)) {
+			@SuppressWarnings("unchecked")
+			final Codec<T> codec = (Codec<T>) new BooleanOrObjectCodec<>(registry);
 			return codec;
 		}
 		return null;
