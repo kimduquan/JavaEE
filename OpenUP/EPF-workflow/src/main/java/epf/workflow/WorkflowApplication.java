@@ -18,7 +18,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
-import jakarta.json.bind.JsonbConfig;
 import jakarta.validation.Validator;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.Consumes;
@@ -54,7 +53,6 @@ import epf.workflow.schema.WorkflowData;
 import epf.workflow.schema.WorkflowDefinition;
 import epf.workflow.schema.action.ActionDefinition;
 import epf.workflow.schema.action.Mode;
-import epf.workflow.schema.adapter.StartDefinitionAdapter;
 import epf.workflow.schema.event.EventDefinition;
 import epf.workflow.schema.event.OnEventsDefinition;
 import epf.workflow.schema.event.ProducedEventDefinition;
@@ -677,7 +675,7 @@ public class WorkflowApplication  {
 		if(workflowDefinition.getStart().isRight()) {
 			return scheduleLink(workflowDefinition.getStart().getRight(), workflowDefinition);
 		}
-		try(Jsonb jsonb = JsonbBuilder.create(new JsonbConfig().withAdapters(new StartDefinitionAdapter()))){
+		try(Jsonb jsonb = JsonbBuilder.create()){
 			final String json = jsonb.toJson(newWorkflowDefinition);
 			return Response.ok(json, MediaType.APPLICATION_JSON).build();
 		}

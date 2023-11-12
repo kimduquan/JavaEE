@@ -1,6 +1,7 @@
 package epf.workflow.schema.util;
 
 import java.io.Serializable;
+import jakarta.json.bind.annotation.JsonbTransient;
 
 /**
  * 
@@ -14,10 +15,12 @@ public class Either<L, R> implements Serializable {
 	/**
 	 * 
 	 */
+	@JsonbTransient
 	private L left;
 	/**
 	 * 
 	 */
+	@JsonbTransient
 	private R right;
 	
 	public L getLeft() {
