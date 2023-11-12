@@ -40,7 +40,7 @@ public class PrimitiveOrObjectJsonAdapter<T extends Either<L, R>, L, R> implemen
 	@Override
 	public T adaptFromJson(final Object obj) throws Exception {
 		final T object = clazz.getConstructor().newInstance();
-		object.copy(either.adaptFromJson(object));
+		object.copy(either.adaptFromJson(obj));
 		return object;
 	}
 
