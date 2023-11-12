@@ -510,6 +510,6 @@ public interface JsonUtil {
 	 * @return
 	 */
 	static boolean isPrimitive(final Class<?> clazz) {
-		return clazz.isAssignableFrom(String.class) || clazz.isAssignableFrom(boolean.class) || clazz.isAssignableFrom(Number.class);
+		return clazz.isAssignableFrom(String.class) || clazz.isAssignableFrom(Boolean.class) || clazz.isAssignableFrom(Number.class);
 	}
 }
