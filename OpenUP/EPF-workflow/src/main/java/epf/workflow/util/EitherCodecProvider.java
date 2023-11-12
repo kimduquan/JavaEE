@@ -5,6 +5,7 @@ import java.util.List;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
+import epf.workflow.schema.TransitionOrEnd;
 import epf.workflow.schema.util.BooleanOrObject;
 import epf.workflow.schema.util.StringOrObject;
 
@@ -28,6 +29,11 @@ public class EitherCodecProvider implements CodecProvider {
 		else if(clazz.equals(BooleanOrObject.class)) {
 			@SuppressWarnings("unchecked")
 			final Codec<T> codec = (Codec<T>) new BooleanOrObjectCodec<>(registry);
+			return codec;
+		}
+		else if(clazz.equals(TransitionOrEnd.class)) {
+			@SuppressWarnings("unchecked")
+			final Codec<T> codec = (Codec<T>) new TransitionOrEndCodec(registry);
 			return codec;
 		}
 		return null;
