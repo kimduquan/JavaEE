@@ -1,6 +1,5 @@
 package epf.workflow.schema.adapter;
 
-import java.util.Arrays;
 import epf.workflow.schema.EndDefinition;
 import epf.workflow.schema.util.BooleanOrObjectJsonAdapter;
 
@@ -14,6 +13,6 @@ public class EndDefinitionAdapter extends BooleanOrObjectJsonAdapter<EndDefiniti
 	 * 
 	 */
 	public EndDefinitionAdapter() {
-		super(EndDefinition.class, Arrays.asList(ContinueAsAdapter.class));
+		super(EndDefinition.class);
 	}
 }

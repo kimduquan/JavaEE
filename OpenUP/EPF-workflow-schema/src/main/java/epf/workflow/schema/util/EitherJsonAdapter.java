@@ -1,10 +1,7 @@
 package epf.workflow.schema.util;
 
-import java.util.List;
 import java.util.Map;
-import epf.util.ClassUtil;
 import epf.util.json.ext.JsonUtil;
-import jakarta.json.bind.JsonbConfig;
 import jakarta.json.bind.adapter.JsonbAdapter;
 
 /**
@@ -24,34 +21,22 @@ public class EitherJsonAdapter<T extends Either<L, R>, L, R> implements JsonbAda
 	/**
 	 * 
 	 */
-	private transient final List<Class<? extends JsonbAdapter<?, ?>>> adapterClasses;
-	
-	/**
-	 * 
-	 */
 	private transient final Class<T> clazz;
 	
-	private static <T> T toObject(final Object object, final Class<T> clazz, final List<? extends JsonbAdapter<?, ?>> adapters) throws Exception{
+	private static <T> T toObject(final Object object, final Class<T> clazz) throws Exception{
 		final Map<?, ?> map = (Map<?, ?>) object;
-		if(adapters.isEmpty()) {
-			return JsonUtil.fromMap(map, clazz);
-		}
-		else {
-			return JsonUtil.fromMap(map, clazz, new JsonbConfig().withAdapters(adapters.toArray(new JsonbAdapter<?, ?>[0])));
-		}
+		return JsonUtil.fromMap(map, clazz);
 	}
 	
 	/**
 	 * @param clazz
 	 * @param left
 	 * @param right
-	 * @param adapterClasses
 	 */
 	@SuppressWarnings("unchecked")
-	public EitherJsonAdapter(final Class<?> clazz, final Class<L> left, final Class<R> right, final List<Class<? extends JsonbAdapter<?, ?>>> adapterClasses) {
+	public EitherJsonAdapter(final Class<?> clazz, final Class<L> left, final Class<R> right) {
 		this.left = left;
 		this.right = right;
-		this.adapterClasses = adapterClasses;
 		this.clazz = (Class<T>) clazz;
 	}
 
@@ -73,11 +58,11 @@ public class EitherJsonAdapter<T extends Either<L, R>, L, R> implements JsonbAda
 			}
 			else if(obj instanceof Map) {
 				if(!JsonUtil.isPrimitive(left)) {
-					final L leftValue = toObject(obj, left, ClassUtil.newInstances(adapterClasses));
+					final L leftValue = toObject(obj, left);
 					either.setLeft(leftValue);
 				}
 				else if(!JsonUtil.isPrimitive(right)) {
-					final R rightValue = toObject(obj, right, ClassUtil.newInstances(adapterClasses));
+					final R rightValue = toObject(obj, right);
 					either.setRight(rightValue);
 				}
 			}

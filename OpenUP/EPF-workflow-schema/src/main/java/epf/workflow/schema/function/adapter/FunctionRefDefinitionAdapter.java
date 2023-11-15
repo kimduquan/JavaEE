@@ -1,6 +1,5 @@
 package epf.workflow.schema.function.adapter;
 
-import java.util.Arrays;
 import epf.workflow.schema.function.FunctionRefDefinition;
 import epf.workflow.schema.util.StringOrObjectJsonAdapter;
 
@@ -14,6 +13,6 @@ public class FunctionRefDefinitionAdapter extends StringOrObjectJsonAdapter<Func
 	 * 
 	 */
 	public FunctionRefDefinitionAdapter() {
-		super(FunctionRefDefinition.class, Arrays.asList());
+		super(FunctionRefDefinition.class);
 	}
 }

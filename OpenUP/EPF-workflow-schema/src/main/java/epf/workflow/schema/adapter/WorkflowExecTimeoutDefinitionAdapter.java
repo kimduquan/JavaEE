@@ -1,6 +1,5 @@
 package epf.workflow.schema.adapter;
 
-import java.util.Arrays;
 import epf.workflow.schema.WorkflowExecTimeoutDefinition;
 import epf.workflow.schema.util.StringOrObjectJsonAdapter;
 
@@ -14,6 +13,6 @@ public class WorkflowExecTimeoutDefinitionAdapter extends StringOrObjectJsonAdap
 	 * 
 	 */
 	public WorkflowExecTimeoutDefinitionAdapter() {
-		super(WorkflowExecTimeoutDefinition.class, Arrays.asList());
+		super(WorkflowExecTimeoutDefinition.class);
 	}
 }

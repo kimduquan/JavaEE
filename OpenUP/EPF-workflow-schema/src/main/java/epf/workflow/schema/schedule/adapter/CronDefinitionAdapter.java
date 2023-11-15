@@ -1,6 +1,5 @@
 package epf.workflow.schema.schedule.adapter;
 
-import java.util.Arrays;
 import epf.workflow.schema.schedule.CronDefinition;
 import epf.workflow.schema.util.StringOrObjectJsonAdapter;
 
@@ -14,6 +13,6 @@ public class CronDefinitionAdapter extends StringOrObjectJsonAdapter<CronDefinit
 	 * 
 	 */
 	public CronDefinitionAdapter() {
-		super(CronDefinition.class, Arrays.asList());
+		super(CronDefinition.class);
 	}
 }
