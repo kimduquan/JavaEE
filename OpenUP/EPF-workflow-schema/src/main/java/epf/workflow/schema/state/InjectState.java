@@ -65,6 +65,13 @@ public class InjectState extends State {
 	@JsonbTypeAdapter(value = EndDefinitionAdapter.class)
 	private BooleanOrObject<EndDefinition> end;
 	
+	/**
+	 * 
+	 */
+	public InjectState() {
+		setType(Type.inject);
+	}
+	
 	public Map<String, Object> getData() {
 		return data;
 	}

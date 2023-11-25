@@ -90,6 +90,13 @@ public class CallbackState extends State {
 	@Column
 	private Object metadata;
 	
+	/**
+	 * 
+	 */
+	public CallbackState() {
+		setType(Type.callback);
+	}
+	
 	public ActionDefinition getAction() {
 		return action;
 	}

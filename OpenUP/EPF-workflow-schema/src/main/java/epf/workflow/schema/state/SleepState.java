@@ -44,6 +44,13 @@ public class SleepState extends State {
 	@JsonbTypeAdapter(value = EndDefinitionAdapter.class)
 	private BooleanOrObject<EndDefinition> end;
 	
+	/**
+	 * 
+	 */
+	public SleepState() {
+		setType(Type.sleep);
+	}
+	
 	public String getDuration() {
 		return duration;
 	}

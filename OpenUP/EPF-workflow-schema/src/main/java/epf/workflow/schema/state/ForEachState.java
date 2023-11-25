@@ -105,6 +105,13 @@ public class ForEachState extends State {
 	@JsonbTypeAdapter(value = EndDefinitionAdapter.class)
 	private BooleanOrObject<EndDefinition> end;
 	
+	/**
+	 * 
+	 */
+	public ForEachState() {
+		setType(Type.foreach);
+	}
+	
 	public String getInputCollection() {
 		return inputCollection;
 	}

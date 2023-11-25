@@ -85,6 +85,13 @@ public class EventState extends State {
 	 */
 	@Column
 	private Object metadata;
+	
+	/**
+	 * 
+	 */
+	public EventState() {
+		setType(Type.event);
+	}
 
 	public Boolean isExclusive() {
 		return exclusive;

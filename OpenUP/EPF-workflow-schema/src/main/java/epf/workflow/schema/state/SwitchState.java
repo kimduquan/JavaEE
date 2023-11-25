@@ -72,6 +72,13 @@ public class SwitchState extends State {
 	@Column
 	private Object metadata;
 	
+	/**
+	 * 
+	 */
+	public SwitchState() {
+		setType(Type.Switch);
+	}
+	
 	public List<SwitchStateDataConditions> getDataConditions() {
 		return dataConditions;
 	}

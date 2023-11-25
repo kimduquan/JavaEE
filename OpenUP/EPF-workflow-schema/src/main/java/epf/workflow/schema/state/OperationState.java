@@ -92,6 +92,13 @@ public class OperationState extends State {
 	@Column
 	@JsonbTypeAdapter(value = EndDefinitionAdapter.class)
 	private BooleanOrObject<EndDefinition> end;
+	
+	/**
+	 * 
+	 */
+	public OperationState() {
+		setType(Type.operation);
+	}
 
 	public Mode getActionMode() {
 		return actionMode;

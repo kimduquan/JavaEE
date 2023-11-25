@@ -87,6 +87,13 @@ public class ParallelState extends State {
 	@JsonbTypeAdapter(value = EndDefinitionAdapter.class)
 	private BooleanOrObject<EndDefinition> end;
 	
+	/**
+	 * 
+	 */
+	public ParallelState() {
+		setType(Type.parallel);
+	}
+	
 	public List<ParallelStateBranch> getBranches() {
 		return branches;
 	}

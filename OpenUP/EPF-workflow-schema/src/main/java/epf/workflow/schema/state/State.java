@@ -2,6 +2,7 @@ package epf.workflow.schema.state;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.json.bind.annotation.JsonbSubtype;
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.json.bind.annotation.JsonbTypeInfo;
 import jakarta.nosql.Column;
 import java.io.Serializable;
@@ -43,6 +44,7 @@ public class State implements Serializable {
 	 */
 	@NotNull
 	@Column
+	@JsonbTransient
 	private Type type;
 
 	public String getName() {
