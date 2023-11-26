@@ -75,19 +75,17 @@ public class Application {
     	final RequestBuilder builder = new RequestBuilder(client, serviceUrl, req.getMethod(), headers, uriInfo, body, true);
     	final Link self = HATEOAS.selfLink(uriInfo, req, service);
     	Response response = builder.build();
-    	response = closeResponse(response, serviceUrl, client);
-    	response = buildLinkRequests(response, headers, self);
+    	response = closeResponse(response);
+    	response = buildLinkRequests(client, response, headers, self);
     	response = ResponseUtil.buildResponse(response, uriInfo.getBaseUri());
     	return response;
     }
     
     /**
      * @param response
-     * @param serviceUrl
-     * @param client
      * @return
      */
-    private Response closeResponse(final Response response, final URI serviceUrl, final Client client) {
+    private Response closeResponse(final Response response) {
     	response.bufferEntity();
 		return response;
     }
@@ -98,10 +96,9 @@ public class Application {
      * @param link
      * @return
      */
-    private Response buildLinkRequest(final Response response, final HttpHeaders headers, final Link link) {
+    private Response buildLinkRequest(final Client client, final Response response, final HttpHeaders headers, final Link link) {
     	final String service = link.getRel();
 		final URI serviceUrl = registry.lookup(service).orElseThrow(NotFoundException::new);
-		final Client client = ClientBuilder.newClient();
 		LOGGER.info(String.format("link=%s", link.toString()));
 		final Optional<Duration> wait = HATEOAS.getWait(link);
 		wait.ifPresent(duration -> {
@@ -116,14 +113,15 @@ public class Application {
      * @param headers
      * @return
      */
-    private Response buildLinkRequests(final Response response, final HttpHeaders headers, final Link self) {
+    private Response buildLinkRequests(final Client client, final Response response, final HttpHeaders headers, final Link self) {
     	Response linkResponse = response;
     	final List<Link> links = HATEOAS.getRequestLinks(response).collect(Collectors.toList());
     	for(Link link : links) {
     		if(HATEOAS.isRequestLink(link)) {
     			final Link targetLink = HATEOAS.isSelfLink(link) ? self : link;
-    			linkResponse = buildLinkRequest(linkResponse, headers, targetLink);
-    			linkResponse = buildLinkRequests(linkResponse, headers, targetLink);
+    			linkResponse = buildLinkRequest(client, linkResponse, headers, targetLink);
+    			linkResponse = closeResponse(linkResponse);
+    			linkResponse = buildLinkRequests(client, linkResponse, headers, targetLink);
     		}
     	}
     	return linkResponse;
