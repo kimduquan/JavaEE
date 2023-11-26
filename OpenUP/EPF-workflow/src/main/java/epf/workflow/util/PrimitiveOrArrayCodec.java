@@ -65,9 +65,6 @@ public class PrimitiveOrArrayCodec<T extends EitherArray<L, R>, L, R> implements
 		else if(isRight) {
 			listCodec.encode(writer, value.getRight(), encoderContext);
 		}
-		else {
-			writer.writeNull();
-		}
 	}
 
 	@Override
