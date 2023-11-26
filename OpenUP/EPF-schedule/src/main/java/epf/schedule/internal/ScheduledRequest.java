@@ -4,7 +4,6 @@ import java.time.Duration;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.Response;
 import epf.client.util.RequestBuilder;
 import epf.client.util.ResponseUtil;
@@ -49,10 +48,10 @@ public class ScheduledRequest implements Callable<Response> {
 	@Override
 	public Response call() throws Exception {
 		if(timeOut.isPresent()) {
-			response = builder.build().toCompletableFuture().get(timeOut.get().toMillis(), TimeUnit.MILLISECONDS);
+			response = builder.build();
 		}
 		else {
-			response = builder.build().toCompletableFuture().get();
+			response = builder.build();
 		}
 		response = ResponseUtil.clone(response);
 		response.bufferEntity();
