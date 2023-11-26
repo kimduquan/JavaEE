@@ -22,6 +22,7 @@ import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
 import epf.naming.Naming;
+import io.smallrye.common.annotation.RunOnVirtualThread;
 
 /**
  * 
@@ -55,6 +56,7 @@ public class Workflow {
     @POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
+    @RunOnVirtualThread
     public CompletionStage<Response> newWorkflowDefinition(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -78,6 +80,7 @@ public class Workflow {
 	@Path("{workflow}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
+    @RunOnVirtualThread
     public CompletionStage<Response> start(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -102,6 +105,7 @@ public class Workflow {
 	@Path("{workflow}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
+    @RunOnVirtualThread
     public CompletionStage<Response> getWorkflowDefinition(
 			@Context final SecurityContext context,
             @Context final HttpHeaders headers, 

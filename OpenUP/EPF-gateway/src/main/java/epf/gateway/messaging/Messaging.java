@@ -15,6 +15,7 @@ import javax.websocket.server.ServerEndpoint;
 import org.eclipse.microprofile.health.Readiness;
 import epf.naming.Naming;
 import epf.util.logging.LogManager;
+import io.smallrye.common.annotation.RunOnVirtualThread;
 
 /**
  * @author PC
@@ -46,6 +47,7 @@ public class Messaging {
 	 * @throws Exception 
 	 */
 	@OnOpen
+    @RunOnVirtualThread
     public void onOpen(
     		@PathParam(Naming.Management.TENANT)
     		final String tenant,
@@ -66,6 +68,7 @@ public class Messaging {
 	 * @param session
 	 */
 	@OnMessage
+    @RunOnVirtualThread
     public void onMessage(
     		@PathParam(Naming.Management.TENANT)
     		final String tenant,
@@ -86,6 +89,7 @@ public class Messaging {
 	 * @param throwable
 	 */
 	@OnError
+    @RunOnVirtualThread
     public void onError(
     		@PathParam(Naming.Management.TENANT)
     		final String tenant,
@@ -106,6 +110,7 @@ public class Messaging {
 	 * @param closeReason
 	 */
 	@OnClose
+    @RunOnVirtualThread
     public void onClose(
     		@PathParam(Naming.Management.TENANT)
     		final String tenant,

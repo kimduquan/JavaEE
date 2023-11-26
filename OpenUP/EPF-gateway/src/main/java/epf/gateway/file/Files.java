@@ -23,6 +23,7 @@ import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
 import epf.naming.Naming;
+import io.smallrye.common.annotation.RunOnVirtualThread;
 
 /**
  *
@@ -57,6 +58,7 @@ public class Files {
     @POST
 	@Path("{paths: .+}")
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
+    @RunOnVirtualThread
     public CompletionStage<Response> createFile(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -80,6 +82,7 @@ public class Files {
     @GET
     @Path("{paths: .+}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @RunOnVirtualThread
     public CompletionStage<Response> lines(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -101,6 +104,7 @@ public class Files {
      */
     @DELETE
     @Path("{paths: .+}")
+    @RunOnVirtualThread
     public CompletionStage<Response> delete(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 

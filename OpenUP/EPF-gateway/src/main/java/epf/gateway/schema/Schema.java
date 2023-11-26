@@ -16,6 +16,7 @@ import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
 import epf.naming.Naming;
+import io.smallrye.common.annotation.RunOnVirtualThread;
 
 /**
  * @author PC
@@ -47,6 +48,7 @@ public class Schema {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @RunOnVirtualThread
     public CompletionStage<Response> getEntities(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -64,6 +66,7 @@ public class Schema {
      */
     @GET
     @Path("embeddable")
+    @RunOnVirtualThread
     @Produces(MediaType.APPLICATION_JSON)
     public CompletionStage<Response> getEmbeddables(
     		@Context final SecurityContext context,

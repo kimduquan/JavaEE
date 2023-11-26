@@ -70,6 +70,7 @@ import epf.workflow.state.Branch;
 import epf.workflow.state.util.StateUtil;
 import epf.workflow.util.ELUtil;
 import epf.workflow.util.TimeoutUtil;
+import io.smallrye.common.annotation.RunOnVirtualThread;
 import epf.workflow.schema.state.SwitchState;
 import epf.workflow.schema.state.SwitchStateConditions;
 import epf.workflow.schema.state.SwitchStateDataConditions;
@@ -654,6 +655,7 @@ public class WorkflowApplication  {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
+	@RunOnVirtualThread
 	public Response newWorkflowDefinition(final InputStream body) throws Exception {
 		WorkflowDefinition workflowDefinition = null;
 		try(Jsonb jsonb = JsonbBuilder.create()){
@@ -686,6 +688,7 @@ public class WorkflowApplication  {
 	@LRA(value = Type.NESTED, end = false)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
+	@RunOnVirtualThread
 	public Response start(final String workflow, final String version, final URI instance, final Map<String, Object> input) throws Exception {
 		WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
 		String startState = null;
@@ -711,6 +714,7 @@ public class WorkflowApplication  {
 	@Path("{workflow}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
+	@RunOnVirtualThread
 	public WorkflowDefinition getWorkflowDefinition(final String workflow, final String version) throws Exception {
 		Optional<WorkflowDefinition> workflowDefinition = Optional.empty();
 		if(version != null) {
@@ -733,6 +737,7 @@ public class WorkflowApplication  {
 	@LRA(value = Type.MANDATORY, end = false)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
+	@RunOnVirtualThread
 	public Response transition(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) throws Exception {
 		final WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
 		final State nextState = getState(workflowDefinition, state);
@@ -771,6 +776,7 @@ public class WorkflowApplication  {
 	@Path("{workflow}/{state}/end")
 	@LRA(value = Type.MANDATORY, end = true)
 	@Consumes(MediaType.APPLICATION_JSON)
+	@RunOnVirtualThread
 	public Response end(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) throws Exception {
 		cache.removeState(instance);
 		return null;
@@ -780,6 +786,7 @@ public class WorkflowApplication  {
 	@Path("{workflow}/{state}/compensate")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Compensate
+	@RunOnVirtualThread
 	public Response compensate(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) throws Exception {
 		final WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
 		final State currentState = getState(workflowDefinition, state);

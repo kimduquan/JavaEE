@@ -28,6 +28,7 @@ import epf.gateway.messaging.Remote;
 import epf.naming.Naming;
 import epf.util.logging.LogManager;
 import epf.util.websocket.Client;
+import io.smallrye.common.annotation.RunOnVirtualThread;
 
 /**
  * @author PC
@@ -112,6 +113,7 @@ public class Stream {
 	@Path("{path}")
 	@Produces(MediaType.SERVER_SENT_EVENTS)
 	@PermitAll
+    @RunOnVirtualThread
 	public void stream(
 			@PathParam("path")
 			final String path, 

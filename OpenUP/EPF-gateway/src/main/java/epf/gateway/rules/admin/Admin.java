@@ -19,6 +19,7 @@ import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
 import epf.naming.Naming;
+import io.smallrye.common.annotation.RunOnVirtualThread;
 
 /**
  * @author PC
@@ -52,6 +53,7 @@ public class Admin {
     @Path("{ruleSet}")
     @PUT
     @Consumes(MediaType.APPLICATION_OCTET_STREAM)
+    @RunOnVirtualThread
     public CompletionStage<Response> registerRuleExecutionSet(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -73,6 +75,7 @@ public class Admin {
      */
     @Path("{ruleSet}")
     @DELETE
+    @RunOnVirtualThread
     public CompletionStage<Response> deregisterRuleExecutionSet(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 

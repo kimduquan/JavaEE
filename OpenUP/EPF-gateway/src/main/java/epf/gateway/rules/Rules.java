@@ -22,6 +22,7 @@ import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
 import epf.naming.Naming;
+import io.smallrye.common.annotation.RunOnVirtualThread;
 
 /**
  * @author PC
@@ -57,6 +58,7 @@ public class Rules {
 	@Path("{ruleSet}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
+    @RunOnVirtualThread
 	public CompletionStage<Response> executeRules(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -79,6 +81,7 @@ public class Rules {
 	@PUT
 	@Path("{ruleSet}")
 	@Produces(MediaType.APPLICATION_JSON)
+    @RunOnVirtualThread
 	public CompletionStage<Response> executeRules(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -100,6 +103,7 @@ public class Rules {
 	@PATCH
 	@Path("{ruleSet}")
 	@Consumes(MediaType.APPLICATION_JSON)
+    @RunOnVirtualThread
 	public CompletionStage<Response> addObject(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -119,6 +123,7 @@ public class Rules {
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
+    @RunOnVirtualThread
 	public CompletionStage<Response> getRegistrations(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 

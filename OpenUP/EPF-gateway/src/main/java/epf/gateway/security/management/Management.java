@@ -20,6 +20,7 @@ import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
 import epf.naming.Naming;
+import io.smallrye.common.annotation.RunOnVirtualThread;
 
 /**
  * 
@@ -54,6 +55,7 @@ public class Management {
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @RunOnVirtualThread
 	public CompletionStage<Response> createCredential(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -75,6 +77,7 @@ public class Management {
     @RolesAllowed(Naming.EPF)
     @Path(Naming.Security.CREDENTIAL)
     @PUT
+    @RunOnVirtualThread
     public CompletionStage<Response> activeCredential(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -98,6 +101,7 @@ public class Management {
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @RunOnVirtualThread
     public CompletionStage<Response> resetPassword(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -120,6 +124,7 @@ public class Management {
     @Path(Naming.Security.Credential.PASSWORD)
     @PUT
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @RunOnVirtualThread
     public CompletionStage<Response> setPassword(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
