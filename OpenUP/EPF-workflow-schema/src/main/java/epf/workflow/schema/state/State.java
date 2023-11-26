@@ -43,7 +43,6 @@ public class State implements Serializable {
 	 * 
 	 */
 	@NotNull
-	@Column("type")
 	@JsonbTransient
 	private Type type_;
 

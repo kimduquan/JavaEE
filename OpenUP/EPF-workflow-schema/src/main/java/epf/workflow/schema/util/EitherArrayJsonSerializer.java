@@ -7,10 +7,10 @@ import jakarta.json.stream.JsonGenerator;
 /**
  * 
  */
-public class EitherArrayJsonSerializer implements JsonbSerializer<Either<? ,?>> {
+public class EitherArrayJsonSerializer implements JsonbSerializer<EitherArray<? ,?>> {
 
 	@Override
-	public void serialize(final Either<?, ?> obj, final JsonGenerator generator, final SerializationContext ctx) {
+	public void serialize(final EitherArray<?, ?> obj, final JsonGenerator generator, final SerializationContext ctx) {
 		if(obj.isLeft()) {
 			ctx.serialize(obj.getLeft(), generator);
 		}
