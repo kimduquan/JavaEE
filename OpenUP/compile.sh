@@ -1,2 +1,2 @@
 . ./env.sh
-mvn clean install -U -DskipTests -Dmaven.test.skip=true -T 1C
+mvn clean install -U -DskipTests -Dmaven.test.skip=true -Dnet.bytebuddy.experimental=true -T 1C
