@@ -61,6 +61,7 @@ import epf.workflow.schema.state.SwitchStateDataConditions;
 import epf.workflow.schema.state.SwitchStateEventConditions;
 import epf.workflow.schema.state.Type;
 import epf.workflow.schema.util.Either;
+import epf.workflow.schema.util.StringOrArray;
 import epf.workflow.state.Branch;
 import epf.workflow.state.util.StateUtil;
 import epf.workflow.util.ELUtil;
@@ -102,6 +103,10 @@ public class WorkflowRuntime {
 	 */
 	@Inject
 	transient WorkflowEventStore workflowEventStore;
+	
+	private <T> List<T> getArray(final StringOrArray<T> either){
+		return either.getRight();
+	}
 
 	/**
 	 * @param workflowDefinition
@@ -189,7 +194,8 @@ public class WorkflowRuntime {
 	
 	private void transitionEventState(final WorkflowDefinition workflowDefinition, final EventState eventState, final WorkflowInstance workflowInstance) {
 		Map<String, EventDefinition> eventDefs = new HashMap<>();
-		MapUtil.putAll(eventDefs, workflowDefinition.getEvents().iterator(), EventDefinition::getName);
+		final List<EventDefinition> events = getArray(workflowDefinition.getEvents());
+		MapUtil.putAll(eventDefs, events.iterator(), EventDefinition::getName);
 		int index = 0;
 		for(OnEventsDefinition onEventsDef : eventState.getOnEvents()) {
 			for(String eventRef : onEventsDef.getEventRefs()) {
@@ -259,7 +265,8 @@ public class WorkflowRuntime {
 		else if(switchState.getEventConditions() != null) {
 			try {
 				final Map<String, EventDefinition> eventDefinitions = new HashMap<>();
-				MapUtil.putAll(eventDefinitions, workflowDefinition.getEvents().iterator(), EventDefinition::getName);
+				final List<EventDefinition> events = getArray(workflowDefinition.getEvents());
+				MapUtil.putAll(eventDefinitions, events.iterator(), EventDefinition::getName);
 				for(SwitchStateEventConditions condition : switchState.getEventConditions()) {
 					if(workflowInstance.isTerminate()) {
 						return;
@@ -572,8 +579,9 @@ public class WorkflowRuntime {
 	
 	private boolean consumeEventStateEvent(final WorkflowDefinition workflowDefinition, final EventState eventState, final OnEventsDefinition onEventsDefinition, final EventDefinition eventDefinition, final EventStateEvent eventStateEvent, final Event event) {
 		boolean isEventConsumed = false;
-		final Map<String, EventDefinition> events = new HashMap<>();
-		MapUtil.putAll(events, workflowDefinition.getEvents().iterator(), EventDefinition::getName);
+		final Map<String, EventDefinition> eventDefs = new HashMap<>();
+		final List<EventDefinition> events = getArray(workflowDefinition.getEvents());
+		MapUtil.putAll(eventDefs, events.iterator(), EventDefinition::getName);
 		for(String eventRef : onEventsDefinition.getEventRefs()) {
 			if(eventRef.equals(eventDefinition.getName())) {
 				if(eventState.isExclusive()) {
@@ -584,7 +592,7 @@ public class WorkflowRuntime {
 					boolean isEventsConsumed = true;
 					for(String consumeEventRef : onEventsDefinition.getEventRefs()) {
 						if(!consumeEventRef.equals(eventDefinition.getName())){
-							final EventDefinition consumeEventDefinition = events.get(consumeEventRef);
+							final EventDefinition consumeEventDefinition = eventDefs.get(consumeEventRef);
 							if(workflowEventStore.count(consumeEventDefinition) == 0) {
 								isEventsConsumed = false;
 								break;
@@ -863,7 +871,8 @@ public class WorkflowRuntime {
 	
 	private void produceEvents(final WorkflowDefinition workflowDefinition, final List<ProducedEventDefinition> produceEvents) throws Exception {
 		final Map<String, EventDefinition> eventDefinitions = new HashMap<>();
-		MapUtil.putAll(eventDefinitions, workflowDefinition.getEvents().iterator(), EventDefinition::getName);
+		final List<EventDefinition> events = getArray(workflowDefinition.getEvents());
+		MapUtil.putAll(eventDefinitions, events.iterator(), EventDefinition::getName);
 		for(ProducedEventDefinition producedEventDefinition : produceEvents) {
 			final EventDefinition eventDefinition = eventDefinitions.get(producedEventDefinition.getEventRef());
 			produceEvent(eventDefinition, producedEventDefinition);
@@ -896,9 +905,10 @@ public class WorkflowRuntime {
 			action = new FunctionAction(workflowDefinition, actionDefinition, actionData);
 		}
 		else if(actionDefinition.getEventRef() != null) {
-			final Map<String, EventDefinition> events = new HashMap<>();
-			MapUtil.putAll(events, workflowDefinition.getEvents().iterator(), EventDefinition::getName);
-			final EventDefinition eventDefinition = events.get(actionDefinition.getEventRef().getProduceEventRef());
+			final Map<String, EventDefinition> eventDefs = new HashMap<>();
+			final List<EventDefinition> events = getArray(workflowDefinition.getEvents());
+			MapUtil.putAll(eventDefs, events.iterator(), EventDefinition::getName);
+			final EventDefinition eventDefinition = eventDefs.get(actionDefinition.getEventRef().getProduceEventRef());
 			action = new ProduceEventAction(workflowDefinition, actionDefinition, eventDefinition, producedEvent, actionData);
 		}
 		else if(actionDefinition.getSubFlowRef() != null) {
@@ -949,7 +959,7 @@ public class WorkflowRuntime {
 	}
 	
 	private List<WorkflowError> getErrors(final WorkflowDefinition workflowDefinition, final ErrorDefinition errorDefinition) {
-		final List<WorkflowError> errors = workflowDefinition.getErrors();
+		final List<WorkflowError> errors = getArray(workflowDefinition.getErrors());
 		if(errorDefinition.getErrorRefs() != null) {
 			final Map<String, WorkflowError> map = new HashMap<>();
 			MapUtil.putAll(map, errors.iterator(), WorkflowError::getName);
@@ -966,7 +976,8 @@ public class WorkflowRuntime {
 	}
 	
 	private EventDefinition getEventDefinition(final WorkflowDefinition workflowDefinition, final String eventRef) {
-		return workflowDefinition.getEvents().stream().filter(eventDef -> eventDef.getName().equals(eventRef)).findFirst().get();
+		final List<EventDefinition> events = getArray(workflowDefinition.getEvents());
+		return events.stream().filter(eventDef -> eventDef.getName().equals(eventRef)).findFirst().get();
 	}
 	
 	private State getState(final WorkflowDefinition workflowDefinition, final String name) {

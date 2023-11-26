@@ -1,6 +1,7 @@
 package epf.workflow.schema;
 
 import epf.json.schema.JsonSchema;
+import epf.workflow.schema.util.StringOrObject;
 import jakarta.nosql.Column;
 import java.io.Serializable;
 import org.eclipse.jnosql.mapping.Embeddable;
@@ -21,7 +22,7 @@ public class DataSchema implements Serializable {
 	 * 
 	 */
 	@Column
-	private JsonSchema schema;
+	private StringOrObject<JsonSchema> schema;
 	
 	/**
 	 * 
@@ -29,10 +30,10 @@ public class DataSchema implements Serializable {
 	@Column
 	private boolean failOnValidationErrors = false;
 	
-	public JsonSchema getSchema() {
+	public StringOrObject<JsonSchema> getSchema() {
 		return schema;
 	}
-	public void setSchema(JsonSchema schema) {
+	public void setSchema(StringOrObject<JsonSchema> schema) {
 		this.schema = schema;
 	}
 	public boolean isFailOnValidationErrors() {

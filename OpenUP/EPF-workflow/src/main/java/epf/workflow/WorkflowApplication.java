@@ -69,6 +69,7 @@ import epf.workflow.schema.state.StateDataFilters;
 import epf.workflow.state.Branch;
 import epf.workflow.state.util.StateUtil;
 import epf.workflow.util.ELUtil;
+import epf.workflow.util.EitherUtil;
 import epf.workflow.util.TimeoutUtil;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import epf.workflow.schema.state.SwitchState;
@@ -191,7 +192,8 @@ public class WorkflowApplication  {
 	}
 	
 	private EventDefinition getEventDefinition(final WorkflowDefinition workflowDefinition, final String event) {
-		return workflowDefinition.getEvents().stream().filter(eventDef -> eventDef.getName().equals(event)).findFirst().get();
+		final List<EventDefinition> events = EitherUtil.getArray(workflowDefinition.getEvents());
+		return events.stream().filter(eventDef -> eventDef.getName().equals(event)).findFirst().get();
 	}
 	
 	private WorkflowDefinition getSubWorkflowDefinition(final Object subFlowRef) {
@@ -290,7 +292,8 @@ public class WorkflowApplication  {
 	
 	private void produceEvents(final WorkflowDefinition workflowDefinition, final List<ProducedEventDefinition> produceEvents, final URI instance) throws Exception {
 		final Map<String, EventDefinition> eventDefinitions = new HashMap<>();
-		MapUtil.putAll(eventDefinitions, workflowDefinition.getEvents().iterator(), EventDefinition::getName);
+		final List<EventDefinition> events = EitherUtil.getArray(workflowDefinition.getEvents());
+		MapUtil.putAll(eventDefinitions, events.iterator(), EventDefinition::getName);
 		for(ProducedEventDefinition producedEventDefinition : produceEvents) {
 			final EventDefinition eventDefinition = eventDefinitions.get(producedEventDefinition.getEventRef());
 			produceEvent(eventDefinition, producedEventDefinition, instance);
@@ -474,8 +477,9 @@ public class WorkflowApplication  {
 	}
 	
 	private Response transitionEventState(final WorkflowDefinition workflowDefinition, final EventState eventState, final URI instance) {
-		Map<String, EventDefinition> eventDefs = new HashMap<>();
-		MapUtil.putAll(eventDefs, workflowDefinition.getEvents().iterator(), EventDefinition::getName);
+		final Map<String, EventDefinition> eventDefs = new HashMap<>();
+		final List<EventDefinition> events = EitherUtil.getArray(workflowDefinition.getEvents());
+		MapUtil.putAll(eventDefs, events.iterator(), EventDefinition::getName);
 		int index = 0;
 		for(OnEventsDefinition onEventsDef : eventState.getOnEvents()) {
 			for(String eventRef : onEventsDef.getEventRefs()) {
@@ -523,7 +527,8 @@ public class WorkflowApplication  {
 		}
 		else if(switchState.getEventConditions() != null) {
 			final Map<String, EventDefinition> eventDefinitions = new HashMap<>();
-			MapUtil.putAll(eventDefinitions, workflowDefinition.getEvents().iterator(), EventDefinition::getName);
+			final List<EventDefinition> events = EitherUtil.getArray(workflowDefinition.getEvents());
+			MapUtil.putAll(eventDefinitions, events.iterator(), EventDefinition::getName);
 			for(SwitchStateEventConditions condition : switchState.getEventConditions()) {
 				final EventDefinition eventDefinition = eventDefinitions.get(condition.getEventRef());
 				boolean isEvent = false;

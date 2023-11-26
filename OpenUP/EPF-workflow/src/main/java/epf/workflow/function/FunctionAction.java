@@ -1,6 +1,7 @@
 package epf.workflow.function;
 
 import java.util.Optional;
+import java.util.List;
 import java.util.Map.Entry;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -16,6 +17,7 @@ import epf.workflow.schema.action.ActionDefinition;
 import epf.workflow.schema.function.FunctionDefinition;
 import epf.workflow.schema.function.FunctionRefDefinition;
 import epf.workflow.schema.function.FunctionType;
+import epf.workflow.util.EitherUtil;
 
 /**
  * @author PC
@@ -36,7 +38,8 @@ public class FunctionAction extends Action {
 	}
 
 	private FunctionDefinition getFunctionDefinition(final WorkflowDefinition workflowDefinition, final String functionRef) {
-		return ListUtil.findFirst(workflowDefinition.getFunctions().iterator(), f -> f.getName().equals(functionRef)).get();
+		final List<FunctionDefinition> functions = EitherUtil.getArray(workflowDefinition.getFunctions());
+		return ListUtil.findFirst(functions.iterator(), f -> f.getName().equals(functionRef)).get();
 	}
 	
 	private void performRestFunction(final WorkflowDefinition workflowDefinition, final FunctionDefinition functionDef, final FunctionRefDefinition functionRef, final WorkflowData workflowData) throws Exception {

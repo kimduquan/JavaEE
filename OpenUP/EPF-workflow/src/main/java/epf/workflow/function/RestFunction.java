@@ -26,6 +26,7 @@ import epf.workflow.schema.auth.Scheme;
 import epf.workflow.schema.function.FunctionDefinition;
 import epf.workflow.schema.function.FunctionRefDefinition;
 import epf.workflow.schema.function.Invoke;
+import epf.workflow.util.EitherUtil;
 
 /**
  * @author PC
@@ -132,7 +133,7 @@ public class RestFunction extends Function {
 			}
 		}
 		if(this.getFunctionDefinition().getAuthRef() != null) {
-			final List<AuthDefinition> authDefs = getWorkflowDefinition().getAuth();
+			final List<AuthDefinition> authDefs = EitherUtil.getArray(getWorkflowDefinition().getAuth());
 			for(AuthDefinition authDef : authDefs) {
 				if(authDef.getName().equals(this.getFunctionDefinition().getAuthRef())) {
 					if(authDef.getScheme() == Scheme.bearer) {

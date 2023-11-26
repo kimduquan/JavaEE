@@ -2,13 +2,16 @@ package epf.workflow.schema;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import jakarta.validation.constraints.NotNull;
 import epf.workflow.schema.event.EventDefinition;
 import epf.workflow.schema.adapter.StartDefinitionAdapter;
+import epf.workflow.schema.adapter.WorkflowTimeoutDefinitionAdapter;
 import epf.workflow.schema.auth.AuthDefinition;
 import epf.workflow.schema.function.FunctionDefinition;
 import epf.workflow.schema.state.State;
+import epf.workflow.schema.util.StringOrArray;
 import epf.workflow.schema.util.StringOrObject;
 import jakarta.nosql.Column;
 import jakarta.nosql.Entity;
@@ -29,7 +32,7 @@ public class WorkflowDefinition implements Serializable {
 	/**
 	 * 
 	 */
-	@Id
+	@Id("id")
 	private String id;
 	
 	/**
@@ -60,25 +63,31 @@ public class WorkflowDefinition implements Serializable {
 	 * 
 	 */
 	@Column
-	private List<Object> annotations;
+	private List<String> annotations;
 	
 	/**
 	 * 
 	 */
 	@Column
-	private DataSchema dataInputSchema;
+	private StringOrObject<DataSchema> dataInputSchema;
 	
 	/**
 	 * 
 	 */
 	@Column
-	private Object constants;
+	private StringOrObject<DataSchema> dataOutputSchema;
 	
 	/**
 	 * 
 	 */
 	@Column
-	private List<Object> secrets;
+	private StringOrObject<Object> constants;
+	
+	/**
+	 * 
+	 */
+	@Column
+	private StringOrArray<String> secrets;
 	
 	/**
 	 * 
@@ -104,13 +113,14 @@ public class WorkflowDefinition implements Serializable {
 	 * 
 	 */
 	@Column
-	private WorkflowTimeoutDefinition timeouts;
+	@JsonbTypeAdapter(value = WorkflowTimeoutDefinitionAdapter.class)
+	private StringOrObject<WorkflowTimeoutDefinition> timeouts;
 	
 	/**
 	 * 
 	 */
 	@Column
-	private List<WorkflowError> errors;
+	private StringOrArray<WorkflowError> errors;
 	
 	/**
 	 * 
@@ -122,19 +132,19 @@ public class WorkflowDefinition implements Serializable {
 	 * 
 	 */
 	@Column
-	private List<AuthDefinition> auth;
+	private StringOrArray<AuthDefinition> auth;
 	
 	/**
 	 * 
 	 */
 	@Column
-	private List<EventDefinition> events;
+	private StringOrArray<EventDefinition> events;
 	
 	/**
 	 * 
 	 */
 	@Column
-	private List<FunctionDefinition> functions;
+	private StringOrArray<FunctionDefinition> functions;
 	
 	/**
 	 * 
@@ -146,7 +156,7 @@ public class WorkflowDefinition implements Serializable {
 	 * 
 	 */
 	@Column
-	private List<RetryDefinition> retries;
+	private StringOrArray<RetryDefinition> retries;
 	
 	/**
 	 * 
@@ -158,13 +168,13 @@ public class WorkflowDefinition implements Serializable {
 	 * 
 	 */
 	@Column
-	private List<Object> extensions;
+	private StringOrArray<Extension> extensions;
 	
 	/**
 	 * 
 	 */
 	@Column
-	private Object metadata;
+	private Map<String, String> metadata;
 
 	public String getId() {
 		return id;
@@ -206,35 +216,43 @@ public class WorkflowDefinition implements Serializable {
 		this.version = version;
 	}
 
-	public List<Object> getAnnotations() {
+	public List<String> getAnnotations() {
 		return annotations;
 	}
 
-	public void setAnnotations(List<Object> annotations) {
+	public void setAnnotations(List<String> annotations) {
 		this.annotations = annotations;
 	}
 
-	public DataSchema getDataInputSchema() {
+	public StringOrObject<DataSchema> getDataInputSchema() {
 		return dataInputSchema;
 	}
 
-	public void setDataInputSchema(DataSchema dataInputSchema) {
+	public void setDataInputSchema(StringOrObject<DataSchema> dataInputSchema) {
 		this.dataInputSchema = dataInputSchema;
 	}
 
-	public Object getConstants() {
+	public StringOrObject<DataSchema> getDataOutputSchema() {
+		return dataOutputSchema;
+	}
+
+	public void setDataOutputSchema(StringOrObject<DataSchema> dataOutputSchema) {
+		this.dataOutputSchema = dataOutputSchema;
+	}
+
+	public StringOrObject<Object> getConstants() {
 		return constants;
 	}
 
-	public void setConstants(Object constants) {
+	public void setConstants(StringOrObject<Object> constants) {
 		this.constants = constants;
 	}
 
-	public List<Object> getSecrets() {
+	public StringOrArray<String> getSecrets() {
 		return secrets;
 	}
 
-	public void setSecrets(List<Object> secrets) {
+	public void setSecrets(StringOrArray<String> secrets) {
 		this.secrets = secrets;
 	}
 
@@ -262,23 +280,23 @@ public class WorkflowDefinition implements Serializable {
 		this.expressionLang = expressionLang;
 	}
 
-	public WorkflowTimeoutDefinition getTimeouts() {
+	public StringOrObject<WorkflowTimeoutDefinition> getTimeouts() {
 		return timeouts;
 	}
 
-	public void setTimeouts(WorkflowTimeoutDefinition timeouts) {
+	public void setTimeouts(StringOrObject<WorkflowTimeoutDefinition> timeouts) {
 		this.timeouts = timeouts;
 	}
 
-	public List<WorkflowError> getErrors() {
+	public StringOrArray<WorkflowError> getErrors() {
 		return errors;
 	}
 
-	public void setErrors(List<WorkflowError> errors) {
+	public void setErrors(StringOrArray<WorkflowError> errors) {
 		this.errors = errors;
 	}
 
-	public Boolean isKeepActive() {
+	public Boolean getKeepActive() {
 		return keepActive;
 	}
 
@@ -286,31 +304,31 @@ public class WorkflowDefinition implements Serializable {
 		this.keepActive = keepActive;
 	}
 
-	public List<AuthDefinition> getAuth() {
+	public StringOrArray<AuthDefinition> getAuth() {
 		return auth;
 	}
 
-	public void setAuth(List<AuthDefinition> auth) {
+	public void setAuth(StringOrArray<AuthDefinition> auth) {
 		this.auth = auth;
 	}
 
-	public List<EventDefinition> getEvents() {
+	public StringOrArray<EventDefinition> getEvents() {
 		return events;
 	}
 
-	public void setEvents(List<EventDefinition> events) {
+	public void setEvents(StringOrArray<EventDefinition> events) {
 		this.events = events;
 	}
 
-	public List<FunctionDefinition> getFunctions() {
+	public StringOrArray<FunctionDefinition> getFunctions() {
 		return functions;
 	}
 
-	public void setFunctions(List<FunctionDefinition> functions) {
+	public void setFunctions(StringOrArray<FunctionDefinition> functions) {
 		this.functions = functions;
 	}
 
-	public Boolean isAutoRetries() {
+	public Boolean getAutoRetries() {
 		return autoRetries;
 	}
 
@@ -318,11 +336,11 @@ public class WorkflowDefinition implements Serializable {
 		this.autoRetries = autoRetries;
 	}
 
-	public List<RetryDefinition> getRetries() {
+	public StringOrArray<RetryDefinition> getRetries() {
 		return retries;
 	}
 
-	public void setRetries(List<RetryDefinition> retries) {
+	public void setRetries(StringOrArray<RetryDefinition> retries) {
 		this.retries = retries;
 	}
 
@@ -334,19 +352,19 @@ public class WorkflowDefinition implements Serializable {
 		this.states = states;
 	}
 
-	public List<Object> getExtensions() {
+	public StringOrArray<Extension> getExtensions() {
 		return extensions;
 	}
 
-	public void setExtensions(List<Object> extensions) {
+	public void setExtensions(StringOrArray<Extension> extensions) {
 		this.extensions = extensions;
 	}
 
-	public Object getMetadata() {
+	public Map<String, String> getMetadata() {
 		return metadata;
 	}
 
-	public void setMetadata(Object metadata) {
+	public void setMetadata(Map<String, String> metadata) {
 		this.metadata = metadata;
 	}
 }
