@@ -17,6 +17,8 @@ import javax.ws.rs.core.Link;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import epf.client.util.LinkComparator;
+import epf.client.util.RequestUtil;
 import epf.naming.Naming;
 
 /**
