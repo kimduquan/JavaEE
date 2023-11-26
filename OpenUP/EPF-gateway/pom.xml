@@ -10,9 +10,6 @@
   </parent>
   <artifactId>EPF-gateway</artifactId>
   <name>Eclipse Process Framework Gateway</name>
-  <properties>
-    <maven.compiler.release>19</maven.compiler.release>
-  </properties>
   <dependencies>
   	<dependency>
       <groupId>io.quarkus</groupId>

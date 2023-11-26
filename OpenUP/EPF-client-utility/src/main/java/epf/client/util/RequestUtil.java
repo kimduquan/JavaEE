@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.CompletionStage;
 import java.util.Map.Entry;
 import java.util.Optional;
 import javax.ws.rs.client.Client;
@@ -190,15 +189,15 @@ public interface RequestUtil {
      * @param body
      * @return
      */
-    static CompletionStage<Response> buildInvoke(
+    static Response buildInvoke(
     		final Builder invoker,
     		final String method, 
     		final MediaType type, 
     		final InputStream body) {
     	if(body == null || type == null) {
-    		return invoker.rx().method(method);
+    		return invoker.method(method);
     	}
-    	return invoker.rx().method(method, Entity.entity(body, type));
+    	return invoker.method(method, Entity.entity(body, type));
     }
     
     /**
@@ -211,7 +210,7 @@ public interface RequestUtil {
      * @param buildForwaredHeaders
      * @return
      */
-    static CompletionStage<Response> buildRequest(
+    static Response buildRequest(
     		final Client client,
     		final URI serviceUri,
     		final HttpHeaders headers, 

@@ -6,7 +6,6 @@ import java.time.Duration;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.CompletionStage;
 import java.util.stream.Stream;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.client.Client;
@@ -18,8 +17,6 @@ import javax.ws.rs.core.Link;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import epf.client.util.LinkComparator;
-import epf.client.util.RequestUtil;
 import epf.naming.Naming;
 
 /**
@@ -36,7 +33,7 @@ public interface HATEOAS {
      * @param link
      * @return
      */
-    static CompletionStage<Response> buildLinkRequest(
+    static Response buildLinkRequest(
     		final Client client,
     		final URI serviceUrl,
     		final HttpHeaders headers,
@@ -55,24 +52,24 @@ public interface HATEOAS {
 		builder = RequestUtil.buildLRAHeaders(builder, response);
 		switch(link.getType()) {
 			case HttpMethod.GET:
-				return builder.rx().get();
+				return builder.get();
 			case HttpMethod.POST:
-				return builder.rx().post(Entity.entity(response.readEntity(InputStream.class), response.getMediaType()));
+				return builder.post(Entity.entity(response.readEntity(InputStream.class), response.getMediaType()));
 			case HttpMethod.PUT:
-				return builder.rx().put(Entity.entity(response.readEntity(InputStream.class), response.getMediaType()));
+				return builder.put(Entity.entity(response.readEntity(InputStream.class), response.getMediaType()));
 			case HttpMethod.DELETE:
-				return builder.rx().delete();
+				return builder.delete();
 			case HttpMethod.HEAD:
-				return builder.rx().head();
+				return builder.head();
 			case HttpMethod.OPTIONS:
-				return builder.rx().options();
+				return builder.options();
 			case HttpMethod.PATCH:
-				return builder.rx().method(HttpMethod.PATCH, Entity.entity(response.readEntity(InputStream.class), response.getMediaType()));
+				return builder.method(HttpMethod.PATCH, Entity.entity(response.readEntity(InputStream.class), response.getMediaType()));
 			default:
 				break;
 		}
 		final Entity<InputStream> entity = response.hasEntity() ? Entity.entity(response.readEntity(InputStream.class), response.getMediaType()) : null;
-		return builder.rx().method(link.getType(), entity);
+		return builder.method(link.getType(), entity);
     }
     
     /**

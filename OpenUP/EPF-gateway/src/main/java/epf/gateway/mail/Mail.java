@@ -1,7 +1,6 @@
 package epf.gateway.mail;
 
 import java.io.InputStream;
-import java.util.concurrent.CompletionStage;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -51,7 +50,7 @@ public class Mail {
     @POST
 	@Consumes(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
-    public CompletionStage<Response> send(
+    public Response send(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,

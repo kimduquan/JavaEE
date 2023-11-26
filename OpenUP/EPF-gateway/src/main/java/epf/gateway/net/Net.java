@@ -3,7 +3,6 @@ package epf.gateway.net;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Map;
-import java.util.concurrent.CompletionStage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
@@ -74,7 +73,7 @@ public class Net {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
     @RunOnVirtualThread
-    public CompletionStage<Response> rewriteUrl(
+    public Response rewriteUrl(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -92,36 +91,34 @@ public class Net {
     @Path("url")
 	@GET
     @RunOnVirtualThread
-    public CompletionStage<Response> temporaryRedirect(
+    public Response temporaryRedirect(
     		@QueryParam("url")
     		final String url
     ) throws Exception {
     	final long id = StringUtil.fromShortString(url);
     	final URI queryUrl = registry.lookup(Naming.QUERY).orElseThrow(NotFoundException::new);
     	final Client client = clients.poll(queryUrl, null);
-    	return client.target(queryUrl)
+    	try(Response response = client.target(queryUrl)
     			.path("entity")
     			.path("EPF_Net")
     			.path("URL")
     			.path(String.valueOf(id))
     			.request(MediaType.APPLICATION_JSON)
-    			.rx()
-    			.get()
-    			.thenApply(response -> {
-					try {
-	    				if(response.getStatus() == 200) {
-	    					final Map<String, Object> map = response.readEntity(new GenericType<Map<String, Object>>(){});
-	    					final String string = String.valueOf(map.get("string"));
-							return Response.temporaryRedirect(new URI(string)).build();
-	    		    	}
-					} 
-					catch (Exception e) {
-						LOGGER.log(Level.SEVERE, e.getMessage(), e);
-					}
-    		    	return response;
-    			})
-    			.whenComplete((r, err) -> {
-    				clients.add(queryUrl, client);
-    			});
+    			.get()){
+    		try {
+    			if(response.getStatus() == 200) {
+					final Map<String, Object> map = response.readEntity(new GenericType<Map<String, Object>>(){});
+					final String string = String.valueOf(map.get("string"));
+					return Response.temporaryRedirect(new URI(string)).build();
+		    	}
+			} 
+			catch (Exception e) {
+				LOGGER.log(Level.SEVERE, e.getMessage(), e);
+			}
+	    	return response;
+    	}
+    	finally {
+    		clients.add(queryUrl, client);
+    	}
     }
 }

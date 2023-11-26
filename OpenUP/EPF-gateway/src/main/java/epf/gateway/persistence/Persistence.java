@@ -1,7 +1,6 @@
 package epf.gateway.persistence;
 
 import java.io.InputStream;
-import java.util.concurrent.CompletionStage;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -58,7 +57,7 @@ public class Persistence {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
-    public CompletionStage<Response> persist(
+    public Response persist(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -82,7 +81,7 @@ public class Persistence {
     @Path("{schema}/{entity}/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
-    public CompletionStage<Response> merge(
+    public Response merge(
     		@Context final SecurityContext context,
     		@Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -106,7 +105,7 @@ public class Persistence {
     @DELETE
     @Path("{schema}/{entity}/{id}")
     @RunOnVirtualThread
-    public CompletionStage<Response> remove(
+    public Response remove(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,

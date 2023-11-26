@@ -1,7 +1,6 @@
 package epf.gateway.security;
 
 import java.io.InputStream;
-import java.util.concurrent.CompletionStage;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
@@ -58,7 +57,7 @@ public class Security {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
     @RunOnVirtualThread
-    public CompletionStage<Response> login(
+    public Response login(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -78,7 +77,7 @@ public class Security {
     @DELETE
     @Produces(MediaType.TEXT_PLAIN)
     @RunOnVirtualThread
-    public CompletionStage<Response> logOut(
+    public Response logOut(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -98,7 +97,7 @@ public class Security {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
-    public CompletionStage<Response> authenticate(
+    public Response authenticate(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -118,7 +117,7 @@ public class Security {
     @PATCH
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @RunOnVirtualThread
-    public CompletionStage<Response> update(
+    public Response update(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -140,7 +139,7 @@ public class Security {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
     @RunOnVirtualThread
-    public CompletionStage<Response> revoke(
+    public Response revoke(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -163,7 +162,7 @@ public class Security {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @RunOnVirtualThread
-    public CompletionStage<Response> authenticateIDToken(
+    public Response authenticateIDToken(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -185,7 +184,7 @@ public class Security {
     @Path(Naming.Security.PRINCIPAL)
     @POST
     @RunOnVirtualThread
-    public CompletionStage<Response> createPrincipal(
+    public Response createPrincipal(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,

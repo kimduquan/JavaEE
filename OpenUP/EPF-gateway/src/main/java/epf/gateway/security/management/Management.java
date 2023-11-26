@@ -1,7 +1,6 @@
 package epf.gateway.security.management;
 
 import java.io.InputStream;
-import java.util.concurrent.CompletionStage;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
@@ -56,7 +55,7 @@ public class Management {
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @RunOnVirtualThread
-	public CompletionStage<Response> createCredential(
+	public Response createCredential(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -78,7 +77,7 @@ public class Management {
     @Path(Naming.Security.CREDENTIAL)
     @PUT
     @RunOnVirtualThread
-    public CompletionStage<Response> activeCredential(
+    public Response activeCredential(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -102,7 +101,7 @@ public class Management {
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @RunOnVirtualThread
-    public CompletionStage<Response> resetPassword(
+    public Response resetPassword(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -125,7 +124,7 @@ public class Management {
     @PUT
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @RunOnVirtualThread
-    public CompletionStage<Response> setPassword(
+    public Response setPassword(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,

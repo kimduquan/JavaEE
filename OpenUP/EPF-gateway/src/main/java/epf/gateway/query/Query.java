@@ -2,7 +2,6 @@ package epf.gateway.query;
 
 import java.io.InputStream;
 import java.util.List;
-import java.util.concurrent.CompletionStage;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -59,7 +58,7 @@ public class Query {
     @Path(Naming.Query.Client.ENTITY_PATH)
 	@Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
-    public CompletionStage<Response> getEntity(
+    public Response getEntity(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -81,7 +80,7 @@ public class Query {
 	@HEAD
 	@Path("entity/{schema}/{entity}")
     @RunOnVirtualThread
-	public CompletionStage<Response> countEntity(
+	public Response countEntity(
 			@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -105,7 +104,7 @@ public class Query {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
-	public CompletionStage<Response> fetchEntities(
+	public Response fetchEntities(
 			@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -126,7 +125,7 @@ public class Query {
     @Path("query/{schema}/{criteria: .+}")
     @Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
-	public CompletionStage<Response> executeQuery(
+	public Response executeQuery(
     		@Context 
     		final SecurityContext context,
             @Context 
@@ -153,7 +152,7 @@ public class Query {
 	@HEAD
     @Path("query/{schema}/{criteria: .+}")
     @RunOnVirtualThread
-	public CompletionStage<Response> executeCountQuery(
+	public Response executeCountQuery(
 			@Context 
 			final SecurityContext context,
             @Context 
@@ -181,7 +180,7 @@ public class Query {
 	@Path(Naming.Query.SEARCH)
 	@Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
-    public CompletionStage<Response> search(
+    public Response search(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -200,7 +199,7 @@ public class Query {
 	@HEAD
 	@Path(Naming.Query.SEARCH)
     @RunOnVirtualThread
-	public CompletionStage<Response> count(
+	public Response count(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,

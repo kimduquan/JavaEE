@@ -5,8 +5,6 @@ import java.net.URI;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
@@ -68,7 +66,7 @@ public class Application {
      * @param req
      * @param body
      */
-    public CompletionStage<Response> buildRequest(
+    public Response buildRequest(
     		final String service,
     		final JsonWebToken jwt,
     		final HttpHeaders headers, 
@@ -82,10 +80,11 @@ public class Application {
     	final Client client = clients.poll(serviceUrl, b -> b);
     	final RequestBuilder builder = new RequestBuilder(client, serviceUrl, req.getMethod(), headers, uriInfo, body, true);
     	final Link self = HATEOAS.selfLink(uriInfo, req, service);
-    	return builder.build()
-    			.thenApply(response -> closeResponse(response, serviceUrl, client))
-    			.thenCompose(response -> buildLinkRequests(response, headers, self))
-    			.thenApply(response -> ResponseUtil.buildResponse(response, uriInfo.getBaseUri()));
+    	Response response = builder.build();
+    	response = closeResponse(response, serviceUrl, client);
+    	response = buildLinkRequests(response, headers, self);
+    	response = ResponseUtil.buildResponse(response, uriInfo.getBaseUri());
+    	return response;
     }
     
     /**
@@ -106,7 +105,7 @@ public class Application {
      * @param link
      * @return
      */
-    private CompletionStage<Response> buildLinkRequest(final Response response, final HttpHeaders headers, final Link link) {
+    private Response buildLinkRequest(final Response response, final HttpHeaders headers, final Link link) {
     	final String service = link.getRel();
 		final URI serviceUrl = registry.lookup(service).orElseThrow(NotFoundException::new);
 		final Client client = clients.poll(serviceUrl, null);
@@ -116,8 +115,7 @@ public class Application {
 			response.bufferEntity();
 			ThreadUtil.sleep(duration);
 		});
-		return HATEOAS.buildLinkRequest(client, serviceUrl, headers, response, link)
-				.whenComplete((res, error) -> closeResponse(response, serviceUrl, client));
+		return HATEOAS.buildLinkRequest(client, serviceUrl, headers, response, link);
     }
     
     /**
@@ -125,13 +123,14 @@ public class Application {
      * @param headers
      * @return
      */
-    private CompletionStage<Response> buildLinkRequests(final Response response, final HttpHeaders headers, final Link self) {
-    	CompletionStage<Response> linkResponse = CompletableFuture.completedFuture(response);
+    private Response buildLinkRequests(final Response response, final HttpHeaders headers, final Link self) {
+    	Response linkResponse = response;
     	final List<Link> links = HATEOAS.getRequestLinks(response).collect(Collectors.toList());
     	for(Link link : links) {
     		if(HATEOAS.isRequestLink(link)) {
     			final Link targetLink = HATEOAS.isSelfLink(link) ? self : link;
-				linkResponse = linkResponse.thenCompose(r -> buildLinkRequest(r, headers, targetLink)).thenCompose(r -> buildLinkRequests(r, headers, targetLink));
+    			linkResponse = buildLinkRequest(linkResponse, headers, targetLink);
+    			linkResponse = buildLinkRequests(linkResponse, headers, targetLink);
     		}
     	}
     	return linkResponse;

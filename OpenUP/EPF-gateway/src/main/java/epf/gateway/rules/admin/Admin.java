@@ -1,7 +1,6 @@
 package epf.gateway.rules.admin;
 
 import java.io.InputStream;
-import java.util.concurrent.CompletionStage;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -54,7 +53,7 @@ public class Admin {
     @PUT
     @Consumes(MediaType.APPLICATION_OCTET_STREAM)
     @RunOnVirtualThread
-    public CompletionStage<Response> registerRuleExecutionSet(
+    public Response registerRuleExecutionSet(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -76,7 +75,7 @@ public class Admin {
     @Path("{ruleSet}")
     @DELETE
     @RunOnVirtualThread
-    public CompletionStage<Response> deregisterRuleExecutionSet(
+    public Response deregisterRuleExecutionSet(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,

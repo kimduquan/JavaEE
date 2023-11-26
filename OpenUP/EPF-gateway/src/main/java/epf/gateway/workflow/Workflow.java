@@ -1,7 +1,6 @@
 package epf.gateway.workflow;
 
 import java.io.InputStream;
-import java.util.concurrent.CompletionStage;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -57,7 +56,7 @@ public class Workflow {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
-    public CompletionStage<Response> newWorkflowDefinition(
+    public Response newWorkflowDefinition(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -81,7 +80,7 @@ public class Workflow {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
-    public CompletionStage<Response> start(
+    public Response start(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
@@ -106,7 +105,7 @@ public class Workflow {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
-    public CompletionStage<Response> getWorkflowDefinition(
+    public Response getWorkflowDefinition(
 			@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,

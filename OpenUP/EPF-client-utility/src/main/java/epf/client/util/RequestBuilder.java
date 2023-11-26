@@ -2,7 +2,6 @@ package epf.client.util;
 
 import java.io.InputStream;
 import java.net.URI;
-import java.util.concurrent.CompletionStage;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -90,12 +89,11 @@ public class RequestBuilder {
 	/**
 	 * @return
 	 */
-	public CompletionStage<Response> build(){
-		CompletionStage<Response> response;
+	public Response build(){
+		Response response;
 		if(clientBuilder != null) {
 			client = clientBuilder.newClient(serviceUrl, b -> b);
-			response = RequestUtil.buildRequest(client, serviceUrl, headers, uriInfo, method, body, buildForwardHeaders)
-					.whenComplete((res, err) -> clientBuilder.close(serviceUrl, client));
+			response = RequestUtil.buildRequest(client, serviceUrl, headers, uriInfo, method, body, buildForwardHeaders);
 		}
 		else {
 			response = RequestUtil.buildRequest(client, serviceUrl, headers, uriInfo, method, body, buildForwardHeaders);

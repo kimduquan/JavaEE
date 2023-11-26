@@ -1,7 +1,6 @@
 package epf.gateway.script;
 
 import java.io.InputStream;
-import java.util.concurrent.CompletionStage;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -43,7 +42,7 @@ public class Script {
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
 	@Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
-    public CompletionStage<Response> eval(
+    public Response eval(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
