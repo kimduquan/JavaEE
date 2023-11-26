@@ -10,7 +10,7 @@
   <artifactId>EPF-workflow</artifactId>
   <name>Eclipse Process Framework Workflow</name>
   <properties>
-    <maven.compiler.release>19</maven.compiler.release>
+    <maven.compiler.release>21</maven.compiler.release>
   </properties>
   <dependencies>
 	<dependency>
