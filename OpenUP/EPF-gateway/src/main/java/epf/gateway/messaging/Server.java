@@ -4,7 +4,6 @@ import java.net.URI;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,12 +17,12 @@ import javax.websocket.SessionException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
+import epf.client.internal.ClientQueue;
 import epf.gateway.Registry;
 import epf.gateway.security.SecurityUtil;
 import epf.naming.Naming;
@@ -58,6 +57,12 @@ public class Server implements HealthCheck {
 	 *
 	 */
 	private URI securityUrl;
+	
+	/**
+	 *
+	 */
+	@Inject
+	transient ClientQueue clients;
 	
 	/**
 	 * 
@@ -155,17 +160,21 @@ public class Server implements HealthCheck {
 	}
 	
 	private void authenticate(final Optional<String> tenant, final String token, final String remotePath, final Session session) {
-		final Client client = ClientBuilder.newClient();
-		final CompletionStage<Response> response = SecurityUtil.authenticate(client, securityUrl, tenant, token);
-		response.thenApply(res -> res.getStatus() == Status.OK.getStatusCode()).whenComplete((isOk, err) -> {
-			if(err != null || !isOk) {
-				closeSession(session, new CloseReason(CloseReason.CloseCodes.VIOLATED_POLICY, ""));
-			}
-			else {
+		final Client client = clients.poll(securityUrl, null);
+		try(Response response = SecurityUtil.authenticate(client, securityUrl, tenant, token)){
+			if(response.getStatus() == Status.OK.getStatusCode()) {
 				putSession(remotePath, session);
 			}
-			client.close();
-		});
+			else {
+				closeSession(session, new CloseReason(CloseReason.CloseCodes.VIOLATED_POLICY, ""));
+			}
+		}
+		catch(Exception ex) {
+			closeSession(session, new CloseReason(CloseReason.CloseCodes.VIOLATED_POLICY, ""));
+		}
+		finally {
+			clients.add(securityUrl, client);
+		}
 	}
 	
 	private void putSession(final String path, final Session session) {

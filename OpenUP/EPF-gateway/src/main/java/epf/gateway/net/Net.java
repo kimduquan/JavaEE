@@ -15,7 +15,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.HttpHeaders;
@@ -25,6 +24,7 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.health.Readiness;
 import epf.gateway.Registry;
+import epf.client.internal.ClientQueue;
 import epf.gateway.Application;
 import epf.naming.Naming;
 import epf.util.StringUtil;
@@ -44,6 +44,12 @@ public class Net {
 	 *
 	 */
 	private transient static final Logger LOGGER = LogManager.getLogger(Net.class.getName());
+	
+	/**
+	 *
+	 */
+	@Inject
+	transient ClientQueue clients;
     
     /**
      * 
@@ -94,7 +100,7 @@ public class Net {
     ) throws Exception {
     	final long id = StringUtil.fromShortString(url);
     	final URI queryUrl = registry.lookup(Naming.QUERY).orElseThrow(NotFoundException::new);
-    	final Client client = ClientBuilder.newClient();
+    	final Client client = clients.poll(queryUrl, null);
     	try(Response response = client.target(queryUrl)
     			.path("entity")
     			.path("EPF_Net")
@@ -113,6 +119,9 @@ public class Net {
 				LOGGER.log(Level.SEVERE, e.getMessage(), e);
 			}
 	    	return response;
+    	}
+    	finally {
+    		clients.add(queryUrl, client);
     	}
     }
 }

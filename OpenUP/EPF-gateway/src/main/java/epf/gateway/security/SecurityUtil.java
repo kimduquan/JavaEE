@@ -4,7 +4,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.CompletionStage;
 import javax.websocket.Session;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
@@ -42,7 +41,7 @@ public interface SecurityUtil {
 	 * @param token
 	 * @return
 	 */
-	static CompletionStage<Response> authenticate(final Client client, final URI securityUrl, final Optional<String> tenant, final String token) {
+	static Response authenticate(final Client client, final URI securityUrl, final Optional<String> tenant, final String token) {
 		final StringBuilder builder = new StringBuilder();
 		builder.append("Bearer ").append(token);
 		WebTarget target = client.target(securityUrl);
@@ -51,7 +50,6 @@ public interface SecurityUtil {
 		}
 		return target.request(MediaType.APPLICATION_JSON_TYPE)
 				.header(HttpHeaders.AUTHORIZATION, builder.toString())
-				.rx()
 				.get();
 	}
 }

@@ -10,11 +10,11 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
+import epf.client.internal.ClientQueue;
 import epf.naming.Naming;
 import epf.util.MapUtil;
 import epf.util.logging.LogManager;
@@ -38,11 +38,17 @@ public class Registry implements HealthCheck  {
 	private transient final Map<String, URI> remotes = new ConcurrentHashMap<>();
 	
 	/**
+	 *
+	 */
+	@Inject
+	transient ClientQueue clients;
+	
+	/**
 	 * 
 	 */
 	@ConfigProperty(name = Naming.Registry.REGISTRY_URL)
 	@Inject
-	String registryUrl;
+	URI registryUrl;
 	
 	/**
 	 * 
@@ -54,21 +60,23 @@ public class Registry implements HealthCheck  {
 	
 	private void initialize() {
 		if(remotes.isEmpty()) {
+			final Client client = clients.poll(registryUrl, null);
 			try {
-				final Client client = ClientBuilder.newClient();
 				client.target(registryUrl)
 				.queryParam(Naming.Registry.Filter.SCHEME, "http", "ws")
 				.request()
 				.get()
 				.getLinks()
 				.forEach(link -> remotes.put(link.getRel(), link.getUri()));
-				client.close();
 				remotes.forEach((name, url) -> {
 					LOGGER.info(String.format("%s=%s", name, url));
 				});
 			}
 			catch(Exception ex) {
 				LOGGER.log(Level.SEVERE, "[Registry.call]", ex);
+			}
+			finally {
+				clients.add(registryUrl, client);
 			}
 		}
 	}
