@@ -70,7 +70,7 @@ public interface TimeoutUtil {
 	 */
 	static WorkflowTimeoutDefinition getTimeouts(final WorkflowDefinition workflowDefinition, final State state) {
 		WorkflowTimeoutDefinition workflowTimeoutDefinition = getTimeouts(null, workflowDefinition.getTimeouts());
-		switch(state.getType()) {
+		switch(state.getType_()) {
 			case event:
 				final EventState eventState = (EventState)state;
 				workflowTimeoutDefinition = getTimeouts(workflowTimeoutDefinition, eventState.getTimeouts());

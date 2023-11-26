@@ -97,7 +97,7 @@ public class OperationState extends State {
 	 * 
 	 */
 	public OperationState() {
-		setType(Type.operation);
+		setType_(Type.operation);
 	}
 
 	public Mode getActionMode() {

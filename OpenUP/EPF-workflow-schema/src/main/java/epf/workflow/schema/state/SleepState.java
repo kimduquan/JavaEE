@@ -48,7 +48,7 @@ public class SleepState extends State {
 	 * 
 	 */
 	public SleepState() {
-		setType(Type.sleep);
+		setType_(Type.sleep);
 	}
 	
 	public String getDuration() {

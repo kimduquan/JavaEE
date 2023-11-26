@@ -91,7 +91,7 @@ public class ParallelState extends State {
 	 * 
 	 */
 	public ParallelState() {
-		setType(Type.parallel);
+		setType_(Type.parallel);
 	}
 	
 	public List<ParallelStateBranch> getBranches() {

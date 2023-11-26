@@ -90,7 +90,7 @@ public class EventState extends State {
 	 * 
 	 */
 	public EventState() {
-		setType(Type.event);
+		setType_(Type.event);
 	}
 
 	public Boolean isExclusive() {

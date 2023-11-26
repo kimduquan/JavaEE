@@ -396,7 +396,7 @@ public class WorkflowApplication  {
 	
 	private String getCompensatedBy(final State state) {
 		String compensatedBy = null;
-		switch(state.getType()) {
+		switch(state.getType_()) {
 			case event:
 				final EventState eventState = (EventState)state;
 				compensatedBy = eventState.getCompensatedBy();
@@ -737,7 +737,7 @@ public class WorkflowApplication  {
 		final WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
 		final State nextState = getState(workflowDefinition, state);
 		cacheState(state, instance, workflowData);
-		switch(nextState.getType()) {
+		switch(nextState.getType_()) {
 			case event:
 				final EventState eventState = (EventState)nextState;
 				return transitionEventState(workflowDefinition, eventState, instance);

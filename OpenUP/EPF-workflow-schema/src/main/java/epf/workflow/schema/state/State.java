@@ -43,9 +43,9 @@ public class State implements Serializable {
 	 * 
 	 */
 	@NotNull
-	@Column
+	@Column("type")
 	@JsonbTransient
-	private Type type;
+	private Type type_;
 
 	public String getName() {
 		return name;
@@ -55,11 +55,11 @@ public class State implements Serializable {
 		this.name = name;
 	}
 
-	public Type getType() {
-		return type;
+	public Type getType_() {
+		return type_;
 	}
 
-	public void setType(Type type) {
-		this.type = type;
+	public void setType_(Type type_) {
+		this.type_ = type_;
 	}
 }

@@ -94,7 +94,7 @@ public class CallbackState extends State {
 	 * 
 	 */
 	public CallbackState() {
-		setType(Type.callback);
+		setType_(Type.callback);
 	}
 	
 	public ActionDefinition getAction() {

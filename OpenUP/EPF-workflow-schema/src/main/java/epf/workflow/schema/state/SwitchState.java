@@ -76,7 +76,7 @@ public class SwitchState extends State {
 	 * 
 	 */
 	public SwitchState() {
-		setType(Type.Switch);
+		setType_(Type.Switch);
 	}
 	
 	public List<SwitchStateDataConditions> getDataConditions() {

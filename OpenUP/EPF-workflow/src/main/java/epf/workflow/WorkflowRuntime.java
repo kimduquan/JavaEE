@@ -149,7 +149,7 @@ public class WorkflowRuntime {
 		if(workflowInstance.isTerminate()) {
 			return;
 		}
-		switch(state.getType()) {
+		switch(state.getType_()) {
 			case event:
 				final EventState eventState = (EventState)state;
 				transitionEventState(workflowDefinition, eventState, workflowInstance);
@@ -511,7 +511,7 @@ public class WorkflowRuntime {
 		eventStateEvents.forEach(eventStateEvent -> {
 			final WorkflowDefinition workflowDefinition = workflowPersistence.find(eventStateEvent.getWorkflowDefinition()).get();
 			final State state = getState(workflowDefinition, eventStateEvent.getState());
-			if(state.getType() == Type.event) {
+			if(state.getType_() == Type.event) {
 				final EventState eventState = (EventState) state;
 				if(eventStateEvent.getOnEventsDefinition() >= 0 && eventStateEvent.getOnEventsDefinition() < eventState.getOnEvents().size()) {
 					final OnEventsDefinition onEventsDefinition = eventState.getOnEvents().get(eventStateEvent.getOnEventsDefinition());
@@ -526,7 +526,7 @@ public class WorkflowRuntime {
 		eventStateActionEventStream.forEach(eventStateActionEvent -> {
 			final WorkflowDefinition workflowDefinition = workflowPersistence.find(eventStateActionEvent.getWorkflowDefinition()).get();
 			final State state = getState(workflowDefinition, eventStateActionEvent.getState());
-			if(state.getType() == Type.event) {
+			if(state.getType_() == Type.event) {
 				boolean isEventConsumed = false;
 				final EventState eventState = (EventState) state;
 				if(eventStateActionEvent.getOnEventsDefinition() >= 0 && eventStateActionEvent.getOnEventsDefinition() < eventState.getOnEvents().size()) {
@@ -555,7 +555,7 @@ public class WorkflowRuntime {
 		callbackStateEvents.forEach(callbackStateEvent -> {
 			final WorkflowDefinition workflowDefinition = workflowPersistence.find(callbackStateEvent.getWorkflowDefinition()).get();
 			final State state = getState(workflowDefinition, callbackStateEvent.getState());
-			if(state.getType() == Type.callback) {
+			if(state.getType_() == Type.callback) {
 				final CallbackState callbackState = (CallbackState)state;
 				final EventDefinition eventDefinition = getEventDefinition(workflowDefinition, callbackState.getEventRef());
 				final WorkflowInstance workflowInstance = workflowPersistence.getInstance(callbackStateEvent.getSubject());
@@ -712,7 +712,7 @@ public class WorkflowRuntime {
 	
 	private void compensateState(final WorkflowDefinition workflowDefinition, final State state, final WorkflowInstance workflowInstance) throws Exception {
 		String compensatedBy = null;
-		switch(state.getType()) {
+		switch(state.getType_()) {
 			case event:
 				final EventState eventState = (EventState)state;
 				compensatedBy = eventState.getCompensatedBy();

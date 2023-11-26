@@ -109,7 +109,7 @@ public class ForEachState extends State {
 	 * 
 	 */
 	public ForEachState() {
-		setType(Type.foreach);
+		setType_(Type.foreach);
 	}
 	
 	public String getInputCollection() {

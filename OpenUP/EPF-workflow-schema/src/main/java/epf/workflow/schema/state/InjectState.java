@@ -69,7 +69,7 @@ public class InjectState extends State {
 	 * 
 	 */
 	public InjectState() {
-		setType(Type.inject);
+		setType_(Type.inject);
 	}
 	
 	public Map<String, Object> getData() {
