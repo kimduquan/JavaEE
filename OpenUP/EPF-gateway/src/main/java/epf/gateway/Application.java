@@ -78,6 +78,7 @@ public class Application {
     	response = closeResponse(response);
     	response = buildLinkRequests(client, response, headers, self);
     	response = ResponseUtil.buildResponse(response, uriInfo.getBaseUri());
+    	client.close();
     	return response;
     }
     
