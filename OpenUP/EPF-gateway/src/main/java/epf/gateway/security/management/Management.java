@@ -19,6 +19,7 @@ import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
 import epf.naming.Naming;
+import io.smallrye.common.annotation.Blocking;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
 /**
@@ -55,6 +56,7 @@ public class Management {
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @RunOnVirtualThread
+    @Blocking
 	public Response createCredential(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -77,6 +79,7 @@ public class Management {
     @Path(Naming.Security.CREDENTIAL)
     @PUT
     @RunOnVirtualThread
+    @Blocking
     public Response activeCredential(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -101,6 +104,7 @@ public class Management {
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @RunOnVirtualThread
+    @Blocking
     public Response resetPassword(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -124,6 +128,7 @@ public class Management {
     @PUT
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @RunOnVirtualThread
+    @Blocking
     public Response setPassword(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 

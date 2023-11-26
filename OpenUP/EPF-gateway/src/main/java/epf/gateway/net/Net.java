@@ -29,6 +29,7 @@ import epf.gateway.Application;
 import epf.naming.Naming;
 import epf.util.StringUtil;
 import epf.util.logging.LogManager;
+import io.smallrye.common.annotation.Blocking;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
 /**
@@ -73,6 +74,7 @@ public class Net {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
     @RunOnVirtualThread
+    @Blocking
     public Response rewriteUrl(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -91,6 +93,7 @@ public class Net {
     @Path("url")
 	@GET
     @RunOnVirtualThread
+    @Blocking
     public Response temporaryRedirect(
     		@QueryParam("url")
     		final String url

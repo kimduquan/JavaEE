@@ -21,6 +21,7 @@ import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
 import epf.naming.Naming;
+import io.smallrye.common.annotation.Blocking;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
 /**
@@ -57,6 +58,7 @@ public class Persistence {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
+    @Blocking
     public Response persist(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -81,6 +83,7 @@ public class Persistence {
     @Path("{schema}/{entity}/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
+    @Blocking
     public Response merge(
     		@Context final SecurityContext context,
     		@Context final HttpHeaders headers, 
@@ -105,6 +108,7 @@ public class Persistence {
     @DELETE
     @Path("{schema}/{entity}/{id}")
     @RunOnVirtualThread
+    @Blocking
     public Response remove(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 

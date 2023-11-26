@@ -16,6 +16,7 @@ import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
 import epf.naming.Naming;
+import io.smallrye.common.annotation.Blocking;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
 /**
@@ -50,6 +51,7 @@ public class Mail {
     @POST
 	@Consumes(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
+    @Blocking
     public Response send(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 

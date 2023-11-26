@@ -22,6 +22,7 @@ import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
 import epf.naming.Naming;
+import io.smallrye.common.annotation.Blocking;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
 /**
@@ -57,6 +58,7 @@ public class Security {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
     @RunOnVirtualThread
+    @Blocking
     public Response login(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -77,6 +79,7 @@ public class Security {
     @DELETE
     @Produces(MediaType.TEXT_PLAIN)
     @RunOnVirtualThread
+    @Blocking
     public Response logOut(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -97,6 +100,7 @@ public class Security {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
+    @Blocking
     public Response authenticate(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -117,6 +121,7 @@ public class Security {
     @PATCH
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @RunOnVirtualThread
+    @Blocking
     public Response update(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -139,6 +144,7 @@ public class Security {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
     @RunOnVirtualThread
+    @Blocking
     public Response revoke(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -162,6 +168,7 @@ public class Security {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @RunOnVirtualThread
+    @Blocking
     public Response authenticateIDToken(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -184,6 +191,7 @@ public class Security {
     @Path(Naming.Security.PRINCIPAL)
     @POST
     @RunOnVirtualThread
+    @Blocking
     public Response createPrincipal(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
