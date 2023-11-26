@@ -18,13 +18,12 @@ import javax.websocket.SessionException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
-
-import epf.client.internal.ClientQueue;
 import epf.gateway.Registry;
 import epf.gateway.security.SecurityUtil;
 import epf.naming.Naming;
@@ -65,12 +64,6 @@ public class Server implements HealthCheck {
 	 */
 	@Inject @Readiness
 	transient Registry registry;
-	
-	/**
-	 *
-	 */
-	@Inject
-	transient ClientQueue clients;
 	
 	/**
 	 * 
@@ -162,7 +155,7 @@ public class Server implements HealthCheck {
 	}
 	
 	private void authenticate(final Optional<String> tenant, final String token, final String remotePath, final Session session) {
-		final Client client = clients.poll(securityUrl, null);
+		final Client client = ClientBuilder.newClient();
 		final CompletionStage<Response> response = SecurityUtil.authenticate(client, securityUrl, tenant, token);
 		response.thenApply(res -> res.getStatus() == Status.OK.getStatusCode()).whenComplete((isOk, err) -> {
 			if(err != null || !isOk) {
@@ -171,7 +164,7 @@ public class Server implements HealthCheck {
 			else {
 				putSession(remotePath, session);
 			}
-			clients.add(securityUrl, client);
+			client.close();
 		});
 	}
 	
