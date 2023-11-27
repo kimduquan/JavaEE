@@ -96,6 +96,9 @@ public class PrimitiveOrObjectCodec<T extends Either<L, R>, L, R> implements Cod
 		else if(isRight) {
 			encodeObject(writer, encoderContext, value.getRight());
 		}
+		else {
+			writer.writeNull();
+		}
 	}
 
 	@Override
