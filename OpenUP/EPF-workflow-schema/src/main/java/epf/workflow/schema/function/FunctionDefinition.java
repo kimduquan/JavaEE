@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import epf.workflow.schema.function.mapping.FunctionTypeConverter;
 import jakarta.nosql.Column;
 import java.io.Serializable;
+import java.util.Map;
 import org.eclipse.jnosql.mapping.Convert;
 import org.eclipse.jnosql.mapping.Embeddable;
 
@@ -49,7 +50,7 @@ public class FunctionDefinition implements Serializable {
 	/**
 	 * 
 	 */
-	private Object metadata;
+	private Map<String, String> metadata;
 
 	public String getName() {
 		return name;
@@ -83,11 +84,11 @@ public class FunctionDefinition implements Serializable {
 		this.authRef = authRef;
 	}
 
-	public Object getMetadata() {
+	public Map<String, String> getMetadata() {
 		return metadata;
 	}
 
-	public void setMetadata(Object metadata) {
+	public void setMetadata(Map<String, String> metadata) {
 		this.metadata = metadata;
 	}
 }

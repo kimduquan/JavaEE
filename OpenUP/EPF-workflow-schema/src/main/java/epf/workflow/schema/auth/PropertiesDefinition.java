@@ -2,6 +2,7 @@ package epf.workflow.schema.auth;
 
 import jakarta.nosql.Column;
 import java.io.Serializable;
+import java.util.Map;
 import org.eclipse.jnosql.mapping.MappedSuperclass;
 
 /**
@@ -20,13 +21,13 @@ public class PropertiesDefinition implements Serializable {
 	 * 
 	 */
 	@Column
-	private Object metadata;
+	private Map<String, String> metadata;
 
-	public Object getMetadata() {
+	public Map<String, String> getMetadata() {
 		return metadata;
 	}
 
-	public void setMetadata(Object metadata) {
+	public void setMetadata(Map<String, String> metadata) {
 		this.metadata = metadata;
 	}
 }

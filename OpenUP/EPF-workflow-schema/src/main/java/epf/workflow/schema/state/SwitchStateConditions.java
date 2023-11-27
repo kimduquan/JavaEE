@@ -9,6 +9,7 @@ import epf.workflow.schema.util.BooleanOrObject;
 import epf.workflow.schema.util.StringOrObject;
 import jakarta.nosql.Column;
 import java.io.Serializable;
+import java.util.Map;
 import org.eclipse.jnosql.mapping.MappedSuperclass;
 
 /**
@@ -44,7 +45,7 @@ public class SwitchStateConditions implements Serializable {
 	 * 
 	 */
 	@Column
-	private Object metadata;
+	private Map<String, String> metadata;
 	
 	public String getName() {
 		return name;
@@ -64,10 +65,10 @@ public class SwitchStateConditions implements Serializable {
 	public void setEnd(BooleanOrObject<EndDefinition> end) {
 		this.end = end;
 	}
-	public Object getMetadata() {
+	public Map<String, String> getMetadata() {
 		return metadata;
 	}
-	public void setMetadata(Object metadata) {
+	public void setMetadata(Map<String, String> metadata) {
 		this.metadata = metadata;
 	}
 

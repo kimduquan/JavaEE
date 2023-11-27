@@ -386,11 +386,11 @@ public class WorkflowRuntime {
 		filterStateDataInput(forEachState.getStateDataFilter(), workflowInstance.getWorkflowData());
 		final List<?> inputCollection = (List<?>) ELUtil.getValue(forEachState.getInputCollection(), workflowInstance.getWorkflowData().getInput());
 		int batchSize = inputCollection.size();
-		if(forEachState.getBatchSize() instanceof String) {
-			batchSize = Integer.valueOf((String)forEachState.getBatchSize());
+		if(forEachState.getBatchSize().isLeft()) {
+			batchSize = Integer.valueOf(forEachState.getBatchSize().getLeft());
 		}
-		else if(forEachState.getBatchSize() instanceof Integer) {
-			batchSize = (int) forEachState.getBatchSize();
+		else if(forEachState.getBatchSize().isRight()){
+			batchSize = forEachState.getBatchSize().getRight().intValue();
 		}
 		List<Branch> iterations = null;
 		try {
