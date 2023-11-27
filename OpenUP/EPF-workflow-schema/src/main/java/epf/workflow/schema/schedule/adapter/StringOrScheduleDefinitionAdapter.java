@@ -7,12 +7,12 @@ import epf.workflow.schema.util.StringOrObjectJsonAdapter;
  * @author PC
  *
  */
-public class ScheduleDefinitionAdapter extends StringOrObjectJsonAdapter<ScheduleDefinition> {
+public class StringOrScheduleDefinitionAdapter extends StringOrObjectJsonAdapter<ScheduleDefinition> {
 
 	/**
 	 * 
 	 */
-	public ScheduleDefinitionAdapter() {
+	public StringOrScheduleDefinitionAdapter() {
 		super(ScheduleDefinition.class);
 	}
 }

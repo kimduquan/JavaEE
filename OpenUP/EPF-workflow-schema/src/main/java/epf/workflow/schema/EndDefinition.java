@@ -3,7 +3,7 @@ package epf.workflow.schema;
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import epf.workflow.schema.event.ProducedEventDefinition;
 import epf.workflow.schema.util.StringOrObject;
-import epf.workflow.schema.adapter.ContinueAsAdapter;
+import epf.workflow.schema.adapter.StringOrContinueAsAdapter;
 import jakarta.nosql.Column;
 import java.io.Serializable;
 import java.util.List;
@@ -40,7 +40,7 @@ public class EndDefinition implements Serializable {
 	 * 
 	 */
 	@Column
-	@JsonbTypeAdapter(value = ContinueAsAdapter.class)
+	@JsonbTypeAdapter(value = StringOrContinueAsAdapter.class)
 	private StringOrObject<ContinueAs> continueAs;
 	
 	public Boolean isTerminate() {

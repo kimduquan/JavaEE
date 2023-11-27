@@ -10,8 +10,8 @@ import epf.workflow.schema.ErrorDefinition;
 import epf.workflow.schema.TransitionDefinition;
 import epf.workflow.schema.WorkflowTimeoutDefinition;
 import epf.workflow.schema.action.ActionDefinition;
-import epf.workflow.schema.adapter.EndDefinitionAdapter;
-import epf.workflow.schema.adapter.TransitionDefinitionAdapter;
+import epf.workflow.schema.adapter.BooleanOrEndDefinitionAdapter;
+import epf.workflow.schema.adapter.StringOrTransitionDefinitionAdapter;
 import jakarta.nosql.Column;
 import java.util.List;
 import org.eclipse.jnosql.mapping.DiscriminatorValue;
@@ -66,13 +66,13 @@ public class CallbackState extends State {
 	 * 
 	 */
 	@Column
-	@JsonbTypeAdapter(value = TransitionDefinitionAdapter.class)
+	@JsonbTypeAdapter(value = StringOrTransitionDefinitionAdapter.class)
 	private StringOrObject<TransitionDefinition> transition;
 	/**
 	 * 
 	 */
 	@Column
-	@JsonbTypeAdapter(value = EndDefinitionAdapter.class)
+	@JsonbTypeAdapter(value = BooleanOrEndDefinitionAdapter.class)
 	private BooleanOrObject<EndDefinition> end;
 	/**
 	 * 

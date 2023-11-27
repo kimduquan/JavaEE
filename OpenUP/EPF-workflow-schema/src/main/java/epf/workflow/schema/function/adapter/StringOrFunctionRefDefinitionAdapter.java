@@ -7,12 +7,12 @@ import epf.workflow.schema.util.StringOrObjectJsonAdapter;
  * @author PC
  *
  */
-public class FunctionRefDefinitionAdapter extends StringOrObjectJsonAdapter<FunctionRefDefinition> {
+public class StringOrFunctionRefDefinitionAdapter extends StringOrObjectJsonAdapter<FunctionRefDefinition> {
 
 	/**
 	 * 
 	 */
-	public FunctionRefDefinitionAdapter() {
+	public StringOrFunctionRefDefinitionAdapter() {
 		super(FunctionRefDefinition.class);
 	}
 }

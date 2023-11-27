@@ -7,12 +7,12 @@ import epf.workflow.schema.util.StringOrObjectJsonAdapter;
  * @author PC
  *
  */
-public class ContinueAsAdapter extends StringOrObjectJsonAdapter<ContinueAs> {
+public class StringOrContinueAsAdapter extends StringOrObjectJsonAdapter<ContinueAs> {
 
 	/**
 	 * 
 	 */
-	public ContinueAsAdapter() {
+	public StringOrContinueAsAdapter() {
 		super(ContinueAs.class);
 	}
 }

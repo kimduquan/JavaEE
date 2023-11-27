@@ -3,11 +3,11 @@ package epf.workflow.schema.action;
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import epf.workflow.schema.event.EventRefDefinition;
 import epf.workflow.schema.function.FunctionRefDefinition;
-import epf.workflow.schema.function.adapter.FunctionRefDefinitionAdapter;
+import epf.workflow.schema.function.adapter.StringOrFunctionRefDefinitionAdapter;
 import epf.workflow.schema.util.StringOrObject;
 import epf.workflow.schema.SubFlowRefDefinition;
 import epf.workflow.schema.WorkflowError;
-import epf.workflow.schema.adapter.SubFlowRefDefinitionAdapter;
+import epf.workflow.schema.adapter.StringOrSubFlowRefDefinitionAdapter;
 import jakarta.nosql.Column;
 import java.io.Serializable;
 import java.util.List;
@@ -35,7 +35,7 @@ public class ActionDefinition implements Serializable {
 	 * 
 	 */
 	@Column
-	@JsonbTypeAdapter(value = FunctionRefDefinitionAdapter.class)
+	@JsonbTypeAdapter(value = StringOrFunctionRefDefinitionAdapter.class)
 	private StringOrObject<FunctionRefDefinition> functionRef;
 	
 	/**
@@ -48,7 +48,7 @@ public class ActionDefinition implements Serializable {
 	 * 
 	 */
 	@Column
-	@JsonbTypeAdapter(value = SubFlowRefDefinitionAdapter.class)
+	@JsonbTypeAdapter(value = StringOrSubFlowRefDefinitionAdapter.class)
 	private StringOrObject<SubFlowRefDefinition> subFlowRef;
 	
 	/**

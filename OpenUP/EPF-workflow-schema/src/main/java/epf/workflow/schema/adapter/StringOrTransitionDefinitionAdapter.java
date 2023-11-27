@@ -7,12 +7,12 @@ import epf.workflow.schema.util.StringOrObjectJsonAdapter;
  * @author PC
  *
  */
-public class TransitionDefinitionAdapter extends StringOrObjectJsonAdapter<TransitionDefinition> {
+public class StringOrTransitionDefinitionAdapter extends StringOrObjectJsonAdapter<TransitionDefinition> {
 
 	/**
 	 * 
 	 */
-	public TransitionDefinitionAdapter() {
+	public StringOrTransitionDefinitionAdapter() {
 		super(TransitionDefinition.class);
 	}
 }

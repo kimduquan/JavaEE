@@ -7,12 +7,12 @@ import epf.workflow.schema.util.StringOrObjectJsonAdapter;
  * @author PC
  *
  */
-public class WorkflowTimeoutDefinitionAdapter extends StringOrObjectJsonAdapter<WorkflowTimeoutDefinition> {
+public class StringOrWorkflowTimeoutDefinitionAdapter extends StringOrObjectJsonAdapter<WorkflowTimeoutDefinition> {
 
 	/**
 	 * 
 	 */
-	public WorkflowTimeoutDefinitionAdapter() {
+	public StringOrWorkflowTimeoutDefinitionAdapter() {
 		super(WorkflowTimeoutDefinition.class);
 	}
 }

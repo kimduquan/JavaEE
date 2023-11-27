@@ -7,12 +7,12 @@ import epf.workflow.schema.util.StringOrObjectJsonAdapter;
  * @author PC
  *
  */
-public class CronDefinitionAdapter extends StringOrObjectJsonAdapter<CronDefinition> {
+public class StringOrCronDefinitionAdapter extends StringOrObjectJsonAdapter<CronDefinition> {
 
 	/**
 	 * 
 	 */
-	public CronDefinitionAdapter() {
+	public StringOrCronDefinitionAdapter() {
 		super(CronDefinition.class);
 	}
 }

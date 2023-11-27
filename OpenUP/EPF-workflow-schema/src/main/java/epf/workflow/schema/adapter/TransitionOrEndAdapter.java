@@ -17,6 +17,6 @@ public class TransitionOrEndAdapter extends EitherOrEitherJsonAdapter<Transition
 	 * 
 	 */
 	public TransitionOrEndAdapter() {
-		super(TransitionOrEnd.TRANSITION, new TransitionDefinitionAdapter(), TransitionOrEnd.END, new EndDefinitionAdapter(), TransitionOrEnd.class);
+		super(TransitionOrEnd.TRANSITION, new StringOrTransitionDefinitionAdapter(), TransitionOrEnd.END, new BooleanOrEndDefinitionAdapter(), TransitionOrEnd.class);
 	}
 }

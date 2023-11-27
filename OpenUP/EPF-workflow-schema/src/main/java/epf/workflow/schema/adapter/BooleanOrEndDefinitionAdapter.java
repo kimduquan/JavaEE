@@ -7,12 +7,12 @@ import epf.workflow.schema.util.BooleanOrObjectJsonAdapter;
  * @author PC
  *
  */
-public class EndDefinitionAdapter extends BooleanOrObjectJsonAdapter<EndDefinition> {
+public class BooleanOrEndDefinitionAdapter extends BooleanOrObjectJsonAdapter<EndDefinition> {
 
 	/**
 	 * 
 	 */
-	public EndDefinitionAdapter() {
+	public BooleanOrEndDefinitionAdapter() {
 		super(EndDefinition.class);
 	}
 }

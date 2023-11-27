@@ -6,10 +6,17 @@ import java.util.Map;
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import jakarta.validation.constraints.NotNull;
 import epf.workflow.schema.event.EventDefinition;
-import epf.workflow.schema.adapter.StartDefinitionAdapter;
-import epf.workflow.schema.adapter.WorkflowTimeoutDefinitionAdapter;
+import epf.workflow.schema.event.adapter.StringOrArrayEventDefinitionAdapter;
+import epf.workflow.schema.adapter.StringOrArrayExtensionAdapter;
+import epf.workflow.schema.adapter.StringOrArrayRetryDefinitionAdapter;
+import epf.workflow.schema.adapter.StringOrArrayWorkflowErrorAdapter;
+import epf.workflow.schema.adapter.StringOrDataSchemaAdapter;
+import epf.workflow.schema.adapter.StringOrStartDefinitionAdapter;
+import epf.workflow.schema.adapter.StringOrWorkflowTimeoutDefinitionAdapter;
 import epf.workflow.schema.auth.AuthDefinition;
+import epf.workflow.schema.auth.adapter.StringOrArrayAuthDefinitionAdapter;
 import epf.workflow.schema.function.FunctionDefinition;
+import epf.workflow.schema.function.adapter.StringOrArrayFunctionDefinitionAdapter;
 import epf.workflow.schema.state.State;
 import epf.workflow.schema.util.StringOrArray;
 import epf.workflow.schema.util.StringOrObject;
@@ -32,7 +39,7 @@ public class WorkflowDefinition implements Serializable {
 	/**
 	 * 
 	 */
-	@Id
+	@Id("id")
 	private String id;
 	
 	/**
@@ -69,12 +76,14 @@ public class WorkflowDefinition implements Serializable {
 	 * 
 	 */
 	@Column
+	@JsonbTypeAdapter(value = StringOrDataSchemaAdapter.class)
 	private StringOrObject<DataSchema> dataInputSchema;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@JsonbTypeAdapter(value = StringOrDataSchemaAdapter.class)
 	private StringOrObject<DataSchema> dataOutputSchema;
 	
 	/**
@@ -93,7 +102,7 @@ public class WorkflowDefinition implements Serializable {
 	 * 
 	 */
 	@Column
-	@JsonbTypeAdapter(value = StartDefinitionAdapter.class)
+	@JsonbTypeAdapter(value = StringOrStartDefinitionAdapter.class)
 	private StringOrObject<StartDefinition> start;
 	
 	/**
@@ -113,13 +122,14 @@ public class WorkflowDefinition implements Serializable {
 	 * 
 	 */
 	@Column
-	@JsonbTypeAdapter(value = WorkflowTimeoutDefinitionAdapter.class)
+	@JsonbTypeAdapter(value = StringOrWorkflowTimeoutDefinitionAdapter.class)
 	private StringOrObject<WorkflowTimeoutDefinition> timeouts;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@JsonbTypeAdapter(value = StringOrArrayWorkflowErrorAdapter.class)
 	private StringOrArray<WorkflowError> errors;
 	
 	/**
@@ -132,18 +142,21 @@ public class WorkflowDefinition implements Serializable {
 	 * 
 	 */
 	@Column
+	@JsonbTypeAdapter(value = StringOrArrayAuthDefinitionAdapter.class)
 	private StringOrArray<AuthDefinition> auth;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@JsonbTypeAdapter(value = StringOrArrayEventDefinitionAdapter.class)
 	private StringOrArray<EventDefinition> events;
 	
 	/**
 	 * 
 	 */
 	@Column
+	@JsonbTypeAdapter(value = StringOrArrayFunctionDefinitionAdapter.class)
 	private StringOrArray<FunctionDefinition> functions;
 	
 	/**
@@ -156,6 +169,7 @@ public class WorkflowDefinition implements Serializable {
 	 * 
 	 */
 	@Column
+	@JsonbTypeAdapter(value = StringOrArrayRetryDefinitionAdapter.class)
 	private StringOrArray<RetryDefinition> retries;
 	
 	/**
@@ -168,6 +182,7 @@ public class WorkflowDefinition implements Serializable {
 	 * 
 	 */
 	@Column
+	@JsonbTypeAdapter(value = StringOrArrayExtensionAdapter.class)
 	private StringOrArray<Extension> extensions;
 	
 	/**
