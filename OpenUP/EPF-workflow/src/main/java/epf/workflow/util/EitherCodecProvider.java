@@ -8,6 +8,7 @@ import org.bson.codecs.configuration.CodecRegistry;
 import epf.workflow.schema.TransitionOrEnd;
 import epf.workflow.schema.util.BooleanOrObject;
 import epf.workflow.schema.util.StringOrArray;
+import epf.workflow.schema.util.StringOrNumber;
 import epf.workflow.schema.util.StringOrObject;
 
 /**
@@ -25,6 +26,11 @@ public class EitherCodecProvider implements CodecProvider {
 		if(clazz.equals(StringOrObject.class)) {
 			@SuppressWarnings("unchecked")
 			final Codec<T> codec = (Codec<T>) new StringOrObjectCodec<>(registry);
+			return codec;
+		}
+		else if(clazz.equals(StringOrNumber.class)) {
+			@SuppressWarnings("unchecked")
+			final Codec<T> codec = (Codec<T>) new StringOrNumberCodec(registry);
 			return codec;
 		}
 		else if(clazz.equals(StringOrArray.class)) {

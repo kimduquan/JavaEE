@@ -13,6 +13,8 @@ import epf.workflow.schema.adapter.BooleanOrEndDefinitionAdapter;
 import epf.workflow.schema.adapter.StringOrTransitionDefinitionAdapter;
 import jakarta.nosql.Column;
 import java.util.List;
+import java.util.Map;
+
 import org.eclipse.jnosql.mapping.DiscriminatorValue;
 import org.eclipse.jnosql.mapping.Embeddable;
 
@@ -84,7 +86,7 @@ public class EventState extends State {
 	 * 
 	 */
 	@Column
-	private Object metadata;
+	private Map<String, String> metadata;
 	
 	/**
 	 * 
@@ -157,11 +159,11 @@ public class EventState extends State {
 		this.compensatedBy = compensatedBy;
 	}
 
-	public Object getMetadata() {
+	public Map<String, String> getMetadata() {
 		return metadata;
 	}
 
-	public void setMetadata(Object metadata) {
+	public void setMetadata(Map<String, String> metadata) {
 		this.metadata = metadata;
 	}
 }

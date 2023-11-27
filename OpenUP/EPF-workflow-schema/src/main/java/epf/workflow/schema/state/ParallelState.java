@@ -9,9 +9,11 @@ import epf.workflow.schema.WorkflowTimeoutDefinition;
 import epf.workflow.schema.adapter.BooleanOrEndDefinitionAdapter;
 import epf.workflow.schema.adapter.StringOrTransitionDefinitionAdapter;
 import epf.workflow.schema.util.BooleanOrObject;
+import epf.workflow.schema.util.StringOrNumber;
 import epf.workflow.schema.util.StringOrObject;
 import jakarta.nosql.Column;
 import java.util.List;
+import java.util.Map;
 import org.eclipse.jnosql.mapping.DiscriminatorValue;
 import org.eclipse.jnosql.mapping.Embeddable;
 
@@ -43,7 +45,7 @@ public class ParallelState extends State {
 	 * 
 	 */
 	@Column
-	private Object numCompleted;
+	private StringOrNumber numCompleted;
 	/**
 	 * 
 	 */
@@ -79,7 +81,7 @@ public class ParallelState extends State {
 	 * 
 	 */
 	@Column
-	private Object metadata;
+	private Map<String, String> metadata;
 	/**
 	 * 
 	 */
@@ -106,10 +108,10 @@ public class ParallelState extends State {
 	public void setCompletionType(CompletionType completionType) {
 		this.completionType = completionType;
 	}
-	public Object getNumCompleted() {
+	public StringOrNumber getNumCompleted() {
 		return numCompleted;
 	}
-	public void setNumCompleted(Object numCompleted) {
+	public void setNumCompleted(StringOrNumber numCompleted) {
 		this.numCompleted = numCompleted;
 	}
 	public WorkflowTimeoutDefinition getTimeouts() {
@@ -148,10 +150,10 @@ public class ParallelState extends State {
 	public void setUsedForCompensation(Boolean usedForCompensation) {
 		this.usedForCompensation = usedForCompensation;
 	}
-	public Object getMetadata() {
+	public Map<String, String> getMetadata() {
 		return metadata;
 	}
-	public void setMetadata(Object metadata) {
+	public void setMetadata(Map<String, String> metadata) {
 		this.metadata = metadata;
 	}
 	public BooleanOrObject<EndDefinition> getEnd() {
