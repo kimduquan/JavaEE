@@ -32,7 +32,7 @@ public class WorkflowDefinition implements Serializable {
 	/**
 	 * 
 	 */
-	@Id("id")
+	@Id
 	private String id;
 	
 	/**
