@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.POST;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -24,7 +25,9 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.HttpMethod;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -698,7 +701,14 @@ public class WorkflowApplication  {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
-	public Response start(final String workflow, final String version, final URI instance, final Map<String, Object> input) throws Exception {
+	public Response start(
+			@PathParam("workflow")
+			final String workflow, 
+			@QueryParam("version")
+			final String version, 
+			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
+			final URI instance, 
+			final Map<String, Object> input) throws Exception {
 		WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
 		String startState = null;
 		if(workflowDefinition.getStart() != null) {
@@ -741,7 +751,11 @@ public class WorkflowApplication  {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
-	public Response getWorkflowDefinition(final String workflow, final String version) throws Exception {
+	public Response getWorkflowDefinition(
+			@PathParam("workflow")
+			final String workflow, 
+			@QueryParam("version")
+			final String version) throws Exception {
 		final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
 		try(Jsonb jsonb = JsonbBuilder.create()){
 			return Response.ok(jsonb.toJson(workflowDefinition), MediaType.APPLICATION_JSON).build();
@@ -754,37 +768,49 @@ public class WorkflowApplication  {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
-	public Response transition(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) throws Exception {
+	public Response transition(
+			@PathParam("workflow")
+			final String workflow, 
+			@QueryParam("version")
+			final String version, 
+			@PathParam("state")
+			final String state, 
+			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
+			final URI instance, 
+			final InputStream body) throws Exception {
 		final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
 		final State nextState = getState(workflowDefinition, state);
-		cacheState(state, instance, workflowData);
-		switch(nextState.getType_()) {
-			case event:
-				final EventState eventState = (EventState)nextState;
-				return transitionEventState(workflowDefinition, eventState, instance);
-			case operation:
-				final OperationState operationState = (OperationState) nextState;
-				return transitionOperationState(workflowDefinition, operationState, instance, workflowData);
-			case Switch:
-				final SwitchState switchState = (SwitchState) nextState;
-				return transitionSwitchState(workflowDefinition, switchState, instance, workflowData);
-			case sleep:
-				final SleepState sleepState = (SleepState) nextState;
-				return transitionSleepState(workflowDefinition, sleepState, instance, workflowData);
-			case parallel:
-				final ParallelState parallelState = (ParallelState) nextState;
-				return transitionParallelState(workflowDefinition, parallelState, instance, workflowData);
-			case inject:
-				final InjectState injectState = (InjectState) nextState;
-				return transitionInjectState(workflowDefinition, injectState, instance, workflowData);
-			case foreach:
-				final ForEachState forEachState = (ForEachState) nextState;
-				return transitionForEachState(workflowDefinition, forEachState, instance, workflowData);
-			case callback:
-				final CallbackState callbackState = (CallbackState) nextState;
-				return transitionCallbackState(workflowDefinition, callbackState, instance, workflowData);
-			default:
-				throw new BadRequestException();
+		try(Jsonb jsonb = JsonbBuilder.create()){
+			final WorkflowData workflowData = jsonb.fromJson(body, WorkflowData.class);
+			cacheState(state, instance, workflowData);
+			switch(nextState.getType_()) {
+				case event:
+					final EventState eventState = (EventState)nextState;
+					return transitionEventState(workflowDefinition, eventState, instance);
+				case operation:
+					final OperationState operationState = (OperationState) nextState;
+					return transitionOperationState(workflowDefinition, operationState, instance, workflowData);
+				case Switch:
+					final SwitchState switchState = (SwitchState) nextState;
+					return transitionSwitchState(workflowDefinition, switchState, instance, workflowData);
+				case sleep:
+					final SleepState sleepState = (SleepState) nextState;
+					return transitionSleepState(workflowDefinition, sleepState, instance, workflowData);
+				case parallel:
+					final ParallelState parallelState = (ParallelState) nextState;
+					return transitionParallelState(workflowDefinition, parallelState, instance, workflowData);
+				case inject:
+					final InjectState injectState = (InjectState) nextState;
+					return transitionInjectState(workflowDefinition, injectState, instance, workflowData);
+				case foreach:
+					final ForEachState forEachState = (ForEachState) nextState;
+					return transitionForEachState(workflowDefinition, forEachState, instance, workflowData);
+				case callback:
+					final CallbackState callbackState = (CallbackState) nextState;
+					return transitionCallbackState(workflowDefinition, callbackState, instance, workflowData);
+				default:
+					throw new BadRequestException();
+			}
 		}
 	}
 
@@ -793,9 +819,17 @@ public class WorkflowApplication  {
 	@LRA(value = Type.MANDATORY, end = true)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
-	public Response end(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) throws Exception {
+	public Response end(
+			@PathParam("workflow")
+			final String workflow, 
+			@QueryParam("version")
+			final String version, 
+			@PathParam("state")
+			final String state, 
+			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
+			final URI instance) throws Exception {
 		cache.removeState(instance);
-		return null;
+		return Response.ok().build();
 	}
 
 	@PUT
@@ -803,7 +837,15 @@ public class WorkflowApplication  {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Compensate
 	@RunOnVirtualThread
-	public Response compensate(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) throws Exception {
+	public Response compensate(
+			@PathParam("workflow")
+			final String workflow, 
+			@QueryParam("version")
+			final String version, 
+			@PathParam("state")
+			final String state, 
+			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
+			final URI instance) throws Exception {
 		final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
 		final State currentState = getState(workflowDefinition, state);
 		final String compensatedBy = getCompensatedBy(currentState);
@@ -812,6 +854,6 @@ public class WorkflowApplication  {
 		while(workflowState != null) {
 			workflowState = workflowState.getPreviousState();
 		}
-		return null;
+		return Response.ok().build();
 	}
 }

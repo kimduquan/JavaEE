@@ -1,6 +1,5 @@
 package epf.workflow.util;
 
-import java.net.URI;
 import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.UriBuilder;
 
