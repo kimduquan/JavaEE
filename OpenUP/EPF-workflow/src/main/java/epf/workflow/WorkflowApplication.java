@@ -164,6 +164,13 @@ public class WorkflowApplication  {
 				.build();
 	}
 	
+	private Response getWorkflowDefinitionLink(final WorkflowDefinition workflowDefinition) {
+		final Link link = WorkflowLink.getWorkflowDefinitionLink(workflowDefinition.getId(), workflowDefinition.getVersion());
+		return Response.ok()
+				.links(link)
+				.build();
+	}
+	
 	private void cacheState(final String state, final URI instance, final WorkflowData workflowData) {
 		final WorkflowState workflowState = cache.getState(instance);
 		final WorkflowState newWorkflowState = new WorkflowState();
@@ -682,10 +689,7 @@ public class WorkflowApplication  {
 		if(workflowDefinition.getStart().isRight()) {
 			return scheduleLink(workflowDefinition.getStart().getRight(), workflowDefinition);
 		}
-		try(Jsonb jsonb = JsonbBuilder.create()){
-			final String json = jsonb.toJson(newWorkflowDefinition);
-			return Response.ok(json, MediaType.APPLICATION_JSON).build();
-		}
+		return getWorkflowDefinitionLink(newWorkflowDefinition);
 	}
 
 	@PUT
@@ -695,7 +699,7 @@ public class WorkflowApplication  {
 	@Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
 	public Response start(final String workflow, final String version, final URI instance, final Map<String, Object> input) throws Exception {
-		WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
+		WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
 		String startState = null;
 		if(workflowDefinition.getStart() != null) {
 			if(workflowDefinition.getStart().isLeft()) {
@@ -714,13 +718,8 @@ public class WorkflowApplication  {
 		workflowData.setOutput(new HashMap<>());
 		return transitionLink(workflow, version, startState, instance, workflowData);
 	}
-
-	@GET
-	@Path("{workflow}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	@RunOnVirtualThread
-	public WorkflowDefinition getWorkflowDefinition(final String workflow, final String version) throws Exception {
+	
+	private WorkflowDefinition findWorkflowDefinition(final String workflow, final String version) {
 		Optional<WorkflowDefinition> workflowDefinition = Optional.empty();
 		if(version != null) {
 			workflowDefinition = Optional.ofNullable(cache.get(workflow, version));
@@ -737,6 +736,18 @@ public class WorkflowApplication  {
 		return workflowDefinition.orElseThrow(NotFoundException::new);
 	}
 
+	@GET
+	@Path("{workflow}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@RunOnVirtualThread
+	public Response getWorkflowDefinition(final String workflow, final String version) throws Exception {
+		final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
+		try(Jsonb jsonb = JsonbBuilder.create()){
+			return Response.ok(jsonb.toJson(workflowDefinition), MediaType.APPLICATION_JSON).build();
+		}
+	}
+
 	@PUT
 	@Path("{workflow}/{state}")
 	@LRA(value = Type.MANDATORY, end = false)
@@ -744,7 +755,7 @@ public class WorkflowApplication  {
 	@Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
 	public Response transition(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) throws Exception {
-		final WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
+		final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
 		final State nextState = getState(workflowDefinition, state);
 		cacheState(state, instance, workflowData);
 		switch(nextState.getType_()) {
@@ -793,7 +804,7 @@ public class WorkflowApplication  {
 	@Compensate
 	@RunOnVirtualThread
 	public Response compensate(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) throws Exception {
-		final WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
+		final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
 		final State currentState = getState(workflowDefinition, state);
 		final String compensatedBy = getCompensatedBy(currentState);
 		getState(workflowDefinition, compensatedBy);
