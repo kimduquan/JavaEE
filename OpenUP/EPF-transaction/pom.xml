@@ -35,5 +35,9 @@
 		<groupId>io.quarkus</groupId>
 		<artifactId>quarkus-container-image-jib</artifactId>
 	</dependency>
+	<dependency>
+	    <groupId>org.jboss.narayana.rts</groupId>
+	    <artifactId>lra-coordinator-jar</artifactId>
+	</dependency>
   </dependencies>
 </project>
