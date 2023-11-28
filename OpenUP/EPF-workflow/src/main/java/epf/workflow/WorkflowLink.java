@@ -2,6 +2,7 @@ package epf.workflow;
 
 import jakarta.ws.rs.HttpMethod;
 import jakarta.ws.rs.core.Link;
+import jakarta.ws.rs.core.UriBuilder;
 import epf.naming.Naming;
 import epf.workflow.util.LinkUtil;
 
@@ -17,9 +18,9 @@ public interface WorkflowLink {
 	 */
 	static Link startLink(final String workflow, final String version) {
 		if(version != null) {
-			return LinkUtil.build(Naming.WORKFLOW, HttpMethod.PUT, "{workflow}?version=" + version, workflow);
+			return LinkUtil.build(UriBuilder.fromUri(Naming.WORKFLOW + "/{workflow}").queryParam("version", version),  Naming.WORKFLOW, HttpMethod.PUT, workflow);
 		}
-		return LinkUtil.build(Naming.WORKFLOW, HttpMethod.PUT, "{workflow}", workflow);
+		return LinkUtil.build(UriBuilder.fromUri(Naming.WORKFLOW + "/{workflow}"),  Naming.WORKFLOW, HttpMethod.PUT, workflow);
 	}
 	
 	/**
@@ -29,9 +30,9 @@ public interface WorkflowLink {
 	 */
 	static Link getWorkflowDefinitionLink(final String workflow, final String version) {
 		if(version != null) {
-			return LinkUtil.build(Naming.WORKFLOW, HttpMethod.GET, "{workflow}?version=" + version, workflow);
+			return LinkUtil.build(UriBuilder.fromUri(Naming.WORKFLOW + "/{workflow}").queryParam("version", version), Naming.WORKFLOW, HttpMethod.GET, workflow);
 		}
-		return LinkUtil.build(Naming.WORKFLOW, HttpMethod.GET, "{workflow}", workflow);
+		return LinkUtil.build(UriBuilder.fromUri(Naming.WORKFLOW + "/{workflow}"), Naming.WORKFLOW, HttpMethod.GET, workflow);
 	}
 	
 	/**
@@ -42,9 +43,9 @@ public interface WorkflowLink {
 	 */
 	static Link transitionLink(final String workflow, final String version, final String state) {
 		if(version != null) {
-			return LinkUtil.build(Naming.WORKFLOW, HttpMethod.PUT, "{workflow}/{state}?version=" + version, workflow, state);
+			return LinkUtil.build(UriBuilder.fromUri(Naming.WORKFLOW + "/{workflow}/{state}").queryParam("version", version), Naming.WORKFLOW, HttpMethod.PUT, workflow, state);
 		}
-		return LinkUtil.build(Naming.WORKFLOW, HttpMethod.PUT, "{workflow}/{state}", workflow, state);
+		return LinkUtil.build(UriBuilder.fromUri(Naming.WORKFLOW + "/{workflow}/{state}"), Naming.WORKFLOW, HttpMethod.PUT, workflow, state);
 	}
 	
 	/**
@@ -55,9 +56,9 @@ public interface WorkflowLink {
 	 */
 	static Link endLink(final String workflow, final String version, final String state) {
 		if(version != null) {
-			return LinkUtil.build(Naming.WORKFLOW, HttpMethod.PUT, "{workflow}/{state}/end?version=" + version, workflow, state);
+			return LinkUtil.build(UriBuilder.fromUri(Naming.WORKFLOW + "/{workflow}/{state}/end").queryParam("version", version), Naming.WORKFLOW, HttpMethod.PUT, workflow, state);
 		}
-		return LinkUtil.build(Naming.WORKFLOW, HttpMethod.PUT, "{workflow}/{state}/end", workflow, state);
+		return LinkUtil.build(UriBuilder.fromUri(Naming.WORKFLOW + "/{workflow}/{state}/end"), Naming.WORKFLOW, HttpMethod.PUT, workflow, state);
 	}
 	
 	/**
@@ -68,9 +69,9 @@ public interface WorkflowLink {
 	 */
 	static Link compensateLink(final String workflow, final String version, final String state) {
 		if(version != null) {
-			return LinkUtil.build(Naming.WORKFLOW, HttpMethod.PUT, "{workflow}/{state}/compensate?version=" + version, workflow, state);
+			return LinkUtil.build(UriBuilder.fromUri(Naming.WORKFLOW + "/{workflow}/{state}/compensate").queryParam("version", version), Naming.WORKFLOW, HttpMethod.PUT, workflow, state);
 		}
-		return LinkUtil.build(Naming.WORKFLOW, HttpMethod.PUT, "{workflow}/{state}/compensate", workflow, state);
+		return LinkUtil.build(UriBuilder.fromUri(Naming.WORKFLOW + "/{workflow}/{state}/compensate"), Naming.WORKFLOW, HttpMethod.PUT, workflow, state);
 	}
 	
 	/**
@@ -85,6 +86,6 @@ public interface WorkflowLink {
 			final String method,
 			final String path,
 			final String recurringTimeInterval) {
-		return LinkUtil.build(Naming.SCHEDULE, HttpMethod.POST, "REST?service=" + service + ";method=" + method + ";recurringTimeInterval=" + recurringTimeInterval + path);
+		return LinkUtil.build(UriBuilder.fromUri(Naming.SCHEDULE + "/REST").queryParam("service", service).queryParam("method", method).queryParam("recurringTimeInterval", recurringTimeInterval), Naming.SCHEDULE, HttpMethod.POST);
 	}
 }

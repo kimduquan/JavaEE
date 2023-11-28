@@ -65,10 +65,6 @@
 		<groupId>io.quarkiverse.jnosql</groupId>
 		<artifactId>quarkus-jnosql-column-cassandra</artifactId>
 	</dependency>
-	<dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-narayana-lra</artifactId>
-    </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-arc</artifactId>
