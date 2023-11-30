@@ -834,8 +834,8 @@ public class WorkflowApplication  {
 
 	@PUT
 	@Path("{workflow}/{state}/compensate")
+	@LRA(value = Type.MANDATORY, end = false)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Compensate
 	@RunOnVirtualThread
 	public Response compensate(
 			@PathParam("workflow")
