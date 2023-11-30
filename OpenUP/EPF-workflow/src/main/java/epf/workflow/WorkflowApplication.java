@@ -35,7 +35,6 @@ import jakarta.ws.rs.core.Response.ResponseBuilder;
 import jakarta.ws.rs.core.Response.Status;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.Readiness;
-import org.eclipse.microprofile.lra.annotation.Compensate;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA.Type;
 import epf.naming.Naming;
