@@ -717,7 +717,6 @@ public class WorkflowApplication  {
 
 	@GET
 	@Path("{workflow}")
-	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
 	public Response getWorkflowDefinition(
@@ -815,7 +814,6 @@ public class WorkflowApplication  {
 	@DELETE
 	@Path("{workflow}")
 	@LRA(value = Type.MANDATORY, end = true)
-	@Consumes(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
 	public Response end(
 			@PathParam("workflow")
@@ -831,13 +829,13 @@ public class WorkflowApplication  {
 	}
 
 	@PUT
-	@Path("{workflow}/compensate")
+	@Path("compensate")
 	@LRA(value = Type.MANDATORY, end = false)
 	@Compensate
 	@Consumes(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
 	public Response compensate(
-			@PathParam("workflow")
+			@QueryParam("workflow")
 			final String workflow, 
 			@QueryParam("version")
 			final String version, 
