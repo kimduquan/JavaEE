@@ -22,6 +22,7 @@ import jakarta.json.bind.JsonbBuilder;
 import jakarta.validation.Validator;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.HttpMethod;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.Path;
@@ -35,6 +36,7 @@ import jakarta.ws.rs.core.Response.ResponseBuilder;
 import jakarta.ws.rs.core.Response.Status;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.Readiness;
+import org.eclipse.microprofile.lra.annotation.Compensate;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA.Type;
 import epf.naming.Naming;
@@ -130,6 +132,13 @@ public class WorkflowApplication  {
 	 */
 	@Inject
 	transient Validator validator;
+	
+	private Response transitionLink(final String workflow, final String version, final String state, final URI instance, final InputStream input) {
+		return Response.ok(input, MediaType.APPLICATION_JSON)
+				.links(WorkflowLink.transitionLink(workflow, version, state))
+				.header(LRA.LRA_HTTP_CONTEXT_HEADER, instance)
+				.build();
+	}
 	
 	private Response transitionLink(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) {
 		return Response.ok(workflowData)
@@ -693,40 +702,6 @@ public class WorkflowApplication  {
 		}
 		return getWorkflowDefinitionLink(newWorkflowDefinition);
 	}
-
-	@PUT
-	@Path("{workflow}")
-	@LRA(value = Type.NESTED, end = false)
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	@RunOnVirtualThread
-	public Response start(
-			@PathParam("workflow")
-			final String workflow, 
-			@QueryParam("version")
-			final String version, 
-			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
-			final URI instance, 
-			final Map<String, Object> input) throws Exception {
-		WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
-		String startState = null;
-		if(workflowDefinition.getStart() != null) {
-			if(workflowDefinition.getStart().isLeft()) {
-				startState = workflowDefinition.getStart().getLeft();
-			}
-			else if(workflowDefinition.getStart().isRight()) {
-				final StartDefinition startDef = workflowDefinition.getStart().getRight();
-				startState = startDef.getStateName();
-			}
-		}
-		else {
-			startState = workflowDefinition.getStates().get(0).getName();
-		}
-		final WorkflowData workflowData = new WorkflowData();
-		workflowData.setInput(input);
-		workflowData.setOutput(new HashMap<>());
-		return transitionLink(workflow, version, startState, instance, workflowData);
-	}
 	
 	private WorkflowDefinition findWorkflowDefinition(final String workflow, final String version) {
 		Optional<WorkflowDefinition> workflowDefinition = Optional.empty();
@@ -761,8 +736,37 @@ public class WorkflowApplication  {
 		}
 	}
 
+	@POST
+	@Path("{workflow}")
+	@LRA(value = Type.NESTED, end = false)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@RunOnVirtualThread
+	public Response start(
+			@PathParam("workflow")
+			final String workflow, 
+			@QueryParam("version")
+			final String version, 
+			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
+			final URI instance, 
+			final InputStream input) throws Exception {
+		WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
+		String startState = null;
+		if(workflowDefinition.getStart().isLeft()) {
+			startState = workflowDefinition.getStart().getLeft();
+		}
+		else if(workflowDefinition.getStart().isRight()) {
+			final StartDefinition startDef = workflowDefinition.getStart().getRight();
+			startState = startDef.getStateName();
+		}
+		else {
+			startState = workflowDefinition.getStates().get(0).getName();
+		}
+		return transitionLink(workflow, version, startState, instance, input);
+	}
+
 	@PUT
-	@Path("{workflow}/{state}")
+	@Path("{workflow}")
 	@LRA(value = Type.MANDATORY, end = false)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -772,7 +776,7 @@ public class WorkflowApplication  {
 			final String workflow, 
 			@QueryParam("version")
 			final String version, 
-			@PathParam("state")
+			@QueryParam("state")
 			final String state, 
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
 			final URI instance, 
@@ -813,8 +817,8 @@ public class WorkflowApplication  {
 		}
 	}
 
-	@PUT
-	@Path("{workflow}/{state}/end")
+	@DELETE
+	@Path("{workflow}")
 	@LRA(value = Type.MANDATORY, end = true)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
@@ -832,8 +836,9 @@ public class WorkflowApplication  {
 	}
 
 	@PUT
-	@Path("{workflow}/{state}/compensate")
+	@Path("{workflow}/compensate")
 	@LRA(value = Type.MANDATORY, end = false)
+	@Compensate
 	@Consumes(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
 	public Response compensate(
@@ -841,7 +846,7 @@ public class WorkflowApplication  {
 			final String workflow, 
 			@QueryParam("version")
 			final String version, 
-			@PathParam("state")
+			@QueryParam("state")
 			final String state, 
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
 			final URI instance) throws Exception {

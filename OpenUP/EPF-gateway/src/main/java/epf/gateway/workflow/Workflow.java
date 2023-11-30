@@ -77,7 +77,7 @@ public class Workflow {
      * @return
      * @throws Exception
      */
-    @PUT
+    @POST
 	@Path("{workflow}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)

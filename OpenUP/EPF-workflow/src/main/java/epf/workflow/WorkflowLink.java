@@ -18,9 +18,9 @@ public interface WorkflowLink {
 	 */
 	static Link startLink(final String workflow, final String version) {
 		if(version != null) {
-			return LinkUtil.build(UriBuilder.fromUri("{workflow}").queryParam("version", version),  Naming.WORKFLOW, HttpMethod.PUT, workflow);
+			return LinkUtil.build(UriBuilder.fromUri("{workflow}").queryParam("version", version),  Naming.WORKFLOW, HttpMethod.POST, workflow);
 		}
-		return LinkUtil.build(UriBuilder.fromUri("{workflow}"),  Naming.WORKFLOW, HttpMethod.PUT, workflow);
+		return LinkUtil.build(UriBuilder.fromUri("{workflow}"),  Naming.WORKFLOW, HttpMethod.POST, workflow);
 	}
 	
 	/**
@@ -43,9 +43,9 @@ public interface WorkflowLink {
 	 */
 	static Link transitionLink(final String workflow, final String version, final String state) {
 		if(version != null) {
-			return LinkUtil.build(UriBuilder.fromUri("{workflow}/{state}").queryParam("version", version), Naming.WORKFLOW, HttpMethod.PUT, workflow, state);
+			return LinkUtil.build(UriBuilder.fromUri("{workflow}").queryParam("state", state).queryParam("version", version), Naming.WORKFLOW, HttpMethod.PUT, workflow);
 		}
-		return LinkUtil.build(UriBuilder.fromUri("{workflow}/{state}"), Naming.WORKFLOW, HttpMethod.PUT, workflow, state);
+		return LinkUtil.build(UriBuilder.fromUri("{workflow}").queryParam("state", state), Naming.WORKFLOW, HttpMethod.PUT, workflow);
 	}
 	
 	/**
@@ -56,9 +56,9 @@ public interface WorkflowLink {
 	 */
 	static Link endLink(final String workflow, final String version, final String state) {
 		if(version != null) {
-			return LinkUtil.build(UriBuilder.fromUri("{workflow}/{state}/end").queryParam("version", version), Naming.WORKFLOW, HttpMethod.PUT, workflow, state);
+			return LinkUtil.build(UriBuilder.fromUri("{workflow}").queryParam("state", state).queryParam("version", version), Naming.WORKFLOW, HttpMethod.DELETE, workflow);
 		}
-		return LinkUtil.build(UriBuilder.fromUri("{workflow}/{state}/end"), Naming.WORKFLOW, HttpMethod.PUT, workflow, state);
+		return LinkUtil.build(UriBuilder.fromUri("{workflow}").queryParam("state", state), Naming.WORKFLOW, HttpMethod.DELETE, workflow);
 	}
 	
 	/**
@@ -69,9 +69,9 @@ public interface WorkflowLink {
 	 */
 	static Link compensateLink(final String workflow, final String version, final String state) {
 		if(version != null) {
-			return LinkUtil.build(UriBuilder.fromUri("{workflow}/{state}/compensate").queryParam("version", version), Naming.WORKFLOW, HttpMethod.PUT, workflow, state);
+			return LinkUtil.build(UriBuilder.fromUri("{workflow}/compensate").queryParam("state", state).queryParam("version", version), Naming.WORKFLOW, HttpMethod.PUT, workflow);
 		}
-		return LinkUtil.build(UriBuilder.fromUri("{workflow}/{state}/compensate"), Naming.WORKFLOW, HttpMethod.PUT, workflow, state);
+		return LinkUtil.build(UriBuilder.fromUri("{workflow}/compensate").queryParam("state", state), Naming.WORKFLOW, HttpMethod.PUT, workflow);
 	}
 	
 	/**
