@@ -17,6 +17,8 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.POST;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonValue;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.validation.Validator;
@@ -41,6 +43,7 @@ import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA.Type;
 import epf.naming.Naming;
 import epf.util.MapUtil;
+import epf.util.json.ext.JsonUtil;
 import epf.workflow.action.Action;
 import epf.workflow.action.SubflowAction;
 import epf.workflow.event.Event;
@@ -53,7 +56,6 @@ import epf.workflow.schema.EndDefinition;
 import epf.workflow.schema.StartDefinition;
 import epf.workflow.schema.SubFlowRefDefinition;
 import epf.workflow.schema.TransitionDefinition;
-import epf.workflow.schema.WorkflowData;
 import epf.workflow.schema.WorkflowDefinition;
 import epf.workflow.schema.action.ActionDefinition;
 import epf.workflow.schema.action.Mode;
@@ -89,12 +91,6 @@ import epf.workflow.schema.util.Either;
 @ApplicationScoped
 @Path(Naming.WORKFLOW)
 public class WorkflowApplication  {
-	
-	/**
-	 * 
-	 */
-	@Inject
-	transient WorkflowRuntime runtime;
 	
 	/**
 	 * 
@@ -197,14 +193,14 @@ public class WorkflowApplication  {
 	
 	private void filterStateDataInput(final StateDataFilters stateDataFilters, final WorkflowData workflowData) throws Exception {
 		if(stateDataFilters != null && stateDataFilters.getInput() != null) {
-			final Map<String, Object> newInput = ELUtil.getValue(stateDataFilters.getInput(), workflowData.getInput());
+			final JsonValue newInput = ELUtil.getValue(stateDataFilters.getInput(), workflowData.getInput());
 			workflowData.setInput(newInput);
 		}
 	}
 	
 	private void filterActionDataInput(final ActionDefinition actionDefinition, final WorkflowData workflowData, final WorkflowData actionData) throws Exception {
 		if(actionDefinition.getActionDataFilter() != null && actionDefinition.getActionDataFilter().getFromStateData() != null) {
-			final Map<String, Object> input = ELUtil.getValue(actionDefinition.getActionDataFilter().getFromStateData(), workflowData.getInput());
+			final JsonValue input = ELUtil.getValue(actionDefinition.getActionDataFilter().getFromStateData(), workflowData.getInput());
 			actionData.setInput(input);
 		}
 	}
@@ -241,7 +237,7 @@ public class WorkflowApplication  {
 			if(actionDefinition.getSubFlowRef().isRight()) {
 				subFlowRefDefinition = actionDefinition.getSubFlowRef().getRight();
 			}
-			action = new SubflowAction(workflowDefinition, actionDefinition, null, subFlowRefDefinition, subWorkflowDefinition, actionData, instance);
+			action = new SubflowAction(workflowDefinition, actionDefinition, subFlowRefDefinition, subWorkflowDefinition, actionData, instance);
 		}
 		return action;
 	}
@@ -259,7 +255,7 @@ public class WorkflowApplication  {
 	
 	private void filterStateDataOutput(final StateDataFilters stateDataFilters, final WorkflowData workflowData) throws Exception {
 		if(stateDataFilters != null && stateDataFilters.getOutput() != null) {
-			final Map<String, Object> newOutput = ELUtil.getValue(stateDataFilters.getOutput(), workflowData.getOutput());
+			final JsonValue newOutput = ELUtil.getValue(stateDataFilters.getOutput(), workflowData.getOutput());
 			workflowData.setOutput(newOutput);
 		}
 	}
@@ -363,7 +359,6 @@ public class WorkflowApplication  {
 		throw new BadRequestException();
 	}
 	
-	@SuppressWarnings("unchecked")
 	private Response continueAs(final Object continueAs, final URI instance, final WorkflowData workflowData) throws Exception {
 		if(continueAs instanceof String) {
 			final WorkflowDefinition workflowDefinition = cache.get((String)continueAs);
@@ -376,13 +371,13 @@ public class WorkflowApplication  {
 			final WorkflowDefinition workflowDefinition = cache.get(continueAsDef.getWorkflowId(), continueAsDef.getVersion());
 			final WorkflowData newWorkflowData = new WorkflowData();
 			if(continueAsDef.getData() != null) {
-				Map<String, Object> input = null;
-				if(continueAsDef.getData() instanceof String) {
-					final String data = (String)continueAsDef.getData();
+				JsonValue input = null;
+				if(continueAsDef.getData().isLeft()) {
+					final String data = continueAsDef.getData().getLeft();
 					input = ELUtil.getValue(data, workflowData.getOutput());
 				}
-				else if(continueAsDef.getData() instanceof Map) {
-					input = (Map<String, Object>) continueAsDef.getData();
+				else if(continueAsDef.getData().isRight()) {
+					input = continueAsDef.getData().getRight();
 				}
 				newWorkflowData.setInput(input);
 			}
@@ -403,7 +398,7 @@ public class WorkflowApplication  {
 		return new Branch(actions.toArray(new Action[0]), workflowData, null);
 	}
 	
-	private Branch newForEachBranch(final WorkflowDefinition workflowDefinition, final ForEachState forEachState, final URI instance, final WorkflowData workflowData, final Object value) throws Exception {
+	private Branch newForEachBranch(final WorkflowDefinition workflowDefinition, final ForEachState forEachState, final URI instance, final WorkflowData workflowData, final JsonValue value) throws Exception {
 		final WorkflowData newWorkflowData = new WorkflowData();
 		newWorkflowData.setInput(workflowData.getOutput());
 		ELUtil.setValue(forEachState.getIterationParam(), newWorkflowData.getInput(), value);
@@ -607,7 +602,7 @@ public class WorkflowApplication  {
 	
 	private Response transitionInjectState(final WorkflowDefinition workflowDefinition, final InjectState injectState, final URI instance, final WorkflowData workflowData) throws Exception {
 		filterStateDataInput(injectState.getStateDataFilter(), workflowData);
-		StateUtil.mergeStateDataOutput(workflowData, injectState.getData());
+		StateUtil.mergeStateDataOutput(workflowData, JsonUtil.toJsonValue(injectState.getData()));
 		if(injectState.getTransition() != null) {
 			filterStateDataOutput(injectState.getStateDataFilter(), workflowData);
 			return transitionState(workflowDefinition, injectState.getTransition(), instance, workflowData);
@@ -620,7 +615,7 @@ public class WorkflowApplication  {
 	
 	private Response transitionForEachState(final WorkflowDefinition workflowDefinition, final ForEachState forEachState, final URI instance, final WorkflowData workflowData) throws Exception {
 		filterStateDataInput(forEachState.getStateDataFilter(), workflowData);
-		final List<?> inputCollection = (List<?>) ELUtil.getValue(forEachState.getInputCollection(), workflowData.getInput());
+		final JsonArray inputCollection = ELUtil.getValue(forEachState.getInputCollection(), workflowData.getInput()).asJsonArray();
 		int batchSize = inputCollection.size();
 		if(forEachState.getBatchSize().isLeft()) {
 			batchSize = Integer.valueOf(forEachState.getBatchSize().getLeft());
@@ -633,12 +628,12 @@ public class WorkflowApplication  {
 			case parallel:
 				int index = 0;
 				while(true) {
-					final List<?> batchInputs = inputCollection.subList(index, Math.min(index + batchSize, inputCollection.size()));
+					final List<JsonValue> batchInputs = inputCollection.subList(index, Math.min(index + batchSize, inputCollection.size()));
 					if(batchInputs.isEmpty()) {
 						break;
 					}
 					final List<Branch> batch = new ArrayList<>();
-					for(Object value : batchInputs) {
+					for(JsonValue value : batchInputs) {
 						batch.add(newForEachBranch(workflowDefinition, forEachState, instance, workflowData, value));
 					}
 					executor.invokeAll(batch);
@@ -647,7 +642,7 @@ public class WorkflowApplication  {
 				break;
 			case sequential:
 				iterations = new ArrayList<>();
-				for(Object value : inputCollection) {
+				for(JsonValue value : inputCollection) {
 					iterations.add(newForEachBranch(workflowDefinition, forEachState, instance, workflowData, value));
 				}
 				for(Branch forEach : iterations) {
@@ -749,7 +744,7 @@ public class WorkflowApplication  {
 			final String version, 
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
 			final URI instance, 
-			final InputStream input) throws Exception {
+			final InputStream body) throws Exception {
 		WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
 		String startState = null;
 		if(workflowDefinition.getStart().isLeft()) {
@@ -762,7 +757,7 @@ public class WorkflowApplication  {
 		else {
 			startState = workflowDefinition.getStates().get(0).getName();
 		}
-		return transitionLink(workflow, version, startState, instance, input);
+		return transitionLink(workflow, version, startState, instance, body);
 	}
 
 	@PUT
@@ -783,37 +778,37 @@ public class WorkflowApplication  {
 			final InputStream body) throws Exception {
 		final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
 		final State nextState = getState(workflowDefinition, state);
-		try(Jsonb jsonb = JsonbBuilder.create()){
-			final WorkflowData workflowData = jsonb.fromJson(body, WorkflowData.class);
-			cacheState(state, instance, workflowData);
-			switch(nextState.getType_()) {
-				case event:
-					final EventState eventState = (EventState)nextState;
-					return transitionEventState(workflowDefinition, eventState, instance);
-				case operation:
-					final OperationState operationState = (OperationState) nextState;
-					return transitionOperationState(workflowDefinition, operationState, instance, workflowData);
-				case Switch:
-					final SwitchState switchState = (SwitchState) nextState;
-					return transitionSwitchState(workflowDefinition, switchState, instance, workflowData);
-				case sleep:
-					final SleepState sleepState = (SleepState) nextState;
-					return transitionSleepState(workflowDefinition, sleepState, instance, workflowData);
-				case parallel:
-					final ParallelState parallelState = (ParallelState) nextState;
-					return transitionParallelState(workflowDefinition, parallelState, instance, workflowData);
-				case inject:
-					final InjectState injectState = (InjectState) nextState;
-					return transitionInjectState(workflowDefinition, injectState, instance, workflowData);
-				case foreach:
-					final ForEachState forEachState = (ForEachState) nextState;
-					return transitionForEachState(workflowDefinition, forEachState, instance, workflowData);
-				case callback:
-					final CallbackState callbackState = (CallbackState) nextState;
-					return transitionCallbackState(workflowDefinition, callbackState, instance, workflowData);
-				default:
-					throw new BadRequestException();
-			}
+		final JsonValue input = JsonUtil.readValue(body);
+		final WorkflowData workflowData = new WorkflowData();
+		workflowData.setInput(input);
+		cacheState(state, instance, workflowData);
+		switch(nextState.getType_()) {
+			case event:
+				final EventState eventState = (EventState)nextState;
+				return transitionEventState(workflowDefinition, eventState, instance);
+			case operation:
+				final OperationState operationState = (OperationState) nextState;
+				return transitionOperationState(workflowDefinition, operationState, instance, workflowData);
+			case Switch:
+				final SwitchState switchState = (SwitchState) nextState;
+				return transitionSwitchState(workflowDefinition, switchState, instance, workflowData);
+			case sleep:
+				final SleepState sleepState = (SleepState) nextState;
+				return transitionSleepState(workflowDefinition, sleepState, instance, workflowData);
+			case parallel:
+				final ParallelState parallelState = (ParallelState) nextState;
+				return transitionParallelState(workflowDefinition, parallelState, instance, workflowData);
+			case inject:
+				final InjectState injectState = (InjectState) nextState;
+				return transitionInjectState(workflowDefinition, injectState, instance, workflowData);
+			case foreach:
+				final ForEachState forEachState = (ForEachState) nextState;
+				return transitionForEachState(workflowDefinition, forEachState, instance, workflowData);
+			case callback:
+				final CallbackState callbackState = (CallbackState) nextState;
+				return transitionCallbackState(workflowDefinition, callbackState, instance, workflowData);
+			default:
+				throw new BadRequestException();
 		}
 	}
 

@@ -22,7 +22,7 @@ import epf.client.util.Client;
 import epf.client.util.LinkUtil;
 import java.util.Map;
 import epf.naming.Naming;
-import epf.workflow.schema.WorkflowData;
+import epf.workflow.WorkflowData;
 import epf.workflow.schema.WorkflowDefinition;
 
 /**

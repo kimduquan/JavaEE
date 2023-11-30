@@ -1,5 +1,6 @@
 package epf.workflow.schema;
 
+import jakarta.json.JsonValue;
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import epf.workflow.schema.adapter.StringOrWorkflowExecTimeoutDefinitionAdapter;
 import epf.workflow.schema.util.StringOrObject;
@@ -35,7 +36,7 @@ public class ContinueAs implements Serializable {
 	 * 
 	 */
 	@Column
-	private Object data;
+	private StringOrObject<JsonValue> data;
 	
 	/**
 	 * 
@@ -60,11 +61,11 @@ public class ContinueAs implements Serializable {
 		this.version = version;
 	}
 
-	public Object getData() {
+	public StringOrObject<JsonValue> getData() {
 		return data;
 	}
 
-	public void setData(Object data) {
+	public void setData(StringOrObject<JsonValue> data) {
 		this.data = data;
 	}
 

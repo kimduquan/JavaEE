@@ -1,7 +1,6 @@
 package epf.workflow;
 
 import java.io.Serializable;
-import epf.workflow.schema.WorkflowData;
 
 /**
  * 

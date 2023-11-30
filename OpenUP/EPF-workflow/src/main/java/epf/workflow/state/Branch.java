@@ -1,9 +1,10 @@
 package epf.workflow.state;
 
 import java.util.concurrent.Callable;
+
+import epf.workflow.WorkflowData;
 import epf.workflow.WorkflowInstance;
 import epf.workflow.action.Action;
-import epf.workflow.schema.WorkflowData;
 
 /**
  * @author PC

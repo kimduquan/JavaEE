@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import jakarta.json.JsonValue;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
@@ -18,7 +19,7 @@ import epf.api.PathItem.HttpMethod;
 import epf.api.parameter.Parameter;
 import epf.api.server.Server;
 import epf.util.json.ext.JsonUtil;
-import epf.workflow.schema.WorkflowData;
+import epf.workflow.WorkflowData;
 import epf.workflow.schema.WorkflowDefinition;
 import epf.workflow.schema.auth.AuthDefinition;
 import epf.workflow.schema.auth.BearerPropertiesDefinition;
@@ -170,7 +171,7 @@ public class RestFunction extends Function {
 			}
 			try(jakarta.ws.rs.core.Response response = invoke.invoke()){
 				try(InputStream result = response.readEntity(InputStream.class)){
-					final Map<String, Object> output = JsonUtil.asMap(JsonUtil.readValue(result).asJsonObject());
+					final JsonValue output = JsonUtil.readValue(result);
 					getWorkflowData().setOutput(output);
 				}
 			}

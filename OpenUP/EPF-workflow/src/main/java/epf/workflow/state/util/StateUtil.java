@@ -1,9 +1,9 @@
 package epf.workflow.state.util;
 
-import java.util.Map;
 import epf.util.json.ext.JsonUtil;
-import epf.workflow.schema.WorkflowData;
+import epf.workflow.WorkflowData;
 import epf.workflow.util.ELUtil;
+import jakarta.json.JsonValue;
 
 /**
  * @author PC
@@ -17,10 +17,10 @@ public interface StateUtil {
 	 * @param fromOutput
 	 * @throws Exception 
 	 */
-	static void mergeStateDataOutput(final String data, final WorkflowData to, final Map<String, Object> fromOutput) throws Exception {
-		Map<String, Object> output = to.getOutput();
+	static void mergeStateDataOutput(final String data, final WorkflowData to, final JsonValue fromOutput) throws Exception {
+		JsonValue output = to.getOutput();
 		output = ELUtil.getValue(data, to.getOutput());
-		final Map<String, Object> newOutput = JsonUtil.asMap(JsonUtil.createMergeDiff(output, fromOutput).apply(JsonUtil.toJsonValue(output)).asJsonObject());
+		final JsonValue newOutput = JsonUtil.createMergeDiff(output, fromOutput).apply(output);
 		ELUtil.setValue(data, to.getOutput(), newOutput);
 	}
 	
@@ -29,9 +29,9 @@ public interface StateUtil {
 	 * @param fromOutput
 	 * @throws Exception 
 	 */
-	static void mergeStateDataOutput(final WorkflowData to, final Map<String, Object> fromOutput) throws Exception {
-		Map<String, Object> output = to.getOutput();
-		final Map<String, Object> newOutput = JsonUtil.asMap(JsonUtil.createMergeDiff(output, fromOutput).apply(JsonUtil.toJsonValue(output)).asJsonObject());
+	static void mergeStateDataOutput(final WorkflowData to, final JsonValue fromOutput) throws Exception {
+		JsonValue output = to.getOutput();
+		final JsonValue newOutput = JsonUtil.createMergeDiff(output, fromOutput).apply(output);
 		to.setOutput(newOutput);
 	}
 	
@@ -41,10 +41,10 @@ public interface StateUtil {
 	 * @param fromInput
 	 * @throws Exception 
 	 */
-	static void mergeStateDataInput(final String data, final WorkflowData to, final Map<String, Object> fromInput) throws Exception {
-		Map<String, Object> input = to.getInput();
+	static void mergeStateDataInput(final String data, final WorkflowData to, final JsonValue fromInput) throws Exception {
+		JsonValue input = to.getInput();
 		input = ELUtil.getValue(data, to.getInput());
-		final Map<String, Object> newInput = JsonUtil.asMap(JsonUtil.createMergeDiff(input, fromInput).apply(JsonUtil.toJsonValue(input)).asJsonObject());
+		final JsonValue newInput = JsonUtil.createMergeDiff(input, fromInput).apply(input);
 		ELUtil.setValue(data, to.getInput(), newInput);
 	}
 	
@@ -53,9 +53,9 @@ public interface StateUtil {
 	 * @param fromInput
 	 * @throws Exception 
 	 */
-	static void mergeStateDataInput(final WorkflowData to, final Map<String, Object> fromInput) throws Exception {
-		Map<String, Object> input = to.getInput();
-		final Map<String, Object> newInput = JsonUtil.asMap(JsonUtil.createMergeDiff(input, fromInput).apply(JsonUtil.toJsonValue(input)).asJsonObject());
+	static void mergeStateDataInput(final WorkflowData to, final JsonValue fromInput) throws Exception {
+		JsonValue input = to.getInput();
+		final JsonValue newInput = JsonUtil.createMergeDiff(input, fromInput).apply(input);
 		to.setInput(newInput);
 	}
 }
