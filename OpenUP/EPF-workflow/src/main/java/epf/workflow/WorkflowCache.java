@@ -32,7 +32,7 @@ public class WorkflowCache implements HealthCheck {
 	/**
 	 * 
 	 */
-	private transient Cache<String, WorkflowState> workflowCache;
+	private transient Cache<String, WorkflowInstance> workflowCache;
 
 	@Override
 	public HealthCheckResponse call() {
@@ -44,7 +44,7 @@ public class WorkflowCache implements HealthCheck {
 		}
 		workflowCache = cacheManager.getCache(Naming.Workflow.Internal.WORKFLOW_CACHE);
 		if(workflowCache == null) {
-			final MutableConfiguration<String, WorkflowState> config = new MutableConfiguration<>();
+			final MutableConfiguration<String, WorkflowInstance> config = new MutableConfiguration<>();
 			workflowCache = cacheManager.createCache(Naming.Workflow.Internal.WORKFLOW_CACHE, config);
 		}
 		return HealthCheckResponse.up("epf-workflow-cache");
@@ -85,26 +85,26 @@ public class WorkflowCache implements HealthCheck {
 	}
 	
 	/**
-	 * @param instance
-	 * @param state
+	 * @param uri
+	 * @param workflowInstance
 	 */
-	public void putState(final URI instance, final WorkflowState state) {
-		workflowCache.put(instance.toString(), state);
+	public void putInstance(final URI uri, final WorkflowInstance workflowInstance) {
+		workflowCache.put(workflowInstance.getId(), workflowInstance);
+	}
+	
+	/**
+	 * @param uri
+	 * @return
+	 */
+	public WorkflowInstance getInstance(final URI uri) {
+		return workflowCache.get(uri.toString());
 	}
 	
 	/**
 	 * @param instance
 	 * @return
 	 */
-	public WorkflowState getState(final URI instance) {
-		return workflowCache.get(instance.toString());
-	}
-	
-	/**
-	 * @param instance
-	 * @return
-	 */
-	public WorkflowState removeState(final URI instance) {
+	public WorkflowInstance removeInstance(final URI instance) {
 		return workflowCache.getAndRemove(instance.toString());
 	}
 }

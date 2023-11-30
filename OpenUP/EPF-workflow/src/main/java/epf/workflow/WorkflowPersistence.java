@@ -1,7 +1,6 @@
 package epf.workflow;
 
 import java.util.Optional;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -78,12 +77,6 @@ public class WorkflowPersistence {
 	 * @return
 	 */
 	public WorkflowInstance persist(final WorkflowInstance workflowInstance) {
-		if(workflowInstance.getUri() != null) {
-			workflowInstance.setId(workflowInstance.getUri().toString());
-		}
-		else {
-			workflowInstance.setId(UUID.randomUUID().toString());
-		}
 		try {
 			return document.insert(workflowInstance);
 		} 

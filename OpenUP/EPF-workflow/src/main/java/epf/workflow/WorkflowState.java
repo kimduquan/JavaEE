@@ -1,10 +1,12 @@
 package epf.workflow;
 
 import java.io.Serializable;
+import org.eclipse.jnosql.mapping.Embeddable;
 
 /**
  * 
  */
+@Embeddable
 public class WorkflowState implements Serializable {
 
 	/**

@@ -1,7 +1,6 @@
 package epf.workflow.state;
 
 import java.util.concurrent.Callable;
-
 import epf.workflow.WorkflowData;
 import epf.workflow.WorkflowInstance;
 import epf.workflow.action.Action;
@@ -53,9 +52,6 @@ public class Branch implements Callable<Void> {
 	@Override
 	public Void call() throws Exception {
 		for(Action action : actions) {
-			if(workflowInstance.isTerminate()) {
-				break;
-			}
 			action.call();
 		}
 		return null;

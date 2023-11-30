@@ -46,6 +46,13 @@ public class Either<L, R> implements Serializable {
 	}
 	
 	/**
+	 * @return
+	 */
+	public boolean isNull() {
+		return left == null && right == null;
+	}
+	
+	/**
 	 * @param from
 	 */
 	public void copy(final Either<L, R> from) {
