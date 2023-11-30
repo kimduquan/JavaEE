@@ -1,8 +1,8 @@
 package epf.workflow.state.util;
 
-import epf.util.json.ext.JsonUtil;
 import epf.workflow.WorkflowData;
 import epf.workflow.util.ELUtil;
+import jakarta.json.Json;
 import jakarta.json.JsonValue;
 
 /**
@@ -20,7 +20,7 @@ public interface StateUtil {
 	static void mergeStateDataOutput(final String data, final WorkflowData to, final JsonValue fromOutput) throws Exception {
 		JsonValue output = to.getOutput();
 		output = ELUtil.getValue(data, to.getOutput());
-		final JsonValue newOutput = JsonUtil.createMergeDiff(output, fromOutput).apply(output);
+		final JsonValue newOutput = Json.createMergeDiff(output, fromOutput).apply(output);
 		ELUtil.setValue(data, to.getOutput(), newOutput);
 	}
 	
@@ -31,7 +31,7 @@ public interface StateUtil {
 	 */
 	static void mergeStateDataOutput(final WorkflowData to, final JsonValue fromOutput) throws Exception {
 		JsonValue output = to.getOutput();
-		final JsonValue newOutput = JsonUtil.createMergeDiff(output, fromOutput).apply(output);
+		final JsonValue newOutput = Json.createMergeDiff(output, fromOutput).apply(output);
 		to.setOutput(newOutput);
 	}
 	
@@ -44,7 +44,7 @@ public interface StateUtil {
 	static void mergeStateDataInput(final String data, final WorkflowData to, final JsonValue fromInput) throws Exception {
 		JsonValue input = to.getInput();
 		input = ELUtil.getValue(data, to.getInput());
-		final JsonValue newInput = JsonUtil.createMergeDiff(input, fromInput).apply(input);
+		final JsonValue newInput = Json.createMergeDiff(input, fromInput).apply(input);
 		ELUtil.setValue(data, to.getInput(), newInput);
 	}
 	
@@ -55,7 +55,7 @@ public interface StateUtil {
 	 */
 	static void mergeStateDataInput(final WorkflowData to, final JsonValue fromInput) throws Exception {
 		JsonValue input = to.getInput();
-		final JsonValue newInput = JsonUtil.createMergeDiff(input, fromInput).apply(input);
+		final JsonValue newInput = Json.createMergeDiff(input, fromInput).apply(input);
 		to.setInput(newInput);
 	}
 }
