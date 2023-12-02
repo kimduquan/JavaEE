@@ -73,6 +73,20 @@ public class WorkflowPersistence {
 	}
 	
 	/**
+	 * @param workflowDefinition
+	 * @return
+	 */
+	public WorkflowDefinition merge(final WorkflowDefinition workflowDefinition) {
+		try {
+			return document.update(workflowDefinition);
+		} 
+		catch (Exception e) {
+			LOGGER.log(Level.WARNING, "merge", e);
+			return null;
+		}
+	}
+	
+	/**
 	 * @param workflowInstance
 	 * @return
 	 */

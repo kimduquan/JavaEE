@@ -79,10 +79,12 @@ public class Application {
     	final URI serviceUrl = registry.lookup(service).orElseThrow(NotFoundException::new);
     	final Client client = clients.poll(serviceUrl, null);
     	final RequestBuilder builder = new RequestBuilder(client, serviceUrl, req.getMethod(), headers, uriInfo, body, true);
-    	final Link self = HATEOAS.selfLink(uriInfo, req, service);
     	Response response = builder.build();
     	response = closeResponse(response);
-    	response = buildLinkRequests(client, response, headers, self);
+    	if(isSuccessful(response)) {
+        	final Link self = HATEOAS.selfLink(uriInfo, req, service);
+        	response = buildLinkRequests(client, response, headers, self);
+    	}
     	response = ResponseUtil.buildResponse(response, uriInfo.getBaseUri());
     	clients.add(serviceUrl, client);
     	return response;
@@ -95,6 +97,10 @@ public class Application {
     private Response closeResponse(final Response response) {
     	response.bufferEntity();
 		return response;
+    }
+    
+    private boolean isSuccessful(final Response response) {
+    	return Response.Status.Family.familyOf(response.getStatus()).compareTo(Response.Status.Family.SUCCESSFUL) == 0;
     }
     
     /**
@@ -128,7 +134,9 @@ public class Application {
     			final Link targetLink = HATEOAS.isSelfLink(link) ? self : link;
     			linkResponse = buildLinkRequest(client, linkResponse, headers, targetLink);
     			linkResponse = closeResponse(linkResponse);
-    			linkResponse = buildLinkRequests(client, linkResponse, headers, targetLink);
+    			if(isSuccessful(linkResponse)) {
+        			linkResponse = buildLinkRequests(client, linkResponse, headers, targetLink);
+    			}
     		}
     	}
     	return linkResponse;

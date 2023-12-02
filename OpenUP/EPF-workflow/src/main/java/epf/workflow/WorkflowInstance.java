@@ -14,12 +14,6 @@ public class WorkflowInstance {
 	/**
 	 * 
 	 */
-	@Column
-	private String workflowDefinition;
-	
-	/**
-	 * 
-	 */
 	@Id
 	private String id;
 	
@@ -28,14 +22,6 @@ public class WorkflowInstance {
 	 */
 	@Column
 	private WorkflowState state;
-
-	public String getWorkflowDefinition() {
-		return workflowDefinition;
-	}
-
-	public void setWorkflowDefinition(String workflowDefinition) {
-		this.workflowDefinition = workflowDefinition;
-	}
 
 	public String getId() {
 		return id;
