@@ -33,13 +33,8 @@ public interface ConfigUtil {
 		return new URI(SystemUtil.getString(name));
 	}
 	
-	/**
-	 * @param name
-	 * @return
-	 * @throws MalformedURLException
-	 */
 	static URL getURL(final String name) throws MalformedURLException {
-		return new URL(SystemUtil.getString(name));
+		return URI.create(SystemUtil.getString(name)).toURL();
 	}
 	
 	/**

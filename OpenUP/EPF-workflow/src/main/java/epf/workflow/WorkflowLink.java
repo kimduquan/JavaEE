@@ -4,6 +4,7 @@ import jakarta.ws.rs.HttpMethod;
 import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.UriBuilder;
 
+import java.time.Duration;
 import java.util.Optional;
 
 import epf.naming.Naming;
@@ -87,15 +88,54 @@ public interface WorkflowLink {
 	static Link compensateLink(final String workflow, final Optional<String> version, final String state) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}");
 		if(version.isPresent()) {
-			uri = uri.queryParam("version", version);
+			uri = uri.queryParam("version", version.get());
 		}
 		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.PUT, workflow, state);
 	}
 	
-	static Link actionLink(final String workflow, final Optional<String> version, final String state, final String action) {
+	/**
+	 * @param workflow
+	 * @param version
+	 * @param state
+	 * @return
+	 */
+	static Link operationLink(final String workflow, final Optional<String> version, final String state) {
+		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}");
+		if(version.isPresent()) {
+			uri = uri.queryParam("version", version.get());
+		}
+		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.HEAD, workflow, state);
+	}
+	
+	/**
+	 * @param workflow
+	 * @param version
+	 * @param state
+	 * @return
+	 */
+	static Link actionsLink(final String workflow, final Optional<String> version, final String state) {
+		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}");
+		if(version.isPresent()) {
+			uri = uri.queryParam("version", version.get());
+		}
+		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.PATCH, workflow, state);
+	}
+	
+	/**
+	 * @param workflow
+	 * @param version
+	 * @param state
+	 * @param action
+	 * @param timeout
+	 * @return
+	 */
+	static Link actionLink(final String workflow, final Optional<String> version, final String state, final String action, final Optional<Duration> timeout) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}/{action}");
 		if(version.isPresent()) {
 			uri = uri.queryParam("version", version);
+		}
+		if(timeout.isPresent()) {
+			uri = uri.queryParam("timeout", timeout.get().toString());
 		}
 		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.POST, workflow, state, action);
 	}

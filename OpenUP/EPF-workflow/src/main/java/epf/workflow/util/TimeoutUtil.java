@@ -1,6 +1,8 @@
 package epf.workflow.util;
 
 import java.time.Duration;
+import java.util.Optional;
+
 import epf.workflow.schema.WorkflowDefinition;
 import epf.workflow.schema.WorkflowTimeoutDefinition;
 import epf.workflow.schema.state.CallbackState;
@@ -54,11 +56,11 @@ public interface TimeoutUtil {
 	 * @param state
 	 * @return
 	 */
-	static Duration getActionExecTimeout(final WorkflowDefinition WorkflowDefinition, final State state) {
-		Duration actionExecTimeout = null;
+	static Optional<Duration> getActionExecTimeout(final WorkflowDefinition WorkflowDefinition, final State state) {
+		Optional<Duration> actionExecTimeout = Optional.empty();
 		WorkflowTimeoutDefinition workflowTimeoutDefinition = getTimeouts(WorkflowDefinition, state);
 		if(workflowTimeoutDefinition != null && workflowTimeoutDefinition.getActionExecTimeout() != null) {
-			actionExecTimeout = Duration.parse(workflowTimeoutDefinition.getActionExecTimeout());
+			actionExecTimeout = Optional.of(Duration.parse(workflowTimeoutDefinition.getActionExecTimeout()));
 		}
 		return actionExecTimeout;
 	}
