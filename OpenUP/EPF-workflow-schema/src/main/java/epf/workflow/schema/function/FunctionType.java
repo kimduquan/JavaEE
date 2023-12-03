@@ -12,6 +12,10 @@ public enum FunctionType {
 	/**
 	 * 
 	 */
+	openapi,
+	/**
+	 * 
+	 */
 	asyncapi,
 	/**
 	 * 

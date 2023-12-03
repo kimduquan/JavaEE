@@ -5,6 +5,7 @@ import jakarta.nosql.Column;
 import java.io.Serializable;
 import org.eclipse.jnosql.mapping.Embeddable;
 import epf.workflow.schema.function.Invoke;
+import epf.workflow.schema.util.StringOrObject;
 
 /**
  * @author PC
@@ -42,7 +43,7 @@ public class EventRefDefinition implements Serializable {
 	 * 
 	 */
 	@Column
-	private Object data;
+	private StringOrObject<Object> data;
 	
 	/**
 	 * 
@@ -80,11 +81,11 @@ public class EventRefDefinition implements Serializable {
 		this.consumeEventTimeout = consumeEventTimeout;
 	}
 
-	public Object getData() {
+	public StringOrObject<Object> getData() {
 		return data;
 	}
 
-	public void setData(Object data) {
+	public void setData(StringOrObject<Object> data) {
 		this.data = data;
 	}
 

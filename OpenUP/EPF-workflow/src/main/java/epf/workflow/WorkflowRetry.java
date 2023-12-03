@@ -14,7 +14,7 @@ import epf.workflow.util.EitherUtil;
  * @author PC
  *
  */
-public class Retry<T> implements Callable<T> {
+public class WorkflowRetry<T> implements Callable<T> {
 
 	/**
 	 * 
@@ -36,7 +36,7 @@ public class Retry<T> implements Callable<T> {
 	 * @param workflowDefinition
 	 * @param actionDefinition
 	 */
-	public Retry(Callable<T> callable, WorkflowDefinition workflowDefinition, ActionDefinition actionDefinition) {
+	public WorkflowRetry(Callable<T> callable, WorkflowDefinition workflowDefinition, ActionDefinition actionDefinition) {
 		this.callable = callable;
 		this.actionDefinition = actionDefinition;
 		this.workflowDefinition = workflowDefinition;

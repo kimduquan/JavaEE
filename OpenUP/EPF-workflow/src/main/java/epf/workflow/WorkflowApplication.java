@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HEAD;
 import jakarta.ws.rs.HeaderParam;
@@ -16,6 +18,7 @@ import jakarta.ws.rs.POST;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.json.JsonArray;
+import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
@@ -30,11 +33,20 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.Invocation;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.client.Invocation.Builder;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
 import org.eclipse.microprofile.context.ManagedExecutor;
+import org.eclipse.microprofile.faulttolerance.Fallback;
+import org.eclipse.microprofile.faulttolerance.Retry;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.lra.annotation.AfterLRA;
 import org.eclipse.microprofile.lra.annotation.ParticipantStatus;
@@ -42,16 +54,19 @@ import org.eclipse.microprofile.lra.annotation.Status;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA.Type;
 import org.eclipse.microprofile.lra.annotation.ws.rs.Leave;
+import org.eclipse.microprofile.openapi.models.OpenAPI;
+import org.eclipse.microprofile.openapi.models.Operation;
+import org.eclipse.microprofile.openapi.models.PathItem;
+import org.eclipse.microprofile.openapi.models.parameters.Parameter;
+import org.eclipse.microprofile.openapi.models.servers.Server;
 import epf.naming.Naming;
 import epf.util.MapUtil;
 import epf.util.json.ext.JsonUtil;
 import epf.workflow.action.Action;
-import epf.workflow.action.SubflowAction;
 import epf.workflow.event.Event;
-import epf.workflow.event.ProduceEventAction;
 import epf.workflow.event.persistence.CallbackStateEvent;
 import epf.workflow.event.persistence.EventStateEvent;
-import epf.workflow.function.FunctionAction;
+import epf.workflow.function.openapi.OpenAPIUtil;
 import epf.workflow.schema.ContinueAs;
 import epf.workflow.schema.EndDefinition;
 import epf.workflow.schema.StartDefinition;
@@ -59,10 +74,13 @@ import epf.workflow.schema.SubFlowRefDefinition;
 import epf.workflow.schema.TransitionDefinition;
 import epf.workflow.schema.WorkflowDefinition;
 import epf.workflow.schema.action.ActionDefinition;
-import epf.workflow.schema.action.Mode;
+import epf.workflow.schema.auth.AuthDefinition;
+import epf.workflow.schema.auth.BearerPropertiesDefinition;
 import epf.workflow.schema.event.EventDefinition;
 import epf.workflow.schema.event.OnEventsDefinition;
 import epf.workflow.schema.event.ProducedEventDefinition;
+import epf.workflow.schema.function.FunctionDefinition;
+import epf.workflow.schema.function.FunctionRefDefinition;
 import epf.workflow.schema.state.CallbackState;
 import epf.workflow.schema.state.EventState;
 import epf.workflow.schema.state.ForEachState;
@@ -93,6 +111,11 @@ import epf.workflow.schema.util.StringOrObject;
 @ApplicationScoped
 @Path(Naming.WORKFLOW)
 public class WorkflowApplication  {
+	
+	/**
+	 * 
+	 */
+	private transient Map<String, OpenAPI> openAPIs = new ConcurrentHashMap<>();
 	
 	/**
 	 * 
@@ -201,7 +224,7 @@ public class WorkflowApplication  {
 	}
 	
 	private State getState(final WorkflowDefinition workflowDefinition, final String name) {
-		return workflowDefinition.getStates().stream().filter(state -> state.getName().equals(name)).findFirst().orElseThrow(BadRequestException::new);
+		return workflowDefinition.getStates().stream().filter(state -> state.getName().equals(name)).findFirst().orElseThrow(NotFoundException::new);
 	}
 	
 	private void filterStateDataInput(final StateDataFilters stateDataFilters, final WorkflowData workflowData) throws Exception {
@@ -223,6 +246,39 @@ public class WorkflowApplication  {
 		return events.stream().filter(eventDef -> eventDef.getName().equals(event)).findFirst().get();
 	}
 	
+	private ActionDefinition getActionDefinition(final State state) {
+		Optional<ActionDefinition> actionDefinition = Optional.empty();
+		List<ActionDefinition> actionDefinitions = null;
+		switch(state.getType_()) {
+			case Switch:
+				break;
+			case callback:
+				break;
+			case event:
+				break;
+			case foreach:
+				final ForEachState forEachState = (ForEachState) state;
+				actionDefinitions = forEachState.getActions();
+				break;
+			case inject:
+				break;
+			case operation:
+				final OperationState operationState = (OperationState) state;
+				actionDefinitions = operationState.getActions();
+				break;
+			case parallel:
+				break;
+			case sleep:
+				break;
+			default:
+				break;
+		}
+		if(actionDefinitions != null) {
+			actionDefinition = actionDefinitions.stream().filter(actionDef -> actionDef.getName().equals(state)).findFirst();
+		}
+		return actionDefinition.orElseThrow(NotFoundException::new);
+	}
+	
 	private WorkflowDefinition getSubWorkflowDefinition(final StringOrObject<SubFlowRefDefinition> subFlowRef) {
 		if(subFlowRef.isLeft()) {
 			return cache.get(subFlowRef.getLeft());
@@ -234,26 +290,205 @@ public class WorkflowApplication  {
 		return null;
 	}
 	
-	private Action action(final WorkflowDefinition workflowDefinition, final ActionDefinition actionDefinition, final URI instance, final WorkflowData workflowData) throws Exception {
+	private Action action(final WorkflowDefinition workflowDefinition, final ActionDefinition actionDefinition, final WorkflowData workflowData) throws Exception {
 		Action action = null;
 		final WorkflowData actionData = new WorkflowData();
 		filterActionDataInput(actionDefinition, workflowData, actionData);
 		if(!actionDefinition.getFunctionRef().isNull()) {
-			action = new FunctionAction(workflowDefinition, actionDefinition, actionData);
+		}
+		else if(actionDefinition.getEventRef() != null) {
+			getEventDefinition(workflowDefinition, actionDefinition.getEventRef().getProduceEventRef());
+		}
+		else if(!actionDefinition.getSubFlowRef().isNull()) {
+			getSubWorkflowDefinition(actionDefinition.getSubFlowRef());
+			if(actionDefinition.getSubFlowRef().isRight()) {
+				actionDefinition.getSubFlowRef().getRight();
+			}
+		}
+		return action;
+	}
+	
+	private Response invoke(final WorkflowDefinition workflowDefinition, final FunctionDefinition functionDefinition, final WorkflowData workflowData, final OpenAPI openAPI, final String path, final PathItem pathItem, final org.eclipse.microprofile.openapi.models.PathItem.HttpMethod httpMethod, final Operation operation) throws Exception {
+		Server server = openAPI.getServers().iterator().next();
+		if(operation.getServers() != null && !operation.getServers().isEmpty()) {
+			server = operation.getServers().iterator().next();
+		}
+		else if(pathItem.getServers() != null && !pathItem.getServers().isEmpty()) {
+			server = pathItem.getServers().iterator().next();
+		}
+		final JsonObject input = workflowData.getInput().asJsonObject();
+		try(Client client = ClientBuilder.newClient()){
+			WebTarget target = client.target(server.getUrl()).path(path);
+			for(Parameter parameter : operation.getParameters()) {
+				switch(parameter.getIn()) {
+					case COOKIE:
+						break;
+					case HEADER:
+						break;
+					case PATH:
+						final Object pathValue = JsonUtil.asValue(input.get(parameter.getName()));
+						target = target.resolveTemplate("{" + parameter.getName() + "}", pathValue);
+						break;
+					case QUERY:
+						final Object queryValue = JsonUtil.asValue(input.get(parameter.getName()));
+						target = target.queryParam(parameter.getName(), queryValue);
+						break;
+					default:
+						break;
+				}
+			}
+			Builder builder = target.request();
+			if(functionDefinition.getAuthRef() != null) {
+				final List<AuthDefinition> authDefs = EitherUtil.getArray(workflowDefinition.getAuth());
+				for(AuthDefinition authDef : authDefs) {
+					if(authDef.getName().equals(functionDefinition.getAuthRef())) {
+						switch(authDef.getScheme()) {
+							case basic:
+								break;
+							case bearer:
+								final BearerPropertiesDefinition bearerDefinition = (BearerPropertiesDefinition) authDef.getProperties();
+								builder = builder.header(HttpHeaders.AUTHORIZATION, "Bearer " + bearerDefinition.getToken());
+								break;
+							case oauth2:
+								break;
+							default:
+								break;
+						}
+						break;
+					}
+				}
+			}
+			for(Parameter parameter : operation.getParameters()) {
+				switch(parameter.getIn()) {
+					case COOKIE:
+						final String cookieValue = input.getString(parameter.getName());
+						builder = builder.cookie(parameter.getName(), cookieValue);
+						break;
+					case HEADER:
+						final Object headerValue = JsonUtil.asValue(input.get(parameter.getName()));
+						builder = builder.header(parameter.getName(), headerValue);
+						break;
+					case PATH:
+						break;
+					case QUERY:
+						break;
+					default:
+						break;
+				}
+			}
+			Entity<?> entity = null;
+			if(operation.getRequestBody() != null) {
+				final String[] mediaTypes = operation.getRequestBody().getContent().getMediaTypes().keySet().toArray(new String[0]);
+				builder = builder.accept(mediaTypes);
+				entity = Entity.entity(workflowData.getInput().toString(), mediaTypes[0]);
+			}
+			Invocation invoke;
+			if(entity != null) {
+				invoke = builder.build(httpMethod.name(), entity);
+			}
+			else {
+				invoke = builder.build(httpMethod.name());
+			}
+			try(Response response = invoke.invoke()){
+				try(InputStream result = response.readEntity(InputStream.class)){
+					final JsonValue output = JsonUtil.readValue(result);
+					workflowData.setOutput(output);
+					return response;
+				}
+			}
+		}
+	}
+	
+	private Response openapi(final WorkflowDefinition workflowDefinition, final FunctionDefinition functionDefinition, final WorkflowData workflowData) throws Exception {
+		final int index = functionDefinition.getOperation().indexOf("#");
+		final String pathToOpenAPIDefinition = functionDefinition.getOperation().substring(0, index);
+		final String operationId = functionDefinition.getOperation().substring(index + 1);
+		if(!openAPIs.containsKey(pathToOpenAPIDefinition)) {
+			final URI uri = URI.create(pathToOpenAPIDefinition);
+			final OpenAPI openAPI = OpenAPIUtil.read(uri.toURL());
+			openAPIs.put(pathToOpenAPIDefinition, openAPI);
+		}
+		final OpenAPI openAPI = openAPIs.get(pathToOpenAPIDefinition);
+		for(Entry<String, PathItem> pathItemEntry : openAPI.getPaths().getPathItems().entrySet()) {
+			final String path = pathItemEntry.getKey();
+			final PathItem pathItem = pathItemEntry.getValue();
+			for(Entry<org.eclipse.microprofile.openapi.models.PathItem.HttpMethod, Operation> operationEntry : pathItem.getOperations().entrySet()) {
+				final org.eclipse.microprofile.openapi.models.PathItem.HttpMethod httpMethod = operationEntry.getKey();
+				final Operation operation = operationEntry.getValue();
+				if(operation.getOperationId().equals(operationId)) {
+					return invoke(workflowDefinition, functionDefinition, workflowData, openAPI, path, pathItem, httpMethod, operation);
+				}
+			}
+		}
+		throw new BadRequestException();
+	}
+	
+	private Response function(final WorkflowDefinition workflowDefinition, final FunctionDefinition functionDefinition, final WorkflowData workflowData) throws Exception {
+		switch(functionDefinition.getType()) {
+			case asyncapi:
+				break;
+			case custom:
+				break;
+			case expression:
+				break;
+			case graphql:
+				break;
+			case odata:
+				break;
+			case openapi:
+				return openapi(workflowDefinition, functionDefinition, workflowData);
+			case rest:
+				break;
+			case rpc:
+				break;
+			default:
+				break;
+		}
+		return null;
+	}
+	
+	private Response event(final ActionDefinition actionDefinition, final EventDefinition eventDefinition, final WorkflowData workflowData) throws Exception {
+		Object data = null;
+		if(actionDefinition.getEventRef().getData() != null) {
+			if(actionDefinition.getEventRef().getData().isLeft()) {
+				data = ELUtil.getValue(actionDefinition.getEventRef().getData().getLeft(), workflowData.getOutput());
+			}
+			else {
+				data = workflowData.getOutput();
+			}
+		}
+		final Event event = new Event();
+		event.setSource(eventDefinition.getSource());
+		event.setType(eventDefinition.getType());
+		event.setData(data);
+		producedEvent.fire(event);
+		return Response.ok().build();
+	}
+	
+	private Response subFlow() {
+		return null;
+	}
+	
+	private Response action2(final WorkflowDefinition workflowDefinition, final ActionDefinition actionDefinition, final WorkflowData workflowData) throws Exception {
+		Response response = null;
+		final WorkflowData actionData = new WorkflowData();
+		filterActionDataInput(actionDefinition, workflowData, actionData);
+		if(!actionDefinition.getFunctionRef().isNull()) {
+			final FunctionDefinition functionDefinition = getFunctionDefinition(workflowDefinition, actionDefinition.getFunctionRef());
+			response = function(workflowDefinition, functionDefinition, actionData);
 		}
 		else if(actionDefinition.getEventRef() != null) {
 			final EventDefinition eventDefinition = getEventDefinition(workflowDefinition, actionDefinition.getEventRef().getProduceEventRef());
-			action = new ProduceEventAction(workflowDefinition, actionDefinition, eventDefinition, producedEvent, actionData);
+			response = event(actionDefinition, eventDefinition, actionData);
 		}
 		else if(!actionDefinition.getSubFlowRef().isNull()) {
-			final WorkflowDefinition subWorkflowDefinition = getSubWorkflowDefinition(actionDefinition.getSubFlowRef());
-			SubFlowRefDefinition subFlowRefDefinition = null;
+			getSubWorkflowDefinition(actionDefinition.getSubFlowRef());
 			if(actionDefinition.getSubFlowRef().isRight()) {
-				subFlowRefDefinition = actionDefinition.getSubFlowRef().getRight();
+				actionDefinition.getSubFlowRef().getRight();
 			}
-			action = new SubflowAction(workflowDefinition, actionDefinition, subFlowRefDefinition, subWorkflowDefinition, actionData, instance);
+			response = subFlow();
 		}
-		return action;
+		return response;
 	}
 	
 	private void filterActionDataOutput(final ActionDefinition actionDefinition, final WorkflowData workflowData, final WorkflowData actionData) throws Exception {
@@ -316,7 +551,7 @@ public class WorkflowApplication  {
 		return actionLinks.toArray(new Link[0]);
 	}
 	
-	private Response actions(final WorkflowDefinition workflowDefinition, final State State, final Mode mode, final Link[] actionLinks, final URI instance, final WorkflowData workflowData) {
+	private Response actions(final Link[] actionLinks, final WorkflowData workflowData) {
 		return Response.status(Response.Status.PARTIAL_CONTENT).entity(workflowData.getInput().toString()).type(MediaType.APPLICATION_JSON).links(actionLinks).build();
 	}
 	
@@ -391,10 +626,10 @@ public class WorkflowApplication  {
 		throw new BadRequestException();
 	}
 	
-	private Branch newBranch(final WorkflowDefinition workflowDefinition, final List<ActionDefinition> actionDefinitions, final URI instance, final WorkflowData workflowData) throws Exception {
+	private Branch newBranch(final WorkflowDefinition workflowDefinition, final List<ActionDefinition> actionDefinitions, final WorkflowData workflowData) throws Exception {
 		final List<Action> actions = new ArrayList<>();
 		for(ActionDefinition actionDefinition : actionDefinitions) {
-			final Action action = action(workflowDefinition, actionDefinition, instance, workflowData);
+			final Action action = action(workflowDefinition, actionDefinition, workflowData);
 			actions.add(action);
 		}
 		return new Branch(actions.toArray(new Action[0]), workflowData, null);
@@ -404,13 +639,13 @@ public class WorkflowApplication  {
 		final WorkflowData newWorkflowData = new WorkflowData();
 		newWorkflowData.setInput(workflowData.getOutput());
 		ELUtil.setValue(forEachState.getIterationParam(), newWorkflowData.getInput(), value);
-		return newBranch(workflowDefinition, forEachState.getActions(), instance, newWorkflowData);
+		return newBranch(workflowDefinition, forEachState.getActions(), newWorkflowData);
 	}
 	
 	private Branch newParallelBranch(final WorkflowDefinition workflowDefinition, final ParallelStateBranch branch, final URI instance, final WorkflowData workflowData) throws Exception {
 		final WorkflowData newWorkflowData = new WorkflowData();
 		newWorkflowData.setInput(workflowData.getOutput());
-		return newBranch(workflowDefinition, branch.getActions(), instance, newWorkflowData);
+		return newBranch(workflowDefinition, branch.getActions(), newWorkflowData);
 	}
 	
 	private Optional<String> getCompensatedBy(final State state) {
@@ -470,7 +705,7 @@ public class WorkflowApplication  {
 		throw new BadRequestException();
 	}
 	
-	private Response transitionCallbackState(final WorkflowDefinition workflowDefinition, final CallbackState callbackState, final URI instance, final WorkflowData workflowData) throws Exception {
+	private Response transitionCallbackState(final WorkflowDefinition workflowDefinition, final CallbackState callbackState, final URI instance) throws Exception {
 		final EventDefinition eventDefinition = getEventDefinition(workflowDefinition, callbackState.getEventRef());
 		
 		final CallbackStateEvent event = new CallbackStateEvent();
@@ -483,9 +718,6 @@ public class WorkflowApplication  {
 		event.setSubject(instance.toString());
 		
 		eventStore.persist(event);
-		
-		final Action action = action(workflowDefinition, callbackState.getAction(), instance, workflowData);
-		action.call();
 		return Response.ok().build();
 	}
 	
@@ -671,6 +903,19 @@ public class WorkflowApplication  {
 			}
 		}
 		return workflowDefinition.orElseThrow(NotFoundException::new);
+	}
+	
+	private FunctionDefinition getFunctionDefinition(final WorkflowDefinition workflowDefinition, final StringOrObject<FunctionRefDefinition> functionRef) {
+		Optional<FunctionDefinition> functionDefinition = Optional.empty();
+		final List<FunctionDefinition> functionDefinitions = EitherUtil.getArray(workflowDefinition.getFunctions());
+		if(functionRef.isLeft()) {
+			functionDefinition = functionDefinitions.stream().filter(func -> func.getName().equals(functionRef.getLeft())).findFirst();
+		}
+		else if(functionRef.isRight()) {
+			final FunctionRefDefinition functionRefDefinition = functionRef.getRight();
+			functionDefinition = functionDefinitions.stream().filter(func -> func.getName().equals(functionRefDefinition.getRefName())).findFirst();
+		}
+		return functionDefinition.orElseThrow(BadRequestException::new);
 	}
 
 	@POST
@@ -865,7 +1110,7 @@ public class WorkflowApplication  {
 				case callback:
 					final CallbackState callbackState = (CallbackState) nextState;
 					filterStateDataInput(callbackState.getStateDataFilter(), workflowData);
-					response = transitionCallbackState(workflowDefinition, callbackState, instance, workflowData);
+					response = transitionCallbackState(workflowDefinition, callbackState, instance);
 					break;
 				default:
 					throw new BadRequestException();
@@ -940,7 +1185,7 @@ public class WorkflowApplication  {
 				final WorkflowData workflowData = workflowInstance.getState().getWorkflowData();
 				final Optional<Duration> actionExecTimeout = TimeoutUtil.getActionExecTimeout(workflowDefinition, operationState);
 				final Link[] actionLinks = actionLinks(workflowDefinition, operationState.getName(), operationState.getActions(), actionExecTimeout);
-				response = actions(workflowDefinition, operationState, operationState.getActionMode(), actionLinks, instance, workflowData);
+				response = actions(actionLinks, workflowData);
 			}
 			else {
 				throw new BadRequestException();
@@ -1004,6 +1249,8 @@ public class WorkflowApplication  {
 	@LRA(value = Type.MANDATORY, end = false)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
+	@Retry(retryOn = {RetryableException.class}, abortOn = {NonRetryableException.class})
+	@Fallback(fallbackMethod = "fallbackAction", applyOn = {WorkflowException.class})
 	@RunOnVirtualThread
 	public Response action(
 			@PathParam("workflow")
@@ -1014,12 +1261,41 @@ public class WorkflowApplication  {
 			final String action,
 			@QueryParam("version")
 			final String version,
-			@QueryParam("timeout")
-			final String timeout,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
 			final URI instance,
 			final InputStream body) throws Exception {
-		return Response.ok(body).build();
+		final WorkflowInstance workflowInstance = cache.getInstance(instance);
+		Response response;
+		if(workflowInstance != null) {
+			final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
+			final State currentState = getState(workflowDefinition, state);
+			final ActionDefinition actionDefinition = getActionDefinition(currentState);
+			final JsonValue input = JsonUtil.readValue(body);
+			final WorkflowData workflowData = new WorkflowData();
+			workflowData.setInput(input);
+			response = action2(workflowDefinition, actionDefinition, workflowData);
+		}
+		else {
+			response = Response.noContent().build();
+		}
+		return response;
+	}
+
+	@LRA(value = Type.MANDATORY, end = false)
+	@RunOnVirtualThread
+	public Response fallbackAction(
+			@PathParam("workflow")
+			final String workflow, 
+			@PathParam("state")
+			final String state,
+			@PathParam("action")
+			final String action,
+			@QueryParam("version")
+			final String version,
+			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
+			final URI instance,
+			final InputStream body) throws Exception {
+		return null;
 	}
 	
 	@DELETE

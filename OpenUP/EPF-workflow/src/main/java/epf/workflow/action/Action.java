@@ -2,7 +2,7 @@ package epf.workflow.action;
 
 import java.time.Duration;
 import java.util.concurrent.Callable;
-import epf.workflow.Retry;
+import epf.workflow.WorkflowRetry;
 import epf.workflow.WorkflowData;
 import epf.workflow.schema.WorkflowDefinition;
 import epf.workflow.schema.action.ActionDefinition;
@@ -81,7 +81,7 @@ public abstract class Action implements Callable<Void> {
 						perform();
 						return null;
 					}};
-				final Retry<Void> retry = new Retry<>(callable, getWorkflowDefinition(), getActionDefinition());
+				final WorkflowRetry<Void> retry = new WorkflowRetry<>(callable, getWorkflowDefinition(), getActionDefinition());
 				retry.call();
 			}
 			else {

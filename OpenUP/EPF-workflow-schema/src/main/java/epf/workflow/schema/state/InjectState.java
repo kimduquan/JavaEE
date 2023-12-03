@@ -57,7 +57,7 @@ public class InjectState extends State {
 	 * 
 	 */
 	@Column
-	private Map<String, Object> metadata;
+	private Map<String, String> metadata;
 	/**
 	 * 
 	 */
@@ -102,10 +102,10 @@ public class InjectState extends State {
 	public void setUsedForCompensation(Boolean usedForCompensation) {
 		this.usedForCompensation = usedForCompensation;
 	}
-	public Map<String, Object> getMetadata() {
+	public Map<String, String> getMetadata() {
 		return metadata;
 	}
-	public void setMetadata(Map<String, Object> metadata) {
+	public void setMetadata(Map<String, String> metadata) {
 		this.metadata = metadata;
 	}
 	public BooleanOrObject<EndDefinition> getEnd() {
