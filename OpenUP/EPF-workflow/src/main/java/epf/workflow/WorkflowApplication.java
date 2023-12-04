@@ -1299,13 +1299,10 @@ public class WorkflowApplication  {
 	}
 	
 	@DELETE
-	@Path("{workflow}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Leave
 	@RunOnVirtualThread
 	public Response terminate(
-			@PathParam("workflow")
-			final String workflow,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
 			final URI instance) throws Exception {
 		final WorkflowInstance workflowInstance = cache.removeInstance(instance);
