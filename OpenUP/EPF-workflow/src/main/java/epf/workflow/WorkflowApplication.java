@@ -157,15 +157,15 @@ public class WorkflowApplication  {
 	private Response transitionLink(final String workflow, final Optional<String> version, final String state, final URI instance, final WorkflowData workflowData, final Link[] compensateLinks) {
 		return Response.ok(workflowData.getOutput().toString(), MediaType.APPLICATION_JSON)
 				.links(compensateLinks)
-				.links(WorkflowLink.transitionLink(workflow, version, state))
+				.links(WorkflowLink.transitionLink(compensateLinks.length, workflow, version, state))
 				.header(LRA.LRA_HTTP_CONTEXT_HEADER, instance)
 				.build();
 	}
 	
 	private Response operationLink(final String workflow, final String version, final String state, final URI instance, final WorkflowData workflowData) {
 		return Response.ok(workflowData.getOutput().toString(), MediaType.APPLICATION_JSON)
-				.links(WorkflowLink.operationLink(workflow, Optional.ofNullable(version), state))
-				.links(WorkflowLink.actionsLink(workflow, Optional.ofNullable(version), state))
+				.links(WorkflowLink.operationLink(0, workflow, Optional.ofNullable(version), state))
+				.links(WorkflowLink.actionsLink(1, workflow, Optional.ofNullable(version), state))
 				.header(LRA.LRA_HTTP_CONTEXT_HEADER, instance)
 				.build();
 	}
@@ -173,14 +173,14 @@ public class WorkflowApplication  {
 	private Response endLink(final String workflow, final Optional<String> version, final URI instance, final WorkflowData workflowData, final Link[] compensateLinks) {
 		return Response.ok(workflowData.getOutput().toString(), MediaType.APPLICATION_JSON)
 				.links(compensateLinks)
-				.links(WorkflowLink.endLink(workflow, version))
+				.links(WorkflowLink.endLink(compensateLinks.length, workflow, version))
 				.header(LRA.LRA_HTTP_CONTEXT_HEADER, instance)
 				.build();
 	}
 	
 	private Response terminateLink(final String workflow, final Optional<String> version, final URI instance, final WorkflowData workflowData) {
 		return Response.ok(workflowData.getOutput().toString(), MediaType.APPLICATION_JSON)
-				.links(WorkflowLink.terminateLink(workflow, version))
+				.links(WorkflowLink.terminateLink(0, workflow, version))
 				.header(LRA.LRA_HTTP_CONTEXT_HEADER, instance)
 				.build();
 	}
@@ -196,10 +196,10 @@ public class WorkflowApplication  {
 			recurringTimeInterval = startDefinition.getSchedule().getRight().getInterval();
 		}
 		if(workflowDefinition.getVersion() != null) {
-			scheduleLink = WorkflowLink.scheduleLink(Naming.WORKFLOW, HttpMethod.PUT, path + "?version=" + workflowDefinition.getVersion(), recurringTimeInterval);
+			scheduleLink = WorkflowLink.scheduleLink(0, Naming.WORKFLOW, HttpMethod.PUT, path + "?version=" + workflowDefinition.getVersion(), recurringTimeInterval);
 		}
 		else {
-			scheduleLink = WorkflowLink.scheduleLink(Naming.WORKFLOW, HttpMethod.PUT, path, recurringTimeInterval);
+			scheduleLink = WorkflowLink.scheduleLink(0, Naming.WORKFLOW, HttpMethod.PUT, path, recurringTimeInterval);
 		}
 		return Response.ok()
 				.links(scheduleLink)
@@ -207,7 +207,7 @@ public class WorkflowApplication  {
 	}
 	
 	private Response getWorkflowLink(final WorkflowDefinition workflowDefinition) {
-		final Link link = WorkflowLink.getWorkflowLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()));
+		final Link link = WorkflowLink.getWorkflowLink(0, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()));
 		return Response.ok()
 				.links(link)
 				.build();
@@ -246,7 +246,7 @@ public class WorkflowApplication  {
 		return events.stream().filter(eventDef -> eventDef.getName().equals(event)).findFirst().get();
 	}
 	
-	private ActionDefinition getActionDefinition(final State state) {
+	private ActionDefinition getActionDefinition(final State state, final String action) {
 		Optional<ActionDefinition> actionDefinition = Optional.empty();
 		List<ActionDefinition> actionDefinitions = null;
 		switch(state.getType_()) {
@@ -274,7 +274,7 @@ public class WorkflowApplication  {
 				break;
 		}
 		if(actionDefinitions != null) {
-			actionDefinition = actionDefinitions.stream().filter(actionDef -> actionDef.getName().equals(state)).findFirst();
+			actionDefinition = actionDefinitions.stream().filter(actionDef -> actionDef.getName().equals(action)).findFirst();
 		}
 		return actionDefinition.orElseThrow(NotFoundException::new);
 	}
@@ -534,8 +534,9 @@ public class WorkflowApplication  {
 		final List<Link> compensateLinks = new ArrayList<>();
 		final WorkflowInstance workflowInstance = cache.getInstance(instance);
 		WorkflowState workflowState = workflowInstance.getState();
+		int index = 0;
 		while(workflowState != null) {
-			final Link compensateLink = WorkflowLink.compensateLink(workflow, version, workflowState.getName());
+			final Link compensateLink = WorkflowLink.compensateLink(index, workflow, version, workflowState.getName());
 			compensateLinks.add(compensateLink);
 			workflowState = workflowState.getPreviousState();
 		}
@@ -544,9 +545,11 @@ public class WorkflowApplication  {
 	
 	private Link[] actionLinks(final WorkflowDefinition workflowDefinition, final String state, final List<ActionDefinition> actionDefinitions, final Optional<Duration> actionExecTimeout){
 		final List<Link> actionLinks = new ArrayList<>();
+		int index = 0;
 		for(ActionDefinition actionDefinition : actionDefinitions) {
-			final Link actionLink = WorkflowLink.actionLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), state, actionDefinition.getName(), actionExecTimeout);
+			final Link actionLink = WorkflowLink.actionLink(index, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), state, actionDefinition.getName(), actionExecTimeout);
 			actionLinks.add(actionLink);
+			index++;
 		}
 		return actionLinks.toArray(new Link[0]);
 	}
@@ -576,7 +579,7 @@ public class WorkflowApplication  {
 	}
 	
 	private Response startLink(final String workflow, final Optional<String> version, final URI parentInstance, final WorkflowData workflowData) {
-		ResponseBuilder builder = Response.ok(workflowData.getInput()).links(WorkflowLink.startLink(workflow, version));
+		ResponseBuilder builder = Response.ok(workflowData.getInput()).links(WorkflowLink.startLink(0, workflow, version));
 		if(parentInstance != null) {
 			builder = builder.header(LRA.LRA_HTTP_PARENT_CONTEXT_HEADER, parentInstance);
 		}
@@ -1268,7 +1271,7 @@ public class WorkflowApplication  {
 		if(workflowInstance != null) {
 			final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
 			final State currentState = getState(workflowDefinition, state);
-			final ActionDefinition actionDefinition = getActionDefinition(currentState);
+			final ActionDefinition actionDefinition = getActionDefinition(currentState, action);
 			final JsonValue input = JsonUtil.readValue(body);
 			final WorkflowData workflowData = new WorkflowData();
 			workflowData.setInput(input);

@@ -176,7 +176,7 @@ public interface RequestUtil {
     static Builder buildLRAHeaders(Builder builder, final Response response) {
     	for(final Entry<String, List<Object>> entry : response.getHeaders().entrySet()) {
 			if(entry.getKey().startsWith(LRA_HTTP_HEADER_PREFIX)) {
-				builder = builder.header(entry.getKey(), entry.getValue());
+				builder = builder.header(entry.getKey(), entry.getValue().get(0));
 			}
 		}
     	return builder;

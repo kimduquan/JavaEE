@@ -38,8 +38,8 @@ public interface LinkUtil {
 	 * @param values
 	 * @return
 	 */
-	static Link build(final UriBuilder builder, final String service, final String method, final Object...values) {
-		return Link.fromUriBuilder(builder).type(method).rel(service).build(values);
+	static Link build(final UriBuilder builder, final int index, final String service, final String method, final Object...values) {
+		return Link.fromUriBuilder(builder).title(String.valueOf(index)).type(method).rel(service).build(values);
 	}
 	
 }

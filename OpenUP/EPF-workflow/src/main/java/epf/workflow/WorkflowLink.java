@@ -16,109 +16,123 @@ import epf.workflow.util.LinkUtil;
 public interface WorkflowLink {
 	
 	/**
+	 * @param index
 	 * @param workflow
 	 * @param version
 	 * @return
 	 */
-	static Link getWorkflowLink(final String workflow, final Optional<String> version) {
+	static Link getWorkflowLink(final int index, final String workflow, final Optional<String> version) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}");
 		if(version.isPresent()) {
 			uri = uri.queryParam("version", version.get());
 		}
-		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.GET, workflow);
+		return LinkUtil.build(uri, index, Naming.WORKFLOW, HttpMethod.GET, workflow);
 	}
 
 	/**
+	 * @param index
 	 * @param workflow
 	 * @param version
 	 * @return
 	 */
-	static Link startLink(final String workflow, final Optional<String> version) {
+	static Link startLink(final int index, final String workflow, final Optional<String> version) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}");
 		if(version.isPresent()) {
 			uri = uri.queryParam("version", version.get());
 		}
-		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.POST, workflow);
+		return LinkUtil.build(uri, index, Naming.WORKFLOW, HttpMethod.POST, workflow);
 	}
 	
 	/**
+	 * @param index
 	 * @param workflow
 	 * @param version
 	 * @return
 	 */
-	static Link endLink(final String workflow, final Optional<String> version) {
+	static Link endLink(final int index, final String workflow, final Optional<String> version) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}");
 		if(version.isPresent()) {
 			uri = uri.queryParam("version", version.get());
 		}
-		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.PUT, workflow);
+		return LinkUtil.build(uri, index, Naming.WORKFLOW, HttpMethod.PUT, workflow);
 	}
 	
-	static Link terminateLink(final String workflow, final Optional<String> version) {
+	/**
+	 * @param index
+	 * @param workflow
+	 * @param version
+	 * @return
+	 */
+	static Link terminateLink(final int index, final String workflow, final Optional<String> version) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}");
 		if(version.isPresent()) {
 			uri = uri.queryParam("version", version.get());
 		}
-		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.DELETE, workflow);
+		return LinkUtil.build(uri, index, Naming.WORKFLOW, HttpMethod.DELETE, workflow);
 	}
 	
 	/**
+	 * @param index
 	 * @param workflow
 	 * @param version
 	 * @param state
 	 * @return
 	 */
-	static Link transitionLink(final String workflow, final Optional<String> version, final String state) {
+	static Link transitionLink(final int index, final String workflow, final Optional<String> version, final String state) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}");
 		if(version.isPresent()) {
 			uri = uri.queryParam("version", version.get());
 		}
-		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.POST, workflow, state);
+		return LinkUtil.build(uri, index, Naming.WORKFLOW, HttpMethod.POST, workflow, state);
 	}
 	
 	/**
+	 * @param index
 	 * @param workflow
 	 * @param version
 	 * @param state
 	 * @return
 	 */
-	static Link compensateLink(final String workflow, final Optional<String> version, final String state) {
+	static Link compensateLink(final int index, final String workflow, final Optional<String> version, final String state) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}");
 		if(version.isPresent()) {
 			uri = uri.queryParam("version", version.get());
 		}
-		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.PUT, workflow, state);
+		return LinkUtil.build(uri, index, Naming.WORKFLOW, HttpMethod.PUT, workflow, state);
 	}
 	
 	/**
+	 * @param index
 	 * @param workflow
 	 * @param version
 	 * @param state
 	 * @return
 	 */
-	static Link operationLink(final String workflow, final Optional<String> version, final String state) {
+	static Link operationLink(final int index, final String workflow, final Optional<String> version, final String state) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}");
 		if(version.isPresent()) {
 			uri = uri.queryParam("version", version.get());
 		}
-		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.HEAD, workflow, state);
+		return LinkUtil.build(uri, index, Naming.WORKFLOW, HttpMethod.HEAD, workflow, state);
 	}
 	
 	/**
+	 * @param index
 	 * @param workflow
 	 * @param version
 	 * @param state
 	 * @return
 	 */
-	static Link actionsLink(final String workflow, final Optional<String> version, final String state) {
+	static Link actionsLink(final int index, final String workflow, final Optional<String> version, final String state) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}");
 		if(version.isPresent()) {
 			uri = uri.queryParam("version", version.get());
 		}
-		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.PATCH, workflow, state);
+		return LinkUtil.build(uri, index, Naming.WORKFLOW, HttpMethod.PATCH, workflow, state);
 	}
 	
 	/**
+	 * @param index
 	 * @param workflow
 	 * @param version
 	 * @param state
@@ -126,7 +140,7 @@ public interface WorkflowLink {
 	 * @param timeout
 	 * @return
 	 */
-	static Link actionLink(final String workflow, final Optional<String> version, final String state, final String action, final Optional<Duration> timeout) {
+	static Link actionLink(final int index, final String workflow, final Optional<String> version, final String state, final String action, final Optional<Duration> timeout) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}/{action}");
 		if(version.isPresent()) {
 			uri = uri.queryParam("version", version);
@@ -134,10 +148,11 @@ public interface WorkflowLink {
 		if(timeout.isPresent()) {
 			uri = uri.queryParam("timeout", timeout.get().toString());
 		}
-		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.POST, workflow, state, action);
+		return LinkUtil.build(uri, index, Naming.WORKFLOW, HttpMethod.POST, workflow, state, action);
 	}
 	
 	/**
+	 * @param index
 	 * @param service
 	 * @param method
 	 * @param path
@@ -145,10 +160,11 @@ public interface WorkflowLink {
 	 * @return
 	 */
 	static Link scheduleLink(
+			final int index,
 			final String service, 
 			final String method,
 			final String path,
 			final String recurringTimeInterval) {
-		return LinkUtil.build(UriBuilder.fromUri("REST").queryParam("service", service).queryParam("method", method).queryParam("recurringTimeInterval", recurringTimeInterval), Naming.SCHEDULE, HttpMethod.POST);
+		return LinkUtil.build(UriBuilder.fromUri("REST").queryParam("service", service).queryParam("method", method).queryParam("recurringTimeInterval", recurringTimeInterval), index, Naming.SCHEDULE, HttpMethod.POST);
 	}
 }
