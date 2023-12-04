@@ -49,8 +49,8 @@ import org.eclipse.microprofile.faulttolerance.Fallback;
 import org.eclipse.microprofile.faulttolerance.Retry;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.lra.annotation.AfterLRA;
-import org.eclipse.microprofile.lra.annotation.ParticipantStatus;
-import org.eclipse.microprofile.lra.annotation.Status;
+import org.eclipse.microprofile.lra.annotation.Compensate;
+import org.eclipse.microprofile.lra.annotation.Forget;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA.Type;
 import org.eclipse.microprofile.lra.annotation.ws.rs.Leave;
@@ -154,10 +154,10 @@ public class WorkflowApplication  {
 	@Inject
 	transient Validator validator;
 	
-	private Response transitionLink(final String workflow, final Optional<String> version, final String state, final URI instance, final WorkflowData workflowData, final Link[] compensateLinks, final Optional<Enum<?>> status) {
+	private Response transitionLink(final String workflow, final Optional<String> version, final String state, final URI instance, final WorkflowData workflowData, final Link[] compensateLinks) {
 		return Response.ok(workflowData.getOutput().toString(), MediaType.APPLICATION_JSON)
 				.links(compensateLinks)
-				.links(WorkflowLink.transitionLink(workflow, version, state, status))
+				.links(WorkflowLink.transitionLink(workflow, version, state))
 				.header(LRA.LRA_HTTP_CONTEXT_HEADER, instance)
 				.build();
 	}
@@ -560,7 +560,6 @@ public class WorkflowApplication  {
 			final EndDefinition endDefinition = end.getRight();
 			if(endDefinition.isCompensate()) {
 				final Link[] compensateLinks = compensateLinks(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), instance);
-				cache.putStatus(instance, ParticipantStatus.Compensating);
 				return endLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), instance, workflowData, compensateLinks);
 			}
 			if(Boolean.TRUE.equals(endDefinition.isTerminate())) {
@@ -690,17 +689,16 @@ public class WorkflowApplication  {
 	private Response transition(final WorkflowDefinition workflowDefinition, final Either<String, TransitionDefinition> transition, final URI instance, final WorkflowData workflowData) throws Exception {
 		if(transition.isLeft()) {
 			final String state = transition.getLeft();
-			return transitionLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), state, instance, workflowData, new Link[0], Optional.empty());
+			return transitionLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), state, instance, workflowData, new Link[0]);
 		}
 		else if(transition.isRight()) {
 			final TransitionDefinition transitionDef = transition.getRight();
 			if(transitionDef.isCompensate()) {
 				final Link[] compensateLinks = compensateLinks(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), instance);
-				cache.putStatus(instance, ParticipantStatus.Compensating);
-				return transitionLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), transitionDef.getNextState(), instance, workflowData, compensateLinks, Optional.of(ParticipantStatus.Compensated));
+				return transitionLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), transitionDef.getNextState(), instance, workflowData, compensateLinks);
 			}
 			produceEvents(workflowDefinition, transitionDef.getProduceEvents(), instance);
-			return transitionLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), transitionDef.getNextState(), instance, workflowData, new Link[0], Optional.empty());
+			return transitionLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), transitionDef.getNextState(), instance, workflowData, new Link[0]);
 		}
 		throw new BadRequestException();
 	}
@@ -964,24 +962,31 @@ public class WorkflowApplication  {
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
+	@Compensate
 	@AfterLRA
 	@RunOnVirtualThread
 	public Response end(
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
 			final URI instance) throws Exception {
 		cache.removeInstance(instance);
-		cache.removeStatus(instance);
 		return Response.ok().build();
 	}
 	
-	@GET
+	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
-	@Status
+	@Leave
+	@Forget
 	@RunOnVirtualThread
-	public ParticipantStatus status(
+	public Response terminate(
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
 			final URI instance) throws Exception {
-		return ParticipantStatus.valueOf(cache.getStatus(instance));
+		final WorkflowInstance workflowInstance = cache.removeInstance(instance);
+		if(workflowInstance != null) {
+			return Response.ok(workflowInstance.getState().getWorkflowData().getOutput().toString(), MediaType.APPLICATION_JSON).build();
+		}
+		else {
+			return Response.ok().build();
+		}
 	}
 
 	@POST
@@ -1014,7 +1019,7 @@ public class WorkflowApplication  {
 		}
 		final WorkflowData workflowData = new WorkflowData();
 		workflowData.setInput(input);
-		return transitionLink(workflow, Optional.ofNullable(version), startState, instance, workflowData, new Link[0], Optional.of(ParticipantStatus.Active));
+		return transitionLink(workflow, Optional.ofNullable(version), startState, instance, workflowData, new Link[0]);
 	}
 	
 	@PUT
@@ -1029,7 +1034,6 @@ public class WorkflowApplication  {
 			final URI instance,
 			final InputStream body) throws Exception {
 		final WorkflowInstance workflowInstance = cache.getInstance(instance);
-		cache.replaceStatus(instance, ParticipantStatus.Compensating, ParticipantStatus.Compensated);
 		if(workflowInstance != null) {
 			return Response.ok(body).build();
 		}
@@ -1050,9 +1054,7 @@ public class WorkflowApplication  {
 			@PathParam("state")
 			final String state,
 			@QueryParam("version")
-			final String version, 
-			@QueryParam("status")
-			final String status, 
+			final String version,
 			@QueryParam("filter")
 			final String filter,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
@@ -1064,9 +1066,6 @@ public class WorkflowApplication  {
 			final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
 			final State nextState = getState(workflowDefinition, state);
 			final JsonValue input = JsonUtil.readValue(body);
-			if(status != null && !status.isEmpty()) {
-				cache.putStatus(instance, ParticipantStatus.valueOf(status));
-			}
 			final StateDataFilters stateDataFilters = new StateDataFilters();
 			stateDataFilters.setInput(filter);
 			final WorkflowData workflowData = new WorkflowData();
@@ -1140,15 +1139,15 @@ public class WorkflowApplication  {
 			final URI instance,
 			final InputStream body) throws Exception {
 		Response response;
-		final String currentStatus = cache.getStatus(instance);
-		if(ParticipantStatus.Compensating.name().equals(currentStatus)) {
+		final WorkflowInstance workflowInstance = cache.getInstance(instance);
+		if(workflowInstance != null) {
 			final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
 			final State currentState = getState(workflowDefinition, state);
 			final Optional<String> compensatedBy = getCompensatedBy(currentState);
 			if(compensatedBy.isPresent()) {
 				final WorkflowData workflowData = new WorkflowData();
 				workflowData.setInput(JsonUtil.readValue(body));
-				response = transitionLink(workflow, Optional.ofNullable(version), compensatedBy.get(), instance, workflowData, new Link[0], Optional.empty());
+				response = transitionLink(workflow, Optional.ofNullable(version), compensatedBy.get(), instance, workflowData, new Link[0]);
 			}
 			else {
 				response = Response.ok(body).build();
@@ -1296,22 +1295,5 @@ public class WorkflowApplication  {
 			final URI instance,
 			final InputStream body) throws Exception {
 		return null;
-	}
-	
-	@DELETE
-	@Produces(MediaType.APPLICATION_JSON)
-	@Leave
-	@RunOnVirtualThread
-	public Response terminate(
-			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
-			final URI instance) throws Exception {
-		final WorkflowInstance workflowInstance = cache.removeInstance(instance);
-		cache.removeStatus(instance);
-		if(workflowInstance != null) {
-			return Response.ok(workflowInstance.getState().getWorkflowData().getOutput().toString(), MediaType.APPLICATION_JSON).build();
-		}
-		else {
-			return Response.noContent().build();
-		}
 	}
 }

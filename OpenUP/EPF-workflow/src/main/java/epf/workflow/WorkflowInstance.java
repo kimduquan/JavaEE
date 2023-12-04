@@ -1,5 +1,7 @@
 package epf.workflow;
 
+import java.io.Serializable;
+
 import jakarta.nosql.Column;
 import jakarta.nosql.Entity;
 import jakarta.nosql.Id;
@@ -9,8 +11,13 @@ import jakarta.nosql.Id;
  *
  */
 @Entity
-public class WorkflowInstance {
+public class WorkflowInstance implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * 
 	 */

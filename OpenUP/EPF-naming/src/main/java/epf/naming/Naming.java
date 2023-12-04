@@ -1048,11 +1048,6 @@ public interface Naming {
 			 * 
 			 */
 			String WORKFLOW_DEFINITION_CACHE = "EPF-workflow-definition-cache";
-			
-			/**
-			 * 
-			 */
-			String WORKFLOW_STATUS_CACHE = "EPF-workflow-status-cache";
 		}
 	}
 }

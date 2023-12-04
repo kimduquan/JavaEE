@@ -33,11 +33,6 @@ public class WorkflowCache implements HealthCheck {
 	 * 
 	 */
 	private transient Cache<String, WorkflowInstance> workflowCache;
-	
-	/**
-	 * 
-	 */
-	private transient Cache<String, String> workflowStatusCache;
 
 	@Override
 	public HealthCheckResponse call() {
@@ -51,11 +46,6 @@ public class WorkflowCache implements HealthCheck {
 		if(workflowCache == null) {
 			final MutableConfiguration<String, WorkflowInstance> config = new MutableConfiguration<>();
 			workflowCache = cacheManager.createCache(Naming.Workflow.Internal.WORKFLOW_CACHE, config);
-		}
-		workflowStatusCache = cacheManager.getCache(Naming.Workflow.Internal.WORKFLOW_STATUS_CACHE);
-		if(workflowStatusCache == null) {
-			final MutableConfiguration<String, String> config = new MutableConfiguration<>();
-			workflowStatusCache = cacheManager.createCache(Naming.Workflow.Internal.WORKFLOW_STATUS_CACHE, config);
 		}
 		return HealthCheckResponse.up("epf-workflow-cache");
 	}
@@ -99,7 +89,7 @@ public class WorkflowCache implements HealthCheck {
 	 * @param workflowInstance
 	 */
 	public void putInstance(final URI instance, final WorkflowInstance workflowInstance) {
-		workflowCache.put(workflowInstance.getId(), workflowInstance);
+		workflowCache.put(instance.toString(), workflowInstance);
 	}
 	
 	/**
@@ -107,7 +97,7 @@ public class WorkflowCache implements HealthCheck {
 	 * @param workflowInstance
 	 */
 	public void replaceInstance(final URI instance, final WorkflowInstance workflowInstance) {
-		workflowCache.replace(workflowInstance.getId(), workflowInstance);
+		workflowCache.replace(instance.toString(), workflowInstance);
 	}
 	
 	/**
@@ -124,38 +114,5 @@ public class WorkflowCache implements HealthCheck {
 	 */
 	public WorkflowInstance removeInstance(final URI instance) {
 		return workflowCache.getAndRemove(instance.toString());
-	}
-	
-	/**
-	 * @param instance
-	 * @param status
-	 */
-	public void putStatus(final URI instance, final Enum<?> status) {
-		this.workflowStatusCache.put(instance.toString(), status.name());
-	}
-	
-	/**
-	 * @param instance
-	 * @return
-	 */
-	public String getStatus(final URI instance) {
-		return workflowStatusCache.get(instance.toString());
-	}
-	
-	/**
-	 * @param instance
-	 * @param status
-	 * @param newStatus
-	 */
-	public boolean replaceStatus(final URI instance, final Enum<?> status, final Enum<?> newStatus) {
-		return workflowStatusCache.replace(instance.toString(), status.name(), newStatus.name());
-	}
-	
-	/**
-	 * @param instance
-	 * @return
-	 */
-	public String removeStatus(final URI instance) {
-		return workflowStatusCache.getAndRemove(instance.toString());
 	}
 }

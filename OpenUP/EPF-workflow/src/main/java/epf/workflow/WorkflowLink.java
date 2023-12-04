@@ -68,11 +68,8 @@ public interface WorkflowLink {
 	 * @param state
 	 * @return
 	 */
-	static Link transitionLink(final String workflow, final Optional<String> version, final String state, final Optional<Enum<?>> status) {
+	static Link transitionLink(final String workflow, final Optional<String> version, final String state) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}");
-		if(status.isPresent()) {
-			uri = uri.queryParam("status", status.get());
-		}
 		if(version.isPresent()) {
 			uri = uri.queryParam("version", version.get());
 		}
