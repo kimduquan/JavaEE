@@ -12,6 +12,7 @@ public class RequestUtilTest {
 	@Test
 	public void testBuildMatrixParameters() {
 		WebTarget webTarget = Mockito.mock(WebTarget.class);
+		Mockito.when(webTarget.matrixParam(Mockito.any())).thenReturn(webTarget);
 		Mockito.when(webTarget.matrixParam(Mockito.any(), Mockito.any())).thenReturn(webTarget);
 		PathSegment pathSegment = Mockito.mock(PathSegment.class);
 		MultivaluedHashMap<String, String> params = new MultivaluedHashMap<>();
@@ -21,16 +22,16 @@ public class RequestUtilTest {
 		params.putSingle("tenant", "tenant-1");
 		Mockito.when(pathSegment.getMatrixParameters()).thenReturn(params);
 		RequestUtil.buildMatrixParameters(webTarget, pathSegment);
-		Mockito.verify(webTarget, Mockito.times(1)).matrixParam(Mockito.eq("single"), Mockito.any());
+		Mockito.verify(webTarget, Mockito.times(1)).matrixParam(Mockito.eq("single"), Mockito.eq("single-value"));
 		Mockito.verify(webTarget, Mockito.times(1)).matrixParam(Mockito.eq("null"));
 		Mockito.verify(webTarget, Mockito.times(1)).matrixParam(Mockito.eq("null2"));
-		Mockito.verify(webTarget, Mockito.never()).matrixParam(Mockito.eq("tenant"), Mockito.any());
-		Mockito.verify(webTarget, Mockito.times(3)).matrixParam(Mockito.any(), Mockito.any());
+		Mockito.verify(webTarget, Mockito.times(1)).matrixParam(Mockito.eq("tenant"), Mockito.eq("tenant-1"));
 	}
 
 	@Test
 	public void testBuildQueryParameters() {
 		WebTarget webTarget = Mockito.mock(WebTarget.class);
+		Mockito.when(webTarget.queryParam(Mockito.any())).thenReturn(webTarget);
 		Mockito.when(webTarget.queryParam(Mockito.any(), Mockito.any())).thenReturn(webTarget);
 		UriInfo uriInfo = Mockito.mock(UriInfo.class);
 		MultivaluedHashMap<String, String> params = new MultivaluedHashMap<>();
@@ -42,7 +43,6 @@ public class RequestUtilTest {
 		Mockito.verify(webTarget, Mockito.times(1)).queryParam(Mockito.eq("single"), Mockito.any());
 		Mockito.verify(webTarget, Mockito.times(1)).queryParam(Mockito.eq("null"));
 		Mockito.verify(webTarget, Mockito.times(1)).queryParam(Mockito.eq("null2"));
-		Mockito.verify(webTarget, Mockito.times(3)).queryParam(Mockito.any(), Mockito.any());
 	}
 
 	@Test

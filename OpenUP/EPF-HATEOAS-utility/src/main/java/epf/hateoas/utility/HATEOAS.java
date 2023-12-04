@@ -52,13 +52,17 @@ public interface HATEOAS {
 		Invocation.Builder builder = target.request();
 		builder = RequestUtil.buildHeaders(builder, headers, targetUrl, true);
 		builder = RequestUtil.buildLRAHeaders(builder, response);
+		InputStream entity = null;
+		if(response.hasEntity()) {
+			entity = response.readEntity(InputStream.class);
+		}
 		switch(link.getType()) {
 			case HttpMethod.GET:
 				return builder.get();
 			case HttpMethod.POST:
-				return builder.post(Entity.entity(response.readEntity(InputStream.class), response.getMediaType()));
+				return builder.post(Entity.entity(entity, response.getMediaType()));
 			case HttpMethod.PUT:
-				return builder.put(Entity.entity(response.readEntity(InputStream.class), response.getMediaType()));
+				return builder.put(Entity.entity(entity, response.getMediaType()));
 			case HttpMethod.DELETE:
 				return builder.delete();
 			case HttpMethod.HEAD:
@@ -66,12 +70,10 @@ public interface HATEOAS {
 			case HttpMethod.OPTIONS:
 				return builder.options();
 			case HttpMethod.PATCH:
-				return builder.method(HttpMethod.PATCH, Entity.entity(response.readEntity(InputStream.class), response.getMediaType()));
+				return builder.method(HttpMethod.PATCH, Entity.entity(entity, response.getMediaType()));
 			default:
-				break;
+				return builder.method(link.getType(), Entity.entity(entity, response.getMediaType()));
 		}
-		final Entity<InputStream> entity = response.hasEntity() ? Entity.entity(response.readEntity(InputStream.class), response.getMediaType()) : null;
-		return builder.method(link.getType(), entity);
     }
     
     /**
