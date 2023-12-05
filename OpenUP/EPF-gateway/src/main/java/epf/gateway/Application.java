@@ -85,10 +85,12 @@ public class Application {
     	final Client client = clients.poll(serviceUrl, null);
     	final RequestBuilder builder = new RequestBuilder(client, serviceUrl, req.getMethod(), headers, uriInfo, body, true);
     	Response response = builder.build();
-    	response.bufferEntity();
     	if(isSuccessful(response)) {
+        	if(response.hasEntity()) {
+            	response.bufferEntity();
+        	}
         	final Link self = HATEOAS.selfLink(uriInfo, req, service);
-        	response = buildLinkRequests(client, response, headers, self, isPartial(response), isAsync(response));
+        	response = buildLinkRequests(client, response, headers, self, isPartial(response));
     	}
     	response = ResponseUtil.buildResponse(response, uriInfo.getBaseUri());
     	clients.add(serviceUrl, client);
@@ -103,10 +105,6 @@ public class Application {
     	return Response.Status.PARTIAL_CONTENT.getStatusCode() == response.getStatus();
     }
     
-    private synchronized boolean isAsync(final Response response) {
-    	return String.valueOf(false).equals(response.getHeaderString("synchronized"));
-    }
-    
     /**
      * @param response
      * @param headers
@@ -119,7 +117,9 @@ public class Application {
 		LOGGER.info(String.format("link=%s", link.toString()));
 		final Optional<Duration> wait = HATEOAS.getWait(link);
 		wait.ifPresent(duration -> {
-			response.bufferEntity();
+			if(response.hasEntity()) {
+				response.bufferEntity();
+			}
 			ThreadUtil.sleep(duration);
 		});
 		return HATEOAS.buildLinkRequest(client, serviceUrl, headers, response, link);
@@ -157,28 +157,30 @@ public class Application {
 		return builder.build();
     }
     
-    private Response buildLinkRequests(final Client client, final Response response, final HttpHeaders headers, final Link self, final boolean isPartial, final boolean isAsync) {
+    private Response buildLinkRequests(final Client client, final Response response, final HttpHeaders headers, final Link self, final boolean isPartial) {
     	Response linkResponse = response;
     	final List<Response> linkResponses = new ArrayList<>();
     	final List<Link> links = HATEOAS.getRequestLinks(response).collect(Collectors.toList());
     	for(Link link : links) {
     		if(HATEOAS.isRequestLink(link)) {
     			final Link targetLink = HATEOAS.isSelfLink(link) ? self : link;
-    			if(isAsync) {
-    				linkResponse = buildLinkRequest(client, response, headers, targetLink);
+    			if(HATEOAS.isSynchronized(link)) {
+        			linkResponse = buildLinkRequest(client, linkResponse, headers, targetLink);
+        			if(isSuccessful(linkResponse)) {
+        				if(linkResponse.hasEntity()) {
+            				linkResponse.bufferEntity();
+        				}
+            			linkResponse = buildLinkRequests(client, linkResponse, headers, targetLink, isPartial(linkResponse));
+    				}
+        			else {
+        				break;
+        			}
     			}
     			else {
-        			linkResponse = buildLinkRequest(client, linkResponse, headers, targetLink);
+    				linkResponse = buildLinkRequest(client, response, headers, targetLink);
+        			linkResponse = buildLinkRequests(client, linkResponse, headers, targetLink, isPartial(linkResponse));
     			}
-    			if(isPartial) {
-    				linkResponse = buildLinkRequests(client, linkResponse, headers, targetLink, isPartial, isAsync);
-        			linkResponses.add(linkResponse);
-    			}
-    			else if(isSuccessful(linkResponse)) {
-    				linkResponse.bufferEntity();
-        			linkResponse = buildLinkRequests(client, linkResponse, headers, targetLink, isPartial(linkResponse), isAsync(linkResponse));
-        			linkResponses.add(linkResponse);
-				}
+    			linkResponses.add(linkResponse);
     		}
     	}
     	if(isPartial) {

@@ -115,6 +115,15 @@ public interface HATEOAS {
      * @param link
      * @return
      */
+    static boolean isSynchronized(final Link link) {
+    	Objects.requireNonNull(link, "Link");
+    	return "true".equals(link.getParams().getOrDefault("synchronized", "true"));
+    }
+    
+    /**
+     * @param link
+     * @return
+     */
     static boolean isRequestLink(final Link link) {
     	Objects.requireNonNull(link, "Link");
     	if(link.getType() != null) {

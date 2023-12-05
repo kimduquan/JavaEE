@@ -220,6 +220,7 @@ public class WorkflowApplication  {
 		newWorkflowState.setPreviousState(workflowState);
 		newWorkflowState.setName(state);
 		newWorkflowState.setWorkflowData(workflowData);
+		workflowInstance.setState(newWorkflowState);
 		cache.replaceInstance(instance, workflowInstance);
 	}
 	
@@ -1208,28 +1209,9 @@ public class WorkflowApplication  {
 		final WorkflowInstance workflowInstance = cache.getInstance(instance);
 		Response response;
 		if(workflowInstance != null) {
-			final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
-			final State currentState = getState(workflowDefinition, state);
-			if(currentState instanceof OperationState) {
-				final JsonArray inputs = JsonUtil.readArray(body);
-				final OperationState operationState = (OperationState) currentState;
-				final JsonValue input = inputs.get(inputs.size() - 1);
-				final WorkflowData workflowData = new WorkflowData();
-				workflowData.setInput(input);
-				putState(state, instance, workflowData);
-				if(!operationState.getTransition().isNull()) {
-					response = transition(workflowDefinition, operationState.getTransition(), instance, input);
-				}
-				else if(!operationState.getEnd().isNull()) {
-					response = end(workflowDefinition, operationState.getEnd(), instance, input);
-				}
-				else {
-					throw new BadRequestException();
-				}
-			}
-			else {
-				throw new BadRequestException();
-			}
+			final JsonArray inputs = JsonUtil.readArray(body);
+			final JsonValue input = inputs.get(inputs.size() - 1);
+			return Response.ok(input.toString(), MediaType.APPLICATION_JSON).build();
 		}
 		else {
 			response = Response.noContent().build();
@@ -1243,7 +1225,7 @@ public class WorkflowApplication  {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Retry(retryOn = {RetryableException.class}, abortOn = {NonRetryableException.class})
-	@Fallback(fallbackMethod = "fallbackAction", applyOn = {WorkflowException.class})
+	@Fallback(fallbackMethod = "onErrors", applyOn = {WorkflowException.class})
 	@RunOnVirtualThread
 	public Response action(
 			@PathParam("workflow")
@@ -1276,7 +1258,7 @@ public class WorkflowApplication  {
 
 	@LRA(value = Type.MANDATORY, end = false)
 	@RunOnVirtualThread
-	public Response fallbackAction(
+	public Response onErrors(
 			@PathParam("workflow")
 			final String workflow, 
 			@PathParam("state")
