@@ -143,7 +143,7 @@ public interface WorkflowLink {
 	static Link actionLink(final int index, final String workflow, final Optional<String> version, final String state, final String action, final Optional<Duration> timeout) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}/{action}");
 		if(version.isPresent()) {
-			uri = uri.queryParam("version", version);
+			uri = uri.queryParam("version", version.get());
 		}
 		if(timeout.isPresent()) {
 			uri = uri.queryParam("timeout", timeout.get().toString());
