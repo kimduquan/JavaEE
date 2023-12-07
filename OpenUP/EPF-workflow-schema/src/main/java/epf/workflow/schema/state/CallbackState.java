@@ -15,7 +15,6 @@ import epf.workflow.schema.adapter.StringOrTransitionDefinitionAdapter;
 import jakarta.nosql.Column;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.jnosql.mapping.DiscriminatorValue;
 import org.eclipse.jnosql.mapping.Embeddable;
 

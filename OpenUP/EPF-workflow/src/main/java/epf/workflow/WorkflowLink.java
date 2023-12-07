@@ -108,7 +108,7 @@ public interface WorkflowLink {
 	 * @param state
 	 * @return
 	 */
-	static Link operationLink(final int index, final String workflow, final Optional<String> version, final String state) {
+	static Link getActionsLink(final int index, final String workflow, final Optional<String> version, final String state) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}");
 		if(version.isPresent()) {
 			uri = uri.queryParam("version", version.get());
@@ -140,13 +140,16 @@ public interface WorkflowLink {
 	 * @param timeout
 	 * @return
 	 */
-	static Link actionLink(final int index, final String workflow, final Optional<String> version, final String state, final String action, final Optional<Duration> timeout) {
+	static Link actionLink(final int index, final String workflow, final Optional<String> version, final String state, final String action, final Optional<Duration> timeout, final boolean useResults) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}/{action}");
 		if(version.isPresent()) {
 			uri = uri.queryParam("version", version.get());
 		}
 		if(timeout.isPresent()) {
 			uri = uri.queryParam("timeout", timeout.get().toString());
+		}
+		if(useResults) {
+			uri = uri.queryParam("useResults", true);
 		}
 		return LinkUtil.build(uri, index, Naming.WORKFLOW, HttpMethod.POST, workflow, state, action);
 	}

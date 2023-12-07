@@ -32,6 +32,7 @@ public interface HATEOAS {
      * @param serviceUrl
      * @param headers
      * @param response
+     * @param entity
      * @param link
      * @return
      */
@@ -40,6 +41,7 @@ public interface HATEOAS {
     		final URI serviceUrl,
     		final HttpHeaders headers,
     		final Response response,
+    		final Optional<InputStream> entity,
     		final Link link
     		) {
     	Objects.requireNonNull(client, "Client");
@@ -52,17 +54,13 @@ public interface HATEOAS {
 		Invocation.Builder builder = target.request();
 		builder = RequestUtil.buildHeaders(builder, headers, targetUrl, true);
 		builder = RequestUtil.buildLRAHeaders(builder, response);
-		InputStream entity = null;
-		if(response.hasEntity()) {
-			entity = response.readEntity(InputStream.class);
-		}
 		switch(link.getType()) {
 			case HttpMethod.GET:
 				return builder.get();
 			case HttpMethod.POST:
-				return builder.post(Entity.entity(entity, response.getMediaType()));
+				return builder.post(Entity.entity(entity.orElse(null), response.getMediaType()));
 			case HttpMethod.PUT:
-				return builder.put(Entity.entity(entity, response.getMediaType()));
+				return builder.put(Entity.entity(entity.orElse(null), response.getMediaType()));
 			case HttpMethod.DELETE:
 				return builder.delete();
 			case HttpMethod.HEAD:
@@ -70,10 +68,23 @@ public interface HATEOAS {
 			case HttpMethod.OPTIONS:
 				return builder.options();
 			case HttpMethod.PATCH:
-				return builder.method(HttpMethod.PATCH, Entity.entity(entity, response.getMediaType()));
+				return builder.method(HttpMethod.PATCH, Entity.entity(entity.orElse(null), response.getMediaType()));
 			default:
-				return builder.method(link.getType(), Entity.entity(entity, response.getMediaType()));
+				return builder.method(link.getType(), Entity.entity(entity.orElse(null), response.getMediaType()));
 		}
+    }
+    
+    /**
+     * @param response
+     * @return
+     */
+    static Optional<InputStream> readEntity(final Response response){
+    	Objects.requireNonNull(response, "Response");
+    	Optional<InputStream> entity = Optional.empty();
+    	if(response.hasEntity()) {
+			entity = Optional.ofNullable(response.readEntity(InputStream.class));
+		}
+    	return entity;
     }
     
     /**
@@ -118,6 +129,31 @@ public interface HATEOAS {
     static boolean isSynchronized(final Link link) {
     	Objects.requireNonNull(link, "Link");
     	return "true".equals(link.getParams().getOrDefault("synchronized", "true"));
+    }
+    
+    /**
+     * @param link
+     * @return
+     */
+    static boolean hasEntity(final Link link) {
+    	Objects.requireNonNull(link, "Link");
+    	boolean hasEntity = true;
+    	if(link.getType() != null) {
+        	switch(link.getType()) {
+    			case HttpMethod.GET:
+    			case HttpMethod.POST:
+    			case HttpMethod.PUT:
+    			case HttpMethod.DELETE:
+    			case HttpMethod.OPTIONS:
+    			case HttpMethod.PATCH:
+    				break;
+    			case HttpMethod.HEAD:
+    				hasEntity = false;
+    			default:
+    				break;
+        	}
+    	}
+    	return hasEntity;
     }
     
     /**

@@ -44,6 +44,7 @@ import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
+import jakarta.ws.rs.core.Response.Status;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.faulttolerance.Fallback;
 import org.eclipse.microprofile.faulttolerance.Retry;
@@ -73,6 +74,7 @@ import epf.workflow.schema.StartDefinition;
 import epf.workflow.schema.SubFlowRefDefinition;
 import epf.workflow.schema.TransitionDefinition;
 import epf.workflow.schema.WorkflowDefinition;
+import epf.workflow.schema.action.ActionDataFilters;
 import epf.workflow.schema.action.ActionDefinition;
 import epf.workflow.schema.auth.AuthDefinition;
 import epf.workflow.schema.auth.BearerPropertiesDefinition;
@@ -164,7 +166,7 @@ public class WorkflowApplication  {
 	
 	private Response operationLink(final String workflow, final String version, final String state, final URI instance, final JsonValue data) {
 		return Response.ok(data.toString(), MediaType.APPLICATION_JSON)
-				.links(WorkflowLink.operationLink(0, workflow, Optional.ofNullable(version), state))
+				.links(WorkflowLink.getActionsLink(0, workflow, Optional.ofNullable(version), state))
 				.links(WorkflowLink.actionsLink(1, workflow, Optional.ofNullable(version), state))
 				.header(LRA.LRA_HTTP_CONTEXT_HEADER, instance)
 				.build();
@@ -228,18 +230,16 @@ public class WorkflowApplication  {
 		return workflowDefinition.getStates().stream().filter(state -> state.getName().equals(name)).findFirst().orElseThrow(NotFoundException::new);
 	}
 	
-	private JsonValue filterStateDataInput(final StateDataFilters stateDataFilters, final WorkflowData workflowData) throws Exception {
-		JsonValue input = workflowData.getInput();
+	private JsonValue filterStateDataInput(final StateDataFilters stateDataFilters, final JsonValue input) throws Exception {
 		if(stateDataFilters != null && stateDataFilters.getInput() != null) {
-			input = ELUtil.getValue(stateDataFilters.getInput(), workflowData.getInput());
+			return ELUtil.getValue(stateDataFilters.getInput(), input);
 		}
 		return input;
 	}
 	
-	private JsonValue filterActionDataInput(final ActionDefinition actionDefinition, final WorkflowData workflowData, final WorkflowData actionData) throws Exception {
-		JsonValue input = workflowData.getInput();
-		if(actionDefinition.getActionDataFilter() != null && actionDefinition.getActionDataFilter().getFromStateData() != null) {
-			input = ELUtil.getValue(actionDefinition.getActionDataFilter().getFromStateData(), workflowData.getInput());
+	private JsonValue filterActionDataInput(final ActionDataFilters actionDataFilters, final JsonValue input) throws Exception {
+		if(actionDataFilters != null && actionDataFilters.getFromStateData() != null) {
+			return ELUtil.getValue(actionDataFilters.getFromStateData(), input);
 		}
 		return input;
 	}
@@ -295,8 +295,7 @@ public class WorkflowApplication  {
 	
 	private Action action(final WorkflowDefinition workflowDefinition, final ActionDefinition actionDefinition, final WorkflowData workflowData) throws Exception {
 		Action action = null;
-		final WorkflowData actionData = new WorkflowData();
-		filterActionDataInput(actionDefinition, workflowData, actionData);
+		filterActionDataInput(actionDefinition.getActionDataFilter(), workflowData.getInput());
 		if(!actionDefinition.getFunctionRef().isNull()) {
 		}
 		else if(actionDefinition.getEventRef() != null) {
@@ -311,7 +310,7 @@ public class WorkflowApplication  {
 		return action;
 	}
 	
-	private Response invoke(final WorkflowDefinition workflowDefinition, final FunctionDefinition functionDefinition, final WorkflowData workflowData, final OpenAPI openAPI, final String path, final PathItem pathItem, final org.eclipse.microprofile.openapi.models.PathItem.HttpMethod httpMethod, final Operation operation) throws Exception {
+	private Response invoke(final WorkflowDefinition workflowDefinition, final FunctionDefinition functionDefinition, final JsonValue data, final boolean useResults, final OpenAPI openAPI, final String path, final PathItem pathItem, final org.eclipse.microprofile.openapi.models.PathItem.HttpMethod httpMethod, final Operation operation) throws Exception {
 		Server server = openAPI.getServers().iterator().next();
 		if(operation.getServers() != null && !operation.getServers().isEmpty()) {
 			server = operation.getServers().iterator().next();
@@ -319,7 +318,7 @@ public class WorkflowApplication  {
 		else if(pathItem.getServers() != null && !pathItem.getServers().isEmpty()) {
 			server = pathItem.getServers().iterator().next();
 		}
-		final JsonObject input = workflowData.getInput().asJsonObject();
+		final JsonObject input = data.asJsonObject();
 		try(Client client = ClientBuilder.newClient()){
 			WebTarget target = client.target(server.getUrl()).path(path);
 			for(Parameter parameter : operation.getParameters()) {
@@ -383,7 +382,7 @@ public class WorkflowApplication  {
 			if(operation.getRequestBody() != null) {
 				final String[] mediaTypes = operation.getRequestBody().getContent().getMediaTypes().keySet().toArray(new String[0]);
 				builder = builder.accept(mediaTypes);
-				entity = Entity.entity(workflowData.getInput().toString(), mediaTypes[0]);
+				entity = Entity.entity(data.toString(), mediaTypes[0]);
 			}
 			Invocation invoke;
 			if(entity != null) {
@@ -392,17 +391,21 @@ public class WorkflowApplication  {
 			else {
 				invoke = builder.build(httpMethod.name());
 			}
-			try(Response response = invoke.invoke()){
-				try(InputStream result = response.readEntity(InputStream.class)){
-					final JsonValue output = JsonUtil.readValue(result);
-					workflowData.setOutput(output);
-					return response;
+			final Response response = invoke.invoke();
+			if(useResults) {
+				if(response.hasEntity()) {
+					response.bufferEntity();
 				}
+				return response;
+			}
+			else {
+				response.close();
+				return null;
 			}
 		}
 	}
 	
-	private Response openapi(final WorkflowDefinition workflowDefinition, final FunctionDefinition functionDefinition, final WorkflowData workflowData) throws Exception {
+	private Response openapi(final WorkflowDefinition workflowDefinition, final FunctionDefinition functionDefinition, final JsonValue data, final boolean useResults) throws Exception {
 		final int index = functionDefinition.getOperation().indexOf("#");
 		final String pathToOpenAPIDefinition = functionDefinition.getOperation().substring(0, index);
 		final String operationId = functionDefinition.getOperation().substring(index + 1);
@@ -419,14 +422,14 @@ public class WorkflowApplication  {
 				final org.eclipse.microprofile.openapi.models.PathItem.HttpMethod httpMethod = operationEntry.getKey();
 				final Operation operation = operationEntry.getValue();
 				if(operation.getOperationId().equals(operationId)) {
-					return invoke(workflowDefinition, functionDefinition, workflowData, openAPI, path, pathItem, httpMethod, operation);
+					return invoke(workflowDefinition, functionDefinition, data, useResults, openAPI, path, pathItem, httpMethod, operation);
 				}
 			}
 		}
 		throw new BadRequestException();
 	}
 	
-	private Response function(final WorkflowDefinition workflowDefinition, final FunctionDefinition functionDefinition, final WorkflowData workflowData) throws Exception {
+	private Response function(final WorkflowDefinition workflowDefinition, final FunctionDefinition functionDefinition, final JsonValue data, final boolean useResults) throws Exception {
 		switch(functionDefinition.getType()) {
 			case asyncapi:
 				break;
@@ -439,7 +442,7 @@ public class WorkflowApplication  {
 			case odata:
 				break;
 			case openapi:
-				return openapi(workflowDefinition, functionDefinition, workflowData);
+				return openapi(workflowDefinition, functionDefinition, data, useResults);
 			case rest:
 				break;
 			case rpc:
@@ -472,13 +475,14 @@ public class WorkflowApplication  {
 		return null;
 	}
 	
-	private Response action2(final WorkflowDefinition workflowDefinition, final ActionDefinition actionDefinition, final WorkflowData workflowData) throws Exception {
+	private Response action(final WorkflowDefinition workflowDefinition, final ActionDefinition actionDefinition, final JsonValue data, final boolean useResults) throws Exception {
 		Response response = null;
+		final JsonValue input = filterActionDataInput(actionDefinition.getActionDataFilter(), data);
 		final WorkflowData actionData = new WorkflowData();
-		filterActionDataInput(actionDefinition, workflowData, actionData);
+		actionData.setInput(input);
 		if(!actionDefinition.getFunctionRef().isNull()) {
 			final FunctionDefinition functionDefinition = getFunctionDefinition(workflowDefinition, actionDefinition.getFunctionRef());
-			response = function(workflowDefinition, functionDefinition, actionData);
+			response = function(workflowDefinition, functionDefinition, actionData.getInput(), useResults);
 		}
 		else if(actionDefinition.getEventRef() != null) {
 			final EventDefinition eventDefinition = getEventDefinition(workflowDefinition, actionDefinition.getEventRef().getProduceEventRef());
@@ -546,19 +550,19 @@ public class WorkflowApplication  {
 		return compensateLinks.toArray(new Link[0]);
 	}
 	
-	private Link[] actionLinks(final WorkflowDefinition workflowDefinition, final String state, final List<ActionDefinition> actionDefinitions, final Optional<Duration> actionExecTimeout){
+	private Link[] actionLinks(final WorkflowDefinition workflowDefinition, final String state, final List<ActionDefinition> actionDefinitions, final Optional<Duration> actionExecTimeout, final boolean useResults){
 		final List<Link> actionLinks = new ArrayList<>();
 		int index = 0;
 		for(ActionDefinition actionDefinition : actionDefinitions) {
-			final Link actionLink = WorkflowLink.actionLink(index, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), state, actionDefinition.getName(), actionExecTimeout);
+			final Link actionLink = WorkflowLink.actionLink(index, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), state, actionDefinition.getName(), actionExecTimeout, useResults);
 			actionLinks.add(actionLink);
 			index++;
 		}
 		return actionLinks.toArray(new Link[0]);
 	}
 	
-	private Response actions(final Link[] actionLinks, final JsonValue data) {
-		return Response.status(Response.Status.PARTIAL_CONTENT).entity(data.toString()).type(MediaType.APPLICATION_JSON).links(actionLinks).build();
+	private Response actionsLink(final Link[] actionLinks) {
+		return Response.status(Status.PARTIAL_CONTENT).links(actionLinks).build();
 	}
 	
 	private Response end(final WorkflowDefinition workflowDefinition, final Either<Boolean, EndDefinition> end, final URI instance, final JsonValue data) throws Exception {
@@ -701,7 +705,7 @@ public class WorkflowApplication  {
 	}
 	
 	private Response transitionCallbackState(final WorkflowDefinition workflowDefinition, final CallbackState callbackState, final URI instance, final WorkflowData workflowData) throws Exception {
-		workflowData.setOutput(filterStateDataInput(callbackState.getStateDataFilter(), workflowData));
+		workflowData.setOutput(filterStateDataInput(callbackState.getStateDataFilter(), workflowData.getInput()));
 		final EventDefinition eventDefinition = getEventDefinition(workflowDefinition, callbackState.getEventRef());
 		
 		final CallbackStateEvent event = new CallbackStateEvent();
@@ -719,7 +723,7 @@ public class WorkflowApplication  {
 	}
 	
 	private Response transitionEventState(final WorkflowDefinition workflowDefinition, final EventState eventState, final URI instance, final WorkflowData workflowData) throws Exception {
-		workflowData.setOutput(filterStateDataInput(eventState.getStateDataFilter(), workflowData));
+		workflowData.setOutput(filterStateDataInput(eventState.getStateDataFilter(), workflowData.getInput()));
 		final Map<String, EventDefinition> eventDefs = new HashMap<>();
 		final List<EventDefinition> events = EitherUtil.getArray(workflowDefinition.getEvents());
 		MapUtil.putAll(eventDefs, events.iterator(), EventDefinition::getName);
@@ -747,13 +751,12 @@ public class WorkflowApplication  {
 	}
 	
 	private Response transitionOperationState(final WorkflowDefinition workflowDefinition, final OperationState operationState, final URI instance, final WorkflowData workflowData) throws Exception {
-		workflowData.setOutput(filterStateDataInput(operationState.getStateDataFilter(), workflowData));
-		filterStateDataOutput(operationState.getStateDataFilter(), workflowData);
+		workflowData.setOutput(filterStateDataInput(operationState.getStateDataFilter(), workflowData.getInput()));
 		return operationLink(workflowDefinition.getId(), workflowDefinition.getVersion(), operationState.getName(), instance, workflowData.getOutput());
 	}
 	
 	private Response transitionSwitchState(final WorkflowDefinition workflowDefinition, final SwitchState switchState, final URI instance, final WorkflowData workflowData) throws Exception {
-		workflowData.setOutput(filterStateDataInput(switchState.getStateDataFilter(), workflowData));
+		workflowData.setOutput(filterStateDataInput(switchState.getStateDataFilter(), workflowData.getInput()));
 		if(switchState.getDataConditions() != null) {
 			for(SwitchStateDataConditions condition : switchState.getDataConditions()) {
 				if(ELUtil.evaluateCondition(workflowData.getOutput(), condition.getCondition())) {
@@ -800,7 +803,7 @@ public class WorkflowApplication  {
 	}
 	
 	private Response transitionParallelState(final WorkflowDefinition workflowDefinition, final ParallelState parallelState, final URI instance, final WorkflowData workflowData) throws Exception {
-		workflowData.setOutput(filterStateDataInput(parallelState.getStateDataFilter(), workflowData));
+		workflowData.setOutput(filterStateDataInput(parallelState.getStateDataFilter(), workflowData.getInput()));
 		final List<Branch> branches = new ArrayList<>();
 		for(ParallelStateBranch branch : parallelState.getBranches()) {
 			branches.add(newParallelBranch(workflowDefinition, branch, instance, workflowData));
@@ -826,7 +829,7 @@ public class WorkflowApplication  {
 	}
 	
 	private Response transitionInjectState(final WorkflowDefinition workflowDefinition, final InjectState injectState, final URI instance, final WorkflowData workflowData) throws Exception {
-		workflowData.setOutput(filterStateDataInput(injectState.getStateDataFilter(), workflowData));
+		workflowData.setOutput(filterStateDataInput(injectState.getStateDataFilter(), workflowData.getInput()));
 		StateUtil.mergeStateDataOutput(workflowData, JsonUtil.toJsonValue(injectState.getData()));
 		filterStateDataOutput(injectState.getStateDataFilter(), workflowData);
 		if(!injectState.getTransition().isNull()) {
@@ -839,7 +842,7 @@ public class WorkflowApplication  {
 	}
 	
 	private Response transitionForEachState(final WorkflowDefinition workflowDefinition, final ForEachState forEachState, final URI instance, final WorkflowData workflowData) throws Exception {
-		workflowData.setOutput(filterStateDataInput(forEachState.getStateDataFilter(), workflowData));
+		workflowData.setOutput(filterStateDataInput(forEachState.getStateDataFilter(), workflowData.getInput()));
 		final JsonArray inputCollection = ELUtil.getValue(forEachState.getInputCollection(), workflowData.getOutput()).asJsonArray();
 		int batchSize = inputCollection.size();
 		if(forEachState.getBatchSize().isLeft()) {
@@ -1040,11 +1043,7 @@ public class WorkflowApplication  {
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
 			final URI instance,
 			final InputStream body) throws Exception {
-		final WorkflowInstance workflowInstance = cache.getInstance(instance);
-		if(workflowInstance != null) {
-			return Response.ok(body).build();
-		}
-		throw new BadRequestException();
+		return Response.ok(body).build();
 	}
 
 	@POST
@@ -1134,21 +1133,15 @@ public class WorkflowApplication  {
 			final URI instance,
 			final InputStream body) throws Exception {
 		Response response;
-		final WorkflowInstance workflowInstance = cache.getInstance(instance);
-		if(workflowInstance != null) {
-			final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
-			final State currentState = getState(workflowDefinition, state);
-			final Optional<String> compensatedBy = getCompensatedBy(currentState);
-			if(compensatedBy.isPresent()) {
-				final JsonValue input = JsonUtil.readValue(body);
-				response = transitionLink(workflow, Optional.ofNullable(version), compensatedBy.get(), instance, input, new Link[0]);
-			}
-			else {
-				response = Response.ok(body).build();
-			}
+		final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
+		final State currentState = getState(workflowDefinition, state);
+		final Optional<String> compensatedBy = getCompensatedBy(currentState);
+		if(compensatedBy.isPresent()) {
+			final JsonValue input = JsonUtil.readValue(body);
+			response = transitionLink(workflow, Optional.ofNullable(version), compensatedBy.get(), instance, input, new Link[0]);
 		}
 		else {
-			response = Response.noContent().build();
+			response = Response.ok(body).build();
 		}
 		return response;
 	}
@@ -1159,7 +1152,7 @@ public class WorkflowApplication  {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
-	public Response operation(
+	public Response getActions(
 			@PathParam("workflow")
 			final String workflow, 
 			@PathParam("state")
@@ -1168,26 +1161,36 @@ public class WorkflowApplication  {
 			final String version,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
 			final URI instance) throws Exception {
-		final WorkflowInstance workflowInstance = cache.getInstance(instance);
-		Response response;
-		if(workflowInstance != null) {
-			final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
-			final State currentState = getState(workflowDefinition, state);
-			if(currentState instanceof OperationState) {
+		final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
+		final State currentState = getState(workflowDefinition, state);
+		final Optional<Duration> actionExecTimeout = TimeoutUtil.getActionExecTimeout(workflowDefinition, currentState);
+		List<ActionDefinition> actions = new ArrayList<>();
+		boolean useResults = false;
+		switch(currentState.getType_()) {
+			case Switch:
+				break;
+			case callback:
+				break;
+			case event:
+				break;
+			case foreach:
+				break;
+			case inject:
+				break;
+			case operation:
 				final OperationState operationState = (OperationState) currentState;
-				final WorkflowData workflowData = workflowInstance.getState().getWorkflowData();
-				final Optional<Duration> actionExecTimeout = TimeoutUtil.getActionExecTimeout(workflowDefinition, operationState);
-				final Link[] actionLinks = actionLinks(workflowDefinition, operationState.getName(), operationState.getActions(), actionExecTimeout);
-				response = actions(actionLinks, workflowData.getOutput());
-			}
-			else {
-				throw new BadRequestException();
-			}
+				actions = operationState.getActions();
+				useResults = true;
+				break;
+			case parallel:
+				break;
+			case sleep:
+				break;
+			default:
+				break;
 		}
-		else {
-			response = Response.noContent().build();
-		}
-		return response;
+		final Link[] actionLinks = actionLinks(workflowDefinition, currentState.getName(), actions, actionExecTimeout, useResults);
+		return actionsLink(actionLinks);
 	}
 	
 	@PATCH
@@ -1206,15 +1209,7 @@ public class WorkflowApplication  {
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
 			final URI instance,
 			final InputStream body) throws Exception {
-		final WorkflowInstance workflowInstance = cache.getInstance(instance);
-		Response response;
-		if(workflowInstance != null) {
-			return Response.ok(body).build();
-		}
-		else {
-			response = Response.noContent().build();
-		}
-		return response;
+		return Response.ok(body).build();
 	}
 	
 	@POST
@@ -1236,6 +1231,8 @@ public class WorkflowApplication  {
 			final String version,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
 			final URI instance,
+			@QueryParam("useResults")
+			final Boolean useResults,
 			final InputStream body) throws Exception {
 		final WorkflowInstance workflowInstance = cache.getInstance(instance);
 		Response response;
@@ -1244,9 +1241,7 @@ public class WorkflowApplication  {
 			final State currentState = getState(workflowDefinition, state);
 			final ActionDefinition actionDefinition = getActionDefinition(currentState, action);
 			final JsonValue input = JsonUtil.readValue(body);
-			final WorkflowData workflowData = new WorkflowData();
-			workflowData.setInput(input);
-			response = action2(workflowDefinition, actionDefinition, workflowData);
+			response = action(workflowDefinition, actionDefinition, input, useResults != null ? useResults : false);
 		}
 		else {
 			response = Response.noContent().build();
