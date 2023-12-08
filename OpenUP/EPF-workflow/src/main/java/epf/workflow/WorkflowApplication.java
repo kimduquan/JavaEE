@@ -1252,16 +1252,13 @@ public class WorkflowApplication  {
 	@LRA(value = Type.MANDATORY, end = false)
 	@RunOnVirtualThread
 	public Response onErrors(
-			@PathParam("workflow")
-			final String workflow, 
-			@PathParam("state")
+			final String workflow,
 			final String state,
-			@PathParam("action")
 			final String action,
-			@QueryParam("version")
 			final String version,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
 			final URI instance,
+			final Boolean useResults,
 			final InputStream body) throws Exception {
 		return null;
 	}
