@@ -1234,19 +1234,11 @@ public class WorkflowApplication  {
 			@QueryParam("useResults")
 			final Boolean useResults,
 			final InputStream body) throws Exception {
-		final WorkflowInstance workflowInstance = cache.getInstance(instance);
-		Response response;
-		if(workflowInstance != null) {
-			final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
-			final State currentState = getState(workflowDefinition, state);
-			final ActionDefinition actionDefinition = getActionDefinition(currentState, action);
-			final JsonValue input = JsonUtil.readValue(body);
-			response = action(workflowDefinition, actionDefinition, input, useResults != null ? useResults : false);
-		}
-		else {
-			response = Response.noContent().build();
-		}
-		return response;
+		final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
+		final State currentState = getState(workflowDefinition, state);
+		final ActionDefinition actionDefinition = getActionDefinition(currentState, action);
+		final JsonValue input = JsonUtil.readValue(body);
+		return action(workflowDefinition, actionDefinition, input, useResults != null ? useResults : false);
 	}
 
 	@LRA(value = Type.MANDATORY, end = false)
@@ -1260,6 +1252,6 @@ public class WorkflowApplication  {
 			final URI instance,
 			final Boolean useResults,
 			final InputStream body) throws Exception {
-		return null;
+		return Response.status(Status.RESET_CONTENT).entity(body).build();
 	}
 }
