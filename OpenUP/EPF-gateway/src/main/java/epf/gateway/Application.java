@@ -165,7 +165,6 @@ public class Application {
     			if(HATEOAS.isSynchronized(link)) {
     				final Response linkResponse = buildLinkRequest(client, prevLinkResponse, prevLinkEntity, headers, targetLink);
         			if(isSuccessful(linkResponse)) {
-        				final boolean isPartialLink = isPartial(linkResponse);
         				if(HATEOAS.hasEntity(link)) {
             				if(linkResponse.hasEntity()) {
                 				linkResponse.bufferEntity();
@@ -173,6 +172,7 @@ public class Application {
             				prevLinkEntity = HATEOAS.readEntity(linkResponse);
             				prevMediaType = linkResponse.getMediaType();
         				}
+        				final boolean isPartialLink = isPartial(linkResponse);
         				prevLinkResponse = buildLinkRequests(client, linkResponse, prevLinkEntity, prevMediaType, headers, targetLink, isPartialLink);
             			linkResponses.add(prevLinkResponse);
     				}
