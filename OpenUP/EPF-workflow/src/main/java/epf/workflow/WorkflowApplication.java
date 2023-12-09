@@ -549,8 +549,12 @@ public class WorkflowApplication  {
 		return actionLinks.toArray(new Link[0]);
 	}
 	
-	private Response actionsLink(final Link[] actionLinks) {
-		return Response.status(Status.PARTIAL_CONTENT).links(actionLinks).build();
+	private Response actionsLink(final URI instance, final Link[] actionLinks) {
+		return Response
+				.status(Status.PARTIAL_CONTENT)
+				.links(actionLinks)
+				.header(LRA.LRA_HTTP_CONTEXT_HEADER, instance)
+				.build();
 	}
 	
 	private Response end(final WorkflowDefinition workflowDefinition, final Either<Boolean, EndDefinition> end, final URI instance, final JsonValue data) throws Exception {
@@ -1178,7 +1182,7 @@ public class WorkflowApplication  {
 				break;
 		}
 		final Link[] actionLinks = actionLinks(workflowDefinition, currentState.getName(), actions, actionExecTimeout, useResults);
-		return actionsLink(actionLinks);
+		return actionsLink(instance, actionLinks);
 	}
 	
 	@PATCH
@@ -1197,7 +1201,7 @@ public class WorkflowApplication  {
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
 			final URI instance,
 			final InputStream body) throws Exception {
-		return Response.ok(body).build();
+		return Response.ok(body).header(LRA.LRA_HTTP_CONTEXT_HEADER, instance).build();
 	}
 	
 	@POST

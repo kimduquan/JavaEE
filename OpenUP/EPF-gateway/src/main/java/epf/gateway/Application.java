@@ -6,6 +6,7 @@ import java.net.URI;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
+import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -25,6 +26,7 @@ import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.client.internal.ClientQueue;
 import epf.client.util.RequestBuilder;
+import epf.client.util.RequestUtil;
 import epf.client.util.ResponseUtil;
 import epf.hateoas.utility.HATEOAS;
 import epf.util.ThreadUtil;
@@ -145,7 +147,12 @@ public class Application {
     
     private Response buildLinkResponse(final Response response, final MediaType mediaType, final List<Response> linkResponses) {
 		final InputStream entity = buildLinkEntity(mediaType, linkResponses);
-    	final ResponseBuilder builder = Response.ok(entity).type(mediaType);
+    	ResponseBuilder builder = Response.ok(entity).type(mediaType);
+    	for(final Entry<String, List<Object>> entry : response.getHeaders().entrySet()) {
+			if(entry.getKey().startsWith(RequestUtil.LRA_HTTP_HEADER_PREFIX)) {
+				builder = builder.header(entry.getKey(), entry.getValue().get(0));
+			}
+		}
 		return builder.build();
     }
     
@@ -161,19 +168,13 @@ public class Application {
     			if(HATEOAS.isSynchronized(link)) {
     				Response linkResponse = buildLinkRequest(client, prevLinkResponse, prevLinkEntity, prevMediaType, headers, targetLink);
         			if(isSuccessful(linkResponse)) {
-        				if(linkResponse.hasEntity()) {
-            				linkResponse.bufferEntity();
-        				}
+        				final boolean isPartialLink = isPartial(linkResponse);
         				if(HATEOAS.hasEntity(link)) {
             				prevLinkEntity = HATEOAS.readEntity(linkResponse);
             				prevMediaType = linkResponse.getMediaType();
         				}
-        				final boolean isPartialLink = isPartial(linkResponse);
         				linkResponse = buildLinkRequests(client, linkResponse, prevLinkEntity, prevMediaType, headers, targetLink, isPartialLink);
         				if(isSuccessful(linkResponse)) {
-            				if(linkResponse.hasEntity()) {
-                				linkResponse.bufferEntity();
-            				}
                 			linkResponses.add(linkResponse);
             				prevLinkResponse = linkResponse;
             				prevLinkEntity = HATEOAS.readEntity(linkResponse);
