@@ -310,7 +310,7 @@ public class WorkflowApplication  {
 		return action;
 	}
 	
-	private Response invoke(final WorkflowDefinition workflowDefinition, final FunctionDefinition functionDefinition, final JsonValue data, final boolean useResults, final OpenAPI openAPI, final String path, final PathItem pathItem, final org.eclipse.microprofile.openapi.models.PathItem.HttpMethod httpMethod, final Operation operation) throws Exception {
+	private Response invoke(final WorkflowDefinition workflowDefinition, final FunctionDefinition functionDefinition, final JsonValue data, final OpenAPI openAPI, final String path, final PathItem pathItem, final org.eclipse.microprofile.openapi.models.PathItem.HttpMethod httpMethod, final Operation operation) throws Exception {
 		Server server = openAPI.getServers().iterator().next();
 		if(operation.getServers() != null && !operation.getServers().isEmpty()) {
 			server = operation.getServers().iterator().next();
@@ -391,21 +391,11 @@ public class WorkflowApplication  {
 			else {
 				invoke = builder.build(httpMethod.name());
 			}
-			final Response response = invoke.invoke();
-			if(useResults) {
-				if(response.hasEntity()) {
-					response.bufferEntity();
-				}
-				return response;
-			}
-			else {
-				response.close();
-				return null;
-			}
+			return invoke.invoke();
 		}
 	}
 	
-	private Response openapi(final WorkflowDefinition workflowDefinition, final FunctionDefinition functionDefinition, final JsonValue data, final boolean useResults) throws Exception {
+	private Response openapi(final WorkflowDefinition workflowDefinition, final FunctionDefinition functionDefinition, final JsonValue data) throws Exception {
 		final int index = functionDefinition.getOperation().indexOf("#");
 		final String pathToOpenAPIDefinition = functionDefinition.getOperation().substring(0, index);
 		final String operationId = functionDefinition.getOperation().substring(index + 1);
@@ -422,14 +412,14 @@ public class WorkflowApplication  {
 				final org.eclipse.microprofile.openapi.models.PathItem.HttpMethod httpMethod = operationEntry.getKey();
 				final Operation operation = operationEntry.getValue();
 				if(operation.getOperationId().equals(operationId)) {
-					return invoke(workflowDefinition, functionDefinition, data, useResults, openAPI, path, pathItem, httpMethod, operation);
+					return invoke(workflowDefinition, functionDefinition, data, openAPI, path, pathItem, httpMethod, operation);
 				}
 			}
 		}
 		throw new BadRequestException();
 	}
 	
-	private Response function(final WorkflowDefinition workflowDefinition, final FunctionDefinition functionDefinition, final JsonValue data, final boolean useResults) throws Exception {
+	private Response function(final WorkflowDefinition workflowDefinition, final ActionDefinition actionDefinition, final FunctionDefinition functionDefinition, final JsonValue data) throws Exception {
 		switch(functionDefinition.getType()) {
 			case asyncapi:
 				break;
@@ -442,7 +432,7 @@ public class WorkflowApplication  {
 			case odata:
 				break;
 			case openapi:
-				return openapi(workflowDefinition, functionDefinition, data, useResults);
+				return openapi(workflowDefinition, functionDefinition, data);
 			case rest:
 				break;
 			case rpc:
@@ -450,17 +440,17 @@ public class WorkflowApplication  {
 			default:
 				break;
 		}
-		return null;
+		return Response.ok(data.toString(), MediaType.APPLICATION_JSON).build();
 	}
 	
-	private Response event(final ActionDefinition actionDefinition, final EventDefinition eventDefinition, final WorkflowData workflowData) throws Exception {
+	private Response event(final ActionDefinition actionDefinition, final EventDefinition eventDefinition, final JsonValue input) throws Exception {
 		Object data = null;
 		if(actionDefinition.getEventRef().getData() != null) {
 			if(actionDefinition.getEventRef().getData().isLeft()) {
-				data = ELUtil.getValue(actionDefinition.getEventRef().getData().getLeft(), workflowData.getOutput());
+				data = ELUtil.getValue(actionDefinition.getEventRef().getData().getLeft(), input);
 			}
 			else {
-				data = workflowData.getOutput();
+				data = input;
 			}
 		}
 		final Event event = new Event();
@@ -478,15 +468,13 @@ public class WorkflowApplication  {
 	private Response action(final WorkflowDefinition workflowDefinition, final ActionDefinition actionDefinition, final JsonValue data, final boolean useResults) throws Exception {
 		Response response = null;
 		final JsonValue input = filterActionDataInput(actionDefinition.getActionDataFilter(), data);
-		final WorkflowData actionData = new WorkflowData();
-		actionData.setInput(input);
 		if(!actionDefinition.getFunctionRef().isNull()) {
 			final FunctionDefinition functionDefinition = getFunctionDefinition(workflowDefinition, actionDefinition.getFunctionRef());
-			response = function(workflowDefinition, functionDefinition, actionData.getInput(), useResults);
+			response = function(workflowDefinition, actionDefinition, functionDefinition, input);
 		}
 		else if(actionDefinition.getEventRef() != null) {
 			final EventDefinition eventDefinition = getEventDefinition(workflowDefinition, actionDefinition.getEventRef().getProduceEventRef());
-			response = event(actionDefinition, eventDefinition, actionData);
+			response = event(actionDefinition, eventDefinition, data);
 		}
 		else if(!actionDefinition.getSubFlowRef().isNull()) {
 			getSubWorkflowDefinition(actionDefinition.getSubFlowRef());
