@@ -116,13 +116,12 @@ public class Application {
 		return HATEOAS.buildLinkRequest(client, serviceUrl, headers, response, entity, mediaType, link);
     }
     
-    private Response buildLinkResponse(final Response response, final List<Response> linkResponses) {
-    	ResponseBuilder builder = Response.fromResponse(response);
-		Optional<InputStream> sep = Optional.empty();
+    private InputStream buildLinkEntity(final MediaType mediaType, final List<Response> linkResponses) {
+    	Optional<InputStream> sep = Optional.empty();
 		Optional<InputStream> begin = Optional.empty();
 		Optional<InputStream> end = Optional.empty();
 		InputStream empty = InputStreamUtil.empty();
-		if(MediaType.APPLICATION_JSON_TYPE.equals(response.getMediaType())) {
+		if(MediaType.APPLICATION_JSON_TYPE.equals(mediaType)) {
 			sep = Optional.of(new ByteArrayInputStream(",".getBytes()));
 			begin = Optional.of(new ByteArrayInputStream("[".getBytes()));
 			end = Optional.of(new ByteArrayInputStream("]".getBytes()));
@@ -130,7 +129,7 @@ public class Application {
 		}
 		final InputStream nullStream = empty;
 		final InputStream streams = linkResponses.stream()
-				.map(res -> {
+				.map(response -> {
 					InputStream stream = nullStream;
 					if(response.hasEntity()) {
 						final Object entity = response.getEntity();
@@ -141,7 +140,12 @@ public class Application {
 					return stream;
 				})
 				.collect(InputStreamUtil.joining(sep, begin, end));
-		builder = builder.status(Response.Status.OK).entity(streams);
+		return streams;
+    }
+    
+    private Response buildLinkResponse(final Response response, final MediaType mediaType, final List<Response> linkResponses) {
+		final InputStream entity = buildLinkEntity(mediaType, linkResponses);
+    	final ResponseBuilder builder = Response.ok(entity).type(mediaType);
 		return builder.build();
     }
     
@@ -155,28 +159,38 @@ public class Application {
     		if(HATEOAS.isRequestLink(link)) {
     			final Link targetLink = HATEOAS.isSelfLink(link) ? self : link;
     			if(HATEOAS.isSynchronized(link)) {
-    				final Response linkResponse = buildLinkRequest(client, prevLinkResponse, prevLinkEntity, prevMediaType, headers, targetLink);
+    				Response linkResponse = buildLinkRequest(client, prevLinkResponse, prevLinkEntity, prevMediaType, headers, targetLink);
         			if(isSuccessful(linkResponse)) {
+        				if(linkResponse.hasEntity()) {
+            				linkResponse.bufferEntity();
+        				}
         				if(HATEOAS.hasEntity(link)) {
-            				if(linkResponse.hasEntity()) {
-                				linkResponse.bufferEntity();
-            				}
             				prevLinkEntity = HATEOAS.readEntity(linkResponse);
             				prevMediaType = linkResponse.getMediaType();
         				}
         				final boolean isPartialLink = isPartial(linkResponse);
-        				prevLinkResponse = buildLinkRequests(client, linkResponse, prevLinkEntity, prevMediaType, headers, targetLink, isPartialLink);
-            			linkResponses.add(prevLinkResponse);
+        				linkResponse = buildLinkRequests(client, linkResponse, prevLinkEntity, prevMediaType, headers, targetLink, isPartialLink);
+        				if(isSuccessful(linkResponse)) {
+            				if(linkResponse.hasEntity()) {
+                				linkResponse.bufferEntity();
+            				}
+                			linkResponses.add(linkResponse);
+            				prevLinkResponse = linkResponse;
+            				prevLinkEntity = HATEOAS.readEntity(linkResponse);
+            				prevMediaType = linkResponse.getMediaType();
+        				}
+        				else {
+        					return linkResponse;
+        				}
     				}
         			else {
-        				prevLinkResponse = linkResponse;
-        				break;
+        				return linkResponse;
         			}
     			}
     		}
     	}
     	if(isPartial) {
-    		return buildLinkResponse(response, linkResponses);
+    		return buildLinkResponse(response, mediaType, linkResponses);
     	}
     	return prevLinkResponse;
     }
