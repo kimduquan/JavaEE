@@ -14,6 +14,7 @@ import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Link;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -33,6 +34,7 @@ public interface HATEOAS {
      * @param headers
      * @param response
      * @param entity
+     * @param mediaType
      * @param link
      * @return
      */
@@ -42,6 +44,7 @@ public interface HATEOAS {
     		final HttpHeaders headers,
     		final Response response,
     		final Optional<InputStream> entity,
+    		final MediaType mediaType,
     		final Link link
     		) {
     	Objects.requireNonNull(client, "Client");
@@ -58,9 +61,9 @@ public interface HATEOAS {
 			case HttpMethod.GET:
 				return builder.get();
 			case HttpMethod.POST:
-				return builder.post(Entity.entity(entity.orElse(null), response.getMediaType()));
+				return builder.post(Entity.entity(entity.orElse(null), mediaType));
 			case HttpMethod.PUT:
-				return builder.put(Entity.entity(entity.orElse(null), response.getMediaType()));
+				return builder.put(Entity.entity(entity.orElse(null), mediaType));
 			case HttpMethod.DELETE:
 				return builder.delete();
 			case HttpMethod.HEAD:
@@ -68,9 +71,9 @@ public interface HATEOAS {
 			case HttpMethod.OPTIONS:
 				return builder.options();
 			case HttpMethod.PATCH:
-				return builder.method(HttpMethod.PATCH, Entity.entity(entity.orElse(null), response.getMediaType()));
+				return builder.method(HttpMethod.PATCH, Entity.entity(entity.orElse(null), mediaType));
 			default:
-				return builder.method(link.getType(), Entity.entity(entity.orElse(null), response.getMediaType()));
+				return builder.method(link.getType(), Entity.entity(entity.orElse(null), mediaType));
 		}
     }
     

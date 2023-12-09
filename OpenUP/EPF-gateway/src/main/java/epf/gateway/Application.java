@@ -105,15 +105,7 @@ public class Application {
     	return Response.Status.PARTIAL_CONTENT.getStatusCode() == response.getStatus();
     }
     
-    /**
-     * @param client
-     * @param response
-     * @param entity
-     * @param headers
-     * @param link
-     * @return
-     */
-    private Response buildLinkRequest(final Client client, final Response response, final Optional<InputStream> entity, final HttpHeaders headers, final Link link) {
+    private Response buildLinkRequest(final Client client, final Response response, final Optional<InputStream> entity, final MediaType mediaType, final HttpHeaders headers, final Link link) {
     	final String service = link.getRel();
 		final URI serviceUrl = registry.lookup(service).orElseThrow(NotFoundException::new);
 		LOGGER.info(String.format("link=%s", link.toString()));
@@ -121,7 +113,7 @@ public class Application {
 		wait.ifPresent(duration -> {
 			ThreadUtil.sleep(duration);
 		});
-		return HATEOAS.buildLinkRequest(client, serviceUrl, headers, response, entity, link);
+		return HATEOAS.buildLinkRequest(client, serviceUrl, headers, response, entity, mediaType, link);
     }
     
     private Response buildLinkResponse(final Response response, final List<Response> linkResponses) {
@@ -163,7 +155,7 @@ public class Application {
     		if(HATEOAS.isRequestLink(link)) {
     			final Link targetLink = HATEOAS.isSelfLink(link) ? self : link;
     			if(HATEOAS.isSynchronized(link)) {
-    				final Response linkResponse = buildLinkRequest(client, prevLinkResponse, prevLinkEntity, headers, targetLink);
+    				final Response linkResponse = buildLinkRequest(client, prevLinkResponse, prevLinkEntity, prevMediaType, headers, targetLink);
         			if(isSuccessful(linkResponse)) {
         				if(HATEOAS.hasEntity(link)) {
             				if(linkResponse.hasEntity()) {
