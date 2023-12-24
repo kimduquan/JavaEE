@@ -156,38 +156,34 @@ public class WorkflowApplication  {
 	@Inject
 	transient Validator validator;
 	
-	private Response transitionLink(final String workflow, final Optional<String> version, final String state, final URI instance, final JsonValue data, final Link[] compensateLinks) {
-		return Response.ok(data.toString(), MediaType.APPLICATION_JSON)
+	private ResponseBuilder transitionLink(final String workflow, final Optional<String> version, final String state, final URI instance, final Link[] compensateLinks) {
+		return Response.ok()
 				.links(compensateLinks)
 				.links(WorkflowLink.transitionLink(compensateLinks.length, workflow, version, state))
-				.header(LRA.LRA_HTTP_CONTEXT_HEADER, instance)
-				.build();
+				.header(LRA.LRA_HTTP_CONTEXT_HEADER, instance);
 	}
 	
-	private Response operationLink(final String workflow, final String version, final String state, final URI instance, final JsonValue data) {
-		return Response.ok(data.toString(), MediaType.APPLICATION_JSON)
+	private ResponseBuilder operationLink(final String workflow, final String version, final String state, final URI instance) {
+		return Response.ok()
 				.links(WorkflowLink.getActionsLink(0, workflow, Optional.ofNullable(version), state))
 				.links(WorkflowLink.actionsLink(1, workflow, Optional.ofNullable(version), state))
-				.header(LRA.LRA_HTTP_CONTEXT_HEADER, instance)
-				.build();
+				.header(LRA.LRA_HTTP_CONTEXT_HEADER, instance);
 	}
 	
-	private Response endLink(final String workflow, final Optional<String> version, final URI instance, final JsonValue data, final Link[] compensateLinks) {
-		return Response.ok(data.toString(), MediaType.APPLICATION_JSON)
+	private ResponseBuilder endLink(final String workflow, final Optional<String> version, final URI instance, final Link[] compensateLinks) {
+		return Response.ok()
 				.links(compensateLinks)
 				.links(WorkflowLink.endLink(compensateLinks.length, workflow, version))
-				.header(LRA.LRA_HTTP_CONTEXT_HEADER, instance)
-				.build();
+				.header(LRA.LRA_HTTP_CONTEXT_HEADER, instance);
 	}
 	
-	private Response terminateLink(final String workflow, final Optional<String> version, final URI instance, final JsonValue data) {
-		return Response.ok(data.toString(), MediaType.APPLICATION_JSON)
+	private ResponseBuilder terminateLink(final String workflow, final Optional<String> version, final URI instance) {
+		return Response.ok()
 				.links(WorkflowLink.terminateLink(0, workflow, version))
-				.header(LRA.LRA_HTTP_CONTEXT_HEADER, instance)
-				.build();
+				.header(LRA.LRA_HTTP_CONTEXT_HEADER, instance);
 	}
 	
-	private Response scheduleLink(final StartDefinition startDefinition, final WorkflowDefinition workflowDefinition) {
+	private ResponseBuilder scheduleLink(final StartDefinition startDefinition, final WorkflowDefinition workflowDefinition) {
 		Link scheduleLink = null;
 		String path =  "/" + workflowDefinition.getName();
 		String recurringTimeInterval = null;
@@ -203,16 +199,12 @@ public class WorkflowApplication  {
 		else {
 			scheduleLink = WorkflowLink.scheduleLink(0, Naming.WORKFLOW, HttpMethod.PUT, path, recurringTimeInterval);
 		}
-		return Response.ok()
-				.links(scheduleLink)
-				.build();
+		return Response.ok().links(scheduleLink);
 	}
 	
-	private Response getWorkflowLink(final WorkflowDefinition workflowDefinition) {
+	private ResponseBuilder getWorkflowLink(final WorkflowDefinition workflowDefinition) {
 		final Link link = WorkflowLink.getWorkflowLink(0, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()));
-		return Response.ok()
-				.links(link)
-				.build();
+		return Response.ok().links(link);
 	}
 	
 	private void putState(final String state, final URI instance, final WorkflowData workflowData) {
@@ -419,7 +411,7 @@ public class WorkflowApplication  {
 		throw new BadRequestException();
 	}
 	
-	private Response function(final WorkflowDefinition workflowDefinition, final ActionDefinition actionDefinition, final FunctionDefinition functionDefinition, final JsonValue data) throws Exception {
+	private ResponseBuilder function(final WorkflowDefinition workflowDefinition, final ActionDefinition actionDefinition, final FunctionDefinition functionDefinition, final JsonValue data) throws Exception {
 		switch(functionDefinition.getType()) {
 			case asyncapi:
 				break;
@@ -432,7 +424,8 @@ public class WorkflowApplication  {
 			case odata:
 				break;
 			case openapi:
-				return openapi(workflowDefinition, functionDefinition, data);
+				final Response respone = openapi(workflowDefinition, functionDefinition, data);
+				return Response.fromResponse(respone);
 			case rest:
 				break;
 			case rpc:
@@ -440,10 +433,10 @@ public class WorkflowApplication  {
 			default:
 				break;
 		}
-		return Response.ok(data.toString(), MediaType.APPLICATION_JSON).build();
+		return Response.ok();
 	}
 	
-	private Response event(final ActionDefinition actionDefinition, final EventDefinition eventDefinition, final JsonValue input) throws Exception {
+	private ResponseBuilder event(final ActionDefinition actionDefinition, final EventDefinition eventDefinition, final JsonValue input) throws Exception {
 		Object data = null;
 		if(actionDefinition.getEventRef().getData() != null) {
 			if(actionDefinition.getEventRef().getData().isLeft()) {
@@ -458,15 +451,15 @@ public class WorkflowApplication  {
 		event.setType(eventDefinition.getType());
 		event.setData(data);
 		producedEvent.fire(event);
-		return Response.ok().build();
+		return Response.ok();
 	}
 	
-	private Response subFlow() {
+	private ResponseBuilder subFlow() {
 		return null;
 	}
 	
-	private Response action(final WorkflowDefinition workflowDefinition, final ActionDefinition actionDefinition, final JsonValue data, final boolean useResults) throws Exception {
-		Response response = null;
+	private ResponseBuilder action(final WorkflowDefinition workflowDefinition, final ActionDefinition actionDefinition, final JsonValue data, final boolean useResults) throws Exception {
+		ResponseBuilder response = null;
 		final JsonValue input = filterActionDataInput(actionDefinition.getActionDataFilter(), data);
 		if(!actionDefinition.getFunctionRef().isNull()) {
 			final FunctionDefinition functionDefinition = getFunctionDefinition(workflowDefinition, actionDefinition.getFunctionRef());
@@ -497,11 +490,11 @@ public class WorkflowApplication  {
 		}
 	}
 	
-	private void filterStateDataOutput(final StateDataFilters stateDataFilters, final WorkflowData workflowData) throws Exception {
+	private JsonValue filterStateDataOutput(final StateDataFilters stateDataFilters, final JsonValue output) throws Exception {
 		if(stateDataFilters != null && stateDataFilters.getOutput() != null) {
-			final JsonValue output = ELUtil.getValue(stateDataFilters.getOutput(), workflowData.getOutput());
-			workflowData.setOutput(output);
+			return ELUtil.getValue(stateDataFilters.getOutput(), output);
 		}
+		return output;
 	}
 	
 	private void produceEvent(final EventDefinition eventDefinition, final ProducedEventDefinition producedEventDefinition, final URI instance) throws Exception {
@@ -549,71 +542,71 @@ public class WorkflowApplication  {
 		return actionLinks.toArray(new Link[0]);
 	}
 	
-	private Response actionsLink(final URI instance, final Link[] actionLinks) {
+	private ResponseBuilder actionsLink(final URI instance, final Link[] actionLinks) {
 		return Response
 				.status(Status.PARTIAL_CONTENT)
 				.links(actionLinks)
-				.header(LRA.LRA_HTTP_CONTEXT_HEADER, instance)
-				.build();
+				.header(LRA.LRA_HTTP_CONTEXT_HEADER, instance);
 	}
 	
-	private Response end(final WorkflowDefinition workflowDefinition, final Either<Boolean, EndDefinition> end, final URI instance, final JsonValue data) throws Exception {
+	private ResponseBuilder end(final WorkflowDefinition workflowDefinition, final Either<Boolean, EndDefinition> end, final URI instance, final WorkflowData workflowData) throws Exception {
 		if(end.isRight()) {
 			final EndDefinition endDefinition = end.getRight();
 			if(endDefinition.isCompensate()) {
 				final Link[] compensateLinks = compensateLinks(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), instance);
-				return endLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), instance, data, compensateLinks);
+				return endLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), instance, compensateLinks);
 			}
 			if(Boolean.TRUE.equals(endDefinition.isTerminate())) {
-				return terminateLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), instance, data);
+				return terminateLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), instance);
 			}
 			if(endDefinition.getProduceEvents() != null) {
 				produceEvents(workflowDefinition, endDefinition.getProduceEvents(), instance);
 			}
 			if(endDefinition.getContinueAs() != null) {
-				return continueAs(endDefinition.getContinueAs(), instance, data);
+				return continueAs(endDefinition.getContinueAs(), instance, workflowData);
 			}
 		}
-		return endLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), instance, data, new Link[0]);
+		return endLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), instance, new Link[0]);
 	}
 	
-	private Response startLink(final String workflow, final Optional<String> version, final URI parentInstance, final JsonValue data) {
-		ResponseBuilder builder = Response.ok(data).links(WorkflowLink.startLink(0, workflow, version));
+	private ResponseBuilder startLink(final String workflow, final Optional<String> version, final URI parentInstance) {
+		ResponseBuilder builder = Response.ok().links(WorkflowLink.startLink(0, workflow, version));
 		if(parentInstance != null) {
 			builder = builder.header(LRA.LRA_HTTP_PARENT_CONTEXT_HEADER, parentInstance);
 		}
-		return builder.build();
+		return builder;
 	}
 	
-	private Response endCondition(final WorkflowDefinition workflowDefinition, final SwitchState switchState, final SwitchStateConditions condition, final URI instance, final JsonValue data) throws Exception {
+	private ResponseBuilder endCondition(final WorkflowDefinition workflowDefinition, final SwitchState switchState, final SwitchStateConditions condition, final URI instance, final WorkflowData workflowData) throws Exception {
 		if(condition.getTransition() != null) {
-			return transition(workflowDefinition, condition.getTransition(), instance, data);
+			return transition(workflowDefinition, condition.getTransition(), instance);
 		}
 		else if(condition.getEnd() != null) {
-			return end(workflowDefinition, condition.getEnd(), instance, data);
+			return end(workflowDefinition, condition.getEnd(), instance, workflowData);
 		}
 		throw new BadRequestException();
 	}
 	
-	private Response continueAs(final StringOrObject<ContinueAs> continueAs, final URI instance, final JsonValue data) throws Exception {
+	private ResponseBuilder continueAs(final StringOrObject<ContinueAs> continueAs, final URI instance, final WorkflowData workflowData) throws Exception {
 		if(continueAs.isLeft()) {
 			final WorkflowDefinition workflowDefinition = cache.get(continueAs.getLeft());
-			return startLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), instance, data);
+			return startLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), instance);
 		}
 		else if(continueAs.isRight()) {
 			final ContinueAs continueAsDef = continueAs.getRight();
 			final WorkflowDefinition workflowDefinition = cache.get(continueAsDef.getWorkflowId(), continueAsDef.getVersion());
-			JsonValue input = data;
 			if(continueAsDef.getData() != null) {
+				JsonValue output = null;
 				if(continueAsDef.getData().isLeft()) {
 					final String continueAsData = continueAsDef.getData().getLeft();
-					input = ELUtil.getValue(continueAsData, data);
+					output = ELUtil.getValue(continueAsData, workflowData.getOutput());
 				}
 				else if(continueAsDef.getData().isRight()) {
-					input = continueAsDef.getData().getRight();
+					output = continueAsDef.getData().getRight();
 				}
+				workflowData.setOutput(output);
 			}
-			return startLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), instance, input);
+			return startLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), instance);
 		}
 		throw new BadRequestException();
 	}
@@ -679,24 +672,24 @@ public class WorkflowApplication  {
 		return Optional.ofNullable(compensatedBy);
 	}
 	
-	private Response transition(final WorkflowDefinition workflowDefinition, final Either<String, TransitionDefinition> transition, final URI instance, final JsonValue data) throws Exception {
+	private ResponseBuilder transition(final WorkflowDefinition workflowDefinition, final Either<String, TransitionDefinition> transition, final URI instance) throws Exception {
 		if(transition.isLeft()) {
 			final String state = transition.getLeft();
-			return transitionLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), state, instance, data, new Link[0]);
+			return transitionLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), state, instance, new Link[0]);
 		}
 		else if(transition.isRight()) {
 			final TransitionDefinition transitionDef = transition.getRight();
 			if(transitionDef.isCompensate()) {
 				final Link[] compensateLinks = compensateLinks(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), instance);
-				return transitionLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), transitionDef.getNextState(), instance, data, compensateLinks);
+				return transitionLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), transitionDef.getNextState(), instance, compensateLinks);
 			}
 			produceEvents(workflowDefinition, transitionDef.getProduceEvents(), instance);
-			return transitionLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), transitionDef.getNextState(), instance, data, new Link[0]);
+			return transitionLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), transitionDef.getNextState(), instance, new Link[0]);
 		}
 		throw new BadRequestException();
 	}
 	
-	private Response transitionCallbackState(final WorkflowDefinition workflowDefinition, final CallbackState callbackState, final URI instance, final WorkflowData workflowData) throws Exception {
+	private ResponseBuilder transitionCallbackState(final WorkflowDefinition workflowDefinition, final CallbackState callbackState, final URI instance, final WorkflowData workflowData) throws Exception {
 		workflowData.setOutput(filterStateDataInput(callbackState.getStateDataFilter(), workflowData.getInput()));
 		final EventDefinition eventDefinition = getEventDefinition(workflowDefinition, callbackState.getEventRef());
 		
@@ -710,12 +703,10 @@ public class WorkflowApplication  {
 		event.setSubject(instance.toString());
 		
 		eventStore.persist(event);
-		filterStateDataOutput(callbackState.getStateDataFilter(), workflowData);
-		return Response.ok(workflowData.getOutput().toString(), MediaType.APPLICATION_JSON).build();
+		return Response.ok();
 	}
 	
-	private Response transitionEventState(final WorkflowDefinition workflowDefinition, final EventState eventState, final URI instance, final WorkflowData workflowData) throws Exception {
-		workflowData.setOutput(filterStateDataInput(eventState.getStateDataFilter(), workflowData.getInput()));
+	private ResponseBuilder transitionEventState(final WorkflowDefinition workflowDefinition, final EventState eventState, final URI instance) throws Exception {
 		final Map<String, EventDefinition> eventDefs = new HashMap<>();
 		final List<EventDefinition> events = EitherUtil.getArray(workflowDefinition.getEvents());
 		MapUtil.putAll(eventDefs, events.iterator(), EventDefinition::getName);
@@ -738,22 +729,18 @@ public class WorkflowApplication  {
 			}
 			index++;
 		}
-		filterStateDataOutput(eventState.getStateDataFilter(), workflowData);
-		return Response.ok(workflowData.getOutput().toString(), MediaType.APPLICATION_JSON).build();
+		return Response.ok();
 	}
 	
-	private Response transitionOperationState(final WorkflowDefinition workflowDefinition, final OperationState operationState, final URI instance, final WorkflowData workflowData) throws Exception {
-		workflowData.setOutput(filterStateDataInput(operationState.getStateDataFilter(), workflowData.getInput()));
-		return operationLink(workflowDefinition.getId(), workflowDefinition.getVersion(), operationState.getName(), instance, workflowData.getOutput());
+	private ResponseBuilder transitionOperationState(final WorkflowDefinition workflowDefinition, final OperationState operationState, final URI instance, final WorkflowData workflowData) throws Exception {
+		return operationLink(workflowDefinition.getId(), workflowDefinition.getVersion(), operationState.getName(), instance);
 	}
 	
-	private Response transitionSwitchState(final WorkflowDefinition workflowDefinition, final SwitchState switchState, final URI instance, final WorkflowData workflowData) throws Exception {
-		workflowData.setOutput(filterStateDataInput(switchState.getStateDataFilter(), workflowData.getInput()));
+	private ResponseBuilder transitionSwitchState(final WorkflowDefinition workflowDefinition, final SwitchState switchState, final URI instance, final WorkflowData workflowData) throws Exception {
 		if(switchState.getDataConditions() != null) {
 			for(SwitchStateDataConditions condition : switchState.getDataConditions()) {
 				if(ELUtil.evaluateCondition(workflowData.getOutput(), condition.getCondition())) {
-					filterStateDataOutput(switchState.getStateDataFilter(), workflowData);
-					return endCondition(workflowDefinition, switchState, condition, instance, workflowData.getOutput());
+					return endCondition(workflowDefinition, switchState, condition, instance, workflowData);
 				}
 			}
 		}
@@ -766,35 +753,33 @@ public class WorkflowApplication  {
 				boolean isEvent = false;
 				isEvent = eventDefinition != null;
 				if(isEvent) {
-					filterStateDataOutput(switchState.getStateDataFilter(), workflowData);
-					return endCondition(workflowDefinition, switchState, condition, instance, workflowData.getOutput());
+					return endCondition(workflowDefinition, switchState, condition, instance, workflowData);
 				}
 			}
 		}
-		filterStateDataOutput(switchState.getStateDataFilter(), workflowData);
 		if(switchState.getDefaultCondition().isLeft()) {
-			return transition(workflowDefinition, switchState.getDefaultCondition().getLeft(), instance, workflowData.getOutput());
+			return transition(workflowDefinition, switchState.getDefaultCondition().getLeft(), instance);
 		}
 		else if(switchState.getDefaultCondition().isRight()) {
-			return end(workflowDefinition, switchState.getDefaultCondition().getRight(), instance, workflowData.getOutput());
+			return end(workflowDefinition, switchState.getDefaultCondition().getRight(), instance, workflowData);
 		}
 		throw new BadRequestException();
 	}
 	
-	private Response transitionSleepState(final WorkflowDefinition workflowDefinition, final SleepState sleepState, final URI instance, final JsonValue data) throws Exception {
+	private ResponseBuilder transitionSleepState(final WorkflowDefinition workflowDefinition, final SleepState sleepState, final URI instance, final WorkflowData workflowData) throws Exception {
 		final Duration duration = Duration.parse(sleepState.getDuration());
 		Thread.currentThread();
 		Thread.sleep(duration.getSeconds() * 1000);
 		if(!sleepState.getTransition().isNull()) {
-			return transition(workflowDefinition, sleepState.getTransition(), instance, data);
+			return transition(workflowDefinition, sleepState.getTransition(), instance);
 		}
 		else if(!sleepState.getEnd().isNull()) {
-			return end(workflowDefinition, sleepState.getEnd(), instance, data);
+			return end(workflowDefinition, sleepState.getEnd(), instance, workflowData);
 		}
 		throw new BadRequestException();
 	}
 	
-	private Response transitionParallelState(final WorkflowDefinition workflowDefinition, final ParallelState parallelState, final URI instance, final WorkflowData workflowData) throws Exception {
+	private ResponseBuilder transitionParallelState(final WorkflowDefinition workflowDefinition, final ParallelState parallelState, final URI instance, final WorkflowData workflowData) throws Exception {
 		workflowData.setOutput(filterStateDataInput(parallelState.getStateDataFilter(), workflowData.getInput()));
 		final List<Branch> branches = new ArrayList<>();
 		for(ParallelStateBranch branch : parallelState.getBranches()) {
@@ -810,30 +795,28 @@ public class WorkflowApplication  {
 			default:
 				break;
 		}
-		filterStateDataOutput(parallelState.getStateDataFilter(), workflowData);
 		if(!parallelState.getTransition().isNull()) {
-			return transition(workflowDefinition, parallelState.getTransition(), instance, workflowData.getOutput());
+			return transition(workflowDefinition, parallelState.getTransition(), instance);
 		}
 		else if(!parallelState.getEnd().isNull()) {
-			return end(workflowDefinition, parallelState.getEnd(), instance, workflowData.getOutput());
+			return end(workflowDefinition, parallelState.getEnd(), instance, workflowData);
 		}
 		throw new BadRequestException();
 	}
 	
-	private Response transitionInjectState(final WorkflowDefinition workflowDefinition, final InjectState injectState, final URI instance, final WorkflowData workflowData) throws Exception {
+	private ResponseBuilder transitionInjectState(final WorkflowDefinition workflowDefinition, final InjectState injectState, final URI instance, final WorkflowData workflowData) throws Exception {
 		workflowData.setOutput(filterStateDataInput(injectState.getStateDataFilter(), workflowData.getInput()));
 		StateUtil.mergeStateDataOutput(workflowData, JsonUtil.toJsonValue(injectState.getData()));
-		filterStateDataOutput(injectState.getStateDataFilter(), workflowData);
 		if(!injectState.getTransition().isNull()) {
-			return transition(workflowDefinition, injectState.getTransition(), instance, workflowData.getOutput());
+			return transition(workflowDefinition, injectState.getTransition(), instance);
 		}
 		else if(!injectState.getEnd().isNull()) {
-			return end(workflowDefinition, injectState.getEnd(), instance, workflowData.getOutput());
+			return end(workflowDefinition, injectState.getEnd(), instance, workflowData);
 		}
 		throw new BadRequestException();
 	}
 	
-	private Response transitionForEachState(final WorkflowDefinition workflowDefinition, final ForEachState forEachState, final URI instance, final WorkflowData workflowData) throws Exception {
+	private ResponseBuilder transitionForEachState(final WorkflowDefinition workflowDefinition, final ForEachState forEachState, final URI instance, final WorkflowData workflowData) throws Exception {
 		workflowData.setOutput(filterStateDataInput(forEachState.getStateDataFilter(), workflowData.getInput()));
 		final JsonArray inputCollection = ELUtil.getValue(forEachState.getInputCollection(), workflowData.getOutput()).asJsonArray();
 		int batchSize = inputCollection.size();
@@ -880,12 +863,11 @@ public class WorkflowApplication  {
 		for(Branch forEach : iterations) {
 			ELUtil.setValue(forEachState.getOutputCollection(), workflowData.getOutput(), forEach.getWorkflowData().getOutput());
 		}
-		filterStateDataOutput(forEachState.getStateDataFilter(), workflowData);
 		if(!forEachState.getTransition().isNull()) {
-			return transition(workflowDefinition, forEachState.getTransition(), instance, workflowData.getOutput());
+			return transition(workflowDefinition, forEachState.getTransition(), instance);
 		}
 		else if(!forEachState.getEnd().isNull()) {
-			return end(workflowDefinition, forEachState.getEnd(), instance, workflowData.getOutput());
+			return end(workflowDefinition, forEachState.getEnd(), instance, workflowData);
 		}
 		throw new BadRequestException();
 	}
@@ -943,9 +925,9 @@ public class WorkflowApplication  {
 			cache.put(newWorkflowDefinition.getId(), workflowDefinition);
 		}
 		if(workflowDefinition.getStart().isRight()) {
-			return scheduleLink(workflowDefinition.getStart().getRight(), workflowDefinition);
+			return scheduleLink(workflowDefinition.getStart().getRight(), workflowDefinition).build();
 		}
-		return getWorkflowLink(newWorkflowDefinition);
+		return getWorkflowLink(newWorkflowDefinition).build();
 	}
 
 	@GET
@@ -1021,7 +1003,7 @@ public class WorkflowApplication  {
 		else {
 			startState = workflowDefinition.getStates().get(0).getName();
 		}
-		return transitionLink(workflow, Optional.ofNullable(version), startState, instance, input, new Link[0]);
+		return transitionLink(workflow, Optional.ofNullable(version), startState, instance, new Link[0]).build();
 	}
 	
 	@PUT
@@ -1057,55 +1039,74 @@ public class WorkflowApplication  {
 			final URI instance, 
 			final InputStream body) throws Exception {
 		final WorkflowInstance workflowInstance = cache.getInstance(instance);
-		Response response;
+		ResponseBuilder response;
 		if(workflowInstance != null) {
 			final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
-			final State nextState = getState(workflowDefinition, state);
+			final State currentState = getState(workflowDefinition, state);
 			final JsonValue input = JsonUtil.readValue(body);
+			StateDataFilters stateDataFilters = null;
 			final WorkflowData workflowData = new WorkflowData();
 			workflowData.setInput(input);
-			switch(nextState.getType_()) {
+			workflowData.setOutput(input);
+			switch(currentState.getType_()) {
 				case event:
-					final EventState eventState = (EventState)nextState;
-					response = transitionEventState(workflowDefinition, eventState, instance, workflowData);
+					final EventState eventState = (EventState)currentState;
+					stateDataFilters = eventState.getStateDataFilter();
+					workflowData.setInput(filterStateDataInput(stateDataFilters, input));
+					response = transitionEventState(workflowDefinition, eventState, instance);
 					break;
 				case operation:
-					final OperationState operationState = (OperationState) nextState;
+					final OperationState operationState = (OperationState) currentState;
+					stateDataFilters = operationState.getStateDataFilter();
+					workflowData.setInput(filterStateDataInput(stateDataFilters, input));
 					response = transitionOperationState(workflowDefinition, operationState, instance, workflowData);
 					break;
 				case Switch:
-					final SwitchState switchState = (SwitchState) nextState;
+					final SwitchState switchState = (SwitchState) currentState;
+					stateDataFilters = switchState.getStateDataFilter();
+					workflowData.setInput(filterStateDataInput(stateDataFilters, input));
 					response = transitionSwitchState(workflowDefinition, switchState, instance, workflowData);
 					break;
 				case sleep:
-					final SleepState sleepState = (SleepState) nextState;
-					response = transitionSleepState(workflowDefinition, sleepState, instance, input);
+					final SleepState sleepState = (SleepState) currentState;
+					workflowData.setInput(input);
+					response = transitionSleepState(workflowDefinition, sleepState, instance, workflowData);
 					break;
 				case parallel:
-					final ParallelState parallelState = (ParallelState) nextState;
+					final ParallelState parallelState = (ParallelState) currentState;
+					stateDataFilters = parallelState.getStateDataFilter();
+					workflowData.setInput(filterStateDataInput(stateDataFilters, input));
 					response = transitionParallelState(workflowDefinition, parallelState, instance, workflowData);
 					break;
 				case inject:
-					final InjectState injectState = (InjectState) nextState;
+					final InjectState injectState = (InjectState) currentState;
+					stateDataFilters = injectState.getStateDataFilter();
+					workflowData.setInput(filterStateDataInput(stateDataFilters, input));
 					response = transitionInjectState(workflowDefinition, injectState, instance, workflowData);
 					break;
 				case foreach:
-					final ForEachState forEachState = (ForEachState) nextState;
+					final ForEachState forEachState = (ForEachState) currentState;
+					stateDataFilters = forEachState.getStateDataFilter();
+					workflowData.setInput(filterStateDataInput(stateDataFilters, input));
 					response = transitionForEachState(workflowDefinition, forEachState, instance, workflowData);
 					break;
 				case callback:
-					final CallbackState callbackState = (CallbackState) nextState;
+					final CallbackState callbackState = (CallbackState) currentState;
+					stateDataFilters = callbackState.getStateDataFilter();
+					workflowData.setInput(filterStateDataInput(stateDataFilters, input));
 					response = transitionCallbackState(workflowDefinition, callbackState, instance, workflowData);
 					break;
 				default:
 					throw new BadRequestException();
 			}
+			final JsonValue output = filterStateDataOutput(stateDataFilters, workflowData.getOutput());
+			response = response.entity(output).type(MediaType.APPLICATION_JSON);
 			putState(state, instance, workflowData);
 		}
 		else {
-			response = Response.noContent().build();
+			response = Response.noContent();
 		}
-		return response;
+		return response.build();
 	}
 
 	@PUT
@@ -1124,18 +1125,17 @@ public class WorkflowApplication  {
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
 			final URI instance,
 			final InputStream body) throws Exception {
-		Response response;
+		ResponseBuilder response;
 		final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
 		final State currentState = getState(workflowDefinition, state);
 		final Optional<String> compensatedBy = getCompensatedBy(currentState);
 		if(compensatedBy.isPresent()) {
-			final JsonValue input = JsonUtil.readValue(body);
-			response = transitionLink(workflow, Optional.ofNullable(version), compensatedBy.get(), instance, input, new Link[0]);
+			response = transitionLink(workflow, Optional.ofNullable(version), compensatedBy.get(), instance, new Link[0]);
 		}
 		else {
-			response = Response.ok(body).build();
+			response = Response.ok(body);
 		}
-		return response;
+		return response.build();
 	}
 	
 	@HEAD
@@ -1182,7 +1182,7 @@ public class WorkflowApplication  {
 				break;
 		}
 		final Link[] actionLinks = actionLinks(workflowDefinition, currentState.getName(), actions, actionExecTimeout, useResults);
-		return actionsLink(instance, actionLinks);
+		return actionsLink(instance, actionLinks).build();
 	}
 	
 	@PATCH
@@ -1230,7 +1230,7 @@ public class WorkflowApplication  {
 		final State currentState = getState(workflowDefinition, state);
 		final ActionDefinition actionDefinition = getActionDefinition(currentState, action);
 		final JsonValue input = JsonUtil.readValue(body);
-		return action(workflowDefinition, actionDefinition, input, useResults != null ? useResults : false);
+		return action(workflowDefinition, actionDefinition, input, useResults != null ? useResults : false).build();
 	}
 
 	@LRA(value = Type.MANDATORY, end = false)
