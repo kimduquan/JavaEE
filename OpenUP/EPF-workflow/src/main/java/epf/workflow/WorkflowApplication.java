@@ -479,10 +479,10 @@ public class WorkflowApplication  {
 		return response;
 	}
 	
-	private void filterActionDataOutput(final ActionDefinition actionDefinition, final WorkflowData workflowData, final WorkflowData actionData) throws Exception {
-		if(actionDefinition.getActionDataFilter() != null && actionDefinition.getActionDataFilter().isUseResults() && actionDefinition.getActionDataFilter().getResults() != null) {
-			if(actionDefinition.getActionDataFilter().getToStateData() != null) {
-				StateUtil.mergeStateDataOutput(actionDefinition.getActionDataFilter().getToStateData(), workflowData, actionData.getOutput());
+	private void filterActionDataOutput(final ActionDataFilters actionDataFilters, final WorkflowData workflowData, final WorkflowData actionData) throws Exception {
+		if(actionDataFilters != null && actionDataFilters.isUseResults() && actionDataFilters.getResults() != null) {
+			if(actionDataFilters.getToStateData() != null) {
+				StateUtil.mergeStateDataOutput(actionDataFilters.getToStateData(), workflowData, actionData.getOutput());
 			}
 			else {
 				StateUtil.mergeStateDataOutput(workflowData, actionData.getOutput());
@@ -690,7 +690,6 @@ public class WorkflowApplication  {
 	}
 	
 	private ResponseBuilder transitionCallbackState(final WorkflowDefinition workflowDefinition, final CallbackState callbackState, final URI instance, final WorkflowData workflowData) throws Exception {
-		workflowData.setOutput(filterStateDataInput(callbackState.getStateDataFilter(), workflowData.getInput()));
 		final EventDefinition eventDefinition = getEventDefinition(workflowDefinition, callbackState.getEventRef());
 		
 		final CallbackStateEvent event = new CallbackStateEvent();
@@ -780,7 +779,6 @@ public class WorkflowApplication  {
 	}
 	
 	private ResponseBuilder transitionParallelState(final WorkflowDefinition workflowDefinition, final ParallelState parallelState, final URI instance, final WorkflowData workflowData) throws Exception {
-		workflowData.setOutput(filterStateDataInput(parallelState.getStateDataFilter(), workflowData.getInput()));
 		final List<Branch> branches = new ArrayList<>();
 		for(ParallelStateBranch branch : parallelState.getBranches()) {
 			branches.add(newParallelBranch(workflowDefinition, branch, instance, workflowData));
@@ -805,7 +803,6 @@ public class WorkflowApplication  {
 	}
 	
 	private ResponseBuilder transitionInjectState(final WorkflowDefinition workflowDefinition, final InjectState injectState, final URI instance, final WorkflowData workflowData) throws Exception {
-		workflowData.setOutput(filterStateDataInput(injectState.getStateDataFilter(), workflowData.getInput()));
 		StateUtil.mergeStateDataOutput(workflowData, JsonUtil.toJsonValue(injectState.getData()));
 		if(!injectState.getTransition().isNull()) {
 			return transition(workflowDefinition, injectState.getTransition(), instance);
@@ -817,7 +814,6 @@ public class WorkflowApplication  {
 	}
 	
 	private ResponseBuilder transitionForEachState(final WorkflowDefinition workflowDefinition, final ForEachState forEachState, final URI instance, final WorkflowData workflowData) throws Exception {
-		workflowData.setOutput(filterStateDataInput(forEachState.getStateDataFilter(), workflowData.getInput()));
 		final JsonArray inputCollection = ELUtil.getValue(forEachState.getInputCollection(), workflowData.getOutput()).asJsonArray();
 		int batchSize = inputCollection.size();
 		if(forEachState.getBatchSize().isLeft()) {
@@ -857,7 +853,7 @@ public class WorkflowApplication  {
 		}
 		for(Branch forEach : iterations) {
 			for(Action action : forEach.getActions()) {
-				filterActionDataOutput(action.getActionDefinition(), forEach.getWorkflowData(), action.getWorkflowData());
+				filterActionDataOutput(action.getActionDefinition().getActionDataFilter(), forEach.getWorkflowData(), action.getWorkflowData());
 			}
 		}
 		for(Branch forEach : iterations) {
@@ -989,8 +985,6 @@ public class WorkflowApplication  {
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
 			final URI instance, 
 			final InputStream body) throws Exception {
-		final JsonValue input = JsonUtil.readValue(body);
-		cache.putInstance(instance, new WorkflowInstance());
 		WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
 		String startState = null;
 		if(workflowDefinition.getStart().isLeft()) {
@@ -1003,7 +997,8 @@ public class WorkflowApplication  {
 		else {
 			startState = workflowDefinition.getStates().get(0).getName();
 		}
-		return transitionLink(workflow, Optional.ofNullable(version), startState, instance, new Link[0]).build();
+		cache.putInstance(instance, new WorkflowInstance());
+		return transitionLink(workflow, Optional.ofNullable(version), startState, instance, new Link[0]).entity(body).build();
 	}
 	
 	@PUT
@@ -1043,64 +1038,62 @@ public class WorkflowApplication  {
 		if(workflowInstance != null) {
 			final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
 			final State currentState = getState(workflowDefinition, state);
-			final JsonValue input = JsonUtil.readValue(body);
 			StateDataFilters stateDataFilters = null;
 			final WorkflowData workflowData = new WorkflowData();
-			workflowData.setInput(input);
-			workflowData.setOutput(input);
+			workflowData.setInput(JsonUtil.readValue(body));
+			workflowData.setOutput(workflowData.getInput());
 			switch(currentState.getType_()) {
 				case event:
 					final EventState eventState = (EventState)currentState;
 					stateDataFilters = eventState.getStateDataFilter();
-					workflowData.setInput(filterStateDataInput(stateDataFilters, input));
+					workflowData.setInput(filterStateDataInput(stateDataFilters, workflowData.getInput()));
 					response = transitionEventState(workflowDefinition, eventState, instance);
 					break;
 				case operation:
 					final OperationState operationState = (OperationState) currentState;
 					stateDataFilters = operationState.getStateDataFilter();
-					workflowData.setInput(filterStateDataInput(stateDataFilters, input));
+					workflowData.setInput(filterStateDataInput(stateDataFilters, workflowData.getInput()));
 					response = transitionOperationState(workflowDefinition, operationState, instance, workflowData);
 					break;
 				case Switch:
 					final SwitchState switchState = (SwitchState) currentState;
 					stateDataFilters = switchState.getStateDataFilter();
-					workflowData.setInput(filterStateDataInput(stateDataFilters, input));
+					workflowData.setInput(filterStateDataInput(stateDataFilters, workflowData.getInput()));
 					response = transitionSwitchState(workflowDefinition, switchState, instance, workflowData);
 					break;
 				case sleep:
 					final SleepState sleepState = (SleepState) currentState;
-					workflowData.setInput(input);
 					response = transitionSleepState(workflowDefinition, sleepState, instance, workflowData);
 					break;
 				case parallel:
 					final ParallelState parallelState = (ParallelState) currentState;
 					stateDataFilters = parallelState.getStateDataFilter();
-					workflowData.setInput(filterStateDataInput(stateDataFilters, input));
+					workflowData.setInput(filterStateDataInput(stateDataFilters, workflowData.getInput()));
 					response = transitionParallelState(workflowDefinition, parallelState, instance, workflowData);
 					break;
 				case inject:
 					final InjectState injectState = (InjectState) currentState;
 					stateDataFilters = injectState.getStateDataFilter();
-					workflowData.setInput(filterStateDataInput(stateDataFilters, input));
+					workflowData.setInput(filterStateDataInput(stateDataFilters, workflowData.getInput()));
 					response = transitionInjectState(workflowDefinition, injectState, instance, workflowData);
 					break;
 				case foreach:
 					final ForEachState forEachState = (ForEachState) currentState;
 					stateDataFilters = forEachState.getStateDataFilter();
-					workflowData.setInput(filterStateDataInput(stateDataFilters, input));
+					workflowData.setInput(filterStateDataInput(stateDataFilters, workflowData.getInput()));
 					response = transitionForEachState(workflowDefinition, forEachState, instance, workflowData);
 					break;
 				case callback:
 					final CallbackState callbackState = (CallbackState) currentState;
 					stateDataFilters = callbackState.getStateDataFilter();
-					workflowData.setInput(filterStateDataInput(stateDataFilters, input));
+					workflowData.setInput(filterStateDataInput(stateDataFilters, workflowData.getInput()));
 					response = transitionCallbackState(workflowDefinition, callbackState, instance, workflowData);
 					break;
 				default:
 					throw new BadRequestException();
 			}
-			final JsonValue output = filterStateDataOutput(stateDataFilters, workflowData.getOutput());
-			response = response.entity(output).type(MediaType.APPLICATION_JSON);
+			workflowData.setOutput(filterStateDataOutput(stateDataFilters, workflowData.getOutput()));
+			response = response.entity(workflowData.getOutput()).type(MediaType.APPLICATION_JSON);
 			putState(state, instance, workflowData);
 		}
 		else {
