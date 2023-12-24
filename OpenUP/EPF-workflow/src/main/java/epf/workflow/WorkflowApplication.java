@@ -1212,7 +1212,8 @@ public class WorkflowApplication  {
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
 			final URI instance,
 			final InputStream body) throws Exception {
-		return Response.ok(body).header(LRA.LRA_HTTP_CONTEXT_HEADER, instance).build();
+		final ResponseBuilder response = Response.ok().header(LRA.LRA_HTTP_CONTEXT_HEADER, instance);
+		return output(response, body);
 	}
 	
 	@POST
@@ -1234,8 +1235,6 @@ public class WorkflowApplication  {
 			final String version,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
 			final URI instance,
-			@QueryParam("useResults")
-			final Boolean useResults,
 			final InputStream body) throws Exception {
 		final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
 		final State currentState = getState(workflowDefinition, state);
