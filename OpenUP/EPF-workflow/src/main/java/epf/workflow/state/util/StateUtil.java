@@ -1,6 +1,5 @@
 package epf.workflow.state.util;
 
-import epf.workflow.WorkflowData;
 import epf.workflow.util.ELUtil;
 import jakarta.json.Json;
 import jakarta.json.JsonValue;
@@ -13,49 +12,50 @@ public interface StateUtil {
 	
 	/**
 	 * @param data
-	 * @param to
+	 * @param toInput
 	 * @param fromOutput
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	static void mergeStateDataOutput(final String data, final WorkflowData to, final JsonValue fromOutput) throws Exception {
-		JsonValue output = to.getOutput();
-		output = ELUtil.getValue(data, to.getOutput());
+	static JsonValue mergeStateDataOutput(final String data, final JsonValue toInput, final JsonValue fromOutput) throws Exception {
+		JsonValue output = toInput;
+		output = ELUtil.getValue(data, toInput);
 		final JsonValue newOutput = Json.createMergeDiff(output, fromOutput).apply(output);
-		ELUtil.setValue(data, to.getOutput(), newOutput);
+		ELUtil.setValue(data, toInput, newOutput);
+		return toInput;
 	}
 	
 	/**
-	 * @param to
+	 * @param toOutput
 	 * @param fromOutput
-	 * @throws Exception 
+	 * @return
+	 * @throws Exception
 	 */
-	static void mergeStateDataOutput(final WorkflowData to, final JsonValue fromOutput) throws Exception {
-		JsonValue output = to.getOutput();
-		final JsonValue newOutput = Json.createMergeDiff(output, fromOutput).apply(output);
-		to.setOutput(newOutput);
+	static JsonValue mergeStateDataOutput(final JsonValue toOutput, final JsonValue fromOutput) throws Exception {
+		final JsonValue newOutput = Json.createMergeDiff(toOutput, fromOutput).apply(toOutput);
+		return newOutput;
 	}
 	
 	/**
 	 * @param data
-	 * @param to
+	 * @param toInput
 	 * @param fromInput
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	static void mergeStateDataInput(final String data, final WorkflowData to, final JsonValue fromInput) throws Exception {
-		JsonValue input = to.getInput();
-		input = ELUtil.getValue(data, to.getInput());
+	static void mergeStateDataInput(final String data, final JsonValue toInput, final JsonValue fromInput) throws Exception {
+		JsonValue input = toInput;
+		input = ELUtil.getValue(data, toInput);
 		final JsonValue newInput = Json.createMergeDiff(input, fromInput).apply(input);
-		ELUtil.setValue(data, to.getInput(), newInput);
+		ELUtil.setValue(data, toInput, newInput);
 	}
 	
 	/**
-	 * @param to
+	 * @param toInput
 	 * @param fromInput
-	 * @throws Exception 
+	 * @return
+	 * @throws Exception
 	 */
-	static void mergeStateDataInput(final WorkflowData to, final JsonValue fromInput) throws Exception {
-		JsonValue input = to.getInput();
-		final JsonValue newInput = Json.createMergeDiff(input, fromInput).apply(input);
-		to.setInput(newInput);
+	static JsonValue mergeStateDataInput(final JsonValue toInput, final JsonValue fromInput) throws Exception {
+		final JsonValue newInput = Json.createMergeDiff(toInput, fromInput).apply(toInput);
+		return newInput;
 	}
 }
