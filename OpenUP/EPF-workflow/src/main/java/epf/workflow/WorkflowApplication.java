@@ -866,7 +866,8 @@ public class WorkflowApplication  {
 		for(Branch forEach : iterations) {
 			ELUtil.setValue(forEachState.getOutputCollection(), workflowData.getOutput(), forEach.getWorkflowData().getOutput());
 		}
-		return stateLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), forEachState.getName(), new Link[0]);
+		final Link[] actionLinks = actionLinks(workflowDefinition, forEachState.getName(), forEachState.getActions());
+		return stateLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), forEachState.getName(), actionLinks);
 	}
 	
 	private WorkflowDefinition findWorkflowDefinition(final String workflow, final String version) {
