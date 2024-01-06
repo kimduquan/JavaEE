@@ -1310,7 +1310,6 @@ public class WorkflowApplication  {
 			final String version,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
 			final URI instance,
-			final Boolean useResults,
 			final InputStream body) throws Exception {
 		return Response.status(Status.RESET_CONTENT).entity(body).build();
 	}
