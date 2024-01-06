@@ -1012,6 +1012,7 @@ public class WorkflowApplication  {
 	}
 
 	@PUT
+	@Path("")
 	@Complete
 	@Compensate
 	@AfterLRA
@@ -1026,6 +1027,7 @@ public class WorkflowApplication  {
 	}
 
 	@DELETE
+	@Path("")
 	@Forget
 	@Leave
 	@Produces(MediaType.APPLICATION_JSON)
