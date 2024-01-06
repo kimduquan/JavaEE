@@ -56,16 +56,11 @@ public interface WorkflowLink {
 	
 	/**
 	 * @param index
-	 * @param workflow
-	 * @param version
 	 * @return
 	 */
-	static Link terminateLink(final int index, final String workflow, final Optional<String> version) {
-		UriBuilder uri = UriBuilder.fromUri("{workflow}");
-		if(version.isPresent()) {
-			uri = uri.queryParam("version", version.get());
-		}
-		return LinkUtil.build(uri, index, Naming.WORKFLOW, HttpMethod.DELETE, workflow);
+	static Link terminateLink(final int index) {
+		UriBuilder uri = UriBuilder.fromUri("");
+		return LinkUtil.build(uri, index, Naming.WORKFLOW, HttpMethod.DELETE);
 	}
 	
 	/**

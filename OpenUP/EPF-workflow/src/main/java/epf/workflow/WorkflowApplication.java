@@ -176,8 +176,8 @@ public class WorkflowApplication  {
 				.links(WorkflowLink.endLink(compensateLinks.length, workflow, version));
 	}
 	
-	private ResponseBuilder terminateLink(final String workflow, final Optional<String> version) {
-		return Response.ok().links(WorkflowLink.terminateLink(0, workflow, version));
+	private ResponseBuilder terminateLink() {
+		return Response.ok().links(WorkflowLink.terminateLink(0));
 	}
 	
 	private ResponseBuilder scheduleLink(final StartDefinition startDefinition, final WorkflowDefinition workflowDefinition) {
@@ -585,7 +585,7 @@ public class WorkflowApplication  {
 				return endLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), compensateLinks);
 			}
 			if(Boolean.TRUE.equals(endDefinition.isTerminate())) {
-				return terminateLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()));
+				return terminateLink();
 			}
 			if(endDefinition.getProduceEvents() != null) {
 				produceEvents(workflowDefinition, endDefinition.getProduceEvents(), instance);
@@ -1087,27 +1087,6 @@ public class WorkflowApplication  {
 			final URI instance,
 			final InputStream body) throws Exception {
 		return output(instance, Response.ok(), body);
-	}
-	
-	@DELETE
-	@Leave
-	@Path("{workflow}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@RunOnVirtualThread
-	public Response terminate(
-			@PathParam("workflow")
-			final String workflow, 
-			@QueryParam("version")
-			final String version, 
-			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
-			final URI instance) throws Exception {
-		final WorkflowInstance workflowInstance = cache.removeInstance(instance);
-		if(workflowInstance != null) {
-			return output(instance, Response.ok(), workflowInstance.getState().getWorkflowData());
-		}
-		else {
-			return Response.ok().build();
-		}
 	}
 
 	@POST
