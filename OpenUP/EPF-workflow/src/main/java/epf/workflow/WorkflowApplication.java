@@ -1012,7 +1012,6 @@ public class WorkflowApplication  {
 	}
 
 	@PUT
-	@LRA(value = Type.MANDATORY)
 	@Complete
 	@Compensate
 	@AfterLRA
@@ -1027,9 +1026,8 @@ public class WorkflowApplication  {
 	}
 
 	@DELETE
-	@LRA(value = Type.MANDATORY)
-	@Leave
 	@Forget
+	@Leave
 	@Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
 	public Response terminate(
@@ -1092,9 +1090,8 @@ public class WorkflowApplication  {
 	}
 	
 	@DELETE
-	@Path("{workflow}")
-	@LRA(value = Type.MANDATORY, end = true)
 	@Leave
+	@Path("{workflow}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
 	public Response terminate(
