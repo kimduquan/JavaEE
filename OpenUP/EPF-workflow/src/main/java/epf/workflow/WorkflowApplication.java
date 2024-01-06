@@ -567,10 +567,10 @@ public class WorkflowApplication  {
 	}
 	
 	private ResponseBuilder transitionState(final WorkflowDefinition workflowDefinition, final String state, final StringOrObject<TransitionDefinition> transition, final BooleanOrObject<EndDefinition> end, final URI instance, final WorkflowData workflowData, final Link[] links) throws Exception {
-		if(!transition.isNull()) {
+		if(transition != null && !transition.isNull()) {
 			return transition(workflowDefinition, state, transition, instance, links);
 		}
-		else if(!end.isNull()) {
+		else if(end != null && !end.isNull()) {
 			return end(workflowDefinition, end, instance, workflowData, links);
 		}
 		throw new BadRequestException();
