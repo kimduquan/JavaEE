@@ -52,6 +52,7 @@ import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.lra.annotation.AfterLRA;
 import org.eclipse.microprofile.lra.annotation.Compensate;
 import org.eclipse.microprofile.lra.annotation.Complete;
+import org.eclipse.microprofile.lra.annotation.Forget;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA.Type;
 import org.eclipse.microprofile.lra.annotation.ws.rs.Leave;
@@ -175,8 +176,8 @@ public class WorkflowApplication  {
 				.links(WorkflowLink.endLink(compensateLinks.length, workflow, version));
 	}
 	
-	private ResponseBuilder terminateLink() {
-		return Response.ok().links(WorkflowLink.terminateLink(0));
+	private ResponseBuilder terminateLink(final String workflow, final Optional<String> version) {
+		return Response.ok().links(WorkflowLink.terminateLink(0, workflow, version));
 	}
 	
 	private ResponseBuilder scheduleLink(final StartDefinition startDefinition, final WorkflowDefinition workflowDefinition) {
@@ -584,7 +585,7 @@ public class WorkflowApplication  {
 				return endLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), compensateLinks);
 			}
 			if(Boolean.TRUE.equals(endDefinition.isTerminate())) {
-				return terminateLink();
+				return terminateLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()));
 			}
 			if(endDefinition.getProduceEvents() != null) {
 				produceEvents(workflowDefinition, endDefinition.getProduceEvents(), instance);
@@ -1028,6 +1029,7 @@ public class WorkflowApplication  {
 	@DELETE
 	@LRA(value = Type.MANDATORY)
 	@Leave
+	@Forget
 	@Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
 	public Response terminate(
@@ -1080,11 +1082,35 @@ public class WorkflowApplication  {
 	@RunOnVirtualThread
 	public Response end(
 			@PathParam("workflow")
-			final String workflow,
+			final String workflow, 
+			@QueryParam("version")
+			final String version, 
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
 			final URI instance,
 			final InputStream body) throws Exception {
 		return output(instance, Response.ok(), body);
+	}
+	
+	@DELETE
+	@Path("{workflow}")
+	@LRA(value = Type.MANDATORY, end = true)
+	@Leave
+	@Produces(MediaType.APPLICATION_JSON)
+	@RunOnVirtualThread
+	public Response terminate(
+			@PathParam("workflow")
+			final String workflow, 
+			@QueryParam("version")
+			final String version, 
+			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
+			final URI instance) throws Exception {
+		final WorkflowInstance workflowInstance = cache.removeInstance(instance);
+		if(workflowInstance != null) {
+			return output(instance, Response.ok(), workflowInstance.getState().getWorkflowData());
+		}
+		else {
+			return Response.ok().build();
+		}
 	}
 
 	@POST
