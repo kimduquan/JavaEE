@@ -414,7 +414,7 @@ public class WorkflowApplication  {
 	}
 	
 	private Response output(final URI instance, final ResponseBuilder response, final WorkflowData workflowData) {
-		return response.entity(workflowData.getOutput()).type(MediaType.APPLICATION_JSON).header(LRA.LRA_HTTP_CONTEXT_HEADER, instance).build();
+		return response.entity(workflowData.getOutput().toString()).type(MediaType.APPLICATION_JSON).header(LRA.LRA_HTTP_CONTEXT_HEADER, instance).build();
 	}
 	
 	private Response output(final URI instance, final ResponseBuilder response, final InputStream body) {
