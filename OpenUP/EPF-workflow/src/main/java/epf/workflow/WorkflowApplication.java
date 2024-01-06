@@ -175,9 +175,8 @@ public class WorkflowApplication  {
 				.links(WorkflowLink.endLink(compensateLinks.length, workflow, version));
 	}
 	
-	private ResponseBuilder terminateLink(final String workflow, final Optional<String> version) {
-		return Response.ok()
-				.links(WorkflowLink.terminateLink(0, workflow, version));
+	private ResponseBuilder terminateLink() {
+		return Response.ok().links(WorkflowLink.terminateLink(0));
 	}
 	
 	private ResponseBuilder scheduleLink(final StartDefinition startDefinition, final WorkflowDefinition workflowDefinition) {
@@ -585,7 +584,7 @@ public class WorkflowApplication  {
 				return endLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), compensateLinks);
 			}
 			if(Boolean.TRUE.equals(endDefinition.isTerminate())) {
-				return terminateLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()));
+				return terminateLink();
 			}
 			if(endDefinition.getProduceEvents() != null) {
 				produceEvents(workflowDefinition, endDefinition.getProduceEvents(), instance);
