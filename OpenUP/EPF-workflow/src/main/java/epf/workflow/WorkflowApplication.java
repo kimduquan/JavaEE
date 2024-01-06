@@ -1012,11 +1012,12 @@ public class WorkflowApplication  {
 	}
 
 	@PUT
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
+	@LRA(value = Type.MANDATORY)
 	@Complete
 	@Compensate
 	@AfterLRA
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
 	public Response end(
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
@@ -1024,11 +1025,12 @@ public class WorkflowApplication  {
 		cache.removeInstance(instance);
 		return Response.ok().build();
 	}
-	
+
 	@DELETE
-	@Produces(MediaType.APPLICATION_JSON)
+	@LRA(value = Type.MANDATORY)
 	@Leave
 	@Forget
+	@Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
 	public Response terminate(
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
