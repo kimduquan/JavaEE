@@ -52,7 +52,6 @@ import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.lra.annotation.AfterLRA;
 import org.eclipse.microprofile.lra.annotation.Compensate;
 import org.eclipse.microprofile.lra.annotation.Complete;
-import org.eclipse.microprofile.lra.annotation.Forget;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA.Type;
 import org.eclipse.microprofile.lra.annotation.ws.rs.Leave;
@@ -1029,7 +1028,6 @@ public class WorkflowApplication  {
 	@DELETE
 	@LRA(value = Type.MANDATORY)
 	@Leave
-	@Forget
 	@Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
 	public Response terminate(
