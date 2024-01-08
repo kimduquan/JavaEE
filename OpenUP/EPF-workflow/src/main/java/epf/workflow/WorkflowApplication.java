@@ -65,7 +65,6 @@ import org.eclipse.microprofile.openapi.models.servers.Server;
 import epf.naming.Naming;
 import epf.util.MapUtil;
 import epf.util.json.ext.JsonUtil;
-import epf.workflow.action.Action;
 import epf.workflow.event.Event;
 import epf.workflow.event.persistence.CallbackStateEvent;
 import epf.workflow.event.persistence.EventStateEvent;
@@ -98,11 +97,9 @@ import epf.workflow.schema.state.ParallelStateBranch;
 import epf.workflow.schema.state.SleepState;
 import epf.workflow.schema.state.State;
 import epf.workflow.schema.state.StateDataFilters;
-import epf.workflow.state.Branch;
 import epf.workflow.state.util.StateUtil;
 import epf.workflow.util.ELUtil;
 import epf.workflow.util.EitherUtil;
-import epf.workflow.util.LinkUtil;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import epf.workflow.schema.state.SwitchState;
 import epf.workflow.schema.state.SwitchStateDataConditions;
@@ -289,23 +286,6 @@ public class WorkflowApplication  {
 			return cache.get(subFlowRefDefinition.getWorkflowId(), subFlowRefDefinition.getVersion());
 		}
 		return null;
-	}
-	
-	private Action newAction(final WorkflowDefinition workflowDefinition, final ActionDefinition actionDefinition, final WorkflowData workflowData) throws Exception {
-		Action action = null;
-		filterActionDataInput(actionDefinition.getActionDataFilter(), workflowData.getInput());
-		if(!actionDefinition.getFunctionRef().isNull()) {
-		}
-		else if(actionDefinition.getEventRef() != null) {
-			getEventDefinition(workflowDefinition, actionDefinition.getEventRef().getProduceEventRef());
-		}
-		else if(!actionDefinition.getSubFlowRef().isNull()) {
-			getSubWorkflowDefinition(actionDefinition.getSubFlowRef());
-			if(actionDefinition.getSubFlowRef().isRight()) {
-				actionDefinition.getSubFlowRef().getRight();
-			}
-		}
-		return action;
 	}
 	
 	private Response invoke(final WorkflowDefinition workflowDefinition, final FunctionDefinition functionDefinition, final JsonValue data, final OpenAPI openAPI, final String path, final PathItem pathItem, final org.eclipse.microprofile.openapi.models.PathItem.HttpMethod httpMethod, final Operation operation) throws Exception {
@@ -616,6 +596,10 @@ public class WorkflowApplication  {
 		return actionLinks.toArray(new Link[0]);
 	}
 	
+	private Link branchLink(final Link[] actionLinks) {
+		return null;
+	}
+	
 	private ResponseBuilder transitionState(final WorkflowDefinition workflowDefinition, final String state, final StringOrObject<TransitionDefinition> transition, final BooleanOrObject<EndDefinition> end, final URI instance, final WorkflowData workflowData, final Link[] links) throws Exception {
 		if(transition != null && !transition.isNull()) {
 			return transition(workflowDefinition, state, transition, instance, links);
@@ -677,28 +661,6 @@ public class WorkflowApplication  {
 			return startLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), instance);
 		}
 		throw new BadRequestException();
-	}
-	
-	private Branch newBranch(final WorkflowDefinition workflowDefinition, final List<ActionDefinition> actionDefinitions, final WorkflowData workflowData) throws Exception {
-		final List<Action> actions = new ArrayList<>();
-		for(ActionDefinition actionDefinition : actionDefinitions) {
-			final Action action = newAction(workflowDefinition, actionDefinition, workflowData);
-			actions.add(action);
-		}
-		return new Branch(actions.toArray(new Action[0]), workflowData, null);
-	}
-	
-	private Branch newForEachBranch(final WorkflowDefinition workflowDefinition, final ForEachState forEachState, final URI instance, final WorkflowData workflowData, final JsonValue value) throws Exception {
-		final WorkflowData newWorkflowData = new WorkflowData();
-		newWorkflowData.setInput(workflowData.getOutput());
-		ELUtil.setValue(forEachState.getIterationParam(), newWorkflowData.getInput(), value);
-		return newBranch(workflowDefinition, forEachState.getActions(), newWorkflowData);
-	}
-	
-	private Branch newParallelBranch(final WorkflowDefinition workflowDefinition, final ParallelStateBranch branch, final URI instance, final WorkflowData workflowData) throws Exception {
-		final WorkflowData newWorkflowData = new WorkflowData();
-		newWorkflowData.setInput(workflowData.getOutput());
-		return newBranch(workflowDefinition, branch.getActions(), newWorkflowData);
 	}
 	
 	private Optional<String> getCompensatedBy(final State state) {
@@ -846,22 +808,24 @@ public class WorkflowApplication  {
 		return transitionState(workflowDefinition, sleepState.getName(), sleepState.getTransition(), sleepState.getEnd(), instance, workflowData, new Link[0]);
 	}
 	
+	private void parallelBranch(final WorkflowDefinition workflowDefinition, final ParallelState parallelState, final ParallelStateBranch branch, final List<Link> links) {
+		
+	}
+	
 	private ResponseBuilder transitionParallelState(final WorkflowDefinition workflowDefinition, final ParallelState parallelState, final URI instance, final WorkflowData workflowData) throws Exception {
-		final List<Branch> branches = new ArrayList<>();
+		final List<Link> brancheLinks = new ArrayList<>();
 		for(ParallelStateBranch branch : parallelState.getBranches()) {
-			branches.add(newParallelBranch(workflowDefinition, branch, instance, workflowData));
+			parallelBranch(workflowDefinition, parallelState, branch, brancheLinks);
 		}
 		switch(parallelState.getCompletionType()) {
 			case allOf:
-				executor.invokeAll(branches);
 				break;
 			case atLeast:
-				executor.invokeAny(branches);
 				break;
 			default:
 				break;
 		}
-		return stateLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), parallelState.getName(), new Link[0]);
+		return stateLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), parallelState.getName(), brancheLinks.toArray(new Link[0]));
 	}
 	
 	private ResponseBuilder transitionInjectState(final WorkflowDefinition workflowDefinition, final InjectState injectState, final URI instance, final WorkflowData workflowData) throws Exception {
@@ -871,6 +835,7 @@ public class WorkflowApplication  {
 	}
 	
 	private ResponseBuilder transitionForEachState(final WorkflowDefinition workflowDefinition, final ForEachState forEachState, final URI instance, final WorkflowData workflowData) throws Exception {
+		final Link[] actionLinks = actionLinks(workflowDefinition, forEachState.getName(), forEachState.getActions());
 		final JsonArray inputCollection = ELUtil.getValue(forEachState.getInputCollection(), workflowData.getOutput()).asJsonArray();
 		int batchSize = inputCollection.size();
 		if(forEachState.getBatchSize().isLeft()) {
@@ -879,7 +844,7 @@ public class WorkflowApplication  {
 		else if(forEachState.getBatchSize().isRight()) {
 			batchSize = forEachState.getBatchSize().getRight().intValue();
 		}
-		List<Branch> iterations = null;
+		final List<Link> links = new ArrayList<>();
 		switch(forEachState.getMode()) {
 			case parallel:
 				int index = 0;
@@ -888,36 +853,22 @@ public class WorkflowApplication  {
 					if(batchInputs.isEmpty()) {
 						break;
 					}
-					final List<Branch> batch = new ArrayList<>();
-					for(JsonValue value : batchInputs) {
-						batch.add(newForEachBranch(workflowDefinition, forEachState, instance, workflowData, value));
+					final List<Link> batchLinks = new ArrayList<>();
+					for(int i = 0; i < batchInputs.size(); i++) {
+						batchLinks.add(branchLink(actionLinks));
 					}
-					executor.invokeAll(batch);
 					index += batchInputs.size();
 				}
 				break;
 			case sequential:
-				iterations = new ArrayList<>();
-				for(JsonValue value : inputCollection) {
-					iterations.add(newForEachBranch(workflowDefinition, forEachState, instance, workflowData, value));
-				}
-				for(Branch forEach : iterations) {
-					forEach.call();
+				for(int i = 0; i < inputCollection.size(); i++) {
+					links.add(branchLink(actionLinks));
 				}
 				break;
 			default:
 				break;
 		}
-		for(Branch forEach : iterations) {
-			for(Action action : forEach.getActions()) {
-				filterActionDataOutput(action.getActionDefinition().getActionDataFilter(), forEach.getWorkflowData(), action.getWorkflowData());
-			}
-		}
-		for(Branch forEach : iterations) {
-			ELUtil.setValue(forEachState.getOutputCollection(), workflowData.getOutput(), forEach.getWorkflowData().getOutput());
-		}
-		final Link[] actionLinks = actionLinks(workflowDefinition, forEachState.getName(), forEachState.getActions());
-		return stateLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), forEachState.getName(), actionLinks);
+		return stateLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), forEachState.getName(), links.toArray(new Link[0]));
 	}
 	
 	private WorkflowDefinition findWorkflowDefinition(final String workflow, final String version) {
@@ -1355,4 +1306,45 @@ public class WorkflowApplication  {
 		workflowData.setOutput(filterActionDataOutput(actionDefinition.getActionDataFilter(), workflowData, actionData));
 		return output(instance, response, workflowData);
 	}
+	
+	@PATCH
+	@Path("{workflow}/{state}/{branch}")
+	@LRA(value = Type.MANDATORY, end = false)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@RunOnVirtualThread
+	public Response branch(
+			@PathParam("workflow")
+			final String workflow, 
+			@PathParam("state")
+			final String state,
+			@PathParam("action")
+			final String action,
+			@QueryParam("version")
+			final String version,
+			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
+			final URI instance,
+			final InputStream body) throws Exception {
+		return null;
+	}
+	
+	@GET
+	@Path("{workflow}/{state}/{branch}")
+	@LRA(value = Type.MANDATORY, end = false)
+	@Produces(MediaType.APPLICATION_JSON)
+	@RunOnVirtualThread
+	public Response iteration(
+			@PathParam("workflow")
+			final String workflow, 
+			@PathParam("state")
+			final String state,
+			@PathParam("action")
+			final String action,
+			@QueryParam("version")
+			final String version,
+			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
+			final URI instance) throws Exception {
+		return null;
+	}
+	
 }
