@@ -21,7 +21,7 @@ public class WorkflowException extends Exception {
 	/**
 	 * @param workflowError
 	 */
-	public WorkflowException(WorkflowError workflowError) {
+	public WorkflowException(final WorkflowError workflowError) {
 		super(workflowError.getDescription());
 		this.workflowError = workflowError;
 	}

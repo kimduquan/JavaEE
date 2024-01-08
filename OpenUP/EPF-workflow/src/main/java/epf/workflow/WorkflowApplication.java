@@ -33,6 +33,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
@@ -76,6 +77,7 @@ import epf.workflow.schema.StartDefinition;
 import epf.workflow.schema.SubFlowRefDefinition;
 import epf.workflow.schema.TransitionDefinition;
 import epf.workflow.schema.WorkflowDefinition;
+import epf.workflow.schema.WorkflowError;
 import epf.workflow.schema.action.ActionDataFilters;
 import epf.workflow.schema.action.ActionDefinition;
 import epf.workflow.schema.auth.AuthDefinition;
@@ -100,6 +102,7 @@ import epf.workflow.state.Branch;
 import epf.workflow.state.util.StateUtil;
 import epf.workflow.util.ELUtil;
 import epf.workflow.util.EitherUtil;
+import epf.workflow.util.LinkUtil;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import epf.workflow.schema.state.SwitchState;
 import epf.workflow.schema.state.SwitchStateDataConditions;
@@ -390,16 +393,34 @@ public class WorkflowApplication  {
 		}
 	}
 	
-	private Response openapi(final WorkflowDefinition workflowDefinition, final FunctionDefinition functionDefinition, final JsonValue data) throws Exception {
+	private void catchException(final WebApplicationException exception) throws WorkflowException {
+		final WorkflowError workflowError = new WorkflowError();
+		workflowError.setCode(String.valueOf(exception.getResponse().getStatus()));
+		workflowError.setDescription(exception.getMessage());
+		throw new WorkflowException(workflowError);
+	}
+	
+	private OpenAPI getOpenAPI(final WorkflowDefinition workflowDefinition, final FunctionDefinition functionDefinition) throws Exception {
 		final int index = functionDefinition.getOperation().indexOf("#");
 		final String pathToOpenAPIDefinition = functionDefinition.getOperation().substring(0, index);
-		final String operationId = functionDefinition.getOperation().substring(index + 1);
 		if(!openAPIs.containsKey(pathToOpenAPIDefinition)) {
 			final URI uri = URI.create(pathToOpenAPIDefinition);
 			final OpenAPI openAPI = OpenAPIUtil.read(uri.toURL());
 			openAPIs.put(pathToOpenAPIDefinition, openAPI);
 		}
 		final OpenAPI openAPI = openAPIs.get(pathToOpenAPIDefinition);
+		return openAPI;
+	}
+	
+	private String getOperationId(final FunctionDefinition functionDefinition) {
+		final int index = functionDefinition.getOperation().indexOf("#");
+		final String operationId = functionDefinition.getOperation().substring(index + 1);
+		return operationId;
+	}
+	
+	private Response openapi(final WorkflowDefinition workflowDefinition, final FunctionDefinition functionDefinition, final JsonValue data) throws Exception {
+		final String operationId = getOperationId(functionDefinition);
+		final OpenAPI openAPI = getOpenAPI(workflowDefinition, functionDefinition);
 		for(Entry<String, PathItem> pathItemEntry : openAPI.getPaths().getPathItems().entrySet()) {
 			final String path = pathItemEntry.getKey();
 			final PathItem pathItem = pathItemEntry.getValue();
@@ -411,7 +432,26 @@ public class WorkflowApplication  {
 				}
 			}
 		}
-		throw new BadRequestException();
+		return Response.status(Status.BAD_REQUEST).build();
+	}
+	
+	private ResponseBuilder retry(final WorkflowDefinition workflowDefinition, final ActionDefinition actionDefinition, final WorkflowException exception) throws RetryableException, NonRetryableException {
+		if(Boolean.TRUE.equals(workflowDefinition.getAutoRetries())) {
+			for(WorkflowError workflowError : actionDefinition.getNonRetryableErrors()) {
+				if(workflowError.getCode().equals(exception.getWorkflowError().getCode())) {
+					throw new NonRetryableException(exception.getWorkflowError());
+				}
+			}
+			throw new RetryableException(exception.getWorkflowError());
+		}
+		else {
+			for(WorkflowError workflowError : actionDefinition.getRetryableErrors()) {
+				if(workflowError.getCode().equals(exception.getWorkflowError().getCode())) {
+					throw new RetryableException(exception.getWorkflowError());
+				}
+			}
+			throw new NonRetryableException(exception.getWorkflowError());
+		}
 	}
 	
 	private Response output(final URI instance, final ResponseBuilder response, final WorkflowData workflowData) {
@@ -435,8 +475,13 @@ public class WorkflowApplication  {
 			case odata:
 				break;
 			case openapi:
-				final Response respone = openapi(workflowDefinition, functionDefinition, workflowData.getInput());
-				return Response.fromResponse(respone);
+				try {
+					final Response respone = openapi(workflowDefinition, functionDefinition, workflowData.getInput());
+					return Response.fromResponse(respone);
+				}
+				catch(WebApplicationException ex) {
+					catchException(ex);
+				}
 			case rest:
 				break;
 			case rpc:
@@ -473,7 +518,12 @@ public class WorkflowApplication  {
 		ResponseBuilder response = null;
 		if(!actionDefinition.getFunctionRef().isNull()) {
 			final FunctionDefinition functionDefinition = getFunctionDefinition(workflowDefinition, actionDefinition.getFunctionRef());
-			response = function(workflowDefinition, actionDefinition, functionDefinition, workflowData);
+			try {
+				response = function(workflowDefinition, actionDefinition, functionDefinition, workflowData);
+			}
+			catch(WorkflowException ex) {
+				response = retry(workflowDefinition, actionDefinition, ex);
+			}
 		}
 		else if(actionDefinition.getEventRef() != null) {
 			final EventDefinition eventDefinition = getEventDefinition(workflowDefinition, actionDefinition.getEventRef().getProduceEventRef());
@@ -1278,7 +1328,7 @@ public class WorkflowApplication  {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Retry(maxRetries = -1, maxDuration = 0, jitter = 0, retryOn = {RetryableException.class}, abortOn = {NonRetryableException.class})
-	@Fallback(fallbackMethod = "onErrors", applyOn = {WorkflowException.class})
+	@Fallback(value = WorkflowErrorHandler.class, applyOn = {WorkflowErrorException.class})
 	@RunOnVirtualThread
 	public Response action(
 			@PathParam("workflow")
@@ -1304,18 +1354,5 @@ public class WorkflowApplication  {
 		final ResponseBuilder response = action(workflowDefinition, actionDefinition, actionData);
 		workflowData.setOutput(filterActionDataOutput(actionDefinition.getActionDataFilter(), workflowData, actionData));
 		return output(instance, response, workflowData);
-	}
-
-	@LRA(value = Type.MANDATORY, end = false)
-	@RunOnVirtualThread
-	public Response onErrors(
-			final String workflow,
-			final String state,
-			final String action,
-			final String version,
-			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
-			final URI instance,
-			final InputStream body) throws Exception {
-		return Response.status(Status.RESET_CONTENT).entity(body).build();
 	}
 }

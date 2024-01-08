@@ -1,5 +1,6 @@
 package epf.workflow.util;
 
+import epf.naming.Naming;
 import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.UriBuilder;
 
@@ -40,6 +41,13 @@ public interface LinkUtil {
 	 */
 	static Link build(final UriBuilder builder, final int index, final String service, final String method, final Object...values) {
 		return Link.fromUriBuilder(builder).title(String.valueOf(index)).type(method).rel(service).build(values);
+	}
+	
+	/**
+	 * @return
+	 */
+	static Link self() {
+		return Link.fromPath("").rel(Naming.Client.Link.SELF).build();
 	}
 	
 }
