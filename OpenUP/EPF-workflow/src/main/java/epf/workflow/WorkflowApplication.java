@@ -17,8 +17,10 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.POST;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
+import jakarta.json.JsonObjectBuilder;
 import jakarta.json.JsonValue;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
@@ -79,6 +81,7 @@ import epf.workflow.schema.WorkflowDefinition;
 import epf.workflow.schema.WorkflowError;
 import epf.workflow.schema.action.ActionDataFilters;
 import epf.workflow.schema.action.ActionDefinition;
+import epf.workflow.schema.action.Mode;
 import epf.workflow.schema.auth.AuthDefinition;
 import epf.workflow.schema.auth.BearerPropertiesDefinition;
 import epf.workflow.schema.event.EventDataFilters;
@@ -164,10 +167,10 @@ public class WorkflowApplication  {
 				.links(WorkflowLink.transitionLink(links.length, workflow, version, state));
 	}
 	
-	private ResponseBuilder stateLink(final String workflow, final Optional<String> version, final String state, final Link[] actionLinks) {
+	private ResponseBuilder stateLink(final String workflow, final Optional<String> version, final epf.workflow.schema.state.Type type, final String state, final Link[] actionLinks) {
 		return Response.ok()
 				.links(actionLinks)
-				.links(WorkflowLink.stateLink(actionLinks.length, workflow, version, state));
+				.links(WorkflowLink.stateLink(actionLinks.length, workflow, version, type.name(), state));
 	}
 	
 	private ResponseBuilder endLink(final String workflow, final Optional<String> version, final Link[] compensateLinks) {
@@ -596,8 +599,33 @@ public class WorkflowApplication  {
 		return actionLinks.toArray(new Link[0]);
 	}
 	
-	private Link branchLink(final Link[] actionLinks) {
-		return null;
+	private Link[] iterationLinks(final WorkflowDefinition workflowDefinition, final String state, final Mode mode, final int batchSize, final JsonArray inputCollection) {
+		final List<Link> iterationLinks = new ArrayList<>();
+		switch(mode) {
+			case parallel:
+				int index = 0;
+				while(true) {
+					final List<JsonValue> batchInputs = inputCollection.subList(index, Math.min(index + batchSize, inputCollection.size()));
+					if(batchInputs.isEmpty()) {
+						break;
+					}
+					for(int i = 0; i < batchInputs.size(); i++) {
+						final Link iterationLink = WorkflowLink.iterationLink(i, false, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), state, i);
+						iterationLinks.add(iterationLink);
+					}
+					index += batchInputs.size();
+				}
+				break;
+			case sequential:
+				for(int i = 0; i < inputCollection.size(); i++) {
+					final Link iterationLink = WorkflowLink.iterationLink(i, false, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), state, i);
+					iterationLinks.add(iterationLink);
+				}
+				break;
+			default:
+				break;
+		}
+		return iterationLinks.toArray(new Link[0]);
 	}
 	
 	private ResponseBuilder transitionState(final WorkflowDefinition workflowDefinition, final String state, final StringOrObject<TransitionDefinition> transition, final BooleanOrObject<EndDefinition> end, final URI instance, final WorkflowData workflowData, final Link[] links) throws Exception {
@@ -768,7 +796,7 @@ public class WorkflowApplication  {
 	
 	private ResponseBuilder transitionOperationState(final WorkflowDefinition workflowDefinition, final OperationState operationState, final WorkflowData workflowData) throws Exception {
 		final Link[] actionLinks = actionLinks(workflowDefinition, operationState.getName(), operationState.getActions());
-		return stateLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), operationState.getName(), actionLinks);
+		return stateLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), operationState.getType_(), operationState.getName(), actionLinks);
 	}
 	
 	private ResponseBuilder transitionSwitchState(final WorkflowDefinition workflowDefinition, final SwitchState switchState, final URI instance, final WorkflowData workflowData) throws Exception {
@@ -825,7 +853,7 @@ public class WorkflowApplication  {
 			default:
 				break;
 		}
-		return stateLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), parallelState.getName(), brancheLinks.toArray(new Link[0]));
+		return stateLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), parallelState.getType_(), parallelState.getName(), brancheLinks.toArray(new Link[0]));
 	}
 	
 	private ResponseBuilder transitionInjectState(final WorkflowDefinition workflowDefinition, final InjectState injectState, final URI instance, final WorkflowData workflowData) throws Exception {
@@ -835,7 +863,6 @@ public class WorkflowApplication  {
 	}
 	
 	private ResponseBuilder transitionForEachState(final WorkflowDefinition workflowDefinition, final ForEachState forEachState, final URI instance, final WorkflowData workflowData) throws Exception {
-		final Link[] actionLinks = actionLinks(workflowDefinition, forEachState.getName(), forEachState.getActions());
 		final JsonArray inputCollection = ELUtil.getValue(forEachState.getInputCollection(), workflowData.getOutput()).asJsonArray();
 		int batchSize = inputCollection.size();
 		if(forEachState.getBatchSize().isLeft()) {
@@ -844,31 +871,8 @@ public class WorkflowApplication  {
 		else if(forEachState.getBatchSize().isRight()) {
 			batchSize = forEachState.getBatchSize().getRight().intValue();
 		}
-		final List<Link> links = new ArrayList<>();
-		switch(forEachState.getMode()) {
-			case parallel:
-				int index = 0;
-				while(true) {
-					final List<JsonValue> batchInputs = inputCollection.subList(index, Math.min(index + batchSize, inputCollection.size()));
-					if(batchInputs.isEmpty()) {
-						break;
-					}
-					final List<Link> batchLinks = new ArrayList<>();
-					for(int i = 0; i < batchInputs.size(); i++) {
-						batchLinks.add(branchLink(actionLinks));
-					}
-					index += batchInputs.size();
-				}
-				break;
-			case sequential:
-				for(int i = 0; i < inputCollection.size(); i++) {
-					links.add(branchLink(actionLinks));
-				}
-				break;
-			default:
-				break;
-		}
-		return stateLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), forEachState.getName(), links.toArray(new Link[0]));
+		final Link[] iterationLinks = iterationLinks(workflowDefinition, forEachState.getName(), forEachState.getMode(), batchSize, inputCollection);
+		return stateLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), forEachState.getType_(), forEachState.getName(), iterationLinks);
 	}
 	
 	private WorkflowDefinition findWorkflowDefinition(final String workflow, final String version) {
@@ -1013,7 +1017,7 @@ public class WorkflowApplication  {
 	}
 
 	@PUT
-	@Path("")
+	@Path("/")
 	@Complete
 	@Compensate
 	@AfterLRA
@@ -1028,7 +1032,7 @@ public class WorkflowApplication  {
 	}
 
 	@DELETE
-	@Path("")
+	@Path("/")
 	@Forget
 	@Leave
 	@Produces(MediaType.APPLICATION_JSON)
@@ -1180,68 +1184,143 @@ public class WorkflowApplication  {
 	}
 	
 	@PATCH
-	@Path("{workflow}/{state}")
+	@Path("{workflow}/callback")
 	@LRA(value = Type.MANDATORY, end = false)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
-	public Response state(
+	public Response callBackState(
 			@PathParam("workflow")
 			final String workflow,  
-			@PathParam("state")
+			@QueryParam("state")
 			final String state,
 			@QueryParam("version")
 			final String version,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
 			final URI instance, 
 			final InputStream body) throws Exception {
-		final WorkflowInstance workflowInstance = cache.getInstance(instance);
-		if(workflowInstance != null) {
-			final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
-			final State currentState = getState(workflowDefinition, state);
-			final JsonValue input = JsonUtil.readValue(body);
-			final WorkflowData workflowData = workflowInstance.getState().getWorkflowData();
-			StateDataFilters stateDataFilters = null;
-			ResponseBuilder response = null;
-			switch(currentState.getType_()) {
-				case Switch:
-					throw new BadRequestException();
-				case callback:
-					final CallbackState callbackState = (CallbackState) currentState;
-					stateDataFilters = callbackState.getStateDataFilter();
-					response = callbackState(workflowDefinition, callbackState, instance, workflowData, input);
-					break;
-				case event:
-					final EventState eventState = (EventState)currentState;
-					stateDataFilters = eventState.getStateDataFilter();
-					response = eventState(workflowDefinition, eventState, instance, workflowData);
-					break;
-				case foreach:
-					final ForEachState forEachState = (ForEachState) currentState;
-					stateDataFilters = forEachState.getStateDataFilter();
-					response = transitionState(workflowDefinition, state, forEachState.getTransition(), forEachState.getEnd(), instance, workflowData, new Link[0]);
-					break;
-				case inject:
-					throw new BadRequestException();
-				case operation:
-					final OperationState operationState = (OperationState) currentState;
-					stateDataFilters = operationState.getStateDataFilter();
-					response = transitionState(workflowDefinition, state, operationState.getTransition(), operationState.getEnd(), instance, workflowData, new Link[0]);
-					break;
-				case parallel:
-					final ParallelState parallelState = (ParallelState) currentState;
-					stateDataFilters = parallelState.getStateDataFilter();
-					response = transitionState(workflowDefinition, state, parallelState.getTransition(), parallelState.getEnd(), instance, workflowData, new Link[0]);
-					break;
-				case sleep:
-					throw new BadRequestException();
-				default:
-					break;
-			}
-			workflowData.setOutput(filterStateDataOutput(stateDataFilters, workflowData.getOutput()));
-			return output(instance, response, workflowData);
-		}
-		return Response.noContent().build();
+		final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
+		final State currentState = getState(workflowDefinition, state);
+		final JsonValue input = JsonUtil.readValue(body);
+		final WorkflowData workflowData = new WorkflowData();
+		workflowData.setInput(input);
+		final CallbackState callbackState = (CallbackState) currentState;
+		final StateDataFilters stateDataFilters = callbackState.getStateDataFilter();
+		final ResponseBuilder response = callbackState(workflowDefinition, callbackState, instance, workflowData, input);
+		workflowData.setOutput(filterStateDataOutput(stateDataFilters, workflowData.getOutput()));
+		return output(instance, response, workflowData);
+	}
+	
+	@PATCH
+	@Path("{workflow}/event")
+	@LRA(value = Type.MANDATORY, end = false)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@RunOnVirtualThread
+	public Response eventState(
+			@PathParam("workflow")
+			final String workflow,  
+			@QueryParam("state")
+			final String state,
+			@QueryParam("version")
+			final String version,
+			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
+			final URI instance, 
+			final InputStream body) throws Exception {
+		final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
+		final State currentState = getState(workflowDefinition, state);
+		final JsonValue input = JsonUtil.readValue(body);
+		final WorkflowData workflowData = new WorkflowData();
+		workflowData.setInput(input);
+		final EventState eventState = (EventState)currentState;
+		final StateDataFilters stateDataFilters = eventState.getStateDataFilter();
+		final ResponseBuilder response = eventState(workflowDefinition, eventState, instance, workflowData);
+		workflowData.setOutput(filterStateDataOutput(stateDataFilters, workflowData.getOutput()));
+		return output(instance, response, workflowData);
+	}
+	
+	@PATCH
+	@Path("{workflow}/foreach")
+	@LRA(value = Type.MANDATORY, end = false)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@RunOnVirtualThread
+	public Response forEachState(
+			@PathParam("workflow")
+			final String workflow,  
+			@QueryParam("state")
+			final String state,
+			@QueryParam("version")
+			final String version,
+			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
+			final URI instance, 
+			final InputStream body) throws Exception {
+		final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
+		final State currentState = getState(workflowDefinition, state);
+		final JsonValue input = JsonUtil.readValue(body);
+		final WorkflowData workflowData = new WorkflowData();
+		workflowData.setInput(input);
+		final ForEachState forEachState = (ForEachState) currentState;
+		final StateDataFilters stateDataFilters = forEachState.getStateDataFilter();
+		final ResponseBuilder response = transitionState(workflowDefinition, state, forEachState.getTransition(), forEachState.getEnd(), instance, workflowData, new Link[0]);
+		workflowData.setOutput(filterStateDataOutput(stateDataFilters, workflowData.getOutput()));
+		return output(instance, response, workflowData);
+	}
+	
+	@PATCH
+	@Path("{workflow}/operation")
+	@LRA(value = Type.MANDATORY, end = false)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@RunOnVirtualThread
+	public Response operationState(
+			@PathParam("workflow")
+			final String workflow,  
+			@QueryParam("state")
+			final String state,
+			@QueryParam("version")
+			final String version,
+			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
+			final URI instance, 
+			final InputStream body) throws Exception {
+		final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
+		final State currentState = getState(workflowDefinition, state);
+		final JsonValue input = JsonUtil.readValue(body);
+		final WorkflowData workflowData = new WorkflowData();
+		workflowData.setInput(input);
+		final OperationState operationState = (OperationState) currentState;
+		final StateDataFilters stateDataFilters = operationState.getStateDataFilter();
+		final ResponseBuilder response = transitionState(workflowDefinition, state, operationState.getTransition(), operationState.getEnd(), instance, workflowData, new Link[0]);
+		workflowData.setOutput(filterStateDataOutput(stateDataFilters, workflowData.getOutput()));
+		return output(instance, response, workflowData);
+	}
+	
+	@PATCH
+	@Path("{workflow}/parallel")
+	@LRA(value = Type.MANDATORY, end = false)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@RunOnVirtualThread
+	public Response parallelState(
+			@PathParam("workflow")
+			final String workflow,  
+			@QueryParam("state")
+			final String state,
+			@QueryParam("version")
+			final String version,
+			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
+			final URI instance, 
+			final InputStream body) throws Exception {
+		final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
+		final State currentState = getState(workflowDefinition, state);
+		final JsonValue input = JsonUtil.readValue(body);
+		final WorkflowData workflowData = new WorkflowData();
+		workflowData.setInput(input);
+		final ParallelState parallelState = (ParallelState) currentState;
+		final StateDataFilters stateDataFilters = parallelState.getStateDataFilter();
+		final ResponseBuilder response = transitionState(workflowDefinition, state, parallelState.getTransition(), parallelState.getEnd(), instance, workflowData, new Link[0]);
+		workflowData.setOutput(filterStateDataOutput(stateDataFilters, workflowData.getOutput()));
+		return output(instance, response, workflowData);
 	}
 
 	@PUT
@@ -1308,7 +1387,45 @@ public class WorkflowApplication  {
 	}
 	
 	@PATCH
-	@Path("{workflow}/{state}/{branch}")
+	@Path("{workflow}/{state}/iteration")
+	@LRA(value = Type.MANDATORY, end = false)
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@RunOnVirtualThread
+	public Response iteration(
+			@PathParam("workflow")
+			final String workflow, 
+			@PathParam("state")
+			final String state,
+			@QueryParam("version")
+			final String version,
+			@QueryParam("next")
+			final int next,
+			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
+			final URI instance,
+			final InputStream body) throws Exception {
+		final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
+		final ForEachState forEachState = (ForEachState) getState(workflowDefinition, state);
+		final JsonValue input = JsonUtil.readValue(body);
+		final JsonArray inputCollection = ELUtil.getValue(forEachState.getInputCollection(), input).asJsonArray();
+		if(next > 0) {
+			JsonValue outputCollection = ELUtil.getValue(forEachState.getOutputCollection(), input);
+			if(outputCollection == null) {
+				outputCollection = Json.createArrayBuilder().build();
+			}
+			outputCollection.asJsonArray().add(inputCollection.get(next - 1));
+			ELUtil.setValue(forEachState.getInputCollection(), input, outputCollection);
+		}
+		final JsonValue iterationParam = Json.createObjectBuilder().add(forEachState.getIterationParam(), inputCollection.get(next)).build();
+		final WorkflowData workflowData = new WorkflowData();
+		workflowData.setInput(input);
+		workflowData.setOutput(iterationParam);
+		final Link[] actionLinks = actionLinks(workflowDefinition, state, forEachState.getActions());
+		return output(instance, Response.ok().links(actionLinks), workflowData);
+	}
+	
+	@PATCH
+	@Path("{workflow}/{state}/branch")
 	@LRA(value = Type.MANDATORY, end = false)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -1327,24 +1444,4 @@ public class WorkflowApplication  {
 			final InputStream body) throws Exception {
 		return null;
 	}
-	
-	@GET
-	@Path("{workflow}/{state}/{branch}")
-	@LRA(value = Type.MANDATORY, end = false)
-	@Produces(MediaType.APPLICATION_JSON)
-	@RunOnVirtualThread
-	public Response iteration(
-			@PathParam("workflow")
-			final String workflow, 
-			@PathParam("state")
-			final String state,
-			@PathParam("action")
-			final String action,
-			@QueryParam("version")
-			final String version,
-			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
-			final URI instance) throws Exception {
-		return null;
-	}
-	
 }
