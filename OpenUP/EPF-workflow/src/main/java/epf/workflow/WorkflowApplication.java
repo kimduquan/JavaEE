@@ -20,7 +20,6 @@ import jakarta.inject.Inject;
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
-import jakarta.json.JsonObjectBuilder;
 import jakarta.json.JsonValue;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
@@ -628,6 +627,15 @@ public class WorkflowApplication  {
 		return iterationLinks.toArray(new Link[0]);
 	}
 	
+	private Link[] branchLinks(final WorkflowDefinition workflowDefinition, final String state, final List<ParallelStateBranch> branches) {
+		final List<Link> branchLinks = new ArrayList<>();
+		for(int index = 0; index < branches.size(); index++) {
+			final Link branchLink = WorkflowLink.branchLink(index, false, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), state, index);
+			branchLinks.add(branchLink);
+		}
+		return branchLinks.toArray(new Link[0]);
+	}
+	
 	private ResponseBuilder transitionState(final WorkflowDefinition workflowDefinition, final String state, final StringOrObject<TransitionDefinition> transition, final BooleanOrObject<EndDefinition> end, final URI instance, final WorkflowData workflowData, final Link[] links) throws Exception {
 		if(transition != null && !transition.isNull()) {
 			return transition(workflowDefinition, state, transition, instance, links);
@@ -836,15 +844,8 @@ public class WorkflowApplication  {
 		return transitionState(workflowDefinition, sleepState.getName(), sleepState.getTransition(), sleepState.getEnd(), instance, workflowData, new Link[0]);
 	}
 	
-	private void parallelBranch(final WorkflowDefinition workflowDefinition, final ParallelState parallelState, final ParallelStateBranch branch, final List<Link> links) {
-		
-	}
-	
 	private ResponseBuilder transitionParallelState(final WorkflowDefinition workflowDefinition, final ParallelState parallelState, final URI instance, final WorkflowData workflowData) throws Exception {
-		final List<Link> brancheLinks = new ArrayList<>();
-		for(ParallelStateBranch branch : parallelState.getBranches()) {
-			parallelBranch(workflowDefinition, parallelState, branch, brancheLinks);
-		}
+		final Link[] branchLinks = branchLinks(workflowDefinition, parallelState.getName(), parallelState.getBranches());
 		switch(parallelState.getCompletionType()) {
 			case allOf:
 				break;
@@ -853,7 +854,7 @@ public class WorkflowApplication  {
 			default:
 				break;
 		}
-		return stateLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), parallelState.getType_(), parallelState.getName(), brancheLinks.toArray(new Link[0]));
+		return stateLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), parallelState.getType_(), parallelState.getName(), branchLinks);
 	}
 	
 	private ResponseBuilder transitionInjectState(final WorkflowDefinition workflowDefinition, final InjectState injectState, final URI instance, final WorkflowData workflowData) throws Exception {
@@ -1435,13 +1436,17 @@ public class WorkflowApplication  {
 			final String workflow, 
 			@PathParam("state")
 			final String state,
-			@PathParam("action")
-			final String action,
 			@QueryParam("version")
 			final String version,
+			@QueryParam("index")
+			final int index,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
 			final URI instance,
 			final InputStream body) throws Exception {
-		return null;
+		final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
+		final ParallelState parallelState = (ParallelState) getState(workflowDefinition, state);
+		final ParallelStateBranch branch = parallelState.getBranches().get(index);
+		final Link[] actionLinks = actionLinks(workflowDefinition, state, branch.getActions());
+		return output(instance, Response.ok().links(actionLinks), body);
 	}
 }
