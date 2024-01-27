@@ -38,16 +38,16 @@ public class WorkflowCache implements HealthCheck {
 	public HealthCheckResponse call() {
 		final CacheManager cacheManager = Caching.getCachingProvider().getCacheManager();
 		workflowDefinitionCache = cacheManager.getCache(Naming.Workflow.Internal.WORKFLOW_DEFINITION_CACHE);
-		if(workflowDefinitionCache == null) {
-			final MutableConfiguration<String, WorkflowDefinition> config = new MutableConfiguration<>();
-			workflowDefinitionCache = cacheManager.createCache(Naming.Workflow.Internal.WORKFLOW_DEFINITION_CACHE, config);
-		}
 		workflowCache = cacheManager.getCache(Naming.Workflow.Internal.WORKFLOW_CACHE);
 		if(workflowCache == null) {
 			final MutableConfiguration<String, WorkflowInstance> config = new MutableConfiguration<>();
 			workflowCache = cacheManager.createCache(Naming.Workflow.Internal.WORKFLOW_CACHE, config);
 		}
-		return HealthCheckResponse.up("epf-workflow-cache");
+		if(workflowDefinitionCache != null) {
+			return HealthCheckResponse.up("epf-workflow-cache");
+		}
+
+		return HealthCheckResponse.down("epf-workflow-cache");
 	}
 	
 	/**

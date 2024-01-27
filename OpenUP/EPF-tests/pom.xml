@@ -47,7 +47,7 @@
         <liberty.env.epf_registry_url>http://${httpHost}:9182/registry/registry/</liberty.env.epf_registry_url>
 		<liberty.env.epf_management_url>http://${httpHost}:${httpPort}/management/management/</liberty.env.epf_management_url>
 		<liberty.env.epf_workflow_url>http://${httpHost}:9189/workflow/</liberty.env.epf_workflow_url>
-		<liberty.env.epf_workflow_management_url>http://${httpHost}:9190/workflow-management/</liberty.env.epf_workflow_management_url>
+		<liberty.env.epf_workflow_management_url>http://${httpHost}:9191/workflow-management/</liberty.env.epf_workflow_management_url>
 		<liberty.env.epf_portlet_url>http://localhost:${portalPort}/pluto/portal</liberty.env.epf_portlet_url>
 		<liberty.env.epf_webapp_url>https://localhost/webapp/</liberty.env.epf_webapp_url>
 		<liberty.env.epf_health_url>http://${httpHost}:${httpPort}/health/</liberty.env.epf_health_url>
