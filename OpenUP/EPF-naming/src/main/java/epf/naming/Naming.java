@@ -1035,6 +1035,22 @@ public interface Naming {
 		String EVENT = "Event";
 		
 		/**
+	     *
+	     */
+	    String WORKFLOW_MANAGEMENT = "workflow-management";
+		
+		/**
+		 * 
+		 */
+		interface Management {
+	    	
+	    	/**
+		     * 
+		     */
+		    String WORKFLOW_MANAGEMENT_URL = "epf.workflow.management.url";
+	    }
+		
+		/**
 		 * 
 		 */
 		interface Internal {
