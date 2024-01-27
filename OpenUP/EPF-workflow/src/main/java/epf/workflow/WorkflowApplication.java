@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
-import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.POST;
@@ -21,8 +20,6 @@ import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
-import jakarta.json.bind.Jsonb;
-import jakarta.json.bind.JsonbBuilder;
 import jakarta.validation.Validator;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.Consumes;
@@ -127,12 +124,6 @@ public class WorkflowApplication  {
 	 * 
 	 */
 	@Inject
-	transient WorkflowPersistence persistence;
-	
-	/**
-	 * 
-	 */
-	@Inject
 	@Readiness
 	transient WorkflowCache cache;
 	
@@ -199,11 +190,6 @@ public class WorkflowApplication  {
 			scheduleLink = WorkflowLink.scheduleLink(0, Naming.WORKFLOW, HttpMethod.PUT, path, recurringTimeInterval);
 		}
 		return Response.ok().links(scheduleLink);
-	}
-	
-	private ResponseBuilder getWorkflowLink(final WorkflowDefinition workflowDefinition) {
-		final Link link = WorkflowLink.getWorkflowLink(0, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()));
-		return Response.ok().links(link);
 	}
 	
 	private void putState(final String state, final URI instance, final WorkflowData workflowData) {
@@ -880,15 +866,9 @@ public class WorkflowApplication  {
 		Optional<WorkflowDefinition> workflowDefinition = Optional.empty();
 		if(version != null) {
 			workflowDefinition = Optional.ofNullable(cache.get(workflow, version));
-			if(!workflowDefinition.isPresent()) {
-				workflowDefinition = persistence.find(workflow, version);
-			}
 		}
 		else {
 			workflowDefinition = Optional.ofNullable(cache.get(workflow));
-			if(!workflowDefinition.isPresent()) {
-				workflowDefinition = persistence.find(workflow);
-			}
 		}
 		return workflowDefinition.orElseThrow(NotFoundException::new);
 	}
@@ -972,49 +952,6 @@ public class WorkflowApplication  {
 	private ResponseBuilder callbackState(final WorkflowDefinition workflowDefinition, final CallbackState callbackState, final URI instance, final WorkflowData workflowData, final JsonValue eventData) throws Exception {
 		workflowData.setOutput(filterEventDataOutput(callbackState.getEventDataFilter(), workflowData, eventData));
 		return transitionState(workflowDefinition, callbackState.getName(), callbackState.getTransition(), callbackState.getEnd(), instance, workflowData, new Link[0]);
-	}
-
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	@RunOnVirtualThread
-	public Response newWorkflowDefinition(final InputStream body) throws Exception {
-		WorkflowDefinition workflowDefinition = null;
-		try(Jsonb jsonb = JsonbBuilder.create()){
-			workflowDefinition = jsonb.fromJson(body, WorkflowDefinition.class);
-		}
-		catch(Exception ex) {
-			throw new BadRequestException();
-		}
-		if(!validator.validate(workflowDefinition).isEmpty()) {
-			throw new BadRequestException();
-		}
-		final WorkflowDefinition newWorkflowDefinition = persistence.persist(workflowDefinition);
-		if(workflowDefinition.getVersion() != null) {
-			cache.put(newWorkflowDefinition.getId(), workflowDefinition.getVersion(), workflowDefinition);
-		}
-		else {
-			cache.put(newWorkflowDefinition.getId(), workflowDefinition);
-		}
-		if(workflowDefinition.getStart().isRight()) {
-			return scheduleLink(workflowDefinition.getStart().getRight(), workflowDefinition).build();
-		}
-		return getWorkflowLink(newWorkflowDefinition).build();
-	}
-
-	@GET
-	@Path("{workflow}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@RunOnVirtualThread
-	public Response getWorkflowDefinition(
-			@PathParam("workflow")
-			final String workflow, 
-			@QueryParam("version")
-			final String version) throws Exception {
-		final WorkflowDefinition workflowDefinition = findWorkflowDefinition(workflow, version);
-		try(Jsonb jsonb = JsonbBuilder.create()){
-			return Response.ok(jsonb.toJson(workflowDefinition), MediaType.APPLICATION_JSON).build();
-		}
 	}
 
 	@PUT

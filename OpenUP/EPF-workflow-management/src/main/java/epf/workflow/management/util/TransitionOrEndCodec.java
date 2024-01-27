@@ -1,4 +1,4 @@
-package epf.workflow.util;
+package epf.workflow.management.util;
 
 import org.bson.codecs.configuration.CodecRegistry;
 import epf.workflow.schema.EndDefinition;

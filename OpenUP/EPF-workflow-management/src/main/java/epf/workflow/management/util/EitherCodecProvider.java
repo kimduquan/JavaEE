@@ -1,4 +1,4 @@
-package epf.workflow.util;
+package epf.workflow.management.util;
 
 import java.lang.reflect.Type;
 import java.util.List;

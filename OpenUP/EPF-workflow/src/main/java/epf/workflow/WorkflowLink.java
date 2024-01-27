@@ -11,20 +11,6 @@ import epf.workflow.util.LinkUtil;
  * 
  */
 public interface WorkflowLink {
-	
-	/**
-	 * @param index
-	 * @param workflow
-	 * @param version
-	 * @return
-	 */
-	static Link getWorkflowLink(final int index, final String workflow, final Optional<String> version) {
-		UriBuilder uri = UriBuilder.fromUri("{workflow}");
-		if(version.isPresent()) {
-			uri = uri.queryParam("version", version.get());
-		}
-		return LinkUtil.build(uri, index, Naming.WORKFLOW, HttpMethod.GET, workflow);
-	}
 
 	/**
 	 * @param index

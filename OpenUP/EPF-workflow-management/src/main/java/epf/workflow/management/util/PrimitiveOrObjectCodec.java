@@ -1,4 +1,4 @@
-package epf.workflow.util;
+package epf.workflow.management.util;
 
 import java.util.Map;
 import java.util.logging.Level;
