@@ -1,11 +1,11 @@
-package epf.gateway.workflow;
+package epf.gateway.workflow.management;
 
 import java.io.InputStream;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.PATCH;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -29,7 +29,7 @@ import io.smallrye.common.annotation.RunOnVirtualThread;
 @Path(Naming.WORKFLOW)
 @ApplicationScoped
 @RolesAllowed(Naming.Security.DEFAULT_ROLE)
-public class Workflow {
+public class Management {
     
     /**
      * 
@@ -42,31 +42,27 @@ public class Workflow {
      */
     @Inject
     transient JsonWebToken jwt;
-    
+
     /**
      * @param context
      * @param headers
      * @param uriInfo
      * @param req
-     * @param workflow
      * @param body
      * @return
      * @throws Exception
      */
     @POST
-	@Path("{workflow}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
     @Blocking
-    public Response start(
+    public Response newWorkflowDefinition(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final Request req,
-			@PathParam(Naming.WORKFLOW) 
-			final String workflow,
-			final InputStream body) throws Exception {
+            final InputStream body) throws Exception {
     	return request.buildRequest(Naming.WORKFLOW, jwt, headers, uriInfo, req, body);
     }
     
@@ -76,26 +72,23 @@ public class Workflow {
      * @param uriInfo
      * @param req
      * @param workflow
-     * @param state
-     * @param body
      * @return
      * @throws Exception
      */
-    @PATCH
-	@Path("{workflow}/{state}")
+    @GET
+	@Path("{workflow}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	@RunOnVirtualThread
-	public Response state(
+    @RunOnVirtualThread
+    @Blocking
+    public Response getWorkflowDefinition(
 			@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
             @Context final Request req,
 			@PathParam(Naming.WORKFLOW) 
-			final String workflow,  
-			@PathParam("state")
-			final String state,
-			final InputStream body) throws Exception {
-    	return request.buildRequest(Naming.WORKFLOW, jwt, headers, uriInfo, req, body);
+			final String workflow
+			) throws Exception {
+    	return request.buildRequest(Naming.WORKFLOW, jwt, headers, uriInfo, req, null);
     }
 }
