@@ -23,7 +23,7 @@ java -jar target/quarkus-app/quarkus-run.jar &
 cd ../
 cd EPF-workflow-management
 mvn clean install -U
-java -jar target/quarkus-app/quarkus-run.jar &
+$JAVA21_HOME/bin/java -jar target/quarkus-app/quarkus-run.jar &
 cd ../
 cd EPF-gateway
 mvn clean install -U
