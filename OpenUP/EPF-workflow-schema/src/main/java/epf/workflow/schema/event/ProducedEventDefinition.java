@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.nosql.Column;
 import java.io.Serializable;
 import org.eclipse.jnosql.mapping.Embeddable;
+import epf.workflow.schema.util.StringOrObject;
 
 /**
  * @author PC
@@ -27,7 +28,7 @@ public class ProducedEventDefinition implements Serializable {
 	 * 
 	 */
 	@Column
-	private Object data;
+	private StringOrObject<Object> data;
 	/**
 	 * 
 	 */
@@ -40,10 +41,10 @@ public class ProducedEventDefinition implements Serializable {
 	public void setEventRef(String eventRef) {
 		this.eventRef = eventRef;
 	}
-	public Object getData() {
+	public StringOrObject<Object> getData() {
 		return data;
 	}
-	public void setData(Object data) {
+	public void setData(StringOrObject<Object> data) {
 		this.data = data;
 	}
 	public Object getContextAttributes() {
