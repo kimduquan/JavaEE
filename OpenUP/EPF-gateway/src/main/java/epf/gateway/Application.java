@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.client.Client;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
@@ -88,7 +89,7 @@ public class Application {
     	final RequestBuilder builder = new RequestBuilder(client, serviceUrl, req.getMethod(), headers, uriInfo, body, true);
     	Response response = builder.build();
     	if(isSuccessful(response)) {
-        	final Optional<InputStream> entity = HATEOAS.readEntity(response);
+        	final Optional<Object> entity = HATEOAS.readEntity(response);
         	final Link self = HATEOAS.selfLink(uriInfo, req, service);
         	final boolean isPartial = isPartial(response);
         	final MediaType mediaType = response.getMediaType();
@@ -107,7 +108,7 @@ public class Application {
     	return Response.Status.PARTIAL_CONTENT.getStatusCode() == response.getStatus();
     }
     
-    private Response buildLinkRequest(final Client client, final Response response, final Optional<InputStream> entity, final MediaType mediaType, final HttpHeaders headers, final Link link) {
+    private Response buildLinkRequest(final Client client, final Response response, final Optional<Object> entity, final MediaType mediaType, final HttpHeaders headers, final Link link) {
     	final String service = link.getRel();
 		final URI serviceUrl = registry.lookup(service).orElseThrow(NotFoundException::new);
 		LOGGER.info(String.format("link=%s", link.toString()));
@@ -156,17 +157,42 @@ public class Application {
 		return builder.build();
     }
     
-    private Response buildLinkRequests(final Client client, final Response response, final Optional<InputStream> entity, final MediaType mediaType, final HttpHeaders headers, final Link self, final boolean isPartial) {
+    private Response buildForLinkRequests(final Client client, final Response response, final Link link, final Optional<Object> entity, final MediaType mediaType, final HttpHeaders headers) {
+    	final List<Object> list = response.readEntity(new GenericType<List<Object>>() {});
+    	for(Object input : list) {
+    		Response linkResponse = buildLinkRequest(client, response, Optional.ofNullable(input), mediaType, headers, link);
+			if(isSuccessful(linkResponse)) {
+				final boolean isPartialLink = isPartial(linkResponse);
+				linkResponse = buildLinkRequests(client, linkResponse, Optional.ofNullable(input), mediaType, headers, link, isPartialLink);
+				if(!isSuccessful(linkResponse)) {
+					return linkResponse;
+				}
+			}
+			else {
+				return linkResponse;
+			}
+    	}
+    	return response;
+    }
+    
+    private Response buildLinkRequests(final Client client, final Response response, final Optional<Object> entity, final MediaType mediaType, final HttpHeaders headers, final Link self, final boolean isPartial) {
     	Response prevLinkResponse = response;
-    	Optional<InputStream> prevLinkEntity = entity;
+    	Optional<Object> prevLinkEntity = entity;
     	MediaType prevMediaType = mediaType;
     	final List<Response> linkResponses = new CopyOnWriteArrayList<>();
     	final List<Link> links = HATEOAS.getRequestLinks(response).collect(Collectors.toList());
     	for(Link link : links) {
     		if(HATEOAS.isRequestLink(link)) {
-    			final Link targetLink = HATEOAS.isSelfLink(link) ? self : link;
     			if(HATEOAS.isSynchronized(link)) {
-    				Response linkResponse = buildLinkRequest(client, prevLinkResponse, prevLinkEntity, prevMediaType, headers, targetLink);
+        			final Link targetLink = HATEOAS.isSelfLink(link) ? self : link;
+        			final boolean isForLink = HATEOAS.isForLink(targetLink);
+        			Response linkResponse;
+        			if(isForLink) {
+        				linkResponse = buildForLinkRequests(client, prevLinkResponse, targetLink, prevLinkEntity, prevMediaType, headers);
+        			}
+        			else {
+            			linkResponse = buildLinkRequest(client, prevLinkResponse, prevLinkEntity, prevMediaType, headers, targetLink);
+        			}
         			if(isSuccessful(linkResponse)) {
         				final boolean isPartialLink = isPartial(linkResponse);
         				if(HATEOAS.hasEntity(link)) {

@@ -43,7 +43,7 @@ public interface HATEOAS {
     		final URI serviceUrl,
     		final HttpHeaders headers,
     		final Response response,
-    		final Optional<InputStream> entity,
+    		final Optional<Object> entity,
     		final MediaType mediaType,
     		final Link link
     		) {
@@ -81,9 +81,9 @@ public interface HATEOAS {
      * @param response
      * @return
      */
-    static Optional<InputStream> readEntity(final Response response){
+    static Optional<Object> readEntity(final Response response){
     	Objects.requireNonNull(response, "Response");
-    	Optional<InputStream> entity = Optional.empty();
+    	Optional<Object> entity = Optional.empty();
     	if(response.hasEntity()) {
 			entity = Optional.ofNullable(response.readEntity(InputStream.class));
 		}
@@ -132,6 +132,15 @@ public interface HATEOAS {
     static boolean isSynchronized(final Link link) {
     	Objects.requireNonNull(link, "Link");
     	return "true".equals(link.getParams().getOrDefault("synchronized", "true"));
+    }
+    
+    /**
+     * @param link
+     * @return
+     */
+    static boolean isForLink(final Link link) {
+    	Objects.requireNonNull(link, "Link");
+    	return !link.getParams().getOrDefault("for", "").isEmpty();
     }
     
     /**

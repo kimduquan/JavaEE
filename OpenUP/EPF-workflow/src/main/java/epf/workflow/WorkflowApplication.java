@@ -132,12 +132,6 @@ public class WorkflowApplication implements Workflow {
 	 * 
 	 */
 	@Inject
-	transient WorkflowEventStore eventStore;
-	
-	/**
-	 * 
-	 */
-	@Inject
 	transient jakarta.enterprise.event.Event<Event> producedEvent;
 	
 	/**
@@ -750,7 +744,6 @@ public class WorkflowApplication implements Workflow {
 		event.setType(eventDefinition.getType());
 		event.setSubject(instance.toString());
 		
-		eventStore.persist(event);
 		final Link actionLink = WorkflowLink.actionLink(0, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), callbackState.getName(), callbackState.getAction().getName());
 		return Response.ok().links(actionLink);
 	}

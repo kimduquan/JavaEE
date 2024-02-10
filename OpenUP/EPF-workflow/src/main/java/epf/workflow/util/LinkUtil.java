@@ -44,6 +44,20 @@ public interface LinkUtil {
 	}
 	
 	/**
+	 * @param builder
+	 * @param index
+	 * @param isFor
+	 * @param isSynchronized
+	 * @param service
+	 * @param method
+	 * @param values
+	 * @return
+	 */
+	static Link build(final UriBuilder builder, final int index, final boolean isFor, final boolean isSynchronized, final String service, final String method, final Object...values) {
+		return Link.fromUriBuilder(builder).title(String.valueOf(index)).type(method).rel(service).param("for", isFor ? "true" : "").param("synchronized", String.valueOf(isSynchronized)).build(values);
+	}
+	
+	/**
 	 * @return
 	 */
 	static Link self() {
