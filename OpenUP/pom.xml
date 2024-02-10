@@ -239,6 +239,12 @@
 			</dependency>
 			
 			
+			<!-- https://mvnrepository.com/artifact/jakarta.ws.rs/jakarta.ws.rs-api -->
+			<dependency>
+			    <groupId>jakarta.ws.rs</groupId>
+			    <artifactId>jakarta.ws.rs-api</artifactId>
+			    <version>3.1.0</version>
+			</dependency>
 			<!-- https://mvnrepository.com/artifact/jakarta.annotation/jakarta.annotation-api -->
 			<dependency>
 			    <groupId>jakarta.annotation</groupId>

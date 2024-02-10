@@ -10,16 +10,10 @@
     <name>Eclipse Process Framework Workflow Client</name>
     <packaging>jar</packaging>
     <dependencies>
-    	<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
+    	<!-- https://mvnrepository.com/artifact/jakarta.ws.rs/jakarta.ws.rs-api -->
 		<dependency>
-		    <groupId>javax.ws.rs</groupId>
-		    <artifactId>javax.ws.rs-api</artifactId>
-		    <scope>provided</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.json/javax.json-api -->
-		<dependency>
-		    <groupId>javax.json</groupId>
-		    <artifactId>javax.json-api</artifactId>
+		    <groupId>jakarta.ws.rs</groupId>
+		    <artifactId>jakarta.ws.rs-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.lra/microprofile-lra-api -->
@@ -31,11 +25,6 @@
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-naming</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-client-utility</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

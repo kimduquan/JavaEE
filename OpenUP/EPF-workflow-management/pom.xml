@@ -76,6 +76,11 @@
 	
 	<dependency>
         <groupId>openup</groupId>
+        <artifactId>EPF-workflow-client</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+	<dependency>
+        <groupId>openup</groupId>
         <artifactId>EPF-workflow-schema</artifactId>
         <version>${project.version}</version>
     </dependency>
