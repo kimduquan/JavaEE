@@ -145,6 +145,22 @@ public interface Naming {
 	/**
 	 * 
 	 */
+	String EVENT = "event";
+	
+	/**
+	 * 
+	 */
+	interface Event {
+		
+		/**
+		 * 
+		 */
+		String EVENT_URL = "epf.config.url";
+	}
+	
+	/**
+	 * 
+	 */
 	String FILE = "file";
 	
 	/**
