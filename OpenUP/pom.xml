@@ -866,6 +866,7 @@
 		<module>EPF-security-auth</module>
 		<module>EPF-workflow</module>
 		<module>EPF-workflow-management</module>
+		<module>EPF-event</module>
 		
 		<module>EPF-schema-utility</module>
 		<module>EPF-net-schema</module>
@@ -878,6 +879,7 @@
 		
 		<module>EPF-schema</module>
 		<module>EPF-workflow-schema</module>
+		<module>EPF-event-schema</module>
 		
 		<module>OpenUP-architecture-schema</module>
 		<module>OpenUP-deployment-schema</module>
@@ -919,6 +921,7 @@
 		<module>EPF-net-client</module>
 		<module>EPF-schedule-client</module>
 		<module>EPF-workflow-client</module>
+		<module>EPF-event-client</module>
 		<module>EPF-mail</module>
 		<module>EPF-image</module>
 		<module>EPF-rules</module>
