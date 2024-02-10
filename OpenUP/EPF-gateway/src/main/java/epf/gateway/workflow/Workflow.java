@@ -5,7 +5,6 @@ import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -66,35 +65,6 @@ public class Workflow {
             @Context final Request req,
 			@PathParam(Naming.WORKFLOW) 
 			final String workflow,
-			final InputStream body) throws Exception {
-    	return request.buildRequest(Naming.WORKFLOW, jwt, headers, uriInfo, req, body);
-    }
-    
-    /**
-     * @param context
-     * @param headers
-     * @param uriInfo
-     * @param req
-     * @param workflow
-     * @param state
-     * @param body
-     * @return
-     * @throws Exception
-     */
-    @PATCH
-	@Path("{workflow}/{state}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	@RunOnVirtualThread
-	public Response state(
-			@Context final SecurityContext context,
-            @Context final HttpHeaders headers, 
-            @Context final UriInfo uriInfo,
-            @Context final Request req,
-			@PathParam(Naming.WORKFLOW) 
-			final String workflow,  
-			@PathParam("state")
-			final String state,
 			final InputStream body) throws Exception {
     	return request.buildRequest(Naming.WORKFLOW, jwt, headers, uriInfo, req, body);
     }
