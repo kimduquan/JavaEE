@@ -63,6 +63,7 @@ import org.eclipse.microprofile.openapi.models.servers.Server;
 import epf.naming.Naming;
 import epf.util.MapUtil;
 import epf.util.json.ext.JsonUtil;
+import epf.workflow.client.Workflow;
 import epf.workflow.event.Event;
 import epf.workflow.event.persistence.CallbackStateEvent;
 import epf.workflow.function.openapi.OpenAPIUtil;
@@ -113,7 +114,7 @@ import epf.workflow.schema.util.StringOrObject;
  */
 @ApplicationScoped
 @Path(Naming.WORKFLOW)
-public class WorkflowApplication  {
+public class WorkflowApplication implements Workflow {
 	
 	/**
 	 * 
@@ -1080,18 +1081,12 @@ public class WorkflowApplication  {
 		}
 	}
 
-	@POST
-	@Path("{workflow}")
 	@LRA(value = Type.NESTED, end = false)
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
+	@Override
 	public Response start(
-			@PathParam("workflow")
 			final String workflow, 
-			@QueryParam("version")
 			final String version, 
-			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
 			final URI instance, 
 			final InputStream body) throws Exception {
 		WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
