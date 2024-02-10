@@ -900,6 +900,7 @@
 		<module>EPF-security-management</module>
 		<module>EPF-view</module>
 		<module>EPF-security-view</module>
+		<module>EPF-workflow-view</module>
 		<module>EPF-security-webapp</module>
 		<module>EPF-security-auth-webapp</module>
 		<module>EPF-persistence-client</module>
