@@ -16,7 +16,7 @@ import picocli.CommandLine.Option;
  * @author PC
  *
  */
-@Command(name = Naming.Workflow.WORKFLOW_MANAGEMENT)
+@Command(name = Naming.MANAGEMENT)
 @RequestScoped
 @Function
 public class Management {
