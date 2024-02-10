@@ -2,6 +2,8 @@ package epf.client.util;
 
 import java.io.InputStream;
 import java.net.URI;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -93,11 +95,12 @@ public class RequestBuilder {
 		Response response;
 		if(clientBuilder != null) {
 			client = clientBuilder.newClient(serviceUrl, b -> b);
-			response = RequestUtil.buildRequest(client, serviceUrl, headers, uriInfo, method, body, buildForwardHeaders);
 		}
-		else {
-			response = RequestUtil.buildRequest(client, serviceUrl, headers, uriInfo, method, body, buildForwardHeaders);
-		}
+		WebTarget target = client.target(serviceUrl);
+		target = RequestUtil.buildTarget(target, uriInfo);
+		Invocation.Builder builder = target.request();
+		builder = RequestUtil.buildHeaders(builder, headers, serviceUrl, buildForwardHeaders);
+		response = RequestUtil.buildInvoke(builder, method, headers.getMediaType(), body);
 		return response;
 	}
 }

@@ -9,9 +9,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.Optional;
-import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.HttpHeaders;
@@ -198,31 +196,6 @@ public interface RequestUtil {
     		return invoker.method(method);
     	}
     	return invoker.method(method, Entity.entity(body, type));
-    }
-    
-    /**
-     * @param client
-     * @param serviceUri
-     * @param headers
-     * @param uriInfo
-     * @param method
-     * @param body
-     * @param buildForwaredHeaders
-     * @return
-     */
-    static Response buildRequest(
-    		final Client client,
-    		final URI serviceUri,
-    		final HttpHeaders headers, 
-            final UriInfo uriInfo,
-            final String method,
-            final InputStream body,
-            final boolean buildForwaredHeaders) {
-		WebTarget target = client.target(serviceUri);
-		target = RequestUtil.buildTarget(target, uriInfo);
-		Invocation.Builder invoke = target.request();
-		invoke = RequestUtil.buildHeaders(invoke, headers, serviceUri, buildForwaredHeaders);
-		return RequestUtil.buildInvoke(invoke, method, headers.getMediaType(), body);
     }
     
     /**
