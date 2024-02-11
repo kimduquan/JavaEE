@@ -26,7 +26,7 @@ import io.smallrye.common.annotation.RunOnVirtualThread;
 /**
  * 
  */
-@Path(Naming.WORKFLOW)
+@Path(Naming.Workflow.WORKFLOW_MANAGEMENT)
 @ApplicationScoped
 @RolesAllowed(Naming.Security.DEFAULT_ROLE)
 public class Management {
