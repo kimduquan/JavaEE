@@ -36,13 +36,13 @@
 		<dependency>
 		    <groupId>io.quarkiverse.jnosql</groupId>
 		    <artifactId>quarkus-jnosql-document-mongodb</artifactId>
-		    <version>3.2.2.0</version>
+		    <version>3.2.2.1</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.quarkiverse.jnosql/quarkus-jnosql-column-cassandra -->
 		<dependency>
 		    <groupId>io.quarkiverse.jnosql</groupId>
 		    <artifactId>quarkus-jnosql-column-cassandra</artifactId>
-		    <version>3.2.2.0</version>
+		    <version>3.2.2.1</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/javax.json/javax.json-api -->
 		<dependency>

@@ -18,7 +18,6 @@ import org.eclipse.microprofile.health.Readiness;
 import epf.naming.Naming;
 import epf.workflow.client.Management;
 import epf.workflow.management.internal.WorkflowCache;
-import epf.workflow.management.internal.WorkflowLink;
 import epf.workflow.management.internal.WorkflowPersistence;
 import epf.workflow.schema.WorkflowDefinition;
 import io.smallrye.common.annotation.RunOnVirtualThread;
@@ -51,7 +50,7 @@ public class WorkflowManagement implements Management {
 	transient Validator validator;
 	
 	private ResponseBuilder getWorkflowLink(final WorkflowDefinition workflowDefinition) {
-		final Link link = WorkflowLink.getWorkflowLink(0, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()));
+		final Link link = Management.getWorkflowLink(0, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()));
 		return Response.ok().links(link);
 	}
 	

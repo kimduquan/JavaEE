@@ -2,7 +2,8 @@ package epf.workflow;
 
 import org.eclipse.microprofile.faulttolerance.ExecutionContext;
 import org.eclipse.microprofile.faulttolerance.FallbackHandler;
-import epf.workflow.util.LinkUtil;
+
+import epf.workflow.client.util.LinkUtil;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
 

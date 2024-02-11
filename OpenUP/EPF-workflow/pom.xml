@@ -61,10 +61,6 @@
 	    <groupId>com.hazelcast</groupId>
 	    <artifactId>quarkus-hazelcast-client</artifactId>
 	</dependency>
-	<dependency>
-		<groupId>io.quarkiverse.jnosql</groupId>
-		<artifactId>quarkus-jnosql-document-mongodb</artifactId>
-	</dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-arc</artifactId>
@@ -77,7 +73,17 @@
     </dependency>
     <dependency>
         <groupId>openup</groupId>
+        <artifactId>EPF-event-schema</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>openup</groupId>
         <artifactId>EPF-workflow-client</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>openup</groupId>
+        <artifactId>EPF-event-client</artifactId>
         <version>${project.version}</version>
     </dependency>
     <dependency>

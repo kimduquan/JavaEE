@@ -2,15 +2,10 @@ package epf.workflow;
 
 import java.io.Serializable;
 
-import jakarta.nosql.Column;
-import jakarta.nosql.Entity;
-import jakarta.nosql.Id;
-
 /**
  * @author PC
  *
  */
-@Entity
 public class WorkflowInstance implements Serializable {
 	
 	/**
@@ -21,13 +16,11 @@ public class WorkflowInstance implements Serializable {
 	/**
 	 * 
 	 */
-	@Id
 	private String id;
 	
 	/**
 	 * 
 	 */
-	@Column
 	private WorkflowState state;
 
 	public String getId() {

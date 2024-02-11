@@ -1,16 +1,21 @@
 package epf.workflow.client;
 
 import java.io.InputStream;
+import java.util.Optional;
 import epf.naming.Naming;
+import epf.workflow.client.util.LinkUtil;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HttpMethod;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriBuilder;
 
 /**
  * 
@@ -42,4 +47,18 @@ public interface Management {
 			final String workflow, 
 			@QueryParam("version")
 			final String version) throws Exception;
+
+	/**
+	 * @param index
+	 * @param workflow
+	 * @param version
+	 * @return
+	 */
+	static Link getWorkflowLink(final int index, final String workflow, final Optional<String> version) {
+		UriBuilder uri = UriBuilder.fromUri("{workflow}");
+		if(version.isPresent()) {
+			uri = uri.queryParam("version", version.get());
+		}
+		return LinkUtil.build(uri, index, Naming.Workflow.WORKFLOW_MANAGEMENT, HttpMethod.GET, workflow);
+	}
 }

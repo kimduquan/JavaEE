@@ -13,57 +13,25 @@
     <maven.compiler.release>21</maven.compiler.release>
   </properties>
   <dependencies>
-	<dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-jsonp</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-jsonb</artifactId>
-    </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-hibernate-validator</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-smallrye-reactive-messaging-kafka</artifactId>
+      <artifactId>quarkus-resteasy-reactive-jsonb</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-narayana-lra</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy-jackson</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy-client</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-smallrye-fault-tolerance</artifactId>
+      <artifactId>quarkus-resteasy-reactive</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-smallrye-health</artifactId>
     </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-smallrye-openapi</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-smallrye-context-propagation</artifactId>
-    </dependency>
-    <dependency>
-	    <groupId>com.hazelcast</groupId>
-	    <artifactId>quarkus-hazelcast-client</artifactId>
-	</dependency>
 	<dependency>
-		<groupId>io.quarkiverse.jnosql</groupId>
-		<artifactId>quarkus-jnosql-document-mongodb</artifactId>
+	    <groupId>io.quarkiverse.jnosql</groupId>
+	    <artifactId>quarkus-jnosql-column-cassandra</artifactId>
 	</dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -86,19 +54,9 @@
     	<version>${project.version}</version>
     </dependency>
     <dependency>
-    	<groupId>openup</groupId>
-    	<artifactId>EPF-utility</artifactId>
-    	<version>${project.version}</version>
-    </dependency>
-    <dependency>
         <groupId>openup</groupId>
         <artifactId>EPF-logging-utility</artifactId>
         <version>${project.version}</version>
-    </dependency>
-    <dependency>
-    	<groupId>openup</groupId>
-    	<artifactId>EPF-json-utility-ext</artifactId>
-    	<version>${project.version}</version>
     </dependency>
   </dependencies>
 </project>
