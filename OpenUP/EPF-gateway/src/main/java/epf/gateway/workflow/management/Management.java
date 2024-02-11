@@ -63,7 +63,7 @@ public class Management {
             @Context final UriInfo uriInfo,
             @Context final Request req,
             final InputStream body) throws Exception {
-    	return request.buildRequest(Naming.WORKFLOW, jwt, headers, uriInfo, req, body);
+    	return request.buildRequest(Naming.Workflow.WORKFLOW_MANAGEMENT, jwt, headers, uriInfo, req, body);
     }
     
     /**
@@ -89,6 +89,6 @@ public class Management {
 			@PathParam(Naming.WORKFLOW) 
 			final String workflow
 			) throws Exception {
-    	return request.buildRequest(Naming.WORKFLOW, jwt, headers, uriInfo, req, null);
+    	return request.buildRequest(Naming.Workflow.WORKFLOW_MANAGEMENT, jwt, headers, uriInfo, req, null);
     }
 }
