@@ -11,6 +11,6 @@ export KAFKA_HOME=$KAFKA_DIR/bin
 export WILDFLY_HOME=~/wildfly-24.0.1.Final/bin
 export JAEGER_HOME=~/jaeger-1.54.0-linux-amd64
 export MAVEN_HOME=~/apache-maven-3.9.6/bin
-export CASSANDRA_HOME=~/apache-cassandra-4.0.11
+export CASSANDRA_HOME=~/apache-cassandra-4.0.12
 export HAZELCAST_HOME=~/hazelcast-5.3.6
 export PATH=$MAVEN_HOME:$PATH
