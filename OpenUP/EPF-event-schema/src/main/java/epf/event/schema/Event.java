@@ -4,6 +4,10 @@ import jakarta.json.bind.annotation.JsonbProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.nosql.Column;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import org.eclipse.jnosql.mapping.Convert;
 import org.eclipse.jnosql.mapping.MappedSuperclass;
 import epf.event.schema.util.UUIDAttributeConverter;
@@ -152,5 +156,103 @@ public class Event {
 
 	public void setData(final Object data) {
 		this.data = data;
+	}
+	
+	/**
+	 * @param map
+	 * @param ext
+	 * @return
+	 */
+	public static Event event(final Map<String, Object> map, final Map<String, Object> ext) {
+		Objects.requireNonNull(map, "Map");
+		final Event event = new Event();
+		ext.putAll(map);
+		event.setData(ext.remove("data"));
+		if(ext.containsKey("dataContentType")) {
+			final Object dataContentType = ext.remove("dataContentType");
+			if(dataContentType instanceof String) {
+				event.setDataContentType((String)dataContentType);
+			}
+		}
+		if(ext.containsKey("dataSchema")) {
+			final Object dataSchema = ext.remove("dataSchema");
+			if(dataSchema instanceof String) {
+				event.setDataSchema((String) dataSchema);
+			}
+		}
+		if(ext.containsKey("id")) {
+			final Object id = ext.remove("id");
+			if(id instanceof String) {
+				event.setId((String) id);
+			}
+		}
+		if(ext.containsKey("source")) {
+			final Object source = ext.remove("source");
+			if(source instanceof String) {
+				event.setSource((String) source);
+			}
+		}
+		if(ext.containsKey("specVersion")) {
+			final Object specVersion = ext.remove("specVersion");
+			if(specVersion instanceof String) {
+				event.setSpecVersion((String) specVersion);
+			}
+		}
+		if(ext.containsKey("subject")) {
+			final Object subject = ext.remove("subject");
+			if(subject instanceof String) {
+				event.setSubject((String) subject);
+			}
+		}
+		if(ext.containsKey("time")) {
+			final Object time = ext.remove("time");
+			if(time instanceof String) {
+				event.setTime((String) time);
+			}
+		}
+		if(ext.containsKey("type")) {
+			final Object type = ext.remove("type");
+			if(type instanceof String) {
+				event.setType((String) type);
+			}
+		}
+		return event;
+	}
+	
+	/**
+	 * @param ext
+	 * @return
+	 */
+	public Map<String, Object> toMap(final Map<String, Object> ext){
+		final Map<String, Object> map = new HashMap<>();
+		if(data != null) {
+			map.put("data", data);
+		}
+		if(this.dataContentType != null) {
+			map.put("dataContentType", dataContentType);
+		}
+		if(this.dataSchema != null) {
+			map.put("dataSchema", dataSchema);
+		}
+		if(this.id != null) {
+			map.put("id", id);
+		}
+		if(this.source != null) {
+			map.put("source", source);
+		}
+		if(this.specVersion != null) {
+			map.put("specVersion", specVersion);
+		}
+		if(this.subject != null) {
+			map.put("subject", subject);
+		}
+		if(this.time != null) {
+			map.put("time", time);
+		}
+		if(this.type != null) {
+			map.put("type", type);
+		}
+		map.putAll(ext);
+		return map;
 	}
 }

@@ -1,18 +1,29 @@
 package epf.event;
 
+import java.net.URI;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import org.eclipse.jnosql.communication.column.Column;
+import org.eclipse.jnosql.communication.column.ColumnEntity;
+import org.eclipse.jnosql.communication.column.ColumnManager;
+import org.eclipse.jnosql.communication.column.ColumnQuery;
+import org.eclipse.jnosql.communication.column.ColumnQuery.ColumnWhere;
+import org.eclipse.jnosql.communication.column.Columns;
 import epf.event.client.Event;
 import epf.naming.Naming;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.nosql.QueryMapper.MapperDeleteWhere;
 import jakarta.nosql.column.ColumnTemplate;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * 
@@ -26,40 +37,110 @@ public class EventStore implements Event {
 	 */
 	@Inject
 	transient ColumnTemplate column;
-
-	@RunOnVirtualThread
-	@Override
-	public Response consumes(final List<epf.event.schema.Event> events) throws Exception {
-		final List<epf.event.schema.Event> insertedEvents = new ArrayList<>();
-		column.insert(events).forEach(insertedEvents::add);
-		return Response.ok(insertedEvents).build();
+	
+	/**
+	 * 
+	 */
+	@Inject
+	transient ColumnManager manager;
+	
+	private Map<String, Object> entityColumns(final ColumnEntity entity) {
+		final Map<String, Object> map = new HashMap<>();
+		entity.columns().forEach(column -> {
+			map.put(column.name(), column.get());
+		});
+		return map;
+	}
+	
+	private ColumnWhere eventQuery(final epf.event.schema.Event event) {
+		return ColumnQuery.select().from("Event").where("source").eq(event.getSource()).and("type").eq(event.getType()).and("time").eq("0");
+	}
+	
+	private ColumnWhere eventQuery(final Map<String, Object> ext, ColumnWhere where) {
+		for(Map.Entry<String, Object> param : ext.entrySet()) {
+			where = where.and(param.getKey()).eq(param.getValue());
+		}
+		return where;
+	}
+	
+	private Link eventLink(final ColumnEntity eventEntity, final int index) throws Exception {
+		final URI source = new URI(eventEntity.find("source").get().get().toString());
+		final String rel = source.getHost();
+		final URI uri = new URI(source.getRawPath() + source.getRawQuery());
+		final String type = eventEntity.find("type").get().get().toString();
+		final Link eventLink = Link.fromUri(uri).type(type).rel(rel).title("#" + index).build();
+		return eventLink;
+	}
+	
+	private ColumnEntity eventEntity(final epf.event.schema.Event event, final List<Column> columns) {
+		final ColumnEntity eventEntity = ColumnEntity.of("Event", columns);
+		return eventEntity(eventEntity, event);
+	}
+	
+	private ColumnEntity eventEntity(final ColumnEntity eventEntity, final epf.event.schema.Event event) {
+		if(event.getData() != null) {
+			eventEntity.add("data", event.getData());
+		}
+		if(event.getDataContentType() != null) {
+			eventEntity.add("dataContentType", event.getDataContentType());
+		}
+		if(event.getDataSchema() != null) {
+			eventEntity.add("dataSchema", event.getDataSchema());
+		}
+		if(event.getSource() != null) {
+			eventEntity.add("source", event.getSource());
+		}
+		if(event.getSpecVersion() != null) {
+			eventEntity.add("specVersion", event.getSpecVersion());
+		}
+		if(event.getSubject() != null) {
+			eventEntity.add("subject", event.getSubject());
+		}
+		if(event.getTime() != null) {
+			eventEntity.add("time", event.getTime());
+		}
+		if(event.getType() != null) {
+			eventEntity.add("type", event.getType());
+		}
+		return eventEntity;
+	}
+	
+	private void observes(final epf.event.schema.Event event, final Map<String, Object> ext, final List<Map<String, Object>> eventDatas, final List<Link> eventLinks) throws Exception {
+		ColumnWhere where = eventQuery(event);
+		where = eventQuery(ext, where);
+		final ColumnQuery query = where.build();
+		final Stream<ColumnEntity> entities = manager.select(query);
+		event.setTime(String.valueOf(Instant.now().toEpochMilli()));
+		entities.map(entity -> eventEntity(entity, event));
+		final Iterable<ColumnEntity> updatedEntities = manager.update(entities.collect(Collectors.toList()));
+		int index = 0;
+		for(ColumnEntity eventEntity : updatedEntities) {
+			final Map<String, Object> eventData = entityColumns(eventEntity);
+			final Link eventLink = eventLink(eventEntity, index);
+			eventDatas.add(eventData);
+			eventLinks.add(eventLink);
+		}
 	}
 
 	@RunOnVirtualThread
 	@Override
-	public Response produces(final List<epf.event.schema.Event> events) throws Exception {
-		final List<epf.event.schema.Event> produceEvents = new ArrayList<>();
-		for(epf.event.schema.Event event : events) {
-			final List<epf.event.schema.Event> list = column.select(epf.event.schema.Event.class).where("source").eq(event.getSource()).and("type").eq(event.getType()).result();
-			list.forEach(e -> {
-				e.setData(event.getData());
-				e.setDataContentType(event.getDataContentType());
-				e.setTime(String.valueOf(Instant.now().toEpochMilli()));
-			});
-			column.update(list).forEach(produceEvents::add);
-		}
-		return Response.ok(produceEvents).build();
+	public Response consumes(final Map<String, Object> map) throws Exception {
+		final Map<String, Object> ext = new HashMap<>();
+		final epf.event.schema.Event event = epf.event.schema.Event.event(map, ext);
+		final List<Column> columns = Columns.of(ext);
+		final ColumnEntity eventEntity = eventEntity(event, columns);
+		final ColumnEntity entity = manager.insert(eventEntity);
+		return Response.ok(entityColumns(entity)).build();
 	}
 
 	@RunOnVirtualThread
 	@Override
-	public Response remove(final List<String> ids) throws Exception {
-		final Iterator<String> iterator = ids.iterator();
-		MapperDeleteWhere delete = column.delete(epf.event.schema.Event.class).where("id").eq(iterator.next());
-		while(iterator.hasNext()) {
-			delete = delete.or("id").eq(iterator.next());
-		}
-		delete.execute();
-		return Response.ok().build();
+	public Response produces(final Map<String, Object> map) throws Exception {
+		final Map<String, Object> ext = new HashMap<>();
+		final epf.event.schema.Event event = epf.event.schema.Event.event(map, ext);
+		final List<Map<String, Object>> eventDatas = new ArrayList<>();
+		final List<Link> eventLinks = new ArrayList<>();
+		observes(event, ext, eventDatas, eventLinks);
+		return Response.status(Status.PARTIAL_CONTENT).entity(eventDatas).links(eventLinks.toArray(new Link[0])).build();
 	}
 }

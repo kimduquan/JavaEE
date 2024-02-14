@@ -2,8 +2,8 @@ package epf.workflow.client;
 
 import java.io.InputStream;
 import java.net.URI;
+import java.util.Map;
 import java.util.Optional;
-
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
 import epf.naming.Naming;
 import epf.workflow.client.util.LinkUtil;
@@ -155,7 +155,7 @@ public interface Internal {
 	 * @param state
 	 * @param version
 	 * @param instance
-	 * @param body
+	 * @param map
 	 * @return
 	 * @throws Exception
 	 */
@@ -172,7 +172,7 @@ public interface Internal {
 			final String version,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
 			final URI instance,
-			final InputStream body) throws Exception;
+			final Map<String, Object> map) throws Exception;
 	
 	/**
 	 * @param workflow

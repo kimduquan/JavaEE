@@ -6,7 +6,6 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -35,6 +34,8 @@ import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
+import jakarta.ws.rs.core.Response.Status;
+
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.faulttolerance.Fallback;
 import org.eclipse.microprofile.faulttolerance.Retry;
@@ -73,7 +74,6 @@ import epf.workflow.schema.auth.AuthDefinition;
 import epf.workflow.schema.auth.BearerPropertiesDefinition;
 import epf.workflow.schema.event.EventDataFilters;
 import epf.workflow.schema.event.EventDefinition;
-import epf.workflow.schema.event.Kind;
 import epf.workflow.schema.event.OnEventsDefinition;
 import epf.workflow.schema.event.ProducedEventDefinition;
 import epf.workflow.schema.function.FunctionDefinition;
@@ -392,6 +392,10 @@ public class WorkflowApplication implements Workflow, Internal {
 	}
 	
 	private Response output(final URI instance, final ResponseBuilder response, final WorkflowData workflowData) {
+		return response.entity(workflowData.getOutput().toString()).type(MediaType.APPLICATION_JSON).header(LRA.LRA_HTTP_CONTEXT_HEADER, instance).build();
+	}
+	
+	private Response output(final URI parent, final URI instance, final ResponseBuilder response, final WorkflowData workflowData) {
 		return response.entity(workflowData.getOutput().toString()).type(MediaType.APPLICATION_JSON).header(LRA.LRA_HTTP_CONTEXT_HEADER, instance).build();
 	}
 	
@@ -733,10 +737,9 @@ public class WorkflowApplication implements Workflow, Internal {
 	
 	private ResponseBuilder transitionEventState(final WorkflowDefinition workflowDefinition, final EventState eventState, final URI instance, final AtomicBoolean useData) throws Exception {
 		final Map<String, EventDefinition> eventDefs = new HashMap<>();
-		final List<EventDefinition> events = EitherUtil.getArray(workflowDefinition.getEvents());
-		MapUtil.putAll(eventDefs, events.iterator(), EventDefinition::getName);
-		final List<Event> consumeEvents = new ArrayList<>();
-		final List<Event> produceEvents = new ArrayList<>();
+		final List<EventDefinition> eventDefinitions = EitherUtil.getArray(workflowDefinition.getEvents());
+		MapUtil.putAll(eventDefs, eventDefinitions.iterator(), EventDefinition::getName);
+		final List<Map<String, Object>> consumeEvents = new ArrayList<>();
 		for(OnEventsDefinition onEventsDef : eventState.getOnEvents()) {
 			for(String eventRef : onEventsDef.getEventRefs()) {
 				final EventDefinition eventDef = eventDefs.get(eventRef);
@@ -744,20 +747,16 @@ public class WorkflowApplication implements Workflow, Internal {
 				event.setSource(eventDef.getSource());
 				event.setType(eventDef.getType());
 				event.setSubject(instance.toString());
-				switch(eventDef.getKind()) {
-					case consumed:
-						consumeEvents.add(event);
-						break;
-					case produced:
-						produceEvents.add(event);
-						break;
-					default:
-						break;
-				}
+				final Map<String, Object> ext = new HashMap<>();
+				eventDef.getCorrelation().forEach(correlationDefinition -> {
+					ext.put(correlationDefinition.getContextAttributeName(), correlationDefinition.getContextAttributeValue());
+				});
+				final Map<String, Object> map = event.toMap(ext);
+				consumeEvents.add(map);
 			}
 		}
-		useData.set(produceEvents.isEmpty() && consumeEvents.isEmpty());
-		return Response.ok(consumeEvents).links(epf.event.client.Event.consumesLink());
+		useData.set(consumeEvents.isEmpty());
+		return Response.status(Status.PARTIAL_CONTENT).entity(consumeEvents).links(epf.event.client.Event.consumesLink());
 	}
 	
 	private ResponseBuilder transitionOperationState(final WorkflowDefinition workflowDefinition, final OperationState operationState, final URI instance, final WorkflowData workflowData) throws Exception {
@@ -858,8 +857,7 @@ public class WorkflowApplication implements Workflow, Internal {
 		return functionDefinition.orElseThrow(BadRequestException::new);
 	}
 	
-	private boolean onEvent(final EventDefinition eventDefinition, final JsonValue input) throws Exception {
-		final Event event = JsonUtil.asObject(Event.class, input);
+	private boolean onEvent(final EventDefinition eventDefinition, final Event event, final Map<String, Object> ext) throws Exception {
 		boolean equals = true;
 		if(equals && eventDefinition.getSource() != null) {
 			equals = eventDefinition.getSource().equals(event.getSource());
@@ -868,9 +866,8 @@ public class WorkflowApplication implements Workflow, Internal {
 			equals = eventDefinition.getType().equals(event.getType());
 		}
 		if(equals && eventDefinition.getCorrelation() != null) {
-			final Map<String, Object> map = JsonUtil.asMap(input.asJsonObject());
 			for(CorrelationDefinition correlationDefinition : eventDefinition.getCorrelation()) {
-				final Object contextAttributeValue = map.get(correlationDefinition.getContextAttributeName());
+				final Object contextAttributeValue = ext.get(correlationDefinition.getContextAttributeName());
 				if(correlationDefinition.getContextAttributeValue() != null) {
 					equals = correlationDefinition.getContextAttributeValue().equals(contextAttributeValue);
 				}
@@ -882,51 +879,45 @@ public class WorkflowApplication implements Workflow, Internal {
 		return equals;
 	}
 	
-	private boolean onEvents(final WorkflowDefinition workflowDefinition, final EventState eventState, final OnEventsDefinition onEventsDefinition, final Map<String, EventDefinition> eventDefinitions, final JsonValue input) throws Exception {
+	private boolean onEvents(final WorkflowDefinition workflowDefinition, final EventState eventState, final OnEventsDefinition onEventsDefinition, final Map<String, EventDefinition> eventDefinitions, final Event event, final Map<String, Object> ext) throws Exception {
 		final List<EventDefinition> onEvents = MapUtil.getAll(eventDefinitions, onEventsDefinition.getEventRefs().iterator());
 		boolean all = true;
 		boolean any = false;
 		for(EventDefinition eventDefinition : onEvents) {
-			if(Kind.consumed.equals(eventDefinition.getKind())) {
-				if(onEvent(eventDefinition, input)) {
-					any = true;
-				}
-				else {
-					all = false;
-				}
+			if(onEvent(eventDefinition, event, ext)) {
+				any = true;
+			}
+			else {
+				all = false;
 			}
 		}
 		final boolean exclusive = !Boolean.FALSE.equals(eventState.isExclusive());
 		return exclusive ? any : all;
 	}
 	
-	private ResponseBuilder consumeEvents(final WorkflowDefinition workflowDefinition, final EventState eventState, final URI instance, final WorkflowData workflowData, final JsonArray inputs) throws Exception {
+	private ResponseBuilder consumeEvent(final WorkflowDefinition workflowDefinition, final EventState eventState, final URI instance, final WorkflowData workflowData, final Event event, final Map<String, Object> ext) throws Exception {
 		final List<ActionDefinition> actions = new ArrayList<>();
 		final Map<String, EventDefinition> events = getEvents(workflowDefinition);
-		final Iterator<JsonValue> iterator = inputs.iterator();
-		while(iterator.hasNext()) {
-			boolean all = true;
-			boolean any = false;
-			final JsonValue input = iterator.next();
-			for(OnEventsDefinition onEventsDefinition : eventState.getOnEvents()) {
-				if(onEvents(workflowDefinition, eventState, onEventsDefinition, events, input)) {
-					any = true;
-					actions.addAll(onEventsDefinition.getActions());
-					filterEventDataOutput(onEventsDefinition.getEventDataFilter(), workflowData, input);
-				}
-				else {
-					all = false;
-				}
+		boolean all = true;
+		boolean any = false;
+		for(OnEventsDefinition onEventsDefinition : eventState.getOnEvents()) {
+			if(onEvents(workflowDefinition, eventState, onEventsDefinition, events, event, ext)) {
+				any = true;
+				actions.addAll(onEventsDefinition.getActions());
+				final JsonValue eventData = JsonUtil.toJsonValue(event.getData());
+				filterEventDataOutput(onEventsDefinition.getEventDataFilter(), workflowData, eventData);
 			}
-			final boolean exclusive = !Boolean.FALSE.equals(eventState.isExclusive());
-			boolean transition = exclusive ? any : all;
-			if(transition) {
-				final Link[] actionLinks = actionLinks(workflowDefinition, eventState.getName(), actions);
-				return transitionOrEnd(workflowDefinition, eventState.getName(), eventState.getTransition(), eventState.getEnd(), instance, workflowData, actionLinks);
+			else {
+				all = false;
 			}
 		}
+		final boolean exclusive = !Boolean.FALSE.equals(eventState.isExclusive());
+		boolean transition = exclusive ? any : all;
 		final Link[] actionLinks = actionLinks(workflowDefinition, eventState.getName(), actions);
-		return Response.ok().links(actionLinks).entity(workflowData.getOutput().toString()).type(MediaType.APPLICATION_JSON).header(LRA.LRA_HTTP_CONTEXT_HEADER, instance);
+		if(transition) {
+			return transitionOrEnd(workflowDefinition, eventState.getName(), eventState.getTransition(), eventState.getEnd(), instance, workflowData, actionLinks);
+		}
+		return Response.ok().links(actionLinks);
 	}
 	
 	private ResponseBuilder transitionState(final WorkflowDefinition workflowDefinition, final State state, final URI instance, final WorkflowData workflowData, final AtomicBoolean useData) throws Exception {
@@ -1144,16 +1135,19 @@ public class WorkflowApplication implements Workflow, Internal {
 	@LRA(value = Type.MANDATORY, end = false)
 	@RunOnVirtualThread
 	@Override
-	public Response events(final String workflow, final String state, final String version, final URI instance, final InputStream body) throws Exception {
-		final WorkflowInstance workflowInstance = cache.getInstance(instance);
+	public Response events(final String workflow, final String state, final String version, final URI instance, final Map<String, Object> map) throws Exception {
+		final Map<String, Object> ext = new HashMap<>();
+		final Event event = Event.event(map, ext); 
+		final URI subject = new URI(event.getSubject());
+		final WorkflowInstance workflowInstance = cache.getInstance(subject);
 		ResponseBuilder response;
 		if(workflowInstance != null) {
 			final WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
 			final State currentState = getState(workflowDefinition, state);
-			final JsonArray inputs = JsonUtil.readArray(body);
 			final EventState eventState = (EventState)currentState;
 			final WorkflowData workflowData = workflowInstance.getState().getWorkflowData();
-			response = consumeEvents(workflowDefinition, eventState, instance, workflowData, inputs);
+			response = consumeEvent(workflowDefinition, eventState, subject, workflowData, event, ext);
+			return output(instance, subject, response, workflowData);
 		}
 		else {
 			response = Response.noContent();

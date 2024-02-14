@@ -4,6 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Map.Entry;
@@ -157,42 +159,26 @@ public class Application {
 		return builder.build();
     }
     
-    private Response buildForLinkRequests(final Client client, final Response response, final Link link, final Optional<Object> entity, final MediaType mediaType, final HttpHeaders headers) {
-    	final List<Object> list = response.readEntity(new GenericType<List<Object>>() {});
-    	for(Object input : list) {
-    		Response linkResponse = buildLinkRequest(client, response, Optional.ofNullable(input), mediaType, headers, link);
-			if(isSuccessful(linkResponse)) {
-				final boolean isPartialLink = isPartial(linkResponse);
-				linkResponse = buildLinkRequests(client, linkResponse, Optional.ofNullable(input), mediaType, headers, link, isPartialLink);
-				if(!isSuccessful(linkResponse)) {
-					return linkResponse;
-				}
-			}
-			else {
-				return linkResponse;
-			}
-    	}
-    	return response;
-    }
-    
     private Response buildLinkRequests(final Client client, final Response response, final Optional<Object> entity, final MediaType mediaType, final HttpHeaders headers, final Link self, final boolean isPartial) {
     	Response prevLinkResponse = response;
     	Optional<Object> prevLinkEntity = entity;
     	MediaType prevMediaType = mediaType;
+    	Iterator<Object> partialEntityIterator = Arrays.asList().iterator();
+    	if(isPartial) {
+    		final List<Object> partialEntities = response.readEntity(new GenericType<List<Object>>() {});
+    		partialEntityIterator = partialEntities.iterator();
+    	}
     	final List<Response> linkResponses = new CopyOnWriteArrayList<>();
     	final List<Link> links = HATEOAS.getRequestLinks(response).collect(Collectors.toList());
     	for(Link link : links) {
     		if(HATEOAS.isRequestLink(link)) {
     			if(HATEOAS.isSynchronized(link)) {
         			final Link targetLink = HATEOAS.isSelfLink(link) ? self : link;
-        			final boolean isForLink = HATEOAS.isForLink(targetLink);
-        			Response linkResponse;
-        			if(isForLink) {
-        				linkResponse = buildForLinkRequests(client, prevLinkResponse, targetLink, prevLinkEntity, prevMediaType, headers);
+        			if(partialEntityIterator.hasNext()) {
+        				prevLinkEntity = Optional.ofNullable(partialEntityIterator.next());
+        				prevMediaType = mediaType;
         			}
-        			else {
-            			linkResponse = buildLinkRequest(client, prevLinkResponse, prevLinkEntity, prevMediaType, headers, targetLink);
-        			}
+        			Response linkResponse = buildLinkRequest(client, prevLinkResponse, prevLinkEntity, prevMediaType, headers, targetLink);
         			if(isSuccessful(linkResponse)) {
         				final boolean isPartialLink = isPartial(linkResponse);
         				if(HATEOAS.hasEntity(link)) {

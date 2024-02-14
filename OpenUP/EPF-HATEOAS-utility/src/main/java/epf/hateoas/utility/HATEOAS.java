@@ -138,15 +138,6 @@ public interface HATEOAS {
      * @param link
      * @return
      */
-    static boolean isForLink(final Link link) {
-    	Objects.requireNonNull(link, "Link");
-    	return !link.getParams().getOrDefault("for", "").isEmpty();
-    }
-    
-    /**
-     * @param link
-     * @return
-     */
     static boolean hasEntity(final Link link) {
     	Objects.requireNonNull(link, "Link");
     	boolean hasEntity = true;
