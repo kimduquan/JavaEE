@@ -8,11 +8,11 @@ java -Dquarkus.http.port=9184 -jar target/quarkus-app/quarkus-run.jar &
 cd ../
 cd EPF-messaging
 mvn clean install -U
-java -Dquarkus.http.port=9183 -jar target/quarkus-app/quarkus-run.jar &
+$JAVA21_HOME/bin/java -Dquarkus.http.port=9183 -jar target/quarkus-app/quarkus-run.jar &
 cd ../
 cd EPF-transaction
 mvn clean install -U
-java -Dquarkus.http.port=50000 -jar target/quarkus-app/quarkus-run.jar &
+$JAVA21_HOME/bin/java -Dquarkus.http.port=50000 -jar target/quarkus-app/quarkus-run.jar &
 cd ../
 cd EPF-registry
 mvn clean install -U
