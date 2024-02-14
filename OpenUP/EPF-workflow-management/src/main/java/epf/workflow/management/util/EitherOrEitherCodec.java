@@ -10,7 +10,6 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
-
 import epf.nosql.schema.Either;
 import epf.nosql.schema.EitherOrEither;
 import epf.util.logging.LogManager;

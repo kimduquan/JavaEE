@@ -13,10 +13,6 @@
     <maven.compiler.release>21</maven.compiler.release>
   </properties>
   <dependencies>
-	<dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-jsonp</artifactId>
-    </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-jsonb</artifactId>
@@ -58,6 +54,16 @@
       <artifactId>quarkus-arc</artifactId>
     </dependency>
 	
+	<dependency>
+        <groupId>openup</groupId>
+        <artifactId>EPF-nosql-schema</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>openup</groupId>
+        <artifactId>EPF-workflow-schema-utility</artifactId>
+        <version>${project.version}</version>
+    </dependency>
 	<dependency>
         <groupId>openup</groupId>
         <artifactId>EPF-workflow-schema</artifactId>

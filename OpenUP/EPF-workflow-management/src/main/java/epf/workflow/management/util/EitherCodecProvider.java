@@ -5,12 +5,11 @@ import java.util.List;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
-
 import epf.nosql.schema.BooleanOrObject;
 import epf.nosql.schema.StringOrArray;
-import epf.nosql.schema.StringOrNumber;
 import epf.nosql.schema.StringOrObject;
 import epf.workflow.schema.TransitionOrEnd;
+import epf.workflow.schema.util.StringOrNumber;
 
 /**
  * 
