@@ -3,6 +3,8 @@ package epf.workflow.schema.util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import epf.nosql.schema.EitherArray;
 import epf.util.json.ext.JsonUtil;
 import jakarta.json.bind.adapter.JsonbAdapter;
 

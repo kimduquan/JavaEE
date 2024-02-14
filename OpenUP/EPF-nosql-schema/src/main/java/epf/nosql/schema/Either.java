@@ -1,4 +1,4 @@
-package epf.workflow.schema.util;
+package epf.nosql.schema;
 
 import java.io.Serializable;
 import jakarta.json.bind.annotation.JsonbTransient;

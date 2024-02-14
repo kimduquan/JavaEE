@@ -5,9 +5,10 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.nosql.Column;
 import java.io.Serializable;
 import org.eclipse.jnosql.mapping.Embeddable;
+
+import epf.nosql.schema.StringOrObject;
 import epf.workflow.schema.schedule.ScheduleDefinition;
 import epf.workflow.schema.schedule.adapter.StringOrScheduleDefinitionAdapter;
-import epf.workflow.schema.util.StringOrObject;
 
 /**
  * @author PC

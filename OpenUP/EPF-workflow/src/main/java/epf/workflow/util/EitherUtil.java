@@ -1,8 +1,9 @@
 package epf.workflow.util;
 
 import java.util.List;
-import epf.workflow.schema.util.StringOrArray;
-import epf.workflow.schema.util.StringOrObject;
+
+import epf.nosql.schema.StringOrArray;
+import epf.nosql.schema.StringOrObject;
 
 /**
  * 

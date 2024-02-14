@@ -4,7 +4,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.nosql.Column;
 import java.io.Serializable;
 import org.eclipse.jnosql.mapping.Embeddable;
-import epf.workflow.schema.util.StringOrObject;
+
+import epf.nosql.schema.StringOrObject;
 
 /**
  * @author PC

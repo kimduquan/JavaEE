@@ -1,12 +1,12 @@
 package epf.workflow.schema.state;
 
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
+import epf.nosql.schema.BooleanOrObject;
+import epf.nosql.schema.StringOrObject;
 import epf.workflow.schema.EndDefinition;
 import epf.workflow.schema.TransitionDefinition;
 import epf.workflow.schema.adapter.BooleanOrEndDefinitionAdapter;
 import epf.workflow.schema.adapter.StringOrTransitionDefinitionAdapter;
-import epf.workflow.schema.util.BooleanOrObject;
-import epf.workflow.schema.util.StringOrObject;
 import jakarta.nosql.Column;
 import java.io.Serializable;
 import java.util.Map;

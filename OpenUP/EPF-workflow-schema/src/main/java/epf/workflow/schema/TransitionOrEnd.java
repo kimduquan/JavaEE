@@ -1,9 +1,9 @@
 package epf.workflow.schema;
 
-import epf.workflow.schema.util.BooleanOrObject;
-import epf.workflow.schema.util.EitherJsonSerializer;
-import epf.workflow.schema.util.EitherOrEither;
-import epf.workflow.schema.util.StringOrObject;
+import epf.nosql.schema.BooleanOrObject;
+import epf.nosql.schema.EitherJsonSerializer;
+import epf.nosql.schema.EitherOrEither;
+import epf.nosql.schema.StringOrObject;
 import jakarta.json.bind.annotation.JsonbTypeSerializer;
 
 /**

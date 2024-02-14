@@ -1,7 +1,7 @@
 package epf.workflow.schema;
 
 import epf.json.schema.JsonSchema;
-import epf.workflow.schema.util.StringOrObject;
+import epf.nosql.schema.StringOrObject;
 import jakarta.nosql.Column;
 import java.io.Serializable;
 import org.eclipse.jnosql.mapping.Embeddable;

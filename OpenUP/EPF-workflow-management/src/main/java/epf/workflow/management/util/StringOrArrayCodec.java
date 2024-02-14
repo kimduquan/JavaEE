@@ -1,7 +1,8 @@
 package epf.workflow.management.util;
 
 import org.bson.codecs.configuration.CodecRegistry;
-import epf.workflow.schema.util.StringOrArray;
+
+import epf.nosql.schema.StringOrArray;
 
 /**
  * @param <T>

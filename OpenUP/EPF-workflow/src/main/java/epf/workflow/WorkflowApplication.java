@@ -54,6 +54,9 @@ import org.eclipse.microprofile.openapi.models.parameters.Parameter;
 import org.eclipse.microprofile.openapi.models.servers.Server;
 import epf.event.schema.Event;
 import epf.naming.Naming;
+import epf.nosql.schema.BooleanOrObject;
+import epf.nosql.schema.Either;
+import epf.nosql.schema.StringOrObject;
 import epf.util.MapUtil;
 import epf.util.json.ext.JsonUtil;
 import epf.workflow.client.Internal;
@@ -95,9 +98,6 @@ import io.smallrye.common.annotation.RunOnVirtualThread;
 import epf.workflow.schema.state.SwitchState;
 import epf.workflow.schema.state.SwitchStateDataConditions;
 import epf.workflow.schema.state.SwitchStateEventConditions;
-import epf.workflow.schema.util.BooleanOrObject;
-import epf.workflow.schema.util.Either;
-import epf.workflow.schema.util.StringOrObject;
 
 /**
  * @author PC

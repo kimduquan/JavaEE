@@ -2,7 +2,7 @@ package epf.workflow.schema;
 
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import epf.workflow.schema.event.ProducedEventDefinition;
-import epf.workflow.schema.util.StringOrObject;
+import epf.nosql.schema.StringOrObject;
 import epf.workflow.schema.adapter.StringOrContinueAsAdapter;
 import jakarta.nosql.Column;
 import java.io.Serializable;

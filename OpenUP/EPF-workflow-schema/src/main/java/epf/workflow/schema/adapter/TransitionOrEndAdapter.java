@@ -1,11 +1,11 @@
 package epf.workflow.schema.adapter;
 
+import epf.nosql.schema.BooleanOrObject;
+import epf.nosql.schema.StringOrObject;
 import epf.workflow.schema.EndDefinition;
 import epf.workflow.schema.TransitionDefinition;
 import epf.workflow.schema.TransitionOrEnd;
-import epf.workflow.schema.util.BooleanOrObject;
 import epf.workflow.schema.util.EitherOrEitherJsonAdapter;
-import epf.workflow.schema.util.StringOrObject;
 
 /**
  * @author PC

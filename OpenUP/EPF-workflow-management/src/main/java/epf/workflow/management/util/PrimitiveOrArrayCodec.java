@@ -10,8 +10,9 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
+
+import epf.nosql.schema.EitherArray;
 import epf.util.logging.LogManager;
-import epf.workflow.schema.util.EitherArray;
 
 /**
  * 

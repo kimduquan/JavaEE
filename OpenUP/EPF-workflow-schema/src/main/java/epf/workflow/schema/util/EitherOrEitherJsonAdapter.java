@@ -2,6 +2,9 @@ package epf.workflow.schema.util;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import epf.nosql.schema.Either;
+import epf.nosql.schema.EitherOrEither;
 import jakarta.json.bind.adapter.JsonbAdapter;
 
 /**

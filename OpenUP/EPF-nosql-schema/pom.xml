@@ -10,10 +10,17 @@
     <name>Eclipse Process Framework NoSQL Schema</name>
     <packaging>jar</packaging>
     <dependencies>
+		<!-- https://mvnrepository.com/artifact/jakarta.json.bind/jakarta.json.bind-api -->
 		<dependency>
-	        <groupId>openup</groupId>
-	        <artifactId>EPF-nosql-schema-utility</artifactId>
-	        <version>${project.version}</version>
-	    </dependency>
+		    <groupId>jakarta.json.bind</groupId>
+		    <artifactId>jakarta.json.bind-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/jakarta.json/jakarta.json-api -->
+		<dependency>
+		    <groupId>jakarta.json</groupId>
+		    <artifactId>jakarta.json-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
     </dependencies>
 </project>

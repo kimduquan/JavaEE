@@ -1,11 +1,12 @@
 package epf.workflow.management.util;
 
 import org.bson.codecs.configuration.CodecRegistry;
+
+import epf.nosql.schema.BooleanOrObject;
+import epf.nosql.schema.StringOrObject;
 import epf.workflow.schema.EndDefinition;
 import epf.workflow.schema.TransitionDefinition;
 import epf.workflow.schema.TransitionOrEnd;
-import epf.workflow.schema.util.BooleanOrObject;
-import epf.workflow.schema.util.StringOrObject;
 
 /**
  * 

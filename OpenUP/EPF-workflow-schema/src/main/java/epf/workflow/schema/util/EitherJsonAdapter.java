@@ -1,6 +1,8 @@
 package epf.workflow.schema.util;
 
 import java.util.Map;
+
+import epf.nosql.schema.Either;
 import epf.util.json.ext.JsonUtil;
 import jakarta.json.bind.adapter.JsonbAdapter;
 

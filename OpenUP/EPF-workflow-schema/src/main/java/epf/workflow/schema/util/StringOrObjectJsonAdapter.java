@@ -1,5 +1,7 @@
 package epf.workflow.schema.util;
 
+import epf.nosql.schema.StringOrObject;
+
 /**
  * @param <T>
  */
