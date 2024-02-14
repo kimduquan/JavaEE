@@ -20,13 +20,13 @@
       <artifactId>quarkus-narayana-lra</artifactId>
     </dependency>
 	<dependency>
-	   <groupId>io.quarkus</groupId>
-	   <artifactId>quarkus-resteasy-jackson</artifactId>
-	</dependency>
-	<dependency>
-	   <groupId>io.quarkus</groupId>
-	   <artifactId>quarkus-resteasy-client</artifactId>
-	</dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-resteasy-reactive-jackson</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-rest-client-reactive</artifactId>
+    </dependency>
 	<dependency>
 	   <groupId>io.quarkus</groupId>
 	   <artifactId>quarkus-kubernetes</artifactId>
