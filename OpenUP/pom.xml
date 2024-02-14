@@ -930,7 +930,6 @@
 		<module>EPF-planning</module>
 		<module>EPF-messaging-webapp</module>
 		<module>EPF-workflow-webapp</module>
-		<module>EPF-event-webapp</module>
 		<module>EPF-webapp</module>
 		
 		<module>OpenUP-schema</module>
