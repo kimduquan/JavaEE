@@ -1,6 +1,6 @@
 package epf.workflow.schema.state.mapping;
 
-import epf.workflow.schema.mapping.EnumAttributeConverter;
+import epf.nosql.schema.util.EnumAttributeConverter;
 import epf.workflow.schema.state.Type;
 
 /**

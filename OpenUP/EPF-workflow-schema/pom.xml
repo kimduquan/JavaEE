@@ -35,31 +35,18 @@
 		    <artifactId>nosql-core</artifactId>
 		    <scope>provided</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/jakarta.nosql/nosql-document -->
-		<dependency>
-		    <groupId>jakarta.nosql</groupId>
-		    <artifactId>nosql-document</artifactId>
-		    <scope>provided</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/jakarta.nosql/nosql-column -->
-		<dependency>
-		    <groupId>jakarta.nosql</groupId>
-		    <artifactId>nosql-column</artifactId>
-		    <scope>provided</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.mapping/jnosql-mapping-core -->
+		<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.mapping/jnosql-mapping-api-core -->
 		<dependency>
 		    <groupId>org.eclipse.jnosql.mapping</groupId>
-		    <artifactId>jnosql-mapping-core</artifactId>
-		    <scope>provided</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.communication/jnosql-communication-core -->
-		<dependency>
-		    <groupId>org.eclipse.jnosql.communication</groupId>
-		    <artifactId>jnosql-communication-core</artifactId>
+		    <artifactId>jnosql-mapping-api-core</artifactId>
 		    <scope>provided</scope>
 		</dependency>
 		
+		<dependency>
+	    	<groupId>openup</groupId>
+	    	<artifactId>EPF-nosql-schema-utility</artifactId>
+	    	<version>${project.version}</version>
+	    </dependency>
 		<dependency>
 	    	<groupId>openup</groupId>
 	    	<artifactId>EPF-json-schema</artifactId>

@@ -1,4 +1,4 @@
-package epf.event.schema.util;
+package epf.nosql.schema.util;
 
 import java.util.UUID;
 import org.eclipse.jnosql.mapping.AttributeConverter;

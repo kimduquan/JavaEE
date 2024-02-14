@@ -1,4 +1,4 @@
-package epf.workflow.schema.mapping;
+package epf.nosql.schema.util;
 
 import org.eclipse.jnosql.mapping.AttributeConverter;
 import epf.util.EnumUtil;

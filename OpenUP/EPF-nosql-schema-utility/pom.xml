@@ -10,5 +10,17 @@
     <name>Eclipse Process Framework NoSQL Schema Utility</name>
     <packaging>jar</packaging>
     <dependencies>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.mapping/jnosql-mapping-api-core -->
+		<dependency>
+		    <groupId>org.eclipse.jnosql.mapping</groupId>
+		    <artifactId>jnosql-mapping-api-core</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+	        <groupId>openup</groupId>
+	        <artifactId>EPF-utility</artifactId>
+	        <version>${project.version}</version>
+	    </dependency>
     </dependencies>
 </project>

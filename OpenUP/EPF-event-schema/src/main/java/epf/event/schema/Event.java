@@ -3,20 +3,21 @@ package epf.event.schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.nosql.Column;
+import jakarta.nosql.Entity;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import org.eclipse.jnosql.mapping.Convert;
-import org.eclipse.jnosql.mapping.MappedSuperclass;
-import epf.event.schema.util.UUIDAttributeConverter;
+
 import epf.naming.Naming.Event.Schema;
+import epf.nosql.schema.util.UUIDAttributeConverter;
 import jakarta.nosql.Id;
 
 /**
  * @author PC
  *
  */
-@MappedSuperclass
+@Entity
 public class Event {
 
 	/**

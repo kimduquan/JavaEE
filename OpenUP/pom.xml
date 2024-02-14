@@ -278,18 +278,28 @@
 			    <groupId>jakarta.nosql</groupId>
 			    <artifactId>nosql-core</artifactId>
 			    <version>1.0.0-b7</version>
+			    <!--<scope>provided</scope>-->
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/jakarta.nosql/nosql-document -->
 			<dependency>
 			    <groupId>jakarta.nosql</groupId>
 			    <artifactId>nosql-document</artifactId>
 			    <version>1.0.0-b7</version>
+			    <!--<scope>provided</scope>-->
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/jakarta.nosql/nosql-column -->
 			<dependency>
 			    <groupId>jakarta.nosql</groupId>
 			    <artifactId>nosql-column</artifactId>
 			    <version>1.0.0-b7</version>
+			    <!--<scope>provided</scope>-->
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.mapping/jnosql-mapping-api-core -->
+			<dependency>
+			    <groupId>org.eclipse.jnosql.mapping</groupId>
+			    <artifactId>jnosql-mapping-api-core</artifactId>
+			    <version>1.1.0</version>
+			    <!--<scope>provided</scope>-->
 			</dependency>
 			
 			
