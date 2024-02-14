@@ -16,7 +16,6 @@ public class UUIDAttributeConverter implements AttributeConverter<String, UUID> 
 
 	@Override
 	public String convertToEntityAttribute(final UUID dbData) {
-		// TODO Auto-generated method stub
 		return dbData.toString();
 	}
 
