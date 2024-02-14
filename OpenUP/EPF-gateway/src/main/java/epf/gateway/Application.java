@@ -150,7 +150,7 @@ public class Application {
     
     private Response buildLinkResponse(final Response response, final MediaType mediaType, final List<Response> linkResponses) {
 		final InputStream entity = buildLinkEntity(mediaType, linkResponses);
-    	ResponseBuilder builder = Response.ok(entity).type(mediaType);
+    	ResponseBuilder builder = Response.status(response.getStatus()).entity(entity).type(mediaType);
     	for(final Entry<String, List<Object>> entry : response.getHeaders().entrySet()) {
 			if(entry.getKey().startsWith(RequestUtil.LRA_HTTP_HEADER_PREFIX)) {
 				builder = builder.header(entry.getKey(), entry.getValue().get(0));

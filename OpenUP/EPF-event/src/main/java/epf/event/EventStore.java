@@ -16,6 +16,7 @@ import org.eclipse.jnosql.communication.column.ColumnQuery.ColumnWhere;
 import org.eclipse.jnosql.communication.column.Columns;
 import epf.event.client.Event;
 import epf.naming.Naming;
+import epf.naming.Naming.Event.Schema;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -53,7 +54,7 @@ public class EventStore implements Event {
 	}
 	
 	private ColumnWhere eventQuery(final epf.event.schema.Event event) {
-		return ColumnQuery.select().from("Event").where("source").eq(event.getSource()).and("type").eq(event.getType()).and("time").eq("0");
+		return ColumnQuery.select().from("Event").where(Schema.SOURCE).eq(event.getSource()).and(Schema.TYPE).eq(event.getType()).and(Schema.TIME).eq("0");
 	}
 	
 	private ColumnWhere eventQuery(final Map<String, Object> ext, ColumnWhere where) {
@@ -64,10 +65,10 @@ public class EventStore implements Event {
 	}
 	
 	private Link eventLink(final ColumnEntity eventEntity, final int index) throws Exception {
-		final URI source = new URI(eventEntity.find("source").get().get().toString());
+		final URI source = new URI(eventEntity.find(Schema.SOURCE).get().get().toString());
 		final String rel = source.getHost();
 		final URI uri = new URI(source.getRawPath() + source.getRawQuery());
-		final String type = eventEntity.find("type").get().get().toString();
+		final String type = eventEntity.find(Schema.TYPE).get().get().toString();
 		final Link eventLink = Link.fromUri(uri).type(type).rel(rel).title("#" + index).build();
 		return eventLink;
 	}
@@ -79,28 +80,28 @@ public class EventStore implements Event {
 	
 	private ColumnEntity eventEntity(final ColumnEntity eventEntity, final epf.event.schema.Event event) {
 		if(event.getData() != null) {
-			eventEntity.add("data", event.getData());
+			eventEntity.add(Schema.DATA, event.getData());
 		}
 		if(event.getDataContentType() != null) {
-			eventEntity.add("dataContentType", event.getDataContentType());
+			eventEntity.add(Schema.DATA_CONTENT_TYPE, event.getDataContentType());
 		}
 		if(event.getDataSchema() != null) {
-			eventEntity.add("dataSchema", event.getDataSchema());
+			eventEntity.add(Schema.DATA_SCHEMA, event.getDataSchema());
 		}
 		if(event.getSource() != null) {
-			eventEntity.add("source", event.getSource());
+			eventEntity.add(Schema.SOURCE, event.getSource());
 		}
 		if(event.getSpecVersion() != null) {
-			eventEntity.add("specVersion", event.getSpecVersion());
+			eventEntity.add(Schema.SPEC_VERSION, event.getSpecVersion());
 		}
 		if(event.getSubject() != null) {
-			eventEntity.add("subject", event.getSubject());
+			eventEntity.add(Schema.SUBJECT, event.getSubject());
 		}
 		if(event.getTime() != null) {
-			eventEntity.add("time", event.getTime());
+			eventEntity.add(Schema.TIME, event.getTime());
 		}
 		if(event.getType() != null) {
-			eventEntity.add("type", event.getType());
+			eventEntity.add(Schema.TYPE, event.getType());
 		}
 		return eventEntity;
 	}

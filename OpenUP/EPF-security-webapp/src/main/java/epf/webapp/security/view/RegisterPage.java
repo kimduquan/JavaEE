@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.logging.Logger;
-
 import epf.client.util.Client;
 import epf.mail.client.Mail;
 import epf.mail.client.Message;

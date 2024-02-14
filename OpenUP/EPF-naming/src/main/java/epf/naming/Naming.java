@@ -156,6 +156,57 @@ public interface Naming {
 		 * 
 		 */
 		String EVENT_URL = "epf.config.url";
+		
+		/**
+		 * 
+		 */
+		interface Schema {
+			
+			/**
+			 * 
+			 */
+			String ID = "id";
+			
+			/**
+			 * 
+			 */
+			String DATA = "data";
+			
+			/**
+			 * 
+			 */
+			String DATA_CONTENT_TYPE = "dataContentType";
+			
+			/**
+			 * 
+			 */
+			String DATA_SCHEMA = "dataSchema";
+			
+			/**
+			 * 
+			 */
+			String SOURCE = "source";
+			
+			/**
+			 * 
+			 */
+			String SPEC_VERSION = "specVersion";
+			
+			/**
+			 * 
+			 */
+			String SUBJECT = "subject";
+			
+			/**
+			 * 
+			 */
+			String TIME = "time";
+			
+			/**
+			 * 
+			 */
+			String TYPE = "type";
+		}
 	}
 	
 	/**
@@ -1065,6 +1116,17 @@ public interface Naming {
 		     */
 		    String WORKFLOW_MANAGEMENT_URL = "epf.workflow.management.url";
 	    }
+		
+		/**
+		 * 
+		 */
+		interface Schema {
+			
+			/**
+			 * 
+			 */
+			String DATA_INPUT_SCHEMA = "dataInputSchema";
+		}
 		
 		/**
 		 * 

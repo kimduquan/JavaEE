@@ -1,16 +1,15 @@
 package epf.event.schema;
 
-import jakarta.json.bind.annotation.JsonbProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.nosql.Column;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import org.eclipse.jnosql.mapping.Convert;
 import org.eclipse.jnosql.mapping.MappedSuperclass;
 import epf.event.schema.util.UUIDAttributeConverter;
+import epf.naming.Naming.Event.Schema;
 import jakarta.nosql.Id;
 
 /**
@@ -23,7 +22,7 @@ public class Event {
 	/**
 	 * 
 	 */
-	@Id("id")
+	@Id(Schema.ID)
 	@Convert(UUIDAttributeConverter.class)
 	@NotNull
 	@NotBlank
@@ -40,10 +39,9 @@ public class Event {
 	/**
 	 * 
 	 */
-	@Column("specversion")
+	@Column
 	@NotNull
 	@NotBlank
-	@JsonbProperty("specversion")
 	private String specVersion = "1.0";
 	
 	/**
@@ -57,15 +55,13 @@ public class Event {
 	/**
 	 * 
 	 */
-	@Column("datacontenttype")
-	@JsonbProperty("datacontenttype")
+	@Column
 	private String dataContentType;
 	
 	/**
 	 * 
 	 */
-	@Column("dataschema")
-	@JsonbProperty("dataschema")
+	@Column
 	private String dataSchema;
 	
 	/**
@@ -167,54 +163,38 @@ public class Event {
 		Objects.requireNonNull(map, "Map");
 		final Event event = new Event();
 		ext.putAll(map);
-		event.setData(ext.remove("data"));
-		if(ext.containsKey("dataContentType")) {
-			final Object dataContentType = ext.remove("dataContentType");
-			if(dataContentType instanceof String) {
-				event.setDataContentType((String)dataContentType);
-			}
+		event.setData(ext.remove(Schema.DATA));
+		final Object dataContentType = ext.remove(Schema.DATA_CONTENT_TYPE);
+		if(dataContentType instanceof String) {
+			event.setDataContentType((String)dataContentType);
 		}
-		if(ext.containsKey("dataSchema")) {
-			final Object dataSchema = ext.remove("dataSchema");
-			if(dataSchema instanceof String) {
-				event.setDataSchema((String) dataSchema);
-			}
+		final Object dataSchema = ext.remove(Schema.DATA_SCHEMA);
+		if(dataSchema instanceof String) {
+			event.setDataSchema((String) dataSchema);
 		}
-		if(ext.containsKey("id")) {
-			final Object id = ext.remove("id");
-			if(id instanceof String) {
-				event.setId((String) id);
-			}
+		final Object id = ext.remove(Schema.ID);
+		if(id instanceof String) {
+			event.setId((String) id);
 		}
-		if(ext.containsKey("source")) {
-			final Object source = ext.remove("source");
-			if(source instanceof String) {
-				event.setSource((String) source);
-			}
+		final Object source = ext.remove(Schema.SOURCE);
+		if(source instanceof String) {
+			event.setSource((String) source);
 		}
-		if(ext.containsKey("specVersion")) {
-			final Object specVersion = ext.remove("specVersion");
-			if(specVersion instanceof String) {
-				event.setSpecVersion((String) specVersion);
-			}
+		final Object specVersion = ext.remove(Schema.SPEC_VERSION);
+		if(specVersion instanceof String) {
+			event.setSpecVersion((String) specVersion);
 		}
-		if(ext.containsKey("subject")) {
-			final Object subject = ext.remove("subject");
-			if(subject instanceof String) {
-				event.setSubject((String) subject);
-			}
+		final Object subject = ext.remove(Schema.SUBJECT);
+		if(subject instanceof String) {
+			event.setSubject((String) subject);
 		}
-		if(ext.containsKey("time")) {
-			final Object time = ext.remove("time");
-			if(time instanceof String) {
-				event.setTime((String) time);
-			}
+		final Object time = ext.remove(Schema.TIME);
+		if(time instanceof String) {
+			event.setTime((String) time);
 		}
-		if(ext.containsKey("type")) {
-			final Object type = ext.remove("type");
-			if(type instanceof String) {
-				event.setType((String) type);
-			}
+		final Object type = ext.remove(Schema.TYPE);
+		if(type instanceof String) {
+			event.setType((String) type);
 		}
 		return event;
 	}
@@ -226,31 +206,31 @@ public class Event {
 	public Map<String, Object> toMap(final Map<String, Object> ext){
 		final Map<String, Object> map = new HashMap<>();
 		if(data != null) {
-			map.put("data", data);
+			map.put(Schema.DATA, data);
 		}
 		if(this.dataContentType != null) {
-			map.put("dataContentType", dataContentType);
+			map.put(Schema.DATA_CONTENT_TYPE, dataContentType);
 		}
 		if(this.dataSchema != null) {
-			map.put("dataSchema", dataSchema);
+			map.put(Schema.DATA_SCHEMA, dataSchema);
 		}
 		if(this.id != null) {
-			map.put("id", id);
+			map.put(Schema.ID, id);
 		}
 		if(this.source != null) {
-			map.put("source", source);
+			map.put(Schema.SOURCE, source);
 		}
 		if(this.specVersion != null) {
-			map.put("specVersion", specVersion);
+			map.put(Schema.SPEC_VERSION, specVersion);
 		}
 		if(this.subject != null) {
-			map.put("subject", subject);
+			map.put(Schema.SUBJECT, subject);
 		}
 		if(this.time != null) {
-			map.put("time", time);
+			map.put(Schema.TIME, time);
 		}
 		if(this.type != null) {
-			map.put("type", type);
+			map.put(Schema.TYPE, type);
 		}
 		map.putAll(ext);
 		return map;
