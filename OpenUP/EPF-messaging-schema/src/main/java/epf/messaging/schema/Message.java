@@ -38,7 +38,7 @@ public class Message {
 	 * 
 	 */
 	@Column
-	private String destination;
+	private Destination destination;
 	
 	/**
 	 * 
@@ -68,7 +68,7 @@ public class Message {
 	 * 
 	 */
 	@Column
-	private String replyTo;
+	private Destination replyTo;
 	
 	/**
 	 * 
@@ -106,10 +106,10 @@ public class Message {
 	public void setDeliveryTime(final Long deliveryTime) {
 		this.deliveryTime = deliveryTime;
 	}
-	public String getDestination() {
+	public Destination getDestination() {
 		return destination;
 	}
-	public void setDestination(final String destination) {
+	public void setDestination(final Destination destination) {
 		this.destination = destination;
 	}
 	public Long getExpiration() {
@@ -136,10 +136,10 @@ public class Message {
 	public void setRedelivered(final Boolean redelivered) {
 		this.redelivered = redelivered;
 	}
-	public String getReplyTo() {
+	public Destination getReplyTo() {
 		return replyTo;
 	}
-	public void setReplyTo(final String replyTo) {
+	public void setReplyTo(final Destination replyTo) {
 		this.replyTo = replyTo;
 	}
 	public Long getTimestamp() {
