@@ -1,115 +1,55 @@
 package epf.messaging;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.eclipse.microprofile.reactive.messaging.Emitter;
+import org.eclipse.microprofile.reactive.messaging.Incoming;
+import epf.messaging.schema.ByteMessage;
+import epf.messaging.schema.TextMessage;
+import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.websocket.CloseReason;
-import jakarta.websocket.OnClose;
-import jakarta.websocket.OnError;
-import jakarta.websocket.OnMessage;
-import jakarta.websocket.OnOpen;
-import jakarta.websocket.Session;
-import jakarta.websocket.server.PathParam;
-import jakarta.websocket.server.ServerEndpoint;
-import epf.naming.Naming;
-import epf.util.logging.LogManager;
+import jakarta.inject.Inject;
+import jakarta.nosql.column.ColumnTemplate;
 
 /**
- * @author PC
- *
+ * 
  */
-@ServerEndpoint(value = "/messaging/{tenant}/{service}/{path}")
 @ApplicationScoped
 public class Messaging {
-	
-	/**
-	 * 
-	 */
-	private static final Logger LOGGER = LogManager.getLogger(Messaging.class.getName());
-	
-	/**
-	 * 
-	 */
-	private final static String PATH = "path";
 
 	/**
-	 * @param tenant
-	 * @param service
-	 * @param path
-	 * @param session
+	 * 
 	 */
-	@OnOpen
-    public void onOpen(
-    		@PathParam(Naming.Management.TENANT)
-    		final String tenant,
-    		@PathParam("service")
-    		final String service,
-    		@PathParam(PATH) 
-    		final String path, 
-    		final Session session) {
-		LOGGER.log(Level.INFO, String.format("[Messaging.open][%s/%s/%s]session.id=%s", tenant, service, path, session.getId()));
-	}
+	@Inject
+    @Channel("epf-messaging-text-out")
+	transient Emitter<TextMessage> text;
+	
+	@Inject
+    @Channel("epf-messaging-bytes-out")
+	transient Emitter<ByteMessage> bytes;
 	
 	/**
-	 * @param tenant
-	 * @param service
-	 * @param path
+	 * 
+	 */
+	@Inject
+	transient ColumnTemplate column;
+	
+	/**
 	 * @param message
-	 * @param session
 	 */
-	@OnMessage
-    public void onMessage(
-    		@PathParam(Naming.Management.TENANT)
-    		final String tenant,
-    		@PathParam("service")
-    		final String service,
-    		@PathParam(PATH) 
-    		final String path,
-    		final String message, 
-    		final Session session) {
-		LOGGER.log(Level.INFO, String.format("[Messaging.message][%s/%s/%s]session.id=%s", tenant, service, path, session.getId()));
-		session.getOpenSessions().stream().forEach(ss -> {
-			ss.getAsyncRemote().sendText(message);
-		});
+	@Incoming("epf-messaging-text-in")
+	@RunOnVirtualThread
+	public void onMessage(final TextMessage message) {
+		column.insert(message);
+		text.send(message);
 	}
 	
 	/**
-	 * @param tenant
-	 * @param service
-	 * @param path
-	 * @param session
-	 * @param closeReason
+	 * @param message
 	 */
-	@OnClose
-    public void onClose(
-    		@PathParam(Naming.Management.TENANT)
-    		final String tenant,
-    		@PathParam("service")
-    		final String service,
-    		@PathParam(PATH) 
-    		final String path, 
-    		final Session session, 
-    		final CloseReason closeReason) {
-		LOGGER.log(Level.INFO, String.format("[Messaging.close][%s/%s/%s]session.id=%s", tenant, service, path, session.getId()));
-	}
-	
-	/**
-	 * @param tenant
-	 * @param service
-	 * @param path
-	 * @param session
-	 * @param throwable
-	 */
-	@OnError
-    public void onError(
-    		@PathParam(Naming.Management.TENANT)
-    		final String tenant,
-    		@PathParam("service")
-    		final String service,
-    		@PathParam(PATH) 
-    		final String path,
-    		final Session session, 
-    		final Throwable throwable) {
-		LOGGER.log(Level.WARNING, String.format("[Messaging.error][%s/%s/%s]session.id=%s", tenant, service, path, session.getId()), throwable);
+	@Incoming("epf-messaging-bytes-in")
+	@RunOnVirtualThread
+	public void onMessage(final ByteMessage message) {
+		column.insert(message);
+		bytes.send(message);
 	}
 }

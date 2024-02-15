@@ -1,60 +1,85 @@
-package epf.webapp.messaging;
+package epf.messaging.schema;
 
 import java.util.Map;
+import org.eclipse.jnosql.mapping.MappedSuperclass;
+import jakarta.nosql.Column;
+import jakarta.nosql.Id;
 
 /**
- * @author PC
- *
+ * 
  */
+@MappedSuperclass
 public class Message {
 
 	/**
 	 * 
 	 */
 	private Map<String, Object> properties;
+	
 	/**
 	 * 
 	 */
+	@Column
 	private String correlationID;
+	
 	/**
 	 * 
 	 */
+	@Column
 	private Integer deliveryMode;
+	
 	/**
 	 * 
 	 */
+	@Column
 	private Long deliveryTime;
+	
 	/**
 	 * 
 	 */
+	@Column
 	private String destination;
+	
 	/**
 	 * 
 	 */
+	@Column
 	private Long expiration;
+	
 	/**
 	 * 
 	 */
+	@Id("messageID")
 	private String messageID;
+	
 	/**
 	 * 
 	 */
-	private Integer priority = 4;
+	@Column
+	private Integer priority;
+	
 	/**
 	 * 
 	 */
+	@Column
 	private Boolean redelivered;
+	
 	/**
 	 * 
 	 */
+	@Column
 	private String replyTo;
+	
 	/**
 	 * 
 	 */
+	@Column
 	private Long timestamp;
+	
 	/**
 	 * 
 	 */
+	@Column
 	private String type;
 	
 	public Map<String, Object> getProperties() {

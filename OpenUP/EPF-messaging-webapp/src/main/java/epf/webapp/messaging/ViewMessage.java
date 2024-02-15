@@ -14,8 +14,6 @@ public class ViewMessage implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-
-	
 	/**
 	 * 
 	 */
@@ -46,7 +44,6 @@ public class ViewMessage implements Serializable {
 	 */
 	public ViewMessage(final FacesMessage message) {
 		this.message = message;
-		
 	}
 
 	public String getSeverity() {

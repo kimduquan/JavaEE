@@ -15,6 +15,8 @@ import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.eclipse.microprofile.jwt.Claims;
+import epf.messaging.schema.Message;
+import epf.messaging.schema.TextMessage;
 import epf.security.auth.core.StandardClaims;
 import epf.webapp.internal.ConfigUtil;
 import epf.webapp.naming.Naming.Messaging;

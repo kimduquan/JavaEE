@@ -29,11 +29,5 @@
 		    <artifactId>jnosql-mapping-api-core</artifactId>
 		    <scope>provided</scope>
 		</dependency>
-		
-		<dependency>
-	    	<groupId>openup</groupId>
-	    	<artifactId>EPF-naming</artifactId>
-	    	<version>${project.version}</version>
-	    </dependency>
     </dependencies>
 </project>

@@ -9,6 +9,7 @@ import javax.enterprise.event.Observes;
 import javax.faces.push.Push;
 import javax.faces.push.PushContext;
 import javax.inject.Inject;
+import epf.messaging.schema.TextMessage;
 import epf.webapp.internal.TokenPrincipal;
 import epf.webapp.naming.Naming;
 
