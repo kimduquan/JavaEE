@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -14,10 +13,8 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.eclipse.microprofile.jwt.Claims;
 import epf.messaging.schema.Message;
 import epf.messaging.schema.TextMessage;
-import epf.security.auth.core.StandardClaims;
 import epf.webapp.internal.ConfigUtil;
 import epf.webapp.naming.Naming.Messaging;
 
@@ -33,6 +30,11 @@ public class Session implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * 
+	 */
+	private List<String> sessions = new CopyOnWriteArrayList<>();
 
 	/**
 	 * 
@@ -59,12 +61,6 @@ public class Session implements Serializable {
 	 */
 	@Inject
 	private transient ConfigUtil config;
-	
-	/**
-	 * 
-	 */
-	@Inject
-	private transient PrincipalStore userStore;
 	
 	/**
 	 * 
@@ -106,19 +102,6 @@ public class Session implements Serializable {
 	 * @param message
 	 * @return
 	 */
-	public String getReplyTo(final Message message) {
-		final Map<String, Object> userInfo = userStore.getClaims(message.getReplyTo());
-		Object name = userInfo.get(StandardClaims.name.name());
-		if(name == null) {
-			name = userInfo.get(Claims.full_name.name());
-		}
-		return String.valueOf(name);
-	}
-	
-	/**
-	 * @param message
-	 * @return
-	 */
 	public String getDeliveryTime(final Message message) {
 		final Instant deliveryTime = Instant.ofEpochMilli(message.getDeliveryTime());
 		final Duration duration = Duration.between(deliveryTime, Instant.now());
@@ -137,12 +120,16 @@ public class Session implements Serializable {
 	}
 	
 	/**
-	 * @param message
-	 * @return
+	 * @param session
 	 */
-	public String getPicture(final Message message) {
-		final Map<String, Object> userInfo = userStore.getClaims(message.getReplyTo());
-		final Object picture = userInfo.get(StandardClaims.picture.name());
-		return picture != null ? (String)picture : "";
+	public void onOpen(final String session) {
+		sessions.add(session);
+	}
+	
+	/**
+	 * @param session
+	 */
+	public void onClose(final String session) {
+		sessions.remove(session);
 	}
 }

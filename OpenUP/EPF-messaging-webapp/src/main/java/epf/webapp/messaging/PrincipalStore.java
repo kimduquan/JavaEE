@@ -35,10 +35,9 @@ public class PrincipalStore {
 	 * @param user
 	 * @param otherUsers
 	 */
-	private void send(final String user, final Set<String> otherUsers) {
+	private void send(final Set<String> otherUsers) {
 		final TextMessage message = new TextMessage();
 		message.setDeliveryTime(Instant.now().toEpochMilli());
-		message.setReplyTo(user);
 		message.setText("");
 		context.send(message, otherUsers);
 	}
@@ -58,6 +57,6 @@ public class PrincipalStore {
 	public void putPrincipal(@Observes final TokenPrincipal principal) throws Exception {
 		final Set<String> otherUsers = principals.keySet();
 		principals.put(principal.getName(), principal.getClaims());
-		send(principal.getName(), otherUsers);
+		send(otherUsers);
 	}
 }
