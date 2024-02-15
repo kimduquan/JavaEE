@@ -28,6 +28,9 @@ public class Messaging implements HealthCheck {
     @Channel(Internal.MESSAGING_TEXT_OUT)
 	transient Emitter<TextMessage> text;
 	
+	/**
+	 * 
+	 */
 	@Inject
     @Channel(Internal.MESSAGING_BYTES_OUT)
 	transient Emitter<ByteMessage> bytes;

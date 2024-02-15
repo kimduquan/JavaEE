@@ -1,4 +1,4 @@
-package epf.gateway.messaging;
+package epf.gateway.stream;
 
 import java.net.URI;
 import java.util.Map;

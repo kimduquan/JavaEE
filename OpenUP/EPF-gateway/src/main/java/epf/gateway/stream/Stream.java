@@ -24,7 +24,6 @@ import javax.ws.rs.sse.SseEventSink;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.Readiness;
 import epf.gateway.Registry;
-import epf.gateway.messaging.Remote;
 import epf.naming.Naming;
 import epf.util.logging.LogManager;
 import epf.util.websocket.Client;
