@@ -384,6 +384,32 @@ public interface Naming {
 	     *
 	     */
 	    String DEFAULT_PATH = "_";
+	    
+	    /**
+	     * 
+	     */
+	    interface Internal {
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String MESSAGING_TEXT_IN = "epf-messaging-text-in";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String MESSAGING_TEXT_OUT = "epf-messaging-text-out";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String MESSAGING_BYTES_IN = "epf-messaging-bytes-in";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String MESSAGING_BYTES_OUT = "epf-messaging-bytes-out";
+	    }
 	}
 	
 	/**
