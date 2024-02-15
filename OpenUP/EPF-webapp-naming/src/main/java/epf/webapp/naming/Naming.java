@@ -52,6 +52,11 @@ public interface Naming {
 		 * 
 		 */
 		String SESSION = "epf_messaging_session";
+		
+		/**
+		 * 
+		 */
+		String APPLICATION = "epf_messaging_application";
 	}
 	
 	/**
