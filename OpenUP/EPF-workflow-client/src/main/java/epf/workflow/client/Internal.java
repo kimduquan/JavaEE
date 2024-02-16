@@ -267,28 +267,26 @@ public interface Internal {
 			final String state,
 			@QueryParam("version")
 			final String version,
-			@QueryParam("index")
-			final int index,
+			@QueryParam("at")
+			final int at,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
 			final URI instance,
 			final InputStream body) throws Exception;
 
 	/**
-	 * @param index
-	 * @param _synchronized
 	 * @param workflow
 	 * @param version
 	 * @param state
-	 * @param branchIndex
+	 * @param at
 	 * @return
 	 */
-	static Link branchLink(final int index, final boolean _synchronized, final String workflow, final Optional<String> version, final String state, final int branchIndex) {
+	static Link branchLink(final String workflow, final Optional<String> version, final String state, final int at) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}/branch");
 		if(version.isPresent()) {
 			uri = uri.queryParam("version", version.get());
 		}
-		uri = uri.queryParam("index", branchIndex);
-		return LinkUtil.build(uri, index, Naming.WORKFLOW, HttpMethod.PATCH, workflow, state);
+		uri = uri.queryParam("at", at);
+		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.PATCH, workflow, state);
 	}
 	
 	/**

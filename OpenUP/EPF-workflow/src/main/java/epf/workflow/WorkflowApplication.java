@@ -570,15 +570,6 @@ public class WorkflowApplication implements Workflow, Internal {
 		return compensateLinks.toArray(new Link[0]);
 	}
 	
-	private Link[] actionLinks(final WorkflowDefinition workflowDefinition, final String state, final List<ActionDefinition> actionDefinitions){
-		final List<Link> actionLinks = new ArrayList<>();
-		for(ActionDefinition actionDefinition : actionDefinitions) {
-			final Link actionLink = Internal.actionLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), state, actionDefinition.getName());
-			actionLinks.add(actionLink);
-		}
-		return actionLinks.toArray(new Link[0]);
-	}
-	
 	private ResponseBuilder batches(final ResponseBuilder response, final WorkflowDefinition workflowDefinition, final String state, final Mode mode, final int batchSize, final JsonArray inputCollection) {
 		final JsonArrayBuilder batches = Json.createArrayBuilder();
 		JsonArrayBuilder batch = null;
@@ -611,13 +602,21 @@ public class WorkflowApplication implements Workflow, Internal {
 		return partial(response, batchesArray, batchLinks.toArray(new Link[0]));
 	}
 	
-	private Link[] branchLinks(final WorkflowDefinition workflowDefinition, final String state, final List<ParallelStateBranch> branches) {
+	private ResponseBuilder branches(final ResponseBuilder response, final String workflow, final String version, final String state, final List<ParallelStateBranch> branches, final WorkflowData workflowData) {
+		final JsonArrayBuilder branchesArray = Json.createArrayBuilder();
 		final List<Link> branchLinks = new ArrayList<>();
-		for(int index = 0; index < branches.size(); index++) {
-			final Link branchLink = Internal.branchLink(index, false, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), state, index);
-			branchLinks.add(branchLink);
+		final LinkBuilder builder = new LinkBuilder();
+		int index = 0;
+		final Iterator<ParallelStateBranch> branchIt = branches.iterator();
+		while(branchIt.hasNext()) {
+			final Link branchLink = Internal.branchLink(workflow, Optional.ofNullable(version), state, index);
+			final Link link = builder.link(branchLink).at(response.getSize()).Synchronized(true).build();
+			branchLinks.add(link);
+			branchesArray.add(workflowData.getInput());
+			branchIt.next();
+			index++;
 		}
-		return branchLinks.toArray(new Link[0]);
+		return partial(response, branchesArray.build(), branchLinks.toArray(new Link[0]));
 	}
 	
 	private ResponseBuilder transitionOrEnd(final ResponseBuilder response, final WorkflowDefinition workflowDefinition, final String state, final StringOrObject<TransitionDefinition> transition, final BooleanOrObject<EndDefinition> end, final URI instance, final WorkflowData workflowData, final Link[] links) throws Exception {
@@ -831,16 +830,8 @@ public class WorkflowApplication implements Workflow, Internal {
 	}
 	
 	private ResponseBuilder transitionParallelState(final ResponseBuilder response, final WorkflowDefinition workflowDefinition, final ParallelState parallelState, final URI instance, final WorkflowData workflowData) throws Exception {
-		final Link[] branchLinks = branchLinks(workflowDefinition, parallelState.getName(), parallelState.getBranches());
-		switch(parallelState.getCompletionType()) {
-			case allOf:
-				break;
-			case atLeast:
-				break;
-			default:
-				break;
-		}
-		return transitionOrEnd(response, workflowDefinition, parallelState.getName(), parallelState.getTransition(), parallelState.getEnd(), instance, workflowData, branchLinks);
+		branches(response, workflowDefinition.getId(), workflowDefinition.getVersion(), parallelState.getName(), parallelState.getBranches(), workflowData);
+		return transitionOrEnd(response, workflowDefinition, parallelState.getName(), parallelState.getTransition(), parallelState.getEnd(), instance, workflowData, new Link[0]);
 	}
 	
 	private ResponseBuilder transitionInjectState(final ResponseBuilder response, final WorkflowDefinition workflowDefinition, final InjectState injectState, final URI instance, final WorkflowData workflowData) throws Exception {
@@ -944,11 +935,11 @@ public class WorkflowApplication implements Workflow, Internal {
 		}
 		final boolean exclusive = !Boolean.FALSE.equals(eventState.isExclusive());
 		boolean transition = exclusive ? any : all;
-		final Link[] actionLinks = actionLinks(workflowDefinition, eventState.getName(), actions);
+		actions(response, workflowDefinition.getId(), workflowDefinition.getVersion(), eventState.getName(), actions, workflowData);
 		if(transition) {
-			return transitionOrEnd(response, workflowDefinition, eventState.getName(), eventState.getTransition(), eventState.getEnd(), instance, workflowData, actionLinks);
+			return transitionOrEnd(response, workflowDefinition, eventState.getName(), eventState.getTransition(), eventState.getEnd(), instance, workflowData, new Link[0]);
 		}
-		return partial(response, actionDatas.build(), actionLinks);
+		return response;
 	}
 	
 	private ResponseBuilder consumesLink(final ResponseBuilder response, final Event event, final Map<String, Object> ext) throws Exception {
@@ -1211,13 +1202,14 @@ public class WorkflowApplication implements Workflow, Internal {
 	@LRA(value = Type.MANDATORY, end = false)
 	@RunOnVirtualThread
 	@Override
-	public Response branch(final String workflow, final String state, final String version, final int index, final URI instance, final InputStream body) throws Exception {
+	public Response branch(final String workflow, final String state, final String version, final int at, final URI instance, final InputStream body) throws Exception {
 		final WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
 		final ParallelState parallelState = (ParallelState) getState(workflowDefinition, state);
-		final ParallelStateBranch branch = parallelState.getBranches().get(index);
-		final Link[] actionLinks = actionLinks(workflowDefinition, state, branch.getActions());
+		final ParallelStateBranch branch = parallelState.getBranches().get(at);
 		final ResponseBuilder response = new ResponseBuilder();
-		return output(instance, response.links(actionLinks), body);
+		final WorkflowData workflowData = input(body);
+		actions(response, workflow, version, state, branch.getActions(), workflowData);
+		return output(instance, response, workflowData);
 	}
 
 	@RunOnVirtualThread
