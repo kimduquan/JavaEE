@@ -94,7 +94,7 @@ public class Registry implements HealthCheck  {
 	/**
 	 * @param remotes
 	 */
-	@Incoming(Naming.Registry.REGISTRY_REMOTES)
+	@Incoming(Naming.Registry.EPF_REGISTRY_REMOTES)
 	@RunOnVirtualThread
 	public void setRemotes(final Map<String, URI> remotes) {
 		this.remotes.putAll(remotes);

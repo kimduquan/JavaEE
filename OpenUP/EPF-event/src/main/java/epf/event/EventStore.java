@@ -13,6 +13,9 @@ import org.eclipse.jnosql.communication.column.ColumnEntity;
 import org.eclipse.jnosql.communication.column.ColumnManager;
 import org.eclipse.jnosql.communication.column.ColumnQuery;
 import org.eclipse.jnosql.communication.column.ColumnQuery.ColumnWhere;
+import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.eclipse.microprofile.reactive.messaging.Emitter;
+import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.jnosql.communication.column.Columns;
 import epf.event.client.Event;
 import epf.naming.Naming;
@@ -44,6 +47,13 @@ public class EventStore implements Event {
 	 */
 	@Inject
 	transient ColumnManager manager;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	@Channel(Naming.Event.EPF_EVENT_PRODUCES)
+	transient Emitter<Map<String, Object>> produces;
 	
 	private Map<String, Object> entityColumns(final ColumnEntity entity) {
 		final Map<String, Object> map = new HashMap<>();
@@ -139,9 +149,25 @@ public class EventStore implements Event {
 	public Response produces(final Map<String, Object> map) throws Exception {
 		final Map<String, Object> ext = new HashMap<>();
 		final epf.event.schema.Event event = epf.event.schema.Event.event(map, ext);
-		final List<Map<String, Object>> eventDatas = new ArrayList<>();
-		final List<Link> eventLinks = new ArrayList<>();
-		observes(event, ext, eventDatas, eventLinks);
-		return Response.status(Status.PARTIAL_CONTENT).entity(eventDatas).links(eventLinks.toArray(new Link[0])).build();
+		final List<Map<String, Object>> produceEvents = new ArrayList<>();
+		final List<Link> produceEventLinks = new ArrayList<>();
+		observes(event, ext, produceEvents, produceEventLinks);
+		return Response.status(Status.PARTIAL_CONTENT).entity(produceEvents).links(produceEventLinks.toArray(new Link[0])).build();
 	}
+	
+	/**
+	 * @param map
+	 * @throws Exception
+	 */
+	@Incoming(Naming.Event.EPF_EVENT_CONSUMES)
+	@RunOnVirtualThread
+	public void consume(final Map<String, Object> map) throws Exception {
+		final Map<String, Object> ext = new HashMap<>();
+		final epf.event.schema.Event event = epf.event.schema.Event.event(map, ext);
+		final List<Map<String, Object>> produceEvents = new ArrayList<>();
+		final List<Link> produceEventLinks = new ArrayList<>();
+		observes(event, ext, produceEvents, produceEventLinks);
+		produceEvents.forEach(produces::send);
+	}
+	
 }

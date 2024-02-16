@@ -39,20 +39,20 @@ public class Application implements HealthCheck {
 	 * 
 	 */
 	@Inject
-    @Channel(Internal.MESSAGING_TEXT_IN)
+    @Channel(Internal.EPF_MESSAGING_TEXT_IN)
 	transient Emitter<Message<Object>> text;
 	
 	/**
 	 * 
 	 */
 	@Inject
-    @Channel(Internal.MESSAGING_BYTES_IN)
+    @Channel(Internal.EPF_MESSAGING_BYTES_IN)
 	transient Emitter<Message<Object>> bytes;
 	
 	/**
 	 * @param message
 	 */
-	@Incoming(Internal.MESSAGING_TEXT_OUT)
+	@Incoming(Internal.EPF_MESSAGING_TEXT_OUT)
 	@RunOnVirtualThread
 	public CompletionStage<Void> onTextMessage(final Message<Object> message) {
 		return CompletableFuture.runAsync(() -> {
@@ -70,7 +70,7 @@ public class Application implements HealthCheck {
 	/**
 	 * @param message
 	 */
-	@Incoming(Internal.MESSAGING_BYTES_OUT)
+	@Incoming(Internal.EPF_MESSAGING_BYTES_OUT)
 	@RunOnVirtualThread
 	public CompletionStage<Void> onBytesMessage(final Message<Object> message) {
 		return CompletableFuture.runAsync(() -> {
@@ -126,10 +126,10 @@ public class Application implements HealthCheck {
 	@Override
 	public HealthCheckResponse call() {
 		if(text.isCancelled()) {
-			return HealthCheckResponse.down(Internal.MESSAGING_TEXT_IN);
+			return HealthCheckResponse.down(Internal.EPF_MESSAGING_TEXT_IN);
 		}
 		if(bytes.isCancelled()) {
-			return HealthCheckResponse.down(Internal.MESSAGING_BYTES_IN);
+			return HealthCheckResponse.down(Internal.EPF_MESSAGING_BYTES_IN);
 		}
 		return HealthCheckResponse.up("epf-gateway-messaging");
 	}

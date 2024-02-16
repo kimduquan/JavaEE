@@ -160,6 +160,16 @@ public interface Naming {
 		/**
 		 * 
 		 */
+		String EPF_EVENT_CONSUMES = "epf-event-consumes";
+		
+		/**
+		 * 
+		 */
+		String EPF_EVENT_PRODUCES = "epf-event-produces";
+		
+		/**
+		 * 
+		 */
 		interface Schema {
 			
 			/**
@@ -393,22 +403,22 @@ public interface Naming {
 	    	/**
 	    	 * 
 	    	 */
-	    	String MESSAGING_TEXT_IN = "epf-messaging-text-in";
+	    	String EPF_MESSAGING_TEXT_IN = "epf-messaging-text-in";
 	    	
 	    	/**
 	    	 * 
 	    	 */
-	    	String MESSAGING_TEXT_OUT = "epf-messaging-text-out";
+	    	String EPF_MESSAGING_TEXT_OUT = "epf-messaging-text-out";
 	    	
 	    	/**
 	    	 * 
 	    	 */
-	    	String MESSAGING_BYTES_IN = "epf-messaging-bytes-in";
+	    	String EPF_MESSAGING_BYTES_IN = "epf-messaging-bytes-in";
 	    	
 	    	/**
 	    	 * 
 	    	 */
-	    	String MESSAGING_BYTES_OUT = "epf-messaging-bytes-out";
+	    	String EPF_MESSAGING_BYTES_OUT = "epf-messaging-bytes-out";
 	    }
 	}
 	
@@ -636,7 +646,7 @@ public interface Naming {
     	/**
     	 * 
     	 */
-    	String REGISTRY_REMOTES = "epf-registry-remotes";
+    	String EPF_REGISTRY_REMOTES = "epf-registry-remotes";
 	    
 	    /**
 	     * @author PC

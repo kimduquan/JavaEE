@@ -52,7 +52,7 @@ public class Registry implements epf.registry.client.Registry {
 	 * 
 	 */
 	@Inject
-	@Channel(Naming.Registry.REGISTRY_REMOTES)
+	@Channel(Naming.Registry.EPF_REGISTRY_REMOTES)
 	transient Emitter<Map<String, URI>> emitter;
 	
 	/**
