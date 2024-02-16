@@ -1,6 +1,5 @@
-package epf.workflow.state.util;
+package epf.workflow.util;
 
-import epf.workflow.util.ELUtil;
 import jakarta.json.Json;
 import jakarta.json.JsonValue;
 

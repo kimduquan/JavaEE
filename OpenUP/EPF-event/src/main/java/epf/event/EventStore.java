@@ -74,13 +74,9 @@ public class EventStore implements Event {
 		return where;
 	}
 	
-	private Link eventLink(final ColumnEntity eventEntity, final int index) throws Exception {
-		final URI source = new URI(eventEntity.find(Schema.SOURCE).get().get().toString());
-		final String rel = source.getHost();
-		final URI uri = new URI(source.getRawPath() + source.getRawQuery());
-		final String type = eventEntity.find(Schema.TYPE).get().get().toString();
-		final Link eventLink = Link.fromUri(uri).type(type).rel(rel).title("#" + index).build();
-		return eventLink;
+	private Link eventLink(final epf.event.schema.Event event, final int index) throws Exception {
+		final URI source = new URI(event.getSource());
+		return Event.getEventSource(source).title("#" + index).build();
 	}
 	
 	private ColumnEntity eventEntity(final epf.event.schema.Event event, final List<Column> columns) {
@@ -127,7 +123,7 @@ public class EventStore implements Event {
 		int index = 0;
 		for(ColumnEntity eventEntity : updatedEntities) {
 			final Map<String, Object> eventData = entityColumns(eventEntity);
-			final Link eventLink = eventLink(eventEntity, index);
+			final Link eventLink = eventLink(event, index);
 			eventDatas.add(eventData);
 			eventLinks.add(eventLink);
 		}

@@ -1,5 +1,6 @@
 package epf.event.client;
 
+import java.net.URI;
 import java.util.Map;
 import epf.naming.Naming;
 import jakarta.ws.rs.Consumes;
@@ -53,5 +54,32 @@ public interface Event {
 	static Link producesLink() {
 		Builder builder = Link.fromPath(Naming.EVENT).rel(Naming.EVENT).type(HttpMethod.PUT);
 		return builder.build();
+	}
+	
+	/**
+	 * 
+	 */
+	String EPF_EVENT_SOURCE_URI_FORMAT = "%s://%s/%s";
+	
+	/**
+	 * @param source
+	 * @return
+	 * @throws Exception
+	 */
+	static URI getEventSource(final Link source) throws Exception {
+		final String uri = String.format(EPF_EVENT_SOURCE_URI_FORMAT, source.getType(), source.getRel(), source.getUri().toString());
+		return new URI(uri);
+	}
+	
+	/**
+	 * @param source
+	 * @return
+	 * @throws Exception
+	 */
+	static Builder getEventSource(final URI source) throws Exception {
+		final String type = source.getScheme();
+		final String rel = source.getHost();
+		final String path = source.getPath() + source.getQuery() + source.getFragment();
+		return Link.fromPath(path).rel(rel).type(type);
 	}
 }

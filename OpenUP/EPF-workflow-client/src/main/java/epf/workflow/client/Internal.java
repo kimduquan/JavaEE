@@ -163,7 +163,31 @@ public interface Internal {
 	@Path("{workflow}/{state}/events")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	Response events(
+	Response observes(
+			@PathParam("workflow")
+			final String workflow, 
+			@PathParam("state")
+			final String state,
+			@QueryParam("version")
+			final String version,
+			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
+			final URI instance,
+			final Map<String, Object> map) throws Exception;
+	
+	/**
+	 * @param workflow
+	 * @param state
+	 * @param version
+	 * @param instance
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	@PATCH
+	@Path("{workflow}/{state}/callback")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	Response callback(
 			@PathParam("workflow")
 			final String workflow, 
 			@PathParam("state")
@@ -243,6 +267,35 @@ public interface Internal {
 			uri = uri.queryParam("version", version.get());
 		}
 		uri = uri.queryParam("index", branchIndex);
+		return LinkUtil.build(uri, index, Naming.WORKFLOW, HttpMethod.PATCH, workflow, state);
+	}
+	
+	/**
+	 * @param workflow
+	 * @param state
+	 * @param version
+	 * @return
+	 */
+	static Link observesLink(final int index, final String workflow, final String state, final Optional<String> version) {
+		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}/events");
+		if(version.isPresent()) {
+			uri = uri.queryParam("version", version.get());
+		}
+		return LinkUtil.build(uri, index, Naming.WORKFLOW, HttpMethod.PATCH, workflow, state);
+	}
+	
+	/**
+	 * @param index
+	 * @param workflow
+	 * @param state
+	 * @param version
+	 * @return
+	 */
+	static Link callbackLink(final int index, final String workflow, final String state, final Optional<String> version) {
+		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}/callback");
+		if(version.isPresent()) {
+			uri = uri.queryParam("version", version.get());
+		}
 		return LinkUtil.build(uri, index, Naming.WORKFLOW, HttpMethod.PATCH, workflow, state);
 	}
 
