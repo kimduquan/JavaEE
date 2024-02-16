@@ -6,6 +6,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -419,24 +420,12 @@ public class WorkflowApplication implements Workflow, Internal {
 		return response.header(LRA.LRA_HTTP_CONTEXT_HEADER, instance).build();
 	}
 	
-	private ResponseBuilder partial(final ResponseBuilder response, final List<?> list, final List<Link> links) {
-		final LinkBuilder linkBuilder = new LinkBuilder();
-		final List<Link> partialLinks = new ArrayList<>();
-		for(Link link : links) {
-			final Link partialLink = linkBuilder.link(link).at(response.getSize()).build();
-			partialLinks.add(partialLink);
-		}
-		return response.status(Status.PARTIAL_CONTENT).entity(list).links(partialLinks.toArray(new Link[0]));
+	private ResponseBuilder partial(final ResponseBuilder response, final List<?> list, final Link[] links) {
+		return response.status(Status.PARTIAL_CONTENT).entity(list).links(links);
 	}
 	
 	private ResponseBuilder partial(final ResponseBuilder response, final JsonArray array, final Link[] links) {
-		final LinkBuilder linkBuilder = new LinkBuilder();
-		final List<Link> partialLinks = new ArrayList<>();
-		for(Link link : links) {
-			final Link partialLink = linkBuilder.link(link).at(response.getSize()).build();
-			partialLinks.add(partialLink);
-		}
-		return response.status(Status.PARTIAL_CONTENT).entity(array.toString()).links(partialLinks.toArray(new Link[0]));
+		return response.status(Status.PARTIAL_CONTENT).entity(array.toString()).links(links);
 	}
 	
 	private ResponseBuilder function(final ResponseBuilder response, final WorkflowDefinition workflowDefinition, final ActionDefinition actionDefinition, final FunctionDefinition functionDefinition, final WorkflowData workflowData) throws Exception {
@@ -515,14 +504,14 @@ public class WorkflowApplication implements Workflow, Internal {
 		return response;
 	}
 	
-	private JsonValue filterActionDataOutput(final ActionDataFilters actionDataFilters, final WorkflowData workflowData, final WorkflowData actionData) throws Exception {
+	private JsonValue filterActionDataOutput(final ActionDataFilters actionDataFilters, final WorkflowData workflowData, final JsonValue actionOutput) throws Exception {
 		JsonValue output = workflowData.getOutput();
 		if(actionDataFilters != null && actionDataFilters.isUseResults() && actionDataFilters.getResults() != null) {
 			if(actionDataFilters.getToStateData() != null) {
-				output = StateUtil.mergeStateDataOutput(actionDataFilters.getToStateData(), workflowData.getOutput(), actionData.getOutput());
+				output = StateUtil.mergeStateDataOutput(actionDataFilters.getToStateData(), workflowData.getOutput(), actionOutput);
 			}
 			else {
-				output = StateUtil.mergeStateDataOutput(workflowData.getOutput(), actionData.getOutput());
+				output = StateUtil.mergeStateDataOutput(workflowData.getOutput(), actionOutput);
 			}
 		}
 		return output;
@@ -590,33 +579,36 @@ public class WorkflowApplication implements Workflow, Internal {
 		return actionLinks.toArray(new Link[0]);
 	}
 	
-	private Link[] iterationLinks(final WorkflowDefinition workflowDefinition, final String state, final Mode mode, final int batchSize, final JsonArray inputCollection) {
-		final List<Link> iterationLinks = new ArrayList<>();
-		switch(mode) {
-			case parallel:
-				int index = 0;
-				while(true) {
-					final List<JsonValue> batchInputs = inputCollection.subList(index, Math.min(index + batchSize, inputCollection.size()));
-					if(batchInputs.isEmpty()) {
-						break;
-					}
-					for(int i = 0; i < batchInputs.size(); i++) {
-						final Link iterationLink = Internal.iterationLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), state, i);
-						iterationLinks.add(iterationLink);
-					}
-					index += batchInputs.size();
+	private ResponseBuilder batches(final ResponseBuilder response, final WorkflowDefinition workflowDefinition, final String state, final Mode mode, final int batchSize, final JsonArray inputCollection) {
+		final JsonArrayBuilder batches = Json.createArrayBuilder();
+		JsonArrayBuilder batch = null;
+		final Iterator<JsonValue> iterator = inputCollection.iterator();
+		int index = 0;
+		while(iterator.hasNext()) {
+			final JsonValue value = iterator.next();
+			if(index % batchSize == 0) {
+				if(index > 0) {
+					batches.add(batch);
 				}
-				break;
-			case sequential:
-				for(int i = 0; i < inputCollection.size(); i++) {
-					final Link iterationLink = Internal.iterationLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), state, i);
-					iterationLinks.add(iterationLink);
-				}
-				break;
-			default:
-				break;
+				batch = Json.createArrayBuilder();
+			}
+			batch.add(value);
+			index++;
 		}
-		return iterationLinks.toArray(new Link[0]);
+		final Link batchLink = Internal.batchLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), state);
+		final LinkBuilder builder = new LinkBuilder();
+		final boolean synchronized_ = Mode.sequential.equals(mode);
+		final JsonArray batchesArray = batches.build();
+		final Iterator<JsonValue> batchIt = batchesArray.iterator();
+		final List<Link> batchLinks = new ArrayList<>();
+		index = 0;
+		while(batchIt.hasNext()) {
+			final Link link = builder.link(batchLink).at(response.getSize()).Synchronized(synchronized_).build();
+			batchLinks.add(link);
+			batchIt.next();
+			index++;
+		}
+		return partial(response, batchesArray, batchLinks.toArray(new Link[0]));
 	}
 	
 	private Link[] branchLinks(final WorkflowDefinition workflowDefinition, final String state, final List<ParallelStateBranch> branches) {
@@ -793,12 +785,12 @@ public class WorkflowApplication implements Workflow, Internal {
 			}
 		}
 		useData.set(events.isEmpty());
-		return partial(response, events, eventLinks);
+		return partial(response, events, eventLinks.toArray(new Link[0]));
 	}
 	
 	private ResponseBuilder transitionOperationState(final ResponseBuilder response, final WorkflowDefinition workflowDefinition, final OperationState operationState, final URI instance, final WorkflowData workflowData) throws Exception {
-		final Link[] actionLinks = actionLinks(workflowDefinition, operationState.getName(), operationState.getActions());
-		return transitionOrEnd(response, workflowDefinition, operationState.getName(), operationState.getTransition(), operationState.getEnd(), instance, workflowData, actionLinks);
+		actions(response, workflowDefinition.getId(), workflowDefinition.getVersion(), operationState.getName(), operationState.getActions(), workflowData);
+		return transitionOrEnd(response, workflowDefinition, operationState.getName(), operationState.getTransition(), operationState.getEnd(), instance, workflowData, new Link[0]);
 	}
 	
 	private ResponseBuilder transitionSwitchState(final ResponseBuilder response, final WorkflowDefinition workflowDefinition, final SwitchState switchState, final URI instance, final WorkflowData workflowData) throws Exception {
@@ -858,7 +850,7 @@ public class WorkflowApplication implements Workflow, Internal {
 	}
 	
 	private ResponseBuilder transitionForEachState(final ResponseBuilder response, final WorkflowDefinition workflowDefinition, final ForEachState forEachState, final URI instance, final WorkflowData workflowData) throws Exception {
-		final JsonArray inputCollection = ELUtil.getValue(forEachState.getInputCollection(), workflowData.getOutput()).asJsonArray();
+		final JsonArray inputCollection = ELUtil.getValue(forEachState.getInputCollection(), workflowData.getInput()).asJsonArray();
 		int batchSize = inputCollection.size();
 		if(forEachState.getBatchSize().isLeft()) {
 			batchSize = Integer.valueOf(forEachState.getBatchSize().getLeft());
@@ -866,8 +858,8 @@ public class WorkflowApplication implements Workflow, Internal {
 		else if(forEachState.getBatchSize().isRight()) {
 			batchSize = forEachState.getBatchSize().getRight().intValue();
 		}
-		final Link[] iterationLinks = iterationLinks(workflowDefinition, forEachState.getName(), forEachState.getMode(), batchSize, inputCollection);
-		return transitionOrEnd(response, workflowDefinition, forEachState.getName(), forEachState.getTransition(), forEachState.getEnd(), instance, workflowData, iterationLinks);
+		batches(response, workflowDefinition, forEachState.getName(), forEachState.getMode(), batchSize, inputCollection);
+		return transitionOrEnd(response, workflowDefinition, forEachState.getName(), forEachState.getTransition(), forEachState.getEnd(), instance, workflowData, new Link[0]);
 	}
 	
 	private WorkflowDefinition getWorkflowDefinition(final String workflow, final String version) {
@@ -1163,14 +1155,11 @@ public class WorkflowApplication implements Workflow, Internal {
 		final WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
 		final State currentState = getState(workflowDefinition, state);
 		final ActionDefinition actionDefinition = getActionDefinition(currentState, action);
-		final WorkflowData workflowData = input(body);
-		final WorkflowData actionData = new WorkflowData();
-		actionData.setInput(filterActionDataInput(actionDefinition.getActionDataFilter(), workflowData.getInput()));
-		actionData.setOutput(actionData.getInput());
+		final WorkflowData actionData = input(body);
 		final ResponseBuilder response = new ResponseBuilder();
 		action(response, workflowDefinition, actionDefinition, actionData);
-		workflowData.setOutput(filterActionDataOutput(actionDefinition.getActionDataFilter(), workflowData, actionData));
-		return output(instance, response, workflowData);
+		actionData.setOutput(filterActionDataOutput(actionDefinition.getActionDataFilter(), actionData, actionData.getOutput()));
+		return output(instance, response, actionData);
 	}
 	
 	@RunOnVirtualThread
@@ -1192,29 +1181,31 @@ public class WorkflowApplication implements Workflow, Internal {
 		return response.build();
 	}
 	
+	final ResponseBuilder actions(final ResponseBuilder response, final String workflow, final String state, final String version, final List<ActionDefinition> actionDefinitions, final WorkflowData workflowData) throws Exception {
+		final JsonArrayBuilder array = Json.createArrayBuilder();
+		final List<Link> actionLinks = new ArrayList<>();
+		final LinkBuilder builder = new LinkBuilder();
+		for(ActionDefinition actionDefinition : actionDefinitions) {
+			final JsonValue actionData = filterActionDataInput(actionDefinition.getActionDataFilter(), workflowData.getInput());
+			final Link actionLink = Internal.actionLink(workflow, Optional.ofNullable(version), state, actionDefinition.getName());
+			final Link link = builder.link(actionLink).at(response.getSize()).build();
+			actionLinks.add(link);
+			array.add(actionData);
+		}
+		return partial(response, array.build(), actionLinks.toArray(new Link[0]));
+	}
+	
 	@LRA(value = Type.MANDATORY, end = false)
 	@RunOnVirtualThread
 	@Override
-	public Response iteration(final String workflow, final String state, final String version, final int next, final URI instance, final InputStream body) throws Exception {
+	public Response iteration(final String workflow, final String state, final String version, final URI instance, final InputStream body) throws Exception {
+		final WorkflowData workflowData = input(body);
 		final WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
 		final ForEachState forEachState = (ForEachState) getState(workflowDefinition, state);
-		final JsonValue input = JsonUtil.readValue(body);
-		final JsonArray inputCollection = ELUtil.getValue(forEachState.getInputCollection(), input).asJsonArray();
-		if(next > 0) {
-			JsonValue outputCollection = ELUtil.getValue(forEachState.getOutputCollection(), input);
-			if(outputCollection == null) {
-				outputCollection = Json.createArrayBuilder().build();
-			}
-			outputCollection.asJsonArray().add(inputCollection.get(next - 1));
-			ELUtil.setValue(forEachState.getInputCollection(), input, outputCollection);
-		}
-		final JsonValue iterationParam = Json.createObjectBuilder().add(forEachState.getIterationParam(), inputCollection.get(next)).build();
-		final WorkflowData workflowData = new WorkflowData();
-		workflowData.setInput(input);
-		workflowData.setOutput(iterationParam);
-		final Link[] actionLinks = actionLinks(workflowDefinition, state, forEachState.getActions());
-		final ResponseBuilder response = new ResponseBuilder();
-		return output(instance, response.links(actionLinks), workflowData);
+		final List<ActionDefinition> actionDefinitions = forEachState.getActions();
+		final ResponseBuilder response = new ResponseBuilder();;
+		actions(response, workflow, version, state, actionDefinitions, workflowData);
+		return output(instance, response);
 	}
 	
 	@LRA(value = Type.MANDATORY, end = false)
@@ -1231,9 +1222,41 @@ public class WorkflowApplication implements Workflow, Internal {
 
 	@RunOnVirtualThread
 	@Override
-	public Response callback(final String workflow, final String state, final String version, final URI instance, final Map<String, Object> map)
-			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public Response callback(final String workflow, final String state, final String version, final URI instance, final Map<String, Object> map) throws Exception {
+		final WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
+		final CallbackState callbackState = (CallbackState) getState(workflowDefinition, state);
+		final ActionDefinition actionDefinition = callbackState.getAction();
+		final Map<String, Object> ext = new HashMap<>();
+		final epf.event.schema.Event event = epf.event.schema.Event.event(map, ext);
+		final JsonValue input = JsonUtil.toJsonValue(event.getData());
+		final WorkflowData workflowData = new WorkflowData();
+		workflowData.setInput(input);
+		workflowData.setOutput(input);
+		final ResponseBuilder response = new ResponseBuilder();
+		action(response, workflowDefinition, actionDefinition, workflowData);
+		return output(instance, response);
+	}
+	
+	private ResponseBuilder iterations(final ResponseBuilder response, final String workflow, final String version, final String state, final boolean synchronized_, final JsonArray inputCollection) {
+		final Link iterationLink = Internal.iterationLink(workflow, Optional.ofNullable(version), state);
+		final LinkBuilder builder = new LinkBuilder();
+		final Iterator<JsonValue> iterator = inputCollection.iterator();
+		final List<Link> iterationLinks = new ArrayList<>();
+		while(iterator.hasNext()) {
+			final Link link = builder.link(iterationLink).at(response.getSize()).Synchronized(synchronized_).build();
+			iterationLinks.add(link);
+			iterator.next();
+		}
+		return partial(response, inputCollection, iterationLinks.toArray(new Link[0]));
+	}
+
+	@LRA(value = Type.MANDATORY, end = false)
+	@RunOnVirtualThread
+	@Override
+	public Response batch(final String workflow, final String state, final String version, final URI instance, final InputStream body) throws Exception {
+		final ResponseBuilder response = new ResponseBuilder();
+		final JsonArray inputCollection = JsonUtil.readArray(body);
+		iterations(response, workflow, version, state, false, inputCollection);
+		return output(instance, response);
 	}
 }

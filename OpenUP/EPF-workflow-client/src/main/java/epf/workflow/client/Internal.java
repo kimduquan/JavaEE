@@ -202,7 +202,30 @@ public interface Internal {
 	 * @param workflow
 	 * @param state
 	 * @param version
-	 * @param next
+	 * @param instance
+	 * @param body
+	 * @return
+	 * @throws Exception
+	 */
+	@PATCH
+	@Path("{workflow}/{state}/batch")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	Response batch(
+			@PathParam("workflow")
+			final String workflow, 
+			@PathParam("state")
+			final String state,
+			@QueryParam("version")
+			final String version,
+			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
+			final URI instance,
+			final InputStream body) throws Exception;
+	
+	/**
+	 * @param workflow
+	 * @param state
+	 * @param version
 	 * @param instance
 	 * @param body
 	 * @return
@@ -219,8 +242,6 @@ public interface Internal {
 			final String state,
 			@QueryParam("version")
 			final String version,
-			@QueryParam("next")
-			final int next,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
 			final URI instance,
 			final InputStream body) throws Exception;
@@ -298,20 +319,26 @@ public interface Internal {
 		}
 		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.PATCH, workflow, state);
 	}
-
+	
 	/**
 	 * @param workflow
 	 * @param version
 	 * @param state
-	 * @param next
 	 * @return
 	 */
-	static Link iterationLink(final String workflow, final Optional<String> version, final String state, final int next) {
+	static Link batchLink(final String workflow, final Optional<String> version, final String state) {
+		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}/batch");
+		if(version.isPresent()) {
+			uri = uri.queryParam("version", version.get());
+		}
+		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.PATCH, workflow, state);
+	}
+
+	static Link iterationLink(final String workflow, final Optional<String> version, final String state) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}/iteration");
 		if(version.isPresent()) {
 			uri = uri.queryParam("version", version.get());
 		}
-		uri = uri.queryParam("next", next);
 		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.PATCH, workflow, state);
 	}
 
