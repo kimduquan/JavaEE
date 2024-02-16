@@ -14,10 +14,12 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
+import org.eclipse.microprofile.reactive.messaging.Incoming;
 import epf.client.internal.ClientQueue;
 import epf.naming.Naming;
 import epf.util.MapUtil;
 import epf.util.logging.LogManager;
+import io.smallrye.common.annotation.RunOnVirtualThread;
 
 /**
  * @author PC
@@ -87,6 +89,15 @@ public class Registry implements HealthCheck  {
 	 */
 	public Optional<URI> lookup(final String name) {
 		return MapUtil.get(remotes, name);
+	}
+	
+	/**
+	 * @param remotes
+	 */
+	@Incoming(Naming.Registry.REGISTRY)
+	@RunOnVirtualThread
+	public void setRemotes(final Map<String, URI> remotes) {
+		this.remotes.putAll(remotes);
 	}
 
 	@Override

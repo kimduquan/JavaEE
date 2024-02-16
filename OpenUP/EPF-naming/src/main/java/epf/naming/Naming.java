@@ -632,6 +632,11 @@ public interface Naming {
 	     * 
 	     */
 	    String REGISTRY_URL = "epf.registry.url";
+    	
+    	/**
+    	 * 
+    	 */
+    	String REGISTRY = "epf-registry";
 	    
 	    /**
 	     * @author PC

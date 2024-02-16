@@ -2,6 +2,7 @@ package epf.registry;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,6 +20,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.eclipse.microprofile.reactive.messaging.Emitter;
 import epf.naming.Naming;
 import epf.util.logging.LogManager;
 
@@ -44,6 +47,13 @@ public class Registry implements epf.registry.client.Registry {
 	 * 
 	 */
 	private transient final Map<String, Map<String, URI>> remoteVersions = new ConcurrentHashMap<>();
+	
+	/**
+	 * 
+	 */
+	@Inject
+	@Channel(Naming.Registry.REGISTRY)
+	transient Emitter<Map<String, URI>> emitter;
 	
 	/**
 	 * 
@@ -221,11 +231,18 @@ public class Registry implements epf.registry.client.Registry {
 			remotes.forEach((name, url) -> {
 				LOGGER.info(String.format("%s=%s", name, url));
 			});
+			sendRemotes();
 		} 
 		catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "postConstruct", e);
 		}
 		
+	}
+	
+	private void sendRemotes() {
+		final Map<String, URI> map = new HashMap<>();
+		map.putAll(this.remotes);
+		emitter.send(map);
 	}
 	
 	/**
@@ -322,6 +339,7 @@ public class Registry implements epf.registry.client.Registry {
 	@Override
 	public void bind(final String name, final URI remote, final String version) {
 		getRemotes(version).put(name, remote);
+		sendRemotes();
 	}
 
 	@Override
@@ -358,11 +376,13 @@ public class Registry implements epf.registry.client.Registry {
 		getRemotes(version).computeIfPresent(name, (key, value) -> {
 			return remote;
 		});
+		sendRemotes();
 	}
 
 	@Override
 	public void unbind(final String name, final String version) {
 		getRemotes(version).remove(name);
+		sendRemotes();
 	}
 
 }
