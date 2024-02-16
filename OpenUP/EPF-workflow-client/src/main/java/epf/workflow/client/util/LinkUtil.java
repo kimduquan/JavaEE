@@ -45,6 +45,17 @@ public interface LinkUtil {
 	
 	/**
 	 * @param builder
+	 * @param service
+	 * @param method
+	 * @param values
+	 * @return
+	 */
+	static Link build(final UriBuilder builder, final String service, final String method, final Object...values) {
+		return Link.fromUriBuilder(builder).type(method).rel(service).build(values);
+	}
+	
+	/**
+	 * @param builder
 	 * @param index
 	 * @param isFor
 	 * @param isSynchronized

@@ -39,15 +39,6 @@ public class ResponseBuilder {
 	}
 	
 	/**
-	 * @param type
-	 * @return
-	 */
-	public ResponseBuilder type(final MediaType type) {
-		builder = builder.type(type);
-		return this;
-	}
-	
-	/**
 	 * @param name
 	 * @param value
 	 * @return
@@ -79,6 +70,9 @@ public class ResponseBuilder {
 		return builder.build();
 	}
 	
+	/**
+	 * @return
+	 */
 	public int getSize() {
 		return size;
 	}

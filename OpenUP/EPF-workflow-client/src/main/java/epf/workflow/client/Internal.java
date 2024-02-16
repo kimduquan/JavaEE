@@ -276,12 +276,12 @@ public interface Internal {
 	 * @param version
 	 * @return
 	 */
-	static Link observesLink(final int index, final String workflow, final String state, final Optional<String> version) {
+	static Link observesLink(final String workflow, final String state, final Optional<String> version) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}/events");
 		if(version.isPresent()) {
 			uri = uri.queryParam("version", version.get());
 		}
-		return LinkUtil.build(uri, index, Naming.WORKFLOW, HttpMethod.PATCH, workflow, state);
+		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.PATCH, workflow, state);
 	}
 	
 	/**
@@ -291,98 +291,88 @@ public interface Internal {
 	 * @param version
 	 * @return
 	 */
-	static Link callbackLink(final int index, final String workflow, final String state, final Optional<String> version) {
+	static Link callbackLink(final String workflow, final String state, final Optional<String> version) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}/callback");
 		if(version.isPresent()) {
 			uri = uri.queryParam("version", version.get());
 		}
-		return LinkUtil.build(uri, index, Naming.WORKFLOW, HttpMethod.PATCH, workflow, state);
+		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.PATCH, workflow, state);
 	}
 
 	/**
-	 * @param index
-	 * @param _synchronized
 	 * @param workflow
 	 * @param version
 	 * @param state
 	 * @param next
 	 * @return
 	 */
-	static Link iterationLink(final int index, final boolean _synchronized, final String workflow, final Optional<String> version, final String state, final int next) {
+	static Link iterationLink(final String workflow, final Optional<String> version, final String state, final int next) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}/iteration");
 		if(version.isPresent()) {
 			uri = uri.queryParam("version", version.get());
 		}
 		uri = uri.queryParam("next", next);
-		return LinkUtil.build(uri, index, Naming.WORKFLOW, HttpMethod.PATCH, workflow, state);
+		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.PATCH, workflow, state);
 	}
 
 	/**
-	 * @param index
 	 * @param workflow
 	 * @param version
 	 * @param state
 	 * @param action
 	 * @return
 	 */
-	static Link actionLink(final int index, final String workflow, final Optional<String> version, final String state, final String action) {
+	static Link actionLink(final String workflow, final Optional<String> version, final String state, final String action) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}/{action}");
 		if(version.isPresent()) {
 			uri = uri.queryParam("version", version.get());
 		}
-		return LinkUtil.build(uri, index, Naming.WORKFLOW, HttpMethod.POST, workflow, state, action);
+		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.POST, workflow, state, action);
 	}
 
 	/**
-	 * @param index
 	 * @param workflow
 	 * @param version
 	 * @param state
 	 * @return
 	 */
-	static Link compensateLink(final int index, final String workflow, final Optional<String> version, final String state) {
+	static Link compensateLink(final String workflow, final Optional<String> version, final String state) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}");
 		if(version.isPresent()) {
 			uri = uri.queryParam("version", version.get());
 		}
-		return LinkUtil.build(uri, index, Naming.WORKFLOW, HttpMethod.PUT, workflow, state);
+		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.PUT, workflow, state);
 	}
 
 	/**
-	 * @param index
 	 * @param workflow
 	 * @param version
 	 * @param state
 	 * @return
 	 */
-	static Link transitionLink(final int index, final String workflow, final Optional<String> version, final String state) {
+	static Link transitionLink(final String workflow, final Optional<String> version, final String state) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}");
 		if(version.isPresent()) {
 			uri = uri.queryParam("version", version.get());
 		}
-		return LinkUtil.build(uri, index, Naming.WORKFLOW, HttpMethod.POST, workflow, state);
+		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.POST, workflow, state);
 	}
 
-	/**
-	 * @param index
-	 * @return
-	 */
-	static Link terminateLink(final int index) {
+	static Link terminateLink() {
 		UriBuilder uri = UriBuilder.fromUri("");
-		return LinkUtil.build(uri, index, Naming.WORKFLOW, HttpMethod.DELETE);
+		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.DELETE);
 	}
 
 	/**
-	 * @param index
 	 * @param workflow
 	 * @param version
 	 * @return
 	 */
-	static Link endLink(final int index, final String workflow, final Optional<String> version) {
+	static Link endLink(final String workflow, final Optional<String> version) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}");
 		if(version.isPresent()) {
 			uri = uri.queryParam("version", version.get());
 		}
-		return LinkUtil.build(uri, index, Naming.WORKFLOW, HttpMethod.PUT, workflow);
+		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.PUT, workflow);
 	}
 }

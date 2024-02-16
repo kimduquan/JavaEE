@@ -32,7 +32,6 @@ import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.client.Invocation.Builder;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Link;
-import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import org.eclipse.microprofile.context.ManagedExecutor;
@@ -93,6 +92,7 @@ import epf.workflow.schema.state.State;
 import epf.workflow.schema.state.StateDataFilters;
 import epf.workflow.util.ELUtil;
 import epf.workflow.util.EitherUtil;
+import epf.workflow.util.LinkBuilder;
 import epf.workflow.util.ResponseBuilder;
 import epf.workflow.util.StateUtil;
 import io.smallrye.common.annotation.RunOnVirtualThread;
@@ -141,17 +141,17 @@ public class WorkflowApplication implements Workflow, Internal {
 	private ResponseBuilder transitionLink(final ResponseBuilder response, final String workflow, final Optional<String> version, final String state, final Link[] links) {
 		return response
 				.links(links)
-				.links(Internal.transitionLink(response.getSize(), workflow, version, state));
+				.links(Internal.transitionLink(workflow, version, state));
 	}
 	
 	private ResponseBuilder endLink(final ResponseBuilder response, final String workflow, final Optional<String> version, final Link[] compensateLinks) {
 		return response
 				.links(compensateLinks)
-				.links(Internal.endLink(response.getSize(), workflow, version));
+				.links(Internal.endLink(workflow, version));
 	}
 	
 	private ResponseBuilder terminateLink(final ResponseBuilder response) {
-		return response.links(Internal.terminateLink(0));
+		return response.links(Internal.terminateLink());
 	}
 	
 	private void putState(final String state, final URI instance, final WorkflowData workflowData) {
@@ -404,27 +404,39 @@ public class WorkflowApplication implements Workflow, Internal {
 	}
 	
 	private Response output(final URI instance, final ResponseBuilder response, final WorkflowData workflowData) {
-		return response.entity(workflowData.getOutput().toString()).type(MediaType.APPLICATION_JSON_TYPE).header(LRA.LRA_HTTP_CONTEXT_HEADER, instance).build();
+		return response.entity(workflowData.getOutput().toString()).header(LRA.LRA_HTTP_CONTEXT_HEADER, instance).build();
 	}
 	
 	private Response output(final URI parent, final URI instance, final ResponseBuilder response, final WorkflowData workflowData) {
-		return response.entity(workflowData.getOutput().toString()).type(MediaType.APPLICATION_JSON_TYPE).header(LRA.LRA_HTTP_CONTEXT_HEADER, instance).build();
+		return response.entity(workflowData.getOutput().toString()).header(LRA.LRA_HTTP_CONTEXT_HEADER, instance).build();
 	}
 	
 	private Response output(final URI instance, final ResponseBuilder response, final InputStream body) {
-		return response.entity(body).type(MediaType.APPLICATION_JSON_TYPE).header(LRA.LRA_HTTP_CONTEXT_HEADER, instance).build();
+		return response.entity(body).header(LRA.LRA_HTTP_CONTEXT_HEADER, instance).build();
 	}
 	
 	private Response output(final URI instance, final ResponseBuilder response) {
 		return response.header(LRA.LRA_HTTP_CONTEXT_HEADER, instance).build();
 	}
 	
-	private ResponseBuilder partial(final ResponseBuilder response, final List<?> list, final Link[] links) {
-		return response.status(Status.PARTIAL_CONTENT).entity(list).type(MediaType.APPLICATION_JSON_TYPE).links(links);
+	private ResponseBuilder partial(final ResponseBuilder response, final List<?> list, final List<Link> links) {
+		final LinkBuilder linkBuilder = new LinkBuilder();
+		final List<Link> partialLinks = new ArrayList<>();
+		for(Link link : links) {
+			final Link partialLink = linkBuilder.link(link).at(response.getSize()).build();
+			partialLinks.add(partialLink);
+		}
+		return response.status(Status.PARTIAL_CONTENT).entity(list).links(partialLinks.toArray(new Link[0]));
 	}
 	
 	private ResponseBuilder partial(final ResponseBuilder response, final JsonArray array, final Link[] links) {
-		return response.status(Status.PARTIAL_CONTENT).entity(array).type(MediaType.APPLICATION_JSON_TYPE).links(links);
+		final LinkBuilder linkBuilder = new LinkBuilder();
+		final List<Link> partialLinks = new ArrayList<>();
+		for(Link link : links) {
+			final Link partialLink = linkBuilder.link(link).at(response.getSize()).build();
+			partialLinks.add(partialLink);
+		}
+		return response.status(Status.PARTIAL_CONTENT).entity(array.toString()).links(partialLinks.toArray(new Link[0]));
 	}
 	
 	private ResponseBuilder function(final ResponseBuilder response, final WorkflowDefinition workflowDefinition, final ActionDefinition actionDefinition, final FunctionDefinition functionDefinition, final WorkflowData workflowData) throws Exception {
@@ -561,7 +573,7 @@ public class WorkflowApplication implements Workflow, Internal {
 		final List<Link> compensateLinks = new ArrayList<>();
 		WorkflowState workflowState = workflowInstance.getState();
 		while(workflowState != null) {
-			final Link compensateLink = Internal.compensateLink(index, workflow, version, workflowState.getName());
+			final Link compensateLink = Internal.compensateLink(workflow, version, workflowState.getName());
 			compensateLinks.add(compensateLink);
 			workflowState = workflowState.getPreviousState();
 			index++;
@@ -571,11 +583,9 @@ public class WorkflowApplication implements Workflow, Internal {
 	
 	private Link[] actionLinks(final WorkflowDefinition workflowDefinition, final String state, final List<ActionDefinition> actionDefinitions){
 		final List<Link> actionLinks = new ArrayList<>();
-		int index = 0;
 		for(ActionDefinition actionDefinition : actionDefinitions) {
-			final Link actionLink = Internal.actionLink(index, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), state, actionDefinition.getName());
+			final Link actionLink = Internal.actionLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), state, actionDefinition.getName());
 			actionLinks.add(actionLink);
-			index++;
 		}
 		return actionLinks.toArray(new Link[0]);
 	}
@@ -591,7 +601,7 @@ public class WorkflowApplication implements Workflow, Internal {
 						break;
 					}
 					for(int i = 0; i < batchInputs.size(); i++) {
-						final Link iterationLink = Internal.iterationLink(i, false, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), state, i);
+						final Link iterationLink = Internal.iterationLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), state, i);
 						iterationLinks.add(iterationLink);
 					}
 					index += batchInputs.size();
@@ -599,7 +609,7 @@ public class WorkflowApplication implements Workflow, Internal {
 				break;
 			case sequential:
 				for(int i = 0; i < inputCollection.size(); i++) {
-					final Link iterationLink = Internal.iterationLink(i, false, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), state, i);
+					final Link iterationLink = Internal.iterationLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), state, i);
 					iterationLinks.add(iterationLink);
 				}
 				break;
@@ -745,7 +755,7 @@ public class WorkflowApplication implements Workflow, Internal {
 		final EventDefinition eventDefinition = getEventDefinition(workflowDefinition, callbackState.getEventRef());
 		final Map<String, Object> ext = new HashMap<>();
 		final Event event = newEvent(eventDefinition, instance, ext);
-		final Link callbackLink = Internal.callbackLink(0, workflowDefinition.getId(), callbackState.getName(), Optional.ofNullable(workflowDefinition.getVersion()));
+		final Link callbackLink = Internal.callbackLink(workflowDefinition.getId(), callbackState.getName(), Optional.ofNullable(workflowDefinition.getVersion()));
 		final URI source = epf.event.client.Event.getEventSource(callbackLink);
 		event.setSource(source.toString());
 		return consumesLink(response, event, ext);
@@ -759,7 +769,9 @@ public class WorkflowApplication implements Workflow, Internal {
 		final List<Link> eventLinks = new ArrayList<>();
 		final Link consumesLink = epf.event.client.Event.consumesLink();
 		final Link producesLink = epf.event.client.Event.producesLink();
-		final Link observesLink = Internal.observesLink(0, workflowDefinition.getId(), eventState.getName(), Optional.ofNullable(workflowDefinition.getVersion()));
+		final Link observesLink = Internal.observesLink(workflowDefinition.getId(), eventState.getName(), Optional.ofNullable(workflowDefinition.getVersion()));
+		final LinkBuilder builder = new LinkBuilder();
+		final URI source = epf.event.client.Event.getEventSource(observesLink);
 		for(OnEventsDefinition onEventsDef : eventState.getOnEvents()) {
 			for(String eventRef : onEventsDef.getEventRefs()) {
 				final EventDefinition eventDef = eventDefs.get(eventRef);
@@ -767,12 +779,11 @@ public class WorkflowApplication implements Workflow, Internal {
 				final Event event = newEvent(eventDef, instance, ext);
 				Link eventLink = null;
 				if(Kind.consumed.equals(eventDef.getKind())) {
-					eventLink = consumesLink;
-					final URI source = epf.event.client.Event.getEventSource(observesLink);
+					eventLink = builder.link(consumesLink).at(response.getSize()).build();
 					event.setSource(source.toString());
 				}
 				else if(Kind.produced.equals(eventDef.getKind())){
-					eventLink = producesLink;
+					eventLink = builder.link(producesLink).at(response.getSize()).build();
 				}
 				if(eventLink != null) {
 					final Map<String, Object> map = event.toMap(ext);
@@ -782,7 +793,7 @@ public class WorkflowApplication implements Workflow, Internal {
 			}
 		}
 		useData.set(events.isEmpty());
-		return partial(response, events, eventLinks.toArray(new Link[0]));
+		return partial(response, events, eventLinks);
 	}
 	
 	private ResponseBuilder transitionOperationState(final ResponseBuilder response, final WorkflowDefinition workflowDefinition, final OperationState operationState, final URI instance, final WorkflowData workflowData) throws Exception {
