@@ -154,7 +154,6 @@ public interface Internal {
 	 * @param workflow
 	 * @param state
 	 * @param version
-	 * @param instance
 	 * @param map
 	 * @return
 	 * @throws Exception
@@ -170,15 +169,12 @@ public interface Internal {
 			final String state,
 			@QueryParam("version")
 			final String version,
-			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
-			final URI instance,
 			final Map<String, Object> map) throws Exception;
 	
 	/**
 	 * @param workflow
 	 * @param state
 	 * @param version
-	 * @param instance
 	 * @param map
 	 * @return
 	 * @throws Exception
@@ -194,8 +190,6 @@ public interface Internal {
 			final String state,
 			@QueryParam("version")
 			final String version,
-			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
-			final URI instance,
 			final Map<String, Object> map) throws Exception;
 	
 	/**

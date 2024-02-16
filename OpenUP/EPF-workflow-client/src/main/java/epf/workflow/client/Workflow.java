@@ -48,16 +48,15 @@ public interface Workflow {
 			final InputStream body) throws Exception;
 
 	/**
-	 * @param index
 	 * @param workflow
 	 * @param version
 	 * @return
 	 */
-	static Link startLink(final int index, final String workflow, final Optional<String> version) {
+	static Link startLink(final String workflow, final Optional<String> version) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}");
 		if(version.isPresent()) {
 			uri = uri.queryParam("version", version.get());
 		}
-		return LinkUtil.build(uri, index, Naming.WORKFLOW, HttpMethod.POST, workflow);
+		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.POST, workflow);
 	}
 }
