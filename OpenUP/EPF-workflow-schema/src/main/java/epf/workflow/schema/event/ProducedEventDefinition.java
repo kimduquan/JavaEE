@@ -3,6 +3,8 @@ package epf.workflow.schema.event;
 import jakarta.validation.constraints.NotNull;
 import jakarta.nosql.Column;
 import java.io.Serializable;
+import java.util.Map;
+
 import org.eclipse.jnosql.mapping.Embeddable;
 
 import epf.nosql.schema.StringOrObject;
@@ -34,7 +36,7 @@ public class ProducedEventDefinition implements Serializable {
 	 * 
 	 */
 	@Column
-	private Object contextAttributes;
+	private Map<String, Object> contextAttributes;
 	
 	public String getEventRef() {
 		return eventRef;
@@ -48,10 +50,10 @@ public class ProducedEventDefinition implements Serializable {
 	public void setData(StringOrObject<Object> data) {
 		this.data = data;
 	}
-	public Object getContextAttributes() {
+	public Map<String, Object> getContextAttributes() {
 		return contextAttributes;
 	}
-	public void setContextAttributes(Object contextAttributes) {
+	public void setContextAttributes(Map<String, Object> contextAttributes) {
 		this.contextAttributes = contextAttributes;
 	}
 }
