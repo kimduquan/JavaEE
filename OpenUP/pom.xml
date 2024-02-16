@@ -892,6 +892,7 @@
 		
         <module>EPF-validation</module>
         <module>EPF-client</module>
+		<module>EPF-concurrent-client</module>
 		<module>EPF-security-client</module>
 		<module>EPF-security</module>
 		<module>EPF-security-management</module>

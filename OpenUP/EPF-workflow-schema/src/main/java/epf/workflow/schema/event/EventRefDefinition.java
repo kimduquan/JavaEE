@@ -3,8 +3,8 @@ package epf.workflow.schema.event;
 import jakarta.validation.constraints.NotNull;
 import jakarta.nosql.Column;
 import java.io.Serializable;
+import java.util.Map;
 import org.eclipse.jnosql.mapping.Embeddable;
-
 import epf.nosql.schema.StringOrObject;
 import epf.workflow.schema.function.Invoke;
 
@@ -50,7 +50,7 @@ public class EventRefDefinition implements Serializable {
 	 * 
 	 */
 	@Column
-	private Object contextAttributes;
+	private Map<String, Object> contextAttributes;
 	
 	/**
 	 * 
@@ -62,7 +62,7 @@ public class EventRefDefinition implements Serializable {
 		return produceEventRef;
 	}
 
-	public void setProduceEventRef(String produceEventRef) {
+	public void setProduceEventRef(final String produceEventRef) {
 		this.produceEventRef = produceEventRef;
 	}
 
@@ -70,7 +70,7 @@ public class EventRefDefinition implements Serializable {
 		return consumeEventRef;
 	}
 
-	public void setConsumeEventRef(String consumeEventRef) {
+	public void setConsumeEventRef(final String consumeEventRef) {
 		this.consumeEventRef = consumeEventRef;
 	}
 
@@ -78,7 +78,7 @@ public class EventRefDefinition implements Serializable {
 		return consumeEventTimeout;
 	}
 
-	public void setConsumeEventTimeout(String consumeEventTimeout) {
+	public void setConsumeEventTimeout(final String consumeEventTimeout) {
 		this.consumeEventTimeout = consumeEventTimeout;
 	}
 
@@ -86,15 +86,15 @@ public class EventRefDefinition implements Serializable {
 		return data;
 	}
 
-	public void setData(StringOrObject<Object> data) {
+	public void setData(final StringOrObject<Object> data) {
 		this.data = data;
 	}
 
-	public Object getContextAttributes() {
+	public Map<String, Object> getContextAttributes() {
 		return contextAttributes;
 	}
 
-	public void setContextAttributes(Object contextAttributes) {
+	public void setContextAttributes(final Map<String, Object> contextAttributes) {
 		this.contextAttributes = contextAttributes;
 	}
 
@@ -102,7 +102,7 @@ public class EventRefDefinition implements Serializable {
 		return invoke;
 	}
 
-	public void setInvoke(Invoke invoke) {
+	public void setInvoke(final Invoke invoke) {
 		this.invoke = invoke;
 	}
 }
