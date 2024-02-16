@@ -636,7 +636,7 @@ public interface Naming {
     	/**
     	 * 
     	 */
-    	String REGISTRY = "epf-registry";
+    	String REGISTRY_REMOTES = "epf-registry-remotes";
 	    
 	    /**
 	     * @author PC
