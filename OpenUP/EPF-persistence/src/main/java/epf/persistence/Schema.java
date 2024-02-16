@@ -15,6 +15,7 @@ import epf.persistence.schema.internal.EmbeddableBuilder;
 import epf.persistence.schema.internal.EmbeddableComparator;
 import epf.persistence.schema.internal.EntityBuilder;
 import epf.persistence.schema.internal.EntityComparator;
+import io.smallrye.common.annotation.RunOnVirtualThread;
 
 /**
  * @author PC
@@ -31,6 +32,7 @@ public class Schema implements epf.persistence.client.Schema {
     transient EntityManager manager;
 
 	@Override
+	@RunOnVirtualThread
 	public List<Entity> getEntities() {
 		final EntityBuilder builder = new EntityBuilder();
 		final EntityComparator comparator = new EntityComparator();
@@ -42,6 +44,7 @@ public class Schema implements epf.persistence.client.Schema {
 	}
 
 	@Override
+	@RunOnVirtualThread
 	public List<Embeddable> getEmbeddables() {
 		final EmbeddableBuilder builder = new EmbeddableBuilder();
 		final EmbeddableComparator comparator = new EmbeddableComparator();

@@ -341,7 +341,7 @@
 			<dependency>
 				<groupId>org.primefaces</groupId>
 				<artifactId>primefaces</artifactId>
-				<version>13.0.4</version>
+				<version>13.0.5</version>
 			</dependency>
             <!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast -->
 			<dependency>
@@ -360,24 +360,6 @@
 			    <groupId>org.drools</groupId>
 			    <artifactId>drools-jsr94</artifactId>
 			    <version>7.2.0.Final</version>
-			</dependency>
-			<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.mapping/jnosql-mapping-core -->
-			<dependency>
-			    <groupId>org.eclipse.jnosql.mapping</groupId>
-			    <artifactId>jnosql-mapping-core</artifactId>
-			    <version>1.0.0</version>
-			</dependency>
-			<!-- https://mvnrepository.com/artifact/org.eclipse.jnosql.communication/jnosql-communication-core -->
-			<dependency>
-			    <groupId>org.eclipse.jnosql.communication</groupId>
-			    <artifactId>jnosql-communication-core</artifactId>
-			    <version>1.0.0</version>
-			</dependency>
-			<!-- https://mvnrepository.com/artifact/org.jboss.narayana.rts/narayana-lra -->
-			<dependency>
-			    <groupId>org.jboss.narayana.rts</groupId>
-			    <artifactId>narayana-lra</artifactId>
-			    <version>7.0.0.Final</version>
 			</dependency>
 
 			<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
@@ -412,13 +394,13 @@
 			<dependency>
 			    <groupId>org.jboss.resteasy</groupId>
 			    <artifactId>resteasy-client</artifactId>
-			    <version>6.2.6.Final</version>
+			    <version>6.2.7.Final</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.jboss.resteasy/resteasy-jackson2-provider -->
 			<dependency>
 			    <groupId>org.jboss.resteasy</groupId>
 			    <artifactId>resteasy-jackson2-provider</artifactId>
-			    <version>6.2.6.Final</version>
+			    <version>6.2.7.Final</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.jppf/jppf-client -->
 			<dependency>
@@ -430,7 +412,7 @@
 			<dependency>
 				<groupId>org.apache.groovy</groupId>
 				<artifactId>groovy-jsr223</artifactId>
-				<version>4.0.17</version>
+				<version>4.0.18</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.python/jython-standalone -->
 			<dependency>
@@ -454,13 +436,13 @@
 			<dependency>
 			    <groupId>org.eclipse.lsp4j</groupId>
 			    <artifactId>org.eclipse.lsp4j.websocket</artifactId>
-			    <version>0.21.1</version>
+			    <version>0.22.0</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.lsp4j/org.eclipse.lsp4j -->
 			<dependency>
 			    <groupId>org.eclipse.lsp4j</groupId>
 			    <artifactId>org.eclipse.lsp4j</artifactId>
-			    <version>0.21.1</version>
+			    <version>0.22.0</version>
 			</dependency>
 			
 			
@@ -488,12 +470,6 @@
                 <artifactId>jackson-jaxrs-json-provider</artifactId>
                 <version>2.16.1</version>
             </dependency>
-            <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
-			<dependency>
-			    <groupId>mysql</groupId>
-			    <artifactId>mysql-connector-java</artifactId>
-			    <version>8.0.33</version>
-			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
 			<dependency>
 			    <groupId>org.postgresql</groupId>
@@ -504,7 +480,7 @@
 			<dependency>
 			    <groupId>org.bitbucket.b_c</groupId>
 			    <artifactId>jose4j</artifactId>
-			    <version>0.9.3</version>
+			    <version>0.9.5</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.persistence/org.eclipse.persistence.core -->
 			<dependency>
@@ -516,13 +492,13 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-jdk14</artifactId>
-                <version>2.0.10</version>
+                <version>2.0.12</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.codehaus.izpack/izpack-panel -->
 			<dependency>
 			    <groupId>org.codehaus.izpack</groupId>
 			    <artifactId>izpack-panel</artifactId>
-			    <version>5.1.3</version>
+			    <version>5.2.1</version>
 			</dependency>
             
             <!-- https://mvnrepository.com/artifact/org.jboss.weld/weld-junit4 -->
@@ -536,21 +512,21 @@
 			<dependency>
 			    <groupId>org.mockito</groupId>
 			    <artifactId>mockito-core</artifactId>
-			    <version>5.8.0</version>
+			    <version>5.10.0</version>
 			    <scope>test</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
 			<dependency>
 			    <groupId>org.seleniumhq.selenium</groupId>
 			    <artifactId>selenium-java</artifactId>
-			    <version>4.16.1</version>
+			    <version>4.17.0</version>
 			    <scope>test</scope>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.eclipse.jetty.websocket/javax-websocket-client-impl -->
 			<dependency>
 			    <groupId>org.eclipse.jetty.websocket</groupId>
 			    <artifactId>javax-websocket-client-impl</artifactId>
-			    <version>9.4.53.v20231009</version>
+			    <version>9.4.54.v20240208</version>
 		    	<scope>test</scope>
 			</dependency>
         </dependencies>
@@ -597,12 +573,12 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.2.3</version>
+                    <version>3.2.5</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>3.2.3</version>
+                    <version>3.2.5</version>
                     <configuration>
                         <forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds>
                         <!-- Specify which test classes are integration tests -->
@@ -695,7 +671,7 @@
 				<plugin>
 					<groupId>org.owasp</groupId>
 					<artifactId>dependency-check-maven</artifactId>
-					<version>9.0.7</version>
+					<version>9.0.9</version>
 		        </plugin>
 		        <plugin>
 		        	<groupId>org.wildfly.plugins</groupId>
@@ -711,7 +687,7 @@
 				<plugin>
 					<groupId>org.codehaus.izpack</groupId>
 					<artifactId>izpack-maven-plugin</artifactId>
-					<version>5.2.0</version>
+					<version>5.2.1</version>
 				</plugin>
             </plugins>
         </pluginManagement>

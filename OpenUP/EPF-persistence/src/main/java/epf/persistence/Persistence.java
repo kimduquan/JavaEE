@@ -41,6 +41,7 @@ import epf.schema.utility.Request;
 import epf.schema.utility.SchemaUtil;
 import epf.util.json.JsonUtil;
 import epf.util.logging.LogManager;
+import io.smallrye.common.annotation.RunOnVirtualThread;
 
 /**
  *
@@ -104,6 +105,7 @@ public class Persistence implements epf.persistence.client.Entities {
     @Override
     @Transactional
     @LRA(LRA.Type.NESTED)
+    @RunOnVirtualThread
     public Response persist(
     		final String tenant,
     		final String schema,
@@ -158,6 +160,7 @@ public class Persistence implements epf.persistence.client.Entities {
     @Override
     @Transactional
     @LRA(LRA.Type.NESTED)
+    @RunOnVirtualThread
 	public Response merge(
     		final String tenant,
 			final String schema,
@@ -225,6 +228,7 @@ public class Persistence implements epf.persistence.client.Entities {
     @Override
     @Transactional
     @LRA(LRA.Type.NESTED)
+    @RunOnVirtualThread
     public Response remove(
     		final String tenant,
     		final String schema,
@@ -285,6 +289,7 @@ public class Persistence implements epf.persistence.client.Entities {
     @Path(Naming.TRANSACTION)
     @PUT
     @Transactional
+    @RunOnVirtualThread
     public Response rollback(
     		@Context
     		final HttpHeaders headers) throws Exception {
@@ -325,6 +330,7 @@ public class Persistence implements epf.persistence.client.Entities {
     @Forget
     @Path(Naming.TRANSACTION_ACTIVE)
     @PUT
+    @RunOnVirtualThread
     public Response commit(
     		@Context
     		final HttpHeaders headers) throws Exception {
