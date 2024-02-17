@@ -900,6 +900,7 @@
         <module>EPF-validation</module>
         <module>EPF-client</module>
 		<module>EPF-concurrent-client</module>
+		<module>EPF-concurrent-client-ext</module>
 		<module>EPF-concurrent</module>
 		<module>EPF-security-client</module>
 		<module>EPF-security</module>
