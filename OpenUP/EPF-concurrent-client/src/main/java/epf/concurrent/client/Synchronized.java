@@ -54,19 +54,7 @@ public class Synchronized implements AutoCloseable {
 	/**
 	 * 
 	 */
-	private final URI uri;
-	
-	/**
-	 * 
-	 */
 	private transient Session session;
-	
-	/**
-	 * @param uri
-	 */
-	public Synchronized(final URI uri) {
-		this.uri = uri;
-	}
 
 	/**
 	 * @param session
@@ -134,9 +122,10 @@ public class Synchronized implements AutoCloseable {
 	}
 	
 	/**
+	 * @param uri
 	 * @throws Exception
 	 */
-	protected void connectToServer() throws Exception {
+	protected void connectToServer(final URI uri) throws Exception {
 		lock.lock();
 		session = ContainerProvider.getWebSocketContainer().connectToServer(this, uri);
 		isOpen.await();

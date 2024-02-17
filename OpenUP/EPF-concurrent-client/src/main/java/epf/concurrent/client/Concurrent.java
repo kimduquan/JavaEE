@@ -53,8 +53,8 @@ public class Concurrent {
 	}
 	
 	private void newSynchronized() throws Exception {
-		final Synchronized synchronized_ = new Synchronized(serverEndpoint);
-		synchronized_.connectToServer();
+		final Synchronized synchronized_ = new Synchronized();
+		synchronized_.connectToServer(serverEndpoint);
 		sessions.add(synchronized_);
 	}
 	

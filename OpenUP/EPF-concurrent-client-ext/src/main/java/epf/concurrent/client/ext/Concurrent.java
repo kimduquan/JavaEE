@@ -53,8 +53,8 @@ public class Concurrent {
 	}
 	
 	private void newSynchronized() throws Exception {
-		final Synchronized synchronized_ = new Synchronized(serverEndpoint);
-		synchronized_.connectToServer();
+		final Synchronized synchronized_ = new Synchronized();
+		synchronized_.connectToServer(serverEndpoint);
 		sessions.add(synchronized_);
 	}
 	
@@ -116,7 +116,9 @@ public class Concurrent {
 	 * @param id
 	 */
 	public void finally_(final String id) {
-		sessions.add(synchronizedSessions.remove(id));
+		final Synchronized synchronized_ = synchronizedSessions.remove(id);
+		synchronized_.finally_();
+		sessions.add(synchronized_);
 	}
 	
 	/**
@@ -126,9 +128,6 @@ public class Concurrent {
 	public void synchronized_(final String id) throws Exception {
 		try(Synchronized sync = try_(id)){
 			sync.synchronized_();
-		}
-		finally {
-			finally_(id);
 		}
 	}
 }
