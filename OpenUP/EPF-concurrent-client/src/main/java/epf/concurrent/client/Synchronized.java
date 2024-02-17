@@ -24,7 +24,7 @@ import javax.websocket.Session;
  * 
  */
 @ClientEndpoint
-public class Synchronized {
+public class Synchronized implements AutoCloseable {
 	
 	/**
 	 * 
@@ -142,7 +142,16 @@ public class Synchronized {
 		isOpen.await();
 	}
 	
-	protected void close() throws Exception {
+	/**
+	 *
+	 */
+	public void close() throws Exception {
+	}
+	
+	/**
+	 * @throws Exception
+	 */
+	protected void clear() throws Exception {
 		session.close();
 	}
 	
@@ -190,9 +199,16 @@ public class Synchronized {
 	}
 	
 	public void synchronized_() throws Exception {
+		lock.lock();
 		if(isSynchronized()) {
-			lock.lock();
 			isSynchronized.await();
 		}
+	}
+	
+	/**
+	 * @return
+	 */
+	public String getId() {
+		return session.getId();
 	}
 }

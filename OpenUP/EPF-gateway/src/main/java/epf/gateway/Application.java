@@ -3,7 +3,6 @@ package epf.gateway;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URI;
-import java.time.Duration;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -12,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.NotAuthorizedException;
@@ -31,8 +31,9 @@ import epf.client.internal.ClientQueue;
 import epf.client.util.RequestBuilder;
 import epf.client.util.RequestUtil;
 import epf.client.util.ResponseUtil;
+import epf.concurrent.client.Concurrent;
 import epf.hateoas.utility.HATEOAS;
-import epf.util.ThreadUtil;
+import epf.naming.Naming;
 import epf.util.io.InputStreamUtil;
 import epf.util.logging.LogManager;
 
@@ -69,6 +70,21 @@ public class Application {
     transient Security security;
     
     /**
+     * 
+     */
+    @Inject
+    transient Concurrent concurrent;
+    
+    /**
+     * 
+     */
+    @PostConstruct
+    protected void postConstruct() {
+    	final Optional<URI> uri = registry.lookup(Naming.CONCURRENT);
+    	concurrent.setServerEndpoint(uri.get());
+    }
+    
+    /**
      * @param service
      * @param jwt
      * @param headers
@@ -76,13 +92,13 @@ public class Application {
      * @param req
      * @param body
      */
-    public Response buildRequest(
+	public Response buildRequest(
     		final String service,
     		final JsonWebToken jwt,
     		final HttpHeaders headers, 
             final UriInfo uriInfo,
             final javax.ws.rs.core.Request req,
-            final InputStream body) {
+            final InputStream body) throws Exception {
     	if(jwt != null && !security.authenticate(jwt, uriInfo)) {
     		throw new NotAuthorizedException(Response.status(Status.UNAUTHORIZED));
     	}
@@ -94,8 +110,13 @@ public class Application {
         	final Optional<Object> entity = HATEOAS.readEntity(response);
         	final Link self = HATEOAS.selfLink(uriInfo, req, service);
         	final boolean isPartial = isPartial(response);
+        	final Optional<String> synchronized_ = isSynchronized(response);
         	final MediaType mediaType = response.getMediaType();
-        	response = buildLinkRequests(client, response, entity, mediaType, headers, self, isPartial);
+
+        	if(synchronized_.isPresent()) {
+				concurrent.synchronized_(synchronized_.get());
+			}
+        	response = buildLinkRequests(client, response, entity, mediaType, headers, self, isPartial, synchronized_);
     	}
     	response = ResponseUtil.buildResponse(response, uriInfo.getBaseUri());
     	clients.add(serviceUrl, client);
@@ -110,14 +131,14 @@ public class Application {
     	return Response.Status.PARTIAL_CONTENT.getStatusCode() == response.getStatus();
     }
     
+    private Optional<String> isSynchronized(final Response response) {
+    	return Optional.ofNullable(response.getHeaderString("synchronized"));
+    }
+    
     private Response buildLinkRequest(final Client client, final Response response, final Optional<Object> entity, final MediaType mediaType, final HttpHeaders headers, final Link link) {
     	final String service = link.getRel();
 		final URI serviceUrl = registry.lookup(service).orElseThrow(NotFoundException::new);
 		LOGGER.info(String.format("link=%s", link.toString()));
-		final Optional<Duration> wait = HATEOAS.getWait(link);
-		wait.ifPresent(duration -> {
-			ThreadUtil.sleep(duration);
-		});
 		return HATEOAS.buildLinkRequest(client, serviceUrl, headers, response, entity, mediaType, link);
     }
     
@@ -159,7 +180,7 @@ public class Application {
 		return builder.build();
     }
     
-    private Response buildLinkRequests(final Client client, final Response response, final Optional<Object> entity, final MediaType mediaType, final HttpHeaders headers, final Link self, final boolean isPartial) {
+    private Response buildLinkRequests(final Client client, final Response response, final Optional<Object> entity, final MediaType mediaType, final HttpHeaders headers, final Link self, final boolean isPartial, final Optional<String> synchronized_) throws Exception {
     	Response prevLinkResponse = response;
     	Optional<Object> prevLinkEntity = entity;
     	MediaType prevMediaType = mediaType;
@@ -181,11 +202,17 @@ public class Application {
         			Response linkResponse = buildLinkRequest(client, prevLinkResponse, prevLinkEntity, prevMediaType, headers, targetLink);
         			if(isSuccessful(linkResponse)) {
         				final boolean isPartialLink = isPartial(linkResponse);
+        				final Optional<String> synchronizedLink = isSynchronized(linkResponse);
         				if(HATEOAS.hasEntity(link)) {
             				prevLinkEntity = HATEOAS.readEntity(linkResponse);
             				prevMediaType = linkResponse.getMediaType();
         				}
-        				linkResponse = buildLinkRequests(client, linkResponse, prevLinkEntity, prevMediaType, headers, targetLink, isPartialLink);
+        				
+        				if(synchronizedLink.isPresent()) {
+        					concurrent.synchronized_(synchronizedLink.get());
+        				}
+        				linkResponse = buildLinkRequests(client, linkResponse, prevLinkEntity, prevMediaType, headers, targetLink, isPartialLink, synchronizedLink);
+        				
         				if(isSuccessful(linkResponse)) {
                 			linkResponses.add(linkResponse);
             				prevLinkResponse = linkResponse;

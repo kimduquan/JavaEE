@@ -2,7 +2,6 @@ package epf.hateoas.utility;
 
 import java.io.InputStream;
 import java.net.URI;
-import java.time.Duration;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
@@ -180,29 +179,5 @@ public interface HATEOAS {
         	}
     	}
     	return false;
-    }
-    
-    /**
-     * @param link
-     * @return
-     */
-    static Optional<Duration> getWait(final Link link) {
-    	Objects.requireNonNull(link, "Link");
-    	final String wait = link.getParams().get(Naming.Client.Link.WAIT);
-    	if(wait != null && !wait.isEmpty()) {
-    		return Optional.of(Duration.parse(wait));
-    	}
-    	return Optional.empty();
-    }
-    
-    /**
-     * @param builder
-     * @param wait
-     * @return
-     */
-    static Link.Builder setWait(final Link.Builder builder, final Duration wait){
-    	Objects.requireNonNull(builder, "Builder");
-    	Objects.requireNonNull(wait, "Duration");
-    	return builder.param(Naming.Client.Link.WAIT, wait.toString());
     }
 }

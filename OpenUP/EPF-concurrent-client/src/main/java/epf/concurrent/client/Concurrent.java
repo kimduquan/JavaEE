@@ -1,7 +1,9 @@
 package epf.concurrent.client;
 
 import java.net.URI;
+import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,6 +30,11 @@ public class Concurrent {
 	/**
 	 * 
 	 */
+	private transient final Map<String, Synchronized> synchronizedSessions = new ConcurrentHashMap<>();
+	
+	/**
+	 * 
+	 */
 	private URI serverEndpoint;
 	
 	/**
@@ -37,7 +44,7 @@ public class Concurrent {
 	protected void close() {
 		sessions.forEach(session -> {
 			try {
-				session.close();
+				session.clear();
 			} 
 			catch (Exception e) {
 				LOGGER.log(Level.WARNING, "close", e);
@@ -54,7 +61,7 @@ public class Concurrent {
 	/**
 	 * @param uri
 	 */
-	protected void setServerEndpoint(final URI uri) {
+	public void setServerEndpoint(final URI uri) {
 		this.serverEndpoint = uri;
 	}
 	
@@ -94,5 +101,34 @@ public class Concurrent {
 	public void finally_(final Synchronized synchronized_) {
 		synchronized_.finally_();
 		sessions.add(synchronized_);
+	}
+	
+	/**
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
+	public Synchronized try_(final String id) throws Exception {
+		return synchronizedSessions.get(id);
+	}
+	
+	/**
+	 * @param id
+	 */
+	public void finally_(final String id) {
+		sessions.add(synchronizedSessions.remove(id));
+	}
+	
+	/**
+	 * @param id
+	 * @throws Exception
+	 */
+	public void synchronized_(final String id) throws Exception {
+		try(Synchronized sync = try_(id)){
+			sync.synchronized_();
+		}
+		finally {
+			finally_(id);
+		}
 	}
 }
