@@ -78,6 +78,24 @@ public class ResponseBuilder {
 	}
 	
 	/**
+	 * @param id
+	 * @return
+	 */
+	public ResponseBuilder synchronized_(final String id) {
+		builder = builder.header("synchronized", id);
+		return this;
+	}
+	
+	/**
+	 * @param id
+	 * @return
+	 */
+	public ResponseBuilder finally_(final String id) {
+		builder = builder.header("finally", id);
+		return this;
+	}
+	
+	/**
 	 * @param builder
 	 * @param response
 	 * @return

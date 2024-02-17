@@ -111,12 +111,16 @@ public class Application {
         	final Link self = HATEOAS.selfLink(uriInfo, req, service);
         	final boolean isPartial = isPartial(response);
         	final Optional<String> synchronized_ = isSynchronized(response);
+        	final Optional<String> finally_ = isFinally(response);
         	final MediaType mediaType = response.getMediaType();
 
         	if(synchronized_.isPresent()) {
 				concurrent.synchronized_(synchronized_.get());
 			}
-        	response = buildLinkRequests(client, response, entity, mediaType, headers, self, isPartial, synchronized_);
+        	if(finally_.isPresent()) {
+        		concurrent.finally_(finally_.get());
+        	}
+        	response = buildLinkRequests(client, response, entity, mediaType, headers, self, isPartial);
     	}
     	response = ResponseUtil.buildResponse(response, uriInfo.getBaseUri());
     	clients.add(serviceUrl, client);
@@ -133,6 +137,10 @@ public class Application {
     
     private Optional<String> isSynchronized(final Response response) {
     	return Optional.ofNullable(response.getHeaderString("synchronized"));
+    }
+    
+    private Optional<String> isFinally(final Response response) {
+    	return Optional.ofNullable(response.getHeaderString("finally"));
     }
     
     private Response buildLinkRequest(final Client client, final Response response, final Optional<Object> entity, final MediaType mediaType, final HttpHeaders headers, final Link link) {
@@ -180,7 +188,7 @@ public class Application {
 		return builder.build();
     }
     
-    private Response buildLinkRequests(final Client client, final Response response, final Optional<Object> entity, final MediaType mediaType, final HttpHeaders headers, final Link self, final boolean isPartial, final Optional<String> synchronized_) throws Exception {
+    private Response buildLinkRequests(final Client client, final Response response, final Optional<Object> entity, final MediaType mediaType, final HttpHeaders headers, final Link self, final boolean isPartial) throws Exception {
     	Response prevLinkResponse = response;
     	Optional<Object> prevLinkEntity = entity;
     	MediaType prevMediaType = mediaType;
@@ -203,6 +211,7 @@ public class Application {
         			if(isSuccessful(linkResponse)) {
         				final boolean isPartialLink = isPartial(linkResponse);
         				final Optional<String> synchronizedLink = isSynchronized(linkResponse);
+        				final Optional<String> finallyLink = isFinally(linkResponse);
         				if(HATEOAS.hasEntity(link)) {
             				prevLinkEntity = HATEOAS.readEntity(linkResponse);
             				prevMediaType = linkResponse.getMediaType();
@@ -211,7 +220,10 @@ public class Application {
         				if(synchronizedLink.isPresent()) {
         					concurrent.synchronized_(synchronizedLink.get());
         				}
-        				linkResponse = buildLinkRequests(client, linkResponse, prevLinkEntity, prevMediaType, headers, targetLink, isPartialLink, synchronizedLink);
+        				if(finallyLink.isPresent()) {
+        					concurrent.finally_(finallyLink.get());
+        				}
+        				linkResponse = buildLinkRequests(client, linkResponse, prevLinkEntity, prevMediaType, headers, targetLink, isPartialLink);
         				
         				if(isSuccessful(linkResponse)) {
                 			linkResponses.add(linkResponse);

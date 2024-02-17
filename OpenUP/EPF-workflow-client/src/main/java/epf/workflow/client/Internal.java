@@ -322,6 +322,21 @@ public interface Internal {
 	}
 	
 	/**
+	 * @param workflow
+	 * @param state
+	 * @param version
+	 * @param action
+	 * @return
+	 */
+	static Link observesLink(final String workflow, final String state, final Optional<String> version, final String action) {
+		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}/{action}/events");
+		if(version.isPresent()) {
+			uri = uri.queryParam("version", version.get());
+		}
+		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.PATCH, workflow, state, action);
+	}
+	
+	/**
 	 * @param index
 	 * @param workflow
 	 * @param state

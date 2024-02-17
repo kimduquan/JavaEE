@@ -8,7 +8,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jakarta.annotation.PreDestroy;
-import epf.concurrent.client.Synchronized;
 import epf.util.logging.LogManager;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -62,7 +61,7 @@ public class Concurrent {
 	/**
 	 * @param uri
 	 */
-	protected void setServerEndpoint(final URI uri) {
+	public void setServerEndpoint(final URI uri) {
 		this.serverEndpoint = uri;
 	}
 	
