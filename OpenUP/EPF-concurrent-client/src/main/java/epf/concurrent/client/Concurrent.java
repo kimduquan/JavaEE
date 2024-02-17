@@ -3,7 +3,11 @@ package epf.concurrent.client;
 import java.net.URI;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import jakarta.enterprise.context.ApplicationScoped;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.PreDestroy;
+import javax.enterprise.context.ApplicationScoped;
+import epf.util.logging.LogManager;
 
 /**
  * 
@@ -14,12 +18,32 @@ public class Concurrent {
 	/**
 	 * 
 	 */
+	private transient static final Logger LOGGER = LogManager.getLogger(Concurrent.class.getName());
+	
+	/**
+	 * 
+	 */
 	private transient final Queue<Synchronized> sessions = new ConcurrentLinkedQueue<>();
 	
 	/**
 	 * 
 	 */
 	private URI serverEndpoint;
+	
+	/**
+	 * 
+	 */
+	@PreDestroy
+	protected void close() {
+		sessions.forEach(session -> {
+			try {
+				session.close();
+			} 
+			catch (Exception e) {
+				LOGGER.log(Level.WARNING, "close", e);
+			}
+		});
+	}
 	
 	private void newSynchronized() throws Exception {
 		final Synchronized synchronized_ = new Synchronized(serverEndpoint);
@@ -49,7 +73,6 @@ public class Concurrent {
 					synchronized_ = null;
 				}
 				else {
-					synchronized_.try_();
 					while(!synchronizedSessions.isEmpty()) {
 						sessions.add(synchronizedSessions.poll());
 					}
@@ -61,6 +84,7 @@ public class Concurrent {
 			}
 		}
 		while(synchronized_ == null);
+		synchronized_.try_();
 		return synchronized_;
 	}
 	

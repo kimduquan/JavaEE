@@ -5,18 +5,20 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import epf.util.logging.LogManager;
-import jakarta.websocket.ClientEndpoint;
-import jakarta.websocket.CloseReason;
-import jakarta.websocket.ContainerProvider;
-import jakarta.websocket.OnClose;
-import jakarta.websocket.OnError;
-import jakarta.websocket.OnMessage;
-import jakarta.websocket.OnOpen;
-import jakarta.websocket.PongMessage;
-import jakarta.websocket.Session;
+import javax.websocket.ClientEndpoint;
+import javax.websocket.CloseReason;
+import javax.websocket.ContainerProvider;
+import javax.websocket.OnClose;
+import javax.websocket.OnError;
+import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
+import javax.websocket.PongMessage;
+import javax.websocket.Session;
 
 /**
  * 
@@ -33,6 +35,21 @@ public class Synchronized {
 	 * 
 	 */
 	private transient final Map<String, Session> synchronizedSessions = new ConcurrentHashMap<>();
+	
+	/**
+	 * 
+	 */
+	private final ReentrantLock lock = new ReentrantLock();
+	
+	/**
+	 * 
+	 */
+	private Condition isOpen = lock.newCondition();
+	
+	/**
+	 * 
+	 */
+	private Condition isSynchronized = lock.newCondition();
 	
 	/**
 	 * 
@@ -87,35 +104,59 @@ public class Synchronized {
 		final String flag = messageData.substring(0, 1);
 		final String id = messageData.substring(1);
 		if("1".equals(flag)) {
-			synchronizedSessions.put(id, session);
+			if(id.isEmpty()) {
+				open();
+			}
+			else {
+				synchronized_(id, session);
+			}
 		}
 		else if("0".equals(flag)) {
-			synchronizedSessions.remove(id);
+			close(id);
+			if(session.getId().equals(id)) {
+				lock.lock();
+				isSynchronized.signalAll();
+			}
 		}
 	}
 	
-	public void connectToServer() throws Exception {
+	private void open() {
+		lock.lock();
+		isOpen.signalAll();
+	}
+	
+	private void synchronized_(final String id, final Session session) {
+		synchronizedSessions.put(id, session);
+	}
+	
+	private void close(final String id) {
+		synchronizedSessions.remove(id);
+	}
+	
+	/**
+	 * @throws Exception
+	 */
+	protected void connectToServer() throws Exception {
+		lock.lock();
 		session = ContainerProvider.getWebSocketContainer().connectToServer(this, uri);
-		while(!synchronizedSessions.containsKey("")) {
-			Thread.sleep(41);
-		}
+		isOpen.await();
 	}
 	
-	public void close() {
+	protected void close() throws Exception {
 		session.close();
 	}
 	
 	/**
 	 * @return
 	 */
-	public boolean isSynchronized() {
+	protected boolean isSynchronized() {
 		return synchronizedSessions.containsKey(session.getId());
 	}
 	
 	/**
 	 * 
 	 */
-	public void try_() {
+	protected void try_() {
 		final String message = "1" + session.getId();
 		final ByteBuffer data = ByteBuffer.wrap(message.getBytes(StandardCharsets.UTF_8));
 		session.getOpenSessions().forEach(ss -> {
@@ -133,7 +174,7 @@ public class Synchronized {
 	/**
 	 * 
 	 */
-	public void finally_() {
+	protected void finally_() {
 		final String message = "0" + session.getId();
 		final ByteBuffer data = ByteBuffer.wrap(message.getBytes(StandardCharsets.UTF_8));
 		session.getOpenSessions().forEach(ss -> {
@@ -146,5 +187,12 @@ public class Synchronized {
 				LOGGER.log(Level.WARNING, "finally", e);
 			}
 		});
+	}
+	
+	public void synchronized_() throws Exception {
+		if(isSynchronized()) {
+			lock.lock();
+			isSynchronized.await();
+		}
 	}
 }
