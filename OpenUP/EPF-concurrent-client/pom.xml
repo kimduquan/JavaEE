@@ -10,5 +10,23 @@
     <name>Eclipse Process Framework Concurrent Client</name>
     <packaging>jar</packaging>
     <dependencies>
+		<!-- https://mvnrepository.com/artifact/jakarta.enterprise/jakarta.enterprise.cdi-api -->
+		<dependency>
+		    <groupId>jakarta.enterprise</groupId>
+		    <artifactId>jakarta.enterprise.cdi-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/jakarta.websocket/jakarta.websocket-client-api -->
+		<dependency>
+		    <groupId>jakarta.websocket</groupId>
+		    <artifactId>jakarta.websocket-client-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-logging-utility</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

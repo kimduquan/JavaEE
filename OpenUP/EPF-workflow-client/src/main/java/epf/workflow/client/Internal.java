@@ -266,6 +266,30 @@ public interface Internal {
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
 			final URI instance,
 			final InputStream body) throws Exception;
+	
+	/**
+	 * @param workflow
+	 * @param state
+	 * @param action
+	 * @param version
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	@PATCH
+	@Path("{workflow}/{state}/{action}/events")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	Response observes(
+			@PathParam("workflow")
+			final String workflow, 
+			@PathParam("state")
+			final String state,
+			@PathParam("action")
+			final String action,
+			@QueryParam("version")
+			final String version,
+			final Map<String, Object> map) throws Exception;
 
 	/**
 	 * @param workflow

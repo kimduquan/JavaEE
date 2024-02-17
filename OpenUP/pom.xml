@@ -252,13 +252,6 @@
 			    <version>2.0.0</version>
 				<!--<scope>provided</scope>-->
 			</dependency>
-			<!-- https://mvnrepository.com/artifact/jakarta.json/jakarta.json-api -->
-			<dependency>
-			    <groupId>jakarta.json</groupId>
-			    <artifactId>jakarta.json-api</artifactId>
-			    <version>2.1.2</version>
-				<!--<scope>provided</scope>-->
-			</dependency>
 			<!-- https://mvnrepository.com/artifact/jakarta.json.bind/jakarta.json.bind-api -->
 			<dependency>
 			    <groupId>jakarta.json.bind</groupId>
@@ -278,6 +271,20 @@
 			    <groupId>jakarta.validation</groupId>
 			    <artifactId>jakarta.validation-api</artifactId>
 			    <version>3.0.2</version>
+				<!--<scope>provided</scope>-->
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/jakarta.enterprise/jakarta.enterprise.cdi-api -->
+			<dependency>
+			    <groupId>jakarta.enterprise</groupId>
+			    <artifactId>jakarta.enterprise.cdi-api</artifactId>
+			    <version>4.0.1</version>
+				<!--<scope>provided</scope>-->
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/jakarta.websocket/jakarta.websocket-client-api -->
+			<dependency>
+			    <groupId>jakarta.websocket</groupId>
+			    <artifactId>jakarta.websocket-client-api</artifactId>
+			    <version>2.1.0</version>
 				<!--<scope>provided</scope>-->
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/jakarta.nosql/nosql-core -->

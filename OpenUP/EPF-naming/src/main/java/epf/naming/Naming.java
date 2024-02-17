@@ -127,6 +127,22 @@ public interface Naming {
 	/**
 	 * 
 	 */
+	String CONCURRENT = "concurrent";
+	
+	/**
+	 * 
+	 */
+	interface Concurrent {
+		
+		/**
+		 * 
+		 */
+		String SYNCHRONIZED = "synchronized";
+	}
+	
+	/**
+	 * 
+	 */
 	String CONFIG = "config";
 	
 	/**
