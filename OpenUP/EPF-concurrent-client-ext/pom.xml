@@ -10,6 +10,12 @@
     <name>Eclipse Process Framework Concurrent Client</name>
     <packaging>jar</packaging>
     <dependencies>
+		<!-- https://mvnrepository.com/artifact/jakarta.annotation/jakarta.annotation-api -->
+		<dependency>
+		    <groupId>jakarta.annotation</groupId>
+		    <artifactId>jakarta.annotation-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/jakarta.enterprise/jakarta.enterprise.cdi-api -->
 		<dependency>
 		    <groupId>jakarta.enterprise</groupId>
