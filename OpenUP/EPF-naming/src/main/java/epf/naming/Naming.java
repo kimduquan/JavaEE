@@ -137,6 +137,11 @@ public interface Naming {
 		/**
 		 * 
 		 */
+		String CONCURRENT_URL = "epf.concurrent.url";
+		
+		/**
+		 * 
+		 */
 		String SYNCHRONIZED = "synchronized";
 	}
 	

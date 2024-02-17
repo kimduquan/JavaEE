@@ -18,6 +18,10 @@ cd EPF-registry
 mvn clean install -U
 java -Dquarkus.http.port=9182 -jar target/quarkus-app/quarkus-run.jar &
 cd ../
+cd EPF-concurrent
+mvn clean install -U
+$JAVA21_HOME/bin/java -Dquarkus.http.port=9193 -jar target/quarkus-app/quarkus-run.jar &
+cd ../
 cd EPF-workflow-management
 mvn clean install -U
 $JAVA21_HOME/bin/java -Dquarkus.http.port=9191 -jar target/quarkus-app/quarkus-run.jar &

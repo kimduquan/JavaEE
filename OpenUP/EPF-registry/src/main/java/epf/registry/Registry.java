@@ -199,6 +199,13 @@ public class Registry implements epf.registry.client.Registry {
 	 * 
 	 */
 	@Inject
+	@ConfigProperty(name = Naming.Concurrent.CONCURRENT_URL)
+	transient URI concurrentUrl;
+	
+	/**
+	 * 
+	 */
+	@Inject
 	@ConfigProperty(name = Naming.Net.HTTP_PORT)
 	transient int httpPort;
 	
@@ -228,6 +235,7 @@ public class Registry implements epf.registry.client.Registry {
 			remotes.put(Naming.WORKFLOW, workflowUrl);
 			remotes.put(Naming.Workflow.WORKFLOW_MANAGEMENT, workflowManagementUrl);
 			remotes.put(Naming.EVENT, eventUrl);
+			remotes.put(Naming.CONCURRENT, concurrentUrl);
 			remotes.forEach((name, url) -> {
 				LOGGER.info(String.format("%s=%s", name, url));
 			});
