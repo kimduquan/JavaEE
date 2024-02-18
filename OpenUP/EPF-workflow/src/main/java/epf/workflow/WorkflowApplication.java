@@ -11,7 +11,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -35,7 +36,6 @@ import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.faulttolerance.Fallback;
@@ -61,6 +61,7 @@ import epf.nosql.schema.Either;
 import epf.nosql.schema.StringOrObject;
 import epf.util.MapUtil;
 import epf.util.json.ext.JsonUtil;
+import epf.util.logging.LogManager;
 import epf.workflow.client.Internal;
 import epf.workflow.client.Workflow;
 import epf.workflow.function.openapi.OpenAPIUtil;
@@ -117,6 +118,11 @@ public class WorkflowApplication implements Workflow, Internal {
 	/**
 	 * 
 	 */
+	private transient static final Logger LOGGER = LogManager.getLogger(WorkflowApplication.class.getName());
+	
+	/**
+	 * 
+	 */
 	private transient final Map<String, OpenAPI> openAPIs = new ConcurrentHashMap<>();
 	
 	/**
@@ -150,7 +156,12 @@ public class WorkflowApplication implements Workflow, Internal {
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		concurrent.setServerEndpoint(concurrentUrl);
+		try {
+			concurrent.connectToServer(concurrentUrl);
+		} 
+		catch (Exception e) {
+			LOGGER.log(Level.SEVERE, "postConstruct", e);
+		}
 	}
 	
 	private ResponseBuilder transitionLink(final ResponseBuilder response, final String workflow, final Optional<String> version, final String state) {
@@ -514,7 +525,7 @@ public class WorkflowApplication implements Workflow, Internal {
 		if(consumeEventDefinition != null) {
 			final Map<String, Object> consumeExt = new HashMap<>();
 			final epf.event.schema.Event consumeEvent = newEvent(produceEventDefinition, instance, consumeExt);
-			final String id = concurrent.try_().getId();
+			final String id = concurrent.new_();
 			consumeEvent.setSource(id);
 			Object consumeData = null;
 			if(eventRefDefinition.getData().isLeft()) {

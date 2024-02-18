@@ -1,9 +1,7 @@
 package epf.concurrent.client.ext;
 
 import java.net.URI;
-import java.util.Map;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,12 +23,12 @@ public class Concurrent {
 	/**
 	 * 
 	 */
-	private transient final Queue<Synchronized> sessions = new ConcurrentLinkedQueue<>();
+	private transient final Queue<Synchronized> internalSessions = new ConcurrentLinkedQueue<>();
 	
 	/**
 	 * 
 	 */
-	private transient final Map<String, Synchronized> synchronizedSessions = new ConcurrentHashMap<>();
+	private transient Synchronized default_ = null;
 	
 	/**
 	 * 
@@ -42,7 +40,7 @@ public class Concurrent {
 	 */
 	@PreDestroy
 	protected void close() {
-		sessions.forEach(session -> {
+		internalSessions.forEach(session -> {
 			try {
 				session.clear();
 			} 
@@ -50,57 +48,57 @@ public class Concurrent {
 				LOGGER.log(Level.WARNING, "close", e);
 			}
 		});
+		try {
+			default_.clear();
+		} 
+		catch (Exception e) {
+			LOGGER.log(Level.WARNING, "close", e);
+		}
 	}
 	
-	private void newSynchronized() throws Exception {
+	private Synchronized newSynchronized() throws Exception {
 		final Synchronized synchronized_ = new Synchronized();
 		synchronized_.connectToServer(serverEndpoint);
-		sessions.add(synchronized_);
+		return synchronized_;
 	}
 	
 	/**
 	 * @param uri
 	 */
-	public void setServerEndpoint(final URI uri) {
+	public void connectToServer(final URI uri) throws Exception {
 		this.serverEndpoint = uri;
+		default_ = newSynchronized();
 	}
 	
 	/**
 	 * @return
 	 * @throws Exception
 	 */
-	public Synchronized try_() throws Exception {
-		final Queue<Synchronized> synchronizedSessions = new ConcurrentLinkedQueue<>();
+	public String new_() throws Exception {
+		final Queue<Synchronized> tempSessions = new ConcurrentLinkedQueue<>();
 		Synchronized synchronized_ = null;
 		do {
-			synchronized_ = sessions.poll();
+			synchronized_ = internalSessions.poll();
 			if(synchronized_ != null) {
 				if(synchronized_.isSynchronized()) {
-					synchronizedSessions.add(synchronized_);
+					tempSessions.add(synchronized_);
 					synchronized_ = null;
 				}
 				else {
-					while(!synchronizedSessions.isEmpty()) {
-						sessions.add(synchronizedSessions.poll());
+					while(!tempSessions.isEmpty()) {
+						internalSessions.add(tempSessions.poll());
 					}
+					internalSessions.add(synchronized_);
 					break;
 				}
 			}
 			else {
-				newSynchronized();
+				synchronized_ = newSynchronized();
+				internalSessions.add(synchronized_);
 			}
 		}
 		while(synchronized_ == null);
-		synchronized_.try_();
-		return synchronized_;
-	}
-	
-	/**
-	 * @param synchronized_
-	 */
-	public void finally_(final Synchronized synchronized_) {
-		synchronized_.finally_();
-		sessions.add(synchronized_);
+		return synchronized_.getId();
 	}
 	
 	/**
@@ -109,25 +107,21 @@ public class Concurrent {
 	 * @throws Exception
 	 */
 	public Synchronized try_(final String id) throws Exception {
-		return synchronizedSessions.get(id);
-	}
-	
-	/**
-	 * @param id
-	 */
-	public void finally_(final String id) {
-		final Synchronized synchronized_ = synchronizedSessions.remove(id);
-		synchronized_.finally_();
-		sessions.add(synchronized_);
+		Synchronized synchronized_ = internalSessions.stream().filter(sync -> sync.getId().equals(id)).findFirst().get();
+		if(synchronized_ == null) {
+			synchronized_ = Synchronized.try_(default_, id);
+		}
+		return synchronized_;
 	}
 	
 	/**
 	 * @param id
 	 * @throws Exception
 	 */
-	public void synchronized_(final String id) throws Exception {
-		try(Synchronized sync = try_(id)){
-			sync.synchronized_();
+	public void finally_(final String id) throws Exception {
+		final Synchronized synchronized_ = try_(id);
+		if(synchronized_ != null) {
+			synchronized_.finally_();
 		}
 	}
 }
