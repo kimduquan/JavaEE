@@ -34,6 +34,16 @@ public class Synchronized {
 	 * 
 	 */
 	private transient final Map<String, Session> synchronizedSessions = new ConcurrentHashMap<>();
+	
+	private ByteBuffer message(final String flag, final String id) {
+		final String message = flag + id;
+		return ByteBuffer.wrap(message.getBytes(StandardCharsets.UTF_8));
+	}
+	
+	private void send(final Session session, final String flag, final String id) throws Exception {
+		final ByteBuffer data = message(flag, id);
+		session.getBasicRemote().sendPong(data);
+	}
 
 	/**
 	 * @param session
@@ -41,17 +51,15 @@ public class Synchronized {
 	@OnOpen
 	public void onOpen(final Session session) {
 		synchronizedSessions.forEach((id, ss) -> {
-			final ByteBuffer data = ByteBuffer.wrap(("1" + id).getBytes(StandardCharsets.UTF_8));
 			try {
-				session.getBasicRemote().sendPong(data);
+				send(ss, "1", id);
 			}
 			catch (Exception e) {
 				LOGGER.log(Level.WARNING, "onOpen", e);
 			}
 		});
-		final ByteBuffer data = ByteBuffer.wrap(("1").getBytes(StandardCharsets.UTF_8));
 		try {
-			session.getBasicRemote().sendPong(data);
+			send(session, "2", "");
 		}
 		catch (Exception e) {
 			LOGGER.log(Level.WARNING, "onOpen", e);

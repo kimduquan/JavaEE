@@ -4,6 +4,8 @@ import java.net.URI;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -24,7 +26,7 @@ import javax.websocket.Session;
  * 
  */
 @ClientEndpoint
-public class Synchronized implements AutoCloseable {
+public class Synchronized {
 	
 	/**
 	 * 
@@ -44,23 +46,36 @@ public class Synchronized implements AutoCloseable {
 	/**
 	 * 
 	 */
-	private Condition isOpen = lock.newCondition();
+	private final Condition isOpen = lock.newCondition();
 	
 	/**
 	 * 
 	 */
-	private Condition isSynchronized = lock.newCondition();
+	private final Condition try_ = lock.newCondition();
 	
 	/**
 	 * 
 	 */
-	private transient Session session;
+	private final Condition finally_ = lock.newCondition();
+	
+	/**
+	 * 
+	 */
+	private transient Session synchronizedSession;
 
 	/**
 	 * @param session
 	 */
 	@OnOpen
 	public void onOpen(final Session session) {
+		if(isSynchronized()) {
+			try {
+				send(session, "1", synchronizedSession.getId());
+			}
+			catch(Exception e) {
+				LOGGER.log(Level.WARNING, "onOpen", e);
+			}
+		}
 	}
 	
 	/**
@@ -92,33 +107,46 @@ public class Synchronized implements AutoCloseable {
 		final String flag = messageData.substring(0, 1);
 		final String id = messageData.substring(1);
 		if("1".equals(flag)) {
-			if(id.isEmpty()) {
-				open();
-			}
-			else {
-				synchronized_(id, session);
+			synchronizedSessions.put(id, session(id));
+			if(id.equals(synchronizedSession.getId())) {
+				try_.signalAll();
 			}
 		}
 		else if("0".equals(flag)) {
-			close(id);
-			if(session.getId().equals(id)) {
-				lock.lock();
-				isSynchronized.signalAll();
+			synchronizedSessions.remove(id);
+			if(id.equals(synchronizedSession.getId())) {
+				finally_.signalAll();
 			}
+		}
+		else if("2".equals(flag)) {
+			isOpen.signalAll();
 		}
 	}
 	
-	private void open() {
-		lock.lock();
-		isOpen.signalAll();
+	private ByteBuffer message(final String flag, final String id) {
+		final String message = flag + id;
+		return ByteBuffer.wrap(message.getBytes(StandardCharsets.UTF_8));
 	}
 	
-	private void synchronized_(final String id, final Session session) {
-		synchronizedSessions.put(id, session);
+	private Session session(final String id) {
+		return synchronizedSession.getOpenSessions().stream().filter(ss -> ss.getId().equals(id)).findFirst().get();
 	}
 	
-	private void close(final String id) {
-		synchronizedSessions.remove(id);
+	private void send(final Session session, final String flag, final String id) throws Exception {
+		final ByteBuffer data = message(flag, id);
+		session.getBasicRemote().sendPong(data);
+	}
+	
+	private void send(final Set<Session> sessions, final String flag, final String id) {
+		final ByteBuffer data = message(flag, id);
+		sessions.stream().filter(Session::isOpen).forEach(session -> {
+			try {
+				session.getBasicRemote().sendPong(data);
+			}
+			catch(Exception ex) {
+				LOGGER.log(Level.WARNING, "send", ex);
+			}
+		});
 	}
 	
 	/**
@@ -127,77 +155,74 @@ public class Synchronized implements AutoCloseable {
 	 */
 	protected void connectToServer(final URI uri) throws Exception {
 		lock.lock();
-		session = ContainerProvider.getWebSocketContainer().connectToServer(this, uri);
-		isOpen.await();
-	}
-	
-	/**
-	 *
-	 */
-	public void close() throws Exception {
+		if(synchronizedSession == null) {
+			synchronizedSession = ContainerProvider.getWebSocketContainer().connectToServer(this, uri);
+			isOpen.await();
+		}
+		lock.unlock();
 	}
 	
 	/**
 	 * @throws Exception
 	 */
 	protected void clear() throws Exception {
-		session.close();
+		synchronizedSession.close();
 	}
 	
 	/**
 	 * @return
 	 */
 	protected boolean isSynchronized() {
-		return synchronizedSessions.containsKey(session.getId());
+		return synchronizedSessions.containsKey(synchronizedSession.getId());
 	}
 	
 	/**
 	 * 
 	 */
 	protected void try_() {
-		final String message = "1" + session.getId();
-		final ByteBuffer data = ByteBuffer.wrap(message.getBytes(StandardCharsets.UTF_8));
-		session.getOpenSessions().forEach(ss -> {
-			try {
-				if(ss.isOpen()) {
-					ss.getBasicRemote().sendPong(data);
-				}
-			} 
-			catch (Exception e) {
-				LOGGER.log(Level.WARNING, "try", e);
-			}
-		});
+		send(synchronizedSession.getOpenSessions(), "1", synchronizedSession.getId());
 	}
 	
 	/**
 	 * 
 	 */
 	protected void finally_() {
-		final String message = "0" + session.getId();
-		final ByteBuffer data = ByteBuffer.wrap(message.getBytes(StandardCharsets.UTF_8));
-		session.getOpenSessions().forEach(ss -> {
-			try {
-				if(ss.isOpen()) {
-					ss.getBasicRemote().sendPong(data);
-				}
-			} 
-			catch (Exception e) {
-				LOGGER.log(Level.WARNING, "finally", e);
-			}
-		});
-	}
-	
-	public void synchronized_() throws Exception {
-		lock.lock();
-		if(isSynchronized()) {
-			isSynchronized.await();
-		}
+		send(synchronizedSession.getOpenSessions(), "0", synchronizedSession.getId());
 	}
 	
 	/**
 	 * @return
 	 */
-	public String getId() {
-		return session.getId();
+	protected String getId() {
+		return synchronizedSession.getId();
+	}
+	
+	/**
+	 * @param default_
+	 * @param id
+	 * @return
+	 */
+	protected static Synchronized try_(final Synchronized default_, final String id) {
+		Synchronized synchronized_ = null;
+		final Optional<Session> session = default_.synchronizedSession.getOpenSessions().stream().filter(ss -> ss.getId().equals(id)).findFirst();
+		if(session.isPresent()) {
+			synchronized_ = new Synchronized();
+			synchronized_.synchronizedSession = session.get();
+		}
+		return synchronized_;
+	}
+	
+	/**
+	 * @throws Exception
+	 */
+	public void synchronized_() throws Exception {
+		lock.lock();
+		if(isSynchronized()) {
+			finally_.await();
+		}
+		else {
+			try_.await();
+		}
+		lock.unlock();
 	}
 }

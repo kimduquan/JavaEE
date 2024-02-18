@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
@@ -32,6 +33,7 @@ import epf.client.util.RequestBuilder;
 import epf.client.util.RequestUtil;
 import epf.client.util.ResponseUtil;
 import epf.concurrent.client.Concurrent;
+import epf.concurrent.client.Synchronized;
 import epf.hateoas.utility.HATEOAS;
 import epf.naming.Naming;
 import epf.util.io.InputStreamUtil;
@@ -81,7 +83,12 @@ public class Application {
     @PostConstruct
     protected void postConstruct() {
     	final Optional<URI> uri = registry.lookup(Naming.CONCURRENT);
-    	concurrent.setServerEndpoint(uri.get());
+    	try {
+			concurrent.connectToServer(uri.get());
+		} 
+    	catch (Exception e) {
+			LOGGER.log(Level.SEVERE, "postConstruct", e);
+		}
     }
     
     /**
@@ -115,11 +122,14 @@ public class Application {
         	final MediaType mediaType = response.getMediaType();
 
         	if(synchronized_.isPresent()) {
-				concurrent.synchronized_(synchronized_.get());
+				final Synchronized sync = concurrent.try_(synchronized_.get());
+				if(sync != null) {
+					sync.synchronized_();
+				}
 			}
-        	if(finally_.isPresent()) {
-        		concurrent.finally_(finally_.get());
-        	}
+			if(finally_.isPresent()) {
+				concurrent.finally_(finally_.get());
+			}
         	response = buildLinkRequests(client, response, entity, mediaType, headers, self, isPartial);
     	}
     	response = ResponseUtil.buildResponse(response, uriInfo.getBaseUri());
@@ -218,7 +228,10 @@ public class Application {
         				}
         				
         				if(synchronizedLink.isPresent()) {
-        					concurrent.synchronized_(synchronizedLink.get());
+        					final Synchronized synchronized_ = concurrent.try_(synchronizedLink.get());
+        					if(synchronized_ != null) {
+        						synchronized_.synchronized_();
+        					}
         				}
         				if(finallyLink.isPresent()) {
         					concurrent.finally_(finallyLink.get());
