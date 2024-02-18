@@ -158,21 +158,21 @@ public class Synchronized {
 	/**
 	 * 
 	 */
-	protected void try_() {
+	public void try_() {
 		send(synchronizedSession.getOpenSessions(), "1", synchronizedSession.getId());
 	}
 	
 	/**
 	 * 
 	 */
-	protected void finally_() {
+	public void continue_() {
 		send(synchronizedSession.getOpenSessions(), "0", synchronizedSession.getId());
 	}
 	
 	/**
 	 * @return
 	 */
-	protected String getId() {
+	public String getId() {
 		return synchronizedSession.getId();
 	}
 	
@@ -181,7 +181,7 @@ public class Synchronized {
 	 * @param id
 	 * @return
 	 */
-	protected static Synchronized try_(final Synchronized default_, final String id) {
+	protected static Synchronized find(final Synchronized default_, final String id) {
 		Synchronized synchronized_ = null;
 		final Optional<Session> session = default_.synchronizedSession.getOpenSessions().stream().filter(ss -> ss.getId().equals(id)).findFirst();
 		if(session.isPresent()) {

@@ -122,13 +122,16 @@ public class Application {
         	final MediaType mediaType = response.getMediaType();
 
         	if(synchronized_.isPresent()) {
-				final Synchronized sync = concurrent.try_(synchronized_.get());
+				final Synchronized sync = concurrent.synchronized_(synchronized_.get());
 				if(sync != null) {
 					sync.synchronized_();
 				}
 			}
 			if(finally_.isPresent()) {
-				concurrent.finally_(finally_.get());
+				final Synchronized sync = concurrent.synchronized_(finally_.get());
+				if(sync != null) {
+					sync.continue_();
+				}
 			}
         	response = buildLinkRequests(client, response, entity, mediaType, headers, self, isPartial);
     	}
@@ -228,13 +231,16 @@ public class Application {
         				}
         				
         				if(synchronizedLink.isPresent()) {
-        					final Synchronized synchronized_ = concurrent.try_(synchronizedLink.get());
+        					final Synchronized synchronized_ = concurrent.synchronized_(synchronizedLink.get());
         					if(synchronized_ != null) {
         						synchronized_.synchronized_();
         					}
         				}
         				if(finallyLink.isPresent()) {
-        					concurrent.finally_(finallyLink.get());
+        					final Synchronized synchronized_ = concurrent.synchronized_(finallyLink.get());
+        					if(synchronized_ != null) {
+        						synchronized_.continue_();
+        					}
         				}
         				linkResponse = buildLinkRequests(client, linkResponse, prevLinkEntity, prevMediaType, headers, targetLink, isPartialLink);
         				

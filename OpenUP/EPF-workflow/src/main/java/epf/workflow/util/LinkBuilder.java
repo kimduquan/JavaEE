@@ -39,11 +39,20 @@ public class LinkBuilder {
 	}
 	
 	/**
-	 * @param _synchronized
+	 * @param synchronized_
 	 * @return
 	 */
-	public LinkBuilder Synchronized(final boolean _synchronized) {
-		builder = builder.param("synchronized", String.valueOf(_synchronized));
+	public LinkBuilder synchronized_(final String synchronized_) {
+		builder = builder.param("synchronized", synchronized_);
+		return this;
+	}
+	
+	/**
+	 * @param synchronized_
+	 * @return
+	 */
+	public LinkBuilder continue_(final String synchronized_) {
+		builder = builder.param("continue", synchronized_);
 		return this;
 	}
 	

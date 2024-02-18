@@ -126,33 +126,6 @@ public interface Internal {
 	/**
 	 * @param workflow
 	 * @param state
-	 * @param action
-	 * @param version
-	 * @param instance
-	 * @param body
-	 * @return
-	 * @throws Exception
-	 */
-	@POST
-	@Path("{workflow}/{state}/{action}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	Response action(
-			@PathParam("workflow")
-			final String workflow, 
-			@PathParam("state")
-			final String state,
-			@PathParam("action")
-			final String action,
-			@QueryParam("version")
-			final String version,
-			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
-			final URI instance,
-			final InputStream body) throws Exception;
-	
-	/**
-	 * @param workflow
-	 * @param state
 	 * @param version
 	 * @param map
 	 * @return
@@ -319,21 +292,6 @@ public interface Internal {
 			uri = uri.queryParam("version", version.get());
 		}
 		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.PATCH, workflow, state);
-	}
-	
-	/**
-	 * @param workflow
-	 * @param state
-	 * @param version
-	 * @param action
-	 * @return
-	 */
-	static Link observesLink(final String workflow, final String state, final Optional<String> version, final String action) {
-		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}/{action}/events");
-		if(version.isPresent()) {
-			uri = uri.queryParam("version", version.get());
-		}
-		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.PATCH, workflow, state, action);
 	}
 	
 	/**

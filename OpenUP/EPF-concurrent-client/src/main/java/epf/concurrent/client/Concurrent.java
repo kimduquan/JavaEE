@@ -74,7 +74,7 @@ public class Concurrent {
 	 * @return
 	 * @throws Exception
 	 */
-	public String new_() throws Exception {
+	public Synchronized synchronized_() throws Exception {
 		final Queue<Synchronized> tempSessions = new ConcurrentLinkedQueue<>();
 		Synchronized synchronized_ = null;
 		do {
@@ -98,7 +98,7 @@ public class Concurrent {
 			}
 		}
 		while(synchronized_ == null);
-		return synchronized_.getId();
+		return synchronized_;
 	}
 	
 	/**
@@ -106,22 +106,11 @@ public class Concurrent {
 	 * @return
 	 * @throws Exception
 	 */
-	public Synchronized try_(final String id) throws Exception {
+	public Synchronized synchronized_(final String id) throws Exception {
 		Synchronized synchronized_ = internalSessions.stream().filter(sync -> sync.getId().equals(id)).findFirst().get();
 		if(synchronized_ == null) {
-			synchronized_ = Synchronized.try_(default_, id);
+			synchronized_ = Synchronized.find(default_, id);
 		}
 		return synchronized_;
-	}
-	
-	/**
-	 * @param id
-	 * @throws Exception
-	 */
-	public void finally_(final String id) throws Exception {
-		final Synchronized synchronized_ = try_(id);
-		if(synchronized_ != null) {
-			synchronized_.finally_();
-		}
 	}
 }

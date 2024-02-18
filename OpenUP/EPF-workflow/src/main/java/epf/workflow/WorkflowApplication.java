@@ -53,6 +53,7 @@ import org.eclipse.microprofile.openapi.models.PathItem;
 import org.eclipse.microprofile.openapi.models.parameters.Parameter;
 import org.eclipse.microprofile.openapi.models.servers.Server;
 import epf.concurrent.client.ext.Concurrent;
+import epf.concurrent.client.ext.Synchronized;
 import epf.event.schema.Event;
 import epf.naming.Naming;
 import epf.nosql.schema.BooleanOrObject;
@@ -85,6 +86,7 @@ import epf.workflow.schema.event.OnEventsDefinition;
 import epf.workflow.schema.event.ProducedEventDefinition;
 import epf.workflow.schema.function.FunctionDefinition;
 import epf.workflow.schema.function.FunctionRefDefinition;
+import epf.workflow.schema.function.Invoke;
 import epf.workflow.schema.state.CallbackState;
 import epf.workflow.schema.state.EventState;
 import epf.workflow.schema.state.ForEachState;
@@ -225,39 +227,6 @@ public class WorkflowApplication implements Workflow, Internal {
 			ext.put(correlationDefinition.getContextAttributeName(), correlationDefinition.getContextAttributeValue());
 		});
 		return event;
-	}
-	
-	private ActionDefinition getActionDefinition(final State state, final String action) {
-		Optional<ActionDefinition> actionDefinition = Optional.empty();
-		List<ActionDefinition> actionDefinitions = null;
-		switch(state.getType_()) {
-			case Switch:
-				break;
-			case callback:
-				break;
-			case event:
-				break;
-			case foreach:
-				final ForEachState forEachState = (ForEachState) state;
-				actionDefinitions = forEachState.getActions();
-				break;
-			case inject:
-				break;
-			case operation:
-				final OperationState operationState = (OperationState) state;
-				actionDefinitions = operationState.getActions();
-				break;
-			case parallel:
-				break;
-			case sleep:
-				break;
-			default:
-				break;
-		}
-		if(actionDefinitions != null) {
-			actionDefinition = actionDefinitions.stream().filter(actionDef -> actionDef.getName().equals(action)).findFirst();
-		}
-		return actionDefinition.orElseThrow(NotFoundException::new);
 	}
 	
 	private WorkflowDefinition getSubWorkflowDefinition(final StringOrObject<SubFlowRefDefinition> subFlowRef) {
@@ -491,7 +460,7 @@ public class WorkflowApplication implements Workflow, Internal {
 		return response;
 	}
 	
-	private ResponseBuilder event(final ResponseBuilder response, final WorkflowDefinition workflowDefinition, final String state, final ActionDefinition actionDefinition, final EventRefDefinition eventRefDefinition, final URI instance, final WorkflowData workflowData) throws Exception {
+	private ResponseBuilder eventRef(final ResponseBuilder response, final WorkflowDefinition workflowDefinition, final String state, final ActionDefinition actionDefinition, final EventRefDefinition eventRefDefinition, final URI instance, final WorkflowData workflowData) throws Exception {
 		final List<Map<String, Object>> eventDatas = new ArrayList<>();
 		final List<Link> eventLinks = new ArrayList<>();
 		final Link producesLink = epf.event.client.Event.producesLink();
@@ -523,8 +492,6 @@ public class WorkflowApplication implements Workflow, Internal {
 		if(consumeEventDefinition != null) {
 			final Map<String, Object> consumeExt = new HashMap<>();
 			final epf.event.schema.Event consumeEvent = newEvent(produceEventDefinition, instance, consumeExt);
-			final String id = concurrent.new_();
-			consumeEvent.setSource(id);
 			Object consumeData = null;
 			if(eventRefDefinition.getData().isLeft()) {
 				final JsonValue value = ELUtil.getValue(eventRefDefinition.getData().getLeft(), workflowData.getInput());
@@ -539,7 +506,11 @@ public class WorkflowApplication implements Workflow, Internal {
 				consumeContextAttributes = new HashMap<>();
 			}
 			final Map<String, Object> consumeEventData = produceEvent.toMap(consumeContextAttributes);
-			final Link consumeEventLink = builder.link(consumeLink).at(response.getSize()).build();
+			builder.link(consumeLink).at(response.getSize());
+			if(Invoke.sync == eventRefDefinition.getInvoke()) {
+				final Synchronized synchronized_ = concurrent.synchronized_();
+			}
+			final Link consumeEventLink = builder.build();
 			
 			eventDatas.add(consumeEventData);
 			eventLinks.add(consumeEventLink);
@@ -558,7 +529,7 @@ public class WorkflowApplication implements Workflow, Internal {
 			}
 		}
 		else if(actionDefinition.getEventRef() != null) {
-			event(response, workflowDefinition, state, actionDefinition, actionDefinition.getEventRef(), instance, workflowData);
+			eventRef(response, workflowDefinition, state, actionDefinition, actionDefinition.getEventRef(), instance, workflowData);
 		}
 		else if(!actionDefinition.getSubFlowRef().isNull()) {
 			getSubWorkflowDefinition(actionDefinition.getSubFlowRef());
@@ -667,13 +638,12 @@ public class WorkflowApplication implements Workflow, Internal {
 		}
 		final Link batchLink = Internal.batchLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), state);
 		final LinkBuilder builder = new LinkBuilder();
-		final boolean synchronized_ = Mode.sequential.equals(mode);
 		final JsonArray batchesArray = batches.build();
 		final Iterator<JsonValue> batchIt = batchesArray.iterator();
 		final List<Link> batchLinks = new ArrayList<>();
 		index = 0;
 		while(batchIt.hasNext()) {
-			final Link link = builder.link(batchLink).at(response.getSize()).Synchronized(synchronized_).build();
+			final Link link = builder.link(batchLink).at(response.getSize()).build();
 			batchLinks.add(link);
 			batchIt.next();
 			index++;
@@ -689,7 +659,7 @@ public class WorkflowApplication implements Workflow, Internal {
 		final Iterator<ParallelStateBranch> branchIt = branches.iterator();
 		while(branchIt.hasNext()) {
 			final Link branchLink = Internal.branchLink(workflow, Optional.ofNullable(version), state, index);
-			final Link link = builder.link(branchLink).at(response.getSize()).Synchronized(true).build();
+			final Link link = builder.link(branchLink).at(response.getSize()).build();
 			branchLinks.add(link);
 			branchesArray.add(workflowData.getInput());
 			branchIt.next();
@@ -1216,22 +1186,6 @@ public class WorkflowApplication implements Workflow, Internal {
 		return output(instance, response, body);
 	}
 	
-	@LRA(value = Type.MANDATORY, end = false)
-	@Retry(maxRetries = -1, maxDuration = 0, jitter = 0, retryOn = {RetryableException.class}, abortOn = {NonRetryableException.class})
-	@Fallback(value = WorkflowErrorHandler.class, applyOn = {WorkflowErrorException.class})
-	@RunOnVirtualThread
-	@Override
-	public Response action(final String workflow, final String state, final String action, final String version, final URI instance, final InputStream body) throws Exception {
-		final WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
-		final State currentState = getState(workflowDefinition, state);
-		final ActionDefinition actionDefinition = getActionDefinition(currentState, action);
-		final WorkflowData actionData = input(body);
-		final ResponseBuilder response = new ResponseBuilder();
-		action(response, workflowDefinition, state, actionDefinition, instance, actionData);
-		actionData.setOutput(filterActionDataOutput(actionDefinition.getActionDataFilter(), actionData, actionData.getOutput()));
-		return output(instance, response, actionData);
-	}
-	
 	@RunOnVirtualThread
 	@Override
 	public Response observes(final String workflow, final String state, final String version, final Map<String, Object> map) throws Exception {
@@ -1322,7 +1276,7 @@ public class WorkflowApplication implements Workflow, Internal {
 		final Iterator<JsonValue> iterator = inputCollection.iterator();
 		final List<Link> iterationLinks = new ArrayList<>();
 		while(iterator.hasNext()) {
-			final Link link = builder.link(iterationLink).at(response.getSize()).Synchronized(synchronized_).build();
+			final Link link = builder.link(iterationLink).at(response.getSize()).build();
 			iterationLinks.add(link);
 			iterator.next();
 		}
