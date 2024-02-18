@@ -51,12 +51,7 @@ public class Synchronized {
 	/**
 	 * 
 	 */
-	private final Condition try_ = lock.newCondition();
-	
-	/**
-	 * 
-	 */
-	private final Condition finally_ = lock.newCondition();
+	private final Condition synchronized_ = lock.newCondition();
 	
 	/**
 	 * 
@@ -68,14 +63,6 @@ public class Synchronized {
 	 */
 	@OnOpen
 	public void onOpen(final Session session) {
-		if(isSynchronized()) {
-			try {
-				send(session, "1", synchronizedSession.getId());
-			}
-			catch(Exception e) {
-				LOGGER.log(Level.WARNING, "onOpen", e);
-			}
-		}
 	}
 	
 	/**
@@ -108,14 +95,11 @@ public class Synchronized {
 		final String id = messageData.substring(1);
 		if("1".equals(flag)) {
 			synchronizedSessions.put(id, session(id));
-			if(id.equals(synchronizedSession.getId())) {
-				try_.signalAll();
-			}
 		}
 		else if("0".equals(flag)) {
 			synchronizedSessions.remove(id);
 			if(id.equals(synchronizedSession.getId())) {
-				finally_.signalAll();
+				synchronized_.signalAll();
 			}
 		}
 		else if("2".equals(flag)) {
@@ -132,14 +116,9 @@ public class Synchronized {
 		return synchronizedSession.getOpenSessions().stream().filter(ss -> ss.getId().equals(id)).findFirst().get();
 	}
 	
-	private void send(final Session session, final String flag, final String id) throws Exception {
-		final ByteBuffer data = message(flag, id);
-		session.getBasicRemote().sendPong(data);
-	}
-	
 	private void send(final Set<Session> sessions, final String flag, final String id) {
 		final ByteBuffer data = message(flag, id);
-		sessions.stream().filter(Session::isOpen).forEach(session -> {
+		sessions.stream().forEach(session -> {
 			try {
 				session.getBasicRemote().sendPong(data);
 			}
@@ -218,10 +197,7 @@ public class Synchronized {
 	public void synchronized_() throws Exception {
 		lock.lock();
 		if(isSynchronized()) {
-			finally_.await();
-		}
-		else {
-			try_.await();
+			synchronized_.await();
 		}
 		lock.unlock();
 	}
