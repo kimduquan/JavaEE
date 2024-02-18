@@ -191,6 +191,17 @@ public interface Naming {
 		/**
 		 * 
 		 */
+		interface Internal {
+			
+			/**
+			 * 
+			 */
+			String EPF_EVENT_CACHE = "epf-event-cache";
+		}
+		
+		/**
+		 * 
+		 */
 		interface Schema {
 			
 			/**

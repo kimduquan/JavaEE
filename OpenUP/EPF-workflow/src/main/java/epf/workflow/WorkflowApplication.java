@@ -37,7 +37,6 @@ import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.faulttolerance.Fallback;
 import org.eclipse.microprofile.faulttolerance.Retry;
 import org.eclipse.microprofile.health.Readiness;
@@ -86,7 +85,6 @@ import epf.workflow.schema.event.OnEventsDefinition;
 import epf.workflow.schema.event.ProducedEventDefinition;
 import epf.workflow.schema.function.FunctionDefinition;
 import epf.workflow.schema.function.FunctionRefDefinition;
-import epf.workflow.schema.function.Invoke;
 import epf.workflow.schema.state.CallbackState;
 import epf.workflow.schema.state.EventState;
 import epf.workflow.schema.state.ForEachState;
@@ -828,9 +826,7 @@ public class WorkflowApplication implements Workflow, Internal {
 		final Map<String, Object> ext = new HashMap<>();
 		final Event event = newEvent(eventDefinition, instance, ext);
 		final Link callbackLink = Internal.callbackLink(workflowDefinition.getId(), callbackState.getName(), Optional.ofNullable(workflowDefinition.getVersion()));
-		final URI source = epf.event.client.Event.getEventSource(callbackLink);
-		event.setSource(source.toString());
-		return consumesLink(response, event, ext);
+		return consumesLink(response, event, callbackLink, ext);
 	}
 	
 	private ResponseBuilder transitionEventState(final ResponseBuilder response, final WorkflowDefinition workflowDefinition, final EventState eventState, final URI instance) throws Exception {
@@ -839,11 +835,10 @@ public class WorkflowApplication implements Workflow, Internal {
 		MapUtil.putAll(eventDefs, eventDefinitions.iterator(), EventDefinition::getName);
 		final List<Map<String, Object>> events = new ArrayList<>();
 		final List<Link> eventLinks = new ArrayList<>();
-		final Link consumesLink = epf.event.client.Event.consumesLink();
 		final Link producesLink = epf.event.client.Event.producesLink();
 		final Link observesLink = Internal.observesLink(workflowDefinition.getId(), eventState.getName(), Optional.ofNullable(workflowDefinition.getVersion()));
+		final Link consumesLink = epf.event.client.Event.consumesLink(observesLink);
 		final LinkBuilder builder = new LinkBuilder();
-		final URI source = epf.event.client.Event.getEventSource(observesLink);
 		for(OnEventsDefinition onEventsDef : eventState.getOnEvents()) {
 			for(String eventRef : onEventsDef.getEventRefs()) {
 				final EventDefinition eventDef = eventDefs.get(eventRef);
@@ -852,7 +847,6 @@ public class WorkflowApplication implements Workflow, Internal {
 				Link eventLink = null;
 				if(Kind.consumed.equals(eventDef.getKind())) {
 					eventLink = builder.link(consumesLink).at(response.getSize()).build();
-					event.setSource(source.toString());
 				}
 				else if(Kind.produced.equals(eventDef.getKind())){
 					eventLink = builder.link(producesLink).at(response.getSize()).build();
@@ -1022,10 +1016,10 @@ public class WorkflowApplication implements Workflow, Internal {
 		return response;
 	}
 	
-	private ResponseBuilder consumesLink(final ResponseBuilder response, final Event event, final Map<String, Object> ext) throws Exception {
+	private ResponseBuilder consumesLink(final ResponseBuilder response, final Event event, final Link eventLink, final Map<String, Object> ext) throws Exception {
 		final Map<String, Object> map = event.toMap(ext);
 		final LinkBuilder builder = new LinkBuilder();
-		final Link consumesLink = epf.event.client.Event.consumesLink();
+		final Link consumesLink = epf.event.client.Event.consumesLink(eventLink);
 		builder.link(consumesLink).at(response.getSize());
 		return response.entity(map).links(builder.build());
 	}

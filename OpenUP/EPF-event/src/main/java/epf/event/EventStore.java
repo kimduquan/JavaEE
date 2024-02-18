@@ -13,6 +13,7 @@ import org.eclipse.jnosql.communication.column.ColumnEntity;
 import org.eclipse.jnosql.communication.column.ColumnManager;
 import org.eclipse.jnosql.communication.column.ColumnQuery;
 import org.eclipse.jnosql.communication.column.ColumnQuery.ColumnWhere;
+import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
@@ -23,10 +24,11 @@ import epf.naming.Naming.Event.Schema;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.nosql.column.ColumnTemplate;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Link;
+import jakarta.ws.rs.core.Link.Builder;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -40,13 +42,14 @@ public class EventStore implements Event {
 	 * 
 	 */
 	@Inject
-	transient ColumnTemplate column;
+	transient ColumnManager manager;
 	
 	/**
 	 * 
 	 */
 	@Inject
-	transient ColumnManager manager;
+	@Readiness
+	transient EventCache eventCache;
 	
 	/**
 	 * 
@@ -54,6 +57,23 @@ public class EventStore implements Event {
 	@Inject
 	@Channel(Naming.Event.EPF_EVENT_PRODUCES)
 	transient Emitter<Map<String, Object>> produces;
+	
+	private String eventId(final ColumnEntity eventEntity) {
+		return eventEntity.find(Schema.ID).get().get().toString();
+	}
+	
+	private Map<String, Object> eventParams(final UriInfo uriInfo) {
+		final Map<String, Object> params = new HashMap<>();
+		uriInfo.getQueryParameters().forEach((name, value) -> {
+			if(value.isEmpty()) {
+				params.put(name, "");
+			}
+			else {
+				params.put(name, value.get(0));
+			}
+		});
+		return params;
+	}
 	
 	private Map<String, Object> entityColumns(final ColumnEntity entity) {
 		final Map<String, Object> map = new HashMap<>();
@@ -74,9 +94,10 @@ public class EventStore implements Event {
 		return where;
 	}
 	
-	private Link eventLink(final epf.event.schema.Event event, final int index) throws Exception {
+	private Link eventLink(final epf.event.schema.Event event, final int index, final Map<String, Object> eventParams) throws Exception {
 		final URI source = new URI(event.getSource());
-		return Event.getEventSource(source).title("#" + index).build();
+		Builder builder = Event.link(source, eventParams).title("#" + index);
+		return builder.build();
 	}
 	
 	private ColumnEntity eventEntity(final epf.event.schema.Event event, final List<Column> columns) {
@@ -123,7 +144,9 @@ public class EventStore implements Event {
 		int index = 0;
 		for(ColumnEntity eventEntity : updatedEntities) {
 			final Map<String, Object> eventData = entityColumns(eventEntity);
-			final Link eventLink = eventLink(event, index);
+			final String id = eventId(eventEntity);
+			final Map<String, Object> eventParams = eventCache.remove(id);
+			final Link eventLink = eventLink(event, index, eventParams);
 			eventDatas.add(eventData);
 			eventLinks.add(eventLink);
 		}
@@ -131,12 +154,15 @@ public class EventStore implements Event {
 
 	@RunOnVirtualThread
 	@Override
-	public Response consumes(final Map<String, Object> map) throws Exception {
+	public Response consumes(final UriInfo uriInfo, final Map<String, Object> map) throws Exception {
 		final Map<String, Object> ext = new HashMap<>();
 		final epf.event.schema.Event event = epf.event.schema.Event.event(map, ext);
 		final List<Column> columns = Columns.of(ext);
 		final ColumnEntity eventEntity = eventEntity(event, columns);
 		final ColumnEntity entity = manager.insert(eventEntity);
+		final Map<String, Object> eventParams = eventParams(uriInfo);
+		final String id = eventId(entity);
+		eventCache.put(id, eventParams);
 		return Response.ok(entityColumns(entity)).build();
 	}
 

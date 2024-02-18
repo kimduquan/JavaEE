@@ -9,10 +9,13 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.Link.Builder;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.UriInfo;
 
 /**
  * 
@@ -21,6 +24,7 @@ import jakarta.ws.rs.core.Response;
 public interface Event {
 
 	/**
+	 * @param uriInfo
 	 * @param event
 	 * @return
 	 * @throws Exception
@@ -28,13 +32,22 @@ public interface Event {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	Response consumes(final Map<String, Object> event) throws Exception;
+	Response consumes(
+			@Context
+			final UriInfo uriInfo,
+			final Map<String, Object> event) throws Exception;
 	
 	/**
+	 * @param eventLink
 	 * @return
 	 */
-	static Link consumesLink() {
-		Builder builder = Link.fromPath(Naming.EVENT).rel(Naming.EVENT).type(HttpMethod.POST);
+	static Link consumesLink(final Link eventLink) {
+		UriBuilder uri = UriBuilder.fromPath(Naming.EVENT);
+		final Map<String, String> params = eventLink.getParams();
+		for(Map.Entry<String, String> entry : params.entrySet()) {
+			uri = uri.queryParam(entry.getKey(), entry.getValue());
+		}
+		Builder builder = Link.fromUriBuilder(uri).rel(Naming.EVENT).type(HttpMethod.POST);
 		return builder.build();
 	}
 	
@@ -57,29 +70,27 @@ public interface Event {
 	}
 	
 	/**
-	 * 
-	 */
-	String EPF_EVENT_SOURCE_URI_FORMAT = "%s://%s/%s";
-	
-	/**
-	 * @param source
+	 * @param uri
+	 * @param params
 	 * @return
-	 * @throws Exception
 	 */
-	static URI getEventSource(final Link source) throws Exception {
-		final String uri = String.format(EPF_EVENT_SOURCE_URI_FORMAT, source.getType(), source.getRel(), source.getUri().toString());
-		return new URI(uri);
-	}
-	
-	/**
-	 * @param source
-	 * @return
-	 * @throws Exception
-	 */
-	static Builder getEventSource(final URI source) throws Exception {
-		final String type = source.getScheme();
-		final String rel = source.getHost();
-		final String path = source.getPath() + source.getQuery() + source.getFragment();
-		return Link.fromPath(path).rel(rel).type(type);
+	static Builder link(final URI uri, final Map<String, Object> params) {
+		Builder builder = Link.fromUri(uri);
+		for(Map.Entry<String, Object> entry : params.entrySet()) {
+			builder = builder.param(entry.getKey(), entry.getValue().toString());
+		}
+		if(params.containsKey("rel")) {
+			builder = builder.rel(params.get("rel").toString());
+		}
+		if(params.containsKey("title")) {
+			builder = builder.title(params.get("title").toString());
+		}
+		if(params.containsKey("type")) {
+			builder = builder.type(params.get("type").toString());
+		}
+		if(params.containsKey("uri")) {
+			builder = builder.uri(params.get("uri").toString());
+		}
+		return builder;
 	}
 }
