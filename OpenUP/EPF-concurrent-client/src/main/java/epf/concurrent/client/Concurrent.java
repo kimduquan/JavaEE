@@ -57,6 +57,10 @@ public class Concurrent {
 	}
 	
 	private Synchronized newSynchronized() throws Exception {
+		if(default_ == null) {
+			default_ = new Synchronized();
+			default_.connectToServer(serverEndpoint);
+		}
 		final Synchronized synchronized_ = new Synchronized();
 		synchronized_.connectToServer(serverEndpoint);
 		return synchronized_;
