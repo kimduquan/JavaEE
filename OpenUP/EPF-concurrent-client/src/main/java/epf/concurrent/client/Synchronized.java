@@ -3,9 +3,7 @@ package epf.concurrent.client;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -28,27 +26,12 @@ public class Synchronized {
 	/**
 	 * 
 	 */
-	private transient final Map<String, Session> closeSessions = new ConcurrentHashMap<>();
-	
-	/**
-	 * 
-	 */
-	private transient final Map<String, Condition> conditions = new ConcurrentHashMap<>();
-	
-	/**
-	 * 
-	 */
 	private final ReentrantLock lock = new ReentrantLock();
 	
 	/**
 	 * 
 	 */
 	private final Condition new_ = lock.newCondition();
-	
-	/**
-	 * 
-	 */
-	private Condition break_ = lock.newCondition();
 	
 	/**
 	 * 
@@ -74,8 +57,12 @@ public class Synchronized {
 		return left == null && right == null;
 	}
 	
-	private boolean isLast() {
-		return left != null && right == null;
+	private boolean isFirst() {
+		return left == null && right != null;
+	}
+	
+	private boolean hasLeft() {
+		return left != null;
 	}
 	
 	private boolean isLeft(final String id) {
@@ -117,25 +104,19 @@ public class Synchronized {
 	private Session session(final String id) {
 		return this_.getOpenSessions().stream().filter(session -> session.getId().equals(id)).findFirst().get();
 	}
-	
+
 	private void break_(final Session session) throws Exception {
-		lock.lock();
 		if(isLeft(session.getId())) {
-			if(!closeSessions.containsKey(session.getId())) {
-				conditions.put(session.getId(), break_);
-				break_.await();
-			}
-			send(left, Message.left, this_.getId());
-			right = closeSessions.remove(session.getId());
+			left = right;
 		}
-		else if(isRight(session.getId())){
-			closeSessions.put(session.getId(), this_);
-			final Condition condition = conditions.get(session.getId());
-			if(condition != null) {
-				condition.signal();
+		else if(isRight(session.getId())) {
+			if(hasLeft()) {
+				send(left, Message.break_, this_.getId());
+			}
+			else {
+				right = null;
 			}
 		}
-		lock.unlock();
 	}
 
 	/**
@@ -145,10 +126,12 @@ public class Synchronized {
 	@OnOpen
 	public void onOpen(final Session session) throws Exception {
 		if(isNull()) {
-			left = session;
-		}
-		else if(isLast()) {
 			right = session;
+		}
+		else if(isFirst()) {
+			left = right;
+			right = session;
+			send(left, Message.left, right.getId());
 		}
 	}
 	
@@ -158,7 +141,7 @@ public class Synchronized {
 	 */
 	@OnClose
 	public void onClose(final Session session, final CloseReason closeReason) throws Exception {
-		
+		break_(session);
 	}
 	
 	/**
@@ -181,11 +164,8 @@ public class Synchronized {
 		final StringBuilder string = new StringBuilder();
 		final Message msg = message(data, string);
 		final String id = string.toString();
+		boolean null_ = false;
 		switch(msg) {
-			case new_:
-				left = session(id);
-				new_.signalAll();
-				break;
 			case return_:
 				if(this_.getId().equals(id)) {
 					state.set(State.new_);
@@ -200,6 +180,25 @@ public class Synchronized {
 				}
 				else {
 					sendAll(msg, id);
+				}
+				break;
+			case break_:
+				send(session(id), Message.right, right.getId());
+				left = right;
+				right = null;
+				break;
+			case left:
+				null_ = isNull();
+				left = session(id);
+				if(null_) {
+					new_.signalAll();
+				}
+				break;
+			case right:
+				null_ = isNull();
+				right = session(id);
+				if(null_) {
+					new_.signalAll();
 				}
 				break;
 			default:

@@ -7,10 +7,6 @@ public enum Message {
 	/**
 	 * 
 	 */
-	new_,
-	/**
-	 * 
-	 */
 	synchronized_,
 	/**
 	 * 
@@ -23,5 +19,9 @@ public enum Message {
 	/**
 	 * 
 	 */
-	right
+	right,
+	/**
+	 * 
+	 */
+	break_
 }
