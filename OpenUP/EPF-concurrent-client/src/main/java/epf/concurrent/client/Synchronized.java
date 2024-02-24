@@ -49,6 +49,11 @@ public class Synchronized {
 	/**
 	 * 
 	 */
+	private final Condition return_ = lock.newCondition();
+	
+	/**
+	 * 
+	 */
 	private transient Session this_;
 
 	/**
@@ -64,7 +69,12 @@ public class Synchronized {
 	/**
 	 * 
 	 */
-	private final AtomicReference<State> state = new AtomicReference<>();
+	private transient Session root;
+	
+	/**
+	 * 
+	 */
+	private final AtomicReference<Session> _synchronized = new AtomicReference<>();
 	
 	/*
 	 * check the session is empty session or not
@@ -80,11 +90,8 @@ public class Synchronized {
 		return left == null && right != null;
 	}
 	
-	/**
-	 * check this session is last session or not
-	 */
-	private boolean isLast() {
-		return left == null && right != null;
+	private boolean isRoot() {
+		return root != null && root.getId().equals(this_.getId());
 	}
 	
 	private boolean hasLeft() {
@@ -178,6 +185,9 @@ public class Synchronized {
 	 */
 	@OnOpen
 	public void onOpen(final Session session) throws Exception {
+		if(isRoot()) {
+			send(session, Message.root, this_.getId());
+		}
 		if(isNull()) {
 			right = session;
 		}
@@ -219,6 +229,35 @@ public class Synchronized {
 		final String id = string.toString();
 		boolean null_ = false;
 		switch(msg) {
+			case synchronized_:
+				if(_synchronized.get() == null) {
+					if(this_.getId().equals(id)) {
+						_synchronized.set(session);
+					}
+					else {
+						final Session synchronizedSession = getOpenSession(id);
+						_synchronized.set(synchronizedSession);
+						send(synchronizedSession, Message.synchronized_, synchronizedSession.getId());
+					}
+					synchronized_.signalAll();
+				}
+				break;
+			case return_:
+				if(this_.getId().equals(id)) {
+					if(_synchronized.get() != null) {
+						send(_synchronized.get(), Message.return_, "");
+					}
+					_synchronized.set(null);
+					return_.signalAll();
+				}
+				else if(id.isEmpty()) {
+					_synchronized.set(null);
+					return_.signalAll();
+				}
+				else {
+					sendAll(session, Message.return_, id);
+				}
+				break;
 			case break_:
 				send(getOpenSession(id), Message.right, right.getId());
 				left = right;
@@ -237,6 +276,9 @@ public class Synchronized {
 				if(null_) {
 					new_.signalAll();
 				}
+				break;
+			case root:
+				root = getOpenSession(id);
 				break;
 			default:
 				break;
@@ -267,7 +309,7 @@ public class Synchronized {
 	 * @return
 	 */
 	protected boolean isSynchronized() {
-		return State.synchronized_.equals(state.get());
+		return this._synchronized.get() != null;
 	}
 	
 	/**
@@ -304,8 +346,35 @@ public class Synchronized {
 	 * @throws Exception
 	 */
 	public void synchronized_() throws Exception {
+		synchronized_(this_.getId());
+	}
+	
+	/**
+	 * @param id
+	 * @throws Exception
+	 */
+	public void synchronized_(final String id) throws Exception {
 		lock.lock();
-		this.synchronized_.await();
+		send(getOpenSession(id), Message.synchronized_, this_.getId());
+		synchronized_.await();
+		lock.unlock();
+	}
+	
+	/**
+	 * @throws Exception
+	 */
+	public void return_() throws Exception {
+		return_(this_.getId());
+	}
+	
+	/**
+	 * @param id
+	 * @throws Exception
+	 */
+	public void return_(final String id) throws Exception {
+		lock.lock();
+		send(root, Message.return_, id);
+		return_.await();
 		lock.unlock();
 	}
 }
