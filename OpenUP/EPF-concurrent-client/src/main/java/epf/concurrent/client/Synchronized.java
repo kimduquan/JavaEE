@@ -18,7 +18,15 @@ import javax.websocket.PongMessage;
 import javax.websocket.Session;
 
 /**
+ * The triple: A,B,C sessions
+ * 		A.left = B
+ * 		B.left = C
+ * 		A.right = C
  * 
+ * The empty session : session does not have left and right
+ * The first session : session has right but left
+ * The last session : session has left but right
+ * The normal session : session has left and right
  */
 @ClientEndpoint
 public class Synchronized {
@@ -32,6 +40,11 @@ public class Synchronized {
 	 * 
 	 */
 	private final Condition new_ = lock.newCondition();
+	
+	/**
+	 * 
+	 */
+	private final Condition synchronized_ = lock.newCondition();
 	
 	/**
 	 * 
@@ -53,11 +66,24 @@ public class Synchronized {
 	 */
 	private final AtomicReference<State> state = new AtomicReference<>();
 	
+	/*
+	 * check the session is empty session or not
+	 */
 	private boolean isNull() {
 		return left == null && right == null;
 	}
 	
+	/**
+	 * check this session is first session or not
+	 */
 	private boolean isFirst() {
+		return left == null && right != null;
+	}
+	
+	/**
+	 * check this session is last session or not
+	 */
+	private boolean isLast() {
 		return left == null && right != null;
 	}
 	
@@ -88,12 +114,12 @@ public class Synchronized {
 	
 	private void send(final Session session, final Message message, final String id) throws Exception {
 		final ByteBuffer data = message(message, id);
-		session.getAsyncRemote().sendPong(data);
+		session.getBasicRemote().sendPong(data);
 	}
 	
-	private void sendAll(final Message message, final String id) throws Exception {
+	private void sendAll(final Session parent, final Message message, final String id) throws Exception {
 		final ByteBuffer data = message(message, id);
-		if(left != null) {
+		if(left != null && !left.getId().equals(parent.getId())) {
 			left.getAsyncRemote().sendPong(data);
 		}
 		if(right != null) {
@@ -101,10 +127,32 @@ public class Synchronized {
 		}
 	}
 	
-	private Session session(final String id) {
+	private Session getOpenSession(final String id) {
 		return this_.getOpenSessions().stream().filter(session -> session.getId().equals(id)).findFirst().get();
 	}
 
+	/**
+	 * handle when session 'x' is broken:
+	 * case 1:
+	 * 		x.left	= A
+	 * 		A.left	= B
+	 * 		x.right	= B
+	 * case 2:
+	 * 		A.left	= x
+	 * 		x.left	= B
+	 * 		A.right	= B
+	 * 	=>	detect A by checking condition A.left = x
+	 * 		make A as last session
+	 * case 3:
+	 *  	A.left	= B
+	 *  	B.left	= x
+	 *  	A.right	= x
+	 *  	B.right	= C
+	 *  =>	detect A by checking condition A.right = x
+	 *  	set B.left = B.right(C)
+	 *  	set A.rigth = B.right(C)
+	 *  	make B as last session by set B.right = null
+	 */
 	private void break_(final Session session) throws Exception {
 		if(isLeft(session.getId())) {
 			left = right;
@@ -122,6 +170,11 @@ public class Synchronized {
 	/**
 	 * @param session
 	 * @throws Exception 
+	 */
+	/*
+	 * set the current first session as normal session
+	 * set the current null session as first session 
+	 * set the new session as empty session
 	 */
 	@OnOpen
 	public void onOpen(final Session session) throws Exception {
@@ -166,37 +219,21 @@ public class Synchronized {
 		final String id = string.toString();
 		boolean null_ = false;
 		switch(msg) {
-			case return_:
-				if(this_.getId().equals(id)) {
-					state.set(State.new_);
-				}
-				else {
-					sendAll(msg, id);
-				}
-				break;
-			case synchronized_:
-				if(this_.getId().equals(id)) {
-					state.set(State.synchronized_);
-				}
-				else {
-					sendAll(msg, id);
-				}
-				break;
 			case break_:
-				send(session(id), Message.right, right.getId());
+				send(getOpenSession(id), Message.right, right.getId());
 				left = right;
 				right = null;
 				break;
 			case left:
 				null_ = isNull();
-				left = session(id);
+				left = getOpenSession(id);
 				if(null_) {
 					new_.signalAll();
 				}
 				break;
 			case right:
 				null_ = isNull();
-				right = session(id);
+				right = getOpenSession(id);
 				if(null_) {
 					new_.signalAll();
 				}
@@ -237,8 +274,7 @@ public class Synchronized {
 	 * @throws Exception
 	 */
 	public void finally_() throws Exception {
-		lock.unlock();
-		sendAll(Message.return_, this_.getId());
+		lock.lock();
 		lock.unlock();
 	}
 	
@@ -269,11 +305,7 @@ public class Synchronized {
 	 */
 	public void synchronized_() throws Exception {
 		lock.lock();
-		lock.unlock();
-	}
-	
-	public void synchronized_(final String id) throws Exception {
-		lock.lock();
+		this.synchronized_.await();
 		lock.unlock();
 	}
 }
