@@ -33,7 +33,6 @@ import epf.client.util.RequestBuilder;
 import epf.client.util.RequestUtil;
 import epf.client.util.ResponseUtil;
 import epf.concurrent.client.Concurrent;
-import epf.concurrent.client.Synchronized;
 import epf.hateoas.utility.HATEOAS;
 import epf.naming.Naming;
 import epf.util.io.InputStreamUtil;
@@ -117,22 +116,7 @@ public class Application {
         	final Optional<Object> entity = HATEOAS.readEntity(response);
         	final Link self = HATEOAS.selfLink(uriInfo, req, service);
         	final boolean isPartial = isPartial(response);
-        	final Optional<String> synchronized_ = isSynchronized(response);
-        	final Optional<String> finally_ = isFinally(response);
         	final MediaType mediaType = response.getMediaType();
-
-        	if(synchronized_.isPresent()) {
-				final Synchronized sync = concurrent.synchronized_(synchronized_.get());
-				if(sync != null) {
-					sync.synchronized_();
-				}
-			}
-			if(finally_.isPresent()) {
-				final Synchronized sync = concurrent.synchronized_(finally_.get());
-				if(sync != null) {
-					sync.return_();
-				}
-			}
         	response = buildLinkRequests(client, response, entity, mediaType, headers, self, isPartial);
     	}
     	response = ResponseUtil.buildResponse(response, uriInfo.getBaseUri());
@@ -146,14 +130,6 @@ public class Application {
     
     private boolean isPartial(final Response response) {
     	return Response.Status.PARTIAL_CONTENT.getStatusCode() == response.getStatus();
-    }
-    
-    private Optional<String> isSynchronized(final Response response) {
-    	return Optional.ofNullable(response.getHeaderString("synchronized"));
-    }
-    
-    private Optional<String> isFinally(final Response response) {
-    	return Optional.ofNullable(response.getHeaderString("finally"));
     }
     
     private Response buildLinkRequest(final Client client, final Response response, final Optional<Object> entity, final MediaType mediaType, final HttpHeaders headers, final Link link) {
@@ -220,28 +196,24 @@ public class Application {
         				prevLinkEntity = Optional.ofNullable(partialEntityIterator.next());
         				prevMediaType = mediaType;
         			}
+        			
+    				final Optional<String> synchronized_ = HATEOAS.synchronized_(targetLink);
+    				if(synchronized_.isPresent()) {
+    					concurrent.synchronized_(synchronized_.get()).synchronized_();
+    				}
+    				final Optional<String> continue_ = HATEOAS.continue_(targetLink);
+    				if(continue_.isPresent()) {
+    					concurrent.synchronized_(synchronized_.get()).return_();
+    				}
+    				
         			Response linkResponse = buildLinkRequest(client, prevLinkResponse, prevLinkEntity, prevMediaType, headers, targetLink);
         			if(isSuccessful(linkResponse)) {
         				final boolean isPartialLink = isPartial(linkResponse);
-        				final Optional<String> synchronizedLink = isSynchronized(linkResponse);
-        				final Optional<String> finallyLink = isFinally(linkResponse);
         				if(HATEOAS.hasEntity(link)) {
             				prevLinkEntity = HATEOAS.readEntity(linkResponse);
             				prevMediaType = linkResponse.getMediaType();
         				}
         				
-        				if(synchronizedLink.isPresent()) {
-        					final Synchronized synchronized_ = concurrent.synchronized_(synchronizedLink.get());
-        					if(synchronized_ != null) {
-        						synchronized_.synchronized_();
-        					}
-        				}
-        				if(finallyLink.isPresent()) {
-        					final Synchronized synchronized_ = concurrent.synchronized_(finallyLink.get());
-        					if(synchronized_ != null) {
-        						synchronized_.return_();
-        					}
-        				}
         				linkResponse = buildLinkRequests(client, linkResponse, prevLinkEntity, prevMediaType, headers, targetLink, isPartialLink);
         				
         				if(isSuccessful(linkResponse)) {

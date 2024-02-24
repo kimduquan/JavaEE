@@ -180,4 +180,20 @@ public interface HATEOAS {
     	}
     	return false;
     }
+    
+    /**
+     * @param link
+     * @return
+     */
+    static Optional<String> synchronized_(final Link link) {
+    	return Optional.ofNullable(link.getParams().get("synchronized"));
+    }
+    
+    /**
+     * @param link
+     * @return
+     */
+    static Optional<String> continue_(final Link link) {
+    	return Optional.ofNullable(link.getParams().get("continue"));
+    }
 }
