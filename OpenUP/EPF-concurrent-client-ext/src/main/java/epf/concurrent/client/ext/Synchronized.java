@@ -3,6 +3,8 @@ package epf.concurrent.client.ext;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -353,6 +355,18 @@ public class Synchronized {
 	}
 	
 	/**
+	 * @param duration
+	 * @throws Exception
+	 */
+	public void synchronized_(final Duration duration) throws Exception {
+		lock.lock();
+		if(_synchronized.get() != null) {
+			synchronized_.await(duration.toMillis(), TimeUnit.MILLISECONDS);
+		}
+		lock.unlock();
+	}
+	
+	/**
 	 * @throws Exception
 	 */
 	public void return_() throws Exception {
@@ -363,5 +377,12 @@ public class Synchronized {
 			return_.await();
 		}
 		lock.unlock();
+	}
+	
+	/**
+	 * @return
+	 */
+	public String getId() {
+		return this_.getId();
 	}
 }

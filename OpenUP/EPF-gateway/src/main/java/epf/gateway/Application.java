@@ -3,6 +3,7 @@ package epf.gateway;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URI;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -33,6 +34,7 @@ import epf.client.util.RequestBuilder;
 import epf.client.util.RequestUtil;
 import epf.client.util.ResponseUtil;
 import epf.concurrent.client.Concurrent;
+import epf.concurrent.client.Synchronized;
 import epf.hateoas.utility.HATEOAS;
 import epf.naming.Naming;
 import epf.util.io.InputStreamUtil;
@@ -199,7 +201,14 @@ public class Application {
         			
     				final Optional<String> synchronized_ = HATEOAS.synchronized_(targetLink);
     				if(synchronized_.isPresent()) {
-    					concurrent.synchronized_(synchronized_.get()).synchronized_();
+    					final Synchronized _synchronized = concurrent.synchronized_(synchronized_.get());
+    					final Optional<String> time = HATEOAS.time(targetLink);
+    					if(time.isPresent()) {
+    						_synchronized.synchronized_(Duration.parse(time.get()));
+    					}
+    					else {
+    						_synchronized.synchronized_();
+    					}
     				}
     				final Optional<String> continue_ = HATEOAS.continue_(targetLink);
     				if(continue_.isPresent()) {

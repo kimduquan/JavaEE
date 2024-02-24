@@ -1,5 +1,6 @@
 package epf.workflow.util;
 
+import java.time.Duration;
 import epf.naming.Naming;
 import jakarta.ws.rs.core.Link;
 
@@ -18,6 +19,7 @@ public class LinkBuilder {
 	 * @return
 	 */
 	public LinkBuilder link(final Link link) {
+		builder = Link.fromLink(link);
 		return this;
 	}
 	
@@ -44,6 +46,16 @@ public class LinkBuilder {
 	 */
 	public LinkBuilder synchronized_(final String synchronized_) {
 		builder = builder.param("synchronized", synchronized_);
+		return this;
+	}
+	
+	/**
+	 * @param synchronized_
+	 * @param time
+	 * @return
+	 */
+	public LinkBuilder synchronized_(final String synchronized_, final Duration time) {
+		builder = builder.param("synchronized", synchronized_).param("time", time.toString());
 		return this;
 	}
 	

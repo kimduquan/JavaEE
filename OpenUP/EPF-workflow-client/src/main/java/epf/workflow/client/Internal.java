@@ -323,6 +323,12 @@ public interface Internal {
 		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.PATCH, workflow, state);
 	}
 
+	/**
+	 * @param workflow
+	 * @param version
+	 * @param state
+	 * @return
+	 */
 	static Link iterationLink(final String workflow, final Optional<String> version, final String state) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}/iteration");
 		if(version.isPresent()) {

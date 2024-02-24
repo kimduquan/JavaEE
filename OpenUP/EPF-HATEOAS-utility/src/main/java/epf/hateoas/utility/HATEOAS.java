@@ -196,4 +196,12 @@ public interface HATEOAS {
     static Optional<String> continue_(final Link link) {
     	return Optional.ofNullable(link.getParams().get("continue"));
     }
+    
+    /**
+     * @param link
+     * @return
+     */
+    static Optional<String> time(final Link link) {
+    	return Optional.ofNullable(link.getParams().get("time"));
+    }
 }
