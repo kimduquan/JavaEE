@@ -3,7 +3,6 @@ package epf.concurrent.client;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -308,55 +307,48 @@ public class Synchronized {
 	/**
 	 * @return
 	 */
-	protected boolean isSynchronized() {
-		return this._synchronized.get() != null;
+	protected boolean _synchronized() {
+		return  _synchronized.get() != null;
 	}
 	
 	/**
-	 * @throws Exception
+	 * @param id
+	 * @return
 	 */
-	public void finally_() throws Exception {
-		lock.lock();
-		lock.unlock();
+	protected boolean _synchronized(final String id) {
+		return  _synchronized.get() != null && _synchronized.get().getId().equals(id);
 	}
 	
 	/**
 	 * @return
+	 * @throws Exception
 	 */
-	public String getId() {
+	protected String try_() throws Exception {
+		try_(this_.getId());
 		return this_.getId();
 	}
 	
 	/**
-	 * @param default_
 	 * @param id
-	 * @return
+	 * @throws Exception
 	 */
-	protected static Synchronized find(final Synchronized default_, final String id) {
-		Synchronized synchronized_ = null;
-		final Optional<Session> session = default_.this_.getOpenSessions().stream().filter(ss -> ss.getId().equals(id)).findFirst();
-		if(session.isPresent()) {
-			synchronized_ = new Synchronized();
-			synchronized_.this_ = session.get();
+	protected void try_(final String id) throws Exception {
+		lock.lock();
+		final boolean _try = _synchronized.get() == null;
+		if(_try) {
+			send(getOpenSession(id), Message.synchronized_, this_.getId());
 		}
-		return synchronized_;
+		lock.unlock();
 	}
 	
 	/**
 	 * @throws Exception
 	 */
 	public void synchronized_() throws Exception {
-		synchronized_(this_.getId());
-	}
-	
-	/**
-	 * @param id
-	 * @throws Exception
-	 */
-	public void synchronized_(final String id) throws Exception {
 		lock.lock();
-		send(getOpenSession(id), Message.synchronized_, this_.getId());
-		synchronized_.await();
+		if(_synchronized.get() != null) {
+			synchronized_.await();
+		}
 		lock.unlock();
 	}
 	
@@ -364,17 +356,12 @@ public class Synchronized {
 	 * @throws Exception
 	 */
 	public void return_() throws Exception {
-		return_(this_.getId());
-	}
-	
-	/**
-	 * @param id
-	 * @throws Exception
-	 */
-	public void return_(final String id) throws Exception {
 		lock.lock();
-		send(root, Message.return_, id);
-		return_.await();
+		final boolean _return = _synchronized.get() != null;
+		if(_return) {
+			send(root, Message.return_, _synchronized.get().getId());
+			return_.await();
+		}
 		lock.unlock();
 	}
 }

@@ -3,6 +3,8 @@ package epf.concurrent.client;
 import java.net.URI;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PreDestroy;
@@ -57,12 +59,38 @@ public class Concurrent {
 	}
 	
 	private Synchronized newSynchronized() throws Exception {
-		if(default_ == null) {
-			default_ = new Synchronized();
-			default_.connectToServer(serverEndpoint);
-		}
 		final Synchronized synchronized_ = new Synchronized();
 		synchronized_.connectToServer(serverEndpoint);
+		return synchronized_;
+	}
+	
+	private Synchronized poll(final Predicate<? super Synchronized> filter, final Supplier<Synchronized> supplier) throws Exception {
+		final Queue<Synchronized> tempSessions = new ConcurrentLinkedQueue<>();
+		Synchronized synchronized_ = null;
+		do {
+			synchronized_ = internalSessions.poll();
+			if(synchronized_ != null) {
+				if(!filter.test(synchronized_)) {
+					tempSessions.add(synchronized_);
+					synchronized_ = null;
+				}
+				else {
+					while(!tempSessions.isEmpty()) {
+						internalSessions.add(tempSessions.poll());
+					}
+					internalSessions.add(synchronized_);
+					break;
+				}
+			}
+			else if(supplier != null) {
+				synchronized_ = supplier.get();
+				if(synchronized_ == null) {
+					break;
+				}
+				internalSessions.add(synchronized_);
+			}
+		}
+		while(synchronized_ == null);
 		return synchronized_;
 	}
 	
@@ -79,30 +107,16 @@ public class Concurrent {
 	 * @throws Exception
 	 */
 	public Synchronized synchronized_() throws Exception {
-		final Queue<Synchronized> tempSessions = new ConcurrentLinkedQueue<>();
-		Synchronized synchronized_ = null;
-		do {
-			synchronized_ = internalSessions.poll();
-			if(synchronized_ != null) {
-				if(synchronized_.isSynchronized()) {
-					tempSessions.add(synchronized_);
-					synchronized_ = null;
-				}
-				else {
-					while(!tempSessions.isEmpty()) {
-						internalSessions.add(tempSessions.poll());
-					}
-					internalSessions.add(synchronized_);
-					break;
-				}
+		return poll(sync -> !sync._synchronized(), () -> {
+			try {
+				final Synchronized synchronized_ = newSynchronized();
+				synchronized_.try_();
+				return synchronized_;
+			} 
+			catch (Exception e) {
+				return null;
 			}
-			else {
-				synchronized_ = newSynchronized();
-				internalSessions.add(synchronized_);
-			}
-		}
-		while(synchronized_ == null);
-		return synchronized_;
+		});
 	}
 	
 	/**
@@ -111,10 +125,15 @@ public class Concurrent {
 	 * @throws Exception
 	 */
 	public Synchronized synchronized_(final String id) throws Exception {
-		Synchronized synchronized_ = internalSessions.stream().filter(sync -> sync.getId().equals(id)).findFirst().get();
-		if(synchronized_ == null) {
-			synchronized_ = Synchronized.find(default_, id);
-		}
-		return synchronized_;
+		return poll(sync -> sync._synchronized(id), () -> {
+			try {
+				final Synchronized synchronized_ = newSynchronized();
+				synchronized_.try_(id);
+				return synchronized_;
+			} 
+			catch (Exception e) {
+				return null;
+			}
+		});
 	}
 }

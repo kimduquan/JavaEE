@@ -130,7 +130,7 @@ public class Application {
 			if(finally_.isPresent()) {
 				final Synchronized sync = concurrent.synchronized_(finally_.get());
 				if(sync != null) {
-					sync.continue_();
+					sync.return_();
 				}
 			}
         	response = buildLinkRequests(client, response, entity, mediaType, headers, self, isPartial);
@@ -239,7 +239,7 @@ public class Application {
         				if(finallyLink.isPresent()) {
         					final Synchronized synchronized_ = concurrent.synchronized_(finallyLink.get());
         					if(synchronized_ != null) {
-        						synchronized_.continue_();
+        						synchronized_.return_();
         					}
         				}
         				linkResponse = buildLinkRequests(client, linkResponse, prevLinkEntity, prevMediaType, headers, targetLink, isPartialLink);
