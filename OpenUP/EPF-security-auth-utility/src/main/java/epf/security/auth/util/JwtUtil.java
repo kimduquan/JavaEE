@@ -32,6 +32,7 @@ public class JwtUtil {
 				.setRequireNotBefore()
 				.setRequireSubject()
 				.setVerificationKey(verifyKey)
+				.setAllowedClockSkewInSeconds(300)
 	            .build();
 	}
 	
