@@ -34,6 +34,11 @@ public class SecurityPage implements SecurityView, Serializable {
 	/**
 	 * 
 	 */
+	private String url;
+	
+	/**
+	 * 
+	 */
 	@Inject
 	private transient HttpServletRequest request;
 	
@@ -95,8 +100,8 @@ public class SecurityPage implements SecurityView, Serializable {
 	}
 
 	@Override
-	public String login() throws Exception {
-		externalContext.redirect("/security-auth?url=" + StringUtil.encodeURL("/webapp/security/auth.html"));
+	public String login(final String url) throws Exception {
+		externalContext.redirect("/security-auth?url=" + StringUtil.encodeURL(url));
 		return "";
 	}
 
