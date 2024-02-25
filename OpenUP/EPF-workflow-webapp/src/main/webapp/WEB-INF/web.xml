@@ -18,7 +18,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>Faces Servlet</servlet-name>
-    <url-pattern>/webapp/*</url-pattern>
+    <url-pattern>*.html</url-pattern>
   </servlet-mapping>
   <context-param>
     <param-name>javax.faces.CLIENT_WINDOW_MODE</param-name>
