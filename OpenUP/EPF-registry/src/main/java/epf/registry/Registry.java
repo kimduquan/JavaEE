@@ -53,7 +53,7 @@ public class Registry implements epf.registry.client.Registry {
 	 */
 	@Inject
 	@Channel(Naming.Registry.EPF_REGISTRY_REMOTES)
-	transient Emitter<Map<String, URI>> emitter;
+	transient Emitter<Map<String, Object>> emitter;
 	
 	/**
 	 * 
@@ -248,7 +248,7 @@ public class Registry implements epf.registry.client.Registry {
 	}
 	
 	private void sendRemotes() {
-		final Map<String, URI> map = new HashMap<>();
+		final Map<String, Object> map = new HashMap<>();
 		map.putAll(this.remotes);
 		emitter.send(map);
 	}

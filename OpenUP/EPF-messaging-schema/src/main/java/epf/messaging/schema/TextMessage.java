@@ -12,7 +12,6 @@ public class TextMessage extends Message {
 	/**
 	 * 
 	 */
-
 	@Column
 	private String text;
 
