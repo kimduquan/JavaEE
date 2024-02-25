@@ -96,8 +96,15 @@ public class Registry implements HealthCheck  {
 	 */
 	@Incoming(Naming.Registry.EPF_REGISTRY_REMOTES)
 	@RunOnVirtualThread
-	public void setRemotes(final Map<String, URI> remotes) {
-		this.remotes.putAll(remotes);
+	public void setRemotes(final Map<String, Object> remotes) {
+		remotes.forEach((name, value) -> {
+			try {
+				this.remotes.put(name, new URI(value.toString()));
+			}
+			catch(Exception ex) {
+				LOGGER.log(Level.SEVERE, "[Registry.setRemotes]", ex);
+			}
+		});
 	}
 
 	@Override

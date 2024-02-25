@@ -2,10 +2,10 @@ package epf.messaging.util.ext.io;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
 import org.apache.kafka.common.serialization.Serializer;
-import epf.util.json.Encoder;
+import epf.util.json.ext.Encoder;
 import epf.util.logging.LogManager;
 
 /**
