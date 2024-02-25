@@ -40,14 +40,14 @@ public class Application implements HealthCheck {
 	 */
 	@Inject
     @Channel(Internal.EPF_MESSAGING_TEXT_IN)
-	transient Emitter<Message<String>> text;
+	transient Emitter<String> text;
 	
 	/**
 	 * 
 	 */
 	@Inject
     @Channel(Internal.EPF_MESSAGING_BYTES_IN)
-	transient Emitter<Message<byte[]>> bytes;
+	transient Emitter<byte[]> bytes;
 	
 	/**
 	 * @param message
@@ -113,14 +113,14 @@ public class Application implements HealthCheck {
 	 * @param text
 	 */
 	public void sendText(final String text) {
-		this.text.send(Message.of(text));
+		this.text.send(text);
 	}
 	
 	/**
 	 * @param bytes
 	 */
 	public void sendBinary(final byte[] bytes) {
-		this.bytes.send(Message.of(bytes));
+		this.bytes.send(bytes);
 	}
 
 	@Override
