@@ -1,8 +1,9 @@
 package epf.webapp.workflow;
 
+import javax.annotation.security.DeclareRoles;
 import javax.enterprise.context.ApplicationScoped;
 import javax.faces.annotation.FacesConfig;
-import javax.security.enterprise.authentication.mechanism.http.BasicAuthenticationMechanismDefinition;
+import epf.naming.Naming;
 
 /**
  * @author PC
@@ -10,7 +11,7 @@ import javax.security.enterprise.authentication.mechanism.http.BasicAuthenticati
  */
 @ApplicationScoped
 @FacesConfig
-@BasicAuthenticationMechanismDefinition
+@DeclareRoles(value = { Naming.Security.DEFAULT_ROLE })
 public class WebApp {
 	
 }
