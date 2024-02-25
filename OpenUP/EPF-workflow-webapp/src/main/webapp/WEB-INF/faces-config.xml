@@ -7,4 +7,13 @@
     <factory>
 		<exception-handler-factory>epf.webapp.util.ExceptionUtil</exception-handler-factory>
 	</factory>
+	<application>
+		<resource-bundle>
+			<base-name>i18n</base-name>
+			<var>i18n</var>
+		</resource-bundle>
+		<locale-config>
+			<default-locale>en</default-locale>
+		</locale-config>
+	</application>
 </faces-config>
