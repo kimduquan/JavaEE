@@ -34,11 +34,6 @@ public class SecurityPage implements SecurityView, Serializable {
 	/**
 	 * 
 	 */
-	private String url;
-	
-	/**
-	 * 
-	 */
 	@Inject
 	private transient HttpServletRequest request;
 	
