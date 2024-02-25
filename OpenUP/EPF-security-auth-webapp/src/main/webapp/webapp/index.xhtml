@@ -16,7 +16,6 @@
 <h:body>
 	<h:inputHidden value="#{security_auth_view.url}" a:name="url" />
 	<h:inputHidden value="#{security_auth_view.credential}" a:name="credential" />
-	<iframe jsf:rendered="#{not empty security_auth_view.credential}" a:src="#{'/webapp/security/auth.html?credential='.concat(security_auth_view.credential)}" style="display:none;"></iframe>
 	<iframe jsf:rendered="#{not empty security_auth_view.credential}" a:src="#{'/persistence/security/auth.html?credential='.concat(security_auth_view.credential)}" style="display:none;"></iframe>
 	<iframe jsf:rendered="#{not empty security_auth_view.credential}" a:src="#{'/workflow/security/auth.html?credential='.concat(security_auth_view.credential)}" style="display:none;"></iframe>
 </h:body>
