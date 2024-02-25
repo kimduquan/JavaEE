@@ -40,25 +40,25 @@ public class Application implements HealthCheck {
 	 */
 	@Inject
     @Channel(Internal.EPF_MESSAGING_TEXT_IN)
-	transient Emitter<Message<Object>> text;
+	transient Emitter<Message<String>> text;
 	
 	/**
 	 * 
 	 */
 	@Inject
     @Channel(Internal.EPF_MESSAGING_BYTES_IN)
-	transient Emitter<Message<Object>> bytes;
+	transient Emitter<Message<byte[]>> bytes;
 	
 	/**
 	 * @param message
 	 */
 	@Incoming(Internal.EPF_MESSAGING_TEXT_OUT)
 	@RunOnVirtualThread
-	public CompletionStage<Void> onTextMessage(final Message<Object> message) {
+	public CompletionStage<Void> onTextMessage(final Message<String> message) {
 		return CompletableFuture.runAsync(() -> {
 			sessions.forEach((path, session) -> {
 				try {
-					session.getBasicRemote().sendText(message.getPayload().toString());
+					session.getBasicRemote().sendText(message.getPayload());
 				} 
 				catch (Exception e) {
 					LOGGER.log(Level.WARNING, "onTextMessage", e);
@@ -72,11 +72,11 @@ public class Application implements HealthCheck {
 	 */
 	@Incoming(Internal.EPF_MESSAGING_BYTES_OUT)
 	@RunOnVirtualThread
-	public CompletionStage<Void> onBytesMessage(final Message<Object> message) {
+	public CompletionStage<Void> onBytesMessage(final Message<byte[]> message) {
 		return CompletableFuture.runAsync(() -> {
 			sessions.forEach((path, session) -> {
 				try {
-					session.getBasicRemote().sendBinary(ByteBuffer.wrap((byte[])message.getPayload()));
+					session.getBasicRemote().sendBinary(ByteBuffer.wrap(message.getPayload()));
 				} 
 				catch (Exception e) {
 					LOGGER.log(Level.WARNING, "onBytesMessage", e);
@@ -110,17 +110,17 @@ public class Application implements HealthCheck {
 	}
 	
 	/**
-	 * @param message
+	 * @param text
 	 */
-	public void sendText(final String message) {
-		text.send(Message.of(message));
+	public void sendText(final String text) {
+		this.text.send(Message.of(text));
 	}
 	
 	/**
-	 * @param message
+	 * @param bytes
 	 */
-	public void sendBinary(final byte[] message) {
-		text.send(Message.of(message));
+	public void sendBinary(final byte[] bytes) {
+		this.bytes.send(Message.of(bytes));
 	}
 
 	@Override
