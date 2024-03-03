@@ -171,13 +171,6 @@ public class WorkflowApplication implements Workflow, Internal {
 		return response.links(builder.build());
 	}
 	
-	private ResponseBuilder endLink(final ResponseBuilder response, final String workflow, final Optional<String> version) {
-		final LinkBuilder builder = new LinkBuilder();
-		final Link endLink = Internal.endLink(workflow, version);
-		builder.link(endLink).at(response.getSize());
-		return response.links(builder.build());
-	}
-	
 	private void putState(final String state, final URI instance, final WorkflowData workflowData) {
 		final WorkflowInstance workflowInstance = cache.getInstance(instance);
 		final WorkflowState workflowState = workflowInstance.getState();
@@ -670,24 +663,20 @@ public class WorkflowApplication implements Workflow, Internal {
 	}
 	
 	private ResponseBuilder end(final ResponseBuilder response, final WorkflowDefinition workflowDefinition, final Either<Boolean, EndDefinition> end, final URI instance, final WorkflowData workflowData) throws Exception {
+		final LinkBuilder builder = new LinkBuilder();
 		if(end.isRight()) {
 			final EndDefinition endDefinition = end.getRight();
-			if(endDefinition.isCompensate()) {
-				final WorkflowInstance workflowInstance = cache.getInstance(instance);
-				compensates(response, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), workflowInstance);
-				return endLink(response, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()));
-			}
-			if(Boolean.TRUE.equals(endDefinition.isTerminate())) {
-				return endLink(response, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()));
-			}
+			final Link endLink = Internal.endLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), endDefinition.isTerminate(), endDefinition.isCompensate(), endDefinition.getContinueAs().getLeft());
+			builder.link(endLink).at(response.getSize());
+			response.links(builder.build());
 			if(endDefinition.getProduceEvents() != null) {
 				produceEvents(response, workflowDefinition, endDefinition.getProduceEvents(), instance, workflowData);
 			}
 			if(endDefinition.getContinueAs() != null) {
-				return continueAs(response, endDefinition.getContinueAs(), instance, workflowData);
+				continueAs(response, endDefinition.getContinueAs(), instance, workflowData);
 			}
 		}
-		return endLink(response, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()));
+		return response;
 	}
 	
 	private ResponseBuilder startLink(final ResponseBuilder response, final String workflow, final Optional<String> version, final URI parentInstance) {
@@ -771,12 +760,9 @@ public class WorkflowApplication implements Workflow, Internal {
 		}
 		else if(transition.isRight()) {
 			final TransitionDefinition transitionDef = transition.getRight();
-			if(transitionDef.isCompensate()) {
-				final WorkflowInstance workflowInstance = cache.getInstance(instance);
-				compensates(response, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), workflowInstance);
-				return transitionLink(response, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), transitionDef.getNextState(), transitionDef.isCompensate());
+			if(transitionDef.getProduceEvents() != null) {
+				produceEvents(response, workflowDefinition, transitionDef.getProduceEvents(), instance, workflowData);
 			}
-			produceEvents(response, workflowDefinition, transitionDef.getProduceEvents(), instance, workflowData);
 			return transitionLink(response, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), transitionDef.getNextState(), transitionDef.isCompensate());
 		}
 		throw new BadRequestException();
@@ -1134,7 +1120,18 @@ public class WorkflowApplication implements Workflow, Internal {
 	@RunOnVirtualThread
 	@Override
 	public Response end(final String workflow, final String version, final Boolean terminate, final Boolean compensate, final String continueAs, final URI instance, final InputStream body) throws Exception {
-		return output(instance, new ResponseBuilder(), body);
+		final ResponseBuilder response = new ResponseBuilder();
+		final WorkflowInstance workflowInstance = cache.getInstance(instance);
+		if(workflowInstance != null) {
+			if(Boolean.TRUE.equals(compensate)) {
+				compensates(response, workflow, Optional.ofNullable(version), workflowInstance);
+			}
+			return output(instance, response, body);
+		}
+		else {
+			response.status(Status.NO_CONTENT);
+		}
+		return response.build();
 	}
 
 	@LRA(value = Type.MANDATORY, end = false, cancelOn = {Response.Status.RESET_CONTENT})
@@ -1144,6 +1141,9 @@ public class WorkflowApplication implements Workflow, Internal {
 		final WorkflowInstance workflowInstance = cache.getInstance(instance);
 		final ResponseBuilder response = new ResponseBuilder();
 		if(workflowInstance != null) {
+			if(Boolean.TRUE.equals(compensate)) {
+				compensates(response, workflow, Optional.ofNullable(version), workflowInstance);
+			}
 			final WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
 			final State state = getState(workflowDefinition, nextState);
 			final WorkflowData workflowData = input(body);

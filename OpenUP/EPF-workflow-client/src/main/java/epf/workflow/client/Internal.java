@@ -403,12 +403,24 @@ public interface Internal {
 	/**
 	 * @param workflow
 	 * @param version
+	 * @param terminate
+	 * @param compensate
+	 * @param continueAs
 	 * @return
 	 */
-	static Link endLink(final String workflow, final Optional<String> version) {
+	static Link endLink(final String workflow, final Optional<String> version, final Boolean terminate, final Boolean compensate, final String continueAs) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}");
 		if(version.isPresent()) {
 			uri = uri.queryParam("version", version.get());
+		}
+		if(terminate != null) {
+			uri = uri.queryParam("terminate", terminate);
+		}
+		if(compensate != null) {
+			uri = uri.queryParam("compensate", compensate);
+		}
+		if(continueAs != null) {
+			uri = uri.queryParam("continueAs", continueAs);
 		}
 		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.PUT, workflow);
 	}
