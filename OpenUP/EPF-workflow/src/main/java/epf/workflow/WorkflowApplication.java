@@ -60,9 +60,9 @@ import epf.nosql.schema.StringOrObject;
 import epf.util.MapUtil;
 import epf.util.json.ext.JsonUtil;
 import epf.util.logging.LogManager;
+import epf.workflow.cache.WorkflowCache;
 import epf.workflow.client.Internal;
 import epf.workflow.client.Workflow;
-import epf.workflow.function.openapi.OpenAPIUtil;
 import epf.workflow.schema.ContinueAs;
 import epf.workflow.schema.CorrelationDefinition;
 import epf.workflow.schema.EndDefinition;
@@ -99,6 +99,7 @@ import epf.workflow.schema.state.StateDataFilters;
 import epf.workflow.util.ELUtil;
 import epf.workflow.util.EitherUtil;
 import epf.workflow.util.LinkBuilder;
+import epf.workflow.util.OpenAPIUtil;
 import epf.workflow.util.ResponseBuilder;
 import epf.workflow.util.StateUtil;
 import io.smallrye.common.annotation.RunOnVirtualThread;
@@ -163,9 +164,9 @@ public class WorkflowApplication implements Workflow, Internal {
 		}
 	}
 	
-	private ResponseBuilder transitionLink(final ResponseBuilder response, final String workflow, final Optional<String> version, final String state) {
+	private ResponseBuilder transitionLink(final ResponseBuilder response, final String workflow, final Optional<String> version, final String nextState, final Boolean compensate) {
 		final LinkBuilder builder = new LinkBuilder();
-		final Link transitionLink = Internal.transitionLink(workflow, version, state);
+		final Link transitionLink = Internal.transitionLink(workflow, version, nextState, compensate);
 		builder.link(transitionLink).at(response.getSize());
 		return response.links(builder.build());
 	}
@@ -766,17 +767,17 @@ public class WorkflowApplication implements Workflow, Internal {
 	private ResponseBuilder transition(final ResponseBuilder response, final WorkflowDefinition workflowDefinition, final Either<String, TransitionDefinition> transition, final URI instance, final WorkflowData workflowData) throws Exception {
 		if(transition.isLeft()) {
 			final String nextState = transition.getLeft();
-			return transitionLink(response, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), nextState);
+			return transitionLink(response, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), nextState, false);
 		}
 		else if(transition.isRight()) {
 			final TransitionDefinition transitionDef = transition.getRight();
 			if(transitionDef.isCompensate()) {
 				final WorkflowInstance workflowInstance = cache.getInstance(instance);
 				compensates(response, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), workflowInstance);
-				return transitionLink(response, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), transitionDef.getNextState());
+				return transitionLink(response, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), transitionDef.getNextState(), transitionDef.isCompensate());
 			}
 			produceEvents(response, workflowDefinition, transitionDef.getProduceEvents(), instance, workflowData);
-			return transitionLink(response, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), transitionDef.getNextState());
+			return transitionLink(response, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), transitionDef.getNextState(), transitionDef.isCompensate());
 		}
 		throw new BadRequestException();
 	}
@@ -1125,26 +1126,26 @@ public class WorkflowApplication implements Workflow, Internal {
 		final WorkflowData workflowData = input(body);
 		cache.putInstance(instance, new WorkflowInstance());
 		final ResponseBuilder response = new ResponseBuilder();
-		transitionLink(response, workflow, Optional.ofNullable(version), startState);
+		transitionLink(response, workflow, Optional.ofNullable(version), startState, false);
 		return output(instance, response, workflowData);
 	}
 	
 	@LRA(value = Type.MANDATORY, end = true)
 	@RunOnVirtualThread
 	@Override
-	public Response end(final String workflow, final String version, final URI instance, final InputStream body) throws Exception {
+	public Response end(final String workflow, final String version, final Boolean terminate, final Boolean compensate, final String continueAs, final URI instance, final InputStream body) throws Exception {
 		return output(instance, new ResponseBuilder(), body);
 	}
 
 	@LRA(value = Type.MANDATORY, end = false, cancelOn = {Response.Status.RESET_CONTENT})
 	@RunOnVirtualThread
 	@Override
-	public Response transition(final String workflow, final String state, final String version, final URI instance, final InputStream body) throws Exception {
+	public Response transition(final String workflow, final String version, final String nextState, final Boolean compensate, final URI instance, final InputStream body) throws Exception {
 		final WorkflowInstance workflowInstance = cache.getInstance(instance);
 		final ResponseBuilder response = new ResponseBuilder();
 		if(workflowInstance != null) {
 			final WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
-			final State nextState = getState(workflowDefinition, state);
+			final State state = getState(workflowDefinition, nextState);
 			final WorkflowData workflowData = input(body);
 			if(workflowInstance.getState() != null) {
 				final State currentState = getState(workflowDefinition, workflowInstance.getState().getName());
@@ -1152,8 +1153,8 @@ public class WorkflowApplication implements Workflow, Internal {
 				workflowData.setInput(filterStateDataInput(stateDataFilters, workflowData.getInput()));
 				workflowData.setOutput(workflowData.getInput());
 			}
-			transitionState(response, workflowDefinition, nextState, instance, workflowData);
-			putState(state, instance, workflowData);
+			transitionState(response, workflowDefinition, state, instance, workflowData);
+			putState(nextState, instance, workflowData);
 			return output(instance, response);
 		}
 		else {
@@ -1171,7 +1172,7 @@ public class WorkflowApplication implements Workflow, Internal {
 		final Optional<String> compensatedBy = getCompensatedBy(currentState);
 		final ResponseBuilder response = new ResponseBuilder();
 		if(compensatedBy.isPresent()) {
-			transitionLink(response, workflow, Optional.ofNullable(version), compensatedBy.get());
+			transitionLink(response, workflow, Optional.ofNullable(version), compensatedBy.get(), false);
 		}
 		return output(instance, response, body);
 	}

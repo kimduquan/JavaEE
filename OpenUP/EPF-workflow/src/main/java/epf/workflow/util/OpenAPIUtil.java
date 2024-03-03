@@ -1,4 +1,4 @@
-package epf.workflow.function.openapi;
+package epf.workflow.util;
 
 import java.net.URL;
 import org.eclipse.microprofile.openapi.models.OpenAPI;

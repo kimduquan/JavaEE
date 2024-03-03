@@ -57,6 +57,9 @@ public interface Internal {
 	/**
 	 * @param workflow
 	 * @param version
+	 * @param terminate
+	 * @param compensate
+	 * @param continueAs
 	 * @param instance
 	 * @param body
 	 * @return
@@ -70,31 +73,40 @@ public interface Internal {
 			@PathParam("workflow")
 			final String workflow, 
 			@QueryParam("version")
-			final String version, 
+			final String version,
+			@QueryParam("terminate")
+			final Boolean terminate,
+			@QueryParam("compensate")
+			final Boolean compensate,
+			@QueryParam("continueAs")
+			final String continueAs,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
 			final URI instance,
 			final InputStream body) throws Exception;
 
 	/**
 	 * @param workflow
-	 * @param state
 	 * @param version
+	 * @param nextState
+	 * @param compensate
 	 * @param instance
 	 * @param body
 	 * @return
 	 * @throws Exception
 	 */
 	@POST
-	@Path("{workflow}/{state}")
+	@Path("{workflow}/{nextState}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	Response transition(
 			@PathParam("workflow")
-			final String workflow,  
-			@PathParam("state")
-			final String state,
+			final String workflow,
 			@QueryParam("version")
-			final String version,
+			final String version,  
+			@PathParam("nextState")
+			final String nextState,
+			@QueryParam("compensate")
+			final Boolean compensate,
 			@HeaderParam(LRA.LRA_HTTP_CONTEXT_HEADER)
 			final URI instance,
 			final InputStream body) throws Exception;
@@ -372,12 +384,15 @@ public interface Internal {
 	 * @param state
 	 * @return
 	 */
-	static Link transitionLink(final String workflow, final Optional<String> version, final String state) {
-		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}");
+	static Link transitionLink(final String workflow, final Optional<String> version, final String nextState, final Boolean compensate) {
+		UriBuilder uri = UriBuilder.fromUri("{workflow}/{nextState}");
 		if(version.isPresent()) {
 			uri = uri.queryParam("version", version.get());
 		}
-		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.POST, workflow, state);
+		if(compensate != null) {
+			uri = uri.queryParam("compensate", compensate);
+		}
+		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.POST, workflow, nextState);
 	}
 
 	static Link terminateLink() {
