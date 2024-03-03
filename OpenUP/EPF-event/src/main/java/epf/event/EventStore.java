@@ -176,6 +176,24 @@ public class EventStore implements Event {
 		observes(event, ext, produceEvents, produceEventLinks);
 		return Response.status(Status.PARTIAL_CONTENT).entity(produceEvents).links(produceEventLinks.toArray(new Link[0])).build();
 	}
+
+	@Override
+	public Response observes(final List<Map<String, Object>> events) throws Exception {
+		final List<Map<String, Object>> observes = new ArrayList<>();
+		for(Map<String, Object> map : events) {
+			final Map<String, Object> ext = new HashMap<>();
+			final epf.event.schema.Event event = epf.event.schema.Event.event(map, ext);
+			ColumnWhere where = eventQuery(event);
+			where = eventQuery(ext, where);
+			final ColumnQuery query = where.build();
+			final Stream<ColumnEntity> entities = manager.select(query);
+			entities.forEach(entity -> {
+				final Map<String, Object> eventData = entityColumns(entity);
+				observes.add(eventData);
+			});
+		}
+		return Response.ok(observes).build();
+	}
 	
 	/**
 	 * @param map
@@ -191,5 +209,4 @@ public class EventStore implements Event {
 		observes(event, ext, produceEvents, produceEventLinks);
 		produceEvents.forEach(produces::send);
 	}
-	
 }

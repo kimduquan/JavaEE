@@ -1,10 +1,12 @@
 package epf.event.client;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 import epf.naming.Naming;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.HttpMethod;
+import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
@@ -92,5 +94,23 @@ public interface Event {
 			builder = builder.uri(params.get("uri").toString());
 		}
 		return builder;
+	}
+	
+	/**
+	 * @param events
+	 * @return
+	 * @throws Exception
+	 */
+	@PATCH
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	Response observes(final List<Map<String, Object>> events) throws Exception;
+	
+	/**
+	 * @return
+	 */
+	static Link observesLink() {
+		Builder builder = Link.fromPath(Naming.EVENT).rel(Naming.EVENT).type(HttpMethod.PATCH);
+		return builder.build();
 	}
 }
