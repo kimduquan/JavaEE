@@ -2,6 +2,7 @@ package epf.workflow.client;
 
 import java.io.InputStream;
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
@@ -143,7 +144,7 @@ public interface Internal {
 	 * @return
 	 * @throws Exception
 	 */
-	@PATCH
+	@POST
 	@Path("{workflow}/{state}/events")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -155,6 +156,27 @@ public interface Internal {
 			@QueryParam("version")
 			final String version,
 			final Map<String, Object> map) throws Exception;
+	
+	/**
+	 * @param workflow
+	 * @param state
+	 * @param version
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	@PATCH
+	@Path("{workflow}/{state}/events")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	Response onEvents(
+			@PathParam("workflow")
+			final String workflow, 
+			@PathParam("state")
+			final String state,
+			@QueryParam("version")
+			final String version,
+			final List<Map<String, Object>> events) throws Exception;
 	
 	/**
 	 * @param workflow
@@ -299,6 +321,20 @@ public interface Internal {
 	 * @return
 	 */
 	static Link observesLink(final String workflow, final String state, final Optional<String> version) {
+		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}/events");
+		if(version.isPresent()) {
+			uri = uri.queryParam("version", version.get());
+		}
+		return LinkUtil.build(uri, Naming.WORKFLOW, HttpMethod.POST, workflow, state);
+	}
+	
+	/**
+	 * @param workflow
+	 * @param state
+	 * @param version
+	 * @return
+	 */
+	static Link onEventsLink(final String workflow, final String state, final Optional<String> version) {
 		UriBuilder uri = UriBuilder.fromUri("{workflow}/{state}/events");
 		if(version.isPresent()) {
 			uri = uri.queryParam("version", version.get());

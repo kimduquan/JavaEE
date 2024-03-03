@@ -177,6 +177,7 @@ public class EventStore implements Event {
 		return Response.status(Status.PARTIAL_CONTENT).entity(produceEvents).links(produceEventLinks.toArray(new Link[0])).build();
 	}
 
+	@RunOnVirtualThread
 	@Override
 	public Response observes(final List<Map<String, Object>> events) throws Exception {
 		final List<Map<String, Object>> observes = new ArrayList<>();
