@@ -3,6 +3,7 @@ helm repo update
 
 helm install scylla-operator scylla/scylla-operator --create-namespace --namespace scylla-operator
 kubectl wait -n scylla-operator --for=condition=ready pod -l "app.kubernetes.io/name=scylla-operator"
+kubectl wait -n scylla-operator --for=condition=ready pod -l "app.kubernetes.io/name=webhook-server"
 kubectl -n scylla-operator get all
 
 helm install scylla-manager scylla/scylla-manager --create-namespace --namespace scylla-manager
