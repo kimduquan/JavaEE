@@ -10,3 +10,5 @@ logPersistence:
 zookeeper:
   persistence:
     size: 1Gi
+controller:
+  replicaCount: 1
