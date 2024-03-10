@@ -34,7 +34,7 @@ public class EventCache implements HealthCheck {
 	 */
 	@PostConstruct()
 	protected void postConstruct() {
-		instance = HazelcastClient.getOrCreateHazelcastClient();
+		instance = HazelcastClient.newHazelcastClient();
 		eventCache = instance.getCacheManager().getCache(Internal.EPF_EVENT_CACHE);
 	}
 	
