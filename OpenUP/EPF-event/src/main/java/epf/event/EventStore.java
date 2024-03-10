@@ -54,8 +54,8 @@ public class EventStore implements Event {
 	 * 
 	 */
 	@Inject
-	@Channel(Naming.Event.EPF_EVENT_PRODUCES)
-	transient Emitter<Map<String, Object>> produces;
+	@Channel(Naming.Event.EPF_EVENT_OBSERVES)
+	transient Emitter<Map<String, Object>> observes;
 	
 	private String eventId(final ColumnEntity eventEntity) {
 		return eventEntity.find(Schema.ID).get().get().toString();
@@ -173,7 +173,7 @@ public class EventStore implements Event {
 		final List<Map<String, Object>> produceEvents = new ArrayList<>();
 		final List<Link> produceEventLinks = new ArrayList<>();
 		observes(event, ext, produceEvents, produceEventLinks);
-		produceEvents.forEach(produces::send);
+		produceEvents.forEach(observes::send);
 		return Response.status(Status.PARTIAL_CONTENT).entity(produceEvents).links(produceEventLinks.toArray(new Link[0])).build();
 	}
 

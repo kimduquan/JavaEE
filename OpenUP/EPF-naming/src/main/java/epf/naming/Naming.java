@@ -181,12 +181,7 @@ public interface Naming {
 		/**
 		 * 
 		 */
-		String EPF_EVENT_CONSUMES = "epf-event-consumes";
-		
-		/**
-		 * 
-		 */
-		String EPF_EVENT_PRODUCES = "epf-event-produces";
+		String EPF_EVENT_OBSERVES = "epf-event-observes";
 		
 		/**
 		 * 
