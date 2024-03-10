@@ -2,13 +2,14 @@ package epf.event;
 
 import java.util.Map;
 import javax.cache.Cache;
-import javax.cache.CacheManager;
-import javax.cache.Caching;
-import javax.cache.configuration.MutableConfiguration;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
+import com.hazelcast.client.HazelcastClient;
+import com.hazelcast.core.HazelcastInstance;
 import epf.naming.Naming.Event.Internal;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.context.ApplicationScoped;
 
 /**
@@ -21,20 +22,36 @@ public class EventCache implements HealthCheck {
 	/**
 	 * 
 	 */
+	private transient HazelcastInstance instance;
+	
+	/**
+	 * 
+	 */
 	private transient Cache<String, Map<String, Object>> eventCache;
+	
+	/**
+	 * 
+	 */
+	@PostConstruct()
+	protected void postConstruct() {
+		instance = HazelcastClient.getOrCreateHazelcastClient();
+		eventCache = instance.getCacheManager().getCache(Internal.EPF_EVENT_CACHE);
+	}
+	
+	/**
+	 * 
+	 */
+	@PreDestroy
+	protected void preDestroy() {
+		eventCache.close();
+		instance.shutdown();
+	}
 
 	@Override
 	public HealthCheckResponse call() {
-		final CacheManager cacheManager = Caching.getCachingProvider().getCacheManager();
-		eventCache = cacheManager.getCache(Internal.EPF_EVENT_CACHE);
-		if(eventCache == null) {
-			final MutableConfiguration<String, Map<String, Object>> config = new MutableConfiguration<>();
-			eventCache = cacheManager.createCache(Internal.EPF_EVENT_CACHE, config);
-		}
 		if(eventCache != null) {
 			return HealthCheckResponse.up(Internal.EPF_EVENT_CACHE);
 		}
-
 		return HealthCheckResponse.down(Internal.EPF_EVENT_CACHE);
 	}
 	

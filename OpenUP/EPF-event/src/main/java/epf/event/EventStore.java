@@ -16,7 +16,6 @@ import org.eclipse.jnosql.communication.column.ColumnQuery.ColumnWhere;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
-import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.jnosql.communication.column.Columns;
 import epf.event.client.Event;
 import epf.naming.Naming;
@@ -174,6 +173,7 @@ public class EventStore implements Event {
 		final List<Map<String, Object>> produceEvents = new ArrayList<>();
 		final List<Link> produceEventLinks = new ArrayList<>();
 		observes(event, ext, produceEvents, produceEventLinks);
+		produceEvents.forEach(produces::send);
 		return Response.status(Status.PARTIAL_CONTENT).entity(produceEvents).links(produceEventLinks.toArray(new Link[0])).build();
 	}
 
@@ -194,20 +194,5 @@ public class EventStore implements Event {
 			});
 		}
 		return Response.ok(observes).build();
-	}
-	
-	/**
-	 * @param map
-	 * @throws Exception
-	 */
-	@Incoming(Naming.Event.EPF_EVENT_CONSUMES)
-	@RunOnVirtualThread
-	public void consume(final Map<String, Object> map) throws Exception {
-		final Map<String, Object> ext = new HashMap<>();
-		final epf.event.schema.Event event = epf.event.schema.Event.event(map, ext);
-		final List<Map<String, Object>> produceEvents = new ArrayList<>();
-		final List<Link> produceEventLinks = new ArrayList<>();
-		observes(event, ext, produceEvents, produceEventLinks);
-		produceEvents.forEach(produces::send);
 	}
 }
