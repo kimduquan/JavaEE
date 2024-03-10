@@ -10,7 +10,7 @@
   <artifactId>EPF-event</artifactId>
   <name>Eclipse Process Framework Event</name>
   <properties>
-    <maven.compiler.release>21</maven.compiler.release>
+    <maven.compiler.release>17</maven.compiler.release>
   </properties>
   <dependencies>
 	<dependency>
