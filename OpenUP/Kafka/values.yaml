@@ -15,3 +15,5 @@ controller:
 sasl:
   controller:
     password: "0123456789"
+  client:
+    passwords: "0123456789"
