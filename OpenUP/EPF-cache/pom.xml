@@ -33,6 +33,16 @@
     </dependency>
 
 	<dependency>
+		<groupId>com.hazelcast</groupId>
+		<artifactId>hazelcast</artifactId>
+	</dependency>
+		
+	<dependency>
+        <groupId>openup</groupId>
+        <artifactId>EPF-naming</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+	<dependency>
         <groupId>openup</groupId>
         <artifactId>EPF-cache-utility</artifactId>
         <version>${project.version}</version>
