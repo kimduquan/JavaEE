@@ -43,7 +43,6 @@ public class EventCache implements HealthCheck {
 	 */
 	@PreDestroy
 	protected void preDestroy() {
-		eventCache.close();
 		instance.shutdown();
 	}
 
