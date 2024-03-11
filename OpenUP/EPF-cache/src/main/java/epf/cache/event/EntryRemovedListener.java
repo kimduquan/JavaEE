@@ -1,9 +1,9 @@
-package epf.cache.internal.event;
+package epf.cache.event;
 
 import javax.cache.event.CacheEntryEvent;
 import javax.cache.event.CacheEntryListenerException;
 import javax.cache.event.CacheEntryRemovedListener;
-import epf.util.websocket.MessageQueue;
+import javax.enterprise.event.Event;
 
 /**
  * @author PC
@@ -12,17 +12,15 @@ import epf.util.websocket.MessageQueue;
 public class EntryRemovedListener extends EntryListener implements CacheEntryRemovedListener<String, Object> {
 
 	/**
-	 * @param messages
+	 * @param event
 	 */
-	public EntryRemovedListener(final MessageQueue messages) {
-		super(messages);
+	public EntryRemovedListener(final Event<CacheEntryEvent<? extends String, ? extends Object>> event) {
+		super(event);
 	}
 
 	@Override
 	public void onRemoved(final Iterable<CacheEntryEvent<? extends String, ? extends Object>> events)
 			throws CacheEntryListenerException {
-		events.forEach(entry -> {
-			add(entry);
-		});
+		onEvent(events);
 	}
 }

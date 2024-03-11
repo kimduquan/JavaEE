@@ -1,4 +1,4 @@
-package epf.cache.internal.event;
+package epf.cache.event;
 
 import javax.cache.event.CacheEntryEvent;
 import javax.cache.event.CacheEntryEventFilter;

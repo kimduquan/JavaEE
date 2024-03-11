@@ -10,32 +10,10 @@
   </parent>
   <artifactId>EPF-cache</artifactId>
   <name>Eclipse Process Framework Cache</name>
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>${quarkus.platform.group-id}</groupId>
-        <artifactId>${quarkus.platform.artifact-id}</artifactId>
-        <version>${quarkus.platform.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>${quarkus.platform.group-id}</groupId>
-        <artifactId>quarkus-hazelcast-client</artifactId>
-        <version>${quarkus.platform.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
   <dependencies>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-resteasy-reactive-jsonb</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy-reactive</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -53,39 +31,15 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-container-image-jib</artifactId>
     </dependency>
-    <dependency>
-      <groupId>com.hazelcast</groupId>
-      <artifactId>quarkus-hazelcast-client</artifactId>
-    </dependency>
 
 	<dependency>
         <groupId>openup</groupId>
-        <artifactId>EPF-cache-client</artifactId>
-        <version>${project.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>openup</groupId>
-        <artifactId>EPF-cache-client-utility</artifactId>
-        <version>${project.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>openup</groupId>
         <artifactId>EPF-cache-utility</artifactId>
-        <version>${project.version}</version>
-    </dependency>
-	<dependency>
-        <groupId>openup</groupId>
-        <artifactId>EPF-json-utility</artifactId>
         <version>${project.version}</version>
     </dependency>
     <dependency>
         <groupId>openup</groupId>
         <artifactId>EPF-logging-utility</artifactId>
-        <version>${project.version}</version>
-    </dependency>
-	<dependency>
-        <groupId>openup</groupId>
-        <artifactId>EPF-websocket-utility</artifactId>
         <version>${project.version}</version>
     </dependency>
   </dependencies>

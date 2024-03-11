@@ -1,8 +1,7 @@
-package epf.cache.internal.event;
+package epf.cache.event;
 
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.cache.Cache;
 import javax.cache.configuration.FactoryBuilder.SingletonFactory;
@@ -10,9 +9,8 @@ import javax.cache.configuration.MutableCacheEntryListenerConfiguration;
 import javax.cache.event.CacheEntryEvent;
 import javax.cache.event.CacheEntryEventFilter;
 import javax.cache.event.CacheEntryListener;
+import javax.enterprise.event.Event;
 import epf.util.logging.LogManager;
-import epf.util.websocket.Message;
-import epf.util.websocket.MessageQueue;
 
 /**
  * @author PC
@@ -28,7 +26,7 @@ public abstract class EntryListener implements CacheEntryListener<String, Object
 	/**
 	 * 
 	 */
-	private transient final MessageQueue messages;
+	private transient final Event<CacheEntryEvent<? extends String, ? extends Object>> event;
 	
 	/**
 	 * 
@@ -41,23 +39,25 @@ public abstract class EntryListener implements CacheEntryListener<String, Object
 	private transient final EntryFilter filter;
 	
 	/**
-	 * @param messages
+	 * @param event
 	 */
-	protected EntryListener(final MessageQueue messages) {
-		this.messages = messages;
+	protected EntryListener(final Event<CacheEntryEvent<? extends String, ? extends Object>> event) {
+		this.event = event;
 		filter = new EntryFilter();
 	}
 	
 	/**
-	 * @param event
+	 * @param events
 	 */
-	protected void add(final CacheEntryEvent<? extends String, ? extends Object> event) {
-		try(Jsonb jsonb = JsonbBuilder.create()){
-			messages.add(new Message(jsonb.toJson(event)));
-		} 
-		catch (Exception e) {
-			LOGGER.throwing(LOGGER.getName(), "add", e);
-		}
+	protected void onEvent(final Iterable<CacheEntryEvent<? extends String, ? extends Object>> events) {
+		events.forEach(event -> {
+			try {
+				this.event.fire(event);
+			}
+			catch(Exception ex) {
+				LOGGER.log(Level.SEVERE, "add", ex);
+			}
+		});
 	}
 	
 	/**

@@ -845,7 +845,6 @@
 		<module>EPF-json-utility-ext</module>
 		<module>EPF-json-schema</module>
 		<module>EPF-client-utility</module>
-		<module>EPF-cache-client-utility</module>
 		<module>EPF-client-internal</module>
 		<module>EPF-file-utility</module>
 		<module>EPF-cache-utility</module>
@@ -931,7 +930,6 @@
 		<module>EPF-file</module>
 		<module>EPF-mail-client</module>
 		<module>EPF-file-client</module>
-		<module>EPF-cache-client</module>
 		<module>EPF-config-client</module>
 		<module>EPF-rules-client</module>
 		<module>EPF-registry-client</module>

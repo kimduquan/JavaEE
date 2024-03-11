@@ -1,9 +1,9 @@
-package epf.cache.internal.event;
+package epf.cache.event;
 
 import javax.cache.event.CacheEntryEvent;
 import javax.cache.event.CacheEntryExpiredListener;
 import javax.cache.event.CacheEntryListenerException;
-import epf.util.websocket.MessageQueue;
+import javax.enterprise.event.Event;
 
 /**
  * @author PC
@@ -12,17 +12,15 @@ import epf.util.websocket.MessageQueue;
 public class EntryExpiredListener extends EntryListener implements CacheEntryExpiredListener<String, Object> {
 
 	/**
-	 * @param messages
+	 * @param event
 	 */
-	public EntryExpiredListener(final MessageQueue messages) {
-		super(messages);
+	public EntryExpiredListener(final Event<CacheEntryEvent<? extends String, ? extends Object>> event) {
+		super(event);
 	}
 
 	@Override
 	public void onExpired(final Iterable<CacheEntryEvent<? extends String, ? extends Object>> events)
 			throws CacheEntryListenerException {
-		events.forEach(entry -> {
-			add(entry);
-		});
+		onEvent(events);
 	}
 }
