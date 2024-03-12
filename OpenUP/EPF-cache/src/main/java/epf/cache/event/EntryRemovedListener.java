@@ -3,7 +3,7 @@ package epf.cache.event;
 import javax.cache.event.CacheEntryEvent;
 import javax.cache.event.CacheEntryListenerException;
 import javax.cache.event.CacheEntryRemovedListener;
-import javax.enterprise.event.Event;
+import jakarta.enterprise.event.Event;
 
 /**
  * @author PC

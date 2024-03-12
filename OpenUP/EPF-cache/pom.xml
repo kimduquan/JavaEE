@@ -4,12 +4,15 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
 	<groupId>epf</groupId>
-	<artifactId>EPF-parent</artifactId>
+	<artifactId>EPF-parent-ext</artifactId>
 	<version>1.0.0</version>
-	<relativePath>../EPF-parent/pom.xml</relativePath>
+	<relativePath>../EPF-parent-ext/pom.xml</relativePath>
   </parent>
   <artifactId>EPF-cache</artifactId>
   <name>Eclipse Process Framework Cache</name>
+  <properties>
+    <maven.compiler.release>21</maven.compiler.release>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -36,15 +39,14 @@
 		<groupId>com.hazelcast</groupId>
 		<artifactId>hazelcast</artifactId>
 	</dependency>
+	<dependency>
+	    <groupId>javax.cache</groupId>
+	    <artifactId>cache-api</artifactId>
+	</dependency>
 		
 	<dependency>
         <groupId>openup</groupId>
         <artifactId>EPF-naming</artifactId>
-        <version>${project.version}</version>
-    </dependency>
-	<dependency>
-        <groupId>openup</groupId>
-        <artifactId>EPF-cache-utility</artifactId>
         <version>${project.version}</version>
     </dependency>
     <dependency>

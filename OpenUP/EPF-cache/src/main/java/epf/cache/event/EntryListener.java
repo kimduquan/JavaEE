@@ -9,7 +9,7 @@ import javax.cache.configuration.MutableCacheEntryListenerConfiguration;
 import javax.cache.event.CacheEntryEvent;
 import javax.cache.event.CacheEntryEventFilter;
 import javax.cache.event.CacheEntryListener;
-import javax.enterprise.event.Event;
+import jakarta.enterprise.event.Event;
 import epf.util.logging.LogManager;
 
 /**
