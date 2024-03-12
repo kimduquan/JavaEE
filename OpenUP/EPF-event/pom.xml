@@ -45,7 +45,6 @@
 	    <groupId>io.quarkiverse.jnosql</groupId>
 	    <artifactId>quarkus-jnosql-column-cassandra</artifactId>
 	</dependency>
-	<!-- https://mvnrepository.com/artifact/com.hazelcast/quarkus-hazelcast-client -->
 	<dependency>
 	    <groupId>com.hazelcast</groupId>
 	    <artifactId>quarkus-hazelcast-client</artifactId>
