@@ -1,72 +1,39 @@
 package epf.event;
 
-import java.util.Map;
-import javax.cache.Cache;
-import org.eclipse.microprofile.health.HealthCheck;
-import org.eclipse.microprofile.health.HealthCheckResponse;
-import org.eclipse.microprofile.health.Readiness;
-import com.hazelcast.client.HazelcastClient;
-import com.hazelcast.core.HazelcastInstance;
-import epf.naming.Naming.Event.Internal;
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
+import java.util.Optional;
+import org.eclipse.jnosql.communication.keyvalue.KeyValueEntity;
+import epf.event.schema.Link;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.nosql.keyvalue.KeyValueTemplate;
 
 /**
  * 
  */
 @ApplicationScoped
-@Readiness
-public class EventCache implements HealthCheck {
+public class EventCache {
 	
 	/**
 	 * 
 	 */
-	private transient HazelcastInstance instance;
-	
-	/**
-	 * 
-	 */
-	private transient Cache<String, Map<String, Object>> eventCache;
-	
-	/**
-	 * 
-	 */
-	@PostConstruct()
-	protected void postConstruct() {
-		instance = HazelcastClient.newHazelcastClient();
-		eventCache = instance.getCacheManager().getCache(Internal.EPF_EVENT_CACHE);
-	}
-	
-	/**
-	 * 
-	 */
-	@PreDestroy
-	protected void preDestroy() {
-		instance.shutdown();
-	}
-
-	@Override
-	public HealthCheckResponse call() {
-		if(eventCache != null) {
-			return HealthCheckResponse.up(Internal.EPF_EVENT_CACHE);
-		}
-		return HealthCheckResponse.down(Internal.EPF_EVENT_CACHE);
-	}
+	@Inject
+	transient KeyValueTemplate cache;
 	
 	/**
 	 * @param key
-	 * @param value
+	 * @param link
 	 */
-	public void put(final String key, final Map<String, Object> value) {
-		eventCache.put(key, value);
+	public void put(final String key, final Link link) {
+		cache.put(KeyValueEntity.of(key, link));
 	}
 	
 	/**
 	 * @param key
 	 * @return
 	 */
-	public Map<String, Object> remove(final String key) {
-		return eventCache.getAndRemove(key);
+	public Link remove(final String key) {
+		final Optional<Link> value = cache.get(key, Link.class);
+		cache.delete(key);
+		return value.orElse(null);
 	}
 }

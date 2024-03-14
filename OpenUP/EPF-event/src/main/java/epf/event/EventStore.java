@@ -13,7 +13,6 @@ import org.eclipse.jnosql.communication.column.ColumnEntity;
 import org.eclipse.jnosql.communication.column.ColumnManager;
 import org.eclipse.jnosql.communication.column.ColumnQuery;
 import org.eclipse.jnosql.communication.column.ColumnQuery.ColumnWhere;
-import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.eclipse.jnosql.communication.column.Columns;
@@ -47,7 +46,6 @@ public class EventStore implements Event {
 	 * 
 	 */
 	@Inject
-	@Readiness
 	transient EventCache eventCache;
 	
 	/**
@@ -61,8 +59,8 @@ public class EventStore implements Event {
 		return eventEntity.find(Schema.ID).get().get().toString();
 	}
 	
-	private Map<String, Object> eventParams(final UriInfo uriInfo) {
-		final Map<String, Object> params = new HashMap<>();
+	private epf.event.schema.Link eventLink(final UriInfo uriInfo) {
+		final Map<String, String> params = new HashMap<>();
 		uriInfo.getQueryParameters().forEach((name, value) -> {
 			if(value.isEmpty()) {
 				params.put(name, "");
@@ -71,7 +69,7 @@ public class EventStore implements Event {
 				params.put(name, value.get(0));
 			}
 		});
-		return params;
+		return epf.event.schema.Link.of(params);
 	}
 	
 	private Map<String, Object> entityColumns(final ColumnEntity entity) {
@@ -144,7 +142,7 @@ public class EventStore implements Event {
 		for(ColumnEntity eventEntity : updatedEntities) {
 			final Map<String, Object> eventData = entityColumns(eventEntity);
 			final String id = eventId(eventEntity);
-			final Map<String, Object> eventParams = eventCache.remove(id);
+			final Map<String, Object> eventParams = eventCache.remove(id).toMap();
 			final Link eventLink = eventLink(event, index, eventParams);
 			eventDatas.add(eventData);
 			eventLinks.add(eventLink);
@@ -159,9 +157,10 @@ public class EventStore implements Event {
 		final List<Column> columns = Columns.of(ext);
 		final ColumnEntity eventEntity = eventEntity(event, columns);
 		final ColumnEntity entity = manager.insert(eventEntity);
-		final Map<String, Object> eventParams = eventParams(uriInfo);
+		final epf.event.schema.Link eventLink = eventLink(uriInfo);
 		final String id = eventId(entity);
-		eventCache.put(id, eventParams);
+		eventLink.setId(id);
+		eventCache.put(id, eventLink);
 		return Response.ok(entityColumns(entity)).build();
 	}
 

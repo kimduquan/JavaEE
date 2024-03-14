@@ -44,6 +44,12 @@
 		    <artifactId>quarkus-jnosql-column-cassandra</artifactId>
 		    <version>3.2.2.1</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.quarkiverse.jnosql/quarkus-jnosql-keyvalue-hazelcast -->
+		<dependency>
+		    <groupId>io.quarkiverse.jnosql</groupId>
+		    <artifactId>quarkus-jnosql-keyvalue-hazelcast</artifactId>
+		    <version>3.2.2.1</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/javax.json/javax.json-api -->
 		<dependency>
 			<groupId>javax.json</groupId>
