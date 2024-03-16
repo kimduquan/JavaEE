@@ -15,13 +15,12 @@ import jakarta.websocket.server.ServerEndpoint;
 import org.eclipse.microprofile.health.Readiness;
 import epf.naming.Naming;
 import epf.util.logging.LogManager;
-import io.smallrye.common.annotation.RunOnVirtualThread;
 
 /**
  * @author PC
  *
  */
-@ServerEndpoint("/messaging/{tenant}/{service}/{path}")
+@ServerEndpoint("/messaging/{tenant}/{id}")
 @ApplicationScoped
 public class Messaging {
 	
@@ -33,42 +32,27 @@ public class Messaging {
 	/**
 	 * 
 	 */
-	private final static String PATH = "path";
-	
-	/**
-	 * 
-	 */
-	private final static String SERVICE = "service";
-	
-	/**
-	 * 
-	 */
-	@Inject
-	@Readiness
-	transient Application application;
+	private final static String ID = "id";
 
 	/**
-	 * @param path
+	 * @param tenant
+	 * @param id
 	 * @param session
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	@OnOpen
     public void onOpen(
     		@PathParam(Naming.Management.TENANT)
     		final String tenant,
-    		@PathParam(SERVICE)
-    		final String service,
-    		@PathParam(PATH) 
-    		final String path, 
+    		@PathParam(ID)
+    		final String id,
     		final Session session) throws Exception {
-		LOGGER.log(Level.INFO, String.format("[Messaging.open][%s/%s/%s]session.id=%s", tenant, service, path, session.getId()));
-		application.onOpen(path, session);
+		LOGGER.log(Level.INFO, String.format("[Messaging.open][%s/%s]session.id=%s", tenant, id, session.getId()));
 	}
 	
 	/**
 	 * @param tenant
-	 * @param service
-	 * @param path
+	 * @param id
 	 * @param message
 	 * @param session
 	 */
@@ -76,34 +60,33 @@ public class Messaging {
     public void onMessage(
     		@PathParam(Naming.Management.TENANT)
     		final String tenant,
-    		@PathParam(SERVICE)
-    		final String service,
-    		@PathParam(PATH) 
-    		final String path,
+    		@PathParam(ID)
+    		final String id,
     		final String message, 
     		final Session session) {
-		LOGGER.log(Level.INFO, String.format("[Messaging.message][%s/%s/%s]session.id=%s", tenant, service, path, session.getId()));
-		application.sendText(message);
-	}
-	
-	@OnMessage
-    public void onMessage(
-    		@PathParam(Naming.Management.TENANT)
-    		final String tenant,
-    		@PathParam(SERVICE)
-    		final String service,
-    		@PathParam(PATH) 
-    		final String path,
-    		final byte[] message, 
-    		final Session session) {
-		LOGGER.log(Level.INFO, String.format("[Messaging.message][%s/%s/%s]session.id=%s", tenant, service, path, session.getId()));
-		application.sendBinary(message);
+		LOGGER.log(Level.INFO, String.format("[Messaging.message][%s/%s]session.id=%s", tenant, id, session.getId()));
 	}
 	
 	/**
 	 * @param tenant
-	 * @param service
-	 * @param path
+	 * @param id
+	 * @param message
+	 * @param session
+	 */
+	@OnMessage
+    public void onMessage(
+    		@PathParam(Naming.Management.TENANT)
+    		final String tenant,
+    		@PathParam(ID)
+    		final String id,
+    		final byte[] message, 
+    		final Session session) {
+		LOGGER.log(Level.INFO, String.format("[Messaging.message][%s/%s]session.id=%s", tenant, id, session.getId()));
+	}
+	
+	/**
+	 * @param tenant
+	 * @param id
 	 * @param session
 	 * @param throwable
 	 */
@@ -111,34 +94,28 @@ public class Messaging {
     public void onError(
     		@PathParam(Naming.Management.TENANT)
     		final String tenant,
-    		@PathParam(SERVICE)
-    		final String service,
-    		@PathParam(PATH) 
-    		final String path,
+    		@PathParam(ID)
+    		final String id,
     		final Session session, 
     		final Throwable throwable) {
-		LOGGER.log(Level.WARNING, String.format("[Messaging.error][%s/%s/%s]session.id=%s", tenant, service, path, session.getId()), throwable);
-		application.onError(path, session);
+		LOGGER.log(Level.WARNING, String.format("[Messaging.error][%s/%s]session.id=%s", tenant, id, session.getId()), throwable);
 	}
 	
 	/**
 	 * @param tenant
-	 * @param service
-	 * @param path
+	 * @param id
 	 * @param session
 	 * @param closeReason
+	 * @throws Exception
 	 */
 	@OnClose
     public void onClose(
     		@PathParam(Naming.Management.TENANT)
     		final String tenant,
-    		@PathParam(SERVICE)
-    		final String service,
-    		@PathParam(PATH) 
-    		final String path,
+    		@PathParam(ID)
+    		final String id,
     		final Session session, 
     		final CloseReason closeReason) throws Exception {
-		LOGGER.log(Level.INFO, String.format("[Messaging.close][%s/%s/%s]session.id=%s", tenant, service, path, session.getId()));
-		application.onClose(path, session);
+		LOGGER.log(Level.INFO, String.format("[Messaging.close][%s/%s]session.id=%s", tenant, id, session.getId()));
 	}
 }
