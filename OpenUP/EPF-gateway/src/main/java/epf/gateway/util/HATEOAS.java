@@ -1,4 +1,4 @@
-package epf.hateoas.utility;
+package epf.gateway.util;
 
 import java.io.InputStream;
 import java.net.URI;

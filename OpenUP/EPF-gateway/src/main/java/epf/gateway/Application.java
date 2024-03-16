@@ -35,7 +35,7 @@ import epf.client.util.RequestUtil;
 import epf.client.util.ResponseUtil;
 import epf.concurrent.client.Concurrent;
 import epf.concurrent.client.Synchronized;
-import epf.hateoas.utility.HATEOAS;
+import epf.gateway.util.HATEOAS;
 import epf.naming.Naming;
 import epf.util.io.InputStreamUtil;
 import epf.util.logging.LogManager;
