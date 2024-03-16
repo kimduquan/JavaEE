@@ -10,12 +10,12 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
-import epf.client.internal.ClientQueue;
 import epf.naming.Naming;
 import epf.util.MapUtil;
 import epf.util.logging.LogManager;
@@ -40,12 +40,6 @@ public class Registry implements HealthCheck  {
 	private transient final Map<String, URI> remotes = new ConcurrentHashMap<>();
 	
 	/**
-	 *
-	 */
-	@Inject
-	transient ClientQueue clients;
-	
-	/**
 	 * 
 	 */
 	@ConfigProperty(name = Naming.Registry.REGISTRY_URL)
@@ -62,7 +56,7 @@ public class Registry implements HealthCheck  {
 	
 	private void initialize() {
 		if(remotes.isEmpty()) {
-			final Client client = clients.poll(registryUrl, null);
+			final Client client = ClientBuilder.newClient();
 			try {
 				client.target(registryUrl)
 				.queryParam(Naming.Registry.Filter.SCHEME, "http", "ws")
@@ -78,7 +72,7 @@ public class Registry implements HealthCheck  {
 				LOGGER.log(Level.SEVERE, "[Registry.call]", ex);
 			}
 			finally {
-				clients.add(registryUrl, client);
+				client.close();
 			}
 		}
 	}

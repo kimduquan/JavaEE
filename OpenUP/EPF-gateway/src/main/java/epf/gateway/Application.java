@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Link;
@@ -29,7 +30,6 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.jwt.JsonWebToken;
-import epf.client.internal.ClientQueue;
 import epf.client.util.RequestBuilder;
 import epf.client.util.RequestUtil;
 import epf.client.util.ResponseUtil;
@@ -51,12 +51,6 @@ public class Application {
 	 * 
 	 */
 	private transient static final Logger LOGGER = LogManager.getLogger(Application.class.getName());
-	
-	/**
-	 * 
-	 */
-	@Inject
-	transient ClientQueue clients;
     
     /**
      * 
@@ -111,7 +105,7 @@ public class Application {
     		throw new NotAuthorizedException(Response.status(Status.UNAUTHORIZED));
     	}
     	final URI serviceUrl = registry.lookup(service).orElseThrow(NotFoundException::new);
-    	final Client client = clients.poll(serviceUrl, null);
+    	final Client client = ClientBuilder.newClient();
     	final RequestBuilder builder = new RequestBuilder(client, serviceUrl, req.getMethod(), headers, uriInfo, body, true);
     	Response response = builder.build();
     	if(isSuccessful(response)) {
@@ -122,7 +116,7 @@ public class Application {
         	response = buildLinkRequests(client, response, entity, mediaType, headers, self, isPartial);
     	}
     	response = ResponseUtil.buildResponse(response, uriInfo.getBaseUri());
-    	clients.add(serviceUrl, client);
+    	client.close();
     	return response;
     }
     

@@ -10,13 +10,13 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.websocket.Session;
 import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import org.eclipse.microprofile.health.Readiness;
-import epf.client.internal.ClientQueue;
 import epf.gateway.Registry;
 import epf.naming.Naming;
 
@@ -30,12 +30,6 @@ public class Security {
 	 *
 	 */
 	private URI securityUrl;
-	
-	/**
-	 *
-	 */
-	@Inject
-	transient ClientQueue clients;
 	
 	/**
 	 * 
@@ -94,7 +88,7 @@ public class Security {
 	 * @return
 	 */
 	public boolean authenticate(final Optional<String> tenant, final String token, final String remotePath, final Session session) {
-		final Client client = clients.poll(securityUrl, null);
+		final Client client = ClientBuilder.newClient();
 		try(Response response = authenticate(client, securityUrl, tenant, token)){
 			if(response.getStatus() == Status.OK.getStatusCode()) {
 				return true;
@@ -104,7 +98,7 @@ public class Security {
 			return false;
 		}
 		finally {
-			clients.add(securityUrl, client);
+			client.close();
 		}
 		return false;
 	}
