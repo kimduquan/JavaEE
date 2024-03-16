@@ -2,11 +2,11 @@ package epf.gateway.util;
 
 import java.io.InputStream;
 import java.net.URI;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import jakarta.ws.rs.client.Invocation;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
 
 /**
  * 
@@ -16,7 +16,7 @@ public class RequestBuilder {
 	/**
 	 * 
 	 */
-	private transient javax.ws.rs.client.Client client;
+	private transient jakarta.ws.rs.client.Client client;
 	
 	/**
 	 *
@@ -53,7 +53,7 @@ public class RequestBuilder {
 	 * @param body
 	 * @param buildForwardHeaders
 	 */
-	public RequestBuilder(final javax.ws.rs.client.Client client, final URI serviceUrl, final String method, final HttpHeaders headers, final UriInfo uriInfo, final InputStream body, final boolean buildForwardHeaders) {
+	public RequestBuilder(final jakarta.ws.rs.client.Client client, final URI serviceUrl, final String method, final HttpHeaders headers, final UriInfo uriInfo, final InputStream body, final boolean buildForwardHeaders) {
 		this.client = client;
 		this.serviceUrl = serviceUrl;
 		this.headers = headers;

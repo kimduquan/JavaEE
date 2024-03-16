@@ -7,7 +7,7 @@ import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
@@ -18,8 +18,8 @@ import org.eclipse.microprofile.reactive.messaging.Message;
 import epf.naming.Naming.Messaging.Internal;
 import epf.util.logging.LogManager;
 import io.smallrye.common.annotation.RunOnVirtualThread;
-import javax.inject.Inject;
-import javax.websocket.Session;
+import jakarta.inject.Inject;
+import jakarta.websocket.Session;
 
 /**
  * 

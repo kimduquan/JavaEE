@@ -1,24 +1,24 @@
 package epf.gateway.security;
 
 import java.io.InputStream;
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.PATCH;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.UriInfo;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.PATCH;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
+import jakarta.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
 import epf.naming.Naming;
@@ -63,7 +63,7 @@ public class Security {
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
-            @Context final javax.ws.rs.core.Request req,
+            @Context final jakarta.ws.rs.core.Request req,
             final InputStream body) throws Exception {
 		return request.buildRequest(Naming.SECURITY, null, headers, uriInfo, req, body);
     }
@@ -84,7 +84,7 @@ public class Security {
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
-            @Context final javax.ws.rs.core.Request req
+            @Context final jakarta.ws.rs.core.Request req
             ) throws Exception {
 		return request.buildRequest(Naming.SECURITY, jwt, headers, uriInfo, req, null);
     }
@@ -105,7 +105,7 @@ public class Security {
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
-            @Context final javax.ws.rs.core.Request req) throws Exception {
+            @Context final jakarta.ws.rs.core.Request req) throws Exception {
 		return request.buildRequest(Naming.SECURITY, jwt, headers, uriInfo, req, null);
     }
     
@@ -126,7 +126,7 @@ public class Security {
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
-            @Context final javax.ws.rs.core.Request req,
+            @Context final jakarta.ws.rs.core.Request req,
             final InputStream body) throws Exception {
 		return request.buildRequest(Naming.SECURITY, jwt, headers, uriInfo, req, body);
     }
@@ -149,7 +149,7 @@ public class Security {
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
-            @Context final javax.ws.rs.core.Request req) throws Exception {
+            @Context final jakarta.ws.rs.core.Request req) throws Exception {
 		return request.buildRequest(Naming.SECURITY, jwt, headers, uriInfo, req, null);
     }
     
@@ -173,7 +173,7 @@ public class Security {
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
-            @Context final javax.ws.rs.core.Request req,
+            @Context final jakarta.ws.rs.core.Request req,
             final InputStream body) throws Exception {
 		return request.buildRequest(Naming.SECURITY, null, headers, uriInfo, req, body);
     }
@@ -196,7 +196,7 @@ public class Security {
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
             @Context final UriInfo uriInfo,
-            @Context final javax.ws.rs.core.Request req,
+            @Context final jakarta.ws.rs.core.Request req,
             final InputStream body) throws Exception {
 		return request.buildRequest(Naming.SECURITY, jwt, headers, uriInfo, req, body);
     }

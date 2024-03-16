@@ -13,25 +13,25 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.ws.rs.NotAuthorizedException;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Link;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.UriInfo;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.NotAuthorizedException;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.Link;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
+import jakarta.ws.rs.core.Response.Status;
+import jakarta.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.jwt.JsonWebToken;
-import epf.concurrent.client.Concurrent;
-import epf.concurrent.client.Synchronized;
+import epf.concurrent.client.ext.Concurrent;
+import epf.concurrent.client.ext.Synchronized;
 import epf.gateway.util.HATEOAS;
 import epf.gateway.util.RequestBuilder;
 import epf.gateway.util.RequestUtil;
@@ -99,7 +99,7 @@ public class Application {
     		final JsonWebToken jwt,
     		final HttpHeaders headers, 
             final UriInfo uriInfo,
-            final javax.ws.rs.core.Request req,
+            final jakarta.ws.rs.core.Request req,
             final InputStream body) throws Exception {
     	if(jwt != null && !security.authenticate(jwt, uriInfo)) {
     		throw new NotAuthorizedException(Response.status(Status.UNAUTHORIZED));

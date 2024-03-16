@@ -4,9 +4,9 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
 	<groupId>epf</groupId>
-	<artifactId>EPF-parent</artifactId>
+	<artifactId>EPF-parent-ext</artifactId>
 	<version>1.0.0</version>
-	<relativePath>../EPF-parent/pom.xml</relativePath>
+	<relativePath>../EPF-parent-ext/pom.xml</relativePath>
   </parent>
   <artifactId>EPF-gateway</artifactId>
   <name>Eclipse Process Framework Gateway</name>
@@ -28,11 +28,11 @@
     </dependency>
 	<dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-rest-client-jsonb</artifactId>
+      <artifactId>quarkus-resteasy-client-jsonb</artifactId>
     </dependency>
 	<dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-rest-client</artifactId>
+      <artifactId>quarkus-resteasy-client</artifactId>
     </dependency>
 	<dependency>
       <groupId>io.quarkus</groupId>
@@ -63,10 +63,9 @@
 		<artifactId>quarkus-container-image-jib</artifactId>
 	</dependency>
 	<dependency>
-		<groupId>io.quarkus</groupId>
+		<groupId>io.quarkiverse.opentracing</groupId>
 		<artifactId>quarkus-smallrye-opentracing</artifactId>
 	</dependency>
-	<!-- https://mvnrepository.com/artifact/com.hazelcast/quarkus-hazelcast-client -->
 	<dependency>
 	    <groupId>com.hazelcast</groupId>
 	    <artifactId>quarkus-hazelcast-client</artifactId>
@@ -75,7 +74,6 @@
 	    <groupId>io.quarkus</groupId>
 	    <artifactId>quarkus-smallrye-openapi</artifactId>
 	</dependency>
-	<!-- https://mvnrepository.com/artifact/org.bitbucket.b_c/jose4j -->
 	<dependency>
 	    <groupId>org.bitbucket.b_c</groupId>
 	    <artifactId>jose4j</artifactId>
@@ -99,7 +97,7 @@
     </dependency>
     <dependency>
         <groupId>openup</groupId>
-        <artifactId>EPF-concurrent-client</artifactId>
+        <artifactId>EPF-concurrent-client-ext</artifactId>
         <version>${project.version}</version>
     </dependency>
   </dependencies>

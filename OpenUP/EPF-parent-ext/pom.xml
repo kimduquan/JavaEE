@@ -50,6 +50,12 @@
 		    <artifactId>quarkus-jnosql-keyvalue-hazelcast</artifactId>
 		    <version>3.2.2.1</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.quarkiverse.opentracing/quarkus-smallrye-opentracing -->
+		<dependency>
+		    <groupId>io.quarkiverse.opentracing</groupId>
+		    <artifactId>quarkus-smallrye-opentracing</artifactId>
+		    <version>1.0.0</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/javax.json/javax.json-api -->
 		<dependency>
 			<groupId>javax.json</groupId>

@@ -1,7 +1,7 @@
 package epf.gateway.planning;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.ws.rs.Path;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ws.rs.Path;
 import epf.naming.Naming;
 
 /**

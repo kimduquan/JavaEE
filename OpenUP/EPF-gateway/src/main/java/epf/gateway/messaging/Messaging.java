@@ -2,16 +2,16 @@ package epf.gateway.messaging;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.websocket.CloseReason;
-import javax.websocket.OnClose;
-import javax.websocket.OnError;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
-import javax.websocket.server.PathParam;
-import javax.websocket.server.ServerEndpoint;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.websocket.CloseReason;
+import jakarta.websocket.OnClose;
+import jakarta.websocket.OnError;
+import jakarta.websocket.OnMessage;
+import jakarta.websocket.OnOpen;
+import jakarta.websocket.Session;
+import jakarta.websocket.server.PathParam;
+import jakarta.websocket.server.ServerEndpoint;
 import org.eclipse.microprofile.health.Readiness;
 import epf.naming.Naming;
 import epf.util.logging.LogManager;
@@ -53,7 +53,6 @@ public class Messaging {
 	 * @throws Exception 
 	 */
 	@OnOpen
-    @RunOnVirtualThread
     public void onOpen(
     		@PathParam(Naming.Management.TENANT)
     		final String tenant,
@@ -74,7 +73,6 @@ public class Messaging {
 	 * @param session
 	 */
 	@OnMessage
-    @RunOnVirtualThread
     public void onMessage(
     		@PathParam(Naming.Management.TENANT)
     		final String tenant,
@@ -89,7 +87,6 @@ public class Messaging {
 	}
 	
 	@OnMessage
-    @RunOnVirtualThread
     public void onMessage(
     		@PathParam(Naming.Management.TENANT)
     		final String tenant,
@@ -111,7 +108,6 @@ public class Messaging {
 	 * @param throwable
 	 */
 	@OnError
-    @RunOnVirtualThread
     public void onError(
     		@PathParam(Naming.Management.TENANT)
     		final String tenant,
@@ -133,7 +129,6 @@ public class Messaging {
 	 * @param closeReason
 	 */
 	@OnClose
-    @RunOnVirtualThread
     public void onClose(
     		@PathParam(Naming.Management.TENANT)
     		final String tenant,
