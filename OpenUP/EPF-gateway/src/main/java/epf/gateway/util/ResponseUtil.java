@@ -1,4 +1,4 @@
-package epf.client.util;
+package epf.gateway.util;
 
 import java.io.InputStream;
 import java.lang.annotation.Annotation;

@@ -21,10 +21,6 @@ import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.health.Readiness;
-import epf.client.internal.ClientQueue;
-import epf.client.util.HttpHeadersUtil;
-import epf.client.util.RequestBuilder;
-import epf.client.util.UriInfoUtil;
 import epf.naming.Naming;
 import epf.schedule.internal.Messaging;
 import epf.schedule.internal.ScheduledRequest;
@@ -33,7 +29,6 @@ import epf.schedule.schema.RecurringTimeInterval;
 import epf.schedule.util.ScheduleUtil;
 import epf.util.StringUtil;
 import epf.util.UUIDUtil;
-import epf.util.io.IOUtil;
 
 /**
  * @author PC
@@ -72,12 +67,6 @@ public class Schedule implements epf.schedule.client.Schedule {
 	/**
 	 * 
 	 */
-	@Inject
-	private transient ClientQueue clients;
-	
-	/**
-	 * 
-	 */
 	@PreDestroy
 	protected void preDestroy() {
 		scheduledFutures.values().parallelStream().forEach(scheduledFuture -> scheduledFuture.cancel(true));
@@ -94,9 +83,8 @@ public class Schedule implements epf.schedule.client.Schedule {
 			final URI serviceUri = registry.lookup(service).orElse(null);
 			final RecurringTimeInterval recurringTimeInterval = ScheduleUtil.parse(recurringTimeIntervalParam);
 			if(serviceUri != null && recurringTimeInterval != null) {
-				final RequestBuilder builder = new RequestBuilder(clients, serviceUri, method, HttpHeadersUtil.clone(headers), UriInfoUtil.clone(uriInfo), IOUtil.clone(body), false);
 				final UUID uuid = UUID.randomUUID();
-				final ScheduledRequest call = new ScheduledRequest(uuid, builder, Optional.empty());
+				final ScheduledRequest call = new ScheduledRequest(uuid, Optional.empty());
 				final ScheduledFuture<Response> response = scheduledExecutor.schedule(call, new RecurringTimeIntervalTrigger(recurringTimeInterval));
 				scheduledFutures.put(uuid.toString(), response);
 				return Response.ok(uuid.toString()).build();

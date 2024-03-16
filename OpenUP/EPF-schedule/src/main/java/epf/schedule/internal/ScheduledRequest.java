@@ -5,8 +5,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import javax.ws.rs.core.Response;
-import epf.client.util.RequestBuilder;
-import epf.client.util.ResponseUtil;
 
 /**
  * @author PC
@@ -22,11 +20,6 @@ public class ScheduledRequest implements Callable<Response> {
 	/**
 	 * 
 	 */
-	private transient final RequestBuilder builder;
-	
-	/**
-	 * 
-	 */
 	private transient final Optional<Duration> timeOut;
 	
 	/**
@@ -36,34 +29,21 @@ public class ScheduledRequest implements Callable<Response> {
 	
 	/**
 	 * @param uuid
-	 * @param builder
 	 * @param timeOut
 	 */
-	public ScheduledRequest(UUID uuid, final RequestBuilder builder, final Optional<Duration> timeOut) {
+	public ScheduledRequest(UUID uuid, final Optional<Duration> timeOut) {
 		this.uuid = uuid;
-		this.builder = builder;
 		this.timeOut = timeOut;
 	}
 
 	@Override
 	public Response call() throws Exception {
-		if(timeOut.isPresent()) {
-			response = builder.build();
-		}
-		else {
-			response = builder.build();
-		}
-		response = ResponseUtil.clone(response);
 		response.bufferEntity();
 		return response;
 	}
 
 	public UUID getUuid() {
 		return uuid;
-	}
-
-	public RequestBuilder getBuilder() {
-		return builder;
 	}
 
 	public Optional<Duration> getTimeOut() {

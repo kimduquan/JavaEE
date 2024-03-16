@@ -1,4 +1,4 @@
-package epf.client.util;
+package epf.gateway.util;
 
 import java.io.InputStream;
 import java.net.URI;
@@ -12,11 +12,6 @@ import javax.ws.rs.core.UriInfo;
  * 
  */
 public class RequestBuilder {
-	
-	/**
-	 *
-	 */
-	private transient final ClientBuilderUtil clientBuilder;
 	
 	/**
 	 * 
@@ -50,25 +45,6 @@ public class RequestBuilder {
 	private final boolean buildForwardHeaders;
 	
 	/**
-	 * @param clientBuilder
-	 * @param serviceUrl
-	 * @param method
-	 * @param headers
-	 * @param uriInfo
-	 * @param body
-	 * @param buildForwardHeaders
-	 */
-	public RequestBuilder(final ClientBuilderUtil clientBuilder, final URI serviceUrl, final String method, final HttpHeaders headers, final UriInfo uriInfo, final InputStream body, final boolean buildForwardHeaders) {
-		this.clientBuilder = clientBuilder;
-		this.serviceUrl = serviceUrl;
-		this.headers = headers;
-		this.uriInfo = uriInfo;
-		this.method = method;
-		this.body = body;
-		this.buildForwardHeaders = buildForwardHeaders;
-	}
-	
-	/**
 	 * @param client
 	 * @param serviceUrl
 	 * @param method
@@ -78,7 +54,6 @@ public class RequestBuilder {
 	 * @param buildForwardHeaders
 	 */
 	public RequestBuilder(final javax.ws.rs.client.Client client, final URI serviceUrl, final String method, final HttpHeaders headers, final UriInfo uriInfo, final InputStream body, final boolean buildForwardHeaders) {
-		this.clientBuilder = null;
 		this.client = client;
 		this.serviceUrl = serviceUrl;
 		this.headers = headers;
@@ -93,9 +68,6 @@ public class RequestBuilder {
 	 */
 	public Response build(){
 		Response response;
-		if(clientBuilder != null) {
-			client = clientBuilder.newClient(serviceUrl, b -> b);
-		}
 		WebTarget target = client.target(serviceUrl);
 		target = RequestUtil.buildTarget(target, uriInfo);
 		Invocation.Builder builder = target.request();

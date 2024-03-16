@@ -13,7 +13,7 @@ import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import com.hazelcast.core.HazelcastInstance;
-import epf.client.util.RequestUtil;
+import epf.gateway.util.RequestUtil;
 import epf.naming.Naming;
 
 /**

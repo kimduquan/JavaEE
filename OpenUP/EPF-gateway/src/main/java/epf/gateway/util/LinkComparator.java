@@ -1,4 +1,4 @@
-package epf.client.util;
+package epf.gateway.util;
 
 import java.util.Comparator;
 import javax.ws.rs.core.Link;
