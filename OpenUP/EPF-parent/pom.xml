@@ -56,6 +56,12 @@
 		    <artifactId>byte-buddy</artifactId>
 		    <version>1.14.12</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast -->
+		<dependency>
+			<groupId>com.hazelcast</groupId>
+			<artifactId>hazelcast</artifactId>
+			<version>5.3.6</version>
+		</dependency>
     </dependencies>
   </dependencyManagement>
   <build>
