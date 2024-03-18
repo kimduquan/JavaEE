@@ -10,7 +10,6 @@ import org.eclipse.microprofile.reactive.messaging.Incoming;
 import epf.naming.Naming;
 import epf.query.internal.EntityCache;
 import epf.query.internal.QueryCache;
-import epf.query.messaging.Messaging;
 import epf.query.persistence.EntityPersistence;
 import epf.schema.utility.EntityEvent;
 import epf.util.logging.LogManager;
@@ -46,12 +45,6 @@ public class Listener implements HealthCheck {
 	 */
 	@Inject @Readiness
 	transient EntityPersistence persistence;
-	
-	/**
-	 * 
-	 */
-	@Inject @Readiness
-	transient Messaging messaging;
 
 	@Override
 	public HealthCheckResponse call() {
@@ -75,6 +68,5 @@ public class Listener implements HealthCheck {
 		persistence.accept(event);
 		entityCache.accept(event);
 		queryCache.accept(event);
-		messaging.accept(event);
 	}
 }
