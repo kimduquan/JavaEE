@@ -118,6 +118,17 @@ rules:
   - update
   - watch
 - apiGroups:
+  - batch
+  resources:
+  - jobs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - update
+  - watch
+- apiGroups:
   - cert-manager.io
   resources:
   - certificates
@@ -182,6 +193,18 @@ rules:
   resources:
   - ingresses
   - networkpolicies
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - update
+  - watch
+- apiGroups:
+  - rbac.authorization.k8s.io
+  resources:
+  - rolebindings
+  - roles
   verbs:
   - create
   - delete
@@ -300,10 +323,10 @@ spec:
         - name: WATCH_NAMESPACE
           value: ""
         - name: RELATED_IMAGE_LIBERTY_SAMPLE_APP
-          value: icr.io/appcafe/open-liberty/samples/getting-started@sha256:6bf52d536e94d6aa6eaa3ca9639e0fe9f5e71dbd891c50362939dd6aca519d02
+          value: icr.io/appcafe/open-liberty/samples/getting-started@sha256:d735c2ceae5945a0f20adcbcb04e55472d2520b6d1abb6d3049c8521234d3b7a
         - name: RELATED_IMAGE_OPEN_LIBERTY_OPERATOR
-          value: icr.io/appcafe/open-liberty-operator@sha256:d45c296d43dc4c4100f38bb736f073e04c8b4d72b68ddf1189e311aff8ad66e3
-        image: icr.io/appcafe/open-liberty-operator@sha256:d45c296d43dc4c4100f38bb736f073e04c8b4d72b68ddf1189e311aff8ad66e3
+          value: icr.io/appcafe/open-liberty-operator@sha256:7a1c5694b55bceec64a5ff115dec33196db72bfca42cb74ef15c7c8655a660d2
+        image: icr.io/appcafe/open-liberty-operator@sha256:7a1c5694b55bceec64a5ff115dec33196db72bfca42cb74ef15c7c8655a660d2
         livenessProbe:
           failureThreshold: 3
           httpGet:
