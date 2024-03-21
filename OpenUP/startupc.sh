@@ -38,6 +38,18 @@ cd EPF-registry
 ./start.sh
 cd ../
 
+cd EPF-concurrent
+./start.sh
+cd ../
+
+cd EPF-workflow-management
+./start.sh
+cd ../
+
+cd EPF-event
+./start.sh
+cd ../
+
 cd EPF-gateway
 ./start.sh
 cd ../

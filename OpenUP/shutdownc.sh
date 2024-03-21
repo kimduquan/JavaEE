@@ -10,6 +10,15 @@ killall kubectl
 cd EPF-gateway
 ./stop.sh
 cd ../
+cd EPF-event
+./stop.sh
+cd ../
+cd EPF-workflow-management
+./stop.sh
+cd ../
+cd EPF-concurrent
+./stop.sh
+cd ../
 cd EPF-registry
 ./stop.sh
 cd ../

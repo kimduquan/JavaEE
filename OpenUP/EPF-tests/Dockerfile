@@ -1,4 +1,4 @@
-FROM icr.io/appcafe/open-liberty:full-java11-openj9-ubi
+FROM icr.io/appcafe/open-liberty:latest
 
 CMD ["/opt/ol/wlp/bin/server", "stop", "defaultServer"]
 
