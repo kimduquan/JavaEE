@@ -22,15 +22,6 @@ spec:
     - name: WLP_DEBUG_ADDRESS
       value: "7777"
   probes:
-    startup:
-      failureThreshold: 12
-      httpGet:
-        path: /health/started
-        port: 9080
-        scheme: HTTP
-      initialDelaySeconds: 60
-      periodSeconds: 60
-      timeoutSeconds: 10
     liveness:
       failureThreshold: 12
       httpGet:
