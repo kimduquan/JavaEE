@@ -50,6 +50,10 @@ cd EPF-event
 ./start.sh
 cd ../
 
+cd EPF-workflow
+./start.sh
+cd ../
+
 cd EPF-gateway
 ./start.sh
 cd ../
