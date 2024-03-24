@@ -12,8 +12,12 @@ import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
+import java.util.Base64.Decoder;
+import java.util.Base64.Encoder;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  * @author PC
@@ -98,5 +102,41 @@ public interface KeyUtil {
 		final KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
 	    final X509EncodedKeySpec keySpec = new X509EncodedKeySpec(KeySpecUtil.decodePKCS8(bytes, KeySpecUtil.BEGIN_PUBLIC_KEY, KeySpecUtil.END_PUBLIC_KEY));
 	    return keyFactory.generatePublic(keySpec);
+	}
+	
+	/**
+	 * @param secretKey
+	 * @param encoder
+	 * @return
+	 */
+	static String encodeToString(final SecretKey secretKey, final Encoder encoder) {
+		return encoder.encodeToString(secretKey.getEncoded());
+	}
+	
+	/**
+	 * @param secretKey
+	 * @return
+	 */
+	static String encodeToString(final SecretKey secretKey) {
+		return encodeToString(secretKey, Base64.getUrlEncoder());
+	}
+	
+	/**
+	 * @param secret
+	 * @param decoder
+	 * @param algorithm
+	 * @return
+	 */
+	static SecretKey decodeFromString(final String secret, final Decoder decoder, final String algorithm) {
+		final byte[] bytes = decoder.decode(secret);
+		return new SecretKeySpec(bytes, 0, bytes.length, algorithm);
+	}
+	
+	/**
+	 * @param secret
+	 * @return
+	 */
+	static SecretKey decodeFromString(final String secret) {
+		return decodeFromString(secret, Base64.getUrlDecoder(), "AES");
 	}
 }

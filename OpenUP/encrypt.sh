@@ -1,0 +1,1 @@
+jshell ./encrypt.jsh -R -Dstring=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
