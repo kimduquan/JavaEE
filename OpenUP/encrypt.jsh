@@ -1,24 +1,27 @@
 /env --class-path EPF-utility/target/EPF-utility-1.0.0.jar
 
 import epf.util.security.KeyUtil;
-import epf.util.security.CryptoUtil;
+import epf.util.security.SecurityUtil;
 import java.util.Base64.Encoder;
+import javax.crypto.SecretKey;
 
 String algorithm = System.getProperty("algorithm", "AES");
 int keySize = Integer.valueOf(System.getProperty("keysize", "256"));
 String string = System.getProperty("string", "");
+String secret = System.getProperty("secret", "");
 
-var secretKey = KeyUtil.generateSecret(algorithm, keySize);
+SecretKey secretKey = null;
 
-var bytes = string.getBytes("UTF-8");
+if(secret.isEmpty()){
+	secretKey = KeyUtil.generateSecret(algorithm, keySize);
+	var secretString = KeyUtil.encodeToString(secretKey);
+	System.out.println("SecretKey:" + secretString);
+} else{
+	secretKey = KeyUtil.decodeFromString(secret, algorithm);
+}
 
-var encrypt = CryptoUtil.encrypt(bytes, secretKey);
+var encryptString = SecurityUtil.encrypt(string, secretKey);
 
-var encryptString = Base64.getUrlEncoder().encodeToString(encrypt);
-
-var secretString = KeyUtil.encodeToString(secretKey);
-
-System.out.println("SecretKey:" + secretString);
 System.out.println("String:" + encryptString);
 
 /exit

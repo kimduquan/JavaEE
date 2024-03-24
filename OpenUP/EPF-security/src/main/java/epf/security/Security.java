@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
+import javax.crypto.SecretKey;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.security.enterprise.credential.Password;
@@ -56,6 +57,7 @@ import epf.util.io.FileUtil;
 import epf.util.logging.LogManager;
 import epf.util.security.KeyStoreUtil;
 import epf.util.security.KeyUtil;
+import epf.util.security.SecurityUtil;
 
 /**
  *
@@ -80,6 +82,11 @@ public class Security implements epf.security.client.Security, epf.security.clie
      * 
      */
     private transient PrivateKey privateKey;
+    
+    /**
+     * 
+     */
+    private transient SecretKey secretKey;
     
 	/**
 	 *
@@ -122,6 +129,13 @@ public class Security implements epf.security.client.Security, epf.security.clie
     @Inject
     @ConfigProperty(name = Naming.Security.JWT.EXPIRE_DURATION)
     transient String expireDuration;
+    
+    /**
+     * 
+     */
+    @ConfigProperty(name = Naming.Security.Auth.CLIENT_SECRET_KEY)
+	@Inject
+	transient String clientSecretKey;
     
     /**
      * 
@@ -198,8 +212,11 @@ public class Security implements epf.security.client.Security, epf.security.clie
         	trustStore = KeyStoreUtil.loadKeyStore(trustStoreType, trustStoreFile, trustStorePassword);
         	builder = ClientBuilder.newBuilder().trustStore(trustStore);
         	privateKey = KeyUtil.decodePrivateKey("RSA", FileUtil.readAllBytes(privateKeyLocation));
-            authProviders.put(Naming.Security.Auth.GOOGLE, new StandardProvider(new URI(googleDiscoveryUrl), googleClientSecret.toCharArray(), googleClientId, builder));
-            authProviders.put(Naming.Security.Auth.FACEBOOK, new StandardProvider(new URI(facebookDiscoveryUrl), facebookClientSecret.toCharArray(), facebookClientId, builder));
+        	secretKey = KeyUtil.decodeFromString(clientSecretKey, "AES");
+        	final String googleSecret = SecurityUtil.decrypt(googleClientSecret, secretKey);
+            authProviders.put(Naming.Security.Auth.GOOGLE, new StandardProvider(new URI(googleDiscoveryUrl), googleSecret.toCharArray(), googleClientId, builder));
+            final String facebookSecret = SecurityUtil.decrypt(facebookClientSecret, secretKey);
+            authProviders.put(Naming.Security.Auth.FACEBOOK, new StandardProvider(new URI(facebookDiscoveryUrl), facebookSecret.toCharArray(), facebookClientId, builder));
         } 
         catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "[Security.postConstruct]", ex);

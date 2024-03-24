@@ -3,6 +3,8 @@ package epf.util.security;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.util.Base64;
+import java.util.Base64.Decoder;
 import java.util.Base64.Encoder;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -85,5 +87,51 @@ public interface SecurityUtil {
 		final SecretKey secretKey = new SecretKeySpec(secretKeyBytes, "AES");
 		final byte[] stringBytes = CryptoUtil.decrypt(encryptStringBytes, secretKey);
 		return stringBytes;
+	}
+	
+	/**
+	 * @param string
+	 * @param secretKey
+	 * @param encoder
+	 * @return
+	 * @throws Exception
+	 */
+	static String encrypt(final String string, final SecretKey secretKey, final Encoder encoder) throws Exception {
+		final byte[] bytes = string.getBytes("UTF-8");
+		final byte[] encryptBytes = CryptoUtil.encrypt(bytes, secretKey);
+		return encoder.encodeToString(encryptBytes);
+	}
+	
+	/**
+	 * @param string
+	 * @param secretKey
+	 * @return
+	 * @throws Exception
+	 */
+	static String encrypt(final String string, final SecretKey secretKey) throws Exception {
+		return encrypt(string, secretKey, Base64.getUrlEncoder());
+	}
+	
+	/**
+	 * @param string
+	 * @param secretKey
+	 * @param decoder
+	 * @return
+	 * @throws Exception
+	 */
+	static String decrypt(final String string, final SecretKey secretKey, final Decoder decoder) throws Exception {
+		final byte[] bytes = decoder.decode(string);
+		final byte[] decryptBytes = CryptoUtil.decrypt(bytes, secretKey);
+		return new String(decryptBytes, "UTF-8");
+	}
+	
+	/**
+	 * @param string
+	 * @param secretKey
+	 * @return
+	 * @throws Exception
+	 */
+	static String decrypt(final String string, final SecretKey secretKey) throws Exception {
+		return decrypt(string, secretKey, Base64.getUrlDecoder());
 	}
 }

@@ -122,21 +122,22 @@ public interface KeyUtil {
 	}
 	
 	/**
-	 * @param secret
+	 * @param string
 	 * @param decoder
 	 * @param algorithm
 	 * @return
 	 */
-	static SecretKey decodeFromString(final String secret, final Decoder decoder, final String algorithm) {
-		final byte[] bytes = decoder.decode(secret);
+	static SecretKey decodeFromString(final String string, final Decoder decoder, final String algorithm) {
+		final byte[] bytes = decoder.decode(string);
 		return new SecretKeySpec(bytes, 0, bytes.length, algorithm);
 	}
 	
 	/**
-	 * @param secret
+	 * @param string
+	 * @param algorithm
 	 * @return
 	 */
-	static SecretKey decodeFromString(final String secret) {
-		return decodeFromString(secret, Base64.getUrlDecoder(), "AES");
+	static SecretKey decodeFromString(final String string, final String algorithm) {
+		return decodeFromString(string, Base64.getUrlDecoder(), algorithm);
 	}
 }

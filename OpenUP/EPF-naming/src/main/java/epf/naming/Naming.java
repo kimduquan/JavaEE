@@ -1008,6 +1008,11 @@ public interface Naming {
 	    	String GOOGLE_CLIENT_SECRET = "epf.security.auth.openid.client.secret.google";
 	    	
 	    	/**
+	    	 * 
+	    	 */
+	    	String CLIENT_SECRET_KEY = "epf.security.auth.openid.client.secret.key";
+	    	
+	    	/**
 	    	 *
 	    	 */
 	    	String FACEBOOK = "facebook";
