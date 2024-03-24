@@ -1,4 +1,4 @@
-/env --class-path EPF-utility\target\EPF-utility-1.0.0.jar
+/env --class-path EPF-utility/target/EPF-utility-1.0.0.jar
 
 import epf.util.security.KeyUtil;
 import epf.util.security.CryptoUtil;
