@@ -56,6 +56,13 @@ public class Config implements epf.config.client.Config {
     /**
      * 
      */
+    @ConfigProperty(name = Naming.Security.Auth.CLIENT_SECRET_KEY)
+	@Inject
+	transient String clientSecretKey;
+    
+    /**
+     * 
+     */
     @ConfigProperty(name = Naming.Security.Auth.GOOGLE_PROVIDER)
 	@Inject
 	transient String googleOpenIDDiscoveryUrl;
@@ -116,6 +123,7 @@ public class Config implements epf.config.client.Config {
     protected void postConstruct() {
     	configs.put(Naming.Query.FIRST_RESULT_DEFAULT, String.valueOf(firstResultDefault));
     	configs.put(Naming.Query.MAX_RESULTS_DEFAULT, String.valueOf(maxResultsDefault));
+    	configs.put(Naming.Security.Auth.CLIENT_SECRET_KEY, clientSecretKey);
     	configs.put(Naming.Security.Auth.GOOGLE_PROVIDER, googleOpenIDDiscoveryUrl);
     	configs.put(Naming.Security.Auth.GOOGLE_CLIENT_ID, googleClientId);
     	configs.put(Naming.Security.Auth.GOOGLE_CLIENT_SECRET, googleClientSecret);

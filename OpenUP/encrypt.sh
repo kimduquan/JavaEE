@@ -1,2 +1,1 @@
-jshell ./encrypt.jsh -R -Dstring=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 -R -Dsecret=mVmMlXDXuN9arYtMpmARuCkTbWNxCF1Rr5KPRIHuYso=
-jshell ./encrypt.jsh -R -Dstring=e133a33fca92b59892ac5d5c2e59e76d -R -Dsecret=mVmMlXDXuN9arYtMpmARuCkTbWNxCF1Rr5KPRIHuYso=
+jshell ./encrypt.jsh -R -Dstring=string -R -Dsecret=mVmMlXDXuN9arYtMpmARuCkTbWNxCF1Rr5KPRIHuYso=

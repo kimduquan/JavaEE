@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.crypto.SecretKey;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.client.ClientBuilder;
@@ -14,6 +15,8 @@ import epf.security.auth.Provider;
 import epf.security.auth.core.AuthRequest;
 import epf.security.auth.discovery.ProviderMetadata;
 import epf.util.logging.LogManager;
+import epf.util.security.KeyUtil;
+import epf.util.security.SecurityUtil;
 import epf.webapp.internal.ConfigUtil;
 import epf.webapp.security.auth.core.CodeFlow;
 import epf.webapp.security.auth.core.ImplicitFlow;
@@ -75,9 +78,15 @@ public class SecurityAuth {
 		try {
 			clientBuilder = ClientBuilder.newBuilder();
 			googleDiscoveryUrl = new URI(config.getProperty(Naming.Security.Auth.GOOGLE_PROVIDER));
-			googleProvider = new StandardProvider(googleDiscoveryUrl, config.getProperty(Naming.Security.Auth.GOOGLE_CLIENT_SECRET).toCharArray(), config.getProperty(Naming.Security.Auth.GOOGLE_CLIENT_ID), clientBuilder);
+			final String clientSecretKey = config.getProperty(Naming.Security.Auth.CLIENT_SECRET_KEY);
+			final SecretKey secretKey = KeyUtil.decodeFromString(clientSecretKey, "AES");
+			final String googleSecret = config.getProperty(Naming.Security.Auth.GOOGLE_CLIENT_SECRET);
+			final String googleClientSecret = SecurityUtil.decrypt(googleSecret, secretKey);
+			googleProvider = new StandardProvider(googleDiscoveryUrl, googleClientSecret.toCharArray(), config.getProperty(Naming.Security.Auth.GOOGLE_CLIENT_ID), clientBuilder);
 			facebookDiscoveryUrl = new URI(config.getProperty(Naming.Security.Auth.FACEBOOK_PROVIDER));
-			facebookProvider = new StandardProvider(facebookDiscoveryUrl, config.getProperty(Naming.Security.Auth.FACEBOOK_CLIENT_SECRET).toCharArray(), config.getProperty(Naming.Security.Auth.FACEBOOK_CLIENT_ID), clientBuilder);
+			final String facebookSecret = config.getProperty(Naming.Security.Auth.FACEBOOK_CLIENT_SECRET);
+			final String facebookClientSecret = SecurityUtil.decrypt(facebookSecret, secretKey);
+			facebookProvider = new StandardProvider(facebookDiscoveryUrl, facebookClientSecret.toCharArray(), config.getProperty(Naming.Security.Auth.FACEBOOK_CLIENT_ID), clientBuilder);
 		} 
 		catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "[SecurityAuth.providers]");
