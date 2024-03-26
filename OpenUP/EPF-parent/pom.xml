@@ -7,7 +7,7 @@
   <packaging>pom</packaging>
   <version>1.0.0</version>
   <properties>
-    <compiler-plugin.version>3.12.1</compiler-plugin.version>
+    <compiler-plugin.version>3.13.0</compiler-plugin.version>
     <maven.compiler.release>8</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -30,7 +30,7 @@
 		<dependency>
 			<groupId>org.jboss.narayana.rts</groupId>
 			<artifactId>lra-coordinator-jar</artifactId>
-			<version>7.0.0.Final</version>
+			<version>7.0.1.Final</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.hazelcast/quarkus-hazelcast-client -->
 		<dependency>
