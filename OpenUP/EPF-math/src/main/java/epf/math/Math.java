@@ -64,7 +64,7 @@ public class Math {
 		return numbers;
 	}
 	
-	static GNumber numbering(final Iterator<String> stringIt, final GNumber context, final List<GNumber> numbers) {
+	static GNumber numbering(final Iterator<String> stringIt, GNumber context, final List<GNumber> numbers) {
 		final List<Long> sequenceNumbers = new ArrayList<>();
 		while(stringIt.hasNext()) {
 			final String string = stringIt.next();
@@ -88,16 +88,16 @@ public class Math {
 			else if(string.equals(".")) {
 				
 			}
-			else if("(".equals(string) 
-					|| ")".equals(string)) {
+			else if("(".equals(string)
+					|| "{".equals(string)
+					|| "[".equals(string)){
+				context = new GNumber(context, Arrays.asList(context.getNumbers()));
 				break;
 			}
-			else if("{".equals(string) 
-					|| "}".equals(string)) {
-				break;
-			}
-			else if("[".equals(string) 
-					|| "]".equals(string)) {
+			else if(")".equals(string)
+					|| "}".equals(string)
+					|| "]".equals(string)){
+				context = context.getContext();
 				break;
 			}
 			else if("\"".equals(string)) {
@@ -154,7 +154,6 @@ public class Math {
 		}
 		for(GNumber number : numbers) {
 			System.out.println(number.toString(primeNumbers, mapSymbols));
-			
 		}
 	}
 }
