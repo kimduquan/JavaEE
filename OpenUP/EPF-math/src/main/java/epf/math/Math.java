@@ -64,7 +64,7 @@ public class Math {
 		return numbers;
 	}
 	
-	static GNumber numbering(final Iterator<String> stringIt, final String start, final String end, final GNumber context, final List<GNumber> numbers) {
+	static GNumber numbering(final Iterator<String> stringIt, final GNumber context, final List<GNumber> numbers) {
 		final List<Long> sequenceNumbers = new ArrayList<>();
 		while(stringIt.hasNext()) {
 			final String string = stringIt.next();
@@ -82,10 +82,10 @@ public class Math {
 				lastSymbol = new Symbol(string, number);
 				symbols.add(lastSymbol);
 			}
-			if(string.equals(start)) {
+			if(string.equals(" ")) {
 				break;
 			}
-			else if(string.equals(end)) {
+			else if(string.equals(".")) {
 				
 			}
 			else if("(".equals(string) 
@@ -126,11 +126,11 @@ public class Math {
 		return context;
 	}
 	
-	static List<GNumber> numbering(final List<String> strings, final String zero, final String first, final GNumber context) {
+	static List<GNumber> numbering(final List<String> strings, final GNumber context) {
 		final List<GNumber> numbers = new LinkedList<>();
 		final Iterator<String> it = strings.iterator();
 		while(it.hasNext()) {
-			numbering(it, first, zero, context, numbers);
+			numbering(it, context, numbers);
 		}
 		return numbers;
 	}
@@ -146,7 +146,7 @@ public class Math {
 			}
 		});
 		GNumber context = new GNumber(null, Arrays.asList());
-		List<GNumber> numbers = numbering(strings, ".", " ", context);
+		List<GNumber> numbers = numbering(strings, context);
 		Map<Long, Symbol> mapSymbols = new HashMap<>();
 		for(Symbol symbol : symbols) {
 			System.out.println(symbol.getNumber() + "->" + symbol.getString());
