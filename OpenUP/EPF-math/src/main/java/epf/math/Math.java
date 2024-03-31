@@ -127,7 +127,8 @@ public class Math {
 			mapSymbols.put(symbol.getNumber(), symbol);
 		}
 		for(GNumber number : numbers) {
-			System.out.println(number.toString(primeNumbers, mapSymbols));
+			System.out.println(number.toString() + "->" + number.toString(primeNumbers, mapSymbols));
+			
 		}
 	}
 }

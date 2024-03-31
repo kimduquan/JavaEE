@@ -1,5 +1,6 @@
 package epf.math;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
@@ -17,17 +18,19 @@ public class GNumber {
 	
 	@Override
 	public String toString() {
-		final StringBuilder string = new StringBuilder();
+		BigInteger big = BigInteger.valueOf(1);
 		for(SequenceNumber number : numbers) {
-			string.append('[').append(number.doubleValue()).append(']');
+			BigInteger bigNumber = BigInteger.valueOf(number.getNumber()).pow((int)number.getExponent());
+			big = big.multiply(bigNumber);
+			
 		}
-		return string.toString();
+		return big.toString();
 	}
 	
 	public String toString(final List<Long> primeNumbers, final Map<Long, Symbol> symbols) {
 		final StringBuilder string = new StringBuilder();
 		for(SequenceNumber number : numbers) {
-			string.append(symbols.get(number.getIndex()).getString());
+			string.append(symbols.get(number.getExponent()).getString());
 		}
 		return string.toString();
 	}

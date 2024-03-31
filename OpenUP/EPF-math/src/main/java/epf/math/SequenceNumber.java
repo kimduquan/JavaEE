@@ -3,23 +3,23 @@ package epf.math;
 public class SequenceNumber {
 	
 	private final long number;
-	private final long index;
+	private final long exponent;
 	
-	public SequenceNumber(long number, long index) {
+	public SequenceNumber(long number, long exponent) {
 		this.number = number;
-		this.index = index;
+		this.exponent = exponent;
 	}
 	
 	public long getNumber() {
 		return number;
 	}
 	
-	public long getIndex() {
-		return index;
+	public long getExponent() {
+		return exponent;
 	}
 	
 	public double doubleValue() {
-		return Double.parseDouble("" + number + "." + index);
+		return Double.parseDouble("" + number + "." + exponent);
 	}
 	
 	public static SequenceNumber fromDouble(final double number) {
