@@ -1,9 +1,14 @@
 package epf.math;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class Math {
 	
@@ -58,7 +63,7 @@ public class Math {
 		return numbers;
 	}
 	
-	static GNumber numbering(final Iterator<String> stringIt) {
+	static GNumber numbering(final Iterator<String> stringIt, final String start, final String end) {
 		final List<Long> sequenceNumbers = new ArrayList<>();
 		while(stringIt.hasNext()) {
 			final String string = stringIt.next();
@@ -75,10 +80,11 @@ public class Math {
 				number = nextPrime(lastSymbol.getNumber());
 				symbols.add(new Symbol(string, number));
 			}
-			if(number == 0) {
+			if(string.equals(start)) {
 				break;
 			}
-			else if(number == 1) {
+			else if(string.equals(end)) {
+				
 			}
 			else {
 				sequenceNumbers.add(number);
@@ -92,19 +98,36 @@ public class Math {
 		return null;
 	}
 	
-	static GNumber numbering(final List<String> strings) {
-		return numbering(strings.iterator());
+	static List<GNumber> numbering(final List<String> strings, final String zero, final String first) {
+		final List<GNumber> numbers = new LinkedList<>();
+		final Iterator<String> it = strings.iterator();
+		while(it.hasNext()) {
+			final GNumber number = numbering(it, first, zero);
+			if(number != null) {
+				numbers.add(number);
+			}
+		}
+		return numbers;
 	}
 	
-	public static void main(final String[] args) {
+	public static void main(final String[] args) throws IOException {
 		defineSymbol(".", 0);
 		defineSymbol(" ", 1);
-		GNumber number = numbering(Arrays.asList("this", " ", "is", "", "a", " ", "test"));
-		System.out.println(number.toString());
-		number = numbering(Arrays.asList("is", " ", "not", "", "a", " ", "test"));
-		System.out.println(number.toString());
+		
+		List<String> strings = new LinkedList<>();
+		Files.lines(Path.of("C:\\GIT\\document\\specification.txt")).forEach(line -> {
+			for(int i = 0; i < line.length(); i++) {
+				strings.add("" + line.charAt(i));
+			}
+		});
+		List<GNumber> numbers = numbering(strings, ".", " ");
+		Map<Long, Symbol> mapSymbols = new HashMap<>();
 		for(Symbol symbol : symbols) {
-			System.out.print(" " + symbol.getString());
+			System.out.println(symbol.getNumber() + "->" + symbol.getString());
+			mapSymbols.put(symbol.getNumber(), symbol);
+		}
+		for(GNumber number : numbers) {
+			System.out.println(number.toString(primeNumbers, mapSymbols));
 		}
 	}
 }

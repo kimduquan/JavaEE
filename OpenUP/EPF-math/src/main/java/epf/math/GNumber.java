@@ -1,6 +1,7 @@
 package epf.math;
 
 import java.util.List;
+import java.util.Map;
 
 public class GNumber {
 
@@ -19,6 +20,14 @@ public class GNumber {
 		final StringBuilder string = new StringBuilder();
 		for(SequenceNumber number : numbers) {
 			string.append('[').append(number.doubleValue()).append(']');
+		}
+		return string.toString();
+	}
+	
+	public String toString(final List<Long> primeNumbers, final Map<Long, Symbol> symbols) {
+		final StringBuilder string = new StringBuilder();
+		for(SequenceNumber number : numbers) {
+			string.append(symbols.get(number.getIndex()).getString());
 		}
 		return string.toString();
 	}
