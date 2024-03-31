@@ -64,7 +64,7 @@ public class Math {
 		return numbers;
 	}
 	
-	static GNumber numbering(final Iterator<String> stringIt, final String start, final String end, final GNumber context) {
+	static GNumber numbering(final Iterator<String> stringIt, final String start, final String end, final GNumber context, final List<GNumber> numbers) {
 		final List<Long> sequenceNumbers = new ArrayList<>();
 		while(stringIt.hasNext()) {
 			final String string = stringIt.next();
@@ -120,21 +120,17 @@ public class Math {
 			}
 		}
 		if(!sequenceNumbers.isEmpty()) {
-			final List<SequenceNumber> numbers = encode(sequenceNumbers);
-			final GNumber numberingNumber = new GNumber(context, numbers);
-			return numberingNumber;
+			final GNumber numberingNumber = new GNumber(context, encode(sequenceNumbers));
+			numbers.add(numberingNumber);
 		}
-		return null;
+		return context;
 	}
 	
 	static List<GNumber> numbering(final List<String> strings, final String zero, final String first, final GNumber context) {
 		final List<GNumber> numbers = new LinkedList<>();
 		final Iterator<String> it = strings.iterator();
 		while(it.hasNext()) {
-			final GNumber number = numbering(it, first, zero, context);
-			if(number != null) {
-				numbers.add(number);
-			}
+			numbering(it, first, zero, context, numbers);
 		}
 		return numbers;
 	}
