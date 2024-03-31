@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -63,7 +64,7 @@ public class Math {
 		return numbers;
 	}
 	
-	static GNumber numbering(final Iterator<String> stringIt, final String start, final String end) {
+	static GNumber numbering(final Iterator<String> stringIt, final String start, final String end, final GNumber context) {
 		final List<Long> sequenceNumbers = new ArrayList<>();
 		while(stringIt.hasNext()) {
 			final String string = stringIt.next();
@@ -78,7 +79,8 @@ public class Math {
 			}
 			if(number == null) {
 				number = nextPrime(lastSymbol.getNumber());
-				symbols.add(new Symbol(string, number));
+				lastSymbol = new Symbol(string, number);
+				symbols.add(lastSymbol);
 			}
 			if(string.equals(start)) {
 				break;
@@ -86,23 +88,50 @@ public class Math {
 			else if(string.equals(end)) {
 				
 			}
+			else if("(".equals(string) 
+					|| ")".equals(string)) {
+				break;
+			}
+			else if("{".equals(string) 
+					|| "}".equals(string)) {
+				break;
+			}
+			else if("[".equals(string) 
+					|| "]".equals(string)) {
+				break;
+			}
+			else if("\"".equals(string)) {
+				break;
+			}
+			else if(",".equals(string)) {
+				break;
+			}
+			else if("	".equals(string)) {
+				break;
+			}
+			else if(":".equals(string)) {
+				break;
+			}
+			else if("$".equals(string)) {
+				break;
+			}
 			else {
 				sequenceNumbers.add(number);
 			}
 		}
 		if(!sequenceNumbers.isEmpty()) {
 			final List<SequenceNumber> numbers = encode(sequenceNumbers);
-			final GNumber numberingNumber = new GNumber(numbers);
+			final GNumber numberingNumber = new GNumber(context, numbers);
 			return numberingNumber;
 		}
 		return null;
 	}
 	
-	static List<GNumber> numbering(final List<String> strings, final String zero, final String first) {
+	static List<GNumber> numbering(final List<String> strings, final String zero, final String first, final GNumber context) {
 		final List<GNumber> numbers = new LinkedList<>();
 		final Iterator<String> it = strings.iterator();
 		while(it.hasNext()) {
-			final GNumber number = numbering(it, first, zero);
+			final GNumber number = numbering(it, first, zero, context);
 			if(number != null) {
 				numbers.add(number);
 			}
@@ -120,14 +149,15 @@ public class Math {
 				strings.add("" + line.charAt(i));
 			}
 		});
-		List<GNumber> numbers = numbering(strings, ".", " ");
+		GNumber context = new GNumber(null, Arrays.asList());
+		List<GNumber> numbers = numbering(strings, ".", " ", context);
 		Map<Long, Symbol> mapSymbols = new HashMap<>();
 		for(Symbol symbol : symbols) {
 			System.out.println(symbol.getNumber() + "->" + symbol.getString());
 			mapSymbols.put(symbol.getNumber(), symbol);
 		}
 		for(GNumber number : numbers) {
-			System.out.println(number.toString() + "->" + number.toString(primeNumbers, mapSymbols));
+			System.out.println(number.toString(primeNumbers, mapSymbols));
 			
 		}
 	}

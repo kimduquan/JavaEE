@@ -8,7 +8,10 @@ public class GNumber {
 
 	private final SequenceNumber[] numbers;
 	
-	public GNumber(final List<SequenceNumber> numbers) {
+	private final GNumber context;
+	
+	public GNumber(final GNumber context, final List<SequenceNumber> numbers) {
+		this.context = context;
 		this.numbers = numbers.toArray(new SequenceNumber[0]);
 	}
 
@@ -33,5 +36,9 @@ public class GNumber {
 			string.append(symbols.get(number.getExponent()).getString());
 		}
 		return string.toString();
+	}
+
+	public GNumber getContext() {
+		return context;
 	}
 }
