@@ -64,7 +64,7 @@ public class Math {
 		return numbers;
 	}
 	
-	static GNumber numbering(final Iterator<String> stringIt, GNumber context, final List<GNumber> numbers) {
+	static BigNumber numbering(final Iterator<String> stringIt, BigNumber context, final List<BigNumber> numbers) {
 		final List<Long> sequenceNumbers = new ArrayList<>();
 		while(stringIt.hasNext()) {
 			final String string = stringIt.next();
@@ -91,7 +91,7 @@ public class Math {
 			else if("(".equals(string)
 					|| "{".equals(string)
 					|| "[".equals(string)){
-				context = new GNumber(context, Arrays.asList(context.getNumbers()));
+				context = new BigNumber(context, Arrays.asList(context.getNumbers()));
 				break;
 			}
 			else if(")".equals(string)
@@ -120,14 +120,14 @@ public class Math {
 			}
 		}
 		if(!sequenceNumbers.isEmpty()) {
-			final GNumber numberingNumber = new GNumber(context, encode(sequenceNumbers));
+			final BigNumber numberingNumber = new BigNumber(context, encode(sequenceNumbers));
 			numbers.add(numberingNumber);
 		}
 		return context;
 	}
 	
-	static List<GNumber> numbering(final List<String> strings, final GNumber context) {
-		final List<GNumber> numbers = new LinkedList<>();
+	static List<BigNumber> numbering(final List<String> strings, final BigNumber context) {
+		final List<BigNumber> numbers = new LinkedList<>();
 		final Iterator<String> it = strings.iterator();
 		while(it.hasNext()) {
 			numbering(it, context, numbers);
@@ -145,14 +145,14 @@ public class Math {
 				strings.add("" + line.charAt(i));
 			}
 		});
-		GNumber context = new GNumber(null, Arrays.asList());
-		List<GNumber> numbers = numbering(strings, context);
+		BigNumber context = new BigNumber(null, Arrays.asList());
+		List<BigNumber> numbers = numbering(strings, context);
 		Map<Long, Symbol> mapSymbols = new HashMap<>();
 		for(Symbol symbol : symbols) {
 			System.out.println(symbol.getNumber() + "->" + symbol.getString());
 			mapSymbols.put(symbol.getNumber(), symbol);
 		}
-		for(GNumber number : numbers) {
+		for(BigNumber number : numbers) {
 			System.out.println(number.toString(primeNumbers, mapSymbols));
 		}
 	}

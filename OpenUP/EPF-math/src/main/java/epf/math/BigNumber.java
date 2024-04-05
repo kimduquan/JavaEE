@@ -4,13 +4,13 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
-public class GNumber {
+public class BigNumber {
 
 	private final SequenceNumber[] numbers;
 	
-	private final GNumber context;
+	private final BigNumber context;
 	
-	public GNumber(final GNumber context, final List<SequenceNumber> numbers) {
+	public BigNumber(final BigNumber context, final List<SequenceNumber> numbers) {
 		this.context = context;
 		this.numbers = numbers.toArray(new SequenceNumber[0]);
 	}
@@ -38,7 +38,7 @@ public class GNumber {
 		return string.toString();
 	}
 
-	public GNumber getContext() {
+	public BigNumber getContext() {
 		return context;
 	}
 }
