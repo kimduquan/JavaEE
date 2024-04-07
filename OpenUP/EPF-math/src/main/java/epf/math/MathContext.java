@@ -71,14 +71,13 @@ public class MathContext {
 		return elementAt(array.getValue(), 0, primeNumbers).intValue();
 	}
 	
-	private static Long elementAt(BigInteger value, final int index, final List<Long> primeNumbers) {
+	private static Long elementAt(final BigInteger value, final int index, final List<Long> primeNumbers) {
 		final BigInteger prime = BigInteger.valueOf(primeNumbers.get(index));
 		long exponent = 0;
-		BigInteger[] divideAndReminder = value.divideAndRemainder(prime);
-		while(!BigInteger.ZERO.equals(divideAndReminder[0]) && BigInteger.ZERO.equals(divideAndReminder[1])) {
+		BigInteger[] divideAndRemainder = value.divideAndRemainder(prime);
+		while(!BigInteger.ZERO.equals(divideAndRemainder[0]) && BigInteger.ZERO.equals(divideAndRemainder[1])) {
 			exponent++;
-			value = divideAndReminder[0];
-			divideAndReminder = value.divideAndRemainder(prime);
+			divideAndRemainder = divideAndRemainder[0].divideAndRemainder(prime);
 		}
 		return exponent;
 	}
@@ -320,8 +319,10 @@ public class MathContext {
 			for(int i = 0 ; i < line.length(); i++) {
 				array[i] = "" + line.charAt(i);
 			}*/
-			context.numbering(array, context.objects, context.primeNumbers);
-			//print(object, System.out, context.objects, context.primeNumbers);
+			final MathObject<?> object = context.numbering(array, context.objects, context.primeNumbers);
+			if(object != null) {
+				print(object, System.out, context.objects, context.primeNumbers);
+			}
 			//beta(mathObject, context.first, context.objects.values());
 		});
 		//context.numbering("this is a test".split(" "), context.first, context.objects);
