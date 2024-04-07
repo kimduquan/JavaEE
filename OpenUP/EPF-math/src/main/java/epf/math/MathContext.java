@@ -36,7 +36,7 @@ public class MathContext {
 		return 2;
 	}
 	
-	private long lastPrime() {
+	private static long lastPrime(final List<Long> primeNumbers) {
 		return primeNumbers.isEmpty() ? firstPrime() : primeNumbers.getLast();
 	}
 	
@@ -61,10 +61,19 @@ public class MathContext {
 		while(true);
 	}
 	
-	private long newPrime() {
-		final long prime = nextPrime(firstPrime(), lastPrime());
+	private static long newPrime(final List<Long> primeNumbers) {
+		final long prime = nextPrime(firstPrime(), lastPrime(primeNumbers));
 		primeNumbers.add(prime);
 		return prime;
+	}
+	
+	private static void fillPrimes(final int count, final List<Long> primeNumbers) {
+		final long firstPrime = firstPrime();
+		long lastPrime = primeNumbers.getLast();
+		for(int i = 0; i < count; i++) {
+			lastPrime = nextPrime(firstPrime, lastPrime);
+			primeNumbers.add(lastPrime);
+		}
 	}
 	
 	private static int length(MathObject<?> array, final List<Long> primeNumbers) {
@@ -91,14 +100,7 @@ public class MathContext {
 		return !BigInteger.valueOf(object.getKey()).equals(object.getValue());
 	}
 	
-	private static BigInteger addElements(BigInteger value, final MathObject<?>[] array, final List<Long> primeNumbers) {
-		for(int i = 0; i < array.length; i++) {
-			value = addElement(value, array[i].getKey(), i, primeNumbers);
-		}
-		return value;
-	}
-	
-	private static void print(final MathObject<?> object, final PrintStream out, final Map<Long, MathObject<?>> objects, final List<Long> primeNumbers) {
+	public static void print(final MathObject<?> object, final PrintStream out, final Map<Long, MathObject<?>> objects, final List<Long> primeNumbers) {
 		if(isArray(object)) {
 			out.println();
 			final int length = length(object, primeNumbers);
@@ -116,12 +118,7 @@ public class MathContext {
 		if(isArray(object)) {
 			for(int i = 0; i < length; i++) {
 				final MathObject<?> element = elementAt(object, i + 1, objects, primeNumbers);
-				if(isArray(element)) {
-					print(element, length(element, primeNumbers), out, objects, primeNumbers);
-				}
-				else {
-					out.print("[" + element.getObject() + "]");
-				}
+				out.print(element.getObject());
 			}
 		}
 		else {
@@ -131,16 +128,9 @@ public class MathContext {
 	
 	private static MathObject<?> getObject(final Object object, final Collection<MathObject<?>> objects, final List<Long> primeNumbers){
 		MathObject<?> mathObject = null;
-		if(object.getClass().isArray()) {
-			final Object[] array = (Object[]) object;
-			final MathObject<?>[] mathArray = new MathObject<?>[array.length];
-			mathObject = getArray(array, mathArray, objects, primeNumbers);
-		}
-		else {
-			for(MathObject<?> math : objects) {
-				if(math.getObject().equals(object)) {
-					mathObject = math;
-				}
+		for(MathObject<?> math : objects) {
+			if(math.getObject().equals(object)) {
+				mathObject = math;
 			}
 		}
 		return mathObject;
@@ -155,35 +145,50 @@ public class MathContext {
 		return null;
 	}
 	
-	private static MathObject<?> getArray(final Object[] array, final MathObject<?>[] mathArray, final Collection<MathObject<?>> objects, final List<Long> primeNumbers){
-		boolean allElementsExist = true;
+	private static MathObject<?> getArray(final Object[] array, final List<MathObject<?>> list, final Map<Long, MathObject<?>> objects, final List<Long> primeNumbers){
+		BigInteger value = BigInteger.ONE;
 		for(int i = 0; i < array.length; i++) {
-			mathArray[i] = getObject(array[i], objects, primeNumbers);
-			if(mathArray[i] == null) {
-				allElementsExist = false;
+			MathObject<?> object = getObject(array[i], objects.values(), primeNumbers);
+			if(object != null) {
+				if(i > 0) {
+					final int length = i;
+					final BigInteger existingSequenceValue = addLength(value, length, primeNumbers);
+					final MathObject<?> existingSequence = getArray(existingSequenceValue, objects.values());
+					if(existingSequence != null) {
+						print(existingSequence, System.out, objects, primeNumbers);
+						list.clear();
+						list.add(existingSequence);
+						value = addElement(BigInteger.ONE, existingSequence.getKey(), 0, primeNumbers);
+					}
+				}
 			}
+			else {
+				object = newObject(array[i], newPrime(primeNumbers), objects);
+				//print(object, System.out, objects, primeNumbers);
+			}
+			value = addElement(value, object.getKey(), i, primeNumbers);
+			list.add(object);
 		}
-		if(allElementsExist) {
-			BigInteger value = addLength(BigInteger.ONE, array.length, primeNumbers);
-			value = addElements(value, mathArray, primeNumbers);
-			return getArray(value, objects);
-		}
-		return null;
+		value = addLength(value, list.size(), primeNumbers);
+		return getArray(value, objects.values());
 	}
 	
-	private MathObject<?> newObject(final Object object, final Long key){
+	private static MathObject<?> newObject(final Object object, final Long key, final Map<Long, MathObject<?>> objects){
 		final MathObject<?> mathObject = new MathObject<>(object, key);
 		objects.put(key, mathObject);
 		return mathObject;
 	}
 	
-	private MathObject<?> newArray(final String string, final Long key, final BigInteger value){
+	private static MathObject<?> newArray(final String string, final Long key, final BigInteger value, final Map<Long, MathObject<?>> objects){
 		final MathObject<?> mathObject = new MathObject<>(string, key, value);
 		objects.put(key, mathObject);
 		return mathObject;
 	}
 	
 	private static BigInteger valueOf(final Long element, final int index, final List<Long> primeNumbers) {
+		if(index >= primeNumbers.size()) {
+			fillPrimes(index - primeNumbers.size() + 1, primeNumbers);
+		}
 		return BigInteger.valueOf(primeNumbers.get(index)).pow(element.intValue());
 	}
 	
@@ -218,75 +223,27 @@ public class MathContext {
 		return true;
 	}
 	
-	private MathObject<?> numbering(final MathObject<?>[] array, final Map<Long, MathObject<?>> objects, final List<Long> primeNumbers){
+	private static MathObject<?> numbering(final MathObject<?>[] array, final Map<Long, MathObject<?>> objects, final List<Long> primeNumbers){
 		BigInteger value = BigInteger.ONE;
 		final List<MathObject<?>> list = Arrays.asList(array);
-		final Map<Long, Integer> indexes = new LinkedHashMap<>();
 		for(int i = 0; i < array.length; i++) {
 			final MathObject<?> object = array[i];
-			/*if(indexes.containsKey(object.getKey())) {
-				final int prevIndex = indexes.get(object.getKey());
-				final List<MathObject<?>> split = new LinkedList<>();
-				
-				final List<MathObject<?>> split1 = new LinkedList<>();
-				if(0 < prevIndex) {
-					split1.addAll(list.subList(0, prevIndex));
-					if(split1.size() > 1) {
-						final MathObject<?> object1 = numbering(split1.toArray(new MathObject<?>[0]), objects, primeNumbers);
-						split.add(object1);
-					}
-					else {
-						split.addAll(split1);
-					}
-				}
-				split.add(array[prevIndex]);
-				
-				final List<MathObject<?>> split2 = new LinkedList<>();
-				if(prevIndex + 1 < i - 1) {
-					split2.addAll(list.subList(prevIndex + 1, i));
-					if(split2.size() > 1) {
-						final MathObject<?> object2 = numbering(split2.toArray(new MathObject<?>[0]), objects, primeNumbers);
-						split.add(object2);
-					}
-					else {
-						split.addAll(split2);
-					}
-				}
-				split.add(array[i]);
-				
-				final List<MathObject<?>> split3 = new LinkedList<>();
-				if(i + 1 < array.length) {
-					split3.addAll(list.subList(i + 1, array.length));
-					if(split3.size() > 1) {
-						final MathObject<?> object3 = numbering(split3.toArray(new MathObject<?>[0]), objects, primeNumbers);
-						split.add(object3);
-					}
-					else {
-						split.addAll(split3);
-					}
-				}
-				value = addLength(BigInteger.ONE, split.size(), primeNumbers);
-				value = addElements(value, split.toArray(new MathObject<?>[0]), primeNumbers);
-				break;
-			}
-			else*/ {
-				value = addElement(value, object.getKey(), i, primeNumbers);
-				indexes.put(object.getKey(), i);
-				BigInteger existingValue = addLength(value, i + 1, primeNumbers);
-				final MathObject<?> existingArray = getArray(existingValue, objects.values());
-				if(existingArray != null) {
-					final List<MathObject<?>> newList = new LinkedList<>();
-					newList.add(existingArray);
-					newList.addAll(list.subList(i + 1, array.length));
-					return numbering(newList.toArray(new MathObject<?>[0]), objects, primeNumbers);
-				}
+			value = addElement(value, object.getKey(), i, primeNumbers);
+			BigInteger existingSequenceValue = addLength(value, i + 1, primeNumbers);
+			final MathObject<?> existingSequence = getArray(existingSequenceValue, objects.values());
+			if(existingSequence != null) {
+				print(existingSequence, System.out, objects, primeNumbers);
+				final List<MathObject<?>> newList = new LinkedList<>();
+				newList.add(existingSequence);
+				newList.addAll(list.subList(i + 1, array.length));
+				return numbering(newList.toArray(new MathObject<?>[0]), objects, primeNumbers);
 			}
 		}
 		value = addLength(value, array.length, primeNumbers);
 		MathObject<?> mathArray = getArray(value, objects.values());
 		if(mathArray == null) {
-			mathArray = newArray("", newPrime(), value);
-			print(mathArray, System.out, objects, primeNumbers);
+			mathArray = newArray("", newPrime(primeNumbers), value, objects);
+			//print(mathArray, System.out, objects, primeNumbers);
 		}
 		return mathArray;
 	}
@@ -310,23 +267,15 @@ public class MathContext {
 		}
 	}
 	
-	private MathObject<?> numbering(final Object[] array, final Map<Long, MathObject<?>> objects, final List<Long> primeNumbers){
-		final MathObject<?>[] mathArray = new MathObject<?>[array.length];
-		MathObject<?> numbering = getArray(array, mathArray, objects.values(), primeNumbers);
+	private static MathObject<?> numbering(final Object[] array, final Map<Long, MathObject<?>> objects, final List<Long> primeNumbers){
+		final List<MathObject<?>> list = new LinkedList<>();
+		MathObject<?> numbering = getArray(array, list, objects, primeNumbers);
 		if(numbering == null) {
-			for(int i = 0; i < array.length; i++) {
-				MathObject<?> mathObject = mathArray[i];
-				if(mathObject == null) {
-					mathObject = newObject(array[i], newPrime());
-					print(mathObject, System.out, objects, primeNumbers);
-					mathArray[i] = mathObject;
-				}
+			if(list.size() > 1) {
+				numbering = numbering(list.toArray(new MathObject<?>[0]), objects, primeNumbers);
 			}
-			if(array.length > 1) {
-				numbering = numbering(mathArray, objects, primeNumbers);
-			}
-			else if(array.length > 0){
-				return mathArray[0];
+			else if(list.size() > 0){
+				return list.getFirst();
 			}
 		}
 		return numbering;
@@ -337,8 +286,12 @@ public class MathContext {
 		context.addPrime(2);
 		//context.numbering(new String[] {".", ",", "?", "\t", "\n", "\r", "\"", "'", "[", "]", "{", "}", "(", ")", "-", ":", "/", " "}, context.first, context.objects);
 		Files.lines(Path.of("C:\\GIT\\document\\specification.txt")).forEach(line -> {
-			final Object[] array = line.split(" ");
-			context.numbering(array, context.objects, context.primeNumbers);
+			//final Object[] array = line.split(" ");
+			final Object[] array = new Object[line.length()];
+			for(int i = 0 ; i < line.length(); i++) {
+				array[i] = "" + line.charAt(i);
+			}
+			numbering(array, context.objects, context.primeNumbers);
 		});
 		//context.numbering("this is".split(" "), context.objects, context.primeNumbers);
 		//final MathObject<?> o = context.numbering("this is a test".split(" "), context.objects, context.primeNumbers);

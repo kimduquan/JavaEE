@@ -42,6 +42,11 @@ public class MathObject<T extends Object> {
 		this.key = key;
 		this.value = value;
 	}
+	
+	@Override
+	public String toString() {
+		return String.valueOf(object);
+	}
 
 	public T getObject() {
 		return object;
