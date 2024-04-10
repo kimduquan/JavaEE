@@ -117,7 +117,13 @@ public class MathContext {
 		if(isArray(object)) {
 			for(int i = 0; i < length; i++) {
 				final MathObject<?> element = elementAt(object, i + 1, objects, primeNumbers);
-				out.print(element.getObject());
+				if(isArray(element)) {
+					final int elementLength = length(element, primeNumbers);
+					print(element, elementLength, out, objects, primeNumbers);
+				}
+				else {
+					out.print(element.getObject());
+				}
 			}
 		}
 		else {
@@ -144,37 +150,25 @@ public class MathContext {
 		return null;
 	}
 	
-	private static BigInteger getSubArray(final List<MathObject<?>> list, final int index, final int end, final List<Long> primeNumbers) {
-		BigInteger value = BigInteger.ONE;
-		final MathObject<?>[] array = list.subList(index, end).toArray(new MathObject<?>[0]);
-		for(int i = 0;i < array.length; i++) {
-			value = addElement(value, array[i].getKey(), i, primeNumbers);
-		}
-		value = addLength(value, array.length, primeNumbers);
-		return value;
-	}
-	
 	private static MathObject<?> getArray(final Object[] array, final List<MathObject<?>> list, final Map<Long, MathObject<?>> objects, final List<Long> primeNumbers){
 		BigInteger value = BigInteger.ONE;
 		for(int i = 0; i < array.length; i++) {
 			MathObject<?> object = getObject(array[i], objects.values(), primeNumbers);
 			if(object != null) {
 				list.add(object);
-				value = addElement(value, object.getKey(), i, primeNumbers);
 				if(i > 0) {
 					final List<MathObject<?>> list1 = new LinkedList<>();
 					final List<MathObject<?>> list2 = new LinkedList<>();
 					if(split(list, list1, list2, objects, primeNumbers)) {
-						value = BigInteger.ONE;
 						list.clear();
 						list.addAll(list1);
 						list.addAll(list2);
-						int j = 0;
-						for(MathObject<?> newObject : list) {
-							value = addElement(value, newObject.getKey(), j, primeNumbers);
-							j++;
+						value = valueOf(list, primeNumbers);
+						MathObject<?> mathArray = getArray(value, objects.values());
+						if(mathArray != null) {
+							print(mathArray, System.out, objects, primeNumbers);
 						}
-						break;
+						return mathArray;
 					}
 				}
 			}
@@ -182,8 +176,8 @@ public class MathContext {
 				object = newObject(array[i], newPrime(primeNumbers), objects);
 				print(object, System.out, objects, primeNumbers);
 				list.add(object);
-				value = addElement(value, object.getKey(), i, primeNumbers);
 			}
+			value = addElement(value, object.getKey(), i, primeNumbers);
 		}
 		value = addLength(value, list.size(), primeNumbers);
 		return getArray(value, objects.values());
@@ -239,33 +233,23 @@ public class MathContext {
 	
 	private static boolean split(final List<MathObject<?>> list, final List<MathObject<?>> list1, final List<MathObject<?>> list2, final Map<Long, MathObject<?>> objects, final List<Long> primeNumbers){
 		boolean split = false;
-		for(int j = 0; j < list.size(); j++) {
-			final int subArrayLength = list.size() - j;
-			final BigInteger subArrayValue = getSubArray(list, j, list.size(), primeNumbers);
-			final MathObject<?> subArray = getArray(subArrayValue, objects.values());
-			final int subArray1Length = j - 0;
-			final BigInteger subArray1Value = getSubArray(list, 0, j, primeNumbers);
-			final MathObject<?> subArray1 = getArray(subArray1Value, objects.values());
-			if(subArrayLength > 1 && subArray1Length > 1) {
-				if(subArray != null && subArray1 != null) {
-					print(subArray, System.out, objects, primeNumbers);
-					print(subArray1, System.out, objects, primeNumbers);
-					list1.add(subArray1);
-					list2.add(subArray);
-					split = true;
+		for(int i = 1; i < list.size(); i++) {
+			final List<MathObject<?>> subList2 = list.subList(i, list.size());
+			final BigInteger value2 = valueOf(subList2, primeNumbers);
+			final MathObject<?> array2 = getArray(value2, objects.values());
+			if(array2 != null) {
+				list2.add(array2);
+				split = true;
+				final List<MathObject<?>> subList1 = list.subList(0, i);
+				final BigInteger array1Value = valueOf(subList1, primeNumbers);
+				final MathObject<?> array1 = getArray(array1Value, objects.values());
+				if(array1 != null) {
+					list1.add(array1);
 				}
-				else if(subArray != null) {
-					print(subArray, System.out, objects, primeNumbers);
-					list1.addAll(list.subList(0, j));
-					list2.add(subArray);
-					split = true;
+				else {
+					list1.addAll(subList1);
 				}
-				else if(subArray1 != null) {
-					print(subArray1, System.out, objects, primeNumbers);
-					list1.add(subArray1);
-					list2.addAll(list.subList(j, list.size()));
-					split = true;
-				}
+				break;
 			}
 		}
 		return split;
@@ -290,12 +274,10 @@ public class MathContext {
 		for(int i = 0; i < array.length; i++) {
 			final MathObject<?> object = array[i];
 			list.add(object);
-			value = addElement(value, object.getKey(), i, primeNumbers);
 			if(i > 0) {
 				final List<MathObject<?>> list1 = new LinkedList<>();
 				final List<MathObject<?>> list2 = new LinkedList<>();
 				if(split(list, list1, list2, objects, primeNumbers)) {
-					value = BigInteger.ONE;
 					list.clear();
 					if(list1.size() > 1) {
 						final BigInteger value1 = valueOf(list1, primeNumbers);
@@ -303,11 +285,17 @@ public class MathContext {
 						print(array1, System.out, objects, primeNumbers);
 						list.add(array1);
 					}
+					else {
+						list.addAll(list1);
+					}
 					if(list2.size() > 1) {
 						final BigInteger value2 = valueOf(list2, primeNumbers);
 						final MathObject<?> array2 = newArray("", newPrime(primeNumbers), value2, objects);
 						print(array2, System.out, objects, primeNumbers);
 						list.add(array2);
+					}
+					else {
+						list.addAll(list2);
 					}
 					value = valueOf(list, primeNumbers);
 					MathObject<?> mathArray = getArray(value, objects.values());
@@ -318,6 +306,7 @@ public class MathContext {
 					return mathArray;
 				}
 			}
+			value = addElement(value, object.getKey(), i, primeNumbers);
 		}
 		value = addLength(value, list.size(), primeNumbers);
 		MathObject<?> mathArray = getArray(value, objects.values());
@@ -365,12 +354,12 @@ public class MathContext {
 		final MathContext context = new MathContext();
 		context.addPrime(2);
 		//numbering(new String[] {".", ",", "?", "\t", "\n", "\r", "\"", "'", "[", "]", "{", "}", "(", ")", "-", ":", "/", " "}, context.objects, context.primeNumbers);
-		final String[] ascii = new String[126 - 32 + 1];
+		/*final String[] ascii = new String[126 - 32 + 1];
 		int ii = 0;
 		for (char c = 32; c <= 126; c++) {
 			ascii[ii++] = "" + c;
 		}
-		numbering(ascii, context.objects, context.primeNumbers);
+		numbering(ascii, context.objects, context.primeNumbers);*/
 		Files.lines(Path.of("C:\\GIT\\document\\specification.txt")).forEach(line -> {
 			//final Object[] array = line.split(" ");
 			final Object[] array = new Object[line.length()];
