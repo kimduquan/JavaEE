@@ -28,6 +28,9 @@ spec:
     - name: admin
       port: 9990
       targetPort: 9990
+    - name: debug
+      port: 8787
+      targetPort: 8787
   selector:
     app.kubernetes.io/name: wildfly
     app.kubernetes.io/version: 1.0.0
@@ -94,4 +97,7 @@ spec:
               protocol: TCP
             - containerPort: 9990
               name: admin
+              protocol: TCP
+            - containerPort: 8787
+              name: debug
               protocol: TCP
