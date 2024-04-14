@@ -131,7 +131,7 @@ public class MathContext {
 		}
 	}
 	
-	private static MathObject<?> getObject(final Object object, final Collection<MathObject<?>> objects, final List<Long> primeNumbers){
+	private static MathObject<?> getObject(final Object object, final Collection<MathObject<?>> objects){
 		MathObject<?> mathObject = null;
 		for(MathObject<?> math : objects) {
 			if(math.getObject().equals(object)) {
@@ -153,7 +153,7 @@ public class MathContext {
 	private static MathObject<?> getArray(final Object[] array, final List<MathObject<?>> list, final Map<Long, MathObject<?>> objects, final List<Long> primeNumbers){
 		BigInteger value = BigInteger.ONE;
 		for(int i = 0; i < array.length; i++) {
-			MathObject<?> object = getObject(array[i], objects.values(), primeNumbers);
+			MathObject<?> object = getObject(array[i], objects.values());
 			if(object != null) {
 				list.add(object);
 				if(i > 0) {
