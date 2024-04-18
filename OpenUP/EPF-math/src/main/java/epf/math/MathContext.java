@@ -2,6 +2,7 @@ package epf.math;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -189,8 +190,8 @@ public class MathContext {
 		return mathObject;
 	}
 	
-	private static MathObject<?> newArray(final String string, final Long key, final BigInteger value, final Map<Long, MathObject<?>> objects){
-		final MathObject<?> mathObject = new MathObject<>(string, key, value);
+	private static MathObject<?> newArray(final String string, final Long key, final BigInteger value, final BigDecimal entropy, final Map<Long, MathObject<?>> objects){
+		final MathObject<?> mathObject = new MathObject<>(string, key, value, entropy);
 		objects.put(key, mathObject);
 		return mathObject;
 	}
@@ -216,15 +217,6 @@ public class MathContext {
 	private static BigInteger addElement(final BigInteger value, final Long element, final int index, final List<Long> primeNumbers) {
 		final BigInteger beta = valueOf(element, index + 1, primeNumbers);
 		return value.multiply(beta);
-	}
-	
-	private static MathObject<?>[] toArray(final MathObject<?> array, final Map<Long, MathObject<?>> objects, final List<Long> primeNumbers) {
-		final int length = length(array, primeNumbers);
-		final MathObject<?>[] mathArray = new MathObject<?>[length];
-		for(int i = 0; i < length; i++) {
-			mathArray[i] = elementAt(array, i + 1, objects, primeNumbers);
-		}
-		return mathArray;
 	}
 	
 	private static BigInteger addLength(final BigInteger value, final int length, final List<Long> primeNumbers) {
@@ -255,17 +247,13 @@ public class MathContext {
 		return split;
 	}
 	
-	private static boolean beta(final BigInteger p, final BigInteger q, final BigInteger element, final int index) {
-		return p.remainder(q.multiply(BigInteger.valueOf(index).add(BigInteger.ONE)).add(BigInteger.ONE)).compareTo(element) == 0;
+	public static double log(final double number, final int n) {
+		return Math.log(number) / Math.log(n);
 	}
 	
-	private static boolean beta(final BigInteger p, final BigInteger q, final MathObject<?>[] array) {
-		for(int i = 0; i < array.length; i++) {
-			if(!beta(p, q, array[i].getValue(), i)) {
-				return false;
-			}
-		}
-		return true;
+	private static BigDecimal entropy(final List<MathObject<?>> list) {
+		BigDecimal entropy = BigDecimal.ZERO;
+		return entropy;
 	}
 	
 	private static MathObject<?> numbering(final MathObject<?>[] array, final Map<Long, MathObject<?>> objects, final List<Long> primeNumbers){
@@ -281,7 +269,8 @@ public class MathContext {
 					list.clear();
 					if(list1.size() > 1) {
 						final BigInteger value1 = valueOf(list1, primeNumbers);
-						final MathObject<?> array1 = newArray("", newPrime(primeNumbers), value1, objects);
+						final BigDecimal entropy1 = entropy(list1);
+						final MathObject<?> array1 = newArray("", newPrime(primeNumbers), value1, entropy1, objects);
 						print(array1, System.out, objects, primeNumbers);
 						list.add(array1);
 					}
@@ -290,7 +279,8 @@ public class MathContext {
 					}
 					if(list2.size() > 1) {
 						final BigInteger value2 = valueOf(list2, primeNumbers);
-						final MathObject<?> array2 = newArray("", newPrime(primeNumbers), value2, objects);
+						final BigDecimal entropy2 = entropy(list2);
+						final MathObject<?> array2 = newArray("", newPrime(primeNumbers), value2, entropy2, objects);
 						print(array2, System.out, objects, primeNumbers);
 						list.add(array2);
 					}
@@ -300,7 +290,8 @@ public class MathContext {
 					value = valueOf(list, primeNumbers);
 					MathObject<?> mathArray = getArray(value, objects.values());
 					if(mathArray == null) {
-						mathArray = newArray("", newPrime(primeNumbers), value, objects);
+						final BigDecimal entropy = entropy(list);
+						mathArray = newArray("", newPrime(primeNumbers), value, entropy, objects);
 						print(mathArray, System.out, objects, primeNumbers);
 					}
 					return mathArray;
@@ -311,29 +302,11 @@ public class MathContext {
 		value = addLength(value, list.size(), primeNumbers);
 		MathObject<?> mathArray = getArray(value, objects.values());
 		if(mathArray == null) {
-			mathArray = newArray("", newPrime(primeNumbers), value, objects);
+			final BigDecimal entropy = entropy(list);
+			mathArray = newArray("", newPrime(primeNumbers), value, entropy, objects);
 			print(mathArray, System.out, objects, primeNumbers);
 		}
 		return mathArray;
-	}
-	
-	public static void beta(final MathObject<?> array, final MathObject<?> first, final Map<Long, MathObject<?>> objects, final List<Long> primeNumbers) {
-		final MathObject<?>[] mathArray = toArray(array, objects, primeNumbers);
-		BigInteger max = BigInteger.valueOf(0);
-		for(int i = 0; i < mathArray.length; i++) {
-			if(mathArray[i].getValue().compareTo(max) > 0) {
-				max = mathArray[i].getValue();
-			}
-		}
-		final BigInteger n = max.pow(mathArray.length);
-		for(BigInteger p = BigInteger.ONE; p.compareTo(n) < 0; p = p.add(BigInteger.ONE)) {
-			for(BigInteger q = BigInteger.ONE; q.compareTo(p) < 0; q = q.add(BigInteger.ONE)) {
-				if(beta(p, q, mathArray)) {
-					System.out.println();
-					System.out.println("p=" + p + ",q=" + q);
-				}
-			}
-		}
 	}
 	
 	private static MathObject<?> numbering(final Object[] array, final Map<Long, MathObject<?>> objects, final List<Long> primeNumbers){
@@ -353,26 +326,12 @@ public class MathContext {
 	public static void main(final String[] args) throws IOException {
 		final MathContext context = new MathContext();
 		context.addPrime(2);
-		//numbering(new String[] {".", ",", "?", "\t", "\n", "\r", "\"", "'", "[", "]", "{", "}", "(", ")", "-", ":", "/", " "}, context.objects, context.primeNumbers);
-		/*final String[] ascii = new String[126 - 32 + 1];
-		int ii = 0;
-		for (char c = 32; c <= 126; c++) {
-			ascii[ii++] = "" + c;
-		}
-		numbering(ascii, context.objects, context.primeNumbers);*/
-		Files.lines(Path.of("C:\\GIT\\document\\specification.txt")).forEach(line -> {
-			//final Object[] array = line.split(" ");
+		Files.lines(Path.of("C:\\GIT\\document\\specification.md")).forEach(line -> {
 			final Object[] array = new Object[line.length()];
 			for(int i = 0 ; i < line.length(); i++) {
 				array[i] = "" + line.charAt(i);
 			}
 			numbering(array, context.objects, context.primeNumbers);
 		});
-		//context.numbering("this is".split(" "), context.objects, context.primeNumbers);
-		//final MathObject<?> o = context.numbering("this is a test".split(" "), context.objects, context.primeNumbers);
-		//print(o, System.out, context.objects, context.primeNumbers);
-		/*context.objects.forEach((key, object) -> {
-			print(object, System.out, context.objects, context.primeNumbers);
-		});*/
 	}
 }

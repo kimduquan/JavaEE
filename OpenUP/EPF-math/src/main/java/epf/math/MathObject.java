@@ -1,5 +1,6 @@
 package epf.math;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
@@ -23,6 +24,11 @@ public class MathObject<T extends Object> {
 	private final BigInteger value;
 	
 	/**
+	 * 
+	 */
+	private final BigDecimal entropy;
+	
+	/**
 	 * @param object
 	 * @param key
 	 */
@@ -30,17 +36,20 @@ public class MathObject<T extends Object> {
 		this.object = object;
 		this.key = key;
 		this.value = BigInteger.valueOf(key);
+		entropy = BigDecimal.ZERO;
 	}
 	
 	/**
 	 * @param object
 	 * @param key
 	 * @param value
+	 * @param entropy
 	 */
-	public MathObject(T object, Long key, BigInteger value) {
+	public MathObject(final T object, final Long key, final BigInteger value, final BigDecimal entropy) {
 		this.object = object;
 		this.key = key;
 		this.value = value;
+		this.entropy = entropy;
 	}
 	
 	@Override
@@ -58,5 +67,9 @@ public class MathObject<T extends Object> {
 
 	public BigInteger getValue() {
 		return value;
+	}
+
+	public BigDecimal getEntropy() {
+		return entropy;
 	}
 }
