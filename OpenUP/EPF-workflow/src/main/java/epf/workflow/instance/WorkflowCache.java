@@ -1,4 +1,4 @@
-package epf.workflow.cache;
+package epf.workflow.instance;
 
 import java.net.URI;
 import javax.cache.Cache;
@@ -10,7 +10,6 @@ import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
 import epf.naming.Naming;
-import epf.workflow.WorkflowInstance;
 import epf.workflow.schema.WorkflowDefinition;
 
 /**

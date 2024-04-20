@@ -1,4 +1,4 @@
-package epf.workflow;
+package epf.workflow.error;
 
 import epf.workflow.schema.WorkflowError;
 

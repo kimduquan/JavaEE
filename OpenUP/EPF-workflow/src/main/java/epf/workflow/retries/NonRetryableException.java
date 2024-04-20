@@ -1,5 +1,6 @@
-package epf.workflow;
+package epf.workflow.retries;
 
+import epf.workflow.error.WorkflowException;
 import epf.workflow.schema.WorkflowError;
 
 /**

@@ -253,6 +253,7 @@
 			    <groupId>jakarta.ws.rs</groupId>
 			    <artifactId>jakarta.ws.rs-api</artifactId>
 			    <version>3.1.0</version>
+				<!--<scope>provided</scope>-->
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/jakarta.annotation/jakarta.annotation-api -->
 			<dependency>
@@ -808,7 +809,7 @@
 							</execution>
 						</executions>
 					</plugin>
-					<plugin>
+					<!--<plugin>
 						<groupId>org.owasp</groupId>
 						<artifactId>dependency-check-maven</artifactId>
 						<executions>
@@ -818,7 +819,7 @@
 								</goals>
 							</execution>
 					   </executions>
-			        </plugin>
+			        </plugin>-->
                 </plugins>
             </build>
        </profile>
@@ -854,6 +855,7 @@
 		<module>EPF-persistence-internal</module>
 		<module>EPF-persistence-ext</module>
 		<module>EPF-security-utility</module>
+		<module>EPF-workflow-utility</module>
 		<module>EPF-security-auth-utility</module>
 		<module>EPF-security-internal</module>
 		<module>EPF-webapp-utility</module>

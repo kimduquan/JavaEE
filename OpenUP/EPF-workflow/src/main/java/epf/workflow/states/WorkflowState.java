@@ -1,6 +1,7 @@
-package epf.workflow;
+package epf.workflow.states;
 
 import java.io.Serializable;
+import epf.workflow.data.WorkflowData;
 
 /**
  * 
