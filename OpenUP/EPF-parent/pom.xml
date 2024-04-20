@@ -54,13 +54,13 @@
 		<dependency>
 		    <groupId>net.bytebuddy</groupId>
 		    <artifactId>byte-buddy</artifactId>
-		    <version>1.14.12</version>
+		    <version>1.14.13</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast -->
 		<dependency>
 			<groupId>com.hazelcast</groupId>
 			<artifactId>hazelcast</artifactId>
-			<version>5.3.6</version>
+			<version>5.4.0</version>
 		</dependency>
     </dependencies>
   </dependencyManagement>
@@ -92,7 +92,7 @@
 		<plugin>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-jar-plugin</artifactId>
-			<version>3.3.0</version>
+			<version>3.4.0</version>
 		</plugin>
 		<plugin>
 			<groupId>org.apache.maven.plugins</groupId>
