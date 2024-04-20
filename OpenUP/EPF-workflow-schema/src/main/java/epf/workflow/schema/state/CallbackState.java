@@ -2,7 +2,7 @@ package epf.workflow.schema.state;
 
 import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import jakarta.validation.constraints.NotNull;
-import epf.workflow.schema.event.EventDataFilters;
+import epf.workflow.schema.event.EventDataFilter;
 import epf.nosql.schema.BooleanOrObject;
 import epf.nosql.schema.StringOrObject;
 import epf.workflow.schema.EndDefinition;
@@ -52,12 +52,12 @@ public class CallbackState extends State {
 	 * 
 	 */
 	@Column
-	private EventDataFilters eventDataFilter;
+	private EventDataFilter eventDataFilter;
 	/**
 	 * 
 	 */
 	@Column
-	private StateDataFilters stateDataFilter;
+	private StateDataFilter stateDataFilter;
 	/**
 	 * 
 	 */
@@ -116,16 +116,16 @@ public class CallbackState extends State {
 	public void setTimeouts(WorkflowTimeoutDefinition timeouts) {
 		this.timeouts = timeouts;
 	}
-	public EventDataFilters getEventDataFilter() {
+	public EventDataFilter getEventDataFilter() {
 		return eventDataFilter;
 	}
-	public void setEventDataFilter(EventDataFilters eventDataFilter) {
+	public void setEventDataFilter(EventDataFilter eventDataFilter) {
 		this.eventDataFilter = eventDataFilter;
 	}
-	public StateDataFilters getStateDataFilter() {
+	public StateDataFilter getStateDataFilter() {
 		return stateDataFilter;
 	}
-	public void setStateDataFilter(StateDataFilters stateDataFilter) {
+	public void setStateDataFilter(StateDataFilter stateDataFilter) {
 		this.stateDataFilter = stateDataFilter;
 	}
 	public List<ErrorDefinition> getOnErrors() {

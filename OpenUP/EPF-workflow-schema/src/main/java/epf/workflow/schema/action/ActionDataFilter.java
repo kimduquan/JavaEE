@@ -9,7 +9,7 @@ import org.eclipse.jnosql.mapping.Embeddable;
  *
  */
 @Embeddable
-public class ActionDataFilters implements Serializable {
+public class ActionDataFilter implements Serializable {
 
 	/**
 	 * 

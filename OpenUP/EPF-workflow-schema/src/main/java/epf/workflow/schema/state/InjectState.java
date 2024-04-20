@@ -36,7 +36,7 @@ public class InjectState extends State {
 	 * 
 	 */
 	@Column
-	private StateDataFilters stateDataFilter;
+	private StateDataFilter stateDataFilter;
 	/**
 	 * 
 	 */
@@ -78,10 +78,10 @@ public class InjectState extends State {
 	public void setData(Map<String, Object> data) {
 		this.data = data;
 	}
-	public StateDataFilters getStateDataFilter() {
+	public StateDataFilter getStateDataFilter() {
 		return stateDataFilter;
 	}
-	public void setStateDataFilter(StateDataFilters stateDataFilter) {
+	public void setStateDataFilter(StateDataFilter stateDataFilter) {
 		this.stateDataFilter = stateDataFilter;
 	}
 	public StringOrObject<TransitionDefinition> getTransition() {

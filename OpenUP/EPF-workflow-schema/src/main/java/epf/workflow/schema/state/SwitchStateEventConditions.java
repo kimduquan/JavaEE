@@ -1,7 +1,7 @@
 package epf.workflow.schema.state;
 
 import jakarta.validation.constraints.NotNull;
-import epf.workflow.schema.event.EventDataFilters;
+import epf.workflow.schema.event.EventDataFilter;
 import jakarta.nosql.Column;
 import org.eclipse.jnosql.mapping.Embeddable;
 
@@ -27,7 +27,7 @@ public class SwitchStateEventConditions extends SwitchStateConditions {
 	 * 
 	 */
 	@Column
-	private EventDataFilters eventDataFilter;
+	private EventDataFilter eventDataFilter;
 	
 	public String getEventRef() {
 		return eventRef;
@@ -35,10 +35,10 @@ public class SwitchStateEventConditions extends SwitchStateConditions {
 	public void setEventRef(String eventRef) {
 		this.eventRef = eventRef;
 	}
-	public EventDataFilters getEventDataFilter() {
+	public EventDataFilter getEventDataFilter() {
 		return eventDataFilter;
 	}
-	public void setEventDataFilter(EventDataFilters eventDataFilter) {
+	public void setEventDataFilter(EventDataFilter eventDataFilter) {
 		this.eventDataFilter = eventDataFilter;
 	}
 }

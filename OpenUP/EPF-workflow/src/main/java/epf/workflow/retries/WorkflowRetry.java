@@ -4,7 +4,8 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Callable;
-import epf.workflow.data.EitherUtil;
+
+import epf.nosql.schema.EitherUtil;
 import epf.workflow.error.WorkflowException;
 import epf.workflow.schema.RetryDefinition;
 import epf.workflow.schema.WorkflowDefinition;

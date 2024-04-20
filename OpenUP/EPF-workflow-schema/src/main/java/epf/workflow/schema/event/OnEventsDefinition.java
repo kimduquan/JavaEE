@@ -43,7 +43,7 @@ public class OnEventsDefinition implements Serializable {
 	 * 
 	 */
 	@Column
-	private EventDataFilters eventDataFilter;
+	private EventDataFilter eventDataFilter;
 
 	public List<String> getEventRefs() {
 		return eventRefs;
@@ -69,11 +69,11 @@ public class OnEventsDefinition implements Serializable {
 		this.actions = actions;
 	}
 
-	public EventDataFilters getEventDataFilter() {
+	public EventDataFilter getEventDataFilter() {
 		return eventDataFilter;
 	}
 
-	public void setEventDataFilter(EventDataFilters eventDataFilter) {
+	public void setEventDataFilter(EventDataFilter eventDataFilter) {
 		this.eventDataFilter = eventDataFilter;
 	}
 }

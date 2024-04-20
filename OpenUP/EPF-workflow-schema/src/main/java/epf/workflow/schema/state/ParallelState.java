@@ -55,7 +55,7 @@ public class ParallelState extends State {
 	 * 
 	 */
 	@Column
-	private StateDataFilters stateDataFilter;
+	private StateDataFilter stateDataFilter;
 	/**
 	 * 
 	 */
@@ -120,10 +120,10 @@ public class ParallelState extends State {
 	public void setTimeouts(WorkflowTimeoutDefinition timeouts) {
 		this.timeouts = timeouts;
 	}
-	public StateDataFilters getStateDataFilter() {
+	public StateDataFilter getStateDataFilter() {
 		return stateDataFilter;
 	}
-	public void setStateDataFilter(StateDataFilters stateDataFilter) {
+	public void setStateDataFilter(StateDataFilter stateDataFilter) {
 		this.stateDataFilter = stateDataFilter;
 	}
 	public List<ErrorDefinition> getOnErrors() {

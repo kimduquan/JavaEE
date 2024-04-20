@@ -73,7 +73,7 @@ public class ActionDefinition implements Serializable {
 	 * 
 	 */
 	@Column
-	private ActionDataFilters actionDataFilter;
+	private ActionDataFilter actionDataFilter;
 	
 	/**
 	 * 
@@ -143,11 +143,11 @@ public class ActionDefinition implements Serializable {
 		this.retryableErrors = retryableErrors;
 	}
 
-	public ActionDataFilters getActionDataFilter() {
+	public ActionDataFilter getActionDataFilter() {
 		return actionDataFilter;
 	}
 
-	public void setActionDataFilter(ActionDataFilters actionDataFilter) {
+	public void setActionDataFilter(ActionDataFilter actionDataFilter) {
 		this.actionDataFilter = actionDataFilter;
 	}
 

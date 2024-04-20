@@ -40,7 +40,7 @@ public class SwitchState extends State {
 	 * 
 	 */
 	@Column
-	private StateDataFilters stateDataFilter;
+	private StateDataFilter stateDataFilter;
 	/**
 	 * 
 	 */
@@ -93,10 +93,10 @@ public class SwitchState extends State {
 	public void setEventConditions(List<SwitchStateEventConditions> eventConditions) {
 		this.eventConditions = eventConditions;
 	}
-	public StateDataFilters getStateDataFilter() {
+	public StateDataFilter getStateDataFilter() {
 		return stateDataFilter;
 	}
-	public void setStateDataFilter(StateDataFilters stateDataFilter) {
+	public void setStateDataFilter(StateDataFilter stateDataFilter) {
 		this.stateDataFilter = stateDataFilter;
 	}
 	public List<ErrorDefinition> getOnErrors() {

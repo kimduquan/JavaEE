@@ -1,8 +1,6 @@
-package epf.workflow.data;
+package epf.nosql.schema;
 
 import java.util.List;
-import epf.nosql.schema.StringOrArray;
-import epf.nosql.schema.StringOrObject;
 
 /**
  * 

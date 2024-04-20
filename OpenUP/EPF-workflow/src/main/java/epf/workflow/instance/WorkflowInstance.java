@@ -17,7 +17,7 @@ import epf.workflow.schema.WorkflowDefinition;
  */
 @ApplicationScoped
 @Readiness
-public class WorkflowCache implements HealthCheck {
+public class WorkflowInstance implements HealthCheck {
 	
 	/**
 	 * 
