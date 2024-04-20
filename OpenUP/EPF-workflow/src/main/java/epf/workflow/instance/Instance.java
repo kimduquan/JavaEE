@@ -7,7 +7,7 @@ import epf.workflow.states.WorkflowState;
  * @author PC
  *
  */
-public class WorkflowInstance implements Serializable {
+public class Instance implements Serializable {
 	
 	/**
 	 * 

@@ -69,7 +69,7 @@ import epf.workflow.error.WorkflowException;
 import epf.workflow.expressions.ELUtil;
 import epf.workflow.functions.openapi.OpenAPIUtil;
 import epf.workflow.instance.WorkflowCache;
-import epf.workflow.instance.WorkflowInstance;
+import epf.workflow.instance.Instance;
 import epf.workflow.retries.NonRetryableException;
 import epf.workflow.retries.RetryableException;
 import epf.workflow.schema.ContinueAs;
@@ -178,7 +178,7 @@ public class WorkflowApplication implements Workflow, Internal {
 	}
 	
 	private void putState(final String state, final URI instance, final WorkflowData workflowData) {
-		final WorkflowInstance workflowInstance = cache.getInstance(instance);
+		final Instance workflowInstance = cache.getInstance(instance);
 		final WorkflowState workflowState = workflowInstance.getState();
 		final WorkflowState newWorkflowState = new WorkflowState();
 		newWorkflowState.setPreviousState(workflowState);
@@ -597,7 +597,7 @@ public class WorkflowApplication implements Workflow, Internal {
 		return partial(response, eventDatas, producesLinks.toArray(new Link[0]));
 	}
 	
-	private ResponseBuilder compensates(final ResponseBuilder response, final String workflow, final Optional<String> version, final WorkflowInstance workflowInstance) {
+	private ResponseBuilder compensates(final ResponseBuilder response, final String workflow, final Optional<String> version, final Instance workflowInstance) {
 		final LinkBuilder builder = new LinkBuilder();
 		final List<Link> compensateLinks = new ArrayList<>();
 		WorkflowState workflowState = workflowInstance.getState();
@@ -957,7 +957,7 @@ public class WorkflowApplication implements Workflow, Internal {
 		final JsonArrayBuilder actionDatas = Json.createArrayBuilder();
 		boolean all = true;
 		boolean any = false;
-		WorkflowInstance workflowInstance = null;
+		Instance workflowInstance = null;
 		for(OnEventsDefinition onEventsDefinition : eventState.getOnEvents()) {
 			final List<epf.event.schema.Event> events = new ArrayList<>();
 			if(onEvents(workflowDefinition, eventState, onEventsDefinition, eventDefinitions, eventDatas, events)) {
@@ -1132,7 +1132,7 @@ public class WorkflowApplication implements Workflow, Internal {
 	@RunOnVirtualThread
 	@Override
 	public Response terminate(final URI instance) throws Exception {
-		final WorkflowInstance workflowInstance = cache.removeInstance(instance);
+		final Instance workflowInstance = cache.removeInstance(instance);
 		final ResponseBuilder response = new ResponseBuilder();
 		if(workflowInstance != null) {
 			output(instance, response, workflowInstance.getState().getWorkflowData());
@@ -1157,7 +1157,7 @@ public class WorkflowApplication implements Workflow, Internal {
 			startState = workflowDefinition.getStates().get(0).getName();
 		}
 		final WorkflowData workflowData = input(body);
-		cache.putInstance(instance, new WorkflowInstance());
+		cache.putInstance(instance, new Instance());
 		final ResponseBuilder response = new ResponseBuilder();
 		transitionLink(response, workflow, Optional.ofNullable(version), startState, false);
 		return output(instance, response, workflowData);
@@ -1168,7 +1168,7 @@ public class WorkflowApplication implements Workflow, Internal {
 	@Override
 	public Response end(final String workflow, final String version, final Boolean terminate, final Boolean compensate, final String continueAs, final URI instance, final InputStream body) throws Exception {
 		final ResponseBuilder response = new ResponseBuilder();
-		final WorkflowInstance workflowInstance = cache.getInstance(instance);
+		final Instance workflowInstance = cache.getInstance(instance);
 		if(workflowInstance != null) {
 			if(Boolean.TRUE.equals(compensate)) {
 				compensates(response, workflow, Optional.ofNullable(version), workflowInstance);
@@ -1185,7 +1185,7 @@ public class WorkflowApplication implements Workflow, Internal {
 	@RunOnVirtualThread
 	@Override
 	public Response transition(final String workflow, final String version, final String nextState, final Boolean compensate, final URI instance, final InputStream body) throws Exception {
-		final WorkflowInstance workflowInstance = cache.getInstance(instance);
+		final Instance workflowInstance = cache.getInstance(instance);
 		final ResponseBuilder response = new ResponseBuilder();
 		if(workflowInstance != null) {
 			if(Boolean.TRUE.equals(compensate)) {
@@ -1230,7 +1230,7 @@ public class WorkflowApplication implements Workflow, Internal {
 		final Map<String, Object> ext = new HashMap<>();
 		final Event event = Event.event(map, ext); 
 		final URI instance = new URI(event.getSubject());
-		final WorkflowInstance workflowInstance = cache.getInstance(instance);
+		final Instance workflowInstance = cache.getInstance(instance);
 		final ResponseBuilder response = new ResponseBuilder();
 		if(workflowInstance != null) {
 			final WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
@@ -1300,7 +1300,7 @@ public class WorkflowApplication implements Workflow, Internal {
 		final Map<String, Object> ext = new HashMap<>();
 		final epf.event.schema.Event event = epf.event.schema.Event.event(map, ext);
 		final URI instance = new URI(event.getSubject());
-		final WorkflowInstance workflowInstance = cache.getInstance(instance);
+		final Instance workflowInstance = cache.getInstance(instance);
 		final ResponseBuilder response = new ResponseBuilder();
 		if(workflowInstance != null) {
 			final WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);

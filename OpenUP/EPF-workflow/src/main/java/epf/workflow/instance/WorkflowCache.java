@@ -32,7 +32,7 @@ public class WorkflowCache implements HealthCheck {
 	/**
 	 * 
 	 */
-	private transient Cache<String, WorkflowInstance> workflowCache;
+	private transient Cache<String, Instance> workflowCache;
 
 	@Override
 	public HealthCheckResponse call() {
@@ -40,7 +40,7 @@ public class WorkflowCache implements HealthCheck {
 		workflowDefinitionCache = cacheManager.getCache(Naming.Workflow.Internal.WORKFLOW_DEFINITION_CACHE);
 		workflowCache = cacheManager.getCache(Naming.Workflow.Internal.WORKFLOW_CACHE);
 		if(workflowCache == null) {
-			final MutableConfiguration<String, WorkflowInstance> config = new MutableConfiguration<>();
+			final MutableConfiguration<String, Instance> config = new MutableConfiguration<>();
 			workflowCache = cacheManager.createCache(Naming.Workflow.Internal.WORKFLOW_CACHE, config);
 		}
 		if(workflowDefinitionCache != null) {
@@ -88,7 +88,7 @@ public class WorkflowCache implements HealthCheck {
 	 * @param instance
 	 * @param workflowInstance
 	 */
-	public void putInstance(final URI instance, final WorkflowInstance workflowInstance) {
+	public void putInstance(final URI instance, final Instance workflowInstance) {
 		workflowCache.put(instance.toString(), workflowInstance);
 	}
 	
@@ -96,7 +96,7 @@ public class WorkflowCache implements HealthCheck {
 	 * @param instance
 	 * @param workflowInstance
 	 */
-	public void replaceInstance(final URI instance, final WorkflowInstance workflowInstance) {
+	public void replaceInstance(final URI instance, final Instance workflowInstance) {
 		workflowCache.replace(instance.toString(), workflowInstance);
 	}
 	
@@ -104,7 +104,7 @@ public class WorkflowCache implements HealthCheck {
 	 * @param instance
 	 * @return
 	 */
-	public WorkflowInstance getInstance(final URI instance) {
+	public Instance getInstance(final URI instance) {
 		return workflowCache.get(instance.toString());
 	}
 	
@@ -112,7 +112,7 @@ public class WorkflowCache implements HealthCheck {
 	 * @param instance
 	 * @return
 	 */
-	public WorkflowInstance removeInstance(final URI instance) {
+	public Instance removeInstance(final URI instance) {
 		return workflowCache.getAndRemove(instance.toString());
 	}
 }
