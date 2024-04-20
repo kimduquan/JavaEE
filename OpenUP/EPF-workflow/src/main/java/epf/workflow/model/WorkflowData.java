@@ -1,4 +1,4 @@
-package epf.workflow.data;
+package epf.workflow.model;
 
 import java.io.Externalizable;
 import java.io.IOException;

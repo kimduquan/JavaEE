@@ -10,6 +10,7 @@ import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
 import epf.naming.Naming;
+import epf.workflow.model.Instance;
 import epf.workflow.schema.WorkflowDefinition;
 
 /**

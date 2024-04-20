@@ -1,7 +1,8 @@
 package epf.workflow.error;
 
 import java.net.URI;
-import epf.workflow.data.WorkflowData;
+
+import epf.workflow.model.WorkflowData;
 import epf.workflow.schema.ErrorDefinition;
 import epf.workflow.schema.WorkflowDefinition;
 import epf.workflow.schema.WorkflowError;

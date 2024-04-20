@@ -5,9 +5,9 @@ import java.util.Optional;
 
 import epf.nosql.schema.EitherUtil;
 import epf.nosql.schema.StringOrObject;
-import epf.workflow.data.WorkflowData;
 import epf.workflow.error.WorkflowErrorHandling;
 import epf.workflow.functions.openapi.OpenAPIFunctions;
+import epf.workflow.model.WorkflowData;
 import epf.workflow.schema.WorkflowDefinition;
 import epf.workflow.schema.action.ActionDefinition;
 import epf.workflow.schema.function.FunctionDefinition;

@@ -1,5 +1,6 @@
 package epf.workflow.data;
 
+import epf.workflow.model.WorkflowData;
 import epf.workflow.schema.event.EventDataFilter;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;

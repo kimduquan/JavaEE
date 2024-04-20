@@ -1,7 +1,6 @@
-package epf.workflow.instance;
+package epf.workflow.model;
 
 import java.io.Serializable;
-import epf.workflow.states.WorkflowState;
 
 /**
  * @author PC

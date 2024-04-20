@@ -1,6 +1,12 @@
 package epf.workflow.compensation;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+
+import epf.workflow.client.Internal;
+import epf.workflow.model.Instance;
+import epf.workflow.model.WorkflowState;
 import epf.workflow.schema.state.CallbackState;
 import epf.workflow.schema.state.EventState;
 import epf.workflow.schema.state.ForEachState;
@@ -9,7 +15,10 @@ import epf.workflow.schema.state.OperationState;
 import epf.workflow.schema.state.ParallelState;
 import epf.workflow.schema.state.State;
 import epf.workflow.schema.state.SwitchState;
+import epf.workflow.util.LinkBuilder;
+import epf.workflow.util.ResponseBuilder;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ws.rs.core.Link;
 
 /**
  * 
@@ -54,5 +63,18 @@ public class WorkflowCompensation {
 				break;
 		}
 		return Optional.ofNullable(compensatedBy);
+	}
+	
+	public ResponseBuilder compensates(final ResponseBuilder response, final String workflow, final Optional<String> version, final Instance workflowInstance) {
+		final LinkBuilder builder = new LinkBuilder();
+		final List<Link> compensateLinks = new ArrayList<>();
+		WorkflowState workflowState = workflowInstance.getState();
+		while(workflowState != null) {
+			final Link compensateLink = Internal.compensateLink(workflow, version, workflowState.getName());
+			final Link link = builder.link(compensateLink).at(response.getSize()).build();
+			compensateLinks.add(link);
+			workflowState = workflowState.getPreviousState();
+		}
+		return response.links(compensateLinks.toArray(new Link[0]));
 	}
 }
