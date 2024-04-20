@@ -100,10 +100,5 @@
         <artifactId>EPF-concurrent-client-ext</artifactId>
         <version>${project.version}</version>
     </dependency>
-    <dependency>
-        <groupId>openup</groupId>
-        <artifactId>EPF-messaging-utility-ext</artifactId>
-        <version>${project.version}</version>
-    </dependency>
   </dependencies>
 </project>
