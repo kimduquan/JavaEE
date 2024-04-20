@@ -247,12 +247,24 @@ public class MathContext {
 		return split;
 	}
 	
-	public static double log(final double number, final int n) {
-		return Math.log(number) / Math.log(n);
+	private static BigDecimal log(final double number, final int n) {
+		final BigDecimal logNumber = new BigDecimal("" + Math.log(number), java.math.MathContext.UNLIMITED);
+		final BigDecimal logn =  new BigDecimal("" + Math.log(n), java.math.MathContext.UNLIMITED);
+		return logNumber.divide(logn, java.math.MathContext.DECIMAL128);
 	}
 	
 	private static BigDecimal entropy(final List<MathObject<?>> list) {
-		BigDecimal entropy = BigDecimal.ZERO;
+		BigDecimal entropy = BigDecimal.ONE;
+		final int length = list.size();
+		final Map<Long, Integer> frequency = new LinkedHashMap<>();
+		for(MathObject<?> object : list) {
+			frequency.put(object.getKey(), frequency.getOrDefault(object.getKey(), 0) + 1);
+		}
+		for(Long key : frequency.keySet()) {
+			final double probability = (double) frequency.get(key) / length;
+			final BigDecimal log2 = log(probability, 2);
+			entropy = entropy.subtract(BigDecimal.valueOf(probability).multiply(log2, java.math.MathContext.UNLIMITED), java.math.MathContext.UNLIMITED);
+		}
 		return entropy;
 	}
 	
