@@ -5,7 +5,6 @@ import java.net.URI;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -15,9 +14,7 @@ import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonValue;
-import jakarta.validation.Validator;
 import jakarta.ws.rs.BadRequestException;
-import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.Response;
@@ -42,7 +39,6 @@ import epf.workflow.client.Internal;
 import epf.workflow.client.Workflow;
 import epf.workflow.compensation.WorkflowCompensation;
 import epf.workflow.data.ActionDataFilters;
-import epf.workflow.data.DataMerging;
 import epf.workflow.data.EventDataFilters;
 import epf.workflow.data.StateDataFilters;
 import epf.workflow.error.WorkflowException;
@@ -55,13 +51,10 @@ import epf.workflow.retries.ActionRetries;
 import epf.workflow.schema.ContinueAs;
 import epf.workflow.schema.EndDefinition;
 import epf.workflow.schema.StartDefinition;
-import epf.workflow.schema.SubFlowRefDefinition;
 import epf.workflow.schema.TransitionDefinition;
 import epf.workflow.schema.WorkflowDefinition;
 import epf.workflow.schema.action.ActionDefinition;
-import epf.workflow.schema.action.Mode;
 import epf.workflow.schema.event.EventDefinition;
-import epf.workflow.schema.event.Kind;
 import epf.workflow.schema.event.OnEventsDefinition;
 import epf.workflow.schema.function.FunctionDefinition;
 import epf.workflow.schema.state.CallbackState;
@@ -81,6 +74,11 @@ import epf.workflow.schema.state.SwitchState;
 import epf.workflow.schema.state.SwitchStateDataConditions;
 import epf.workflow.schema.state.SwitchStateEventConditions;
 import epf.workflow.states.WorkflowStates;
+import epf.workflow.states.event.WorkflowEventStates;
+import epf.workflow.states.inject.WorkflowInjectStates;
+import epf.workflow.states.operation.WorkflowOperationStates;
+import epf.workflow.states.parallel.WorkflowParallelStates;
+import epf.workflow.states.sleep.WorkflowSleepStates;
 
 /**
  * @author PC
@@ -102,12 +100,6 @@ public class WorkflowRuntime implements Workflow, Internal {
 	 */
 	@Inject
 	transient WorkflowStates workflowStates;
-	
-	/**
-	 * 
-	 */
-	@Inject
-	transient DataMerging dataMerging;
 	
 	/**
 	 * 
@@ -137,12 +129,6 @@ public class WorkflowRuntime implements Workflow, Internal {
 	 * 
 	 */
 	@Inject
-	transient ActionDataFilters actionDataFilters;
-	
-	/**
-	 * 
-	 */
-	@Inject
 	transient EventDataFilters eventDataFilters;
 	
 	/**
@@ -161,25 +147,25 @@ public class WorkflowRuntime implements Workflow, Internal {
 	 * 
 	 */
 	@Inject
-	transient Validator validator;
+	transient WorkflowEventStates workflowEventStates;
 	
-	private ResponseBuilder transitionLink(final ResponseBuilder response, final String workflow, final Optional<String> version, final String nextState, final Boolean compensate) {
-		final LinkBuilder builder = new LinkBuilder();
-		final Link transitionLink = Internal.transitionLink(workflow, version, nextState, compensate);
-		builder.link(transitionLink).at(response.getSize());
-		return response.links(builder.build());
-	}
+	/**
+	 * 
+	 */
+	@Inject
+	transient WorkflowParallelStates workflowParallelStates;
 	
-	private WorkflowDefinition getSubWorkflowDefinition(final StringOrObject<SubFlowRefDefinition> subFlowRef) {
-		if(subFlowRef.isLeft()) {
-			return workflowInstance.get(subFlowRef.getLeft());
-		}
-		else if(subFlowRef.isRight()) {
-			final SubFlowRefDefinition subFlowRefDefinition = subFlowRef.getRight();
-			return workflowInstance.get(subFlowRefDefinition.getWorkflowId(), subFlowRefDefinition.getVersion());
-		}
-		return null;
-	}
+	/**
+	 * 
+	 */
+	@Inject
+	transient WorkflowInjectStates workflowInjectStates;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	transient WorkflowSleepStates workflowSleepStates;
 	
 	private ResponseBuilder subFlow(final ResponseBuilder response) {
 		return response;
@@ -199,7 +185,7 @@ public class WorkflowRuntime implements Workflow, Internal {
 			workflowEvents.eventRef(response, workflowDefinition, state, actionDefinition, actionDefinition.getEventRef(), instance, workflowData);
 		}
 		else if(!actionDefinition.getSubFlowRef().isNull()) {
-			getSubWorkflowDefinition(actionDefinition.getSubFlowRef());
+			workflowInstance.getSubWorkflowDefinition(actionDefinition.getSubFlowRef());
 			if(actionDefinition.getSubFlowRef().isRight()) {
 				actionDefinition.getSubFlowRef().getRight();
 			}
@@ -208,57 +194,9 @@ public class WorkflowRuntime implements Workflow, Internal {
 		return response;
 	}
 	
-	private ResponseBuilder batches(final ResponseBuilder response, final WorkflowDefinition workflowDefinition, final String state, final Mode mode, final int batchSize, final JsonArray inputCollection) {
-		final JsonArrayBuilder batches = Json.createArrayBuilder();
-		JsonArrayBuilder batch = null;
-		final Iterator<JsonValue> iterator = inputCollection.iterator();
-		int index = 0;
-		while(iterator.hasNext()) {
-			final JsonValue value = iterator.next();
-			if(index % batchSize == 0) {
-				if(index > 0) {
-					batches.add(batch);
-				}
-				batch = Json.createArrayBuilder();
-			}
-			batch.add(value);
-			index++;
-		}
-		final Link batchLink = Internal.batchLink(workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), state);
-		final LinkBuilder builder = new LinkBuilder();
-		final JsonArray batchesArray = batches.build();
-		final Iterator<JsonValue> batchIt = batchesArray.iterator();
-		final List<Link> batchLinks = new ArrayList<>();
-		index = 0;
-		while(batchIt.hasNext()) {
-			final Link link = builder.link(batchLink).at(response.getSize()).build();
-			batchLinks.add(link);
-			batchIt.next();
-			index++;
-		}
-		return workflowStates.partial(response, batchesArray, batchLinks.toArray(new Link[0]));
-	}
-	
-	private ResponseBuilder branches(final ResponseBuilder response, final String workflow, final String version, final String state, final List<ParallelStateBranch> branches, final WorkflowData workflowData) {
-		final JsonArrayBuilder branchesArray = Json.createArrayBuilder();
-		final List<Link> branchLinks = new ArrayList<>();
-		final LinkBuilder builder = new LinkBuilder();
-		int index = 0;
-		final Iterator<ParallelStateBranch> branchIt = branches.iterator();
-		while(branchIt.hasNext()) {
-			final Link branchLink = Internal.branchLink(workflow, Optional.ofNullable(version), state, index);
-			final Link link = builder.link(branchLink).at(response.getSize()).build();
-			branchLinks.add(link);
-			branchesArray.add(workflowData.getInput());
-			branchIt.next();
-			index++;
-		}
-		return workflowStates.partial(response, branchesArray.build(), branchLinks.toArray(new Link[0]));
-	}
-	
 	private ResponseBuilder transitionOrEnd(final ResponseBuilder response, final WorkflowDefinition workflowDefinition, final String state, final StringOrObject<TransitionDefinition> transition, final BooleanOrObject<EndDefinition> end, final URI instance, final WorkflowData workflowData) throws Exception {
 		if(transition != null && !transition.isNull()) {
-			return transition(response, workflowDefinition, transition, instance, workflowData);
+			return workflowStates.transition(response, workflowDefinition, transition, instance, workflowData);
 		}
 		else if(end != null && !end.isNull()) {
 			return end(response, workflowDefinition, end, instance, workflowData);
@@ -318,64 +256,12 @@ public class WorkflowRuntime implements Workflow, Internal {
 		throw new BadRequestException();
 	}
 	
-	private ResponseBuilder transition(final ResponseBuilder response, final WorkflowDefinition workflowDefinition, final Either<String, TransitionDefinition> transition, final URI instance, final WorkflowData workflowData) throws Exception {
-		if(transition.isLeft()) {
-			final String nextState = transition.getLeft();
-			return transitionLink(response, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), nextState, false);
-		}
-		else if(transition.isRight()) {
-			final TransitionDefinition transitionDef = transition.getRight();
-			if(transitionDef.getProduceEvents() != null) {
-				workflowEvents.produceEvents(response, workflowDefinition, transitionDef.getProduceEvents(), instance, workflowData);
-			}
-			return transitionLink(response, workflowDefinition.getId(), Optional.ofNullable(workflowDefinition.getVersion()), transitionDef.getNextState(), transitionDef.isCompensate());
-		}
-		throw new BadRequestException();
-	}
-	
 	private ResponseBuilder transitionCallbackState(final ResponseBuilder response, final WorkflowDefinition workflowDefinition, final CallbackState callbackState, final URI instance, final WorkflowData workflowData) throws Exception {
 		final EventDefinition eventDefinition = workflowEvents.getEventDefinition(workflowDefinition, callbackState.getEventRef());
 		final Map<String, Object> ext = new HashMap<>();
 		final Event event = workflowEvents.newEvent(eventDefinition, instance, ext);
 		final Link callbackLink = Internal.callbackLink(workflowDefinition.getId(), callbackState.getName(), Optional.ofNullable(workflowDefinition.getVersion()));
-		return consumesLink(response, event, callbackLink, ext);
-	}
-	
-	private ResponseBuilder transitionEventState(final ResponseBuilder response, final WorkflowDefinition workflowDefinition, final EventState eventState, final URI instance) throws Exception {
-		final Map<String, EventDefinition> eventDefs = new HashMap<>();
-		final List<EventDefinition> eventDefinitions = EitherUtil.getArray(workflowDefinition.getEvents());
-		MapUtil.putAll(eventDefs, eventDefinitions.iterator(), EventDefinition::getName);
-		final List<Map<String, Object>> events = new ArrayList<>();
-		final List<Link> eventLinks = new ArrayList<>();
-		final Link producesLink = epf.event.client.Event.producesLink();
-		final Link observesLink = Internal.observesLink(workflowDefinition.getId(), eventState.getName(), Optional.ofNullable(workflowDefinition.getVersion()));
-		final Link consumesLink = epf.event.client.Event.consumesLink(observesLink);
-		final LinkBuilder builder = new LinkBuilder();
-		for(OnEventsDefinition onEventsDef : eventState.getOnEvents()) {
-			for(String eventRef : onEventsDef.getEventRefs()) {
-				final EventDefinition eventDef = eventDefs.get(eventRef);
-				final Map<String, Object> ext = new HashMap<>();
-				final Event event = workflowEvents.newEvent(eventDef, instance, ext);
-				Link eventLink = null;
-				if(Kind.consumed.equals(eventDef.getKind())) {
-					eventLink = builder.link(consumesLink).at(response.getSize()).build();
-				}
-				else if(Kind.produced.equals(eventDef.getKind())){
-					eventLink = builder.link(producesLink).at(response.getSize()).build();
-				}
-				if(eventLink != null) {
-					final Map<String, Object> map = event.toMap(ext);
-					events.add(map);
-					eventLinks.add(eventLink);
-				}
-			}
-		}
-		return workflowStates.partial(response, events, eventLinks.toArray(new Link[0]));
-	}
-	
-	private ResponseBuilder transitionOperationState(final ResponseBuilder response, final WorkflowDefinition workflowDefinition, final OperationState operationState, final URI instance, final WorkflowData workflowData) throws Exception {
-		actions(response, workflowDefinition.getId(), workflowDefinition.getVersion(), operationState.getName(), operationState.getActions(), workflowData);
-		return transitionOrEnd(response, workflowDefinition, operationState.getName(), operationState.getTransition(), operationState.getEnd(), instance, workflowData);
+		return workflowEvents.consumesLink(response, event, callbackLink, ext);
 	}
 	
 	private ResponseBuilder transitionSwitchState(final ResponseBuilder response, final WorkflowDefinition workflowDefinition, final SwitchState switchState, final URI instance, final WorkflowData workflowData) throws Exception {
@@ -400,7 +286,7 @@ public class WorkflowRuntime implements Workflow, Internal {
 			}
 		}
 		if(switchState.getDefaultCondition().isLeft()) {
-			return transition(response, workflowDefinition, switchState.getDefaultCondition().getLeft(), instance, workflowData);
+			return workflowStates.transition(response, workflowDefinition, switchState.getDefaultCondition().getLeft(), instance, workflowData);
 		}
 		else if(switchState.getDefaultCondition().isRight()) {
 			return end(response, workflowDefinition, switchState.getDefaultCondition().getRight(), instance, workflowData);
@@ -410,19 +296,17 @@ public class WorkflowRuntime implements Workflow, Internal {
 	
 	private ResponseBuilder transitionSleepState(final ResponseBuilder response, final WorkflowDefinition workflowDefinition, final SleepState sleepState, final URI instance, final WorkflowData workflowData) throws Exception {
 		final Duration duration = Duration.parse(sleepState.getDuration());
-		Thread.currentThread();
-		Thread.sleep(duration.getSeconds() * 1000);
+		workflowSleepStates.sleep(duration);
 		return transitionOrEnd(response, workflowDefinition, sleepState.getName(), sleepState.getTransition(), sleepState.getEnd(), instance, workflowData);
 	}
 	
 	private ResponseBuilder transitionParallelState(final ResponseBuilder response, final WorkflowDefinition workflowDefinition, final ParallelState parallelState, final URI instance, final WorkflowData workflowData) throws Exception {
-		branches(response, workflowDefinition.getId(), workflowDefinition.getVersion(), parallelState.getName(), parallelState.getBranches(), workflowData);
+		workflowParallelStates.branches(response, workflowDefinition.getId(), workflowDefinition.getVersion(), parallelState.getName(), parallelState.getBranches(), workflowData);
 		return transitionOrEnd(response, workflowDefinition, parallelState.getName(), parallelState.getTransition(), parallelState.getEnd(), instance, workflowData);
 	}
 	
 	private ResponseBuilder transitionInjectState(final ResponseBuilder response, final WorkflowDefinition workflowDefinition, final InjectState injectState, final URI instance, final WorkflowData workflowData) throws Exception {
-		final JsonValue output = dataMerging.mergeStateDataOutput(workflowData.getOutput(), JsonUtil.toJsonValue(injectState.getData()));
-		workflowData.setOutput(output);
+		workflowInjectStates.inject(injectState, workflowData);
 		return transitionOrEnd(response, workflowDefinition, injectState.getName(), injectState.getTransition(), injectState.getEnd(), instance, workflowData);
 	}
 	
@@ -435,19 +319,13 @@ public class WorkflowRuntime implements Workflow, Internal {
 		else if(forEachState.getBatchSize().isRight()) {
 			batchSize = forEachState.getBatchSize().getRight().intValue();
 		}
-		batches(response, workflowDefinition, forEachState.getName(), forEachState.getMode(), batchSize, inputCollection);
+		workflowStates.batches(response, workflowDefinition, forEachState.getName(), forEachState.getMode(), batchSize, inputCollection);
 		return transitionOrEnd(response, workflowDefinition, forEachState.getName(), forEachState.getTransition(), forEachState.getEnd(), instance, workflowData);
 	}
 	
-	private WorkflowDefinition getWorkflowDefinition(final String workflow, final String version) {
-		Optional<WorkflowDefinition> workflowDefinition = Optional.empty();
-		if(version != null) {
-			workflowDefinition = Optional.ofNullable(workflowInstance.get(workflow, version));
-		}
-		else {
-			workflowDefinition = Optional.ofNullable(workflowInstance.get(workflow));
-		}
-		return workflowDefinition.orElseThrow(NotFoundException::new);
+	public ResponseBuilder transitionOperationState(final ResponseBuilder response, final WorkflowDefinition workflowDefinition, final OperationState operationState, final URI instance, final WorkflowData workflowData) throws Exception {
+		workflowStates.actions(response, workflowDefinition.getId(), workflowDefinition.getVersion(), operationState.getName(), operationState.getActions(), workflowData);
+		return transitionOrEnd(response, workflowDefinition, operationState.getName(), operationState.getTransition(), operationState.getEnd(), instance, workflowData);
 	}
 	
 	private ResponseBuilder onEvents(final ResponseBuilder response, final Map<String, EventDefinition> eventDefinitions, final WorkflowDefinition workflowDefinition, final EventState eventState, URI uri, WorkflowData workflowData, final List<Map<String, Object>> eventDatas) throws Exception {
@@ -478,26 +356,11 @@ public class WorkflowRuntime implements Workflow, Internal {
 		}
 		final boolean exclusive = !Boolean.FALSE.equals(eventState.isExclusive());
 		boolean transition = exclusive ? any : all;
-		actions(response, workflowDefinition.getId(), workflowDefinition.getVersion(), eventState.getName(), actions, workflowData);
+		workflowStates.actions(response, workflowDefinition.getId(), workflowDefinition.getVersion(), eventState.getName(), actions, workflowData);
 		if(transition) {
 			return transitionOrEnd(response, workflowDefinition, eventState.getName(), eventState.getTransition(), eventState.getEnd(), uri, workflowData);
 		}
 		return response;
-	}
-	
-	private ResponseBuilder consumesLink(final ResponseBuilder response, final Event event, final Link eventLink, final Map<String, Object> ext) throws Exception {
-		final Map<String, Object> map = event.toMap(ext);
-		final LinkBuilder builder = new LinkBuilder();
-		final Link consumesLink = epf.event.client.Event.consumesLink(eventLink);
-		builder.link(consumesLink).at(response.getSize());
-		return response.entity(map).links(builder.build());
-	}
-	
-	private ResponseBuilder onEventsLink(final ResponseBuilder response, final URI instance, final List<Map<String, Object>> events) {
-		final LinkBuilder builder = new LinkBuilder();
-		final Link observesLink = epf.event.client.Event.observesLink();
-		builder.link(observesLink).at(response.getSize());
-		return response.entity(events);
 	}
 	
 	private ResponseBuilder transitionState(final ResponseBuilder response, final WorkflowDefinition workflowDefinition, final State state, final URI instance, final WorkflowData workflowData) throws Exception {
@@ -506,7 +369,7 @@ public class WorkflowRuntime implements Workflow, Internal {
 				final EventState eventState = (EventState) state;
 				workflowData.setInput(stateDataFilters.filterStateDataInput(eventState.getStateDataFilter(), workflowData.getInput()));
 				workflowData.setOutput(workflowData.getInput());
-				transitionEventState(response, workflowDefinition, eventState, instance);
+				workflowEventStates.transitionEventState(response, workflowDefinition, eventState, instance);
 				break;
 			case operation:
 				final OperationState operationState = (OperationState) state;
@@ -587,7 +450,7 @@ public class WorkflowRuntime implements Workflow, Internal {
 	@RunOnVirtualThread
 	@Override
 	public Response start(final String workflow, final String version, final URI instance, final InputStream body) throws Exception {
-		WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
+		WorkflowDefinition workflowDefinition = workflowInstance.getWorkflowDefinition(workflow, version);
 		String startState = null;
 		if(workflowDefinition.getStart().isLeft()) {
 			startState = workflowDefinition.getStart().getLeft();
@@ -602,7 +465,7 @@ public class WorkflowRuntime implements Workflow, Internal {
 		final WorkflowData workflowData = workflowStates.input(body);
 		workflowInstance.putInstance(instance, new Instance());
 		final ResponseBuilder response = new ResponseBuilder();
-		transitionLink(response, workflow, Optional.ofNullable(version), startState, false);
+		workflowStates.transitionLink(response, workflow, Optional.ofNullable(version), startState, false);
 		return workflowStates.output(instance, response, workflowData);
 	}
 	
@@ -634,7 +497,7 @@ public class WorkflowRuntime implements Workflow, Internal {
 			if(Boolean.TRUE.equals(compensate)) {
 				workflowCompensation.compensates(response, workflow, Optional.ofNullable(version), instance);
 			}
-			final WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
+			final WorkflowDefinition workflowDefinition = workflowInstance.getWorkflowDefinition(workflow, version);
 			final State state = workflowStates.getState(workflowDefinition, nextState);
 			final WorkflowData workflowData = workflowStates.input(body);
 			if(instance.getState() != null) {
@@ -644,7 +507,7 @@ public class WorkflowRuntime implements Workflow, Internal {
 				workflowData.setOutput(workflowData.getInput());
 			}
 			transitionState(response, workflowDefinition, state, uri, workflowData);
-			workflowStates.putState(nextState, uri, workflowData);
+			workflowInstance.putState(nextState, uri, workflowData);
 			return workflowStates.output(uri, response);
 		}
 		else {
@@ -657,12 +520,12 @@ public class WorkflowRuntime implements Workflow, Internal {
 	@RunOnVirtualThread
 	@Override
 	public Response compensate(final String workflow, final String state, final String version, final URI instance, final InputStream body) throws Exception {
-		final WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
+		final WorkflowDefinition workflowDefinition = workflowInstance.getWorkflowDefinition(workflow, version);
 		final State currentState = workflowStates.getState(workflowDefinition, state);
 		final Optional<String> compensatedBy = workflowCompensation.getCompensatedBy(currentState);
 		final ResponseBuilder response = new ResponseBuilder();
 		if(compensatedBy.isPresent()) {
-			transitionLink(response, workflow, Optional.ofNullable(version), compensatedBy.get(), false);
+			workflowStates.transitionLink(response, workflow, Optional.ofNullable(version), compensatedBy.get(), false);
 		}
 		return workflowStates.output(instance, response, body);
 	}
@@ -676,7 +539,7 @@ public class WorkflowRuntime implements Workflow, Internal {
 		final Instance instance = workflowInstance.getInstance(uri);
 		final ResponseBuilder response = new ResponseBuilder();
 		if(instance != null) {
-			final WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
+			final WorkflowDefinition workflowDefinition = workflowInstance.getWorkflowDefinition(workflow, version);
 			final State currentState = workflowStates.getState(workflowDefinition, state);
 			final EventState eventState = (EventState)currentState;
 			final Map<String, EventDefinition> eventDefinitions = workflowEvents.getEvents(workflowDefinition);
@@ -687,7 +550,7 @@ public class WorkflowRuntime implements Workflow, Internal {
 			}
 			else {
 				final List<Map<String, Object>> events = workflowEvents.events(eventState, eventDefinitions, uri);
-				onEventsLink(response, uri, events);
+				workflowEvents.onEventsLink(response, uri, events);
 			}
 			return workflowStates.output(uri, response);
 		}
@@ -697,30 +560,16 @@ public class WorkflowRuntime implements Workflow, Internal {
 		return response.build();
 	}
 	
-	final ResponseBuilder actions(final ResponseBuilder response, final String workflow, final String state, final String version, final List<ActionDefinition> actionDefinitions, final WorkflowData workflowData) throws Exception {
-		final JsonArrayBuilder array = Json.createArrayBuilder();
-		final List<Link> actionLinks = new ArrayList<>();
-		final LinkBuilder builder = new LinkBuilder();
-		for(ActionDefinition actionDefinition : actionDefinitions) {
-			final JsonValue actionData = actionDataFilters.filterActionDataInput(actionDefinition.getActionDataFilter(), workflowData.getInput());
-			final Link actionLink = Internal.actionLink(workflow, Optional.ofNullable(version), state, actionDefinition.getName());
-			final Link link = builder.link(actionLink).at(response.getSize()).build();
-			actionLinks.add(link);
-			array.add(actionData);
-		}
-		return workflowStates.partial(response, array.build(), actionLinks.toArray(new Link[0]));
-	}
-	
 	@LRA(value = Type.MANDATORY, end = false)
 	@RunOnVirtualThread
 	@Override
 	public Response iteration(final String workflow, final String state, final String version, final URI instance, final InputStream body) throws Exception {
 		final WorkflowData workflowData = workflowStates.input(body);
-		final WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
+		final WorkflowDefinition workflowDefinition = workflowInstance.getWorkflowDefinition(workflow, version);
 		final ForEachState forEachState = (ForEachState) workflowStates.getState(workflowDefinition, state);
 		final List<ActionDefinition> actionDefinitions = forEachState.getActions();
 		final ResponseBuilder response = new ResponseBuilder();;
-		actions(response, workflow, version, state, actionDefinitions, workflowData);
+		workflowStates.actions(response, workflow, version, state, actionDefinitions, workflowData);
 		return workflowStates.output(instance, response);
 	}
 	
@@ -728,12 +577,12 @@ public class WorkflowRuntime implements Workflow, Internal {
 	@RunOnVirtualThread
 	@Override
 	public Response branch(final String workflow, final String state, final String version, final int at, final URI instance, final InputStream body) throws Exception {
-		final WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
+		final WorkflowDefinition workflowDefinition = workflowInstance.getWorkflowDefinition(workflow, version);
 		final ParallelState parallelState = (ParallelState) workflowStates.getState(workflowDefinition, state);
 		final ParallelStateBranch branch = parallelState.getBranches().get(at);
 		final ResponseBuilder response = new ResponseBuilder();
 		final WorkflowData workflowData = workflowStates.input(body);
-		actions(response, workflow, version, state, branch.getActions(), workflowData);
+		workflowStates.actions(response, workflow, version, state, branch.getActions(), workflowData);
 		return workflowStates.output(instance, response, workflowData);
 	}
 
@@ -746,7 +595,7 @@ public class WorkflowRuntime implements Workflow, Internal {
 		final Instance instance = workflowInstance.getInstance(uri);
 		final ResponseBuilder response = new ResponseBuilder();
 		if(instance != null) {
-			final WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
+			final WorkflowDefinition workflowDefinition = workflowInstance.getWorkflowDefinition(workflow, version);
 			final CallbackState callbackState = (CallbackState) workflowStates.getState(workflowDefinition, state);
 			final ActionDefinition actionDefinition = callbackState.getAction();
 			final WorkflowData workflowData = workflowStates.input(event);
@@ -758,19 +607,6 @@ public class WorkflowRuntime implements Workflow, Internal {
 		}
 		return response.build();
 	}
-	
-	private ResponseBuilder iterations(final ResponseBuilder response, final String workflow, final String version, final String state, final boolean synchronized_, final JsonArray inputCollection) {
-		final Link iterationLink = Internal.iterationLink(workflow, Optional.ofNullable(version), state);
-		final LinkBuilder builder = new LinkBuilder();
-		final Iterator<JsonValue> iterator = inputCollection.iterator();
-		final List<Link> iterationLinks = new ArrayList<>();
-		while(iterator.hasNext()) {
-			final Link link = builder.link(iterationLink).at(response.getSize()).build();
-			iterationLinks.add(link);
-			iterator.next();
-		}
-		return workflowStates.partial(response, inputCollection, iterationLinks.toArray(new Link[0]));
-	}
 
 	@LRA(value = Type.MANDATORY, end = false)
 	@RunOnVirtualThread
@@ -778,7 +614,7 @@ public class WorkflowRuntime implements Workflow, Internal {
 	public Response batch(final String workflow, final String state, final String version, final URI instance, final InputStream body) throws Exception {
 		final ResponseBuilder response = new ResponseBuilder();
 		final JsonArray inputCollection = JsonUtil.readArray(body);
-		iterations(response, workflow, version, state, false, inputCollection);
+		workflowStates.iterations(response, workflow, version, state, false, inputCollection);
 		return workflowStates.output(instance, response);
 	}
 
@@ -793,7 +629,7 @@ public class WorkflowRuntime implements Workflow, Internal {
 	@Override
 	public Response onEvents(final String workflow, final String state, final String version, final List<Map<String, Object>> events) throws Exception {
 		final ResponseBuilder response = new ResponseBuilder();
-		final WorkflowDefinition workflowDefinition = getWorkflowDefinition(workflow, version);
+		final WorkflowDefinition workflowDefinition = workflowInstance.getWorkflowDefinition(workflow, version);
 		final State currentState = workflowStates.getState(workflowDefinition, state);
 		final EventState eventState = (EventState)currentState;
 		final Map<String, EventDefinition> eventDefinitions = workflowEvents.getEvents(workflowDefinition);

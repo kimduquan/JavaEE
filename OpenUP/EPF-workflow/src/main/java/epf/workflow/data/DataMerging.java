@@ -62,7 +62,7 @@ public class DataMerging {
 	 * @return
 	 * @throws Exception
 	 */
-	public JsonValue mergeStateDataInput(final JsonValue toInput, final JsonValue fromInput) throws Exception {
+	public static JsonValue mergeStateDataInput(final JsonValue toInput, final JsonValue fromInput) throws Exception {
 		final JsonValue newInput = Json.createMergeDiff(toInput, fromInput).apply(toInput);
 		return newInput;
 	}

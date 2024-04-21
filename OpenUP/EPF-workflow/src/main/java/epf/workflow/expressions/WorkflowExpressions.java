@@ -38,7 +38,7 @@ public class WorkflowExpressions {
 	 * @return
 	 * @throws Exception 
 	 */
-	public ELProcessor newELProcessor(final JsonValue data) throws Exception {
+	private static ELProcessor newELProcessor(final JsonValue data) throws Exception {
 		final ELProcessor elProcessor = new ELProcessor();
 		final JsonELResolver elResolver = new JsonELResolver(data);
 		elResolver.defineBean(elProcessor);

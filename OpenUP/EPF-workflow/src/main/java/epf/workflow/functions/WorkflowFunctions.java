@@ -2,7 +2,6 @@ package epf.workflow.functions;
 
 import java.util.List;
 import java.util.Optional;
-
 import epf.nosql.schema.EitherUtil;
 import epf.nosql.schema.StringOrObject;
 import epf.workflow.error.WorkflowErrorHandling;

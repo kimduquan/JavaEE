@@ -270,4 +270,19 @@ public class WorkflowEvents {
 		final boolean exclusive = !Boolean.FALSE.equals(eventState.isExclusive());
 		return exclusive ? any : all;
 	}
+	
+	public ResponseBuilder consumesLink(final ResponseBuilder response, final Event event, final Link eventLink, final Map<String, Object> ext) throws Exception {
+		final Map<String, Object> map = event.toMap(ext);
+		final LinkBuilder builder = new LinkBuilder();
+		final Link consumesLink = epf.event.client.Event.consumesLink(eventLink);
+		builder.link(consumesLink).at(response.getSize());
+		return response.entity(map).links(builder.build());
+	}
+	
+	public ResponseBuilder onEventsLink(final ResponseBuilder response, final URI instance, final List<Map<String, Object>> events) {
+		final LinkBuilder builder = new LinkBuilder();
+		final Link observesLink = epf.event.client.Event.observesLink();
+		builder.link(observesLink).at(response.getSize());
+		return response.entity(events);
+	}
 }
