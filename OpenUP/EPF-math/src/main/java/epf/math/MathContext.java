@@ -7,6 +7,7 @@ import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -160,22 +161,24 @@ public class MathContext {
 				if(i > 0) {
 					final List<MathObject<?>> list1 = new LinkedList<>();
 					final List<MathObject<?>> list2 = new LinkedList<>();
+					final List<MathObject<?>> newList = new LinkedList<>();
 					if(split(list, list1, list2, objects, primeNumbers)) {
-						list.clear();
-						list.addAll(list1);
-						list.addAll(list2);
-						value = valueOf(list, primeNumbers);
+						newList.addAll(list1);
+						newList.addAll(list2);
+						value = valueOf(newList, primeNumbers);
 						MathObject<?> mathArray = getArray(value, objects.values());
 						if(mathArray != null) {
-							print(mathArray, System.out, objects, primeNumbers);
+							//print(mathArray, System.out, objects, primeNumbers);
 						}
+						list.clear();
+						list.addAll(newList);
 						return mathArray;
 					}
 				}
 			}
 			else {
 				object = newObject(array[i], newPrime(primeNumbers), objects);
-				print(object, System.out, objects, primeNumbers);
+				//print(object, System.out, objects, primeNumbers);
 				list.add(object);
 			}
 			value = addElement(value, object.getKey(), i, primeNumbers);
@@ -248,8 +251,8 @@ public class MathContext {
 	}
 	
 	private static BigDecimal log(final double number, final int n) {
-		final BigDecimal logNumber = new BigDecimal("" + Math.log(number), java.math.MathContext.UNLIMITED);
-		final BigDecimal logn =  new BigDecimal("" + Math.log(n), java.math.MathContext.UNLIMITED);
+		final BigDecimal logNumber = new BigDecimal(Math.log(number), java.math.MathContext.UNLIMITED);
+		final BigDecimal logn =  new BigDecimal(Math.log(n), java.math.MathContext.UNLIMITED);
 		return logNumber.divide(logn, java.math.MathContext.DECIMAL128);
 	}
 	
@@ -268,9 +271,24 @@ public class MathContext {
 		return entropy;
 	}
 	
-	private static MathObject<?> numbering(final MathObject<?>[] array, final Map<Long, MathObject<?>> objects, final List<Long> primeNumbers){
-		BigInteger value = BigInteger.ONE;
+	private static BigDecimal deltaEntropy(final int index, final BigDecimal entropy1, final BigDecimal entropy2) {
+		final BigDecimal deltaEntropy =  BigDecimal.valueOf(Math.pow(Math.log(index + 1), Math.log(entropy1.divide(entropy2, java.math.MathContext.DECIMAL128).doubleValue())));
+		return deltaEntropy;
+	}
+	
+	private static boolean checkDeltaEntropy(final BigDecimal prevDeltaEntropy, final BigDecimal deltaEntropy) {
+		return prevDeltaEntropy.compareTo(BigDecimal.ONE) < 0 && deltaEntropy.compareTo(BigDecimal.ONE) > 0;
+	}
+	
+	private static MathObject<?> numbering(BigDecimal maxEntropy, final MathObject<?>[] array, final Map<Long, MathObject<?>> objects, final List<Long> primeNumbers){
 		final List<MathObject<?>> list = new LinkedList<>();
+		int entropyIndex = 0;
+		final List<MathObject<?>> mathList = Arrays.asList(array);
+		if(maxEntropy == null) {
+			maxEntropy = entropy(mathList);
+		}
+		final List<MathObject<?>> tempList1 = new LinkedList<>();
+		BigDecimal prevDeltaEntropy = BigDecimal.ZERO;
 		for(int i = 0; i < array.length; i++) {
 			final MathObject<?> object = array[i];
 			list.add(object);
@@ -278,47 +296,100 @@ public class MathContext {
 				final List<MathObject<?>> list1 = new LinkedList<>();
 				final List<MathObject<?>> list2 = new LinkedList<>();
 				if(split(list, list1, list2, objects, primeNumbers)) {
-					list.clear();
+					final List<MathObject<?>> newList = new LinkedList<>();
 					if(list1.size() > 1) {
 						final BigInteger value1 = valueOf(list1, primeNumbers);
 						final BigDecimal entropy1 = entropy(list1);
 						final MathObject<?> array1 = newArray("", newPrime(primeNumbers), value1, entropy1, objects);
-						print(array1, System.out, objects, primeNumbers);
-						list.add(array1);
-					}
-					else {
-						list.addAll(list1);
+						//print(array1, System.out, objects, primeNumbers);
+						newList.add(array1);
 					}
 					if(list2.size() > 1) {
 						final BigInteger value2 = valueOf(list2, primeNumbers);
 						final BigDecimal entropy2 = entropy(list2);
 						final MathObject<?> array2 = newArray("", newPrime(primeNumbers), value2, entropy2, objects);
-						print(array2, System.out, objects, primeNumbers);
-						list.add(array2);
+						//print(array2, System.out, objects, primeNumbers);
+						newList.add(array2);
 					}
-					else {
-						list.addAll(list2);
+					if(list1.size() > 1 && list2.size() > 1) {
+						final BigInteger newValue = valueOf(newList, primeNumbers);
+						MathObject<?> newArray = getArray(newValue, objects.values());
+						if(newArray == null) {
+							final BigDecimal newEntropy = entropy(newList);
+							newArray = newArray("", newPrime(primeNumbers), newValue, newEntropy, objects);
+							//print(newArray, System.out, objects, primeNumbers);
+						}
+						return newArray;
 					}
-					value = valueOf(list, primeNumbers);
-					MathObject<?> mathArray = getArray(value, objects.values());
-					if(mathArray == null) {
-						final BigDecimal entropy = entropy(list);
-						mathArray = newArray("", newPrime(primeNumbers), value, entropy, objects);
-						print(mathArray, System.out, objects, primeNumbers);
+				}
+				
+				list1.addAll(mathList.subList(0, i));
+				list2.addAll(mathList.subList(i, mathList.size()));
+				if(list1.size() > 1 && list2.size() > 1) {
+					final BigDecimal entropy1 = entropy(list1);
+					final BigDecimal entropy2 = entropy(list2);
+					if(entropy1.compareTo(maxEntropy) <= 0 && entropy2.compareTo(maxEntropy) <= 0) {
+						final BigDecimal deltaEntropy = deltaEntropy(i, entropy1, entropy2);
+						if(prevDeltaEntropy.compareTo(BigDecimal.ZERO) == 0) {
+							prevDeltaEntropy = deltaEntropy;
+						}
+						else if(checkDeltaEntropy(prevDeltaEntropy, deltaEntropy)) {
+							tempList1.clear();
+							tempList1.addAll(list);
+							entropyIndex = i;
+							/*System.out.println();
+							for(MathObject<?> obj : tempList1) {
+								System.out.print(obj.getObject());
+							}*/
+						}
+						prevDeltaEntropy = deltaEntropy;
+						//final double log2 = Math.pow(Math.log(i + 1), Math.log(entropy1.divide(entropy2, java.math.MathContext.DECIMAL128).doubleValue()));
 					}
-					return mathArray;
 				}
 			}
-			value = addElement(value, object.getKey(), i, primeNumbers);
 		}
-		value = addLength(value, list.size(), primeNumbers);
-		MathObject<?> mathArray = getArray(value, objects.values());
-		if(mathArray == null) {
-			final BigDecimal entropy = entropy(list);
-			mathArray = newArray("", newPrime(primeNumbers), value, entropy, objects);
-			print(mathArray, System.out, objects, primeNumbers);
+		final List<MathObject<?>> list1 = list.subList(0, entropyIndex);
+		final List<MathObject<?>> list2 = list.subList(entropyIndex, list.size());
+		final List<MathObject<?>> newList = new LinkedList<>(list);
+		if(entropyIndex > 0 && list1.size() > 1 && list2.size() > 1) {
+			newList.clear();
+			for(MathObject<?> obj : list1) {
+				System.out.print(obj.getObject());
+			}
+			System.out.println();
+			final BigInteger value1 = valueOf(list1, primeNumbers);
+			MathObject<?> array1 = getArray(value1, objects.values());
+			if(array1 == null && list1.size() > 2) {
+				array1 = numbering(maxEntropy, list1.toArray(new MathObject<?>[0]), objects, primeNumbers);
+			}
+			if(array1 != null) {
+				newList.add(array1);
+			}
+			else {
+				newList.addAll(list1);
+			}
+			
+			final BigInteger value2 = valueOf(list2, primeNumbers);
+			MathObject<?> array2 = getArray(value2, objects.values());
+			if(array2 == null && list2.size() > 2) {
+				array2 = numbering(maxEntropy, list2.toArray(new MathObject<?>[0]), objects, primeNumbers);
+			}
+			if(array2 != null) {
+				newList.add(array2);
+			}
+			else {
+				newList.addAll(list2);
+			}
+			final BigInteger newValue = valueOf(newList, primeNumbers);
+			MathObject<?> newArray = getArray(newValue, objects.values());
+			if(newArray == null) {
+				final BigDecimal newEntropy = entropy(newList);
+				newArray = newArray("", newPrime(primeNumbers), newValue, newEntropy, objects);
+				//print(newArray, System.out, objects, primeNumbers);
+			}
+			return newArray;
 		}
-		return mathArray;
+		return null;
 	}
 	
 	private static MathObject<?> numbering(final Object[] array, final Map<Long, MathObject<?>> objects, final List<Long> primeNumbers){
@@ -326,7 +397,7 @@ public class MathContext {
 		MathObject<?> numbering = getArray(array, list, objects, primeNumbers);
 		if(numbering == null) {
 			if(list.size() > 1) {
-				numbering = numbering(list.toArray(new MathObject<?>[0]), objects, primeNumbers);
+				numbering = numbering(null, list.toArray(new MathObject<?>[0]), objects, primeNumbers);
 			}
 			else if(list.size() > 0){
 				return list.getFirst();
@@ -338,12 +409,32 @@ public class MathContext {
 	public static void main(final String[] args) throws IOException {
 		final MathContext context = new MathContext();
 		context.addPrime(2);
-		Files.lines(Path.of("C:\\GIT\\document\\specification.md")).forEach(line -> {
-			final Object[] array = new Object[line.length()];
-			for(int i = 0 ; i < line.length(); i++) {
-				array[i] = "" + line.charAt(i);
+		/*final String[] ascii = new String[126 - 32 + 1];
+		int ii = 0;
+		for (char c = 32; c <= 126; c++) {
+			ascii[ii++] = "" + c;
+		}
+		numbering(ascii, context.objects, context.primeNumbers);*/
+		Files.lines(Path.of("C:\\GIT\\document\\specification.txt")).forEach(line -> {
+			/*for(String string : line.split(" ")) {
+				final Object[] array = new Object[string.length()];
+				for(int i = 0 ; i < string.length(); i++) {
+					array[i] = "" + string.charAt(i);
+				}
+				numbering(array, context.objects, context.primeNumbers);
+			}*/
+			final String string = line;
+			final Object[] array = new Object[string.length()];
+			for(int i = 0 ; i < string.length(); i++) {
+				array[i] = "" + string.charAt(i);
 			}
 			numbering(array, context.objects, context.primeNumbers);
 		});
+		/*final String line = "# Serverless Workflow Specification";
+		final Object[] array = new Object[line.length()];
+		for(int i = 0 ; i < line.length(); i++) {
+			array[i] = "" + line.charAt(i);
+		}
+		numbering(array, context.objects, context.primeNumbers);*/
 	}
 }
