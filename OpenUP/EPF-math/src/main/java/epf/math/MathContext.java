@@ -167,9 +167,6 @@ public class MathContext {
 						newList.addAll(list2);
 						value = valueOf(newList, primeNumbers);
 						MathObject<?> mathArray = getArray(value, objects.values());
-						if(mathArray != null) {
-							//print(mathArray, System.out, objects, primeNumbers);
-						}
 						list.clear();
 						list.addAll(newList);
 						return mathArray;
@@ -251,8 +248,8 @@ public class MathContext {
 	}
 	
 	private static BigDecimal log(final double number, final int n) {
-		final BigDecimal logNumber = new BigDecimal(Math.log(number), java.math.MathContext.UNLIMITED);
-		final BigDecimal logn =  new BigDecimal(Math.log(n), java.math.MathContext.UNLIMITED);
+		final BigDecimal logNumber = new BigDecimal("" + Math.log(number), java.math.MathContext.UNLIMITED);
+		final BigDecimal logn =  new BigDecimal("" + Math.log(n), java.math.MathContext.UNLIMITED);
 		return logNumber.divide(logn, java.math.MathContext.DECIMAL128);
 	}
 	
@@ -420,12 +417,12 @@ public class MathContext {
 	public static void main(final String[] args) throws IOException {
 		final MathContext context = new MathContext();
 		context.addPrime(2);
-		/*final String[] ascii = new String[126 - 32 + 1];
+		final String[] ascii = new String[126 - 32 + 1];
 		int ii = 0;
 		for (char c = 32; c <= 126; c++) {
 			ascii[ii++] = "" + c;
 		}
-		numbering(ascii, context.objects, context.primeNumbers);*/
+		numbering(ascii, context.objects, context.primeNumbers);
 		Files.lines(Path.of("C:\\GIT\\document\\specification.txt")).forEach(line -> {
 			/*for(String string : line.split(" ")) {
 				final Object[] array = new Object[string.length()];
