@@ -2,7 +2,6 @@ package epf.registry;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -11,19 +10,28 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Link;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.core.UriInfo;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.FormParam;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.Link;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
+import jakarta.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.eclipse.microprofile.reactive.messaging.Channel;
-import org.eclipse.microprofile.reactive.messaging.Emitter;
 import epf.naming.Naming;
 import epf.util.logging.LogManager;
+import io.smallrye.common.annotation.RunOnVirtualThread;
 
 /**
  * @author PC
@@ -31,12 +39,27 @@ import epf.util.logging.LogManager;
  */
 @Path(Naming.REGISTRY)
 @ApplicationScoped
-public class Registry implements epf.registry.client.Registry {
+public class Registry {
 	
 	/**
 	 * 
 	 */
 	private static final Logger LOGGER = LogManager.getLogger(Registry.class.getName());
+    
+	/**
+	 * 
+	 */
+	private static final String REMOTE = "remote";
+	
+	/**
+	 * 
+	 */
+	private static final String NAME = "name";
+	
+	/**
+	 * 
+	 */
+	private static final String VERSION = "version";
 	
 	/**
 	 * 
@@ -47,13 +70,6 @@ public class Registry implements epf.registry.client.Registry {
 	 * 
 	 */
 	private transient final Map<String, Map<String, URI>> remoteVersions = new ConcurrentHashMap<>();
-	
-	/**
-	 * 
-	 */
-	@Inject
-	@Channel(Naming.Registry.EPF_REGISTRY_REMOTES)
-	transient Emitter<Map<String, Object>> emitter;
 	
 	/**
 	 * 
@@ -239,18 +255,11 @@ public class Registry implements epf.registry.client.Registry {
 			remotes.forEach((name, url) -> {
 				LOGGER.info(String.format("%s=%s", name, url));
 			});
-			sendRemotes();
 		} 
 		catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "postConstruct", e);
 		}
 		
-	}
-	
-	private void sendRemotes() {
-		final Map<String, Object> map = new HashMap<>();
-		map.putAll(this.remotes);
-		emitter.send(map);
 	}
 	
 	/**
@@ -344,14 +353,36 @@ public class Registry implements epf.registry.client.Registry {
 		return stream;
 	}
 
-	@Override
-	public void bind(final String name, final URI remote, final String version) {
+	/**
+	 * @param name
+	 * @param remote
+	 * @param version
+	 */
+	@POST
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@RunOnVirtualThread
+	public void bind(
+			@FormParam(NAME) 
+			final String name, 
+			@FormParam(REMOTE) 
+			final URI remote, 
+			@QueryParam(VERSION) 
+			final String version) {
 		getRemotes(version).put(name, remote);
-		sendRemotes();
 	}
 
-	@Override
-	public Response list(final String version, final UriInfo uriInfo) {
+	/**
+	 * @param version
+	 * @param uriInfo
+	 * @return
+	 */
+	@GET
+	@RunOnVirtualThread
+	public Response list(
+			@QueryParam(VERSION) 
+			final String version, 
+			@Context 
+			final UriInfo uriInfo) {
 		ResponseBuilder builder = Response.ok();
 		Stream<Link> links = getRemotes(version)
 				.entrySet()
@@ -369,8 +400,19 @@ public class Registry implements epf.registry.client.Registry {
 		return builder.build();
 	}
 
-	@Override
-	public Response lookup(final String name, final String version) {
+	/**
+	 * @param name
+	 * @param version
+	 * @return
+	 */
+	@GET
+	@Path("{name}")
+	@RunOnVirtualThread
+	public Response lookup(
+			@PathParam(NAME) 
+			final String name, 
+			@QueryParam(VERSION) 
+			final String version) {
 		final ResponseBuilder builder = Response.ok();
 		getRemotes(version).computeIfPresent(name, (key, remote) -> {
 			builder.link(remote, name);
@@ -379,18 +421,40 @@ public class Registry implements epf.registry.client.Registry {
 		return builder.build();
 	}
 
-	@Override
-	public void rebind(final String name, final URI remote, final String version) {
+	/**
+	 * @param name
+	 * @param remote
+	 * @param version
+	 */
+	@PUT
+	@Path("{name}")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@RunOnVirtualThread
+	public void rebind(
+			@PathParam(NAME) 
+			final String name, 
+			@FormParam(REMOTE) 
+			final URI remote, 
+			@QueryParam(VERSION) 
+			final String version) {
 		getRemotes(version).computeIfPresent(name, (key, value) -> {
 			return remote;
 		});
-		sendRemotes();
 	}
 
-	@Override
-	public void unbind(final String name, final String version) {
+	/**
+	 * @param name
+	 * @param version
+	 */
+	@DELETE
+	@Path("{name}")
+	@RunOnVirtualThread
+	public void unbind(
+			@PathParam(NAME) 
+			final String name, 
+			@QueryParam(VERSION) 
+			final String version) {
 		getRemotes(version).remove(name);
-		sendRemotes();
 	}
 
 }
