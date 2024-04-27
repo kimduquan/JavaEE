@@ -4,15 +4,20 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.annotation.security.PermitAll;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.ws.rs.Path;
+import jakarta.ws.rs.DefaultValue;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Path;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import epf.naming.Naming;
 import epf.util.io.FileUtil;
 import epf.util.logging.LogManager;
+import io.smallrye.common.annotation.RunOnVirtualThread;
 
 /**
  *
@@ -20,7 +25,7 @@ import epf.util.logging.LogManager;
  */
 @ApplicationScoped
 @Path(Naming.CONFIG)
-public class Config implements epf.config.client.Config {
+public class Config {
 	
 	/**
 	 * 
@@ -140,9 +145,14 @@ public class Config implements epf.config.client.Config {
     	}
     }
     
-    @Override
-    @PermitAll
-    public Map<String, String> getProperties(final String name) {
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @RunOnVirtualThread
+    public Map<String, String> getProperties(
+    		@QueryParam("name") 
+    		@DefaultValue("")
+    		final String name
+    		) {
         return configs;
     }
 }

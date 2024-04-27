@@ -4,20 +4,23 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
 	<groupId>epf</groupId>
-	<artifactId>EPF-parent</artifactId>
+	<artifactId>EPF-parent-ext</artifactId>
 	<version>1.0.0</version>
-	<relativePath>../EPF-parent/pom.xml</relativePath>
+	<relativePath>../EPF-parent-ext/pom.xml</relativePath>
   </parent>
   <artifactId>EPF-config</artifactId>
   <name>Eclipse Process Framework Config</name>
+  <properties>
+    <maven.compiler.release>21</maven.compiler.release>
+  </properties>
   <dependencies>
   	<dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy-reactive-jsonb</artifactId>
+      <artifactId>quarkus-rest-jsonb</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy-reactive</artifactId>
+      <artifactId>quarkus-rest</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -31,17 +34,15 @@
 		<groupId>io.quarkus</groupId>
 		<artifactId>quarkus-container-image-jib</artifactId>
 	</dependency>
-
-	<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.config/microprofile-config-api -->
-	<dependency>
-		<groupId>org.eclipse.microprofile.config</groupId>
-		<artifactId>microprofile-config-api</artifactId>
-		<scope>provided</scope>
-	</dependency>
 	
     <dependency>
         <groupId>openup</groupId>
-        <artifactId>EPF-config-client</artifactId>
+        <artifactId>EPF-naming</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>openup</groupId>
+        <artifactId>EPF-utility</artifactId>
         <version>${project.version}</version>
     </dependency>
     <dependency>
