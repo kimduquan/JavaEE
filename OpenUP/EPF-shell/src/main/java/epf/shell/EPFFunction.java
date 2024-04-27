@@ -15,7 +15,7 @@ import epf.shell.util.Utility;
 import epf.shell.workflow.Workflow;
 import io.quarkus.picocli.runtime.annotations.TopCommand;
 import picocli.CommandLine.Command;
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  * @author PC

@@ -1,7 +1,7 @@
 package epf.shell.cache;
 
 import java.io.PrintWriter;
-import javax.ws.rs.sse.InboundSseEvent;
+import jakarta.ws.rs.sse.InboundSseEvent;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 

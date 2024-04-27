@@ -13,30 +13,31 @@ import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.ws.rs.client.Invocation.Builder;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.sse.SseEventSource;
-import epf.client.util.Client;
+import jakarta.websocket.ContainerProvider;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonReader;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.websocket.Session;
+import jakarta.ws.rs.client.Invocation.Builder;
+import jakarta.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Response;
 import epf.file.util.PathUtil;
 import epf.shell.Function;
 import epf.shell.SYSTEM;
 import epf.shell.client.ClientUtil;
+import epf.shell.messaging.MessagingClient;
 import epf.shell.util.client.Entity;
 import epf.util.logging.LogManager;
 import epf.util.security.KeyUtil;
 import epf.util.zip.ZipUtil;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import java.sql.Connection;
@@ -134,58 +135,6 @@ public class Utility {
 	}
 	
 	/**
-	 * @param method
-	 * @param target
-	 * @param accept
-	 * @param encoding
-	 * @param language
-	 * @param cookie
-	 * @param header
-	 * @param type
-	 * @param entity
-	 * @return
-	 * @throws Exception
-	 */
-	@Command(name = "invoke")
-	public String invoke(
-			@Option(names = {"-m", "--method"}, required = true, description = "Method")
-			final String method,
-			@Option(names = {"-u", "--target"}, required = true, description = "Target")
-			final URI target, 
-			@Option(names = {"-a", "--accept"}, description = "Accept")
-			final String[] accept, 
-			@Option(names = {"-ec", "--encode"}, description = "Accept encoding")
-			final String[] encoding,
-			@Option(names = {"-l", "--lang"}, description = "Accept language")
-			final String[] language,
-			@Option(names = {"-c", "--cookie"}, description = "Cookie")
-			final Map<String, String> cookie,
-			@Option(names = {"-h", "--header"}, description = "header")
-			final Map<String, String> header,
-			@Option(names = {"-t", "--type"}, description = "Type")
-			final Entity type,
-			@Option(names = {"-e", "--entity"}, description = "Entity", interactive = true, echo = true)
-			final String entity) throws Exception {
-		try(Client client = clientUtil.newClient(target)){
-			final Builder builder = client
-					.request(
-							reqTarget -> reqTarget, 
-							req -> buildRequest(
-									req,
-									accept, 
-									encoding, 
-									language, 
-									cookie,
-									header
-									)
-					);
-			try(Response response = buildEntity(builder, method, type, entity)){
-					return response.readEntity(String.class);
-				}
-			}
-		}
-	
-	/**
 	 * @param builder
 	 * @param accept
 	 * @param encoding
@@ -230,7 +179,7 @@ public class Utility {
 			final String method, 
 			final Entity type,
 			final String entity){
-		javax.ws.rs.client.Entity<?> reqEntity = null;
+		jakarta.ws.rs.client.Entity<?> reqEntity = null;
 		if(type != null) {
 			switch(type) {
 			case FORM:
@@ -241,24 +190,24 @@ public class Utility {
 						obj.keySet().forEach(name -> {
 							form.add(name, obj.getString(name));
 						});
-						reqEntity = javax.ws.rs.client.Entity.form(form);
+						reqEntity = jakarta.ws.rs.client.Entity.form(form);
 					}
 				}
 				break;
 			case HTML:
-				reqEntity = javax.ws.rs.client.Entity.html(entity);
+				reqEntity = jakarta.ws.rs.client.Entity.html(entity);
 				break;
 			case JSON:
-				reqEntity = javax.ws.rs.client.Entity.json(entity);
+				reqEntity = jakarta.ws.rs.client.Entity.json(entity);
 				break;
 			case TEXT:
-				reqEntity = javax.ws.rs.client.Entity.text(entity);
+				reqEntity = jakarta.ws.rs.client.Entity.text(entity);
 				break;
 			case XHTML:
-				reqEntity = javax.ws.rs.client.Entity.xhtml(entity);
+				reqEntity = jakarta.ws.rs.client.Entity.xhtml(entity);
 				break;
 			case XML:
-				reqEntity = javax.ws.rs.client.Entity.xml(entity);
+				reqEntity = jakarta.ws.rs.client.Entity.xml(entity);
 				break;
 			default:
 				break;
@@ -275,9 +224,7 @@ public class Utility {
 	public void connectToServer(
 			@Option(names = {"-u", "--uri"}, required = true, description = "URI") 
 			final URI uri) throws Exception {
-		try(epf.util.websocket.Client client = epf.util.websocket.Client.connectToServer(uri)){
-			client.onError((error, session) -> error.printStackTrace());
-			client.onMessage((msg, session) -> out.println(msg));
+		try(Session session = ContainerProvider.getWebSocketContainer().connectToServer(MessagingClient.class, uri)){
 			try(Scanner scanner = new Scanner(System.in)){
 				while(scanner.hasNext()) {
 					final String line = scanner.next();
@@ -285,31 +232,9 @@ public class Utility {
 						break;
 					}
 					else {
-						client.getSession().getBasicRemote().sendText(line);
+						session.getBasicRemote().sendText(line);
 					}
 				}
-			}
-		}
-	}
-	
-	/**
-	 * @param uri
-	 * @throws Exception 
-	 */
-	@Command(name = "stream")
-	public void stream(
-			@Option(names = {"-u", "--uri"}, required = true, description = "URI") 
-			final URI uri) throws Exception {
-		try(Client client = clientUtil.newClient(uri)){
-			try(SseEventSource stream = client.stream(target -> target, req -> req)){
-				stream.register(
-						event -> {
-							out.println(event.readData());
-						},
-						error -> {
-							error.printStackTrace();
-						});
-				stream.open();
 			}
 		}
 	}

@@ -1,9 +1,9 @@
 package epf.shell.mail;
 
 import java.util.Map;
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.ws.rs.core.Response;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import epf.mail.client.Message;
 import epf.naming.Naming;

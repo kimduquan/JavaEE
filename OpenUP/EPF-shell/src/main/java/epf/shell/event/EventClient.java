@@ -1,6 +1,6 @@
 package epf.shell.event;
 
-import javax.ws.rs.Path;
+import jakarta.ws.rs.Path;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import epf.naming.Naming;
 

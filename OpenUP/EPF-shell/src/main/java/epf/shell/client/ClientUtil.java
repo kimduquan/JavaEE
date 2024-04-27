@@ -1,17 +1,10 @@
 package epf.shell.client;
 
-import epf.client.internal.ClientQueue;
-import epf.client.util.Client;
 import epf.naming.Naming;
 import epf.shell.security.SecurityUtil;
 import java.net.URI;
-import java.util.Objects;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.ws.rs.client.ClientBuilder;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 
@@ -21,11 +14,6 @@ import org.eclipse.microprofile.rest.client.RestClientBuilder;
  */
 @ApplicationScoped
 public class ClientUtil {
-	
-	/**
-	 * 
-	 */
-	private transient ClientQueue clients;
 	
 	/**
 	 *
@@ -39,47 +27,13 @@ public class ClientUtil {
 	@ConfigProperty(name = Naming.Client.CLIENT_CONFIG + "/mp-rest/uri")
 	@Inject
 	URI gatewayUrl;
-
-	/**
-	 * 
-	 */
-	@PostConstruct
-	protected void postConstruct() {
-		clients = new ClientQueue();
-	}
-	
-	/**
-	 * 
-	 */
-	@PreDestroy
-	protected void preDestroy() {
-		clients.close();
-	}
 	
 	/**
 	 * @param builder
 	 * @return
 	 */
-	private ClientBuilder build(final ClientBuilder builder) {
+	private RestClientBuilder build(final RestClientBuilder builder) {
 		return builder.keyStore(securityUtil.getKeyStore(), securityUtil.getKeyPassword()).trustStore(securityUtil.getTrustStore());
-	}
-	
-	/**
-	 * @param uri
-	 * @return
-	 */
-	public Client newClient(final URI uri) {
-		Objects.requireNonNull(uri, "URI");
-		return new Client(clients.poll(uri, this::build), uri, clients::add);
-	}
-	
-	/**
-	 * @param name
-	 * @return
-	 * @throws Exception
-	 */
-	public Client newClient(final String name) throws Exception {
-		return new Client(clients.poll(gatewayUrl.resolve(name), this::build), gatewayUrl.resolve(name), clients::add);
 	}
 	
 	/**
@@ -96,7 +50,7 @@ public class ClientUtil {
 	 * @return
 	 */
 	public <T> T newClient(final Class<T> cls) {
-		return RestClientBuilder.newBuilder().keyStore(securityUtil.getKeyStore(), securityUtil.getKeyPassword()).trustStore(securityUtil.getTrustStore()).baseUri(gatewayUrl).build(cls);
+		return build(RestClientBuilder.newBuilder()).baseUri(gatewayUrl).build(cls);
 	}
 	
 	/**
@@ -106,6 +60,6 @@ public class ClientUtil {
 	 * @return
 	 */
 	public <T> T newClient(final URI baseUri, final Class<T> cls) {
-		return RestClientBuilder.newBuilder().keyStore(securityUtil.getKeyStore(), securityUtil.getKeyPassword()).trustStore(securityUtil.getTrustStore()).baseUri(baseUri).build(cls);
+		return build(RestClientBuilder.newBuilder()).baseUri(baseUri).build(cls);
 	}
 }
