@@ -5,14 +5,15 @@ import java.util.Optional;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import javax.cache.Cache;
+import javax.cache.CacheManager;
+import javax.cache.Caching;
+import javax.cache.configuration.MutableConfiguration;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import jakarta.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.jwt.JsonWebToken;
-import com.hazelcast.core.HazelcastInstance;
 import epf.gateway.util.RequestUtil;
 import epf.naming.Naming;
 
@@ -27,19 +28,18 @@ public class Security implements HealthCheck {
 	 * 
 	 */
 	private transient Cache<String, String> cache;
-	
-	/**
-	 * 
-	 */
-	@Inject
-	transient HazelcastInstance client;
 
 	/**
 	 * 
 	 */
 	@PostConstruct
 	protected void postConstruct() {
-		cache = client.getCacheManager().getCache(Naming.Security.Internal.SECURITY_CACHE);
+		final MutableConfiguration<String, String> config = new MutableConfiguration<>();
+		final CacheManager manager = Caching.getCachingProvider().getCacheManager();
+		cache = manager.getCache(Naming.Security.Internal.SECURITY_CACHE);
+		if(cache == null) {
+			cache = manager.createCache(Naming.Security.Internal.SECURITY_CACHE, config);
+		}
 	}
 	
 	/**
@@ -48,7 +48,6 @@ public class Security implements HealthCheck {
 	@PreDestroy
 	protected void preDestroy() {
 		cache.close();
-		client.shutdown();
 	}
 	
 	/**
@@ -75,7 +74,7 @@ public class Security implements HealthCheck {
 
 	@Override
 	public HealthCheckResponse call() {
-		if(client != null && cache != null && !cache.isClosed()) {
+		if(cache != null && !cache.isClosed()) {
 			return HealthCheckResponse.up("EPF-gateway-security");
 		}
 		return HealthCheckResponse.down("EPF-gateway-security");
