@@ -78,6 +78,7 @@
 	<dependency>
 		<groupId>com.hazelcast</groupId>
 		<artifactId>hazelcast</artifactId>
+	    <version>5.3.6</version>
 	</dependency>
 	<!-- https://mvnrepository.com/artifact/javax.cache/cache-api -->
 	<dependency>
