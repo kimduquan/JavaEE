@@ -67,6 +67,12 @@
 	</dependency>
 	
 	<dependency>
+		<groupId>com.hazelcast</groupId>
+		<artifactId>hazelcast</artifactId>
+		<version>5.2.3</version>
+	</dependency>
+	
+	<dependency>
         <groupId>openup</groupId>
         <artifactId>EPF-nosql-schema</artifactId>
         <version>${project.version}</version>
