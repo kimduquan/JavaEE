@@ -61,6 +61,8 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
+            - name: HAZELCAST_KUBERNETES_SERVICE_DNS
+              value: hazelcast.default.svc.cluster.local
           image: epf/epf-gateway:1.0.0
           imagePullPolicy: IfNotPresent
           livenessProbe:
