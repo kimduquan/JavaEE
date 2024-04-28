@@ -33,9 +33,6 @@
 	<application id="EPF-script" name="EPF-script" context-root="script" location="EPF-script-1.0.0.war" >
         <classloader classProviderRef="jppf" apiTypeVisibility="spec,ibm-api,api,stable,third-party"/>
     </application>
-	<application id="EPF-management" name="EPF-management" context-root="management" location="EPF-management-1.0.0.war" >
-        <classloader apiTypeVisibility="+third-party"/>
-    </application>
 	<application id="EPF-file" name="EPF-file" context-root="file" location="EPF-file-1.0.0.war">
         <classloader apiTypeVisibility="+third-party"/>
     </application>
