@@ -6,7 +6,10 @@ import java.util.stream.Stream;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import epf.naming.Naming;
 import epf.persistence.internal.util.SchemaUtil;
 import epf.persistence.schema.Embeddable;
@@ -23,7 +26,7 @@ import io.smallrye.common.annotation.RunOnVirtualThread;
  */
 @Path(Naming.SCHEMA)
 @ApplicationScoped
-public class Schema implements epf.persistence.client.Schema {
+public class Schema {
 	
 	/**
 	 * 
@@ -31,7 +34,11 @@ public class Schema implements epf.persistence.client.Schema {
 	@Inject
     transient EntityManager manager;
 
-	@Override
+	/**
+	 * @return
+	 */
+	@GET
+    @Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
 	public List<Entity> getEntities() {
 		final EntityBuilder builder = new EntityBuilder();
@@ -43,7 +50,12 @@ public class Schema implements epf.persistence.client.Schema {
 		return entities.collect(Collectors.toList());
 	}
 
-	@Override
+	/**
+	 * @return
+	 */
+	@GET
+    @Path("embeddable")
+    @Produces(MediaType.APPLICATION_JSON)
 	@RunOnVirtualThread
 	public List<Embeddable> getEmbeddables() {
 		final EmbeddableBuilder builder = new EmbeddableBuilder();

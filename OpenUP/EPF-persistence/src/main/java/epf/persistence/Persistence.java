@@ -18,10 +18,19 @@ import javax.persistence.EntityManager;
 import javax.persistence.metamodel.EntityType;
 import javax.transaction.Transactional;
 import javax.validation.Validator;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.MatrixParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.lra.annotation.Compensate;
@@ -49,7 +58,7 @@ import io.smallrye.common.annotation.RunOnVirtualThread;
  */
 @Path(Naming.PERSISTENCE)
 @ApplicationScoped
-public class Persistence implements epf.persistence.client.Entities {
+public class Persistence {
 	
 	/**
 	 *
@@ -102,17 +111,36 @@ public class Persistence implements epf.persistence.client.Entities {
 		schemaUtil.clear();
 	}
     
-    @Override
+    /**
+     * @param tenant
+     * @param schema
+     * @param entity
+     * @param headers
+     * @param body
+     * @return
+     * @throws Exception
+     */
+    @POST
+    @Path("{schema}/{entity}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     @LRA(LRA.Type.NESTED)
     @RunOnVirtualThread
     public Response persist(
+    		@MatrixParam(Naming.Management.TENANT)
     		final String tenant,
-    		final String schema,
+    		@PathParam(Naming.Persistence.Client.SCHEMA)
+            @NotBlank
+            final String schema,
+            @PathParam(Naming.Persistence.Client.ENTITY)
+            @NotBlank
             final String name,
+            @Context
             final HttpHeaders headers,
+            @NotNull
             final InputStream body
-            ) throws Exception{
+            ) throws Exception {
     	request.setTenant(tenant);
     	request.setSchema(schema);
     	final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), name);
@@ -157,18 +185,39 @@ public class Persistence implements epf.persistence.client.Entities {
         return Response.ok(JsonUtil.toString(entity)).build();
     }
     
-    @Override
+    /**
+     * @param tenant
+     * @param schema
+     * @param name
+     * @param entityId
+     * @param headers
+     * @param body
+     * @return
+     * @throws Exception
+     */
+    @PUT
+    @Path("{schema}/{entity}/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
     @LRA(LRA.Type.NESTED)
     @RunOnVirtualThread
-	public Response merge(
+    public Response merge(
+    		@MatrixParam(Naming.Management.TENANT)
     		final String tenant,
-			final String schema,
-			final String name, 
-			final String id,
+    		@PathParam(Naming.Persistence.Client.SCHEMA)
+            @NotBlank
+            final String schema,
+            @PathParam(Naming.Persistence.Client.ENTITY)
+            @NotBlank
+            final String name,
+            @PathParam(Naming.Persistence.Client.ID)
+            @NotBlank
+            final String id,
+            @Context
             final HttpHeaders headers,
-			final InputStream body
-			) throws Exception {
+            @NotNull
+            final InputStream body
+            ) throws Exception {
     	request.setTenant(tenant);
     	request.setSchema(schema);
     	final Optional<EntityType<?>> entityType = EntityTypeUtil.findEntityType(manager.getMetamodel(), name);
@@ -225,15 +274,33 @@ public class Persistence implements epf.persistence.client.Entities {
         return Response.ok(JsonUtil.toString(mergedEntity)).build();
 	}
     
-    @Override
+    /**
+     * @param tenant
+     * @param schema
+     * @param name
+     * @param id
+     * @param headers
+     * @return
+     * @throws Exception
+     */
+    @DELETE
+    @Path("{schema}/{entity}/{id}")
     @Transactional
     @LRA(LRA.Type.NESTED)
     @RunOnVirtualThread
     public Response remove(
+    		@MatrixParam(Naming.Management.TENANT)
     		final String tenant,
-    		final String schema,
-    		final String name,
-    		final String id,
+    		@PathParam(Naming.Persistence.Client.SCHEMA)
+            @NotBlank
+            final String schema,
+            @PathParam(Naming.Persistence.Client.ENTITY)
+            @NotBlank
+            final String name,
+            @PathParam(Naming.Persistence.Client.ID)
+            @NotBlank
+            final String id,
+            @Context
             final HttpHeaders headers
             ) throws Exception {
     	request.setTenant(tenant);
