@@ -347,11 +347,11 @@ public class Registry {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@RunOnVirtualThread
 	public void bind(
-			@FormParam(NAME) 
+			@FormParam(Naming.Registry.Client.NAME) 
 			final String name, 
-			@FormParam(REMOTE) 
+			@FormParam(Naming.Registry.Client.REMOTE) 
 			final URI remote, 
-			@QueryParam(VERSION) 
+			@QueryParam(Naming.Registry.Client.VERSION) 
 			final String version) {
 		getRemotes(version).put(name, remote);
 	}
@@ -364,7 +364,7 @@ public class Registry {
 	@GET
 	@RunOnVirtualThread
 	public Response list(
-			@QueryParam(VERSION) 
+			@QueryParam(Naming.Registry.Client.VERSION) 
 			final String version, 
 			@Context 
 			final UriInfo uriInfo) {
@@ -394,9 +394,9 @@ public class Registry {
 	@Path("{name}")
 	@RunOnVirtualThread
 	public Response lookup(
-			@PathParam(NAME) 
+			@PathParam(Naming.Registry.Client.NAME) 
 			final String name, 
-			@QueryParam(VERSION) 
+			@QueryParam(Naming.Registry.Client.VERSION) 
 			final String version) {
 		final ResponseBuilder builder = Response.ok();
 		getRemotes(version).computeIfPresent(name, (key, remote) -> {
@@ -416,11 +416,11 @@ public class Registry {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@RunOnVirtualThread
 	public void rebind(
-			@PathParam(NAME) 
+			@PathParam(Naming.Registry.Client.NAME) 
 			final String name, 
-			@FormParam(REMOTE) 
+			@FormParam(Naming.Registry.Client.REMOTE) 
 			final URI remote, 
-			@QueryParam(VERSION) 
+			@QueryParam(Naming.Registry.Client.VERSION) 
 			final String version) {
 		getRemotes(version).computeIfPresent(name, (key, value) -> {
 			return remote;
@@ -435,9 +435,9 @@ public class Registry {
 	@Path("{name}")
 	@RunOnVirtualThread
 	public void unbind(
-			@PathParam(NAME) 
+			@PathParam(Naming.Registry.Client.NAME) 
 			final String name, 
-			@QueryParam(VERSION) 
+			@QueryParam(Naming.Registry.Client.VERSION) 
 			final String version) {
 		getRemotes(version).remove(name);
 	}
