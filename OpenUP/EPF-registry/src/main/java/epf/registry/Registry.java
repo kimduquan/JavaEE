@@ -45,21 +45,6 @@ public class Registry {
 	 * 
 	 */
 	private static final Logger LOGGER = LogManager.getLogger(Registry.class.getName());
-    
-	/**
-	 * 
-	 */
-	private static final String REMOTE = "remote";
-	
-	/**
-	 * 
-	 */
-	private static final String NAME = "name";
-	
-	/**
-	 * 
-	 */
-	private static final String VERSION = "version";
 	
 	/**
 	 * 

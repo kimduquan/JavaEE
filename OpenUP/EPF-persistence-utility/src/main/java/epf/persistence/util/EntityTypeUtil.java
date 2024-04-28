@@ -1,9 +1,9 @@
 package epf.persistence.util;
 
 import java.util.Optional;
-import javax.persistence.Table;
-import javax.persistence.metamodel.EntityType;
-import javax.persistence.metamodel.Metamodel;
+import jakarta.persistence.Table;
+import jakarta.persistence.metamodel.EntityType;
+import jakarta.persistence.metamodel.Metamodel;
 
 /**
  * @author PC

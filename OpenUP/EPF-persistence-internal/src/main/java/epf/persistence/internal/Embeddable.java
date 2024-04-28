@@ -1,6 +1,6 @@
 package epf.persistence.internal;
 
-import javax.persistence.metamodel.EmbeddableType;
+import jakarta.persistence.metamodel.EmbeddableType;
 
 /**
  *

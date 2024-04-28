@@ -1,17 +1,17 @@
 package epf.persistence.internal;
 
 import java.util.Objects;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import javax.cache.Cache;
 import javax.cache.CacheManager;
 import javax.cache.Caching;
 import javax.cache.configuration.MutableConfiguration;
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
-import epf.util.json.Decoder;
-import epf.util.json.Encoder;
+import epf.util.json.ext.Decoder;
+import epf.util.json.ext.Encoder;
 
 /**
  * @author PC

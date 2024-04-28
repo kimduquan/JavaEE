@@ -25,21 +25,6 @@ import epf.naming.Naming;
  */
 @Path(Naming.PERSISTENCE)
 public interface Entities {
-	
-	/**
-	 * 
-	 */
-	String SCHEMA = "schema";
-	
-	/**
-	 * 
-	 */
-	String ENTITY = "entity";
-	
-	/**
-	 * 
-	 */
-	String ID = "id";
     
     /**
      * @param schema
@@ -55,10 +40,10 @@ public interface Entities {
     Response persist(
     		@MatrixParam(Naming.Management.TENANT)
     		final String tenant,
-    		@PathParam(SCHEMA)
+    		@PathParam(Naming.Persistence.Client.SCHEMA)
             @NotBlank
             final String schema,
-            @PathParam(ENTITY)
+            @PathParam(Naming.Persistence.Client.ENTITY)
             @NotBlank
             final String entity,
             @Context
@@ -120,13 +105,13 @@ public interface Entities {
     Response merge(
     		@MatrixParam(Naming.Management.TENANT)
     		final String tenant,
-    		@PathParam(SCHEMA)
+    		@PathParam(Naming.Persistence.Client.SCHEMA)
             @NotBlank
             final String schema,
-            @PathParam(ENTITY)
+            @PathParam(Naming.Persistence.Client.ENTITY)
             @NotBlank
             final String entity,
-            @PathParam(ID)
+            @PathParam(Naming.Persistence.Client.ID)
             @NotBlank
             final String entityId,
             @Context
@@ -187,13 +172,13 @@ public interface Entities {
     Response remove(
     		@MatrixParam(Naming.Management.TENANT)
     		final String tenant,
-    		@PathParam(SCHEMA)
+    		@PathParam(Naming.Persistence.Client.SCHEMA)
             @NotBlank
             final String schema,
-            @PathParam(ENTITY)
+            @PathParam(Naming.Persistence.Client.ENTITY)
             @NotBlank
             final String entity,
-            @PathParam(ID)
+            @PathParam(Naming.Persistence.Client.ID)
             @NotBlank
             final String entityId,
             @Context

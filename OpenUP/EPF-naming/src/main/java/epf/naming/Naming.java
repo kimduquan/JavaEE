@@ -534,6 +534,27 @@ public interface Naming {
 		}
 		
 		/**
+		 * 
+		 */
+		interface Client {
+			
+			/**
+			 * 
+			 */
+			String SCHEMA = "schema";
+			
+			/**
+			 * 
+			 */
+			String ENTITY = "entity";
+			
+			/**
+			 * 
+			 */
+			String ID = "id";
+		}
+		
+		/**
 		 * @author PC
 		 *
 		 */
@@ -730,6 +751,26 @@ public interface Naming {
 		     * 
 		     */
 		    String USER_INFO = "user-info";
+	    }
+	    
+	    /**
+	     * 
+	     */
+	    interface Client {
+	    	/**
+	    	 * 
+	    	 */
+	    	String REMOTE = "remote";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String NAME = "name";
+	    	
+	    	/**
+	    	 * 
+	    	 */
+	    	String VERSION = "version";
 	    }
 	}
 	

@@ -1,7 +1,7 @@
 package epf.persistence.util;
 
-import javax.persistence.Entity;
-import javax.persistence.NamedEntityGraph;
+import jakarta.persistence.Entity;
+import jakarta.persistence.NamedEntityGraph;
 
 /**
  * @author PC

@@ -10,22 +10,21 @@
     <name>Eclipse Process Framework Persistence Internal</name>
     <packaging>jar</packaging>
     <dependencies>
-		<!-- https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api -->
 		<dependency>
-		    <groupId>javax.persistence</groupId>
-		    <artifactId>javax.persistence-api</artifactId>
+		    <groupId>jakarta.persistence</groupId>
+		    <artifactId>jakarta.persistence-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
 		<dependency>
-		    <groupId>javax.ws.rs</groupId>
-		    <artifactId>javax.ws.rs-api</artifactId>
+		    <groupId>jakarta.ws.rs</groupId>
+		    <artifactId>jakarta.ws.rs-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/javax.json.bind/javax.json.bind-api -->
 		<dependency>
-			<groupId>javax.json.bind</groupId>
-			<artifactId>javax.json.bind-api</artifactId>
+			<groupId>jakarta.json.bind</groupId>
+			<artifactId>jakarta.json.bind-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.jwt/microprofile-jwt-auth-api -->
@@ -34,9 +33,15 @@
 		    <artifactId>microprofile-jwt-auth-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		
 		<dependency>
             <groupId>openup</groupId>
             <artifactId>EPF-utility</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>openup</groupId>
+            <artifactId>EPF-naming</artifactId>
             <version>${project.version}</version>
         </dependency>
 	    <dependency>
@@ -46,7 +51,7 @@
 	    </dependency>
 		<dependency>
             <groupId>openup</groupId>
-            <artifactId>EPF-persistence-client</artifactId>
+            <artifactId>EPF-persistence-schema</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

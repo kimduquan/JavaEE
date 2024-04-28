@@ -2,9 +2,9 @@ package epf.persistence.schema.internal;
 
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import javax.persistence.metamodel.EntityType;
-import javax.persistence.metamodel.Type;
-import javax.persistence.metamodel.Type.PersistenceType;
+import jakarta.persistence.metamodel.EntityType;
+import jakarta.persistence.metamodel.Type;
+import jakarta.persistence.metamodel.Type.PersistenceType;
 import epf.persistence.internal.Entity;
 import epf.persistence.schema.Attribute;
 import epf.persistence.schema.Table;
@@ -87,7 +87,7 @@ public class EntityBuilder {
 	 * @return
 	 */
 	protected static Table buildTable(final Class<?> cls) {
-		final javax.persistence.Table tableAnnotation = cls.getAnnotation(javax.persistence.Table.class);
+		final jakarta.persistence.Table tableAnnotation = cls.getAnnotation(jakarta.persistence.Table.class);
 		final Table table = new Table();
 		table.setCatalog(tableAnnotation.catalog());
 		table.setName(tableAnnotation.name());

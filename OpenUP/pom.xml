@@ -255,6 +255,12 @@
 			    <version>3.1.0</version>
 				<!--<scope>provided</scope>-->
 			</dependency>
+			<!-- https://mvnrepository.com/artifact/jakarta.persistence/jakarta.persistence-api -->
+			<dependency>
+			    <groupId>jakarta.persistence</groupId>
+			    <artifactId>jakarta.persistence-api</artifactId>
+			    <version>3.1.0</version>
+			</dependency>
 			<!-- https://mvnrepository.com/artifact/jakarta.annotation/jakarta.annotation-api -->
 			<dependency>
 			    <groupId>jakarta.annotation</groupId>
@@ -267,6 +273,13 @@
 			    <groupId>jakarta.json.bind</groupId>
 			    <artifactId>jakarta.json.bind-api</artifactId>
 			    <version>3.0.0</version>
+				<!--<scope>provided</scope>-->
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/jakarta.xml.bind/jakarta.xml.bind-api -->
+			<dependency>
+			    <groupId>jakarta.xml.bind</groupId>
+			    <artifactId>jakarta.xml.bind-api</artifactId>
+			    <version>4.0.2</version>
 				<!--<scope>provided</scope>-->
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/jakarta.json/jakarta.json-api -->
@@ -853,7 +866,6 @@
 		<module>EPF-messaging-utility-ext</module>
 		<module>EPF-persistence-utility</module>
 		<module>EPF-persistence-internal</module>
-		<module>EPF-persistence-ext</module>
 		<module>EPF-security-utility</module>
 		<module>EPF-workflow-utility</module>
 		<module>EPF-security-auth-utility</module>

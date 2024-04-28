@@ -27,21 +27,6 @@ import epf.naming.Naming;
  */
 @Path(Naming.REGISTRY)
 public interface Registry {
-    
-	/**
-	 * 
-	 */
-	String REMOTE = "remote";
-	
-	/**
-	 * 
-	 */
-	String NAME = "name";
-	
-	/**
-	 * 
-	 */
-	String VERSION = "version";
 
 	/**
 	 * @param name
@@ -51,11 +36,11 @@ public interface Registry {
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	void bind(
-			@FormParam(NAME) 
+			@FormParam(Naming.Registry.Client.NAME) 
 			final String name, 
-			@FormParam(REMOTE) 
+			@FormParam(Naming.Registry.Client.REMOTE) 
 			final URI remote, 
-			@QueryParam(VERSION) 
+			@QueryParam(Naming.Registry.Client.VERSION) 
 			final String version);
 	/**
 	 * @param client
@@ -69,11 +54,11 @@ public interface Registry {
 			final URI remote, 
 			final String version){
 		final Form form = new Form();
-		form.param(NAME, name);
-		form.param(REMOTE, remote.toString());
+		form.param(Naming.Registry.Client.NAME, name);
+		form.param(Naming.Registry.Client.REMOTE, remote.toString());
 		client
 		.request(
-				target -> target.queryParam(VERSION, version), 
+				target -> target.queryParam(Naming.Registry.Client.VERSION, version), 
 				req -> req
 				)
 		.post(Entity.form(form));
@@ -84,7 +69,7 @@ public interface Registry {
 	 */
 	@GET
 	Response list(
-			@QueryParam(VERSION) 
+			@QueryParam(Naming.Registry.Client.VERSION) 
 			final String version, 
 			@Context 
 			final UriInfo uriInfo);
@@ -98,7 +83,7 @@ public interface Registry {
 			final String version) {
 		return client
 				.request(
-						target -> version != null ? target.queryParam(VERSION, version) : target, 
+						target -> version != null ? target.queryParam(Naming.Registry.Client.VERSION, version) : target, 
 						req -> req
 						)
 				.get()
@@ -112,9 +97,9 @@ public interface Registry {
 	@GET
 	@Path("{name}")
 	Response lookup(
-			@PathParam(NAME) 
+			@PathParam(Naming.Registry.Client.NAME) 
 			final String name, 
-			@QueryParam(VERSION) 
+			@QueryParam(Naming.Registry.Client.VERSION) 
 			final String version);
 	
 	/**
@@ -128,7 +113,7 @@ public interface Registry {
 			final String version){
 		return client
 				.request(
-						target -> target.path(name).queryParam(VERSION, version), 
+						target -> target.path(name).queryParam(Naming.Registry.Client.VERSION, version), 
 						req -> req
 						)
 				.get();
@@ -142,11 +127,11 @@ public interface Registry {
 	@Path("{name}")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	void rebind(
-			@PathParam(NAME) 
+			@PathParam(Naming.Registry.Client.NAME) 
 			final String name, 
-			@FormParam(REMOTE) 
+			@FormParam(Naming.Registry.Client.REMOTE) 
 			final URI remote, 
-			@QueryParam(VERSION) 
+			@QueryParam(Naming.Registry.Client.VERSION) 
 			final String version);
 	
 	/**
@@ -160,10 +145,10 @@ public interface Registry {
 			final URI remote, 
 			final String version) {
 		final Form form = new Form();
-		form.param(REMOTE, remote.toString());
+		form.param(Naming.Registry.Client.REMOTE, remote.toString());
 		client
 		.request(
-				target -> target.path(name).queryParam(VERSION, version), 
+				target -> target.path(name).queryParam(Naming.Registry.Client.VERSION, version), 
 				req -> req
 				)
 		.post(Entity.form(form));
@@ -175,9 +160,9 @@ public interface Registry {
 	@DELETE
 	@Path("{name}")
 	void unbind(
-			@PathParam(NAME) 
+			@PathParam(Naming.Registry.Client.NAME) 
 			final String name, 
-			@QueryParam(VERSION) 
+			@QueryParam(Naming.Registry.Client.VERSION) 
 			final String version);
 	
 	/**
@@ -190,7 +175,7 @@ public interface Registry {
 			final String version) {
 		client
 		.request(
-				target -> target.path(name).queryParam(VERSION, version), 
+				target -> target.path(name).queryParam(Naming.Registry.Client.VERSION, version), 
 				req -> req
 				)
 		.delete();

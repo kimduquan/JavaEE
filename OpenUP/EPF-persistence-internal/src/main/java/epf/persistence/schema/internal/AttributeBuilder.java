@@ -1,8 +1,8 @@
 package epf.persistence.schema.internal;
 
-import javax.persistence.metamodel.Attribute;
-import javax.persistence.metamodel.Attribute.PersistentAttributeType;
-import javax.persistence.metamodel.Bindable;
+import jakarta.persistence.metamodel.Attribute;
+import jakarta.persistence.metamodel.Attribute.PersistentAttributeType;
+import jakarta.persistence.metamodel.Bindable;
 import epf.persistence.schema.AttributeType;
 import epf.persistence.schema.Column;
 
@@ -28,8 +28,8 @@ public class AttributeBuilder {
 			attribute.setBindable(buildBindableType(bindable));
 			attribute.setBindableType(bindable.getBindableJavaType().getName());
 		}
-		if(attr.getJavaType().isAnnotationPresent(javax.persistence.Column.class)) {
-			final Column column = buildColumn(attr.getJavaType().getAnnotation(javax.persistence.Column.class));
+		if(attr.getJavaType().isAnnotationPresent(jakarta.persistence.Column.class)) {
+			final Column column = buildColumn(attr.getJavaType().getAnnotation(jakarta.persistence.Column.class));
 			attribute.setColumn(column);
 		}
 		return attribute;
@@ -94,7 +94,7 @@ public class AttributeBuilder {
 	 * @param columnAnnotation
 	 * @return
 	 */
-	protected static Column buildColumn(final javax.persistence.Column columnAnnotation) {
+	protected static Column buildColumn(final jakarta.persistence.Column columnAnnotation) {
 		final Column column = new Column();
 		column.setColumnDefinition(columnAnnotation.columnDefinition());
 		column.setName(columnAnnotation.name());
