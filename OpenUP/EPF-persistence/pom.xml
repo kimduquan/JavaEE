@@ -68,13 +68,11 @@
 	<dependency>
 		<groupId>com.hazelcast</groupId>
 		<artifactId>hazelcast</artifactId>
-		<version>5.3.6</version>
 	</dependency>
 	<!-- https://mvnrepository.com/artifact/javax.cache/cache-api -->
 	<dependency>
 		<groupId>javax.cache</groupId>
 		<artifactId>cache-api</artifactId>
-		<version>1.1.1</version>
 	</dependency>
 	
 	<dependency>
