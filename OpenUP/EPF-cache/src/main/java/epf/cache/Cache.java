@@ -25,7 +25,7 @@ public class Cache implements HealthCheck {
 	@PostConstruct
 	protected void postConstruct() {
 		final CacheManager cacheManager = Caching.getCachingProvider().getCacheManager();
-		eventCache = cacheManager.getCache(Naming.Event.Internal.EPF_EVENT_CACHE, String.class, Object.class);
+		eventCache = cacheManager.getCache(Naming.Event.Internal.EPF_EVENT_CACHE);
 		if(eventCache == null) {
 			final MutableConfiguration<String, Object> config = new MutableConfiguration<>();
 			eventCache = cacheManager.createCache(Naming.Event.Internal.EPF_EVENT_CACHE, config);
