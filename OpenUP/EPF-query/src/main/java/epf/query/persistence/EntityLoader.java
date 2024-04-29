@@ -1,20 +1,20 @@
 package epf.query.persistence;
 
 import java.util.Optional;
-import javax.enterprise.context.Dependent;
-import javax.enterprise.context.control.ActivateRequestContext;
-import javax.enterprise.event.Observes;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.ws.rs.BadRequestException;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.context.control.ActivateRequestContext;
+import jakarta.enterprise.event.Observes;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.ws.rs.BadRequestException;
 import org.eclipse.microprofile.health.Readiness;
 import epf.persistence.util.EntityUtil;
 import epf.query.cache.EntityLoad;
 import epf.query.internal.EntityKey;
 import epf.query.internal.SchemaCache;
 import epf.schema.utility.Request;
-import epf.util.json.JsonUtil;
+import epf.util.json.ext.JsonUtil;
 
 /**
  * @author PC

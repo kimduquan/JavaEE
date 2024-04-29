@@ -5,22 +5,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.HEAD;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.MatrixParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
+import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.health.Readiness;
-import epf.function.query.FetchEntitiesFunction;
+import epf.naming.Naming;
 import epf.query.client.EntityId;
 import epf.query.internal.SchemaCache;
+import io.smallrye.common.annotation.RunOnVirtualThread;
 
 /**
  * 
  */
 @ApplicationScoped
-public class Search implements epf.query.client.Search {
+public class Search {
 	
 	/**
 	 *
@@ -44,23 +51,45 @@ public class Search implements epf.query.client.Search {
 	@Inject @Readiness
 	transient SchemaCache schemaCache;
 
-	@Override
-	public Response search(
+	/**
+	 * @param tenant
+	 * @param text
+	 * @param firstResult
+	 * @param maxResults
+	 * @return
+	 */
+	@GET
+    @Produces(MediaType.APPLICATION_JSON)
+	@RunOnVirtualThread
+    public Response search(
+    		@MatrixParam(Naming.Management.TENANT)
     		final String tenant,
+    		@QueryParam(Naming.Query.Client.TEXT)
     		final String text, 
-    		final Integer firstResult, 
+    		@QueryParam(Naming.Query.Client.FIRST)
+    		final Integer firstResult,
+            @QueryParam(Naming.Query.Client.MAX)
     		final Integer maxResults) {
 		final Query query = createSearchQuery(FULLTEXT_SEARCH, tenant, text, maxResults != null ? maxResults : 0, firstResult != null ? firstResult : 0);
 		final List<?> resultList = query.getResultList();
 		final List<EntityId> entities = resultList.stream().map(this::toEntityId).filter(entityId -> entityId != null).collect(Collectors.toList());
-		final FetchEntitiesFunction fetchFunc = new FetchEntitiesFunction();
-		return Response.ok(entities).links(fetchFunc.toLink(null)).build();
+		//final FetchEntitiesFunction fetchFunc = new FetchEntitiesFunction();
+		//return Response.ok(entities).links(fetchFunc.toLink(null)).build();
+		return Response.ok(entities).build();
 	}
 
-	@Override
-	public Response count(
+	/**
+	 * @param tenant
+	 * @param text
+	 * @return
+	 */
+	@HEAD
+	@RunOnVirtualThread
+    public Response count(
+    		@MatrixParam(Naming.Management.TENANT)
     		final String tenant,
-    		final String text) {
+			@QueryParam(Naming.Query.Client.TEXT)
+			final String text) {
 		final Query query = createSearchQuery(FULLTEXT_SEARCH_COUNT, tenant, text, 0, 0);
 		final Long count = (Long) query.getSingleResult();
 		return Response.ok().header(epf.naming.Naming.Query.Client.ENTITY_COUNT, count).build();

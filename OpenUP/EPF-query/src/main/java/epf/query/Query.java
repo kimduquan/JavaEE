@@ -2,14 +2,26 @@ package epf.query;
 
 import java.util.List;
 import java.util.Optional;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.PathSegment;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.core.SecurityContext;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HEAD;
+import jakarta.ws.rs.MatrixParam;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.PATCH;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.PathSegment;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
+import jakarta.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.health.Readiness;
 import epf.naming.Naming;
 import epf.naming.Naming.Query.Client;
@@ -19,7 +31,8 @@ import epf.query.internal.QueryCache;
 import epf.query.persistence.QueryPersistence;
 import epf.query.util.LinkUtil;
 import epf.schema.utility.Request;
-import epf.util.concurrent.Executor;
+import epf.util.concurrent.ext.Executor;
+import io.smallrye.common.annotation.RunOnVirtualThread;
 
 /**
  * @author PC
@@ -27,7 +40,7 @@ import epf.util.concurrent.Executor;
  */
 @ApplicationScoped
 @Path(Naming.QUERY)
-public class Query implements epf.query.client.Query {
+public class Query {
 
 	/**
 	 * 
@@ -65,11 +78,31 @@ public class Query implements epf.query.client.Query {
 	@Inject
 	Request request;
 	
-	@Override
+	/**
+	 * @param tenant
+	 * @param schema
+	 * @param entity
+	 * @param entityId
+	 * @return
+	 */
+	@GET
+    @Path(Naming.Query.Client.ENTITY_PATH)
+	@Produces(MediaType.APPLICATION_JSON)
+	@RunOnVirtualThread
     public Response getEntity(
+    		@MatrixParam(Naming.Management.TENANT)
     		final String tenant,
-    		final String schema,
+    		@PathParam(Naming.Query.Client.SCHEMA)
+            @NotNull
+            @NotBlank
+            final String schema,
+            @PathParam(Naming.Query.Client.ENTITY)
+            @NotNull
+            @NotBlank
             final String name,
+            @PathParam(Naming.Query.Client.ID)
+            @NotNull
+            @NotBlank
             final String entityId
             ) {
 		request.setSchema(schema);
@@ -78,11 +111,27 @@ public class Query implements epf.query.client.Query {
 		return Response.ok(entity.orElseThrow(NotFoundException::new)).build();
 	}
 
-	@Override
-	public Response countEntity(
+	/**
+	 * @param tenant
+	 * @param schema
+	 * @param entity
+	 * @return
+	 */
+	@HEAD
+	@Path("entity/{schema}/{entity}")
+	@RunOnVirtualThread
+    public Response countEntity(
+    		@MatrixParam(Naming.Management.TENANT)
     		final String tenant,
-    		final String schema, 
-    		final String entity) {
+    		@PathParam(Naming.Query.Client.SCHEMA)
+            @NotNull
+            @NotBlank
+            final String schema,
+            @PathParam(Naming.Query.Client.ENTITY)
+            @NotNull
+            @NotBlank
+            final String entity
+            ) {
 		request.setSchema(schema);
 		request.setTenant(tenant);
 		final Optional<Integer> count = queryCache.countEntity(entity);
@@ -92,15 +141,38 @@ public class Query implements epf.query.client.Query {
 		throw new NotFoundException();
 	}
 
-	@Override
+	/**
+	 * @param tenant
+	 * @param schema
+	 * @param paths
+	 * @param firstResult
+	 * @param maxResults
+	 * @param context
+	 * @param sort
+	 * @return
+	 * @throws Exception
+	 */
+	@GET
+    @Path("query/{schema}/{criteria: .+}")
+    @Produces(MediaType.APPLICATION_JSON)
+	@RunOnVirtualThread
 	public Response executeQuery(
+    		@MatrixParam(Naming.Management.TENANT)
     		final String tenant,
-			final String schema, 
-			final List<PathSegment> paths, 
-			final Integer firstResult, 
-			final Integer maxResults,
-			final SecurityContext context,
-			final List<String> sort) throws Exception {
+    		@PathParam(Naming.Query.Client.SCHEMA)
+            @NotBlank
+            final String schema,
+            @PathParam("criteria")
+            final List<PathSegment> paths,
+            @QueryParam(Naming.Query.Client.FIRST)
+            final Integer firstResult,
+            @QueryParam(Naming.Query.Client.MAX)
+            final Integer maxResults,
+            @Context
+            final SecurityContext context,
+            @QueryParam(Naming.Query.Client.SORT)
+    		final List<String> sort
+            ) throws Exception {
 		request.setSchema(schema);
 		request.setTenant(tenant);
 		if(!paths.isEmpty()) {
@@ -110,13 +182,28 @@ public class Query implements epf.query.client.Query {
 		throw new NotFoundException();
 	}
 
-	@Override
+	/**
+	 * @param tenant
+	 * @param schema
+	 * @param paths
+	 * @param context
+	 * @return
+	 * @throws Exception
+	 */
+	@HEAD
+    @Path("query/{schema}/{criteria: .+}")
+	@RunOnVirtualThread
 	public Response executeCountQuery(
+    		@MatrixParam(Naming.Management.TENANT)
     		final String tenant,
-			final String schema, 
-			final List<PathSegment> paths, 
-			final SecurityContext context)
-			throws Exception {
+    		@PathParam(Naming.Query.Client.SCHEMA)
+            @NotBlank
+            final String schema,
+            @PathParam("criteria")
+            final List<PathSegment> paths,
+            @Context
+            final SecurityContext context
+            ) throws Exception {
 		request.setSchema(schema);
 		request.setTenant(tenant);
 		if(!paths.isEmpty()) {
@@ -126,8 +213,18 @@ public class Query implements epf.query.client.Query {
 		throw new NotFoundException();
 	}
 
-	@Override
-	public Response fetchEntities(
+	/**
+	 * @param tenant
+	 * @param entityIds
+	 * @return
+	 */
+	@PATCH
+    @Path(Naming.Query.Client.ENTITY)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+	@RunOnVirtualThread
+    public Response fetchEntities(
+    		@MatrixParam(Naming.Management.TENANT)
     		final String tenant,
     		final List<EntityId> entityIds) {
 		request.setTenant(tenant);

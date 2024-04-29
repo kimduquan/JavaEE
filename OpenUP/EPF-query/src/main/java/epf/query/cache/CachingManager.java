@@ -6,12 +6,12 @@ import javax.cache.Cache;
 import javax.cache.Caching;
 import javax.cache.configuration.FactoryBuilder;
 import javax.cache.configuration.MutableConfiguration;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Event;
+import jakarta.inject.Inject;
 import epf.cache.util.Loader;
 import epf.query.Naming;
-import epf.util.concurrent.EventEmitter;
+import epf.util.concurrent.ext.EventEmitter;
 
 /**
  * @author PC

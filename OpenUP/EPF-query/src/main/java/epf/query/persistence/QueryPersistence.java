@@ -2,16 +2,16 @@ package epf.query.persistence;
 
 import java.util.List;
 import java.util.logging.Logger;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.metamodel.EntityType;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.core.PathSegment;
-import javax.ws.rs.core.SecurityContext;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.metamodel.EntityType;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.core.PathSegment;
+import jakarta.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
@@ -19,7 +19,7 @@ import epf.persistence.internal.Entity;
 import epf.persistence.internal.QueryBuilder;
 import epf.persistence.util.EntityTypeUtil;
 import epf.schema.utility.Request;
-import epf.util.json.JsonUtil;
+import epf.util.json.ext.JsonUtil;
 import epf.util.logging.LogManager;
 
 /**

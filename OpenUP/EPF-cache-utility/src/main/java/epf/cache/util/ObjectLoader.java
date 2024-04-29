@@ -1,8 +1,7 @@
 package epf.cache.util;
 
 import java.util.function.Supplier;
-
-import epf.util.concurrent.Emitter;
+import epf.util.concurrent.ext.Emitter;
 
 /**
  * 

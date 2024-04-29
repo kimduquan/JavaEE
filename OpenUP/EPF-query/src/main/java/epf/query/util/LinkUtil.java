@@ -2,10 +2,9 @@ package epf.query.util;
 
 import java.util.List;
 import java.util.Map.Entry;
-import javax.ws.rs.core.Link;
-import javax.ws.rs.core.Link.Builder;
-import javax.ws.rs.core.Response.ResponseBuilder;
-
+import jakarta.ws.rs.core.Link;
+import jakarta.ws.rs.core.Link.Builder;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
 import epf.query.client.EntityId;
 
 /**
