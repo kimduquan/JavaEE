@@ -1,7 +1,7 @@
 package epf.roles.schema.section;
 
 import java.io.Serializable;
-import javax.persistence.Embeddable;
+import jakarta.persistence.Embeddable;
 import org.eclipse.microprofile.graphql.Type;
 
 /**

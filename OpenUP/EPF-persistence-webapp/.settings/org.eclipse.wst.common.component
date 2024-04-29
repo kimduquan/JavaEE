@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="EPF-persistence-webapp-1.0.0">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <dependent-module archiveName="EPF-client-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EPF-client/EPF-client">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="EPF-naming-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EPF-naming/EPF-naming">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="EPF-validation-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EPF-validation/EPF-validation">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="EPF-client-utility-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EPF-client-utility/EPF-client-utility">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="EPF-persistence-client-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EPF-persistence-client/EPF-persistence-client">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="EPF-persistence-schema-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EPF-persistence-schema/EPF-persistence-schema">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="EPF-query-client-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EPF-query-client/EPF-query-client">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="EPF-security-view-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EPF-security-view/EPF-security-view">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="EPF-persistence-view-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EPF-persistence-view/EPF-persistence-view">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="EPF-security-auth-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EPF-security-auth/EPF-security-auth">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="EPF-security-auth-utility-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EPF-security-auth-utility/EPF-security-auth-utility">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="EPF-utility-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EPF-utility/EPF-utility">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="EPF-json-utility-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EPF-json-utility/EPF-json-utility">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="EPF-logging-utility-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EPF-logging-utility/EPF-logging-utility">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="EPF-webapp-utility-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EPF-webapp-utility/EPF-webapp-utility">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="EPF-webapp-naming-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EPF-webapp-naming/EPF-webapp-naming">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="EPF-webapp-internal-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EPF-webapp-internal/EPF-webapp-internal">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="EPF-config-client-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EPF-config-client/EPF-config-client">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="EPF-security-client-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EPF-security-client/EPF-security-client">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="EPF-security-schema-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EPF-security-schema/EPF-security-schema">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="EPF-schema-utility-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EPF-schema-utility/EPF-schema-utility">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="EPF-client-internal-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EPF-client-internal/EPF-client-internal">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="EPF-persistence-webapp"/>
+        <property name="java-output-path" value="/EPF-persistence-webapp/target/classes"/>
+    </wb-module>
+</project-modules>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="EPF-schema-1.0.0">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <dependent-module archiveName="EPF-schema-utility-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EPF-schema-utility/EPF-schema-utility">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="EPF-json-utility-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EPF-json-utility/EPF-json-utility">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="EPF-security-schema-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EPF-security-schema/EPF-security-schema">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="EPF-delivery-processes-schema-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EPF-delivery-processes-schema/EPF-delivery-processes-schema">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="EPF-roles-schema-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EPF-roles-schema/EPF-roles-schema">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="EPF-tasks-schema-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EPF-tasks-schema/EPF-tasks-schema">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="EPF-work-products-schema-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EPF-work-products-schema/EPF-work-products-schema">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="EPF-net-schema-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EPF-net-schema/EPF-net-schema">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="OpenUP-schema-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/OpenUP-schema/OpenUP-schema">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="EPF-schema"/>
+        <property name="java-output-path" value="/EPF-schema/target/classes"/>
+    </wb-module>
+</project-modules>
