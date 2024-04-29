@@ -1,10 +1,9 @@
 package epf.schema.utility;
 
-import javax.json.JsonObject;
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
-
-import epf.util.json.JsonUtil;
+import jakarta.json.JsonObject;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
+import epf.util.json.ext.JsonUtil;
 
 /**
  * @author PC

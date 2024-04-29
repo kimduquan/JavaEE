@@ -1,7 +1,7 @@
 package epf.schema.utility;
 
 import java.io.Serializable;
-import javax.persistence.Transient;
+import jakarta.persistence.Transient;
 
 /**
  * 

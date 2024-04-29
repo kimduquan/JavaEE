@@ -1,6 +1,6 @@
 package epf.schema.utility;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 /**
  * @author PC
