@@ -6,7 +6,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 import epf.net.schema.URL;
 import epf.util.StringUtil;
-import epf.util.json.ext.JsonUtil;
+import epf.util.json.JsonUtil;
 import epf.function.net.ShortenUrlFunction;
 import epf.function.persistence.PersistFunction;
 import epf.function.LinkFunction;
