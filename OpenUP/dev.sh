@@ -31,6 +31,9 @@ cd ../
 cd EPF-concurrent
 ./start.sh
 cd ../
+cd EPF-file
+./start.sh
+cd ../
 cd EPF-workflow-management
 ./start.sh
 cd ../

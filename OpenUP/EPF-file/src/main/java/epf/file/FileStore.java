@@ -12,20 +12,30 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
-import javax.annotation.security.RolesAllowed;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.ws.rs.HttpMethod;
-import javax.ws.rs.core.Link;
-import javax.ws.rs.core.PathSegment;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.StreamingOutput;
-import javax.ws.rs.core.UriInfo;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HttpMethod;
+import jakarta.ws.rs.MatrixParam;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.Link;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.PathSegment;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
+import jakarta.ws.rs.core.StreamingOutput;
+import jakarta.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.health.Readiness;
-import epf.client.util.EntityOutput;
+import epf.file.util.EntityOutput;
 import epf.file.internal.FileWatchService;
 import epf.file.internal.PathBuilder;
 import epf.file.util.FileUtil;
@@ -39,10 +49,10 @@ import epf.util.logging.LogManager;
  *
  * @author FOXCONN
  */
-@javax.ws.rs.Path(Naming.FILE)
+@jakarta.ws.rs.Path(Naming.FILE)
 @RolesAllowed(Security.DEFAULT_ROLE)
 @ApplicationScoped
-public class FileStore implements epf.file.client.Files {
+public class FileStore {
 	
 	/**
 	 * 
@@ -84,13 +94,30 @@ public class FileStore implements epf.file.client.Files {
 		}
 	}
 
-	@Override
+	/**
+	 * @param tenant
+	 * @param paths
+	 * @param uriInfo
+	 * @param input
+	 * @param security
+	 * @return
+	 * @throws Exception
+	 */
+	@POST
+	@jakarta.ws.rs.Path("{paths: .+}")
+	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
 	public Response createFile(
+			@MatrixParam(Naming.Management.TENANT)
 			final String tenant,
+			@PathParam("paths")
+			@NotEmpty
 			final List<PathSegment> paths,
-			final UriInfo uriInfo,
-			final InputStream input, 
-			final SecurityContext security) throws Exception {
+			@Context 
+    		final UriInfo uriInfo,
+			final InputStream input,
+			@Context
+			final SecurityContext security
+			) throws Exception {
 		PathValidator.validate(paths, security, HttpMethod.POST);
 		final PathBuilder builder = new PathBuilder(system, rootFolder, tenant);
 		final Path targetFolder = builder
@@ -116,12 +143,28 @@ public class FileStore implements epf.file.client.Files {
 		return Response.ok().links(links).build();
 	}
 
-	@Override
-	public StreamingOutput read(
+	/**
+	 * @param tenant
+	 * @param uriInfo
+	 * @param paths
+	 * @param security
+	 * @return
+	 * @throws Exception
+	 */
+	@GET
+    @jakarta.ws.rs.Path("{paths: .+}")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public StreamingOutput read(
+			@MatrixParam(Naming.Management.TENANT)
 			final String tenant,
-			final UriInfo uriInfo, 
-			final List<PathSegment> paths,
-			final SecurityContext security) throws Exception {
+    		@Context 
+    		final UriInfo uriInfo, 
+    		@PathParam("paths")
+    		@NotEmpty
+    		final List<PathSegment> paths,
+    		@Context
+			final SecurityContext security
+    		) throws Exception {
 		PathValidator.validate(paths, security, HttpMethod.GET);
 		final PathBuilder builder = new PathBuilder(system, rootFolder, tenant);
 		final Path targetFile = builder
@@ -130,11 +173,25 @@ public class FileStore implements epf.file.client.Files {
 		return new EntityOutput(Files.newInputStream(targetFile));
 	}
 
-	@Override
-	public Response delete(
+	/**
+	 * @param tenant
+	 * @param uriInfo
+	 * @param paths
+	 * @param security
+	 * @return
+	 * @throws Exception
+	 */
+	@DELETE
+    @jakarta.ws.rs.Path("{paths: .+}")
+    public Response delete(
+			@MatrixParam(Naming.Management.TENANT)
 			final String tenant,
-			final UriInfo uriInfo, 
-			final List<PathSegment> paths, 
+    		@Context 
+    		final UriInfo uriInfo, 
+    		@PathParam("paths")
+    		@NotEmpty
+    		final List<PathSegment> paths,
+    		@Context
 			final SecurityContext security) throws Exception {
 		PathValidator.validate(paths, security, HttpMethod.DELETE);
 		final PathBuilder builder = new PathBuilder(system, rootFolder, tenant);

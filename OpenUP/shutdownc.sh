@@ -19,6 +19,9 @@ cd ../
 cd EPF-workflow-management
 ./stop.sh
 cd ../
+cd EPF-file
+./stop.sh
+cd ../
 cd EPF-concurrent
 ./stop.sh
 cd ../

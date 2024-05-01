@@ -7,24 +7,20 @@ import java.nio.file.WatchService;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
-import javax.enterprise.concurrent.ManagedScheduledExecutorService;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Event;
+import jakarta.inject.Inject;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
-
 import epf.file.client.FileEvent;
-import epf.util.concurrent.Emitter;
-import epf.util.concurrent.EventEmitter;
+import epf.util.concurrent.ext.Emitter;
+import epf.util.concurrent.ext.EventEmitter;
 import epf.util.logging.LogManager;
 
 /**
@@ -61,12 +57,6 @@ public class FileWatchService implements HealthCheck {
 	 */
 	@Inject
 	private transient FileSystem system;
-	
-	/**
-	 * 
-	 */
-	@Resource(lookup = "java:comp/DefaultManagedScheduledExecutorService")
-	private transient ManagedScheduledExecutorService scheduledExecutor;
 	
 	/**
 	 *
@@ -107,7 +97,6 @@ public class FileWatchService implements HealthCheck {
 				final WatchService watchService = system.newWatchService();
 				path.register(watchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY, StandardWatchEventKinds.OVERFLOW);
 				final FileWatch fileWatch = new FileWatch(path, watchService, emitter);
-				fileWatch.setResult(scheduledExecutor.scheduleWithFixedDelay(fileWatch, 0, 40, TimeUnit.MILLISECONDS));
 				return fileWatch;
 			} 
 			catch (Exception e) {

@@ -6,16 +6,25 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
-import javax.annotation.security.RolesAllowed;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.ws.rs.HttpMethod;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.core.PathSegment;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.StreamingOutput;
-import javax.ws.rs.core.UriInfo;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HttpMethod;
+import jakarta.ws.rs.MatrixParam;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.PathSegment;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
+import jakarta.ws.rs.core.StreamingOutput;
+import jakarta.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import epf.file.cache.FileCache;
 import epf.file.internal.PathBuilder;
@@ -26,10 +35,10 @@ import epf.naming.Naming.Security;
 /**
  * 
  */
-@javax.ws.rs.Path(Naming.CACHE)
+@jakarta.ws.rs.Path(Naming.CACHE)
 @RolesAllowed(Security.DEFAULT_ROLE)
 @ApplicationScoped
-public class Cache implements epf.file.client.FileCache {
+public class Cache {
 	
 	/**
 	 * 
@@ -50,8 +59,30 @@ public class Cache implements epf.file.client.FileCache {
 	@Inject
 	private transient FileCache cache;
 
-	@Override
-	public Response putFile(final String tenant, final List<PathSegment> paths, final UriInfo uriInfo, final InputStream input, final SecurityContext security) throws Exception {
+	/**
+	 * @param tenant
+	 * @param paths
+	 * @param uriInfo
+	 * @param input
+	 * @param security
+	 * @return
+	 * @throws Exception
+	 */
+	@POST
+	@jakarta.ws.rs.Path("{paths: .+}")
+	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
+	public Response putFile(
+			@MatrixParam(Naming.Management.TENANT)
+			final String tenant,
+			@PathParam("paths")
+			@NotEmpty
+			final List<PathSegment> paths,
+			@Context 
+    		final UriInfo uriInfo,
+			final InputStream input,
+			@Context
+			final SecurityContext security
+			) throws Exception {
 		PathValidator.validate(paths, security, HttpMethod.POST);
 		final PathBuilder builder = new PathBuilder(system, rootFolder, tenant);
 		final Path targetFolder = builder
@@ -63,9 +94,28 @@ public class Cache implements epf.file.client.FileCache {
 		return Response.ok().build();
 	}
 
-	@Override
-	public StreamingOutput getFile(final String tenant, final UriInfo uriInfo, final List<PathSegment> paths, final SecurityContext security)
-			throws Exception {
+	/**
+	 * @param tenant
+	 * @param uriInfo
+	 * @param paths
+	 * @param security
+	 * @return
+	 * @throws Exception
+	 */
+	@GET
+    @jakarta.ws.rs.Path("{paths: .+}")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public StreamingOutput getFile(
+			@MatrixParam(Naming.Management.TENANT)
+			final String tenant,
+    		@Context 
+    		final UriInfo uriInfo, 
+    		@PathParam("paths")
+    		@NotEmpty
+    		final List<PathSegment> paths,
+    		@Context
+			final SecurityContext security
+    		) throws Exception {
 		PathValidator.validate(paths, security, HttpMethod.GET);
 		final PathBuilder builder = new PathBuilder(system, rootFolder, tenant);
 		final Path targetFile = builder
