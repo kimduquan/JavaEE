@@ -31,7 +31,6 @@ import epf.query.internal.QueryCache;
 import epf.query.persistence.QueryPersistence;
 import epf.query.util.LinkUtil;
 import epf.schema.utility.Request;
-import epf.util.concurrent.ext.Executor;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
 /**
@@ -65,12 +64,6 @@ public class Query {
 	 */
 	@Inject
 	transient Search search;
-	
-	/**
-	 *
-	 */
-	@Inject
-	transient Executor executor;
 	
 	/**
 	 * 
