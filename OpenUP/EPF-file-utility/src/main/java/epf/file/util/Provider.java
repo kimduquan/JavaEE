@@ -1,12 +1,9 @@
-/**
- * 
- */
 package epf.file.util;
 
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
 
 /**
  * @author PC

@@ -31,6 +31,7 @@ import epf.file.internal.PathBuilder;
 import epf.file.validation.PathValidator;
 import epf.naming.Naming;
 import epf.naming.Naming.Security;
+import io.smallrye.common.annotation.RunOnVirtualThread;
 
 /**
  * 
@@ -44,20 +45,20 @@ public class Cache {
 	 * 
 	 */
 	@Inject
-	private transient FileSystem system;
+	transient FileSystem system;
 	
 	/**
 	 * 
 	 */
 	@ConfigProperty(name = Naming.File.Cache.ROOT)
 	@Inject
-	private transient String rootFolder;
+	transient String rootFolder;
 	
 	/**
 	 *
 	 */
 	@Inject
-	private transient FileCache cache;
+	transient FileCache cache;
 
 	/**
 	 * @param tenant
@@ -71,6 +72,7 @@ public class Cache {
 	@POST
 	@jakarta.ws.rs.Path("{paths: .+}")
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
+	@RunOnVirtualThread
 	public Response putFile(
 			@MatrixParam(Naming.Management.TENANT)
 			final String tenant,
@@ -105,6 +107,7 @@ public class Cache {
 	@GET
     @jakarta.ws.rs.Path("{paths: .+}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
+	@RunOnVirtualThread
     public StreamingOutput getFile(
 			@MatrixParam(Naming.Management.TENANT)
 			final String tenant,

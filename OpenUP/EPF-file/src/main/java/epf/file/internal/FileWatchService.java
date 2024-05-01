@@ -50,25 +50,25 @@ public class FileWatchService implements HealthCheck {
 	 * 
 	 */
 	@Inject
-	private transient Event<FileEvent> events;
+	transient Event<FileEvent> events;
 	
 	/**
 	 * 
 	 */
 	@Inject
-	private transient FileSystem system;
+	transient FileSystem system;
 	
 	/**
 	 *
 	 */
 	@Inject
-	private transient ManagedExecutor executor;
+	transient ManagedExecutor executor;
 	
 	/**
 	 * 
 	 */
 	@PostConstruct
-	protected void postConstruct() {
+	void postConstruct() {
 		emitter = new EventEmitter<>(events);
 	}
 	
@@ -76,7 +76,7 @@ public class FileWatchService implements HealthCheck {
 	 * 
 	 */
 	@PreDestroy
-	protected void preDestroy() {
+	void preDestroy() {
 		fileWatches.forEach((p, watch) -> {
 			try {
 				watch.close();

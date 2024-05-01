@@ -44,6 +44,7 @@ import epf.file.validation.PathValidator;
 import epf.naming.Naming;
 import epf.naming.Naming.Security;
 import epf.util.logging.LogManager;
+import io.smallrye.common.annotation.RunOnVirtualThread;
 
 /**
  *
@@ -63,27 +64,27 @@ public class FileStore {
 	 * 
 	 */
 	@Inject
-	private transient FileSystem system;
+	transient FileSystem system;
 	
 	/**
 	 * 
 	 */
 	@ConfigProperty(name = Naming.File.ROOT)
 	@Inject
-	private transient String rootFolder;
+	transient String rootFolder;
 	
 	/**
 	 * 
 	 */
 	@Inject
 	@Readiness
-	private transient FileWatchService watchService;
+	transient FileWatchService watchService;
 	
 	/**
 	 * 
 	 */
 	@PostConstruct
-	protected void postConstruct() {
+	void postConstruct() {
 		final Path rootPath = system.getPath(rootFolder);
 		try {
 			LOGGER.info("[FileStore]epf.file.root=" + rootPath.toAbsolutePath().toString());
@@ -106,6 +107,7 @@ public class FileStore {
 	@POST
 	@jakarta.ws.rs.Path("{paths: .+}")
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
+	@RunOnVirtualThread
 	public Response createFile(
 			@MatrixParam(Naming.Management.TENANT)
 			final String tenant,
@@ -154,6 +156,7 @@ public class FileStore {
 	@GET
     @jakarta.ws.rs.Path("{paths: .+}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
+	@RunOnVirtualThread
     public StreamingOutput read(
 			@MatrixParam(Naming.Management.TENANT)
 			final String tenant,
@@ -183,6 +186,7 @@ public class FileStore {
 	 */
 	@DELETE
     @jakarta.ws.rs.Path("{paths: .+}")
+	@RunOnVirtualThread
     public Response delete(
 			@MatrixParam(Naming.Management.TENANT)
 			final String tenant,

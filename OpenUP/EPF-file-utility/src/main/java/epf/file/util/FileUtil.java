@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.file.util;
 
 import java.io.IOException;

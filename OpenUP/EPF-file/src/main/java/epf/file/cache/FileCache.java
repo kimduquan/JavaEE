@@ -39,13 +39,13 @@ public class FileCache {
 	 * 
 	 */
 	@Inject
-	private transient FileSystem system;
+	transient FileSystem system;
 	
 	/**
 	 * 
 	 */
 	@PreDestroy
-	protected void preDestroy() {
+	void preDestroy() {
 		files.forEach((p, buffer) -> {
 			buffer.clear();
 		});
