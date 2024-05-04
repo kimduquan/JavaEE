@@ -1,5 +1,6 @@
 package epf.security.schema;
 
+import java.io.Serializable;
 import java.util.Map;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -12,7 +13,6 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import org.eclipse.microprofile.graphql.Type;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import epf.schema.utility.EPFEntity;
 
 /**
  *
@@ -22,7 +22,7 @@ import epf.schema.utility.EPFEntity;
 @Schema(name = Security.PRINCIPAL, title = "Principal")
 @Entity(name = Security.PRINCIPAL)
 @Table(schema = Security.SCHEMA, name = "PRINCIPAL", indexes = {@Index(columnList = "NAME")})
-public class Principal extends EPFEntity {
+public class Principal implements Serializable {
 
     /**
 	 * 
