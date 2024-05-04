@@ -2,7 +2,7 @@ package epf.logging;
 
 import java.util.Objects;
 import java.util.logging.Level;
-import epf.util.websocket.Client;
+import epf.util.websocket.ext.Client;
 
 /**
  * @author PC

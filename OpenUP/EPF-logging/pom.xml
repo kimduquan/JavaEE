@@ -4,9 +4,9 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
 	<groupId>epf</groupId>
-	<artifactId>EPF-parent</artifactId>
+	<artifactId>EPF-parent-ext</artifactId>
 	<version>1.0.0</version>
-	<relativePath>../EPF-parent/pom.xml</relativePath>
+	<relativePath>../EPF-parent-ext/pom.xml</relativePath>
   </parent>
   <artifactId>EPF-logging</artifactId>
   <name>Eclipse Process Framework Logging</name>
@@ -17,7 +17,7 @@
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy-reactive</artifactId>
+      <artifactId>quarkus-rest</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -53,7 +53,7 @@
     </dependency>
     <dependency>
         <groupId>openup</groupId>
-        <artifactId>EPF-websocket-utility</artifactId>
+        <artifactId>EPF-websocket-utility-ext</artifactId>
         <version>${project.version}</version>
     </dependency>
   </dependencies>

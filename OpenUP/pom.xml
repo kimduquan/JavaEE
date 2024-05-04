@@ -853,6 +853,7 @@
 		<module>EPF-utility</module>
 		<module>EPF-logging-utility</module>
 		<module>EPF-websocket-utility</module>
+		<module>EPF-websocket-utility-ext</module>
 		<module>EPF-concurrent-utility</module>
 		<module>EPF-concurrent-utility-ext</module>
 		<module>EPF-xml-utility</module>
