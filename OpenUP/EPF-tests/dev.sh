@@ -1,6 +1,5 @@
 mkdir -p ./target/.libertyDevc/apps/
 cp -R -d ./target/servers/test/apps/ ./target/.libertyDevc/apps/
-mkdir -p ./target/servers/test/epf.file.root/
 
 . ../env.sh
 . ../config.sh
@@ -12,6 +11,7 @@ cp $SOURCE_DIR/dev.p12 ./
 cp $SOURCE_DIR/private.pem ./
 cp $SOURCE_DIR/public.pem ./
 mvn clean install -U -P Container -DskipITs
+mkdir -p ./target/servers/test/epf.file.root/
 docker build -t openup:1.0.0 ./
 ./stop.sh
 ./start.sh
