@@ -18,11 +18,11 @@ import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.naming.Naming;
-import epf.schema.utility.TenantUtil;
 import epf.security.internal.JPAPrincipal;
 import epf.security.internal.NativeQueries;
 import epf.security.schema.Security;
 import epf.security.util.Credential;
+import epf.security.util.TenantUtil;
 import epf.util.StringUtil;
 
 /**

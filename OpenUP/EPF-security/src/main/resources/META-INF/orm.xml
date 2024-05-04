@@ -3,10 +3,7 @@
 	<persistence-unit-metadata>
 		<persistence-unit-defaults>
 			<entity-listeners>
-				<entity-listener class="epf.schema.utility.EntityListener">
-				</entity-listener>
 			</entity-listeners>
 		</persistence-unit-defaults>
 	</persistence-unit-metadata>
-	<converter class="epf.schema.utility.JsonConverter" auto-apply="true" />
 </entity-mappings>
