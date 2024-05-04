@@ -10,6 +10,9 @@
   </parent>
   <artifactId>EPF-logging</artifactId>
   <name>Eclipse Process Framework Logging</name>
+	<properties>
+		<maven.compiler.release>21</maven.compiler.release>
+	</properties>
   <dependencies>
     <dependency>
       <groupId>io.quarkus</groupId>

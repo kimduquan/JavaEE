@@ -1,6 +1,6 @@
 package epf.util.websocket.ext;
 
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

@@ -2,7 +2,7 @@ package epf.util.websocket.ext;
 
 import java.util.function.Consumer;
 import java.util.logging.Logger;
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 import epf.util.logging.LogManager;
 
 /**

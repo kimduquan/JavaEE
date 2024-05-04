@@ -1,7 +1,7 @@
 package epf.util.websocket.ext;
 
 import java.util.function.Consumer;
-import epf.util.concurrent.ObjectTopic;
+import epf.util.concurrent.ext.ObjectTopic;
 
 /**
  * @author PC

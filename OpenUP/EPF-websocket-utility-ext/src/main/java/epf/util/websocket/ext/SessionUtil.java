@@ -2,8 +2,8 @@ package epf.util.websocket.ext;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.json.Json;
-import javax.websocket.Session;
+import jakarta.json.Json;
+import jakarta.websocket.Session;
 
 /**
  * @author PC

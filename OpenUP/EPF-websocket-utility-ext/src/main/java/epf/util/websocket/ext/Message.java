@@ -3,8 +3,8 @@ package epf.util.websocket.ext;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
-import javax.websocket.EncodeException;
-import javax.websocket.Session;
+import jakarta.websocket.EncodeException;
+import jakarta.websocket.Session;
 
 /**
  * @author PC

@@ -2,8 +2,8 @@ package epf.util.websocket.ext;
 
 import java.io.Closeable;
 import java.util.logging.Logger;
-import javax.websocket.CloseReason;
-import javax.websocket.Session;
+import jakarta.websocket.CloseReason;
+import jakarta.websocket.Session;
 import epf.util.logging.LogManager;
 
 /**

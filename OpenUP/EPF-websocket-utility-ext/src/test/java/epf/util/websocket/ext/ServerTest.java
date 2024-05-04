@@ -1,7 +1,7 @@
 package epf.util.websocket.ext;
 
 import java.time.Instant;
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

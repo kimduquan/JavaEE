@@ -2,8 +2,8 @@ package epf.util.websocket.ext;
 
 import java.util.Objects;
 import java.util.logging.Logger;
-import javax.websocket.Session;
-import epf.util.concurrent.ObjectQueue;
+import jakarta.websocket.Session;
+import epf.util.concurrent.ext.ObjectQueue;
 import epf.util.logging.LogManager;
 
 /**
