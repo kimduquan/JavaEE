@@ -1,6 +1,3 @@
-mkdir -p ./target/.libertyDevc/apps/
-cp -R -d ./target/servers/test/apps/ ./target/.libertyDevc/apps/
-
 . ../env.sh
 . ../config.sh
 cp $USER_DIR/EPF-query.trace.db ./
