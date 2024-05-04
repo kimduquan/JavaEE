@@ -11,7 +11,6 @@ cp $SOURCE_DIR/dev.p12 ./
 cp $SOURCE_DIR/private.pem ./
 cp $SOURCE_DIR/public.pem ./
 mvn clean install -U -P Container -DskipITs
-mkdir -p ./target/servers/test/epf.file.root/
 docker build -t openup:1.0.0 ./
 ./stop.sh
 ./start.sh
