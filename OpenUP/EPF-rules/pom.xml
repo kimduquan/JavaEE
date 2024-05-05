@@ -88,15 +88,5 @@
 		    <groupId>org.drools</groupId>
 		    <artifactId>drools-jsr94</artifactId>
 		</dependency>
-		<dependency>
-            <groupId>openup</groupId>
-            <artifactId>OpenUP-schema</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>openup</groupId>
-            <artifactId>EPF-net-schema</artifactId>
-            <version>${project.version}</version>
-        </dependency>
     </dependencies>
 </project>

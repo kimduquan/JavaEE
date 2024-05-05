@@ -1,6 +1,3 @@
-/**
- * 
- */
 package epf.planning;
 
 import java.util.Arrays;
