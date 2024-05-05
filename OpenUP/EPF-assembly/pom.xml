@@ -144,14 +144,6 @@
                     <deployPackages>dependencies</deployPackages>
 							<copyDependencies>
 								<dependencyGroup>
-									<location>${project.build.directory}/shared/resources/epf/persistence</location>
-	                                <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
-									<dependency>
-									    <groupId>org.postgresql</groupId>
-			    						<artifactId>postgresql</artifactId>
-									</dependency>
-								</dependencyGroup>
-								<dependencyGroup>
 									<location>${project.build.directory}/shared/resources/epf/security</location>
 									<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
 									<dependency>

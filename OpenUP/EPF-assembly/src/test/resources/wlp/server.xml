@@ -15,7 +15,6 @@
         <feature>jpa-2.2</feature>
         <feature>websocket-1.1</feature>
         <feature>jca-1.7</feature>
-        <feature>jsf-2.3</feature>
         <feature>javaMail-1.6</feature>
     </featureManager>
     
@@ -32,9 +31,6 @@
     </application>
 	<application id="EPF-script" name="EPF-script" context-root="script" location="EPF-script-1.0.0.war" >
         <classloader classProviderRef="jppf" apiTypeVisibility="spec,ibm-api,api,stable,third-party"/>
-    </application>
-	<application id="EPF-management" name="EPF-management" context-root="management" location="EPF-management-1.0.0.war" >
-        <classloader apiTypeVisibility="+third-party"/>
     </application>
     <application id="EPF-mail" name="EPF-mail" context-root="mail" location="EPF-mail-1.0.0.war">
         <classloader apiTypeVisibility="+third-party"/>
@@ -84,7 +80,7 @@
 	    <transportProtocol>smtp</transportProtocol>
 	    <host>smtp.gmail.com</host>
 	    <user>kimduquan01@gmail.com</user>
-	    <password>pdjnxktsdcyqfdjw</password>
+	    <password>mkaknpzvynipbphi</password>
 	    <from>kimduquan01@gmail.com</from>
 	    <property name="mail.imap.host" value="imap.gmail.com" />
 	    <property name="mail.smtp.port" value="587" />
@@ -97,18 +93,7 @@
         <fileset dir="${shared.resource.dir}/epf/security" includes="*.jar"/>
     </library>
     
-    <library id="PostgreSQLJDBCLib">
-        <fileset dir="${shared.resource.dir}/epf/persistence" includes="*.jar"/>
-    </library>
-    
-    <dataSource id="epf_schema" jndiName="jdbc/epf_schema">
-        <jdbcDriver libraryRef="PostgreSQLJDBCLib"/>
-	    <properties.postgresql serverName="localhost" portNumber="5432"
-	                databaseName="epf"
-	                user="postgres"
-	                password="090323508"/>
-    </dataSource>
-	<dataSource id="epf_security_management" jndiName="jdbc/epf_security_management">
+    <dataSource id="epf_security_management" jndiName="jdbc/epf_security_management">
         <jdbcDriver 
             javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"
             javax.sql.ConnectionPoolDataSource="org.h2.jdbcx.JdbcDataSource"
