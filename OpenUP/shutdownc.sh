@@ -25,13 +25,13 @@ cd ../
 cd EPF-concurrent
 ./stop.sh
 cd ../
+cd EPF-tests
+./stop.sh
+cd ../
 cd EPF-registry
 ./stop.sh
 cd ../
 cd EPF-net
-./stop.sh
-cd ../
-cd EPF-tests
 ./stop.sh
 cd ../
 cd EPF-query

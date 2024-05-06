@@ -26,15 +26,15 @@ cd EPF-query
 ./start.sh
 cd ../
 
-cd EPF-tests
-./start.sh
-cd ../
-
 cd EPF-net
 ./start.sh
 cd ../
 
 cd EPF-registry
+./start.sh
+cd ../
+
+cd EPF-tests
 ./start.sh
 cd ../
 
