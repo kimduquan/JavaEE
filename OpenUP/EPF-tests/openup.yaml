@@ -8,7 +8,7 @@ metadata:
 spec:
   applicationImage: openup:1.0.0
   service:
-    port: 9443
+    port: 9080
   expose: true
   route:
     pathType: ImplementationSpecific
