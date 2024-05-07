@@ -41,7 +41,6 @@ public class Security {
 	/**
 	 * 
 	 */
-	@Inject
 	@RestClient
 	transient SecurityClient security;
 	

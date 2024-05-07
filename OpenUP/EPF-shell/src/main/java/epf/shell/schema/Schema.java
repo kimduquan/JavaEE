@@ -5,7 +5,6 @@ import epf.shell.Function;
 import epf.shell.security.Credential;
 import epf.shell.security.CallerPrincipal;
 import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import picocli.CommandLine.ArgGroup;
@@ -23,7 +22,6 @@ public class Schema {
 	/**
 	 * 
 	 */
-	@Inject
 	@RestClient
 	transient SchemaClient schema;
 	

@@ -7,7 +7,6 @@ import epf.shell.security.CallerPrincipal;
 import epf.shell.security.Credential;
 import epf.shell.workflow.management.Management;
 import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
@@ -25,7 +24,6 @@ public class Workflow {
 	/**
 	 * 
 	 */
-	@Inject
 	@RestClient
 	transient WorkflowClient client;
 	

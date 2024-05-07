@@ -2,7 +2,6 @@ package epf.shell.mail;
 
 import java.util.Map;
 import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import epf.mail.client.Message;
@@ -25,7 +24,6 @@ public class Mail {
 	/**
 	 * 
 	 */
-	@Inject
 	@RestClient
 	transient MailClient mail;
 	

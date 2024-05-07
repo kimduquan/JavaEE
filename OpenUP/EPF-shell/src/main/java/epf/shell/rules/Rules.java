@@ -8,7 +8,6 @@ import epf.shell.rules.admin.Admin;
 import epf.shell.security.Credential;
 import epf.shell.security.CallerPrincipal;
 import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -25,7 +24,6 @@ public class Rules {
 	/**
 	 * 
 	 */
-	@Inject
 	@RestClient
 	transient RulesClient rules;
 	

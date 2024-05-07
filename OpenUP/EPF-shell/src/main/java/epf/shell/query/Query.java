@@ -1,7 +1,6 @@
 package epf.shell.query;
 
 import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import epf.naming.Naming;
@@ -24,7 +23,6 @@ public class Query {
 	/**
 	 * 
 	 */
-	@Inject
 	@RestClient
 	transient QueryClient query;
 	

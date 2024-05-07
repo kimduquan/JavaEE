@@ -9,7 +9,6 @@ import epf.shell.Function;
 import epf.shell.security.Credential;
 import epf.shell.security.CallerPrincipal;
 import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -26,7 +25,6 @@ public class Admin {
 	/**
 	 * 
 	 */
-	@Inject
 	@RestClient
 	transient AdminClient admin;
 
