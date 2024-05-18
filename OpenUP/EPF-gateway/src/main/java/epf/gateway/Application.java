@@ -79,7 +79,7 @@ public class Application {
     protected void postConstruct() {
     	final Optional<URI> uri = registry.lookup(Naming.CONCURRENT);
     	try {
-			concurrent.connectToServer(uri.get());
+			concurrent.connectToServer(uri.get().resolve(Naming.Concurrent.SYNCHRONIZED));
 		} 
     	catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "postConstruct", e);

@@ -142,7 +142,7 @@ public interface Naming {
 		/**
 		 * 
 		 */
-		String SYNCHRONIZED = "/synchronized";
+		String SYNCHRONIZED = "synchronized";
 	}
 	
 	/**

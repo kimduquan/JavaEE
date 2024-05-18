@@ -14,7 +14,7 @@ import jakarta.websocket.server.ServerEndpoint;
 /**
  * 
  */
-@ServerEndpoint(value = Naming.Concurrent.SYNCHRONIZED)
+@ServerEndpoint(value = "/" + Naming.Concurrent.SYNCHRONIZED)
 @ApplicationScoped
 public class Synchronized {
 
