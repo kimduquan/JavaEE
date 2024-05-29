@@ -32,7 +32,7 @@
     </dependencies>
 
     <build>
-        <finalName>epf-driver</finalName>
+        <finalName>EPF-driver</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>
