@@ -92,7 +92,7 @@ public class Search {
 			final String text) {
 		final Query query = createSearchQuery(FULLTEXT_SEARCH_COUNT, tenant, text, 0, 0);
 		final Long count = (Long) query.getSingleResult();
-		return Response.ok().header(epf.naming.Naming.Query.Client.ENTITY_COUNT, count).build();
+		return Response.ok().header(Naming.Query.Client.ENTITY_COUNT, count).build();
 	}
 	
 	/**
