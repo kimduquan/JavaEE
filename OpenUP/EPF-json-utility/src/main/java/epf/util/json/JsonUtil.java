@@ -411,17 +411,15 @@ public interface JsonUtil {
 		Objects.requireNonNull(list, "List");
 		Objects.requireNonNull(cls, "Class");
 		final List<T> result = new ArrayList<>();
-		try(Jsonb jsonb = JsonbBuilder.create()){
-			for(Object object : list) {
-				if(object instanceof Map) {
-					@SuppressWarnings("unchecked")
-					final Map<String, Object> map = (Map<String, Object>) object;
-					final T t = fromMap(map, cls);
-					result.add(t);
-				}
-				else {
-					result.add(null);
-				}
+		for(Object object : list) {
+			if(object instanceof Map) {
+				@SuppressWarnings("unchecked")
+				final Map<String, Object> map = (Map<String, Object>) object;
+				final T t = fromMap(map, cls);
+				result.add(t);
+			}
+			else {
+				result.add(null);
 			}
 		}
 		return result;
@@ -438,17 +436,15 @@ public interface JsonUtil {
 		Objects.requireNonNull(list, "List");
 		Objects.requireNonNull(convert, "Function");
 		final List<T> result = new ArrayList<>();
-		try(Jsonb jsonb = JsonbBuilder.create()){
-			for(Object object : list) {
-				if(object instanceof Map) {
-					@SuppressWarnings("unchecked")
-					final Map<String, Object> map = (Map<String, Object>) object;
-					final T t = convert.apply(map);
-					result.add(t);
-				}
-				else {
-					result.add(null);
-				}
+		for(Object object : list) {
+			if(object instanceof Map) {
+				@SuppressWarnings("unchecked")
+				final Map<String, Object> map = (Map<String, Object>) object;
+				final T t = convert.apply(map);
+				result.add(t);
+			}
+			else {
+				result.add(null);
 			}
 		}
 		return result;
