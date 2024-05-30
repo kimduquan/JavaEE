@@ -13,7 +13,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-    <quarkus.platform.version>3.10.2</quarkus.platform.version>
+    <quarkus.platform.version>3.11.0</quarkus.platform.version>
     <skipITs>true</skipITs>
     <surefire-plugin.version>3.2.5</surefire-plugin.version>
   </properties>
@@ -36,19 +36,19 @@
 		<dependency>
 		    <groupId>io.quarkiverse.jnosql</groupId>
 		    <artifactId>quarkus-jnosql-document-mongodb</artifactId>
-		    <version>3.2.2.1</version>
+		    <version>3.3.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.quarkiverse.jnosql/quarkus-jnosql-column-cassandra -->
 		<dependency>
 		    <groupId>io.quarkiverse.jnosql</groupId>
 		    <artifactId>quarkus-jnosql-column-cassandra</artifactId>
-		    <version>3.2.2.1</version>
+		    <version>3.3.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.quarkiverse.jnosql/quarkus-jnosql-keyvalue-hazelcast -->
 		<dependency>
 		    <groupId>io.quarkiverse.jnosql</groupId>
 		    <artifactId>quarkus-jnosql-keyvalue-hazelcast</artifactId>
-		    <version>3.2.2.1</version>
+		    <version>3.3.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.quarkiverse.opentracing/quarkus-smallrye-opentracing -->
 		<dependency>
@@ -95,7 +95,7 @@
 		<plugin>
 		    <groupId>org.apache.maven.plugins</groupId>
 		    <artifactId>maven-pmd-plugin</artifactId>
-		    <version>3.21.2</version>
+		    <version>3.22.0</version>
 		</plugin>
 		<plugin>
 			<groupId>org.apache.maven.plugins</groupId>
@@ -110,18 +110,18 @@
 		<plugin>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-jar-plugin</artifactId>
-			<version>3.4.0</version>
+			<version>3.4.1</version>
 		</plugin>
 		<plugin>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-install-plugin</artifactId>
-			<version>3.1.1</version>
+			<version>3.1.2</version>
 		</plugin>
 		<!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-deploy-plugin -->
 		<plugin>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-deploy-plugin</artifactId>
-			<version>3.1.1</version>
+			<version>3.1.2</version>
 		</plugin>
 		<!-- https://mvnrepository.com/artifact/org.codehaus.izpack/izpack-maven-plugin -->
 		<plugin>
