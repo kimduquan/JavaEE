@@ -12,7 +12,7 @@ import epf.naming.Naming.Messaging.Internal;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.nosql.column.ColumnTemplate;
+import org.eclipse.jnosql.mapping.column.ColumnTemplate;
 
 /**
  * 
