@@ -185,53 +185,51 @@ public class Application {
     	final List<Response> linkResponses = new CopyOnWriteArrayList<>();
     	final List<Link> links = HATEOAS.getRequestLinks(response).collect(Collectors.toList());
     	for(Link link : links) {
-    		if(HATEOAS.isRequestLink(link)) {
-    			if(HATEOAS.isSynchronized(link)) {
-        			final Link targetLink = HATEOAS.isSelfLink(link) ? self : link;
-        			if(partialEntityIterator.hasNext()) {
-        				prevLinkEntity = Optional.ofNullable(partialEntityIterator.next());
-        				prevMediaType = mediaType;
-        			}
-        			
-    				final Optional<String> synchronized_ = HATEOAS.synchronized_(targetLink);
-    				if(synchronized_.isPresent()) {
-    					final Synchronized _synchronized = concurrent.synchronized_(synchronized_.get());
-    					final Optional<String> time = HATEOAS.time(targetLink);
-    					if(time.isPresent()) {
-    						_synchronized.synchronized_(Duration.parse(time.get()));
-    					}
-    					else {
-    						_synchronized.synchronized_();
-    					}
-    				}
-    				final Optional<String> continue_ = HATEOAS.continue_(targetLink);
-    				if(continue_.isPresent()) {
-    					concurrent.synchronized_(synchronized_.get()).return_();
+    		if(HATEOAS.isRequestLink(link) && HATEOAS.isSynchronized(link)) {
+    			final Link targetLink = HATEOAS.isSelfLink(link) ? self : link;
+    			if(partialEntityIterator.hasNext()) {
+    				prevLinkEntity = Optional.ofNullable(partialEntityIterator.next());
+    				prevMediaType = mediaType;
+    			}
+    			
+				final Optional<String> synchronized_ = HATEOAS.synchronized_(targetLink);
+				if(synchronized_.isPresent()) {
+					final Synchronized _synchronized = concurrent.synchronized_(synchronized_.get());
+					final Optional<String> time = HATEOAS.time(targetLink);
+					if(time.isPresent()) {
+						_synchronized.synchronized_(Duration.parse(time.get()));
+					}
+					else {
+						_synchronized.synchronized_();
+					}
+				}
+				final Optional<String> continue_ = HATEOAS.continue_(targetLink);
+				if(continue_.isPresent()) {
+					concurrent.synchronized_(synchronized_.get()).return_();
+				}
+				
+    			Response linkResponse = buildLinkRequest(client, prevLinkResponse, prevLinkEntity, prevMediaType, headers, targetLink);
+    			if(isSuccessful(linkResponse)) {
+    				final boolean isPartialLink = isPartial(linkResponse);
+    				if(HATEOAS.hasEntity(link)) {
+        				prevLinkEntity = HATEOAS.readEntity(linkResponse);
+        				prevMediaType = linkResponse.getMediaType();
     				}
     				
-        			Response linkResponse = buildLinkRequest(client, prevLinkResponse, prevLinkEntity, prevMediaType, headers, targetLink);
-        			if(isSuccessful(linkResponse)) {
-        				final boolean isPartialLink = isPartial(linkResponse);
-        				if(HATEOAS.hasEntity(link)) {
-            				prevLinkEntity = HATEOAS.readEntity(linkResponse);
-            				prevMediaType = linkResponse.getMediaType();
-        				}
-        				
-        				linkResponse = buildLinkRequests(client, linkResponse, prevLinkEntity, prevMediaType, headers, targetLink, isPartialLink);
-        				
-        				if(isSuccessful(linkResponse)) {
-                			linkResponses.add(linkResponse);
-            				prevLinkResponse = linkResponse;
-            				prevLinkEntity = HATEOAS.readEntity(linkResponse);
-            				prevMediaType = linkResponse.getMediaType();
-        				}
-        				else {
-        					return linkResponse;
-        				}
+    				linkResponse = buildLinkRequests(client, linkResponse, prevLinkEntity, prevMediaType, headers, targetLink, isPartialLink);
+    				
+    				if(isSuccessful(linkResponse)) {
+            			linkResponses.add(linkResponse);
+        				prevLinkResponse = linkResponse;
+        				prevLinkEntity = HATEOAS.readEntity(linkResponse);
+        				prevMediaType = linkResponse.getMediaType();
     				}
-        			else {
-        				return linkResponse;
-        			}
+    				else {
+    					return linkResponse;
+    				}
+				}
+    			else {
+    				return linkResponse;
     			}
     		}
     	}

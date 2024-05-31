@@ -281,7 +281,7 @@ public class ResponseUtil extends Response {
      * @return
      */
     public static Response buildResponse(final Response response, final URI baseUri){
-    	ResponseBuilder builder = Response.fromResponse(response);
+    	ResponseBuilder builder = fromResponse(response);
 		Set<Link> links = response.getLinks();
 		if(links != null){
 			links = links
