@@ -114,7 +114,7 @@ public class WorkflowEvents {
 	
 	private Map<String, Object> eventData(final EventRefDefinition eventRefDefinition, final EventDefinition eventRef, final URI instance, final WorkflowData workflowData) throws Exception {
 		final Map<String, Object> ext = new HashMap<>();
-		final epf.event.schema.Event event = newEvent(eventRef, instance, ext);
+		final Event event = newEvent(eventRef, instance, ext);
 		Object data = null;
 		if(eventRefDefinition.getData().isLeft()) {
 			final JsonValue value = workflowExpressions.getValue(eventRefDefinition.getData().getLeft(), workflowData.getInput());
@@ -172,7 +172,7 @@ public class WorkflowEvents {
 	
 	private Map<String, Object> produceEventData(final ProducedEventDefinition producedEventDefinition, final EventDefinition eventDefinition, final URI instance, final WorkflowData workflowData) throws Exception {
 		final Map<String, Object> ext = new HashMap<>();
-		final epf.event.schema.Event event = newEvent(eventDefinition, instance, ext);
+		final Event event = newEvent(eventDefinition, instance, ext);
 		Object data = null;
 		if(producedEventDefinition.getData().isLeft()) {
 			final JsonValue value = workflowExpressions.getValue(producedEventDefinition.getData().getLeft(), workflowData.getInput());
@@ -213,17 +213,17 @@ public class WorkflowEvents {
 			for(String eventRef : onEventsDefinition.getEventRefs()) {
 				final EventDefinition eventDefinition = eventDefinitions.get(eventRef);
 				final Map<String, Object> map = new HashMap<>();
-				final epf.event.schema.Event event = newEvent(eventDefinition, instance, map);
-				map.put(epf.naming.Naming.Event.Schema.SOURCE, event.getSource());
-				map.put(epf.naming.Naming.Event.Schema.SUBJECT, event.getSubject());
-				map.put(epf.naming.Naming.Event.Schema.TYPE, event.getType());
+				final Event event = newEvent(eventDefinition, instance, map);
+				map.put(Naming.Event.Schema.SOURCE, event.getSource());
+				map.put(Naming.Event.Schema.SUBJECT, event.getSubject());
+				map.put(Naming.Event.Schema.TYPE, event.getType());
 				events.add(map);
 			}
 		}
 		return events;
 	}
 	
-	private boolean onEvent(final EventDefinition eventDefinition, final List<Map<String, Object>> eventDatas, final List<epf.event.schema.Event> events) throws Exception {
+	private boolean onEvent(final EventDefinition eventDefinition, final List<Map<String, Object>> eventDatas, final List<Event> events) throws Exception {
 		boolean equals = true;
 		final Iterator<Map<String, Object>> eventData = eventDatas.iterator();
 		while(eventData.hasNext()) {
@@ -255,7 +255,7 @@ public class WorkflowEvents {
 		return equals;
 	}
 	
-	public boolean onEvents(final WorkflowDefinition workflowDefinition, final EventState eventState, final OnEventsDefinition onEventsDefinition, final Map<String, EventDefinition> eventDefinitions, final List<Map<String, Object>> eventDatas, final List<epf.event.schema.Event> events) throws Exception {
+	public boolean onEvents(final WorkflowDefinition workflowDefinition, final EventState eventState, final OnEventsDefinition onEventsDefinition, final Map<String, EventDefinition> eventDefinitions, final List<Map<String, Object>> eventDatas, final List<Event> events) throws Exception {
 		final List<EventDefinition> onEvents = MapUtil.getAll(eventDefinitions, onEventsDefinition.getEventRefs().iterator());
 		boolean all = true;
 		boolean any = false;

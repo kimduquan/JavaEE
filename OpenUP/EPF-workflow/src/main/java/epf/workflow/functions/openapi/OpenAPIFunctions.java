@@ -46,7 +46,7 @@ public class OpenAPIFunctions {
 		return OpenApiParser.parse(url);
 	}
 
-	private OpenAPI getOpenAPI(final WorkflowDefinition workflowDefinition, final FunctionDefinition functionDefinition) throws Exception {
+	private OpenAPI getOpenAPI(final FunctionDefinition functionDefinition) throws Exception {
 		final int index = functionDefinition.getOperation().indexOf("#");
 		final String pathToOpenAPIDefinition = functionDefinition.getOperation().substring(0, index);
 		if(!openAPIs.containsKey(pathToOpenAPIDefinition)) {
@@ -64,7 +64,7 @@ public class OpenAPIFunctions {
 		return operationId;
 	}
 	
-	private Response invoke(final WorkflowDefinition workflowDefinition, final FunctionDefinition functionDefinition, final JsonValue data, final OpenAPI openAPI, final String path, final PathItem pathItem, final org.eclipse.microprofile.openapi.models.PathItem.HttpMethod httpMethod, final Operation operation) throws Exception {
+	private Response invoke(final WorkflowDefinition workflowDefinition, final FunctionDefinition functionDefinition, final JsonValue data, final OpenAPI openAPI, final String path, final PathItem pathItem, final PathItem.HttpMethod httpMethod, final Operation operation) throws Exception {
 		Server server = openAPI.getServers().iterator().next();
 		if(operation.getServers() != null && !operation.getServers().isEmpty()) {
 			server = operation.getServers().iterator().next();
@@ -151,12 +151,12 @@ public class OpenAPIFunctions {
 	
 	public Response openapi(final WorkflowDefinition workflowDefinition, final FunctionDefinition functionDefinition, final JsonValue data) throws Exception {
 		final String operationId = getOperationId(functionDefinition);
-		final OpenAPI openAPI = getOpenAPI(workflowDefinition, functionDefinition);
+		final OpenAPI openAPI = getOpenAPI(functionDefinition);
 		for(Entry<String, PathItem> pathItemEntry : openAPI.getPaths().getPathItems().entrySet()) {
 			final String path = pathItemEntry.getKey();
 			final PathItem pathItem = pathItemEntry.getValue();
-			for(Entry<org.eclipse.microprofile.openapi.models.PathItem.HttpMethod, Operation> operationEntry : pathItem.getOperations().entrySet()) {
-				final org.eclipse.microprofile.openapi.models.PathItem.HttpMethod httpMethod = operationEntry.getKey();
+			for(Entry<PathItem.HttpMethod, Operation> operationEntry : pathItem.getOperations().entrySet()) {
+				final PathItem.HttpMethod httpMethod = operationEntry.getKey();
 				final Operation operation = operationEntry.getValue();
 				if(operation.getOperationId().equals(operationId)) {
 					return invoke(workflowDefinition, functionDefinition, data, openAPI, path, pathItem, httpMethod, operation);
