@@ -40,7 +40,6 @@ public class SecurityAuthServlet extends HttpServlet {
 					final String redirectUrl = epf.webapp.naming.Naming.Security.Auth.CONTEXT_ROOT + epf.webapp.naming.Naming.View.SECURITY_AUTH_PAGE + "?" + req.getQueryString() + "&cid=" + cid + "&javax.faces.Token=" + URLEncoder.encode(csrfToken, "UTF-8");
 					resp.setHeader("Referrer-Policy", "no-referrer");
 					resp.sendRedirect(redirectUrl);
-					return;
 				}
 			}
 		}

@@ -103,7 +103,7 @@ public class SecurityAuth {
 		authRequest.setClient_id(config.getProperty(Naming.Security.Auth.GOOGLE_CLIENT_ID));
 		authRequest.setRedirect_uri(config.getProperty(Naming.Security.Auth.AUTH_URL));
 		final ProviderMetadata metadata = authFlow.getProviderConfig(clientBuilder, googleDiscoveryUrl);
-		providers.put(epf.naming.Naming.Security.Auth.GOOGLE, googleProvider);
+		providers.put(Naming.Security.Auth.GOOGLE, googleProvider);
 		return metadata;
 	}
 	
@@ -117,7 +117,7 @@ public class SecurityAuth {
 		authRequest.setClient_id(config.getProperty(Naming.Security.Auth.FACEBOOK_CLIENT_ID));
 		authRequest.setRedirect_uri(config.getProperty(Naming.Security.Auth.AUTH_URL));
 		final ProviderMetadata metadata = authFlow.getProviderConfig(clientBuilder, facebookDiscoveryUrl);
-		providers.put(epf.naming.Naming.Security.Auth.FACEBOOK, facebookProvider);
+		providers.put(Naming.Security.Auth.FACEBOOK, facebookProvider);
 		return metadata;
 	}
 	
