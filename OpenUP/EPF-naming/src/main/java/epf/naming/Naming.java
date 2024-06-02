@@ -354,6 +354,38 @@ public interface Naming {
 	}
 	
 	/**
+	 * 
+	 */
+	String LANG = "lang";
+	
+	/**
+	 * 
+	 */
+	interface Lang {
+		
+		/**
+		 * 
+		 */
+		String LANG_URL = "epf.lang.url";
+		
+		/**
+		 * 
+		 */
+		interface Internal {
+			
+			/**
+			 * 
+			 */
+			String OLLAMA = "ollama";
+			
+			/**
+			 * 
+			 */
+			String MODEL = "model";
+		}
+	}
+	
+	/**
 	 *
 	 */
 	String MAIL = "mail";
