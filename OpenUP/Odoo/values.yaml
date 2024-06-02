@@ -613,7 +613,7 @@ persistence:
   accessMode: ReadWriteOnce
   ## @param persistence.size Persistent Volume size
   ##
-  size: 10Gi
+  size: 1Gi
   ## @param persistence.dataSource Custom PVC data source
   ##
   dataSource: {}
@@ -718,11 +718,11 @@ autoscaling:
 ## @param postgresql.architecture PostgreSQL architecture (`standalone` or `replication`)
 ##
 postgresql:
-  enabled: true
+  enabled: false
   auth:
-    username: bn_odoo
-    password: ""
-    database: bitnami_odoo
+    username: odoo
+    password: "123456"
+    database: odoo
     existingSecret: ""
   architecture: standalone
 ## External PostgreSQL configuration
@@ -740,14 +740,14 @@ postgresql:
 ## @param externalDatabase.existingSecretPostgresPasswordKey Name of an existing secret key containing the admin credentials
 ##
 externalDatabase:
-  host: ""
+  host: "postgresql.default.svc.cluster.local"
   port: 5432
-  user: bn_odoo
-  password: ""
-  database: bitnami_odoo
+  user: odoo
+  password: "123456"
+  database: odoo
   create: true
   postgresqlPostgresUser: "postgres"
-  postgresqlPostgresPassword: ""
+  postgresqlPostgresPassword: "090323508"
   existingSecret: ""
   existingSecretPasswordKey: ""
   existingSecretPostgresPasswordKey: ""
