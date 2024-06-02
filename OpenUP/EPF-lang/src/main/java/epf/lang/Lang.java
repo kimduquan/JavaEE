@@ -9,12 +9,9 @@ import org.eclipse.microprofile.rest.client.inject.RestClient;
 import epf.lang.internal.Ollama;
 import epf.lang.schema.Message;
 import epf.lang.schema.Request;
-import epf.lang.schema.Response;
 import epf.lang.schema.Role;
 import epf.naming.Naming;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.json.bind.Jsonb;
-import jakarta.json.bind.JsonbBuilder;
 import jakarta.websocket.OnClose;
 import jakarta.websocket.OnError;
 import jakarta.websocket.OnMessage;
@@ -61,13 +58,10 @@ public class Lang {
         final CompletionStage<InputStream> response = ollama.chat(request);
         response.handleAsync((stream, error) -> {
         	try(BufferedReader reader = new BufferedReader(new InputStreamReader(stream))){
-        		try(Jsonb jsonb = JsonbBuilder.create()){
-        			String line;
-        		    while ((line = reader.readLine()) != null) {
-        		        final Response res = jsonb.fromJson(line, Response.class);
-        		        session.getBasicRemote().sendText(res.getMessage().getContent());
-        		    }
-        		}
+        		String line;
+    		    while ((line = reader.readLine()) != null) {
+    		        session.getBasicRemote().sendText(line);
+    		    }
     		}
         	catch(Exception ex) {
         		ex.printStackTrace();

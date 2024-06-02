@@ -38,6 +38,19 @@
             <artifactId>quarkus-arc</artifactId>
         </dependency>
         
+        <!-- https://mvnrepository.com/artifact/dev.langchain4j/langchain4j-ollama -->
+		<dependency>
+		    <groupId>dev.langchain4j</groupId>
+		    <artifactId>langchain4j-ollama</artifactId>
+		    <version>0.31.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/dev.langchain4j/langchain4j -->
+		<dependency>
+		    <groupId>dev.langchain4j</groupId>
+		    <artifactId>langchain4j</artifactId>
+		    <version>0.31.0</version>
+		</dependency>
+        
         <dependency>
 	        <groupId>openup</groupId>
 	        <artifactId>EPF-naming</artifactId>
