@@ -5,6 +5,7 @@ import java.util.concurrent.CompletionStage;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import epf.lang.schema.Embedding;
 import epf.lang.schema.Request;
+import epf.lang.schema.Response;
 import epf.naming.Naming;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -27,9 +28,13 @@ public interface Ollama {
 	 */
 	@POST
 	@Path("chat")
-	CompletionStage<InputStream> chat(final Request request);
+	CompletionStage<InputStream> stream(final Request request);
+	
+	@POST
+	@Path("chat")
+	Response chat(final Request request);
 	
 	@POST
 	@Path("embeddings")
-	Embedding generateEmbeddings(final EmbeddingRequest request);
+	Embedding generateEmbedding(final EmbeddingRequest request);
 }

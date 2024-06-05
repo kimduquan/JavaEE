@@ -26,9 +26,9 @@
             <artifactId>quarkus-rest-client</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-jsonp</artifactId>
-        </dependency>
+		    <groupId>io.quarkus</groupId>
+		    <artifactId>quarkus-smallrye-context-propagation</artifactId>
+		</dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-websockets</artifactId>

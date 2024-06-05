@@ -5,13 +5,13 @@ package epf.lang.schema;
  */
 public class Embedding {
 
-	private double[] embedding;
+	private float[] embedding;
 
-	public double[] getEmbedding() {
+	public float[] getEmbedding() {
 		return embedding;
 	}
 
-	public void setEmbedding(double[] embedding) {
+	public void setEmbedding(float[] embedding) {
 		this.embedding = embedding;
 	}
 }
