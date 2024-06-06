@@ -37,14 +37,18 @@ import epf.lang.internal.Ollama;
 import epf.lang.schema.Message;
 import epf.lang.schema.Request;
 import epf.lang.schema.Role;
+import epf.lang.schema.StreamResponse;
 import epf.naming.Naming;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
 import jakarta.websocket.OnClose;
 import jakarta.websocket.OnError;
 import jakarta.websocket.OnMessage;
 import jakarta.websocket.OnOpen;
+import jakarta.websocket.RemoteEndpoint.Basic;
 import jakarta.websocket.Session;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
@@ -71,10 +75,6 @@ public class Lang {
 	@Inject
 	@ConfigProperty(name = "epf.lang.model")
 	String embeddingModelName;
-	
-	@Inject
-	@ConfigProperty(name = "quarkus.rest-client.ollama.url")
-	String ollamaUrl;
 	
 	//private Chat chat;
 	private EmbeddingStore<TextSegment> embeddingStore;
@@ -142,7 +142,7 @@ public class Lang {
     	return String.format(DEFAULT_PROMPT_TEMPLATE, query, contents.toString());
 	}
 	
-	private void chat(final String model, final String prompt, final Consumer<String> consumer) {
+	private void chat(final String model, final String prompt, final Consumer<StreamResponse> consumer) {
 		final Request request = new Request();
         request.setModel(model);
         final Message requestMessage = new Message();
@@ -157,10 +157,13 @@ public class Lang {
         	}
         	else {
             	try(BufferedReader reader = new BufferedReader(new InputStreamReader(stream))){
-            		String line;
-        		    while ((line = reader.readLine()) != null) {
-        		        consumer.accept(line);
-        		    }
+            		try(Jsonb jsonb = JsonbBuilder.create()){
+                		String line;
+            		    while ((line = reader.readLine()) != null) {
+            		        final StreamResponse res = jsonb.fromJson(line, StreamResponse.class);
+            		        consumer.accept(res);
+            		    }
+            		}
         		}
             	catch(Exception ex) {
             		ex.printStackTrace();
@@ -221,9 +224,10 @@ public class Lang {
         	System.out.println("inject prompt:");
         	final String prompt = injectPrompt(message, segments);
         	System.out.println("chat:");
-        	chat(model, prompt, (line) -> {
+        	final Basic remote = session.getBasicRemote();
+        	chat(model, prompt, (response) -> {
         		try {
-            		session.getBasicRemote().sendText(line);
+        			remote.sendText(response.getMessage().getContent(), response.isDone());
         		}
             	catch(Exception ex) {
             		ex.printStackTrace();
