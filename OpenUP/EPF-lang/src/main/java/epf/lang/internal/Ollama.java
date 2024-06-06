@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.concurrent.CompletionStage;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import epf.lang.schema.Embedding;
+import epf.lang.schema.EmbeddingRequest;
 import epf.lang.schema.Request;
 import epf.lang.schema.Response;
 import epf.naming.Naming;

@@ -1,4 +1,4 @@
-package epf.lang.internal;
+package epf.lang.schema;
 
 /**
  * 

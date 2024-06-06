@@ -8,7 +8,9 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -17,23 +19,14 @@ import dev.langchain4j.data.document.DocumentSplitter;
 import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
 import dev.langchain4j.data.document.parser.TextDocumentParser;
 import dev.langchain4j.data.document.splitter.DocumentSplitters;
-import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
-import dev.langchain4j.memory.ChatMemory;
-import dev.langchain4j.memory.chat.MessageWindowChatMemory;
-import dev.langchain4j.model.chat.ChatLanguageModel;
-import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
-import dev.langchain4j.service.AiServices;
 import dev.langchain4j.store.embedding.EmbeddingSearchRequest;
 import dev.langchain4j.store.embedding.EmbeddingSearchResult;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
-import epf.lang.internal.Chat;
-import epf.lang.internal.EPFChatLanguageModel;
-import epf.lang.internal.EPFEmbeddingModel;
-import epf.lang.internal.EmbeddingRequest;
 import epf.lang.internal.Ollama;
+import epf.lang.schema.Embedding;
+import epf.lang.schema.EmbeddingRequest;
 import epf.lang.schema.Message;
 import epf.lang.schema.Request;
 import epf.lang.schema.Role;
@@ -60,7 +53,7 @@ import jakarta.websocket.server.ServerEndpoint;
 @ApplicationScoped
 public class Lang {
 	
-	private static final String DEFAULT_PROMPT_TEMPLATE = "%s\n\nAnswer using the following information:\n%s";
+	private static final String DEFAULT_PROMPT_TEMPLATE = "<|start_header_id|>user<|end_header_id|>\n\n%s<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n%s<|eot_id|>";
 
     @Inject 
     ManagedExecutor executor;
@@ -76,9 +69,7 @@ public class Lang {
 	@ConfigProperty(name = "epf.lang.model")
 	String embeddingModelName;
 	
-	//private Chat chat;
 	private EmbeddingStore<TextSegment> embeddingStore;
-	private EmbeddingModel embeddingModel;
 	
 	private List<Document> loadDocuments(){
 		final TextDocumentParser parser = new TextDocumentParser();
@@ -90,39 +81,35 @@ public class Lang {
         return splitter.splitAll(documents);
 	}
 	
-	private List<Embedding> embedSegments(List<TextSegment> segments){
-		return embeddingModel.embedAll(segments).content();
+	private List<Embedding> embedSegments(List<TextSegment> segments, Consumer<Float> progress){
+		final int size = segments.size();
+		final List<Embedding> embeddings = new LinkedList<>();
+		final AtomicInteger count = new AtomicInteger();
+		segments.forEach(segment -> {
+			final EmbeddingRequest request = new EmbeddingRequest();
+			request.setModel(embeddingModelName);
+			request.setPrompt(segment.text());
+			final Embedding embedding = ollama.generateEmbedding(request);
+			embeddings.add(embedding);
+			progress.accept((float)count.incrementAndGet() * 100 / size);
+		});
+		return embeddings;
 	}
 	
 	private void storeEmbeddings(final List<Embedding> embeddings, final List<TextSegment> segments) {
-        embeddingStore.addAll(embeddings, segments);
-	}
-	
-	private Chat buildService(final String model) {
-        final EmbeddingStoreContentRetriever contentRetriever = EmbeddingStoreContentRetriever.builder()
-                .embeddingStore(embeddingStore)
-                .embeddingModel(embeddingModel)
-                .build();
-        final ChatMemory chatMemory = MessageWindowChatMemory.builder().maxMessages(10).build();
-        final ChatLanguageModel chatLanguageModel = new EPFChatLanguageModel(ollama, model);
-        return AiServices.builder(Chat.class)
-        .chatLanguageModel(chatLanguageModel)
-        .contentRetriever(contentRetriever)
-        .chatMemory(chatMemory)
-        .build();
+        embeddingStore.addAll(embeddings.stream().map(e -> dev.langchain4j.data.embedding.Embedding.from(e.getEmbedding())).collect(Collectors.toList()), segments);
 	}
 	
 	private Embedding embedQuery(final String model, final String query) {
 		final EmbeddingRequest embeddingRequest = new EmbeddingRequest();
     	embeddingRequest.setModel(model);
     	embeddingRequest.setPrompt(query);
-    	final epf.lang.schema.Embedding embeddedQuery = ollama.generateEmbedding(embeddingRequest);
-    	return new Embedding(embeddedQuery.getEmbedding());
+    	return ollama.generateEmbedding(embeddingRequest);
 	}
 	
 	private List<TextSegment> searchQuery(final Embedding embeddedQuery){
     	final EmbeddingSearchRequest searchRequest = EmbeddingSearchRequest.builder()
-                .queryEmbedding(embeddedQuery)
+                .queryEmbedding(dev.langchain4j.data.embedding.Embedding.from(embeddedQuery.getEmbedding()))
                 .maxResults(3)
                 .minScore(0.0)
                 .build();
@@ -175,7 +162,6 @@ public class Lang {
 	
 	@PostConstruct
 	void postConstruct() {
-        embeddingModel = new EPFEmbeddingModel(ollama, embeddingModelName);
         embeddingStore = new InMemoryEmbeddingStore<>();
 	}
 
@@ -189,11 +175,11 @@ public class Lang {
                 System.out.println("split documents:");
                 final List<TextSegment> segments = splitDocuments(documents);
                 System.out.println("embed segments:");
-                final List<Embedding> embeddings = embedSegments(segments);
+                final List<Embedding> embeddings = embedSegments(segments, (progress) -> {
+                	System.out.println(progress);
+                });
                 System.out.println("store embeddings:");
                 storeEmbeddings(embeddings, segments);
-                System.out.println("build service:");
-                buildService(model);
                 System.out.println("done.");
         	}
         	catch(Exception ex) {
@@ -227,7 +213,8 @@ public class Lang {
         	final Basic remote = session.getBasicRemote();
         	chat(model, prompt, (response) -> {
         		try {
-        			remote.sendText(response.getMessage().getContent(), response.isDone());
+        			remote.sendText(response.getMessage().getContent());
+        			System.out.print(response.getMessage().getContent());
         		}
             	catch(Exception ex) {
             		ex.printStackTrace();
