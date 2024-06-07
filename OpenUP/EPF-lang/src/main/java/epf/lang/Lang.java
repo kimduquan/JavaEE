@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -53,7 +54,9 @@ import jakarta.websocket.server.ServerEndpoint;
 @ApplicationScoped
 public class Lang {
 	
-	private static final String DEFAULT_PROMPT_TEMPLATE = "<|start_header_id|>user<|end_header_id|>\n\n%s<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n%s<|eot_id|>";
+	private final Map<String, String> promptTemplates = Map.of(
+			"llama3:instruct", "<|start_header_id|>user<|end_header_id|>\n\n%s<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n%s<|eot_id|>",
+			"nous-hermes2:10.7b", "<|im_start|>user\n%s<|im_end|>\n<|im_start|>assistant\n%s<|im_end|>\n");
 
     @Inject 
     ManagedExecutor executor;
@@ -121,12 +124,12 @@ public class Lang {
     	return segments;
 	}
 	
-	private String injectPrompt(final String query, final List<TextSegment> segments) {
+	private String injectPrompt(final String model, final String query, final List<TextSegment> segments) {
     	final StringBuilder contents = new StringBuilder();
     	segments.forEach(segment -> {
     		contents.append(segment.text());
     	});
-    	return String.format(DEFAULT_PROMPT_TEMPLATE, query, contents.toString());
+    	return String.format(promptTemplates.get(model), query, contents.toString());
 	}
 	
 	private void chat(final String model, final String prompt, final Consumer<StreamResponse> consumer) {
@@ -208,7 +211,7 @@ public class Lang {
         	System.out.println("search query:");
         	final List<TextSegment> segments = searchQuery(embeddedQuery);
         	System.out.println("inject prompt:");
-        	final String prompt = injectPrompt(message, segments);
+        	final String prompt = injectPrompt(model, message, segments);
         	System.out.println("chat:");
         	final Basic remote = session.getBasicRemote();
         	chat(model, prompt, (response) -> {
