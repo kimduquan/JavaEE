@@ -52,3 +52,12 @@ spec:
             - containerPort: 11434
               name: http
               protocol: TCP
+          volumeMounts:
+            - mountPath: /root/.ollama
+              name: ollama
+              readOnly: false
+      volumes:
+        - name: ollama
+          persistentVolumeClaim:
+            claimName: ollama
+            readOnly: false
