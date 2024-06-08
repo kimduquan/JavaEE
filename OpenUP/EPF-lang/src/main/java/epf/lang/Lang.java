@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.context.ManagedExecutor;
@@ -132,7 +133,7 @@ public class Lang {
     	return String.format(promptTemplates.get(model), query, contents.toString());
 	}
 	
-	private void chat(final String model, final String prompt, final Consumer<StreamResponse> consumer) {
+	private void chat(final String model, final String prompt, final Function<StreamResponse, Boolean> consumer) {
 		final Request request = new Request();
         request.setModel(model);
         final Message requestMessage = new Message();
@@ -151,7 +152,9 @@ public class Lang {
                 		String line;
             		    while ((line = reader.readLine()) != null) {
             		        final StreamResponse res = jsonb.fromJson(line, StreamResponse.class);
-            		        consumer.accept(res);
+            		        if(false == consumer.apply(res)) {
+            		        	break;
+            		        }
             		    }
             		}
         		}
@@ -216,12 +219,15 @@ public class Lang {
         	final Basic remote = session.getBasicRemote();
         	chat(model, prompt, (response) -> {
         		try {
-        			remote.sendText(response.getMessage().getContent());
+        			if(session.isOpen()) {
+            			remote.sendText(response.getMessage().getContent());
+        			}
         			System.out.print(response.getMessage().getContent());
         		}
             	catch(Exception ex) {
             		ex.printStackTrace();
             	}
+        		return session.isOpen();
         	});
         });
     }
