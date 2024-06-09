@@ -19,6 +19,19 @@ spec:
   type: ClusterIP
 ---
 apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+  labels:
+    app.kubernetes.io/name: ollama
+    app.kubernetes.io/version: 1.0.0
+  name: ollama
+spec:
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: "Retain"
+---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   annotations:
@@ -32,6 +45,7 @@ spec:
   resources:
     requests:
       storage: "10Gi"
+  volumeName: "ollama"
 ---
 apiVersion: apps/v1
 kind: Deployment
