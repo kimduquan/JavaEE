@@ -30,6 +30,12 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: "Retain"
+  storageClassName: "hostpath"
+  hostPath:
+    path: "/ollama"
+    type: "DirectoryOrCreate"
+  capacity:  
+    storage: 10Gi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
