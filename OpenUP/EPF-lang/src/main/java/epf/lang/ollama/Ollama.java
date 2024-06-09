@@ -7,6 +7,10 @@ import java.util.concurrent.CompletionStage;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
+import epf.lang.schema.ollama.ChatRequest;
+import epf.lang.schema.ollama.EmbeddingsRequest;
+import epf.lang.schema.ollama.EmbeddingsResponse;
+import epf.lang.schema.ollama.GenerateRequest;
 import epf.naming.Naming;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
@@ -48,11 +52,6 @@ public interface Ollama {
 	@Path("embeddings")
 	@POST
 	EmbeddingsResponse generateEmbeddings(final EmbeddingsRequest request);
-	
-	/**
-	 * 
-	 */
-	String DEFAULT_PROMPT_TEMPLATE = "%s\n\nAnswer using the following information:\n%s";
 	
 	/**
 	 * @param <T>

@@ -1,4 +1,4 @@
-package epf.lang.ollama;
+package epf.lang.schema.ollama;
 
 import java.util.List;
 

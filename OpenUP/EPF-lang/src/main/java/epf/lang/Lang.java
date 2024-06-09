@@ -55,6 +55,11 @@ import jakarta.websocket.server.ServerEndpoint;
 @ApplicationScoped
 public class Lang {
 	
+	/**
+	 * 
+	 */
+	private static final String DEFAULT_PROMPT_TEMPLATE = "%s\n\nAnswer using the following information:\n%s";
+	
 	private final Map<String, String> promptTemplates = Map.of(
 			"llama3:instruct", "<|start_header_id|>user<|end_header_id|>\n\n%s<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n%s<|eot_id|>",
 			"nous-hermes2:10.7b", "<|im_start|>user\n%s<|im_end|>\n<|im_start|>assistant\n%s<|im_end|>\n");
@@ -130,7 +135,7 @@ public class Lang {
     	segments.forEach(segment -> {
     		contents.append(segment.text());
     	});
-    	return String.format(promptTemplates.get(model), query, contents.toString());
+    	return String.format(promptTemplates.getOrDefault(model, DEFAULT_PROMPT_TEMPLATE), query, contents.toString());
 	}
 	
 	private void chat(final String model, final String prompt, final Function<StreamResponse, Boolean> consumer) {
