@@ -82,6 +82,8 @@ spec:
                   fieldPath: metadata.namespace
             - name: OLLAMA_MODELS
               value: "/root/.ollama/models"
+            - name: OLLAMA_MAX_LOADED_MODELS
+              value: "2"
           image: ollama/ollama:latest
           imagePullPolicy: IfNotPresent
           name: ollama
