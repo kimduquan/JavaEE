@@ -80,8 +80,12 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
+            - name: OLLAMA_KEEP_ALIVE
+              value: "24h"
+            - name: OLLAMA_NUM_PARALLEL
+              value: "86400"
             - name: OLLAMA_MAX_LOADED_MODELS
-              value: "2"
+              value: "3"
             - name: OLLAMA_MODELS
               value: "/root/.ollama/models"
             - name: OLLAMA_RUNNERS_DIR
