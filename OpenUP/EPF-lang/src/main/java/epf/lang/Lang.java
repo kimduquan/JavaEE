@@ -61,8 +61,9 @@ public class Lang {
 	private static final String DEFAULT_PROMPT_TEMPLATE = "%s\n\nAnswer using the following information:\n%s";
 	
 	private final Map<String, String> promptTemplates = Map.of(
-			"llama3:instruct", "<|start_header_id|>user<|end_header_id|>\n\n%s<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n%s<|eot_id|>",
-			"nous-hermes2:10.7b", "<|im_start|>user\n%s<|im_end|>\n<|im_start|>assistant\n%s<|im_end|>\n");
+			//"llama3:instruct", "<|start_header_id|>user<|end_header_id|>\n\n%s<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n%s<|eot_id|>",
+			//"nous-hermes2:10.7b", "<|im_start|>user\n%s<|im_end|>\n<|im_start|>assistant\n%s<|im_end|>\n"
+			);
 
     @Inject 
     ManagedExecutor executor;
@@ -134,6 +135,7 @@ public class Lang {
     	final StringBuilder contents = new StringBuilder();
     	segments.forEach(segment -> {
     		contents.append(segment.text());
+    		contents.append("\n\n");
     	});
     	return String.format(promptTemplates.getOrDefault(model, DEFAULT_PROMPT_TEMPLATE), query, contents.toString());
 	}
@@ -220,6 +222,7 @@ public class Lang {
         	final List<TextSegment> segments = searchQuery(embeddedQuery);
         	System.out.println("inject prompt:");
         	final String prompt = injectPrompt(model, message, segments);
+        	System.out.print(prompt);
         	System.out.println("chat:");
         	final Basic remote = session.getBasicRemote();
         	chat(model, prompt, (response) -> {
