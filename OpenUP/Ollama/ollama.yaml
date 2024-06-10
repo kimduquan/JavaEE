@@ -32,8 +32,8 @@ spec:
   persistentVolumeReclaimPolicy: "Retain"
   storageClassName: "hostpath"
   hostPath:
-    path: "/ollama"
-    type: "DirectoryOrCreate"
+    path: "/var/lib/k8s-pvs/ollama"
+    type: ""
   capacity:  
     storage: 10Gi
 ---
@@ -80,10 +80,12 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
-            - name: OLLAMA_MODELS
-              value: "/root/.ollama/models"
             - name: OLLAMA_MAX_LOADED_MODELS
               value: "2"
+            - name: OLLAMA_MODELS
+              value: "/root/.ollama/models"
+            - name: OLLAMA_RUNNERS_DIR
+              value: "/root/.ollama/runners"
           image: ollama/ollama:latest
           imagePullPolicy: IfNotPresent
           name: ollama
