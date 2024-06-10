@@ -83,6 +83,8 @@ spec:
             - name: OLLAMA_KEEP_ALIVE
               value: "24h"
             - name: OLLAMA_NUM_PARALLEL
+              value: "1"
+            - name: OLLAMA_MAX_QUEUE
               value: "86400"
             - name: OLLAMA_MAX_LOADED_MODELS
               value: "3"
