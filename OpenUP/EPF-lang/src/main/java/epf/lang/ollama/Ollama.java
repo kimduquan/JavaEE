@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.concurrent.CompletionStage;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import epf.lang.schema.ollama.ChatRequest;
@@ -58,34 +57,33 @@ public interface Ollama {
 	 * @param response
 	 * @param clazz
 	 * @param consumer
-	 * @throws Throwable
 	 */
-	static <T> void stream(final CompletionStage<InputStream> response, final Class<T> clazz, final Function<T, Boolean> consumer) throws Throwable {
-		final AtomicReference<Throwable> throwable = new AtomicReference<>();
+	static <T> void stream(final CompletionStage<InputStream> response, final Class<T> clazz, final Function<T, Boolean> consumer) {
 		response.handleAsync((stream, error) -> {
 			if(error != null) {
-				throwable.set(error);
+				error.printStackTrace();
 			}
 			else {
-				try(BufferedReader reader = new BufferedReader(new InputStreamReader(stream))){
-            		try(Jsonb jsonb = JsonbBuilder.create()){
-                		String line;
-            		    while ((line = reader.readLine()) != null) {
-            		        final T res = jsonb.fromJson(line, clazz);
-            		        if(false == consumer.apply(res)) {
-            		        	break;
-            		        }
-            		    }
-            		}
-        		}
+				try(stream) {
+					try(InputStreamReader input = new InputStreamReader(stream)) {
+						try(BufferedReader reader = new BufferedReader(input)){
+		            		try(Jsonb jsonb = JsonbBuilder.create()){
+		                		String line;
+		            		    while ((line = reader.readLine()) != null) {
+		            		        final T res = jsonb.fromJson(line, clazz);
+		            		        if(false == consumer.apply(res)) {
+		            		        	break;
+		            		        }
+		            		    }
+		            		}
+		        		}
+					}
+				}
             	catch(Exception ex) {
-            		throwable.set(ex);
+            		ex.printStackTrace();
             	}
 			}
 			return stream;
 		});
-		if(throwable.get() != null) {
-			throw throwable.get();
-		}
 	}
 }

@@ -1,17 +1,13 @@
 package epf.lang;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.file.Paths;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.context.ManagedExecutor;
@@ -26,19 +22,17 @@ import dev.langchain4j.store.embedding.EmbeddingSearchRequest;
 import dev.langchain4j.store.embedding.EmbeddingSearchResult;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
-import epf.lang.internal.Ollama;
-import epf.lang.schema.Embedding;
-import epf.lang.schema.EmbeddingRequest;
-import epf.lang.schema.Message;
-import epf.lang.schema.Request;
-import epf.lang.schema.Role;
-import epf.lang.schema.StreamResponse;
+import epf.lang.ollama.Ollama;
+import epf.lang.schema.ollama.ChatRequest;
+import epf.lang.schema.ollama.ChatResponse;
+import epf.lang.schema.ollama.EmbeddingsRequest;
+import epf.lang.schema.ollama.EmbeddingsResponse;
+import epf.lang.schema.ollama.Message;
+import epf.lang.schema.ollama.Role;
 import epf.naming.Naming;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.json.bind.Jsonb;
-import jakarta.json.bind.JsonbBuilder;
 import jakarta.websocket.OnClose;
 import jakarta.websocket.OnError;
 import jakarta.websocket.OnMessage;
@@ -64,6 +58,8 @@ public class Lang {
 			//"llama3:instruct", "<|start_header_id|>user<|end_header_id|>\n\n%s<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n%s<|eot_id|>",
 			//"nous-hermes2:10.7b", "<|im_start|>user\n%s<|im_end|>\n<|im_start|>assistant\n%s<|im_end|>\n"
 			);
+	
+	private final Map<String, ChatRequest> chats = new ConcurrentHashMap<>();
 
     @Inject 
     ManagedExecutor executor;
@@ -91,33 +87,33 @@ public class Lang {
         return splitter.splitAll(documents);
 	}
 	
-	private List<Embedding> embedSegments(List<TextSegment> segments, Consumer<Float> progress){
+	private List<EmbeddingsResponse> embedSegments(List<TextSegment> segments, Consumer<Float> progress){
 		final int size = segments.size();
-		final List<Embedding> embeddings = new LinkedList<>();
+		final List<EmbeddingsResponse> embeddings = new LinkedList<>();
 		final AtomicInteger count = new AtomicInteger();
 		segments.forEach(segment -> {
-			final EmbeddingRequest request = new EmbeddingRequest();
+			final EmbeddingsRequest request = new EmbeddingsRequest();
 			request.setModel(embeddingModelName);
 			request.setPrompt(segment.text());
-			final Embedding embedding = ollama.generateEmbedding(request);
+			final EmbeddingsResponse embedding = ollama.generateEmbeddings(request);
 			embeddings.add(embedding);
 			progress.accept((float)count.incrementAndGet() * 100 / size);
 		});
 		return embeddings;
 	}
 	
-	private void storeEmbeddings(final List<Embedding> embeddings, final List<TextSegment> segments) {
+	private void storeEmbeddings(final List<EmbeddingsResponse> embeddings, final List<TextSegment> segments) {
         embeddingStore.addAll(embeddings.stream().map(e -> dev.langchain4j.data.embedding.Embedding.from(e.getEmbedding())).collect(Collectors.toList()), segments);
 	}
 	
-	private Embedding embedQuery(final String model, final String query) {
-		final EmbeddingRequest embeddingRequest = new EmbeddingRequest();
+	private EmbeddingsResponse embedQuery(final String model, final String query) {
+		final EmbeddingsRequest embeddingRequest = new EmbeddingsRequest();
     	embeddingRequest.setModel(model);
     	embeddingRequest.setPrompt(query);
-    	return ollama.generateEmbedding(embeddingRequest);
+    	return ollama.generateEmbeddings(embeddingRequest);
 	}
 	
-	private List<TextSegment> searchQuery(final Embedding embeddedQuery){
+	private List<TextSegment> searchQuery(final EmbeddingsResponse embeddedQuery){
     	final EmbeddingSearchRequest searchRequest = EmbeddingSearchRequest.builder()
                 .queryEmbedding(dev.langchain4j.data.embedding.Embedding.from(embeddedQuery.getEmbedding()))
                 .maxResults(3)
@@ -140,47 +136,9 @@ public class Lang {
     	return String.format(promptTemplates.getOrDefault(model, DEFAULT_PROMPT_TEMPLATE), query, contents.toString());
 	}
 	
-	private void chat(final String model, final String prompt, final Function<StreamResponse, Boolean> consumer) {
-		final Request request = new Request();
-        request.setModel(model);
-        final Message requestMessage = new Message();
-        requestMessage.setContent(prompt);
-        requestMessage.setRole(Role.user);
-        request.setMessages(Arrays.asList(requestMessage));
-        final CompletionStage<InputStream> response = ollama.stream(request);
-        System.out.println("stream:");
-        response.handleAsync((stream, error) -> {
-        	if(error != null) {
-        		error.printStackTrace();
-        	}
-        	else {
-            	try(BufferedReader reader = new BufferedReader(new InputStreamReader(stream))){
-            		try(Jsonb jsonb = JsonbBuilder.create()){
-                		String line;
-            		    while ((line = reader.readLine()) != null) {
-            		        final StreamResponse res = jsonb.fromJson(line, StreamResponse.class);
-            		        if(false == consumer.apply(res)) {
-            		        	break;
-            		        }
-            		    }
-            		}
-        		}
-            	catch(Exception ex) {
-            		ex.printStackTrace();
-            	}
-        	}
-        	return stream;
-        });
-	}
-	
 	@PostConstruct
 	void postConstruct() {
         embeddingStore = new InMemoryEmbeddingStore<>();
-	}
-
-    @OnOpen
-    public void onOpen(Session session, @PathParam(Naming.Lang.Internal.MODEL) String model) {
-        System.out.println("onOpen> " + model);
         executor.submit(() -> {
         	try {
         		System.out.println("load documents:");
@@ -188,7 +146,7 @@ public class Lang {
                 System.out.println("split documents:");
                 final List<TextSegment> segments = splitDocuments(documents);
                 System.out.println("embed segments:");
-                final List<Embedding> embeddings = embedSegments(segments, (progress) -> {
+                final List<EmbeddingsResponse> embeddings = embedSegments(segments, (progress) -> {
                 	System.out.println(progress);
                 });
                 System.out.println("store embeddings:");
@@ -199,44 +157,68 @@ public class Lang {
         		ex.printStackTrace();
         	}
         });
+	}
+
+    @OnOpen
+    public void onOpen(Session session, @PathParam(Naming.Lang.Internal.MODEL) String model) {
+        System.out.println("onOpen> " + model);
+        final ChatRequest chat = new ChatRequest();
+        chat.setModel(model);
+        chat.setMessages(new ArrayList<>());
+        chats.put(session.getId(), chat);
     }
 
     @OnClose
     public void onClose(Session session, @PathParam(Naming.Lang.Internal.MODEL) String model) {
         System.out.println("onClose> " + model);
+        chats.remove(session.getId());
     }
 
     @OnError
     public void onError(Session session, @PathParam(Naming.Lang.Internal.MODEL) String model, Throwable throwable) {
         System.out.println("onError> " + model + ": " + throwable);
         throwable.printStackTrace();
+        chats.remove(session.getId());
     }
 
     @OnMessage
     public void onMessage(final Session session, @PathParam(Naming.Lang.Internal.MODEL) String model, String message) throws Exception {
         System.out.println("onMessage> " + model + ": " + message);
         executor.submit(() -> {
-            System.out.println("embed query:");
-        	final Embedding embeddedQuery = embedQuery(embeddingModelName, message);
-        	System.out.println("search query:");
-        	final List<TextSegment> segments = searchQuery(embeddedQuery);
-        	System.out.println("inject prompt:");
-        	final String prompt = injectPrompt(model, message, segments);
-        	System.out.print(prompt);
-        	System.out.println("chat:");
-        	final Basic remote = session.getBasicRemote();
-        	chat(model, prompt, (response) -> {
-        		try {
-        			if(session.isOpen()) {
-            			remote.sendText(response.getMessage().getContent());
+        	try {
+                System.out.println("embed query:");
+            	final EmbeddingsResponse embeddedQuery = embedQuery(embeddingModelName, message);
+            	System.out.println("search query:");
+            	final List<TextSegment> segments = searchQuery(embeddedQuery);
+            	System.out.println("inject prompt:");
+            	final String prompt = injectPrompt(model, message, segments);
+            	System.out.print(prompt);
+            	System.out.println("chat:");
+            	final Message chatMessage = new Message();
+            	chatMessage.setContent(prompt);
+            	chatMessage.setRole(Role.user);
+            	final ChatRequest chat = chats.get(session.getId());
+            	chat.getMessages().add(chatMessage);
+            	final Basic remote = session.getBasicRemote();
+            	Ollama.stream(ollama.chat(chat), ChatResponse.class, (response) -> {
+            		if(session.isOpen()) {
+            			try {
+                			remote.sendText(response.getMessage().getContent());
+            			}
+                    	catch(Exception ex) {
+                    		ex.printStackTrace();
+                    	}
         			}
         			System.out.print(response.getMessage().getContent());
-        		}
-            	catch(Exception ex) {
-            		ex.printStackTrace();
-            	}
-        		return session.isOpen();
-        	});
+        			if(response.isDone()) {
+                    	chat.getMessages().add(response.getMessage());
+        			}
+            		return session.isOpen();
+            	});
+        	}
+        	catch(Exception ex) {
+        		ex.printStackTrace();
+        	}
         });
     }
 }
