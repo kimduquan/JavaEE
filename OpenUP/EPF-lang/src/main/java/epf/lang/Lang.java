@@ -1,14 +1,18 @@
 package epf.lang;
 
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import javax.cache.Cache;
+import javax.cache.CacheManager;
+import javax.cache.Caching;
+import javax.cache.configuration.MutableConfiguration;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -20,7 +24,6 @@ import dev.langchain4j.data.document.splitter.DocumentSplitters;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.store.embedding.EmbeddingSearchRequest;
 import dev.langchain4j.store.embedding.EmbeddingSearchResult;
-import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
 import epf.lang.ollama.Ollama;
 import epf.lang.schema.ollama.ChatRequest;
@@ -31,6 +34,7 @@ import epf.lang.schema.ollama.Message;
 import epf.lang.schema.ollama.Role;
 import epf.naming.Naming;
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.websocket.OnClose;
@@ -59,7 +63,10 @@ public class Lang {
 			//"nous-hermes2:10.7b", "<|im_start|>user\n%s<|im_end|>\n<|im_start|>assistant\n%s<|im_end|>\n"
 			);
 	
-	private final Map<String, ChatRequest> chats = new ConcurrentHashMap<>();
+	/**
+	 * 
+	 */
+	private transient Cache<String, ChatRequest> chats;
 
     @Inject 
     ManagedExecutor executor;
@@ -75,7 +82,11 @@ public class Lang {
 	@ConfigProperty(name = "epf.lang.model")
 	String embeddingModelName;
 	
-	private EmbeddingStore<TextSegment> embeddingStore;
+	@Inject
+	@ConfigProperty(name = "epf.lang.store")
+	String store;
+	
+	private InMemoryEmbeddingStore<TextSegment> embeddingStore;
 	
 	private List<Document> loadDocuments(){
 		final TextDocumentParser parser = new TextDocumentParser();
@@ -138,25 +149,43 @@ public class Lang {
 	
 	@PostConstruct
 	void postConstruct() {
-        embeddingStore = new InMemoryEmbeddingStore<>();
-        executor.submit(() -> {
-        	try {
-        		System.out.println("load documents:");
-                final List<Document> documents = loadDocuments();
-                System.out.println("split documents:");
-                final List<TextSegment> segments = splitDocuments(documents);
-                System.out.println("embed segments:");
-                final List<EmbeddingsResponse> embeddings = embedSegments(segments, (progress) -> {
-                	System.out.println(progress);
-                });
-                System.out.println("store embeddings:");
-                storeEmbeddings(embeddings, segments);
-                System.out.println("done.");
-        	}
-        	catch(Exception ex) {
-        		ex.printStackTrace();
-        	}
-        });
+        final MutableConfiguration<String, ChatRequest> config = new MutableConfiguration<>();
+		final CacheManager manager = Caching.getCachingProvider().getCacheManager();
+		chats = manager.getCache(Naming.Lang.Internal.OLLAMA);
+		if(chats == null) {
+			chats = manager.createCache(Naming.Lang.Internal.OLLAMA, config);
+		}
+		if(Files.exists(Paths.get(store))) {
+			embeddingStore = InMemoryEmbeddingStore.fromFile(store);
+		}
+		else {
+	        embeddingStore = new InMemoryEmbeddingStore<>();
+	        executor.submit(() -> {
+	        	try {
+	        		System.out.println("load documents:");
+	                final List<Document> documents = loadDocuments();
+	                System.out.println("split documents:");
+	                final List<TextSegment> segments = splitDocuments(documents);
+	                System.out.println("embed segments:");
+	                final List<EmbeddingsResponse> embeddings = embedSegments(segments, (progress) -> {
+	                	System.out.println(progress);
+	                });
+	                System.out.println("store embeddings:");
+	                storeEmbeddings(embeddings, segments);
+	                System.out.println("serialize to file:");
+	                embeddingStore.serializeToFile(store);
+	                System.out.println("done.");
+	        	}
+	        	catch(Exception ex) {
+	        		ex.printStackTrace();
+	        	}
+	        });
+		}
+	}
+	
+	@PreDestroy
+	void preDestroy() {
+		chats.close();
 	}
 
     @OnOpen
@@ -212,6 +241,7 @@ public class Lang {
         			System.out.print(response.getMessage().getContent());
         			if(response.isDone()) {
                     	chat.getMessages().add(response.getMessage());
+                    	chats.put(session.getId(), chat);
         			}
             		return session.isOpen();
             	});
