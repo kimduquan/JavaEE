@@ -28,6 +28,9 @@ cd ../
 cd EPF-registry
 ./start.sh
 cd ../
+cd EPF-lang
+./start.sh
+cd ../
 cd EPF-concurrent
 ./start.sh
 cd ../
