@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Map.Entry;
+import java.util.concurrent.CompletionStage;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,6 +37,7 @@ import epf.gateway.util.HATEOAS;
 import epf.gateway.util.RequestBuilder;
 import epf.gateway.util.RequestUtil;
 import epf.gateway.util.ResponseUtil;
+import epf.gateway.util.Streaming;
 import epf.naming.Naming;
 import epf.util.io.InputStreamUtil;
 import epf.util.logging.LogManager;
@@ -71,6 +73,12 @@ public class Application {
      */
     @Inject
     transient Concurrent concurrent;
+    
+    /**
+     * 
+     */
+    @Inject
+    transient Stream stream;
     
     /**
      * 
@@ -128,11 +136,11 @@ public class Application {
     	return Response.Status.PARTIAL_CONTENT.getStatusCode() == response.getStatus();
     }
     
-    private Response buildLinkRequest(final Client client, final Response response, final Optional<Object> entity, final MediaType mediaType, final HttpHeaders headers, final Link link) {
+    private URI lookup(final Link link) {
     	final String service = link.getRel();
 		final URI serviceUrl = registry.lookup(service).orElseThrow(NotFoundException::new);
 		LOGGER.info(String.format("link=%s", link.toString()));
-		return HATEOAS.buildLinkRequest(client, serviceUrl, headers, response, entity, mediaType, link);
+		return serviceUrl;
     }
     
     private InputStream buildLinkEntity(final MediaType mediaType, final List<Response> linkResponses) {
@@ -173,6 +181,24 @@ public class Application {
 		return builder.build();
     }
     
+    private void synchronized_(final Link targetLink) throws Exception {
+    	final Optional<String> synchronized_ = HATEOAS.synchronized_(targetLink);
+		if(synchronized_.isPresent()) {
+			final Synchronized _synchronized = concurrent.synchronized_(synchronized_.get());
+			final Optional<String> time = HATEOAS.time(targetLink);
+			if(time.isPresent()) {
+				_synchronized.synchronized_(Duration.parse(time.get()));
+			}
+			else {
+				_synchronized.synchronized_();
+			}
+		}
+		final Optional<String> continue_ = HATEOAS.continue_(targetLink);
+		if(continue_.isPresent()) {
+			concurrent.synchronized_(synchronized_.get()).return_();
+		}
+    }
+    
     private Response buildLinkRequests(final Client client, final Response response, final Optional<Object> entity, final MediaType mediaType, final HttpHeaders headers, final Link self, final boolean isPartial) throws Exception {
     	Response prevLinkResponse = response;
     	Optional<Object> prevLinkEntity = entity;
@@ -185,51 +211,59 @@ public class Application {
     	final List<Response> linkResponses = new CopyOnWriteArrayList<>();
     	final List<Link> links = HATEOAS.getRequestLinks(response).collect(Collectors.toList());
     	for(Link link : links) {
-    		if(HATEOAS.isRequestLink(link) && HATEOAS.isSynchronized(link)) {
+    		if(HATEOAS.isRequestLink(link)) {
     			final Link targetLink = HATEOAS.isSelfLink(link) ? self : link;
     			if(partialEntityIterator.hasNext()) {
     				prevLinkEntity = Optional.ofNullable(partialEntityIterator.next());
     				prevMediaType = mediaType;
     			}
-    			
-				final Optional<String> synchronized_ = HATEOAS.synchronized_(targetLink);
-				if(synchronized_.isPresent()) {
-					final Synchronized _synchronized = concurrent.synchronized_(synchronized_.get());
-					final Optional<String> time = HATEOAS.time(targetLink);
-					if(time.isPresent()) {
-						_synchronized.synchronized_(Duration.parse(time.get()));
-					}
-					else {
-						_synchronized.synchronized_();
-					}
-				}
-				final Optional<String> continue_ = HATEOAS.continue_(targetLink);
-				if(continue_.isPresent()) {
-					concurrent.synchronized_(synchronized_.get()).return_();
-				}
-				
-    			Response linkResponse = buildLinkRequest(client, prevLinkResponse, prevLinkEntity, prevMediaType, headers, targetLink);
-    			if(isSuccessful(linkResponse)) {
-    				final boolean isPartialLink = isPartial(linkResponse);
-    				if(HATEOAS.hasEntity(link)) {
-        				prevLinkEntity = HATEOAS.readEntity(linkResponse);
-        				prevMediaType = linkResponse.getMediaType();
+    			if(HATEOAS.isSynchronized(link)) {
+    				synchronized_(targetLink);
+    			}
+    			final URI serviceUrl = lookup(targetLink);
+    			final Optional<String> volatile_ = HATEOAS.volatile_(targetLink);
+    			if(volatile_.isPresent()) {
+    				final CompletionStage<InputStream> linkStream = HATEOAS.buildStreamRequest(client, serviceUrl, headers, prevLinkResponse, prevLinkEntity, prevMediaType, targetLink);
+    				stream.stream(volatile_.get(), linkStream);
+    			}
+    			else {
+        			Response linkResponse = HATEOAS.buildLinkRequest(client, serviceUrl, headers, prevLinkResponse, prevLinkEntity, prevMediaType, targetLink);
+        			if(isSuccessful(linkResponse)) {
+        				final boolean isPartialLink = isPartial(linkResponse);
+        				if(HATEOAS.hasEntity(link)) {
+            				prevLinkEntity = HATEOAS.readEntity(linkResponse);
+            				prevMediaType = linkResponse.getMediaType();
+        				}
+        				
+        				linkResponse = buildLinkRequests(client, linkResponse, prevLinkEntity, prevMediaType, headers, targetLink, isPartialLink);
+        				
+        				if(isSuccessful(linkResponse)) {
+                			linkResponses.add(linkResponse);
+            				prevLinkResponse = linkResponse;
+            				prevLinkEntity = HATEOAS.readEntity(linkResponse);
+            				prevMediaType = linkResponse.getMediaType();
+        				}
+        				else {
+        					return linkResponse;
+        				}
     				}
-    				
-    				linkResponse = buildLinkRequests(client, linkResponse, prevLinkEntity, prevMediaType, headers, targetLink, isPartialLink);
-    				
-    				if(isSuccessful(linkResponse)) {
-            			linkResponses.add(linkResponse);
-        				prevLinkResponse = linkResponse;
-        				prevLinkEntity = HATEOAS.readEntity(linkResponse);
-        				prevMediaType = linkResponse.getMediaType();
+        			else {
+        				return linkResponse;
+        			}
+    			}
+    		}
+    		else if(HATEOAS.isStreamLink(link)) {
+    			final Link targetLink = HATEOAS.isSelfLink(link) ? self : link;
+    			final URI serviceUrl = lookup(targetLink);
+    			final Streaming stream = Streaming.connectToServer(serviceUrl.resolve(targetLink.getUri()));
+    			if(prevLinkEntity.isPresent()) {
+    				final Optional<String> volatile_ = HATEOAS.volatile_(targetLink);
+    				if(volatile_.isPresent()) {
+        				stream.send(volatile_.get(), (InputStream)prevLinkEntity.get());
     				}
     				else {
-    					return linkResponse;
+        				stream.send((InputStream)prevLinkEntity.get());
     				}
-				}
-    			else {
-    				return linkResponse;
     			}
     		}
     	}

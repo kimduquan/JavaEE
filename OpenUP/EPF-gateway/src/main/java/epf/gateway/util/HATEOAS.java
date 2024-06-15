@@ -5,6 +5,7 @@ import java.net.URI;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.CompletionStage;
 import java.util.stream.Stream;
 import jakarta.ws.rs.HttpMethod;
 import jakarta.ws.rs.client.Client;
@@ -24,6 +25,11 @@ import epf.naming.Naming;
  *
  */
 public interface HATEOAS {
+	
+	/**
+	 * 
+	 */
+	String STREAM = "ws";
     
     /**
      * @param client
@@ -71,6 +77,45 @@ public interface HATEOAS {
 				return builder.method(HttpMethod.PATCH, Entity.entity(entity.orElse(null), mediaType));
 			default:
 				return builder.method(link.getType(), Entity.entity(entity.orElse(null), mediaType));
+		}
+    }
+    
+    static CompletionStage<InputStream> buildStreamRequest(
+    		final Client client,
+    		final URI serviceUrl,
+    		final HttpHeaders headers,
+    		final Response response,
+    		final Optional<Object> entity,
+    		final MediaType mediaType,
+    		final Link link
+    		) {
+    	Objects.requireNonNull(client, "Client");
+    	Objects.requireNonNull(serviceUrl, "URI");
+    	Objects.requireNonNull(headers, "HttpHeaders");
+    	Objects.requireNonNull(response, "Response");
+    	Objects.requireNonNull(link, "Link");
+    	final URI targetUrl = serviceUrl.resolve(link.getUri());
+		final WebTarget target = client.target(targetUrl);
+		Invocation.Builder builder = target.request();
+		builder = RequestUtil.buildHeaders(builder, headers, targetUrl, true);
+		builder = RequestUtil.buildLRAHeaders(builder, response);
+		switch(link.getType()) {
+			case HttpMethod.GET:
+				return builder.rx().get(InputStream.class);
+			case HttpMethod.POST:
+				return builder.rx().post(Entity.entity(entity.orElse(null), mediaType), InputStream.class);
+			case HttpMethod.PUT:
+				return builder.rx().put(Entity.entity(entity.orElse(null), mediaType), InputStream.class);
+			case HttpMethod.DELETE:
+				return builder.rx().delete(InputStream.class);
+			case HttpMethod.HEAD:
+				return builder.rx().head().thenApply((res) -> res.readEntity(InputStream.class));
+			case HttpMethod.OPTIONS:
+				return builder.rx().options(InputStream.class);
+			case HttpMethod.PATCH:
+				return builder.rx().method(HttpMethod.PATCH, Entity.entity(entity.orElse(null), mediaType), InputStream.class);
+			default:
+				return builder.rx().method(link.getType(), Entity.entity(entity.orElse(null), mediaType), InputStream.class);
 		}
     }
     
@@ -135,6 +180,24 @@ public interface HATEOAS {
      * @param link
      * @return
      */
+    static Optional<String> volatile_(final Link link) {
+    	Objects.requireNonNull(link, "Link");
+    	return Optional.ofNullable(link.getParams().get("volatile"));
+    }
+    
+    /**
+     * @param link
+     * @return
+     */
+    static Optional<String> this_(final Link link) {
+    	Objects.requireNonNull(link, "Link");
+    	return Optional.ofNullable(link.getParams().get("this"));
+    }
+    
+    /**
+     * @param link
+     * @return
+     */
     static boolean hasEntity(final Link link) {
     	Objects.requireNonNull(link, "Link");
     	boolean hasEntity = true;
@@ -177,6 +240,15 @@ public interface HATEOAS {
         	}
     	}
     	return false;
+    }
+    
+    /**
+     * @param link
+     * @return
+     */
+    static boolean isStreamLink(final Link link) {
+    	Objects.requireNonNull(link, "Link");
+    	return STREAM.equals(link.getType());
     }
     
     /**

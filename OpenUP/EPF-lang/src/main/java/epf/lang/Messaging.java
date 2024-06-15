@@ -6,13 +6,11 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import javax.cache.Cache;
-import javax.cache.CacheManager;
-import javax.cache.Caching;
-import javax.cache.configuration.MutableConfiguration;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -22,8 +20,6 @@ import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
 import dev.langchain4j.data.document.parser.TextDocumentParser;
 import dev.langchain4j.data.document.splitter.DocumentSplitters;
 import dev.langchain4j.data.segment.TextSegment;
-import dev.langchain4j.store.embedding.EmbeddingSearchRequest;
-import dev.langchain4j.store.embedding.EmbeddingSearchResult;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
 import epf.lang.ollama.Ollama;
 import epf.lang.schema.ollama.ChatRequest;
@@ -34,7 +30,6 @@ import epf.lang.schema.ollama.Message;
 import epf.lang.schema.ollama.Role;
 import epf.naming.Naming;
 import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.websocket.OnClose;
@@ -49,7 +44,7 @@ import jakarta.websocket.server.ServerEndpoint;
 /**
  * 
  */
-@ServerEndpoint("/lang/messaging/{model}")
+@ServerEndpoint("/messaging/{model}")
 @ApplicationScoped
 public class Messaging {
 	
@@ -63,28 +58,52 @@ public class Messaging {
 			//"nous-hermes2:10.7b", "<|im_start|>user\n%s<|im_end|>\n<|im_start|>assistant\n%s<|im_end|>\n"
 			);
 	
+	private final List<Session> sessions = new CopyOnWriteArrayList<>();
+	
 	/**
 	 * 
 	 */
-	private transient Cache<String, ChatRequest> chats;
-
-    @Inject 
-    ManagedExecutor executor;
-	
-	@RestClient
-	Ollama ollama;
-	
 	@Inject
 	@ConfigProperty(name = "epf.lang.path")
 	String path;
 	
+	/**
+	 * 
+	 */
 	@Inject
 	@ConfigProperty(name = "epf.lang.model")
 	String embeddingModelName;
 	
+	/**
+	 * 
+	 */
 	@Inject
 	@ConfigProperty(name = "epf.lang.store")
 	String store;
+
+    /**
+     * 
+     */
+    @Inject 
+    ManagedExecutor executor;
+	
+	/**
+	 * 
+	 */
+	@RestClient
+	Ollama ollama;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	Cache cache;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	Persistence persistence;
 	
 	private InMemoryEmbeddingStore<TextSegment> embeddingStore;
 	
@@ -116,46 +135,35 @@ public class Messaging {
 	private void storeEmbeddings(final List<EmbeddingsResponse> embeddings, final List<TextSegment> segments) {
         embeddingStore.addAll(embeddings.stream().map(e -> dev.langchain4j.data.embedding.Embedding.from(e.getEmbedding())).collect(Collectors.toList()), segments);
 	}
-	
-	private EmbeddingsResponse embedQuery(final String model, final String query) {
-		final EmbeddingsRequest embeddingRequest = new EmbeddingsRequest();
-    	embeddingRequest.setModel(model);
-    	embeddingRequest.setPrompt(query);
-    	return ollama.generateEmbeddings(embeddingRequest);
-	}
-	
-	private List<TextSegment> searchQuery(final EmbeddingsResponse embeddedQuery){
-    	final EmbeddingSearchRequest searchRequest = EmbeddingSearchRequest.builder()
-                .queryEmbedding(dev.langchain4j.data.embedding.Embedding.from(embeddedQuery.getEmbedding()))
-                .maxResults(3)
-                .minScore(0.0)
-                .build();
-    	final EmbeddingSearchResult<TextSegment> searchResult = embeddingStore.search(searchRequest);
-    	final List<TextSegment> segments = new LinkedList<>();
-    	searchResult.matches().forEach(match -> {
-    		segments.add(match.embedded());
+    
+    private void send(final Session session, final String promt) {
+    	final Message chatMessage = new Message();
+    	chatMessage.setContent(promt);
+    	chatMessage.setRole(Role.user);
+    	final ChatRequest chat = cache.get(session.getId());
+    	chat.getMessages().add(chatMessage);
+    	final Basic remote = session.getBasicRemote();
+    	Ollama.stream(ollama.chat(chat), ChatResponse.class, (response) -> {
+    		if(session.isOpen()) {
+    			try {
+        			remote.sendText(response.getMessage().getContent());
+    			}
+            	catch(Exception ex) {
+            		ex.printStackTrace();
+            	}
+			}
+			System.out.print(response.getMessage().getContent());
+			if(response.isDone()) {
+            	chat.getMessages().add(response.getMessage());
+            	cache.put(session.getId(), chat);
+			}
+    		return session.isOpen();
     	});
-    	return segments;
-	}
-	
-	private String injectPrompt(final String model, final String query, final List<TextSegment> segments) {
-    	final StringBuilder contents = new StringBuilder();
-    	segments.forEach(segment -> {
-    		contents.append(segment.text());
-    		contents.append("\n\n");
-    	});
-    	return String.format(promptTemplates.getOrDefault(model, DEFAULT_PROMPT_TEMPLATE), query, contents.toString());
-	}
+    }
 	
 	@PostConstruct
 	void postConstruct() {
-        final MutableConfiguration<String, ChatRequest> config = new MutableConfiguration<>();
-		final CacheManager manager = Caching.getCachingProvider().getCacheManager();
-		chats = manager.getCache(Naming.Lang.Internal.OLLAMA);
-		if(chats == null) {
-			chats = manager.createCache(Naming.Lang.Internal.OLLAMA, config);
-		}
-		if(Files.exists(Paths.get(store))) {
+        if(Files.exists(Paths.get(store))) {
 			embeddingStore = InMemoryEmbeddingStore.fromFile(store);
 		}
 		else {
@@ -182,11 +190,6 @@ public class Messaging {
 	        });
 		}
 	}
-	
-	@PreDestroy
-	void preDestroy() {
-		chats.close();
-	}
 
     @OnOpen
     public void onOpen(Session session, @PathParam(Naming.Lang.Internal.MODEL) String model) {
@@ -194,20 +197,27 @@ public class Messaging {
         final ChatRequest chat = new ChatRequest();
         chat.setModel(model);
         chat.setMessages(new ArrayList<>());
-        chats.put(session.getId(), chat);
+        cache.put(session.getId(), chat);
+        sessions.clear();
+        sessions.addAll(session.getOpenSessions());
+        session.getAsyncRemote().sendText(session.getId());
     }
 
     @OnClose
     public void onClose(Session session, @PathParam(Naming.Lang.Internal.MODEL) String model) {
         System.out.println("onClose> " + model);
-        chats.remove(session.getId());
+        cache.remove(session.getId());
+        sessions.clear();
+        sessions.addAll(session.getOpenSessions());
     }
 
     @OnError
     public void onError(Session session, @PathParam(Naming.Lang.Internal.MODEL) String model, Throwable throwable) {
         System.out.println("onError> " + model + ": " + throwable);
         throwable.printStackTrace();
-        chats.remove(session.getId());
+        cache.remove(session.getId());
+        sessions.clear();
+        sessions.addAll(session.getOpenSessions());
     }
 
     @OnMessage
@@ -215,40 +225,33 @@ public class Messaging {
         System.out.println("onMessage> " + model + ": " + message);
         executor.submit(() -> {
         	try {
-                System.out.println("embed query:");
-            	final EmbeddingsResponse embeddedQuery = embedQuery(embeddingModelName, message);
-            	System.out.println("search query:");
-            	final List<TextSegment> segments = searchQuery(embeddedQuery);
+                System.out.println("execute query:");
+            	final List<TextSegment> segments = persistence.executeQuery(message);
             	System.out.println("inject prompt:");
             	final String prompt = injectPrompt(model, message, segments);
             	System.out.print(prompt);
-            	System.out.println("chat:");
-            	final Message chatMessage = new Message();
-            	chatMessage.setContent(prompt);
-            	chatMessage.setRole(Role.user);
-            	final ChatRequest chat = chats.get(session.getId());
-            	chat.getMessages().add(chatMessage);
-            	final Basic remote = session.getBasicRemote();
-            	Ollama.stream(ollama.chat(chat), ChatResponse.class, (response) -> {
-            		if(session.isOpen()) {
-            			try {
-                			remote.sendText(response.getMessage().getContent());
-            			}
-                    	catch(Exception ex) {
-                    		ex.printStackTrace();
-                    	}
-        			}
-        			System.out.print(response.getMessage().getContent());
-        			if(response.isDone()) {
-                    	chat.getMessages().add(response.getMessage());
-                    	chats.put(session.getId(), chat);
-        			}
-            		return session.isOpen();
-            	});
+            	System.out.println("send:");
+            	send(session, prompt);
         	}
         	catch(Exception ex) {
         		ex.printStackTrace();
         	}
         });
+    }
+	
+	public String injectPrompt(final String model, final String query, final List<TextSegment> segments) {
+    	final StringBuilder contents = new StringBuilder();
+    	segments.forEach(segment -> {
+    		contents.append(segment.text());
+    		contents.append("\n\n");
+    	});
+    	return String.format(promptTemplates.getOrDefault(model, DEFAULT_PROMPT_TEMPLATE), query, contents.toString());
+	}
+    
+    public void send(final String sid, final String promt) {
+    	final Optional<Session> session = sessions.stream().filter(ss -> ss.getId().equals(sid)).findFirst();
+    	if(session.isPresent()) {
+    		send(session.get(), promt);
+    	}
     }
 }
