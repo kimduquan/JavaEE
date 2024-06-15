@@ -49,9 +49,9 @@ import jakarta.websocket.server.ServerEndpoint;
 /**
  * 
  */
-@ServerEndpoint("/lang/{model}")
+@ServerEndpoint("/lang/messaging/{model}")
 @ApplicationScoped
-public class Lang {
+public class Messaging {
 	
 	/**
 	 * 
