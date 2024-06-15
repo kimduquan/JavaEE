@@ -28,6 +28,9 @@ cd ../
 cd EPF-tests
 ./stop.sh
 cd ../
+cd EPF-lang
+./stop.sh
+cd ../
 cd EPF-registry
 ./stop.sh
 cd ../

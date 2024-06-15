@@ -1,2 +1,4 @@
-kubectl port-forward svc/hazelcast 5701 &
-kubectl port-forward svc/ollama 11434 &
+. ../env.sh
+mvn clean install -U -Dquarkus.container-image.build=true
+./stop.sh
+./start.sh

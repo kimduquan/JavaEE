@@ -207,6 +207,20 @@ public class Registry {
 	 * 
 	 */
 	@Inject
+	@ConfigProperty(name = Naming.Lang.LANG_URL)
+	transient URI langUrl;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	@ConfigProperty(name = Naming.Lang.Internal.OLLAMA)
+	transient URI ollamaUrl;
+	
+	/**
+	 * 
+	 */
+	@Inject
 	@ConfigProperty(name = Naming.Net.HTTP_PORT)
 	transient int httpPort;
 	
@@ -237,6 +251,8 @@ public class Registry {
 			remotes.put(Naming.Workflow.WORKFLOW_MANAGEMENT, workflowManagementUrl);
 			remotes.put(Naming.EVENT, eventUrl);
 			remotes.put(Naming.CONCURRENT, concurrentUrl);
+			remotes.put(Naming.LANG, langUrl);
+			remotes.put(Naming.Lang.Internal.OLLAMA, ollamaUrl);
 			remotes.forEach((name, url) -> {
 				LOGGER.info(String.format("%s=%s", name, url));
 			});
