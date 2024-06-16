@@ -43,6 +43,7 @@ public class Stream {
 	public void onOpen(final Session session) {
 		LOGGER.info("onOpen:" + session.getId());
 		setOpenSessions(session);
+		session.getAsyncRemote().sendText(session.getId());
 	}
 	
 	@OnClose

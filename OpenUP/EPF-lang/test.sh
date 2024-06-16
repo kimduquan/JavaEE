@@ -1,8 +1,8 @@
-cd ../EPF-tests
-./start.sh
 cd ../EPF-concurrent
 ./start.sh
 cd ../EPF-registry
+./start.sh
+cd ../EPF-tests
 ./start.sh
 cd ../EPF-gateway
 ./start.sh
