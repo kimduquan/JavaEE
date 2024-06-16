@@ -9,6 +9,7 @@ import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
 import epf.lang.ollama.Ollama;
 import epf.lang.schema.ollama.EmbeddingsRequest;
 import epf.lang.schema.ollama.EmbeddingsResponse;
+import epf.naming.Naming;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -41,7 +42,7 @@ public class Persistence {
 	 * 
 	 */
 	@Inject
-	@ConfigProperty(name = "epf.lang.model")
+	@ConfigProperty(name = Naming.Lang.Internal.EMBEDDING_LANGUAGE_MODEL)
 	String embeddingModelName;
 	
 	/**

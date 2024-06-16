@@ -382,6 +382,16 @@ public interface Naming {
 			 * 
 			 */
 			String MODEL = "model";
+			
+			/**
+			 * 
+			 */
+			String LANGUAGE_MODEL = "epf.lang.model";
+			
+			/**
+			 * 
+			 */
+			String EMBEDDING_LANGUAGE_MODEL = "epf.lang.embed.model";
 		}
 	}
 	

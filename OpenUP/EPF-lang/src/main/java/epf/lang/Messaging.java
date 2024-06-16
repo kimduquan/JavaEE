@@ -38,13 +38,12 @@ import jakarta.websocket.OnMessage;
 import jakarta.websocket.OnOpen;
 import jakarta.websocket.RemoteEndpoint.Basic;
 import jakarta.websocket.Session;
-import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
 
 /**
  * 
  */
-@ServerEndpoint("/messaging/{model}")
+@ServerEndpoint("/messaging")
 @ApplicationScoped
 public class Messaging {
 	
@@ -71,8 +70,15 @@ public class Messaging {
 	 * 
 	 */
 	@Inject
-	@ConfigProperty(name = "epf.lang.model")
+	@ConfigProperty(name = Naming.Lang.Internal.EMBEDDING_LANGUAGE_MODEL)
 	String embeddingModelName;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	@ConfigProperty(name = Naming.Lang.Internal.LANGUAGE_MODEL)
+	String modelName;
 	
 	/**
 	 * 
@@ -191,11 +197,14 @@ public class Messaging {
 		}
 	}
 
+    /**
+     * @param session
+     */
     @OnOpen
-    public void onOpen(Session session, @PathParam(Naming.Lang.Internal.MODEL) String model) {
-        System.out.println("onOpen> " + model);
+    public void onOpen(final Session session) {
+        System.out.println("onOpen>");
         final ChatRequest chat = new ChatRequest();
-        chat.setModel(model);
+        chat.setModel(modelName);
         chat.setMessages(new ArrayList<>());
         cache.put(session.getId(), chat);
         sessions.clear();
@@ -204,16 +213,16 @@ public class Messaging {
     }
 
     @OnClose
-    public void onClose(Session session, @PathParam(Naming.Lang.Internal.MODEL) String model) {
-        System.out.println("onClose> " + model);
+    public void onClose(final Session session) {
+        System.out.println("onClose>");
         cache.remove(session.getId());
         sessions.clear();
         sessions.addAll(session.getOpenSessions());
     }
 
     @OnError
-    public void onError(Session session, @PathParam(Naming.Lang.Internal.MODEL) String model, Throwable throwable) {
-        System.out.println("onError> " + model + ": " + throwable);
+    public void onError(final Session session, Throwable throwable) {
+        System.out.println("onError>" + throwable);
         throwable.printStackTrace();
         cache.remove(session.getId());
         sessions.clear();
@@ -221,14 +230,14 @@ public class Messaging {
     }
 
     @OnMessage
-    public void onMessage(final Session session, @PathParam(Naming.Lang.Internal.MODEL) String model, String message) throws Exception {
-        System.out.println("onMessage> " + model + ": " + message);
+    public void onMessage(final Session session, final String message) throws Exception {
+        System.out.println("onMessage>" + message);
         executor.submit(() -> {
         	try {
                 System.out.println("execute query:");
             	final List<TextSegment> segments = persistence.executeQuery(message);
             	System.out.println("inject prompt:");
-            	final String prompt = injectPrompt(model, message, segments);
+            	final String prompt = injectPrompt(message, segments);
             	System.out.print(prompt);
             	System.out.println("send:");
             	send(session, prompt);
@@ -239,13 +248,13 @@ public class Messaging {
         });
     }
 	
-	public String injectPrompt(final String model, final String query, final List<TextSegment> segments) {
+	public String injectPrompt(final String query, final List<TextSegment> segments) {
     	final StringBuilder contents = new StringBuilder();
     	segments.forEach(segment -> {
     		contents.append(segment.text());
     		contents.append("\n\n");
     	});
-    	return String.format(promptTemplates.getOrDefault(model, DEFAULT_PROMPT_TEMPLATE), query, contents.toString());
+    	return String.format(promptTemplates.getOrDefault(modelName, DEFAULT_PROMPT_TEMPLATE), query, contents.toString());
 	}
     
     public void send(final String sid, final String promt) {

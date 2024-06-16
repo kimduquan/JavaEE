@@ -5,8 +5,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import epf.gateway.util.Streaming;
+import epf.util.logging.LogManager;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.websocket.CloseReason;
 import jakarta.websocket.OnClose;
 import jakarta.websocket.OnError;
 import jakarta.websocket.OnOpen;
@@ -19,6 +23,11 @@ import jakarta.websocket.server.ServerEndpoint;
 @ApplicationScoped
 @ServerEndpoint("/stream")
 public class Stream {
+	
+	/**
+	 * 
+	 */
+	private static transient final Logger LOGGER = LogManager.getLogger(Stream.class.getName());
 
 	/**
 	 * 
@@ -32,16 +41,19 @@ public class Stream {
 	
 	@OnOpen
 	public void onOpen(final Session session) {
+		LOGGER.info("onOpen:" + session.getId());
 		setOpenSessions(session);
 	}
 	
 	@OnClose
-	public void onClose(final Session session) {
+	public void onClose(final Session session, final CloseReason closeReason) {
+		LOGGER.info("onClose:" + session.getId() + "," + closeReason.getReasonPhrase() + "," + closeReason.getCloseCode());
 		setOpenSessions(session);
 	}
 	
 	@OnError
-	public void onError(final Session session) {
+	public void onError(final Session session, final Throwable throwable) {
+		LOGGER.log(Level.SEVERE, "onError", throwable);
 		setOpenSessions(session);
 	}
 	
