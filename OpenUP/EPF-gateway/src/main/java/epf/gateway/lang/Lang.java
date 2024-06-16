@@ -73,7 +73,7 @@ public class Lang {
      */
     @Path(Naming.MESSAGING)
     @POST
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.TEXT_PLAIN)
     @RunOnVirtualThread
     @Blocking
     public Response send(

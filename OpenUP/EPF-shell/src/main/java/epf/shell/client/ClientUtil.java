@@ -5,6 +5,7 @@ import epf.shell.security.SecurityUtil;
 import java.net.URI;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.core.UriBuilder;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 
@@ -42,6 +43,15 @@ public class ClientUtil {
 	 */
 	public URI getUrl(final String name) {
 		return gatewayUrl.resolve(name);
+	}
+	
+	/**
+	 * @param name
+	 * @return
+	 */
+	public URI getWSUrl(final String name) {
+		final URI url = gatewayUrl.resolve(name);
+		return UriBuilder.fromUri(url).scheme("wss").build();
 	}
 	
 	/**
