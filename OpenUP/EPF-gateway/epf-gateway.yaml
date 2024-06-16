@@ -63,6 +63,8 @@ spec:
                   fieldPath: metadata.namespace
             - name: HAZELCAST_KUBERNETES_SERVICE_DNS
               value: hazelcast.default.svc.cluster.local
+            - name: EPF_REGISTRY_URL
+              value: http://epf-registry.default.svc.cluster.local:9182/registry/
           image: epf/epf-gateway:1.0.0
           imagePullPolicy: IfNotPresent
           livenessProbe:
