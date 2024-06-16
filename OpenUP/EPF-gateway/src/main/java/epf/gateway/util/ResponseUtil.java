@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import jakarta.ws.rs.core.EntityTag;
@@ -277,11 +278,15 @@ public class ResponseUtil extends Response {
     
     /**
      * @param response
+     * @param entity
      * @param baseUri
      * @return
      */
-    public static Response buildResponse(final Response response, final URI baseUri){
+    public static Response buildResponse(final Response response, final Optional<Object> entity, final URI baseUri){
     	ResponseBuilder builder = fromResponse(response);
+    	if(entity.isPresent()) {
+    		builder = builder.entity(entity.get());
+    	}
 		Set<Link> links = response.getLinks();
 		if(links != null){
 			links = links

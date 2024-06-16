@@ -1,12 +1,14 @@
 package epf.lang;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import dev.langchain4j.data.segment.TextSegment;
 import epf.lang.schema.ollama.ChatRequest;
 import epf.lang.schema.ollama.Message;
 import epf.lang.schema.ollama.Role;
 import epf.naming.Naming;
+import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -53,6 +55,7 @@ public class Lang {
 	@Path(Naming.PERSISTENCE)
 	@POST
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
+    @RunOnVirtualThread
 	public Response persist(final InputStream input) {
 		persistence.persist(input);
 		return Response.ok().build();
@@ -65,6 +68,7 @@ public class Lang {
 	@Path(Naming.PERSISTENCE)
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
+    @RunOnVirtualThread
 	public String executeQuery(
 			@QueryParam("query") 
 			final String query) {
@@ -81,11 +85,16 @@ public class Lang {
 	@PUT
 	@Consumes(MediaType.TEXT_PLAIN)
 	@Produces(MediaType.APPLICATION_JSON)
+    @RunOnVirtualThread
 	public Response put(
 			@QueryParam("id")
 			final String id,
 			final String text) {
-		final ChatRequest chat = cache.get(id);
+		ChatRequest chat = cache.get(id);
+		if(chat == null) {
+			chat = new ChatRequest();
+			chat.setMessages(new ArrayList<>());
+		}
 		final Message message = new Message();
 		message.setRole(Role.user);
 		message.setContent(text);
@@ -101,12 +110,13 @@ public class Lang {
 	@Path(Naming.MESSAGING)
 	@POST
 	@Consumes(MediaType.TEXT_PLAIN)
+    @RunOnVirtualThread
 	public Response send(
 			@QueryParam("id")
 			final String id, 
 			final String text) {
-		final Link executeQuery = Link.fromUriBuilder(UriBuilder.fromPath(Naming.PERSISTENCE).queryParam("query", text)).rel("_self").type(HttpMethod.GET).title("#1").build();
-		final Link put = Link.fromUriBuilder(UriBuilder.fromPath(Naming.CACHE).queryParam("id", id)).rel("_self").type(HttpMethod.PUT).title("#2").build();
+		final Link executeQuery = Link.fromUriBuilder(UriBuilder.fromPath(Naming.PERSISTENCE).queryParam("query", text)).rel(Naming.LANG).type(HttpMethod.GET).title("#1").build();
+		final Link put = Link.fromUriBuilder(UriBuilder.fromPath(Naming.CACHE).queryParam("id", id)).rel(Naming.LANG).type(HttpMethod.PUT).title("#2").build();
 		final Link ollamaLink = Link.fromPath("api/chat").rel(Naming.Lang.Internal.OLLAMA).type(HttpMethod.POST).param("volatile", id).title("#3").build();
 		return Response.ok().links(executeQuery, put, ollamaLink).build();
 	}

@@ -23,7 +23,6 @@ import jakarta.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
 import epf.naming.Naming;
-import io.smallrye.common.annotation.Blocking;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
 /**
@@ -59,7 +58,6 @@ public class Query {
     @Path(Naming.Query.Client.ENTITY_PATH)
 	@Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
-    @Blocking
     public Response getEntity(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -82,7 +80,6 @@ public class Query {
 	@HEAD
 	@Path("entity/{schema}/{entity}")
     @RunOnVirtualThread
-    @Blocking
 	public Response countEntity(
 			@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -107,7 +104,6 @@ public class Query {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
-    @Blocking
 	public Response fetchEntities(
 			@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -129,7 +125,6 @@ public class Query {
     @Path("query/{schema}/{criteria: .+}")
     @Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
-    @Blocking
 	public Response executeQuery(
     		@Context 
     		final SecurityContext context,
@@ -157,7 +152,6 @@ public class Query {
 	@HEAD
     @Path("query/{schema}/{criteria: .+}")
     @RunOnVirtualThread
-    @Blocking
 	public Response executeCountQuery(
 			@Context 
 			final SecurityContext context,
@@ -186,7 +180,6 @@ public class Query {
 	@Path(Naming.Query.SEARCH)
 	@Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
-    @Blocking
     public Response search(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -206,7 +199,6 @@ public class Query {
 	@HEAD
 	@Path(Naming.Query.SEARCH)
     @RunOnVirtualThread
-    @Blocking
 	public Response count(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 

@@ -21,7 +21,6 @@ import jakarta.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
 import epf.naming.Naming;
-import io.smallrye.common.annotation.Blocking;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
 /**
@@ -59,7 +58,6 @@ public class Rules {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
-    @Blocking
 	public Response executeRules(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -83,7 +81,6 @@ public class Rules {
 	@Path("{ruleSet}")
 	@Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
-    @Blocking
 	public Response executeRules(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -106,7 +103,6 @@ public class Rules {
 	@Path("{ruleSet}")
 	@Consumes(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
-    @Blocking
 	public Response addObject(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -127,7 +123,6 @@ public class Rules {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
-    @Blocking
 	public Response getRegistrations(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 

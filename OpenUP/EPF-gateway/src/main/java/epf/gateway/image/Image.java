@@ -15,7 +15,6 @@ import jakarta.ws.rs.core.SecurityContext;
 import jakarta.ws.rs.core.UriInfo;
 import epf.gateway.Application;
 import epf.naming.Naming;
-import io.smallrye.common.annotation.Blocking;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
 /**
@@ -45,7 +44,6 @@ public class Image {
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
 	@Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
-    @Blocking
     public Response findContours(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 

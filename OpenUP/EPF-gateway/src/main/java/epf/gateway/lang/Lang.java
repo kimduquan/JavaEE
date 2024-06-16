@@ -4,7 +4,6 @@ import java.io.InputStream;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
 import epf.naming.Naming;
-import io.smallrye.common.annotation.Blocking;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -52,7 +51,6 @@ public class Lang {
     @POST
 	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
     @RunOnVirtualThread
-    @Blocking
     public Response persist(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -75,7 +73,6 @@ public class Lang {
     @POST
 	@Consumes(MediaType.TEXT_PLAIN)
     @RunOnVirtualThread
-    @Blocking
     public Response send(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 

@@ -15,7 +15,6 @@ import jakarta.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import epf.gateway.Application;
 import epf.naming.Naming;
-import io.smallrye.common.annotation.Blocking;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 
 /**
@@ -49,7 +48,6 @@ public class Schema {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
-    @Blocking
     public Response getEntities(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
@@ -69,7 +67,6 @@ public class Schema {
     @Path("embeddable")
     @Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
-    @Blocking
     public Response getEmbeddables(
     		@Context final SecurityContext context,
             @Context final HttpHeaders headers, 
