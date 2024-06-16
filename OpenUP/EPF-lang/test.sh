@@ -1,8 +1,13 @@
+cd ../EPF-tests
+./start.sh
+cd ../EPF-concurrent
+./start.sh
+cd ../EPF-registry
+./start.sh
+cd ../EPF-gateway
+./start.sh
+cd ../EPF-lang
 . ../env.sh
-../EPF-tests/start.sh
-../EPF-concurrent/start.sh
-../EPF-registry/start.sh
-../EPF-gateway/start.sh
 mvn clean install -U -Dquarkus.container-image.build=true
 ./stop.sh
 ./start.sh
