@@ -190,7 +190,12 @@ public class Synchronized {
 			send(session, Message.root, this_.getId());
 		}
 		if(isNull()) {
-			right = session;
+			if(session.getOpenSessions().isEmpty()) {
+				root = session;
+			}
+			else {
+				right = session;
+			}
 		}
 		else if(isFirst()) {
 			left = right;
@@ -294,7 +299,9 @@ public class Synchronized {
 		lock.lock();
 		if(this_ == null) {
 			this_ = ContainerProvider.getWebSocketContainer().connectToServer(this, uri);
-			this.new_.await();
+			if(!isRoot()) {
+				new_.await();
+			}
 		}
 		lock.unlock();
 	}

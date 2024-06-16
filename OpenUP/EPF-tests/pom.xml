@@ -363,7 +363,7 @@
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
-            <plugin>
+			<plugin>
                 <groupId>io.openliberty.tools</groupId>
                 <artifactId>liberty-maven-plugin</artifactId>
                 <executions>
@@ -409,7 +409,7 @@
                             </copyDependencies>
                         </configuration>
                     </execution>
-                    <!-- Start the server
+                    <!-- Start the server -->
                     <execution>
                         <id>start-liberty-server</id>
                         <phase>pre-integration-test</phase>
@@ -421,15 +421,15 @@
                             <serverStartTimeout>600</serverStartTimeout>
                             <applications>EPF-schedule,EPF-script,EPF-batch,EPF-mail,EPF-image,EPF-rules,EPF-planning,EPF-security,EPF-security-management</applications>
                         </configuration>
-                    </execution> -->
-                    <!-- Stop the server
+                    </execution>
+                    <!-- Stop the server -->
                     <execution>
                         <id>stop-liberty-server</id>
                         <phase>post-integration-test</phase>
                         <goals>
                             <goal>stop</goal>
                         </goals>
-                    </execution> -->
+                    </execution>
                 </executions>
                 <configuration>
                     <installDirectory>${liberty.install.dir}</installDirectory>
@@ -440,7 +440,7 @@
 					<serverStartTimeout>600</serverStartTimeout>
 					<applications>EPF-schedule,EPF-script,EPF-batch,EPF-mail,EPF-image,EPF-rules,EPF-planning,EPF-security,EPF-security-management</applications>
 					<dockerRunOpts>-p 7286:7286</dockerRunOpts>
-				</configuration>
+                </configuration>
             </plugin>
 			<plugin>
 				<groupId>com.lazerycode.jmeter</groupId>
